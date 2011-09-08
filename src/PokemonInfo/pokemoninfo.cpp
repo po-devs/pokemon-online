@@ -129,9 +129,6 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
 }
 
 void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
-    if (m == FillMode::Client) {
-        filename = PoCurrentModPath + filename;
-    }
 }
 
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
@@ -422,7 +419,12 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
 {
     m_CurrentMode = mode;
     PoCurrentModPath = readModDirectory(modName);
-    if (PoCurrentModPath.isEmpty() && (m_CurrentMode != FillMode::Server)) m_CurrentMode = FillMode::NoMod;
+
+    QString modpath = PoCurrentModPath;
+    if (modpath.isEmpty() && (m_CurrentMode != FillMode::Server)) {
+        m_CurrentMode = FillMode::NoMod;
+    }
+
     clearData();
 
     loadNames();
@@ -469,6 +471,7 @@ void PokemonInfo::clearData()
         for (int j = 0; j < 3; ++j) {
             m_Abilities[i][j].clear();
         }
+        m_MinLevels[i].clear();
     }
     m_LevelBalance.clear();
     m_Classification.clear();
@@ -2455,7 +2458,10 @@ bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quin
 
 QString PokemonInfo::readModDirectory(const QString &modName)
 {
-    if (m_CurrentMode == FillMode::Server) return ""; // from current directory, mod_db/*
+    if (m_CurrentMode == FillMode::Server) {
+        return ""; // from current directory, mod_db/*
+    }
+
     QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
     int mod_id = s_mod.value(modName + "/id", 0).toInt();
     if (mod_id == 0) {

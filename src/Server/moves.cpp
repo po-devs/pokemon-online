@@ -1096,7 +1096,7 @@ struct MMGrassKnot : public MM
         } else {
             bp = 120;
         }
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b,s).power * bp;
     }
 };
 
@@ -1151,7 +1151,7 @@ struct MMGyroBall : public MM
         int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b, s).power * bp;
     }
 };
 
@@ -3526,20 +3526,6 @@ struct MMTelekinesis : public MM
     }
 };
 
-struct MMStrikeDown : public MM
-{
-    MMStrikeDown() {
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void uas(int s, int t, BS &b) {
-        if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, s, type(b,s), t);
-            poke(b,t)["StruckDown"] = true;
-        }
-    }
-};
-
 struct MMYouFirst : public MM
 {
     MMYouFirst() {
@@ -4308,7 +4294,6 @@ void MoveEffect::init()
     REGISTER_MOVE(172, MirrorType);
     //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
-    REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
     REGISTER_MOVE(177, Stall);
     REGISTER_MOVE(178, FireOath);
