@@ -439,7 +439,7 @@ int BattleSituation::randomOpponent(int slot) const
     QList<int> opps = revs(slot);
     if (opps.empty()) return -1;
 
-    return opps[true_rand()%opps.size()];
+    return opps[randint(opps.size())];
 }
 
 int BattleSituation::randomValidOpponent(int slot) const
@@ -448,7 +448,7 @@ int BattleSituation::randomValidOpponent(int slot) const
     if (opps.empty())
         return allRevs(slot).front();
 
-    return opps[true_rand()%opps.size()];
+    return opps[randint(opps.size())];
 }
 
 TeamBattle &BattleSituation::team(int spot)
@@ -1044,7 +1044,7 @@ void BattleSituation::endTurnDefrost()
     foreach(int player, speedsVector) {
         if (poke(player).status() == Pokemon::Frozen)
         {
-            if (true_rand() % 255 <= 25)
+            if (coinflip(26, 255))
             {
                 unthaw(player);
             }
@@ -2200,7 +2200,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = (true_rand() % 100) < unsigned (30 + poke(player).level() - poke(target).level());
+        bool ret = coinflip(unsigned(30 + poke(player).level() - poke(target).level()), 100);
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -2230,7 +2230,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
             * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20;
 
-    if (true_rand() % 100 < unsigned(acc)) {
+    if (coinflip(unsigned(acc), 100)) {
         return true;
     } else {
         if (!silent) {
@@ -2262,7 +2262,6 @@ void BattleSituation::testCritical(int player, int target)
         return;
     }
 
-    int randnum = true_rand() % 48;
     int minch;
     int craise = tmove(player).critRaise;
 
@@ -2279,7 +2278,7 @@ void BattleSituation::testCritical(int player, int target)
     case 6: default: minch = 48;
     }
 
-    bool critical = randnum<minch;
+    bool critical = coinflip(minch, 48);
 
     turnMemory(player)["CriticalHit"] = critical;
 
@@ -2328,7 +2327,7 @@ bool BattleSituation::testStatus(int player)
     }
     if (poke(player).status() == Pokemon::Frozen)
     {
-        if (gen() <=2 || (true_rand() % 255 > 51 && !(tmove(player).flags & Move::UnthawingFlag)) )
+        if (gen() <=2 || (!coinflip(1, 5) && !(tmove(player).flags & Move::UnthawingFlag)) )
         {
             notify(All, StatusMessage, player, qint8(PrevFrozen));
             if (useBattleLog)
@@ -2358,7 +2357,7 @@ bool BattleSituation::testStatus(int player)
             if (useBattleLog)
                 appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(player)))), Theme::TypeColor(Type::Ghost).name()));
 
-            if (true_rand() % 2 == 0) {
+            if (coinflip(1, 2)) {
                 inflictConfusedDamage(player);
                 return false;
             }
@@ -2373,7 +2372,7 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         //MagicGuard
-        if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && true_rand() % 4 == 0) {
+        if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && coinflip(1, 4)) {
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             if (useBattleLog)
                 appendBattleLog("StatusMessage", toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(player)))), Theme::StatusColor(Pokemon::Paralysed)));
@@ -2417,21 +2416,19 @@ void BattleSituation::testFlinch(int player, int target)
         return;
     }
 
-
-    int randnum = true_rand() % 100;
     /* Serene Grace */
     if (hasWorkingAbility(player, Ability::SereneGrace)) {
-        randnum /= 2;
+        rate *= 2;
     }
 
-    if (randnum % 100 < rate) {
+    if (rate && coinflip(rate, 100)) {
         turnMemory(target)["Flinched"] = true;
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
                                    || hasWorkingItem(player, Item::RazorFang))) {
         /* King's rock */
-        if (true_rand() % 100 < 10) {
+        if (coinflip(10, 100)) {
             turnMemory(target)["Flinched"] = true;
         }
     }
@@ -2653,7 +2650,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                 }
                 if (possibilities.size() > 0) {
-                    targetList.push_back(possibilities[true_rand()%possibilities.size()]);
+                        targetList.push_back(possibilities[randint(possibilities.size())]);
                 }
             } else {
                 targetList.push_back(target);
@@ -2682,7 +2679,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                 }
                 if (targetList.size() > 0) {
-                    int randp = targetList[true_rand()%targetList.size()];
+                    int randp = targetList[randint(targetList.size())];
                     targetList.clear();
                     targetList.push_back(randp);
                 }
@@ -3287,14 +3284,12 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             return;
         }
 
-        /* Then we check if the effect hits */
-        int randnum = true_rand() % 100;
         /* Serene Grace, Rainbow */
         if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
             rate *= 2;
         }
 
-        if (rate != 0 && randnum > rate) {
+        if (rate != 0 && !coinflip(rate, 100)) {
             continue;
         }
 
@@ -3347,13 +3342,12 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     /* Then we check if the effect hits */
-    int randnum = true_rand() % 100;
     /* Serene Grace, Rainbow */
     if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
         rate *= 2;
     }
 
-    if (rate != 0 && randnum > rate) {
+    if (rate != 0 && !coinflip(rate, 100)) {
         applyingMoveStatMods = false;
         return;
     }
@@ -3544,7 +3538,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
     }
 
-    changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + true_rand() % (maxTurns - minTurns + 1));
+    changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + randint(maxTurns - minTurns + 1));
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
         changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
@@ -3593,7 +3587,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     }
 
     pokeMemory(player)["Confused"] = true;
-    pokeMemory(player)["ConfusedCount"] = (true_rand() % 4) + 1;
+    pokeMemory(player)["ConfusedCount"] = randint(4) + 1;
 
     if (tell)
     {
@@ -3824,11 +3818,11 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
     }
     else if (status == Pokemon::Asleep) {
         if (gen() == 2) {
-            poke(player).statusCount() = 1 + (true_rand()) % 6;
+            poke(player).statusCount() = 1 + (randint(6));
         } else if (gen() <= 4) {
-            poke(player).statusCount() = 1 + (true_rand()) % 4;
+            poke(player).statusCount() = 1 + (randint(4));
         } else {
-            poke(player).statusCount() = 1 + (true_rand()) % 3;
+            poke(player).statusCount() = 1 + (randint(3));
             poke(player).oriStatusCount() = poke(player).statusCount();
         }
     }
@@ -3951,7 +3945,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = ((true_rand() >> 4) % 16) + 85;
+    int randnum = randint(16) + 85;
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
@@ -4117,7 +4111,7 @@ int BattleSituation::repeatNum(int player)
             }
         }
     } else {
-        return min + (true_rand() % (max-min));
+        return min + (randint(max-min));
     }
 }
 
