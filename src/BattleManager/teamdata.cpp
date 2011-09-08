@@ -25,3 +25,13 @@ QString &TeamData::name()
 {
     return mName;
 }
+
+void TeamData::setPoke(int slot, const std::shared_ptr<ShallowBattlePoke> &poke)
+{
+    pokemons[slot] = poke;
+}
+
+void TeamData::switchPokemons(int slot1, int slot2)
+{
+    pokemons[slot1].swap(pokemons[slot2]);
+}
