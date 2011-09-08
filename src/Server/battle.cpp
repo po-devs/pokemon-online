@@ -1000,7 +1000,7 @@ void BattleSituation::endTurn()
                 }
             }
             int p = this->player(player);
-            if (p > 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+            if (p >= 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
                 fullLoop[p] = true;
             }
         }
