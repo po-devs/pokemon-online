@@ -1096,7 +1096,7 @@ struct MMGrassKnot : public MM
         } else {
             bp = 120;
         }
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b,s).power * bp;
     }
 };
 
@@ -1151,7 +1151,7 @@ struct MMGyroBall : public MM
         int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b, s).power * bp;
     }
 };
 
