@@ -41,10 +41,6 @@ class ShallowBattlePoke
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
     PROPERTY(quint8, level)
-    //In-Battle
-    PROPERTY(bool, substitute)
-    PROPERTY(Pokemon::uniqueId, alternateSprite)
-    PROPERTY(bool, showing)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);

@@ -119,7 +119,7 @@ protected:
 
 /* Functions to create in your class :
     void onKo(int spot);
-    void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
+    void onSendOut(int spot, int previndex, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
     void onSendBack(int spot);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);
