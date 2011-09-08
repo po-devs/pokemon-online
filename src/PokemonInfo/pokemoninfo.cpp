@@ -129,9 +129,6 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
 }
 
 void fill_check_mode_path(FillMode::FillModeType m, QString &filename) {
-    if (m == FillMode::Client) {
-        filename = PoCurrentModPath + filename;
-    }
 }
 
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
