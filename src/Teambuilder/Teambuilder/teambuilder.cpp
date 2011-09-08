@@ -377,14 +377,6 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
                 }
                 modActionGroup->addAction(ac);
             }
-
-            // Invoke if needed.
-            if (is_mod_selected) {
-                QAction *a = modActionGroup->checkedAction();
-                if (a) {
-                    a->trigger();
-                }
-            }
         }
     }
 
