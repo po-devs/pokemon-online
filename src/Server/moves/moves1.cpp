@@ -2004,6 +2004,11 @@ struct MMWideGuard : public MM
             return;
         }
 
+        /* Dark void isn't effected */
+        if (tmove(b,s).category == Move::Other) {
+            return;
+        }
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
