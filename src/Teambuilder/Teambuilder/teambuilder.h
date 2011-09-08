@@ -108,6 +108,7 @@ private:
     TB_TrainerBody *trainerbody();
 
     bool modified[6];
+    QActionGroup *modActionGroup;
 };
 
 #endif // TEAMBUILDER_H
