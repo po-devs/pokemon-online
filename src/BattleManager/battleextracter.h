@@ -87,7 +87,7 @@ protected:
     start(CriticalHit, int spot) end(spot)
     start(Miss, int spot) end(spot)
     start(Avoid, int spot) end(spot)
-    start(StatChange, int spot; int stat; int boost) end(spot, stat, boost)
+    start(StatChange, int spot; int stat; int boost; bool silent) end(spot, stat, boost, silent)
     start(ClassicStatusChange, int spot; int status; bool multipleTurns) end(spot, status, multipleTurns)
     start(AbsoluteStatusChange, int player; int poke; int status) end(player, poke, status)
     start(AlreadyStatusMessage, int spot; int status) end(spot, status)

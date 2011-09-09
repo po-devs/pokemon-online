@@ -154,9 +154,10 @@ void BattleClientLog::onAvoid(int spot)
     printLine(tr("%1 avoided the attack!").arg(tu(nick(spot))));
 }
 
-void BattleClientLog::onStatBoost(int spot, int stat, int boost)
+void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
 {
-    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
+    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "",
+                                         boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
 
 void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns)
