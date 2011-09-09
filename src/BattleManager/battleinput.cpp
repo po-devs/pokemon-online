@@ -380,7 +380,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
 
         in >> s1 >> s2 >> silent;
 
-        output<BattleEnum::ShiftSpots>(s1, s1, silent);
+        output<BattleEnum::ShiftSpots>(spot, s1, s2, silent);
         break;
     }
     default:

@@ -379,167 +379,78 @@ void BattleClientLog::onHurtWeather(int spot, int weather)
     }
 }
 
-//    case StraightDamage :
-//    {
-//        qint16 damage;
-//        in >> damage;
+void BattleClientLog::onDamageDone(int spot, int damage)
+{
+    printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
+}
 
-//        printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
+void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int foe, int other)
+{
+    QString mess = AbilityInfo::Message(ab,part);
+    mess.replace("%st", StatInfo::Stat(other));
+    mess.replace("%s", nick(spot));
+    //            mess.replace("%ts", data()->name(spot));
+    //            mess.replace("%tf", data()->name(!spot));
+    mess.replace("%t", TypeInfo::Name(type));
+    mess.replace("%f", nick(foe));
+    mess.replace("%m", MoveInfo::Name(other));
+    //            mess.replace("%d", QString::number(other));
+    mess.replace("%i", ItemInfo::Name(other));
+    mess.replace("%a", AbilityInfo::Name(other));
+    mess.replace("%p", PokemonInfo::Name(other));
+    if (type == Pokemon::Normal) {
+        printLine(escapeHtml(tu(mess)));
+    } else {
+        printHtml(toColor(escapeHtml(tu(mess)),theme()->TypeColor(type)));
+    }
+}
 
-//        break;
-//    }
-//    case AbilityMessage:
-//    {
-//        quint16 ab=0;
-//        uchar part=0;
-//        qint8 type(0), foe(0);
-//        qint16 other(0);
-//        in >> ab >> part >> type >> foe >> other;
-//        QString mess = AbilityInfo::Message(ab,part);
-//        mess.replace("%st", StatInfo::Stat(other));
-//        mess.replace("%s", nick(spot));
-//        //            mess.replace("%ts", data()->name(spot));
-//        //            mess.replace("%tf", data()->name(!spot));
-//        mess.replace("%t", TypeInfo::Name(type));
-//        mess.replace("%f", nick(foe));
-//        mess.replace("%m", MoveInfo::Name(other));
-//        //            mess.replace("%d", QString::number(other));
-//        mess.replace("%i", ItemInfo::Name(other));
-//        mess.replace("%a", AbilityInfo::Name(other));
-//        mess.replace("%p", PokemonInfo::Name(other));
-//        if (type == Pokemon::Normal) {
-//            printLine(escapeHtml(tu(mess)));
-//        } else {
-//            printHtml(toColor(escapeHtml(tu(mess)),Theme::TypeColor(type)));
-//        }
-//        break;
-//    }
-//    case Substitute:
-//        in >> data()->sub[spot];
-//        printLine(QString("%1 has a subtitute: %2").arg(nick(spot)).arg(data()->sub[spot]), true);
-//        mydisplay->updatePoke(spot);
-//        break;
-//    case BattleEnd:
-//    {
-//        printLine("");
-//        qint8 res;
-//        in >> res;
-//        battleEnded = true;
-//        if (res == Tie) {
-//            printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(data()->myself), data()->name(data()->opponent)), Qt::blue));
-//        } else {
-//            printHtml(toBoldColor(tr("%1 won the battle!").arg(data()->name(spot)), Qt::blue));
-//        }
-//        break;
-//    }
-//    case BlankMessage:
-//        printLine("");
-//        break;
-//    case Clause:
-//    {
-//        printLine(ChallengeInfo::battleText(truespot));
-//        break;
-//    }
-//    case Rated:
-//    {
-//        bool rated;
-//        in >> rated;
-//        printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
+void BattleClientLog::onSubstituteStatus(int spot, bool substitute)
+{
+    printLine(QString("%1 has a subtitute: %2").arg(nick(spot)).arg(substitute), true);
+}
+
+void BattleClientLog::onBattleEnd(int res, int winner)
+{
+    if (res == Tie) {
+        printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(BattleData::Player1), data()->name(BattleData::Player2)), Qt::blue));
+    } else {
+        printHtml(toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
+    }
+}
+
+void BattleClientLog::onBlankMessage()
+{
+    printLine("");
+}
+
+void BattleClientLog::onClauseActivated(int clause)
+{
+    printLine(ChallengeInfo::battleText(clause));
+}
+
+void BattleClientLog::onRatedNotification(bool rated)
+{
+    printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
 
 //        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
 //            if (conf().clauses & (1 << i)) {
 //                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
 //            }
 //        }
+}
 
-//        break;
-//    }
-//    case TierSection:
-//    {
-//        QString tier;
-//        in >> tier;
-//        printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
+void BattleClientLog::onTierNotification(QString tier)
+{
+    printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
 //        printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode));
-//        break;
-//    }
-//    case DynamicInfo:
-//    {
-//        in >> data()->statChanges[spot];
-//        mydisplay->updateToolTip(spot);
-//        break;
-//    }
-//    case TempPokeChange:
-//    {
-//        quint8 type;
-//        in >> type;
-//        if (type == TempSprite) {
-//            Pokemon::uniqueId old = data()->specialSprite[spot];
-//            in >> data()->specialSprite[spot];
-//            if (data()->specialSprite[spot] == -1) {
-//                data()->lastSeenSpecialSprite[spot] = old;
-//            } else if (data()->specialSprite[spot] == Pokemon::NoPoke) {
-//                data()->specialSprite[spot] = data()->lastSeenSpecialSprite[spot];
-//            }
-//            mydisplay->updatePoke(spot);
-//        } else if (type == DefiniteForme)
-//        {
-//            quint8 poke;
-//            quint16 newform;
-//            in >> poke >> newform;
-//            data()->pokemons[spot][poke].num() = newform;
-//            if (data()->isOut(spot, poke)) {
-//                data()->poke(data()->slot(spot, poke)).num() = newform;
-//            }
-//        } else if (type == AestheticForme)
-//        {
-//            quint16 newforme;
-//            in >> newforme;
-//            data()->poke(spot).num().subnum = newforme;
-//            mydisplay->updatePoke(spot);
-//        }
-//        break;
-//    }
-//    case ClockStart:
-//    {
-//        in >> data()->time[spot];
-//        data()->startingTime[spot] = time(NULL);
-//        data()->ticking[spot] = true;
-//        break;
-//    }
-//    case ClockStop:
-//    {
-//        in >> data()->time[spot];
-//        data()->ticking[spot] = false;
-//        break;
-//    }
-//    case SpotShifts:
-//    {
-//        qint8 s1, s2;
-//        bool silent;
+}
 
-//        in >> s1 >> s2 >> silent;
-
-//        if (data()->poke(data()->slot(spot, s2)).status() == Pokemon::Koed) {
-//            printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(data()->slot(spot, s1)))), silent);
-//        } else {
-//            printLine(tr("%1 shifted spots with %2!").arg(tu(nick(data()->slot(spot, s1))), nick(data()->slot(spot, s2))), silent);
-//        }
-
-//        data()->switchOnSide(spot, s1, s2);
-
-//        int pk1 = data()->slot(spot, s1);
-//        int pk2 = data()->slot(spot, s2);
-//        mydisplay->updatePoke(pk1);
-//        mydisplay->updatePoke(pk2);
-
-//        mydisplay->updatePoke(data()->player(spot), s1);
-//        mydisplay->updatePoke(data()->player(spot), s2);
-
-//        delay(500);
-//        break;
-//    }
-//    default:
-//        printLine("<i>" + tr("Unknown command received, are you up to date?") + "</i>");
-//        break;
-//    }
-//}
+void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent)
+{
+    if (data()->poke(data()->spot(player, spot1)).status() == Pokemon::Koed) {
+        printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(data()->spot(player, spot2)))), silent);
+    } else {
+        printLine(tr("%1 shifted spots with %2!").arg(tu(nick(data()->spot(player, spot2))), nick(data()->spot(player, spot1))), silent);
+    }
+}

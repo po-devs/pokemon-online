@@ -126,7 +126,7 @@ protected:
     start(CosmeticFormeChange, int spot; int subforme) end(spot, subforme)
     start(ClockStart, int player; int time) end(player, time)
     start(ClockStop, int player; int time) end(player, time)
-    start(ShiftSpots, int spot1; int spot2; bool silent) end(spot1, spot2, silent)
+    start(ShiftSpots, int player; int slot1; int slot2; bool silent) end(player, slot1, slot2, silent)
 
 #undef start
 #undef end

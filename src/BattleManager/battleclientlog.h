@@ -46,13 +46,13 @@ public:
     void onContinueWeather(int weather);
     void onEndWeather(int weather);
     void onHurtWeather(int spot, int weather);
-//    void onDamageDone(int spot, int damage);
-//    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
-//    void onSubstituteStatus(int spot, bool substitute);
-//    void onBlankMessage();
-//    void onCauseActivated(int clause);
-//    void onRatedNotification(bool rated);
-//    void onTierNotification(QString tier);
+    void onDamageDone(int spot, int damage);
+    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
+    void onSubstituteStatus(int spot, bool substitute);
+    void onBlankMessage();
+    void onClauseActivated(int clause);
+    void onRatedNotification(bool rated);
+    void onTierNotification(QString tier);
 //    void onDynamicInfo(int spot, BattleDynamicInfo info);
 //    void onPokemonVanish(int spot);
 //    void onPokemonReappear(int spot);
@@ -61,8 +61,8 @@ public:
 //    void onCosmeticFormeChange(int spot, int subforme);
 //    void onClockStart(int player, int time);
 //    void onClockStop(int player, int time);
-//    void onShiftSpots(int spot1, int spot2, bool silent);
-//    void onBattleEnd(int res, int winner);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
+    void onBattleEnd(int res, int winner);
 
     QString nick(int spot);
     QString rnick(int spot);

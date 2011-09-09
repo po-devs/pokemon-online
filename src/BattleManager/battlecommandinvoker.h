@@ -96,7 +96,7 @@ protected:
     start(SubstituteStatus, onSubstituteStatus, int spot, bool substitute) end(onSubstituteStatus, spot, substitute)
     start(BlankMessage, onBlankMessage) end (onBlankMessage)
     start(BattleEnd, onBattleEnd, int res, int winner) end(onBattleEnd, res, winner)
-    start(ClauseMessage, onCauseActivated, int clause) end(onCauseActivated, clause)
+    start(ClauseMessage, onClauseActivated, int clause) end(onClauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
     start(TierInfo, onTierNotification, char* tier) end(onTierNotification, QString::fromUtf8(QByteArray(tier)))
     start(StatBoostsAndField, onDynamicInfo, int spot, BattleDynamicInfo *info) end(onDynamicInfo, spot, *info)
@@ -107,7 +107,7 @@ protected:
     start(CosmeticFormeChange, onCosmeticFormeChange, int spot, int subforme) end(onCosmeticFormeChange, spot, subforme)
     start(ClockStart, onClockStart, int player, int time) end(onClockStart, player, time)
     start(ClockStop, onClockStop, int player, int time) end(onClockStop, player, time)
-    start(ShiftSpots, onShiftSpots, int spot1, int spot2, bool silent) end(onShiftSpots, spot1, spot2, silent)
+    start(ShiftSpots, onShiftSpots, int player, int spot1, int spot2, bool silent) end(onShiftSpots, player, spot1, spot2, silent)
 
 #undef start
 #undef end
@@ -156,7 +156,7 @@ protected:
     void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
     void onSubstituteStatus(int spot, bool substitute);
     void onBlankMessage();
-    void onCauseActivated(int clause);
+    void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
     void onTierNotification(QString tier);
     void onDynamicInfo(int spot, BattleDynamicInfo info);
@@ -167,7 +167,7 @@ protected:
     void onCosmeticFormeChange(int spot, int subforme);
     void onClockStart(int player, int time);
     void onClockStop(int player, int time);
-    void onShiftSpots(int spot1, int spot2, bool silent);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
 */
 

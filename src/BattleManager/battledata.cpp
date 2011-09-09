@@ -79,10 +79,10 @@ void BattleData::onCosmeticFormeChange(int spot, int subforme)
     fieldPoke(spot).alternateSprite.subnum = subforme;
 }
 
-void BattleData::onShiftSpots(int spot1, int spot2, bool)
+void BattleData::onShiftSpots(int player, int spot1, int spot2, bool)
 {
-    std::swap(fieldPoke(spot1), fieldPoke(spot2));
-    team(player(spot1)).switchPokemons(slotNum(spot1), slotNum(spot2));
+    std::swap(fieldPoke(spot(player, spot1)), fieldPoke(spot(player, spot2)));
+    team(player).switchPokemons(spot1, spot2);
 }
 
 TeamData &BattleData::team(int player)
@@ -113,6 +113,11 @@ ShallowBattlePoke &BattleData::poke(int player)
 int BattleData::slotNum(int player)
 {
     return player/2;
+}
+
+int BattleData::spot(int player, int slot)
+ {
+    return player + 2*slot;
 }
 
 AuxPokeData& BattleData::fieldPoke(int player)
