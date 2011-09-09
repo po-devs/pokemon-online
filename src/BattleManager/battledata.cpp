@@ -100,6 +100,11 @@ int BattleData::player(int spot)
     return spot % 2;
 }
 
+int BattleData::opponent(int player)
+{
+    return (player+1) %2;
+}
+
 ShallowBattlePoke &BattleData::poke(int player)
 {
     return teams[this->player(player)].poke(slotNum(player));

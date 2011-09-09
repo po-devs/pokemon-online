@@ -81,13 +81,14 @@ protected:
     start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, char *data)
         end(onMoveMessage, spot, move, part, type, foe, other, QString::fromUtf8(QByteArray(data)))
     start(NoTargetMessage, onNoTarget, int spot) end(onNoTarget, spot)
-    start(ItemMessage, onItemMessage, int item, int part, int foe, int berry, int other) end(onItemMessage, item, part, foe, berry, other)
+    start(ItemMessage, onItemMessage, int spot, int item, int part, int foe, int berry, int other)
+        end(onItemMessage, spot, item, part, foe, berry, other)
     start(Flinch, onFlinch, int spot) end(onFlinch, spot)
     start(Recoil, onRecoil, int spot) end(onRecoil, spot)
     start(Drained, onDrained, int spot) end(onDrained, spot)
     start(WeatherMessage, onContinueWeather, int weather) end(onContinueWeather, weather)
     start(EndWeather, onEndWeather, int weather) end(onEndWeather, weather)
-    start(StartWeather, onStartWeather, int weather, bool ability) end(onStartWeather, weather, ability)
+    start(StartWeather, onStartWeather, int spot, int weather, bool ability) end(onStartWeather, spot, weather, ability)
     start(WeatherDamage, onHurtWeather, int spot, int weather) end(onHurtWeather, spot, weather)
     start(Damaged, onDamageDone, int spot, int damage) end(onDamageDone, spot, damage)
     start(AbilityMessage, onAbilityMessage, int spot, int ab, int part, int type, int foe, int other)
@@ -143,7 +144,7 @@ protected:
     void onSpectatorChat(int id, QString message);
     void onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString data);
     void onNoTarget(int spot);
-    void onItemMessage(int item, int part, int foe, int berry, int other);
+    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
     void onFlinch(int spot);
     void onRecoil(int spot);
     void onDrained(int spot);

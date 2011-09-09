@@ -1967,4 +1967,16 @@ enum Stat
     AllStats = 8
 };
 
+/* Could be enum class weather in C++0x */
+namespace Weather {
+    enum Weather
+    {
+        NormalWeather = 0,
+        Hail = 1,
+        Rain = 2,
+        SandStorm = 3,
+        Sunny = 4
+    };
+}
+
 #endif // ENUMS_H
