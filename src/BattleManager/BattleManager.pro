@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+QT += declarative
 TARGET = BattleManager
 TEMPLATE = app
 DESTDIR = ../../bin
@@ -20,7 +21,8 @@ SOURCES += \
     teamdata.cpp \
     battleinput.cpp \
     battleclientlog.cpp \
-    auxpokebattledata.cpp
+    auxpokebattledata.cpp \
+    battlescene.cpp
 
 HEADERS +=\
     command.h \
@@ -38,7 +40,8 @@ HEADERS +=\
     battleinput.h \
     battleclientlog.h \
     auxpokebattledata.h \
-    defaulttheme.h
+    defaulttheme.h \
+    battlescene.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -60,3 +63,5 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+
