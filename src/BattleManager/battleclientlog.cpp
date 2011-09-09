@@ -156,7 +156,8 @@ void BattleClientLog::onAvoid(int spot)
 
 void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
 {
-    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "",
+    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? (abs(boost) > 2 ? tr("drastically") : tr("sharply "))
+                                                                                          : "",
                                          boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
 
