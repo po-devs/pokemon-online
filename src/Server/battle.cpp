@@ -776,7 +776,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         27.0 Zen Mode
 
-        28.0 pokemon is switched in (if previous Pokeen fainted)
+        28.0 pokemon is switched in (if previous Pokemon fainted)
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
