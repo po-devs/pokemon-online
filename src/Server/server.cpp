@@ -197,7 +197,6 @@ void Server::start(){
         s.setValue("logs_battle_files", false);
     }
     useChannelFileLog = s.value("logs_channel_files").toBool();
-    useBattleFileLog = s.value("logs_battle_files").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -1186,14 +1185,6 @@ void Server::useChannelFileLogChanged(bool logging)
     printLine("Channel File Logging changed", false, true);
 }
 
-void Server::useBattleFileLogChanged(bool logging)
-{
-    if (useBattleFileLog == logging)
-        return;
-    useBattleFileLog = logging;
-    printLine("Battle File Logging changed", false, true);
-}
-
 void Server::TCPDelayChanged(bool lowTCP)
 {
     if (lowTCPDelay == lowTCP)
@@ -1334,7 +1325,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
-    battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c,id);
