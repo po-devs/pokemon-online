@@ -37,7 +37,8 @@ HEADERS +=\
     teamdata.h \
     battleinput.h \
     battleclientlog.h \
-    auxpokebattledata.h
+    auxpokebattledata.h \
+    defaulttheme.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -59,11 +60,3 @@ unix:!symbian {
     }
     INSTALLS += target
 }
-
-
-
-
-
-
-
-

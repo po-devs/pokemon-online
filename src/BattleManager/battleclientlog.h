@@ -2,6 +2,7 @@
 #define BATTLECLIENTLOG_H
 
 #include "battlecommandmanager.h"
+#include "defaulttheme.h"
 
 class BattleData;
 class BattleDynamicInfo;
@@ -14,18 +15,18 @@ public:
 
     void onKo(int spot);
     void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
-//    void onSendBack(int spot);
-//    void onUseAttack(int spot, int attack);
-//    void onBeginTurn(int turn);
-//    void onHpChange(int spot, int newHp);
-//    void onHitCount(int spot, int count);
-//    void onEffectiveness(int spot, int effectiveness);
-//    void onCriticalHit(int spot);
-//    void onMiss(int spot);
-//    void onAvoid(int spot);
-//    void onStatBoost(int spot, int stat, int boost);
-//    void onMajorStatusChange(int spot, int status);
-//    void onPokeballStatusChanged(int player, int poke, int status);
+    void onSendBack(int spot);
+    void onUseAttack(int spot, int attack);
+    void onBeginTurn(int turn);
+    void onHpChange(int spot, int newHp);
+    void onHitCount(int spot, int count);
+    void onEffectiveness(int spot, int effectiveness);
+    void onCriticalHit(int spot);
+    void onMiss(int spot);
+    void onAvoid(int spot);
+    void onStatBoost(int spot, int stat, int boost);
+    void onMajorStatusChange(int spot, int status, bool multipleTurns);
+    void onPokeballStatusChanged(int player, int poke, int status);
 //    void onStatusAlreadyThere(int spot, int status);
 //    void onStatusNotification(int spot, int status);
 //    void onStatusDamage(int spot, int status);
@@ -76,6 +77,8 @@ signals:
 protected:
     BattleData *mData;
     BattleData *data();
+    BattleDefaultTheme *mTheme;
+    BattleDefaultTheme *theme();
 
     QList<QString> log;
     bool blankMessage;

@@ -110,7 +110,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         bool multipleTurns;
         in >> multipleTurns;
 
-        output<BattleEnum::ClassicStatusChange>(spot, status);
+        output<BattleEnum::ClassicStatusChange>(spot, status, multipleTurns);
         break;
     }
     case AbsStatusChange:

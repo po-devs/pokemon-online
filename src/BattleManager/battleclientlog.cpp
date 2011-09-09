@@ -13,26 +13,9 @@ BattleClientLog::BattleClientLog(BattleData *dat) : mData(dat)
     printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(BattleData::Player1), data()->name(BattleData::Player2)));
 }
 
-void BattleClientLog::onKo(int spot)
+BattleDefaultTheme * BattleClientLog::theme()
 {
-    printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
-}
-
-void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silent)
-{
-    QString pokename = PokemonInfo::Name(data()->poke(spot).num());
-    if (pokename != rnick(spot))
-        printLine(tr("%1 sent out %2! (%3)").arg(data()->name(spot), rnick(spot), pokename), silent);
-    else
-        printLine(tr("%1 sent out %2!").arg(data()->name(spot), rnick(spot)), silent);
-
-    printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
-    printLine(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(data()->slotNum(spot)), true);
-    printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(data()->poke(spot).lifePercent()), true);
-    printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(data()->poke(spot).status())), true);
-    printLine(tr("%1's level: %2.").arg(nick(spot)).arg(data()->poke(spot).level()), true);
-    printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(data()->poke(spot).shiny()), true);
-    printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(data()->poke(spot).gender())), true);
+    return mTheme;
 }
 
 void BattleClientLog::printLine(const QString &str, bool silent)
@@ -90,127 +73,119 @@ BattleData * BattleClientLog::data()
     return mData;
 }
 
+void BattleClientLog::onKo(int spot)
+{
+    printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
+}
+
+void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silent)
+{
+    QString pokename = PokemonInfo::Name(data()->poke(spot).num());
+    if (pokename != rnick(spot))
+        printLine(tr("%1 sent out %2! (%3)").arg(data()->name(spot), rnick(spot), pokename), silent);
+    else
+        printLine(tr("%1 sent out %2!").arg(data()->name(spot), rnick(spot)), silent);
+
+    printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
+    printLine(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(data()->slotNum(spot)), true);
+    printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(data()->poke(spot).lifePercent()), true);
+    printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(data()->poke(spot).status())), true);
+    printLine(tr("%1's level: %2.").arg(nick(spot)).arg(data()->poke(spot).level()), true);
+    printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(data()->poke(spot).shiny()), true);
+    printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(data()->poke(spot).gender())), true);
+}
+
+void BattleClientLog::onSendBack(int spot)
+{
+    printLine(tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)));
+}
+
+void BattleClientLog::onUseAttack(int spot, int attack)
+{
+    printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
+}
+
+void BattleClientLog::onBeginTurn(int turn)
+{
+    printLine("");
+    printHtml(toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
+}
+
+void BattleClientLog::onHpChange(int spot, int newHp)
+{
+    printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
+}
+
+void BattleClientLog::onHitCount(int, int count)
+{
+    printLine(tr("Hit %1 times!").arg(count));
+}
+
+void BattleClientLog::onEffectiveness(int, int effectiveness)
+{
+    switch (effectiveness) {
+    case 0:
+        printLine(tr("It had no effect!"));
+        break;
+    case 1:
+    case 2:
+        printHtml(toColor(tr("It's not very effective..."), Qt::gray));
+        break;
+    case 8:
+    case 16:
+        printHtml(toColor(tr("It's super effective!"), Qt::blue));
+    default:
+        break;
+    }
+}
+
+void BattleClientLog::onCriticalHit(int)
+{
+    printHtml(toColor(tr("A critical hit!"), "#6b0000"));
+}
+
+void BattleClientLog::onMiss(int spot)
+{
+    printLine(tr("The attack of %1 missed!").arg(nick(spot)));
+}
+
+void BattleClientLog::onAvoid(int spot)
+{
+    printLine(tr("%1 avoided the attack!").arg(tu(nick(spot))));
+}
+
+void BattleClientLog::onStatBoost(int spot, int stat, int boost)
+{
+    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
+}
+
+void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns)
+{
+    static const QString statusChangeMessages[6] = {
+        tr("%1 is paralyzed! It may be unable to move!"),
+        tr("%1 fell asleep!"),
+        tr("%1 was frozen solid!"),
+        tr("%1 was burned!"),
+        tr("%1 was poisoned!"),
+        tr("%1 was badly poisoned!")
+    };
+
+    if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
+        printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
+                          theme()->StatusColor(status)));
+    } else if (status == Pokemon::Confused) {
+        printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+    }
+    printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
+}
+
+void BattleClientLog::onPokeballStatusChanged(int player, int poke, int status)
+{
+    printLine(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(data()->name(player), StatInfo::Status(status)), true);
+}
 
 //void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
 //{
-//    switch (command)
-//    {
-//    case SendBack:
-//        printLine(tr("%1 called %2 back!").arg(data()->name(player(spot)), rnick(spot)));
-//        switchToNaught(spot);
-//        break;
-//    case UseAttack:
-//    {
-//        qint16 attack;
-//        in >> attack;
-
-//        printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), Theme::TypeColor(MoveInfo::Type(attack, gen())))));
-//        break;
-//    }
-//    case BeginTurn:
-//    {
-//        int turn;
-//        in >> turn;
-//        printLine("");
-//        printHtml(toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
-//        break;
-//    }
-//    case ChangeHp:
-//    {
-//        quint16 newHp;
-//        in >> newHp;
-
-//        printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
-
-//        animatedHpSpot() = spot;
-//        animatedHpGoal() = newHp;
-//        animateHPBar();
-//        break;
-//    }
-//    case Hit:
-//    {
-//        quint8 number;
-//        in >> number;
-//        printLine(tr("Hit %1 times!").arg(int(number)));
-//        break;
-//    }
-//    case Effective:
-//    {
-//        quint8 eff;
-//        in >> eff;
-//        switch (eff) {
-//        case 0:
-//            printLine(tr("It had no effect!"));
-//            break;
-//        case 1:
-//        case 2:
-//            printHtml(toColor(tr("It's not very effective..."), Qt::gray));
-//            break;
-//        case 8:
-//        case 16:
-//            printHtml(toColor(tr("It's super effective!"), Qt::blue));
-//        default:
-//            break;
-//        }
-//        break;
-//    }
-//    case CriticalHit:
-//        printHtml(toColor(tr("A critical hit!"), "#6b0000"));
-//        break;
-//    case Miss:
-//        printLine(tr("The attack of %1 missed!").arg(nick(spot)));
-//        break;
-//    case Avoid:
-//        printLine(tr("%1 avoided the attack!").arg(tu(nick(spot))));
-//        break;
-//    case StatChange:
-//        qint8 stat, boost;
-//        in >> stat >> boost;
-
-//        printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? tr("sharply ") : "", boost > 0 ? tr("rose") : tr("fell"))));
-//        break;
-//    case StatusChange:
-//    {
-//        static const QString statusChangeMessages[6] = {
-//            tr("%1 is paralyzed! It may be unable to move!"),
-//            tr("%1 fell asleep!"),
-//            tr("%1 was frozen solid!"),
-//            tr("%1 was burned!"),
-//            tr("%1 was poisoned!"),
-//            tr("%1 was badly poisoned!")
-//        };
-
-//        qint8 status;
-//        in >> status;
-//        bool multipleTurns;
-//        in >> multipleTurns;
-//        if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
-//            printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))), Theme::StatusColor(status)));
-//        } else if (status == Pokemon::Confused) {
-//            printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), Theme::TypeColor(Type::Ghost).data()->name()));
-//        }
-//        printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
-
-//        break;
-//    }
-//    case AbsStatusChange:
-//    {
-//        qint8 poke, status;
-//        in >> poke >> status;
-
-//        if (poke < 0 || poke >= 6)
-//            break;
-
-//        printLine(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(data()->name(spot), StatInfo::Status(status)), true);
-
-//        if (status != Pokemon::Confused) {
-//            data()->pokemons[spot][poke].changeStatus(status);
-//            if (data()->isOut(spot, poke))
-//                mydisplay->updatePoke(data()->slot(spot, poke));
-//        }
-//        mydisplay->changeStatus(spot,poke,status);
-//        break;
-//    }
 //    case AlreadyStatusMessage:
 //    {
 //        quint8 status;
