@@ -34,14 +34,19 @@ void BattleData::onHpChange(int spot, int newHp)
     poke(spot).lifePercent() = newHp;
 }
 
-void BattleData::onMajorStatusChange(int spot, int status)
+void BattleData::onMajorStatusChange(int spot, int status, bool)
 {
-    poke(spot).changeStatus(status);
+    //TODO: handle confusion better
+    if (status != Pokemon::Confused) {
+        poke(spot).changeStatus(status);
+    }
 }
 
 void BattleData::onPokeballStatusChanged(int player, int poke, int status)
 {
-    team(player).poke(poke).changeStatus(status);
+    if (status != Pokemon::Confused) {
+        team(player).poke(poke).changeStatus(status);
+    }
 }
 
 void BattleData::onSubstituteStatus(int spot, bool substitute)
@@ -108,4 +113,9 @@ int BattleData::slotNum(int player)
 AuxPokeData& BattleData::fieldPoke(int player)
 {
     return  auxdata[player];
+}
+
+int BattleData::gen()
+{
+    return GEN_MAX;
 }
