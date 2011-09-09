@@ -64,6 +64,7 @@ public:
     TeamData &team(int player);
     ShallowBattlePoke &poke(int player);
     int player(int spot);
+    int opponent(int player);
     QString name(int player);
     int slotNum(int player);
     AuxPokeData &fieldPoke(int player);
