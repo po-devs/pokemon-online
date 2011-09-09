@@ -58,7 +58,7 @@ public:
     void onCosmeticFormeChange(int spot, int subforme);
     /*void onClockStart(int player, int time);
     void onClockStop(int player, int time);*/
-    void onShiftSpots(int spot1, int spot2, bool silent);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     /*void onBattleEnd(int res, int winner);*/
 
     TeamData &team(int player);
@@ -67,6 +67,7 @@ public:
     int opponent(int player);
     QString name(int player);
     int slotNum(int player);
+    int spot(int player, int slot);
     AuxPokeData &fieldPoke(int player);
     int gen();
 
