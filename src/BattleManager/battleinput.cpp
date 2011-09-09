@@ -99,8 +99,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case StatChange:
     {
         qint8 stat, boost;
-        in >> stat >> boost;
-        output<BattleEnum::StatChange>(spot, stat, boost);
+        bool silent;
+        in >> stat >> boost >> silent;
+        output<BattleEnum::StatChange>(spot, stat, boost, silent);
         break;
     }
     case StatusChange:
