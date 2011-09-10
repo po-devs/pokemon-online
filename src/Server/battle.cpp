@@ -4194,7 +4194,9 @@ void BattleSituation::healDamage(int player, int target)
             // No HP to heal
             notifyFail(player);
         }
-    } else if (healing < 0){
+    } else if (healing < 0 &&
+               (gen() > 1 || /* Killing subs with struggle == no recoil. */
+                (gen()== 1 && !hasSubstitute(target)))){
         /* Struggle: actually recoil damage */
         notify(All, Recoil, player, true);
         inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
