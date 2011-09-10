@@ -2121,7 +2121,7 @@ struct MMRazorWind : public MM
                 b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                    tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
