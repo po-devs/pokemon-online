@@ -7,6 +7,7 @@ BattleScene::BattleScene(BattleData *dat) : mData(dat)
 {
     mWidget = new QDeclarativeView();
     mWidget->setAttribute(Qt::WA_DeleteOnClose);
+    mWidget->setSource(QString("qrc:battlescene.qml"));
 }
 
 BattleScene::~BattleScene()
