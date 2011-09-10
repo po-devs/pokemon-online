@@ -3759,7 +3759,14 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     power = std::min(power, 65535);
-    int damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) * attack / 50) / def);
+    int damage;
+    if (gen() == 1) {
+        damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) *
+                   attack / def) / 50) + 2;
+    } else {
+        damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) *
+                   attack / 50) / def);
+    }
     //Guts, burn
     if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
         damage = damage * (
@@ -3817,30 +3824,35 @@ int BattleSituation::calculateDamage(int p, int t)
     if (type == Type::Fire && pokeMemory(p).contains("FlashFired") && hasWorkingAbility(p, Ability::FlashFire)) {
         damage = damage * 3 / 2;
     }
-    damage = (damage+2)*ch;
-    move.remove("ItemMod2Modifier");
-    callieffects(p,t,"Mod2Modifier");
-    damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
-    damage = damage *randnum/100*stab/2*typemod/4;
 
-    /* Mod 3 */
-    // FILTER / SOLID ROCK
-    if (typemod > 4 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
-        damage = damage * 3 / 4;
+    if (gen() == 1) { // Gen 1 has no items and crits are already factored in.
+        damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+    } else {
+        damage = (damage+2)*ch;
+        move.remove("ItemMod2Modifier");
+        callieffects(p,t,"Mod2Modifier");
+        damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
+        damage = damage *randnum/100*stab/2*typemod/4;
+
+        /* Mod 3 */
+        // FILTER / SOLID ROCK
+        if (typemod > 4 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+            damage = damage * 3 / 4;
+        }
+
+        /* Expert belt */
+        damage = damage * ((typemod > 4 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
+
+        move.remove("Mod3Berry");
+
+        /* Berries of the foe */
+        callieffects(t, p, "Mod3Items");
+
+        damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
+
+        if (gen() == 2)
+            damage += 1;
     }
-
-    /* Expert belt */
-    damage = damage * ((typemod > 4 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
-
-    move.remove("Mod3Berry");
-
-    /* Berries of the foe */
-    callieffects(t, p, "Mod3Items");
-
-    damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
-
-    if (gen() == 2)
-        damage += 1;
 
     return damage;
 }
