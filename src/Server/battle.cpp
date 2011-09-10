@@ -3231,8 +3231,16 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     if (negative)
         *negative = !pos;
 
-    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple))
+    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple)) {
         mod *= 2;
+    }
+
+    /* Gen 1 has only Special, which means no Satk or Sdef.
+       For simplicity we map all Sdef changes to Satk and treat
+       Satk as meaning "Special". */
+    if (gen() == 1 && stat == 4) {
+        stat = 3;
+    }
 
     if (pos)
         return gainStatMod(player, stat, std::abs(mod), attacker, tell);
@@ -3652,7 +3660,11 @@ int BattleSituation::calculateDamage(int p, int t)
         def = getStat(t, Defense);
     } else {
         attack = getStat(p, SpAttack);
-        def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
+        if(gen() == 1) {
+            def = getStat(t, SpAttack);
+        } else {
+            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
+        }
     }
 
     /* Used by Oaths to use a special attack, the sum of both */
