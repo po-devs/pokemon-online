@@ -2892,6 +2892,10 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
         typemod *= typeffs[i];
     }
 
+    // Counter hits regardless of type matchups in Gen 1.
+    if (gen() == 1 && tmove(player).attack == Move::Counter) {
+        typemod = 2;
+    }
     if (type == Type::Ground && isFlying(target)) {
         typemod = 0;
     }
