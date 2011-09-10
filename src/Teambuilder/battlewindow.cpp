@@ -517,7 +517,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     switch (command)
     {
     case SendOut:
-	{
+        {
         if (player != info().myself) {
             BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
             break;
@@ -557,8 +557,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         printLine(tr("%1's level: %2.").arg(nick(spot)).arg(info().currentShallow(spot).level()), true);
         printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(info().currentShallow(spot).shiny()), true);
         printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(info().currentShallow(spot).gender())), true);
-	    break;
-	}
+            break;
+        }
     case ChangeHp:
     {
         if (player != info().myself) {
@@ -578,20 +578,20 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case ChangePP:
-	{
-	    quint8 move, PP;
-	    in  >> move >> PP;
+        {
+            quint8 move, PP;
+            in  >> move >> PP;
 
-	    //Think to check for crash if currentIndex != -1, move > 3
+            //Think to check for crash if currentIndex != -1, move > 3
         info().currentPoke(spot).move(move).PP() = PP;
         info().tempPoke(spot).move(move).PP() = PP;
         myazones[info().number(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
         mypzone->pokes[info().number(spot)]->updateToolTip();
 
         break;
-	}
+        }
     case OfferChoice:
-	{
+        {
         if (info().sent) {
 
             info().sent = false;
@@ -609,7 +609,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         mysend->setEnabled(true);
         mysend->setChecked(false);
 
-	    break;
+            break;
     }
     case MakeYourChoice:
     {
@@ -630,7 +630,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case StraightDamage :
-	{
+        {
         qint16 damage;
         in >> damage;
         if (player == info().myself) {

@@ -5,8 +5,8 @@
 #-------------------------------------------------
 
 QT += declarative
-TARGET = BattleManager
-TEMPLATE = app
+TARGET = battlelib
+TEMPLATE = lib
 DESTDIR = ../../bin
 LIBS += -L../../bin \
     -lutilities \
