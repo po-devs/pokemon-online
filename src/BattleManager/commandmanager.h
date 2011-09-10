@@ -24,14 +24,45 @@ public:
     }
 };
 
-/* Example class inherited from AbstractCommandManager, with some cool functionalities */
-template<class T=int, class Current=AbstractCommandManager<T>, class Extracter=CommandExtracter<T, Current>,
-         class FlowWorker = CommandFlow<T, Current>, class Invoker=CommandInvoker<T, Current> >
-class CommandManager : public AbstractCommandManager<T>, public Extracter, public FlowWorker, public Invoker
+template <class T>
+class FlowCommandManager : public AbstractCommandManager<T>
 {
 public:
     typedef T enumClass;
-    typedef AbstractCommandManager<T> baseClass;
+    typedef FlowCommandManager<T> baseClass;
+
+    /* Used to clean up a whole battle flow tree's memory */
+    void deleteTree() {
+        for(unsigned i = 0; i < m_outputs.size(); i++) {
+            m_outputs[i]->deleteTree();
+        }
+        delete this;
+    }
+
+    template <enumClass val, typename ...Params>
+    void output(Params...params) {
+        /* Todo: convert this to new iterating function when gcc 4.6 is widely broadcast */
+        for (unsigned i = 0; i < m_outputs.size(); i++) {
+            m_outputs[i]->entryPoint(val, params...);
+        }
+    }
+
+    void addOutput(baseClass* source) {
+        m_outputs.push_back(source);
+    }
+
+protected:
+    std::vector<baseClass*> m_outputs;
+};
+
+/* Example class inherited from AbstractCommandManager, with some cool functionalities */
+template<class T=int, class Current=AbstractCommandManager<T>, class Extracter=CommandExtracter<T, Current>,
+         class FlowWorker = CommandFlow<T, Current>, class Invoker=CommandInvoker<T, Current> >
+class CommandManager : public FlowCommandManager<T>, public Extracter, public FlowWorker, public Invoker
+{
+public:
+    typedef T enumClass;
+    typedef FlowCommandManager<T> baseClass;
     typedef Current type;
     typedef Extracter extracterType;
     typedef FlowWorker flowType;
@@ -77,18 +108,6 @@ public:
     }
 
     template <enumClass val, typename ...Params>
-    void output(Params...params) {
-        /* Todo: convert this to new iterating function when gcc 4.6 is widely broadcast */
-        for (unsigned i = 0; i < m_outputs.size(); i++) {
-            m_outputs[i]->entryPoint(val, params...);
-        }
-    }
-
-    void addOutput(baseClass* source) {
-        m_outputs.push_back(source);
-    }
-
-    template <enumClass val, typename ...Params>
     AbstractCommand* createCommand(Params&&... params) {
         return new Command<type, enumClass, val, Params...>(wc(), std::forward<Params>(params)...);
     }
@@ -109,7 +128,6 @@ public:
     }
 
 protected:
-    std::vector<baseClass*> m_outputs;
     /* TODO: Fix this */
 //    enum {
 //        /* If triggered, means Current is incorrect type */
