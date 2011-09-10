@@ -3026,8 +3026,19 @@ void BattleSituation::inflictRecoil(int source, int target)
 
     //Rockhead, MagicGuard
     if (koed(source) ||
-            (recoil < 0 && (hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard))))
+            (recoil < 0 && (hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard)))) {
         return;
+    }
+
+    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
+    if (gen() == 1 && koed(target)) {
+        return;
+    }
+
+    // If move defeats a sub, no recoil damage is applied in Gen 1.
+    if (gen() == 1 && hasSubstitute(target)) {
+        return;
+    }
 
     notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
 
