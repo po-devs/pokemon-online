@@ -1,8 +1,6 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-
-
 // Minimum Generation supported.
 static const int GEN_MIN = 1;
 static const int GEN_MIN_ITEMS = 2;
