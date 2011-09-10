@@ -2860,7 +2860,21 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     int typemod = 1;
 
     for (int i = 0; i < 2; i++) {
+        /* Gen 1 has largely the same type lookup table as Gen 2-5.
+          Only 5 type matchups differ, so those 5 are handled here. */
+        if (gen() == 1) {
+            if((type == Type::Bug && typeadv[i] == Type::Poison) ||
+                    (type == Type::Poison && typeadv[i] == Type::Bug)) {
+                typeffs[i] = 4;
+            } else if ((type == Type::Bug && typeadv[i] == Type::Ghost) ||
+                       (type == Type::Ice && typeadv[i] == Type::Fire)) {
+                typeffs[i] = 2;
+            } else if ((type == Type::Ghost && typeadv[i] == Type::Psychic)) {
+                typeffs[i] = 0;
+            }
+        }
         if (typeffs[i] == 0) {
+            /* Check for grounded flying types */
             if (type == Type::Ground && !isFlying(target)) {
                 typemod *= 2;
                 continue;
