@@ -2111,7 +2111,7 @@ struct MMRazorWind : public MM
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
-            if (mv == SkullBash) {
+            if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
             }
 
