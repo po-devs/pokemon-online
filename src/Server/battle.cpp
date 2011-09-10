@@ -2154,24 +2154,32 @@ void BattleSituation::testCritical(int player, int target)
         return;
     }
 
-    int randnum = true_rand() % 48;
-    int minch;
-    int craise = tmove(player).critRaise;
+    bool critical;
+    if (gen() == 1) {
+        int randnum = true_rand() % 512;
+        int critChance = (tmove(player).critRaise & 1) * 7 + 1;
+        int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
+        critical = randnum < critChance * baseSpeed;
+    } else {
+        int randnum = true_rand() % 48;
+        int minch;
+        int craise = tmove(player).critRaise;
 
-    if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
-        craise += 1;
+        if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
+            craise += 1;
+        }
+
+        switch(craise) {
+        case 0: minch = 3; break;
+        case 1: minch = 6; break;
+        case 2: minch = 12; break;
+        case 3: minch = 16; break;
+        case 4: case 5: minch = 24; break;
+        case 6: default: minch = 48;
+        }
+ 
+        critical = randnum<minch;
     }
-
-    switch(craise) {
-    case 0: minch = 3; break;
-    case 1: minch = 6; break;
-    case 2: minch = 12; break;
-    case 3: minch = 16; break;
-    case 4: case 5: minch = 24; break;
-    case 6: default: minch = 48;
-    }
-
-    bool critical = randnum<minch;
 
     turnMemory(player)["CriticalHit"] = critical;
 
