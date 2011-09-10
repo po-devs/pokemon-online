@@ -64,4 +64,14 @@ unix:!symbian {
     INSTALLS += target
 }
 
+OTHER_FILES += \
+    battlescene.qml
+
+RESOURCES += \
+    battlemanager.qrc
+
+
+
+
+
 
