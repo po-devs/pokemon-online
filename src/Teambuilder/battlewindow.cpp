@@ -1245,7 +1245,16 @@ void BattleDisplay::updateToolTip(int spot)
     tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
-        tooltip += "\n" + stats[i] + ": ";
+        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
+        if (info().gen == 1) {
+            switch (i) {
+            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
+            case 3: continue;
+            default: tooltip += "\n" + stats[i] + " ";
+            }
+        } else {
+            tooltip += "\n" + stats[i] + " ";
+        }
         int stat = info().mystats[info().number(spot)].stats[i];
         if (stat == -1) {
             tooltip += "???";
