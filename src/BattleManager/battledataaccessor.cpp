@@ -54,8 +54,8 @@ TeamProxy::~TeamProxy()
 BattleDataProxy::BattleDataProxy(BattleData *battleData) : battleData(battleData)
 {
     /* Needed for QML use */
-    if (QMetaType::type("Pokemon::uniqueId") == 0) {
-        qRegisterMetaType<Pokemon::uniqueId>("Pokemon::uniqueId");
+    if (QMetaType::type("pokeid") == 0) {
+        qRegisterMetaType<Pokemon::uniqueId>("pokeid");
     }
 
     for (int i = 0; i < 2; i++) {
