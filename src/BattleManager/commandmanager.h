@@ -15,7 +15,7 @@ class AbstractCommandManager
 public:
     typedef T enumClass;
 
-    virtual void entryPoint_v(enumClass commandId, va_list) = 0;
+    virtual void entryPoint_v(enumClass commandId, va_list&) = 0;
     void entryPoint(enumClass commandId, ...) {
         va_list args;
         va_start(args, commandId);
@@ -89,7 +89,7 @@ public:
 
     }
 
-    void entryPoint_v(enumClass commandId, va_list args) {
+    void entryPoint_v(enumClass commandId, va_list &args) {
         extracterType::entryPoint_v(commandId, args);
     }
 
@@ -98,7 +98,7 @@ public:
         receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
-    void unknownEntryPoint(enumClass, va_list) {
+    void unknownEntryPoint(enumClass, va_list&) {
         /* If your class never introduces delays, i.e. always forward
           and keeps nothing in storage, it's safe to use
           va_copy to pass it to the outputs.

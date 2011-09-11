@@ -4,6 +4,8 @@
 #include "theme.h"
 #include "logmanager.h"
 #include "remove_direction_override.h"
+#include "spectatorwindow.h"
+#include "../BattleManager/battledata.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -132,6 +134,20 @@ void BaseBattleWindow::init()
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     loadSettings(this);
+
+    test = new SpectatorWindow();
+    test->setParent(this);
+
+    QWidget *widget =test->getSampleWidget();
+    widget->setParent(this);
+    widget->setWindowFlags(Qt::Window);
+    widget->show();
+    testWidget = widget;
+
+    connect(this, SIGNAL(destroyed()), widget, SLOT(close()));
+
+    test->accessData()->team(0).name() = info().name(0);
+    test->accessData()->team(1).name() = info().name(1);
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
@@ -316,6 +332,7 @@ void BaseBattleWindow::closeEvent(QCloseEvent *)
 void BaseBattleWindow::close()
 {
     writeSettings(this);
+    testWidget->close();
     QWidget::close();
 }
 
@@ -342,6 +359,8 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
         delayedCommands.push_back(inf);
         return;
     }
+    test->receiveData(inf);
+
     /* At the start of the battle 700 ms are waited, to prevent misclicks
        when wanting to do something else */
     if (!started() && inf[0] == char(OfferChoice)) {

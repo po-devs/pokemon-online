@@ -34,13 +34,15 @@ public:
       is responsible for managing the widget's lifetime
       and free it */
     QWidget *getSampleWidget();
+
+    BattleData *accessData();
 private:
     BattleData *data;
     BattleClientLog *log;
     BattleInput *input;
     BattleScene *scene;
 
-    PokeTextEdit *logWidget;
+    PokeTextEdit* logWidget;
 };
 
 #endif // SPECTATORWINDOW_H

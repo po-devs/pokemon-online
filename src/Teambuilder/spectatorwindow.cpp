@@ -6,11 +6,12 @@
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battlescene.h"
 #include "poketextedit.h"
+#include "theme.h"
 
 SpectatorWindow::SpectatorWindow()
 {
     data = new BattleData();
-    log = new BattleClientLog(data);
+    log = new BattleClientLog(data, Theme::getBattleTheme());
     input = new BattleInput();
     scene = new BattleScene(data);
 
@@ -19,10 +20,6 @@ SpectatorWindow::SpectatorWindow()
     input->addOutput(scene);
 
     logWidget = new PokeTextEdit();
-
-    /* To not worry about memory management */
-    logWidget->QObject::setParent(this);
-    scene->getWidget()->QObject::setParent(this);
 
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
 }
@@ -57,4 +54,9 @@ SpectatorWindow::~SpectatorWindow()
 void SpectatorWindow::receiveData(const QByteArray &data)
 {
     input->receiveData(data);
+}
+
+BattleData *SpectatorWindow::accessData()
+{
+    return data;
 }

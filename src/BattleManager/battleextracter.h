@@ -21,54 +21,55 @@ public:
     typedef Current workerClass;
     typedef BattleEnum enumClass;
 
-    typedef void (BattleExtracter<Current>::*extrac_func)(va_list);
+    typedef void (BattleExtracter<Current>::*extrac_func)(va_list&);
 
     BattleExtracter();
-    void entryPoint_v(enumClass, va_list);
+    void entryPoint_v(enumClass, va_list&);
 
     template <enumClass val, typename ...Params>
     void forwardCommand(Params&&...params) {
         wc()->template receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
-    void forwardUnknownCommand(enumClass val, va_list args) {
+    void forwardUnknownCommand(enumClass val, va_list &args) {
         wc()->unknownEntryPoint(val, args);
     }
 
 protected:
     QHash<enumClass, extrac_func> callbacks;
 
-    void extractArgument(va_list args, bool &arg) {
+    void extractArgument(va_list &args, bool &arg) {
         arg = va_arg(args, int);
     }
 
     template<class T>
-    void extractArgument(va_list args, T &arg) {
+    void extractArgument(va_list &args, T &arg) {
         arg = va_arg(args, T);
     }
 
-    void extractArguments(va_list args) {
+    void extractArguments(va_list &args) {
 
     }
 
     template<class T>
-    void extractArguments(va_list args, T&arg)
+    void extractArguments(va_list &args, T&arg)
     {
         extractArgument(args, arg);
     }
 
     template <typename T, typename ...Params>
-    void extractArguments(va_list args, T &head, Params&... params) {
+    void extractArguments(va_list &args, T &head, Params&... params) {
         extractArgument(args, head);
         extractArguments(args, params...);
     }
 
-    void extractKo(va_list);
-    void extractSendOut(va_list);
-    void extractBlankMessage(va_list args);
+    void extractKo(va_list&);
+    void extractSendOut(va_list&);
+    void extractBlankMessage(va_list &args);
+    void extractSpectatorEnter(va_list &args);
 
 #define start(en, ...) \
-    void extract##en(va_list args) {\
+    void extract##en(va_list &args) {\
         __VA_ARGS__; \
         constexpr BattleEnum val = BattleEnum::en;
 
@@ -96,7 +97,6 @@ protected:
     start(StatusFree, int spot; int status) end(spot, status)
     start(Fail, int spot) end(spot)
     start(PlayerMessage, int spot; char* message) end(spot, message)
-    start(SpectatorEnter, int id; char* name) end(id, name)
     start(SpectatorLeave, int id) end(id)
     start(SpectatorMessage, int id; char * message) end(id, message)
     start(MoveMessage, int spot; int move; int part; int type; int foe; int other; char *data)
@@ -137,7 +137,7 @@ protected:
 };
 
 template <class C>
-void BattleExtracter<C>::extractKo(va_list args)
+void BattleExtracter<C>::extractKo(va_list &args)
 {
     uint8_t spot = va_arg(args, int);
 
@@ -145,13 +145,13 @@ void BattleExtracter<C>::extractKo(va_list args)
 }
 
 template <class C>
-void BattleExtracter<C>::extractBlankMessage(va_list)
+void BattleExtracter<C>::extractBlankMessage(va_list&)
 {
     forwardCommand<BattleEnum::BlankMessage>();
 }
 
 template <class C>
-void BattleExtracter<C>::extractSendOut(va_list args)
+void BattleExtracter<C>::extractSendOut(va_list &args)
 {
     uint8_t spot = va_arg(args, int);
     uint8_t prevIndex = va_arg(args, int);
@@ -159,6 +159,15 @@ void BattleExtracter<C>::extractSendOut(va_list args)
     bool silent = va_arg(args, int);
 
     forwardCommand<BattleEnum::SendOut>(spot, prevIndex, poke, silent);
+}
+
+template <class C>
+void BattleExtracter<C>::extractSpectatorEnter(va_list &args)
+{
+    int id = va_arg(args, int);
+    char *name = va_arg(args, char*);
+
+    forwardCommand<BattleEnum::SpectatorEnter>(id, name);
 }
 
 template<class C>
@@ -221,7 +230,7 @@ BattleExtracter<C>::BattleExtracter()
 }
 
 template <class C>
-void BattleExtracter<C>::entryPoint_v(enumClass val, va_list args)
+void BattleExtracter<C>::entryPoint_v(enumClass val, va_list &args)
 {
     if (callbacks.find(val) == callbacks.end()) {
         forwardUnknownCommand(val, args);
