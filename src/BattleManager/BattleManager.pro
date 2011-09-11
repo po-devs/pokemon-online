@@ -22,7 +22,8 @@ SOURCES += \
     battleinput.cpp \
     battleclientlog.cpp \
     auxpokebattledata.cpp \
-    battlescene.cpp
+    battlescene.cpp \
+    battledataaccessor.cpp
 
 HEADERS +=\
     command.h \
@@ -41,7 +42,8 @@ HEADERS +=\
     battleclientlog.h \
     auxpokebattledata.h \
     defaulttheme.h \
-    battlescene.h
+    battlescene.h \
+    battledataaccessor.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -69,6 +71,8 @@ OTHER_FILES += \
 
 RESOURCES += \
     battlemanager.qrc
+
+
 
 
 
