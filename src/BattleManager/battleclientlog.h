@@ -2,16 +2,16 @@
 #define BATTLECLIENTLOG_H
 
 #include "battlecommandmanager.h"
-#include "defaulttheme.h"
 
 class BattleData;
 class BattleDynamicInfo;
+class BattleDefaultTheme;
 
 class BattleClientLog : public QObject, public BattleCommandManager<BattleClientLog>
 {
     Q_OBJECT
 public:
-    BattleClientLog(BattleData *data);
+    BattleClientLog(BattleData *data, BattleDefaultTheme *theme);
 
     void onKo(int spot);
     void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
@@ -66,6 +66,8 @@ public:
 
     QString nick(int spot);
     QString rnick(int spot);
+
+    void setTheme(BattleDefaultTheme *);
 
     /* Logs, but doesnt request a print */
     void pushHtml(const QString&);

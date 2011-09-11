@@ -12,6 +12,7 @@ class BaseBattleDisplay;
 class QScrollDownTextBrowser;
 class QClickPBar;
 class Log;
+class SpectatorWindow;
 
 struct BaseBattleInfo
 {
@@ -299,6 +300,8 @@ protected:
     void init();
     void checkAndSaveLog();
 
+    SpectatorWindow *test;
+    QWidget *testWidget;
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };

@@ -53,7 +53,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case BeginTurn:
     {
-        quint16 turn;
+        int turn;
         in >> turn;
         output<BattleEnum::Turn>(turn);
         break;
@@ -184,8 +184,11 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         bool come;
         qint32 id;
         in >> come >> id;
+
         if (come) {
-            output<BattleEnum::SpectatorEnter>(id, (QString*)NULL);
+            QString name;
+            in >> name;
+            output<BattleEnum::SpectatorEnter>(id, name.toUtf8().constData());
         } else {
             output<BattleEnum::SpectatorLeave>(id);
         }

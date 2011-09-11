@@ -1,10 +1,11 @@
 #include <memory>
 #include "battleclientlog.h"
 #include "battledata.h"
+#include "defaulttheme.h"
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
 
-BattleClientLog::BattleClientLog(BattleData *dat) : mData(dat)
+BattleClientLog::BattleClientLog(BattleData *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
     pushHtml("<!DOCTYPE html>");
     pushHtml("<!-- Pokemon Online battle spectator log (version 1.1) -->");
@@ -30,12 +31,11 @@ void BattleClientLog::printLine(const QString &str, bool silent)
         blankMessage = false;
     }
 
-    QString html = str + "<br />";
     if (!silent) {
-        pushHtml(str+"<br/>");
+        pushHtml(str+"<br />");
         emit lineToBePrinted(log.back());
     } else {
-        pushHtml("<!--"+html+"-->");
+        pushHtml("<!--"+str+"-->");
     }
 }
 
@@ -51,7 +51,7 @@ void BattleClientLog::printHtml(const QString &str, bool silent)
     }
 
     if (!silent) {
-        pushHtml(str+"<br/>");
+        pushHtml(str+"<br />");
         emit lineToBePrinted(log.back());
     } else {
         pushHtml("<!--"+str+"-->");
@@ -327,10 +327,10 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     static const QString weatherAbilityMessage[4] = {
-        tr("%s's Snow Warning whipped up a hailstorm!"),
-        tr("%s's Drizzle made it rain!"),
-        tr("%s's Sand Stream whipped up a sandstorm!"),
-        tr("%s's Drought intensified the sun's rays!")
+        tr("%1's Snow Warning whipped up a hailstorm!"),
+        tr("%1's Drizzle made it rain!"),
+        tr("%1's Sand Stream whipped up a sandstorm!"),
+        tr("%1's Drought intensified the sun's rays!")
     };
 
     static const QString weatherRegularMessage[4] = {
@@ -440,6 +440,11 @@ void BattleClientLog::onRatedNotification(bool rated)
 //                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
 //            }
 //        }
+}
+
+void BattleClientLog::setTheme(BattleDefaultTheme *theme)
+{
+    mTheme = theme;
 }
 
 void BattleClientLog::onTierNotification(QString tier)

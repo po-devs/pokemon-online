@@ -5,9 +5,9 @@
 
 class BattleDefaultTheme {
 public:
-    QColor TypeColor(int){return QColor();}
-    QColor CategoryColor(int){return QColor();}
-    QColor StatusColor(int){return QColor();}
+    virtual QColor TypeColor(int){return QColor();}
+    virtual QColor CategoryColor(int){return QColor();}
+    virtual QColor StatusColor(int){return QColor();}
 };
 
 #endif // DEFAULTTHEME_H

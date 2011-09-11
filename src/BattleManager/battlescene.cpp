@@ -12,11 +12,6 @@ BattleScene::BattleScene(BattleData *dat) : mData(dat)
 
 BattleScene::~BattleScene()
 {
-    /* Normally, somebody should have taken ownership of the widget,
-      but if not, closing & deleting it */
-    if (mWidget->parent() == NULL) {
-        mWidget->close();
-    }
 }
 
 BattleData * BattleScene::data()
