@@ -49,6 +49,7 @@ QWidget *SpectatorWindow::getSampleWidget()
 SpectatorWindow::~SpectatorWindow()
 {
     input->deleteTree();
+    delete input;
 }
 
 void SpectatorWindow::receiveData(const QByteArray &data)

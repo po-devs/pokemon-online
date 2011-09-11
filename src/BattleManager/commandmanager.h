@@ -15,6 +15,10 @@ class AbstractCommandManager
 public:
     typedef T enumClass;
 
+    virtual ~AbstractCommandManager() {
+
+    }
+
     virtual void entryPoint_v(enumClass commandId, va_list&) = 0;
     void entryPoint(enumClass commandId, ...) {
         va_list args;
@@ -35,8 +39,9 @@ public:
     void deleteTree() {
         for(unsigned i = 0; i < m_outputs.size(); i++) {
             m_outputs[i]->deleteTree();
+            delete m_outputs[i];
         }
-        delete this;
+        m_outputs.clear();
     }
 
     template <enumClass val, typename ...Params>
