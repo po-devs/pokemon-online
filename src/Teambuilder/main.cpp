@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         QString locale = settings.value("language").toString();
 
         QTranslator translator;
-        translator.load(QString("translation_") + locale);
+        translator.load(QString("trans/translation_") + locale);
         a.installTranslator(&translator);
 
         /* icon ;) */
