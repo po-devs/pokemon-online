@@ -3,7 +3,11 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
+#ifdef WIN32
 #include "../../SpecialIncludes/zip.h"
+#else
+#include <zip.h>
+#endif
 #include "../Utilities/functions.h"
 
 /*initialising static variables */
