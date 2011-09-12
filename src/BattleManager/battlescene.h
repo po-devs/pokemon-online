@@ -16,7 +16,6 @@ public:
     ~BattleScene();
 
     QDeclarativeView *getWidget();
-    BattleDataProxy *getProxy();
 private:
     BattleData *mData;
     BattleData *data();

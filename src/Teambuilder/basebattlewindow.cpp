@@ -136,7 +136,6 @@ void BaseBattleWindow::init()
     loadSettings(this);
 
     test = new SpectatorWindow();
-    test->setParent(this);
 
     QWidget *widget =test->getSampleWidget();
     widget->setParent(this);
@@ -144,7 +143,7 @@ void BaseBattleWindow::init()
     widget->show();
     testWidget = widget;
 
-    connect(this, SIGNAL(destroyed()), widget, SLOT(close()));
+    connect(this, SIGNAL(destroyed()), test, SLOT(deleteLater()));
 
     test->accessData()->team(0).name() = info().name(0);
     test->accessData()->team(1).name() = info().name(1);

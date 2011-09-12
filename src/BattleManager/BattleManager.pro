@@ -24,7 +24,8 @@ SOURCES += \
     auxpokebattledata.cpp \
     battlescene.cpp \
     battledataaccessor.cpp \
-    battlesceneproxy.cpp
+    battlesceneproxy.cpp \
+    pokemoninfoaccessor.cpp
 
 HEADERS +=\
     command.h \
@@ -45,7 +46,8 @@ HEADERS +=\
     defaulttheme.h \
     battlescene.h \
     battledataaccessor.h \
-    battlesceneproxy.h
+    battlesceneproxy.h \
+    pokemoninfoaccessor.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -73,6 +75,10 @@ OTHER_FILES += \
 
 RESOURCES += \
     battlemanager.qrc
+
+
+
+
 
 
 
