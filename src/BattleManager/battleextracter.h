@@ -71,7 +71,7 @@ protected:
 #define start(en, ...) \
     void extract##en(va_list &args) {\
         __VA_ARGS__; \
-        constexpr BattleEnum val = BattleEnum::en;
+        const BattleEnum val = BattleEnum::en;
 
 #define end(...) \
         extractArguments(args, ##__VA_ARGS__); \
