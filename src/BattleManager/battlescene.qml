@@ -1,4 +1,5 @@
 import QtQuick 1.0
+import pokemononline.battlemanager.proxies 1.0
 
 Rectangle {
     id: rectangle1
@@ -30,13 +31,13 @@ Rectangle {
         id: pokemon
 
         Item {
-            property QtObject poke: QtObject{}
+            property PokeData poke: team.poke(index)
             width: 32
             height: 32
 
             Image {
                 id: pokeicon
-                source: "image://pokeinfo/icon/"+index
+                source: "image://pokeinfo/icon/"+ poke.num
                 width: 32
                 height: 32
             }
@@ -44,10 +45,10 @@ Rectangle {
     }
 
     Component {
-        id: team
+        id: qmlteam
 
         Item {
-            property QtObject team: QtObject {}
+            property TeamData team: battle.data.team(parent.parent.player)
             anchors.fill: parent
 
             Grid {
@@ -75,7 +76,7 @@ Rectangle {
         height: 76
         Loader {
             anchors.fill: parent
-            sourceComponent: team
+            sourceComponent: qmlteam
         }
     }
 
@@ -91,7 +92,7 @@ Rectangle {
         height: 76
         Loader {
             anchors.fill: parent
-            sourceComponent: team
+            sourceComponent: qmlteam
         }
     }
 }

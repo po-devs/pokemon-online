@@ -7,3 +7,7 @@ BattleSceneProxy::BattleSceneProxy(BattleScene * scene) : scene(scene)
 
 }
 
+BattleDataProxy* BattleSceneProxy::data()
+{
+    return scene->getDataProxy();
+}
