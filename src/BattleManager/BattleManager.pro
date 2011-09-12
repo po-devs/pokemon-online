@@ -71,10 +71,24 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
-    battlescene.qml
+    battlescene.qml \
+    BattleDataQML/Pokemon.qml \
+    BattleDataQML/Team.qml
 
-RESOURCES += \
-    battlemanager.qrc
+RESOURCES +=
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

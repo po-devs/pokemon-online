@@ -34,7 +34,7 @@ BattleScene::BattleScene(BattleData *dat) : mData(dat), proxy(new BattleDataProx
     //mWidget->engine()->rootContext()->setContextProperty("info", PokemonInfoAccessor::getInstance());
     //mWidget->engine()->rootContext()->setContextProperty("data", proxy);
     mWidget->engine()->addImageProvider("pokeinfo", PokemonInfoAccessor::getInstance());
-    mWidget->setSource(QString("qrc:battlescene.qml"));
+    mWidget->setSource(QString("qml/battlescene.qml"));
 }
 
 BattleScene::~BattleScene()
