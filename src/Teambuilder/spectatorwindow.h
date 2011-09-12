@@ -29,8 +29,7 @@ public:
     /* gets the scene widget */
     QDeclarativeView *getSceneWidget();
 
-    /* Gets a premade widget, with delete-on-close
-      attribute set. Apart from that, the caller
+    /* Gets a premade widget. The caller
       is responsible for managing the widget's lifetime
       and free it */
     QWidget *getSampleWidget();

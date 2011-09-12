@@ -26,5 +26,72 @@ Rectangle {
         }
     }
 
+    Component {
+        id: pokemon
 
+        Item {
+            property QtObject poke: QtObject{}
+            width: 32
+            height: 32
+
+            Image {
+                id: pokeicon
+                source: "image://pokeinfo/icon/"+index
+                width: 32
+                height: 32
+            }
+        }
+    }
+
+    Component {
+        id: team
+
+        Item {
+            property QtObject team: QtObject {}
+            anchors.fill: parent
+
+            Grid {
+                anchors.fill: parent
+                rows: 2
+                columns: 3
+                spacing: 12
+                Repeater {
+                    model: 6
+                    delegate: pokemon
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: team1
+        property int player: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        color:"transparent"
+        width: 120
+        height: 76
+        Loader {
+            anchors.fill: parent
+            sourceComponent: team
+        }
+    }
+
+    Rectangle {
+        id: team2
+        color: "transparent"
+        property int player: 1
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        width: 120
+        height: 76
+        Loader {
+            anchors.fill: parent
+            sourceComponent: team
+        }
+    }
 }

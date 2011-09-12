@@ -1,4 +1,5 @@
 #include <QtDeclarative/QDeclarativeView>
+#include <QDeclarativeError>
 
 #include "spectatorwindow.h"
 #include "../BattleManager/battleclientlog.h"
@@ -22,6 +23,10 @@ SpectatorWindow::SpectatorWindow()
     logWidget = new PokeTextEdit();
 
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
+
+    foreach(QDeclarativeError error, scene->getWidget()->errors()) {
+        log->printLine(error.toString());
+    }
 }
 
 PokeTextEdit *SpectatorWindow::getLogWidget()
@@ -37,7 +42,6 @@ QDeclarativeView *SpectatorWindow::getSceneWidget()
 QWidget *SpectatorWindow::getSampleWidget()
 {
     QWidget *ret = new QWidget();
-    ret->setAttribute(Qt::WA_DeleteOnClose, true);
 
     QHBoxLayout *layout = new QHBoxLayout(ret);
     layout->addWidget(getSceneWidget());
