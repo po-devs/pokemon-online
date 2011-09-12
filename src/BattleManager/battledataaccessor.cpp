@@ -4,6 +4,8 @@
 #include "teamdata.h"
 #include "battledata.h"
 
+#include <QtDeclarative>
+
 PokeProxy::PokeProxy(ShallowBattlePoke *pokemon) : pokeData(pokemon)
 {
 
