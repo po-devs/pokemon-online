@@ -123,6 +123,6 @@ macx:LIBS += -framework \
 macx:ICON = pokemononline.icns
 macx:QMAKE_INFO_PLIST = Info.plist
 
-
-
-
+CONFIG(debian) {
+    DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
+}
