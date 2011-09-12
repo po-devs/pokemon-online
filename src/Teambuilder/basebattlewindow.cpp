@@ -143,7 +143,8 @@ void BaseBattleWindow::init()
     widget->show();
     testWidget = widget;
 
-    connect(this, SIGNAL(destroyed()), test, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
+    connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
 
     test->accessData()->team(0).name() = info().name(0);
     test->accessData()->team(1).name() = info().name(1);
