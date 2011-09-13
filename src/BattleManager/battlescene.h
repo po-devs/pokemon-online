@@ -1,27 +1,28 @@
 #ifndef BATTLESCENE_H
 #define BATTLESCENE_H
 
-#include <QObject>
 #include "battlecommandmanager.h"
 
-class BattleData;
+template <class T> class BattleData;
 class QDeclarativeView;
-class BattleDataProxy;
 class BattleSceneProxy;
+class ProxyDataContainer;
 
-class BattleScene: public BattleCommandManager<BattleScene>
+class BattleScene: public QObject, public BattleCommandManager<BattleScene>
 {
+    Q_OBJECT
 public:
-    BattleScene(BattleData *data);
+    typedef BattleData<ProxyDataContainer>* battledata_ptr;
+
+    BattleScene(battledata_ptr data);
     ~BattleScene();
 
     QDeclarativeView *getWidget();
-    BattleDataProxy *getDataProxy();
+    ProxyDataContainer *getDataProxy();
 private:
-    BattleData *mData;
-    BattleData *data();
+    battledata_ptr mData;
+    battledata_ptr data();
 
-    BattleDataProxy *proxy;
     BattleSceneProxy *mOwnProxy;
 
     QDeclarativeView *mWidget;

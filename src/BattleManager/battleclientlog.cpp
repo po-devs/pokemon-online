@@ -1,17 +1,19 @@
 #include <memory>
 #include "battleclientlog.h"
 #include "battledata.h"
+#include "teamdata.h"
 #include "defaulttheme.h"
 
-typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
+typedef ShallowBattlePoke* shallowpoke;
+typedef BattleData<DataContainer> battledata;
 
-BattleClientLog::BattleClientLog(BattleData *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
+BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
     pushHtml("<!DOCTYPE html>");
     pushHtml("<!-- Pokemon Online battle spectator log (version 1.1) -->");
-    pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(BattleData::Player1), data()->name(BattleData::Player2)));
+    pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
-    printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(BattleData::Player1), data()->name(BattleData::Player2)));
+    printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
 }
 
 BattleDefaultTheme * BattleClientLog::theme()
@@ -68,7 +70,7 @@ QString BattleClientLog::rnick(int spot)
     return data()->poke(spot).nick();
 }
 
-BattleData * BattleClientLog::data()
+battledata * BattleClientLog::data()
 {
     return mData;
 }
@@ -415,7 +417,7 @@ void BattleClientLog::onSubstituteStatus(int spot, bool substitute)
 void BattleClientLog::onBattleEnd(int res, int winner)
 {
     if (res == Tie) {
-        printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(BattleData::Player1), data()->name(BattleData::Player2)), Qt::blue));
+        printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
     } else {
         printHtml(toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
     }

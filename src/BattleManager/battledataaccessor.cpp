@@ -4,46 +4,45 @@
 #include "teamdata.h"
 #include "battledata.h"
 
-#include <QtDeclarative>
-
-PokeProxy::PokeProxy(ShallowBattlePoke *pokemon) : pokeData(pokemon)
+PokeProxy::PokeProxy() : hasOwnerShip(true), pokeData(new ShallowBattlePoke())
 {
-
 }
 
-QString PokeProxy::nickname() {
-    return d()->nick();
-}
-
-bool PokeProxy::shiny() {
-    return d()->shiny();
-}
-
-int PokeProxy::gender() {
-    return d()->gender();
-}
-
-int PokeProxy::level() {
-    return d()->level();
-}
-
-Pokemon::uniqueId PokeProxy::num() {
-    return d()->num();
-}
-
-int PokeProxy::status() {
-    return d()->status();
-}
-
-TeamProxy::TeamProxy(TeamData *teamData) : teamData(teamData)
+PokeProxy::PokeProxy(ShallowBattlePoke *pokemon) : hasOwnerShip(false), pokeData(pokemon)
 {
-    for (int i = 0; i < 6; i++) {
-        pokemons.push_back(new PokeProxy(&teamData->poke(i)));
+}
+
+PokeProxy::~PokeProxy()
+{
+    if (hasOwnerShip) {
+        delete pokeData;
     }
 }
 
-QString TeamProxy::name() {
-    return teamData->name();
+void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
+    if (*pokemon == *pokeData) {
+        return;
+    }
+    /* Could be more granular, change if it matters */
+    *pokemon = *pokeData;
+    emit numChanged(); emit statusChanged(); emit pokemonReset();
+}
+
+TeamProxy::TeamProxy()
+{
+    teamData = new TeamData();
+    for (int i = 0; i < 6; i++) {
+        pokemons.push_back(new PokeProxy(teamData->poke(i)));
+    }
+    hasOwnerShip = true;
+}
+
+TeamProxy::TeamProxy(TeamData *teamData) : teamData(teamData), hasOwnerShip(false)
+{
+    for (int i = 0; i < 6; i++) {
+        pokemons.push_back(new PokeProxy(teamData->poke(i)));
+    }
+    hasOwnerShip = false;
 }
 
 TeamProxy::~TeamProxy()
@@ -51,23 +50,22 @@ TeamProxy::~TeamProxy()
     foreach(PokeProxy *item, pokemons) {
         delete item;
     }
-}
-
-BattleDataProxy::BattleDataProxy(BattleData *battleData) : battleData(battleData)
-{
-    /* Needed for QML use */
-    if (QMetaType::type("pokeid") == 0) {
-        qRegisterMetaType<Pokemon::uniqueId>("pokeid");
-    }
-
-    for (int i = 0; i < 2; i++) {
-        teams.push_back(new TeamProxy(&battleData->team(i)));
+    if (hasOwnerShip) {
+        delete teamData;
     }
 }
 
-BattleDataProxy::~BattleDataProxy()
+QString TeamProxy::name() {
+    return teamData->name();
+}
+
+void TeamProxy::switchPokemons(int index, int prevIndex)
 {
-    foreach(TeamProxy* team, teams) {
-        delete team;
-    }
+    std::swap(pokemons[index], pokemons[prevIndex]);
+    teamData->switchPokemons(index, prevIndex);
+}
+
+void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
+{
+    poke(index)->adaptTo(pokemon);
 }

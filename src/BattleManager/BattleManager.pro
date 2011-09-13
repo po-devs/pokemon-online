@@ -15,7 +15,6 @@ LIBS += -L../../bin \
 DEFINES += BATTLEMANAGER_LIBRARY
 
 SOURCES += \
-    battledata.cpp \
     main.cpp \
     testing.cpp \
     teamdata.cpp \
@@ -47,7 +46,10 @@ HEADERS +=\
     battlescene.h \
     battledataaccessor.h \
     battlesceneproxy.h \
-    pokemoninfoaccessor.h
+    pokemoninfoaccessor.h \
+    datacontainer.h \
+    proxydatacontainer.h \
+    battledatatypes.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -73,9 +75,26 @@ unix:!symbian {
 OTHER_FILES += \
     battlescene.qml \
     BattleDataQML/Pokemon.qml \
-    BattleDataQML/Team.qml
+    BattleDataQML/Team.qml \
+    ../../bin/qml/battlescene.qml \
+    ../../bin/qml/BattleDataQML/qmldir \
+    ../../bin/qml/BattleDataQML/Team.qml \
+    ../../bin/qml/BattleDataQML/Pokemon.qml
 
 RESOURCES +=
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

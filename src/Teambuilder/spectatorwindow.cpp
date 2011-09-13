@@ -6,18 +6,25 @@
 #include "../BattleManager/battledata.h"
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battlescene.h"
+#include "../BattleManager/battledatatypes.h"
 #include "poketextedit.h"
 #include "theme.h"
 
-SpectatorWindow::SpectatorWindow()
+SpectatorWindow::SpectatorWindow(QString name1, QString name2)
 {
-    data = new BattleData();
+    battledata_basic * data = new battledata_basic();
+    battledata_proxy * data2 = new battledata_proxy();
+
+    data->team(0).name() = data2->team(0).name() = name1;
+    data->team(1).name() = data2->team(1).name() = name2;
+
     log = new BattleClientLog(data, Theme::getBattleTheme());
     input = new BattleInput();
-    scene = new BattleScene(data);
+    scene = new BattleScene(data2);
 
     input->addOutput(data);
     input->addOutput(log);
+    input->addOutput(data2);
     input->addOutput(scene);
 
     logWidget = new PokeTextEdit();
@@ -59,9 +66,4 @@ SpectatorWindow::~SpectatorWindow()
 void SpectatorWindow::receiveData(const QByteArray &data)
 {
     input->receiveData(data);
-}
-
-BattleData *SpectatorWindow::accessData()
-{
-    return data;
 }

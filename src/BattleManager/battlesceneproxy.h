@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "battledataaccessor.h"
+#include "proxydatacontainer.h"
 
 class BattleScene;
 
@@ -11,10 +11,10 @@ class BattleSceneProxy : public QObject
 {
     Q_OBJECT
 public:
-    Q_PROPERTY (BattleDataProxy* data READ data CONSTANT)
+    Q_PROPERTY (ProxyDataContainer* data READ data CONSTANT)
 
     BattleSceneProxy(BattleScene*);
-    BattleDataProxy *data();
+    ProxyDataContainer *data();
 private:
     BattleScene *scene;
 };

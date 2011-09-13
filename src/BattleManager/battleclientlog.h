@@ -3,18 +3,19 @@
 
 #include "battlecommandmanager.h"
 
-class BattleData;
+template <class T> class BattleData;
 class BattleDynamicInfo;
 class BattleDefaultTheme;
+class DataContainer;
 
 class BattleClientLog : public QObject, public BattleCommandManager<BattleClientLog>
 {
     Q_OBJECT
 public:
-    BattleClientLog(BattleData *data, BattleDefaultTheme *theme);
+    BattleClientLog(BattleData<DataContainer> *data, BattleDefaultTheme *theme);
 
     void onKo(int spot);
-    void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
+    void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);
@@ -77,8 +78,8 @@ public:
 signals:
     void lineToBePrinted(const QString &);
 protected:
-    BattleData *mData;
-    BattleData *data();
+    BattleData<DataContainer> *mData;
+    BattleData<DataContainer> *data();
     BattleDefaultTheme *mTheme;
     BattleDefaultTheme *theme();
 
