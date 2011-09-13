@@ -12,9 +12,4 @@ Item {
         width: 32
         height: 32
     }
-
-    Connections {
-        target: poke
-        onNumChanged: img.source = "image://pokeinfo/icon/"+ poke.numRef
-    }
 }

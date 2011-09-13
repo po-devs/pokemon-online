@@ -24,7 +24,7 @@ void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
         return;
     }
     /* Could be more granular, change if it matters */
-    *pokemon = *pokeData;
+    *pokeData = *pokemon;
     emit numChanged(); emit statusChanged(); emit pokemonReset();
 }
 
