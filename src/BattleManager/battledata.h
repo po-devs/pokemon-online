@@ -2,82 +2,117 @@
 #define BATTLEDATA_H
 
 #include "battlecommandmanager.h"
-#include "teamdata.h"
-#include "auxpokebattledata.h"
+#include "datacontainer.h"
 
-class BattleData : public BattleCommandManager<BattleData>
+template <class T=DataContainer>
+class BattleData : public BattleCommandManager<BattleData<T> >
 {
 public:
-    BattleData();
+    typedef T container;
+    typedef decltype(container().team(0)) teamTypePtr;
+    typedef decltype(*teamTypePtr(0)) teamType;
+    typedef decltype(teamTypePtr(0)->poke(0)) pokeTypePtr;
+    typedef decltype(*pokeTypePtr(0)) pokeType;
+    typedef decltype(container().fieldPoke(0)) auxTypeRef;
 
-    void onKo(int spot);
-    void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
-    void onSendBack(int spot);
-    /*void onUseAttack(int spot, int attack);
-    void onBeginTurn(int turn);*/
-    void onHpChange(int spot, int newHp);
-    /*void onHitCount(int spot, int count);
-    void onEffectiveness(int spot, int effectiveness);
-    void onCriticalHit(int spot);
-    void onMiss(int spot);
-    void onAvoid(int spot);
-    void onStatBoost(int spot, int stat, int boost);*/
-    void onMajorStatusChange(int spot, int status, bool multipleTurns);
-    void onPokeballStatusChanged(int player, int poke, int status);
-    /*void onStatusAlreadyThere(int spot, int status);
-    void onStatusNotification(int spot, int status);
-    void onStatusDamage(int spot, int status);
-    void onStatusOver(int spot, int status);
-    void onAttackFailing(int spot);
-    void onPlayerMessage(int spot, QString message);
-    void onSpectatorJoin(int id, QString name);
-    void onSpectatorLeave(int id);
-    void onSpectatorChat(int id, QString message);
-    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString data);
-    void onNoTarget(int spot);
-    void onItemMessage(int item, int part, int foe, int berry, int other);
-    void onFlinch(int spot);
-    void onRecoil(int spot);
-    void onDrained(int spot);
-    void onStartWeather(int spot, int weather, bool ability);
-    void onContinueWeather(int weather);
-    void onEndWeather(int weather);
-    void onHurtWeather(int spot, int weather);
-    void onDamageDone(int spot, int damage);
-    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);*/
-    void onSubstituteStatus(int spot, bool substitute);
-    /*void onBlankMessage();
-    void onCauseActivated(int clause);
-    void onRatedNotification(bool rated);
-    void onTierNotification(QString tier);
-    void onDynamicInfo(int spot, BattleDynamicInfo info);*/
-    void onPokemonVanish(int spot);
-    void onPokemonReappear(int spot);
-    void onSpriteChange(int spot, int newSprite);
-    void onDefiniteFormeChange(int spot, int poke, int newPoke);
-    void onCosmeticFormeChange(int spot, int subforme);
-    /*void onClockStart(int player, int time);
-    void onClockStop(int player, int time);*/
-    void onShiftSpots(int player, int spot1, int spot2, bool silent);
-    /*void onBattleEnd(int res, int winner);*/
+    BattleData(){}
 
-    TeamData &team(int player);
-    ShallowBattlePoke &poke(int player);
-    int player(int spot);
-    int opponent(int player);
-    QString name(int player);
-    int slotNum(int player);
-    int spot(int player, int slot);
-    AuxPokeData &fieldPoke(int player);
-    int gen();
+    void onKo(int spot)
+    {
+        poke(spot).changeStatus(Pokemon::Koed);
+    }
+
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool)
+    {
+        int player = this->player(spot);
+        int slot = this->slotNum(spot);
+
+        team(player).switchPokemons(slot, previndex);
+        team(player).setPoke(slot, pokemon);
+
+        fieldPoke(spot).onSendOut();
+    }
+
+    void onSendBack(int spot)
+    {
+        fieldPoke(spot).onSendBack();
+    }
+
+    void onHpChange(int spot, int newHp)
+    {
+        poke(spot).setLife(newHp);
+    }
+
+    void onMajorStatusChange(int spot, int status, bool)
+    {
+        //TODO: handle confusion better
+        if (status != Pokemon::Confused) {
+            poke(spot).changeStatus(status);
+        }
+    }
+
+    void onPokeballStatusChanged(int player, int poke, int status)
+    {
+        if (status != Pokemon::Confused) {
+            team(player).poke(poke)->changeStatus(status);
+        }
+    }
+
+    void onSubstituteStatus(int spot, bool substitute)
+    {
+        fieldPoke(spot).subsitute = substitute;
+    }
+
+    void onPokemonVanish(int spot)
+    {
+        fieldPoke(spot).showing = false;
+    }
+
+    void onPokemonReappear(int spot)
+    {
+        fieldPoke(spot).showing = true;
+    }
+
+    void onSpriteChange(int spot, int newSprite)
+    {
+        fieldPoke(spot).alternateSprite = newSprite;
+    }
+
+    void onDefiniteFormeChange(int player, int poke, int newPoke)
+    {
+        team(player).poke(poke)->setNum(newPoke);
+    }
+
+    void onCosmeticFormeChange(int spot, int subforme)
+    {
+        fieldPoke(spot).alternateSprite.subnum = subforme;
+    }
+
+    void onShiftSpots(int player, int spot1, int spot2, bool)
+    {
+        d()->swapFieldPokemons(spot(player, spot1), spot(player, spot2));
+        team(player).switchPokemons(spot1, spot2);
+    }
+
+    teamType &team(int player) { return *d()->team(player); }
+    pokeType &poke(int player) { return *team(player).poke(slotNum(player));}
+    int player(int spot) { return spot%2;}
+    int opponent(int player) { return (player+1)%2;}
+    QString name(int player) { return team(player).name();}
+    int slotNum(int player) { return player/2;}
+    int spot(int player, int slot) {return player+2*slot;}
+    auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
+    int gen() { return GEN_MAX; }
 
     enum {
         Player1,
         Player2
     };
+
+    container *exposedData() { return d(); }
 private:
-    TeamData teams[2];
-    std::vector<AuxPokeData> auxdata;
+    container cont;
+    container* d() { return &cont;}
 };
 
 #endif // BATTLEDATA_H

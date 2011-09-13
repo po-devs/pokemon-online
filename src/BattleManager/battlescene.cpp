@@ -5,12 +5,15 @@
 #include "battledataaccessor.h"
 #include "battlesceneproxy.h"
 #include "pokemoninfoaccessor.h"
+#include "proxydatacontainer.h"
 
-BattleScene::BattleScene(BattleData *dat) : mData(dat), proxy(new BattleDataProxy(dat)), mOwnProxy(new BattleSceneProxy(this))
+BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this))
 {
-    qmlRegisterType<BattleDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
+    qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
     qmlRegisterType<PokeProxy>("pokemononline.battlemanager.proxies", 1, 0, "PokeData");
+    qmlRegisterType<PokemonInfoAccessor>();
+    qmlRegisterType<BattleSceneProxy>();
 
     /* Tells QML not to delete our pokeproxy and teamproxy objects...
 
@@ -20,30 +23,27 @@ BattleScene::BattleScene(BattleData *dat) : mData(dat), proxy(new BattleDataProx
       The calls on team() and team()->poke() are absolutely needed though.
 
       See http://apidocs.meego.com/1.1/core/html/qt4/qdeclarativeengine.html#objectOwnership */
-    QDeclarativeEngine::setObjectOwnership(proxy, QDeclarativeEngine::CppOwnership);
+    ProxyDataContainer *data_ptr = getDataProxy();
+    QDeclarativeEngine::setObjectOwnership(data_ptr, QDeclarativeEngine::CppOwnership);
     for (int i = 0; i < 2; i++) {
-        QDeclarativeEngine::setObjectOwnership(proxy->team(i), QDeclarativeEngine::CppOwnership);
+        QDeclarativeEngine::setObjectOwnership(data_ptr->team(i), QDeclarativeEngine::CppOwnership);
         for (int j = 0; j < 6; j++) {
-            QDeclarativeEngine::setObjectOwnership(proxy->team(i)->poke(j), QDeclarativeEngine::CppOwnership);
+            QDeclarativeEngine::setObjectOwnership(data_ptr->team(i)->poke(j), QDeclarativeEngine::CppOwnership);
         }
     }
-
     mWidget = new QDeclarativeView();
     mWidget->setAttribute(Qt::WA_DeleteOnClose);
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
-    //mWidget->engine()->rootContext()->setContextProperty("info", PokemonInfoAccessor::getInstance());
-    //mWidget->engine()->rootContext()->setContextProperty("data", proxy);
-    mWidget->engine()->addImageProvider("pokeinfo", PokemonInfoAccessor::getInstance());
+    mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
     mWidget->setSource(QString("qml/battlescene.qml"));
 }
 
 BattleScene::~BattleScene()
 {
     delete mOwnProxy;
-    delete proxy;
 }
 
-BattleData * BattleScene::data()
+BattleScene::battledata_ptr BattleScene::data()
 {
     return mData;
 }
@@ -53,7 +53,7 @@ QDeclarativeView *BattleScene::getWidget()
     return mWidget;
 }
 
-BattleDataProxy * BattleScene::getDataProxy()
+ProxyDataContainer * BattleScene::getDataProxy()
 {
-    return proxy;
+    return data()->exposedData();
 }

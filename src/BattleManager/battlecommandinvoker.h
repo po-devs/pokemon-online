@@ -53,7 +53,7 @@ protected:
     template<class Y=workerClass>
     typename test<decltype(&Y::onSendOut)>::type
     invoke2(Param<BattleEnum::SendOut>, uint8_t spot, uint8_t prevIndex, std::shared_ptr<ShallowBattlePoke> *ptr, bool silent) {
-        wc()->onSendOut(spot, prevIndex, *ptr, silent);
+        wc()->onSendOut(spot, prevIndex, ptr->get(), silent);
     }
 
     /* Todo: expand following macros */
@@ -120,7 +120,7 @@ protected:
 
 /* Functions to create in your class :
     void onKo(int spot);
-    void onSendOut(int spot, int previndex, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);

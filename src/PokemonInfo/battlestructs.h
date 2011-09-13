@@ -53,10 +53,22 @@ public:
     bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
 
     void init(const PokeBattle &poke);
-    virtual quint8 lifePercent() const { return m_prop_lifePercent; }
-    quint8 &lifePercent() { return m_prop_lifePercent; }
+    virtual quint8 lifePercent() const { return mLifePercent; }
+    quint8 &lifePercent() { return mLifePercent; }
+    virtual int life() { return mLifePercent; }
+    virtual void setLife(int newLife) { mLifePercent = newLife;}
+    void setLifePercent(quint8 percent) {mLifePercent = percent;}
+    void setNum(Pokemon::uniqueId num) {this->num() = num;}
+
+    bool operator == (const ShallowBattlePoke &other) {
+        return gender() == other.gender() && level() == other.level()
+                && shiny() == other.shiny() && num() == other.num()
+                && nick() == other.nick() && status() == other.status()
+                && mLifePercent == other.mLifePercent;
+    }
+
 private:
-    quint8 m_prop_lifePercent;
+    quint8 mLifePercent;
 };
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
@@ -69,7 +81,6 @@ class PokeBattle : public ShallowBattlePoke
 {
     PROPERTY(QList<int>, dvs)
     PROPERTY(QList<int>, evs)
-    PROPERTY(quint16, lifePoints)
     PROPERTY(quint16, totalLifePoints)
     PROPERTY(quint16, item)
     PROPERTY(quint16, ability)
@@ -93,12 +104,17 @@ public:
 
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
+    virtual void setLife(int newLife) {mLifePoints = newLife;}
+    virtual int life() { return mLifePoints; }
+    quint16 lifePoints() const { return mLifePoints;}
+    quint16 &lifePoints() { return mLifePoints;}
 
     void setNormalStat(int, quint16);
 private:
     BattleMove m_moves[4];
 
     quint16 normal_stats[5];
+    quint16 mLifePoints;
 };
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po);

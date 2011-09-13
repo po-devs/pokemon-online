@@ -9,10 +9,10 @@ class TeamData
 {
 public:
     TeamData();
-    ShallowBattlePoke& poke(int slot);
+    ShallowBattlePoke* poke(int slot);
     QString& name();
 
-    void setPoke(int slot, const std::shared_ptr<ShallowBattlePoke> &poke);
+    void setPoke(int slot, ShallowBattlePoke* poke);
     void switchPokemons(int slot1, int slot2);
 protected:
     void init();

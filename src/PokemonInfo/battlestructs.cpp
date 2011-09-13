@@ -220,7 +220,7 @@ void PokeBattle::init(PokePersonal &poke)
 void PokeBattle::updateStats(int gen)
 {
     totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
-    lifePoints() = totalLifePoints();
+    setLife(totalLifePoints());
 
     for (int i = 0; i < 5; i++) {
         normal_stats[i] = PokemonInfo::FullStat(num(), gen, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
@@ -293,9 +293,9 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     num() = poke.num();
     shiny() = poke.shiny();
     gender() = poke.gender();
-    lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
+    setLifePercent( (poke.lifePoints() * 100) / poke.totalLifePoints() );
     if (lifePercent() == 0 && poke.lifePoints() > 0) {
-        lifePercent() = 1;
+        setLifePercent(1);
     }
     level() = poke.level();
 }

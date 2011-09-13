@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-class BattleData;
 class BattleClientLog;
 class BattleScene;
 class BattleInput;
@@ -18,7 +17,7 @@ class QDeclarativeView;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow();
+    SpectatorWindow(QString name1, QString name2);
     ~SpectatorWindow();
 
     /* Receives the binary data */
@@ -33,10 +32,7 @@ public:
       is responsible for managing the widget's lifetime
       and free it */
     QWidget *getSampleWidget();
-
-    BattleData *accessData();
 private:
-    BattleData *data;
     BattleClientLog *log;
     BattleInput *input;
     BattleScene *scene;

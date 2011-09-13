@@ -135,7 +135,7 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
-    test = new SpectatorWindow();
+    test = new SpectatorWindow(info().name(0), info().name(1));
 
     QWidget *widget =test->getSampleWidget();
     widget->setParent(this);
@@ -145,9 +145,6 @@ void BaseBattleWindow::init()
 
     connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
     connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
-
-    test->accessData()->team(0).name() = info().name(0);
-    test->accessData()->team(1).name() = info().name(1);
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);

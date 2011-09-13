@@ -5,12 +5,12 @@ TeamData::TeamData() : _init(false)
 
 }
 
-ShallowBattlePoke& TeamData::poke(int slot)
+ShallowBattlePoke* TeamData::poke(int slot)
 {
     if (!_init) {
         init();
     }
-    return *pokemons[slot];
+    return pokemons[slot].get();
 }
 
 void TeamData::init()
@@ -26,7 +26,7 @@ QString &TeamData::name()
     return mName;
 }
 
-void TeamData::setPoke(int slot, const std::shared_ptr<ShallowBattlePoke> &poke)
+void TeamData::setPoke(int slot, ShallowBattlePoke *poke)
 {
     *pokemons[slot] = *poke;
 }
