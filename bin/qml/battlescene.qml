@@ -3,9 +3,9 @@ import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
 
 Rectangle {
-    id: rectangle1
     width: 500
     height: 400
+    property bool loaded: false;
     gradient: Gradient {
         GradientStop {
             position: 0
@@ -35,8 +35,8 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
         color:"transparent"
-        width: 120
-        height: 76
+        width: 96
+        height: 64
         Team {
             player: 0
             anchors.fill: parent
@@ -50,8 +50,8 @@ Rectangle {
         anchors.leftMargin: 20
         anchors.top: parent.top
         anchors.topMargin: 20
-        width: 120
-        height: 76
+        width: 96
+        height: 64
         Team {
             player: 1
             anchors.fill: parent

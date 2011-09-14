@@ -92,6 +92,8 @@ public:
 
     Q_PROPERTY(QString name READ name CONSTANT)
     QString name();
+signals:
+    void pokemonsSwapped(int slot1, int slot2);
 private:
     TeamData *teamData;
     bool hasOwnerShip;

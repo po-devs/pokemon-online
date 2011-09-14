@@ -27,7 +27,10 @@ public:
         int player = this->player(spot);
         int slot = this->slotNum(spot);
 
-        team(player).switchPokemons(slot, previndex);
+        if (slot != previndex) {
+            team(player).switchPokemons(slot, previndex);
+        }
+
         team(player).setPoke(slot, pokemon);
 
         fieldPoke(spot).onSendOut();
