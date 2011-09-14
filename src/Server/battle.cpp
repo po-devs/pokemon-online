@@ -2040,8 +2040,7 @@ void BattleSituation::sendBack(int player, bool silent)
         }
     }
 
-    if (!silent)
-        notify(All, SendBack, player);
+    notify(All, SendBack, player, silent);
 
     if (!koed(player)) {
         callaeffects(player,player,"UponSwitchOut");
