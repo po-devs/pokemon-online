@@ -3394,7 +3394,14 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
             && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
     {
         sendAbMessage(61,0,player,attacker);
-        inflictStatus(attacker, status, player);
+
+        int minTurns(0), maxTurns(0);
+
+        /* Toxic is synchronized, but only in gen 5 */
+        if (gen() >= 5 && status == Pokemon::Poisoned && poke(player).statusCount() > 0) {
+            minTurns = maxTurns = MoveInfo::MinTurns(Move::Toxic, gen());
+        }
+        inflictStatus(attacker, status, player, minTurns, maxTurns);
     }
 }
 
