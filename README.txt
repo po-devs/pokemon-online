@@ -1,4 +1,4 @@
-This is Pokemon Online
+This is Pokémon Online
 ----------------------
 
 Homepage: http://pokemon-online.eu/
