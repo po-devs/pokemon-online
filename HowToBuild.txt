@@ -1,4 +1,4 @@
-(For windows users, use something other than NotePad to read this)
+(For windows users, check out the post on the PO forums)
 
 HOW TO BUILD THE PROJECT:
 * Learn how to use Git
