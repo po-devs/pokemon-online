@@ -63,6 +63,8 @@ void TeamProxy::switchPokemons(int index, int prevIndex)
 {
     std::swap(pokemons[index], pokemons[prevIndex]);
     teamData->switchPokemons(index, prevIndex);
+
+    emit pokemonsSwapped(index, prevIndex);
 }
 
 void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
