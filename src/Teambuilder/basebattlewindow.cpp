@@ -445,6 +445,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case SendBack:
+        bool silent;
+        in >> silent;
+
+        if (silent) {
+            break;
+        }
         printLine(tr("%1 called %2 back!").arg(name(player(spot)), rnick(spot)));
         switchToNaught(spot);
         break;
