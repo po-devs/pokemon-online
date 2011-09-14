@@ -36,7 +36,7 @@ public:
         fieldPoke(spot).onSendOut();
     }
 
-    void onSendBack(int spot)
+    void onSendBack(int spot, bool)
     {
         fieldPoke(spot).onSendBack();
     }
@@ -63,22 +63,22 @@ public:
 
     void onSubstituteStatus(int spot, bool substitute)
     {
-        fieldPoke(spot).subsitute = substitute;
+        fieldPoke(spot).setSubstitute(substitute);
     }
 
     void onPokemonVanish(int spot)
     {
-        fieldPoke(spot).showing = false;
+        fieldPoke(spot).vanish();
     }
 
     void onPokemonReappear(int spot)
     {
-        fieldPoke(spot).showing = true;
+        fieldPoke(spot).reappear();
     }
 
     void onSpriteChange(int spot, int newSprite)
     {
-        fieldPoke(spot).alternateSprite = newSprite;
+        fieldPoke(spot).changeSprite(newSprite);
     }
 
     void onDefiniteFormeChange(int player, int poke, int newPoke)
@@ -88,12 +88,12 @@ public:
 
     void onCosmeticFormeChange(int spot, int subforme)
     {
-        fieldPoke(spot).alternateSprite.subnum = subforme;
+        fieldPoke(spot).changeForme(subforme);
     }
 
     void onShiftSpots(int player, int spot1, int spot2, bool)
     {
-        d()->swapFieldPokemons(spot(player, spot1), spot(player, spot2));
+        d()->field()->shiftSpots(spot(player, spot1), spot(player, spot2));
         team(player).switchPokemons(spot1, spot2);
     }
 

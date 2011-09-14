@@ -79,7 +79,7 @@ protected:
     }
 
     /* Todo: expand following macros */
-    start(SendBack, int spot) end(spot)
+    start(SendBack, int spot; bool silent) end(spot, silent)
     start(UseAttack, int spot; int attack) end(spot, attack)
     start(Turn, int turn) end(turn)
     start(NewHp, int spot; int newHp) end(spot, newHp)

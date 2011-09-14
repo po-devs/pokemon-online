@@ -41,7 +41,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case SendBack:
     {
-        output<BattleEnum::SendBack>(spot);
+        bool silent;
+        in >> silent;
+        output<BattleEnum::SendBack>(spot, silent);
         break;
     }
     case UseAttack:

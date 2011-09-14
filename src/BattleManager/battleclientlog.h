@@ -16,7 +16,7 @@ public:
 
     void onKo(int spot);
     void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
-    void onSendBack(int spot);
+    void onSendBack(int spot, bool silent);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);

@@ -14,21 +14,20 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     qmlRegisterType<PokeProxy>("pokemononline.battlemanager.proxies", 1, 0, "PokeData");
     qmlRegisterType<PokemonInfoAccessor>();
     qmlRegisterType<BattleSceneProxy>();
+    qmlRegisterType<AuxPokeDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldPokeData");
+    qmlRegisterType<FieldProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldData");
 
     /* Tells QML not to delete our pokeproxy and teamproxy objects...
 
-      The dataproxy is a property of the CPP object, not something returned by
-      a CPP function inside QML, so it's safe, but we never know for the future.
-
-      The calls on team() and team()->poke() are absolutely needed though.
-
       See http://apidocs.meego.com/1.1/core/html/qt4/qdeclarativeengine.html#objectOwnership */
     ProxyDataContainer *data_ptr = getDataProxy();
-    QDeclarativeEngine::setObjectOwnership(data_ptr, QDeclarativeEngine::CppOwnership);
     for (int i = 0; i < 2; i++) {
         QDeclarativeEngine::setObjectOwnership(data_ptr->team(i), QDeclarativeEngine::CppOwnership);
         for (int j = 0; j < 6; j++) {
             QDeclarativeEngine::setObjectOwnership(data_ptr->team(i)->poke(j), QDeclarativeEngine::CppOwnership);
+        }
+        for (int j = 0; j < 3; j++) {
+            QDeclarativeEngine::setObjectOwnership(data_ptr->field()->poke(j*2+i), QDeclarativeEngine::CppOwnership);
         }
     }
     mWidget = new QDeclarativeView();

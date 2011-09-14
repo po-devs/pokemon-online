@@ -97,9 +97,9 @@ void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silen
     printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(data()->poke(spot).gender())), true);
 }
 
-void BattleClientLog::onSendBack(int spot)
+void BattleClientLog::onSendBack(int spot, bool silent)
 {
-    printLine(tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)));
+    printLine(tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
 }
 
 void BattleClientLog::onUseAttack(int spot, int attack)

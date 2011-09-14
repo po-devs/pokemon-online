@@ -4,14 +4,14 @@ AuxPokeData::AuxPokeData()
 {
     showing = true;
     onTheField = false;
-    subsitute = false;
+    substitute = false;
 }
 
 void AuxPokeData::onSendOut()
 {
     showing = true;
     onTheField = true;
-    subsitute = false;
+    substitute = false;
     alternateSprite = Pokemon::NoPoke;
 }
 
