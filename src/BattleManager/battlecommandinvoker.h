@@ -57,7 +57,7 @@ protected:
     }
 
     /* Todo: expand following macros */
-    start(SendBack, onSendBack, int spot) end(onSendBack, spot)
+    start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
     start(UseAttack, onUseAttack, int spot, int attack) end(onUseAttack, spot, attack)
     start(Turn, onBeginTurn, int turn) end(onBeginTurn, turn)
     start(NewHp, onHpChange, int spot, int newHp) end(onHpChange, spot, newHp)
@@ -121,7 +121,7 @@ protected:
 /* Functions to create in your class :
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
-    void onSendBack(int spot);
+    void onSendBack(int spot, bool silent);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);

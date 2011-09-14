@@ -24,7 +24,8 @@ SOURCES += \
     battlescene.cpp \
     battledataaccessor.cpp \
     battlesceneproxy.cpp \
-    pokemoninfoaccessor.cpp
+    pokemoninfoaccessor.cpp \
+    auxpokedataproxy.cpp
 
 HEADERS +=\
     command.h \
@@ -49,7 +50,8 @@ HEADERS +=\
     pokemoninfoaccessor.h \
     datacontainer.h \
     proxydatacontainer.h \
-    battledatatypes.h
+    battledatatypes.h \
+    auxpokedataproxy.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -82,6 +84,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Pokemon.qml
 
 RESOURCES +=
+
+
 
 
 
