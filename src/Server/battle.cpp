@@ -2735,7 +2735,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             if (hit) {
-                notifyHits(hitcount);
+                notifyHits(player, hitcount);
             }
 
             if (gen() >= 5 && !koed(target)) {
@@ -2835,7 +2835,7 @@ void BattleSituation::notifyKO(int player)
 
 void BattleSituation::notifyHits(int number)
 {
-    notify(All, Hit, Player1, quint8(number));
+    notify(All, Hit, spot, quint8(number));
 }
 
 bool BattleSituation::hasMove(int player, int move) {
