@@ -28,33 +28,43 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    Team {
         id: team1
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
-        color:"transparent"
         width: 96
         height: 64
-        Team {
-            player: 0
-            anchors.fill: parent
-        }
+        player: 0
     }
 
-    Rectangle {
+    Team {
         id: team2
-        color: "transparent"
+        player: 1
+        width: 96
+        height: 64
         anchors.left: parent.left
         anchors.leftMargin: 20
         anchors.top: parent.top
         anchors.topMargin: 20
-        width: 96
-        height: 64
-        Team {
-            player: 1
-            anchors.fill: parent
-        }
+    }
+
+    FieldPokemon {
+        id: poke1
+        back: true
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+    }
+
+    FieldPokemon {
+        id: poke2
+        back: false
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.top: parent.top
+        anchors.topMargin: 0
     }
 }

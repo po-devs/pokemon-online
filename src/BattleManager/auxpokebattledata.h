@@ -13,7 +13,7 @@ public:
     void onSendBack();
 
     void setOnTheField(bool on) {onTheField = on;}
-    void setSubsitute(bool on) {substitute = on;}
+    void setSubstitute(bool on) {substitute = on;}
     void setShowing(bool on) {showing = on;}
     void setAlternateSprite(Pokemon::uniqueId num) {alternateSprite=num;}
     Pokemon::uniqueId getAlternateSprite() { return alternateSprite;}

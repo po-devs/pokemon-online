@@ -68,19 +68,8 @@ public:
 class FieldProxy : public QObject {
     Q_OBJECT
 public:
-    FieldProxy() {
-        /* Resizes for triple. Later, when loaded with battle configuration, will get
-          more accurate loading */
-        for (int i = 0; i < 6; i++) {
-            auxdata[i] = new AuxPokeDataProxy();
-        }
-    }
-
-    ~FieldProxy() {
-        for (int i = 0; i < 6; i++) {
-            delete auxdata[i];
-        }
-    }
+    FieldProxy();
+    ~FieldProxy();
 
     Q_INVOKABLE AuxPokeDataProxy *poke(int num) {
         return auxdata[num];
