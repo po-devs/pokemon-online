@@ -3,8 +3,7 @@ import pokemononline.battlemanager.proxies 1.0
 
 Item {
     id: item;
-    property int player
-    property TeamData team: battle.data.team(player)
+    property TeamData team
 
     GridView {
         id: grid
@@ -35,6 +34,14 @@ Item {
             var max = Math.max(slot1, slot2);
             grid.model.move(min, max, 1);
             grid.model.move(max-1, min, 1);
+
+            /* Todo: later, check for something else than singles */
+            /* Should the logic of this really be in this file? */
+            if (min == 0) {
+                fieldPokemonChanged(min)
+            }
         }
     }
+
+    signal fieldPokemonChanged(int pokemon)
 }
