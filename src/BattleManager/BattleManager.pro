@@ -81,9 +81,11 @@ OTHER_FILES += \
     ../../bin/qml/battlescene.qml \
     ../../bin/qml/BattleDataQML/qmldir \
     ../../bin/qml/BattleDataQML/Team.qml \
-    ../../bin/qml/BattleDataQML/Pokemon.qml
+    ../../bin/qml/BattleDataQML/Pokemon.qml \
+    ../../bin/qml/BattleDataQML/FieldPokemon.qml
 
 RESOURCES +=
+
 
 
 

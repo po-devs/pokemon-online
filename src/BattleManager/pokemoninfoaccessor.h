@@ -24,28 +24,9 @@ public:
         return PokemonInfo::Icon(num);
     }*/
 
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
-        (void) requestedSize;
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
-        QPixmap ret;
-
-        if (id.startsWith("icon/")) {
-            ret = PokemonInfo::Icon(id.section("/", 1).toInt());
-        } else if (id.startsWith("pokemon/")){
-            /* Todo */
-        }
-
-        *size = ret.size();
-
-        return ret;
-    }
-
-    static PokemonInfoAccessor *getInstance() {
-        if (mInstance == NULL) {
-            mInstance = new PokemonInfoAccessor();
-        }
-        return mInstance;
-    }
+    static PokemonInfoAccessor *getInstance();
 
 private:
     static PokemonInfoAccessor *mInstance;
