@@ -74,7 +74,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         quint8 number;
         in >> number;
-        output<BattleEnum::Hits>(number);
+        output<BattleEnum::Hits>(spot, number);
         break;
     }
     case Effective:
