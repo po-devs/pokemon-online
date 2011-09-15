@@ -1331,7 +1331,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(causedEffect, path("caused_effect.txt"));
     fill_container_with_file(critRate, path("crit_rate.txt"));
     fill_container_with_file(damageClass, path("damage_class.txt"));
-    fill_container_with_file(effect, path("effect.txt"));
+    fill_container_with_file(effect, trFile(path("effect")));
     fill_container_with_file(effectChance, path("effect_chance.txt"));
     fill_container_with_file(flags, path("flags.txt"));
     fill_container_with_file(flinchChance, path("flinch_chance.txt"));
