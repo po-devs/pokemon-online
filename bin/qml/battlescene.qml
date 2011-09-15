@@ -36,12 +36,12 @@ Rectangle {
         anchors.bottomMargin: 20
         width: 96
         height: 64
-        player: 0
+        team: battle.data.team(0)
     }
 
     Team {
         id: team2
-        player: 1
+        team: battle.data.team(1)
         width: 96
         height: 64
         anchors.left: parent.left
@@ -53,18 +53,36 @@ Rectangle {
     FieldPokemon {
         id: poke1
         back: true
+        fieldPokemon: battle.data.field.poke(0)
+        pokemon: team1.team.poke(0)
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: 55
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: 55
     }
 
     FieldPokemon {
         id: poke2
         back: false
+        fieldPokemon: battle.data.field.poke(1)
+        pokemon: team2.team.poke(0)
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: 45
         anchors.top: parent.top
         anchors.topMargin: 0
+    }
+
+    Connections {
+        target: team1
+        onFieldPokemonChanged: {
+            poke1.pokemon = team1.team.poke(pokemon)
+        }
+    }
+
+    Connections {
+        target: team2
+        onFieldPokemonChanged: {
+            poke2.pokemon = team2.team.poke(pokemon)
+        }
     }
 }
