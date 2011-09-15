@@ -2833,7 +2833,7 @@ void BattleSituation::notifyKO(int player)
     notify(All, Ko, player);
 }
 
-void BattleSituation::notifyHits(int number)
+void BattleSituation::notifyHits(int spot, int number)
 {
     notify(All, Hit, spot, quint8(number));
 }
