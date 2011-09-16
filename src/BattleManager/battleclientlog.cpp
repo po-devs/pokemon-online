@@ -258,12 +258,12 @@ void BattleClientLog::onSpectatorJoin(int id, QString name)
 {
     spectators.insert(id, name);
 
-    printHtml(toBoldColor(tr("%1 is watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml(toColor(tr("%1 is watching the battle.").arg(spectators.value(id)), Qt::green));
 }
 
 void BattleClientLog::onSpectatorLeave(int id)
 {
-    printHtml(toBoldColor(tr("%1 stopped watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml(toColor(tr("%1 stopped watching the battle.").arg(spectators.value(id)), Qt::green));
     spectators.remove(id);
 }
 
