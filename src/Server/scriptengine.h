@@ -71,6 +71,8 @@ public:
     void afterPlayerBan(int src, int dest);
     void battleSetup(int src, int dest, int battleId);
 
+    /* Imports a module with a given name */
+    Q_INVOKABLE void import(const QString &moduleName, const QString &fileName);
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
@@ -134,8 +136,6 @@ public:
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
-    Q_INVOKABLE void setPA(const QString &name);
-    Q_INVOKABLE void unsetPA(const QString &name);
 
     Q_INVOKABLE QScriptValue channelIds();
     Q_INVOKABLE QScriptValue channel(int id);
@@ -319,7 +319,6 @@ private:
     QScriptValue myscript;
     QTimer * step_timer;
     QVector<bool> stopevents;
-    QList<QScriptString> playerArrays;
     SessionDataFactory *mySessionDataFactory;
     ScriptDB *myScriptDB;
 
