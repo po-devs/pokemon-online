@@ -13,6 +13,9 @@ public:
     bool delayed;
     std::vector<QByteArray> delayedCommands;
 
+    void pause();
+    void unpause();
+
     enum BattleCommand
     {
         SendOut,

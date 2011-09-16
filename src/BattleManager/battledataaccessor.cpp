@@ -25,7 +25,34 @@ void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
     }
     /* Could be more granular, change if it matters */
     *pokeData = *pokemon;
-    emit numChanged(); emit statusChanged(); emit pokemonReset();
+    emit numChanged(); emit statusChanged(); emit lifeChanged();
+    emit pokemonReset();
+}
+
+void PokeProxy::changeStatus(int fullStatus)
+{
+    if (d()->status() == fullStatus) {
+        return;
+    }
+    d()->changeStatus(fullStatus);
+    emit statusChanged();
+}
+
+void PokeProxy::setLife(int newLife)
+{
+    if (d()->life() == newLife) {
+        return;
+    }
+    d()->setLife(newLife);
+    emit lifeChanged();
+}
+
+void PokeProxy::setNum(Pokemon::uniqueId num){
+    if (d()->num() == num) {
+        return;
+    }
+    d()->num() = num;
+    emit numChanged();
 }
 
 TeamProxy::TeamProxy()
