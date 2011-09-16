@@ -7,14 +7,18 @@
 class BattleInput : public BattleCommandManager<BattleInput>
 {
 public:
+    BattleInput();
+
     void receiveData(QByteArray data);
     void dealWithCommandInfo(QDataStream&,uchar command,int spot);
 
     bool delayed;
     std::vector<QByteArray> delayedCommands;
+    unsigned mCount; /* Used to know the index in delayedCommands */
 
     void pause();
     void unpause();
+
 
     enum BattleCommand
     {

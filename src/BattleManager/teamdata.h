@@ -15,9 +15,6 @@ public:
     void setPoke(int slot, ShallowBattlePoke* poke);
     void switchPokemons(int slot1, int slot2);
 protected:
-    void init();
-
-    bool _init;
     std::vector<std::shared_ptr<ShallowBattlePoke> > pokemons;
     QString mName;
 };
