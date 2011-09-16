@@ -29,3 +29,5 @@ src/*__Debug
 *~
 
 build_mac.sh
+Makefile*
+*__Release*
