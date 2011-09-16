@@ -8,11 +8,13 @@ Rectangle {
     radius: 4
     border.color: "#0d0d0d"
 
+    property int oldValue: 0;
+
     Rectangle {
         id: rectangle1
         x: 1
         y: 1
-        width: pokemon.life
+        width: woof.pokemon.life
         height: 7
         color: "#1f6920"
         radius: 2
@@ -20,5 +22,24 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 1
         anchors.topMargin: 1
+
+        Behavior on width {
+            SequentialAnimation {
+                ScriptAction {
+                    script: {
+                        battle.scene.pause();
+                        numanim.duration = (oldValue < woof.pokemon.life ? (woof.pokemon.life-oldValue) : -(woof.pokemon.life-oldValue)) * 10
+                    }
+                }
+                NumberAnimation {
+                    id: numanim
+                }
+                ScriptAction {script: {oldValue = woof.pokemon.life; battle.scene.unpause();}}
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        oldValue = woof.pokemon.life;
     }
 }
