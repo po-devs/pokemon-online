@@ -97,11 +97,11 @@ public:
         team(player).switchPokemons(spot1, spot2);
     }
 
-    teamType &team(int player) { return *d()->team(player); }
-    pokeType &poke(int player) { return *team(player).poke(slotNum(player));}
+    teamType &team(int player) { return *d()->team(this->player(player)); }
+    pokeType &poke(int player) { return *team(this->player(player)).poke(slotNum(player));}
     int player(int spot) { return spot%2;}
     int opponent(int player) { return (player+1)%2;}
-    QString name(int player) { return team(player).name();}
+    QString name(int player) { return team(this->player(player)).name();}
     int slotNum(int player) { return player/2;}
     int spot(int player, int slot) {return player+2*slot;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
