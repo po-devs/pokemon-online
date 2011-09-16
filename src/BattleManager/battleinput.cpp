@@ -5,6 +5,11 @@
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
 
+BattleInput::BattleInput() {
+    mCount = 0;
+    delayed = false;
+}
+
 void BattleInput::receiveData(QByteArray inf)
 {
     if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
@@ -33,13 +38,14 @@ void BattleInput::unpause()
 {
     delayed = false;
 
-    unsigned count = 0;
-
-    for (count = 0; count < delayedCommands.size() && !delayed; count++) {
-        receiveData(delayedCommands[count]);
+    /* As unpaused / paused can be in nested calls, class variable mCount is
+      necessary */
+    for ( ; mCount < delayedCommands.size() && !delayed; ) {
+        receiveData(delayedCommands[mCount++]); //The ++ inside is necessary, not oustide
     }
 
-    delayedCommands.erase(delayedCommands.begin(), delayedCommands.begin()+count);
+    delayedCommands.erase(delayedCommands.begin(), delayedCommands.begin()+mCount);
+    mCount = 0;
 }
 
 void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
