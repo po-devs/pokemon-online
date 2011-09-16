@@ -72,7 +72,7 @@ public:
     void battleSetup(int src, int dest, int battleId);
 
     /* Imports a module with a given name */
-    Q_INVOKABLE void import(const QString &moduleName, const QString &fileName);
+    Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
