@@ -89,26 +89,18 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-void ScriptEngine::setPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if(playerArrays.contains(str))
+void ScriptEngine::import(const QString &moduleName, const QString &fileName) {
+    QString url = "scripts/"+fileName;
+    QFile in(url);
+
+    if (!in.open(QIODevice::ReadOnly)) {
+        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
         return;
+    }
 
-    playerArrays.push_back(str);
-    QScriptValue pa = myengine.newArray();
-
-    myengine.globalObject().setProperty(name, pa);
-}
-
-void ScriptEngine::unsetPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if (!playerArrays.contains(str))
-        return;
-
-    playerArrays.removeOne(str);
-    myengine.globalObject().setProperty(name, QScriptValue());
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
+    evaluate(import);
+    myengine.globalObject().setProperty(moduleName, import);
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -396,13 +388,6 @@ void ScriptEngine::beforeLogOut(int src)
 void ScriptEngine::afterLogOut(int src)
 {
     makeEvent("afterLogOut", src);
-
-    /* Removes the player from the player array */
-    foreach(QScriptString pa, playerArrays) {
-        if (!myengine.globalObject().property(pa).isNull()) {
-            myengine.globalObject().property(pa).setProperty(src, QScriptValue());
-        }
-    }
 
     mySessionDataFactory->handleUserLogOut(src);
 }

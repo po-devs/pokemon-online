@@ -3951,7 +3951,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         if (hp <= 0) {
             koPoke(player, source, straightattack);
         } else {
-            }
 
             /* Endure & Focus Sash */
             if (survivalItem) {
