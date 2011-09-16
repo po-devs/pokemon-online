@@ -560,7 +560,7 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &line, bool flashing)
+void Channel::printLine(const QString &line, bool flashing, bool act)
 {
     QString timeStr = "";
     if(client->showTS)
@@ -571,7 +571,8 @@ void Channel::printLine(const QString &line, bool flashing)
     }
 
     if (line.leftRef(3) == "***") {
-        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        if (flashing)
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
         return;
     }
@@ -589,7 +590,8 @@ void Channel::printLine(const QString &line, bool flashing)
         else
             checkFlash(end, "<ping */ *>");
 
-        checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        if (flashing)
+            checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
         end = addChannelLinks(end);
 
@@ -613,7 +615,9 @@ void Channel::printLine(const QString &line, bool flashing)
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
         }
-        emit activated(this);
+        if (act) {
+            emit activated(this);
+        }
     } else {
         if (flashing) {
             checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
@@ -622,7 +626,7 @@ void Channel::printLine(const QString &line, bool flashing)
     }
 }
 
-void Channel::printHtml(const QString &str)
+void Channel::printHtml(const QString &str, bool act)
 {
     QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
@@ -635,7 +639,13 @@ void Channel::printHtml(const QString &str)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
     mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
+<<<<<<< HEAD
     emit activated(this);
+=======
+    if (act) {
+        emit activated(this);
+    }
+>>>>>>> coyotte508/master
 }
 
 void Channel::addEvent(int event)
