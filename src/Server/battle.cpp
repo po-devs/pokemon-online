@@ -311,19 +311,20 @@ void BattleSituation::addSpectator(Player *p)
         // Then a guy was put on waitlist and tried again, w/e don't accept him
         return;
     }
-    spectators[key] = id;
+    spectators[key] = QPair<int, QString>(id, p->name());
 
     if (tier().length() > 0)
         notify(key, TierSection, Player1, tier());
 
     notify(key, Rated, Player1, rated());
 
-    foreach (int specId, spectators) {
-        if (specId != id)
-            notify(key, Spectating, 0, true, qint32(specId));
+    typedef QPair<int, QString> pair;
+    foreach (pair spec, spectators) {
+        if (spec.first != id)
+            notify(key, Spectating, 0, true, qint32(spec.first), spec.second);
     }
 
-    notify(All, Spectating, 0, true, qint32(id));
+    notify(All, Spectating, 0, true, qint32(id), p->name());
     notify(key, BlankMessage, 0);
 
     for (int i = 0; i < 2; i++) {
