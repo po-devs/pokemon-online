@@ -1,7 +1,8 @@
 QT += network \
     xml \
     phonon \
-    declarative
+    declarative \
+    opengl
 TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app

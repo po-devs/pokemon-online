@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += declarative
+QT += declarative opengl
 TARGET = battlelib
 TEMPLATE = lib
 DESTDIR = ../../bin

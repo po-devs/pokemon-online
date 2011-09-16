@@ -1,4 +1,5 @@
 #include <QtDeclarative>
+#include <QtOpenGL/QGLWidget>
 
 #include "battlescene.h"
 #include "battledata.h"
@@ -33,6 +34,15 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     }
     mWidget = new QDeclarativeView();
     mWidget->setAttribute(Qt::WA_DeleteOnClose);
+
+    // Set optimizations not already done in QDeclarativeView
+    mWidget->setAttribute(Qt::WA_OpaquePaintEvent);
+    mWidget->setAttribute(Qt::WA_NoSystemBackground);
+    // Make QDeclarativeView use OpenGL backend
+    QGLWidget *glWidget = new QGLWidget(mWidget);
+    mWidget->setViewport(glWidget);
+    mWidget->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
     mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
     mWidget->setSource(QString("qml/battlescene.qml"));
