@@ -7,19 +7,21 @@ Item {
     property FieldPokeData fieldPokemon
     property PokeData pokemon
 
+
     function isKoed() {
         return pokemon.status === 31 || pokemon.numRef === 0;
     }
 
-    PokeballAnimation {
-        paused: true;
-        opacity: 0;
-    }
+//    PokeballAnimation {
+//        paused: false;
+//        opacity: 1;
+//    }
 
     width: 96
     height: 96
 
     ProgressBar {
+        z: -100;
         parent: woof.parent
         x: woof.x
         y: woof.y - 15;

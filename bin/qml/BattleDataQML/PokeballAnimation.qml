@@ -6,4 +6,5 @@ FrameAnimation {
     height: 40
     frameCount: 8
     delay: 50
+    col: 6
 }
