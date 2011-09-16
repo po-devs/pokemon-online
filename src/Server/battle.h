@@ -630,7 +630,7 @@ public:
         return unsigned(true_rand2());
     }
 private:
-    QHash<int,int> spectators;
+    QHash<int,QPair<int, QString> > spectators;
     /* Used when pokemon shift slots */
     QVector<int> indexes;
 public:
