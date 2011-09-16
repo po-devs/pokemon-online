@@ -25,8 +25,4 @@ Item {
         width: 32
         height: 32
     }
-
-    Component.onCompleted: {
-        loaded = true;
-    }
 }

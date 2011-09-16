@@ -11,6 +11,10 @@ Item {
         return pokemon.status === 31 || pokemon.numRef === 0;
     }
 
+    PokeballAnimation {
+        paused: true;
+        opacity: 0;
+    }
 
     width: 96
     height: 96
@@ -18,7 +22,7 @@ Item {
     ProgressBar {
         parent: woof.parent
         x: woof.x
-        y: woof.y - 20;
+        y: woof.y - 15;
     }
 
     Image {
