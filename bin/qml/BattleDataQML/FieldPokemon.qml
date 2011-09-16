@@ -51,6 +51,7 @@ Item {
 
     Image {
         id: image
+        transformOrigin: Item.Bottom
         source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&back="+back+"&shiny="+pokemon.shiny
     }
 
