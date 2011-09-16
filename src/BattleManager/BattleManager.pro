@@ -82,9 +82,11 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/qmldir \
     ../../bin/qml/BattleDataQML/Team.qml \
     ../../bin/qml/BattleDataQML/Pokemon.qml \
-    ../../bin/qml/BattleDataQML/FieldPokemon.qml
+    ../../bin/qml/BattleDataQML/FieldPokemon.qml \
+    ../../bin/qml/BattleDataQML/ProgressBar.qml
 
 RESOURCES +=
+
 
 
 

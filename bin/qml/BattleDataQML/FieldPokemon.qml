@@ -2,6 +2,7 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 
 Item {
+    id: woof
     property bool back: false
     property FieldPokeData fieldPokemon
     property PokeData pokemon
@@ -13,6 +14,12 @@ Item {
 
     width: 96
     height: 96
+
+    ProgressBar {
+        parent: woof.parent
+        x: woof.x
+        y: woof.y - 20;
+    }
 
     Image {
         id: image
