@@ -69,7 +69,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 45
         anchors.top: parent.top
-        anchors.topMargin: 0
+        anchors.topMargin: 25
     }
 
     Connections {
