@@ -89,7 +89,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-void ScriptEngine::import(const QString &moduleName, const QString &fileName) {
+QScriptValue ScriptEngine::import(const QString &fileName) {
     QString url = "scripts/"+fileName;
     QFile in(url);
 
@@ -100,7 +100,7 @@ void ScriptEngine::import(const QString &moduleName, const QString &fileName) {
 
     QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
     evaluate(import);
-    myengine.globalObject().setProperty(moduleName, import);
+    return import;
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
