@@ -11,3 +11,8 @@ ProxyDataContainer* BattleSceneProxy::data()
 {
     return scene->getDataProxy();
 }
+
+BattleScene* BattleSceneProxy::getScene()
+{
+    return scene;
+}

@@ -36,38 +36,19 @@ public:
     int level() {return d()->level();}
     int numRef() {return d()->num().toPokeRef();}
     int life() { return d()->life();}
+    Q_INVOKABLE bool isKoed() { return d()->ko();}
 
     void adaptTo(ShallowBattlePoke *pokemon);
-
-    void changeStatus(int fullStatus) {
-        if (d()->status() == fullStatus) {
-            return;
-        }
-        d()->changeStatus(fullStatus);
-        emit statusChanged();
-    }
-
-    void setNum(Pokemon::uniqueId num) {
-        if (d()->num() == num) {
-            return;
-        }
-        d()->num() = num;
-        emit numChanged();
-    }
-
-    void setLife(int newLife) {
-        if (d()->life() == newLife) {
-            return;
-        }
-        d()->setLife(newLife);
-        emit lifeChanged();
-    }
+    void changeStatus(int fullStatus);
+    void setNum(Pokemon::uniqueId num);
+    void setLife(int newLife);
 
 signals:
     void numChanged();
     void statusChanged();
     void pokemonReset();
     void lifeChanged();
+    void ko();
 private:
     bool hasOwnerShip;
     ShallowBattlePoke *pokeData;

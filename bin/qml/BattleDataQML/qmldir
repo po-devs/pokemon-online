@@ -1,3 +1,5 @@
 Pokemon 1.0 Pokemon.qml
 Team 1.0 Team.qml
 FieldPokemon 1.0 FieldPokemon.qml
+Pause 1.0 Pause.qml
+Unpause 1.0 Unpause.qml

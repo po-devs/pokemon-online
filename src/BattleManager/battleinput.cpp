@@ -24,6 +24,24 @@ void BattleInput::receiveData(QByteArray inf)
     dealWithCommandInfo(in, command, player);
 }
 
+void BattleInput::pause()
+{
+    delayed = true;
+}
+
+void BattleInput::unpause()
+{
+    delayed = false;
+
+    unsigned count = 0;
+
+    for (count = 0; count < delayedCommands.size() && !delayed; count++) {
+        receiveData(delayedCommands[count]);
+    }
+
+    delayedCommands.erase(delayedCommands.begin(), delayedCommands.begin()+count);
+}
+
 void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
 {
     switch (command)

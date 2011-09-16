@@ -35,6 +35,10 @@ public:
     typedef T enumClass;
     typedef FlowCommandManager<T> baseClass;
 
+    FlowCommandManager() {
+        m_input = NULL;
+    }
+
     /* Used to clean up a whole battle flow tree's memory */
     void deleteTree() {
         for(unsigned i = 0; i < m_outputs.size(); i++) {
@@ -54,9 +58,28 @@ public:
 
     void addOutput(baseClass* source) {
         m_outputs.push_back(source);
+        source->m_input = this;
+    }
+
+    /* Reimplement this for the base input class,
+      and everything in the chain can be stopped.
+
+      More fine grain control would be achieved by
+      completing the Command structure usage */
+    virtual void pause() {
+        if (m_input) {
+            m_input->pause();
+        }
+    }
+
+    virtual void unpause() {
+        if (m_input) {
+            m_input->unpause();
+        }
     }
 
 protected:
+    baseClass *m_input;
     std::vector<baseClass*> m_outputs;
 };
 

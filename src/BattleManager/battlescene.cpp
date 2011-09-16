@@ -16,6 +16,7 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     qmlRegisterType<BattleSceneProxy>();
     qmlRegisterType<AuxPokeDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldPokeData");
     qmlRegisterType<FieldProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldData");
+    qmlRegisterType<BattleScene>();
 
     /* Tells QML not to delete our pokeproxy and teamproxy objects...
 
@@ -55,4 +56,12 @@ QDeclarativeView *BattleScene::getWidget()
 ProxyDataContainer * BattleScene::getDataProxy()
 {
     return data()->exposedData();
+}
+
+void BattleScene::pause() {
+    BattleCommandManager<BattleScene>::pause();
+}
+
+void BattleScene::unpause() {
+    BattleCommandManager<BattleScene>::unpause();
 }

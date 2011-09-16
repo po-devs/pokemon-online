@@ -19,6 +19,9 @@ public:
 
     QDeclarativeView *getWidget();
     ProxyDataContainer *getDataProxy();
+
+    Q_INVOKABLE void pause();
+    Q_INVOKABLE void unpause();
 private:
     battledata_ptr mData;
     battledata_ptr data();
