@@ -7,44 +7,9 @@ Item {
     property PokeData pokemon
 
     function isKoed() {
-        return pokemon.status === 31;
+        return pokemon.status === 31 || pokemon.numRef === 0;
     }
 
-    property bool wasKoed: false
-    property bool koed: isKoed()
-    property bool onTheField: fieldPokemon.onTheField
-
-    property bool triggerKo: false
-    property bool triggerSendBack: false
-    property bool triggerSendOut: false
-
-    onKoedChanged: {
-        if (wasKoed == koed) {
-            return;
-        }
-        wasKoed = koed;
-
-        if (!fieldPokemon.onTheField) {
-            return;
-        }
-
-        if (koed) {
-            triggerKo = !triggerKo;
-        } else {
-            triggerSendOut = !triggerSendOut;
-        }
-    }
-
-    onOnTheFieldChanged: {
-        if (pokemon.isKoed()) {
-            return;
-        }
-        if (onTheField) {
-            triggerSendOut = !triggerSendOut;
-        } else {
-            triggerSendBack = !triggerSendBack;
-        }
-    }
 
     width: 96
     height: 96
@@ -55,49 +20,79 @@ Item {
         source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&back="+back+"&shiny="+pokemon.shiny
     }
 
-    Behavior on triggerKo {
-        SequentialAnimation {
-            ScriptAction {
-                script: {battle.scene.pause();}
+    states: [
+        State {
+            name: "koed"
+            when: isKoed()
+            PropertyChanges {
+                target: image
+                opacity: 0;
             }
-            ParallelAnimation {
-                NumberAnimation {
-                    target: image; property: "opacity";
-                    from: 1; to: 0; duration: 800
-                }
-                NumberAnimation {
-                    target: image; property: "y";
-                    from: image.y; to: image.y+96; duration: 800;
-                }
-            }
-            /* Restores image state */
-            ScriptAction {
-                script: {image.y -= 96; battle.scene.unpause();}
-            }
-        }
-    }
+        },
 
-    /* When a pokemon is sent out */
-    Behavior on triggerSendOut {
-        animation: SequentialAnimation {
-            ScriptAction { script: {battle.scene.pause(); image.opacity = 1;} }
-            NumberAnimation { target:image; from: 0.5;
-                to: 1.0; property: "scale"; duration: 400 }
-            /* Grace pausing time after a pokemon is sent out*/
-            NumberAnimation {duration: 300}
-            ScriptAction {script: battle.scene.unpause();}
-        }
-    }
+        State {
+            name: "onTheField"
+            when: fieldPokemon.onTheField
+            PropertyChanges {
+                target: image
+                opacity: 1;
+                scale: 1;
+            }
+        },
 
-    /* When a pokemon is sent back */
-    Behavior on triggerSendBack {
-        animation: SequentialAnimation {
-            ScriptAction {script: battle.scene.pause();}
-            NumberAnimation { target: image; property: "scale";
-                duration: 600; from: 1.0; to: 0.5 }
-            NumberAnimation { property: "opacity";  duration: 200
-                from: 1.0; to: 0; target: image}
-            ScriptAction {script: battle.scene.unpause();}
+        State {
+            name: "offTheField"
+            when: !fieldPokemon.onTheField
+            PropertyChanges {
+                target: image
+                opacity: 0;
+            }
         }
-    }
+    ]
+
+    transitions: [
+        Transition {
+            from: "onTheField"
+            to: "koed"
+            SequentialAnimation {
+                ScriptAction {script: {battle.scene.pause();}}
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: image; property: "opacity";
+                        from: 1; to: 0; duration: 800
+                    }
+                    NumberAnimation {
+                        target: image; property: "y";
+                        from: image.y; to: image.y+96; duration: 800;
+                    }
+                }
+                /* Restores image state */
+                ScriptAction {script: {image.y -= 96; battle.scene.unpause();}}
+            }
+        },
+        Transition {
+            from: "*"
+            to: "onTheField"
+            SequentialAnimation {
+                ScriptAction { script: {battle.scene.pause(); image.opacity = 1;} }
+                NumberAnimation { target:image; from: 0.5;
+                    to: 1.0; property: "scale"; duration: 400 }
+                /* Grace pausing time after a pokemon is sent out*/
+                NumberAnimation {duration: 300}
+                ScriptAction {script: battle.scene.unpause();}
+            }
+        },
+        Transition {
+            from: "onTheField"
+            to: "offTheField"
+            SequentialAnimation {
+                ScriptAction {script: battle.scene.pause();}
+                NumberAnimation { target: image; property: "scale";
+                    duration: 600; from: 1.0; to: 0.5 }
+                NumberAnimation { property: "opacity";  duration: 200
+                    from: 1.0; to: 0; target: image}
+                ScriptAction {script: {image.scale = 1; battle.scene.unpause();}}
+            }
+        }
+    ]
 }
