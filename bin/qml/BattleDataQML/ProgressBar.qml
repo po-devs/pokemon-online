@@ -16,7 +16,7 @@ Rectangle {
         y: 1
         width: woof.pokemon.life
         height: 7
-        color: "#1f6920"
+        color: width >= 50 ? "#1fc42a": (width >= 25 ? "#f8db17" : "#b80202")
         radius: 2
         anchors.top: parent.top
         anchors.left: parent.left

@@ -21,7 +21,6 @@ Item {
     height: 96
 
     ProgressBar {
-        z: -100;
         parent: woof.parent
         x: woof.x
         y: woof.y - 15;
