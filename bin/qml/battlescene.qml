@@ -5,28 +5,28 @@ import "BattleDataQML" 1.0
 Rectangle {
     width: 500
     height: 400
-    property bool loaded: false;
     gradient: Gradient {
         GradientStop {
             position: 0
-            color: "#cfa50d"
+            color: "#8f9da8"
         }
 
         GradientStop {
-            position: 0.460
-            color: "#9e7373"
+            position: 0.190
+            color: "#80b5ca"
         }
 
         GradientStop {
-            position: 0.700
-            color: "#7794a6"
+            position: 0.480
+            color: "#db9b40"
         }
 
         GradientStop {
             position: 1
-            color: "#40598d"
+            color: "#91772f"
         }
     }
+    property bool loaded: false;
 
     Team {
         id: team1
@@ -67,9 +67,9 @@ Rectangle {
         fieldPokemon: battle.data.field.poke(1)
         pokemon: team2.team.poke(0)
         anchors.right: parent.right
-        anchors.rightMargin: 45
+        anchors.rightMargin: 65
         anchors.top: parent.top
-        anchors.topMargin: 25
+        anchors.topMargin: 55
     }
 
     Connections {

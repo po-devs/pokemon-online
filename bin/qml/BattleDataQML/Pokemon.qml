@@ -1,6 +1,6 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
-
+import Qt.labs.shaders 1.0
 Item {
     id: main
     width: grid.cellWidth
@@ -24,5 +24,16 @@ Item {
         source: "image://pokeinfo/icon/"+ pokemon.numRef
         width: 32
         height: 32
+
+        onSourceChanged: shader.grab()
     }
+
+    /* Used to display fainted pokemon */
+    ColorShader {
+        id: shader
+        image: img
+        blendColor: "black"
+        alpha: pokemon.status === 31 ? 0.5 : 0
+    }
+
 }

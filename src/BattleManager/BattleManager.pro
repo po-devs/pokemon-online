@@ -85,9 +85,11 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/FieldPokemon.qml \
     ../../bin/qml/BattleDataQML/ProgressBar.qml \
     ../../bin/qml/BattleDataQML/FrameAnimation.qml \
-    ../../bin/qml/BattleDataQML/PokeballAnimation.qml
+    ../../bin/qml/BattleDataQML/PokeballAnimation.qml \
+    ../../bin/qml/BattleDataQML/ColorShader.qml
 
 RESOURCES +=
+
 
 
 
