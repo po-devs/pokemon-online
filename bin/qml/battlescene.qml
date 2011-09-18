@@ -5,6 +5,7 @@ import "BattleDataQML" 1.0
 Rectangle {
     width: 500
     height: 400
+
     gradient: Gradient {
         GradientStop {
             position: 0
@@ -26,6 +27,7 @@ Rectangle {
             color: "#91772f"
         }
     }
+
     property bool loaded: false;
 
     Team {

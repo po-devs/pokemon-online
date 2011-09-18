@@ -28,6 +28,18 @@ public:
     Q_PROPERTY(int numRef READ numRef STORED false NOTIFY numChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
 
+    enum Status {
+        Koed = Pokemon::Koed,
+        Paralysed = Pokemon::Paralysed,
+        Asleep = Pokemon::Asleep,
+        Burnt = Pokemon::Burnt,
+        Frozen = Pokemon::Frozen,
+        Fine = Pokemon::Fine,
+        Poisoned = Pokemon::Poisoned
+    };
+
+    Q_ENUMS(Status)
+
     QString nickname() {return d()->nick();}
     int status() {return d()->status();}
     Pokemon::uniqueId num() {return d()->num();}

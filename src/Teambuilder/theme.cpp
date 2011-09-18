@@ -196,7 +196,7 @@ QPixmap Theme::FrameBall()
 QColor Theme::StatusColor(int status)
 {
     switch (status) {
-    case Pokemon::Koed: return "#171b1a";
+    case Pokemon::Koed: return "#000000";
     case Pokemon::Fine: return TypeColor(Pokemon::Normal);
     case Pokemon::Paralysed: return TypeColor(Pokemon::Electric);
     case Pokemon::Burnt: return TypeColor(Pokemon::Fire);

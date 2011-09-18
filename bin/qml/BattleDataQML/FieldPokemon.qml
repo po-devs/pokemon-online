@@ -1,5 +1,6 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
+import "colors.js" as Colors
 
 Item {
     id: woof
@@ -12,10 +13,10 @@ Item {
         return pokemon.status === 31 || pokemon.numRef === 0;
     }
 
-//    PokeballAnimation {
-//        paused: false;
-//        opacity: 1;
-//    }
+    PokeballAnimation {
+        paused: false;
+        opacity: 0;
+    }
 
     width: 96
     height: 96
@@ -30,6 +31,16 @@ Item {
         id: image
         transformOrigin: Item.Bottom
         source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&back="+back+"&shiny="+pokemon.shiny
+
+        onSourceChanged: shader.grab();
+    }
+
+    /* Used to display fainted pokemon */
+    ColorShader {
+        id: shader
+        image: image
+        blendColor: Colors.statusColor(pokemon.status)
+        alpha: (pokemon.status === PokeData.Fine || pokemon.status == PokeData.Koed) ? 0.0 : 0.3
     }
 
     states: [

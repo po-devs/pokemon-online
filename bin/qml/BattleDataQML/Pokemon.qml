@@ -1,6 +1,8 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import Qt.labs.shaders 1.0
+import "colors.js" as Colors
+
 Item {
     id: main
     width: grid.cellWidth
@@ -32,8 +34,8 @@ Item {
     ColorShader {
         id: shader
         image: img
-        blendColor: "black"
-        alpha: pokemon.status === 31 ? 0.5 : 0
+        blendColor: Colors.statusColor(pokemon.status)
+        alpha: pokemon.status === 0 ? 0.0 : 0.5
     }
 
 }

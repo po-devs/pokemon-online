@@ -27,15 +27,18 @@ import Qt.labs.shaders 1.0
             sourceImage.grab();
         }
 
-        id: maskEffect
         x: image.x
         y: image.y
         width: image.width
         height: image.height
         parent: image.parent
 
+        property real opac: image.opacity
+
         property variant sourceTexture: sourceImage
+
         property color blendColor: "black"
+
 
         vertexShader: "
             uniform highp mat4 qt_ModelViewProjectionMatrix;
@@ -52,15 +55,17 @@ import Qt.labs.shaders 1.0
         "
 
         fragmentShader: "
-            uniform lowp sampler2D sourceTexture;
+            uniform highp sampler2D sourceTexture;
             uniform lowp vec4 blendColor;
             uniform lowp float alpha;
+            uniform lowp float opac;
             varying highp vec2 qt_TexCoord;
 
             void main (void)
             {
                 vec4 c = texture2D(sourceTexture, qt_TexCoord);
-                gl_FragColor = vec4(c.rgb*(1.-alpha)+ blendColor.rgb*alpha, c.a);
+
+                gl_FragColor = vec4((c.rgb*(1-alpha)+blendColor.rgb*alpha)*c.a*opac, c.a*opac);
             }
         "
     }
