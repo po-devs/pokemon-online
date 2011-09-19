@@ -27,6 +27,7 @@ public:
     Q_PROPERTY(int level READ level NOTIFY pokemonReset)
     Q_PROPERTY(int numRef READ numRef STORED false NOTIFY numChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
+    Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
 
     enum Status {
         Koed = Pokemon::Koed,
@@ -48,6 +49,7 @@ public:
     int level() {return d()->level();}
     int numRef() {return d()->num().toPokeRef();}
     int life() { return d()->life();}
+    int lifePercent() {return d()->lifePercent();}
     Q_INVOKABLE bool isKoed() { return d()->ko();}
 
     void adaptTo(ShallowBattlePoke *pokemon);

@@ -14,7 +14,7 @@ Rectangle {
         id: rectangle1
         x: 1
         y: 1
-        width: woof.pokemon.life
+        width: woof.pokemon.lifePercent
         height: 7
         color: width >= 50 ? "#1fc42a": (width >= 25 ? "#f8db17" : "#b80202")
         radius: 2
@@ -28,18 +28,18 @@ Rectangle {
                 ScriptAction {
                     script: {
                         battle.scene.pause();
-                        numanim.duration = (oldValue < woof.pokemon.life ? (woof.pokemon.life-oldValue) : -(woof.pokemon.life-oldValue)) * 10
+                        numanim.duration = (oldValue < woof.pokemon.lifePercent ? (woof.pokemon.lifePercent-oldValue) : -(woof.pokemon.lifelifePercent-oldValue)) * 10
                     }
                 }
                 NumberAnimation {
                     id: numanim
                 }
-                ScriptAction {script: {oldValue = woof.pokemon.life; battle.scene.unpause();}}
+                ScriptAction {script: {oldValue = woof.pokemon.lifePercent; battle.scene.unpause();}}
             }
         }
     }
 
     Component.onCompleted: {
-        oldValue = woof.pokemon.life;
+        oldValue = woof.pokemon.lifePercent;
     }
 }
