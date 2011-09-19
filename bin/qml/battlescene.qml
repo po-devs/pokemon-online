@@ -2,31 +2,33 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
 
-Rectangle {
+Image {
     width: 500
     height: 400
 
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#8f9da8"
-        }
+    source: "images/grass.png"
 
-        GradientStop {
-            position: 0.190
-            color: "#80b5ca"
-        }
+//    gradient: Gradient {
+//        GradientStop {
+//            position: 0
+//            color: "#8f9da8"
+//        }
 
-        GradientStop {
-            position: 0.480
-            color: "#db9b40"
-        }
+//        GradientStop {
+//            position: 0.190
+//            color: "#80b5ca"
+//        }
 
-        GradientStop {
-            position: 1
-            color: "#91772f"
-        }
-    }
+//        GradientStop {
+//            position: 0.480
+//            color: "#db9b40"
+//        }
+
+//        GradientStop {
+//            position: 1
+//            color: "#91772f"
+//        }
+//    }
 
     property bool loaded: false;
 
