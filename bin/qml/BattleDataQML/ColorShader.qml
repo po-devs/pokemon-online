@@ -65,7 +65,7 @@ import Qt.labs.shaders 1.0
             {
                 vec4 c = texture2D(sourceTexture, qt_TexCoord);
 
-                gl_FragColor = vec4((c.rgb*(1-alpha)+blendColor.rgb*alpha)*c.a*opac, c.a*opac);
+                gl_FragColor = vec4((c.rgb*(1.0-alpha)+blendColor.rgb*alpha)*c.a*opac, c.a*opac);
             }
         "
     }

@@ -279,6 +279,10 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 
 ShallowBattlePoke::ShallowBattlePoke()
 {
+    setLife(0);
+    gender() = 0;
+    fullStatus() = 1;
+    level() = 100;
 }
 
 ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
