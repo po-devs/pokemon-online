@@ -31,6 +31,7 @@ Rectangle {
                     script: {
                         if (woof.pokemon.numRef===0) {
                             anim.complete();
+                            return;
                         }
 
                         battle.scene.pause();
