@@ -32,6 +32,8 @@ import Qt.labs.shaders 1.0
         width: image.width
         height: image.height
         parent: image.parent
+        scale: image.scale
+        transformOrigin: image.transformOrigin
 
         property real opac: image.opacity
 
