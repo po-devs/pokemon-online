@@ -12,12 +12,14 @@ public:
     void receiveData(QByteArray data);
     void dealWithCommandInfo(QDataStream&,uchar command,int spot);
 
-    bool delayed;
+    int delayCount;
     std::vector<QByteArray> delayedCommands;
     unsigned mCount; /* Used to know the index in delayedCommands */
 
     void pause();
     void unpause();
+
+    bool delayed();
 
 
     enum BattleCommand

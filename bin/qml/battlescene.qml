@@ -8,28 +8,6 @@ Image {
 
     source: "images/grass.png"
 
-//    gradient: Gradient {
-//        GradientStop {
-//            position: 0
-//            color: "#8f9da8"
-//        }
-
-//        GradientStop {
-//            position: 0.190
-//            color: "#80b5ca"
-//        }
-
-//        GradientStop {
-//            position: 0.480
-//            color: "#db9b40"
-//        }
-
-//        GradientStop {
-//            position: 1
-//            color: "#91772f"
-//        }
-//    }
-
     property bool loaded: false;
 
     Team {
