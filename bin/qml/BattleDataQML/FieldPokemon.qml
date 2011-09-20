@@ -103,7 +103,8 @@ Item {
                 PauseAnimation { duration: 1000 }
                 ScriptAction {script: {shader.opacity = image.opacity = 1; image.y -= 70;}}
                 NumberAnimation { target:image; from: 0.5;
-                    to: 1.0; property: "scale"; duration: 400 }
+                    to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
+                PauseAnimation { duration: 200 }
                 NumberAnimation { target:image; from: image.y-70;
                     to: image.y; property: "y"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
