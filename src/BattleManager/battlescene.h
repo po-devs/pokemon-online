@@ -22,6 +22,10 @@ public:
 
     Q_INVOKABLE void pause();
     Q_INVOKABLE void unpause();
+
+    Q_INVOKABLE void debug(const QString&m) {emit printMessage(m);}
+signals:
+    void printMessage(const QString&);
 private:
     battledata_ptr mData;
     battledata_ptr data();

@@ -2,6 +2,7 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 
 Rectangle {
+    id: main;
     width: 101
     height: 8
     color: "#ffffff"
@@ -28,13 +29,13 @@ Rectangle {
                 ScriptAction {
                     script: {
                         battle.scene.pause();
-                        numanim.duration = (oldValue < woof.pokemon.lifePercent ? (woof.pokemon.lifePercent-oldValue) : -(woof.pokemon.lifelifePercent-oldValue)) * 10
+                        numanim.duration = Math.floor(Math.abs(woof.pokemon.lifePercent-main.oldValue) * 10);
                     }
                 }
                 NumberAnimation {
                     id: numanim
                 }
-                ScriptAction {script: {oldValue = woof.pokemon.lifePercent; battle.scene.unpause();}}
+                ScriptAction {script: {main.oldValue = woof.pokemon.lifePercent; battle.scene.unpause();}}
             }
         }
     }

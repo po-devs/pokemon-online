@@ -30,6 +30,7 @@ SpectatorWindow::SpectatorWindow(QString name1, QString name2)
     logWidget = new PokeTextEdit();
 
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
+    connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
     foreach(QDeclarativeError error, scene->getWidget()->errors()) {
         log->printLine(error.toString());
