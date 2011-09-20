@@ -28,14 +28,24 @@ Rectangle {
             SequentialAnimation {
                 ScriptAction {
                     script: {
+                        if (woof.pokemon.numRef===0) {
+                            anim.complete();
+                        }
+
                         battle.scene.pause();
+                        //battle.scene.debug("Beginning animation for " + woof.pokemon.numRef + "\n");
                         numanim.duration = Math.floor(Math.abs(woof.pokemon.lifePercent-main.oldValue) * 10);
                     }
                 }
                 NumberAnimation {
                     id: numanim
                 }
-                ScriptAction {script: {main.oldValue = woof.pokemon.lifePercent; battle.scene.unpause();}}
+                ScriptAction {
+                    script: {
+                        //battle.scene.debug("Ending animation for " + woof.pokemon.numRef + "\n");
+                        main.oldValue = woof.pokemon.lifePercent; battle.scene.unpause();
+                    }
+                }
             }
         }
     }
