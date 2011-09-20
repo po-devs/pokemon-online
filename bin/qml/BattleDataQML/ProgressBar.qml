@@ -26,6 +26,7 @@ Rectangle {
 
         Behavior on width {
             SequentialAnimation {
+                id: anim;
                 ScriptAction {
                     script: {
                         if (woof.pokemon.numRef===0) {

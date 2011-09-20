@@ -14,8 +14,9 @@ Item {
     }
 
     PokeballAnimation {
-        paused: false;
-        opacity: 0;
+        id: pokeball;
+        paused: true;
+        opacity: 1;
     }
 
     width: 96
@@ -97,9 +98,14 @@ Item {
             from: "*"
             to: "onTheField"
             SequentialAnimation {
-                ScriptAction { script: {battle.scene.pause(); image.opacity = 1;} }
+                ScriptAction { script: {battle.scene.pause(); image.opacity = shader.opacity=0;
+                        pokeball.opacity=1; pokeball.trigger(); } }
+                PauseAnimation { duration: 1000 }
+                ScriptAction {script: {shader.opacity = image.opacity = 1; image.y -= 70;}}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 400 }
+                NumberAnimation { target:image; from: image.y-70;
+                    to: image.y; property: "y"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
                 NumberAnimation {duration: 300}
                 ScriptAction {script: battle.scene.unpause();}
