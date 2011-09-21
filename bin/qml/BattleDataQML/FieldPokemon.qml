@@ -79,8 +79,13 @@ Item {
             from: "onTheField"
             to: "koed"
             SequentialAnimation {
-                running: woof.pokemon.numRef !== 0
+                id: anim;
                 ScriptAction {script: {
+                        if (woof.pokemon.numRef === 0) {
+                            anim.complete();
+                            return;
+                        }
+
                         //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.pause();}}
                 ParallelAnimation {
