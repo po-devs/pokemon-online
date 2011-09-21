@@ -3,9 +3,12 @@
 
 #include "battlecommandmanager.h"
 #include "datacontainer.h"
+#include "empty.h"
 
-template <class T=DataContainer>
-class BattleData : public BattleCommandManager<BattleData<T> >
+template <class T, class U> class BattleData;
+
+template <class T=DataContainer, class Derived = BattleData<T, Empty> >
+class BattleData : public BattleCommandManager<Derived >
 {
 public:
     typedef T container;

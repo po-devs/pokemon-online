@@ -2,8 +2,8 @@
 #define BATTLECLIENTLOG_H
 
 #include "battlecommandmanager.h"
+#include "battledata.h"
 
-template <class T> class BattleData;
 class BattleDynamicInfo;
 class BattleDefaultTheme;
 class DataContainer;
