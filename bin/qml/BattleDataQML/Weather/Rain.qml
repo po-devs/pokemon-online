@@ -10,7 +10,7 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "#5a69b5";
-        z: -80;
+        z: 10;
     }
 
     Particles {
