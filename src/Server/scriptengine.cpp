@@ -1008,7 +1008,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
             copy[i] = copy[i].toUpper();
             up = false;
         } else {
-            if (copy[i] == '-')
+            if (copy[i] == '-' || copy[i] == ' ')
                 up = true;
             copy[i] = copy[i].toLower();
         }
