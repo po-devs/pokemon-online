@@ -28,6 +28,7 @@ public:
         return &auxdata;
     }
 
+private:
     FieldProxy auxdata;
 
     TeamProxy teams[2];

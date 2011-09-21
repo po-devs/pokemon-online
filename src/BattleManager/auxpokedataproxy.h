@@ -79,6 +79,20 @@ public:
         std::swap(auxdata[spot1], auxdata[spot2]);
     }
 
+    enum Weather {
+        NormalWeather = 0,
+        Hail = 1,
+        Rain = 2,
+        SandStorm = 3,
+        Sunny = 4
+    };
+
+    Q_ENUMS(Weather)
+
+signals:
+    void weatherSummon(int weather);
+    void weatherContinue(int weather);
+private:
     std::vector<AuxPokeDataProxy*> auxdata;
 };
 

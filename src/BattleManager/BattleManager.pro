@@ -87,9 +87,21 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/FrameAnimation.qml \
     ../../bin/qml/BattleDataQML/PokeballAnimation.qml \
     ../../bin/qml/BattleDataQML/ColorShader.qml \
-    ../../bin/qml/BattleDataQML/colors.js
+    ../../bin/qml/BattleDataQML/colors.js \
+    ../../bin/qml/BattleDataQML/weather.js \
+    ../../bin/qml/BattleDataQML/Weather/Rain.qml \
+    ../../bin/qml/BattleDataQML/Weather/Sand.qml \
+    ../../bin/qml/BattleDataQML/Weather/Hail.qml \
+    ../../bin/qml/BattleDataQML/Weather/qmldir
 
 RESOURCES +=
+
+
+
+
+
+
+
 
 
 
