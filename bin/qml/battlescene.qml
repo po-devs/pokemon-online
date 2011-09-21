@@ -94,7 +94,7 @@ Item {
     }
 
     Component.onCompleted: {
-        battle.scene.unpause();
+        //battle.scene.unpause();
 
         //uncomment to start hail
         /* weather.source = "BattleDataQML/Weather/Hail.qml"

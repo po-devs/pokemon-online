@@ -79,7 +79,10 @@ Item {
             from: "onTheField"
             to: "koed"
             SequentialAnimation {
-                ScriptAction {script: {battle.scene.pause();}}
+                running: woof.pokemon.numRef !== 0
+                ScriptAction {script: {
+                        //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.pause();}}
                 ParallelAnimation {
                     NumberAnimation {
                         target: image; property: "opacity";
@@ -91,37 +94,49 @@ Item {
                     }
                 }
                 /* Restores image state */
-                ScriptAction {script: {image.y -= 96; battle.scene.unpause();}}
+                ScriptAction {script: {image.y -= 96;
+                        //battle.scene.debug("Ending ko animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.unpause();}}
             }
         },
         Transition {
             from: "*"
             to: "onTheField"
             SequentialAnimation {
-                ScriptAction { script: {battle.scene.pause(); image.opacity = shader.opacity=0;
+                ScriptAction { script: {
+                        //battle.scene.debug("Beginning sendout animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.pause(); image.opacity = shader.opacity=0;
                         pokeball.opacity=1; pokeball.trigger(); } }
                 PauseAnimation { duration: 1000 }
                 ScriptAction {script: {shader.opacity = image.opacity = 1; image.y -= 70;}}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
-                PauseAnimation { duration: 200 }
+                PauseAnimation { duration: 150 }
                 NumberAnimation { target:image; from: image.y-70;
                     to: image.y; property: "y"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
                 NumberAnimation {duration: 300}
-                ScriptAction {script: battle.scene.unpause();}
+                ScriptAction {script: {
+                        //battle.scene.debug("Ending  sendout animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.unpause();
+                    }
+                }
             }
         },
         Transition {
             from: "onTheField"
             to: "offTheField"
             SequentialAnimation {
-                ScriptAction {script: battle.scene.pause();}
+                ScriptAction {script: {
+                        //battle.scene.debug("Beginning sendback animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.pause();}}
                 NumberAnimation { target: image; property: "scale";
-                    duration: 600; from: 1.0; to: 0.5 }
+                    duration:400; from: 1.0; to: 0.5 ; easing.type: Easing.InQuad }
                 NumberAnimation { property: "opacity";  duration: 200
                     from: 1.0; to: 0; target: image}
-                ScriptAction {script: {image.scale = 1; battle.scene.unpause();}}
+                ScriptAction {script: {image.scale = 1;
+                        //battle.scene.debug("Ending sendback animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.unpause();}}
             }
         }
     ]
