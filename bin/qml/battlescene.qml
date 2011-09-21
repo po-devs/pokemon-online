@@ -2,13 +2,33 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
 
-Image {
+Item {
+    id: scene;
+
     width: 500
     height: 400
 
-    source: "images/grass.png"
+    /* Separate element so that it can have a negative Z and be separate from the rest */
+    Image {
+        source: "images/grass.png"
+        anchors.fill: parent;
+        z: -100;
+    }
 
     property bool loaded: false;
+
+    /* Rectangle used by the weather */
+    Rectangle{
+        id: weatherOverlay;
+        anchors.fill: parent;
+        opacity: 0;
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 250;
+            }
+        }
+    }
 
     Team {
         id: team1
@@ -66,5 +86,18 @@ Image {
         onFieldPokemonChanged: {
             poke2.pokemon = team2.team.poke(pokemon)
         }
+    }
+
+    Loader {
+        anchors.fill: parent;
+        id: weather
+    }
+
+    Component.onCompleted: {
+        battle.scene.unpause();
+
+        //uncomment to start hail
+        /* weather.source = "BattleDataQML/Weather/Hail.qml"
+        weather.item.start();*/
     }
 }
