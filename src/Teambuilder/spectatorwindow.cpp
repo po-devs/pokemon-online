@@ -22,9 +22,6 @@ SpectatorWindow::SpectatorWindow(QString name1, QString name2)
     input = new BattleInput();
     scene = new BattleScene(data2);
 
-    /* Will get unpaused by scene when it's loaded */
-    input->pause();
-
     input->addOutput(data);
     input->addOutput(log);
     input->addOutput(data2);

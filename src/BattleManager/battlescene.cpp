@@ -69,9 +69,13 @@ ProxyDataContainer * BattleScene::getDataProxy()
 }
 
 void BattleScene::pause() {
+    //qDebug() << "pausing";
+    //debug("pausing\n");
     BattleCommandManager<BattleScene>::pause();
 }
 
 void BattleScene::unpause() {
+    //qDebug() << "unpausing";
+    //debug("unpausing\n");
     BattleCommandManager<BattleScene>::unpause();
 }
