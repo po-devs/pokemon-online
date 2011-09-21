@@ -2,8 +2,8 @@
 #define BATTLESCENE_H
 
 #include "battlecommandmanager.h"
+#include "battledata.h"
 
-template <class T> class BattleData;
 class QDeclarativeView;
 class BattleSceneProxy;
 class ProxyDataContainer;
