@@ -40,9 +40,10 @@ FrameAnimation {
     Behavior on triggerProp {
         SequentialAnimation {
             ScriptAction {
-                script: {pokeball.reset(); pokeball.paused = false; opacity = 1;}
+                script: {pokeball.reset();}
             }
-
+            PropertyAction { target: pokeball; property: "paused"; value: false }
+            PropertyAction { target: pokeball; property: "opacity"; value: 1 }
             NumberAnimation {
                 target: pokeball; property: "percent"
                 from: 0.2; to: 1.0; duration: 900;
@@ -52,9 +53,9 @@ FrameAnimation {
                 target: pokeball; property: "opacity"
                 from: 1.0; to: 0; duration: 150;
             }
-
+            PropertyAction { target: pokeball; property: "paused"; value: true }
             ScriptAction {
-                script: { pokeball.paused = true; animationCompleted();}
+                script: { animationCompleted();}
             }
         }
     }

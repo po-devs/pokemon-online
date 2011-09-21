@@ -96,7 +96,7 @@ Item {
     Component.onCompleted: {
         //battle.scene.unpause();
 
-        weather.source = "BattleDataQML/Weather/Sand.qml"
-        weather.item.start();
+//        weather.source = "BattleDataQML/Weather/Sand.qml"
+//        weather.item.start();
     }
 }

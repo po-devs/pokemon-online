@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE void pause();
     Q_INVOKABLE void unpause();
 
-    Q_INVOKABLE void debug(const QString&m) {emit printMessage(m);}
+    Q_INVOKABLE void debug(const QString&m);
 signals:
     void printMessage(const QString&);
 private:

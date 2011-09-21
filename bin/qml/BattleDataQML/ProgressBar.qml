@@ -30,7 +30,7 @@ Rectangle {
                 ScriptAction {
                     script: {
                         if (woof.pokemon.numRef===0) {
-                            anim.complete();
+                            anim.stop();
                             return;
                         }
 
@@ -42,10 +42,11 @@ Rectangle {
                 NumberAnimation {
                     id: numanim
                 }
+                PropertyAction { target: main; property: "oldvalue"; value: woof.pokemon.lifePercent }
                 ScriptAction {
                     script: {
                         //battle.scene.debug("Ending life animation for " + woof.pokemon.numRef + "\n");
-                        main.oldValue = woof.pokemon.lifePercent; battle.scene.unpause();
+                        battle.scene.unpause();
                     }
                 }
             }
