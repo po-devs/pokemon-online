@@ -31,7 +31,7 @@ Item {
     Image {
         id: image
         transformOrigin: Item.Bottom
-        source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&back="+back+"&shiny="+pokemon.shiny
+        source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         onSourceChanged: shader.grab();
     }
@@ -81,8 +81,8 @@ Item {
             SequentialAnimation {
                 id: anim;
                 ScriptAction {script: {
-                        if (woof.pokemon.numRef === 0) {
-                            anim.complete();
+                        if (woof.pokemon.numRef===0) {
+                            anim.stop();
                             return;
                         }
 
@@ -108,12 +108,14 @@ Item {
             from: "*"
             to: "onTheField"
             SequentialAnimation {
+                PropertyAction { targets: [image, shader]; properties: "opacity"; value: 0 }
                 ScriptAction { script: {
                         //battle.scene.debug("Beginning sendout animation for " + woof.pokemon.numRef + "\n");
-                        battle.scene.pause(); image.opacity = shader.opacity=0;
-                        pokeball.opacity=1; pokeball.trigger(); } }
+                        battle.scene.pause();
+                        pokeball.trigger(); } }
                 PauseAnimation { duration: 1000 }
-                ScriptAction {script: {shader.opacity = image.opacity = 1; image.y -= 70;}}
+                PropertyAction { targets: [image, shader]; properties: "opacity"; value: 1}
+                ScriptAction {script: image.y -= 70}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
                 PauseAnimation { duration: 150 }

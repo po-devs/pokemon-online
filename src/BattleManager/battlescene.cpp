@@ -68,6 +68,12 @@ ProxyDataContainer * BattleScene::getDataProxy()
     return data()->exposedData();
 }
 
+void BattleScene::debug(const QString &m)
+{
+    qDebug() << m;
+    emit printMessage(m);
+}
+
 void BattleScene::pause() {
     //qDebug() << "pausing";
     //debug("pausing\n");
