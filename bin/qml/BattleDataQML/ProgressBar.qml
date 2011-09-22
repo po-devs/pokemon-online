@@ -6,7 +6,7 @@ Rectangle {
     width: 101
     height: 8
     color: "#ffffff"
-    radius: 4
+    radius: 2
     border.color: "#0d0d0d"
 
     property int oldValue: 0;
@@ -18,7 +18,7 @@ Rectangle {
         width: woof.pokemon.lifePercent
         height: 7
         color: width >= 50 ? "#1fc42a": (width >= 25 ? "#f8db17" : "#b80202")
-        radius: 2
+        radius: 1
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: 1
@@ -42,9 +42,10 @@ Rectangle {
                 NumberAnimation {
                     id: numanim
                 }
-                PropertyAction { target: main; property: "oldvalue"; value: woof.pokemon.lifePercent }
+                PauseAnimation { duration: 100; }
                 ScriptAction {
                     script: {
+                        main.oldValue = woof.pokemon.lifePercent;
                         //battle.scene.debug("Ending life animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.unpause();
                     }

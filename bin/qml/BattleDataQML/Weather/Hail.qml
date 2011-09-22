@@ -27,6 +27,8 @@ Item {
         angleDeviation: 36
         velocity: 120
         count: 0;
+        emissionRate: 60;
+        opacity: 0;
 
         velocityDeviation: 10
         ParticleMotionWander {
@@ -40,27 +42,27 @@ Item {
         running: false;
 
         ScriptAction {
-            script: {battle.scene.pause();}
+            script: {battle.scene.pause();particles.count=500;}
         }
-        NumberAnimation {
-            target: overlay; duration: 250;
-            property: "opacity"; to: 0.8;
+        ParallelAnimation {
+            NumberAnimation {
+                target: particles; duration: 250;
+                property: "opacity"; to: 1;
+            }
+            NumberAnimation {
+                target: overlay; duration: 250;
+                property: "opacity"; to: 0.5;
+            }
         }
         PauseAnimation {
-            duration: 300;
-        }
-        ScriptAction {
-            script: particles.burst(30, 60);
-        }
-        PauseAnimation {
-            duration: 1950;
+            duration: 2300;
         }
         NumberAnimation {
-            target: overlay; duration: 250;
+            targets: [overlay, particles]; duration: 250;
             property: "opacity"; to: 0.0;
         }
         ScriptAction {
-            script: {battle.scene.unpause();}
+            script: {particles.count = 0; battle.scene.unpause();}
         }
     }
 

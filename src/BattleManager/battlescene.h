@@ -2,7 +2,7 @@
 #define BATTLESCENE_H
 
 #include "battlecommandmanager.h"
-#include "battledata.h"
+#include "advancedbattledata.h"
 
 class QDeclarativeView;
 class BattleSceneProxy;
@@ -12,7 +12,7 @@ class BattleScene: public QObject, public BattleCommandManager<BattleScene>
 {
     Q_OBJECT
 public:
-    typedef BattleData<ProxyDataContainer>* battledata_ptr;
+    typedef AdvancedBattleData* battledata_ptr;
 
     BattleScene(battledata_ptr data);
     ~BattleScene();

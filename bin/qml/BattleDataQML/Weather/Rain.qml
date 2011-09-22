@@ -10,7 +10,7 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "#5a69b5";
-        z: 10;
+        z: -10;
     }
 
     Particles {
@@ -28,6 +28,7 @@ Item {
         velocity: 500
         count:0;
         emissionRate: 80;
+        opacity: 0;
 
         velocityDeviation: 10
         ParticleMotionLinear {
@@ -39,20 +40,20 @@ Item {
         running: false;
 
         ScriptAction {
-            script: {battle.scene.pause();}
+            script: {battle.scene.pause();particles.count = 500}
         }
-        NumberAnimation {
-            target: overlay; duration: 250;
-            property: "opacity"; to: 0.8;
+        ParallelAnimation {
+            NumberAnimation {
+                target: particles; duration: 250;
+                property: "opacity"; to: 1.0;
+            }
+            NumberAnimation {
+                target: overlay; duration: 250;
+                property: "opacity"; to: 0.6;
+            }
         }
         PauseAnimation {
-            duration: 300;
-        }
-        ScriptAction {
-            script: particles.count = 500;
-        }
-        PauseAnimation {
-            duration: 1800;
+            duration: 2000;
         }
         ScriptAction {
             script: particles.count = 0;
@@ -61,11 +62,11 @@ Item {
             duration: 200;
         }
         NumberAnimation {
-            target: overlay; duration: 250;
+            targets: [overlay, particles]; duration: 250;
             property: "opacity"; to: 0.0;
         }
         ScriptAction {
-            script: {battle.scene.unpause();}
+            script: {particles.count = 0; battle.scene.unpause();}
         }
     }
 

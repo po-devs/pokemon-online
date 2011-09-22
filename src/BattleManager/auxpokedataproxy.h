@@ -75,6 +75,8 @@ public:
         return auxdata[num];
     }
 
+    Q_PROPERTY(int weather READ weather NOTIFY weatherChanged)
+
     void shiftSpots(int spot1, int spot2) {
         std::swap(auxdata[spot1], auxdata[spot2]);
     }
@@ -89,11 +91,14 @@ public:
 
     Q_ENUMS(Weather)
 
+    int weather() {return mWeather;}
+    void setWeather(int newWeather);
 signals:
-    void weatherSummon(int weather);
-    void weatherContinue(int weather);
+    void weatherChanged();
 private:
     std::vector<AuxPokeDataProxy*> auxdata;
+
+    int mWeather;
 };
 
 #endif // AUXPOKEDATAPROXY_H

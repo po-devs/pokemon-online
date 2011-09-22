@@ -111,7 +111,7 @@ public:
     };
 
     container *exposedData() { return d(); }
-private:
+protected:
     container cont;
     container* d() { return &cont;}
 };

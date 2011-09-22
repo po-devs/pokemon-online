@@ -13,7 +13,7 @@
 SpectatorWindow::SpectatorWindow(QString name1, QString name2)
 {
     battledata_basic * data = new battledata_basic();
-    battledata_proxy * data2 = new battledata_proxy();
+    advbattledata_proxy * data2 = new advbattledata_proxy();
 
     data->team(0).name() = data2->team(0).name() = name1;
     data->team(1).name() = data2->team(1).name() = name2;
