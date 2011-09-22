@@ -3,12 +3,9 @@
 
 #include "battlecommandmanager.h"
 #include "datacontainer.h"
-#include "empty.h"
 
-template <class T, class U> class BattleData;
-
-template <class T=DataContainer, class Derived = BattleData<T, Empty> >
-class BattleData : public BattleCommandManager<Derived >
+template <class T, class Derived>
+class BattleDataInherit : public BattleCommandManager<Derived>
 {
 public:
     typedef T container;
@@ -17,8 +14,6 @@ public:
     typedef decltype(teamTypePtr(0)->poke(0)) pokeTypePtr;
     typedef decltype(*pokeTypePtr(0)) pokeType;
     typedef decltype(container().fieldPoke(0)) auxTypeRef;
-
-    BattleData(){}
 
     void onKo(int spot)
     {
@@ -119,6 +114,12 @@ public:
 private:
     container cont;
     container* d() { return &cont;}
+};
+
+template <class T = DataContainer>
+class BattleData: public BattleDataInherit<T, BattleData<T> >
+{
+
 };
 
 #endif // BATTLEDATA_H
