@@ -95,7 +95,7 @@ QScriptValue ScriptEngine::import(const QString &fileName) {
 
     if (!in.open(QIODevice::ReadOnly)) {
         warn("sys.import", "The file scripts/" + fileName + " is not readable.");
-        return;
+        return QScriptValue();
     }
 
     QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));

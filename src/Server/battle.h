@@ -634,7 +634,7 @@ private:
     /* Used when pokemon shift slots */
     QVector<int> indexes;
 public:
-    const QHash<int, int> &getSpectators() const {
+    const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
         return spectators;
     }
