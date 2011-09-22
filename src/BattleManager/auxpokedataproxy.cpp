@@ -20,8 +20,16 @@ void AuxPokeDataProxy::onSendBack()
     setOnTheField(false);
 }
 
+void FieldProxy::setWeather(int weather)
+{
+    if (mWeather == weather) {
+        return;
+    }
+    mWeather = weather;
+    emit weatherChanged();
+}
 
-FieldProxy::FieldProxy() {
+FieldProxy::FieldProxy() : mWeather(NormalWeather) {
     /* Resizes for triple. Later, when loaded with battle configuration, will get
               more accurate loading */
     for (int i = 0; i < 6; i++) {

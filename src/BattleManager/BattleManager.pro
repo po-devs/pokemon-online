@@ -51,7 +51,8 @@ HEADERS +=\
     datacontainer.h \
     proxydatacontainer.h \
     battledatatypes.h \
-    auxpokedataproxy.h
+    auxpokedataproxy.h \
+    advancedbattledata.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -93,4 +94,5 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Weather/Sand.qml \
     ../../bin/qml/BattleDataQML/Weather/Hail.qml \
     ../../bin/qml/BattleDataQML/Weather/qmldir
+
 

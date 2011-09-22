@@ -1,6 +1,7 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
+import "BattleDataQML/weather.js" as Weather
 
 Item {
     id: scene;
@@ -93,10 +94,14 @@ Item {
         id: weather
     }
 
-    Component.onCompleted: {
-        //battle.scene.unpause();
+    Connections {
+        target: battle.data.field
+        onWeatherChanged: {
+            Weather.trigger(weather, battle.data.field.weather);
+        }
+    }
 
-//        weather.source = "BattleDataQML/Weather/Sand.qml"
-//        weather.item.start();
+    Component.onCompleted: {
+
     }
 }

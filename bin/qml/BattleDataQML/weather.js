@@ -1,42 +1,12 @@
-var hailComponent;
+var sources = {};
 
-function triggerWeather(scene, weather) {
-    switch(weather) {
-    case FieldData.Rain:
-        triggerRain(scene); break;
-    case FieldData.Hail:
-        triggerHail(scene); break;
-    case FieldData.SandStorm:
-        triggerSand(scene); break;
-    case FieldData.Sunny:
-        triggerSun(scene); break;
+sources[FieldData.Rain] = "BattleDataQML/Weather/Rain.qml";
+sources[FieldData.Hail] = "BattleDataQML/Weather/Hail.qml";
+sources[FieldData.SandStorm] = "BattleDataQML/Weather/Sand.qml";
+
+function trigger(weatherScene, weather) {
+    if (weather in sources) {
+        weatherScene.source = sources[weather];
+        weatherScene.item.start();
     }
-}
-
-function triggerRain(scene) {
-}
-
-function triggerHail(scene) {
-    if (!hailComponent) {
-        hailComponent = Qt.createComponent("BattleDataQML/Weather/Hail.qml");
-    }
-
-    if (hailComponent.status != Component.Ready) {
-        return;
-    }
-
-    battle.scene.pause();
-
-    var hail = hailComponent.createObject(scene);
-
-    hail.finished.connect(function() {battle.scene.unpause()} )
-    hail.start();
-}
-
-function triggerSand(scene) {
-
-}
-
-function triggerSun(scene) {
-
 }

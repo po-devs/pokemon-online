@@ -29,7 +29,7 @@ Item {
         velocity: 400
         count:0;
         emissionRate: 300;
-        fadeInDuration: 50;
+        fadeInDuration: 10;
 
         velocityDeviation: 10
         ParticleMotionWander {
@@ -42,7 +42,7 @@ Item {
         id: animation;
         running: false;
         ScriptAction {
-            script: {particles.opacity = 1; console.log("Pausing sand");battle.scene.debug("Pausing sand\n");battle.scene.pause();}
+            script: {particles.opacity = 1; battle.scene.pause(); particles.count = 2000;}
         }
         ParallelAnimation {
             NumberAnimation {
@@ -55,13 +55,7 @@ Item {
             }
         }
         PauseAnimation {
-            duration: 300;
-        }
-        ScriptAction {
-            script: particles.count = 2000;
-        }
-        PauseAnimation {
-            duration: 2000;
+            duration: 2300;
         }
         ParallelAnimation {
             NumberAnimation {
@@ -74,7 +68,7 @@ Item {
             }
         }
         ScriptAction {
-            script: {particles.count = 0; console.log("Unpausing sand"); battle.scene.debug("Unpausing sand\n");battle.scene.unpause();}
+            script: {particles.count = 0; battle.scene.unpause();}
         }
     }
 
