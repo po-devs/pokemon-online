@@ -1335,7 +1335,18 @@ struct MMDoomDesire : public MM
                 if (b.gen() <= 4) {
                     b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
                 } else {
+                    int t = b.opponent(b.player(s));
+                    int doomuser = s;
+
+                    for (int i = 0; i < b.numberPerSide(); i++) {
+                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
+                            doomuser = b.slot(t, i);
+                            break;
+                        }
+                    }
+
                     MoveEffect e(move, b.gen(), tmove(b,s));
+                    MoveEffect f(move, b.gen(), tmove(b,doomuser));
 
                     b.calculateTypeModStab(s, s);
 
@@ -1348,17 +1359,6 @@ struct MMDoomDesire : public MM
                     turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
                     turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
                     turn(b,s)["CriticalHit"] = false;
-                    tmove(b,s).power = MoveInfo::Power(move, b.gen());
-
-                    int t = b.opponent(b.player(s));
-                    int doomuser = s;
-
-                    for (int i = 0; i < b.numberPerSide(); i++) {
-                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
-                            doomuser = b.slot(t, i);
-                            break;
-                        }
-                    }
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BS::Effective, s, quint8(typemod));
