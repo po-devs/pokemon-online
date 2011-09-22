@@ -359,7 +359,7 @@ void BattleSituation::removeSpectator(int id)
 int BattleSituation::id(int spot) const
 {
     if (spot >= 2) {
-        return spectators.value(spot);
+        return spectators.value(spot).first;
     } else {
         return myid[spot];
     }
@@ -4744,16 +4744,19 @@ void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSen
         emit battleInfo(publicId(), qint32(id(Player2)), toSend);
 
         spectatorMutex.lock();
-        foreach(int id, spectators) {
-            emit battleInfo(publicId(), qint32(id), toSend);
+
+        QHashIterator<int, QPair<int, QString> > it(spectators);
+        while(it.hasNext()) {
+            emit battleInfo(publicId(), qint32(it.next().value().first), toSend);
         }
         spectatorMutex.unlock();
     } else if (players == AllButPlayer) {
         emit battleInfo(publicId(), qint32(id(opponent(player(slot)))), toSend);
 
         spectatorMutex.lock();
-        foreach(int id, spectators) {
-            emit battleInfo(publicId(), qint32(id), toSend);
+        QHashIterator<int, QPair<int, QString> >  it(spectators);
+        while(it.hasNext()) {
+            emit battleInfo(publicId(), qint32(it.next().value().first), toSend);
         }
         spectatorMutex.unlock();
     } else {

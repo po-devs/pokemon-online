@@ -1440,9 +1440,10 @@ void Server::removeBattle(int battleid)
     mybattles.remove(battleid);
     battleList.remove(battleid);
 
-    foreach(int id, battle->getSpectators()) {
-        player(id)->relay().finishSpectating(battleid);
-        player(id)->battlesSpectated.remove(battleid);
+    typedef QPair<int, QString> pair;
+    foreach(pair p, battle->getSpectators()) {
+        player(p.first)->relay().finishSpectating(battleid);
+        player(p.first)->battlesSpectated.remove(battleid);
     }
     /* When manipulating threaded objects, you need to be careful... */
     battle->deleteLater();
@@ -1587,8 +1588,9 @@ void Server::spectatingRequested(int id, int idOfBattle)
         p2->relay().sendPlayer(bundle);
         source->relay().sendPlayer(p2->bundle());
     }
-    foreach(int id, battle->getSpectators()) {
-        Player *p = player(id);
+    typedef QPair<int, QString> pair;
+    foreach(pair mp, battle->getSpectators()) {
+        Player *p = player(mp.first);
         if (!p->isInSameChannel(source)) {
             p->relay().sendPlayer(bundle);
             source->relay().sendPlayer(p->bundle());

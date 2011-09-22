@@ -2834,7 +2834,7 @@ struct MMOutrage : public MM
         if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Outrage");
-            pokeMM(b,s).remove("OutrageUntil");
+            poke(b,s).remove("OutrageUntil");
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
             b.sendMoveMessage(93,0,s,type(b,s));

@@ -66,7 +66,7 @@ struct MMDisable : public MM
             poke(b,t)["DisabledMove"] = mv;
             addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
             addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable");
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable", &et);
         }
     }
 
