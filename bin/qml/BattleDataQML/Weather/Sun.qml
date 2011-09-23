@@ -6,6 +6,7 @@ Image {
     opacity: 0;
     source: "../../images/sun.png"
     anchors.fill: parent;
+    z: 200;
 
     Particles {
         parent: main.parent;

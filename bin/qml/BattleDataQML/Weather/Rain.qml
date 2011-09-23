@@ -10,7 +10,7 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "#5a69b5";
-        z: -10;
+        z: -100;
     }
 
     Particles {
@@ -33,6 +33,7 @@ Item {
         velocityDeviation: 10
         ParticleMotionLinear {
         }
+        z: 200;
     }
 
     SequentialAnimation {

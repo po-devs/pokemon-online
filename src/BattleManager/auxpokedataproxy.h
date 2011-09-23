@@ -13,7 +13,7 @@ public:
     void onSendBack();
 
     Q_PROPERTY(bool onTheField READ isOnTheField NOTIFY onTheFieldChanged)
-    Q_PROPERTY(bool subsitute READ hasSubstitute NOTIFY substituteChanged)
+    Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
     Q_PROPERTY(bool showing READ isShowing NOTIFY showingChanged)
     Q_PROPERTY(int alternateSprite READ alternateSpriteRef NOTIFY alternateSpriteChanged)
 

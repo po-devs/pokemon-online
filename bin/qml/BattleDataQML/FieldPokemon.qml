@@ -7,7 +7,7 @@ Item {
     property bool back: false
     property FieldPokeData fieldPokemon
     property PokeData pokemon
-
+    z: back ? 80 : 0;
 
     function isKoed() {
         return pokemon.status === 31 || pokemon.numRef === 0;
@@ -30,10 +30,20 @@ Item {
 
     Image {
         id: image
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom
         source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         onSourceChanged: shader.grab();
+    }
+
+    Image {
+        id :substitute;
+        opacity: 0;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.bottom: parent.bottom;
+        source: "image://pokeinfo/pokemon/substitute&back="+back
     }
 
     /* Used to display fainted pokemon */
@@ -45,6 +55,23 @@ Item {
     }
 
     states: [
+        State {
+            name: "substitute"
+            when: fieldPokemon.substitute
+            extend: "onTheField"
+            PropertyChanges {
+                target: image
+                anchors.bottomMargin: back ? -40 : 40;
+                anchors.horizontalCenterOffset: back? -40: 40;
+                opacity: 0.7;
+                z: woof.back ? 10 : -10;
+            }
+            PropertyChanges {
+                target: substitute
+                opacity: 1;
+            }
+        },
+
         State {
             name: "koed"
             when: isKoed()
@@ -94,18 +121,22 @@ Item {
                         from: 1; to: 0; duration: 800
                     }
                     NumberAnimation {
-                        target: image; property: "y";
-                        from: image.y; to: image.y+96; duration: 800;
+                        target: image; property: "anchors.bottomMargin";
+                        from: 0; to: -96; duration: 800;
                     }
                 }
+                PropertyAction { target: image; property: "anchors.bottomMargin"; value: 0 }
                 /* Restores image state */
-                ScriptAction {script: {image.y -= 96;
+                ScriptAction {
+                    script: {
                         //battle.scene.debug("Ending ko animation for " + woof.pokemon.numRef + "\n");
-                        battle.scene.unpause();}}
+                        battle.scene.unpause();
+                    }
+                }
             }
         },
         Transition {
-            from: "*"
+            from: "koed,offTheField"
             to: "onTheField"
             SequentialAnimation {
                 PropertyAction { targets: [image, shader]; properties: "opacity"; value: 0 }
@@ -115,12 +146,12 @@ Item {
                         pokeball.trigger(); } }
                 PauseAnimation { duration: 1000 }
                 PropertyAction { targets: [image, shader]; properties: "opacity"; value: 1}
-                ScriptAction {script: image.y -= 70}
+                PropertyAction { target: image; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
                 PauseAnimation { duration: 150 }
-                NumberAnimation { target:image; from: image.y-70;
-                    to: image.y; property: "y"; duration: 400; easing.type: Easing.OutBounce}
+                NumberAnimation { target:image; from: 70;
+                    to: 0; property: "anchors.bottomMargin"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
                 NumberAnimation {duration: 300}
                 ScriptAction {script: {
@@ -144,6 +175,47 @@ Item {
                 ScriptAction {script: {image.scale = 1;
                         //battle.scene.debug("Ending sendback animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.unpause();}}
+            }
+        },
+        Transition {
+            from: "onTheField"
+            to: "substitute"
+            SequentialAnimation {
+                ScriptAction { script: battle.scene.pause();}
+                NumberAnimation { target: image; property: "width"; to: image.implicitWidth*0.3; duration: 200;
+                    easing.type: Easing.OutQuad }
+                NumberAnimation { target: image; property: "width"; to: image.implicitWidth; duration: 200;
+                    easing.type: Easing.InQuad }
+                ScriptAction {
+                    script: image.width = undefined;
+                }
+                ParallelAnimation {
+                    SequentialAnimation {
+                        NumberAnimation { target: substitute; property: "anchors.bottomMargin"; to: 50; duration: 200
+                        easing.type: Easing.OutQuad;}
+                        NumberAnimation { target: substitute; property: "anchors.bottomMargin"; to: 0; duration: 200
+                        easing.type: Easing.InCubic;}
+                    }
+                    NumberAnimation { target: substitute; property: "opacity";}
+                    NumberAnimation {target: image; property: "anchors.horizontalCenterOffset"}
+                    NumberAnimation {target: image; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: image; property: "opacity"}
+                }
+                ScriptAction { script: battle.scene.unpause();}
+            }
+        },
+        Transition {
+            from: "substitute"
+            to: "onTheField"
+            SequentialAnimation {
+                ScriptAction { script: battle.scene.pause();}
+                NumberAnimation { target: substitute; property: "opacity"}
+                ParallelAnimation {
+                    NumberAnimation {target: image; property: "anchors.horizontalCenterOffset"}
+                    NumberAnimation {target: image; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: image; property: "opacity"}
+                }
+                ScriptAction { script: battle.scene.unpause();}
             }
         }
     ]
