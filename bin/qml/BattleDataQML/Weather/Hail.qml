@@ -10,7 +10,7 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "black";
-        z: -80;
+        z: -100;
     }
 
     Particles {
@@ -35,6 +35,8 @@ Item {
             xvariance: 20
             pace: 100
         }
+
+        z: 200;
     }
 
     SequentialAnimation {

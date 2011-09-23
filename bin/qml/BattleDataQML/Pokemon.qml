@@ -7,6 +7,7 @@ Item {
     id: main
     width: grid.cellWidth
     height: grid.cellHeight
+    z: 100;
 
     Image {
         id: img

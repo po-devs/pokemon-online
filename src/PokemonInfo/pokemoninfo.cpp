@@ -656,12 +656,13 @@ QPixmap PokemonInfo::Picture(const QString &url)
     Pokemon::uniqueId num = Pokemon::NoPoke;
     bool shiny=false;
     bool back = false;
+    bool substitute = false;
 
     foreach (QString param, params) {
         QString par = param.section('=', 0,0);
         QString val = param.section('=', 1);
 
-        if (par.length() > 0 && par[0].isDigit() && val.length() == 0) {
+        if (par.length() > 0 && val.length() == 0 && (par[0].isDigit() || par == "substitute")) {
             val = par;
             par = "num";
         }
@@ -669,10 +670,14 @@ QPixmap PokemonInfo::Picture(const QString &url)
         if (par == "gen") {
             gen = val.toInt();
         } else if (par == "num") {
-            if (val.indexOf('-') != -1) {
-                num = Pokemon::uniqueId(val.section('-', 0,0).toInt(), val.section('-', 1).toInt());
+            if (val == "substitute") {
+                substitute  = true;
             } else {
-                num = val.toInt();
+                if (val.indexOf('-') != -1) {
+                    num = Pokemon::uniqueId(val.section('-', 0,0).toInt(), val.section('-', 1).toInt());
+                } else {
+                    num = val.toInt();
+                }
             }
         } else if (par == "shiny") {
             shiny = val == "true";
@@ -683,7 +688,11 @@ QPixmap PokemonInfo::Picture(const QString &url)
         }
     }
 
-    return Picture(num, gen, gender, shiny, back);
+    if (substitute) {
+        return Sub(gen, back);
+    } else {
+        return Picture(num, gen, gender, shiny, back);
+    }
 }
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
