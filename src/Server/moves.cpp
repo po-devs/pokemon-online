@@ -2266,7 +2266,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == 0) {
+        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
