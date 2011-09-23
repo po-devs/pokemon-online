@@ -4678,13 +4678,10 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     int attacked = this->attacked();
 
     if (attacker != -1 && attacked != -1) {
-        //Unaware
+        //Unaware / Sacred sword
         if (attacker != player && attacked == player) {
-            if (hasWorkingAbility(attacker, Ability::Unaware) && (stat == SpDefense || stat == Defense || stat == Evasion)) {
-                boost = 0;
-            }
-            else if ((tmove(attacker).attack == Move::PaymentPlan
-                      || tmove(attacker).attack == Move::SacredSword)&& (stat == SpDefense || stat == Defense)) {
+            if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::PaymentPlan || tmove(attacker).attack == Move::SacredSword)
+                    && (stat == SpDefense || stat == Defense || stat == Evasion)) {
                 boost = 0;
             }
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&
