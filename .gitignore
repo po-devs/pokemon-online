@@ -36,3 +36,4 @@ bin/Registry
 bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
+bin/scripts.js

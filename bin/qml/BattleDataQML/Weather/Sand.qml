@@ -42,7 +42,7 @@ Item {
         id: animation;
         running: false;
         ScriptAction {
-            script: {particles.opacity = 1; battle.scene.pause(); particles.count = 2000;}
+            script: {battle.scene.pause(); particles.count = 2000;}
         }
         ParallelAnimation {
             NumberAnimation {

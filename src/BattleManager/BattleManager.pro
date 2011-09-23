@@ -93,6 +93,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Weather/Rain.qml \
     ../../bin/qml/BattleDataQML/Weather/Sand.qml \
     ../../bin/qml/BattleDataQML/Weather/Hail.qml \
-    ../../bin/qml/BattleDataQML/Weather/qmldir
+    ../../bin/qml/BattleDataQML/Weather/qmldir \
+    ../../bin/qml/BattleDataQML/Weather/Sun.qml
+
 
 
