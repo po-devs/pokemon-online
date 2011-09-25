@@ -4,16 +4,21 @@
 #include "battlecommandmanager.h"
 #include "datacontainer.h"
 
+class BattleConfiguration;
+
 template <class T, class Derived>
 class BattleDataInherit : public BattleCommandManager<Derived>
 {
 public:
+    BattleDataInherit(BattleConfiguration *conf) : cont(conf) {
+    }
+
     typedef T container;
-    typedef decltype(container().team(0)) teamTypePtr;
+    typedef decltype(container(0).team(0)) teamTypePtr;
     typedef decltype(*teamTypePtr(0)) teamType;
     typedef decltype(teamTypePtr(0)->poke(0)) pokeTypePtr;
     typedef decltype(*pokeTypePtr(0)) pokeType;
-    typedef decltype(container().fieldPoke(0)) auxTypeRef;
+    typedef decltype(container(0).fieldPoke(0)) auxTypeRef;
 
     void onKo(int spot)
     {
@@ -104,6 +109,7 @@ public:
     int spot(int player, int slot) {return player+2*slot;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
     int gen() { return GEN_MAX; }
+    BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
 
     enum {
         Player1,
@@ -113,13 +119,17 @@ public:
     container *exposedData() { return d(); }
 protected:
     container cont;
+    BattleConfiguration *conf;
     container* d() { return &cont;}
 };
 
 template <class T = DataContainer>
 class BattleData: public BattleDataInherit<T, BattleData<T> >
 {
+public:
+    typedef BattleDataInherit<T, BattleData<T> > baseClass;
 
+    BattleData(BattleConfiguration *conf) : baseClass(conf) {}
 };
 
 #endif // BATTLEDATA_H

@@ -6,10 +6,15 @@
 #include "teamdata.h"
 #include "auxpokebattledata.h"
 
+class BattleConfiguration;
+
 class DataContainer {
 public:
+    DataContainer(BattleConfiguration *configuration);
+    ~DataContainer();
+
     TeamData *team(int player) {
-        return &teams[player];
+        return teams[player];
     }
 
     AuxPokeData &fieldPoke(int spot) {
@@ -21,7 +26,7 @@ public:
     }
 
     FieldData auxdata;
-    TeamData teams[2];
+    TeamData* teams[2];
 };
 
 #endif // DATACONTAINER_H

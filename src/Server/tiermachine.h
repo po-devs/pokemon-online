@@ -90,7 +90,17 @@ private:
     LoadThread *threads;
     InsertThread<MemberRating> *ithread;
 
+    static const int semaphoreMaxLoad = 1000;
+    QSemaphore semaphore;
+
     LoadThread * getThread();
+
+    /* Number gets increased by one every time tiers are reloaded.
+
+        So that if tiers are reloaded while a threaded query was already thrown,
+        if the version stored in the query and this version are different,
+        the query is discarded. */
+    quint16 version;
 };
 
 /* For rankings */
