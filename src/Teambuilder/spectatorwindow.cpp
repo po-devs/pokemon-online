@@ -10,16 +10,16 @@
 #include "poketextedit.h"
 #include "theme.h"
 
-SpectatorWindow::SpectatorWindow(QString name1, QString name2)
+SpectatorWindow::SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2)
 {
-    battledata_basic * data = new battledata_basic();
-    advbattledata_proxy * data2 = new advbattledata_proxy();
+    battledata_basic * data = new battledata_basic(&conf);
+    advbattledata_proxy * data2 = new advbattledata_proxy(&conf);
 
     data->team(0).name() = data2->team(0).name() = name1;
     data->team(1).name() = data2->team(1).name() = name2;
 
     log = new BattleClientLog(data, Theme::getBattleTheme());
-    input = new BattleInput();
+    input = new BattleInput(&conf);
     scene = new BattleScene(data2);
 
     input->addOutput(data);

@@ -1,9 +1,15 @@
 #include "teamdata.h"
 
-TeamData::TeamData()
+TeamData::TeamData(bool player)
 {
-    for (int i = 0; i < 6; i++) {
-        pokemons.push_back(std::shared_ptr<ShallowBattlePoke>(new ShallowBattlePoke()));
+    if (!player) {
+        for (int i = 0; i < 6; i++) {
+            pokemons.push_back(std::shared_ptr<ShallowBattlePoke>(new ShallowBattlePoke()));
+        }
+    } else {
+        for (int i = 0; i < 6; i++) {
+            pokemons.push_back(std::shared_ptr<ShallowBattlePoke>(new PokeBattle()));
+        }
     }
 }
 

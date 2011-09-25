@@ -4,17 +4,15 @@
 #include "battlecommandmanager.h"
 #include <vector>
 
+class BattleConfiguration;
+
 class BattleInput : public BattleCommandManager<BattleInput>
 {
 public:
-    BattleInput();
+    BattleInput(BattleConfiguration *conf);
 
     void receiveData(QByteArray data);
     void dealWithCommandInfo(QDataStream&,uchar command,int spot);
-
-    int delayCount;
-    std::vector<QByteArray> delayedCommands;
-    unsigned mCount; /* Used to know the index in delayedCommands */
 
     void pause();
     void unpause();
@@ -113,6 +111,12 @@ public:
         HurtBurn,
         HurtPoison
     };
+
+protected:
+    int delayCount;
+    std::vector<QByteArray> delayedCommands;
+    unsigned mCount; /* Used to know the index in delayedCommands */
+    BattleConfiguration *conf;
 };
 
 #endif // BATTLEINPUT_H

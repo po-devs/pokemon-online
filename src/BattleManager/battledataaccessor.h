@@ -50,6 +50,7 @@ public:
     int numRef() {return d()->num().toPokeRef();}
     int life() { return d()->life();}
     int lifePercent() {return d()->lifePercent();}
+    int totalLife() {return d()->totalLife();}
     Q_INVOKABLE bool isKoed() { return d()->ko();}
 
     void adaptTo(ShallowBattlePoke *pokemon);
@@ -73,7 +74,7 @@ class TeamProxy : public QObject
 {
     Q_OBJECT
 public:
-    TeamProxy();
+    TeamProxy(bool player = false);
     TeamProxy(TeamData *teamData);
     ~TeamProxy();
 

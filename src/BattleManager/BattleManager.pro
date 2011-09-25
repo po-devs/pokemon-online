@@ -25,7 +25,9 @@ SOURCES += \
     battledataaccessor.cpp \
     battlesceneproxy.cpp \
     pokemoninfoaccessor.cpp \
-    auxpokedataproxy.cpp
+    auxpokedataproxy.cpp \
+    proxydatacontainer.cpp \
+    datacontainer.cpp
 
 HEADERS +=\
     command.h \
@@ -95,6 +97,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Weather/Hail.qml \
     ../../bin/qml/BattleDataQML/Weather/qmldir \
     ../../bin/qml/BattleDataQML/Weather/Sun.qml
+
+
 
 
 

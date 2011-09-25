@@ -5,9 +5,10 @@
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
 
-BattleInput::BattleInput() {
+BattleInput::BattleInput(BattleConfiguration *conf) {
     mCount = 0;
     delayCount = 0;
+    this->conf = conf;
 }
 
 void BattleInput::receiveData(QByteArray inf)

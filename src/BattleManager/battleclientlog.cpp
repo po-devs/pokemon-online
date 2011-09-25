@@ -385,7 +385,11 @@ void BattleClientLog::onHurtWeather(int spot, int weather)
 
 void BattleClientLog::onDamageDone(int spot, int damage)
 {
-    printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
+    if (data()->role(spot) == BattleConfiguration::Spectator) {
+        printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
+    } else {
+        printLine(tu(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(spot)).arg(damage).arg(damage*100/data()->poke(spot).totalLife())));
+    }
 }
 
 void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int foe, int other)

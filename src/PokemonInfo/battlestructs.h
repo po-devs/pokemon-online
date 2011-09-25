@@ -56,6 +56,7 @@ public:
     virtual quint8 lifePercent() const { return mLifePercent; }
     quint8 &lifePercent() { return mLifePercent; }
     virtual int life() { return mLifePercent; }
+    virtual int totalLife() { return 100; }
     virtual void setLife(int newLife) { mLifePercent = newLife;}
     void setLifePercent(quint8 percent) {mLifePercent = percent;}
     void setNum(Pokemon::uniqueId num) {this->num() = num;}
@@ -106,6 +107,7 @@ public:
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
     virtual void setLife(int newLife) {mLifePoints = newLife;}
     virtual int life() { return mLifePoints; }
+    virtual int totalLife() { return m_prop_totalLifePoints;}
     quint16 lifePoints() const { return mLifePoints;}
     quint16 &lifePoints() { return mLifePoints;}
 
@@ -454,10 +456,16 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
+    enum ReceivingMode {
+        Spectator = 0,
+        Player = 1
+    };
+
     quint8 gen;
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;
+    ReceivingMode receivingMode[2];
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;

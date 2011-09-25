@@ -41,6 +41,7 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 {
     ownid() = _ownid;
     this->conf() = conf;
+    this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
     mydisplay = new BaseBattleDisplay(info());
@@ -135,7 +136,7 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
-    test = new SpectatorWindow(info().name(0), info().name(1));
+    test = new SpectatorWindow(conf(), info().name(0), info().name(1));
 
     QWidget *widget =test->getSampleWidget();
     widget->setParent(this);

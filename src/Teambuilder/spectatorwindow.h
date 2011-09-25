@@ -8,6 +8,7 @@ class BattleScene;
 class BattleInput;
 class PokeTextEdit;
 class QDeclarativeView;
+class BattleConfiguration;
 
 /* A window which takes binary as input, and manages
   a battle scene as well as a battle log.
@@ -17,7 +18,7 @@ class QDeclarativeView;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(QString name1, QString name2);
+    SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2);
     ~SpectatorWindow();
 
     /* Receives the binary data */

@@ -8,7 +8,7 @@
 class TeamData
 {
 public:
-    TeamData();
+    TeamData(bool player = false);
     ShallowBattlePoke* poke(int slot);
     QString& name();
 
