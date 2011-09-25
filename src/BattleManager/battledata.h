@@ -10,7 +10,7 @@ template <class T, class Derived>
 class BattleDataInherit : public BattleCommandManager<Derived>
 {
 public:
-    BattleDataInherit(BattleConfiguration *conf) : cont(conf) {
+    BattleDataInherit(BattleConfiguration *conf) : cont(conf), conf(conf) {
     }
 
     typedef T container;

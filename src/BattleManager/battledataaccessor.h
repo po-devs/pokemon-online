@@ -41,17 +41,17 @@ public:
 
     Q_ENUMS(Status)
 
-    QString nickname() {return d()->nick();}
-    int status() {return d()->status();}
-    Pokemon::uniqueId num() {return d()->num();}
-    bool shiny() {return d()->shiny();}
-    int gender() {return d()->gender();}
-    int level() {return d()->level();}
-    int numRef() {return d()->num().toPokeRef();}
-    int life() { return d()->life();}
-    int lifePercent() {return d()->lifePercent();}
-    int totalLife() {return d()->totalLife();}
-    Q_INVOKABLE bool isKoed() { return d()->ko();}
+    QString nickname() const {return d()->nick();}
+    int status() const {return d()->status();}
+    Pokemon::uniqueId num() const {return d()->num();}
+    bool shiny() const {return d()->shiny();}
+    int gender() const {return d()->gender();}
+    int level() const {return d()->level();}
+    int numRef() const {return d()->num().toPokeRef();}
+    int life() const {return d()->life();}
+    int lifePercent() const {return d()->lifePercent();}
+    int totalLife() const {return d()->totalLife();}
+    Q_INVOKABLE bool isKoed() const { return d()->ko();}
 
     void adaptTo(ShallowBattlePoke *pokemon);
     void changeStatus(int fullStatus);
@@ -68,13 +68,14 @@ private:
     bool hasOwnerShip;
     ShallowBattlePoke *pokeData;
     inline ShallowBattlePoke *d() {return pokeData;}
+    inline const ShallowBattlePoke *d() const {return pokeData;}
 };
 
 class TeamProxy : public QObject
 {
     Q_OBJECT
 public:
-    TeamProxy(bool player = false);
+    TeamProxy();
     TeamProxy(TeamData *teamData);
     ~TeamProxy();
 

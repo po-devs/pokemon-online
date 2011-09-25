@@ -1,4 +1,5 @@
 #include "proxydatacontainer.h"
+#include "teamdata.h"
 
 ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf)
 {
@@ -7,8 +8,13 @@ ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf)
         qRegisterMetaType<Pokemon::uniqueId>("pokeid");
     }
 
-    teams[0] = new TeamProxy(conf->receivingMode[0]==BattleConfiguration::Player);
-    teams[1] = new TeamProxy(conf->receivingMode[1]==BattleConfiguration::Player);
+    for (int i = 0; i < 2; i++) {
+        if (conf->receivingMode[i]==BattleConfiguration::Player) {
+            teams[i] = new TeamProxy(new TeamData(conf->teams[i]));
+        } else {
+            teams[i] = new TeamProxy();
+        }
+    }
 }
 
 ProxyDataContainer::~ProxyDataContainer()

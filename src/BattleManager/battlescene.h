@@ -24,6 +24,10 @@ public:
     Q_INVOKABLE void unpause();
 
     Q_INVOKABLE void debug(const QString&m);
+
+    Q_PROPERTY(bool reversed READ reversed() CONSTANT)
+
+    bool reversed();
 signals:
     void printMessage(const QString&);
 private:
