@@ -1,21 +1,27 @@
 #include "teamdata.h"
 
-TeamData::TeamData(bool player)
+TeamData::TeamData(TeamBattle *team)
 {
-    if (!player) {
+    if (!team) {
         for (int i = 0; i < 6; i++) {
-            pokemons.push_back(std::shared_ptr<ShallowBattlePoke>(new ShallowBattlePoke()));
+            pokemons.push_back(new ShallowBattlePoke());
         }
     } else {
         for (int i = 0; i < 6; i++) {
-            pokemons.push_back(std::shared_ptr<ShallowBattlePoke>(new PokeBattle()));
+            pokemons.push_back(new PokeBattle(team->poke(i)));
         }
+    }
+}
+
+TeamData::~TeamData() {
+    foreach(ShallowBattlePoke *poke, pokemons) {
+        delete poke;
     }
 }
 
 ShallowBattlePoke* TeamData::poke(int slot)
 {
-    return pokemons[slot].get();
+    return pokemons[slot];
 }
 
 QString &TeamData::name()
@@ -30,5 +36,5 @@ void TeamData::setPoke(int slot, ShallowBattlePoke *poke)
 
 void TeamData::switchPokemons(int slot1, int slot2)
 {
-    pokemons[slot1].swap(pokemons[slot2]);
+    std::swap(pokemons[slot1],pokemons[slot2]);
 }

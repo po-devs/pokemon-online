@@ -39,12 +39,12 @@ Item {
         anchors.bottomMargin: 20
         width: 96
         height: 64
-        team: battle.data.team(0)
+        team: battle.data.team(battle.scene.reversed?1:0)
     }
 
     Team {
         id: team2
-        team: battle.data.team(1)
+        team: battle.data.team(battle.scene.reversed?0:1)
         width: 96
         height: 64
         anchors.left: parent.left
@@ -56,7 +56,7 @@ Item {
     FieldPokemon {
         id: poke1
         back: true
-        fieldPokemon: battle.data.field.poke(0)
+        fieldPokemon: battle.data.field.poke(battle.scene.reversed?1:0)
         pokemon: team1.team.poke(0)
         anchors.left: parent.left
         anchors.leftMargin: 55
@@ -67,7 +67,7 @@ Item {
     FieldPokemon {
         id: poke2
         back: false
-        fieldPokemon: battle.data.field.poke(1)
+        fieldPokemon: battle.data.field.poke(battle.scene.reversed?0:1)
         pokemon: team2.team.poke(0)
         anchors.right: parent.right
         anchors.rightMargin: 65

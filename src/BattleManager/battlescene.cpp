@@ -53,6 +53,11 @@ BattleScene::~BattleScene()
     delete mOwnProxy;
 }
 
+bool BattleScene::reversed()
+{
+    return data()->role(1) == BattleConfiguration::Player;
+}
+
 BattleScene::battledata_ptr BattleScene::data()
 {
     return mData;

@@ -2,8 +2,13 @@
 
 DataContainer::DataContainer(BattleConfiguration *conf)
 {
-    teams[0] = new TeamData(conf->receivingMode[0]==BattleConfiguration::Player);
-    teams[1] = new TeamData(conf->receivingMode[1]==BattleConfiguration::Player);
+    for (int i = 0; i < 2; i++) {
+        if (conf->receivingMode[i]==BattleConfiguration::Player) {
+            teams[i] = new TeamData(conf->teams[i]);
+        } else {
+            teams[i] = new TeamData();
+        }
+    }
 }
 
 DataContainer::~DataContainer()

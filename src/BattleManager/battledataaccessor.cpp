@@ -55,9 +55,9 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     emit numChanged();
 }
 
-TeamProxy::TeamProxy(bool player)
+TeamProxy::TeamProxy()
 {
-    teamData = new TeamData(player);
+    teamData = new TeamData();
     for (int i = 0; i < 6; i++) {
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
     }

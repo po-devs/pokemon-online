@@ -64,15 +64,18 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     _mclient = client;
 
     conf() = _conf;
+    myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
+
     if (conf().ids[0] == ownid()) {
         conf().receivingMode[0] = BattleConfiguration::Player;
+        conf().teams[0] = &info().myteam;
         conf().receivingMode[1] = BattleConfiguration::Spectator;
     } else {
+        conf().teams[1] = &info().myteam;
         conf().receivingMode[1] = BattleConfiguration::Player;
         conf().receivingMode[0] = BattleConfiguration::Spectator;
     }
 
-    myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
     info().gen = conf().gen;
 
     mydisplay = new BattleDisplay(info());
