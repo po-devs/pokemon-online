@@ -2219,3 +2219,8 @@ QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
     }
     return myserver->player(id)->team().poke(slot).shiny();
 }
+
+int ScriptEngine::moveType(int moveNum, int gen)
+{
+    return MoveInfo::Type(moveNum, gen);
+}
