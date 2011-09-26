@@ -2211,3 +2211,11 @@ int ScriptEngine::system(const QString &command)
     }
 }
 #endif // PO_SCRIPT_NO_SYSTEM
+
+QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
+{
+    if (!testPlayer("teamPokeShine", id) || !testRange("teamPokeShine", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(slot).shiny();
+}

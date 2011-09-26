@@ -253,6 +253,7 @@ public:
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeHappiness(int id, int slot, int value);
     Q_INVOKABLE void changePokeShine(int id, int slot, bool value);
+    Q_INVOKABLE QScriptValue teamPokeShine(int id, int slot);
     Q_INVOKABLE void changePokeNature(int id, int pokeslot, int nature);
     Q_INVOKABLE QScriptValue teamPokeGender(int id, int slot);
 
