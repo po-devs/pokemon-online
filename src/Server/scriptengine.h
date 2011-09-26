@@ -185,6 +185,7 @@ public:
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
     Q_INVOKABLE QScriptValue move(int num);
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);
