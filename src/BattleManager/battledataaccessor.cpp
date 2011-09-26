@@ -29,6 +29,20 @@ void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
     emit pokemonReset();
 }
 
+void PokeProxy::adaptTo(PokeBattle *pokemon) {
+    PokeBattle *trans = dynamic_cast<PokeBattle*>(this);
+
+    if (trans) {
+        *trans = *pokemon;
+
+        /* Could be more granular, change if it matters */
+        emit numChanged(); emit statusChanged(); emit lifeChanged();
+        emit pokemonReset();
+    } else {
+        adaptTo((ShallowBattlePoke*)pokemon);
+    }
+}
+
 void PokeProxy::changeStatus(int fullStatus)
 {
     if (d()->status() == fullStatus) {
@@ -97,4 +111,11 @@ void TeamProxy::switchPokemons(int index, int prevIndex)
 void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
 {
     poke(index)->adaptTo(pokemon);
+}
+
+void TeamProxy::setTeam(TeamBattle *team)
+{
+    for (int i = 0; i < 6; i++) {
+        poke(i)->adaptTo(&team->poke(i));
+    }
 }

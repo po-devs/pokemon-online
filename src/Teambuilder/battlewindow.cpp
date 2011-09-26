@@ -5,6 +5,7 @@
 #include "logmanager.h"
 #include "client.h"
 #include "theme.h"
+#include "spectatorwindow.h"
 #include <cstdlib>
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
@@ -956,6 +957,7 @@ void BattleWindow::sendRearrangedTeam()
     /* If the team was rearranged... */
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(info().myteam.poke(i));
+        test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     }
 }
 

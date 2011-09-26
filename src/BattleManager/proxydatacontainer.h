@@ -26,10 +26,13 @@ public:
         return &auxdata;
     }
 
+    void reloadTeam(int player);
+
 private:
     FieldProxy auxdata;
 
     TeamProxy* teams[2];
+    BattleConfiguration *conf;
 };
 
 
