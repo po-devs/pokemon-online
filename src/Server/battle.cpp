@@ -18,7 +18,7 @@ typedef BattlePStorage BP;
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
-    qDebug() <<"Created battlesituation " << this;
+    //qDebug() <<"Created battlesituation " << this;
     publicId() = id;
     timer = NULL;
     myid[0] = p1.id();

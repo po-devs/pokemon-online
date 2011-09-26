@@ -657,12 +657,12 @@ private:
 
     template<class T1, class T2, class T3>
     void callp(int function, T1 arg1, T2 arg2, T3 arg3) {
-        qDebug() << "Beginning callp for " << this;
+        //qDebug() << "Beginning callp for " << this;
         foreach(BattlePStorage *p, calls) {
             if (p->call(function, this, arg1, arg2, arg3) == -1)
                 removePlugin(p->plugin);
         }
-        qDebug() << "Ending callp for " << this;
+        //qDebug() << "Ending callp for " << this;
     }
 };
 
