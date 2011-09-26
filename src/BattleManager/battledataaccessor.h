@@ -65,6 +65,8 @@ signals:
     void pokemonReset();
     void lifeChanged();
     void ko();
+    void statUp(int stat, int level);
+    void statDown(int stat, int level);
 private:
     bool hasOwnerShip;
     ShallowBattlePoke *pokeData;

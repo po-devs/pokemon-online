@@ -144,7 +144,7 @@ Item {
                         //battle.scene.debug("Beginning sendout animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.pause();
                         pokeball.trigger(); } }
-                PauseAnimation { duration: 1000 }
+                PauseAnimation { duration: 800 }
                 PropertyAction { targets: [image, shader]; properties: "opacity"; value: 1}
                 PropertyAction { target: image; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:image; from: 0.5;

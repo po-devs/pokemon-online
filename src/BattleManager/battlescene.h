@@ -23,12 +23,36 @@ public:
     Q_INVOKABLE void pause();
     Q_INVOKABLE void unpause();
 
+    /* Prints debug text in the console and battle log */
     Q_INVOKABLE void debug(const QString&m);
+
+    /* Consecutive stat ups or stat downs are not animated. This
+      function tells whether or not a stat up/stat down should be
+      animated. */
+    Q_INVOKABLE bool isFreshForStatChange(int slot, StatDirection direction);
+
+    Q_ENUMS(StatDirection)
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
 
     bool reversed();
     void launch();
+
+    template <enumClass val, typename Params...>
+    bool shouldInvoke(Params...) {
+        if (val != StatChange) {
+            info.lastStatChange = NoStat;
+        }
+        return true;
+    }
+
+    enum StatDirection {
+        StatUp = 1,
+        NoStat = 0,
+        StatDown = -1
+    };
+
+    void onStatBoost(int spot, int stat, int boost, bool silent);
 
 signals:
     void printMessage(const QString&);
@@ -40,6 +64,18 @@ private:
     BattleSceneProxy *mOwnProxy;
 
     QDeclarativeView *mWidget;
+
+    struct BattleSceneInfo {
+        StatDirection lastStatChange;
+        int lastSlot;
+
+        BattleSceneInfo() {
+            lastSlot = -1;
+            lastStatChange = NoStat;
+        }
+    };
+
+    BattleSceneInfo info;
 };
 
 
