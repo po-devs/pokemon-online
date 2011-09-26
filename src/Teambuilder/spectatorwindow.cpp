@@ -12,8 +12,8 @@
 
 SpectatorWindow::SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2)
 {
-    battledata_basic * data = new battledata_basic(&conf);
-    advbattledata_proxy * data2 = new advbattledata_proxy(&conf);
+    data = new battledata_basic(&conf);
+    data2 = new advbattledata_proxy(&conf);
 
     data->team(0).name() = data2->team(0).name() = name1;
     data->team(1).name() = data2->team(1).name() = name2;
@@ -32,9 +32,17 @@ SpectatorWindow::SpectatorWindow(BattleConfiguration &conf, QString name1, QStri
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
     connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
+    scene->launch();
+
     foreach(QDeclarativeError error, scene->getWidget()->errors()) {
         log->printLine(error.toString());
     }
+}
+
+void SpectatorWindow::reloadTeam(int player)
+{
+    data->reloadTeam(player);
+    data2->reloadTeam(player);
 }
 
 PokeTextEdit *SpectatorWindow::getLogWidget()

@@ -28,8 +28,11 @@ public:
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
 
     bool reversed();
+    void launch();
+
 signals:
     void printMessage(const QString&);
+    void launched();
 private:
     battledata_ptr mData;
     battledata_ptr data();

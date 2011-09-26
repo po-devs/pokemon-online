@@ -1,6 +1,6 @@
 #include "datacontainer.h"
 
-DataContainer::DataContainer(BattleConfiguration *conf)
+DataContainer::DataContainer(BattleConfiguration *conf) : conf(conf)
 {
     for (int i = 0; i < 2; i++) {
         if (conf->receivingMode[i]==BattleConfiguration::Player) {
@@ -8,6 +8,13 @@ DataContainer::DataContainer(BattleConfiguration *conf)
         } else {
             teams[i] = new TeamData();
         }
+    }
+}
+
+void DataContainer::reloadTeam(int player)
+{
+    if (conf->receivingMode[player] == BattleConfiguration::Player) {
+        teams[player]->setTeam(conf->teams[player]);
     }
 }
 

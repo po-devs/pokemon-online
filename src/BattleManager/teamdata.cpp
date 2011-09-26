@@ -34,6 +34,24 @@ void TeamData::setPoke(int slot, ShallowBattlePoke *poke)
     *pokemons[slot] = *poke;
 }
 
+void TeamData::setPoke(int slot, PokeBattle *poke)
+{
+    PokeBattle* trans = dynamic_cast<PokeBattle*>(pokemons[slot]);
+
+    if (!trans)  {
+        *pokemons[slot] = *poke;
+    } else {
+        *trans = *poke;
+    }
+}
+
+void TeamData::setTeam(TeamBattle *team)
+{
+    for (int i = 0; i < 6; i++) {
+        setPoke(i, &team->poke(i));
+    }
+}
+
 void TeamData::switchPokemons(int slot1, int slot2)
 {
     std::swap(pokemons[slot1],pokemons[slot2]);

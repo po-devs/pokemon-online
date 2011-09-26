@@ -25,8 +25,11 @@ public:
         return &auxdata;
     }
 
+    void reloadTeam(int player);
+
     FieldData auxdata;
     TeamData* teams[2];
+    BattleConfiguration *conf;
 };
 
 #endif // DATACONTAINER_H

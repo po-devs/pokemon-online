@@ -1,7 +1,7 @@
 #include "proxydatacontainer.h"
 #include "teamdata.h"
 
-ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf)
+ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf) : conf(conf)
 {
     /* Needed for QML use */
     if (QMetaType::type("pokeid") == 0) {
@@ -14,6 +14,13 @@ ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf)
         } else {
             teams[i] = new TeamProxy();
         }
+    }
+}
+
+void ProxyDataContainer::reloadTeam(int player)
+{
+    if (conf->receivingMode[player] == BattleConfiguration::Player) {
+        teams[player]->setTeam(conf->teams[player]);
     }
 }
 

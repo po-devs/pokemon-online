@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "../BattleManager/battledatatypes.h"
+
 class BattleClientLog;
 class BattleScene;
 class BattleInput;
@@ -33,12 +35,17 @@ public:
       is responsible for managing the widget's lifetime
       and free it */
     QWidget *getSampleWidget();
+
+    void reloadTeam(int player);
 private:
     BattleClientLog *log;
     BattleInput *input;
     BattleScene *scene;
 
     PokeTextEdit* logWidget;
+
+    battledata_basic *data;
+    advbattledata_proxy *data2;
 };
 
 #endif // SPECTATORWINDOW_H

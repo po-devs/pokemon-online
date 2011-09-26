@@ -111,6 +111,10 @@ public:
     int gen() { return GEN_MAX; }
     BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
 
+    void reloadTeam(int player) {
+        d()->reloadTeam(player);
+    }
+
     enum {
         Player1,
         Player2
