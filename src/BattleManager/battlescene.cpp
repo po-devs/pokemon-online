@@ -83,14 +83,33 @@ void BattleScene::debug(const QString &m)
     emit printMessage(m);
 }
 
-void BattleScene::pause() {
+void BattleScene::pause()
+{
     //qDebug() << "pausing";
     //debug("pausing\n");
     BattleCommandManager<BattleScene>::pause();
 }
 
-void BattleScene::unpause() {
+void BattleScene::unpause()
+{
     //qDebug() << "unpausing";
     //debug("unpausing\n");
     BattleCommandManager<BattleScene>::unpause();
+}
+
+bool BattleScene::isFreshForStatChange(int slot, StatDirection direction)
+{
+    if (info.lastSlot == slot && info.lastStatChange = direction) {
+        return false;
+    }
+    return true;
+}
+
+void BattleScene::onStatBoost(int spot, int stat, int boost, bool silent)
+{
+    (void) stat;
+    (void) silent;
+
+    info.lastSlot = spot;
+    info.lastStatChange = boost > 0 ? StatUp : StatDown;
 }

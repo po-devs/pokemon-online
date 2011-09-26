@@ -46,7 +46,7 @@ FrameAnimation {
             PropertyAction { target: pokeball; property: "opacity"; value: 1 }
             NumberAnimation {
                 target: pokeball; property: "percent"
-                from: 0.2; to: 1.0; duration: 900;
+                from: 0.2; to: 1.0; duration: 700;
             }
 
             NumberAnimation {
