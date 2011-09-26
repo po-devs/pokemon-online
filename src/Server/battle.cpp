@@ -333,7 +333,7 @@ void BattleSituation::addSpectator(Player *p)
         }
         for (int k = 0; k < numberOfSlots()/ 2; k++) {
             int s = slot(i,k);
-            if (!koed(s)) {
+            if (!koed(s) && !rearrangeTime()) {
                 notify(key, SendOut, s, true, quint8(k), opoke(s, i, k));
                 /* Not clean. A pokemon with illusion could always have mimiced transform and then transformed... */
                 if (!pokeMemory(s).contains("IllusionTarget"))
