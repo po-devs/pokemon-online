@@ -94,7 +94,12 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     logmanager.h \
     poketextedit.h \
     remove_direction_override.h \
-    spectatorwindow.h
+    spectatorwindow.h \
+    ../BattleManager/battlescene.h \
+    ../BattleManager/battleinput.h \
+    ../BattleManager/battledatatypes.h \
+    ../BattleManager/battledata.h \
+    ../BattleManager/battleclientlog.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -127,3 +132,4 @@ macx:QMAKE_INFO_PLIST = Info.plist
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
 }
+

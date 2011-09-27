@@ -12,6 +12,8 @@ public:
     void onSendOut();
     void onSendBack();
 
+    Q_INVOKABLE int statBoost(int stat);
+
     Q_PROPERTY(bool onTheField READ isOnTheField NOTIFY onTheFieldChanged)
     Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
     Q_PROPERTY(bool showing READ isShowing NOTIFY showingChanged)
@@ -51,6 +53,9 @@ public:
     void reappear() {setShowing(true);}
     void changeSprite(Pokemon::uniqueId sprite) {setAlternateSprite(sprite);}
     void changeForme(int subnum) {setAlternateSprite(Pokemon::uniqueId(alternateSprite.pokenum, subnum));}
+    void boostStat(int stat, int level);
+    void setBoost(int stat, int level);
+    void resetStatBoosts();
 
 signals:
     void onTheFieldChanged();
@@ -58,11 +63,16 @@ signals:
     void showingChanged();
     void alternateSpriteChanged();
 
+    void statUp(int stat, int level);
+    void statDown(int stat, int level);
+
 public:
     bool onTheField;
     bool substitute;
     bool showing;
     Pokemon::uniqueId alternateSprite;
+
+    int statboosts[8];
 };
 
 class FieldProxy : public QObject {

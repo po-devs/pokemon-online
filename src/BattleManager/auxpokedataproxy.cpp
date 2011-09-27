@@ -5,6 +5,42 @@ AuxPokeDataProxy::AuxPokeDataProxy()
     showing = true;
     onTheField = false;
     substitute = false;
+
+    resetStatBoosts();
+}
+
+int AuxPokeDataProxy::statBoost(int stat)
+{
+    return statboosts[stat];
+}
+
+void AuxPokeDataProxy::resetStatBoosts()
+{
+    for (int i = 0; i < 8; i++) {
+        statboosts[i] = 0;
+    }
+}
+
+void AuxPokeDataProxy::setBoost(int stat, int level)
+{
+    statboosts[stat] = level;
+}
+
+void AuxPokeDataProxy::boostStat(int stat, int level)
+{
+    statboosts[stat] += level;
+
+    if (statboosts[stat] > 6) {
+        statboosts[stat] = 6;
+    } else if (statboosts[stat] < -6) {
+        statboosts[stat] = -6;
+    }
+
+    if (level > 0) {
+        emit statUp(stat, level);
+    } else if (level < 0) {
+        emit statDown(stat, level);
+    }
 }
 
 void AuxPokeDataProxy::onSendOut()
@@ -18,6 +54,7 @@ void AuxPokeDataProxy::onSendOut()
 void AuxPokeDataProxy::onSendBack()
 {
     setOnTheField(false);
+    resetStatBoosts();
 }
 
 void FieldProxy::setWeather(int weather)
