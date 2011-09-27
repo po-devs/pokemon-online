@@ -21,6 +21,8 @@ bin/myplugins/
 bin/Themes/
 bin/Teams/
 bin/usage_stats/formatted/
+bin/*.dylib
+bin/*.app/
 *.a
 src/*/Makefile
 src/*__Debug
