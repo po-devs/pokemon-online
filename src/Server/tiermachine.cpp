@@ -63,7 +63,7 @@ void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, 
     int trueQueryNo = (queryNo >> 10) & Tier::MaxGetQueryNumber;
 
     /* Safe, this->version is only updated in semaphores */
-    if (version != this->version) {
+    if (version == this->version) {
         if (m_tiers.length() > tierno) {
             m_tiers[tierno]->processQuery(q, data, trueQueryNo, w);
         } else {
@@ -83,7 +83,7 @@ void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
     int trueQueryNo = (queryNo >> 10) & Tier::MaxInsertQueryNumber;
 
     /* Safe, this->version is only updated in semaphores */
-    if (version != this->version) {
+    if (version == this->version) {
         if (m_tiers.length() > tierno) {
             m_tiers[tierno]->insertMember(q, m, trueQueryNo);
         } else {
