@@ -17,6 +17,12 @@ public:
     BattleScene(battledata_ptr data);
     ~BattleScene();
 
+    enum StatDirection {
+        StatUp = 1,
+        NoStat = 0,
+        StatDown = -1
+    };
+
     QDeclarativeView *getWidget();
     ProxyDataContainer *getDataProxy();
 
@@ -38,19 +44,13 @@ public:
     bool reversed();
     void launch();
 
-    template <enumClass val, typename Params...>
+    template <enumClass val, typename... Params>
     bool shouldInvoke(Params...) {
-        if (val != StatChange) {
+        if (val != BattleEnum::StatChange) {
             info.lastStatChange = NoStat;
         }
         return true;
     }
-
-    enum StatDirection {
-        StatUp = 1,
-        NoStat = 0,
-        StatDown = -1
-    };
 
     void onStatBoost(int spot, int stat, int boost, bool silent);
 

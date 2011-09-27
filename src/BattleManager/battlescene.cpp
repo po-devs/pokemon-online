@@ -99,7 +99,7 @@ void BattleScene::unpause()
 
 bool BattleScene::isFreshForStatChange(int slot, StatDirection direction)
 {
-    if (info.lastSlot == slot && info.lastStatChange = direction) {
+    if (info.lastSlot == slot && info.lastStatChange == direction) {
         return false;
     }
     return true;
