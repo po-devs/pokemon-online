@@ -357,21 +357,30 @@ struct MMHaze : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.gen() > 1) {
+            if (tmove(b,s).power == 0) {
+                b.sendMoveMessage(149);
 
-        if (tmove(b,s).power == 0) {
-            b.sendMoveMessage(149);
+                foreach (int p, b.sortedBySpeed())
+                {
+                    for (int i = 1; i <= 7; i++) {
+                        fpoke(b,p).boosts[i] = 0;
+                    }
+                }
+            }
+            else {
+                b.sendMoveMessage(149, 1, s, type(b,s), t);
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,t).boosts[i] = 0;
+                }
+            }
+        } else {
+            /* In gen 1, haze just clears status */
+            b.sendMoveMessage(149, 2);
 
             foreach (int p, b.sortedBySpeed())
             {
-                for (int i = 1; i <= 7; i++) {
-                    fpoke(b,p).boosts[i] = 0;
-                }
-            }
-        }
-        else {
-            b.sendMoveMessage(149, 1, s, type(b,s), t);
-            for (int i = 1; i <= 7; i++) {
-                fpoke(b,t).boosts[i] = 0;
+                b.healStatus(p, 0);
             }
         }
     }
