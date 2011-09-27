@@ -368,7 +368,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         BattleDynamicInfo info;
         in >> info;
-        output<BattleEnum::StatBoostsAndField>(&info);
+        output<BattleEnum::StatBoostsAndField>(spot, &info);
         break;
     }
     case TempPokeChange:
