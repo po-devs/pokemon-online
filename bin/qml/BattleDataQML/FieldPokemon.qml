@@ -7,6 +7,7 @@ Item {
     property bool back: false
     property FieldPokeData fieldPokemon
     property PokeData pokemon
+    property int spot
     z: back ? 80 : 0;
 
     function isKoed() {
@@ -52,6 +53,25 @@ Item {
         image: image
         blendColor: Colors.statusColor(pokemon.status)
         alpha: (pokemon.status === PokeData.Fine || pokemon.status == PokeData.Koed) ? 0.0 : 0.3
+    }
+
+    /* Loader. Loads a move animation */
+    Loader {
+        id: moveLoader
+    }
+
+    Connections {
+        target: fieldPokemon
+        onStatUp: {
+            if (!battle.scene.isFreshForStatChange(spot, battle.scene.StatUp)) {
+                return;
+            }
+        }
+        onStatDown: {
+            if (!battle.scene.isFreshForStatChange(spot, battle.scene.StatUp)) {
+                return;
+            }
+        }
     }
 
     states: [
