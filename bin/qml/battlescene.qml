@@ -17,6 +17,8 @@ Item {
     }
 
     property bool loaded: false;
+    property int playerFront: battle.scene.reversed ? 0: 1;
+    property int playerBack: battle.scene.reversed ? 1: 0;
 
     /* Rectangle used by the weather */
     Rectangle{
@@ -39,12 +41,12 @@ Item {
         anchors.bottomMargin: 20
         width: 96
         height: 64
-        team: battle.data.team(battle.scene.reversed?1:0)
+        team: battle.data.team(playerBack)
     }
 
     Team {
         id: team2
-        team: battle.data.team(battle.scene.reversed?0:1)
+        team: battle.data.team(playerFront)
         width: 96
         height: 64
         anchors.left: parent.left
@@ -56,7 +58,8 @@ Item {
     FieldPokemon {
         id: poke1
         back: true
-        fieldPokemon: battle.data.field.poke(battle.scene.reversed?1:0)
+        spot: playerBack;
+        fieldPokemon: battle.data.field.poke(playerBack)
         pokemon: team1.team.poke(0)
         anchors.left: parent.left
         anchors.leftMargin: 55
@@ -67,7 +70,8 @@ Item {
     FieldPokemon {
         id: poke2
         back: false
-        fieldPokemon: battle.data.field.poke(battle.scene.reversed?0:1)
+        spot: playerFront;
+        fieldPokemon: battle.data.field.poke(playerFront)
         pokemon: team2.team.poke(0)
         anchors.right: parent.right
         anchors.rightMargin: 65
