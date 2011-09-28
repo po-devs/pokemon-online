@@ -1,6 +1,7 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "colors.js" as Colors
+import "effects.js" as Effects
 
 Item {
     id: woof
@@ -26,7 +27,7 @@ Item {
     ProgressBar {
         parent: woof.parent
         x: woof.x
-        y: woof.y - 15;
+        y: woof.y - 30;
     }
 
     Image {
@@ -55,10 +56,7 @@ Item {
         alpha: (pokemon.status === PokeData.Fine || pokemon.status == PokeData.Koed) ? 0.0 : 0.3
     }
 
-    /* Loader. Loads a move animation */
-    Loader {
-        id: moveLoader
-    }
+    property Image pokeSprite: image
 
     Connections {
         target: fieldPokemon
@@ -71,6 +69,8 @@ Item {
             if (!battle.scene.isFreshForStatChange(spot, battle.scene.StatUp)) {
                 return;
             }
+            battle.scene.debug("Starting move down animation\n");
+            Effects.statDown(woof);
         }
     }
 
