@@ -14,13 +14,13 @@ class BattleScene: public QObject, public BattleCommandManager<BattleScene>
 public:
     typedef AdvancedBattleData* battledata_ptr;
 
-    BattleScene(battledata_ptr data);
+    BattleScene(battledata_ptr data=0);
     ~BattleScene();
 
     enum StatDirection {
-        StatUp = 1,
+        StatDown = -1,
         NoStat = 0,
-        StatDown = -1
+        StatUp = 1
     };
 
     QDeclarativeView *getWidget();
@@ -49,6 +49,7 @@ public:
         if (val != BattleEnum::StatChange) {
             info.lastStatChange = NoStat;
         }
+
         return true;
     }
 

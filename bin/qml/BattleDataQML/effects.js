@@ -1,23 +1,38 @@
 var components = {};
 
-function statUp(pokemon) {
+var effects = {
+    "stat-down": "CommonEffects/StatDown.qml",
+    "stat-up": "CommonEffects/StatUp.qml"
+};
 
+function statUp(pokemon) {
+    launchEffect("stat-up", pokemon, {"pokemon":pokemon});
 }
 
 function statDown(pokemon) {
+    launchEffect("stat-down", pokemon, {"pokemon":pokemon});
+}
+
+function launchEffect(key, parent, vars) {
+    if (! (key in effects)) {
+        console.log("Error: effect not found: " + key);
+    }
+
     var c;
-    if (! ("stat-up" in components) ) {
-        var component = Qt.createComponent("CommonEffects/StatDown.qml");
+    if (! (key in components) ) {
+        var component = Qt.createComponent(effects[key]);
 
         if (component.status != Component.Ready) {
-            console.log("Failed loading components " + "stat-up");
+            console.log("Failed loading components " + key + " (" + effects[key] + ")");
+            return;
         }
 
-        c = components["stat-up"] = component;
+        c = components[key] = component;
     } else {
-        c = components["stat-up"];
+        c = components[key];
     }
-    var obj = c.createObject(pokemon, {"pokemon":pokemon});
-    obj.finished.connect(function() {obj.destroy();});
+    var obj = c.createObject(parent, vars);
+    obj.finished.connect(function() {console.log("Object destroyed.");
+                             obj.destroy();});
     obj.start();
 }

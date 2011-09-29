@@ -17,7 +17,7 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     qmlRegisterType<BattleSceneProxy>();
     qmlRegisterType<AuxPokeDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldPokeData");
     qmlRegisterType<FieldProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldData");
-    qmlRegisterType<BattleScene>();
+    qmlRegisterType<BattleScene>("pokemononline.battlemanager.proxies", 1, 0, "BattleScene");
 
     /* Tells QML not to delete our pokeproxy and teamproxy objects...
 
@@ -102,6 +102,7 @@ bool BattleScene::isFreshForStatChange(int slot, StatDirection direction)
     if (info.lastSlot == slot && info.lastStatChange == direction) {
         return false;
     }
+
     return true;
 }
 
