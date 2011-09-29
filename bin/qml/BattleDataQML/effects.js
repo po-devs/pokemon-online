@@ -32,7 +32,6 @@ function launchEffect(key, parent, vars) {
         c = components[key];
     }
     var obj = c.createObject(parent, vars);
-    obj.finished.connect(function() {console.log("Object destroyed.");
-                             obj.destroy();});
+    obj.finished.connect(function() {obj.destroy();});
     obj.start();
 }
