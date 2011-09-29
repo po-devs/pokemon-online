@@ -97,7 +97,13 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Weather/Hail.qml \
     ../../bin/qml/BattleDataQML/Weather/qmldir \
     ../../bin/qml/BattleDataQML/Weather/Sun.qml \
-    ../../bin/qml/initial.qml
+    ../../bin/qml/initial.qml \
+    ../../bin/qml/BattleDataQML/CommonEffects/StatUp.qml \
+    ../../bin/qml/BattleDataQML/CommonEffects/StatDown.qml \
+    ../../bin/qml/BattleDataQML/effects.js
+
+
+
 
 
 
