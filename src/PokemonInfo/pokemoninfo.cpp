@@ -3,7 +3,11 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
+#ifdef WIN32
 #include "../../SpecialIncludes/zip.h"
+#else
+#include <zip.h>
+#endif
 #include "../Utilities/functions.h"
 
 /*initialising static variables */
@@ -453,6 +457,7 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
     loadHeights();
     loadDescriptions();
     loadBaseStats();
+    loadMinLevels();
 
     makeDataConsistent();
 }

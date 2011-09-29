@@ -127,7 +127,7 @@ protected:
     void loadStats();
 };
 
-/* Data that is unique to a pokémon */
+/* Data that is unique to a e*/
 class PokePersonal
 {
     PROPERTY(QString, nickname);
