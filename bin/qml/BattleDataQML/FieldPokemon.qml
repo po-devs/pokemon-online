@@ -1,12 +1,14 @@
 import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "colors.js" as Colors
+import "effects.js" as Effects
 
 Item {
     id: woof
     property bool back: false
     property FieldPokeData fieldPokemon
     property PokeData pokemon
+    property int spot
     z: back ? 80 : 0;
 
     function isKoed() {
@@ -25,7 +27,7 @@ Item {
     ProgressBar {
         parent: woof.parent
         x: woof.x
-        y: woof.y - 15;
+        y: woof.y - 30;
     }
 
     Image {
@@ -52,6 +54,25 @@ Item {
         image: image
         blendColor: Colors.statusColor(pokemon.status)
         alpha: (pokemon.status === PokeData.Fine || pokemon.status == PokeData.Koed) ? 0.0 : 0.3
+    }
+
+    property Image pokeSprite: image
+
+    Connections {
+        target: fieldPokemon
+        onStatUp: {
+            if (!battle.scene.isFreshForStatChange(spot, BattleScene.StatUp)) {
+                return;
+            }
+            Effects.statUp(woof);
+        }
+        onStatDown: {
+            /* Qt 4.7.4 bug makes it that -1 enum is undefined, use BattleScene.StatDown when it's fixed */
+            if (!battle.scene.isFreshForStatChange(spot, -1)) {
+                return;
+            }
+            Effects.statDown(woof);
+        }
     }
 
     states: [
