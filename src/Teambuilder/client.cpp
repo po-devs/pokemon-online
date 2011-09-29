@@ -1428,20 +1428,20 @@ void Client::seeChallenge(const ChallengeInfo &c)
 {
     if (playerExist(c))
     {
-    if (busy()) {
-        /* Warns the server that we are too busy to accept the challenge */
+        if (busy()) {
+            /* Warns the server that we are too busy to accept the challenge */
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
-            relay().sendChallengeStuff(c);
+            relay().sendChallengeStuff(d);
         } else {
             BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
-        connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
-        connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-        connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
-        connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
+            connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+            connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
+            connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+            connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
-    }
+        }
     }
 }
 
@@ -1629,7 +1629,7 @@ void Client::challengeStuff(const ChallengeInfo &c)
                     closeChallengeWindow(b);
                 }
             }
-    }
+        }
     }
 }
 
@@ -1803,8 +1803,8 @@ void Client::fadeAway()
             removePlayer(player);
         }
         continue;
-        refresh:
-            refreshPlayer(player);
+refresh:
+        refreshPlayer(player);
     }
 }
 
@@ -1892,9 +1892,9 @@ QColor Client::color(int id) const
 int Client::id(const QString &name) const
 {
     if (mynames.contains(name)) {
-    return mynames[name];
+        return mynames[name];
     } else {
-    return -1;
+        return -1;
     }
 }
 
@@ -2014,7 +2014,7 @@ void Client::removeIgnore(int id)
 void Client::printHtml(const QString &html)
 {
     foreach(Channel *c, mychannels)
-        c->printHtml(html);
+        c->printHtml(html, false);
 }
 
 void Client::printLine(const QString &line)
@@ -2023,7 +2023,7 @@ void Client::printLine(const QString &line)
         return;
 
     foreach(Channel *c, mychannels)
-        c->printLine(line);
+        c->printLine(line,false, false);
 }
 
 /* Prints a line regarding a particular player */

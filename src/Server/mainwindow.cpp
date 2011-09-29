@@ -8,7 +8,7 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
     QApplication::setQuitOnLastWindowClosed(false);
 
     setWindowTitle(tr("Pokémon Online Server"));
-    //setWindowIcon(QIcon("db/icon.png"));
+    setWindowIcon(QIcon("db/icon-server.png"));
 
     setCentralWidget(myserverwidget = new ServerWidget(myserver));
     resize(500,500);
