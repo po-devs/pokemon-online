@@ -20,9 +20,9 @@ enum BattleResult
 
 class BattleMove
 {
-    PROPERTY(quint8, PP);
-    PROPERTY(quint8, totalPP);
-    PROPERTY(quint16, num);
+    PROPERTY(quint8, PP)
+    PROPERTY(quint8, totalPP)
+    PROPERTY(quint16, num)
 public:
     BattleMove();
 
@@ -30,29 +30,60 @@ public:
     operator int () {return num();}
 };
 
+class PokeBattle;
+
+/* A pokemon as viewed by the opponent: nearly no info */
+class ShallowBattlePoke
+{
+    PROPERTY(QString, nick)
+    PROPERTY(quint32, fullStatus)
+    PROPERTY(Pokemon::uniqueId, num)
+    PROPERTY(bool, shiny)
+    PROPERTY(quint8, gender)
+    PROPERTY(quint8, level)
+    //In-Battle
+    PROPERTY(bool, substitute)
+    PROPERTY(Pokemon::uniqueId, alternateSprite)
+    PROPERTY(bool, showing)
+public:
+    ShallowBattlePoke();
+    ShallowBattlePoke(const PokeBattle &poke);
+
+    int status() const;
+    void changeStatus(int status);
+
+    void addStatus(int status);
+    void removeStatus(int status);
+    bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
+
+    void init(const PokeBattle &poke);
+    virtual quint8 lifePercent() const { return m_prop_lifePercent; }
+    quint8 &lifePercent() { return m_prop_lifePercent; }
+private:
+    quint8 m_prop_lifePercent;
+};
+
+QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
+QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po);
+
 QDataStream & operator >> (QDataStream &in, BattleMove &mo);
 QDataStream & operator << (QDataStream &out, const BattleMove &mo);
 
-class PokeBattle
+class PokeBattle : public ShallowBattlePoke
 {
-    PROPERTY(QString, nick);
-    PROPERTY(QList<int>, dvs);
-    PROPERTY(QList<int>, evs);
-    PROPERTY(quint16, lifePoints);
-    PROPERTY(quint16, totalLifePoints);
-    PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(quint16, item);
-    PROPERTY(quint16, ability);
-    PROPERTY(quint32, fullStatus);
-    PROPERTY(qint8, statusCount);
-    PROPERTY(qint8, oriStatusCount);
-    PROPERTY(quint8, gender);
-    PROPERTY(quint8, level);
-    PROPERTY(quint8, nature);
-    PROPERTY(quint8, happiness);
-    PROPERTY(quint16, itemUsed);
-    PROPERTY(quint16, itemUsedTurn);
-    PROPERTY(bool, shiny);
+    PROPERTY(QList<int>, dvs)
+    PROPERTY(QList<int>, evs)
+    PROPERTY(quint16, lifePoints)
+    PROPERTY(quint16, totalLifePoints)
+    PROPERTY(quint16, item)
+    PROPERTY(quint16, ability)
+    PROPERTY(quint8, nature)
+    PROPERTY(quint8, happiness)
+    /* Below is only known by battle */
+    PROPERTY(quint16, itemUsed)
+    PROPERTY(quint16, itemUsedTurn)
+    PROPERTY(qint8, statusCount)
+    PROPERTY(qint8, oriStatusCount)
 public:
     PokeBattle();
 
@@ -64,13 +95,10 @@ public:
     quint16 normalStat(int stat) const;
     void updateStats(int gen);
 
-    bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
-    int lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
+    quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
     void setNormalStat(int, quint16);
-    int status() const;
-    void changeStatus(int status);
 private:
     BattleMove m_moves[4];
 
@@ -79,29 +107,6 @@ private:
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po);
 QDataStream & operator << (QDataStream &out, const PokeBattle &po);
-
-/* A pokemon as viewed by the opponent: nearly no info */
-class ShallowBattlePoke
-{
-    PROPERTY(QString, nick);
-    PROPERTY(quint32, fullStatus);
-    PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(bool, shiny);
-    PROPERTY(quint8, gender);
-    PROPERTY(quint8, lifePercent);
-    PROPERTY(quint8, level);
-public:
-    ShallowBattlePoke();
-    ShallowBattlePoke(const PokeBattle &poke);
-
-    int status() const;
-    void changeStatus(int status);
-
-    void init(const PokeBattle &poke);
-};
-
-QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
-QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po);
 
 class TeamBattle
 {

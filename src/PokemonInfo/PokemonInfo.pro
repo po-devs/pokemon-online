@@ -13,7 +13,8 @@ HEADERS += pokemonstructs.h \
     networkstructs.h \
     movesetchecker.h \
     battlestructs.h \
-    teamsaver.h
+    teamsaver.h \
+    enums.h
 LIBS += -L../../bin \
     -lutilities \
     -lzip

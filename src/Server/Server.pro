@@ -34,7 +34,6 @@ SOURCES += main.cpp \
     tiertree.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
-    scriptdb.cpp \
     battlepluginstruct.cpp \
     battlecounters.cpp \
     moves/moves1.cpp
@@ -89,7 +88,6 @@ HEADERS += player.h \
     ../Utilities/mtrand.h \
     miscmoves.h \
     sessiondatafactory.h \
-    scriptdb.h \
     battleinterface.h \
     battlepluginstruct.h \
     miscabilities.h \
@@ -115,7 +113,8 @@ CONFIG(nogui) {
 CONFIG(sfml) { 
     DEFINES += SFML_SOCKETS
     SOURCES += sfmlsocket.cpp
-    LIBS += -L/usr/local/lib -lboost_system-mt
+    LIBS += -L/usr/local/lib \
+        -lboost_system-mt
 }
 CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY

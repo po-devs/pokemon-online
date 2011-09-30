@@ -966,8 +966,8 @@ struct AMTechnician : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        /* Pokemon::Curse is for confusion damaeg */
-        if (tmove(b,s).power <= 60 && type(b,s) != Pokemon::Curse) {
+        /* Move::NoMove is for confusion damage, Struggle is affected by technician in gen 5 but not gen 4 */
+        if (tmove(b,s).power <= 60 && ( (b.gen() >= 5 && move(b,s) != Move::NoMove) || (b.gen() <= 4 && type(b,s) != Type::Curse) ) ) {
             turn(b,s)["BasePowerAbilityModifier"] = 10;
         }
     }
@@ -1728,6 +1728,9 @@ struct AMSelfConscious : public AM {
     }
 
     static void ubh(int s, int t, BS &b) {
+        if (b.koed(s)) {
+            return;
+        }
         int tp = type(b,t);
 
         if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {

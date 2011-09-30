@@ -70,8 +70,8 @@ public:
 
     QString addChannelLinks(const QString &line);
     void checkFlash(const QString &haystack, const QString &needle);
-    void printLine(const QString &str);
-    void printHtml(const QString &str);
+    void printLine(const QString &str, bool flashing = true, bool act=true);
+    void printHtml(const QString &str, bool act = true);
 
     void dealWithCommand(int command, QDataStream *stream);
     QHash<qint32, Battle> &getBattles();

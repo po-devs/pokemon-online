@@ -1,14 +1,14 @@
 #include "channel.h"
 #include "client.h"
-#include "../Utilities/otherwidgets.h"
-
+#include "poketextedit.h"
+#include "remove_direction_override.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
-    mymainchat = new QScrollDownTextBrowser();
+    mymainchat = new PokeTextEdit();
     myplayers = new QTreeWidget();
     battleList = new QTreeWidget();
 
@@ -218,7 +218,7 @@ void Channel::battleStarted(int bid, int id1, int id2)
         return;
 
     if (eventEnabled(Client::BattleEvent) || id1 == ownId() || id2 == ownId())
-        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)));
+        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)), false);
 
     battleReceived(bid, id1, id2);
 
@@ -265,11 +265,11 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
 
     if (eventEnabled(Client::BattleEvent) || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
-            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)));
+            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)), false);
         } else if (res == Tie) {
-            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)));
+            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)), false);
         } else if (res == Win) {
-            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)));
+            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)), false);
         }
     }
 }
@@ -376,7 +376,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         playerReceived(id);
 
         if (eventEnabled(Client::ChannelEvent)) {
-            printLine(tr("%1 joined the channel.").arg(name(id)));
+            printLine(tr("%1 joined the channel.").arg(name(id)), false);
         }
     } else if (command == NetworkCli::ChannelMessage) {
         QString message;
@@ -406,7 +406,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         qint32 id;
         in >> id;
         if (eventEnabled(Client::ChannelEvent)) {
-            printLine(tr("%1 left the channel.").arg(name(id)));
+            printLine(tr("%1 left the channel.").arg(name(id)), false);
         }
         /* Remove everything... */
         removePlayer(id);
@@ -451,7 +451,7 @@ void Channel::playerLogOut(int id) {
     removePlayer(id);
 
     if (eventEnabled(Client::ChannelEvent))
-        printLine(tr("%1 logged out.").arg(name));
+        printLine(tr("%1 logged out.").arg(name), false);
 }
 
 void Channel::removePlayer(int id) {
@@ -560,7 +560,7 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &line)
+void Channel::printLine(const QString &line, bool flashing, bool act)
 {
     QString timeStr = "";
     if(client->showTS)
@@ -571,8 +571,9 @@ void Channel::printLine(const QString &line)
     }
 
     if (line.leftRef(3) == "***") {
-        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + addChannelLinks(escapeHtml(line)) + "</span><br />");
+        if (flashing)
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
         return;
     }
 
@@ -580,7 +581,7 @@ void Channel::printLine(const QString &line)
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
-        QString end = line.right(line.length()-pos-1);
+        QString end = removeDirectionOverride(line.right(line.length()-pos-1));
         int id = client->id(beg);
 
         /* Messages from players from auth 3 and less have their html escaped */
@@ -589,7 +590,8 @@ void Channel::printLine(const QString &line)
         else
             checkFlash(end, "<ping */ *>");
 
-        checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        if (flashing)
+            checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
         end = addChannelLinks(end);
 
@@ -613,14 +615,18 @@ void Channel::printLine(const QString &line)
                 mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
             }
         }
-        emit activated(this);
+        if (act) {
+            emit activated(this);
+        }
     } else {
-        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        if (flashing) {
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        }
         mainChat()->insertPlainText( timeStr + line + "\n");
     }
 }
 
-void Channel::printHtml(const QString &str)
+void Channel::printHtml(const QString &str, bool act)
 {
     QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
@@ -632,8 +638,10 @@ void Channel::printHtml(const QString &str)
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
-    mainChat()->insertHtml(QString(str).replace( rx, timeStr ) + "<br />");
-    emit activated(this);
+    mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
+    if (act) {
+        emit activated(this);
+    }
 }
 
 void Channel::addEvent(int event)

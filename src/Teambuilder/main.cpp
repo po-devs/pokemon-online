@@ -44,7 +44,6 @@ void myMessageOutput(QtMsgType type, const char *msg)
 int main(int argc, char *argv[])
 {
 #ifdef WIN32
-    freopen("stdout.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #endif
 #if defined(Q_OS_MACX)

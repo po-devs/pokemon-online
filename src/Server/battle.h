@@ -425,7 +425,7 @@ public:
         int power; /* unsigned char in the game, but can be raised by effects */
         int accuracy; /* Same */
         char type;
-        char category;
+        char category; /* Physical/Special/Other */
         int rate; /* Same */
         char flinchRate;
         char recoil;

@@ -662,20 +662,20 @@ void BattleSituation::initializeEndTurnFunctions()
     6.0 Ingrain
     6.1 Aqua Ring
     6.2 Speed Boost, Shed Skin
-    6.3 Black Sludge, Leftovers: "pokémon restored a little HP using its leftovers"
-    6.4 Leech Seed: "pokémon's health is sapped by leech seed"
-    6.5 Burn, Poison Heal, Poison: "pokémon is hurt by poison"
+    6.3 Black Sludge, Leftovers: "pokemon restored a little HP using its leftovers"
+    6.4 Leech Seed: "pokemon's health is sapped by leech seed"
+    6.5 Burn, Poison Heal, Poison: "pokemon is hurt by poison"
     6.6 Nightmare
     6.7 Flame Orb activation, Toxic Orb activation
     6.8 Curse (from a Ghost)
     6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
     6.10 Bad Dreams Damage
-    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
-    6.12 Disable ends: "pokémon is no longer disabled"
+    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokemon caused an uproar" & "pokemon calmed down"
+    6.12 Disable ends: "pokemon is no longer disabled"
     6.13 Encore ends
     6.14 Taunt wears off
     6.15 Magnet Rise
-    6.16 Heal Block: "the foe pokémon's heal block wore off"
+    6.16 Heal Block: "the foe pokemon's heal block wore off"
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
@@ -704,6 +704,7 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
 
         addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
+        addEndTurnEffect(AbilityEffect, 6, 10); /* Bad Dreams */
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
 
 
@@ -775,7 +776,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         27.0 Zen Mode
 
-        28.0 Pokémon is switched in (if previous Pokémon fainted)
+        28.0 pokemon is switched in (if previous Pokemon fainted)
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
@@ -949,7 +950,8 @@ void BattleSituation::endTurn()
         }
         i -= 1;
 
-        bool side1(false), side2(false);
+        quint32 side1(0), side2(0);
+        bool fullLoop[2] = {false, false};
 
         for(int z = 0; z < speedsVector.size(); z++) {
             int player = speedsVector[z];
@@ -980,12 +982,13 @@ void BattleSituation::endTurn()
                     (this->*f)(player);
                 } else if (flags == ZoneEffect) {
                     int p = this->player(player);
+                    quint32 mask = 1 << b.priority;
 
-                    if (p == Player1 && !side1) {
-                        side1 = true;
+                    if (p == Player1 && !(side1&mask)) {
+                        side1 |= mask;
                         callzeffects(p, p, effect);
-                    } else if (p == Player2 && !side2) {
-                        side2 = true;
+                    } else if (p == Player2 && !(side2&mask)) {
+                        side2 |= mask;
                         callzeffects(p, p, effect);
                     }
                 }
@@ -996,9 +999,26 @@ void BattleSituation::endTurn()
                     break;
                 }
             }
+            int p = this->player(player);
+            if (p >= 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+                fullLoop[p] = true;
+            }
         }
 
-        continue;
+        for (int i = Player1; i <= Player2; i++) {
+            if (!fullLoop[i]) {
+                for (int j = beginning; j <= i; j++) {
+                    priorityBracket b = endTurnEffects[j];
+
+                    int flags = bracketType[b];
+                    if (flags == ZoneEffect) {
+                        QString effect = bracketToEffect[b];
+
+                        callzeffects(i, i, effect);
+                    }
+                }
+            }
+        }
     }
     while (ownBracket < ownEndFunctions.size()) {
         VoidFunction f = ownEndFunctions[ownBracket].second;
@@ -3370,7 +3390,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
     case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasType(player, Pokemon::Fire) && !hasWorkingAbility(player, Ability::WaterVeil);
-    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && (gen() <= 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
+    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison) && (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && (gen() <= 2 || !hasType(player, Pokemon::Ice)) && !hasWorkingAbility(player, Ability::MagmaArmor);
     default:
         return false;
@@ -3935,18 +3955,23 @@ int BattleSituation::calculateDamage(int p, int t)
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
-    int power = tmove(p).power;
     int type = tmove(p).type;
 
+    /*** WARNING ***/
+    /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
+      but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
+      move power (not just power variable) because of technician which relies on it */
+    callieffects(p,t,"BasePowerModifier");
+    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
+        tmove(p).power *= 2;
+    }
+
+    int power = tmove(p).power;
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }
 
-    callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
-        power *= 2;
-    }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
     QString sport = "Sported" + QString::number(type);
@@ -4001,7 +4026,7 @@ int BattleSituation::calculateDamage(int p, int t)
                 if (gen() <= 4) {
                     foreach (int tar, targetList) {
                         if (tar != t && !koed(tar)) {
-                            damage = damage * 3/4;
+                            damage = damage * (gen() <= 3 ? 2 : 3)/4;
                             break;
                         }
                     }
