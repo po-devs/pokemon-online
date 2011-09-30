@@ -1096,7 +1096,7 @@ struct MMGrassKnot : public MM
         } else {
             bp = 120;
         }
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b,s).power * bp;
     }
 };
 
@@ -1151,7 +1151,7 @@ struct MMGyroBall : public MM
         int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b, s).power * bp;
     }
 };
 
@@ -1284,7 +1284,7 @@ struct MMPowerTrick : public MM
 /* Heal block:
    For 5 turns, the target cannot select or execute any of the following moves:
 
-If Pokémon under the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
+If eunder the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
 
 Aqua Ring and Ingrain do not heal their user while under the effects of Heal Block.
 
@@ -2831,7 +2831,7 @@ struct MMOutrage : public MM
     }
 
     static void aas(int s, int, BS &b) {
-        if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt() && poke(b,s)["LastOutrage"] == b.turn()) {
+        if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt()) {
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Outrage");
             poke(b,s).remove("OutrageUntil");
@@ -2849,6 +2849,7 @@ struct MMOutrage : public MM
 
             if (b.gen() >=5) {
                 addFunction(turn(b, s), "AfterAttackSuccessful", "Outrage", &aas);
+                addFunction(turn(b, s), "AttackSomehowFailed", "Outrage", &aas);
             }
         }
     }
@@ -3525,20 +3526,6 @@ struct MMTelekinesis : public MM
     }
 };
 
-struct MMStrikeDown : public MM
-{
-    MMStrikeDown() {
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void uas(int s, int t, BS &b) {
-        if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, s, type(b,s), t);
-            poke(b,t)["StruckDown"] = true;
-        }
-    }
-};
-
 struct MMYouFirst : public MM
 {
     MMYouFirst() {
@@ -4074,6 +4061,9 @@ struct MMTriAttack : public MM
         if (b.true_rand() % 5 > unsigned(0+boost))
             return;
 
+        if (b.poke(t).status() == Pokemon::Koed)
+            return;
+
         int status;
         switch (b.true_rand() %3) {
         case 0:
@@ -4304,7 +4294,6 @@ void MoveEffect::init()
     REGISTER_MOVE(172, MirrorType);
     //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
-    REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
     REGISTER_MOVE(177, Stall);
     REGISTER_MOVE(178, FireOath);

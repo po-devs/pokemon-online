@@ -1,6 +1,7 @@
 #include "qrcodeplugin.h"
 #include "../Teambuilder/engineinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../Utilities/otherwidgets.h"
 #ifdef WIN32
 #include "../../SpecialIncludes/zlib.h"
 #include "../../SpecialIncludes/qrencode.h"
@@ -104,7 +105,7 @@ QWidget *QRCodePlugin::getConfigurationWidget()
 
     QRcode_free(code);
 
-    QLabel *ret = new QLabel();
+    QLabel *ret = new QDraggableLabel();
     QPalette palette = ret->palette();
     palette.setColor(QPalette::Foreground, Qt::black);
     palette.setColor(QPalette::Background, Qt::white);
