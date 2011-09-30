@@ -946,8 +946,8 @@ void BattleSituation::endTurn()
             }
         }
 
-        for (int i = Player1; i <= Player2; i++) {
-            if (!fullLoop[i]) {
+        for (int p = Player1; p <= Player2; p++) {
+            if (!fullLoop[p]) {
                 for (int j = beginning; j <= i; j++) {
                     priorityBracket b = endTurnEffects[j];
 
@@ -955,7 +955,7 @@ void BattleSituation::endTurn()
                     if (flags == ZoneEffect) {
                         QString effect = bracketToEffect[b];
 
-                        callzeffects(i, i, effect);
+                        callzeffects(p, p, effect);
                     }
                 }
             }
