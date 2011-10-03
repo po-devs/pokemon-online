@@ -348,7 +348,7 @@ struct IMScopeLens : public IM
 struct IMShellBell : public IM
 {
     IMShellBell() {
-        functions["UponDamageInflicted"] = &udi;
+        functions["AfterAttackSuccessful"] = &udi;
     }
 
     static void udi(int s, int t, BS &b) {
@@ -362,8 +362,12 @@ struct IMShellBell : public IM
             return;
         }
 
-        b.sendItemMessage(24, s);
-        b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
+        int damage = turn(b,s)["DamageInflicted"].toInt();
+
+        if (damage > 0) {
+            b.sendItemMessage(24, s);
+            b.healLife(s, damage/8);
+        }
     }
 };
 

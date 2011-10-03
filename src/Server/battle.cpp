@@ -2758,6 +2758,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             if (!koed(player)) {
+                callieffects(player, target, "AfterAttackSuccessful");
                 calleffects(player, target, "AfterAttackSuccessful");
             }
 
@@ -4002,7 +4003,7 @@ end:
     if (straightattack && player != source) {
         if (!sub) {
             /* If there's a sub its already taken care of */
-            turnMemory(source)["DamageInflicted"] = damage;
+            turnMemory(source)["DamageInflicted"] += damage;
             pokeMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenBy"] = source;
@@ -4051,12 +4052,12 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
     if (life <= damage) {
         pokeMemory(player)["Substitute"] = false;
-        turnMemory(source)["DamageInflicted"] = life;
+        turnMemory(source)["DamageInflicted"] += life;
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
         pokeMemory(player)["SubstituteLife"] = life-damage;
-        turnMemory(source)["DamageInflicted"] = damage;
+        turnMemory(source)["DamageInflicted"] += damage;
         sendMoveMessage(128, 3, player);
     }
 }
