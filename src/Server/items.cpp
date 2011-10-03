@@ -683,7 +683,7 @@ struct IMRedCard : public IM
         if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
             return;
         int s = turn(b,t)["RedCardUser"].toInt();
-        if (b.koed(s) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
+        if (b.koed(s) || b.koed(t) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
         if (!b.hasWorkingItem(s, Item::RedCard))
             return;
