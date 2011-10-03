@@ -894,7 +894,7 @@ void BattleSituation::endTurn()
         quint32 side1(0), side2(0);
         bool fullLoop[2] = {false, false};
 
-        for(int z = 0; z < speedsVector.size(); z++) {
+        for(int z = 0; z < int(speedsVector.size()); z++) {
             int player = speedsVector[z];
 
             if (koed(player)) {
@@ -941,7 +941,7 @@ void BattleSituation::endTurn()
                 }
             }
             int p = this->player(player);
-            if (p >= 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+            if (p >= 0 && p < int(sizeof(fullLoop)/sizeof(*fullLoop))) {
                 fullLoop[p] = true;
             }
         }
