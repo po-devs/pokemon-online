@@ -30,7 +30,6 @@ SOURCES += main.cpp \
     tier.cpp \
     moves.cpp \
     channel.cpp \
-    theme.cpp \
     tiertree.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
@@ -78,7 +77,6 @@ HEADERS += player.h \
     ../PokemonInfo/movesetchecker.h \
     ../PokemonInfo/battlestructs.h \
     ../Shared/config.h \
-    theme.h \
     channel.h \
     tiertree.h \
     tiernode.h \

@@ -2567,9 +2567,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         //Pressure
         int ppsum = 1;
 
-        foreach(int poke, targetList) {
-            if (poke != player && hasWorkingAbility(poke, Ability::Pressure)) {
-                ppsum += 1;
+        if (tmove(player).targets != Move::OpposingTeam) {
+            foreach(int poke, targetList) {
+                if (poke != player && hasWorkingAbility(poke, Ability::Pressure)) {
+                    ppsum += 1;
+                }
+            }
+        } else {
+            int opp = opponent(this->player(player));
+            for (int i = 0; i < numberPerSide(); i++) {
+                if (areAdjacent(player, slot(opp, i)) && hasWorkingAbility(slot(opp, i), Ability::Pressure)) {
+                    ppsum += 1;
+                }
             }
         }
 
