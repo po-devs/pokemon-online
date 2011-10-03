@@ -2096,7 +2096,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = (true_rand() % 100) < unsigned (30 + poke(player).level() - poke(target).level());
+        bool ret = (true_rand() % 100) < unsigned (30 + (gen() == 1 ? 0 :poke(player).level() - poke(target).level()));
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
