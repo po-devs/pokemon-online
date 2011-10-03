@@ -644,8 +644,8 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()
-                || b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level())
+                || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
