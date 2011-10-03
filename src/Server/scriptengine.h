@@ -14,7 +14,6 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "sessiondatafactory.h"
-#include "scriptdb.h"
 
 class Server;
 class ChallengeInfo;
@@ -185,6 +184,7 @@ public:
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
     Q_INVOKABLE QScriptValue move(int num);
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);
@@ -251,6 +251,7 @@ public:
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeHappiness(int id, int slot, int value);
     Q_INVOKABLE void changePokeShine(int id, int slot, bool value);
+    Q_INVOKABLE QScriptValue teamPokeShine(int id, int slot);
     Q_INVOKABLE void changePokeNature(int id, int pokeslot, int nature);
     Q_INVOKABLE QScriptValue teamPokeGender(int id, int slot);
 
@@ -320,7 +321,6 @@ private:
     QTimer * step_timer;
     QVector<bool> stopevents;
     SessionDataFactory *mySessionDataFactory;
-    ScriptDB *myScriptDB;
 
     QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;
