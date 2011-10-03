@@ -4003,7 +4003,7 @@ end:
     if (straightattack && player != source) {
         if (!sub) {
             /* If there's a sub its already taken care of */
-            turnMemory(source)["DamageInflicted"] += damage;
+            inc(turnMemory(source)["DamageInflicted"], damage);
             pokeMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenBy"] = source;
@@ -4052,12 +4052,12 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
     if (life <= damage) {
         pokeMemory(player)["Substitute"] = false;
-        turnMemory(source)["DamageInflicted"] += life;
+        inc(turnMemory(source)["DamageInflicted"], life);
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
         pokeMemory(player)["SubstituteLife"] = life-damage;
-        turnMemory(source)["DamageInflicted"] += damage;
+        inc(turnMemory(source)["DamageInflicted"], damage);
         sendMoveMessage(128, 3, player);
     }
 }
@@ -4503,6 +4503,7 @@ void BattleSituation::changePP(int player, int move, int PP)
         notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
     }
     else {
+        fpoke(player).pps[move] = std::min(fpoke(player).pps[move], quint8(5));
         notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), fpoke(player).pps[move]);
     }
 }
