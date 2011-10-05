@@ -27,10 +27,6 @@ ScriptEngine::ScriptEngine(Server *s) {
         myengine.newQObject(mySessionDataFactory),
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
-    // DB object.
-    myScriptDB = new ScriptDB(myserver, &myengine);
-    QScriptValue sysdb = myengine.newQObject(myScriptDB);
-    sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
@@ -2185,3 +2181,16 @@ int ScriptEngine::system(const QString &command)
     }
 }
 #endif // PO_SCRIPT_NO_SYSTEM
+
+QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
+{
+    if (!testPlayer("teamPokeShine", id) || !testRange("teamPokeShine", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(slot).shiny();
+}
+
+int ScriptEngine::moveType(int moveNum, int gen)
+{
+    return MoveInfo::Type(moveNum, gen);
+}
