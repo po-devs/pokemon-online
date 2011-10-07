@@ -3585,7 +3585,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
         notify(All, StatusChange, player, qint8(status));
     }
     notify(All, AbsStatusChange, this->player(player), qint8(this->slotNum(player)), qint8(status), turns > 0);
-    poke(player).changeStatus(status);
+    poke(player).addStatus(status);
     if (turns != 0) {
         poke(player).statusCount() = turns;
         if (status == Pokemon::Asleep)
@@ -3779,9 +3779,9 @@ int BattleSituation::calculateDamage(int p, int t)
     }
     //Guts, burn
     if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
-        damage = damage * (
+        damage = damage / (
                     (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
-                    ? PokeFraction(1,2) : PokeFraction(1,1));
+                    ? 2 : 1);
     }
 
     /* Light screen / Reflect */
