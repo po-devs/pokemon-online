@@ -721,13 +721,20 @@ struct MMBellyDrum : public MM
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
             b.sendMoveMessage(8,1,s,type(b,s));
-            b.inflictStatMod(s,Attack,12, s, false);
 
             if (b.gen() == 2) {
-                while (b.getStat(s, Attack) == 999) {
-                    b.inflictStatMod(s,Attack,-1,s,false);
+                b.inflictStatMod(s,Attack,2, s, false);
+
+                while(b.getStatBoost(s, Attack < 6)) {
+                    b.inflictStatMod(s,Attack,2,s,false);
+
+                    if (b.getStat(s, Attack) == 999) {
+                        b.inflictStatMod(s, Attack, -1,s,false);
+                        break;
+                    }
                 }
-                b.inflictStatMod(s,Attack,1,s,false);
+            } else {
+                b.inflictStatMod(s, Attack, 12, s, false);
             }
         }
         b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
