@@ -2717,9 +2717,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 heatOfAttack() = false;
                 if (hitting) {
                     if (tmove(player).flags & Move::ContactFlag) {
-                        if (!sub)
+                        if (!sub) {
                             callieffects(target, player, "UponPhysicalAssault");
-                        callaeffects(target,player,"UponPhysicalAssault");
+                            callaeffects(target,player,"UponPhysicalAssault");
+                        }
                         callaeffects(player,target,"OnPhysicalAssault");
                     }
 
