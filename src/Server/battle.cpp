@@ -11,6 +11,7 @@
 #include "tier.h"
 #include "pluginmanager.h"
 #include "battlepluginstruct.h"
+#include "battlefunctions.h"
 #include "battlecounterindex.h"
 
 typedef BattlePStorage BP;
@@ -3899,27 +3900,7 @@ int BattleSituation::repeatNum(int player)
         return max;
     }
 
-    if (min == max) {
-        return min;
-    } else if (min == 2 && max == 5) {
-        if (gen() <= 4) {
-            switch (rand () % 8) {
-            case 0: case 1: case 2: return 2;
-            case 3: case 4: case 5: return 3;
-            case 6: return 4;
-            case 7: default: return 5;
-            }
-        } else {
-            switch (rand () % 6) {
-            case 0: case 1:  return 2;
-            case 2: case 3:  return 3;
-            case 4: return 4;
-            case 5: default: return 5;
-            }
-        }
-    } else {
-        return min + (true_rand() % (max-min));
-    }
+    return minMax(min, max, gen(), true_rand());
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {

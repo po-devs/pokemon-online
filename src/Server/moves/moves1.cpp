@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 #include "battlecounterindex.h"
+#include "battlefunctions.h"
 
 typedef BS::priorityBracket bracket;
 using namespace Move;
@@ -1016,7 +1017,7 @@ struct MMBind : public MM
             b.link(s, t, "Trapped");
             BS::BasicMoveInfo &fm = tmove(b,s);
             poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
-                        fm.maxTurns : (b.true_rand()%(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
+                        fm.maxTurns : minMax(fm.minTurns, fm.maxTurns, b.gen(), b.true_rand()); /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
         }
