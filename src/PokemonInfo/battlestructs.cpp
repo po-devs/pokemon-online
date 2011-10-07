@@ -500,6 +500,10 @@ void TeamBattle::generateRandom(int gen)
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
+        if (ItemInfo::isPlate(p.item()) && p.num() == Pokemon::Arceus) {
+            p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
+        }
+
         p.updateStats(gen);
         p.nick() = PokemonInfo::Name(p.num());
         p.fullStatus() = 0;
