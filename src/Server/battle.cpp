@@ -894,7 +894,7 @@ void BattleSituation::endTurn()
         quint32 side1(0), side2(0);
         bool fullLoop[2] = {false, false};
 
-        for(int z = 0; z < speedsVector.size(); z++) {
+        for(int z = 0; z < int(speedsVector.size()); z++) {
             int player = speedsVector[z];
 
             if (koed(player)) {
@@ -941,7 +941,7 @@ void BattleSituation::endTurn()
                 }
             }
             int p = this->player(player);
-            if (p >= 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+            if (p >= 0 && p < int(sizeof(fullLoop)/sizeof(*fullLoop))) {
                 fullLoop[p] = true;
             }
         }
@@ -2096,7 +2096,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = (true_rand() % 100) < unsigned (30 + poke(player).level() - poke(target).level());
+        bool ret = (true_rand() % 100) < unsigned (30 + (gen() == 1 ? 0 :poke(player).level() - poke(target).level()));
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -2567,9 +2567,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         //Pressure
         int ppsum = 1;
 
-        foreach(int poke, targetList) {
-            if (poke != player && hasWorkingAbility(poke, Ability::Pressure)) {
-                ppsum += 1;
+        if (tmove(player).targets != Move::OpposingTeam) {
+            foreach(int poke, targetList) {
+                if (poke != player && hasWorkingAbility(poke, Ability::Pressure)) {
+                    ppsum += 1;
+                }
+            }
+        } else {
+            int opp = opponent(this->player(player));
+            for (int i = 0; i < numberPerSide(); i++) {
+                if (areAdjacent(player, slot(opp, i)) && hasWorkingAbility(slot(opp, i), Ability::Pressure)) {
+                    ppsum += 1;
+                }
             }
         }
 
@@ -2749,6 +2758,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             if (!koed(player)) {
+                callieffects(player, target, "AfterAttackSuccessful");
                 calleffects(player, target, "AfterAttackSuccessful");
             }
 
@@ -3993,7 +4003,7 @@ end:
     if (straightattack && player != source) {
         if (!sub) {
             /* If there's a sub its already taken care of */
-            turnMemory(source)["DamageInflicted"] = damage;
+            inc(turnMemory(source)["DamageInflicted"], damage);
             pokeMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenByAttack"] = damage;
             turnMemory(player)["DamageTakenBy"] = source;
@@ -4042,12 +4052,12 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
     if (life <= damage) {
         pokeMemory(player)["Substitute"] = false;
-        turnMemory(source)["DamageInflicted"] = life;
+        inc(turnMemory(source)["DamageInflicted"], life);
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
         pokeMemory(player)["SubstituteLife"] = life-damage;
-        turnMemory(source)["DamageInflicted"] = damage;
+        inc(turnMemory(source)["DamageInflicted"], damage);
         sendMoveMessage(128, 3, player);
     }
 }
@@ -4493,6 +4503,7 @@ void BattleSituation::changePP(int player, int move, int PP)
         notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
     }
     else {
+        fpoke(player).pps[move] = std::min(fpoke(player).pps[move], quint8(5));
         notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), fpoke(player).pps[move]);
     }
 }
