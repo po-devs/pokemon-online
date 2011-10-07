@@ -321,7 +321,7 @@ void ShallowBattlePoke::changeStatus(int status)
 
 void ShallowBattlePoke::addStatus(int status)
 {
-    if (status <= Pokemon::Poisoned || status == Pokemon::Koed) {
+    if (status <= Pokemon::Poisoned) {
         changeStatus(status);
         return;
     }
