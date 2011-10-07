@@ -49,7 +49,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int gen = 5;
+    int gen = 3;
     int pokenum = PokemonInfo::TrueCount(gen);
 
     qDebug() << "Gen " << gen;

@@ -644,7 +644,8 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(s).level() < b.poke(t).level()) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level())
+                || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -839,7 +840,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat) {
+        if (move == 0 || move == Copycat || move == DragonTail || move == OverheadThrow) {
             turn(b,s)["Failed"] = true;
         }
     }
