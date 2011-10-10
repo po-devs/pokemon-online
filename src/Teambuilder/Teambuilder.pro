@@ -1,6 +1,8 @@
 QT += network \
     xml \
-    phonon
+    phonon \
+    declarative \
+    opengl
 TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -40,7 +42,8 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    remove_direction_override.cpp
+    remove_direction_override.cpp \
+    spectatorwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -90,10 +93,18 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     engineinterface.h \
     logmanager.h \
     poketextedit.h \
-    remove_direction_override.h
+    remove_direction_override.h \
+    spectatorwindow.h \
+    ../BattleManager/battlescene.h \
+    ../BattleManager/battleinput.h \
+    ../BattleManager/battledatatypes.h \
+    ../BattleManager/battledata.h \
+    ../BattleManager/battleclientlog.h
 LIBS += -L../../bin \
     -lpokemonlib \
-    -lutilities
+    -lutilities \
+    -lbattlelib
+QMAKE_CXXFLAGS += "-std=c++0x"
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
@@ -118,4 +129,7 @@ macx:LIBS += -framework \
 macx:ICON = pokemononline.icns
 macx:QMAKE_INFO_PLIST = Info.plist
 
+CONFIG(debian) {
+    DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
+}
 

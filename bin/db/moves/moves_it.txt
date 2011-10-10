@@ -1,4 +1,4 @@
-
+﻿
 Botta
 Colpokarate
 Doppiasberla
@@ -432,7 +432,7 @@ Cannonflash
 Scalaroccia
 Scacciabruma
 Distortozona
-Dracometeora
+Dragobolide
 Scarica
 Lavasbuffo
 Verdebufera

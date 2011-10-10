@@ -536,10 +536,14 @@ void PokeTeam::load()
     {
         gender() = Pokemon::Female;
     }
-    else
+    else if (genderAvail() == Pokemon::MaleAvail)
     {
         gender() = Pokemon::Male;
+    } else
+    {
+        gender() = true_rand() % 2 ? Pokemon::Male : Pokemon::Female;
     }
+
     ability() = abilities().ab(0);
     nickname() = PokemonInfo::Name(num());
     PokeGraphics::load(gender(), false);
