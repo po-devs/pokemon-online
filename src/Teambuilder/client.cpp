@@ -923,6 +923,15 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
+#ifdef PO_PMS_YOU_START_ONLY
+    if (mypms.contains(id)) {
+        registerPermPlayer(id);
+        mypms[id]->printLine(pm);
+    } else {
+        myrelay.sendPM(id, "This player cannot recieve PMs."); // no translation needed
+        return;
+    }
+#else
     if (!playerExist(id) || myIgnored.contains(id)) {
         return;
     }
@@ -932,6 +941,7 @@ void Client::PMReceived(int id, QString pm)
 
     registerPermPlayer(id);
     mypms[id]->printLine(pm);
+#endif
 }
 
 void Client::removePM(int id)
