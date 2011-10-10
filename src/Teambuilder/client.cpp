@@ -928,7 +928,7 @@ void Client::PMReceived(int id, QString pm)
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
-        myrelay.sendPM(id, "This player cannot recieve PMs."); // no translation needed
+        myrelay.sendPM(id, "This player cannot receive PMs."); // no translation needed
         return;
     }
 #else
