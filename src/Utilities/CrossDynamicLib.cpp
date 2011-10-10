@@ -68,7 +68,7 @@ void* cross::DynamicLibrary::GetFunction(const char* funcname)
 		throw( DynamicLibException("Access to unloaded library.") );
 
 #ifdef WIN32
-	func = (void*)GetProcAddress((HINSTANCE)libhandle, funcname);
+        func = (void*)GetProcAddress((HINSTANCE)libhandle, funcname);
 #else
 	func = dlsym(libhandle, funcname);
 #endif

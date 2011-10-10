@@ -24,40 +24,11 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
             {
                 QVariant ret;
 
+                QString info = url.section(":", 1);
                 if (res == "pokemon") {
-                    QStringList params = url.section(':', 1).split('&');
-
-                    int gen = 5;
-                    int gender = 0;
-                    Pokemon::uniqueId num = Pokemon::NoPoke;
-                    bool shiny=false;
-                    bool back = false;
-
-                    foreach (QString param, params) {
-                        QString par = param.section('=', 0,0);
-                        QString val = param.section('=', 1);
-
-                        if (par.length() > 0 && par[0].isDigit() && val.length() == 0) {
-                            val = par;
-                            par = "num";
-                        }
-
-                        if (par == "gen") {
-                            gen = val.toInt();
-                        } else if (par == "num") {
-                            num = Pokemon::uniqueId(val.section('-', 0,0).toInt(), val.section('-', 1).toInt());
-                        } else if (par == "shiny") {
-                            shiny = val == "true";
-                        } else if (par == "gender") {
-                            gender = val == "male" ? Pokemon::Male : (val == "female"?Pokemon::Female : Pokemon::Neutral);
-                        } else if (par == "back") {
-                            back = val == "true";
-                        }
-                    }
-
-                    ret = PokemonInfo::Picture(num, gen, gender, shiny, back);
+                    ret = PokemonInfo::Picture(info);
                 } else if (res == "item") {
-                    int item = url.section(':', 1).toInt();
+                    int item = info.toInt();
                     ret = ItemInfo::Icon(item);
                 }
 

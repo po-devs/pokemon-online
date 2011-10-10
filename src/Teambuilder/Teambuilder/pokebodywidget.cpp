@@ -115,6 +115,7 @@ PokeBodyWidget::PokeBodyWidget(QWidget *upparent, int gen, QAbstractItemModel *i
 
     movechoice = new MoveList();
     box4->addWidget(movechoice, 0, 0, 1, 4);
+    movechoice->sortByColumn(1);
     for (int i = 0; i < 4; i++)
     {
         box4->addWidget(m_moves[i] = new QLineEdit(),1,i);
@@ -143,7 +144,7 @@ void PokeBodyWidget::goToAdvanced()
 
 void PokeBodyWidget::setWidgetNum(int num)
 {
-    this->num->setText(tr("e%1").arg(num+1));
+    this->num->setText(tr("Pokemon %1").arg(num+1));
     setProperty("num", num);
 }
 

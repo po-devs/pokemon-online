@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 #include "battlecounterindex.h"
+#include "battlefunctions.h"
 
 typedef BS::priorityBracket bracket;
 using namespace Move;
@@ -644,7 +645,8 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(s).level() < b.poke(t).level()) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level())
+                || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -720,13 +722,20 @@ struct MMBellyDrum : public MM
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
             b.sendMoveMessage(8,1,s,type(b,s));
-            b.inflictStatMod(s,Attack,12, s, false);
 
             if (b.gen() == 2) {
-                while (b.getStat(s, Attack) == 999) {
-                    b.inflictStatMod(s,Attack,-1,s,false);
+                b.inflictStatMod(s,Attack,2, s, false);
+
+                while(b.getStatBoost(s, Attack < 6)) {
+                    b.inflictStatMod(s,Attack,2,s,false);
+
+                    if (b.getStat(s, Attack) == 999) {
+                        b.inflictStatMod(s, Attack, -1,s,false);
+                        break;
+                    }
                 }
-                b.inflictStatMod(s,Attack,1,s,false);
+            } else {
+                b.inflictStatMod(s, Attack, 12, s, false);
             }
         }
         b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
@@ -839,7 +848,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat) {
+        if (move == 0 || move == Copycat || move == DragonTail || move == OverheadThrow) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -1008,7 +1017,7 @@ struct MMBind : public MM
             b.link(s, t, "Trapped");
             BS::BasicMoveInfo &fm = tmove(b,s);
             poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
-                        fm.maxTurns : (b.true_rand()%(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
+                        fm.maxTurns : minMax(fm.minTurns, fm.maxTurns, b.gen(), b.true_rand()); /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
         }
@@ -1335,7 +1344,18 @@ struct MMDoomDesire : public MM
                 if (b.gen() <= 4) {
                     b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
                 } else {
+                    int t = b.opponent(b.player(s));
+                    int doomuser = s;
+
+                    for (int i = 0; i < b.numberPerSide(); i++) {
+                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
+                            doomuser = b.slot(t, i);
+                            break;
+                        }
+                    }
+
                     MoveEffect e(move, b.gen(), tmove(b,s));
+                    MoveEffect f(move, b.gen(), tmove(b,doomuser));
 
                     b.calculateTypeModStab(s, s);
 
@@ -1348,17 +1368,6 @@ struct MMDoomDesire : public MM
                     turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
                     turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
                     turn(b,s)["CriticalHit"] = false;
-                    tmove(b,s).power = MoveInfo::Power(move, b.gen());
-
-                    int t = b.opponent(b.player(s));
-                    int doomuser = s;
-
-                    for (int i = 0; i < b.numberPerSide(); i++) {
-                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
-                            doomuser = b.slot(t, i);
-                            break;
-                        }
-                    }
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BS::Effective, s, quint8(typemod));
@@ -1844,6 +1853,23 @@ struct MMGravity : public MM
         return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
     }
 
+    static void bindToGround(int s, int p, BS &b, bool silent=false) {
+        if (b.koed(p))
+            return;
+        if (!silent &&b.isFlying(p)) {
+            b.sendMoveMessage(53,2,p,Type::Psychic);
+        }
+        if(poke(b,p).value("Invulnerable").toBool()) {
+            int move = poke(b,p)["2TurnMove"].toInt();
+            if (move == Fly || move == Bounce || move == FreeFall) {
+                MMBounce::groundStruck(p, b);
+                if (!silent) {
+                    b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
+                }
+            }
+        }
+    }
+
     static void uas(int s, int, BS &b) {
         b.battleMemory()["Gravity"] = true;
         b.battleMemory()["GravityCount"] = 5;
@@ -1852,18 +1878,7 @@ struct MMGravity : public MM
         std::vector<int> list = b.sortedBySpeed();
 
         foreach(int p, list) {
-            if (b.koed(p))
-                continue;
-            if (b.isFlying(p)) {
-                b.sendMoveMessage(53,2,p,Type::Psychic);
-            }
-            if(poke(b,p).value("Invulnerable").toBool()) {
-                int move = poke(b,p)["2TurnMove"].toInt();
-                if (move == Fly || move == Bounce || move == FreeFall) {
-                    MMBounce::groundStruck(p, b);
-                    b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
-                }
-            }
+            bindToGround(s, p, b);
         }
 
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "Gravity", &et);
@@ -1917,8 +1932,22 @@ struct MMGravity : public MM
     }
 };
 
-MMGravity::FM MMGravity::forbidden_moves;
+struct MMStrikeDown : public MM
+{
+    MMStrikeDown() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
 
+    static void uas(int s, int t, BS &b) {
+        if (b.isFlying(t)) {
+            b.sendMoveMessage(175, 0, s, type(b,s), t);
+            poke(b,t)["StruckDown"] = true;
+        }
+        MMGravity::bindToGround(s, t, b, true);
+    }
+};
+
+MMGravity::FM MMGravity::forbidden_moves;
 
 struct MMMetronome : public MM
 {
@@ -2001,6 +2030,11 @@ struct MMWideGuard : public MM
         }
 
         if (tmove(b,s).targets != Move::Opponents && tmove(b,s).targets != Move::All && tmove(b,s).targets != Move::AllButSelf) {
+            return;
+        }
+
+        /* Dark void isn't effected */
+        if (tmove(b,s).category == Move::Other) {
             return;
         }
 
@@ -2153,5 +2187,7 @@ void init_moves_1(QHash<int, MoveMechanics> &mechanics, QHash<int, QString> &nam
 
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
+
+    REGISTER_MOVE(175, StrikeDown);
 }
 

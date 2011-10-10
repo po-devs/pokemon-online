@@ -12,6 +12,7 @@ class BaseBattleDisplay;
 class QScrollDownTextBrowser;
 class QClickPBar;
 class Log;
+class SpectatorWindow;
 
 struct BaseBattleInfo
 {
@@ -95,13 +96,13 @@ class BaseBattleWindow : public QWidget
 {
     Q_OBJECT
 
-    PROPERTY(int, battleId);
-    PROPERTY(int, animatedHpSpot);
-    PROPERTY(int, animatedHpGoal);
-    PROPERTY(int, ownid);
-    PROPERTY(bool, started);
-    PROPERTY(bool, usePokemonNames);
-    PROPERTY(BattleConfiguration, conf);
+    PROPERTY(int, battleId)
+    PROPERTY(int, animatedHpSpot)
+    PROPERTY(int, animatedHpGoal)
+    PROPERTY(int, ownid)
+    PROPERTY(bool, started)
+    PROPERTY(bool, usePokemonNames)
+    PROPERTY(BattleConfiguration, conf)
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {
@@ -299,6 +300,8 @@ protected:
     void init();
     void checkAndSaveLog();
 
+    SpectatorWindow *test;
+    QWidget *testWidget;
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };
