@@ -357,21 +357,30 @@ struct MMHaze : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.gen() > 1) {
+            if (tmove(b,s).power == 0) {
+                b.sendMoveMessage(149);
 
-        if (tmove(b,s).power == 0) {
-            b.sendMoveMessage(149);
+                foreach (int p, b.sortedBySpeed())
+                {
+                    for (int i = 1; i <= 7; i++) {
+                        fpoke(b,p).boosts[i] = 0;
+                    }
+                }
+            }
+            else {
+                b.sendMoveMessage(149, 1, s, type(b,s), t);
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,t).boosts[i] = 0;
+                }
+            }
+        } else {
+            /* In gen 1, haze just clears status */
+            b.sendMoveMessage(149, 2);
 
             foreach (int p, b.sortedBySpeed())
             {
-                for (int i = 1; i <= 7; i++) {
-                    fpoke(b,p).boosts[i] = 0;
-                }
-            }
-        }
-        else {
-            b.sendMoveMessage(149, 1, s, type(b,s), t);
-            for (int i = 1; i <= 7; i++) {
-                fpoke(b,t).boosts[i] = 0;
+                b.healStatus(p, 0);
             }
         }
     }
@@ -2111,7 +2120,7 @@ struct MMRazorWind : public MM
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
-            if (mv == SkullBash) {
+            if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
             }
 
@@ -2121,7 +2130,7 @@ struct MMRazorWind : public MM
                 b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                    tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
@@ -2266,7 +2275,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == 0) {
+        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             turn(b,s)["Failed"] = true;
         }
     }

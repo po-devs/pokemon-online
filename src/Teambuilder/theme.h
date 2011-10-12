@@ -8,6 +8,7 @@
 class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
+class BattleDefaultTheme;
 
 #define DEFAULT_PO_THEME "Classic"
 
@@ -48,6 +49,7 @@ public:
     static QPixmap OrangeBall();
     static QPixmap FrameBall();
     static QPixmap TrainerSprite(int num);
+    static BattleDefaultTheme* getBattleTheme();
 
 private:
     static QString m_Directory;
@@ -62,6 +64,7 @@ private:
     static void loadPixmaps();
 
     static QVariant value(const QString &key, bool *def);
+    static BattleDefaultTheme *m_battleTheme;
 };
 
 #endif // THEME_H

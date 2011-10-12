@@ -15,7 +15,11 @@ class AbstractCommandManager
 public:
     typedef T enumClass;
 
-    virtual void entryPoint_v(enumClass commandId, va_list) = 0;
+    virtual ~AbstractCommandManager() {
+
+    }
+
+    virtual void entryPoint_v(enumClass commandId, va_list&) = 0;
     void entryPoint(enumClass commandId, ...) {
         va_list args;
         va_start(args, commandId);
@@ -24,14 +28,69 @@ public:
     }
 };
 
-/* Example class inherited from AbstractCommandManager, with some cool functionalities */
-template<class T=int, class Current=AbstractCommandManager<T>, class Extracter=CommandExtracter<T, Current>,
-         class FlowWorker = CommandFlow<T, Current>, class Invoker=CommandInvoker<T, Current> >
-class CommandManager : public AbstractCommandManager<T>, public Extracter, public FlowWorker, public Invoker
+template <class T>
+class FlowCommandManager : public AbstractCommandManager<T>
 {
 public:
     typedef T enumClass;
-    typedef AbstractCommandManager<T> baseClass;
+    typedef FlowCommandManager<T> baseClass;
+
+    FlowCommandManager() {
+        m_input = NULL;
+    }
+
+    /* Used to clean up a whole battle flow tree's memory */
+    void deleteTree() {
+        for(unsigned i = 0; i < m_outputs.size(); i++) {
+            m_outputs[i]->deleteTree();
+            delete m_outputs[i];
+        }
+        m_outputs.clear();
+    }
+
+    template <enumClass val, typename ...Params>
+    void output(Params...params) {
+        /* Todo: convert this to new iterating function when gcc 4.6 is widely broadcast */
+        for (unsigned i = 0; i < m_outputs.size(); i++) {
+            m_outputs[i]->entryPoint(val, params...);
+        }
+    }
+
+    void addOutput(baseClass* source) {
+        m_outputs.push_back(source);
+        source->m_input = this;
+    }
+
+    /* Reimplement this for the base input class,
+      and everything in the chain can be stopped.
+
+      More fine grain control would be achieved by
+      completing the Command structure usage */
+    virtual void pause() {
+        if (m_input) {
+            m_input->pause();
+        }
+    }
+
+    virtual void unpause() {
+        if (m_input) {
+            m_input->unpause();
+        }
+    }
+
+protected:
+    baseClass *m_input;
+    std::vector<baseClass*> m_outputs;
+};
+
+/* Example class inherited from AbstractCommandManager, with some cool functionalities */
+template<class T=int, class Current=AbstractCommandManager<T>, class Extracter=CommandExtracter<T, Current>,
+         class FlowWorker = CommandFlow<T, Current>, class Invoker=CommandInvoker<T, Current> >
+class CommandManager : public FlowCommandManager<T>, public Extracter, public FlowWorker, public Invoker
+{
+public:
+    typedef T enumClass;
+    typedef FlowCommandManager<T> baseClass;
     typedef Current type;
     typedef Extracter extracterType;
     typedef FlowWorker flowType;
@@ -58,7 +117,7 @@ public:
 
     }
 
-    void entryPoint_v(enumClass commandId, va_list args) {
+    void entryPoint_v(enumClass commandId, va_list &args) {
         extracterType::entryPoint_v(commandId, args);
     }
 
@@ -67,25 +126,13 @@ public:
         receiveCommand<val, Params...>(std::forward<Params>(params)...);
     }
 
-    void unknownEntryPoint(enumClass, va_list) {
+    void unknownEntryPoint(enumClass, va_list&) {
         /* If your class never introduces delays, i.e. always forward
           and keeps nothing in storage, it's safe to use
           va_copy to pass it to the outputs.
 
           Same if all the Extracter<enumClass> never introduce non-POD
           types, or pointer that may go dangling with delays */
-    }
-
-    template <enumClass val, typename ...Params>
-    void output(Params...params) {
-        /* Todo: convert this to new iterating function when gcc 4.6 is widely broadcast */
-        for (unsigned i = 0; i < m_outputs.size(); i++) {
-            m_outputs[i]->entryPoint(val, params...);
-        }
-    }
-
-    void addOutput(baseClass* source) {
-        m_outputs.push_back(source);
     }
 
     template <enumClass val, typename ...Params>
@@ -109,7 +156,6 @@ public:
     }
 
 protected:
-    std::vector<baseClass*> m_outputs;
     /* TODO: Fix this */
 //    enum {
 //        /* If triggered, means Current is incorrect type */

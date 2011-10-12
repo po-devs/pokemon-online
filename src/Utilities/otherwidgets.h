@@ -118,11 +118,12 @@ public:
     void setAutoClear(bool a) {
         autoClear = a;
     }
-    void insertHtml(const QString &text);
-    void insertPlainText(const QString &text);
+
     void keepLines(int numberOfLines);
 
 public slots:
+    void insertPlainText(const QString &text);
+    void insertHtml(const QString &text);
     void clear(); // Overriden to make linecount zero.
 
 private:

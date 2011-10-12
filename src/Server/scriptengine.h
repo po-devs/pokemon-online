@@ -70,6 +70,8 @@ public:
     void afterPlayerBan(int src, int dest);
     void battleSetup(int src, int dest, int battleId);
 
+    /* Imports a module with a given name */
+    Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
@@ -133,8 +135,6 @@ public:
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
-    Q_INVOKABLE void setPA(const QString &name);
-    Q_INVOKABLE void unsetPA(const QString &name);
 
     Q_INVOKABLE QScriptValue channelIds();
     Q_INVOKABLE QScriptValue channel(int id);
@@ -245,8 +245,6 @@ public:
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
-    Q_INVOKABLE QString getBattleLogFileName(int battleid);
-
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeAbility(int id, int slot, int ability);
@@ -322,7 +320,6 @@ private:
     QScriptValue myscript;
     QTimer * step_timer;
     QVector<bool> stopevents;
-    QList<QScriptString> playerArrays;
     SessionDataFactory *mySessionDataFactory;
 
     QNetworkAccessManager manager;

@@ -30,7 +30,6 @@ SOURCES += main.cpp \
     tier.cpp \
     moves.cpp \
     channel.cpp \
-    theme.cpp \
     tiertree.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
@@ -78,7 +77,6 @@ HEADERS += player.h \
     ../PokemonInfo/movesetchecker.h \
     ../PokemonInfo/battlestructs.h \
     ../Shared/config.h \
-    theme.h \
     channel.h \
     tiertree.h \
     tiernode.h \
@@ -95,7 +93,8 @@ HEADERS += player.h \
     sfmlsocket.h \
     ../Shared/networkcommands.h \
     battlecounters.h \
-    battlecounterindex.h
+    battlecounterindex.h \
+    battlefunctions.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -119,3 +118,6 @@ CONFIG(sfml) {
 CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
 CONFIG(nosysteminscript):DEFINES += PO_SCRIPT_NO_SYSTEM
+
+
+

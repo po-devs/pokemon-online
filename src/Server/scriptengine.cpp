@@ -85,26 +85,18 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-void ScriptEngine::setPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if(playerArrays.contains(str))
-        return;
+QScriptValue ScriptEngine::import(const QString &fileName) {
+    QString url = "scripts/"+fileName;
+    QFile in(url);
 
-    playerArrays.push_back(str);
-    QScriptValue pa = myengine.newArray();
+    if (!in.open(QIODevice::ReadOnly)) {
+        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
+        return QScriptValue();
+    }
 
-    myengine.globalObject().setProperty(name, pa);
-}
-
-void ScriptEngine::unsetPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if (!playerArrays.contains(str))
-        return;
-
-    playerArrays.removeOne(str);
-    myengine.globalObject().setProperty(name, QScriptValue());
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
+    evaluate(import);
+    return import;
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -392,13 +384,6 @@ void ScriptEngine::beforeLogOut(int src)
 void ScriptEngine::afterLogOut(int src)
 {
     makeEvent("afterLogOut", src);
-
-    /* Removes the player from the player array */
-    foreach(QScriptString pa, playerArrays) {
-        if (!myengine.globalObject().property(pa).isNull()) {
-            myengine.globalObject().property(pa).setProperty(src, QScriptValue());
-        }
-    }
 
     mySessionDataFactory->handleUserLogOut(src);
 }
@@ -1019,7 +1004,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
             copy[i] = copy[i].toUpper();
             up = false;
         } else {
-            if (copy[i] == '-')
+            if (copy[i] == '-' || copy[i] == ' ')
                 up = true;
             copy[i] = copy[i].toLower();
         }
@@ -1618,17 +1603,6 @@ void ScriptEngine::unban(QString name)
 void ScriptEngine::battleSetup(int src, int dest, int battleId)
 {
     makeEvent("battleSetup", src, dest, battleId);
-}
-
-QString ScriptEngine::getBattleLogFileName(int battleId)
-{
-    BattleSituation * battle = myserver->getBattle(battleId);
-    if (battle) {
-        return battle->getBattleLogFilename();
-    }else{
-        warn("getBattleLogFileName", "can't find a battle with specified id.");
-        return QString();
-    }
 }
 
 void ScriptEngine::prepareWeather(int battleId, int weatherId)

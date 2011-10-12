@@ -22,7 +22,6 @@ bin/Themes/
 bin/Teams/
 bin/usage_stats/formatted/
 *.a
-bin/*
 src/*/Makefile
 src/*__Debug
 # Ignore emacs temporary files
@@ -31,3 +30,10 @@ src/*__Debug
 build_mac.sh
 Makefile*
 *__Release*
+bin/core*
+bin/StatsExtracter
+bin/Registry
+bin/Chain Breeding
+bin/MoveMachine
+bin/BattleManager
+bin/scripts.js
