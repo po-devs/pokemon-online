@@ -91,6 +91,7 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     logmanager.h \
     poketextedit.h \
     remove_direction_override.h
+CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
