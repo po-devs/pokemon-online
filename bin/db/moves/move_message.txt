@@ -147,7 +147,7 @@ Poison spikes were scattered all around the feet of %tf's team!|The poison spike
 
 
 
-All stat changes were eliminated!|%f's stat changes were eliminated!
+All stat changes were eliminated!|%f's stat changes were eliminated!|Haze wafted through the field!
 %s landed on the ground!
 %s planted its roots!|%s absorbed nutrients with its roots!
 

@@ -5,9 +5,15 @@
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
 
+BattleInput::BattleInput(BattleConfiguration *conf) {
+    mCount = 0;
+    delayCount = 0;
+    this->conf = conf;
+}
+
 void BattleInput::receiveData(QByteArray inf)
 {
-    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
+    if (delayed() && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
             && inf[0] != char(Spectating)) {
         delayedCommands.push_back(inf);
         return;
@@ -22,6 +28,35 @@ void BattleInput::receiveData(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player);
+}
+
+bool BattleInput::delayed()
+{
+    return delayCount > 0;
+}
+
+void BattleInput::pause()
+{
+    delayCount++;
+    qDebug() << "New delay (+): " << delayCount;
+}
+
+void BattleInput::unpause()
+{
+    delayCount--;
+    qDebug() << "New delay (-): " << delayCount;
+    if (delayCount < 0) {
+        delayCount = 0;
+    }
+
+    /* As unpaused / paused can be in nested calls, class variable mCount is
+      necessary */
+    for ( ; mCount < delayedCommands.size() && !delayed(); ) {
+        receiveData(delayedCommands[mCount++]); //The ++ inside is necessary, not oustide
+    }
+
+    delayedCommands.erase(delayedCommands.begin(), delayedCommands.begin()+mCount);
+    mCount = 0;
 }
 
 void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
@@ -41,7 +76,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case SendBack:
     {
-        output<BattleEnum::SendBack>(spot);
+        bool silent;
+        in >> silent;
+        output<BattleEnum::SendBack>(spot, silent);
         break;
     }
     case UseAttack:
@@ -53,7 +90,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case BeginTurn:
     {
-        quint16 turn;
+        int turn;
         in >> turn;
         output<BattleEnum::Turn>(turn);
         break;
@@ -72,7 +109,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         quint8 number;
         in >> number;
-        output<BattleEnum::Hits>(number);
+        output<BattleEnum::Hits>(spot, number);
         break;
     }
     case Effective:
@@ -99,8 +136,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case StatChange:
     {
         qint8 stat, boost;
-        in >> stat >> boost;
-        output<BattleEnum::StatChange>(spot, stat, boost);
+        bool silent;
+        in >> stat >> boost >> silent;
+        output<BattleEnum::StatChange>(spot, stat, boost, silent);
         break;
     }
     case StatusChange:
@@ -110,7 +148,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         bool multipleTurns;
         in >> multipleTurns;
 
-        output<BattleEnum::ClassicStatusChange>(spot, status);
+        output<BattleEnum::ClassicStatusChange>(spot, status, multipleTurns);
         break;
     }
     case AbsStatusChange:
@@ -183,8 +221,11 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         bool come;
         qint32 id;
         in >> come >> id;
+
         if (come) {
-            output<BattleEnum::SpectatorEnter>(id, (QString*)NULL);
+            QString name;
+            in >> name;
+            output<BattleEnum::SpectatorEnter>(id, name.toUtf8().constData());
         } else {
             output<BattleEnum::SpectatorLeave>(id);
         }
@@ -327,7 +368,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         BattleDynamicInfo info;
         in >> info;
-        output<BattleEnum::StatBoostsAndField>(&info);
+        output<BattleEnum::StatBoostsAndField>(spot, &info);
         break;
     }
     case TempPokeChange:
@@ -380,7 +421,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
 
         in >> s1 >> s2 >> silent;
 
-        output<BattleEnum::ShiftSpots>(s1, s1, silent);
+        output<BattleEnum::ShiftSpots>(spot, s1, s2, silent);
         break;
     }
     default:

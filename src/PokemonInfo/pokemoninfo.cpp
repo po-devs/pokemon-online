@@ -3,7 +3,11 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
+#ifdef WIN32
 #include "../../SpecialIncludes/zip.h"
+#else
+#include <zip.h>
+#endif
 #include "../Utilities/functions.h"
 
 /*initialising static variables */
@@ -641,6 +645,54 @@ bool PokemonInfo::IsAesthetic(Pokemon::uniqueId id)
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
     return IsAesthetic(id) ? OriginalForme(id) : id;
+}
+
+QPixmap PokemonInfo::Picture(const QString &url)
+{
+    QStringList params = url.split('&');
+
+    int gen = GEN_MAX;
+    int gender = 0;
+    Pokemon::uniqueId num = Pokemon::NoPoke;
+    bool shiny=false;
+    bool back = false;
+    bool substitute = false;
+
+    foreach (QString param, params) {
+        QString par = param.section('=', 0,0);
+        QString val = param.section('=', 1);
+
+        if (par.length() > 0 && val.length() == 0 && (par[0].isDigit() || par == "substitute")) {
+            val = par;
+            par = "num";
+        }
+
+        if (par == "gen") {
+            gen = val.toInt();
+        } else if (par == "num") {
+            if (val == "substitute") {
+                substitute  = true;
+            } else {
+                if (val.indexOf('-') != -1) {
+                    num = Pokemon::uniqueId(val.section('-', 0,0).toInt(), val.section('-', 1).toInt());
+                } else {
+                    num = val.toInt();
+                }
+            }
+        } else if (par == "shiny") {
+            shiny = val == "true";
+        } else if (par == "gender") {
+            gender = val == "male" ? Pokemon::Male : (val == "female"?Pokemon::Female : Pokemon::Neutral);
+        } else if (par == "back") {
+            back = val == "true";
+        }
+    }
+
+    if (substitute) {
+        return Sub(gen, back);
+    } else {
+        return Picture(num, gen, gender, shiny, back);
+    }
 }
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, int gen, int gender, bool shiney, bool back)
@@ -1288,7 +1340,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(causedEffect, path("caused_effect.txt"));
     fill_container_with_file(critRate, path("crit_rate.txt"));
     fill_container_with_file(damageClass, path("damage_class.txt"));
-    fill_container_with_file(effect, path("effect.txt"));
+    fill_container_with_file(effect, trFile(path("effect")));
     fill_container_with_file(effectChance, path("effect_chance.txt"));
     fill_container_with_file(flags, path("flags.txt"));
     fill_container_with_file(flinchChance, path("flinch_chance.txt"));
