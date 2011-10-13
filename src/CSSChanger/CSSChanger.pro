@@ -10,10 +10,14 @@ DESTDIR = ../../bin/myplugins
 
 DEFINES += CSSCHANGER_LIBRARY
 
-SOURCES += csschanger.cpp
+SOURCES += csschanger.cpp \
+    csswidget.cpp
 
 HEADERS += csschanger.h\
-        CSSChanger_global.h
+        CSSChanger_global.h \
+    csswidget.h \
+    ui_dialog.h \
+    ui_colorchoice.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -33,3 +37,17 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+FORMS += \
+    dialog.ui \
+    colorchoice.ui
+
+
+
+
+
+
+
+
+
+
