@@ -1,5 +1,5 @@
 #include "csschanger.h"
-
+#include "csswidget.h"
 
 ClientPlugin* createPluginClass()
 {
@@ -22,5 +22,5 @@ QString CSSPlugin::pluginName() const
 
 QWidget *CSSPlugin::getConfigurationWidget()
 {
-    return NULL;
+    return new CssWidget();
 }
