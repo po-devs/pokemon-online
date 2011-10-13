@@ -133,3 +133,5 @@ CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
 }
 
+
+CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY

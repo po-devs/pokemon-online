@@ -61,16 +61,9 @@ Item {
     Connections {
         target: fieldPokemon
         onStatUp: {
-            if (!battle.scene.isFreshForStatChange(spot, BattleScene.StatUp)) {
-                return;
-            }
             Effects.statUp(woof);
         }
         onStatDown: {
-            /* Qt 4.7.4 bug makes it that -1 enum is undefined, use BattleScene.StatDown when it's fixed */
-            if (!battle.scene.isFreshForStatChange(spot, -1)) {
-                return;
-            }
             Effects.statDown(woof);
         }
     }
