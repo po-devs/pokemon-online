@@ -22,8 +22,6 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
-private:
-    MainEngineInterface *interface;
 };
 
 
