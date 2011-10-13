@@ -22,10 +22,10 @@ SpectatorWindow::SpectatorWindow(BattleConfiguration &conf, QString name1, QStri
     input = new BattleInput(&conf);
     scene = new BattleScene(data2);
 
-    input->addOutput(data);
-    input->addOutput(log);
-    input->addOutput(data2);
     input->addOutput(scene);
+    scene->addOutput(data);
+    scene->addOutput(log);
+    scene->addOutput(data2);
 
     logWidget = new PokeTextEdit();
 
