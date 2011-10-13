@@ -92,7 +92,7 @@ struct BaseBattleInfo
 /* The battle window called by the client, online */
 class Client;
 
-class BaseBattleWindow : public QWidget
+class BaseBattleWindow : public QLabel
 {
     Q_OBJECT
 
