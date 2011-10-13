@@ -8,7 +8,8 @@
 #include "pokemoninfoaccessor.h"
 #include "proxydatacontainer.h"
 
-BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this))
+BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false),
+    pauseCount(0)
 {
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
@@ -85,32 +86,22 @@ void BattleScene::debug(const QString &m)
 
 void BattleScene::pause()
 {
-    //qDebug() << "pausing";
-    //debug("pausing\n");
-    BattleCommandManager<BattleScene>::pause();
+    pauseCount =+ 1;
+    baseClass::pause();
 }
 
 void BattleScene::unpause()
 {
-    //qDebug() << "unpausing";
-    //debug("unpausing\n");
-    BattleCommandManager<BattleScene>::unpause();
-}
+    pauseCount -= 1;
 
-bool BattleScene::isFreshForStatChange(int slot, StatDirection direction)
-{
-    if (info.lastSlot == slot && info.lastStatChange == direction) {
-        return false;
+    if (pauseCount == 0) {
+        if (commands.size() > 0) {
+            commands[0]->apply();
+            delete commands[0];
+            commands.erase(commands.begin(), commands.begin()+1);
+        }
     }
 
-    return true;
+    baseClass::unpause();
 }
 
-void BattleScene::onStatBoost(int spot, int stat, int boost, bool silent)
-{
-    (void) stat;
-    (void) silent;
-
-    info.lastSlot = spot;
-    info.lastStatChange = boost > 0 ? StatUp : StatDown;
-}

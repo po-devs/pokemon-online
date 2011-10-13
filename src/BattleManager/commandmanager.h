@@ -96,6 +96,10 @@ public:
     typedef FlowWorker flowType;
     typedef Invoker invokeType;
 
+    CommandManager() : misReplayingCommands(false) {
+
+    }
+
     template <enumClass val, typename ...Params>
     void receiveCommand(Params&&... params) {
         flowType::template receiveCommand<val, Params...>(std::forward<Params>(params)...);
@@ -146,16 +150,42 @@ public:
     }
 
     /* Not by default */
-    void store(AbstractCommand *c) {
-        delete c;
+    void store(AbstractCommand *command) {
+        commands.push_back(command);
         return;
+    }
+
+    /* Replays the commands stored and delete them. */
+    void replayCommands() {
+        misReplayingCommands = true;
+
+        int size = commands.size();
+        for(int i = 0; i < size; i++) {
+            commands[i]->apply();
+            delete commands[i];
+        }
+
+        /* The size could have been changed by replayed commands */
+        if (unsigned(size) == commands.size()) {
+            commands.clear();
+        } else {
+            commands.erase(commands.begin(), commands.begin()+size);
+        }
+
+        misReplayingCommands = false;
     }
 
     inline type* wc() {
         return static_cast<type*>(this);
     }
 
+    bool replaying() const {
+        return misReplayingCommands;
+    }
+
 protected:
+    std::vector<AbstractCommand *> commands;
+    bool misReplayingCommands;
     /* TODO: Fix this */
 //    enum {
 //        /* If triggered, means Current is incorrect type */
