@@ -624,15 +624,23 @@ public:
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
 
-    /* Generator of random numbers */
-    mutable MTRand_int32 true_rand2;
-    unsigned true_rand() const {
-        return unsigned(true_rand2());
+    /* Generate a random number from 0 to max-1 */
+    unsigned randint(int max) const {
+        return unsigned(rand_generator()) % max;
+    }
+    unsigned randint() const {
+        return unsigned(rand_generator());
+    }
+    /* Return true with probability (heads_chance/total) */
+    bool coinflip(int heads_chance, int total) const {
+        return (unsigned(rand_generator()) % total) < heads_chance;
     }
 private:
     QHash<int,QPair<int, QString> > spectators;
     /* Used when pokemon shift slots */
     QVector<int> indexes;
+    /* Generator of random numbers */
+    mutable MTRand_int32 rand_generator;
 public:
     const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
