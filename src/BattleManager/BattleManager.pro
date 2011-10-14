@@ -55,7 +55,8 @@ HEADERS +=\
     battledatatypes.h \
     auxpokedataproxy.h \
     advancedbattledata.h \
-    battlesceneflow.h
+    battlesceneflow.h \
+    param.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -102,6 +103,11 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/CommonEffects/StatUp.qml \
     ../../bin/qml/BattleDataQML/CommonEffects/StatDown.qml \
     ../../bin/qml/BattleDataQML/effects.js
+
+
+
+
+
 
 
 

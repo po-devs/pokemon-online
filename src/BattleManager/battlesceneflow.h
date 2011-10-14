@@ -2,6 +2,7 @@
 #define BATTLESCENEFLOW_H
 
 #include "commandflow.h"
+#include "param.h"
 
 template <class T, class Underling>
 class BattleSceneFlow
@@ -13,7 +14,7 @@ public:
     template <enumClass val, typename ...Params>
     void receiveCommand(Params... params) {
         if (wc()->isPeeking()) {
-            if (!wc()->template shouldContinuePeeking<val, Params...>(params...)) {
+            if (!wc()->template shouldContinuePeeking(param<val>(), params...)) {
                 wc()->stopPeeking();
                 wc()->replayCommands();
 
@@ -27,7 +28,7 @@ public:
             }
         } else {
 continueLife:
-            if (!wc()->replaying() && wc()->template shouldStartPeeking<val, Params...>(params...)) {
+            if (!wc()->replaying() && wc()->template shouldStartPeeking(param<val>(), params...)) {
                 wc()->startPeeking();
                 wc()->template store(wc()->template createCommand<val, Params...>(params...));
             } else {

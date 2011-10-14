@@ -41,16 +41,11 @@ public:
     void launch();
 
     template <enumClass val, typename... Params>
-    bool shouldStartPeeking(Params...) {
+    bool shouldStartPeeking(param<val>, Params...) {
         return false;
     }
 
-    template <enumClass val,int,int,int,bool>
-    bool shouldStartPeeking(int spot, int stat, int boost, bool silent) {
-        if (val != BattleEnum::StatChange) {
-            return false;
-        }
-
+    bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent) {
         (void) stat;
         (void) silent;
 
@@ -61,16 +56,11 @@ public:
     }
 
     template <enumClass val, typename... Params>
-    bool shouldContinuePeeking(Params...) {
+    bool shouldContinuePeeking(param<val>, Params...) {
         return false;
     }
 
-    template <enumClass val,int,int,int,bool>
-    bool shouldContinuePeeking(int spot, int stat, int boost, bool silent) {
-        if (val != BattleEnum::StatChange) {
-            return false;
-        }
-
+    bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent) {
         (void) stat;
         (void) silent;
 
