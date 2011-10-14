@@ -144,7 +144,7 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
-    void notifyHits(int number);
+    void notifyHits(int spot, int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
@@ -157,8 +157,6 @@ public:
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
     bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
-    void setLogging(bool logging);
-    QString getBattleLogFilename() const;
 private:
     bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
@@ -319,7 +317,6 @@ private:
     bool allChoicesOkForPlayer(int player);
     bool allChoicesSet();
 
-    void appendBattleLog(const QString &command, const QString &message);
     QString name(int id);
     QString nick(int slot);
 signals:
@@ -360,9 +357,6 @@ private:
     int myid[2];
     QString winMessage[2];
     QString loseMessage[2];
-
-    bool useBattleLog;
-    QFile battleLog;
 protected:
     void timerEvent(QTimerEvent *);
 
@@ -425,7 +419,7 @@ public:
         int power; /* unsigned char in the game, but can be raised by effects */
         int accuracy; /* Same */
         char type;
-        char category;
+        char category; /* Physical/Special/Other */
         int rate; /* Same */
         char flinchRate;
         char recoil;
@@ -630,17 +624,25 @@ public:
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
 
-    /* Generator of random numbers */
-    mutable MTRand_int32 true_rand2;
-    unsigned true_rand() const {
-        return unsigned(true_rand2());
+    /* Generate a random number from 0 to max-1 */
+    unsigned randint(int max) const {
+        return unsigned(rand_generator()) % max;
+    }
+    unsigned randint() const {
+        return unsigned(rand_generator());
+    }
+    /* Return true with probability (heads_chance/total) */
+    bool coinflip(int heads_chance, int total) const {
+        return (unsigned(rand_generator()) % total) < heads_chance;
     }
 private:
-    QHash<int,int> spectators;
+    QHash<int,QPair<int, QString> > spectators;
     /* Used when pokemon shift slots */
     QVector<int> indexes;
+    /* Generator of random numbers */
+    mutable MTRand_int32 rand_generator;
 public:
-    const QHash<int, int> &getSpectators() const {
+    const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
         return spectators;
     }
@@ -663,12 +665,12 @@ private:
 
     template<class T1, class T2, class T3>
     void callp(int function, T1 arg1, T2 arg2, T3 arg3) {
-        qDebug() << "Beginning callp for " << this;
+        //qDebug() << "Beginning callp for " << this;
         foreach(BattlePStorage *p, calls) {
             if (p->call(function, this, arg1, arg2, arg3) == -1)
                 removePlugin(p->plugin);
         }
-        qDebug() << "Ending callp for " << this;
+        //qDebug() << "Ending callp for " << this;
     }
 };
 

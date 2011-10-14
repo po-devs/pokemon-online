@@ -151,7 +151,7 @@ struct IMFocusBand : public IM
     }
 
     static void btd(int s, int t, BS &b) {
-        if (b.true_rand() % 10 == 0) {
+        if (b.coinflip(1, 10)) {
             if (b.gen() <= 4)
                 turn(b,s)["CannotBeKoedBy"] = t;
             else
@@ -348,7 +348,7 @@ struct IMScopeLens : public IM
 struct IMShellBell : public IM
 {
     IMShellBell() {
-        functions["UponDamageInflicted"] = &udi;
+        functions["AfterAttackSuccessful"] = &udi;
     }
 
     static void udi(int s, int t, BS &b) {
@@ -362,8 +362,12 @@ struct IMShellBell : public IM
             return;
         }
 
-        b.sendItemMessage(24, s);
-        b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
+        int damage = turn(b,s)["DamageInflicted"].toInt();
+
+        if (damage > 0) {
+            b.sendItemMessage(24, s);
+            b.healLife(s, damage/8);
+        }
     }
 };
 
@@ -464,7 +468,7 @@ struct IMQuickClaw : public IM
         functions["TurnOrder"] = &tu;
     }
     static void tu(int s, int, BS &b) {
-        if (b.true_rand() % 5 == 0) {
+        if (b.coinflip(1, 5)) {
             turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
         }
@@ -683,7 +687,7 @@ struct IMRedCard : public IM
         if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
             return;
         int s = turn(b,t)["RedCardUser"].toInt();
-        if (b.koed(s) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
+        if (b.koed(s) || b.koed(t) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
         if (!b.hasWorkingItem(s, Item::RedCard))
             return;
@@ -713,7 +717,7 @@ struct IMRedCard : public IM
             }
         }
         b.sendBack(t, true);
-        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,0,t);
         b.callEntryEffects(t);
     }

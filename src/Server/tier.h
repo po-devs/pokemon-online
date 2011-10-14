@@ -132,9 +132,15 @@ public:
     Tier *dataClone() const;
     bool isTier() const { return true; }
 protected:
-    enum QueryType {
+    enum GetQueryType {
         GetInfoOnUser,
         GetRankings,
+        MaxGetQueryNumber = (1 << 6)-1 /* 6 bits */
+    };
+    enum InsertQueryType {
+        InsertMember,
+        UpdateMember,
+        MaxInsertQueryNumber = (1 << 6)-1 /* 6 bits */
     };
 
     int make_query_number(int type);

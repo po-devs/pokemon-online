@@ -62,11 +62,11 @@ struct MMDisable : public MM
             b.sendItemMessage(7,t);
             b.disposeItem(t);
         } else {
-            b.counters(t).addCounter(BC::Disable, 3 + (b.true_rand()%4));
+            b.counters(t).addCounter(BC::Disable, 3 + (b.randint(4)));
             poke(b,t)["DisabledMove"] = mv;
             addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
             addFunction(poke(b,t), "MovePossible", "Disable", &mp);
-            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable");
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Disable", &et);
         }
     }
 

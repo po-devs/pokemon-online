@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
     QDir::setCurrent( path );
     CFRelease(pluginRef);
     CFRelease(macPath);
+#elif defined(PO_DATA_REPO)
+    QDir::setCurrent(PO_DATA_REPO);
 #endif
 
     srand(time(NULL));
@@ -76,7 +78,7 @@ int main(int argc, char *argv[])
         QString locale = settings.value("language").toString();
 
         QTranslator translator;
-        translator.load(QString("translation_") + locale);
+        translator.load(QString("trans/translation_") + locale);
         a.installTranslator(&translator);
 
         /* icon ;) */
