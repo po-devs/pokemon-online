@@ -12,11 +12,14 @@ struct AbstractCommand {
 template<class T, class enumC, enumC val, typename...Params>
 struct Command : public AbstractCommand
 {
-    typedef std::tuple<Params...> tupleType;
+    typedef std::tuple<typename std::remove_reference<Params>::type...> tupleType;
     typedef T boundType;
     typedef enumC enumClass;
 
     Command(boundType*cl, Params... params) : m_tuple(params...), m_assoc(cl){
+    }
+
+    ~Command() {
     }
 
     void apply() {
