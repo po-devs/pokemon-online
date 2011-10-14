@@ -151,7 +151,7 @@ struct IMFocusBand : public IM
     }
 
     static void btd(int s, int t, BS &b) {
-        if (b.true_rand() % 10 == 0) {
+        if (b.coinflip(1, 10)) {
             if (b.gen() <= 4)
                 turn(b,s)["CannotBeKoedBy"] = t;
             else
@@ -468,7 +468,7 @@ struct IMQuickClaw : public IM
         functions["TurnOrder"] = &tu;
     }
     static void tu(int s, int, BS &b) {
-        if (b.true_rand() % 5 == 0) {
+        if (b.coinflip(1, 5)) {
             turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
         }
@@ -717,7 +717,7 @@ struct IMRedCard : public IM
             }
         }
         b.sendBack(t, true);
-        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,0,t);
         b.callEntryEffects(t);
     }

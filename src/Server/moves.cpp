@@ -317,7 +317,7 @@ struct MMPerishSong : public MM
                 continue;
             }
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "PerishSong", &et);
-            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
+            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + b.randint(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns) - 1;
             poke(b, t)["PerishSonger"] = s;
         }
         b.sendMoveMessage(95);
@@ -654,7 +654,7 @@ struct MMRoar : public MM
             }
         }
         b.sendBack(t, true);
-        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,type(b,s),t);
         b.callEntryEffects(t);
     }
@@ -892,7 +892,7 @@ struct MMAttract : public MM
             int seducer = b.linker(s, "Attract");
 
             b.sendMoveMessage(58,0,s,0,seducer);
-            if (b.true_rand() % 2 == 0) {
+            if (b.coinflip(1, 2)) {
                 turn(b,s)["ImpossibleToMove"] = true;
                 b.sendMoveMessage(58, 2,s);
             }
@@ -1014,7 +1014,7 @@ struct MMTaunt : public MM
             if (b.gen() <= 3) {
                 b.counters(t).addCounter(BC::Taunt, 1);
             } else if (b.gen() == 4) {
-                b.counters(t).addCounter(BC::Taunt, 2 + (b.true_rand()%3));
+                b.counters(t).addCounter(BC::Taunt, 2 + (b.randint(3)));
             } else {
                 b.counters(t).addCounter(BC::Taunt, 2);
             }
@@ -1789,7 +1789,7 @@ struct MMMagnitude: public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        int randnum = b.true_rand()%20;
+        int randnum = b.randint(20);
 
         int pow, magn;
 
@@ -2050,7 +2050,7 @@ struct MMPresent : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * 40 * (b.true_rand() % 4);
+        tmove(b, s).power = tmove(b, s).power * 40 * b.randint(4);
         if (tmove(b, s).power == 0) {
             tmove(b, s).power = 1;
         }
@@ -2102,7 +2102,7 @@ struct MMPsywave : public MM
     }
 
     static void cad (int s, int, BS &b) {
-        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10;
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + b.randint(11)) / 10;
     }
 };
 
@@ -2344,7 +2344,7 @@ struct MMSleepTalk : public MM
         if (mp.size() == 0) {
             turn(b,s)["Failed"] = true;
         } else {
-            turn(b,s)["SleepTalkedMove"] = b.move(s, mp[b.true_rand()%mp.size()]);
+            turn(b,s)["SleepTalkedMove"] = b.move(s, mp[b.randint(mp.size())]);
         }
     }
 
@@ -2464,9 +2464,9 @@ struct MMSpite : public MM
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
         else if (b.gen() == 3)
-            b.losePP(t, slot, 2 + (b.true_rand()%4) );
+            b.losePP(t, slot, 2 + b.randint(4) );
         else if (b.gen() == 2)
-            b.losePP(t, slot, 1 + (b.true_rand()%5) );
+            b.losePP(t, slot, 1 + b.randint(5) );
 
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
     }
@@ -2824,7 +2824,7 @@ struct MMOutrage : public MM
         // Asleep is for Sleep Talk
         if ( (!turn(b,s)["OutrageBefore"].toBool() || poke(b,s).value("OutrageUntil").toInt() < b.turn())
              && b.poke(s).status() != Pokemon::Asleep) {
-            poke(b,s)["OutrageUntil"] = b.turn() +  1 + (b.true_rand() % 2);
+            poke(b,s)["OutrageUntil"] = b.turn() +  1 + b.randint(2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
 
@@ -2882,7 +2882,7 @@ struct MMUproar : public MM {
     static void uas(int s,int, BS &b) {
         if (poke(b,s).value("UproarUntil").toInt() < b.turn() || !turn(b,s).value("UproarBefore").toBool()) {
             if (b.gen() <= 4)
-                poke(b,s)["UproarUntil"] = b.turn() + 1 + (b.true_rand() % 4);
+                poke(b,s)["UproarUntil"] = b.turn() + 1 + b.randint(4);
             else
                 poke(b,s)["UproarUntil"] = b.turn() + 2;
 
@@ -3185,7 +3185,7 @@ struct MMAcupressure : public MM
         }
         if (stats.empty())
             return;
-        b.inflictStatMod(t, stats[b.true_rand()%stats.size()], 2, t);
+        b.inflictStatMod(t, stats[b.randint(stats.size())], 2, t);
     }
 };
 
@@ -4067,14 +4067,14 @@ struct MMTriAttack : public MM
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
 
-        if (b.true_rand() % 5 > unsigned(0+boost))
+        if (!b.coinflip(unsigned(1+boost), 5))
             return;
 
         if (b.poke(t).status() == Pokemon::Koed)
             return;
 
         int status;
-        switch (b.true_rand() %3) {
+        switch (b.randint(3)) {
         case 0:
             status = Pokemon::Paralysed;
             break;

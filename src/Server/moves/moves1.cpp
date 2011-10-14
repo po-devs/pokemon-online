@@ -292,7 +292,7 @@ struct MMConversion : public MM
                     poss.push_back(b.move(s,i));
                 }
             }
-            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
+            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
         } else {
             QList<int> poss;
             for (int i = 0; i < 4; i++) {
@@ -303,7 +303,7 @@ struct MMConversion : public MM
             if (poss.size() == 0) {
                 turn(b, s)["Failed"] = true;
             } else {
-                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.true_rand()%poss.size()], b.gen());
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
             }
         }
     }
@@ -357,7 +357,7 @@ struct MMConversion2 : public MM
         if (poss.size() == 0) {
             turn(b,s)["Failed"] = true;
         } else {
-            turn(b,s)["Conversion2Type"] = poss[b.true_rand()%poss.size()];
+            turn(b,s)["Conversion2Type"] = poss[b.randint(poss.size())];
         }
     }
 
@@ -494,19 +494,15 @@ struct MMDetect : public MM
         if (b.gen() <= 2) {
             int x = 256 / (1 << (std::min(protectCount, 8))) - 1;
 
-            return (b.true_rand() & 0xFF) < x;
+            return b.coinflip(x, 256);
         } else if (b.gen() <= 4) {
             int x = 1 << (std::min(protectCount, 3));
 
-            return (b.true_rand() & (x-1)) == 0;
+            return (b.coinflip(1, x));
         } else {
             int x = 1 << (std::min(protectCount, 8));
 
-            if (x >= 256) {
-                return b.true_rand() == 0;
-            } else {
-                return (b.true_rand() & (x-1)) == 0;
-            }
+            return (b.coinflip(1, x));
         }
     }
 
@@ -726,7 +722,7 @@ struct MMBellyDrum : public MM
             if (b.gen() == 2) {
                 b.inflictStatMod(s,Attack,2, s, false);
 
-                while(b.getStatBoost(s, Attack < 6)) {
+                while(!b.hasMaximalStatMod(s, Attack)) {
                     b.inflictStatMod(s,Attack,2,s,false);
 
                     if (b.getStat(s, Attack) == 999) {
@@ -920,7 +916,7 @@ struct MMAssist : public MM
             }
         }
         if (!possible_moves.empty()) {
-            turn(b,s)["AssistMove"] = *(possible_moves.begin() + (b.true_rand() %possible_moves.size()));
+            turn(b,s)["AssistMove"] = *(possible_moves.begin() + (b.randint(possible_moves.size())));
         } else {
             turn(b,s)["Failed"] = true;
         }
@@ -1017,7 +1013,7 @@ struct MMBind : public MM
             b.link(s, t, "Trapped");
             BS::BasicMoveInfo &fm = tmove(b,s);
             poke(b,t)["TrappedRemainingTurns"] = b.poke(s).item() == Item::GripClaw ?
-                        fm.maxTurns : minMax(fm.minTurns, fm.maxTurns, b.gen(), b.true_rand()); /* Grip claw = max turns */
+            fm.maxTurns : minMax(fm.minTurns, fm.maxTurns, b.gen(), b.randint()); /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
         }
@@ -1478,9 +1474,9 @@ struct MMEncore : public MM
             b.disposeItem(t);
         } else {
             if (b.gen() <=3)
-                b.counters(t).addCounter(BC::Encore, 2 + (b.true_rand()%4));
+                b.counters(t).addCounter(BC::Encore, 2 + (b.randint(4)));
             else if (b.gen() == 4)
-                b.counters(t).addCounter(BC::Encore, 3 + (b.true_rand()%5));
+                b.counters(t).addCounter(BC::Encore, 3 + (b.randint(5)));
             else
                 b.counters(t).addCounter(BC::Encore, 2);
 
@@ -1672,7 +1668,7 @@ struct MMBeatUp : public MM {
             PokeBattle &p = b.poke(source,i);
             if (p.status() == Pokemon::Fine) {
                 int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
-                int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.true_rand() % (255-217) + 217)*100/255/100;
+                int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.randint(255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
                 if (b.hasSubstitute(t))
                     b.inflictSubDamage(t,damage,t);
@@ -1959,7 +1955,7 @@ struct MMMetronome : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
 
         while (1) {
-            int move = b.true_rand() % MoveInfo::NumberOfMoves();
+            int move = b.randint(MoveInfo::NumberOfMoves());
 
             bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
                                                       (b.gen() >= 5 && !forbidden.contains(move)))
