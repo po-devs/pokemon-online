@@ -20,6 +20,8 @@ Item {
     property int playerFront: battle.scene.reversed ? 0: 1;
     property int playerBack: battle.scene.reversed ? 1: 0;
 
+    property variant fieldPokemons: battle.scene.reversed ? [poke2, poke1] : [poke1, poke2];
+
     /* Rectangle used by the weather */
     Rectangle{
         id: weatherOverlay;
@@ -102,6 +104,14 @@ Item {
         target: battle.data.field
         onWeatherChanged: {
             Weather.trigger(weather, battle.data.field.weather);
+        }
+    }
+
+    Connections {
+        target: battle.scene
+        onAttackUsed: {
+            battle.scene.debug("HeyHeyHey\n");
+            fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot]);
         }
     }
 
