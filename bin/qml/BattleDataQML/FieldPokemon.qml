@@ -2,6 +2,7 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "colors.js" as Colors
 import "effects.js" as Effects
+import "moves.js" as Moves
 
 Item {
     id: woof
@@ -13,6 +14,10 @@ Item {
 
     function isKoed() {
         return pokemon.status === 31 || pokemon.numRef === 0;
+    }
+
+    function useAttack(attack, target) {
+        Moves.useAttack(woof, attack, target);
     }
 
     PokeballAnimation {
