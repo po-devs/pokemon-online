@@ -45,30 +45,16 @@ public:
         return false;
     }
 
-    bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent) {
-        (void) stat;
-        (void) silent;
-
-        info.lastStatChange = boost > 0 ? StatUp : StatDown;
-        info.lastSlot = spot;
-
-        return true;
-    }
+    bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
     template <enumClass val, typename... Params>
     bool shouldContinuePeeking(param<val>, Params...) {
         return false;
     }
 
-    bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent) {
-        (void) stat;
-        (void) silent;
+    bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
-        if (info.lastSlot == spot && ((info.lastStatChange == StatUp) == (boost > 0) )) {
-            return true;
-        }
-        return false;
-    }
+    void useAttack(int spot, int attack);
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
@@ -78,6 +64,7 @@ public:
 signals:
     void printMessage(const QString&);
     void launched();
+    void attackUsed(int spot, int attack);
 private:
     battledata_ptr mData;
     battledata_ptr data();
