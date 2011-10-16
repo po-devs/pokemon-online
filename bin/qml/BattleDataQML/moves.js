@@ -6,12 +6,13 @@ var effects = {
 effects[BattleData.LeechSeed] = "Moves/LeechSeed.qml";
 
 function useAttack(attacker, attack, defender) {
-
+    launchMove(attacker, attack, defender);
 }
 
 function launchMove(attacker, attack, defender) {
+    var key = attack;
     if (! (key in effects)) {
-        console.log("Error: effect not found: " + key);
+        console.log("Error: Move effect not found: " + key);
         return;
     }
 

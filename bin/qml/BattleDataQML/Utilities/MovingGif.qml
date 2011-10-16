@@ -8,7 +8,9 @@ import QtQuick 1.0
 AnimatedImage {
     id: image;
     property real percent: 0;
-    property int duration: duration;
+    property int duration;
+    property variant curve;
+    property int delay;
 
     x: curve.x(percent);
     y: curve.y(percent);
