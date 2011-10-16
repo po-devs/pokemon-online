@@ -1,7 +1,7 @@
 var components = {};
 
 var effects = {
-    "moving-animated": "Utilities/MovingGif.qml"
+    "moving-animated": "../Utilities/MovingGif.qml"
 };
 
 function spawn(parent, type, params, callback) {

@@ -125,6 +125,6 @@ bool BattleScene::shouldStartPeeking(param<BattleEnum::StatChange>, int spot, in
     return true;
 }
 
-void BattleScene::useAttack(int spot, int attack) {
+void BattleScene::onUseAttack(int spot, int attack) {
     emit attackUsed(spot, attack);
 }
