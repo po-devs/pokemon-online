@@ -107,7 +107,9 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/LeechSeed.qml \
     ../../bin/qml/BattleDataQML/utilities.js \
     ../../bin/qml/BattleDataQML/Utilities/MovingGif.qml \
-    ../../bin/qml/BattleDataQML/spawner.js
+    ../../bin/qml/BattleDataQML/spawner.js \
+    ../../bin/qml/BattleDataQML/Moves/Move.qml
+
 
 
 

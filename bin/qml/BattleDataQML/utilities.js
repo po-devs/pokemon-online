@@ -1,5 +1,3 @@
-.pragma library
-
 /* Makes a curve, given pos of origin and destination,
   plus Y amplitude.
 

@@ -114,8 +114,4 @@ Item {
             fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot]);
         }
     }
-
-    Component.onCompleted: {
-
-    }
 }
