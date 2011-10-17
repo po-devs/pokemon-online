@@ -105,3 +105,26 @@ void BattleScene::unpause()
     baseClass::unpause();
 }
 
+bool BattleScene::shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
+    (void) stat;
+    (void) silent;
+
+    if (info.lastSlot == spot && ((info.lastStatChange == StatUp) == (boost > 0) )) {
+        return true;
+    }
+    return false;
+}
+
+bool BattleScene::shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
+    (void) stat;
+    (void) silent;
+
+    info.lastStatChange = boost > 0 ? StatUp : StatDown;
+    info.lastSlot = spot;
+
+    return true;
+}
+
+void BattleScene::onUseAttack(int spot, int attack) {
+    emit attackUsed(spot, attack);
+}

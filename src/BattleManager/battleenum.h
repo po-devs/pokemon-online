@@ -55,7 +55,7 @@ enum class BattleEnum
     ShiftSpots
 };
 
-inline uint qHash(const BattleEnum &b) {
+inline unsigned int qHash(const BattleEnum &b) {
     return int(b);
 }
 
