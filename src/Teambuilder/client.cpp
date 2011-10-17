@@ -635,6 +635,8 @@ void Client::startPM(int id)
         return;
     }
 
+    activateWindow(); // activate po window when pm recieved
+
     if (mypms.contains(id)) {
         return;
     }
