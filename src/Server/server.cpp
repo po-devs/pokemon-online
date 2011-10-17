@@ -104,6 +104,12 @@ void Server::start(){
     if (!s.contains("safe_scripts")) {
         s.setValue("safe_scripts", true);
     }
+    if (!s.contains("server_password")) {
+        s.setValue("server_password", "");
+    }
+    if (!s.contains("require_password")) {
+        s.setValue("require_password", false);
+    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -214,6 +220,8 @@ void Server::start(){
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
+    passwordProtected = s.value("require_password").toBool();
+    serverPassword = s.value("server_password").toString();
 
     /* Adds the main channel */
     addChannel();
@@ -1208,6 +1216,8 @@ void Server::TCPDelayChanged(bool lowTCP)
 
 void Server::safeScriptsChanged(bool safeScripts)
 {
+    if (this->safeScripts == safeScripts)
+        return;
     this->safeScripts = safeScripts;
     printLine("Safe scripts setting changed", false, true);
 }
@@ -1219,6 +1229,22 @@ void Server::proxyServersChanged(const QString &ips)
         return;
     proxyServers = ips.split(",");
     printLine("Proxy Servers setting changed", false, true);
+}
+
+void Server::serverPasswordChanged(const QString &pass)
+{
+    if (serverPassword == pass)
+        return;
+    serverPassword = pass;
+    printLine("Server Password changed", false, true);
+}
+
+void Server::usePasswordChanged(bool usePass)
+{
+    if (passwordProtected == usePass)
+        return;
+    passwordProtected = usePass; 
+    printLine("Require Server Password changed", false, true);
 }
 
 void Server::info(int id, const QString &mess) {
@@ -1757,7 +1783,11 @@ BattleSituation * Server::getBattle(int battleId) const
     }
 }
 
-bool Server::isLegalProxyServer(const QString &ip)
+bool Server::correctPass(const QByteArray &hash, const QByteArray &salt) const {
+    return hash == md5_hash(md5_hash(serverPassword.toAscii()) + salt);
+}
+
+bool Server::isLegalProxyServer(const QString &ip) const
 {
     foreach (QString proxyip, proxyServers) {
         if (ip == proxyip)
