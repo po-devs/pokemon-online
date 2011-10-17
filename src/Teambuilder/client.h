@@ -173,6 +173,8 @@ public slots:
     void loadTeam();
     /* A popup that asks for the pass */
     void askForPass(const QString &salt);
+    /* A popup that asks for a server pass */
+    void serverPass(const QString &salt);
     /* When someone is kicked */
     void playerKicked(int,int);
     void playerBanned(int,int);

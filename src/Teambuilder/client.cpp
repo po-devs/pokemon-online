@@ -164,6 +164,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
+    connect(relay, SIGNAL(serverPassRequired(QString)), SLOT(serverPass(QString)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
@@ -1175,6 +1176,20 @@ void Client::askForPass(const QString &salt) {
     if (ok) {
         QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
         relay().notify(NetworkCli::AskForPass, hash);
+    }
+}
+
+void Client::serverPass(const QString &salt) {
+    bool ok;
+
+    QString pass = QInputDialog::getText(this, tr("Enter the server password"),
+                                         tr("Enter the password for this server.\n"
+                                            "This server requires a password to log in."),
+                                         QLineEdit::Password,"", &ok);
+
+    if (ok) {
+        QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+        relay().notify(NetworkCli::ServerPass, hash);
     }
 }
 

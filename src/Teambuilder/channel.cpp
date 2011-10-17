@@ -644,13 +644,9 @@ void Channel::printHtml(const QString &str, bool act)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
     mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
-<<<<<<< HEAD
-    emit activated(this);
-=======
     if (act) {
         emit activated(this);
     }
->>>>>>> coyotte508/master
 }
 
 void Channel::addEvent(int event)
