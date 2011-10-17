@@ -54,7 +54,7 @@ public:
 
     bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
-    void useAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack);
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
