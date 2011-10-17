@@ -5,6 +5,7 @@
 #include "logmanager.h"
 #include "client.h"
 #include "theme.h"
+#include "spectatorwindow.h"
 #include <cstdlib>
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
@@ -64,8 +65,18 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     _mclient = client;
 
     conf() = _conf;
-
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
+
+    if (conf().ids[0] == ownid()) {
+        conf().receivingMode[0] = BattleConfiguration::Player;
+        conf().teams[0] = &info().myteam;
+        conf().receivingMode[1] = BattleConfiguration::Spectator;
+    } else {
+        conf().teams[1] = &info().myteam;
+        conf().receivingMode[1] = BattleConfiguration::Player;
+        conf().receivingMode[0] = BattleConfiguration::Spectator;
+    }
+
     info().gen = conf().gen;
 
     mydisplay = new BattleDisplay(info());
@@ -517,7 +528,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     switch (command)
     {
     case SendOut:
-	{
+        {
         if (player != info().myself) {
             BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
             break;
@@ -557,8 +568,8 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         printLine(tr("%1's level: %2.").arg(nick(spot)).arg(info().currentShallow(spot).level()), true);
         printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(info().currentShallow(spot).shiny()), true);
         printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(info().currentShallow(spot).gender())), true);
-	    break;
-	}
+            break;
+        }
     case ChangeHp:
     {
         if (player != info().myself) {
@@ -578,20 +589,20 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case ChangePP:
-	{
-	    quint8 move, PP;
-	    in  >> move >> PP;
+        {
+            quint8 move, PP;
+            in  >> move >> PP;
 
-	    //Think to check for crash if currentIndex != -1, move > 3
+            //Think to check for crash if currentIndex != -1, move > 3
         info().currentPoke(spot).move(move).PP() = PP;
         info().tempPoke(spot).move(move).PP() = PP;
         myazones[info().number(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
         mypzone->pokes[info().number(spot)]->updateToolTip();
 
         break;
-	}
+        }
     case OfferChoice:
-	{
+        {
         if (info().sent) {
 
             info().sent = false;
@@ -609,7 +620,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         mysend->setEnabled(true);
         mysend->setChecked(false);
 
-	    break;
+            break;
     }
     case MakeYourChoice:
     {
@@ -630,7 +641,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case StraightDamage :
-	{
+        {
         qint16 damage;
         in >> damage;
         if (player == info().myself) {
@@ -946,6 +957,7 @@ void BattleWindow::sendRearrangedTeam()
     /* If the team was rearranged... */
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(info().myteam.poke(i));
+        test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     }
 }
 
@@ -1245,7 +1257,16 @@ void BattleDisplay::updateToolTip(int spot)
     tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
-        tooltip += "\n" + stats[i] + ": ";
+        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
+        if (info().gen == 1) {
+            switch (i) {
+            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
+            case 3: continue;
+            default: tooltip += "\n" + stats[i] + " ";
+            }
+        } else {
+            tooltip += "\n" + stats[i] + " ";
+        }
         int stat = info().mystats[info().number(spot)].stats[i];
         if (stat == -1) {
             tooltip += "???";

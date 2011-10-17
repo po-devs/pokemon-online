@@ -111,6 +111,8 @@ private:
     int events;
     bool readyToQuit;
 
+    bool stillLoading;
+
     QIdTreeWidgetItem *item(int  id);
     void getBackAllPlayerItems();
 };

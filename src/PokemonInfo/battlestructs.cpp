@@ -220,7 +220,7 @@ void PokeBattle::init(PokePersonal &poke)
 void PokeBattle::updateStats(int gen)
 {
     totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
-    lifePoints() = totalLifePoints();
+    setLife(totalLifePoints());
 
     for (int i = 0; i < 5; i++) {
         normal_stats[i] = PokemonInfo::FullStat(num(), gen, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
@@ -279,6 +279,10 @@ QDataStream & operator << (QDataStream &out, const PokeBattle &po)
 
 ShallowBattlePoke::ShallowBattlePoke()
 {
+    setLife(0);
+    gender() = 0;
+    fullStatus() = 1;
+    level() = 100;
 }
 
 ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
@@ -293,9 +297,9 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     num() = poke.num();
     shiny() = poke.shiny();
     gender() = poke.gender();
-    lifePercent() = (poke.lifePoints() * 100) / poke.totalLifePoints();
+    setLifePercent( (poke.lifePoints() * 100) / poke.totalLifePoints() );
     if (lifePercent() == 0 && poke.lifePoints() > 0) {
-        lifePercent() = 1;
+        setLifePercent(1);
     }
     level() = poke.level();
 }
@@ -317,7 +321,7 @@ void ShallowBattlePoke::changeStatus(int status)
 
 void ShallowBattlePoke::addStatus(int status)
 {
-    if (status <= Pokemon::Poisoned || status == Pokemon::Koed) {
+    if (status <= Pokemon::Poisoned) {
         changeStatus(status);
         return;
     }
@@ -495,6 +499,10 @@ void TeamBattle::generateRandom(int gen)
 
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
+
+        if (ItemInfo::isPlate(p.item()) && p.num() == Pokemon::Arceus) {
+            p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
+        }
 
         p.updateStats(gen);
         p.nick() = PokemonInfo::Name(p.num());
