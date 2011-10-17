@@ -28,7 +28,7 @@ signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();
 private slots:
-    void showDescription(int row);
+    void showDetails(int row);
     void regServerChosen(int row);
     void advServerChosen();
     void connectionError(int , const QString &mess);
