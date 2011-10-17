@@ -1,4 +1,4 @@
-Ôªø(Pas d'attaque)
+(Pas d'attaque)
 Ecras'face
 Poing-karate
 Torgnoles
@@ -470,12 +470,12 @@ Aiguisage
 Garde Large
 PartageGarde
 PartageForce
-Zone √âtrange
+Zone …trange
 Choc Psy
 Choc Venin
-All√®gement
+AllËgement
 PoudreFureur
-L√©vikin√©sie
+LÈvikinÈsie
 Zone Magique
 Anti-Air
 Yama Arashi
@@ -484,8 +484,8 @@ Cradovague
 Papillodance
 Tacle lourd
 Synchropeine
-Boule √âlek
-D√©trempage
+Boule …lek
+DÈtrempage
 Nitrocharge
 Enroulement
 Balayette
@@ -493,43 +493,43 @@ Bombe acide
 Tricherie
 Rayon simple
 Ten-danse
-Apr√®s Vous
+AprËs Vous
 Chant Canon
 Echo
 Chatiment
 Bain de Smog
-ForceAjout√©e
-Pr√©vention
+ForceAjoutÈe
+PrÈvention
 Interversion
 Ebullition
 Exuviation
 Vibra Soin
-Evil Eye
+Chatiment
 Chute Libre
 Chgt Vitesse
 Projection
 Calcination
-√Ä la Queue
+¿ la Queue
 Acrobatie
 Ten-danse
 Vengeance
 Tout ou Rien
 Passe-Cadeau
 Feu d'Enfer
-Aire d'eau
+Aire d'Eau
 Aire de Feu
 Aire d'Herbe
-Change√âclair
+Change…clair
 Survinsecte
-Pi√©tisol
-Souffle Glac√©
+PiÈtisol
+Souffle GlacÈ
 Draco-Queue
 Rengorgement
-Toile √âlek
+Toile …lek
 Eclair Fou
 Tunnelier
 Double Baffe
-Cr√®vecoeur
+CrËvecoeur
 Encornebois
 Lame Sainte
 Coquilame
@@ -541,20 +541,20 @@ Explonuit
 Frappe Psy
 Plumo-Queue
 Vent Violent
-Peign√©e
-Lanc√©crou
-Kaendan
+PeignÈe
+LancÈcrou
+Incendie
 TechnoBuster
 ChantAntique
 Lame Ouinte
-Aire Glaci√®re
+Aire GlaciËre
 ChargeFoudre
 Flamme Bleue
 Danse du Feu
-√âclair Gel√©
-Feu glac√©
+…clair GelÈ
+Feu glacÈ
 Aboiement
 Chute Glace
 CoupVictoire
 Flamme Croix
-√âclair Croix
+…clair Croix
