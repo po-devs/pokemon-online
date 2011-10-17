@@ -16,6 +16,7 @@ function statDown(pokemon) {
 function launchEffect(key, parent, vars) {
     if (! (key in effects)) {
         console.log("Error: effect not found: " + key);
+        return;
     }
 
     var c;

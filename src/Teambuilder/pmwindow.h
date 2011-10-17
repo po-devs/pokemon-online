@@ -7,7 +7,7 @@
 class QScrollDownTextBrowser;
 class QIRCLineEdit;
 
-struct PMWindow : public QLabel
+struct PMWindow : public QWidget
 {
     Q_OBJECT
     PROPERTY(int, id);

@@ -41,44 +41,20 @@ public:
     void launch();
 
     template <enumClass val, typename... Params>
-    bool shouldStartPeeking(Params...) {
+    bool shouldStartPeeking(param<val>, Params...) {
         return false;
     }
 
-    template <enumClass val,int,int,int,bool>
-    bool shouldStartPeeking(int spot, int stat, int boost, bool silent) {
-        if (val != BattleEnum::StatChange) {
-            return false;
-        }
-
-        (void) stat;
-        (void) silent;
-
-        info.lastStatChange = boost > 0 ? StatUp : StatDown;
-        info.lastSlot = spot;
-
-        return true;
-    }
+    bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
     template <enumClass val, typename... Params>
-    bool shouldContinuePeeking(Params...) {
+    bool shouldContinuePeeking(param<val>, Params...) {
         return false;
     }
 
-    template <enumClass val,int,int,int,bool>
-    bool shouldContinuePeeking(int spot, int stat, int boost, bool silent) {
-        if (val != BattleEnum::StatChange) {
-            return false;
-        }
+    bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
-        (void) stat;
-        (void) silent;
-
-        if (info.lastSlot == spot && ((info.lastStatChange == StatUp) == (boost > 0) )) {
-            return true;
-        }
-        return false;
-    }
+    void onUseAttack(int spot, int attack);
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
@@ -88,6 +64,7 @@ public:
 signals:
     void printMessage(const QString&);
     void launched();
+    void attackUsed(int spot, int attack);
 private:
     battledata_ptr mData;
     battledata_ptr data();
