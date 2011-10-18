@@ -8,6 +8,7 @@
 #include "centralwidget.h"
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
+#include "password_wallet.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -324,6 +325,9 @@ private:
     /* Network Relay */
     Analyzer myrelay;
     Analyzer & relay();
+
+    /* Password Wallet */
+    PasswordWallet wallet;
 
     PlayerInfo & playerInfo(int id);
     void updateState(int player);
