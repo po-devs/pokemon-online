@@ -7,9 +7,22 @@ import QtQuick 1.0
   */
 AnimatedImage {
     id: image;
+
+    property variant pos1;
+    property variant pos2;
+    property real controlY;
+    paused: true;
+
+    Curve {
+        id: curve;
+        pos1: image.pos1;
+        pos2: image.pos2;
+        controlY: image.controlY;
+    }
+
     property real percent: 0;
     property int duration;
-    property variant curve;
+
     property int delay;
 
     x: curve.x(percent);
@@ -18,8 +31,15 @@ AnimatedImage {
     SequentialAnimation {
         id: anim
         NumberAnimation { target: image; property: "percent"; to: 1.0; duration: image.duration}
+        ScriptAction {script: image.paused=false;}
         PauseAnimation { duration: delay }
         ScriptAction { script: image.finished();}
+    }
+
+    onCurrentFrameChanged: {
+        if (currentFrame== frameCount-1) {
+            paused = true;
+        }
     }
 
     function start() {

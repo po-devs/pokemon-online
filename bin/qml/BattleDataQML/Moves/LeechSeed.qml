@@ -14,16 +14,41 @@ Move {
     function start() {
         battle.scene.pause();
 
-        var curve1 = Utilities.makeCurve({"x":attacker.x, "y":attacker.y}, {"x":target.x, "y":target.y-10}, 120);
-        var curve2 = Utilities.makeCurve({"x":attacker.x, "y":attacker.y}, {"x":target.x+30, "y":target.y-30}, 120);
-        var curve3 = Utilities.makeCurve({"x":attacker.x, "y":attacker.y}, {"x":target.x+70, "y":target.y+5}, 120);
+        var curve1 = {"pos1":{"x":attacker.x+40, "y":attacker.y+10}, "pos2":{"x":target.x, "y":target.y+40}, "controlY":80};
+        var curve2 = {"pos1":{"x":attacker.x+30, "y":attacker.y+5}, "pos2":{"x":target.x+30, "y":target.y+20}, "controlY":80};
+        var curve3 = {"pos1":{"x":attacker.x+40, "y":attacker.y+15}, "pos2":{"x":target.x+70, "y":target.y+60}, "controlY":70};
 
+//        var parent = main.parent;
+//        var leech1 = Spawner.spawn(parent.parent, "moving-animated", {
+//                                   "source": "../../images/leech-seed.gif",
+//                                   "duration": 750,
+//                                   "delay": 850,
+//                                   "pos1": curve1.pos1,
+//                                   "pos2": curve1.pos2,
+//                                   "controlY": curve1.controlY
+//                               },
+//                               function(obj){
+//                                   obj.destroy();
+//                                   battle.scene.unpause();
+//                                   finished();
+//                               }
+//                               );
+
+        launchSeed(curve1);
+        launchSeed(curve2);
+        launchSeed(curve3);
+    }
+
+    function launchSeed(curve) {
         var parent = main.parent;
-        var leech1 = Spawner.spawn(parent, "moving-animated", {
+        var leech = Spawner.spawn(parent.parent, "moving-animated", {
                                    "source": "../../images/leech-seed.gif",
-                                   "duration": 350,
-                                   "delay": 50,
-                                   "curve": curve1
+                                   "duration": 750,
+                                   "delay": 850,
+                                   "pos1": curve.pos1,
+                                   "pos2": curve.pos2,
+                                   "controlY": curve.controlY,
+                                    "z": parent.z
                                },
                                function(obj){
                                    obj.destroy();
