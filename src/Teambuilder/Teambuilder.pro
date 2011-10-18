@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    remove_direction_override.cpp
+    remove_direction_override.cpp \
+    password_wallet.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -90,7 +91,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     engineinterface.h \
     logmanager.h \
     poketextedit.h \
-    remove_direction_override.h
+    remove_direction_override.h \
+    password_wallet.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities
