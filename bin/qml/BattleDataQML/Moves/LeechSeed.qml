@@ -11,6 +11,18 @@ Move {
       - target (FieldPokemon)
       - attack (int)
       */
+
+    Timer {
+        id: timer2;
+        interval: 300;
+    }
+
+
+    Timer {
+        id: timer3;
+        interval: 600;
+    }
+
     function start() {
         battle.scene.pause();
 
@@ -18,42 +30,32 @@ Move {
         var curve2 = {"pos1":{"x":attacker.x+30, "y":attacker.y+5}, "pos2":{"x":target.x+30, "y":target.y+20}, "controlY":80};
         var curve3 = {"pos1":{"x":attacker.x+40, "y":attacker.y+15}, "pos2":{"x":target.x+70, "y":target.y+60}, "controlY":70};
 
-//        var parent = main.parent;
-//        var leech1 = Spawner.spawn(parent.parent, "moving-animated", {
-//                                   "source": "../../images/leech-seed.gif",
-//                                   "duration": 750,
-//                                   "delay": 850,
-//                                   "pos1": curve1.pos1,
-//                                   "pos2": curve1.pos2,
-//                                   "controlY": curve1.controlY
-//                               },
-//                               function(obj){
-//                                   obj.destroy();
-//                                   battle.scene.unpause();
-//                                   finished();
-//                               }
-//                               );
+        launchSeed(curve1, false);
 
-        launchSeed(curve1);
-        launchSeed(curve2);
-        launchSeed(curve3);
+        timer2.triggered.connect(function(){launchSeed(curve2, false)});
+        timer3.triggered.connect(function(){launchSeed(curve3, true)});
+
+        timer2.start();
+        timer3.start();
     }
 
-    function launchSeed(curve) {
+    function launchSeed(curve, finish) {
         var parent = main.parent;
         var leech = Spawner.spawn(parent.parent, "moving-animated", {
                                    "source": "../../images/leech-seed.gif",
                                    "duration": 750,
-                                   "delay": 850,
-                                   "pos1": curve.pos1,
-                                   "pos2": curve.pos2,
-                                   "controlY": curve.controlY,
+                                   "delay": 1000,
+                                   "curve": curve,
                                     "z": parent.z
                                },
                                function(obj){
-                                   obj.destroy();
-                                   battle.scene.unpause();
-                                   finished();
+                                      if (finish) {
+                                           obj.destroy();
+                                           battle.scene.unpause();
+                                           finished();
+                                      } else {
+                                          finished.connect(function(){obj.destroy()});
+                                      }
                                }
                                );
     }
