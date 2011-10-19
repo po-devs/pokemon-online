@@ -3,6 +3,7 @@ import Qt.labs.particles 1.0
 
 Item {
     id: main
+    z: 300;
 
     Rectangle {
         id: overlay;
@@ -10,7 +11,6 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "#5a69b5";
-        z: -100;
     }
 
     Particles {
@@ -33,7 +33,8 @@ Item {
         velocityDeviation: 10
         ParticleMotionLinear {
         }
-        z: 200;
+
+        z: 20;
     }
 
     SequentialAnimation {

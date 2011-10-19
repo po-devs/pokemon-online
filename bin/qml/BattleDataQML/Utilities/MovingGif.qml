@@ -8,16 +8,14 @@ import QtQuick 1.0
 AnimatedImage {
     id: image;
 
-    property variant pos1;
-    property variant pos2;
-    property real controlY;
+    property variant curve;
     paused: true;
 
     Curve {
-        id: curve;
-        pos1: image.pos1;
-        pos2: image.pos2;
-        controlY: image.controlY;
+        id: _curve;
+        pos1: curve.pos1;
+        pos2: curve.pos2;
+        controlY: curve.controlY;
     }
 
     property real percent: 0;
@@ -25,8 +23,8 @@ AnimatedImage {
 
     property int delay;
 
-    x: curve.x(percent);
-    y: curve.y(percent);
+    x: _curve.x(percent);
+    y: _curve.y(percent);
 
     SequentialAnimation {
         id: anim
