@@ -8,6 +8,7 @@ sources[FieldData.Sunny] = "BattleDataQML/Weather/Sun.qml";
 function trigger(weatherScene, weather) {
     if (weather in sources) {
         weatherScene.source = sources[weather];
+        weatherScene.item.parent = weatherScene.parent;
         weatherScene.item.start();
     }
 }
