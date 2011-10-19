@@ -4,6 +4,7 @@ import pokemononline.battlemanager.proxies 1.0
 Item {
     id: item;
     property TeamData team
+    z: 500;
 
     GridView {
         id: grid
