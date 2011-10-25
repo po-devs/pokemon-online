@@ -1870,7 +1870,6 @@ void Client::removePlayer(int id)
 
     if (mypms.contains(id)) {
         mypms[id]->disable();
-        mypms.remove(id);
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
@@ -1950,6 +1949,16 @@ void Client::playerReceived(const PlayerInfo &p)
             c->playerReceived(p.id);
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
+    }
+
+    QHashIterator<int, PMWindow*> pm(mypms);
+    while (pm.hasNext()) {
+        pm.next();
+        if (pm.value()->name() == name(p.id)) {
+            mypms[p.id] = pm.value();
+            pm.value()->reuse(p.id);
+            break;
+        }
     }
 }
 
