@@ -628,6 +628,13 @@ void Client::ban(int p) {
 void Client::tempban(int p, int time) {
     relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
 }
+void Client::pmcp(QString p) {
+    int pm = id(p);
+    if (!mypms.contains(pm)) {
+        startPM(pm);
+    }
+    return;
+}
 
 void Client::startPM(int id)
 {
@@ -885,6 +892,7 @@ void Client::controlPanel(int id)
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
     connect(myCP, SIGNAL(tunbanRequested(QString)), &relay(), SLOT(CPTUnban(QString)));
     connect(myCP, SIGNAL(tempBanRequested(QString, int)),this, SLOT(requestTempBan(QString,int)));
+    connect(myCP, SIGNAL(pmcp(QString)), SLOT(pmcp(QString)));
 }
 
 void Client::openBattleFinder()

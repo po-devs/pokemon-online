@@ -180,6 +180,7 @@ public slots:
     void kick(int);
     void ban(int);
     void tempban(int, int);
+    void pmcp(QString);
     /* PM */
     void startPM(int);
     void removePM(int);
