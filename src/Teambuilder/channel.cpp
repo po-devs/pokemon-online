@@ -600,6 +600,38 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
 
         end = addChannelLinks(end);
 
+        if (end.contains(QRegExp(QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive))) { // Make some lines italics if your name is mentioned in line
+
+            if (beg == "~~Server~~") {
+                end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
+                mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
+            } else if (beg == "Welcome Message") {
+                mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
+            } else if (id == -1) {
+                mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "<br />");
+            } else {
+
+                if (client->isIgnored(id))
+                    return;
+
+                QColor color = client->color(id);
+
+                if (id == ownId() && client->auth(id) > 0 && client->auth(id) <= 3) {
+                    mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + end + "<br />");
+                } else if (id == ownId()) {
+                    mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
+                } else if (client->auth(id) > 0 && client->auth(id) <= 3) {
+                    end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
+                    mainChat()->insertHtml("<i><span style='color:" + color.name() + ";font-weight:bold'>" + timeStr + "+" + escapeHtml(beg) + ":</span><strong>" + end + "</strong></i><br />");
+                } else {
+                    end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
+                    mainChat()->insertHtml("<i><span style='color:" + color.name() + ";font-weight:bold'>" + timeStr + escapeHtml(beg) + ":</span><strong>" + end + "</strong></i><br />");
+                }
+            }
+        }
+
+        else {
+
         if (beg == "~~Server~~") {
             mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
         } else if (beg == "Welcome Message") {
@@ -623,13 +655,16 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
         if (act) {
             emit activated(this);
         }
-    } else {
-        if (flashing) {
-            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
         }
-        mainChat()->insertPlainText( timeStr + line + "\n");
     }
+     else {
+        if (flashing) {
+        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+    }
+    mainChat()->insertPlainText( timeStr + line + "\n");
 }
+}
+
 
 void Channel::printHtml(const QString &str, bool act)
 {
