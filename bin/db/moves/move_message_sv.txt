@@ -87,7 +87,7 @@ Men inget hände!
 
 %s har en mardröm!
 %s lugnade ned sig!|%s blev förvirrad av utmattning!Utmanarna delade på smärtan!Alla Pokémon som hör sången svimmar efter tre rundor!|%ss perish räkning föll till %d.
-%ss present helade %f 80 HP!
+%ss present helade %f %d HP!
 %s kopierade %fs stats-förändringar!
 %s flyttade sin status till %f!
 
