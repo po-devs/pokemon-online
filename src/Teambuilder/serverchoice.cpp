@@ -50,12 +50,15 @@ ServerChoice::ServerChoice(const QString &nick)
 
     QPushButton *cancel = new QPushButton("&Go Back");
     QPushButton *ok = new QPushButton("Advanced &Connection");
+    QPushButton *localhost = new QPushButton("Connect to own server");
 
     connect(cancel, SIGNAL(clicked()), SIGNAL(rejected()));
     connect(ok, SIGNAL(clicked()), SLOT(advServerChosen()));
+    connect(localhost, SIGNAL(clicked()), SLOT(connectToLocalhost()));
 
     hl->addWidget(cancel);
     hl->addWidget(ok);
+    hl->addWidget(localhost);
 }
 
 ServerChoice::~ServerChoice()
@@ -92,6 +95,10 @@ void ServerChoice::advServerChosen()
     else
         emit serverChosen(ip,5080, myName->text());
 
+}
+void ServerChoice::connectToLocalhost()
+{
+    emit serverChosen("localhost", 5080, myName->text());
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port)
