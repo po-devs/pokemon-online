@@ -449,6 +449,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             in >> ip;
             emit ipChangeRequested(ip);
         }
+    case ServerPass:
+        {
+            QString hash;
+            in >> hash;
+            emit serverPasswordSent(hash);
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

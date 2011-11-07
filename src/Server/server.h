@@ -81,9 +81,13 @@ public:
     const QString &servName() {
         return serverName;
     }
-    bool isSafeScripts() { return safeScripts; }
+    bool isSafeScripts() const { return safeScripts; }
 
-    bool isLegalProxyServer(const QString &ip);
+    bool isLegalProxyServer(const QString &ip) const;
+
+    bool isPasswordProtected() const { return passwordProtected; }
+
+    bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
 
 signals:
     void chatmessage(const QString &name);
@@ -112,6 +116,8 @@ public slots:
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);
     void proxyServersChanged(const QString &ips);
+    void serverPasswordChanged(const QString &pass);
+    void usePasswordChanged(bool usePass);
 
     void nameTaken();
     void ipRefused();
@@ -176,6 +182,8 @@ private:
     bool useChannelFileLog;
     bool lowTCPDelay;
     bool safeScripts;
+    bool passwordProtected;
+    QString serverPassword;
 
     quint16 numPlayers() {
         return myplayers.size();
