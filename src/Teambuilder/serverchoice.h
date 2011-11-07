@@ -32,6 +32,7 @@ private slots:
     void regServerChosen(int row);
     void advServerChosen();
     void connectionError(int , const QString &mess);
+    void connectToLocalhost();
 private:
     QCompactTable *mylist;
     QLineEdit *myAdvServer;

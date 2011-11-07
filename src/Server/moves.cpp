@@ -2067,8 +2067,14 @@ struct MMPresent : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-        b.sendMoveMessage(96,0,s,type(b,s),t);
-        b.healLife(t, 80);
+        if (b.gen() >= 5) {
+            b.sendMoveMessage(96,0,s,type(b,s),t);
+            b.healLife(t, b.poke(t).totalLifePoints()/4);
+        }
+        else {
+            b.sendMoveMessage(96,0,s,type(b,s),t, 80);
+            b.healLife(t, 80);
+        }
     }
 };
 
