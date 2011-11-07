@@ -866,6 +866,7 @@ void BattleSituation::endTurn()
     int i, ownBracket(0);
 
     for (i = 0; i < endTurnEffects.size(); i++) {
+        /* First the functions that deal with the whole turn */
         while (ownBracket < ownEndFunctions.size() && ownEndFunctions[ownBracket].first <= endTurnEffects[i].bracket) {
             VoidFunction f = ownEndFunctions[ownBracket].second;
             (this->*f)();
@@ -961,11 +962,15 @@ void BattleSituation::endTurn()
                 }
             }
         }
+
+        testWin();
     }
     while (ownBracket < ownEndFunctions.size()) {
         VoidFunction f = ownEndFunctions[ownBracket].second;
         (this->*f)();
         ownBracket++;
+
+        testWin();
     }
 
     /* Remove all useless end turn brackets */

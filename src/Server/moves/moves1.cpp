@@ -64,8 +64,12 @@ struct MMAquaRing : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull()) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
-            b.sendMoveMessage(2, 1, s, Pokemon::Water);
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s);
+            } else {
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                b.sendMoveMessage(2, 1, s, Pokemon::Water);
+            }
         }
     }
 };
@@ -750,7 +754,8 @@ struct MMAromaTherapy : public MM
         b.sendMoveMessage(3, (move == Aromatherapy) ? 0 : 1, s, type(b,s));
         for (int i = 0; i < 6; i++) {
             //SoundProof blocks healbell but not aromatherapy
-            if (!b.poke(player,i).ko() && (move == Aromatherapy || b.poke(player,i).ability() != Ability::Soundproof)) {
+            if (!b.poke(player,i).ko() && (move == Aromatherapy || b.gen() >= 5 ||
+                                           b.poke(player,i).ability() != Ability::Soundproof)) {
                 b.changeStatus(player,i,Pokemon::Fine);
             }
         }
@@ -1384,7 +1389,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,s).contains("EmbargoEnd") && poke(b,s)["EmbargoEnd"].toInt() >= b.turn()) {
+        else if (poke(b,s).contains("Embargoed")) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -1404,6 +1409,7 @@ struct MMEmbargo : public MM
         if (poke(b,s).value("Embargoed").toBool() && poke(b,s)["EmbargoEnd"].toInt() <= b.turn()) {
             b.sendMoveMessage(32,1,s,0);
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
+            poke(b,s).remove("Embargoed");
         }
     }
 };
