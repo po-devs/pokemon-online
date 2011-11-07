@@ -1389,7 +1389,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,s).contains("EmbargoEnd") && poke(b,s)["EmbargoEnd"].toInt() >= b.turn()) {
+        else if (poke(b,s).contains("Embargoed")) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -1409,6 +1409,7 @@ struct MMEmbargo : public MM
         if (poke(b,s).value("Embargoed").toBool() && poke(b,s)["EmbargoEnd"].toInt() <= b.turn()) {
             b.sendMoveMessage(32,1,s,0);
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
+            poke(b,s).remove("Embargoed");
         }
     }
 };
