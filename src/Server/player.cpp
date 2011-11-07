@@ -18,12 +18,14 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     myip = relay().ip();
     rating() = -1;
     waiting_team = NULL;
+    server_pass_sent = false;
 
     m_state = NotLoggedIn;
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo&,bool,bool,QColor)), SLOT(loggedIn(TeamInfo&,bool,bool,QColor)));
+    connect(&relay(), SIGNAL(serverPasswordSent(const QString&)), SLOT(serverPasswordSent(const QString&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
@@ -763,7 +765,34 @@ void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
     assignNewColor(c);
     assignTeam(team);
 
+    // If the server is password protected, the login cannot continue until the server password is supplied
+    if (Server::serverIns->isPasswordProtected()) {
+        // hack, uses waiting name to store the salt
+        waiting_name.resize(SecurityManager::Member::saltLength); 
+        for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
+            waiting_name[i] = uchar((true_rand() % (90-49)) + 49); 
+        }    
+
+        relay().notify(NetworkServ::ServerPass, waiting_name);
+        return;
+    } else {
+        server_pass_sent = true;
+    }
+
     testAuthentification(team.name);
+}
+
+void Player::serverPasswordSent(const QString &_hash)
+{
+    if (Server::serverIns->correctPass(_hash.toAscii(), waiting_name.toAscii())) {
+        server_pass_sent = true;
+        waiting_name.clear();
+        testAuthentification(team().name);
+    } else {
+        // Retry the password prompt
+        // XXX: maybe make a counter of 3 or something in retry attempts?
+        relay().notify(NetworkServ::ServerPass, waiting_name);
+    }
 }
 
 void Player::loginSuccess()
@@ -991,6 +1020,8 @@ void Player::userInfoAsked(const QString &name)
 }
 
 void Player::hashReceived(const QString &_hash) {
+    if (!server_pass_sent) return; // Don't accept this if we haven't logged in
+
     QByteArray hash = md5_hash(_hash.toAscii());
     if (waiting_name.length() > 0) {
         if (battling()) {

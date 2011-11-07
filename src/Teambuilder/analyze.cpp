@@ -422,6 +422,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             s.endGroup();
             break;
         }
+    case ServerPass: {
+            QString salt;
+            in >> salt;
+            emit serverPassRequired(salt); 
+            break;
+        }
     default: {
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
         }

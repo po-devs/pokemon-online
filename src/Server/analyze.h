@@ -97,6 +97,7 @@ signals:
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(TeamInfo &team, bool ladder, bool showteam, QColor c);
+    void serverPasswordSent(const QString &hash);
     void messageReceived(int chanid, const QString &mess);
     void teamReceived(TeamInfo &team);
     void connected();
