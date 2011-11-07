@@ -40,7 +40,7 @@ public:
         NotLoggedIn=0,
         LoggedIn=1,
         Battling=2,
-        Away = 4
+        Away = 4,
     };
 
     Player(const GenericSocket &sock, int id);
@@ -151,6 +151,7 @@ signals:
     void ipChangeRequested(int id, const QString &ip);
 public slots:
     void loggedIn(TeamInfo &team,bool,bool, QColor);
+    void serverPasswordSent(const QString &hash);
     void recvMessage(int chan, const QString &mess);
     void recvTeam(TeamInfo &team);
     void disconnected();
@@ -197,6 +198,7 @@ private:
     QString proxyip;
     bool ontologin;
     mutable int lastcommand;
+    bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
 
     int m_state;
     TeamInfo *waiting_team;
