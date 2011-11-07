@@ -1134,7 +1134,7 @@ struct MMGrudge : public MM
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
         if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
-            if (!b.koed(t) && !b.hasSubstitute(t)) {
+            if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
