@@ -1535,18 +1535,22 @@ struct AMMagicMirror : public AM
         if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
+
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if (b.koed(t)) {
-                    continue;
-                }
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
-                    target = t;
-                    break;
+            if (tmove(b,s).targets == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if (b.koed(t)) {
+                        continue;
+                    }
+                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
