@@ -1722,7 +1722,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
                         target = t;
                         break;
                     }
