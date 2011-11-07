@@ -886,6 +886,12 @@ struct MMAttract : public MM
         } else {
             b.link(s, t, "Attract");
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+            if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                b.link(t, s, "Attract");
+                addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                b.sendItemMessage(7,t,0,s);
+            }
         }
     }
 
