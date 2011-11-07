@@ -94,7 +94,7 @@ Electric's power has been weakened!|Fire's power has been weakened!
 %s calmed down!|%s became confused due to fatigue!
 The battlers shared their pain!
 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
-%s's present healed %f 80 HP!
+%s's present healed %f some HP!
 %s copied %f's stat changes!
 %s moved its status onto %f!
 

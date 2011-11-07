@@ -222,6 +222,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>PM User</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
