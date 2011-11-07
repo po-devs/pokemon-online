@@ -43,6 +43,7 @@ SOURCES += main.cpp \
     logmanager.cpp \
     poketextedit.cpp \
     remove_direction_override.cpp \
+	password_wallet.cpp\
     spectatorwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
@@ -94,6 +95,7 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     logmanager.h \
     poketextedit.h \
     remove_direction_override.h \
+	password_wallet.h\
     spectatorwindow.h \
     ../BattleManager/battlescene.h \
     ../BattleManager/battleinput.h \
