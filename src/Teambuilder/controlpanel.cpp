@@ -33,6 +33,11 @@ void ControlPanel::setPlayer(const UserInfo &ui)
     mute->setDisabled(true);
     if (!ui.online()) {
         kick->setDisabled(true);
+        pm->setDisabled(true);
+    }
+    else {
+        kick->setEnabled(true);
+        pm->setEnabled(true);
     }
 }
 
