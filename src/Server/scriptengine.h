@@ -264,6 +264,7 @@ public:
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
+    Q_INVOKABLE QString serverVersion();
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
