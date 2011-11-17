@@ -82,7 +82,7 @@ public:
         return serverName;
     }
     bool isSafeScripts() const { return safeScripts; }
-
+    bool isPrivate() const { return serverPrivate == 1; }
     bool isLegalProxyServer(const QString &ip) const;
 
     bool isPasswordProtected() const { return passwordProtected; }

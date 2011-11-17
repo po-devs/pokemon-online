@@ -2200,3 +2200,8 @@ QString ScriptEngine::serverVersion()
 {
     return VERSION;
 }
+
+bool ScriptEngine::isServerPrivate()
+{
+    return myserver->isPrivate();
+}
