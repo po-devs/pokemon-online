@@ -1167,6 +1167,14 @@ void Server::afterChangeTier(int src, const QString &old, const QString &dest)
     myengine->afterChangeTier(src, old, dest);
 }
 
+bool Server::beforeFindBattle(int src) {
+    return myengine->beforeFindBattle(src);
+}
+
+void Server::afterFindBattle(int src) {
+    myengine->afterFindBattle(src);
+}
+
 bool Server::beforePlayerAway(int src, bool away)
 {
     return myengine->beforePlayerAway(src, away);
