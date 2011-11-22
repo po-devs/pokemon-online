@@ -110,7 +110,7 @@ Nugget
 Old Gateau
 Parlyz Heal
 Pearl
-Poké Doll
+PokÃ© Doll
 Potion
 PP Max
 PP Up
@@ -225,10 +225,10 @@ Snow Mail
 Space Mail
 Steel Mail
 Tunnel Mail
-Aqua Cassette
-Lightning Cassette
-Blaze Cassette
-Freeze Cassette
+Douse Drive
+Shock Drive
+Burn Drive
+Chill Drive
 Sweet Heart
 Prism Scale
 Eviolite
