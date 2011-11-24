@@ -869,7 +869,7 @@ struct AMSlowStart : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        poke(b,s)["SlowStartTurns"] = b.turn() + 4;
+        poke(b,s)["SlowStartTurns"] = b.turn() + 5;
         b.sendAbMessage(55,0,s);
     }
 
