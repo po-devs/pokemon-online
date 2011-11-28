@@ -16,6 +16,8 @@
 
 typedef BattlePStorage BP;
 
+Q_DECLARE_METATYPE(QList<int>)
+
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
@@ -2165,8 +2167,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
     turnMemory(target).remove("EvadeAttack");
-    callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
-            like EQ on dig need their boost even if lock on */
+    callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
     if (pokeMemory(player).contains("LockedOn") && pokeMemory(player).value("LockedOnEnd").toInt() >= turn()
             && pokeMemory(player).value("LockedOn") == target &&
@@ -3927,6 +3928,7 @@ int BattleSituation::calculateDamage(int p, int t)
         def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
     }
 
+
     /* Used by Oaths to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
@@ -3951,6 +3953,18 @@ int BattleSituation::calculateDamage(int p, int t)
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
     int power = tmove(p).power;
     int type = tmove(p).type;
+
+    /* Calculate the multiplier for two turn attacks */ 
+    if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
+        QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
+        QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
+    
+        for (int i = 0; i < vuln_moves.size(); i++) {
+            if (vuln_moves[i] == attackused) {
+                power = power * vuln_mults[i];
+            }
+        }
+    }
 
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
