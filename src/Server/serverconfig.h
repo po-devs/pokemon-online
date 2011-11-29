@@ -24,6 +24,7 @@ signals:
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePassword);
+    void showTrayPopupChanged(bool show);
 
 private slots:
     void apply();
@@ -40,6 +41,7 @@ private:
     QCheckBox *battleFileLog;
     QCheckBox *lowLatency;
     QCheckBox *safeScripts;
+    QCheckBox *trayPopup;
     QLineEdit *proxyServers;
     QLineEdit *serverPassword;
     QCheckBox *usePassword;
