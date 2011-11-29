@@ -3316,9 +3316,10 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             return false;
         }
 
-        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0) {
-            if (canSendPreventMessage(player, attacker))
-                sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker))) {
+            if (canSendPreventMessage(player, attacker)) {
+                    sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+            }
             return false;
         }
     }
@@ -3373,8 +3374,10 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
 
         if(teamMemory(this->player(player)).value("SafeGuardCount").toInt() > 0) {
-            sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(player).attack);
-            return;
+            if (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker)) {
+                sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(player).attack);
+                return;
+            }
         }
     }
 
