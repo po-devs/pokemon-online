@@ -171,6 +171,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(proxyServersChanged(QString)), server, SLOT(proxyServersChanged(QString)));
     connect(w, SIGNAL(serverPasswordChanged(QString)), server, SLOT(serverPasswordChanged(QString)));
     connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
+    connect(w, SIGNAL(showTrayPopupChanged(bool)), server, SLOT(showTrayPopupChanged(bool)));
 }
 
 void ServerWidget::openScriptWindow()
