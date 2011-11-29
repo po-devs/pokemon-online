@@ -63,6 +63,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Safe scripts: ", safeScripts = new QCheckBox("Restricts some script functions to improve security."));
     safeScripts->setChecked(settings.value("safe_scripts").toBool());
 
+    l->addRow("Show tray popup: ", trayPopup = new QCheckBox("Show tooltip when PO is minimized to tray."));
+    trayPopup->setChecked(settings.value("show_tray_popup").toBool());
+
     l->addRow("Proxy Servers: ", proxyServers = new QLineEdit(settings.value("proxyservers").toString()));
 
     l->addRow(usePassword = new QCheckBox("Require Password: "), serverPassword = new QLineEdit(settings.value("server_password").toString()));
@@ -98,6 +101,7 @@ void ServerWindow::apply()
     settings.setValue("mainchanname", mainChan->text());
     settings.setValue("low_TCP_delay", lowLatency->isChecked());
     settings.setValue("safe_scripts", safeScripts->isChecked());
+    settings.setValue("show_tray_popup", trayPopup->isChecked());
     settings.setValue("proxyservers", proxyServers->text());
     settings.setValue("server_password", serverPassword->text());
     settings.setValue("require_password", usePassword->isChecked());
@@ -116,6 +120,7 @@ void ServerWindow::apply()
     emit proxyServersChanged(proxyServers->text());
     emit serverPasswordChanged(serverPassword->text());
     emit usePasswordChanged(usePassword->isChecked());
+    emit showTrayPopupChanged(trayPopup->isChecked());
 
     close();
 }
