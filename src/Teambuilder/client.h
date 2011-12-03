@@ -259,8 +259,9 @@ private:
     /* GUI */
     /* Main chat */
     QScrollDownTextBrowser *mychat;
-    /* PMs */
+    /* PMs and disabled PMs */
     QHash<int, PMWindow*> mypms;
+    QHash<QString, PMWindow*> disabledpms;
     /* Line the user types in */
 //    QLineEdit *myline;
     QIRCLineEdit *myline;
