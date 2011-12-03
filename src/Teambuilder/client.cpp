@@ -164,6 +164,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
+    connect(relay, SIGNAL(serverPassRequired(QString)), SLOT(serverPass(QString)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
@@ -628,6 +629,13 @@ void Client::ban(int p) {
 void Client::tempban(int p, int time) {
     relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
 }
+void Client::pmcp(QString p) {
+    int pm = id(p);
+    if (!mypms.contains(pm)) {
+        startPM(pm);
+    }
+    return;
+}
 
 void Client::startPM(int id)
 {
@@ -883,6 +891,7 @@ void Client::controlPanel(int id)
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
     connect(myCP, SIGNAL(tunbanRequested(QString)), &relay(), SLOT(CPTUnban(QString)));
     connect(myCP, SIGNAL(tempBanRequested(QString, int)),this, SLOT(requestTempBan(QString,int)));
+    connect(myCP, SIGNAL(pmcp(QString)), SLOT(pmcp(QString)));
 }
 
 void Client::openBattleFinder()
@@ -1172,20 +1181,109 @@ void Client::playerBanned(int dest, int src) {
 
 
 void Client::askForPass(const QString &salt) {
-    bool ok;
 
-    QString pass = QInputDialog::getText(this, tr("Enter your password"),
-                                         tr("Enter the password for your current name.\n"
-                                            "If you don't have it, the name you have chosen might be already taken."
-                                            " Choose different name.\n"
-                                            "\nIt is advised to use a slightly different password for each server."
-                                            " (The server only sees the encrypted form of the pass, but still...)"),
-                                         QLineEdit::Password,"", &ok);
+    QString pass;
+    QStringList warns;
+    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass, warns);
+    if (!warns.empty()) warns.prepend(""); // for join()
+
+    /* Create a dialog for password input */
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Enter your password"));
+    QVBoxLayout* layout = new QVBoxLayout;
+    // Label
+    layout->addWidget(new QLabel(tr("Enter the password for your current name.\n"
+                                    "If you don't have it, the name you have chosen might be already taken."
+                                    " Choose different name.\n"
+                                    "\nIt is advised to use a slightly different password for each server."
+                                    " (The server only sees the encrypted form of the pass, but still...)")
+                                 + warns.join("\n")));
+    // Password input
+    QLineEdit *passEdit = new QLineEdit;
+    passEdit->setEchoMode(QLineEdit::Password);
+    layout->addWidget(passEdit);
+
+    // Save pass
+    QCheckBox *savePass = new QCheckBox;
+    savePass->setText(tr("Save the user password"));
+    layout->addWidget(savePass);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
+    connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+    layout->addWidget(buttonBox);
+
+
+    dialog.setLayout(layout);
 
     if (ok) {
-        QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
-        relay().notify(NetworkCli::AskForPass, hash);
+        passEdit->setText(pass);
+        savePass->setChecked(true);
     }
+
+    int ret = dialog.exec();
+    if (!ret) {
+        return;
+    }
+    pass = passEdit->text();
+    if (savePass->isChecked()) {
+        // TODO: ipv6 support in the future
+        wallet.saveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass);
+    }
+
+
+    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    relay().notify(NetworkCli::AskForPass, hash);
+}
+
+void Client::serverPass(const QString &salt) {
+
+    QString pass;
+    QStringList warns;
+    bool ok = wallet.retrieveServerPassword(relay().getIp(), serverName, pass, warns);
+    if (!warns.empty()) warns.prepend(""); // for join()
+
+    /* Create a dialog for password input */
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Enter the server password"));
+    QVBoxLayout* layout = new QVBoxLayout;
+    // Label
+    layout->addWidget(new QLabel(tr("Enter the password for this server.\n"
+                                    "This server requires a password to log in.")
+                                 + warns.join("\n")));
+    // Password input
+    QLineEdit *passEdit = new QLineEdit;
+    passEdit->setEchoMode(QLineEdit::Password);
+    layout->addWidget(passEdit);
+
+    // Save pass
+    QCheckBox *savePass = new QCheckBox;
+    savePass->setText(tr("Save the server password"));
+    layout->addWidget(savePass);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
+    connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+    layout->addWidget(buttonBox);
+
+    dialog.setLayout(layout);
+
+    if (ok) {
+        passEdit->setText(pass);
+        savePass->setChecked(true);
+    }
+
+    int ret = dialog.exec();
+    if (!ret) {
+        return;
+    }
+    pass = passEdit->text();
+    if (savePass->isChecked()) {
+        // TODO: ipv6 support in the future
+        wallet.saveServerPassword(relay().getIp(), serverName, pass);
+    }
+    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    relay().notify(NetworkCli::ServerPass, hash);
 }
 
 void Client::sendRegister() {

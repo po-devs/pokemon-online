@@ -39,3 +39,4 @@
 %s used its Red Card on %f!
 %s used its Eject Button!
 %s's Berserk Gene activated!|%s's Attack went way up!
+%s's Destiny Knot activated, %f is in love!

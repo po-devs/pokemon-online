@@ -86,6 +86,7 @@ signals:
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
     void passRequired(const QString &salt);
+    void serverPassRequired(const QString &salt);
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);

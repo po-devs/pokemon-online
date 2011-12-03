@@ -8,6 +8,7 @@
 #include "centralwidget.h"
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
+#include "password_wallet.h"
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -173,6 +174,8 @@ public slots:
     void loadTeam();
     /* A popup that asks for the pass */
     void askForPass(const QString &salt);
+    /* A popup that asks for a server pass */
+    void serverPass(const QString &salt);
     /* When someone is kicked */
     void playerKicked(int,int);
     void playerBanned(int,int);
@@ -180,6 +183,7 @@ public slots:
     void kick(int);
     void ban(int);
     void tempban(int, int);
+    void pmcp(QString);
     /* PM */
     void startPM(int);
     void removePM(int);
@@ -322,6 +326,9 @@ private:
     /* Network Relay */
     Analyzer myrelay;
     Analyzer & relay();
+
+    /* Password Wallet */
+    PasswordWallet wallet;
 
     PlayerInfo & playerInfo(int id);
     void updateState(int player);

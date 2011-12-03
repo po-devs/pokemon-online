@@ -169,6 +169,8 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(latencyChanged(bool)), server, SLOT(TCPDelayChanged(bool)));
     connect(w, SIGNAL(safeScriptsChanged(bool)), server, SLOT(safeScriptsChanged(bool)));
     connect(w, SIGNAL(proxyServersChanged(QString)), server, SLOT(proxyServersChanged(QString)));
+    connect(w, SIGNAL(serverPasswordChanged(QString)), server, SLOT(serverPasswordChanged(QString)));
+    connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
 }
 
 void ServerWidget::openScriptWindow()

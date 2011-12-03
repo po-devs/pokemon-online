@@ -13,7 +13,7 @@ Item {
     Image {
         source: "images/grass.png"
         anchors.fill: parent;
-        z: -100;
+        z: -500;
     }
 
     property bool loaded: false;
@@ -110,7 +110,6 @@ Item {
     Connections {
         target: battle.scene
         onAttackUsed: {
-            battle.scene.debug("HeyHeyHey\n");
             fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot]);
         }
     }
