@@ -1840,6 +1840,23 @@ struct MMGravity : public MM
         return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
     }
 
+    static void bindToGround(int s, int p, BS &b, bool silent=false) {
+        if (b.koed(p))
+            return;
+        if (!silent &&b.isFlying(p)) {
+            b.sendMoveMessage(53,2,p,Type::Psychic);
+        }
+        if(poke(b,p).value("Invulnerable").toBool()) {
+            int move = poke(b,p)["2TurnMove"].toInt();
+            if (move == Fly || move == Bounce || move == FreeFall) {
+                MMBounce::groundStruck(p, b);
+                if (!silent) {
+                    b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
+                }
+            }
+        }
+    }
+
     static void uas(int s, int, BS &b) {
         b.battleMemory()["Gravity"] = true;
         b.battleMemory()["GravityCount"] = 5;
@@ -1848,18 +1865,7 @@ struct MMGravity : public MM
         std::vector<int> list = b.sortedBySpeed();
 
         foreach(int p, list) {
-            if (b.koed(p))
-                continue;
-            if (b.isFlying(p)) {
-                b.sendMoveMessage(53,2,p,Type::Psychic);
-            }
-            if(poke(b,p).value("Invulnerable").toBool()) {
-                int move = poke(b,p)["2TurnMove"].toInt();
-                if (move == Fly || move == Bounce || move == FreeFall) {
-                    MMBounce::groundStruck(p, b);
-                    b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
-                }
-            }
+            bindToGround(s, p, b);
         }
 
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "Gravity", &et);
@@ -1913,8 +1919,22 @@ struct MMGravity : public MM
     }
 };
 
-MMGravity::FM MMGravity::forbidden_moves;
+struct MMStrikeDown : public MM
+{
+    MMStrikeDown() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
 
+    static void uas(int s, int t, BS &b) {
+        if (b.isFlying(t)) {
+            b.sendMoveMessage(175, 0, s, type(b,s), t);
+            poke(b,t)["StruckDown"] = true;
+        }
+        MMGravity::bindToGround(s, t, b, true);
+    }
+};
+
+MMGravity::FM MMGravity::forbidden_moves;
 
 struct MMMetronome : public MM
 {
@@ -1997,6 +2017,11 @@ struct MMWideGuard : public MM
         }
 
         if (tmove(b,s).targets != Move::Opponents && tmove(b,s).targets != Move::All && tmove(b,s).targets != Move::AllButSelf) {
+            return;
+        }
+
+        /* Dark void isn't effected */
+        if (tmove(b,s).category == Move::Other) {
             return;
         }
 
@@ -2149,5 +2174,7 @@ void init_moves_1(QHash<int, MoveMechanics> &mechanics, QHash<int, QString> &nam
 
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
+
+    REGISTER_MOVE(175, StrikeDown);
 }
 

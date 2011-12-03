@@ -1000,7 +1000,7 @@ void BattleSituation::endTurn()
                 }
             }
             int p = this->player(player);
-            if (p > 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
+            if (p >= 0 && p < sizeof(fullLoop)/sizeof(*fullLoop)) {
                 fullLoop[p] = true;
             }
         }
@@ -3949,18 +3949,23 @@ int BattleSituation::calculateDamage(int p, int t)
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
-    int power = tmove(p).power;
     int type = tmove(p).type;
 
+    /*** WARNING ***/
+    /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
+      but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
+      move power (not just power variable) because of technician which relies on it */
+    callieffects(p,t,"BasePowerModifier");
+    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
+        tmove(p).power *= 2;
+    }
+
+    int power = tmove(p).power;
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }
 
-    callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
-        power *= 2;
-    }
     power = power * (10+move["BasePowerItemModifier"].toInt())/10;
 
     QString sport = "Sported" + QString::number(type);
@@ -4015,7 +4020,7 @@ int BattleSituation::calculateDamage(int p, int t)
                 if (gen() <= 4) {
                     foreach (int tar, targetList) {
                         if (tar != t && !koed(tar)) {
-                            damage = damage * 3/4;
+                            damage = damage * (gen() <= 3 ? 2 : 3)/4;
                             break;
                         }
                     }
