@@ -4,7 +4,7 @@
 #include "remove_direction_override.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
-    : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false)
+    : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
 {
     /* Those will actually be gotten back by the client itself, when
        he adds the channel */
@@ -32,13 +32,6 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     events = -1;
     restoreEventSettings();
-
-
-    if(client->sortBT) {
-        sortAllPlayersByTier();
-    } else {
-        sortAllPlayersNormally();
-    }
 
     connect(myplayers, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)));
     connect(myplayers, SIGNAL(itemActivated(QTreeWidgetItem*, int)), client, SLOT(seeInfo(QTreeWidgetItem*)));
@@ -192,16 +185,20 @@ void Channel::placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent)
         if(parent == NULL) {
             myplayers->addTopLevelItem(item);
 
-            myplayers->sortItems(0,Qt::AscendingOrder);
-            if(client->sortBA) {
-                myplayers->sortItems(1,Qt::DescendingOrder);
+            if (!stillLoading) {
+                myplayers->sortItems(0,Qt::AscendingOrder);
+                if(client->sortBA) {
+                    myplayers->sortItems(1,Qt::DescendingOrder);
+                }
             }
         } else {
             parent->addChild(item);
 
-            parent->sortChildren(0,Qt::AscendingOrder);
-            if(client->sortBA) {
-                parent->sortChildren(1,Qt::DescendingOrder);
+            if (!stillLoading) {
+                parent->sortChildren(0,Qt::AscendingOrder);
+                if(client->sortBA) {
+                    parent->sortChildren(1,Qt::DescendingOrder);
+                }
             }
         }
     }
@@ -401,6 +398,14 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
             battleItems.insert(h.key(), it);
             battleList->addTopLevelItem(it);
             emit battleReceived2(h.key(), h.value().id1, h.value().id2);
+        }
+
+        // Battle list finished the channel loading, now it's a good time to sort the players
+        stillLoading = false;
+        if(client->sortBT) {
+            sortAllPlayersByTier();
+        } else {
+            sortAllPlayersNormally();
         }
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
@@ -639,13 +644,9 @@ void Channel::printHtml(const QString &str, bool act)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
     mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
-<<<<<<< HEAD
-    emit activated(this);
-=======
     if (act) {
         emit activated(this);
     }
->>>>>>> coyotte508/master
 }
 
 void Channel::addEvent(int event)
