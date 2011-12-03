@@ -27,7 +27,7 @@ ServerChoice::ServerChoice(const QString &nick)
     mylist->setMinimumHeight(200);
 
     connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
-    connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDescription(int)));
+    connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
 
     l->addWidget(mylist, 100);
 
@@ -135,15 +135,19 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     mylist->sortByColumn(1);
 
     if (mylist->currentRow() != -1)
-        showDescription(mylist->currentRow());
+        showDetails(mylist->currentRow());
 }
 
-void ServerChoice::showDescription(int row)
+void ServerChoice::showDetails(int row)
 {
     if (row < 0)
         return;
     myDesc->clear();
     myDesc->insertHtml(descriptionsPerIp[mylist->item(row,2)->text()]);
+
+    QString ip = mylist->item(row, 2)->text();
+    myAdvServer->setText(ip);
+
 }
 
 void ServerChoice::connectionError(int, const QString &mess)

@@ -643,6 +643,8 @@ void Client::startPM(int id)
         return;
     }
 
+    activateWindow(); // activate po window when pm recieved
+
     if (mypms.contains(id)) {
         return;
     }
@@ -1878,7 +1880,6 @@ void Client::removePlayer(int id)
 
     if (mypms.contains(id)) {
         mypms[id]->disable();
-        mypms.remove(id);
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
@@ -1958,6 +1959,22 @@ void Client::playerReceived(const PlayerInfo &p)
             c->playerReceived(p.id);
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
+    }
+    if (!mypms.contains(p.id)) {
+        // If the player who logged on is in our PMs, we can reuse that PM
+        QHashIterator<int, PMWindow*> pm(mypms);
+        const QString username = name(p.id);
+        while (pm.hasNext()) {
+            pm.next();
+            if (pm.value()->name() == username) {
+                int old_id = pm.key();
+                PMWindow *window = pm.value();
+                mypms.remove(old_id);
+                mypms[p.id] = window;
+                window->reuse(p.id);
+                break;
+            }
+        }
     }
 }
 
