@@ -8,7 +8,8 @@
 #include "pokemoninfoaccessor.h"
 #include "proxydatacontainer.h"
 
-BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this))
+BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false),
+    pauseCount(0)
 {
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
@@ -85,32 +86,45 @@ void BattleScene::debug(const QString &m)
 
 void BattleScene::pause()
 {
-    //qDebug() << "pausing";
-    //debug("pausing\n");
-    BattleCommandManager<BattleScene>::pause();
+    pauseCount =+ 1;
+    baseClass::pause();
 }
 
 void BattleScene::unpause()
 {
-    //qDebug() << "unpausing";
-    //debug("unpausing\n");
-    BattleCommandManager<BattleScene>::unpause();
+    pauseCount -= 1;
+
+    if (pauseCount == 0) {
+        if (commands.size() > 0) {
+            commands[0]->apply();
+            delete commands[0];
+            commands.erase(commands.begin(), commands.begin()+1);
+        }
+    }
+
+    baseClass::unpause();
 }
 
-bool BattleScene::isFreshForStatChange(int slot, StatDirection direction)
-{
-    if (info.lastSlot == slot && info.lastStatChange == direction) {
-        return false;
+bool BattleScene::shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
+    (void) stat;
+    (void) silent;
+
+    if (info.lastSlot == spot && ((info.lastStatChange == StatUp) == (boost > 0) )) {
+        return true;
     }
+    return false;
+}
+
+bool BattleScene::shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
+    (void) stat;
+    (void) silent;
+
+    info.lastStatChange = boost > 0 ? StatUp : StatDown;
+    info.lastSlot = spot;
 
     return true;
 }
 
-void BattleScene::onStatBoost(int spot, int stat, int boost, bool silent)
-{
-    (void) stat;
-    (void) silent;
-
-    info.lastSlot = spot;
-    info.lastStatChange = boost > 0 ? StatUp : StatDown;
+void BattleScene::onUseAttack(int spot, int attack) {
+    emit attackUsed(spot, attack);
 }

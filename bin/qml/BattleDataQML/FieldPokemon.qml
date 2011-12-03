@@ -2,6 +2,7 @@ import QtQuick 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "colors.js" as Colors
 import "effects.js" as Effects
+import "moves.js" as Moves
 
 Item {
     id: woof
@@ -13,6 +14,11 @@ Item {
 
     function isKoed() {
         return pokemon.status === 31 || pokemon.numRef === 0;
+    }
+
+    function useAttack(attack, target) {
+        battle.scene.debug("Using attack " + attack + "\n");
+        Moves.useAttack(woof, attack, target);
     }
 
     PokeballAnimation {
@@ -61,16 +67,9 @@ Item {
     Connections {
         target: fieldPokemon
         onStatUp: {
-            if (!battle.scene.isFreshForStatChange(spot, BattleScene.StatUp)) {
-                return;
-            }
             Effects.statUp(woof);
         }
         onStatDown: {
-            /* Qt 4.7.4 bug makes it that -1 enum is undefined, use BattleScene.StatDown when it's fixed */
-            if (!battle.scene.isFreshForStatChange(spot, -1)) {
-                return;
-            }
             Effects.statDown(woof);
         }
     }

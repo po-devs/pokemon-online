@@ -54,7 +54,9 @@ HEADERS +=\
     proxydatacontainer.h \
     battledatatypes.h \
     auxpokedataproxy.h \
-    advancedbattledata.h
+    advancedbattledata.h \
+    battlesceneflow.h \
+    param.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -100,7 +102,27 @@ OTHER_FILES += \
     ../../bin/qml/initial.qml \
     ../../bin/qml/BattleDataQML/CommonEffects/StatUp.qml \
     ../../bin/qml/BattleDataQML/CommonEffects/StatDown.qml \
-    ../../bin/qml/BattleDataQML/effects.js
+    ../../bin/qml/BattleDataQML/effects.js \
+    ../../bin/qml/BattleDataQML/moves.js \
+    ../../bin/qml/BattleDataQML/Moves/LeechSeed.qml \
+    ../../bin/qml/BattleDataQML/utilities.js \
+    ../../bin/qml/BattleDataQML/Utilities/MovingGif.qml \
+    ../../bin/qml/BattleDataQML/spawner.js \
+    ../../bin/qml/BattleDataQML/Moves/Move.qml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
