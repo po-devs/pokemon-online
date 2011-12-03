@@ -1728,6 +1728,9 @@ struct AMSelfConscious : public AM {
     }
 
     static void ubh(int s, int t, BS &b) {
+        if (b.koed(s)) {
+            return;
+        }
         int tp = type(b,t);
 
         if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {

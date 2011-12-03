@@ -20,9 +20,9 @@ enum BattleResult
 
 class BattleMove
 {
-    PROPERTY(quint8, PP);
-    PROPERTY(quint8, totalPP);
-    PROPERTY(quint16, num);
+    PROPERTY(quint8, PP)
+    PROPERTY(quint8, totalPP)
+    PROPERTY(quint16, num)
 public:
     BattleMove();
 
@@ -41,6 +41,10 @@ class ShallowBattlePoke
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
     PROPERTY(quint8, level)
+    //In-Battle
+    PROPERTY(bool, substitute)
+    PROPERTY(Pokemon::uniqueId, alternateSprite)
+    PROPERTY(bool, showing)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
@@ -50,6 +54,7 @@ public:
 
     void addStatus(int status);
     void removeStatus(int status);
+    bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
 
     void init(const PokeBattle &poke);
     virtual quint8 lifePercent() const { return m_prop_lifePercent; }
@@ -90,7 +95,6 @@ public:
     quint16 normalStat(int stat) const;
     void updateStats(int gen);
 
-    bool ko() const {return lifePoints() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
 
