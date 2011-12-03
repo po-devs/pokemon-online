@@ -65,6 +65,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
     l->addRow("Proxy Servers: ", proxyServers = new QLineEdit(settings.value("proxyservers").toString()));
 
+    l->addRow(usePassword = new QCheckBox("Require Password: "), serverPassword = new QLineEdit(settings.value("server_password").toString()));
+    usePassword->setChecked(settings.value("require_password").toBool());
+
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
 
@@ -76,6 +79,13 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 
 void ServerWindow::apply()
 {
+    if (usePassword->isChecked() && serverPassword->text().length() == 0) {
+        QMessageBox msgBox;
+        msgBox.setText("You need to set the server password if you require it.");
+        msgBox.exec();
+        return;
+    }
+
     QSettings settings("config", QSettings::IniFormat);
     settings.setValue("server_private", serverPrivate->currentIndex());
     settings.setValue("server_name", serverName->text());
@@ -89,6 +99,8 @@ void ServerWindow::apply()
     settings.setValue("low_TCP_delay", lowLatency->isChecked());
     settings.setValue("safe_scripts", safeScripts->isChecked());
     settings.setValue("proxyservers", proxyServers->text());
+    settings.setValue("server_password", serverPassword->text());
+    settings.setValue("require_password", usePassword->isChecked());
 
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
@@ -102,6 +114,8 @@ void ServerWindow::apply()
     emit latencyChanged(lowLatency->isChecked());
     emit safeScriptsChanged(safeScripts->isChecked());
     emit proxyServersChanged(proxyServers->text());
+    emit serverPasswordChanged(serverPassword->text());
+    emit usePasswordChanged(usePassword->isChecked());
 
     close();
 }

@@ -21,6 +21,8 @@ signals:
     void latencyChanged(bool lowDelay);
     void safeScriptsChanged(bool safeScripts);
     void proxyServersChanged(const QString &ips);
+    void serverPasswordChanged(const QString &pass);
+    void usePasswordChanged(bool usePassword);
 
 private slots:
     void apply();
@@ -37,7 +39,9 @@ private:
     QCheckBox *battleFileLog;
     QCheckBox *lowLatency;
     QCheckBox *safeScripts;
-    QLineEdit* proxyServers;
+    QLineEdit *proxyServers;
+    QLineEdit *serverPassword;
+    QCheckBox *usePassword;
 };
 
 #endif // SERVERCONFIG_H

@@ -574,8 +574,12 @@ struct MMIngrain : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
-            b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s);
+            } else {
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            }
         }
     }
 };
@@ -882,6 +886,12 @@ struct MMAttract : public MM
         } else {
             b.link(s, t, "Attract");
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+            if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                b.link(t, s, "Attract");
+                addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                b.sendItemMessage(7,t,0,s);
+            }
         }
     }
 
@@ -1124,7 +1134,7 @@ struct MMGrudge : public MM
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
         if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
-            if (!b.koed(t) && !b.hasSubstitute(t)) {
+            if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
@@ -1718,7 +1728,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
                         target = t;
                         break;
                     }
@@ -2057,8 +2067,14 @@ struct MMPresent : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-        b.sendMoveMessage(96,0,s,type(b,s),t);
-        b.healLife(t, 80);
+        if (b.gen() >= 5) {
+            b.sendMoveMessage(96,0,s,type(b,s),t);
+            b.healLife(t, b.poke(t).totalLifePoints()/4);
+        }
+        else {
+            b.sendMoveMessage(96,0,s,type(b,s),t, 80);
+            b.healLife(t, 80);
+        }
     }
 };
 

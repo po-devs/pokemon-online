@@ -7,7 +7,7 @@ Rectangle {
     height: 8
     color: "#ffffff"
     radius: 2
-    z: 100;
+    z: 500;
     border.color: "#0d0d0d"
 
     property int oldValue: 0;

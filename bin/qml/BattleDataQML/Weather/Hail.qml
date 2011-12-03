@@ -3,6 +3,7 @@ import Qt.labs.particles 1.0
 
 Item {
     id: main
+    z: 200;
 
     Rectangle {
         id: overlay;
@@ -10,7 +11,6 @@ Item {
         anchors.fill: main.parent;
         opacity: 0.0;
         color: "black";
-        z: -100;
     }
 
     Particles {
@@ -35,8 +35,6 @@ Item {
             xvariance: 20
             pace: 100
         }
-
-        z: 200;
     }
 
     SequentialAnimation {
