@@ -326,7 +326,7 @@ struct BMStarf : public BMPinch
         if (!testpinch(s, s, b, 4))
             return;
 
-        int stat = stats[b.true_rand()%stats.size()];
+        int stat = stats[b.randint(stats.size())];
         b.inflictStatMod(s, stat, 2, s, false);
         b.sendBerryMessage(9,s,0,s,berry,stat);
     }

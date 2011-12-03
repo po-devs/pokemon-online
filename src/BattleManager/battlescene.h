@@ -1,6 +1,7 @@
 #ifndef BATTLESCENE_H
 #define BATTLESCENE_H
 
+#include "battlesceneflow.h"
 #include "battlecommandmanager.h"
 #include "advancedbattledata.h"
 
@@ -8,11 +9,12 @@ class QDeclarativeView;
 class BattleSceneProxy;
 class ProxyDataContainer;
 
-class BattleScene: public QObject, public BattleCommandManager<BattleScene>
+class BattleScene: public QObject, public BattleCommandManager<BattleScene, BattleSceneFlow<BattleEnum, BattleScene> >
 {
     Q_OBJECT
 public:
     typedef AdvancedBattleData* battledata_ptr;
+    typedef BattleCommandManager<BattleScene, BattleSceneFlow<BattleEnum, BattleScene> > baseClass;
 
     BattleScene(battledata_ptr data=0);
     ~BattleScene();
@@ -32,32 +34,37 @@ public:
     /* Prints debug text in the console and battle log */
     Q_INVOKABLE void debug(const QString&m);
 
-    /* Consecutive stat ups or stat downs are not animated. This
-      function tells whether or not a stat up/stat down should be
-      animated. */
-    Q_INVOKABLE bool isFreshForStatChange(int slot, StatDirection direction);
-
-    Q_ENUMS(StatDirection)
-
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
 
+    /* Should the players be reversed positions in the visual scene? */
     bool reversed();
     void launch();
 
     template <enumClass val, typename... Params>
-    bool shouldInvoke(Params...) {
-        if (val != BattleEnum::StatChange) {
-            info.lastStatChange = NoStat;
-        }
-
-        return true;
+    bool shouldStartPeeking(param<val>, Params...) {
+        return false;
     }
 
-    void onStatBoost(int spot, int stat, int boost, bool silent);
+    bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
 
+    template <enumClass val, typename... Params>
+    bool shouldContinuePeeking(param<val>, Params...) {
+        return false;
+    }
+
+    bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
+
+    void onUseAttack(int spot, int attack);
+
+    bool isPeeking() const { return peeking; }
+    bool isPaused() const {return pauseCount > 0;}
+
+    void startPeeking() { peeking = true; }
+    void stopPeeking() { peeking = false; }
 signals:
     void printMessage(const QString&);
     void launched();
+    void attackUsed(int spot, int attack);
 private:
     battledata_ptr mData;
     battledata_ptr data();
@@ -77,6 +84,8 @@ private:
     };
 
     BattleSceneInfo info;
+    bool peeking;
+    int pauseCount;
 };
 
 
