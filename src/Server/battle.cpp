@@ -2411,7 +2411,7 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = tmove(player).flinchRate;
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
-        if (rate == 100) {
+        if (rate == 100 && gen() <= 4) {
             sendAbMessage(12,0,target);
         }
         return;
