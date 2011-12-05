@@ -1994,6 +1994,13 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
+       int forme = ItemInfo::DriveForme(p.item());
+
+       if (forme != 0) {
+           changeAForme(slot, forme);
+       }
+    }
 
     turnMemory(slot)["CantGetToMove"] = true;
 

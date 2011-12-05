@@ -1426,6 +1426,8 @@ struct AMEccentric : public AM
         if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
             num.subnum = ItemInfo::PlateType(b.poke(s).item());
         }
+        if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+            num.subnum = ItemInfo::DriveForme(b.poke(s).item());
 
         b.sendAbMessage(81,0,s,s,0,num.pokenum);
 

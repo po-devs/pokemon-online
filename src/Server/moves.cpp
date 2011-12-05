@@ -3106,6 +3106,8 @@ struct MMTransform : public MM {
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
             }
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+                num.subnum = ItemInfo::DriveForme(b.poke(s).item());
         }
 
         b.sendMoveMessage(137,0,s,0,s,num.pokenum);
@@ -3899,7 +3901,7 @@ struct MMTechnoBuster : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isCassette(item))
+        if (!ItemInfo::isDrive(item))
             return;
         if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
