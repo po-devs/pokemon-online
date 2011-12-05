@@ -174,11 +174,11 @@ struct AMChlorophyll : public AM {
 
 struct AMColorChange : public AM {
     AMColorChange() {
-        functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponBeingHit"] = &ubh;
         functions["AfterBeingPlumetted"] = &abp;
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void ubh(int s, int t, BS &b) {
         if (b.gen() > 4)
             return;
         if (b.koed(s))
