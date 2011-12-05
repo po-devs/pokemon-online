@@ -74,7 +74,7 @@ struct AMAngerPoint : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool()) {
+        if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool() && (b.gen() <= 4 || !b.hasSubstitute(s))) {
             b.sendAbMessage(3,0,s);
             b.inflictStatMod(s,Attack,12,s);
         }
