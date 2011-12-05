@@ -2400,9 +2400,6 @@ struct MMSnatch : public MM
     static void dgaf(int s, int , BS &b) {
         if (b.battleMemory().contains("Snatcher")) {
             int snatcher = b.battleMemory()["Snatcher"].toInt();
-            if (b.player(s) == b.player(snatcher)) {
-                return;
-            }
             if (!turn(b,snatcher).value("Snatcher").toBool()) {
                 return;
             }
