@@ -2430,7 +2430,9 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))) {
+                                   || hasWorkingItem(player, Item::RazorFang))
+        /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
+        && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
         /* King's rock */
         if (true_rand() % 100 < 10) {
             turnMemory(target)["Flinched"] = true;
