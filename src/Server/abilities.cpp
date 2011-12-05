@@ -1846,6 +1846,18 @@ struct AMPickUp : public AM {
     }
 };
 
+struct AMUnnerve : public AM {
+    AMUnnerve() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendAbMessage(102,0,s);
+    }
+};
+
+
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -1975,4 +1987,5 @@ void AbilityEffect::init()
     REGISTER_AB(99, HealingHeart);
     REGISTER_AB(100, FriendGuard);
     REGISTER_AB(101, PoisonTouch);
+    REGISTER_AB(102, Unnerve);
 }
