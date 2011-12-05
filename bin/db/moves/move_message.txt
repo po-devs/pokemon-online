@@ -116,7 +116,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 
 
-%s snatched %f's %m!|%s waits for a target to make a move!
+%s snatched %f's move!|%s waits for a target to make a move!
 
 
 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
