@@ -154,6 +154,9 @@ void PokeBattle::init(PokePersonal &poke)
             num().subnum = 0;
         }
     }
+    if (PokemonInfo::OriginalForme(num()) == Pokemon::Genesect) {
+        num().subnum = ItemInfo::DriveForme(item());
+    }
 
     Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
 
