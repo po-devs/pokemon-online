@@ -1,7 +1,7 @@
 #ifndef BATTLEENUM_H
 #define BATTLEENUM_H
 
-enum class BattleEnum
+enum /* class */ BattleEnum
 {
     NewHp,
     Damaged,
