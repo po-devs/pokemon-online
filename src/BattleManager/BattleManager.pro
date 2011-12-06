@@ -58,7 +58,7 @@ HEADERS +=\
     battlesceneflow.h \
     param.h
 
-QMAKE_CXXFLAGS += "-std=c++0x"
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
