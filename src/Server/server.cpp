@@ -110,6 +110,12 @@ void Server::start(){
     if (!s.contains("require_password")) {
         s.setValue("require_password", false);
     }
+    if (!s.contains("show_tray_popup")) {
+        s.setValue("show_tray_popup", true);
+    }
+    if (!s.contains("minimize_to_tray")) {
+        s.setValue("minimize_to_tray", true);
+    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -221,6 +227,8 @@ void Server::start(){
     proxyServers = s.value("proxyservers").toString().split(",");
     passwordProtected = s.value("require_password").toBool();
     serverPassword = s.value("server_password").toString();
+    showTrayPopup = s.value("show_tray_popup").toBool();
+    minimizeToTray = s.value("minimize_to_tray").toBool();
 
     /* Adds the main channel */
     addChannel();
@@ -1786,4 +1794,14 @@ bool Server::isLegalProxyServer(const QString &ip) const
             return true;
     }
     return false;
+}
+
+void Server::showTrayPopupChanged(bool show)
+{
+    showTrayPopup = show;
+}
+
+void Server::minimizeToTrayChanged(bool allow)
+{
+    minimizeToTray = allow;
 }
