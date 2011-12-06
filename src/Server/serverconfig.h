@@ -25,6 +25,7 @@ signals:
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePassword);
     void showTrayPopupChanged(bool show);
+    void minimizeToTrayChanged(bool allow);
 
 private slots:
     void apply();
@@ -42,6 +43,7 @@ private:
     QCheckBox *lowLatency;
     QCheckBox *safeScripts;
     QCheckBox *trayPopup;
+    QCheckBox *minimizeToTray;
     QLineEdit *proxyServers;
     QLineEdit *serverPassword;
     QCheckBox *usePassword;

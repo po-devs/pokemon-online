@@ -23,8 +23,8 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
 
 bool MainWindow::event(QEvent *event)
 {
-    if(event->type() == QEvent::WindowStateChange) {
-        if(isMinimized()) {
+    if (event->type() == QEvent::WindowStateChange) {
+        if (myserverwidget->isMinimizeToTrayAllowed() && isMinimized()) {
             trayIcon->show();
             if (myserverwidget->isServerTrayPopupAllowed()) {
                 trayIcon->showMessage("Pok\303\251mon Online is still running", "The program will keep running in system Tray. You can left click the icon to get a menu of options.");
