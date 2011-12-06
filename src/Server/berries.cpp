@@ -93,7 +93,8 @@ struct BMLeppa : public BM
                 minPP = 0;
                 break;
             }
-            if (b.PP(s, i) < minPP && b.PP(s, i) < b.poke(s).move(i).totalPP()) {
+            if (b.PP(s, i) < minPP && (fpoke(b, s).moves[i] == b.poke(s).move(i).num() ?
+                                       b.PP(s, i) < b.poke(s).move(i).totalPP() : b.PP(s, i) < 5)) {
                 minmove = i;
                 init = true;
                 minPP = b.PP(s, i);

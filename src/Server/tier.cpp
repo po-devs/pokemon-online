@@ -105,7 +105,9 @@ void Tier::changeId(int id)
 
 int Tier::make_query_number(int type)
 {
-    return (type << 16) + id();
+    /* boss->version is only updated in the main thread, so this call is safe
+        as make_query_number is only called in the main thread too */
+    return (type << 10) + id() + (boss->version << 16);
 }
 
 void Tier::loadFromFile()
@@ -605,7 +607,7 @@ void Tier::updateMember(const MemberRating &m, bool add)
 
 void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
 {
-    boss->ithread->pushMember(m, make_query_number(int(!add)));
+    boss->ithread->pushMember(m, make_query_number(add ? InsertMember : UpdateMember));
 }
 
 void Tier::loadFromXml(const QDomElement &elem)

@@ -53,11 +53,11 @@ protected:
     template<class Y=workerClass>
     typename test<decltype(&Y::onSendOut)>::type
     invoke2(Param<BattleEnum::SendOut>, uint8_t spot, uint8_t prevIndex, std::shared_ptr<ShallowBattlePoke> *ptr, bool silent) {
-        wc()->onSendOut(spot, prevIndex, *ptr, silent);
+        wc()->onSendOut(spot, prevIndex, ptr->get(), silent);
     }
 
     /* Todo: expand following macros */
-    start(SendBack, onSendBack, int spot) end(onSendBack, spot)
+    start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
     start(UseAttack, onUseAttack, int spot, int attack) end(onUseAttack, spot, attack)
     start(Turn, onBeginTurn, int turn) end(onBeginTurn, turn)
     start(NewHp, onHpChange, int spot, int newHp) end(onHpChange, spot, newHp)
@@ -66,8 +66,8 @@ protected:
     start(CriticalHit, onCriticalHit, int spot) end(onCriticalHit, spot)
     start(Miss, onMiss, int spot) end(onMiss, spot)
     start(Avoid, onAvoid, int spot) end(onAvoid, spot)
-    start(StatChange, onStatBoost, int spot, int stat, int boost) end(onStatBoost, spot, stat, boost)
-    start(ClassicStatusChange, onMajorStatusChange, int spot, int status) end(onMajorStatusChange, spot, status)
+    start(StatChange, onStatBoost, int spot, int stat, int boost, bool silent) end(onStatBoost, spot, stat, boost, silent)
+    start(ClassicStatusChange, onMajorStatusChange, int spot, int status, bool multipleTurns) end(onMajorStatusChange, spot, status, multipleTurns)
     start(AbsoluteStatusChange, onPokeballStatusChanged, int player, int poke, int status) end(onPokeballStatusChanged, player, poke, status)
     start(AlreadyStatusMessage, onStatusAlreadyThere, int spot, int status) end(onStatusAlreadyThere, spot, status)
     start(StatusFeel, onStatusNotification, int spot, int status) end(onStatusNotification, spot, status)
@@ -81,13 +81,14 @@ protected:
     start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, char *data)
         end(onMoveMessage, spot, move, part, type, foe, other, QString::fromUtf8(QByteArray(data)))
     start(NoTargetMessage, onNoTarget, int spot) end(onNoTarget, spot)
-    start(ItemMessage, onItemMessage, int item, int part, int foe, int berry, int other) end(onItemMessage, item, part, foe, berry, other)
+    start(ItemMessage, onItemMessage, int spot, int item, int part, int foe, int berry, int other)
+        end(onItemMessage, spot, item, part, foe, berry, other)
     start(Flinch, onFlinch, int spot) end(onFlinch, spot)
     start(Recoil, onRecoil, int spot) end(onRecoil, spot)
     start(Drained, onDrained, int spot) end(onDrained, spot)
     start(WeatherMessage, onContinueWeather, int weather) end(onContinueWeather, weather)
     start(EndWeather, onEndWeather, int weather) end(onEndWeather, weather)
-    start(StartWeather, onStartWeather, int weather, bool ability) end(onStartWeather, weather, ability)
+    start(StartWeather, onStartWeather, int spot, int weather, bool ability) end(onStartWeather, spot, weather, ability)
     start(WeatherDamage, onHurtWeather, int spot, int weather) end(onHurtWeather, spot, weather)
     start(Damaged, onDamageDone, int spot, int damage) end(onDamageDone, spot, damage)
     start(AbilityMessage, onAbilityMessage, int spot, int ab, int part, int type, int foe, int other)
@@ -95,7 +96,7 @@ protected:
     start(SubstituteStatus, onSubstituteStatus, int spot, bool substitute) end(onSubstituteStatus, spot, substitute)
     start(BlankMessage, onBlankMessage) end (onBlankMessage)
     start(BattleEnd, onBattleEnd, int res, int winner) end(onBattleEnd, res, winner)
-    start(ClauseMessage, onCauseActivated, int clause) end(onCauseActivated, clause)
+    start(ClauseMessage, onClauseActivated, int clause) end(onClauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
     start(TierInfo, onTierNotification, char* tier) end(onTierNotification, QString::fromUtf8(QByteArray(tier)))
     start(StatBoostsAndField, onDynamicInfo, int spot, BattleDynamicInfo *info) end(onDynamicInfo, spot, *info)
@@ -106,7 +107,7 @@ protected:
     start(CosmeticFormeChange, onCosmeticFormeChange, int spot, int subforme) end(onCosmeticFormeChange, spot, subforme)
     start(ClockStart, onClockStart, int player, int time) end(onClockStart, player, time)
     start(ClockStop, onClockStop, int player, int time) end(onClockStop, player, time)
-    start(ShiftSpots, onShiftSpots, int spot1, int spot2, bool silent) end(onShiftSpots, spot1, spot2, silent)
+    start(ShiftSpots, onShiftSpots, int player, int spot1, int spot2, bool silent) end(onShiftSpots, player, spot1, spot2, silent)
 
 #undef start
 #undef end
@@ -119,8 +120,8 @@ protected:
 
 /* Functions to create in your class :
     void onKo(int spot);
-    void onSendOut(int spot, int player, std::shared_ptr<ShallowBattlePoke> pokemon, bool silent);
-    void onSendBack(int spot);
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
+    void onSendBack(int spot, bool silent);
     void onUseAttack(int spot, int attack);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
@@ -129,8 +130,8 @@ protected:
     void onCriticalHit(int spot);
     void onMiss(int spot);
     void onAvoid(int spot);
-    void onStatBoost(int spot, int stat, int boost);
-    void onMajorStatusChange(int spot, int status);
+    void onStatBoost(int spot, int stat, int boost, bool silent);
+    void onMajorStatusChange(int spot, int status, bool multipleTurns);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onStatusAlreadyThere(int spot, int status);
     void onStatusNotification(int spot, int status);
@@ -143,7 +144,7 @@ protected:
     void onSpectatorChat(int id, QString message);
     void onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString data);
     void onNoTarget(int spot);
-    void onItemMessage(int item, int part, int foe, int berry, int other);
+    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
     void onFlinch(int spot);
     void onRecoil(int spot);
     void onDrained(int spot);
@@ -155,7 +156,7 @@ protected:
     void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
     void onSubstituteStatus(int spot, bool substitute);
     void onBlankMessage();
-    void onCauseActivated(int clause);
+    void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
     void onTierNotification(QString tier);
     void onDynamicInfo(int spot, BattleDynamicInfo info);
@@ -166,7 +167,7 @@ protected:
     void onCosmeticFormeChange(int spot, int subforme);
     void onClockStart(int player, int time);
     void onClockStop(int player, int time);
-    void onShiftSpots(int spot1, int spot2, bool silent);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
 */
 

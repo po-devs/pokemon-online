@@ -30,11 +30,7 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
 
     connect(m_textToSend, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(m_send, SIGNAL(toggled(bool)), this, SLOT(ignore(bool)));
-
-    QSignalMapper *s = new QSignalMapper(this);
-    s->setMapping(m_challenge, id);
-    connect(m_challenge, SIGNAL(clicked()), s, SLOT(map()));
-    connect(s, SIGNAL(mapped(int)), SIGNAL(challengeSent(int)));
+    connect(m_challenge, SIGNAL(clicked()), this, SLOT(challenge()));
 }
 
 void PMWindow::changeName(const QString &newname)
@@ -112,11 +108,25 @@ void PMWindow::ignore(bool yes)
     emit ignore(id(), yes);
 }
 
+void PMWindow::challenge()
+{
+    emit challengeSent(id());
+}
+
 void PMWindow::disable()
 {
     printHtml("<i>" + tr("The other party left the server, so the window was disabled.") + "</i>");
-    blockSignals(true);
     m_challenge->setDisabled(true);
     m_send->setDisabled(true);
     m_textToSend->setDisabled(true);
+}
+void PMWindow::reuse(int id)
+{
+    if (this->id() == id) return;
+
+    this->id() = id;
+    printHtml("<i>" + tr("The player has logged on again") + "</i>");
+    m_challenge->setEnabled(true);
+    m_send->setEnabled(true);
+    m_textToSend->setEnabled(true);
 }

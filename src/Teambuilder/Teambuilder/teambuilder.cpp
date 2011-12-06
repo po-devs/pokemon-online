@@ -322,7 +322,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QString genStrings[] = {tr("RBY (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
                             tr("HGSS (&4th gen)"),tr("B/W (&5th gen)")};
 
-    for (int i = 1; i < NUMBER_GENS; i++) {
+    for (int i = 0; i < NUMBER_GENS; i++) {
         this->gens[i] = gen->addAction(genStrings[i], this, SLOT(genChanged()));
         this->gens[i]->setCheckable(true);
         this->gens[i]->setProperty("gen", i + GEN_MIN);
@@ -376,14 +376,6 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
                     ac->setChecked(true);
                 }
                 modActionGroup->addAction(ac);
-            }
-
-            // Invoke if needed.
-            if (is_mod_selected) {
-                QAction *a = modActionGroup->checkedAction();
-                if (a) {
-                    a->trigger();
-                }
             }
         }
     }
