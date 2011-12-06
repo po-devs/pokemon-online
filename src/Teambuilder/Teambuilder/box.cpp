@@ -118,7 +118,7 @@ void TB_PokemonDetail::updatePoke()
 
 PokemonBoxButton::PokemonBoxButton(int num) : num(num)
 {
-    setText(tr("e&%1").arg(num+1));
+    setText(tr("Pokémon &%1").arg(num+1));
     setIcon(Theme::WhiteBall());
     setCheckable(true);
     setAcceptDrops(true);
