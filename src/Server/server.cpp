@@ -113,6 +113,9 @@ void Server::start(){
     if (!s.contains("show_tray_popup")) {
         s.setValue("show_tray_popup", true);
     }
+    if (!s.contains("minimize_to_tray")) {
+        s.setValue("minimize_to_tray", true);
+    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -226,6 +229,7 @@ void Server::start(){
     passwordProtected = s.value("require_password").toBool();
     serverPassword = s.value("server_password").toString();
     showTrayPopup = s.value("show_tray_popup").toBool();
+    minimizeToTray = s.value("minimize_to_tray").toBool();
 
     /* Adds the main channel */
     addChannel();
@@ -1803,4 +1807,9 @@ bool Server::isLegalProxyServer(const QString &ip) const
 void Server::showTrayPopupChanged(bool show)
 {
     showTrayPopup = show;
+}
+
+void Server::minimizeToTrayChanged(bool allow)
+{
+    minimizeToTray = allow;
 }
