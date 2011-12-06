@@ -136,6 +136,10 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
+    // Following code initiates another battle window, but this one with
+    // pretty graphics and such. Currently disabled until post 1.0.32
+    // release. ~nix
+    /*
     test = new SpectatorWindow(conf(), info().name(0), info().name(1));
 
     QWidget *widget =test->getSampleWidget();
@@ -146,6 +150,7 @@ void BaseBattleWindow::init()
 
     connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
     connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
+    */
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
