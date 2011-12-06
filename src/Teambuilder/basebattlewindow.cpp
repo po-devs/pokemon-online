@@ -135,22 +135,19 @@ void BaseBattleWindow::init()
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     loadSettings(this);
-
-    // Following code initiates another battle window, but this one with
-    // pretty graphics and such. Currently disabled until post 1.0.32
-    // release. ~nix
-    /*
     test = new SpectatorWindow(conf(), info().name(0), info().name(1));
 
     QWidget *widget =test->getSampleWidget();
     widget->setParent(this);
     widget->setWindowFlags(Qt::Window);
-    widget->show();
+    // Following line shows another battle window, but this one with
+    // pretty graphics and such. Currently disabled until post 1.0.32
+    // release. ~nix
+    /* widget->show(); */
     testWidget = widget;
 
     connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
     connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
-    */
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
