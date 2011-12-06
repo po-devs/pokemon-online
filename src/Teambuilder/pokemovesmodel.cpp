@@ -121,8 +121,12 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
         } else if (section == PP) {
             return MoveInfo::PP(movenum, gen);
         } else if (section == Pow) {
+            int power = MoveInfo::Power(movenum, gen);
+            if (power > 1) return power; 
             return MoveInfo::PowerS(movenum, gen);
         } else if (section == Acc) {
+            int acc = MoveInfo::Acc(movenum, gen);
+            if (acc <= 100) return acc;
             return MoveInfo::AccS(movenum, gen);
         } else if (section == Category) {
             return CategoryInfo::Name(MoveInfo::Category(movenum, gen));
