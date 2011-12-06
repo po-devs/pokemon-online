@@ -1015,7 +1015,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
-    menuFichier->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
+    menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
 
     w->addStyleMenu(menuBar);
     w->addThemeMenu(menuBar);
