@@ -4,8 +4,9 @@
 #
 #-------------------------------------------------
 
-TARGET = BattleManager
-TEMPLATE = app
+QT += declarative opengl
+TARGET = battlelib
+TEMPLATE = lib
 DESTDIR = ../../bin
 LIBS += -L../../bin \
     -lutilities \
@@ -14,12 +15,19 @@ LIBS += -L../../bin \
 DEFINES += BATTLEMANAGER_LIBRARY
 
 SOURCES += \
-    battledata.cpp \
     main.cpp \
     testing.cpp \
     teamdata.cpp \
     battleinput.cpp \
-    battleclientlog.cpp
+    battleclientlog.cpp \
+    auxpokebattledata.cpp \
+    battlescene.cpp \
+    battledataaccessor.cpp \
+    battlesceneproxy.cpp \
+    pokemoninfoaccessor.cpp \
+    auxpokedataproxy.cpp \
+    proxydatacontainer.cpp \
+    datacontainer.cpp
 
 HEADERS +=\
     command.h \
@@ -35,7 +43,20 @@ HEADERS +=\
     battledata.h \
     teamdata.h \
     battleinput.h \
-    battleclientlog.h
+    battleclientlog.h \
+    auxpokebattledata.h \
+    defaulttheme.h \
+    battlescene.h \
+    battledataaccessor.h \
+    battlesceneproxy.h \
+    pokemoninfoaccessor.h \
+    datacontainer.h \
+    proxydatacontainer.h \
+    battledatatypes.h \
+    auxpokedataproxy.h \
+    advancedbattledata.h \
+    battlesceneflow.h \
+    param.h
 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
@@ -57,6 +78,58 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+OTHER_FILES += \
+    battlescene.qml \
+    BattleDataQML/Pokemon.qml \
+    BattleDataQML/Team.qml \
+    ../../bin/qml/battlescene.qml \
+    ../../bin/qml/BattleDataQML/qmldir \
+    ../../bin/qml/BattleDataQML/Team.qml \
+    ../../bin/qml/BattleDataQML/Pokemon.qml \
+    ../../bin/qml/BattleDataQML/FieldPokemon.qml \
+    ../../bin/qml/BattleDataQML/ProgressBar.qml \
+    ../../bin/qml/BattleDataQML/FrameAnimation.qml \
+    ../../bin/qml/BattleDataQML/PokeballAnimation.qml \
+    ../../bin/qml/BattleDataQML/ColorShader.qml \
+    ../../bin/qml/BattleDataQML/colors.js \
+    ../../bin/qml/BattleDataQML/weather.js \
+    ../../bin/qml/BattleDataQML/Weather/Rain.qml \
+    ../../bin/qml/BattleDataQML/Weather/Sand.qml \
+    ../../bin/qml/BattleDataQML/Weather/Hail.qml \
+    ../../bin/qml/BattleDataQML/Weather/qmldir \
+    ../../bin/qml/BattleDataQML/Weather/Sun.qml \
+    ../../bin/qml/initial.qml \
+    ../../bin/qml/BattleDataQML/CommonEffects/StatUp.qml \
+    ../../bin/qml/BattleDataQML/CommonEffects/StatDown.qml \
+    ../../bin/qml/BattleDataQML/effects.js \
+    ../../bin/qml/BattleDataQML/moves.js \
+    ../../bin/qml/BattleDataQML/Moves/LeechSeed.qml \
+    ../../bin/qml/BattleDataQML/utilities.js \
+    ../../bin/qml/BattleDataQML/Utilities/MovingGif.qml \
+    ../../bin/qml/BattleDataQML/spawner.js \
+    ../../bin/qml/BattleDataQML/Moves/Move.qml \
+    ../../bin/qml/BattleDataQML/Utilities/Curve.qml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

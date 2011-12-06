@@ -357,21 +357,30 @@ struct MMHaze : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.gen() > 1) {
+            if (tmove(b,s).power == 0) {
+                b.sendMoveMessage(149);
 
-        if (tmove(b,s).power == 0) {
-            b.sendMoveMessage(149);
+                foreach (int p, b.sortedBySpeed())
+                {
+                    for (int i = 1; i <= 7; i++) {
+                        fpoke(b,p).boosts[i] = 0;
+                    }
+                }
+            }
+            else {
+                b.sendMoveMessage(149, 1, s, type(b,s), t);
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,t).boosts[i] = 0;
+                }
+            }
+        } else {
+            /* In gen 1, haze just clears status */
+            b.sendMoveMessage(149, 2);
 
             foreach (int p, b.sortedBySpeed())
             {
-                for (int i = 1; i <= 7; i++) {
-                    fpoke(b,p).boosts[i] = 0;
-                }
-            }
-        }
-        else {
-            b.sendMoveMessage(149, 1, s, type(b,s), t);
-            for (int i = 1; i <= 7; i++) {
-                fpoke(b,t).boosts[i] = 0;
+                b.healStatus(p, 0);
             }
         }
     }
@@ -565,8 +574,12 @@ struct MMIngrain : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
-            b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s);
+            } else {
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            }
         }
     }
 };
@@ -873,6 +886,12 @@ struct MMAttract : public MM
         } else {
             b.link(s, t, "Attract");
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+            if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                b.link(t, s, "Attract");
+                addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                b.sendItemMessage(7,t,0,s);
+            }
         }
     }
 
@@ -901,7 +920,8 @@ struct MMKnockOff : public MM
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
                                                                                                     (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
+                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isCassette(b.poke(t).item()) &&
+                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -921,9 +941,10 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
                 || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
-                || b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb
-                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
-            /* Sticky Hold, MultiType, Giratina-O, Mail */
+                || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
+                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
+                || ((ItemInfo::isCassette(b.poke(s).item()) || ItemInfo::isCassette(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Insekuta || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)))
+            /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
         {
             turn(b,s)["Failed"] = true;
         }
@@ -1115,7 +1136,7 @@ struct MMGrudge : public MM
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
         if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
-            if (!b.koed(t) && !b.hasSubstitute(t)) {
+            if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
@@ -1709,7 +1730,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
                         target = t;
                         break;
                     }
@@ -1939,10 +1960,17 @@ struct MMMist : public MM
 {
     MMMist() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
     }
 
     static ::bracket bracket(int gen) {
         return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int count = team(b,s)["MistCount"].toInt();
+        if (count > 0)
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
@@ -2117,7 +2145,7 @@ struct MMRazorWind : public MM
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
-            if (mv == SkullBash) {
+            if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
             }
 
@@ -2127,7 +2155,7 @@ struct MMRazorWind : public MM
                 b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                    tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
@@ -2272,7 +2300,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == 0) {
+        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             turn(b,s)["Failed"] = true;
         }
     }

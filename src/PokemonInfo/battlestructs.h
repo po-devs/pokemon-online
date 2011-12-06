@@ -41,10 +41,6 @@ class ShallowBattlePoke
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
     PROPERTY(quint8, level)
-    //In-Battle
-    PROPERTY(bool, substitute)
-    PROPERTY(Pokemon::uniqueId, alternateSprite)
-    PROPERTY(bool, showing)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
@@ -57,10 +53,23 @@ public:
     bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
 
     void init(const PokeBattle &poke);
-    virtual quint8 lifePercent() const { return m_prop_lifePercent; }
-    quint8 &lifePercent() { return m_prop_lifePercent; }
+    virtual quint8 lifePercent() const { return mLifePercent; }
+    quint8 &lifePercent() { return mLifePercent; }
+    virtual int life() const { return mLifePercent; }
+    virtual int totalLife() const { return 100; }
+    virtual void setLife(int newLife) { mLifePercent = newLife;}
+    void setLifePercent(quint8 percent) {mLifePercent = percent;}
+    void setNum(Pokemon::uniqueId num) {this->num() = num;}
+
+    bool operator == (const ShallowBattlePoke &other) {
+        return gender() == other.gender() && level() == other.level()
+                && shiny() == other.shiny() && num() == other.num()
+                && nick() == other.nick() && status() == other.status()
+                && mLifePercent == other.mLifePercent;
+    }
+
 private:
-    quint8 m_prop_lifePercent;
+    quint8 mLifePercent;
 };
 
 QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
@@ -73,7 +82,6 @@ class PokeBattle : public ShallowBattlePoke
 {
     PROPERTY(QList<int>, dvs)
     PROPERTY(QList<int>, evs)
-    PROPERTY(quint16, lifePoints)
     PROPERTY(quint16, totalLifePoints)
     PROPERTY(quint16, item)
     PROPERTY(quint16, ability)
@@ -97,12 +105,18 @@ public:
 
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
+    virtual void setLife(int newLife) {mLifePoints = newLife;}
+    virtual int life() const { return mLifePoints; }
+    virtual int totalLife() const { return m_prop_totalLifePoints;}
+    quint16 lifePoints() const { return mLifePoints;}
+    quint16 &lifePoints() { return mLifePoints;}
 
     void setNormalStat(int, quint16);
 private:
     BattleMove m_moves[4];
 
     quint16 normal_stats[5];
+    quint16 mLifePoints;
 };
 
 QDataStream & operator >> (QDataStream &in, PokeBattle &po);
@@ -442,10 +456,18 @@ QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
+    enum ReceivingMode {
+        Spectator = 0,
+        Player = 1
+    };
+
     quint8 gen;
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;
+    ReceivingMode receivingMode[2];
+
+    TeamBattle *teams[2];
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;

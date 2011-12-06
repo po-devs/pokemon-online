@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <QFontDatabase>
 #include <QPixmapCache>
+#include "../BattleManager/defaulttheme.h"
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
@@ -40,6 +41,12 @@ static void fill_container_with_file(T &container, const QString & filename)
     }
 }
 
+class BattleTheme : public BattleDefaultTheme {
+    QColor TypeColor(int t){return Theme::TypeColor(t);}
+    QColor CategoryColor(int c){return Theme::CategoryColor(c);}
+    QColor StatusColor(int s){return Theme::StatusColor(s);}
+};
+
 QString Theme::m_Directory;
 QList<QColor> Theme::m_TColors;
 QList<QColor> Theme::m_CColors;
@@ -48,6 +55,7 @@ QList<QPixmap> Theme::m_TPics;
 QHash<int, QPixmap> Theme::m_statusIcons;
 QHash<int, QPixmap> Theme::m_battleIcons;
 QHash<QString, QColor> Theme::m_Colors;
+BattleDefaultTheme *Theme::m_battleTheme = new BattleTheme();
 
 QString Theme::path(const QString& file, bool def)
 {
@@ -188,7 +196,7 @@ QPixmap Theme::FrameBall()
 QColor Theme::StatusColor(int status)
 {
     switch (status) {
-    case Pokemon::Koed: return "#171b1a";
+    case Pokemon::Koed: return "#000000";
     case Pokemon::Fine: return TypeColor(Pokemon::Normal);
     case Pokemon::Paralysed: return TypeColor(Pokemon::Electric);
     case Pokemon::Burnt: return TypeColor(Pokemon::Fire);
@@ -298,4 +306,9 @@ QIcon Theme::Icon(const QString &code)
     QPixmap pm = Sprite(code);
 
     return QIcon(pm);
+}
+
+BattleDefaultTheme *Theme::getBattleTheme()
+{
+    return m_battleTheme;
 }

@@ -234,6 +234,12 @@ struct AMCuteCharm : public AM {
             } else {
                 b.link(s, t, "Attract");
                 addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+                if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                    b.link(t, s, "Attract");
+                    addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                    b.sendItemMessage(7,t,0,s);
+                }
             }
         }
     }
@@ -869,7 +875,7 @@ struct AMSlowStart : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        poke(b,s)["SlowStartTurns"] = b.turn() + 4;
+        poke(b,s)["SlowStartTurns"] = b.turn() + 5;
         b.sendAbMessage(55,0,s);
     }
 
@@ -1535,18 +1541,22 @@ struct AMMagicMirror : public AM
         if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
+
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if (b.koed(t)) {
-                    continue;
-                }
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
-                    target = t;
-                    break;
+            if (tmove(b,s).targets == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if (b.koed(t)) {
+                        continue;
+                    }
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
