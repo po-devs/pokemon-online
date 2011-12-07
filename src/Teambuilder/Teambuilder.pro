@@ -106,7 +106,7 @@ LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
     -lbattlelib
-QMAKE_CXXFLAGS += "-std=c++0x"
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
