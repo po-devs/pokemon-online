@@ -225,10 +225,10 @@
 31#Space Mail
 31#Steel Mail
 31#Tunnel Mail
-32-10#Aqua Cassette
-32-12#Lightning Cassette
-32-8#Blaze Cassette
-32-14#Freeze Cassette
+32-10#Douse Drive
+32-12#Shock Drive
+32-9#Burn Drive
+32-14#Chill Drive
 
 
 33#Evolution Stone

@@ -16,6 +16,8 @@
 
 typedef BattlePStorage BP;
 
+Q_DECLARE_METATYPE(QList<int>)
+
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
@@ -1898,6 +1900,13 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
+       int forme = ItemInfo::DriveForme(p.item());
+
+       if (forme != 0) {
+           changeAForme(slot, forme);
+       }
+    }
 
     turnMemory(slot)["CantGetToMove"] = true;
 
@@ -2067,8 +2076,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
     turnMemory(target).remove("EvadeAttack");
-    callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
-            like EQ on dig need their boost even if lock on */
+    callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
     if (pokeMemory(player).contains("LockedOn") && pokeMemory(player).value("LockedOnEnd").toInt() >= turn()
             && pokeMemory(player).value("LockedOn") == target &&
@@ -2299,7 +2307,7 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = tmove(player).flinchRate;
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
-        if (rate == 100) {
+        if (rate == 100 && gen() <= 4) {
             sendAbMessage(12,0,target);
         }
         return;
@@ -2315,7 +2323,9 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))) {
+                                   || hasWorkingItem(player, Item::RazorFang))
+        /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
+        && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
         /* King's rock */
         if (coinflip(10, 100)) {
             turnMemory(target)["Flinched"] = true;
@@ -3721,6 +3731,7 @@ int BattleSituation::calculateDamage(int p, int t)
         }
     }
 
+
     /* Used by Oaths to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
@@ -3745,10 +3756,22 @@ int BattleSituation::calculateDamage(int p, int t)
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
     int type = tmove(p).type;
 
-    /*** WARNING ***/
-    /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
-      but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
-      move power (not just power variable) because of technician which relies on it */
+    /* Calculate the multiplier for two turn attacks */ 
+    if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
+        QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
+        QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
+    
+        for (int i = 0; i < vuln_moves.size(); i++) {
+            if (vuln_moves[i] == attackused) {
+                power = power * vuln_mults[i];
+            }
+        }
+    }
+
+    if (move.contains("HelpingHanded")) {
+        power = power * 3 / 2;
+    }
+
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
     if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
