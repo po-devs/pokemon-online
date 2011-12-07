@@ -11,6 +11,7 @@
 #include "battle.h"
 #include <QRegExp>
 #include "analyze.h"
+#include "../Shared/config.h"
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -2193,4 +2194,14 @@ QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
 int ScriptEngine::moveType(int moveNum, int gen)
 {
     return MoveInfo::Type(moveNum, gen);
+}
+
+QString ScriptEngine::serverVersion()
+{
+    return VERSION;
+}
+
+bool ScriptEngine::isServerPrivate()
+{
+    return myserver->isPrivate();
 }
