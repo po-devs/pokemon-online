@@ -98,3 +98,6 @@
 %s raised its Speed in fear!
 
 %s's Healing Heart cured %f's status!
+
+
+%s makes %tf's team too nervous to eat Berries!

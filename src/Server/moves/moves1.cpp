@@ -1216,11 +1216,9 @@ struct MMBounce : public MM
         int attack = move(b,t);
         /* Lets see if the poke is vulnerable to that one attack */
         QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
-        QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
 
         for (int i = 0; i < vuln_moves.size(); i++) {
             if (vuln_moves[i] == attack) {
-                tmove(b, s).power = tmove(b, s).power * vuln_mults[i];
                 return;
             }
         }
@@ -1397,7 +1395,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,s).contains("Embargoed")) {
+        else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
             turn(b,s)["Failed"] = true;
         }
     }
