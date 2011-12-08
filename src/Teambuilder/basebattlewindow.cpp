@@ -768,8 +768,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         QString mess = AbilityInfo::Message(ab,part);
         mess.replace("%st", StatInfo::Stat(other));
         mess.replace("%s", nick(spot));
-        //            mess.replace("%ts", name(spot));
-        //            mess.replace("%tf", name(!spot));
+        mess.replace("%ts", name(player(spot)));
+        mess.replace("%tf", name(opponent(player(spot))));
         mess.replace("%t", TypeInfo::Name(type));
         mess.replace("%f", nick(foe));
         mess.replace("%m", MoveInfo::Name(other));
