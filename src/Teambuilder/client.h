@@ -107,6 +107,7 @@ public:
     bool sortBT;
     bool sortBA;
     bool showTS;
+    bool pmFlashing;
     TierNode tierRoot;
     QStringList tierList;
 public slots:
@@ -220,6 +221,7 @@ public slots:
     void toggleAutoJoin(bool);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
+    void pmFlash(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
