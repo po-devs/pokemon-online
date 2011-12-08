@@ -1898,8 +1898,11 @@ void Client::removePlayer(int id)
     pmedPlayers.remove(id);
     fade.remove(id);
 
-    if (mypms.contains(id)) {
-        mypms[id]->disable();
+    QHash<int, PMWindow*>::iterator pm = mypms.find(id);
+    if (pm != mypms.end()) {
+        pm.value()->disable();
+        disabledpms[name] = pm.value();
+        mypms.erase(pm);
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
@@ -1980,21 +1983,13 @@ void Client::playerReceived(const PlayerInfo &p)
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
-    if (!mypms.contains(p.id)) {
-        // If the player who logged on is in our PMs, we can reuse that PM
-        QHashIterator<int, PMWindow*> pm(mypms);
-        const QString username = name(p.id);
-        while (pm.hasNext()) {
-            pm.next();
-            if (pm.value()->name() == username) {
-                int old_id = pm.key();
-                PMWindow *window = pm.value();
-                mypms.remove(old_id);
-                mypms[p.id] = window;
-                window->reuse(p.id);
-                break;
-            }
-        }
+    
+    QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
+    if (pm != disabledpms.end()) {
+        PMWindow *window = pm.value();
+        disabledpms.erase(pm);
+        mypms[p.id] = window;
+        window->reuse(p.id);
     }
 }
 
