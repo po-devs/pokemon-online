@@ -1900,6 +1900,13 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
+       int forme = ItemInfo::DriveForme(p.item());
+
+       if (forme != 0) {
+           changeAForme(slot, forme);
+       }
+    }
 
     turnMemory(slot)["CantGetToMove"] = true;
 
@@ -2300,7 +2307,7 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = tmove(player).flinchRate;
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
-        if (rate == 100) {
+        if (rate == 100 && gen() <= 4) {
             sendAbMessage(12,0,target);
         }
         return;
@@ -2316,7 +2323,9 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))) {
+                                   || hasWorkingItem(player, Item::RazorFang))
+        /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
+        && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
         /* King's rock */
         if (coinflip(10, 100)) {
             turnMemory(target)["Flinched"] = true;

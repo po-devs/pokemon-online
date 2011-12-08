@@ -78,7 +78,7 @@
 
 %s stole %f's %i!
 
-%s's Defiant sharply raised its Attack!
+%s's Competitive Spirit sharply raised its Attack!
 %s transformed into %p!
 
 
@@ -98,3 +98,6 @@
 %s raised its Speed in fear!
 
 %s's Healing Heart cured %f's status!
+
+
+%s makes %tf's team too nervous to eat Berries!
