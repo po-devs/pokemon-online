@@ -18,6 +18,7 @@ signals:
     void maxChanged(int num);
     void logSavingChanged(bool logSaving);
     void useChannelFileLogChanged(bool useChannelFileLog);
+    void useBattleFileLogChanged(bool useBattleFileLog);
     void latencyChanged(bool lowDelay);
     void safeScriptsChanged(bool safeScripts);
     void proxyServersChanged(const QString &ips);

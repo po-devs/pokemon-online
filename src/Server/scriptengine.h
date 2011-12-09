@@ -245,6 +245,8 @@ public:
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
+    Q_INVOKABLE QString getBattleLogFileName(int battleid);
+
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeAbility(int id, int slot, int ability);
