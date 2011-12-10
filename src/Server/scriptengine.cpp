@@ -1609,9 +1609,9 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
 QString ScriptEngine::getBattleLogFileName(int battleId)
 {
     BattleSituation * battle = myserver->getBattle(battleId);
-    /*if (battle) {
+    if (battle) {
         return battle->getBattleLogFilename();
-    }else*/{
+    }else{
         warn("getBattleLogFileName", "can't find a battle with specified id.");
         return QString();
     }
