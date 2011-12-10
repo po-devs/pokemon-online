@@ -181,6 +181,12 @@ BattleSituation::~BattleSituation()
     qDebug() << "Deleted battle situation";
 }
 
+QString BattleSituation::getBattleLogFilename() const
+{
+    QFileInfo info(battleLog);
+    return info.absoluteFilePath();
+}
+
 void BattleSituation::start(ContextSwitcher &ctx)
 {
     QString date = QDate::currentDate().toString("yyyy-MM-dd");
