@@ -920,8 +920,8 @@ struct MMKnockOff : public MM
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
                                                                                                     (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isCassette(b.poke(t).item()) &&
-                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
+                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
+                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -943,7 +943,7 @@ struct MMSwitcheroo : public MM
                 || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
                 || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
                 || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
-                || ((ItemInfo::isCassette(b.poke(s).item()) || ItemInfo::isCassette(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Insekuta || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)))
+                || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
             /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
         {
             turn(b,s)["Failed"] = true;
