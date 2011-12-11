@@ -3750,7 +3750,12 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = randint(16) + 85;
+    int randnum;
+    if (gen() == 1) {
+      randnum = randint(38) + 217;
+    } else {
+      randnum = randint(16) + 85;
+    }
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
