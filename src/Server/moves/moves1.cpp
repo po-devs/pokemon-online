@@ -1395,7 +1395,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
+        else if (poke(b,s).contains("Embargoed")) {
             turn(b,s)["Failed"] = true;
         }
     }

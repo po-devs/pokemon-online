@@ -3754,6 +3754,18 @@ int BattleSituation::calculateDamage(int p, int t)
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
+
+    /*** WARNING ***/
+    /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
+      but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
+      move power (not just power variable) because of technician which relies on it */
+    callieffects(p,t,"BasePowerModifier");
+    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
+        tmove(p).power *= 2;
+    }
+
+    int power = tmove(p).power;
     int type = tmove(p).type;
 
     /* Calculate the multiplier for two turn attacks */ 
@@ -3768,17 +3780,6 @@ int BattleSituation::calculateDamage(int p, int t)
         }
     }
 
-    if (move.contains("HelpingHanded")) {
-        power = power * 3 / 2;
-    }
-
-    callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
-        tmove(p).power *= 2;
-    }
-
-    int power = tmove(p).power;
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }

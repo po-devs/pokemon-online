@@ -1282,8 +1282,10 @@ struct MMHealingWish : public MM
             b.sendMoveMessage(61,0,s,t);
             b.healLife(s,b.poke(s).totalLifePoints());
             b.changeStatus(s, Pokemon::Fine);
-            for(int i = 0; i < 4; i++) {
-                b.gainPP(s, i, 100);
+            if (move(b,s) == LunarDance) {
+                for(int i = 0; i < 4; i++) {
+                    b.gainPP(s, i, 100);
+                }
             }
             removeFunction(turn(b,s), "AfterSwitchIn", "HealingWish");
         }
