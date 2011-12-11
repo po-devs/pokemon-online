@@ -2203,7 +2203,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return false;
     }
 
-    if (acc == 0 || acc == 101 || pokeMemory(target).value("LevitatedCount").toInt() > 0) {
+    if (acc == 0 || acc == 101 ||
+        (pokeMemory(target).value("LevitatedCount").toInt() > 0 &&
+         !MoveInfo::isOHKO(move, gen()))) {
         return true;
     }
 
