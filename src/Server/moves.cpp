@@ -1282,8 +1282,10 @@ struct MMHealingWish : public MM
             b.sendMoveMessage(61,0,s,t);
             b.healLife(s,b.poke(s).totalLifePoints());
             b.changeStatus(s, Pokemon::Fine);
-            for(int i = 0; i < 4; i++) {
-                b.gainPP(s, i, 100);
+            if (move(b,s) == LunarDance) {
+                for(int i = 0; i < 4; i++) {
+                    b.gainPP(s, i, 100);
+                }
             }
             removeFunction(turn(b,s), "AfterSwitchIn", "HealingWish");
         }
@@ -2434,9 +2436,6 @@ struct MMSnatch : public MM
     static void dgaf(int s, int , BS &b) {
         if (b.battleMemory().contains("Snatcher")) {
             int snatcher = b.battleMemory()["Snatcher"].toInt();
-            if (b.player(s) == b.player(snatcher)) {
-                return;
-            }
             if (!turn(b,snatcher).value("Snatcher").toBool()) {
                 return;
             }
@@ -3128,6 +3127,8 @@ struct MMTransform : public MM {
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
             }
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+                num.subnum = ItemInfo::DriveForme(b.poke(s).item());
         }
 
         b.sendMoveMessage(137,0,s,0,s,num.pokenum);
@@ -3907,7 +3908,7 @@ struct MMTechnoBuster : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isCassette(item))
+        if (!ItemInfo::isDrive(item))
             return;
         if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
