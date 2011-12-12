@@ -623,7 +623,10 @@ void Player::findBattle(const FindBattleData& f)
 
     cancelBattleSearch();
 
-    emit findBattle(id(),f);
+    if (Server::serverIns->beforeFindBattle(id())) {
+        emit findBattle(id(),f);
+        Server::serverIns->afterFindBattle(id());
+    }
 }
 
 void Player::sendChallengeStuff(const ChallengeInfo &c)
