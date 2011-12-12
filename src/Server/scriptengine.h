@@ -69,6 +69,8 @@ public:
     bool beforePlayerBan(int src, int dest);
     void afterPlayerBan(int src, int dest);
     void battleSetup(int src, int dest, int battleId);
+    bool beforeFindBattle(int src);
+    void afterFindBattle(int src);
 
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
@@ -213,6 +215,8 @@ public:
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int slot, int stat);
     Q_INVOKABLE void setTeamPokeDV(int id, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeIV(int id, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeEV(int id, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
@@ -244,6 +248,8 @@ public:
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
+
+    Q_INVOKABLE QString getBattleLogFileName(int battleid);
 
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
