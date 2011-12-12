@@ -377,6 +377,14 @@ void ScriptEngine::afterBattleEnded(int src, int dest, int desc, int battleid)
     evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
 }
 
+bool ScriptEngine::beforeFindBattle(int src) {
+    return makeSEvent("beforeFindBattle", src);
+}
+
+void ScriptEngine::afterFindBattle(int src) {
+    makeEvent("afterFindBattle", src);
+}
+
 void ScriptEngine::beforeLogOut(int src)
 {
     makeEvent("beforeLogOut", src);
@@ -1419,6 +1427,26 @@ void ScriptEngine::setTeamPokeDV(int id, int slot, int stat, int newValue)
     }
 }
 
+void ScriptEngine::changeTeamPokeIV(int id, int slot, int stat, int newValue)
+{
+    return this->setTeamPokeDV(id, slot, stat, newValue);
+}
+
+void ScriptEngine::changeTeamPokeEV(int id, int slot, int stat, int newValue)
+{
+    if(loggedIn(id) && slot >=0 && slot <6 && stat >=0 && stat <6 && newValue >= 0 && newValue <= 255) {
+        int total = 0;
+        for (int i=0; i<6; i++) {
+            if (i == stat)
+                total += newValue;
+            else
+                total += myserver->player(id)->team().poke(slot).evs()[i];
+        }
+        if (total <= 510)
+            myserver->player(id)->team().poke(slot).evs()[stat] = newValue;
+    }
+}
+
 int ScriptEngine::rand(int min, int max)
 {
     if (min == max)
@@ -1605,6 +1633,18 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
 {
     makeEvent("battleSetup", src, dest, battleId);
 }
+
+QString ScriptEngine::getBattleLogFileName(int battleId)
+{
+    BattleSituation * battle = myserver->getBattle(battleId);
+    if (battle) {
+        return battle->getBattleLogFilename();
+    }else{
+        warn("getBattleLogFileName", "can't find a battle with specified id.");
+        return QString();
+    }
+}
+
 
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
