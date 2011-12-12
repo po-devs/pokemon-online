@@ -76,7 +76,7 @@
         <translation>Palvelin käyttää epäluotettavaa varmennusta.</translation>
     </message>
     <message>
-        <location filename="analyze.cpp" line="426"/>
+        <location filename="analyze.cpp" line="432"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
         <translation>Protokollavirhe: vastaanotettiin tuntematon käsky -- ohjelmaan on ehkä saatavilla päivitys</translation>
     </message>
@@ -109,32 +109,37 @@ Vaikutus: %5</translation>
 <context>
     <name>BaseBattleDisplay</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="1187"/>
+        <location filename="basebattlewindow.cpp" line="1213"/>
         <source>Lv. %1</source>
         <translation>Taso. %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1195"/>
-        <location filename="basebattlewindow.cpp" line="1197"/>
-        <location filename="basebattlewindow.cpp" line="1213"/>
-        <location filename="basebattlewindow.cpp" line="1215"/>
+        <location filename="basebattlewindow.cpp" line="1221"/>
+        <location filename="basebattlewindow.cpp" line="1223"/>
+        <location filename="basebattlewindow.cpp" line="1239"/>
+        <location filename="basebattlewindow.cpp" line="1241"/>
         <source>%1 lv %2 -- %3%</source>
         <translation>%1 taso %2 -- %3%</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1292"/>
+        <location filename="basebattlewindow.cpp" line="1293"/>
+        <source>Special</source>
+        <translation>Erikois</translation>
+    </message>
+    <message>
+        <location filename="basebattlewindow.cpp" line="1327"/>
         <source>Spikes level %1</source>
         <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
         <translation>Spikes taso %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1300"/>
+        <location filename="basebattlewindow.cpp" line="1335"/>
         <source>Toxic Spikes level %1</source>
         <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
         <translation>Toxic Spikes taso %1</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="1306"/>
+        <location filename="basebattlewindow.cpp" line="1341"/>
         <source>Stealth Rock</source>
         <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
         <translation>Stealth Rock</translation>
@@ -143,37 +148,37 @@ Vaikutus: %5</translation>
 <context>
     <name>BaseBattleWindow</name>
     <message>
-        <location filename="basebattlewindow.cpp" line="57"/>
+        <location filename="basebattlewindow.cpp" line="61"/>
         <source>Battle between %1 and %2 is underway!</source>
         <translation>Ottelu pelaajien %1 ja %2 välillä on käynnissä!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="100"/>
+        <location filename="basebattlewindow.cpp" line="104"/>
         <source>%1 vs %2</source>
         <translation>%1 vs %2</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="103"/>
+        <location filename="basebattlewindow.cpp" line="107"/>
         <source>Battle between %1 and %2</source>
         <translation>Ottelu: %1 vs %2</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="109"/>
+        <location filename="basebattlewindow.cpp" line="113"/>
         <source>Save log</source>
         <translation>Tallenna loki</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="110"/>
+        <location filename="basebattlewindow.cpp" line="114"/>
         <source>Music</source>
         <translation>Musiikki</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="111"/>
+        <location filename="basebattlewindow.cpp" line="115"/>
         <source>&amp;Close</source>
         <translation>&amp;Sulje</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="124"/>
+        <location filename="basebattlewindow.cpp" line="128"/>
         <source>C&amp;hat</source>
         <translation>L&amp;ähetä</translation>
     </message>
@@ -182,198 +187,198 @@ Vaikutus: %5</translation>
         <translation type="obsolete">Älä &amp;huomioi katsojia</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="255"/>
+        <location filename="basebattlewindow.cpp" line="272"/>
         <source>%1&apos;s %2</source>
         <translation>%1:n %2</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="379"/>
+        <location filename="basebattlewindow.cpp" line="399"/>
         <source>&amp;Ignore everybody</source>
         <translation>&amp;Estä kaikki</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="381"/>
+        <location filename="basebattlewindow.cpp" line="401"/>
         <source>Stop &amp;ignoring</source>
         <translation>Lopeta &amp;estäminen</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="416"/>
+        <location filename="basebattlewindow.cpp" line="436"/>
         <source>%1 sent out %2! (%3)</source>
         <translation>%1 valitsi pokemonin %2 (%3)</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="418"/>
+        <location filename="basebattlewindow.cpp" line="438"/>
         <source>%1 sent out %2!</source>
         <translation>%1 valitsi pokemonin %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="420"/>
+        <location filename="basebattlewindow.cpp" line="440"/>
         <source>%1&apos;s previous position in the team: %2.</source>
         <translation>Pokémonin %1 edellinen paikka tiimissä: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="421"/>
+        <location filename="basebattlewindow.cpp" line="441"/>
         <source>%1&apos;s new place on the field: %2.</source>
         <translation>Pokémonin %1 uusi paikka kentällä: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="422"/>
+        <location filename="basebattlewindow.cpp" line="442"/>
         <source>%1&apos;s life: %2%.</source>
         <translation>Pokémonin %1 elämä: %2%.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="423"/>
+        <location filename="basebattlewindow.cpp" line="443"/>
         <source>%1&apos;s status: %2.</source>
         <translation>Pokémonin %1 status: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="424"/>
+        <location filename="basebattlewindow.cpp" line="444"/>
         <source>%1&apos;s level: %2.</source>
         <translation>Pokémonin %1 taso: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="425"/>
+        <location filename="basebattlewindow.cpp" line="445"/>
         <source>%1&apos;s shininess: %2.</source>
         <translation>Pokémonin %1 kiiltävyys: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="426"/>
+        <location filename="basebattlewindow.cpp" line="446"/>
         <source>%1&apos;s gender: %2.</source>
         <translation>Pokémonin %1 sukupuoli: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="431"/>
+        <location filename="basebattlewindow.cpp" line="457"/>
         <source>%1 called %2 back!</source>
         <translation>%1 kutsui pokemonin %2 takaisin!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="439"/>
+        <location filename="basebattlewindow.cpp" line="465"/>
         <source>%1 used %2!</source>
         <translation>%1 käytti iskua %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="447"/>
+        <location filename="basebattlewindow.cpp" line="473"/>
         <source>Start of turn %1</source>
         <translation>Vuoron %1 alku</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="455"/>
+        <location filename="basebattlewindow.cpp" line="481"/>
         <source>%1&apos;s new HP is %2%.</source>
         <translation>Pokémonin %1 uusi HP on %2%.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="469"/>
+        <location filename="basebattlewindow.cpp" line="495"/>
         <source>%1 fainted!</source>
         <translation>%1 pyörtyi!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="476"/>
+        <location filename="basebattlewindow.cpp" line="502"/>
         <source>Hit %1 times!</source>
         <translation>Osui %1 kertaa!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="485"/>
+        <location filename="basebattlewindow.cpp" line="511"/>
         <source>It had no effect!</source>
         <translation>Sillä ei ollut vaikutusta!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="489"/>
+        <location filename="basebattlewindow.cpp" line="515"/>
         <source>It&apos;s not very effective...</source>
         <translation>Se ei ollut kovin tehokas...</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="493"/>
+        <location filename="basebattlewindow.cpp" line="519"/>
         <source>It&apos;s super effective!</source>
         <translation>Se oli supertehokas!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="500"/>
+        <location filename="basebattlewindow.cpp" line="526"/>
         <source>A critical hit!</source>
         <translation>Kriittinen osuma!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="503"/>
+        <location filename="basebattlewindow.cpp" line="529"/>
         <source>The attack of %1 missed!</source>
         <translation>%1:n isku ei osunut!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="506"/>
+        <location filename="basebattlewindow.cpp" line="532"/>
         <source>%1 avoided the attack!</source>
         <translation>%1 väisti hyökkäyksen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="512"/>
+        <location filename="basebattlewindow.cpp" line="538"/>
         <source>%1&apos;s %2 %3%4!</source>
         <translation>Pelaajan %1 pokémonin %2 %4%3!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="512"/>
+        <location filename="basebattlewindow.cpp" line="538"/>
         <source>sharply </source>
         <translation>voimakkaasti</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="512"/>
+        <location filename="basebattlewindow.cpp" line="538"/>
         <source>rose</source>
         <translation>nousi </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="512"/>
+        <location filename="basebattlewindow.cpp" line="538"/>
         <source>fell</source>
         <translation>tippui </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="517"/>
+        <location filename="basebattlewindow.cpp" line="543"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
         <translation>%1 halvaantui! Se ei saata pystyä iskemään!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="520"/>
+        <location filename="basebattlewindow.cpp" line="546"/>
         <source>%1 was burned!</source>
         <translation>%1 paloi!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="519"/>
+        <location filename="basebattlewindow.cpp" line="545"/>
         <source>%1 was frozen solid!</source>
         <translation>%1 jäätyi täysin!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="125"/>
-        <location filename="basebattlewindow.cpp" line="377"/>
+        <location filename="basebattlewindow.cpp" line="129"/>
+        <location filename="basebattlewindow.cpp" line="397"/>
         <source>&amp;Ignore spectators</source>
         <translation>&amp;Estä katsojat</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="518"/>
+        <location filename="basebattlewindow.cpp" line="544"/>
         <source>%1 fell asleep!</source>
         <translation>%1 nukahti!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="521"/>
+        <location filename="basebattlewindow.cpp" line="547"/>
         <source>%1 was poisoned!</source>
         <translation>%1 sai myrkytyksen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="522"/>
+        <location filename="basebattlewindow.cpp" line="548"/>
         <source>%1 was badly poisoned!</source>
         <translation>%1 sai pahan myrkytyksen!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="532"/>
+        <location filename="basebattlewindow.cpp" line="558"/>
         <source>%1 became confused!</source>
         <translation>%1 meni sekaisin!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="534"/>
+        <location filename="basebattlewindow.cpp" line="560"/>
         <source>%1 had its status changed to: %2.</source>
         <translation>Pokémonin %1 status muutui: %2.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="546"/>
+        <location filename="basebattlewindow.cpp" line="572"/>
         <source>Pokemon number %1 of %2 had its status changed to: %3.</source>
         <translation>Pokémon numero %1 %2:sta status muuttui: &amp;3.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="560"/>
+        <location filename="basebattlewindow.cpp" line="586"/>
         <source>%1 is already %2.</source>
         <translation>%1 on jo %2!.</translation>
     </message>
@@ -382,62 +387,62 @@ Vaikutus: %5</translation>
         <translation type="obsolete">%1 on jo %2!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="571"/>
+        <location filename="basebattlewindow.cpp" line="597"/>
         <source>%1 is confused!</source>
         <translation>%1 on sekaisin!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="574"/>
+        <location filename="basebattlewindow.cpp" line="600"/>
         <source>It hurt itself in its confusion!</source>
         <translation>Se vahingoitti itseään sekaantuneena!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="577"/>
+        <location filename="basebattlewindow.cpp" line="603"/>
         <source>%1 snapped out its confusion!</source>
         <translation>%1 ei ole enää sekaisin!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="580"/>
+        <location filename="basebattlewindow.cpp" line="606"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
         <translation>%1 on halvaantunut! Se ei voi liikkua!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="583"/>
+        <location filename="basebattlewindow.cpp" line="609"/>
         <source>%1 is fast asleep!</source>
         <translation>%1 nukkuu sikeästi!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="586"/>
+        <location filename="basebattlewindow.cpp" line="612"/>
         <source>%1 woke up!</source>
         <translation>%1 heräsi!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="589"/>
+        <location filename="basebattlewindow.cpp" line="615"/>
         <source>%1 is hurt by its burn!</source>
         <translation>Palovamma vahingoitti vastustajan %1 pokémonia!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="592"/>
+        <location filename="basebattlewindow.cpp" line="618"/>
         <source>%1 is hurt by poison!</source>
         <translation>Myrkytys vahingoitti %1 pokémonia!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="595"/>
+        <location filename="basebattlewindow.cpp" line="621"/>
         <source>%1 is frozen solid!</source>
         <translation>%1 on umpijäässä!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="598"/>
+        <location filename="basebattlewindow.cpp" line="624"/>
         <source>%1 thawed out!</source>
         <translation>%1 suli kokonaan!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="604"/>
+        <location filename="basebattlewindow.cpp" line="630"/>
         <source>But it failed!</source>
         <translation>Mutta se epäonnistui!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="660"/>
+        <location filename="basebattlewindow.cpp" line="686"/>
         <source>But there was no target...</source>
         <translation>Mutta kohdetta ei ole...</translation>
     </message>
@@ -446,133 +451,133 @@ Vaikutus: %5</translation>
         <translation type="obsolete">Mutta ei ole kohdepokémonia!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="684"/>
+        <location filename="basebattlewindow.cpp" line="710"/>
         <source>%1 flinched!</source>
         <translation>%1 säpsähti!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="692"/>
+        <location filename="basebattlewindow.cpp" line="718"/>
         <source>%1 is hit with recoil!</source>
         <translation>Rekyyli vahingoitti %1!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="694"/>
+        <location filename="basebattlewindow.cpp" line="720"/>
         <source>%1 had its energy drained!</source>
         <translation>Pokémonilta %1 imettiin energiat!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="707"/>
+        <location filename="basebattlewindow.cpp" line="733"/>
         <source>The hail subsided!</source>
         <translation>Lumimyrsky taantui!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="708"/>
+        <location filename="basebattlewindow.cpp" line="734"/>
         <source>The sandstorm subsided!</source>
         <translation>Hiekkamyrsky taantui!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="709"/>
+        <location filename="basebattlewindow.cpp" line="735"/>
         <source>The sunlight faded!</source>
         <translation>Auringonpaiste hiipui!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="710"/>
+        <location filename="basebattlewindow.cpp" line="736"/>
         <source>The rain stopped!</source>
         <translation>Sade loppui!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="714"/>
+        <location filename="basebattlewindow.cpp" line="740"/>
         <source>%1 is buffeted by the hail!</source>
         <translation>Lumimyrsky vahingoitti pokémonia %1!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="715"/>
+        <location filename="basebattlewindow.cpp" line="741"/>
         <source>%1 is buffeted by the sandstorm!</source>
         <translation>Hiekkamyrsky vahingoitti pokémonia %1!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="719"/>
+        <location filename="basebattlewindow.cpp" line="745"/>
         <source>Hail continues to fall!</source>
         <translation>Lumimyrsky jatkuu!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="720"/>
+        <location filename="basebattlewindow.cpp" line="746"/>
         <source>The sandstorm rages!</source>
         <translation>Hiekkamyrsky raivoaa!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="721"/>
+        <location filename="basebattlewindow.cpp" line="747"/>
         <source>The sunlight is strong!</source>
         <translation>Aurinko paistaa kirkkaana!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="722"/>
+        <location filename="basebattlewindow.cpp" line="748"/>
         <source>Rain continues to fall!</source>
         <translation>Sade jatkuu!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="731"/>
+        <location filename="basebattlewindow.cpp" line="757"/>
         <source>%1 lost %2% of its health!</source>
         <translation>%1 menetti %2% terveydestään!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="773"/>
+        <location filename="basebattlewindow.cpp" line="799"/>
         <source>Tie between %1 and %2!</source>
         <translation>Tasapeli pelaajien %1 ja %2 välillä!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="775"/>
+        <location filename="basebattlewindow.cpp" line="801"/>
         <source>%1 won the battle!</source>
         <translation>%1 voitti ottelun!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="791"/>
-        <location filename="basebattlewindow.cpp" line="795"/>
+        <location filename="basebattlewindow.cpp" line="817"/>
+        <location filename="basebattlewindow.cpp" line="821"/>
         <source>Rule: </source>
         <translation>Sääntö: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="791"/>
+        <location filename="basebattlewindow.cpp" line="817"/>
         <source>Rated</source>
         <translation>Vaikuttaa tasoon</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="791"/>
+        <location filename="basebattlewindow.cpp" line="817"/>
         <source>Unrated</source>
         <translation>Ei vaikuta tasoon</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="805"/>
+        <location filename="basebattlewindow.cpp" line="831"/>
         <source>Tier: </source>
         <translation>Sarja: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="806"/>
+        <location filename="basebattlewindow.cpp" line="832"/>
         <source>Mode: </source>
         <translation>Moodi: </translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="867"/>
+        <location filename="basebattlewindow.cpp" line="893"/>
         <source>%1 shifted spots to the middle!</source>
         <translation>%1 siirtyi keskelle!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="869"/>
+        <location filename="basebattlewindow.cpp" line="895"/>
         <source>%1 shifted spots with %2!</source>
         <translation>%1 vaihtoi paikkaa pokémonin %2 kanssa!</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="886"/>
+        <location filename="basebattlewindow.cpp" line="912"/>
         <source>Unknown command received, are you up to date?</source>
         <translation>Vastaanotettiin tuntematon käsky, onko ohjelma päivitetty?</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="905"/>
+        <location filename="basebattlewindow.cpp" line="931"/>
         <source>%1 is watching the battle.</source>
         <translation>%1 seuraa ottelua.</translation>
     </message>
     <message>
-        <location filename="basebattlewindow.cpp" line="905"/>
+        <location filename="basebattlewindow.cpp" line="931"/>
         <source>%1 stopped watching the battle.</source>
         <translation>%1 ei enää seuraa ottelua</translation>
     </message>
@@ -598,17 +603,22 @@ Vaikutus: %5</translation>
 <context>
     <name>BattleDisplay</name>
     <message>
-        <location filename="battlewindow.cpp" line="1283"/>
+        <location filename="battlewindow.cpp" line="1263"/>
+        <source>Special</source>
+        <translation>Erikois</translation>
+    </message>
+    <message>
+        <location filename="battlewindow.cpp" line="1304"/>
         <source>Spikes level %1</source>
         <translation>Spikes taso %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1291"/>
+        <location filename="battlewindow.cpp" line="1312"/>
         <source>Toxic Spikes level %1</source>
         <translation>Toxic Spikes taso %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1297"/>
+        <location filename="battlewindow.cpp" line="1318"/>
         <source>Stealth Rock</source>
         <translation>Stealth Rock</translation>
     </message>
@@ -616,42 +626,42 @@ Vaikutus: %5</translation>
 <context>
     <name>BattleFinder</name>
     <message>
-        <location filename="client.cpp" line="2057"/>
+        <location filename="client.cpp" line="2205"/>
         <source>Force rated battles</source>
         <translation>Vain tasoon vaikuttavia otteluita</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2058"/>
+        <location filename="client.cpp" line="2206"/>
         <source>Force same tier</source>
         <translation>Vain saman sarjan otteluita</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2061"/>
+        <location filename="client.cpp" line="2209"/>
         <source>Only battle players with a max rating difference of </source>
         <translation>Max. Tasoero</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2064"/>
+        <location filename="client.cpp" line="2212"/>
         <source>Singles</source>
         <translation>Yksi vs. yksi</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2064"/>
+        <location filename="client.cpp" line="2212"/>
         <source>Doubles</source>
         <translation>Kaksi vs. kaksi</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2064"/>
+        <location filename="client.cpp" line="2212"/>
         <source>Triples</source>
         <translation>Kolme vs. kolme</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2068"/>
+        <location filename="client.cpp" line="2216"/>
         <source>Find Battle</source>
         <translation>Otteluhaku</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2069"/>
+        <location filename="client.cpp" line="2217"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
@@ -659,171 +669,171 @@ Vaikutus: %5</translation>
 <context>
     <name>BattleWindow</name>
     <message>
-        <location filename="battlewindow.cpp" line="78"/>
+        <location filename="battlewindow.cpp" line="89"/>
         <source>Battling against %1</source>
         <translation>Otellaan pelaajaa %1 vastaan</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="80"/>
+        <location filename="battlewindow.cpp" line="91"/>
         <source>&amp;Forfeit</source>
         <translation>&amp;Luovuta</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="82"/>
+        <location filename="battlewindow.cpp" line="93"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Peruuta</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="83"/>
-        <location filename="battlewindow.cpp" line="143"/>
+        <location filename="battlewindow.cpp" line="94"/>
+        <location filename="battlewindow.cpp" line="154"/>
         <source>&amp;Attack</source>
         <translation>&amp;Hyökkää</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="84"/>
-        <location filename="battlewindow.cpp" line="343"/>
+        <location filename="battlewindow.cpp" line="95"/>
+        <location filename="battlewindow.cpp" line="354"/>
         <source>&amp;Switch Pokemon</source>
         <oldsource>&amp;Switch PokÃ©mon</oldsource>
         <translation>&amp;Vaihda Pokémonia</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="88"/>
+        <location filename="battlewindow.cpp" line="99"/>
         <source>&amp;Moves</source>
         <translation>&amp;Liikkeet</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="89"/>
+        <location filename="battlewindow.cpp" line="100"/>
         <source>&amp;Pokemon</source>
         <oldsource>&amp;PokÃ©mon</oldsource>
         <translation>&amp;Pokémon</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="90"/>
+        <location filename="battlewindow.cpp" line="101"/>
         <source>Spectators</source>
         <translation>Katsojat</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="121"/>
+        <location filename="battlewindow.cpp" line="132"/>
         <source>Suggest draw</source>
         <translation>Ehdota tasapeliä</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="135"/>
+        <location filename="battlewindow.cpp" line="146"/>
         <source>Battle between %1 and %2 started!</source>
         <translation>Ottelu pelaajien %1 ja %2 välillä alkoi!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="145"/>
+        <location filename="battlewindow.cpp" line="156"/>
         <source>&amp;Go Back</source>
         <translation>&amp;Mene takaisin</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="153"/>
+        <location filename="battlewindow.cpp" line="164"/>
         <source>the foe&apos;s %1</source>
         <translation>vihollisen %1</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="231"/>
+        <location filename="battlewindow.cpp" line="242"/>
         <source>Losing your battle</source>
         <translation>Olet häviämässä ottelun!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="231"/>
+        <location filename="battlewindow.cpp" line="242"/>
         <source>Do you mean to forfeit?</source>
         <translation>Haluatko todella luovuttaa?</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="349"/>
+        <location filename="battlewindow.cpp" line="360"/>
         <source>&amp;Shift to centre</source>
         <translation>&amp;Siirry keskelle</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="550"/>
+        <location filename="battlewindow.cpp" line="561"/>
         <source>%1 sent out %2! (%3)</source>
         <translation>%1 valitsi pokemonin %2! (%3)</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="552"/>
+        <location filename="battlewindow.cpp" line="563"/>
         <source>%1 sent out %2!</source>
         <translation>%1 valitsi pokemonin %2!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="554"/>
+        <location filename="battlewindow.cpp" line="565"/>
         <source>%1&apos;s previous position in the team: %2.</source>
         <translation>Pokémonin %1 edellinen paikka tiimissä: %2</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="555"/>
+        <location filename="battlewindow.cpp" line="566"/>
         <source>%1&apos;s life: %2/%3 HP.</source>
         <translation>Pokémonin %1 elämä: %2/%3 HP.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="556"/>
+        <location filename="battlewindow.cpp" line="567"/>
         <source>%1&apos;s status: %2.</source>
         <translation>Pokémonin %1 status: %2.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="557"/>
+        <location filename="battlewindow.cpp" line="568"/>
         <source>%1&apos;s level: %2.</source>
         <translation>Pokémonin %1 taso: %2.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="558"/>
+        <location filename="battlewindow.cpp" line="569"/>
         <source>%1&apos;s shininess: %2.</source>
         <translation>Pokémonin: %1 kiiltävyys: %2</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="559"/>
+        <location filename="battlewindow.cpp" line="570"/>
         <source>%1&apos;s gender: %2.</source>
         <translation>Pokémonin %1 sukupuoli: %2.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="572"/>
+        <location filename="battlewindow.cpp" line="583"/>
         <source>%1&apos;s new HP is %2/%3.</source>
         <translation>Pokémonin %1 uusi HP on %2/%3.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="637"/>
+        <location filename="battlewindow.cpp" line="648"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
         <translation>%1 menetti %2 HP! (%3% terveydestään)</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="639"/>
+        <location filename="battlewindow.cpp" line="650"/>
         <source>%1 lost %2% of its health!</source>
         <translation>%1 menetti %2% terveydestään!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="652"/>
+        <location filename="battlewindow.cpp" line="663"/>
         <source>Pokemon number %1 of %2 had its status changed to: %3.</source>
         <translation>Pokémon numero %1/%2:n status muuttui: %3.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="670"/>
+        <location filename="battlewindow.cpp" line="681"/>
         <source>&amp;Close</source>
         <translation>&amp;Sulje</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="744"/>
+        <location filename="battlewindow.cpp" line="755"/>
         <source>Variation: </source>
         <translation>Variaatio:</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="764"/>
+        <location filename="battlewindow.cpp" line="775"/>
         <source>%1 shifted spots to the middle!</source>
         <translation>%1 siirtyi keskelle!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="766"/>
+        <location filename="battlewindow.cpp" line="777"/>
         <source>%1 shifted spots with %2!</source>
         <translation>%1 vaihtoi paikkaa pokémonin %2 kanssa!</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="920"/>
+        <location filename="battlewindow.cpp" line="931"/>
         <source>Your team: </source>
         <translation>Sinun tiimisi: </translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="921"/>
+        <location filename="battlewindow.cpp" line="932"/>
         <source>Opponent&apos;s team: </source>
         <translation>Vastustajasi tiimi: </translation>
     </message>
@@ -874,7 +884,7 @@ Vaikutus: %5</translation>
 <context>
     <name>ChallengeWindow</name>
     <message>
-        <location filename="challenge.cpp" line="139"/>
+        <location filename="challenge.cpp" line="138"/>
         <source>%1&apos;s Info</source>
         <translation>Pelaajan %1 Tiedot</translation>
     </message>
@@ -882,7 +892,7 @@ Vaikutus: %5</translation>
 <context>
     <name>ChallengedWindow</name>
     <message>
-        <location filename="challenge.cpp" line="181"/>
+        <location filename="challenge.cpp" line="180"/>
         <source>%1 challenged you!</source>
         <translation>%1 haastoi sinut!</translation>
     </message>
@@ -900,108 +910,108 @@ Vaikutus: %5</translation>
         <translation>Pelaaja 2</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="69"/>
+        <location filename="channel.cpp" line="62"/>
         <source>&amp;Challenge</source>
         <translation>&amp;Haasta</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="71"/>
+        <location filename="channel.cpp" line="64"/>
         <source>&amp;View Ranking</source>
         <translation>&amp;Katso sijoitus</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="74"/>
+        <location filename="channel.cpp" line="67"/>
         <source>Go &amp;Back</source>
         <translation>&amp;Takaisin</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="76"/>
+        <location filename="channel.cpp" line="69"/>
         <source>Go &amp;Away</source>
         <translation>&amp;Poissa</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="79"/>
+        <location filename="channel.cpp" line="72"/>
         <source>&amp;Send Message</source>
         <translation>&amp;Lähetä viesti</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="81"/>
+        <location filename="channel.cpp" line="74"/>
         <source>&amp;Watch Battle</source>
         <translation>&amp;Katso Ottelua</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="83"/>
+        <location filename="channel.cpp" line="76"/>
         <source>&amp;Remove Ignore</source>
         <translation>&amp;Huomioi</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="85"/>
+        <location filename="channel.cpp" line="78"/>
         <source>&amp;Ignore</source>
         <translation>&amp;Estä</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="91"/>
+        <location filename="channel.cpp" line="84"/>
         <source>&amp;Control Panel</source>
         <translation>&amp;Ohjauspaneeli</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="97"/>
+        <location filename="channel.cpp" line="90"/>
         <source>&amp;Kick</source>
         <translation>&amp;Potkaise</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="102"/>
+        <location filename="channel.cpp" line="95"/>
         <source>&amp;Ban</source>
         <translation>&amp;Bannaa</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="221"/>
+        <location filename="channel.cpp" line="218"/>
         <source>Battle between %1 and %2 started.</source>
         <translation>Ottelu pelaajien %1 ja %2 kesken alkoi.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="226"/>
-        <location filename="channel.cpp" line="230"/>
+        <location filename="channel.cpp" line="223"/>
+        <location filename="channel.cpp" line="227"/>
         <source>Battling against %1</source>
         <translation>Otellaan pelaajaa %1 vastaan</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="268"/>
+        <location filename="channel.cpp" line="265"/>
         <source>%1 forfeited against %2.</source>
         <translation>%1 luovutti pelaajaa %2 vastaan.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="270"/>
+        <location filename="channel.cpp" line="267"/>
         <source>%1 and %2 tied.</source>
         <translation>%1 ja %2 ottelivat tasapelin.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="272"/>
+        <location filename="channel.cpp" line="269"/>
         <source>%1 won against %2.</source>
         <translation>%1 voitti pelaajan %2.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="379"/>
+        <location filename="channel.cpp" line="376"/>
         <source>%1 joined the channel.</source>
         <translation>%1 liittyi kanavalle.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="409"/>
+        <location filename="channel.cpp" line="414"/>
         <source>%1 left the channel.</source>
         <translation>%1 lähti kanavalta.</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="415"/>
+        <location filename="channel.cpp" line="420"/>
         <source>&lt;i&gt;You are not in the channel anymore&lt;/i&gt;</source>
         <translation>&lt;i&gt;Et ole enää kanavalla&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="424"/>
+        <location filename="channel.cpp" line="429"/>
         <source>&lt;i&gt;Unkown command received: %1. Maybe the client should be updated?&lt;/i&gt;</source>
         <translation>&lt;i&gt;Tuntematon komento: %1. Ehkö ohjelma täytyy päivittää?&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="channel.cpp" line="454"/>
+        <location filename="channel.cpp" line="459"/>
         <source>%1 logged out.</source>
         <translation>%1 kirjautui ulos.</translation>
     </message>
@@ -1009,22 +1019,22 @@ Vaikutus: %5</translation>
 <context>
     <name>Client</name>
     <message>
-        <location filename="client.cpp" line="84"/>
+        <location filename="client.cpp" line="88"/>
         <source>&amp;Find Battle</source>
         <translation>Ottelu&amp;haku</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="85"/>
+        <location filename="client.cpp" line="89"/>
         <source>&amp;Register</source>
         <translation>&amp;Rekisteröidy</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="86"/>
+        <location filename="client.cpp" line="90"/>
         <source>&amp;Exit</source>
         <translation>&amp;Poistu</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="87"/>
+        <location filename="client.cpp" line="91"/>
         <source>&amp;Send</source>
         <translation>&amp;Lähetä</translation>
     </message>
@@ -1073,7 +1083,7 @@ Vaikutus: %5</translation>
         <translation type="obsolete">&amp;Bannaa</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="994"/>
+        <location filename="client.cpp" line="1035"/>
         <source>&amp;File</source>
         <translation>&amp;Tiedosto</translation>
     </message>
@@ -1082,8 +1092,9 @@ Vaikutus: %5</translation>
         <translation type="obsolete">&amp;Lataa Tiimi</translation>
     </message>
     <message>
+        <location filename="client.cpp" line="1037"/>
         <source>Open &amp;TeamBuilder</source>
-        <translation type="obsolete">Avaa &amp;TeamBuilder</translation>
+        <translation>Avaa &amp;TeamBuilder</translation>
     </message>
     <message>
         <source>&amp;Style</source>
@@ -1094,7 +1105,7 @@ Vaikutus: %5</translation>
         <translation type="obsolete">Päivitä tyylilista</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1001"/>
+        <location filename="client.cpp" line="1042"/>
         <source>&amp;Options</source>
         <translation>&amp;Asetukset</translation>
     </message>
@@ -1124,7 +1135,7 @@ Vaikutus: %5</translation>
         <translation type="obsolete">&amp;Ottelut</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1106"/>
+        <location filename="client.cpp" line="1152"/>
         <source>Save &amp;Battle Logs</source>
         <translation>Tallenna &amp;Ottelulokit</translation>
     </message>
@@ -1133,7 +1144,7 @@ Vaikutus: %5</translation>
         <translation type="obsolete">Vaihda &amp;Lokikansiota</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1120"/>
+        <location filename="client.cpp" line="1166"/>
         <source>Animate HP Bar</source>
         <translation>Animoi HP-palkki</translation>
     </message>
@@ -1150,72 +1161,71 @@ Vaikutus: %5</translation>
         <translation type="obsolete">&amp;Haasta</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="39"/>
+        <location filename="client.cpp" line="42"/>
         <source>Players</source>
         <translation>Pelaajat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="40"/>
+        <location filename="client.cpp" line="43"/>
         <source>Battles</source>
         <translation>Taistelut</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="42"/>
+        <location filename="client.cpp" line="45"/>
         <source>Channels</source>
         <translation>Kanavat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="50"/>
+        <location filename="client.cpp" line="53"/>
         <source>Join: </source>
         <translation>Liity: </translation>
     </message>
     <message>
-        <location filename="client.cpp" line="362"/>
+        <location filename="client.cpp" line="369"/>
         <source>Custom settings</source>
         <translation>Omat asetukset</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="364"/>
+        <location filename="client.cpp" line="371"/>
         <source>Use global</source>
         <translation>Käytä globaalia</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="369"/>
+        <location filename="client.cpp" line="376"/>
         <source>Global settings</source>
         <translation>Globaalit asetukset</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="424"/>
+        <location filename="client.cpp" line="431"/>
         <source>Auto-join</source>
         <translation>Liity automaattisesti</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="908"/>
+        <location filename="client.cpp" line="934"/>
         <source>&amp;Cancel Find Battle</source>
         <translation>&amp;Peru taistelun etsintä</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="995"/>
+        <location filename="client.cpp" line="1036"/>
         <source>&amp;Load team</source>
         <translation>&amp;Lataa tiimi</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="996"/>
         <source>Open &amp;teamBuilder</source>
-        <translation>Avaa &amp;TeamBuilder</translation>
+        <translation type="obsolete">Avaa &amp;TeamBuilder</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1002"/>
+        <location filename="client.cpp" line="1043"/>
         <source>&amp;Idle</source>
         <translation>&amp;Jouten</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1009"/>
+        <location filename="client.cpp" line="1050"/>
         <source>&amp;Show team</source>
         <translation>&amp;Näytä tiimi</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1014"/>
+        <location filename="client.cpp" line="1055"/>
         <source>Enable &amp;ladder</source>
         <translation>Käytä &amp;tikapuita</translation>
     </message>
@@ -1224,95 +1234,99 @@ Vaikutus: %5</translation>
         <translation type="obsolete">Näytä &amp;pelaajien tapahtumat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1075"/>
+        <location filename="client.cpp" line="1116"/>
         <source>Enable &amp;timestamps</source>
         <translation>Käytä &amp;aikaleimoja</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1081"/>
+        <location filename="client.cpp" line="1122"/>
         <source>Enable timestamps in &amp;PMs</source>
         <translation>Käytä aikaleimoja &amp;yksityisviesteissä</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1086"/>
+        <location filename="client.cpp" line="1127"/>
+        <source>Make new PMs &amp;flash</source>
+        <translation>Tee uudet &amp;yksityisviestit huomauttamaan</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1132"/>
         <source>Sort players by &amp;tiers</source>
         <translation>&amp;Järjestä pelaajat sarjoittain</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1092"/>
+        <location filename="client.cpp" line="1138"/>
         <source>Sort players by auth &amp;level</source>
         <translation>Järjestä pelaajat vallan &amp;mukaan</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1098"/>
+        <location filename="client.cpp" line="1144"/>
         <source>Move player list to &amp;right</source>
         <translation>Siirrä pelaajalista &amp;oikealle</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1103"/>
+        <location filename="client.cpp" line="1149"/>
         <source>&amp;Tiers</source>
         <translation>&amp;Sarjat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1105"/>
+        <location filename="client.cpp" line="1151"/>
         <source>&amp;Battle options</source>
         <comment>Menu</comment>
         <translation>&amp;Taisteluvalinnat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1111"/>
+        <location filename="client.cpp" line="1157"/>
         <source>Change &amp;log folder ...</source>
         <translation>Vaihda &amp;lokituskansio ...</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1113"/>
+        <location filename="client.cpp" line="1159"/>
         <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
         <translation>Käytä &amp;musiikkia (Testausvaiheessa! Älä käytä jos tuottaa ongelmia)</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1118"/>
+        <location filename="client.cpp" line="1164"/>
         <source>Change &amp;music folder ...</source>
         <translation>Vaihda &amp;musiikkikansio ...</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1125"/>
+        <location filename="client.cpp" line="1171"/>
         <source>Old school buttons</source>
         <translation>Old school -napit</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1130"/>
+        <location filename="client.cpp" line="1176"/>
         <source>Don&apos;t show Pokemon Nicknames</source>
         <translation>Älä näytä Pokemonien lempinimiä</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1144"/>
+        <location filename="client.cpp" line="1190"/>
         <source>%1 was kicked by the server!</source>
         <translation>%1 potkaistiin palvelimen toimesta!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1146"/>
+        <location filename="client.cpp" line="1192"/>
         <source>%1 kicked %2!</source>
         <translation>%1 potkaisi pelaajan %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1155"/>
+        <location filename="client.cpp" line="1201"/>
         <source>%1 was banned by the server!</source>
         <translation>%1 bannattiin palvelimen toimesta!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1157"/>
+        <location filename="client.cpp" line="1203"/>
         <source>%1 banned %2!</source>
         <translation>%1 bannasi käyttäjän %2!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1166"/>
+        <location filename="client.cpp" line="1218"/>
         <source>Enter your password</source>
         <translation>Syötä salasanasi</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1694"/>
         <source>Error while connected to server -- Received error n°%1: %2</source>
-        <translation>Virhe yhdistettäessä palvelimelle -- Vastaanotettiin virhe n°%1: %2</translation>
+        <translation type="obsolete">Virhe yhdistettäessä palvelimelle -- Vastaanotettiin virhe n°%1: %2</translation>
     </message>
     <message>
         <source>Enter the password for your current name.
@@ -1323,7 +1337,7 @@ It is advised to use a slightly different password for each server. (The server 
 On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. (Palvelin näkee vain salatun muodon salasanasta, mutta silti...)</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1262"/>
+        <location filename="client.cpp" line="1397"/>
         <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
 
 http://www.pokemon-online.eu/downloads.php for updates.</source>
@@ -1332,53 +1346,53 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
 Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1188"/>
+        <location filename="client.cpp" line="1323"/>
         <source>Battle Music Directory</source>
         <translation>Ottelumusiikin Kansio</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1019"/>
+        <location filename="client.cpp" line="1060"/>
         <source>Player events</source>
         <translation>Pelaajatapahtumat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="374"/>
-        <location filename="client.cpp" line="1023"/>
+        <location filename="client.cpp" line="381"/>
+        <location filename="client.cpp" line="1064"/>
         <source>Enable all events</source>
         <translation>Näytä tapahtumat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="379"/>
-        <location filename="client.cpp" line="1026"/>
+        <location filename="client.cpp" line="386"/>
+        <location filename="client.cpp" line="1067"/>
         <source>Disable all events</source>
         <translation>Älä näytä tapahtumia</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="386"/>
-        <location filename="client.cpp" line="1031"/>
+        <location filename="client.cpp" line="393"/>
+        <location filename="client.cpp" line="1072"/>
         <source>Enable idle events</source>
         <translation>Näytä joutenolot</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="395"/>
-        <location filename="client.cpp" line="1042"/>
+        <location filename="client.cpp" line="402"/>
+        <location filename="client.cpp" line="1083"/>
         <source>Enable battle events</source>
         <translation>Näytä taistelutapahtumat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="404"/>
-        <location filename="client.cpp" line="1053"/>
+        <location filename="client.cpp" line="411"/>
+        <location filename="client.cpp" line="1094"/>
         <source>Enable channel events</source>
         <translation>Näytä kanavatapahtumat</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="413"/>
-        <location filename="client.cpp" line="1064"/>
+        <location filename="client.cpp" line="420"/>
+        <location filename="client.cpp" line="1105"/>
         <source>Enable team change events</source>
         <translation>Näytä joukkueen vaihtamiset</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1167"/>
+        <location filename="client.cpp" line="1221"/>
         <source>Enter the password for your current name.
 If you don&apos;t have it, the name you have chosen might be already taken. Choose different name.
 
@@ -1389,17 +1403,39 @@ Jos sinnulla ei ole salasanaa, valitsemasi nimi on jo ehkä valittu. Valitse eri
 On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. (Palvelin näkee vain salatun muodon salasanasta, mutta silti...)</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1198"/>
+        <location filename="client.cpp" line="1234"/>
+        <source>Save the user password</source>
+        <translation>Tallenna salasana</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1274"/>
+        <source>Enter the server password</source>
+        <translation>Syötä palvelimen salasana</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1277"/>
+        <source>Enter the password for this server.
+This server requires a password to log in.</source>
+        <translation>Syötä salasana tälle palvelimelle.
+Tämä palvelin vaatii salasanan kirjautuaksesi sisään.</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1287"/>
+        <source>Save the server password</source>
+        <translation>Tallenna palvelimen salasana</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="1333"/>
         <source>Battle Logs Directory</source>
         <translation>Ottelulokien Kansio</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1254"/>
+        <location filename="client.cpp" line="1389"/>
         <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
         <translation>Sinun asiakasohjelmasi versio (%2) ei ole sama palvelimen kanssa (%1).</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1262"/>
+        <location filename="client.cpp" line="1397"/>
         <source>Old Version</source>
         <translation>Vanha versio</translation>
     </message>
@@ -1424,42 +1460,42 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
         <translation type="obsolete">%1 voitti pelaajan %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1588"/>
+        <location filename="client.cpp" line="1723"/>
         <source>&amp;Find battle</source>
         <translation>Ottelu&amp;haku</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1606"/>
+        <location filename="client.cpp" line="1741"/>
         <source>%1 refused your challenge.</source>
         <translation>%1 hylkäsi haasteesi.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1611"/>
+        <location filename="client.cpp" line="1746"/>
         <source>%1 is busy.</source>
         <translation>%1 on kiireinen.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1616"/>
+        <location filename="client.cpp" line="1751"/>
         <source>%1 cancelled their challenge.</source>
         <translation>%1 peruutti haasteensa.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1621"/>
+        <location filename="client.cpp" line="1756"/>
         <source>%1 has an invalid team.</source>
         <translation>Pelaajalla %1 on viallinen tiimi.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1626"/>
+        <location filename="client.cpp" line="1761"/>
         <source>%1 has a different gen than yours.</source>
         <translation>Pelaajalla %1 on eri sukupolvi kuin sinulla.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1638"/>
+        <location filename="client.cpp" line="1773"/>
         <source>%1 is idling.</source>
         <translation>Pelaaja %1 on jouten.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1640"/>
+        <location filename="client.cpp" line="1775"/>
         <source>%1 is active and ready for battles.</source>
         <translation>%1 on aktiivinen ja valmiina taistelemaan.</translation>
     </message>
@@ -1472,16 +1508,17 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
         <translation type="obsolete">%1 on palannut.</translation>
     </message>
     <message>
+        <location filename="client.cpp" line="1831"/>
         <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation type="obsolete">Virhe yhdistettäessä palvelimelle -- Vastaanotettiin virhe nÂ°%1: %2</translation>
+        <translation>Virhe yhdistettäessä palvelimelle -- Vastaanotettiin virhe nÂ°%1: %2</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1699"/>
+        <location filename="client.cpp" line="1837"/>
         <source>Connected to Server!</source>
         <translation>Yhdistettiin palvelimelle!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1714"/>
+        <location filename="client.cpp" line="1852"/>
         <source>Disconnected from Server!</source>
         <translation>Katkaistiin yhteys Palvelimelta!</translation>
     </message>
@@ -1494,27 +1531,27 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
         <translation type="obsolete">%1 kirjautui ulos.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1869"/>
+        <location filename="client.cpp" line="2017"/>
         <source>%1 changed teams and is now known as %2.</source>
         <translation>%1 vaihtoi tiimiään ja tunnetaan nyt nimellä %2.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1874"/>
+        <location filename="client.cpp" line="2022"/>
         <source>%1 changed teams.</source>
         <translation>%1 vaihtoi tiimiään.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1940"/>
+        <location filename="client.cpp" line="2088"/>
         <source>You can&apos;t change teams while battling, so your nick was kept.</source>
         <translation>Et voi vaihtaa tiimejä taistellessa, joten nimesi pidettiin samana.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="1988"/>
+        <location filename="client.cpp" line="2136"/>
         <source>You ignored %1.</source>
         <translation>Sinä estit pelaajan %1.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="2005"/>
+        <location filename="client.cpp" line="2153"/>
         <source>You stopped ignoring %1.</source>
         <translation>Sinä sallit pelaajan %1.</translation>
     </message>
@@ -1523,101 +1560,107 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
     <name>ControlPanel</name>
     <message>
         <location filename="controlpanel.ui" line="14"/>
-        <location filename="ui_controlpanel.h" line="370"/>
+        <location filename="ui_controlpanel.h" line="376"/>
         <source>Control Panel</source>
         <translation>Ohjauspaneeli</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="27"/>
-        <location filename="ui_controlpanel.h" line="387"/>
+        <location filename="ui_controlpanel.h" line="394"/>
         <source>User info</source>
         <oldsource>User Info</oldsource>
         <translation>Käyttäjän tiedot</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="38"/>
-        <location filename="ui_controlpanel.h" line="371"/>
+        <location filename="ui_controlpanel.h" line="377"/>
         <source>Username: </source>
         <translation>Käyttäjän nimi: </translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="48"/>
-        <location filename="controlpanel.ui" line="257"/>
-        <location filename="ui_controlpanel.h" line="372"/>
-        <location filename="ui_controlpanel.h" line="389"/>
+        <location filename="controlpanel.ui" line="264"/>
+        <location filename="ui_controlpanel.h" line="378"/>
+        <location filename="ui_controlpanel.h" line="396"/>
         <source>Search</source>
         <translation>Etsi</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="59"/>
-        <location filename="ui_controlpanel.h" line="373"/>
+        <location filename="ui_controlpanel.h" line="379"/>
         <source>Status: </source>
         <translation>Tila: </translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="72"/>
-        <location filename="controlpanel.cpp" line="64"/>
-        <location filename="ui_controlpanel.h" line="374"/>
+        <location filename="controlpanel.cpp" line="69"/>
+        <location filename="ui_controlpanel.h" line="380"/>
         <source>Online</source>
         <translation>Online</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="89"/>
-        <location filename="ui_controlpanel.h" line="375"/>
+        <location filename="ui_controlpanel.h" line="381"/>
         <source>Authority: </source>
         <translation>Valta: </translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="119"/>
-        <location filename="ui_controlpanel.h" line="377"/>
+        <location filename="ui_controlpanel.h" line="383"/>
         <source>IP Address: </source>
         <translation>IP Osoite: </translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="146"/>
-        <location filename="ui_controlpanel.h" line="379"/>
+        <location filename="ui_controlpanel.h" line="385"/>
         <source>Last Appearance:</source>
         <translation>Viimeksi paikalla:</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="176"/>
-        <location filename="ui_controlpanel.h" line="381"/>
+        <location filename="ui_controlpanel.h" line="387"/>
         <source>Temporary Ban:</source>
         <translation>Väliaikainen banni:</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="196"/>
-        <location filename="ui_controlpanel.h" line="383"/>
+        <location filename="ui_controlpanel.h" line="389"/>
         <source>Temp Ban</source>
         <translation>Valiaikaisbanni</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="207"/>
-        <location filename="ui_controlpanel.h" line="384"/>
+        <location filename="ui_controlpanel.h" line="390"/>
         <source>Mute</source>
         <translation>Mykistä</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="214"/>
-        <location filename="ui_controlpanel.h" line="385"/>
+        <location filename="ui_controlpanel.h" line="391"/>
         <source>Kick</source>
         <translation>Potki</translation>
     </message>
     <message>
         <location filename="controlpanel.ui" line="221"/>
-        <location filename="ui_controlpanel.h" line="386"/>
+        <location filename="ui_controlpanel.h" line="392"/>
         <source>Ban</source>
         <translation>Bannaa</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="346"/>
-        <location filename="ui_controlpanel.h" line="408"/>
+        <location filename="controlpanel.ui" line="228"/>
+        <location filename="ui_controlpanel.h" line="393"/>
+        <source>PM User</source>
+        <translation>Yksityisviesti</translation>
+    </message>
+    <message>
+        <location filename="controlpanel.ui" line="353"/>
+        <location filename="ui_controlpanel.h" line="415"/>
         <source>Temporary bans</source>
         <translation>Valiaikaiset bannit</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="444"/>
-        <location filename="ui_controlpanel.h" line="407"/>
+        <location filename="controlpanel.ui" line="451"/>
+        <location filename="ui_controlpanel.h" line="414"/>
         <source>Time left</source>
         <translation>Aikaa jäljellä</translation>
     </message>
@@ -1630,89 +1673,89 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
         <translation type="obsolete">Bannilista</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="308"/>
-        <location filename="controlpanel.ui" line="434"/>
-        <location filename="ui_controlpanel.h" line="392"/>
-        <location filename="ui_controlpanel.h" line="403"/>
+        <location filename="controlpanel.ui" line="315"/>
+        <location filename="controlpanel.ui" line="441"/>
+        <location filename="ui_controlpanel.h" line="399"/>
+        <location filename="ui_controlpanel.h" line="410"/>
         <source>Username</source>
         <translation>Käyttäjän nimi</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="313"/>
-        <location filename="controlpanel.ui" line="439"/>
-        <location filename="ui_controlpanel.h" line="394"/>
-        <location filename="ui_controlpanel.h" line="405"/>
+        <location filename="controlpanel.ui" line="320"/>
+        <location filename="controlpanel.ui" line="446"/>
+        <location filename="ui_controlpanel.h" line="401"/>
+        <location filename="ui_controlpanel.h" line="412"/>
         <source>Banned IP</source>
         <translation>Bannattu IP</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="321"/>
-        <location filename="controlpanel.ui" line="369"/>
-        <location filename="ui_controlpanel.h" line="395"/>
-        <location filename="ui_controlpanel.h" line="401"/>
+        <location filename="controlpanel.ui" line="328"/>
+        <location filename="controlpanel.ui" line="376"/>
+        <location filename="ui_controlpanel.h" line="402"/>
+        <location filename="ui_controlpanel.h" line="408"/>
         <source>Refresh</source>
         <translation>Päivitä</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="231"/>
-        <location filename="ui_controlpanel.h" line="390"/>
+        <location filename="controlpanel.ui" line="238"/>
+        <location filename="ui_controlpanel.h" line="397"/>
         <source>User alias</source>
         <translation>Käyttäjän alias</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="265"/>
-        <location filename="ui_controlpanel.h" line="398"/>
+        <location filename="controlpanel.ui" line="272"/>
+        <location filename="ui_controlpanel.h" line="405"/>
         <source>Ban list</source>
         <translation>Bannilista</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="328"/>
-        <location filename="controlpanel.ui" line="362"/>
-        <location filename="ui_controlpanel.h" line="396"/>
-        <location filename="ui_controlpanel.h" line="400"/>
+        <location filename="controlpanel.ui" line="335"/>
+        <location filename="controlpanel.ui" line="369"/>
+        <location filename="ui_controlpanel.h" line="403"/>
+        <location filename="ui_controlpanel.h" line="407"/>
         <source>Unban</source>
         <translation>Peruuta banni</translation>
     </message>
     <message>
-        <location filename="controlpanel.ui" line="335"/>
-        <location filename="controlpanel.ui" line="355"/>
-        <location filename="ui_controlpanel.h" line="397"/>
-        <location filename="ui_controlpanel.h" line="399"/>
+        <location filename="controlpanel.ui" line="342"/>
+        <location filename="controlpanel.ui" line="362"/>
+        <location filename="ui_controlpanel.h" line="404"/>
+        <location filename="ui_controlpanel.h" line="406"/>
         <source>Ban IP ...</source>
         <translation>Bannaa IP ...</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="43"/>
+        <location filename="controlpanel.cpp" line="48"/>
         <source>User</source>
         <translation>Käyttäjä</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="45"/>
+        <location filename="controlpanel.cpp" line="50"/>
         <source>Moderator</source>
         <translation>Järjestyksenvalvoja</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="47"/>
+        <location filename="controlpanel.cpp" line="52"/>
         <source>Administrator</source>
         <translation>Ylläpitäjä</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="60"/>
+        <location filename="controlpanel.cpp" line="65"/>
         <source>Banned</source>
         <translation>Bannattu</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="62"/>
+        <location filename="controlpanel.cpp" line="67"/>
         <source>Tempbanned</source>
         <translation>Väliaikaisesti bannattu</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="66"/>
+        <location filename="controlpanel.cpp" line="71"/>
         <source>Offline</source>
         <translation>Offline</translation>
     </message>
     <message>
-        <location filename="controlpanel.cpp" line="71"/>
+        <location filename="controlpanel.cpp" line="76"/>
         <source>[Muted]</source>
         <translation>[Mykistetty]</translation>
     </message>
@@ -1728,12 +1771,12 @@ On suositeltavaa käyttää hieman erilaista salasanaa jokaiselle palvelimelle. 
 <context>
     <name>ImageAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="1056"/>
+        <location filename="battlewindow.cpp" line="1068"/>
         <source>PP %1/%2</source>
         <translation>PP %1/%2</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1069"/>
+        <location filename="battlewindow.cpp" line="1081"/>
         <source>%1
 
 Power: %2
@@ -1755,47 +1798,47 @@ Vaikutus: %5</translation>
 <context>
     <name>MainEngine</name>
     <message>
-        <location filename="mainwindow.cpp" line="91"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Plugins</source>
         <translation>Liitännäiset</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="92"/>
+        <location filename="mainwindow.cpp" line="116"/>
         <source>Plugin Manager</source>
         <translation>Liitännäisten hallinta</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="268"/>
+        <location filename="mainwindow.cpp" line="292"/>
         <source>Impossible to go online</source>
         <translation>Mahdotonta yhdistää</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="268"/>
+        <location filename="mainwindow.cpp" line="292"/>
         <source>You haven&apos;t set your name yet. Do so in the teambuilder.</source>
         <translation>Et ole vielä nimennyt hahmoasi. Tee niin TeamBuilder ikkunassa.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="259"/>
+        <location filename="mainwindow.cpp" line="283"/>
         <source>Language Change</source>
         <translation>Vaihda Kieltä</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="259"/>
+        <location filename="mainwindow.cpp" line="283"/>
         <source>Restart the application to see the changes.</source>
         <translation>Käynnistä ohjelma uudelleen nähdäksesi muutokset.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="303"/>
+        <location filename="mainwindow.cpp" line="327"/>
         <source>&amp;Style</source>
         <translation>&amp;Tyyli</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="321"/>
+        <location filename="mainwindow.cpp" line="345"/>
         <source>Reload StyleSheet</source>
         <translation>Päivitä tyylilista</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="326"/>
+        <location filename="mainwindow.cpp" line="350"/>
         <source>&amp;Theme</source>
         <translation>&amp;Teema</translation>
     </message>
@@ -1831,12 +1874,12 @@ Vaikutus: %5</translation>
 <context>
     <name>OldAttackButton</name>
     <message>
-        <location filename="battlewindow.cpp" line="1010"/>
+        <location filename="battlewindow.cpp" line="1022"/>
         <source>PP %1/%2</source>
         <translation>PP %1/%2</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1026"/>
+        <location filename="battlewindow.cpp" line="1038"/>
         <source>%1
 
 Power: %2
@@ -1880,23 +1923,49 @@ Vaikutus: %5</translation>
 <context>
     <name>PMWindow</name>
     <message>
-        <location filename="pmwindow.cpp" line="21"/>
+        <location filename="pmwindow.cpp" line="22"/>
         <source>&amp;Challenge</source>
         <translation>&amp;Haasta</translation>
     </message>
     <message>
-        <location filename="pmwindow.cpp" line="22"/>
+        <location filename="pmwindow.cpp" line="23"/>
         <source>&amp;Ignore</source>
         <translation>&amp;Estä</translation>
+    </message>
+    <message>
+        <location filename="pmwindow.cpp" line="128"/>
+        <source>The player has logged on again</source>
+        <translation>Pelaaja on kirjautunut sisään uudestaan</translation>
     </message>
     <message>
         <source>&amp;Send</source>
         <translation type="obsolete">&amp;Lähetä</translation>
     </message>
     <message>
-        <location filename="pmwindow.cpp" line="116"/>
+        <location filename="pmwindow.cpp" line="118"/>
         <source>The other party left the server, so the window was disabled.</source>
         <translation>Toinen pelaaja lähti palvelimelta, joten ikkuna suljettiin.</translation>
+    </message>
+</context>
+<context>
+    <name>PasswordWallet</name>
+    <message>
+        <location filename="password_wallet.cpp" line="69"/>
+        <location filename="password_wallet.cpp" line="92"/>
+        <source>Warning: the Server IP Address has changed since password was saved.</source>
+        <translation>Varoitus! Tämän palvelimen IP osoite on muuttunut sen jälkeen, kun salasana tallennettiin.</translation>
+    </message>
+    <message>
+        <location filename="password_wallet.cpp" line="71"/>
+        <location filename="password_wallet.cpp" line="94"/>
+        <source>Warning: the Server Name has changed since password was saved.</source>
+        <translation>Varoitus! Tämän palvelimen nimi on vaihtunut sen jälkeen, kun tallensit salasanan.</translation>
+    </message>
+    <message>
+        <location filename="password_wallet.cpp" line="73"/>
+        <source>&lt;span style=&quot;color: red&quot;&gt;&lt;b&gt;Warning: the salt for name has changed since password was saved. Account password was probably resetted.&lt;/b&gt;&lt;/span&gt;</source>
+        <translatorcomment>I don&apos;t remember what is salt in finnish, left an -</translatorcomment>
+        <translation>&lt;span style=&quot;color: red&quot;&gt;&lt;b&gt;Varoitus! - nimellesi on muuttunut siitä kun tallensit salasanasi. Salasanasi on varmaan nollattu.&lt;/b&gt;&lt;/span&gt;</translation>
     </message>
 </context>
 <context>
@@ -1960,12 +2029,12 @@ Vaikutus: %5</translation>
         <translation>L&amp;uonne</translation>
     </message>
     <message>
-        <location filename="Teambuilder/pokebodywidget.cpp" line="146"/>
+        <location filename="Teambuilder/pokebodywidget.cpp" line="147"/>
         <source>PokÃ©mon %1</source>
         <translation>Pokémon %1</translation>
     </message>
     <message>
-        <location filename="Teambuilder/pokebodywidget.cpp" line="380"/>
+        <location filename="Teambuilder/pokebodywidget.cpp" line="381"/>
         <source>Lv. %1</source>
         <translation>Taso. %1</translation>
     </message>
@@ -1995,7 +2064,7 @@ Liikkeet:
 --%8</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1136"/>
+        <location filename="battlewindow.cpp" line="1148"/>
         <source>%1 lv %2
 
 Item:%3
@@ -2018,7 +2087,7 @@ Liikkeet:
 --%8 - %12 PP</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1143"/>
+        <location filename="battlewindow.cpp" line="1155"/>
         <source>%1 lv %2
 Item:%3
 
@@ -2038,7 +2107,7 @@ Liikkeet:
 --%8 - %12 PP</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1149"/>
+        <location filename="battlewindow.cpp" line="1161"/>
         <source>%1 lv %2
 
 Moves:
@@ -2456,7 +2525,7 @@ Liikkeet:
 <context>
     <name>RearrangeLayout</name>
     <message>
-        <location filename="battlewindow.cpp" line="1547"/>
+        <location filename="battlewindow.cpp" line="1568"/>
         <source>Lv. %1</source>
         <translation>Taso. %1</translation>
     </message>
@@ -2464,22 +2533,22 @@ Liikkeet:
 <context>
     <name>RearrangeWindow</name>
     <message>
-        <location filename="battlewindow.cpp" line="1453"/>
+        <location filename="battlewindow.cpp" line="1474"/>
         <source>You can rearrange your team by clicking on your pokemon before the battle.</source>
         <translation>Voit järjestellä tiimisi uudelleen vetämällä pokémonit paikoilleen ennen taistelua.</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1472"/>
+        <location filename="battlewindow.cpp" line="1493"/>
         <source>Team of your opponent:</source>
         <translation>Vastustajasi tiimi:</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1487"/>
+        <location filename="battlewindow.cpp" line="1508"/>
         <source>Done</source>
         <translation>Valmis</translation>
     </message>
     <message>
-        <location filename="battlewindow.cpp" line="1488"/>
+        <location filename="battlewindow.cpp" line="1509"/>
         <source>Forfeit</source>
         <translation>Luovuta</translation>
     </message>
@@ -2506,7 +2575,7 @@ Liikkeet:
         <translation>Pelaajat / Maksimi</translation>
     </message>
     <message>
-        <location filename="serverchoice.cpp" line="146"/>
+        <location filename="serverchoice.cpp" line="157"/>
         <source>Disconnected from the registry: %1</source>
         <translation>Katkaistiin yhteys rekisteristä: %1</translation>
     </message>
@@ -3229,7 +3298,7 @@ Liikkeet:
         <translation>Pakota &amp;minimitasot</translation>
     </message>
     <message>
-        <location filename="Teambuilder/teambuilder.cpp" line="359"/>
+        <location filename="Teambuilder/teambuilder.cpp" line="360"/>
         <source>&amp;Mods</source>
         <translation>&amp;Modit</translation>
     </message>
