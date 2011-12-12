@@ -325,11 +325,12 @@ public:
     static bool Exists(int itemnum, int gen=GEN_MAX);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
-    static bool isCassette(int itemnum);
+    static bool isDrive(int itemnum);
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
-    static int CassetteType(int itemnum);
+    static int DriveType(int itemnum);
+    static int DriveForme(int itemnum);
     static QList<QString> SortedNames(int gen);
     static QList<QString> SortedUsefulNames(int gen);
     static QList<Effect> Effects(int item, int gen);

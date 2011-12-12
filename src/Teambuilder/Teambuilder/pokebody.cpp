@@ -223,6 +223,16 @@ void TB_PokemonBody::setItem(int it)
             changeForme(Pokemon::uniqueId(poke()->num().pokenum, type));
         }
     }
+    if (PokemonInfo::OriginalForme(poke()->num()) == Pokemon::Genesect) {
+        int forme = 0;
+        if (ItemInfo::isDrive(it)) {
+            forme = ItemInfo::DriveForme(it);
+        }
+
+        if (forme != poke()->num().subnum) {
+            changeForme(Pokemon::uniqueId(poke()->num().pokenum, forme));
+        }
+    }
     if (it == Item::GriseousOrb && poke()->num().pokenum != Pokemon::Giratina && gen() <= 4) {
         poke()->item() = 0;
         if (widget) {
