@@ -232,6 +232,7 @@ public:
     }
 
     bool musicPlayed() const;
+    bool flashWhenMoved() const;
     void playCry(int pokemon);
     bool hasKnowledgeOf(int player) const;
     void close();
@@ -272,6 +273,7 @@ protected:
 
     QCheckBox *saveLogs;
     QCheckBox *musicOn;
+    QCheckBox *flashWhenMoveDone;
 
     /* The device which outputs the sound */
     Phonon::AudioOutput *audioOutput;
