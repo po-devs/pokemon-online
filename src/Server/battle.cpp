@@ -1060,6 +1060,11 @@ void BattleSituation::endTurn()
 
 void BattleSituation::endTurnDefrost()
 {
+    // RBY freeze is forever unless hit by fire moves.
+    // We think both stadium and cart have permafreeze.
+    if (gen() == 1) {
+      return;
+    }
     foreach(int player, speedsVector) {
         if (poke(player).status() == Pokemon::Frozen)
         {
