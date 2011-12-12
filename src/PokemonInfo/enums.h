@@ -788,7 +788,7 @@ namespace Pokemon
         Kyuremu,
         Kerudio,
         Meloia,
-        Insekuta,
+        Genesect,
         // Base forms end here.
         Rotom_C = Rotom + (1 << 16),
         Rotom_H = Rotom + (2 << 16),
@@ -803,7 +803,11 @@ namespace Pokemon
         Giratina_O = Giratina + (1 << 16),
         Shaymin_S = Shaymin + (1 << 16),
         Meloia_S = Meloia + (1 << 16),
-        SpikyPichu = Pichu + (1 << 16)
+        SpikyPichu = Pichu + (1 << 16),
+        Genesect_D = Genesect + (1 << 16),
+        Genesect_S = Genesect + (2 << 16),
+        Genesect_B = Genesect + (3 << 16),
+        Genesect_C = Genesect + (4 << 16)
     };
 }
 
@@ -1871,10 +1875,10 @@ namespace Item
         SpaceMail,
         SteelMail,
         TunnelMail,
-        AquaCassette,
-        LightningCassette,
-        BlazeCassette,
-        FreezeCassette,
+        DouseDrive,
+        ShockDrive,
+        BurnDrive,
+        ChillDrive,
         HeartSweets,
         CleanScale,
         EvolutionStone,

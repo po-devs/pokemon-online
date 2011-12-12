@@ -16,6 +16,8 @@
 
 typedef BattlePStorage BP;
 
+Q_DECLARE_METATYPE(QList<int>)
+
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
     : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
@@ -604,20 +606,20 @@ void BattleSituation::initializeEndTurnFunctions()
     6.0 Ingrain
     6.1 Aqua Ring
     6.2 Speed Boost, Shed Skin
-    6.3 Black Sludge, Leftovers: "pokémon restored a little HP using its leftovers"
-    6.4 Leech Seed: "pokémon's health is sapped by leech seed"
-    6.5 Burn, Poison Heal, Poison: "pokémon is hurt by poison"
+    6.3 Black Sludge, Leftovers: "pokÃ©mon restored a little HP using its leftovers"
+    6.4 Leech Seed: "pokÃ©mon's health is sapped by leech seed"
+    6.5 Burn, Poison Heal, Poison: "pokÃ©mon is hurt by poison"
     6.6 Nightmare
     6.7 Flame Orb activation, Toxic Orb activation
     6.8 Curse (from a Ghost)
     6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
     6.10 Bad Dreams Damage
-    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
-    6.12 Disable ends: "pokémon is no longer disabled"
+    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokÃ©mon caused an uproar" & "pokÃ©mon calmed down"
+    6.12 Disable ends: "pokÃ©mon is no longer disabled"
     6.13 Encore ends
     6.14 Taunt wears off
     6.15 Magnet Rise
-    6.16 Heal Block: "the foe pokémon's heal block wore off"
+    6.16 Heal Block: "the foe pokÃ©mon's heal block wore off"
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
@@ -718,7 +720,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         27.0 Zen Mode
 
-        28.0 Pokémon is switched in (if previous Pokémon fainted)
+        28.0 PokÃ©mon is switched in (if previous PokÃ©mon fainted)
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
@@ -1898,6 +1900,13 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
+       int forme = ItemInfo::DriveForme(p.item());
+
+       if (forme != 0) {
+           changeAForme(slot, forme);
+       }
+    }
 
     turnMemory(slot)["CantGetToMove"] = true;
 
@@ -2067,8 +2076,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
     turnMemory(target).remove("EvadeAttack");
-    callpeffects(target, player, "TestEvasion"); /*dig bounce ..., still calling it there cuz x2 attacks
-            like EQ on dig need their boost even if lock on */
+    callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
     if (pokeMemory(player).contains("LockedOn") && pokeMemory(player).value("LockedOnEnd").toInt() >= turn()
             && pokeMemory(player).value("LockedOn") == target &&
@@ -2097,7 +2105,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return false;
     }
 
-    if (acc == 0 || acc == 101 || pokeMemory(target).value("LevitatedCount").toInt() > 0) {
+    if (acc == 0 || acc == 101 ||
+        (pokeMemory(target).value("LevitatedCount").toInt() > 0 &&
+         !MoveInfo::isOHKO(move, gen()))) {
         return true;
     }
 
@@ -2299,7 +2309,7 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = tmove(player).flinchRate;
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
-        if (rate == 100) {
+        if (rate == 100 && gen() <= 4) {
             sendAbMessage(12,0,target);
         }
         return;
@@ -2315,7 +2325,9 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))) {
+                                   || hasWorkingItem(player, Item::RazorFang))
+        /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
+        && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
         /* King's rock */
         if (coinflip(10, 100)) {
             turnMemory(target)["Flinched"] = true;
@@ -3721,6 +3733,7 @@ int BattleSituation::calculateDamage(int p, int t)
         }
     }
 
+
     /* Used by Oaths to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
@@ -3739,11 +3752,15 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = randint(16) + 85;
+    int randnum;
+    if (gen() == 1) {
+      randnum = randint(38) + 217;
+    } else {
+      randnum = randint(16) + 85;
+    }
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
-    int type = tmove(p).type;
 
     /*** WARNING ***/
     /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
@@ -3756,6 +3773,20 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     int power = tmove(p).power;
+    int type = tmove(p).type;
+
+    /* Calculate the multiplier for two turn attacks */ 
+    if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
+        QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
+        QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
+    
+        for (int i = 0; i < vuln_moves.size(); i++) {
+            if (vuln_moves[i] == attackused) {
+                power = power * vuln_mults[i];
+            }
+        }
+    }
+
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }
