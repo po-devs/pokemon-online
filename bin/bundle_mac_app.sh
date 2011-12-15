@@ -35,7 +35,7 @@ function bundle_mac_app() {
 
    fworks=$app/Contents/Frameworks
    zlib=libz.1.dylib
-   libzip=libzip.2.dylib
+   libzip=libzip.1.dylib
    pokemonlib_long=libpokemonlib.1.0.0.dylib
    pokemonlib=libpokemonlib.1.dylib
    utilities_long=libutilities.1.0.0.dylib

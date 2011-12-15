@@ -4,6 +4,7 @@ var effects = {
 };
 
 effects[BattleData.LeechSeed] = "Moves/LeechSeed.qml";
+effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
 
 function useAttack(attacker, attack, defender) {
     launchMove(attacker, attack, defender);
