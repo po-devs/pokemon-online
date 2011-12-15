@@ -1955,9 +1955,9 @@ bool ItemInfo::isPlate(int itemnum)
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
 }
 
-bool ItemInfo::isCassette(int itemnum)
+bool ItemInfo::isDrive(int itemnum)
 {
-    return itemnum == Item::AquaCassette || itemnum == Item::BlazeCassette || itemnum == Item::FreezeCassette || itemnum == Item::LightningCassette;
+    return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
 }
 
 bool ItemInfo::isMail(int itemnum)
@@ -1975,9 +1975,24 @@ int ItemInfo::PlateType(int itemnum)
     return Effects(itemnum, GEN_MAX).front().args.toInt();
 }
 
-int ItemInfo::CassetteType(int itemnum)
+int ItemInfo::DriveType(int itemnum)
 {
     return Effects(itemnum, GEN_MAX).front().args.toInt();
+}
+int ItemInfo::DriveForme(int itemnum)
+{
+    switch(itemnum) {
+    case Item::DouseDrive:
+        return 1;
+    case Item::ShockDrive:
+        return 2;
+    case Item::BurnDrive:
+        return 3;
+    case Item::ChillDrive:
+        return 4;
+    default:
+        return 0;
+    }
 }
 
 int ItemInfo::Number(const QString &itemname)
