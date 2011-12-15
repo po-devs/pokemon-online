@@ -7,7 +7,7 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
 {
     QApplication::setQuitOnLastWindowClosed(false);
 
-    setWindowTitle(tr("Pokémon Online Server"));
+    setWindowTitle(tr("Pok\303\251mon Online Server"));
     setWindowIcon(QIcon("db/icon-server.png"));
 
     setCentralWidget(myserverwidget = new ServerWidget(myserver));
@@ -23,10 +23,12 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
 
 bool MainWindow::event(QEvent *event)
 {
-    if(event->type() == QEvent::WindowStateChange) {
-        if(isMinimized()) {
+    if (event->type() == QEvent::WindowStateChange) {
+        if (myserverwidget->isMinimizeToTrayAllowed() && isMinimized()) {
             trayIcon->show();
-            trayIcon->showMessage("Pokemon Online is Still runnning", "The program will keep running in system Tray. You can left click the icon to get a menu of options.");
+            if (myserverwidget->isServerTrayPopupAllowed()) {
+                trayIcon->showMessage("Pok\303\251mon Online is still running", "The program will keep running in system Tray. You can left click the icon to get a menu of options.");
+            }
             setParent(NULL, Qt::SubWindow); // We're avoiding to make the Application show again in the Taskbar.
             hide();
             event->ignore();

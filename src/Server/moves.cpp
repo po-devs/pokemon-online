@@ -920,7 +920,8 @@ struct MMKnockOff : public MM
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
                                                                                                     (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
+                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
+                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -940,9 +941,10 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
                 || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
-                || b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb
-                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
-            /* Sticky Hold, MultiType, Giratina-O, Mail */
+                || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
+                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
+                || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
+            /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
         {
             turn(b,s)["Failed"] = true;
         }
@@ -1280,8 +1282,10 @@ struct MMHealingWish : public MM
             b.sendMoveMessage(61,0,s,t);
             b.healLife(s,b.poke(s).totalLifePoints());
             b.changeStatus(s, Pokemon::Fine);
-            for(int i = 0; i < 4; i++) {
-                b.gainPP(s, i, 100);
+            if (move(b,s) == LunarDance) {
+                for(int i = 0; i < 4; i++) {
+                    b.gainPP(s, i, 100);
+                }
             }
             removeFunction(turn(b,s), "AfterSwitchIn", "HealingWish");
         }
@@ -1638,6 +1642,10 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
+        // Barriers such as Reflect and Light Screen do not time out in gen 1
+        if (b.gen() == 1) {
+          return;
+        }
         int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
         for (int i = 0; i < 2; i++) {
@@ -1958,10 +1966,17 @@ struct MMMist : public MM
 {
     MMMist() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
     }
 
     static ::bracket bracket(int gen) {
         return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int count = team(b,s)["MistCount"].toInt();
+        if (count > 0)
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
@@ -2425,9 +2440,6 @@ struct MMSnatch : public MM
     static void dgaf(int s, int , BS &b) {
         if (b.battleMemory().contains("Snatcher")) {
             int snatcher = b.battleMemory()["Snatcher"].toInt();
-            if (b.player(s) == b.player(snatcher)) {
-                return;
-            }
             if (!turn(b,snatcher).value("Snatcher").toBool()) {
                 return;
             }
@@ -3119,6 +3131,8 @@ struct MMTransform : public MM {
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
             }
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+                num.subnum = ItemInfo::DriveForme(b.poke(s).item());
         }
 
         b.sendMoveMessage(137,0,s,0,s,num.pokenum);
@@ -3898,7 +3912,7 @@ struct MMTechnoBuster : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isCassette(item))
+        if (!ItemInfo::isDrive(item))
             return;
         if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();

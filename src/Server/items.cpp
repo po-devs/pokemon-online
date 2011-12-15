@@ -758,8 +758,8 @@ struct IMEscapeButton : public IM
 };
 
 /* Needs a function in order for its Item argument to be registered */
-struct IMCassette : public IM {
-    IMCassette() {
+struct IMDrive : public IM {
+    IMDrive() {
 
     }
 };
@@ -805,7 +805,7 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
-    REGISTER_ITEM(32, Cassette);
+    REGISTER_ITEM(32, Drive);
     REGISTER_ITEM(33, EvolutionStone);
     REGISTER_ITEM(34, RuggedHelmet);
     REGISTER_ITEM(35, Balloon);
