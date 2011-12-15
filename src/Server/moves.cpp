@@ -1307,7 +1307,7 @@ struct MMPowerTrick : public MM
 /* Heal block:
    For 5 turns, the target cannot select or execute any of the following moves:
 
-If eunder the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
+If Pokémon under the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
 
 Aqua Ring and Ingrain do not heal their user while under the effects of Heal Block.
 

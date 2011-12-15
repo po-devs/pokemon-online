@@ -31,6 +31,7 @@ function launchMove(attacker, attack, defender) {
     }
 
     var obj = c.createObject(attacker, {"attacker":attacker, "attack":attack, "target":defender});
-    obj.finished.connect(function() {obj.destroy();});
+    battle.scene.pause();
+    obj.finished.connect(function() {battle.scene.unpause();obj.destroy();});
     obj.start();
 }

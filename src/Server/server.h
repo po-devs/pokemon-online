@@ -62,6 +62,8 @@ public:
     void removeBattle(int battleid);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
+    bool beforeFindBattle(int src);
+    void afterFindBattle(int src);
     bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
     void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
     bool beforePlayerAway(int src, bool away);
@@ -82,7 +84,7 @@ public:
         return serverName;
     }
     bool isSafeScripts() const { return safeScripts; }
-
+    bool isPrivate() const { return serverPrivate == 1; }
     bool isLegalProxyServer(const QString &ip) const;
 
     bool isPasswordProtected() const { return passwordProtected; }
