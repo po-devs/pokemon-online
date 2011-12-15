@@ -198,9 +198,14 @@ struct MMCamouflage : public MM {
     }
 
     static void uas (int s, int, BS &b) {
-        fpoke(b,s).type1 = Pokemon::Normal;
+        if (b.gen() >= 5) {
+            fpoke(b,s).type1 = Pokemon::Ground;
+            b.sendMoveMessage(17,0,s,4);
+        } else {
+            fpoke(b,s).type1 = Pokemon::Normal;
+            b.sendMoveMessage(17,0,s,0);
+        }
         fpoke(b,s).type2 = Pokemon::Curse;
-        b.sendMoveMessage(17,0,s,0);
     }
 };
 
@@ -811,8 +816,11 @@ struct MMCovet : public MM
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
                 && (!b.hasWorkingAbility(t, Ability::Multitype) || (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
                 && !b.hasWorkingAbility(s, Ability::Multitype)
-                && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
-                && b.poke(t).item() != Item::GriseousOrb && !ItemInfo::isMail(b.poke(t).item())) /* Sticky Hold, MultiType, Giratina_O, Mail*/
+                && b.poke(s).item() == 0
+                && !(b.poke(t).item() == Item::GriseousOrb && (b.gen() <= 4 || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina))
+                && !ItemInfo::isMail(b.poke(t).item())
+                && !(ItemInfo::isCassette(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Insekuta || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)))
+                /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
@@ -1208,11 +1216,9 @@ struct MMBounce : public MM
         int attack = move(b,t);
         /* Lets see if the poke is vulnerable to that one attack */
         QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
-        QList<int> vuln_mults = poke(b,s)["VulnerableMults"].value<QList<int> >();
 
         for (int i = 0; i < vuln_moves.size(); i++) {
             if (vuln_moves[i] == attack) {
-                tmove(b, s).power = tmove(b, s).power * vuln_mults[i];
                 return;
             }
         }

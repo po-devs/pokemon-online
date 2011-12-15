@@ -21,6 +21,10 @@ public:
     void changeSelf(const QString &newname);
     void printLine(QString line, bool self = false);
     void disable();
+    void reuse(int id);
+    QString name() const {
+        return m_name;
+    }
 signals:
     void messageEntered(int id, const QString &mess);
     void challengeSent(int id);
@@ -33,9 +37,6 @@ private:
     QString m_name;
     QString m_ownName;
     bool escape_html;
-    QString name() const {
-        return m_name;
-    }
 
     void printHtml(const QString &htmlCode, bool timestamps=true);
 

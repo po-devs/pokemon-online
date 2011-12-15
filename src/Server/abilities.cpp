@@ -74,7 +74,7 @@ struct AMAngerPoint : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool()) {
+        if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool() && (b.gen() <= 4 || !b.hasSubstitute(s))) {
             b.sendAbMessage(3,0,s);
             b.inflictStatMod(s,Attack,12,s);
         }
@@ -174,11 +174,11 @@ struct AMChlorophyll : public AM {
 
 struct AMColorChange : public AM {
     AMColorChange() {
-        functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponBeingHit"] = &ubh;
         functions["AfterBeingPlumetted"] = &abp;
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void ubh(int s, int t, BS &b) {
         if (b.gen() > 4)
             return;
         if (b.koed(s))
@@ -875,7 +875,7 @@ struct AMSlowStart : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        poke(b,s)["SlowStartTurns"] = b.turn() + 4;
+        poke(b,s)["SlowStartTurns"] = b.turn() + 5;
         b.sendAbMessage(55,0,s);
     }
 
@@ -1432,6 +1432,8 @@ struct AMEccentric : public AM
         if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
             num.subnum = ItemInfo::PlateType(b.poke(s).item());
         }
+        if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+            num.subnum = ItemInfo::DriveForme(b.poke(s).item());
 
         b.sendAbMessage(81,0,s,s,0,num.pokenum);
 
