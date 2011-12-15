@@ -14,8 +14,9 @@
 #include "channel.h"
 #include "theme.h"
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
+Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
+    isConnected = true;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -1309,8 +1310,12 @@ void Client::serverPass(const QString &salt) {
 }
 
 void Client::sendRegister() {
-    relay().notify(NetworkCli::Register);
-    myregister->setDisabled(true);
+    if (isConnected) {
+        relay().notify(NetworkCli::Register);
+        myregister->setDisabled(true);
+    } else {
+        relay().connectTo(url, port);
+    }
 }
 
 void Client::changeMusicFolder()
@@ -1831,6 +1836,8 @@ void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 void Client::connected()
 {
     printLine(tr("Connected to Server!"));
+    isConnected = true;
+    myregister->setText(tr("&Register"));
 
     QSettings s;
 
@@ -1846,6 +1853,10 @@ void Client::connected()
 void Client::disconnected()
 {
     printLine(tr("Disconnected from Server!"));
+
+    isConnected = false;
+    myregister->setText(tr("&Reconnect"));
+    myregister->setEnabled(true);
 }
 
 TrainerTeam* Client::team()
