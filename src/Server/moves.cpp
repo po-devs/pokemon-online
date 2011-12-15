@@ -317,7 +317,7 @@ struct MMPerishSong : public MM
                 continue;
             }
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "PerishSong", &et);
-            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + (b.true_rand() % (tmove(b,s).maxTurns+1-tmove(b,s).maxTurns)) - 1;
+            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + b.randint(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns) - 1;
             poke(b, t)["PerishSonger"] = s;
         }
         b.sendMoveMessage(95);
@@ -357,21 +357,30 @@ struct MMHaze : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.gen() > 1) {
+            if (tmove(b,s).power == 0) {
+                b.sendMoveMessage(149);
 
-        if (tmove(b,s).power == 0) {
-            b.sendMoveMessage(149);
+                foreach (int p, b.sortedBySpeed())
+                {
+                    for (int i = 1; i <= 7; i++) {
+                        fpoke(b,p).boosts[i] = 0;
+                    }
+                }
+            }
+            else {
+                b.sendMoveMessage(149, 1, s, type(b,s), t);
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,t).boosts[i] = 0;
+                }
+            }
+        } else {
+            /* In gen 1, haze just clears status */
+            b.sendMoveMessage(149, 2);
 
             foreach (int p, b.sortedBySpeed())
             {
-                for (int i = 1; i <= 7; i++) {
-                    fpoke(b,p).boosts[i] = 0;
-                }
-            }
-        }
-        else {
-            b.sendMoveMessage(149, 1, s, type(b,s), t);
-            for (int i = 1; i <= 7; i++) {
-                fpoke(b,t).boosts[i] = 0;
+                b.healStatus(p, 0);
             }
         }
     }
@@ -565,8 +574,12 @@ struct MMIngrain : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
-            b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s);
+            } else {
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            }
         }
     }
 };
@@ -645,7 +658,7 @@ struct MMRoar : public MM
             }
         }
         b.sendBack(t, true);
-        b.sendPoke(t, switches[b.true_rand()%switches.size()], true);
+        b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,type(b,s),t);
         b.callEntryEffects(t);
     }
@@ -873,6 +886,12 @@ struct MMAttract : public MM
         } else {
             b.link(s, t, "Attract");
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+            if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                b.link(t, s, "Attract");
+                addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                b.sendItemMessage(7,t,0,s);
+            }
         }
     }
 
@@ -883,7 +902,7 @@ struct MMAttract : public MM
             int seducer = b.linker(s, "Attract");
 
             b.sendMoveMessage(58,0,s,0,seducer);
-            if (b.true_rand() % 2 == 0) {
+            if (b.coinflip(1, 2)) {
                 turn(b,s)["ImpossibleToMove"] = true;
                 b.sendMoveMessage(58, 2,s);
             }
@@ -901,7 +920,8 @@ struct MMKnockOff : public MM
     {
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
                                                                                                     (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && b.poke(t).item() != Item::GriseousOrb) /* Sticky Hold, MultiType, Giratina-O */
+                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
+                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -921,9 +941,10 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
                 || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
-                || b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb
-                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item()))
-            /* Sticky Hold, MultiType, Giratina-O, Mail */
+                || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
+                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
+                || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
+            /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
         {
             turn(b,s)["Failed"] = true;
         }
@@ -1005,7 +1026,7 @@ struct MMTaunt : public MM
             if (b.gen() <= 3) {
                 b.counters(t).addCounter(BC::Taunt, 1);
             } else if (b.gen() == 4) {
-                b.counters(t).addCounter(BC::Taunt, 2 + (b.true_rand()%3));
+                b.counters(t).addCounter(BC::Taunt, 2 + (b.randint(3)));
             } else {
                 b.counters(t).addCounter(BC::Taunt, 2);
             }
@@ -1096,7 +1117,7 @@ struct MMGrassKnot : public MM
         } else {
             bp = 120;
         }
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b,s).power * bp;
     }
 };
 
@@ -1115,7 +1136,7 @@ struct MMGrudge : public MM
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
         if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
-            if (!b.koed(t) && !b.hasSubstitute(t)) {
+            if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
@@ -1151,7 +1172,7 @@ struct MMGyroBall : public MM
         int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b, s).power * bp;
     }
 };
 
@@ -1261,8 +1282,10 @@ struct MMHealingWish : public MM
             b.sendMoveMessage(61,0,s,t);
             b.healLife(s,b.poke(s).totalLifePoints());
             b.changeStatus(s, Pokemon::Fine);
-            for(int i = 0; i < 4; i++) {
-                b.gainPP(s, i, 100);
+            if (move(b,s) == LunarDance) {
+                for(int i = 0; i < 4; i++) {
+                    b.gainPP(s, i, 100);
+                }
             }
             removeFunction(turn(b,s), "AfterSwitchIn", "HealingWish");
         }
@@ -1619,6 +1642,10 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
+        // Barriers such as Reflect and Light Screen do not time out in gen 1
+        if (b.gen() == 1) {
+          return;
+        }
         int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
         for (int i = 0; i < 2; i++) {
@@ -1709,7 +1736,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
                         target = t;
                         break;
                     }
@@ -1780,7 +1807,7 @@ struct MMMagnitude: public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        int randnum = b.true_rand()%20;
+        int randnum = b.randint(20);
 
         int pow, magn;
 
@@ -1939,10 +1966,17 @@ struct MMMist : public MM
 {
     MMMist() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
     }
 
     static ::bracket bracket(int gen) {
         return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int count = team(b,s)["MistCount"].toInt();
+        if (count > 0)
+            turn(b,s)["Failed"] = true;
     }
 
     static void uas(int s, int, BS &b) {
@@ -2041,15 +2075,21 @@ struct MMPresent : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * 40 * (b.true_rand() % 4);
+        tmove(b, s).power = tmove(b, s).power * 40 * b.randint(4);
         if (tmove(b, s).power == 0) {
             tmove(b, s).power = 1;
         }
     }
 
     static void cad(int s, int t, BS &b) {
-        b.sendMoveMessage(96,0,s,type(b,s),t);
-        b.healLife(t, 80);
+        if (b.gen() >= 5) {
+            b.sendMoveMessage(96,0,s,type(b,s),t);
+            b.healLife(t, b.poke(t).totalLifePoints()/4);
+        }
+        else {
+            b.sendMoveMessage(96,0,s,type(b,s),t, 80);
+            b.healLife(t, 80);
+        }
     }
 };
 
@@ -2093,7 +2133,7 @@ struct MMPsywave : public MM
     }
 
     static void cad (int s, int, BS &b) {
-        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + (b.true_rand() % 11)) / 10;
+        turn(b,s)["CustomDamage"] = fpoke(b,s).level * (5 + b.randint(11)) / 10;
     }
 };
 
@@ -2111,7 +2151,7 @@ struct MMRazorWind : public MM
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
-            if (mv == SkullBash) {
+            if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
             }
 
@@ -2121,7 +2161,7 @@ struct MMRazorWind : public MM
                 b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                    tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
@@ -2266,7 +2306,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == 0) {
+        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -2335,7 +2375,7 @@ struct MMSleepTalk : public MM
         if (mp.size() == 0) {
             turn(b,s)["Failed"] = true;
         } else {
-            turn(b,s)["SleepTalkedMove"] = b.move(s, mp[b.true_rand()%mp.size()]);
+            turn(b,s)["SleepTalkedMove"] = b.move(s, mp[b.randint(mp.size())]);
         }
     }
 
@@ -2452,9 +2492,9 @@ struct MMSpite : public MM
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
         else if (b.gen() == 3)
-            b.losePP(t, slot, 2 + (b.true_rand()%4) );
+            b.losePP(t, slot, 2 + b.randint(4) );
         else if (b.gen() == 2)
-            b.losePP(t, slot, 1 + (b.true_rand()%5) );
+            b.losePP(t, slot, 1 + b.randint(5) );
 
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
     }
@@ -2812,7 +2852,7 @@ struct MMOutrage : public MM
         // Asleep is for Sleep Talk
         if ( (!turn(b,s)["OutrageBefore"].toBool() || poke(b,s).value("OutrageUntil").toInt() < b.turn())
              && b.poke(s).status() != Pokemon::Asleep) {
-            poke(b,s)["OutrageUntil"] = b.turn() +  1 + (b.true_rand() % 2);
+            poke(b,s)["OutrageUntil"] = b.turn() +  1 + b.randint(2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
 
@@ -2870,7 +2910,7 @@ struct MMUproar : public MM {
     static void uas(int s,int, BS &b) {
         if (poke(b,s).value("UproarUntil").toInt() < b.turn() || !turn(b,s).value("UproarBefore").toBool()) {
             if (b.gen() <= 4)
-                poke(b,s)["UproarUntil"] = b.turn() + 1 + (b.true_rand() % 4);
+                poke(b,s)["UproarUntil"] = b.turn() + 1 + b.randint(4);
             else
                 poke(b,s)["UproarUntil"] = b.turn() + 2;
 
@@ -3175,7 +3215,7 @@ struct MMAcupressure : public MM
         }
         if (stats.empty())
             return;
-        b.inflictStatMod(t, stats[b.true_rand()%stats.size()], 2, t);
+        b.inflictStatMod(t, stats[b.randint(stats.size())], 2, t);
     }
 };
 
@@ -3522,20 +3562,6 @@ struct MMTelekinesis : public MM
             b.removeEndTurnEffect(BS::PokeEffect, s, "Telekinesis");
             b.sendMoveMessage(174, 1, s);
         };
-    }
-};
-
-struct MMStrikeDown : public MM
-{
-    MMStrikeDown() {
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void uas(int s, int t, BS &b) {
-        if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, s, type(b,s), t);
-            poke(b,t)["StruckDown"] = true;
-        }
     }
 };
 
@@ -4071,14 +4097,14 @@ struct MMTriAttack : public MM
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
 
-        if (b.true_rand() % 5 > unsigned(0+boost))
+        if (!b.coinflip(unsigned(1+boost), 5))
             return;
 
         if (b.poke(t).status() == Pokemon::Koed)
             return;
 
         int status;
-        switch (b.true_rand() %3) {
+        switch (b.randint(3)) {
         case 0:
             status = Pokemon::Paralysed;
             break;
@@ -4307,7 +4333,6 @@ void MoveEffect::init()
     REGISTER_MOVE(172, MirrorType);
     //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
-    REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
     REGISTER_MOVE(177, Stall);
     REGISTER_MOVE(178, FireOath);

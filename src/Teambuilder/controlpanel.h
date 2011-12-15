@@ -29,6 +29,7 @@ signals:
     void unbanRequested(const QString &name);
     void tunbanRequested(const QString &name);
     void tempBanRequested(const QString &name,const int &time);
+    void pmcp(const QString &p);
 private slots:
     void getUser() {
         aliasList->clear();
@@ -68,6 +69,9 @@ private slots:
     }
     void on_tBan_clicked() {
         emit tempBanRequested(userName->text(),time->value());
+    }
+    void on_pm_clicked() {
+        emit pmcp(userName->text());
     }
 };
 

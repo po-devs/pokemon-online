@@ -78,7 +78,7 @@
 
 %s stole %f's %i!
 
-%s's Competitive Spirit sharply raised its Attack!
+%s's Defiant sharply raised its Attack!
 %s transformed into %p!
 
 

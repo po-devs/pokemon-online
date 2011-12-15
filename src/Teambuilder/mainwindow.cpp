@@ -38,6 +38,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "show_player_events_team", false);
     setDefaultValue(s, "show_timestamps", true);
     setDefaultValue(s, "show_timestamps2", true);
+    setDefaultValue(s, "pm_flashing", true);
     setDefaultValue(s, "animate_hp_bar", true);
     setDefaultValue(s, "sort_players_by_tier", false);
     setDefaultValue(s, "show_all_items", false);
@@ -59,7 +60,30 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
-    PokemonInfo::init("db/pokes/", FillMode::Client);
+    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QStringList mods = s_mod.childGroups();
+    QString modname;
+
+    if (mods.size() > 0) {
+        int general_pos = mods.indexOf("General");
+        if (general_pos != -1) {
+            mods.removeAt(general_pos);
+        }
+        if (mods.size() > 0) {
+            int mod_selected = s_mod.value("active", 0).toInt();
+            bool is_mod_selected = mod_selected > 0;
+
+            QStringListIterator mods_it(mods);
+            while (mods_it.hasNext()) {
+                QString current = mods_it.next();
+                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
+                    modname = current;
+                }
+            }
+        }
+    }
+
+    PokemonInfo::init("db/pokes/", FillMode::Client, modname);
     MoveSetChecker::init("db/pokes/", s.value("enforce_min_levels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");

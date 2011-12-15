@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
     QDir::setCurrent( path );
     CFRelease(pluginRef);
     CFRelease(macPath);
+#elif defined(PO_DATA_REPO)
+    QDir::setCurrent(PO_DATA_REPO);
 #endif
 
     srand(time(NULL));
@@ -68,6 +70,8 @@ int main(int argc, char *argv[])
         QCoreApplication::setApplicationName("Pokeymon-Online");
 	QCoreApplication::setOrganizationName("Dreambelievers");
 
+        QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
+
         QSettings settings;
         if (settings.value("language").isNull()) {
             settings.setValue("language", QLocale::system().name().section('_', 0, 0));
@@ -76,7 +80,7 @@ int main(int argc, char *argv[])
         QString locale = settings.value("language").toString();
 
         QTranslator translator;
-        translator.load(QString("translation_") + locale);
+        translator.load(QString("trans/translation_") + locale);
         a.installTranslator(&translator);
 
         /* icon ;) */

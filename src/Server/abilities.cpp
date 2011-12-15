@@ -224,7 +224,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(s) && !b.koed(t) && b.isSeductionPossible(s,t) && b.true_rand() % 100 < 30
+        if (!b.koed(s) && !b.koed(t) && b.isSeductionPossible(s,t) && b.coinflip(30, 100)
             && !b.linked(t, "Attract"))
         {
             b.sendMoveMessage(58,1,s,0,t);
@@ -234,6 +234,12 @@ struct AMCuteCharm : public AM {
             } else {
                 b.link(s, t, "Attract");
                 addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+                if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                    b.link(t, s, "Attract");
+                    addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                    b.sendItemMessage(7,t,0,s);
+                }
             }
         }
     }
@@ -245,7 +251,7 @@ struct AMCuteCharm : public AM {
             int seducer = b.linker(s, "Attract");
 
             b.sendMoveMessage(58,0,s,0,seducer);
-            if (b.true_rand() % 2 == 0) {
+            if (b.coinflip(1, 2)) {
                 turn(b,s)["ImpossibleToMove"] = true;
                 b.sendMoveMessage(58, 2,s);
             }
@@ -324,8 +330,8 @@ struct AMEffectSpore : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.poke(t).status() == Pokemon::Fine && b.true_rand() % 100 < 30) {
-            switch (b.true_rand() % 3) {
+        if (b.poke(t).status() == Pokemon::Fine && b.coinflip(30, 100)) {
+            switch (b.randint(3)) {
             case 0:
                 if (b.canGetStatus(t,Pokemon::Asleep)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
@@ -465,7 +471,7 @@ struct AMForeWarn : public AM {
             }
         }
 
-        int m = poss[b.true_rand()%poss.size()];
+        int m = poss[b.randint(poss.size())];
 
         b.sendAbMessage(22,0,s,s,MoveInfo::Type(m, b.gen()),m);
     }
@@ -853,7 +859,7 @@ struct AMShedSkin : public AM {
     static void et(int s, int, BS &b) {
         if (b.koed(s))
             return;
-        if (b.true_rand() % 100 < 30 && b.poke(s).status() != Pokemon::Fine) {
+        if (b.coinflip(30, 100) && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(54,0,s,s,Pokemon::Bug);
             b.healStatus(s, b.poke(s).status());
         }
@@ -869,7 +875,7 @@ struct AMSlowStart : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        poke(b,s)["SlowStartTurns"] = b.turn() + 4;
+        poke(b,s)["SlowStartTurns"] = b.turn() + 5;
         b.sendAbMessage(55,0,s);
     }
 
@@ -1537,18 +1543,22 @@ struct AMMagicMirror : public AM
         if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
+
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if (b.koed(t)) {
-                    continue;
-                }
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
-                    target = t;
-                    break;
+            if (tmove(b,s).targets == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if (b.koed(t)) {
+                        continue;
+                    }
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
@@ -1586,7 +1596,7 @@ struct AMHarvest : public AM
     static void et(int s, int, BS &b) {
         if (b.poke(s).item() == 0 && b.poke(s).itemUsed() != 0 && ItemInfo::isBerry(b.poke(s).itemUsed())) {
             if (!b.isWeatherWorking(BattleSituation::Sunny)) {
-                if (b.true_rand() % 2)
+                if (b.coinflip(1, 2))
                      return; // 50 % change when not sunny
             }
             int item = b.poke(s).itemUsed();
@@ -1614,7 +1624,7 @@ struct AMMiracleSkin : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (turn(b,s)["StatModType"].toString() == "Status" && b.true_rand() % 2) {
+        if (turn(b,s)["StatModType"].toString() == "Status" && b.coinflip(1, 2)) {
             if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(90,0,s);
             b.preventStatMod(s,t);
@@ -1691,7 +1701,7 @@ struct AMInconsistent : public AM {
         }
         if (raisableStats.empty())
             return;
-        int randomStat = raisableStats[b.true_rand()%raisableStats.size()];
+        int randomStat = raisableStats[b.randint(raisableStats.size())];
 
         b.sendAbMessage(95,0,s,0, 0, randomStat);
         b.inflictStatMod(s, randomStat, 2, s, false);
@@ -1703,7 +1713,7 @@ struct AMInconsistent : public AM {
         }
         if (raisableStats.empty())
             return;
-        randomStat = raisableStats[b.true_rand()%raisableStats.size()];
+        randomStat = raisableStats[b.randint(raisableStats.size())];
 
         b.sendAbMessage(95,1,s,0, 0, randomStat);
         b.inflictStatMod(s, randomStat, -1, s, false);
@@ -1716,7 +1726,7 @@ struct AMCursedBody : public AM {
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(t) || (b.true_rand() % 100) >= 30 || MMDisable::failOn(t, b))
+        if (b.koed(t) || MMDisable::failOn(t, b) || !b.coinflip(30, 100))
             return;
 
         b.sendAbMessage(96, 0, s);
@@ -1730,6 +1740,9 @@ struct AMSelfConscious : public AM {
     }
 
     static void ubh(int s, int t, BS &b) {
+        if (b.koed(s)) {
+            return;
+        }
         int tp = type(b,t);
 
         if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {
@@ -1761,7 +1774,7 @@ struct AMHealingHeart : public AM {
             return;
         }
 
-        if (b.true_rand() % 100 > 30) {
+        if (!b.coinflip(30, 100)) {
             return;
         }
 
@@ -1775,7 +1788,7 @@ struct AMHealingHeart : public AM {
         if (partners.size() == 0)
             return;
 
-        int p = partners[b.true_rand() % partners.size()];
+        int p = partners[b.randint(partners.size())];
 
         b.sendAbMessage(99, 0, s, p);
         b.healStatus(p, b.poke(p).status());
@@ -1840,7 +1853,7 @@ struct AMPickUp : public AM {
             return;
         }
 
-        int i = possibilities[b.true_rand()%possibilities.size()];
+        int i = possibilities[b.randint(possibilities.size())];
         int item = b.poke(i).itemUsed();
         b.sendAbMessage(93, 0, s, 0, 0, item);
         b.poke(i).itemUsed() = 0;

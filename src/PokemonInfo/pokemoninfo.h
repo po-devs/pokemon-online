@@ -81,6 +81,7 @@ public:
     static int Type1(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
     static int Type2(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
     static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Picture(const QString &url);
     static QPixmap Sub(int gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
     static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = GEN_MAX);

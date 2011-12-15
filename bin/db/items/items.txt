@@ -249,7 +249,7 @@ Ice Gem
 Fight Gem
 Poison Gem
 Earth Gem
-Flight Gem
+Flying Gem
 Psychic Gem
 Bug Gem
 Rock Gem
