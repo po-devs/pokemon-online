@@ -136,6 +136,7 @@ void Server::start(){
     AbilityInfo::init("db/abilities/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
+    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 
     printLine(tr("Pokemon database loaded"));
 

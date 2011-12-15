@@ -104,6 +104,7 @@ BattleLogsPlugin::BattleLogsPlugin(bool raw, bool plain) : commands(&toSend, QIO
 {
     started = false;
     input = NULL;
+    ptr = NULL;
     commands.setVersion(QDataStream::Qt_4_5);
     t.start();
 }
@@ -142,8 +143,10 @@ BattleLogsPlugin::~BattleLogsPlugin()
 
         if (input) {
             input->deleteTree();
-            delete input;
         }
+
+        delete input;
+        delete ptr;
     }
 }
 
@@ -176,16 +179,19 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
     }
 
     if (text) {
+        ptr = new Logger(&plainText);
         conf = b.configuration();
         conf.receivingMode[0] = conf.receivingMode[1] = BattleConfiguration::Player;
+        conf.teams[0] = &b.team(0);
+        conf.teams[1] = &b.team(1);
 
-        BattleInput *input = new BattleInput(&conf);
+        input = new BattleInput(&conf);
         battledata_basic *data = new battledata_basic(&conf);
         BattleClientLog *log = new BattleClientLog(data, &theme);
         input->addOutput(data);
         input->addOutput(log);
 
-        QObject::connect(log, SIGNAL(lineToBePrinted(QString)), SLOT(printLine(QString)));
+        QObject::connect(log, SIGNAL(lineToBePrinted(QString)), ptr, SLOT(log(QString)));
     }
 
     id1 = b.id(0);
@@ -193,11 +199,6 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
     started = true;
 
     return 0;
-}
-
-void BattleLogsPlugin::printLine(const QString &line)
-{
-    plainText+=line;
 }
 
 int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
@@ -218,4 +219,14 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
     }
 
     return 0;
+}
+
+Logger::Logger(QString *string)
+{
+    this->ptr = string;
+}
+
+void Logger::log(const QString &s)
+{
+    this->ptr->append(s);
 }
