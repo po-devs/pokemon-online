@@ -348,7 +348,7 @@ struct IMScopeLens : public IM
 struct IMShellBell : public IM
 {
     IMShellBell() {
-        functions["UponDamageInflicted"] = &udi;
+        functions["AfterAttackSuccessful"] = &udi;
     }
 
     static void udi(int s, int t, BS &b) {
@@ -362,8 +362,12 @@ struct IMShellBell : public IM
             return;
         }
 
-        b.sendItemMessage(24, s);
-        b.healLife(s, turn(b,s)["DamageInflicted"].toInt()/8);
+        int damage = turn(b,s)["DamageInflicted"].toInt();
+
+        if (damage > 0) {
+            b.sendItemMessage(24, s);
+            b.healLife(s, damage/8);
+        }
     }
 };
 
@@ -683,7 +687,7 @@ struct IMRedCard : public IM
         if (turn(b,t)["RedCardCount"] != slot(b,t)["SwitchCount"])
             return;
         int s = turn(b,t)["RedCardUser"].toInt();
-        if (b.koed(s) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
+        if (b.koed(s) || b.koed(t) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
         if (!b.hasWorkingItem(s, Item::RedCard))
             return;

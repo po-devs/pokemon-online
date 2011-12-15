@@ -144,7 +144,7 @@ void PokeBodyWidget::goToAdvanced()
 
 void PokeBodyWidget::setWidgetNum(int num)
 {
-    this->num->setText(tr("e%1").arg(num+1));
+    this->num->setText(tr("Pokémon %1").arg(num+1));
     setProperty("num", num);
 }
 

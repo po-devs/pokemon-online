@@ -33,6 +33,7 @@ signals:
 public slots:
     void sendMessage();
     void ignore(bool);
+    void challenge();
 private:
     QString m_name;
     QString m_ownName;

@@ -498,15 +498,19 @@ struct MMDetect : public MM
         if (b.gen() <= 2) {
             int x = 256 / (1 << (std::min(protectCount, 8))) - 1;
 
-            return b.coinflip(x, 256);
+            return (b.randint() & 0xFF) < x;
         } else if (b.gen() <= 4) {
             int x = 1 << (std::min(protectCount, 3));
 
-            return (b.coinflip(1, x));
+            return (b.randint() & (x-1)) == 0;
         } else {
             int x = 1 << (std::min(protectCount, 8));
 
-            return (b.coinflip(1, x));
+            if (x >= 256) {
+                return b.randint() == 0;
+            } else {
+                return (b.randint() & (x-1)) == 0;
+            }
         }
     }
 
@@ -1381,7 +1385,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
+        else if (poke(b,s).contains("Embargoed")) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -2156,4 +2160,3 @@ void init_moves_1(QHash<int, MoveMechanics> &mechanics, QHash<int, QString> &nam
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
 }
-

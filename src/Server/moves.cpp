@@ -357,21 +357,30 @@ struct MMHaze : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.gen() > 1) {
+            if (tmove(b,s).power == 0) {
+                b.sendMoveMessage(149);
 
-        if (tmove(b,s).power == 0) {
-            b.sendMoveMessage(149);
+                foreach (int p, b.sortedBySpeed())
+                {
+                    for (int i = 1; i <= 7; i++) {
+                        fpoke(b,p).boosts[i] = 0;
+                    }
+                }
+            }
+            else {
+                b.sendMoveMessage(149, 1, s, type(b,s), t);
+                for (int i = 1; i <= 7; i++) {
+                    fpoke(b,t).boosts[i] = 0;
+                }
+            }
+        } else {
+            /* In gen 1, haze just clears status */
+            b.sendMoveMessage(149, 2);
 
             foreach (int p, b.sortedBySpeed())
             {
-                for (int i = 1; i <= 7; i++) {
-                    fpoke(b,p).boosts[i] = 0;
-                }
-            }
-        }
-        else {
-            b.sendMoveMessage(149, 1, s, type(b,s), t);
-            for (int i = 1; i <= 7; i++) {
-                fpoke(b,t).boosts[i] = 0;
+                b.healStatus(p, 0);
             }
         }
     }
@@ -565,8 +574,12 @@ struct MMIngrain : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
-            b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                b.sendMoveMessage(60, 0, s);
+            } else {
+                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            }
         }
     }
 };
@@ -873,6 +886,12 @@ struct MMAttract : public MM
         } else {
             b.link(s, t, "Attract");
             addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+            if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                b.link(t, s, "Attract");
+                addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                b.sendItemMessage(7,t,0,s);
+            }
         }
     }
 
@@ -1098,7 +1117,7 @@ struct MMGrassKnot : public MM
         } else {
             bp = 120;
         }
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b,s).power * bp;
     }
 };
 
@@ -1117,7 +1136,7 @@ struct MMGrudge : public MM
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
         if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
-            if (!b.koed(t) && !b.hasSubstitute(t)) {
+            if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
@@ -1153,7 +1172,7 @@ struct MMGyroBall : public MM
         int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = bp;
+        tmove(b, s).power = tmove(b, s).power * bp;
     }
 };
 
@@ -1288,7 +1307,7 @@ struct MMPowerTrick : public MM
 /* Heal block:
    For 5 turns, the target cannot select or execute any of the following moves:
 
-If eunder the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
+If Pokémon under the effect of Heal Block receives the effects of Wish, Wish will fail to heal. If a Pokemon uses Wish, is hit by Heal Block, and then switches out to another Pokemon, Wish will heal that Pokemon.
 
 Aqua Ring and Ingrain do not heal their user while under the effects of Heal Block.
 
@@ -1717,7 +1736,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror))) {
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
                         target = t;
                         break;
                     }
@@ -2132,7 +2151,7 @@ struct MMRazorWind : public MM
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
             /* Skull bash */
-            if (mv == SkullBash) {
+            if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
             }
 
@@ -2142,7 +2161,7 @@ struct MMRazorWind : public MM
                 b.disposeItem(s);
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                    tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
@@ -2287,7 +2306,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == 0) {
+        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -3546,20 +3565,6 @@ struct MMTelekinesis : public MM
     }
 };
 
-struct MMStrikeDown : public MM
-{
-    MMStrikeDown() {
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void uas(int s, int t, BS &b) {
-        if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, s, type(b,s), t);
-            poke(b,t)["StruckDown"] = true;
-        }
-    }
-};
-
 struct MMYouFirst : public MM
 {
     MMYouFirst() {
@@ -4328,7 +4333,6 @@ void MoveEffect::init()
     REGISTER_MOVE(172, MirrorType);
     //REGISTER_MOVE(173, Acrobat);
     REGISTER_MOVE(174, Telekinesis);
-    REGISTER_MOVE(175, StrikeDown);
     REGISTER_MOVE(176, YouFirst);
     REGISTER_MOVE(177, Stall);
     REGISTER_MOVE(178, FireOath);

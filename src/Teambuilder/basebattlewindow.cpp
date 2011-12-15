@@ -4,6 +4,8 @@
 #include "theme.h"
 #include "logmanager.h"
 #include "remove_direction_override.h"
+#include "spectatorwindow.h"
+#include "../BattleManager/battledata.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -39,6 +41,7 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 {
     ownid() = _ownid;
     this->conf() = conf;
+    this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
     mydisplay = new BaseBattleDisplay(info());
@@ -132,6 +135,19 @@ void BaseBattleWindow::init()
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     loadSettings(this);
+    test = new SpectatorWindow(conf(), info().name(0), info().name(1));
+
+    QWidget *widget =test->getSampleWidget();
+    widget->setParent(this);
+    widget->setWindowFlags(Qt::Window);
+    // Following line shows another battle window, but this one with
+    // pretty graphics and such. Currently disabled until post 1.0.32
+    // release. ~nix
+    /* widget->show(); */
+    testWidget = widget;
+
+    connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
+    connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
@@ -316,6 +332,7 @@ void BaseBattleWindow::closeEvent(QCloseEvent *)
 void BaseBattleWindow::close()
 {
     writeSettings(this);
+    testWidget->close();
     QWidget::close();
 }
 
@@ -342,6 +359,8 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
         delayedCommands.push_back(inf);
         return;
     }
+    test->receiveData(inf);
+
     /* At the start of the battle 700 ms are waited, to prevent misclicks
        when wanting to do something else */
     if (!started() && inf[0] == char(OfferChoice)) {
@@ -429,6 +448,12 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         break;
     }
     case SendBack:
+        bool silent;
+        in >> silent;
+
+        if (silent) {
+            break;
+        }
         printLine(tr("%1 called %2 back!").arg(name(player(spot)), rnick(spot)));
         switchToNaught(spot);
         break;
@@ -743,8 +768,8 @@ void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spo
         QString mess = AbilityInfo::Message(ab,part);
         mess.replace("%st", StatInfo::Stat(other));
         mess.replace("%s", nick(spot));
-        //            mess.replace("%ts", name(spot));
-        //            mess.replace("%tf", name(!spot));
+        mess.replace("%ts", name(player(spot)));
+        mess.replace("%tf", name(opponent(player(spot))));
         mess.replace("%t", TypeInfo::Name(type));
         mess.replace("%f", nick(foe));
         mess.replace("%m", MoveInfo::Name(other));
@@ -1262,7 +1287,16 @@ void BaseBattleDisplay::updateToolTip(int spot)
     tooltip += "\n";
 
     for (int i = 0; i < 5; i++) {
-        tooltip += "\n" + stats[i] + " ";
+        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
+        if (info().gen == 1) {
+            switch (i) {
+            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
+            case 3: continue;
+            default: tooltip += "\n" + stats[i] + " ";
+            }
+        } else {
+            tooltip += "\n" + stats[i] + " ";
+        }
         int boost = info().statChanges[spot].boosts[i];
         if (boost >= 0) {
             tooltip += QString("+%1").arg(boost);

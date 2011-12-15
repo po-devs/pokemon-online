@@ -1,6 +1,8 @@
 QT += network \
     xml \
-    phonon
+    phonon \
+    declarative \
+    opengl
 TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
@@ -41,7 +43,8 @@ SOURCES += main.cpp \
     logmanager.cpp \
     poketextedit.cpp \
     remove_direction_override.cpp \
-    password_wallet.cpp
+	password_wallet.cpp\
+    spectatorwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -92,10 +95,18 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     logmanager.h \
     poketextedit.h \
     remove_direction_override.h \
-    password_wallet.h
+	password_wallet.h\
+    spectatorwindow.h \
+    ../BattleManager/battlescene.h \
+    ../BattleManager/battleinput.h \
+    ../BattleManager/battledatatypes.h \
+    ../BattleManager/battledata.h \
+    ../BattleManager/battleclientlog.h
 LIBS += -L../../bin \
     -lpokemonlib \
-    -lutilities
+    -lutilities \
+    -lbattlelib
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 FORMS += controlpanel.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
@@ -120,4 +131,9 @@ macx:LIBS += -framework \
 macx:ICON = pokemononline.icns
 macx:QMAKE_INFO_PLIST = Info.plist
 
+CONFIG(debian) {
+    DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
+}
 
+
+CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
