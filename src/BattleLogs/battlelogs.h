@@ -4,6 +4,7 @@
 #include "BattleLogs_global.h"
 #include "../Server/plugininterface.h"
 #include "../Server/battleinterface.h"
+#include "../BattleManager/defaulttheme.h"
 
 #include <QtCore>
 #include <QWidget>
@@ -25,6 +26,7 @@ BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
 }
 
 class PokeBattle;
+class BattleInput;
 
 class BATTLELOGSSHARED_EXPORT BattleLogs
     : public ServerPlugin
@@ -41,6 +43,8 @@ public:
 
     QSet<QString> tiers;
     bool saveMixedTiers;
+    bool saveRawFiles;
+    bool saveTextFiles;
 };
 
 class BATTLELOGSSHARED_EXPORT BattleLogsWidget : public QWidget
@@ -49,7 +53,7 @@ class BATTLELOGSSHARED_EXPORT BattleLogsWidget : public QWidget
 public:
     BattleLogsWidget(BattleLogs *master);
 
-    QCheckBox *mixedTiers;
+    QCheckBox *mixedTiers, *rawFile, *textFile;
     QTextEdit *tiers;
     BattleLogs *master;
 
@@ -58,22 +62,32 @@ public slots:
 };
 
 class BATTLELOGSSHARED_EXPORT BattleLogsPlugin
-    : public BattlePlugin
+    : public QObject, public BattlePlugin
 {
+    Q_OBJECT
 public:
-    BattleLogsPlugin();
+    BattleLogsPlugin(bool raw=true, bool text=false);
     ~BattleLogsPlugin();
 
     QHash<QString, Hook> getHooks();
     int emitCommand(BattleInterface &, int slot, int players, QByteArray b);
     int battleStarting(BattleInterface &);
-
+public slots:
+    void printLine(const QString &line);
+public:
     bool started;
     int id1, id2;
     QByteArray teams;
     QByteArray toSend;
     QDataStream commands;
     QElapsedTimer t;
+
+    QString plainText;
+    BattleConfiguration conf;
+    BattleDefaultTheme theme;
+    BattleInput *input;
+
+    bool raw, text;
 };
 
 #endif // BATTLELOGS_H
