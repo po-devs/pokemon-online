@@ -190,7 +190,8 @@ struct BMAntiNormal : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        if (b.gen() >= 4) {
+        /* We never want to activate this berry if this is consumed by Bug Bite */
+        if (b.gen() >= 4 && !turn(b,s).value("BugBiter").toBool()) {
             /* Normal moves */
             if (!b.hasSubstitute(s) && tmove(b,t).type == 0) {
                 b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));

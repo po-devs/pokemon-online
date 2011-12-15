@@ -990,6 +990,11 @@ void BattleSituation::endTurn()
 
 void BattleSituation::endTurnDefrost()
 {
+    // RBY freeze is forever unless hit by fire moves.
+    // We think both stadium and cart have permafreeze.
+    if (gen() == 1) {
+      return;
+    }
     foreach(int player, speedsVector) {
         if (poke(player).status() == Pokemon::Frozen)
         {
@@ -1900,6 +1905,13 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
+       int forme = ItemInfo::DriveForme(p.item());
+
+       if (forme != 0) {
+           changeAForme(slot, forme);
+       }
+    }
 
     turnMemory(slot)["CantGetToMove"] = true;
 
@@ -2098,7 +2110,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return false;
     }
 
-    if (acc == 0 || acc == 101 || pokeMemory(target).value("LevitatedCount").toInt() > 0) {
+    if (acc == 0 || acc == 101 ||
+        (pokeMemory(target).value("LevitatedCount").toInt() > 0 &&
+         !MoveInfo::isOHKO(move, gen()))) {
         return true;
     }
 
@@ -2300,7 +2314,7 @@ void BattleSituation::testFlinch(int player, int target)
     int rate = tmove(player).flinchRate;
 
     if (hasWorkingAbility(target, Ability::InnerFocus)) {
-        if (rate == 100) {
+        if (rate == 100 && gen() <= 4) {
             sendAbMessage(12,0,target);
         }
         return;
@@ -3741,7 +3755,12 @@ int BattleSituation::calculateDamage(int p, int t)
 
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
-    int randnum = randint(16) + 85;
+    int randnum;
+    if (gen() == 1) {
+      randnum = randint(38) + 217;
+    } else {
+      randnum = randint(16) + 85;
+    }
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
@@ -3768,6 +3787,7 @@ int BattleSituation::calculateDamage(int p, int t)
     /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
       but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
       move power (not just power variable) because of technician which relies on it */
+
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
     if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {

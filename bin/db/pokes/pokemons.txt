@@ -721,4 +721,8 @@
 647:0 Keldeo
 648:0:H Meloetta
 648:1 Meloetta-S
-649:0 Genesect
+649:0:H Genesect
+649:1 Genesect-D
+649:2 Genesect-S
+649:3 Genesect-B
+649:4 Genesect-C

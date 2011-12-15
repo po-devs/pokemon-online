@@ -23,6 +23,8 @@ class ServerWidget: public QWidget
 public:
     ServerWidget(Server *myserver);
     QMenuBar *createMenuBar();
+    bool isServerTrayPopupAllowed() const { return server->isTrayPopupAllowed(); }
+    bool isMinimizeToTrayAllowed() const { return server->isMinimizeToTrayAllowed(); }
 
     void atShutDown();
     
