@@ -3771,6 +3771,7 @@ int BattleSituation::calculateDamage(int p, int t)
     /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
       but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
       move power (not just power variable) because of technician which relies on it */
+
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
     if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
