@@ -30,6 +30,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "battle_music_directory", "Music/Battle/");
     setDefaultValue(s, "play_battle_music", false);
     setDefaultValue(s, "play_battle_sounds", false);
+    setDefaultValue(s, "flash_when_enemy_moves", true);
     setDefaultValue(s, "show_team", true);
     setDefaultValue(s, "enable_ladder", true);
     setDefaultValue(s, "show_player_events_idle", false);

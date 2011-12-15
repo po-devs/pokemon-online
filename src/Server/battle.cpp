@@ -606,20 +606,20 @@ void BattleSituation::initializeEndTurnFunctions()
     6.0 Ingrain
     6.1 Aqua Ring
     6.2 Speed Boost, Shed Skin
-    6.3 Black Sludge, Leftovers: "pokemon restored a little HP using its leftovers"
-    6.4 Leech Seed: "pokemon's health is sapped by leech seed"
-    6.5 Burn, Poison Heal, Poison: "pokemon is hurt by poison"
+    6.3 Black Sludge, Leftovers: "pokémon restored a little HP using its leftovers"
+    6.4 Leech Seed: "pokémon's health is sapped by leech seed"
+    6.5 Burn, Poison Heal, Poison: "pokémon is hurt by poison"
     6.6 Nightmare
     6.7 Flame Orb activation, Toxic Orb activation
     6.8 Curse (from a Ghost)
     6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
     6.10 Bad Dreams Damage
-    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokemon caused an uproar" & "pokemon calmed down"
-    6.12 Disable ends: "pokemon is no longer disabled"
+    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
+    6.12 Disable ends: "pokémon is no longer disabled"
     6.13 Encore ends
     6.14 Taunt wears off
     6.15 Magnet Rise
-    6.16 Heal Block: "the foe pokemon's heal block wore off"
+    6.16 Heal Block: "the foe pokémon's heal block wore off"
     6.17 Embargo
     6.18 Yawn
     6.19 Sticky Barb
@@ -720,7 +720,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         27.0 Zen Mode
 
-        28.0 pokemon is switched in (if previous Pokemon fainted)
+        28.0 Pokémon is switched in (if previous Pokémon fainted)
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
@@ -3766,24 +3766,6 @@ int BattleSituation::calculateDamage(int p, int t)
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
-    int type = tmove(p).type;
-
-    /* Calculate the multiplier for two turn attacks 
-       This has to be here since some moves ie. earthquake only want to boost on some targets */ 
-    if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
-        QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
-        QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
-    
-        for (int i = 0; i < vuln_moves.size(); i++) {
-            if (vuln_moves[i] == attackused) {
-                power = power * vuln_mults[i];
-            }
-        }
-    }
-
-    if (move.contains("HelpingHanded")) {
-        power = power * 3 / 2;
-    }
 
     /*** WARNING ***/
     /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
@@ -3797,6 +3779,20 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     int power = tmove(p).power;
+    int type = tmove(p).type;
+
+    /* Calculate the multiplier for two turn attacks */ 
+    if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
+        QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
+        QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
+    
+        for (int i = 0; i < vuln_moves.size(); i++) {
+            if (vuln_moves[i] == attackused) {
+                power = power * vuln_mults[i];
+            }
+        }
+    }
+
     if (move.contains("HelpingHanded")) {
         power = power * 3 / 2;
     }

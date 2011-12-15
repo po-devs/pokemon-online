@@ -28,7 +28,7 @@ Pokedex::Pokedex(QWidget *parent, QAbstractItemModel *model)
     firstCol->addWidget(type = new QPushButton(tr("&Type Chart")));
     firstCol->addWidget(damage = new QPushButton(tr("&Damage Calculator")));
     firstCol->addStretch(100);
-    QLabel *text = new QLabel(toBoldColor("The Pokeex is not complete yet.", Qt::blue));
+    QLabel *text = new QLabel(toBoldColor("The Pokédex is not complete yet.", Qt::blue));
     text->setWordWrap(true);
     firstCol->addWidget(text);
 

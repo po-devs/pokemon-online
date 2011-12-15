@@ -36,7 +36,7 @@ TeamPokeButton::TeamPokeButton(int num, Pokemon::uniqueId poke, int level, int i
 
     ml->addWidget(pokeBG,0,0,3,1);
 
-    QLabel * pokeText = new QLabel(tr("Pokemon &%1").arg(num+1));
+    QLabel * pokeText = new QLabel(tr("Pokémon &%1").arg(num+1));
     pokeText->setObjectName("NormalText");
     pokeText->setBuddy(this);
     ml->addWidget(pokeText, 0,1,1,2);

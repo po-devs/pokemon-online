@@ -69,6 +69,8 @@ public:
     bool beforePlayerBan(int src, int dest);
     void afterPlayerBan(int src, int dest);
     void battleSetup(int src, int dest, int battleId);
+    bool beforeFindBattle(int src);
+    void afterFindBattle(int src);
 
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
@@ -213,6 +215,8 @@ public:
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int slot, int stat);
     Q_INVOKABLE void setTeamPokeDV(int id, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeIV(int id, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeEV(int id, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
@@ -264,6 +268,8 @@ public:
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
+    Q_INVOKABLE QString serverVersion();
+    Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);

@@ -20,6 +20,9 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
+#ifdef PO_PMS_YOU_START_ONLY
+    lastAutoPM = time(NULL);
+#endif
 
     /* different events */
     eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
@@ -946,7 +949,12 @@ void Client::PMReceived(int id, QString pm)
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
-        myrelay.sendPM(id, "This player cannot receive PMs."); // no translation needed
+        time_t current = time(NULL);
+        double difference = difftime(lastAutoPM, current);
+        if ((difference > 6) || (difference < -6)) {
+            myrelay.sendPM(id, "This player cannot receive PMs."); // no translation needed
+            lastAutoPM = current;
+        }
         return;
     }
 #else

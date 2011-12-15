@@ -126,7 +126,6 @@ void PMWindow::reuse(int id)
 
     this->id() = id;
     printHtml("<i>" + tr("The player has logged on again") + "</i>");
-    blockSignals(false);
     m_challenge->setEnabled(true);
     m_send->setEnabled(true);
     m_textToSend->setEnabled(true);
