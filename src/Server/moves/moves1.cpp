@@ -819,7 +819,7 @@ struct MMCovet : public MM
                 && b.poke(s).item() == 0
                 && !(b.poke(t).item() == Item::GriseousOrb && (b.gen() <= 4 || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina))
                 && !ItemInfo::isMail(b.poke(t).item())
-                && !(ItemInfo::isCassette(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Insekuta || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Insekuta)))
+                && !(ItemInfo::isDrive(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
                 /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
