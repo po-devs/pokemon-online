@@ -624,15 +624,15 @@ public:
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
 
-    /* Generate a random number from 0 to max-1 */
+    /* Generate a random number from 0 to max-1. Could be improved to use something better than modulo */
     unsigned randint(int max) const {
         return unsigned(rand_generator()) % max;
     }
     unsigned randint() const {
         return unsigned(rand_generator());
     }
-    /* Return true with probability (heads_chance/total) */
-    bool coinflip(int heads_chance, int total) const {
+    /* Return true with probability (heads_chance/total). Could be improved to use something better than modulo. */
+    bool coinflip(unsigned heads_chance, unsigned total) const {
         return (unsigned(rand_generator()) % total) < heads_chance;
     }
 private:
