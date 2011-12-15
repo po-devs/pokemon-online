@@ -93,7 +93,8 @@ struct BMLeppa : public BM
                 minPP = 0;
                 break;
             }
-            if (b.PP(s, i) < minPP && b.PP(s, i) < b.poke(s).move(i).totalPP()) {
+            if (b.PP(s, i) < minPP && (fpoke(b, s).moves[i] == b.poke(s).move(i).num() ?
+                                       b.PP(s, i) < b.poke(s).move(i).totalPP() : b.PP(s, i) < 5)) {
                 minmove = i;
                 init = true;
                 minPP = b.PP(s, i);
@@ -189,7 +190,8 @@ struct BMAntiNormal : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        if (b.gen() >= 4) {
+        /* We never want to activate this berry if this is consumed by Bug Bite */
+        if (b.gen() >= 4 && !turn(b,s).value("BugBiter").toBool()) {
             /* Normal moves */
             if (!b.hasSubstitute(s) && tmove(b,t).type == 0) {
                 b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
@@ -325,7 +327,7 @@ struct BMStarf : public BMPinch
         if (!testpinch(s, s, b, 4))
             return;
 
-        int stat = stats[b.true_rand()%stats.size()];
+        int stat = stats[b.randint(stats.size())];
         b.inflictStatMod(s, stat, 2, s, false);
         b.sendBerryMessage(9,s,0,s,berry,stat);
     }

@@ -86,6 +86,8 @@ public:
     bool isLegalProxyServer(const QString &ip) const;
 
     bool isPasswordProtected() const { return passwordProtected; }
+    bool isTrayPopupAllowed() const { return showTrayPopup; }
+    bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
 
@@ -112,13 +114,14 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
-    void useBattleFileLogChanged(bool logging);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
+    void showTrayPopupChanged(bool show);
+    void minimizeToTrayChanged(bool allow);
 
     void nameTaken();
     void ipRefused();
@@ -184,6 +187,8 @@ private:
     bool lowTCPDelay;
     bool safeScripts;
     bool passwordProtected;
+    bool showTrayPopup;
+    bool minimizeToTray;
     QString serverPassword;
 
     quint16 numPlayers() {

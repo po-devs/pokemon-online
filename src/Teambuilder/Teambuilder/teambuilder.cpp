@@ -322,7 +322,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QString genStrings[] = {tr("RBY (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
                             tr("HGSS (&4th gen)"),tr("B/W (&5th gen)")};
 
-    for (int i = 1; i < NUMBER_GENS; i++) {
+    for (int i = 0; i < NUMBER_GENS; i++) {
         this->gens[i] = gen->addAction(genStrings[i], this, SLOT(genChanged()));
         this->gens[i]->setCheckable(true);
         this->gens[i]->setProperty("gen", i + GEN_MIN);
@@ -348,6 +348,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     /* Loading mod menu */
     QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
     QStringList mods = s_mod.childGroups();
+    modActionGroup = new QActionGroup(menuBar);
     if (mods.size() > 0) {
         int general_pos = mods.indexOf("General");
         if (general_pos != -1) {
@@ -357,12 +358,11 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
             int mod_selected = s_mod.value("active", 0).toInt();
             bool is_mod_selected = mod_selected > 0;
             QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
-            QActionGroup *ag = new QActionGroup(menuBar);
 
             // No mod option.
             QAction *action_no_mod = menuMods->addAction(tr("No mod"), this, SLOT(setNoMod()));
             action_no_mod->setCheckable(true);
-            ag->addAction(action_no_mod);
+            modActionGroup->addAction(action_no_mod);
             if (!is_mod_selected) action_no_mod->setChecked(true);
             menuMods->addSeparator();
 
@@ -375,7 +375,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
                 if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
                     ac->setChecked(true);
                 }
-                ag->addAction(ac);
+                modActionGroup->addAction(ac);
             }
         }
     }
@@ -385,8 +385,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
 
 void TeamBuilder::changeMod()
 {
-    // TODO: 2nd param - read from menu.
-    PokemonInfo::reloadMod(FillMode::Client);
+    PokemonInfo::reloadMod(FillMode::Client, modActionGroup->checkedAction()->text());
     // TODO: MoveSetChecker::init("db/pokes/"); ?
 }
 

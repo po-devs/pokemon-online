@@ -1,0 +1,57 @@
+import QtQuick 1.0
+import Qt.labs.particles 1.0
+import "../" 1.0
+
+Item {
+    id: main;
+    property FieldPokemon pokemon
+
+    Particles {
+        id: particles;
+
+        x: pokemon.pokeSprite.x + pokemon.pokeSprite.width/2 - width/2
+        y: pokemon.pokeSprite.y+pokemon.pokeSprite.height-35;
+        width: 2
+        height: 2;
+        source: "../../images/orangecircle.png"
+
+        lifeSpan: 1400
+        lifeSpanDeviation: 100;
+        angle: 270
+        angleDeviation: 50
+        velocity: 100
+        count: 0;
+        emissionRate: 100;
+
+        velocityDeviation: 20
+        z: pokemon.pokeSprite.z + 10;
+
+        ParticleMotionGravity {
+            yattractor: 1000
+            acceleration: 100
+        }
+    }
+
+    SequentialAnimation {
+        id: anim
+        ScriptAction {
+            script: {battle.scene.pause(); particles.count=100; }
+        }
+        PauseAnimation { duration: 500 }
+        ScriptAction {
+            script: {particles.count = 0; particles.emissionRate=0; }
+        }
+        PauseAnimation {duration: 800;}
+        ScriptAction {
+            script: {battle.scene.unpause();}
+        }
+        PauseAnimation { duration: 1000 }
+        ScriptAction { script: main.finished();}
+    }
+
+    function start() {
+        anim.start();
+    }
+
+    signal finished();
+}

@@ -59,6 +59,7 @@ public:
     QPushButton *mute;
     QPushButton *kick;
     QPushButton *ban;
+    QPushButton *pm;
     QWidget *userAlias;
     QGridLayout *gridLayout_4;
     QListWidget *aliasList;
@@ -232,6 +233,11 @@ public:
 
         horizontalLayout_5->addWidget(ban);
 
+        pm = new QPushButton(userInfo);
+        pm->setObjectName(QString::fromUtf8("pm"));
+
+        horizontalLayout_5->addWidget(pm);
+
 
         verticalLayout_2->addLayout(horizontalLayout_5);
 
@@ -384,6 +390,7 @@ public:
         mute->setText(QApplication::translate("ControlPanel", "Mute", 0, QApplication::UnicodeUTF8));
         kick->setText(QApplication::translate("ControlPanel", "Kick", 0, QApplication::UnicodeUTF8));
         ban->setText(QApplication::translate("ControlPanel", "Ban", 0, QApplication::UnicodeUTF8));
+        pm->setText(QApplication::translate("ControlPanel", "PM User", 0, QApplication::UnicodeUTF8));
         ControlPanel->setTabText(ControlPanel->indexOf(userInfo), QApplication::translate("ControlPanel", "User info", 0, QApplication::UnicodeUTF8));
         aliasName->setText(QString());
         searchAlias->setText(QApplication::translate("ControlPanel", "Search", 0, QApplication::UnicodeUTF8));

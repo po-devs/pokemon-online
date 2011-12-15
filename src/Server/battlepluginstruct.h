@@ -29,7 +29,7 @@ template<class T1, class T2, class T3>
 int BattlePStorage::call(int f, BattleInterface *b, T1 arg1, T2 arg2, T3 arg3)
 {
     if (calls[f]) {
-        qDebug() << "Plugin of " << this << " is " << plugin << "(Battle " << b << ")";
+        //qDebug() << "Plugin of " << this << " is " << plugin << "(Battle " << b << ")";
         /* Calls the plugin member function, from the correct class, with the appropriate parameters */
         return (*plugin.*(reinterpret_cast<int (BattlePlugin::*)(BattleInterface &, T1, T2, T3)>(calls[f])))(*b, arg1, arg2, arg3);
     }
