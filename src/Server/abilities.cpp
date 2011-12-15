@@ -234,6 +234,12 @@ struct AMCuteCharm : public AM {
             } else {
                 b.link(s, t, "Attract");
                 addFunction(poke(b,t), "DetermineAttackPossible", "Attract", &pda);
+
+                if (b.hasWorkingItem(t, Item::DestinyKnot) && b.isSeductionPossible(t, s) && !b.linked(s, "Attract")) {
+                    b.link(t, s, "Attract");
+                    addFunction(poke(b,s), "DetermineAttackPossible", "Attract", &pda);
+                    b.sendItemMessage(7,t,0,s);
+                }
             }
         }
     }
@@ -1537,18 +1543,22 @@ struct AMMagicMirror : public AM
         if (b.battleMemory().contains("CoatingAttackNow")) {
             return;
         }
+
         int target = -1;
+
         if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
             target = t;
         } else {
             /* Entry hazards */
-            foreach(int t, b.revs(s)) {
-                if (b.koed(t)) {
-                    continue;
-                }
-                if (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) {
-                    target = t;
-                    break;
+            if (tmove(b,s).targets == Move::OpposingTeam) {
+                foreach(int t, b.revs(s)) {
+                    if (b.koed(t)) {
+                        continue;
+                    }
+                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
+                        target = t;
+                        break;
+                    }
                 }
             }
         }
@@ -1730,6 +1740,9 @@ struct AMSelfConscious : public AM {
     }
 
     static void ubh(int s, int t, BS &b) {
+        if (b.koed(s)) {
+            return;
+        }
         int tp = type(b,t);
 
         if ((tp == Type::Bug || tp == Type::Ghost || tp == Type::Dark) && !b.hasMaximalStatMod(s, Speed)) {
@@ -1847,6 +1860,18 @@ struct AMPickUp : public AM {
         b.acqItem(s, item);
     }
 };
+
+struct AMUnnerve : public AM {
+    AMUnnerve() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendAbMessage(102,0,s);
+    }
+};
+
+
 
 /* Events:
     PriorityChoice
@@ -1977,4 +2002,5 @@ void AbilityEffect::init()
     REGISTER_AB(99, HealingHeart);
     REGISTER_AB(100, FriendGuard);
     REGISTER_AB(101, PoisonTouch);
+    REGISTER_AB(102, Unnerve);
 }

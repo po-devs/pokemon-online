@@ -20,6 +20,9 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
+#ifdef PO_PMS_YOU_START_ONLY
+    lastAutoPM = time(NULL);
+#endif
 
     /* different events */
     eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
@@ -941,6 +944,20 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
+#ifdef PO_PMS_YOU_START_ONLY
+    if (mypms.contains(id)) {
+        registerPermPlayer(id);
+        mypms[id]->printLine(pm);
+    } else {
+        time_t current = time(NULL);
+        double difference = difftime(lastAutoPM, current);
+        if ((difference > 6) || (difference < -6)) {
+            myrelay.sendPM(id, "This player cannot receive PMs."); // no translation needed
+            lastAutoPM = current;
+        }
+        return;
+    }
+#else
     if (!playerExist(id) || myIgnored.contains(id)) {
         return;
     }
@@ -950,6 +967,7 @@ void Client::PMReceived(int id, QString pm)
 
     registerPermPlayer(id);
     mypms[id]->printLine(pm);
+#endif
 }
 
 void Client::removePM(int id)
@@ -1880,8 +1898,11 @@ void Client::removePlayer(int id)
     pmedPlayers.remove(id);
     fade.remove(id);
 
-    if (mypms.contains(id)) {
-        mypms[id]->disable();
+    QHash<int, PMWindow*>::iterator pm = mypms.find(id);
+    if (pm != mypms.end()) {
+        pm.value()->disable();
+        disabledpms[name] = pm.value();
+        mypms.erase(pm);
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
@@ -1962,16 +1983,12 @@ void Client::playerReceived(const PlayerInfo &p)
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
-    // If the player who logged on is in our PMs, we can reuse that PM
-    QHashIterator<int, PMWindow*> pm(mypms);
-    while (pm.hasNext()) {
-        pm.next();
-        if (pm.value()->name() == name(p.id)) {
-            mypms[p.id] = pm.value();
-            pm.value()->reuse(p.id);
-            mypms.remove(pm.key());
-            break;
-        }
+    QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
+    if (pm != disabledpms.end()) {
+        PMWindow *window = pm.value();
+        disabledpms.erase(pm);
+        mypms[p.id] = window;
+        window->reuse(p.id);
     }
 }
 

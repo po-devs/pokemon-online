@@ -82,7 +82,7 @@ public:
         return serverName;
     }
     bool isSafeScripts() const { return safeScripts; }
-
+    bool isPrivate() const { return serverPrivate == 1; }
     bool isLegalProxyServer(const QString &ip) const;
 
     bool isPasswordProtected() const { return passwordProtected; }
@@ -114,7 +114,6 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
-    void useBattleFileLogChanged(bool logging);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);

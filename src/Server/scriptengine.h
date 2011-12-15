@@ -14,7 +14,6 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "sessiondatafactory.h"
-#include "scriptdb.h"
 
 class Server;
 class ChallengeInfo;
@@ -71,6 +70,8 @@ public:
     void afterPlayerBan(int src, int dest);
     void battleSetup(int src, int dest, int battleId);
 
+    /* Imports a module with a given name */
+    Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
@@ -134,8 +135,6 @@ public:
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
-    Q_INVOKABLE void setPA(const QString &name);
-    Q_INVOKABLE void unsetPA(const QString &name);
 
     Q_INVOKABLE QScriptValue channelIds();
     Q_INVOKABLE QScriptValue channel(int id);
@@ -185,6 +184,7 @@ public:
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
     Q_INVOKABLE QScriptValue move(int num);
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);
@@ -245,14 +245,13 @@ public:
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
-    Q_INVOKABLE QString getBattleLogFileName(int battleid);
-
     Q_INVOKABLE int teamPokeAbility(int id, int slot);
     Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeAbility(int id, int slot, int ability);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GEN_MAX);
     Q_INVOKABLE void changePokeHappiness(int id, int slot, int value);
     Q_INVOKABLE void changePokeShine(int id, int slot, bool value);
+    Q_INVOKABLE QScriptValue teamPokeShine(int id, int slot);
     Q_INVOKABLE void changePokeNature(int id, int pokeslot, int nature);
     Q_INVOKABLE QScriptValue teamPokeGender(int id, int slot);
 
@@ -265,6 +264,8 @@ public:
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
+    Q_INVOKABLE QString serverVersion();
+    Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
@@ -321,9 +322,7 @@ private:
     QScriptValue myscript;
     QTimer * step_timer;
     QVector<bool> stopevents;
-    QList<QScriptString> playerArrays;
     SessionDataFactory *mySessionDataFactory;
-    ScriptDB *myScriptDB;
 
     QNetworkAccessManager manager;
     QHash<QTimer*,QString> timerEvents;

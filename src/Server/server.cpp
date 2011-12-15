@@ -209,7 +209,6 @@ void Server::start(){
         s.setValue("logs_battle_files", false);
     }
     useChannelFileLog = s.value("logs_channel_files").toBool();
-    useBattleFileLog = s.value("logs_battle_files").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -1202,14 +1201,6 @@ void Server::useChannelFileLogChanged(bool logging)
     printLine("Channel File Logging changed", false, true);
 }
 
-void Server::useBattleFileLogChanged(bool logging)
-{
-    if (useBattleFileLog == logging)
-        return;
-    useBattleFileLog = logging;
-    printLine("Battle File Logging changed", false, true);
-}
-
 void Server::TCPDelayChanged(bool lowTCP)
 {
     if (lowTCPDelay == lowTCP)
@@ -1368,7 +1359,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
-    battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c,id);
@@ -1484,9 +1474,10 @@ void Server::removeBattle(int battleid)
     mybattles.remove(battleid);
     battleList.remove(battleid);
 
-    foreach(int id, battle->getSpectators()) {
-        player(id)->relay().finishSpectating(battleid);
-        player(id)->battlesSpectated.remove(battleid);
+    typedef QPair<int, QString> pair;
+    foreach(pair p, battle->getSpectators()) {
+        player(p.first)->relay().finishSpectating(battleid);
+        player(p.first)->battlesSpectated.remove(battleid);
     }
     /* When manipulating threaded objects, you need to be careful... */
     battle->deleteLater();
@@ -1631,8 +1622,9 @@ void Server::spectatingRequested(int id, int idOfBattle)
         p2->relay().sendPlayer(bundle);
         source->relay().sendPlayer(p2->bundle());
     }
-    foreach(int id, battle->getSpectators()) {
-        Player *p = player(id);
+    typedef QPair<int, QString> pair;
+    foreach(pair mp, battle->getSpectators()) {
+        Player *p = player(mp.first);
         if (!p->isInSameChannel(source)) {
             p->relay().sendPlayer(bundle);
             source->relay().sendPlayer(p->bundle());

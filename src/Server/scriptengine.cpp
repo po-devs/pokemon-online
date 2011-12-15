@@ -11,6 +11,7 @@
 #include "battle.h"
 #include <QRegExp>
 #include "analyze.h"
+#include "../Shared/config.h"
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -27,10 +28,6 @@ ScriptEngine::ScriptEngine(Server *s) {
         myengine.newQObject(mySessionDataFactory),
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
-    // DB object.
-    myScriptDB = new ScriptDB(myserver, &myengine);
-    QScriptValue sysdb = myengine.newQObject(myScriptDB);
-    sys.setProperty("db", sysdb, QScriptValue::ReadOnly | QScriptValue::Undeletable);
 
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
@@ -89,26 +86,18 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-void ScriptEngine::setPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if(playerArrays.contains(str))
-        return;
+QScriptValue ScriptEngine::import(const QString &fileName) {
+    QString url = "scripts/"+fileName;
+    QFile in(url);
 
-    playerArrays.push_back(str);
-    QScriptValue pa = myengine.newArray();
+    if (!in.open(QIODevice::ReadOnly)) {
+        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
+        return QScriptValue();
+    }
 
-    myengine.globalObject().setProperty(name, pa);
-}
-
-void ScriptEngine::unsetPA(const QString &name)
-{
-    QScriptString str = myengine.toStringHandle(name);
-    if (!playerArrays.contains(str))
-        return;
-
-    playerArrays.removeOne(str);
-    myengine.globalObject().setProperty(name, QScriptValue());
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
+    evaluate(import);
+    return import;
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -396,13 +385,6 @@ void ScriptEngine::beforeLogOut(int src)
 void ScriptEngine::afterLogOut(int src)
 {
     makeEvent("afterLogOut", src);
-
-    /* Removes the player from the player array */
-    foreach(QScriptString pa, playerArrays) {
-        if (!myengine.globalObject().property(pa).isNull()) {
-            myengine.globalObject().property(pa).setProperty(src, QScriptValue());
-        }
-    }
 
     mySessionDataFactory->handleUserLogOut(src);
 }
@@ -1624,17 +1606,6 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
     makeEvent("battleSetup", src, dest, battleId);
 }
 
-QString ScriptEngine::getBattleLogFileName(int battleId)
-{
-    BattleSituation * battle = myserver->getBattle(battleId);
-    if (battle) {
-        return battle->getBattleLogFilename();
-    }else{
-        warn("getBattleLogFileName", "can't find a battle with specified id.");
-        return QString();
-    }
-}
-
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
     if((weatherId >= 0) && (weatherId <= 4)) {
@@ -2211,3 +2182,26 @@ int ScriptEngine::system(const QString &command)
     }
 }
 #endif // PO_SCRIPT_NO_SYSTEM
+
+QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
+{
+    if (!testPlayer("teamPokeShine", id) || !testRange("teamPokeShine", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+    return myserver->player(id)->team().poke(slot).shiny();
+}
+
+int ScriptEngine::moveType(int moveNum, int gen)
+{
+    return MoveInfo::Type(moveNum, gen);
+}
+
+QString ScriptEngine::serverVersion()
+{
+    return VERSION;
+}
+
+bool ScriptEngine::isServerPrivate()
+{
+    return myserver->isPrivate();
+}

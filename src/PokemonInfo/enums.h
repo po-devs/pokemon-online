@@ -1,8 +1,6 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-
-
 // Minimum Generation supported.
 static const int GEN_MIN = 1;
 static const int GEN_MIN_ITEMS = 2;
@@ -1970,5 +1968,17 @@ enum Stat
     Evasion = 7,
     AllStats = 8
 };
+
+/* Could be enum class weather in C++0x */
+namespace Weather {
+    enum Weather
+    {
+        NormalWeather = 0,
+        Hail = 1,
+        Rain = 2,
+        SandStorm = 3,
+        Sunny = 4
+    };
+}
 
 #endif // ENUMS_H

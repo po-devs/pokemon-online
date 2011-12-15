@@ -11,6 +11,11 @@ void TierMachine::init()
 
 TierMachine::TierMachine()
 {
+    /* Allows up to 1000 request at a time! */
+    semaphore.release(semaphoreMaxLoad);
+    /* First version of tiers */
+    version = 0;
+
     loadDecaySettings();
 
     threads = new LoadThread[loadThreadCount];
@@ -52,26 +57,41 @@ void TierMachine::load()
 
 void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
 {
-    int tierno = queryNo % (1 << 16);
+    semaphore.acquire();
+    int tierno = queryNo % (1 << 10);
+    int version = queryNo >> 16;
+    int trueQueryNo = (queryNo >> 10) & Tier::MaxGetQueryNumber;
 
-    if (m_tiers.length() > tierno) {
-        m_tiers[tierno]->processQuery(q, data, queryNo >> 16,w);
-    } else {
-        qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
-        return;
+    /* Safe, this->version is only updated in semaphores */
+    if (version == this->version) {
+        if (m_tiers.length() > tierno) {
+            m_tiers[tierno]->processQuery(q, data, trueQueryNo, w);
+        } else {
+            qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
+            return;
+        }
     }
+
+    semaphore.release();
 }
 
 void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
 {
-    int tierno = queryNo % (1 << 16);
+    semaphore.acquire();
+    int tierno = queryNo % (1 << 10);
+    int version = queryNo >> 16;
+    int trueQueryNo = (queryNo >> 10) & Tier::MaxInsertQueryNumber;
 
-    if (m_tiers.length() > tierno) {
-        m_tiers[tierno]->insertMember(q, m, queryNo >> 16);
-    } else {
-        qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;
-        return;
+    /* Safe, this->version is only updated in semaphores */
+    if (version == this->version) {
+        if (m_tiers.length() > tierno) {
+            m_tiers[tierno]->insertMember(q, m, trueQueryNo);
+        } else {
+            qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;
+        }
     }
+
+    semaphore.release();
 }
 
 void TierMachine::save()
@@ -89,9 +109,14 @@ void TierMachine::clear()
 
 void TierMachine::fromString(const QString &s)
 {
+    /* This, to make sure any threaded code gets treated
+      properly before we block it */
+    semaphore.acquire(semaphoreMaxLoad);
     clear();
+    version += 1;
 
     tree.loadFromXml(s, this);
+    semaphore.release(semaphoreMaxLoad);
 
     QList<Tier *> tiers = tree.gatherTiers();
     if (tiers.empty()) {

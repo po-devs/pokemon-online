@@ -149,7 +149,7 @@ void TB_EVManager::changeEV(const QString &newvalue)
 {
     int mstat = stat(sender());
 
-    poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 255), 0));
+    poke()->setEV(mstat, std::max(std::min(newvalue.toInt(), 252), 0));
 
     slider(mstat)->blockSignals(true);
     updateEV(mstat);
@@ -169,9 +169,8 @@ void TB_EVManager::changeEV(int newvalue)
     int mstat = stat(sender());
 
     if (sender() == slider(mstat)) {
-        if (newvalue < 255) {
-            newvalue = newvalue - (newvalue %4);
-        }
+        newvalue = newvalue - (newvalue %4);
+
         if (newvalue == poke()->EV(mstat)) {
             return;
         }
