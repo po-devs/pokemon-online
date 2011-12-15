@@ -27,6 +27,7 @@ BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
 
 class PokeBattle;
 class BattleInput;
+class Logger;
 
 class BATTLELOGSSHARED_EXPORT BattleLogs
     : public ServerPlugin
@@ -62,9 +63,8 @@ public slots:
 };
 
 class BATTLELOGSSHARED_EXPORT BattleLogsPlugin
-    : public QObject, public BattlePlugin
+    : public BattlePlugin
 {
-    Q_OBJECT
 public:
     BattleLogsPlugin(bool raw=true, bool text=false);
     ~BattleLogsPlugin();
@@ -72,8 +72,6 @@ public:
     QHash<QString, Hook> getHooks();
     int emitCommand(BattleInterface &, int slot, int players, QByteArray b);
     int battleStarting(BattleInterface &);
-public slots:
-    void printLine(const QString &line);
 public:
     bool started;
     int id1, id2;
@@ -86,8 +84,21 @@ public:
     BattleConfiguration conf;
     BattleDefaultTheme theme;
     BattleInput *input;
+    Logger *ptr;
 
     bool raw, text;
+};
+
+class BATTLELOGSSHARED_EXPORT Logger
+    : public QObject
+{
+    Q_OBJECT
+public:
+    Logger(QString *string);
+public slots:
+    void log(const QString &);
+private:
+    QString *ptr;
 };
 
 #endif // BATTLELOGS_H
