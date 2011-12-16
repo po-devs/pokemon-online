@@ -13,7 +13,11 @@ QT += gui core
 SOURCES += battlelogs.cpp
 
 HEADERS += battlelogs.h\
-        BattleLogs_global.h
+        BattleLogs_global.h \
+    ../Server/plugininterface.h \
+    ../Server/battleinterface.h
 LIBS += -L../../bin \
     -lpokemonlib \
-    -lutilities
+    -lutilities \
+    -lbattlelib
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

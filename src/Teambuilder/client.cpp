@@ -7,6 +7,7 @@
 #include "basebattlewindow.h"
 #include "pmwindow.h"
 #include "controlpanel.h"
+#include "spectate.h"
 #include "ranking.h"
 #include "poketextedit.h"
 #include "../Utilities/functions.h"
@@ -14,8 +15,9 @@
 #include "channel.h"
 #include "theme.h"
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), myrelay()
+Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
+    isConnected = true;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -1169,6 +1171,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
     oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
 
+    QAction *oldBattleWindow = battleMenu->addAction(tr("Old battle window"));
+    oldBattleWindow->setCheckable(true);
+    connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
+    oldBattleWindow->setChecked(s.value("old_battle_window").toBool());
+
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
@@ -1309,8 +1316,12 @@ void Client::serverPass(const QString &salt) {
 }
 
 void Client::sendRegister() {
-    relay().notify(NetworkCli::Register);
-    myregister->setDisabled(true);
+    if (isConnected) {
+        relay().notify(NetworkCli::Register);
+        myregister->setDisabled(true);
+    } else {
+        relay().connectTo(url, port);
+    }
 }
 
 void Client::changeMusicFolder()
@@ -1340,6 +1351,12 @@ void Client::changeButtonStyle(bool old)
 {
     QSettings s;
     s.setValue("old_attack_buttons",old);
+}
+
+void Client::changeBattleWindow(bool old)
+{
+    QSettings s;
+    s.setValue("old_battle_window",old);
 }
 
 void Client::changeNicknames(bool old)
@@ -1625,7 +1642,16 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+    QSettings s;
+
+    BaseBattleWindowInterface *battle;
+    if (conf.mode != ChallengeInfo::Singles || s.value("old_battle_window",false).toBool()) {
+        BaseBattleWindow *battlew = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+        battlew->client() = this;
+        battle = battlew;
+    } else {
+        battle = new SpectatingWindow(conf, name(conf.ids[0]), name(conf.ids[1]));
+    }
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
@@ -1634,7 +1660,6 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
     battle->battleId() = battleId;
-    battle->client() = this;
     mySpectatingBattles[battleId] = battle;
 }
 
@@ -1831,6 +1856,8 @@ void Client::errorFromNetwork(int errnum, const QString &errorDesc)
 void Client::connected()
 {
     printLine(tr("Connected to Server!"));
+    isConnected = true;
+    myregister->setText(tr("&Register"));
 
     QSettings s;
 
@@ -1846,6 +1873,10 @@ void Client::connected()
 void Client::disconnected()
 {
     printLine(tr("Disconnected from Server!"));
+
+    isConnected = false;
+    myregister->setText(tr("&Reconnect"));
+    myregister->setEnabled(true);
 }
 
 TrainerTeam* Client::team()
@@ -1921,14 +1952,6 @@ void Client::fadeAway()
             if (c->hasRemoteKnowledgeOf(player))
                 goto refresh;
         }
-        foreach(BattleWindow *w, mybattles){
-            if (w->hasKnowledgeOf(player))
-                goto refresh;
-        }
-        foreach(BaseBattleWindow *w, mybattles) {
-            if (w->hasKnowledgeOf(player))
-                goto refresh;
-        }
 
         fade[player] += 1;
         if (fade[player] >= 5) {
@@ -1983,26 +2006,12 @@ void Client::playerReceived(const PlayerInfo &p)
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
-<<<<<<< HEAD
-    
     QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
     if (pm != disabledpms.end()) {
         PMWindow *window = pm.value();
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
-=======
-    // If the player who logged on is in our PMs, we can reuse that PM
-    QHashIterator<int, PMWindow*> pm(mypms);
-    while (pm.hasNext()) {
-        pm.next();
-        if (pm.value()->name() == name(p.id)) {
-            mypms[p.id] = pm.value();
-            pm.value()->reuse(p.id);
-            mypms.remove(pm.key());
-            break;
-        }
->>>>>>> f8e49c837aa9659be9fa0dfac55f9c2be797dd49
     }
 }
 

@@ -10,7 +10,7 @@ class BattleConfiguration;
 
 class DataContainer {
 public:
-    DataContainer(BattleConfiguration *configuration);
+    DataContainer(const BattleConfiguration *configuration);
     ~DataContainer();
 
     TeamData *team(int player) {
@@ -29,7 +29,7 @@ public:
 
     FieldData auxdata;
     TeamData* teams[2];
-    BattleConfiguration *conf;
+    const BattleConfiguration *conf;
 };
 
 #endif // DATACONTAINER_H
