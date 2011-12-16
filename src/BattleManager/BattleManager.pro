@@ -111,7 +111,15 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Utilities/MovingGif.qml \
     ../../bin/qml/BattleDataQML/spawner.js \
     ../../bin/qml/BattleDataQML/Moves/Move.qml \
-    ../../bin/qml/BattleDataQML/Utilities/Curve.qml
+    ../../bin/qml/BattleDataQML/Utilities/Curve.qml \
+    ../../bin/qml/BattleDataQML/Moves/UTurn.qml \
+    ../../bin/qml/BattleDataQML/Moves/ToxicSpikes.qml \
+    ../../bin/qml/BattleDataQML/Moves/TakeDown.qml \
+    ../../bin/qml/BattleDataQML/Moves/Spikes.qml \
+    ../../bin/qml/BattleDataQML/Moves/RapidSpin.qml \
+    ../../bin/qml/BattleDataQML/Moves/QuickAttack.qml \
+    ../../bin/qml/BattleDataQML/Moves/HiddenPebbles.qml \
+    ../../bin/qml/BattleDataQML/Moves/Earthquake.qml
 
 
 
