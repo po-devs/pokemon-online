@@ -175,29 +175,6 @@ private:
     bool hasLoggedWifiClause;
 };
 
-class BattleDisplay : public BaseBattleDisplay
-{
-    Q_OBJECT
-public:
-    BattleDisplay(BattleInfo &i);
-
-    void updateHp(int spot);
-    void updateToolTip(int spot);
-
-    BattleInfo &info() const {
-        return *(BattleInfo *)(&BaseBattleDisplay::info());
-    }
-public slots:
-    void changeBarMode();
-
-protected:
-    const PokeBattle &mypoke(int spot) const {return info().currentPoke(spot); }
-    const ShallowBattlePoke &foe(int spot) const {return info().currentShallow(spot); }
-
-    QList<bool> percentageMode;
-};
-
-
 class AbstractAttackButton;
 
 /* An attack zone is the zone where the attacks are displayed */

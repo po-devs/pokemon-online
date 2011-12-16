@@ -40,7 +40,7 @@ void BattleClientLog::printLine(const QString &cl, const QString &str, bool sile
 
     if (!silent) {
         pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
-        emit lineToBePrinted(log.back());
+        emit lineToBePrinted(QString("%2<br />").arg(str));
     } else {
         pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->").arg(cl, str));
     }
@@ -66,7 +66,7 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
     blankMessage = false;
 
     pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
-    emit lineToBePrinted(log.back());
+    emit lineToBePrinted(QString("%2<br />").arg(str));
 }
 
 QString BattleClientLog::nick(int spot)

@@ -6,6 +6,8 @@
 #include "client.h"
 
 #include "basebattlewindowinterface.h"
+#include "../BattleManager/battledatatypes.h"
+
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
 
@@ -264,7 +266,6 @@ protected:
     QGridLayout *mylayout;
     QScrollDownTextBrowser *mychat;
     QIRCLineEdit *myline;
-    BaseBattleDisplay *mydisplay;
     QPushButton *myclose, *mysend, *myignore;
     Client *_mclient;
 
@@ -294,6 +295,7 @@ protected:
     bool battleEnded;
 
     Log *log;
+    SpectatorWindow *test;
 
     BaseBattleWindow();
     void init();
@@ -302,90 +304,5 @@ protected:
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };
-
-class BaseGraphicsZone;
-
-class BaseBattleDisplay : public QWidget
-{
-    Q_OBJECT
-public:
-    BaseBattleInfo* myInfo;
-    BaseBattleInfo &info() const {
-        return *myInfo;
-    }
-
-    BaseBattleDisplay(BaseBattleInfo &i);
-
-    virtual void updatePoke(int spot);
-    virtual void updatePoke(int player, int index);
-    virtual void updateHp(int spot);
-    virtual void updateToolTip(int spot);
-    void changeStatus(int spot, int poke, int status);
-public slots:
-    void updateTimers();
-
-protected:
-    QString health(int lifePercent);
-
-    BaseGraphicsZone *zone;
-
-    QVector<QLabel *> nick;
-    QVector<QLabel *> level;
-    QVector<QLabel *> status;
-    QVector<QLabel *> gender;
-    QVector<QClickPBar *> bars;
-
-    QProgressBar *timers[2];
-    QLabel * trainers[2];
-
-    /* The pokeballs to indicate how well a team is doing */
-    QLabel *advpokeballs[6];
-    QLabel *mypokeballs[6];
-
-    BaseBattleWindow *parent;
-};
-
-/* The graphics zone, where both pokes are displayed */
-class BaseGraphicsZone : public QGraphicsView
-{
-    Q_OBJECT
-public:
-    BaseGraphicsZone(BaseBattleInfo *info);
-    /* displays that poke */
-    template <class T>
-    void switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite = Pokemon::NoPoke);
-    /* Display blank */
-    void switchToNaught(int spot);
-    /* For tool tips */
-    void mouseMoveEvent(QMouseEvent *e);
-    /* Updates the position of an item */
-    void updatePos(int spot);
-
-    /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
-    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
-        is a combination of 2 bools, 1 quin8; and one quint16 */
-    quint64 key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const;
-    QHash<qint32, QPixmap> graphics;
-    /* Current pixmaps displayed */
-    QVector<QGraphicsPixmapItem *> items;
-    QGraphicsScene scene;
-
-    QVector<QString> tooltips;
-    BaseBattleInfo *mInfo;
-
-    BaseBattleInfo & info() {
-        return *mInfo;
-    }
-};
-
-/* Yeepee, at last templates */
-template <class T>
-void BaseGraphicsZone::switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite)
-{
-    items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ? specialSprite:poke.num(), poke.shiny(),
-                                      info().player(spot) == info().myself , poke.gender(), sub));
-    updatePos(spot);
-}
 
 #endif // BASEBATTLEWINDOW_H
