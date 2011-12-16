@@ -1,7 +1,7 @@
 #include "proxydatacontainer.h"
 #include "teamdata.h"
 
-ProxyDataContainer::ProxyDataContainer(BattleConfiguration *conf) : conf(conf)
+ProxyDataContainer::ProxyDataContainer(const BattleConfiguration *conf) : conf(conf)
 {
     /* Needed for QML use */
     if (QMetaType::type("pokeid") == 0) {

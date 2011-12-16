@@ -7,6 +7,7 @@
 #include "basebattlewindow.h"
 #include "pmwindow.h"
 #include "controlpanel.h"
+#include "spectate.h"
 #include "ranking.h"
 #include "poketextedit.h"
 #include "../Utilities/functions.h"
@@ -1170,6 +1171,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
     oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
 
+    QAction *oldBattleWindow = battleMenu->addAction(tr("Old battle window"));
+    oldBattleWindow->setCheckable(true);
+    connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
+    oldBattleWindow->setChecked(s.value("old_battle_window").toBool());
+
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
@@ -1345,6 +1351,12 @@ void Client::changeButtonStyle(bool old)
 {
     QSettings s;
     s.setValue("old_attack_buttons",old);
+}
+
+void Client::changeBattleWindow(bool old)
+{
+    QSettings s;
+    s.setValue("old_battle_window",old);
 }
 
 void Client::changeNicknames(bool old)
@@ -1630,7 +1642,16 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    BaseBattleWindow *battle = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+    QSettings s;
+
+    BaseBattleWindowInterface *battle;
+    if (conf.mode != ChallengeInfo::Singles || s.value("old_battle_window",false).toBool()) {
+        BaseBattleWindow *battlew = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+        battlew->client() = this;
+        battle = battlew;
+    } else {
+        battle = new SpectatingWindow(conf, name(conf.ids[0]), name(conf.ids[1]));
+    }
     battle->setWindowFlags(Qt::Window);
     battle->show();
 
@@ -1639,7 +1660,6 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
     battle->battleId() = battleId;
-    battle->client() = this;
     mySpectatingBattles[battleId] = battle;
 }
 
@@ -1930,14 +1950,6 @@ void Client::fadeAway()
             continue;
         foreach(Channel *c, mychannels) {
             if (c->hasRemoteKnowledgeOf(player))
-                goto refresh;
-        }
-        foreach(BattleWindow *w, mybattles){
-            if (w->hasKnowledgeOf(player))
-                goto refresh;
-        }
-        foreach(BaseBattleWindow *w, mybattles) {
-            if (w->hasKnowledgeOf(player))
                 goto refresh;
         }
 

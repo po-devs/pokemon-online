@@ -137,17 +137,6 @@ void BaseBattleWindow::init()
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
 
     loadSettings(this);
-    test = new SpectatorWindow(conf(), info().name(0), info().name(1));
-
-    QWidget *widget =test->getSampleWidget();
-    widget->setParent(this);
-    widget->setWindowFlags(Qt::Window);
-
-    widget->show();
-    testWidget = widget;
-
-    connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));
-    connect(widget, SIGNAL(destroyed()), test, SLOT(deleteLater()));
 
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
@@ -337,7 +326,6 @@ void BaseBattleWindow::closeEvent(QCloseEvent *)
 void BaseBattleWindow::close()
 {
     writeSettings(this);
-    testWidget->close();
     QWidget::close();
 }
 
@@ -364,7 +352,6 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
         delayedCommands.push_back(inf);
         return;
     }
-    test->receiveData(inf);
 
     /* At the start of the battle 700 ms are waited, to prevent misclicks
        when wanting to do something else */
@@ -382,12 +369,6 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
     in >> command >> player;
 
     dealWithCommandInfo(in, command, player, player);
-}
-
-bool BaseBattleWindow::hasKnowledgeOf(int player) const
-{
-    /* Ironically, the battlers id aren't even stored here, so we have to use another way */
-    return spectators.contains(player) || client()->name(player) == name(0) || client()->name(player) == name(1);
 }
 
 void BaseBattleWindow::ignoreSpectators()
