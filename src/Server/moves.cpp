@@ -1777,8 +1777,11 @@ struct MMDefog : public MM
     static void uas (int s, int t, BS &b) {
         bool clear = false;
 
-
         BS::context &c = team(b,b.player(t));
+
+        if (!b.hasMinimalStatMod(t, Evasion)) {
+            b.inflictStatMod(t, Evasion, -1, s);
+        }
 
         if (c.contains("Barrier1Count") || c.contains("Barrier2Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
                 || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
