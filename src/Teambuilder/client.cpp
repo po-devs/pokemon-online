@@ -7,7 +7,6 @@
 #include "basebattlewindow.h"
 #include "pmwindow.h"
 #include "controlpanel.h"
-#include "spectate.h"
 #include "ranking.h"
 #include "poketextedit.h"
 #include "../Utilities/functions.h"
@@ -1645,13 +1644,13 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
     QSettings s;
 
     BaseBattleWindowInterface *battle;
-    if (conf.mode != ChallengeInfo::Singles || s.value("old_battle_window",false).toBool()) {
+
+    {
         BaseBattleWindow *battlew = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
         battlew->client() = this;
         battle = battlew;
-    } else {
-        battle = new SpectatingWindow(conf, name(conf.ids[0]), name(conf.ids[1]));
     }
+
     battle->setWindowFlags(Qt::Window);
     battle->show();
 

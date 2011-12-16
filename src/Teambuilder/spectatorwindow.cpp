@@ -35,7 +35,7 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, QString name1,
     scene->launch();
 
     foreach(QDeclarativeError error, scene->getWidget()->errors()) {
-        log->printLine(error.toString());
+        log->printLine("Error", error.toString());
     }
 }
 
@@ -50,7 +50,7 @@ PokeTextEdit *SpectatorWindow::getLogWidget()
     return logWidget;
 }
 
-QDeclarativeView *SpectatorWindow::getSceneWidget()
+QWidget *SpectatorWindow::getSceneWidget()
 {
     return scene->getWidget();
 }

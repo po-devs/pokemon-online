@@ -66,6 +66,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     conf() = _conf;
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
+    info().myteam.name = me.team.name;
 
     if (conf().ids[0] == ownid()) {
         conf().receivingMode[0] = BattleConfiguration::Player;
@@ -79,7 +80,6 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     info().gen = conf().gen;
 
-    mydisplay = new BattleDisplay(info());
     BaseBattleWindow::init();
 
     QSettings s;
@@ -209,8 +209,6 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
 
     mystack->setCurrentIndex(info().number(spot));
     mytab->setCurrentIndex(MoveTab);
-
-    mydisplay->updatePoke(spot);
 
     for (int i = 0; i< 4; i++) {
         myazones[info().number(spot)]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
@@ -528,7 +526,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     switch (command)
     {
     case SendOut:
-        {
+    {
         if (player != info().myself) {
             BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
             break;
@@ -547,29 +545,14 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         if (!in.atEnd())
             in >> info().currentShallow(spot);
 
-        mydisplay->updatePoke(info().player(spot), info().slotNum(spot));
-        mydisplay->updatePoke(info().player(spot), prevIndex);
-
         //Plays the battle cry when a pokemon is switched in
         if (musicPlayed())
         {
             playCry(info().currentShallow(spot).num().pokenum);
         }
 
-        QString pokename = PokemonInfo::Name(info().currentShallow(spot).num());
-        if (pokename != rnick(spot))
-            printLine(tr("%1 sent out %2! (%3)").arg(name(info().player(spot)), rnick(spot), pokename), silent);
-        else
-            printLine(tr("%1 sent out %2!").arg(name(info().player(spot)), rnick(spot)), silent);
-
-        printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
-        printLine(tr("%1's life: %2/%3 HP.").arg(nick(spot)).arg(info().currentPoke(spot).lifePoints()).arg(info().currentPoke(spot).totalLifePoints()), true);
-        printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(info().currentPoke(spot).status())), true);
-        printLine(tr("%1's level: %2.").arg(nick(spot)).arg(info().currentShallow(spot).level()), true);
-        printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(info().currentShallow(spot).shiny()), true);
-        printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(info().currentShallow(spot).gender())), true);
-            break;
-        }
+        break;
+    }
     case ChangeHp:
     {
         if (player != info().myself) {
@@ -580,8 +563,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         quint16 newHp;
         in >> newHp;
 
-        printLine(tr("%1's new HP is %2/%3.").arg(nick(spot)).arg(newHp).arg(info().currentPoke(spot).totalLifePoints()), true);
-
         animatedHpSpot() = spot;
         animatedHpGoal() = newHp;
         animateHPBar();
@@ -589,20 +570,20 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case ChangePP:
-        {
-            quint8 move, PP;
-            in  >> move >> PP;
+    {
+        quint8 move, PP;
+        in  >> move >> PP;
 
-            //Think to check for crash if currentIndex != -1, move > 3
+        //Think to check for crash if currentIndex != -1, move > 3
         info().currentPoke(spot).move(move).PP() = PP;
         info().tempPoke(spot).move(move).PP() = PP;
         myazones[info().number(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
         mypzone->pokes[info().number(spot)]->updateToolTip();
 
         break;
-        }
+    }
     case OfferChoice:
-        {
+    {
         if (info().sent) {
 
             info().sent = false;
@@ -620,7 +601,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         mysend->setEnabled(true);
         mysend->setChecked(false);
 
-            break;
+        break;
     }
     case MakeYourChoice:
     {
@@ -641,14 +622,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     }
 
     case StraightDamage :
-        {
-        qint16 damage;
-        in >> damage;
-        if (player == info().myself) {
-            printLine(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(spot)).arg(damage).arg(damage*100/info().currentPoke(spot).totalLifePoints()));
-        } else {
-            printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
-        }
+    {
         break;
     }
 
@@ -660,18 +634,12 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         if (poke < 0 || poke >= 6)
             break;
 
-        printLine(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(name(spot), StatInfo::Status(status)), true);
-
-        mydisplay->changeStatus(spot,poke,status);
-
         if (player == info().myself) {
             info().myteam.poke(poke).changeStatus(status);
             mypzone->pokes[poke]->update();
         }
 
         info().pokemons[player][poke].changeStatus(status);
-        if (info().isOut(player, poke))
-            mydisplay->updatePoke(info().slot(player, poke));
 
         break;
     }
@@ -691,7 +659,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
     case DynamicStats:
     {
         in >> info().mystats[info().number(spot)];
-        mydisplay->updateToolTip(spot);
         break;
     }
     case TempPokeChange:
@@ -725,7 +692,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
                     info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
                 }
-                mydisplay->updatePoke(spot);
             } else if (type == DefiniteForme) {
                 quint8 poke;
                 quint16 newform;
@@ -742,7 +708,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
                 quint16 newforme;
                 in >> newforme;
                 info().currentShallow(spot).num().subnum = newforme;
-                mydisplay->updatePoke(spot);
             }
         }
         break;
@@ -752,7 +717,6 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         qint8 first, second;
         in >> first >> second;
 
-        printHtml(toBoldColor(tr("Variation: "), Qt::blue) + QString("+%1, %2").arg(int(first)).arg(int(second)));
         break;
     }
     case RearrangeTeam:
@@ -770,23 +734,7 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
 
         in >> s1 >> s2 >> silent;
 
-        if (!silent) {
-            if (info().currentShallow(info().slot(spot, s2)).status() == Pokemon::Koed) {
-                printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(info().slot(spot, s1)))));
-            } else {
-                printLine(tr("%1 shifted spots with %2!").arg(tu(nick(info().slot(spot, s1))), nick(info().slot(spot, s2))));
-            }
-        }
-
         info().switchOnSide(spot, s1, s2);
-
-        int pk1 = info().slot(spot, s1);
-        int pk2 = info().slot(spot, s2);
-        mydisplay->updatePoke(pk1);
-        mydisplay->updatePoke(pk2);
-
-        mydisplay->updatePoke(info().player(spot), s1);
-        mydisplay->updatePoke(info().player(spot), s2);
 
         mypzone->pokes[s1]->changePokemon(info().myteam.poke(s1));
         mypzone->pokes[s2]->changePokemon(info().myteam.poke(s2));
@@ -827,12 +775,11 @@ void BattleWindow::animateHPBar()
     const int goal = animatedHpGoal();
 
     QSettings s;
-    if (!s.value("animate_hp_bar").toBool()) {
+    if (true || !s.value("animate_hp_bar").toBool()) {
         info().currentPoke(spot).lifePoints() = goal;
         info().tempPoke(spot).lifePoints() = goal;
         info().currentShallow(spot).lifePercent() = info().tempPoke(spot).lifePercent();
         mypzone->pokes[info().number(spot)]->update();
-        mydisplay->updatePoke(spot);
         undelay();
         return;
     }
@@ -856,8 +803,6 @@ void BattleWindow::animateHPBar()
 
     //Recursive call to update the hp bar 30msecs later
     QTimer::singleShot(30, this, SLOT(animateHPBar()));
-
-    mydisplay->updatePoke(spot);
 }
 
 void BattleWindow::switchToNaught(int spot)
@@ -867,7 +812,6 @@ void BattleWindow::switchToNaught(int spot)
     }
 
     info().pokeAlive[spot] = false;
-    mydisplay->updatePoke(spot);
 }
 
 void BattleWindow::updateChoices()
@@ -957,7 +901,7 @@ void BattleWindow::sendRearrangedTeam()
     /* If the team was rearranged... */
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(info().myteam.poke(i));
-        //test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+        test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     }
 }
 
@@ -1167,160 +1111,6 @@ void PokeButton::updateToolTip()
     }
     setToolTip(tooltip);
 }
-
-
-BattleDisplay::BattleDisplay(BattleInfo &i)
-    : BaseBattleDisplay(i)
-{
-    for (int i = 0; i < info().numberOfSlots; i++) {
-        if (info().player(i) == info().myself) {
-            percentageMode.push_back(false);
-            bars[i]->setRange(0,100);
-            bars[i]->setFormat("%v / %m");
-            connect(bars[i], SIGNAL(clicked()), SLOT(changeBarMode()));
-        } else {
-            percentageMode.push_back(true);
-        }
-    }
-
-
-    for (int i = 0; i < 6; i++) {
-        mypokeballs[i]->setToolTip(info().myteam.poke(i).nick());
-    }
-
-    for (int i = 0; i < info().numberOfSlots/2; i++) {
-        updatePoke(info().slot(info().myself, i));
-    }
-}
-
-void BattleDisplay::updateHp(int spot)
-{
-    if (percentageMode[spot])
-        BaseBattleDisplay::updateHp(spot);
-    else {
-        bars[spot]->setRange(0, mypoke(spot).totalLifePoints());
-        bars[spot]->setValue(mypoke(spot).lifePoints());
-    }
-}
-
-void BattleDisplay::changeBarMode()
-{
-    int i;
-    for (i = 0; i < info().numberOfSlots; i++) {
-        if (bars[i] == sender()) {
-            break;
-        }
-    }
-
-    bars[i]->setFormat(percentageMode[i] ? "%v / %m" : "%p%");
-    percentageMode[i] = !percentageMode[i];
-
-    if (percentageMode[i])
-        bars[i]->setRange(0,100);
-
-    updateHp(i);
-}
-
-void BattleDisplay::updateToolTip(int spot)
-{
-    if (info().player(spot) == info().opponent) {
-        BaseBattleDisplay::updateToolTip(spot);
-        return;
-    }
-
-    QString tooltip;
-
-    QString stats[7] = {
-        tu(StatInfo::Stat(1)),
-        tu(StatInfo::Stat(2)),
-        tu(StatInfo::Stat(3)),
-        tu(StatInfo::Stat(4)),
-        tu(StatInfo::Stat(5)),
-        tu(StatInfo::Stat(6)),
-        tu(StatInfo::Stat(7))
-    };
-    int max = 0;
-    for (int i = 0; i < 7; i++) {
-        max = std::max(max, stats[i].length());
-    }
-    for (int i = 0; i < 7; i++) {
-        stats[i] = stats[i].leftJustified(max, '.', false);
-    }
-
-    tooltip += info().currentPoke(spot).nick() + "\n";
-    Pokemon::uniqueId num = info().currentPoke(spot).num();
-    tooltip += TypeInfo::Name(PokemonInfo::Type1(num, info().gen));
-    int type2 = PokemonInfo::Type2(num);
-    if (type2 != Pokemon::Curse) {
-        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(num, info().gen));
-    }
-    tooltip += "\n";
-
-    for (int i = 0; i < 5; i++) {
-        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
-        if (info().gen == 1) {
-            switch (i) {
-            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
-            case 3: continue;
-            default: tooltip += "\n" + stats[i] + " ";
-            }
-        } else {
-            tooltip += "\n" + stats[i] + " ";
-        }
-        int stat = info().mystats[info().number(spot)].stats[i];
-        if (stat == -1) {
-            tooltip += "???";
-        } else {
-            tooltip += QString::number(stat);
-        }
-        int boost = info().statChanges[spot].boosts[i];
-        if (boost > 0) {
-            tooltip += QString("(+%1)").arg(boost);
-        } else if (boost < 0) {
-            tooltip += QString("(%1)").arg(boost);
-        }
-    }
-    for (int i = 5; i < 7; i++) {
-        int boost = info().statChanges[spot].boosts[i];
-
-        if (boost != 0) {
-            tooltip += "\n" + stats[i] + " ";
-
-            if (boost > 0) {
-                tooltip += QString("+%1").arg(boost);
-            } else {
-                tooltip += QString("%1").arg(boost);
-            }
-        }
-    }
-
-    tooltip += "\n";
-
-    int flags = info().statChanges[spot].flags;
-
-    int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
-    for (int i = 0; i < 3; i++) {
-        if (flags & spikes[i]) {
-            tooltip += "\n" + tr("Spikes level %1").arg(i+1);
-            break;
-        }
-    }
-
-    int tspikes[2] = {BattleDynamicInfo::ToxicSpikes, BattleDynamicInfo::ToxicSpikesLV2};
-    for (int i = 0; i < 2; i++) {
-        if (flags & tspikes[i]) {
-            tooltip += "\n" + tr("Toxic Spikes level %1").arg(i+1);
-            break;
-        }
-    }
-
-    if (flags & BattleDynamicInfo::StealthRock) {
-        tooltip += "\n" + tr("Stealth Rock");
-    }
-
-    zone->tooltips[spot] = tooltip;
-}
-
 
 /******************************************************************************/
 /******************** TARGET TAB **********************************************/
