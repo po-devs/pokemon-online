@@ -708,10 +708,10 @@ struct MMBellyDrum : public MM
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
             b.fail(s, 8);
 
-            /* Odd bug with crystal & stadium 2 */
+            /* Odd bug with gold, silver, crystal versions in gen 2
             if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
-            }
+            } */
         } else if (move(b,s) == Move::BellyDrum) {
             if (b.hasMaximalStatMod(s, Attack)) {
                 turn(b,s)["Failed"] = true;
