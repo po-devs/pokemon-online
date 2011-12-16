@@ -75,6 +75,8 @@ public:
     /* Requests a print, unless silent, in which case it calls pushHtml and add comments */
     void printHtml(const QString&, bool silent = false);
     void printLine(const QString&, bool silent = false);
+
+    QStringList getLog();
 signals:
     void lineToBePrinted(const QString &);
 protected:
@@ -83,7 +85,7 @@ protected:
     BattleDefaultTheme *mTheme;
     BattleDefaultTheme *theme();
 
-    QList<QString> log;
+    QStringList log;
     QHash<int, QString> spectators;
     bool blankMessage;
 };
