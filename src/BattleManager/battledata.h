@@ -10,7 +10,7 @@ template <class T, class Derived>
 class BattleDataInherit : public BattleCommandManager<Derived>
 {
 public:
-    BattleDataInherit(BattleConfiguration *conf) : cont(conf), conf(conf) {
+    BattleDataInherit(const BattleConfiguration *conf) : cont(conf), conf(conf) {
     }
 
     typedef T container;
@@ -107,9 +107,12 @@ public:
     QString name(int player) { return team(this->player(player)).name();}
     int slotNum(int player) { return player/2;}
     int spot(int player, int slot) {return player+2*slot;}
+    int clauses() const {return conf->clauses;}
+    int mode() const {return conf->mode;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
     int gen() { return GEN_MAX; }
     BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
+    int numberOfSlots() const {return (conf->mode+1)*2;}
 
     void reloadTeam(int player) {
         d()->reloadTeam(player);
@@ -123,7 +126,7 @@ public:
     container *exposedData() { return d(); }
 protected:
     container cont;
-    BattleConfiguration *conf;
+    const BattleConfiguration *conf;
     container* d() { return &cont;}
 };
 
@@ -133,7 +136,7 @@ class BattleData: public BattleDataInherit<T, BattleData<T> >
 public:
     typedef BattleDataInherit<T, BattleData<T> > baseClass;
 
-    BattleData(BattleConfiguration *conf) : baseClass(conf) {}
+    BattleData(const BattleConfiguration *conf) : baseClass(conf) {}
 };
 
 #endif // BATTLEDATA_H

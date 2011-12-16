@@ -104,7 +104,6 @@ BattleLogsPlugin::BattleLogsPlugin(bool raw, bool plain) : commands(&toSend, QIO
 {
     started = false;
     input = NULL;
-    ptr = NULL;
     commands.setVersion(QDataStream::Qt_4_5);
     t.start();
 }
@@ -138,7 +137,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
         QFile out;
         out.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, time, id0, id1));
         out.open(QIODevice::WriteOnly);
-        out.write(plainText.toUtf8());
+        out.write(log->getLog().join("").toUtf8());
         out.close();
 
         if (input) {
@@ -146,7 +145,6 @@ BattleLogsPlugin::~BattleLogsPlugin()
         }
 
         delete input;
-        delete ptr;
     }
 }
 
@@ -179,7 +177,6 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
     }
 
     if (text) {
-        ptr = new Logger(&plainText);
         conf = b.configuration();
         conf.receivingMode[0] = conf.receivingMode[1] = BattleConfiguration::Player;
         conf.teams[0] = &b.team(0);
@@ -187,11 +184,9 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
 
         input = new BattleInput(&conf);
         battledata_basic *data = new battledata_basic(&conf);
-        BattleClientLog *log = new BattleClientLog(data, &theme);
+        log = new BattleClientLog(data, &theme);
         input->addOutput(data);
         input->addOutput(log);
-
-        QObject::connect(log, SIGNAL(lineToBePrinted(QString)), ptr, SLOT(log(QString)));
     }
 
     id1 = b.id(0);
@@ -219,14 +214,4 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
     }
 
     return 0;
-}
-
-Logger::Logger(QString *string)
-{
-    this->ptr = string;
-}
-
-void Logger::log(const QString &s)
-{
-    this->ptr->append(s);
 }

@@ -17,7 +17,7 @@ Item {
     }
 
     function useAttack(attack, target) {
-        battle.scene.debug("Using attack " + attack + "\n");
+        //battle.scene.debug("Using attack " + attack + "\n");
         Moves.useAttack(woof, attack, target);
     }
 

@@ -27,7 +27,7 @@ BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
 
 class PokeBattle;
 class BattleInput;
-class Logger;
+class BattleClientLog;
 
 class BATTLELOGSSHARED_EXPORT BattleLogs
     : public ServerPlugin
@@ -80,25 +80,13 @@ public:
     QDataStream commands;
     QElapsedTimer t;
 
-    QString plainText;
     BattleConfiguration conf;
     BattleDefaultTheme theme;
     BattleInput *input;
-    Logger *ptr;
+    BattleClientLog *log;
 
     bool raw, text;
 };
 
-class BATTLELOGSSHARED_EXPORT Logger
-    : public QObject
-{
-    Q_OBJECT
-public:
-    Logger(QString *string);
-public slots:
-    void log(const QString &);
-private:
-    QString *ptr;
-};
 
 #endif // BATTLELOGS_H

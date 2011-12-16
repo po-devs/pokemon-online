@@ -96,8 +96,12 @@ TeamProxy::~TeamProxy()
     }
 }
 
-QString TeamProxy::name() {
+QString TeamProxy::name() const {
     return teamData->name();
+}
+
+quint16 TeamProxy::avatar() const {
+    return teamData->avatar();
 }
 
 void TeamProxy::switchPokemons(int index, int prevIndex)

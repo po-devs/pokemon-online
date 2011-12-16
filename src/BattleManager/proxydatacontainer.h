@@ -9,7 +9,7 @@ class BattleConfiguration;
 class ProxyDataContainer : public QObject {
     Q_OBJECT
 public:
-    ProxyDataContainer(BattleConfiguration *conf=NULL);
+    ProxyDataContainer(const BattleConfiguration *conf=NULL);
     ~ProxyDataContainer();
 
     Q_INVOKABLE TeamProxy *team(int player) {
@@ -32,7 +32,7 @@ private:
     FieldProxy auxdata;
 
     TeamProxy* teams[2];
-    BattleConfiguration *conf;
+    const BattleConfiguration *conf;
 
 public:
 

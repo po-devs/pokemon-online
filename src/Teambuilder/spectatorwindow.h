@@ -9,7 +9,6 @@ class BattleClientLog;
 class BattleScene;
 class BattleInput;
 class PokeTextEdit;
-class QDeclarativeView;
 class BattleConfiguration;
 
 /* A window which takes binary as input, and manages
@@ -20,7 +19,7 @@ class BattleConfiguration;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2);
+    SpectatorWindow(const BattleConfiguration &conf, QString name1, QString name2);
     ~SpectatorWindow();
 
     /* Receives the binary data */
@@ -29,7 +28,7 @@ public:
     /* Gets the battle log widget */
     PokeTextEdit * getLogWidget();
     /* gets the scene widget */
-    QDeclarativeView *getSceneWidget();
+    QWidget *getSceneWidget();
 
     /* Gets a premade widget. The caller
       is responsible for managing the widget's lifetime
