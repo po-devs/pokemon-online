@@ -63,12 +63,14 @@ int main(int argc, char *argv[])
     try
     {
         //HotKeyClass HotKeyEvent;
-	QApplication a(argc, argv);
+        QApplication a(argc, argv);
         //a.installEventFilter(&HotKeyEvent);
 
-	/* Names to use later for QSettings */
+        /* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokeymon-Online");
-	QCoreApplication::setOrganizationName("Dreambelievers");
+        QCoreApplication::setOrganizationName("Dreambelievers");
+
+        QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 
         QSettings settings;
         if (settings.value("language").isNull()) {
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
 
         /* icon ;) */
 #if not defined(Q_OS_MACX)
-	a.setWindowIcon(QIcon("db/icon.png"));
+        a.setWindowIcon(QIcon("db/icon.png"));
 #endif
 
         MainEngine w;

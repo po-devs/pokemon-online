@@ -301,6 +301,9 @@ private:
     QAction *goaway;
 
     bool findingBattle;
+    bool isConnected;
+    QString url;
+    quint16 port;
     int _mid;
     int selectedChannel;
 

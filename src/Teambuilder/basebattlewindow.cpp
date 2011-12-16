@@ -142,10 +142,8 @@ void BaseBattleWindow::init()
     QWidget *widget =test->getSampleWidget();
     widget->setParent(this);
     widget->setWindowFlags(Qt::Window);
-    // Following line shows another battle window, but this one with
-    // pretty graphics and such. Currently disabled until post 1.0.32
-    // release. ~nix
-    /* widget->show(); */
+
+    widget->show();
     testWidget = widget;
 
     connect(this, SIGNAL(destroyed()), widget, SLOT(deleteLater()));

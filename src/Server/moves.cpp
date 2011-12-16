@@ -1642,6 +1642,10 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
+        // Barriers such as Reflect and Light Screen do not time out in gen 1
+        if (b.gen() == 1) {
+          return;
+        }
         int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
         for (int i = 0; i < 2; i++) {

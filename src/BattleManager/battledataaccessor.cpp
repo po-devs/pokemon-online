@@ -19,7 +19,7 @@ PokeProxy::~PokeProxy()
     }
 }
 
-void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
+void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon) {
     if (*pokemon == *pokeData) {
         return;
     }
@@ -29,7 +29,7 @@ void PokeProxy::adaptTo(ShallowBattlePoke *pokemon) {
     emit pokemonReset();
 }
 
-void PokeProxy::adaptTo(PokeBattle *pokemon) {
+void PokeProxy::adaptTo(const PokeBattle *pokemon) {
     PokeBattle *trans = dynamic_cast<PokeBattle*>(this);
 
     if (trans) {
@@ -113,7 +113,7 @@ void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
     poke(index)->adaptTo(pokemon);
 }
 
-void TeamProxy::setTeam(TeamBattle *team)
+void TeamProxy::setTeam(const TeamBattle *team)
 {
     for (int i = 0; i < 6; i++) {
         poke(i)->adaptTo(&team->poke(i));
