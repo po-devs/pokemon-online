@@ -215,13 +215,3 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
 
     return 0;
 }
-
-Logger::Logger(QString *string)
-{
-    this->ptr = string;
-}
-
-void Logger::log(const QString &s)
-{
-    this->ptr->append(s);
-}

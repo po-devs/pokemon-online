@@ -13,7 +13,12 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : m
     pushHtml("<!-- Pokemon Online battle spectator log (version 1.1) -->");
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
-    printHtml(toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+
+    if (data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player) {
+        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is started!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+    } else {
+        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+    }
 }
 
 BattleDefaultTheme * BattleClientLog::theme()
@@ -21,7 +26,7 @@ BattleDefaultTheme * BattleClientLog::theme()
     return mTheme;
 }
 
-void BattleClientLog::printLine(const QString &str, bool silent)
+void BattleClientLog::printLine(const QString &cl, const QString &str, bool silent)
 {
     if (str == "" && blankMessage) {
         return;
@@ -34,11 +39,16 @@ void BattleClientLog::printLine(const QString &str, bool silent)
     }
 
     if (!silent) {
-        pushHtml(str+"<br />");
+        pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
         emit lineToBePrinted(log.back());
     } else {
-        pushHtml("<!--"+str+"-->");
+        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->").arg(cl, str));
     }
+}
+
+void BattleClientLog::printSilent(const QString &str)
+{
+    pushHtml("<!--"+str+"-->");
 }
 
 QStringList BattleClientLog::getLog()
@@ -51,18 +61,12 @@ void BattleClientLog::pushHtml(const QString &html)
     log.push_back(html);
 }
 
-void BattleClientLog::printHtml(const QString &str, bool silent)
+void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
-    if (!silent) {
-        blankMessage = false;
-    }
+    blankMessage = false;
 
-    if (!silent) {
-        pushHtml(str+"<br />");
-        emit lineToBePrinted(log.back());
-    } else {
-        pushHtml("<!--"+str+"-->");
-    }
+    pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
+    emit lineToBePrinted(log.back());
 }
 
 QString BattleClientLog::nick(int spot)
@@ -82,65 +86,65 @@ battledata * BattleClientLog::data()
 
 void BattleClientLog::onKo(int spot)
 {
-    printHtml("<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
+    printHtml("Ko", "<b>" + escapeHtml(tu(tr("%1 fainted!").arg(nick(spot)))) + "</b>");
 }
 
 void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silent)
 {
     QString pokename = PokemonInfo::Name(data()->poke(spot).num());
     if (pokename != rnick(spot))
-        printLine(tr("%1 sent out %2! (%3)").arg(data()->name(spot), rnick(spot), pokename), silent);
+        printLine("SendOut", tr("%1 sent out %2! (%3)").arg(data()->name(spot), rnick(spot), pokename), silent);
     else
-        printLine(tr("%1 sent out %2!").arg(data()->name(spot), rnick(spot)), silent);
+        printLine("SendOut", tr("%1 sent out %2!").arg(data()->name(spot), rnick(spot)), silent);
 
-    printLine(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex), true);
-    printLine(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(data()->slotNum(spot)), true);
-    printLine(tr("%1's life: %2%.").arg(nick(spot)).arg(data()->poke(spot).lifePercent()), true);
-    printLine(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(data()->poke(spot).status())), true);
-    printLine(tr("%1's level: %2.").arg(nick(spot)).arg(data()->poke(spot).level()), true);
-    printLine(tr("%1's shininess: %2.").arg(nick(spot)).arg(data()->poke(spot).shiny()), true);
-    printLine(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(data()->poke(spot).gender())), true);
+    printSilent(tr("%1's previous position in the team: %2.").arg(nick(spot)).arg(prevIndex));
+    printSilent(tr("%1's new place on the field: %2.").arg(nick(spot)).arg(data()->slotNum(spot)));
+    printSilent(tr("%1's life: %2%.").arg(nick(spot)).arg(data()->poke(spot).lifePercent()));
+    printSilent(tr("%1's status: %2.").arg(nick(spot), StatInfo::Status(data()->poke(spot).status())));
+    printSilent(tr("%1's level: %2.").arg(nick(spot)).arg(data()->poke(spot).level()));
+    printSilent(tr("%1's shininess: %2.").arg(nick(spot)).arg(data()->poke(spot).shiny()));
+    printSilent(tr("%1's gender: %2.").arg(nick(spot)).arg(GenderInfo::Name(data()->poke(spot).gender())));
 }
 
 void BattleClientLog::onSendBack(int spot, bool silent)
 {
-    printLine(tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
+    printLine("SendBack", tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
 }
 
 void BattleClientLog::onUseAttack(int spot, int attack)
 {
-    printHtml(tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
+    printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
 }
 
 void BattleClientLog::onBeginTurn(int turn)
 {
-    printLine("");
-    printHtml(toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
+    printLine("Space", "");
+    printHtml("BeginTurn", toBoldColor(tr("Start of turn %1").arg(turn), Qt::blue));
 }
 
 void BattleClientLog::onHpChange(int spot, int newHp)
 {
-    printLine(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp), true);
+    printSilent(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp));
 }
 
 void BattleClientLog::onHitCount(int, int count)
 {
-    printLine(tr("Hit %1 times!").arg(count));
+    printLine("Hit", tr("Hit %1 times!").arg(count));
 }
 
 void BattleClientLog::onEffectiveness(int, int effectiveness)
 {
     switch (effectiveness) {
     case 0:
-        printLine(tr("It had no effect!"));
+        printLine("Effective", tr("It had no effect!"));
         break;
     case 1:
     case 2:
-        printHtml(toColor(tr("It's not very effective..."), Qt::gray));
+        printHtml("Effective", toColor(tr("It's not very effective..."), Qt::gray));
         break;
     case 8:
     case 16:
-        printHtml(toColor(tr("It's super effective!"), Qt::blue));
+        printHtml("Effective", toColor(tr("It's super effective!"), Qt::blue));
     default:
         break;
     }
@@ -148,24 +152,24 @@ void BattleClientLog::onEffectiveness(int, int effectiveness)
 
 void BattleClientLog::onCriticalHit(int)
 {
-    printHtml(toColor(tr("A critical hit!"), "#6b0000"));
+    printHtml("CriticalHit", toColor(tr("A critical hit!"), "#6b0000"));
 }
 
 void BattleClientLog::onMiss(int spot)
 {
-    printLine(tr("The attack of %1 missed!").arg(nick(spot)));
+    printLine("Miss", tr("The attack of %1 missed!").arg(nick(spot)));
 }
 
 void BattleClientLog::onAvoid(int spot)
 {
-    printLine(tr("%1 avoided the attack!").arg(tu(nick(spot))));
+    printLine("Avoid", tr("%1 avoided the attack!").arg(tu(nick(spot))));
 }
 
 void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
 {
-    printLine(tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? (abs(boost) > 2 ? tr("drastically") : tr("sharply "))
-                                                                                          : "",
-                                         boost > 0 ? tr("rose") : tr("fell"))), silent);
+    printLine("StatChange", tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat), abs(boost) > 1 ? (abs(boost) > 2 ? tr("drastically") : tr("sharply "))
+                                                                                                        : "",
+                                                       boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
 
 void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns)
@@ -180,38 +184,38 @@ void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTur
     };
 
     if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
-        printHtml(toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
-                          theme()->StatusColor(status)));
+        printHtml("StatusChange", toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
+                                          theme()->StatusColor(status)));
     } else if (status == Pokemon::Confused) {
-        printHtml(toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+        printHtml("StatusChange", toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
     }
-    printLine(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)), true);
+    printSilent(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)));
 }
 
 void BattleClientLog::onPokeballStatusChanged(int player, int poke, int status)
 {
-    printLine(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(data()->name(player), StatInfo::Status(status)), true);
+    printSilent(tr("Pokemon number %1 of %2 had its status changed to: %3.").arg(poke).arg(data()->name(player), StatInfo::Status(status)));
 }
 
 void BattleClientLog::onStatusAlreadyThere(int spot, int status)
 {
-    printHtml(toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)), theme()->StatusColor(status)));
+    printHtml("AlreadyStatusMessage", toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)), theme()->StatusColor(status)));
 }
 
 void BattleClientLog::onStatusNotification(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
         break;
     case Pokemon::Paralysed:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Paralysed)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Paralysed)));
         break;
     case Pokemon::Asleep:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Asleep)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Asleep)));
         break;
     case Pokemon::Frozen:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Frozen)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Frozen)));
     default:
         break;
     }
@@ -221,13 +225,13 @@ void BattleClientLog::onStatusDamage(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml(toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), theme()->TypeColor(Type::Ghost)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), theme()->TypeColor(Type::Ghost)));
         break;
     case Pokemon::Burnt:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Burnt)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Burnt)));
         break;
     case Pokemon::Poisoned:
-        printHtml(toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Poisoned)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Poisoned)));
     default:
         break;
     }
@@ -237,13 +241,13 @@ void BattleClientLog::onStatusOver(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml(toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
         break;
     case Pokemon::Asleep:
-        printHtml(toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
         break;
     case Pokemon::Frozen:
-        printHtml(toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
     default:
         break;
     }
@@ -251,30 +255,30 @@ void BattleClientLog::onStatusOver(int spot, int status)
 
 void BattleClientLog::onAttackFailing(int)
 {
-    printLine(tr("But if failted!"));
+    printLine("Failed", tr("But if failed!"));
 }
 
 void BattleClientLog::onPlayerMessage(int spot, QString message)
 {
-    printHtml(QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
+    printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
 }
 
 void BattleClientLog::onSpectatorJoin(int id, QString name)
 {
     spectators.insert(id, name);
 
-    printHtml(toColor(tr("%1 is watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml("Spectating", toColor(tr("%1 is watching the battle.").arg(spectators.value(id)), Qt::green));
 }
 
 void BattleClientLog::onSpectatorLeave(int id)
 {
-    printHtml(toColor(tr("%1 stopped watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml("Spectating", toColor(tr("%1 stopped watching the battle.").arg(spectators.value(id)), Qt::green));
     spectators.remove(id);
 }
 
 void BattleClientLog::onSpectatorChat(int id, QString message)
 {
-    printHtml(toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(message));
+    printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(message));
 }
 
 void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString q)
@@ -291,12 +295,12 @@ void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int 
     mess.replace("%i", ItemInfo::Name(other));
     mess.replace("%a", AbilityInfo::Name(other));
     mess.replace("%p", PokemonInfo::Name(other));
-    printHtml(toColor(escapeHtml(tu(mess)), theme()->TypeColor(type)));
+    printHtml("MoveMessage", toColor(escapeHtml(tu(mess)), theme()->TypeColor(type)));
 }
 
 void BattleClientLog::onNoTarget(int)
 {
-    printLine(tr("But there was no target..."));
+    printLine("NoTarget", tr("But there was no target..."));
 }
 
 void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int berry, int other)
@@ -309,24 +313,24 @@ void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int b
     mess.replace("%m", MoveInfo::Name(other));
     /* Balloon gets a really special treatment */
     if (item == 35)
-        printHtml(QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
+        printHtml("ItemMessage", QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
     else
-        printLine(tu(mess));
+        printLine("ItemMessage", tu(mess));
 }
 
 void BattleClientLog::onFlinch(int spot)
 {
-    printLine(tu(tr("%1 flinched!").arg(nick(spot))));
+    printLine("Flinch", tu(tr("%1 flinched!").arg(nick(spot))));
 }
 
 void BattleClientLog::onRecoil(int spot)
 {
-    printLine(tu(tr("%1 is hit with recoil!").arg(nick(spot))));
+    printLine("Recoil", tu(tr("%1 is hit with recoil!").arg(nick(spot))));
 }
 
 void BattleClientLog::onDrained(int spot)
 {
-    printLine(tu(tr("%1 had its energy drained!").arg(nick(spot))));
+    printLine("Drain", tu(tr("%1 had its energy drained!").arg(nick(spot))));
 }
 
 void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
@@ -348,9 +352,9 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
     };
 
     if (ability) {
-        printLine(toColor(tu(weatherAbilityMessage[weather-1]).arg(nick(spot)), c));
+        printLine("Weather", toColor(tu(weatherAbilityMessage[weather-1]).arg(nick(spot)), c));
     } else {
-        printLine(toColor(tu(weatherRegularMessage[weather-1]), c));
+        printLine("Weather", toColor(tu(weatherRegularMessage[weather-1]), c));
     }
 }
 
@@ -359,10 +363,10 @@ void BattleClientLog::onContinueWeather(int weather)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
-    case Weather::Hail: printHtml(toColor(tr("Hail continues to fall!"),c)); break;
-    case Weather::SandStorm: printHtml(toColor(tr("The sandstorm rages!"),c)); break;
-    case Weather::Sunny: printHtml(toColor(tr("The sunlight is strong!"),c)); break;
-    case Weather::Rain: printHtml(toColor(tr("Rain continues to fall!"),c)); break;
+    case Weather::Hail: printHtml("Weather", toColor(tr("Hail continues to fall!"),c)); break;
+    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm rages!"),c)); break;
+    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight is strong!"),c)); break;
+    case Weather::Rain: printHtml("Weather", toColor(tr("Rain continues to fall!"),c)); break;
     }
 }
 
@@ -371,10 +375,10 @@ void BattleClientLog::onEndWeather(int weather)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
-    case Weather::Hail: printHtml(toColor(tr("The hail subsided!"),c)); break;
-    case Weather::SandStorm: printHtml(toColor(tr("The sandstorm subsided!"),c)); break;
-    case Weather::Sunny: printHtml(toColor(tr("The sunlight faded!"),c)); break;
-    case Weather::Rain: printHtml(toColor(tr("The rain stopped!"),c)); break;
+    case Weather::Hail: printHtml("Weather", toColor(tr("The hail subsided!"),c)); break;
+    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm subsided!"),c)); break;
+    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight faded!"),c)); break;
+    case Weather::Rain: printHtml("Weather", toColor(tr("The rain stopped!"),c)); break;
     }
 }
 
@@ -383,17 +387,17 @@ void BattleClientLog::onHurtWeather(int spot, int weather)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
-    case Weather::Hail: printHtml(toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
-    case Weather::SandStorm: printHtml(toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(spot))),c)); break;
+    case Weather::Hail: printHtml("Weather", toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
+    case Weather::SandStorm: printHtml("Weather", toColor(tr("%1 is buffeted by the sandstorm!").arg(tu(nick(spot))),c)); break;
     }
 }
 
 void BattleClientLog::onDamageDone(int spot, int damage)
 {
     if (data()->role(spot) == BattleConfiguration::Spectator) {
-        printLine(tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
+        printLine("StraightDamage", tu(tr("%1 lost %2% of its health!").arg(nick(spot)).arg(damage)));
     } else {
-        printLine(tu(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(spot)).arg(damage).arg(damage*100/data()->poke(spot).totalLife())));
+        printLine("StraightDamage", tu(tr("%1 lost %2 HP! (%3% of its health)").arg(nick(spot)).arg(damage).arg(damage*100/data()->poke(spot).totalLife())));
     }
 }
 
@@ -412,45 +416,45 @@ void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int
     mess.replace("%a", AbilityInfo::Name(other));
     mess.replace("%p", PokemonInfo::Name(other));
     if (type == Pokemon::Normal) {
-        printLine(escapeHtml(tu(mess)));
+        printLine("AbilityMessage", escapeHtml(tu(mess)));
     } else {
-        printHtml(toColor(escapeHtml(tu(mess)),theme()->TypeColor(type)));
+        printHtml("AbilityMessage", toColor(escapeHtml(tu(mess)),theme()->TypeColor(type)));
     }
 }
 
 void BattleClientLog::onSubstituteStatus(int spot, bool substitute)
 {
-    printLine(QString("%1 has a subtitute: %2").arg(nick(spot)).arg(substitute), true);
+    printSilent(QString("%1 has a subtitute: %2").arg(nick(spot)).arg(substitute));
 }
 
 void BattleClientLog::onBattleEnd(int res, int winner)
 {
     if (res == Tie) {
-        printHtml(toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
+        printHtml("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
     } else {
-        printHtml(toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
+        printHtml("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
     }
 }
 
 void BattleClientLog::onBlankMessage()
 {
-    printLine("");
+    printLine("Space", "");
 }
 
 void BattleClientLog::onClauseActivated(int clause)
 {
-    printLine(ChallengeInfo::battleText(clause));
+    printLine("ClauseMessage", ChallengeInfo::battleText(clause));
 }
 
 void BattleClientLog::onRatedNotification(bool rated)
 {
-    printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
+    printHtml("Rated", toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
 
-    //        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-    //            if (conf().clauses & (1 << i)) {
-    //                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
-    //            }
-    //        }
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        if (data()->clauses() & (1 << i)) {
+            printHtml("Clause", toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+        }
+    }
 }
 
 void BattleClientLog::setTheme(BattleDefaultTheme *theme)
@@ -460,15 +464,15 @@ void BattleClientLog::setTheme(BattleDefaultTheme *theme)
 
 void BattleClientLog::onTierNotification(QString tier)
 {
-    printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
-    //        printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode));
+    printHtml("Tier", toBoldColor(tr("Tier: "), Qt::blue) + tier);
+    printHtml("Mode", toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode()));
 }
 
 void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent)
 {
     if (data()->poke(data()->spot(player, spot1)).status() == Pokemon::Koed) {
-        printLine(tr("%1 shifted spots to the middle!").arg(tu(nick(data()->spot(player, spot2)))), silent);
+        printLine("ShiftSpots", tr("%1 shifted spots to the middle!").arg(tu(nick(data()->spot(player, spot2)))), silent);
     } else {
-        printLine(tr("%1 shifted spots with %2!").arg(tu(nick(data()->spot(player, spot2))), nick(data()->spot(player, spot1))), silent);
+        printLine("ShiftSpots", tr("%1 shifted spots with %2!").arg(tu(nick(data()->spot(player, spot2))), nick(data()->spot(player, spot1))), silent);
     }
 }

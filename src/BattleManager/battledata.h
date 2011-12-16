@@ -107,6 +107,8 @@ public:
     QString name(int player) { return team(this->player(player)).name();}
     int slotNum(int player) { return player/2;}
     int spot(int player, int slot) {return player+2*slot;}
+    int clauses() const {return conf->clauses;}
+    int mode() const {return conf->mode;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
     int gen() { return GEN_MAX; }
     BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
