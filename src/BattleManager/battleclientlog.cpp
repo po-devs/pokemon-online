@@ -41,6 +41,11 @@ void BattleClientLog::printLine(const QString &str, bool silent)
     }
 }
 
+QStringList BattleClientLog::getLog()
+{
+    return log;
+}
+
 void BattleClientLog::pushHtml(const QString &html)
 {
     log.push_back(html);
@@ -441,11 +446,11 @@ void BattleClientLog::onRatedNotification(bool rated)
 {
     printHtml(toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
 
-//        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-//            if (conf().clauses & (1 << i)) {
-//                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
-//            }
-//        }
+    //        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+    //            if (conf().clauses & (1 << i)) {
+    //                printHtml(toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+    //            }
+    //        }
 }
 
 void BattleClientLog::setTheme(BattleDefaultTheme *theme)
@@ -456,7 +461,7 @@ void BattleClientLog::setTheme(BattleDefaultTheme *theme)
 void BattleClientLog::onTierNotification(QString tier)
 {
     printHtml(toBoldColor(tr("Tier: "), Qt::blue) + tier);
-//        printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode));
+    //        printHtml(toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode));
 }
 
 void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent)
