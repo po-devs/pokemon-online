@@ -496,7 +496,7 @@ struct MMDetect : public MM
 
     static bool testSuccess(int protectCount, BS &b) {
         if (b.gen() <= 2) {
-            int x = 256 / (1 << (std::min(protectCount, 8))) - 1;
+            unsigned x = 256 / (1 << (std::min(protectCount, 8))) - 1;
 
             return (b.randint() & 0xFF) < x;
         } else if (b.gen() <= 4) {
@@ -1385,7 +1385,7 @@ struct MMEmbargo : public MM
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
             turn(b,s)["Failed"] = true;
-        else if (poke(b,s).contains("Embargoed")) {
+        else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
             turn(b,s)["Failed"] = true;
         }
     }

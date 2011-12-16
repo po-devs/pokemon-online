@@ -61,7 +61,7 @@ public:
     void setLifePercent(quint8 percent) {mLifePercent = percent;}
     void setNum(Pokemon::uniqueId num) {this->num() = num;}
 
-    bool operator == (const ShallowBattlePoke &other) {
+    bool operator == (const ShallowBattlePoke &other) const {
         return gender() == other.gender() && level() == other.level()
                 && shiny() == other.shiny() && num() == other.num()
                 && nick() == other.nick() && status() == other.status()
@@ -467,7 +467,7 @@ struct BattleConfiguration
     quint32 clauses;
     ReceivingMode receivingMode[2];
 
-    TeamBattle *teams[2];
+    const TeamBattle *teams[2];
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;

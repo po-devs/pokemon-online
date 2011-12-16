@@ -27,7 +27,8 @@ SOURCES += \
     pokemoninfoaccessor.cpp \
     auxpokedataproxy.cpp \
     proxydatacontainer.cpp \
-    datacontainer.cpp
+    datacontainer.cpp \
+    regularbattlescene.cpp
 
 HEADERS +=\
     command.h \
@@ -56,7 +57,8 @@ HEADERS +=\
     auxpokedataproxy.h \
     advancedbattledata.h \
     battlesceneflow.h \
-    param.h
+    param.h \
+    regularbattlescene.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

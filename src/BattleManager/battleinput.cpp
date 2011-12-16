@@ -5,7 +5,7 @@
 
 typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
 
-BattleInput::BattleInput(BattleConfiguration *conf) {
+BattleInput::BattleInput(const BattleConfiguration *conf) {
     mCount = 0;
     delayCount = 0;
     this->conf = conf;

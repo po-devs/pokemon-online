@@ -10,7 +10,7 @@
 #include "poketextedit.h"
 #include "theme.h"
 
-SpectatorWindow::SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2)
+SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, QString name1, QString name2)
 {
     data = new battledata_basic(&conf);
     data2 = new advbattledata_proxy(&conf);

@@ -53,8 +53,8 @@ public:
     int totalLife() const {return d()->totalLife();}
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
 
-    void adaptTo(ShallowBattlePoke *pokemon);
-    void adaptTo(PokeBattle *pokemon);
+    void adaptTo(const ShallowBattlePoke *pokemon);
+    void adaptTo(const PokeBattle *pokemon);
     void changeStatus(int fullStatus);
     void setNum(Pokemon::uniqueId num);
     void setLife(int newLife);
@@ -84,7 +84,7 @@ public:
         return pokemons[index];
     }
 
-    void setTeam(TeamBattle *team);
+    void setTeam(const TeamBattle *team);
     void setPoke(int index, ShallowBattlePoke *pokemon);
 
     void switchPokemons(int index, int prevIndex);

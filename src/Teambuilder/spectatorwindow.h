@@ -20,7 +20,7 @@ class BattleConfiguration;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(BattleConfiguration &conf, QString name1, QString name2);
+    SpectatorWindow(const BattleConfiguration &conf, QString name1, QString name2);
     ~SpectatorWindow();
 
     /* Receives the binary data */

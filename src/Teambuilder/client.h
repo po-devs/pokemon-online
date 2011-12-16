@@ -17,7 +17,7 @@ class MainEngine;
 class BaseChallengeWindow;
 class QIdTreeWidgetItem;
 class BattleWindow;
-class BaseBattleWindow;
+class BaseBattleWindowInterface;
 class QScrollDownTextBrowser;
 class PMWindow;
 class ControlPanel;
@@ -206,6 +206,7 @@ public slots:
         goAway(away);
     }
     void changeButtonStyle(bool old);
+    void changeBattleWindow(bool old);
     void changeNicknames(bool old);
     void showTeam(bool);
     void enableLadder(bool);
@@ -296,11 +297,14 @@ private:
     /* Challenge windows , to emit or to receive*/
     QSet<BaseChallengeWindow *> mychallenges;
     QPointer<BattleFinder> myBattleFinder;
-    QHash<int, BaseBattleWindow* > mySpectatingBattles;
+    QHash<int, BaseBattleWindowInterface* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
     QAction *goaway;
 
     bool findingBattle;
+    bool isConnected;
+    QString url;
+    quint16 port;
     int _mid;
     int selectedChannel;
 

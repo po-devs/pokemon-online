@@ -54,8 +54,8 @@ public:
     /* returns the id corresponding to that spot (spot is 0 or 1) */
     virtual int id(int spot) const = 0;
     virtual int rating(int spot) const = 0;
-//    /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
-//    virtual BattleConfiguration configuration() const = 0;
+    /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
+    virtual BattleConfiguration configuration() const = 0;
 
 //    virtual bool acceptSpectator(int id, bool authed=false) const = 0;
 //    virtual void addSpectator(Player *p) = 0;
