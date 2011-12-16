@@ -64,6 +64,4 @@ Move {
                                   }
                                   );
     }
-
-    signal finished();
 }

@@ -116,7 +116,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/RapidSpin.qml \
     ../../bin/qml/BattleDataQML/Moves/QuickAttack.qml \
     ../../bin/qml/BattleDataQML/Moves/HiddenPebbles.qml \
-    ../../bin/qml/BattleDataQML/Moves/Earthquake.qml
+    ../../bin/qml/BattleDataQML/Moves/Earthquake.qml \
+    ../../bin/qml/BattleDataQML/Moves/Substitute.qml
 
 
 
