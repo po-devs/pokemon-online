@@ -2,6 +2,8 @@
 
 TeamData::TeamData(const TeamBattle *team)
 {
+    mAvatar = 0;
+
     if (!team) {
         for (int i = 0; i < 6; i++) {
             pokemons.push_back(new ShallowBattlePoke());
@@ -28,6 +30,21 @@ ShallowBattlePoke* TeamData::poke(int slot)
 QString &TeamData::name()
 {
     return mName;
+}
+
+QString TeamData::name() const
+{
+    return mName;
+}
+
+quint16 &TeamData::avatar()
+{
+    return mAvatar;
+}
+
+quint16 TeamData::avatar() const
+{
+    return mAvatar;
 }
 
 void TeamData::setPoke(int slot, const ShallowBattlePoke *poke)

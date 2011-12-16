@@ -110,6 +110,7 @@ public:
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
     int gen() { return GEN_MAX; }
     BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
+    int numberOfSlots() const {return (conf->mode+1)*2;}
 
     void reloadTeam(int player) {
         d()->reloadTeam(player);
