@@ -9,10 +9,10 @@ class BattleConfiguration;
 class BattleInput : public BattleCommandManager<BattleInput>
 {
 public:
-    BattleInput(BattleConfiguration *conf);
+    BattleInput(const BattleConfiguration *conf);
 
     void receiveData(QByteArray data);
-    void dealWithCommandInfo(QDataStream&,uchar command,int spot);
+    void dealWithCommandInfo(QDataStream&, uchar command,int spot);
 
     void pause();
     void unpause();
@@ -116,7 +116,7 @@ protected:
     int delayCount;
     std::vector<QByteArray> delayedCommands;
     unsigned mCount; /* Used to know the index in delayedCommands */
-    BattleConfiguration *conf;
+    const BattleConfiguration *conf;
 };
 
 #endif // BATTLEINPUT_H

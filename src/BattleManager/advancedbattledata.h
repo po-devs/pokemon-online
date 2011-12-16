@@ -9,7 +9,7 @@ class AdvancedBattleData : public BattleDataInherit<ProxyDataContainer, Advanced
 public:
     typedef BattleDataInherit<ProxyDataContainer, AdvancedBattleData> baseClass;
 
-    AdvancedBattleData(BattleConfiguration *conf) : baseClass(conf) {
+    AdvancedBattleData(const BattleConfiguration *conf) : baseClass(conf) {
 
     }
 

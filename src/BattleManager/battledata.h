@@ -10,7 +10,7 @@ template <class T, class Derived>
 class BattleDataInherit : public BattleCommandManager<Derived>
 {
 public:
-    BattleDataInherit(BattleConfiguration *conf) : cont(conf), conf(conf) {
+    BattleDataInherit(const BattleConfiguration *conf) : cont(conf), conf(conf) {
     }
 
     typedef T container;
@@ -123,7 +123,7 @@ public:
     container *exposedData() { return d(); }
 protected:
     container cont;
-    BattleConfiguration *conf;
+    const BattleConfiguration *conf;
     container* d() { return &cont;}
 };
 
@@ -133,7 +133,7 @@ class BattleData: public BattleDataInherit<T, BattleData<T> >
 public:
     typedef BattleDataInherit<T, BattleData<T> > baseClass;
 
-    BattleData(BattleConfiguration *conf) : baseClass(conf) {}
+    BattleData(const BattleConfiguration *conf) : baseClass(conf) {}
 };
 
 #endif // BATTLEDATA_H

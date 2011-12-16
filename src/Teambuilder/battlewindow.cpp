@@ -957,7 +957,7 @@ void BattleWindow::sendRearrangedTeam()
     /* If the team was rearranged... */
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(info().myteam.poke(i));
-        test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+        //test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     }
 }
 

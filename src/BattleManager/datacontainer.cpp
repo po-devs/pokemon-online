@@ -1,6 +1,6 @@
 #include "datacontainer.h"
 
-DataContainer::DataContainer(BattleConfiguration *conf) : conf(conf)
+DataContainer::DataContainer(const BattleConfiguration *conf) : conf(conf)
 {
     for (int i = 0; i < 2; i++) {
         if (conf->receivingMode[i]==BattleConfiguration::Player) {

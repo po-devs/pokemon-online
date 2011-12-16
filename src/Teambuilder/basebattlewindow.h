@@ -5,6 +5,7 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "client.h"
 
+#include "basebattlewindowinterface.h"
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
 
@@ -92,11 +93,10 @@ struct BaseBattleInfo
 /* The battle window called by the client, online */
 class Client;
 
-class BaseBattleWindow : public QLabel
+class BaseBattleWindow : public BaseBattleWindowInterface
 {
     Q_OBJECT
 
-    PROPERTY(int, battleId)
     PROPERTY(int, animatedHpSpot)
     PROPERTY(int, animatedHpGoal)
     PROPERTY(int, ownid)
@@ -234,7 +234,6 @@ public:
     bool musicPlayed() const;
     bool flashWhenMoved() const;
     void playCry(int pokemon);
-    bool hasKnowledgeOf(int player) const;
     void close();
 
 public slots:
@@ -252,8 +251,6 @@ public slots:
     void criesProblem(Phonon::State newState);
 signals:
     void battleCommand(int battleId, const BattleChoice &);
-    void battleMessage(int battleId, const QString &str);
-    void closedBW(int);
 protected:
     int delayed;
     int ignoreSpecs;
@@ -302,8 +299,6 @@ protected:
     void init();
     void checkAndSaveLog();
 
-    SpectatorWindow *test;
-    QWidget *testWidget;
     void closeEvent(QCloseEvent *);
     virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };
