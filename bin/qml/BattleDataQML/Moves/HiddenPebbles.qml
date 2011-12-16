@@ -24,8 +24,6 @@ Move {
         }
 
         function start() {
-                battle.scene.pause();
-
                 var curve1 = {"pos1":{"x":attacker.x+40, "y":attacker.y+10}, "pos2":{"x":target.x-10, "y":target.y+40}, "controlY":80};
                 var curve2 = {"pos1":{"x":attacker.x+30, "y":attacker.y+5}, "pos2":{"x":target.x+30, "y":target.y+80}, "controlY":80};
                 var curve3 = {"pos1":{"x":attacker.x+40, "y":attacker.y+15}, "pos2":{"x":target.x+70, "y":target.y+60}, "controlY":70};
@@ -51,7 +49,6 @@ Move {
                                                            function(obj){
                                                                           if (finish) {
                                                                                    obj.destroy();
-                                                                                   battle.scene.unpause();
                                                                                    finished();
                                                                           } else {
                                                                                   finished.connect(function(){obj.destroy()});
