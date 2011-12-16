@@ -10,6 +10,8 @@ effects[BattleData.ToxicSpikes] = "Moves/ToxicSpikes.qml";
 effects[BattleData.Spikes] = "Moves/Spikes.qml";
 effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 effects[BattleData.TakeDown] = "Moves/TakeDown.qml";
+effects[BattleData.QuickAttack] = "Moves/QuickAttack.qml";
+effects[BattleData.U_turn] = "Moves/UTurn.qml";
 
 function useAttack(attacker, attack, defender) {
     launchMove(attacker, attack, defender);
