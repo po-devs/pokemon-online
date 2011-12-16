@@ -1793,6 +1793,10 @@ struct MMDefog : public MM
             c.remove("SafeGuardCount");
         }
 
+        if (!b.hasMinimalStatMod(t, Evasion)) {
+            b.inflictStatMod(t, Evasion, -1, s);
+        }
+
         if (clear) {
             b.sendMoveMessage(77,0, s, type(b,s), t);
         }
