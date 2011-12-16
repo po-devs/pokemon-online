@@ -1634,18 +1634,6 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
     makeEvent("battleSetup", src, dest, battleId);
 }
 
-QString ScriptEngine::getBattleLogFileName(int battleId)
-{
-    BattleSituation * battle = myserver->getBattle(battleId);
-    if (battle) {
-        return battle->getBattleLogFilename();
-    }else{
-        warn("getBattleLogFileName", "can't find a battle with specified id.");
-        return QString();
-    }
-}
-
-
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
     if((weatherId >= 0) && (weatherId <= 4)) {

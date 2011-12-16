@@ -1377,7 +1377,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
 
-    battle->setLogging(useBattleFileLog);
     battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c,id);
