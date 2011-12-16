@@ -1983,6 +1983,7 @@ void Client::playerReceived(const PlayerInfo &p)
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
+<<<<<<< HEAD
     
     QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
     if (pm != disabledpms.end()) {
@@ -1990,6 +1991,18 @@ void Client::playerReceived(const PlayerInfo &p)
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
+=======
+    // If the player who logged on is in our PMs, we can reuse that PM
+    QHashIterator<int, PMWindow*> pm(mypms);
+    while (pm.hasNext()) {
+        pm.next();
+        if (pm.value()->name() == name(p.id)) {
+            mypms[p.id] = pm.value();
+            pm.value()->reuse(p.id);
+            mypms.remove(pm.key());
+            break;
+        }
+>>>>>>> f8e49c837aa9659be9fa0dfac55f9c2be797dd49
     }
 }
 
