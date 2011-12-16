@@ -9,6 +9,7 @@ effects[BattleData.StealthRock] = "Moves/HiddenPebbles.qml";
 effects[BattleData.ToxicSpikes] = "Moves/ToxicSpikes.qml";
 effects[BattleData.Spikes] = "Moves/Spikes.qml";
 effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
+effects[BattleData.TakeDown] = "Moves/TakeDown.qml";
 
 function useAttack(attacker, attack, defender) {
     launchMove(attacker, attack, defender);
@@ -27,6 +28,7 @@ function launchMove(attacker, attack, defender) {
 
         if (component.status != Component.Ready) {
             console.log("Failed loading components " + key + " (" + effects[key] + ")");
+            console.log(component.errorString());
             return;
         }
 
