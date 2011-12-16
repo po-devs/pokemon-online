@@ -5,6 +5,10 @@ var effects = {
 
 effects[BattleData.LeechSeed] = "Moves/LeechSeed.qml";
 effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
+effects[BattleData.StealthRock] = "Moves/HiddenPebbles.qml";
+effects[BattleData.ToxicSpikes] = "Moves/ToxicSpikes.qml";
+effects[BattleData.Spikes] = "Moves/Spikes.qml";
+effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 
 function useAttack(attacker, attack, defender) {
     launchMove(attacker, attack, defender);
