@@ -49,10 +49,11 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, QString name1,
         battleView = scene->getWidget();
     } else {
         RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme());
+
+        input->addOutput(data);
+        input->addOutput(log);
+        input->addOutput(data2);
         input->addOutput(battle);
-        battle->addOutput(data);
-        battle->addOutput(log);
-        battle->addOutput(data2);
 
         connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 

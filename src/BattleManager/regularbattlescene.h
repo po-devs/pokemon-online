@@ -33,16 +33,13 @@ public:
 
     ProxyDataContainer *getDataProxy();
 
-    Q_INVOKABLE void pause();
-    Q_INVOKABLE void unpause();
-
-    Q_PROPERTY(bool reversed READ reversed() CONSTANT)
+    void pause();
 
     /* Should the players be reversed positions in the visual scene? */
     bool reversed() const;
     int opponent() const;
     int myself() const;
-    void launch();
+    bool isPlayer(int spot) const;
 
     template <enumClass val, typename... Params>
     bool shouldStartPeeking(param<val>, Params...) {
@@ -53,7 +50,22 @@ public:
     bool shouldContinuePeeking(param<val>, Params...) {
         return false;
     }
+
     void onUseAttack(int spot, int attack);
+    void onPokeballStatusChanged(int player, int poke, int status);
+    void onKo(int spot) { updatePoke(spot); }
+    void onMajorStatusChange(int spot, int, bool){ updatePoke(spot);}
+    void onSendOut(int spot, int previndex, ShallowBattlePoke*, bool) {
+        updatePoke(spot);
+        updateBall(data()->player(spot), previndex);
+    }
+    void onHpChange(int spot, int newHp);
+
+    void updateBall(int player, int poke);
+    void updateBallStatus(int player, int poke);
+    void updatePoke(int spot);
+    void updateHp(int spot, int val = -1);
+    static QString health(int lifePercent);
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
@@ -65,6 +77,11 @@ signals:
     void attackUsed(int spot, int attack);
 public slots:
     void updateTimers();
+    void changeBarMode();
+
+    void unpause();
+protected slots:
+    void animateHpBar();
 private:
     battledata_ptr mData;
     battledata_ptr data();
@@ -92,11 +109,16 @@ private:
     };
 
     struct Info {
-        Info();
+        Info(int nslots);
 
         QVector<int> time;
         QVector<int> startingTime;
         QVector<int> ticking;
+
+        QVector<int> percentage;
+
+        int animatedSpot;
+        int animatedValue;
     };
 
     Gui gui;
