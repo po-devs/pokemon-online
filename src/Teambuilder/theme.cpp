@@ -48,6 +48,7 @@ class BattleTheme : public BattleDefaultTheme {
     QPixmap TrainerSprite(int t){return Theme::TrainerSprite(t);}
     QPixmap Sprite(const QString &s){return Theme::Sprite(s);}
     QPixmap StatusIcon(int st){return Theme::StatusIcon(st);}
+    QPixmap Pic(const QString &s){return Theme::Pic(s);}
 };
 
 QString Theme::m_Directory;

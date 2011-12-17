@@ -13,6 +13,7 @@ public:
     virtual QPixmap TrainerSprite(int){return QPixmap();}
     virtual QPixmap Sprite(const QString&){return QPixmap();}
     virtual QPixmap StatusIcon(int){return QPixmap();}
+    virtual QPixmap Pic(const QString&){return QPixmap();}
 };
 
 #endif // DEFAULTTHEME_H
