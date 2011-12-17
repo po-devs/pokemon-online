@@ -49,6 +49,8 @@ class BattleTheme : public BattleDefaultTheme {
     QPixmap Sprite(const QString &s){return Theme::Sprite(s);}
     QPixmap StatusIcon(int st){return Theme::StatusIcon(st);}
     QPixmap Pic(const QString &s){return Theme::Pic(s);}
+    QPixmap BattleStatusIcon(int s){return Theme::BattleStatusIcon(s);}
+    QPixmap BattleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
 };
 
 QString Theme::m_Directory;

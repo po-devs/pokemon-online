@@ -14,6 +14,8 @@ public:
     virtual QPixmap Sprite(const QString&){return QPixmap();}
     virtual QPixmap StatusIcon(int){return QPixmap();}
     virtual QPixmap Pic(const QString&){return QPixmap();}
+    virtual QPixmap BattleStatusIcon(int){return QPixmap();}
+    virtual QPixmap BattleGenderPicture(int){return QPixmap();}
 };
 
 #endif // DEFAULTTHEME_H
