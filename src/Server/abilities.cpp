@@ -180,10 +180,11 @@ struct AMColorChange : public AM {
 
     /* gen 3 & 4 */
     static void ubh(int s, int t, BS &b) {
-        if (b.gen() > 4)
-            return;
         if (b.koed(s))
             return;
+        if (b.hasSubstitute(s)) {
+            return;
+        }
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
             if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
