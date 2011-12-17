@@ -106,13 +106,14 @@ public:
     int opponent(int player) { return (player+1)%2;}
     QString name(int player) { return team(this->player(player)).name();}
     int slotNum(int player) { return player/2;}
-    int spot(int player, int slot) {return player+2*slot;}
+    int spot(int player, int slot=0) {return player+2*slot;}
     int clauses() const {return conf->clauses;}
     int mode() const {return conf->mode;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
-    int gen() { return GEN_MAX; }
+    int gen() { return conf->gen; }
     BattleConfiguration::ReceivingMode role(int player) { return conf->receivingMode[this->player(player)];}
     int numberOfSlots() const {return (conf->mode+1)*2;}
+    bool multiples() const {return (conf->mode != ChallengeInfo::Singles);}
 
     void reloadTeam(int player) {
         d()->reloadTeam(player);

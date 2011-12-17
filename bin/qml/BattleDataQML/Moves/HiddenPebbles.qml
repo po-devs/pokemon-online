@@ -4,58 +4,64 @@ import "../utilities.js" as Utilities
 import "../spawner.js" as Spawner
 
 Move {
-        id: main;
+    id: main;
 
-        /* Available variables:
-          - attacker (FieldPokemon)
-          - target (FieldPokemon)
-          - attack (int)
-          */
+    /* Available variables:
+      - attacker (FieldPokemon)
+      - target (FieldPokemon)
+      - attack (int)
+      - params (misc)
+      */
 
-        Timer {
-                id: timer2;
-                interval: 300;
-        }
+    Timer {
+        id: timer2;
+        interval: 300;
+    }
 
 
-        Timer {
-                id: timer3;
-                interval: 600;
-        }
+    Timer {
+        id: timer3;
+        interval: 600;
+    }
 
-        function start() {
-                var curve1 = {"pos1":{"x":attacker.x+40, "y":attacker.y+10}, "pos2":{"x":target.x-10, "y":target.y+40}, "controlY":80};
-                var curve2 = {"pos1":{"x":attacker.x+30, "y":attacker.y+5}, "pos2":{"x":target.x+30, "y":target.y+80}, "controlY":80};
-                var curve3 = {"pos1":{"x":attacker.x+40, "y":attacker.y+15}, "pos2":{"x":target.x+70, "y":target.y+60}, "controlY":70};
+    function adjustCurve(curve) {
+        curve.pos1.x += attacker.x;
+        curve.pos1.y += attacker.y;
+        curve.pos2.x += target.x;
+        curve.pos2.y += target.y;
 
-                launchStealth(curve1, false);
+        return curve;
+    }
 
-                timer2.triggered.connect(function(){launchStealth(curve2, false)});
-                timer3.triggered.connect(function(){launchStealth(curve3, true)});
+    function start() {
+        var curve1 = adjustCurve(params.curves[0]);
+        var curve2 = adjustCurve(params.curves[1]);
+        var curve3 = adjustCurve(params.curves[2]);
 
-                timer2.start();
-                timer3.start();
-        }
+        launchPebble(curve1, false);
 
-        function launchStealth(curve, finish) {
-                var parent = main.parent;
-                var stealth = Spawner.spawn(parent.parent, "moving-animated", {
-                                                                   "source": "../../images/stealth-rock.png",
-                                                                   "duration": 750,
-                                                                   "delay": 1000,
-                                                                   "curve": curve,
-                                                                        "z": parent.z
-                                                           },
-                                                           function(obj){
-                                                                          if (finish) {
-                                                                                   obj.destroy();
-                                                                                   finished();
-                                                                          } else {
-                                                                                  finished.connect(function(){obj.destroy()});
-                                                                          }
-                                                           }
-                                                           );
-        }
+        timer2.triggered.connect(function(){launchPebble(curve2, false)});
+        timer3.triggered.connect(function(){launchPebble(curve3, true)});
 
-        signal finished();
+        timer2.start();
+        timer3.start();
+    }
+
+    function launchPebble(curve, finish) {
+        var parent = main.parent;
+        var leech = Spawner.spawn(parent.parent, "moving-animated", {
+                                      "source": "../../images/" + params.image,
+                                      "duration": 750,
+                                      "delay": 1000,
+                                      "curve": curve,
+                                      "z": parent.z
+                                  },
+                                  function(obj){
+                                      finished.connect(function(){obj.destroy()});
+                                      if (finish) {
+                                          finished();
+                                      }
+                                  }
+                                  );
+    }
 }

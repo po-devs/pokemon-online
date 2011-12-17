@@ -5,4 +5,7 @@ Item {
     property FieldPokemon target;
     property int attack;
     property FieldPokemon attacker;
+    property variant params;
+
+    signal finished();
 }

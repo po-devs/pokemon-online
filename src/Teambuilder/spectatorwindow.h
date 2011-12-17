@@ -39,6 +39,8 @@ public:
 private:
     BattleClientLog *log;
     BattleInput *input;
+
+    QWidget *battleView;
     BattleScene *scene;
 
     PokeTextEdit* logWidget;
