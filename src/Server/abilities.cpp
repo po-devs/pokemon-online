@@ -178,13 +178,12 @@ struct AMColorChange : public AM {
         functions["AfterBeingPlumetted"] = &abp;
     }
 
-    /* gen 3 & 4 */
+    /* gen 3 & 4 event */
     static void ubh(int s, int t, BS &b) {
+        if (b.gen() > 4)
+            return;
         if (b.koed(s))
             return;
-        if (b.hasSubstitute(s)) {
-            return;
-        }
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
             if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
@@ -196,7 +195,7 @@ struct AMColorChange : public AM {
         }
     }
 
-    /* gen 5+ */
+    /* gen 5 event */
     static void abp(int s, int t, BS &b) {
         if (b.hasSubstitute(s)) {
             return;
