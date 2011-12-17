@@ -2770,7 +2770,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notifyHits(player, hitcount);
             }
 
-            if (gen() >= 5 && !koed(target)) {
+            if (gen() >= 5 && !koed(target) && !hasSubstitute(target)) {
                 callaeffects(target, player, "AfterBeingPlumetted");
             }
 
