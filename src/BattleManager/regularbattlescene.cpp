@@ -10,9 +10,16 @@
 #include <QToolTip>
 
 RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), peeking(false),
-    pauseCount(0)
+    pauseCount(0), info(dat->numberOfSlots())
 {
     gui.theme = theme;
+
+    /* Sets the bar in non-percentage mode for players */
+    for (int i = 0; i < data()->numberOfSlots(); i++) {
+        if (isPlayer(i)) {
+            info.percentage[i] = false;
+        }
+    }
 
     setupGui();
 }
@@ -66,6 +73,13 @@ QGridLayout* RegularBattleScene::createHPBarLayout(int slot)
     barL->addWidget(gui.bars[slot]);
 
     inside->addLayout(barL,1,0,1,4);
+
+    int player = data()->player(slot);
+
+    if (data()->role(player) == BattleConfiguration::Player) {
+        gui.bars[slot]->setFormat("%v / %m");
+        connect(gui.bars[slot], SIGNAL(clicked()), SLOT(changeBarMode()));
+    }
 
     return inside;
 }
@@ -204,6 +218,45 @@ ProxyDataContainer * RegularBattleScene::getDataProxy()
     return data()->exposedData();
 }
 
+void RegularBattleScene::animateHpBar()
+{
+    int spot = info.animatedSpot;
+    int current = info.animatedValue;
+
+    const int goal = data()->poke(spot).life();
+
+    QSettings s;
+    if (!s.value("animate_hp_bar").toBool()) {
+        updateHp(spot);
+        info.animatedSpot = -1;
+        unpause();
+        return;
+    }
+
+    if (goal == current) {
+        info.animatedSpot = -1;
+        QTimer::singleShot(120, this, SLOT(unpause()));
+        return;
+    }
+
+    /* We deal with true HP. 30 msec per 3 hp / % */
+    bool trueHP = isPlayer(spot);
+    int incr = trueHP ? 3 : 1;
+
+    int newHp = goal < current ? std::max(goal, current - incr) : std::min(goal, current+incr);
+    info.animatedValue = newHp;
+
+    updateHp(spot, newHp);
+
+    //Recursive call to update the hp bar 30msecs later
+    QTimer::singleShot(30, this, SLOT(animateHpBar()));
+}
+
+bool RegularBattleScene::isPlayer(int spot) const
+{
+    return data()->role(data()->player(spot)) == BattleConfiguration::Player;
+}
+
 void RegularBattleScene::pause()
 {
     pauseCount =+ 1;
@@ -229,6 +282,107 @@ void RegularBattleScene::onUseAttack(int spot, int attack) {
     emit attackUsed(spot, attack);
 }
 
+void RegularBattleScene::onPokeballStatusChanged(int player, int poke, int)
+{
+    updateBallStatus(player, poke);
+}
+
+void RegularBattleScene::onHpChange(int spot, int)
+{
+    info.animatedSpot = spot;
+    if (isPlayer(spot) && info.percentage[spot]) {
+        info.animatedValue = gui.bars[spot]->value() * data()->poke(spot).totalLife() / 100;
+    } else {
+        info.animatedValue = gui.bars[spot]->value();
+    }
+    pause();
+    animateHpBar();
+}
+
+void RegularBattleScene::updateBall(int player, int index)
+{
+    auto &poke = *data()->team(player).poke(index);
+
+    gui.pokeballs[player][index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+    updateBallStatus(player, index);
+}
+
+void RegularBattleScene::updatePoke(int spot)
+{
+    int player = data()->player(spot);
+    int slot = data()->slotNum(spot);
+
+    auto &poke = *data()->team(player).poke(slot);
+
+    if (!poke.isKoed()) {
+        //zone->switchTo(poke, spot, info()->sub[spot], info()->specialSprite[spot]);
+        gui.nick[spot]->setText(poke.nickname());
+        gui.level[spot]->setText(tr("Lv. %1").arg(poke.level()));
+        updateHp(spot);
+        gui.gender[spot]->setPixmap(gui.theme->BattleGenderPicture(poke.gender()));
+        int status = poke.status();
+        gui.status[spot]->setPixmap(gui.theme->BattleStatusIcon(status));
+    }  else {
+        //zone->switchToNaught(spot);
+        gui.nick[spot]->setText("");
+        gui.status[spot]->setPixmap(gui.theme->BattleStatusIcon(Pokemon::Fine));
+        gui.gender[spot]->setPixmap(QPixmap());
+        gui.bars[spot]->setValue(0);
+        gui.level[spot]->setText("");
+    }
+
+    updateBall(player, slot);
+}
+
+void RegularBattleScene::updateHp(int spot, int val)
+{
+    int value = val == -1 ? data()->poke(spot).life() : val;
+    int pvalue = value * 100 / data()->poke(spot).totalLife();
+    if (pvalue == 0 && value > 0) {
+        pvalue = 1;
+    }
+
+    gui.bars[spot]->setStyleSheet(health(pvalue));
+    if (info.percentage[spot]) {
+        gui.bars[spot]->setValue(pvalue);
+    } else {
+        gui.bars[spot]->setRange(0, data()->poke(spot).totalLife());
+        gui.bars[spot]->setValue(val);
+    }
+}
+
+void RegularBattleScene::updateBallStatus(int player, int index)
+{
+    gui.pokeballs[player][index]->setPixmap(gui.theme->StatusIcon(data()->team(player).poke(index)->status()));
+}
+
+QString RegularBattleScene::health(int lifePercent)
+{
+    return lifePercent > 50 ? "::chunk{background-color: #1fc42a;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
+}
+
+void RegularBattleScene::changeBarMode()
+{
+    int i;
+    for (i = 0; i < data()->numberOfSlots(); i++) {
+        if (gui.bars[i] == sender()) {
+            break;
+        }
+    }
+
+    gui.bars[i]->setFormat(info.percentage[i] ? "%v / %m" : "%p%");
+    info.percentage[i] = !info.percentage[i];
+
+    if (info.percentage[i])
+        gui.bars[i]->setRange(0,100);
+
+    if (info.animatedSpot == i) {
+        updateHp(i, info.animatedValue);
+    } else {
+        updateHp(i);
+    }
+}
+
 void RegularBattleScene::updateTimers()
 {
     for (int i = 0; i <= 1; i++) {
@@ -249,13 +403,20 @@ void RegularBattleScene::updateTimers()
     }
 }
 
-RegularBattleScene::Info::Info()
+RegularBattleScene::Info::Info(int nslots)
 {
     for (int i = 0; i < 2; i++) {
         time.push_back(300);
         startingTime.push_back(300);
         ticking.push_back(false);
     }
+
+    for (int i = 0; i < nslots; i++) {
+        percentage.push_back(true);
+    }
+
+    animatedSpot = -1;
+    animatedValue = 0;
 }
 
 GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(i)
@@ -417,58 +578,6 @@ void GraphicsZone::mouseMoveEvent(QMouseEvent * e)
 //    BaseBattleWindow *parent;
 //};
 
-//void BaseBattleDisplay::updatePoke(int spot)
-//{
-//    if (!parent) {
-//        parent = dynamic_cast<BaseBattleWindow*>(QWidget::parent());
-
-//        if (!parent)
-//            return;
-//    }
-
-//    if (info()->pokeAlive[spot]) {
-//        const ShallowBattlePoke &poke = info()->currentShallow(spot);
-//        zone->switchTo(poke, spot, info()->sub[spot], info()->specialSprite[spot]);
-//        nick[spot]->setText(parent->rnick(spot));
-//        level[spot]->setText(tr("Lv. %1").arg(poke.level()));
-//        updateHp(spot);
-//        bars[spot]->setStyleSheet(health(poke.lifePercent()));
-//        gender[spot]->setPixmap(Theme::GenderPicture(poke.gender(), Theme::BattleM));
-//        int status = poke.status();
-//        this->status[spot]->setPixmap(Theme::BattleStatusIcon(status));
-
-//        if (info()->player(spot) == info()->myself) {
-//            mypokeballs[info()->slotNum(spot)]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
-//        } else {
-//            advpokeballs[info()->slotNum(spot)]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
-//        }
-//    }  else {
-//        zone->switchToNaught(spot);
-//        nick[spot]->setText("");
-//        this->status[spot]->setPixmap(Theme::BattleStatusIcon(Pokemon::Fine));
-//        gender[spot]->setPixmap(QPixmap());
-//        bars[spot]->setValue(0);
-//    }
-//}
-
-//void BaseBattleDisplay::updatePoke(int player, int index)
-//{
-//    ShallowBattlePoke &poke = info()->pokemons[player][index];
-
-//    if (player == info()->myself) {
-//        mypokeballs[index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
-//    } else {
-//        advpokeballs[index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
-//    }
-
-//    changeStatus(player, index, poke.status());
-//}
-
-//void BaseBattleDisplay::updateHp(int spot)
-//{
-//    bars[spot]->setValue(info()->currentShallow(spot).lifePercent());
-//}
-
 //void BaseBattleDisplay::updateToolTip(int spot)
 //{
 //    if (!parent) {
@@ -564,19 +673,6 @@ void GraphicsZone::mouseMoveEvent(QMouseEvent * e)
 //    zone->tooltips[spot] = tooltip;
 //}
 
-//void BaseBattleDisplay::changeStatus(int spot, int poke, int status) {
-//    if (info()->player(spot)==info()->myself) {
-//        mypokeballs[poke]->setPixmap(Theme::StatusIcon(status));
-//    } else {
-//        advpokeballs[poke]->setPixmap(Theme::StatusIcon(status));
-//    }
-//}
-
-//QString BaseBattleDisplay::health(int lifePercent)
-//{
-//    return lifePercent > 50 ? "::chunk{background-color: #1fc42a;}" : (lifePercent >= 26 ? "::chunk{background-color: #F8DB17;}" : "::chunk{background-color: #D40202;}");
-//}
-
 //class BattleDisplay : public BaseBattleDisplay
 //{
 //    Q_OBJECT
@@ -622,34 +718,6 @@ void GraphicsZone::mouseMoveEvent(QMouseEvent * e)
 //    for (int i = 0; i < info()->numberOfSlots/2; i++) {
 //        updatePoke(info()->spot(info()->myself, i));
 //    }
-//}
-
-//void BattleDisplay::updateHp(int spot)
-//{
-//    if (percentageMode[spot])
-//        BaseBattleDisplay::updateHp(spot);
-//    else {
-//        bars[spot]->setRange(0, mypoke(spot).totalLifePoints());
-//        bars[spot]->setValue(mypoke(spot).lifePoints());
-//    }
-//}
-
-//void BattleDisplay::changeBarMode()
-//{
-//    int i;
-//    for (i = 0; i < info()->numberOfSlots; i++) {
-//        if (bars[i] == sender()) {
-//            break;
-//        }
-//    }
-
-//    bars[i]->setFormat(percentageMode[i] ? "%v / %m" : "%p%");
-//    percentageMode[i] = !percentageMode[i];
-
-//    if (percentageMode[i])
-//        bars[i]->setRange(0,100);
-
-//    updateHp(i);
 //}
 
 //void BattleDisplay::updateToolTip(int spot)
