@@ -30,6 +30,4 @@ Move {
 		function start() {
 				animation.running = true;
 		}
-
-		signal finished();
 }
