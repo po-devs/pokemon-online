@@ -164,6 +164,10 @@ void RegularBattleScene::setupGui()
 
     lastLine->addLayout(teamAndName[myself()]);
     lastLine->addWidget(createFullBarLayout(nslots, myself()));
+
+    QTimer *t = new QTimer (this);
+    t->start(200);
+    connect(t, SIGNAL(timeout()), SLOT(updateTimers()));
 }
 
 RegularBattleScene::~RegularBattleScene()
@@ -223,6 +227,35 @@ void RegularBattleScene::unpause()
 
 void RegularBattleScene::onUseAttack(int spot, int attack) {
     emit attackUsed(spot, attack);
+}
+
+void RegularBattleScene::updateTimers()
+{
+    for (int i = 0; i <= 1; i++) {
+        int ctime = std::max(long(0), info.ticking[i] ? info.time[i] + info.startingTime[i] - time(NULL) : info.time[i]);
+        if (ctime <= 5*60) {
+            gui.timers[i]->setValue(ctime);
+        } else {
+            gui.timers[i]->setValue(300);
+        }
+        gui.timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
+        if (ctime > 60) {
+            gui.timers[i]->setStyleSheet("::chunk{background-color: #55a8fc;}");
+        }else if (ctime > 30) {
+            gui.timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
+        } else {
+            gui.timers[i]->setStyleSheet("::chunk{background-color: #D40202;}");
+        }
+    }
+}
+
+RegularBattleScene::Info::Info()
+{
+    for (int i = 0; i < 2; i++) {
+        time.push_back(300);
+        startingTime.push_back(300);
+        ticking.push_back(false);
+    }
 }
 
 GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(i)
@@ -383,234 +416,6 @@ void GraphicsZone::mouseMoveEvent(QMouseEvent * e)
 
 //    BaseBattleWindow *parent;
 //};
-
-//BaseBattleDisplay::BaseBattleDisplay(BaseBattleInfo &i)
-//    : myInfo(&i)
-//{
-//    parent = NULL;
-
-//    QVBoxLayout *l=  new QVBoxLayout(this);
-//    l->setMargin(0);
-
-//    /* As anyway the GraphicsZone is a fixed size, it's useless to
-//       resize that part, might as well let  the chat be resized */
-//    l->setSizeConstraint(QLayout::SetFixedSize);
-
-//    nick.resize(i.numberOfSlots);
-//    level.resize(i.numberOfSlots);
-//    gender.resize(i.numberOfSlots);
-//    bars.resize(i.numberOfSlots);
-//    status.resize(i.numberOfSlots);
-
-//    QHBoxLayout *firstLine = new QHBoxLayout();
-//    l->addLayout(firstLine);
-
-//    QLabel* oppPoke = new QLabel();
-//    oppPoke->setPixmap(Theme::Sprite("hpbar"));
-//    oppPoke->setFixedSize(oppPoke->pixmap()->size());
-//    firstLine->addWidget(oppPoke);
-
-//    QVBoxLayout *oppl = new QVBoxLayout(oppPoke);
-//    oppl->setMargin(5);
-//    oppl->setSpacing(0);
-//    oppl->addSpacing(3);
-
-//    QHBoxLayout *oppl2 = new QHBoxLayout();
-//    oppl->addLayout(oppl2);
-//    oppl2->setMargin(0);
-//    oppl2->setSpacing(6);
-
-//    for (int i = 0; i < info()->numberOfSlots/2; i++) {
-//        QGridLayout *inside = new QGridLayout();
-//        oppl2->addLayout(inside);
-//        inside->setMargin(0);
-//        inside->setSpacing(4);
-
-//        int slot = info()->spot(info()->opponent, i);
-
-//        nick[slot] = new QLabel();
-//        nick[slot]->setObjectName("PokemonNick");
-//        inside->addWidget(nick[slot], 0, 0, 1, 1, Qt::AlignLeft);
-//        inside->setColumnStretch(0, 100);
-
-//        status[slot] = new QLabel();
-//        inside->addWidget(status[slot], 0, 1);
-
-//        gender[slot] = new QLabel();
-//        inside->addWidget(gender[slot], 0, 2);
-
-//        level[slot] = new QLabel();
-//        level[slot]->setObjectName("PokemonLevel");
-//        inside->addWidget(level[slot], 0, 3);
-
-
-//        QHBoxLayout *barL = new QHBoxLayout();
-//        barL->setMargin(0);
-//        barL->setSpacing(0);
-//        QLabel *HPIcon = new QLabel();
-//        HPIcon->setPixmap(Theme::Sprite("hpsquare"));
-//        HPIcon->setFixedSize(HPIcon->pixmap()->size());
-//        barL->addWidget(HPIcon);
-//        bars[slot] = new QClickPBar();
-//        bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
-//        bars[slot]->setRange(0, 100);
-//        barL->addWidget(bars[slot]);
-
-//        inside->addLayout(barL,1,0,1,4);
-//    }
-
-//    QHBoxLayout *foeteam = new QHBoxLayout();
-//    foeteam->addStretch(100);
-//    for (int i = 0; i < 6; i++) {
-//        advpokeballs[i] = new QLabel();
-//        advpokeballs[i]->setPixmap(Theme::StatusIcon(Pokemon::Fine));
-//        foeteam->addWidget(advpokeballs[i],0,Qt::AlignTop);
-//    }
-//    foeteam->setSpacing(1);
-
-//    QVBoxLayout * oppTeamAndName = new QVBoxLayout();
-//    oppTeamAndName->addLayout(foeteam);
-//    oppTeamAndName->addWidget(trainers[info()->opponent] = new QLabel(info()->name(info()->opponent)),0, Qt::AlignRight);
-//    trainers[info()->opponent]->setObjectName("TrainerNick");
-//    firstLine->addLayout(oppTeamAndName);
-
-
-//    zone = new GraphicsZone(&info());
-
-//    QHBoxLayout *midzone = new QHBoxLayout();
-//    QVBoxLayout *midme = new QVBoxLayout();
-//    midzone->addLayout(midme);
-//    midme->addStretch(100);
-//    timers[info()->myself] = new QProgressBar();
-//    timers[info()->myself]->setObjectName("TimeOut"); //for style sheets
-//    timers[info()->myself]->setRange(0,300);
-//    midme->addWidget(timers[info()->myself]);
-//    QLabel *mybox = new QLabel();
-//    mybox->setObjectName("MyTrainerBox");
-//    mybox->setFixedSize(82,82);
-//    mybox->setPixmap(Theme::TrainerSprite(info()->pInfo[info()->myself].avatar));
-//    midme->addWidget(mybox);
-//    midzone->addWidget(zone);
-//    QVBoxLayout *midopp = new QVBoxLayout();
-//    midzone->addLayout(midopp);
-//    QLabel *oppbox = new QLabel();
-//    oppbox->setPixmap(Theme::TrainerSprite(info()->pInfo[info()->opponent].avatar));
-//    oppbox->setObjectName("OppTrainerBox");
-//    oppbox->setFixedSize(82,82);
-//    midopp->addWidget(oppbox);
-//    timers[info()->opponent] = new QProgressBar();
-//    timers[info()->opponent]->setObjectName("TimeOut"); //for style sheets
-//    timers[info()->opponent]->setRange(0,300);
-//    midopp->addWidget(timers[info()->opponent]);
-//    midopp->addStretch(100);
-
-//    l->addLayout(midzone);
-
-
-//    QHBoxLayout *lastLine = new QHBoxLayout();
-//    l->addLayout(lastLine);
-
-//    QHBoxLayout *team = new QHBoxLayout();
-//    for (int i = 0; i < 6; i++) {
-//        mypokeballs[i] = new QLabel();
-//        mypokeballs[i]->setPixmap(Theme::StatusIcon(Pokemon::Fine));
-//        team->addWidget(mypokeballs[i],0,Qt::AlignBottom);
-//    }
-//    team->setSpacing(1);
-//    team->addStretch(100);
-
-//    QVBoxLayout * myTeamAndName = new QVBoxLayout();
-//    myTeamAndName->addWidget(trainers[info()->myself] = new QLabel(info()->name(info()->myself)),0, Qt::AlignLeft);
-//    myTeamAndName->addLayout(team);
-//    trainers[info()->myself]->setObjectName("TrainerNick");
-
-//    lastLine->addLayout(myTeamAndName);
-
-//    QLabel* myPoke = new QLabel();
-//    myPoke->setPixmap(Theme::Sprite("hpbar"));
-//    myPoke->setFixedSize(myPoke->pixmap()->size());
-//    lastLine->addWidget(myPoke);
-
-//    QVBoxLayout *myl = new QVBoxLayout(myPoke);
-//    myl->setMargin(5);
-//    myl->setSpacing(0);
-//    myl->addSpacing(3);
-
-//    QHBoxLayout *myl2 = new QHBoxLayout();
-//    myl->addLayout(myl2);
-//    myl2->setMargin(0);
-//    myl2->setSpacing(6);
-
-//    for (int i = 0; i < info()->numberOfSlots/2; i++) {
-
-//        QGridLayout *inside = new QGridLayout();
-//        myl2->addLayout(inside);
-//        inside->setMargin(0);
-//        inside->setSpacing(4);
-
-//        int slot = info()->spot(info()->myself, i);
-
-//        nick[slot] = new QLabel();
-//        nick[slot]->setObjectName("PokemonNick");
-//        inside->addWidget(nick[slot], 0, 0, 1, 1, Qt::AlignLeft);
-//        inside->setColumnStretch(0, 100);
-
-//        status[slot] = new QLabel();
-//        inside->addWidget(status[slot], 0, 1);
-
-//        gender[slot] = new QLabel();
-//        inside->addWidget(gender[slot], 0, 2);
-
-//        level[slot] = new QLabel();
-//        level[slot]->setObjectName("PokemonLevel");
-//        inside->addWidget(level[slot], 0, 3);
-
-
-//        QHBoxLayout *barL = new QHBoxLayout();
-//        barL->setMargin(0);
-//        barL->setSpacing(0);
-//        QLabel *HPIcon = new QLabel();
-//        HPIcon->setPixmap(Theme::Sprite("hpsquare"));
-//        HPIcon->setFixedSize(HPIcon->pixmap()->size());
-//        barL->addWidget(HPIcon);
-//        bars[slot] = new QClickPBar();
-//        bars[slot]->setObjectName("LifePoints"); /* for stylesheets */
-//        bars[slot]->setRange(0, 100);
-//        barL->addWidget(bars[slot]);
-
-//        inside->addLayout(barL,1,0,1,4);
-//    }
-
-//    for (int i = 0; i < info()->numberOfSlots; i++) {
-//        updatePoke(i);
-//    }
-
-//    updateTimers();
-
-//    QTimer *t = new QTimer (this);
-//    t->start(200);
-//    connect(t, SIGNAL(timeout()), SLOT(updateTimers()));
-//}
-
-//void BaseBattleDisplay::updateTimers()
-//{
-//    for (int i = 0; i <= 1; i++) {
-//        int ctime = std::max(long(0), info()->ticking[i] ? info()->time[i] + info()->startingTime[i] - time(NULL) : info()->time[i]);
-//        if (ctime <= 5*60) {
-//            timers[i]->setValue(ctime);
-//        } else {
-//            timers[i]->setValue(300);
-//        }
-//        timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
-//        if (ctime > 60) {
-//            timers[i]->setStyleSheet("::chunk{background-color: #55a8fc;}");
-//        }else if (ctime > 30) {
-//            timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
-//        } else {
-//            timers[i]->setStyleSheet("::chunk{background-color: #D40202;}");
-//        }
-//    }
-//}
 
 //void BaseBattleDisplay::updatePoke(int spot)
 //{

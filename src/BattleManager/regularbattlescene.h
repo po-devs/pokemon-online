@@ -63,6 +63,8 @@ public:
 signals:
     void printMessage(const QString&);
     void attackUsed(int spot, int attack);
+public slots:
+    void updateTimers();
 private:
     battledata_ptr mData;
     battledata_ptr data();
@@ -89,7 +91,16 @@ private:
         BattleDefaultTheme *theme;
     };
 
+    struct Info {
+        Info();
+
+        QVector<int> time;
+        QVector<int> startingTime;
+        QVector<int> ticking;
+    };
+
     Gui gui;
+    Info info;
 
     void setupGui();
     QHBoxLayout *createTeamLayout(QLabel** labels);

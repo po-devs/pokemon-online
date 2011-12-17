@@ -6,6 +6,7 @@
 #include "../BattleManager/battledata.h"
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battlescene.h"
+#include "../BattleManager/regularbattlescene.h"
 #include "../BattleManager/battledatatypes.h"
 #include "poketextedit.h"
 #include "theme.h"
@@ -20,22 +21,42 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, QString name1,
 
     log = new BattleClientLog(data, Theme::getBattleTheme());
     input = new BattleInput(&conf);
-    scene = new BattleScene(data2);
-
-    input->addOutput(scene);
-    scene->addOutput(data);
-    scene->addOutput(log);
-    scene->addOutput(data2);
 
     logWidget = new PokeTextEdit();
-
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
-    connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
-    scene->launch();
+    QSettings s;
 
-    foreach(QDeclarativeError error, scene->getWidget()->errors()) {
-        log->printLine("Error", error.toString());
+    bool qml = !(s.value("old_battle_window", false).toBool() || conf.mode != ChallengeInfo::Singles);
+
+    if (qml) {
+        BattleScene *scene = new BattleScene(data2);
+
+        input->addOutput(scene);
+        scene->addOutput(data);
+        scene->addOutput(log);
+        scene->addOutput(data2);
+
+
+        connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
+
+        scene->launch();
+
+        foreach(QDeclarativeError error, scene->getWidget()->errors()) {
+            log->printLine("Error", error.toString());
+        }
+
+        battleView = scene->getWidget();
+    } else {
+        RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme());
+        input->addOutput(battle);
+        battle->addOutput(data);
+        battle->addOutput(log);
+        battle->addOutput(data2);
+
+        connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
+
+        battleView = battle;
     }
 }
 
@@ -52,7 +73,7 @@ PokeTextEdit *SpectatorWindow::getLogWidget()
 
 QWidget *SpectatorWindow::getSceneWidget()
 {
-    return scene->getWidget();
+    return battleView;
 }
 
 QWidget *SpectatorWindow::getSampleWidget()
