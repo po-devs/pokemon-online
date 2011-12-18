@@ -256,6 +256,7 @@ void TB_Advanced::changeShininess2(bool shine)
     updateDVs();
 
     changeShininess(poke()->shiny());
+    updateHiddenPower();
 }
 
 void TB_Advanced::changeGender(bool gend1)
