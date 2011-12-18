@@ -10,7 +10,7 @@ typedef BattleData<DataContainer> battledata;
 BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
     pushHtml("<!DOCTYPE html>");
-    pushHtml("<!-- Pokemon Online battle spectator log (version 1.1) -->");
+    pushHtml("<!-- Pokemon Online battle spectator log (version 2.0) -->");
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
 
