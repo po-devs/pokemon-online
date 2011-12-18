@@ -252,6 +252,43 @@ void Tier::addBanParent(Tier *t)
     parent = t;
 }
 
+QString Tier::bannedReason(const PokeBattle &p) const {
+    QString errorList = "";
+    if(banPokes) {
+        if(bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
+            errorList += QString("Pokemon %1 is banned, ").arg(PokemonInfo::Name(p.num()));
+        }
+        if(bannedMoves.size() > 0) {
+            for(int i = 0; i < 4; i++) {
+                if(bannedMoves.contains(p.move(i).num())) {
+                    errorList += QString("%1, ").arg(MoveInfo::Name(p.move(i).num()));
+                }
+            }
+        }
+        if(bannedItems.contains(p.item())) {
+            errorList += QString("Item %1, ").arg(ItemInfo::Name(p.item()));
+        }
+        if(bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
+            errorList += QString("Pokemon %1 is banned, ").arg(PokemonInfo::Name(p.num()));
+        }
+        if(bannedMoves.size() > 0) {
+            for(int i = 0; i < 4; i++) {
+                if(p.move(i).num() != 0 && !bannedMoves.contains(p.move(i).num())) {
+                    errorList += QString("%1, ").arg(MoveInfo::Name(p.move(i).num()));
+                }
+            }
+        }
+        if(bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
+            errorList += QString("%1, ").arg(ItemInfo::Name(p.item()));
+        }
+    }
+    if(errorList.length() >= 2) {
+        errorList.resize(errorList.size()-2);
+        errorList += ".";
+    }
+    return errorList;
+}
+
 bool Tier::isBanned(const PokeBattle &p) const {
     if (banPokes) {
         if (bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num())))

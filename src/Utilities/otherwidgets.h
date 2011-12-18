@@ -100,7 +100,7 @@ class QIdListWidgetItem : public QListWidgetItem
 public:
     QIdListWidgetItem(int id, const QString &text);
     QIdListWidgetItem(int id, const QIcon &icon, const QString &text);
-
+    bool operator<(const QListWidgetItem & item) const;
     int id() const;
     void setColor(const QColor &c);
 private:
