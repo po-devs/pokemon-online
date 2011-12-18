@@ -42,6 +42,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "pm_flashing", true);
     setDefaultValue(s, "animate_hp_bar", true);
     setDefaultValue(s, "sort_players_by_tier", false);
+    setDefaultValue(s, "sort_channels_by_name", false);
     setDefaultValue(s, "show_all_items", false);
 
     setDefaultValue(s, "find_battle_force_rated", false);
