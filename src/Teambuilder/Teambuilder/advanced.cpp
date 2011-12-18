@@ -151,12 +151,16 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         }
     }
 
-    if (gen() >= 3) {
+    if (gen() >= 2) {
         secondColumn->addWidget(shiny = new QCheckBox(tr("&Shiny")));
         if (poke()->shiny()) {
             shiny->setChecked(true);
         }
-        connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
+        if (gen() == 2) { // This because changeShininess is called also when an IV is changed, so you wouldn't be able to change IVs when it's not shiny
+            connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess2(bool)));
+        } else {
+            connect(shiny, SIGNAL(toggled(bool)), SLOT(changeShininess(bool)));
+        }
 
         QPushButton *bForms = new QPushButton(tr("Alternate Formes"));
         QMenu *m= new QMenu(bForms);
@@ -232,6 +236,40 @@ void TB_Advanced::changeShininess(bool shine)
     emit imageChanged();
 }
 
+void TB_Advanced::changeShininess2(bool shine)
+{
+    if (shine) {
+        poke()->setDV(Defense, 10);
+        poke()->setDV(Speed, 10);
+        poke()->setDV(SpDefense, 10);
+        poke()->setDV(SpAttack, 10);
+        poke()->setDV(Attack, 15);
+
+        updateDV(Hp);
+        updateDV(Defense);
+        updateDV(Speed);
+        updateDV(SpDefense);
+        updateDV(SpAttack);
+        updateDV(Attack);
+    } else {
+        poke()->setDV(Defense, 15);
+        poke()->setDV(Speed, 15);
+        poke()->setDV(SpDefense, 15);
+        poke()->setDV(SpAttack, 15);
+        poke()->setDV(Attack, 15);
+
+        updateDV(Hp);
+        updateDV(Defense);
+        updateDV(Speed);
+        updateDV(SpDefense);
+        updateDV(SpAttack);
+        updateDV(Attack);
+    }
+    poke()->shiny() = shine;
+    updatePokeImage();
+    emit imageChanged();
+}
+
 void TB_Advanced::changeGender(bool gend1)
 {
     poke()->gender() = gend1 ? Pokemon::Male : Pokemon::Female;
@@ -290,6 +328,15 @@ void TB_Advanced::changeDV(int stat, int newval)
             updateDV(Hp);
             changeShininess(poke()->shiny());
             changeGender(poke()->gender());
+            if (poke()->shiny()) {
+                shiny->blockSignals(true);
+                shiny->setChecked(true);
+                shiny->blockSignals(false);
+            } else {
+                shiny->blockSignals(true);
+                shiny->setChecked(false);
+                shiny->blockSignals(false);
+            }
         }
 
 	updateHiddenPower();
