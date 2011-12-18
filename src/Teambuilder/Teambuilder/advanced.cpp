@@ -64,14 +64,14 @@ TB_Advanced::TB_Advanced(PokeTeam *_poke)
         dvlayout->addWidget(s, i, 1);
 
         dvchoice[i]->setRange(0, gen() <= 2 ? 15 : 31);
-	dvchoice[i]->setAccelerated(true);
-	connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
+        dvchoice[i]->setAccelerated(true);
+        connect(dvchoice[i], SIGNAL(valueChanged(int)), SLOT(changeDV(int)));
 
         if (gen() <= 2 && i == Hp) {
             dvchoice[i]->setDisabled(true);
         }
 
-	dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
+        dvlayout->addWidget((stats[i]=new QLabel()), i, 2);
         stats[i]->setObjectName("BigText");
 
         if (gen() == 1 && i == SpDefense) {
@@ -231,6 +231,9 @@ void TB_Advanced::changeAbility(bool)
 
 void TB_Advanced::changeShininess(bool shine)
 {
+    if (shine != shiny->isChecked()) {
+        shiny->setChecked(shine);
+    }
     poke()->shiny() = shine;
     updatePokeImage();
     emit imageChanged();
@@ -238,36 +241,21 @@ void TB_Advanced::changeShininess(bool shine)
 
 void TB_Advanced::changeShininess2(bool shine)
 {
-    if (shine) {
-        poke()->setDV(Defense, 10);
-        poke()->setDV(Speed, 10);
-        poke()->setDV(SpDefense, 10);
-        poke()->setDV(SpAttack, 10);
-        poke()->setDV(Attack, 15);
-
-        updateDV(Hp);
-        updateDV(Defense);
-        updateDV(Speed);
-        updateDV(SpDefense);
-        updateDV(SpAttack);
-        updateDV(Attack);
-    } else {
-        poke()->setDV(Defense, 15);
-        poke()->setDV(Speed, 15);
-        poke()->setDV(SpDefense, 15);
-        poke()->setDV(SpAttack, 15);
-        poke()->setDV(Attack, 15);
-
-        updateDV(Hp);
-        updateDV(Defense);
-        updateDV(Speed);
-        updateDV(SpDefense);
-        updateDV(SpAttack);
-        updateDV(Attack);
+    if (shine == poke()->shiny()) {
+        return;
     }
-    poke()->shiny() = shine;
-    updatePokeImage();
-    emit imageChanged();
+
+    uchar stats[6];
+
+    memset(stats,  shine ? 10: 15, 6);
+    stats[Attack] = 15;
+
+    for (unsigned i = Attack; i < 6; i++) {
+        poke()->setDV(i, stats[i]);
+    }
+    updateDVs();
+
+    changeShininess(poke()->shiny());
 }
 
 void TB_Advanced::changeGender(bool gend1)
@@ -301,12 +289,12 @@ void TB_Advanced::updateGender()
 {
     if (poke()->genderAvail()== Pokemon::MaleAndFemaleAvail)
     {
-	if (poke()->gender() == Pokemon::Male)
-	{
-	    gender1->setChecked(true);
-	} else {
-	    gender2->setChecked(true);
-	}
+        if (poke()->gender() == Pokemon::Male)
+        {
+            gender1->setChecked(true);
+        } else {
+            gender2->setChecked(true);
+        }
     }
 }
 
@@ -314,7 +302,7 @@ void TB_Advanced::changeDV(int stat, int newval)
 {
     if (poke()->DV(stat) != newval)
     {
-	poke()->setDV(stat, newval);
+        poke()->setDV(stat, newval);
 
         /* Making Sp Atk and Sp Def coordinated in gen 2 */
         if (gen() == 2 && (stat == SpDefense || stat == SpAttack)) {
@@ -328,12 +316,9 @@ void TB_Advanced::changeDV(int stat, int newval)
             updateDV(Hp);
             changeShininess(poke()->shiny());
             changeGender(poke()->gender());
-                shiny->blockSignals(true);
-                shiny->setChecked(poke()->shiny());
-                shiny->blockSignals(false);
         }
 
-	updateHiddenPower();
+        updateHiddenPower();
     }
 }
 
@@ -345,8 +330,8 @@ int TB_Advanced::gen() const
 int TB_Advanced::stat(QObject *dvchoiceptr)
 {
     for (int i = 0; i < 6; i++) {
-	if (dvchoice[i] == dvchoiceptr)
-	    return i;
+        if (dvchoice[i] == dvchoiceptr)
+            return i;
     }
 
     throw tr("Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice");
@@ -361,7 +346,7 @@ void TB_Advanced::updateDVs()
 {
     for (int i = 0; i < 6; i++)
     {
-	updateDV(i);
+        updateDV(i);
     }
 }
 
@@ -415,12 +400,12 @@ void TB_Advanced::updateHpAndDvChoice()
 
     for (int i = 0; i < hpAndDvVals.size(); i++)
     {
-	for (int j = 0; j < 6; j++)
-	{
-	    QLabel *l = new QLabel(hpAndDvVals[i][j]);
-	    l->setAlignment(Qt::AlignHCenter);
-	    hpanddvchoice->setCellWidget(i, j, l);
-	}
+        for (int j = 0; j < 6; j++)
+        {
+            QLabel *l = new QLabel(hpAndDvVals[i][j]);
+            l->setAlignment(Qt::AlignHCenter);
+            hpanddvchoice->setCellWidget(i, j, l);
+        }
     }
 
     emit statChanged();
@@ -450,7 +435,7 @@ void TB_Advanced::changeHiddenPower(int newtype)
 {
     newtype += 1;
     if (newtype == calculateHiddenPowerType())
-	return;
+        return;
 
     if (gen() >= 3) {
         updateHpAndDvChoice();
@@ -468,31 +453,31 @@ void TB_Advanced::changeDVsAccordingToHP(int row)
 {
     /* Now we have to change the dvs... */
     for (int i = 0; i < 6; i++) {
-	/* If the item at row0 and column i (i=current stat) is a string representing an odd number,
-	   then odd is true */
+        /* If the item at row0 and column i (i=current stat) is a string representing an odd number,
+       then odd is true */
 
-	int numeric_value = (dynamic_cast<QLabel*>(hpanddvchoice->cellWidget(row, i)))->text().toInt();
-	bool odd =  numeric_value % 2;
+        int numeric_value = (dynamic_cast<QLabel*>(hpanddvchoice->cellWidget(row, i)))->text().toInt();
+        bool odd =  numeric_value % 2;
 
-	if (odd == poke()->DV(i)%2) {
-	    /* if that stat has the same parity, no need to change it, as the type is only based
-	       on parity */
-	} else {
-	    /* changing the parity of the stat */
-	    if (odd == false)
-		poke()->setDV(i, poke()->DV(i)-1);
-	    else
-		poke()->setDV(i, poke()->DV(i)+1);
+        if (odd == poke()->DV(i)%2) {
+            /* if that stat has the same parity, no need to change it, as the type is only based
+           on parity */
+        } else {
+            /* changing the parity of the stat */
+            if (odd == false)
+                poke()->setDV(i, poke()->DV(i)-1);
+            else
+                poke()->setDV(i, poke()->DV(i)+1);
 
-	    updateDV(i);
-	}
+            updateDV(i);
+        }
     }
 }
 
 void TB_Advanced::updateStats()
 {
     for (int i = 0; i < 6; i++)
-	updateStat(i);
+        updateStat(i);
     emit statChanged();
 }
 
