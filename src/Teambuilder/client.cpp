@@ -285,11 +285,6 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
     }
 }
 
-void Client::updateChannelsItems(QListWidgetItem *item) {
-    QIdListWidgetItem * objitem;
-    objitem = dynamic_cast<QIdListWidgetItem*>(item);
-}
-
 void Client::sortChannelsToggle(bool newvalue)
 {
     QSettings s;
@@ -300,9 +295,6 @@ void Client::sortChannelsToggle(bool newvalue)
 }
 
 void Client::sortChannels() {
-    for(int i = 0; i < channels->count(); i++) {
-        updateChannelsItems(channels->item(i));
-    }
     channels->sortItems();
 }
 
