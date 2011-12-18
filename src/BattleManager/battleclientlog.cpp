@@ -15,7 +15,7 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : m
     pushHtml("<body>");
 
     if (data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player) {
-        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is started!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     } else {
         printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     }
