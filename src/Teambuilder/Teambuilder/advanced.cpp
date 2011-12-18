@@ -328,15 +328,9 @@ void TB_Advanced::changeDV(int stat, int newval)
             updateDV(Hp);
             changeShininess(poke()->shiny());
             changeGender(poke()->gender());
-            if (poke()->shiny()) {
                 shiny->blockSignals(true);
-                shiny->setChecked(true);
+                shiny->setChecked(poke()->shiny());
                 shiny->blockSignals(false);
-            } else {
-                shiny->blockSignals(true);
-                shiny->setChecked(false);
-                shiny->blockSignals(false);
-            }
         }
 
 	updateHiddenPower();
