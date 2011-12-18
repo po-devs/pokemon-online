@@ -31,6 +31,7 @@ signals:
 private slots:
     void changeAbility(bool);
     void changeShininess(bool);
+    void changeShininess2(bool);
     void changeGender(bool);
     void updatePokeImage();
     void changeDVsAccordingToHP(int row);
