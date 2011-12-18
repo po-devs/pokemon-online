@@ -21,9 +21,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
-#ifdef PO_PMS_YOU_START_ONLY
     lastAutoPM = time(NULL);
-#endif
 
     /* different events */
     eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
@@ -145,6 +143,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
         sortCBN = 1;
     } else {
         sortCBN = 0;
+    }
+    if(settings.value("pm_disabled").toBool()) {
+        pmDisabled = 1;
+    } else {
+        pmDisabled = 0;
     }
 }
 
@@ -668,20 +671,21 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing)
+    if(pmFlashing && !pmDisabled)
         activateWindow(); // activate po window when pm recieved
 
     if (mypms.contains(id)) {
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled);
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
+    connect(this, SIGNAL(PMDisabled(bool)), p, SLOT(disablePM(bool)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
@@ -719,12 +723,22 @@ void Client::showTimeStamps2(bool b)
     QSettings s;
     s.setValue("show_timestamps2", b);
 }
+
 void Client::pmFlash(bool b)
 {
     QSettings s;
     s.setValue("pm_flashing", b);
     pmFlashing = b;
 }
+
+void Client::togglePM(bool b)
+{
+    QSettings s;
+    s.setValue("pm_disabled", b);
+    pmDisabled = b;
+    emit PMDisabled(b);
+}
+
 
 void Client::ignoreServerVersion(bool b)
 {
@@ -966,31 +980,38 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-#ifdef PO_PMS_YOU_START_ONLY
+    time_t current = time(NULL);
+    double difference = difftime(lastAutoPM, current);
     if (mypms.contains(id)) {
+        if(pmDisabled) { // We're avoiding that people that was actually chatting with the user continue talking avoiding the Disable PM =-)
+            if((difference > 6) || (difference < -6)) {
+                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                lastAutoPM = current;
+            }
+            return;
+        }
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
-        time_t current = time(NULL);
-        double difference = difftime(lastAutoPM, current);
-        if ((difference > 6) || (difference < -6)) {
-            myrelay.sendPM(id, "This player cannot receive PMs."); // no translation needed
-            lastAutoPM = current;
+        if(pmDisabled) {
+            if ((difference > 6) || (difference < -6)) {
+                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                lastAutoPM = current;
+            }
+            return;
+        } else {
+            if (!playerExist(id) || myIgnored.contains(id)) {
+                return;
+            }
+            if (!mypms.contains(id)) {
+                startPM(id);
+            }
+            registerPermPlayer(id);
+            mypms[id]->printLine(pm);
         }
-        return;
     }
-#else
-    if (!playerExist(id) || myIgnored.contains(id)) {
-        return;
-    }
-    if (!mypms.contains(id)) {
-        startPM(id);
-    }
-
-    registerPermPlayer(id);
-    mypms[id]->printLine(pm);
-#endif
 }
+
 
 void Client::removePM(int id)
 {
@@ -1146,6 +1167,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     pm_flash->setCheckable(true);
     connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
     pm_flash->setChecked(s.value("pm_flashing").toBool());
+
+    QAction * pm_disable = menuActions->addAction(tr("Disable PMs"));
+    pm_disable->setCheckable(true);
+    connect(pm_disable, SIGNAL(triggered(bool)), SLOT(togglePM(bool)));
+    pm_disable->setChecked(s.value("pm_disabled").toBool());
 
     QAction *sortByTier = menuActions->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
