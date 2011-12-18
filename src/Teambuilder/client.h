@@ -146,7 +146,6 @@ public slots:
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void sortChannels();
     void sortChannelsToggle(bool enabled);
-    void updateChannelsItems(QListWidgetItem *name);
     void channelPlayers(int chanid, const QVector<qint32> &ids = QVector<qint32>());
     void addChannel(const QString &name, int id);
     void channelNameChanged(int id, const QString &name);
