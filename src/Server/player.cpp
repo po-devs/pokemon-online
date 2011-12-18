@@ -142,7 +142,9 @@ void Player::changeTier(const QString &newtier)
             pokeList.resize(pokeList.size()-2);
 
         if (pokeList.size() > 0) {
-            sendMessage(tr("The following pokemons of your team are invalid (ban, level, moveset, item...) in %1, hence you can't choose that tier: %2.").arg(newtier,pokeList));
+            for(int i = 0; i < pokeList.length(); i++) {
+                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
+            }
             return;
         } else {
             sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
