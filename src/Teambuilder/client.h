@@ -9,9 +9,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
-#ifdef PO_PMS_YOU_START_ONLY
 #include <ctime>
-#endif
 
 class MainEngine;
 class BaseChallengeWindow;
@@ -109,8 +107,10 @@ public:
     int showPEvents;
     bool sortBT;
     bool sortBA;
+    bool sortCBN;
     bool showTS;
     bool pmFlashing;
+    bool pmDisabled;
     TierNode tierRoot;
     QStringList tierList;
 public slots:
@@ -146,6 +146,9 @@ public slots:
     void channelPlayers(int chanid, const QVector<qint32> &ids = QVector<qint32>());
     void addChannel(const QString &name, int id);
     void channelNameChanged(int id, const QString &name);
+    void sortChannels();
+    void sortChannelsToggle(bool enabled);
+    void updateChannelsItems(QListWidgetItem *name);
     void removeChannel(int id);
     void leaveChannelR(int index);
     void leaveChannel(int id);
@@ -226,6 +229,7 @@ public slots:
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
+    void togglePM(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const QString &a, const QString &b);
@@ -249,6 +253,7 @@ signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
     void tierListFormed(const QStringList &tiers);
+    void PMDisabled(bool b);
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -350,9 +355,7 @@ private:
     void changeTierChecked(const QString &newtier);
 
     bool eventEnabled(int event);
-#ifdef PO_PMS_YOU_START_ONLY
     time_t lastAutoPM;
-#endif
 };
 
 class BattleFinder : public QWidget

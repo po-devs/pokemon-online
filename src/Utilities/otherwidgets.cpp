@@ -226,6 +226,24 @@ void QIdListWidgetItem::setColor(const QColor &c)
     setForeground(QBrush(c));
 }
 
+bool QIdListWidgetItem::operator< (const QListWidgetItem & item) const
+{
+    QString text1 = text().toLower();
+    QString text2 = item.text().toLower();
+    bool shorter  =(text1.size() < text2.size());
+    int length = shorter?text1.size():text2.size();
+    for(int counter = 0; counter < length; counter++) {
+        if(text1[counter] == text2[counter]) {
+            continue;
+        }
+        if(text1[counter].isLetter() != text2[counter].isLetter()) {
+            return text1[counter].isLetter();
+        }
+        return (text1[counter] < text2[counter]);
+    }
+    return shorter;
+}
+
 QScrollDownTextBrowser::QScrollDownTextBrowser()
 {
     autoClear = true;

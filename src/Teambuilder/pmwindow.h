@@ -12,7 +12,7 @@ struct PMWindow : public QWidget
     Q_OBJECT
     PROPERTY(int, id);
 public:
-    PMWindow(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false);
+    PMWindow(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false, bool pmDisabled = false);
     ~PMWindow() {
         emit destroyed(id());
     }
@@ -34,6 +34,7 @@ public slots:
     void sendMessage();
     void ignore(bool);
     void challenge();
+    void disablePM(bool);
 private:
     QString m_name;
     QString m_ownName;
