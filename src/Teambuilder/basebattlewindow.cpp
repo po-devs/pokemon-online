@@ -86,7 +86,7 @@ void BaseBattleWindow::undelay()
 
 void BaseBattleWindow::init()
 {
-    test = new SpectatorWindow(conf(), info().name(0), info().name(1));
+    test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     QToolTip::setFont(QFont("Verdana",10));

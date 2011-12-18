@@ -347,7 +347,7 @@ void RegularBattleScene::updateHp(int spot, int val)
         gui.bars[spot]->setValue(pvalue);
     } else {
         gui.bars[spot]->setRange(0, data()->poke(spot).totalLife());
-        gui.bars[spot]->setValue(val);
+        gui.bars[spot]->setValue(value);
     }
 }
 
@@ -531,6 +531,16 @@ void GraphicsZone::mouseMoveEvent(QMouseEvent * e)
             QToolTip::showText(e->globalPos(), tooltips[i]);
             break;
         }
+    }
+}
+
+void GraphicsZone::updatePoke(int spot)
+{
+    const auto &fieldInfo = info()->fieldPoke(spot);
+    if (fieldInfo.showing && fieldInfo.onTheField && !info()->poke(spot).isKoed()) {
+        switchTo(info()->poke(spot), spot, fieldInfo.substitute, fieldInfo.alternateSprite);
+    } else {
+        switchToNaught(spot);
     }
 }
 
