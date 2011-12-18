@@ -141,6 +141,11 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     if (settings.value("user_list_at_right").toBool()) {
         s->addWidget(mytab);
     }
+    if(settings.value("sort_channels_by_name").toBool()) {
+        sortCBN = 1;
+    } else {
+        sortCBN = 0;
+    }
 }
 
 Client::~Client()
@@ -275,6 +280,30 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         else
             channels->addItem(new QIdListWidgetItem(it.key(), greychatot, it.value()));
     }
+    if(sortCBN) {
+        sortChannels();
+    }
+}
+
+void Client::updateChannelsItems(QListWidgetItem *item) {
+    QIdListWidgetItem * objitem;
+    objitem = dynamic_cast<QIdListWidgetItem*>(item);
+}
+
+void Client::sortChannelsToggle(bool newvalue)
+{
+    QSettings s;
+    s.setValue("sort_channels_by_name", newvalue);
+    if(sortCBN) {
+        sortChannels();
+    }
+}
+
+void Client::sortChannels() {
+    for(int i = 0; i < channels->count(); i++) {
+        updateChannelsItems(channels->item(i));
+    }
+    channels->sortItems();
 }
 
 void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
@@ -1137,6 +1166,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
     sortByAuth->setChecked(s.value("sort_players_by_auth").toBool());
     sortBA = sortByAuth->isChecked();
+
+    QAction *sortChannelsName = menuActions->addAction(tr("Sort channels by name"));
+    sortChannelsName->setCheckable(true);
+    sortChannelsName->setChecked(s.value("sort_channels_by_name").toBool());
+    connect(sortChannelsName, SIGNAL(triggered(bool)), SLOT(sortChannelsToggle(bool)));
+    sortCBN = sortChannelsName->isChecked();
 
     QAction *list_right = menuActions->addAction(tr("Move player list to &right"));
     list_right->setCheckable(true);
