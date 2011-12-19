@@ -20,6 +20,23 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : m
     } else {
         printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     }
+    QString roster = "";
+    for (int i=0; i<12; i+=2)
+    {
+        roster+=PokemonInfo::Name(data()->poke(i).num());
+	    if (i<10)
+		    roster+=" / ";
+    }
+    printHtml("Teams",toBoldColor(tr("%1's team:"), Qt::blue).arg(data()->name(battledata::Player1)) + roster);
+
+    roster = "";
+    for (int i=1; i<12; i+=2)
+    {
+	    roster+=PokemonInfo::Name(data()->poke(i).num());
+	    if (i<10)
+		    roster+=" / ";
+    }
+    printHtml("Teams",toBoldColor(tr("%1's team:"), Qt::blue).arg(data()->name(battledata::Player2)) + roster);
 }
 
 BattleDefaultTheme * BattleClientLog::theme()
