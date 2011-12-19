@@ -13,6 +13,9 @@ namespace std {
 
 class ShallowBattlePoke;
 class BattleDynamicInfo;
+class BattleChoices;
+class ShallowShownTeam;
+class BattleStats;
 
 template <class Current>
 class BattleExtracter
@@ -129,6 +132,15 @@ protected:
     start(ClockStart, int player; int time) end(player, time)
     start(ClockStop, int player; int time) end(player, time)
     start(ShiftSpots, int player; int slot1; int slot2; bool silent) end(player, slot1, slot2, silent)
+    start(PPChange, int spot; int move; int PP) end(spot, move, PP)
+    start(OfferChoice, int player; std::shared_ptr<BattleChoices>* choice) end (player, choice)
+    start(TempPPChange, int spot; int move; int PP) end (spot, move, PP)
+    start(MoveChange, int spot; int slot; int move; bool definite) end (spot, slot, move, definite)
+    start(RearrangeTeam, int player; std::shared_ptr<ShallowShownTeam>* team) end (player, team)
+    start(ChoiceSelection, int player) end (player)
+    start(ChoiceCanceled, int player) end (player)
+    start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
+    start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
 
 #undef start
 #undef end
@@ -228,6 +240,16 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ClockStart);
     addCallback(ClockStop);
     addCallback(ShiftSpots);
+    addCallback(PPChange);
+    addCallback(OfferChoice);
+    addCallback(TempPPChange);
+    addCallback(MoveChange);
+    addCallback(RearrangeTeam);
+    addCallback(ChoiceSelection);
+    addCallback(ChoiceCanceled);
+    addCallback(Variation);
+    addCallback(DynamicStats);
+
 #undef addCallback
 }
 

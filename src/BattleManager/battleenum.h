@@ -54,7 +54,14 @@ enum /* class */ BattleEnum
     ClockStop,
     ShiftSpots,
     PPChange,
-    OfferChoice
+    OfferChoice,
+    TempPPChange,
+    MoveChange,
+    RearrangeTeam,
+    ChoiceSelection,
+    ChoiceCanceled,
+    Variation,
+    DynamicStats
 };
 
 inline unsigned int qHash(const BattleEnum &b) {
