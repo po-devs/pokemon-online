@@ -267,7 +267,7 @@ Efecto: %5</translation>
     <message>
         <location filename="basebattlewindow.cpp" line="115"/>
         <source>Flash when a move is done</source>
-        <translation type="unfinished"></translation>
+        <translation>Avisar cuando el enemigo utiliza un movimiento</translation>
     </message>
     <message>
         <location filename="basebattlewindow.cpp" line="131"/>
@@ -1338,7 +1338,7 @@ Efecto: %5</translation>
     <message>
         <location filename="client.cpp" line="1174"/>
         <source>Old battle window</source>
-        <translation type="unfinished"></translation>
+        <translation>Ventana de batalla vieja</translation>
     </message>
     <message>
         <location filename="client.cpp" line="1179"/>
@@ -1373,7 +1373,7 @@ Efecto: %5</translation>
     <message>
         <location filename="client.cpp" line="1878"/>
         <source>&amp;Reconnect</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reconectar</translation>
     </message>
     <message>
         <source>Enter the password for your current name.
@@ -2595,17 +2595,17 @@ txt (*.txt)</translation>
     <message>
         <location filename="spectate.cpp" line="23"/>
         <source>Music</source>
-        <translation type="unfinished">Música</translation>
+        <translation>Música</translation>
     </message>
     <message>
         <location filename="spectate.cpp" line="24"/>
         <source>Save log</source>
-        <translation type="unfinished">Guardar log de batalla</translation>
+        <translation>Guardar log de batalla</translation>
     </message>
     <message>
         <location filename="spectate.cpp" line="25"/>
         <source>Save replay</source>
-        <translation type="unfinished"></translation>
+        <translation>Guardar &quot;película&quot; de la batalla</translation>
     </message>
 </context>
 <context>
