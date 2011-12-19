@@ -1810,18 +1810,46 @@ struct MMMagnitude: public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        int randnum = b.randint(20);
 
         int pow, magn;
 
-        switch (randnum) {
-        case 0: magn = 4; pow = 10; break;
-        case 1: case 2: magn = 5; pow = 30; break;
-        case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
-        case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
-        case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
-        case 17: case 18: magn = 9; pow = 110; break;
-        case 19: default: magn = 10; pow = 150; break;
+        if (b.gen() >= 3) {
+            int randnum = b.randint(20);
+
+            switch (randnum) {
+            case 0: magn = 4; pow = 10; break;
+            case 1: case 2: magn = 5; pow = 30; break;
+            case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
+            case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
+            case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
+            case 17: case 18: magn = 9; pow = 110; break;
+            case 19: default: magn = 10; pow = 150; break;
+            }
+        }
+        else { // gen 2 has slightly different probabilities, 14, 25, 51, 77, 51, 25, 13
+            int randnum = b.randint(256);
+
+            if (randnum < 14) {
+                magn = 4; pow = 10;
+            }
+            else if (randnum < 39) {
+                magn = 5; pow = 30;
+            }
+            else if (randnum < 90) {
+                magn = 6; pow = 50;
+            }
+            else if (randnum < 167) {
+                magn = 7; pow = 70;
+            }
+            else if (randnum < 218) {
+                magn = 8; pow = 90;
+            }
+            else if (randnum < 243) {
+                magn = 9; pow = 110;
+            }
+            else {
+                magn = 10; pow = 150;
+            }
         }
 
         turn(b,s)["MagnitudeLevel"] = magn;
