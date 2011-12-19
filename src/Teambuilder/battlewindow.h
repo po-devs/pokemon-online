@@ -140,8 +140,6 @@ private:
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
     QMessageBox *question;
-
-    bool hasLoggedWifiClause;
 };
 
 class AbstractAttackButton;

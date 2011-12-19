@@ -22,6 +22,13 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : m
     }
 }
 
+void BattleClientLog::emitAll()
+{
+    foreach(QString s, getLog()) {
+        emit lineToBePrinted(s);
+    }
+}
+
 BattleDefaultTheme * BattleClientLog::theme()
 {
     return mTheme;
@@ -480,4 +487,35 @@ void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent
     } else {
         printLine("ShiftSpots", tr("%1 shifted spots with %2!").arg(tu(nick(data()->spot(player, spot2))), nick(data()->spot(player, spot1))), silent);
     }
+}
+
+void BattleClientLog::onVariation(int, int bonus, int malus)
+{
+    printHtml("Variation", tr("%1+%2, %3").arg(toBoldColor(tr("Variation: "), Qt::blue)).arg(bonus).arg(malus));
+}
+
+void BattleClientLog::onRearrangeTeam(int, const ShallowShownTeam &team)
+{
+    int mp = data()->role(battledata::Player1) == BattleConfiguration::Player ? battledata::Player1 : battledata::Player2;
+
+    QStringList mynames, oppnames;
+
+    for (int i = 0; i < 6; i++) {
+        Pokemon::uniqueId id = data()->team(mp).poke(i)->num();
+
+        if (id != Pokemon::NoPoke) {
+            mynames.push_back(PokemonInfo::Name(id));
+        }
+    }
+    for (int i = 0; i < 6; i++) {
+        Pokemon::uniqueId id = team.poke(i).num;
+
+        if (id != Pokemon::NoPoke) {
+            oppnames.push_back(PokemonInfo::Name(id));
+        }
+    }
+
+    printHtml("Teams", toBoldColor(tr("Your team: "), Qt::blue) + mynames.join(" / "));
+    printHtml("Teams", toBoldColor(tr("Opponent's team: "), Qt::blue) + oppnames.join(" / "));
+    onBlankMessage();
 }
