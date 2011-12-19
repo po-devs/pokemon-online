@@ -22,74 +22,20 @@ struct BaseBattleInfo
     BaseBattleInfo(const PlayerInfo & me, const PlayerInfo &opp, int mode, int myself=0, int opponent=1);
     /* name [0] = mine, name[1] = other */
     PlayerInfo pInfo[2];
-    QVector<bool> sub;
-    QVector<Pokemon::uniqueId> specialSprite;
-    QVector<Pokemon::uniqueId> lastSeenSpecialSprite;
-
-    quint16 time[2];
-    bool ticking[2];
-    int startingTime[2];
+    advbattledata_proxy *data;
 
     int mode;
-    int numberOfSlots;
+    int gen;
 
     int myself;
     int opponent;
-
-    int gen;
+    int numberOfSlots;
 
     /* Opponent pokemon */
-    ShallowBattlePoke pokemons[2][6];
-    QVector<bool> pokeAlive;
-
-    ShallowBattlePoke &currentShallow(int spot) {
-        return pokemons[player(spot)][slotNum(spot)];
-    }
-    const ShallowBattlePoke &currentShallow(int spot) const {
-        return pokemons[player(spot)][slotNum(spot)];
-    }
 
     QString name(int x) const {
         return pInfo[x].team.name;
     }
-
-    int slot(int player, int poke=0) {
-        return player + poke*2;
-    }
-
-    int player(int slot) const {
-        return slot %2;
-    }
-
-    int slotNum(int slot) const {
-        return slot / 2;
-    }
-
-    bool isOut(int , int poke) const {
-        return poke < numberOfSlots/2;
-    }
-
-    bool multiples() const {
-        return mode == ChallengeInfo::Doubles || mode == ChallengeInfo::Triples;
-    }
-
-    virtual void switchPoke(int spot, int poke) {
-        std::swap(currentShallow(spot), pokemons[player(spot)][poke]);
-        pokeAlive[spot] = true;
-    }
-
-    virtual void switchOnSide(int player, int s1, int s2) {
-        int pk1 = slot(player, s1);
-        int pk2 = slot(player, s2);
-        std::swap(currentShallow(pk1), currentShallow(pk2));
-        std::swap(pokeAlive[pk1], pokeAlive[pk2]);
-        std::swap(sub[pk1], sub[pk2]);
-        std::swap(specialSprite[pk1], specialSprite[pk2]);
-        std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
-    }
-
-    /* Stat boosts & team status */
-    QList<BattleDynamicInfo> statChanges;
 };
 
 /* The battle window called by the client, online */
@@ -99,8 +45,6 @@ class BaseBattleWindow : public BaseBattleWindowInterface
 {
     Q_OBJECT
 
-    PROPERTY(int, animatedHpSpot)
-    PROPERTY(int, animatedHpGoal)
     PROPERTY(int, ownid)
     PROPERTY(bool, started)
     PROPERTY(bool, usePokemonNames)
@@ -113,6 +57,15 @@ public:
     BaseBattleInfo &info() {
         return *myInfo;
     }
+
+    const advbattledata_proxy &data() const {
+        return *info().data;
+    }
+    advbattledata_proxy &data() {
+        return *info().data;
+    }
+
+    virtual void switchToNaught(int){}
 
     BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client);
 
@@ -212,7 +165,6 @@ public:
         HurtPoison
     };
 
-    virtual void switchToNaught(int spot);
     virtual void addSpectator(bool add, int id);
 
     //void playCry(int pokenum);
@@ -220,8 +172,6 @@ public:
     void printLine(const QString &str, bool silent = false);
     void printHtml(const QString &str, bool silent = false, bool newline = true);
     QString name(int spot) const;
-    virtual QString nick(int spot) const;
-    QString rnick(int spot) const;
     int player(int spot) const;
     int opponent(int player) const;
 
@@ -245,7 +195,6 @@ public slots:
     void delay(qint64 msec=0, bool forceDelay=true);
     void undelay();
 
-    void animateHPBar();
     void ignoreSpectators();
 
     void musicPlayStop();

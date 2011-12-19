@@ -18,7 +18,7 @@ Rectangle {
         if (running) {
             return;
         }
-        if (woof.pokemon.numRef===0 || main.oldValue == woof.pokemon.lifePercent || !woof.fieldPokemon.onTheField) {
+        if (woof.pokemon.numRef===0 || main.oldValue === woof.pokemon.lifePercent || !woof.fieldPokemon.onTheField) {
             rectangle1.width = oldValue = woof.pokemon.lifePercent;
             return;
         }

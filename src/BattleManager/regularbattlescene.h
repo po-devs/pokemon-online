@@ -111,13 +111,15 @@ public:
         updateBall(data()->player(spot), previndex);
     }
     void onHpChange(int spot, int newHp);
+    void onClockStart(int player, int time);
+    void onClockStop(int player, int time);
 
     void onPokemonVanish(int spot) {gui.zone->updatePoke(spot);}
     void onPokemonReappear(int spot) {gui.zone->updatePoke(spot);}
     void onSpriteChange(int spot, int) {gui.zone->updatePoke(spot);}
     void onDefiniteFormeChange(int player, int poke, int){gui.zone->updatePoke(data()->spot(player, poke));}
     void onCosmeticFormeChange(int spot, int) {gui.zone->updatePoke(spot);}
-    void onShiftSpots(int player, int spot1, int spot2, bool) { gui.zone->updatePoke(spot1); gui.zone->updatePoke(spot2); }
+    void onShiftSpots(int player, int spot1, int spot2, bool);
     void onSendBack(int spot, bool) {gui.zone->updatePoke(spot);}
     void onSubstituteStatus(int spot, bool) {gui.zone->updatePoke(spot);}
 

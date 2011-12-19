@@ -22,6 +22,7 @@ RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *t
     }
 
     setupGui();
+    updateTimers();
 }
 
 QHBoxLayout* RegularBattleScene::createTeamLayout(QLabel **labels)
@@ -184,6 +185,19 @@ void RegularBattleScene::setupGui()
     connect(t, SIGNAL(timeout()), SLOT(updateTimers()));
 }
 
+void RegularBattleScene::onClockStart(int player, int time)
+{
+    info.time[player] = time;
+    info.startingTime[player] = ::time(NULL);
+    info.ticking[player] = true;
+}
+
+void RegularBattleScene::onClockStop(int player, int time)
+{
+    info.time[player] = time;
+    info.ticking[player] = false;
+}
+
 RegularBattleScene::~RegularBattleScene()
 {
 }
@@ -307,6 +321,14 @@ void RegularBattleScene::updateBall(int player, int index)
     updateBallStatus(player, index);
 }
 
+void RegularBattleScene::onShiftSpots(int player, int spot1, int spot2, bool)
+{
+    gui.zone->updatePoke(data()->spot(player, spot1));
+    gui.zone->updatePoke(data()->spot(player, spot2));
+    pause();
+    QTimer::singleShot(500, this, SLOT(unpause()));
+}
+
 void RegularBattleScene::updatePoke(int spot)
 {
     int player = data()->player(spot);
@@ -407,7 +429,7 @@ RegularBattleScene::Info::Info(int nslots)
 {
     for (int i = 0; i < 2; i++) {
         time.push_back(300);
-        startingTime.push_back(300);
+        startingTime.push_back(0);
         ticking.push_back(false);
     }
 

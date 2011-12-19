@@ -71,7 +71,11 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 
 QString BattleClientLog::nick(int spot)
 {
-    return QString("%1's %2").arg(data()->name(spot), data()->poke(spot).nick());
+    if (data()->role(spot) == BattleConfiguration::Player) {
+        return rnick(spot);
+    } else {
+        return QString("%1's %2").arg(data()->name(spot), rnick(spot));
+    }
 }
 
 QString BattleClientLog::rnick(int spot)
