@@ -9,6 +9,7 @@ typedef BattleData<DataContainer> battledata;
 
 BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
+    hasLoggedTeams = false;
     bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
     pushHtml(QString("<!-- Pokemon Online battle%1 log (version 2.0) -->\n").arg(spectator ? " spectator": ""));
@@ -496,6 +497,11 @@ void BattleClientLog::onVariation(int, int bonus, int malus)
 
 void BattleClientLog::onRearrangeTeam(int, const ShallowShownTeam &team)
 {
+    if (hasLoggedTeams) {
+        return;
+    }
+    hasLoggedTeams = true;
+
     int mp = data()->role(battledata::Player1) == BattleConfiguration::Player ? battledata::Player1 : battledata::Player2;
 
     QStringList mynames, oppnames;
