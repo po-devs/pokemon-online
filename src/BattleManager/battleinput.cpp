@@ -402,14 +402,14 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case ClockStart:
     {
-        quint32 time;
+        quint16 time;
         in >> time;
         output<BattleEnum::ClockStart>(spot, time);
         break;
     }
     case ClockStop:
     {
-        quint32 time;
+        quint16 time;
         in >> time;
         output<BattleEnum::ClockStop>(spot, time);
         break;
