@@ -424,6 +424,20 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::ShiftSpots>(spot, s1, s2, silent);
         break;
     }
+    case ChangePP:
+    {
+        quint8 move, pp;
+        in >> move >> pp;
+
+        output<BattleEnum::PPChange>(spot, move, pp);
+    }
+    case OfferChoice:
+    {
+        BattleChoices c;
+        in >> c;
+
+        output<BattleEnum::OfferChoice>(&c);
+    }
     default:
         /* TODO: UNKNOWN COMMAND */
         break;

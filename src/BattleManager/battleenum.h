@@ -52,7 +52,8 @@ enum /* class */ BattleEnum
     CosmeticFormeChange,
     ClockStart,
     ClockStop,
-    ShiftSpots
+    ShiftSpots,
+    PPChange
 };
 
 inline unsigned int qHash(const BattleEnum &b) {
