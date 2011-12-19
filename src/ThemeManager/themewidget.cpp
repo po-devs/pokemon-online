@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDebug>
+#include <QDialog>
 
 ThemeWidget::ThemeWidget(QString name, QString author, QString version, QString _downloadUrl, QString _forumId) :
     QWidget(0),
@@ -17,6 +18,10 @@ ThemeWidget::ThemeWidget(QString name, QString author, QString version, QString 
     ui->author->setText(author);
     ui->version->setText(version);
 
+    ui->themeName->adjustSize();
+    ui->author->adjustSize();
+    ui->version->adjustSize();
+
     if (downloadUrl.isEmpty()) {
         ui->downloadButton->setDisabled(true);
     }
@@ -29,6 +34,7 @@ ThemeWidget::ThemeWidget(QString name, QString author, QString version, QString 
 
     connect(ui->downloadButton, SIGNAL(clicked()), SLOT(downloadButtonClicked()));
     connect(ui->forumButton, SIGNAL(clicked()), SLOT(forumThreadButtonClicked()));
+    connect(ui->image, SIGNAL(clicked()), SLOT(imageClicked()));
 }
 
 ThemeWidget::~ThemeWidget()
@@ -47,7 +53,6 @@ void ThemeWidget::setThemeImage(QString image)
 
 void ThemeWidget::downloadFinished(QNetworkReply *reply)
 {
-    QPixmap im;
     im.loadFromData(reply->readAll());
     if (im.width() > im.height()) {
         ui->image->setPixmap(im.scaledToWidth(120));
@@ -68,3 +73,14 @@ void ThemeWidget::forumThreadButtonClicked()
     QDesktopServices::openUrl(url);
 }
 
+void ThemeWidget::imageClicked()
+{
+    QLabel *l = new QLabel;
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget(l);
+    l->setPixmap(im);
+    QDialog d(this);
+    d.setLayout(layout);
+    d.setModal(true);
+    d.exec();
+}

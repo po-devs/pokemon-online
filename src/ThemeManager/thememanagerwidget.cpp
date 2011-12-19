@@ -10,6 +10,8 @@ ThemeManagerWidget::ThemeManagerWidget(QWidget *parent) :
     ui(new Ui::ThemeManagerWidget)
 {
     ui->setupUi(this);
+    ui->progressBar->setVisible(false);
+
     connect(ui->getListingButton, SIGNAL(clicked()), SLOT(updateListing()));
 
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
@@ -64,6 +66,7 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
         widget->setThemeImage(imageUrl);
         ui->themeWidgets->addWidget(widget);
     }
+    ui->scrollAreaWidgetContents->adjustSize();
 }
 
 
