@@ -9,12 +9,13 @@ typedef BattleData<DataContainer> battledata;
 
 BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
+    bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
-    pushHtml("<!-- Pokemon Online battle spectator log (version 2.0) -->\n");
+    pushHtml(QString("<!-- Pokemon Online battle%1 log (version 2.0) -->\n").arg(spectator ? " spectator": ""));
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
 
-    if (data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player) {
+    if (!spectator) {
         printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     } else {
         printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
