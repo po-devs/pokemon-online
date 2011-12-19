@@ -31,6 +31,9 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
     logWidget = new PokeTextEdit();
     connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
 
+    /* All the previous message which didn't get a chance to be emitted */
+    log->emitAll();
+
     QSettings s;
 
     bool qml = !(s.value("old_battle_window", true).toBool() || conf.mode != ChallengeInfo::Singles);

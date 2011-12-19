@@ -57,7 +57,6 @@ PokeProxy & BattleInfo::currentPoke(int spot)
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf,
                            Client *client)
 {
-    hasLoggedWifiClause = false;
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
@@ -136,14 +135,6 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     switchTo(0,data().spot(info().myself,0), false);
 
     show();
-
-    log->pushHtml("<!DOCTYPE html>");
-    log->pushHtml("<!-- Pokemon Online battle log (version 2.0) -->");
-    log->pushHtml(QString("<!-- Log belonging to %1-->").arg(data().name(info().myself)));
-    log->pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data().name(info().myself), data().name(info().opponent)));
-    log->pushHtml("<body>");
-
-    printHtml(toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(name(1), name(0)));
 
     disableAll();
 }
@@ -697,31 +688,6 @@ void BattleWindow::updateChoices()
 
 void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 {
-    if (!hasLoggedWifiClause) {
-        hasLoggedWifiClause = true;
-
-        QStringList mynames, oppnames;
-
-        for (int i = 0; i < 6; i++) {
-            Pokemon::uniqueId id = info()._myteam.poke(i).num();
-
-            if (id != Pokemon::NoPoke) {
-                mynames.push_back(PokemonInfo::Name(id));
-            }
-        }
-        for (int i = 0; i < 6; i++) {
-            Pokemon::uniqueId id = t.poke(i).num;
-
-            if (id != Pokemon::NoPoke) {
-                oppnames.push_back(PokemonInfo::Name(id));
-            }
-        }
-
-        printLine(toBoldColor(tr("Your team: "), Qt::blue) + mynames.join(" / "));
-        printLine(toBoldColor(tr("Opponent's team: "), Qt::blue) + oppnames.join(" / "));
-        printLine("");
-    }
-
     RearrangeWindow *r = new RearrangeWindow(info()._myteam, t);
     r->setParent(this, Qt::Window | Qt::Dialog);
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
