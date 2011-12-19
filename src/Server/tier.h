@@ -89,6 +89,7 @@ public:
     void addBanParent(Tier *t);
 
     bool isBanned(const PokeBattle &p) const;
+    QString bannedReason(const PokeBattle &p) const;
     bool isRestricted(const PokeBattle &p) const;
     bool isValid(const TeamBattle &t) const;
     bool exists(const QString &name);

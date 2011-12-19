@@ -21,6 +21,56 @@ class QHBoxLayout;
 class QGridLayout;
 class GraphicsZone;
 
+
+/* The graphics zone, where both pokes are displayed */
+class GraphicsZone : public QGraphicsView
+{
+    typedef AdvancedBattleData* battledata_ptr;
+public:
+    GraphicsZone(battledata_ptr info, BattleDefaultTheme *theme);
+    /* displays that poke */
+    template <class T>
+    void switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite = Pokemon::NoPoke) {
+        items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ? specialSprite:poke.num(), poke.shiny(),
+                                          info()->player(spot) == myself(), poke.gender(), sub));
+        updatePos(spot);
+    }
+
+    /* Display blank */
+    void switchToNaught(int spot);
+    /* For tool tips */
+    void mouseMoveEvent(QMouseEvent *e);
+    /* Updates the position of an item */
+    void updatePos(int spot);
+    /* updates the sprite of a pokemon */
+    void updatePoke(int spot);
+
+    /* Loads a pixmap if not loaded otherwise go see graphics */
+    QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
+    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
+            is a combination of 2 bools, 1 quin8; and one quint16 */
+    quint64 key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const;
+    QHash<qint32, QPixmap> graphics;
+    /* Current pixmaps displayed */
+    QVector<QGraphicsPixmapItem *> items;
+    QGraphicsScene scene;
+
+    QVector<QString> tooltips;
+    battledata_ptr mInfo;
+
+    battledata_ptr info() {
+        return mInfo;
+    }
+
+    const battledata_ptr info() const {
+        return mInfo;
+    }
+
+    int opponent() const;
+    int myself() const;
+    bool reversed() const;
+};
+
 class RegularBattleScene: public QWidget, public BattleCommandManager<RegularBattleScene, BattleSceneFlow<BattleEnum, RegularBattleScene> >
 {
     Q_OBJECT
@@ -53,13 +103,23 @@ public:
 
     void onUseAttack(int spot, int attack);
     void onPokeballStatusChanged(int player, int poke, int status);
-    void onKo(int spot) { updatePoke(spot); }
+    void onKo(int spot) { updatePoke(spot); gui.zone->updatePoke(spot); }
     void onMajorStatusChange(int spot, int, bool){ updatePoke(spot);}
     void onSendOut(int spot, int previndex, ShallowBattlePoke*, bool) {
         updatePoke(spot);
+        gui.zone->updatePoke(spot);
         updateBall(data()->player(spot), previndex);
     }
     void onHpChange(int spot, int newHp);
+
+    void onPokemonVanish(int spot) {gui.zone->updatePoke(spot);}
+    void onPokemonReappear(int spot) {gui.zone->updatePoke(spot);}
+    void onSpriteChange(int spot, int) {gui.zone->updatePoke(spot);}
+    void onDefiniteFormeChange(int player, int poke, int){gui.zone->updatePoke(data()->spot(player, poke));}
+    void onCosmeticFormeChange(int spot, int) {gui.zone->updatePoke(spot);}
+    void onShiftSpots(int player, int spot1, int spot2, bool) { gui.zone->updatePoke(spot1); gui.zone->updatePoke(spot2); }
+    void onSendBack(int spot, bool) {gui.zone->updatePoke(spot);}
+    void onSubstituteStatus(int spot, bool) {gui.zone->updatePoke(spot);}
 
     void updateBall(int player, int poke);
     void updateBallStatus(int player, int poke);
@@ -128,53 +188,6 @@ private:
     QHBoxLayout *createTeamLayout(QLabel** labels);
     QGridLayout *createHPBarLayout(int slot);
     QWidget *createFullBarLayout(int nslots, int player);
-};
-
-/* The graphics zone, where both pokes are displayed */
-class GraphicsZone : public QGraphicsView
-{
-    typedef AdvancedBattleData* battledata_ptr;
-public:
-    GraphicsZone(battledata_ptr info, BattleDefaultTheme *theme);
-    /* displays that poke */
-    template <class T>
-    void switchTo(const T &poke, int spot, bool sub, Pokemon::uniqueId specialSprite = Pokemon::NoPoke) {
-        items[spot]->setPixmap(loadPixmap(specialSprite != Pokemon::NoPoke ? specialSprite:poke.num(), poke.shiny(),
-                                          info()->player(spot) == myself(), poke.gender(), sub));
-        updatePos(spot);
-    }
-
-    /* Display blank */
-    void switchToNaught(int spot);
-    /* For tool tips */
-    void mouseMoveEvent(QMouseEvent *e);
-    /* Updates the position of an item */
-    void updatePos(int spot);
-
-    /* Loads a pixmap if not loaded otherwise go see graphics */
-    QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
-    /* We are using a qmap to store the graphics already loaded. So the key of the pixmap
-            is a combination of 2 bools, 1 quin8; and one quint16 */
-    quint64 key(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub) const;
-    QHash<qint32, QPixmap> graphics;
-    /* Current pixmaps displayed */
-    QVector<QGraphicsPixmapItem *> items;
-    QGraphicsScene scene;
-
-    QVector<QString> tooltips;
-    battledata_ptr mInfo;
-
-    battledata_ptr info() {
-        return mInfo;
-    }
-
-    const battledata_ptr info() const {
-        return mInfo;
-    }
-
-    int opponent() const;
-    int myself() const;
-    bool reversed() const;
 };
 
 #endif // REGULARBATTLESCENE_H

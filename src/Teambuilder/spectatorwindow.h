@@ -9,6 +9,7 @@ class BattleClientLog;
 class BattleScene;
 class BattleInput;
 class PokeTextEdit;
+class PlayerInfo;
 class BattleConfiguration;
 
 /* A window which takes binary as input, and manages
@@ -19,7 +20,8 @@ class BattleConfiguration;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(const BattleConfiguration &conf, QString name1, QString name2);
+    SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo &name1,
+                    const PlayerInfo &name2);
     ~SpectatorWindow();
 
     /* Receives the binary data */
