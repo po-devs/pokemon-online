@@ -28,8 +28,12 @@ private slots:
 
     void downloadFinished(QNetworkReply*);
 
+    void imageClicked();
+
 private:
     QNetworkAccessManager manager;
+
+    QPixmap im;
 
     QString downloadUrl;
     QString forumId;
