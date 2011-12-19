@@ -117,6 +117,16 @@ void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
     poke(index)->adaptTo(pokemon);
 }
 
+void TeamProxy::setName(const QString &name)
+{
+    teamData->name() = name;
+}
+
+void TeamProxy::setAvatar(int avatar)
+{
+    teamData->avatar() = avatar;
+}
+
 void TeamProxy::setTeam(const TeamBattle *team)
 {
     for (int i = 0; i < 6; i++) {

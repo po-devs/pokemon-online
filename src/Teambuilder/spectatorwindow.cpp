@@ -10,14 +10,20 @@
 #include "../BattleManager/battledatatypes.h"
 #include "poketextedit.h"
 #include "theme.h"
+#include "../PokemonInfo/networkstructs.h"
 
-SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, QString name1, QString name2)
+SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo& p1,
+                                 const PlayerInfo& p2)
 {
     data = new battledata_basic(&conf);
     data2 = new advbattledata_proxy(&conf);
 
-    data->team(0).name() = data2->team(0).name() = name1;
-    data->team(1).name() = data2->team(1).name() = name2;
+    data->team(0).name() = p1.team.name;
+    data->team(1).name() = p2.team.name;
+    data2->team(0).setName(p1.team.name);
+    data2->team(1).setName(p2.team.name);
+    data2->team(0).setAvatar(p1.avatar);
+    data2->team(1).setAvatar(p2.avatar);
 
     log = new BattleClientLog(data, Theme::getBattleTheme());
     input = new BattleInput(&conf);

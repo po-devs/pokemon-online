@@ -86,6 +86,8 @@ public:
 
     void setTeam(const TeamBattle *team);
     void setPoke(int index, ShallowBattlePoke *pokemon);
+    void setName(const QString &name);
+    void setAvatar(int avatar);
 
     void switchPokemons(int index, int prevIndex);
 
