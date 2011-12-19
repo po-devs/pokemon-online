@@ -263,12 +263,12 @@ void BattleClientLog::onAttackFailing(int)
     printLine("Failed", tr("But if failed!"));
 }
 
-void BattleClientLog::onPlayerMessage(int spot, QString message)
+void BattleClientLog::onPlayerMessage(int spot, const QString &message)
 {
     printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
 }
 
-void BattleClientLog::onSpectatorJoin(int id, QString name)
+void BattleClientLog::onSpectatorJoin(int id, const QString &name)
 {
     spectators.insert(id, name);
 
@@ -281,12 +281,12 @@ void BattleClientLog::onSpectatorLeave(int id)
     spectators.remove(id);
 }
 
-void BattleClientLog::onSpectatorChat(int id, QString message)
+void BattleClientLog::onSpectatorChat(int id, const QString &message)
 {
     printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(message));
 }
 
-void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString q)
+void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &q)
 {
     QString mess = MoveInfo::MoveMessage(move,part);
     mess.replace("%s", nick(spot));
@@ -467,7 +467,7 @@ void BattleClientLog::setTheme(BattleDefaultTheme *theme)
     mTheme = theme;
 }
 
-void BattleClientLog::onTierNotification(QString tier)
+void BattleClientLog::onTierNotification(const QString &tier)
 {
     printHtml("Tier", toBoldColor(tr("Tier: "), Qt::blue) + tier);
     printHtml("Mode", toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode()));

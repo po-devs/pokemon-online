@@ -53,7 +53,8 @@ enum /* class */ BattleEnum
     ClockStart,
     ClockStop,
     ShiftSpots,
-    PPChange
+    PPChange,
+    OfferChoice
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

@@ -3,7 +3,7 @@
 #include <QPair>
 #include "../PokemonInfo/battlestructs.h"
 
-typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
+template <class T> std::shared_ptr<T> mk() { return std::shared_ptr<T>(new T()); }
 
 BattleInput::BattleInput(const BattleConfiguration *conf) {
     mCount = 0;
@@ -67,7 +67,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         bool silent;
         quint8 prevIndex;
-        shallowpoke poke (new ShallowBattlePoke());
+        auto poke = mk<ShallowBattlePoke>();
         in >> silent;
         in >> prevIndex;
         in >> *poke;
@@ -211,9 +211,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case BattleChat:
     case EndMessage:
     {
-        QString message;
-        in >> message;
-        output<BattleEnum::PlayerMessage>(spot, message.toUtf8().constData());
+        auto message = mk<QString>();
+        in >> *message;
+        output<BattleEnum::PlayerMessage>(spot, &message);
         break;
     }
     case Spectating:
@@ -223,9 +223,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         in >> come >> id;
 
         if (come) {
-            QString name;
-            in >> name;
-            output<BattleEnum::SpectatorEnter>(id, name.toUtf8().constData());
+            auto name = mk<QString>();
+            in >> *name;
+            output<BattleEnum::SpectatorEnter>(id, &name);
         } else {
             output<BattleEnum::SpectatorLeave>(id);
         }
@@ -234,9 +234,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case SpectatorChat:
     {
         qint32 id;
-        QString message;
-        in >> id >> message;
-        output<BattleEnum::SpectatorMessage>(id, message.toUtf8().constData());
+        auto message = mk<QString>();
+        in >> id >> *message;
+        output<BattleEnum::SpectatorMessage>(id, &message);
         break;
     }
     case MoveMessage:
@@ -245,12 +245,12 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         uchar part=0;
         qint8 type(0), foe(0);
         qint16 other(0);
-        QString q;
-        in >> move >> part >> type >> foe >> other >> q;
+        auto q = mk<QString>();
+        in >> move >> part >> type >> foe >> other >> *q;
         if (move == 57) {
             output<BattleEnum::StartWeather>(spot, part+1, false); //False for non-ability weather
         } else {
-            output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, q.toUtf8().constData());
+            output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, &q);
         }
         break;
     }
@@ -359,16 +359,16 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case TierSection:
     {
-        QString tier;
-        in >> tier;
-        output<BattleEnum::TierInfo>(tier.toUtf8().constData());
+        auto tier = mk<QString>();
+        in >> *tier;
+        output<BattleEnum::TierInfo>(&tier);
         break;
     }
     case DynamicInfo:
     {
         BattleDynamicInfo info;
         in >> info;
-        output<BattleEnum::StatBoostsAndField>(spot, &info);
+        output<BattleEnum::StatBoostsAndField>(spot, info);
         break;
     }
     case TempPokeChange:
