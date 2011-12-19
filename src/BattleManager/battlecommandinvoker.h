@@ -110,6 +110,15 @@ protected:
     start(ClockStart, onClockStart, int player, int time) end(onClockStart, player, time)
     start(ClockStop, onClockStop, int player, int time) end(onClockStop, player, time)
     start(ShiftSpots, onShiftSpots, int player, int spot1, int spot2, bool silent) end(onShiftSpots, player, spot1, spot2, silent)
+    start(PPChange, onPPChange, int spot, int move, int PP) end(onPPChange, spot, move, PP)
+    start(OfferChoice, onOfferChoice, int player, std::shared_ptr<BattleChoices>* choice) end (onOfferChoice, player, *choice->get())
+    start(TempPPChange, onTempPPChange, int spot, int move, int PP) end (onTempPPChange, spot, move, PP)
+    start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)
+    start(RearrangeTeam, onRearrangeTeam, int player, std::shared_ptr<ShallowShownTeam>* team) end (onRearrangeTeam, player, *team->get())
+    start(ChoiceSelection, onChoiceSelection, int player) end (onChoiceSelection, player)
+    start(ChoiceCanceled, onChoiceCanceled, int player) end (onChoiceCanceled, player)
+    start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
+    start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
 
 #undef start
 #undef end
@@ -171,6 +180,15 @@ protected:
     void onClockStop(int player, int time);
     void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
+    void onPPChange(int spot, int move, int PP);
+    void onOfferChoice(int player, const BattleChoices &choice);
+    void onTempPPChange(int spot, int move, int PP);
+    void onMoveChange(int spot, int slot, int move, bool definite);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onChoiceSelection(int player);
+    void onChoiceCanceled(int player);
+    void onVariation(int player, int bonus, int malus);
+    void onDynamicStats(int spot, const BattleStats& stats);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

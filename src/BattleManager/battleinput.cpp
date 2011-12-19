@@ -375,7 +375,19 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     {
         quint8 type;
         in >> type;
-        if (type == TempSprite) {
+        if (type == TempMove || type == DefMove) {
+            qint8 slot;
+            quint16 move;
+            in >> slot >> move;
+
+            output<BattleEnum::MoveChange>(spot, slot, move, type==DefMove);
+        } else if (type == TempPP) {
+            qint8 slot;
+            qint8 PP;
+
+            in >> slot >> PP;
+            output<BattleEnum::TempPPChange>(spot, slot, PP);
+        } else if (type == TempSprite) {
             Pokemon::uniqueId tempsprite;
             in >> tempsprite;
 
@@ -430,13 +442,48 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         in >> move >> pp;
 
         output<BattleEnum::PPChange>(spot, move, pp);
+        break;
     }
     case OfferChoice:
     {
-        BattleChoices c;
-        in >> c;
+        auto c = mk<BattleChoices>();
+        in >> *c;
 
-        output<BattleEnum::OfferChoice>(&c);
+        output<BattleEnum::OfferChoice>(spot, &c);
+        break;
+    }
+    case MakeYourChoice:
+    {
+        output<BattleEnum::ChoiceSelection>(spot);
+        break;
+    }
+    case CancelMove:
+    {
+        output<BattleEnum::ChoiceCanceled>(spot);
+        break;
+    }
+    case DynamicStats:
+    {
+        auto stats = mk<BattleStats>();
+        in >> *stats;
+
+        output<BattleEnum::DynamicStats>(spot, &stats);
+        break;
+    }
+    case PointEstimate:
+    {
+        qint8 first, second;
+        in >> first >> second;
+
+        output<BattleEnum::Variation>(spot, first, second);
+        break;
+    }
+    case RearrangeTeam:
+    {
+        auto t = mk<ShallowShownTeam>();
+        in >> *t;
+
+        output<BattleEnum::RearrangeTeam>(spot, &t);
     }
     default:
         /* TODO: UNKNOWN COMMAND */
