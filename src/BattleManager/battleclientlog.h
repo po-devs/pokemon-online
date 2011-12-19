@@ -64,6 +64,8 @@ public:
 //    void onClockStop(int player, int time);
     void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
+    void onVariation(int player, int bonus, int malus);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
 
     QString nick(int spot);
     QString rnick(int spot);
@@ -78,6 +80,7 @@ public:
     void printSilent(const QString&);
 
     QStringList getLog();
+    void emitAll();
 signals:
     void lineToBePrinted(const QString &);
 protected:
