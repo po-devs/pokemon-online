@@ -566,50 +566,6 @@ void GraphicsZone::updatePoke(int spot)
     }
 }
 
-///Storage to use to construct battlescene
-
-//class GraphicsZone;
-
-//class BaseBattleDisplay : public QWidget
-//{
-//    Q_OBJECT
-//public:
-//    BaseBattleInfo* myInfo;
-//    BaseBattleInfo &info() const {
-//        return *myInfo;
-//    }
-
-//    BaseBattleDisplay(BaseBattleInfo &i);
-
-//    virtual void updatePoke(int spot);
-//    virtual void updatePoke(int player, int index);
-//    virtual void updateHp(int spot);
-//    virtual void updateToolTip(int spot);
-//    void changeStatus(int spot, int poke, int status);
-//public slots:
-//    void updateTimers();
-
-//protected:
-//    QString health(int lifePercent);
-
-//    GraphicsZone *zone;
-
-//    QVector<QLabel *> nick;
-//    QVector<QLabel *> level;
-//    QVector<QLabel *> status;
-//    QVector<QLabel *> gender;
-//    QVector<QClickPBar *> bars;
-
-//    QProgressBar *timers[2];
-//    QLabel * trainers[2];
-
-//    /* The pokeballs to indicate how well a team is doing */
-//    QLabel *advpokeballs[6];
-//    QLabel *mypokeballs[6];
-
-//    BaseBattleWindow *parent;
-//};
-
 //void BaseBattleDisplay::updateToolTip(int spot)
 //{
 //    if (!parent) {
