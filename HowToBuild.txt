@@ -5,7 +5,7 @@ HOW TO BUILD THE PROJECT:
 * Download all the files using Git
 * Install the Qt Framework on your computer, or at least the libraries
 * For linux users, install libzip-dev package (For Ubuntu --in a terminal--: sudo apt-get install libzip-dev)
-* On linux just run the makefile, then add pogeymon-online/bin to your LD_LIBRARY_PATH. 
+* On linux just run the makefile, then add pokemon-online/bin to your LD_LIBRARY_PATH.
   For that add `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/pogeymon-online/bin/` with the correct path to the bin directory to the end of your ~/.bashrc file.
 * On windows Build src/Utilities/Utilities.pro and src/PokemonInfo/PokemonInfo.pro and thensrc/Teambuilder/Teambuilder.pro. To build those files, open them with Qt Creator and build the projects and run them. For the server it's src/Server/Server.pro
 * On mac, you need to run qmake -spec macx-g++ if you want Makefile. Running qmake without -spec option creates .xcodeproject file, which you can build using xcodebuild command line tool or XCode IDE. After compiling client, run bin/bundle_mac_app.sh to copy resources inside application bundle
