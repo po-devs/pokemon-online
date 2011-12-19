@@ -10,7 +10,7 @@ typedef BattleData<DataContainer> battledata;
 BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
     pushHtml("<!DOCTYPE html>");
-    pushHtml("<!-- Pokemon Online battle spectator log (version 2.0) -->");
+    pushHtml("<!-- Pokemon Online battle spectator log (version 2.0) -->\n");
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
 
@@ -39,16 +39,16 @@ void BattleClientLog::printLine(const QString &cl, const QString &str, bool sile
     }
 
     if (!silent) {
-        pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
-        emit lineToBePrinted(QString("%2<br />").arg(str));
+        pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
+        emit lineToBePrinted(QString("%2<br />\n").arg(str));
     } else {
-        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->").arg(cl, str));
+        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->\n").arg(cl, str));
     }
 }
 
 void BattleClientLog::printSilent(const QString &str)
 {
-    pushHtml("<!--"+str+"-->");
+    pushHtml("<!--"+str+"-->\n");
 }
 
 QStringList BattleClientLog::getLog()
@@ -65,8 +65,8 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(QString("<div class=\"%1\">%2</div><br />").arg(cl, str));
-    emit lineToBePrinted(QString("%2<br />").arg(str));
+    pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
+    emit lineToBePrinted(QString("%2<br />\n").arg(str));
 }
 
 QString BattleClientLog::nick(int spot)
