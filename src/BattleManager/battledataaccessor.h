@@ -51,6 +51,12 @@ public:
     int life() const {return d()->life();}
     int lifePercent() const {return d()->lifePercent();}
     int totalLife() const {return d()->totalLife();}
+    int ability() const {return dd()->ability();}
+    int item() const {return dd()->item();}
+    int happiness() const {return dd()->item();}
+    const QList<int> &dvs() const { return dd()->dvs();}
+    BattleMove &move(int slot) {return dd()->move(slot);}
+    const BattleMove &move(int slot) const {return dd()->move(slot);}
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
 
     void adaptTo(const ShallowBattlePoke *pokemon);
@@ -70,6 +76,8 @@ private:
     ShallowBattlePoke *pokeData;
     inline ShallowBattlePoke *d() {return pokeData;}
     inline const ShallowBattlePoke *d() const {return pokeData;}
+    inline PokeBattle* dd() {return (PokeBattle*)pokeData;}
+    inline const PokeBattle* dd() const {return (PokeBattle*)pokeData;}
 };
 
 class TeamProxy : public QObject
@@ -81,6 +89,10 @@ public:
     ~TeamProxy();
 
     Q_INVOKABLE PokeProxy* poke(int index) {
+        return pokemons[index];
+    }
+
+    Q_INVOKABLE const PokeProxy* poke(int index) const {
         return pokemons[index];
     }
 

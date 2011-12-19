@@ -30,7 +30,7 @@ void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon) {
 }
 
 void PokeProxy::adaptTo(const PokeBattle *pokemon) {
-    PokeBattle *trans = dynamic_cast<PokeBattle*>(this);
+    PokeBattle *trans = dynamic_cast<PokeBattle*>(pokeData);
 
     if (trans) {
         *trans = *pokemon;

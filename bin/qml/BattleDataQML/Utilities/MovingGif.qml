@@ -35,7 +35,7 @@ AnimatedImage {
     }
 
     onCurrentFrameChanged: {
-        if (currentFrame== frameCount-1) {
+        if (currentFrame === frameCount-1) {
             paused = true;
         }
     }

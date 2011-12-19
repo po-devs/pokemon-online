@@ -10,10 +10,16 @@ class BattleConfiguration;
 
 class DataContainer {
 public:
+    typedef TeamData teamType;
+
     DataContainer(const BattleConfiguration *configuration);
     ~DataContainer();
 
     TeamData *team(int player) {
+        return teams[player];
+    }
+
+    const TeamData *team(int player) const {
         return teams[player];
     }
 

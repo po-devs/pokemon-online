@@ -32,6 +32,8 @@ public:
     /* gets the scene widget */
     QWidget *getSceneWidget();
 
+    advbattledata_proxy *getBattleData();
+
     /* Gets a premade widget. The caller
       is responsible for managing the widget's lifetime
       and free it */

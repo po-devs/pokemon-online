@@ -38,6 +38,10 @@ public:
         (void) weather;
         d()->field()->setWeather(Weather::NormalWeather);
     }
+
+    bool areAdjacent (int poke1, int poke2) const {
+        return abs(slotNum(poke1)-slotNum(poke2)) <= 1;
+    }
 };
 
 #endif // ADVANCEDBATTLEDATA_H

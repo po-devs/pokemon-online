@@ -33,7 +33,7 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
 
     QSettings s;
 
-    bool qml = !(s.value("old_battle_window", false).toBool() || conf.mode != ChallengeInfo::Singles);
+    bool qml = !(s.value("old_battle_window", true).toBool() || conf.mode != ChallengeInfo::Singles);
 
     if (qml) {
         BattleScene *scene = new BattleScene(data2);
@@ -42,7 +42,6 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
         scene->addOutput(data);
         scene->addOutput(log);
         scene->addOutput(data2);
-
 
         connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
@@ -103,4 +102,9 @@ SpectatorWindow::~SpectatorWindow()
 void SpectatorWindow::receiveData(const QByteArray &data)
 {
     input->receiveData(data);
+}
+
+advbattledata_proxy *SpectatorWindow::getBattleData()
+{
+    return data2;
 }
