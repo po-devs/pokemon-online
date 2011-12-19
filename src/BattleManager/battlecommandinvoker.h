@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <QString>
 #include "test.h"
 #include "battleenum.h"
 
@@ -24,6 +25,7 @@ public:
     }
 
 protected:
+    typedef std::shared_ptr<QString> *string_ptr;
 
     template <BattleEnum val>
     struct Param
@@ -74,12 +76,12 @@ protected:
     start(StatusHurt, onStatusDamage, int spot, int status) end(onStatusDamage, spot, status)
     start(StatusFree, onStatusOver, int spot, int status) end(onStatusOver, spot, status)
     start(Fail, onAttackFailing, int spot) end(onAttackFailing, spot)
-    start(PlayerMessage, onPlayerMessage, int spot, char* message) end(onPlayerMessage, spot, QString::fromUtf8(QByteArray(message)))
-    start(SpectatorEnter, onSpectatorJoin, int id, char* name) end(onSpectatorJoin, id, QString::fromUtf8(QByteArray(name)))
+    start(PlayerMessage, onPlayerMessage, int spot, string_ptr message) end(onPlayerMessage, spot, *message->get())
+    start(SpectatorEnter, onSpectatorJoin, int id, string_ptr name) end(onSpectatorJoin, id, *name->get())
     start(SpectatorLeave, onSpectatorLeave, int id) end(onSpectatorLeave, id)
-    start(SpectatorMessage, onSpectatorChat, int id, char * message) end(onSpectatorChat, id, QString::fromUtf8(QByteArray(message)))
-    start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, char *data)
-        end(onMoveMessage, spot, move, part, type, foe, other, QString::fromUtf8(QByteArray(data)))
+    start(SpectatorMessage, onSpectatorChat, int id, string_ptr message) end(onSpectatorChat, id, *message->get())
+    start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, string_ptr data)
+        end(onMoveMessage, spot, move, part, type, foe, other, *data->get())
     start(NoTargetMessage, onNoTarget, int spot) end(onNoTarget, spot)
     start(ItemMessage, onItemMessage, int spot, int item, int part, int foe, int berry, int other)
         end(onItemMessage, spot, item, part, foe, berry, other)
@@ -98,8 +100,8 @@ protected:
     start(BattleEnd, onBattleEnd, int res, int winner) end(onBattleEnd, res, winner)
     start(ClauseMessage, onClauseActivated, int clause) end(onClauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
-    start(TierInfo, onTierNotification, char* tier) end(onTierNotification, QString::fromUtf8(QByteArray(tier)))
-    start(StatBoostsAndField, onDynamicInfo, int spot, BattleDynamicInfo *info) end(onDynamicInfo, spot, *info)
+    start(TierInfo, onTierNotification, string_ptr tier) end(onTierNotification, *tier->get())
+    start(StatBoostsAndField, onDynamicInfo, int spot, const BattleDynamicInfo &info) end(onDynamicInfo, spot, info)
     start(PokemonVanish, onPokemonVanish, int spot) end(onPokemonVanish, spot)
     start(PokemonReappear, onPokemonReappear, int spot) end(onPokemonReappear, spot)
     start(SpriteChange, onSpriteChange, int spot, int newSprite) end(onSpriteChange, spot, newSprite)
@@ -138,11 +140,11 @@ protected:
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
     void onAttackFailing(int spot);
-    void onPlayerMessage(int spot, QString message);
-    void onSpectatorJoin(int id, QString name);
+    void onPlayerMessage(int spot, const QString& message);
+    void onSpectatorJoin(int id, const QString& name);
     void onSpectatorLeave(int id);
-    void onSpectatorChat(int id, QString message);
-    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString data);
+    void onSpectatorChat(int id, const QString& message);
+    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
     void onNoTarget(int spot);
     void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
     void onFlinch(int spot);
@@ -159,7 +161,7 @@ protected:
     void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
     void onTierNotification(QString tier);
-    void onDynamicInfo(int spot, BattleDynamicInfo info);
+    void onDynamicInfo(int spot, const BattleDynamicInfo &info);
     void onPokemonVanish(int spot);
     void onPokemonReappear(int spot);
     void onSpriteChange(int spot, int newSprite);

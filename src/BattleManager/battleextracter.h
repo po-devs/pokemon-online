@@ -35,6 +35,8 @@ public:
         wc()->unknownEntryPoint(val, args);
     }
 
+    typedef std::shared_ptr<QString>* string_ptr;
+
 protected:
     QHash<enumClass, extrac_func> callbacks;
 
@@ -96,10 +98,10 @@ protected:
     start(StatusHurt, int spot; int status) end(spot, status)
     start(StatusFree, int spot; int status) end(spot, status)
     start(Fail, int spot) end(spot)
-    start(PlayerMessage, int spot; char* message) end(spot, message)
+    start(PlayerMessage, int spot; string_ptr message) end(spot, message)
     start(SpectatorLeave, int id) end(id)
-    start(SpectatorMessage, int id; char * message) end(id, message)
-    start(MoveMessage, int spot; int move; int part; int type; int foe; int other; char *data)
+    start(SpectatorMessage, int id; string_ptr message) end(id, message)
+    start(MoveMessage, int spot; int move; int part; int type; int foe; int other; string_ptr data)
         end(spot, move, part, type, foe, other, data)
     start(NoTargetMessage, int spot) end(spot)
     start(ItemMessage, int spot; int item; int part; int foe; int berry; int other) end(spot, item, part, foe, berry, other)
@@ -117,8 +119,8 @@ protected:
     start(BattleEnd, int res; int winner) end(res, winner)
     start(ClauseMessage, int clause) end(clause)
     start(RatedInfo, bool rated) end(rated)
-    start(TierInfo, char* tier) end(tier)
-    start(StatBoostsAndField, int spot; BattleDynamicInfo *info) end(spot, info)
+    start(TierInfo, string_ptr tier) end(tier)
+    start(StatBoostsAndField, int spot; BattleDynamicInfo info) end(spot, info)
     start(PokemonVanish, int spot) end(spot)
     start(PokemonReappear, int spot) end(spot)
     start(SpriteChange, int spot; int newSprite) end(spot, newSprite)
@@ -165,7 +167,7 @@ template <class C>
 void BattleExtracter<C>::extractSpectatorEnter(va_list &args)
 {
     int id = va_arg(args, int);
-    char *name = va_arg(args, char*);
+    string_ptr name = va_arg(args, string_ptr);
 
     forwardCommand<BattleEnum::SpectatorEnter>(id, name);
 }
