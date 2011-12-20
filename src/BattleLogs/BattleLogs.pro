@@ -10,12 +10,14 @@ DESTDIR = ../../bin/serverplugins
 DEFINES += BATTLELOGS_LIBRARY
 QT += gui core
 
-SOURCES += battlelogs.cpp
+SOURCES += battlelogs.cpp \
+    battleserverlog.cpp
 
 HEADERS += battlelogs.h\
         BattleLogs_global.h \
     ../Server/plugininterface.h \
-    ../Server/battleinterface.h
+    ../Server/battleinterface.h \
+    battleserverlog.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

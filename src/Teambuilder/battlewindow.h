@@ -13,6 +13,7 @@ class BattleDisplay;
 class TargetSelection;
 class StruggleZone;
 class TeamProxy;
+class PokeProxy;
 
 class BattleInfo : public BaseBattleInfo
 {

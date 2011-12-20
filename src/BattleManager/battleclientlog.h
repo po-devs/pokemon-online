@@ -90,6 +90,7 @@ protected:
     BattleDefaultTheme *theme();
 
     QStringList log;
+    bool hasLoggedTeams;
     QHash<int, QString> spectators;
     bool blankMessage;
 };

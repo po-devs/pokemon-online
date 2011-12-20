@@ -5,7 +5,7 @@
 #include "../Server/plugininterface.h"
 #include "../Server/battleinterface.h"
 #include "../BattleManager/defaulttheme.h"
-
+#include "../BattleManager/battledatatypes.h"
 #include <QtCore>
 #include <QWidget>
 
@@ -66,7 +66,7 @@ class BATTLELOGSSHARED_EXPORT BattleLogsPlugin
     : public BattlePlugin
 {
 public:
-    BattleLogsPlugin(bool raw=true, bool text=false);
+    BattleLogsPlugin(BattleInterface *b= NULL, bool raw=true, bool text=false);
     ~BattleLogsPlugin();
 
     QHash<QString, Hook> getHooks();
@@ -84,6 +84,7 @@ public:
     BattleDefaultTheme theme;
     BattleInput *input;
     BattleClientLog *log;
+    battledata_basic *data;
 
     bool raw, text;
 };

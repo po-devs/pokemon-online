@@ -51,6 +51,9 @@ private:
 
     battledata_basic *data;
     advbattledata_proxy *data2;
+
+    static int qmlcount;// qml windows use opengl, so only one can be open at all times
+    bool qmlwindow;
 };
 
 #endif // SPECTATORWINDOW_H

@@ -51,6 +51,9 @@ struct remove_ptr<std::shared_ptr<T>*> {
 };
 
 template <class T>
+std::shared_ptr<T>& remove_ptr_f (std::shared_ptr<T> * const & item) {return *item;}
+
+template <class T>
 struct remove_ptr_ref {
     typedef T type;
 };
@@ -59,9 +62,6 @@ template <class T>
 struct remove_ptr_ref<T*&> {
     typedef T* type;
 };
-
-template <class T>
-std::shared_ptr<T>& remove_ptr_f (std::shared_ptr<T> * const & item) {return *item;}
 
 template <class T>
 struct add_ptr {
@@ -105,12 +105,13 @@ struct Command : public AbstractCommand
     /* De-tuples the parameters to apply them to the function
         boundType::template replayCommand */
     template <typename... MethodParams>
-    void apply_inn(MethodParams... params) {
+    typename enable_if_c<sizeof...(Params) != sizeof...(MethodParams)>::type
+    apply_inn(MethodParams... params) {
         apply_inn(params..., add_ptr_f(std::get<sizeof...(MethodParams)>(m_tuple)));
     }
 
-    void apply_inn(typename remove_ptr_ref<Params>::type&&... params) {
-        m_assoc->template replayCommand<val, typename remove_ptr_ref<Params>::type...>(params...);
+    void apply_inn(typename remove_ptr_ref<Params>::type... params) {
+        m_assoc->template replayCommand<val>(params...);
     }
 
     tupleType m_tuple;
