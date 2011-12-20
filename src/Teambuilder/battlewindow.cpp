@@ -46,12 +46,12 @@ PokeProxy &BattleInfo::tempPoke(int spot)
 
 const PokeProxy & BattleInfo::currentPoke(int spot) const
 {
-    return data->poke(data->slotNum(spot));
+    return data->poke(spot);
 }
 
 PokeProxy & BattleInfo::currentPoke(int spot)
 {
-    return data->poke(data->slotNum(spot));
+    return data->poke(spot);
 }
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf,
@@ -192,7 +192,7 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     mytab->setCurrentIndex(MoveTab);
 
     for (int i = 0; i< 4; i++) {
-        myazones[data().slotNum(spot)]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
+        myazones[snum]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
     }
 }
 
@@ -514,7 +514,9 @@ void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, i
         in >> silent;
         in >> prevIndex;
 
-        switchTo(prevIndex, spot, true);
+        if (player == info().myself) {
+            switchTo(prevIndex, spot, true);
+        }
 
         //Plays the battle cry when a pokemon is switched in
         if (musicPlayed())
