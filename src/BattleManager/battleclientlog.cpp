@@ -10,6 +10,8 @@ typedef BattleData<DataContainer> battledata;
 BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
 {
     hasLoggedTeams = false;
+    blankMessage = false;
+
     bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
     pushHtml(QString("<!-- Pokemon Online battle%1 log (version 2.0) -->\n").arg(spectator ? " spectator": ""));
@@ -21,12 +23,20 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : m
     } else {
         printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     }
+
+    onBlankMessage();
 }
 
 void BattleClientLog::emitAll()
 {
+    QRegExp r("<div class=\"([A-z]+)\">(.*)</div>");
+
     foreach(QString s, getLog()) {
-        emit lineToBePrinted(s);
+        if (r.indexIn(s) != -1) {
+            emit lineToBePrinted(r.cap(2) + "<br />");
+        } else {
+            emit lineToBePrinted(s);
+        }
     }
 }
 
