@@ -473,6 +473,11 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
     }
 }
 
+void GraphicsZone::updateToolTip(int spot)
+{
+    items[spot]->setToolTip(tooltips[spot]);
+}
+
 void GraphicsZone::updatePos(int spot)
 {
     int player = info()->player(spot);
@@ -566,147 +571,88 @@ void GraphicsZone::updatePoke(int spot)
     }
 }
 
-//void BaseBattleDisplay::updateToolTip(int spot)
-//{
-//    if (!parent) {
-//        parent = dynamic_cast<BaseBattleWindow*>(QWidget::parent());
+void RegularBattleScene::updateToolTip(int spot)
+{
+    QString tooltip;
 
-//        if (!parent)
-//            return;
-//    }
-//    QString tooltip;
+    QString stats[7] = {
+        tu(StatInfo::Stat(1)),
+        tu(StatInfo::Stat(2)),
+        tu(StatInfo::Stat(3)),
+        tu(StatInfo::Stat(4)),
+        tu(StatInfo::Stat(5)),
+        tu(StatInfo::Stat(6)),
+        tu(StatInfo::Stat(7))
+    };
 
-//    QString stats[7] = {
-//        tu(StatInfo::Stat(1)),
-//        tu(StatInfo::Stat(2)),
-//        tu(StatInfo::Stat(3)),
-//        tu(StatInfo::Stat(4)),
-//        tu(StatInfo::Stat(5)),
-//        tu(StatInfo::Stat(6)),
-//        tu(StatInfo::Stat(7))
-//    };
-//    int max = 0;
-//    for (int i = 0; i < 7; i++) {
-//        max = std::max(max, stats[i].length());
-//    }
-//    for (int i = 0; i < 7; i++) {
-//        stats[i] = stats[i].leftJustified(max, '.', false);
-//    }
+    /* Putting dots after stat names so the ":" is always at the same place */
+    int max = 0;
+    for (int i = 0; i < 7; i++) {
+        max = std::max(max, stats[i].length());
+    }
+    for (int i = 0; i < 7; i++) {
+        stats[i] = stats[i].leftJustified(max, '.', false);
+    }
 
-//    const ShallowBattlePoke &poke = info()->currentShallow(spot);
+    const auto &poke = data()->poke(spot);
 
-//    tooltip += parent->rnick(spot) + "\n";
-//    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), info()->gen));
-//    int type2 = PokemonInfo::Type2(poke.num());
-//    if (type2 != Pokemon::Curse) {
-//        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num(), info()->gen));
-//    }
-//    tooltip += "\n";
+    tooltip += poke.nickname() + "\n";
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), data()->gen()));
+    int type2 = PokemonInfo::Type2(poke.num());
+    if (type2 != Pokemon::Curse) {
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num(), data()->gen()));
+    }
+    tooltip += "\n";
 
-//    for (int i = 0; i < 5; i++) {
-//        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
-//        if (info()->gen == 1) {
-//            switch (i) {
-//            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
-//            case 3: continue;
-//            default: tooltip += "\n" + stats[i] + " ";
-//            }
-//        } else {
-//            tooltip += "\n" + stats[i] + " ";
-//        }
-//        int boost = info()->statChanges[spot].boosts[i];
-//        if (boost >= 0) {
-//            tooltip += QString("+%1").arg(boost);
-//        } else if (boost < 0) {
-//            tooltip += QString("%1").arg(boost);
-//        }
-//    }
-//    for (int i = 5; i < 7; i++) {
-//        int boost = info()->statChanges[spot].boosts[i];
-//        if (boost) {
-//            tooltip += "\n" + stats[i] + " ";
+    for (int i = 0; i < 5; i++) {
+        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
+        if (data()->gen() == 1) {
+            switch (i) {
+            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
+            case 3: continue;
+            default: tooltip += "\n" + stats[i] + " ";
+            }
+        } else {
+            tooltip += "\n" + stats[i] + " ";
+        }
+        int boost = data()->fieldPoke(spot).statBoost(i+1);
+        if (boost >= 0) {
+            tooltip += QString("+%1").arg(boost);
+        } else if (boost < 0) {
+            tooltip += QString("%1").arg(boost);
+        }
+    }
+    for (int i = 5; i < 7; i++) {
+        int boost = data()->fieldPoke(spot).statBoost(i+1);
+        if (boost) {
+            tooltip += "\n" + stats[i] + " ";
 
-//            if (boost > 0) {
-//                tooltip += QString("+%1").arg(boost);
-//            } else if (boost < 0) {
-//                tooltip += QString("%1").arg(boost);
-//            }
-//        }
-//    }
+            if (boost > 0) {
+                tooltip += QString("+%1").arg(boost);
+            } else if (boost < 0) {
+                tooltip += QString("%1").arg(boost);
+            }
+        }
+    }
 
-//    tooltip += "\n";
+    tooltip += "\n";
 
-//    int flags = info()->statChanges[spot].flags;
+    const auto &zone = *data()->field().zone(data()->player(spot));
 
-//    int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
-//    for (int i = 0; i < 3; i++) {
-//        if (flags & spikes[i]) {
-//            tooltip += "\n" + tr("Spikes level %1").arg(i+1);
-//            break;
-//        }
-//    }
+    if (zone.spikesLevel() > 0) {
+        tooltip += "\n" + tr("Spikes level %1").arg(zone.spikesLevel());
+    }
 
-//    int tspikes[2] = {BattleDynamicInfo::ToxicSpikes, BattleDynamicInfo::ToxicSpikesLV2};
-//    for (int i = 0; i < 2; i++) {
-//        if (flags & tspikes[i]) {
-//            tooltip += "\n" + tr("Toxic Spikes level %1").arg(i+1);
-//            break;
-//        }
-//    }
+    if (zone.tspikesLevel() > 0) {
+        tooltip += "\n" + tr("Toxic Spikes level %1").arg(zone.tspikesLevel());
+    }
 
-//    if (flags & BattleDynamicInfo::StealthRock) {
-//        tooltip += "\n" + tr("Stealth Rock");
-//    }
+    if (zone.stealthRocks()) {
+        tooltip += "\n" + tr("Stealth Rock");
+    }
 
-//    zone->tooltips[spot] = tooltip;
-//}
-
-//class BattleDisplay : public BaseBattleDisplay
-//{
-//    Q_OBJECT
-//public:
-//    BattleDisplay(BattleInfo &i);
-
-//    void updateHp(int spot);
-//    void updateToolTip(int spot);
-
-//    BattleInfo &info() const {
-//        return *(BattleInfo *)(&BaseBattleDisplay::info());
-//    }
-//public slots:
-//    void changeBarMode();
-
-//protected:
-//    const PokeBattle &mypoke(int spot) const {return info()->currentPoke(spot); }
-//    const ShallowBattlePoke &foe(int spot) const {return info()->currentShallow(spot); }
-
-//    QList<bool> percentageMode;
-//};
-
-
-//BattleDisplay::BattleDisplay(BattleInfo &i)
-//    : BaseBattleDisplay(i)
-//{
-//    for (int i = 0; i < info()->numberOfSlots; i++) {
-//        if (info()->player(i) == info()->myself) {
-//            percentageMode.push_back(false);
-//            bars[i]->setRange(0,100);
-//            bars[i]->setFormat("%v / %m");
-//            connect(bars[i], SIGNAL(clicked()), SLOT(changeBarMode()));
-//        } else {
-//            percentageMode.push_back(true);
-//        }
-//    }
-
-
-//    for (int i = 0; i < 6; i++) {
-//        mypokeballs[i]->setToolTip(info()->myteam.poke(i).nick());
-//    }
-
-//    for (int i = 0; i < info()->numberOfSlots/2; i++) {
-//        updatePoke(info()->spot(info()->myself, i));
-//    }
-//}
+    gui.zone->tooltips[spot] = tooltip;
+}
 
 //void BattleDisplay::updateToolTip(int spot)
 //{
