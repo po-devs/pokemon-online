@@ -18,25 +18,26 @@ public:
         fieldPoke(spot).boostStat(stat, boost);
     }
 
-    void onDynamicInfo(int spot, BattleDynamicInfo info) {
+    void onDynamicInfo(int spot, const BattleDynamicInfo &info) {
         for (int i = 0; i < 7; i++) {
             fieldPoke(spot).setBoost(i+1, info.boosts[i]);
         }
+        field().zone(player(spot))->setHazards(info.flags);
     }
 
     void onStartWeather(int spot, int weather, bool ability) {
         (void) ability;
         (void) spot;
-        d()->field()->setWeather(weather);
+        field().setWeather(weather);
     }
 
     void onContinueWeather(int weather) {
-        d()->field()->setWeather(weather);
+        field().setWeather(weather);
     }
 
     void onEndWeather(int weather) {
         (void) weather;
-        d()->field()->setWeather(Weather::NormalWeather);
+        field().setWeather(Weather::NormalWeather);
     }
 
     bool areAdjacent (int poke1, int poke2) const {

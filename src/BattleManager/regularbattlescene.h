@@ -44,6 +44,8 @@ public:
     void updatePos(int spot);
     /* updates the sprite of a pokemon */
     void updatePoke(int spot);
+    /* updates the tooltip */
+    void updateToolTip(int spot);
 
     /* Loads a pixmap if not loaded otherwise go see graphics */
     QPixmap loadPixmap(Pokemon::uniqueId num, bool shiny, bool back, quint8 gender, bool sub);
@@ -123,10 +125,20 @@ public:
     void onSendBack(int spot, bool) {gui.zone->updatePoke(spot);}
     void onSubstituteStatus(int spot, bool) {gui.zone->updatePoke(spot);}
 
+    void onStatBoost(int spot, int, int, bool) {
+        updateToolTip(spot);
+        gui.zone->updateToolTip(spot);
+    }
+    void onDynamicInfo(int spot, const BattleDynamicInfo&) {
+        updateToolTip(spot);
+        gui.zone->updateToolTip(spot);
+    }
+
     void updateBall(int player, int poke);
     void updateBallStatus(int player, int poke);
     void updatePoke(int spot);
     void updateHp(int spot, int val = -1);
+    void updateToolTip(int spot);
     static QString health(int lifePercent);
 
     bool isPeeking() const { return peeking; }

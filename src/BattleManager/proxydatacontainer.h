@@ -10,6 +10,7 @@ class ProxyDataContainer : public QObject {
     Q_OBJECT
 public:
     typedef TeamProxy teamType;
+    typedef FieldProxy fieldType;
 
     ProxyDataContainer(const BattleConfiguration *conf=NULL);
     ~ProxyDataContainer();
