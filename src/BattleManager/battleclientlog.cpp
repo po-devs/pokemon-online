@@ -273,6 +273,9 @@ void BattleClientLog::onAttackFailing(int)
 
 void BattleClientLog::onPlayerMessage(int spot, const QString &message)
 {
+    //can be 0 for winning/losing message
+    if (message.length() == 0)
+        return;
     printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
 }
 

@@ -1,5 +1,5 @@
 #include "battlewindow.h"
-#include "../BattleManager/battledata.h"
+#include "../BattleManager/advancedbattledata.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"

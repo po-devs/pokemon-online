@@ -5,7 +5,7 @@
 #include "logmanager.h"
 #include "remove_direction_override.h"
 #include "spectatorwindow.h"
-#include "../BattleManager/battledata.h"
+#include "../BattleManager/advancedbattledata.h"
 #include "poketextedit.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
