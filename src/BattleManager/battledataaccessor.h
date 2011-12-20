@@ -92,7 +92,7 @@ public:
         return pokemons[index];
     }
 
-    Q_INVOKABLE const PokeProxy* poke(int index) const {
+    const PokeProxy* poke(int index) const {
         return pokemons[index];
     }
 
