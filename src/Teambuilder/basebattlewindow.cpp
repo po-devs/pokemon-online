@@ -5,7 +5,7 @@
 #include "logmanager.h"
 #include "remove_direction_override.h"
 #include "spectatorwindow.h"
-#include "../BattleManager/battledata.h"
+#include "../BattleManager/advancedbattledata.h"
 #include "poketextedit.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
@@ -397,42 +397,5 @@ void BaseBattleWindow::addSpectator(bool come, int id)
         spectators.insert(id);
     } else {
         spectators.remove(id);
-    }
-}
-
-void BaseBattleWindow::printLine(const QString &str, bool silent)
-{
-    if (str == "" && blankMessage) {
-        return;
-    }
-
-    if (str == "") {
-        blankMessage = true;
-        mychat->insertHtml("");
-    } else if (!silent) {
-        blankMessage = false;
-    }
-
-    QString html = str + "<br />";
-    if (!silent) {
-        mychat->insertHtml(removeDirectionOverride(html));
-        log->pushHtml(html);
-    } else {
-        log->pushHtml("<!--"+html+"-->");
-    }
-}
-
-void BaseBattleWindow::printHtml(const QString &str, bool silent, bool newline)
-{
-    if (!silent) {
-        blankMessage = false;
-    }
-
-    QString html = str + (newline?"<br />":"");
-    if (!silent) {
-        mychat->insertHtml(removeDirectionOverride(html));
-        log->pushHtml(html);
-    } else {
-        log->pushHtml("<!--"+html+"-->");
     }
 }
