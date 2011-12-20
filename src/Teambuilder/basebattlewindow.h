@@ -169,8 +169,6 @@ public:
 
     //void playCry(int pokenum);
 
-    void printLine(const QString &str, bool silent = false);
-    void printHtml(const QString &str, bool silent = false, bool newline = true);
     QString name(int spot) const;
     int player(int spot) const;
     int opponent(int player) const;
