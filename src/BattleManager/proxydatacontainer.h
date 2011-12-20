@@ -18,7 +18,7 @@ public:
         return teams[player];
     }
 
-    Q_INVOKABLE const TeamProxy *team(int player) const {
+    const TeamProxy *team(int player) const {
         return teams[player];
     }
 
