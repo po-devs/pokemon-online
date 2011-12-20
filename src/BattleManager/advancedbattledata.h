@@ -25,6 +25,12 @@ public:
         field().zone(player(spot))->setHazards(info.flags);
     }
 
+    void onDynamicStats(int spot, const BattleStats &stats) {
+        for (int i = 0; i < 5; i++) {
+            fieldPoke(spot).setStat(i+1, stats.stats[i]);
+        }
+    }
+
     void onStartWeather(int spot, int weather, bool ability) {
         (void) ability;
         (void) spot;

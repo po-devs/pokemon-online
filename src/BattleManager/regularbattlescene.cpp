@@ -616,10 +616,25 @@ void RegularBattleScene::updateToolTip(int spot)
             tooltip += "\n" + stats[i] + " ";
         }
         int boost = data()->fieldPoke(spot).statBoost(i+1);
-        if (boost >= 0) {
-            tooltip += QString("+%1").arg(boost);
-        } else if (boost < 0) {
-            tooltip += QString("%1").arg(boost);
+        int stat = data()->fieldPoke(spot).stat(i+1);
+
+        if (stat == 0) {
+            if (boost >= 0) {
+                tooltip += QString("+%1").arg(boost);
+            } else if (boost < 0) {
+                tooltip += QString("%1").arg(boost);
+            }
+        } else {
+            if (stat == -1) {
+                tooltip += "???";
+            } else {
+                tooltip += QString::number(stat);
+            }
+            if (boost >= 0) {
+                tooltip += QString("(+%1)").arg(boost);
+            } else if (boost < 0) {
+                tooltip += QString("(%1)").arg(boost);
+            }
         }
     }
     for (int i = 5; i < 7; i++) {
@@ -653,103 +668,3 @@ void RegularBattleScene::updateToolTip(int spot)
 
     gui.zone->tooltips[spot] = tooltip;
 }
-
-//void BattleDisplay::updateToolTip(int spot)
-//{
-//    if (info()->player(spot) == info()->opponent) {
-//        BaseBattleDisplay::updateToolTip(spot);
-//        return;
-//    }
-
-//    QString tooltip;
-
-//    QString stats[7] = {
-//        tu(StatInfo::Stat(1)),
-//        tu(StatInfo::Stat(2)),
-//        tu(StatInfo::Stat(3)),
-//        tu(StatInfo::Stat(4)),
-//        tu(StatInfo::Stat(5)),
-//        tu(StatInfo::Stat(6)),
-//        tu(StatInfo::Stat(7))
-//    };
-//    int max = 0;
-//    for (int i = 0; i < 7; i++) {
-//        max = std::max(max, stats[i].length());
-//    }
-//    for (int i = 0; i < 7; i++) {
-//        stats[i] = stats[i].leftJustified(max, '.', false);
-//    }
-
-//    tooltip += info()->currentPoke(spot).nick() + "\n";
-//    Pokemon::uniqueId num = info()->currentPoke(spot).num();
-//    tooltip += TypeInfo::Name(PokemonInfo::Type1(num, info()->gen));
-//    int type2 = PokemonInfo::Type2(num);
-//    if (type2 != Pokemon::Curse) {
-//        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(num, info()->gen));
-//    }
-//    tooltip += "\n";
-
-//    for (int i = 0; i < 5; i++) {
-//        // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
-//        if (info()->gen == 1) {
-//            switch (i) {
-//            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
-//            case 3: continue;
-//            default: tooltip += "\n" + stats[i] + " ";
-//            }
-//        } else {
-//            tooltip += "\n" + stats[i] + " ";
-//        }
-//        int stat = info()->mystats[info()->number(spot)].stats[i];
-//        if (stat == -1) {
-//            tooltip += "???";
-//        } else {
-//            tooltip += QString::number(stat);
-//        }
-//        int boost = info()->statChanges[spot].boosts[i];
-//        if (boost > 0) {
-//            tooltip += QString("(+%1)").arg(boost);
-//        } else if (boost < 0) {
-//            tooltip += QString("(%1)").arg(boost);
-//        }
-//    }
-//    for (int i = 5; i < 7; i++) {
-//        int boost = info()->statChanges[spot].boosts[i];
-
-//        if (boost != 0) {
-//            tooltip += "\n" + stats[i] + " ";
-
-//            if (boost > 0) {
-//                tooltip += QString("+%1").arg(boost);
-//            } else {
-//                tooltip += QString("%1").arg(boost);
-//            }
-//        }
-//    }
-
-//    tooltip += "\n";
-
-//    int flags = info()->statChanges[spot].flags;
-
-//    int spikes[3] = {BattleDynamicInfo::Spikes, BattleDynamicInfo::SpikesLV2 ,BattleDynamicInfo::SpikesLV3};
-//    for (int i = 0; i < 3; i++) {
-//        if (flags & spikes[i]) {
-//            tooltip += "\n" + tr("Spikes level %1").arg(i+1);
-//            break;
-//        }
-//    }
-
-//    int tspikes[2] = {BattleDynamicInfo::ToxicSpikes, BattleDynamicInfo::ToxicSpikesLV2};
-//    for (int i = 0; i < 2; i++) {
-//        if (flags & tspikes[i]) {
-//            tooltip += "\n" + tr("Toxic Spikes level %1").arg(i+1);
-//            break;
-//        }
-//    }
-
-//    if (flags & BattleDynamicInfo::StealthRock) {
-//        tooltip += "\n" + tr("Stealth Rock");
-//    }
-
-//    zone->tooltips[spot] = tooltip;
-//}

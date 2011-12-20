@@ -4,12 +4,14 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include <vector>
 
+class ShallowBattlePoke;
+
 struct AuxPokeData
 {
 public:
     AuxPokeData();
 
-    void onSendOut();
+    void onSendOut(ShallowBattlePoke* poke);
     void onSendBack();
 
     void setOnTheField(bool on) {onTheField = on;}
