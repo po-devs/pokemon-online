@@ -7,7 +7,7 @@ AuxPokeData::AuxPokeData()
     substitute = false;
 }
 
-void AuxPokeData::onSendOut()
+void AuxPokeData::onSendOut(ShallowBattlePoke*)
 {
     showing = true;
     onTheField = true;

@@ -37,7 +37,7 @@ public:
 
         team(player).setPoke(slot, pokemon);
 
-        fieldPoke(spot).onSendOut();
+        fieldPoke(spot).onSendOut(team(player).poke(slot));
     }
 
     void onSendBack(int spot, bool)

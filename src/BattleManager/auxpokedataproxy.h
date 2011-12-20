@@ -3,16 +3,19 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 
+class PokeProxy;
+
 class AuxPokeDataProxy : public QObject
 {
     Q_OBJECT
 public:
     AuxPokeDataProxy();
 
-    void onSendOut();
+    void onSendOut(PokeProxy *poke);
     void onSendBack();
 
     Q_INVOKABLE int statBoost(int stat);
+    Q_INVOKABLE int stat(int stat);
 
     Q_PROPERTY(bool onTheField READ isOnTheField NOTIFY onTheFieldChanged)
     Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
@@ -55,7 +58,9 @@ public:
     void changeForme(int subnum) {setAlternateSprite(Pokemon::uniqueId(alternateSprite.pokenum, subnum));}
     void boostStat(int stat, int level);
     void setBoost(int stat, int level);
+    void setStat(int stat, int value);
     void resetStatBoosts();
+    void resetStats();
 
 signals:
     void onTheFieldChanged();
@@ -71,8 +76,13 @@ public:
     bool substitute;
     bool showing;
     Pokemon::uniqueId alternateSprite;
+    PokeProxy *poke;
 
     int statboosts[8];
+    int basestats[8];
+    int boostedstats[8];
+
+    void updateBoostedStat(int stat);
 };
 
 class ZoneProxy : public QObject {
