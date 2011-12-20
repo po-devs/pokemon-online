@@ -7,8 +7,9 @@ BattleServerLog::BattleServerLog(BattleData<DataContainer> *data, BattleDefaultT
         QStringList roster;
         for (int j=0; j<6; j++) {
             Pokemon::uniqueId num = data->team(i).poke(j)->num();
+
             if (num != Pokemon::NoPoke) {
-                roster+=PokemonInfo::Name(PokemonInfo::OriginalForme(num));
+                roster+=PokemonInfo::Name(num);
             }
         }
         printHtml("Teams",toBoldColor(tr("%1's team:"), Qt::blue).arg(data->name(i)) + roster.join(" / "));
