@@ -12,9 +12,12 @@
 #include "theme.h"
 #include "../PokemonInfo/networkstructs.h"
 
+int SpectatorWindow::qmlcount = 0;
+
 SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo& p1,
                                  const PlayerInfo& p2)
 {
+    qmlwindow = false;
     data = new battledata_basic(&conf);
     data2 = new advbattledata_proxy(&conf);
 
@@ -36,7 +39,7 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
 
     QSettings s;
 
-    bool qml = !(s.value("old_battle_window", true).toBool() || conf.mode != ChallengeInfo::Singles);
+    bool qml = !(s.value("old_battle_window", true).toBool() || conf.mode != ChallengeInfo::Singles || qmlcount > 0);
 
     if (qml) {
         BattleScene *scene = new BattleScene(data2);
@@ -55,6 +58,9 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
         }
 
         battleView = scene->getWidget();
+
+        qmlcount ++;
+        qmlwindow = true;
     } else {
         RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme());
 
@@ -98,6 +104,10 @@ QWidget *SpectatorWindow::getSampleWidget()
 
 SpectatorWindow::~SpectatorWindow()
 {
+    if (qmlwindow) {
+        qmlcount--;
+    }
+
     input->deleteTree();
     delete input;
 }
