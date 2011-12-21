@@ -25,10 +25,13 @@ public:
     Data data;
 
     void setupList();
+    void setupGrid();
 public slots:
     void onColorChanged(int num, QColor color);
 private slots:
     void on_buttonBox_clicked(QAbstractButton*);
+    void on_tabWidget_currentChanged(QWidget*);
+    void openMassColor();
 private:
     ThemeAccessor *theme;
     QString path;

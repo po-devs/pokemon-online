@@ -48,6 +48,11 @@ CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
 
 void CssWidget::setupList()
 {
+    QLayoutItem *child;
+    while ((child = colorsList->takeAt(0)) != 0) {
+      delete child;
+    }
+
     for (int i = 0; i < data.colors.size(); i++) {
         ColorChoiceWidget *w = new ColorChoiceWidget();
         w->setNumber(i);
@@ -59,6 +64,47 @@ void CssWidget::setupList()
 
         connect(w, SIGNAL(colorChanged(int,QColor)), SLOT(onColorChanged(int,QColor)));
     }
+}
+
+void CssWidget::on_tabWidget_currentChanged(QWidget *w)
+{
+    if (w == individualColors) {
+        setupList();
+    } else if (w == massReplace) {
+        setupGrid();
+    }
+}
+
+void CssWidget::setupGrid()
+{
+    QLayoutItem *child;
+    while ((child = colorGrid->takeAt(0)) != 0) {
+      delete child;
+    }
+
+    QSet<QString> colors;
+
+    int count = 0;
+    for (int i = 0; i < data.colors.size(); i++) {
+        QColor color = data.colors[i].value;
+        if (colors.contains(color.name())) {
+            continue;
+        }
+        colors.insert(color.name());
+        QPushButton *button = new QPushButton();
+        button->setStyleSheet(QString("background: %1;").arg(color.name()));
+        button->setProperty("associated-color", color.name());
+        connect(button, SIGNAL(clicked()), SLOT(openMassColor()));
+        colorGrid->addWidget(button, count/4, count%4);
+        count ++;
+    }
+}
+
+void CssWidget::openMassColor()
+{
+    QColor color(sender()->property("associated-color").toString());
+
+    (void) color;
 }
 
 void CssWidget::onColorChanged(int num, QColor color)
