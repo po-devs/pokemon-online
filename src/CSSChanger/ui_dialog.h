@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog.ui'
 **
-** Created: Wed Dec 21 23:04:05 2011
+** Created: Wed Dec 21 23:58:39 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -117,7 +117,7 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        Dialog->setWindowTitle(QApplication::translate("Dialog", "Theme color changer", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(individualColors), QApplication::translate("Dialog", "Individual colors", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(massReplace), QApplication::translate("Dialog", "Mass color replace", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

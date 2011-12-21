@@ -2,6 +2,7 @@
 #define CSSWIDGET_H
 
 #include "ui_dialog.h"
+#include "data.h"
 
 class ThemeAccessor;
 
@@ -10,24 +11,15 @@ Q_OBJECT
 public:
     CssWidget(ThemeAccessor* theme);
 
-    struct Data {
-        struct PosValue {
-            int pos;
-            QColor value;
-            QString desc;
-
-            PosValue(int pos=0, QColor color = QColor(), const QString &desc = QString()) : pos(pos), value(color), desc(desc) {}
-        };
-
-        QString stylesheet;
-        QList<PosValue> colors;
-    };
     Data data;
 
     void setupList();
     void setupGrid();
 public slots:
     void onColorChanged(int num, QColor color);
+    void onApply();
+    void onAccept();
+    void updateGrid();
 private slots:
     void on_buttonBox_clicked(QAbstractButton*);
     void on_tabWidget_currentChanged(QWidget*);
