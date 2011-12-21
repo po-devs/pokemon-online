@@ -74,6 +74,7 @@ void BaseBattleWindow::undelay()
 void BaseBattleWindow::init()
 {
     test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
+    test->setParent(this);
     info().data = test->getBattleData();
 
     setAttribute(Qt::WA_DeleteOnClose, true);
