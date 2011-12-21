@@ -217,12 +217,7 @@ int RegularBattleScene::myself() const
     return reversed() ? 1 : 0;
 }
 
-RegularBattleScene::battledata_ptr RegularBattleScene::data()
-{
-    return mData;
-}
-
-const RegularBattleScene::battledata_ptr RegularBattleScene::data() const
+RegularBattleScene::battledata_ptr RegularBattleScene::data() const
 {
     return mData;
 }

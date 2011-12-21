@@ -88,6 +88,7 @@ void BaseBattleWindow::init()
 
     if (ptr != NULL) {
         test->addOutput(ptr);
+        ptr->deletable = false;
     }
 
     info().data = test->getBattleData();
