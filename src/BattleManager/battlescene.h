@@ -64,6 +64,7 @@ public:
 signals:
     void printMessage(const QString&);
     void launched();
+    void playCry(int);
     void attackUsed(int spot, int attack);
 private:
     battledata_ptr mData;

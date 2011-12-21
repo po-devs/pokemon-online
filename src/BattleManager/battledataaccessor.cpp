@@ -69,6 +69,14 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     emit numChanged();
 }
 
+int PokeProxy::basestat(int stat) const
+{
+    if (hasExposedData())
+        return PokemonInfo::FullStat(num(), 5, nature(), stat, level(), dvs()[stat], evs()[stat]);
+    else
+        return 0;
+}
+
 TeamProxy::TeamProxy()
 {
     teamData = new TeamData();

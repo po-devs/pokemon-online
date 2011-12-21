@@ -61,6 +61,8 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
 
         qmlcount ++;
         qmlwindow = true;
+
+        lastOutput = scene;
     } else {
         RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme());
 
@@ -72,7 +74,13 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
         connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
         battleView = battle;
+        lastOutput = battle;
     }
+}
+
+FlowCommandManager<BattleEnum> * SpectatorWindow::getBattle()
+{
+    return lastOutput;
 }
 
 void SpectatorWindow::reloadTeam(int player)

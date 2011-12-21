@@ -11,6 +11,7 @@ class BattleConfiguration;
 class DataContainer {
 public:
     typedef TeamData teamType;
+    typedef FieldData fieldType;
 
     DataContainer(const BattleConfiguration *configuration);
     ~DataContainer();

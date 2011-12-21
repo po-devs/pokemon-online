@@ -19,6 +19,7 @@ public:
     typedef decltype(teamTypePtr(0)->poke(0)) pokeTypePtr;
     typedef decltype(*pokeTypePtr(0)) pokeType;
     typedef decltype(container(0).fieldPoke(0)) auxTypeRef;
+    typedef typename container::fieldType fieldType;
 
     void onKo(int spot)
     {
@@ -36,7 +37,7 @@ public:
 
         team(player).setPoke(slot, pokemon);
 
-        fieldPoke(spot).onSendOut();
+        fieldPoke(spot).onSendOut(team(player).poke(slot));
     }
 
     void onSendBack(int spot, bool)
@@ -102,6 +103,8 @@ public:
 
     const teamType &team(int player) const { return *d()->team(this->player(player));}
     teamType &team(int player) { return *d()->team(this->player(player));}
+    const fieldType &field() const { return *d()->field();}
+    fieldType &field() { return *d()->field();}
     pokeType &poke(int player) { return *team(this->player(player)).poke(slotNum(player));}
     int player(int spot) const { return spot%2;}
     int opponent(int player) const { return (player+1)%2;}

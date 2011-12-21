@@ -2,23 +2,31 @@
 #define CSSWIDGET_H
 
 #include "ui_dialog.h"
+#include "data.h"
+
+class ThemeAccessor;
 
 class CssWidget : public QDialog, public Ui::Dialog {
+Q_OBJECT
 public:
-    CssWidget();
+    CssWidget(ThemeAccessor* theme);
 
-    struct Data {
-        struct PosValue {
-            int pos;
-            QColor value;
-
-            PosValue(int pos=0, QColor color = QColor()) : pos(pos), value(color) {}
-        };
-
-        QString stylesheet;
-        QList<PosValue> colors;
-    };
     Data data;
+
+    void setupList();
+    void setupGrid();
+public slots:
+    void onColorChanged(int num, QColor color);
+    void onApply();
+    void onAccept();
+    void updateGrid();
+private slots:
+    void on_buttonBox_clicked(QAbstractButton*);
+    void on_tabWidget_currentChanged(QWidget*);
+    void openMassColor();
+private:
+    ThemeAccessor *theme;
+    QString path;
 };
 
 #endif // CSSWIDGET_H

@@ -58,6 +58,12 @@ protected:
         wc()->onSendOut(spot, prevIndex, ptr->get(), silent);
     }
 
+    template<class Y=workerClass>
+    typename test<decltype(&Y::onDynamicInfo)>::type
+    invoke2(Param<BattleEnum::StatBoostsAndField>, int &spot, BattleDynamicInfo &info) {
+        wc()->onDynamicInfo(spot, info);
+    }
+
     /* Todo: expand following macros */
     start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
     start(UseAttack, onUseAttack, int spot, int attack) end(onUseAttack, spot, attack)
@@ -101,7 +107,6 @@ protected:
     start(ClauseMessage, onClauseActivated, int clause) end(onClauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
     start(TierInfo, onTierNotification, string_ptr tier) end(onTierNotification, *tier->get())
-    start(StatBoostsAndField, onDynamicInfo, int spot, const BattleDynamicInfo &info) end(onDynamicInfo, spot, info)
     start(PokemonVanish, onPokemonVanish, int spot) end(onPokemonVanish, spot)
     start(PokemonReappear, onPokemonReappear, int spot) end(onPokemonReappear, spot)
     start(SpriteChange, onSpriteChange, int spot, int newSprite) end(onSpriteChange, spot, newSprite)

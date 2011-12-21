@@ -134,6 +134,7 @@ Item {
                         }
 
                         //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
+                        battle.scene.playCry(woof.pokemon.numRef);
                         battle.scene.pause();}}
                 ParallelAnimation {
                     NumberAnimation {
@@ -169,6 +170,7 @@ Item {
                 PropertyAction { target: image; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
+                ScriptAction {script: battle.scene.playCry(woof.pokemon.numRef);}
                 PauseAnimation { duration: 150 }
                 NumberAnimation { target:image; from: 70;
                     to: 0; property: "anchors.bottomMargin"; duration: 400; easing.type: Easing.OutBounce}

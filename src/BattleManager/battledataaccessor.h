@@ -54,7 +54,10 @@ public:
     int ability() const {return dd()->ability();}
     int item() const {return dd()->item();}
     int happiness() const {return dd()->item();}
+    int nature() const {return dd()->nature();}
+    int basestat(int stat) const;
     const QList<int> &dvs() const { return dd()->dvs();}
+    const QList<int> &evs() const { return dd()->evs();}
     BattleMove &move(int slot) {return dd()->move(slot);}
     const BattleMove &move(int slot) const {return dd()->move(slot);}
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
@@ -64,6 +67,10 @@ public:
     void changeStatus(int fullStatus);
     void setNum(Pokemon::uniqueId num);
     void setLife(int newLife);
+
+    bool hasExposedData() const {
+        return dynamic_cast<PokeBattle*>(pokeData) != NULL;
+    }
 
 signals:
     void numChanged();
