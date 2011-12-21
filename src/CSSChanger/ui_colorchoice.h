@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'colorchoice.ui'
 **
-** Created: Wed Dec 21 22:12:59 2011
+** Created: Wed Dec 21 22:19:16 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,9 +33,11 @@ public:
     {
         if (Form->objectName().isEmpty())
             Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(400, 64);
+        Form->resize(400, 40);
         horizontalLayout = new QHBoxLayout(Form);
+        horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setContentsMargins(-1, 0, -1, 0);
         label = new QLabel(Form);
         label->setObjectName(QString::fromUtf8("label"));
         label->setWordWrap(true);

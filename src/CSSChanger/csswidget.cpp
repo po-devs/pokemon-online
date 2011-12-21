@@ -18,6 +18,7 @@ CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
 
     QRegExp regExp("(#[A-Fa-f0-9]{6})\\b");
     QRegExp comment("/\\*([^*]|\\*(?!/))*\\*/");
+    QRegExp misc("/\\*|\\*/");
 
     int pos = 0;
 
@@ -25,9 +26,6 @@ CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
 
         int acc = sheet.lastIndexOf("{", pos);
         if (acc != -1) {
-            if (acc > 0) {
-                acc -= 1;
-            }
             int acc2 = sheet.lastIndexOf("}", acc);
 
             if (acc2 == -1) {
@@ -35,7 +33,7 @@ CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
             } else {
                 acc2++;
             }
-            QString desc = sheet.mid(acc2, acc-acc2).replace(comment, "").trimmed();
+            QString desc = sheet.mid(acc2, acc-acc2).replace(comment, "").replace(misc, "").trimmed();
 
             data.colors << Data::PosValue(pos, QColor(regExp.cap(1)), desc);
         } else {
