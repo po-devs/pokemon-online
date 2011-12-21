@@ -64,7 +64,7 @@ public:
         return mInfo;
     }
 
-    const battledata_ptr info() const {
+    battledata_ptr info() const {
         return mInfo;
     }
 
@@ -158,8 +158,7 @@ protected slots:
     void animateHpBar();
 private:
     battledata_ptr mData;
-    battledata_ptr data();
-    const battledata_ptr data() const;
+    battledata_ptr data() const;
 
     bool peeking;
     int pauseCount;

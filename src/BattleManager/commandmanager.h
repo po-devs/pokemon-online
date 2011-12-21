@@ -37,13 +37,16 @@ public:
 
     FlowCommandManager() {
         m_input = NULL;
+        deletable = true;
     }
 
     /* Used to clean up a whole battle flow tree's memory */
     void deleteTree() {
         for(unsigned i = 0; i < m_outputs.size(); i++) {
             m_outputs[i]->deleteTree();
-            delete m_outputs[i];
+            if (m_outputs[i]->deletable) {
+                delete m_outputs[i];
+            }
         }
         m_outputs.clear();
     }
@@ -78,6 +81,7 @@ public:
         }
     }
 
+    bool deletable;
 protected:
     baseClass *m_input;
     std::vector<baseClass*> m_outputs;
