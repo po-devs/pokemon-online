@@ -1,12 +1,13 @@
 #include "csschanger.h"
 #include "csswidget.h"
+#include "../Teambuilder/engineinterface.h"
 
-ClientPlugin* createPluginClass()
+ClientPlugin* createPluginClass(MainEngineInterface*i)
 {
-    return new CSSPlugin();
+    return new CSSPlugin(i->theme());
 }
 
-CSSPlugin::CSSPlugin()
+CSSPlugin::CSSPlugin(ThemeAccessor*theme) : theme(theme)
 {
 }
 
@@ -22,5 +23,5 @@ QString CSSPlugin::pluginName() const
 
 QWidget *CSSPlugin::getConfigurationWidget()
 {
-    return new CssWidget();
+    return new CssWidget(theme);
 }

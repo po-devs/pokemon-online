@@ -58,6 +58,7 @@ public:
     TrainerTeam *trainerTeam() {
         return &m_team;
     }
+    ThemeAccessor *theme();
 };
 
 #endif // MAINWINDOW_H
