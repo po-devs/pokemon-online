@@ -25,16 +25,24 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
-                                   int _ownid, Client *client) : delayed(0), ignoreSpecs(NoIgnore), _mclient(client)
+                                   int _ownid, Client *client) : ignoreSpecs(NoIgnore), _mclient(client)
 {
+    QSettings s;
+    usePokemonNames() = s.value("use_pokemon_names").toBool();
+
+    init(me, opponent, conf, _ownid, client);
+}
+
+void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
+                            int _ownid, Client *client)
+{
+    _mclient = client;
+
     ownid() = _ownid;
     this->conf() = conf;
     this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
     myInfo = new BaseBattleInfo(me, opponent, conf.mode);
     info().gen = conf.gen;
-
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
 
     init();
     show();
@@ -42,17 +50,19 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
 BaseBattleWindow::BaseBattleWindow()
 {
-    delayed=0;ignoreSpecs=NoIgnore;
+    ignoreSpecs=NoIgnore;
     QSettings s;
     usePokemonNames() = s.value("use_pokemon_names").toBool();
 }
 
-void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
+void BaseBattleWindow::delay(qint64 msec)
 {
-    delayed += 1;
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
-    if (!forceDelay && delayed > 1)
-        delayed = 1;
+    if (ptr != NULL) {
+        ptr->pause();
+    }
 
     if (msec != 0)
         QTimer::singleShot(msec, this, SLOT(undelay()));
@@ -60,14 +70,11 @@ void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 
 void BaseBattleWindow::undelay()
 {
-    if (delayed > 0)
-        delayed -= 1;
-    else
-        return;
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
-    while (delayed == 0 && delayedCommands.size() > 0) {
-        QByteArray command = delayedCommands.takeFirst();
-        receiveInfo(command);
+    if (ptr != NULL) {
+        ptr->unpause();
     }
 }
 
@@ -75,6 +82,14 @@ void BaseBattleWindow::init()
 {
     test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
     test->setParent(this);
+
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
+
+    if (ptr != NULL) {
+        test->addOutput(ptr);
+    }
+
     info().data = test->getBattleData();
 
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -286,29 +301,9 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
-            && inf[0] != char(Spectating)) {
-        delayedCommands.push_back(inf);
-        return;
-    }
-    test->receiveData(inf);
-
     /* At the start of the battle 700 ms are waited, to prevent misclicks
        when wanting to do something else */
-    if (!started() && inf[0] == char(OfferChoice)) {
-        started() = true;
-        delay(700);
-    }
-
-    QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_5);
-
-    uchar command;
-    qint8 player;
-
-    in >> command >> player;
-
-    dealWithCommandInfo(in, command, player, player);
+    test->receiveData(inf);
 }
 
 void BaseBattleWindow::ignoreSpectators()
@@ -328,68 +323,57 @@ void BaseBattleWindow::ignoreSpectators()
     }
 }
 
-void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
+void BaseBattleWindow::onSendOut(int spot, int, ShallowBattlePoke *, bool)
 {
-    switch (command)
+    //Plays the battle cry when a pokemon is switched in
+    if (musicPlayed())
     {
-    case SendOut:
-    {
-        //Plays the battle cry when a pokemon is switched in
-        if (musicPlayed())
-        {
-            playCry(data().poke(spot).num().pokenum);
-        }
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
+        playCry(data().poke(spot).num().pokenum);
+    }
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
+    }
+}
 
-        break;
+void BaseBattleWindow::onSendBack(int spot, bool)
+{
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
     }
-    case SendBack:
-        bool silent;
-        in >> silent;
 
-        if (silent) {
-            break;
-        }
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
+    switchToNaught(spot);
+}
 
-        switchToNaught(spot);
-        break;
-    case UseAttack:
-    {
-        qint16 attack;
-        in >> attack;
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
+void BaseBattleWindow::onUseAttack(int, int)
+{
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
+    }
+}
 
-        break;
-    }
-    case Ko:
-        //Plays the battle cry when a pokemon faints
-        if (musicPlayed())
-        {
-            playCry(data().poke(spot).num().pokenum);
-        }
-        switchToNaught(spot);
-        break;
-    case Spectating:
+void BaseBattleWindow::onKo(int spot)
+{
+    //Plays the battle cry when a pokemon faints
+    if (musicPlayed())
     {
-        bool come;
-        qint32 id;
-        in >> come >> id;
-        addSpectator(come, id);
-        break;
+        playCry(data().poke(spot).num().pokenum);
     }
-    case BattleEnd:
-    {
-        battleEnded = true;
-        break;
-    }
-    }
+    switchToNaught(spot);
+}
+
+void BaseBattleWindow::onSpectatorJoin(int id, const QString &)
+{
+    addSpectator(true, id);
+}
+
+void BaseBattleWindow::onSpectatorLeave(int id)
+{
+    addSpectator(false, id);
+}
+
+void BaseBattleWindow::onBattleEnd(int, int)
+{
+    battleEnded = true;
 }
 
 void BaseBattleWindow::addSpectator(bool come, int id)

@@ -48,7 +48,7 @@ public:
 
 class Client;
 
-class BattleWindow : public BaseBattleWindow
+class BattleWindow : public BaseBattleWindow, public BattleCommandManager<BattleWindow>
 {
     Q_OBJECT
 
@@ -82,6 +82,19 @@ public:
     void switchToNaught(int spot);
     void switchTo(int pokezone, int spot, bool forced);
 
+    void onKo(int spot);
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
+    void onHpChange(int spot, int newHp);
+    void onPokeballStatusChanged(int player, int poke, int status);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
+    void onBattleEnd(int res, int winner);
+    void onPPChange(int spot, int move, int PP);
+    void onOfferChoice(int player, const BattleChoices &choice);
+    //void onTempPPChange(int spot, int move, int PP);
+    //void onMoveChange(int spot, int slot, int move, bool definite);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onChoiceSelection(int player);
+    void onChoiceCanceled(int player);
     void addSpectator(bool add, int id);
 
     /* Disable / enable buttons */
@@ -105,8 +118,6 @@ signals:
     void offerTie(int battleid);
 protected:
     void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
-
 protected slots:
     void changeAttackText(int i);
     void targetChosen(int i);

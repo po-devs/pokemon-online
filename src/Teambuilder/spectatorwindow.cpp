@@ -75,6 +75,11 @@ SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerIn
     }
 }
 
+void SpectatorWindow::addOutput(FlowCommandManager<BattleEnum> *widg)
+{
+    input->addOutput(widg);
+}
+
 void SpectatorWindow::reloadTeam(int player)
 {
     data->reloadTeam(player);

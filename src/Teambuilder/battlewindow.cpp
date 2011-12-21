@@ -184,15 +184,18 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     int snum = data().slotNum(spot);
 
     if (snum != pokezone || forced) {
-        mypzone->pokes[snum]->changePokemon(*team().poke(snum));
-        mypzone->pokes[pokezone]->changePokemon(*team().poke(pokezone));
+        auto poke1 = team().poke(snum);
+        auto poke2 = team().poke(pokezone);
+        mypzone->pokes[snum]->changePokemon(*poke1);
+        mypzone->pokes[pokezone]->changePokemon(*poke2);
     }
 
-    mystack->setCurrentIndex(data().slotNum(spot));
+    mystack->setCurrentIndex(snum);
     mytab->setCurrentIndex(MoveTab);
 
+    const auto &poke = info().tempPoke(spot);
     for (int i = 0; i< 4; i++) {
-        myazones[snum]->tattacks[i]->updateAttack(info().tempPoke(spot).move(i), info().tempPoke(spot), gen());
+        myazones[snum]->tattacks[i]->updateAttack(poke.move(i), poke, gen());
     }
 }
 
@@ -502,131 +505,96 @@ void BattleWindow::offerTie()
     sendChoice(BattleChoice(data().spot(info().myself), DrawChoice()));
 }
 
-void BattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
+void BattleWindow::onSendOut(int spot, int prevIndex, ShallowBattlePoke *p, bool s)
 {
-    int player = data().player(spot);
-    switch (command)
-    {
-    case SendOut:
-    {
-        bool silent;
-        quint8 prevIndex;
-        in >> silent;
-        in >> prevIndex;
-
-        if (player == info().myself) {
-            switchTo(prevIndex, spot, true);
-        }
-
-        //Plays the battle cry when a pokemon is switched in
-        if (musicPlayed())
-        {
-            playCry(data().poke(spot).num().pokenum);
-        }
-
-        break;
+    if (data().player(spot) == info().myself) {
+        switchTo(prevIndex, spot, true);
     }
-    case ChangeHp:
-    {
+
+    BaseBattleWindow::onSendOut(spot, prevIndex, p, s);
+}
+
+void BattleWindow::onHpChange(int spot, int)
+{
+    if (data().player(spot) == info().myself) {
         mypzone->pokes[spot]->update();
-        break;
     }
-    case ChangePP:
-    {
-        quint8 move, PP;
-        in  >> move >> PP;
+}
 
-        info().currentPoke(spot).move(move).PP() = PP;
-        info().tempPoke(spot).move(move).PP() = PP;
-        myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
-        mypzone->pokes[data().slotNum(spot)]->updateToolTip();
+void BattleWindow::onPPChange(int spot, int move, int PP)
+{
+    info().currentPoke(spot).move(move).PP() = PP;
+    info().tempPoke(spot).move(move).PP() = PP;
+    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
+    mypzone->pokes[data().slotNum(spot)]->updateToolTip();
+}
 
-        break;
-    }
-    case OfferChoice:
-    {
-        if (info().sent) {
-
-            info().sent = false;
-            for (int i = 0; i < info().available.size(); i++) {
-                info().available[i] = false;
-                info().done[i] = false;
-            }
+void BattleWindow::onOfferChoice(int, const BattleChoices &c)
+{
+    if (info().sent) {
+        info().sent = false;
+        for (int i = 0; i < info().available.size(); i++) {
+            info().available[i] = false;
+            info().done[i] = false;
         }
-
-        BattleChoices c;
-        in >> c;
-        info().choices[c.numSlot/2] = c;
-        info().available[c.numSlot/2] = true;
-        /* Allows to ask for draw again */
-        mysend->setEnabled(true);
-        mysend->setChecked(false);
-
-        break;
-    }
-    case MakeYourChoice:
-    {
-        info().possible = true;
-        info().sent = true;
-
-        goToNextChoice();
-
-        break;
-    }
-    case Ko:
-    {
-        if (player==info().myself) {
-            mypzone->pokes[data().slotNum(spot)]->setEnabled(false); //crash!!
-        }
-        BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
-        break;
-    }
-    case AbsStatusChange:
-    {
-        quint8 poke;
-        in >> poke;
-
-        if (player == info().myself) {
-            mypzone->pokes[poke]->update();
-        }
-
-        break;
     }
 
-    case BattleEnd:
-    {
-        myclose->setText(tr("&Close"));
-        BaseBattleWindow::dealWithCommandInfo(in, command,spot, truespot);
-        break;
-    }
-    case CancelMove:
-    {
-        cancel();
-        break;
-    }
-    case RearrangeTeam:
-    {
-        ShallowShownTeam t;
-        in >> t;
+    info().choices[c.numSlot/2] = c;
+    info().available[c.numSlot/2] = true;
+    /* Allows to ask for draw again */
+    mysend->setEnabled(true);
+    mysend->setChecked(false);
 
-        openRearrangeWindow(t);
-        break;
+    if (!started()) {
+        started() = true;
+
+        delay(700);
     }
-    case SpotShifts:
-    {
-        qint8 s1, s2;
-        bool silent;
+}
 
-        in >> s1 >> s2 >> silent;
+void BattleWindow::onChoiceSelection(int)
+{
+    info().possible = true;
+    info().sent = true;
 
+    goToNextChoice();
+}
+
+void BattleWindow::onKo(int spot)
+{
+    if (data().player(spot) == info().myself) {
+        mypzone->pokes[data().slotNum(spot)]->setEnabled(false);
+    }
+    BaseBattleWindow::onKo(spot);
+}
+
+void BattleWindow::onPokeballStatusChanged(int player, int poke, int)
+{
+    if (player == info().myself) {
+        mypzone->pokes[poke]->update();
+    }
+}
+
+void BattleWindow::onBattleEnd(int res, int winner)
+{
+    myclose->setText(tr("&Close"));
+    BaseBattleWindow::onBattleEnd(res, winner);
+}
+
+void BattleWindow::onChoiceCanceled(int) {
+    cancel();
+}
+
+void BattleWindow::onRearrangeTeam(int, const ShallowShownTeam &team)
+{
+    openRearrangeWindow(team);
+}
+
+void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
+{
+    if (player == info().myself) {
         mypzone->pokes[s1]->changePokemon(poke(s1));
         mypzone->pokes[s2]->changePokemon(poke(s2));
-
-        break;
-    }
-    default:
-        BaseBattleWindow::dealWithCommandInfo(in, command, spot, truespot);
-        break;
     }
 }
 
