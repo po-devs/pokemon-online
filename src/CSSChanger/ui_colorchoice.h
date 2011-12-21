@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'colorchoice.ui'
 **
-** Created: Wed 21. Dec 06:22:31 2011
+** Created: Wed Dec 21 22:12:59 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,6 +38,7 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         label = new QLabel(Form);
         label->setObjectName(QString::fromUtf8("label"));
+        label->setWordWrap(true);
 
         horizontalLayout->addWidget(label);
 

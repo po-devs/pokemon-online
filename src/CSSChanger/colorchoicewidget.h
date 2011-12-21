@@ -17,6 +17,10 @@ public:
         this->color = color;
         pushButton->setStyleSheet(QString("background: %1;").arg(color.name()));
     }
+    void setDesc(const QString &desc) {
+        label->setText(desc);
+    }
+
 signals:
     void colorChanged(int num, QColor color);
 private slots:

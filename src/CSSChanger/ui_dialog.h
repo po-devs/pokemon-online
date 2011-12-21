@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialog.ui'
 **
-** Created: Wed 21. Dec 06:59:26 2011
+** Created: Wed Dec 21 22:12:59 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -43,10 +43,11 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         scrollArea = new QScrollArea(Dialog);
         scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 299, 442));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 288, 442));
         verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         colorsList = new QVBoxLayout();
