@@ -105,12 +105,17 @@ public:
 
     void onUseAttack(int spot, int attack);
     void onPokeballStatusChanged(int player, int poke, int status);
-    void onKo(int spot) { updatePoke(spot); gui.zone->updatePoke(spot); }
+    void onKo(int spot) {
+        updatePoke(spot);
+        gui.zone->updatePoke(spot);
+        emit playCry(data()->poke(spot).num().pokenum);
+    }
     void onMajorStatusChange(int spot, int, bool){ updatePoke(spot);}
     void onSendOut(int spot, int previndex, ShallowBattlePoke*, bool) {
         updatePoke(spot);
         gui.zone->updatePoke(spot);
         updateBall(data()->player(spot), previndex);
+        emit playCry(data()->poke(spot).num().pokenum);
     }
     void onHpChange(int spot, int newHp);
     void onClockStart(int player, int time);
@@ -149,6 +154,7 @@ public:
 signals:
     void printMessage(const QString&);
     void attackUsed(int spot, int attack);
+    void playCry(int poke);
 public slots:
     void updateTimers();
     void changeBarMode();

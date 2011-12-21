@@ -34,6 +34,7 @@ public:
     /* gets the scene widget */
     QWidget *getSceneWidget();
 
+    FlowCommandManager<BattleEnum> * getBattle();
     void addOutput(FlowCommandManager<BattleEnum>*);
 
     advbattledata_proxy *getBattleData();
@@ -55,6 +56,8 @@ private:
 
     battledata_basic *data;
     advbattledata_proxy *data2;
+
+    FlowCommandManager<BattleEnum> *lastOutput;
 
     static int qmlcount;// qml windows use opengl, so only one can be open at all times
     bool qmlwindow;
