@@ -151,6 +151,11 @@ void MainEngine::openPluginConfiguration()
     }
 }
 
+ThemeAccessor *MainEngine::theme()
+{
+    return Theme::getAccessor();
+}
+
 void MainEngine::loadStyleSheet()
 {
     QFile stylesheet(Theme::path("default.css"));

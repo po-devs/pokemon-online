@@ -3,16 +3,19 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 
+class PokeProxy;
+
 class AuxPokeDataProxy : public QObject
 {
     Q_OBJECT
 public:
     AuxPokeDataProxy();
 
-    void onSendOut();
+    void onSendOut(PokeProxy *poke);
     void onSendBack();
 
     Q_INVOKABLE int statBoost(int stat);
+    Q_INVOKABLE int stat(int stat);
 
     Q_PROPERTY(bool onTheField READ isOnTheField NOTIFY onTheFieldChanged)
     Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
@@ -55,7 +58,9 @@ public:
     void changeForme(int subnum) {setAlternateSprite(Pokemon::uniqueId(alternateSprite.pokenum, subnum));}
     void boostStat(int stat, int level);
     void setBoost(int stat, int level);
+    void setStat(int stat, int value);
     void resetStatBoosts();
+    void resetStats();
 
 signals:
     void onTheFieldChanged();
@@ -71,8 +76,51 @@ public:
     bool substitute;
     bool showing;
     Pokemon::uniqueId alternateSprite;
+    PokeProxy *poke;
 
     int statboosts[8];
+    int basestats[8];
+    int boostedstats[8];
+
+    void updateBoostedStat(int stat);
+};
+
+class ZoneProxy : public QObject {
+    Q_OBJECT
+public:
+    ZoneProxy();
+    ~ZoneProxy();
+
+    enum Hazards {
+        Spikes=1,
+        SpikesLV2=2,
+        SpikesLV3=4,
+        StealthRock=8,
+        ToxicSpikes=16,
+        ToxicSpikesLV2=32
+    };
+
+
+    Q_PROPERTY(int spikes READ spikesLevel NOTIFY spikesChanged)
+    Q_PROPERTY(int toxicSpikes READ tspikesLevel NOTIFY tspikesChanged)
+    Q_PROPERTY(bool stealthRocks READ stealthRocks NOTIFY rocksChanged)
+
+    int spikesLevel() const {return mSpikes;}
+    int tspikesLevel() const {return mTSpikes;}
+    bool stealthRocks() const {return mRocks;}
+    void setSpikesLevel(int level);
+    void setToxicSpikesLevel(int level);
+    void setStealthRocks(bool stealthRocks);
+
+    void setHazards(quint8 hazards);
+signals:
+    void spikesChanged();
+    void tspikesChanged();
+    void rocksChanged();
+private:
+    int mSpikes;
+    int mTSpikes;
+    bool mRocks;
 };
 
 class FieldProxy : public QObject {
@@ -83,6 +131,10 @@ public:
 
     Q_INVOKABLE AuxPokeDataProxy *poke(int num) {
         return auxdata[num];
+    }
+
+    Q_INVOKABLE ZoneProxy *zone(int player) {
+        return zonedata[player];
     }
 
     Q_PROPERTY(int weather READ weather NOTIFY weatherChanged)
@@ -107,6 +159,7 @@ signals:
     void weatherChanged();
 private:
     std::vector<AuxPokeDataProxy*> auxdata;
+    std::vector<ZoneProxy*> zonedata;
 
     int mWeather;
 };

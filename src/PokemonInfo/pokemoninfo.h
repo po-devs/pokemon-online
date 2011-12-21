@@ -127,6 +127,7 @@ public:
     static int Ability(const Pokemon::uniqueId &pokeid, int slot, int gen=GEN_MAX);
     static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
     static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static int BoostedStat(int stat, int boost);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
     static QString Height(const Pokemon::uniqueId &pokeid);
     // Will NOT return Missingno.

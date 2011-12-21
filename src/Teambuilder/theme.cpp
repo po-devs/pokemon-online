@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QPixmapCache>
 #include "../BattleManager/defaulttheme.h"
+#include "themeaccessor.h"
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
@@ -53,6 +54,10 @@ class BattleTheme : public BattleDefaultTheme {
     QPixmap BattleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
 };
 
+class Accessor : public ThemeAccessor {
+    QString path(const QString &file) {return Theme::path(file);}
+};
+
 QString Theme::m_Directory;
 QList<QColor> Theme::m_TColors;
 QList<QColor> Theme::m_CColors;
@@ -62,6 +67,7 @@ QHash<int, QPixmap> Theme::m_statusIcons;
 QHash<int, QPixmap> Theme::m_battleIcons;
 QHash<QString, QColor> Theme::m_Colors;
 BattleDefaultTheme *Theme::m_battleTheme = new BattleTheme();
+ThemeAccessor *Theme::m_accessor = new Accessor();
 
 QString Theme::path(const QString& file, bool def)
 {
@@ -317,4 +323,9 @@ QIcon Theme::Icon(const QString &code)
 BattleDefaultTheme *Theme::getBattleTheme()
 {
     return m_battleTheme;
+}
+
+ThemeAccessor *Theme::getAccessor()
+{
+    return m_accessor;
 }

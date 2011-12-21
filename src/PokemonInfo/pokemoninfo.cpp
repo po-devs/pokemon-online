@@ -405,6 +405,11 @@ int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, 
     }
 }
 
+int PokemonInfo::BoostedStat(int stat, int boost)
+{
+    return stat * std::max(2, 2+boost) / std::max(2, 2-boost);
+}
+
 void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QString &modName)
 {
     /* makes sure it isn't already initialized */

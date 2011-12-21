@@ -9,6 +9,7 @@ class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
 class BattleDefaultTheme;
+class ThemeAccessor;
 
 #define DEFAULT_PO_THEME "Classic"
 
@@ -50,7 +51,7 @@ public:
     static QPixmap FrameBall();
     static QPixmap TrainerSprite(int num);
     static BattleDefaultTheme* getBattleTheme();
-
+    static ThemeAccessor* getAccessor();
 private:
     static QString m_Directory;
     static QList<QColor> m_TColors;
@@ -65,6 +66,7 @@ private:
 
     static QVariant value(const QString &key, bool *def);
     static BattleDefaultTheme *m_battleTheme;
+    static ThemeAccessor *m_accessor;
 };
 
 #endif // THEME_H

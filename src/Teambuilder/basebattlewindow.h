@@ -7,6 +7,7 @@
 
 #include "basebattlewindowinterface.h"
 #include "../BattleManager/battledatatypes.h"
+#include "../BattleManager/battlecommandmanager.h"
 
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
@@ -68,102 +69,12 @@ public:
     virtual void switchToNaught(int){}
 
     BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client);
+    void init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
+              int _ownid, Client *client);
 
     int gen() const {
         return info().gen;
     }
-
-    enum BattleCommand
-    {
-        SendOut,
-        SendBack,
-        UseAttack,
-        OfferChoice,
-        BeginTurn,
-        ChangePP,
-        ChangeHp,
-        Ko,
-        Effective, /* to tell how a move is effective */
-        Miss,
-        CriticalHit = 10,
-        Hit, /* for moves like fury double kick etc. */
-        StatChange,
-        StatusChange,
-        StatusMessage,
-        Failed,
-        BattleChat,
-        MoveMessage,
-        ItemMessage,
-        NoOpponent,
-        Flinch = 20,
-        Recoil,
-        WeatherMessage,
-        StraightDamage,
-        AbilityMessage,
-        AbsStatusChange,
-        Substitute,
-        BattleEnd,
-        BlankMessage,
-        CancelMove,
-        Clause = 30,
-        DynamicInfo = 31,
-        DynamicStats = 32,
-        Spectating,
-        SpectatorChat,
-        AlreadyStatusMessage,
-        TempPokeChange,
-        ClockStart = 37,
-        ClockStop = 38,
-        Rated,
-        TierSection = 40,
-        EndMessage,
-        PointEstimate,
-        MakeYourChoice,
-        Avoid,
-        RearrangeTeam,
-        SpotShifts
-    };
-
-    enum TempPokeChange {
-        TempMove,
-        TempAbility,
-        TempItem,
-        TempSprite,
-        DefiniteForme,
-        AestheticForme,
-        DefMove,
-        TempPP
-    };
-
-    enum WeatherM
-    {
-        ContinueWeather,
-        EndWeather,
-        HurtWeather
-    };
-
-    enum Weather
-    {
-        NormalWeather = 0,
-        Hail = 1,
-        Rain = 2,
-        SandStorm = 3,
-        Sunny = 4
-    };
-
-    enum StatusFeeling
-    {
-        FeelConfusion,
-        HurtConfusion,
-        FreeConfusion,
-        PrevParalysed,
-        PrevFrozen,
-        FreeFrozen,
-        FeelAsleep,
-        FreeAsleep,
-        HurtBurn,
-        HurtPoison
-    };
 
     virtual void addSpectator(bool add, int id);
 
@@ -181,17 +92,25 @@ public:
         return _mclient;
     }
 
+    void onKo(int spot);
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
+    void onSendBack(int spot, bool silent);
+    void onUseAttack(int spot, int attack);
+    void onSpectatorJoin(int id, const QString& name);
+    void onSpectatorLeave(int id);
+    void onBattleEnd(int res, int winner);
+
     bool musicPlayed() const;
     bool flashWhenMoved() const;
-    void playCry(int pokemon);
     void close();
 
 public slots:
     void receiveInfo(QByteArray);
     void sendMessage();
     void clickClose();
-    void delay(qint64 msec=0, bool forceDelay=true);
+    void delay(qint64 msec=0);
     void undelay();
+    void playCry(int pokemon);
 
     void ignoreSpectators();
 
@@ -201,7 +120,6 @@ public slots:
 signals:
     void battleCommand(int battleId, const BattleChoice &);
 protected:
-    int delayed;
     int ignoreSpecs;
 
     enum IgnoreMode {
@@ -235,7 +153,6 @@ protected:
     QBuffer cryBuffer;
     bool undelayOnSounds;
 
-    QLinkedList<QByteArray> delayedCommands;
     QSet<int> spectators;
 
     bool blankMessage;
@@ -249,7 +166,14 @@ protected:
     void checkAndSaveLog();
 
     void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
 };
 
+class BaseBattleWindowIns : public BaseBattleWindow, public BattleCommandManager<BaseBattleWindowIns>
+{
+public:
+    BaseBattleWindowIns(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client)
+        : BaseBattleWindow(){
+        init(me, opponent, conf, ownid, client);
+    }
+};
 #endif // BASEBATTLEWINDOW_H

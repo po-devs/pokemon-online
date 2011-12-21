@@ -102,7 +102,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battledatatypes.h \
     ../BattleManager/battledata.h \
     ../BattleManager/battleclientlog.h \
-    basebattlewindowinterface.h
+    basebattlewindowinterface.h \
+    themeaccessor.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
