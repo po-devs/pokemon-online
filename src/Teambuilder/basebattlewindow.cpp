@@ -87,8 +87,14 @@ void BaseBattleWindow::init()
     FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
     if (ptr != NULL) {
-        test->addOutput(ptr);
+        test->getBattle()->addOutput(ptr);
         ptr->deletable = false;
+    }
+
+    QObject *ptr2 = dynamic_cast<QObject*>(test->getBattle());
+
+    if (ptr2) {
+        connect(ptr2, SIGNAL(playCry(int)), SLOT(playCry(int)));
     }
 
     info().data = test->getBattleData();
@@ -226,6 +232,8 @@ void BaseBattleWindow::playCry(int pokemon)
 
     delay();
 
+    pokemon = Pokemon::uniqueId(pokemon).pokenum;
+
     if (!cries.contains(pokemon)) {
         cries.insert(pokemon, PokemonInfo::Cry(pokemon));
     }
@@ -324,13 +332,9 @@ void BaseBattleWindow::ignoreSpectators()
     }
 }
 
-void BaseBattleWindow::onSendOut(int spot, int, ShallowBattlePoke *, bool)
+void BaseBattleWindow::onSendOut(int, int, ShallowBattlePoke *, bool)
 {
     //Plays the battle cry when a pokemon is switched in
-    if (musicPlayed())
-    {
-        playCry(data().poke(spot).num().pokenum);
-    }
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
         qApp->alert(this, 0);
     }
@@ -354,11 +358,6 @@ void BaseBattleWindow::onUseAttack(int, int)
 
 void BaseBattleWindow::onKo(int spot)
 {
-    //Plays the battle cry when a pokemon faints
-    if (musicPlayed())
-    {
-        playCry(data().poke(spot).num().pokenum);
-    }
     switchToNaught(spot);
 }
 

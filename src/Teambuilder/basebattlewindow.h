@@ -102,7 +102,6 @@ public:
 
     bool musicPlayed() const;
     bool flashWhenMoved() const;
-    void playCry(int pokemon);
     void close();
 
 public slots:
@@ -111,6 +110,7 @@ public slots:
     void clickClose();
     void delay(qint64 msec=0);
     void undelay();
+    void playCry(int pokemon);
 
     void ignoreSpectators();
 
