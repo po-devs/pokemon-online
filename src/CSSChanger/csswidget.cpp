@@ -5,6 +5,7 @@
 #include "../Teambuilder/themeaccessor.h"
 #include "colorchoicewidget.h"
 #include <QDialogButtonBox>
+#include "massreplacewidget.h"
 
 CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
     setupUi(this);
@@ -104,13 +105,55 @@ void CssWidget::openMassColor()
 {
     QColor color(sender()->property("associated-color").toString());
 
-    (void) color;
+    MassReplaceWidget *w = new MassReplaceWidget();
+    w->setParent(this);
+    w->setup(color, &data);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->setWindowFlags(Qt::Dialog);
+    w->show();
+
+    connect(w, SIGNAL(colorChanged(int,QColor)), SLOT(onColorChanged(int,QColor)));
+    connect(w, SIGNAL(accepted()), SLOT(onApply()));
+    connect(w, SIGNAL(accepted()), SLOT(updateGrid()));
+}
+
+void CssWidget::updateGrid()
+{
+    if (tabWidget->currentWidget() == massReplace) {
+        setupGrid();
+    }
+}
+
+QVector<int> Data::findColor(const QColor &c)
+{
+    QVector<int> ret;
+    for (int i = 0; i < colors.size(); i++) {
+        if (colors[i].value == c) {
+            ret.push_back(i);
+        }
+    }
+
+    return ret;
 }
 
 void CssWidget::onColorChanged(int num, QColor color)
 {
     data.colors[num].value = color;
     data.stylesheet.replace(data.colors[num].pos, color.name().length(), color.name());
+}
+
+void CssWidget::onApply()
+{
+    qApp->setStyleSheet(data.stylesheet);
+}
+
+void CssWidget::onAccept()
+{
+    onApply();
+    QFile out(path);
+    out.open(QIODevice::WriteOnly);
+    out.write(data.stylesheet.toUtf8());
+    out.close();;
 }
 
 void CssWidget::on_buttonBox_clicked(QAbstractButton *b)
@@ -120,13 +163,9 @@ void CssWidget::on_buttonBox_clicked(QAbstractButton *b)
     if (role == QDialogButtonBox::RejectRole) {
         reject();
     } else if (role == QDialogButtonBox::ApplyRole) {
-        qApp->setStyleSheet(data.stylesheet);
+        onApply();
     } else if (role == QDialogButtonBox::AcceptRole) {
-        qApp->setStyleSheet(data.stylesheet);
-        QFile out(path);
-        out.open(QIODevice::WriteOnly);
-        out.write(data.stylesheet.toUtf8());
-        out.close();;
+        onAccept();
         accept();
     }
 }

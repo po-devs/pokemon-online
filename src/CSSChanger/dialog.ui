@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Theme color changer</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
