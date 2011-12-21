@@ -3,9 +3,12 @@
 
 #include "ui_dialog.h"
 
+class ThemeAccessor;
+
 class CssWidget : public QDialog, public Ui::Dialog {
+Q_OBJECT
 public:
-    CssWidget();
+    CssWidget(ThemeAccessor* theme);
 
     struct Data {
         struct PosValue {
@@ -19,6 +22,15 @@ public:
         QList<PosValue> colors;
     };
     Data data;
+
+    void setupList();
+public slots:
+    void onColorChanged(int num, QColor color);
+private slots:
+    void on_buttonBox_clicked(QAbstractButton*);
+private:
+    ThemeAccessor *theme;
+    QString path;
 };
 
 #endif // CSSWIDGET_H

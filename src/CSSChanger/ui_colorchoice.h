@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'colorchoice.ui'
 **
-** Created: Thu Oct 13 19:55:05 2011
+** Created: Wed 21. Dec 06:22:31 2011
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -48,9 +48,9 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy);
-        pushButton->setAutoFillBackground(true);
+        pushButton->setAutoFillBackground(false);
         pushButton->setStyleSheet(QString::fromUtf8("margin: 5px;"));
-        pushButton->setFlat(true);
+        pushButton->setFlat(false);
 
         horizontalLayout->addWidget(pushButton);
 
