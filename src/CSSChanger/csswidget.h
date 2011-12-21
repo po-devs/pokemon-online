@@ -14,8 +14,9 @@ public:
         struct PosValue {
             int pos;
             QColor value;
+            QString desc;
 
-            PosValue(int pos=0, QColor color = QColor()) : pos(pos), value(color) {}
+            PosValue(int pos=0, QColor color = QColor(), const QString &desc = QString()) : pos(pos), value(color), desc(desc) {}
         };
 
         QString stylesheet;

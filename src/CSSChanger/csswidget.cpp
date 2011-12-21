@@ -17,11 +17,31 @@ CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
     data.stylesheet = sheet;
 
     QRegExp regExp("(#[A-Fa-f0-9]{6})\\b");
+    QRegExp comment("/\\*([^*]|\\*(?!/))*\\*/");
 
     int pos = 0;
 
     while ((pos = regExp.indexIn(sheet, pos)) != -1) {
-        data.colors << Data::PosValue(pos, QColor(regExp.cap(1)));
+
+        int acc = sheet.lastIndexOf("{", pos);
+        if (acc != -1) {
+            if (acc > 0) {
+                acc -= 1;
+            }
+            int acc2 = sheet.lastIndexOf("}", acc);
+
+            if (acc2 == -1) {
+                acc2 = 0;
+            } else {
+                acc2++;
+            }
+            QString desc = sheet.mid(acc2, acc-acc2).replace(comment, "").trimmed();
+
+            data.colors << Data::PosValue(pos, QColor(regExp.cap(1)), desc);
+        } else {
+            data.colors << Data::PosValue(pos, QColor(regExp.cap(1)));
+        }
+
         pos += regExp.matchedLength();
     }
 
@@ -34,6 +54,9 @@ void CssWidget::setupList()
         ColorChoiceWidget *w = new ColorChoiceWidget();
         w->setNumber(i);
         w->setColor(data.colors[i].value);
+        if (!data.colors[i].desc.isEmpty()) {
+            w->setDesc(data.colors[i].desc);
+        }
         colorsList->addWidget(w);
 
         connect(w, SIGNAL(colorChanged(int,QColor)), SLOT(onColorChanged(int,QColor)));
