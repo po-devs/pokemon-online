@@ -1696,13 +1696,7 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
     QSettings s;
 
-    BaseBattleWindowInterface *battle;
-
-    {
-        BaseBattleWindow *battlew = new BaseBattleWindow(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
-        battlew->client() = this;
-        battle = battlew;
-    }
+    BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
 
     battle->setWindowFlags(Qt::Window);
     battle->show();

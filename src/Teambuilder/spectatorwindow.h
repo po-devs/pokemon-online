@@ -4,11 +4,13 @@
 #include <QObject>
 
 #include "../BattleManager/battledatatypes.h"
+#include "../BattleManager/battleenum.h"
 
 class BattleClientLog;
 class BattleScene;
 class BattleInput;
 class PokeTextEdit;
+template <class T> class FlowCommandManager;
 class PlayerInfo;
 class BattleConfiguration;
 
@@ -31,6 +33,8 @@ public:
     PokeTextEdit * getLogWidget();
     /* gets the scene widget */
     QWidget *getSceneWidget();
+
+    void addOutput(FlowCommandManager<BattleEnum>*);
 
     advbattledata_proxy *getBattleData();
 
