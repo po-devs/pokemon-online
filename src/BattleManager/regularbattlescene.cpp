@@ -666,5 +666,9 @@ void RegularBattleScene::updateToolTip(int spot)
         tooltip += "\n" + tr("Stealth Rock");
     }
 
+    if (data()->field().weather() != Weather::NormalWeather) {
+        tooltip += "\n" + tr("Weather: %1").arg(TypeInfo::weatherName(data()->field().weather()));
+    }
+
     gui.zone->tooltips[spot] = tooltip;
 }
