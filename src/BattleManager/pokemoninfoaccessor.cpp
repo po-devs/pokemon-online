@@ -11,7 +11,10 @@ QPixmap PokemonInfoAccessor::requestPixmap(const QString &id, QSize *size, const
     if (id.startsWith("icon/")) {
         ret = PokemonInfo::Icon(id.section("/", 1).toInt());
     } else if (id.startsWith("pokemon/")){
-        ret = PokemonInfo::Picture(id.section('/', 1));        }
+        ret = PokemonInfo::Picture(id.section('/', 1));
+    } else if (id.startsWith("item/")) {
+        ret = ItemInfo::Icon(id.section("/", 1).toInt());
+    }
 
     *size = ret.size();
 
