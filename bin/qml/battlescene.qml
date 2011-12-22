@@ -110,7 +110,7 @@ Item {
     Connections {
         target: battle.scene
         onAttackUsed: {
-            fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot]);
+            fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot], params);
         }
     }
 }

@@ -2,6 +2,7 @@
 #define COMMANDMANAGER_H
 
 #include <functional>
+#include <list>
 #include <vector>
 
 #include "command.h"
@@ -164,15 +165,10 @@ public:
 
         int size = commands.size();
         for(int i = 0; i < size; i++) {
-            commands[i]->apply();
-            delete commands[i];
-        }
-
-        /* The size could have been changed by replayed commands */
-        if (unsigned(size) == commands.size()) {
-            commands.clear();
-        } else {
-            commands.erase(commands.begin(), commands.begin()+size);
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
         }
 
         misReplayingCommands = false;
@@ -187,7 +183,7 @@ public:
     }
 
 protected:
-    std::vector<AbstractCommand *> commands;
+    std::list<AbstractCommand *> commands;
     bool misReplayingCommands;
     /* TODO: Fix this */
 //    enum {

@@ -6,6 +6,7 @@ Item {
     property int attack;
     property FieldPokemon attacker;
     property variant params;
+    property variant extras;
 
     signal finished();
 }
