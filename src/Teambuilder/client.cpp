@@ -292,6 +292,8 @@ void Client::sortChannelsToggle(bool newvalue)
 {
     QSettings s;
     s.setValue("sort_channels_by_name", newvalue);
+
+    sortCBN = newvalue;
     if(sortCBN) {
         sortChannels();
     }
