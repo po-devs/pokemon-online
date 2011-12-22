@@ -15,4 +15,8 @@ Item {
 
         return baseY - addY;
     }
+
+    function z(percent) {
+        return pos1.z + (pos2.z-pos1.z)*percent;
+    }
 }

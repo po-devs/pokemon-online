@@ -21,21 +21,21 @@ var params = {
 };
 
 params[BattleData.LeechSeed] = {"image":"leech-seed.gif",
-    "curves": [{"pos1":{"x":40, "y":10}, "pos2":{"x":0, "y":40}, "controlY":80},
-               {"pos1":{"x":30, "y":5}, "pos2":{"x":30, "y":20}, "controlY":80},
-               {"pos1":{"x":40, "y":15}, "pos2":{"x":70, "y":60}, "controlY":70}]};
+        "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":40, "z":0}, "controlY":80},
+               {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":20, "z":0}, "controlY":80},
+               {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
 params[BattleData.StealthRock] = {"image":"stealth-rock.png",
-    "curves": [{"pos1":{"x":40, "y":10}, "pos2":{"x":-10, "y":40}, "controlY":80},
-               {"pos1":{"x":30, "y":5}, "pos2":{"x":30, "y":80}, "controlY":80},
-               {"pos1":{"x":40, "y":15}, "pos2":{"x":70, "y":60}, "controlY":70}]};
+    "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":-10, "y":40, "z":10}, "controlY":80},
+               {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":80, "z":-20}, "controlY":80},
+               {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":10}, "controlY":70}]};
 params[BattleData.ToxicSpikes] = {"image":"toxic-spikes.png",
-    "curves": [{"pos1":{"x":40, "y":10}, "pos2":{"x":0, "y":55}, "controlY":80},
-               {"pos1":{"x":30, "y":5}, "pos2":{"x":30, "y":65}, "controlY":80},
-               {"pos1":{"x":40, "y":15}, "pos2":{"x":70, "y":60}, "controlY":70}]};
+    "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":55, "z":0}, "controlY":80},
+               {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":65, "z":0}, "controlY":80},
+               {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
 params[BattleData.Spikes] = {"image":"spikes.png",
-    "curves": [{"pos1":{"x":40, "y":10}, "pos2":{"x":0, "y":55}, "controlY":80},
-               {"pos1":{"x":30, "y":5}, "pos2":{"x":30, "y":65}, "controlY":80},
-               {"pos1":{"x":40, "y":15}, "pos2":{"x":70, "y":60}, "controlY":70}]};
+    "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":55, "z":0}, "controlY":80},
+               {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":65, "z":0}, "controlY":80},
+               {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
@@ -63,7 +63,7 @@ function launchMove(attacker, attack, defender, extras) {
         c = components[key];
     }
 
-    var p = {"attacker":attacker, "attack":attack, "target":defender};
+    var p = {"attacker":attacker, "attack":attack, "defender":defender};
     p["extras"] = extras;
     if (key in params) {
         p["params"] = params[key];

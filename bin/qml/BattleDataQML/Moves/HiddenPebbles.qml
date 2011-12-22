@@ -8,7 +8,7 @@ Move {
 
     /* Available variables:
       - attacker (FieldPokemon)
-      - target (FieldPokemon)
+      - defender (FieldPokemon)
       - attack (int)
       - params (misc)
       */
@@ -27,8 +27,10 @@ Move {
     function adjustCurve(curve) {
         curve.pos1.x += attacker.x;
         curve.pos1.y += attacker.y;
-        curve.pos2.x += target.x;
-        curve.pos2.y += target.y;
+        curve.pos1.z = attacker.infront(z);
+        curve.pos2.x += defender.x;
+        curve.pos2.y += defender.y;
+        curve.pos2.z += defender.infront(z);
 
         return curve;
     }
