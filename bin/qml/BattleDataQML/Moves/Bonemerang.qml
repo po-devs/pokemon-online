@@ -28,6 +28,7 @@ Move {
 
     SequentialAnimation  {
             id: animation;
+            running: false;
 
             ParallelAnimation {
                 SequentialAnimation {
@@ -62,6 +63,10 @@ Move {
     }
 
     function start() {
-        animation.running = true;
+        if ((extras.currentHit || 0) == 0) {
+            animation.running = true;
+        } else {
+            finished();
+        }
     }
 }

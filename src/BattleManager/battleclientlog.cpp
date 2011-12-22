@@ -134,9 +134,11 @@ void BattleClientLog::onSendBack(int spot, bool silent)
     printLine("SendBack", tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
 }
 
-void BattleClientLog::onUseAttack(int spot, int attack)
+void BattleClientLog::onUseAttack(int spot, int attack, bool silent)
 {
-    printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
+    if (!silent) {
+        printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
+    }
 }
 
 void BattleClientLog::onBeginTurn(int turn)
@@ -276,9 +278,9 @@ void BattleClientLog::onStatusOver(int spot, int status)
     }
 }
 
-void BattleClientLog::onAttackFailing(int)
+void BattleClientLog::onAttackFailing(int, bool silent)
 {
-    printLine("Failed", tr("But if failed!"));
+    printLine("Failed", tr("But if failed!"), silent);
 }
 
 void BattleClientLog::onPlayerMessage(int spot, const QString &message)

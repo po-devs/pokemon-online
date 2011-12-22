@@ -349,7 +349,7 @@ void BaseBattleWindow::onSendBack(int spot, bool)
     switchToNaught(spot);
 }
 
-void BaseBattleWindow::onUseAttack(int, int)
+void BaseBattleWindow::onUseAttack(int, int, bool)
 {
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
         qApp->alert(this, 0);

@@ -112,5 +112,8 @@ Item {
         onAttackUsed: {
             fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot], params);
         }
+        onHit: {
+            fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot], params);
+        }
     }
 }

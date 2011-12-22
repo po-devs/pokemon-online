@@ -16,8 +16,6 @@ Move {
     property int xt2: xt + 120*dirx;
     property int yt2: yt + 120*diry;
 
-    property int hits: extras.hits || 1
-
     Image {
         id: bone;
 
@@ -32,7 +30,6 @@ Move {
             id: animation;
 
             ParallelAnimation {
-                loops: hits
                 SequentialAnimation {
                     ScriptAction {
                         script: {
@@ -58,6 +55,14 @@ Move {
     }
 
     function start() {
-        animation.running = true;
+        for (var i in extras) {
+            console.log(i + ": " + extras[i]);
+        }
+
+        if ((extras.currentHit || 0) == 0) {
+            finished();
+        } else {
+            animation.running = true;
+        }
     }
 }

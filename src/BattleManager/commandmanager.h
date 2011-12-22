@@ -69,15 +69,15 @@ public:
       and everything in the chain can be stopped.
 
       More fine grain control can be achieved with the Command structure */
-    virtual void pause() {
+    virtual void pause(int ticks=1) {
         if (m_input) {
-            m_input->pause();
+            m_input->pause(ticks);
         }
     }
 
-    virtual void unpause() {
+    virtual void unpause(int ticks=1) {
         if (m_input) {
-            m_input->unpause();
+            m_input->unpause(ticks);
         }
     }
 

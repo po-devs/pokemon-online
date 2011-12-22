@@ -35,15 +35,15 @@ bool BattleInput::delayed()
     return delayCount > 0;
 }
 
-void BattleInput::pause()
+void BattleInput::pause(int ticks)
 {
-    delayCount++;
+    delayCount+= ticks;
     qDebug() << "New delay (+): " << delayCount;
 }
 
-void BattleInput::unpause()
+void BattleInput::unpause(int ticks)
 {
-    delayCount--;
+    delayCount-=ticks;
     qDebug() << "New delay (-): " << delayCount;
     if (delayCount < 0) {
         delayCount = 0;
@@ -84,8 +84,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case UseAttack:
     {
         qint16 attack;
-        in >> attack;
-        output<BattleEnum::UseAttack>(spot, attack);
+        bool silent;
+        in >> attack >> silent;
+        output<BattleEnum::UseAttack>(spot, attack, silent);
         break;
     }
     case BeginTurn:
@@ -205,7 +206,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case Failed:
     {
-        output<BattleEnum::Fail>(spot);
+        bool silent;
+        in >> silent;
+        output<BattleEnum::Fail>(spot, silent);
         break;
     }
     case BattleChat:
