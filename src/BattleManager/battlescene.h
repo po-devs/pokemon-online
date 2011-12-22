@@ -19,12 +19,6 @@ public:
     BattleScene(battledata_ptr data=0);
     ~BattleScene();
 
-    enum StatDirection {
-        StatDown = -1,
-        NoStat = 0,
-        StatUp = 1
-    };
-
     QDeclarativeView *getWidget();
     ProxyDataContainer *getDataProxy();
 
@@ -33,6 +27,8 @@ public:
 
     /* Prints debug text in the console and battle log */
     Q_INVOKABLE void debug(const QString&m);
+
+    Q_INVOKABLE int statboostlevel();
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
 
@@ -46,26 +42,40 @@ public:
     }
 
     bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
+    bool shouldStartPeeking(param<BattleEnum::UseAttack>, int, int);
 
     template <enumClass val, typename... Params>
     bool shouldContinuePeeking(param<val>, Params...) {
-        return false;
+        return true;
     }
 
     bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
+    bool shouldContinuePeeking(param<BattleEnum::BlankMessage>) {return false;}
+    bool shouldContinuePeeking(param<BattleEnum::Hits>, int, int hits) {info.moveData.insert("hits", hits); return true;}
 
     void onUseAttack(int spot, int attack);
+    void onStatBoost(int spot, int stat, int boost, bool silent);
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
 
-    void startPeeking() { peeking = true; }
-    void stopPeeking() { peeking = false; }
+    void startPeeking();
+    void stopPeeking();
+    void useCommand();
+
+    /* Replays the commands stored and delete them. */
+    void replayCommands() {
+        misReplayingCommands = true;
+
+        while (!isPaused() && commands.size() > 0) {
+            useCommand();
+        }
+    }
 signals:
     void printMessage(const QString&);
     void launched();
     void playCry(int);
-    void attackUsed(int spot, int attack);
+    void attackUsed(int spot, int attack, QVariantMap params);
 private:
     battledata_ptr mData;
     battledata_ptr data();
@@ -75,18 +85,17 @@ private:
     QDeclarativeView *mWidget;
 
     struct BattleSceneInfo {
-        StatDirection lastStatChange;
-        int lastSlot;
+        QLinkedList<int> statChanges;
+        QVariantMap moveData;
 
-        BattleSceneInfo() {
-            lastSlot = -1;
-            lastStatChange = NoStat;
-        }
+        BattleSceneInfo() {statChanges.push_back(0);}
     };
 
     BattleSceneInfo info;
     bool peeking;
+    bool inmove;
     int pauseCount;
+    int replayCount;
 };
 
 

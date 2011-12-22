@@ -7,8 +7,9 @@
 #include "battlesceneproxy.h"
 #include "pokemoninfoaccessor.h"
 #include "proxydatacontainer.h"
+#include "../Utilities/functions.h"
 
-BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false),
+BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
     pauseCount(0)
 {
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
@@ -94,37 +95,84 @@ void BattleScene::unpause()
 {
     pauseCount -= 1;
 
-    if (pauseCount == 0) {
-        if (commands.size() > 0) {
-            commands[0]->apply();
-            delete commands[0];
-            commands.erase(commands.begin(), commands.begin()+1);
-        }
+    while (!isPaused() && commands.size() > 0) {
+        useCommand();
     }
 
     baseClass::unpause();
 }
 
-bool BattleScene::shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
-    (void) stat;
-    (void) silent;
+void BattleScene::useCommand()
+{
+    if (commands.size() > 0) {
+        AbstractCommand *command = *commands.begin();
+        commands.pop_front();
+        command->apply();
+        delete command;
 
-    if (info.lastSlot == spot && ((info.lastStatChange == StatUp) == (boost > 0) )) {
-        return true;
+        if (replayCount > 0 && misReplayingCommands) {
+            replayCount --;
+
+            if (replayCount == 0) {
+                misReplayingCommands = false;
+            }
+        }
     }
-    return false;
 }
 
-bool BattleScene::shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent)  {
-    (void) stat;
-    (void) silent;
+bool BattleScene::shouldStartPeeking(param<BattleEnum::StatChange> p, int spot, int stat, int boost, bool silent)
+{
+    return shouldContinuePeeking(p, spot, stat, boost, silent);
+}
 
-    info.lastStatChange = boost > 0 ? StatUp : StatDown;
-    info.lastSlot = spot;
+bool BattleScene::shouldContinuePeeking(param<BattleEnum::StatChange>, int, int, int boost, bool)
+{
+    /* Stacks all consecutive changes of the same sign into one boost, for the purpose of animations */
+    QLinkedListIterator<int> it(info.statChanges);
+    it.toBack();
+
+    if (sign(info.statChanges.back()) == sign(boost)) {
+        boost += info.statChanges.back();
+        info.statChanges.back() = 0;
+    }
+
+    info.statChanges.push_back(boost);
 
     return true;
 }
 
-void BattleScene::onUseAttack(int spot, int attack) {
-    emit attackUsed(spot, attack);
+int BattleScene::statboostlevel()
+{
+    return abs(info.statChanges.front());
+}
+
+void BattleScene::onStatBoost(int, int, int, bool)
+{
+    info.statChanges.pop_front();
+}
+
+bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int)
+{
+    inmove = true;
+    return true;
+}
+
+void BattleScene::onUseAttack(int spot, int attack)
+{
+    qDebug() << "move data length: " << info.moveData.count();
+    emit attackUsed(spot, attack, info.moveData);
+    info.moveData.clear();
+}
+
+void BattleScene::startPeeking()
+{
+    replayCount = 0;
+    peeking = true;
+}
+
+void BattleScene::stopPeeking()
+{
+    inmove = false;
+    peeking = false;
+    replayCount = commands.size();
 }

@@ -277,11 +277,10 @@ void RegularBattleScene::unpause()
     pauseCount -= 1;
 
     if (pauseCount == 0) {
-        if (commands.size() > 0) {
-            commands[0]->apply();
-            delete commands[0];
-            commands.erase(commands.begin(), commands.begin()+1);
-        }
+        AbstractCommand *command = *commands.begin();
+        commands.pop_front();
+        command->apply();
+        delete command;
     }
 
     baseClass::unpause();

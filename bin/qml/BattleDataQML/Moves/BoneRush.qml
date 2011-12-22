@@ -16,7 +16,7 @@ Move {
     property int xt2: xt + 120*dirx;
     property int yt2: yt + 120*diry;
 
-    property int hits: 2
+    property int hits: extras.hits || 1
 
     Image {
         id: bone;

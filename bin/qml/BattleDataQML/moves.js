@@ -37,11 +37,11 @@ params[BattleData.Spikes] = {"image":"spikes.png",
                {"pos1":{"x":30, "y":5}, "pos2":{"x":30, "y":65}, "controlY":80},
                {"pos1":{"x":40, "y":15}, "pos2":{"x":70, "y":60}, "controlY":70}]};
 
-function useAttack(attacker, attack, defender) {
-    launchMove(attacker, attack, defender);
+function useAttack(attacker, attack, defender, params) {
+    launchMove(attacker, attack, defender, params);
 }
 
-function launchMove(attacker, attack, defender) {
+function launchMove(attacker, attack, defender, extras) {
     var key = attack;
     if (! (key in effects)) {
         console.log("Error: Move effect not found: " + key);
@@ -64,6 +64,7 @@ function launchMove(attacker, attack, defender) {
     }
 
     var p = {"attacker":attacker, "attack":attack, "target":defender};
+    p["extras"] = extras;
     if (key in params) {
         p["params"] = params[key];
     } else {
