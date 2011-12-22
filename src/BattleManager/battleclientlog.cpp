@@ -7,7 +7,7 @@
 typedef ShallowBattlePoke* shallowpoke;
 typedef BattleData<DataContainer> battledata;
 
-BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme) : mData(dat), mTheme(theme)
+BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, bool lognames) : mData(dat), mTheme(theme), mLogNames(lognames)
 {
     hasLoggedTeams = false;
     blankMessage = false;
@@ -99,7 +99,11 @@ QString BattleClientLog::nick(int spot)
 
 QString BattleClientLog::rnick(int spot)
 {
-    return data()->poke(spot).nick();
+    if (mLogNames) {
+        return data()->poke(spot).nick();
+    } else {
+        return PokemonInfo::Name(data()->poke(spot).num());
+    }
 }
 
 battledata * BattleClientLog::data()
