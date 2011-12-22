@@ -21,6 +21,15 @@ Item {
         Moves.useAttack(woof, attack, target);
     }
 
+    function behind(zdelta) {
+        return z + (back ? zdelta : -zdelta);
+    }
+
+    function infront(zdelta) {
+        return z + (back ? -zdelta : zdelta);
+    }
+
+
     PokeballAnimation {
         id: pokeball;
         paused: true;
