@@ -15,6 +15,7 @@ effects[BattleData.QuickAttack] = "Moves/QuickAttack.qml";
 effects[BattleData.U_turn] = "Moves/UTurn.qml";
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
+effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
 
 var params = {
 };

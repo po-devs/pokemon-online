@@ -34,17 +34,17 @@ Move {
                     ParallelAnimation {
                         NumberAnimation { target: bone; property: "x"; to: xt; duration: 500; easing.type: Easing.OutQuad }
                         NumberAnimation { target: bone; property: "y"; to: yt; duration: 500; easing.type: Easing.InQuad }
-                        NumberAnimation { target: bone; property: "z"; to: target.infront(1); duration: 500; easing.type: Easing.InQuad }
+                        NumberAnimation { target: bone; property: "z"; to: main.target.infront(1); duration: 500; easing.type: Easing.InQuad }
                     }
                     ParallelAnimation {
                         NumberAnimation { target: bone; property: "x"; to: xt2; duration: 300; easing.type: Easing.InQuad }
                         NumberAnimation { target: bone; property: "y"; to: yt2; duration: 300; easing.type: Easing.OutQuad }
-                        NumberAnimation { target: bone; property: "z"; to: target.behind(50); duration: 300; easing.type: Easing.InQuad }
+                        NumberAnimation { target: bone; property: "z"; to: main.target.behind(50); duration: 300; easing.type: Easing.InQuad }
                     }
                     ParallelAnimation {
                         NumberAnimation { target: bone; property: "x"; to: xt; duration: 300; easing.type: Easing.InQuad }
                         NumberAnimation { target: bone; property: "y"; to: yt; duration: 300; easing.type: Easing.OutQuad }
-                        NumberAnimation { target: bone; property: "z"; to: target.behind(-1); duration: 300; easing.type: Easing.InQuad }
+                        NumberAnimation { target: bone; property: "z"; to: main.target.behind(-1); duration: 300; easing.type: Easing.InQuad }
                     }
                     ParallelAnimation {
                         NumberAnimation { target: bone; property: "x"; to: x0; duration: 500; easing.type: Easing.OutQuad }

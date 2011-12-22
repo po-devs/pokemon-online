@@ -67,8 +67,7 @@ public:
     /* Reimplement this for the base input class,
       and everything in the chain can be stopped.
 
-      More fine grain control would be achieved by
-      completing the Command structure usage */
+      More fine grain control can be achieved with the Command structure */
     virtual void pause() {
         if (m_input) {
             m_input->pause();
