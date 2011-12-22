@@ -27,9 +27,6 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
                                    int _ownid, Client *client) : ignoreSpecs(NoIgnore), _mclient(client)
 {
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
-
     init(me, opponent, conf, _ownid, client);
 }
 
@@ -51,8 +48,6 @@ void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, co
 BaseBattleWindow::BaseBattleWindow()
 {
     ignoreSpecs=NoIgnore;
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
 }
 
 void BaseBattleWindow::delay(qint64 msec)

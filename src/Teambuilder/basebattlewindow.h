@@ -48,7 +48,6 @@ class BaseBattleWindow : public BaseBattleWindowInterface
 
     PROPERTY(int, ownid)
     PROPERTY(bool, started)
-    PROPERTY(bool, usePokemonNames)
     PROPERTY(BattleConfiguration, conf)
 public:
     BaseBattleInfo *myInfo;

@@ -80,7 +80,7 @@ public:
     typedef AdvancedBattleData* battledata_ptr;
     typedef BattleCommandManager<RegularBattleScene> baseClass;
 
-    RegularBattleScene(battledata_ptr data=0, BattleDefaultTheme*theme=0);
+    RegularBattleScene(battledata_ptr data=0, BattleDefaultTheme*theme=0, bool logNames=true);
     ~RegularBattleScene();
 
     ProxyDataContainer *getDataProxy();
@@ -137,6 +137,7 @@ public:
     static QString health(int lifePercent);
 
     bool isPaused() const {return pauseCount > 0;}
+    QString nick(int spot) const;
 
 signals:
     void printMessage(const QString&);
@@ -189,6 +190,7 @@ private:
 
     Gui gui;
     Info info;
+    bool mLogNames;
 
     void setupGui();
     QHBoxLayout *createTeamLayout(QLabel** labels);

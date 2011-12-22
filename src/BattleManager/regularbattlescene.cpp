@@ -9,8 +9,8 @@
 #include <QMouseEvent>
 #include <QToolTip>
 
-RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), unpausing(false),
-    pauseCount(0), info(dat->numberOfSlots())
+RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme, bool logNames) : mData(dat), unpausing(false),
+    pauseCount(0), info(dat->numberOfSlots()), mLogNames(logNames)
 {
     gui.theme = theme;
 
@@ -327,6 +327,15 @@ void RegularBattleScene::onShiftSpots(int player, int spot1, int spot2, bool)
     QTimer::singleShot(500, this, SLOT(unpause()));
 }
 
+QString RegularBattleScene::nick(int spot) const
+{
+    if (mLogNames) {
+        return data()->poke(spot).nickname();
+    } else {
+        return PokemonInfo::Name(data()->poke(spot).num());
+    }
+}
+
 void RegularBattleScene::updatePoke(int spot)
 {
     int player = data()->player(spot);
@@ -336,7 +345,7 @@ void RegularBattleScene::updatePoke(int spot)
 
     if (!poke.isKoed()) {
         //zone->switchTo(poke, spot, info()->sub[spot], info()->specialSprite[spot]);
-        gui.nick[spot]->setText(poke.nickname());
+        gui.nick[spot]->setText(nick(spot));
         gui.level[spot]->setText(tr("Lv. %1").arg(poke.level()));
         updateHp(spot);
         gui.gender[spot]->setPixmap(gui.theme->BattleGenderPicture(poke.gender()));
@@ -594,7 +603,7 @@ void RegularBattleScene::updateToolTip(int spot)
 
     const auto &poke = data()->poke(spot);
 
-    tooltip += poke.nickname() + "\n";
+    tooltip += nick(spot) + "\n";
     tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), data()->gen()));
     int type2 = PokemonInfo::Type2(poke.num());
     if (type2 != Pokemon::Curse) {

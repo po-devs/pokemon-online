@@ -12,7 +12,7 @@ class BattleClientLog : public QObject, public BattleCommandManager<BattleClient
 {
     Q_OBJECT
 public:
-    BattleClientLog(BattleData<DataContainer> *data, BattleDefaultTheme *theme);
+    BattleClientLog(BattleData<DataContainer> *data, BattleDefaultTheme *theme, bool logNames=true);
 
     void onKo(int spot);
     void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
@@ -93,6 +93,7 @@ protected:
     bool hasLoggedTeams;
     QHash<int, QString> spectators;
     bool blankMessage;
+    bool mLogNames;
 };
 
 #endif // BATTLECLIENTLOG_H
