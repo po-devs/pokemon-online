@@ -304,7 +304,9 @@ PokedexBody::PokedexBody(QAbstractItemModel *pokeModel)
     QPushButton *advSearch;
     col1->addWidget(advSearch = new QPushButton(QIcon(Theme::Sprite("orangedisc")), tr("&Advanced Search")));
     col1->addWidget(pokeEdit = new QLineEdit());
+    pokeEdit->setAccessibleName(tr("Pokemon search field", "TB accessible name"));
     pokeList = new TB_PokeChoice(pokeModel, false);
+    pokeList->setAccessibleName(tr("Pokemon list", "TB accessible name"));
     pokeList->verticalHeader()->setDefaultSectionSize(30);
     QCompleter *comp = new QCompleter(pokeEdit);
     comp->setModel(pokeList->model());
@@ -325,7 +327,9 @@ PokedexBody::PokedexBody(QAbstractItemModel *pokeModel)
     buttons->setMargin(0);
     QPushButton *sortByAlph, *sortByNum;
     buttons->addWidget(sortByAlph = new QPushButton(tr("A-Z")));
+    sortByAlph->setAccessibleName(tr("Sort pokemon alphabetically", "TB accessible name"));
     buttons->addWidget(sortByNum = new QPushButton(QString("%1 - %2").arg(1).arg(PokemonInfo::TrueCount()-1)));
+    sortByNum->setAccessibleName(tr("Sort pokemon by National Pokedex number", "TB accessible name"));
     sortByAlph->setCheckable(true);
     sortByNum->setCheckable(true);
     sortByNum->setChecked(true);
@@ -695,6 +699,7 @@ MoveTab::MoveTab()
 {
     QVBoxLayout *v = new QVBoxLayout(this);
     moves = new QTableView();
+    moves->setAccessibleName(tr("Pokemon moves", "TB accessible name"));
     QSortFilterProxyModel *filter=  new QSortFilterProxyModel(this);
     filter->setSourceModel(movesModel = new PokeMovesModel(1, GEN_MAX, this));
     moves->setModel(filter);
