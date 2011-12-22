@@ -73,12 +73,12 @@ public:
     bool reversed() const;
 };
 
-class RegularBattleScene: public QWidget, public BattleCommandManager<RegularBattleScene, BattleSceneFlow<BattleEnum, RegularBattleScene> >
+class RegularBattleScene: public QWidget, public BattleCommandManager<RegularBattleScene>
 {
     Q_OBJECT
 public:
     typedef AdvancedBattleData* battledata_ptr;
-    typedef BattleCommandManager<RegularBattleScene, BattleSceneFlow<BattleEnum, RegularBattleScene> > baseClass;
+    typedef BattleCommandManager<RegularBattleScene> baseClass;
 
     RegularBattleScene(battledata_ptr data=0, BattleDefaultTheme*theme=0);
     ~RegularBattleScene();
@@ -93,17 +93,7 @@ public:
     int myself() const;
     bool isPlayer(int spot) const;
 
-    template <enumClass val, typename... Params>
-    bool shouldStartPeeking(param<val>, Params...) {
-        return false;
-    }
-
-    template <enumClass val, typename... Params>
-    bool shouldContinuePeeking(param<val>, Params...) {
-        return false;
-    }
-
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onKo(int spot) {
         updatePoke(spot);
@@ -146,11 +136,8 @@ public:
     void updateToolTip(int spot);
     static QString health(int lifePercent);
 
-    bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
 
-    void startPeeking() { peeking = true; }
-    void stopPeeking() { peeking = false; }
 signals:
     void printMessage(const QString&);
     void attackUsed(int spot, int attack);
@@ -166,7 +153,7 @@ private:
     battledata_ptr mData;
     battledata_ptr data() const;
 
-    bool peeking;
+    bool unpausing;
     int pauseCount;
 
     struct Gui {

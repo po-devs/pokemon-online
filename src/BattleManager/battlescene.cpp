@@ -12,6 +12,8 @@
 BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
     pauseCount(0)
 {
+    activelyReplaying = false;
+
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
     qmlRegisterType<PokeProxy>("pokemononline.battlemanager.proxies", 1, 0, "PokeData");
@@ -85,27 +87,55 @@ void BattleScene::debug(const QString &m)
     emit printMessage(m);
 }
 
-void BattleScene::pause()
+void BattleScene::pause(int ticks)
 {
-    pauseCount =+ 1;
-    baseClass::pause();
+    pauseCount =+ ticks;
+    baseClass::pause(ticks);
 }
 
-void BattleScene::unpause()
+void BattleScene::unpause(int ticks)
 {
-    pauseCount -= 1;
+    pauseCount -= ticks;
 
-    while (!isPaused() && commands.size() > 0) {
-        useCommand();
+    useCommands();
+
+    if (playingCommands()) {
+        baseClass::pause(-ticks);
+    } else {
+        baseClass::unpause(ticks);
     }
+}
 
-    baseClass::unpause();
+void BattleScene::useCommands()
+{
+    if (!playingCommands()) {
+        activelyReplaying = true;
+        while (!isPaused() && commands.size() > 0) {
+            useCommand();
+        }
+        activelyReplaying = false;
+    }
+}
+
+void BattleScene::replayCommands()
+{
+    misReplayingCommands = true;
+
+    useCommands();
+    baseClass::unpause(0);
 }
 
 void BattleScene::useCommand()
 {
     if (commands.size() > 0) {
         AbstractCommand *command = *commands.begin();
+
+        int val = command->val();
+
+        if (!onPeek(val)) {
+            return;
+        }
+
         commands.pop_front();
         command->apply();
         delete command;
@@ -151,17 +181,22 @@ void BattleScene::onStatBoost(int, int, int, bool)
     info.statChanges.pop_front();
 }
 
-bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int)
+bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int, bool)
 {
+    info.reset();
     inmove = true;
     return true;
 }
 
-void BattleScene::onUseAttack(int spot, int attack)
+void BattleScene::onUseAttack(int spot, int attack, bool)
 {
-    qDebug() << "move data length: " << info.moveData.count();
+    info.attack = attack;
+    info.spot = spot;
+
+    if (info.hits > 0) {
+        info.moveData["currentHit"] = 0;
+    }
     emit attackUsed(spot, attack, info.moveData);
-    info.moveData.clear();
 }
 
 void BattleScene::startPeeking()
@@ -175,4 +210,24 @@ void BattleScene::stopPeeking()
     inmove = false;
     peeking = false;
     replayCount = commands.size();
+}
+
+bool BattleScene::onPeek(int val)
+{
+    if (val == BattleEnum::Damaged && info.hits > 0) {
+        if (info.blocked) {
+            if (info.currentHit < info.hits) {
+                info.currentHit++;
+                info.moveData["currentHit"] = info.currentHit;
+                emit hit(info.spot, info.attack, info.moveData);
+            }
+            info.blocked = false;
+            return false;
+        } else {
+            info.blocked = true;
+            return true;
+        }
+    }
+
+    return true;
 }

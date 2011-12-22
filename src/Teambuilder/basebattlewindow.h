@@ -95,7 +95,7 @@ public:
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool);
     void onSpectatorJoin(int id, const QString& name);
     void onSpectatorLeave(int id);
     void onBattleEnd(int res, int winner);

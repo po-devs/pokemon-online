@@ -2343,9 +2343,8 @@ void BattleSituation::testFlinch(int player, int target)
 bool BattleSituation::testFail(int player)
 {
     if (turnMemory(player)["Failed"].toBool() == true) {
-        if (turnMemory(player)["FailingMessage"].toBool()) {
-            notify(All, Failed, player);
-        }
+        /* Silently or not ? */
+        notify(All, Failed, player, turnMemory(player)["FailingMessage"].toBool() ? false : true);
         return true;
     }
     return false;
@@ -2450,9 +2449,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player, player, "MoveSettings");
 
-    if (tellPlayers && !turnMemory(player).contains("TellPlayers")) {
-        notify(All, UseAttack, player, qint16(attack));
-    }
+    notify(All, UseAttack, player, qint16(attack), tellPlayers && !turnMemory(player).contains("TellPlayers"));
 
     calleffects(player, player, "AfterTellingPlayers");
 

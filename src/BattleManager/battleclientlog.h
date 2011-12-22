@@ -17,7 +17,7 @@ public:
     void onKo(int spot);
     void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool silent);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
     void onHitCount(int spot, int count);
@@ -32,7 +32,7 @@ public:
     void onStatusNotification(int spot, int status);
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
-    void onAttackFailing(int spot);
+    void onAttackFailing(int spot, bool silent);
     void onPlayerMessage(int spot, const QString &message);
     void onSpectatorJoin(int id, const QString &name);
     void onSpectatorLeave(int id);

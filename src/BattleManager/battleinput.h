@@ -14,8 +14,8 @@ public:
     void receiveData(QByteArray data);
     void dealWithCommandInfo(QDataStream&, uchar command,int spot);
 
-    void pause();
-    void unpause();
+    void pause(int ticks=1);
+    void unpause(int ticks=1);
 
     bool delayed();
 

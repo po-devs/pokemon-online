@@ -9,7 +9,7 @@
 #include <QMouseEvent>
 #include <QToolTip>
 
-RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), peeking(false),
+RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), unpausing(false),
     pauseCount(0), info(dat->numberOfSlots())
 {
     gui.theme = theme;
@@ -276,17 +276,21 @@ void RegularBattleScene::unpause()
 {
     pauseCount -= 1;
 
-    if (pauseCount == 0) {
-        AbstractCommand *command = *commands.begin();
-        commands.pop_front();
-        command->apply();
-        delete command;
+    if (pauseCount == 0 && !unpausing) {
+        unpausing = true;
+        while (commands.size() > 0) {
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
+        }
+        unpausing = false;
     }
 
     baseClass::unpause();
 }
 
-void RegularBattleScene::onUseAttack(int spot, int attack) {
+void RegularBattleScene::onUseAttack(int spot, int attack, bool) {
     emit attackUsed(spot, attack);
 }
 
