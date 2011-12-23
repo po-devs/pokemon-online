@@ -33,10 +33,8 @@ public:
 
 struct FieldData
 {
-    FieldData() {
-        /* Resizes for triple. Later, when loaded with battle configuration, will get
-          more accurate loading */
-        auxdata.resize(6);
+    FieldData(int numberOfSlots = 2) {
+        auxdata.resize(numberOfSlots);
     }
 
     AuxPokeData &poke(int num) {

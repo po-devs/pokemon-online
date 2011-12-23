@@ -32,7 +32,7 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
         for (int j = 0; j < 6; j++) {
             QDeclarativeEngine::setObjectOwnership(data_ptr->team(i)->poke(j), QDeclarativeEngine::CppOwnership);
         }
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < dat->numberOfSlots()/2; j++) {
             QDeclarativeEngine::setObjectOwnership(data_ptr->field()->poke(j*2+i), QDeclarativeEngine::CppOwnership);
         }
     }

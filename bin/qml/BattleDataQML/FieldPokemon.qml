@@ -50,7 +50,7 @@ Item {
     }
 
     Image {
-        property int spriteRef: fieldPokemon.alternateSpriteRef || pokemon.numRef;
+        property int spriteRef: fieldPokemon.alternateSpriteRef || fieldPokemon.pokemon.numRef;
         id: image
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
@@ -58,8 +58,8 @@ Item {
 //        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
 //                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
 //                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
-//        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
-        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
+        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
+//        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         onSourceChanged: shader.grab();
     }

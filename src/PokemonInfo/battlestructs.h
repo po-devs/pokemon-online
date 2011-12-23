@@ -479,9 +479,23 @@ struct BattleConfiguration
         return ids[0] == id ? 0 : 1;
     }
 
+    bool isPlayer(int slot) const {
+        return receivingMode[slot] == Player;
+    }
+
     void setTeam(int i, TeamBattle *team) {
         teams[i] = team;
         receivingMode[i] = Player;
+    }
+
+    int numberOfSlots() const {
+        if (mode == ChallengeInfo::Doubles) {
+            return 4;
+        } else if (mode == ChallengeInfo::Triples) {
+            return 6;
+        } else {
+            return 2;
+        }
     }
 
     BattleConfiguration() {

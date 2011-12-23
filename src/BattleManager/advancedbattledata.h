@@ -13,6 +13,51 @@ public:
 
     }
 
+    /* The code could be refactored to be included in battledata directly,
+      with the regular battledata container having also the extras functions */
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool)
+    {
+        int player = this->player(spot);
+        int slot = this->slotNum(spot);
+
+        if (slot != previndex) {
+            team(player).switchPokemons(slot, previndex);
+
+            fieldPoke(spot).setPoke(team(player).poke(slot));
+        }
+
+        team(player).setPoke(slot, pokemon, isPlayer(spot));
+
+        fieldPoke(spot).onSendOut(pokemon);
+    }
+
+    void onKo(int spot)
+    {
+        tempPoke(spot).changeStatus(Pokemon::Koed);
+        if (isPlayer(spot)) {
+            poke(spot).changeStatus(Pokemon::Koed);
+        }
+    }
+
+    void onHpChange(int spot, int newHp)
+    {
+        tempPoke(spot).setLife(newHp);
+        if (isPlayer(spot)) {
+            poke(spot).setLife(newHp);
+        }
+    }
+
+    void onMajorStatusChange(int spot, int status, bool)
+    {
+        //TODO: handle confusion better
+        if (status != Pokemon::Confused) {
+            tempPoke(spot).changeStatus(status);
+            if (isPlayer(spot)) {
+                poke(spot).changeStatus(status);
+            }
+        }
+    }
+
     void onStatBoost(int spot, int stat, int boost, bool silent) {
         (void) silent;
         fieldPoke(spot).boostStat(stat, boost);
@@ -48,6 +93,11 @@ public:
 
     bool areAdjacent (int poke1, int poke2) const {
         return abs(slotNum(poke1)-slotNum(poke2)) <= 1;
+    }
+
+    /* the temp poke code could be made generic */
+    PokeProxy &tempPoke(int spot) {
+        return *fieldPoke(spot).pokemon();
     }
 };
 

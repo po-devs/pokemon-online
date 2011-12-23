@@ -4,15 +4,20 @@
 #include "../PokemonInfo/pokemonstructs.h"
 
 class PokeProxy;
+class ShallowBattlePoke;
 
 class AuxPokeDataProxy : public QObject
 {
     Q_OBJECT
 public:
     AuxPokeDataProxy();
+    ~AuxPokeDataProxy();
 
-    void onSendOut(PokeProxy *poke);
+    void setPoke(PokeProxy *poke);
+    void onSendOut(ShallowBattlePoke *shallow);
     void onSendBack();
+
+    void setPlayerPoke(bool p);
 
     Q_INVOKABLE int statBoost(int stat);
     Q_INVOKABLE int stat(int stat);
@@ -21,6 +26,7 @@ public:
     Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
     Q_PROPERTY(bool showing READ isShowing NOTIFY showingChanged)
     Q_PROPERTY(int alternateSprite READ alternateSpriteRef NOTIFY alternateSpriteChanged)
+    Q_PROPERTY(PokeProxy *pokemon READ pokemon CONSTANT)
 
     bool isOnTheField() {
         return onTheField;
@@ -36,6 +42,10 @@ public:
 
     int alternateSpriteRef() {
         return alternateSprite.toPokeRef();
+    }
+
+    PokeProxy *pokemon() const {
+        return poke;
     }
 
     /* Macro to generate setters... */
@@ -75,6 +85,7 @@ public:
     bool onTheField;
     bool substitute;
     bool showing;
+    bool playerPoke;
     Pokemon::uniqueId alternateSprite;
     PokeProxy *poke;
 
@@ -126,7 +137,7 @@ private:
 class FieldProxy : public QObject {
     Q_OBJECT
 public:
-    FieldProxy();
+    FieldProxy(int numOfSlots=2);
     ~FieldProxy();
 
     Q_INVOKABLE AuxPokeDataProxy *poke(int num) {
