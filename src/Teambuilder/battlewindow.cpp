@@ -235,6 +235,8 @@ void BattleWindow::clickClose()
 
 void BattleWindow::forfeit() {
     emit forfeit(battleId());
+    if (battleEnded)
+        close();
 }
 
 void BattleWindow::nullQuestion() {
@@ -409,6 +411,17 @@ void BattleWindow::goToNextChoice()
             sendChoice(info().choice[i]);
         }
     }
+}
+
+void BattleWindow::disable()
+{
+    onBattleEnd(0,0); // TODO: add meaninfull numbers
+    mysend->setEnabled(false);
+    myattack->setEnabled(false); 
+    myswitch->setEnabled(false); 
+    mycancel->setEnabled(false); 
+    disableAll();
+    BaseBattleWindow::disable();
 }
 
 void BattleWindow::disableAll()
