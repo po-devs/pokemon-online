@@ -23,6 +23,7 @@ TeamPokeButton::TeamPokeButton(int num, Pokemon::uniqueId poke, int level, int i
     setObjectName("PokeButton");
     setAcceptDrops(true);
     setCheckable(true);
+    setAccessibleName(tr("Pokemon slot %1", "TB accessible name").arg(QString::number(num)));
 
     QGridLayout *ml = new QGridLayout(this);
     ml->setMargin(2);
