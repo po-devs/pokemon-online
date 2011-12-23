@@ -134,6 +134,7 @@ macx:LIBS += -framework \
     CoreFoundation
 macx:ICON = pokemononline.icns
 macx:QMAKE_INFO_PLIST = Info.plist
+macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
 
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
