@@ -42,7 +42,7 @@ void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, co
     conf().avatar[0] = me.avatar;
     conf().avatar[1] = opponent.avatar;
     conf().name[0] = me.team.name;
-    conf().name[1] = me.team.name;
+    conf().name[1] = opponent.team.name;
 
     myInfo = new BaseBattleInfo(me, opponent, conf().mode);
     info().gen = conf().gen;
