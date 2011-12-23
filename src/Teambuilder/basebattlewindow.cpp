@@ -115,7 +115,7 @@ void BaseBattleWindow::init()
 
     replayData.data = "battle_logs_v1\n";
     QDataStream stream(&replayData.data, QIODevice::Append);
-    stream.setVersion(QDataStream::Qt_4_7);
+    stream.setVersion(QDataStream::Qt_4_5);
     stream << conf();
     replayData.t.start();
 
@@ -326,7 +326,7 @@ void BaseBattleWindow::sendMessage()
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
     QDataStream stream(&replayData.data, QIODevice::Append);
-    stream.setVersion(QDataStream::Qt_4_7);
+    stream.setVersion(QDataStream::Qt_4_5);
     stream << quint32(replayData.t.elapsed()) << inf;
 
     test->receiveData(inf);

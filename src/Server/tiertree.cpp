@@ -295,7 +295,7 @@ QByteArray TierTree::buildTierList()
     QByteArray toWrite;
 
     QDataStream stream(&toWrite, QIODevice::WriteOnly);
-    stream.setVersion(QDataStream::Qt_4_7);
+    stream.setVersion(QDataStream::Qt_4_5);
 
     root.serialize(stream, -1);
 

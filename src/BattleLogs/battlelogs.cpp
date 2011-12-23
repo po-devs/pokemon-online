@@ -116,7 +116,7 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
     }
 
     started = false;
-    commands.setVersion(QDataStream::Qt_4_7);
+    commands.setVersion(QDataStream::Qt_4_5);
     t.start();
 }
 
@@ -149,7 +149,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
 
         /* Writing configuration */
         QDataStream outd(&out);
-        outd.setVersion(QDataStream::Qt_4_7);
+        outd.setVersion(QDataStream::Qt_4_5);
         conf.teams[0] = &team1;
         conf.teams[1] = &team2;
         outd << conf;
