@@ -8,9 +8,9 @@
 
 ThemeWidget::ThemeWidget(QString name, QString author, QString version, QString _downloadUrl, QString _forumId) :
     QWidget(0),
-    ui(new Ui::ThemeWidget),
     downloadUrl(_downloadUrl),
-    forumId(_forumId)
+    forumId(_forumId),
+    ui(new Ui::ThemeWidget)
 {
     ui->setupUi(this);
 
