@@ -120,6 +120,7 @@ void AuxPokeDataProxy::setPoke(PokeProxy *poke)
         }
     } else {
         this->poke = poke;
+        emit pokemonChanged();
     }
 }
 

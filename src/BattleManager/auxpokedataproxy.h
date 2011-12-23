@@ -26,7 +26,7 @@ public:
     Q_PROPERTY(bool substitute READ hasSubstitute NOTIFY substituteChanged)
     Q_PROPERTY(bool showing READ isShowing NOTIFY showingChanged)
     Q_PROPERTY(int alternateSprite READ alternateSpriteRef NOTIFY alternateSpriteChanged)
-    Q_PROPERTY(PokeProxy *pokemon READ pokemon CONSTANT)
+    Q_PROPERTY(PokeProxy *pokemon READ pokemon NOTIFY pokemonChanged)
 
     bool isOnTheField() {
         return onTheField;
@@ -77,6 +77,7 @@ signals:
     void substituteChanged();
     void showingChanged();
     void alternateSpriteChanged();
+    void pokemonChanged();
 
     void statUp(int stat, int level);
     void statDown(int stat, int level);
