@@ -107,8 +107,17 @@ void BaseBattleWindow::init()
     battleEnded = false;
     started() = false;
 
-    log = LogManager::obj()->createLog(BattleLog, tr("%1 vs %2").arg(data().name(0), data().name(1) + "--"));
+    QString title = tr("%1 vs %2").arg(data().name(0), data().name(1)) + "--";
+    log = LogManager::obj()->createLog(BattleLog, title);
     log->override = Log::OverrideNo; /* By default, no logging enabled */
+    replay = LogManager::obj()->createLog(ReplayLog, title);
+    replay->override = Log::OverrideNo;
+
+    replayData.data = "battle_logs_v1\n";
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << conf();
+    replayData.t.start();
 
     setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
@@ -273,12 +282,16 @@ void BaseBattleWindow::checkAndSaveLog()
 {
     log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
+    replay->setBinary(replayData.data);
     if (saveLogs->isChecked()) {
         log->override = Log::OverrideYes;
+        replay->override = Log::OverrideYes;
     }
 
     log->close();
     log = NULL;
+    replay->close();
+    replay = NULL;
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -312,8 +325,10 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    /* At the start of the battle 700 ms are waited, to prevent misclicks
-       when wanting to do something else */
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << quint32(replayData.t.elapsed()) << inf;
+
     test->receiveData(inf);
 }
 

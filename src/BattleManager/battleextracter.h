@@ -141,6 +141,7 @@ protected:
     start(ChoiceCanceled, int player) end (player)
     start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
     start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
+    start(PrintHtml, string_ptr data) end(data)
 
 #undef start
 #undef end
@@ -249,6 +250,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChoiceCanceled);
     addCallback(Variation);
     addCallback(DynamicStats);
+    addCallback(PrintHtml);
 
 #undef addCallback
 }

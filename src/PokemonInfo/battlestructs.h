@@ -489,12 +489,8 @@ struct BattleConfiguration
         receivingMode[0] = receivingMode[1] = Spectator;
     }
 
-    ~BattleConfiguration() {
-        if (teamOwnership) {
-            delete teams[0];
-            delete teams[1];
-        }
-    }
+    explicit BattleConfiguration(const BattleConfiguration &other);
+    ~BattleConfiguration();
 };
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
@@ -522,57 +518,8 @@ struct FullBattleConfiguration : public BattleConfiguration
     }
 };
 
-inline QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c)
-{
-    //Used as placeholder for subgen
-    quint8 foo;
-    in >> c.gen >> foo >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
-
-    in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
-
-    if (c.receivingMode[0] == BattleConfiguration::Player) {
-        c.teams[0] = new TeamBattle();
-        in >> *c.teams[0];
-        c.teams[0]->name = c.name[0];
-    } else {
-        c.teams[0] = NULL;
-    }
-
-    in >> c.receivingMode[1] >> c.name[1] >> c.avatar[1];
-
-    if (c.receivingMode[1] == BattleConfiguration::Player) {
-        c.teams[1] = new TeamBattle();
-        in >> *c.teams[1];
-        c.teams[1]->name = c.name[1];
-    } else {
-        c.teams[1] = NULL;
-    }
-
-    c.teamOwnership = true;
-
-    return in;
-}
-
-inline QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c)
-{
-    //Used as placeholder for subgen
-    quint8 foo(0);
-    out << c.gen << foo << c.mode << c.ids[0] << c.ids[1] << c.clauses;
-
-    out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
-
-    if (c.receivingMode[0] == BattleConfiguration::Player) {
-        out << *c.teams[0];
-    }
-
-    out << c.receivingMode[1] << c.getName(1) << c.avatar[1];
-
-    if (c.receivingMode[1] == BattleConfiguration::Player) {
-        out << *c.teams[1];
-    }
-
-    return out;
-}
+QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c);
+QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c);
 
 struct BattleDynamicInfo
 {

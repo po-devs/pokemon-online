@@ -87,6 +87,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     QSettings s;
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
     log->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
+    replay->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
 
     setWindowTitle(tr("Battling against %1").arg(name(info().opponent)));
 

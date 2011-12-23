@@ -66,6 +66,7 @@ public:
     void onBattleEnd(int res, int winner);
     void onVariation(int player, int bonus, int malus);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onPrintHtml(const QString &data);
 
     QString nick(int spot);
     QString rnick(int spot);

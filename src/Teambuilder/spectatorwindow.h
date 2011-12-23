@@ -35,6 +35,7 @@ public:
 
     BattleClientLog *getLog();
     FlowCommandManager<BattleEnum> * getBattle();
+    BattleInput *getInput();
     void addOutput(FlowCommandManager<BattleEnum>*);
 
     advbattledata_proxy *getBattleData();

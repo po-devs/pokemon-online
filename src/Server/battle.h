@@ -42,7 +42,7 @@ public:
     BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, PluginManager *p);
     ~BattleSituation();
 
-    const TeamBattle &pubteam(int id);
+    const TeamBattle &pubteam(int id) const;
     /* returns 0 or 1, or -1 if that player is not involved */
     int spot(int id) const;
     /* The other player */
@@ -347,7 +347,6 @@ private:
     QList<bool> couldMove;
     QList<QPointer<Player> > pendingSpectators;
 
-    TeamBattle team1, team2;
     int ratings[2];
 
     /* timers */
@@ -687,7 +686,7 @@ inline void BattleSituation::notify(int player, int command, int who)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who);
 
@@ -699,7 +698,7 @@ void BattleSituation::notify(int player, int command, int who, const T& param)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param;
 
@@ -711,7 +710,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param1 << param2;
 
@@ -723,7 +722,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3;
 
@@ -735,7 +734,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4;
 
@@ -747,7 +746,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5;
 
@@ -759,7 +758,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5 << param6;
 
