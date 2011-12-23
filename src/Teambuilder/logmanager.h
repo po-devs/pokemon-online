@@ -45,6 +45,7 @@ struct Log
 
     void pushHtml(const QString& html);
     void pushTxt(const QString &txt);
+    void pushList(const QStringList &list);
     void flush();
     void close();
 

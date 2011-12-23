@@ -59,6 +59,13 @@ void Log::pushTxt(const QString &txt)
     pushedData();
 }
 
+void Log::pushList(const QStringList &list)
+{
+    data += list.join("");
+    data += "\n";
+    pushedData();
+}
+
 void Log::close()
 {
     flush();

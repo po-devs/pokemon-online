@@ -90,6 +90,11 @@ void SpectatorWindow::reloadTeam(int player)
     data2->reloadTeam(player);
 }
 
+BattleClientLog* SpectatorWindow::getLog()
+{
+    return log;
+}
+
 PokeTextEdit *SpectatorWindow::getLogWidget()
 {
     return logWidget;
