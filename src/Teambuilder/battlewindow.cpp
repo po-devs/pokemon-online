@@ -41,7 +41,7 @@ const TeamProxy &BattleInfo::myteam() const
 PokeProxy &BattleInfo::tempPoke(int spot)
 {
     //return m_tempPoke[number(spot)];
-    return currentPoke(spot);
+    return data->tempPoke(spot);
 }
 
 const PokeProxy & BattleInfo::currentPoke(int spot) const
@@ -533,6 +533,12 @@ void BattleWindow::onPPChange(int spot, int move, int PP)
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }
 
+void BattleWindow::onTempPPChange(int spot, int move, int PP)
+{
+    info().tempPoke(spot).move(move).PP() = PP;
+    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
+}
+
 void BattleWindow::onOfferChoice(int, const BattleChoices &c)
 {
     if (info().sent) {
@@ -553,6 +559,20 @@ void BattleWindow::onOfferChoice(int, const BattleChoices &c)
         started() = true;
 
         delay(700);
+    }
+}
+
+void BattleWindow::onMoveChange(int spot, int slot, int move, bool definite)
+{
+    info().tempPoke(spot).move(slot).num() = move;
+    info().tempPoke(spot).move(slot).totalPP() = MoveInfo::PP(move, info().gen);
+    if (definite) {
+        info().currentPoke(spot).move(slot).num() = move;
+        info().currentPoke(spot).move(slot).totalPP() = MoveInfo::PP(move, info().gen);
+    }
+    myazones[data().slotNum(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
+    if (definite) {
+        mypzone->pokes[data().slotNum(spot)]->updateToolTip();
     }
 }
 

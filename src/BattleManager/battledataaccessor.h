@@ -62,7 +62,7 @@ public:
     const BattleMove &move(int slot) const {return dd()->move(slot);}
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
 
-    void adaptTo(const ShallowBattlePoke *pokemon);
+    void adaptTo(const ShallowBattlePoke *pokemon, bool soft=false);
     void adaptTo(const PokeBattle *pokemon);
     void changeStatus(int fullStatus);
     void setNum(Pokemon::uniqueId num);
@@ -72,6 +72,9 @@ public:
         return dynamic_cast<PokeBattle*>(pokeData) != NULL;
     }
 
+    void setOwnerShip(bool o) {hasOwnerShip = o;}
+
+    ShallowBattlePoke *exposedData() { return d();}
 signals:
     void numChanged();
     void statusChanged();
@@ -104,7 +107,7 @@ public:
     }
 
     void setTeam(const TeamBattle *team);
-    void setPoke(int index, ShallowBattlePoke *pokemon);
+    void setPoke(int index, ShallowBattlePoke *pokemon, bool soft = false);
     void setName(const QString &name);
 
     void switchPokemons(int index, int prevIndex);
