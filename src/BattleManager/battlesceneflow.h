@@ -31,7 +31,7 @@ continueLife:
             if (!wc()->replaying() && wc()->template shouldStartPeeking(param<val>(), params...)) {
                 wc()->startPeeking();
                 wc()->template store(wc()->template createCommand<val, Params...>(params...));
-            } else if (wc()->playingCommands()){
+            } else {
                 wc()->template invoke<val, Params...>(params...);
                 wc()->template output<val, Params...>(params...);
             }
