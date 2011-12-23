@@ -265,6 +265,7 @@ QString BaseBattleWindow::name(int spot) const
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
     if (saveLogs->isChecked()) {
         log->override = Log::OverrideYes;

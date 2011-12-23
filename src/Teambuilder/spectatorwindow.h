@@ -34,6 +34,7 @@ public:
     /* gets the scene widget */
     QWidget *getSceneWidget();
 
+    BattleClientLog *getLog();
     FlowCommandManager<BattleEnum> * getBattle();
     void addOutput(FlowCommandManager<BattleEnum>*);
 
