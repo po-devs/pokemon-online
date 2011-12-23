@@ -50,7 +50,7 @@ Item {
     }
 
     Image {
-        property int spriteRef: fieldPokemon.alternateSpriteRef || fieldPokemon.pokemon.numRef;
+        property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
         id: image
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
