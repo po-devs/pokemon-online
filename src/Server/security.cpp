@@ -12,7 +12,7 @@ QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QHash<QString, QString> SecurityManager::bannedMembers;
 int SecurityManager::nextLoadThreadNumber = 0;
-LoadThread * SecurityManager::threads = NULL;
+LoadThread ** SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
 
 SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
@@ -132,11 +132,12 @@ void SecurityManager::loadMembers()
 
 void SecurityManager::init()
 {
-    threads = new LoadThread[loadThreadCount];
+    threads = new LoadThread*[loadThreadCount];
 
     for (int i = 0; i < loadThreadCount; i++) {
-        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QSqlQuery*,QVariant,int)), Qt::DirectConnection);
-        threads[i].start();
+        threads[i] = new LoadThread();
+        connect(threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QSqlQuery*,QVariant,int)), Qt::DirectConnection);
+        threads[i]->start();
     }
 
     ithread = new InsertThread<Member>();
@@ -146,6 +147,15 @@ void SecurityManager::init()
 
 
     loadMembers();
+}
+
+void SecurityManager::destroy()
+{
+    ithread->finish();
+    for (int i = 0; i < loadThreadCount; i++) {
+        threads[i]->finish();
+    }
+    delete [] threads;
 }
 
 bool SecurityManager::isValid(const QString &name) {
@@ -376,7 +386,7 @@ LoadThread * SecurityManager::getThread()
     /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
     int n = nextLoadThreadNumber % loadThreadCount;
     nextLoadThreadNumber = (nextLoadThreadNumber + 1) % loadThreadCount;
-    return threads + n;
+    return threads[n];
 }
 
 void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)

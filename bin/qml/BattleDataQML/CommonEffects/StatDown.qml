@@ -5,6 +5,7 @@ import "../" 1.0
 Item {
     id: main;
     property FieldPokemon pokemon
+    property int level
 
     Particles {
         id: particles;
@@ -21,7 +22,7 @@ Item {
         angleDeviation: 60
         velocity: 60
         count: 0;
-        emissionRate: 40;
+        emissionRate: 40*level;
 
         velocityDeviation: 10
         z: pokemon.pokeSprite.z + 10;
@@ -30,7 +31,7 @@ Item {
     SequentialAnimation {
         id: anim
         ScriptAction {
-            script: {battle.scene.pause(); particles.count=40; }
+            script: {battle.scene.pause(); particles.count=40*level; }
         }
         PauseAnimation { duration: 500 }
         ScriptAction {

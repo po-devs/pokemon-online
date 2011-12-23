@@ -1773,6 +1773,22 @@ void Server::atServerShutDown() {
     delete pluginManager, pluginManager = NULL;
 
     myengine->serverShutDown();
+
+#ifdef WIN32
+    ::exit(0);
+#endif
+    // On linux, threads need to be cleared or the server may be left hanging...
+//    TierMachine::destroy();
+//    SecurityManager::destroy();
+
+//    connect(&battleThread, SIGNAL(finished()), this, SLOT(deleteLater()));
+//    battleThread.finish();
+//    exit(0);
+
+    //The above always hangs now for some reason on linux, so here we go
+    int *x = NULL;
+    *x += 1;
+
 }
 
 void Server::setAnnouncement(int &id, const QString &html) {

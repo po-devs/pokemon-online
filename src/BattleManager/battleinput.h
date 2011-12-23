@@ -14,11 +14,10 @@ public:
     void receiveData(QByteArray data);
     void dealWithCommandInfo(QDataStream&, uchar command,int spot);
 
-    void pause();
-    void unpause();
+    void pause(int ticks=1);
+    void unpause(int ticks=1);
 
     bool delayed();
-
 
     enum BattleCommand
     {
@@ -111,6 +110,16 @@ public:
         HurtBurn,
         HurtPoison
     };
+
+    template <enumClass val, typename... Params>
+    bool shouldStore(Params...) {
+        if (delayCount > 0) {
+            //To tell we have a raw command there
+            delayedCommands.push_back(QByteArray());
+            return true;
+        }
+        return false;
+    }
 
 protected:
     int delayCount;

@@ -5,12 +5,12 @@ var effects = {
     "stat-up": "CommonEffects/StatUp.qml"
 };
 
-function statUp(pokemon) {
-    launchEffect("stat-up", pokemon, {"pokemon":pokemon});
+function statUp(pokemon, level) {
+    launchEffect("stat-up", pokemon, {"pokemon":pokemon, "level":(level||1)});
 }
 
-function statDown(pokemon) {
-    launchEffect("stat-down", pokemon, {"pokemon":pokemon});
+function statDown(pokemon, level) {
+    launchEffect("stat-down", pokemon, {"pokemon":pokemon, "level":(level||1)});
 }
 
 function launchEffect(key, parent, vars) {

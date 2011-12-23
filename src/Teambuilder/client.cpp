@@ -292,6 +292,8 @@ void Client::sortChannelsToggle(bool newvalue)
 {
     QSettings s;
     s.setValue("sort_channels_by_name", newvalue);
+
+    sortCBN = newvalue;
     if(sortCBN) {
         sortChannels();
     }
@@ -1158,28 +1160,32 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
-    QAction * show_ts2 = menuActions->addAction(tr("Enable timestamps in &PMs"));
+    QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
+
+    QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
     show_ts2->setChecked(s.value("show_timestamps2").toBool());
 
-    QAction * pm_flash = menuActions->addAction(tr("Make new PMs &flash"));
+    QAction * pm_flash = pmMenu->addAction(tr("Make new PMs &flash"));
     pm_flash->setCheckable(true);
     connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
     pm_flash->setChecked(s.value("pm_flashing").toBool());
 
-    QAction * pm_disable = menuActions->addAction(tr("Disable PMs"));
+    QAction * pm_disable = pmMenu->addAction(tr("Disable PMs"));
     pm_disable->setCheckable(true);
     connect(pm_disable, SIGNAL(triggered(bool)), SLOT(togglePM(bool)));
     pm_disable->setChecked(s.value("pm_disabled").toBool());
 
-    QAction *sortByTier = menuActions->addAction(tr("Sort players by &tiers"));
+    QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
+
+    QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
     connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersCountingTiers(bool)));
     sortByTier->setChecked(s.value("sort_players_by_tier").toBool());
     sortBT = sortByTier->isChecked();
 
-    QAction *sortByAuth = menuActions->addAction(tr("Sort players by auth &level"));
+    QAction *sortByAuth = sortMenu->addAction(tr("Sort players by auth &level"));
     sortByAuth->setCheckable(true);
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
     sortByAuth->setChecked(s.value("sort_players_by_auth").toBool());
@@ -1388,15 +1394,14 @@ void Client::changeMusicFolder()
 
 void Client::changeBattleLogFolder()
 {
-    QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Logs Directory"),
-                                                    QDir::home().absoluteFilePath(LogManager::obj()->getDirectoryForType(BattleLog)));
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Logs Directory"),
+                                                    QDir::home().absoluteFilePath(LogManager::obj()->getDirectory()));
 
     if (dir.isNull()) {
         return;
     }
 
-    LogManager::obj()->changeDirectoryForType(BattleLog, dir);
+    LogManager::obj()->changeBaseDirectory(dir);
 }
 
 void Client::changeButtonStyle(bool old)

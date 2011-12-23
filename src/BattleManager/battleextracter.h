@@ -85,7 +85,7 @@ protected:
 
     /* Todo: expand following macros */
     start(SendBack, int spot; bool silent) end(spot, silent)
-    start(UseAttack, int spot; int attack) end(spot, attack)
+    start(UseAttack, int spot; int attack; bool silent) end(spot, attack, silent)
     start(Turn, int turn) end(turn)
     start(NewHp, int spot; int newHp) end(spot, newHp)
     start(Hits, int spot; int count) end(spot, count)
@@ -100,7 +100,7 @@ protected:
     start(StatusFeel, int spot; int status) end(spot, status)
     start(StatusHurt, int spot; int status) end(spot, status)
     start(StatusFree, int spot; int status) end(spot, status)
-    start(Fail, int spot) end(spot)
+    start(Fail, int spot; bool silent) end(spot, silent)
     start(PlayerMessage, int spot; string_ptr message) end(spot, message)
     start(SpectatorLeave, int id) end(id)
     start(SpectatorMessage, int id; string_ptr message) end(id, message)
@@ -141,6 +141,7 @@ protected:
     start(ChoiceCanceled, int player) end (player)
     start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
     start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
+    start(PrintHtml, string_ptr data) end(data)
 
 #undef start
 #undef end
@@ -249,6 +250,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChoiceCanceled);
     addCallback(Variation);
     addCallback(DynamicStats);
+    addCallback(PrintHtml);
 
 #undef addCallback
 }

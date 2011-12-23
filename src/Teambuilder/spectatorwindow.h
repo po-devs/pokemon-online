@@ -12,7 +12,7 @@ class BattleInput;
 class PokeTextEdit;
 template <class T> class FlowCommandManager;
 class PlayerInfo;
-class BattleConfiguration;
+class FullBattleConfiguration;
 
 /* A window which takes binary as input, and manages
   a battle scene as well as a battle log.
@@ -22,8 +22,7 @@ class BattleConfiguration;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo &name1,
-                    const PlayerInfo &name2);
+    SpectatorWindow(const FullBattleConfiguration &conf);
     ~SpectatorWindow();
 
     /* Receives the binary data */
@@ -34,7 +33,9 @@ public:
     /* gets the scene widget */
     QWidget *getSceneWidget();
 
+    BattleClientLog *getLog();
     FlowCommandManager<BattleEnum> * getBattle();
+    BattleInput *getInput();
     void addOutput(FlowCommandManager<BattleEnum>*);
 
     advbattledata_proxy *getBattleData();

@@ -187,7 +187,7 @@ void Analyzer::sendRanking(QString name, int points)
 void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
     QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_5);
+    in.setVersion(QDataStream::Qt_4_7);
     uchar command;
 
     in >> command;
@@ -501,7 +501,7 @@ void Analyzer::notify(int command)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command);
 
