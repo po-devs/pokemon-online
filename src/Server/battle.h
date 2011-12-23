@@ -686,7 +686,7 @@ inline void BattleSituation::notify(int player, int command, int who)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who);
 
@@ -698,7 +698,7 @@ void BattleSituation::notify(int player, int command, int who, const T& param)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param;
 
@@ -710,7 +710,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2;
 
@@ -722,7 +722,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3;
 
@@ -734,7 +734,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4;
 
@@ -746,7 +746,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5;
 
@@ -758,7 +758,7 @@ void BattleSituation::notify(int player, int command, int who, const T1& param1,
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    out.setVersion(QDataStream::Qt_4_5);
 
     out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5 << param6;
 
