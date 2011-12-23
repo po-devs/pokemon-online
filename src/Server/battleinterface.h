@@ -8,6 +8,7 @@ class Player;
 class PluginManager;
 class TeamBattle;
 class PokeBattle;
+class BattleConfiguration;
 
 /* Fixme: needs some sort of cache to avoid revs() creating a list
    each time */
@@ -31,13 +32,13 @@ public:
 //    virtual const int & publicId() const = 0;
 //    virtual const bool & rated() const = 0;
     virtual const QString & tier() const = 0;
-    virtual const quint32 & clauses() const = 0;
+    virtual quint32 clauses() const = 0;
 //    virtual const int & attacker() const = 0;
 //    virtual const int & attacked() const = 0;
-    virtual const int & mode() const = 0;
+    virtual int mode() const = 0;
 //    virtual const int & numberOfSlots() const = 0;
 //    virtual const bool & blocked() const = 0;
-    virtual const int & gen() const = 0;
+    virtual int gen() const = 0;
 //    virtual const int & attackCount() const = 0;
 //    virtual const bool & rearrangeTime() const = 0;
 //    virtual const int & selfKoer() const = 0;

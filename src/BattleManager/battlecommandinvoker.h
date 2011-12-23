@@ -124,6 +124,7 @@ protected:
     start(ChoiceCanceled, onChoiceCanceled, int player) end (onChoiceCanceled, player)
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
+    start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
 
 #undef start
 #undef end
@@ -194,6 +195,7 @@ protected:
     void onChoiceCanceled(int player);
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
+    void onPrintHtml(const QString &html);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

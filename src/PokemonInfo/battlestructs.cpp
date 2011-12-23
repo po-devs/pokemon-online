@@ -610,6 +610,82 @@ QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po) {
     return out;
 }
 
+BattleConfiguration::BattleConfiguration(const BattleConfiguration &other)
+{
+   gen = other.gen;
+   mode = other.mode;
+   clauses = other.clauses;
+   ids[0] = other.ids[0];
+   ids[1] = other.ids[1];
+   avatar[0] = other.avatar[0];
+   avatar[1] = other.avatar[1];
+   teams[0] = other.teams[0];
+   teams[1] = other.teams[1];
+   receivingMode[0] = other.receivingMode[0];
+   receivingMode[1] = other.receivingMode[1];
+   teamOwnership = false;
+}
+
+BattleConfiguration::~BattleConfiguration()
+{
+    if (teamOwnership) {
+        delete teams[0];
+        delete teams[1];
+    }
+}
+
+QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c)
+{
+    //Used as placeholder for subgen
+    quint8 foo;
+    in >> c.gen >> foo >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+
+    in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
+
+    if (c.receivingMode[0] == BattleConfiguration::Player) {
+        c.teams[0] = new TeamBattle();
+        in >> *c.teams[0];
+        c.teams[0]->name = c.name[0];
+    } else {
+        c.teams[0] = NULL;
+    }
+
+    in >> c.receivingMode[1] >> c.name[1] >> c.avatar[1];
+
+    if (c.receivingMode[1] == BattleConfiguration::Player) {
+        c.teams[1] = new TeamBattle();
+        in >> *c.teams[1];
+        c.teams[1]->name = c.name[1];
+    } else {
+        c.teams[1] = NULL;
+    }
+
+    c.teamOwnership = true;
+
+    return in;
+}
+
+QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c)
+{
+    //Used as placeholder for subgen
+    quint8 foo(0);
+    out << c.gen << foo << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+
+    out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
+
+    if (c.receivingMode[0] == BattleConfiguration::Player) {
+        out << *c.teams[0];
+    }
+
+    out << c.receivingMode[1] << c.getName(1) << c.avatar[1];
+
+    if (c.receivingMode[1] == BattleConfiguration::Player) {
+        out << *c.teams[1];
+    }
+
+    return out;
+}
+
 BattleChoices::BattleChoices()
 {
     switchAllowed = true;

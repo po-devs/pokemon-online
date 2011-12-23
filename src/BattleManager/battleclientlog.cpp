@@ -544,3 +544,8 @@ void BattleClientLog::onRearrangeTeam(int, const ShallowShownTeam &team)
     printHtml("Teams", toBoldColor(tr("Opponent's team: "), Qt::blue) + oppnames.join(" / "));
     onBlankMessage();
 }
+
+void BattleClientLog::onPrintHtml(const QString &data)
+{
+    printHtml("ServerMessage", data);
+}

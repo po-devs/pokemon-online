@@ -157,8 +157,15 @@ protected:
     bool blankMessage;
     bool battleEnded;
 
-    Log *log;
+    Log *log, *replay;
     SpectatorWindow *test;
+
+    struct ReplaySavingData {
+        QElapsedTimer t;
+        QByteArray data;
+    };
+
+    ReplaySavingData replayData;
 
     BaseBattleWindow();
     void init();

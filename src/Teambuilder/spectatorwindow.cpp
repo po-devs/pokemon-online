@@ -92,6 +92,11 @@ BattleClientLog* SpectatorWindow::getLog()
     return log;
 }
 
+BattleInput *SpectatorWindow::getInput()
+{
+    return input;
+}
+
 PokeTextEdit *SpectatorWindow::getLogWidget()
 {
     return logWidget;

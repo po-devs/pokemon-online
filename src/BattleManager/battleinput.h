@@ -19,7 +19,6 @@ public:
 
     bool delayed();
 
-
     enum BattleCommand
     {
         SendOut,
@@ -111,6 +110,16 @@ public:
         HurtBurn,
         HurtPoison
     };
+
+    template <enumClass val, typename... Params>
+    bool shouldStore(Params...) {
+        if (delayCount > 0) {
+            //To tell we have a raw command there
+            delayedCommands.push_back(QByteArray());
+            return true;
+        }
+        return false;
+    }
 
 protected:
     int delayCount;

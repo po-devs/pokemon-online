@@ -3,6 +3,7 @@
 #include "replayviewer.h"
 #include "spectatorwindow.h"
 #include "poketextedit.h"
+#include "../BattleManager/battleinput.h"
 
 /* Format for raw:
 
@@ -23,14 +24,14 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 
     QByteArray version = in->readLine();
 
-    if (version != "battle_logs_v1") {
+    if (version != "battle_logs_v1\n") {
         QMessageBox::critical(NULL, tr("Log format not supported"), tr("The replay version of the file isn't supported by this client."));
         deleteLater();
         return;
     }
 
     QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_5);
+    stream.setVersion(QDataStream::Qt_4_7);
 
     stream >> conf;
 
@@ -38,9 +39,10 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
     window->setParent(this);
 
     QWidget *widget = window->getSampleWidget();
+    widget->setWindowTitle(tr("Pok\303\251mon Online Replay"));
 
     widget->show();
-    widget->setWindowFlags(Qt::Window);
+    //widget->setWindowFlags(Qt::Window);
     widget->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(widget, SIGNAL(destroyed()), SLOT(deleteLater()));
@@ -52,7 +54,7 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 void ReplayViewer::read()
 {
     QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_5);
+    stream.setVersion(QDataStream::Qt_4_7);
 
     if (nextRead == quint32(-1)) {
         stream >> nextRead;
@@ -62,7 +64,9 @@ void ReplayViewer::read()
     while(nextRead <= t.elapsed()) {
         if (lastData.size() == 0) {
             //finished
-            window->getLogWidget()->insertHtml(toBoldColor(tr("This is the end of the replay"), Qt::blue) + "<br />");
+            window->getInput()->entryPoint(BattleEnum::BlankMessage);
+            auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("This is the end of the replay"), Qt::blue)));
+            window->getInput()->entryPoint(BattleEnum::PrintHtml, &mess);
             return;
         }
 
