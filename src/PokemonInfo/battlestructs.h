@@ -465,9 +465,11 @@ struct BattleConfiguration
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;
-    ReceivingMode receivingMode[2];
+    quint8 receivingMode[2];
+    quint16 avatar[2];
 
-    const TeamBattle *teams[2];
+    TeamBattle *teams[2];
+    bool teamOwnership;
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;
@@ -475,6 +477,23 @@ struct BattleConfiguration
 
     int spot(int id) const {
         return ids[0] == id ? 0 : 1;
+    }
+
+    void setTeam(int i, TeamBattle *team) {
+        teams[i] = team;
+        receivingMode[i] = Player;
+    }
+
+    BattleConfiguration() {
+        teamOwnership = false;
+        receivingMode[0] = receivingMode[1] = Spectator;
+    }
+
+    ~BattleConfiguration() {
+        if (teamOwnership) {
+            delete teams[0];
+            delete teams[1];
+        }
     }
 };
 
@@ -488,6 +507,69 @@ inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
 inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
 {
     out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+
+    return out;
+}
+
+struct FullBattleConfiguration : public BattleConfiguration
+{
+    QString name[2];
+
+    const QString getName(int player) const {return receivingMode[player] == Spectator ? name[player] : teams[player]->name;}
+
+    FullBattleConfiguration& operator = (const BattleConfiguration& conf) {
+        return * (FullBattleConfiguration*)(& (this->BattleConfiguration::operator = (conf)));
+    }
+};
+
+inline QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c)
+{
+    //Used as placeholder for subgen
+    quint8 foo;
+    in >> c.gen >> foo >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+
+    in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
+
+    if (c.receivingMode[0] == BattleConfiguration::Player) {
+        c.teams[0] = new TeamBattle();
+        in >> *c.teams[0];
+        c.teams[0]->name = c.name[0];
+    } else {
+        c.teams[0] = NULL;
+    }
+
+    in >> c.receivingMode[1] >> c.name[1] >> c.avatar[1];
+
+    if (c.receivingMode[1] == BattleConfiguration::Player) {
+        c.teams[1] = new TeamBattle();
+        in >> *c.teams[1];
+        c.teams[1]->name = c.name[1];
+    } else {
+        c.teams[1] = NULL;
+    }
+
+    c.teamOwnership = true;
+
+    return in;
+}
+
+inline QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c)
+{
+    //Used as placeholder for subgen
+    quint8 foo(0);
+    out << c.gen << foo << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+
+    out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
+
+    if (c.receivingMode[0] == BattleConfiguration::Player) {
+        out << *c.teams[0];
+    }
+
+    out << c.receivingMode[1] << c.getName(1) << c.avatar[1];
+
+    if (c.receivingMode[1] == BattleConfiguration::Player) {
+        out << *c.teams[1];
+    }
 
     return out;
 }

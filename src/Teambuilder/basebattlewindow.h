@@ -48,7 +48,7 @@ class BaseBattleWindow : public BaseBattleWindowInterface
 
     PROPERTY(int, ownid)
     PROPERTY(bool, started)
-    PROPERTY(BattleConfiguration, conf)
+    PROPERTY(FullBattleConfiguration, conf)
 public:
     BaseBattleInfo *myInfo;
     const BaseBattleInfo &info() const {

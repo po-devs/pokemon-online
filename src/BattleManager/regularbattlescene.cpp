@@ -158,7 +158,7 @@ void RegularBattleScene::setupGui()
     QLabel *mybox = new QLabel();
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
-    mybox->setPixmap(gui.theme->TrainerSprite(data()->team(myself()).avatar()));
+    mybox->setPixmap(gui.theme->TrainerSprite(data()->avatar(myself())));
     midme->addWidget(gui.timers[myself()]);
     midme->addWidget(mybox);
 
@@ -171,7 +171,7 @@ void RegularBattleScene::setupGui()
     gui.timers[opponent()]->setObjectName("TimeOut"); //for style sheets
     gui.timers[opponent()]->setRange(0,300);
     QLabel *oppbox = new QLabel();
-    oppbox->setPixmap(gui.theme->TrainerSprite(data()->team(opponent()).avatar()));
+    oppbox->setPixmap(gui.theme->TrainerSprite(data()->avatar(opponent())));
     oppbox->setObjectName("OppTrainerBox");
     oppbox->setFixedSize(82,82);
     midopp->addWidget(oppbox);

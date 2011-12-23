@@ -106,14 +106,11 @@ public:
     void setTeam(const TeamBattle *team);
     void setPoke(int index, ShallowBattlePoke *pokemon);
     void setName(const QString &name);
-    void setAvatar(int avatar);
 
     void switchPokemons(int index, int prevIndex);
 
     Q_PROPERTY(QString name READ name CONSTANT)
     QString name() const;
-    Q_PROPERTY(quint16 avatar READ avatar CONSTANT)
-    quint16 avatar() const;
 signals:
     void pokemonsSwapped(int slot1, int slot2);
 private:

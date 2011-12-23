@@ -108,10 +108,6 @@ QString TeamProxy::name() const {
     return teamData->name();
 }
 
-quint16 TeamProxy::avatar() const {
-    return teamData->avatar();
-}
-
 void TeamProxy::switchPokemons(int index, int prevIndex)
 {
     std::swap(pokemons[index], pokemons[prevIndex]);
@@ -128,11 +124,6 @@ void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
 void TeamProxy::setName(const QString &name)
 {
     teamData->name() = name;
-}
-
-void TeamProxy::setAvatar(int avatar)
-{
-    teamData->avatar() = avatar;
 }
 
 void TeamProxy::setTeam(const TeamBattle *team)

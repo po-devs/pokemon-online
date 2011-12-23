@@ -3,10 +3,11 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
-#include "../PokemonInfo/battlestructs.h"
+
 class Player;
 class PluginManager;
 class TeamBattle;
+class PokeBattle;
 
 /* Fixme: needs some sort of cache to avoid revs() creating a list
    each time */
@@ -55,7 +56,7 @@ public:
     virtual int id(int spot) const = 0;
     virtual int rating(int spot) const = 0;
     /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
-    virtual BattleConfiguration configuration() const = 0;
+    virtual const BattleConfiguration &configuration() const = 0;
 
 //    virtual bool acceptSpectator(int id, bool authed=false) const = 0;
 //    virtual void addSpectator(Player *p) = 0;

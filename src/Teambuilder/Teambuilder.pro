@@ -44,7 +44,8 @@ SOURCES += main.cpp \
     poketextedit.cpp \
     remove_direction_override.cpp \
 	password_wallet.cpp\
-    spectatorwindow.cpp
+    spectatorwindow.cpp \
+    replayviewer.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -103,7 +104,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battledata.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
-    themeaccessor.h
+    themeaccessor.h \
+    replayviewer.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

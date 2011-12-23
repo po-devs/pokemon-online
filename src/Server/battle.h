@@ -26,13 +26,10 @@ class BattleSituation : public ContextCallee, public BattleInterface
     PROPERTY(int , publicId);
     PROPERTY(bool, rated);
     PROPERTY(QString, tier);
-    PROPERTY(quint32, clauses);
     PROPERTY(int, attacker);
     PROPERTY(int, attacked);
-    PROPERTY(int, mode);
     PROPERTY(int, numberOfSlots);
     PROPERTY(bool, blocked);
-    PROPERTY(int, gen);
     PROPERTY(int, attackCount);
     PROPERTY(bool, rearrangeTime);
     PROPERTY(int, selfKoer);
@@ -56,7 +53,7 @@ public:
     /* returns the id corresponding to that spot (spot is 0 or 1) */
     int id(int spot) const;
     /* Return the configuration of the players (1 refer to that player, 0 to that one... */
-    BattleConfiguration configuration() const;
+    const BattleConfiguration &configuration() const;
     /* Returns the rating of the beginning of a battle, of a player */
     int rating(int spot) const;
 
@@ -73,6 +70,9 @@ public:
 
     void removeSpectator(int id);
 
+    int gen() const {return conf.gen;}
+    int mode() const {return conf.mode;}
+    quint32 clauses() const {return conf.clauses;}
     /*
 	Below Player is either 1 or 0, aka the spot of the id.
 	Use the functions above to make conversions
@@ -679,6 +679,8 @@ private:
         }
         //qDebug() << "Ending callp for " << this;
     }
+
+    BattleConfiguration conf;
 };
 
 inline void BattleSituation::notify(int player, int command, int who)
