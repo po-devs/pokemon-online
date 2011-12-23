@@ -31,16 +31,21 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
     init(me, opponent, conf, _ownid, client);
 }
 
-void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
+void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &_conf,
                             int _ownid, Client *client)
 {
     _mclient = client;
 
     ownid() = _ownid;
-    this->conf() = conf;
-    this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
-    myInfo = new BaseBattleInfo(me, opponent, conf.mode);
-    info().gen = conf.gen;
+    conf() = _conf;
+    conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
+    conf().avatar[0] = me.avatar;
+    conf().avatar[1] = opponent.avatar;
+    conf().name[0] = me.team.name;
+    conf().name[1] = me.team.name;
+
+    myInfo = new BaseBattleInfo(me, opponent, conf().mode);
+    info().gen = conf().gen;
 
     init();
     show();
@@ -76,7 +81,7 @@ void BaseBattleWindow::undelay()
 
 void BaseBattleWindow::init()
 {
-    test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
+    test = new SpectatorWindow(conf());
     test->setParent(this);
 
     /* The dynamic cast works if called from BaseBattleWindowIns */

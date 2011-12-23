@@ -14,19 +14,16 @@
 
 int SpectatorWindow::qmlcount = 0;
 
-SpectatorWindow::SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo& p1,
-                                 const PlayerInfo& p2)
+SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
 {
     qmlwindow = false;
     data = new battledata_basic(&conf);
     data2 = new advbattledata_proxy(&conf);
 
-    data->team(0).name() = p1.team.name;
-    data->team(1).name() = p2.team.name;
-    data2->team(0).setName(p1.team.name);
-    data2->team(1).setName(p2.team.name);
-    data2->team(0).setAvatar(p1.avatar);
-    data2->team(1).setAvatar(p2.avatar);
+    data->team(0).name() = conf.getName(0);
+    data->team(1).name() = conf.getName(1);
+    data2->team(0).setName(conf.getName(0));
+    data2->team(1).setName(conf.getName(1));
 
     QSettings s;
     bool usePokemonNames = s.value("use_pokemon_names").toBool();

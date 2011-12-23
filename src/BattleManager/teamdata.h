@@ -14,8 +14,6 @@ public:
     ShallowBattlePoke* poke(int slot);
     QString& name();
     QString name() const;
-    quint16& avatar();
-    quint16 avatar() const;
 
     void setPoke(int slot, const ShallowBattlePoke* poke);
     void setPoke(int slot, const PokeBattle* poke);
@@ -24,7 +22,6 @@ public:
 protected:
     std::vector< ShallowBattlePoke* > pokemons;
     QString mName;
-    quint16 mAvatar;
 };
 
 #endif // TEAMDATA_H

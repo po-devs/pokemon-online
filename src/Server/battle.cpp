@@ -19,13 +19,21 @@ typedef BattlePStorage BP;
 Q_DECLARE_METATYPE(QList<int>)
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
-    : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     //qDebug() <<"Created battlesituation " << this;
     publicId() = id;
     timer = NULL;
-    myid[0] = p1.id();
-    myid[1] = p2.id();
+    conf.avatar[0] = p1.avatar();
+    conf.avatar[1] = p2.avatar();
+    conf.setTeam(0, new TeamBattle(p1.team()));
+    conf.setTeam(1, new TeamBattle(p2.team()));
+    conf.ids[0] = p1.id();
+    conf.ids[2] = p2.id();
+    conf.teamOwnership = true;
+    conf.gen = std::max(p1.gen(), p2.gen());
+    conf.clauses = c.clauses;
+    conf.mode = c.mode;
+
     ratings[0] = p1.rating();
     ratings[1] = p2.rating();
     winMessage[0] = p1.winningMessage();
@@ -36,7 +44,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacker() = -1;
     selfKoer() = -1;
     drawer() = -1;
-    gen() = std::max(p1.gen(), p2.gen());
     applyingMoveStatMods = false;
     weather = 0;
     weatherCount = -1;
@@ -46,9 +53,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timeleft[1] = 5*60;
     timeStopped[0] = true;
     timeStopped[1] = true;
-    clauses() = c.clauses;
+
     rated() = c.rated;
-    mode() = c.mode;
 
     if (mode() == ChallengeInfo::Doubles) {
         numberOfSlots() = 4;
@@ -58,8 +64,9 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         numberOfSlots() = 2;
     }
 
-    if (p1.tier() == p2.tier())
+    if (p1.tier() == p2.tier()) {
         tier() = p1.tier();
+    }
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.addBattle(publicId());
@@ -262,9 +269,9 @@ void BattleSituation::engageBattle()
 
 int BattleSituation::spot(int id) const
 {
-    if (myid[0] == id) {
+    if (conf.ids[0] == id) {
         return 0;
-    } else if (myid[1] == id) {
+    } else if (conf.ids[1] == id) {
         return 1;
     } else {
         return -1;
@@ -364,7 +371,7 @@ int BattleSituation::id(int spot) const
     if (spot >= 2) {
         return spectators.value(spot).first;
     } else {
-        return myid[spot];
+        return conf.ids[spot];
     }
 }
 
@@ -397,20 +404,12 @@ int BattleSituation::randomValidOpponent(int slot) const
 
 TeamBattle &BattleSituation::team(int spot)
 {
-    if (spot == 0) {
-        return team1;
-    } else {
-        return team2;
-    }
+    return *conf.teams[spot];
 }
 
 const TeamBattle &BattleSituation::team(int spot) const
 {
-    if (spot == 0) {
-        return team1;
-    } else {
-        return team2;
-    }
+    return *conf.teams[spot];
 }
 
 const TeamBattle& BattleSituation::pubteam(int id)
@@ -4751,17 +4750,9 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     }
 }
 
-BattleConfiguration BattleSituation::configuration() const
+const BattleConfiguration &BattleSituation::configuration() const
 {
-    BattleConfiguration ret;
-
-    ret.ids[0] = id(0);
-    ret.ids[1] = id(1);
-    ret.gen = gen();
-    ret.mode = mode();
-    ret.clauses = clauses();
-
-    return ret;
+    return conf;
 }
 
 void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSend)
