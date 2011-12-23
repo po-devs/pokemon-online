@@ -1734,7 +1734,7 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 {
     /* On old servers battleid is always 0 so you don't want to forfeit that battle ... */
     if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
-        removeBattleWindow(battleid);
+        disableBattleWindow(battleid);
 
     foreach(Channel *c, mychannels) {
         c->battleEnded(battleid, res, winner, loser);
@@ -1766,6 +1766,15 @@ void Client::battleCommand(int battleid, const QByteArray &command)
         return;
 
     mybattles[battleid]->receiveInfo(command);
+}
+
+void Client::disableBattleWindow(int battleid)
+{
+    if (!mybattles.contains(battleid))
+        return;
+
+    BattleWindow *w = mybattles.take(battleid);
+    w->disable();
 }
 
 void Client::removeBattleWindow(int battleid)
