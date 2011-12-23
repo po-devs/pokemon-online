@@ -81,10 +81,11 @@ std::shared_ptr<T>* add_ptr_f (std::shared_ptr<T> &item) {return &item;}
 
 struct AbstractCommand {
     virtual void apply() = 0;
+    virtual int val() const = 0;
     virtual ~AbstractCommand(){}
 };
 
-template<class T, class enumC, enumC val, typename...Params>
+template<class T, class enumC, enumC Val, typename...Params>
 struct Command : public AbstractCommand
 {
     typedef std::tuple<typename remove_ptr<typename std::remove_reference<Params>::type>::type...> tupleType;
@@ -111,7 +112,11 @@ struct Command : public AbstractCommand
     }
 
     void apply_inn(typename remove_ptr_ref<Params>::type... params) {
-        m_assoc->template replayCommand<val>(params...);
+        m_assoc->template replayCommand<Val>(params...);
+    }
+
+    int val() const {
+        return Val;
     }
 
     tupleType m_tuple;

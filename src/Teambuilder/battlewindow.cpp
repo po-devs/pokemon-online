@@ -76,6 +76,9 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
         conf().receivingMode[1] = BattleConfiguration::Player;
         conf().receivingMode[0] = BattleConfiguration::Spectator;
     }
+    conf().avatar[0] = me.avatar;
+    conf().avatar[1] = opponent.avatar;
+    conf().name[info().opponent] = opponent.team.name;
 
     info().gen = conf().gen;
 
@@ -84,6 +87,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     QSettings s;
     saveLogs->setChecked(s.value("save_battle_logs").toBool());
     log->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
+    replay->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
 
     setWindowTitle(tr("Battling against %1").arg(name(info().opponent)));
 

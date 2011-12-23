@@ -6,6 +6,7 @@
 #include "remove_direction_override.h"
 #include "spectatorwindow.h"
 #include "../BattleManager/advancedbattledata.h"
+#include "../BattleManager/battleclientlog.h"
 #include "poketextedit.h"
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
@@ -27,22 +28,24 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
                                    int _ownid, Client *client) : ignoreSpecs(NoIgnore), _mclient(client)
 {
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
-
     init(me, opponent, conf, _ownid, client);
 }
 
-void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
+void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &_conf,
                             int _ownid, Client *client)
 {
     _mclient = client;
 
     ownid() = _ownid;
-    this->conf() = conf;
-    this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
-    myInfo = new BaseBattleInfo(me, opponent, conf.mode);
-    info().gen = conf.gen;
+    conf() = _conf;
+    conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
+    conf().avatar[0] = me.avatar;
+    conf().avatar[1] = opponent.avatar;
+    conf().name[0] = me.team.name;
+    conf().name[1] = me.team.name;
+
+    myInfo = new BaseBattleInfo(me, opponent, conf().mode);
+    info().gen = conf().gen;
 
     init();
     show();
@@ -51,8 +54,6 @@ void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, co
 BaseBattleWindow::BaseBattleWindow()
 {
     ignoreSpecs=NoIgnore;
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
 }
 
 void BaseBattleWindow::delay(qint64 msec)
@@ -80,7 +81,7 @@ void BaseBattleWindow::undelay()
 
 void BaseBattleWindow::init()
 {
-    test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
+    test = new SpectatorWindow(conf());
     test->setParent(this);
 
     /* The dynamic cast works if called from BaseBattleWindowIns */
@@ -106,8 +107,17 @@ void BaseBattleWindow::init()
     battleEnded = false;
     started() = false;
 
-    log = LogManager::obj()->createLog(BattleLog, tr("%1 vs %2").arg(data().name(0), data().name(1) + "--"));
+    QString title = tr("%1 vs %2").arg(data().name(0), data().name(1)) + "--";
+    log = LogManager::obj()->createLog(BattleLog, title);
     log->override = Log::OverrideNo; /* By default, no logging enabled */
+    replay = LogManager::obj()->createLog(ReplayLog, title);
+    replay->override = Log::OverrideNo;
+
+    replayData.data = "battle_logs_v1\n";
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << conf();
+    replayData.t.start();
 
     setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
@@ -181,7 +191,7 @@ void BaseBattleWindow::musicPlayStop()
     /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QSettings s;
     QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid",
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a",
                                             QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
     QStringList tmpSources;
@@ -270,13 +280,18 @@ QString BaseBattleWindow::name(int spot) const
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
+    replay->setBinary(replayData.data);
     if (saveLogs->isChecked()) {
         log->override = Log::OverrideYes;
+        replay->override = Log::OverrideYes;
     }
 
     log->close();
     log = NULL;
+    replay->close();
+    replay = NULL;
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -310,8 +325,10 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    /* At the start of the battle 700 ms are waited, to prevent misclicks
-       when wanting to do something else */
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << quint32(replayData.t.elapsed()) << inf;
+
     test->receiveData(inf);
 }
 
@@ -349,7 +366,7 @@ void BaseBattleWindow::onSendBack(int spot, bool)
     switchToNaught(spot);
 }
 
-void BaseBattleWindow::onUseAttack(int, int)
+void BaseBattleWindow::onUseAttack(int, int, bool)
 {
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
         qApp->alert(this, 0);

@@ -10,7 +10,13 @@ Log::Log(LogType type, const QString &title)
 {
     key.type = type;
     key.title = title + QDate::currentDate().toString("dd MMMM yyyy")
-                 + " at " + QTime::currentTime().toString("hh'h'mm") + ".html";
+                 + " at " + QTime::currentTime().toString("hh'h'mm");
+
+    if (type == ReplayLog) {
+        key.title += ".poreplay";
+    } else {
+        key.title += ".html";
+    }
 
     started = autolog = false;
     master = NULL;
@@ -40,11 +46,21 @@ void Log::flush()
     dir.cd(directory);
     QFile out (dir.absoluteFilePath(title()));
     out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
-    out.write(data.toUtf8());
+    out.write(isBinary() ? bdata : data.toUtf8());
 
     started = true;
     linecount = 0;
     data.clear();
+}
+
+void Log::setBinary(const QByteArray &bdata)
+{
+    this->bdata = bdata;
+}
+
+bool Log::isBinary() const
+{
+    return type() == ReplayLog;
 }
 
 void Log::pushHtml(const QString &html)
@@ -56,6 +72,13 @@ void Log::pushHtml(const QString &html)
 void Log::pushTxt(const QString &txt)
 {
     data += txt + "<br/>\n";
+    pushedData();
+}
+
+void Log::pushList(const QStringList &list)
+{
+    data += list.join("");
+    data += "\n";
     pushedData();
 }
 
@@ -93,11 +116,16 @@ LogManager::LogManager()
     flags = 0;
     QSettings s;
 
-    setDefaultValue(s, "battle_logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/Battles/");
+    setDefaultValue(s, "logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
     setDefaultValue(s, "save_battle_logs", false);
 
-    directories[BattleLog] = s.value("battle_logs_directory").toString();
-    flags |= (s.value("save_battle_logs").toBool() << BattleLog);
+    directory = s.value("logs_directory").toString();
+    flags |= (s.value("save_battle_logs").toBool() << (BattleLog|ReplayLog));
+
+    QDir d;
+    d.mkpath(getDirectory());
+    d.mkpath(getDirectoryForType(ReplayLog));
+    d.mkpath(getDirectoryForType(BattleLog));
 }
 
 bool LogManager::logsType(LogType type)
@@ -114,14 +142,12 @@ void LogManager::changeLogSaving(LogType type, bool save)
     flags &= (0XFFFF ^ (1 << type));
 }
 
-void LogManager::changeDirectoryForType(LogType type, const QString &directory)
+void LogManager::changeBaseDirectory(const QString &directory)
 {
-    directories[type] = directory;
+    this->directory = directory;
 
-    if (type == BattleLog) {
-        QSettings s;
-        s.setValue("battle_logs_directory", directory);
-    }
+    QSettings s;
+    s.setValue("logs_directory", directory);
 }
 
 Log * LogManager::createLog(LogType type, const QString &title, bool autolog)
@@ -171,7 +197,18 @@ void LogManager::logHtml(LogType type, const QString &title, const QString &html
     getOrCreateLog(type, title)->pushHtml(html);
 }
 
+QString LogManager::getDirectory() const
+{
+    return directory;
+}
+
 QString LogManager::getDirectoryForType(LogType type)
 {
-    return directories[type];
+    if (type == BattleLog) {
+        return directory + "Battle Logs/";
+    } else if (type == ReplayLog) {
+        return directory + "Battle Replays/";
+    } else {
+        return directory;
+    }
 }

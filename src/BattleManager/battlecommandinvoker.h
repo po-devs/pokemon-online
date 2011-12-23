@@ -66,7 +66,7 @@ protected:
 
     /* Todo: expand following macros */
     start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
-    start(UseAttack, onUseAttack, int spot, int attack) end(onUseAttack, spot, attack)
+    start(UseAttack, onUseAttack, int spot, int attack, bool silent) end(onUseAttack, spot, attack, silent)
     start(Turn, onBeginTurn, int turn) end(onBeginTurn, turn)
     start(NewHp, onHpChange, int spot, int newHp) end(onHpChange, spot, newHp)
     start(Hits, onHitCount, int spot, int count) end(onHitCount, spot, count)
@@ -81,7 +81,7 @@ protected:
     start(StatusFeel, onStatusNotification, int spot, int status) end(onStatusNotification, spot, status)
     start(StatusHurt, onStatusDamage, int spot, int status) end(onStatusDamage, spot, status)
     start(StatusFree, onStatusOver, int spot, int status) end(onStatusOver, spot, status)
-    start(Fail, onAttackFailing, int spot) end(onAttackFailing, spot)
+    start(Fail, onAttackFailing, int spot, bool silent) end(onAttackFailing, spot, silent)
     start(PlayerMessage, onPlayerMessage, int spot, string_ptr message) end(onPlayerMessage, spot, *message->get())
     start(SpectatorEnter, onSpectatorJoin, int id, string_ptr name) end(onSpectatorJoin, id, *name->get())
     start(SpectatorLeave, onSpectatorLeave, int id) end(onSpectatorLeave, id)
@@ -124,6 +124,7 @@ protected:
     start(ChoiceCanceled, onChoiceCanceled, int player) end (onChoiceCanceled, player)
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
+    start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
 
 #undef start
 #undef end
@@ -138,7 +139,7 @@ protected:
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool silent);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
     void onHitCount(int spot, int count);
@@ -153,7 +154,7 @@ protected:
     void onStatusNotification(int spot, int status);
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
-    void onAttackFailing(int spot);
+    void onAttackFailing(int spot, bool fail);
     void onPlayerMessage(int spot, const QString& message);
     void onSpectatorJoin(int id, const QString& name);
     void onSpectatorLeave(int id);
@@ -194,6 +195,7 @@ protected:
     void onChoiceCanceled(int player);
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
+    void onPrintHtml(const QString &html);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

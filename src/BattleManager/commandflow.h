@@ -14,10 +14,10 @@ public:
             wc()->template invoke<val, Params...>(params...);
         }
 
-        wc()->template output<val, Params...>(params...);
-
         if (wc()->template shouldStore<val, Params...>(params...)) {
             wc()->template store(wc()->template createCommand<val, Params...>(params...));
+        } else {
+            wc()->template output<val, Params...>(params...);
         }
     }
 

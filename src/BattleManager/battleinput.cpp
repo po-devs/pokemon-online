@@ -13,6 +13,22 @@ BattleInput::BattleInput(const BattleConfiguration *conf) {
 
 void BattleInput::receiveData(QByteArray inf)
 {
+    if (inf.isEmpty()) {
+        if (delayed()) {
+            delayedCommands.push_back(inf);
+            return;
+        }
+
+        /* An empty array means raw Command */
+        if (commands.size() > 0) {
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
+            return;
+        }
+    }
+
     if (delayed() && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
             && inf[0] != char(Spectating)) {
         delayedCommands.push_back(inf);
@@ -20,7 +36,7 @@ void BattleInput::receiveData(QByteArray inf)
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_6);
+    in.setVersion(QDataStream::Qt_4_7);
 
     uchar command;
     qint8 player;
@@ -35,15 +51,15 @@ bool BattleInput::delayed()
     return delayCount > 0;
 }
 
-void BattleInput::pause()
+void BattleInput::pause(int ticks)
 {
-    delayCount++;
+    delayCount+= ticks;
     qDebug() << "New delay (+): " << delayCount;
 }
 
-void BattleInput::unpause()
+void BattleInput::unpause(int ticks)
 {
-    delayCount--;
+    delayCount-=ticks;
     qDebug() << "New delay (-): " << delayCount;
     if (delayCount < 0) {
         delayCount = 0;
@@ -84,8 +100,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     case UseAttack:
     {
         qint16 attack;
-        in >> attack;
-        output<BattleEnum::UseAttack>(spot, attack);
+        bool silent;
+        in >> attack >> silent;
+        output<BattleEnum::UseAttack>(spot, attack, silent);
         break;
     }
     case BeginTurn:
@@ -205,7 +222,9 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
     }
     case Failed:
     {
-        output<BattleEnum::Fail>(spot);
+        bool silent;
+        in >> silent;
+        output<BattleEnum::Fail>(spot, silent);
         break;
     }
     case BattleChat:

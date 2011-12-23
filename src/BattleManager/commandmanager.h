@@ -2,6 +2,7 @@
 #define COMMANDMANAGER_H
 
 #include <functional>
+#include <list>
 #include <vector>
 
 #include "command.h"
@@ -67,17 +68,16 @@ public:
     /* Reimplement this for the base input class,
       and everything in the chain can be stopped.
 
-      More fine grain control would be achieved by
-      completing the Command structure usage */
-    virtual void pause() {
+      More fine grain control can be achieved with the Command structure */
+    virtual void pause(int ticks=1) {
         if (m_input) {
-            m_input->pause();
+            m_input->pause(ticks);
         }
     }
 
-    virtual void unpause() {
+    virtual void unpause(int ticks=1) {
         if (m_input) {
-            m_input->unpause();
+            m_input->unpause(ticks);
         }
     }
 
@@ -165,15 +165,10 @@ public:
 
         int size = commands.size();
         for(int i = 0; i < size; i++) {
-            commands[i]->apply();
-            delete commands[i];
-        }
-
-        /* The size could have been changed by replayed commands */
-        if (unsigned(size) == commands.size()) {
-            commands.clear();
-        } else {
-            commands.erase(commands.begin(), commands.begin()+size);
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
         }
 
         misReplayingCommands = false;
@@ -188,7 +183,7 @@ public:
     }
 
 protected:
-    std::vector<AbstractCommand *> commands;
+    std::list<AbstractCommand *> commands;
     bool misReplayingCommands;
     /* TODO: Fix this */
 //    enum {

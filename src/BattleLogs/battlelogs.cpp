@@ -107,12 +107,6 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
 
     if (text) {
         conf = b->configuration();
-        conf.receivingMode[0] = conf.receivingMode[1] = BattleConfiguration::Player;
-        conf.teams[0] = &b->team(0);
-        conf.teams[1] = &b->team(1);
-
-        //log->data()->reloadTeam(0);
-        //log->data()->reloadTeam(1);
 
         input = new BattleInput(&conf);
         data = new battledata_basic(&conf);
@@ -122,12 +116,18 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
     }
 
     started = false;
-    commands.setVersion(QDataStream::Qt_4_5);
+    commands.setVersion(QDataStream::Qt_4_7);
     t.start();
 }
 
 BattleLogsPlugin::~BattleLogsPlugin()
 {
+    if (input) {
+        input->deleteTree();
+    }
+
+    delete input;
+
     if (!started)
         return;
 
@@ -143,10 +143,17 @@ BattleLogsPlugin::~BattleLogsPlugin()
 
     if (raw) {
         QFile out;
-        out.setFileName(QString("logs/battles/%1/%2-%3-%4.raw").arg(date, time, id0, id1));
+        out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
         out.open(QIODevice::WriteOnly);
-        out.write("battle_logs_v0 0\n");
-        out.write(teams);
+        out.write("battle_logs_v1\n");
+
+        /* Writing configuration */
+        QDataStream outd(&out);
+        outd.setVersion(QDataStream::Qt_4_7);
+        conf.teams[0] = &team1;
+        conf.teams[1] = &team2;
+        outd << conf;
+
         out.write(toSend);
         out.close();
     }
@@ -157,12 +164,6 @@ BattleLogsPlugin::~BattleLogsPlugin()
         out.open(QIODevice::WriteOnly);
         out.write(log->getLog().join("").toUtf8());
         out.close();
-
-        if (input) {
-            input->deleteTree();
-        }
-
-        delete input;
     }
 }
 
@@ -179,19 +180,8 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
     if (raw) {
-        QDataStream dteams(&teams, QIODevice::WriteOnly);
-
-        QByteArray team1;
-        QDataStream d1(&team1, QIODevice::WriteOnly);
-        d1.setVersion(QDataStream::Qt_4_5);
-        d1 << b.team(0);
-        dteams << team1;
-
-        QByteArray team2;
-        QDataStream d2(&team2, QIODevice::WriteOnly);
-        d2.setVersion(QDataStream::Qt_4_5);
-        d2 << b.team(1);
-        dteams << team2;
+        team1 = b.team(0);
+        team2 = b.team(1);
     }
 
     //team may have been reordered with wifi clause?

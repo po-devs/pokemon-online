@@ -12,12 +12,12 @@ class BattleClientLog : public QObject, public BattleCommandManager<BattleClient
 {
     Q_OBJECT
 public:
-    BattleClientLog(BattleData<DataContainer> *data, BattleDefaultTheme *theme);
+    BattleClientLog(BattleData<DataContainer> *data, BattleDefaultTheme *theme, bool logNames=true);
 
     void onKo(int spot);
     void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool silent);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
     void onHitCount(int spot, int count);
@@ -32,7 +32,7 @@ public:
     void onStatusNotification(int spot, int status);
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
-    void onAttackFailing(int spot);
+    void onAttackFailing(int spot, bool silent);
     void onPlayerMessage(int spot, const QString &message);
     void onSpectatorJoin(int id, const QString &name);
     void onSpectatorLeave(int id);
@@ -66,6 +66,7 @@ public:
     void onBattleEnd(int res, int winner);
     void onVariation(int player, int bonus, int malus);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onPrintHtml(const QString &data);
 
     QString nick(int spot);
     QString rnick(int spot);
@@ -93,6 +94,7 @@ protected:
     bool hasLoggedTeams;
     QHash<int, QString> spectators;
     bool blankMessage;
+    bool mLogNames;
 };
 
 #endif // BATTLECLIENTLOG_H

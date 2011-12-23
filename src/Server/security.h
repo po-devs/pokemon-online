@@ -23,6 +23,7 @@ public:
     };
 
     static void init();
+    static void destroy();
 
     /* A member as stored in the file */
     struct Member {
@@ -130,7 +131,7 @@ private:
 
     static const int loadThreadCount=2;
     static int nextLoadThreadNumber;
-    static LoadThread *threads;
+    static LoadThread **threads;
     static InsertThread<Member> *ithread;
 
     static LoadThread * getThread();

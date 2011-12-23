@@ -153,7 +153,7 @@ void Analyzer::notify(int command, const T& param)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << param;
 
@@ -165,7 +165,7 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2)
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << param1 << param2;
 
@@ -177,7 +177,7 @@ void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 
 {
     QByteArray tosend;
     QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
+    out.setVersion(QDataStream::Qt_4_7);
 
     out << uchar(command) << param1 << param2 << param3;
 
