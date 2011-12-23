@@ -13,6 +13,9 @@
 #include "battlepluginstruct.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
+#include "../Shared/battlecommands.h"
+
+using BattleCommands;
 
 typedef BattlePStorage BP;
 
