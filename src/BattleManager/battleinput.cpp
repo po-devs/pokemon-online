@@ -36,7 +36,7 @@ void BattleInput::receiveData(QByteArray inf)
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_5);
+    in.setVersion(QDataStream::Qt_4_7);
 
     uchar command;
     qint8 player;
