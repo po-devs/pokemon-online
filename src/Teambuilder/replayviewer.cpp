@@ -31,7 +31,7 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
     }
 
     QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_5);
+    stream.setVersion(QDataStream::Qt_4_7);
 
     stream >> conf;
 
@@ -54,7 +54,7 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 void ReplayViewer::read()
 {
     QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_5);
+    stream.setVersion(QDataStream::Qt_4_7);
 
     if (nextRead == quint32(-1)) {
         stream >> nextRead;
