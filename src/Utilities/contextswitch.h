@@ -104,6 +104,8 @@ public:
     ContextSwitcher();
     ~ContextSwitcher();
 
+    void finish();
+
     /* Starts the main loop. */
     void run();
 
@@ -123,6 +125,7 @@ private:
     ContextCallee *context_to_delete;
 
     QList<pair> scheduled;
+    bool finished;
 
     void create_context(coro_context *c, coro_func function=NULL, void *param=NULL, void *stack=NULL, long stacksize=0);
     void switch_context(ContextCallee *new_context);

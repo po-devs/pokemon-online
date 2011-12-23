@@ -2,23 +2,31 @@
 
 QMutex ContextSwitcher::guardian;
 
-ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NULL)
+ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NULL), finished(false)
 {
     create_context(&main_context);
+    connect(this, SIGNAL(finished()), SLOT(deleteLater()));
 }
 
 ContextSwitcher::~ContextSwitcher()
 {
     qDebug() << "Deleting a context switcher ";
     /* Normally, all contexts should have disappeared before though */
-    foreach (ContextCallee *x, contexts) {
-        delete x;
-    }
-    contexts.clear();
+    finish();
 
     //to suppress "no effect" warning
     (void) coro_destroy(&main_context);
     qDebug() << "End Deleting a context switcher ";
+}
+
+void ContextSwitcher::finish()
+{
+    foreach(ContextCallee *context, contexts) {
+        terminate(context);
+    }
+    contexts.clear();
+    finished = true;
+    streamController.release(1);
 }
 
 void ContextSwitcher::run()
@@ -32,6 +40,10 @@ void ContextSwitcher::run()
         }
 
         streamController.acquire(1);
+
+        if (finished) {
+            return;
+        }
 
         ownGuardian.lock();
 

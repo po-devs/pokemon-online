@@ -9,6 +9,11 @@ void TierMachine::init()
     inst = new TierMachine();
 }
 
+void TierMachine::destroy()
+{
+    delete inst, inst = NULL;
+}
+
 TierMachine::TierMachine()
 {
     /* Allows up to 1000 request at a time! */
@@ -18,11 +23,12 @@ TierMachine::TierMachine()
 
     loadDecaySettings();
 
-    threads = new LoadThread[loadThreadCount];
+    threads = new LoadThread*[loadThreadCount];
 
     for (int i = 0; i < loadThreadCount; i++) {
-        connect(&threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
-        threads[i].start();
+        threads[i] = new LoadThread();
+        connect(threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
+        threads[i]->start();
     }
 
     nextLoadThreadNumber = 0;
@@ -33,6 +39,15 @@ TierMachine::TierMachine()
     ithread->start();
 
     load();
+}
+
+TierMachine::~TierMachine()
+{
+    ithread->finish();
+    for (int i = 0; i < loadThreadCount; i++) {
+        threads[i]->finish();
+    }
+    delete [] threads;
 }
 
 void TierMachine::loadDecaySettings()
@@ -303,7 +318,7 @@ LoadThread *TierMachine::getThread()
     /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
     int n = nextLoadThreadNumber % loadThreadCount;
     nextLoadThreadNumber = (n + 1) % loadThreadCount;
-    return threads + n;
+    return threads[n];
 }
 
 TierTree *TierMachine::getDataTree() const

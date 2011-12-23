@@ -18,6 +18,7 @@ void TierCategory::cleanCategories()
     foreach(TierCategory *c, firstLevelCategories()) {
         if (c->subNodes.empty()) {
             subNodes.removeOne(c);
+            delete c;
         }
     }
 }
