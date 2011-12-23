@@ -103,6 +103,8 @@ public:
     void sendChoice(const BattleChoice &b);
 
     int ownSlot() const;
+
+    void disable();
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);

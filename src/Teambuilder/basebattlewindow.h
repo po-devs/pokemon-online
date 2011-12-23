@@ -102,6 +102,7 @@ public:
     bool musicPlayed() const;
     bool flashWhenMoved() const;
     void close();
+    virtual void disable();
 
 public slots:
     void receiveInfo(QByteArray);
