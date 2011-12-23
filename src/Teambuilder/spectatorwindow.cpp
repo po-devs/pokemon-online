@@ -68,6 +68,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
         input->addOutput(log);
         input->addOutput(data2);
         input->addOutput(battle);
+        battle->deletable = false;
 
         connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
