@@ -2,6 +2,7 @@
 #include "client.h"
 #include "poketextedit.h"
 #include "remove_direction_override.h"
+#include "theme.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
@@ -14,6 +15,10 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     mymainchat->setObjectName("MainChat");
     mymainchat->setOpenExternalLinks(false);
+    
+    QFile stylesheet(Theme::path("mainchat.css"));
+    stylesheet.open(QIODevice::ReadOnly);
+    mymainchat->document()->setDefaultStyleSheet(stylesheet.readAll());
     connect(mymainchat, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
 
     myplayers->setColumnCount(2);
@@ -531,20 +536,26 @@ QString Channel::addChannelLinks(const QString &line2)
     /* scan for channel links */
     int pos = 0;
     pos = line.indexOf('#', pos);
+    QString longest_match;
     while(pos != -1)
     {
         ++pos;
+        QString longestName;
+        QString longestChannelName;
         foreach(QString name, client->channelNames)
         {
             QString channelName = line.midRef(pos, name.length()).toString();
             bool res=channelName.toLower() == name.toLower();
-            if(res)
-            {
-                QString html = QString("<a href=\"po:join/%1\">#%2</a>").arg(name, channelName);
-                line.replace(pos-1, name.length()+1, html);
-                pos += html.length()-1;
-                break;
+            if(res && longestName.size() < channelName.size()) {
+                longestName = name;
+                longestChannelName = channelName;
             }
+        }
+        if(!longestName.isNull())
+        {
+            QString html = QString("<a href=\"po:join/%1\">#%2</a>").arg(longestName, longestChannelName);
+            line.replace(pos-1, longestName.length()+1, html);
+            pos += html.length()-1;
         }
         pos = line.indexOf('#', pos);
     }
@@ -575,10 +586,14 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
         return;
     }
 
+    if (act) {
+        emit activated(this);
+     }
+
     if (line.leftRef(3) == "***") {
         if (flashing)
             checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-        mainChat()->insertHtml("<span style='color:magenta'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
+        mainChat()->insertHtml("<span class='line action'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
         return;
     }
 
@@ -600,69 +615,51 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
 
         end = addChannelLinks(end);
 
-        if (end.contains(QRegExp(QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive))) { // Make some lines italics if your name is mentioned in line
+        const QRegExp nameNotInsideTag(QString("\\b(%1)\\b(?![^\\s<]*>)").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive);
+        const QString addHilightClass("<span class='name-hilight'>\\1</span>");
+        QString lineClass = "line";
 
-            if (beg == "~~Server~~") {
-                end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
-                mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
-            } else if (beg == "Welcome Message") {
-                mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
-            } else if (id == -1) {
-                mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "<br />");
-            } else {
-
-                if (client->isIgnored(id))
-                    return;
-
-                QColor color = client->color(id);
-
-                if (id == ownId() && client->auth(id) > 0 && client->auth(id) <= 3) {
-                    mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + end + "<br />");
-                } else if (id == ownId()) {
-                    mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
-                } else if (client->auth(id) > 0 && client->auth(id) <= 3) {
-                    end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
-                    mainChat()->insertHtml("<i><span style='color:" + color.name() + ";font-weight:bold'>" + timeStr + "+" + escapeHtml(beg) + ":</span><strong>" + end + "</strong></i><br />");
-                } else {
-                    end = end.replace(QRegExp(QString("\\b(%1)\\b").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive), "<span style='background-color:#FCD116'>\\1</span>");
-                    mainChat()->insertHtml("<i><span style='color:" + color.name() + ";font-weight:bold'>" + timeStr + escapeHtml(beg) + ":</span><strong>" + end + "</strong></i><br />");
-                }
-            }
+        if (id != ownId() && end.contains(nameNotInsideTag)) { // Add stuff if we are to be flashed
+            lineClass = "line line-hilight";
         }
+ 
+        /* Add HTML to timeStr */
+        timeStr = "<span class='timestamp'>" + timeStr + "</span>";
 
-        else {
+        QString nameClass = "name";
+        if (id != -1)
+            nameClass = "name name-auth-" + QString::number(client->auth(id));
 
         if (beg == "~~Server~~") {
-            mainChat()->insertHtml("<span style='color:orange'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
+            end = end.replace(nameNotInsideTag, addHilightClass);
+            mainChat()->insertHtml("<span class='line server-message'><span class='server-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
         } else if (beg == "Welcome Message") {
-            mainChat()->insertHtml("<span style='color:blue'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "<br />");
+            mainChat()->insertHtml("<span class='line welcome-message'><span class='welcome-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
         } else if (id == -1) {
-            mainChat()->insertHtml("<span style='color:#3daa68'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "<br />");
+            mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
         } else {
+
             if (client->isIgnored(id))
                 return;
+
+            // If it is not our message, hilight our name if mentioned
+            if (id != ownId())
+                end = end.replace(nameNotInsideTag, addHilightClass);
+
+            // Todo: maybe pull auth symbol from theme for all auth levels?
+            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : ""; 
+
             QColor color = client->color(id);
 
-            if (client->auth(id) > 0 && client->auth(id) <= 3) {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "+<i><b>" + escapeHtml(beg) + ":</b></i></span>" + end + "<br />");
-            }
-            else if (id == ownId()) {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
-            } else {
-                mainChat()->insertHtml("<span style='color:" + color.name() + "'>" + timeStr + "<b>" + escapeHtml(beg) + ":</b></span>" + end + "<br />");
-            }
+            mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");
         }
-        if (act) {
-            emit activated(this);
-        }
-        }
-    }
-     else {
+        
+    } else {
         if (flashing) {
-        checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        }
+        mainChat()->insertPlainText( timeStr + line + "\n");
     }
-    mainChat()->insertPlainText( timeStr + line + "\n");
-}
 }
 
 
