@@ -235,8 +235,6 @@ void BattleWindow::clickClose()
 
 void BattleWindow::forfeit() {
     emit forfeit(battleId());
-    if (battleEnded)
-        close();
 }
 
 void BattleWindow::nullQuestion() {
@@ -421,6 +419,8 @@ void BattleWindow::disable()
     myswitch->setEnabled(false); 
     mycancel->setEnabled(false); 
     disableAll();
+    disconnect(myclose);
+    connect(myclose, SIGNAL(clicked()), this, SLOT(deleteLater()));
     BaseBattleWindow::disable();
 }
 
