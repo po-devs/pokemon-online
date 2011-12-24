@@ -297,6 +297,10 @@ void RegularBattleScene::onUseAttack(int spot, int attack, bool) {
 void RegularBattleScene::onPokeballStatusChanged(int player, int poke, int)
 {
     updateBallStatus(player, poke);
+
+    if (poke < data()->numberOfSlots()/2) {
+        updatePoke(data()->spot(player, poke));
+    }
 }
 
 void RegularBattleScene::onHpChange(int spot, int)
