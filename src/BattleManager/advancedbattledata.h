@@ -58,6 +58,16 @@ public:
         }
     }
 
+    void onPokeballStatusChanged(int player, int poke, int status)
+    {
+        if (status != Pokemon::Confused) {
+            team(player).poke(poke)->changeStatus(status);
+            if (isPlayer(player) && slotNum(poke) < numberOfSlots()/2) {
+                tempPoke(spot(player, poke)).changeStatus(status);
+            }
+        }
+    }
+
     void onStatBoost(int spot, int stat, int boost, bool silent) {
         (void) silent;
         fieldPoke(spot).boostStat(stat, boost);
