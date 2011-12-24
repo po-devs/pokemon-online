@@ -1070,8 +1070,8 @@ void BattleSituation::endTurnStatus(int player)
             return;
 
         notify(All, StatusMessage, player, qint8(HurtBurn));
-        //HeatProof: burn does only 1/16
-        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+hasWorkingAbility(player,Ability::Heatproof))), player);
+        //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
+        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen() == 1))), player);
         break;
     case Pokemon::Poisoned:
         //PoisonHeal
@@ -1088,7 +1088,7 @@ void BattleSituation::endTurnStatus(int player)
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (poke(player).statusCount() == 0)
-                inflictDamage(player, poke(player).totalLifePoints()/8, player);
+                inflictDamage(player, poke(player).totalLifePoints()/ (gen() == 1 ? 16 : 8), player); // 1/16 in gen 1
             else {
                 inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
                 poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
