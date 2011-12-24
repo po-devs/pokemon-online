@@ -320,11 +320,13 @@ void PokePersonal::setDV(int stat, quint8 val)
         m_DVs[stat] = val;
     }
 
-    if (gen() == 2) {
+    if (gen() <= 2) {
         controlHPDV();
-        controlShininess();
-        if (stat == Attack)
-            controlGender();
+        if (gen() == 2) {
+            controlShininess();
+            if (stat == Attack)
+                controlGender();
+        }
     }
 }
 

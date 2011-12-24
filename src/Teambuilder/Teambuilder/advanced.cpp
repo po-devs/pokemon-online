@@ -315,8 +315,10 @@ void TB_Advanced::changeDV(int stat, int newval)
 
         if (gen() <= 2) {
             updateDV(Hp);
-            changeShininess(poke()->shiny());
-            changeGender(poke()->gender());
+            if (gen() == 2) {
+                changeShininess(poke()->shiny());
+                changeGender(poke()->gender());
+            }
         }
 
         updateHiddenPower();
