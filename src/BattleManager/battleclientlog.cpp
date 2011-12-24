@@ -201,7 +201,7 @@ void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
                                                        boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
 
-void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns)
+void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent)
 {
     static const QString statusChangeMessages[6] = {
         tr("%1 is paralyzed! It may be unable to move!"),
@@ -212,11 +212,13 @@ void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTur
         tr("%1 was badly poisoned!")
     };
 
-    if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
-        printHtml("StatusChange", toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
-                                          theme()->StatusColor(status)));
-    } else if (status == Pokemon::Confused) {
-        printHtml("StatusChange", toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+    if (!silent) {
+        if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
+            printHtml("StatusChange", toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
+                                              theme()->StatusColor(status)));
+        } else if (status == Pokemon::Confused) {
+            printHtml("StatusChange", toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+        }
     }
     printSilent(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)));
 }

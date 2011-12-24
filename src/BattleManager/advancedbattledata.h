@@ -47,23 +47,13 @@ public:
         }
     }
 
-    void onMajorStatusChange(int spot, int status, bool)
+    void onMajorStatusChange(int spot, int status, bool, bool)
     {
         //TODO: handle confusion better
         if (status != Pokemon::Confused) {
             tempPoke(spot).changeStatus(status);
             if (isPlayer(spot)) {
                 poke(spot).changeStatus(status);
-            }
-        }
-    }
-
-    void onPokeballStatusChanged(int player, int poke, int status)
-    {
-        if (status != Pokemon::Confused) {
-            team(player).poke(poke)->changeStatus(status);
-            if (isPlayer(player) && slotNum(poke) < numberOfSlots()/2) {
-                tempPoke(spot(player, poke)).changeStatus(status);
             }
         }
     }
