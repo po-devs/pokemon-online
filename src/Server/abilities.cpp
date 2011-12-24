@@ -3,6 +3,7 @@
 #include "moves.h" //For magic mirror.
 #include "../PokemonInfo/pokemoninfo.h"
 #include "miscabilities.h"
+#include "../Shared/battlecommands.h"
 
 QHash<int, AbilityMechanics> AbilityEffect::mechanics;
 QHash<int, QString> AbilityEffect::names;
@@ -1662,7 +1663,7 @@ struct AMIllusion : public AM {
             return;
         poke(b,s).remove("IllusionTarget");
         /* Bad!! But this is such a peculiar ability, I'll allow this. */
-        b.notify(BS::All, BS::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(s, b.player(s), b.slotNum(s)));
+        b.notify(BS::All, BattleCommands::SendOut, s, true, quint8(b.slotNum(s)), b.opoke(s, b.player(s), b.slotNum(s)));
     }
 };
 
