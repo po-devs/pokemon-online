@@ -230,6 +230,11 @@ ProxyDataContainer * RegularBattleScene::getDataProxy()
 void RegularBattleScene::animateHpBar()
 {
     int spot = info.animatedSpot;
+
+    if (spot == -1) {
+        return;
+    }
+
     int current = info.animatedValue;
 
     const int goal = data()->poke(spot).life();
