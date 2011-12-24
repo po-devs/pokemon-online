@@ -29,8 +29,9 @@ protected:
     QImageButton *challenge_b;
     QCheckBox *clauses[ChallengeInfo::numberOfClauses];
     QComboBox *battleMode;
-private:
+
     int myid;
+private:
 
     bool emitOnClose;
 };
