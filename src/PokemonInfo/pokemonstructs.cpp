@@ -121,18 +121,12 @@ void PokeGeneral::loadGenderAvail()
     m_genderAvail = PokemonInfo::Gender(num());
 }
 
-void PokeGeneral::loadStats()
-{
-    m_stats = PokemonInfo::BaseStats(num());
-}
-
 void PokeGeneral::load()
 {
     loadMoves();
     loadTypes();
     loadAbilities();
     loadGenderAvail();
-    loadStats();
 }
 
 const QSet<int> &PokeGeneral::moves() const
@@ -159,12 +153,6 @@ int PokeGeneral::type2() const
 {
     return m_types[1];
 }
-
-const PokeBaseStats & PokeGeneral::stats() const
-{
-    return m_stats;
-}
-
 
 PokePersonal::PokePersonal()
 {
