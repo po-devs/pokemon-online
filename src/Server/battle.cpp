@@ -15,7 +15,7 @@
 #include "battlecounterindex.h"
 #include "../Shared/battlecommands.h"
 
-using BattleCommands;
+using namespace BattleCommands;
 
 typedef BattlePStorage BP;
 
