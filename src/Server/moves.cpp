@@ -420,7 +420,10 @@ struct MMLeechSeed : public MM
         if (b.koed(s2))
             return;
 
-        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / (gen() == 1 ? 16 : 8), 1));
+        /* In RBY and stadium 1, toxic count increases also leech seed count */
+        int numerator = b.poke(s).status() == Pokemon::Poisoned && b.poke(s).statusCount() > 0 && b.gen() == 1 ? 15-b.poke(s).statusCount() : 1;
+        int denumerator = b.gen() == 1 ? 16 : 8;
+        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() * numerator / denumerator, 1));
 
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
         b.inflictDamage(s, damage, s, false);
