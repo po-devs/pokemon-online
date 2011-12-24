@@ -465,9 +465,11 @@ struct BattleConfiguration
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;
-    ReceivingMode receivingMode[2];
+    quint8 receivingMode[2];
+    quint16 avatar[2];
 
-    const TeamBattle *teams[2];
+    TeamBattle *teams[2];
+    bool teamOwnership;
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;
@@ -476,6 +478,33 @@ struct BattleConfiguration
     int spot(int id) const {
         return ids[0] == id ? 0 : 1;
     }
+
+    bool isPlayer(int slot) const {
+        return receivingMode[slot] == Player;
+    }
+
+    void setTeam(int i, TeamBattle *team) {
+        teams[i] = team;
+        receivingMode[i] = Player;
+    }
+
+    int numberOfSlots() const {
+        if (mode == ChallengeInfo::Doubles) {
+            return 4;
+        } else if (mode == ChallengeInfo::Triples) {
+            return 6;
+        } else {
+            return 2;
+        }
+    }
+
+    BattleConfiguration() {
+        teamOwnership = false;
+        receivingMode[0] = receivingMode[1] = Spectator;
+    }
+
+    explicit BattleConfiguration(const BattleConfiguration &other);
+    ~BattleConfiguration();
 };
 
 inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
@@ -491,6 +520,20 @@ inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c
 
     return out;
 }
+
+struct FullBattleConfiguration : public BattleConfiguration
+{
+    QString name[2];
+
+    const QString getName(int player) const {return receivingMode[player] == Spectator ? name[player] : teams[player]->name;}
+
+    FullBattleConfiguration& operator = (const BattleConfiguration& conf) {
+        return * (FullBattleConfiguration*)(& (this->BattleConfiguration::operator = (conf)));
+    }
+};
+
+QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c);
+QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c);
 
 struct BattleDynamicInfo
 {

@@ -1,8 +1,11 @@
+#include "battleserverlog.h"
 #include "battlelogs.h"
 #include <QtGui>
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battleclientlog.h"
 #include "../BattleManager/battledatatypes.h"
+#include "../Shared/battlecommands.h"
+
 
 ServerPlugin * createPluginClass(ServerInterface*) {
     return new BattleLogs();
@@ -35,7 +38,7 @@ BattlePlugin* BattleLogs::getBattlePlugin(BattleInterface* b)
             return NULL;
     }
 
-    return new BattleLogsPlugin(saveRawFiles, saveTextFiles);
+    return new BattleLogsPlugin(b, saveRawFiles, saveTextFiles);
 }
 
 bool BattleLogs::hasConfigurationWidget () const
@@ -100,16 +103,33 @@ void BattleLogsWidget::done()
 /************************/
 /************************/
 
-BattleLogsPlugin::BattleLogsPlugin(bool raw, bool plain) : commands(&toSend, QIODevice::WriteOnly), raw(raw), text(plain)
+BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : commands(&toSend, QIODevice::WriteOnly), raw(raw), text(plain)
 {
-    started = false;
     input = NULL;
-    commands.setVersion(QDataStream::Qt_4_5);
+
+    if (text) {
+        conf = b->configuration();
+
+        input = new BattleInput(&conf);
+        data = new battledata_basic(&conf);
+        log = new BattleServerLog(data, &theme);
+        input->addOutput(data);
+        input->addOutput(log);
+    }
+
+    started = false;
+    commands.setVersion(QDataStream::Qt_4_7);
     t.start();
 }
 
 BattleLogsPlugin::~BattleLogsPlugin()
 {
+    if (input) {
+        input->deleteTree();
+    }
+
+    delete input;
+
     if (!started)
         return;
 
@@ -125,10 +145,17 @@ BattleLogsPlugin::~BattleLogsPlugin()
 
     if (raw) {
         QFile out;
-        out.setFileName(QString("logs/battles/%1/%2-%3-%4.raw").arg(date, time, id0, id1));
+        out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
         out.open(QIODevice::WriteOnly);
-        out.write("battle_logs_v0 0\n");
-        out.write(teams);
+        out.write("battle_logs_v1\n");
+
+        /* Writing configuration */
+        QDataStream outd(&out);
+        outd.setVersion(QDataStream::Qt_4_7);
+        conf.teams[0] = &team1;
+        conf.teams[1] = &team2;
+        outd << conf;
+
         out.write(toSend);
         out.close();
     }
@@ -139,12 +166,6 @@ BattleLogsPlugin::~BattleLogsPlugin()
         out.open(QIODevice::WriteOnly);
         out.write(log->getLog().join("").toUtf8());
         out.close();
-
-        if (input) {
-            input->deleteTree();
-        }
-
-        delete input;
     }
 }
 
@@ -161,32 +182,14 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
     if (raw) {
-        QDataStream dteams(&teams, QIODevice::WriteOnly);
-
-        QByteArray team1;
-        QDataStream d1(&team1, QIODevice::WriteOnly);
-        d1.setVersion(QDataStream::Qt_4_5);
-        d1 << b.team(0);
-        dteams << team1;
-
-        QByteArray team2;
-        QDataStream d2(&team2, QIODevice::WriteOnly);
-        d2.setVersion(QDataStream::Qt_4_5);
-        d2 << b.team(1);
-        dteams << team2;
+        team1 = b.team(0);
+        team2 = b.team(1);
     }
 
+    //team may have been reordered with wifi clause?
     if (text) {
-        conf = b.configuration();
-        conf.receivingMode[0] = conf.receivingMode[1] = BattleConfiguration::Player;
-        conf.teams[0] = &b.team(0);
-        conf.teams[1] = &b.team(1);
-
-        input = new BattleInput(&conf);
-        battledata_basic *data = new battledata_basic(&conf);
-        log = new BattleClientLog(data, &theme);
-        input->addOutput(data);
-        input->addOutput(log);
+        data->reloadTeam(0);
+        data->reloadTeam(1);
     }
 
     id1 = b.id(0);
@@ -199,7 +202,7 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
 int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
 {
     /* Those, are not logged */
-    if (char(b[0]) == BattleInterface::CancelMove || char(b[0]) == BattleInterface::OfferChoice || char(b[0]) == BattleInterface::RearrangeTeam)
+    if (char(b[0]) == BattleCommands::CancelMove || char(b[0]) == BattleCommands::OfferChoice || char(b[0]) == BattleCommands::RearrangeTeam)
         return 0;
 
     if (players != BattleInterface::AllButPlayer) {
@@ -207,9 +210,7 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
             commands << qint32(t.elapsed()) << b;
         }
         if (text) {
-            if (started) {
-                input->receiveData(b);
-            }
+            input->receiveData(b);
         }
     }
 

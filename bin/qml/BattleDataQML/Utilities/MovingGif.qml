@@ -25,6 +25,7 @@ AnimatedImage {
 
     x: _curve.x(percent);
     y: _curve.y(percent);
+    z: _curve.z(percent);
 
     SequentialAnimation {
         id: anim
@@ -35,7 +36,7 @@ AnimatedImage {
     }
 
     onCurrentFrameChanged: {
-        if (currentFrame== frameCount-1) {
+        if (currentFrame === frameCount-1) {
             paused = true;
         }
     }

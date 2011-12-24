@@ -24,6 +24,8 @@ TB_TrainerBody::TB_TrainerBody(TrainerTeam *team) : m_team(team)
     /* Avatar Selection */
     col1->addWidget(m_avatarSelection = new QSpinBox(), 5, Qt::AlignTop);
     m_avatarSelection->setRange(1,263);
+    m_avatarSelection->setAccessibleName(tr("Avatar selector", "TB accessible name"));
+    m_avatarSelection->setAccessibleDescription(tr("In this field you can select your avatar by its number.", "TB accessible description"));
 
     //////////////// Second Column ///////////////////
     QVBoxLayout *col2 = new QVBoxLayout();
@@ -33,6 +35,7 @@ TB_TrainerBody::TB_TrainerBody(TrainerTeam *team) : m_team(team)
     col2->addWidget(new TitledWidget(tr("Trainer &Name"),m_nick = new QLineEdit()));
     m_nick->setMaximumWidth(150);
     m_nick->setValidator(new QNickValidator(m_nick));
+    m_nick->setAccessibleName(tr("Trainer name", "TB accessible name"));
 
     QHBoxLayout *colorTier = new QHBoxLayout();
     colorTier->setMargin(0);
@@ -45,13 +48,17 @@ TB_TrainerBody::TB_TrainerBody(TrainerTeam *team) : m_team(team)
     m_colorButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     colorTier->addWidget(new TitledWidget(tr("Team Tier"), m_tier = new QLineEdit()));
     m_tier->setText(trainerTeam()->defaultTier());
+    m_tier->setAccessibleName(tr("Team tier", "TB accessible name"));
 
     /* Trainer information */
     col2->addWidget(new TitledWidget(tr("Trainer I&nformation"), m_trainerInfo = new QPlainTextEdit()));
+    m_trainerInfo->setAccessibleName(tr("Trainer information", "TB accessible name"));
 
     /* Trainer win, lose message */
     col2->addWidget(new TitledWidget(tr("&Winning Message"), m_winMessage = new QPlainTextEdit()));
+    m_winMessage->setAccessibleName(tr("Winning message", "TB accessible name"));
     col2->addWidget(new TitledWidget(tr("L&osing Message"), m_loseMessage = new QPlainTextEdit()));
+    m_loseMessage->setAccessibleName(tr("Losing message", "TB accessible name"));
 
     //////////////// Third  Column ///////////////////
     QVBoxLayout *col3 = new QVBoxLayout();
@@ -82,7 +89,7 @@ void TB_TrainerBody::changeTrainerColor()
 
     s.setValue("trainer_color", c);
 
-    if (c.name() != "#000000" && c.lightness() <= 140 && c.green() <= 180)
+    if (c.isValid() && c.lightness() <= 140 && c.green() <= 180)
         m_colorButton->setStyleSheet(QString("background: %1; color: white").arg(c.name()));
     else {
         s.setValue("trainer_color", "");

@@ -8,6 +8,8 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "theme.h"
+#include "logmanager.h"
+#include "replayviewer.h"
 #include "../Utilities/functions.h"
 
 MainEngine::MainEngine() : displayer(0)
@@ -149,6 +151,11 @@ void MainEngine::openPluginConfiguration()
             w->show();
         }
     }
+}
+
+ThemeAccessor *MainEngine::theme()
+{
+    return Theme::getAccessor();
 }
 
 void MainEngine::loadStyleSheet()
@@ -323,6 +330,23 @@ void MainEngine::loadTeam(const QString &path)
 void MainEngine::loadTeamDialog()
 {
     loadTTeamDialog(*trainerTeam());
+}
+
+void MainEngine::loadReplayDialog()
+{
+    QFileDialog *f = new QFileDialog(NULL, QObject::tr("Replay a battle"), LogManager::obj()->getDirectoryForType(ReplayLog), "*.poreplay");
+    f->setWindowFlags(Qt::Window);
+    f->setAttribute(Qt::WA_DeleteOnClose);
+    f->setAcceptMode(QFileDialog::AcceptOpen);
+    f->setFileMode(QFileDialog::ExistingFile);
+    f->show();
+
+    connect(f, SIGNAL(fileSelected(QString)), SLOT(showReplay(QString)));
+}
+
+void MainEngine::showReplay(QString file)
+{
+    new ReplayViewer(file);
 }
 
 void MainEngine::addStyleMenu(QMenuBar *menuBar)

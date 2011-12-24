@@ -58,7 +58,8 @@ HEADERS +=\
     advancedbattledata.h \
     battlesceneflow.h \
     param.h \
-    regularbattlescene.h
+    regularbattlescene.h \
+    ../Shared/battlecommands.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -117,4 +118,6 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/QuickAttack.qml \
     ../../bin/qml/BattleDataQML/Moves/HiddenPebbles.qml \
     ../../bin/qml/BattleDataQML/Moves/Earthquake.qml \
-    ../../bin/qml/BattleDataQML/Moves/Substitute.qml
+    ../../bin/qml/BattleDataQML/Moves/Substitute.qml \
+    ../../bin/qml/BattleDataQML/Moves/Bonemerang.qml \
+    ../../bin/qml/BattleDataQML/Moves/BoneRush.qml

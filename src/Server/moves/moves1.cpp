@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "items.h"
 #include "battlecounterindex.h"
+#include "../Shared/battlecommands.h"
 
 typedef BS::priorityBracket bracket;
 using namespace Move;
@@ -708,10 +709,10 @@ struct MMBellyDrum : public MM
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
             b.fail(s, 8);
 
-            /* Odd bug with gold, silver, crystal versions in gen 2
+            /* Odd bug with gold, silver, crystal versions in gen 2 */
             if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
-            } */
+            }
         } else if (move(b,s) == Move::BellyDrum) {
             if (b.hasMaximalStatMod(s, Attack)) {
                 turn(b,s)["Failed"] = true;
@@ -1062,7 +1063,7 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
-            b.notify(All, BS::UseAttack, s, qint16(Move::FreeFall));
+            b.notify(All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
             turn(b,s)["Failed"] = true;
         }
     }
@@ -1348,7 +1349,7 @@ struct MMDoomDesire : public MM
                     int typemod = turn(b,s)["TypeMod"].toInt();
                     if (typemod == 0) {
                         /* If it's ineffective we just say it */
-                        b.notify(All, BS::Effective, s, quint8(typemod));
+                        b.notify(All, BattleCommands::Effective, s, quint8(typemod));
                         return;
                     }
                     turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
@@ -1367,7 +1368,7 @@ struct MMDoomDesire : public MM
                     }
 
                     int damage = b.calculateDamage(s, s);
-                    b.notify(BS::All, BS::Effective, s, quint8(typemod));
+                    b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
                     b.inflictDamage(s, damage, doomuser, true, true);
                 }
             }

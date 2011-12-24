@@ -3,10 +3,12 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
-#include "../PokemonInfo/battlestructs.h"
+
 class Player;
 class PluginManager;
 class TeamBattle;
+class PokeBattle;
+class BattleConfiguration;
 
 /* Fixme: needs some sort of cache to avoid revs() creating a list
    each time */
@@ -30,13 +32,13 @@ public:
 //    virtual const int & publicId() const = 0;
 //    virtual const bool & rated() const = 0;
     virtual const QString & tier() const = 0;
-    virtual const quint32 & clauses() const = 0;
+    virtual quint32 clauses() const = 0;
 //    virtual const int & attacker() const = 0;
 //    virtual const int & attacked() const = 0;
-    virtual const int & mode() const = 0;
+    virtual int mode() const = 0;
 //    virtual const int & numberOfSlots() const = 0;
 //    virtual const bool & blocked() const = 0;
-    virtual const int & gen() const = 0;
+    virtual int gen() const = 0;
 //    virtual const int & attackCount() const = 0;
 //    virtual const bool & rearrangeTime() const = 0;
 //    virtual const int & selfKoer() const = 0;
@@ -55,7 +57,7 @@ public:
     virtual int id(int spot) const = 0;
     virtual int rating(int spot) const = 0;
     /* Return the configuration of the players (1 refer to that player, 0 to that one...) */
-    virtual BattleConfiguration configuration() const = 0;
+    virtual const BattleConfiguration &configuration() const = 0;
 
 //    virtual bool acceptSpectator(int id, bool authed=false) const = 0;
 //    virtual void addSpectator(Player *p) = 0;
@@ -229,69 +231,6 @@ public:
 //    virtual void changeTempMove(int player, int slot, int move) = 0;
 //    virtual void changeDefMove(int player, int slot, int move) = 0;
 //    virtual void changeSprite(int player, Pokemon::uniqueId newForme) = 0;
-
-    /* Send a message to the outworld */
-    enum BattleCommand
-    {
-        SendOut,
-        SendBack,
-        UseAttack,
-        OfferChoice,
-        BeginTurn,
-        ChangePP,
-        ChangeHp,
-        Ko,
-        Effective, /* to tell how a move is effective */
-        Miss,
-        CriticalHit,
-        Hit, /* for moves like fury double kick etc. */
-        StatChange,
-        StatusChange,
-        StatusMessage,
-        Failed,
-        BattleChat,
-        MoveMessage,
-        ItemMessage,
-        NoOpponent,
-        Flinch,
-        Recoil,
-        WeatherMessage,
-        StraightDamage,
-        AbilityMessage,
-        AbsStatusChange,
-        Substitute,
-        BattleEnd,
-        BlankMessage,
-        CancelMove,
-        Clause,
-        DynamicInfo,
-        DynamicStats,
-        Spectating,
-        SpectatorChat,
-        AlreadyStatusMessage,
-        ChangeTempPoke,
-        ClockStart,
-        ClockStop,
-        Rated,
-        TierSection,
-        EndMessage,
-        PointEstimate,
-        StartChoices,
-        Avoid,
-        RearrangeTeam,
-        SpotShifting
-    };
-
-    enum ChangeTempPoke {
-        TempMove,
-        TempAbility,
-        TempItem,
-        TempSprite,
-        DefiniteForme,
-        AestheticForme,
-        DefMove,
-        TempPP
-    };
 
 //    enum WeatherM
 //    {

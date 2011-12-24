@@ -2,8 +2,11 @@
 #include <memory>
 #include <QPair>
 #include "../PokemonInfo/battlestructs.h"
+#include "../Shared/battlecommands.h"
 
-typedef std::shared_ptr<ShallowBattlePoke> shallowpoke;
+namespace BC = BattleCommands;
+
+template <class T> std::shared_ptr<T> mk() { return std::shared_ptr<T>(new T()); }
 
 BattleInput::BattleInput(const BattleConfiguration *conf) {
     mCount = 0;
@@ -13,14 +16,31 @@ BattleInput::BattleInput(const BattleConfiguration *conf) {
 
 void BattleInput::receiveData(QByteArray inf)
 {
-    if (delayed() && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
-            && inf[0] != char(Spectating)) {
+    if (inf.isEmpty()) {
+        if (delayed()) {
+            delayedCommands.push_back(inf);
+            return;
+        }
+
+        /* An empty array means raw Command */
+        if (commands.size() > 0) {
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
+            return;
+        }
+    }
+
+    if (delayed() && inf[0] != char(BC::BattleChat) && inf[0] != char(BC::SpectatorChat) && inf[0] != char(BC::ClockStart)
+            && inf[0] != char(BC::ClockStop)
+            && inf[0] != char(BC::Spectating)) {
         delayedCommands.push_back(inf);
         return;
     }
 
     QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_6);
+    in.setVersion(QDataStream::Qt_4_7);
 
     uchar command;
     qint8 player;
@@ -35,15 +55,15 @@ bool BattleInput::delayed()
     return delayCount > 0;
 }
 
-void BattleInput::pause()
+void BattleInput::pause(int ticks)
 {
-    delayCount++;
+    delayCount+= ticks;
     qDebug() << "New delay (+): " << delayCount;
 }
 
-void BattleInput::unpause()
+void BattleInput::unpause(int ticks)
 {
-    delayCount--;
+    delayCount-=ticks;
     qDebug() << "New delay (-): " << delayCount;
     if (delayCount < 0) {
         delayCount = 0;
@@ -63,56 +83,57 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
 {
     switch (command)
     {
-    case SendOut:
+    case BC::SendOut:
     {
         bool silent;
         quint8 prevIndex;
-        shallowpoke poke (new ShallowBattlePoke());
+        auto poke = mk<ShallowBattlePoke>();
         in >> silent;
         in >> prevIndex;
         in >> *poke;
         output<BattleEnum::SendOut>(spot, prevIndex, &poke, silent);
         break;
     }
-    case SendBack:
+    case BC::SendBack:
     {
         bool silent;
         in >> silent;
         output<BattleEnum::SendBack>(spot, silent);
         break;
     }
-    case UseAttack:
+    case BC::UseAttack:
     {
         qint16 attack;
-        in >> attack;
-        output<BattleEnum::UseAttack>(spot, attack);
+        bool silent;
+        in >> attack >> silent;
+        output<BattleEnum::UseAttack>(spot, attack, silent);
         break;
     }
-    case BeginTurn:
+    case BC::BeginTurn:
     {
         int turn;
         in >> turn;
         output<BattleEnum::Turn>(turn);
         break;
     }
-    case ChangeHp:
+    case BC::ChangeHp:
     {
         quint16 newHp;
         in >> newHp;
         output<BattleEnum::NewHp>(spot, newHp);
         break;
     }
-    case Ko:
+    case BC::Ko:
         output<BattleEnum::Ko>(spot);
         break;
-    case Hit:
+    case BC::Hit:
     {
         quint8 number;
         in >> number;
         output<BattleEnum::Hits>(spot, number);
         break;
     }
-    case Effective:
+    case BC::Effective:
     {
         quint8 eff;
         in >> eff;
@@ -120,20 +141,20 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::Effectiveness>(spot, eff);
         break;
     }
-    case CriticalHit:
+    case BC::CriticalHit:
         output<BattleEnum::CriticalHit>(spot);
         break;
-    case Miss:
+    case BC::Miss:
     {
         output<BattleEnum::Miss>(spot);
         break;
     }
-    case Avoid:
+    case BC::Avoid:
     {
         output<BattleEnum::Avoid>(spot);
         break;
     }
-    case StatChange:
+    case BC::StatChange:
     {
         qint8 stat, boost;
         bool silent;
@@ -141,7 +162,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::StatChange>(spot, stat, boost, silent);
         break;
     }
-    case StatusChange:
+    case BC::StatusChange:
     {
         qint8 status;
         in >> status;
@@ -151,7 +172,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::ClassicStatusChange>(spot, status, multipleTurns);
         break;
     }
-    case AbsStatusChange:
+    case BC::AbsStatusChange:
     {
         qint8 poke, status;
         in >> poke >> status;
@@ -162,14 +183,14 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::AbsoluteStatusChange>(spot,poke,status);
         break;
     }
-    case AlreadyStatusMessage:
+    case BC::AlreadyStatusMessage:
     {
         quint8 status;
         in >> status;
         output<BattleEnum::AlreadyStatusMessage>(spot,status);
         break;
     }
-    case StatusMessage:
+    case BC::StatusMessage:
     {
         qint8 status;
         in >> status;
@@ -203,61 +224,63 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         }
         break;
     }
-    case Failed:
+    case BC::Failed:
     {
-        output<BattleEnum::Fail>(spot);
+        bool silent;
+        in >> silent;
+        output<BattleEnum::Fail>(spot, silent);
         break;
     }
-    case BattleChat:
-    case EndMessage:
+    case BC::BattleChat:
+    case BC::EndMessage:
     {
-        QString message;
-        in >> message;
-        output<BattleEnum::PlayerMessage>(spot, message.toUtf8().constData());
+        auto message = mk<QString>();
+        in >> *message;
+        output<BattleEnum::PlayerMessage>(spot, &message);
         break;
     }
-    case Spectating:
+    case BC::Spectating:
     {
         bool come;
         qint32 id;
         in >> come >> id;
 
         if (come) {
-            QString name;
-            in >> name;
-            output<BattleEnum::SpectatorEnter>(id, name.toUtf8().constData());
+            auto name = mk<QString>();
+            in >> *name;
+            output<BattleEnum::SpectatorEnter>(id, &name);
         } else {
             output<BattleEnum::SpectatorLeave>(id);
         }
         break;
     }
-    case SpectatorChat:
+    case BC::SpectatorChat:
     {
         qint32 id;
-        QString message;
-        in >> id >> message;
-        output<BattleEnum::SpectatorMessage>(id, message.toUtf8().constData());
+        auto message = mk<QString>();
+        in >> id >> *message;
+        output<BattleEnum::SpectatorMessage>(id, &message);
         break;
     }
-    case MoveMessage:
+    case BC::MoveMessage:
     {
         quint16 move=0;
         uchar part=0;
         qint8 type(0), foe(0);
         qint16 other(0);
-        QString q;
-        in >> move >> part >> type >> foe >> other >> q;
+        auto q = mk<QString>();
+        in >> move >> part >> type >> foe >> other >> *q;
         if (move == 57) {
             output<BattleEnum::StartWeather>(spot, part+1, false); //False for non-ability weather
         } else {
-            output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, q.toUtf8().constData());
+            output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, &q);
         }
         break;
     }
-    case NoOpponent:
+    case BC::NoOpponent:
         output<BattleEnum::NoTargetMessage>(spot);
         break;
-    case ItemMessage:
+    case BC::ItemMessage:
     {
         quint16 item=0;
         uchar part=0;
@@ -268,12 +291,12 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::ItemMessage>(spot, item, part, foe, berry, other);
         break;
     }
-    case Flinch:
+    case BC::Flinch:
     {
         output<BattleEnum::Flinch>(spot);
         break;
     }
-    case Recoil:
+    case BC::Recoil:
     {
         bool damage;
         in >> damage;
@@ -284,25 +307,25 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
             output<BattleEnum::Drained>(spot);
         break;
     }
-    case WeatherMessage: {
+    case BC::WeatherMessage: {
         qint8 wstatus, weather;
         in >> wstatus >> weather;
-        if (weather == NormalWeather)
+        if (weather == BC::NormalWeather)
             break;
 
         switch(wstatus) {
-        case EndWeather:
+        case BC::EndWeather:
             output<BattleEnum::EndWeather>(weather);
             break;
-        case HurtWeather:
+        case BC::HurtWeather:
             output<BattleEnum::WeatherDamage>(spot, weather);
             break;
-        case ContinueWeather:
+        case BC::ContinueWeather:
             output<BattleEnum::WeatherMessage>(weather);
             break;
         }
     } break;
-    case StraightDamage :
+    case BC::StraightDamage:
     {
         qint16 damage;
         in >> damage;
@@ -310,7 +333,7 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::Damaged>(spot, damage);
         break;
     }
-    case AbilityMessage:
+    case BC::AbilityMessage:
     {
         quint16 ab=0;
         uchar part=0;
@@ -326,30 +349,30 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         }
         break;
     }
-    case Substitute:
+    case BC::Substitute:
     {
         bool sub;
         in >> sub;
         output<BattleEnum::SubstituteStatus>(spot, sub);
         break;
     }
-    case BattleEnd:
+    case BC::BattleEnd:
     {
         qint8 res;
         in >> res;
         output<BattleEnum::BattleEnd>(res, spot);
         break;
     }
-    case BlankMessage: {
+    case BC::BlankMessage: {
         output<BattleEnum::BlankMessage>();
         break;
     }
-    case Clause:
+    case BC::Clause:
     {
         output<BattleEnum::ClauseMessage>(spot);
         break;
     }
-    case Rated:
+    case BC::Rated:
     {
         bool rated;
         in >> rated;
@@ -357,25 +380,37 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         output<BattleEnum::RatedInfo>(rated);
         break;
     }
-    case TierSection:
+    case BC::TierSection:
     {
-        QString tier;
-        in >> tier;
-        output<BattleEnum::TierInfo>(tier.toUtf8().constData());
+        auto tier = mk<QString>();
+        in >> *tier;
+        output<BattleEnum::TierInfo>(&tier);
         break;
     }
-    case DynamicInfo:
+    case BC::DynamicInfo:
     {
         BattleDynamicInfo info;
         in >> info;
-        output<BattleEnum::StatBoostsAndField>(spot, &info);
+        output<BattleEnum::StatBoostsAndField>(spot, info);
         break;
     }
-    case TempPokeChange:
+    case BC::ChangeTempPoke:
     {
         quint8 type;
         in >> type;
-        if (type == TempSprite) {
+        if (type == BC::TempMove || type == BC::DefMove) {
+            qint8 slot;
+            quint16 move;
+            in >> slot >> move;
+
+            output<BattleEnum::MoveChange>(spot, slot, move, type==BC::DefMove);
+        } else if (type == BC::TempPP) {
+            qint8 slot;
+            qint8 PP;
+
+            in >> slot >> PP;
+            output<BattleEnum::TempPPChange>(spot, slot, PP);
+        } else if (type == BC::TempSprite) {
             Pokemon::uniqueId tempsprite;
             in >> tempsprite;
 
@@ -386,13 +421,13 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
             } else {
                 output<BattleEnum::SpriteChange>(spot, tempsprite.toPokeRef());
             }
-        } else if (type == DefiniteForme)
+        } else if (type == BC::DefiniteForme)
         {
             quint8 poke;
             Pokemon::uniqueId newforme;
             in >> poke >> newforme;
             output<BattleEnum::DefiniteFormeChange>(spot, poke, newforme.toPokeRef());
-        } else if (type == AestheticForme)
+        } else if (type == BC::AestheticForme)
         {
             quint16 newforme;
             in >> newforme;
@@ -400,21 +435,21 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
         }
         break;
     }
-    case ClockStart:
+    case BC::ClockStart:
     {
-        quint32 time;
+        quint16 time;
         in >> time;
         output<BattleEnum::ClockStart>(spot, time);
         break;
     }
-    case ClockStop:
+    case BC::ClockStop:
     {
-        quint32 time;
+        quint16 time;
         in >> time;
         output<BattleEnum::ClockStop>(spot, time);
         break;
     }
-    case SpotShifts:
+    case BC::SpotShifting:
     {
         qint8 s1, s2;
         bool silent;
@@ -423,6 +458,55 @@ void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
 
         output<BattleEnum::ShiftSpots>(spot, s1, s2, silent);
         break;
+    }
+    case BC::ChangePP:
+    {
+        quint8 move, pp;
+        in >> move >> pp;
+
+        output<BattleEnum::PPChange>(spot, move, pp);
+        break;
+    }
+    case BC::OfferChoice:
+    {
+        auto c = mk<BattleChoices>();
+        in >> *c;
+
+        output<BattleEnum::OfferChoice>(spot, &c);
+        break;
+    }
+    case BC::StartChoices:
+    {
+        output<BattleEnum::ChoiceSelection>(spot);
+        break;
+    }
+    case BC::CancelMove:
+    {
+        output<BattleEnum::ChoiceCanceled>(spot);
+        break;
+    }
+    case BC::DynamicStats:
+    {
+        auto stats = mk<BattleStats>();
+        in >> *stats;
+
+        output<BattleEnum::DynamicStats>(spot, &stats);
+        break;
+    }
+    case BC::PointEstimate:
+    {
+        qint8 first, second;
+        in >> first >> second;
+
+        output<BattleEnum::Variation>(spot, first, second);
+        break;
+    }
+    case BC::RearrangeTeam:
+    {
+        auto t = mk<ShallowShownTeam>();
+        in >> *t;
+
+        output<BattleEnum::RearrangeTeam>(spot, &t);
     }
     default:
         /* TODO: UNKNOWN COMMAND */

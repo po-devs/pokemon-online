@@ -41,7 +41,9 @@ public slots:
 
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
+    void loadReplayDialog();
     void loadStyleSheet();
+    void showReplay(QString);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -58,6 +60,7 @@ public:
     TrainerTeam *trainerTeam() {
         return &m_team;
     }
+    ThemeAccessor *theme();
 };
 
 #endif // MAINWINDOW_H

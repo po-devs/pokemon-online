@@ -11,13 +11,19 @@ DESTDIR = ../../bin/myplugins
 DEFINES += CSSCHANGER_LIBRARY
 
 SOURCES += csschanger.cpp \
-    csswidget.cpp
+    csswidget.cpp \
+    colorchoicewidget.cpp \
+    massreplacewidget.cpp
 
 HEADERS += csschanger.h\
         CSSChanger_global.h \
     csswidget.h \
     ui_dialog.h \
-    ui_colorchoice.h
+    ui_colorchoice.h \
+    colorchoicewidget.h \
+    massreplacewidget.h \
+    ui_massreplace.h \
+    data.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -40,14 +46,5 @@ unix:!symbian {
 
 FORMS += \
     dialog.ui \
-    colorchoice.ui
-
-
-
-
-
-
-
-
-
-
+    colorchoice.ui \
+    massreplace.ui

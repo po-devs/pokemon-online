@@ -12,6 +12,8 @@ class PokeZone;
 class BattleDisplay;
 class TargetSelection;
 class StruggleZone;
+class TeamProxy;
+class PokeProxy;
 
 class BattleInfo : public BaseBattleInfo
 {
@@ -26,50 +28,18 @@ public:
     QList<bool> available;
     QList<bool> done;
 
-    int currentSlot;
+    const PokeProxy &currentPoke(int spot) const;
+    PokeProxy &currentPoke(int spot);
+    PokeProxy &tempPoke(int spot);
 
-    /* My team */
-    TeamBattle myteam;
+    int currentSlot;
+    TeamBattle _myteam;
+    TeamProxy &myteam();
+    const TeamProxy &myteam() const;
 
     bool sent;
 
     QList<BattleStats> mystats;
-
-    const PokeBattle &currentPoke(int spot) const;
-    PokeBattle &currentPoke(int spot);
-
-    QList<PokeBattle> m_tempPoke;
-    PokeBattle &tempPoke(int spot);
-
-    int number(int spot) const {
-        return spot / 2;
-    }
-
-    bool areAdjacent (int poke1, int poke2) const;
-
-    virtual void switchPoke(int spot, int poke, bool own) {
-        BaseBattleInfo::switchPoke(spot, poke);
-        if (!own) {
-            return;
-        }
-        myteam.switchPokemon(number(spot), poke);
-        currentShallow(spot) = myteam.poke(number(spot));
-        tempPoke(spot) = myteam.poke(number(spot));
-    }
-
-    virtual void switchOnSide(int player, int s1, int s2) {
-        int pk1 = slot(player, s1);
-        int pk2 = slot(player, s2);
-        std::swap(currentShallow(pk1), currentShallow(pk2));
-        std::swap(pokeAlive[pk1], pokeAlive[pk2]);
-        std::swap(sub[pk1], sub[pk2]);
-        std::swap(specialSprite[pk1], specialSprite[pk2]);
-        std::swap(lastSeenSpecialSprite[pk1], lastSeenSpecialSprite[pk2]);
-        if (player == myself) {
-            myteam.switchPokemon(s1, s2);
-            std::swap(tempPoke(pk1), tempPoke(pk2));
-        }
-    }
 
     int lastMove[6];
 };
@@ -78,7 +48,7 @@ public:
 
 class Client;
 
-class BattleWindow : public BaseBattleWindow
+class BattleWindow : public BaseBattleWindow, public BattleCommandManager<BattleWindow>
 {
     Q_OBJECT
 
@@ -104,21 +74,37 @@ public:
         StruggleTab = 4
     };
 
-    TeamBattle &team();
-    const TeamBattle &team() const;
+    TeamProxy &team();
+    const TeamProxy &team() const;
+    PokeProxy &poke(int slot);
+    const PokeProxy &poke(int slot) const;
 
     void switchToNaught(int spot);
     void switchTo(int pokezone, int spot, bool forced);
 
+    void onKo(int spot);
+    void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
+    void onHpChange(int spot, int newHp);
+    void onPokeballStatusChanged(int player, int poke, int status);
+    void onShiftSpots(int player, int spot1, int spot2, bool silent);
+    void onBattleEnd(int res, int winner);
+    void onPPChange(int spot, int move, int PP);
+    void onTempPPChange(int spot, int move, int PP);
+    void onOfferChoice(int player, const BattleChoices &choice);
+    void onMoveChange(int spot, int slot, int move, bool definite);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onChoiceSelection(int player);
+    void onChoiceCanceled(int player);
     void addSpectator(bool add, int id);
 
     /* Disable / enable buttons */
     void updateChoices();
     /* sends the choice */
     void sendChoice(const BattleChoice &b);
-    QString nick(int spot) const;
 
     int ownSlot() const;
+
+    void disable();
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
@@ -134,10 +120,7 @@ signals:
     void offerTie(int battleid);
 protected:
     void closeEvent(QCloseEvent *);
-    virtual void dealWithCommandInfo(QDataStream &s, int command, int spot, int truespot);
-
 protected slots:
-    void animateHPBar();
     void changeAttackText(int i);
     void targetChosen(int i);
     void nullQuestion();
@@ -171,8 +154,6 @@ private:
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
     QMessageBox *question;
-
-    bool hasLoggedWifiClause;
 };
 
 class AbstractAttackButton;
@@ -182,7 +163,7 @@ class AttackZone : public QWidget
 {
     Q_OBJECT
 public:
-    AttackZone(const PokeBattle &poke, int gen);
+    AttackZone(const PokeProxy &poke, int gen);
 
     AbstractAttackButton *tattacks[4];
     QAbstractButton *attacks[4];
@@ -197,7 +178,7 @@ class AbstractAttackButton
 {
 public:
     //AbstractAttackButton();
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen) = 0;
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen) = 0;
 
     QAbstractButton *pointer() {
         return dynamic_cast<QAbstractButton *> (this);
@@ -211,26 +192,27 @@ class ImageAttackButton : public QImageButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    ImageAttackButton(const BattleMove& b, const PokeBattle &p, int gen);
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen);
+    ImageAttackButton(const BattleMove& b, const PokeProxy &p, int gen);
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen);
 };
 
 class OldAttackButton : public QPushButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    OldAttackButton(const BattleMove& b, const PokeBattle &p, int gen);
-    virtual void updateAttack(const BattleMove& b, const PokeBattle &p, int gen);
+    OldAttackButton(const BattleMove& b, const PokeProxy &p, int gen);
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen);
 };
 
 class PokeButton;
+class TeamProxy;
 
 /* When you want to switch pokemons, that's what you see */
 class PokeZone : public QWidget
 {
     Q_OBJECT
 public:
-    PokeZone(const TeamBattle &team);
+    PokeZone(const TeamProxy &team);
 
     PokeButton *pokes[6];
 signals:
@@ -240,17 +222,19 @@ private:
     QSignalMapper *mymapper;
 };
 
+class PokeProxy;
+
 class PokeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    PokeButton(const PokeBattle &p);
-    void changePokemon(const PokeBattle &p);
+    PokeButton(const PokeProxy &p);
+    void changePokemon(const PokeProxy &p);
     void update();
     void updateToolTip();
 private:
 
-    const PokeBattle *p;
+    const PokeProxy *p;
 };
 
 class TargetSelection : public QWidget

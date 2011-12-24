@@ -13,19 +13,30 @@
 #include "battlepluginstruct.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
+#include "../Shared/battlecommands.h"
+
+using namespace BattleCommands;
 
 typedef BattlePStorage BP;
 
 Q_DECLARE_METATYPE(QList<int>)
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
-    : /*spectatorMutex(QMutex::Recursive), */team1(p1.team()), team2(p2.team())
 {
     //qDebug() <<"Created battlesituation " << this;
     publicId() = id;
     timer = NULL;
-    myid[0] = p1.id();
-    myid[1] = p2.id();
+    conf.avatar[0] = p1.avatar();
+    conf.avatar[1] = p2.avatar();
+    conf.setTeam(0, new TeamBattle(p1.team()));
+    conf.setTeam(1, new TeamBattle(p2.team()));
+    conf.ids[0] = p1.id();
+    conf.ids[1] = p2.id();
+    conf.teamOwnership = true;
+    conf.gen = std::max(p1.gen(), p2.gen());
+    conf.clauses = c.clauses;
+    conf.mode = c.mode;
+
     ratings[0] = p1.rating();
     ratings[1] = p2.rating();
     winMessage[0] = p1.winningMessage();
@@ -36,7 +47,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacker() = -1;
     selfKoer() = -1;
     drawer() = -1;
-    gen() = std::max(p1.gen(), p2.gen());
     applyingMoveStatMods = false;
     weather = 0;
     weatherCount = -1;
@@ -46,9 +56,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     timeleft[1] = 5*60;
     timeStopped[0] = true;
     timeStopped[1] = true;
-    clauses() = c.clauses;
+
     rated() = c.rated;
-    mode() = c.mode;
 
     if (mode() == ChallengeInfo::Doubles) {
         numberOfSlots() = 4;
@@ -58,8 +67,9 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         numberOfSlots() = 2;
     }
 
-    if (p1.tier() == p2.tier())
+    if (p1.tier() == p2.tier()) {
         tier() = p1.tier();
+    }
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
     p1.addBattle(publicId());
@@ -75,22 +85,22 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
-        team1.generateRandom(gen());
-        team2.generateRandom(gen());
+        team(0).generateRandom(gen());
+        team(1).generateRandom(gen());
     } else {
         if (clauses() & ChallengeInfo::ItemClause) {
             QSet<int> alreadyItems[2];
             for (int i = 0; i < 6; i++) {
-                int o1 = team1.poke(i).item();
-                int o2 = team2.poke(i).item();
+                int o1 = team(0).poke(i).item();
+                int o2 = team(1).poke(i).item();
 
                 if (alreadyItems[0].contains(o1)) {
-                    team1.poke(i).item() = 0;
+                    team(0).poke(i).item() = 0;
                 } else {
                     alreadyItems[0].insert(o1);
                 }
                 if (alreadyItems[1].contains(o2)) {
-                    team2.poke(i).item() = 0;
+                    team(1).poke(i).item() = 0;
                 } else {
                     alreadyItems[1].insert(o2);
                 }
@@ -99,16 +109,16 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         if (clauses() & ChallengeInfo::SpeciesClause) {
             QSet<int> alreadyPokes[2];
             for (int i = 0; i < 6; i++) {
-                int o1 = PokemonInfo::OriginalForme(team1.poke(i).num()).pokenum;
-                int o2 = PokemonInfo::OriginalForme(team2.poke(i).num()).pokenum;
+                int o1 = PokemonInfo::OriginalForme(team(0).poke(i).num()).pokenum;
+                int o2 = PokemonInfo::OriginalForme(team(1).poke(i).num()).pokenum;
 
                 if (alreadyPokes[0].contains(o1)) {
-                    team1.poke(i).num() = Pokemon::NoPoke;
+                    team(0).poke(i).num() = Pokemon::NoPoke;
                 } else {
                     alreadyPokes[0].insert(o1);
                 }
                 if (alreadyPokes[1].contains(o2)) {
-                    team2.poke(i).num() = Pokemon::NoPoke;
+                    team(1).poke(i).num() = Pokemon::NoPoke;
                 } else {
                     alreadyPokes[1].insert(o2);
                 }
@@ -121,13 +131,13 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
 
         if (maxLevel < 100) {
             for (int i = 0; i < 6; i ++) {
-                if (team1.poke(i).level() > maxLevel) {
-                    team1.poke(i).level() = maxLevel;
-                    team1.poke(i).updateStats(gen());
+                if (team(0).poke(i).level() > maxLevel) {
+                    team(0).poke(i).level() = maxLevel;
+                    team(0).poke(i).updateStats(gen());
                 }
-                if (team2.poke(i).level() > maxLevel) {
-                    team2.poke(i).level() = maxLevel;
-                    team2.poke(i).updateStats(gen());
+                if (team(1).poke(i).level() > maxLevel) {
+                    team(1).poke(i).level() = maxLevel;
+                    team(1).poke(i).updateStats(gen());
                 }
             }
         }
@@ -192,8 +202,8 @@ void BattleSituation::start(ContextSwitcher &ctx)
     }
 
     if (rated()) {
-        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team1.name, team2.name, tier());
-        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team2.name, team1.name, tier());
+        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());
+        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team(1).name, team(0).name, tier());
 
         notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
         notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
@@ -219,8 +229,8 @@ void BattleSituation::engageBattle()
     if (tier().length() != 0) {
         Tier &t = TierMachine::obj()->tier(tier());
 
-        t.fixTeam(team1);
-        t.fixTeam(team2);
+        t.fixTeam(team(0));
+        t.fixTeam(team(1));
     }
 
     qDebug() << "Engaging battle " << this << ", calling plugins";
@@ -262,9 +272,9 @@ void BattleSituation::engageBattle()
 
 int BattleSituation::spot(int id) const
 {
-    if (myid[0] == id) {
+    if (conf.ids[0] == id) {
         return 0;
-    } else if (myid[1] == id) {
+    } else if (conf.ids[1] == id) {
         return 1;
     } else {
         return -1;
@@ -364,7 +374,7 @@ int BattleSituation::id(int spot) const
     if (spot >= 2) {
         return spectators.value(spot).first;
     } else {
-        return myid[spot];
+        return conf.ids[spot];
     }
 }
 
@@ -397,23 +407,15 @@ int BattleSituation::randomValidOpponent(int slot) const
 
 TeamBattle &BattleSituation::team(int spot)
 {
-    if (spot == 0) {
-        return team1;
-    } else {
-        return team2;
-    }
+    return *conf.teams[spot];
 }
 
 const TeamBattle &BattleSituation::team(int spot) const
 {
-    if (spot == 0) {
-        return team1;
-    } else {
-        return team2;
-    }
+    return *conf.teams[spot];
 }
 
-const TeamBattle& BattleSituation::pubteam(int id)
+const TeamBattle& BattleSituation::pubteam(int id) const
 {
     return team(spot(id));
 }
@@ -1807,11 +1809,8 @@ void BattleSituation::spectatingChat(int id, const QString &str)
 
 QString BattleSituation::name(int id)
 {
-    if(id == 0) {
-        return team1.name;
-    }
-    else if(id == 1) {
-        return team2.name;
+    if(id <= 1) {
+        return team(id).name;
     }
     else {
         return "?";
@@ -1849,9 +1848,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             }
         }
     }
-
-    QString pokename = PokemonInfo::Name(poke(player,pok).num());
-    QString nickname = poke(player,pok).nick();
 
     notify(All, SendOut, slot, silent, quint8(pok), opoke(slot, player, pok));
 
@@ -2343,9 +2339,8 @@ void BattleSituation::testFlinch(int player, int target)
 bool BattleSituation::testFail(int player)
 {
     if (turnMemory(player)["Failed"].toBool() == true) {
-        if (turnMemory(player)["FailingMessage"].toBool()) {
-            notify(All, Failed, player);
-        }
+        /* Silently or not ? */
+        notify(All, Failed, player, turnMemory(player)["FailingMessage"].toBool() ? false : true);
         return true;
     }
     return false;
@@ -2450,9 +2445,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player, player, "MoveSettings");
 
-    if (tellPlayers && !turnMemory(player).contains("TellPlayers")) {
-        notify(All, UseAttack, player, qint16(attack));
-    }
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
 
     calleffects(player, player, "AfterTellingPlayers");
 
@@ -4754,17 +4747,9 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     }
 }
 
-BattleConfiguration BattleSituation::configuration() const
+const BattleConfiguration &BattleSituation::configuration() const
 {
-    BattleConfiguration ret;
-
-    ret.ids[0] = id(0);
-    ret.ids[1] = id(1);
-    ret.gen = gen();
-    ret.mode = mode();
-    ret.clauses = clauses();
-
-    return ret;
+    return conf;
 }
 
 void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSend)

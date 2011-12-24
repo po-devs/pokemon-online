@@ -25,9 +25,11 @@ public:
     };
 
     static void init();
+    static void destroy();
     static TierMachine *obj();
 
     TierMachine();
+    ~TierMachine();
 
     void load();
     void loadDecaySettings();
@@ -87,7 +89,7 @@ private:
 
     static const int loadThreadCount=2;
     int nextLoadThreadNumber;
-    LoadThread *threads;
+    LoadThread **threads;
     InsertThread<MemberRating> *ithread;
 
     static const int semaphoreMaxLoad = 1000;

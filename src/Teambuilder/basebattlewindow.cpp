@@ -5,8 +5,13 @@
 #include "logmanager.h"
 #include "remove_direction_override.h"
 #include "spectatorwindow.h"
-#include "../BattleManager/battledata.h"
+#include "../BattleManager/advancedbattledata.h"
+#include "../BattleManager/battleclientlog.h"
+#include "../BattleManager/battleinput.h"
 #include "poketextedit.h"
+#include "../Shared/battlecommands.h"
+
+using namespace BattleCommands;
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -20,34 +25,31 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
         numberOfSlots = 2;
     }
 
-    for (int i = 0; i < numberOfSlots; i++) {
-        sub.push_back(false);
-        pokeAlive.push_back(false);
-        specialSprite.push_back(0);
-        lastSeenSpecialSprite.push_back(0);
-        statChanges.push_back(BattleDynamicInfo());
-    }
-
     pInfo[myself] = me;
     pInfo[opponent] = opp;
-
-    time[myself] = 5*60;
-    time[opponent] = 5*60;
-    ticking[myself] = false;
-    ticking[opponent] = false;
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
-                                   int _ownid, Client *client) : delayed(0), ignoreSpecs(NoIgnore), _mclient(client)
+                                   int _ownid, Client *client) : ignoreSpecs(NoIgnore), _mclient(client)
 {
-    ownid() = _ownid;
-    this->conf() = conf;
-    this->conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
-    myInfo = new BaseBattleInfo(me, opponent, conf.mode);
-    info().gen = conf.gen;
+    init(me, opponent, conf, _ownid, client);
+}
 
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
+void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &_conf,
+                            int _ownid, Client *client)
+{
+    _mclient = client;
+
+    ownid() = _ownid;
+    conf() = _conf;
+    conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
+    conf().avatar[0] = me.avatar;
+    conf().avatar[1] = opponent.avatar;
+    conf().name[0] = me.team.name;
+    conf().name[1] = opponent.team.name;
+
+    myInfo = new BaseBattleInfo(me, opponent, conf().mode);
+    info().gen = conf().gen;
 
     init();
     show();
@@ -55,17 +57,17 @@ BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &oppon
 
 BaseBattleWindow::BaseBattleWindow()
 {
-    delayed=0;ignoreSpecs=NoIgnore;
-    QSettings s;
-    usePokemonNames() = s.value("use_pokemon_names").toBool();
+    ignoreSpecs=NoIgnore;
 }
 
-void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
+void BaseBattleWindow::delay(qint64 msec)
 {
-    delayed += 1;
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
-    if (!forceDelay && delayed > 1)
-        delayed = 1;
+    if (ptr != NULL) {
+        ptr->pause();
+    }
 
     if (msec != 0)
         QTimer::singleShot(msec, this, SLOT(undelay()));
@@ -73,20 +75,34 @@ void BaseBattleWindow::delay(qint64 msec, bool forceDelay)
 
 void BaseBattleWindow::undelay()
 {
-    if (delayed > 0)
-        delayed -= 1;
-    else
-        return;
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
-    while (delayed == 0 && delayedCommands.size() > 0) {
-        QByteArray command = delayedCommands.takeFirst();
-        receiveInfo(command);
+    if (ptr != NULL) {
+        ptr->unpause();
     }
 }
 
 void BaseBattleWindow::init()
 {
-    test = new SpectatorWindow(conf(), info().pInfo[0], info().pInfo[1]);
+    test = new SpectatorWindow(conf());
+    test->setParent(this);
+
+    /* The dynamic cast works if called from BaseBattleWindowIns */
+    FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
+
+    if (ptr != NULL) {
+        test->getBattle()->addOutput(ptr);
+        ptr->deletable = false;
+    }
+
+    QObject *ptr2 = dynamic_cast<QObject*>(test->getBattle());
+
+    if (ptr2) {
+        connect(ptr2, SIGNAL(playCry(int)), SLOT(playCry(int)));
+    }
+
+    info().data = test->getBattleData();
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     QToolTip::setFont(QFont("Verdana",10));
@@ -95,8 +111,17 @@ void BaseBattleWindow::init()
     battleEnded = false;
     started() = false;
 
-    log = LogManager::obj()->createLog(BattleLog, tr("%1 vs %2").arg(info().name(0), info().name(1) + "--"));
+    QString title = tr("%1 vs %2").arg(data().name(0), data().name(1)) + "--";
+    log = LogManager::obj()->createLog(BattleLog, title);
     log->override = Log::OverrideNo; /* By default, no logging enabled */
+    replay = LogManager::obj()->createLog(ReplayLog, title);
+    replay->override = Log::OverrideNo;
+
+    replayData.data = "battle_logs_v1\n";
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << conf();
+    replayData.t.start();
 
     setWindowTitle(tr("Battle between %1 and %2").arg(name(0), name(1)));
 
@@ -170,7 +195,7 @@ void BaseBattleWindow::musicPlayStop()
     /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QSettings s;
     QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid",
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a",
                                             QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
     QStringList tmpSources;
@@ -221,6 +246,8 @@ void BaseBattleWindow::playCry(int pokemon)
 
     delay();
 
+    pokemon = Pokemon::uniqueId(pokemon).pokenum;
+
     if (!cries.contains(pokemon)) {
         cries.insert(pokemon, PokemonInfo::Cry(pokemon));
     }
@@ -252,59 +279,23 @@ int BaseBattleWindow::opponent(int player) const
 
 QString BaseBattleWindow::name(int spot) const
 {
-    return info().name(spot);
-}
-
-QString BaseBattleWindow::nick(int player) const
-{
-    return tr("%1's %2").arg(name(this->player(player)), rnick(player));
-}
-
-QString BaseBattleWindow::rnick(int player) const
-{
-    if (usePokemonNames())
-        return PokemonInfo::Name(info().currentShallow(player).num());
-    else
-        return info().currentShallow(player).nick();
-}
-
-void BaseBattleWindow::animateHPBar()
-{
-    const int spot = animatedHpSpot();
-    const int goal = animatedHpGoal();
-
-    QSettings s;
-    if (true || !s.value("animate_hp_bar").toBool()) {
-        undelay();
-        info().currentShallow(spot).lifePercent() = goal;
-        return;
-    }
-
-    //To stop the commands from being processed
-    delay(0, false);
-
-    /* We deal with % hp, 30 msecs per % */
-    int life = info().currentShallow(spot).lifePercent();
-
-    if (goal == life) {
-        delay(120, false);
-        return;
-    }
-
-    info().currentShallow(spot).lifePercent() = life < goal ? life+1 : life-1;
-    //Recursive call to update the hp bar 30msecs later
-    QTimer::singleShot(30, this, SLOT(animateHPBar()));
+    return data().name(spot);
 }
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
+    replay->setBinary(replayData.data);
     if (saveLogs->isChecked()) {
         log->override = Log::OverrideYes;
+        replay->override = Log::OverrideYes;
     }
 
     log->close();
     log = NULL;
+    replay->close();
+    replay = NULL;
 }
 
 void BaseBattleWindow::closeEvent(QCloseEvent *)
@@ -318,6 +309,16 @@ void BaseBattleWindow::close()
 {
     writeSettings(this);
     QWidget::close();
+}
+
+void BaseBattleWindow::disable()
+{
+    mysend->setDisabled(true);
+    myline->setDisabled(true); 
+
+    test->getInput()->entryPoint(BattleEnum::BlankMessage);
+    auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("The window was disabled due to one of the players closing the battle window."), Qt::blue)));
+    test->getInput()->entryPoint(BattleEnum::PrintHtml, &mess);
 }
 
 void BaseBattleWindow::clickClose()
@@ -338,29 +339,20 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
-    if (delayed && inf[0] != char(BattleChat) && inf[0] != char(SpectatorChat) && inf[0] != char(ClockStart) && inf[0] != char(ClockStop)
-            && inf[0] != char(Spectating)) {
-        delayedCommands.push_back(inf);
+    if (inf[0] == char(SpectatorChat) && ignoreSpecs != NoIgnore) {
         return;
     }
-    test->receiveData(inf);
-
-    /* At the start of the battle 700 ms are waited, to prevent misclicks
-       when wanting to do something else */
-    if (!started() && inf[0] == char(OfferChoice)) {
-        started() = true;
-        delay(700);
+    if ( (inf[0] == char(BattleChat) || inf[0] == char(EndMessage)) && ignoreSpecs == char(IgnoreAll)) {
+        if (inf[1] == char(info().opponent)) {
+            return;
+        }
     }
 
-    QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_5);
+    QDataStream stream(&replayData.data, QIODevice::Append);
+    stream.setVersion(QDataStream::Qt_4_7);
+    stream << quint32(replayData.t.elapsed()) << inf;
 
-    uchar command;
-    qint8 player;
-
-    in >> command >> player;
-
-    dealWithCommandInfo(in, command, player, player);
+    test->receiveData(inf);
 }
 
 void BaseBattleWindow::ignoreSpectators()
@@ -380,258 +372,48 @@ void BaseBattleWindow::ignoreSpectators()
     }
 }
 
-void BaseBattleWindow::dealWithCommandInfo(QDataStream &in, int command, int spot, int truespot)
+void BaseBattleWindow::onSendOut(int, int, ShallowBattlePoke *, bool)
 {
-    switch (command)
-    {
-    case SendOut:
-    {
-        bool silent;
-        quint8 prevIndex;
-        in >> silent;
-        in >> prevIndex;
-
-        info().sub[spot] = false;
-        info().specialSprite[spot] = Pokemon::NoPoke;
-
-        info().switchPoke(spot, prevIndex);
-        in >> info().currentShallow(spot);
-        info().pokeAlive[spot] = true;
-
-        //Plays the battle cry when a pokemon is switched in
-        if (musicPlayed())
-        {
-            playCry(info().currentShallow(spot).num().pokenum);
-        }
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
-
-        break;
-    }
-    case SendBack:
-        bool silent;
-        in >> silent;
-
-        if (silent) {
-            break;
-        }
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
-
-        switchToNaught(spot);
-        break;
-    case UseAttack:
-    {
-        qint16 attack;
-        in >> attack;
-        if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-            qApp->alert(this, 0);
-        }
-
-        break;
-    }
-    case BeginTurn:
-    {
-        break;
-    }
-    case ChangeHp:
-    {
-        quint16 newHp;
-        in >> newHp;
-
-        animatedHpSpot() = spot;
-        animatedHpGoal() = newHp;
-        animateHPBar();
-        break;
-    }
-    case Ko:
-        //Plays the battle cry when a pokemon faints
-        if (musicPlayed())
-        {
-            playCry(info().currentShallow(spot).num().pokenum);
-        }
-        switchToNaught(spot);
-        break;
-    case Hit:
-    {
-        break;
-    }
-    case Effective:
-    {
-        break;
-    }
-    case CriticalHit:
-        break;
-    case Miss:
-        break;
-    case Avoid:
-        break;
-    case StatChange:
-        break;
-    case StatusChange:
-    {
-        break;
-    }
-    case AbsStatusChange:
-    {
-        qint8 poke, status;
-        in >> poke >> status;
-
-        if (poke < 0 || poke >= 6)
-            break;
-
-        if (status != Pokemon::Confused) {
-            info().pokemons[spot][poke].changeStatus(status);
-        }
-        break;
-    }
-    case AlreadyStatusMessage:
-    {
-        break;
-    }
-    case StatusMessage:
-    {
-        break;
-    }
-    case Failed:
-        break;
-    case BattleChat:
-    case EndMessage:
-    {
-        break;
-    }
-    case Spectating:
-    {
-        bool come;
-        qint32 id;
-        in >> come >> id;
-        addSpectator(come, id);
-        break;
-    }
-    case SpectatorChat:
-    {
-        break;
-    }
-    case MoveMessage:
-    {
-        break;
-    }
-    case NoOpponent:
-        break;
-    case ItemMessage:
-    {
-        break;
-    }
-    case Flinch:
-        break;
-    case Recoil:
-    {
-        break;
-    }
-    case WeatherMessage:
-        break;
-    case StraightDamage :
-    {
-        break;
-    }
-    case AbilityMessage:
-    {
-        break;
-    }
-    case Substitute:
-        in >> info().sub[spot];
-        break;
-    case BattleEnd:
-    {
-        qint8 res;
-        in >> res;
-        battleEnded = true;
-        break;
-    }
-    case BlankMessage:
-        break;
-    case Clause:
-    {
-        break;
-    }
-    case Rated:
-    {
-        break;
-    }
-    case TierSection:
-    {
-        break;
-    }
-    case DynamicInfo:
-    {
-        in >> info().statChanges[spot];
-        break;
-    }
-    case TempPokeChange:
-    {
-        quint8 type;
-        in >> type;
-        if (type == TempSprite) {
-            Pokemon::uniqueId old = info().specialSprite[spot];
-            in >> info().specialSprite[spot];
-            if (info().specialSprite[spot] == -1) {
-                info().lastSeenSpecialSprite[spot] = old;
-            } else if (info().specialSprite[spot] == Pokemon::NoPoke) {
-                info().specialSprite[spot] = info().lastSeenSpecialSprite[spot];
-            }
-        } else if (type == DefiniteForme)
-        {
-            quint8 poke;
-            quint16 newform;
-            in >> poke >> newform;
-            info().pokemons[spot][poke].num() = newform;
-            if (info().isOut(spot, poke)) {
-                info().currentShallow(info().slot(spot, poke)).num() = newform;
-            }
-        } else if (type == AestheticForme)
-        {
-            quint16 newforme;
-            in >> newforme;
-            info().currentShallow(spot).num().subnum = newforme;
-        }
-        break;
-    }
-    case ClockStart:
-    {
-        in >> info().time[spot];
-        info().startingTime[spot] = time(NULL);
-        info().ticking[spot] = true;
-        break;
-    }
-    case ClockStop:
-    {
-        in >> info().time[spot];
-        info().ticking[spot] = false;
-        break;
-    }
-    case SpotShifts:
-    {
-        qint8 s1, s2;
-        bool silent;
-
-        in >> s1 >> s2 >> silent;
-
-        info().switchOnSide(spot, s1, s2);
-
-        delay(500);
-        break;
-    }
-    default:
-        printLine("<i>" + tr("Unknown command received, are you up to date?") + "</i>");
-        break;
+    //Plays the battle cry when a pokemon is switched in
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
     }
 }
 
-void BaseBattleWindow::switchToNaught(int spot)
+void BaseBattleWindow::onSendBack(int spot, bool)
 {
-    info().pokeAlive[spot] = false;
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
+    }
+
+    switchToNaught(spot);
+}
+
+void BaseBattleWindow::onUseAttack(int, int, bool)
+{
+    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
+        qApp->alert(this, 0);
+    }
+}
+
+void BaseBattleWindow::onKo(int spot)
+{
+    switchToNaught(spot);
+}
+
+void BaseBattleWindow::onSpectatorJoin(int id, const QString &)
+{
+    addSpectator(true, id);
+}
+
+void BaseBattleWindow::onSpectatorLeave(int id)
+{
+    addSpectator(false, id);
+}
+
+void BaseBattleWindow::onBattleEnd(int, int)
+{
+    battleEnded = true;
 }
 
 void BaseBattleWindow::addSpectator(bool come, int id)
@@ -640,42 +422,5 @@ void BaseBattleWindow::addSpectator(bool come, int id)
         spectators.insert(id);
     } else {
         spectators.remove(id);
-    }
-}
-
-void BaseBattleWindow::printLine(const QString &str, bool silent)
-{
-    if (str == "" && blankMessage) {
-        return;
-    }
-
-    if (str == "") {
-        blankMessage = true;
-        mychat->insertHtml("");
-    } else if (!silent) {
-        blankMessage = false;
-    }
-
-    QString html = str + "<br />";
-    if (!silent) {
-        mychat->insertHtml(removeDirectionOverride(html));
-        log->pushHtml(html);
-    } else {
-        log->pushHtml("<!--"+html+"-->");
-    }
-}
-
-void BaseBattleWindow::printHtml(const QString &str, bool silent, bool newline)
-{
-    if (!silent) {
-        blankMessage = false;
-    }
-
-    QString html = str + (newline?"<br />":"");
-    if (!silent) {
-        mychat->insertHtml(removeDirectionOverride(html));
-        log->pushHtml(html);
-    } else {
-        log->pushHtml("<!--"+html+"-->");
     }
 }

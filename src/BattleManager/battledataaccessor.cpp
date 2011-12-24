@@ -19,8 +19,16 @@ PokeProxy::~PokeProxy()
     }
 }
 
-void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon) {
+void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon, bool soft) {
+    const PokeBattle *trans = dynamic_cast<const PokeBattle*>(pokemon);
+    if (trans) {
+        adaptTo(trans);
+    }
     if (*pokemon == *pokeData) {
+        return;
+    }
+    if (soft) {
+        pokeData->changeStatus(pokemon->status());
         return;
     }
     /* Could be more granular, change if it matters */
@@ -30,17 +38,20 @@ void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon) {
 }
 
 void PokeProxy::adaptTo(const PokeBattle *pokemon) {
-    PokeBattle *trans = dynamic_cast<PokeBattle*>(this);
+    PokeBattle *trans = dynamic_cast<PokeBattle*>(pokeData);
 
     if (trans) {
         *trans = *pokemon;
-
-        /* Could be more granular, change if it matters */
-        emit numChanged(); emit statusChanged(); emit lifeChanged();
-        emit pokemonReset();
     } else {
-        adaptTo((ShallowBattlePoke*)pokemon);
+        if (*pokeData == *(static_cast<const ShallowBattlePoke*>(pokemon))) {
+            return;
+        }
+        *pokeData = *pokemon;
     }
+
+    /* Could be more granular, change if it matters */
+    emit numChanged(); emit statusChanged(); emit lifeChanged();
+    emit pokemonReset();
 }
 
 void PokeProxy::changeStatus(int fullStatus)
@@ -67,6 +78,14 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     }
     d()->num() = num;
     emit numChanged();
+}
+
+int PokeProxy::basestat(int stat) const
+{
+    if (hasExposedData())
+        return PokemonInfo::FullStat(num(), 5, nature(), stat, level(), dvs()[stat], evs()[stat]);
+    else
+        return 0;
 }
 
 TeamProxy::TeamProxy()
@@ -100,10 +119,6 @@ QString TeamProxy::name() const {
     return teamData->name();
 }
 
-quint16 TeamProxy::avatar() const {
-    return teamData->avatar();
-}
-
 void TeamProxy::switchPokemons(int index, int prevIndex)
 {
     std::swap(pokemons[index], pokemons[prevIndex]);
@@ -112,19 +127,14 @@ void TeamProxy::switchPokemons(int index, int prevIndex)
     emit pokemonsSwapped(index, prevIndex);
 }
 
-void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon)
+void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon, bool soft)
 {
-    poke(index)->adaptTo(pokemon);
+    poke(index)->adaptTo(pokemon, soft);
 }
 
 void TeamProxy::setName(const QString &name)
 {
     teamData->name() = name;
-}
-
-void TeamProxy::setAvatar(int avatar)
-{
-    teamData->avatar() = avatar;
 }
 
 void TeamProxy::setTeam(const TeamBattle *team)

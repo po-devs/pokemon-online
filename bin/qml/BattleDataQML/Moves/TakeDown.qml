@@ -4,8 +4,8 @@ import "../" 1.0
 Move {
         id: main;
 
-        property int xt: target.x-attacker.x;
-        property int yt: attacker.y-target.y;
+        property int xt: defender.x-attacker.x;
+        property int yt: attacker.y-defender.y;
 
         property int x0: attacker.pokeSprite.anchors.horizontalCenterOffset;
         property int y0: attacker.pokeSprite.anchors.bottomMargin;
