@@ -79,6 +79,12 @@ public:
         }
     }
 
+    static void removeDatabases() {
+        foreach (QString db, QSqlDatabase::connectionNames()) {
+            QSqlDatabase::removeDatabase(db);
+        }
+    }
+
     enum DataBaseType  {
         SQLite,
         PostGreSQL,

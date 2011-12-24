@@ -2,6 +2,7 @@
 #define COMMANDMANAGER_H
 
 #include <functional>
+#include <list>
 #include <vector>
 
 #include "command.h"
@@ -37,13 +38,16 @@ public:
 
     FlowCommandManager() {
         m_input = NULL;
+        deletable = true;
     }
 
     /* Used to clean up a whole battle flow tree's memory */
     void deleteTree() {
         for(unsigned i = 0; i < m_outputs.size(); i++) {
             m_outputs[i]->deleteTree();
-            delete m_outputs[i];
+            if (m_outputs[i]->deletable) {
+                delete m_outputs[i];
+            }
         }
         m_outputs.clear();
     }
@@ -64,20 +68,20 @@ public:
     /* Reimplement this for the base input class,
       and everything in the chain can be stopped.
 
-      More fine grain control would be achieved by
-      completing the Command structure usage */
-    virtual void pause() {
+      More fine grain control can be achieved with the Command structure */
+    virtual void pause(int ticks=1) {
         if (m_input) {
-            m_input->pause();
+            m_input->pause(ticks);
         }
     }
 
-    virtual void unpause() {
+    virtual void unpause(int ticks=1) {
         if (m_input) {
-            m_input->unpause();
+            m_input->unpause(ticks);
         }
     }
 
+    bool deletable;
 protected:
     baseClass *m_input;
     std::vector<baseClass*> m_outputs;
@@ -161,15 +165,10 @@ public:
 
         int size = commands.size();
         for(int i = 0; i < size; i++) {
-            commands[i]->apply();
-            delete commands[i];
-        }
-
-        /* The size could have been changed by replayed commands */
-        if (unsigned(size) == commands.size()) {
-            commands.clear();
-        } else {
-            commands.erase(commands.begin(), commands.begin()+size);
+            AbstractCommand *command = *commands.begin();
+            commands.pop_front();
+            command->apply();
+            delete command;
         }
 
         misReplayingCommands = false;
@@ -184,7 +183,7 @@ public:
     }
 
 protected:
-    std::vector<AbstractCommand *> commands;
+    std::list<AbstractCommand *> commands;
     bool misReplayingCommands;
     /* TODO: Fix this */
 //    enum {

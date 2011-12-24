@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <QString>
 #include "test.h"
 #include "battleenum.h"
 
@@ -24,6 +25,7 @@ public:
     }
 
 protected:
+    typedef std::shared_ptr<QString> *string_ptr;
 
     template <BattleEnum val>
     struct Param
@@ -56,9 +58,15 @@ protected:
         wc()->onSendOut(spot, prevIndex, ptr->get(), silent);
     }
 
+    template<class Y=workerClass>
+    typename test<decltype(&Y::onDynamicInfo)>::type
+    invoke2(Param<BattleEnum::StatBoostsAndField>, int &spot, BattleDynamicInfo &info) {
+        wc()->onDynamicInfo(spot, info);
+    }
+
     /* Todo: expand following macros */
     start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
-    start(UseAttack, onUseAttack, int spot, int attack) end(onUseAttack, spot, attack)
+    start(UseAttack, onUseAttack, int spot, int attack, bool silent) end(onUseAttack, spot, attack, silent)
     start(Turn, onBeginTurn, int turn) end(onBeginTurn, turn)
     start(NewHp, onHpChange, int spot, int newHp) end(onHpChange, spot, newHp)
     start(Hits, onHitCount, int spot, int count) end(onHitCount, spot, count)
@@ -73,13 +81,13 @@ protected:
     start(StatusFeel, onStatusNotification, int spot, int status) end(onStatusNotification, spot, status)
     start(StatusHurt, onStatusDamage, int spot, int status) end(onStatusDamage, spot, status)
     start(StatusFree, onStatusOver, int spot, int status) end(onStatusOver, spot, status)
-    start(Fail, onAttackFailing, int spot) end(onAttackFailing, spot)
-    start(PlayerMessage, onPlayerMessage, int spot, char* message) end(onPlayerMessage, spot, QString::fromUtf8(QByteArray(message)))
-    start(SpectatorEnter, onSpectatorJoin, int id, char* name) end(onSpectatorJoin, id, QString::fromUtf8(QByteArray(name)))
+    start(Fail, onAttackFailing, int spot, bool silent) end(onAttackFailing, spot, silent)
+    start(PlayerMessage, onPlayerMessage, int spot, string_ptr message) end(onPlayerMessage, spot, *message->get())
+    start(SpectatorEnter, onSpectatorJoin, int id, string_ptr name) end(onSpectatorJoin, id, *name->get())
     start(SpectatorLeave, onSpectatorLeave, int id) end(onSpectatorLeave, id)
-    start(SpectatorMessage, onSpectatorChat, int id, char * message) end(onSpectatorChat, id, QString::fromUtf8(QByteArray(message)))
-    start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, char *data)
-        end(onMoveMessage, spot, move, part, type, foe, other, QString::fromUtf8(QByteArray(data)))
+    start(SpectatorMessage, onSpectatorChat, int id, string_ptr message) end(onSpectatorChat, id, *message->get())
+    start(MoveMessage, onMoveMessage, int spot, int move, int part, int type, int foe, int other, string_ptr data)
+        end(onMoveMessage, spot, move, part, type, foe, other, *data->get())
     start(NoTargetMessage, onNoTarget, int spot) end(onNoTarget, spot)
     start(ItemMessage, onItemMessage, int spot, int item, int part, int foe, int berry, int other)
         end(onItemMessage, spot, item, part, foe, berry, other)
@@ -98,8 +106,7 @@ protected:
     start(BattleEnd, onBattleEnd, int res, int winner) end(onBattleEnd, res, winner)
     start(ClauseMessage, onClauseActivated, int clause) end(onClauseActivated, clause)
     start(RatedInfo, onRatedNotification, bool rated) end(onRatedNotification, rated)
-    start(TierInfo, onTierNotification, char* tier) end(onTierNotification, QString::fromUtf8(QByteArray(tier)))
-    start(StatBoostsAndField, onDynamicInfo, int spot, BattleDynamicInfo *info) end(onDynamicInfo, spot, *info)
+    start(TierInfo, onTierNotification, string_ptr tier) end(onTierNotification, *tier->get())
     start(PokemonVanish, onPokemonVanish, int spot) end(onPokemonVanish, spot)
     start(PokemonReappear, onPokemonReappear, int spot) end(onPokemonReappear, spot)
     start(SpriteChange, onSpriteChange, int spot, int newSprite) end(onSpriteChange, spot, newSprite)
@@ -108,6 +115,16 @@ protected:
     start(ClockStart, onClockStart, int player, int time) end(onClockStart, player, time)
     start(ClockStop, onClockStop, int player, int time) end(onClockStop, player, time)
     start(ShiftSpots, onShiftSpots, int player, int spot1, int spot2, bool silent) end(onShiftSpots, player, spot1, spot2, silent)
+    start(PPChange, onPPChange, int spot, int move, int PP) end(onPPChange, spot, move, PP)
+    start(OfferChoice, onOfferChoice, int player, std::shared_ptr<BattleChoices>* choice) end (onOfferChoice, player, *choice->get())
+    start(TempPPChange, onTempPPChange, int spot, int move, int PP) end (onTempPPChange, spot, move, PP)
+    start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)
+    start(RearrangeTeam, onRearrangeTeam, int player, std::shared_ptr<ShallowShownTeam>* team) end (onRearrangeTeam, player, *team->get())
+    start(ChoiceSelection, onChoiceSelection, int player) end (onChoiceSelection, player)
+    start(ChoiceCanceled, onChoiceCanceled, int player) end (onChoiceCanceled, player)
+    start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
+    start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
+    start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
 
 #undef start
 #undef end
@@ -122,7 +139,7 @@ protected:
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
-    void onUseAttack(int spot, int attack);
+    void onUseAttack(int spot, int attack, bool silent);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
     void onHitCount(int spot, int count);
@@ -137,12 +154,12 @@ protected:
     void onStatusNotification(int spot, int status);
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
-    void onAttackFailing(int spot);
-    void onPlayerMessage(int spot, QString message);
-    void onSpectatorJoin(int id, QString name);
+    void onAttackFailing(int spot, bool fail);
+    void onPlayerMessage(int spot, const QString& message);
+    void onSpectatorJoin(int id, const QString& name);
     void onSpectatorLeave(int id);
-    void onSpectatorChat(int id, QString message);
-    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, QString data);
+    void onSpectatorChat(int id, const QString& message);
+    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
     void onNoTarget(int spot);
     void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
     void onFlinch(int spot);
@@ -159,7 +176,7 @@ protected:
     void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
     void onTierNotification(QString tier);
-    void onDynamicInfo(int spot, BattleDynamicInfo info);
+    void onDynamicInfo(int spot, const BattleDynamicInfo &info);
     void onPokemonVanish(int spot);
     void onPokemonReappear(int spot);
     void onSpriteChange(int spot, int newSprite);
@@ -169,6 +186,16 @@ protected:
     void onClockStop(int player, int time);
     void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
+    void onPPChange(int spot, int move, int PP);
+    void onOfferChoice(int player, const BattleChoices &choice);
+    void onTempPPChange(int spot, int move, int PP);
+    void onMoveChange(int spot, int slot, int move, bool definite);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onChoiceSelection(int player);
+    void onChoiceCanceled(int player);
+    void onVariation(int player, int bonus, int malus);
+    void onDynamicStats(int spot, const BattleStats& stats);
+    void onPrintHtml(const QString &html);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

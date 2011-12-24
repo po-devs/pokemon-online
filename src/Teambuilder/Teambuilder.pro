@@ -44,7 +44,8 @@ SOURCES += main.cpp \
     poketextedit.cpp \
     remove_direction_override.cpp \
 	password_wallet.cpp\
-    spectatorwindow.cpp
+    spectatorwindow.cpp \
+    replayviewer.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -102,7 +103,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battledatatypes.h \
     ../BattleManager/battledata.h \
     ../BattleManager/battleclientlog.h \
-    basebattlewindowinterface.h
+    basebattlewindowinterface.h \
+    themeaccessor.h \
+    replayviewer.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -131,6 +134,7 @@ macx:LIBS += -framework \
     CoreFoundation
 macx:ICON = pokemononline.icns
 macx:QMAKE_INFO_PLIST = Info.plist
+macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
 
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"

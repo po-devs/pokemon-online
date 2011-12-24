@@ -12,37 +12,37 @@ import Qt.labs.shaders 1.0
  * "live images", i.e. animations, then maybe expose the live
  * property, otherwise do shader.sourceShader.live = true
 */
-    ShaderEffectItem {
-        property variant image
-        property real alpha: 0.5
+ShaderEffectItem {
+    property variant image
+    property real alpha: 0.5
 
-        ShaderEffectSource {
-            id: sourceImage
-            hideSource: true
-            sourceItem: image
-            live: false
-        }
+    ShaderEffectSource {
+        id: sourceImage
+        hideSource: true
+        sourceItem: image
+        live: false
+    }
 
-        function grab() {
-            sourceImage.grab();
-        }
+    function grab() {
+        sourceImage.grab();
+    }
 
-        x: image.x
-        y: image.y
-        width: image.width
-        height: image.height
-        parent: image.parent
-        scale: image.scale
-        transformOrigin: image.transformOrigin
+    x: image.x
+    y: image.y
+    width: image.width
+    height: image.height
+    parent: image.parent
+    scale: image.scale
+    transformOrigin: image.transformOrigin
 
-        property real opac: image.opacity
+    property real opac: image.opacity
 
-        property variant sourceTexture: sourceImage
+    property variant sourceTexture: sourceImage
 
-        property color blendColor: "black"
+    property color blendColor: "black"
 
 
-        vertexShader: "
+    vertexShader: "
             uniform highp mat4 qt_ModelViewProjectionMatrix;
             attribute highp vec4 qt_Vertex;
             attribute highp vec2 qt_MultiTexCoord0;
@@ -56,7 +56,7 @@ import Qt.labs.shaders 1.0
             }
         "
 
-        fragmentShader: "
+    fragmentShader: "
             uniform highp sampler2D sourceTexture;
             uniform lowp vec4 blendColor;
             uniform lowp float alpha;
@@ -70,4 +70,4 @@ import Qt.labs.shaders 1.0
                 gl_FragColor = vec4((c.rgb*(1.0-alpha)+blendColor.rgb*alpha)*c.a*opac, c.a*opac);
             }
         "
-    }
+}

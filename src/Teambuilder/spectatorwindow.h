@@ -4,13 +4,15 @@
 #include <QObject>
 
 #include "../BattleManager/battledatatypes.h"
+#include "../BattleManager/battleenum.h"
 
 class BattleClientLog;
 class BattleScene;
 class BattleInput;
 class PokeTextEdit;
+template <class T> class FlowCommandManager;
 class PlayerInfo;
-class BattleConfiguration;
+class FullBattleConfiguration;
 
 /* A window which takes binary as input, and manages
   a battle scene as well as a battle log.
@@ -20,8 +22,7 @@ class BattleConfiguration;
 class SpectatorWindow : public QObject
 {
 public:
-    SpectatorWindow(const BattleConfiguration &conf, const PlayerInfo &name1,
-                    const PlayerInfo &name2);
+    SpectatorWindow(const FullBattleConfiguration &conf);
     ~SpectatorWindow();
 
     /* Receives the binary data */
@@ -31,6 +32,13 @@ public:
     PokeTextEdit * getLogWidget();
     /* gets the scene widget */
     QWidget *getSceneWidget();
+
+    BattleClientLog *getLog();
+    FlowCommandManager<BattleEnum> * getBattle();
+    BattleInput *getInput();
+    void addOutput(FlowCommandManager<BattleEnum>*);
+
+    advbattledata_proxy *getBattleData();
 
     /* Gets a premade widget. The caller
       is responsible for managing the widget's lifetime
@@ -49,6 +57,11 @@ private:
 
     battledata_basic *data;
     advbattledata_proxy *data2;
+
+    FlowCommandManager<BattleEnum> *lastOutput;
+
+    static int qmlcount;// qml windows use opengl, so only one can be open at all times
+    bool qmlwindow;
 };
 
 #endif // SPECTATORWINDOW_H

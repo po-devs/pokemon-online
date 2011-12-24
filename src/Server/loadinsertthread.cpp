@@ -14,6 +14,11 @@ void LoadThread::run()
     sem.acquire(1);
 
     forever {
+        if (finished) {
+            db.close();
+            return;
+        }
+
         queryMutex.lock();
         Query q = queries.takeFirst();
         queryMutex.unlock();
@@ -34,5 +39,11 @@ void LoadThread::pushQuery(const QVariant &name, WaitingObject *w, int query_typ
 
     queryMutex.unlock();
 
+    sem.release(1);
+}
+
+void LoadThread::finish()
+{
+    finished = true;
     sem.release(1);
 }

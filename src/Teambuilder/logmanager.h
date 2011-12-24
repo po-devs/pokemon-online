@@ -6,7 +6,8 @@
 enum LogType {
     BattleLog,
     PMLog,
-    ChannelLog
+    ChannelLog,
+    ReplayLog
 };
 
 struct LogKey
@@ -31,7 +32,10 @@ struct Log
     bool started;
     bool autolog;
     LogManager *master;
+
     QString data;
+    QByteArray bdata;
+
     LogKey key;
     int linecount;
     enum OverRide {
@@ -45,8 +49,12 @@ struct Log
 
     void pushHtml(const QString& html);
     void pushTxt(const QString &txt);
+    void pushList(const QStringList &list);
+    void setBinary(const QByteArray &bdata);
     void flush();
     void close();
+
+    bool isBinary() const;
 
     const QString  &title() const {
         return key.title;
@@ -77,7 +85,9 @@ public:
 
     /* Base directory for those kind of logs */
     QString getDirectoryForType(LogType type);
-    void changeDirectoryForType(LogType type, const QString &directory);
+    QString getDirectory() const;
+    void changeBaseDirectory(const QString &directory);
+    //void changeDirectoryForType(LogType type, const QString &directory);
     void changeLogSaving(LogType type, bool save);
 
 private:
@@ -87,7 +97,7 @@ private:
     static LogManager *instance;
 
     QHash<LogKey, Log*> logs;
-    QHash<LogType, QString> directories;
+    QString directory;
     int flags;
 };
 

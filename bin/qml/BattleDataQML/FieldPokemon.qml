@@ -16,10 +16,23 @@ Item {
         return pokemon.status === 31 || pokemon.numRef === 0;
     }
 
-    function useAttack(attack, target) {
+    function useAttack(attack, target, params) {
+        for (var i in params) {
+            console.log("param: " + i + ": " + params[i]);
+        }
+
         //battle.scene.debug("Using attack " + attack + "\n");
-        Moves.useAttack(woof, attack, target);
+        Moves.useAttack(woof, attack, target, params);
     }
+
+    function behind(zdelta) {
+        return z + (back ? zdelta : -zdelta);
+    }
+
+    function infront(zdelta) {
+        return z + (back ? -zdelta : zdelta);
+    }
+
 
     PokeballAnimation {
         id: pokeball;
@@ -37,11 +50,16 @@ Item {
     }
 
     Image {
+        property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
         id: image
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom
-        source: "image://pokeinfo/pokemon/"+pokemon.numRef+"&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
+//        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
+//                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
+//                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
+        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
+//        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         onSourceChanged: shader.grab();
     }
@@ -67,10 +85,16 @@ Item {
     Connections {
         target: fieldPokemon
         onStatUp: {
-            Effects.statUp(woof);
+            var level = battle.scene.statboostlevel();
+            if (level > 0) {
+                Effects.statUp(woof, level);
+            }
         }
         onStatDown: {
-            Effects.statDown(woof);
+            var level = battle.scene.statboostlevel();
+            if (level > 0) {
+                Effects.statDown(woof, level);
+            }
         }
     }
 
@@ -134,7 +158,10 @@ Item {
                         }
 
                         //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
-                        battle.scene.pause();}}
+                        battle.scene.pause();
+                        battle.scene.playCry(woof.pokemon.numRef);
+                    }
+                }
                 ParallelAnimation {
                     NumberAnimation {
                         target: image; property: "opacity";
@@ -169,6 +196,7 @@ Item {
                 PropertyAction { target: image; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:image; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
+                ScriptAction {script: battle.scene.playCry(woof.pokemon.numRef);}
                 PauseAnimation { duration: 150 }
                 NumberAnimation { target:image; from: 70;
                     to: 0; property: "anchors.bottomMargin"; duration: 400; easing.type: Easing.OutBounce}

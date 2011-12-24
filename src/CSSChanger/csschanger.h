@@ -5,13 +5,15 @@
 
 #include "../Teambuilder/plugininterface.h"
 
+class ThemeAccessor;
+
 extern "C" {
 CSSCHANGERSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
 }
 
 class CSSCHANGERSHARED_EXPORT CSSPlugin : public ClientPlugin {
 public:
-    CSSPlugin();
+    CSSPlugin(ThemeAccessor*);
 
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
@@ -22,6 +24,8 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
+private:
+    ThemeAccessor *theme;
 };
 
 

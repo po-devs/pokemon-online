@@ -33,6 +33,7 @@ QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
     menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
+    menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
     w->addStyleMenu(menuBar);
