@@ -160,6 +160,7 @@ void ChallengeWindow::onChallenge()
     s.setValue("challenge_with_doubles", battleMode->currentIndex());
 
     emit challenge(id());
+    myid = -1; // Mess up player ID so double ID will not occur..
     close();
 }
 
