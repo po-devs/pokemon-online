@@ -2476,8 +2476,11 @@ void StatInfo::init(const QString &dir)
     fill_container_with_file(m_status, trFile(path("status")));
 }
 
-QString StatInfo::Stat(int stat)
+QString StatInfo::Stat(int stat, int gen)
 {
+    if (stat == SpAttack && gen == 1) {
+        return tr("Special", "Stat");
+    }
     if (stat >= 0 && stat <= Evasion)
         return m_stats[stat];
     else

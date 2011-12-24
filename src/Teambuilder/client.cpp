@@ -144,6 +144,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     } else {
         sortCBN = 0;
     }
+    pmFlashing = settings.value("pm_flashing").toBool();
     if(settings.value("pm_disabled").toBool()) {
         pmDisabled = 1;
     } else {
