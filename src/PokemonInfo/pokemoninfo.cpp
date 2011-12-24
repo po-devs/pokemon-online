@@ -2479,7 +2479,7 @@ void StatInfo::init(const QString &dir)
 QString StatInfo::Stat(int stat, int gen)
 {
     if (stat == SpAttack && gen == 1) {
-        return tr("Special", "Stat");
+        return QObject::tr("Special", "Stat");
     }
     if (stat >= 0 && stat <= Evasion)
         return m_stats[stat];
