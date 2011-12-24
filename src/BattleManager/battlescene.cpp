@@ -73,6 +73,7 @@ BattleScene::battledata_ptr BattleScene::data()
 
 QDeclarativeView *BattleScene::getWidget()
 {
+    mWidget->setFixedSize(mWidget->sizeHint());
     return mWidget;
 }
 
