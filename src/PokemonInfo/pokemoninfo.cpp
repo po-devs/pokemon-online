@@ -26,6 +26,7 @@ QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinLevels[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinEggLevels[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[NUMBER_GENS][3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
+QVector<int> PokemonInfo::m_SpecialStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
@@ -384,6 +385,11 @@ int PokemonInfo::calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint
 int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev)
 {
     quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
+
+    if (stat == SpAttack && gen == 1) {
+        basestat = SpecialStat(pokeid);
+    }
+
     if (stat == Hp) {
         /* Formerly direct check for Shedinja */
         if(m_Options.value(pokeid).contains('1')) {
@@ -456,6 +462,7 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
     }
 
     fill_uid_int(m_LevelBalance, path("level_balance.txt"), m_CurrentMode);
+    fill_container_with_file(m_SpecialStats, path("specialstat.txt"), m_CurrentMode);
     loadClassifications();
     loadGenderRates();
     loadHeights();
@@ -939,6 +946,14 @@ void PokemonInfo::loadBaseStats()
 PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
 {
     return m_BaseStats.value(pokeid);
+}
+
+int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
+{
+    if (!Exists(pokeid, 1)) {
+        return 0;
+    }
+    return m_SpecialStats[pokeid.pokenum];
 }
 
 void PokemonInfo::loadNames()
@@ -2461,8 +2476,11 @@ void StatInfo::init(const QString &dir)
     fill_container_with_file(m_status, trFile(path("status")));
 }
 
-QString StatInfo::Stat(int stat)
+QString StatInfo::Stat(int stat, int gen)
 {
+    if (stat == SpAttack && gen == 1) {
+        return tr("Special", "Stat");
+    }
     if (stat >= 0 && stat <= Evasion)
         return m_stats[stat];
     else

@@ -315,8 +315,10 @@ void TB_Advanced::changeDV(int stat, int newval)
 
         if (gen() <= 2) {
             updateDV(Hp);
-            changeShininess(poke()->shiny());
-            changeGender(poke()->gender());
+            if (gen() == 2) {
+                changeShininess(poke()->shiny());
+                changeGender(poke()->gender());
+            }
         }
 
         updateHiddenPower();
@@ -484,14 +486,18 @@ void TB_Advanced::updateStats()
 
 void TB_Advanced::updateStat(int stat)
 {
-    QColor color;
+    if (poke()->natureBoost(stat) != 0) {
+        QColor color;
 
-    switch (poke()->natureBoost(stat)) {
-    case -1: color = Theme::Color("Teambuilder/statHindered"); break;
-    case 1: color = Theme::Color("Teambuilder/statRaised"); break;
+        switch (poke()->natureBoost(stat)) {
+        case -1: color = Theme::Color("Teambuilder/statHindered"); break;
+        case 1: color = Theme::Color("Teambuilder/statRaised"); break;
+        }
+
+        stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), color));
+    } else {
+        stats[stat]->setText(QString::number(poke()->stat(stat)));
     }
-
-    stats[stat]->setText(toColor(QString::number(poke()->stat(stat)), color));
 }
 
 PokeTeam *TB_Advanced::poke()

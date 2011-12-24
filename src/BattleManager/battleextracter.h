@@ -94,7 +94,7 @@ protected:
     start(Miss, int spot) end(spot)
     start(Avoid, int spot) end(spot)
     start(StatChange, int spot; int stat; int boost; bool silent) end(spot, stat, boost, silent)
-    start(ClassicStatusChange, int spot; int status; bool multipleTurns) end(spot, status, multipleTurns)
+    start(ClassicStatusChange, int spot; int status; bool multipleTurns; bool silent) end(spot, status, multipleTurns, silent)
     start(AbsoluteStatusChange, int player; int poke; int status) end(player, poke, status)
     start(AlreadyStatusMessage, int spot; int status) end(spot, status)
     start(StatusFeel, int spot; int status) end(spot, status)

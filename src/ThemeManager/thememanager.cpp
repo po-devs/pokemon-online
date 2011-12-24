@@ -3,7 +3,7 @@
 
 #include <QCoreApplication>
 
-ClientPlugin* createPluginClass(MainEngineInterface* interface)
+ClientPlugin* createPluginClass(MainEngineInterface*)
 {
     return new ThemeManagerPlugin();
 }

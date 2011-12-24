@@ -13,6 +13,9 @@
 #include "battlepluginstruct.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
+#include "../Shared/battlecommands.h"
+
+using namespace BattleCommands;
 
 typedef BattlePStorage BP;
 
@@ -3462,9 +3465,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
     pokeMemory(player)["Confused"] = true;
     pokeMemory(player)["ConfusedCount"] = randint(4) + 1;
 
-    if (tell) {
-        notify(All, StatusChange, player, qint8(Pokemon::Confused));
-    }
+    notify(All, StatusChange, player, qint8(Pokemon::Confused), true, !tell);
 
     callieffects(player, player,"AfterStatusChange");
 }
@@ -3603,9 +3604,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
         currentForcedSleepPoke[this->player(player)] = -1;
     }
 
-    if (tell) {
-        notify(All, StatusChange, player, qint8(status));
-    }
+    notify(All, StatusChange, player, qint8(status), turns > 0, !tell);
     notify(All, AbsStatusChange, this->player(player), qint8(this->slotNum(player)), qint8(status), turns > 0);
     poke(player).addStatus(status);
     if (turns != 0) {
