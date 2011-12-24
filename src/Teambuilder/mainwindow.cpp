@@ -22,7 +22,7 @@ MainEngine::MainEngine() : displayer(0)
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "application_style", "plastique");
-    setDefaultValue(s, "theme_2", "Themes/Dratini Dreams/");
+    setDefaultValue(s, "theme_2", "Themes/Balanced/");
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
