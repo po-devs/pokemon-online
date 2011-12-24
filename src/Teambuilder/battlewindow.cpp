@@ -721,6 +721,12 @@ void BattleWindow::sendRearrangedTeam()
         test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
         mypzone->pokes[i]->changePokemon(poke(i));
     }
+    /* update attacks for poke on field */
+    for (int snum = 0; snum < 3; ++snum) {
+        for (int i = 0; i< 4; i++) {
+            myazones[snum]->tattacks[i]->updateAttack(poke(snum).move(i), poke(snum), gen());
+        }
+    }
 }
 
 TeamProxy &BattleWindow::team()
