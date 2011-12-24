@@ -50,7 +50,7 @@ public:
         poke(spot).setLife(newHp);
     }
 
-    void onMajorStatusChange(int spot, int status, bool)
+    void onMajorStatusChange(int spot, int status, bool, bool)
     {
         //TODO: handle confusion better
         if (status != Pokemon::Confused) {

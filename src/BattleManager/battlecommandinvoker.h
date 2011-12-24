@@ -75,7 +75,7 @@ protected:
     start(Miss, onMiss, int spot) end(onMiss, spot)
     start(Avoid, onAvoid, int spot) end(onAvoid, spot)
     start(StatChange, onStatBoost, int spot, int stat, int boost, bool silent) end(onStatBoost, spot, stat, boost, silent)
-    start(ClassicStatusChange, onMajorStatusChange, int spot, int status, bool multipleTurns) end(onMajorStatusChange, spot, status, multipleTurns)
+    start(ClassicStatusChange, onMajorStatusChange, int spot, int status, bool multipleTurns, bool silent) end(onMajorStatusChange, spot, status, multipleTurns, silent)
     start(AbsoluteStatusChange, onPokeballStatusChanged, int player, int poke, int status) end(onPokeballStatusChanged, player, poke, status)
     start(AlreadyStatusMessage, onStatusAlreadyThere, int spot, int status) end(onStatusAlreadyThere, spot, status)
     start(StatusFeel, onStatusNotification, int spot, int status) end(onStatusNotification, spot, status)
@@ -148,7 +148,7 @@ protected:
     void onMiss(int spot);
     void onAvoid(int spot);
     void onStatBoost(int spot, int stat, int boost, bool silent);
-    void onMajorStatusChange(int spot, int status, bool multipleTurns);
+    void onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onStatusAlreadyThere(int spot, int status);
     void onStatusNotification(int spot, int status);
