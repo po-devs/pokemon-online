@@ -523,7 +523,7 @@ public:
     /* directory where all the data is */
     static void init(const QString &dir="db/stats/");
 
-    static QString Stat(int stat);
+    static QString Stat(int stat, int gen = GEN_MAX);
     static QString Status(int status);
     static QString ShortStatus(int status);
 private:
