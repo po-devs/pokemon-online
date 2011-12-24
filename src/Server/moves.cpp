@@ -420,7 +420,7 @@ struct MMLeechSeed : public MM
         if (b.koed(s2))
             return;
 
-        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / 8, 1));
+        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / (gen() == 1 ? 16 : 8), 1));
 
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
         b.inflictDamage(s, damage, s, false);
