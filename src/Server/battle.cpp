@@ -1167,10 +1167,10 @@ void BattleSituation::notifyInfos(int tosend)
 {
     for (int p = 0; p < numberOfSlots(); p++) {
         if (!koed(p)) {
-            BattleStats stats = constructStats(p);
-            notify(player(p), DynamicStats, p, stats);
             BattleDynamicInfo infos = constructInfo(p);
             notify(tosend, DynamicInfo, p, infos);
+            BattleStats stats = constructStats(p);
+            notify(player(p), DynamicStats, p, stats);
         }
     }
 }
