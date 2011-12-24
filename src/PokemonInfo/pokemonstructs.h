@@ -107,14 +107,12 @@ public:
     int genderAvail() const;
     int type1() const;
     int type2() const;
-    const PokeBaseStats &stats() const;
 
     const QSet<int>& moves() const;
 
     /* loads using num() */
     void load();
 protected:
-    PokeBaseStats m_stats;
     QSet<int> m_moves;
     AbilityGroup m_abilities;
     int m_types[2];
@@ -124,7 +122,6 @@ protected:
     void loadTypes();
     void loadAbilities();
     void loadGenderAvail();
-    void loadStats();
 };
 
 /* Data that is unique to a pokémon */

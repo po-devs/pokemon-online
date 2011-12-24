@@ -100,7 +100,7 @@ public:
         gui.zone->updatePoke(spot);
         emit playCry(data()->poke(spot).num().pokenum);
     }
-    void onMajorStatusChange(int spot, int, bool){ updatePoke(spot);}
+    void onMajorStatusChange(int spot, int, bool, bool){ updatePoke(spot);}
     void onSendOut(int spot, int previndex, ShallowBattlePoke*, bool) {
         updatePoke(spot);
         gui.zone->updatePoke(spot);

@@ -9,6 +9,9 @@
 #include "../BattleManager/battleclientlog.h"
 #include "../BattleManager/battleinput.h"
 #include "poketextedit.h"
+#include "../Shared/battlecommands.h"
+
+using namespace BattleCommands;
 
 BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int mode, int myself, int opponent)
     : myself(myself), opponent(opponent)
@@ -336,6 +339,15 @@ void BaseBattleWindow::sendMessage()
 
 void BaseBattleWindow::receiveInfo(QByteArray inf)
 {
+    if (inf[0] == char(SpectatorChat) && ignoreSpecs != NoIgnore) {
+        return;
+    }
+    if ( (inf[0] == char(BattleChat) || inf[0] == char(EndMessage)) && ignoreSpecs == char(IgnoreAll)) {
+        if (inf[1] == char(info().opponent)) {
+            return;
+        }
+    }
+
     QDataStream stream(&replayData.data, QIODevice::Append);
     stream.setVersion(QDataStream::Qt_4_7);
     stream << quint32(replayData.t.elapsed()) << inf;

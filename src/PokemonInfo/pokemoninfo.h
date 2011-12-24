@@ -121,6 +121,7 @@ public:
     static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
+    static int SpecialStat(const Pokemon::uniqueId &pokeid);
     static bool Exists(const Pokemon::uniqueId &pokeid, int gen);
     static bool Exists(const Pokemon::uniqueId &pokeid);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
@@ -151,6 +152,7 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Genders;
     static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
+    static QVector<int> m_SpecialStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
     static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
@@ -521,7 +523,7 @@ public:
     /* directory where all the data is */
     static void init(const QString &dir="db/stats/");
 
-    static QString Stat(int stat);
+    static QString Stat(int stat, int gen = GEN_MAX);
     static QString Status(int status);
     static QString ShortStatus(int status);
 private:

@@ -37,7 +37,7 @@ public:
 
         team(player).setPoke(slot, pokemon);
 
-        fieldPoke(spot).onSendOut(team(player).poke(slot));
+        fieldPoke(spot).onSendOut(pokemon);
     }
 
     void onSendBack(int spot, bool)
@@ -50,7 +50,7 @@ public:
         poke(spot).setLife(newHp);
     }
 
-    void onMajorStatusChange(int spot, int status, bool)
+    void onMajorStatusChange(int spot, int status, bool, bool)
     {
         //TODO: handle confusion better
         if (status != Pokemon::Confused) {
@@ -117,8 +117,9 @@ public:
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
     int gen() { return conf->gen; }
     bool isKoed(int spot) { return poke(spot).isKoed();}
-    BattleConfiguration::ReceivingMode role(int player) { return BattleConfiguration::ReceivingMode(conf->receivingMode[this->player(player)]);}
-    int numberOfSlots() const {return (conf->mode+1)*2;}
+    BattleConfiguration::ReceivingMode role(int player) const { return BattleConfiguration::ReceivingMode(conf->receivingMode[this->player(player)]);}
+    bool isPlayer(int spot) const { return role(spot) == BattleConfiguration::Player;}
+    int numberOfSlots() const {return conf->numberOfSlots();}
     bool multiples() const {return (conf->mode != ChallengeInfo::Singles);}
 
     void reloadTeam(int player) {

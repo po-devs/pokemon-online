@@ -58,7 +58,8 @@ HEADERS +=\
     advancedbattledata.h \
     battlesceneflow.h \
     param.h \
-    regularbattlescene.h
+    regularbattlescene.h \
+    ../Shared/battlecommands.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

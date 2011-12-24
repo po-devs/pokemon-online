@@ -8,9 +8,27 @@ AuxPokeDataProxy::AuxPokeDataProxy()
     showing = true;
     onTheField = false;
     substitute = false;
+    playerPoke = false;
 
     resetStatBoosts();
     resetStats();
+}
+
+AuxPokeDataProxy::~AuxPokeDataProxy()
+{
+    if (playerPoke) {
+        delete poke;
+    }
+}
+
+void AuxPokeDataProxy::setPlayerPoke(bool p)
+{
+    playerPoke = p;
+
+    if (p) {
+        poke = new PokeProxy(new PokeBattle());
+        poke->setOwnerShip(true);
+    }
 }
 
 int AuxPokeDataProxy::statBoost(int stat)
@@ -20,6 +38,10 @@ int AuxPokeDataProxy::statBoost(int stat)
 
 int AuxPokeDataProxy::stat(int stat)
 {
+    if (!playerPoke) {
+        return 0;
+    }
+
     if (basestats[stat] == 0) {
         return 0;
     }
@@ -87,13 +109,25 @@ void AuxPokeDataProxy::boostStat(int stat, int level)
     }
 }
 
-void AuxPokeDataProxy::onSendOut(PokeProxy *poke)
+void AuxPokeDataProxy::setPoke(PokeProxy *poke)
 {
-    this->poke = poke;
+    if (playerPoke) {
+        this->poke->adaptTo(poke->exposedData());
 
-    for (int i = 0; i < 6; i++) {
-        basestats[i] = poke->basestat(i);
-        updateBoostedStat(i);
+        for (int i = 0; i < 6; i++) {
+            basestats[i] = poke->basestat(i);
+            updateBoostedStat(i);
+        }
+    } else {
+        this->poke = poke;
+        emit pokemonChanged();
+    }
+}
+
+void AuxPokeDataProxy::onSendOut(ShallowBattlePoke *shallow)
+{
+    if (playerPoke) {
+        this->poke->adaptTo(shallow);
     }
 
     setShowing(true);
@@ -106,8 +140,9 @@ void AuxPokeDataProxy::onSendBack()
 {
     setOnTheField(false);
     resetStatBoosts();
-    resetStats();
-    poke = NULL;
+    if (playerPoke) {
+        resetStats();
+    }
 }
 
 void FieldProxy::setWeather(int weather)
@@ -119,10 +154,8 @@ void FieldProxy::setWeather(int weather)
     emit weatherChanged();
 }
 
-FieldProxy::FieldProxy() : mWeather(NormalWeather) {
-    /* Resizes for triple. Later, when loaded with battle configuration, will get
-              more accurate loading */
-    for (int i = 0; i < 6; i++) {
+FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
+    for (int i = 0; i < numOfSlots; i++) {
         AuxPokeDataProxy *ptr = new AuxPokeDataProxy();
         auxdata.push_back(ptr);
     }
@@ -132,7 +165,7 @@ FieldProxy::FieldProxy() : mWeather(NormalWeather) {
 }
 
 FieldProxy::~FieldProxy() {
-    for (int i = 0; i < 6; i++) {
+    for (unsigned i = 0; i < auxdata.size(); i++) {
         delete auxdata[i];
     }
     for (int i = 0; i < 2; i++) {

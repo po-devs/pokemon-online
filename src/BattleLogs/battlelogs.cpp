@@ -4,6 +4,8 @@
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battleclientlog.h"
 #include "../BattleManager/battledatatypes.h"
+#include "../Shared/battlecommands.h"
+
 
 ServerPlugin * createPluginClass(ServerInterface*) {
     return new BattleLogs();
@@ -200,7 +202,7 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
 int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
 {
     /* Those, are not logged */
-    if (char(b[0]) == BattleInterface::CancelMove || char(b[0]) == BattleInterface::OfferChoice || char(b[0]) == BattleInterface::RearrangeTeam)
+    if (char(b[0]) == BattleCommands::CancelMove || char(b[0]) == BattleCommands::OfferChoice || char(b[0]) == BattleCommands::RearrangeTeam)
         return 0;
 
     if (players != BattleInterface::AllButPlayer) {
