@@ -3153,6 +3153,14 @@ struct MMTransform : public MM {
     static void daf(int s, int t, BS &b) {
         if (poke(b,t).contains("Transformed") || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
             turn(b,s)["Failed"] = true;
+
+        Pokemon::uniqueId num = b.pokenum(t);
+
+        /* In Pokemon Stadium Ditto can't transform into an opposing Ditto */
+        if (b.gen() == 1 && num.toPokeRef() == Pokemon::Ditto) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
     }
 
     static void uas(int s, int t, BS &b) {
