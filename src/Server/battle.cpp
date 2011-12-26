@@ -2094,8 +2094,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             return true;
     }
 
-    //No Guard and Swift in Gen 1.
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && move == 129)) {
+    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == 129 || move == 144 || move == 102))) {
         return true;
     }
 

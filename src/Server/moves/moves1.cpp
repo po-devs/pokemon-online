@@ -209,6 +209,16 @@ struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
         functions["UponAttackSuccessful"] = &aas;
+        functions["AttackSomehowFailed"] = &asf;
+    }
+
+    // Hyper Beam requires a recharge in Gen 1 Stadium even if it misses.
+    static void asf(int s, int, BS &b) {
+        if (b.gen() != 1) {
+            return;
+        }
+        addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
+        poke(b, s)["BlastBurnTurn"] = b.turn();
     }
 
     static void aas(int s, int, BS &b) {
