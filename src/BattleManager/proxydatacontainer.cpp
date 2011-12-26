@@ -30,6 +30,11 @@ void ProxyDataContainer::reloadTeam(int player)
 {
     if (conf->receivingMode[player] == BattleConfiguration::Player) {
         teams[player]->setTeam(conf->teams[player]);
+    
+        int numberInTeam = conf->numberOfSlots()/2;
+        for (int j = 0; j < numberInTeam; j++) {
+            auxdata.poke(player+j*2)->setPoke(teams[player]->poke(j));
+        }
     }
 }
 
