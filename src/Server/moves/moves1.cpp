@@ -1205,11 +1205,11 @@ struct MMBounce : public MM
             return;
         }
         int attack = move(b,t);
-        /* Lets see if the poke is vulnerable to that one attack */
+        /* Lets see if the poke is vulnerable to that one attack in Gen 2 or later */
         QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
 
         for (int i = 0; i < vuln_moves.size(); i++) {
-            if (vuln_moves[i] == attack) {
+            if (vuln_moves[i] == attack && b.gen() != 1) {
                 return;
             }
         }
