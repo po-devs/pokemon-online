@@ -71,16 +71,26 @@ struct MMDisable : public MM
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         /* Disable disables a random move in gen 1 */
         if (b.gen() == 1) {
-            int randnum = b.randint(4);
+            /* Number of Moves on moveset */
+            int moves = 4;
+            if (b.move(t,1) == 0) {
+                moves = 1;
+            }
+            else if (b.move(t,2) == 0) {
+                moves = 2;
+            }
+            else if (b.move(t,3) == 0) {
+                moves = 3;
+            }
             mv = 0;
-            /* This code checks if the user has less than 4 moves so it doesn't pick an empty moveslot */
+            int randnum = b.randint(moves);
             while (mv == 0) {
                 mv = b.move(t,randnum);
                 /* Checks that move doesn't have 0 PP */
                 if (b.PP(t, randnum) == 0) {
                     mv = 0;
                 }
-                randnum = b.randint(4);
+                randnum = b.randint(moves);
             }
         }
         b.sendMoveMessage(28,0,s,0,t,mv);
