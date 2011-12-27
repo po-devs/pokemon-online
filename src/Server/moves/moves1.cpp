@@ -289,6 +289,10 @@ struct MMConversion : public MM
     }
 
     static void daf(int s, int, BS &b) {
+        /* Conversion doesn't fail in Gen 1 */
+        if (b.gen() == 1) {
+            return;
+        }
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
@@ -323,11 +327,19 @@ struct MMConversion : public MM
         }
     }
 
-    static void uas(int s, int, BS &b) {
-        int type = turn(b,s)["ConversionType"].toInt();
-        fpoke(b,s).type1 = type;
-        fpoke(b,s).type2 = Pokemon::Curse;
-        b.sendMoveMessage(19, 0, s, type, s);
+    static void uas(int s, int t, BS &b) {
+        /* Conversion changes the user's types to the opponent's types in Gen 1*/
+        if (b.gen() == 1) {
+            b.sendMoveMessage(172,0,s,type(b,s),t);
+            fpoke(b,s).type1 = fpoke(b,t).type1;
+            fpoke(b,s).type2 = fpoke(b,t).type2;
+        }
+        else {
+            int type = turn(b,s)["ConversionType"].toInt();
+            fpoke(b,s).type1 = type;
+            fpoke(b,s).type2 = Pokemon::Curse;
+            b.sendMoveMessage(19, 0, s, type, s);
+        }
     }
 };
 
