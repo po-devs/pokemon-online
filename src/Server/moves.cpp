@@ -1380,6 +1380,8 @@ struct MMJumpKick : public MM
         int damage;
         if (b.gen() >= 5)
             damage = b.poke(s).totalLifePoints()/2;
+        else if (b.gen() == 1)
+            damage = 1;
         else {
             int typemod;
             int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
