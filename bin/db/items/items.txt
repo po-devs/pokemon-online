@@ -272,7 +272,7 @@ Pearl String
 Comet Shard
 Relic Copper
 Relic Silver
-Relice Gold
+Relic Gold
 Relic Vase
 Relic Band
 Relic Statue
