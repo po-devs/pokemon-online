@@ -690,7 +690,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
     connect(this, SIGNAL(PMDisabled(bool)), p, SLOT(disablePM(bool)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
-    connect(p, SIGNAL(destroyed(int)), this, SLOT(removePM(int)));
+    connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
 
     mypms[id] = p;
@@ -1016,9 +1016,10 @@ void Client::PMReceived(int id, QString pm)
 }
 
 
-void Client::removePM(int id)
+void Client::removePM(int id, const QString name)
 {
     mypms.remove(id);
+    disabledpms.remove(name);
 }
 
 void Client::loadTeam()
