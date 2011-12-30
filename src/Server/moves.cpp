@@ -188,7 +188,7 @@ struct MMUTurn : public MM
         if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
-        if (b.countAlive(s) <= 1) {
+        if (b.countAlive(b.player(s)) <= 1) {
             return;
         }
         if (b.koed(s)) {
