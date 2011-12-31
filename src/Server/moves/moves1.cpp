@@ -209,6 +209,16 @@ struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
         functions["UponAttackSuccessful"] = &aas;
+        functions["AttackSomehowFailed"] = &asf;
+    }
+
+    // Hyper Beam requires a recharge in Gen 1 Stadium even if it misses.
+    static void asf(int s, int, BS &b) {
+        if (b.gen() != 1) {
+            return;
+        }
+        addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
+        poke(b, s)["BlastBurnTurn"] = b.turn();
     }
 
     static void aas(int s, int, BS &b) {
@@ -279,6 +289,10 @@ struct MMConversion : public MM
     }
 
     static void daf(int s, int, BS &b) {
+        /* Conversion doesn't fail in Gen 1 */
+        if (b.gen() == 1) {
+            return;
+        }
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
@@ -313,11 +327,19 @@ struct MMConversion : public MM
         }
     }
 
-    static void uas(int s, int, BS &b) {
-        int type = turn(b,s)["ConversionType"].toInt();
-        fpoke(b,s).type1 = type;
-        fpoke(b,s).type2 = Pokemon::Curse;
-        b.sendMoveMessage(19, 0, s, type, s);
+    static void uas(int s, int t, BS &b) {
+        /* Conversion changes the user's types to the opponent's types in Gen 1*/
+        if (b.gen() == 1) {
+            b.sendMoveMessage(172,0,s,type(b,s),t);
+            fpoke(b,s).type1 = fpoke(b,t).type1;
+            fpoke(b,s).type2 = fpoke(b,t).type2;
+        }
+        else {
+            int type = turn(b,s)["ConversionType"].toInt();
+            fpoke(b,s).type1 = type;
+            fpoke(b,s).type2 = Pokemon::Curse;
+            b.sendMoveMessage(19, 0, s, type, s);
+        }
     }
 };
 
@@ -650,7 +672,7 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(s).level() < b.poke(t).level()) {
+        if (b.gen() > 1 && b.poke(s).level() < b.poke(t).level() || b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -1205,11 +1227,11 @@ struct MMBounce : public MM
             return;
         }
         int attack = move(b,t);
-        /* Lets see if the poke is vulnerable to that one attack */
+        /* Lets see if the poke is vulnerable to that one attack in Gen 2 or later */
         QList<int> vuln_moves = poke(b,s)["VulnerableMoves"].value<QList<int> >();
 
         for (int i = 0; i < vuln_moves.size(); i++) {
-            if (vuln_moves[i] == attack) {
+            if (vuln_moves[i] == attack && b.gen() != 1) {
                 return;
             }
         }
