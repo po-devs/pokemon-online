@@ -188,7 +188,7 @@ struct MMUTurn : public MM
         if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
-        if (b.countAlive(s) <= 1) {
+        if (b.countAlive(b.player(s)) <= 1) {
             return;
         }
         if (b.koed(s)) {
@@ -4165,6 +4165,9 @@ struct MMTriAttack : public MM
             return;
         // Do not apply extra effects with Sheer Force
         if (b.hasWorkingAbility(s, Ability::Encourage))
+            return;
+        // In Gen 1 Tri Attack has no secondary effects
+        if (b.gen() == 1)
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
