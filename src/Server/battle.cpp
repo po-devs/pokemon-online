@@ -2094,8 +2094,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             return true;
     }
 
-    //No Guard
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard))) {
+    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == 129 || move == 144 || move == 102))) {
         return true;
     }
 
@@ -2763,7 +2763,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notifyHits(player, hitcount);
             }
 
-            if (gen() >= 5 && !koed(target)) {
+            if (gen() >= 5 && !koed(target) && !hasSubstitute(target)) {
                 callaeffects(target, player, "AfterBeingPlumetted");
             }
 
