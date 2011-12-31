@@ -3575,7 +3575,7 @@ bool BattleSituation::isFlying(int player)
 {
     return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) &&
             (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
-            !pokeMemory(player).value("StruckDown").toBool() &&
+            !pokeMemory(player).value("SmackedDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
              || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
