@@ -14,7 +14,7 @@ struct PMWindow : public QWidget
 public:
     PMWindow(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false, bool pmDisabled = false);
     ~PMWindow() {
-        emit destroyed(id());
+        emit destroyed(id(), m_name);
     }
 
     void changeName(const QString &newname);
@@ -28,7 +28,7 @@ public:
 signals:
     void messageEntered(int id, const QString &mess);
     void challengeSent(int id);
-    void destroyed(int id);
+    void destroyed(int id, QString name);
     void ignore(int id, bool);
 public slots:
     void sendMessage();
