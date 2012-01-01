@@ -132,17 +132,15 @@ void Player::changeTier(const QString &newtier)
             return;
         }
 
-        QString pokeList = "";
+        QList<int> indexList;
         for(int i = 0; i < 6; i++) {
             if (tier->isBanned(team().poke(i))) {
-                pokeList += PokemonInfo::Name(team().poke(i).num()) + ", ";
+                indexList.append(i);
             }
         }
-        if (pokeList.length() >= 2)
-            pokeList.resize(pokeList.size()-2);
 
-        if (pokeList.size() > 0) {
-            for(int i = 0; i < pokeList.length(); i++) {
+        if (indexList.size() > 0) {
+            foreach(int i, indexList) {
                 sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
             }
             return;

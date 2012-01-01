@@ -1617,6 +1617,8 @@ struct MMTeamBarrier : public MM
     }
 
     static void daf(int s, int, BS &b) {
+        if (b.gen() == 1) { MMTeamBarrier::daf1(s,s,b); return; }
+
         int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
         int source = b.player(s);
 
@@ -1630,6 +1632,8 @@ struct MMTeamBarrier : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.gen() == 1) { MMTeamBarrier::uas1(s,s,b); return; }
+
         int source = b.player(s);
 
         int nturn;
@@ -1647,10 +1651,6 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
-        // Barriers such as Reflect and Light Screen do not time out in gen 1
-        if (b.gen() == 1) {
-          return;
-        }
         int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
         for (int i = 0; i < 2; i++) {
@@ -1661,6 +1661,20 @@ struct MMTeamBarrier : public MM
                 }
             }
         }
+    }
+
+    static void daf1(int s, int, BS &b) {
+        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
+        if (poke(b,s).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas1(int s, int, BS &b) {
+        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
+
+        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
+        poke(b,s)["Barrier" + QString::number(cat) + "Count"] = 1;
     }
 };
 

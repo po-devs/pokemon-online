@@ -1948,6 +1948,30 @@ struct MMGravity : public MM
 
 MMGravity::FM MMGravity::forbidden_moves;
 
+struct MMSmackDown : public MM
+{
+    MMSmackDown() {
+        functions["OnFoeOnAttack"] = &ofoa;
+    }
+
+    static void ofoa(int s, int t, BS &b) {
+        if (b.isFlying(t)) {
+            b.sendMoveMessage(175, 0, s, type(b,s), t);
+            poke(b,t)["SmackedDown"] = true;
+        }
+
+        if (b.koed(t)) {
+            return;
+        }
+
+        if(poke(b,t).value("Invulnerable").toBool()) {
+            int move = poke(b,t)["2TurnMove"].toInt();
+            if (move == Fly || move == Bounce || move == FreeFall) { 
+                MMBounce::groundStruck(t, b);
+            }
+        }
+    }
+};
 
 struct MMMetronome : public MM
 {
@@ -2182,4 +2206,6 @@ void init_moves_1(QHash<int, MoveMechanics> &mechanics, QHash<int, QString> &nam
 
     REGISTER_MOVE(169, WideGuard);
     REGISTER_MOVE(170, FastGuard);
+
+    REGISTER_MOVE(175, SmackDown);
 }

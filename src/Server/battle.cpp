@@ -3575,7 +3575,7 @@ bool BattleSituation::isFlying(int player)
 {
     return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) &&
             (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
-            !pokeMemory(player).value("StruckDown").toBool() &&
+            !pokeMemory(player).value("SmackedDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::Balloon)
              || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
@@ -3827,7 +3827,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     /* Light screen / Reflect */
     if ( (!crit || (gen() == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
-         teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+         (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
         else {
