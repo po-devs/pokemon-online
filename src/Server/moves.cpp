@@ -188,7 +188,7 @@ struct MMUTurn : public MM
         if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
-        if (b.countAlive(s) <= 1) {
+        if (b.countAlive(b.player(s)) <= 1) {
             return;
         }
         if (b.koed(s)) {
@@ -1380,6 +1380,8 @@ struct MMJumpKick : public MM
         int damage;
         if (b.gen() >= 5)
             damage = b.poke(s).totalLifePoints()/2;
+        else if (b.gen() == 1)
+            damage = 1;
         else {
             int typemod;
             int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
@@ -1615,6 +1617,8 @@ struct MMTeamBarrier : public MM
     }
 
     static void daf(int s, int, BS &b) {
+        if (b.gen() == 1) { MMTeamBarrier::daf1(s,s,b); return; }
+
         int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
         int source = b.player(s);
 
@@ -1628,6 +1632,8 @@ struct MMTeamBarrier : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        if (b.gen() == 1) { MMTeamBarrier::uas1(s,s,b); return; }
+
         int source = b.player(s);
 
         int nturn;
@@ -1645,10 +1651,6 @@ struct MMTeamBarrier : public MM
     }
 
     static void et(int s, int, BS &b) {
-        // Barriers such as Reflect and Light Screen do not time out in gen 1
-        if (b.gen() == 1) {
-          return;
-        }
         int counts[] = {team(b,s).value("Barrier1Count").toInt(), team(b,s).value("Barrier2Count").toInt()};
 
         for (int i = 0; i < 2; i++) {
@@ -1659,6 +1661,20 @@ struct MMTeamBarrier : public MM
                 }
             }
         }
+    }
+
+    static void daf1(int s, int, BS &b) {
+        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
+        if (poke(b,s).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+            turn(b,s)["Failed"] = true;
+        }
+    }
+
+    static void uas1(int s, int, BS &b) {
+        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
+
+        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
+        poke(b,s)["Barrier" + QString::number(cat) + "Count"] = 1;
     }
 };
 
@@ -1813,18 +1829,46 @@ struct MMMagnitude: public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        int randnum = b.randint(20);
 
         int pow, magn;
 
-        switch (randnum) {
-        case 0: magn = 4; pow = 10; break;
-        case 1: case 2: magn = 5; pow = 30; break;
-        case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
-        case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
-        case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
-        case 17: case 18: magn = 9; pow = 110; break;
-        case 19: default: magn = 10; pow = 150; break;
+        if (b.gen() >= 3) {
+            int randnum = b.randint(20);
+
+            switch (randnum) {
+            case 0: magn = 4; pow = 10; break;
+            case 1: case 2: magn = 5; pow = 30; break;
+            case 3: case 4: case 5: case 6: magn = 6; pow = 50; break;
+            case 7: case 8: case 9: case 10: case 11: case 12: magn = 7; pow = 70; break;
+            case 13: case 14: case 15: case 16: magn = 8; pow = 90; break;
+            case 17: case 18: magn = 9; pow = 110; break;
+            case 19: default: magn = 10; pow = 150; break;
+            }
+        }
+        else { // gen 2 has slightly different probabilities, 14, 25, 51, 77, 51, 25, 13
+            int randnum = b.randint(256);
+
+            if (randnum < 14) {
+                magn = 4; pow = 10;
+            }
+            else if (randnum < 39) {
+                magn = 5; pow = 30;
+            }
+            else if (randnum < 90) {
+                magn = 6; pow = 50;
+            }
+            else if (randnum < 167) {
+                magn = 7; pow = 70;
+            }
+            else if (randnum < 218) {
+                magn = 8; pow = 90;
+            }
+            else if (randnum < 243) {
+                magn = 9; pow = 110;
+            }
+            else {
+                magn = 10; pow = 150;
+            }
         }
 
         turn(b,s)["MagnitudeLevel"] = magn;
@@ -1891,6 +1935,10 @@ struct MMMimic : public MM
     static FailedMoves FM;
 
     static void daf(int s, int t, BS &b) {
+        /* Mimic doesn't fail in Gen 1 */
+        if (b.gen() == 1) {
+            return;
+        }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
             turn(b,s)["Failed"] = true;
             return;
@@ -1909,6 +1957,30 @@ struct MMMimic : public MM
 
     static void uas(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
+        /* Mimic copies a random move in Gen 1 */
+        if (b.gen() == 1) {
+            /* Number of Moves on moveset */
+            int moves = 4;
+            if (b.move(t,1) == 0) {
+                moves = 1;
+            }
+            else if (b.move(t,2) == 0) {
+                moves = 2;
+            }
+            else if (b.move(t,3) == 0) {
+                moves = 3;
+            }
+            move = 0;
+            int randnum = b.randint(moves);
+            while (move == 0) {
+                move = b.move(t,randnum);
+                /* Checks that move isn't Struggle */
+                if (move == 165) {
+                    move = 0;
+                }
+                randnum = b.randint(moves);
+            }
+        }
         int slot = poke(b,s)["MoveSlot"].toInt();
         b.changeTempMove(s, slot, move);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
@@ -3125,6 +3197,14 @@ struct MMTransform : public MM {
     static void daf(int s, int t, BS &b) {
         if (poke(b,t).contains("Transformed") || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
             turn(b,s)["Failed"] = true;
+
+        Pokemon::uniqueId num = b.pokenum(t);
+
+        /* In Pokemon Stadium Ditto can't transform into an opposing Ditto */
+        if (b.gen() == 1 && num.toPokeRef() == Pokemon::Ditto) {
+            turn(b,s)["Failed"] = true;
+            return;
+        }
     }
 
     static void uas(int s, int t, BS &b) {
@@ -4099,6 +4179,9 @@ struct MMTriAttack : public MM
             return;
         // Do not apply extra effects with Sheer Force
         if (b.hasWorkingAbility(s, Ability::Encourage))
+            return;
+        // In Gen 1 Tri Attack has no secondary effects
+        if (b.gen() == 1)
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
