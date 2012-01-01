@@ -2095,7 +2095,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == 129 || move == 144 || move == 102))) {
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == Move::Swift || move == Move::Mimic || move == Move::Transform))) {
         return true;
     }
 
@@ -2174,7 +2174,7 @@ void BattleSituation::testCritical(int player, int target)
     bool critical;
     if (gen() == 1) {
         int randnum = randint(512);
-        int critChance = (tmove(player).critRaise & 1) * 7 + 1;
+        int critChance = ((tmove(player).critRaise & 1) * 7 + 1) * (tmove(player).critRaise >= 2 ? 4 : 1);
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
         critical = randnum < critChance * baseSpeed;
     } else {
@@ -2920,8 +2920,8 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
         typemod *= typeffs[i];
     }
 
-    // Counter hits regardless of type matchups in Gen 1.
-    if (gen() == 1 && tmove(player).attack == Move::Counter) {
+    // Counter, Night Shade and Seismic Toss hit regardless of type matchups in Gen 1.
+    if (gen() == 1 && (tmove(player).attack == Move::Counter || tmove(player).attack == Move::NightShade || tmove(player).attack == Move::SeismicToss)) {
         typemod = 2;
     }
     if (type == Type::Ground && isFlying(target)) {
