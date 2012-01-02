@@ -1034,7 +1034,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(recvMessage(int, int, QString)), SLOT(recvMessage(int, int, QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
     connect(p, SIGNAL(sendChallenge(int,int,ChallengeInfo)), SLOT(dealWithChallenge(int,int,ChallengeInfo)));
-    connect(p, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleForfeited(int,int,int,int)));
+    connect(p, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
@@ -1413,13 +1413,6 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
     return true;
 }
 
-void Server::battleForfeited(int battleid, int, int, int loser)
-{
-    BattleSituation *battle = mybattles[battleid];
-
-    battle->playerForfeit(loser);
-}
-
 void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
     if (!mybattles.contains(battleid)) {
@@ -1444,6 +1437,9 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         pw->battleResult(battleid, Close, winner, loser);
         pl->battleResult(battleid, Close, winner, loser);
     } else {
+        if (desc == Forfeit) {
+            battle->playerForfeit(loser);
+        }
         if (desc != Tie && rated) {
             QString winn = pw->name();
             QString lose = pl->name();
