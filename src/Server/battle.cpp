@@ -1521,6 +1521,10 @@ void BattleSituation::cancel(int player)
 
 void BattleSituation::addDraw(int player)
 {
+    if (finished()) {
+        return;
+    }
+
     if (drawer() == -1) {
         drawer() = player;
         return;
@@ -4444,7 +4448,11 @@ bool BattleSituation::areAdjacent(int attacker, int defender) const
 
 void BattleSituation::playerForfeit(int forfeiterId)
 {
-    endBattle(Forfeit, opponent(spot(forfeiterId)), spot(forfeiterId));
+    if (finished()) {
+        return;
+    }
+    forfeiter() = spot(forfeiterId);
+    schedule();
 }
 
 void BattleSituation::endBattle(int result, int winner, int loser)
@@ -4464,16 +4472,17 @@ void BattleSituation::endBattle(int result, int winner, int loser)
         notify(All, EndMessage, winner, winMessage[winner]);
         notify(All, EndMessage, loser, loseMessage[loser]);
 
-        /* Forfeit is sent by the server, so it already closes the battle */
-        if (result != Forfeit) {
-            emit battleFinished(publicId(), Win, id(winner), id(loser));
-        }
+        emit battleFinished(publicId(), result, id(winner), id(loser));
         exit();
     }
 }
 
 void BattleSituation::testWin()
 {
+    if (forfeiter() != -1) {
+        endBattle(Forfeit, opponent(forfeiter()), spot(forfeiter()));
+    }
+
     /* No one wants a battle that long xd */
     if (turn() == 1024) {
         endBattle(Tie, Player1, Player2);
