@@ -465,6 +465,8 @@ void BattleClientLog::onBattleEnd(int res, int winner)
 {
     if (res == Tie) {
         printHtml("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
+    } else if (res == Forfeit) {
+        printHtml("BattleEnd", toBoldColor(tr("%1 forfeited against %2!").arg(data()->name(data()->opponent(winner)), data()->name(winner)), Qt::blue));
     } else {
         printHtml("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
     }
