@@ -2035,7 +2035,7 @@ struct MMMist : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        int count = team(b,s)["MistCount"].toInt();
+        int count = team(b,b.player(s))["MistCount"].toInt();
         if (count > 0)
             turn(b,s)["Failed"] = true;
     }
@@ -2049,15 +2049,16 @@ struct MMMist : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (team(b,s).value("MistCount") == 0) {
+        int source = b.player(s);
+        if (team(b,source).value("MistCount") == 0) {
             return;
         }
 
-        inc(team(b,s)["MistCount"], -1);
-        int count = team(b,s)["MistCount"].toInt();
+        inc(team(b,source)["MistCount"], -1);
+        int count = team(b,source)["MistCount"].toInt();
         if (count == 0) {
             b.sendMoveMessage(86,1,s,Pokemon::Ice);
-            b.removeEndTurnEffect(BS::ZoneEffect, s, "Mist");
+            b.removeEndTurnEffect(BS::ZoneEffect, source, "Mist");
         }
     }
 };
