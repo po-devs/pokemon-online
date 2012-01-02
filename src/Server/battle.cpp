@@ -4444,7 +4444,7 @@ bool BattleSituation::areAdjacent(int attacker, int defender) const
 
 void BattleSituation::playerForfeit(int forfeiterId)
 {
-    endBattle(result, opponent(spot(forfeiterId)), spot(forfeiterId));
+    endBattle(Forfeit, opponent(spot(forfeiterId)), spot(forfeiterId));
 }
 
 void BattleSituation::endBattle(int result, int winner, int loser)
