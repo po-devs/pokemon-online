@@ -47,6 +47,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacker() = -1;
     selfKoer() = -1;
     drawer() = -1;
+    forfeiter() = -1;
     applyingMoveStatMods = false;
     weather = 0;
     weatherCount = -1;
