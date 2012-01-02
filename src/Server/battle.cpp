@@ -4481,7 +4481,7 @@ void BattleSituation::endBattle(int result, int winner, int loser)
 void BattleSituation::testWin()
 {
     if (forfeiter() != -1) {
-        endBattle(Forfeit, opponent(forfeiter()), spot(forfeiter()));
+        endBattle(Forfeit, opponent(forfeiter()), forfeiter());
     }
 
     /* No one wants a battle that long xd */
