@@ -1959,26 +1959,9 @@ struct MMMimic : public MM
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Mimic copies a random move in Gen 1 */
         if (b.gen() == 1) {
-            /* Number of Moves on moveset */
-            int moves = 4;
-            if (b.move(t,1) == 0) {
-                moves = 1;
-            }
-            else if (b.move(t,2) == 0) {
-                moves = 2;
-            }
-            else if (b.move(t,3) == 0) {
-                moves = 3;
-            }
             move = 0;
-            int randnum = b.randint(moves);
             while (move == 0) {
-                move = b.move(t,randnum);
-                /* Checks that move isn't Struggle */
-                if (move == 165) {
-                    move = 0;
-                }
-                randnum = b.randint(moves);
+                move = b.move(t, b.randint(4));
             }
         }
         int slot = poke(b,s)["MoveSlot"].toInt();
