@@ -59,6 +59,8 @@ public:
 
     bool acceptSpectator(int id, bool authed=false) const;
     void addSpectator(Player *p);
+    /* Server tells a player forfeited */
+    void playerForfeit(int forfeiterId);
 
     bool sleepClause() const {
         return clauses() & ChallengeInfo::SleepClause;

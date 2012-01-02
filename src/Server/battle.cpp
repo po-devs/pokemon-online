@@ -4442,6 +4442,11 @@ bool BattleSituation::areAdjacent(int attacker, int defender) const
     return std::abs(slotNum(attacker)-slotNum(defender)) <= 1;
 }
 
+void BattleSituation::playerForfeit(int forfeiterId)
+{
+    endBattle(result, opponent(spot(forfeiterId)), spot(forfeiterId));
+}
+
 void BattleSituation::endBattle(int result, int winner, int loser)
 {
     int time1 = std::max(0, timeLeft(Player1));
@@ -4454,12 +4459,15 @@ void BattleSituation::endBattle(int result, int winner, int loser)
         emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         exit();
     }
-    if (result == Win) {
-        notify(All, BattleEnd, winner, qint8(Win));
+    if (result == Win || result == Forfeit) {
+        notify(All, BattleEnd, winner, qint8(result));
         notify(All, EndMessage, winner, winMessage[winner]);
         notify(All, EndMessage, loser, loseMessage[loser]);
 
-        emit battleFinished(publicId(), Win, id(winner), id(loser));
+        /* Forfeit is sent by the server, so it already closes the battle */
+        if (result != Forfeit) {
+            emit battleFinished(publicId(), Win, id(winner), id(loser));
+        }
         exit();
     }
 }
