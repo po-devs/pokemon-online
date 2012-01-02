@@ -4452,8 +4452,8 @@ void BattleSituation::playerForfeit(int forfeiterId)
     if (finished()) {
         return;
     }
-    forfeiter() = spot(forfeiterId);
-    schedule();
+    forfeiter() = slot(forfeiterId);
+    notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
 }
 
 void BattleSituation::endBattle(int result, int winner, int loser)
@@ -4481,7 +4481,7 @@ void BattleSituation::endBattle(int result, int winner, int loser)
 void BattleSituation::testWin()
 {
     if (forfeiter() != -1) {
-        endBattle(Forfeit, opponent(forfeiter()), forfeiter());
+        exit();
     }
 
     /* No one wants a battle that long xd */
