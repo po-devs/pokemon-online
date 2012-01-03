@@ -4452,7 +4452,7 @@ void BattleSituation::playerForfeit(int forfeiterId)
     if (finished()) {
         return;
     }
-    forfeiter() = slot(forfeiterId);
+    forfeiter() = spot(forfeiterId);
     notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
 }
 
