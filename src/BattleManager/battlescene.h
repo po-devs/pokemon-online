@@ -51,6 +51,10 @@ public:
 
     bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
     bool shouldContinuePeeking(param<BattleEnum::BlankMessage>) {return false;}
+    /* When using u-turn or baton pass, it stops at the middle. Dynamic Stats is always sent to both players though, so it unhangs both */
+    bool shouldContinuePeeking(param<BattleEnum::DynamicStats>, int , std::shared_ptr<BattleStats>*) { return false;}
+    /* When sending a backup with intimidate, this happens before any blank message */
+    bool shouldContinuePeeking(param<BattleEnum::Turn>, int) {return false;}
     bool shouldContinuePeeking(param<BattleEnum::Hits>, int, int hits) {info.hits = hits; info.blocked = true; info.moveData.insert("hits", hits); return true;}
 
     void onUseAttack(int spot, int attack, bool silent);
