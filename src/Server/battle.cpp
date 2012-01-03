@@ -1170,8 +1170,10 @@ void BattleSituation::notifyInfos(int tosend)
         if (!koed(p)) {
             BattleDynamicInfo infos = constructInfo(p);
             notify(tosend, DynamicInfo, p, infos);
-            BattleStats stats = constructStats(p);
-            notify(player(p), DynamicStats, p, stats);
+            if (tosend == All || tosend == player(p)) {
+                BattleStats stats = constructStats(p);
+                notify(player(p), DynamicStats, p, stats);
+            }
         }
     }
 }
