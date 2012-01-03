@@ -1959,26 +1959,9 @@ struct MMMimic : public MM
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Mimic copies a random move in Gen 1 */
         if (b.gen() == 1) {
-            /* Number of Moves on moveset */
-            int moves = 4;
-            if (b.move(t,1) == 0) {
-                moves = 1;
-            }
-            else if (b.move(t,2) == 0) {
-                moves = 2;
-            }
-            else if (b.move(t,3) == 0) {
-                moves = 3;
-            }
             move = 0;
-            int randnum = b.randint(moves);
             while (move == 0) {
-                move = b.move(t,randnum);
-                /* Checks that move isn't Struggle */
-                if (move == 165) {
-                    move = 0;
-                }
-                randnum = b.randint(moves);
+                move = b.move(t, b.randint(4));
             }
         }
         int slot = poke(b,s)["MoveSlot"].toInt();
@@ -2052,7 +2035,7 @@ struct MMMist : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        int count = team(b,s)["MistCount"].toInt();
+        int count = team(b,b.player(s))["MistCount"].toInt();
         if (count > 0)
             turn(b,s)["Failed"] = true;
     }
@@ -2066,15 +2049,16 @@ struct MMMist : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (team(b,s).value("MistCount") == 0) {
+        int source = b.player(s);
+        if (team(b,source).value("MistCount") == 0) {
             return;
         }
 
-        inc(team(b,s)["MistCount"], -1);
-        int count = team(b,s)["MistCount"].toInt();
+        inc(team(b,source)["MistCount"], -1);
+        int count = team(b,source)["MistCount"].toInt();
         if (count == 0) {
             b.sendMoveMessage(86,1,s,Pokemon::Ice);
-            b.removeEndTurnEffect(BS::ZoneEffect, s, "Mist");
+            b.removeEndTurnEffect(BS::ZoneEffect, source, "Mist");
         }
     }
 };

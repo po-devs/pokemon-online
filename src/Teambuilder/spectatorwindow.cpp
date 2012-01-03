@@ -28,7 +28,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
     QSettings s;
     bool usePokemonNames = s.value("use_pokemon_names").toBool();
 
-    log = new BattleClientLog(data, Theme::getBattleTheme(), usePokemonNames);
+    log = new BattleClientLog(data, Theme::getBattleTheme(), !usePokemonNames);
     input = new BattleInput(&conf);
 
     logWidget = new PokeTextEdit();

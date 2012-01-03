@@ -626,6 +626,24 @@ BattleConfiguration::BattleConfiguration(const BattleConfiguration &other)
    teamOwnership = false;
 }
 
+BattleConfiguration &BattleConfiguration::operator =(const BattleConfiguration &other)
+{
+   gen = other.gen;
+   mode = other.mode;
+   clauses = other.clauses;
+   ids[0] = other.ids[0];
+   ids[1] = other.ids[1];
+   avatar[0] = other.avatar[0];
+   avatar[1] = other.avatar[1];
+   teams[0] = other.teams[0];
+   teams[1] = other.teams[1];
+   receivingMode[0] = other.receivingMode[0];
+   receivingMode[1] = other.receivingMode[1];
+   teamOwnership = false;
+
+   return* this;
+}
+
 BattleConfiguration::~BattleConfiguration()
 {
     if (teamOwnership) {
