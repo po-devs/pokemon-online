@@ -83,7 +83,7 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
 int PokeProxy::basestat(int stat) const
 {
     if (hasExposedData())
-        return PokemonInfo::FullStat(num(), 5, nature(), stat, level(), dvs()[stat], evs()[stat]);
+        return dd()->normalStat(stat);
     else
         return 0;
 }
