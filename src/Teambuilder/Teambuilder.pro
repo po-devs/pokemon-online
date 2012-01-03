@@ -130,11 +130,16 @@ TRANSLATIONS = translation_cz.ts \
     translation_tr.ts
 RC_FILE = myapp.rc
 RESOURCES += 
-macx:LIBS += -framework \
-    CoreFoundation
-macx:ICON = pokemononline.icns
-macx:QMAKE_INFO_PLIST = Info.plist
-macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
+
+
+macx {
+   INCLUDEPATH += /usr/local/gcc-4.6.2/include
+   LIBS += -L/usr/local/gcc-4.6.2/lib -framework CoreFoundation
+   ICON = pokemononline.icns
+   QMAKE_INFO_PLIST = Info.plist
+   QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
+}
+
 
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
