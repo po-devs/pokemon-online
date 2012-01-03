@@ -90,6 +90,14 @@ void AuxPokeDataProxy::updateBoostedStat(int stat)
     }
 }
 
+void AuxPokeDataProxy::changeForme(int subnum)
+{
+    /* TODO: Still need to update the stats */
+    if (pokemon()) {
+        setAlternateSprite(Pokemon::uniqueId(pokemon()->num().pokenum, subnum));
+    }
+}
+
 void AuxPokeDataProxy::boostStat(int stat, int level)
 {
     statboosts[stat] += level;
