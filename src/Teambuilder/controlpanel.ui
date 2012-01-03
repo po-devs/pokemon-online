@@ -223,7 +223,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pm">
         <property name="text">
          <string>PM User</string>
         </property>
