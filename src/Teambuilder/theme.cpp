@@ -125,6 +125,32 @@ void Theme::Reload(const QString &dir)
     loadPixmaps();
 }
 
+QStringList Theme::SearchPath()
+{
+    QSettings settings;
+    QString userPath = settings.value("user_theme_directory").toString();
+    if (userPath.rightRef(1) != "/") {
+        userPath += "/";
+    }
+    QStringList searchPath; 
+    if (userPath != "Themes/" && userPath != "Themes") {
+        searchPath << userPath;
+    }
+    searchPath << "Themes/";
+    return searchPath;
+}
+
+QString Theme::FindTheme(const QString& theme)
+{
+    foreach(QString dir, Theme::SearchPath()) {
+        if (QDir(dir).exists(theme)) {
+            QString fullTheme = dir + theme + "/";
+            return fullTheme;
+        }
+    }
+    return QString();
+}
+
 QColor Theme::TypeColor(int typenum)
 {
     return m_TColors[typenum];

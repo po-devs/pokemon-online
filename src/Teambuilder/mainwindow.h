@@ -49,11 +49,16 @@ private slots:
     void openPluginConfiguration();
     void changeStyle();
     void changeTheme();
+
+    void changeUserThemeFolder();
 private:
+    void rebuildThemeMenu();
+
     QMainWindow *displayer;
     PluginManager *pluginManager;
 
     QMenuBar* transformMenuBar(QMenuBar *param);
+    QMenu* themeMenu;
 
     TrainerTeam m_team;
 public:
