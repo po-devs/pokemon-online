@@ -1530,12 +1530,15 @@ ScriptWindow::ScriptWindow()
 
     QPushButton *ok = new QPushButton(tr("&Ok"));
     QPushButton *cancel = new QPushButton(tr("&Cancel"));
+    QPushButton *gotoLine = new QPushButton(tr("&Goto Line"));
 
-    l->addWidget(cancel,1,2);
-    l->addWidget(ok,1,3);
+    l->addWidget(cancel,1,1);
+    l->addWidget(ok,1,2);
+    l->addWidget(gotoLine, 1, 3);
 
     connect(ok, SIGNAL(clicked()), SLOT(okPressed()));
     connect(cancel, SIGNAL(clicked()), SLOT(deleteLater()));
+    connect(gotoLine, SIGNAL(clicked()), SLOT(gotoLine()));
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
@@ -1559,6 +1562,16 @@ void ScriptWindow::okPressed()
     emit scriptChanged(plainText);
 
     close();
+}
+
+void ScriptWindow::gotoLine()
+{
+    int line = QInputDialog::getInteger(myedit, tr("Line Number"), tr("To what line do you want to go?"), 1, 1, myedit->document()->lineCount());
+    QTextCursor myCursor = myedit->textCursor();
+    myCursor.setPosition(0);
+    myCursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, line - 1);
+    myedit->setTextCursor(myCursor);
+    myedit->setFocus();
 }
 
 QScriptValue ScriptEngine::getScript()

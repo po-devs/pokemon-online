@@ -42,7 +42,7 @@ pokemon-info: utilities src/PokemonInfo/PokemonInfo.pro ;
 
 battlelib: pokemon-info src/BattleManager/BattleManager.pro ;
 
-battlelogs: pokemon-info src/BattleLogs/BattleLogs.pro ;
+battlelogs: battlelib src/BattleLogs/BattleLogs.pro ;
 usagestats: pokemon-info src/UsageStatistics/UsageStatistics.pro ;
 plugins: battlelogs usagestats ;
 

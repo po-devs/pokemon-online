@@ -319,7 +319,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
 
-    QString genStrings[] = {tr("RBY (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
+    QString genStrings[] = {tr("Stadium (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
                             tr("HGSS (&4th gen)"),tr("B/W (&5th gen)")};
 
     for (int i = 0; i < NUMBER_GENS; i++) {

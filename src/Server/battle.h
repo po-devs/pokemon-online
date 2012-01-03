@@ -36,6 +36,7 @@ class BattleSituation : public ContextCallee, public BattleInterface
     PROPERTY(int, repeatCount);
     PROPERTY(bool, heatOfAttack);
     PROPERTY(int, drawer);
+    PROPERTY(int, forfeiter);
 public:
     typedef QVariantHash context;
 
@@ -59,6 +60,8 @@ public:
 
     bool acceptSpectator(int id, bool authed=false) const;
     void addSpectator(Player *p);
+    /* Server tells a player forfeited */
+    void playerForfeit(int forfeiterId);
 
     bool sleepClause() const {
         return clauses() & ChallengeInfo::SleepClause;
@@ -334,7 +337,7 @@ private:
 
     /* if battle ends, stop the battle thread */
     void testWin();
-    void endBattle(int result, int winner, int loser);
+    void endBattle(int result, int winner, int loser); //must always be called from the thread
     int spectatorKey(int id) const {
         return 10000 + id;
     }

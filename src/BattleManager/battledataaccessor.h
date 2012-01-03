@@ -53,7 +53,7 @@ public:
     int totalLife() const {return d()->totalLife();}
     int ability() const {return dd()->ability();}
     int item() const {return dd()->item();}
-    int happiness() const {return dd()->item();}
+    int happiness() const {return dd()->happiness();}
     int nature() const {return dd()->nature();}
     int basestat(int stat) const;
     const QList<int> &dvs() const { return dd()->dvs();}
