@@ -107,9 +107,9 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
 {
     input = NULL;
 
-    if (text) {
-        conf = b->configuration();
+    conf = b->configuration();
 
+    if (text) {
         input = new BattleInput(&conf);
         data = new battledata_basic(&conf);
         log = new BattleServerLog(data, &theme);
