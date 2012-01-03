@@ -44,6 +44,10 @@ unix:!symbian {
     INSTALLS += target
 }
 
+macx {
+   INCLUDEPATH += /usr/local/gcc-4.6.2/include
+   LIBS += -L/usr/local/gcc-4.6.2/lib
+}
 FORMS += \
     dialog.ui \
     colorchoice.ui \

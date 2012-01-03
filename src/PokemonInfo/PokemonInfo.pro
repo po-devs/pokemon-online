@@ -19,3 +19,9 @@ LIBS += -L../../bin \
     -lutilities \
     -lzip
 OTHER_FILES += 
+
+macx {
+    INCLUDEPATH += /usr/local/include
+    LIBS += -L/usr/local/lib
+}
+
