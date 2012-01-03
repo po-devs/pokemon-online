@@ -1266,6 +1266,10 @@ struct MMCounter : public MM
         if (b.gen() <= 3 && TypeInfo::Category(MoveInfo::Type(move(b, source), b.gen())) != turn(b,s)["Counter_Arg"].toInt()) {
             return;
         }
+        /* In gen 1, only Normal and Fighting moves are countered */
+        if (b.gen() == 1 && type(b,s) != Type::Fighting && type(b,s) != Type::Normal) {
+            return;
+        }
 
         if (turn(b, s).value("DamageTakenByAttack").toInt() <= 0) {
             return;
