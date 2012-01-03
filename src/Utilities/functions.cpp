@@ -72,8 +72,13 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
     settings.beginGroup(w->metaObject()->className());
     if (settings.contains("size") || !defaultSize.isNull())
         w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
-    if (settings.contains("pos"))
-        w->topLevelWidget()->move(settings.value("pos").toPoint());
+    if (settings.contains("pos")) {
+        QPoint pos = settings.value("pos").toPoint();
+        /* Checks if the position stored is not off the screen */
+        if (QApplication::desktop()->screenGeometry(pos).contains(pos)) {
+            w->topLevelWidget()->move(settings.value("pos").toPoint());
+        }
+    }
     if (settings.contains("maximized") && settings.value("maximized").toBool())
         w->topLevelWidget()->showMaximized();
     settings.endGroup();
