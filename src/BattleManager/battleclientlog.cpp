@@ -441,7 +441,7 @@ void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int
     mess.replace("%st", StatInfo::Stat(other));
     mess.replace("%s", nick(spot));
     //            mess.replace("%ts", data()->name(spot));
-    //            mess.replace("%tf", data()->name(!spot));
+    mess.replace("%tf", data()->name(!spot));
     mess.replace("%t", TypeInfo::Name(type));
     mess.replace("%f", nick(foe));
     mess.replace("%m", MoveInfo::Name(other));
