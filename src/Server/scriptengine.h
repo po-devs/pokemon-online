@@ -375,6 +375,7 @@ signals:
     void scriptChanged(const QString &script);
 public slots:
     void okPressed();
+    void gotoLine();
 private:
     QTextEdit *myedit;
 };
