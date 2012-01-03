@@ -1116,7 +1116,7 @@ struct MMBounce : public MM
     }
 
     static void ts(int s, int, BS &b) {
-        if (poke(b,s)["Invulnerable"].toBool()) {
+        if (poke(b,s).value("Invulnerable").toBool()) {
             turn(b,s)["NoChoice"] = true;
 
             int move = poke(b,s)["2TurnMove"].toInt();
@@ -1132,7 +1132,8 @@ struct MMBounce : public MM
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
             }
         }
-        removeFunction(poke(b,s), "TurnSettings", "Bounce");
+        //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
+        //removeFunction(poke(b,s), "TurnSettings", "Bounce");
     }
 
     /* Called with freefall */
