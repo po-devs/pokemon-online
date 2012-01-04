@@ -248,10 +248,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    break;
 	}
     case AskForPass: {
-            QString salt;
+            QByteArray salt;
             in >> salt;
 
-            if (salt.length() < 6 || strlen((" " + salt).toUtf8().data()) < 7)
+            if (salt.length() < 6 || strlen((" " + salt).data()) < 7)
                 emit protocolError(5080, tr("The server requires insecure authentication."));
             emit passRequired(salt);
             break;
@@ -421,7 +421,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case ServerPass: {
-            QString salt;
+            QByteArray salt;
             in >> salt;
             emit serverPassRequired(salt); 
             break;

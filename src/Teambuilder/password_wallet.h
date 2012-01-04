@@ -9,10 +9,10 @@ class PasswordWallet : public QObject {
 public:
     PasswordWallet();
 
-    bool retrieveUserPassword(const QString& ip, const QString& serverName, const QString& trainerName, const QString& salt, QString& pass, QStringList& warnings);
+    bool retrieveUserPassword(const QString& ip, const QString& serverName, const QString& trainerName, const QByteArray& salt, QString& pass, QStringList& warnings);
     bool retrieveServerPassword(const QString& ip, const QString& serverName, QString& pass, QStringList& warnings);
 
-    void saveUserPassword(const QString& ip, const QString& serverName, const QString& trainerName, const QString& salt, const QString& pass);
+    void saveUserPassword(const QString& ip, const QString& serverName, const QString& trainerName, const QByteArray& salt, const QString& pass);
     void saveServerPassword(const QString& ip, const QString& serverName, const QString& pass);
 
     struct ServerPassRecord
@@ -27,7 +27,7 @@ public:
         QString ip;
         QString server;
         QString name;
-        QString salt;
+        QByteArray salt;
         QString pass;
     };
 

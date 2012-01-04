@@ -273,7 +273,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         break;
     case AskForPass:
         {
-            QString hash;
+            QByteArray hash;
             in >> hash;
             emit sentHash(hash);
             break;
@@ -452,7 +452,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case ServerPass:
         {
-            QString hash;
+            QByteArray hash;
             in >> hash;
             emit serverPasswordSent(hash);
             break;

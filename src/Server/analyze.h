@@ -94,7 +94,7 @@ signals:
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(TeamInfo &team, bool ladder, bool showteam, QColor c);
-    void serverPasswordSent(const QString &hash);
+    void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
     void teamReceived(TeamInfo &team);
     void connected();
@@ -107,7 +107,7 @@ signals:
     void battleSpectateEnded(int id);
     void battleSpectateChat(int id, const QString &chat);
     void wannaRegister();
-    void sentHash(QString);
+    void sentHash(QByteArray);
     void kick(int id);
     void ban(int id);
     void banRequested(const QString &name);

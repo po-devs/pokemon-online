@@ -228,7 +228,7 @@ void Server::start(){
     safeScripts = s.value("safe_scripts").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
     passwordProtected = s.value("require_password").toBool();
-    serverPassword = s.value("server_password").toString();
+    serverPassword = s.value("server_password").toByteArray();
     showTrayPopup = s.value("show_tray_popup").toBool();
     minimizeToTray = s.value("minimize_to_tray").toBool();
 
@@ -1250,9 +1250,9 @@ void Server::proxyServersChanged(const QString &ips)
 
 void Server::serverPasswordChanged(const QString &pass)
 {
-    if (serverPassword == pass)
+    if (serverPassword == pass.toUtf8())
         return;
-    serverPassword = pass;
+    serverPassword = pass.toUtf8();
     printLine("Server Password changed", false, true);
 }
 
@@ -1821,7 +1821,7 @@ BattleSituation * Server::getBattle(int battleId) const
 }
 
 bool Server::correctPass(const QByteArray &hash, const QByteArray &salt) const {
-    return hash == md5_hash(md5_hash(serverPassword.toAscii()) + salt);
+    return hash == QCryptographicHash::hash(QCryptographicHash::hash(serverPassword, QCryptographicHash::Md5) + salt, QCryptographicHash::Md5);
 }
 
 bool Server::isLegalProxyServer(const QString &ip) const

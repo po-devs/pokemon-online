@@ -181,9 +181,9 @@ public slots:
     void battleListActivated(QTreeWidgetItem* it);
     void loadTeam();
     /* A popup that asks for the pass */
-    void askForPass(const QString &salt);
+    void askForPass(const QByteArray &salt);
     /* A popup that asks for a server pass */
-    void serverPass(const QString &salt);
+    void serverPass(const QByteArray &salt);
     /* When someone is kicked */
     void playerKicked(int,int);
     void playerBanned(int,int);

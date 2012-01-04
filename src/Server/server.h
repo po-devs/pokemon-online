@@ -192,7 +192,7 @@ private:
     bool passwordProtected;
     bool showTrayPopup;
     bool minimizeToTray;
-    QString serverPassword;
+    QByteArray serverPassword;
 
     quint16 numPlayers() {
         return myplayers.size();

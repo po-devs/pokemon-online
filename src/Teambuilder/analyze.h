@@ -88,8 +88,8 @@ signals:
     void spectatedBattle(int battleId, const BattleConfiguration &conf);
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
-    void passRequired(const QString &salt);
-    void serverPassRequired(const QString &salt);
+    void passRequired(const QByteArray &salt);
+    void serverPassRequired(const QByteArray &salt);
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
