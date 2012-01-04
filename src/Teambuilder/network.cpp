@@ -22,9 +22,9 @@ void Network::onReceipt()
         /* Ok now we can start */
         commandStarted=true;
         /* getting the length of the message */
-        char c1, c2;
-        this->getChar(&c1), this->getChar(&c2);
-	remainingLength= uchar(c1)*256+uchar(c2);
+        char c1, c2, c3, c4;
+        this->getChar(&c1), this->getChar(&c2); this->getChar(&c3), this->getChar(&c4);
+        remainingLength= (uchar(c1) << 24) + (uchar(c2) << 16) + (uchar(c3) << 8) + uchar(c4);
         /* Recursive call to write less code =) */
         onReceipt();
     } else {
@@ -40,7 +40,19 @@ void Network::onReceipt()
 
 void Network::send(const QByteArray &message)
 {
-    this->putChar(message.length()/256);
-    this->putChar(message.length()%256);
+    quint32 length = message.length();
+    uchar c1, c2, c3, c4;
+    c1 = length & 0xFF;
+    length >>= 8;
+    c2 = length & 0xFF;
+    length >>= 8;
+    c3 = length & 0xFF;
+    length >>= 8;
+    c4 = length & 0xFF;
+
+    this->putChar(c4);
+    this->putChar(c3);
+    this->putChar(c2);
+    this->putChar(c1);
     this->write(message);
 }
