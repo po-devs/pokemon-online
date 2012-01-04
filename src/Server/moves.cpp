@@ -498,8 +498,8 @@ struct MMRest : public MM
         b.healLife(s, b.poke(s).totalLifePoints());
         b.sendMoveMessage(106,0,s,type(b,s));
         b.changeStatus(s, Pokemon::Asleep,false);
-        b.poke(s).statusCount() = 2;
-        b.poke(s).oriStatusCount() = 2;
+        b.poke(s).statusCount() = b.gen() == 1 ? 1 : 2;
+        b.poke(s).oriStatusCount() = b.gen() == 1 ? 1 : 2;
         poke(b,s)["Rested"] = true;
 
         /* In GSC, when you rest when asleep thanks to sleep talk,
