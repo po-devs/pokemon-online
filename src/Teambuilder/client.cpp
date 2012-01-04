@@ -2264,7 +2264,7 @@ void Client::printLine(int event, int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
-            c->printLine(line, false);
+            c->printLine(line, false, false);
     }
 }
 
