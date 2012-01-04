@@ -19,7 +19,7 @@ CONFIG += ordered
 CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins
 
 !CONFIG(po_server):!CONFIG(po_serverplugins):CONFIG += po_client
-CONFIG(po_server_plugins):CONFIG += po_server
+CONFIG(po_serverplugins):CONFIG += po_server
 
 CONFIG(po_client) | CONFIG(po_server) {
     SUBDIRS = src/Utilities \
