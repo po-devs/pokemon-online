@@ -6,7 +6,7 @@
 
 TARGET = ThemeManager
 TEMPLATE = lib
-DESTDIR = ../../bin/myplugins
+DESTDIR = ../../bin/Pokemon-Online.app/Contents/Resources/myplugins
 
 QT += network xml
 
@@ -15,19 +15,20 @@ DEFINES += THEMEMANAGER_LIBRARY
 SOURCES += thememanager.cpp \
     thememanagerwidget.cpp \
     themewidget.cpp \
-    clickablelabel.cpp
+    clickablelabel.cpp \
+    imageviewerlabel.cpp
 
 HEADERS += thememanager.h\
         ThemeManager_global.h \
     thememanagerwidget.h \
     themewidget.h \
-    clickablelabel.h
+    clickablelabel.h \
+    imageviewerlabel.h
 
 FORMS += \
     thememanagerwidget.ui \
     themewidget.ui
 
 macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-macx:QMAKE_POST_LINK = (cd ../../bin/myplugins && ./fix.sh)
-
+macx:QMAKE_POST_LINK = (cd $$DESTDIR && ./fix.sh)
 

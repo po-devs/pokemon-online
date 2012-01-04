@@ -10,7 +10,6 @@ ThemeManagerWidget::ThemeManagerWidget(QWidget *parent) :
     ui(new Ui::ThemeManagerWidget)
 {
     ui->setupUi(this);
-    ui->progressBar->setVisible(false);
 
     connect(ui->getListingButton, SIGNAL(clicked()), SLOT(updateListing()));
 
@@ -30,7 +29,6 @@ void ThemeManagerWidget::updateListing()
     QString url = "http://valssi.fixme.fi/~lamperi/pokemononline/themes.xml";
 
     ui->getListingButton->setDisabled(true);
-    ui->progressBar->setValue(0);
 
     QNetworkRequest request;
     request.setUrl(QUrl(url));
@@ -42,7 +40,7 @@ void ThemeManagerWidget::updateListing()
 
 void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
 {
-    ui->progressBar->setValue(100);
+    //ui->progressBar->setValue(100);
     ui->getListingButton->setDisabled(false);
 
     QString data = reply->readAll();
@@ -50,20 +48,29 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
     document.setContent(data);
     qDebug() << data;
     qDebug() << document.firstChild().nodeName();
-    qDebug() << document.firstChild().firstChildElement("theme").nodeName();
     QDomElement themeNode = document.firstChild().firstChildElement("theme");
     while (!themeNode.isNull()) {
 
         QString name = themeNode.attribute("name");
         QString author = themeNode.attribute("author");
         QString version = themeNode.attribute("version");
-        QString imageUrl = themeNode.attribute("preview");
         QString downloadUrl = themeNode.attribute("downloadurl");
         QString forumId = themeNode.attribute("forumthread");
+        bool directDownload = (themeNode.attribute("direct") == "yes");
+
+        QStringList images;
+        QDomElement imageNode = themeNode.firstChildElement("preview");
+        while (!imageNode.isNull()) {
+            qDebug() << "imagaNode" << &imageNode;
+            images << imageNode.firstChild().toText().data();
+            imageNode = imageNode.nextSiblingElement("preview");
+        }
         themeNode = themeNode.nextSiblingElement("theme");
 
-        ThemeWidget *widget = new ThemeWidget(name, author, version, downloadUrl, forumId);
-        widget->setThemeImage(imageUrl);
+        qDebug() << "before creating themewidget";
+        ThemeWidget *widget = new ThemeWidget(name, author, version, downloadUrl, forumId, directDownload);
+        qDebug() << "after creating themewidget";
+        widget->setImages(images);
         ui->themeWidgets->addWidget(widget);
     }
     ui->scrollAreaWidgetContents->adjustSize();
@@ -72,7 +79,7 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
 
 void ThemeManagerWidget::downloadProgress(qint64 done, qint64 total)
 {
-    double percent = total <= 0 ? 0 : static_cast<double>(done)/total;
-    ui->progressBar->setValue(percent);
+    //double percent = total <= 0 ? 0 : static_cast<double>(done)/total;
+    //ui->progressBar->setValue(percent);
 }
 
