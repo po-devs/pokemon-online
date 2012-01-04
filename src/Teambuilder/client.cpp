@@ -176,8 +176,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
-    connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
-    connect(relay, SIGNAL(serverPassRequired(QString)), SLOT(serverPass(QString)));
+    connect(relay, SIGNAL(passRequired(QByteArray)), SLOT(askForPass(QByteArray)));
+    connect(relay, SIGNAL(serverPassRequired(QByteArray)), SLOT(serverPass(QByteArray)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
@@ -1270,7 +1270,7 @@ void Client::playerBanned(int dest, int src) {
 }
 
 
-void Client::askForPass(const QString &salt) {
+void Client::askForPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
@@ -1322,11 +1322,11 @@ void Client::askForPass(const QString &salt) {
     }
 
 
-    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toAscii())+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::AskForPass, hash);
 }
 
-void Client::serverPass(const QString &salt) {
+void Client::serverPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
@@ -1372,7 +1372,7 @@ void Client::serverPass(const QString &salt) {
         // TODO: ipv6 support in the future
         wallet.saveServerPassword(relay().getIp(), serverName, pass);
     }
-    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    QByteArray hash = QCryptographicHash::hash(QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5)+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::ServerPass, hash);
 }
 

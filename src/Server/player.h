@@ -151,7 +151,7 @@ signals:
     void ipChangeRequested(int id, const QString &ip);
 public slots:
     void loggedIn(TeamInfo &team,bool,bool, QColor);
-    void serverPasswordSent(const QString &hash);
+    void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
     void recvTeam(TeamInfo &team);
     void disconnected();
@@ -160,7 +160,7 @@ public slots:
     void battleMessage(int id, const BattleChoice &b);
     void battleChat(int id, const QString &s);
     void registerRequest();
-    void hashReceived(const QString &hash);
+    void hashReceived(const QByteArray &hash);
     void playerKick(int);
     void playerBan(int);
     void CPBan(const QString &name);
