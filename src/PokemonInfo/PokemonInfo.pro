@@ -20,8 +20,4 @@ LIBS += -L../../bin \
     -lzip
 OTHER_FILES += 
 
-macx {
-    INCLUDEPATH += /usr/local/include
-    LIBS += -L/usr/local/lib
-}
-
+include(../Shared/Common.pri)

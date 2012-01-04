@@ -122,11 +122,4 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/Bonemerang.qml \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
 
-macx {
-   INCLUDEPATH += /usr/local/gcc-4.6.2/include
-   LIBS += -L/usr/local/gcc-4.6.2/lib
-
-   INCLUDEPATH += /usr/local/include
-   LIBS += -L/usr/local/lib
-
-}
+include(../Shared/Common.pri)
