@@ -25,8 +25,4 @@ LIBS += -L../../bin \
     -lbattlelib
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
-macx {
-   INCLUDEPATH += /usr/local/gcc-4.6.2/include
-   LIBS += -L/usr/local/gcc-4.6.2/lib
-}
-
+include(../Shared/Common.pri)
