@@ -25,6 +25,7 @@ class FindBattleData;
 class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
+class DataStream;
 
 /* The class for going online.
 
@@ -142,7 +143,7 @@ public slots:
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
     /* Channels list */
-    void channelCommandReceived(int command, int channel, QDataStream *stream);
+    void channelCommandReceived(int command, int channel, DataStream *stream);
     void channelsListReceived(const QHash<qint32, QString> &channels);
     void sortChannels();
     void sortChannelsToggle(bool enabled);

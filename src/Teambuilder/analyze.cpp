@@ -70,8 +70,7 @@ void Analyzer::battleCommand(int id, const BattleChoice &comm)
 void Analyzer::channelCommand(int command, int channelid, const QByteArray &body)
 {
     QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    DataStream out(&tosend, QIODevice::WriteOnly);
     out << uchar(command) << qint32(channelid);
 
     /* We don't know for sure that << body will do what we want (as ServerSide we don't want
@@ -150,8 +149,7 @@ void Analyzer::wasConnected()
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_7);
+    DataStream in (commandline);
     uchar command;
 
     in >> command;
@@ -452,15 +450,4 @@ void Analyzer::getBanList()
 void Analyzer::getTBanList()
 {
     notify(GetTBanList);
-}
-
-void Analyzer::notify(int command)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command);
-
-    emit sendCommand(tosend);
 }

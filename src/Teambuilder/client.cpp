@@ -192,7 +192,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
     connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
-    connect(relay, SIGNAL(channelCommandReceived(int,int,QDataStream*)), SLOT(channelCommandReceived(int,int,QDataStream*)));
+    connect(relay, SIGNAL(channelCommandReceived(int,int,DataStream*)), SLOT(channelCommandReceived(int,int,DataStream*)));
     connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
@@ -1057,7 +1057,7 @@ Channel *Client::channel(int channelid)
     return mychannels.value(channelid);
 }
 
-void Client::channelCommandReceived(int command, int channel, QDataStream *stream)
+void Client::channelCommandReceived(int command, int channel, DataStream *stream)
 {
     if (!hasChannel(channel))
         return;

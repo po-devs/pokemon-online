@@ -95,7 +95,8 @@ HEADERS += player.h \
     battlecounters.h \
     battlecounterindex.h \
     battlefunctions.h \
-    ../Shared/battlecommands.h
+    ../Shared/battlecommands.h \
+    ../Utilities/coreclasses.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -129,4 +130,4 @@ macx {
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
 }
 
-
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

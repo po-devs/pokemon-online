@@ -9,6 +9,7 @@ class TierMachine;
 class QDomElement;
 class QTreeWidget;
 class QTreeWidgetItem;
+class DataStream;
 
 struct TierCategory : public TierNode
 {
@@ -29,7 +30,7 @@ struct TierCategory : public TierNode
     void kill(TierNode *t);
     TierCategory *dataClone() const;
 
-    void serialize(QDataStream &stream, int level = -1);
+    void serialize(DataStream &stream, int level = -1);
 
     TierNode *getNode(const QString &name);
     TierCategory *getParentCategory(TierNode *t);

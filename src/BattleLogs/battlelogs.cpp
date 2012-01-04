@@ -118,7 +118,6 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
     }
 
     started = false;
-    commands.setVersion(QDataStream::Qt_4_7);
     t.start();
 }
 
@@ -139,11 +138,10 @@ BattleLogsPlugin::~BattleLogsPlugin()
             QFile out;
             out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
             out.open(QIODevice::WriteOnly);
-            out.write("battle_logs_v1\n");
+            out.write("battle_logs_v2\n");
 
             /* Writing configuration */
-            QDataStream outd(&out);
-            outd.setVersion(QDataStream::Qt_4_7);
+            DataStream outd(&out);
             conf.teams[0] = &team1;
             conf.teams[1] = &team2;
             outd << conf;

@@ -1,5 +1,5 @@
 #include "password_wallet.h"
-
+#include "../Utilities/coreclasses.h"
 
 namespace {
     static quint32 MAGIC = 0xB0C3B455;
@@ -20,7 +20,7 @@ void PasswordWallet::load()
     QFile f(dataPath);
     if (!f.open(QIODevice::ReadOnly))
         return;
-    QDataStream s(&f);
+    DataStream s(&f);
     // sanity checks
     quint32 magic;
     s >> magic;
@@ -45,7 +45,7 @@ void PasswordWallet::save()
     QFile f(dataPath);
     if (!f.open(QIODevice::WriteOnly))
         return;
-    QDataStream s(&f);
+    DataStream s(&f);
     // write magic byte
     s << MAGIC;
     s << VERSION;
@@ -142,7 +142,7 @@ void PasswordWallet::saveServerPassword(const QString& ip,
     save();
 }
 
-QDataStream &operator<<(QDataStream &ds, const PasswordWallet::ServerPassRecord &r)
+DataStream &operator<<(DataStream &ds, const PasswordWallet::ServerPassRecord &r)
 {
     ds << r.ip;
     ds << r.server;
@@ -150,7 +150,7 @@ QDataStream &operator<<(QDataStream &ds, const PasswordWallet::ServerPassRecord 
     return ds;
 }
 
-QDataStream &operator>>(QDataStream &ds, PasswordWallet::ServerPassRecord &r)
+DataStream &operator>>(DataStream &ds, PasswordWallet::ServerPassRecord &r)
 {
     ds >> r.ip;
     ds >> r.server;
@@ -158,7 +158,7 @@ QDataStream &operator>>(QDataStream &ds, PasswordWallet::ServerPassRecord &r)
     return ds;
 }
 
-QDataStream &operator<<(QDataStream &ds, const PasswordWallet::UserPassRecord &r)
+DataStream &operator<<(DataStream &ds, const PasswordWallet::UserPassRecord &r)
 {
     ds << r.ip;
     ds << r.server;
@@ -168,7 +168,7 @@ QDataStream &operator<<(QDataStream &ds, const PasswordWallet::UserPassRecord &r
     return ds;
 }
 
-QDataStream &operator>>(QDataStream &ds, PasswordWallet::UserPassRecord &r)
+DataStream &operator>>(DataStream &ds, PasswordWallet::UserPassRecord &r)
 {
     ds >> r.ip;
     ds >> r.server;

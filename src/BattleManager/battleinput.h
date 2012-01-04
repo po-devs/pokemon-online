@@ -5,6 +5,7 @@
 #include <vector>
 
 class BattleConfiguration;
+class DataStream;
 
 class BattleInput : public BattleCommandManager<BattleInput>
 {
@@ -12,7 +13,7 @@ public:
     BattleInput(const BattleConfiguration *conf);
 
     void receiveData(QByteArray data);
-    void dealWithCommandInfo(QDataStream&, uchar command,int spot);
+    void dealWithCommandInfo(DataStream&, uchar command,int spot);
 
     void pause(int ticks=1);
     void unpause(int ticks=1);

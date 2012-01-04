@@ -186,8 +186,7 @@ void Analyzer::sendRanking(QString name, int points)
 
 void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
-    QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_7);
+    DataStream in (commandline);
     uchar command;
 
     in >> command;
@@ -495,15 +494,4 @@ GenericNetwork & Analyzer::socket()
 const GenericNetwork & Analyzer::socket() const
 {
     return *mysocket;
-}
-
-void Analyzer::notify(int command)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command);
-
-    emit sendCommand(tosend);
 }
