@@ -28,7 +28,7 @@ void PasswordWallet::load()
         return;
     quint16 version;
     s >> version;
-    if (version != 1)
+    if (version != VERSION)
         return;
 
     // read server and user pass
@@ -64,13 +64,11 @@ bool PasswordWallet::retrieveUserPassword(const QString& ip,
     for (QVector<UserPassRecord>::iterator i = userPass.begin(); i != userPass.end(); ++i) {
         UserPassRecord& r = *i;
     //foreach(UserPassRecord& r, userPass) {
-        if (r.name == trainerName && (r.ip == ip || r.server == serverName)) {
+        if (r.name == trainerName && (r.salt == salt)) {
             if (r.ip != ip)
                 warnings.append(tr("Warning: the Server IP Address has changed since password was saved."));
             if (r.server != serverName)
                 warnings.append(tr("Warning: the Server Name has changed since password was saved."));
-            if (r.salt != salt)
-                warnings.append(tr("<span style=\"color: red\"><b>Warning: the salt for name has changed since password was saved. Account password was probably resetted.</b></span>"));
             pass = r.pass;
             return true;
         }
@@ -108,7 +106,7 @@ void PasswordWallet::saveUserPassword(const QString& ip,
     for (QVector<UserPassRecord>::iterator i = userPass.begin(); i != userPass.end(); ++i) {
         UserPassRecord& r = *i;
     //foreach(UserPassRecord& r, userPass) {
-        if (r.name == trainerName && (r.ip == ip || r.server == serverName)) {
+        if (r.name == trainerName && r.salt == salt) {
             r.ip = ip;
             r.server = serverName;
             r.salt = salt;
