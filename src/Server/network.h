@@ -66,7 +66,7 @@ private:
     S mysocket;
     /* internal variables for the protocol */
     bool commandStarted;
-    quint16 remainingLength;
+    quint32 remainingLength;
     /* errors stored when disconnected */
     int myerror;
     QString myerrorString;
@@ -166,16 +166,16 @@ void Network<S>::onReceipt()
     {
         if (commandStarted == false) {
             /* There it's a new message we are receiving.
-               To start receiving it we must know its length, i.e. the 2 first bytes */
-            if (socket()->bytesAvailable() < 2) {
+               To start receiving it we must know its length, i.e. the 4 first bytes */
+            if (socket()->bytesAvailable() < 4) {
                 return;
             }
             /* Ok now we can start */
             commandStarted=true;
             /* getting the length of the message */
-            char c1, c2;
-            socket()->getChar(&c1), socket()->getChar(&c2);
-            remainingLength=uchar(c1)*256+uchar(c2);
+            char c1, c2, c3, c4;
+            socket()->getChar(&c1), socket()->getChar(&c2); socket()->getChar(&c3), socket()->getChar(&c4);
+            remainingLength= (uchar(c1) << 24) + (uchar(c2) << 16) + (uchar(c3) << 8) + uchar(c4);
 
             /* Just a little check :p */
             if (!AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
@@ -223,8 +223,20 @@ void Network<S>::send(const QByteArray &message)
 {
     if (!isConnected())
         return;
-    socket()->putChar(message.length()/256);
-    socket()->putChar(message.length()%256);
+    quint32 length = message.length();
+    uchar c1, c2, c3, c4;
+    c1 = length & 0xFF;
+    length >>= 8;
+    c2 = length & 0xFF;
+    length >>= 8;
+    c3 = length & 0xFF;
+    length >>= 8;
+    c4 = length & 0xFF;
+
+    socket()->putChar(c4);
+    socket()->putChar(c3);
+    socket()->putChar(c2);
+    socket()->putChar(c1);
     socket()->write(message);
 }
 
