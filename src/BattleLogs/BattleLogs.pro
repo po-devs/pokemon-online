@@ -18,7 +18,8 @@ HEADERS += battlelogs.h\
     ../Server/plugininterface.h \
     ../Server/battleinterface.h \
     battleserverlog.h \
-    ../Shared/battlecommands.h
+    ../Shared/battlecommands.h \
+    ../Utilities/coreclasses.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -29,4 +30,3 @@ macx {
    INCLUDEPATH += /usr/local/gcc-4.6.2/include
    LIBS += -L/usr/local/gcc-4.6.2/lib
 }
-

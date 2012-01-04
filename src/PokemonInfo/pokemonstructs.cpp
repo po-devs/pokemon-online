@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include "../Utilities/coreclasses.h"
+
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spAtt, quint8 base_spDef, quint8 base_spd)
 {
     setBaseHp(base_hp);
@@ -1184,7 +1186,7 @@ QString TrainerTeam::exportToTxt() const
 }
 
 
-QDataStream & operator << (QDataStream & out, const Team & team)
+DataStream & operator << (DataStream & out, const Team & team)
 {
     out << quint8(team.gen());
 
@@ -1198,7 +1200,7 @@ QDataStream & operator << (QDataStream & out, const Team & team)
 }
 
 
-QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
+DataStream &operator << (DataStream &out, const TrainerTeam& trainerTeam)
 {
     out << trainerTeam.trainerNick();
     out << trainerTeam.trainerInfo();
@@ -1212,7 +1214,7 @@ QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
 }
 
 
-QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
+DataStream &operator >> (DataStream &in, TrainerTeam& trainerTeam)
 {
     QString nick, info, lose, win;
 
@@ -1233,7 +1235,7 @@ QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
     return in;
 }
 
-QDataStream & operator >> (QDataStream & in, Team & team)
+DataStream & operator >> (DataStream & in, Team & team)
 {
     quint8 gen;
 
@@ -1250,7 +1252,7 @@ QDataStream & operator >> (QDataStream & in, Team & team)
 }
 
 
-QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
+DataStream & operator >> (DataStream & in, PokeTeam & poke)
 {
     Pokemon::uniqueId num;
     in >> num;
@@ -1283,7 +1285,7 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 }
 
 
-QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
+DataStream & operator << (DataStream & out, const PokePersonal & Pokemon)
 {
     out << Pokemon.num();
     out << Pokemon.nickname();
@@ -1310,7 +1312,7 @@ QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
     return out;
 }
 
-QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
+DataStream & operator >> (DataStream & in, PokePersonal & poke)
 {
     in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
@@ -1409,14 +1411,14 @@ bool Pokemon::uniqueId::extract_short(const QString &from, quint16 &pokenum, QSt
     return result;
 }
 
-QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id)
+DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id)
 {
     out << id.pokenum;
     out << id.subnum;
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id)
+DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id)
 {
     in >> id.pokenum;
     in >> id.subnum;

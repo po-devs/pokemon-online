@@ -5,6 +5,7 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
+#include "../Utilities/coreclasses.h"
 #include "pokemoninfo.h"
 
 class TeamInfo;
@@ -72,11 +73,11 @@ private:
     quint8 mLifePercent;
 };
 
-QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po);
-QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po);
+DataStream & operator >> (DataStream &in, ShallowBattlePoke &po);
+DataStream & operator << (DataStream &out, const ShallowBattlePoke &po);
 
-QDataStream & operator >> (QDataStream &in, BattleMove &mo);
-QDataStream & operator << (QDataStream &out, const BattleMove &mo);
+DataStream & operator >> (DataStream &in, BattleMove &mo);
+DataStream & operator << (DataStream &out, const BattleMove &mo);
 
 class PokeBattle : public ShallowBattlePoke
 {
@@ -119,8 +120,8 @@ private:
     quint16 mLifePoints;
 };
 
-QDataStream & operator >> (QDataStream &in, PokeBattle &po);
-QDataStream & operator << (QDataStream &out, const PokeBattle &po);
+DataStream & operator >> (DataStream &in, PokeBattle &po);
+DataStream & operator << (DataStream &out, const PokeBattle &po);
 
 class TeamBattle
 {
@@ -158,8 +159,8 @@ private:
     int m_indexes[6];
 };
 
-QDataStream & operator >> (QDataStream &in, TeamBattle &te);
-QDataStream & operator << (QDataStream &out, const TeamBattle &te);
+DataStream & operator >> (DataStream &in, TeamBattle &te);
+DataStream & operator << (DataStream &out, const TeamBattle &te);
 
 struct ShallowShownPoke
 {
@@ -173,8 +174,8 @@ public:
     quint8 gender;
 };
 
-QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po);
-QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po);
+DataStream & operator >> (DataStream &in, ShallowShownPoke &po);
+DataStream & operator << (DataStream &out, const ShallowShownPoke &po);
 
 class ShallowShownTeam
 {
@@ -192,8 +193,8 @@ private:
     ShallowShownPoke pokemons[6];
 };
 
-QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po);
-QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po);
+DataStream & operator >> (DataStream &in, ShallowShownTeam &po);
+DataStream & operator << (DataStream &out, const ShallowShownTeam &po);
 
 struct BattleChoices
 {
@@ -213,8 +214,8 @@ struct BattleChoices
     static BattleChoices SwitchOnly(quint8 numslot);
 };
 
-QDataStream & operator >> (QDataStream &in, BattleChoices &po);
-QDataStream & operator << (QDataStream &out, const BattleChoices &po);
+DataStream & operator >> (DataStream &in, BattleChoices &po);
+DataStream & operator << (DataStream &out, const BattleChoices &po);
 
 enum ChoiceType {
     CancelType,
@@ -353,8 +354,8 @@ struct BattleChoice {
     bool match(const BattleChoices &avail) const;
 };
 
-QDataStream & operator >> (QDataStream &in, BattleChoice &po);
-QDataStream & operator << (QDataStream &out, const BattleChoice &po);
+DataStream & operator >> (DataStream &in, BattleChoice &po);
+DataStream & operator << (DataStream &out, const BattleChoice &po);
 
 struct ChallengeInfo
 {
@@ -451,8 +452,8 @@ struct ChallengeInfo
     }
 };
 
-QDataStream & operator >> (QDataStream &in, ChallengeInfo &c);
-QDataStream & operator << (QDataStream &out, const ChallengeInfo &c);
+DataStream & operator >> (DataStream &in, ChallengeInfo &c);
+DataStream & operator << (DataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
@@ -508,14 +509,14 @@ struct BattleConfiguration
     ~BattleConfiguration();
 };
 
-inline QDataStream & operator >> (QDataStream &in, BattleConfiguration &c)
+inline DataStream & operator >> (DataStream &in, BattleConfiguration &c)
 {
     in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     return in;
 }
 
-inline QDataStream & operator << (QDataStream &out, const BattleConfiguration &c)
+inline DataStream & operator << (DataStream &out, const BattleConfiguration &c)
 {
     out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
 
@@ -533,8 +534,8 @@ struct FullBattleConfiguration : public BattleConfiguration
     }
 };
 
-QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c);
-QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c);
+DataStream & operator >> (DataStream &in, FullBattleConfiguration &c);
+DataStream & operator << (DataStream &out, const FullBattleConfiguration &c);
 
 struct BattleDynamicInfo
 {
@@ -550,14 +551,14 @@ struct BattleDynamicInfo
     quint8 flags;
 };
 
-inline QDataStream & operator >> (QDataStream &in, BattleDynamicInfo &c)
+inline DataStream & operator >> (DataStream &in, BattleDynamicInfo &c)
 {
     in >> c.boosts[0] >> c.boosts[1] >> c.boosts[2] >> c.boosts[3] >> c.boosts[4] >> c.boosts[5] >> c.boosts[6] >> c.flags;
 
     return in;
 }
 
-inline QDataStream & operator << (QDataStream &out, const BattleDynamicInfo &c)
+inline DataStream & operator << (DataStream &out, const BattleDynamicInfo &c)
 {
     out << c.boosts[0] << c.boosts[1] << c.boosts[2] << c.boosts[3] << c.boosts[4] << c.boosts[5] << c.boosts[6] << c.flags;
 
@@ -569,14 +570,14 @@ struct BattleStats
     qint16 stats[5];
 };
 
-inline QDataStream & operator >> (QDataStream &in, BattleStats &c)
+inline DataStream & operator >> (DataStream &in, BattleStats &c)
 {
     in >> c.stats[0] >> c.stats[1] >> c.stats[2] >> c.stats[3] >> c.stats[4];
 
     return in;
 }
 
-inline QDataStream & operator << (QDataStream &out, const BattleStats &c)
+inline DataStream & operator << (DataStream &out, const BattleStats &c)
 {
     out << c.stats[0] << c.stats[1] << c.stats[2] << c.stats[3] << c.stats[4];
 
@@ -594,8 +595,8 @@ struct FindBattleData
     //quint32 bannedClauses;
 };
 
-QDataStream& operator >> (QDataStream &in, FindBattleData &f);
-QDataStream& operator << (QDataStream &out, const FindBattleData &f);
+DataStream& operator >> (DataStream &in, FindBattleData &f);
+DataStream& operator << (DataStream &out, const FindBattleData &f);
 
 
 #endif // BATTLESTRUCTS_H

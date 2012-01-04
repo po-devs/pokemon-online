@@ -2,6 +2,7 @@
 #define NETWORKSTRUCTS_H
 
 #include "pokemonstructs.h"
+#include "../Utilities/coreclasses.h"
 
 /* Only the infos needed by the server */
 class TeamInfo
@@ -16,8 +17,8 @@ public:
     quint8 gen;
 };
 
-QDataStream & operator << (QDataStream & out,const TeamInfo & team);
-QDataStream & operator >> (QDataStream & in,TeamInfo & team);
+DataStream & operator << (DataStream & out,const TeamInfo & team);
+DataStream & operator >> (DataStream & in,TeamInfo & team);
 
 /* Only infos needed by other players */
 class BasicInfo
@@ -55,18 +56,18 @@ struct UserInfo
     bool tempBanned() const { return flags & TempBanned;}
 };
 
-inline QDataStream & operator << (QDataStream &d, const UserInfo &ui) {
+inline DataStream & operator << (DataStream &d, const UserInfo &ui) {
     d << ui.flags << ui.auth << ui.ip << ui.name << ui.date;
     return d;
 }
 
-inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
+inline DataStream & operator >> (DataStream &d, UserInfo &ui) {
     d >> ui.flags >> ui.auth >> ui.ip >> ui.name >> ui.date;
     return d;
 }
 
-QDataStream & operator << (QDataStream & out,const BasicInfo & team);
-QDataStream & operator >> (QDataStream & in,BasicInfo & team);
+DataStream & operator << (DataStream & out,const BasicInfo & team);
+DataStream & operator >> (DataStream & in,BasicInfo & team);
 
 /* Struct representing a player's data */
 class PlayerInfo
@@ -106,8 +107,8 @@ public:
     }
 };
 
-QDataStream & operator >> (QDataStream &in, PlayerInfo &p);
-QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
+DataStream & operator >> (DataStream &in, PlayerInfo &p);
+DataStream & operator << (DataStream &out, const PlayerInfo &p);
 
 struct FullInfo
 {
@@ -118,8 +119,8 @@ struct FullInfo
     QColor nameColor;
 };
 
-QDataStream & operator >> (QDataStream &in, FullInfo &p);
-QDataStream & operator << (QDataStream &out, const FullInfo &p);
+DataStream & operator >> (DataStream &in, FullInfo &p);
+DataStream & operator << (DataStream &out, const FullInfo &p);
 
 
 struct Battle
@@ -129,7 +130,7 @@ struct Battle
     Battle(int id1=0, int id2=0);
 };
 
-QDataStream & operator >> (QDataStream &in, Battle &p);
-QDataStream & operator << (QDataStream &out, const Battle &p);
+DataStream & operator >> (DataStream &in, Battle &p);
+DataStream & operator << (DataStream &out, const Battle &p);
 
 #endif // NETWORKSTRUCTS_H

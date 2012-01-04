@@ -10,6 +10,7 @@
 #include "../BattleManager/battleinput.h"
 #include "poketextedit.h"
 #include "../Shared/battlecommands.h"
+#include "../Utilities/coreclasses.h"
 
 using namespace BattleCommands;
 
@@ -118,8 +119,7 @@ void BaseBattleWindow::init()
     replay->override = Log::OverrideNo;
 
     replayData.data = "battle_logs_v1\n";
-    QDataStream stream(&replayData.data, QIODevice::Append);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(&replayData.data, QIODevice::Append);
     stream << conf();
     replayData.t.start();
 
@@ -348,8 +348,7 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
         }
     }
 
-    QDataStream stream(&replayData.data, QIODevice::Append);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(&replayData.data, QIODevice::Append);
     stream << quint32(replayData.t.elapsed()) << inf;
 
     test->receiveData(inf);

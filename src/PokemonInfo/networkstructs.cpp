@@ -1,4 +1,5 @@
 #include "networkstructs.h"
+#include "../Utilities/coreclasses.h"
 
 PokePersonal & TeamInfo::pokemon(int num)
 {
@@ -11,7 +12,7 @@ const PokePersonal & TeamInfo::pokemon(int num) const
     return m_pokes[num];
 }
 
-QDataStream &operator << (QDataStream &out, const TeamInfo& team)
+DataStream &operator << (DataStream &out, const TeamInfo& team)
 {
     out << team.name;
     out << team.info;
@@ -28,7 +29,7 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     return out;
 }
 
-QDataStream &operator >> (QDataStream &in, TeamInfo& team)
+DataStream &operator >> (DataStream &in, TeamInfo& team)
 {
     in >> team.name;
     in >> team.info;
@@ -62,7 +63,7 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     return in;
 }
 
-QDataStream &operator << (QDataStream &out, const BasicInfo& team)
+DataStream &operator << (DataStream &out, const BasicInfo& team)
 {
     out << team.name;
     out << team.info;
@@ -70,7 +71,7 @@ QDataStream &operator << (QDataStream &out, const BasicInfo& team)
     return out;
 }
 
-QDataStream &operator >> (QDataStream &in, BasicInfo& team)
+DataStream &operator >> (DataStream &in, BasicInfo& team)
 {
     in >> team.name;
     in >> team.info;
@@ -83,7 +84,7 @@ QDataStream &operator >> (QDataStream &in, BasicInfo& team)
 }
 
 
-QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
+DataStream & operator >> (DataStream &in, PlayerInfo &p)
 {
     in >> p.id;
     in >> p.team;
@@ -103,7 +104,7 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
+DataStream & operator << (DataStream &out, const PlayerInfo &p)
 {
     out << p.id;
     out << p.team;
@@ -123,14 +124,14 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, FullInfo &p)
+DataStream & operator >> (DataStream &in, FullInfo &p)
 {
     in >> p.team >> p.ladder >> p.showteam >> p.nameColor;
 
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const FullInfo &p)
+DataStream & operator << (DataStream &out, const FullInfo &p)
 {
     out << p.team << p.ladder << p.showteam << p.nameColor;
 
@@ -142,7 +143,7 @@ Battle::Battle(int id1, int id2) : id1(id1), id2(id2)
 
 }
 
-QDataStream & operator >> (QDataStream &in, Battle &p)
+DataStream & operator >> (DataStream &in, Battle &p)
 {
     //in >> p.battleid >> p.id1 >> p.id2;
     in >> p.id1 >> p.id2;
@@ -150,7 +151,7 @@ QDataStream & operator >> (QDataStream &in, Battle &p)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const Battle &p)
+DataStream & operator << (DataStream &out, const Battle &p)
 {
     //out << p.battleid << p.id1 << p.id2;
     out << p.id1 << p.id2;

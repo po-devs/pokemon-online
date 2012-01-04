@@ -7,6 +7,7 @@
 #include "../BattleManager/defaulttheme.h"
 #include "../BattleManager/battledatatypes.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "../Utilities/coreclasses.h"
 #include <QtCore>
 #include <QWidget>
 
@@ -34,7 +35,9 @@ class QTextEdit;
 
  BattleConfiguration helps: it holds the roles of the different players, aka Spectator or Player.
 
- Current version output: V1
+ V2-
+ Same as v1, except using new serialization scheme (in which for example string is an UTF8 bytearray)
+ Current version output: V2
 */
 
 extern "C" {
@@ -93,7 +96,7 @@ public:
     int id1, id2;
 
     QByteArray toSend;
-    QDataStream commands;
+    DataStream commands;
     QElapsedTimer t;
 
     FullBattleConfiguration conf;

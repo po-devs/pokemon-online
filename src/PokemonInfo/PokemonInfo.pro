@@ -25,3 +25,4 @@ macx {
     LIBS += -L/usr/local/lib
 }
 
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

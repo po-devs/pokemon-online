@@ -3,6 +3,8 @@
 
 #include <QtGui>
 
+class DataStream;
+
 class PasswordWallet : public QObject {
 public:
     PasswordWallet();
@@ -41,9 +43,9 @@ private:
     
 };
 
-QDataStream &operator<<(QDataStream &ds, const PasswordWallet::ServerPassRecord &r);
-QDataStream &operator>>(QDataStream &ds, PasswordWallet::ServerPassRecord &r);
+DataStream &operator<<(DataStream &ds, const PasswordWallet::ServerPassRecord &r);
+DataStream &operator>>(DataStream &ds, PasswordWallet::ServerPassRecord &r);
 
-QDataStream &operator<<(QDataStream &ds, const PasswordWallet::UserPassRecord &r);
-QDataStream &operator>>(QDataStream &ds, PasswordWallet::UserPassRecord &r);
+DataStream &operator<<(DataStream &ds, const PasswordWallet::UserPassRecord &r);
+DataStream &operator>>(DataStream &ds, PasswordWallet::UserPassRecord &r);
 #endif

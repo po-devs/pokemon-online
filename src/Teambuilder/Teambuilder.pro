@@ -105,7 +105,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    replayviewer.h
+    replayviewer.h \
+    ../Utilities/coreclasses.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

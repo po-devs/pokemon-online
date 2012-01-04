@@ -3,6 +3,7 @@
 #include "poketextedit.h"
 #include "remove_direction_override.h"
 #include "theme.h"
+#include "../Utilities/coreclasses.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
@@ -364,9 +365,9 @@ void Channel::receivePlayerList(const QVector<int> &ids)
     }
 }
 
-void Channel::dealWithCommand(int command, QDataStream *stream)
+void Channel::dealWithCommand(int command, DataStream *stream)
 {
-    QDataStream &in = *stream;
+    DataStream &in = *stream;
 
     if (command == NetworkCli::JoinChannel) {
         qint32 id;
