@@ -18,9 +18,13 @@ TB_Menu::TB_Menu()
     layout->setSpacing(0);
 
     layout->addWidget(teambuilder = Theme::PressedButton("teambuilder"), 0, Qt::AlignCenter);
+    teambuilder->setAccessibleName(tr("Teambuilder"));
     layout->addWidget(online = Theme::PressedButton("goonline"), 0, Qt::AlignCenter);
+    online->setAccessibleName(tr("Go online"));
     layout->addWidget(credits = Theme::PressedButton("credits"), 0, Qt::AlignCenter);
+    credits->setAccessibleName(tr("Credits"));
     layout->addWidget(exit = Theme::PressedButton("quit"), 0, Qt::AlignCenter);
+    exit->setAccessibleName(tr("exit"));
 
     connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
     connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
