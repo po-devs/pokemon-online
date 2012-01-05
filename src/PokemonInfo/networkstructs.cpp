@@ -158,3 +158,39 @@ DataStream & operator << (DataStream &out, const Battle &p)
 
     return out;
 }
+
+Flags::Flags()
+{
+    memset(data, 0, size);
+}
+
+bool Flags::operator [](int index) {
+    /* out of bounds */
+    if (index >= size*7 || index < 0) {
+        return false;
+    }
+
+    return data[index/7] & (1 << (index % 7));
+}
+
+DataStream &operator << (DataStream &out, const Flags &f) {
+    const uchar *d = f.data;
+    do {
+        out << d[0];
+        d++;
+    } while (d[-1] & (1 << 7));
+
+    return out;
+}
+
+DataStream &operator >> (DataStream &in, Flags &f) {
+    memset(f.data, 0, Flags::size);
+
+    uchar *d = f.data;
+    do {
+        in >> d[0];
+        d++;
+    } while (d[-1] & (1 << 7));
+
+    return in;
+}
