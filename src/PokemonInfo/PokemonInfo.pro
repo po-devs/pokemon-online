@@ -14,7 +14,8 @@ HEADERS += pokemonstructs.h \
     movesetchecker.h \
     battlestructs.h \
     teamsaver.h \
-    enums.h
+    enums.h \
+    ../Shared/config.h
 LIBS += -L../../bin \
     -lutilities \
     -lzip
