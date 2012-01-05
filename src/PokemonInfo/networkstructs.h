@@ -148,4 +148,15 @@ struct Flags
 DataStream & operator >> (DataStream &in, Flags &p);
 DataStream & operator << (DataStream &out, const Flags &p);
 
+struct ProtocolVersion
+{
+    quint16 version;
+    quint16 subversion;
+
+    ProtocolVersion();
+};
+
+DataStream & operator >> (DataStream &in, ProtocolVersion &p);
+DataStream & operator << (DataStream &out, const ProtocolVersion &p);
+
 #endif // NETWORKSTRUCTS_H

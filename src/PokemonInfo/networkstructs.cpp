@@ -1,5 +1,6 @@
 #include "networkstructs.h"
 #include "../Utilities/coreclasses.h"
+#include "../Shared/config.h"
 
 PokePersonal & TeamInfo::pokemon(int num)
 {
@@ -193,4 +194,22 @@ DataStream &operator >> (DataStream &in, Flags &f) {
     } while (d[-1] & (1 << 7));
 
     return in;
+}
+
+ProtocolVersion::ProtocolVersion()
+{
+    version = PROTOCOL_VERSION;
+    subversion = PROTOCOL_SUBVERSION;
+}
+
+DataStream &operator >> (DataStream &in, ProtocolVersion &p)
+{
+    in >> p.version >> p.subversion;
+    return in;
+}
+
+DataStream &operator << (DataStream &in, const ProtocolVersion &p)
+{
+    out << p.version << p.subversion;
+    return out;
 }
