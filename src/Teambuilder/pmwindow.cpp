@@ -2,7 +2,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "remove_direction_override.h"
 
-PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content, bool html, bool pmDisabled)
+PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content, bool html, bool pmDisabled, int starterAuth)
     : m_ownName(ownName), escape_html(!html)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -24,9 +24,11 @@ PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QS
     m_send->setCheckable(true);
 
     if(pmDisabled) {
-        m_textToSend->setDisabled(true);
-        m_textToSend->setText("You have private messages disabled.");
-        m_send->setDisabled(true);
+        if(starterAuth <= 0) {
+            m_textToSend->setDisabled(true);
+            m_textToSend->setText(tr("You have private messages disabled."));
+            m_send->setDisabled(true);
+        }
     } else {
         m_textToSend->setDisabled(false);
         m_textToSend->setText("");
@@ -123,11 +125,13 @@ void PMWindow::challenge()
     emit challengeSent(id());
 }
 
-void PMWindow::disablePM(bool b) {
+void PMWindow::disablePM(bool b, int starterAuth) {
     if(b == 1) {
-        m_textToSend->setDisabled(true);
-        m_textToSend->setText("You have private messages disabled.");
-        m_send->setDisabled(true);
+        if(starterAuth <= 0) {
+            m_textToSend->setDisabled(true);
+            m_textToSend->setText(tr("You have private messages disabled."));
+            m_send->setDisabled(true);
+        }
     } else {
         m_textToSend->setDisabled(false);
         m_textToSend->setText("");
