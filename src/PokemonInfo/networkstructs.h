@@ -133,4 +133,19 @@ struct Battle
 DataStream & operator >> (DataStream &in, Battle &p);
 DataStream & operator << (DataStream &out, const Battle &p);
 
+struct Flags
+{
+    static const int size = 4;
+    /* For now no flags need more than 2 bytes. If there really needs to be a huge number of flags this
+      number may increase; however for now there's no reason for dynamic allocation & what not */
+    uchar data[size];
+
+    Flags();
+
+    bool operator [] (int index);
+};
+
+DataStream & operator >> (DataStream &in, Flags &p);
+DataStream & operator << (DataStream &out, const Flags &p);
+
 #endif // NETWORKSTRUCTS_H
