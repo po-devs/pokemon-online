@@ -133,20 +133,34 @@ struct Battle
 DataStream & operator >> (DataStream &in, Battle &p);
 DataStream & operator << (DataStream &out, const Battle &p);
 
+/* Flags are like so: for each byte, 7 bits of flag and one bit to tell if there are higher flags (in network)
+  so as to limit the number of bytes sent by networking. That's why you should never have a flag that's 7,
+    15, 23, etc. because it'd possibly mess the networking */
 struct Flags
 {
-    static const int size = 4;
     /* For now no flags need more than 2 bytes. If there really needs to be a huge number of flags this
       number may increase; however for now there's no reason for dynamic allocation & what not */
-    uchar data[size];
+    quint32 data;
 
-    Flags();
+    Flags(quint32 data=0);
 
-    bool operator [] (int index);
+    bool operator [] (int index) const;
+    void setFlag(int index, bool value);
+    void setFlags(quint32 flags);
 };
 
 DataStream & operator >> (DataStream &in, Flags &p);
 DataStream & operator << (DataStream &out, const Flags &p);
+
+namespace PlayerFlags {
+    enum {
+        SupportsZipCompression,
+        ShowTeam,
+        LadderEnabled,
+        Idle,
+        IdsWithMessage
+    };
+}
 
 struct ProtocolVersion
 {
@@ -158,5 +172,33 @@ struct ProtocolVersion
 
 DataStream & operator >> (DataStream &in, ProtocolVersion &p);
 DataStream & operator << (DataStream &out, const ProtocolVersion &p);
+
+struct VersionControl
+{
+    VersionControl(quint8 versionNumber=0);
+
+    QByteArray data;
+    DataStream stream;
+    quint8 versionNumber;
+};
+
+DataStream & operator >> (DataStream &in, VersionControl &v);
+DataStream & operator << (DataStream &out, const VersionControl &v);
+
+struct TrainerInfo
+{
+    static const quint8 version = 0;
+    enum Flags {
+        HasWinningMessages
+    };
+    TrainerInfo();
+
+    quint16 avatar;
+    QString info;
+    QString winning, losing, tie;
+};
+
+DataStream & operator >> (DataStream &in, TrainerInfo &i);
+DataStream & operator << (DataStream &out, const TrainerInfo &i);
 
 #endif // NETWORKSTRUCTS_H
