@@ -67,6 +67,7 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
+    bool supportsZip() const; //TODO: update with real value instead of always true
     void acquireKnowledgeOf(Player *other);
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);

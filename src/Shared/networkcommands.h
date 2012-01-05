@@ -15,9 +15,9 @@
  */
 
 enum Command {
-    WhatAreYou = 0,
-    WhoAreYou,
+    ZipCommand = 0,
     Login,
+    Unused0,
     Logout,
     SendMessage,
     PlayersList,

@@ -165,6 +165,45 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         return;
     }
     switch (command) {
+    case ZipCommand: {
+        quint8 contentType;
+
+        in >> contentType;
+
+        if (contentType > 1) {
+            return;
+        }
+
+        int length = commandline.length()-1-1;
+
+        if (length <= 0) {
+            return;
+        }
+        char data[length];
+
+        in.readRawData(data, length);
+
+        QByteArray info = qUncompress((uchar*)data, length);
+
+        if (contentType == 0) {
+            if (info.length() == 0) {
+                return;
+            }
+
+            commandReceived(info);
+        } else { //contentType == 1
+            DataStream in2(info);
+            QByteArray packet;
+            do {
+                in2 >> packet;
+
+                if (packet.length() > 0) {
+                   commandReceived(packet);
+                }
+            } while (packet.length() > 0);
+        }
+        break;
+    }
     case SendMessage: {
 	    QString mess;
 	    in >> mess;
