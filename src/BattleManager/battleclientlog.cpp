@@ -58,10 +58,10 @@ void BattleClientLog::printLine(const QString &cl, const QString &str, bool sile
     }
 
     if (!silent) {
-        pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-        emit lineToBePrinted(QString("%2<br />\n").arg(str));
+        pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+        emit lineToBePrinted(log.back());
     } else {
-        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->\n").arg(cl, str));
+        pushHtml(QString("<!-- <span class=\"%1\">%2</span> -->\n").arg(cl, str));
     }
 }
 
@@ -84,8 +84,8 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-    emit lineToBePrinted(QString("%2<br />\n").arg(str));
+    pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+    emit lineToBePrinted(log.back());
 }
 
 QString BattleClientLog::nick(int spot)
