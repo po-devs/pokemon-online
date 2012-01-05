@@ -221,7 +221,8 @@ void Server::start(){
 
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
-    serverAnnouncement = s.value("server_announcement").toString();
+    serverAnnouncement = s.value("server_announcement").toByteArray();
+    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
@@ -592,21 +593,30 @@ void Server::changeScript(const QString &script)
 
 void Server::setAllAnnouncement(const QString &html) {
     foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::Announcement, html);
+        if (p->isLoggedIn()) {
+            p->relay().notify(NetworkServ::Announcement, html);
+        }
     }
 }
 
 void Server::announcementChanged(const QString &announcement)
 {
-    if (announcement == serverAnnouncement)
+    if (announcement.toUtf8() == serverAnnouncement)
         return;
 
-    serverAnnouncement = announcement;
+    serverAnnouncement = announcement.toUtf8();
+    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
 
     printLine("Announcement changed.", false, true);
 
     foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+        if (p->isLoggedIn()) {
+            if (p->supportsZip()) {
+                p->relay().emitCommand(zippedAnnouncement);
+            } else {
+                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+            }
+        }
     }
 }
 
@@ -835,8 +845,13 @@ void Server::loggedIn(int id, const QString &name)
 
         p->relay().sendLogin(p->bundle());
 
-        if (serverAnnouncement.length() > 0)
-            p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+        if (serverAnnouncement.length() > 0) {
+            if (p->supportsZip()) {
+                p->relay().emitCommand(zippedAnnouncement);
+            } else {
+                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+            }
+        }
 
         sendTierList(id);
         sendChannelList(id);

@@ -1707,7 +1707,7 @@ void ScriptEngine::makeServerPublic(bool isPublic)
 }
 
 QScriptValue ScriptEngine::getAnnouncement() {
-    return myserver->serverAnnouncement;
+    return QString::fromUtf8(myserver->serverAnnouncement);
 }
 
 /* Causes crash...

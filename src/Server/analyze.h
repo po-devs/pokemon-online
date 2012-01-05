@@ -76,6 +76,10 @@ public:
     void delay();
 
     /* Convenience functions to avoid writing a new one every time */
+    inline void emitCommand(const QByteArray &command) {
+        emit sendCommand(command);
+    }
+
     template <typename ...Params>
     void notify(int command, Params&&... params) {
         QByteArray tosend;
@@ -83,7 +87,7 @@ public:
 
         out.pack(uchar(command), std::forward<Params>(params)...);
 
-        emit sendCommand(tosend);
+        emitCommand(tosend);
     }
     template<class T>
     void notify_expand(int command, const T &paramList);

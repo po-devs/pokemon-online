@@ -687,6 +687,11 @@ bool Player::battling() const
     return battles.size() > 0;
 }
 
+bool Player::supportsZip() const
+{
+    return true;
+}
+
 bool Player::hasBattle(int battleId) const
 {
     return battles.contains(battleId);
