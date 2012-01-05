@@ -2273,6 +2273,8 @@ struct MMRage : public MM
         functions["OnSetup"] = &os;
         functions["MoveSettings"] = &ms;
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["AttackSomehowFailed"] = &asf;
     }
 
     static void os(int s, int, BS &b) {
@@ -2298,6 +2300,13 @@ struct MMRage : public MM
             poke(b,s).remove("Tormented");
         }
         poke(b,s).remove("RageBuilt");
+
+        // In Gen 1 we are locked into Rage
+        if (b.gen() == 1) {
+            addFunction(poke(b,s), "TurnSettings", "Rage", &ts);
+            poke(b,s)["RageMissed"] = false;
+        }
+
     }
 
     static void uodr(int s, int, BS &b) {
@@ -2317,6 +2326,28 @@ struct MMRage : public MM
         }
 
     }
+
+    static void ts(int s, int, BS &b) {
+        turn(b,s)["NoChoice"] = true;
+        MoveEffect::setup(Move::Rage,s,s,b);
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.gen() == 1 && poke(b,s)["RageMissed"].toBool()) {
+            if (b.coinflip(1,256)) {
+                tmove(b, s).accuracy = 0;
+            } else {
+                turn(b,s)["Failed"] = true;
+            }
+        }
+    }
+
+    static void asf(int s, int, BS &b) {
+       if (b.gen() == 1) {
+           poke(b,s)["RageMissed"] = true;
+       }
+    }
+
 };
 
 struct MMSafeGuard : public MM
