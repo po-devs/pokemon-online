@@ -24,7 +24,53 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
 
 void Analyzer::login(const FullInfo &team)
 {
-    notify(Login, team);
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    Flags network;
+    network.setFlags(LoginCommand::HasClientType | LoginCommand::HasVersionNumber | LoginCommand::HasTrainerInfo
+                     | LoginCommand::HasTeams);
+
+    if (team.nameColor.isValid()) {
+        network.setFlag(LoginCommand::HasColor, true);
+    }
+    //    HasClientType,
+    //    HasVersionNumber,
+    //    HasReconnect,
+    //    HasDefaultChannel,
+    //    HasAdditionalChannels,
+    //    HasColor,
+    //    HasTrainerInfo,
+    //    HasTeams,
+    //    HasEventSpecification,
+    //    HasPluginList
+
+    Flags data;
+    data.setFlags(PlayerFlags::SupportsZipCompression);
+    data.setFlag(PlayerFlags::LadderEnabled, team.ladder);
+    data.setFlag(PlayerFlags::ShowTeam, team.showteam);
+//                  SupportsZipCompression,
+//                  ShowTeam,
+//                  LadderEnabled,
+//                  Idle,
+//                  IdsWithMessage
+
+    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.team.trainerNick() << data;
+    if (team.nameColor.isValid()) {
+        out << team.nameColor;
+    }
+
+    TrainerInfo info;
+    info.info = team.team.trainerInfo();
+    info.winning = team.team.trainerWin();
+    info.losing = team.team.trainerLose();
+    info.avatar = team.team.avatar();
+
+    out << info;
+
+    out << uchar(1) << team.team.team();
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
@@ -374,7 +420,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit spectatingBattleFinished(battleId);
             break;
         }
-    case VersionControl: {
+    case NetworkCli::VersionControl: {
             QString version;
             in >> version;
             if (version != VERSION)
