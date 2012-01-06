@@ -97,18 +97,6 @@ QMenuBar#MainChat::item:pressed{
 	background: #888888;
 }*/
 
-QMenuBar#TeamBuilder
-{
-	background: #0ca3df;
-}
-
-
-TeamBuilder {
-	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-				stop: 0 #0ca4e0, stop: 0.031 #0bb3e9, stop: 0.061 #00d7fb, stop: 0.076 white, stop: 0.086 white, stop: .100 #919495, stop: 0.25 #626769,
-				stop: 0.5 #282e32, stop: 0.75 #626769, stop: .900 #919495, stop: 0.914 white, stop: 0.924 white, stop: 0.939 #00d7fb, stop: 0.969 #0bb3e9, stop: 1 #0ca4e0);
-}
-
 DockAdvanced#OwnWindow {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
 }
@@ -133,11 +121,6 @@ QTextEdit#MainChat {
 	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 #cbe6f8, stop:1 #15abea);
 	padding: 2px;
 	text-align: center;
-}
-
-TeamBuilder QTextEdit {
-	border-radius: 5px;
-	background-color: white;
 }
 
 QSlider::groove:horizontal {
@@ -172,27 +155,6 @@ TeamPokeButton {
 /*TeamPokeButton:checked{
 	background: #8683b0;
 }*/
-
-TeamBuilder QLabel#SmallText {
-	font-family: Trebuchet MS;
-	font-size: 12px; 
-	color: white;
-	font-weight: bold;
-}
-
-TeamBuilder QLabel#NormalText {
-	font-family: Trebuchet MS;
-	font-weight: bold;
-	font-size: 14px;
-	color: white;
-}
-
-TeamBuilder QLabel#BigText {
-	font-family: Trebuchet MS;
-	font-weight: bold;
-	font-size: 12px;
-	color: white;
-}
 
 TB_Advanced QGroupBox::title {
 	subcontrol-position: top left; /* position at the top center */
@@ -650,8 +612,3 @@ QTabBar::tab:left:last, QTabBar::tab:right:last {
 								"border-radius: 10px"
 							);
 */
-/*TeamBuilder QSlider::handle:horizontal {
-	image:url(db/Teambuilder/ScrollBall.png);
-	margin: 0px -8px;
-	height: 23px;
-}*/

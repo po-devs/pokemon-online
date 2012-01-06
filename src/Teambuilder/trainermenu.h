@@ -2,7 +2,6 @@
 #define TRAINERMENU_H
 
 #include <QFrame>
-#include "centralwidget.h"
 
 namespace Ui {
     class TrainerMenu;
@@ -10,14 +9,15 @@ namespace Ui {
 
 class TeamHolder;
 
-class TrainerMenu : public QFrame, public CentralWidgetInterface
+class TrainerMenu : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit TrainerMenu(QWidget *parent = 0);
     TrainerMenu(TeamHolder *team);
     ~TrainerMenu();
+
+    void updateAll();
 signals:
     void done();
 private slots:

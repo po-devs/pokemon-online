@@ -20,10 +20,6 @@ public:
     MainEngine();
     ~MainEngine();
 
-    void loadTeam(const QString &path);
-    void loadProfile(const QString &path);
-
-    void addStyleMenu(QMenuBar *m);
     void addThemeMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
 public slots:
@@ -45,7 +41,6 @@ public slots:
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
-    void changeStyle();
     void changeTheme();
 
     void changeUserThemeFolder();

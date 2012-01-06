@@ -18,7 +18,7 @@ public:
     ServerChoice(const QString &nick);
     ~ServerChoice();
 
-    QSize defaultSize() {
+    QSize defaultSize() const {
         return QSize(500, 450);
     }
 

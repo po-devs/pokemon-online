@@ -1,5 +1,5 @@
-#ifndef TEAMBUILDER_H
-#define TEAMBUILDER_H
+#ifndef TEAMBUILDER_H2
+#define TEAMBUILDER_H2
 
 #include <QtGui>
 #include <QPair>
@@ -25,12 +25,12 @@ class MainEngine;
 class TeamHolder;
 
 /* The Teambuilder!! */
-class TeamBuilder : public QLabel, public CentralWidgetInterface
+class TeamBuilderOld : public QLabel, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
-    TeamBuilder(TeamHolder *team);
-    ~TeamBuilder();
+    TeamBuilderOld(TeamHolder *team);
+    ~TeamBuilderOld();
 
     TeamHolder *trainerTeam();
     Team *team();
@@ -40,7 +40,7 @@ public:
     /* Create a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 
-    QSize defaultSize() {
+    QSize defaultSize() const {
         return  QSize(785,610);
     }
 
@@ -111,4 +111,4 @@ private:
     QActionGroup *modActionGroup;
 };
 
-#endif // TEAMBUILDER_H
+#endif // TEAMBUILDER_H2

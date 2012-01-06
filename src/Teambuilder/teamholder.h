@@ -25,6 +25,9 @@ class TeamHolder : public TeamHolderInterface
     TrainerInfo &info() {return profile().info();}
     QString &name() { return profile().name();}
     QColor &color() { return profile().color();}
+
+    void save();
+    void load();
 };
 
 #endif // TEAMHOLDER_H

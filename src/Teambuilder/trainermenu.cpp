@@ -3,14 +3,7 @@
 #include "teamholder.h"
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
-
-TrainerMenu::TrainerMenu(QWidget *parent) :
-    QFrame(parent),
-    ui(new Ui::TrainerMenu)
-{
-    ui->setupUi(this);
-    ui->name->setValidator(new QNickValidator(this));
-}
+#include <QColorDialog>
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
@@ -18,6 +11,11 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui->setupUi(this);
     ui->name->setValidator(new QNickValidator(this));
 
+    setupData();
+}
+
+void TrainerMenu::updateAll()
+{
     setupData();
 }
 

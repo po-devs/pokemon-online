@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "challenge.h"
 #include "logmanager.h"
-#include "Teambuilder/teambuilder.h"
+#include "Teambuilder/teambuilder_old.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmwindow.h"
@@ -29,15 +29,13 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
-    s->setStyle(QStyleFactory::create("Plastique"));
     h->addWidget(s);
     s->setChildrenCollapsible(false);
 
     QSettings settings;
 
     QTabWidget *mytab = new QTabWidget();
-    /* Cancels out the effect of the splitter being Plastique */
-    mytab->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
+
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
@@ -79,9 +77,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
-    /* Cancels out the effect of the splitter being Plastique */
-    mainChat->setStyle(QStyleFactory::create(settings.value("application_style").toString()));
-    //    layout->addWidget(myline = new QLineEdit());
+
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     layout->addLayout(buttonsLayout);
@@ -1087,7 +1083,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
 
-    w->addStyleMenu(menuBar);
     w->addThemeMenu(menuBar);
 
     QMenu * menuActions = menuBar->addMenu(tr("&Options"));
@@ -2155,7 +2150,7 @@ void Client::openTeamBuilder()
 
     myteambuilder = new QMainWindow();
 
-    TeamBuilder *t = new TeamBuilder(myteam);
+    TeamBuilderOld *t = new TeamBuilderOld(myteam);
     myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
