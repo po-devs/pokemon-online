@@ -626,38 +626,9 @@ void PokemonBox::setName(const QString &name)
 }
 
 // OS specific paths.
-// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
-// Windows: APPDATA environment variable.
-// Mac: somewhere in Library.
-// Other: "Boxes" in current directory.
 QString PokemonBox::getBoxPath()
 {
-    QString boxpath;
-#if defined(Q_OS_MAC)
-    boxpath = QDir::homePath() + "/Library/Application Support/Pokemon Online/Boxes";
-#elif defined(Q_OS_LINUX)
-    boxpath = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
-              + "/Dreambelievers/Pokemon Online/Boxes";
-#elif defined(Q_OS_WIN32)
-    boxpath = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
-              + "/Pokemon Online/Boxes";
-#else
-    boxpath = "Boxes";
-#endif
-    if (!QDir(boxpath).exists()) {
-        // Create if not exist.
-        QDir().mkpath(boxpath);
-        // Copy files from "./Boxes" (files from older versions or default data).
-        if (boxpath != "Boxes") {
-            QDir box_src_dir = QDir("Boxes", "*.box", QDir::NoSort, QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);
-            QStringList files = box_src_dir.entryList();
-            QStringListIterator files_it(files);
-            while (files_it.hasNext()) {
-                QString current_file = files_it.next();
-                QFile::copy(box_src_dir.filePath(current_file), boxpath + "/" + current_file);
-            }
-        }
-    }
+    QString boxpath = appDataPath("Boxes", true);
     return boxpath;
 }
 

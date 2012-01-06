@@ -26,7 +26,8 @@ MainEngine::MainEngine() : displayer(0)
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "application_style", "plastique");
-    setDefaultValue(s, "theme_2", "Themes/Balanced/");
+    setDefaultValue(s, "theme_2", "Themes/Classic/");
+    setDefaultValue(s, "profile_location", appDataPath("Profiles", true) + "/profile.xml");
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
@@ -111,6 +112,7 @@ MainEngine::MainEngine() : displayer(0)
     QApplication::setStyle(s.value("application_style").toString());
     loadStyleSheet();
     loadTeam(s.value("team_location").toString());
+    loadProfile(s.value("profile_location").toString());
 
     launchMenu();
 }
@@ -231,7 +233,7 @@ void MainEngine::launchCredits()
 void MainEngine::launchTeamBuilder()
 {
     //TeamBuilder *TB = new TeamBuilder(trainerTeam());
-    TrainerMenu *TB = new TrainerMenu();
+    TrainerMenu *TB = new TrainerMenu(trainerTeam());
     MainEngineRoutine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
@@ -337,6 +339,11 @@ void MainEngine::quit()
 void MainEngine::loadTeam(const QString &path)
 {
     trainerTeam()->team().loadFromFile(path);
+}
+
+void MainEngine::loadProfile(const QString &path)
+{
+    trainerTeam()->profile().loadFromFile(path);
 }
 
 void MainEngine::loadTeamDialog()

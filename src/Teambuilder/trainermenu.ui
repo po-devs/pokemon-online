@@ -64,7 +64,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QPlainTextEdit" name="infos"/>
+      <widget class="QPlainTextEdit" name="infos">
+       <property name="tabChangesFocus">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="winningMessageLabel">
@@ -145,10 +149,20 @@
            <property name="text">
             <string/>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="avatarNumber"/>
+          <widget class="QSpinBox" name="avatarNumber">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>263</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -322,8 +336,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>avatarNumber</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>TrainerMenu</receiver>
+   <slot>setAvatarPixmap()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>486</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>106</x>
+     <y>500</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
-  <signal>done()</signal>
+  <slot>setAvatarPixmap()</slot>
  </slots>
 </ui>

@@ -36,7 +36,7 @@ QString QRCodePlugin::pluginName() const
 QWidget *QRCodePlugin::getConfigurationWidget()
 {
     TeamHolderInterface *team = interface->trainerTeam();
-    QByteArray xml = team->team()->toXml().toUtf8();
+    QByteArray xml = team->team().toXml().toUtf8();
 
     /* Creates zipped data */
     z_stream stream;

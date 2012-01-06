@@ -136,4 +136,8 @@ void setDefaultValue(QSettings &s, const QString &key, T value)
         s.setValue(key, value);
 }
 
+/* Returns the folder in which you can store boxes, mods, profiles, all the application data.
+  The createFolder param is whether or not you want to force-create the subfolder */
+QString appDataPath(const QString &subfolder, bool createFolder=false);
+
 #endif // FUNCTIONS_H

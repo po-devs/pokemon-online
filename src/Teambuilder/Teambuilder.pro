@@ -48,7 +48,8 @@ SOURCES += main.cpp \
     replayviewer.cpp \
     trainermenu.cpp \
     pokebuttonsholder.cpp \
-    pokebutton.cpp
+    pokebutton.cpp \
+    teamholder.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \

@@ -21,6 +21,7 @@ public:
     ~MainEngine();
 
     void loadTeam(const QString &path);
+    void loadProfile(const QString &path);
 
     void addStyleMenu(QMenuBar *m);
     void addThemeMenu(QMenuBar *m);
