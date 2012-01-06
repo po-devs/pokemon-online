@@ -129,7 +129,7 @@ public:
         gui.zone->updateToolTip(spot);
     }
 
-    void onDynamicStats(int spot, const BattleStats &stats) {
+    void onDynamicStats(int spot, const BattleStats &) {
         updateToolTip(spot);
         gui.zone->updateToolTip(spot);
     }
