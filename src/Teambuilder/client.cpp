@@ -682,14 +682,14 @@ void Client::startPM(int id)
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(this, SIGNAL(PMDisabled(bool)), p, SLOT(disablePM(bool)));
+    connect(this, SIGNAL(PMDisabled(bool, int)), p, SLOT(disablePM(bool, int)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
@@ -740,7 +740,7 @@ void Client::togglePM(bool b)
     QSettings s;
     s.setValue("pm_disabled", b);
     pmDisabled = b;
-    emit PMDisabled(b);
+    emit PMDisabled(b, player(_mid).auth);
 }
 
 
@@ -988,21 +988,28 @@ void Client::PMReceived(int id, QString pm)
     double difference = difftime(lastAutoPM, current);
     if (mypms.contains(id)) {
         if(pmDisabled) { // We're avoiding that people that was actually chatting with the user continue talking avoiding the Disable PM =-)
-            if((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
             }
-            return;
         }
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
         if(pmDisabled) {
-            if ((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if ((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
+            } else {
+                registerPermPlayer(id);
+                mypms[id]->printLine(pm);
             }
-            return;
         } else {
             if (!playerExist(id) || myIgnored.contains(id)) {
                 return;
@@ -2264,7 +2271,7 @@ void Client::printLine(int event, int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
-            c->printLine(line, false);
+            c->printLine(line, false, false);
     }
 }
 
