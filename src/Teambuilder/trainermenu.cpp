@@ -31,6 +31,8 @@ void TrainerMenu::setupData()
     ui->tieMessage->setText(team().info().tie);
     ui->avatarNumber->setValue(team().info().avatar);
     setAvatarPixmap();
+
+    ui->pokemonButtons->setTeam(team().team());
 }
 
 void TrainerMenu::setAvatarPixmap()

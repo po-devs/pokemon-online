@@ -1,3 +1,6 @@
+#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
+
 #include "pokebutton.h"
 #include "ui_pokebutton.h"
 
@@ -17,5 +20,14 @@ PokeButton::~PokeButton()
 
 void PokeButton::setNumber(int x)
 {
-    ui->number->setText(tr("#&%1").arg(x));
+    ui->number->setText(tr("#&%1").arg(x+1));
+}
+
+void PokeButton::setPokemon(PokeTeam &poke)
+{
+    ui->level->setText(tr("Lv. %1").arg(poke.level()));
+    ui->item->setPixmap(ItemInfo::Icon(poke.item()));
+    ui->nickname->setText(poke.nickname());
+    ui->species->setText(PokemonInfo::Name(poke.num()));
+    ui->sprite->setPixmap(poke.picture());
 }

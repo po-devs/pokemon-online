@@ -7,6 +7,8 @@ namespace Ui {
     class PokeButton;
 }
 
+class PokeTeam;
+
 class PokeButton : public QPushButton
 {
     Q_OBJECT
@@ -16,6 +18,7 @@ public:
     ~PokeButton();
 
     void setNumber(int x);
+    void setPokemon(PokeTeam &poke);
 private:
     Ui::PokeButton *ui;
 };

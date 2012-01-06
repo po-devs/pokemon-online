@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>354</width>
-    <height>129</height>
+    <height>188</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="checkable">
+   <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
@@ -27,14 +33,14 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>70</width>
-       <height>70</height>
+       <width>60</width>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>70</width>
-       <height>70</height>
+       <width>60</width>
+       <height>60</height>
       </size>
      </property>
      <property name="text">
@@ -67,6 +73,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+       </property>
+       <property name="margin">
+        <number>2</number>
        </property>
       </widget>
      </item>
