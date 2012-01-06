@@ -5,8 +5,8 @@
 #include "engineinterface.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
+#include "teamholder.h"
 
-class TeamHolder;
 class TB_Menu;
 class TeamBuilder;
 class Client;
