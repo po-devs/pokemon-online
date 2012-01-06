@@ -110,19 +110,6 @@ public:
 DataStream & operator >> (DataStream &in, PlayerInfo &p);
 DataStream & operator << (DataStream &out, const PlayerInfo &p);
 
-struct FullInfo
-{
-    TrainerTeam team;
-
-    bool ladder;
-    bool showteam;
-    QColor nameColor;
-};
-
-DataStream & operator >> (DataStream &in, FullInfo &p);
-DataStream & operator << (DataStream &out, const FullInfo &p);
-
-
 struct Battle
 {
     qint32 id1, id2;

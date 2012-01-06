@@ -11,9 +11,12 @@
 #include "logmanager.h"
 #include "replayviewer.h"
 #include "../Utilities/functions.h"
+#include "teamholder.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
+    m_team = new TeamHolder();
+
     pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -114,6 +117,7 @@ MainEngine::MainEngine() : displayer(0)
 MainEngine::~MainEngine()
 {
     delete pluginManager, pluginManager = NULL;
+    delete m_team, m_team = NULL;
 }
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
@@ -233,7 +237,7 @@ void MainEngine::launchTeamBuilder()
 
 void MainEngine::launchServerChoice()
 {
-    ServerChoice *choice = new ServerChoice(trainerTeam()->trainerNick());
+    ServerChoice *choice = new ServerChoice(trainerTeam()->name());
     MainEngineRoutine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
@@ -300,10 +304,11 @@ void MainEngine::changeLanguage()
 
 void MainEngine::goOnline(const QString &url, const quint16 port, const QString& nick)
 {
-    if (nick.size() > 0)
-        trainerTeam()->setTrainerNick(nick);
+    if (nick.size() > 0) {
+        trainerTeam()->name() = nick;
+    }
 
-    if (trainerTeam()->trainerNick().length() == 0) {
+    if (trainerTeam()->name().length() == 0) {
         QMessageBox::information(displayer, tr("Impossible to go online"), tr("You haven't set your name yet. Do so in the teambuilder."));
         return;
     }
@@ -329,12 +334,12 @@ void MainEngine::quit()
 
 void MainEngine::loadTeam(const QString &path)
 {
-    trainerTeam()->loadFromFile(path);
+    trainerTeam()->team().loadFromFile(path);
 }
 
 void MainEngine::loadTeamDialog()
 {
-    loadTTeamDialog(*trainerTeam());
+    loadTTeamDialog(trainerTeam()->team());
 }
 
 void MainEngine::loadReplayDialog()

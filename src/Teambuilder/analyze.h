@@ -6,7 +6,6 @@
 #include "../Utilities/coreclasses.h"
 
 class Client;
-class FullInfo;
 class PlayerInfo;
 class BattleChoice;
 class TeamBattle;
@@ -14,7 +13,7 @@ class BattleConfiguration;
 class ChallengeInfo;
 class Battle;
 class UserInfo;
-class TrainerTeam;
+class TeamHolder;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -34,11 +33,11 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const FullInfo &team);
+    void login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color);
     void sendMessage(const QString &message);
     void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
-    void sendTeam(const TrainerTeam & team);
+    void sendTeam(const TeamHolder & team);
     void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int id, int result);
     bool isConnected() const;

@@ -2,14 +2,14 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QPlainTextEdit>
-#include "../../PokemonInfo/pokemonstructs.h"
 #include "trainerbody.h"
 #include "theme.h"
 #include "avatarbox.h"
 #include "teambuilder.h"
 #include "pokeballed.h"
+#include "teamholder.h"
 
-TB_TrainerBody::TB_TrainerBody(TrainerTeam *team) : m_team(team)
+TB_TrainerBody::TB_TrainerBody(TeamHolder *team) : m_team(team)
 {
     QHBoxLayout *ml = new QHBoxLayout(this);
     ml->setMargin(0);
@@ -47,7 +47,7 @@ TB_TrainerBody::TB_TrainerBody(TrainerTeam *team) : m_team(team)
         m_colorButton->setStyleSheet(QString("background: %1;color:white").arg(s.value("trainer_color").value<QColor>().name()));
     m_colorButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     colorTier->addWidget(new TitledWidget(tr("Team Tier"), m_tier = new QLineEdit()));
-    m_tier->setText(trainerTeam()->defaultTier());
+    m_tier->setText(trainerTeam()->team().defaultTier());
     m_tier->setAccessibleName(tr("Team tier", "TB accessible name"));
 
     /* Trainer information */
@@ -104,44 +104,44 @@ void TB_TrainerBody::setTierList(const QStringList &tiers) {
     m_tier->setCompleter(completer);
 }
 
-TrainerTeam * TB_TrainerBody::trainerTeam()
+TeamHolder * TB_TrainerBody::trainerTeam()
 {
     return m_team;
 }
 
 void TB_TrainerBody::updateTrainer()
 {
-    m_trainerInfo->setPlainText(trainerTeam()->trainerInfo());
-    m_nick->setText(trainerTeam()->trainerNick());
-    m_winMessage->setPlainText(trainerTeam()->trainerWin());
-    m_loseMessage->setPlainText(trainerTeam()->trainerLose());
-    m_tier->setText(trainerTeam()->defaultTier());
-    changeTrainerAvatar(trainerTeam()->avatar());
+    m_trainerInfo->setPlainText(trainerTeam()->info().info);
+    m_nick->setText(trainerTeam()->name());
+    m_winMessage->setPlainText(trainerTeam()->info().winning);
+    m_loseMessage->setPlainText(trainerTeam()->info().losing);
+    m_tier->setText(trainerTeam()->team().defaultTier());
+    changeTrainerAvatar(trainerTeam()->info().avatar);
 }
 
 void TB_TrainerBody::changeTrainerInfo()
 {
-    trainerTeam()->setTrainerInfo(m_trainerInfo->toPlainText());
+    trainerTeam()->info().info = m_trainerInfo->toPlainText();
 }
 
 void TB_TrainerBody::setTrainerNick(const QString &newnick)
 {
-    trainerTeam()->setTrainerNick(newnick);
+    trainerTeam()->name() = newnick;
 }
 
 void TB_TrainerBody::changeTier(const QString &tier)
 {
-    trainerTeam()->defaultTier() = tier;
+    trainerTeam()->team().defaultTier() = tier;
 }
 
 void TB_TrainerBody::changeTrainerWin()
 {
-    trainerTeam()->setTrainerWin(m_winMessage->toPlainText());
+    trainerTeam()->info().winning = m_winMessage->toPlainText();
 }
 
 void TB_TrainerBody::changeTrainerLose()
 {
-    trainerTeam()->setTrainerLose(m_loseMessage->toPlainText());
+    trainerTeam()->info().losing = m_loseMessage->toPlainText();
 }
 
 void TB_TrainerBody::changeTrainerAvatar(int newavatar)
@@ -149,6 +149,6 @@ void TB_TrainerBody::changeTrainerAvatar(int newavatar)
     if (newavatar==0)
         newavatar=1;
     m_avatarSelection->setValue(newavatar);
-    trainerTeam()->avatar() = newavatar;
+    trainerTeam()->info().avatar = newavatar;
     m_avatar->changePic(Theme::TrainerSprite(newavatar));
 }

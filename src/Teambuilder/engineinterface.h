@@ -1,12 +1,12 @@
 #ifndef PLUGINDELEGATE_H
 #define PLUGINDELEGATE_H
 
-class TrainerTeam;
+class TeamHolder;
 class ThemeAccessor;
 
 class MainEngineInterface {
 public:
-    virtual TrainerTeam* trainerTeam() = 0;
+    virtual TeamHolder* trainerTeam() = 0;
     virtual ThemeAccessor* theme() = 0;
 };
 
