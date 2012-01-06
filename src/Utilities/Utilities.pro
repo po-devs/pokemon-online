@@ -16,3 +16,5 @@ HEADERS += otherwidgets.h \
     coro.h \
     contextswitch.h
 OTHER_FILES += 
+
+include(../Shared/Common.pri)
