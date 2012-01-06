@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>629</width>
-    <height>508</height>
+    <height>511</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="6">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="close">
      <property name="text">
       <string>Close</string>
      </property>
@@ -30,22 +30,22 @@
    <item row="0" column="0" rowspan="2">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="trainerNameLabel">
        <property name="text">
         <string>Trainer Name</string>
        </property>
        <property name="buddy">
-        <cstring>lineEdit_2</cstring>
+        <cstring>name</cstring>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="name"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="colorButton">
          <property name="text">
           <string>Color</string>
          </property>
@@ -54,73 +54,73 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="informationsLabel">
        <property name="text">
         <string>Informations</string>
        </property>
        <property name="buddy">
-        <cstring>plainTextEdit</cstring>
+        <cstring>infos</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPlainTextEdit" name="plainTextEdit"/>
+      <widget class="QPlainTextEdit" name="infos"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="winningMessageLabel">
        <property name="text">
         <string>Winning Message</string>
        </property>
        <property name="buddy">
-        <cstring>lineEdit_3</cstring>
+        <cstring>winningMessage</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="winningMessage"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="losingMessageLabel">
        <property name="text">
         <string>Losing Message</string>
        </property>
        <property name="buddy">
-        <cstring>lineEdit_4</cstring>
+        <cstring>losingMessage</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_4"/>
+      <widget class="QLineEdit" name="losingMessage"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="tieLabel">
        <property name="text">
         <string>Tie message</string>
        </property>
        <property name="buddy">
-        <cstring>lineEdit_5</cstring>
+        <cstring>tieMessage</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_5"/>
+      <widget class="QLineEdit" name="tieMessage"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QLabel" name="label_7">
+          <widget class="QLabel" name="avatarLabel">
            <property name="text">
             <string>Avatar</string>
            </property>
            <property name="buddy">
-            <cstring>spinBox</cstring>
+            <cstring>avatarNumber</cstring>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_6">
+          <widget class="QLabel" name="avatar">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -129,14 +129,14 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>80</width>
-             <height>80</height>
+             <width>96</width>
+             <height>96</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>80</width>
-             <height>80</height>
+             <width>96</width>
+             <height>96</height>
             </size>
            </property>
            <property name="autoFillBackground">
@@ -148,21 +148,34 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox"/>
+          <widget class="QSpinBox" name="avatarNumber"/>
          </item>
         </layout>
        </item>
        <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="saveProfile">
            <property name="text">
             <string>Save Profile</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="loadProfile">
            <property name="text">
             <string>Load Profile</string>
            </property>
@@ -182,7 +195,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="deleteProfile">
            <property name="text">
             <string>Delete Profile</string>
            </property>
@@ -198,7 +211,7 @@
     <widget class="QFrame" name="frame">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="teamBuilderLabel">
         <property name="text">
          <string>Teambuilder</string>
         </property>
@@ -208,46 +221,46 @@
        </widget>
       </item>
       <item>
-       <widget class="PokeButtonsHolder" name="widget" native="true"/>
+       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true"/>
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="1">
-         <widget class="QPushButton" name="pushButton_12">
+        <item row="1" column="1">
+         <widget class="QPushButton" name="editSelected">
           <property name="text">
            <string>Edit Selected</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="pushButton_13">
+        <item row="1" column="3">
+         <widget class="QPushButton" name="saveTeam">
           <property name="text">
            <string>Save Team</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton_14">
+        <item row="2" column="1">
+         <widget class="QPushButton" name="boxCenter">
           <property name="text">
            <string>Box Center</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="pushButton_15">
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pokedex">
           <property name="text">
            <string>Pokedex</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
-         <widget class="QPushButton" name="pushButton_16">
+        <item row="2" column="3">
+         <widget class="QPushButton" name="loadTeam">
           <property name="text">
            <string>Load Team</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
+        <item row="2" column="2">
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -260,7 +273,7 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -273,7 +286,7 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="4">
+        <item row="2" column="4">
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -282,6 +295,32 @@
            <size>
             <width>20</width>
             <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0" colspan="5">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="4" column="0" colspan="5">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -297,7 +336,7 @@
   <customwidget>
    <class>PokeButtonsHolder</class>
    <extends>QWidget</extends>
-   <header>pokebuttonsholder.h</header>
+   <header>../Teambuilder/pokebuttonsholder.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
