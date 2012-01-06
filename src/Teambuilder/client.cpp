@@ -142,6 +142,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     }
     if(settings.value("sort_channels_by_name").toBool()) {
         sortCBN = 1;
+        sortChannels();
     } else {
         sortCBN = 0;
     }
@@ -285,9 +286,6 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         else
             channels->addItem(new QIdListWidgetItem(it.key(), greychatot, it.value()));
     }
-    if(sortCBN) {
-        sortChannels();
-    }
 }
 
 void Client::sortChannelsToggle(bool newvalue)
@@ -296,13 +294,14 @@ void Client::sortChannelsToggle(bool newvalue)
     s.setValue("sort_channels_by_name", newvalue);
 
     sortCBN = newvalue;
-    if(sortCBN) {
-        sortChannels();
-    }
+    sortChannels();
 }
 
 void Client::sortChannels() {
-    channels->sortItems();
+    if(sortCBN) {
+        channels->sortItems();
+    }
+    channels->setSortingEnabled(sortCBN);
 }
 
 void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
