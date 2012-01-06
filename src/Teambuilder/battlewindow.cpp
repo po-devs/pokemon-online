@@ -871,7 +871,7 @@ PokeZone::PokeZone(const TeamProxy &team)
 
     for (int i = 0; i < 6; i++)
     {
-        l->addWidget(pokes[i] = new PokeButton(*team.poke(i)), i >= 3, i % 3);
+        l->addWidget(pokes[i] = new BattlePokeButton(*team.poke(i)), i >= 3, i % 3);
 
         mymapper->setMapping(pokes[i], i);
         connect(pokes[i], SIGNAL(clicked()), mymapper, SLOT(map()));
@@ -881,7 +881,7 @@ PokeZone::PokeZone(const TeamProxy &team)
 }
 
 
-PokeButton::PokeButton(const PokeProxy &p)
+BattlePokeButton::BattlePokeButton(const PokeProxy &p)
     : p(&p)
 {
     setIconSize(QSize(32,32));
@@ -891,7 +891,7 @@ PokeButton::PokeButton(const PokeProxy &p)
     updateToolTip();
 }
 
-void PokeButton::changePokemon(const PokeProxy &p)
+void BattlePokeButton::changePokemon(const PokeProxy &p)
 {
     this->p = &p;
 
@@ -901,7 +901,7 @@ void PokeButton::changePokemon(const PokeProxy &p)
     updateToolTip();
 }
 
-void PokeButton::update()
+void BattlePokeButton::update()
 {
     setText(p->nickname() + "\n" + QString::number(p->life()) + "/" + QString::number(p->totalLife()));
     int status = p->status();
@@ -915,7 +915,7 @@ void PokeButton::update()
     setAccessibleName(PokemonInfo::Name(p->num()));
 }
 
-void PokeButton::updateToolTip()
+void BattlePokeButton::updateToolTip()
 {
     const PokeProxy &p = *(this->p);
     QString tooltip;

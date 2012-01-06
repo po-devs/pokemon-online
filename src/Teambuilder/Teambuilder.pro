@@ -47,7 +47,8 @@ SOURCES += main.cpp \
     spectatorwindow.cpp \
     replayviewer.cpp \
     trainermenu.cpp \
-    pokebuttonsholder.cpp
+    pokebuttonsholder.cpp \
+    pokebutton.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -111,7 +112,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teamholder.h \
     trainermenu.h \
     pokebuttonsholder.h \
-    teamholderinterface.h
+    teamholderinterface.h \
+    pokebutton.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -119,7 +121,8 @@ LIBS += -L../../bin \
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 FORMS += controlpanel.ui \
     trainermenu.ui \
-    pokebuttonsholder.ui
+    pokebuttonsholder.ui \
+    pokebutton.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
