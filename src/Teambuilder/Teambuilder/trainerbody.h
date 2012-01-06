@@ -10,13 +10,13 @@ class QPlainTextEdit;
 class AvatarBox;
 class QPushButton;
 class QSpinBox;
-class TrainerTeam;
+class TeamHolder;
 
 class TB_TrainerBody : public QWidget
 {
     Q_OBJECT
 public:
-    TB_TrainerBody(TrainerTeam *team);
+    TB_TrainerBody(TeamHolder *team);
 
     void updateTrainer();
     void setTierList(const QStringList &);
@@ -36,8 +36,8 @@ private:
     AvatarBox *m_avatar;
     QSpinBox *m_avatarSelection;
 
-    TrainerTeam *m_team;
-    TrainerTeam* trainerTeam();
+    TeamHolder *m_team;
+    TeamHolder* trainerTeam();
 };
 
 #endif // TRAINERBODY_H

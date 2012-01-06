@@ -26,6 +26,7 @@ class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
 class DataStream;
+class TeamHolder;
 
 /* The class for going online.
 
@@ -37,10 +38,10 @@ class Client : public QWidget, public CentralWidgetInterface
 
     friend class Channel;
 public:
-    Client(TrainerTeam *, const QString &url, const quint16 port);
+    Client(TeamHolder *, const QString &url, const quint16 port);
     ~Client();
 
-    TrainerTeam *team();
+    TeamHolder *team();
     QMenuBar *createMenuBar(MainEngine *w);
 
     /* Prints a line to all the channels which have that player */
@@ -265,7 +266,7 @@ protected:
     }
 
 private:
-    TrainerTeam *myteam;
+    TeamHolder *myteam;
     QString mynick;
 
     /* GUI */

@@ -4,8 +4,10 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
+#include "teamholder.h"
 
 #include "battlewindow.h"
+
 
 using namespace NetworkCli;
 
@@ -22,7 +24,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage << HtmlChannel;
 }
 
-void Analyzer::login(const FullInfo &team)
+void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
@@ -31,7 +33,7 @@ void Analyzer::login(const FullInfo &team)
     network.setFlags(LoginCommand::HasClientType | LoginCommand::HasVersionNumber | LoginCommand::HasTrainerInfo
                      | LoginCommand::HasTeams);
 
-    if (team.nameColor.isValid()) {
+    if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);
     }
     //    HasClientType,
@@ -47,28 +49,22 @@ void Analyzer::login(const FullInfo &team)
 
     Flags data;
     data.setFlags(PlayerFlags::SupportsZipCompression);
-    data.setFlag(PlayerFlags::LadderEnabled, team.ladder);
-    data.setFlag(PlayerFlags::ShowTeam, team.showteam);
+    data.setFlag(PlayerFlags::LadderEnabled, ladder);
+    data.setFlag(PlayerFlags::ShowTeam, showTeam);
 //                  SupportsZipCompression,
 //                  ShowTeam,
 //                  LadderEnabled,
 //                  Idle,
 //                  IdsWithMessage
 
-    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.team.trainerNick() << data;
-    if (team.nameColor.isValid()) {
-        out << team.nameColor;
+    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.name() << data;
+    if (color.isValid()) {
+        out << color;
     }
 
-    TrainerInfo info;
-    info.info = team.team.trainerInfo();
-    info.winning = team.team.trainerWin();
-    info.losing = team.team.trainerLose();
-    info.avatar = team.team.avatar();
+    out << team.info();
 
-    out << info;
-
-    out << uchar(1) << team.team.team();
+    out << uchar(1) << team.team();
 
     emit sendCommand(tosend);
 }
@@ -98,9 +94,9 @@ void Analyzer::sendChanMessage(int channelid, const QString &message)
     notify(ChannelMessage, qint32(channelid), message);
 }
 
-void Analyzer::sendTeam(const TrainerTeam &team)
+void Analyzer::sendTeam(const TeamHolder &team)
 {
-    notify(SendTeam, team);
+    notify(SendTeam, team.team());
 }
 
 void Analyzer::sendBattleResult(int id, int result)

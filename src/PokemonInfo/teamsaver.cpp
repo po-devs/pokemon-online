@@ -1,9 +1,8 @@
 #include "teamsaver.h"
 #include "pokemonstructs.h"
 
-TeamSaver::TeamSaver(TrainerTeam *t)
+TeamSaver::TeamSaver(Team *t) :t(t)
 {
-    this->t = t;
 }
 
 void TeamSaver::fileNameReceived(const QString &name)

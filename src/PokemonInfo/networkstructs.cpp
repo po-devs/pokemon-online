@@ -125,20 +125,6 @@ DataStream & operator << (DataStream &out, const PlayerInfo &p)
     return out;
 }
 
-DataStream & operator >> (DataStream &in, FullInfo &p)
-{
-    in >> p.team >> p.ladder >> p.showteam >> p.nameColor;
-
-    return in;
-}
-
-DataStream & operator << (DataStream &out, const FullInfo &p)
-{
-    out << p.team << p.ladder << p.showteam << p.nameColor;
-
-    return out;
-}
-
 Battle::Battle(int id1, int id2) : id1(id1), id2(id2)
 {
 

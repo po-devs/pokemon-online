@@ -7,7 +7,7 @@
 #include "../../PokemonInfo/pokemoninfo.h"
 
 class TB_PokemonBody;
-class TrainerTeam;
+class TeamHolder;
 class QStackedWidget;
 class DockAdvanced;
 class QSplitter;
@@ -20,7 +20,7 @@ class TB_TeamBody: public QWidget
 {
     Q_OBJECT
 public:
-    TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractItemModel *pokeModel);
+    TB_TeamBody(QWidget *parent, TeamHolder *team, int gen, QAbstractItemModel *pokeModel);
     ~TB_TeamBody();
 
     void updateTeam();
@@ -51,8 +51,8 @@ private:
     }
     void createDockAdvanced(bool sepWindow);
 
-    TrainerTeam *m_team;
-    TrainerTeam* trainerTeam() {
+    TeamHolder *m_team;
+    TeamHolder* trainerTeam() {
         return m_team;
     }
 

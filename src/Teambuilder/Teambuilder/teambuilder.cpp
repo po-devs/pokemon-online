@@ -14,13 +14,14 @@
 #include "trainerbody.h"
 #include "teambody.h"
 #include "teamimporter.h"
+#include "teamholder.h"
 
 /***********************************/
 /**** TEAMBUILDER ******************/
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_teamBody(NULL), m_boxes(NULL), m_pokedex(NULL), m_team(pub_team)
+TeamBuilder::TeamBuilder(TeamHolder *pub_team) : m_teamBody(NULL), m_boxes(NULL), m_pokedex(NULL), m_team(pub_team)
 {
     for (int i = 0; i < NUMBER_GENS; i++)
         gens[i] = NULL;
@@ -148,7 +149,7 @@ Team* TeamBuilder::team()
     return & m_team->team();
 }
 
-TrainerTeam * TeamBuilder::trainerTeam()
+TeamHolder * TeamBuilder::trainerTeam()
 {
     return m_team;
 }
@@ -158,7 +159,7 @@ Team* TeamBuilder::team() const
     return & m_team->team();
 }
 
-TrainerTeam * TeamBuilder::trainerTeam() const
+TeamHolder * TeamBuilder::trainerTeam() const
 {
     return m_team;
 }
@@ -247,12 +248,12 @@ void TeamBuilder::changeToPokedex()
 
 void TeamBuilder::saveTeam()
 {
-    saveTTeamDialog(*trainerTeam());
+    saveTTeamDialog(trainerTeam()->team());
 }
 
 void TeamBuilder::loadTeam()
 {
-    loadTTeamDialog(*trainerTeam(), this, SLOT(updateAll()));
+    loadTTeamDialog(trainerTeam()->team(), this, SLOT(updateAll()));
 }
 
 void TeamBuilder::newTeam()
@@ -438,7 +439,7 @@ void TeamBuilder::importFromTxt()
 
 void TeamBuilder::importDone(const QString &text)
 {
-    trainerTeam()->importFromTxt(text);
+    trainerTeam()->team().importFromTxt(text);
     updateTeam();
 }
 
@@ -448,7 +449,7 @@ void TeamBuilder::exportToTxt()
     exporting->setWindowFlags(Qt::Window);
     exporting->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    exporting->setText(trainerTeam()->exportToTxt());
+    exporting->setText(trainerTeam()->team().exportToTxt());
     exporting->setReadOnly(true);
 
     exporting->show();

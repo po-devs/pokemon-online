@@ -13,8 +13,9 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "teamholder.h"
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
+Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
     isConnected = true;
     _mid = -1;
@@ -99,7 +100,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     pal.setColor(QPalette::Base, Qt::blue);
     setPalette(pal);
     myregister->setDisabled(true);
-    mynick = t->trainerNick();
+    mynick = t->name();
 
     s->setSizes(QList<int>() << 200 << 800);
 
@@ -1024,7 +1025,7 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    loadTTeamDialog(*team(), this, SLOT(changeTeam()));
+    loadTTeamDialog(team()->team(), this, SLOT(changeTeam()));
 }
 
 void Client::sendText()
@@ -1274,7 +1275,7 @@ void Client::askForPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
-    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass, warns);
+    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
     if (!warns.empty()) warns.prepend(""); // for join()
 
     /* Create a dialog for password input */
@@ -1318,7 +1319,7 @@ void Client::askForPass(const QByteArray &salt) {
     pass = passEdit->text();
     if (savePass->isChecked()) {
         // TODO: ipv6 support in the future
-        wallet.saveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass);
+        wallet.saveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass);
     }
 
 
@@ -1929,8 +1930,7 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>()};
-    relay().login(f);
+    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>());
 }
 
 void Client::disconnected()
@@ -1942,7 +1942,7 @@ void Client::disconnected()
     myregister->setEnabled(true);
 }
 
-TrainerTeam* Client::team()
+TeamHolder* Client::team()
 {
     return myteam;
 }
@@ -2165,9 +2165,9 @@ void Client::openTeamBuilder()
 
 void Client::changeTeam()
 {
-    if (battling() && myteam->trainerNick() != mynick) {
+    if (battling() && myteam->name() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
-        myteam->setTrainerNick(mynick);
+        myteam->name() = mynick;
     }
     cancelFindBattle(false);
     relay().sendTeam(*myteam);
