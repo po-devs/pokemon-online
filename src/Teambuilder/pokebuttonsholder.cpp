@@ -1,3 +1,6 @@
+#include <QButtonGroup>
+
+#include "../PokemonInfo/pokemonstructs.h"
 #include "pokebuttonsholder.h"
 #include "ui_pokebuttonsholder.h"
 
@@ -14,12 +17,29 @@ PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
     pokemonButtons[4] = ui->pokemon4;
     pokemonButtons[5] = ui->pokemon5;
 
+    pokemonButtons[0]->setChecked(true);
+
+    QButtonGroup *group = new QButtonGroup(this);
+
     for (int i = 0; i < 6; i++) {
         pokemonButtons[i]->setNumber(i);
+        group->addButton(pokemonButtons[i], i);
     }
 }
 
 PokeButtonsHolder::~PokeButtonsHolder()
 {
     delete ui;
+}
+
+int PokeButtonsHolder::currentSlot() const
+{
+    return group->checkedId();
+}
+
+void PokeButtonsHolder::setTeam(Team &team)
+{
+    for (int i = 0; i < 6; i++) {
+        pokemonButtons[i]->setPokemon(team.poke(i));
+    }
 }
