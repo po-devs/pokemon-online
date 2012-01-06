@@ -3,8 +3,6 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
-#include <QStyleFactory>
-
 
 TB_Menu::TB_Menu()
 {
@@ -30,6 +28,13 @@ TB_Menu::TB_Menu()
     connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
     connect (credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (exit, SIGNAL(clicked()), SIGNAL(goToExit()));
+
+    loadSettings(this);
+}
+
+TB_Menu::~TB_Menu()
+{
+    writeSettings(this);
 }
 
 QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
@@ -40,7 +45,6 @@ QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
-    w->addStyleMenu(menuBar);
     w->addThemeMenu(menuBar);
 
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));

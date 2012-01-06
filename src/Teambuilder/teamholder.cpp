@@ -88,3 +88,17 @@ bool Profile::saveToFile(const QString &path) const
     document.save(in,4);
     return true;
 }
+
+void TeamHolder::save()
+{
+    QSettings s;
+    team().saveToFile(s.value("team_location").toString());
+    profile().saveToFile(s.value("profile_location").toString());
+}
+
+void TeamHolder::load()
+{
+    QSettings s;
+    team().loadFromFile(s.value("team_location").toString());
+    profile().loadFromFile(s.value("profile_location").toString());
+}

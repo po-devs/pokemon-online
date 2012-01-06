@@ -26,7 +26,6 @@ SOURCES += main.cpp \
     rearrangewindow.cpp \
     poketablemodel.cpp \
     pokemovesmodel.cpp \
-    Teambuilder/teambuilder.cpp \
     Teambuilder/pokedex.cpp \
     Teambuilder/box.cpp \
     Teambuilder/trainerbody.cpp \
@@ -49,7 +48,9 @@ SOURCES += main.cpp \
     trainermenu.cpp \
     pokebuttonsholder.cpp \
     pokebutton.cpp \
-    teamholder.cpp
+    teamholder.cpp \
+    teambuilder.cpp \
+    Teambuilder/teambuilder_old.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -81,7 +82,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     poketablemodel.h \
     modelenum.h \
     pokemovesmodel.h \
-    Teambuilder/teambuilder.h \
     Teambuilder/pokedex.h \
     Teambuilder/box.h \
     Teambuilder/trainerbody.h \
@@ -114,7 +114,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     trainermenu.h \
     pokebuttonsholder.h \
     teamholderinterface.h \
-    pokebutton.h
+    pokebutton.h \
+    teambuilder.h \
+    Teambuilder/teambuilder_old.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

@@ -4,7 +4,7 @@
 
 class PokeTeam;
 class Team;
-class TeamBuilder;
+class TeamBuilderOld;
 
 class TB_PokemonDetail : public QFrame
 {

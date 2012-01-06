@@ -2,7 +2,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/movesetchecker.h"
-#include "teambuilder.h"
+#include "teambuilder_old.h"
 #include "poketablemodel.h"
 #include "pokemovesmodel.h"
 #include "box.h"
@@ -21,7 +21,7 @@
 /***********************************/
 
 
-TeamBuilder::TeamBuilder(TeamHolder *pub_team) : m_teamBody(NULL), m_boxes(NULL), m_pokedex(NULL), m_team(pub_team)
+TeamBuilderOld::TeamBuilderOld(TeamHolder *pub_team) : m_teamBody(NULL), m_boxes(NULL), m_pokedex(NULL), m_team(pub_team)
 {
     for (int i = 0; i < NUMBER_GENS; i++)
         gens[i] = NULL;
@@ -127,7 +127,7 @@ TeamBuilder::TeamBuilder(TeamHolder *pub_team) : m_teamBody(NULL), m_boxes(NULL)
     updateAll();
 }
 
-void TeamBuilder::initBox()
+void TeamBuilderOld::initBox()
 {
     m_boxes = new TB_PokemonBoxes(team());
     m_body->addWidget(m_boxes);
@@ -135,49 +135,49 @@ void TeamBuilder::initBox()
     connect(m_boxes, SIGNAL(pokeChanged(int)), SLOT(pokeChanged(int)));
 }
 
-void TeamBuilder::initPokedex()
+void TeamBuilderOld::initPokedex()
 {
     m_pokedex = new Pokedex(this, pokeModel);
     m_body->addWidget(m_pokedex);
 }
 
-void TeamBuilder::initTeam()
+void TeamBuilderOld::initTeam()
 {
     m_teamBody = new TB_TeamBody(this, trainerTeam(), gen(), pokeModel);
     m_body->addWidget(m_teamBody);
 }
 
-int TeamBuilder::gen() const
+int TeamBuilderOld::gen() const
 {
     return team()->gen();
 }
 
-Team* TeamBuilder::team()
+Team* TeamBuilderOld::team()
 {
     return & m_team->team();
 }
 
-TeamHolder * TeamBuilder::trainerTeam()
+TeamHolder * TeamBuilderOld::trainerTeam()
 {
     return m_team;
 }
 
-Team* TeamBuilder::team() const
+Team* TeamBuilderOld::team() const
 {
     return & m_team->team();
 }
 
-TeamHolder * TeamBuilder::trainerTeam() const
+TeamHolder * TeamBuilderOld::trainerTeam() const
 {
     return m_team;
 }
 
-void TeamBuilder::pokeChanged(int poke)
+void TeamBuilderOld::pokeChanged(int poke)
 {
     modified[poke] = true;
 }
 
-void TeamBuilder::changeZone()
+void TeamBuilderOld::changeZone()
 {
     if (m_body->currentIndex() == TrainerW)
         changeToTeam();
@@ -185,7 +185,7 @@ void TeamBuilder::changeZone()
         changeToTrainer();
 }
 
-void TeamBuilder::genChanged() {
+void TeamBuilderOld::genChanged() {
     int gen = sender()->property("gen").toInt();
 
     pokeModel->setGen(gen);
@@ -195,7 +195,7 @@ void TeamBuilder::genChanged() {
     }
 }
 
-void TeamBuilder::changeToTeam()
+void TeamBuilderOld::changeToTeam()
 {    if (m_teamBody == NULL) {
         initTeam();
     }
@@ -214,7 +214,7 @@ void TeamBuilder::changeToTeam()
     }
 }
 
-void TeamBuilder::changeToBoxes()
+void TeamBuilderOld::changeToBoxes()
 {
     if (m_boxes == NULL) {
         initBox();
@@ -230,7 +230,7 @@ void TeamBuilder::changeToBoxes()
     updateBox();
 }
 
-void TeamBuilder::changeToTrainer()
+void TeamBuilderOld::changeToTrainer()
 {
     if (m_body->currentWidget() != m_trainerBody) {
         buttons[m_body->currentIndex()]->setChecked(false);
@@ -241,7 +241,7 @@ void TeamBuilder::changeToTrainer()
     }
 }
 
-void TeamBuilder::changeToPokedex()
+void TeamBuilderOld::changeToPokedex()
 {
     if (m_pokedex == NULL) {
         initPokedex();
@@ -254,17 +254,17 @@ void TeamBuilder::changeToPokedex()
     currentZoneLabel->setPixmap(Theme::Sprite("pokedex"));
 }
 
-void TeamBuilder::saveTeam()
+void TeamBuilderOld::saveTeam()
 {
     saveTTeamDialog(trainerTeam()->team());
 }
 
-void TeamBuilder::loadTeam()
+void TeamBuilderOld::loadTeam()
 {
     loadTTeamDialog(trainerTeam()->team(), this, SLOT(updateAll()));
 }
 
-void TeamBuilder::newTeam()
+void TeamBuilderOld::newTeam()
 {
     if (QMessageBox::question(this, tr("New Team"), tr("You sure?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         for (int i = 0; i < 6; i++) {
@@ -275,19 +275,19 @@ void TeamBuilder::newTeam()
     }
 }
 
-void TeamBuilder::clickOnDone()
+void TeamBuilderOld::clickOnDone()
 {
     emit done();
 }
 
-void TeamBuilder::updateAll()
+void TeamBuilderOld::updateAll()
 {
     updateTrainer();
     updateTeam();
     updateBox();
 }
 
-void TeamBuilder::updateTeam()
+void TeamBuilderOld::updateTeam()
 {
     if (gens[team()->gen()-GEN_MIN]) {
         gens[team()->gen()-GEN_MIN]->setChecked(true);
@@ -298,19 +298,19 @@ void TeamBuilder::updateTeam()
     }
 }
 
-void TeamBuilder::updateTrainer()
+void TeamBuilderOld::updateTrainer()
 {
     m_trainerBody->updateTrainer();
 }
 
-void TeamBuilder::updateBox()
+void TeamBuilderOld::updateBox()
 {
     if (m_boxes) {
         m_boxes->updateBox();
     }
 }
 
-QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
+QMenuBar * TeamBuilderOld::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("TeamBuilder");
@@ -322,7 +322,6 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&Export to text"),this,SLOT(exportToTxt()),Qt::CTRL+Qt::Key_E);
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
-    w->addStyleMenu(menuBar);
     w->addThemeMenu(menuBar);
 
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
@@ -392,18 +391,18 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     return menuBar;
 }
 
-void TeamBuilder::changeMod()
+void TeamBuilderOld::changeMod()
 {
     PokemonInfo::reloadMod(FillMode::Client, modActionGroup->checkedAction()->text());
     // TODO: MoveSetChecker::init("db/pokes/"); ?
 }
 
-void TeamBuilder::setNoMod()
+void TeamBuilderOld::setNoMod()
 {
     PokemonInfo::reloadMod(FillMode::Client);
 }
 
-void TeamBuilder::changeItemDisplay(bool b)
+void TeamBuilderOld::changeItemDisplay(bool b)
 {
     QSettings s;
     s.setValue("show_all_items", b);
@@ -415,14 +414,14 @@ void TeamBuilder::changeItemDisplay(bool b)
     }
 }
 
-void TeamBuilder::enforceMinLevels(bool enforce)
+void TeamBuilderOld::enforceMinLevels(bool enforce)
 {
     QSettings s;
     s.setValue("enforce_min_levels", enforce);
     MoveSetChecker::enforceMinLevels = enforce;
 }
 
-void TeamBuilder::showNoFrame()
+void TeamBuilderOld::showNoFrame()
 {
     bool static k=false;//if it is full screen?
     if(k){
@@ -434,7 +433,7 @@ void TeamBuilder::showNoFrame()
     }
 }
 
-void TeamBuilder::importFromTxt()
+void TeamBuilderOld::importFromTxt()
 {
     if (m_import) {
         m_import->raise();
@@ -445,13 +444,13 @@ void TeamBuilder::importFromTxt()
     connect(m_import, SIGNAL(done(QString)), SLOT(importDone(QString)));
 }
 
-void TeamBuilder::importDone(const QString &text)
+void TeamBuilderOld::importDone(const QString &text)
 {
     trainerTeam()->team().importFromTxt(text);
     updateTeam();
 }
 
-void TeamBuilder::exportToTxt()
+void TeamBuilderOld::exportToTxt()
 {
     QTextEdit *exporting = new QTextEdit(this);
     exporting->setWindowFlags(Qt::Window);
@@ -465,12 +464,12 @@ void TeamBuilder::exportToTxt()
     exporting->resize(500,700);
 }
 
-void TeamBuilder::setTierList(const QStringList &tiers)
+void TeamBuilderOld::setTierList(const QStringList &tiers)
 {
     m_trainerBody->setTierList(tiers);
 }
 
-TeamBuilder::~TeamBuilder()
+TeamBuilderOld::~TeamBuilderOld()
 {
     writeSettings(this);
 }

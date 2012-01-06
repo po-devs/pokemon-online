@@ -5,7 +5,7 @@
 #include "trainerbody.h"
 #include "theme.h"
 #include "avatarbox.h"
-#include "teambuilder.h"
+#include "teambuilder_old.h"
 #include "pokeballed.h"
 #include "teamholder.h"
 
