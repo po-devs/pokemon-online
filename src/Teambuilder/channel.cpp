@@ -3,6 +3,7 @@
 #include "poketextedit.h"
 #include "remove_direction_override.h"
 #include "theme.h"
+#include "../Utilities/coreclasses.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
@@ -220,7 +221,7 @@ void Channel::battleStarted(int bid, int id1, int id2)
         return;
 
     if (eventEnabled(Client::BattleEvent) || id1 == ownId() || id2 == ownId())
-        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)), false);
+        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)), false, false);
 
     battleReceived(bid, id1, id2);
 
@@ -267,11 +268,11 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
 
     if (eventEnabled(Client::BattleEvent) || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
-            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)), false);
+            printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)), false, false);
         } else if (res == Tie) {
-            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)), false);
+            printLine(tr("%1 and %2 tied.").arg(name(loser), name(winner)), false, false);
         } else if (res == Win) {
-            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)), false);
+            printLine(tr("%1 won against %2.").arg(name(winner), name(loser)), false, false);
         }
     }
 }
@@ -364,9 +365,9 @@ void Channel::receivePlayerList(const QVector<int> &ids)
     }
 }
 
-void Channel::dealWithCommand(int command, QDataStream *stream)
+void Channel::dealWithCommand(int command, DataStream *stream)
 {
-    QDataStream &in = *stream;
+    DataStream &in = *stream;
 
     if (command == NetworkCli::JoinChannel) {
         qint32 id;
@@ -378,7 +379,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         playerReceived(id);
 
         if (eventEnabled(Client::ChannelEvent)) {
-            printLine(tr("%1 joined the channel.").arg(name(id)), false);
+            printLine(tr("%1 joined the channel.").arg(name(id)), false, false);
         }
     } else if (command == NetworkCli::ChannelMessage) {
         QString message;
@@ -416,7 +417,7 @@ void Channel::dealWithCommand(int command, QDataStream *stream)
         qint32 id;
         in >> id;
         if (eventEnabled(Client::ChannelEvent)) {
-            printLine(tr("%1 left the channel.").arg(name(id)), false);
+            printLine(tr("%1 left the channel.").arg(name(id)), false, false);
         }
         /* Remove everything... */
         removePlayer(id);
@@ -461,7 +462,7 @@ void Channel::playerLogOut(int id) {
     removePlayer(id);
 
     if (eventEnabled(Client::ChannelEvent))
-        printLine(tr("%1 logged out.").arg(name), false);
+        printLine(tr("%1 logged out.").arg(name), false, false);
 }
 
 void Channel::removePlayer(int id) {

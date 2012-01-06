@@ -14,7 +14,11 @@ HEADERS += pokemonstructs.h \
     movesetchecker.h \
     battlestructs.h \
     teamsaver.h \
-    enums.h
+    enums.h \
+    ../Shared/config.h
+
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
 LIBS += -L../../bin \
     -lutilities \
     -lzip

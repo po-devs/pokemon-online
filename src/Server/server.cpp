@@ -221,14 +221,15 @@ void Server::start(){
 
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
-    serverAnnouncement = s.value("server_announcement").toString();
+    serverAnnouncement = s.value("server_announcement").toByteArray();
+    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
     passwordProtected = s.value("require_password").toBool();
-    serverPassword = s.value("server_password").toString();
+    serverPassword = s.value("server_password").toByteArray();
     showTrayPopup = s.value("show_tray_popup").toBool();
     minimizeToTray = s.value("minimize_to_tray").toBool();
 
@@ -592,21 +593,30 @@ void Server::changeScript(const QString &script)
 
 void Server::setAllAnnouncement(const QString &html) {
     foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::Announcement, html);
+        if (p->isLoggedIn()) {
+            p->relay().notify(NetworkServ::Announcement, html);
+        }
     }
 }
 
 void Server::announcementChanged(const QString &announcement)
 {
-    if (announcement == serverAnnouncement)
+    if (announcement.toUtf8() == serverAnnouncement)
         return;
 
-    serverAnnouncement = announcement;
+    serverAnnouncement = announcement.toUtf8();
+    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
 
     printLine("Announcement changed.", false, true);
 
     foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+        if (p->isLoggedIn()) {
+            if (p->supportsZip()) {
+                p->relay().emitCommand(zippedAnnouncement);
+            } else {
+                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+            }
+        }
     }
 }
 
@@ -835,8 +845,13 @@ void Server::loggedIn(int id, const QString &name)
 
         p->relay().sendLogin(p->bundle());
 
-        if (serverAnnouncement.length() > 0)
-            p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+        if (serverAnnouncement.length() > 0) {
+            if (p->supportsZip()) {
+                p->relay().emitCommand(zippedAnnouncement);
+            } else {
+                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
+            }
+        }
 
         sendTierList(id);
         sendChannelList(id);
@@ -1250,9 +1265,9 @@ void Server::proxyServersChanged(const QString &ips)
 
 void Server::serverPasswordChanged(const QString &pass)
 {
-    if (serverPassword == pass)
+    if (serverPassword == pass.toUtf8())
         return;
-    serverPassword = pass;
+    serverPassword = pass.toUtf8();
     printLine("Server Password changed", false, true);
 }
 
@@ -1821,7 +1836,7 @@ BattleSituation * Server::getBattle(int battleId) const
 }
 
 bool Server::correctPass(const QByteArray &hash, const QByteArray &salt) const {
-    return hash == md5_hash(md5_hash(serverPassword.toAscii()) + salt);
+    return hash == QCryptographicHash::hash(QCryptographicHash::hash(serverPassword, QCryptographicHash::Md5) + salt, QCryptographicHash::Md5);
 }
 
 bool Server::isLegalProxyServer(const QString &ip) const

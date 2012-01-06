@@ -2,6 +2,7 @@
 #include "networkstructs.h"
 #include "movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
+#include "../Utilities/coreclasses.h"
 
 QString ChallengeInfo::clauseText[] =
 {
@@ -62,14 +63,14 @@ void BattleMove::load(int gen) {
     totalPP() = PP();
 }
 
-QDataStream & operator >> (QDataStream &in, BattleMove &mo)
+DataStream & operator >> (DataStream &in, BattleMove &mo)
 {
     in >> mo.num() >> mo.PP() >> mo.totalPP();
 
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const BattleMove &mo)
+DataStream & operator << (DataStream &out, const BattleMove &mo)
 {
     out << mo.num() << mo.PP() << mo.totalPP();
 
@@ -230,7 +231,7 @@ void PokeBattle::updateStats(int gen)
     }
 }
 
-QDataStream & operator >> (QDataStream &in, PokeBattle &po)
+DataStream & operator >> (DataStream &in, PokeBattle &po)
 {
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
        >> po.happiness();
@@ -256,7 +257,7 @@ QDataStream & operator >> (QDataStream &in, PokeBattle &po)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const PokeBattle &po)
+DataStream & operator << (DataStream &out, const PokeBattle &po)
 {
     out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability()
         << po.happiness();
@@ -338,14 +339,14 @@ void ShallowBattlePoke::removeStatus(int status)
 }
 
 
-QDataStream & operator >> (QDataStream &in, ShallowBattlePoke &po)
+DataStream & operator >> (DataStream &in, ShallowBattlePoke &po)
 {
     in >> po.num() >> po.nick() >> po.lifePercent() >> po.fullStatus() >> po.gender() >> po.shiny() >> po.level();
 
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const ShallowBattlePoke &po)
+DataStream & operator << (DataStream &out, const ShallowBattlePoke &po)
 {
     out << po.num() << po.nick() << po.lifePercent() << po.fullStatus() << po.gender() << po.shiny() << po.level();
 
@@ -539,7 +540,7 @@ const PokeBattle &TeamBattle::getByInternalId(int i) const
     return m_pokemons[i];
 }
 
-QDataStream & operator >> (QDataStream &in, TeamBattle &te)
+DataStream & operator >> (DataStream &in, TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
         in >> te.poke(i);
@@ -548,7 +549,7 @@ QDataStream & operator >> (QDataStream &in, TeamBattle &te)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const TeamBattle &te)
+DataStream & operator << (DataStream &out, const TeamBattle &te)
 {
     for (int i = 0; i < 6; i++) {
         out << te.poke(i);
@@ -575,13 +576,13 @@ void ShallowShownPoke::init(const PokeBattle &b)
     }
 }
 
-QDataStream & operator >> (QDataStream &in, ShallowShownPoke &po) {
+DataStream & operator >> (DataStream &in, ShallowShownPoke &po) {
     in >> po.num >> po.level >> po.gender >> po.item;
 
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const ShallowShownPoke &po) {
+DataStream & operator << (DataStream &out, const ShallowShownPoke &po) {
     out << po.num << po.level << po.gender << po.item;
 
     return out;
@@ -594,7 +595,7 @@ ShallowShownTeam::ShallowShownTeam(const TeamBattle &t)
     }
 }
 
-QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po) {
+DataStream & operator >> (DataStream &in, ShallowShownTeam &po) {
     for (int i = 0; i < 6; i++) {
         in >> po.poke(i);
     }
@@ -602,7 +603,7 @@ QDataStream & operator >> (QDataStream &in, ShallowShownTeam &po) {
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const ShallowShownTeam &po) {
+DataStream & operator << (DataStream &out, const ShallowShownTeam &po) {
     for (int i = 0; i < 6; i++) {
         out << po.poke(i);
     }
@@ -652,7 +653,7 @@ BattleConfiguration::~BattleConfiguration()
     }
 }
 
-QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c)
+DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
     //Used as placeholder for subgen
     quint8 foo;
@@ -683,7 +684,7 @@ QDataStream & operator >> (QDataStream &in, FullBattleConfiguration &c)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const FullBattleConfiguration &c)
+DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 {
     //Used as placeholder for subgen
     quint8 foo(0);
@@ -736,13 +737,13 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
     return ret;
 }
 
-QDataStream & operator >> (QDataStream &in, BattleChoices &po)
+DataStream & operator >> (DataStream &in, BattleChoices &po)
 {
     in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3];
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const BattleChoices &po)
+DataStream & operator << (DataStream &out, const BattleChoices &po)
 {
     out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3];
     return out;
@@ -790,7 +791,7 @@ bool BattleChoice::match(const BattleChoices &avail) const
     return false;
 }
 
-QDataStream & operator >> (QDataStream &in, BattleChoice &po)
+DataStream & operator >> (DataStream &in, BattleChoice &po)
 {
     in >> po.playerSlot >> po.type;
 
@@ -815,7 +816,7 @@ QDataStream & operator >> (QDataStream &in, BattleChoice &po)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const BattleChoice &po)
+DataStream & operator << (DataStream &out, const BattleChoice &po)
 {
     out << po.playerSlot << po.type;
 
@@ -840,17 +841,17 @@ QDataStream & operator << (QDataStream &out, const BattleChoice &po)
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, ChallengeInfo & c) {
+DataStream & operator >> (DataStream &in, ChallengeInfo & c) {
     in >> c.dsc >> c.opp >> c.clauses >> c.mode;
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const ChallengeInfo & c) {
+DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
     out << c.dsc <<  c.opp << c.clauses << c.mode;
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, FindBattleData &f)
+DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
     quint32 flags;
 
@@ -866,7 +867,7 @@ QDataStream & operator >> (QDataStream &in, FindBattleData &f)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const FindBattleData &f)
+DataStream & operator << (DataStream &out, const FindBattleData &f)
 {
     quint32 flags = 0;
 

@@ -45,7 +45,9 @@ SOURCES += main.cpp \
     remove_direction_override.cpp \
 	password_wallet.cpp\
     spectatorwindow.cpp \
-    replayviewer.cpp
+    replayviewer.cpp \
+    trainermenu.cpp \
+    pokebuttonsholder.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -104,13 +106,20 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    replayviewer.h
+    replayviewer.h \
+    ../Utilities/coreclasses.h \
+    teamholder.h \
+    trainermenu.h \
+    pokebuttonsholder.h \
+    teamholderinterface.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
     -lbattlelib
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-FORMS += controlpanel.ui
+FORMS += controlpanel.ui \
+    trainermenu.ui \
+    pokebuttonsholder.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

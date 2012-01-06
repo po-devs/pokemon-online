@@ -12,6 +12,7 @@
 #include "pokebody.h"
 #include "pokebodywidget.h"
 #include "dockinterface.h"
+#include "teamholder.h"
 
 /*********************************************/
 /**************** POKE BUTTON ****************/
@@ -136,7 +137,7 @@ void TeamPokeButton::startDrag()
 /**************** TEAM BODY ******************/
 /*********************************************/
 
-TB_TeamBody::TB_TeamBody(QWidget *parent, TrainerTeam *team, int gen, QAbstractItemModel *pokeModel) :
+TB_TeamBody::TB_TeamBody(QWidget *parent, TeamHolder *team, int gen, QAbstractItemModel *pokeModel) :
     m_dockAdvanced(0), m_team(team), gen(gen), pokeModel(pokeModel), upParent(parent)
 {
     QHBoxLayout *hh = new QHBoxLayout(this);

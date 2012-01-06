@@ -19,22 +19,22 @@ class TB_Advanced;
 
 class PokeTableModel;
 class PokeMovesModel;
-class TrainerTeam;
 class Team;
 class PokeTeam;
 class MainEngine;
+class TeamHolder;
 
 /* The Teambuilder!! */
 class TeamBuilder : public QLabel, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
-    TeamBuilder(TrainerTeam *team);
+    TeamBuilder(TeamHolder *team);
     ~TeamBuilder();
 
-    TrainerTeam *trainerTeam();
+    TeamHolder *trainerTeam();
     Team *team();
-    TrainerTeam *trainerTeam() const;
+    TeamHolder *trainerTeam() const;
     Team *team() const;
 
     /* Create a menu bar to give to the main window */
@@ -93,7 +93,7 @@ private:
     QImageButton *buttons[LastW];
     QLabel *currentZoneLabel;
     /* the Team of the trainer */
-    TrainerTeam *m_team;
+    TeamHolder *m_team;
 
     QPointer<QWidget> m_import;
 

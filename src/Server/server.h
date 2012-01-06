@@ -180,7 +180,8 @@ private:
 
     Analyzer *registry_connection;
     QString serverName, serverDesc;
-    QString serverAnnouncement;
+    QByteArray serverAnnouncement;
+    QByteArray zippedAnnouncement;
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
     QStringList proxyServers;
@@ -192,7 +193,7 @@ private:
     bool passwordProtected;
     bool showTrayPopup;
     bool minimizeToTray;
-    QString serverPassword;
+    QByteArray serverPassword;
 
     quint16 numPlayers() {
         return myplayers.size();
@@ -284,5 +285,21 @@ private:
     QHash<int, FindBattleData*> battleSearchs;
 
     ContextSwitcher battleThread;
+
+    template <typename ...Params>
+    QByteArray makeZipCommand(int command, Params&&... params) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out.pack(uchar(command), std::forward<Params>(params)...);
+
+        QByteArray ret;
+        ret.push_back('\0'); /* ZipCommand == 0 */
+        ret.push_back('\0'); /* 0 = Single command, 1 would be multiple packets */
+        QByteArray cp = qCompress(tosend);
+
+        ret.push_back(cp);
+        return ret;
+    }
 };
 #endif // SERVER_H

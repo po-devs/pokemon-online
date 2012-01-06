@@ -3,11 +3,12 @@
 #include "replayviewer.h"
 #include "spectatorwindow.h"
 #include "poketextedit.h"
+#include "../Utilities/coreclasses.h"
 #include "../BattleManager/battleinput.h"
 
 /* Format for raw:
 
- battle_logs_v1<line break>
+ battle_logs_v2<line break>
  <configuration (FullBattleConfiguration)>
  <timestamp (32 bits)><command (byteArray)> * infinite
 */
@@ -24,14 +25,13 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 
     QByteArray version = in->readLine();
 
-    if (version != "battle_logs_v1\n") {
+    if (version != "battle_logs_v2\n") {
         QMessageBox::critical(NULL, tr("Log format not supported"), tr("The replay version of the file isn't supported by this client."));
         deleteLater();
         return;
     }
 
-    QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(in);
 
     stream >> conf;
 
@@ -53,8 +53,7 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 
 void ReplayViewer::read()
 {
-    QDataStream stream(in);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(in);
 
     if (nextRead == quint32(-1)) {
         stream >> nextRead;
