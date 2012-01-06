@@ -225,42 +225,42 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="1">
+        <item row="0" column="1">
          <widget class="QPushButton" name="editSelected">
           <property name="text">
            <string>Edit Selected</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
+        <item row="0" column="3">
          <widget class="QPushButton" name="saveTeam">
           <property name="text">
            <string>Save Team</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="1" column="1">
          <widget class="QPushButton" name="boxCenter">
           <property name="text">
            <string>Box Center</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="2" column="1">
          <widget class="QPushButton" name="pokedex">
           <property name="text">
            <string>Pokedex</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="1" column="3">
          <widget class="QPushButton" name="loadTeam">
           <property name="text">
            <string>Load Team</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
+        <item row="1" column="2">
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -273,7 +273,7 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="0">
+        <item row="1" column="0">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -286,7 +286,7 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="4">
+        <item row="1" column="4">
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -299,31 +299,12 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="0" colspan="5">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="2" column="3">
+         <widget class="QPushButton" name="importTeam">
+          <property name="text">
+           <string>Import Team</string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="4" column="0" colspan="5">
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
       </item>
@@ -342,4 +323,7 @@
  </customwidgets>
  <resources/>
  <connections/>
+ <slots>
+  <signal>done()</signal>
+ </slots>
 </ui>
