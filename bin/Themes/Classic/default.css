@@ -4,6 +4,18 @@
 		stop:0 white, stop:1 #0ca0dd); 
 }
 
+/*=============================================*\*/
+
+PokeButton {
+    min-width: 180px;
+}
+
+TrainerMenu QLabel#avatar {
+    background: #ffffff;
+}
+
+/*\*=============================================*/
+
 Client QTextEdit {
 	font-family: Tahoma;
 }
@@ -369,6 +381,7 @@ PokeBallDescBox QLabel#PokeSpec {
 
 PokeBallDescBox QLabel {
 	font-family: Trebuchet MS;
+
 	font-weight: normal;
 	font-size: 13px;
 }

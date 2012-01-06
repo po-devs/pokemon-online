@@ -15,6 +15,7 @@ public:
     explicit PokeButton(QWidget *parent = 0);
     ~PokeButton();
 
+    void setNumber(int x);
 private:
     Ui::PokeButton *ui;
 };

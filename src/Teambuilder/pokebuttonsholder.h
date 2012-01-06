@@ -7,6 +7,8 @@ namespace Ui {
     class PokeButtonsHolder;
 }
 
+class PokeButton;
+
 class PokeButtonsHolder : public QWidget
 {
     Q_OBJECT
@@ -17,6 +19,7 @@ public:
 
 private:
     Ui::PokeButtonsHolder *ui;
+    PokeButton *pokemonButtons[6];
 };
 
 #endif // POKEBUTTONSHOLDER_H

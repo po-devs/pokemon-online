@@ -12,6 +12,7 @@
 #include "replayviewer.h"
 #include "../Utilities/functions.h"
 #include "teamholder.h"
+#include "trainermenu.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -229,7 +230,8 @@ void MainEngine::launchCredits()
 
 void MainEngine::launchTeamBuilder()
 {
-    TeamBuilder *TB = new TeamBuilder(trainerTeam());
+    //TeamBuilder *TB = new TeamBuilder(trainerTeam());
+    TrainerMenu *TB = new TrainerMenu();
     MainEngineRoutine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));

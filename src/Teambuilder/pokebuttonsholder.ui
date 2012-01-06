@@ -62,7 +62,7 @@
   <customwidget>
    <class>PokeButton</class>
    <extends>QPushButton</extends>
-   <header>pokebutton.h</header>
+   <header>../Teambuilder/pokebutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

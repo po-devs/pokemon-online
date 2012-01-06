@@ -7,10 +7,6 @@
 #include "centralwidget.h"
 #include "teamholder.h"
 
-class TB_Menu;
-class TeamBuilder;
-class Client;
-class ServerChoice;
 class PluginManager;
 
 /* The main window!
