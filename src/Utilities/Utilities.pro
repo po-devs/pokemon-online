@@ -19,3 +19,6 @@ HEADERS += otherwidgets.h \
     coreclasses.h
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+include(../Shared/Common.pri)
+
