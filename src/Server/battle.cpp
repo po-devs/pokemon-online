@@ -2230,7 +2230,7 @@ bool BattleSituation::testStatus(int player)
     }
 
     if (poke(player).status() == Pokemon::Asleep) {
-        if (poke(player).statusCount() > 0) {
+        if (poke(player).statusCount() > (gen() == 1 ? 1 : 0)) {
             //Early bird
             poke(player).statusCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
             notify(All, StatusMessage, player, qint8(FeelAsleep));
