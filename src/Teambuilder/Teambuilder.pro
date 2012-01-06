@@ -110,7 +110,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../Utilities/coreclasses.h \
     teamholder.h \
     trainermenu.h \
-    pokebuttonsholder.h
+    pokebuttonsholder.h \
+    teamholderinterface.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
