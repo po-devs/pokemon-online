@@ -104,3 +104,24 @@ void cropImage(QImage &p)
         memcpy(p.scanLine(k), buffer, p.bytesPerLine());
     }
 }
+
+QString appDataPath(const QString &subfolder, bool createFolder)
+{
+#if defined(Q_OS_MAC)
+    QString path = QDir::homePath() + "/Library/Application Support/Pokemon Online/" + subfolder;
+#elif defined(Q_OS_LINUX)
+    QString path = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
+              + "/Dreambelievers/Pokemon Online/"+subfolder;
+#elif defined(Q_OS_WIN32)
+    QString path = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath()) + "/Pokemon Online/" + subfolder;
+#else
+    QString path = "AppData/"+subfolder;
+#endif
+
+    if (createFolder) {
+        QDir d;
+        d.mkpath(path);
+    }
+
+    return path;
+}
