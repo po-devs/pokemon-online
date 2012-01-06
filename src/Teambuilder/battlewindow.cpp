@@ -819,6 +819,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int 
     setStyleSheet(QString("background: %1;").arg(Theme::TypeColor(type).name()));
 
     setToolTip(ttext);
+    setAccessibleName(MoveInfo::Name(b.num()));
 }
 
 ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, int gen)
@@ -860,6 +861,7 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, in
     changePics(Theme::path(model.arg("D")), Theme::path(model.arg("H")), Theme::path(model.arg("C")));
 
     setToolTip(ttext);
+    setAccessibleName(MoveInfo::Name(b.num()));
 }
 
 PokeZone::PokeZone(const TeamProxy &team)
@@ -910,6 +912,7 @@ void PokeButton::update()
     }
     
     updateToolTip();
+    setAccessibleName(PokemonInfo::Name(p->num()));
 }
 
 void PokeButton::updateToolTip()
