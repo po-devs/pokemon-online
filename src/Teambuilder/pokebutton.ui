@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>10</verstretch>
    </sizepolicy>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="sprite">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -37,11 +37,8 @@
        <height>60</height>
       </size>
      </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
      <property name="text">
-      <string>image</string>
+      <string/>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -49,7 +46,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="level">
      <property name="text">
       <string>Lv. 100</string>
      </property>
@@ -61,7 +58,7 @@
    <item row="0" column="1" rowspan="3">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="number">
        <property name="text">
         <string>#1</string>
        </property>
@@ -71,7 +68,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="nickname">
        <property name="text">
         <string>Nickname</string>
        </property>
@@ -81,7 +78,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="species">
        <property name="text">
         <string>Species</string>
        </property>
@@ -108,14 +105,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="itemLabel">
        <property name="text">
         <string>Item</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="item">
        <property name="minimumSize">
         <size>
          <width>24</width>
