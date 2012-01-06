@@ -17,3 +17,5 @@ HEADERS += usagestats.h \
     ../Server/playerinterface.h \
     ../Server/serverinterface.h \
     ../Server/battleinterface.h
+
+include(../Shared/Common.pri)

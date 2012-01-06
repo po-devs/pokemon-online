@@ -122,12 +122,15 @@ CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
 CONFIG(nosysteminscript):DEFINES += PO_SCRIPT_NO_SYSTEM
 
 macx {
-   INCLUDEPATH += /usr/local/gcc-4.6.2/include
-   LIBS += -L/usr/local/gcc-4.6.2/lib -framework CoreFoundation
+   LIBS += -framework CoreFoundation
    # Todo: get a real icon
    #ICON = pokemononline.icns
    QMAKE_INFO_PLIST = Info.plist
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
 }
 
+
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+include(../Shared/Common.pri)
+

@@ -16,14 +16,12 @@ HEADERS += pokemonstructs.h \
     teamsaver.h \
     enums.h \
     ../Shared/config.h
+
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
 LIBS += -L../../bin \
     -lutilities \
     -lzip
 OTHER_FILES += 
 
-macx {
-    INCLUDEPATH += /usr/local/include
-    LIBS += -L/usr/local/lib
-}
-
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+include(../Shared/Common.pri)
