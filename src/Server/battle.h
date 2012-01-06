@@ -6,6 +6,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
+#include "../Utilities/coreclasses.h"
 #include "battleinterface.h"
 #include "battlepluginstruct.h"
 #include "battlecounters.h"
@@ -291,20 +292,16 @@ public:
     void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
 
     void notifyFail(int p);
-    /* Here C++0x would make it so much better looking with variadic templates! */
-    void notify(int player, int command, int who);
-    template<class T>
-    void notify(int player, int command, int who, const T& param);
-    template<class T1, class T2>
-    void notify(int player, int command, int who, const T1& param1, const T2& param2);
-    template<class T1, class T2, class T3>
-    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3);
-    template<class T1, class T2, class T3, class T4>
-    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4);
-    template<class T1, class T2, class T3, class T4, class T5>
-    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5);
-    template<class T1, class T2, class T3, class T4, class T5, class T6>
-    void notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6);
+    /* Sends data to players */
+    template <typename ...Params>
+    void notify(int player, int command, int who, Params&&... params) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out.pack(uchar(command), qint8(who), std::forward<Params>(params)...);
+
+        emitCommand(who, player, tosend);
+    }
 public slots:
     void battleChoiceReceived(int id, const BattleChoice &b);
     void battleChat(int id, const QString &str);
@@ -684,89 +681,6 @@ private:
 
     BattleConfiguration conf;
 };
-
-inline void BattleSituation::notify(int player, int command, int who)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who);
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T>
-void BattleSituation::notify(int player, int command, int who, const T& param)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param;
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T1, class T2>
-void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param1 << param2;
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T1, class T2, class T3>
-void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param1 << param2 << param3;
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T1, class T2, class T3, class T4>
-void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4;
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T1, class T2, class T3, class T4, class T5>
-void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5;
-
-    emitCommand(who, player, tosend);
-}
-
-template<class T1, class T2, class T3, class T4, class T5, class T6>
-void BattleSituation::notify(int player, int command, int who, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << qint8(who) << param1 << param2 << param3 << param4 << param5 << param6;
-
-    emitCommand(who, player, tosend);
-}
 
 Q_DECLARE_METATYPE(QSharedPointer<QSet<int> >)
 

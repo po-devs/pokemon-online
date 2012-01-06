@@ -7,6 +7,7 @@
 class QIdTreeWidgetItem;
 class QScrollDownTextBrowser;
 class Client;
+class DataStream;
 
 class Channel : public QObject {
     Q_OBJECT
@@ -73,7 +74,7 @@ public:
     void printLine(const QString &str, bool flashing = true, bool act=true);
     void printHtml(const QString &str, bool act = true);
 
-    void dealWithCommand(int command, QDataStream *stream);
+    void dealWithCommand(int command, DataStream *stream);
     QHash<qint32, Battle> &getBattles();
 
     /* removes if necessary (i.e. empty) a tier */

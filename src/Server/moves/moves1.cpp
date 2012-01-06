@@ -1268,7 +1268,7 @@ struct MMCounter : public MM
             return;
         }
         /* In gen 1, only Normal and Fighting moves are countered */
-        if (b.gen() == 1 && type(b,s) != Type::Fighting && type(b,s) != Type::Normal) {
+        if (b.gen() == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
             return;
         }
 

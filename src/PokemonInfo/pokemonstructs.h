@@ -10,12 +10,12 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include <QSet>
 #include <QIcon>
 #include <QPixmap>
-#include <QDataStream>
 #include "../Utilities/functions.h"
 #include "enums.h"
 
 class QDomElement;
 class QDomDocument;
+class DataStream;
 
 namespace Pokemon {
 class uniqueId
@@ -234,6 +234,7 @@ public:
 
 class Team
 {
+    PROPERTY(QString, defaultTier);
 protected:
     PokeTeam m_pokes[6];
     quint8 m_gen;
@@ -245,34 +246,6 @@ public:
 
     const PokeTeam & poke(int index) const {return m_pokes[index];}
     PokeTeam & poke(int index) {return m_pokes[index];}
-};
-
-class TrainerTeam
-{
-    PROPERTY(quint16, avatar);
-    PROPERTY(QString, defaultTier);
-protected:
-    Team m_team;
-    QString m_trainerNick;
-    QString m_trainerInfo;
-    QString m_trainerWin;
-    QString m_trainerLose;
-
-public:
-    TrainerTeam();
-
-    const Team & team() const;
-    Team & team();
-
-    void setTrainerInfo(const QString &newinfo);
-    void setTrainerWin(const QString &newwin);
-    void setTrainerLose(const QString &newlose);
-    void setTrainerNick(const QString &newnick);
-
-    const QString & trainerInfo() const;
-    const QString & trainerWin() const;
-    const QString & trainerLose() const;
-    const QString & trainerNick() const;
 
     bool loadFromFile(const QString &path);
     void toXml(QDomDocument &doc) const;
@@ -283,27 +256,25 @@ public:
 };
 
 /* Dialog for loading/saving team */
-void saveTTeamDialog(const TrainerTeam &team, QObject *receiver=NULL, const char *slot=NULL);
-void loadTTeamDialog(TrainerTeam &team, QObject *receiver=NULL, const char *slot=NULL);
+void saveTTeamDialog(const Team &team, QObject *receiver=NULL, const char *slot=NULL);
+void loadTTeamDialog(Team &team, QObject *receiver=NULL, const char *slot=NULL);
 
-QDataStream & operator << (QDataStream & out,const Team & team);
-QDataStream & operator << (QDataStream & out,const TrainerTeam & trainerTeam);
+DataStream & operator << (DataStream & out,const Team & team);
 
-QDataStream & operator >> (QDataStream & in,Team & team);
-QDataStream & operator >> (QDataStream & in,PokeTeam & Pokemon);
-QDataStream & operator >> (QDataStream & in,TrainerTeam & trainerTeam);
+DataStream & operator >> (DataStream & in,Team & team);
+DataStream & operator >> (DataStream & in,PokeTeam & Pokemon);
 
 
-QDataStream & operator << (QDataStream & out,const PokePersonal & Pokemon);
-QDataStream & operator >> (QDataStream & in,PokePersonal & Pokemon);
+DataStream & operator << (DataStream & out,const PokePersonal & Pokemon);
+DataStream & operator >> (DataStream & in,PokePersonal & Pokemon);
 
 inline uint qHash(const Pokemon::uniqueId &key)
 {
     return qHash(key.toPokeRef());
 }
 
-QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id);
-QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id);
+DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);
+DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id);
 
 Q_DECLARE_METATYPE(Pokemon::uniqueId);
 

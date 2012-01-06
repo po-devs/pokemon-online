@@ -1,10 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
+#include <QMainWindow>
 #include "engineinterface.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
+#include "teamholder.h"
 
 class TB_Menu;
 class TeamBuilder;
@@ -60,10 +61,10 @@ private:
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
 
-    TrainerTeam m_team;
+    TeamHolder *m_team;
 public:
-    TrainerTeam *trainerTeam() {
-        return &m_team;
+    TeamHolder *trainerTeam() {
+        return m_team;
     }
     ThemeAccessor *theme();
 };

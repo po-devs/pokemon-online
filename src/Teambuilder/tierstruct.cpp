@@ -1,3 +1,4 @@
+#include "../Utilities/coreclasses.h"
 #include "tierstruct.h"
 
 TierNode::TierNode(const QString &s) : name(s)
@@ -25,8 +26,7 @@ void TierNode::buildFromRaw(QByteArray raw)
     clean();
     pathToTiers = new QHash<QString, QVector<QString> >();
 
-    QDataStream stream(&raw, QIODevice::ReadOnly);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(&raw, QIODevice::ReadOnly);
 
     int lastLevel = 0;
     uchar currentLevel = 0;

@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include "../Utilities/coreclasses.h"
+
 PokeBaseStats::PokeBaseStats(quint8 base_hp, quint8 base_att, quint8 base_def, quint8 base_spAtt, quint8 base_spDef, quint8 base_spd)
 {
     setBaseHp(base_hp);
@@ -580,62 +582,6 @@ void Team::setGen(int gen)
     }
 }
 
-TrainerTeam::TrainerTeam()
-{
-    avatar() = 0;
-}
-
-const QString & TrainerTeam::trainerInfo() const
-{
-    return m_trainerInfo;
-}
-
-const QString & TrainerTeam::trainerLose() const
-{
-    return m_trainerLose;
-}
-
-const QString & TrainerTeam::trainerWin() const
-{
-    return m_trainerWin;
-}
-
-const QString & TrainerTeam::trainerNick() const
-{
-    return m_trainerNick;
-}
-
-
-void TrainerTeam::setTrainerInfo(const QString &newinfo)
-{
-    m_trainerInfo = newinfo;
-}
-
-void TrainerTeam::setTrainerWin(const QString &newwin)
-{
-    m_trainerWin = newwin;
-}
-
-void TrainerTeam::setTrainerLose(const QString &newlose)
-{
-    m_trainerLose = newlose;
-}
-
-void TrainerTeam::setTrainerNick(const QString &newnick)
-{
-    m_trainerNick = newnick;
-}
-
-const Team & TrainerTeam::team() const
-{
-    return m_team;
-}
-
-Team & TrainerTeam::team()
-{
-    return m_team;
-}
-
 QDomElement & PokeTeam::toXml(QDomElement &el) const
 {
     QDomDocument doc;
@@ -680,30 +626,22 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     return el;
 }
 
-void TrainerTeam::toXml(QDomDocument &document) const
+void Team::toXml(QDomDocument &document) const
 {
     QDomElement Team = document.createElement("Team");
-    Team.setAttribute("gen", team().gen());
+    Team.setAttribute("gen", gen());
     Team.setAttribute("defaultTier", defaultTier());
     Team.setAttribute("version", 1);
     document.appendChild(Team);
-    QDomElement trainer = document.createElement("Trainer");
-    Team.appendChild(trainer);
-    QDomText trainerName = document.createTextNode(trainerNick());
-    trainer.appendChild(trainerName);
-    trainer.setAttribute("winMsg",trainerWin());
-    trainer.setAttribute("loseMsg",trainerLose());
-    trainer.setAttribute("infoMsg",trainerInfo());
-    trainer.setAttribute("avatar", avatar());
 
     for(int i = 0; i < 6; i++)
     {
         QDomElement pokemon = document.createElement("Pokemon");
-        Team.appendChild(team().poke(i).toXml(pokemon));
+        Team.appendChild(poke(i).toXml(pokemon));
     }
 }
 
-QString TrainerTeam::toXml() const
+QString Team::toXml() const
 {
     QDomDocument document;
 
@@ -712,7 +650,7 @@ QString TrainerTeam::toXml() const
     return document.toString();
 }
 
-bool TrainerTeam::saveToFile(const QString &path) const
+bool Team::saveToFile(const QString &path) const
 {
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly))
@@ -730,7 +668,7 @@ bool TrainerTeam::saveToFile(const QString &path) const
     return true;
 }
 
-void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slot)
+void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
     QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
@@ -743,7 +681,7 @@ void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slo
 #endif
     f->show();
 
-    TeamSaver *t = new TeamSaver(const_cast<TrainerTeam*>(&team));
+    TeamSaver *t = new TeamSaver(const_cast<Team*>(&team));
     t->setParent(f);
 
     QObject::connect(f, SIGNAL(fileSelected(QString)), t, SLOT(fileNameReceived(QString)));
@@ -751,7 +689,7 @@ void saveTTeamDialog(const TrainerTeam &team, QObject *receiver, const char *slo
         QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
 }
 
-void loadTTeamDialog(TrainerTeam &team, QObject *receiver, const char *slot)
+void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
     QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
@@ -849,7 +787,7 @@ int PokeTeam::gen() const
     return PokePersonal::gen();
 }
 
-bool TrainerTeam::loadFromFile(const QString &path)
+bool Team::loadFromFile(const QString &path)
 {
     QFile file(path);
     if (!file.open(QFile::ReadOnly))
@@ -880,27 +818,14 @@ bool TrainerTeam::loadFromFile(const QString &path)
     int gen = team.attribute("gen", "4").toInt();
     if (gen < GEN_MIN || gen > GEN_MAX)
         gen = GEN_MAX;
-    this->team().setGen(gen);
+    setGen(gen);
     defaultTier() = team.attribute("defaultTier");
-
-    QDomElement trainer = team.firstChildElement("Trainer");
-    if(trainer.isNull())
-    {
-        QMessageBox::information(0,QObject::tr("Load Team"),QObject::tr("Error while loading the team."));
-        return false;
-    }
-
-    setTrainerNick(trainer.text());
-    setTrainerInfo(trainer.attribute("infoMsg"));
-    setTrainerLose(trainer.attribute("loseMsg"));
-    setTrainerWin(trainer.attribute("winMsg"));
-    avatar() = trainer.attribute("avatar", 0).toInt();
 
     QDomElement poke = team.firstChildElement("Pokemon");
     int cpt = 0;
     while(!poke.isNull())
     {
-        this->team().poke(cpt).loadFromXml(poke, version);
+        this->poke(cpt).loadFromXml(poke, version);
 
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
@@ -909,7 +834,7 @@ bool TrainerTeam::loadFromFile(const QString &path)
 }
 
 /******** Really ugly *********/
-bool TrainerTeam::importFromTxt(const QString &file1)
+bool Team::importFromTxt(const QString &file1)
 {
     QString file = file1;
     file.replace("---", "");
@@ -925,7 +850,7 @@ bool TrainerTeam::importFromTxt(const QString &file1)
         }
 
         QStringList first = pokeDetail[0].split('@');
-        PokeTeam &p = team().poke(i);
+        PokeTeam &p = this->poke(i);
         p.reset();
 
         Pokemon::uniqueId pokenum;
@@ -1115,14 +1040,14 @@ bool TrainerTeam::importFromTxt(const QString &file1)
 }
 
 /******** Less ugly *********/
-QString TrainerTeam::exportToTxt() const
+QString Team::exportToTxt() const
 {
     QString ret = "";
     for (int i = 0; i < 6; i++) {
-        if (team().poke(i).num() == Pokemon::NoPoke)
+        if (this->poke(i).num() == Pokemon::NoPoke)
             continue;
 
-        const PokeTeam &p = team().poke(i);
+        const PokeTeam &p = this->poke(i);
 
         ret += p.nickname();
 
@@ -1184,7 +1109,7 @@ QString TrainerTeam::exportToTxt() const
 }
 
 
-QDataStream & operator << (QDataStream & out, const Team & team)
+DataStream & operator << (DataStream & out, const Team & team)
 {
     out << quint8(team.gen());
 
@@ -1197,43 +1122,7 @@ QDataStream & operator << (QDataStream & out, const Team & team)
     return out;
 }
 
-
-QDataStream &operator << (QDataStream &out, const TrainerTeam& trainerTeam)
-{
-    out << trainerTeam.trainerNick();
-    out << trainerTeam.trainerInfo();
-    out << trainerTeam.trainerLose();
-    out << trainerTeam.trainerWin();
-    out << trainerTeam.avatar();
-    out << trainerTeam.defaultTier();
-    out << trainerTeam.team();
-
-    return out;
-}
-
-
-QDataStream &operator >> (QDataStream &in, TrainerTeam& trainerTeam)
-{
-    QString nick, info, lose, win;
-
-    in >> nick;
-    in >> info;
-    in >> lose;
-    in >> win;
-    in >> trainerTeam.avatar();
-    in >> trainerTeam.defaultTier();
-    in >> trainerTeam.team();
-
-
-    trainerTeam.setTrainerNick(nick);
-    trainerTeam.setTrainerInfo(info);
-    trainerTeam.setTrainerWin(win);
-    trainerTeam.setTrainerLose(lose);
-
-    return in;
-}
-
-QDataStream & operator >> (QDataStream & in, Team & team)
+DataStream & operator >> (DataStream & in, Team & team)
 {
     quint8 gen;
 
@@ -1250,7 +1139,7 @@ QDataStream & operator >> (QDataStream & in, Team & team)
 }
 
 
-QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
+DataStream & operator >> (DataStream & in, PokeTeam & poke)
 {
     Pokemon::uniqueId num;
     in >> num;
@@ -1283,7 +1172,7 @@ QDataStream & operator >> (QDataStream & in, PokeTeam & poke)
 }
 
 
-QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
+DataStream & operator << (DataStream & out, const PokePersonal & Pokemon)
 {
     out << Pokemon.num();
     out << Pokemon.nickname();
@@ -1310,7 +1199,7 @@ QDataStream & operator << (QDataStream & out, const PokePersonal & Pokemon)
     return out;
 }
 
-QDataStream & operator >> (QDataStream & in, PokePersonal & poke)
+DataStream & operator >> (DataStream & in, PokePersonal & poke)
 {
     in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
 
@@ -1409,14 +1298,14 @@ bool Pokemon::uniqueId::extract_short(const QString &from, quint16 &pokenum, QSt
     return result;
 }
 
-QDataStream & operator << (QDataStream &out, const Pokemon::uniqueId &id)
+DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id)
 {
     out << id.pokenum;
     out << id.subnum;
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, Pokemon::uniqueId &id)
+DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id)
 {
     in >> id.pokenum;
     in >> id.subnum;

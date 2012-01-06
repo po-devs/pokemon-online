@@ -42,7 +42,7 @@ signals:
 private:
     /* internal variables for the protocol */
     bool commandStarted;
-    quint16 remainingLength;
+    quint32 remainingLength;
 };
 
 #endif // NETWORK_H

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "tiertree.h"
 #include "tier.h"
+#include "../Utilities/coreclasses.h"
 
 TierCategory::~TierCategory()
 {
@@ -23,7 +24,7 @@ void TierCategory::cleanCategories()
     }
 }
 
-void TierCategory::serialize(QDataStream &stream, int level)
+void TierCategory::serialize(DataStream &stream, int level)
 {
     if (!root) {
         TierNode::serialize(stream, level);
@@ -294,8 +295,7 @@ QByteArray TierTree::buildTierList()
 {
     QByteArray toWrite;
 
-    QDataStream stream(&toWrite, QIODevice::WriteOnly);
-    stream.setVersion(QDataStream::Qt_4_7);
+    DataStream stream(&toWrite, QIODevice::WriteOnly);
 
     root.serialize(stream, -1);
 

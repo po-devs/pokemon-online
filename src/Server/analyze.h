@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <QColor>
 #include "network.h"
+#include "../Utilities/coreclasses.h"
 
 class TeamBattle;
 class Battle;
@@ -75,19 +76,19 @@ public:
     void delay();
 
     /* Convenience functions to avoid writing a new one every time */
-    void notify(int command);
-    template<class T>
-    void notify(int command, const T& param);
-    template<class T1, class T2>
-    void notify(int command, const T1& param1, const T2& param2);
-    template<class T1, class T2, class T3>
-    void notify(int command, const T1& param1, const T2& param2, const T3 &param3);
-    template<class T1, class T2, class T3, class T4>
-    void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4);
-    template<class T1, class T2, class T3, class T4, class T5>
-    void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4,const T5 &param5);
-    template<class T1, class T2, class T3, class T4, class T5, class T6>
-    void notify(int command, const T1& param1, const T2& param2, const T3 &param3, const T4 &param4,const T5 &param5, const T6 &param6);
+    inline void emitCommand(const QByteArray &command) {
+        emit sendCommand(command);
+    }
+
+    template <typename ...Params>
+    void notify(int command, Params&&... params) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out.pack(uchar(command), std::forward<Params>(params)...);
+
+        emitCommand(tosend);
+    }
     template<class T>
     void notify_expand(int command, const T &paramList);
 signals:
@@ -97,7 +98,7 @@ signals:
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(TeamInfo &team, bool ladder, bool showteam, QColor c);
-    void serverPasswordSent(const QString &hash);
+    void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
     void teamReceived(TeamInfo &team);
     void connected();
@@ -110,7 +111,7 @@ signals:
     void battleSpectateEnded(int id);
     void battleSpectateChat(int id, const QString &chat);
     void wannaRegister();
-    void sentHash(QString);
+    void sentHash(QByteArray);
     void kick(int id);
     void ban(int id);
     void banRequested(const QString &name);
@@ -181,24 +182,12 @@ Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<Socke
     delayCount = 0;
 }
 
-template<class T>
-void Analyzer::notify(int command, const T& param)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param;
-
-    emit sendCommand(tosend);
-}
 
 template<class T>
 void Analyzer::notify_expand(int command, const T& paramList)
 {
     QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    DataStream out(&tosend, QIODevice::WriteOnly);
 
     out << uchar(command);
 
@@ -212,64 +201,5 @@ void Analyzer::notify_expand(int command, const T& paramList)
     emit sendCommand(tosend);
 }
 
-template<class T1, class T2>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2, class T3>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2 << param3;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2, class T3, class T4>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2 << param3 << param4;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2, class T3, class T4,class T5>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4, const T5 &param5)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2 << param3 << param4 << param5;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2, class T3, class T4,class T5, class T6>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3, const T4 &param4, const T5 &param5, const T6 &param6)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2 << param3 << param4 << param5 << param6;
-
-    emit sendCommand(tosend);
-}
 
 #endif // ANALYZE_H

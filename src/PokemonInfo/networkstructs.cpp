@@ -1,4 +1,6 @@
 #include "networkstructs.h"
+#include "../Utilities/coreclasses.h"
+#include "../Shared/config.h"
 
 PokePersonal & TeamInfo::pokemon(int num)
 {
@@ -11,7 +13,7 @@ const PokePersonal & TeamInfo::pokemon(int num) const
     return m_pokes[num];
 }
 
-QDataStream &operator << (QDataStream &out, const TeamInfo& team)
+DataStream &operator << (DataStream &out, const TeamInfo& team)
 {
     out << team.name;
     out << team.info;
@@ -28,7 +30,7 @@ QDataStream &operator << (QDataStream &out, const TeamInfo& team)
     return out;
 }
 
-QDataStream &operator >> (QDataStream &in, TeamInfo& team)
+DataStream &operator >> (DataStream &in, TeamInfo& team)
 {
     in >> team.name;
     in >> team.info;
@@ -62,7 +64,7 @@ QDataStream &operator >> (QDataStream &in, TeamInfo& team)
     return in;
 }
 
-QDataStream &operator << (QDataStream &out, const BasicInfo& team)
+DataStream &operator << (DataStream &out, const BasicInfo& team)
 {
     out << team.name;
     out << team.info;
@@ -70,7 +72,7 @@ QDataStream &operator << (QDataStream &out, const BasicInfo& team)
     return out;
 }
 
-QDataStream &operator >> (QDataStream &in, BasicInfo& team)
+DataStream &operator >> (DataStream &in, BasicInfo& team)
 {
     in >> team.name;
     in >> team.info;
@@ -83,7 +85,7 @@ QDataStream &operator >> (QDataStream &in, BasicInfo& team)
 }
 
 
-QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
+DataStream & operator >> (DataStream &in, PlayerInfo &p)
 {
     in >> p.id;
     in >> p.team;
@@ -103,7 +105,7 @@ QDataStream & operator >> (QDataStream &in, PlayerInfo &p)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
+DataStream & operator << (DataStream &out, const PlayerInfo &p)
 {
     out << p.id;
     out << p.team;
@@ -123,26 +125,12 @@ QDataStream & operator << (QDataStream &out, const PlayerInfo &p)
     return out;
 }
 
-QDataStream & operator >> (QDataStream &in, FullInfo &p)
-{
-    in >> p.team >> p.ladder >> p.showteam >> p.nameColor;
-
-    return in;
-}
-
-QDataStream & operator << (QDataStream &out, const FullInfo &p)
-{
-    out << p.team << p.ladder << p.showteam << p.nameColor;
-
-    return out;
-}
-
 Battle::Battle(int id1, int id2) : id1(id1), id2(id2)
 {
 
 }
 
-QDataStream & operator >> (QDataStream &in, Battle &p)
+DataStream & operator >> (DataStream &in, Battle &p)
 {
     //in >> p.battleid >> p.id1 >> p.id2;
     in >> p.id1 >> p.id2;
@@ -150,10 +138,142 @@ QDataStream & operator >> (QDataStream &in, Battle &p)
     return in;
 }
 
-QDataStream & operator << (QDataStream &out, const Battle &p)
+DataStream & operator << (DataStream &out, const Battle &p)
 {
     //out << p.battleid << p.id1 << p.id2;
     out << p.id1 << p.id2;
 
+    return out;
+}
+
+Flags::Flags(quint32 data) : data(data) {
+}
+
+bool Flags::operator [](int index) const {
+    return data & (1 << index);
+}
+
+void Flags::setFlag(int index, bool value)
+{
+    if (value) {
+        data|= (1 << index);
+    } else {
+        data &=  ~(1 << index);
+    }
+}
+
+void Flags::setFlags(quint32 flags)
+{
+    data = flags;
+}
+
+DataStream &operator << (DataStream &out, const Flags &f) {
+    for (int i = 0; i==0 || f.data>>(i*8); i++) {
+        char c = f.data >> i*8;
+        if (f.data >> ((i+1)*8)) {
+            c |= 1 << 8;
+        }
+        out << c;
+    }
+
+    return out;
+}
+
+DataStream &operator >> (DataStream &in, Flags &f) {
+    f.data = 0;
+
+    uchar c(0);
+
+    for (int i = 0; i == 0 || c & (1 << 8); i++) {
+        in >> c;
+        f.data |= c << (i * 8);
+        c &= ~(1 << (i*8+7)); /* Remove marker bit if present */
+    }
+
+    return in;
+}
+
+ProtocolVersion::ProtocolVersion()
+{
+    version = PROTOCOL_VERSION;
+    subversion = PROTOCOL_SUBVERSION;
+}
+
+DataStream &operator >> (DataStream &in, ProtocolVersion &p)
+{
+    in >> p.version >> p.subversion;
+    return in;
+}
+
+DataStream &operator << (DataStream &out, const ProtocolVersion &p)
+{
+    out << p.version << p.subversion;
+    return out;
+}
+
+VersionControl::VersionControl(quint8 versionNumber) : stream(&data, QIODevice::ReadWrite), versionNumber(versionNumber)
+{
+
+}
+
+DataStream & operator >> (DataStream &in, VersionControl &v)
+{
+    quint16 length;
+    in >> length;
+
+    v.data.resize(length);
+    in.readRawData(v.data.data(), length);
+    v.stream >> v.versionNumber;
+
+    return in;
+}
+
+DataStream & operator << (DataStream &out, const VersionControl &v)
+{
+    out << quint16(v.data.length() + 1);
+    out << v.versionNumber;
+    out.writeRawData(v.data, v.data.length());
+
+    return out;
+}
+
+TrainerInfo::TrainerInfo() : avatar(0) {
+}
+
+
+DataStream & operator >> (DataStream &in, TrainerInfo &i)
+{
+    VersionControl v;
+    in >> v;
+
+    if (i.version != v.versionNumber) {
+        return in;
+    }
+
+    Flags network;
+    v.stream >> network >> i.avatar >> i.info;
+
+    if (network[TrainerInfo::HasWinningMessages]) {
+        v.stream >> i.winning >> i.losing >> i.tie;
+    }
+
+    return in;
+}
+
+DataStream & operator << (DataStream &out, const TrainerInfo &i)
+{
+    VersionControl v(i.version);
+    Flags network;
+
+    bool messages = !i.winning.isEmpty() || !i.losing.isEmpty() || !i.tie.isEmpty();
+
+    network.setFlag(TrainerInfo::HasWinningMessages, messages);
+
+    v.stream << network << i.avatar << i.info;
+    if (messages) {
+        v.stream << i.winning << i.losing << i.tie;
+    }
+
+    out << v;
     return out;
 }

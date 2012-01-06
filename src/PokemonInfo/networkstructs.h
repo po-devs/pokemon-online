@@ -2,6 +2,7 @@
 #define NETWORKSTRUCTS_H
 
 #include "pokemonstructs.h"
+#include "../Utilities/coreclasses.h"
 
 /* Only the infos needed by the server */
 class TeamInfo
@@ -16,8 +17,8 @@ public:
     quint8 gen;
 };
 
-QDataStream & operator << (QDataStream & out,const TeamInfo & team);
-QDataStream & operator >> (QDataStream & in,TeamInfo & team);
+DataStream & operator << (DataStream & out,const TeamInfo & team);
+DataStream & operator >> (DataStream & in,TeamInfo & team);
 
 /* Only infos needed by other players */
 class BasicInfo
@@ -55,18 +56,18 @@ struct UserInfo
     bool tempBanned() const { return flags & TempBanned;}
 };
 
-inline QDataStream & operator << (QDataStream &d, const UserInfo &ui) {
+inline DataStream & operator << (DataStream &d, const UserInfo &ui) {
     d << ui.flags << ui.auth << ui.ip << ui.name << ui.date;
     return d;
 }
 
-inline QDataStream & operator >> (QDataStream &d, UserInfo &ui) {
+inline DataStream & operator >> (DataStream &d, UserInfo &ui) {
     d >> ui.flags >> ui.auth >> ui.ip >> ui.name >> ui.date;
     return d;
 }
 
-QDataStream & operator << (QDataStream & out,const BasicInfo & team);
-QDataStream & operator >> (QDataStream & in,BasicInfo & team);
+DataStream & operator << (DataStream & out,const BasicInfo & team);
+DataStream & operator >> (DataStream & in,BasicInfo & team);
 
 /* Struct representing a player's data */
 class PlayerInfo
@@ -106,21 +107,8 @@ public:
     }
 };
 
-QDataStream & operator >> (QDataStream &in, PlayerInfo &p);
-QDataStream & operator << (QDataStream &out, const PlayerInfo &p);
-
-struct FullInfo
-{
-    TrainerTeam team;
-
-    bool ladder;
-    bool showteam;
-    QColor nameColor;
-};
-
-QDataStream & operator >> (QDataStream &in, FullInfo &p);
-QDataStream & operator << (QDataStream &out, const FullInfo &p);
-
+DataStream & operator >> (DataStream &in, PlayerInfo &p);
+DataStream & operator << (DataStream &out, const PlayerInfo &p);
 
 struct Battle
 {
@@ -129,7 +117,75 @@ struct Battle
     Battle(int id1=0, int id2=0);
 };
 
-QDataStream & operator >> (QDataStream &in, Battle &p);
-QDataStream & operator << (QDataStream &out, const Battle &p);
+DataStream & operator >> (DataStream &in, Battle &p);
+DataStream & operator << (DataStream &out, const Battle &p);
+
+/* Flags are like so: for each byte, 7 bits of flag and one bit to tell if there are higher flags (in network)
+  so as to limit the number of bytes sent by networking. That's why you should never have a flag that's 7,
+    15, 23, etc. because it'd possibly mess the networking */
+struct Flags
+{
+    /* For now no flags need more than 2 bytes. If there really needs to be a huge number of flags this
+      number may increase; however for now there's no reason for dynamic allocation & what not */
+    quint32 data;
+
+    Flags(quint32 data=0);
+
+    bool operator [] (int index) const;
+    void setFlag(int index, bool value);
+    void setFlags(quint32 flags);
+};
+
+DataStream & operator >> (DataStream &in, Flags &p);
+DataStream & operator << (DataStream &out, const Flags &p);
+
+namespace PlayerFlags {
+    enum {
+        SupportsZipCompression,
+        ShowTeam,
+        LadderEnabled,
+        Idle,
+        IdsWithMessage
+    };
+}
+
+struct ProtocolVersion
+{
+    quint16 version;
+    quint16 subversion;
+
+    ProtocolVersion();
+};
+
+DataStream & operator >> (DataStream &in, ProtocolVersion &p);
+DataStream & operator << (DataStream &out, const ProtocolVersion &p);
+
+struct VersionControl
+{
+    VersionControl(quint8 versionNumber=0);
+
+    QByteArray data;
+    DataStream stream;
+    quint8 versionNumber;
+};
+
+DataStream & operator >> (DataStream &in, VersionControl &v);
+DataStream & operator << (DataStream &out, const VersionControl &v);
+
+struct TrainerInfo
+{
+    static const quint8 version = 0;
+    enum Flags {
+        HasWinningMessages
+    };
+    TrainerInfo();
+
+    quint16 avatar;
+    QString info;
+    QString winning, losing, tie;
+};
+
+DataStream & operator >> (DataStream &in, TrainerInfo &i);
+DataStream & operator << (DataStream &out, const TrainerInfo &i);
 
 #endif // NETWORKSTRUCTS_H

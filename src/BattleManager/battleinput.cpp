@@ -3,6 +3,7 @@
 #include <QPair>
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/battlecommands.h"
+#include "../Utilities/coreclasses.h"
 
 namespace BC = BattleCommands;
 
@@ -39,8 +40,7 @@ void BattleInput::receiveData(QByteArray inf)
         return;
     }
 
-    QDataStream in (&inf, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_4_7);
+    DataStream in (&inf, QIODevice::ReadOnly);
 
     uchar command;
     qint8 player;
@@ -79,7 +79,7 @@ void BattleInput::unpause(int ticks)
     mCount = 0;
 }
 
-void BattleInput::dealWithCommandInfo(QDataStream &in, uchar command, int spot)
+void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
 {
     switch (command)
     {

@@ -3,9 +3,9 @@
 
 #include <QtCore>
 #include "network.h"
+#include "../Utilities/coreclasses.h"
 
 class Client;
-class FullInfo;
 class PlayerInfo;
 class BattleChoice;
 class TeamBattle;
@@ -13,7 +13,7 @@ class BattleConfiguration;
 class ChallengeInfo;
 class Battle;
 class UserInfo;
-class TrainerTeam;
+class TeamHolder;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -33,11 +33,11 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const FullInfo &team);
+    void login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color);
     void sendMessage(const QString &message);
     void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
-    void sendTeam(const TrainerTeam & team);
+    void sendTeam(const TeamHolder & team);
     void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int id, int result);
     bool isConnected() const;
@@ -46,13 +46,15 @@ public:
     void disconnectFromHost();
 
     /* Convenience functions to avoid writing a new one every time */
-    void notify(int command);
-    template<class T>
-    void notify(int command, const T& param);
-    template<class T1, class T2>
-    void notify(int command, const T1& param1, const T2& param2);
-    template<class T1, class T2, class T3>
-    void notify(int command, const T1& param1, const T2& param2, const T3 &param3);
+    template <typename ...Params>
+    void notify(int command, Params&&... params) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out.pack(uchar(command), std::forward<Params>(params)...);
+
+        emit sendCommand(tosend);
+    }
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
@@ -65,7 +67,7 @@ signals:
     void messageReceived(const QString &mess);
     void htmlMessageReceived(const QString &mess);
     /* Command specific to a channel */
-    void channelCommandReceived(int command, int channel, QDataStream *stream);
+    void channelCommandReceived(int command, int channel, DataStream *stream);
     /* player from the players list */
     void playerReceived(const PlayerInfo &p);
     /* login of a player */
@@ -85,8 +87,8 @@ signals:
     void spectatedBattle(int battleId, const BattleConfiguration &conf);
     void spectatingBattleMessage(int battleId, const QByteArray &mess);
     void spectatingBattleFinished(int battleId);
-    void passRequired(const QString &salt);
-    void serverPassRequired(const QString &salt);
+    void passRequired(const QByteArray &salt);
+    void serverPassRequired(const QByteArray &salt);
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
@@ -147,41 +149,5 @@ private:
 
     Network mysocket;
 };
-
-template<class T>
-void Analyzer::notify(int command, const T& param)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2;
-
-    emit sendCommand(tosend);
-}
-
-template<class T1, class T2, class T3>
-void Analyzer::notify(int command, const T1& param1, const T2 &param2, const T3 &param3)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command) << param1 << param2 << param3;
-
-    emit sendCommand(tosend);
-}
 
 #endif // ANALYZE_H

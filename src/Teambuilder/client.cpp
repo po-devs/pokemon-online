@@ -13,8 +13,9 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "teamholder.h"
 
-Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
+Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
     isConnected = true;
     _mid = -1;
@@ -99,7 +100,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     pal.setColor(QPalette::Base, Qt::blue);
     setPalette(pal);
     myregister->setDisabled(true);
-    mynick = t->trainerNick();
+    mynick = t->name();
 
     s->setSizes(QList<int>() << 200 << 800);
 
@@ -176,8 +177,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
-    connect(relay, SIGNAL(passRequired(QString)), SLOT(askForPass(QString)));
-    connect(relay, SIGNAL(serverPassRequired(QString)), SLOT(serverPass(QString)));
+    connect(relay, SIGNAL(passRequired(QByteArray)), SLOT(askForPass(QByteArray)));
+    connect(relay, SIGNAL(serverPassRequired(QByteArray)), SLOT(serverPass(QByteArray)));
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
@@ -192,7 +193,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
     connect(relay, SIGNAL(channelsListReceived(QHash<qint32,QString>)), SLOT(channelsListReceived(QHash<qint32,QString>)));
     connect(relay, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(channelPlayers(int,QVector<qint32>)));
-    connect(relay, SIGNAL(channelCommandReceived(int,int,QDataStream*)), SLOT(channelCommandReceived(int,int,QDataStream*)));
+    connect(relay, SIGNAL(channelCommandReceived(int,int,DataStream*)), SLOT(channelCommandReceived(int,int,DataStream*)));
     connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
@@ -681,14 +682,14 @@ void Client::startPM(int id)
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(this, SIGNAL(PMDisabled(bool)), p, SLOT(disablePM(bool)));
+    connect(this, SIGNAL(PMDisabled(bool, int)), p, SLOT(disablePM(bool, int)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
@@ -739,7 +740,7 @@ void Client::togglePM(bool b)
     QSettings s;
     s.setValue("pm_disabled", b);
     pmDisabled = b;
-    emit PMDisabled(b);
+    emit PMDisabled(b, player(_mid).auth);
 }
 
 
@@ -987,21 +988,28 @@ void Client::PMReceived(int id, QString pm)
     double difference = difftime(lastAutoPM, current);
     if (mypms.contains(id)) {
         if(pmDisabled) { // We're avoiding that people that was actually chatting with the user continue talking avoiding the Disable PM =-)
-            if((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
             }
-            return;
         }
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
         if(pmDisabled) {
-            if ((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if ((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
+            } else {
+                registerPermPlayer(id);
+                mypms[id]->printLine(pm);
             }
-            return;
         } else {
             if (!playerExist(id) || myIgnored.contains(id)) {
                 return;
@@ -1024,7 +1032,7 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    loadTTeamDialog(*team(), this, SLOT(changeTeam()));
+    loadTTeamDialog(team()->team(), this, SLOT(changeTeam()));
 }
 
 void Client::sendText()
@@ -1057,7 +1065,7 @@ Channel *Client::channel(int channelid)
     return mychannels.value(channelid);
 }
 
-void Client::channelCommandReceived(int command, int channel, QDataStream *stream)
+void Client::channelCommandReceived(int command, int channel, DataStream *stream)
 {
     if (!hasChannel(channel))
         return;
@@ -1270,11 +1278,11 @@ void Client::playerBanned(int dest, int src) {
 }
 
 
-void Client::askForPass(const QString &salt) {
+void Client::askForPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
-    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass, warns);
+    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
     if (!warns.empty()) warns.prepend(""); // for join()
 
     /* Create a dialog for password input */
@@ -1318,15 +1326,15 @@ void Client::askForPass(const QString &salt) {
     pass = passEdit->text();
     if (savePass->isChecked()) {
         // TODO: ipv6 support in the future
-        wallet.saveUserPassword(relay().getIp(), serverName, myteam->trainerNick(), salt, pass);
+        wallet.saveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass);
     }
 
 
-    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toAscii())+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::AskForPass, hash);
 }
 
-void Client::serverPass(const QString &salt) {
+void Client::serverPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
@@ -1372,7 +1380,7 @@ void Client::serverPass(const QString &salt) {
         // TODO: ipv6 support in the future
         wallet.saveServerPassword(relay().getIp(), serverName, pass);
     }
-    QString hash = QString(md5_hash(md5_hash(pass.toAscii())+salt.toAscii()));
+    QByteArray hash = QCryptographicHash::hash(QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5)+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::ServerPass, hash);
 }
 
@@ -1929,8 +1937,7 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    FullInfo f = {*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>()};
-    relay().login(f);
+    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>());
 }
 
 void Client::disconnected()
@@ -1942,7 +1949,7 @@ void Client::disconnected()
     myregister->setEnabled(true);
 }
 
-TrainerTeam* Client::team()
+TeamHolder* Client::team()
 {
     return myteam;
 }
@@ -2165,9 +2172,9 @@ void Client::openTeamBuilder()
 
 void Client::changeTeam()
 {
-    if (battling() && myteam->trainerNick() != mynick) {
+    if (battling() && myteam->name() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
-        myteam->setTrainerNick(mynick);
+        myteam->name() = mynick;
     }
     cancelFindBattle(false);
     relay().sendTeam(*myteam);
@@ -2264,7 +2271,7 @@ void Client::printLine(int event, int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
-            c->printLine(line, false);
+            c->printLine(line, false, false);
     }
 }
 

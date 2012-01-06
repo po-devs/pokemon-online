@@ -5,6 +5,7 @@
 #include "../../Teambuilder/mainwindow.h"
 #include "teambody.h"
 #include "pokebody.h"
+#include "teamholder.h"
 
 //class dockAdvanced
 DockAdvanced::DockAdvanced(TB_TeamBody * builder): m_builder(builder)

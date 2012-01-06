@@ -18,7 +18,8 @@ HEADERS += battlelogs.h\
     ../Server/plugininterface.h \
     ../Server/battleinterface.h \
     battleserverlog.h \
-    ../Shared/battlecommands.h
+    ../Shared/battlecommands.h \
+    ../Utilities/coreclasses.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

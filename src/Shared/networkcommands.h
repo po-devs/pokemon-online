@@ -15,9 +15,9 @@
  */
 
 enum Command {
-    WhatAreYou = 0,
-    WhoAreYou,
+    ZipCommand = 0,
     Login,
+    Unused0,
     Logout,
     SendMessage,
     PlayersList,
@@ -81,3 +81,21 @@ enum ProtocolError {
     UnknownCommand = 0
 };
 
+namespace LoginCommand {
+    enum NetworkFlagsCS {
+        HasClientType = 0,
+        HasVersionNumber,
+        HasReconnect,
+        HasDefaultChannel,
+        HasAdditionalChannels,
+        HasColor,
+        HasTrainerInfo,
+        /* markerbit = 7 */
+        HasTeams = 8,
+        HasEventSpecification,
+        HasPluginList
+    };
+    enum NetworkFlagsSC {
+        HasReconnectPass = 0
+    };
+}

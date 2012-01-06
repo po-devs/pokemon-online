@@ -25,14 +25,14 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(TeamInfo&,bool,bool,QColor)), SLOT(loggedIn(TeamInfo&,bool,bool,QColor)));
-    connect(&relay(), SIGNAL(serverPasswordSent(const QString&)), SLOT(serverPasswordSent(const QString&)));
+    connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
     connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
     connect(&relay(), SIGNAL(battleMessage(int,BattleChoice)), SLOT(battleMessage(int,BattleChoice)));
     connect(&relay(), SIGNAL(battleChat(int,QString)), SLOT(battleChat(int,QString)));
-    connect(&relay(), SIGNAL(sentHash(QString)), SLOT(hashReceived(QString)));
+    connect(&relay(), SIGNAL(sentHash(QByteArray)), SLOT(hashReceived(QByteArray)));
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
@@ -687,6 +687,11 @@ bool Player::battling() const
     return battles.size() > 0;
 }
 
+bool Player::supportsZip() const
+{
+    return true;
+}
+
 bool Player::hasBattle(int battleId) const
 {
     return battles.contains(battleId);
@@ -776,7 +781,7 @@ void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
             waiting_name[i] = uchar((true_rand() % (90-49)) + 49); 
         }    
 
-        relay().notify(NetworkServ::ServerPass, waiting_name);
+        relay().notify(NetworkServ::ServerPass, waiting_name.toAscii());
         return;
     } else {
         server_pass_sent = true;
@@ -785,9 +790,9 @@ void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
     testAuthentification(team.name);
 }
 
-void Player::serverPasswordSent(const QString &_hash)
+void Player::serverPasswordSent(const QByteArray &_hash)
 {
-    if (Server::serverIns->correctPass(_hash.toAscii(), waiting_name.toAscii())) {
+    if (Server::serverIns->correctPass(_hash, waiting_name.toAscii())) {
         server_pass_sent = true;
         waiting_name.clear();
         testAuthentification(team().name);
@@ -835,7 +840,7 @@ void Player::testAuthentificationLoaded()
         }
 
         if (m.isProtected()) {
-            relay().notify(NetworkServ::AskForPass, QString(m.salt));
+            relay().notify(NetworkServ::AskForPass, m.salt);
             return;
         }
 
@@ -1022,10 +1027,10 @@ void Player::userInfoAsked(const QString &name)
     }
 }
 
-void Player::hashReceived(const QString &_hash) {
+void Player::hashReceived(const QByteArray &_hash) {
     if (!server_pass_sent) return; // Don't accept this if we haven't logged in
 
-    QByteArray hash = md5_hash(_hash.toAscii());
+    QByteArray hash = md5_hash(_hash.toHex());
     if (waiting_name.length() > 0) {
         if (battling()) {
             sendMessage("You can't change teams while battling.");

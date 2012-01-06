@@ -3,19 +3,19 @@
 
 #include <QtCore>
 
-class TrainerTeam;
+class Team;
 
 /* Temporary object to manage team saving */
 class TeamSaver : public QObject
 {
     Q_OBJECT
 public:
-    TeamSaver(TrainerTeam *t);
+    TeamSaver(Team *t);
 public slots:
     void fileNameReceived(const QString &name);
     void fileNameReceivedL(const QString &name);
 private:
-    TrainerTeam *t;
+    Team *t;
 };
 
 

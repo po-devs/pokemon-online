@@ -5,8 +5,13 @@
 
 ServerChoice::ServerChoice(const QString &nick)
 {
+    QSettings settings;
+
     registry_connection = new Analyzer(true);
-    registry_connection->connectTo("pokemon-online.dynalias.net", 5081);
+    registry_connection->connectTo(
+            settings.value("registry_server", "pokemon-online.dynalias.net").toString(),
+            settings.value("registry_port", 5081).toUInt()
+    );
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
@@ -39,7 +44,6 @@ ServerChoice::ServerChoice(const QString &nick)
     myName = new QLineEdit(nick);
     l->addWidget(new QEntitled("Trainer Name", myName));
 
-    QSettings settings;
     myAdvServer = new QLineEdit(settings.value("default_server").toString());
     connect(myAdvServer, SIGNAL(returnPressed()), SLOT(advServerChosen()));
 

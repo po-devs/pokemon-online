@@ -4,8 +4,10 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
+#include "teamholder.h"
 
 #include "battlewindow.h"
+
 
 using namespace NetworkCli;
 
@@ -22,9 +24,49 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage << HtmlChannel;
 }
 
-void Analyzer::login(const FullInfo &team)
+void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color)
 {
-    notify(Login, team);
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    Flags network;
+    network.setFlags(LoginCommand::HasClientType | LoginCommand::HasVersionNumber | LoginCommand::HasTrainerInfo
+                     | LoginCommand::HasTeams);
+
+    if (color.isValid()) {
+        network.setFlag(LoginCommand::HasColor, true);
+    }
+    //    HasClientType,
+    //    HasVersionNumber,
+    //    HasReconnect,
+    //    HasDefaultChannel,
+    //    HasAdditionalChannels,
+    //    HasColor,
+    //    HasTrainerInfo,
+    //    HasTeams,
+    //    HasEventSpecification,
+    //    HasPluginList
+
+    Flags data;
+    data.setFlags(PlayerFlags::SupportsZipCompression);
+    data.setFlag(PlayerFlags::LadderEnabled, ladder);
+    data.setFlag(PlayerFlags::ShowTeam, showTeam);
+//                  SupportsZipCompression,
+//                  ShowTeam,
+//                  LadderEnabled,
+//                  Idle,
+//                  IdsWithMessage
+
+    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.name() << data;
+    if (color.isValid()) {
+        out << color;
+    }
+
+    out << team.info();
+
+    out << uchar(1) << team.team();
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
@@ -52,9 +94,9 @@ void Analyzer::sendChanMessage(int channelid, const QString &message)
     notify(ChannelMessage, qint32(channelid), message);
 }
 
-void Analyzer::sendTeam(const TrainerTeam &team)
+void Analyzer::sendTeam(const TeamHolder &team)
 {
-    notify(SendTeam, team);
+    notify(SendTeam, team.team());
 }
 
 void Analyzer::sendBattleResult(int id, int result)
@@ -70,8 +112,7 @@ void Analyzer::battleCommand(int id, const BattleChoice &comm)
 void Analyzer::channelCommand(int command, int channelid, const QByteArray &body)
 {
     QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
+    DataStream out(&tosend, QIODevice::WriteOnly);
     out << uchar(command) << qint32(channelid);
 
     /* We don't know for sure that << body will do what we want (as ServerSide we don't want
@@ -150,8 +191,7 @@ void Analyzer::wasConnected()
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_7);
+    DataStream in (commandline);
     uchar command;
 
     in >> command;
@@ -167,6 +207,45 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         return;
     }
     switch (command) {
+    case ZipCommand: {
+        quint8 contentType;
+
+        in >> contentType;
+
+        if (contentType > 1) {
+            return;
+        }
+
+        int length = commandline.length()-1-1;
+
+        if (length <= 0) {
+            return;
+        }
+        char data[length];
+
+        in.readRawData(data, length);
+
+        QByteArray info = qUncompress((uchar*)data, length);
+
+        if (contentType == 0) {
+            if (info.length() == 0) {
+                return;
+            }
+
+            commandReceived(info);
+        } else { //contentType == 1
+            DataStream in2(info);
+            QByteArray packet;
+            do {
+                in2 >> packet;
+
+                if (packet.length() > 0) {
+                   commandReceived(packet);
+                }
+            } while (packet.length() > 0);
+        }
+        break;
+    }
     case SendMessage: {
 	    QString mess;
 	    in >> mess;
@@ -250,10 +329,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 	    break;
 	}
     case AskForPass: {
-            QString salt;
+            QByteArray salt;
             in >> salt;
 
-            if (salt.length() < 6 || strlen((" " + salt).toUtf8().data()) < 7)
+            if (salt.length() < 6 || strlen((" " + salt).data()) < 7)
                 emit protocolError(5080, tr("The server requires insecure authentication."));
             emit passRequired(salt);
             break;
@@ -337,7 +416,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit spectatingBattleFinished(battleId);
             break;
         }
-    case VersionControl: {
+    case NetworkCli::VersionControl: {
             QString version;
             in >> version;
             if (version != VERSION)
@@ -423,7 +502,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case ServerPass: {
-            QString salt;
+            QByteArray salt;
             in >> salt;
             emit serverPassRequired(salt); 
             break;
@@ -452,15 +531,4 @@ void Analyzer::getBanList()
 void Analyzer::getTBanList()
 {
     notify(GetTBanList);
-}
-
-void Analyzer::notify(int command)
-{
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_7);
-
-    out << uchar(command);
-
-    emit sendCommand(tosend);
 }
