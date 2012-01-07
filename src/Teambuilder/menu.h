@@ -26,6 +26,7 @@ class TB_Menu : public QLabel, public CentralWidgetInterface
         Q_OBJECT
 public:
     TB_Menu();
+    ~TB_Menu();
     /* Creates a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 

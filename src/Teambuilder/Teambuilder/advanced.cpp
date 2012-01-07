@@ -1,5 +1,5 @@
 #include "advanced.h"
-#include "teambuilder.h"
+#include "teambuilder_old.h"
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"

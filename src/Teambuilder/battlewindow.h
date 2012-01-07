@@ -204,7 +204,7 @@ public:
     virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen);
 };
 
-class PokeButton;
+class BattlePokeButton;
 class TeamProxy;
 
 /* When you want to switch pokemons, that's what you see */
@@ -214,7 +214,7 @@ class PokeZone : public QWidget
 public:
     PokeZone(const TeamProxy &team);
 
-    PokeButton *pokes[6];
+    BattlePokeButton *pokes[6];
 signals:
     void switchTo(int poke);
 
@@ -224,11 +224,11 @@ private:
 
 class PokeProxy;
 
-class PokeButton : public QPushButton
+class BattlePokeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    PokeButton(const PokeProxy &p);
+    BattlePokeButton(const PokeProxy &p);
     void changePokemon(const PokeProxy &p);
     void update();
     void updateToolTip();

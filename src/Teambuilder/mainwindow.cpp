@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
-#include "Teambuilder/teambuilder.h"
 #include "client.h"
 #include "serverchoice.h"
 #include "../PokemonInfo/movesetchecker.h"
@@ -12,6 +11,7 @@
 #include "replayviewer.h"
 #include "../Utilities/functions.h"
 #include "teamholder.h"
+#include "teambuilder.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -24,8 +24,8 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue(s, "application_style", "plastique");
-    setDefaultValue(s, "theme_2", "Themes/Balanced/");
+    setDefaultValue(s, "theme_2", "Themes/Classic/");
+    setDefaultValue(s, "profile_location", appDataPath("Profiles", true) + "/profile.xml");
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
@@ -107,9 +107,10 @@ MainEngine::MainEngine() : displayer(0)
     Theme::init(s.value("theme_2").toString());
 
     /* Loading the values */
-    QApplication::setStyle(s.value("application_style").toString());
+    QApplication::setStyle("plastique");
     loadStyleSheet();
-    loadTeam(s.value("team_location").toString());
+
+    trainerTeam()->load();
 
     launchMenu();
 }
@@ -220,8 +221,6 @@ void MainEngine::launchCredits()
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
     d_credit.setStyleSheet(
-                "QWidget {background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-                                                       "stop:0 white, stop:1 #0ca0dd);}"
                 "QLabel {background:transparent}"
                            );
     d_credit.exec();
@@ -242,18 +241,6 @@ void MainEngine::launchServerChoice()
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
     connect(choice, SIGNAL(serverChosen(QString,quint16,QString)), this, SLOT(goOnline(QString,quint16,QString)));
-}
-
-void MainEngine::changeStyle()
-{
-    QAction * a = qobject_cast<QAction *>(sender());
-    if(!a) {
-        return;
-    }
-    QString style = a->text();
-    qApp->setStyle(QStyleFactory::create(style));
-    QSettings setting;
-    setting.setValue("application_style",style);
 }
 
 void MainEngine::changeTheme()
@@ -332,11 +319,6 @@ void MainEngine::quit()
     exit(0);
 }
 
-void MainEngine::loadTeam(const QString &path)
-{
-    trainerTeam()->team().loadFromFile(path);
-}
-
 void MainEngine::loadTeamDialog()
 {
     loadTTeamDialog(trainerTeam()->team());
@@ -357,29 +339,6 @@ void MainEngine::loadReplayDialog()
 void MainEngine::showReplay(QString file)
 {
     new ReplayViewer(file);
-}
-
-void MainEngine::addStyleMenu(QMenuBar *menuBar)
-{
-    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
-    QStringList style = QStyleFactory::keys();
-    QActionGroup *ag = new QActionGroup(menuBar);
-
-    QSettings settings;
-    QString curStyle = settings.value("application_style").toString();
-
-    foreach(QString s , style) {
-        QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
-        ac->setCheckable(true);
-
-        if (s == curStyle) {
-            ac->setChecked(true);
-        }
-        ag->addAction(ac);
-    }
-
-    menuStyle->addSeparator();
-    menuStyle->addAction(tr("Reload StyleSheet"), this, SLOT(loadStyleSheet()));
 }
 
 void MainEngine::addThemeMenu(QMenuBar *menuBar)
@@ -417,6 +376,9 @@ void MainEngine::rebuildThemeMenu()
             ac->setChecked(true);
         ag->addAction(ac);
     }
+
+    themeMenu->addSeparator();
+    themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()));
 }
 
 void MainEngine::changeUserThemeFolder()
