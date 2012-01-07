@@ -57,12 +57,12 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const Q
 //                  Idle,
 //                  IdsWithMessage
 
-    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.name() << data;
+    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.profile().name() << data;
     if (color.isValid()) {
         out << color;
     }
 
-    out << team.info();
+    out << team.profile().info();
 
     out << uchar(1) << team.team();
 

@@ -1,5 +1,5 @@
 #include "dockinterface.h"
-#include "teambuilder.h"
+#include "teambuilder_old.h"
 #include "../../PokemonInfo/pokemonstructs.h"
 #include "advanced.h"
 #include "../../Teambuilder/mainwindow.h"
