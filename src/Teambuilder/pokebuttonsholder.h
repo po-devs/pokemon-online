@@ -21,10 +21,15 @@ public:
 
     int currentSlot() const;
     void setTeam(Team &team);
+signals:
+    void teamChanged();
 private:
     Ui::PokeButtonsHolder *ui;
     PokeButton *pokemonButtons[6];
     QButtonGroup *group;
+
+    Team *m_team;
+    Team &team() {return *m_team;}
 };
 
 #endif // POKEBUTTONSHOLDER_H

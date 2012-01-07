@@ -65,6 +65,14 @@
    <header>../Teambuilder/pokebutton.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pokemon0</tabstop>
+  <tabstop>pokemon1</tabstop>
+  <tabstop>pokemon2</tabstop>
+  <tabstop>pokemon3</tabstop>
+  <tabstop>pokemon4</tabstop>
+  <tabstop>pokemon5</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

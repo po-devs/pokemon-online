@@ -11,6 +11,8 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui->setupUi(this);
     ui->name->setValidator(new QNickValidator(this));
 
+    connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
+
     setupData();
 }
 
@@ -30,6 +32,11 @@ void TrainerMenu::setupData()
     ui->avatarNumber->setValue(team().info().avatar);
     setAvatarPixmap();
 
+    updateTeam();
+}
+
+void TrainerMenu::updateTeam()
+{
     ui->pokemonButtons->setTeam(team().team());
 }
 
