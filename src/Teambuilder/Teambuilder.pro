@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     pokebutton.cpp \
     teamholder.cpp \
     teambuilder.cpp \
-    Teambuilder/teambuilder_old.cpp
+    Teambuilder/teambuilder_old.cpp \
+    teammenu.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -116,7 +117,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teamholderinterface.h \
     pokebutton.h \
     teambuilder.h \
-    Teambuilder/teambuilder_old.h
+    Teambuilder/teambuilder_old.h \
+    teammenu.h \
+    teambuilderwidget.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

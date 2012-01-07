@@ -23,6 +23,7 @@ public:
     void setTeam(Team &team);
 signals:
     void teamChanged();
+    void doubleClicked(int index);
 private:
     Ui::PokeButtonsHolder *ui;
     PokeButton *pokemonButtons[6];

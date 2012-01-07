@@ -2,6 +2,7 @@
 #define POKEBUTTON_H
 
 #include <QPushButton>
+#include <QElapsedTimer>
 
 namespace Ui {
     class PokeButton;
@@ -21,6 +22,7 @@ public:
     void setPokemon(PokeTeam &poke);
 signals:
     void pokemonOrderChanged(int start, int end);
+    void doubleClicked();
 protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
@@ -30,6 +32,7 @@ protected:
 private:
     Ui::PokeButton *ui;
     QPoint startPos;
+    QElapsedTimer lastPress;
 
     PokeTeam *m_poke;
     int num;
