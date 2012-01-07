@@ -12,6 +12,7 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui->name->setValidator(new QNickValidator(this));
 
     connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
+    connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
 
     setupData();
 }

@@ -59,6 +59,13 @@ void PokeButton::mousePressEvent(QMouseEvent * event)
         startPos = event->pos();
     }
     QPushButton::mousePressEvent(event);
+
+    if (lastPress.isValid() && lastPress.elapsed() < QApplication::doubleClickInterval()) {
+        lastPress.invalidate();
+        emit doubleClicked();
+    } else {
+        lastPress.restart();
+    }
 }
 
 
@@ -98,5 +105,4 @@ void PokeButton::startDrag()
     drag->exec(Qt::MoveAction);
 
     setChecked(true);
-    emit clicked();
 }
