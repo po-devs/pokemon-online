@@ -18,8 +18,10 @@ public:
     ~TrainerMenu();
 
     void updateAll();
+    void updateTeam();
 signals:
     void done();
+    void teamChanged();
 private slots:
     void on_close_clicked(){emit done();}
     void on_name_textEdited();

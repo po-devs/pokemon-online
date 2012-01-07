@@ -24,6 +24,8 @@ PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
     for (int i = 0; i < 6; i++) {
         pokemonButtons[i]->setNumber(i);
         group->addButton(pokemonButtons[i], i);
+
+        connect(pokemonButtons[i], SIGNAL(pokemonOrderChanged(int,int)), SIGNAL(teamChanged()));
     }
 }
 
@@ -39,6 +41,7 @@ int PokeButtonsHolder::currentSlot() const
 
 void PokeButtonsHolder::setTeam(Team &team)
 {
+    m_team = &team;
     for (int i = 0; i < 6; i++) {
         pokemonButtons[i]->setPokemon(team.poke(i));
     }
