@@ -672,7 +672,7 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.gen() > 1 && b.poke(s).level() < b.poke(t).level() || b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -1116,7 +1116,7 @@ struct MMBounce : public MM
     }
 
     static void ts(int s, int, BS &b) {
-        if (poke(b,s)["Invulnerable"].toBool()) {
+        if (poke(b,s).value("Invulnerable").toBool()) {
             turn(b,s)["NoChoice"] = true;
 
             int move = poke(b,s)["2TurnMove"].toInt();
@@ -1132,7 +1132,8 @@ struct MMBounce : public MM
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
             }
         }
-        removeFunction(poke(b,s), "TurnSettings", "Bounce");
+        //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
+        //removeFunction(poke(b,s), "TurnSettings", "Bounce");
     }
 
     /* Called with freefall */
@@ -1264,6 +1265,10 @@ struct MMCounter : public MM
         }
         /* In third gen, all hidden power are countered by counter but not by mirror coat */
         if (b.gen() <= 3 && TypeInfo::Category(MoveInfo::Type(move(b, source), b.gen())) != turn(b,s)["Counter_Arg"].toInt()) {
+            return;
+        }
+        /* In gen 1, only Normal and Fighting moves are countered */
+        if (b.gen() == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
             return;
         }
 

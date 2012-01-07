@@ -28,7 +28,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
     QSettings s;
     bool usePokemonNames = s.value("use_pokemon_names").toBool();
 
-    log = new BattleClientLog(data, Theme::getBattleTheme(), usePokemonNames);
+    log = new BattleClientLog(data, Theme::getBattleTheme(), !usePokemonNames);
     input = new BattleInput(&conf);
 
     logWidget = new PokeTextEdit();
@@ -62,7 +62,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
 
         lastOutput = scene;
     } else {
-        RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme(), usePokemonNames);
+        RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme(), !usePokemonNames);
 
         input->addOutput(data);
         input->addOutput(log);

@@ -121,3 +121,5 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/Substitute.qml \
     ../../bin/qml/BattleDataQML/Moves/Bonemerang.qml \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
+
+include(../Shared/Common.pri)

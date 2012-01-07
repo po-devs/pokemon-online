@@ -129,6 +129,11 @@ public:
         gui.zone->updateToolTip(spot);
     }
 
+    void onDynamicStats(int spot, const BattleStats &) {
+        updateToolTip(spot);
+        gui.zone->updateToolTip(spot);
+    }
+
     void updateBall(int player, int poke);
     void updateBallStatus(int player, int poke);
     void updatePoke(int spot);

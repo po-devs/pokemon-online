@@ -73,7 +73,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     tierstruct.h \
     theme.h \
     rearrangewindow.h \
-    ui_controlpanel.h \
     ../Shared/networkcommands.h \
     poketablemodel.h \
     modelenum.h \
@@ -130,11 +129,16 @@ TRANSLATIONS = translation_cz.ts \
     translation_tr.ts
 RC_FILE = myapp.rc
 RESOURCES += 
-macx:LIBS += -framework \
-    CoreFoundation
-macx:ICON = pokemononline.icns
-macx:QMAKE_INFO_PLIST = Info.plist
-macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
+
+
+macx {
+   LIBS += -framework CoreFoundation
+   ICON = pokemononline.icns
+   QMAKE_INFO_PLIST = Info.plist
+   QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
+   QMAKE_POST_LINK = macdeployqt $${DESTDIR}/$${TARGET}.app
+}
+
 
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
@@ -142,3 +146,5 @@ CONFIG(debian) {
 
 
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
+
+include(../Shared/Common.pri)

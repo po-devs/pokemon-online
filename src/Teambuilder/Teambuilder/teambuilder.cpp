@@ -45,15 +45,19 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_teamBody(NULL), m_boxes(NULL
     /* Buttons of pokemons / trainers */
     QImageButton * m_trainer = Theme::Button("trainer");
     upButtons->addWidget(m_trainer,0,Qt::AlignTop);
+    m_trainer->setAccessibleName(tr("Trainer"));
 
     QImageButton * m_team = Theme::Button("team");
     upButtons->addWidget(m_team,0,Qt::AlignTop);
+    m_team->setAccessibleName(tr("Team"));
 
     QImageButton * m_box = Theme::Button("box");
     upButtons->addWidget(m_box,0,Qt::AlignTop);
+    m_box->setAccessibleName(tr("Box"));
 
     QImageButton * m_pokedexb = Theme::Button("pokedex");
     upButtons->addWidget(m_pokedexb,0,Qt::AlignTop);
+    m_pokedexb->setAccessibleName(tr("Pokedex"));
 
     currentZoneLabel = new QLabel();
     currentZoneLabel->setPixmap(Theme::Sprite("poketrainer"));
@@ -75,16 +79,20 @@ TeamBuilder::TeamBuilder(TrainerTeam *pub_team) : m_teamBody(NULL), m_boxes(NULL
 
     QImageButton * m_new = Theme::Button("new");
     downButtons->addWidget(m_new, 0, Qt::AlignBottom);
+    m_new->setAccessibleName(tr("New team"));
 
     QImageButton * m_load = Theme::Button("load");
     downButtons->addWidget(m_load, 0, Qt::AlignBottom);
+    m_load->setAccessibleName(tr("Load team"));
 
     QImageButton * m_save = Theme::Button("save");
     downButtons->addWidget(m_save, 0, Qt::AlignBottom);
+    m_save->setAccessibleName(tr("Save team"));
 
     QImageButton * m_close = Theme::Button("close");
     downButtons->addWidget(m_close, 0, Qt::AlignBottom);
-
+    m_close->setAccessibleName(tr("Close teambuilder"));
+    m_close->setAccessibleDescription(tr("Closes the teambuilder and applies the changes to the team"));
 
     downButtons->setMargin(0);
     downButtons->setSpacing(0);
@@ -319,7 +327,7 @@ QMenuBar * TeamBuilder::createMenuBar(MainEngine *w)
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
 
-    QString genStrings[] = {tr("RBY (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
+    QString genStrings[] = {tr("Stadium (&1st gen)"), tr("GSC (&2nd gen)"), tr("Advance (&3rd gen)"),
                             tr("HGSS (&4th gen)"),tr("B/W (&5th gen)")};
 
     for (int i = 0; i < NUMBER_GENS; i++) {

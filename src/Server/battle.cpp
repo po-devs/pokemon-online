@@ -47,6 +47,7 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     attacker() = -1;
     selfKoer() = -1;
     drawer() = -1;
+    forfeiter() = -1;
     applyingMoveStatMods = false;
     weather = 0;
     weatherCount = -1;
@@ -995,7 +996,7 @@ void BattleSituation::endTurnDefrost()
     // RBY freeze is forever unless hit by fire moves.
     // We think both stadium and cart have permafreeze.
     if (gen() == 1) {
-      return;
+        return;
     }
     foreach(int player, speedsVector) {
         if (poke(player).status() == Pokemon::Frozen)
@@ -1169,8 +1170,10 @@ void BattleSituation::notifyInfos(int tosend)
         if (!koed(p)) {
             BattleDynamicInfo infos = constructInfo(p);
             notify(tosend, DynamicInfo, p, infos);
-            BattleStats stats = constructStats(p);
-            notify(player(p), DynamicStats, p, stats);
+            if (tosend == All || tosend == player(p)) {
+                BattleStats stats = constructStats(p);
+                notify(player(p), DynamicStats, p, stats);
+            }
         }
     }
 }
@@ -1521,6 +1524,10 @@ void BattleSituation::cancel(int player)
 
 void BattleSituation::addDraw(int player)
 {
+    if (finished()) {
+        return;
+    }
+
     if (drawer() == -1) {
         drawer() = player;
         return;
@@ -1902,11 +1909,11 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         }
     }
     if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
-       int forme = ItemInfo::DriveForme(p.item());
+        int forme = ItemInfo::DriveForme(p.item());
 
-       if (forme != 0) {
-           changeAForme(slot, forme);
-       }
+        if (forme != 0) {
+            changeAForme(slot, forme);
+        }
     }
 
     turnMemory(slot)["CantGetToMove"] = true;
@@ -2095,7 +2102,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == Move::Swift || move == Move::Mimic || move == Move::Transform))) {
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == Move::Swift || move == Move::Mimic
+                                                                                                                        || move == Move::Transform))) {
         return true;
     }
 
@@ -2107,8 +2115,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (acc == 0 || acc == 101 ||
-        (pokeMemory(target).value("LevitatedCount").toInt() > 0 &&
-         !MoveInfo::isOHKO(move, gen()))) {
+            (pokeMemory(target).value("LevitatedCount").toInt() > 0 &&
+             !MoveInfo::isOHKO(move, gen()))) {
         return true;
     }
 
@@ -2194,7 +2202,7 @@ void BattleSituation::testCritical(int player, int target)
         case 4: case 5: minch = 24; break;
         case 6: default: minch = 48;
         }
- 
+
         critical = randnum<minch;
     }
 
@@ -2222,7 +2230,7 @@ bool BattleSituation::testStatus(int player)
     }
 
     if (poke(player).status() == Pokemon::Asleep) {
-        if (poke(player).statusCount() > 0) {
+        if (poke(player).statusCount() > (gen() == 1 ? 1 : 0)) {
             //Early bird
             poke(player).statusCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
             notify(All, StatusMessage, player, qint8(FeelAsleep));
@@ -2327,8 +2335,8 @@ void BattleSituation::testFlinch(int player, int target)
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
                                    || hasWorkingItem(player, Item::RazorFang))
-        /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
-        && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
+            /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
+            && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
         /* King's rock */
         if (coinflip(10, 100)) {
             turnMemory(target)["Flinched"] = true;
@@ -2527,7 +2535,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
             }
         }
-        /* There is no "break" here and it is normal. Do not change the order */
+            /* There is no "break" here and it is normal. Do not change the order */
         case Move::RandomTarget :
         {
             if (!turnMemory(player).contains("TargetChanged")) {
@@ -2539,7 +2547,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                 }
                 if (possibilities.size() > 0) {
-                        targetList.push_back(possibilities[randint(possibilities.size())]);
+                    targetList.push_back(possibilities[randint(possibilities.size())]);
                 }
             } else {
                 targetList.push_back(target);
@@ -2757,6 +2765,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 if (!sub && !koed(target)) testFlinch(player, target);
 
                 attackCount() += 1;
+
+                if (poke(player).status() == Pokemon::Asleep && !turnMemory(player).value("SleepingMove").toBool()) {
+                    break;
+                }
             }
 
             if (hit) {
@@ -2784,10 +2796,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int type = tmove(player).type; /* move type */
 
             if ( target != player &&
-                 ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
-                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
-                   && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
-                   && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
+                    ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
+                     ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
+                      && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
+                      && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
                 continue;
             }
@@ -2834,12 +2846,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     heatOfAttack() = false;
 
-end:
-    /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
-    callieffects(player, player, "AfterTargetList");
-trueend:
+    end:
+        /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
+        callieffects(player, player, "AfterTargetList");
+    trueend:
 
-    if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
+        if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
     }
 
@@ -3328,7 +3340,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
 
         if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker))) {
             if (canSendPreventMessage(player, attacker)) {
-                    sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+                sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             }
             return false;
         }
@@ -3748,9 +3760,9 @@ int BattleSituation::calculateDamage(int p, int t)
     int typemod = move["TypeMod"].toInt();
     int randnum;
     if (gen() == 1) {
-      randnum = randint(38) + 217;
+        randnum = randint(38) + 217;
     } else {
-      randnum = randint(16) + 85;
+        randnum = randint(16) + 85;
     }
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
@@ -3774,7 +3786,7 @@ int BattleSituation::calculateDamage(int p, int t)
     if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
         QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
         QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
-    
+
         for (int i = 0; i < vuln_moves.size(); i++) {
             if (vuln_moves[i] == attackused) {
                 power = power * vuln_mults[i];
@@ -3827,7 +3839,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     /* Light screen / Reflect */
     if ( (!crit || (gen() == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
-         (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
+            (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
         else {
@@ -3996,8 +4008,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
                 //Or, ultimately, it's an item
                 callieffects(player, source, "UponSelfSurvival");
 
-end:
-                turnMemory(player).remove("SurviveReason");
+                end:
+                    turnMemory(player).remove("SurviveReason");
             }
 
             if (straightattack) {
@@ -4005,7 +4017,7 @@ end:
                 notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
             }
 
-	    
+
             changeHp(player, hp);
         }
     }
@@ -4437,6 +4449,15 @@ bool BattleSituation::areAdjacent(int attacker, int defender) const
     return std::abs(slotNum(attacker)-slotNum(defender)) <= 1;
 }
 
+void BattleSituation::playerForfeit(int forfeiterId)
+{
+    if (finished()) {
+        return;
+    }
+    forfeiter() = spot(forfeiterId);
+    notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
+}
+
 void BattleSituation::endBattle(int result, int winner, int loser)
 {
     int time1 = std::max(0, timeLeft(Player1));
@@ -4449,18 +4470,22 @@ void BattleSituation::endBattle(int result, int winner, int loser)
         emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
         exit();
     }
-    if (result == Win) {
-        notify(All, BattleEnd, winner, qint8(Win));
+    if (result == Win || result == Forfeit) {
+        notify(All, BattleEnd, winner, qint8(result));
         notify(All, EndMessage, winner, winMessage[winner]);
         notify(All, EndMessage, loser, loseMessage[loser]);
 
-        emit battleFinished(publicId(), Win, id(winner), id(loser));
+        emit battleFinished(publicId(), result, id(winner), id(loser));
         exit();
     }
 }
 
 void BattleSituation::testWin()
 {
+    if (forfeiter() != -1) {
+        exit();
+    }
+
     /* No one wants a battle that long xd */
     if (turn() == 1024) {
         endBattle(Tie, Player1, Player2);

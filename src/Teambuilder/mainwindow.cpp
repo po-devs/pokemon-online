@@ -26,8 +26,10 @@ MainEngine::MainEngine() : displayer(0)
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
+    setDefaultValue(s, "user_theme_directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
     setDefaultValue(s, "team_location", "Team/trainer.tp");
+    setDefaultValue(s, "user_theme_directory", "Themes/");
 #endif
     setDefaultValue(s, "battle_music_directory", "Music/Battle/");
     setDefaultValue(s, "play_battle_music", false);
@@ -265,11 +267,14 @@ void MainEngine::changeTheme(const QString &theme)
 {
     QSettings settings;
 
-    QString fullTheme = "Themes/" + theme + "/";
-    settings.setValue("theme_2", fullTheme);
+    QString fullTheme = Theme::FindTheme(theme);
+    qDebug() << fullTheme;
+    if (!fullTheme.isNull()) {
+        settings.setValue("theme_2", fullTheme);
 
-    Theme::Reload(fullTheme);
-    loadStyleSheet();
+        Theme::Reload(fullTheme);
+        loadStyleSheet();
+    }
 }
 
 
@@ -374,23 +379,51 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
 
 void MainEngine::addThemeMenu(QMenuBar *menuBar)
 {
-    QMenu *themeMenu = menuBar->addMenu(tr("&Theme"));
+    themeMenu = menuBar->addMenu(tr("&Theme"));
+    rebuildThemeMenu();
+}
 
-    QDir d("Themes");
+void MainEngine::rebuildThemeMenu()
+{
+    themeMenu->clear();
 
-    QList<QFileInfo> dirs = d.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    themeMenu->addAction(tr("Change &user theme folder ..."), this, SLOT(changeUserThemeFolder()));
+    themeMenu->addSeparator();
 
     QSettings s;
+
+    QStringList searchPath = Theme::SearchPath();
+
+    QSet<QString> themes;
+    foreach(QString dir, searchPath) {
+        QDir d(dir);
+        foreach(QFileInfo f, d.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+            themes.insert(f.baseName());
+        }
+    }
+
     QString theme = s.value("theme_2").toString().section('/', -2, -2);
 
     QActionGroup *ag = new QActionGroup(themeMenu);
-    foreach(QFileInfo f, dirs) {
-        QAction *ac = themeMenu->addAction(f.baseName(), this, SLOT(changeTheme()));
+    foreach(QString baseName, themes) {
+        QAction *ac = themeMenu->addAction(baseName, this, SLOT(changeTheme()));
         ac->setCheckable(true);
         if (ac->text() == theme)
             ac->setChecked(true);
         ag->addAction(ac);
     }
 }
+
+void MainEngine::changeUserThemeFolder()
+{
+    QSettings s;
+    QString dir = QFileDialog::getExistingDirectory(displayer, tr("User Theme Directory"), s.value("user_theme_directory").toString());
+
+    if (dir != "") {
+        s.setValue("user_theme_directory", dir + "/");
+    }
+    rebuildThemeMenu();
+}
+
 
 #undef MainEngineRoutine

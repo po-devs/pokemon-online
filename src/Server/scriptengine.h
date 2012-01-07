@@ -11,6 +11,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "sessiondatafactory.h"
@@ -154,7 +155,8 @@ public:
     Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
-    Q_INVOKABLE QScriptValue proxyIp(int id); 
+    Q_INVOKABLE QScriptValue proxyIp(int id);
+    Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
     Q_INVOKABLE QScriptValue gen(int id);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
@@ -319,6 +321,7 @@ private slots:
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
 #endif
+    void hostInfo_Ready(const QHostInfo &myInfo);
     
 private:
     Server *myserver;
@@ -332,6 +335,7 @@ private:
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
+    QHash<int,QScriptValue> myHostLookups;
 
     void startStopEvent() {stopevents.push_back(false);}
     bool endStopEvent() {
@@ -375,6 +379,7 @@ signals:
     void scriptChanged(const QString &script);
 public slots:
     void okPressed();
+    void gotoLine();
 private:
     QTextEdit *myedit;
 };

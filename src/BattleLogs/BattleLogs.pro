@@ -24,3 +24,5 @@ LIBS += -L../../bin \
     -lutilities \
     -lbattlelib
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+include(../Shared/Common.pri)

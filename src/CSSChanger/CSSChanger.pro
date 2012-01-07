@@ -48,3 +48,5 @@ FORMS += \
     dialog.ui \
     colorchoice.ui \
     massreplace.ui
+
+include(../Shared/Common.pri)

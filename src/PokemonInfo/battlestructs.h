@@ -504,6 +504,7 @@ struct BattleConfiguration
     }
 
     explicit BattleConfiguration(const BattleConfiguration &other);
+    BattleConfiguration& operator = (const BattleConfiguration& conf);
     ~BattleConfiguration();
 };
 

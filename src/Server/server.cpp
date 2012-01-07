@@ -1437,6 +1437,9 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         pw->battleResult(battleid, Close, winner, loser);
         pl->battleResult(battleid, Close, winner, loser);
     } else {
+        if (desc == Forfeit) {
+            battle->playerForfeit(loser);
+        }
         if (desc != Tie && rated) {
             QString winn = pw->name();
             QString lose = pl->name();

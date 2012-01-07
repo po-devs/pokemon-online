@@ -19,3 +19,5 @@ LIBS += -L../../bin \
     -lutilities \
     -lzip
 OTHER_FILES += 
+
+include(../Shared/Common.pri)

@@ -58,10 +58,10 @@ void BattleClientLog::printLine(const QString &cl, const QString &str, bool sile
     }
 
     if (!silent) {
-        pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-        emit lineToBePrinted(QString("%2<br />\n").arg(str));
+        pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+        emit lineToBePrinted(log.back());
     } else {
-        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->\n").arg(cl, str));
+        pushHtml(QString("<!-- <span class=\"%1\">%2</span> -->\n").arg(cl, str));
     }
 }
 
@@ -84,8 +84,8 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-    emit lineToBePrinted(QString("%2<br />\n").arg(str));
+    pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+    emit lineToBePrinted(log.back());
 }
 
 QString BattleClientLog::nick(int spot)
@@ -441,7 +441,7 @@ void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int
     mess.replace("%st", StatInfo::Stat(other));
     mess.replace("%s", nick(spot));
     //            mess.replace("%ts", data()->name(spot));
-    //            mess.replace("%tf", data()->name(!spot));
+    mess.replace("%tf", data()->name(!spot));
     mess.replace("%t", TypeInfo::Name(type));
     mess.replace("%f", nick(foe));
     mess.replace("%m", MoveInfo::Name(other));
@@ -465,6 +465,8 @@ void BattleClientLog::onBattleEnd(int res, int winner)
 {
     if (res == Tie) {
         printHtml("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
+    } else if (res == Forfeit) {
+        printHtml("BattleEnd", toBoldColor(tr("%1 forfeited against %2!").arg(data()->name(data()->opponent(winner)), data()->name(winner)), Qt::blue));
     } else {
         printHtml("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
     }

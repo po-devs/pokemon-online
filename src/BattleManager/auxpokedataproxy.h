@@ -65,7 +65,7 @@ public:
     void vanish() {setShowing(false);}
     void reappear() {setShowing(true);}
     void changeSprite(Pokemon::uniqueId sprite) {setAlternateSprite(sprite);}
-    void changeForme(int subnum) {setAlternateSprite(Pokemon::uniqueId(alternateSprite.pokenum, subnum));}
+    void changeForme(int subnum);
     void boostStat(int stat, int level);
     void setBoost(int stat, int level);
     void setStat(int stat, int value);
