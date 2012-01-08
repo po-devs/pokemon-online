@@ -87,6 +87,8 @@ public:
     void afterFindBattle(int src);
     void beforeCancelSearch(int id);
     void afterCancelSearch(int id);
+    bool beforeServerMessage(const QString& message);
+    void afterServerMessage(const QString& message);
 
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue importScript(const QString &fileName);

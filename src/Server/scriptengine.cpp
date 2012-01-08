@@ -263,9 +263,9 @@ bool ScriptEngine::beforeCPBan(int src, const QString &name)
     return makeSEvent("beforeCPBan", src, name);
 }
 
-bool ScriptEngine::beforeCPUnban(int id, const QString &name)
+bool ScriptEngine::beforeCPUnban(int src, const QString &name)
 {
-    makeEvent("beforeCPUnban", src, name);
+    return makeSEvent("beforeCPUnban", src, name);
 }
 
 void ScriptEngine::afterCPBan(int src, const QString &name)
@@ -273,7 +273,7 @@ void ScriptEngine::afterCPBan(int src, const QString &name)
     makeEvent("afterCPBan", src, name);
 }
 
-void ScriptEngine::afterCPUnban(int id, const QString &name)
+void ScriptEngine::afterCPUnban(int src, const QString &name)
 {
     makeEvent("afterCPUnban", src, name);
 }
@@ -1040,9 +1040,9 @@ QScriptValue ScriptEngine::ladderRating(int id)
 
 QScriptValue ScriptEngine::ladderRating(const QString &name, const QString &tier)
 {
-    if (!SecurityManager::exists(name))
+    if (!SecurityManager::exist(name))
         return myengine.undefinedValue();
-    else if (!TierMachine::obj->exists(tier))
+    else if (!TierMachine::obj()->exists(tier))
         return myengine.undefinedValue();
     else
         return TierMachine::obj()->rating(name, tier);
@@ -1059,26 +1059,26 @@ QScriptValue ScriptEngine::ladderEnabled(int id)
 
 int ScriptEngine::tierMode(const QString &tier)
 {
-    if (!TierMachine::obj->exists(tier)) {
+    if (!TierMachine::obj()->exists(tier)) {
         warn("tierMode(tier)", "Invalid tier.");
         return -1;
     }
-    return TierMachine::obj()->tier(tier)->mode;
+    return TierMachine::obj()->tier(tier).mode;
 }
 
 int ScriptEngine::tierGen(const QString &tier)
 {
-    if (!TierMachine::obj->exists(tier)) {
+    if (!TierMachine::obj()->exists(tier)) {
         warn("tierGen(tier)", "Invalid tier.");
         return -1;
     }
-    return TierMachine::obj()->tier(tier)->gen;
+    return TierMachine::obj()->tier(tier).gen;
 
 }
 
 bool ScriptEngine::tierExists(const QString &tier)
 {
-    return TierManager::obj()->exists(tier);
+    return TierMachine::obj()->exists(tier);
 }
 
 QScriptValue ScriptEngine::ip(int id)
@@ -1153,7 +1153,7 @@ bool ScriptEngine::banned(const QString &name)
         return false;
     }
     else {
-        return SecurityManager::banned(name);
+        return SecurityManager::member(name).isBanned();
     }
 }
 
@@ -1867,7 +1867,7 @@ void ScriptEngine::changeAnnouncement(const QString &html) {
 
 void ScriptEngine::makeServerPublic(bool isPublic)
 {
-    myserver->regPrivacyChanged(!isPublic);
+    myserver->regPrivacyChanged(0+isPublic);
 }
 
 QScriptValue ScriptEngine::getAnnouncement() {
@@ -2173,7 +2173,8 @@ void ScriptEngine::initFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.exists()) {
-        out.write(content);
+        QTextStream s(&out);
+        s << content;
     }
 }
 
@@ -2465,7 +2466,7 @@ void ScriptEngine::reloadConfig()
     myserver->announcementChanged(s.value("server_announcement").toString());
     if(s.value("server_maxplayers").toString() != "unlimited")
     myserver->regMaxChanged(quint16(s.value("server_maxplayers").toInt()));
-    myserver->regPrivaryChanged(quint16(s.value("server_private").toInt()));
+    myserver->regPrivacyChanged(quint16(s.value("server_private").toInt()));
     myserver->TCPDelayChanged(quint16(s.value("low_TCP_delay").toBool()));
     myserver->safeScriptsChanged(s.value("safe_scripts").toBool());
     myserver->proxyServersChanged(s.value("proxyservers").toString());
@@ -2501,9 +2502,9 @@ void ScriptEngine::changeServerName(const QString &name)
 
 }
 
-QScriptValue ScriptEngine::ipsNum()
+int ScriptEngine::ipsNum()
 {
-    return AntiDos::obj->numberOfDiffIps();
+    return AntiDos::obj()->numberOfDiffIps();
 }
 
 QScriptValue ScriptEngine::playerIps()
@@ -2511,8 +2512,9 @@ QScriptValue ScriptEngine::playerIps()
     QList<int> keys = myserver->myplayers.keys();
     QScriptValue ret = myengine.newArray(keys.count());
 
+    int i = 0;
     foreach(Player *p, myserver->myplayers) {
-        ret.setProperty(i, p->ip);
+        ret.setProperty(i++, p->ip());
     }
 
     return ret;

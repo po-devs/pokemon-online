@@ -473,14 +473,15 @@ void Player::CPBan(const QString &name)
     if (auth() < 2) {
         return; //INVALID BEHAVIOR
     }
-    if(!SecurityManager::exist(name))
+    if (!SecurityManager::exist(name)) {
         return;
-
-    if(!Server::serverIns->beforeCPBan(id(), name))
+    }
+    if (!Server::serverIns->beforeCPBan(id(), name)) {
         return;
-
-    if(!isLoggedIn())
+    }
+    if (!isLoggedIn()) {
         return;
+    }
 
     int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
     if (maxAuth >= auth()) {
@@ -490,8 +491,8 @@ void Player::CPBan(const QString &name)
     SecurityManager::ban(name);
     emit info(id(), "Banned player " + name + " with CP.");
 
-    if(Server::playerLoggedIn(Server::id(name)))
-        Server::silentKick(Server::id(name));
+    if (Server::serverIns->playerLoggedIn(Server::serverIns->id(name)))
+        Server::serverIns->silentKick(Server::serverIns->id(name));
 
     QFile out("bans.txt");
     out.open(QIODevice::Append);
@@ -504,14 +505,17 @@ void Player::CPUnban(const QString &name)
     if (auth() < 2) {
         return; //INVALID BEHAVIOR
     }
-    if(!SecurityManager::exist(name))
+    if (!SecurityManager::exist(name)) {
         return;
+    }
 
-    if(!Server::serverIns->beforeCPUnban(id(), name))
+    if (!Server::serverIns->beforeCPUnban(id(), name)) {
         return;
+    }
 
-    if(!isLoggedIn())
+    if (!isLoggedIn()) {
         return;
+    }
 
     SecurityManager::unban(name);
     emit info(id(), "Unbanned player " + name + " with CP.");
