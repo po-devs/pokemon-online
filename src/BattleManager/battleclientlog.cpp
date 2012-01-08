@@ -3,6 +3,7 @@
 #include "battledata.h"
 #include "teamdata.h"
 #include "defaulttheme.h"
+#include "remove_direction_override.h"
 
 typedef ShallowBattlePoke* shallowpoke;
 typedef BattleData<DataContainer> battledata;
@@ -84,7 +85,7 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+    pushHtml(removeDirectionOverride(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str)));
     emit lineToBePrinted(log.back());
 }
 
@@ -286,7 +287,7 @@ void BattleClientLog::onStatusOver(int spot, int status)
 
 void BattleClientLog::onAttackFailing(int, bool silent)
 {
-    printLine("Failed", tr("But if failed!"), silent);
+    printLine("Failed", tr("But it failed!"), silent);
 }
 
 void BattleClientLog::onPlayerMessage(int spot, const QString &message)
