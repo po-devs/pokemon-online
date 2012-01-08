@@ -1,8 +1,9 @@
-#ifndef PLAYERSWINDOW_H
+﻿#ifndef PLAYERSWINDOW_H
 #define PLAYERSWINDOW_H
 
 #include <QtGui>
 #include "security.h"
+#include "server.h"
 
 class PlayersWindow : public QWidget
 {

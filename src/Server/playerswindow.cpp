@@ -1,5 +1,5 @@
-#include "playerswindow.h"
-
+﻿#include "playerswindow.h"
+#include "server.h"
 #include "security.h"
 
 #include <QSqlQuery>
@@ -15,6 +15,8 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
     mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
+
+    myengine = new ScriptEngine(this);
 
     QMap<int, QString> authgrade;
     authgrade[0] = "User";
@@ -97,48 +99,69 @@ QString PlayersWindow::currentName()
 
 void PlayersWindow::ban()
 {
-    SecurityManager::ban(currentName());
+    QString name = currentName();
+    Server::serverIns->beforeServerBan(name);
+    SecurityManager::ban(name);
     mytable->item(mytable->currentRow(), 2)->setText("Banned");
-    emit banned(currentName());
+    emit banned(name);
+    Server::serverIns->afterServerBan(name);
 }
 
 void PlayersWindow::unban()
 {
-    SecurityManager::unban(currentName());
+    QString name = currentName();
+    Server::serverIns->beforeServerUnban(name);
+    SecurityManager::unban(name);
     mytable->item(mytable->currentRow(), 2)->setText("Fine");
+    Server::serverIns->afterServerUnban(name);
 }
 
 void PlayersWindow::user()
 {
     QString name = currentName();
+    int oldauth = SecurityManager::member(name).auth;
+    Server::serverIns->beforeAuthChange(name, oldauth, 0);
     SecurityManager::setAuth(name, 0);
     mytable->item(mytable->currentRow(), 1)->setText("User");
-    emit authChanged(name,0);
+    emit authChanged(name, 0);
+    Server::serverIns->afterAuthChange(name, oldauth, 0);
+
 }
 
 void PlayersWindow::mod()
 {
     QString name = currentName();
+    int oldauth = SecurityManager::member(name).auth;
+    Server::serverIns->beforeAuthChange(name, oldauth, 0);
     SecurityManager::setAuth(name, 1);
     mytable->item(mytable->currentRow(), 1)->setText("Mod");
-    emit authChanged(name,1);
+    emit authChanged(name, 1);
+    Server::serverIns->afterAuthChange(name, oldauth, 1);
 }
 
 void PlayersWindow::admin()
 {
     QString name = currentName();
+    int oldauth = SecurityManager::member(name).auth;
+    Server::serverIns->beforeAuthChange(name, oldauth, 0);
     SecurityManager::setAuth(name, 2);
     mytable->item(mytable->currentRow(), 1)->setText("Admin");
-    emit authChanged(name,2);
+    emit authChanged(name, 2);
+    Server::serverIns->afterAuthChange(name, oldauth, 2);
 }
 
 void PlayersWindow::owner()
 {
+
     QString name = currentName();
+    int oldauth = SecurityManager::member(name).auth;
+    Server::serverIns->beforeAuthChange(name, oldauth, 0);
     SecurityManager::setAuth(name, 3);
     mytable->item(mytable->currentRow(), 1)->setText("Owner");
-    emit authChanged(name,3);
+    emit authChanged(name, 3);
+    Server::serverIns->afterAuthChange(name, oldauth, 3);
 }
+
 
 void PlayersWindow::clpass()
 {

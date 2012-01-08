@@ -1,4 +1,4 @@
-#ifndef SCRIPTENGINE_H
+﻿#ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
 #include <QtCore>
@@ -12,6 +12,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QHostInfo>
+#include <QDir>
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "sessiondatafactory.h"
@@ -37,6 +38,18 @@ public:
     void afterChatMessage(int src, const QString &message, int channel);
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
+    void beforeAuthChange(const QString &name, int oldauth, int newauth);
+    void afterAuthChange(const QString &name, int oldauth, int newauth);
+    void beforeServerBan(const QString &name);
+    void afterServerBan(const QString &name);
+    void beforeServerUnban(const QString &name);
+    void afterServerUnban(const QString &name);
+    void beforeServerKick(int id);
+    void afterServerKick(int id);
+    bool beforeCPBan(int src, const QString &name);
+    void afterCPBan(int src, const QString &name);
+    bool beforeCPUnban(int src,const QString &name);
+    void afterCPUnban(int src, const QString &name);
     void serverStartUp();
     void serverShutDown();
     void beforeLogOut(int src);
@@ -72,9 +85,11 @@ public:
     void battleSetup(int src, int dest, int battleId);
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
+    void beforeCancelSearch(int id);
+    void afterCancelSearch(int id);
 
     /* Imports a module with a given name */
-    Q_INVOKABLE QScriptValue import(const QString &fileName);
+    Q_INVOKABLE QScriptValue importScript(const QString &fileName);
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
@@ -136,6 +151,7 @@ public:
     Q_INVOKABLE void callQuickly(const QString &s, int delay);
     /* Accepts function as 1st parameter. */
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE void quickCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
@@ -151,6 +167,8 @@ public:
     Q_INVOKABLE QScriptValue playerIds();
     Q_INVOKABLE QScriptValue name(int id);
     Q_INVOKABLE QScriptValue id(const QString& name);
+    Q_INVOKABLE bool banned(const QString &name);
+    Q_INVOKABLE bool ipBanned(const QString &ip);
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue battling(int id);
     Q_INVOKABLE QScriptValue away(int id);
@@ -165,6 +183,7 @@ public:
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE bool dbRegistered(const QString &name);
+    Q_INVOKABLE bool dbExists(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id);
     Q_INVOKABLE QScriptValue ranking(int id);
     Q_INVOKABLE QScriptValue ratedBattles(int id);
@@ -174,7 +193,11 @@ public:
     Q_INVOKABLE QScriptValue aliases(const QString &ip);
     Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
-    Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());
+    Q_INVOKABLE QScriptValue ladderRating(int id);
+    Q_INVOKABLE QScriptValue ladderRating(const QString &name, const QString &tier);
+    Q_INVOKABLE int tierMode(const QString &tier);
+    Q_INVOKABLE int tierGen(const QString &tier);
+    Q_INVOKABLE bool tierExists(const QString &tier);
     /* returns a state of the memory, useful to check for memory leaks and memory usage */
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE bool hasLegalTeamForTier(int id, const QString &tier);
@@ -198,6 +221,7 @@ public:
     Q_INVOKABLE QScriptValue genderNum(QString genderName);
     Q_INVOKABLE QString gender(int genderNum);
 
+    Q_INVOKABLE int teamPokeHappiness(int id, int slot);
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int index);
     Q_INVOKABLE bool hasTeamPoke(int id, int pokemonnum);
@@ -272,6 +296,14 @@ public:
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
     Q_INVOKABLE bool isServerPrivate();
+    Q_INVOKABLE bool isPasswordProtected();
+    Q_INVOKABLE void reloadConfig();
+    Q_INVOKABLE bool safeScripts();
+    Q_INVOKABLE void changeDescription(const QString &html);
+    Q_INVOKABLE void changeServerName(const QString &name);
+    Q_INVOKABLE int ipsNum();
+    Q_INVOKABLE QScriptValue playerIps();
+    Q_INVOKABLE QString serverName();
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
@@ -279,6 +311,9 @@ public:
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
+
+    Q_INVOKABLE void initVal(const QString &key, const QVariant &val);
+    Q_INVOKABLE void initVal(const QString &file, const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
     Q_INVOKABLE void removeVal(const QString &key);
@@ -288,7 +323,10 @@ public:
     // Returns an array of Script_* key names in config.
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
+    // Directory creation access.
+    Q_INVOKABLE void makeDir(const QString &dir);
     // Direct file access.
+    Q_INVOKABLE void initFile(const QString &fileName, const QString &content = QString());
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
