@@ -5,11 +5,13 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "teammenu.h"
 #include "pokeedit.h"
+#include "teamholder.h"
 
 TeamMenu::TeamMenu(TeamHolder *team, int index) :
     ui(new _ui()), m_team(team)
 {
     setupUi();
+    updateTabs();
 
     switchToTab(index);
 }
@@ -40,6 +42,18 @@ void TeamMenu::switchToTab(int index)
         connect(ui->pokemons[index], SIGNAL(switchToTrainer()), SIGNAL(switchToTrainer()));
     }
     ui->stack->setCurrentWidget(ui->pokemons[index]);
+}
+
+void TeamMenu::updateTeam()
+{
+    updateTabs();
+}
+
+void TeamMenu::updateTabs()
+{
+    for (int i = 0; i < 6; i++) {
+        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num()));
+    }
 }
 
 TeamMenu::~TeamMenu()
