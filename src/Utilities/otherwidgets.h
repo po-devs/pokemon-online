@@ -52,6 +52,7 @@ class QImageButton : public QAbstractButton
 {
     Q_OBJECT
 public:
+    QImageButton(QWidget *w=0);
     QImageButton(const QString &normal, const QString &hovered, const QString &checked ="");
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
@@ -146,18 +147,6 @@ public:
     void fixup(QString &input) const;
     State validate(QString &input, int &pos) const;
     State validate(const QString &input) const;
-};
-/* I have no idea if this will work, but I'm trying :p*/
-class QImageButtonLR : public QImageButton
-{
-    Q_OBJECT
-public:
-    QImageButtonLR(const QString &normal, const QString &hovered);
-protected:
-    void mouseReleaseEvent(QMouseEvent *ev);
-signals:
-    void leftClick();
-    void rightClick();
 };
 
 /* A Progress bar that emits a signal when clicked on */

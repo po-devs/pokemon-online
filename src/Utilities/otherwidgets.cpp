@@ -95,6 +95,16 @@ static QBitmap mask(const QPixmap &p)
 }
 #endif
 
+QImageButton::QImageButton(QWidget *w)
+    : QAbstractButton(w)
+{
+    /* Both are necessary for some styles */
+    setMouseTracking(true);
+    setAttribute(Qt::WA_Hover, true);
+
+    lastState = Normal;
+}
+
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
     : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
 {
@@ -115,6 +125,8 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered, const 
 void QImageButton::changePics(const QString &normal, const QString &hovered, const QString &checked)
 {
     myPic = QPixmap(normal);
+    setFixedSize(myPic.size());
+
     myHoveredPic = QPixmap(hovered);
     if (checked != "")
         myCheckedPic = QPixmap(checked);
@@ -430,18 +442,6 @@ QValidator::State QNickValidator::validate(const QString &input) const
 QValidator::State QNickValidator::validate(QString &input, int &) const
 {
     return validate(input);
-}
-
-QImageButtonLR::QImageButtonLR(const QString &normal, const QString &hovered)
-    :QImageButton(normal,hovered)
-{}
-
-void QImageButtonLR::mouseReleaseEvent(QMouseEvent *ev)
-{
-    if(ev->button() == Qt::LeftButton)
-        emit leftClick();
-    else if (ev->button() == Qt::RightButton)
-        emit rightClick();
 }
 
 void QClickPBar::mousePressEvent(QMouseEvent *)
