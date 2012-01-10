@@ -105,6 +105,18 @@ void BattleLogsWidget::done()
 
 BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : commands(&toSend, QIODevice::WriteOnly), raw(raw), text(plain)
 {
+    QString date = QDate::currentDate().toString("yyyy-MM-dd");
+    QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
+    QString id0 = QString::number(b->id(0));
+    QString id1 = QString::number(b->id(1));
+
+    QDir d("");
+    if(!d.exists("logs/battles/" + date)) {
+        d.mkpath("logs/battles/" + date);
+    }
+
+    fileName = QString("logs/battles/%1/%2-%3-%4").arg(date, time, id0, id1);
+
     input = NULL;
 
     conf = b->configuration();
@@ -125,19 +137,9 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
 BattleLogsPlugin::~BattleLogsPlugin()
 {
     if (started) {
-        QString date = QDate::currentDate().toString("yyyy-MM-dd");
-        QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
-        QString id0 = QString::number(id1);
-        QString id1 = QString::number(id2);
-
-        QDir d("");
-        if(!d.exists("logs/battles/" + date)) {
-            d.mkpath("logs/battles/" + date);
-        }
-
         if (raw) {
             QFile out;
-            out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
+            out.setFileName(fileName + ".poreplay");
             out.open(QIODevice::WriteOnly);
             out.write("battle_logs_v1\n");
 
@@ -154,7 +156,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
 
         if (text) {
             QFile out;
-            out.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, time, id0, id1));
+            out.setFileName(fileName + ".html");
             out.open(QIODevice::WriteOnly);
             out.write(log->getLog().join("").toUtf8());
             out.close();
@@ -166,6 +168,11 @@ BattleLogsPlugin::~BattleLogsPlugin()
     }
 
     delete input, input = NULL;
+}
+
+QString BattleLogsPlugin::pluginName() const
+{
+    return "Battle Logs";
 }
 
 QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
