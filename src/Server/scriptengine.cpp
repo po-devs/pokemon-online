@@ -1,4 +1,4 @@
-#include "server.h"
+﻿#include "server.h"
 #include "player.h"
 #include "security.h"
 #include "antidos.h"
@@ -86,12 +86,12 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-QScriptValue ScriptEngine::import(const QString &fileName) {
+QScriptValue ScriptEngine::importScript(const QString &fileName) {
     QString url = "scripts/"+fileName;
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
+        warn("sys.importScript", "The file scripts/" + fileName + " is not readable.");
         return QScriptValue();
     }
 
@@ -206,6 +206,86 @@ bool ScriptEngine::beforeNewMessage(const QString &message)
 void ScriptEngine::afterNewMessage(const QString &message)
 {
     makeEvent("afterNewMessage", message);
+}
+
+void ScriptEngine::beforeAuthChange(const QString &name, int oldauth, int newauth)
+{
+    makeEvent("beforeAuthChange", name, oldauth, newauth);
+}
+
+void ScriptEngine::afterAuthChange(const QString &name, int oldauth, int newauth)
+{
+    makeEvent("afterAuthChange", name, oldauth, newauth);
+}
+
+void ScriptEngine::beforeServerBan(const QString &name)
+{
+    makeEvent("beforeServerBan", name);
+}
+
+void ScriptEngine::afterServerBan(const QString &name)
+{
+    makeEvent("afterServerBan", name);
+}
+
+void ScriptEngine::beforeServerUnban(const QString &name)
+{
+    makeEvent("beforeServerUnban", name);
+}
+
+void ScriptEngine::afterServerUnban(const QString &name)
+{
+    makeEvent("afterServerUnban", name);
+}
+
+void ScriptEngine::beforeCancelSearch(int id)
+{
+    makeEvent("beforeCancelSearch", id);
+}
+
+void ScriptEngine::afterCancelSearch(int id)
+{
+    makeEvent("afterCancelSearch", id);
+}
+
+void ScriptEngine::beforeServerKick(int id)
+{
+    makeEvent("beforeServerKick", id);
+}
+
+void ScriptEngine::afterServerKick(int id)
+{
+    makeEvent("afterServerKick", id);
+}
+
+bool ScriptEngine::beforeCPBan(int src, const QString &name)
+{
+    return makeSEvent("beforeCPBan", src, name);
+}
+
+bool ScriptEngine::beforeCPUnban(int src, const QString &name)
+{
+    return makeSEvent("beforeCPUnban", src, name);
+}
+
+void ScriptEngine::afterCPBan(int src, const QString &name)
+{
+    makeEvent("afterCPBan", src, name);
+}
+
+void ScriptEngine::afterCPUnban(int src, const QString &name)
+{
+    makeEvent("afterCPUnban", src, name);
+}
+
+bool ScriptEngine::beforeServerMessage(const QString &message)
+{
+    return makeSEvent("beforeServerMessage", message);
+}
+
+void ScriptEngine::afterServerMessage(const QString &message)
+{
+    makeEvent("afterServerMessage", message);
 }
 
 void ScriptEngine::serverStartUp()
@@ -720,6 +800,11 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
+bool ScriptEngine::dbExists(const QString &name)
+{
+    return SecurityManager::exist(name);
+}
+
 void ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
@@ -772,6 +857,18 @@ void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
         timerEventsFunc[t] = func;
         t->setSingleShot(true);
         t->start(delay*1000);
+        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    }
+}
+
+void ScriptEngine::quickCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) return;
+    if (func.isFunction()) {
+        QTimer *t = new QTimer(this);
+        timerEventsFunc[t] = func;
+        t->setSingleShot(true);
+        t->start(delay);
         connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
     }
 }
@@ -848,7 +945,7 @@ QScriptValue ScriptEngine::dbDelete(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        SecurityManager::deleteUser(name);
+        SecurityManager::deleteUser(name.toLower());
         return myengine.undefinedValue();
     }
 }
@@ -932,17 +1029,23 @@ QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
     return TierMachine::obj()->count(tier);
 }
 
-QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
+QScriptValue ScriptEngine::ladderRating(int id)
 {
     if (!myserver->playerLoggedIn(id)) {
         return myengine.undefinedValue();
     } else {
-        if (tier.isEmpty()) {
-            return myserver->player(id)->rating();
-        } else {
-            return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
-        }
+        return myserver->player(id)->rating();
     }
+}
+
+QScriptValue ScriptEngine::ladderRating(const QString &name, const QString &tier)
+{
+    if (!SecurityManager::exist(name))
+        return myengine.undefinedValue();
+    else if (!TierMachine::obj()->exists(tier))
+        return myengine.undefinedValue();
+    else
+        return TierMachine::obj()->rating(name, tier);
 }
 
 QScriptValue ScriptEngine::ladderEnabled(int id)
@@ -952,6 +1055,30 @@ QScriptValue ScriptEngine::ladderEnabled(int id)
     } else {
         return myserver->player(id)->ladder();
     }
+}
+
+int ScriptEngine::tierMode(const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier)) {
+        warn("tierMode(tier)", "Invalid tier.");
+        return -1;
+    }
+    return TierMachine::obj()->tier(tier).mode;
+}
+
+int ScriptEngine::tierGen(const QString &tier)
+{
+    if (!TierMachine::obj()->exists(tier)) {
+        warn("tierGen(tier)", "Invalid tier.");
+        return -1;
+    }
+    return TierMachine::obj()->tier(tier).gen;
+
+}
+
+bool ScriptEngine::tierExists(const QString &tier)
+{
+    return TierMachine::obj()->exists(tier);
 }
 
 QScriptValue ScriptEngine::ip(int id)
@@ -1017,6 +1144,23 @@ QScriptValue ScriptEngine::id(const QString &name)
     } else {
         return myserver->id(name);
     }
+}
+
+bool ScriptEngine::banned(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        warn("banned(name)", "Unknown Player");
+        return false;
+    }
+    else {
+        return SecurityManager::member(name).isBanned();
+    }
+}
+
+bool ScriptEngine::ipBanned(const QString &ip)
+{
+    return SecurityManager::bannedIP(ip);
+
 }
 
 QScriptValue ScriptEngine::pokemon(int num)
@@ -1723,7 +1867,7 @@ void ScriptEngine::changeAnnouncement(const QString &html) {
 
 void ScriptEngine::makeServerPublic(bool isPublic)
 {
-    myserver->regPrivacyChanged(!isPublic);
+    myserver->regPrivacyChanged(0+isPublic);
 }
 
 QScriptValue ScriptEngine::getAnnouncement() {
@@ -1974,6 +2118,20 @@ QScriptValue ScriptEngine::avatar(int playerId)
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
 
+void ScriptEngine::initVal(const QString &key, const QVariant &val)
+{
+    QSettings s;
+    if (s.value("Script_"+key).toString() == "")
+    s.setValue("Script_"+key, val);
+}
+
+void ScriptEngine::initVal(const QString &file, const QString &key, const QVariant &val)
+{
+    QSettings s(file, QSettings::IniFormat);
+    if (s.value("Script_"+key).toString() == "")
+    s.setValue("Script_"+key, val);
+}
+
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
 {
     QSettings s;
@@ -2010,6 +2168,16 @@ void ScriptEngine::removeVal(const QString &file, const QString &key)
     s.remove("Script_"+key);
 }
 
+void ScriptEngine::initFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.exists()) {
+        QTextStream s(&out);
+        s << content;
+    }
+}
+
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
 {
     QFile out(fileName);
@@ -2044,6 +2212,13 @@ void ScriptEngine::deleteFile(const QString &fileName)
     }
 
     out.remove();
+}
+
+void ScriptEngine::makeDir(const QString &dir)
+{
+    QDir newdir(dir);
+    if(!newdir.exists())
+    newdir.mkdir(dir);
 }
 
 /**
@@ -2122,7 +2297,7 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
 /**
  * Function will perform a GET-Request server side, synchronously
  * @param urlstring web-url
- * @author Remco cd Zon and Toni Fadjukoff
+ * @author Remco vd Zon and Toni Fadjukoff
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -2252,6 +2427,15 @@ QScriptValue ScriptEngine::teamPokeShine(int id, int slot)
     return myserver->player(id)->team().poke(slot).shiny();
 }
 
+int ScriptEngine::teamPokeHappiness(int id, int slot)
+{
+    if (!testPlayer("teamPokeHappiness", id)
+        || !testRange("teamPokeHappiness", slot, 0, 5)) {
+        return 0;
+    }
+    return myserver->player(id)->team().poke(slot).happiness();
+}
+
 int ScriptEngine::moveType(int moveNum, int gen)
 {
     return MoveInfo::Type(moveNum, gen);
@@ -2265,4 +2449,78 @@ QString ScriptEngine::serverVersion()
 bool ScriptEngine::isServerPrivate()
 {
     return myserver->isPrivate();
+}
+
+bool ScriptEngine::isPasswordProtected()
+{
+    return myserver->isPasswordProtected();
+}
+
+void ScriptEngine::reloadConfig()
+{
+    QSettings s("config", QSettings::IniFormat);
+    myserver->loadRatedBattlesSettings();
+
+    myserver->regNameChanged(s.value("server_name").toString());
+    myserver->regDescChanged(s.value("server_description").toString());
+    myserver->announcementChanged(s.value("server_announcement").toString());
+    if(s.value("server_maxplayers").toString() != "unlimited")
+    myserver->regMaxChanged(quint16(s.value("server_maxplayers").toInt()));
+    myserver->regPrivacyChanged(quint16(s.value("server_private").toInt()));
+    myserver->TCPDelayChanged(quint16(s.value("low_TCP_delay").toBool()));
+    myserver->safeScriptsChanged(s.value("safe_scripts").toBool());
+    myserver->proxyServersChanged(s.value("proxyservers").toString());
+    myserver->usePasswordChanged(s.value("require_password").toBool());
+    myserver->serverPasswordChanged(s.value("server_password").toString());
+    myserver->showTrayPopupChanged(s.value("show_tray_popup").toBool());
+    myserver->minimizeToTrayChanged(s.value("minimize_to_tray").toBool());
+    myserver->logSavingChanged(s.value("show_log_messages").toBool());
+    myserver->mainChanChanged(s.value("mainchanname").toString());
+
+    myserver->useChannelFileLogChanged(s.value("logs_channel_files").toBool());
+    myserver->useBattleFileLogChanged(s.value("logs_battle_files").toBool());
+}
+
+bool ScriptEngine::safeScripts()
+{
+    return myserver->isSafeScripts();
+
+}
+
+void ScriptEngine::changeDescription(const QString &html)
+{
+     QSettings s("config", QSettings::IniFormat);
+     s.setValue("server_description", html);
+     myserver->regDescChanged(html);
+}
+
+void ScriptEngine::changeServerName(const QString &name)
+{
+     QSettings s("config", QSettings::IniFormat);
+     s.setValue("server_name", name);
+     myserver->regNameChanged(name);
+
+}
+
+int ScriptEngine::ipsNum()
+{
+    return AntiDos::obj()->numberOfDiffIps();
+}
+
+QScriptValue ScriptEngine::playerIps()
+{
+    QList<int> keys = myserver->myplayers.keys();
+    QScriptValue ret = myengine.newArray(keys.count());
+
+    int i = 0;
+    foreach(Player *p, myserver->myplayers) {
+        ret.setProperty(i++, p->ip());
+    }
+
+    return ret;
+}
+
+QString ScriptEngine::serverName()
+{
+    return myserver->serverName;
 }

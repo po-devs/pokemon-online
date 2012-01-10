@@ -1,4 +1,4 @@
-#ifndef SERVER_H
+﻿#ifndef SERVER_H
 #define SERVER_H
 
 #include "../Utilities/contextswitch.h"
@@ -66,6 +66,16 @@ public:
     void afterFindBattle(int src);
     bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
     void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
+    void beforeAuthChange(const QString &name, int oldauth, int newauth);
+    void afterAuthChange(const QString &name, int oldauth, int newauth);
+    void beforeServerBan(const QString &name);
+    void afterServerBan(const QString &name);
+    void beforeServerUnban(const QString &name);
+    void afterServerUnban(const QString &name);
+    bool beforeCPBan(int src, const QString &name);
+    void afterCPBan(int src, const QString &name);
+    bool beforeCPUnban(int src,const QString &name);
+    void afterCPUnban(int src, const QString &name);
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
     void disconnectFromRegistry();

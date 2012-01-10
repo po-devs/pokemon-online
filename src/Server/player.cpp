@@ -1,4 +1,4 @@
-#include "../Shared/config.h"
+﻿#include "../Shared/config.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "player.h"
@@ -77,7 +77,7 @@ void Player::autoKick()
 void Player::ladderChange(bool n)
 {
     if (!isLoggedIn())
-        return;//INV BEHAV
+        return; //INV BEHAV
     ladder() = n;
     emit updated(id());
 }
@@ -473,6 +473,16 @@ void Player::CPBan(const QString &name)
     if (auth() < 2) {
         return; //INVALID BEHAVIOR
     }
+    if (!SecurityManager::exist(name)) {
+        return;
+    }
+    if (!Server::serverIns->beforeCPBan(id(), name)) {
+        return;
+    }
+    if (!isLoggedIn()) {
+        return;
+    }
+
     int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
     if (maxAuth >= auth()) {
         sendMessage(name + " has authority equal or superior to yours under another nick.");
@@ -481,9 +491,13 @@ void Player::CPBan(const QString &name)
     SecurityManager::ban(name);
     emit info(id(), "Banned player " + name + " with CP.");
 
+    if (Server::serverIns->playerLoggedIn(Server::serverIns->id(name)))
+        Server::serverIns->silentKick(Server::serverIns->id(name));
+
     QFile out("bans.txt");
     out.open(QIODevice::Append);
     out.write((this->name() + " CP banned " + name + ".\n").toUtf8());
+    Server::serverIns->afterCPBan(id(), name);
 }
 
 void Player::CPUnban(const QString &name)
@@ -491,12 +505,25 @@ void Player::CPUnban(const QString &name)
     if (auth() < 2) {
         return; //INVALID BEHAVIOR
     }
+    if (!SecurityManager::exist(name)) {
+        return;
+    }
+
+    if (!Server::serverIns->beforeCPUnban(id(), name)) {
+        return;
+    }
+
+    if (!isLoggedIn()) {
+        return;
+    }
+
     SecurityManager::unban(name);
     emit info(id(), "Unbanned player " + name + " with CP.");
 
     QFile out("bans.txt");
     out.open(QIODevice::Append);
     out.write((this->name() + " unbanned " + name + ".\n").toUtf8());
+    Server::serverIns->afterCPUnban(id(), name);
 }
 
 //void Player::CPTBan(const QString &name, int time)

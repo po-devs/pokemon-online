@@ -1,4 +1,4 @@
-#include <QtNetwork>
+﻿#include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -723,7 +723,9 @@ void Server::changeAuth(const QString &name, int auth) {
 }
 
 void Server::kick(int id) {
+    myengine->beforeServerKick(id);
     kick(id, 0);
+    myengine->afterServerKick(id);
 }
 
 void Server::silentKick(int id) {
@@ -747,7 +749,11 @@ void Server::kick(int id, int src) {
 }
 
 void Server::ban(int id) {
+    QString pname = name(id);
+    myengine->beforeServerBan(pname);
+
     ban(id, 0);
+    myengine->afterServerBan(pname);
 }
 
 void Server::ban(int id, int src) {
@@ -891,7 +897,10 @@ void Server::sendMessage(int id, const QString &message, bool html)
 
 void Server::sendServerMessage(const QString &message)
 {
+    if(!myengine->beforeServerMessage(message))
+        return;
     sendAll("~~Server~~: " + message);
+    myengine->afterServerMessage(message);
 }
 
 void Server::battleMessage(int player, int battle, const BattleChoice &choice)
@@ -1071,10 +1080,15 @@ void Server::awayChanged(int src, bool away)
 
 void Server::cancelSearch(int id)
 {
+    myengine->beforeCancelSearch(id);
+    /* if script kicked player */
+    if(!playerLoggedIn(id))
+        return;
+
     player(id)->battleSearch() = false;
     delete battleSearchs.take(id);
+    myengine->afterCancelSearch(id);
 }
-
 void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
 {
     if (!playerLoggedIn(to)) {
@@ -1177,12 +1191,64 @@ void Server::afterChangeTier(int src, const QString &old, const QString &dest)
     myengine->afterChangeTier(src, old, dest);
 }
 
-bool Server::beforeFindBattle(int src) {
+bool Server::beforeFindBattle(int src)
+{
     return myengine->beforeFindBattle(src);
 }
 
-void Server::afterFindBattle(int src) {
+void Server::afterFindBattle(int src)
+{
     myengine->afterFindBattle(src);
+}
+
+void Server::beforeAuthChange(const QString &name, int oldauth, int newauth)
+{
+    myengine->beforeAuthChange(name, oldauth, newauth);
+}
+
+void Server::afterAuthChange(const QString &name, int oldauth, int newauth)
+{
+    myengine->afterAuthChange(name, oldauth, newauth);
+}
+
+void Server::beforeServerBan(const QString &name)
+{
+    myengine->beforeServerBan(name);
+}
+
+void Server::afterServerBan(const QString &name)
+{
+    myengine->afterServerBan(name);
+}
+
+void Server::beforeServerUnban(const QString &name)
+{
+    myengine->beforeServerUnban(name);
+}
+
+void Server::afterServerUnban(const QString &name)
+{
+    myengine->afterServerUnban(name);
+}
+
+bool Server::beforeCPBan(int src, const QString &name)
+{
+    return myengine->beforeCPBan(src, name);
+}
+
+void Server::afterCPBan(int src, const QString &name)
+{
+    myengine->afterCPBan(src, name);
+}
+
+bool Server::beforeCPUnban(int src,const QString &name)
+{
+    return myengine->beforeCPUnban(src, name);
+}
+
+void Server::afterCPUnban(int src, const QString &name)
+{
+    myengine->afterCPUnban(src, name);
 }
 
 bool Server::beforePlayerAway(int src, bool away)
