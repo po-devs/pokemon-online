@@ -749,11 +749,11 @@ void Server::kick(int id, int src) {
 }
 
 void Server::ban(int id) {
-    QString name = name(id);
-    myengine->beforeServerBan(name);
+    QString pname = name(id);
+    myengine->beforeServerBan(pname);
 
     ban(id, 0);
-    myengine->afterServerBan(name);
+    myengine->afterServerBan(pname);
 }
 
 void Server::ban(int id, int src) {
@@ -900,7 +900,7 @@ void Server::sendServerMessage(const QString &message)
     if(!myengine->beforeServerMessage(message))
         return;
     sendAll("~~Server~~: " + message);
-    myengine->afterChatMessage(message);
+    myengine->afterServerMessage(message);
 }
 
 void Server::battleMessage(int player, int battle, const BattleChoice &choice)

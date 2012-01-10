@@ -16,8 +16,6 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
 
-    myengine = new ScriptEngine(this);
-
     QMap<int, QString> authgrade;
     authgrade[0] = "User";
     authgrade[1] = "Mod";
