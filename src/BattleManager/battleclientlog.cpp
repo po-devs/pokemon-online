@@ -29,14 +29,8 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, boo
 
 void BattleClientLog::emitAll()
 {
-    QRegExp r("<div class=\"([A-z]+)\">(.*)</div>");
-
     foreach(QString s, getLog()) {
-        if (r.indexIn(s) != -1) {
-            emit lineToBePrinted(r.cap(2) + "<br />");
-        } else {
-            emit lineToBePrinted(s);
-        }
+        emit lineToBePrinted(s);
     }
 }
 
@@ -153,7 +147,11 @@ void BattleClientLog::onBeginTurn(int turn)
 
 void BattleClientLog::onHpChange(int spot, int newHp)
 {
-    printSilent(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp));
+    if (data()->isPlayer(spot)) {
+        printSilent(tr("%1's new HP is %2/%3.").arg(nick(spot)).arg(newHp).arg(data()->poke(spot).totalLife()));
+    } else {
+        printSilent(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp));
+    }
 }
 
 void BattleClientLog::onHitCount(int, int count)
