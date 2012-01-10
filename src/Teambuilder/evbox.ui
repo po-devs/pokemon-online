@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>574</width>
-    <height>221</height>
+    <height>227</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
    <item row="0" column="3">
     <widget class="QSlider" name="hpslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
@@ -67,7 +67,7 @@
    <item row="1" column="3">
     <widget class="QSlider" name="atkslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
@@ -107,7 +107,7 @@
    <item row="2" column="3">
     <widget class="QSlider" name="defslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
@@ -147,7 +147,7 @@
    <item row="3" column="3">
     <widget class="QSlider" name="satkslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
@@ -176,7 +176,7 @@
       <bool>false</bool>
      </property>
      <property name="maximum">
-      <number>510</number>
+      <number>508</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -193,7 +193,7 @@
    <item row="4" column="3">
     <widget class="QSlider" name="sdefslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
@@ -247,7 +247,7 @@
    <item row="6" column="3">
     <widget class="QSlider" name="speedslider">
      <property name="maximum">
-      <number>255</number>
+      <number>252</number>
      </property>
      <property name="singleStep">
       <number>4</number>
