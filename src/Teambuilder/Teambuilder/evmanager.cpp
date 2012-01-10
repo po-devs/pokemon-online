@@ -8,6 +8,7 @@
 #include "../../Utilities/otherwidgets.h"
 #include "../../PokemonInfo/pokemoninfo.h"
 #include "theme.h"
+#include "../Utilities/qimagebuttonlr.h"
 
 TB_EVManager::TB_EVManager(PokeTeam *_poke)
 {

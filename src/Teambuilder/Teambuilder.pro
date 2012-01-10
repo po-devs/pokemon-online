@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     teambuilder.cpp \
     Teambuilder/teambuilder_old.cpp \
     teammenu.cpp \
-    pokeedit.cpp
+    pokeedit.cpp \
+    evbox.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -121,7 +122,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/teambuilder_old.h \
     teammenu.h \
     teambuilderwidget.h \
-    pokeedit.h
+    pokeedit.h \
+    evbox.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -131,7 +133,8 @@ FORMS += controlpanel.ui \
     trainermenu.ui \
     pokebuttonsholder.ui \
     pokebutton.ui \
-    pokeedit.ui
+    pokeedit.ui \
+    evbox.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
