@@ -26,6 +26,7 @@ public slots:
     void loadAll();
     void newTeam();
     void editPoke(int);
+    void switchToTrainer();
 private slots:
     void markTeamUpdated();
 signals:

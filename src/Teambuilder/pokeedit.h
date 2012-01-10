@@ -14,7 +14,10 @@ class PokeEdit : public QWidget
 public:
     explicit PokeEdit(QWidget *parent = 0);
     ~PokeEdit();
-
+signals:
+    void switchToTrainer();
+private slots:
+    void on_done_clicked() {emit switchToTrainer();}
 private:
     Ui::PokeEdit *ui;
 };
