@@ -15,12 +15,15 @@ class TeamMenu : public TeamBuilderWidget
 public:
     explicit TeamMenu(TeamHolder *team, int index=0);
     ~TeamMenu();
+
+    void updateTeam();
 signals:
     void switchToTrainer();
 private slots:
     void switchToTab(int index);
 private:
     void setupUi();
+    void updateTabs();
 
     struct _ui {
         QStackedWidget *stack;
