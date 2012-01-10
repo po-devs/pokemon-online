@@ -1,6 +1,7 @@
 #include <QStackedWidget>
 #include <QTabBar>
 #include <QGridLayout>
+#include <QStringListModel>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "teammenu.h"
@@ -27,6 +28,16 @@ void TeamMenu::setupUi()
     }
     ui->pokemonTabs->setCurrentIndex(0);
 
+    QSettings s;
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    ui->itemsModel = new QStringListModel(itemList, this);
+
+    QStringList natures;
+    for (int i = 0; i < NatureInfo::NumberOfNatures(); i++) {
+        natures.push_back(NatureInfo::Name(i));
+    }
+    ui->natureModel = new QStringListModel(natures, this);
+
     connect(ui->pokemonTabs, SIGNAL(currentChanged(int)), SLOT(switchToTab(int)));
 }
 
@@ -38,7 +49,7 @@ void TeamMenu::switchToTab(int index)
         return;
     }
     if (!ui->pokemons.contains(index)) {
-        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit());
+        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit(&team().team().poke(index), ui->itemsModel, ui->natureModel));
         connect(ui->pokemons[index], SIGNAL(switchToTrainer()), SIGNAL(switchToTrainer()));
     }
     ui->stack->setCurrentWidget(ui->pokemons[index]);

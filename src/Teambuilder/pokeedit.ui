@@ -25,7 +25,7 @@
     <widget class="QWidget" name="widget" native="true"/>
    </item>
    <item row="1" column="0">
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="pokemonFrame">
      <property name="minimumSize">
       <size>
        <width>96</width>
@@ -126,7 +126,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="nickname">
        <property name="placeholderText">
         <string>Pokemon nickname</string>
        </property>
