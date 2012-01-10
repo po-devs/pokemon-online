@@ -77,14 +77,20 @@ void TeamBuilder::markTeamUpdated()
     }
 }
 
-void TeamBuilder::editPoke(int)
+void TeamBuilder::editPoke(int index)
 {
     if (!teamMenu) {
-        addWidget(teamMenu = new TeamMenu());
+        addWidget(teamMenu = new TeamMenu(&team(), index));
         connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
+        connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
     }
 
     switchTo(teamMenu);
+}
+
+void TeamBuilder::switchToTrainer()
+{
+    switchTo(trainer);
 }
 
 TeamBuilderWidget *TeamBuilder::currentWidget()
