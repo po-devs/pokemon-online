@@ -21,9 +21,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="5" rowspan="2">
-    <widget class="QWidget" name="widget" native="true"/>
-   </item>
    <item row="1" column="0">
     <widget class="QFrame" name="pokemonFrame">
      <property name="minimumSize">
@@ -189,6 +186,9 @@
    <item row="2" column="0" colspan="4">
     <widget class="QTableView" name="moveChoice"/>
    </item>
+   <item row="0" column="5" rowspan="2">
+    <widget class="PokeLevelSettings" name="levelSettings"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -196,6 +196,12 @@
    <class>EvBox</class>
    <extends>QWidget</extends>
    <header>evbox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PokeLevelSettings</class>
+   <extends>QFrame</extends>
+   <header>pokelevelsettings.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

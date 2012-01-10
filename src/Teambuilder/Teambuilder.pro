@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     Teambuilder/teambuilder_old.cpp \
     teammenu.cpp \
     pokeedit.cpp \
-    evbox.cpp
+    evbox.cpp \
+    pokelevelsettings.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -123,7 +124,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teammenu.h \
     teambuilderwidget.h \
     pokeedit.h \
-    evbox.h
+    evbox.h \
+    pokelevelsettings.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -134,7 +136,8 @@ FORMS += controlpanel.ui \
     pokebuttonsholder.ui \
     pokebutton.ui \
     pokeedit.ui \
-    evbox.ui
+    evbox.ui \
+    pokelevelsettings.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

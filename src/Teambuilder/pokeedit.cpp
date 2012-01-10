@@ -12,7 +12,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->itemSprite->raise();
     ui->item->setModel(itemsModel);
     ui->nature->setModel(natureModel);
-
+    ui->levelSettings->setPoke(poke);
     updateAll();
 }
 
@@ -32,6 +32,7 @@ void PokeEdit::updateAll()
     ui->happiness->setValue(poke().happiness());
     ui->nature->setCurrentIndex(poke().nature());
     setItem(poke().item());
+    ui->levelSettings->updateAll();
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
