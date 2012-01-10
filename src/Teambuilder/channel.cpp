@@ -1,7 +1,7 @@
 #include "channel.h"
 #include "client.h"
 #include "poketextedit.h"
-#include "remove_direction_override.h"
+#include "remove_troll_characters.h"
 #include "theme.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
@@ -585,15 +585,13 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
         mainChat()->insertPlainText("\n");
         return;
     }
-
     if (act) {
         emit activated(this);
      }
-
     if (line.leftRef(3) == "***") {
         if (flashing)
             checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-        mainChat()->insertHtml("<span class='line action'>" + timeStr + removeDirectionOverride(addChannelLinks(escapeHtml(line))) + "</span><br />");
+        mainChat()->insertHtml("<span class='line action'>" + timeStr + removeTrollCharacters(addChannelLinks(escapeHtml(line))) + "</span><br />");
         return;
     }
 
@@ -601,7 +599,7 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
-        QString end = removeDirectionOverride(line.right(line.length()-pos-1));
+        QString end = removeTrollCharacters(line.right(line.length()-pos-1));
         int id = client->id(beg);
 
         /* Messages from players from auth 3 and less have their html escaped */
@@ -647,7 +645,7 @@ void Channel::printLine(const QString &line, bool flashing, bool act)
                 end = end.replace(nameNotInsideTag, addHilightClass);
 
             // Todo: maybe pull auth symbol from theme for all auth levels?
-            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : ""; 
+            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : "";
 
             QColor color = client->color(id);
 
@@ -675,7 +673,7 @@ void Channel::printHtml(const QString &str, bool act)
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
     QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
-    mainChat()->insertHtml(removeDirectionOverride(QString(str).replace( rx, timeStr )) + "<br />");
+    mainChat()->insertHtml(removeTrollCharacters(QString(str).replace( rx, timeStr )) + "<br />");
     if (act) {
         emit activated(this);
     }

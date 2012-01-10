@@ -29,7 +29,7 @@ SOURCES += \
     proxydatacontainer.cpp \
     datacontainer.cpp \
     regularbattlescene.cpp \
-    remove_direction_override.cpp
+    remove_troll_characters.cpp
 
 HEADERS +=\
     command.h \
@@ -61,7 +61,7 @@ HEADERS +=\
     param.h \
     regularbattlescene.h \
     ../Shared/battlecommands.h \
-    remove_direction_override.h
+    remove_troll_characters.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -125,6 +125,10 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
 
 include(../Shared/Common.pri)
+
+
+
+
 
 
 

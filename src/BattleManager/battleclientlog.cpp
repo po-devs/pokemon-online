@@ -3,7 +3,7 @@
 #include "battledata.h"
 #include "teamdata.h"
 #include "defaulttheme.h"
-#include "remove_direction_override.h"
+#include "remove_troll_characters.h"
 
 typedef ShallowBattlePoke* shallowpoke;
 typedef BattleData<DataContainer> battledata;
@@ -85,7 +85,7 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(removeDirectionOverride(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str)));
+    pushHtml(removeTrollCharacters(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str)));
     emit lineToBePrinted(log.back());
 }
 
