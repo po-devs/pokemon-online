@@ -7,6 +7,7 @@
 class QStackedWidget;
 class QTabBar;
 class TeamHolder;
+class QStringListModel;
 
 class TeamMenu : public TeamBuilderWidget
 {
@@ -29,6 +30,7 @@ private:
         QStackedWidget *stack;
         QTabBar *pokemonTabs;
         QHash<int, QWidget*> pokemons;
+        QStringListModel *itemsModel, *natureModel;
     };
 
     _ui *ui;
