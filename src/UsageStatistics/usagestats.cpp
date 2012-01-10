@@ -140,6 +140,11 @@ PokemonOnlineStatsBattlePlugin::~PokemonOnlineStatsBattlePlugin()
     qDebug() << "Deleted stats plugin " << this;
 }
 
+QString PokemonOnlineStatsBattlePlugin::pluginName() const
+{
+    return "Usage Statistics";
+}
+
 QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
 {
     QHash<QString, Hook> ret;

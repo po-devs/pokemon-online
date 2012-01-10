@@ -85,6 +85,8 @@ public:
     BattleLogsPlugin(BattleInterface *b= NULL, bool raw=true, bool text=false);
     ~BattleLogsPlugin();
 
+    QString pluginName() const;
+
     QHash<QString, Hook> getHooks();
     int emitCommand(BattleInterface &, int slot, int players, QByteArray b);
     int battleStarting(BattleInterface &);
@@ -105,6 +107,8 @@ public:
     TeamBattle team1, team2;
 
     bool raw, text;
+	
+    QString fileName;
 };
 
 

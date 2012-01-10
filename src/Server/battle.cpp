@@ -11,9 +11,11 @@
 #include "tier.h"
 #include "pluginmanager.h"
 #include "battlepluginstruct.h"
+#include "plugininterface.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
 #include "../Shared/battlecommands.h"
+#include "../BattleLogs/battlelogs.h"
 
 using namespace BattleCommands;
 
@@ -4883,4 +4885,14 @@ bool BattleSituation::isThereUproar()
 void BattleSituation::BasicMoveInfo::reset()
 {
     memset(this, 0, sizeof(*this));
+}
+
+QString BattleSituation::getBattleLogFilename() const
+{
+    foreach(BattlePlugin *p, plugins) {
+        if(p->pluginName() == "Battle Logs") {
+            return ((BattleLogsPlugin*)p)->fileName;
+        }
+    }
+    return "";
 }

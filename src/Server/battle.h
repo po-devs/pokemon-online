@@ -42,6 +42,8 @@ public:
 
     BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, PluginManager *p);
     ~BattleSituation();
+	
+    QString getBattleLogFilename() const;
 
     const TeamBattle &pubteam(int id) const;
     /* returns 0 or 1, or -1 if that player is not involved */

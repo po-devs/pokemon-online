@@ -1451,6 +1451,11 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         }
         myengine->beforeBattleEnded(winner, loser, desc, battleid);
 
+        qDebug() << QString("Battle result %1 vs. %2 %3:%4 %5").arg(pw->name(), pl->name(),
+                                                   QString::number(battle->countAlive(battle->spot(pw->id()))),
+                                                   QString::number(battle->countAlive(battle->spot(pl->id()))),
+                                                   battle->getBattleLogFilename());
+
         ++lastDataId;
         foreach(int chanid, pw->getChannels()) {
             Channel &chan = channel(chanid);

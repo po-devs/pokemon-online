@@ -20,6 +20,10 @@ public:
     typedef int (BattlePlugin::*Hook) ();
     virtual ~BattlePlugin(){}
 
+    virtual QString pluginName() const {
+        return "";
+    };
+	
     virtual QHash<QString, Hook> getHooks(){
         return QHash<QString, Hook>();
     }

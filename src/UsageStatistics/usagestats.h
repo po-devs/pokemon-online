@@ -60,6 +60,8 @@ public:
     PokemonOnlineStatsBattlePlugin(PokemonOnlineStatsPlugin *master, TierRank *t);
     ~PokemonOnlineStatsBattlePlugin();
 
+    QString pluginName() const;
+
     QHash<QString, Hook> getHooks();
 
     int battleStarting(BattleInterface &b);

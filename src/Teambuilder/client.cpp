@@ -1943,9 +1943,9 @@ void Client::disconnected()
 {
     printLine(tr("Disconnected from Server!"));
 
-    isConnected = false;
-    myregister->setText(tr("&Reconnect"));
-    myregister->setEnabled(true);
+//    isConnected = false;
+//    myregister->setText(tr("&Reconnect"));
+//    myregister->setEnabled(true);
 }
 
 TrainerTeam* Client::team()
