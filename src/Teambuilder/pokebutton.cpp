@@ -14,6 +14,7 @@ PokeButton::PokeButton(QWidget *parent) :
     ui->setupUi(this);
     ui->number->setBuddy(this);
     layout()->setMargin(2);
+    lastPress.invalidate();
 }
 
 PokeButton::~PokeButton()
