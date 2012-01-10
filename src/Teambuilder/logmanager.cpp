@@ -12,6 +12,9 @@ Log::Log(LogType type, const QString &title)
     key.title = title + QDate::currentDate().toString("dd MMMM yyyy")
                  + " at " + QTime::currentTime().toString("hh'h'mm");
 
+    QRegExp removeIllegal(QString("[\\/:\"/*?<>|]"));
+    key.title.remove(removeIllegal);
+
     if (type == ReplayLog) {
         key.title += ".poreplay";
     } else {
