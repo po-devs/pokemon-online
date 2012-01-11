@@ -124,7 +124,7 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
 
 BattleLogsPlugin::~BattleLogsPlugin()
 {
-    if (started) {
+    //if (started) {
         QString date = QDate::currentDate().toString("yyyy-MM-dd");
         QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
         QString id0 = QString::number(id1);
@@ -159,7 +159,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
             out.write(log->getLog().join("").toUtf8());
             out.close();
         }
-    }
+    //}
 
     if (input) {
         input->deleteTree();
