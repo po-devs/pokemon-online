@@ -7,6 +7,8 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     ui(new Ui::PokeLevelSettings)
 {
     ui->setupUi(this);
+
+    connect(ui->level, SIGNAL(valueChanged(int)), this, SLOT(changeLevel(int)));
 }
 
 PokeLevelSettings::~PokeLevelSettings()
@@ -63,4 +65,9 @@ void PokeLevelSettings::updateGender()
     } else {
         ui->neutralButton->setChecked(true);
     }
+}
+
+void PokeLevelSettings::changeLevel(int newLevel)
+{
+    poke().level() = newLevel;
 }
