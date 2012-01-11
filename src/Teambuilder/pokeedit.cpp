@@ -18,6 +18,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
 
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
+    connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
+    connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
 
@@ -55,6 +57,11 @@ void PokeEdit::updateStats()
 void PokeEdit::updatePicture()
 {
     ui->pokemonSprite->setPixmap(poke().picture());
+}
+
+void PokeEdit::updateGender()
+{
+    ui->genderSprite->setPixmap(Theme::GenderPicture(poke().gender()));
 }
 
 void PokeEdit::setItem(int itemnum)
