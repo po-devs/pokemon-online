@@ -16,6 +16,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
 
+    connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
+
     updateAll();
 }
 
@@ -71,4 +73,9 @@ void PokeEdit::setItem(int itemnum)
     }
 
     ui->itemSprite->setPixmap(ItemInfo::Icon(poke().item()));
+}
+
+void PokeEdit::changeHappiness(int newHappiness)
+{
+    poke().happiness() = newHappiness;
 }
