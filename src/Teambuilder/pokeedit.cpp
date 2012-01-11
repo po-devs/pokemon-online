@@ -17,6 +17,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->evbox->setPoke(poke);
 
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
+    connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
 
     updateAll();
 }
@@ -78,4 +79,9 @@ void PokeEdit::setItem(int itemnum)
 void PokeEdit::changeHappiness(int newHappiness)
 {
     poke().happiness() = newHappiness;
+}
+
+void PokeEdit::changeNature(int newNature)
+{
+    poke().nature() = newNature;
 }

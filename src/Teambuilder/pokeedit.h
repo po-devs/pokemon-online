@@ -25,6 +25,7 @@ private slots:
 
 public slots:
     void changeHappiness(int newHappiness);
+    void changeNature(int newNature);
 
 private:
     Ui::PokeEdit *ui;
