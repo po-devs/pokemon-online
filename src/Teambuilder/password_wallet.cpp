@@ -10,13 +10,11 @@ PasswordWallet::PasswordWallet() :
     dataPath(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/wallet.dat"), 
     serverPass(), userPass()
 {
-    qDebug() << "The data file is " << dataPath;
     load();
 }
 
 void PasswordWallet::load()
 {
-
     QFile f(dataPath);
     if (!f.open(QIODevice::ReadOnly))
         return;
