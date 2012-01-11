@@ -24,6 +24,8 @@ private slots:
     void on_done_clicked() {emit switchToTrainer();}
 
 public slots:
+    void updateStats();
+
     void changeHappiness(int newHappiness);
     void changeNature(int newNature);
 
