@@ -19,6 +19,10 @@ public:
 
     void setPoke(PokeTeam *poke);
     void updateAll();
+
+public slots:
+    void changeLevel(int newLevel);
+
 private:
     Ui::PokeLevelSettings *ui;
 
