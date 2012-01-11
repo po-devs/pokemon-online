@@ -25,6 +25,7 @@ private slots:
 
 public slots:
     void updateStats();
+    void updatePicture();
 
     void changeHappiness(int newHappiness);
     void changeNature(int newNature);

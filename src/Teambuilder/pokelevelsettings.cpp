@@ -9,6 +9,7 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->level, SIGNAL(valueChanged(int)), this, SLOT(changeLevel(int)));
+    connect(ui->shiny, SIGNAL(toggled(bool)), this, SLOT(changeShinyness(bool)));
 }
 
 PokeLevelSettings::~PokeLevelSettings()
@@ -71,4 +72,10 @@ void PokeLevelSettings::changeLevel(int newLevel)
 {
     poke().level() = newLevel;
     emit levelUpdated();
+}
+
+void PokeLevelSettings::changeShinyness(bool isShiny)
+{
+    poke().shiny() = isShiny;
+    emit shinyUpdated();
 }
