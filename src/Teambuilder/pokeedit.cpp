@@ -17,6 +17,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->evbox->setPoke(poke);
 
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
+    connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
 
@@ -49,6 +50,11 @@ void PokeEdit::updateAll()
 void PokeEdit::updateStats()
 {
     ui->evbox->updateAll();
+}
+
+void PokeEdit::updatePicture()
+{
+    ui->pokemonSprite->setPixmap(poke().picture());
 }
 
 void PokeEdit::setItem(int itemnum)

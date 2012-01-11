@@ -22,9 +22,11 @@ public:
 
 signals:
     void levelUpdated();
+    void shinyUpdated();
 
 public slots:
     void changeLevel(int newLevel);
+    void changeShinyness(bool isShiny);
 
 private:
     Ui::PokeLevelSettings *ui;
