@@ -20,6 +20,9 @@ public:
     void setPoke(PokeTeam *poke);
     void updateAll();
 
+signals:
+    void levelUpdated();
+
 public slots:
     void changeLevel(int newLevel);
 

@@ -16,6 +16,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
 
+    connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
 
@@ -43,6 +44,11 @@ void PokeEdit::updateAll()
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
+}
+
+void PokeEdit::updateStats()
+{
+    ui->evbox->updateAll();
 }
 
 void PokeEdit::setItem(int itemnum)
@@ -84,4 +90,5 @@ void PokeEdit::changeHappiness(int newHappiness)
 void PokeEdit::changeNature(int newNature)
 {
     poke().nature() = newNature;
+    updateStats();
 }

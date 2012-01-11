@@ -70,4 +70,5 @@ void PokeLevelSettings::updateGender()
 void PokeLevelSettings::changeLevel(int newLevel)
 {
     poke().level() = newLevel;
+    emit levelUpdated();
 }
