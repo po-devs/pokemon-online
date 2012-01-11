@@ -3,7 +3,7 @@
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include "../../SpecialIncludes/zip.h"
 #else
 #include <zip.h>
