@@ -23,10 +23,12 @@ public:
 signals:
     void levelUpdated();
     void shinyUpdated();
+    void genderUpdated();
 
 public slots:
     void changeLevel(int newLevel);
     void changeShinyness(bool isShiny);
+    void changeGender();
 
 private:
     Ui::PokeLevelSettings *ui;
