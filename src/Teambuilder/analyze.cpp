@@ -24,7 +24,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle << ChannelMessage << HtmlChannel;
 }
 
-void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color)
+void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
@@ -50,7 +50,6 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const Q
     Flags data;
     data.setFlags(PlayerFlags::SupportsZipCompression);
     data.setFlag(PlayerFlags::LadderEnabled, ladder);
-    data.setFlag(PlayerFlags::ShowTeam, showTeam);
 //                  SupportsZipCompression,
 //                  ShowTeam,
 //                  LadderEnabled,
@@ -64,7 +63,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool showTeam, const Q
 
     out << team.profile().info();
 
-    out << uchar(1) << team.team();
+    out << uchar(team.count());
+    for (int i = 0; i < team.count(); i++) {
+        out << team.team(i);
+    }
 
     emit sendCommand(tosend);
 }
@@ -416,7 +418,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             emit spectatingBattleFinished(battleId);
             break;
         }
-    case NetworkCli::VersionControl: {
+    case NetworkCli::VersionControl_: {
             QString version;
             in >> version;
             if (version != VERSION)

@@ -48,7 +48,7 @@ enum Command {
     SpectatingBattleFinished = 30,
     LadderChange,
     ShowTeamChange,
-    VersionControl,
+    VersionControl_,
     TierSelection,
     ServMaxChange,
     FindBattle,

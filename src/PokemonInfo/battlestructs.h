@@ -128,9 +128,8 @@ class TeamBattle
 public:
     TeamBattle();
     /* removes the invalid pokemons */
-    TeamBattle(TeamInfo &other);
+    TeamBattle(Team &other);
 
-    void init(TeamInfo &other);
     void generateRandom(int gen);
 
     PokeBattle& poke(int i);
@@ -153,6 +152,7 @@ public:
 
     QString name;
     QString info;
+    QString tier;
     int gen;
 private:
     PokeBattle m_pokemons[6];
