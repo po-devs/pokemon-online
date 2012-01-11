@@ -1,6 +1,6 @@
 #include "pmwindow.h"
 #include "../Utilities/otherwidgets.h"
-#include "remove_troll_characters.h"
+#include "../Utilities/functions.h"
 
 PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content, bool html, bool pmDisabled, int starterAuth)
     : m_ownName(ownName), escape_html(!html)

@@ -3,7 +3,7 @@
 #include "battledata.h"
 #include "teamdata.h"
 #include "defaulttheme.h"
-#include "remove_troll_characters.h"
+#include "../Utilities/functions.h"
 
 typedef ShallowBattlePoke* shallowpoke;
 typedef BattleData<DataContainer> battledata;

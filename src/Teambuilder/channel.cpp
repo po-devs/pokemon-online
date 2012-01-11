@@ -1,7 +1,7 @@
 #include "channel.h"
 #include "client.h"
 #include "poketextedit.h"
-#include "remove_troll_characters.h"
+#include "../Utilities/functions.h"
 #include "theme.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)

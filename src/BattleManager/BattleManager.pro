@@ -28,8 +28,7 @@ SOURCES += \
     auxpokedataproxy.cpp \
     proxydatacontainer.cpp \
     datacontainer.cpp \
-    regularbattlescene.cpp \
-    remove_troll_characters.cpp
+    regularbattlescene.cpp
 
 HEADERS +=\
     command.h \
@@ -60,8 +59,7 @@ HEADERS +=\
     battlesceneflow.h \
     param.h \
     regularbattlescene.h \
-    ../Shared/battlecommands.h \
-    remove_troll_characters.h
+    ../Shared/battlecommands.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -125,11 +123,3 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
 
 include(../Shared/Common.pri)
-
-
-
-
-
-
-
-
