@@ -689,7 +689,7 @@ bool Player::battling() const
 
 bool Player::supportsZip() const
 {
-    return true;
+    return spec()[SupportsZipCompression];
 }
 
 bool Player::hasBattle(int battleId) const
@@ -754,52 +754,69 @@ BasicInfo Player::basicInfo() const
     return ret;
 }
 
-void Player::loggedIn(TeamInfo &team,bool ladder, bool showteam, QColor c)
+bool Player::ladder() const
 {
-    if (isLoggedIn())
+    return spec()[PlayerFlags::LadderEnabled];
+}
+
+void Player::loggedIn(LoginInfo *info)
+{
+    if (state()[LoginAttempt])
         return;
+
+    state().setFlag(LoginAttempt, true);
 
     /* Version control, whatever happens, because the problem could be because of an old version */
     relay().notify(NetworkServ::VersionControl, VERSION);
     relay().notify(NetworkServ::ServerName, Server::serverIns->servName());
 
-    if (!testNameValidity(team.name)) {
+    if (!testNameValidity(info->trainerName)) {
         return;
     }
 
-    this->ladder() = ladder;
-    this->showteam() = showteam;
+    spec()[SupportsZipCompression] = info->data[PlayerFlags::SupportsZipCompression];
+    spec()[IdsWithMessage] = info->data[PlayerFlags::IdsWithMessage];
+    state()[LadderEnabled] = info->data[PlayerFlags::LadderEnabled];
+    state()[Away] = info->data[PlayerFlags::Idle];
 
-    assignNewColor(c);
-    assignTeam(team);
+    assignNewColor(info->trainerColor);
+    if (info->trainerInfo) {
+        this->info() = *info->trainerInfo;
+    }
+
+    if (info->teams) {
+        m_teams.init(info->teams);
+    }
+    color() = info->trainerColor;
 
     // If the server is password protected, the login cannot continue until the server password is supplied
     if (Server::serverIns->isPasswordProtected()) {
         // hack, uses waiting name to store the salt
-        waiting_name.resize(SecurityManager::Member::saltLength); 
+        waiting_pass.resize(SecurityManager::Member::saltLength);
         for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-            waiting_name[i] = uchar((true_rand() % (90-49)) + 49); 
-        }    
+            waiting_pass[i] = uchar((true_rand() % (90-49)) + 49);
+        }
 
-        relay().notify(NetworkServ::ServerPass, waiting_name.toAscii());
+        relay().notify(NetworkServ::ServerPass, waiting_pass.toAscii());
+        waiting_name = info->trainerName;
         return;
     } else {
         server_pass_sent = true;
     }
 
-    testAuthentification(team.name);
+    testAuthentification(info->trainerName);
 }
 
 void Player::serverPasswordSent(const QByteArray &_hash)
 {
-    if (Server::serverIns->correctPass(_hash, waiting_name.toAscii())) {
+    if (Server::serverIns->correctPass(_hash, waiting_pass.toAscii())) {
         server_pass_sent = true;
-        waiting_name.clear();
-        testAuthentification(team().name);
+        waiting_pass.clear();
+        testAuthentification(waiting_name);
     } else {
         // Retry the password prompt
         // XXX: maybe make a counter of 3 or something in retry attempts?
-        relay().notify(NetworkServ::ServerPass, waiting_name);
+        relay().notify(NetworkServ::ServerPass, waiting_pass);
     }
 }
 

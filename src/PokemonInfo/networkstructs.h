@@ -4,22 +4,6 @@
 #include "pokemonstructs.h"
 #include "../Utilities/coreclasses.h"
 
-/* Only the infos needed by the server */
-class TeamInfo
-{
-public:
-    PokePersonal m_pokes[6];
-    PokePersonal &pokemon(int num);
-    const PokePersonal &pokemon(int num) const;
-
-    QString name, info, win, lose, defaultTier;
-    quint16 avatar;
-    quint8 gen;
-};
-
-DataStream & operator << (DataStream & out,const TeamInfo & team);
-DataStream & operator >> (DataStream & in,TeamInfo & team);
-
 /* Only infos needed by other players */
 class BasicInfo
 {
@@ -142,10 +126,9 @@ DataStream & operator << (DataStream &out, const Flags &p);
 namespace PlayerFlags {
     enum {
         SupportsZipCompression,
-        ShowTeam,
         LadderEnabled,
-        Idle,
-        IdsWithMessage
+        IdsWithMessage,
+        Idle
     };
 }
 
@@ -187,5 +170,27 @@ struct TrainerInfo
 
 DataStream & operator >> (DataStream &in, TrainerInfo &i);
 DataStream & operator << (DataStream &out, const TrainerInfo &i);
+
+/* Only the infos needed by the server */
+struct LoginInfo
+{
+    LoginInfo();
+    ~LoginInfo();
+
+    ProtocolVersion version;
+    Flags network, data, events;
+    QString clientType;
+    quint16 clientVersion;
+    QString trainerName;
+    quint8 reconnectBits;
+    QColor trainerColor;
+    QList<Team> *teams;
+    QString *channel;
+    QStringList *additionalChannels;
+    TrainerInfo *trainerInfo;
+    QStringList *plugins;
+};
+
+DataStream & operator >> (DataStream & in, LoginInfo & team);
 
 #endif // NETWORKSTRUCTS_H

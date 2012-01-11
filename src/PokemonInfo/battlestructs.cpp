@@ -360,13 +360,12 @@ TeamBattle::TeamBattle() : gen(GEN_MAX)
     }
 }
 
-TeamBattle::TeamBattle(TeamInfo &other)
+TeamBattle::TeamBattle(Team &other)
 {
     resetIndexes();
 
-    name = other.name;
-    info = other.info;
-    gen = other.gen;
+    gen = other.gen();
+    tier = other.defaultTier();
 
     if (gen < GEN_MIN || gen > GEN_MAX) {
         gen = GEN_MAX;
@@ -374,7 +373,7 @@ TeamBattle::TeamBattle(TeamInfo &other)
 
     int curs = 0;
     for (int i = 0; i < 6; i++) {
-        poke(curs).init(other.pokemon(i));
+        poke(curs).init(other.poke(i));
         if (poke(curs).num() != 0) {
             ++curs;
         }

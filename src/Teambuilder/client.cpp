@@ -1931,7 +1931,7 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("show_team").toBool(), s.value("trainer_color").value<QColor>());
+    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
 }
 
 void Client::disconnected()

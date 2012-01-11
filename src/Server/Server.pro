@@ -96,7 +96,8 @@ HEADERS += player.h \
     battlecounterindex.h \
     battlefunctions.h \
     ../Shared/battlecommands.h \
-    ../Utilities/coreclasses.h
+    ../Utilities/coreclasses.h \
+    playerstructs.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -133,4 +134,3 @@ macx {
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 include(../Shared/Common.pri)
-

@@ -5,6 +5,7 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
 #include "sfmlsocket.h"
+#include "playerstructs.h"
 
 class Challenge;
 class BattleSituation;
@@ -21,28 +22,33 @@ class Player : public QObject, public PlayerInterface
     Q_OBJECT
 
     PROPERTY(int, rating);
-    PROPERTY(bool, ladder);
-    PROPERTY(bool, showteam);
     PROPERTY(QString, tier);
-    PROPERTY(quint16, avatar);
     PROPERTY(QString, defaultTier);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
-    PROPERTY(QString, winningMessage);
-    PROPERTY(QString, losingMessage);
+    PROPERTY(TrainerInfo, info);
     PROPERTY(QString, lastFindBattleIp);
+    PROPERTY(Flags, spec);
+    PROPERTY(Flags, state);
 public:
+    enum State
+    {
+        LoginAttempt,
+        LoggedIn,
+        Battling,
+        Away,
+        LadderEnabled
+    };
+
+    enum Spec
+    {
+        SupportsZipCompression,
+        IdsWithMessage
+    };
 
     QSet<int> battlesSpectated;
 
-    enum State
-    {
-        NotLoggedIn=0,
-        LoggedIn=1,
-        Battling=2,
-        Away = 4,
-    };
-
+    bool ladder() const;
     Player(const GenericSocket &sock, int id);
     ~Player();
 
@@ -67,7 +73,7 @@ public:
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
-    bool supportsZip() const; //TODO: update with real value instead of always true
+    bool supportsZip() const;
     void acquireKnowledgeOf(Player *other);
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);
@@ -151,7 +157,7 @@ signals:
     void leaveRequested(int id, int channelid);
     void ipChangeRequested(int id, const QString &ip);
 public slots:
-    void loggedIn(TeamInfo &team,bool,bool, QColor);
+    void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
     void recvTeam(TeamInfo &team);
@@ -189,7 +195,6 @@ public slots:
     void ipChangeRequested(const QString &ip);
     void autoKick();
 private:
-    TeamBattle myteam;
     Analyzer *myrelay;
     int lockCount;
 
@@ -201,9 +206,8 @@ private:
     mutable int lastcommand;
     bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
 
-    int m_state;
-    TeamInfo *waiting_team;
-    QString waiting_name;
+    TeamsHolder m_teams;
+    QString waiting_name, waiting_pass;
 
     QSet<int> battles;
     QSet<Challenge*> challenged;
