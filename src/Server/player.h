@@ -87,7 +87,6 @@ public:
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
     void changeState(int newstate, bool on);
-    int state() const;
     int auth() const;
     void setAuth (int newAuth);
     void setName (const QString & newName);
@@ -181,7 +180,6 @@ public slots:
     void spectatingChat(int id, const QString &chat);
     void quitSpectating(int id);
     void ladderChange(bool);
-    void showTeamChange(bool);
     void changeTier(const QString&);
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
@@ -248,7 +246,6 @@ private:
     /* The channels a player is on */
     QSet<int> channels;
 
-    void assignTeam(TeamInfo &team);
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
     void loginSuccess();

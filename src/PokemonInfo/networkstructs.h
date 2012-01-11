@@ -53,56 +53,6 @@ inline DataStream & operator >> (DataStream &d, UserInfo &ui) {
 DataStream & operator << (DataStream & out,const BasicInfo & team);
 DataStream & operator >> (DataStream & in,BasicInfo & team);
 
-/* Struct representing a player's data */
-class PlayerInfo
-{
-public:
-    qint32 id;
-    BasicInfo team;
-    qint8 auth;
-    quint8 flags;
-    qint16 rating;
-    Pokemon::uniqueId pokes[6];
-    quint16 avatar;
-    QString tier;
-    QColor color;
-    quint8 gen;
-
-    enum {
-        LoggedIn = 1,
-        Battling = 2,
-        Away = 4
-    };
-
-    bool battling() const {
-        return flags & Battling;
-    }
-
-    bool away() const {
-        return flags & Away;
-    }
-
-    void changeState(int state, bool on) {
-        if (on) {
-            flags |= state;
-        } else {
-            flags &= 0xFF ^ state;
-        }
-    }
-};
-
-DataStream & operator >> (DataStream &in, PlayerInfo &p);
-DataStream & operator << (DataStream &out, const PlayerInfo &p);
-
-struct Battle
-{
-    qint32 id1, id2;
-
-    Battle(int id1=0, int id2=0);
-};
-
-DataStream & operator >> (DataStream &in, Battle &p);
-DataStream & operator << (DataStream &out, const Battle &p);
 
 /* Flags are like so: for each byte, 7 bits of flag and one bit to tell if there are higher flags (in network)
   so as to limit the number of bytes sent by networking. That's why you should never have a flag that's 7,
@@ -131,6 +81,52 @@ namespace PlayerFlags {
         Idle
     };
 }
+
+/* Struct representing a player's data */
+class PlayerInfo
+{
+public:
+    qint32 id;
+    BasicInfo team;
+    qint8 auth;
+    Flags flags;
+    qint16 rating;
+    quint16 avatar;
+    QString tier;
+    QColor color;
+    quint8 gen;
+
+    enum {
+        LoggedIn = 1,
+        Battling = 2,
+        Away = 4
+    };
+
+    bool battling() const {
+        return flags[Battling];
+    }
+
+    bool away() const {
+        return flags[Away];
+    }
+
+    void changeState(int state, bool on) {
+        flags.setFlag(state, on);
+    }
+};
+
+DataStream & operator >> (DataStream &in, PlayerInfo &p);
+DataStream & operator << (DataStream &out, const PlayerInfo &p);
+
+struct Battle
+{
+    qint32 id1, id2;
+
+    Battle(int id1=0, int id2=0);
+};
+
+DataStream & operator >> (DataStream &in, Battle &p);
+DataStream & operator << (DataStream &out, const Battle &p);
 
 struct ProtocolVersion
 {
@@ -171,6 +167,22 @@ struct TrainerInfo
 DataStream & operator >> (DataStream &in, TrainerInfo &i);
 DataStream & operator << (DataStream &out, const TrainerInfo &i);
 
+class PersonalTeam
+{
+    PROPERTY(QString, defaultTier);
+protected:
+    PokeTeam m_pokes[6];
+    quint8 m_gen;
+
+public:
+    PersonalTeam();
+    quint8 gen() const {return m_gen;}
+    void setGen(int gen);
+
+    const PokePersonal & poke(int index) const {return m_pokes[index];}
+    PokePersonal & poke(int index) {return m_pokes[index];}
+};
+
 /* Only the infos needed by the server */
 struct LoginInfo
 {
@@ -184,7 +196,7 @@ struct LoginInfo
     QString trainerName;
     quint8 reconnectBits;
     QColor trainerColor;
-    QList<Team> *teams;
+    QList<PersonalTeam> *teams;
     QString *channel;
     QStringList *additionalChannels;
     TrainerInfo *trainerInfo;

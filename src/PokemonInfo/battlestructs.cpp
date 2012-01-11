@@ -360,7 +360,7 @@ TeamBattle::TeamBattle() : gen(GEN_MAX)
     }
 }
 
-TeamBattle::TeamBattle(Team &other)
+TeamBattle::TeamBattle(PersonalTeam &other)
 {
     resetIndexes();
 
