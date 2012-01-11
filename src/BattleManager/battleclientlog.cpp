@@ -14,7 +14,7 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, boo
 
     bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
-    pushHtml(QString("<!-- Pokemon Online battle%1 log (version 2.0) -->\n").arg(spectator ? " spectator": ""));
+    pushHtml(QString("<!-- Pokemon Online battle%1 log (version 3.0) -->\n").arg(spectator ? " spectator": ""));
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
 
