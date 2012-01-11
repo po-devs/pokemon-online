@@ -123,12 +123,14 @@ private:
 DataStream & operator >> (DataStream &in, PokeBattle &po);
 DataStream & operator << (DataStream &out, const PokeBattle &po);
 
+class PersonalTeam;
+
 class TeamBattle
 {
 public:
     TeamBattle();
     /* removes the invalid pokemons */
-    TeamBattle(Team &other);
+    TeamBattle(PersonalTeam &other);
 
     void generateRandom(int gen);
 

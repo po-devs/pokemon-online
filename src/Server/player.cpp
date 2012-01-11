@@ -17,10 +17,8 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     battleSearch() = false;
     myip = relay().ip();
     rating() = -1;
-    waiting_team = NULL;
     server_pass_sent = false;
 
-    m_state = NotLoggedIn;
     myauth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
@@ -78,15 +76,7 @@ void Player::ladderChange(bool n)
 {
     if (!isLoggedIn())
         return;//INV BEHAV
-    ladder() = n;
-    emit updated(id());
-}
-
-void Player::showTeamChange(bool n)
-{
-    if (!isLoggedIn())
-        return; //INV BEHAV
-    showteam() = n;
+    state().setFlag(LadderEnabled, n);
     emit updated(id());
 }
 
@@ -307,11 +297,7 @@ void Player::executeAwayChange(bool away)
 
 void Player::changeState(int newstate, bool on)
 {
-    if (on) {
-        m_state |= newstate;
-    } else {
-        m_state &= 0xFF ^ newstate;
-    }
+    state().setFlag(newstate, on);
 }
 
 int Player::auth() const {
@@ -659,12 +645,12 @@ void Player::giveBanList()
 
 TeamBattle & Player::team()
 {
-    return myteam;
+    return m_teams.team(0);
 }
 
 const TeamBattle & Player::team() const
 {
-    return myteam;
+    return m_teams.team(0);
 }
 
 int Player::gen() const
@@ -699,12 +685,7 @@ bool Player::hasBattle(int battleId) const
 
 bool Player::away() const
 {
-    return state() & Away;
-}
-
-int Player::state() const
-{
-    return m_state;
+    return state()[Away];
 }
 
 bool Player::connected() const
@@ -716,7 +697,8 @@ PlayerInfo Player::bundle() const
 {
     PlayerInfo p;
     p.auth = myauth;
-    p.flags = state() | (Battling && battling());
+    p.flags = state();
+    p.flags.setFlag(Battling, battling());
     p.id = id();
     p.team = basicInfo();
     p.rating = ladder() ? rating() : -1;
@@ -725,22 +707,12 @@ PlayerInfo Player::bundle() const
     p.color = color();
     p.gen = gen();
 
-    if (showteam()) {
-        for(int i = 0; i < 6; i++) {
-            p.pokes[i] = team().poke(i).num();
-        }
-    } else {
-        for(int i = 0; i < 6; i++) {
-            p.pokes[i] = 0;
-        }
-    }
-
     return p;
 }
 
 bool Player::isLoggedIn() const
 {
-    return m_state != NotLoggedIn;
+    return state()[LoggedIn];
 }
 
 int Player::id() const
@@ -767,17 +739,17 @@ void Player::loggedIn(LoginInfo *info)
     state().setFlag(LoginAttempt, true);
 
     /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl, VERSION);
+    relay().notify(NetworkServ::VersionControl_, VERSION);
     relay().notify(NetworkServ::ServerName, Server::serverIns->servName());
 
     if (!testNameValidity(info->trainerName)) {
         return;
     }
 
-    spec()[SupportsZipCompression] = info->data[PlayerFlags::SupportsZipCompression];
-    spec()[IdsWithMessage] = info->data[PlayerFlags::IdsWithMessage];
-    state()[LadderEnabled] = info->data[PlayerFlags::LadderEnabled];
-    state()[Away] = info->data[PlayerFlags::Idle];
+    spec().setFlag(SupportsZipCompression, info->data[PlayerFlags::SupportsZipCompression]);
+    spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
+    state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
+    state().setFlag(Away, info->data[PlayerFlags::Idle]);
 
     assignNewColor(info->trainerColor);
     if (info->trainerInfo) {
@@ -785,7 +757,7 @@ void Player::loggedIn(LoginInfo *info)
     }
 
     if (info->teams) {
-        m_teams.init(info->teams);
+        m_teams.init(*info->teams);
     }
     color() = info->trainerColor;
 
@@ -959,15 +931,6 @@ void Player::assignNewColor(const QColor &c)
 {
     if (c.lightness() <= 140 && c.green() <= 180)
         color() = c;
-}
-
-void Player::assignTeam(TeamInfo &team)
-{
-    avatar() = team.avatar;
-    this->team() = team;
-    winningMessage() = team.win;
-    losingMessage() = team.lose;
-    defaultTier() = team.defaultTier;
 }
 
 void Player::changeWaitingTeam(const TeamInfo &t)

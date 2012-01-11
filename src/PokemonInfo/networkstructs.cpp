@@ -32,10 +32,6 @@ DataStream & operator >> (DataStream &in, PlayerInfo &p)
     in >> p.flags;
     in >> p.rating;
 
-    for (int i = 0; i < 6; i++) {
-        in >> p.pokes[i];
-    }
-
     in >> p.avatar;
     in >> p.tier;
     in >> p.color;
@@ -51,10 +47,6 @@ DataStream & operator << (DataStream &out, const PlayerInfo &p)
     out << p.auth;
     out << p.flags;
     out << p.rating;
-
-    for (int i = 0; i < 6; i++) {
-        out << p.pokes[i];
-    }
 
     out << p.avatar;
     out << p.tier;
@@ -231,6 +223,52 @@ DataStream & operator << (DataStream &out, const TrainerInfo &i)
     return out;
 }
 
+
+DataStream & operator << (DataStream & out, const PersonalTeam & team)
+{
+    out << quint8(team.gen());
+
+    for(int index = 0;index<6;index++)
+    {
+        const PokePersonal & poke = team.poke(index);
+        out << poke;
+    }
+
+    return out;
+}
+
+DataStream & operator >> (DataStream & in, PersonalTeam & team)
+{
+    quint8 gen;
+
+    in >> gen;
+
+    team.setGen(gen);
+
+    for(int i=0;i<6;i++)
+    {
+        in >> team.poke(i);
+    }
+
+    return in;
+}
+
+PersonalTeam::PersonalTeam(): m_gen(GEN_MAX)
+{
+}
+
+void PersonalTeam::setGen(int gen)
+{
+    if (this->gen() == gen)
+        return;
+
+    m_gen = gen;
+
+    for (int i = 0; i < 6; i++) {
+        poke(i).gen() = gen;
+    }
+}
+
 LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0)
 {
 }
@@ -271,11 +309,11 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
     load(trainerInfo, HasTrainerInfo);
 
     if (l.network[LoginCommand::HasTeams]) {
-        l.teams = new QList<Team>();
+        l.teams = new QList<PersonalTeam>();
         qint8 count;
         in >> count;
         for (int i = 0; i < count; i++) {
-            Team t;
+            PersonalTeam t;
             in >> t;
             /* 6 teams tops */
             if (i < 6) {
