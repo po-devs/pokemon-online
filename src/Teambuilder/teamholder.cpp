@@ -89,6 +89,37 @@ bool Profile::saveToFile(const QString &path) const
     return true;
 }
 
+TeamHolder::TeamHolder()
+{
+    m_teams.push_back(Team());
+    m_currentTeam = 0;
+}
+
+const Team &TeamHolder::team() const
+{
+    return m_teams[currentTeam()];
+}
+
+Team &TeamHolder::team()
+{
+    return m_teams[currentTeam()];
+}
+
+const Team &TeamHolder::team(int i) const
+{
+    return m_teams[i];
+}
+
+Team &TeamHolder::team(int i)
+{
+    return m_teams[i];
+}
+
+int TeamHolder::count() const
+{
+    return m_teams.size();
+}
+
 void TeamHolder::save()
 {
     QSettings s;
