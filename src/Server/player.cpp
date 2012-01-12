@@ -16,7 +16,6 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     lockCount = 0;
     battleSearch() = false;
     myip = relay().ip();
-    rating() = -1;
     server_pass_sent = false;
 
     myauth = 0;
@@ -62,7 +61,6 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
 
 Player::~Player()
 {
-    removeWaitingTeam();
     delete myrelay;
 }
 
@@ -104,52 +102,52 @@ void Player::unlock()
 
 void Player::changeTier(const QString &newtier)
 {
-    if (tier() == newtier)
-        return;
-    if (battling()) {
-        sendMessage(tr("You can't change tiers while battling."));
-        return;
-    }
-    if (!TierMachine::obj()->exists(newtier)) {
-        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
-        return;
-    }
-    if (!TierMachine::obj()->isValid(team(), newtier)) {
-        Tier *tier = &TierMachine::obj()->tier(newtier);
+//    if (tier() == newtier)
+//        return;
+//    if (battling()) {
+//        sendMessage(tr("You can't change tiers while battling."));
+//        return;
+//    }
+//    if (!TierMachine::obj()->exists(newtier)) {
+//        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
+//        return;
+//    }
+//    if (!TierMachine::obj()->isValid(team(), newtier)) {
+//        Tier *tier = &TierMachine::obj()->tier(newtier);
 
-        if (!tier->allowGen(team().gen)) {
-            sendMessage(tr("The generation of your team is invalid for that tier."));
-            return;
-        }
+//        if (!tier->allowGen(team().gen)) {
+//            sendMessage(tr("The generation of your team is invalid for that tier."));
+//            return;
+//        }
 
-        QList<int> indexList;
-        for(int i = 0; i < 6; i++) {
-            if (tier->isBanned(team().poke(i))) {
-                indexList.append(i);
-            }
-        }
+//        QList<int> indexList;
+//        for(int i = 0; i < 6; i++) {
+//            if (tier->isBanned(team().poke(i))) {
+//                indexList.append(i);
+//            }
+//        }
 
-        if (indexList.size() > 0) {
-            foreach(int i, indexList) {
-                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
-            }
-            return;
-        } else {
-            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
-            return;
-        }
-    }
-    if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
-        QString oldtier = tier();
-        executeTierChange(newtier);
-        Server::serverIns->afterChangeTier(id(), oldtier, tier());
-    }
+//        if (indexList.size() > 0) {
+//            foreach(int i, indexList) {
+//                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
+//            }
+//            return;
+//        } else {
+//            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+//            return;
+//        }
+//    }
+//    if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
+//        QString oldtier = tier();
+//        executeTierChange(newtier);
+//        Server::serverIns->afterChangeTier(id(), oldtier, tier());
+//    }
 }
 
 void Player::executeTierChange(const QString &newtier)
 {
-    tier() = newtier;
-    findRating();
+ //   tier() = newtier;
+    findRatings();
     cancelChallenges();
 }
 
@@ -602,11 +600,6 @@ void Player::findBattle(const FindBattleData& f)
         return;
     }
 
-    if (f.mode < 0 || f.mode > ChallengeInfo::Rotation) {
-        sendMessage("You're tring to find a battle with an invalid mode.");
-        return;
-    }
-
     cancelBattleSearch();
 
     if (Server::serverIns->beforeFindBattle(id())) {
@@ -653,9 +646,33 @@ const TeamBattle & Player::team() const
     return m_teams.team(0);
 }
 
+TeamBattle & Player::team(int i)
+{
+    return m_teams.team(i);
+}
+
+const TeamBattle & Player::team(int i) const
+{
+    return m_teams.team(i);
+}
+
 int Player::gen() const
 {
     return team().gen;
+}
+
+int Player::teamCount() const
+{
+    return m_teams.count();
+}
+
+int Player::rating(const QString &tier)
+{
+    if (m_ratings.contains(tier)) {
+        return m_ratings[tier];
+    } else {
+        return TierMachine::obj()->rating(name(), tier);
+    }
 }
 
 Analyzer & Player::relay()
@@ -676,6 +693,11 @@ bool Player::battling() const
 bool Player::supportsZip() const
 {
     return spec()[SupportsZipCompression];
+}
+
+bool Player::hasTier(const QString &tier) const
+{
+    return tiers.contains(tier);
 }
 
 bool Player::hasBattle(int battleId) const
@@ -701,8 +723,6 @@ PlayerInfo Player::bundle() const
     p.flags.setFlag(Battling, battling());
     p.id = id();
     p.team = basicInfo();
-    p.rating = ladder() ? rating() : -1;
-    p.tier = tier();
     p.avatar = avatar();
     p.color = color();
     p.gen = gen();
@@ -794,15 +814,6 @@ void Player::serverPasswordSent(const QByteArray &_hash)
 
 void Player::loginSuccess()
 {
-    if (waiting_team) {
-        /* Don't get the new name yet, wait till fully logged in (with rating and all) */
-        if (isLoggedIn()) {
-            waiting_team->name = name();
-        }
-        assignTeam(*waiting_team);
-        removeWaitingTeam();
-    }
-
     ontologin = true;
     findTierAndRating();
 }
@@ -844,7 +855,6 @@ void Player::testAuthentificationLoaded()
         loginSuccess();
     } else {
         myauth = 0;
-        rating() = 1000;
 
         SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), ip());
         /* To tell the player he's not registered */
@@ -855,11 +865,17 @@ void Player::testAuthentificationLoaded()
 
 void Player::findTierAndRating()
 {
-    if (TierMachine::obj()->exists(defaultTier()) && TierMachine::obj()->isValid(team(), defaultTier()))
-        tier() = defaultTier();
-    else
-        tier() = TierMachine::obj()->findTier(team());
-    findRating();
+    tiers.clear();
+    for (int i = 0; i < m_teams.count(); i++) {
+        findTier(i);
+        tiers.insert(team(i).tier);
+    }
+    findRatings();
+}
+
+void Player::findTier(int slot)
+{
+    TierMachine::obj()->findTier(team(slot));
 }
 
 bool Player::hasKnowledgeOf(Player *other) const {
@@ -891,13 +907,45 @@ void Player::acquireRoughKnowledgeOf(Player *other) {
     acquireKnowledgeOf(other);
 }
 
-void Player::findRating()
+void Player::findRatings(bool force)
+{
+    if (force) {
+        m_ratings.clear();
+    }
+
+    QString name = waiting_name.length()>0 ? waiting_name : this->name();
+
+    foreach(QString tier, tiers) {
+        if (!m_ratings.contains(name)) {
+            findRating(tier);
+        }
+    }
+}
+
+const quint16 &Player::avatar() const
+{
+    return info().avatar;
+}
+
+quint16 &Player::avatar()
+{
+    return info().avatar;
+}
+
+const QString &Player::winningMessage() const
+{
+    return info().winning;
+}
+
+const QString &Player::losingMessage() const
+{
+    return info().losing;
+}
+
+void Player::findRating(const QString &tier)
 {
     lock();
-    if (waiting_name.length() > 0)
-        TierMachine::obj()->loadMemberInMemory(waiting_name, tier(), this, SLOT(ratingLoaded()));
-    else
-        TierMachine::obj()->loadMemberInMemory(name(), tier(), this, SLOT(ratingLoaded()));
+    TierMachine::obj()->loadMemberInMemory(waiting_name.length()>0 ? waiting_name : this->name(), tier, this, SLOT(ratingLoaded()));
 }
 
 void Player::addChannel(int chanid)
@@ -913,17 +961,20 @@ void Player::removeChannel(int chanid)
 void Player::ratingLoaded()
 {
     unlock();
-    rating() = TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier());
+    QString tier = sender()->property("tier").toString();
+    m_ratings.insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
 
-    if (ontologin) {
-        ontologin = false;
-        if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
-            emit loggedIn(id(), waiting_name);
-        else
-            emit recvTeam(id(), name());
-        waiting_name.clear();
-    } else {
-        emit updated(id());
+    if (tiers.count() <= m_ratings.count() && m_ratings.keys().toSet().contains(tiers)) {
+        if (ontologin) {
+            ontologin = false;
+            if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
+                emit loggedIn(id(), waiting_name);
+            else
+                emit recvTeam(id(), name());
+            waiting_name.clear();
+        } else {
+            emit updated(id());
+        }
     }
 }
 
@@ -931,19 +982,6 @@ void Player::assignNewColor(const QColor &c)
 {
     if (c.lightness() <= 140 && c.green() <= 180)
         color() = c;
-}
-
-void Player::changeWaitingTeam(const TeamInfo &t)
-{
-    delete waiting_team;
-    waiting_team = new TeamInfo(t);
-}
-
-void Player::removeWaitingTeam()
-{
-    delete waiting_team;
-    waiting_team=NULL;
-    return;
 }
 
 bool Player::isLocked() const
@@ -1044,11 +1082,6 @@ void Player::hashReceived(const QByteArray &_hash) {
     }
 }
 
-QString Player::name() const
-{
-    return team().name;
-}
-
 QString Player::ip() const
 {
     return myip;
@@ -1061,37 +1094,37 @@ QString Player::proxyIp() const
 
 void Player::recvTeam(TeamInfo &team)
 {
-    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
-    if (!isLoggedIn())
-        return;
+//    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
+//    if (!isLoggedIn())
+//        return;
 
-    QString oldName = name();
+//    QString oldName = name();
 
-    if (team.name != oldName && battling()) {
-        sendMessage("You can't change names while battling.");
-        return;
-    }
+//    if (team.name != oldName && battling()) {
+//        sendMessage("You can't change names while battling.");
+//        return;
+//    }
 
-    cancelChallenges();
-    cancelBattleSearch();
+//    cancelChallenges();
+//    cancelBattleSearch();
 
-    if (team.name.toLower() == oldName.toLower()) {
-        assignTeam(team);
-        /* Clears the wainting name in case it's not clear,
-           else something bad could happen */
-        waiting_name = "";
+//    if (team.name.toLower() == oldName.toLower()) {
+//        assignTeam(team);
+//        /* Clears the wainting name in case it's not clear,
+//           else something bad could happen */
+//        waiting_name = "";
 
-        //Still needs to deal with afterChangeTeam event
-        ontologin = true;
-        findTierAndRating();
-        return;
-    }
+//        //Still needs to deal with afterChangeTeam event
+//        ontologin = true;
+//        findTierAndRating();
+//        return;
+//    }
 
-    if (!testNameValidity(team.name))
-        return;
+//    if (!testNameValidity(team.name))
+//        return;
 
-    changeWaitingTeam(team);
-    testAuthentification(team.name);
+//    changeWaitingTeam(team);
+//    testAuthentification(team.name);
 }
 
 void Player::spectatingRequested(int id)

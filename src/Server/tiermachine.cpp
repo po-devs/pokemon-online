@@ -1,6 +1,7 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "loadinsertthread.h"
+#include "../PokemonInfo/battlestructs.h"
 
 TierMachine* TierMachine::inst;
 
@@ -300,6 +301,10 @@ QPair<int, int> TierMachine::pointChangeEstimate(const QString &player, const QS
 
 QString TierMachine::findTier(const TeamBattle &t) const
 {
+    if (exists(t.tier) && tier(t.tier).isValid(t)) {
+        return t.tier;
+    }
+
     for (int i = m_tiers.size()-1; i >= 0; i--) {
         if (m_tiers[i]->isValid(t)) {
             return m_tierNames[i];

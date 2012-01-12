@@ -222,9 +222,9 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case SendTeam:
         {
-            TeamInfo team;
-            in >> team;
-            emit teamReceived(team);
+//            TeamInfo team;
+//            in >> team;
+//            emit teamReceived(team);
             break;
         }
     case ChallengeStuff:

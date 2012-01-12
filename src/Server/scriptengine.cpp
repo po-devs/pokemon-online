@@ -895,20 +895,20 @@ QScriptValue ScriptEngine::tier(int id)
     if (!myserver->playerLoggedIn(id)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->tier();
+        return myserver->player(id)->team().tier;
     }
 }
 
 QScriptValue ScriptEngine::ranking(int id)
 {
     Player *p = myserver->player(id);
-    return ranking(p->name(), p->tier());
+    return ranking(p->name(), p->team().tier);
 }
 
 QScriptValue ScriptEngine::ratedBattles(int id)
 {
     Player *p = myserver->player(id);
-    return ratedBattles(p->name(), p->tier());
+    return ratedBattles(p->name(), p->team().tier);
 }
 
 QScriptValue ScriptEngine::ranking(const QString &name, const QString &tier)
@@ -937,11 +937,7 @@ QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
     if (!myserver->playerLoggedIn(id)) {
         return myengine.undefinedValue();
     } else {
-        if (tier.isEmpty()) {
-            return myserver->player(id)->rating();
-        } else {
-            return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
-        }
+        return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
     }
 }
 
@@ -1885,15 +1881,15 @@ void ScriptEngine::resetLadder(const QString &tier)
 
     /* Updates the rating of all the players of the tier */
     foreach(Player *p, myserver->myplayers) {
-        if (p->tier() == tier)
-            p->findRating();
+        if (p->hasTier(tier))
+            p->findRating(tier);
     }
 }
 
 void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
 {
     if (!TierMachine::obj()->exists(tier)) {
-        warn("resetLadder", "tier doesn't exist");
+        warn("synchronizeTierWithSQL", "tier doesn't exist");
         return;
     }
 
@@ -1901,8 +1897,8 @@ void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
 
     /* Updates the rating of all the players of the tier */
     foreach(Player *p, myserver->myplayers) {
-        if (p->tier() == tier)
-            p->findRating();
+        if (p->hasTier(tier))
+            p->findRating(tier);
     }
 }
 

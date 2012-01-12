@@ -21,6 +21,7 @@ class ScriptEngine;
 class Challenge;
 class QTcpServer;
 class PluginManager;
+class TeamBattle;
 
 class Server: public QObject, public ServerInterface
 {
@@ -72,7 +73,7 @@ public:
     void setAnnouncement(int &id, const QString &html);
     void setAllAnnouncement(const QString &html);
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
-    bool canHaveRatedBattle(int id1, int id2, int mode, bool forceRated1 = false, bool forceRated2 = false);
+    bool canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const TeamBattle &t2, bool forceRated1 = false, bool forceRated2 = false);
 
     void sendServerMessage(const QString &message);
 

@@ -41,8 +41,9 @@ Challenge::Challenge(Player *source, Player *dest, const ChallengeInfo &c, Serve
     dest->addChallenge(this, true);
 
     ChallengeInfo d = c;
-    /* Now only rated battles are through Find Battle */
-    desc.rated = s->allowThroughChallenge && s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
+    //Todo: fix rated below
+    //desc.rated = s->allowThroughChallenge && s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
+    desc.rated = false;
     d.opp = source->id();
     d.dsc = ChallengeInfo::Sent;
     dest->sendChallengeStuff(d);

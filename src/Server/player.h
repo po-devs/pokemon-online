@@ -21,9 +21,7 @@ class Player : public QObject, public PlayerInterface
 {
     Q_OBJECT
 
-    PROPERTY(int, rating);
-    PROPERTY(QString, tier);
-    PROPERTY(QString, defaultTier);
+    PROPERTY(QString, name);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
     PROPERTY(TrainerInfo, info);
@@ -55,6 +53,8 @@ public:
     /* returns all the regular info */
     TeamBattle &team();
     const TeamBattle &team() const;
+    TeamBattle &team(int);
+    const TeamBattle &team(int) const;
     /* Converts the content of the TeamInfo to a basicInfo and returns it */
     BasicInfo basicInfo() const;
 
@@ -65,11 +65,18 @@ public:
     bool hasSentCommand(int commandid) const;
 
     int id() const;
-    QString name() const;
     QString ip() const;
     QString proxyIp() const;
     int gen() const;
+    int teamCount() const;
+    int rating(const QString &tier);
 
+    virtual const quint16& avatar() const;
+    quint16 &avatar();
+    const QString &winningMessage() const;
+    const QString &losingMessage() const;
+
+    bool hasTier(const QString &tier) const;
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
@@ -126,7 +133,9 @@ public:
     void unlock();
     bool isLocked() const;
     void findTierAndRating();
-    void findRating();
+    void findTier(int slot);
+    void findRatings(bool force = false);
+    void findRating(const QString &tier);
 
     void executeTierChange(const QString&);
     void executeAwayChange(bool away);
@@ -208,6 +217,8 @@ private:
     QString waiting_name, waiting_pass;
 
     QSet<int> battles;
+    QSet<QString> tiers;
+    QHash<QString, int> m_ratings;
     QSet<Challenge*> challenged;
     QSet<Challenge*> challengedBy;
 
@@ -249,8 +260,6 @@ private:
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
     void loginSuccess();
-    void changeWaitingTeam(const TeamInfo &t);
-    void removeWaitingTeam();
     /* only call when sure there is one battle */
     int firstBattleId();
 

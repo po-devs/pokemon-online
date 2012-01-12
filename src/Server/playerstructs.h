@@ -4,30 +4,20 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/networkstructs.h"
 
-struct TeamHolder
-{
-    TeamHolder(){}
-    TeamHolder(PersonalTeam &t) : team(t), waiting(true) {
-
-    }
-
-    TeamBattle team;
-    bool waiting;
-};
-
 struct TeamsHolder
 {
     void init(QList<PersonalTeam> &teams) {
         teams.clear();
         for (int i = 0; i < teams.size(); i++) {
-            this->teams.push_back(std::move(TeamHolder(teams[i])));
+            this->teams.push_back(teams[i]);
         }
     }
 
-    TeamBattle &team(int i) {return teams[i].team;}
-    const TeamBattle &team(int i) const {return teams[i].team;}
+    TeamBattle &team(int i) {return teams[i];}
+    const TeamBattle &team(int i) const {return teams[i];}
+    int count() const {return teams.count();}
 
-    QList<TeamHolder> teams;
+    QList<TeamBattle> teams;
 };
 
 #endif // PLAYERSTRUCTS_H

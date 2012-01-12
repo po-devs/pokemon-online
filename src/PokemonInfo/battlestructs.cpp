@@ -854,7 +854,7 @@ DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
     quint32 flags;
 
-    in >> flags >> f.range >> f.mode;
+    in >> flags >> f.range;
 
     f.rated = flags & 0x01;
     f.sameTier = f.rated || flags & 0x2;
@@ -874,7 +874,7 @@ DataStream & operator << (DataStream &out, const FindBattleData &f)
     flags |= f.sameTier << 1;
     flags |= f.ranged << 2;
 
-    out << flags << f.range << f.mode;
+    out << flags << f.range;
 
     return out;
 }
