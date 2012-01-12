@@ -290,7 +290,7 @@ void TB_TeamBody::updateButton()
 
 void TB_TeamBody::updateTeam()
 {
-    changeGeneration(trainerTeam()->team().gen());
+    changeGeneration(trainerTeam()->team().gen().num);
 
     for(int i=0; i < 6; i++) {
         updatePoke(i);

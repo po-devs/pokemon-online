@@ -250,7 +250,7 @@ void TB_EVManager::updateEV(int stat)
 int TB_EVManager::gen() const
 {
     if (poke()) {
-        return poke()->gen();
+        return poke()->gen().num;
     } else {
         return GEN_MAX;
     }

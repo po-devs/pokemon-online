@@ -54,6 +54,44 @@ public:
     // Extracts short data in a "pokenum data_text" form.
     static bool extract_short(const QString &from, quint16 &pokenum, QString &remaining);
 };
+
+class gen
+{
+public:
+    quint8 num;
+    quint8 subnum;
+    gen() : num(GEN_MAX), subnum(0) {}
+    gen(int num, int subnum) : num(num), subnum(subnum) {}
+    gen(const gen &g) { num = g.num; subnum = g.subnum; }
+    gen(quint32 genRef) {
+        subnum = genRef >> 8;
+        num = genRef & 0xFF;
+    }
+    inline bool operator == (const gen &other) const {
+        return (num == other.num) && (subnum == other.subnum);
+    }
+    inline bool operator != (const gen &other) const {
+        return (num != other.num) || (subnum != other.subnum);
+    }
+    inline bool operator < (const gen &other) const {
+        return (num < other.num) || ((num == other.num) && (subnum < other.subnum));
+    }
+    inline bool operator > (const gen &other) const {
+        return (num > other.num) || ((num == other.num) && (subnum > other.subnum));
+    }
+    inline bool operator < (int other) const {
+        return (num < other);
+    }
+    inline bool operator > (int other) const {
+        return (num > other);
+    }
+    inline bool operator <= (int other) const {
+        return (num <= other);
+    }
+    inline bool operator >= (int other) const {
+        return (num >= other);
+    }
+};
 }
 
 struct AbilityGroup {
@@ -99,7 +137,7 @@ public:
 class PokeGeneral
 {
     PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(quint8, gen);
+    PROPERTY(Pokemon::gen, gen);
 public:
     PokeGeneral();
 
@@ -136,7 +174,7 @@ class PokePersonal
     PROPERTY(bool, shiny);
     PROPERTY(quint8, happiness);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, gen);
+    PROPERTY(Pokemon::gen, gen);
 protected:
     quint16 m_moves[4];
 
@@ -190,9 +228,9 @@ public:
 
 
     void setNum(Pokemon::uniqueId num);
-    void setGen(int gen);
+    void setGen(Pokemon::gen gen);
     Pokemon::uniqueId num() const;
-    int gen() const;
+    Pokemon::gen gen() const;
 
     void load(int gender, bool shiny);
     void loadIcon(const Pokemon::uniqueId &pokeid);
@@ -203,7 +241,7 @@ protected:
     QIcon m_icon;
     Pokemon::uniqueId m_num;
     int m_storedgender;
-    int m_gen;
+    Pokemon::gen m_gen;
 
     bool m_storedshininess;
     bool m_uptodate;
@@ -219,8 +257,8 @@ public:
 
     Pokemon::uniqueId num() const;
     void setNum(Pokemon::uniqueId num);
-    void setGen(int gen);
-    int gen() const;
+    void setGen(Pokemon::gen gen);
+    Pokemon::gen gen() const;
     void runCheck();
 
     int stat(int statno) const;
@@ -242,12 +280,12 @@ class Team
     PROPERTY(QString, defaultTier);
 protected:
     PokeTeam m_pokes[6];
-    quint8 m_gen;
+    Pokemon::gen m_gen;
 
 public:
     Team();
-    quint8 gen() const {return m_gen;}
-    void setGen(int gen);
+    Pokemon::gen gen() const {return m_gen;}
+    void setGen(Pokemon::gen gen);
 
     const PokeTeam & poke(int index) const {return m_pokes[index];}
     PokeTeam & poke(int index) {return m_pokes[index];}
@@ -276,6 +314,9 @@ inline uint qHash(const Pokemon::uniqueId &key)
 
 DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);
 DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id);
+
+DataStream & operator << (DataStream &out, const Pokemon::gen &g);
+DataStream & operator >> (DataStream &in, Pokemon::gen &g);
 
 Q_DECLARE_METATYPE(Pokemon::uniqueId);
 

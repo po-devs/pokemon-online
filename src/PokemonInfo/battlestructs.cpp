@@ -58,7 +58,7 @@ BattleMove::BattleMove()
     totalPP() = 0;
 }
 
-void BattleMove::load(int gen) {
+void BattleMove::load(Pokemon::gen gen) {
     PP() = MoveInfo::PP(num(), gen)*(num() == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */
     totalPP() = PP();
 }
@@ -218,7 +218,7 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    updateStats(p.gen());
+    updateStats(p.gen().num);
 }
 
 void PokeBattle::updateStats(int gen)

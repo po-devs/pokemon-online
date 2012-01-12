@@ -65,7 +65,7 @@ public:
     static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
 
     /* Self-explainable functions */
-    static int TrueCount(int gen=GEN_MAX); // pokes without counting forms
+    static int TrueCount(Pokemon::gen gen=GEN_MAX); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
     static int NumberOfVisiblePokes(); // base + visible forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
@@ -78,21 +78,21 @@ public:
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
     static QByteArray Cry(const Pokemon::uniqueId &pokeid);
-    static int Type1(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static int Type2(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QPixmap Picture(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static int Type1(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static int Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Picture(const QString &url);
-    static QPixmap Sub(int gen=5, bool back = false);
+    static QPixmap Sub(Pokemon::gen gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
-    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, int gen = GEN_MAX);
-    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
-    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, int gen = GEN_MAX);
+    static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> Moves(const Pokemon::uniqueId &pokeid, Pokemon::gen = GEN_MAX);
+    static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> LevelMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> TutorMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> TMMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
+    static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
     static QSet<int> dreamWorldMoves(const Pokemon::uniqueId &pokeid);
     static QList<Pokemon::uniqueId> AllIds();
     // Base form do NOT count.
@@ -105,11 +105,11 @@ public:
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
-    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static int MinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static int MinEggLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
+    static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
+    static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
+    static int MinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
+    static int MinEggLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
+    static int AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
@@ -122,19 +122,19 @@ public:
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static int SpecialStat(const Pokemon::uniqueId &pokeid);
-    static bool Exists(const Pokemon::uniqueId &pokeid, int gen);
+    static bool Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static bool Exists(const Pokemon::uniqueId &pokeid);
-    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, int gen=GEN_MAX);
-    static int Ability(const Pokemon::uniqueId &pokeid, int slot, int gen=GEN_MAX);
-    static int Stat(const Pokemon::uniqueId &pokeid, int gen, int stat, int level, quint8 dv, quint8 ev);
-    static int FullStat(const Pokemon::uniqueId &pokeid, int gen, int nature, int stat, int level, quint8 dv, quint8 ev);
+    static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, Pokemon::gen gen=GEN_MAX);
+    static int Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen gen=GEN_MAX);
+    static int Stat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int stat, int level, quint8 dv, quint8 ev);
+    static int FullStat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int nature, int stat, int level, quint8 dv, quint8 ev);
     static int BoostedStat(int stat, int boost);
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
     static QString Height(const Pokemon::uniqueId &pokeid);
     // Will NOT return Missingno.
-    static Pokemon::uniqueId getRandomPokemon(int gen=GEN_MAX);
+    static Pokemon::uniqueId getRandomPokemon(Pokemon::gen gen=GEN_MAX);
 
-    static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, int gen = GEN_MAX);
+    static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, Pokemon::gen gen = GEN_MAX);
     static bool modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value);
 private:
     // m_Names is a base.
@@ -209,41 +209,41 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
-    static int Type(int movenum, int gen);
-    static int Category(int movenum, int gen);
-    static int Classification(int movenum, int gen);
+    static int Type(int movenum, Pokemon::gen gen);
+    static int Category(int movenum, Pokemon::gen gen);
+    static int Classification(int movenum, Pokemon::gen gen);
     static int Number(const QString &movename);
     static int NumberOfMoves();
-    static int FlinchRate(int movenum, int gen);
-    static int Recoil(int movenum, int gen);
-    static QString Description(int movenum, int gen);
+    static int FlinchRate(int movenum, Pokemon::gen gen);
+    static int Recoil(int movenum, Pokemon::gen gen);
+    static QString Description(int movenum, Pokemon::gen gen);
     static QString DetailedDescription(int movenum);
-    static int Power(int movenum, int gen);
+    static int Power(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
-    static QString PowerS(int movenum, int gen);
-    static int PP(int movenum, int gen);
-    static int Acc(int movenum, int gen);
+    static QString PowerS(int movenum, Pokemon::gen gen);
+    static int PP(int movenum, Pokemon::gen gen);
+    static int Acc(int movenum, Pokemon::gen gen);
     /* gives the accuracy of a move in the form of a string */
-    static QString AccS(int movenum, int gen);
-    static int CriticalRaise(int movenum, int gen);
-    static int RepeatMin(int movenum, int gen);
-    static int RepeatMax(int movenum, int gen);
-    static int SpeedPriority(int movenum, int gen);
-    static int Flags(int movenum, int gen);
-    static bool Exists(int movenum, int gen);
-    static bool isOHKO(int movenum, int gen);
-    static bool isHM(int movenum, int gen);
-    static bool FlinchByKingRock(int movenum, int gen);
-    static int EffectRate(int movenum, int gen);
-    static quint32 StatAffected(int movenum, int gen);
-    static quint32 BoostOfStat(int movenum, int gen);
-    static quint32 RateOfStat(int movenum, int gen);
-    static int Target(int movenum, int gen);
-    static int Healing(int movenum, int gen);
-    static int MinTurns(int movenum, int gen);
-    static int MaxTurns(int movenum, int gen);
-    static int Status(int movenum, int gen);
-    static int StatusKind(int movenum, int gen);
+    static QString AccS(int movenum, Pokemon::gen gen);
+    static int CriticalRaise(int movenum, Pokemon::gen gen);
+    static int RepeatMin(int movenum, Pokemon::gen gen);
+    static int RepeatMax(int movenum, Pokemon::gen gen);
+    static int SpeedPriority(int movenum, Pokemon::gen gen);
+    static int Flags(int movenum, Pokemon::gen gen);
+    static bool Exists(int movenum, Pokemon::gen gen);
+    static bool isOHKO(int movenum, Pokemon::gen gen);
+    static bool isHM(int movenum, Pokemon::gen gen);
+    static bool FlinchByKingRock(int movenum, Pokemon::gen gen);
+    static int EffectRate(int movenum, Pokemon::gen gen);
+    static quint32 StatAffected(int movenum, Pokemon::gen gen);
+    static quint32 BoostOfStat(int movenum, Pokemon::gen gen);
+    static quint32 RateOfStat(int movenum, Pokemon::gen gen);
+    static int Target(int movenum, Pokemon::gen gen);
+    static int Healing(int movenum, Pokemon::gen gen);
+    static int MinTurns(int movenum, Pokemon::gen gen);
+    static int MaxTurns(int movenum, Pokemon::gen gen);
+    static int Status(int movenum, Pokemon::gen gen);
+    static int StatusKind(int movenum, Pokemon::gen gen);
     static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
     static QStringList MoveList();
@@ -298,8 +298,8 @@ private:
 
     static QString m_Directory;
     static Gen gens[Version::NumberOfGens];
-    static Gen & gen(int gen) {
-        return gens[gen-1];
+    static Gen & gen(Pokemon::gen gen) {
+        return gens[gen.num-1];
     }
 
     static void loadNames();
@@ -325,7 +325,7 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, int gen=GEN_MAX);
+    static bool Exists(int itemnum, Pokemon::gen gen=GEN_MAX);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isDrive(int itemnum);
@@ -334,9 +334,9 @@ public:
     static int PlateType(int itemnum);
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
-    static QList<QString> SortedNames(int gen);
-    static QList<QString> SortedUsefulNames(int gen);
-    static QList<Effect> Effects(int item, int gen);
+    static QList<QString> SortedNames(Pokemon::gen gen);
+    static QList<QString> SortedUsefulNames(Pokemon::gen gen);
+    static QList<Effect> Effects(int item, Pokemon::gen gen);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
     static QString Description(int itemnum);
@@ -458,13 +458,13 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int abnum);
-    static Effect Effects(int abnum, int gen);
+    static Effect Effects(int abnum, Pokemon::gen gen);
     static int Number(const QString &ab);
     static QString Message(int ab, int part);
     static int NumberOfAbilities();
     static QString Desc(int abnum);
     static QString EffectDesc(int abnum);
-    static bool Exists(int ability, int gen);
+    static bool Exists(int ability, Pokemon::gen gen);
     static int ConvertFromOldAbility(int oldability);
 private:
     static QList<QString> m_Names;

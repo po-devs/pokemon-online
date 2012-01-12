@@ -94,7 +94,6 @@ void PokeBaseStats::setBaseStat(int stat, quint8 base)
 PokeGeneral::PokeGeneral()
 {
     num() = Pokemon::uniqueId();
-    gen() = 5;
     //default for non-bugged programs
     m_genderAvail = Pokemon::NeutralAvail;
     m_types[0] = Pokemon::Curse;
@@ -158,7 +157,6 @@ int PokeGeneral::type2() const
 
 PokePersonal::PokePersonal()
 {
-    this->gen() = GEN_MAX;
     reset();
 }
 
@@ -412,7 +410,7 @@ void PokeGraphics::setNum(Pokemon::uniqueId num)
     setUpToDate(false);
 }
 
-void PokeGraphics::setGen(int gen)
+void PokeGraphics::setGen(Pokemon::gen gen)
 {
     m_gen = gen;
     setUpToDate(false);
@@ -472,7 +470,7 @@ Pokemon::uniqueId PokeGraphics::num() const
     return m_num;
 }
 
-int PokeGraphics::gen() const
+Pokemon::gen PokeGraphics::gen() const
 {
     return m_gen;
 }
@@ -490,7 +488,7 @@ void PokeTeam::setNum(Pokemon::uniqueId num)
     PokeGraphics::setNum(num);
 }
 
-void PokeTeam::setGen(int gen)
+void PokeTeam::setGen(Pokemon::gen gen)
 {
     PokeGeneral::gen() = gen;
     PokePersonal::gen() = gen;
@@ -566,11 +564,11 @@ int PokeTeam::stat(int statno) const
     return PokemonInfo::FullStat(num(), gen(), nature(), statno, level(),DV(statno),EV(statno));
 }
 
-Team::Team(): m_gen(GEN_MAX)
+Team::Team()
 {
 }
 
-void Team::setGen(int gen)
+void Team::setGen(Pokemon::gen gen)
 {
     if (this->gen() == gen)
         return;
@@ -596,7 +594,8 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     el.setAttribute("Happiness", happiness());
     el.setAttribute("Forme", num().subnum);
     el.setAttribute("Lvl", level());
-    el.setAttribute("Gen", gen());
+    el.setAttribute("Gen", gen().num);
+    el.setAttribute("SubGen", gen().subnum);
 
     for(int i = 0; i < 4; i++)
     {
@@ -629,7 +628,8 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
 void Team::toXml(QDomDocument &document) const
 {
     QDomElement Team = document.createElement("Team");
-    Team.setAttribute("gen", gen());
+    Team.setAttribute("gen", gen().num);
+    Team.setAttribute("subgen", gen().subnum);
     Team.setAttribute("defaultTier", defaultTier());
     Team.setAttribute("version", 1);
     document.appendChild(Team);
@@ -711,7 +711,7 @@ void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
 void PokeTeam::loadFromXml(const QDomElement &poke, int version)
 {
     if (poke.hasAttribute("Gen")) {
-        setGen(poke.attribute("Gen").toInt());
+        setGen(Pokemon::gen(poke.attribute("Gen").toInt(), poke.attribute("SubGen").toInt()));
     }
 
     reset();
@@ -782,7 +782,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version)
     }
 }
 
-int PokeTeam::gen() const
+Pokemon::gen PokeTeam::gen() const
 {
     return PokePersonal::gen();
 }
@@ -818,7 +818,7 @@ bool Team::loadFromFile(const QString &path)
     int gen = team.attribute("gen", "4").toInt();
     if (gen < GEN_MIN || gen > GEN_MAX)
         gen = GEN_MAX;
-    setGen(gen);
+    setGen(Pokemon::gen(team.attribute("gen", QString::number(GEN_MAX)).toInt(), team.attribute("subgen", "0").toInt()));
     defaultTier() = team.attribute("defaultTier");
 
     QDomElement poke = team.firstChildElement("Pokemon");
@@ -1097,7 +1097,7 @@ QString Team::exportToTxt() const
             if (p.move(i) != 0) {
                 ret += "- " + MoveInfo::Name(p.move(i)) ;
                 if (p.move(i) == Move::HiddenPower) {
-                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.gen(), p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
+                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.gen().num, p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
                 }
                 ret += "\n";
             }
@@ -1127,6 +1127,8 @@ DataStream & operator << (DataStream & out, const Team & team)
     }
 
     out << v;
+
+    return out;
 }
 
 
@@ -1350,5 +1352,30 @@ DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id)
 {
     in >> id.pokenum;
     in >> id.subnum;
+    return in;
+}
+
+DataStream & operator << (DataStream &out, const Pokemon::gen &id)
+{
+    out << id.num;
+    out << id.subnum;
+    return out;
+}
+
+DataStream & operator >> (DataStream &in, Pokemon::gen &id)
+{
+    in >> id.num;
+    in >> id.subnum;
+
+    if (id.num < GEN_MIN) {
+        id.num = GEN_MIN;
+    } else if (id.num > GEN_MAX) {
+        id.num = GEN_MAX;
+    }
+
+    if (id.subnum >= Gen::nums[id.num - GEN_MIN]) {
+        id.subnum = Gen::nums[id.num - GEN_MIN] - 1;
+    }
+
     return in;
 }
