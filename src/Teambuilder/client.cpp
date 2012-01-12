@@ -1677,8 +1677,8 @@ void Client::battleStarted(int battleId, int id, const TeamBattle &team, const B
 
 void Client::battleStarted(int bid, int id1, int id2)
 {
-    myplayersinfo[id1].flags |= PlayerInfo::Battling;
-    myplayersinfo[id2].flags |= PlayerInfo::Battling;
+    myplayersinfo[id1].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[id2].flags.setFlag(PlayerInfo::Battling, true);
 
     battles.insert(bid, Battle(id1, id2));
     foreach(Channel *c, mychannels) {
@@ -1693,8 +1693,8 @@ void Client::battleReceived(int battleid, int id1, int id2)
         return;
     }
 
-    myplayersinfo[id1].flags |= PlayerInfo::Battling;
-    myplayersinfo[id2].flags |= PlayerInfo::Battling;
+    myplayersinfo[id1].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[id2].flags.setFlag(PlayerInfo::Battling, true);
 
     battles.insert(battleid, Battle(id1, id2));
 
@@ -1747,16 +1747,16 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
     battles.remove(battleid);
 
     if (myplayersinfo.contains(winner))
-        myplayersinfo[winner].flags &= 0xFF ^ PlayerInfo::Battling;
+        myplayersinfo[winner].flags.setFlag(PlayerInfo::Battling, false);
     if (myplayersinfo.contains(loser))
-        myplayersinfo[loser].flags &= 0xFF ^ PlayerInfo::Battling;
+        myplayersinfo[loser].flags.setFlag(PlayerInfo::Battling, false);
 
     foreach(Battle b, battles) {
         if (myplayersinfo.contains(winner) && (b.id1 == winner || b.id2 == winner)) {
-            myplayersinfo[winner].flags |= PlayerInfo::Battling;
+            myplayersinfo[winner].flags.setFlag(PlayerInfo::Battling, true);
         }
         if (myplayersinfo.contains(loser) && (b.id1 == loser || b.id2 == loser)) {
-            myplayersinfo[loser].flags |= PlayerInfo::Battling;
+            myplayersinfo[loser].flags.setFlag(PlayerInfo::Battling, true);
         }
     }
 
@@ -2290,8 +2290,6 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
     ml->addLayout(sub2);
     sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
     sub2->addWidget(range = new QLineEdit());
-    ml->addWidget(mode = new QComboBox());
-    mode->addItems(QStringList() << tr("Singles") << tr("Doubles") << tr("Triples") /*<< tr("Rotation")*/);
 
     QHBoxLayout *hl = new QHBoxLayout();
     ml->addLayout(hl);
@@ -2302,7 +2300,6 @@ BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
 
     rated->setChecked(s.value("find_battle_force_rated").toBool());
     sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    mode->setCurrentIndex(s.value("find_battle_mode").toInt());
     rangeOn->setChecked(s.value("find_battle_range_on").toBool());
     range->setText(QString::number(s.value("find_battle_range").toInt()));
     changeEnabled();
@@ -2326,7 +2323,6 @@ void BattleFinder::throwChallenge()
     d.sameTier = sameTier->isChecked();
     d.range = std::max(range->text().toInt(), 100);
     d.ranged = rangeOn->isChecked();
-    d.mode = mode->currentIndex();
 
     QSettings s;
 
@@ -2334,7 +2330,6 @@ void BattleFinder::throwChallenge()
     s.setValue("find_battle_same_tier", d.sameTier);
     s.setValue("find_battle_range_on", d.ranged);
     s.setValue("find_battle_range", d.range);
-    s.setValue("find_battle_mode", d.mode);
 
     emit findBattle(d);
 }
