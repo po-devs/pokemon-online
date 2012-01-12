@@ -59,7 +59,7 @@ Move {
             console.log(i + ": " + extras[i]);
         }
 
-        if ((extras.currentHit || 0) == 0) {
+        if ((extras.currentHit || 0) === 0) {
             finished();
         } else {
             animation.running = true;

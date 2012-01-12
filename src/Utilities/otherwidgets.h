@@ -59,6 +59,7 @@ public:
     QSize maximumSize() const;
 
     void changePics(const QString &normal, const QString &hovered, const QString &checked = "");
+    void changePics(const QPixmap &normal, const QPixmap &hovered, const QPixmap &checked);
 protected:
     void paintEvent(QPaintEvent *e);
     void mouseMoveEvent(QMouseEvent *e);

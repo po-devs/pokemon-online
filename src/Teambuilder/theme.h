@@ -43,7 +43,7 @@ public:
     static QImageButtonP *PressedButton(const QString &code);
     static QImageButtonLR *LRButton(const QString &code);
     static void ChangePics(QImageButton *b, const QString &code);
-    static QPixmap Pic(const QString &way);
+    static QPixmap Pic(const QString &way, bool def=false);
     static QPixmap Sprite(const QString &key);
     static QIcon Icon(const QString &key);
     static QPixmap BlueBall();
