@@ -171,7 +171,7 @@ class PersonalTeam
 {
     PROPERTY(QString, defaultTier);
 protected:
-    PokeTeam m_pokes[6];
+    PokePersonal m_pokes[6];
     quint8 m_gen;
 
 public:
