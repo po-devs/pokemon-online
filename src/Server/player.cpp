@@ -778,8 +778,12 @@ void Player::loggedIn(LoginInfo *info)
 
     if (info->teams) {
         m_teams.init(*info->teams);
+    } else {
+        m_teams.init();
     }
+
     color() = info->trainerColor;
+    name() = info->trainerName;
 
     // If the server is password protected, the login cannot continue until the server password is supplied
     if (Server::serverIns->isPasswordProtected()) {
@@ -875,7 +879,7 @@ void Player::findTierAndRating()
 
 void Player::findTier(int slot)
 {
-    TierMachine::obj()->findTier(team(slot));
+    team(slot).tier = TierMachine::obj()->findTier(team(slot));
 }
 
 bool Player::hasKnowledgeOf(Player *other) const {
@@ -915,10 +919,16 @@ void Player::findRatings(bool force)
 
     QString name = waiting_name.length()>0 ? waiting_name : this->name();
 
+    bool one = false;
     foreach(QString tier, tiers) {
         if (!m_ratings.contains(name)) {
+            one = true;
             findRating(tier);
         }
+    }
+
+    if (!one) {
+        ratingsFound();
     }
 }
 
@@ -965,16 +975,21 @@ void Player::ratingLoaded()
     m_ratings.insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
 
     if (tiers.count() <= m_ratings.count() && m_ratings.keys().toSet().contains(tiers)) {
-        if (ontologin) {
-            ontologin = false;
-            if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
-                emit loggedIn(id(), waiting_name);
-            else
-                emit recvTeam(id(), name());
-            waiting_name.clear();
-        } else {
-            emit updated(id());
-        }
+        ratingsFound();
+    }
+}
+
+void Player::ratingsFound()
+{
+    if (ontologin) {
+        ontologin = false;
+        if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
+            emit loggedIn(id(), waiting_name);
+        else
+            emit recvTeam(id(), name());
+        waiting_name.clear();
+    } else {
+        emit updated(id());
     }
 }
 
