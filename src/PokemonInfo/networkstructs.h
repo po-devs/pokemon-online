@@ -138,18 +138,18 @@ DataStream & operator << (DataStream &out, const TrainerInfo &i);
 class PersonalTeam
 {
     PROPERTY(QString, defaultTier);
+    PROPERTY(quint8, gen);
 protected:
     PokePersonal m_pokes[6];
-    quint8 m_gen;
 
 public:
     PersonalTeam();
-    quint8 gen() const {return m_gen;}
-    void setGen(int gen);
 
     const PokePersonal & poke(int index) const {return m_pokes[index];}
     PokePersonal & poke(int index) {return m_pokes[index];}
 };
+
+DataStream & operator >> (DataStream & in, PersonalTeam & team);
 
 /* Only the infos needed by the server */
 struct LoginInfo
