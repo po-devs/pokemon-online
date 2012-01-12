@@ -29,19 +29,9 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     QPixmap px = Theme::Pic(QString("Trainer Sprites/%1.png").arg(p.avatar));
     trainerPic->setPixmap(px);
 
-    bool hidden = p.pokes[0]==0;
-
-    if (hidden) {
-        QLabel *hiddenTeam = new QLabel(this);
-        hiddenTeam->move(163,82);
-        hiddenTeam->setPixmap(Theme::Sprite("hiddenteam"));
-    } else {
-        for (int i = 0; i < 6; i++) {
-            QLabel *icon = new QLabel(this);
-            icon->move(168+i*51,84);
-            icon->setPixmap(PokemonInfo::Icon(p.pokes[i]));
-        }
-    }
+    QLabel *hiddenTeam = new QLabel(this);
+    hiddenTeam->move(163,82);
+    hiddenTeam->setPixmap(Theme::Sprite("hiddenteam"));
 
     PokeTextEdit *pinfo = new PokeTextEdit();
     pinfo->setParent(this);
