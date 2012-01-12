@@ -296,7 +296,7 @@ void Theme::ChangePics(QImageButton *b, const QString &code)
     while (s.size() < 3)
         s.append("");
 
-    b->changePics(path(s[0], def), path(s[1], def), path(s[2], def));
+    b->changePics(Pic(s[0], def), Pic(s[1], def), Pic(s[2], def));
 }
 
 QVariant Theme::value(const QString &key, bool *def)
@@ -315,9 +315,17 @@ QVariant Theme::value(const QString &key, bool *def)
     return ret;
 }
 
-QPixmap Theme::Pic(const QString &way)
+QPixmap Theme::Pic(const QString &way, bool def)
 {
-    return QPixmap(path(way));
+    QPixmap pm;
+
+    if (!QPixmapCache::find(way, &pm)) {
+        pm = QPixmap(path(way, def));
+
+        QPixmapCache::insert(way, pm);
+    }
+
+    return pm;
 }
 
 QPixmap Theme::Sprite(const QString &code)

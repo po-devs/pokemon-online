@@ -11,6 +11,7 @@ class PokeTeam;
 class QSlider;
 class QLabel;
 class QLineEdit;
+class QImageButtonLR;
 
 class EvBox : public QWidget
 {
@@ -22,16 +23,20 @@ public:
     void updateAll();
 
     ~EvBox();
-public slots:
+signals:
+    void natureChanged(int);
+private slots:
     void changeEV(const QString &newValue);
     void changeEV(int newValue);
-
+    void changeToPlusBoost();
+    void changeToMinusBoost();
 private:
     Ui::EvBox *ui;
     QSlider *m_sliders[6];
     QLabel *m_stats[6];
     QLabel *m_descs[6];
     QLineEdit *m_evs[6];
+    QImageButtonLR *m_boosts[6];
 
     PokeTeam *m_poke;
     PokeTeam &poke() {return *m_poke;}
@@ -39,6 +44,7 @@ private:
 
     void updateMain();
     void updateEV(int stat);
+    void updateNatureButtons();
 };
 
 #endif // EVBOX_H

@@ -31,7 +31,7 @@ public slots:
     void changeHappiness(int newHappiness);
     void changeNature(int newNature);
     void changeItem(const QString &newItem);
-
+    void setNature(int index);
 private:
     Ui::PokeEdit *ui;
     PokeTeam *m_poke;

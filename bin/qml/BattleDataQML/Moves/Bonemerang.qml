@@ -63,7 +63,7 @@ Move {
     }
 
     function start() {
-        if ((extras.currentHit || 0) == 0) {
+        if ((extras.currentHit || 0) === 0) {
             animation.running = true;
         } else {
             finished();

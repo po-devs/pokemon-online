@@ -138,6 +138,21 @@ void QImageButton::changePics(const QString &normal, const QString &hovered, con
     update();
 }
 
+void QImageButton::changePics(const QPixmap &normal, const QPixmap &hovered, const QPixmap &checked)
+{
+    myPic = normal;
+    setFixedSize(myPic.size());
+
+    myHoveredPic = hovered;
+    myCheckedPic = checked;
+
+#if defined(WIN32) || defined(WIN64)
+    setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
+#endif
+
+    update();
+}
+
 void QImageButton::mousePressEvent(QMouseEvent *e)
 {
     pressed = true;
