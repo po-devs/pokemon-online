@@ -22,6 +22,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
+    connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
 
     updateAll();
 }
@@ -64,6 +65,11 @@ void PokeEdit::updateGender()
     ui->genderSprite->setPixmap(Theme::GenderPicture(poke().gender()));
 }
 
+void PokeEdit::updateItemSprite(int newItem)
+{
+    ui->itemSprite->setPixmap(ItemInfo::Icon(newItem));
+}
+
 void PokeEdit::setItem(int itemnum)
 {
     QString item = ItemInfo::Name(itemnum);
@@ -91,8 +97,7 @@ void PokeEdit::setItem(int itemnum)
             low = mid;
         }
     }
-
-    ui->itemSprite->setPixmap(ItemInfo::Icon(poke().item()));
+    updateItemSprite(poke().item());
 }
 
 void PokeEdit::changeHappiness(int newHappiness)
@@ -104,4 +109,11 @@ void PokeEdit::changeNature(int newNature)
 {
     poke().nature() = newNature;
     updateStats();
+}
+
+void PokeEdit::changeItem(const QString &itemName)
+{
+    int itemNum = ItemInfo::Number(itemName);
+    poke().item() = itemNum;
+    updateItemSprite(poke().item());
 }

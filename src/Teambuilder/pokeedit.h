@@ -30,6 +30,7 @@ public slots:
 
     void changeHappiness(int newHappiness);
     void changeNature(int newNature);
+    void changeItem(const QString &newItem);
 
 private:
     Ui::PokeEdit *ui;
@@ -39,6 +40,7 @@ private:
     const PokeTeam &poke() const {return *m_poke;}
 
     void updateAll();
+    void updateItemSprite(int newItem);
     void setItem(int num);
 };
 
