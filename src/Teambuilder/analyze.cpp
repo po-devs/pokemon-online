@@ -30,8 +30,8 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     DataStream out(&tosend, QIODevice::WriteOnly);
 
     Flags network;
-    network.setFlags(LoginCommand::HasClientType | LoginCommand::HasVersionNumber | LoginCommand::HasTrainerInfo
-                     | LoginCommand::HasTeams);
+    network.setFlags( (1 << LoginCommand::HasClientType) | (1 << LoginCommand::HasVersionNumber) | (1 << LoginCommand::HasTrainerInfo)
+                     | (1 << LoginCommand::HasTeams));
 
     if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);

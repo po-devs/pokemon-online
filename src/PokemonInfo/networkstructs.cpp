@@ -101,9 +101,9 @@ void Flags::setFlags(quint32 flags)
 DataStream &operator << (DataStream &out, const Flags &f)
 {
     for (int i = 0; i==0 || f.data>>(i*8); i++) {
-        char c = f.data >> i*8;
+        quint8 c = f.data >> (i*8);
         if (f.data >> ((i+1)*8)) {
-            c |= 1 << 8;
+            c |= 1 << 7;
         }
         out << c;
     }
@@ -114,12 +114,12 @@ DataStream &operator << (DataStream &out, const Flags &f)
 DataStream &operator >> (DataStream &in, Flags &f) {
     f.data = 0;
 
-    uchar c(0);
+    quint8 c(0);
 
-    for (int i = 0; i == 0 || c & (1 << 8); i++) {
+    for (int i = 0; i == 0 || c & (1 << 7); i++) {
         in >> c;
         f.data |= c << (i * 8);
-        c &= ~(1 << (i*8+7)); /* Remove marker bit if present */
+        f.data &= ~(1 << (i*8+7)); /* Remove marker bit if present */
     }
 
     return in;
