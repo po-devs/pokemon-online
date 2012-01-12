@@ -14,7 +14,7 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, boo
 
     bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
-    pushHtml(QString("<!-- Pokemon Online battle%1 log (version 2.0) -->\n").arg(spectator ? " spectator": ""));
+    pushHtml(QString("<!-- Pokemon Online battle%1 log (version 3.0) -->\n").arg(spectator ? " spectator": ""));
     pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
     pushHtml("<body>");
 
@@ -29,14 +29,8 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, boo
 
 void BattleClientLog::emitAll()
 {
-    QRegExp r("<div class=\"([A-z]+)\">(.*)</div>");
-
     foreach(QString s, getLog()) {
-        if (r.indexIn(s) != -1) {
-            emit lineToBePrinted(r.cap(2) + "<br />");
-        } else {
-            emit lineToBePrinted(s);
-        }
+        emit lineToBePrinted(s);
     }
 }
 
@@ -58,10 +52,10 @@ void BattleClientLog::printLine(const QString &cl, const QString &str, bool sile
     }
 
     if (!silent) {
-        pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-        emit lineToBePrinted(QString("%2<br />\n").arg(str));
+        pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+        emit lineToBePrinted(log.back());
     } else {
-        pushHtml(QString("<!-- <div class=\"%1\">%2</div> -->\n").arg(cl, str));
+        pushHtml(QString("<!-- <span class=\"%1\">%2</span> -->\n").arg(cl, str));
     }
 }
 
@@ -84,8 +78,8 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(QString("<div class=\"%1\">%2</div><br />\n").arg(cl, str));
-    emit lineToBePrinted(QString("%2<br />\n").arg(str));
+    pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
+    emit lineToBePrinted(log.back());
 }
 
 QString BattleClientLog::nick(int spot)
@@ -153,7 +147,11 @@ void BattleClientLog::onBeginTurn(int turn)
 
 void BattleClientLog::onHpChange(int spot, int newHp)
 {
-    printSilent(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp));
+    if (data()->isPlayer(spot)) {
+        printSilent(tr("%1's new HP is %2/%3.").arg(nick(spot)).arg(newHp).arg(data()->poke(spot).totalLife()));
+    } else {
+        printSilent(tr("%1's new HP is %2%.").arg(nick(spot)).arg(newHp));
+    }
 }
 
 void BattleClientLog::onHitCount(int, int count)
