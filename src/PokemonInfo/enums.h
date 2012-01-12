@@ -10,6 +10,17 @@ static const int GEN_MAX = 5;
 // Number of gens
 static const int NUMBER_GENS = (GEN_MAX-GEN_MIN+1);
 
+namespace Gen
+{
+enum {
+    Stadium=1, RBY=1+(1<<8), StadiumWithTradebacks=(1+(2<<8)),
+    Stadium2=2, GSC=2+(1<<8),
+    Adv=3, RSE200=3+(1<<8),
+    HGSS=4, DP=4+(1<<8), DPPt=4+(2<<8),
+    BW=5
+};
+static const int nums[NUMBER_GENS] = {3,2,2,3,1};
+}
 namespace Version
 {
     enum {

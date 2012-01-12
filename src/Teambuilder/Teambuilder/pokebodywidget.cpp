@@ -336,7 +336,7 @@ void PokeBodyWidget::MoveList::setModel(QAbstractItemModel *model)
 
 void PokeBodyWidget::loadPokemon(PokeTeam &poke)
 {
-    changeGen(poke.gen());
+    changeGen(poke.gen().num);
 
     evchoice->setPokemon(&poke);
     setNature(poke.nature());

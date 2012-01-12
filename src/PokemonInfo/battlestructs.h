@@ -27,7 +27,7 @@ class BattleMove
 public:
     BattleMove();
 
-    void load(int gen);
+    void load(Pokemon::gen gen);
     operator int () {return num();}
 };
 
