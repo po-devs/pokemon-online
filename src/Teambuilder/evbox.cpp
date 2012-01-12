@@ -23,6 +23,11 @@ EvBox::EvBox(QWidget *parent) :
     setNums(m_sliders);
     setNums(m_evs);
 #undef setNums
+
+    for(int i = 0; i < 6; i++) {
+        connect(m_sliders[i], SIGNAL(valueChanged(int)), this, SLOT(changeEV(int)));
+        connect(m_evs[i], SIGNAL(textChanged(QString)), this, SLOT(changeEV(QString)));
+    }
 }
 
 EvBox::~EvBox()
@@ -66,4 +71,20 @@ void EvBox::updateMain()
 {
     ui->totalslider->setValue(poke().EVSum());
     ui->totallabel->setText(QString::number(poke().EVSum()));
+}
+
+void EvBox::changeEV(int newValue)
+{
+    int stat = sender()->property("stat").toInt();
+    poke().setEV(stat, newValue);
+    updateEV(stat);
+    updateMain();
+}
+
+void EvBox::changeEV(const QString &newValue)
+{
+    int stat = sender()->property("stat").toInt();
+    poke().setEV(stat, std::max(std::min(newValue.toInt(), 252), 0));
+    updateEV(stat);
+    updateMain();
 }
