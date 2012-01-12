@@ -99,7 +99,7 @@ signals:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
-    void teamReceived(TeamInfo &team);
+    //void teamReceived(TeamInfo &team);
     void connected();
     void disconnected();
     void forfeitBattle(int id);

@@ -516,6 +516,7 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
     /* It is important that this connect is done before the connect to freeObject(),
        because then the user at the signal's reception can use the object at will knowing it's not already
        used by another Player or w/e */
+    w->setProperty("tier", this->name());
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
@@ -661,6 +662,9 @@ void Tier::loadFromXml(const QDomElement &elem)
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
     mode = elem.attribute("mode", "0").toInt();
+    if (mode < ChallengeInfo::Singles || mode > ChallengeInfo::Rotation) {
+        mode = ChallengeInfo::Singles;
+    }
     displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
@@ -978,13 +982,9 @@ LoadThread * Tier::getThread()
     return boss->getThread();
 }
 
-bool Tier::allowMode(int mode) const
+int Tier::getMode() const
 {
-    if (this->mode < 0) {
-        return true;
-    }
-
-    return this->mode == mode;
+    return mode;
 }
 
 bool Tier::allowGen(int gen) const
