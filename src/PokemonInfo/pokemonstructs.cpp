@@ -1111,15 +1111,22 @@ QString Team::exportToTxt() const
 
 DataStream & operator << (DataStream & out, const Team & team)
 {
-    out << quint8(team.gen());
+    VersionControl v;
+    Flags network(!team.defaultTier().isEmpty());
 
-    for(int index = 0;index<6;index++)
-    {
-        const PokeTeam & poke = team.poke(index);
-        out << poke;
+    v.stream << network;
+
+    if (team.defaultTier().length() > 0) {
+        v.stream << team.defaultTier();
     }
 
-    return out;
+    v.stream << team.gen();
+
+    for (int i = 0; i < 6; i++) {
+        v.stream << team.poke(i);
+    }
+
+    out << v;
 }
 
 

@@ -148,50 +148,51 @@ DataStream & operator << (DataStream &out, const TrainerInfo &i)
     return out;
 }
 
-
-DataStream & operator << (DataStream & out, const PersonalTeam & team)
-{
-    out << quint8(team.gen());
-
-    for(int index = 0;index<6;index++)
-    {
-        const PokePersonal & poke = team.poke(index);
-        out << poke;
-    }
-
-    return out;
-}
-
 DataStream & operator >> (DataStream & in, PersonalTeam & team)
 {
-    quint8 gen;
+    VersionControl v;
+    in >> v;
 
-    in >> gen;
+    if (v.versionNumber != 0) {
+        return in;
+    }
 
-    team.setGen(gen);
+    Flags network;
+    v.stream >> network;
 
-    for(int i=0;i<6;i++)
+    if (network[0]) {
+        QString s;
+        v.stream >> s;
+        team.defaultTier() = s;
+    }
+
+    v.stream >> team.gen();
+
+    for (int i = 0; i < 6; i++) {
+        team.poke(i).gen() = team.gen();
+    }
+
+    quint8 count = 6;
+
+    if (network[1]) {
+        v.stream >> count;
+    }
+
+    for(int i=0;i<count;i++)
     {
-        in >> team.poke(i);
+        v.stream >> team.poke(i);
+    }
+
+    /* In case the sender overrode the gen parameter in the individual pokemons */
+    for (int i = 0; i < 6; i++) {
+        team.poke(i).gen() = team.gen();
     }
 
     return in;
 }
 
-PersonalTeam::PersonalTeam(): m_gen(GEN_MAX)
+PersonalTeam::PersonalTeam(): m_prop_gen(GEN_MAX)
 {
-}
-
-void PersonalTeam::setGen(int gen)
-{
-    if (this->gen() == gen)
-        return;
-
-    m_gen = gen;
-
-    for (int i = 0; i < 6; i++) {
-        poke(i).gen() = gen;
-    }
 }
 
 LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0)
