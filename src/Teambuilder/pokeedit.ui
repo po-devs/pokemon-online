@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,100,0,0,0">
-   <item row="0" column="3" colspan="2">
+  <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,100,0,0,0,0">
+   <item row="0" column="3" colspan="3">
     <widget class="QPushButton" name="done">
      <property name="text">
       <string>&amp;Trainer Home</string>
@@ -177,17 +177,77 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="2" colspan="3">
+   <item row="1" column="2" colspan="4">
     <widget class="EvBox" name="evbox" native="true"/>
    </item>
-   <item row="2" column="4" colspan="2">
+   <item row="2" column="5" colspan="2">
     <layout class="QGridLayout" name="gridLayout"/>
    </item>
-   <item row="2" column="0" colspan="4">
-    <widget class="QTableView" name="moveChoice"/>
-   </item>
-   <item row="0" column="5" rowspan="2">
+   <item row="0" column="6" rowspan="2">
     <widget class="PokeLevelSettings" name="levelSettings"/>
+   </item>
+   <item row="2" column="0" colspan="5">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0" colspan="4">
+      <widget class="QTableView" name="moveChoice">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>22</number>
+       </attribute>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="move1">
+       <property name="placeholderText">
+        <string>Move 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="move2">
+       <property name="placeholderText">
+        <string>Move 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="move3">
+       <property name="placeholderText">
+        <string>Move 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="move4">
+       <property name="placeholderText">
+        <string>Move 4</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -206,5 +266,70 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>move1</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>move1</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>149</x>
+     <y>442</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>move2</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>move2</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>440</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>444</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>move3</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>move3</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>463</x>
+     <y>443</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>526</x>
+     <y>447</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>move4</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>move4</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>648</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>744</x>
+     <y>446</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

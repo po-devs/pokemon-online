@@ -1,8 +1,14 @@
+#include <QSortFilterProxyModel>
+#include <QCompleter>
+#include <QLineEdit>
+#include <QMessageBox>
+
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "pokeedit.h"
 #include "ui_pokeedit.h"
 #include "theme.h"
+#include "pokemovesmodel.h"
 
 PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
@@ -16,6 +22,47 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
 
+    movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
+    QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
+    filter->setSourceModel(movesModel);
+    ui->moveChoice->setModel(filter);
+
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
+    ui->moveChoice->setIconSize(Theme::TypePicture(Type::Normal).size());
+
+    ui->moveChoice->sortByColumn(PokeMovesModel::Name, Qt::AscendingOrder);
+
+    m_moves[0] = ui->move1;
+    m_moves[1] = ui->move2;
+    m_moves[2] = ui->move3;
+    m_moves[3] = ui->move4;
+
+    connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
+
+    /* the four move choice items */
+    for (int i = 0; i < 4; i++)
+    {
+        QCompleter *completer = new QCompleter(m_moves[i]);
+        completer->setModel(ui->moveChoice->model());
+        completer->setCompletionColumn(PokeMovesModel::Name);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+        completer->setCompletionMode(QCompleter::PopupCompletion);
+        completer->setCompletionRole(Qt::DisplayRole);
+        m_moves[i]->setCompleter(completer);
+
+        completer->setProperty("move", i);
+        m_moves[i]->setProperty("move", i);
+
+        connect(completer, SIGNAL(activated(QString)), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(returnPressed()), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(editingFinished()), SLOT(changeMove()));
+    }
+
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
@@ -26,6 +73,45 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     connect(ui->evbox, SIGNAL(natureChanged(int)), this, SLOT(setNature(int)));
 
     updateAll();
+}
+
+void PokeEdit::changeMove()
+{
+    int slot = sender()->property("move").toInt();
+    int move = MoveInfo::Number(m_moves[slot]->text());
+
+    setMove(slot, move);
+}
+
+void PokeEdit::setMove(int slot, int move)
+{
+    try {
+        poke().setMove(move, slot, true);
+        m_moves[slot]->setText(MoveInfo::Name(move));
+
+        if (move == Move::Return) {
+            ui->happiness->setValue(255);
+        } else if (move == Move::Frustration) {
+            ui->happiness->setValue(0);
+        }
+    } catch (const QString &s) {
+        QMessageBox::information(this, tr("Invalid moveset"), s);
+        m_moves[slot]->clear();
+    }
+}
+
+void PokeEdit::moveEntered(const QModelIndex &index)
+{
+    int num = index.data(CustomModel::MovenumRole).toInt();
+
+    for (int i = 0; i < 4; i++) {
+        if (poke().move(i) == Move::NoMove) {
+            setMove(i, num);
+            return;
+        }
+    }
+
+    QMessageBox::information(this, tr("Impossible to add move"), tr("No more free moves!"));
 }
 
 PokeEdit::~PokeEdit()
@@ -46,6 +132,15 @@ void PokeEdit::updateAll()
     setItem(poke().item());
     ui->levelSettings->updateAll();
     ui->evbox->updateAll();
+    movesModel->setPokemon(poke().num(), poke().gen());
+
+    for (int i = 0; i < 4; i++) {
+        if (poke().move(i) != 0) {
+            m_moves[i]->setText(MoveInfo::Name(poke().move(i)));
+        } else {
+            m_moves[i]->clear();
+        }
+    }
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
