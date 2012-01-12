@@ -48,7 +48,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     //    HasPluginList
 
     Flags data;
-    data.setFlags(PlayerFlags::SupportsZipCompression);
+    data.setFlag(PlayerFlags::SupportsZipCompression, true);
     data.setFlag(PlayerFlags::LadderEnabled, ladder);
 //                  SupportsZipCompression,
 //                  ShowTeam,

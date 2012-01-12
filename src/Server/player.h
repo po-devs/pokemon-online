@@ -262,6 +262,8 @@ private:
     void loginSuccess();
     /* only call when sure there is one battle */
     int firstBattleId();
+    /* called when all ratings are found */
+    void ratingsFound();
 
     void testAuthentification(const QString &name);
 };
