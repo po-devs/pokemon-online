@@ -9,6 +9,9 @@ namespace Ui {
 
 class PokeTeam;
 class QAbstractItemModel;
+class PokeMovesModel;
+class QLineEdit;
+class QModelIndex;
 
 class PokeEdit : public QWidget
 {
@@ -32,8 +35,13 @@ public slots:
     void changeNature(int newNature);
     void changeItem(const QString &newItem);
     void setNature(int index);
+private slots:
+    void changeMove();
+    void moveEntered(const QModelIndex&);
 private:
     Ui::PokeEdit *ui;
+    QLineEdit *m_moves[4];
+    PokeMovesModel *movesModel;
     PokeTeam *m_poke;
 
     PokeTeam &poke() {return *m_poke;}
@@ -42,6 +50,7 @@ private:
     void updateAll();
     void updateItemSprite(int newItem);
     void setItem(int num);
+    void setMove(int slot, int move);
 };
 
 #endif // POKEEDIT_H

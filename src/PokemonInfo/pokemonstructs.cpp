@@ -164,7 +164,10 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 {
     if (moveNum == move(moveSlot))
         return;
+
     if (check && moveNum != 0) {
+        m_moves[moveSlot] = Move::NoMove;
+
         if (hasMove(moveNum))
             throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
         else if (!PokemonInfo::Moves(num(), gen()).contains(moveNum))
