@@ -22,6 +22,9 @@ public:
     void updateAll();
 
     ~EvBox();
+public slots:
+    void changeEV(const QString &newValue);
+    void changeEV(int newValue);
 
 private:
     Ui::EvBox *ui;
