@@ -138,7 +138,7 @@ class PokePersonal
     PROPERTY(quint8, level);
     PROPERTY(quint8, gen);
 protected:
-    int m_moves[4];
+    quint16 m_moves[4];
 
     quint8 m_DVs[6];
     quint8 m_EVs[6];
@@ -150,7 +150,7 @@ public:
 
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     int natureBoost(int stat) const;
-    int move(int moveSlot) const;
+    quint16 move(int moveSlot) const;
     /* resets everything to default values */
     void reset();
     /* Removes / Reset things if they are wrong */
@@ -171,6 +171,11 @@ public:
     int EVSum() const;
 
     void setEV(int stat, quint8 EV);
+
+    enum Flags {
+        hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs,
+        isShiny=0
+    };
 };
 
 /* Contains / loads the graphics of a pokemon */
@@ -260,10 +265,6 @@ void saveTTeamDialog(const Team &team, QObject *receiver=NULL, const char *slot=
 void loadTTeamDialog(Team &team, QObject *receiver=NULL, const char *slot=NULL);
 
 DataStream & operator << (DataStream & out,const Team & team);
-
-DataStream & operator >> (DataStream & in,Team & team);
-DataStream & operator >> (DataStream & in,PokeTeam & Pokemon);
-
 
 DataStream & operator << (DataStream & out,const PokePersonal & Pokemon);
 DataStream & operator >> (DataStream & in,PokePersonal & Pokemon);

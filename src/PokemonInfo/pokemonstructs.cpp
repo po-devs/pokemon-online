@@ -158,7 +158,7 @@ int PokeGeneral::type2() const
 
 PokePersonal::PokePersonal()
 {
-    this->gen() = 5;
+    this->gen() = GEN_MAX;
     reset();
 }
 
@@ -365,7 +365,7 @@ quint8 PokePersonal::EV(int stat) const
     return m_EVs[stat];
 }
 
-int PokePersonal::move(int moveSlot) const
+quint16 PokePersonal::move(int moveSlot) const
 {
     return m_moves[moveSlot];
 }
@@ -1122,105 +1122,139 @@ DataStream & operator << (DataStream & out, const Team & team)
     return out;
 }
 
-DataStream & operator >> (DataStream & in, Team & team)
+
+DataStream & operator << (DataStream & out, const PokePersonal & p)
 {
-    quint8 gen;
+    VersionControl v;
+    Flags network;
 
-    in >> gen;
+    typedef PokePersonal pp;
 
-    team.setGen(gen);
+    network.setFlag(pp::hasNickname, !p.nickname().isEmpty());
+    network.setFlag(pp::hasHappiness, p.happiness() != 0);
 
-    for(int i=0;i<6;i++)
-    {
-        in >> team.poke(i);
+    for (int i = Hp; i <= Speed; i++) {
+        if (p.DV(i) != 31) {
+            network.setFlag(pp::hasIVs, true);
+            break;
+        }
     }
 
-    return in;
-}
+    v.stream << network;
+    v.stream << p.num();
+    v.stream << p.level();
 
+    Flags data;
+    data.setFlag(pp::isShiny, p.shiny());
 
-DataStream & operator >> (DataStream & in, PokeTeam & poke)
-{
-    Pokemon::uniqueId num;
-    in >> num;
+    v.stream << data;
 
-    poke.setNum(num);
-
-    poke.load();
-
-    in >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
-
-    for(int i=0;i<4;i++)
-    {
-        int moveNum;
-        in >> moveNum;
-        poke.setMove(moveNum,i);
+    if (p.nickname().length() > 0) {
+        v.stream << p.nickname();
     }
-    for(int i=0;i<6;i++)
-    {
-        quint8 DV;
-        in >> DV;
-        poke.setDV(i,DV);
-    }
-    for(int i=0;i<6;i++)
-    {
-        quint8 EV;
-        in >> EV;
-        poke.setEV(i,EV);
-    }
-    return in;
-}
 
+    if (p.gen() > 1) {
+        v.stream << p.item();
+        if (p.gen() > 2) {
+            v.stream << p.ability();
+            v.stream << p.nature();
+        }
+        v.stream << p.gender();
+        if (p.gen() > 2 && p.happiness() != 0) {
+            v.stream << p.happiness();
+        }
+    }
 
-DataStream & operator << (DataStream & out, const PokePersonal & Pokemon)
-{
-    out << Pokemon.num();
-    out << Pokemon.nickname();
-    out << Pokemon.item();
-    out << Pokemon.ability();
-    out << Pokemon.nature();
-    out << Pokemon.gender();
-    out << Pokemon.shiny();
-    out << Pokemon.happiness();
-    out << Pokemon.level();
     int i;
     for(i=0;i<4;i++)
     {
-        out << Pokemon.move(i);
+        v.stream << p.move(i);
     }
     for(i=0;i<6;i++)
     {
-        out << Pokemon.DV(i);
+        v.stream << p.EV(i);
     }
-    for(i=0;i<6;i++)
-    {
-        out << Pokemon.EV(i);
+
+    if (network[pp::hasIVs]) {
+        for(i=0;i<6;i++)
+        {
+            v.stream << p.DV(i);
+        }
     }
+
+    out << v;
+
     return out;
 }
 
-DataStream & operator >> (DataStream & in, PokePersonal & poke)
+DataStream & operator >> (DataStream & in, PokePersonal & p)
 {
-    in >> poke.num() >> poke.nickname() >> poke.item() >> poke.ability() >> poke.nature() >> poke.gender() >> poke.shiny() >> poke.happiness() >> poke.level();
+    typedef PokePersonal pp;
 
-    for(int i=0;i<4;i++)
-    {
-        int moveNum;
-        in >> moveNum;
-        poke.setMove(moveNum,i);
+    VersionControl v;
+    in >> v;
+
+    if (v.versionNumber != 0) {
+        return in;
     }
-    for(int i=0;i<6;i++)
-    {
-        quint8 DV;
-        in >> DV;
-        poke.setDV(i,DV);
+
+    Flags network, data;
+
+    v.stream >> network;
+    if (network[pp::hasGen]) {
+        v.stream >> p.gen();
     }
+    v.stream >> p.num() >> p.level() >> data;
+
+    p.shiny() = data[pp::isShiny];
+
+    if (network[pp::hasNickname]) {
+        v.stream >> p.nickname();
+    }
+
+    if (network[pp::hasPokeball]) {
+        quint16 ball;
+        v.stream >> ball;
+    }
+
+    if (p.gen() > 1) {
+        v.stream >> p.item();
+        if (p.gen() > 2) {
+            v.stream >> p.ability();
+            v.stream >> p.nature();
+        }
+        v.stream >> p.gender();
+        if (p.gen() > 2 && network[pp::hasHappiness]) {
+            v.stream >> p.happiness();
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        if (network[pp::hasPPups]) {
+            quint8 ppup;
+            v.stream >> ppup;
+        }
+        quint16 moveNum;
+        v.stream >> moveNum;
+        p.setMove(moveNum,i);
+    }
+
     for(int i=0;i<6;i++)
     {
         quint8 EV;
-        in >> EV;
-        poke.setEV(i,EV);
+        v.stream >> EV;
+        p.setEV(i,EV);
     }
+
+    if (network[pp::hasIVs]) {
+        for(int i=0;i<6;i++)
+        {
+            quint8 IV;
+            v.stream >> IV;
+            p.setDV(i,IV);
+        }
+    }
+
     return in;
 }
 
