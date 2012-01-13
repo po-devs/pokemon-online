@@ -31,16 +31,14 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
 }
 
 BaseBattleWindow::BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
-                                   int _ownid, Client *client) : ignoreSpecs(NoIgnore), _mclient(client)
+                                   int _ownid) : ignoreSpecs(NoIgnore)
 {
-    init(me, opponent, conf, _ownid, client);
+    init(me, opponent, conf, _ownid);
 }
 
 void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &_conf,
-                            int _ownid, Client *client)
+                            int _ownid)
 {
-    _mclient = client;
-
     ownid() = _ownid;
     conf() = _conf;
     conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
@@ -400,9 +398,9 @@ void BaseBattleWindow::onKo(int spot)
     switchToNaught(spot);
 }
 
-void BaseBattleWindow::onSpectatorJoin(int id, const QString &)
+void BaseBattleWindow::onSpectatorJoin(int id, const QString &n)
 {
-    addSpectator(true, id);
+    addSpectator(true, id, n);
 }
 
 void BaseBattleWindow::onSpectatorLeave(int id)
@@ -415,7 +413,7 @@ void BaseBattleWindow::onBattleEnd(int, int)
     battleEnded = true;
 }
 
-void BaseBattleWindow::addSpectator(bool come, int id)
+void BaseBattleWindow::addSpectator(bool come, int id, const QString &)
 {
     if (come) {
         spectators.insert(id);

@@ -184,7 +184,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
-    connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
+    connect(relay, SIGNAL(versionDiff(ProtocolVersion, int)), SLOT(versionDiff(ProtocolVersion, int)));
     connect(relay, SIGNAL(serverNameReceived(QString)), SLOT(serverNameReceived(QString)));
     connect(relay, SIGNAL(tierListReceived(QByteArray)), SLOT(tierListReceived(QByteArray)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
@@ -742,10 +742,11 @@ void Client::togglePM(bool b)
 void Client::ignoreServerVersion(bool b)
 {
     QSettings s;
+    QString key  = QString("ignore_version_%1_%2").arg(serverVersion.version).arg(serverVersion.subversion);
     if (b) {
-        s.setValue("ignore_version_" + serverVersion, true);
+        s.setValue(key, true);
     } else {
-        s.remove("ignore_version_" + serverVersion);
+        s.remove(key);
     }
 }
 
@@ -1456,25 +1457,33 @@ bool Client::battling() const
     return mybattles.size() > 0;
 }
 
-void Client::versionDiff(const QString &a, const QString &b)
+void Client::versionDiff(const ProtocolVersion &v, int level)
 {
-    serverVersion = a;
+    serverVersion = v;
 
-    if (a != b) {
-        printHtml(toColor(tr("Your client version (%2) doesn't match with the server's (%1).").arg(a,b), QColor("#e37800")));
+    printHtml(toColor(tr("Your client version doesn't match with the server's (%1).").arg(level <= 0 ? tr("older") : tr("more recent")),
+                      QColor("#e37800")));
 
-        if (b.compare(a) < 0) {
-            QSettings s;
+    if (level <= 0) {
+        QSettings s;
 
-            if (s.contains("ignore_version_" + serverVersion))
-                return;
+        if (s.contains(QString("ignore_version_%1_%2").arg(v.version).arg(v.subversion)))
+            return;
 
-            QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), tr("Your version is older than the server's, there might be some things you can't do.\n\nhttp://www.pokemon-online.eu/downloads.php for updates."),QMessageBox::Ok  | QMessageBox::Ignore,NULL, Qt::Window);
-            int result = update->exec();
-
-            if (result & QMessageBox::Ignore)
-                ignoreServerVersion(true);
+        QString message;
+        switch(level) {
+        case -3: message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems"); break;
+        case -2: message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
+        case -1: message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
+        case 0: message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
         }
+
+        QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), message,
+                                              QMessageBox::Ok | QMessageBox::Ignore, NULL, Qt::Window);
+        int result = update->exec();
+
+        if (result & QMessageBox::Ignore)
+            ignoreServerVersion(true);
     }
 }
 
@@ -1657,10 +1666,9 @@ void Client::seeChallenge(const ChallengeInfo &c)
 void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
     cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, this);
+    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
     mybattle->setWindowFlags(Qt::Window);
-    mybattle->client() = this;
     mybattle->show();
     mybattle->activateWindow();
 
@@ -1704,9 +1712,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    QSettings s;
-
-    BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+    BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
 
     battle->setWindowFlags(Qt::Window);
     battle->show();

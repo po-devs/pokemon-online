@@ -14,6 +14,7 @@ class ChallengeInfo;
 class Battle;
 class UserInfo;
 class TeamHolder;
+class ProtocolVersion;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -101,7 +102,7 @@ signals:
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
-    void versionDiff(const QString &a, const QString &b);
+    void versionDiff(const ProtocolVersion&, int level);
     void serverNameReceived(const QString &serverName);
     /* Ranking */
     void rankingStarted(int,int,int);

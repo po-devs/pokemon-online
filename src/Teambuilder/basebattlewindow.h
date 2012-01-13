@@ -67,29 +67,21 @@ public:
 
     virtual void switchToNaught(int){}
 
-    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client);
+    BaseBattleWindow(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid);
     void init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
-              int _ownid, Client *client);
+              int _ownid);
 
     int gen() const {
         return info().gen;
     }
 
-    virtual void addSpectator(bool add, int id);
+    virtual void addSpectator(bool add, int id, const QString &name="");
 
     //void playCry(int pokenum);
 
     QString name(int spot) const;
     int player(int spot) const;
     int opponent(int player) const;
-
-    Client *& client() {
-        return _mclient;
-    }
-
-    const Client * client() const {
-        return _mclient;
-    }
 
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
@@ -132,7 +124,6 @@ protected:
     QScrollDownTextBrowser *mychat;
     QIRCLineEdit *myline;
     QPushButton *myclose, *mysend, *myignore;
-    Client *_mclient;
 
     QCheckBox *saveLogs;
     QCheckBox *musicOn;
@@ -178,9 +169,9 @@ protected:
 class BaseBattleWindowIns : public BaseBattleWindow, public BattleCommandManager<BaseBattleWindowIns>
 {
 public:
-    BaseBattleWindowIns(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid, Client *client)
+    BaseBattleWindowIns(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf, int ownid)
         : BaseBattleWindow(){
-        init(me, opponent, conf, ownid, client);
+        init(me, opponent, conf, ownid);
     }
 };
 #endif // BASEBATTLEWINDOW_H

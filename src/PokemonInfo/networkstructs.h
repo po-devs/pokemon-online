@@ -113,6 +113,9 @@ struct ProtocolVersion
     quint16 version;
     quint16 subversion;
 
+    bool operator < (const ProtocolVersion &other) const
+    {return version < other.version || (version == other.version && subversion < other.subversion);}
+
     ProtocolVersion();
 };
 

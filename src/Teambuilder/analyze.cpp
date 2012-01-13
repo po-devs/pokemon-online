@@ -419,18 +419,28 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         }
     case NetworkCli::VersionControl_: {
-            QString version;
-            in >> version;
-            if (version != VERSION)
-                emit versionDiff(version, VERSION);
+            ProtocolVersion server, feature, minor, major;
+            Flags f;
+            QString serverName;
+
+            in >> server >> f >> feature >> minor >> major >> serverName;
+
+            emit serverNameReceived(serverName);
+
+            ProtocolVersion version;
+
+            if (version < major) {
+                emit versionDiff(major, -3);
+            } else if (version < minor) {
+                emit versionDiff(minor, -2);
+            } else if (version < feature) {
+                emit versionDiff(feature, -1);
+            } else if (version < server) {
+                emit versionDiff(server, 0);
+            }
+
             break;
         }
-    case ServerName: {
-            QString serverName;
-            in >> serverName;
-            emit serverNameReceived(serverName);
-            break;
-       }
     case TierSelection: {
             QByteArray tierList;
             in >> tierList;
