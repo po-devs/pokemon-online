@@ -16,7 +16,7 @@ class ConfigForm : public QObject
 {
     Q_OBJECT
 public:
-    ConfigForm(const QString &button1, const QString &button2);
+    ConfigForm(const QString &button1, const QString &button2, QObject*parent=NULL);
     ~ConfigForm();
 
     QWidget* generateConfigWidget();

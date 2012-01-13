@@ -87,7 +87,7 @@ void TierWindow::done()
 
 void TierWindow::openCategoryEdit(TierCategory *c)
 {
-    helper = new ConfigForm("Delete Category", "Apply");
+    helper = new ConfigForm("Delete Category", "Apply", this);
     currentEdit = c->name();
     currentType = CategoryT;
     currentTierCat = c;
@@ -116,7 +116,7 @@ void TierWindow::openCategoryEdit(TierCategory *c)
 
 void TierWindow::openTierEdit(Tier *t)
 {
-    helper = new ConfigForm("Delete Tier", "Apply");
+    helper = new ConfigForm("Delete Tier", "Apply", this);
     currentEdit = t->name();
     currentType = TierT;
     currentTier = t;
