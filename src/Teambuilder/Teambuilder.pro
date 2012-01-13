@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     remove_direction_override.cpp \
 	password_wallet.cpp\
     spectatorwindow.cpp \
-    replayviewer.cpp
+    replayviewer.cpp \
+    soundconfigwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -104,7 +105,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    replayviewer.h
+    replayviewer.h \
+    soundconfigwindow.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -148,3 +150,4 @@ CONFIG(debian) {
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
+
