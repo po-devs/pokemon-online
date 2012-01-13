@@ -54,7 +54,8 @@ SOURCES += main.cpp \
     teammenu.cpp \
     pokeedit.cpp \
     evbox.cpp \
-    pokelevelsettings.cpp
+    pokelevelsettings.cpp \
+    soundconfigwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -125,7 +126,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teambuilderwidget.h \
     pokeedit.h \
     evbox.h \
-    pokelevelsettings.h
+    pokelevelsettings.h \
+    soundconfigwindow.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
