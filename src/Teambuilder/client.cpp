@@ -13,6 +13,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "soundconfigwindow.h"
 #include "teamholder.h"
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
@@ -1218,6 +1219,8 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
+    battleMenu->addAction(tr("&Sound configuration"),this, SLOT(openSoundConfig()));
+
     QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
     playMusic->setCheckable(true);
     connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
@@ -1408,6 +1411,11 @@ void Client::changeBattleLogFolder()
     }
 
     LogManager::obj()->changeBaseDirectory(dir);
+}
+
+void Client::openSoundConfig()
+{
+    new SoundConfigWindow();
 }
 
 void Client::changeButtonStyle(bool old)
