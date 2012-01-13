@@ -14,8 +14,8 @@
 
    Visual C++ > GCC on this point */
 
-ConfigForm::ConfigForm(const QString &button1, const QString &button2)
-    :button1S(button1), button2S(button2)
+ConfigForm::ConfigForm(const QString &button1, const QString &button2, QObject *parent)
+    : QObject(parent), button1S(button1), button2S(button2)
 {
 
 }

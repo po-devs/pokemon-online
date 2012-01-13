@@ -9,12 +9,15 @@ SOURCES += otherwidgets.cpp \
     CrossDynamicLib.cpp \
     contextswitch.cpp \
     coro.c
+    confighelper.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
     CrossDynamicLib.h \
     coro.h \
     contextswitch.h
+    confighelper.h
 OTHER_FILES += 
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 include(../Shared/Common.pri)
