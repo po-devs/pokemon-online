@@ -171,6 +171,7 @@ public slots:
     void playMusic(bool music);
     void changeMusicFolder();
     void changeBattleLogFolder();
+    void openSoundConfig();
     void forfeitBattle(int);
     void watchBattleOf(int);
     void watchBattleRequ(int);
