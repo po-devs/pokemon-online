@@ -234,7 +234,7 @@ public slots:
     void togglePM(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
-    void versionDiff(const QString &a, const QString &b);
+    void versionDiff(const ProtocolVersion &v, int level);
     void serverNameReceived(const QString &sName);
     void tierListReceived(const QByteArray &array);
     void changeTier();
@@ -315,7 +315,7 @@ private:
     int _mid;
     int selectedChannel;
 
-    QString serverVersion;
+    ProtocolVersion serverVersion;
     QString serverName;
 
     QPointer<QMenuBar> mymenubar;

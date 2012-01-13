@@ -4,7 +4,6 @@
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 #include "logmanager.h"
-#include "client.h"
 #include "theme.h"
 #include "spectatorwindow.h"
 #include <cstdlib>
@@ -54,14 +53,12 @@ PokeProxy & BattleInfo::currentPoke(int spot)
     return data->poke(spot);
 }
 
-BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf,
-                           Client *client)
+BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
     ownid() = me.id;
-    _mclient = client;
 
     conf() = _conf;
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
@@ -635,11 +632,11 @@ void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
     }
 }
 
-void BattleWindow::addSpectator(bool add, int id)
+void BattleWindow::addSpectator(bool add, int id, const QString &name)
 {
-    BaseBattleWindow::addSpectator(add,id);
+    BaseBattleWindow::addSpectator(add,id, name);
     if (add) {
-        myspecs->addItem(new QIdListWidgetItem(id, client()->name(id)));
+        myspecs->addItem(new QIdListWidgetItem(id, name));
     } else {
         for (int i =0 ; i < myspecs->count(); i++) {
             if ( ((QIdListWidgetItem*)(myspecs->item(i)))->id() == id) {

@@ -46,15 +46,12 @@ public:
 
 /* The battle window called by the client, online */
 
-class Client;
-
 class BattleWindow : public BaseBattleWindow, public BattleCommandManager<BattleWindow>
 {
     Q_OBJECT
 
 public:
-    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf,
-                 Client *client);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -95,7 +92,7 @@ public:
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
     void onChoiceCanceled(int player);
-    void addSpectator(bool add, int id);
+    void addSpectator(bool add, int id, const QString &);
 
     /* Disable / enable buttons */
     void updateChoices();
