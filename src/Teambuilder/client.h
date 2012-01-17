@@ -168,8 +168,6 @@ public slots:
     void battleCommand(int battleid, const QByteArray&command);
     void saveBattleLogs(bool save);
     void animateHpBar(bool animate);
-    void playMusic(bool music);
-    void changeMusicFolder();
     void changeBattleLogFolder();
     void openSoundConfig();
     void forfeitBattle(int);

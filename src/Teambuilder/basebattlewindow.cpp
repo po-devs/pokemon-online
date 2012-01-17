@@ -192,10 +192,13 @@ void BaseBattleWindow::musicPlayStop()
         return;
     }
 
-    /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QSettings s;
+    audioOutput->setVolume(float(s.value("battle_music_volume").toInt())/100);
+    cryOutput->setVolume(float(s.value("battle_cry_volume").toInt())/100);
+
+    /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a",
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a" << "*.mp4",
                                             QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
     QStringList tmpSources;
