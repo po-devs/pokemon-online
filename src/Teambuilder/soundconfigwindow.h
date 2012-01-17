@@ -11,6 +11,9 @@ public:
     SoundConfigWindow();
 public slots:
     void saveChanges();
+signals:
+    void cryVolumeChanged(int);
+    void musicVolumeChanged(int);
 private:
     int cryVolume;
     int musicVolume;

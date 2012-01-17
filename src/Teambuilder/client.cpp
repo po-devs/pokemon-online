@@ -1398,7 +1398,17 @@ void Client::changeBattleLogFolder()
 
 void Client::openSoundConfig()
 {
-    new SoundConfigWindow();
+    SoundConfigWindow *w = new SoundConfigWindow();
+
+    foreach(BaseBattleWindowInterface *i, mySpectatingBattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
+
+    foreach(BattleWindow *i, mybattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
 }
 
 void Client::changeButtonStyle(bool old)
