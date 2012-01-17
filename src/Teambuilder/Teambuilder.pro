@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     pokelevelsettings.cpp \
     spectatorwindow.cpp \
     replayviewer.cpp \
-    soundconfigwindow.cpp
+    soundconfigwindow.cpp \
+    password_wallet.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -122,7 +123,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     pokeedit.h \
     evbox.h \
     pokelevelsettings.h \
-    soundconfigwindow.h
+    soundconfigwindow.h \
+    replayviewer.h \
+    password_wallet.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
