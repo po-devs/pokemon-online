@@ -3,7 +3,6 @@
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
 #include "logmanager.h"
-#include "remove_direction_override.h"
 #include "spectatorwindow.h"
 #include "../BattleManager/advancedbattledata.h"
 #include "../BattleManager/battleclientlog.h"

@@ -26,6 +26,10 @@ SOURCES += main.cpp \
     rearrangewindow.cpp \
     poketablemodel.cpp \
     pokemovesmodel.cpp \
+<<<<<<< HEAD
+=======
+    Teambuilder/teambuilder.cpp \
+>>>>>>> master
     Teambuilder/pokedex.cpp \
     Teambuilder/box.cpp \
     Teambuilder/trainerbody.cpp \
@@ -41,6 +45,7 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
+<<<<<<< HEAD
     remove_direction_override.cpp \
 	password_wallet.cpp\
     spectatorwindow.cpp \
@@ -55,6 +60,11 @@ SOURCES += main.cpp \
     pokeedit.cpp \
     evbox.cpp \
     pokelevelsettings.cpp \
+=======
+	password_wallet.cpp\
+    spectatorwindow.cpp \
+    replayviewer.cpp \
+>>>>>>> master
     soundconfigwindow.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
@@ -87,6 +97,10 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     poketablemodel.h \
     modelenum.h \
     pokemovesmodel.h \
+<<<<<<< HEAD
+=======
+    Teambuilder/teambuilder.h \
+>>>>>>> master
     Teambuilder/pokedex.h \
     Teambuilder/box.h \
     Teambuilder/trainerbody.h \
@@ -103,7 +117,10 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     engineinterface.h \
     logmanager.h \
     poketextedit.h \
+<<<<<<< HEAD
     remove_direction_override.h \
+=======
+>>>>>>> master
 	password_wallet.h\
     spectatorwindow.h \
     ../BattleManager/battlescene.h \
@@ -177,3 +194,4 @@ CONFIG(debian) {
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
+
