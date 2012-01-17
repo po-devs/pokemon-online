@@ -150,7 +150,7 @@ void LogManager::changeBaseDirectory(const QString &directory)
     this->directory = directory;
 
     QSettings s;
-    s.setValue("logs_directory", directory);
+    s.setValue("logs_directory", directory + "/");
 }
 
 Log * LogManager::createLog(LogType type, const QString &title, bool autolog)
