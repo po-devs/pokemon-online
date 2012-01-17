@@ -25,9 +25,9 @@ SoundConfigWindow::SoundConfigWindow()
 
     form->addConfigHelper(new ConfigFile(tr("Music path: "), musicPath));
     form->addConfigHelper(new ConfigCheck(tr("Play battle music"), playMusic));
-    form->addConfigHelper(new ConfigSlider(tr("Music volume: "), musicVolume, 0, 200));
+    form->addConfigHelper(new ConfigSlider(tr("Music volume: "), musicVolume, 0, 100));
     form->addConfigHelper(new ConfigCheck(tr("Play pokemon cries"), playCries));
-    form->addConfigHelper(new ConfigSlider(tr("Cries volume: "), cryVolume, 0, 200));
+    form->addConfigHelper(new ConfigSlider(tr("Cries volume: "), cryVolume, 0, 100));
 
     QWidget *w = form->generateConfigWidget();
     w->setAttribute(Qt::WA_DeleteOnClose);
@@ -48,10 +48,13 @@ void SoundConfigWindow::saveChanges()
     QSettings s;
 
     s.setValue("battle_cry_volume", cryVolume);
-    s.setValue("music_volume", musicVolume);
+    s.setValue("battle_music_volume", musicVolume);
     s.setValue("battle_music_directory", musicPath);
     s.setValue("play_battle_music", playMusic);
     s.setValue("play_battle_sounds", playCries);
+
+    emit cryVolumeChanged(cryVolume);
+    emit musicVolumeChanged(musicVolume);
 }
 
 #endif // SOUNDCONFIGWINDOW_CPP
