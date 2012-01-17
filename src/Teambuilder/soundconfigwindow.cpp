@@ -8,8 +8,8 @@ SoundConfigWindow::SoundConfigWindow()
 {
     QSettings s;
 
-    cryVolume = s.value("cry_volume").toInt();
-    musicVolume = s.value("music_volume").toInt();
+    cryVolume = s.value("battle_cry_volume").toInt();
+    musicVolume = s.value("battle_music_volume").toInt();
     musicPath = s.value("battle_music_directory").toString();
     playMusic = s.value("play_battle_music", false).toBool();
     playCries = s.value("play_battle_sounds").toBool();
@@ -45,7 +45,13 @@ SoundConfigWindow::SoundConfigWindow()
 
 void SoundConfigWindow::saveChanges()
 {
+    QSettings s;
 
+    s.setValue("battle_cry_volume", cryVolume);
+    s.setValue("music_volume", musicVolume);
+    s.setValue("battle_music_directory", musicPath);
+    s.setValue("play_battle_music", playMusic);
+    s.setValue("play_battle_sounds", playCries);
 }
 
 #endif // SOUNDCONFIGWINDOW_CPP
