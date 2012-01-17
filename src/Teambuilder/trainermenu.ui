@@ -189,9 +189,19 @@
           </widget>
          </item>
          <item>
+          <widget class="QComboBox" name="profileList"/>
+         </item>
+         <item>
           <widget class="QPushButton" name="loadProfile">
            <property name="text">
             <string>Load Profile</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="newProfile">
+           <property name="text">
+            <string>New Profile</string>
            </property>
           </widget>
          </item>
