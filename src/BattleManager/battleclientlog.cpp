@@ -3,7 +3,6 @@
 #include "battledata.h"
 #include "teamdata.h"
 #include "defaulttheme.h"
-#include "remove_direction_override.h"
 
 typedef ShallowBattlePoke* shallowpoke;
 typedef BattleData<DataContainer> battledata;
@@ -79,7 +78,7 @@ void BattleClientLog::printHtml(const QString &cl, const QString &str)
 {
     blankMessage = false;
 
-    pushHtml(removeDirectionOverride(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str)));
+    pushHtml(QString("<span class=\"%1\">%2</span><br />\n").arg(cl, str));
     emit lineToBePrinted(log.back());
 }
 
@@ -293,7 +292,7 @@ void BattleClientLog::onPlayerMessage(int spot, const QString &message)
     //can be 0 for winning/losing message
     if (message.length() == 0)
         return;
-    printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
+    printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(removeTrollCharacters(message)));
 }
 
 void BattleClientLog::onSpectatorJoin(int id, const QString &name)
@@ -311,7 +310,7 @@ void BattleClientLog::onSpectatorLeave(int id)
 
 void BattleClientLog::onSpectatorChat(int id, const QString &message)
 {
-    printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(message));
+    printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(removeTrollCharacters(message)));
 }
 
 void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &q)

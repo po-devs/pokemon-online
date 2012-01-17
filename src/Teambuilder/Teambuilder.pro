@@ -42,7 +42,6 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    remove_direction_override.cpp \
 	password_wallet.cpp\
     spectatorwindow.cpp \
     replayviewer.cpp \
@@ -95,7 +94,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     engineinterface.h \
     logmanager.h \
     poketextedit.h \
-    remove_direction_override.h \
 	password_wallet.h\
     spectatorwindow.h \
     ../BattleManager/battlescene.h \

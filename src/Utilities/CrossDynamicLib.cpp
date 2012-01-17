@@ -4,7 +4,7 @@
 
 #include "CrossDynamicLib.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dlfcn.h>
@@ -35,7 +35,7 @@ public:
 cross::DynamicLibrary::DynamicLibrary(const char* libname):
         libhandle(NULL)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	libhandle = LoadLibrary(libname);
 #else
 	libhandle = dlopen(libname, RTLD_LOCAL | RTLD_NOW);
@@ -50,7 +50,7 @@ cross::DynamicLibrary::~DynamicLibrary()
 {
 	if(libhandle)
 	{
-#ifdef WIN32
+#ifdef _WIN32
 		FreeLibrary((HINSTANCE)libhandle);
 #else
 		if(dlclose(libhandle) != 0)
@@ -67,7 +67,7 @@ void* cross::DynamicLibrary::GetFunction(const char* funcname)
 	if(!libhandle)
 		throw( DynamicLibException("Access to unloaded library.") );
 
-#ifdef WIN32
+#ifdef _WIN32
         func = (void*)GetProcAddress((HINSTANCE)libhandle, funcname);
 #else
 	func = dlsym(libhandle, funcname);
