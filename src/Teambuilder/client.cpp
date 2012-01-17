@@ -1224,13 +1224,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("&Sound configuration"),this, SLOT(openSoundConfig()));
 
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
-    playMusic->setCheckable(true);
-    connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
-    playMusic->setChecked(s.value("play_battle_music").toBool());
-
-    battleMenu->addAction(tr("Change &music folder ..."), this, SLOT(changeMusicFolder()));
-
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
@@ -1394,16 +1387,6 @@ void Client::sendRegister() {
     }
 }
 
-void Client::changeMusicFolder()
-{
-    QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Music Directory"), s.value("battle_music_directory").toString());
-
-    if (dir != "") {
-        s.setValue("battle_music_directory", dir + "/");
-    }
-}
-
 void Client::changeBattleLogFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Logs Directory"),
@@ -1448,12 +1431,6 @@ void Client::animateHpBar(bool save)
 {
     QSettings s;
     s.setValue("animate_hp_bar", save);
-}
-
-void Client::playMusic(bool save)
-{
-    QSettings s;
-    s.setValue("play_battle_music", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
