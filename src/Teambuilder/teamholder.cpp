@@ -3,6 +3,16 @@
 #include <QMessageBox>
 #include "teamholder.h"
 
+QStringList Profile::getProfileList(const QString &path)
+{
+    QDir profilesPath(path);
+    QStringList profilesList;
+    foreach(const QString &name, profilesPath.entryList(QStringList("*.xml"))) {
+        profilesList.append(name.split(".")[0]);
+    }
+    return profilesList;
+}
+
 bool Profile::loadFromFile(const QString &path)
 {
     QFile file(path);
@@ -89,6 +99,16 @@ bool Profile::saveToFile(const QString &path) const
     return true;
 }
 
+void Profile::deleteProfile(const QString &path)
+{
+    QFile file(path);
+    if(file.isOpen()) {
+        QMessageBox::warning(0, QObject::tr("Deleting Profile"), QObject::tr("Couldn't delete profile: %1\n%2").arg(file.fileName(), file.errorString()));
+        return;
+    }
+    file.remove();
+}
+
 TeamHolder::TeamHolder()
 {
     m_teams.push_back(Team());
@@ -122,14 +142,15 @@ int TeamHolder::count() const
 
 void TeamHolder::save()
 {
-    QSettings s;
-    team().saveToFile(s.value("team_location").toString());
-    profile().saveToFile(s.value("profile_location").toString());
+   QSettings s;
+   team().saveToFile(s.value("team_location").toString());
+   QString path = s.value("profiles_path").toString() + "/" + name() + ".xml";
+   profile().saveToFile(path);
 }
 
 void TeamHolder::load()
 {
     QSettings s;
     team().loadFromFile(s.value("team_location").toString());
-    profile().loadFromFile(s.value("profile_location").toString());
+    profile().loadFromFile(s.value("current_profile").toString());
 }
