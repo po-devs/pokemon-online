@@ -1396,7 +1396,7 @@ void Client::changeBattleLogFolder()
         return;
     }
 
-    LogManager::obj()->changeBaseDirectory(dir);
+    LogManager::obj()->changeBaseDirectory(dir + "/");
 }
 
 void Client::openSoundConfig()
