@@ -153,6 +153,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
 
 Client::~Client()
 {
+    relay().notify(NetworkCli::Logout);
     writeSettings(this);
 }
 
