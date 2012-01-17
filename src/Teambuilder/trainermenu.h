@@ -24,7 +24,7 @@ signals:
     void done();
     void editPoke(int);
 private slots:
-    void on_close_clicked(){emit done();}
+    void on_close_clicked(){ emit done(); }
     void on_name_textEdited();
     void on_winningMessage_textEdited();
     void on_losingMessage_textEdited();
@@ -34,9 +34,15 @@ private slots:
     void on_loadProfile_clicked();
     void on_colorButton_clicked();
     void setAvatarPixmap();
+    void on_deleteProfile_clicked();
+
+    void on_newProfile_clicked();
+
 private:
     void setupData();
+    void updateData();
     void setColor();
+    void loadProfileList();
 
     Ui::TrainerMenu *ui;
     TeamHolder *m_team;

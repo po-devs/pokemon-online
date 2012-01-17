@@ -25,7 +25,8 @@ MainEngine::MainEngine() : displayer(0)
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "theme_2", "Themes/Classic/");
-    setDefaultValue(s, "profile_location", appDataPath("Profiles", true) + "/profile.xml");
+    setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
+    setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
     setDefaultValue(s, "cry_volume", 100);
     setDefaultValue(s, "music_volume", 100);
 
