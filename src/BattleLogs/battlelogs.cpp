@@ -180,6 +180,7 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
 
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
+    QMutexLocker l(&m);
     if (raw) {
         team1 = b.team(0);
         team2 = b.team(1);
@@ -200,6 +201,7 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
 
 int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
 {
+    QMutexLocker l(&m);
     /* Those, are not logged */
     if (char(b[0]) == BattleCommands::CancelMove || char(b[0]) == BattleCommands::OfferChoice || char(b[0]) == BattleCommands::RearrangeTeam)
         return 0;
