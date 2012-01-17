@@ -1,6 +1,5 @@
 #include "pmwindow.h"
 #include "../Utilities/otherwidgets.h"
-#include "remove_direction_override.h"
 
 PMWindow::PMWindow(int id, const QString &ownName, const QString &name, const QString &content, bool html, bool pmDisabled, int starterAuth)
     : m_ownName(ownName), escape_html(!html)
@@ -92,7 +91,7 @@ void PMWindow::printHtml(const QString &htmlCode, bool timestamps)
     if (tt && timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
-    m_mainwindow->insertHtml(timeStr + removeDirectionOverride(htmlCode) + "<br />");
+    m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
 }
 
 void PMWindow::sendMessage()

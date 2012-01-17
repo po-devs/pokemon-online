@@ -123,3 +123,7 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
 
 include(../Shared/Common.pri)
+
+
+
+

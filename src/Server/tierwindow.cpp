@@ -1,7 +1,7 @@
 #include "tierwindow.h"
 #include "tiermachine.h"
-#include "confighelper.h"
 #include "tier.h"
+#include "../Utilities/confighelper.h"
 
 TierWindow::TierWindow(QWidget *parent) : QWidget(parent), helper(NULL)
 {
