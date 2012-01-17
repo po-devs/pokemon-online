@@ -11,10 +11,12 @@ class Profile : public ProfileInterace
     PROPERTY(QString, name);
     PROPERTY(QColor, color);
 
+    QStringList getProfileList(const QString &path);
     bool loadFromFile(const QString &path);
     void toXml(QDomDocument &doc) const;
     QString toXml() const;
     bool saveToFile(const QString &path) const;
+    void deleteProfile(const QString &path);
 };
 
 class TeamHolder : public TeamHolderInterface
