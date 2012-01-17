@@ -26,7 +26,6 @@ SOURCES += main.cpp \
     rearrangewindow.cpp \
     poketablemodel.cpp \
     pokemovesmodel.cpp \
-    Teambuilder/teambuilder.cpp \
     Teambuilder/pokedex.cpp \
     Teambuilder/box.cpp \
     Teambuilder/trainerbody.cpp \
@@ -42,8 +41,6 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    spectatorwindow.cpp \
-    replayviewer.cpp \
     trainermenu.cpp \
     pokebuttonsholder.cpp \
     pokebutton.cpp \
@@ -88,7 +85,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     poketablemodel.h \
     modelenum.h \
     pokemovesmodel.h \
-    Teambuilder/teambuilder.h \
     Teambuilder/pokedex.h \
     Teambuilder/box.h \
     Teambuilder/trainerbody.h \
@@ -106,7 +102,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     logmanager.h \
     poketextedit.h\
     password_wallet.h\
-    spectatorwindow.h \
     ../BattleManager/battlescene.h \
     ../BattleManager/battleinput.h \
     ../BattleManager/battledatatypes.h \
@@ -114,7 +109,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    replayviewer.h \
     ../Utilities/coreclasses.h \
     teamholder.h \
     trainermenu.h \
