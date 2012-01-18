@@ -5,7 +5,7 @@
 #include "Teambuilder/teambuilder_old.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
-#include "pmwindow.h"
+#include "pmsystem.h"
 #include "controlpanel.h"
 #include "ranking.h"
 #include "poketextedit.h"
@@ -131,6 +131,10 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     /* Default channel on to display messages */
     channelPlayers(0);
 
+    /* PM System */
+    pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    connect(this, SIGNAL(TogglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
+
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
      */
@@ -148,6 +152,12 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
         pmDisabled = 1;
     } else {
         pmDisabled = 0;
+    }
+    pmsTabbed = settings.value("pms_tabbed").toBool();
+    if(settings.value("pms_tabbed").toBool()) {
+        pmsTabbed = 1;
+    } else {
+        pmsTabbed = 0;
     }
 }
 
@@ -676,13 +686,14 @@ void Client::startPM(int id)
         activateWindow(); // activate po window when pm recieved
 
     if (mypms.contains(id)) {
+        if(!pmSystem->isVisible()) {
+            pmSystem->show();
+        }
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
-    p->setParent(this);
-    p->setWindowFlags(Qt::Window);
-    p->show();
+    PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
+    pmSystem->startPM(p);
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
@@ -740,6 +751,13 @@ void Client::togglePM(bool b)
     emit PMDisabled(b, player(_mid).auth);
 }
 
+void Client::togglePMTabs(bool b)
+{
+    QSettings s;
+    s.setValue("pms_tabbed", b);
+    pmsTabbed = b;
+    emit TogglePMs(b);
+}
 
 void Client::ignoreServerVersion(bool b)
 {
@@ -1169,6 +1187,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     showTS = show_ts->isChecked();
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
+
+    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
+    pmsTabbedToggle->setCheckable(true);
+    connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
+    pmsTabbedToggle->setChecked(s.value("pms_tabbed").toBool());
 
     QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
@@ -1995,7 +2018,7 @@ void Client::removePlayer(int id)
     pmedPlayers.remove(id);
     fade.remove(id);
 
-    QHash<int, PMWindow*>::iterator pm = mypms.find(id);
+    QHash<int, PMStruct*>::iterator pm = mypms.find(id);
     if (pm != mypms.end()) {
         pm.value()->disable();
         disabledpms[name] = pm.value();
@@ -2072,9 +2095,9 @@ void Client::playerReceived(const PlayerInfo &p)
         else
             c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
-    QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
+    QHash<QString, PMStruct*>::iterator pm = disabledpms.find(name(p.id));
     if (pm != disabledpms.end()) {
-        PMWindow *window = pm.value();
+        PMStruct *window = pm.value();
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
@@ -2090,7 +2113,7 @@ void Client::changeName(int player, const QString &name)
     }
 
     if (player == ownId()) {
-        foreach(PMWindow *p, mypms) {
+        foreach(PMStruct *p, mypms) {
             p->changeSelf(name);
         }
     }
