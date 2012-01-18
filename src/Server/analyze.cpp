@@ -214,9 +214,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         } */
     case ChannelMessage:
         {
+            Flags network, data;
             qint32 chanid;
             QString mess;
-            in >> chanid >> mess;
+            in >> network >> data >> chanid >> mess;
             emit messageReceived(chanid, mess);
             break;
         }
