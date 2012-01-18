@@ -15,7 +15,6 @@ SOURCES += main.cpp \
     serverchoice.cpp \
     challenge.cpp \
     battlewindow.cpp \
-    pmwindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
     ranking.cpp \
@@ -54,7 +53,8 @@ SOURCES += main.cpp \
     spectatorwindow.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp \
-    password_wallet.cpp
+    password_wallet.cpp \
+    pmsystem.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -69,7 +69,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     challenge.h \
     battlewindow.h \
     ../Utilities/functions.h \
-    pmwindow.h \
     controlpanel.h \
     basebattlewindow.h \
     ../PokemonInfo/movesetchecker.h \
@@ -125,7 +124,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     pokelevelsettings.h \
     soundconfigwindow.h \
     replayviewer.h \
-    password_wallet.h
+    password_wallet.h \
+    pmsystem.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
