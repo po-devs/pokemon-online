@@ -102,7 +102,7 @@ public:
     const BattleMove& move(int i) const;
 
     quint16 normalStat(int stat) const;
-    void updateStats(int gen);
+    void updateStats(Pokemon::gen gen);
 
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
@@ -132,7 +132,7 @@ public:
     /* removes the invalid pokemons */
     TeamBattle(PersonalTeam &other);
 
-    void generateRandom(int gen);
+    void generateRandom(Pokemon::gen gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -464,7 +464,7 @@ struct BattleConfiguration
         Player = 1
     };
 
-    quint8 gen;
+    Pokemon::gen gen;
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;

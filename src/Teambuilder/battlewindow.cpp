@@ -291,7 +291,7 @@ void BattleWindow::attackClicked(int zone)
             /* Triples still require to choose the target */
             if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
                     || data().numberOfSlots() > 4) {
-                tarZone->updateData(info(), move, gen());
+                tarZone->updateData(info(), move);
                 mystack->setCurrentIndex(TargetTab);
             } else {
                 info().done[data().slotNum(slot)] = true;
@@ -740,7 +740,7 @@ const PokeProxy &BattleWindow::poke(int slot) const
     return *info().myteam().poke(slot);
 }
 
-AttackZone::AttackZone(const PokeProxy &poke, int gen)
+AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
 {
     QGridLayout *l = new QGridLayout(this);
     mymapper = new QSignalMapper(this);
@@ -772,7 +772,7 @@ AttackZone::AttackZone(const PokeProxy &poke, int gen)
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
-OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, int gen)/* : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")*/
+OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)/* : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")*/
 {
     QVBoxLayout *l = new QVBoxLayout(this);
 
@@ -785,7 +785,7 @@ OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, int ge
     updateAttack(b,p,gen);
 }
 
-void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int gen)
+void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -819,7 +819,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int 
     setAccessibleName(MoveInfo::Name(b.num()));
 }
 
-ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, int gen)
+ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
     : QImageButton(Theme::path("BattleWindow/Buttons/0D.png"), Theme::path("BattleWindow/Buttons/0H.png"))
 {
     QVBoxLayout *l = new QVBoxLayout(this);
@@ -832,7 +832,7 @@ ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, in
     updateAttack(b,p,gen);
 }
 
-void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int gen)
+void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -966,10 +966,11 @@ TargetSelection::TargetSelection(const BattleInfo &info)
     connect(bg, SIGNAL(buttonClicked(int)), SIGNAL(targetSelected(int)));
 }
 
-void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
+void TargetSelection::updateData(const BattleInfo &info, int move)
 {
     int slot = info.currentSlot;
     int num = info.numberOfSlots;
+    auto gen = info.gen;
     advbattledata_proxy &data = *info.data;
 
     for (int i = 0; i < num; i++) {

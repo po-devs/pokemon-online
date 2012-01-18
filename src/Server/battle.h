@@ -74,7 +74,7 @@ public:
 
     void removeSpectator(int id);
 
-    int gen() const {return conf.gen;}
+    Pokemon::gen gen() const {return conf.gen;}
     int mode() const {return conf.mode;}
     quint32 clauses() const {return conf.clauses;}
     /*

@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "../Utilities/functions.h"
+#include "../PokemonInfo/pokemonstructs.h"
 
 class Player;
 class PluginManager;
@@ -38,7 +39,7 @@ public:
     virtual int mode() const = 0;
 //    virtual const int & numberOfSlots() const = 0;
 //    virtual const bool & blocked() const = 0;
-    virtual int gen() const = 0;
+    virtual Pokemon::gen gen() const = 0;
 //    virtual const int & attackCount() const = 0;
 //    virtual const bool & rearrangeTime() const = 0;
 //    virtual const int & selfKoer() const = 0;

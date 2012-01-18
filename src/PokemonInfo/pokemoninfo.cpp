@@ -2427,7 +2427,7 @@ QString HiddenPowerInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-int HiddenPowerInfo::Type(int gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
+int HiddenPowerInfo::Type(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     if (gen >= 3)
         return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
@@ -2435,7 +2435,7 @@ int HiddenPowerInfo::Type(int gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, q
         return (att_dv%4)*4+(def_dv%4)+1;
 }
 
-int HiddenPowerInfo::Power(int gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
+int HiddenPowerInfo::Power(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     if (gen >= 3)
         return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;

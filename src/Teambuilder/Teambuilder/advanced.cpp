@@ -426,12 +426,12 @@ const PokeTeam * TB_Advanced::poke() const
 
 int TB_Advanced::calculateHiddenPowerPower() const
 {
-    return HiddenPowerInfo::Power(poke()->gen().num, poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Power(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 int TB_Advanced::calculateHiddenPowerType() const
 {
-    return HiddenPowerInfo::Type(poke()->gen().num, poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
+    return HiddenPowerInfo::Type(poke()->gen(), poke()->DV(0), poke()->DV(1), poke()->DV(2), poke()->DV(3), poke()->DV(4), poke()->DV(5));
 }
 
 void TB_Advanced::changeHiddenPower(int newtype)

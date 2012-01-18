@@ -17,7 +17,7 @@ struct MoveMechanics : public Mechanics
 /* Used to tell us everything about a move */
 struct MoveEffect
 {
-    MoveEffect(int num, int gen, BattleSituation::BasicMoveInfo &bmi);
+    MoveEffect(int num, Pokemon::gen gen, BattleSituation::BasicMoveInfo &bmi);
 
     static void setup(int movenum, int source, int target, BattleSituation &b);
     static void unsetup(int movenum, int source, BattleSituation &b);
