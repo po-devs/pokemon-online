@@ -17,7 +17,8 @@ class QIdTreeWidgetItem;
 class BattleWindow;
 class BaseBattleWindowInterface;
 class QScrollDownTextBrowser;
-class PMWindow;
+class PMSystem;
+class PMStruct;
 class ControlPanel;
 class RankingDialog;
 class BattleFinder;
@@ -113,6 +114,7 @@ public:
     bool sortCBN;
     bool showTS;
     bool pmFlashing;
+    bool pmsTabbed;
     bool pmDisabled;
     TierNode tierRoot;
     QStringList tierList;
@@ -231,6 +233,7 @@ public slots:
     void showTimeStamps2(bool);
     void pmFlash(bool);
     void togglePM(bool);
+    void togglePMTabs(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const ProtocolVersion &v, int level);
@@ -255,6 +258,7 @@ signals:
     void userInfoReceived(const UserInfo &ui);
     void tierListFormed(const QStringList &tiers);
     void PMDisabled(bool b, int starterAuth);
+    void TogglePMs(bool b);
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -272,8 +276,8 @@ private:
     /* Main chat */
     QScrollDownTextBrowser *mychat;
     /* PMs and disabled PMs */
-    QHash<int, PMWindow*> mypms;
-    QHash<QString, PMWindow*> disabledpms;
+    QHash<int, PMStruct*> mypms;
+    QHash<QString, PMStruct*> disabledpms;
     /* Line the user types in */
 //    QLineEdit *myline;
     QIRCLineEdit *myline;
@@ -291,6 +295,8 @@ private:
     QPushButton *myregister;
     /* Button to find a battle */
     QPushButton *findMatch;
+    /* PM System */
+    PMSystem *pmSystem;
 
     /*Channels */
     QHash<qint32, QString> channelNames;
