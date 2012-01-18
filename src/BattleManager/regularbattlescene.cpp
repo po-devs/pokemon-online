@@ -475,7 +475,7 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
         scene.addItem(items[i]);
     }
 
-    int size = Version::avatarSize[info()->gen()-1];
+    int size = Version::avatarSize[info()->gen().num-1];
 
     if (!info()->multiples()) {
         items[info()->spot(myself())]->setPos(50 - size/2, 146 - size);

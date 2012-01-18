@@ -221,13 +221,13 @@ void PokeBattle::init(PokePersonal &poke)
     updateStats(p.gen().num);
 }
 
-void PokeBattle::updateStats(int gen)
+void PokeBattle::updateStats(Pokemon::gen gen)
 {
-    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen.num, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
     setLife(totalLifePoints());
 
     for (int i = 0; i < 5; i++) {
-        normal_stats[i] = PokemonInfo::FullStat(num(), gen, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(num(), gen.num, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
     }
 }
 
@@ -397,7 +397,7 @@ bool TeamBattle::invalid() const
     return poke(0).num() == Pokemon::NoPoke;
 }
 
-void TeamBattle::generateRandom(int gen)
+void TeamBattle::generateRandom(Pokemon::gen gen)
 {
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
@@ -654,9 +654,7 @@ BattleConfiguration::~BattleConfiguration()
 
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
-    //Used as placeholder for subgen
-    quint8 foo;
-    in >> c.gen >> foo >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
 
@@ -685,9 +683,7 @@ DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 
 DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 {
-    //Used as placeholder for subgen
-    quint8 foo(0);
-    out << c.gen << foo << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
 
     out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
 

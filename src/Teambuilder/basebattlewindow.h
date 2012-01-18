@@ -26,7 +26,7 @@ struct BaseBattleInfo
     advbattledata_proxy *data;
 
     int mode;
-    int gen;
+    Pokemon::gen gen;
 
     int myself;
     int opponent;
@@ -73,7 +73,7 @@ public:
     void init(const PlayerInfo &me, const PlayerInfo &opponent, const BattleConfiguration &conf,
               int _ownid);
 
-    int gen() const {
+    Pokemon::gen gen() const {
         return info().gen;
     }
 

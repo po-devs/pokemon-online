@@ -3941,7 +3941,7 @@ int BattleSituation::repeatNum(int player)
         return max;
     }
 
-    return minMax(min, max, gen(), randint());
+    return minMax(min, max, gen().num, randint());
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {

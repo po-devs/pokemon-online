@@ -52,7 +52,7 @@ struct MMAquaRing : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 1) : makeBracket(6, 0) ;
     }
 
@@ -433,7 +433,7 @@ struct MMCurse : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 8) : makeBracket(10, 0) ;
     }
 
@@ -904,7 +904,7 @@ struct MMAssist : public MM
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
         }
 
-        bool contains(int move, int gen=GEN_MAX) const {
+        bool contains(int move, Pokemon::gen gen=GEN_MAX) const {
             if (move == Transform) {
                 return gen >= 5;
             } else {
@@ -1030,7 +1030,7 @@ struct MMBind : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(3,0) : gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
     }
 
@@ -1326,7 +1326,7 @@ struct MMDoomDesire : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(1, 0) : gen <= 4 ? makeBracket(7, 0) : makeBracket(3, 0) ;
     }
 
@@ -1418,7 +1418,7 @@ struct MMEmbargo : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 17) : makeBracket(18, 0) ;
     }
 
@@ -1453,7 +1453,7 @@ struct MMEncore : public MM
     };
     static FM forbidden_moves;
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(9, 0) : gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
     }
 
@@ -1874,7 +1874,7 @@ struct MMGravity : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
     }
 

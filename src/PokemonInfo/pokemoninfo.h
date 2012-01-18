@@ -504,9 +504,9 @@ public:
     static void init(const QString &dir="db/types/");
 
     /* The type of the hidden power depending on the dvs */
-    static int Type(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
+    static int Type(Pokemon::gen gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* The power of the hidden power depending on the dvs */
-    static int Power(int gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
+    static int Power(Pokemon::gen gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
     static QList<QStringList> PossibilitiesForType(int type);
 
