@@ -19,7 +19,6 @@ IvBox::IvBox(QWidget *parent) :
     memcpy(m_abilities, abilitiesButtons, sizeof(abilitiesButtons));
 
 #define setNums(var) for(int i = 0; i < 6; i++) { var[i]->setProperty("ivstat", i); }
-    setNums(m_statslabel);
     setNums(m_ivchangers);
 #undef setNums
 
