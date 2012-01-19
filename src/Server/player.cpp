@@ -192,6 +192,16 @@ void Player::joinRequested(const QString &name)
     emit joinRequested(id(), name);
 }
 
+bool Player::inChannel(int chan) const
+{
+    return channels.contains(chan);
+}
+
+void Player::sendPacket(const QByteArray &packet)
+{
+    relay().sendPacket(packet);
+}
+
 void Player::leaveRequested(int slotid)
 {
     if (!isLoggedIn()) {

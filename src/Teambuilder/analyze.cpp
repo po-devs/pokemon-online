@@ -93,7 +93,7 @@ void Analyzer::sendMessage(const QString &message)
 
 void Analyzer::sendChanMessage(int channelid, const QString &message)
 {
-    notify(ChannelMessage, Flags(1), Flags(0), qint32(channelid), message);
+    notify(ChannelMessage, qint32(channelid), message);
 }
 
 void Analyzer::sendTeam(const TeamHolder &team)

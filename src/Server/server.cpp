@@ -23,6 +23,7 @@
 #include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "analyze.h"
+#include "networkutilities.h"
 
 Server *Server::serverIns = NULL;
 
@@ -222,7 +223,7 @@ void Server::start(){
     serverName = s.value("server_name").toString();
     serverDesc = s.value("server_description").toString();
     serverAnnouncement = s.value("server_announcement").toByteArray();
-    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
+    zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
@@ -232,6 +233,7 @@ void Server::start(){
     serverPassword = s.value("server_password").toByteArray();
     showTrayPopup = s.value("show_tray_popup").toBool();
     minimizeToTray = s.value("minimize_to_tray").toBool();
+    zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
     addChannel();
@@ -326,10 +328,7 @@ int Server::addChannel(const QString &name, int playerid) {
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
 
-    foreach(Player *p, myplayers) {
-        if (p->isLoggedIn())
-            p->relay().notify(NetworkServ::AddChannel, chanName, qint32(chanid));
-    }
+    notifyGroup(All, NetworkServ::AddChannel, chanName, qint32(chanid));
 
     if (chanid != 0)
         myengine->afterChannelCreated(chanid, chanName, playerid);
@@ -441,10 +440,7 @@ void Server::removeChannel(int channelid) {
     channelids.remove(chanName.toLower());
     delete channels.take(channelid);
 
-    foreach(Player *p, myplayers) {
-        if (p->isLoggedIn())
-            p->relay().notify(NetworkServ::RemoveChannel, qint32(channelid));
-    }
+    notifyGroup(All, NetworkServ::RemoveChannel, qint32(channelid));
 
     myengine->afterChannelDestroyed(channelid);
 }
@@ -546,11 +542,8 @@ void Server::regNameChanged(const QString &name)
 
     serverName = name;
     sendAll("The name of the server changed to " + name + ".");
-    foreach (Player *p, myplayers) {
-        if (p->isLoggedIn()) {
-            p->relay().notify(NetworkServ::ServerName, name);
-        }
-    }
+
+    notifyAll(NetworkServ::ServerName, name);
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
@@ -592,11 +585,18 @@ void Server::changeScript(const QString &script)
 }
 
 void Server::setAllAnnouncement(const QString &html) {
-    foreach(Player *p, myplayers) {
-        if (p->isLoggedIn()) {
-            p->relay().notify(NetworkServ::Announcement, html);
-        }
-    }
+    notifyGroup(SupportsZip, makeZipPacket(NetworkServ::Announcement, html));
+    notifyOppGroup(SupportsZip, NetworkServ::Announcement, html);
+}
+
+const QSet<Player*>& Server::getGroup(PlayerGroupFlags group) const
+{
+    return groups[group];
+}
+
+const QSet<Player*>& Server::getOppGroup(PlayerGroupFlags group) const
+{
+    return oppGroups[group];
 }
 
 void Server::announcementChanged(const QString &announcement)
@@ -605,19 +605,12 @@ void Server::announcementChanged(const QString &announcement)
         return;
 
     serverAnnouncement = announcement.toUtf8();
-    zippedAnnouncement = makeZipCommand(NetworkServ::Announcement, serverAnnouncement);
+    zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
 
     printLine("Announcement changed.", false, true);
 
-    foreach(Player *p, myplayers) {
-        if (p->isLoggedIn()) {
-            if (p->supportsZip()) {
-                p->relay().emitCommand(zippedAnnouncement);
-            } else {
-                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
-            }
-        }
-    }
+    notifyGroup(SupportsZip, zippedAnnouncement);
+    notifyOppGroup(SupportsZip, NetworkServ::Announcement, serverAnnouncement);
 }
 
 void Server::mainChanChanged(const QString &name) {
@@ -637,9 +630,7 @@ void Server::mainChanChanged(const QString &name) {
 
     printLine("Main channel name changed", false, true);
 
-    foreach(Player *p, myplayers) {
-        p->relay().notify(NetworkServ::ChanNameChange, qint32(0), name);
-    }
+    notifyGroup(All, NetworkServ::ChanNameChange, qint32(0), name);
 }
 
 void Server::clearRatedBattlesHistory()
@@ -700,9 +691,9 @@ void Server::tiersChanged()
 {
     sendAll("Tiers have been updated!");
 
-    foreach(Player *p, myplayers) {
-        sendTierList(p->id());
-    }
+    zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
+    notifyGroup(SupportsZip, zippedTiers);
+    notifyOppGroup(SupportsZip, NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     foreach(Player *p, myplayers) {
         p->findTierAndRating();
@@ -742,11 +733,9 @@ void Server::silentKick(int id) {
 void Server::kick(int id, int src) {
     if (!playerExist(id))
         return;
-    foreach(Player *p, myplayers)
-    {
-        if (p->isLoggedIn())
-            p->relay().notify(NetworkServ::PlayerKick, qint32(id), qint32(src));
-    }
+
+    notifyGroup(All, NetworkServ::PlayerKick, qint32(id), qint32(src));
+
     if (src == 0)
         printLine("The server kicked " + name(id) + "!");
     else
@@ -759,10 +748,8 @@ void Server::ban(int id) {
 }
 
 void Server::ban(int id, int src) {
-    foreach(Player *p, myplayers)
-    {
-        p->relay().notify(NetworkServ::PlayerBan, qint32(id), qint32(src));
-    }
+    notifyGroup(All, NetworkServ::PlayerBan, qint32(id), qint32(src));
+
     if (src == 0)
         printLine("The server banned " + name(id) + "!");
     else
@@ -802,7 +789,6 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
-
     if (nameExist(name)) {
         int ids = this->id(name);
         if (!playerLoggedIn(ids) || player(ids)->name().toLower() != name.toLower()) {
@@ -831,6 +817,17 @@ void Server::loggedIn(int id, const QString &name)
         Player *p = player(id);
 
         p->changeState(Player::LoggedIn, true);
+        groups[All].insert(p);
+        if (p->supportsZip()) {
+            groups[SupportsZip].insert(p);
+        } else {
+            oppGroups[SupportsZip].insert(p);
+        }
+        if (p->spec()[Player::IdsWithMessage]) {
+            groups[IdsWithMessage].insert(p);
+        } else {
+            oppGroups[IdsWithMessage].insert(p);
+        }
 
         if(!myengine->beforeLogIn(id) && playerExist(id)) {
             mynames.remove(name.toLower());
@@ -838,6 +835,7 @@ void Server::loggedIn(int id, const QString &name)
             silentKick(id);
             return;
         }
+
         if (!playerExist(id))
             return;
 
@@ -845,7 +843,7 @@ void Server::loggedIn(int id, const QString &name)
 
         if (serverAnnouncement.length() > 0) {
             if (p->supportsZip()) {
-                p->relay().emitCommand(zippedAnnouncement);
+                p->sendPacket(zippedAnnouncement);
             } else {
                 p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
             }
@@ -875,7 +873,11 @@ void Server::sendChannelList(int player) {
 
 void Server::sendTierList(int id)
 {
-    player(id)->relay().notify(NetworkServ::TierSelection, TierMachine::obj()->tierList());
+    if (player(id)->supportsZip()) {
+        player(id)->sendPacket(zippedTiers);
+    } else {
+        player(id)->relay().notify(NetworkServ::TierSelection, TierMachine::obj()->tierList());
+    }
 }
 
 void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
@@ -1708,7 +1710,7 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-        p->deleteLater(); myplayers.remove(id);
+        p->deleteLater(); myplayers.remove(id); for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
 
         if (loggedIn)
             mynames.remove(playerName.toLower());
@@ -1730,6 +1732,7 @@ int Server::id(const QString &name) const
 void Server::sendAll(const QString &message, bool chatMessage, bool html)
 {
     if (printLine(message, chatMessage, true)) {
+        //todo: ids with message
         foreach (Player *p, myplayers)
             if (p->isLoggedIn())
                 p->sendMessage(message, html);
@@ -1847,4 +1850,65 @@ void Server::showTrayPopupChanged(bool show)
 void Server::minimizeToTrayChanged(bool allow)
 {
     minimizeToTray = allow;
+}
+
+template <typename ...Params>
+void Server::notifyGroup(PlayerGroupFlags group, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+    notifyGroup(group, packet);
+}
+
+void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)
+{
+    const QSet<Player*> &g = getGroup(group);
+
+    foreach(Player *p, g) {
+        p->sendPacket(packet);
+    }
+}
+
+template <typename ...Params>
+void Server::notifyOppGroup(PlayerGroupFlags group, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+
+    const QSet<Player*> &g = getOppGroup(group);
+
+    foreach(Player *p, g) {
+        p->sendPacket(packet);
+    }
+}
+
+template <typename ...Params>
+void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+    const QSet<Player*> &g1 = getGroup(group);
+    const QSet<Player*> &g2 = this->channel(channel).players;
+
+    if (g1.size() < g2.size()) {
+        foreach(Player *p, g1) {
+            if (p->inChannel(channel)) {
+                p->sendPacket(packet);
+            }
+        }
+    } else {
+        int log = intlog2(group);
+
+        foreach(Player *p, g2) {
+            if (p->spec()[log]) {
+                p->sendPacket(packet);
+            }
+        }
+    }
+}
+
+template <typename ...Params>
+void Server::notifyAll(int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+    foreach(Player *p, myplayers) {
+        p->sendPacket(packet);
+    }
 }

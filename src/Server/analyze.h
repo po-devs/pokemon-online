@@ -68,6 +68,7 @@ public:
     void stopReceiving();
     void connectTo(const QString &host, quint16 port);
     void setLowDelay(bool lowDelay);
+    void sendPacket(const QByteArray &packet);
 
     /* Closes the connection */
     void close();
@@ -93,6 +94,7 @@ public:
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
+    void packetToSend(const QByteArray &packet);
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
@@ -164,6 +166,7 @@ Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<Socke
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
+    connect(this, SIGNAL(packetToSend(QByteArray)), &socket(), SLOT(sendPacket(QByteArray)));
 
     socket().setParent(this);
 
