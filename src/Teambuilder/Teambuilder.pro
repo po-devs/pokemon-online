@@ -54,7 +54,8 @@ SOURCES += main.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp \
     password_wallet.cpp \
-    pmsystem.cpp
+    pmsystem.cpp \
+    ivbox.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -125,7 +126,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     soundconfigwindow.h \
     replayviewer.h \
     password_wallet.h \
-    pmsystem.h
+    pmsystem.h \
+    ivbox.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -137,7 +139,8 @@ FORMS += controlpanel.ui \
     pokebutton.ui \
     pokeedit.ui \
     evbox.ui \
-    pokelevelsettings.ui
+    pokelevelsettings.ui \
+    ivbox.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

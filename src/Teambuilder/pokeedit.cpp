@@ -21,6 +21,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
 
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
+    ui->ivbox->setPoke(poke);
 
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
@@ -71,6 +72,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
     connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
     connect(ui->evbox, SIGNAL(natureChanged(int)), this, SLOT(setNature(int)));
+    connect(ui->evbox, SIGNAL(natureBoostChanged()), ui->ivbox, SLOT(updateStats()));
+    connect(ui->ivbox, SIGNAL(statsUpdated()), ui->evbox, SLOT(updateEVs()));
 
     updateAll();
 }
@@ -132,6 +135,7 @@ void PokeEdit::updateAll()
     setItem(poke().item());
     ui->levelSettings->updateAll();
     ui->evbox->updateAll();
+
     movesModel->setPokemon(poke().num(), poke().gen());
 
     for (int i = 0; i < 4; i++) {
