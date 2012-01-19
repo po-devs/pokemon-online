@@ -477,6 +477,11 @@ void Analyzer::delay()
     delayCount += 1;
 }
 
+void Analyzer::sendPacket(const QByteArray &packet)
+{
+    emit packetToSend(packet);
+}
+
 void Analyzer::undelay()
 {
     delayCount -=1;

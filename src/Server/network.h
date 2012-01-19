@@ -33,6 +33,7 @@ public slots:
     virtual void onDisconnect(){}
     virtual void manageError(QAbstractSocket::SocketError){}
     virtual void send(const QByteArray &message){(void) message;}
+    virtual void sendPacket(const QByteArray&){};
 };
 
 template <class S>
@@ -61,6 +62,7 @@ public:
     virtual void onDisconnect();
     virtual void manageError(QAbstractSocket::SocketError);
     virtual void send(const QByteArray &message);
+    virtual void sendPacket(const QByteArray&);
 private:
     /* internal socket */
     S mysocket;
@@ -250,6 +252,12 @@ template <class S>
 const S Network<S>::socket() const
 {
     return mysocket;
+}
+
+template <class S>
+void Network<S>::sendPacket(const QByteArray &p)
+{
+    socket()->write(p);
 }
 
 #endif // NETWORK_H

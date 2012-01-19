@@ -30,6 +30,13 @@ class Server: public QObject, public ServerInterface
     friend class ScriptEngine;
     friend class ServerWidget;
 public:
+    enum PlayerGroupFlags {
+        All = 0,
+        SupportsZip = 1,
+        IdsWithMessage = 2,
+        LastGroup
+    };
+
     Server(quint16 port = 5080);
     Server(QList<quint16> ports);
     ~Server();
@@ -183,6 +190,7 @@ private:
     QString serverName, serverDesc;
     QByteArray serverAnnouncement;
     QByteArray zippedAnnouncement;
+    QByteArray zippedTiers;
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
     QStringList proxyServers;
@@ -288,19 +296,23 @@ private:
     ContextSwitcher battleThread;
 
     template <typename ...Params>
-    QByteArray makeZipCommand(int command, Params&&... params) {
-        QByteArray tosend;
-        DataStream out(&tosend, QIODevice::WriteOnly);
+    void notifyGroup(PlayerGroupFlags group, int command, Params &&... params);
 
-        out.pack(uchar(command), std::forward<Params>(params)...);
+    void notifyGroup(PlayerGroupFlags group, const QByteArray &packet);
 
-        QByteArray ret;
-        ret.push_back('\0'); /* ZipCommand == 0 */
-        ret.push_back('\0'); /* 0 = Single command, 1 would be multiple packets */
-        QByteArray cp = qCompress(tosend);
+    template <typename ...Params>
+    void notifyOppGroup(PlayerGroupFlags group, int command, Params &&... params);
 
-        ret.push_back(cp);
-        return ret;
-    }
+    template <typename ...Params>
+    void notifyChannel(int channel, PlayerGroupFlags group, int command, Params &&... params);
+
+    template <typename ...Params>
+    void notifyAll(int command, Params &&... params);
+
+    const QSet<Player*> &getGroup(PlayerGroupFlags group) const;
+    const QSet<Player*> &getOppGroup(PlayerGroupFlags group) const;
+
+    QSet<Player*> groups[LastGroup];
+    QSet<Player*> oppGroups[LastGroup];
 };
 #endif // SERVER_H

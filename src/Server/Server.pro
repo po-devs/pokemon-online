@@ -96,7 +96,8 @@ HEADERS += player.h \
     battlefunctions.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
-    playerstructs.h
+    playerstructs.h \
+    networkutilities.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

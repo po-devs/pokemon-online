@@ -109,6 +109,7 @@ public:
     bool okForBattle() const;
     void spectateBattle(int battleId, const BattleConfiguration &battle);
     void sendChallengeStuff(const ChallengeInfo &c);
+    bool inChannel(int chan) const;
 
     QSet<int> &getChannels() {
         return channels;
@@ -139,6 +140,8 @@ public:
 
     void executeTierChange(const QString&);
     void executeAwayChange(bool away);
+
+    void sendPacket(const QByteArray &packet);
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, int chanid, const QString &mess);
