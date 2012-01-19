@@ -68,6 +68,13 @@ void EvBox::updateAll()
     updateNatureButtons();
 }
 
+void EvBox::updateEVs()
+{
+    for (int i = 0; i < 6; i++) {
+        updateEV(i);
+    }
+}
+
 void EvBox::updateEV(int stat)
 {
     int ev = poke().EV(stat);
@@ -118,6 +125,7 @@ void EvBox::changeToPlusBoost()
     }
 
     emit natureChanged(NatureInfo::NatureOf(plus,minus));
+    emit natureBoostChanged();
 }
 
 void EvBox::changeToMinusBoost()
@@ -130,4 +138,5 @@ void EvBox::changeToMinusBoost()
     }
 
     emit natureChanged(NatureInfo::NatureOf(plus,minus));
+    emit natureBoostChanged();
 }

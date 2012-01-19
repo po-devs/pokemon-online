@@ -23,13 +23,20 @@ public:
     void updateAll();
 
     ~EvBox();
+
 signals:
     void natureChanged(int);
+    void natureBoostChanged();
+
 private slots:
     void changeEV(const QString &newValue);
     void changeEV(int newValue);
     void changeToPlusBoost();
     void changeToMinusBoost();
+
+public slots:
+    void updateEVs();
+
 private:
     Ui::EvBox *ui;
     QSlider *m_sliders[6];
