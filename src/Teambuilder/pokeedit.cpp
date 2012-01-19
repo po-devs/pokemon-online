@@ -65,6 +65,7 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     }
 
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
+    connect(ui->levelSettings, SIGNAL(levelUpdated()), ui->ivbox, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
