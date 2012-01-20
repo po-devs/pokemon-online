@@ -752,7 +752,7 @@ QString & Player::info()
     return m_bundle.info;
 }
 
-PlayerInfo Player::bundle() const
+const PlayerInfo& Player::bundle() const
 {
     //Todo: update those in real time
     m_bundle.flags.setFlag(PlayerInfo::Away, state()[Away]);
@@ -1039,9 +1039,9 @@ void Player::assignNewColor(const QColor &c)
 
 void Player::assignTrainerInfo(const TrainerInfo &info)
 {
-    avatar() = info.trainerInfo->avatar;
-    winningMessage() = info.trainerInfo->winning;
-    losingMessage() = info.trainerInfo->losing;
+    avatar() = info.avatar;
+    winningMessage() = info.winning;
+    losingMessage() = info.losing;
 }
 
 bool Player::isLocked() const
