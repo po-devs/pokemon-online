@@ -21,10 +21,9 @@ class Player : public QObject, public PlayerInterface
 {
     Q_OBJECT
 
-    PROPERTY(QString, name);
-    PROPERTY(QColor, color);
+    PROPERTY(QString, winningMessage);
+    PROPERTY(QString, losingMessage);
     PROPERTY(bool, battleSearch);
-    PROPERTY(TrainerInfo, info);
     PROPERTY(QString, lastFindBattleIp);
     PROPERTY(Flags, spec);
     PROPERTY(Flags, state);
@@ -55,15 +54,20 @@ public:
     const TeamBattle &team() const;
     TeamBattle &team(int);
     const TeamBattle &team(int) const;
-    /* Converts the content of the TeamInfo to a basicInfo and returns it */
-    BasicInfo basicInfo() const;
 
     /* Sends a message to the player */
+    void sendLoginInfo();
     void sendMessage(const QString &mess, bool html=false);
     void sendChanMessage(int channel, const QString &mess, bool html=false);
 
     bool hasSentCommand(int commandid) const;
 
+    const QString &name() const;
+    QString &name();
+    const QString &info() const;
+    QString &info();
+    const QColor &color() const;
+    QColor &color();
     int id() const;
     QString ip() const;
     QString proxyIp() const;
@@ -73,8 +77,6 @@ public:
 
     virtual const quint16& avatar() const;
     quint16 &avatar();
-    const QString &winningMessage() const;
-    const QString &losingMessage() const;
 
     bool hasTier(const QString &tier) const;
     bool connected() const;
@@ -101,6 +103,9 @@ public:
     const QSet<int> & getBattles() const {
         return battles;
     }
+    const QSet<QString> &getTiers() const {
+        return tiers;
+    }
 
     bool okForChallenge(int src) const;
     void addChallenge(Challenge *c, bool isChallenged);
@@ -115,6 +120,8 @@ public:
         return channels;
     }
 
+    QStringList getTierList() const;
+
     void doWhenDC();
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
@@ -127,7 +134,7 @@ public:
     Analyzer& relay();
     const Analyzer& relay() const;
 
-    PlayerInfo bundle() const;
+    const PlayerInfo& bundle() const;
 
     /* A locked player will stop processing its events */
     void lock();
@@ -208,20 +215,20 @@ private:
     Analyzer *myrelay;
     int lockCount;
 
-    int myid;
-    int myauth;
     QString myip;
     QString proxyip;
     bool ontologin;
     mutable int lastcommand;
+    mutable PlayerInfo m_bundle;
+
     bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
 
     TeamsHolder m_teams;
     QString waiting_name, waiting_pass;
 
     QSet<int> battles;
+    QHash<QString, quint16> &ratings();
     QSet<QString> tiers;
-    QHash<QString, int> m_ratings;
     QSet<Challenge*> challenged;
     QSet<Challenge*> challengedBy;
 
@@ -261,6 +268,7 @@ private:
     QSet<int> channels;
 
     void assignNewColor(const QColor &c);
+    void assignTrainerInfo(const TrainerInfo &info);
     bool testNameValidity(const QString &name);
     void loginSuccess();
     /* only call when sure there is one battle */

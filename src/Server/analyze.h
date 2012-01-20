@@ -48,7 +48,7 @@ public:
     void sendChannelPlayers(int channelid, const QVector<qint32> &ids);
     void sendJoin(int channelid, int playerid);
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
-    void sendLogin(const PlayerInfo &p);
+    void sendLogin(const PlayerInfo &p, const QStringList&);
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;

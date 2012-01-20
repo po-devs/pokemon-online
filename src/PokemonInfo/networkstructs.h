@@ -4,13 +4,6 @@
 #include "pokemonstructs.h"
 #include "../Utilities/coreclasses.h"
 
-/* Only infos needed by other players */
-class BasicInfo
-{
-public:
-    QString name, info;
-};
-
 struct UserInfo
 {
     enum Flags {
@@ -50,9 +43,6 @@ inline DataStream & operator >> (DataStream &d, UserInfo &ui) {
     return d;
 }
 
-DataStream & operator << (DataStream & out,const BasicInfo & team);
-DataStream & operator >> (DataStream & in,BasicInfo & team);
-
 namespace PlayerFlags {
     enum {
         SupportsZipCompression,
@@ -67,19 +57,22 @@ class PlayerInfo
 {
 public:
     qint32 id;
-    BasicInfo team;
+    QString name, info;
     qint8 auth;
     Flags flags;
-    qint16 rating;
     quint16 avatar;
-    QString tier;
     QColor color;
-    quint8 gen;
+
+    QHash<QString, quint16> ratings;
+
+    PlayerInfo() {
+        avatar = id = auth = 0;
+    }
 
     enum {
-        LoggedIn = 1,
-        Battling = 2,
-        Away = 4
+        Away = 0,
+        LadderEnabled=1,
+        Battling=2
     };
 
     bool battling() const {

@@ -62,7 +62,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     conf() = _conf;
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
-    info()._myteam.name = me.team.name;
+    info()._myteam.name = me.name;
 
     if (conf().ids[0] == ownid()) {
         conf().receivingMode[0] = BattleConfiguration::Player;
@@ -75,7 +75,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     }
     conf().avatar[info().myself] = me.avatar;
     conf().avatar[info().opponent] = opponent.avatar;
-    conf().name[info().opponent] = opponent.team.name;
+    conf().name[info().opponent] = opponent.name;
 
     info().gen = conf().gen;
 

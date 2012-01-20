@@ -10,15 +10,17 @@
 #include "server.h"
 #include "analyze.h"
 
-Player::Player(const GenericSocket &sock, int id) : myid(id)
+Player::Player(const GenericSocket &sock, int id)
 {
+    m_bundle.id = id;
+
     myrelay = new Analyzer(sock, id);
     lockCount = 0;
     battleSearch() = false;
     myip = relay().ip();
     server_pass_sent = false;
 
-    myauth = 0;
+    m_bundle.auth = 0;
 
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
@@ -309,11 +311,11 @@ void Player::changeState(int newstate, bool on)
 }
 
 int Player::auth() const {
-    return myauth;
+    return m_bundle.auth;
 }
 
 void Player::setAuth(int auth)  {
-    myauth = auth;
+    m_bundle.auth = auth;
 }
 
 void Player::setName(const QString &newname)  {
@@ -633,7 +635,7 @@ void Player::startBattle(int battleid, int id, const TeamBattle &team, const Bat
 
 void Player::giveBanList()
 {
-    if (myauth == 0) {
+    if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
     QHash<QString, QString> bannedMembers = SecurityManager::banList();
@@ -678,11 +680,16 @@ int Player::teamCount() const
 
 int Player::rating(const QString &tier)
 {
-    if (m_ratings.contains(tier)) {
-        return m_ratings[tier];
+    if (ratings().contains(tier)) {
+        return ratings()[tier];
     } else {
         return TierMachine::obj()->rating(name(), tier);
     }
+}
+
+QHash<QString, quint16> &Player::ratings()
+{
+    return m_bundle.ratings;
 }
 
 Analyzer & Player::relay()
@@ -725,19 +732,33 @@ bool Player::connected() const
     return relay().isConnected();
 }
 
+const QString & Player::name() const
+{
+    return m_bundle.name;
+}
+
+QString & Player::name()
+{
+    return m_bundle.name;
+}
+
+const QString & Player::info() const
+{
+    return m_bundle.info;
+}
+
+QString & Player::info()
+{
+    return m_bundle.info;
+}
+
 PlayerInfo Player::bundle() const
 {
-    PlayerInfo p;
-    p.auth = myauth;
-    p.flags = state();
-    p.flags.setFlag(Battling, battling());
-    p.id = id();
-    p.team = basicInfo();
-    p.avatar = avatar();
-    p.color = color();
-    p.gen = gen();
+    //Todo: update those in real time
+    m_bundle.flags.setFlag(PlayerInfo::Away, state()[Away]);
+    m_bundle.flags.setFlag(PlayerInfo::LadderEnabled, state()[LadderEnabled]);
 
-    return p;
+    return m_bundle;
 }
 
 bool Player::isLoggedIn() const
@@ -747,13 +768,7 @@ bool Player::isLoggedIn() const
 
 int Player::id() const
 {
-    return myid;
-}
-
-BasicInfo Player::basicInfo() const
-{
-    BasicInfo ret = {team().name, team().info};
-    return ret;
+    return m_bundle.id;
 }
 
 bool Player::ladder() const
@@ -782,7 +797,7 @@ void Player::loggedIn(LoginInfo *info)
 
     assignNewColor(info->trainerColor);
     if (info->trainerInfo) {
-        this->info() = *info->trainerInfo;
+        assignTrainerInfo(*info->trainerInfo);
     }
 
     if (info->teams) {
@@ -857,7 +872,7 @@ void Player::testAuthentificationLoaded()
             return;
         }
 
-        myauth = m.authority();
+        setAuth(m.authority());
 
         m.modifyIP(ip().toAscii());
         m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
@@ -867,7 +882,7 @@ void Player::testAuthentificationLoaded()
         relay().notify(NetworkServ::Register);
         loginSuccess();
     } else {
-        myauth = 0;
+        setAuth(0);
 
         SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), ip());
         /* To tell the player he's not registered */
@@ -923,14 +938,14 @@ void Player::acquireRoughKnowledgeOf(Player *other) {
 void Player::findRatings(bool force)
 {
     if (force) {
-        m_ratings.clear();
+        ratings().clear();
     }
 
     QString name = waiting_name.length()>0 ? waiting_name : this->name();
 
     bool one = false;
     foreach(QString tier, tiers) {
-        if (!m_ratings.contains(name)) {
+        if (!ratings().contains(name)) {
             one = true;
             findRating(tier);
         }
@@ -943,22 +958,22 @@ void Player::findRatings(bool force)
 
 const quint16 &Player::avatar() const
 {
-    return info().avatar;
+    return m_bundle.avatar;
 }
 
 quint16 &Player::avatar()
 {
-    return info().avatar;
+    return m_bundle.avatar;
 }
 
-const QString &Player::winningMessage() const
+const QColor &Player::color() const
 {
-    return info().winning;
+    return m_bundle.color;
 }
 
-const QString &Player::losingMessage() const
+QColor &Player::color()
 {
-    return info().losing;
+    return m_bundle.color;
 }
 
 void Player::findRating(const QString &tier)
@@ -981,9 +996,9 @@ void Player::ratingLoaded()
 {
     unlock();
     QString tier = sender()->property("tier").toString();
-    m_ratings.insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
+    ratings().insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
 
-    if (tiers.count() <= m_ratings.count() && m_ratings.keys().toSet().contains(tiers)) {
+    if (tiers.count() <= ratings().count() && ratings().keys().toSet().contains(tiers)) {
         ratingsFound();
     }
 }
@@ -1002,10 +1017,31 @@ void Player::ratingsFound()
     }
 }
 
+void Player::sendLoginInfo()
+{
+    relay().sendLogin(bundle(), getTierList());
+}
+
+QStringList Player::getTierList() const
+{
+    QStringList ret;
+    for (int i = 0; i < teamCount(); i++) {
+        ret.push_back(team(i).tier);
+    }
+    return ret;
+}
+
 void Player::assignNewColor(const QColor &c)
 {
     if (c.lightness() <= 140 && c.green() <= 180)
         color() = c;
+}
+
+void Player::assignTrainerInfo(const TrainerInfo &info)
+{
+    avatar() = info.trainerInfo->avatar;
+    winningMessage() = info.trainerInfo->winning;
+    losingMessage() = info.trainerInfo->losing;
 }
 
 bool Player::isLocked() const
@@ -1043,7 +1079,7 @@ void Player::registerRequest() {
 
 void Player::userInfoAsked(const QString &name)
 {
-    if (myauth == 0) {
+    if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
 
@@ -1084,7 +1120,7 @@ void Player::hashReceived(const QByteArray &_hash) {
             m.modifyIP(ip().toAscii());
             m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
             m.hash = hash;
-            myauth = m.authority();
+            setAuth(m.authority());
             SecurityManager::updateMember(m);
 
             loginSuccess();

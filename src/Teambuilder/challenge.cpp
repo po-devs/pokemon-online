@@ -13,13 +13,13 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     setParent(parent);
 
-    setWindowTitle(windowTitle.arg(p.team.name));
+    setWindowTitle(windowTitle.arg(p.name));
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     QColor grey = "#414141";
 
-    QLabel *name = new QLabel(toColor(p.team.name, grey),this);
+    QLabel *name = new QLabel(toColor(p.name, grey),this);
     name->setGeometry(54,0,290,52);
     name->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     name->setObjectName("Title");
@@ -36,7 +36,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     PokeTextEdit *pinfo = new PokeTextEdit();
     pinfo->setParent(this);
     pinfo->setObjectName("PlayerInfo");
-    pinfo->setText(p.team.info);
+    pinfo->setText(p.info);
     pinfo->setGeometry(18,197,280,58);
     pinfo->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     pinfo->setOpenExternalLinks(true);
@@ -48,12 +48,12 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
     battleMode->addItem(tr("Doubles"));
     battleMode->addItem(tr("Triples"));
 
-    QLabel *ladder = new QLabel(p.rating == -1 ? "unknown" : QString::number(p.rating),this);
+    QLabel *ladder = new QLabel(p.flags[PlayerInfo::LadderEnabled] ? QString::number(p.ratings.begin().value()) : "unknown", this);
     ladder->setObjectName("PlayerRating");
     ladder->setGeometry(224,144,83,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-    QLabel *tier = new QLabel(p.tier,this);
+    QLabel *tier = new QLabel(p.ratings.begin().key(),this);
     tier->setObjectName("PlayerTier");
     tier->setGeometry(116,144,94,18);
     ladder->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);

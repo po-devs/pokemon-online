@@ -72,7 +72,7 @@ signals:
     /* player from the players list */
     void playerReceived(const PlayerInfo &p);
     /* login of a player */
-    void playerLogin(const PlayerInfo &p);
+    void playerLogin(const PlayerInfo &p, const QStringList& tiers);
     /* Change of team of a player */
     void teamChanged(const PlayerInfo &p);
     /* logout... */
