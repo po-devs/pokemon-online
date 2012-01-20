@@ -213,7 +213,6 @@ public slots:
     void changeButtonStyle(bool old);
     void changeBattleWindow(bool old);
     void changeNicknames(bool old);
-    void showTeam(bool);
     void enableLadder(bool);
     void sortPlayersCountingTiers(bool);
     void sortPlayersByAuth(bool);

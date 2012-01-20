@@ -204,15 +204,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
             break;
         }
-        /* If used, would be used to dial with the server directly */
-/*    case SendMessage:
-        {
-            QString mess;
-            in >> mess;
-            emit messageReceived(mess);
-            break;
-        } */
-    case ChannelMessage:
+    case SendMessage:
         {
             Flags network, data;
             qint32 chanid;

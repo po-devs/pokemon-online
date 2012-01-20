@@ -716,13 +716,6 @@ void Client::goAway(int away)
     goaway->setChecked(away);
 }
 
-void Client::showTeam(bool b)
-{
-    QSettings s;
-    s.setValue("show_team", b);
-    relay().notify(NetworkCli::ShowTeamChange, b);
-}
-
 void Client::showTimeStamps(bool b)
 {
     QSettings s;
