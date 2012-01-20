@@ -64,15 +64,15 @@ void Network::onReceipt()
         if (commandStarted == false) {
             /* There it's a new message we are receiving.
                To start receiving it we must know its length, i.e. the 2 first bytes */
-            if (socket()->bytesAvailable() < 2) {
+            if (socket()->bytesAvailable() < 4) {
                 return;
             }
             /* Ok now we can start */
             commandStarted=true;
             /* getting the length of the message */
-            char c1, c2;
-            socket()->getChar(&c1), socket()->getChar(&c2);
-            remainingLength=uchar(c1)*256+uchar(c2);
+            char c1, c2, c3, c4;
+            socket()->getChar(&c1), socket()->getChar(&c2), socket()->getChar(&c3), socket()->getChar(&c4);
+            remainingLength=uchar(c3)*256+uchar(c4); //Anyway we don't consider messages more than 65536 for registry
 
             /* Just a little check :p */
             if (!AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
@@ -111,6 +111,8 @@ QString Network::errorString() const
 
 void Network::send(const QByteArray &message)
 {
+    socket()->putChar(message.length()/(65336*256));
+    socket()->putChar(message.length()/65536);
     socket()->putChar(message.length()/256);
     socket()->putChar(message.length()%256);
     socket()->write(message);
