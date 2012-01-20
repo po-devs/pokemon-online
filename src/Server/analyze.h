@@ -37,10 +37,7 @@ public:
     ~Analyzer();
 
     /* functions called by the server */
-    void sendMessage(const QString &message);
-    void sendChannelMessage(int chanid, const QString &message);
-    void sendHtmlMessage(const QString &message);
-    void sendHtmlChannelMessage(int chanid, const QString &message);
+    void sendMessage(const QString &message, bool html = false);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
     void sendPlayers(const QList<PlayerInfo> &p);
