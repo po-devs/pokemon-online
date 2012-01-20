@@ -25,24 +25,9 @@ void Analyzer::keepAlive()
     notify(KeepAlive);
 }
 
-void Analyzer::sendMessage(const QString &message)
+void Analyzer::sendMessage(const QString &message, bool html)
 {
-    notify(SendMessage, message);
-}
-
-void Analyzer::sendChannelMessage(int chanid, const QString &message)
-{
-    notify(ChannelMessage, qint32(chanid), message);
-}
-
-void Analyzer::sendHtmlMessage(const QString &message)
-{
-    notify(HtmlMessage, message);
-}
-
-void Analyzer::sendHtmlChannelMessage(int chanid, const QString &message)
-{
-    notify(HtmlChannel, qint32(chanid), message);
+    notify(SendMessage, Flags(0), Flags(html==true), message);
 }
 
 void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)

@@ -58,7 +58,6 @@ public:
     /* Sends a message to the player */
     void sendLoginInfo();
     void sendMessage(const QString &mess, bool html=false);
-    void sendChanMessage(int channel, const QString &mess, bool html=false);
 
     bool hasSentCommand(int commandid) const;
 

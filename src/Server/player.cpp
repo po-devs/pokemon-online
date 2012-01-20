@@ -1200,18 +1200,7 @@ void Player::spectatingRequested(int id)
 
 void Player::sendMessage(const QString &mess, bool html)
 {
-    if (!html)
-        relay().sendMessage(mess);
-    else
-        relay().sendHtmlMessage(mess);
-}
-
-void Player::sendChanMessage(int channel, const QString &mess, bool html)
-{
-    if (!html)
-        relay().sendChannelMessage(channel, mess);
-    else
-        relay().sendHtmlChannelMessage(channel, mess);
+    relay().sendMessage(mess, html);
 }
 
 void Player::tUnban(QString name)

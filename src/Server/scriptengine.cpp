@@ -434,22 +434,22 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
     }
 }
 
-void ScriptEngine::sendAll(const QString &mess)
+void ScriptEngine::sendAll(const QString &message)
 {
-    myserver->sendAll(mess);
+    myserver->broadCast(message);
 }
 
-void ScriptEngine::sendAll(const QString &mess, int channel)
+void ScriptEngine::sendAll(const QString &message, int channel)
 {
     if (testChannel("sendAll(mess, channel)", channel)) {
-        myserver->sendChannelMessage(channel, mess);
+        myserver->broadCast(message, channel);
     }
 }
 
 void ScriptEngine::sendMessage(int id, const QString &mess)
 {
     if (testPlayer("sendMessage(id, mess)", id)) {
-        myserver->sendMessage(id, mess);
+        myserver->broadCast(mess, Server::NoChannel, Server::NoSender, false, id);
     }
 }
 
@@ -458,26 +458,27 @@ void ScriptEngine::sendMessage(int id, const QString &mess, int channel)
     if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
         testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
     {
-        myserver->sendChannelMessage(id, channel, mess);
+        myserver->broadCast(mess, channel, Server::NoSender, false, id);
     }
 }
 
 void ScriptEngine::sendHtmlAll(const QString &mess)
 {
-    myserver->sendAll(mess, false, true);
+    myserver->broadCast(mess, Server::NoChannel, Server::NoSender, true);
 }
 
 void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
 {
     if (testChannel("sendAll(mess, channel)", channel)) {
-        myserver->sendChannelMessage(channel, mess, false, true);
+
+        myserver->broadCast(mess, channel, Server::NoSender, true);
     }
 }
 
 void ScriptEngine::sendHtmlMessage(int id, const QString &mess)
 {
     if (testPlayer("sendMessage(id, mess)", id)) {
-        myserver->sendMessage(id, mess, true);
+        myserver->broadCast(mess, Server::NoChannel, Server::NoSender, true, id);
     }
 }
 
@@ -486,7 +487,7 @@ void ScriptEngine::sendHtmlMessage(int id, const QString &mess, int channel)
     if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
         testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
     {
-        myserver->sendChannelMessage(id, channel, mess, true);
+        myserver->broadCast(mess, channel, Server::NoSender, true, id);
     }
 }
 

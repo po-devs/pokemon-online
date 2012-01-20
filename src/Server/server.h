@@ -36,6 +36,11 @@ public:
         IdsWithMessage = 2,
         LastGroup
     };
+    enum {
+        NoSender = -1,
+        NoChannel = -1,
+        NoTarget = -1
+    };
 
     Server(quint16 port = 5080);
     Server(QList<quint16> ports);
@@ -48,14 +53,8 @@ public:
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
-    /* Sends a broadcast message to all the players */
-    void sendAll(const QString &message, bool chatMessage = false, bool html=false);
-    /* Send a broadcast to one player */
-    void sendMessage(int id, const QString &message, bool html=false);
-    /* Sends to the whole channel */
-    void sendChannelMessage(int channel, const QString &message, bool chat = false, bool html=false);
-    /* Sends to a particular guy in the channel */
-    void sendChannelMessage(int id, int chanid, const QString &message, bool html=false);
+    void broadCast(const QString &message, int channel = NoChannel, int sender = NoSender, bool html = false, int target=NoTarget);
+    void sendMessage(int id, const QString &message);
 
     void sendBattlesList(int id, int chanid);
     /* Sends the login of the player to everybody but the player */
@@ -305,6 +304,9 @@ private:
 
     template <typename ...Params>
     void notifyChannel(int channel, PlayerGroupFlags group, int command, Params &&... params);
+
+    template <typename ...Params>
+    void notifyChannelOpp(int channel, PlayerGroupFlags group, int command, Params &&... params);
 
     template <typename ...Params>
     void notifyAll(int command, Params &&... params);

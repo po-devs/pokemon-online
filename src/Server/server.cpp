@@ -272,7 +272,7 @@ GenericSocket Server::server(int i)
 #endif
 void Server::processDailyRun()
 {
-    sendAll("The server is updating all the ratings, as it does daily. It may take a bit of time.");
+    broadCast("The server is updating all the ratings, as it does daily. It may take a bit of time.");
 
     /* Running delayed as otherwise the message would be sent after the lag, not before */
     QTimer::singleShot(1000, this, SLOT(updateRatings()));
@@ -282,7 +282,7 @@ void Server::updateRatings()
 {
     TierMachine::obj()->processDailyRun();
 
-    sendAll("All ratings updated!");
+    broadCast("All ratings updated!");
 
     /* Updating ratings of the players online */
     foreach(Player *p, myplayers) {
@@ -541,7 +541,7 @@ void Server::regNameChanged(const QString &name)
         return;
 
     serverName = name;
-    sendAll("The name of the server changed to " + name + ".");
+    broadCast("The name of the server changed to " + name + ".");
 
     notifyAll(NetworkServ::ServerName, name);
 
@@ -689,7 +689,7 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
 
 void Server::tiersChanged()
 {
-    sendAll("Tiers have been updated!");
+    broadCast("Tiers have been updated!");
 
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
     notifyGroup(SupportsZip, zippedTiers);
@@ -760,13 +760,13 @@ void Server::ban(int id, int src) {
 
 void Server::dosKick(int id) {
     if (playerExist(id)) {
-        sendAll(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
+        broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
     }
     silentKick(id);
 }
 
 void Server::dosBan(const QString &ip) {
-    sendAll(tr("IP %1 is being overactive.").arg(ip));
+    broadCast(tr("IP %1 is being overactive.").arg(ip));
     SecurityManager::ban(ip);
 }
 
@@ -783,6 +783,11 @@ QString Server::authedName(int id) const
     }
 
     return QString("%1    %2").arg(id).arg(nick);
+}
+
+void Server::sendMessage(int id, const QString &message)
+{
+    broadCast(message, NoChannel, NoSender, false, id);
 }
 
 void Server::loggedIn(int id, const QString &name)
@@ -856,7 +861,8 @@ void Server::loggedIn(int id, const QString &name)
         /* Makes the player join the default channel */
         joinChannel(id, 0);
 #ifndef PO_NO_WELCOME
-        sendMessage(id, tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),true);
+        broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
+                  NoChannel, NoSender, true, id);
 #endif
 
         myengine->afterLogIn(id);
@@ -899,14 +905,9 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
     }
 }
 
-void Server::sendMessage(int id, const QString &message, bool html)
-{
-    player(id)->sendMessage(message, html);
-}
-
 void Server::sendServerMessage(const QString &message)
 {
-    sendAll("~~Server~~: " + message);
+    broadCast(message, NoChannel, 0);
 }
 
 void Server::battleMessage(int player, int battle, const BattleChoice &choice)
@@ -966,7 +967,7 @@ void Server::recvMessage(int id, int channel, const QString &mess)
     QString re = mess.trimmed();
     if (re.length() > 0) {
         if (myengine->beforeChatMessage(id, mess, channel)) {
-            sendChannelMessage(channel, QString("%1: %2").arg(name(id)).arg(re), true);
+            broadCast(mess, channel, id);
             myengine->afterChatMessage(id, mess, channel);
         }
     }
@@ -1729,29 +1730,54 @@ int Server::id(const QString &name) const
     return mynames.value(name.toLower());
 }
 
-void Server::sendAll(const QString &message, bool chatMessage, bool html)
+void Server::broadCast(const QString &message, int channel, int sender, bool html, int target)
 {
-    if (printLine(message, chatMessage, true)) {
-        //todo: ids with message
-        foreach (Player *p, myplayers)
-            if (p->isLoggedIn())
-                p->sendMessage(message, html);
-    }
-}
+    QString fullMessage = message;
 
-void Server::sendChannelMessage(int channel, const QString &message, bool chat, bool html)
-{
-    if(useChannelFileLog) {
-        this->channel(channel).log(message);
+    if (sender != NoSender) {
+        if (sender == 0) {
+            fullMessage = QString("~~Server~~: %1").arg(message);
+        } else {
+            fullMessage = QString("%1: %2").arg(name(sender), message);
+        }
     }
-    printLine(QString("[#%1] %2").arg(this->channel(channel).name, message), chat, true);
-    foreach (Player *p, this->channel(channel).players)
-        p->sendChanMessage(channel, message, html);
-}
 
-void Server::sendChannelMessage(int id, int chanid, const QString &message, bool html)
-{
-    player(id)->sendChanMessage(chanid, message, html);
+    if (target != NoTarget) {
+        Player *p = player(target);
+        if (p->spec()[Player::IdsWithMessage] && sender != NoSender) {
+            if (channel != NoChannel) {
+                p->relay().notify(NetworkServ::SendMessage, Flags(3), Flags(html), channel, sender, message);
+            } else {
+                p->relay().notify(NetworkServ::SendMessage, Flags(2), Flags(html), sender, message);
+            }
+        } else {
+            if (channel != NoChannel) {
+                p->relay().notify(NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
+            } else {
+                p->relay().notify(NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+            }
+        }
+    } else {
+        if (channel != NoChannel) {
+            if(useChannelFileLog) {
+                this->channel(channel).log(fullMessage);
+            }
+            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), true, true);
+            if (sender == NoSender) {
+                notifyChannel(channel, All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
+            } else {
+                notifyChannel(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), message);
+                notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+            }
+        } else {
+            if (sender == NoSender) {
+                notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
+            } else {
+                notifyGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), message);
+                notifyOppGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+            }
+        }
+    }
 }
 
 int Server::freeid() const
@@ -1885,6 +1911,30 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
 {
     QByteArray packet = makePacket(command, std::forward<Params>(params)...);
     const QSet<Player*> &g1 = getGroup(group);
+    const QSet<Player*> &g2 = this->channel(channel).players;
+
+    if (g1.size() < g2.size()) {
+        foreach(Player *p, g1) {
+            if (p->inChannel(channel)) {
+                p->sendPacket(packet);
+            }
+        }
+    } else {
+        int log = intlog2(group);
+
+        foreach(Player *p, g2) {
+            if (p->spec()[log]) {
+                p->sendPacket(packet);
+            }
+        }
+    }
+}
+
+template <typename ...Params>
+void Server::notifyChannelOpp(int channel, PlayerGroupFlags group, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+    const QSet<Player*> &g1 = getOppGroup(group);
     const QSet<Player*> &g2 = this->channel(channel).players;
 
     if (g1.size() < g2.size()) {
