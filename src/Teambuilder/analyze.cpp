@@ -86,14 +86,9 @@ void Analyzer::sendPM(int id, const QString &mess)
     notify(SendPM, qint32(id), mess);
 }
 
-void Analyzer::sendMessage(const QString &message)
-{
-    notify(SendMessage, message);
-}
-
 void Analyzer::sendChanMessage(int channelid, const QString &message)
 {
-    notify(ChannelMessage, qint32(channelid), message);
+    notify(SendMessage, Flags(1), Flags(0), qint32(channelid), message);
 }
 
 void Analyzer::sendTeam(const TeamHolder &team)
