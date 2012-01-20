@@ -366,13 +366,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             emit ladderChange(change);
             break;
         }
-    case ShowTeamChange:
-        {
-            bool change;
-            in >> change;
-            emit showTeamChange(change);
-            break;
-        }
     case TierSelection:
         {
             QString tier;

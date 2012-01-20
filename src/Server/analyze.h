@@ -130,7 +130,6 @@ signals:
     void invalidName();
     void accepted();
     void awayChange(bool away);
-    void showTeamChange(bool);
     void ladderChange(bool);
     void tierChanged(const QString &);
     void findBattle(const FindBattleData &f);
