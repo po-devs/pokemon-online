@@ -22,7 +22,7 @@ DataStream & operator >> (DataStream &in, PlayerInfo &p)
     for (int i = 0; i < numTiers; i++) {
         QString tier;
         quint16 rating;
-        in >> tier >> rating;
+        v.stream >> tier >> rating;
 
         p.ratings.insert(tier, rating);
     }

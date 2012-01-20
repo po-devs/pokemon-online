@@ -46,7 +46,6 @@ Player::Player(const GenericSocket &sock, int id)
     connect(&relay(), SIGNAL(battleSpectateEnded(int)), SLOT(quitSpectating(int)));
     connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
     connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
-    connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
     connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
