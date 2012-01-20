@@ -3,55 +3,47 @@
 #include "../Shared/config.h"
 #include "../Shared/networkcommands.h"
 
-DataStream &operator << (DataStream &out, const BasicInfo& team)
-{
-    out << team.name;
-    out << team.info;
-
-    return out;
-}
-
-DataStream &operator >> (DataStream &in, BasicInfo& team)
-{
-    in >> team.name;
-    in >> team.info;
-
-    /* To avoid server overloads */
-    if (team.info.length() > 250)
-        team.info.resize(250);
-
-    return in;
-}
-
-
 DataStream & operator >> (DataStream &in, PlayerInfo &p)
 {
-    in >> p.id;
-    in >> p.team;
-    in >> p.auth;
-    in >> p.flags;
-    in >> p.rating;
+    VersionControl v;
+    in >> v;
 
-    in >> p.avatar;
-    in >> p.tier;
-    in >> p.color;
-    in >> p.gen;
+    if (v.versionNumber != 0) {
+        return in;
+    }
+
+    Flags network;
+    v.stream >> p.id >> network >> p.flags >> p.name >> p.color >> p.avatar >> p.info >> p.auth;
+
+    qint8 numTiers;
+
+    v.stream >> numTiers;
+
+    for (int i = 0; i < numTiers; i++) {
+        QString tier;
+        quint16 rating;
+        in >> tier >> rating;
+
+        p.ratings.insert(tier, rating);
+    }
 
     return in;
 }
 
 DataStream & operator << (DataStream &out, const PlayerInfo &p)
 {
-    out << p.id;
-    out << p.team;
-    out << p.auth;
-    out << p.flags;
-    out << p.rating;
+    VersionControl v;
 
-    out << p.avatar;
-    out << p.tier;
-    out << p.color;
-    out << p.gen;
+    v.stream << p.id << Flags(0) << p.flags << p.name << p.color << p.avatar << p.info << p.auth << qint8(p.ratings.size());
+
+    QHashIterator<QString, quint16> it(p.ratings);
+
+    while (it.hasNext()) {
+        it.next();
+        v.stream << it.key() << it.value();
+    }
+
+    out << v;
 
     return out;
 }

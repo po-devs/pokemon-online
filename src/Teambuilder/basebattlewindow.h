@@ -35,7 +35,7 @@ struct BaseBattleInfo
     /* Opponent pokemon */
 
     QString name(int x) const {
-        return pInfo[x].team.name;
+        return pInfo[x].name;
     }
 };
 

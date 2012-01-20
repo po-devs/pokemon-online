@@ -839,7 +839,7 @@ void Server::loggedIn(int id, const QString &name)
         if (!playerExist(id))
             return;
 
-        p->relay().sendLogin(p->bundle());
+        p->relay().sendLogin(p->bundle(), p->getTiers());
 
         if (serverAnnouncement.length() > 0) {
             if (p->supportsZip()) {

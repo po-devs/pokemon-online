@@ -85,7 +85,6 @@ public:
     void seeChallenge(const ChallengeInfo &c);
 
     PlayerInfo player(int id) const;
-    BasicInfo info(int id) const;
 
     void removePlayer(int id);
     void removeBattleWindow(int id);
@@ -127,7 +126,7 @@ public slots:
     void printHtml(const QString &html);
     /* sends what's in the line edit */
     void sendText();
-    void playerLogin(const PlayerInfo &p);
+    void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
     void teamChanged(const PlayerInfo &p);
     void announcementReceived(const QString &);

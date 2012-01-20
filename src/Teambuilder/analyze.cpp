@@ -281,9 +281,19 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             }
 	}
     case Login: {
-            PlayerInfo p;
+        Flags network;
+        in >> network;
+
+        if (network[0]) {
+            QByteArray reconnectPass;
+            in >> reconnectPass;
+            (void) reconnectPass;
+        }
+        PlayerInfo p;
 	    in >> p;
-	    emit playerLogin(p);
+        QStringList tiers;
+        in >> tiers;
+        emit playerLogin(p, tiers);
 	    break;
 	}
     case Logout: {

@@ -89,9 +89,9 @@ void Analyzer::sendPM(int dest, const QString &mess)
     notify(SendPM, qint32(dest), mess);
 }
 
-void Analyzer::sendLogin(const PlayerInfo &p)
+void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers)
 {
-    notify(Login, p);
+    notify(Login, Flags(0), p, tiers);
 }
 
 void Analyzer::notifyAway(qint32 id, bool away)

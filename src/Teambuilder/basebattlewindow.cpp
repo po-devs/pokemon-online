@@ -43,8 +43,8 @@ void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, co
     conf().receivingMode[0] = this->conf().receivingMode[1] = BattleConfiguration::Spectator;
     conf().avatar[0] = me.avatar;
     conf().avatar[1] = opponent.avatar;
-    conf().name[0] = me.team.name;
-    conf().name[1] = opponent.team.name;
+    conf().name[0] = me.name;
+    conf().name[1] = opponent.name;
 
     myInfo = new BaseBattleInfo(me, opponent, conf().mode);
     info().gen = conf().gen;
