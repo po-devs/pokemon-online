@@ -27,16 +27,25 @@
 
 Server *Server::serverIns = NULL;
 
+/* Todo: use those as lambda functions when mingw 4.5 is out in windows */
+static void updateChannelCache(QByteArray &val) {
+    val = makePacket(NetworkServ::ChannelsList, Server::serverIns->channelNames);
+}
+
+static void updateZippedChannelCache(QByteArray&val) {
+    val = makeZipPacket(NetworkServ::ChannelsList, Server::serverIns->channelNames);
+}
+
 Server::Server(quint16 port) : registry_connection(NULL), serverPorts(), showLogMessages(true),
-    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), numberOfPlayersLoggedIn(0),
-    myengine(NULL)
+    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), channelCache(&updateChannelCache),
+    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
 {
     serverPorts << port;
 }
 
 Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(), showLogMessages(true),
-    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), numberOfPlayersLoggedIn(0),
-    myengine(NULL)
+    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), channelCache(&updateChannelCache),
+    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
 {
     foreach(quint16 port, ports)
         serverPorts << port;
@@ -327,6 +336,7 @@ int Server::addChannel(const QString &name, int playerid) {
     channels[chanid] = new Channel(chanName);
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
+    channelCache.outdate();zchannelCache.outdate();
 
     notifyGroup(All, NetworkServ::AddChannel, chanName, qint32(chanid));
 
@@ -439,6 +449,8 @@ void Server::removeChannel(int channelid) {
     printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
     delete channels.take(channelid);
+
+    channelCache.outdate();zchannelCache.outdate();
 
     notifyGroup(All, NetworkServ::RemoveChannel, qint32(channelid));
 
@@ -627,6 +639,7 @@ void Server::mainChanChanged(const QString &name) {
     channel(0).name = name;
     channelids[name.toLower()] = 0;
     channelNames[0] = name;
+    channelCache.outdate();zchannelCache.outdate();
 
     printLine("Main channel name changed", false, true);
 
@@ -874,7 +887,7 @@ void Server::loggedIn(int id, const QString &name)
 void Server::sendChannelList(int player) {
     Player *p = this->player(player);
 
-    p->relay().notify(NetworkServ::ChannelsList, channelNames);
+    p->sendPacket(p->supportsZip() ? zchannelCache.value() : channelCache.value());
 }
 
 void Server::sendTierList(int id)
