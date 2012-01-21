@@ -1203,6 +1203,11 @@ void Player::sendMessage(const QString &mess, bool html)
     relay().sendMessage(mess, html);
 }
 
+void Player::sendPlayers(const QVector<PlayerInfo &> bundles)
+{
+    relay().notify(NetworkServer::PlayerList, Expander<decltype(bundles)>(bundles));
+}
+
 void Player::tUnban(QString name)
 {
     SecurityManager::unban(name);

@@ -301,7 +301,11 @@ private:
     template <typename ...Params>
     void notifyGroup(PlayerGroupFlags group, int command, Params &&... params);
 
+    template <typename ...Params>
+    void notifyGroup(const QSet<Player*> &group, int command, Params &&... params);
+
     void notifyGroup(PlayerGroupFlags group, const QByteArray &packet);
+
 
     template <typename ...Params>
     void notifyOppGroup(PlayerGroupFlags group, int command, Params &&... params);

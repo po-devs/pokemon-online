@@ -293,4 +293,24 @@ struct Cache
     }
 };
 
+/* Serializes a container without count param */
+template <class T>
+class Expander
+{
+public:
+    Expander(const T& ref) : mRef(ref){}
+
+    const T& mRef;
+};
+
+template <class T>
+DataStream &operator<<(DataStream &out, const Expander<T> &list)
+{
+    foreach (const typename T::value_type &val, list.mRef) {
+        out << val;
+    }
+
+    return out;
+}
+
 #endif // CORECLASSES_H
