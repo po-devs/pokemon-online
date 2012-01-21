@@ -13,6 +13,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "soundconfigwindow.h"
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
@@ -141,6 +142,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
     }
     if(settings.value("sort_channels_by_name").toBool()) {
         sortCBN = 1;
+        sortChannels();
     } else {
         sortCBN = 0;
     }
@@ -284,9 +286,6 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
         else
             channels->addItem(new QIdListWidgetItem(it.key(), greychatot, it.value()));
     }
-    if(sortCBN) {
-        sortChannels();
-    }
 }
 
 void Client::sortChannelsToggle(bool newvalue)
@@ -295,13 +294,14 @@ void Client::sortChannelsToggle(bool newvalue)
     s.setValue("sort_channels_by_name", newvalue);
 
     sortCBN = newvalue;
-    if(sortCBN) {
-        sortChannels();
-    }
+    sortChannels();
 }
 
 void Client::sortChannels() {
-    channels->sortItems();
+    if(sortCBN) {
+        channels->sortItems();
+    }
+    channels->setSortingEnabled(sortCBN);
 }
 
 void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
@@ -681,14 +681,14 @@ void Client::startPM(int id)
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(this, SIGNAL(PMDisabled(bool)), p, SLOT(disablePM(bool)));
+    connect(this, SIGNAL(PMDisabled(bool, int)), p, SLOT(disablePM(bool, int)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
@@ -739,7 +739,7 @@ void Client::togglePM(bool b)
     QSettings s;
     s.setValue("pm_disabled", b);
     pmDisabled = b;
-    emit PMDisabled(b);
+    emit PMDisabled(b, player(_mid).auth);
 }
 
 
@@ -987,21 +987,28 @@ void Client::PMReceived(int id, QString pm)
     double difference = difftime(lastAutoPM, current);
     if (mypms.contains(id)) {
         if(pmDisabled) { // We're avoiding that people that was actually chatting with the user continue talking avoiding the Disable PM =-)
-            if((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
             }
-            return;
         }
         registerPermPlayer(id);
         mypms[id]->printLine(pm);
     } else {
         if(pmDisabled) {
-            if ((difference > 6) || (difference < -6)) {
-                myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                lastAutoPM = current;
+            if(player(id).auth <= 0) {
+                if ((difference > 6) || (difference < -6)) {
+                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
+                    lastAutoPM = current;
+                }
+                return;
+            } else {
+                registerPermPlayer(id);
+                mypms[id]->printLine(pm);
             }
-            return;
         } else {
             if (!playerExist(id) || myIgnored.contains(id)) {
                 return;
@@ -1215,12 +1222,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
-    playMusic->setCheckable(true);
-    connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
-    playMusic->setChecked(s.value("play_battle_music").toBool());
-
-    battleMenu->addAction(tr("Change &music folder ..."), this, SLOT(changeMusicFolder()));
+    battleMenu->addAction(tr("&Sound configuration"),this, SLOT(openSoundConfig()));
 
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
@@ -1385,16 +1387,6 @@ void Client::sendRegister() {
     }
 }
 
-void Client::changeMusicFolder()
-{
-    QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Music Directory"), s.value("battle_music_directory").toString());
-
-    if (dir != "") {
-        s.setValue("battle_music_directory", dir + "/");
-    }
-}
-
 void Client::changeBattleLogFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Logs Directory"),
@@ -1405,6 +1397,21 @@ void Client::changeBattleLogFolder()
     }
 
     LogManager::obj()->changeBaseDirectory(dir);
+}
+
+void Client::openSoundConfig()
+{
+    SoundConfigWindow *w = new SoundConfigWindow();
+
+    foreach(BaseBattleWindowInterface *i, mySpectatingBattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
+
+    foreach(BattleWindow *i, mybattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
 }
 
 void Client::changeButtonStyle(bool old)
@@ -1434,12 +1441,6 @@ void Client::animateHpBar(bool save)
 {
     QSettings s;
     s.setValue("animate_hp_bar", save);
-}
-
-void Client::playMusic(bool save)
-{
-    QSettings s;
-    s.setValue("play_battle_music", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -2264,7 +2265,7 @@ void Client::printLine(int event, int playerid, const QString &line)
 {
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
-            c->printLine(line, false);
+            c->printLine(line, false, false);
     }
 }
 

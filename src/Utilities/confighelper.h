@@ -16,7 +16,7 @@ class ConfigForm : public QObject
 {
     Q_OBJECT
 public:
-    ConfigForm(const QString &button1, const QString &button2);
+    ConfigForm(const QString &button1, const QString &button2, QObject*parent=NULL);
     ~ConfigForm();
 
     QWidget* generateConfigWidget();
@@ -36,13 +36,15 @@ class AbstractConfigHelper
 {
 public:
     AbstractConfigHelper(const QString &desc = "");
+    virtual ~AbstractConfigHelper(){}
+
     QWidget * generateConfigWidget();
-    virtual void updateVal() = 0;
+    virtual void updateVal(){}
 protected:
     QString description;
     QWidget* internalWidget;
 private:
-    virtual QWidget *getInternalWidget() = 0;
+    virtual QWidget *getInternalWidget() {return NULL;}
 };
 
 template <class T>
@@ -104,6 +106,31 @@ public:
     void updateVal();
 private:
     QString checkBoxText;
+    virtual QWidget *getInternalWidget();
+};
+
+/* Finds a file path */
+class ConfigFile : public QObject, public ConfigHelper<QString> {
+    Q_OBJECT
+public:
+    ConfigFile(const QString &desc, QString &path);
+    void updateVal();
+public slots:
+    void findPath();
+private:
+    QString path;
+    virtual QWidget *getInternalWidget();
+
+    QLineEdit *edit;
+};
+
+/* Slider */
+class ConfigSlider : public ConfigHelper<int> {
+public:
+    ConfigSlider(const QString &desc, int &var, int min=0, int max=100);
+    void updateVal();
+private:
+    int min, max;
     virtual QWidget *getInternalWidget();
 };
 

@@ -62,7 +62,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
 
         lastOutput = scene;
     } else {
-        RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme(), usePokemonNames);
+        RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme(), !usePokemonNames);
 
         input->addOutput(data);
         input->addOutput(log);

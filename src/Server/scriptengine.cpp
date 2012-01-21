@@ -972,6 +972,26 @@ QScriptValue ScriptEngine::proxyIp(int id)
     }
 }
 
+void ScriptEngine::hostName(const QString &ip, const QScriptValue &function)
+{
+    myHostLookups[QHostInfo::lookupHost(ip, this, SLOT(hostInfo_Ready(QHostInfo)))] = function;
+}
+
+void ScriptEngine::hostInfo_Ready(const QHostInfo &myInfo)
+{
+    QScriptValue myVal = myHostLookups.take(myInfo.lookupId());
+    if(myVal.isString()) {
+        QString info = myInfo.hostName();
+        eval("var name = '"+info+"';"+myVal.toString());
+    } else {
+        if(myVal.isFunction()) {
+            QScriptValueList arguments;
+            arguments << QString(myInfo.hostName());
+            myVal.call(QScriptValue(), arguments);
+        }
+    }
+}
+
 QScriptValue ScriptEngine::gen(int id)
 {
     if (!myserver->playerLoggedIn(id)) {

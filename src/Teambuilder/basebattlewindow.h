@@ -48,6 +48,8 @@ class BaseBattleWindow : public BaseBattleWindowInterface
 
     PROPERTY(int, ownid)
     PROPERTY(bool, started)
+    PROPERTY(bool, playBattleCries)
+    PROPERTY(bool, playBattleMusic)
     PROPERTY(FullBattleConfiguration, conf)
 public:
     BaseBattleInfo *myInfo;
@@ -111,6 +113,8 @@ public slots:
     void delay(qint64 msec=0);
     void undelay();
     void playCry(int pokemon);
+    void changeCryVolume(int);
+    void changeMusicVolume(int);
 
     void ignoreSpectators();
 

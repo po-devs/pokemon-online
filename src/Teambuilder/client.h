@@ -168,9 +168,8 @@ public slots:
     void battleCommand(int battleid, const QByteArray&command);
     void saveBattleLogs(bool save);
     void animateHpBar(bool animate);
-    void playMusic(bool music);
-    void changeMusicFolder();
     void changeBattleLogFolder();
+    void openSoundConfig();
     void forfeitBattle(int);
     void watchBattleOf(int);
     void watchBattleRequ(int);
@@ -253,7 +252,7 @@ signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
     void tierListFormed(const QStringList &tiers);
-    void PMDisabled(bool b);
+    void PMDisabled(bool b, int starterAuth);
 protected:
     void paintEvent(QPaintEvent *)
     {
