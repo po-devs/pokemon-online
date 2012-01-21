@@ -363,16 +363,21 @@ void Server::joinChannel(int playerid, int channelid) {
     ids.reserve(channel.players.size());
 
     Player *player = this->player(playerid);
-    PlayerInfo bundle = player->bundle();
+
+    QSet<Player*> unknown;
+    QVector<PlayerInfo&> bundles;
 
     Analyzer &relay = player->relay();
     foreach(Player *p, channel.players) {
         if (!p->isInSameChannel(player)) {
-            relay.sendPlayer(p->bundle());
-            p->relay().sendPlayer(bundle);
+            unknown.insert(p);
+            bundles.push_back(p->bundle());
         }
         ids.push_back(p->id());
     }
+
+    notifyGroup(unknown, NetworkServ::PlayersList, player->bundle());
+    player->sendPlayers(bundles);
 
     relay.sendChannelPlayers(channelid, ids);
     channel.players.insert(player);
@@ -1897,6 +1902,16 @@ void Server::notifyGroup(PlayerGroupFlags group, int command, Params &&... param
 {
     QByteArray packet = makePacket(command, std::forward<Params>(params)...);
     notifyGroup(group, packet);
+}
+
+template <typename ...Params>
+void Server::notifyGroup(const QSet<Player*>& group, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+
+    foreach(Player *p, group) {
+        p->sendPacket(packet);
+    }
 }
 
 void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)

@@ -59,6 +59,7 @@ public:
     /* Sends a message to the player */
     void sendLoginInfo();
     void sendMessage(const QString &mess, bool html=false);
+    void sendPlayers(const QVector<PlayerInfo&> bundles);
 
     bool hasSentCommand(int commandid) const;
 
