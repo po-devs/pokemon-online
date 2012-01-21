@@ -66,6 +66,7 @@ signals:
     /* Message to appear in all the mainchats */
     void messageReceived(const QString &mess);
     void htmlMessageReceived(const QString &mess);
+    void channelMessageReceived(const QString &mess, int channel, bool html);
     /* Command specific to a channel */
     void channelCommandReceived(int command, int channel, DataStream *stream);
     /* player from the players list */

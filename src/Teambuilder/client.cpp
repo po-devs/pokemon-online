@@ -176,6 +176,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(disconnected()), SLOT(disconnected()));
     connect(relay, SIGNAL(messageReceived(QString)), SLOT(printLine(QString)));
     connect(relay, SIGNAL(htmlMessageReceived(QString)), SLOT(printHtml(QString)));
+    connect(relay, SIGNAL(channelMessageReceived(QString,int,bool)), SLOT(printChannelMessage(QString, int, bool)));
     connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
     connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
     connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
@@ -2274,6 +2275,17 @@ void Client::printLine(int event, int playerid, const QString &line)
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(playerid) && c->eventEnabled(event))
             c->printLine(line, false, false);
+    }
+}
+
+void Client::printChannelMessage(const QString &mess, int channel, bool html)
+{
+    if (hasChannel(channel)) {
+        if (html) {
+            this->channel(channel)->printHtml(mess);
+        } else {
+            this->channel(channel)->printLine(mess);
+        }
     }
 }
 

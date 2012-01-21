@@ -66,10 +66,10 @@ enum Command {
     ChannelBattle,
     RemoveChannel,
     AddChannel = 50,
-    ChannelMessage,
+    Unused1,
     ChanNameChange,
-    HtmlMessage,
-    HtmlChannel,
+    Unused2,
+    Unused3,
     ServerName,
     SpecialPass,
     ServerListEnd,              // Indicates end of transmission for registry.
