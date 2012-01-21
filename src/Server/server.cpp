@@ -1764,16 +1764,17 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             }
             printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), true, true);
             if (sender == NoSender) {
-                notifyChannel(channel, All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
+                notifyChannel(channel, All, NetworkServ::SendMessage, Flags(1), Flags(html), channel, message);
             } else {
-                notifyChannel(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), message);
-                notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+                notifyChannel(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(3), Flags(html), channel, sender, message);
+                notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
             }
         } else {
+            printLine(fullMessage);
             if (sender == NoSender) {
                 notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
             } else {
-                notifyGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), message);
+                notifyGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), sender, message);
                 notifyOppGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
             }
         }
@@ -1920,10 +1921,8 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
             }
         }
     } else {
-        int log = intlog2(group);
-
         foreach(Player *p, g2) {
-            if (p->spec()[log]) {
+            if (p->spec()[group]) {
                 p->sendPacket(packet);
             }
         }
@@ -1944,10 +1943,8 @@ void Server::notifyChannelOpp(int channel, PlayerGroupFlags group, int command, 
             }
         }
     } else {
-        int log = intlog2(group);
-
         foreach(Player *p, g2) {
-            if (p->spec()[log]) {
+            if (!p->spec()[group]) {
                 p->sendPacket(packet);
             }
         }

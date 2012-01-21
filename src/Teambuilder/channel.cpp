@@ -380,16 +380,6 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         if (eventEnabled(Client::ChannelEvent)) {
             printLine(tr("%1 joined the channel.").arg(name(id)), false, false);
         }
-    } else if (command == NetworkCli::ChannelMessage) {
-        QString message;
-
-        in >> message;
-        printLine(message);
-    } else if (command == NetworkCli::HtmlChannel) {
-        QString message;
-
-        in >> message;
-        printHtml(message);
     } else if (command == NetworkCli::BattleList) {
         QHash<qint32, Battle> battles;
         in >> battles;

@@ -124,6 +124,7 @@ public slots:
     /* message received from the server */
     void printLine(const QString &line);
     void printHtml(const QString &html);
+    void printChannelMessage(const QString &mess, int channel, bool html);
     /* sends what's in the line edit */
     void sendText();
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);

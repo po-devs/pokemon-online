@@ -39,6 +39,7 @@ public:
 
     enum Spec
     {
+        First=0,
         SupportsZipCompression,
         IdsWithMessage
     };
