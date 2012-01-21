@@ -237,7 +237,11 @@ private:
 
     QHash<int, Channel*> channels;
     QHash<QString, int> channelids;
+public:
     QHash<qint32, QString> channelNames;
+private:
+    Cache<QByteArray, void (*)(QByteArray&)> channelCache;
+    Cache<QByteArray, void (*)(QByteArray&)> zchannelCache;
 
     QHash<int, BattleSituation *> mybattles;
     QHash<qint32, Battle> battleList;

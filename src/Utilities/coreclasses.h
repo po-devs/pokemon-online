@@ -262,5 +262,35 @@ struct VersionControl
 DataStream & operator >> (DataStream &in, VersionControl &v);
 DataStream & operator << (DataStream &out, const VersionControl &v);
 
+/* Way it works: Refreshes a value, if necessary, when it is needed.
+
+  And gives the value.*/
+template <class T, class Lambda>
+struct Cache
+{
+    Cache(Lambda f) {
+        upToDate = false;
+        converter = f;
+    }
+
+    const T& value() const {
+        if (!updated()) {
+            converter(m_value);
+            upToDate = true;
+        }
+        return m_value;
+    }
+
+    void outdate() const {upToDate = false;}
+    bool updated()const {return upToDate;}
+
+    mutable T m_value;
+    mutable bool upToDate;
+    Lambda converter;
+
+    operator T() const {
+        return m_value;
+    }
+};
 
 #endif // CORECLASSES_H
