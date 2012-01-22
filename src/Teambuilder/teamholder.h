@@ -34,6 +34,7 @@ class TeamHolder : public TeamHolderInterface
     Team &team(int index);
     const Team &team(int index) const;
     int currentTeam() const {return m_currentTeam;}
+    void setCurrent(int t) {m_currentTeam = t;}
     int count() const;
 
     void save();

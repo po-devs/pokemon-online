@@ -14,6 +14,12 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>4</number>
+   </property>
    <item row="0" column="0">
     <widget class="PokeButton" name="pokemon0">
      <property name="text">

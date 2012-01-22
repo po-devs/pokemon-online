@@ -296,6 +296,13 @@ public:
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
     QString exportToTxt() const;
+
+    QString name() const;
+    QString folder() const;
+    QString path() const {return m_path;}
+    void setName(const QString &name);
+private:
+    mutable QString m_path;
 };
 
 /* Dialog for loading/saving team */

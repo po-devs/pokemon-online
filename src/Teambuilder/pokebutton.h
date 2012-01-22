@@ -28,6 +28,7 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
+    void keyReleaseEvent(QKeyEvent *);
     void startDrag();
 private:
     Ui::PokeButton *ui;

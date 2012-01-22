@@ -12,11 +12,58 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui->setupUi(this);
     ui->name->setValidator(new QNickValidator(this));
 
+    QPushButton *buttons[6] = {ui->team1, ui->team2, ui->team3, ui->team4, ui->team5, ui->team6};
+    memcpy(teamButtons, buttons, sizeof(buttons));
+
+    QButtonGroup *bg = new QButtonGroup(this);
+    for (int i = 0; i < 6; i++) {
+        buttons[i]->setCheckable(true);
+        bg->addButton(buttons[i], i);
+    }
+    buttons[0]->setChecked(true);
+
+    connect(bg, SIGNAL(buttonClicked(int)), SLOT(changeCurrentTeam(int)));
+
     connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
     connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
 
     loadProfileList();
     setupData();
+}
+
+void TrainerMenu::changeCurrentTeam(int t)
+{
+    if (t == team().currentTeam()) {
+        return;
+    }
+    teamButtons[t]->setChecked(true);
+    team().setCurrent(t);
+    updateTeam();
+
+    emit teamChanged();
+}
+
+void TrainerMenu::on_teamName_textEdited()
+{
+    team().team().setName(ui->teamName->text());
+    teamButtons[team().currentTeam()]->setText(ui->teamName->text());
+}
+
+void TrainerMenu::updateTeamButtons()
+{
+    for (int i = 0; i < team().count(); i++) {
+        teamButtons[i]->setVisible(true);
+        teamButtons[i]->setText(team().team(i).name().isEmpty() ? tr("Untitled", "Team name") : team().team(i).name());
+    }
+
+    for (int i = team().count(); i < 6; i++) {
+        teamButtons[i]->setVisible(false);
+    }
+
+    teamButtons[team().currentTeam()]->setChecked(true);
+
+    ui->removeTeam->setDisabled(team().count() <= 1);
+    ui->addTeam->setDisabled(team().count() >= 6);
 }
 
 void TrainerMenu::updateAll()
@@ -28,6 +75,7 @@ void TrainerMenu::setupData()
 {
     updateData();
     updateTeam();
+    updateTeamButtons();
 }
 
 void TrainerMenu::updateData()
@@ -46,6 +94,7 @@ void TrainerMenu::updateData()
 void TrainerMenu::updateTeam()
 {
     ui->pokemonButtons->setTeam(team().team());
+    ui->teamName->setText(team().team().name());
 }
 
 void TrainerMenu::setAvatarPixmap()
