@@ -31,10 +31,12 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
+    setDefaultValue(s, "team_folder", QDir::homePath() + "/Documents");
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
     setDefaultValue(s, "user_theme_directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
     setDefaultValue(s, "team_location", "Team/trainer.tp");
+    setDefaultValue(s, "team_folder", "Team");
     setDefaultValue(s, "user_theme_directory", "Themes/");
 #endif
     setDefaultValue(s, "battle_music_directory", "Music/Battle/");
