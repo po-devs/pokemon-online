@@ -365,13 +365,13 @@ void Server::joinChannel(int playerid, int channelid) {
     Player *player = this->player(playerid);
 
     QSet<Player*> unknown;
-    QVector<PlayerInfo&> bundles;
+    QVector<reference<PlayerInfo> > bundles;
 
     Analyzer &relay = player->relay();
     foreach(Player *p, channel.players) {
         if (!p->isInSameChannel(player)) {
             unknown.insert(p);
-            bundles.push_back(p->bundle());
+            bundles.push_back(&p->bundle());
         }
         ids.push_back(p->id());
     }

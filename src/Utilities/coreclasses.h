@@ -293,6 +293,23 @@ struct Cache
     }
 };
 
+template <class T>
+class reference
+{
+public:
+    reference(const T *val=0) : mRef(val) {}
+
+    const T *mRef;
+};
+
+template <class T>
+DataStream &operator<<(DataStream &out, const reference<T> &ref)
+{
+    out << (*ref.mRef);
+
+    return out;
+}
+
 /* Serializes a container without count param */
 template <class T>
 class Expander
@@ -306,8 +323,11 @@ public:
 template <class T>
 DataStream &operator<<(DataStream &out, const Expander<T> &list)
 {
-    foreach (const typename T::value_type &val, list.mRef) {
-        out << val;
+    auto it = list.mRef.begin();
+
+    while (it != list.mRef.end()) {
+        out << *it;
+        ++it;
     }
 
     return out;
