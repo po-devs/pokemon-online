@@ -9,7 +9,7 @@ class TeamImporter : public QWidget
 {
     Q_OBJECT
 public:
-    TeamImporter();
+    TeamImporter(QWidget *parent=0);
 signals:
     void done(const QString&);
 public slots:

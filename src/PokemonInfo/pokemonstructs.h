@@ -301,6 +301,7 @@ public:
     QString folder() const;
     QString path() const {return m_path;}
     void setName(const QString &name);
+    void setFolder(const QString &folder);
 private:
     mutable QString m_path;
 };

@@ -23,6 +23,7 @@ public:
     void updateTeam();
 public slots:
     void updateCurrentTeamAndNotify();
+    void importTeam(const QString &team);
 signals:
     void done();
     void editPoke(int);
@@ -44,9 +45,9 @@ private slots:
     void on_removeTeam_clicked();
     void on_saveTeam_clicked();
     void on_loadTeam_clicked();
-
+    void on_importTeam_clicked();
+    void on_teamFolderButton_clicked();
     void on_newProfile_clicked();
-
 private:
     void setupData();
     void updateData();

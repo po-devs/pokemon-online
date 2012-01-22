@@ -1,11 +1,14 @@
+#include <QColorDialog>
+#include <QMessageBox>
+#include <QFileDialog>
+
+#include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/teamsaver.h"
 #include "trainermenu.h"
 #include "ui_trainermenu.h"
 #include "teamholder.h"
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/teamsaver.h"
 #include "theme.h"
-#include <QColorDialog>
-#include <QMessageBox>
+#include "teamimporter.h"
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
@@ -48,6 +51,20 @@ void TrainerMenu::on_teamName_textEdited()
 {
     team().team().setName(ui->teamName->text());
     updateButtonName();
+}
+
+void TrainerMenu::on_importTeam_clicked()
+{
+    TeamImporter *i = new TeamImporter(this);
+    i->show();
+
+    connect(i, SIGNAL(done(QString)), SLOT(importTeam(QString)));
+    connect(i, SIGNAL(done(QString)), SLOT(updateCurrentTeamAndNotify()));
+}
+
+void TrainerMenu::importTeam(const QString &team)
+{
+    this->team().team().importFromTxt(team);
 }
 
 void TrainerMenu::updateTeamButtons()
@@ -136,6 +153,21 @@ void TrainerMenu::updateTeam()
     ui->pokemonButtons->setTeam(team().team());
     ui->teamName->setText(team().team().name());
     updateButtonName();
+}
+
+void TrainerMenu::on_teamFolderButton_clicked()
+{
+    QSettings s;
+
+    QString folder = QFileDialog::getExistingDirectory(this, tr("Folder in which to save the team"), team().team().folder().isEmpty() ?
+                                                           s.value("team_folder").toString() : team().team().folder());
+
+    if (folder.length() > 0) {
+        team().team().setFolder(folder);
+
+        QSettings s;
+        s.setValue("team_folder", folder);
+    }
 }
 
 void TrainerMenu::setAvatarPixmap()
