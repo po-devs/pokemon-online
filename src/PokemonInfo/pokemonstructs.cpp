@@ -655,6 +655,8 @@ QString Team::toXml() const
 
 bool Team::saveToFile(const QString &path) const
 {
+    m_path = path;
+
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly))
     {
@@ -792,6 +794,8 @@ Pokemon::gen PokeTeam::gen() const
 
 bool Team::loadFromFile(const QString &path)
 {
+    m_path = path;
+
     QFile file(path);
     if (!file.open(QFile::ReadOnly))
     {
@@ -1111,6 +1115,24 @@ QString Team::exportToTxt() const
     return ret.trimmed();
 }
 
+QString Team::name() const
+{
+    QFileInfo info(path());
+
+    return QUrl::fromPercentEncoding(info.fileName().toUtf8());
+}
+
+void Team::setName(const QString &name)
+{
+    m_path = folder() + "/" + QUrl::toPercentEncoding(name);
+}
+
+QString Team::folder() const
+{
+    QFileInfo info(path());
+
+    return info.absolutePath();
+}
 
 DataStream & operator << (DataStream & out, const Team & team)
 {

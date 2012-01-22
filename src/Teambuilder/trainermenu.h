@@ -8,6 +8,7 @@ namespace Ui {
     class TrainerMenu;
 }
 
+class QPushButton;
 class TeamHolder;
 
 class TrainerMenu : public TeamBuilderWidget
@@ -29,22 +30,27 @@ private slots:
     void on_winningMessage_textEdited();
     void on_losingMessage_textEdited();
     void on_tieMessage_textEdited();
+    void on_teamName_textEdited();
     void on_infos_textChanged();
     void on_saveProfile_clicked();
     void on_loadProfile_clicked();
     void on_colorButton_clicked();
     void setAvatarPixmap();
     void on_deleteProfile_clicked();
+    void changeCurrentTeam(int);
 
     void on_newProfile_clicked();
 
 private:
     void setupData();
     void updateData();
+    void updateTeamButtons();
     void setColor();
     void loadProfileList();
 
     Ui::TrainerMenu *ui;
+    QPushButton *teamButtons[6];
+
     TeamHolder *m_team;
     TeamHolder &team() {return *m_team;}
     const TeamHolder &team() const {return *m_team;}
