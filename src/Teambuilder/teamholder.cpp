@@ -142,15 +142,73 @@ int TeamHolder::count() const
 
 void TeamHolder::save()
 {
-   QSettings s;
-   team().saveToFile(s.value("team_location").toString());
-   QString path = s.value("profiles_path").toString() + "/" + name() + ".xml";
-   profile().saveToFile(path);
+    QSettings s;
+
+    QStringList locations;
+
+    for (int i = 0; i < count(); i++) {
+        if (team(i).name().isEmpty()) {
+            QMessageBox::warning(NULL, QObject::tr("Impossible to save team"),
+                                 QObject::tr("The team number %1 could not be saved as it was given no name!").arg(i+1));
+        } else {
+            team(i).saveToFile(team(i).path());
+            locations.push_back(team(i).path());
+        }
+    }
+
+    s.setValue("team_locations", locations);
+    QString path = s.value("profiles_path").toString() + "/" + name() + ".xml";
+    profile().saveToFile(path);
 }
 
 void TeamHolder::load()
 {
     QSettings s;
-    team().loadFromFile(s.value("team_location").toString());
+
+    m_teams.clear();
+    if (!s.contains("team_locations")) {
+        addTeam();
+        setCurrent(0);
+        team().loadFromFile(s.value("team_location").toString());
+    } else {
+        m_teams.clear();
+
+        QStringList l = s.value("team_locations").toStringList();
+
+        for (int i = 0; i < l.length(); i++) {
+            addTeam();
+            team(i).loadFromFile(l[i]);
+        }
+
+        if (count() == 0) {
+            addTeam();
+            setCurrent(0);
+        } else {
+            if (currentTeam() >= count()) {
+                setCurrent(count()-1);
+            }
+        }
+    }
+
+    if (!team().path().isEmpty()) {
+        s.setValue("team_folder", team().folder());
+    }
+
     profile().loadFromFile(s.value("current_profile").toString());
+}
+
+void TeamHolder::addTeam()
+{
+    m_teams.push_back(Team());
+}
+
+void TeamHolder::removeTeam()
+{
+    if (count() > 1) {
+        m_teams.removeAt(currentTeam());
+    }
+
+    if (currentTeam() >= count()) {
+        m_currentTeam -= 1;
+    }
 }

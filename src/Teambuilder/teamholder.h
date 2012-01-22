@@ -37,6 +37,9 @@ class TeamHolder : public TeamHolderInterface
     void setCurrent(int t) {m_currentTeam = t;}
     int count() const;
 
+    void addTeam();
+    void removeTeam();
+
     void save();
     void load();
 private:

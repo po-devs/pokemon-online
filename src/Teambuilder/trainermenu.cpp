@@ -2,6 +2,7 @@
 #include "ui_trainermenu.h"
 #include "teamholder.h"
 #include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/teamsaver.h"
 #include "theme.h"
 #include <QColorDialog>
 #include <QMessageBox>
@@ -46,7 +47,7 @@ void TrainerMenu::changeCurrentTeam(int t)
 void TrainerMenu::on_teamName_textEdited()
 {
     team().team().setName(ui->teamName->text());
-    teamButtons[team().currentTeam()]->setText(ui->teamName->text());
+    updateButtonName();
 }
 
 void TrainerMenu::updateTeamButtons()
@@ -64,6 +65,45 @@ void TrainerMenu::updateTeamButtons()
 
     ui->removeTeam->setDisabled(team().count() <= 1);
     ui->addTeam->setDisabled(team().count() >= 6);
+}
+
+void TrainerMenu::updateButtonName()
+{
+    teamButtons[team().currentTeam()]->setText(ui->teamName->text().isEmpty() ? tr("Untitled", "Team name") : ui->teamName->text());
+}
+
+void TrainerMenu::on_addTeam_clicked()
+{
+    team().addTeam();
+
+    updateTeamButtons();
+}
+
+void TrainerMenu::on_removeTeam_clicked()
+{
+    team().removeTeam();
+
+    updateTeamButtons();
+    updateTeam();
+}
+
+void TrainerMenu::on_saveTeam_clicked()
+{
+    //Updates name of team if changed
+    saveTTeamDialog(team().team(), this, SLOT(on_teamName_textEdited()));
+}
+
+void TrainerMenu::on_loadTeam_clicked()
+{
+    //Updates name of team if changed
+
+    loadTTeamDialog(team().team(), this, SLOT(updateCurrentTeamAndNotify()));
+}
+
+void TrainerMenu::updateCurrentTeamAndNotify()
+{
+    updateTeam();
+    emit teamChanged();
 }
 
 void TrainerMenu::updateAll()
@@ -95,6 +135,7 @@ void TrainerMenu::updateTeam()
 {
     ui->pokemonButtons->setTeam(team().team());
     ui->teamName->setText(team().team().name());
+    updateButtonName();
 }
 
 void TrainerMenu::setAvatarPixmap()

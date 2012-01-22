@@ -676,7 +676,7 @@ bool Team::saveToFile(const QString &path) const
 void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
-    QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
+    QString defaultPath = s.value("team_folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
@@ -697,7 +697,7 @@ void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
 void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
-    QString defaultPath = s.value("team_location", "Team/trainer.tp").toString();
+    QString defaultPath = s.value("team_folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath);
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
@@ -1119,12 +1119,12 @@ QString Team::name() const
 {
     QFileInfo info(path());
 
-    return QUrl::fromPercentEncoding(info.fileName().toUtf8());
+    return QUrl::fromPercentEncoding(info.baseName().toUtf8());
 }
 
 void Team::setName(const QString &name)
 {
-    m_path = folder() + "/" + QUrl::toPercentEncoding(name);
+    m_path = folder() + "/" + QUrl::toPercentEncoding(name) + ".tp";
 }
 
 QString Team::folder() const

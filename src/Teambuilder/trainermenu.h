@@ -21,6 +21,8 @@ public:
 
     void updateAll();
     void updateTeam();
+public slots:
+    void updateCurrentTeamAndNotify();
 signals:
     void done();
     void editPoke(int);
@@ -38,6 +40,10 @@ private slots:
     void setAvatarPixmap();
     void on_deleteProfile_clicked();
     void changeCurrentTeam(int);
+    void on_addTeam_clicked();
+    void on_removeTeam_clicked();
+    void on_saveTeam_clicked();
+    void on_loadTeam_clicked();
 
     void on_newProfile_clicked();
 
@@ -47,6 +53,7 @@ private:
     void updateTeamButtons();
     void setColor();
     void loadProfileList();
+    void updateButtonName();
 
     Ui::TrainerMenu *ui;
     QPushButton *teamButtons[6];
