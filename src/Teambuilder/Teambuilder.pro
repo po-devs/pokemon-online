@@ -35,7 +35,6 @@ SOURCES += main.cpp \
     Teambuilder/advanced.cpp \
     Teambuilder/pokechoice.cpp \
     Teambuilder/teambody.cpp \
-    Teambuilder/teamimporter.cpp \
     Teambuilder/dockinterface.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
@@ -55,7 +54,8 @@ SOURCES += main.cpp \
     soundconfigwindow.cpp \
     password_wallet.cpp \
     pmsystem.cpp \
-    ivbox.cpp
+    ivbox.cpp \
+    teamimporter.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -95,7 +95,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/pokebody.h \
     Teambuilder/pokechoice.h \
     Teambuilder/evmanager.h \
-    Teambuilder/teamimporter.h \
     Teambuilder/advanced.h \
     Teambuilder/dockinterface.h \
     Teambuilder/pokebodywidget.h \
@@ -127,7 +126,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     replayviewer.h \
     password_wallet.h \
     pmsystem.h \
-    ivbox.h
+    ivbox.h \
+    teamimporter.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \

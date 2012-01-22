@@ -200,6 +200,14 @@ void TeamHolder::load()
 void TeamHolder::addTeam()
 {
     m_teams.push_back(Team());
+
+    if (currentTeam() < count() - 1 && !team(currentTeam()).folder().isEmpty()) {
+        m_teams.back().setFolder(team(currentTeam()).folder());
+    } else {
+        QSettings s;
+
+        m_teams.back().setFolder(s.value("team_folder").toString());
+    }
 }
 
 void TeamHolder::removeTeam()

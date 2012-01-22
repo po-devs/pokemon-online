@@ -1127,6 +1127,11 @@ void Team::setName(const QString &name)
     m_path = folder() + "/" + QUrl::toPercentEncoding(name) + ".tp";
 }
 
+void Team::setFolder(const QString &folder)
+{
+    m_path = folder + "/" + QUrl::toPercentEncoding(name()) + ".tp";
+}
+
 QString Team::folder() const
 {
     QFileInfo info(path());
