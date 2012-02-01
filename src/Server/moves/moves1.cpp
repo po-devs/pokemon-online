@@ -403,7 +403,7 @@ struct MMCrushGrip : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints();
+        tmove(b, s).power = tmove(b, s).power * std::max(1, 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints());
     }
 };
 
