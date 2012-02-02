@@ -8,13 +8,19 @@ SOURCES += otherwidgets.cpp \
     functions.cpp \
     CrossDynamicLib.cpp \
     contextswitch.cpp \
-    coro.c
+    coro.c \
+    confighelper.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
     CrossDynamicLib.h \
     coro.h \
-    contextswitch.h
+    contextswitch.h \
+    confighelper.h
 OTHER_FILES += 
+<<<<<<< HEAD
+=======
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+>>>>>>> coyotte508/master
 
 include(../Shared/Common.pri)

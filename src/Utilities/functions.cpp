@@ -117,3 +117,29 @@ void cropImage(QImage &p)
         memcpy(p.scanLine(k), buffer, p.bytesPerLine());
     }
 }
+
+QString removeTrollCharacters(const QString& s)
+{
+    QString result = s;
+    int y = -1;
+    QChar const rtloverride(0x202e);
+
+    for (int x = 0; x < s.size(); x++) {
+        if (s[x].category() != QChar::Mark_NonSpacing && s[x] != rtloverride) {
+          if (y==-1) {
+            continue;
+          } else {
+            result[y] = x;
+            y++;
+          }
+        } else {
+          y = x;
+        }
+    }
+
+    if (y != -1) {
+      result.resize(y);
+    }
+
+    return result;
+}

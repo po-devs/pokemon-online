@@ -576,8 +576,9 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &line, bool flashing, bool act)
+void Channel::printLine(const QString &_line, bool flashing, bool act)
 {
+    QString line = removeTrollCharacters(_line);
     QString timeStr = "";
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";

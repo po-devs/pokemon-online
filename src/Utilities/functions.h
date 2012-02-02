@@ -138,4 +138,6 @@ void setDefaultValue(QSettings &s, const QString &key, T value)
         s.setValue(key, value);
 }
 
+QString removeTrollCharacters(const QString& s);
+
 #endif // FUNCTIONS_H

@@ -14,8 +14,8 @@
 
    Visual C++ > GCC on this point */
 
-ConfigForm::ConfigForm(const QString &button1, const QString &button2)
-    :button1S(button1), button2S(button2)
+ConfigForm::ConfigForm(const QString &button1, const QString &button2, QObject *parent)
+    : QObject(parent), button1S(button1), button2S(button2)
 {
 
 }
@@ -87,6 +87,10 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
     internalWidget = getInternalWidget();
     if (description.isEmpty()) {
         return internalWidget;
+    } else if (!internalWidget) {
+        QLabel *ret = new QLabel(description);
+        ret->setWordWrap(true);
+        return ret;
     } else {
         QWidget *w = new QWidget();
         w->setLayout(new QSideBySide(new QLabel(description), internalWidget));
@@ -169,6 +173,68 @@ QWidget *ConfigCheck::getInternalWidget()
 {
     QCheckBox *ret = new QCheckBox(checkBoxText);
     ret->setChecked(var);
+
+    return ret;
+}
+
+ConfigFile::ConfigFile(const QString &desc, QString &path)
+                       : ConfigHelper<QString> (desc, path)
+{
+    this->path = path;
+}
+
+QWidget *ConfigFile::getInternalWidget()
+{
+    QWidget *w = new QWidget();
+    QToolButton *dots;
+
+    w->setLayout(new QSideBySide(edit=new QLineEdit(path), dots=new QToolButton()));
+    dots->setText("...");
+
+    w->layout()->setSpacing(1);
+
+    connect(dots, SIGNAL(clicked()), SLOT(findPath()));
+
+    return w;
+}
+
+void ConfigFile::findPath()
+{
+    QString dir = QFileDialog::getExistingDirectory(internalWidget, tr("Find Directory"), path);
+
+    if (dir != "") {
+        this->path = dir + "/";
+        edit->setText(path);
+    }
+}
+
+void ConfigFile::updateVal()
+{
+    QDir d;
+    if (d.exists(edit->text()) && edit->text().length() > 0) {
+        var = edit->text();
+    }
+}
+
+ConfigSlider::ConfigSlider(const QString &desc, int &var, int min, int max)
+    : ConfigHelper<int>(desc, var), min(min), max(max)
+{
+
+}
+
+void ConfigSlider::updateVal()
+{
+    var = ((QSlider*)(internalWidget))->value();
+}
+
+QWidget * ConfigSlider::getInternalWidget()
+{
+    QSlider *ret = new QSlider();
+    ret->setOrientation(Qt::Horizontal);
+    ret->setRange(min, max);
+    ret->setTickInterval((max-min)/2);
+    ret->setTickPosition(QSlider::TicksAbove);
+    ret->setValue(var);
 
     return ret;
 }

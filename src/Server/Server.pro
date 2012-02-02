@@ -42,8 +42,7 @@ SOURCES += main.cpp \
     serverwidget.cpp \
     battlingoptions.cpp \
     tierwindow.cpp \
-    serverconfig.cpp \
-    confighelper.cpp
+    serverconfig.cpp
 LIBS += -L../../bin \
     -lutilities \
     -lpokemonlib
@@ -105,7 +104,7 @@ HEADERS += player.h \
     serverconfig.h \
     sqlconfig.h \
     tierwindow.h \
-    confighelper.h
+    ../Utilities/confighelper.h
 CONFIG(nogui) { 
     QT -= gui
     DEFINES += PO_NO_GUI

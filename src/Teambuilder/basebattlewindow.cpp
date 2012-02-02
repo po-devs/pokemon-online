@@ -133,7 +133,7 @@ void BaseBattleWindow::init()
     mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 2);
 
     QSettings s;
-    musicOn->setChecked(s.value("play_battle_music").toBool());
+    musicOn->setChecked(s.value("play_battle_music").toBool() || s.value("play_battle_cries").toBool());
     flashWhenMoveDone->setChecked(s.value("flash_when_enemy_moves").toBool());
 
     QVBoxLayout *chat = new QVBoxLayout();
@@ -184,17 +184,41 @@ bool BaseBattleWindow::flashWhenMoved() const
     return flashWhenMoveDone->isChecked();
 }
 
+void BaseBattleWindow::changeCryVolume(int v)
+{
+    cryOutput->setVolume(float(v)/100);
+}
+
+void BaseBattleWindow::changeMusicVolume(int v)
+{
+    audioOutput->setVolume(float(v)/100);
+}
+
 void BaseBattleWindow::musicPlayStop()
 {
     if (!musicPlayed()) {
+        playBattleCries() = false;
+        playBattleMusic() = false;
         mediaObject->pause();
         return;
     }
 
-    /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QSettings s;
+    audioOutput->setVolume(float(s.value("battle_music_volume").toInt())/100);
+    cryOutput->setVolume(float(s.value("battle_cry_volume").toInt())/100);
+
+    if (musicPlayed()) {
+        playBattleCries() = s.value("play_battle_sounds").toBool();
+        playBattleMusic() = s.value("play_battle_music").toBool() || !s.value("play_battle_cries").toBool();
+    }
+
+    if (!playBattleMusic()) {
+        return;
+    }
+
+    /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QDir directory = QDir(s.value("battle_music_directory").toString());
-    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a",
+    QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a" << "*.mp4",
                                             QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
     QStringList tmpSources;
@@ -240,7 +264,7 @@ void BaseBattleWindow::criesProblem(Phonon::State newState)
 
 void BaseBattleWindow::playCry(int pokemon)
 {
-    if (!musicPlayed())
+    if (!playBattleCries())
         return;
 
     delay();
@@ -314,6 +338,7 @@ void BaseBattleWindow::disable()
 {
     mysend->setDisabled(true);
     myline->setDisabled(true); 
+    checkAndSaveLog();
 
     test->getInput()->entryPoint(BattleEnum::BlankMessage);
     auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("The window was disabled due to one of the players closing the battle window."), Qt::blue)));

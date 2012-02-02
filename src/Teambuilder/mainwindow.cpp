@@ -23,6 +23,8 @@ MainEngine::MainEngine() : displayer(0)
     /* initializing the default init values if not there */
     setDefaultValue(s, "application_style", "plastique");
     setDefaultValue(s, "theme_2", "Themes/Balanced/");
+    setDefaultValue(s, "battle_cry_volume", 100);
+    setDefaultValue(s, "battle_music_volume", 100);
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
