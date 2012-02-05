@@ -490,7 +490,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("pokemon-online.dynalias.net", 5082);
+    s->connectToHost("poregtest.zapto.org", 5082);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
