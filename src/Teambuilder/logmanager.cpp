@@ -212,6 +212,10 @@ QString LogManager::getDirectoryForType(LogType type)
     } else if (type == ReplayLog) {
         return directory + "Battle Replays/";
     } else {
-        return directory;
+        if(type == PMLog) {
+            return directory + "Private Messages/";
+        } else {
+            return directory;
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 #include <QtGui>
 
+#include "logmanager.h"
 #include "../Utilities/functions.h"
 #include "../Utilities/otherwidgets.h"
 
@@ -72,10 +73,15 @@ public slots:
     void challenge();
     void disablePM(bool, int starterAuth);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     QString m_name;
     QString m_ownName;
     bool escape_html;
+
+    Log *log;
 
     void printHtml(const QString &htmlCode, bool timestamps = true);
 

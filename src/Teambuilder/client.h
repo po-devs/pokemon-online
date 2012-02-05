@@ -233,6 +233,7 @@ public slots:
     void pmFlash(bool);
     void togglePM(bool);
     void togglePMTabs(bool);
+    void togglePMLogs(bool);
     void movePlayerList(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const ProtocolVersion &v, int level);
