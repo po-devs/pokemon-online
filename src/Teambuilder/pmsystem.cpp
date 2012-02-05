@@ -138,12 +138,19 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_send = new QPushButton(tr("&Ignore"));
     m_send->setCheckable(true);
 
+    log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
+    QSettings s;
+    if(s.value("pms_logged").toBool()) {
+        log->override = Log::OverrideYes;
+    }
+
     if(pmDisabled) {
         if(starterAuth <= 0) {
             m_textToSend->setDisabled(true);
             m_textToSend->setText(tr("You have private messages disabled."));
             m_send->setDisabled(true);
         }
+
     } else {
         m_textToSend->setDisabled(false);
         m_textToSend->setText("");
@@ -208,6 +215,7 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
+    log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     emit messageReceived(this);
 }
 
@@ -273,3 +281,7 @@ void PMStruct::reuse(int id)
     m_textToSend->setEnabled(true);
 }
 
+void PMStruct::closeEvent(QCloseEvent *event) {
+    log->close();
+    event->accept();
+}
