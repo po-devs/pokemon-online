@@ -9,7 +9,7 @@ ServerChoice::ServerChoice(const QString &nick)
 
     registry_connection = new Analyzer(true);
     registry_connection->connectTo(
-            settings.value("registry_server", "pokemon-online.dynalias.net").toString(),
+            settings.value("registry_server", "poregtest.zapto.org").toString(),
             settings.value("registry_port", 5081).toUInt()
     );
     registry_connection->setParent(this);
