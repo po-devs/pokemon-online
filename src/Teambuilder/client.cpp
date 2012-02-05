@@ -753,6 +753,11 @@ void Client::togglePMTabs(bool b)
     emit TogglePMs(b);
 }
 
+void Client::togglePMLogs(bool b) {
+    QSettings s;
+    s.setValue("pms_logged", b);
+}
+
 void Client::ignoreServerVersion(bool b)
 {
     QSettings s;
@@ -1186,6 +1191,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     pmsTabbedToggle->setCheckable(true);
     connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
     pmsTabbedToggle->setChecked(s.value("pms_tabbed").toBool());
+
+    QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
+    save_logs->setCheckable(true);
+    connect(save_logs, SIGNAL(triggered(bool)), SLOT(togglePMLogs(bool)));
+    save_logs->setChecked(s.value("pms_logged").toBool());
 
     QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
