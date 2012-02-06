@@ -596,6 +596,12 @@ void Server::regMaxChanged(const int &numMax)
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
 }
 
+void Server::regPasswordChanged(bool &isEnabled) {
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+    registry_connection->notify(NetworkServ::ServPassToggle, isEnabled);
+}
+
 void Server::changeScript(const QString &script)
 {
     myengine->changeScript(script);
@@ -1297,6 +1303,7 @@ void Server::usePasswordChanged(bool usePass)
         return;
     passwordProtected = usePass; 
     printLine("Require Server Password changed", false, true);
+    regPasswordChanged(usePass);
 }
 
 void Server::info(int id, const QString &mess) {

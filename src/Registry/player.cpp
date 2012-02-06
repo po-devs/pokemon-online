@@ -30,9 +30,9 @@ void Player::sendRegistryAnnouncement(const QString &announcement) {
 void Player::sendServer(const Server &s)
 {
     if(s.port() == 0)
-        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers(),5080);
+        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers(),5080, s.passwordProtected());
     else
-        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers(),s.port());
+        m_relay->sendServer(s.name(), s.desc(), s.players(), s.ip(),s.maxPlayers(),s.port(), s.passwordProtected());
 }
 
 void Player::sendServerListEnd()

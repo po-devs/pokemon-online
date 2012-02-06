@@ -16,7 +16,7 @@ ServerChoice::ServerChoice(const QString &nick)
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), SLOT(setRegistryAnnouncement(QString)));
-    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16)));
+    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16, bool)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16, bool)));
 
     // Someone make this a little better, though i suck at UI design :( - Latios / Forgive
     QVBoxLayout *l = new QVBoxLayout(this);
@@ -27,10 +27,11 @@ ServerChoice::ServerChoice(const QString &nick)
 
     l->addWidget(announcement);
 
-    mylist = new QCompactTable(0,3);
+    mylist = new QCompactTable(0,4);
 
     QStringList horHeaders;
-    horHeaders << tr("Server Name") << tr("Players / Max") << tr("Advanced connection");
+    horHeaders << tr("") << tr("Server Name") << tr("Players / Max") << tr("Advanced connection");
+
     mylist->setHorizontalHeaderLabels(horHeaders);
     mylist->setSelectionBehavior(QAbstractItemView::SelectRows);
     mylist->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -39,6 +40,12 @@ ServerChoice::ServerChoice(const QString &nick)
     mylist->horizontalHeader()->resizeSection(0, 150);
     mylist->horizontalHeader()->setStretchLastSection(true);
     mylist->setMinimumHeight(200);
+
+    //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
+
+    mylist->horizontalHeaderItem(0)->setIcon(QIcon("db/mixed-lock.png"));
+    mylist->horizontalHeaderItem(0)->setToolTip(tr("This is to check if the server is password protected"));
+    mylist->setColumnWidth(16, 16);
 
     connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
     connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
@@ -81,7 +88,7 @@ ServerChoice::~ServerChoice()
 
 void ServerChoice::regServerChosen(int row)
 {
-    QString ip = mylist->item(row, 2)->text();
+    QString ip = mylist->item(row, 3)->text();
 
     QSettings settings;
     settings.setValue("default_server", ip);
@@ -118,7 +125,7 @@ void ServerChoice::setRegistryAnnouncement(const QString &sannouncement) {
     announcement->insertHtml(sannouncement);
 }
 
-void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port)
+void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected)
 {
     mylist->setSortingEnabled(false);
 
@@ -132,17 +139,24 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
 
     QTableWidgetItem *witem;
 
-    witem = new QTableWidgetItem(name);
+    witem = new QTableWidgetItem();
+    if(passwordProtected) witem->setIcon(QIcon("db/locked.png"));
+    else witem->setIcon(QIcon("db/unlocked.png"));
+
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 0, witem);
 
-    witem = new QTableWidgetItem(playerStr);
+    witem = new QTableWidgetItem(name);
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 1, witem);
 
-    witem = new QTableWidgetItem(ip + ":" + QString::number(port == 0 ? 5080 : port));
+    witem = new QTableWidgetItem(playerStr);
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 2, witem);
+
+    witem = new QTableWidgetItem(ip + ":" + QString::number(port == 0 ? 5080 : port));
+    witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
+    mylist->setItem(row, 3, witem);
 
     descriptionsPerIp.insert(ip + ":" + QString::number(port == 0 ? 5080 : port), desc);
     /*This needed to be changed because the showDescription function was looking for a ip and port,
@@ -162,7 +176,7 @@ void ServerChoice::showDetails(int row)
     myDesc->clear();
     myDesc->insertHtml(descriptionsPerIp[mylist->item(row,2)->text()]);
 
-    QString ip = mylist->item(row, 2)->text();
+    QString ip = mylist->item(row, 3)->text();
     myAdvServer->setText(ip);
 
 }
