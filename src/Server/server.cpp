@@ -1831,7 +1831,7 @@ void Server::atServerShutDown() {
 
     myengine->serverShutDown();
 
-#ifdef WIN32
+#ifdef _WIN32
     ::exit(0);
 #endif
     // On linux, threads need to be cleared or the server may be left hanging...
