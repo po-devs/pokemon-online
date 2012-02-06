@@ -2264,3 +2264,9 @@ bool ScriptEngine::isServerPrivate()
 {
     return myserver->isPrivate();
 }
+
+QString ScriptEngine::sha1(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}

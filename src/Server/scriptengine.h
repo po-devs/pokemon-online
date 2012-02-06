@@ -276,6 +276,8 @@ public:
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
     
+    Q_INVOKABLE QString sha1(const QString &text);
+
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
