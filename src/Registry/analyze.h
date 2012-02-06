@@ -26,6 +26,7 @@ public:
     ~Analyzer();
 
     /* functions called by the reg */
+    void sendRegistryAnnouncement(const QString &announcement);
     void sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port);
     void sendServerListEnd(void);
     void sendInvalidName();

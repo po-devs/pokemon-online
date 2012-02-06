@@ -23,6 +23,8 @@ Registry::Registry() {
         printLine("Starting to listen to port 5082");
     }
 
+    registry_announcement = " ";
+
     connect(&forPlayers, SIGNAL(newConnection()), SLOT(incomingPlayer()));
     connect(&forServers, SIGNAL(newConnection()), SLOT(incomingServer()));
 
@@ -35,8 +37,10 @@ Registry::Registry() {
     t->setInterval(60*1000);
     t->start();
     connect(t, SIGNAL(timeout()), SLOT(updateTBanList()));
+    connect(t, SIGNAL(timeout()), SLOT(updateRegistryAnnouncement()));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(tbanListReceived(QNetworkReply*)));
     updateTBanList();
+    updateRegistryAnnouncement();
 }
 
 void Registry::printLine(const QString &line)
@@ -75,6 +79,21 @@ void Registry::tbanListReceived(QNetworkReply* reply){
     }
 
     reply->deleteLater();
+}
+
+void Registry::updateRegistryAnnouncement() {
+    QFile file("announcement.txt");
+    QString newAnnouncement;
+    if(file.open(QIODevice::ReadOnly)) {
+        QTextStream in(file.readAll());
+        newAnnouncement = in.readAll();
+        if(registry_announcement != newAnnouncement) {
+            printLine(QString("New Registry announcement: %1").arg(newAnnouncement));
+            registry_announcement = newAnnouncement;
+        }
+    }
+    file.close();
+    newAnnouncement.clear();
 }
 
 void Registry::incomingServer()
@@ -143,6 +162,10 @@ void Registry::incomingPlayer()
     Player *p = players[id] = new Player(id, newconnection);
 
     connect(players[id], SIGNAL(disconnection(int)), SLOT(disconnection(int)));
+
+    printLine("Sending the registry announcement");
+
+    p->sendRegistryAnnouncement(registry_announcement);
 
     printLine("Sending the server list");
     foreach(Server *s, servers) {

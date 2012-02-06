@@ -17,6 +17,7 @@ class Player : public QObject
 public:
     Player(int id, QTcpSocket *s);
 
+    void sendRegistryAnnouncement(const QString &announcement);
     void sendServer(const Server &s);
     void sendServerListEnd(void);
     void kick();

@@ -15,9 +15,18 @@ ServerChoice::ServerChoice(const QString &nick)
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
+    connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), SLOT(setRegistryAnnouncement(QString)));
     connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16)));
 
+    // Someone make this a little better, though i suck at UI design :( - Latios / Forgive
     QVBoxLayout *l = new QVBoxLayout(this);
+
+    announcement = new QTextBrowser();
+    announcement->setMinimumSize(this->width(), 100);
+    announcement->setMaximumSize(this->maximumWidth(), 100);
+
+    l->addWidget(announcement);
+
     mylist = new QCompactTable(0,3);
 
     QStringList horHeaders;
@@ -103,6 +112,10 @@ void ServerChoice::advServerChosen()
 void ServerChoice::connectToLocalhost()
 {
     emit serverChosen("localhost", 5080, myName->text());
+}
+
+void ServerChoice::setRegistryAnnouncement(const QString &sannouncement) {
+    announcement->insertHtml(sannouncement);
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port)

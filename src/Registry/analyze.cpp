@@ -94,6 +94,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
 }
 
+void Analyzer::sendRegistryAnnouncement(const QString &announcement)
+{
+    notify(Announcement, announcement);
+}
+
 void Analyzer::sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port)
 {
     notify(PlayersList, name, desc, numplayers, ip, max, port);
