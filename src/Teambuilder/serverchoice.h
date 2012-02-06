@@ -23,6 +23,7 @@ public:
     }
 
 public slots:
+    void setRegistryAnnouncement(const QString &announcement);
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
 signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
@@ -34,6 +35,7 @@ private slots:
     void connectionError(int , const QString &mess);
     void connectToLocalhost();
 private:
+    QTextBrowser *announcement;
     QCompactTable *mylist;
     QLineEdit *myAdvServer;
     QLineEdit *myName;

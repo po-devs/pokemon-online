@@ -23,6 +23,10 @@ void Player::kick()
     m_relay->close();
 }
 
+void Player::sendRegistryAnnouncement(const QString &announcement) {
+    m_relay->sendRegistryAnnouncement(announcement);
+}
+
 void Player::sendServer(const Server &s)
 {
     if(s.port() == 0)

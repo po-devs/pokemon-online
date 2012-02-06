@@ -481,10 +481,18 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case Announcement: {
-        QString ann;
-        in >> ann;
-        emit announcement(ann);
-        break;
+        if(!registry_socket) {
+            QString ann;
+            in >> ann;
+            emit announcement(ann);
+            break;
+        } else {
+            QString announcement;
+            in >> announcement;
+            qDebug() << announcement;
+            emit regAnnouncementReceived(announcement);
+            break;
+        }
     }
     case ChannelsList: {
         QHash<qint32, QString> channels;
