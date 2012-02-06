@@ -2,8 +2,9 @@
 #define CORECLASSES_H
 
 #include <QDataStream>
-#include <QColor>
 #include <QPair>
+#include <QStringList>
+#include <QList>
 
 class DataStream : public QDataStream
 {
@@ -58,9 +59,6 @@ DataStream &operator >>(DataStream &in, QString &s);
 DataStream &operator <<(DataStream &out, const QString &s);
 inline DataStream &operator >>(DataStream &in, QByteArray &s) { return (DataStream&) ::operator >>((QDataStream&)in, s); }
 inline DataStream &operator <<(DataStream &out, const QByteArray &s) { return (DataStream&) ::operator <<((QDataStream&)out, s); }
-inline DataStream &operator<<(DataStream &in, const QColor &c) { return (DataStream&) ::operator <<((QDataStream&)in, c); }
-inline DataStream &operator>>(DataStream &out, QColor &c) { return (DataStream&) ::operator >>((QDataStream&)out, c); }
-
 template <class T1, class T2>
 inline DataStream& operator>>(DataStream& s, QPair<T1, T2>& p)
 {
@@ -229,6 +227,7 @@ inline DataStream &operator<<(DataStream &out, const QStringList &list)
 {
     return operator<<(out, static_cast<const QList<QString> &>(list));
 }
+
 
 /* Flags are like so: for each byte, 7 bits of flag and one bit to tell if there are higher flags (in network)
   so as to limit the number of bytes sent by networking. That's why you should never have a flag that's 7,
