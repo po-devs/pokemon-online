@@ -118,6 +118,7 @@ public slots:
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(const int &num);
+    void regPasswordChanged(bool &newValue);
     void changeScript(const QString &script);
     void announcementChanged(const QString &announcement);
     void mainChanChanged(const QString &mainChan);

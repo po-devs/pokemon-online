@@ -283,8 +283,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             // Registry socket;
             QString servName, servDesc, ip;
             quint16 numPlayers, max, port;
-            in >> servName >> servDesc >> numPlayers >> ip >> max >> port;
-            emit serverReceived(servName, servDesc, numPlayers, ip, max, port);
+            bool passwordProtected;
+            in >> servName >> servDesc >> numPlayers >> ip >> max >> port >> passwordProtected;
+            emit serverReceived(servName, servDesc, numPlayers, ip, max, port, passwordProtected);
         }
     }
     case Login: {

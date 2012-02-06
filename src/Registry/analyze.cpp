@@ -57,8 +57,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         {
             QString name, desc;
             quint16 num, max, nport;
-            in >> name >> desc >> num >> max >> nport;
-            emit loggedIn(name,desc,num, max, nport);
+            bool passwordProtected;
+            in >> name >> desc >> num >> max >> nport >> passwordProtected;
+            emit loggedIn(name,desc,num, max, nport, passwordProtected);
             break;
         }
     case ServNumChange:
@@ -88,6 +89,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> max;
             emit maxChange(max);
         }
+    case ServPassToggle:
+        {
+            bool toggle;
+            in >> toggle;
+            emit passToggleChanged(toggle);
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
@@ -99,14 +106,14 @@ void Analyzer::sendRegistryAnnouncement(const QString &announcement)
     notify(Announcement, announcement);
 }
 
-void Analyzer::sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port)
+void Analyzer::sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port, bool passwordProtected)
 {
-    notify(PlayersList, name, desc, numplayers, ip, max, port);
+    notify(PlayersList, name, desc, numplayers, ip, max, port, passwordProtected);
 }
 
 void Analyzer::sendServerListEnd()
 {
-  notify(ServerListEnd);
+    notify(ServerListEnd);
 }
 
 void Analyzer::sendInvalidName()

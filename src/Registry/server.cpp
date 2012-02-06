@@ -10,20 +10,22 @@ Server::Server(int _id, QTcpSocket *s)
     m_relay = new Analyzer(s, id());
     m_relay->setParent(this);
 
-    connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16,quint16,quint16)), SLOT(login(QString,QString,quint16,quint16,quint16)));
+    connect(m_relay, SIGNAL(loggedIn(QString,QString,quint16,quint16,quint16, bool)), SLOT(login(QString,QString,quint16,quint16,quint16, bool)));
     connect(m_relay, SIGNAL(nameChange(QString)), SLOT(nameChanged(QString)));
     connect(m_relay, SIGNAL(numChange(quint16)), SLOT(numChanged(quint16)));
     connect(m_relay, SIGNAL(descChange(QString)), SLOT(descChanged(QString)));
     connect(m_relay, SIGNAL(maxChange(quint16)), SLOT(maxChanged(quint16)));
+    connect(m_relay, SIGNAL(passToggleChanged(bool)), SLOT(passToggled(bool)));
     connect(m_relay, SIGNAL(disconnected()), SLOT(disconnected()));
 }
 
-void Server::login(const QString &name, const QString &desc, quint16 num, quint16 max,quint16 nport)
+void Server::login(const QString &name, const QString &desc, quint16 num, quint16 max,quint16 nport, bool passwordProtected)
 {
     descChanged(desc);
     numChanged(num);
     nameChanged(name);
     maxChanged(max);
+    passToggled(passwordProtected);
     int oldport = port();
     port() = nport;
 
@@ -61,6 +63,10 @@ void Server::nameChanged(const QString &name)
 void Server::maxChanged(const quint16 max)
 {
     this->maxPlayers() = max;
+}
+
+void Server::passToggled(bool toggle) {
+    this->passwordProtected() = toggle;
 }
 
 void Server::refuseIP()
