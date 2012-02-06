@@ -47,8 +47,7 @@ bool Analyzer::isConnected() const
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_5);
+    DataStream in (commandline);
     uchar command;
 
     in >> command;
@@ -129,17 +128,3 @@ const Network & Analyzer::socket() const
 {
     return mysocket;
 }
-
-void Analyzer::notify(int command)
-{
-    if (!isConnected())
-        return;
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(command);
-
-    emit sendCommand(tosend);
-}
-
