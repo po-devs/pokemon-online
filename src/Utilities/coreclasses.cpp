@@ -1,5 +1,7 @@
 #include "coreclasses.h"
 
+#include <QColor>
+
 DataStream::DataStream()
 {
     setVersion(QDataStream::Qt_4_7);
@@ -110,4 +112,12 @@ DataStream & operator << (DataStream &out, const VersionControl &v)
     out.writeRawData(v.data, v.data.length());
 
     return out;
+}
+
+DataStream &operator<<(DataStream &in, const QColor &c) {
+    return (DataStream&)::operator <<((QDataStream&)in, c);
+}
+
+DataStream &operator>>(DataStream &out, QColor &c) {
+    return (DataStream&)::operator >>((QDataStream&)out, c);
 }
