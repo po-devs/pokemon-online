@@ -403,7 +403,7 @@ struct MMCrushGrip : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints();
+        tmove(b, s).power = tmove(b, s).power * std::max(1, 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints());
     }
 };
 
@@ -1711,7 +1711,7 @@ struct MMBeatUp : public MM {
     }
 
     static void bh(int s, int, BS &b) {
-        if (b.poke(s, b.repeatCount()).status() != Pokemon::Fine) {
+        if (b.poke(b.player(s), b.repeatCount()).status() != Pokemon::Fine) {
             turn(b,s)["HitCancelled"] = true;
         } else {
             tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id).baseAttack()/10);
