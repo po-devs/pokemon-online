@@ -48,22 +48,22 @@ ServerChoice::ServerChoice(const QString &nick)
     myDesc = new PokeTextEdit();
     myDesc->setOpenExternalLinks(true);
     myDesc->setFixedHeight(100);
-    l->addWidget(new QEntitled("Server Description", myDesc));
+    l->addWidget(new QEntitled(tr("Server Description"), myDesc));
 
     myName = new QLineEdit(nick);
-    l->addWidget(new QEntitled("Trainer Name", myName));
+    l->addWidget(new QEntitled(tr("Trainer Name"), myName));
 
     myAdvServer = new QLineEdit(settings.value("default_server").toString());
     connect(myAdvServer, SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
-    l->addWidget(new QEntitled("&Advanced Connection", myAdvServer));
+    l->addWidget(new QEntitled(tr("&Advanced Connection"), myAdvServer));
 
     QHBoxLayout *hl= new QHBoxLayout();
     l->addLayout(hl);
 
-    QPushButton *cancel = new QPushButton("&Go Back");
-    QPushButton *ok = new QPushButton("Advanced &Connection");
-    QPushButton *localhost = new QPushButton("Connect to own server");
+    QPushButton *cancel = new QPushButton(tr("&Go Back"));
+    QPushButton *ok = new QPushButton(tr("Advanced &Connection"));
+    QPushButton *localhost = new QPushButton(tr("Connect to own server"));
 
     connect(cancel, SIGNAL(clicked()), SIGNAL(rejected()));
     connect(ok, SIGNAL(clicked()), SLOT(advServerChosen()));
