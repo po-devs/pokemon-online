@@ -21,7 +21,7 @@ ServerChoice::ServerChoice(const QString &nick)
     // Someone make this a little better, though i suck at UI design :( - Latios / Forgive
     QVBoxLayout *l = new QVBoxLayout(this);
 
-    announcement = new QTextBrowser();
+    announcement = new PokeTextEdit();
     announcement->setMinimumSize(this->width(), 100);
     announcement->setMaximumSize(this->maximumWidth(), 100);
 
@@ -168,7 +168,7 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
       while only the IP was in the list, and in the end, the description wouldn't be displayed. */
 
     mylist->setSortingEnabled(true);
-    mylist->sortByColumn(1);
+    mylist->sortByColumn(2);
 
     if (mylist->currentRow() != -1)
         showDetails(mylist->currentRow());
@@ -179,7 +179,7 @@ void ServerChoice::showDetails(int row)
     if (row < 0)
         return;
     myDesc->clear();
-    myDesc->insertHtml(descriptionsPerIp[mylist->item(row,2)->text()]);
+    myDesc->insertHtml(descriptionsPerIp[mylist->item(row,3)->text()]);
 
     QString ip = mylist->item(row, 3)->text();
     myAdvServer->setText(ip);
