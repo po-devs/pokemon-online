@@ -2186,7 +2186,6 @@ void BattleSituation::testCritical(int player, int target)
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
         critical = randnum < critChance * baseSpeed;
     } else {
-        int randnum = randint(48);
         int minch;
         int craise = tmove(player).critRaise;
 
@@ -2203,7 +2202,7 @@ void BattleSituation::testCritical(int player, int target)
         case 6: default: minch = 48;
         }
 
-        critical = randnum<minch;
+        critical = coinflip(minch, 48);
     }
 
     turnMemory(player)["CriticalHit"] = critical;
