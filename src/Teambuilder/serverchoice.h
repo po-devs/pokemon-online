@@ -22,6 +22,8 @@ public:
         return QSize(500, 450);
     }
 
+    void saveSettings();
+
 public slots:
     void setRegistryAnnouncement(const QString &announcement);
     void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected);

@@ -43,9 +43,13 @@ ServerChoice::ServerChoice(const QString &nick)
 
     //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
 
+    mylist->setColumnWidth(0, settings.value("ServerChoice/PasswordProtectedWidth", 26).toInt());
+    mylist->setColumnWidth(1, settings.value("ServerChoice/ServerNameWidth", 409).toInt());
+    mylist->setColumnWidth(2, settings.value("ServerChoice/PlayersInfoWidth", 340).toInt());
+    mylist->setColumnWidth(3, settings.value("ServerChoice/ServerIPWidth", 450).toInt());
+
     mylist->horizontalHeaderItem(0)->setIcon(QIcon("db/mixed-lock.png"));
     mylist->horizontalHeaderItem(0)->setToolTip(tr("This is to check if the server is password protected"));
-    mylist->setColumnWidth(16, 16);
 
     connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
     connect(mylist, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
@@ -84,6 +88,7 @@ ServerChoice::ServerChoice(const QString &nick)
 ServerChoice::~ServerChoice()
 {
     writeSettings(this);
+    saveSettings();
 }
 
 void ServerChoice::regServerChosen(int row)
@@ -186,4 +191,12 @@ void ServerChoice::connectionError(int, const QString &mess)
     mylist->setCurrentCell(-1,-1);
     myDesc->clear();
     myDesc->insertPlainText(tr("Disconnected from the registry: %1").arg(mess));
+}
+
+void ServerChoice::saveSettings() {
+    QSettings settings;
+    settings.setValue("ServerChoice/PasswordProtectedWidth", mylist->columnWidth(0));
+    settings.setValue("ServerChoice/ServerNameWidth", mylist->columnWidth(1));
+    settings.setValue("ServerChoice/PlayersInfoWidth", mylist->columnWidth(2));
+    settings.setValue("ServerChoice/ServerIPWidth", mylist->columnWidth(3));
 }
