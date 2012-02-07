@@ -24,6 +24,9 @@ ServerChoice::ServerChoice(const QString &nick)
     announcement = new PokeTextEdit();
     announcement->setMinimumSize(this->width(), 100);
     announcement->setMaximumSize(this->maximumWidth(), 100);
+    announcement->setOpenLinks(false);
+
+    connect(announcement, SIGNAL(anchorClicked(QUrl)), SLOT(openURL(QUrl)));
 
     l->addWidget(announcement);
 
@@ -59,7 +62,9 @@ ServerChoice::ServerChoice(const QString &nick)
     myDesc = new PokeTextEdit();
     myDesc->setOpenExternalLinks(true);
     myDesc->setFixedHeight(100);
+    myDesc->setOpenLinks(false);
     l->addWidget(new QEntitled(tr("Server Description"), myDesc));
+    connect(myDesc, SIGNAL(anchorClicked(QUrl)), SLOT(openURL(QUrl)));
 
     myName = new QLineEdit(nick);
     l->addWidget(new QEntitled(tr("Trainer Name"), myName));
@@ -199,4 +204,8 @@ void ServerChoice::saveSettings() {
     settings.setValue("ServerChoice/ServerNameWidth", mylist->columnWidth(1));
     settings.setValue("ServerChoice/PlayersInfoWidth", mylist->columnWidth(2));
     settings.setValue("ServerChoice/ServerIPWidth", mylist->columnWidth(3));
+}
+
+void ServerChoice::openURL(QUrl url) {
+    QDesktopServices::openUrl(url);
 }
