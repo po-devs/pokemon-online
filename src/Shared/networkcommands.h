@@ -51,6 +51,7 @@ enum Command {
     VersionControl_,
     TierSelection,
     ServMaxChange,
+    ServPassToggle = 60, // >.>
     FindBattle,
     ShowRankings,
     Announcement,
