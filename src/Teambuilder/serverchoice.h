@@ -22,9 +22,13 @@ public:
         return QSize(500, 450);
     }
 
+    void saveSettings();
+
 public slots:
     void setRegistryAnnouncement(const QString &announcement);
-    void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port);
+    void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
+    void openURL(QUrl url); // Just to avoid showing links in registry.
+
 signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();

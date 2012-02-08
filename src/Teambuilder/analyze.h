@@ -94,7 +94,7 @@ signals:
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
     void regAnnouncementReceived(const QString &announcement);
-    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
+    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QByteArray &tl);

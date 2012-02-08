@@ -490,7 +490,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("pokemon-online.dynalias.net", 5082);
+    s->connectToHost("poregtest.zapto.org", 5082);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
@@ -594,6 +594,12 @@ void Server::regMaxChanged(const int &numMax)
         return;
 
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
+}
+
+void Server::regPasswordChanged(bool &isEnabled) {
+    if (registry_connection == NULL || !registry_connection->isConnected())
+        return;
+    registry_connection->notify(NetworkServ::ServPassToggle, isEnabled);
 }
 
 void Server::changeScript(const QString &script)
@@ -1297,6 +1303,7 @@ void Server::usePasswordChanged(bool usePass)
         return;
     passwordProtected = usePass; 
     printLine("Require Server Password changed", false, true);
+    regPasswordChanged(usePass);
 }
 
 void Server::info(int id, const QString &mess) {
