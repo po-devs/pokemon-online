@@ -118,7 +118,7 @@ void cropImage(QImage &p)
     }
 }
 
-QString removeTrollCharacters(const QString& s)
+/*QString removeTrollCharacters(const QString& s)
 {
     QString result = s;
     int y = -1;
@@ -142,4 +142,4 @@ QString removeTrollCharacters(const QString& s)
     }
 
     return result;
-}
+}*/

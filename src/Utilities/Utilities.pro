@@ -18,9 +18,6 @@ HEADERS += otherwidgets.h \
     contextswitch.h \
     confighelper.h
 OTHER_FILES += 
-<<<<<<< HEAD
-=======
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
->>>>>>> coyotte508/master
 
 include(../Shared/Common.pri)
