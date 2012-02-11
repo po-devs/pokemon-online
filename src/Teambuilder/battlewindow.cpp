@@ -422,6 +422,7 @@ void BattleWindow::disable()
     disconnect(myclose);
     connect(myclose, SIGNAL(clicked()), this, SLOT(deleteLater()));
     BaseBattleWindow::disable();
+    setEnabled(true);
 }
 
 void BattleWindow::disableAll()
