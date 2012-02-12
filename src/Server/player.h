@@ -165,9 +165,10 @@ public slots:
     void playerBan(int);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
-    //void CPTBan(const QString &name, int time);
+    void CPTBan(const QString &name, int time);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
+    void giveTBanList();
     void giveBanList();
     void awayChange(bool away);
     void spectatingRequested(int id);
@@ -253,27 +254,6 @@ private:
     int firstBattleId();
 
     void testAuthentification(const QString &name);
-};
-
-class TempBan : public QObject
-{
-    Q_OBJECT
-public:
-        TempBan(const QString& na,const int& ti);
-        ~TempBan();
-        void start();
-        int time() const;
-        QString name() const;
-signals:
-        void end(QString);
-
-public slots:
-        void done();
-
-private:
-        QTimer *mytimer;
-        QString myname;
-        int mytime;
 };
 
 #endif // PLAYER_H

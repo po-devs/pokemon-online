@@ -14,7 +14,8 @@ HEADERS += otherwidgets.h \
     functions.h \
     CrossDynamicLib.h \
     coro.h \
-    contextswitch.h
+    contextswitch.h \
+    coreclasses.h
 OTHER_FILES += 
 
 include(../Shared/Common.pri)
