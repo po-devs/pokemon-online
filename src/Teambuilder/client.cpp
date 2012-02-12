@@ -714,7 +714,7 @@ void Client::ban(int p) {
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().notify(NetworkCli::PlayerTBan, qint32(p), qint32(time));
 }
 
 void Client::pmcp(QString p) {

@@ -474,6 +474,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit awayChanged(id, f[1]);
         break;
     }
+    case GetTBanList: {
+        QString s, i;
+        QDateTime dt;
+        in >> s >> i >> dt;
+        emit tbanListReceived(s,i,dt);
+        break;
+        }
     case SpectateBattle: {
         BattleConfiguration conf;
         Flags f;
