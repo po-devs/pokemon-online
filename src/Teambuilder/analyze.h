@@ -105,6 +105,8 @@ signals:
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
     void versionDiff(const ProtocolVersion&, int level);
+    void tbanListReceived(const QString &n, const QString &ip, const QDateTime &expires);
+
     void serverNameReceived(const QString &serverName);
     /* Ranking */
     void rankingStarted(int,int,int);

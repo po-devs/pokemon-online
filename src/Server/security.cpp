@@ -65,7 +65,7 @@ void SecurityManager::loadMembers()
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
             query.exec("create table trainers (id integer primary key autoincrement, name varchar(20) unique, "
-                            "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
+                       "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
                        "ip varchar(39), ban_expire_time int);");
         } else {
             throw QString("Using a not supported database");
@@ -291,7 +291,7 @@ void SecurityManager::updateMember(const Member &m) {
 
 bool SecurityManager::bannedIP(const QString &ip) {
     QHash<QString, int>::const_iterator i = bannedIPs.find(ip);
-    if (i != bannedIPs.end() && i.value() != 0 && uint(i.value()) < QDateTime::currentDateTimeUtc().toTime_t()) {
+    if (i != bannedIPs.end() && i.value() != 0 && i.value() < QDateTime::currentDateTimeUtc().toTime_t()) {
        /* We expire the tempban here if we should */
        IPunban(ip);
        return false;
