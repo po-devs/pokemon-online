@@ -674,7 +674,7 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing && !pmDisabled || auth(id) > 0)
+    if((pmFlashing && !pmDisabled) || auth(id) > 0)
         activateWindow(); // activate po window when pm recieved
 
     if (mypms.contains(id)) {
