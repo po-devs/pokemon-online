@@ -681,7 +681,7 @@ void Client::startPM(int id)
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, auth(id));
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
