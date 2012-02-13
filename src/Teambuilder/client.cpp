@@ -1006,6 +1006,9 @@ void Client::PMReceived(int id, QString pm)
                 }
                 return;
             } else {
+                if (!mypms.contains(id)) {
+                    startPM(id);
+                }
                 registerPermPlayer(id);
                 mypms[id]->printLine(pm);
             }
