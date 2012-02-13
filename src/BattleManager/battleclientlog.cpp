@@ -16,13 +16,18 @@ BattleClientLog::BattleClientLog(battledata *dat, BattleDefaultTheme *theme, boo
     bool spectator = !(data()->role(battledata::Player1) == BattleConfiguration::Player || data()->role(battledata::Player2) == BattleConfiguration::Player);
     pushHtml("<!DOCTYPE html>");
     pushHtml(QString("<!-- Pokemon Online battle%1 log (version 3.0) -->\n").arg(spectator ? " spectator": ""));
-    pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+    pushHtml(QString("<head>\n\t<title>%1 vs %2</title>\n</head>").arg(escapeHtml(data()->name(battledata::Player1)),
+                                                                       escapeHtml(data()->name(battledata::Player2))));
     pushHtml("<body>");
 
     if (!spectator) {
-        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 started!"),
+                                             Qt::blue).arg(escapeHtml(data()->name(battledata::Player1)),
+                                                           escapeHtml(data()->name(battledata::Player2))));
     } else {
-        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"), Qt::blue).arg(data()->name(battledata::Player1), data()->name(battledata::Player2)));
+        printHtml("BattleStart", toBoldColor(tr("Battle between %1 and %2 is underway!"),
+                                             Qt::blue).arg(escapeHtml(data()->name(battledata::Player1)),
+                                                           escapeHtml(data()->name(battledata::Player2))));
     }
 
     onBlankMessage();
@@ -88,7 +93,7 @@ QString BattleClientLog::nick(int spot)
     if (data()->role(spot) == BattleConfiguration::Player) {
         return rnick(spot);
     } else {
-        return QString("%1's %2").arg(data()->name(spot), rnick(spot));
+        return QString("%1's %2").arg(escapeHtml(data()->name(spot)), rnick(spot));
     }
 }
 
@@ -130,7 +135,7 @@ void BattleClientLog::onSendOut(int spot, int prevIndex, shallowpoke, bool silen
 
 void BattleClientLog::onSendBack(int spot, bool silent)
 {
-    printLine("SendBack", tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
+    printLine("SendBack", tr("%1 called %2 back!").arg(escapeHtml(data()->name(data()->player(spot))), rnick(spot)), silent);
 }
 
 void BattleClientLog::onUseAttack(int spot, int attack, bool silent)
@@ -300,12 +305,12 @@ void BattleClientLog::onSpectatorJoin(int id, const QString &name)
 {
     spectators.insert(id, name);
 
-    printHtml("Spectating", toColor(tr("%1 is watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml("Spectating", toColor(tr("%1 is watching the battle.").arg(escapeHtml(spectators.value(id))), Qt::green));
 }
 
 void BattleClientLog::onSpectatorLeave(int id)
 {
-    printHtml("Spectating", toColor(tr("%1 stopped watching the battle.").arg(spectators.value(id)), Qt::green));
+    printHtml("Spectating", toColor(tr("%1 stopped watching the battle.").arg(escapeHtml(spectators.value(id))), Qt::green));
     spectators.remove(id);
 }
 
@@ -463,11 +468,14 @@ void BattleClientLog::onSubstituteStatus(int spot, bool substitute)
 void BattleClientLog::onBattleEnd(int res, int winner)
 {
     if (res == Tie) {
-        printHtml("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(data()->name(battledata::Player1), data()->name(battledata::Player2)), Qt::blue));
+        printHtml("BattleEnd", toBoldColor(tr("Tie between %1 and %2!").arg(escapeHtml(data()->name(battledata::Player1)),
+                                                                            escapeHtml(data()->name(battledata::Player2))),
+                                           Qt::blue));
     } else if (res == Forfeit) {
-        printHtml("BattleEnd", toBoldColor(tr("%1 forfeited against %2!").arg(data()->name(data()->opponent(winner)), data()->name(winner)), Qt::blue));
+        printHtml("BattleEnd", toBoldColor(tr("%1 forfeited against %2!").arg(escapeHtml(data()->name(data()->opponent(winner))),
+                                                                              escapeHtml(data()->name(winner))), Qt::blue));
     } else {
-        printHtml("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(data()->name(winner)), Qt::blue));
+        printHtml("BattleEnd", toBoldColor(tr("%1 won the battle!").arg(escapeHtml(data()->name(winner))), Qt::blue));
     }
 }
 
