@@ -232,6 +232,18 @@ QPixmap Theme::FrameBall()
     return Sprite("frameball");
 }
 
+QPixmap Theme::unlockedLockedRegistry() {
+    return Sprite("registrylockunlock");
+}
+
+QPixmap Theme::lockedServer() {
+    return Sprite("registrylocked");
+}
+
+QPixmap Theme::unlockedServer() {
+    return Sprite("registryunlocked");
+}
+
 QColor Theme::StatusColor(int status)
 {
     switch (status) {
