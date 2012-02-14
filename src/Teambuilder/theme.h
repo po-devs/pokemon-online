@@ -52,6 +52,9 @@ public:
     static QPixmap BlackBall();
     static QPixmap OrangeBall();
     static QPixmap FrameBall();
+    static QPixmap unlockedLockedRegistry();
+    static QPixmap lockedServer();
+    static QPixmap unlockedServer();
     static QPixmap TrainerSprite(int num);
     static BattleDefaultTheme* getBattleTheme();
     static ThemeAccessor* getAccessor();

@@ -2,6 +2,7 @@
 #include "../Utilities/functions.h"
 #include "analyze.h"
 #include "poketextedit.h"
+#include "theme.h"
 
 ServerChoice::ServerChoice(const QString &nick)
 {
@@ -56,7 +57,7 @@ ServerChoice::ServerChoice(const QString &nick)
     } else {
         mylist->horizontalHeader()->setStretchLastSection(true);
     }
-    mylist->horizontalHeaderItem(0)->setIcon(QIcon("db/mixed-lock.png"));
+    mylist->horizontalHeaderItem(0)->setIcon(Theme::unlockedLockedRegistry());
     mylist->horizontalHeaderItem(0)->setToolTip(tr("This is to check if the server is password protected"));
 
     connect(mylist, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
@@ -157,8 +158,8 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
     QTableWidgetItem *witem;
 
     witem = new QTableWidgetItem();
-    if(passwordProtected) witem->setIcon(QIcon("db/locked.png"));
-    else witem->setIcon(QIcon("db/unlocked.png"));
+    if(passwordProtected) witem->setIcon(Theme::lockedServer());
+    else witem->setIcon(Theme::unlockedServer());
 
     witem->setFlags(witem->flags() ^Qt::ItemIsEditable);
     mylist->setItem(row, 0, witem);
