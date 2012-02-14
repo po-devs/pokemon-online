@@ -9,18 +9,18 @@ Registry::Registry() {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    if (!forPlayers.listen(QHostAddress::Any, 5081))
+    if (!forPlayers.listen(QHostAddress::Any, 8080))
     {
-        printLine("Unable to listen to port 5081 (players)");
+        printLine("Unable to listen to port 8080 (players)");
     } else {
-        printLine("Starting to listen to port 5081");
+        printLine("Starting to listen to port 8080");
     }
 
-    if (!forServers.listen(QHostAddress::Any, 5082))
+    if (!forServers.listen(QHostAddress::Any, 8081))
     {
-        printLine("Unable to listen to port 5082 (servers)");
+        printLine("Unable to listen to port 8081 (servers)");
     } else {
-        printLine("Starting to listen to port 5082");
+        printLine("Starting to listen to port 8081");
     }
 
     registry_announcement = " ";
