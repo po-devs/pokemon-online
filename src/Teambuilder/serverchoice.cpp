@@ -53,6 +53,8 @@ ServerChoice::ServerChoice(const QString &nick)
     }
     if (settings.contains("ServerChoice/ServerIPWidth")) {
         mylist->setColumnWidth(3, settings.value("ServerChoice/ServerIPWidth").toInt());
+    } else {
+        mylist->horizontalHeader()->setStretchLastSection(true);
     }
     mylist->horizontalHeaderItem(0)->setIcon(QIcon("db/mixed-lock.png"));
     mylist->horizontalHeaderItem(0)->setToolTip(tr("This is to check if the server is password protected"));
