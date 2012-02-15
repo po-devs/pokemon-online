@@ -305,6 +305,9 @@ QString BaseBattleWindow::name(int spot) const
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    if (!log) {
+        return;
+    }
     log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
     replay->setBinary(replayData.data);
