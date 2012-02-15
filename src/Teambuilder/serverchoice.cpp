@@ -23,8 +23,7 @@ ServerChoice::ServerChoice(const QString &nick)
     QVBoxLayout *l = new QVBoxLayout(this);
 
     announcement = new PokeTextEdit();
-    announcement->setMinimumSize(this->width(), 100);
-    announcement->setMaximumSize(this->maximumWidth(), 100);
+    announcement->setVisible(false);
     announcement->setOpenLinks(false);
 
     connect(announcement, SIGNAL(anchorClicked(QUrl)), SLOT(openURL(QUrl)));
@@ -48,10 +47,13 @@ ServerChoice::ServerChoice(const QString &nick)
     //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
 
     mylist->setColumnWidth(0, settings.value("ServerChoice/PasswordProtectedWidth", 26).toInt());
-    mylist->setColumnWidth(1, settings.value("ServerChoice/ServerNameWidth", 409).toInt());
-    mylist->setColumnWidth(2, settings.value("ServerChoice/PlayersInfoWidth", 340).toInt());
-    mylist->setColumnWidth(3, settings.value("ServerChoice/ServerIPWidth", 450).toInt());
-
+    mylist->setColumnWidth(1, settings.value("ServerChoice/ServerNameWidth", 152).toInt());
+    if (settings.contains("ServerChoice/PlayersInfoWidth")) {
+        mylist->setColumnWidth(2, settings.value("ServerChoice/PlayersInfoWidth").toInt());
+    }
+    if (settings.contains("ServerChoice/ServerIPWidth")) {
+        mylist->setColumnWidth(3, settings.value("ServerChoice/ServerIPWidth").toInt());
+    }
     mylist->horizontalHeaderItem(0)->setIcon(QIcon("db/mixed-lock.png"));
     mylist->horizontalHeaderItem(0)->setToolTip(tr("This is to check if the server is password protected"));
 
@@ -135,6 +137,7 @@ void ServerChoice::connectToLocalhost()
 
 void ServerChoice::setRegistryAnnouncement(const QString &sannouncement) {
     announcement->insertHtml(sannouncement);
+    announcement->show();
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected)
