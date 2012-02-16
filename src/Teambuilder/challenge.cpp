@@ -26,7 +26,7 @@ BaseChallengeWindow::BaseChallengeWindow(const PlayerInfo &p, const QString &win
 
     QLabel *trainerPic = new QLabel(this);
     trainerPic->move(13,85);
-    QPixmap px = Theme::Pic(QString("Trainer Sprites/%1.png").arg(p.avatar));
+    QPixmap px = Theme::TrainerSprite(p.avatar);
     trainerPic->setPixmap(px);
 
     QLabel *hiddenTeam = new QLabel(this);

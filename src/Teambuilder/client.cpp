@@ -15,6 +15,7 @@
 #include "theme.h"
 #include "soundconfigwindow.h"
 #include "teamholder.h"
+#include "challengedialog.h"
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
@@ -1654,6 +1655,10 @@ void Client::seeInfo(int id)
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
         mychallenges.insert(mychallenge);
+
+        ChallengeDialog *d = new ChallengeDialog();
+        d->show();
+        d->setPlayerInfo(player(id));
     }
 }
 
