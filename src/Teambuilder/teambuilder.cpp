@@ -115,3 +115,9 @@ void TeamBuilder::switchTo(TeamBuilderWidget *w)
     }
     setCurrentWidget(w);
 }
+
+//TODO
+void TeamBuilder::setTierList(const QStringList &)
+{
+
+}
