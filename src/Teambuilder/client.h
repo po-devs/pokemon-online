@@ -270,6 +270,7 @@ protected:
 
 private:
     TeamHolder *myteam;
+    MainEngine *top;
     QString mynick;
 
     /* GUI */

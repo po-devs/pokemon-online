@@ -27,6 +27,7 @@ public slots:
     void newTeam();
     void editPoke(int);
     void switchToTrainer();
+    void setTierList(const QStringList &l); //tells which tiers are available
 private slots:
     void markTeamUpdated();
 signals:

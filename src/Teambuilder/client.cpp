@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "challenge.h"
 #include "logmanager.h"
-#include "Teambuilder/teambuilder_old.h"
+#include "teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmsystem.h"
@@ -18,6 +18,7 @@
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
+    top = NULL;
     isConnected = true;
     _mid = -1;
     selectedChannel = -1;
@@ -1098,6 +1099,7 @@ void Client::channelCommandReceived(int command, int channel, DataStream *stream
 
 QMenuBar * Client::createMenuBar(MainEngine *w)
 {
+    top = w;
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("MainChat");
 
@@ -1115,11 +1117,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
     QSettings s;
-
-    QAction * show = menuActions->addAction(tr("&Show team"));
-    show->setCheckable(true);
-    connect(show, SIGNAL(triggered(bool)), SLOT(showTeam(bool)));
-    show->setChecked(s.value("show_team").toBool());
 
     QAction * ladd = menuActions->addAction(tr("Enable &ladder"));
     ladd->setCheckable(true);
@@ -2172,12 +2169,14 @@ void Client::openTeamBuilder()
 
     myteambuilder = new QMainWindow();
 
-    TeamBuilderOld *t = new TeamBuilderOld(myteam);
+    TeamBuilder *t = new TeamBuilder(team());
     myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
-    myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
+    if (top) {
+        myteambuilder->setMenuBar(t->createMenuBar(top));
+    }
     t->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
