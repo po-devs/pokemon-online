@@ -173,6 +173,7 @@ void TrainerMenu::on_teamFolderButton_clicked()
 void TrainerMenu::setAvatarPixmap()
 {
     ui->avatar->setPixmap(Theme::TrainerSprite(ui->avatarNumber->value()));
+    team().profile().info().avatar = ui->avatarNumber->value();
 }
 
 void TrainerMenu::setColor()

@@ -3,20 +3,25 @@
 
 #include <QDialog>
 
+#include "../PokemonInfo/networkstructs.h"
+
 namespace Ui {
-    class ChallengeDIalog;
+    class ChallengeDialog;
 }
 
-class ChallengeDIalog : public QDialog
+class ChallengeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ChallengeDIalog(QWidget *parent = 0);
-    ~ChallengeDIalog();
+    explicit ChallengeDialog(QWidget *parent = 0);
+    ~ChallengeDialog();
+
+    void setPlayerInfo(const PlayerInfo &info);
 
 private:
-    Ui::ChallengeDIalog *ui;
+    Ui::ChallengeDialog *ui;
+    PlayerInfo info;
 };
 
 #endif // CHALLENGEDIALOG_H
