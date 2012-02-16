@@ -55,7 +55,8 @@ SOURCES += main.cpp \
     password_wallet.cpp \
     pmsystem.cpp \
     ivbox.cpp \
-    teamimporter.cpp
+    teamimporter.cpp \
+    challengedialog.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -127,7 +128,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     password_wallet.h \
     pmsystem.h \
     ivbox.h \
-    teamimporter.h
+    teamimporter.h \
+    challengedialog.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -140,7 +142,8 @@ FORMS += controlpanel.ui \
     pokeedit.ui \
     evbox.ui \
     pokelevelsettings.ui \
-    ivbox.ui
+    ivbox.ui \
+    challengedialog.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
@@ -178,4 +181,3 @@ CONFIG(debian) {
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
-
