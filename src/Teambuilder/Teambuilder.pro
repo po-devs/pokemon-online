@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     pmsystem.cpp \
     ivbox.cpp \
     teamimporter.cpp \
-    challengedialog.cpp
+    challengedialog.cpp \
+    tierratingbutton.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -129,7 +130,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     pmsystem.h \
     ivbox.h \
     teamimporter.h \
-    challengedialog.h
+    challengedialog.h \
+    tierratingbutton.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -143,7 +145,8 @@ FORMS += controlpanel.ui \
     evbox.ui \
     pokelevelsettings.ui \
     ivbox.ui \
-    challengedialog.ui
+    challengedialog.ui \
+    tierratingbutton.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
