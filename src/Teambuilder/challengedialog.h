@@ -4,10 +4,13 @@
 #include <QDialog>
 
 #include "../PokemonInfo/networkstructs.h"
+#include "../PokemonInfo/battlestructs.h"
 
 namespace Ui {
     class ChallengeDialog;
 }
+
+class QCheckBox;
 
 class ChallengeDialog : public QDialog
 {
@@ -22,6 +25,7 @@ public:
 private:
     Ui::ChallengeDialog *ui;
     PlayerInfo info;
+    QCheckBox* clauses[ChallengeInfo::numberOfClauses];
 };
 
 #endif // CHALLENGEDIALOG_H
