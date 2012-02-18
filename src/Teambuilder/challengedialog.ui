@@ -10,9 +10,6 @@
     <height>435</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="name">
@@ -26,16 +23,10 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="3" rowspan="2">
+     <item row="0" column="4" rowspan="3">
       <layout class="QVBoxLayout" name="clauses"/>
      </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="PokeTextEdit" name="description"/>
-     </item>
-     <item row="2" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="teams"/>
-     </item>
-     <item row="2" column="3">
+     <item row="3" column="4">
       <widget class="QComboBox" name="mode">
        <item>
         <property name="text">
@@ -72,6 +63,70 @@
         </property>
        </layout>
       </widget>
+     </item>
+     <item row="1" column="0" rowspan="3" colspan="3">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="PokeTextEdit" name="description"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="teams">
+         <item>
+          <widget class="QPushButton" name="teamChoice">
+           <property name="text">
+            <string>Your team</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="poke3">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poke2">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poke1">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poke4">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poke6">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poke5">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

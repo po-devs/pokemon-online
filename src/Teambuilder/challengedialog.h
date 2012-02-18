@@ -11,6 +11,8 @@ namespace Ui {
 }
 
 class QCheckBox;
+class TeamHolder;
+class QLabel;
 
 class ChallengeDialog : public QDialog
 {
@@ -21,11 +23,18 @@ public:
     ~ChallengeDialog();
 
     void setPlayerInfo(const PlayerInfo &info);
-
+    void setTeam(TeamHolder *t);
+private slots:
+    void changeCurrentTeam();
 private:
     Ui::ChallengeDialog *ui;
-    PlayerInfo info;
     QCheckBox* clauses[ChallengeInfo::numberOfClauses];
+    QLabel *pokes[6];
+
+    PlayerInfo info;
+    TeamHolder *team;
+
+    void updateCurrentTeam();
 };
 
 #endif // CHALLENGEDIALOG_H

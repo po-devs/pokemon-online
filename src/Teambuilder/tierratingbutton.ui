@@ -20,7 +20,7 @@
   <property name="flat">
    <bool>true</bool>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
    <item>
     <widget class="QLabel" name="tier">
      <property name="text">

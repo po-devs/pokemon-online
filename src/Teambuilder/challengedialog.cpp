@@ -5,12 +5,17 @@
 #include "ui_challengedialog.h"
 #include "tierratingbutton.h"
 #include "theme.h"
+#include "teamholder.h"
+#include "../PokemonInfo/pokemoninfo.h"
 
 ChallengeDialog::ChallengeDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChallengeDialog)
 {
     ui->setupUi(this);
+    QLabel *pokes [6] = {ui->poke1, ui->poke2, ui->poke3, ui->poke4, ui->poke5, ui->poke6};
+    memcpy(this->pokes, pokes, sizeof(pokes));
+
     setAttribute(Qt::WA_DeleteOnClose);
 }
 
@@ -56,7 +61,40 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     }
 }
 
+void ChallengeDialog::setTeam(TeamHolder *t)
+{
+    this->team = t;
+
+    QMenu *m = new QMenu(ui->teamChoice);
+    for (int i = 0; i < team->count(); i++) {
+        QAction *a = m->addAction(QString ("%1 (%2)").arg(team->team(i).name(), team->tier(i)), this, SLOT(changeCurrentTeam()));
+        a->setProperty("slot", i);
+    }
+    ui->teamChoice->setMenu(m);
+
+    updateCurrentTeam();
+}
+
+void ChallengeDialog::updateCurrentTeam()
+{
+    ui->teamChoice->setText(team->team().name());
+
+    for (int i = 0; i < 6; i++) {
+        pokes[i]->setPixmap(PokemonInfo::Icon(team->team().poke(i).num()));
+    }
+}
+
 ChallengeDialog::~ChallengeDialog()
 {
     delete ui;
+}
+
+void ChallengeDialog::changeCurrentTeam()
+{
+    int slot = sender()->property("slot").toInt();
+
+    slot = std::min(slot, team->count());
+    team->setCurrent(slot);
+
+    updateCurrentTeam();
 }

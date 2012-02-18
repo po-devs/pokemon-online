@@ -137,7 +137,25 @@ Team &TeamHolder::team(int i)
 
 int TeamHolder::count() const
 {
-    return m_teams.size();
+    if (m_tiers.isEmpty())
+        return m_teams.size();
+    else
+        return std::min(m_tiers.size(), m_teams.size());
+}
+
+QString TeamHolder::tier() const
+{
+    return tier(currentTeam());
+}
+
+QString TeamHolder::tier(int team) const
+{
+    return team < m_tiers.size() ? m_tiers[team] : QObject::tr("No Tier");
+}
+
+void TeamHolder::setTiers(const QStringList &tiers)
+{
+    m_tiers = tiers;
 }
 
 void TeamHolder::save()
