@@ -152,7 +152,13 @@ void TrainerMenu::updateTeam()
 {
     ui->pokemonButtons->setTeam(team().team());
     ui->teamName->setText(team().team().name());
+    ui->teamTier->setText(team().team().defaultTier());
     updateButtonName();
+}
+
+void TrainerMenu::on_teamTier_textEdited()
+{
+    team().team().defaultTier() = ui->teamTier->text();
 }
 
 void TrainerMenu::on_teamFolderButton_clicked()
