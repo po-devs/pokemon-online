@@ -743,7 +743,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     }
 
     dest.setAttribute("banParent", banParentS);
-    dest.setAttribute("gen", gen);
+    dest.setAttribute("gen", gen.num);
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
@@ -987,7 +987,7 @@ int Tier::getMode() const
     return mode;
 }
 
-bool Tier::allowGen(int gen) const
+bool Tier::allowGen(Pokemon::gen gen) const
 {
     if (this->gen == 0)
         return true;
