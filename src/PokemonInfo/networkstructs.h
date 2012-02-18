@@ -134,7 +134,7 @@ DataStream & operator << (DataStream &out, const TrainerInfo &i);
 class PersonalTeam
 {
     PROPERTY(QString, defaultTier);
-    PROPERTY(quint8, gen);
+    PROPERTY(Pokemon::gen, gen);
 protected:
     PokePersonal m_pokes[6];
 

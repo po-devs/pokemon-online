@@ -994,7 +994,7 @@ QScriptValue ScriptEngine::gen(int id)
     if (!myserver->playerLoggedIn(id)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->gen();
+        return myserver->player(id)->gen().num;
     }
 }
 

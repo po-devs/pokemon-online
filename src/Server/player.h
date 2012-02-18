@@ -72,7 +72,7 @@ public:
     int id() const;
     QString ip() const;
     QString proxyIp() const;
-    int gen() const;
+    Pokemon::gen gen() const;
     int teamCount() const;
     int rating(const QString &tier);
 

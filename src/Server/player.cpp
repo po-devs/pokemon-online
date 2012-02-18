@@ -667,7 +667,7 @@ const TeamBattle & Player::team(int i) const
     return m_teams.team(i);
 }
 
-int Player::gen() const
+Pokemon::gen Player::gen() const
 {
     return team().gen;
 }

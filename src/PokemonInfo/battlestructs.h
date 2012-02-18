@@ -155,7 +155,7 @@ public:
     QString name;
     QString info;
     QString tier;
-    int gen;
+    Pokemon::gen gen;
 private:
     PokeBattle m_pokemons[6];
     int m_indexes[6];

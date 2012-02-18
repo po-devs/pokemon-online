@@ -18,7 +18,6 @@ public:
     virtual const QString &losingMessage() const = 0;
     virtual const QString &lastFindBattleIp() const = 0;
     virtual const TeamBattle &team() const = 0;
-    virtual int gen() const = 0;
-};
+ };
 
 #endif // PLAYERINTERFACE_H
