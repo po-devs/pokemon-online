@@ -2,6 +2,7 @@
 #define TRAINERMENU_H
 
 #include <QFrame>
+#include <QCompleter>
 #include "teambuilderwidget.h"
 
 namespace Ui {
@@ -21,6 +22,8 @@ public:
 
     void updateAll();
     void updateTeam();
+    void setTiers(const QStringList &tiers);
+
 public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
@@ -49,6 +52,7 @@ private slots:
     void on_teamFolderButton_clicked();
     void on_newProfile_clicked();
     void on_teamTier_textEdited();
+    void setTier(const QString &tier);
 private:
     void setupData();
     void updateData();

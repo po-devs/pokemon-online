@@ -117,7 +117,7 @@ void TeamBuilder::switchTo(TeamBuilderWidget *w)
 }
 
 //TODO
-void TeamBuilder::setTierList(const QStringList &)
+void TeamBuilder::setTierList(const QStringList &tiers)
 {
-
+    trainer->setTiers(tiers);
 }
