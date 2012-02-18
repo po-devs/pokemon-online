@@ -44,6 +44,8 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
         tierGroup->addButton(b);
 
         tiers->addWidget(b, cpt/3, cpt%3);
+
+        cpt++;
     }
 
     for (int i = 0; i < 3; i++) {
