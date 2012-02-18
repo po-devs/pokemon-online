@@ -48,6 +48,7 @@ private slots:
     void on_importTeam_clicked();
     void on_teamFolderButton_clicked();
     void on_newProfile_clicked();
+    void on_teamTier_textEdited();
 private:
     void setupData();
     void updateData();

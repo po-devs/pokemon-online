@@ -490,7 +490,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         } else {
             QString announcement;
             in >> announcement;
-            qDebug() << announcement;
             emit regAnnouncementReceived(announcement);
             break;
         }
