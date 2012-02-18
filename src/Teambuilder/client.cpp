@@ -1659,6 +1659,7 @@ void Client::seeInfo(int id)
         ChallengeDialog *d = new ChallengeDialog();
         d->show();
         d->setPlayerInfo(player(id));
+        d->setTeam(team());
     }
 }
 
@@ -1987,6 +1988,7 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
     mynames[p.name] = p.id;
 
     changeTierChecked(tiers.front());
+    team()->setTiers(tiers);
 
     if (serverName.size() > 0) {
         QSettings settings;

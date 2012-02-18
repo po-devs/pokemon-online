@@ -37,13 +37,19 @@ class TeamHolder : public TeamHolderInterface
     void setCurrent(int t) {m_currentTeam = t;}
     int count() const;
 
+    QString tier(int team) const;
+    QString tier() const;
+
     void addTeam();
     void removeTeam();
 
     void save();
     void load();
+
+    void setTiers(const QStringList &tiers);
 private:
     QList<Team> m_teams;
+    QStringList m_tiers; //The tier of each team, provided by the server.
     int m_currentTeam;
 };
 
