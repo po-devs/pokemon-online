@@ -271,7 +271,7 @@ void QIdListWidgetItem::setColor(const QColor &c)
     setForeground(QBrush(c));
 }
 
-QScrollDownTextBrowser::QScrollDownTextBrowser()
+QScrollDownTextBrowser::QScrollDownTextBrowser(QWidget *parent) : QTextBrowser(parent)
 {
     autoClear = true;
     setReadOnly(true);
