@@ -201,6 +201,9 @@ void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
 
     //updates the teams you can choose depending on the tier you were challenged in
     setTeam(team);
+
+    ui->challenge->setText(tr("Accept", "Challenge"));
+    ui->refuse->setText(tr("Decline", "Challenge"));
 }
 
 void ChallengeDialog::setClauses(quint32 clauses)
