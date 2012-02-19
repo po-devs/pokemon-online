@@ -9,6 +9,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
+#include "teamholder.h"
 #include <ctime>
 
 class MainEngine;
@@ -27,7 +28,6 @@ class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
 class DataStream;
-class TeamHolder;
 
 /* The class for going online.
 
@@ -130,6 +130,7 @@ public slots:
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
     void announcementReceived(const QString &);
+    void tiersReceived(const QStringList &tiers);
     void playerLogout(int);
     void sendRegister();
     /* removes the pointer to the challenge window when it is destroyed */
@@ -358,6 +359,9 @@ private:
 
     bool eventEnabled(int event);
     time_t lastAutoPM;
+
+    TeamHolder secondTeam;
+    bool waitingOnSecond;
 };
 
 #endif // CLIENT_H

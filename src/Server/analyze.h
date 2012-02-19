@@ -66,6 +66,7 @@ public:
     void setLowDelay(bool lowDelay);
     void sendPacket(const QByteArray &packet);
     void sendChallengeStuff(const ChallengeInfo &c);
+    void sendTeam(const QString *name, const QStringList &tierList);
 
     /* Closes the connection */
     void close();
