@@ -70,7 +70,7 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
             b->setChecked(true);
         }
 
-        tierGroup->addButton(b);
+        tierGroup->addButton(b,cpt);
 
         tiers->addWidget(b, cpt/3, cpt%3);
 
