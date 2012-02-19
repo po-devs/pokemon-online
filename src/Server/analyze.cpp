@@ -164,6 +164,17 @@ void Analyzer::sendRanking(QString name, int points)
     notify(ShowRankings, false, name, qint32(points));
 }
 
+void Analyzer::sendTeam(const QString *name, const QStringList &tierList)
+{
+    Flags network(0+2);
+    if (name) {
+        network.setFlag(0, true);
+        notify(SendTeam, network, *name, tierList);
+    } else {
+        notify(SendTeam, network, tierList);
+    }
+}
+
 void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
     DataStream in (commandline);

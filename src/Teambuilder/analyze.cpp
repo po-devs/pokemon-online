@@ -93,7 +93,16 @@ void Analyzer::sendChanMessage(int channelid, const QString &message)
 
 void Analyzer::sendTeam(const TeamHolder &team)
 {
-    notify(SendTeam, team.team());
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << quint8(SendTeam) << Flags((1 << 4)-1) ;
+    out << team.name() << team.color();
+    out << team.info() << quint8(false) << quint8(team.count());
+
+    for (int i = 0; i < team.count(); i++) {
+        out << team.team(i);
+    }
 }
 
 void Analyzer::sendBattleResult(int id, int result)
@@ -373,6 +382,20 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         qint32 p,src;
         in >> p >> src;
         emit playerBanned(p,src);
+        break;
+    }
+    case SendTeam: {
+        Flags network;
+        in >> network;
+        if (network[0]) {
+            QString name;
+            in >> name;
+        }
+        if (network[1]) {
+            QStringList tiers;
+            in >> tiers;
+            emit teamApproved(tiers);
+        }
         break;
     }
     case SendPM: {

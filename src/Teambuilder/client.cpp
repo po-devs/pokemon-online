@@ -19,6 +19,7 @@
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
+    waitingOnSecond = false;
     top = NULL;
     isConnected = true;
     _mid = -1;
@@ -1953,8 +1954,7 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
     myplayersinfo[p.id] = p;
     mynames[p.name] = p.id;
 
-    changeTierChecked(tiers.front());
-    team()->setTiers(tiers);
+    tiersReceived(tiers);
 
     if (serverName.size() > 0) {
         QSettings settings;
@@ -1964,6 +1964,16 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
             join(channel);
         }
     }
+}
+
+void Client::tiersReceived(const QStringList &tiers)
+{
+    if (waitingOnSecond) {
+        waitingOnSecond = false;
+        *team() = secondTeam;
+    }
+    team()->setTiers(tiers);
+    changeTierChecked(tiers.front());
 }
 
 void Client::playerLogout(int id)
@@ -2136,7 +2146,9 @@ void Client::openTeamBuilder()
 
     myteambuilder = new QMainWindow();
 
-    TeamBuilder *t = new TeamBuilder(team());
+    secondTeam = *team();
+
+    TeamBuilder *t = new TeamBuilder(&secondTeam);
     myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
@@ -2154,12 +2166,13 @@ void Client::openTeamBuilder()
 
 void Client::changeTeam()
 {
-    if (battling() && myteam->name() != mynick) {
+    if (battling() && secondTeam.name() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
-        myteam->name() = mynick;
+        secondTeam.name() = mynick;
     }
     cancelFindBattle(false);
-    relay().sendTeam(*myteam);
+    waitingOnSecond = true;
+    relay().sendTeam(secondTeam);
 }
 
 PlayerInfo &Client::playerInfo(int id)

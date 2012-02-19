@@ -26,8 +26,11 @@ class TeamHolder : public TeamHolderInterface
     TeamHolder();
 
     TrainerInfo &info() {return profile().info();}
+    const TrainerInfo &info() const {return profile().info();}
     QString &name() { return profile().name();}
+    const QString &name() const { return profile().name();}
     QColor &color() { return profile().color();}
+    const QColor &color() const { return profile().color();}
 
     Team &team();
     const Team &team() const;
