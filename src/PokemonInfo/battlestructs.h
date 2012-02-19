@@ -597,12 +597,16 @@ struct FindBattleData
     bool ranged;
     quint16 range;
     quint8 teams;
-    //quint32 forcedClauses;
-    //quint32 bannedClauses;
 };
 
 DataStream& operator >> (DataStream &in, FindBattleData &f);
 DataStream& operator << (DataStream &out, const FindBattleData &f);
 
+struct FindBattleDataAdv : public FindBattleData
+{
+    void shuffle(int total);
+
+    QVector<quint8> shuffled;
+};
 
 #endif // BATTLESTRUCTS_H

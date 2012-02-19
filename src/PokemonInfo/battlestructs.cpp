@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "battlestructs.h"
 #include "networkstructs.h"
 #include "movesetchecker.h"
@@ -890,4 +892,17 @@ DataStream & operator << (DataStream &out, const FindBattleData &f)
     out << f.teams;
 
     return out;
+}
+
+void FindBattleDataAdv::shuffle(int total)
+{
+    shuffled.clear();
+
+    for (int i = 0; i < total; i++) {
+        if (teams == 0 || ((teams >> i )& 1)) {
+            shuffled.push_back(i);
+        }
+    }
+
+    std::random_shuffle(shuffled.begin(), shuffled.end());
 }

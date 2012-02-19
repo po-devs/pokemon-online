@@ -1129,17 +1129,20 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
     }
 }
 
-void Server::findBattle(int id, const FindBattleData &f)
+void Server::findBattle(int id, const FindBattleData &_f)
 {
-    printLine(QString("%1 initiated a battle search.").arg(name(id)));
+    FindBattleDataAdv f;
+    (FindBattleData&)f = _f;
 
     Player *p1 = player(id);
 
-    QHash<int, FindBattleData*>::iterator it;
+    f.shuffle(p1->teamCount());
+
+    QHash<int, FindBattleDataAdv*>::iterator it;
     for(it = battleSearchs.begin(); it != battleSearchs.end(); ++it)
     {
         int key = it.key();
-        FindBattleData *data = it.value();
+        FindBattleDataAdv *data = it.value();
         Player *p2 = player(key);
 
         /* First look if this not a repeat */
@@ -1147,10 +1150,10 @@ void Server::findBattle(int id, const FindBattleData &f)
             continue;
         }
 
-        for (int i = 0; i < p1->teamCount(); i++) {
-            for (int j = 0; j < p2->teamCount(); j++) {
-                const TeamBattle &t1 = p1->team(i);
-                const TeamBattle &t2 = p2->team(j);
+        for (int i = 0; i < f.shuffled.count(); i++) {
+            for (int j = 0; j < data->shuffled.count(); j++) {
+                const TeamBattle &t1 = p1->team(f.shuffled[i]);
+                const TeamBattle &t2 = p2->team(data->shuffled[j]);
 
                 if (t1.gen != t2.gen)
                     continue;
@@ -1180,10 +1183,14 @@ void Server::findBattle(int id, const FindBattleData &f)
                 c.clauses = TierMachine::obj()->tier(t1.tier).getClauses();
                 c.mode = TierMachine::obj()->tier(t1.tier).getMode();
 
+                if ((!c.clauses & ChallengeInfo::ChallengeCup) && (t1.invalid() || t2.invalid())) {
+                    continue;
+                }
+
                 if (myengine->beforeBattleMatchup(id,key,c)) {
                     player(id)->lastFindBattleIp() = player(key)->ip();
                     player(key)->lastFindBattleIp() = player(id)->ip();
-                    startBattle(id,key,c);
+                    startBattle(id,key,c,f.shuffled[i], data->shuffled[j]);
                     myengine->afterBattleMatchup(id,key,c);
                     return;
                 }
@@ -1192,7 +1199,7 @@ void Server::findBattle(int id, const FindBattleData &f)
     }
 
     /* Not reached if a match was found */
-    battleSearchs.insert(id, new FindBattleData(f));
+    battleSearchs.insert(id, new FindBattleDataAdv(f));
     p1->battleSearch() = true;
 }
 
