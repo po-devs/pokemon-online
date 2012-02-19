@@ -10,13 +10,37 @@
 
 ChallengeDialog::ChallengeDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ChallengeDialog)
+    ui(new Ui::ChallengeDialog),
+    emitOnClose(true), challenging(false)
+{
+    init();
+    show();
+}
+
+ChallengeDialog::ChallengeDialog(const PlayerInfo &info, TeamHolder *t) :
+    ui(new Ui::ChallengeDialog),
+    emitOnClose(true), challenging(false)
+{
+    init();
+
+    setPlayerInfo(info);
+    setTeam(t);
+
+    show();
+}
+
+void ChallengeDialog::init()
 {
     ui->setupUi(this);
     QLabel *pokes [6] = {ui->poke1, ui->poke2, ui->poke3, ui->poke4, ui->poke5, ui->poke6};
     memcpy(this->pokes, pokes, sizeof(pokes));
 
     setAttribute(Qt::WA_DeleteOnClose);
+
+    loadSettings(this, QSize(700, 320));
+
+    connect (ui->challenge, SIGNAL(clicked()), SLOT(onChallenge()));
+    connect (ui->refuse, SIGNAL(clicked()), SLOT(onCancel()));
 }
 
 void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
@@ -86,6 +110,8 @@ void ChallengeDialog::updateCurrentTeam()
 
 ChallengeDialog::~ChallengeDialog()
 {
+    writeSettings(this);
+
     delete ui;
 }
 
@@ -97,4 +123,100 @@ void ChallengeDialog::changeCurrentTeam()
     team->setCurrent(slot);
 
     updateCurrentTeam();
+}
+
+int ChallengeDialog::id()
+{
+    return info.id;
+}
+
+
+void ChallengeDialog::closeEvent(QCloseEvent *)
+{
+    if (emitOnClose)
+        onCancel();
+}
+
+void ChallengeDialog::forcedClose()
+{
+    emitOnClose = false;
+    close();
+}
+
+void ChallengeDialog::onChallenge()
+{
+    if (challenging) {
+        saveData();
+        cinfo.dsc = ChallengeInfo::Sent;
+        cinfo.opp = id();
+        cinfo.mode = ui->mode->currentIndex();
+        cinfo.clauses = 0;
+        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+            cinfo.clauses |= clauses[i]->isChecked() << i;
+        }
+    } else {
+        cinfo.dsc = ChallengeInfo::Accepted;
+    }
+
+    emit challenge(id(), cinfo);
+    emitOnClose = false;
+    close();
+}
+
+void ChallengeDialog::onCancel()
+{
+    cinfo.dsc = ChallengeInfo::Refused;
+
+    emit cancel(id(), cinfo);
+    close();
+}
+
+void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
+{
+    this->cinfo = info;
+
+    ui->tierContainer->setDisabled(true);
+
+    setClauses(info.clauses);
+    setMode(info.mode);
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses[i]->setDisabled(true);
+    }
+    ui->mode->setDisabled(true);
+}
+
+void ChallengeDialog::setClauses(quint32 clauses)
+{
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        this->clauses[i]->setChecked(clauses & (1 << i));
+    }
+}
+
+void ChallengeDialog::setMode(int mode)
+{
+    ui->mode->setCurrentIndex(mode);
+}
+
+void ChallengeDialog::setChallenging()
+{
+    challenging = true;
+
+    QSettings s;
+    setMode(s.value("challenge_with_doubles").toInt());
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
+    }
+}
+
+void ChallengeDialog::saveData()
+{
+    QSettings s;
+
+    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+        s.setValue("clause_"+ChallengeInfo::clause(i), clauses[i]->isChecked());
+    }
+
+    s.setValue("challenge_with_doubles", ui->mode->currentIndex());
 }

@@ -22,11 +22,8 @@
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="4" rowspan="3">
-      <layout class="QVBoxLayout" name="clauses"/>
-     </item>
-     <item row="3" column="4">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,0,0">
+     <item row="3" column="3" colspan="2">
       <widget class="QComboBox" name="mode">
        <item>
         <property name="text">
@@ -127,6 +124,14 @@
         </layout>
        </item>
       </layout>
+     </item>
+     <item row="0" column="3" rowspan="3" colspan="2">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Clauses</string>
+       </property>
+       <layout class="QVBoxLayout" name="clauses"/>
+      </widget>
      </item>
     </layout>
    </item>

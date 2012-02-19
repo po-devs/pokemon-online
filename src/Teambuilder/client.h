@@ -12,7 +12,7 @@
 #include <ctime>
 
 class MainEngine;
-class BaseChallengeWindow;
+class ChallengeDialog;
 class QIdTreeWidgetItem;
 class BattleWindow;
 class BaseBattleWindowInterface;
@@ -308,7 +308,7 @@ private:
     QList<int> myIgnored;
 
     /* Challenge windows , to emit or to receive*/
-    QSet<BaseChallengeWindow *> mychallenges;
+    QSet<ChallengeDialog *> mychallenges;
     QPointer<BattleFinder> myBattleFinder;
     QHash<int, BaseBattleWindowInterface* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
@@ -356,8 +356,8 @@ private:
     PlayerInfo & playerInfo(int id);
     void updateState(int player);
     /* Returns the challenge window displaying that player or NULL otherwise */
-    BaseChallengeWindow * getChallengeWindow(int player);
-    void closeChallengeWindow(BaseChallengeWindow *c);
+    ChallengeDialog * getChallengeWindow(int player);
+    void closeChallengeWindow(ChallengeDialog *c);
 
     void initRelay();
     void changeTierChecked(const QString &newtier);

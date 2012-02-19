@@ -20,21 +20,43 @@ class ChallengeDialog : public QDialog
 
 public:
     explicit ChallengeDialog(QWidget *parent = 0);
+    ChallengeDialog(const PlayerInfo &info, TeamHolder *t);
     ~ChallengeDialog();
 
     void setPlayerInfo(const PlayerInfo &info);
     void setTeam(TeamHolder *t);
-private slots:
+    void setChallengeInfo(const ChallengeInfo &info);
+    void setChallenging();
+
+    int id();
+    /* defined once again so we can make a distinction between user closure and programmed closure */
+    void closeEvent(QCloseEvent *event);
+    /* Won't emit refused signals when closed */
+    void forcedClose();
+signals:
+    void challenge(int id, const ChallengeInfo &c);
+    void cancel(int id, const ChallengeInfo &c);
+public slots:
+    void onChallenge();
+    void onCancel();
+protected slots:
     void changeCurrentTeam();
-private:
+protected:
     Ui::ChallengeDialog *ui;
     QCheckBox* clauses[ChallengeInfo::numberOfClauses];
     QLabel *pokes[6];
 
     PlayerInfo info;
+    ChallengeInfo cinfo;
     TeamHolder *team;
 
+    bool emitOnClose, challenging;
+
     void updateCurrentTeam();
+    void setClauses(quint32 clauses);
+    void setMode(int mode);
+    void init();
+    void saveData();
 };
 
 #endif // CHALLENGEDIALOG_H
