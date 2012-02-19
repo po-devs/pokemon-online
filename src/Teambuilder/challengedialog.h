@@ -13,6 +13,7 @@ namespace Ui {
 class QCheckBox;
 class TeamHolder;
 class QLabel;
+class QButtonGroup;
 
 class ChallengeDialog : public QDialog
 {
@@ -34,8 +35,8 @@ public:
     /* Won't emit refused signals when closed */
     void forcedClose();
 signals:
-    void challenge(int id, const ChallengeInfo &c);
-    void cancel(int id, const ChallengeInfo &c);
+    void challenge(const ChallengeInfo &c);
+    void cancel(const ChallengeInfo &c);
 public slots:
     void onChallenge();
     void onCancel();
@@ -45,6 +46,7 @@ protected:
     Ui::ChallengeDialog *ui;
     QCheckBox* clauses[ChallengeInfo::numberOfClauses];
     QLabel *pokes[6];
+    QButtonGroup *tierGroup;
 
     PlayerInfo info;
     ChallengeInfo cinfo;
@@ -57,6 +59,7 @@ protected:
     void setMode(int mode);
     void init();
     void saveData();
+    void setTierChecked(const QString &tier);
 };
 
 #endif // CHALLENGEDIALOG_H

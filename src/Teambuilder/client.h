@@ -137,9 +137,6 @@ public slots:
     void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
-    /* sends the server a "Accept Challenge" notice */
-    void acceptChallenge(int id);
-    void refuseChallenge(int id);
     /* Display the info for that player */
     void seeInfo(int id);
     void seeInfo(QTreeWidgetItem *it);
