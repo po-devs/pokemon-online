@@ -1649,17 +1649,14 @@ void Client::seeInfo(int id)
 {
     if (playerExist(id))
     {
-        BaseChallengeWindow *mychallenge = new ChallengeWindow(player(id));
-        connect(mychallenge, SIGNAL(challenge(int)), SLOT(sendChallenge(int)));
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
+        mychallenge->setChallenging();
+
+        connect(mychallenge, SIGNAL(challenge(int, ChallengeInfo)), SLOT(sendChallenge(int)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
         mychallenges.insert(mychallenge);
-
-        ChallengeDialog *d = new ChallengeDialog();
-        d->show();
-        d->setPlayerInfo(player(id));
-        d->setTeam(team());
     }
 }
 
@@ -1673,10 +1670,12 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
-            connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team());
+            mychallenge->setChallengeInfo(c);
+
+            connect(mychallenge, SIGNAL(challenge(int,ChallengeInfo)), SLOT(acceptChallenge(int)));
             connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-            connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+            connect(mychallenge, SIGNAL(cancel(int,ChallengeInfo)), SLOT(refuseChallenge(int)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
@@ -1849,7 +1848,7 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
-            BaseChallengeWindow *b;
+            ChallengeDialog *b;
             if (c.desc() == ChallengeInfo::Refused) {
                 printLine(tr("%1 refused your challenge.").arg(name(c)));
                 while ( (b = getChallengeWindow(c)) ) {
@@ -1934,7 +1933,7 @@ void Client::sendChallenge(int id)
 
 void Client::clearChallenge()
 {
-    mychallenges.remove(dynamic_cast<BaseChallengeWindow*>(sender()));
+    mychallenges.remove(dynamic_cast<ChallengeDialog*>(sender()));
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
@@ -2150,15 +2149,15 @@ int Client::id(const QString &name) const
     }
 }
 
-void Client::closeChallengeWindow(BaseChallengeWindow *b)
+void Client::closeChallengeWindow(ChallengeDialog *b)
 {
     mychallenges.remove(b);
     b->forcedClose();
 }
 
-BaseChallengeWindow * Client::getChallengeWindow(int player)
+ChallengeDialog * Client::getChallengeWindow(int player)
 {
-    foreach(BaseChallengeWindow *c, mychallenges) {
+    foreach(ChallengeDialog *c, mychallenges) {
         if (c->id() == player)
             return c;
     }
