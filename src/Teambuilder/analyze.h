@@ -38,7 +38,6 @@ public:
     void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TeamHolder & team);
-    void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int id, int result);
     bool isConnected() const;
     void goAway(bool away);
@@ -138,6 +137,9 @@ public slots:
     /* By the rankings window */
     void getRanking(const QString &tier, const QString &name);
     void getRanking(const QString &tier, int page);
+
+    /* By the challenge window */
+    void sendChallengeStuff(const ChallengeInfo &c);
 
 private:
     /* The connection to the outside */

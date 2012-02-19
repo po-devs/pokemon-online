@@ -1652,7 +1652,7 @@ void Client::seeInfo(int id)
         ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
         mychallenge->setChallenging();
 
-        connect(mychallenge, SIGNAL(challenge(ChallengeInfo)),&relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
+        connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
