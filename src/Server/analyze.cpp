@@ -200,9 +200,51 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case SendTeam:
         {
-//            TeamInfo team;
-//            in >> team;
-//            emit teamReceived(team);
+//        Client->Server: <Network Flags><? name: string ?><? color: QColor ?><? trainerInfo:TrainerInfo ?><? <keepsOldTeams:bool><#<numberOfTeams:uint8><team:Team*numberOfTeams>#><#<teamChanged:uint8><team:Team>*#> ?> - Tells the server that we are changing teams
+//        Network Flags: hasName, hasColor, hasTrainerInfo, hasTeamChange
+//        Team Stuff: Either we choose to replace all teams, or only some. This is described by keepsOldTeams.
+//        In case we replace all teams, the number of teams is sent followed by those teams
+//        In case we only change some teams, for each team changed the id of the team followed by the team itself are sent.
+            Flags network;
+            in >> network;
+
+            ChangeTeamInfo cinfo;
+
+            int i = 0;
+
+#define mkptr(type, var) type var; if (network[i]) {in >> var; cinfo.var = &var;} i++;
+            mkptr(QString, name);
+            mkptr(QColor, color);
+            mkptr(TrainerInfo, info);
+
+            if (network[i++]) {
+                bool oldTeams;
+                in >> oldTeams;
+                quint8 num;
+                in >> num;
+
+                if (oldTeams) {
+                    num = num > 6 ? 6 : num;
+
+                    QList<PersonalTeam> teams;
+
+                    for (int i = 0; i < num; i++) {
+                        PersonalTeam t;
+                        in >> t;
+                        teams.push_back(t);
+                    }
+
+                    cinfo.teams = &teams;
+                } else {
+                    PersonalTeam t;
+                    in >> t;
+
+                    cinfo.teamNum = num;
+                    cinfo.team = &t;
+                }
+            }
+#undef mkptr
+            emit teamChanged(cinfo);
             break;
         }
     case ChallengeStuff:

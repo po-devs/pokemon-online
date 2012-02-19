@@ -167,6 +167,18 @@ struct LoginInfo
     QStringList *plugins;
 };
 
+struct ChangeTeamInfo
+{
+    ChangeTeamInfo();
+
+    QString *name;
+    QColor *color;
+    QList<PersonalTeam> *teams;
+    PersonalTeam *team;
+    quint8 teamNum;
+    TrainerInfo *info;
+};
+
 DataStream & operator >> (DataStream & in, LoginInfo & team);
 
 #endif // NETWORKSTRUCTS_H

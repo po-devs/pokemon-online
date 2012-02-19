@@ -247,3 +247,13 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
 
     return in;
 }
+
+ChangeTeamInfo::ChangeTeamInfo()
+{
+    name = 0;
+    color = 0;
+    teams = 0;
+    team = 0;
+    teamNum = 0;
+    info = 0;
+}

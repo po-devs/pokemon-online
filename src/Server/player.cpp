@@ -550,7 +550,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
         return;
     }
 
-    if (c.team < 0 || c.team >= teamCount()) {
+    if (c.team >= teamCount()) {
         sendMessage("You must select a correct team");
         return;
     }
@@ -565,7 +565,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
             sendMessage("You already have challenged 10 people, you can't challenge more!");
             return;
         }
-        if (c.mode < 0 || c.mode > ChallengeInfo::Rotation) {
+        if (c.mode > ChallengeInfo::Rotation) {
             sendMessage("You must challenge to a correct mode");
             return;
         }
@@ -786,6 +786,7 @@ void Player::loggedIn(LoginInfo *info)
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
 
     assignNewColor(info->trainerColor);
+
     if (info->trainerInfo) {
         assignTrainerInfo(*info->trainerInfo);
     }
@@ -796,7 +797,6 @@ void Player::loggedIn(LoginInfo *info)
         m_teams.init();
     }
 
-    color() = info->trainerColor;
     name() = info->trainerName;
 
     // If the server is password protected, the login cannot continue until the server password is supplied
@@ -1142,39 +1142,73 @@ QString Player::proxyIp() const
     return proxyip;
 }
 
-void Player::recvTeam(TeamInfo &team)
+void Player::recvTeam(ChangeTeamInfo &cinfo)
 {
-//    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
-//    if (!isLoggedIn())
-//        return;
+    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
+    if (!isLoggedIn())
+        return;
 
-//    QString oldName = name();
+    QString oldName = name();
 
-//    if (team.name != oldName && battling()) {
-//        sendMessage("You can't change names while battling.");
-//        return;
-//    }
+    if (cinfo.name && *cinfo.name != oldName && battling()) {
+        sendMessage("You can't change names while battling.");
+        return;
+    }
 
-//    cancelChallenges();
-//    cancelBattleSearch();
+    if (cinfo.name || cinfo.teams || cinfo.team) {
+        cancelChallenges();
+        cancelBattleSearch();
+    }
 
-//    if (team.name.toLower() == oldName.toLower()) {
-//        assignTeam(team);
-//        /* Clears the wainting name in case it's not clear,
-//           else something bad could happen */
-//        waiting_name = "";
+    if (cinfo.color) {
+        assignNewColor(*cinfo.color);
+    }
+    if (cinfo.info) {
+        assignTrainerInfo(*cinfo.info);
+    }
 
-//        //Still needs to deal with afterChangeTeam event
-//        ontologin = true;
-//        findTierAndRating();
-//        return;
-//    }
+    if (!cinfo.name || cinfo.name->toLower() == oldName.toLower()) {
+        /* Clears the wainting name in case it's not clear,
+           else something bad could happen */
+        waiting_name = "";
 
-//    if (!testNameValidity(team.name))
-//        return;
+        //Still needs to deal with afterChangeTeam event
+        ontologin = true;
 
-//    changeWaitingTeam(team);
-//    testAuthentification(team.name);
+        if (cinfo.teams) {
+            m_teams.init(*cinfo.teams);
+            findTierAndRating();
+        } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+            m_teams.team(cinfo.teamNum) = *cinfo.team;
+            findTier(cinfo.teamNum);
+            syncTiers();
+            findRating(team(cinfo.teamNum).tier);
+        } else {
+            emit updated(id());
+        }
+
+        return;
+    }
+
+    if (!testNameValidity(*cinfo.name))
+        return;
+
+    if (cinfo.teams) {
+        m_teams.init(*cinfo.teams);
+    } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+        m_teams.team(cinfo.teamNum) = *cinfo.team;
+    }
+
+    testAuthentification(*cinfo.name);
+}
+
+void Player::syncTiers()
+{
+    tiers.clear();
+
+    for (int i = 0; i < teamCount(); i++) {
+        tiers.insert(team(i).tier);
+    }
 }
 
 void Player::spectatingRequested(int id)

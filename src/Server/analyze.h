@@ -15,6 +15,7 @@ class UserInfo;
 class PlayerInfo;
 class FindBattleData;
 class LoginInfo;
+class ChangeTeamInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -98,7 +99,7 @@ signals:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
-    //void teamReceived(TeamInfo &team);
+    void teamChanged(const ChangeTeamInfo&);
     void connected();
     void disconnected();
     void forfeitBattle(int id);
