@@ -180,7 +180,6 @@ void Client::initRelay()
     connect(relay, SIGNAL(htmlMessageReceived(QString)), SLOT(printHtml(QString)));
     connect(relay, SIGNAL(channelMessageReceived(QString,int,bool)), SLOT(printChannelMessage(QString, int, bool)));
     connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
-    connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
     connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
@@ -2045,6 +2044,12 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    if (name(p.id) != p.name) {
+        printLine(TeamEvent, p.id, tr("%1 changed names and is now known as %2.").arg(name(p.id), p.name));
+        if (p.id == ownId()) {
+            mynick = p.name;
+        }
+    }
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
         if (mynames.value(p.name) == p.id)
@@ -2085,18 +2090,6 @@ void Client::changeName(int player, const QString &name)
             p->changeSelf(name);
         }
     }
-}
-
-void Client::teamChanged(const PlayerInfo &p) {
-    if (name(p.id) != p.name) {
-        printLine(TeamEvent, p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.name));
-        if (p.id == ownId()) {
-            mynick = p.name;
-        }
-    } else {
-        printLine(TeamEvent, p.id, tr("%1 changed teams.").arg(name(p.id)));
-    }
-    playerReceived(p);
 }
 
 QColor Client::color(int id) const

@@ -375,12 +375,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit playerBanned(p,src);
         break;
     }
-    case SendTeam: {
-        PlayerInfo p;
-        in >> p;
-        emit teamChanged(p);
-        break;
-    }
     case SendPM: {
         qint32 idsrc;
         QString mess;

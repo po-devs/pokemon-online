@@ -64,11 +64,6 @@ void Analyzer::sendPlayer(const PlayerInfo &p)
     notify(PlayersList, p);
 }
 
-void Analyzer::sendTeamChange(const PlayerInfo &p)
-{
-    notify(SendTeam, p);
-}
-
 void Analyzer::sendPM(int dest, const QString &mess)
 {
     notify(SendPM, qint32(dest), mess);
@@ -200,11 +195,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case SendTeam:
         {
-//        Client->Server: <Network Flags><? name: string ?><? color: QColor ?><? trainerInfo:TrainerInfo ?><? <keepsOldTeams:bool><#<numberOfTeams:uint8><team:Team*numberOfTeams>#><#<teamChanged:uint8><team:Team>*#> ?> - Tells the server that we are changing teams
-//        Network Flags: hasName, hasColor, hasTrainerInfo, hasTeamChange
-//        Team Stuff: Either we choose to replace all teams, or only some. This is described by keepsOldTeams.
-//        In case we replace all teams, the number of teams is sent followed by those teams
-//        In case we only change some teams, for each team changed the id of the team followed by the team itself are sent.
             Flags network;
             in >> network;
 

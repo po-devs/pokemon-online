@@ -54,7 +54,6 @@ public:
     void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
-    void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
     void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode);

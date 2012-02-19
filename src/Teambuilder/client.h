@@ -129,7 +129,6 @@ public slots:
     void sendText();
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
-    void teamChanged(const PlayerInfo &p);
     void announcementReceived(const QString &);
     void playerLogout(int);
     void sendRegister();
