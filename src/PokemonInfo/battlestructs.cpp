@@ -848,13 +848,23 @@ DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
 
 DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
-    quint32 flags;
+    Flags network, data;
 
-    in >> flags >> f.range;
+    in >> network >> data;
 
-    f.rated = flags & 0x01;
-    f.sameTier = f.rated || flags & 0x2;
-    f.ranged = f.sameTier && flags & 0x4;
+    f.rated = data[0];
+    f.sameTier = data[1] || f.rated;
+    f.ranged = network[0] && f.sameTier;
+
+    if (network[0]) {
+        in >> f.range;
+    }
+
+    if (network[1]) {
+        in >> f.teams;
+    } else {
+        f.teams = 0;
+    }
 
     if (f.range < 100)
         f.range = 100;
@@ -864,13 +874,20 @@ DataStream & operator >> (DataStream &in, FindBattleData &f)
 
 DataStream & operator << (DataStream &out, const FindBattleData &f)
 {
-    quint32 flags = 0;
+    Flags data, network;
 
-    flags |= f.rated;
-    flags |= f.sameTier << 1;
-    flags |= f.ranged << 2;
+    data.setFlag(0, f.rated);
+    data.setFlag(1, f.sameTier);
+    network.setFlag(0, f.ranged);
+    network.setFlag(1, true);
 
-    out << flags << f.range;
+    out << data << network;
+
+    if (f.ranged) {
+        out << f.range;
+    }
+
+    out << f.teams;
 
     return out;
 }
