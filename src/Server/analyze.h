@@ -65,6 +65,7 @@ public:
     void connectTo(const QString &host, quint16 port);
     void setLowDelay(bool lowDelay);
     void sendPacket(const QByteArray &packet);
+    void sendChallengeStuff(const ChallengeInfo &c);
 
     /* Closes the connection */
     void close();
@@ -134,7 +135,6 @@ signals:
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
-    void sendChallengeStuff(const ChallengeInfo &c);
 public slots:
     /* slots called by the network */
     void error();
