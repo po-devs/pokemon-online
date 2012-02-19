@@ -134,13 +134,13 @@ signals:
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
+    void sendChallengeStuff(const ChallengeInfo &c);
 public slots:
     /* slots called by the network */
     void error();
     void commandReceived (const QByteArray &command);
     void undelay();
     void keepAlive();
-    void sendChallengeStuff(const ChallengeInfo &c);
 private:
     GenericNetwork &socket();
     const GenericNetwork &socket() const;
