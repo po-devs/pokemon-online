@@ -182,6 +182,19 @@ void TrainerMenu::setAvatarPixmap()
     team().profile().info().avatar = ui->avatarNumber->value();
 }
 
+void TrainerMenu::setTiers(const QStringList &tiers) {
+    QCompleter *m_completer = new QCompleter(tiers);
+    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    m_completer->setCompletionMode(QCompleter::PopupCompletion);
+    ui->teamTier->setCompleter(m_completer);
+
+    connect(m_completer, SIGNAL(highlighted(QString)), this, SLOT(setTier(QString)));
+}
+
+void TrainerMenu::setTier(const QString &tier) {
+    team().team().defaultTier() = tier;
+}
+
 void TrainerMenu::setColor()
 {
     if (team().color().isValid()) {
