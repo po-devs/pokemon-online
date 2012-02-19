@@ -1620,18 +1620,8 @@ void Server::recvTeam(int id, const QString &_name)
         source->setName(_name);
     }
 
-    PlayerInfo bundle = source->bundle();
-
     /* Sending the team change! */
-    ++lastDataId;
-    foreach(int chanid, source->getChannels()) {
-        foreach(Player *p, channel(chanid).players) {
-            /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
-                p->relay().sendTeamChange(bundle);
-            }
-        }
-    }
+    sendPlayer(id);
 
     emit player_authchange(id, authedName(id));
 
