@@ -41,7 +41,7 @@ class BattleSituation : public ContextCallee, public BattleInterface
 public:
     typedef QVariantHash context;
 
-    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, PluginManager *p);
+    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
     ~BattleSituation();
 
     const TeamBattle &pubteam(int id) const;
