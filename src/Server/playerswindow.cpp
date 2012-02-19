@@ -92,7 +92,10 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
 QString PlayersWindow::currentName()
 {
-    return mytable->item(mytable->currentRow(), 0)->text();
+    if(mytable->rowCount() > 0) {
+        return mytable->item(mytable->currentRow(), 0)->text();
+    }
+    return 0;
 }
 
 void PlayersWindow::ban()
@@ -111,33 +114,41 @@ void PlayersWindow::unban()
 void PlayersWindow::user()
 {
     QString name = currentName();
-    SecurityManager::setAuth(name, 0);
-    mytable->item(mytable->currentRow(), 1)->setText("User");
-    emit authChanged(name,0);
+    if(!name.isNull()) {
+        SecurityManager::setAuth(name, 0);
+        mytable->item(mytable->currentRow(), 1)->setText("User");
+        emit authChanged(name,0);
+    }
 }
 
 void PlayersWindow::mod()
 {
     QString name = currentName();
-    SecurityManager::setAuth(name, 1);
-    mytable->item(mytable->currentRow(), 1)->setText("Mod");
-    emit authChanged(name,1);
+    if(!name.isNull()) {
+        SecurityManager::setAuth(name, 1);
+        mytable->item(mytable->currentRow(), 1)->setText("Mod");
+        emit authChanged(name,1);
+    }
 }
 
 void PlayersWindow::admin()
 {
     QString name = currentName();
-    SecurityManager::setAuth(name, 2);
-    mytable->item(mytable->currentRow(), 1)->setText("Admin");
-    emit authChanged(name,2);
+    if(!name.isNull()) {
+        SecurityManager::setAuth(name, 2);
+        mytable->item(mytable->currentRow(), 1)->setText("Admin");
+        emit authChanged(name,2);
+    }
 }
 
 void PlayersWindow::owner()
 {
     QString name = currentName();
-    SecurityManager::setAuth(name, 3);
-    mytable->item(mytable->currentRow(), 1)->setText("Owner");
-    emit authChanged(name,3);
+    if(!name.isNull()) {
+        SecurityManager::setAuth(name, 3);
+        mytable->item(mytable->currentRow(), 1)->setText("Owner");
+        emit authChanged(name,3);
+    }
 }
 
 void PlayersWindow::clpass()
