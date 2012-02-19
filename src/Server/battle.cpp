@@ -153,20 +153,20 @@ void BattleSituation::buildPlugins(PluginManager *p)
 
     foreach(BattlePlugin *pl, plugins) {
         calls.push_back(new BattlePStorage(pl));
-        qDebug() << "Created battle storage " << calls.back() << " for battle " << this;
+        //qDebug() << "Created battle storage " << calls.back() << " for battle " << this;
     }
 }
 
 void BattleSituation::removePlugin(BattlePlugin *p)
 {
     int index = plugins.indexOf(p);
-    qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
+    //qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
 
     if (index != -1) {
-        qDebug() << "Index is not -1";
+        //qDebug() << "Index is not -1";
         plugins.removeAt(index);
         delete calls.takeAt(index);
-        qDebug() << "Remaining plugin size after operation: " << calls.size();
+        //qDebug() << "Remaining plugin size after operation: " << calls.size();
     }
 }
 
@@ -181,7 +181,7 @@ void BattleSituation::callp(int function)
 
 BattleSituation::~BattleSituation()
 {
-    qDebug() << "Deleting battle situation " << this;
+    //qDebug() << "Deleting battle situation " << this;
     terminate();
     /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
     wait();
@@ -190,7 +190,7 @@ BattleSituation::~BattleSituation()
         delete p;
     }
     delete timer;
-    qDebug() << "Deleted battle situation";
+    //qDebug() << "Deleted battle situation";
 }
 
 void BattleSituation::start(ContextSwitcher &ctx)
@@ -234,7 +234,7 @@ void BattleSituation::engageBattle()
         t.fixTeam(team(1));
     }
 
-    qDebug() << "Engaging battle " << this << ", calling plugins";
+    //qDebug() << "Engaging battle " << this << ", calling plugins";
     /* Plugin call */
     callp(BP::battleStarting);
 

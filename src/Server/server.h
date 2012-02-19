@@ -12,6 +12,7 @@
 /* the server */
 
 class FindBattleData;
+class FindBattleDataAdv;
 class Player;
 class BattleSituation;
 class Analyzer;
@@ -295,7 +296,7 @@ private:
 
     ScriptEngine *myengine;
 
-    QHash<int, FindBattleData*> battleSearchs;
+    QHash<int, FindBattleDataAdv*> battleSearchs;
 
     ContextSwitcher battleThread;
 

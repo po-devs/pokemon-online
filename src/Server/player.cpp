@@ -612,12 +612,6 @@ void Player::findBattle(const FindBattleData& f)
         return;
     }
 
-    if (team().invalid())
-    {
-        sendMessage("Your team is invalid, you can't find battles!");
-        return;
-    }
-
     cancelBattleSearch();
 
     if (Server::serverIns->beforeFindBattle(id())) {
