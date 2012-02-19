@@ -17,7 +17,7 @@ public:
     virtual const QString &winningMessage() const = 0;
     virtual const QString &losingMessage() const = 0;
     virtual const QString &lastFindBattleIp() const = 0;
-    virtual const TeamBattle &team() const = 0;
+    virtual const TeamBattle &team(int team=0) const = 0;
  };
 
 #endif // PLAYERINTERFACE_H

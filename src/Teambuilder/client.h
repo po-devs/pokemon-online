@@ -133,8 +133,6 @@ public slots:
     void announcementReceived(const QString &);
     void playerLogout(int);
     void sendRegister();
-    /* sends the server a challenge notice */
-    void sendChallenge(int id);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
     /* Display the info for that player */

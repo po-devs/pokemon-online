@@ -51,10 +51,8 @@ public:
     ~Player();
 
     /* returns all the regular info */
-    TeamBattle &team();
-    const TeamBattle &team() const;
-    TeamBattle &team(int);
-    const TeamBattle &team(int) const;
+    TeamBattle &team(int i = 0);
+    const TeamBattle &team(int i = 0) const;
 
     /* Sends a message to the player */
     void sendLoginInfo();
