@@ -30,9 +30,9 @@ void Analyzer::sendMessage(const QString &message, bool html)
     notify(SendMessage, Flags(0), Flags(html==true), message);
 }
 
-void Analyzer::engageBattle(int battleid, int , int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    notify(EngageBattle, qint32(battleid), qint32(0), qint32(id), conf, team);
+    notify(EngageBattle, qint32(battleid), Flags(1), conf.mode, qint32(myid), qint32(id), conf, team);
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)
@@ -129,9 +129,9 @@ void Analyzer::sendChannelPlayers(int channelid, const QVector<qint32> &ids)
     notify(ChannelPlayers, qint32(channelid), ids);
 }
 
-void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2)
+void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode)
 {
-    notify(EngageBattle, battleid , id1, id2);
+    notify(EngageBattle, battleid, Flags(0), mode, id1, id2);
 }
 
 void Analyzer::sendUserInfo(const UserInfo &ui)

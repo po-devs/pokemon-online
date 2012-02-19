@@ -317,15 +317,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case EngageBattle: {
+        Flags network;
+        quint8 mode;
         qint32 battleid, id1, id2;
-        in >> battleid >> id1 >> id2;
+        in >> battleid >> network >> mode >> id1 >> id2;
 
-        if (id1 == 0) {
+        if (network[0]) {
             /* This is a battle we take part in */
             TeamBattle team;
             BattleConfiguration conf;
             in >> conf >> team;
-            emit battleStarted(battleid, id2, team, conf);
+            emit battleStarted(battleid, id1, id2, team, conf);
         } else {
             /* this is a battle of strangers */
             emit battleStarted(battleid, id1, id2);
