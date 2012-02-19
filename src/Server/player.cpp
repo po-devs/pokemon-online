@@ -550,6 +550,11 @@ void Player::challengeStuff(const ChallengeInfo &c)
         return;
     }
 
+    if (c.team < 0 || c.team >= teamCount()) {
+        sendMessage("You must select a correct team");
+        return;
+    }
+
     if (desc == ChallengeInfo::Sent)
     {
         if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
@@ -562,7 +567,9 @@ void Player::challengeStuff(const ChallengeInfo &c)
         }
         if (c.mode < 0 || c.mode > ChallengeInfo::Rotation) {
             sendMessage("You must challenge to a correct mode");
+            return;
         }
+
         emit sendChallenge(this->id(), id, c);
     } else {
         if (desc == ChallengeInfo::Accepted && !okForBattle()) {
@@ -570,7 +577,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
         }
 
         foreach (Challenge *_c, challengedBy) {
-            if (_c->challenger() == id) {
+            if (_c->challenger() == id && _c->tier() == c.desttier && _c->gen() == c.gen) {
                 _c->manageStuff(this, c);
                 return;
             }
@@ -645,16 +652,6 @@ void Player::giveBanList()
         it.next();
         relay().notify(NetworkServ::GetBanList, it.key(), it.value());
     }
-}
-
-TeamBattle & Player::team()
-{
-    return m_teams.team(0);
-}
-
-const TeamBattle & Player::team() const
-{
-    return m_teams.team(0);
 }
 
 TeamBattle & Player::team(int i)

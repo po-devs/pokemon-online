@@ -47,7 +47,6 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
 {
     this->info = info;
 
-    setWindowTitle(tr("%1's info").arg(info.name));
     ui->name->setText(info.name);
     ui->avatar->setPixmap(Theme::TrainerSprite(info.avatar));
     ui->avatar->setFixedSize(Theme::TrainerSprite(1).size());
@@ -92,8 +91,14 @@ void ChallengeDialog::setTeam(TeamHolder *t)
 
     QMenu *m = new QMenu(ui->teamChoice);
     for (int i = 0; i < team->count(); i++) {
-        QAction *a = m->addAction(QString ("%1 (%2)").arg(team->team(i).name(), team->tier(i)), this, SLOT(changeCurrentTeam()));
-        a->setProperty("slot", i);
+        if (cinfo.desttier.isEmpty() || team->tier(i) == cinfo.desttier) {
+            QAction *a = m->addAction(QString ("%1 (%2)").arg(team->team(i).name(), team->tier(i)), this, SLOT(changeCurrentTeam()));
+            a->setProperty("slot", i);
+
+            if (team->tier() != cinfo.desttier && !cinfo.desttier.isEmpty()) {
+                team->setCurrent(i);
+            }
+        }
     }
     ui->teamChoice->setMenu(m);
 
@@ -153,7 +158,7 @@ void ChallengeDialog::onChallenge()
         cinfo.mode = ui->mode->currentIndex();
         cinfo.clauses = 0;
         if (info.ratings.size() > 0) {
-            cinfo.tier = tierGroup->checkedButton()->property("tier").toString();
+            cinfo.desttier = tierGroup->checkedButton()->property("tier").toString();
         }
         for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
             cinfo.clauses |= clauses[i]->isChecked() << i;
@@ -178,9 +183,10 @@ void ChallengeDialog::onCancel()
 
 void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
 {
+    setWindowTitle(tr("%1 challenged you to the %2 tier!").arg(this->info.name, info.desttier));
     this->cinfo = info;
 
-    setTierChecked(info.tier);
+    setTierChecked(info.srctier);
 
     ui->tierContainer->setDisabled(true);
 
@@ -192,6 +198,9 @@ void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
     }
 
     ui->mode->setDisabled(true);
+
+    //updates the teams you can choose depending on the tier you were challenged in
+    setTeam(team);
 }
 
 void ChallengeDialog::setClauses(quint32 clauses)
@@ -208,6 +217,8 @@ void ChallengeDialog::setMode(int mode)
 
 void ChallengeDialog::setChallenging()
 {
+    setWindowTitle(tr("%1's info").arg(info.name));
+
     challenging = true;
 
     QSettings s;
@@ -217,7 +228,7 @@ void ChallengeDialog::setChallenging()
         clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
     }
 
-    setTierChecked(s.value("challenge/tier"));
+    setTierChecked(s.value("challenge/tier").toString());
 }
 
 void ChallengeDialog::setTierChecked(const QString &tier)
