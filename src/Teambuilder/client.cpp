@@ -1,7 +1,7 @@
 #include "client.h"
 #include "mainwindow.h"
-#include "challenge.h"
 #include "logmanager.h"
+#include "findbattledialog.h"
 #include "teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
@@ -975,7 +975,8 @@ void Client::openBattleFinder()
         return;
     }
 
-    myBattleFinder = new BattleFinder(this);
+    myBattleFinder = new FindBattleDialog(this);
+    myBattleFinder->setTeam(team());
     myBattleFinder->show();
 
     connect(myBattleFinder, SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
@@ -2271,69 +2272,3 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
         }
     }
 }
-
-/**********************************************************/
-/****************** BATTLE FINDER *************************/
-/**********************************************************/
-
-BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
-{
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
-    QSettings s;
-
-    QVBoxLayout *ml = new QVBoxLayout(this);
-    ml->setSpacing(10);
-    setWindowFlags(Qt::Window);
-
-    QPushButton *ok, *cancel;
-    ml->addWidget(rated = new QCheckBox(tr("Force rated battles")));
-    ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
-    QHBoxLayout *sub2 = new QHBoxLayout();
-    ml->addLayout(sub2);
-    sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
-    sub2->addWidget(range = new QLineEdit());
-
-    QHBoxLayout *hl = new QHBoxLayout();
-    ml->addLayout(hl);
-    hl->addWidget(ok = new QPushButton(tr("Find Battle")));
-    hl->addWidget(cancel = new QPushButton(tr("Cancel")));
-
-    range->setMaximumWidth(35);
-
-    rated->setChecked(s.value("find_battle_force_rated").toBool());
-    sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    rangeOn->setChecked(s.value("find_battle_range_on").toBool());
-    range->setText(QString::number(s.value("find_battle_range").toInt()));
-    changeEnabled();
-
-    connect(rated, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
-    connect(sameTier, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
-
-    connect(ok, SIGNAL(clicked()), SLOT(close()));
-    connect(cancel, SIGNAL(clicked()), SLOT(close()));
-    connect(ok, SIGNAL(clicked()), SLOT(throwChallenge()));
-}
-
-void BattleFinder::changeEnabled()
-{
-}
-
-void BattleFinder::throwChallenge()
-{
-    FindBattleData d;
-    d.rated = rated->isChecked();
-    d.sameTier = sameTier->isChecked();
-    d.range = std::max(range->text().toInt(), 100);
-    d.ranged = rangeOn->isChecked();
-
-    QSettings s;
-
-    s.setValue("find_battle_force_rated", d.rated);
-    s.setValue("find_battle_same_tier", d.sameTier);
-    s.setValue("find_battle_range_on", d.ranged);
-    s.setValue("find_battle_range", d.range);
-
-    emit findBattle(d);
-}
-

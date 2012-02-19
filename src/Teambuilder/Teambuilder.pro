@@ -13,7 +13,6 @@ SOURCES += main.cpp \
     client.cpp \
     analyze.cpp \
     serverchoice.cpp \
-    challenge.cpp \
     battlewindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
@@ -57,7 +56,9 @@ SOURCES += main.cpp \
     ivbox.cpp \
     teamimporter.cpp \
     challengedialog.cpp \
-    tierratingbutton.cpp
+    tierratingbutton.cpp \
+    findbattledialog.cpp \
+    teamline.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -69,7 +70,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     serverchoice.h \
     ../PokemonInfo/battlestructs.h \
     ../PokemonInfo/networkstructs.h \
-    challenge.h \
     battlewindow.h \
     ../Utilities/functions.h \
     controlpanel.h \
@@ -131,7 +131,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ivbox.h \
     teamimporter.h \
     challengedialog.h \
-    tierratingbutton.h
+    tierratingbutton.h \
+    findbattledialog.h \
+    teamline.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -146,7 +148,9 @@ FORMS += controlpanel.ui \
     pokelevelsettings.ui \
     ivbox.ui \
     challengedialog.ui \
-    tierratingbutton.ui
+    tierratingbutton.ui \
+    findbattledialog.ui \
+    teamline.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

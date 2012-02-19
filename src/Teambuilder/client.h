@@ -21,7 +21,7 @@ class PMSystem;
 class PMStruct;
 class ControlPanel;
 class RankingDialog;
-class BattleFinder;
+class FindBattleDialog;
 class FindBattleData;
 class Channel;
 class QExposedTabWidget;
@@ -304,7 +304,7 @@ private:
 
     /* Challenge windows , to emit or to receive*/
     QSet<ChallengeDialog *> mychallenges;
-    QPointer<BattleFinder> myBattleFinder;
+    QPointer<FindBattleDialog> myBattleFinder;
     QHash<int, BaseBattleWindowInterface* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
     QAction *goaway;
@@ -359,22 +359,6 @@ private:
 
     bool eventEnabled(int event);
     time_t lastAutoPM;
-};
-
-class BattleFinder : public QWidget
-{
-    Q_OBJECT
-public:
-    BattleFinder(QWidget *parent = NULL);
-public slots:
-    void throwChallenge();
-    void changeEnabled();
-signals:
-    void findBattle(const FindBattleData&);
-private:
-    QCheckBox *sameTier, *rated, *rangeOn;
-    QCheckBox *clauses[ChallengeInfo::numberOfClauses];
-    QLineEdit *range;
 };
 
 #endif // CLIENT_H
