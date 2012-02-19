@@ -184,8 +184,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration)),
-            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration)),
+            SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration)));
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
@@ -1684,8 +1684,10 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf)
 {
+    int id = id1== ownId() ? id2: id1;
+
     cancelFindBattle(false);
     BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
     connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));

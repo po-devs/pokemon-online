@@ -79,7 +79,7 @@ signals:
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int battleid, int id, const TeamBattle &myteam, const BattleConfiguration &conf);
+    void battleStarted(int battleid, int id1, int id2, const TeamBattle &myteam, const BattleConfiguration &conf);
     /* battle of strangers */
     void battleStarted(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int srcid, int destid);

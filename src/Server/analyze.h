@@ -56,7 +56,7 @@ public:
     void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
-    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2);
+    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
     void startRankings(int page, int startingRank, int total);
