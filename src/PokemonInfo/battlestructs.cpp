@@ -837,12 +837,12 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
 }
 
 DataStream & operator >> (DataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.clauses >> c.mode;
+    in >> c.dsc >> c.opp >> c.clauses >> c.mode >> c.tier >> c.team;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.clauses << c.mode;
+    out << c.dsc <<  c.opp << c.clauses << c.mode << c.tier << c.team;
     return out;
 }
 

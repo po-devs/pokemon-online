@@ -62,9 +62,10 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     ui->tierContainer->setFixedHeight(ui->avatar->height());;
     QGridLayout *tiers = (QGridLayout*) ui->tierContainer->layout();
     int cpt = 0;
-    QButtonGroup* tierGroup = new QButtonGroup(this);
+    tierGroup = new QButtonGroup(this);
     foreach(QString s, info.ratings.keys()) {
         TierRatingButton *b = new TierRatingButton(s, info.ratings[s]);
+        b->setProperty("tier", s);
 
         if (cpt == 0) {
             b->setChecked(true);
@@ -151,14 +152,18 @@ void ChallengeDialog::onChallenge()
         cinfo.opp = id();
         cinfo.mode = ui->mode->currentIndex();
         cinfo.clauses = 0;
+        if (info.ratings.size() > 0) {
+            cinfo.tier = tierGroup->checkedButton()->property("tier").toString();
+        }
         for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
             cinfo.clauses |= clauses[i]->isChecked() << i;
         }
     } else {
         cinfo.dsc = ChallengeInfo::Accepted;
     }
+    cinfo.team = team->currentTeam();
 
-    emit challenge(id(), cinfo);
+    emit challenge(cinfo);
     emitOnClose = false;
     close();
 }
@@ -167,13 +172,15 @@ void ChallengeDialog::onCancel()
 {
     cinfo.dsc = ChallengeInfo::Refused;
 
-    emit cancel(id(), cinfo);
+    emit cancel(cinfo);
     close();
 }
 
 void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
 {
     this->cinfo = info;
+
+    setTierChecked(info.tier);
 
     ui->tierContainer->setDisabled(true);
 
@@ -183,6 +190,7 @@ void ChallengeDialog::setChallengeInfo(const ChallengeInfo &info)
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i]->setDisabled(true);
     }
+
     ui->mode->setDisabled(true);
 }
 
@@ -208,6 +216,18 @@ void ChallengeDialog::setChallenging()
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
     }
+
+    setTierChecked(s.value("challenge/tier"));
+}
+
+void ChallengeDialog::setTierChecked(const QString &tier)
+{
+    for (int i = 0; i < info.ratings.size(); i++) {
+        if (tierGroup->button(i)->property("tier").toString() == tier) {
+            tierGroup->button(i)->setChecked(true);
+            break;
+        }
+    }
 }
 
 void ChallengeDialog::saveData()
@@ -219,4 +239,8 @@ void ChallengeDialog::saveData()
     }
 
     s.setValue("challenge_with_doubles", ui->mode->currentIndex());
+
+    if (tierGroup->checkedButton()) {
+        s.setValue("challenge/tier", tierGroup->checkedButton()->property("tier").toString());
+    }
 }

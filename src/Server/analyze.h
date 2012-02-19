@@ -49,7 +49,6 @@ public:
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
-    void sendChallengeStuff(const ChallengeInfo &c);
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
@@ -141,6 +140,7 @@ public slots:
     void commandReceived (const QByteArray &command);
     void undelay();
     void keepAlive();
+    void sendChallengeStuff(const ChallengeInfo &c);
 private:
     GenericNetwork &socket();
     const GenericNetwork &socket() const;

@@ -1652,7 +1652,7 @@ void Client::seeInfo(int id)
         ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
         mychallenge->setChallenging();
 
-        connect(mychallenge, SIGNAL(challenge(int, ChallengeInfo)), SLOT(sendChallenge(int)));
+        connect(mychallenge, SIGNAL(challenge(ChallengeInfo)),&relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
@@ -1673,9 +1673,9 @@ void Client::seeChallenge(const ChallengeInfo &c)
             ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team());
             mychallenge->setChallengeInfo(c);
 
-            connect(mychallenge, SIGNAL(challenge(int,ChallengeInfo)), SLOT(acceptChallenge(int)));
+            connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-            connect(mychallenge, SIGNAL(cancel(int,ChallengeInfo)), SLOT(refuseChallenge(int)));
+            connect(mychallenge, SIGNAL(cancel(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
@@ -1901,34 +1901,9 @@ bool Client::away() const
     return player(ownId()).away();
 }
 
-void Client::acceptChallenge(int id)
-{
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Accepted, id));
-}
-
-void Client::refuseChallenge(int id)
-{
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Refused, id));
-}
-
 QString Client::tier(int player) const
 {
     return this->player(player).ratings.begin().key();
-}
-
-void Client::sendChallenge(int id)
-{
-    QSettings s;
-
-    quint32 clauses = 0;
-
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses |= s.value("clause_"+ChallengeInfo::clause(i)).toBool() ? (1 << i) : 0;
-    }
-
-    int mode = s.value("challenge_with_doubles").toInt();
-
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses, mode));
 }
 
 void Client::clearChallenge()
