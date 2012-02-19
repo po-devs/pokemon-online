@@ -10,6 +10,7 @@
 class Challenge;
 class BattleSituation;
 class Analyzer;
+class ChangeTeamInfo;
 
 /* a single player */
 /***
@@ -177,7 +178,7 @@ public slots:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
-    void recvTeam(TeamInfo &team);
+    void recvTeam(ChangeTeamInfo &info);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
     void battleForfeited(int id);
@@ -274,6 +275,7 @@ private:
     int firstBattleId();
     /* called when all ratings are found */
     void ratingsFound();
+    void syncTiers();
 
     void testAuthentification(const QString &name);
 };
