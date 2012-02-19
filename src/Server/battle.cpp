@@ -21,15 +21,15 @@ typedef BattlePStorage BP;
 
 Q_DECLARE_METATYPE(QList<int>)
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, PluginManager *pluginManager)
+BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
 {
     //qDebug() <<"Created battlesituation " << this;
     publicId() = id;
     timer = NULL;
     conf.avatar[0] = p1.avatar();
     conf.avatar[1] = p2.avatar();
-    conf.setTeam(0, new TeamBattle(p1.team()));
-    conf.setTeam(1, new TeamBattle(p2.team()));
+    conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
+    conf.setTeam(1, new TeamBattle(p2.team(nteam2)));
     conf.ids[0] = p1.id();
     conf.ids[1] = p2.id();
     conf.teamOwnership = true;

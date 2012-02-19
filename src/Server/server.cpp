@@ -1123,7 +1123,7 @@ void Server::dealWithChallenge(int from, int to, const ChallengeInfo &c)
     }
     try {
         Challenge *_c = new Challenge(player(from), player(to), c, this);
-        connect(_c, SIGNAL(battleStarted(int,int,ChallengeInfo)), SLOT(startBattle(int, int, ChallengeInfo)));
+        connect(_c, SIGNAL(battleStarted(int,int,ChallengeInfo,int,int)), SLOT(startBattle(int, int, ChallengeInfo,int,int)));
     } catch (Challenge::Exception) {
         ;
     }
@@ -1347,11 +1347,11 @@ void Server::playerBan(int src, int dest)
 }
 
 
-void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
+void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, int team2)
 {
     int id = freebattleid();
 
-    myengine->beforeBattleStarted(id1,id2,c,id);
+    myengine->beforeBattleStarted(id1,id2,c,id,team1,team2);
 
     if (!playerExist(id1) || !playerExist(id2))
         return;
@@ -1375,7 +1375,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
         }
     }
 
-    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id, pluginManager);
+    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event
@@ -1421,7 +1421,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
 
     battle->start(battleThread);
 
-    myengine->afterBattleStarted(id1,id2,c,id);
+    myengine->afterBattleStarted(id1,id2,c,id,team1,team2);
 }
 
 bool Server::canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const TeamBattle &t2, bool force1, bool force2)

@@ -148,7 +148,7 @@ public slots:
     void recvTeam(int id, const QString &name);
     void disconnected(int id);
     void dealWithChallenge(int from, int to, const ChallengeInfo &c);
-    void startBattle(int id1, int id2, const ChallengeInfo &c);
+    void startBattle(int id1, int id2, const ChallengeInfo &c, int team1=0,int team2=0);
     void battleResult(int battleid, int desc, int winner, int loser);
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int battle);
