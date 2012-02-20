@@ -318,7 +318,7 @@ void Player::setAuth(int auth)  {
 }
 
 void Player::setName(const QString &newname)  {
-    team().name = newname;
+    m_bundle.name = newname;
 }
 
 void Player::setInfo(const QString &newInfo)  {
