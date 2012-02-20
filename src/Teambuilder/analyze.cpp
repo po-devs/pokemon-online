@@ -103,6 +103,8 @@ void Analyzer::sendTeam(const TeamHolder &team)
     for (int i = 0; i < team.count(); i++) {
         out << team.team(i);
     }
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::sendBattleResult(int id, int result)
