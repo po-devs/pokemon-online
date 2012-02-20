@@ -178,7 +178,7 @@ public slots:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
-    void recvTeam(ChangeTeamInfo &info);
+    void recvTeam(const ChangeTeamInfo &info);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
     void battleForfeited(int id);

@@ -26,7 +26,7 @@ Player::Player(const GenericSocket &sock, int id)
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
-    connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
+    connect(&relay(), SIGNAL(teamChanged(const ChangeTeamInfo&)), SLOT(recvTeam(const ChangeTeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
     connect(&relay(), SIGNAL(battleMessage(int,BattleChoice)), SLOT(battleMessage(int,BattleChoice)));
@@ -1142,7 +1142,7 @@ QString Player::proxyIp() const
     return proxyip;
 }
 
-void Player::recvTeam(ChangeTeamInfo &cinfo)
+void Player::recvTeam(const ChangeTeamInfo &cinfo)
 {
     /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
     if (!isLoggedIn())
