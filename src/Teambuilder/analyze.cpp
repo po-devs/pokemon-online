@@ -96,8 +96,11 @@ void Analyzer::sendTeam(const TeamHolder &team)
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
 
-    out << quint8(SendTeam) << Flags((1 << 4)-1) ;
-    out << team.name() << team.color();
+    out << quint8(SendTeam) << Flags(1 + (team.color().isValid() << 1) + (1 << 2) + (1 << 3)) ;
+    out << team.name();
+    if (team.color().isValid()) {
+        out << team.color();
+    }
     out << team.info() << quint8(false) << quint8(team.count());
 
     for (int i = 0; i < team.count(); i++) {
