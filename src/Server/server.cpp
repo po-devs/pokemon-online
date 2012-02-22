@@ -1477,8 +1477,8 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     Player *pl = player(loser);
 
     if (desc == Forfeit && battle->finished()) {
-        pw->battleResult(battleid, Close, winner, loser);
-        pl->battleResult(battleid, Close, winner, loser);
+        pw->battleResult(battleid, Close, battle->mode(), winner, loser);
+        pl->battleResult(battleid, Close, battle->mode(), winner, loser);
     } else {
         if (desc == Forfeit) {
             battle->playerForfeit(loser);
@@ -1499,7 +1499,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, winner, loser);
+                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
                 }
             }
         }
@@ -1509,7 +1509,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, winner, loser);
+                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
                 }
             }
         }

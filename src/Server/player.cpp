@@ -381,9 +381,9 @@ void Player::battleForfeited(int bid)
     emit battleFinished(bid, Forfeit, 0, id());
 }
 
-void Player::battleResult(int battleid, int result, int winner, int loser)
+void Player::battleResult(int battleid, int result, int battlemode, int winner, int loser)
 {
-    relay().sendBattleResult(battleid, result, winner, loser);
+    relay().sendBattleResult(battleid, result, battlemode, winner, loser);
 }
 
 void Player::addBattle(int battleid)
