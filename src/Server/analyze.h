@@ -51,7 +51,7 @@ public:
     bool isConnected() const;
     QString ip() const;
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
-    void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
+    void sendBattleResult(qint32 battleid, quint8 res, quint8 mode, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
     void sendPM(int dest, const QString &mess);
