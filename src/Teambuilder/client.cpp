@@ -186,6 +186,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration)),
             SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(teamApproved(QStringList)), SLOT(tiersReceived(QStringList)));
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
