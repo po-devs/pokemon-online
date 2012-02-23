@@ -44,3 +44,5 @@ bin/*.js
 bin/*.json
 bin/tiers.xml
 ui_*.h
+*.Debug
+*.Release

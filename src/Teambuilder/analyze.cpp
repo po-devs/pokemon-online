@@ -349,10 +349,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case BattleFinished: {
-        qint8 desc;
+        qint8 desc, mode;
         qint32 battleid;
         qint32 id1, id2;
-        in >> battleid >> desc >> id1 >> id2;
+        in >> battleid >> desc >> mode >> id1 >> id2;
         emit battleFinished(battleid, desc, id1, id2);
         break;
     }
