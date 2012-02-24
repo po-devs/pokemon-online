@@ -355,13 +355,17 @@ private:
     void closeChallengeWindow(ChallengeDialog *c);
 
     void initRelay();
-    void changeTierChecked(const QString &newtier);
+    void changeTiersChecked();
+    void rebuildTierMenu();
 
     bool eventEnabled(int event);
     time_t lastAutoPM;
 
     TeamHolder secondTeam;
     bool waitingOnSecond;
+
+    /* The mode of the tier list. If it's single, then a simple checkbox, otherwise another menu for each team for each tier */
+    bool singleTeam;
 };
 
 #endif // CLIENT_H

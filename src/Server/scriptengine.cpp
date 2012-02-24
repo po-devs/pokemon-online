@@ -139,6 +139,21 @@ bool ScriptEngine::testChannel(const QString &function, int id)
     return true;
 }
 
+bool ScriptEngine::testTeamCount(const QString &function, int id, int team)
+{
+    if (!testPlayer(function, id)) {
+        return false;
+    }
+
+    if (myserver->player(id)->teamCount() <= team) {
+        if (function.length() > 0)
+            warn(function, QString("Player numbered %1 only has %2 teams, so you can't access team #%3.").arg(id).arg(myserver->player(id)->teamCount()).arg(team));
+        return false;
+    }
+
+    return true;
+}
+
 bool ScriptEngine::testPlayer(const QString &function, int id)
 {
     if (!loggedIn(id)) {
@@ -286,14 +301,14 @@ void ScriptEngine::afterChangeTeam(int src)
     makeEvent("afterChangeTeam", src);
 }
 
-bool ScriptEngine::beforeChangeTier(int src, const QString &oldTier, const QString &newTier)
+bool ScriptEngine::beforeChangeTier(int src, int slot, const QString &oldTier, const QString &newTier)
 {
-    return makeSEvent("beforeChangeTier", src, oldTier, newTier);
+    return makeSEvent("beforeChangeTier", src, slot, oldTier, newTier);
 }
 
-void ScriptEngine::afterChangeTier(int src, const QString &oldTier, const QString &newTier)
+void ScriptEngine::afterChangeTier(int src, int slot, const QString &oldTier, const QString &newTier)
 {
-    makeEvent("afterChangeTier", src, oldTier, newTier);
+    makeEvent("afterChangeTier", src, slot, oldTier, newTier);
 }
 
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
@@ -588,12 +603,12 @@ void ScriptEngine::changeRating(const QString& name, const QString& tier, int ne
         TierMachine::obj()->changeRating(name, tier, newRating);
 }
 
-void ScriptEngine::changeTier(int id, const QString &tier)
+void ScriptEngine::changeTier(int id, int team, const QString &tier)
 {
     if (!TierMachine::obj()->exists(tier))
         printLine("Script Warning in sys.changeTier(id, tier): no such tier as " + tier);
-    else if (testPlayer("changeTier(id, tier)", id)) {
-        myserver->player(id)->executeTierChange(tier);
+    else if (testTeamCount("changeTier(id, tier)", id, team)) {
+        myserver->player(id)->executeTierChange(team, tier);
     }
 }
 

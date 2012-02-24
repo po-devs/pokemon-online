@@ -140,15 +140,16 @@ public:
     void lock();
     void unlock();
     bool isLocked() const;
-    void findTierAndRating();
+    void findTierAndRating(bool force=false);
     void findTier(int slot);
     void findRatings(bool force = false);
     void findRating(const QString &tier);
 
-    void executeTierChange(const QString&);
+    void executeTierChange(int num, const QString&);
     void executeAwayChange(bool away);
 
     void sendPacket(const QByteArray &packet);
+    void setNeedToBeUpdated(bool onlyInCommand=false);
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, int chanid, const QString &mess);
@@ -199,7 +200,7 @@ public slots:
     void spectatingChat(int id, const QString &chat);
     void quitSpectating(int id);
     void ladderChange(bool);
-    void changeTier(const QString&);
+    void changeTier(quint8 team, const QString&);
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
@@ -211,6 +212,7 @@ public slots:
     void leaveRequested(int slotid);
     void ipChangeRequested(const QString &ip);
     void autoKick();
+    void sendUpdatedIfNeeded();
 private:
     Analyzer *myrelay;
     int lockCount;
@@ -222,6 +224,10 @@ private:
     mutable PlayerInfo m_bundle;
 
     bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
+    /* When you want to break down in Analyzer a command in several signals, but you don't want to
+      send the updated player info to every player online, use setNeedToUpdate(true) instead of
+      emit updated(id). At the end of the command, the updated signal will automatically be sent */
+    bool needToUpdate;
 
     TeamsHolder m_teams;
     QString waiting_name, waiting_pass;
@@ -276,6 +282,8 @@ private:
     /* called when all ratings are found */
     void ratingsFound();
     void syncTiers();
+    /* Are we currently executing code directly in response to a network command received from this player ? */
+    bool isInCommand() const;
 
     void testAuthentification(const QString &name);
 };

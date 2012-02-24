@@ -136,6 +136,18 @@ void setDefaultValue(QSettings &s, const QString &key, T value)
         s.setValue(key, value);
 }
 
+template <typename T>
+T& pack(T &cont)
+{
+    return cont;
+}
+
+template <typename T, typename U, typename ...Params>
+T& pack(T &cont, const U &item, Params&&...params) {
+    cont << item;
+    return pack(cont, std::forward<Params>(params)...);
+}
+
 /* Returns the folder in which you can store boxes, mods, profiles, all the application data.
   The createFolder param is whether or not you want to force-create the subfolder */
 QString appDataPath(const QString &subfolder, bool createFolder=false);

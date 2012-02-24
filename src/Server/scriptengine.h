@@ -14,6 +14,7 @@
 #include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
 
 class Server;
@@ -53,8 +54,8 @@ public:
     void afterChannelLeave(int src, int channelid);
     void beforeChangeTeam(int src);
     void afterChangeTeam(int src);
-    bool beforeChangeTier(int src, const QString& oldTier, const QString &newTier);
-    void afterChangeTier(int src, const QString& oldTier, const QString &newTier);
+    bool beforeChangeTier(int src, int teamSlot, const QString& oldTier, const QString &newTier);
+    void afterChangeTier(int src, int teamSlot, const QString& oldTier, const QString &newTier);
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc);
@@ -119,7 +120,7 @@ public:
     Q_INVOKABLE void changePokeMove(int id, int team, int pokeslot, int moveslot, int move);
     Q_INVOKABLE void changePokeGender(int id, int team, int pokeslot, int gender);
     Q_INVOKABLE void changePokeName(int id, int team, int pokeslot, const QString &name);
-    Q_INVOKABLE void changeTier(int id, const QString &tier);
+    Q_INVOKABLE void changeTier(int id, int team, const QString &tier);
     Q_INVOKABLE void reloadTiers();
     /* Export the SQL databases to old style txt files */
     Q_INVOKABLE void exportMemberDatabase();
@@ -353,23 +354,16 @@ private:
     void printLine(const QString &s);
 
     bool testPlayer(const QString &function, int id);
+    bool testTeamCount(const QString &function, int id, int team);
     bool testChannel(const QString &function, int id);
     bool testPlayerInChannel(const QString &function, int id, int chan);
     bool testRange(const QString &function, int val, int min, int max);
     void warn(const QString &function, const QString &message);
 
-    template<class T>
-    void makeEvent(const QString &event, const T& param);
-    template<class T, class T2>
-    void makeEvent(const QString &event, const T &param, const T2 &param2);
-    template<class T, class T2, class T3>
-    void makeEvent(const QString &event, const T& param, const T2 &param2, const T3 &param3);
-    template<class T>
-    bool makeSEvent(const QString &event, const T& param);
-    template<class T, class T2>
-    bool makeSEvent(const QString &event, const T &param, const T2 &param2);
-    template<class T, class T2, class T3>
-    bool makeSEvent(const QString &event, const T& param, const T2 &param2, const T3 &param3);
+    template <typename ...Params>
+    void makeEvent(const QString &event, const Params&&... params);
+    template <typename ...Params>
+    bool makeSEvent(const QString &event, const Params&&... params);
 };
 
 class ScriptWindow : public QWidget
@@ -386,68 +380,26 @@ private:
     QTextEdit *myedit;
 };
 
-template<class T>
-void ScriptEngine::makeEvent(const QString &event, const T &param)
+template<typename ...Params>
+void ScriptEngine::makeEvent(const QString &event, const Params &&... params)
 {
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param));
+    QScriptValueList l;
+    evaluate(myscript.property(event).call(myscript, pack(l, params...)));
 }
 
-template<class T, class T2>
-void ScriptEngine::makeEvent(const QString &event, const T &param, const T2 &param2)
-{
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2));
-}
-
-template<class T, class T2, class T3>
-void ScriptEngine::makeEvent(const QString &event, const T &param, const T2 &param2, const T3 &param3)
-{
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2 << param3));
-}
-
-template<class T>
-bool ScriptEngine::makeSEvent(const QString &event, const T &param)
+template<typename ...Params>
+bool ScriptEngine::makeSEvent(const QString &event, const Params &&... params)
 {
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return true;
 
     startStopEvent();
 
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param));
-
-    return !endStopEvent();
-}
-
-template<class T, class T2>
-bool ScriptEngine::makeSEvent(const QString &event, const T &param, const T2 &param2)
-{
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2));
-
-    return !endStopEvent();
-}
-
-template<class T, class T2, class T3>
-bool ScriptEngine::makeSEvent(const QString &event, const T &param, const T2 &param2, const T3 &param3)
-{
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property(event).call(myscript, QScriptValueList() << param << param2 << param3));
+    QScriptValueList l;
+    evaluate(myscript.property(event).call(myscript, pack(l, params...)));
 
     return !endStopEvent();
 }

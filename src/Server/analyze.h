@@ -78,6 +78,10 @@ public:
         emit sendCommand(command);
     }
 
+    inline bool isInCommand() const {
+        return mIsInCommand;
+    }
+
     template <typename ...Params>
     void notify(int command, Params&&... params) {
         QByteArray tosend;
@@ -129,13 +133,15 @@ signals:
     void accepted();
     void awayChange(bool away);
     void ladderChange(bool);
-    void tierChanged(const QString &);
+    void tierChanged(quint8 team, const QString &);
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
+    /* Used to tell the command is finished - and that any pending updated() is good to go */
+    void endCommand();
 public slots:
     /* slots called by the network */
     void error();
@@ -154,10 +160,11 @@ private:
     GenericNetwork *mysocket;
     QMutex mutex;
     bool pingedBack;
+    bool mIsInCommand;
 };
 
 template<class SocketClass>
-Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true)
+Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true), mIsInCommand(false)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));

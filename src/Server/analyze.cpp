@@ -177,6 +177,8 @@ void Analyzer::sendTeam(const QString *name, const QStringList &tierList)
 
 void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
+    mIsInCommand = true;
+
     DataStream in (commandline);
     uchar command;
 
@@ -388,9 +390,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case TierSelection:
         {
+            quint8 team;
             QString tier;
-            in >> tier;
-            emit tierChanged(tier);
+            while (!in.atEnd()) {
+                in >> team >> tier;
+            }
+            emit tierChanged(team, tier);
             break;
         }
     case FindBattle:
@@ -474,6 +479,8 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
     }
+    mIsInCommand = false;
+    emit endCommand();
 }
 
 void Analyzer::commandReceived(const QByteArray &command)

@@ -72,8 +72,8 @@ public:
     void afterChallengeIssued(int src, int dest, Challenge *c);
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
-    bool beforeChangeTier(int src, const QString &oldTier, const QString &newTier);
-    void afterChangeTier(int src, const QString &oldTier, const QString &newTier);
+    bool beforeChangeTier(int src, int teamNum, const QString &oldTier, const QString &newTier);
+    void afterChangeTier(int src, int teamNum, const QString &oldTier, const QString &newTier);
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
     void disconnectFromRegistry();

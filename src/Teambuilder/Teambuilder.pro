@@ -133,7 +133,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     challengedialog.h \
     tierratingbutton.h \
     findbattledialog.h \
-    teamline.h
+    teamline.h \
+    tieractionfactory.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
