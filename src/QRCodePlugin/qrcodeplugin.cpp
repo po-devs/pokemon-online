@@ -3,7 +3,7 @@
 #include "../Teambuilder/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/otherwidgets.h"
-#ifdef WIN32
+#ifdef _WIN32
 #include "../../SpecialIncludes/zlib.h"
 #include "../../SpecialIncludes/qrencode.h"
 #else

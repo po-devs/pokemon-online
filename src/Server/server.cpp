@@ -1215,14 +1215,14 @@ void Server::afterChallengeIssued(int src, int dest, Challenge *c)
     myengine->afterChallengeIssued(src, dest, c->description());
 }
 
-bool Server::beforeChangeTier(int src, const QString &old, const QString &dest)
+bool Server::beforeChangeTier(int src, int n, const QString &old, const QString &dest)
 {
-    return myengine->beforeChangeTier(src, old, dest);
+    return myengine->beforeChangeTier(src, n, old, dest);
 }
 
-void Server::afterChangeTier(int src, const QString &old, const QString &dest)
+void Server::afterChangeTier(int src, int n, const QString &old, const QString &dest)
 {
-    myengine->afterChangeTier(src, old, dest);
+    myengine->afterChangeTier(src, n, old, dest);
 }
 
 bool Server::beforeFindBattle(int src) {

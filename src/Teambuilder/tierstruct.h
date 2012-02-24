@@ -4,6 +4,8 @@
 #include <QtCore>
 #include <QtGui>
 
+class TierActionFactory;
+
 struct TierNode
 {
     QList<TierNode *> subNodes;
@@ -24,7 +26,7 @@ struct TierNode
     QHash<QString, QTreeWidgetItem*> buildSelf(QTreeWidgetItem *parent);
     QTreeWidgetItem *addTier(QTreeWidgetItem *category, const QString &tier);
     QTreeWidgetItem *addNode(QTreeWidgetItem *category, const QString &tier);
-    QList<QAction*> buildMenu(QMenu *menu, QObject *c);
+    QList<QAction*> buildMenu(QMenu *menu, QObject *c, TierActionFactory *f=NULL);
     TierNode *subNode(const QString name);
     static TierNode* moveInTree(TierNode *lastNode, int levelDiff);
 };

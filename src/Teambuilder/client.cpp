@@ -16,6 +16,7 @@
 #include "soundconfigwindow.h"
 #include "teamholder.h"
 #include "challengedialog.h"
+#include "tieractionfactory.h"
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
@@ -211,6 +212,28 @@ void Client::initRelay()
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
 }
+
+class TierActionFactoryTeams : public TierActionFactory
+{
+public:
+    TierActionFactoryTeams(TeamHolder *t) {
+        team = t;
+    }
+
+    QList<QAction* > createTierActions(QMenu *m, QObject *o, const char *slot) {
+        QList<QAction* > ret;
+        for (int i = 0; i < team->count(); i++) {
+            //Todo: subclass QAction to show the 6 pokemons in the QAction?
+            ret.push_back(m->addAction(team->team(i).name(), o, slot));
+            ret.back()->setCheckable(true);
+            ret.back()->setProperty("team", i);
+        }
+
+        return ret;
+    }
+
+    TeamHolder *team;
+};
 
 int Client::ownAuth() const
 {
@@ -1544,8 +1567,6 @@ void Client::announcementReceived(const QString &ann)
 
 void Client::tierListReceived(const QByteArray &tl)
 {
-    mytiermenu->clear();
-    mytiers.clear();
     tierList.clear();
     tierRoot.buildFromRaw(tl);
     tierList = tierRoot.getTierList();
@@ -1555,8 +1576,8 @@ void Client::tierListReceived(const QByteArray &tl)
         tierList = tierRoot.getTierList();
     }
 
-    mytiers = tierRoot.buildMenu(mytiermenu, this);
-    changeTierChecked(tier(ownId()));
+    rebuildTierMenu();
+    changeTiersChecked();
 
     QSettings s;
 
@@ -1565,6 +1586,16 @@ void Client::tierListReceived(const QByteArray &tl)
             c->sortAllPlayersByTier();
     }
     emit tierListFormed(tierList);
+}
+
+void Client::rebuildTierMenu()
+{
+    mytiermenu->clear();
+    mytiers.clear();
+
+    TierActionFactoryTeams f(team());
+    mytiers = tierRoot.buildMenu(mytiermenu, this, team()->count() <= 1 ? NULL : &f);
+    singleTeam = team()->count() <= 1;
 }
 
 void Client::sortPlayersCountingTiers(bool byTier)
@@ -1612,14 +1643,16 @@ void Client::movePlayerList(bool right)
     }
 }
 
-void Client::changeTierChecked(const QString &newtier)
+void Client::changeTiersChecked()
 {
+    if (singleTeam != team()->count() <= 1) {
+        rebuildTierMenu();
+    }
     foreach(QAction *a, mytiers) {
-        if (a->text() == newtier) {
-            a->setChecked(true);
-        } else {
-            a->setChecked(false);
-        }
+        QString tier = a->property("tier").toString();
+        int team = a->property("team").toInt();
+
+        a->setChecked(team < this->team()->count() && this->team()->tier() == tier);
     }
 }
 
@@ -1627,8 +1660,7 @@ void Client::changeTier()
 {
     QAction *a = (QAction*)sender();
 
-    relay().notify(NetworkCli::TierSelection, a->text());
-    changeTierChecked(tier(ownId()));
+    relay().notify(NetworkCli::TierSelection, quint8(a->property("team").toInt()), a->property("tier"));
 }
 
 bool Client::playerExist(int id) const
@@ -1974,7 +2006,7 @@ void Client::tiersReceived(const QStringList &tiers)
         *team() = secondTeam;
     }
     team()->setTiers(tiers);
-    changeTierChecked(tiers.front());
+    changeTiersChecked();
 }
 
 void Client::playerLogout(int id)

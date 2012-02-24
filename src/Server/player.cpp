@@ -19,6 +19,7 @@ Player::Player(const GenericSocket &sock, int id)
     battleSearch() = false;
     myip = relay().ip();
     server_pass_sent = false;
+    needToUpdate = false;
 
     m_bundle.auth = 0;
 
@@ -46,13 +47,15 @@ Player::Player(const GenericSocket &sock, int id)
     connect(&relay(), SIGNAL(battleSpectateEnded(int)), SLOT(quitSpectating(int)));
     connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
     connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
-    connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
+    connect(&relay(), SIGNAL(tierChanged(quint8,QString)), SLOT(changeTier(quint8,QString)));
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
     connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
+    connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
+
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
 
@@ -101,55 +104,100 @@ void Player::unlock()
         lockCount = 0;
 }
 
-void Player::changeTier(const QString &newtier)
+void Player::setNeedToBeUpdated(bool onlyIfInCommand)
 {
-//    if (tier() == newtier)
-//        return;
-//    if (battling()) {
-//        sendMessage(tr("You can't change tiers while battling."));
-//        return;
-//    }
-//    if (!TierMachine::obj()->exists(newtier)) {
-//        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
-//        return;
-//    }
-//    if (!TierMachine::obj()->isValid(team(), newtier)) {
-//        Tier *tier = &TierMachine::obj()->tier(newtier);
+    needToUpdate = true;
 
-//        if (!tier->allowGen(team().gen)) {
-//            sendMessage(tr("The generation of your team is invalid for that tier."));
-//            return;
-//        }
-
-//        QList<int> indexList;
-//        for(int i = 0; i < 6; i++) {
-//            if (tier->isBanned(team().poke(i))) {
-//                indexList.append(i);
-//            }
-//        }
-
-//        if (indexList.size() > 0) {
-//            foreach(int i, indexList) {
-//                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
-//            }
-//            return;
-//        } else {
-//            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
-//            return;
-//        }
-//    }
-//    if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
-//        QString oldtier = tier();
-//        executeTierChange(newtier);
-//        Server::serverIns->afterChangeTier(id(), oldtier, tier());
-//    }
+    if (onlyIfInCommand && !isInCommand()) {
+        sendUpdatedIfNeeded();
+    }
 }
 
-void Player::executeTierChange(const QString &newtier)
+bool Player::isInCommand() const
 {
- //   tier() = newtier;
-    findRatings();
+    return relay().isInCommand();
+}
+
+void Player::sendUpdatedIfNeeded()
+{
+    if (needToUpdate) {
+        needToUpdate = false;
+        emit updated(id());
+    }
+}
+
+void Player::changeTier(quint8 teamNum, const QString &newtier)
+{
+    if (teamNum >= teamCount()) {
+        return;
+    }
+    if (team(teamNum).tier == newtier)
+        return;
+    if (battling()) {
+        sendMessage(tr("You can't change tiers while battling."));
+        return;
+    }
+    if (!TierMachine::obj()->exists(newtier)) {
+        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
+        return;
+    }
+    if (!TierMachine::obj()->isValid(team(teamNum), newtier)) {
+        Tier *tier = &TierMachine::obj()->tier(newtier);
+
+        if (!tier->allowGen(team(teamNum).gen)) {
+            sendMessage(tr("The generation of your team is invalid for that tier."));
+            return;
+        }
+
+        QList<int> indexList;
+        for(int i = 0; i < 6; i++) {
+            if (tier->isBanned(team(teamNum).poke(i))) {
+                indexList.append(i);
+            }
+        }
+
+        if (indexList.size() > 0) {
+            foreach(int i, indexList) {
+                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team(teamNum).poke(i).num()), newtier,
+                                                                                                            tier->bannedReason(team(teamNum).poke(i))));
+            }
+            return;
+        } else {
+            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+            return;
+        }
+    }
+    if (Server::serverIns->beforeChangeTier(id(), teamNum, team(teamNum).tier, newtier)) {
+        QString oldtier = team(teamNum).tier;
+        executeTierChange(teamNum, newtier);
+        Server::serverIns->afterChangeTier(id(), teamNum, oldtier, team(teamNum).tier);
+    }
+}
+
+void Player::executeTierChange(int num, const QString &newtier)
+{
+    bool oldT(false), newT(false);
+
+    for (int i = 0; i < teamCount(); i++) {
+        if (i != num) {
+            if (team(i).tier == team(num).tier) {
+                oldT = true;
+            }
+            if (team(i).tier == newtier) {
+                newT = true;
+            }
+        }
+    }
+
     cancelChallenges();
+
+    team(num).tier = newtier;
+    if (newT && oldT) {
+        //The list of tiers didn't change overall, no need to recalculate anything
+    } else {
+        syncTiers();
+        findRating(team(num).tier);
+    }
 }
 
 void Player::doWhenDC()
@@ -833,7 +881,7 @@ void Player::serverPasswordSent(const QByteArray &_hash)
 void Player::loginSuccess()
 {
     ontologin = true;
-    findTierAndRating();
+    findTierAndRating(true);
 }
 
 void Player::testAuthentification(const QString &name)
@@ -881,14 +929,14 @@ void Player::testAuthentificationLoaded()
     }
 }
 
-void Player::findTierAndRating()
+void Player::findTierAndRating(bool force)
 {
     tiers.clear();
     for (int i = 0; i < m_teams.count(); i++) {
         findTier(i);
         tiers.insert(team(i).tier);
     }
-    findRatings();
+    findRatings(force);
 }
 
 void Player::findTier(int slot)
@@ -1003,7 +1051,7 @@ void Player::ratingsFound()
             emit recvTeam(id(), name());
         waiting_name.clear();
     } else {
-        emit updated(id());
+        setNeedToBeUpdated(true);
     }
 }
 

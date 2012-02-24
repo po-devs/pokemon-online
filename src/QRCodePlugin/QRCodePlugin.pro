@@ -14,6 +14,8 @@ DEFINES += QRCODEPLUGIN_LIBRARY
 
 SOURCES += qrcodeplugin.cpp
 
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
 HEADERS += qrcodeplugin.h\
         QRCodePlugin_global.h \
     ../Teambuilder/plugininterface.h \
