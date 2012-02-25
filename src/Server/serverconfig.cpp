@@ -61,9 +61,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     battleFileLog->setChecked(settings.value("logs_battle_files").toBool());
 
     l->addRow("Delete inactive members in a period of (Days):", deleteInactive = new QSpinBox());
-    deleteInactive->setRange(1, 365);
+    deleteInactive->setRange(1, 728);
     if(settings.value("delete_inactive_members_days").isNull()) {
-        deleteInactive->setValue(31);
+        deleteInactive->setValue(182);
     } else {
         deleteInactive->setValue(settings.value("delete_inactive_members_days").toInt());
     }

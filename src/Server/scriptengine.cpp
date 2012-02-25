@@ -885,7 +885,7 @@ QScriptValue ScriptEngine::dbExpire(const QString &name)
     } else {
         QDate tempDate;
         tempDate = QDate::fromString(SecurityManager::member(name).date, "yyyy-MM-dd");
-        return tempDate.daysTo(QDate::currentDate());
+        return myserver->playerDeleteDays() - tempDate.daysTo(QDate::currentDate());
     }
 }
 
