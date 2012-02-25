@@ -449,15 +449,11 @@ void SecurityManager::exportDatabase()
 
 void SecurityManager::processDailyRun(int maxdays)
 {
-    QDate currentDate = QDate::currentDate();
-    QDate tempDate;
     QSqlQuery q;
-    q.exec("select name, laston from trainers order by name asc");
-    while(q.next()) {
-        tempDate = QDate::fromString(q.value(1).toString(), "yyyy-MM-dd");
-        if(tempDate.daysTo(currentDate) > maxdays) {
-            SecurityManager::deleteUser(q.value(0).toString());
-        }
+    QString limit = QDate::currentDate().addDays(-maxdays).toString("yyyy-MM-dd");
+    q.exec("select name, laston from trainers order by laston asc");
+    while(q.next() && q.value(1).toString().compare(limit) < 0) {
+        SecurityManager::deleteUser(q.value(0).toString());
     }
 }
 
