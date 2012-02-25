@@ -6,263 +6,250 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>159</width>
-    <height>291</height>
+    <width>226</width>
+    <height>361</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>159</width>
-     <height>291</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="abilityTitle">
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0" rowspan="2" colspan="2">
+    <widget class="QGroupBox" name="finalStats">
+     <property name="title">
+      <string>Final Stats</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="hpivdesc">
         <property name="text">
-         <string>Ability</string>
+         <string>HP:</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="ability1">
+      <item row="0" column="1">
+       <widget class="QLabel" name="hpivlabel">
         <property name="text">
-         <string>Ability 1</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>0</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="ability2">
-        <property name="text">
-         <string>Ability 2</string>
+      <item row="0" column="2">
+       <widget class="QSpinBox" name="hpivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="ability3">
+      <item row="1" column="0">
+       <widget class="QLabel" name="attivdesc">
         <property name="text">
-         <string>DW Ability</string>
+         <string>Att:</string>
         </property>
        </widget>
       </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+      <item row="1" column="1">
+       <widget class="QLabel" name="attivlabel">
+        <property name="text">
+         <string>0</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QSpinBox" name="attivspin">
+        <property name="maximum">
+         <number>31</number>
         </property>
-       </spacer>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="defivdesc">
+        <property name="text">
+         <string>Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="defivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QSpinBox" name="defivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="spattivdesc">
+        <property name="text">
+         <string>Sp. Att:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="spattivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QSpinBox" name="spattivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="spdefivdesc">
+        <property name="text">
+         <string>Sp. Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="spdefivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QSpinBox" name="spdefivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="speedivdesc">
+        <property name="text">
+         <string>Speed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="speedivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QSpinBox" name="speedivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
       </item>
      </layout>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QGroupBox" name="finalStats">
-      <property name="title">
-       <string>Final Stats</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <property name="verticalSpacing">
-        <number>2</number>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="abilityTitle">
+       <property name="text">
+        <string>Ability</string>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="hpivdesc">
-         <property name="text">
-          <string>HP:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="hpivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="attivdesc">
-         <property name="text">
-          <string>Att:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="attivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="defivdesc">
-         <property name="text">
-          <string>Def:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="defivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="spattivdesc">
-         <property name="text">
-          <string>Sp. Att:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="spattivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="spdefivdesc">
-         <property name="text">
-          <string>Sp. Def:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="spdefivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="speedivdesc">
-         <property name="text">
-          <string>Speed:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="speedivlabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QSpinBox" name="hpivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QSpinBox" name="attivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QSpinBox" name="defivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QSpinBox" name="spattivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QSpinBox" name="spdefivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="2">
-        <widget class="QSpinBox" name="speedivspin">
-         <property name="maximum">
-          <number>31</number>
-         </property>
-         <property name="value">
-          <number>31</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="hiddenPowerTitle">
-        <property name="text">
-         <string>Hidden Power</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="hiddenPowerType"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="hiddenPowerPower">
-        <property name="text">
-         <string>Power: 70</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>72</width>
-          <height>113</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="ability1">
+       <property name="text">
+        <string>Ability 1</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="ability2">
+       <property name="text">
+        <string>Ability 2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="ability3">
+       <property name="text">
+        <string>DW Ability</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="hiddenPowerTitle">
+       <property name="text">
+        <string>Hidden Power</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="hiddenPowerType"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="hiddenPowerPower">
+       <property name="text">
+        <string>Power: 70</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>72</width>
+         <height>113</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
