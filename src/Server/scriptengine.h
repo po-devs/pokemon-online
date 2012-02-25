@@ -361,9 +361,9 @@ private:
     void warn(const QString &function, const QString &message);
 
     template <typename ...Params>
-    void makeEvent(const QString &event, const Params&&... params);
+    void makeEvent(const QString &event, Params&&... params);
     template <typename ...Params>
-    bool makeSEvent(const QString &event, const Params&&... params);
+    bool makeSEvent(const QString &event, Params&&... params);
 };
 
 class ScriptWindow : public QWidget
@@ -381,7 +381,7 @@ private:
 };
 
 template<typename ...Params>
-void ScriptEngine::makeEvent(const QString &event, const Params &&... params)
+void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 {
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return;
@@ -391,7 +391,7 @@ void ScriptEngine::makeEvent(const QString &event, const Params &&... params)
 }
 
 template<typename ...Params>
-bool ScriptEngine::makeSEvent(const QString &event, const Params &&... params)
+bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
 {
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return true;
