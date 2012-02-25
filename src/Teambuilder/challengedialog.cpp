@@ -218,7 +218,7 @@ void ChallengeDialog::setMode(int mode)
     ui->mode->setCurrentIndex(mode);
 }
 
-void ChallengeDialog::setChallenging()
+void ChallengeDialog::setChallenging(const QString &tier)
 {
     setWindowTitle(tr("%1's info").arg(info.name));
 
@@ -231,7 +231,7 @@ void ChallengeDialog::setChallenging()
         clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
     }
 
-    setTierChecked(s.value("challenge/tier").toString());
+    setTierChecked(tier.length() == 0 ? s.value("challenge/tier").toString() : tier);
 }
 
 void ChallengeDialog::setTierChecked(const QString &tier)

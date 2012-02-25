@@ -475,14 +475,20 @@ void Channel::removePlayer(int id) {
     /* Players List */
 
 
-    QIdTreeWidgetItem *item = myplayersitems.take(id);
-    QTreeWidgetItem *parent = item->parent();
+    QList<QIdTreeWidgetItem* >items = myplayersitems.values(id);
+    myplayersitems.remove(id);
 
-    if (parent)
-        parent->takeChild(parent->indexOfChild(item));
-    else
-        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
-    delete item;
+    foreach(QIdTreeWidgetItem *item, items) {
+        QTreeWidgetItem *parent = item->parent();
+
+        if (parent)
+            parent->takeChild(parent->indexOfChild(item));
+        else
+            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
+        delete item;
+
+        cleanTier(parent);
+    }
 
     /* Battleslist */
     QSet<int> dlt;
@@ -502,8 +508,6 @@ void Channel::removePlayer(int id) {
     foreach(int id, dlt) {
         battles.remove(id);
     }
-
-    cleanTier(parent);
 }
 
 void Channel::cleanTier(QTreeWidgetItem *tier)
