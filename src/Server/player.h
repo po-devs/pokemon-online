@@ -283,7 +283,7 @@ private:
     int firstBattleId();
     /* called when all ratings are found */
     void ratingsFound();
-    void syncTiers();
+    void syncTiers(QString oldTier);
     /* Are we currently executing code directly in response to a network command received from this player ? */
     bool isInCommand() const;
 

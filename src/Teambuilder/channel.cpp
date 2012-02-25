@@ -130,32 +130,14 @@ void Channel::anchorClicked(const QUrl &url)
     }
 }
 
-void Channel::getBackAllPlayerItems()
-{
-    foreach(QIdTreeWidgetItem *it, myplayersitems) {
-        if (it->parent())
-            it->parent()->takeChild(it->parent()->indexOfChild(it));
-        else {
-            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(it));
-        }
-    }
-}
-
 void Channel::sortAllPlayersByTier()
 {
-    getBackAllPlayerItems();
+    myplayersitems.clear();
     myplayers->clear();
     mytiersitems.clear();
 
-    QHash<int, QIdTreeWidgetItem *>::iterator iter;
-
-    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        QString tier = client->tier(iter.key());
-
-        if (!mytiersitems.contains(tier))
-            placeTier(tier);
-
-        placeItem(iter.value(), mytiersitems.value(tier));
+    foreach(int player, ownPlayers) {
+        insertPlayerItems(player);
     }
 
     myplayers->expandAll();
@@ -173,14 +155,12 @@ void Channel::placeTier(const QString &tier)
 
 void Channel::sortAllPlayersNormally()
 {
-    getBackAllPlayerItems();
+    myplayersitems.clear();
     myplayers->clear();
     mytiersitems.clear();
 
-    QHash<int, QIdTreeWidgetItem *>::iterator iter;
-
-    for (iter = myplayersitems.begin(); iter != myplayersitems.end(); ++iter) {
-        placeItem(iter.value(), NULL);
+    foreach(int player, ownPlayers) {
+        insertPlayerItems(player);
     }
 }
 
@@ -225,11 +205,17 @@ void Channel::battleStarted(int bid, int id1, int id2)
     battleReceived(bid, id1, id2);
 
     if (id1 != 0 && item(id1) != NULL) {
-        item(id1)->setToolTip(0,tr("Battling against %1").arg(name(id2)));
+        foreach(QIdTreeWidgetItem *it, items(id1)) {
+            it->setToolTip(0,tr("Battling against %1").arg(name(id2)));
+        }
+
         updateState(id1);
     }
     if (id2 != 0 && item(id2) != NULL) {
-        item(id2)->setToolTip(0,tr("Battling against %1").arg(name(id1)));
+        foreach(QIdTreeWidgetItem *it, items(id2)) {
+            it->setToolTip(0,tr("Battling against %1").arg(name(id1)));
+        }
+
         updateState(id2);
     }
 }
@@ -247,6 +233,11 @@ void Channel::battleReceived(int bid, int id1, int id2)
 
 QIdTreeWidgetItem *Channel::item(int id) {
     return myplayersitems.value(id);
+}
+
+QList<QIdTreeWidgetItem*> Channel::items(int id)
+{
+    return myplayersitems.values(id);
 }
 
 QString Channel::name(int player)
@@ -282,42 +273,36 @@ void Channel::playerReceived(int playerid) {
         return;
     }
 
-    QIdTreeWidgetItem *item = myplayersitems.value(playerid);
-    QTreeWidgetItem *parent = item->parent();
-
-    if (parent)
-        parent->takeChild(parent->indexOfChild(item));
-    else
-        myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
-
     changeName(playerid, client->name(playerid));
 
-    item->setColor(client->color(playerid));
-    item->setText(1,QString::number(client->auth(playerid)));
+    QVector<QTreeWidgetItem*> parents;
 
-    QString tier = client->tier(playerid);
-    if (client->sortBT) {
-        if (!mytiersitems.contains(tier))
-            placeTier(tier);
+    QList<QIdTreeWidgetItem*> items = myplayersitems.values(playerid);
+    myplayersitems.remove(playerid);
 
-        placeItem(item, mytiersitems.value(tier));
+    foreach(QIdTreeWidgetItem *item, items) {
+        QTreeWidgetItem *parent = item->parent();
 
-    } else {
-        placeItem(item, NULL);
+        if (parent)
+            parent->takeChild(parent->indexOfChild(item));
+        else
+            myplayers->takeTopLevelItem(myplayers->indexOfTopLevelItem(item));
+
+        delete item;
+
+        parents.push_back(parent);
     }
 
-    updateState(playerid);
+    insertPlayerItems(playerid);
 
-    cleanTier(parent);
+    foreach(QTreeWidgetItem *parent, parents) {
+        cleanTier(parent);
+    }
 }
 
 /* When a player has a name updated, change all possible places of that name */
 void Channel::changeName(int id, const QString &name)
 {
-    /* Playerslist */
-    if (myplayersitems.contains(id))
-        myplayersitems.value(id)->setText(0, name);
-
     /* Battleslist */
     QHashIterator<qint32, Battle> bit(battles);
     while (bit.hasNext()) {
@@ -335,24 +320,49 @@ void Channel::changeName(int id, const QString &name)
 void Channel::insertNewPlayer(int playerid)
 {
     ownPlayers.insert(playerid);
-    QIdTreeWidgetItem *item = new QIdTreeWidgetItem(playerid, QStringList());
-    QFont f = item->font(0);
-    f.setBold(true);
-    item->setFont(0,f);
-    item->setText(0,name(playerid));
-    item->setText(1,QString::number(client->auth(playerid)));
-    item->setColor(client->color(playerid));
-    myplayersitems.insert(playerid, item);
 
-    QString tier = client->tier(playerid);
-    if (client->sortBT && client->tierList.contains(tier)) {
-        if (!mytiersitems.contains(tier))
-            placeTier(tier);
+    insertPlayerItems(playerid);
+}
 
-        placeItem(item, mytiersitems.value(tier));
+void Channel::insertPlayerItems(int playerid)
+{
+    if (stillLoading) {
+        return;
+    }
+#define create_item() \
+    QIdTreeWidgetItem *item = new QIdTreeWidgetItem(playerid, QStringList()); \
+    item->setText(0,name(playerid)); \
+    item->setText(1,QString::number(client->auth(playerid))); \
+    item->setColor(client->color(playerid)); \
+    myplayersitems.insertMulti(playerid, item)
+
+    if (client->sortBT) {
+        bool oneDone = false;
+        QStringList tiers = client->tiers(playerid);
+
+        for (int i = 0; i < tiers.size(); i++) {
+            QString tier = tiers[i];
+
+            if (client->tierList.contains(tier)) {
+                create_item();
+
+                if (!mytiersitems.contains(tier)) {
+                    placeTier(tier);
+                }
+
+                placeItem(item, mytiersitems.value(tier));
+            } else if (!oneDone) {
+                oneDone = true;
+
+                create_item();
+                placeItem(item, NULL);
+            }
+        }
     } else {
+        create_item();
         placeItem(item, NULL);
     }
+#undef create_item
 
     updateState(playerid);
 }
@@ -427,20 +437,22 @@ void Channel::dealWithCommand(int command, DataStream *stream)
 
 void Channel::updateState(int id)
 {
-    int auth = client->auth(id);
     if (item(id)) {
-        if (client->isIgnored(id)) {
-            item(id)->setIcon(0, client->statusIcon(auth,Client::Ignored));
-            return;
-        }
-        if (client->player(id).battling()) {
-            item(id)->setIcon(0, client->statusIcon(auth,Client::Battling));
-        } else if (client->player(id).away()) {
-            item(id)->setIcon(0, client->statusIcon(auth,Client::Away));
-            item(id)->setToolTip(0, "");
-        } else {
-            item(id)->setIcon(0, client->statusIcon(auth,Client::Available));
-            item(id)->setToolTip(0, "");
+        int auth = client->auth(id);
+        foreach (QIdTreeWidgetItem *it, items(id)) {
+            if (client->isIgnored(id)) {
+                it->setIcon(0, client->statusIcon(auth,Client::Ignored));
+                return;
+            }
+            if (client->player(id).battling()) {
+                it->setIcon(0, client->statusIcon(auth,Client::Battling));
+            } else if (client->player(id).away()) {
+                it->setIcon(0, client->statusIcon(auth,Client::Away));
+                it->setToolTip(0, "");
+            } else {
+                it->setIcon(0, client->statusIcon(auth,Client::Available));
+                it->setToolTip(0, "");
+            }
         }
     }
 }
