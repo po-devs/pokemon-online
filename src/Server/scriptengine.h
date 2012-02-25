@@ -127,6 +127,8 @@ public:
     Q_INVOKABLE void exportTierDatabase();
     /* Updates the rankings. Very time consuming, be aware... ! */
     Q_INVOKABLE void updateRatings();
+    /* Updates the database and delete inactive players. Very time consuming, be aware... ! */
+    Q_INVOKABLE void updateDatabase();
     /* Resets a tier's ladders */
     Q_INVOKABLE void resetLadder(const QString &tier);
     Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
@@ -165,6 +167,8 @@ public:
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
+    Q_INVOKABLE QScriptValue dbExpire(const QString &name);
+    Q_INVOKABLE int dbExpiration();
     Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id, int team);
     Q_INVOKABLE QScriptValue ranking(int id, int team);

@@ -109,6 +109,8 @@ public:
        only from there), so hangs the server */
     static void exportDatabase();
 
+    static void processDailyRun(int maxdays);
+
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);
     static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);

@@ -878,6 +878,21 @@ QScriptValue ScriptEngine::dbLastOn(const QString &name)
     }
 }
 
+QScriptValue ScriptEngine::dbExpire(const QString &name)
+{
+    if(!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        QDate tempDate;
+        tempDate = QDate::fromString(SecurityManager::member(name).date, "yyyy-MM-dd");
+        return tempDate.daysTo(QDate::currentDate());
+    }
+}
+
+int ScriptEngine::dbExpiration()
+{
+    return myserver->playerDeleteDays();
+}
 
 QScriptValue ScriptEngine::battling(int id)
 {
@@ -1885,6 +1900,11 @@ void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
 void ScriptEngine::updateRatings()
 {
     TierMachine::obj()->processDailyRun();
+}
+
+void ScriptEngine::updateDatabase()
+{
+    SecurityManager::processDailyRun(myserver->playerDeleteDays());
 }
 
 void ScriptEngine::resetLadder(const QString &tier)

@@ -4,14 +4,14 @@
 
 #include <QSqlQuery>
 
-PlayersWindow::PlayersWindow(QWidget *parent)
+PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     QGridLayout *mylayout = new QGridLayout(this);
 
-    mytable = new QCompactTable(0,6);
+    mytable = new QCompactTable(0,7);
 
     mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
@@ -23,7 +23,7 @@ PlayersWindow::PlayersWindow(QWidget *parent)
     authgrade[3] = "Owner";
 
     QStringList headers;
-    headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance";
+    headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance" << "Expires In";
     mytable->setHorizontalHeaderLabels(headers);
 
     QSqlQuery q;
@@ -57,6 +57,9 @@ PlayersWindow::PlayersWindow(QWidget *parent)
 
         witem = new QTableWidgetItem(q.value(5).toString());
         mytable->setItem(i, 5, witem);
+
+        witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(q.value(5).toString(), "yyyy-MM-dd").daysTo(QDate::currentDate())) + " Days");
+        mytable->setItem(i, 6, witem);
 
         i++;
     }
