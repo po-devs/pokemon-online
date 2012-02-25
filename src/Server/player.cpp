@@ -1242,7 +1242,7 @@ void Player::recvTeam(const ChangeTeamInfo &cinfo)
                 findRating(team(cinfo.teamNum).tier);
             } else {
                 if (cinfo.color || cinfo.info) {
-                    emit updated(id);
+                    emit updated(id());
                 }
             }
         } else {
