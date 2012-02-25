@@ -229,7 +229,7 @@ QList<QAction*> TierNode::buildMenu(QMenu *menu, QObject *c, TierActionFactory *
             }
         } else {
             QMenu *newMenu = menu->addMenu(t->name);
-            ret.append(t->buildMenu(newMenu, c));
+            ret.append(t->buildMenu(newMenu, c, f));
         }
     }
 

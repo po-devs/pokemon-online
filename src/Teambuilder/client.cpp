@@ -1645,14 +1645,14 @@ void Client::movePlayerList(bool right)
 
 void Client::changeTiersChecked()
 {
-    if (singleTeam != team()->count() <= 1) {
+    if (singleTeam != (team()->count() <= 1)) {
         rebuildTierMenu();
     }
     foreach(QAction *a, mytiers) {
         QString tier = a->property("tier").toString();
         int team = a->property("team").toInt();
 
-        a->setChecked(team < this->team()->count() && this->team()->tier() == tier);
+        a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
     }
 }
 
@@ -1660,7 +1660,11 @@ void Client::changeTier()
 {
     QAction *a = (QAction*)sender();
 
-    relay().notify(NetworkCli::TierSelection, quint8(a->property("team").toInt()), a->property("tier"));
+    int team = a->property("team").toInt();
+    QString tier = a->property("tier").toString();
+
+    a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
+    relay().notify(NetworkCli::TierSelection, quint8(team), tier);
 }
 
 bool Client::playerExist(int id) const
