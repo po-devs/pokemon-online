@@ -126,7 +126,7 @@ void Player::sendUpdatedIfNeeded()
     }
 }
 
-void Player::hangeTier(quint8 teamNum, const QString &newtier)
+void Player::changeTier(quint8 teamNum, const QString &newtier)
 {
     if (teamNum >= teamCount()) {
         return;
