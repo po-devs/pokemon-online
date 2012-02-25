@@ -27,7 +27,7 @@ public:
     void setPlayerInfo(const PlayerInfo &info);
     void setTeam(TeamHolder *t);
     void setChallengeInfo(const ChallengeInfo &info);
-    void setChallenging();
+    void setChallenging(const QString &tier = "");
 
     int id();
     /* defined once again so we can make a distinction between user closure and programmed closure */

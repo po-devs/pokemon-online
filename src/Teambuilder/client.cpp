@@ -1679,16 +1679,18 @@ PlayerInfo Client::player(int id) const
 
 void Client::seeInfo(QTreeWidgetItem *it)
 {
+    QTreeWidgetItem *parent = it->parent();
+
     if (dynamic_cast<QIdTreeWidgetItem*>(it))
-        seeInfo(((QIdTreeWidgetItem*)(it))->id());
+        seeInfo(((QIdTreeWidgetItem*)(it))->id(), parent ? parent->text(0) : "");
 }
 
-void Client::seeInfo(int id)
+void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
         ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
-        mychallenge->setChallenging();
+        mychallenge->setChallenging(tier);
 
         connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));

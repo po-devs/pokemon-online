@@ -137,7 +137,7 @@ public slots:
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
     /* Display the info for that player */
-    void seeInfo(int id);
+    void seeInfo(int id, QString tier="");
     void seeInfo(QTreeWidgetItem *it);
     /* Challenge info by the server */
     void challengeStuff(const ChallengeInfo &c);
