@@ -66,6 +66,7 @@ public:
     QString authedNick(int id) const;
     QColor color(int id) const;
     QString tier(int player) const;
+    QStringList tiers(int player) const;
     void changeName(int player, const QString &name);
     /* Resets fade away counter */
     void refreshPlayer(int id);

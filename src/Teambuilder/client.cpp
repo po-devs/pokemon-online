@@ -1936,6 +1936,11 @@ QString Client::tier(int player) const
     return this->player(player).ratings.begin().key();
 }
 
+QStringList Client::tiers(int player) const
+{
+    return this->player(player).ratings.keys();
+}
+
 void Client::clearChallenge()
 {
     mychallenges.remove(dynamic_cast<ChallengeDialog*>(sender()));

@@ -188,6 +188,7 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
     else
         f.setPixelSize(12);
     ret->setFont(0,f);
+
     category->insertChild(i, ret);
     ret->setExpanded(true);
 

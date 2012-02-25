@@ -177,10 +177,11 @@ void Player::changeTier(quint8 teamNum, const QString &newtier)
 void Player::executeTierChange(int num, const QString &newtier)
 {
     bool oldT(false), newT(false);
+    QString oldTier = team(num).tier;
 
     for (int i = 0; i < teamCount(); i++) {
         if (i != num) {
-            if (team(i).tier == team(num).tier) {
+            if (team(i).tier == oldTier) {
                 oldT = true;
             }
             if (team(i).tier == newtier) {
@@ -195,7 +196,7 @@ void Player::executeTierChange(int num, const QString &newtier)
     if (newT && oldT) {
         //The list of tiers didn't change overall, no need to recalculate anything
     } else {
-        syncTiers();
+        syncTiers(oldTier);
         findRating(team(num).tier);
     }
 }
@@ -1229,12 +1230,21 @@ void Player::recvTeam(const ChangeTeamInfo &cinfo)
 
         if (cinfo.teams) {
             m_teams.init(*cinfo.teams);
-            findTierAndRating();
+            findTierAndRating(true);
         } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
             m_teams.team(cinfo.teamNum) = *cinfo.team;
+
+            QString oldTier = team(cinfo.teamNum).tier;
             findTier(cinfo.teamNum);
-            syncTiers();
-            findRating(team(cinfo.teamNum).tier);
+
+            if (oldTier != team(cinfo.teamNum).tier) {
+                syncTiers(oldTier);
+                findRating(team(cinfo.teamNum).tier);
+            } else {
+                if (cinfo.color || cinfo.info) {
+                    emit updated(id);
+                }
+            }
         } else {
             emit updated(id());
         }
@@ -1254,12 +1264,20 @@ void Player::recvTeam(const ChangeTeamInfo &cinfo)
     testAuthentification(*cinfo.name);
 }
 
-void Player::syncTiers()
+/* The old tier param is there for us to remove the old tier
+  in the ratings if no team has it anymore.
+
+  The alternative would be to check all of ratings' keys*/
+void Player::syncTiers(QString oldTier)
 {
     tiers.clear();
 
     for (int i = 0; i < teamCount(); i++) {
         tiers.insert(team(i).tier);
+    }
+
+    if (!tiers.contains(oldTier)) {
+        ratings().remove(oldTier);
     }
 }
 
