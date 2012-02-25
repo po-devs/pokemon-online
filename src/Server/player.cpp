@@ -126,7 +126,7 @@ void Player::sendUpdatedIfNeeded()
     }
 }
 
-void Player::changeTier(quint8 teamNum, const QString &newtier)
+void Player::hangeTier(quint8 teamNum, const QString &newtier)
 {
     if (teamNum >= teamCount()) {
         return;
@@ -1052,6 +1052,10 @@ void Player::ratingsFound()
         waiting_name.clear();
     } else {
         setNeedToBeUpdated(true);
+        /* Sends the team tiers to the players.
+          Note: in case of cached tiers for a player, we can end up sending several time
+          that in succession if he changes multiple tiers at the same time */
+        relay().sendTeam(NULL, getTierList());
     }
 }
 

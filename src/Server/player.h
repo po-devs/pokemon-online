@@ -149,6 +149,8 @@ public:
     void executeAwayChange(bool away);
 
     void sendPacket(const QByteArray &packet);
+    //Tells that the player has been changed and its updated info should be sent to everyone
+    //onlyInCommand true means that if not during a player command, the info is updated immediately (otherwise at end of player command)
     void setNeedToBeUpdated(bool onlyInCommand=false);
 signals:
     void loggedIn(int id, const QString &name);
