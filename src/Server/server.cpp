@@ -235,6 +235,7 @@ void Server::start(){
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
+    amountOfInactiveDays = s.value("delete_inactive_members_days").toInt();
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
@@ -248,9 +249,15 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("process_ratings_on_startup", true).toBool())
+    if (s.value("process_ratings_on_startup", true).toBool()) {
         TierMachine::obj()->processDailyRun();
-    QTimer *t2= new QTimer(this);
+    }
+
+    if (s.value("process_database_clearing_on_startup", true).toBool()) {
+        SecurityManager::processDailyRun(amountOfInactiveDays);
+    }
+
+    QTimer *t2 = new QTimer(this);
     connect(t2, SIGNAL(timeout()), this, SLOT(processDailyRun()));
     t2->start(24*3600*1000);
 
@@ -281,10 +288,19 @@ GenericSocket Server::server(int i)
 #endif
 void Server::processDailyRun()
 {
+    broadCast("The server is updating the database and clearing inactive members, as it does daily. It may take a bit of time depending on database size.");
     broadCast("The server is updating all the ratings, as it does daily. It may take a bit of time.");
 
     /* Running delayed as otherwise the message would be sent after the lag, not before */
+    QTimer::singleShot(1000, this, SLOT(updateDatabase()));
     QTimer::singleShot(1000, this, SLOT(updateRatings()));
+}
+
+void Server::updateDatabase()
+{
+    SecurityManager::processDailyRun(amountOfInactiveDays);
+
+    broadCast("Database updated and cleaned!");
 }
 
 void Server::updateRatings()
@@ -1265,6 +1281,14 @@ void Server::useBattleFileLogChanged(bool logging)
         return;
     useBattleFileLog = logging;
     printLine("Battle File Logging changed", false, true);
+}
+
+void Server::inactivePlayersDeleteDaysChanged(int newValue) {
+    if(amountOfInactiveDays == newValue) {
+        return;
+    }
+    printLine("The amount of days that an user can stay inactive in database has been changed", false, true);
+    amountOfInactiveDays = newValue;
 }
 
 void Server::TCPDelayChanged(bool lowTCP)

@@ -99,6 +99,8 @@ public:
     bool isTrayPopupAllowed() const { return showTrayPopup; }
     bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
 
+    int playerDeleteDays() const { return amountOfInactiveDays; }
+
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
 
 signals:
@@ -126,6 +128,7 @@ public slots:
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
     void useBattleFileLogChanged(bool logging);
+    void inactivePlayersDeleteDaysChanged(int newValue);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);
@@ -180,6 +183,7 @@ public slots:
     void loadRatedBattlesSettings();
 
     void processDailyRun();
+    void updateDatabase();
     void updateRatings();
 
     void atServerShutDown();
@@ -198,6 +202,7 @@ private:
     bool showLogMessages;
     bool useBattleFileLog;
     bool useChannelFileLog;
+    int amountOfInactiveDays;
     bool lowTCPDelay;
     bool safeScripts;
     bool passwordProtected;

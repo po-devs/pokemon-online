@@ -129,7 +129,7 @@ void ServerWidget::openPluginConfig()
 
 void ServerWidget::openPlayers()
 {
-    PlayersWindow *w = new PlayersWindow();
+    PlayersWindow *w = new PlayersWindow(0, server->playerDeleteDays());
 
     w->show();
 
@@ -165,6 +165,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(privacyChanged(int)), server, SLOT(regPrivacyChanged(int)));
     connect(w, SIGNAL(announcementChanged(QString)), server, SLOT(announcementChanged(QString)));
     connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
+    connect(w, SIGNAL(inactivePlayersDeleteDaysChanged(int)), server, SLOT(inactivePlayersDeleteDaysChanged(int)));
     connect(w, SIGNAL(mainChanChanged(QString)), server, SLOT(mainChanChanged(QString)));
     connect(w, SIGNAL(latencyChanged(bool)), server, SLOT(TCPDelayChanged(bool)));
     connect(w, SIGNAL(safeScriptsChanged(bool)), server, SLOT(safeScriptsChanged(bool)));

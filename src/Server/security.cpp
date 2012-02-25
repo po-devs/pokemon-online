@@ -447,6 +447,19 @@ void SecurityManager::exportDatabase()
     Server::print("Member database exported!");
 }
 
+void SecurityManager::processDailyRun(int maxdays)
+{
+    QDate currentDate = QDate::currentDate();
+    QDate tempDate;
+    QSqlQuery q;
+    q.exec("select name, laston from trainers order by name asc");
+    while(q.next()) {
+        tempDate = QDate::fromString(q.value(1).toString(), "yyyy-MM-dd");
+        if(tempDate.daysTo(currentDate) > maxdays) {
+            SecurityManager::deleteUser(q.value(0).toString());
+        }
+    }
+}
 
 /* Used for threads */
 SecurityManager * SecurityManager::instance = new SecurityManager();
