@@ -17,6 +17,13 @@ Analyzer::~Analyzer()
 void Analyzer::keepAlive()
 {
     pingSent++;
+
+    // You could uncomment the following, but what's the point of disconnecting someone when he could resume his connection?
+//    /* If the player hasn't answered for too long, disconnecting */
+//    if (pingSent - pingedBack > 9) {
+//        emit logout();
+//    }
+
     /* Seems that the keep alive option doesn't work on all computers */
     notify(KeepAlive, pingSent);
 }
