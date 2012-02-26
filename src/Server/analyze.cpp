@@ -212,7 +212,11 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case Logout:
     {
-        emit logout();
+        if (socket().id() == 0) {
+            emit ipRefused();
+        } else {
+            emit logout();
+        }
         break;
     }
     case SendMessage:
@@ -334,9 +338,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             emit ban(id);
             break;
         }
-    case Logout:
-        emit ipRefused();
-        break;
     case ServNameChange:
         emit invalidName();
         break;

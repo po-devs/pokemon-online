@@ -92,7 +92,6 @@ public:
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);
     void removeChannel(int chanid);
-    bool hasKnowledgeOf(Player *other) const;
     bool isInSameChannel(const Player *other) const;
     bool hasBattle(int battleId) const;
     void addBattle(int battleid);
@@ -127,7 +126,8 @@ public:
 
     QStringList getTierList() const;
 
-    void doWhenDC();
+    void doWhenDC(); // when the player  disconnects, but we still want to keep some info
+    void doWhenDQ(); // when we really want to remove the player
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 

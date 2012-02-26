@@ -162,7 +162,7 @@ public slots:
     void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
     void joinRequest(int player, const QString &chn);
-    void leaveRequest(int player, int chan);
+    void leaveRequest(int player, int chan, bool keepChannelForPlayer=false);
     void ipChangeRequested(int player, const QString &ip);
     void info(int , const QString& );
 
@@ -266,7 +266,8 @@ private:
     int freebattleid() const;
     int freechannelid() const;
     /* removes a player */
-    void removePlayer(int id);
+    void disconnectPlayer(int id); // keeps info in case of a reconnect
+    void removePlayer(int id); // keeps no info
     /* creates a channel */
     int addChannel(const QString &name="", int playerid=0);
     void removeChannel(int channelid);
