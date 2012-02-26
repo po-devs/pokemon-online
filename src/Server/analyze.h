@@ -141,6 +141,7 @@ signals:
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
+    void logout();
     /* Used to tell the command is finished - and that any pending updated() is good to go */
     void endCommand();
 public slots:

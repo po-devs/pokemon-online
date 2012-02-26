@@ -815,6 +815,16 @@ bool Player::ladder() const
     return spec()[PlayerFlags::LadderEnabled];
 }
 
+void Player::logout()
+{
+    emit logout(id());
+}
+
+bool Player::hasReconnectPass() const
+{
+    return isLoggedIn() && waiting_pass.length() > 0;
+}
+
 void Player::loggedIn(LoginInfo *info)
 {
     if (state()[LoginAttempt])

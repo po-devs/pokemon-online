@@ -36,7 +36,8 @@ public:
         LoggedIn,
         Battling,
         Away,
-        LadderEnabled
+        LadderEnabled,
+        WaitingReconnect
     };
 
     enum Spec
@@ -77,6 +78,7 @@ public:
     Pokemon::gen gen() const;
     int teamCount() const;
     int rating(const QString &tier);
+    bool hasReconnectPass() const;
 
     virtual const quint16& avatar() const;
     quint16 &avatar();
@@ -176,6 +178,7 @@ signals:
     void spectatingStopped(int, int battleId);
     void findBattle(int,const FindBattleData&);
     void battleSearchCancelled(int);
+    void logout(int);
     void unlocked();
     void joinRequested(int id, const QString &channel);
     void leaveRequested(int id, int channelid);
@@ -218,6 +221,7 @@ public slots:
     void ipChangeRequested(const QString &ip);
     void autoKick();
     void sendUpdatedIfNeeded();
+    void logout();
 private:
     Analyzer *myrelay;
     int lockCount;
