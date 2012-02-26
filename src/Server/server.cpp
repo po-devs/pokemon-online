@@ -615,7 +615,7 @@ void Server::regMaxChanged(const int &numMax)
 void Server::regPasswordChanged(bool &isEnabled) {
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
-    registry_connection->notify(NetworkServ::ServPassToggle, isEnabled);
+    registry_connection->notify(NetworkServ::ServerPass, isEnabled);
 }
 
 void Server::changeScript(const QString &script)
