@@ -36,7 +36,7 @@ enum Command {
     ServDescChange,
     ServNameChange,
     SendPM = 20,
-    Away,
+    OptionsChange,
     GetUserInfo,
     GetUserAlias,
     GetBanList,
