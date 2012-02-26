@@ -151,6 +151,15 @@ int IvBox::calculateHiddenPowerType()
 
 void IvBox::changeHiddenPower(int newType)
 {
+    if (newType == calculateHiddenPowerType()) {
+        return;
+    }
+    QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
 
+    for (int i = 0; i < std::max(6, possibility.size()); i++) {
+        poke().setDV(i, possibility[i].toInt());
+    }
+
+    updateIVs();
 }
 
