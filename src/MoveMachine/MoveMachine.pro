@@ -11,3 +11,5 @@ HEADERS += mainwindow.h \
     ../Utilities/otherwidgets.h \
     ../PokemonInfo/movesetchecker.h
 FORMS += mainwindow.ui
+
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
