@@ -16,6 +16,12 @@
   <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,100,0,0,0,0">
    <item row="0" column="3" colspan="3">
     <widget class="QPushButton" name="done">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>&amp;Trainer Home</string>
      </property>
