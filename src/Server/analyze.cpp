@@ -152,7 +152,7 @@ void Analyzer::stopReceiving()
 
 void Analyzer::finishSpectating(qint32 battleId)
 {
-    notify(SpectatingBattleFinished, battleId);
+    notify(SpectateBattle, Flags(0), battleId);
 }
 
 void Analyzer::startRankings(int page, int startingRank, int total)
@@ -368,15 +368,13 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case SpectateBattle:
         {
             qint32 id;
-            in >> id;
-            emit battleSpectateRequested(id);
-            break;
-        }
-    case SpectatingBattleFinished:
-        {
-            qint32 id;
-            in >> id;
-            emit battleSpectateEnded(id);
+            Flags data;
+            in >> id, data;
+
+            if (data[0])
+                emit battleSpectateRequested(id);
+            else
+                emit battleSpectateEnded(id);
             break;
         }
     case SpectatingBattleChat:

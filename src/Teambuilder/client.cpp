@@ -1793,7 +1793,7 @@ void Client::stopWatching(int battleId)
     if (mySpectatingBattles.contains(battleId)) {
         mySpectatingBattles[battleId]->close();
         mySpectatingBattles.remove(battleId);
-        relay().notify(NetworkCli::SpectatingBattleFinished, qint32(battleId));
+        relay().notify(NetworkCli::SpectateBattle, Flags(0), qint32(battleId));
     }
 }
 

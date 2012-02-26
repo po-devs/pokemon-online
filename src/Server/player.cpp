@@ -290,7 +290,7 @@ void Player::ipChangeRequested(const QString& ip)
 void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
 {
     battlesSpectated.insert(battleId);
-    relay().notify(NetworkServ::SpectateBattle, qint32(battleId), battle);
+    relay().notify(NetworkServ::SpectateBattle, Flags(1), qint32(battleId), battle);
 }
 
 void Player::cancelChallenges()
