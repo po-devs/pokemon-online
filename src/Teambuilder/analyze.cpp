@@ -282,7 +282,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case KeepAlive: {
-        notify(KeepAlive);
+        quint16 ping;
+        in >> ping;
+        notify(KeepAlive, ping);
         break;
     }
     case PlayersList: {

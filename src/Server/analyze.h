@@ -159,12 +159,13 @@ private:
 
     GenericNetwork *mysocket;
     QMutex mutex;
-    bool pingedBack;
+    quint16 pingedBack;
+    quint16 pingSent;
     bool mIsInCommand;
 };
 
 template<class SocketClass>
-Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true), mIsInCommand(false)
+Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(0), pingSent(0), mIsInCommand(false)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
