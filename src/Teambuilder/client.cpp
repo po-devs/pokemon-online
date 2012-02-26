@@ -211,6 +211,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
+    connect(relay, SIGNAL(reconnectPassGiven(QByteArray)), SLOT(setReconnectPass(QByteArray)));
 }
 
 class TierActionFactoryTeams : public TierActionFactory
@@ -1380,8 +1381,12 @@ void Client::askForPass(const QByteArray &salt) {
     relay().notify(NetworkCli::AskForPass, hash);
 }
 
-void Client::serverPass(const QByteArray &salt) {
+void Client::setReconnectPass(const QByteArray &pass)
+{
+    reconnectPass = pass;
+}
 
+void Client::serverPass(const QByteArray &salt) {
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveServerPassword(relay().getIp(), serverName, pass, warns);

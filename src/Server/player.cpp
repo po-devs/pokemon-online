@@ -832,7 +832,9 @@ void Player::loggedIn(LoginInfo *info)
     spec().setFlag(SupportsZipCompression, info->data[PlayerFlags::SupportsZipCompression]);
     spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
     state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
+    state().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
+    reconnectBits() = info->reconnectBits;
 
     assignNewColor(info->trainerColor);
 
@@ -856,7 +858,7 @@ void Player::loggedIn(LoginInfo *info)
             waiting_pass[i] = uchar((true_rand() % (90-49)) + 49);
         }
 
-        relay().notify(NetworkServ::ServerPass, waiting_pass.toAscii());
+        relay().notify(NetworkServ::ServerPass, waiting_pass);
         waiting_name = info->trainerName;
         return;
     } else {
@@ -868,7 +870,7 @@ void Player::loggedIn(LoginInfo *info)
 
 void Player::serverPasswordSent(const QByteArray &_hash)
 {
-    if (Server::serverIns->correctPass(_hash, waiting_pass.toAscii())) {
+    if (Server::serverIns->correctPass(_hash, waiting_pass)) {
         server_pass_sent = true;
         waiting_pass.clear();
         testAuthentification(waiting_name);
@@ -1062,7 +1064,23 @@ void Player::ratingsFound()
 
 void Player::sendLoginInfo()
 {
-    relay().sendLogin(bundle(), getTierList());
+    if (spec()[ReconnectEnabled]) {
+        if (waiting_pass.length() == 0) {
+            generateReconnectPass();
+        }
+    }
+    relay().sendLogin(bundle(), getTierList(), waiting_pass);
+}
+
+static uchar random_character()
+{
+    return rand();
+}
+
+void Player::generateReconnectPass()
+{
+    waiting_pass.resize(8);
+    std::generate(waiting_pass.begin(), waiting_pass.end(), &random_character);
 }
 
 QStringList Player::getTierList() const

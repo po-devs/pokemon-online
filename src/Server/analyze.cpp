@@ -65,9 +65,21 @@ void Analyzer::sendPM(int dest, const QString &mess)
     notify(SendPM, qint32(dest), mess);
 }
 
-void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers)
+void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers, const QByteArray &reconnectPass)
 {
-    notify(Login, Flags(0), p, tiers);
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(Login) << Flags((!reconnectPass.isEmpty()) << LoginCommand::HasReconnectPass);
+
+    if (!reconnectPass.isEmpty()) {
+        out << reconnectPass;
+    }
+
+    out << p << tiers;
+
+    emit sendCommand(tosend);
+
 }
 
 void Analyzer::notifyAway(qint32 id, bool away)
@@ -369,7 +381,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         {
             qint32 id;
             Flags data;
-            in >> id, data;
+            in >> id >> data;
 
             if (data[0])
                 emit battleSpectateRequested(id);

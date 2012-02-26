@@ -28,6 +28,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(QString, lastFindBattleIp);
     PROPERTY(Flags, spec);
     PROPERTY(Flags, state);
+    PROPERTY(quint8, reconnectBits);
 public:
     enum State
     {
@@ -42,7 +43,8 @@ public:
     {
         First=0,
         SupportsZipCompression,
-        IdsWithMessage
+        IdsWithMessage,
+        ReconnectEnabled
     };
 
     QSet<int> battlesSpectated;
@@ -55,8 +57,9 @@ public:
     TeamBattle &team(int i = 0);
     const TeamBattle &team(int i = 0) const;
 
-    /* Sends a message to the player */
+    void generateReconnectPass();
     void sendLoginInfo();
+    /* Sends a message to the player */
     void sendMessage(const QString &mess, bool html=false);
     void sendPlayers(const QVector<reference<PlayerInfo> > & bundles);
 
@@ -232,7 +235,8 @@ private:
     bool needToUpdate;
 
     TeamsHolder m_teams;
-    QString waiting_name, waiting_pass;
+    QString waiting_name;
+    QByteArray waiting_pass; //Serves as Server Pass during the first login phase, reconnect pass after that
 
     QSet<int> battles;
     QHash<QString, quint16> &ratings();

@@ -134,6 +134,7 @@ public slots:
     void tiersReceived(const QStringList &tiers);
     void playerLogout(int);
     void sendRegister();
+    void setReconnectPass(const QByteArray&);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
     /* Display the info for that player */
@@ -316,6 +317,7 @@ private:
     quint16 port;
     int _mid;
     int selectedChannel;
+    QByteArray reconnectPass;
 
     ProtocolVersion serverVersion;
     QString serverName;

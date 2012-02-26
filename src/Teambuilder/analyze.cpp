@@ -30,8 +30,8 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     DataStream out(&tosend, QIODevice::WriteOnly);
 
     Flags network;
-    network.setFlags( (1 << LoginCommand::HasClientType) | (1 << LoginCommand::HasVersionNumber) | (1 << LoginCommand::HasTrainerInfo)
-                      | (1 << LoginCommand::HasTeams));
+    network.setFlags( (1 << LoginCommand::HasClientType) | (1 << LoginCommand::HasVersionNumber) | (1 << LoginCommand::HasReconnect)
+                      | (1 << LoginCommand::HasTrainerInfo) | (1 << LoginCommand::HasTeams));
 
     if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);
@@ -57,6 +57,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     //                  IdsWithMessage
 
     out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.profile().name() << data;
+
+    /* Can reconnect even if the last 2 bytes of the IP are different */
+    out << uchar(16);
+
     if (color.isValid()) {
         out << color;
     }
@@ -311,7 +315,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         if (network[0]) {
             QByteArray reconnectPass;
             in >> reconnectPass;
-            (void) reconnectPass;
+            emit reconnectPassGiven(reconnectPass);
         }
         PlayerInfo p;
         in >> p;
