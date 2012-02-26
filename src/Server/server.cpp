@@ -862,6 +862,7 @@ void Server::loggedIn(int id, const QString &name)
         Player *p = player(id);
 
         p->changeState(Player::LoggedIn, true);
+
         groups[All].insert(p);
         if (p->supportsZip()) {
             groups[SupportsZip].insert(p);

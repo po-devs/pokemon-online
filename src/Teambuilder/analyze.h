@@ -111,6 +111,7 @@ signals:
     void addChannel(QString name, int id);
     void channelNameChanged(int id, const QString &name);
     void removeChannel(int id);
+    void reconnectPassGiven(const QByteArray&);
 public slots:
     /* slots called by the network */
     void error();
