@@ -22,11 +22,11 @@ CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins
 CONFIG(po_serverplugins):CONFIG += po_server
 
 CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) {
-    SUBDIRS = src/Utilities
+    SUBDIRS += src/Utilities
 }
 
 CONFIG(po_client) | CONFIG(po_server) {
-    SUBDIRS = src/PokemonInfo
+    SUBDIRS += src/PokemonInfo
 }
 
 CONFIG(po_client) {
