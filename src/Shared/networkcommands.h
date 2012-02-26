@@ -46,12 +46,11 @@ enum Command {
     SpectatingBattleMessage,
     SpectatingBattleChat,
     SpectatingBattleFinished = 30,
-    LadderChange,
-    ShowTeamChange,
+    Unused31,
+    Unused32,
     VersionControl_,
     TierSelection,
     ServMaxChange,
-    ServPassToggle = 60, // >.>
     FindBattle,
     ShowRankings,
     Announcement,
@@ -75,7 +74,7 @@ enum Command {
     SpecialPass,
     ServerListEnd,              // Indicates end of transmission for registry.
     SetIP,                      // Indicates that a proxy server sends the real ip of client
-    ServerPass                  // Prompts for the server password
+    ServerPass                 // Prompts for the server password
 };
 
 enum ProtocolError {

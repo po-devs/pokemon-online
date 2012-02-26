@@ -137,7 +137,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
 
     /* PM System */
     pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
-    connect(this, SIGNAL(TogglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
+    connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
 
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
@@ -776,7 +776,7 @@ void Client::togglePMTabs(bool b)
     QSettings s;
     s.setValue("pms_tabbed", b);
     pmsTabbed = b;
-    emit TogglePMs(b);
+    emit togglePMs(b);
 }
 
 void Client::togglePMLogs(bool b) {

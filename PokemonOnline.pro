@@ -18,12 +18,15 @@ CONFIG += ordered
 
 CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins
 
-!CONFIG(po_server):!CONFIG(po_serverplugins):CONFIG += po_client
+!CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
 
+CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) {
+    SUBDIRS = src/Utilities
+}
+
 CONFIG(po_client) | CONFIG(po_server) {
-    SUBDIRS = src/Utilities \
-              src/PokemonInfo
+    SUBDIRS = src/PokemonInfo
 }
 
 CONFIG(po_client) {
@@ -46,6 +49,10 @@ CONFIG(po_serverplugins) {
                src/StatsExtracter \
                src/BattleManager \
                src/BattleLogs
+}
+
+CONFIG(po_registry) {
+    SUBDIRS += src/Registry
 }
 
 macx:QMAKE_CC=echo

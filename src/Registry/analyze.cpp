@@ -89,7 +89,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> max;
             emit maxChange(max);
         }
-    case ServPassToggle:
+    case ServerPass:
         {
             bool toggle;
             in >> toggle;
