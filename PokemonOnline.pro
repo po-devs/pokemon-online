@@ -31,7 +31,8 @@ CONFIG(po_client) | CONFIG(po_server) {
 
 CONFIG(po_client) {
     SUBDIRS += src/BattleManager \
-               src/Teambuilder
+               src/Teambuilder \
+               src/MoveMachine
 }
 
 CONFIG(po_clientplugins) {
