@@ -1065,7 +1065,6 @@ void Server::incomingConnection(int i)
     if (numPlayers() >= serverPlayerMax && serverPlayerMax != 0) {
         printLine(QString("Stopped IP %1 from logging in, server full.").arg(ip));
         Player* p = new Player(newconnection,-1);
-        connect(p, SIGNAL(disconnected(int)), p, SLOT(deleteLater()));
         p->sendMessage("The server is full.");
         AntiDos::obj()->disconnect(p->ip(), -1);
         p->kick();
@@ -1658,6 +1657,12 @@ void Server::recvTeam(int id, const QString &_name)
 void Server::disconnected(int id)
 {
     printLine(QString("Received disconnection from player %1").arg(name(id)));
+    removePlayer(id);
+}
+
+void Server::logout(int id)
+{
+    printLine(QString("Received logout from player %1").arg(name(id)));
     removePlayer(id);
 }
 

@@ -151,6 +151,7 @@ public slots:
     void recvPM(int src, int dest, const QString &mess);
     void recvTeam(int id, const QString &name);
     void disconnected(int id);
+    void logout(int id);
     void dealWithChallenge(int from, int to, const ChallengeInfo &c);
     void startBattle(int id1, int id2, const ChallengeInfo &c, int team1=0,int team2=0);
     void battleResult(int battleid, int desc, int winner, int loser);

@@ -210,6 +210,11 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
             break;
         }
+    case Logout:
+    {
+        emit logout();
+        break;
+    }
     case SendMessage:
         {
             Flags network, data;
