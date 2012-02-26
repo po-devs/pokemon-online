@@ -439,9 +439,16 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
     case SpectateBattle: {
         BattleConfiguration conf;
+        Flags f;
         qint32 battleId;
-        in >> battleId >> conf;
-        emit spectatedBattle(battleId, conf);
+        in >> battleId;
+
+        if (f[0]) {
+            in >> conf;
+            emit spectatedBattle(battleId, conf);
+        } else {
+            emit spectatingBattleFinished(battleId);
+        }
         break;
     }
     case SpectatingBattleMessage: {
@@ -454,12 +461,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         QByteArray command(buf, len);
         delete [] buf;
         emit spectatingBattleMessage(battleId, command);
-        break;
-    }
-    case SpectatingBattleFinished: {
-        qint32 battleId;
-        in >> battleId;
-        emit spectatingBattleFinished(battleId);
         break;
     }
     case NetworkCli::VersionControl_: {
