@@ -70,8 +70,10 @@ Player::~Player()
 
 void Player::autoKick()
 {
-    if (!isLoggedIn())
+    if (!isLoggedIn()) {
+        blockSignals(false); // In case we autokick an alt that was already disconnected
         kick();
+    }
 }
 
 void Player::ladderChange(bool n)
@@ -210,11 +212,29 @@ void Player::doWhenDC()
     foreach(int id, battles) {
         battleForfeited(id);
     }
+    foreach(Player *p, knowledge) {
+        if (p->isLoggedIn()) {
+            p->relay().sendLogout(this->id());
+        }
+    }
+}
+
+void Player::doWhenDQ()
+{
+    relay().stopReceiving();
+    cancelChallenges();
+    cancelBattleSearch();
+
+    foreach(int id, battles) {
+        battleForfeited(id);
+    }
     foreach(int id, battlesSpectated) {
         quitSpectating(id);
     }
     foreach(Player *p, knowledge) {
-        p->relay().sendLogout(this->id());
+        if (isLoggedIn() && p->isLoggedIn()) {
+            p->relay().sendLogout(this->id());
+        }
         p->knowledge.remove(this);
     }
     knowledge.clear();
@@ -955,10 +975,6 @@ void Player::findTierAndRating(bool force)
 void Player::findTier(int slot)
 {
     team(slot).tier = TierMachine::obj()->findTier(team(slot));
-}
-
-bool Player::hasKnowledgeOf(Player *other) const {
-    return knowledge.contains(other) || hasKnowledgeOf(other);
 }
 
 bool Player::isInSameChannel(const Player *other) const {
