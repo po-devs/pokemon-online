@@ -152,7 +152,7 @@ void Analyzer::CPTUnban(const QString &name)
 
 void Analyzer::goAway(bool away)
 {
-    notify(Away, away);
+    notify(OptionsChange, Flags(away << 1));
 }
 
 void Analyzer::disconnectFromHost()
@@ -430,11 +430,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit banListReceived(s,i);
         break;
     }
-    case Away: {
+    case OptionsChange: {
         qint32 id;
-        bool away;
-        in >> id >> away;
-        emit awayChanged(id, away);
+        Flags f;
+        in >> id >> f;
+        emit awayChanged(id, f[1]);
         break;
     }
     case SpectateBattle: {

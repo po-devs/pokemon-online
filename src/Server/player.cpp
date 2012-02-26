@@ -79,7 +79,7 @@ void Player::ladderChange(bool n)
     if (!isLoggedIn())
         return;//INV BEHAV
     state().setFlag(LadderEnabled, n);
-    emit updated(id());
+    relay().notifyLadderChange(id(), n);
 }
 
 void Player::cancelBattleSearch()

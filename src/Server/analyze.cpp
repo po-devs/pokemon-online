@@ -72,7 +72,12 @@ void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers)
 
 void Analyzer::notifyAway(qint32 id, bool away)
 {
-    notify(Away, id, away);
+    notify(OptionsChange, id, Flags(away << 1));
+}
+
+void Analyzer::notifyLadderChange(qint32 id, bool ladder)
+{
+    notify(OptionsChange, id, Flags(ladder));
 }
 
 void Analyzer::sendLogout(int num)
@@ -336,11 +341,14 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case GetBanList:
         emit banListRequested();
         break;
-    case Away:
+    case OptionsChange:
         {
-            bool away;
-            in >> away;
-            emit awayChange(away);
+            Flags f;
+            in >> f;
+
+            emit ladderChange(f[0]);
+            emit awayChange(f[1]);
+
             break;
         }
     case CPBan:
@@ -377,13 +385,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             QString str;
             in >> id >> str;
             emit battleSpectateChat(id, str);
-            break;
-        }
-    case LadderChange:
-        {
-            bool change;
-            in >> change;
-            emit ladderChange(change);
             break;
         }
     case TierSelection:

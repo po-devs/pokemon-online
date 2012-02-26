@@ -799,7 +799,8 @@ void Client::enableLadder(bool b)
 {
     QSettings s;
     s.setValue("enable_ladder", b);
-    relay().notify(NetworkCli::LadderChange, b);
+
+    relay().notify(NetworkCli::OptionsChange, Flags(b));
 }
 
 void Client::setChannelSelected(int id)

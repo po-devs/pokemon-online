@@ -59,6 +59,7 @@ public:
     void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
+    void notifyLadderChange(qint32 id, bool ladder);
     void startRankings(int page, int startingRank, int total);
     void sendRanking(const QString name, int points);
     void stopReceiving();
