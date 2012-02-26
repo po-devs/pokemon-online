@@ -16,13 +16,9 @@ Analyzer::~Analyzer()
 
 void Analyzer::keepAlive()
 {
-    if (!pingedBack) {
-        //emit disconnected();
-        //return;
-    }
-    pingedBack = false;
+    pingSent++;
     /* Seems that the keep alive option doesn't work on all computers */
-    notify(KeepAlive);
+    notify(KeepAlive, pingSent);
 }
 
 void Analyzer::sendMessage(const QString &message, bool html)
@@ -281,8 +277,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit forfeitBattle(id);
         break;
     case KeepAlive:
-        pingedBack = true;
+    {
+        in >> pingedBack;
         break;
+    }
     case Register:
         if (socket().id() != 0)
         {
