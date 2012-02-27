@@ -1983,7 +1983,7 @@ void Client::connected()
     if (reconnectPass.length() > 0) {
         relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
     } else {
-        relay().notify(Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
+        relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
 }
 

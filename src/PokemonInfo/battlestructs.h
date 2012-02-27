@@ -490,7 +490,7 @@ struct BattleConfiguration
         return receivingMode[slot] == Player;
     }
 
-    bool isInBattle(int id) {
+    bool isInBattle(int id) const {
         return ids[0] == id || ids[1] == id;
     }
 
