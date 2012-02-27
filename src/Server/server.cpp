@@ -1183,11 +1183,6 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
     processLoginDetails(player(id));
 }
 
-void Server::resendBattleInfos(int player, int battle)
-{
-
-}
-
 void Server::cancelSearch(int id)
 {
     player(id)->battleSearch() = false;
