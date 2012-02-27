@@ -17,7 +17,7 @@
 enum Command {
     ZipCommand = 0,
     Login,
-    Unused2,
+    Reconnect,
     Logout,
     SendMessage,
     PlayersList,

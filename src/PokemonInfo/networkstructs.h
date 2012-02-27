@@ -50,6 +50,12 @@ namespace PlayerFlags {
         IdsWithMessage,
         Idle
     };
+    enum {
+        NoReconnectData,
+        WrongHash,
+        NoHistory,
+        IPMismatch
+    };
 }
 
 /* Struct representing a player's data */

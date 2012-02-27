@@ -102,7 +102,7 @@ public:
     int playerDeleteDays() const { return amountOfInactiveDays; }
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
-
+    void processLoginDetails(Player *p);
 signals:
     void chatmessage(const QString &name);
     void servermessage(const QString &name);
@@ -162,9 +162,12 @@ public slots:
     void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
     void joinRequest(int player, const QString &chn);
+    /* Makes a player join a channel */
+    void joinChannel(int playerid, int chanid);
     void leaveRequest(int player, int chan, bool keepChannelForPlayer=false);
     void ipChangeRequested(int player, const QString &ip);
-    void info(int , const QString& );
+    void info(int , const QString &);
+    void onReconnect(int, int, const QByteArray &);
 
     void kick(int i);
     void silentKick(int i);
@@ -271,8 +274,6 @@ private:
     /* creates a channel */
     int addChannel(const QString &name="", int playerid=0);
     void removeChannel(int channelid);
-    /* Makes a player join a channel */
-    void joinChannel(int playerid, int chanid);
     /* Sends the list of channels to a player */
     void sendChannelList(int player);
 

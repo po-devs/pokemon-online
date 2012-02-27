@@ -226,6 +226,16 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
         break;
     }
+    case Reconnect:
+    {
+        quint32 id;
+        QByteArray hash;
+
+        in >> id >> hash;
+
+        emit reconnect(id, hash);
+        break;
+    }
     case SendMessage:
         {
             Flags network, data;
