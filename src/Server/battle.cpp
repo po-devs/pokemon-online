@@ -2182,7 +2182,7 @@ void BattleSituation::testCritical(int player, int target)
     bool critical;
     if (gen() == 1) {
         int randnum = randint(512);
-        int critChance = (tmove(player).critRaise & 1) * 7 + 1;
+        int critChance = ((tmove(player).critRaise & 1) * 7 + 1) * (tmove(player).critRaise >= 2 ? 4 : 1);
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
         critical = randnum < critChance * baseSpeed;
     } else {
