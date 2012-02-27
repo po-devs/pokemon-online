@@ -1815,7 +1815,7 @@ int BattleSituation::timeLeft(int player)
   Beware of the multi threading problems.
   Don't change the order of the instructions.
   ****************************************/
-void BattleSituation::Event(QTimerEvent *)
+void BattleSituation::timerEvent(QTimerEvent *)
 {
     if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
         schedule(); // the battle is finished, isn't it?
