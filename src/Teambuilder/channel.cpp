@@ -124,6 +124,8 @@ void Channel::anchorClicked(const QUrl &url)
             QString cname = url.path().mid(5);
             client->join(cname);
             client->activateChannel(cname);
+        } else if (url.path() == "reconnect") {
+            client->reconnect();
         }
     } else {
         QDesktopServices::openUrl(url);

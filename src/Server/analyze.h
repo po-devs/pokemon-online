@@ -74,6 +74,8 @@ public:
 
     void delay();
 
+    void swapIds(Analyzer *other);
+
     /* Convenience functions to avoid writing a new one every time */
     inline void emitCommand(const QByteArray &command) {
         emit sendCommand(command);

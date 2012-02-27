@@ -529,6 +529,13 @@ void Analyzer::delay()
     delayCount += 1;
 }
 
+void Analyzer::swapIds(Analyzer *other)
+{
+    int id = other->socket().id();
+    other->socket().changeId(socket().id());
+    socket().changeId(id);
+}
+
 void Analyzer::sendPacket(const QByteArray &packet)
 {
     emit packetToSend(packet);

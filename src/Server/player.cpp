@@ -937,6 +937,7 @@ void Player::associateWith(Player *other)
     other->relay().disconnect(other);
     myrelay->disconnect(this);
 
+    myrelay->swapIds(other->myrelay);
     std::swap(myrelay, other->myrelay);
 
     other->myip = other->myrelay->ip();
@@ -956,6 +957,9 @@ void Player::associateWith(Player *other)
     SecurityManager::Member m = SecurityManager::member(name());
     m.ip = ip().toAscii();
     SecurityManager::updateMember(m);
+
+    /* Deals with anti DOS */
+    AntiDos::obj()->connecting(ip());
 }
 
 void Player::loggedIn(LoginInfo *info)
