@@ -12,6 +12,7 @@ QNickValidator SecurityManager::val(NULL);
 QSet<QString> SecurityManager::bannedIPs;
 QHash<QString, QString> SecurityManager::bannedMembers;
 int SecurityManager::nextLoadThreadNumber = 0;
+int SecurityManager::dailyRunDays = 182;
 LoadThread ** SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
 
@@ -142,6 +143,7 @@ void SecurityManager::init()
 
     ithread = new InsertThread<Member>();
     connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), instance, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
+    connect(ithread, SIGNAL(processDailyRun(QSqlQuery*)), instance, SLOT(dailyRunEx(QSqlQuery*)), Qt::DirectConnection);
 
     ithread->start();
 
@@ -449,17 +451,23 @@ void SecurityManager::exportDatabase()
 
 void SecurityManager::processDailyRun(int maxdays)
 {
-    QSqlQuery q;
-    QString limit = QDate::currentDate().addDays(-maxdays).toString("yyyy-MM-dd");
+    dailyRunDays = maxdays;
+    ithread->addDailyRun();
+}
+
+void SecurityManager::dailyRunEx(QSqlQuery *q)
+{
+    QString limit = QDate::currentDate().addDays(-dailyRunDays).toString("yyyy-MM-dd");
 
     if (SQLCreator::databaseType == SQLCreator::MySQL) {
-        q.prepare("delete from trainers where laston<? and auth=0 and banned=0");
+        q->prepare("delete from trainers where laston<? and auth=0 and banned=0");
     } else {
-        q.prepare("delete from trainers where laston<? and auth=0 and banned='false'");
+        q->prepare("delete from trainers where laston<? and auth=0 and banned='false'");
     }
-    q.addBindValue(limit);
+    q->addBindValue(limit);
 
-    q.exec();
+    q->exec();
+    q->finish();
 }
 
 /* Used for threads */

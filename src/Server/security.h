@@ -114,7 +114,7 @@ public:
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);
     static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
-
+    static void dailyRunEx(QSqlQuery *q);
 private:
     static void loadMembers();
 
@@ -139,6 +139,7 @@ private:
     static LoadThread * getThread();
 
     static QNickValidator val;
+    static int dailyRunDays;
 };
 
 #endif // SECURITY_H
