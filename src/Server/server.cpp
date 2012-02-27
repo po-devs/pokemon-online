@@ -1563,19 +1563,19 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         pw->battleResult(battleid, Close, battle->mode(), winner, loser);
         pl->battleResult(battleid, Close, battle->mode(), winner, loser);
     } else {
-        int desc = disconnected ? Tie : desc;
+        int _desc = disconnected ? Tie : desc;
 
-        if (desc == Forfeit) {
+        if (_desc == Forfeit) {
             battle->playerForfeit(loser);
         }
-        if (desc != Tie && rated) {
+        if (_desc != Tie && rated) {
             QString winn = pw->name();
             QString lose = pl->name();
             TierMachine::obj()->changeRating(winn, lose, tier);
             pw->findRating(tier);
             pl->findRating(tier);
         }
-        myengine->beforeBattleEnded(winner, loser, desc, battleid);
+        myengine->beforeBattleEnded(winner, loser, _desc, battleid);
 
         ++lastDataId;
         foreach(int chanid, pw->getChannels()) {
@@ -1584,7 +1584,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
+                    p->battleResult(battleid, _desc, battle->mode(), winner, loser);
                 }
             }
         }
@@ -1594,18 +1594,18 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
+                    p->battleResult(battleid, _desc, battle->mode(), winner, loser);
                 }
             }
         }
-        if (desc == Forfeit) {
+        if (_desc == Forfeit) {
             printLine(QString("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
-        } else if (desc == Win) {
+        } else if (_desc == Win) {
             printLine(QString("%1 won his battle against %2").arg(name(winner), name(loser)));
-        } else if (desc == Tie) {
+        } else if (_desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
-        myengine->afterBattleEnded(winner, loser, desc, battleid);
+        myengine->afterBattleEnded(winner, loser, _desc, battleid);
     }
 
     if (desc == Forfeit) {
