@@ -52,7 +52,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "show_timestamps", true);
     setDefaultValue(s, "show_timestamps2", true);
     setDefaultValue(s, "pm_flashing", true);
-    setDefaultValue(s, "pm_disabled", false);
+    setDefaultValue(s, "reject_incoming_pms", false);
     setDefaultValue(s, "pms_tabbed", false);
     setDefaultValue(s, "pms_logged", true);
     setDefaultValue(s, "animate_hp_bar", true);

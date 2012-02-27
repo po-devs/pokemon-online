@@ -36,9 +36,10 @@ private:
 struct PMStruct : public QWidget
 {
     Q_OBJECT
-    PROPERTY(int, id);
+    PROPERTY(int, id)
+
 public:
-    PMStruct(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false, bool pmDisabled = false, int starterAuth = 0);
+    PMStruct(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false);
     ~PMStruct() {
         emit destroyed(id(), m_name);
     }
@@ -71,7 +72,6 @@ public slots:
     void sendMessage();
     void ignore(bool);
     void challenge();
-    void disablePM(bool, int starterAuth);
 
 protected:
     void closeEvent(QCloseEvent *event);
