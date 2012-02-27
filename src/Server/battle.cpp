@@ -312,6 +312,8 @@ void BattleSituation::addSpectator(Player *p)
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
     if (!blocked() && !finished()) {
         pendingSpectators.append(QPointer<Player>(p));
+        QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
+
         return;
     }
 
@@ -1665,6 +1667,25 @@ bool BattleSituation::allChoicesSet()
     return true;
 }
 
+void BattleSituation::clearSpectatorQueue()
+{
+    if (!blocked() && !finished()) {
+        QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
+        return;
+    }
+    if (pendingSpectators.size() > 0) {
+        QList<QPointer<Player> > copy = pendingSpectators;
+
+        pendingSpectators.clear();
+
+        foreach (QPointer<Player> p, copy) {
+            if (p) {
+                addSpectator(p);
+            }
+        }
+    }
+}
+
 void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
 {
     int player = spot(id);
@@ -1679,17 +1700,7 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     }
 
     /* Clear the queue of pending spectators */
-    if (pendingSpectators.size() > 0) {
-        QList<QPointer<Player> > copy = pendingSpectators;
-
-        pendingSpectators.clear();
-
-        foreach (QPointer<Player> p, copy) {
-            if (p) {
-                addSpectator(p);
-            }
-        }
-    }
+    clearSpectatorQueue();
 
     if (b.slot() < 0 || b.slot() >= numberOfSlots()) {
         return;
@@ -1804,7 +1815,7 @@ int BattleSituation::timeLeft(int player)
   Beware of the multi threading problems.
   Don't change the order of the instructions.
   ****************************************/
-void BattleSituation::timerEvent(QTimerEvent *)
+void BattleSituation::Event(QTimerEvent *)
 {
     if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
         schedule(); // the battle is finished, isn't it?

@@ -303,11 +303,12 @@ public:
 
         emitCommand(who, player, tosend);
     }
-public slots:
+public:
     void battleChoiceReceived(int id, const BattleChoice &b);
     void battleChat(int id, const QString &str);
-public:
     void spectatingChat(int id, const QString &str);
+private slots:
+    void clearSpectatorQueue();
 private:
     bool canCancel(int player);
     void cancel(int player);
