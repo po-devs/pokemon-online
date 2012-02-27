@@ -150,7 +150,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     } else {
         sortCBN = 0;
     }
-    pmFlashing = settings.value("reject_incoming_pms").toBool();
+    pmFlashing = settings.value("pm_flashing").toBool();
     if(settings.value("reject_incoming_pms").toBool()) {
         pmReject = 1;
     } else {
