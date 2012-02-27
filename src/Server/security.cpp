@@ -451,10 +451,15 @@ void SecurityManager::processDailyRun(int maxdays)
 {
     QSqlQuery q;
     QString limit = QDate::currentDate().addDays(-maxdays).toString("yyyy-MM-dd");
-    q.exec("select name, laston from trainers order by laston asc");
-    while(q.next() && q.value(1).toString().compare(limit) < 0) {
-        SecurityManager::deleteUser(q.value(0).toString());
+
+    if (SQLCreator::databaseType == SQLCreator::MySQL) {
+        q.prepare("delete from trainers where laston<? and auth=0 and banned=0");
+    } else {
+        q.prepare("delete from trainers where laston<? and auth=0 and banned='false'");
     }
+    q.addBindValue(limit);
+
+    q.exec();
 }
 
 /* Used for threads */
