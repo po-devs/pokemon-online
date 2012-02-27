@@ -50,6 +50,8 @@ QString ControlPanel::authorityText(int auth) const
         return tr("Moderator");
     } else if (auth == 2) {
         return tr("Administrator");
+    } else if (auth == 3) {
+        return tr("Owner");
     } else {
         return "";
     }
