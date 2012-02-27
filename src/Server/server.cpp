@@ -874,6 +874,8 @@ void Server::processLoginDetails(Player *p)
 {
     bool wasLoggedIn = p->isLoggedIn();
 
+    int id = p->id();
+
     p->changeState(Player::LoggedIn, true);
 
     if (!wasLoggedIn) {
@@ -890,7 +892,7 @@ void Server::processLoginDetails(Player *p)
         }
 
         if(!myengine->beforeLogIn(id) && playerExist(id)) {
-            mynames.remove(name.toLower());
+            mynames.remove(p->name().toLower());
             p->changeState(Player::LoggedIn, false);
             silentKick(id);
             return;

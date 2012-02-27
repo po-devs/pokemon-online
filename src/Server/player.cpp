@@ -231,15 +231,15 @@ void Player::doWhenDC()
 
 void Player::doWhenRC(bool wasLoggedIn)
 {
-    p->changeState(Player::WaitingReconnect, false);
+    changeState(Player::WaitingReconnect, false);
 
     if (!wasLoggedIn)
     {
         /* make acquaintances again! */
         foreach(Player *p, knowledge) {
             if (p->isLoggedIn()) {
-                p->relay().notify(NetworkServ::PlayerReceived, bundle());
-                relay().notify(NetworkServ::PlayerReceived, p->bundle());
+                p->relay().notify(NetworkServ::PlayersList, bundle());
+                relay().notify(NetworkServ::PlayersList, p->bundle());
             }
         }
 
@@ -297,7 +297,7 @@ void Player::quitSpectating(int battleId)
     }
 }
 
-void Player::onReconnect(int id, const QString &hash)
+void Player::onReconnect(int id, const QByteArray &hash)
 {
     if (state()[LoginAttempt]) {
         return; //INVALID BEHAVIOR
@@ -949,7 +949,7 @@ void Player::associateWith(Player *other)
 
     /* Updates IP in case it changed */
     SecurityManager::Member m = SecurityManager::member(name());
-    m.ip = ip();
+    m.ip = ip().toAscii();
     SecurityManager::updateMember(m);
 }
 
