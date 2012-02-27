@@ -300,7 +300,7 @@ void Server::updateDatabase()
 {
     SecurityManager::processDailyRun(amountOfInactiveDays);
 
-    broadCast("Database updated and cleaned!");
+    broadCast("Database cleaning launched!");
 }
 
 void Server::updateRatings()
