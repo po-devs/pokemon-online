@@ -1643,6 +1643,11 @@ void Server::sendBattlesList(int playerid, int chanid)
 void Server::sendPlayer(int id)
 {
     Player *source = player(id);
+
+    if (!source->isLoggedIn()) {
+        return;
+    }
+
     PlayerInfo bundle = source->bundle();
 
     ++lastDataId;
