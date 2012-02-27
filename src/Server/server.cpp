@@ -839,20 +839,25 @@ void Server::loggedIn(int id, const QString &name)
 
     if (nameExist(name)) {
         int ids = this->id(name);
-        if (!playerLoggedIn(ids) || player(ids)->name().toLower() != name.toLower()) {
+        if ((!playerExist(ids) || (!playerLoggedIn(ids) && !player(ids)->waitingForReconnect())) || player(ids)->name().toLower() != name.toLower()) {
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            // If registered - kick old one (ghost), otherwise - kick new one to prevent wars.
-            if (SecurityManager::member(name).isProtected()) {
-                printLine(tr("%1: replaced by new connection.").arg(name));
-                sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
-                silentKick(ids);
+            // If the other player is disconnected, we remove him
+            if (player(ids)->waitingForReconnect()) {
+                player(ids)->autoKick();
             } else {
-                printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
-                sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
-                silentKick(id);
-                return;
+                // If registered - kick old one (ghost), otherwise - kick new one to prevent wars.
+                if (SecurityManager::member(name).isProtected()) {
+                    printLine(tr("%1: replaced by new connection.").arg(name));
+                    sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
+                    silentKick(ids);
+                } else {
+                    printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
+                    sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
+                    silentKick(id);
+                    return;
+                }
             }
         }
     }
