@@ -226,7 +226,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
         break;
     }
-    case Reconnect:
+    case NetworkServ::Reconnect:
     {
         quint32 id;
         QByteArray hash;
