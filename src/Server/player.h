@@ -97,6 +97,7 @@ public:
     void addBattle(int battleid);
     void removeBattle(int battleid);
     bool away() const;
+    bool waitingForReconnect() const;
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
     void changeState(int newstate, bool on);

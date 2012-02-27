@@ -846,6 +846,11 @@ bool Player::away() const
     return state()[Away];
 }
 
+bool Player::waitingForReconnect() const
+{
+    return state()[WaitingReconnect] && !isLoggedIn();
+}
+
 bool Player::connected() const
 {
     return relay().isConnected();
