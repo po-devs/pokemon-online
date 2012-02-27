@@ -1548,6 +1548,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     }
 
     bool rated = mybattles.value(battleid)->rated();
+    bool disconnected = (!playerLoggedIn(winner) || !playerLoggedIn(loser)) && dynamic_cast<Player*>(sender()) != NULL; // if the battle sent the event, then it's legit win
     QString tier = mybattles.value(battleid)->tier();
     BattleSituation *battle = mybattles[battleid];
 
@@ -1562,6 +1563,8 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         pw->battleResult(battleid, Close, battle->mode(), winner, loser);
         pl->battleResult(battleid, Close, battle->mode(), winner, loser);
     } else {
+        int desc = disconnected ? Tie : desc;
+
         if (desc == Forfeit) {
             battle->playerForfeit(loser);
         }
@@ -1604,7 +1607,6 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         }
         myengine->afterBattleEnded(winner, loser, desc, battleid);
     }
-
 
     if (desc == Forfeit) {
         removeBattle(battleid);
