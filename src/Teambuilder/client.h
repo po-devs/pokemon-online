@@ -10,7 +10,6 @@
 #include "tierstruct.h"
 #include "password_wallet.h"
 #include "teamholder.h"
-#include <ctime>
 
 class MainEngine;
 class ChallengeDialog;
@@ -116,7 +115,7 @@ public:
     bool showTS;
     bool pmFlashing;
     bool pmsTabbed;
-    bool pmDisabled;
+    bool pmReject;
     TierNode tierRoot;
     QStringList tierList;
 public slots:
@@ -231,7 +230,7 @@ public slots:
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
-    void togglePM(bool);
+    void toggleIncomingPM(bool);
     void togglePMTabs(bool);
     void togglePMLogs(bool);
     void movePlayerList(bool);
@@ -365,7 +364,6 @@ private:
     void rebuildTierMenu();
 
     bool eventEnabled(int event);
-    time_t lastAutoPM;
 
     TeamHolder secondTeam;
     bool waitingOnSecond;

@@ -117,7 +117,7 @@ void PMSystem::messageReceived(PMStruct *pm) {
 
 }
 
-PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html, bool pmDisabled, int starterAuth)
+PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
     : m_ownName(ownName), escape_html(!html)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -142,19 +142,6 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     QSettings s;
     if(s.value("pms_logged").toBool()) {
         log->override = Log::OverrideYes;
-    }
-
-    if(pmDisabled) {
-        if(starterAuth <= 0) {
-            m_textToSend->setDisabled(true);
-            m_textToSend->setText(tr("You have private messages disabled."));
-            m_send->setDisabled(true);
-        }
-
-    } else {
-        m_textToSend->setDisabled(false);
-        m_textToSend->setText("");
-        m_send->setDisabled(false);
     }
 
     l->addWidget(m_challenge,2,0);
@@ -247,20 +234,6 @@ void PMStruct::ignore(bool yes)
 void PMStruct::challenge()
 {
     emit challengeSent(id());
-}
-
-void PMStruct::disablePM(bool b, int starterAuth) {
-    if(b == 1) {
-        if(starterAuth <= 0) {
-            m_textToSend->setDisabled(true);
-            m_textToSend->setText(tr("You have private messages disabled."));
-            m_send->setDisabled(true);
-        }
-    } else {
-        m_textToSend->setDisabled(false);
-        m_textToSend->setText("");
-        m_send->setDisabled(false);
-    }
 }
 
 void PMStruct::disable()
