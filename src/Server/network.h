@@ -23,6 +23,7 @@ public:
 
     virtual void close() = 0;
     virtual int id() const = 0;
+    virtual void changeId(int newId) = 0;
 signals:
     void isFull(QByteArray command);
     void connected();
@@ -57,6 +58,7 @@ public:
 
     void close();
     int id() const {return myid;}
+    void changeId(int newId) {myid = newId;}
 
     virtual void onReceipt();
     virtual void onDisconnect();

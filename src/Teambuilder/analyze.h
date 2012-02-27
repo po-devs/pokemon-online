@@ -42,6 +42,7 @@ public:
     bool isConnected() const;
     void goAway(bool away);
     QString getIp() const;
+    quint32 getCommandCount() const {return commandCount;}
     void disconnectFromHost();
 
     /* Convenience functions to avoid writing a new one every time */
@@ -147,6 +148,8 @@ private:
     const Network &socket() const;
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
+
+    quint32 commandCount;
 
     QList<QByteArray> storedCommands;
     QSet<int> channelCommands;

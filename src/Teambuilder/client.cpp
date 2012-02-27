@@ -1444,6 +1444,11 @@ void Client::sendRegister() {
     }
 }
 
+void Client::reconnect()
+{
+    relay().connectTo(url, port);
+}
+
 void Client::changeBattleLogFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Logs Directory"),
@@ -1975,12 +1980,20 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+    if (reconnectPass.length() > 0) {
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+    } else {
+        relay().notify(Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
+    }
 }
 
 void Client::disconnected()
 {
     printLine(tr("Disconnected from Server!"));
+
+    if (reconnectPass.length() > 0) {
+        printLine(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+    }
 
     isConnected = false;
     myregister->setText(tr("&Reconnect"));

@@ -11,7 +11,7 @@
 
 using namespace NetworkCli;
 
-Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection)
+Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), commandCount(0)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
     connect(&socket(), SIGNAL(connected()), this, SLOT(wasConnected()));
@@ -210,6 +210,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     uchar command;
 
     in >> command;
+
+    if (command != Reconnect) {
+        commandCount ++;
+    }
 
     if (channelCommands.contains(command)) {
         qint32 chanid;

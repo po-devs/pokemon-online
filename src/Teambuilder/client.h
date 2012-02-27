@@ -73,6 +73,7 @@ public:
     QSize defaultSize() const {
         return QSize(800,600);
     }
+    void reconnect();
 
     enum Status {
         Available = 0,
