@@ -160,6 +160,7 @@ public slots:
     void spectatingStopped(int id, int battle);
     void battleMessage(int player, int battle, const BattleChoice &message);
     void battleChat(int player, int battle, const QString &chat);
+    void resendBattleInfos(int player, int battle);
     void spectatingChat(int player, int battle, const QString &chat);
     void joinRequest(int player, const QString &chn);
     /* Makes a player join a channel */

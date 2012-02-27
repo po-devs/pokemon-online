@@ -315,17 +315,27 @@ void BattleSituation::addSpectator(Player *p)
         return;
     }
 
-    p->spectateBattle(publicId(), configuration());
     int id = p->id();
 
-    /* Assumption: each id is a different player, so key is unique */
-    int key = spectatorKey(id);
+    int key;
 
-    if (spectators.contains(key)) {
-        // Then a guy was put on waitlist and tried again, w/e don't accept him
-        return;
+    if (configuration().isInBattle(id)) {
+        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration());
+        key = spot(id);
+    } else {
+        /* Assumption: each id is a different player, so key is unique */
+        key = spectatorKey(id);
+
+        if (spectators.contains(key)) {
+            // Then a guy was put on waitlist and tried again, w/e don't accept him
+            return;
+        }
+
+        spectators[key] = QPair<int, QString>(id, p->name());
+
+        p->spectateBattle(publicId(), configuration());
     }
-    spectators[key] = QPair<int, QString>(id, p->name());
+
 
     if (tier().length() > 0)
         notify(key, TierSection, Player1, tier());
@@ -339,6 +349,7 @@ void BattleSituation::addSpectator(Player *p)
     }
 
     notify(All, Spectating, 0, true, qint32(id), p->name());
+
     notify(key, BlankMessage, 0);
 
     for (int i = 0; i < 2; i++) {

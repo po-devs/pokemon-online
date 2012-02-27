@@ -60,6 +60,7 @@ public:
     int rating(int spot) const;
 
     bool acceptSpectator(int id, bool authed=false) const;
+    /* In case it's one of the battler, resends the current info to the battler */
     void addSpectator(Player *p);
     /* Server tells a player forfeited */
     void playerForfeit(int forfeiterId);

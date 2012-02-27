@@ -490,6 +490,10 @@ struct BattleConfiguration
         return receivingMode[slot] == Player;
     }
 
+    bool isInBattle(int id) {
+        return ids[0] == id || ids[1] == id;
+    }
+
     void setTeam(int i, TeamBattle *team) {
         teams[i] = team;
         receivingMode[i] = Player;

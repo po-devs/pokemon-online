@@ -988,6 +988,15 @@ void Server::battleMessage(int player, int battle, const BattleChoice &choice)
     mybattles[battle]->battleChoiceReceived(player, choice);
 }
 
+void Server::resendBattleInfos(int player, int battle)
+{
+    if (!mybattles.contains(battle)) {
+        return;
+    }
+
+    mybattles[battle]->addSpectator(this->player(player));
+}
+
 void Server::battleChat(int player, int battle, const QString &chat)
 {
     if (!mybattles.contains(battle)) {
@@ -1137,6 +1146,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
     connect(p, SIGNAL(reconnect(int,int,QByteArray)), SLOT(onReconnect(int,int,QByteArray)));
+    connect(p, SIGNAL(resendBattleInfos(int,int)), SLOT(resendBattleInfos(int,int)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -1171,6 +1181,11 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
     //proceed to reconnect
     player(id)->associateWith(player(sender));
     processLoginDetails(player(id));
+}
+
+void Server::resendBattleInfos(int player, int battle)
+{
+
 }
 
 void Server::cancelSearch(int id)
