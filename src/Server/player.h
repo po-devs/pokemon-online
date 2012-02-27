@@ -128,6 +128,7 @@ public:
 
     void doWhenDC(); // when the player  disconnects, but we still want to keep some info
     void doWhenDQ(); // when we really want to remove the player
+    void doWhenRC(bool wasLoggedIn); // when the player reconnects
 
     ChallengeInfo getChallengeInfo(int id); /* to get the battle info of a challenge received by that player */
 
@@ -157,6 +158,9 @@ public:
     //Tells that the player has been changed and its updated info should be sent to everyone
     //onlyInCommand true means that if not during a player command, the info is updated immediately (otherwise at end of player command)
     void setNeedToBeUpdated(bool onlyInCommand=false);
+    bool testReconnectData(Player *other, const QByteArray &hash);
+    //other used reconnect on us and it worked, it seems
+    void associateWith(Player *other);
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, int chanid, const QString &mess);
@@ -181,8 +185,11 @@ signals:
     void logout(int);
     void unlocked();
     void joinRequested(int id, const QString &channel);
+    void joinRequested(int id, int channelId);
+    void resendBattleInfos(int id, int battleid);
     void leaveRequested(int id, int channelid);
     void ipChangeRequested(int id, const QString &ip);
+    void reconnect(int req, int id, const QByteArray &hash);
 public slots:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
@@ -197,6 +204,7 @@ public slots:
     void hashReceived(const QByteArray &hash);
     void playerKick(int);
     void playerBan(int);
+    void onReconnect(int id, const QByteArray &hash);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
     //void CPTBan(const QString &name, int time);
@@ -294,6 +302,8 @@ private:
     void syncTiers(QString oldTier);
     /* Are we currently executing code directly in response to a network command received from this player ? */
     bool isInCommand() const;
+
+    void doConnections();
 
     void testAuthentification(const QString &name);
 };

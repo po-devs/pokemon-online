@@ -23,6 +23,19 @@ Player::Player(const GenericSocket &sock, int id)
 
     m_bundle.auth = 0;
 
+    doConnections();
+
+    /* Autokick after 3 minutes if still not logged in */
+    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
+}
+
+Player::~Player()
+{
+    delete myrelay;
+}
+
+void Player::doConnections()
+{
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
@@ -55,17 +68,10 @@ Player::Player(const GenericSocket &sock, int id)
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
+    connect(&relay(), SIGNAL(reconnect(int,QByteArray)), SLOT(onReconnect(int,QByteArray)));
 
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
-
-    /* Autokick after 3 minutes if still not logged in */
-    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
-}
-
-Player::~Player()
-{
-    delete myrelay;
 }
 
 void Player::autoKick()
@@ -130,6 +136,10 @@ void Player::sendUpdatedIfNeeded()
 
 void Player::changeTier(quint8 teamNum, const QString &newtier)
 {
+    if (!isLoggedIn()) {
+        return;
+    }
+
     if (teamNum >= teamCount()) {
         return;
     }
@@ -219,6 +229,45 @@ void Player::doWhenDC()
     }
 }
 
+void Player::doWhenRC(bool wasLoggedIn)
+{
+    p->changeState(Player::WaitingReconnect, false);
+
+    if (!wasLoggedIn)
+    {
+        /* make acquaintances again! */
+        foreach(Player *p, knowledge) {
+            if (p->isLoggedIn()) {
+                p->relay().notify(NetworkServ::PlayerReceived, bundle());
+                relay().notify(NetworkServ::PlayerReceived, p->bundle());
+            }
+        }
+
+        foreach(int channelId, channels) {
+            channels.remove(channelId);
+
+            emit joinRequested(id(), channelId);
+            /* In case a script kicked us */
+            if (!isLoggedIn()) {
+                return;
+            }
+        }
+
+        if (channels.empty()) {
+            emit joinRequested(id(), 0);
+
+            if (!isLoggedIn()) {
+                return;
+            }
+        }
+    }
+
+    foreach(int battleid, battles)
+    {
+        emit resendBattleInfos(this->id(), battleid);
+    }
+}
+
 void Player::doWhenDQ()
 {
     relay().stopReceiving();
@@ -246,6 +295,17 @@ void Player::quitSpectating(int battleId)
         battlesSpectated.remove(battleId);
         emit spectatingStopped(this->id(), battleId);
     }
+}
+
+void Player::onReconnect(int id, const QString &hash)
+{
+    if (state()[LoginAttempt]) {
+        return; //INVALID BEHAVIOR
+    }
+
+    state().setFlag(LoginAttempt, true);
+
+    emit reconnect(this->id(), id, hash);
 }
 
 void Player::joinRequested(const QString &name)
@@ -842,7 +902,55 @@ void Player::logout()
 
 bool Player::hasReconnectPass() const
 {
-    return isLoggedIn() && waiting_pass.length() > 0;
+    return (isLoggedIn() && waiting_pass.length() > 0) || state()[WaitingReconnect];
+}
+
+bool Player::testReconnectData(Player *other, const QByteArray &hash)
+{
+    //test ip first
+    QHostAddress own(ip()), otherHost(other->ip());
+
+    if (reconnectBits() != 0) {
+        if (!own.isInSubnet(otherHost, reconnectBits())) {
+            other->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::IPMismatch));
+            other->kick();
+            return false;
+        }
+    }
+
+    if (hash != waiting_pass) {
+        other->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::WrongHash));
+        other->kick();
+        return false;
+    }
+
+    return true;
+}
+
+void Player::associateWith(Player *other)
+{
+    other->relay().disconnect(other);
+    myrelay->disconnect(this);
+
+    std::swap(myrelay, other->myrelay);
+
+    other->myip = other->myrelay->ip();
+    myip = myrelay->ip();
+
+    connect(&other->relay(), SIGNAL(disconnected()), other, SLOT(disconnected()));
+    other->kick();
+
+    lockCount = 0;
+
+    doConnections();
+
+    blockSignals(false);
+    relay().blockSignals(false);
+
+    /* Updates IP in case it changed */
+    SecurityManager::Member m = SecurityManager::member(name());
+    m.ip = ip();
+    SecurityManager::updateMember(m);
 }
 
 void Player::loggedIn(LoginInfo *info)

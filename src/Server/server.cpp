@@ -864,8 +864,19 @@ void Server::loggedIn(int id, const QString &name)
 
         Player *p = player(id);
 
-        p->changeState(Player::LoggedIn, true);
+        processLoginDetails(p);
+    } else { /* if already logged in */
+        recvTeam(id, name);
+    }
+}
 
+void Server::processLoginDetails(Player *p)
+{
+    bool wasLoggedIn = p->isLoggedIn();
+
+    p->changeState(Player::LoggedIn, true);
+
+    if (!wasLoggedIn) {
         groups[All].insert(p);
         if (p->supportsZip()) {
             groups[SupportsZip].insert(p);
@@ -887,31 +898,38 @@ void Server::loggedIn(int id, const QString &name)
 
         if (!playerExist(id))
             return;
+    }
 
-        p->sendLoginInfo();
+    p->sendLoginInfo();
 
-        if (serverAnnouncement.length() > 0) {
-            if (p->supportsZip()) {
-                p->sendPacket(zippedAnnouncement);
-            } else {
-                p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
-            }
+    if (serverAnnouncement.length() > 0) {
+        if (p->supportsZip()) {
+            p->sendPacket(zippedAnnouncement);
+        } else {
+            p->relay().notify(NetworkServ::Announcement, serverAnnouncement);
         }
+    }
 
-        sendTierList(id);
-        sendChannelList(id);
+    sendTierList(id);
+    sendChannelList(id);
+
+    if (wasLoggedIn) {
         numberOfPlayersLoggedIn += 1;
+    }
 
+    if (!p->state()[Player::WaitingReconnect]) {
         /* Makes the player join the default channel */
         joinChannel(id, 0);
 #ifndef PO_NO_WELCOME
         broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
-                  NoChannel, NoSender, true, id);
+              NoChannel, NoSender, true, id);
 #endif
+    } else {
+        p->doWhenRC(wasLoggedIn);
+    }
 
+    if (wasLoggedIn) {
         myengine->afterLogIn(id);
-    } else { /* if already logged in */
-        recvTeam(id, name);
     }
 }
 
@@ -1108,8 +1126,10 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
     connect(p, SIGNAL(joinRequested(int,QString)), SLOT(joinRequest(int,QString)));
+    connect(p, SIGNAL(joinRequested(int,int)), SLOT(joinChannel(int,int)));
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
+    connect(p, SIGNAL(reconnect(int,int,QByteArray)), SLOT(onReconnect(int,int,QByteArray)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -1126,6 +1146,24 @@ void Server::awayChanged(int src, bool away)
             }
         }
     }
+}
+
+void Server::onReconnect(int sender, int id, const QByteArray &hash)
+{
+    if (!playerExist(id) || !player(id)->hasReconnectPass()) {
+        player(sender)->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::NoReconnectData));
+        player(sender)->kick();
+        return;
+    }
+
+    if (!player(id)->testReconnectData(player(sender), hash)) {
+        // sender will automatically be dealt with
+        return;
+    }
+
+    //proceed to reconnect
+    player(id)->associateWith(player(sender));
+    processLoginDetails(player(id));
 }
 
 void Server::cancelSearch(int id)
