@@ -1736,24 +1736,29 @@ void Client::seeChallenge(const ChallengeInfo &c)
 
 void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    int id = id1== ownId() ? id2: id1;
+    if (!mybattles.contains(battleId)) {
+        int id = id1== ownId() ? id2: id1;
 
-    cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
-    connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
-    mybattle->setWindowFlags(Qt::Window);
-    mybattle->show();
-    mybattle->activateWindow();
+        cancelFindBattle(false);
+        BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
+        connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
+        mybattle->setWindowFlags(Qt::Window);
+        mybattle->show();
+        mybattle->activateWindow();
 
-    connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
-    connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
-    connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
-    connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
-    //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
+        connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
+        connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
+        connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
+        connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+        //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
-    mybattles[battleId] = mybattle;
+        mybattles[battleId] = mybattle;
 
-    battleStarted(battleId, ownId(), id);
+        battleStarted(battleId, ownId(), id);
+    } else {
+        //We reconnected probably, and our team changed
+        mybattles[battleId]->updateTeam(team);
+    }
 }
 
 void Client::battleStarted(int bid, int id1, int id2)
@@ -1815,9 +1820,11 @@ void Client::forfeitBattle(int id)
 
 void Client::battleFinished(int battleid, int res, int winner, int loser)
 {
-    /* On old servers battleid is always 0 so you don't want to forfeit that battle ... */
-    if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
-        disableBattleWindow(battleid);
+    if (res == Close || res == Forfeit) {
+        if (mybattles.contains(battleid) || mySpectatingBattles.contains(battleid)) {
+            disableBattleWindow(battleid);
+        }
+    }
 
     foreach(Channel *c, mychannels) {
         c->battleEnded(battleid, res, winner, loser);
@@ -1853,10 +1860,10 @@ void Client::battleCommand(int battleid, const QByteArray &command)
 
 void Client::disableBattleWindow(int battleid)
 {
-    if (!mybattles.contains(battleid))
+    if (!mybattles.contains(battleid) && !mySpectatingBattles.contains(battleid))
         return;
 
-    BattleWindow *w = mybattles.take(battleid);
+    BaseBattleWindowInterface *w = mybattles.contains(battleid) ? mybattles.take(battleid) : mySpectatingBattles.take(battleid);
     w->disable();
 }
 

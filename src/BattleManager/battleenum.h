@@ -62,7 +62,9 @@ enum /* class */ BattleEnum
     ChoiceCanceled,
     Variation,
     DynamicStats,
-    PrintHtml
+    PrintHtml,
+    Reconnect,
+    Disconnect
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

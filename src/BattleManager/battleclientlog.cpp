@@ -551,3 +551,21 @@ void BattleClientLog::onPrintHtml(const QString &data)
 {
     printHtml("ServerMessage", data);
 }
+
+void BattleClientLog::onReconnect(int player)
+{
+    int spot = data()->spotFromId(player);
+
+    printHtml("Reconnect", toBoldColor(tr("%1 logged back in and is ready to resume the battle!").arg(data()->name(spot)), Qt::blue));
+}
+
+void BattleClientLog::onDisconnect(int player)
+{
+    int spot = data()->spotFromId(player);
+
+    if (data()->isPlayer(data()->opponent(spot))) {
+        printHtml("Disconnect", toBoldColor(tr("%1 got disconnected! You can leave the battle or wait for your opponent to log back on or the timer to end.").arg(data()->name(spot)), Qt::blue));
+    } else {
+        printHtml("Disconnect", toBoldColor(tr("%1 got disconnected!").arg(data()->name(spot)), Qt::blue));
+    }
+}

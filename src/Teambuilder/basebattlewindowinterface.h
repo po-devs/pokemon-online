@@ -9,7 +9,7 @@ class BaseBattleWindowInterface : public QWidget
     Q_OBJECT
     PROPERTY(quint32, battleId)
 public:
-
+    virtual void disable() {}
 public slots:
     virtual void receiveInfo(QByteArray){}
 signals:

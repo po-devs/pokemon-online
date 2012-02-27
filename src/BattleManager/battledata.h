@@ -111,6 +111,7 @@ public:
     QString name(int player) const { return team(this->player(player)).name();}
     int slotNum(int player) const { return player/2;}
     int spot(int player, int slot=0) {return player+2*slot;}
+    int spotFromId(int id) const { return conf->spot(id);}
     int clauses() const {return conf->clauses;}
     int avatar(int player) const {return conf->avatar[player];}
     int mode() const {return conf->mode;}
