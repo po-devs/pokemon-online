@@ -220,7 +220,10 @@ void Player::doWhenDC()
     cancelBattleSearch();
 
     foreach(int id, battles) {
-        battleForfeited(id);
+        quitSpectating(id);
+    }
+    foreach(int id, battlesSpectated) {
+        quitSpectating(id);
     }
     foreach(Player *p, knowledge) {
         if (p->isLoggedIn()) {
@@ -293,6 +296,8 @@ void Player::quitSpectating(int battleId)
 {
     if (battlesSpectated.contains(battleId)) {
         battlesSpectated.remove(battleId);
+        emit spectatingStopped(this->id(), battleId);
+    } else if (battles.contains(battleId)) {
         emit spectatingStopped(this->id(), battleId);
     }
 }

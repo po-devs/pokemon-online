@@ -55,6 +55,7 @@ PokeProxy & BattleInfo::currentPoke(int spot)
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    canLeaveBattle = false;
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
@@ -212,7 +213,7 @@ void BattleWindow::targetChosen(int i)
 
 void BattleWindow::clickClose()
 {
-    if (battleEnded) {
+    if (battleEnded || canLeaveBattle) {
         forfeit();
         return;
     }
@@ -549,6 +550,20 @@ void BattleWindow::onTempPPChange(int spot, int move, int PP)
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
 }
 
+void BattleWindow::onReconnect(int)
+{
+    canLeaveBattle = true;
+    myclose->setText(tr("&Close"));
+}
+
+void BattleWindow::onDisconnect(int)
+{
+    canLeaveBattle = false;
+    if (!battleEnded) {
+        myclose->setText(tr("&Forfeit"));
+    }
+}
+
 void BattleWindow::onOfferChoice(int, const BattleChoices &c)
 {
     if (info().sent) {
@@ -714,6 +729,15 @@ void BattleWindow::sendRearrangedTeam()
     sendChoice(c);
 
     /* If the team was rearranged... */
+    test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+    for (int i = 0; i < 6; i++) {
+        mypzone->pokes[i]->changePokemon(poke(i));
+    }
+}
+
+void BattleWindow::updateTeam(const TeamBattle &b)
+{
+    info()._myteam = b;
     test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(poke(i));

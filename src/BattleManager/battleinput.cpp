@@ -245,12 +245,20 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         qint32 id;
         in >> come >> id;
 
-        if (come) {
-            auto name = mk<QString>();
-            in >> *name;
-            output<BattleEnum::SpectatorEnter>(id, &name);
+        if (conf->isInBattle(id)) {
+            if (come) {
+                output<BattleEnum::Reconnect>(id);
+            } else {
+                output<BattleEnum::Disconnect>(id);
+            }
         } else {
-            output<BattleEnum::SpectatorLeave>(id);
+            if (come) {
+                auto name = mk<QString>();
+                in >> *name;
+                output<BattleEnum::SpectatorEnter>(id, &name);
+            } else {
+                output<BattleEnum::SpectatorLeave>(id);
+            }
         }
         break;
     }

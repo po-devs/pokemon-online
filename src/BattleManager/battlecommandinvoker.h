@@ -125,6 +125,8 @@ protected:
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
+    start(Reconnect, onReconnect, int player) end (onReconnect, player)
+    start(Reconnect, onDisconnect, int player) end (onDisconnect, player)
 
 #undef start
 #undef end
@@ -196,6 +198,8 @@ protected:
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
     void onPrintHtml(const QString &html);
+    void onReconnect(int player);
+    void onDisconnect(int player);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

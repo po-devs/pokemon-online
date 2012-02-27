@@ -142,6 +142,8 @@ protected:
     start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
     start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
     start(PrintHtml, string_ptr data) end(data)
+    start(Reconnect, int player) end (player)
+    start(Disconnect, int player) end (player)
 
 #undef start
 #undef end

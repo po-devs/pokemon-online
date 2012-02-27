@@ -211,7 +211,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
 
     in >> command;
 
-    if (command != Reconnect) {
+    if (command != NetworkCli::Reconnect) {
         commandCount ++;
     }
 
