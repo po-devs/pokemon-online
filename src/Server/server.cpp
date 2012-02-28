@@ -946,7 +946,7 @@ void Server::processLoginDetails(Player *p)
     sendTierList(id);
     sendChannelList(id);
 
-    if (wasLoggedIn) {
+    if (!wasLoggedIn) {
         numberOfPlayersLoggedIn += 1;
     }
 
