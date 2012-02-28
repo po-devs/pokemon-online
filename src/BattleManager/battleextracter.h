@@ -253,6 +253,8 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(Variation);
     addCallback(DynamicStats);
     addCallback(PrintHtml);
+    addCallback(Reconnect);
+    addCallback(Disconnect);
 
 #undef addCallback
 }
