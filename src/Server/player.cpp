@@ -948,9 +948,6 @@ void Player::associateWith(Player *other)
     other->myip = other->myrelay->ip();
     myip = myrelay->ip();
 
-    connect(&other->relay(), SIGNAL(disconnected()), other, SLOT(disconnected()));
-    other->kick();
-
     lockCount = 0;
 
     doConnections();
@@ -965,6 +962,8 @@ void Player::associateWith(Player *other)
 
     /* Deals with anti DOS */
     AntiDos::obj()->connecting(ip());
+
+    other->disconnected();
 }
 
 void Player::loggedIn(LoginInfo *info)
@@ -983,8 +982,8 @@ void Player::loggedIn(LoginInfo *info)
 
     spec().setFlag(SupportsZipCompression, info->data[PlayerFlags::SupportsZipCompression]);
     spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
+    spec().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
     state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
-    state().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
     reconnectBits() = info->reconnectBits;
 

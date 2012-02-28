@@ -266,6 +266,11 @@ int QIdListWidgetItem::id() const
     return myid;
 }
 
+void QIdListWidgetItem::setId(int id)
+{
+    myid = id;
+}
+
 void QIdListWidgetItem::setColor(const QColor &c)
 {
     setForeground(QBrush(c));
