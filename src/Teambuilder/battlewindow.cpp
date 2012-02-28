@@ -737,7 +737,10 @@ void BattleWindow::sendRearrangedTeam()
 
 void BattleWindow::updateTeam(const TeamBattle &b)
 {
+    QString name = info().myteam().name();
     info()._myteam = b;
+    info()._myteam.name = name;
+
     test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(poke(i));
