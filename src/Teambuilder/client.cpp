@@ -212,6 +212,8 @@ void Client::initRelay()
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
     connect(relay, SIGNAL(reconnectPassGiven(QByteArray)), SLOT(setReconnectPass(QByteArray)));
+    connect(relay, SIGNAL(reconnectSuccess()), SLOT(cleanData()));
+    connect(relay, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
 }
 
 class TierActionFactoryTeams : public TierActionFactory
@@ -623,6 +625,13 @@ void Client::activateChannel(const QString& text) {
             mainChat->setCurrentIndex(i);
             return;
         }
+    }
+}
+
+void Client::cleanData()
+{
+    foreach(Channel *c, mychannels) {
+        c->cleanData();
     }
 }
 
@@ -1384,6 +1393,22 @@ void Client::askForPass(const QByteArray &salt) {
 void Client::setReconnectPass(const QByteArray &pass)
 {
     reconnectPass = pass;
+}
+
+void Client::onReconnectFailure(int reason)
+{
+    QString reasons[] = {
+        tr("Server doesn't have data stored for the reconnection."),
+        tr("There's an error when trying to reconnect."),
+        tr("The disconnection has lasted too long."),
+        tr("Your IP is too different from what's expected.")
+    };
+
+    if (reason < sizeof(reasons)/sizeof(QString) && reason >= 0) {
+        printLine(tr("The server refused the reconnect attempt with the reason: %1").arg(reasons[reason]));
+    } else {
+        printLine(tr("The server refused the reconnect attempt."));
+    }
 }
 
 void Client::serverPass(const QByteArray &salt) {
