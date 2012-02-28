@@ -104,6 +104,7 @@ public:
     QIdListWidgetItem(int id, const QIcon &icon, const QString &text);
     bool operator<(const QListWidgetItem & item) const;
     int id() const;
+    void setId(int id);
     void setColor(const QColor &c);
 private:
     int myid;

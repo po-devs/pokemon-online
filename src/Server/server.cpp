@@ -235,7 +235,7 @@ void Server::start(){
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
-    amountOfInactiveDays = s.value("delete_inactive_members_days").toInt();
+    amountOfInactiveDays = s.value("delete_inactive_members_days", 182).toInt();
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
@@ -1180,6 +1180,8 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
 
     //proceed to reconnect
     player(id)->associateWith(player(sender));
+    emit player_incomingconnection(id);
+    emit player_authchange(id, authedName(id));
     processLoginDetails(player(id));
 }
 

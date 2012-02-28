@@ -1987,7 +1987,7 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    if (reconnectPass.length() == 0) {
+    if (reconnectPass.isEmpty()) {
         relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
@@ -1999,7 +1999,7 @@ void Client::disconnected()
     printLine(tr("Disconnected from Server!"));
 
     if (reconnectPass.length() > 0) {
-        printLine(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+        printHtml(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
     }
 
     isConnected = false;

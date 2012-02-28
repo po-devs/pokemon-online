@@ -716,6 +716,11 @@ QScriptValue ScriptEngine::memoryDump()
     return ret;
 }
 
+int ScriptEngine::disconnectedPlayers()
+{
+    return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;
+}
+
 void ScriptEngine::exportMemberDatabase()
 {
     SecurityManager::exportDatabase();
@@ -1042,7 +1047,12 @@ QScriptValue ScriptEngine::id(const QString &name)
     if (!myserver->nameExist(name)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->id(name);
+        int id = myserver->id(name);
+        if (!loggedIn(id)) {
+            return myengine.undefinedValue();
+        } else {
+            return id;
+        }
     }
 }
 
