@@ -563,9 +563,5 @@ void BattleClientLog::onDisconnect(int player)
 {
     int spot = data()->spotFromId(player);
 
-    if (data()->isPlayer(data()->opponent(spot))) {
-        printHtml("Disconnect", toBoldColor(tr("%1 got disconnected! You can leave the battle or wait for your opponent to log back on or the timer to end.").arg(data()->name(spot)), Qt::blue));
-    } else {
-        printHtml("Disconnect", toBoldColor(tr("%1 got disconnected!").arg(data()->name(spot)), Qt::blue));
-    }
+    printHtml("Disconnect", toBoldColor(tr("%1 got disconnected!").arg(data()->name(spot)), Qt::blue));
 }
