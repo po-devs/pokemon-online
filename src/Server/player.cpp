@@ -9,6 +9,7 @@
 #include "waitingobject.h"
 #include "server.h"
 #include "analyze.h"
+#include <algorithm>
 
 Player::Player(const GenericSocket &sock, int id)
 {
