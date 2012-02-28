@@ -2,6 +2,11 @@
 {
 	background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,
 		stop:0 white, stop:1 #0ca0dd); 
+
+}
+
+QToolTip {
+    color: black;
 }
 
 /*=============================================*\*/
