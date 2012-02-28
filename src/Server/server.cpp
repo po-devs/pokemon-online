@@ -1578,13 +1578,15 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     }
 
     bool rated = mybattles.value(battleid)->rated();
-    bool disconnected = (!playerLoggedIn(winner) || !playerLoggedIn(loser)) && dynamic_cast<Player*>(sender()) != NULL; // if the battle sent the event, then it's legit win
+
     QString tier = mybattles.value(battleid)->tier();
     BattleSituation *battle = mybattles[battleid];
 
     if (winner == 0) {
         winner = battle->id(battle->opponent(battle->spot(loser)));
     }
+
+    bool disconnected = (!playerLoggedIn(winner) || !playerLoggedIn(loser)) && dynamic_cast<Player*>(sender()) != NULL; // if the battle sent the event, then it's legit win
 
     Player *pw = player(winner);
     Player *pl = player(loser);
