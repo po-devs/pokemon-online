@@ -126,7 +126,7 @@ protected:
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
     start(Reconnect, onReconnect, int player) end (onReconnect, player)
-    start(Reconnect, onDisconnect, int player) end (onDisconnect, player)
+    start(Disconnect, onDisconnect, int player) end (onDisconnect, player)
 
 #undef start
 #undef end

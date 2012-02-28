@@ -550,13 +550,13 @@ void BattleWindow::onTempPPChange(int spot, int move, int PP)
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
 }
 
-void BattleWindow::onReconnect(int)
+void BattleWindow::onDisconnect(int)
 {
     canLeaveBattle = true;
     myclose->setText(tr("&Close"));
 }
 
-void BattleWindow::onDisconnect(int)
+void BattleWindow::onReconnect(int)
 {
     canLeaveBattle = false;
     if (!battleEnded) {
