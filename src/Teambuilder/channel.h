@@ -58,6 +58,8 @@ public:
     void resetEvents();
     void restoreEventSettings();
 
+    void cleanData();
+
     void makeReadyToQuit() {
         readyToQuit = true;
     }

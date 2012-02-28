@@ -524,6 +524,16 @@ void Channel::cleanTier(QTreeWidgetItem *tier)
     }
 }
 
+void Channel::cleanData()
+{
+    myplayers->clear();
+    myplayersitems.clear();
+    mytiersitems.clear();
+    battleList->clear();
+    battles.clear();
+    battleItems.clear();
+}
+
 bool Channel::hasRemoteKnowledgeOf(int player) const
 {
     if (hasPlayer(player))

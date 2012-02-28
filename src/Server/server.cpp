@@ -419,6 +419,32 @@ void Server::joinChannel(int playerid, int channelid) {
     myengine->afterChannelJoin(playerid, channelid);
 }
 
+void Server::needChannelData(int playerid, int channelid)
+{
+    Channel &channel = this->channel(channelid);
+    QVector<qint32> ids;
+    ids.reserve(channel.players.size());
+
+    Player *player = this->player(playerid);
+
+    QVector<reference<PlayerInfo> > bundles;
+
+    Analyzer &relay = player->relay();
+    foreach(Player *p, channel.players) {
+        if (!p->isInSameChannel(player)) {
+            bundles.push_back(&p->bundle());
+        }
+        ids.push_back(p->id());
+    }
+
+    player->sendPlayers(bundles);
+
+    relay.sendChannelPlayers(channelid, ids);
+    player->addChannel(channelid);
+
+    relay.sendBattleList(channelid, channel.battleList);
+}
+
 void Server::leaveRequest(int playerid, int channelid, bool keep)
 {
     Channel &channel = this->channel(channelid);
@@ -1147,6 +1173,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
     connect(p, SIGNAL(reconnect(int,int,QByteArray)), SLOT(onReconnect(int,int,QByteArray)));
     connect(p, SIGNAL(resendBattleInfos(int,int)), SLOT(resendBattleInfos(int,int)));
+    connect(p, SIGNAL(needChannelData(int,int)), SLOT(needChannelData(int,int)));
 }
 
 void Server::awayChanged(int src, bool away)
@@ -1168,7 +1195,7 @@ void Server::awayChanged(int src, bool away)
 void Server::onReconnect(int sender, int id, const QByteArray &hash)
 {
     if (!playerExist(id) || !player(id)->hasReconnectPass()) {
-        player(sender)->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::NoReconnectData));
+        player(sender)->relay().notify(NetworkServ::Reconnect, false, quint8(PlayerFlags::NoReconnectData));
         player(sender)->kick();
         return;
     }
@@ -1182,6 +1209,7 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
     player(id)->associateWith(player(sender));
     emit player_incomingconnection(id);
     emit player_authchange(id, authedName(id));
+    player(id)->relay().notify(NetworkServ::Reconnect, true);
     processLoginDetails(player(id));
 }
 

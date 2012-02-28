@@ -579,6 +579,18 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit serverPassRequired(salt);
         break;
     }
+    case NetworkCli::Reconnect: {
+        bool success;
+        in >> success;
+
+        if (success) {
+            emit reconnectSuccess();
+        } else {
+            quint8 reason;
+            in >> reason;
+            emit reconnectFailure(reason);
+        }
+    }
     default: {
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received -- maybe an update for the program is available"));
     }

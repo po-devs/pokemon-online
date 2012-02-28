@@ -263,6 +263,12 @@ void Player::doWhenRC(bool wasLoggedIn)
                 return;
             }
         }
+    } else {
+        QSet<int> copy = channels;
+        channels.clear();
+        foreach(int channelId, copy) {
+            emit needChannelData(id(), channelId);
+        }
     }
 
     foreach(int battleid, battles)
@@ -922,14 +928,14 @@ bool Player::testReconnectData(Player *other, const QByteArray &hash)
 
     if (reconnectBits() != 0) {
         if (!own.isInSubnet(otherHost, reconnectBits())) {
-            other->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::IPMismatch));
+            other->relay().notify(NetworkServ::Reconnect, false, quint8(PlayerFlags::IPMismatch));
             other->kick();
             return false;
         }
     }
 
     if (hash != waiting_pass) {
-        other->relay().notify(NetworkServ::Reconnect, quint8(PlayerFlags::WrongHash));
+        other->relay().notify(NetworkServ::Reconnect, false, quint8(PlayerFlags::WrongHash));
         other->kick();
         return false;
     }

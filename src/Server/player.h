@@ -191,6 +191,7 @@ signals:
     void leaveRequested(int id, int channelid);
     void ipChangeRequested(int id, const QString &ip);
     void reconnect(int req, int id, const QByteArray &hash);
+    void needChannelData(int , int channel);
 public slots:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
