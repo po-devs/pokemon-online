@@ -336,18 +336,17 @@ void BattleSituation::addSpectator(Player *p)
         spectators[key] = QPair<int, QString>(id, p->name());
 
         p->spectateBattle(publicId(), configuration());
-    }
 
+        if (tier().length() > 0)
+            notify(key, TierSection, Player1, tier());
 
-    if (tier().length() > 0)
-        notify(key, TierSection, Player1, tier());
+        notify(key, Rated, Player1, rated());
 
-    notify(key, Rated, Player1, rated());
-
-    typedef QPair<int, QString> pair;
-    foreach (pair spec, spectators) {
-        if (spec.first != id)
-            notify(key, Spectating, 0, true, qint32(spec.first), spec.second);
+        typedef QPair<int, QString> pair;
+        foreach (pair spec, spectators) {
+            if (spec.first != id)
+                notify(key, Spectating, 0, true, qint32(spec.first), spec.second);
+        }
     }
 
     notify(All, Spectating, 0, true, qint32(id), p->name());
