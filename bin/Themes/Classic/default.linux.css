@@ -103,16 +103,16 @@ TrainerMenu PokeButton {
 }
 
 PokeButton QLabel#nickname, PokeButton QLabel#number {
-    font-size: 15px;
+    font-size: 16px;
 }
 
 PokeButton QLabel#species {
-    font-size: 11px;
+    font-size: 12px;
     color: #90979f;
 }
 
 PokeButton QLabel#itemLabel {
-    font-size: 11px;
+    font-size: 12px;
     color: #dfe6ec;
 }
 
