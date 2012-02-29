@@ -16,6 +16,9 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui->setupUi(this);
     ui->teamFolderButton->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
     ui->removeTeam->setIcon(QApplication::style()->standardIcon(QStyle::SP_TrashIcon));
+    ui->saveTeam->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton));
+    ui->loadTeam->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton));
+    ui->importTeam->setIcon(QApplication::style()->standardIcon(QStyle::SP_FileDialogContentsView));
     ui->name->setValidator(new QNickValidator(this));
 
     QPushButton *buttons[6] = {ui->team1, ui->team2, ui->team3, ui->team4, ui->team5, ui->team6};
@@ -57,8 +60,10 @@ void TrainerMenu::on_teamName_textEdited()
 
 void TrainerMenu::on_importTeam_clicked()
 {
-    TeamImporter *i = new TeamImporter(this);
+    TeamImporter *i = new TeamImporter();
     i->show();
+
+    connect(this, SIGNAL(destroyed()), i, SLOT(deleteLater()));
 
     connect(i, SIGNAL(done(QString)), SLOT(importTeam(QString)));
     connect(i, SIGNAL(done(QString)), SLOT(updateCurrentTeamAndNotify()));
@@ -167,7 +172,7 @@ void TrainerMenu::on_teamFolderButton_clicked()
 {
     QSettings s;
 
-    QString folder = QFileDialog::getExistingDirectory(this, tr("Folder in which to save the team"), team().team().folder().isEmpty() ?
+    QString folder = QFileDialog::getExistingDirectory(NULL, tr("Folder in which to save the team"), team().team().folder().isEmpty() ?
                                                            s.value("team_folder").toString() : team().team().folder());
 
     if (folder.length() > 0) {
