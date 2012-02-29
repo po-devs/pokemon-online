@@ -124,6 +124,13 @@ PokeButton:checked {
     background: #40491e;
 }
 
+TeamMenu QLabel {
+    color: white;
+}
+
+TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
+    color: white;
+}
 
 /*\*=============================================*/
 
