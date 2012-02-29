@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
-    <height>511</height>
+    <width>737</width>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -263,10 +263,10 @@
     </layout>
    </item>
    <item row="0" column="5" colspan="2">
-    <widget class="QFrame" name="frame">
-     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,1,0,0">
+    <widget class="QFrame" name="teambuilderFrame">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0,0,0">
       <item>
-       <widget class="QLabel" name="teamBuilderLabel">
+       <widget class="QLabel" name="teambuilderLabel">
         <property name="text">
          <string>Teambuilder</string>
         </property>
@@ -276,16 +276,68 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <property name="spacing">
-         <number>2</number>
+       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true">
+        <property name="toolTip">
+         <string>Remove team</string>
         </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QLineEdit" name="teamName">
-          <property name="placeholderText">
-           <string>Team name</string>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QFormLayout" name="formLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="teamNameLabel">
+            <property name="text">
+             <string>Team name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="spacing">
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="teamName">
+              <property name="placeholderText">
+               <string>Team name</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="teamTierLabel">
+            <property name="text">
+             <string>Team tier</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="teamTier">
+            <property name="placeholderText">
+             <string>Team default tier</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QToolButton" name="teamFolderButton">
@@ -293,26 +345,41 @@
            <string>Change team folder</string>
           </property>
           <property name="text">
-           <string>...</string>
+           <string/>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonIconOnly</enum>
+          </property>
+          <property name="autoRaise">
+           <bool>true</bool>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true"/>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QLineEdit" name="teamTier">
-          <property name="placeholderText">
-           <string>Team default tier</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="loadTeam">
+          <property name="toolTip">
+           <string>Load team</string>
+          </property>
           <property name="text">
            <string>Load Team</string>
           </property>
@@ -320,6 +387,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="saveTeam">
+          <property name="toolTip">
+           <string>Save team</string>
+          </property>
           <property name="text">
            <string>Save Team</string>
           </property>
@@ -327,6 +397,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="importTeam">
+          <property name="toolTip">
+           <string>Import team</string>
+          </property>
           <property name="text">
            <string>Import Team</string>
           </property>
@@ -336,8 +409,8 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,1,1,0">
-        <property name="spacing">
-         <number>2</number>
+        <property name="verticalSpacing">
+         <number>3</number>
         </property>
         <item row="0" column="0">
          <widget class="QPushButton" name="team1">
@@ -384,10 +457,19 @@
         <item row="0" column="3">
          <widget class="QToolButton" name="addTeam">
           <property name="toolTip">
-           <string>add team</string>
+           <string>Add team</string>
           </property>
           <property name="text">
-           <string>+</string>
+           <string/>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonIconOnly</enum>
+          </property>
+          <property name="autoRaise">
+           <bool>true</bool>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::LeftArrow</enum>
           </property>
          </widget>
         </item>
@@ -400,10 +482,16 @@
            </sizepolicy>
           </property>
           <property name="toolTip">
-           <string>remove current team</string>
+           <string>Remove team</string>
           </property>
           <property name="text">
-           <string>-</string>
+           <string/>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonIconOnly</enum>
+          </property>
+          <property name="autoRaise">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
