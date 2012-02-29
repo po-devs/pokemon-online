@@ -39,7 +39,6 @@ private slots:
     void on_teamName_textEdited();
     void on_infos_textChanged();
     void on_saveProfile_clicked();
-    void on_loadProfile_clicked();
     void on_colorButton_clicked();
     void setAvatarPixmap();
     void on_deleteProfile_clicked();
@@ -50,6 +49,7 @@ private slots:
     void on_loadTeam_clicked();
     void on_importTeam_clicked();
     void on_teamFolderButton_clicked();
+    void on_profileList_currentIndexChanged(int);
     void on_newProfile_clicked();
     void on_teamTier_textEdited();
     void setTier(const QString &tier);
