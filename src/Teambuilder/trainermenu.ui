@@ -340,23 +340,78 @@
          </layout>
         </item>
         <item>
-         <widget class="QToolButton" name="teamFolderButton">
-          <property name="toolTip">
-           <string>Change team folder</string>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonIconOnly</enum>
-          </property>
-          <property name="autoRaise">
-           <bool>true</bool>
-          </property>
-          <property name="arrowType">
-           <enum>Qt::NoArrow</enum>
-          </property>
-         </widget>
+          <item row="2" column="0">
+           <widget class="QToolButton" name="teamFolderButton">
+            <property name="toolTip">
+             <string>Change team folder</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::NoArrow</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QToolButton" name="loadTeam">
+            <property name="toolTip">
+             <string>Load team</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="saveTeam">
+            <property name="toolTip">
+             <string>Save team</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QToolButton" name="importTeam">
+            <property name="toolTip">
+             <string>Import team</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonIconOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -374,38 +429,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QPushButton" name="loadTeam">
-          <property name="toolTip">
-           <string>Load team</string>
-          </property>
-          <property name="text">
-           <string>Load Team</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="saveTeam">
-          <property name="toolTip">
-           <string>Save team</string>
-          </property>
-          <property name="text">
-           <string>Save Team</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="importTeam">
-          <property name="toolTip">
-           <string>Import team</string>
-          </property>
-          <property name="text">
-           <string>Import Team</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout_4"/>
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,1,1,0">
