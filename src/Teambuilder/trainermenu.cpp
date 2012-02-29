@@ -14,6 +14,8 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
 {
     ui->setupUi(this);
+    ui->teamFolderButton->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
+    ui->removeTeam->setIcon(QApplication::style()->standardIcon(QStyle::SP_TrashIcon));
     ui->name->setValidator(new QNickValidator(this));
 
     QPushButton *buttons[6] = {ui->team1, ui->team2, ui->team3, ui->team4, ui->team5, ui->team6};
