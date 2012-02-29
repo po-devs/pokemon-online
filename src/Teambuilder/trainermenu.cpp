@@ -239,7 +239,28 @@ void TrainerMenu::on_infos_textChanged()
 void TrainerMenu::loadProfileList()
 {
     QSettings s;
+    ui->profileList->blockSignals(true);
     ui->profileList->addItems(team().profile().getProfileList(s.value("profiles_path").toString()));
+    ui->profileList->blockSignals(false);
+
+    for (int i = 0; i < ui->profileList->count(); i++) {
+        if (ui->profileList->itemText(i) == team().profile().name()) {
+            ui->profileList->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+
+void TrainerMenu::on_profileList_currentIndexChanged(int)
+{
+    if (ui->profileList->currentText() == team().name()) {
+        return;
+    }
+    QSettings s;
+    QString path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
+    s.setValue("current_profile", path);
+    team().profile().loadFromFile(path);
+    updateData();
 }
 
 void TrainerMenu::on_saveProfile_clicked()
@@ -263,19 +284,6 @@ void TrainerMenu::on_saveProfile_clicked()
         }
         s.setValue("current_profile", path);
     }
-}
-
-void TrainerMenu::on_loadProfile_clicked()
-{
-    if(ui->profileList->currentText().isNull()) {
-        QMessageBox::warning(0, tr("Loading a Profile"), tr("There's no profile selected."));
-        return;
-    }
-    QSettings s;
-    QString path = s.value("profiles_path").toString() + "/" + ui->profileList->currentText() + ".xml";
-    s.setValue("current_profile", path);
-    team().profile().loadFromFile(path);
-    updateData();
 }
 
 void TrainerMenu::on_deleteProfile_clicked()

@@ -179,16 +179,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="loadProfile">
-           <property name="text">
-            <string>Load Profile</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="newProfile">
            <property name="text">
-            <string>New Profile</string>
+            <string>Clear Profile</string>
            </property>
           </widget>
          </item>
@@ -433,9 +426,6 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,1,1,0">
-        <property name="verticalSpacing">
-         <number>3</number>
-        </property>
         <item row="0" column="0">
          <widget class="QPushButton" name="team1">
           <property name="text">
