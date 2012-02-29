@@ -8,7 +8,7 @@ QStringList Profile::getProfileList(const QString &path)
     QDir profilesPath(path);
     QStringList profilesList;
     foreach(const QString &name, profilesPath.entryList(QStringList("*.xml"))) {
-        profilesList.append(name.split(".")[0]);
+        profilesList.append(QUrl::fromPercentEncoding(name.split(".")[0].toUtf8()));
     }
     return profilesList;
 }
