@@ -19,8 +19,22 @@ TrainerMenu QLabel#avatar {
     background: #ffffff;
 }
 
-PokeEdit QFrame#pokemonFrame {
+PokeEdit #pokemonSprite {
     background: #ffffff;
+	margin: 9px;
+
+}
+
+PokeEdit #itemSprite {
+	margin: 9px;
+}
+
+PokeEdit #pokemonFrame {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a2d3c, stop: 0.495 #172c3d,
+                                stop: 0.505 #0d161f, stop: 1.0 #16242f);
+	height: 110px;
+	width: 110px;
 }
 
 TeamBuilder {
@@ -36,7 +50,6 @@ TeamBuilder {
 TrainerMenu, TeamMenu {
     background: #070a0f;
     border-radius: 20px;
-    border: 1px solid #293742;
 }
 
 TeamBuilder * {
