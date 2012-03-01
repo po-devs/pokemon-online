@@ -537,8 +537,10 @@ void PokeTeam::load()
         gender() = true_rand() % 2 ? Pokemon::Male : Pokemon::Female;
     }
 
-    ability() = abilities().ab(0);
-    nickname() = PokemonInfo::Name(num());
+    if (ability() == 0 || !abilities().contains(ability())) {
+        ability() = abilities().ab(0);
+    }
+
     PokeGraphics::load(gender(), false);
     PokeGraphics::loadIcon(num());
 }

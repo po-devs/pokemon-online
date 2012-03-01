@@ -8,20 +8,24 @@ class QStackedWidget;
 class QTabBar;
 class TeamHolder;
 class QStringListModel;
+class QAbstractItemModel;
+class PokeEdit;
 
 class TeamMenu : public TeamBuilderWidget
 {
     Q_OBJECT
 
 public:
-    explicit TeamMenu(TeamHolder *team, int index=0);
+    explicit TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
     ~TeamMenu();
 
     void updateTeam();
 signals:
     void switchToTrainer();
-private slots:
+public slots:
     void switchToTab(int index);
+private slots:
+    void tabIconChanged();
 private:
     void setupUi();
     void updateTabs();
@@ -29,8 +33,9 @@ private:
     struct _ui {
         QStackedWidget *stack;
         QTabBar *pokemonTabs;
-        QHash<int, QWidget*> pokemons;
+        QHash<int, PokeEdit*> pokemons;
         QStringListModel *itemsModel, *natureModel;
+        QAbstractItemModel *pokemonModel;
     };
 
     _ui *ui;

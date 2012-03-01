@@ -32,7 +32,6 @@ SOURCES += main.cpp \
     Teambuilder/evmanager.cpp \
     Teambuilder/pokebody.cpp \
     Teambuilder/advanced.cpp \
-    Teambuilder/pokechoice.cpp \
     Teambuilder/teambody.cpp \
     Teambuilder/dockinterface.cpp \
     Teambuilder/pokebodywidget.cpp \
@@ -58,7 +57,9 @@ SOURCES += main.cpp \
     challengedialog.cpp \
     tierratingbutton.cpp \
     findbattledialog.cpp \
-    teamline.cpp
+    teamline.cpp \
+    pokeselection.cpp \
+    pokechoice.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -95,7 +96,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/pokeballed.h \
     Teambuilder/teambody.h \
     Teambuilder/pokebody.h \
-    Teambuilder/pokechoice.h \
     Teambuilder/evmanager.h \
     Teambuilder/advanced.h \
     Teambuilder/dockinterface.h \
@@ -134,7 +134,9 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     tierratingbutton.h \
     findbattledialog.h \
     teamline.h \
-    tieractionfactory.h
+    tieractionfactory.h \
+    pokeselection.h \
+    pokechoice.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -151,7 +153,8 @@ FORMS += controlpanel.ui \
     challengedialog.ui \
     tierratingbutton.ui \
     findbattledialog.ui \
-    teamline.ui
+    teamline.ui \
+    pokeselection.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

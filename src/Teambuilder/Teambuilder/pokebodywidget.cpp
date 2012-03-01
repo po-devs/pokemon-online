@@ -12,7 +12,7 @@
 #include "pokeballed.h"
 #include "../../Utilities/otherwidgets.h"
 #include "pokemovesmodel.h"
-#include "pokechoice.h"
+#include "../pokechoice.h"
 #include "evmanager.h"
 #include "../theme.h"
 

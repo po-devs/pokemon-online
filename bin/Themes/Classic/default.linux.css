@@ -10,6 +10,27 @@ QToolTip {
 }
 
 /*=============================================*\*/
+/*************** Platform dependent **************/
+
+PokeButton QLabel#nickname, PokeButton QLabel#number {
+    font-size: 16px;
+}
+
+PokeButton QLabel#species {
+    font-size: 12px;
+    color: #90979f;
+}
+
+PokeButton QLabel#itemLabel {
+    font-size: 12px;
+    color: #dfe6ec;
+}
+
+PokeButton QLabel#level {
+    font-size: 13px;
+}
+
+/*=============================================*\*/
 
 PokeButton {
     min-width: 170px;
@@ -35,7 +56,9 @@ PokeEdit #pokemonFrame {
                                 stop: 0.505 #0d161f, stop: 1.0 #16242f);
 	height: 110px;
 	width: 110px;
+	/*border-radius: 4px;*/
 }
+
 TeamBuilder {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #192c3b, stop: 0.55 #192b39,
@@ -46,10 +69,9 @@ TeamBuilder {
     padding-right: 5px;
 }
 
-TrainerMenu, TeamMenu {
+TrainerMenu, TeamMenu, PokeSelection {
     background: #070a0f;
     border-radius: 20px;
-    border: 1px solid #293742;
 }
 
 TeamBuilder * {
@@ -115,24 +137,6 @@ TrainerMenu PokeButton {
     border-color: #0a131c;
 }
 
-PokeButton QLabel#nickname, PokeButton QLabel#number {
-    font-size: 16px;
-}
-
-PokeButton QLabel#species {
-    font-size: 12px;
-    color: #90979f;
-}
-
-PokeButton QLabel#itemLabel {
-    font-size: 12px;
-    color: #dfe6ec;
-}
-
-PokeButton QLabel#level {
-    font-size: 13px;
-}
-
 PokeButton:checked {
     background: #40491e;
 }
@@ -143,6 +147,11 @@ TeamMenu QLabel {
 
 TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
     color: white;
+}
+
+PokeSelection QPushButton {
+	color: white;
+	background: #459903;
 }
 
 /*\*=============================================*/
@@ -603,18 +612,3 @@ QTabBar::tab:left:last, QTabBar::tab:right:last {
 }
 
  */
-
-
-/*m_trainerInfo->setStyleSheet(
-							 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-															  "stop: 0 #ABAFE5, stop: 1 #8588B2);"
-								"border: 1px solid gray;"
-								"border-radius: 10px"
-							); */
-/*m_winMessage->setStyleSheet(
-								"background: qradialgradient(cx:0.5, cy:0.5, radius: 0.8,"
-								"stop:0 white, stop:1 #bfbfbd);"
-								"border: 1px solid gray;"
-								"border-radius: 10px"
-							);
-*/

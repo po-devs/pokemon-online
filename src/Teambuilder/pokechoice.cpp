@@ -10,28 +10,45 @@ QSize TB_PokeChoice::sizeHint() const {
     return QWidget::sizeHint();
 }
 
+TB_PokeChoice::TB_PokeChoice(QWidget *parent)
+    : QTableView(parent)
+{
+    init();
+}
+
 TB_PokeChoice::TB_PokeChoice(QAbstractItemModel *model, bool missingno)
 {
-    setObjectName("PokeChoice");
+    init();
+    setModel(model);
 
+    if (!missingno) {
+        //hideRow(0);
+    }
+}
+
+void TB_PokeChoice::setModel(QAbstractItemModel *model)
+{
+    if (selectionModel()) {
+        selectionModel()->disconnect(SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this);
+    }
+    QTableView::setModel(model);
+
+    connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(selectedCell(QModelIndex)));
+}
+
+void TB_PokeChoice::init()
+{
     verticalHeader()->setDefaultSectionSize(22);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setShowGrid(false);
     verticalHeader()->hide();
-    horizontalHeader()->hide();
 
     horizontalHeader()->setDefaultSectionSize(40);
     horizontalHeader()->setStretchLastSection(true);
 
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::DragOnly);
-
-    setModel(model);
-
-    if (!missingno) {
-        //hideRow(0);
-    }
 
     connect(this, SIGNAL(activated(QModelIndex)), SLOT(activatedCell(QModelIndex)));
 }
@@ -41,6 +58,13 @@ void TB_PokeChoice::activatedCell(const QModelIndex &index)
     int num = model()->data(index, CustomModel::PokenumRole).toInt();
 
     emit pokemonActivated(Pokemon::uniqueId(num, 0));
+}
+
+void TB_PokeChoice::selectedCell(const QModelIndex &index)
+{
+    int num = model()->data(index, CustomModel::PokenumRole).toInt();
+
+    emit pokemonSelected(Pokemon::uniqueId(num, 0));
 }
 
 void TB_PokeChoice::mousePressEvent(QMouseEvent *event)
