@@ -1695,7 +1695,7 @@ struct MMBeatUp : public MM {
         int def = PokemonInfo::Stat(b.poke(t).num(), b.gen(), Defense,b.poke(t).level(),0,0);
         for (int i = 0; i < 6; i++) {
             PokeBattle &p = b.poke(source,i);
-            if (p.status() == Pokemon::Fine) {
+            if (p.status() == Pokemon::Fine || i == b.slotNum(s)) {
                 int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.randint(255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
