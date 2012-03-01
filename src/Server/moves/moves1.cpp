@@ -1,9 +1,9 @@
-#include "moves.h"
-#include "miscmoves.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "items.h"
-#include "battlecounterindex.h"
-#include "../Shared/battlecommands.h"
+#include "../moves.h"
+#include "../miscmoves.h"
+#include "../../PokemonInfo/pokemoninfo.h"
+#include "../items.h"
+#include "../battlecounterindex.h"
+#include "../../Shared/battlecommands.h"
 
 typedef BS::priorityBracket bracket;
 using namespace Move;
