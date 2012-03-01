@@ -952,8 +952,8 @@ struct MMSwitcheroo : public MM
             turn(b,s)["Failed"] = true;
         }
         /* Knock off */
-        if (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
-                || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) {
+        if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
+                || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool())) {
             turn(b,s)["Failed"] = true;
         }
     }
