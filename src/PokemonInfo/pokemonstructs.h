@@ -106,6 +106,10 @@ struct AbilityGroup {
     int ab(int num) const {
         return _ab[num];
     }
+
+    bool contains(int num) const {
+        return _ab[0] == num || _ab[1] == num || _ab[2] == num;
+    }
 };
 
 class PokeBaseStats
@@ -327,5 +331,6 @@ DataStream & operator << (DataStream &out, const Pokemon::gen &g);
 DataStream & operator >> (DataStream &in, Pokemon::gen &g);
 
 Q_DECLARE_METATYPE(Pokemon::uniqueId);
+Q_DECLARE_METATYPE(Pokemon::gen);
 
 #endif // POKEMONSTRUCTS_H

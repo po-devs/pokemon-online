@@ -22,6 +22,8 @@ public:
     ~IvBox();
 
 public slots:
+    void updateAll();
+
     void updateStats();
     void updateStat(int stat);
     void changeAbility();
@@ -38,7 +40,6 @@ private:
     PokeTeam &poke() {return *m_poke;}
     const PokeTeam &poke() const {return *m_poke;}
 
-    void setData();
     void updateAbility();
     void updateIVs();
     void updateIV(int stat);

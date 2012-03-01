@@ -8,9 +8,10 @@
 #include "pokeedit.h"
 #include "teamholder.h"
 
-TeamMenu::TeamMenu(TeamHolder *team, int index) :
+TeamMenu::TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
     ui(new _ui()), m_team(team)
 {
+    ui->pokemonModel = pokeModel;
     setupUi();
     updateTabs();
 
@@ -49,15 +50,28 @@ void TeamMenu::switchToTab(int index)
         return;
     }
     if (!ui->pokemons.contains(index)) {
-        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit(&team().team().poke(index), ui->itemsModel, ui->natureModel));
+        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit(&team().team().poke(index), ui->pokemonModel, ui->itemsModel, ui->natureModel));
+        ui->pokemons[index]->setProperty("slot", index);
         connect(ui->pokemons[index], SIGNAL(switchToTrainer()), SIGNAL(switchToTrainer()));
+        connect(ui->pokemons[index], SIGNAL(numChanged()), SLOT(tabIconChanged()));
     }
     ui->stack->setCurrentWidget(ui->pokemons[index]);
+}
+
+void TeamMenu::tabIconChanged()
+{
+    int slot = sender()->property("slot").toInt();
+
+    ui->pokemonTabs->setTabIcon(slot, PokemonInfo::Icon(team().team().poke(slot).num()));
 }
 
 void TeamMenu::updateTeam()
 {
     updateTabs();
+
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->setPoke(&team().team().poke(p->property("slot").toInt()));
+    }
 }
 
 void TeamMenu::updateTabs()

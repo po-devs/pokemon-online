@@ -42,13 +42,13 @@ IvBox::~IvBox()
 void IvBox::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
-    setData();
+    updateAll();
 }
 
 // We need to initialize in a separate function since setPoke() is obviously called after IvBox::IvBox
 // So if we do this things inside that function, a nicely crash.
 
-void IvBox::setData()
+void IvBox::updateAll()
 {
     // Abilities.
 

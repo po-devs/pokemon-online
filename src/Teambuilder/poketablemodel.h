@@ -2,18 +2,20 @@
 #define POKETABLEMODEL_H
 
 #include <QAbstractTableModel>
+#include "../PokemonInfo/pokemonstructs.h"
 
 class PokeTableModel : public QAbstractTableModel {
 public:
-    PokeTableModel(int gen=5, QObject *parent = NULL);
+    PokeTableModel(Pokemon::gen gen=5, QObject *parent = NULL);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-    void setGen(int gen);
+    void setGen(Pokemon::gen gen);
 private:
-    int gen;
+    Pokemon::gen gen;
 };
 
 #endif // POKETABLEMODEL_H

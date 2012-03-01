@@ -1404,7 +1404,7 @@ void Client::onReconnectFailure(int reason)
         tr("Your IP is too different from what's expected.")
     };
 
-    if (reason < sizeof(reasons)/sizeof(QString) && reason >= 0) {
+    if (unsigned(reason) < sizeof(reasons)/sizeof(QString) && reason >= 0) {
         printLine(tr("The server refused the reconnect attempt with the reason: %1").arg(reasons[reason]));
     } else {
         printLine(tr("The server refused the reconnect attempt."));

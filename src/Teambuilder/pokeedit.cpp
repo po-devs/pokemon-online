@@ -9,9 +9,11 @@
 #include "ui_pokeedit.h"
 #include "theme.h"
 #include "pokemovesmodel.h"
+#include "pokeselection.h"
 
-PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
+PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
+    pokemonModel(pokeModel),
     m_poke(poke)
 {
     ui->setupUi(this);
@@ -79,6 +81,18 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
     updateAll();
 }
 
+void PokeEdit::on_pokemonFrame_clicked()
+{
+    PokeSelection *p = new PokeSelection(poke().num(), pokemonModel);
+    p->setParent(this, Qt::Popup);
+    QPoint pos = ui->pokemonFrame->mapToGlobal(ui->pokemonFrame->pos());
+    p->move(pos.x() + ui->pokemonFrame->width()+10, pos.y()-ui->pokemonFrame->height()/2);
+    p->setAttribute(Qt::WA_DeleteOnClose, true);
+    p->show();
+
+    connect(p, SIGNAL(pokemonChosen(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
+}
+
 void PokeEdit::changeMove()
 {
     int slot = sender()->property("move").toInt();
@@ -136,6 +150,7 @@ void PokeEdit::updateAll()
     setItem(poke().item());
     ui->levelSettings->updateAll();
     ui->evbox->updateAll();
+    ui->ivbox->updateAll();
 
     movesModel->setPokemon(poke().num(), poke().gen());
 
@@ -149,6 +164,14 @@ void PokeEdit::updateAll()
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
+}
+
+void PokeEdit::setPoke(PokeTeam *poke)
+{
+    m_poke = poke;
+    ui->ivbox->setPoke(poke);
+    ui->evbox->setPoke(poke);
+    updateAll();
 }
 
 void PokeEdit::updateStats()
@@ -204,6 +227,25 @@ void PokeEdit::setItem(int itemnum)
 void PokeEdit::changeHappiness(int newHappiness)
 {
     poke().happiness() = newHappiness;
+}
+
+void PokeEdit::setNum(const Pokemon::uniqueId &num)
+{
+    if (num == poke().num()) {
+        return;
+    }
+    bool sameForme = num.pokenum == poke().num().pokenum;
+    if (!sameForme) {
+        poke().reset();
+    }
+    poke().setNum(num);
+    poke().load();
+    if (sameForme) {
+        poke().runCheck();
+    }
+
+    emit numChanged();
+    updateAll();
 }
 
 void PokeEdit::setNature(int index)

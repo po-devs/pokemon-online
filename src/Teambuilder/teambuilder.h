@@ -39,6 +39,8 @@ private:
     TrainerMenu *trainer;
     TeamMenu *teamMenu;
 
+    QAbstractItemModel *pokemonModel;
+
     void markAllUpdated();
     void switchTo(TeamBuilderWidget *w);
 };

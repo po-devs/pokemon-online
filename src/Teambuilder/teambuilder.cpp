@@ -4,10 +4,12 @@
 #include "teamholder.h"
 #include "mainwindow.h"
 #include "teammenu.h"
+#include "poketablemodel.h"
 
 TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
 {
     addWidget(trainer = new TrainerMenu(team));
+    pokemonModel = new PokeTableModel(team->team().gen(), this);
 
     loadSettings(this, defaultSize());
 
@@ -80,9 +82,11 @@ void TeamBuilder::markTeamUpdated()
 void TeamBuilder::editPoke(int index)
 {
     if (!teamMenu) {
-        addWidget(teamMenu = new TeamMenu(&team(), index));
+        addWidget(teamMenu = new TeamMenu(pokemonModel, &team(), index));
         connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
         connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
+    } else {
+        teamMenu->switchToTab(index);
     }
 
     switchTo(teamMenu);
