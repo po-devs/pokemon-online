@@ -185,37 +185,7 @@ void BattleSituation::start(ContextSwitcher &ctx)
 
 void BattleSituation::engageBattle()
 {
-    if (tier().length() != 0) {
-        Tier &t = TierMachine::obj()->tier(tier());
-
-        t.fixTeam(team(0));
-        t.fixTeam(team(1));
-    }
-
-    //qDebug() << "Engaging battle " << this << ", calling plugins";
-    /* Plugin call */
-    callp(BP::battleStarting);
-
-    for (int i = 0; i < 6; i++) {
-        if (poke(Player1,i).ko()) {
-            changeStatus(Player1, i, Pokemon::Koed);
-        }
-        if (poke(Player2,i).ko()) {
-            changeStatus(Player2, i, Pokemon::Koed);
-        }
-    }
-
-    // Check for set weather.
-    if(weather != NormalWeather) {
-        sendMoveMessage(57, weather - 1, 0, TypeInfo::TypeForWeather(weather));
-    }
-
-    for (int i = 0; i < numberOfSlots()/2; i++) {
-        if (!poke(Player1, i).ko())
-            sendPoke(slot(Player1, i), i);
-        if (!poke(Player2, i).ko())
-            sendPoke(slot(Player2, i), i);
-    }
+    BattleBase::engageBattle();
 
     /* For example, if two pokemons are brought out
        with a weather ability, the slower one acts last */
@@ -223,76 +193,6 @@ void BattleSituation::engageBattle()
 
     foreach(int p, pokes)
         callEntryEffects(p);
-
-    for (int i = 0; i< numberOfSlots(); i++) {
-        hasChoice[i] = false;
-    }
-}
-
-/* The battle loop !! */
-void BattleSituation::run()
-{
-#ifdef WIN32
-    /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
-        interfere with other battles */
-    srand(time(NULL));
-    /* Get rid of the first predictable values for a better rand*/
-    for (int i = 0; i < 10; i++)
-        rand();
-#else
-# ifdef WIN64
-    /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing */
-    srand(time(NULL));
-    for (int i = 0; i < 10; i++)
-        rand();
-# endif
-#endif
-    unsigned long array[10];
-    for (int i = 0; i < 10; i++) {
-        array[i] = rand();
-        array[i] |= (rand() << 16);
-    }
-    rand_generator.seed(array, 10);
-
-    if (clauses() & ChallengeInfo::RearrangeTeams) {
-        rearrangeTeams();
-    }
-
-    rearrangeTime() = false;
-
-    initializeEndTurnFunctions();
-
-    engageBattle();
-
-    forever
-    {
-        beginTurn();
-
-        endTurn();
-    }
-}
-
-void BattleSituation::rearrangeTeams()
-{
-    rearrangeTime() = true;
-    /* Here we'll give the possibility to rearrange teams */
-    notify(Player1,RearrangeTeam,Player2,ShallowShownTeam(team(Player2)));
-    notify(Player2,RearrangeTeam,Player1,ShallowShownTeam(team(Player1)));
-
-    for (int player = Player1; player <= Player2; player++) {
-        couldMove[player] = true;
-        hasChoice[player] = true;
-
-        startClock(player);
-    }
-
-    yield();
-
-    for (int player = Player1; player <= Player2; player++) {
-        team(player).setIndexes(choice(slot(player)).choice.rearrange.pokeIndexes);
-
-        startClock(player);
-    }
 }
 
 void BattleSituation::beginTurn()
@@ -806,11 +706,6 @@ void BattleSituation::personalEndTurn(int player)
     testWin();
 }
 
-void BattleSituation::notifyFail(int p)
-{
-    notify(All, Failed, p);
-}
-
 void BattleSituation::endTurnStatus(int player)
 {
     if (koed(player))
@@ -1070,52 +965,14 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
     }
 }
 
-inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> & y) {
-    return x.second>y.second;
-};
-
-std::vector<int> BattleSituation::sortedBySpeed() {
-    std::vector<int> ret;
-
-    std::vector<std::pair<int, int> > speeds;
-
-    for (int i =0; i < numberOfSlots(); i++) {
-        if (!koed(i)) {
-            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
-        }
-    }
-
-    if (speeds.size() == 0)
-        return ret;
-
-    std::sort(speeds.begin(), speeds.end(), &comparePair);
-
-    /* Now for the speed tie */
-    for (unsigned i = 0; i < speeds.size()-1; ) {
-        unsigned  j;
-        for (j = i+1; j < speeds.size(); j++) {
-            if (speeds[j].second != speeds[i].second) {
-                break;
-            }
-        }
-
-        if (j != i +1) {
-            std::random_shuffle(speeds.begin() + i, speeds.begin() + j);
-        }
-
-        i = j;
-    }
-
-    /* Now assigning, removing the pairs */
-    for (unsigned i =0; i < speeds.size(); i++) {
-        ret.push_back(speeds[i].first);
-    }
+std::vector<int> && BattleSituation::sortedBySpeed() {
+    std::vector<int> ret = BattleBase::sortedBySpeed();
 
     if (battleMemory().value("TrickRoomCount").toInt() > 0) {
         std::reverse(ret.begin(),ret.end());
     }
 
-    return ret;
+    return std::move(ret);
 }
 
 void BattleSituation::analyzeChoices()
@@ -1226,281 +1083,6 @@ bool BattleSituation::hasMoved(int p)
 void BattleSituation::notifySub(int player, bool sub)
 {
     notify(All, Substitute, player, sub);
-}
-
-bool BattleSituation::canCancel(int player)
-{
-    if (!blocked())
-        return false;
-    if (rearrangeTime())
-        return true;
-
-    for (int i = 0; i < numberOfSlots()/2; i++) {
-        if (couldMove[slot(player,i)])
-            return true;
-    }
-
-    return false;
-}
-
-void BattleSituation::cancel(int player)
-{
-    if (rearrangeTime()) {
-        notify(player,RearrangeTeam,opponent(player),ShallowShownTeam(team(opponent(player))));
-        hasChoice[slot(player, 0)] = true;
-    } else {
-        notify(player, CancelMove, player);
-
-        for (int i = 0; i < numberOfSlots()/2; i++) {
-            if (couldMove[slot(player, i)]) {
-                hasChoice[slot(player, i)] = true;
-            }
-        }
-    }
-    if (drawer() == player) {
-        drawer() = -1;
-    }
-
-    startClock(player,false);
-}
-
-void BattleSituation::addDraw(int player)
-{
-    if (finished()) {
-        return;
-    }
-
-    if (drawer() == -1) {
-        drawer() = player;
-        return;
-    }
-    if (drawer() != player) {
-        drawer() = -2;
-        schedule();
-    }
-}
-
-bool BattleSituation::validChoice(const BattleChoice &b)
-{
-    if (!couldMove[b.slot()] || !hasChoice[b.slot()]) {
-        return false;
-    }
-
-    if (rearrangeTime()) {
-        if (!b.rearrangeChoice())
-            return false;
-    } else if (!b.match(options[b.slot()])) {
-        return false;
-    }
-
-    if (b.moveToCenterChoice()) {
-        return mode() == ChallengeInfo::Triples && slotNum(b.slot()) != 1;
-    }
-
-    int player = this->player(b.slot());
-
-    /* If it's a switch, we check the receiving poke valid, if it's a move, we check the target */
-    if (b.switchChoice()) {
-        if (isOut(player, b.pokeSlot()) || poke(player, b.pokeSlot()).ko()) {
-            return false;
-        }
-        /* Let's also check another switch hasn't been made to the same poke */
-        for (int i = 0; i < numberOfSlots(); i++) {
-            int p2 = this->player(i);
-            if (i != b.slot() && p2 == player && couldMove[i] && hasChoice[i] == false && choice(i).switchChoice()
-                    && choice(i).pokeSlot() == b.pokeSlot()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    if (b.attackingChoice()){
-        /* It's an attack, we check the target is valid */
-        if (b.target() < 0 || b.target() >= numberOfSlots())
-            return false;
-        return true;
-    }
-
-    if (b.rearrangeChoice()) {
-        if (slotNum(b.slot()) != 0)
-            return false;
-
-        bool used[6] = {false};
-
-        /* Checks all the 6 indexes are different */
-        for (int i = 0; i < 6; i++) {
-            int x = b.choice.rearrange.pokeIndexes[i];
-
-            if (x < 0 || x >= 6)
-                return false;
-
-            if (used[x])
-                return false;
-
-            used[x] = true;
-        }
-
-        if (tier().length() > 0) {
-            team(player).setIndexes(b.choice.rearrange.pokeIndexes);
-            if (!TierMachine::obj()->isValid(team(player), tier()) && !(clauses() & ChallengeInfo::ChallengeCup)) {
-                team(player).resetIndexes();
-                return false;
-            } else {
-                team(player).resetIndexes();
-                return true;
-            }
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-bool BattleSituation::isOut(int, int poke)
-{
-    return poke < numberOfSlots()/2;
-}
-
-void BattleSituation::storeChoice(const BattleChoice &b)
-{
-    choice(b.slot()) = b;
-    hasChoice[b.slot()] = false;
-
-    /* If the move is encored, a random target is picked. */
-    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
-        choice(b.slot()).choice.attack.attackTarget = b.slot();
-}
-
-bool BattleSituation::allChoicesOkForPlayer(int player)
-{
-    for (int i = 0; i < numberOfSlots()/2; i++) {
-        if (hasChoice[slot(player, i)] != false)
-            return false;
-    }
-    return true;
-}
-
-int BattleSituation::currentInternalId(int slot) const
-{
-    return team(this->player(slot)).internalId(poke(slot));
-}
-
-bool BattleSituation::allChoicesSet()
-{
-    for (int i = 0; i < numberOfSlots(); i++) {
-        if (hasChoice[i])
-            return false;
-    }
-    return true;
-}
-
-void BattleSituation::clearSpectatorQueue()
-{
-    if (!blocked() && !finished()) {
-        QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
-        return;
-    }
-    if (pendingSpectators.size() > 0) {
-        QList<QPointer<Player> > copy = pendingSpectators;
-
-        pendingSpectators.clear();
-
-        foreach (QPointer<Player> p, copy) {
-            if (p) {
-                addSpectator(p);
-            }
-        }
-    }
-}
-
-void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
-{
-    int player = spot(id);
-
-    /* Simple guard to avoid multithreading problems */
-    if (!blocked()) {
-        return;
-    }
-
-    if (finished()) {
-        return;
-    }
-
-    /* Clear the queue of pending spectators */
-    clearSpectatorQueue();
-
-    if (b.slot() < 0 || b.slot() >= numberOfSlots()) {
-        return;
-    }
-
-    if (player != this->player(b.slot())) {
-        /* W00T! He tried to impersonate the other! Bad Guy! */
-        //notify(player, BattleChat, opponent(player), QString("Say, are you trying to hack this game? Beware, i'll report you and have you banned!"));
-        return;
-    }
-
-    /* If the player wants a cancel, we grant it, if possible */
-    if (b.cancelled()) {
-        if (canCancel(player)) {
-            cancel(player);
-        }
-        return;
-    }
-
-    if (b.drawChoice()) {
-        addDraw(player);
-        return;
-    }
-
-    if (!validChoice(b)) {
-        if (canCancel(player))
-            cancel(player);
-        return;
-    }
-
-    storeChoice(b);
-
-    if (allChoicesOkForPlayer(player)) {
-        stopClock(player,false);
-    }
-
-    if (allChoicesSet()) {
-        /* Blocking any further cancels */
-        for (int i = 0; i < numberOfSlots(); i++) {
-            if (couldMove[i]) {
-                couldMove[i] = false;
-                stopClock(this->player(i), true);
-            }
-        }
-        schedule();
-    }
-}
-
-void BattleSituation::battleChat(int id, const QString &str)
-{
-    notify(All, BattleChat, spot(id), str);
-}
-
-void BattleSituation::spectatingChat(int id, const QString &str)
-{
-    notify(All, SpectatorChat, id, qint32(id), str);
-}
-
-QString BattleSituation::name(int id)
-{
-    if(id <= 1) {
-        return team(id).name;
-    }
-    else {
-        return "?";
-    }
-}
-
-QString BattleSituation::nick(int slot)
-{
-    return QString ("%1's %2").arg(name(player(slot)), poke(slot).nick());
 }
 
 /* Battle functions! Yeah! */
@@ -2022,11 +1604,6 @@ bool BattleSituation::testFail(int player)
         return true;
     }
     return false;
-}
-
-bool BattleSituation::attacking()
-{
-    return attacker() != -1;
 }
 
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
@@ -4225,48 +3802,6 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
     }
 }
 
-void BattleSituation::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)
-{
-    if (foe == -1) {
-        notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type));
-    } else if (other == -1) {
-        notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe));
-    } else if (q == "") {
-        notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other));
-    } else {
-        notify(All, MoveMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other), q);
-    }
-}
-
-void BattleSituation::sendAbMessage(int move, int part, int src, int foe, int type, int other)
-{
-    if (foe == -1) {
-        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type));
-    } else if (other == -1) {
-        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe));
-    } else {
-        notify(All, AbilityMessage, src, quint16(move), uchar(part), qint8(type), qint8(foe), qint16(other));
-    }
-}
-
-void BattleSituation::sendItemMessage(int move, int src, int part, int foe, int berry, int stat)
-{
-    if (foe ==-1)
-        notify(All, ItemMessage, src, quint16(move), uchar(part));
-    else if (berry == -1)
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe));
-    else if (stat == -1)
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
-    else
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint16(stat));
-}
-
-void BattleSituation::sendBerryMessage(int move, int src, int part, int foe, int berry, int stat)
-{
-    sendItemMessage(move+8000,src,part,foe,berry,stat);
-}
-
-
 void BattleSituation::fail(int player, int move, int part, int type, int trueSource)
 {
     failSilently(player);
@@ -4419,4 +3954,13 @@ bool BattleSituation::isThereUproar()
 void BattleSituation::BasicMoveInfo::reset()
 {
     memset(this, 0, sizeof(*this));
+}
+
+void BattleSituation::storeChoice(const BattleChoice &b)
+{
+    BattleBase::storeChoice(b);
+
+    /* If the move is encored, a random target is picked. */
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
+        choice(b.slot()).choice.attack.attackTarget = b.slot();
 }

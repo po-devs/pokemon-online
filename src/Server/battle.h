@@ -30,8 +30,7 @@ public:
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start(ContextSwitcher &ctx);
-    /* The battle runs in a different thread -- easier to interrutpt the battle & co */
-    void run();
+
     /* requests choice of action from the player */
     bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
     void requestChoices(); /* request from both players */
@@ -41,10 +40,9 @@ public:
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
-    std::vector<int> sortedBySpeed();
+    std::vector<int> && sortedBySpeed();
 
     /* Commands for the battle situation */
-    void rearrangeTeams();
     void engageBattle();
     void beginTurn();
     void endTurn();
@@ -58,8 +56,6 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
-    /* Returns true or false if an attack is going on or not */
-    bool attacking();
     void makeTargetList(const QVector<int> &base);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
@@ -138,7 +134,6 @@ public:
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     int weight(int player);
-    int currentInternalId(int slot) const;
     Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
@@ -148,7 +143,6 @@ public:
     bool hasMove(int player, int move);
     int getType(int player, int slot);
     bool isFlying(int player);
-    bool isOut(int player, int poke);
     bool hasSubstitute(int slot);
     bool hasMoved(int slot);
     void requestSwitchIns();
@@ -161,7 +155,8 @@ public:
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
     /* "Pure" stat is without items */
-    int getStat(int player, int stat, int purityLevel = 0);
+    int getStat(int player, int stat) {return getStat(player, stat, 0);}
+    int getStat(int player, int stat, int purityLevel);
     int getBoostedStat(int player, int stat);
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
@@ -203,43 +198,10 @@ public:
 	HurtBurn,
 	HurtPoison
     };
-
-    void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
-    void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
-    void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
-    void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
-
-    void notifyFail(int p);
-public:
-    void battleChoiceReceived(int id, const BattleChoice &b);
-    void battleChat(int id, const QString &str);
-    void spectatingChat(int id, const QString &str);
-private slots:
-    void clearSpectatorQueue();
-private:
-    bool canCancel(int player);
-    void cancel(int player);
-    void addDraw(int player);
-
-    bool validChoice(const BattleChoice &b);
-    void storeChoice(const BattleChoice &b);
-    bool allChoicesOkForPlayer(int player);
-    bool allChoicesSet();
-
-    void appendBattleLog(const QString &command, const QString &message);
-    void writeUsageLog();
-    QString name(int id);
-    QString nick(int slot);
 private:
     virtual void notifySituation(int dest);
 
-    /* What choice we allow the players to have */
-    QList<BattleChoices> options;
-    /* Is set to false once a player choses it move */
-    QList<int> hasChoice;
-    /* just indicates if the player could originally move or not */
-    QList<bool> couldMove;
-
+    virtual void storeChoice(const BattleChoice &b);
 public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */
@@ -261,9 +223,6 @@ public:
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
     unsigned int currentSlot;
-
-    int weather;
-    int weatherCount;
 
     bool applyingMoveStatMods;
 
@@ -492,10 +451,6 @@ public:
     int fromInternalId(int id) const {
         return indexes.indexOf(id);
     }
-
-    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
-    // Public because used by Yawn
-    int currentForcedSleepPoke[2];
 private:
     /* Used when pokemon shift slots */
     QVector<int> indexes;
