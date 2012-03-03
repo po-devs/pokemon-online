@@ -3,8 +3,10 @@
 
 namespace Pokemon {
 class uniqueId;
+class gen;
 }
 unsigned int qHash (const Pokemon::uniqueId &key);
+unsigned int qHash (const Pokemon::gen &key);
 
 #include <QString>
 #include <QSet>
@@ -91,6 +93,10 @@ public:
     inline bool operator >= (int other) const {
         return (num >= other);
     }
+    // Will return true if everything is fine. And false otherwise.
+    static bool extract(const QString &raw, gen &id, QString &info);
+    // Extracts short data in a "pokenum data_text" form.
+    static bool extract_short(const QString &from, quint8 &gen, QString &remaining);
 };
 }
 
@@ -322,6 +328,11 @@ DataStream & operator >> (DataStream & in,PokePersonal & Pokemon);
 inline uint qHash(const Pokemon::uniqueId &key)
 {
     return qHash(key.toPokeRef());
+}
+
+inline uint qHash(const Pokemon::gen &gen)
+{
+    return qHash(gen.num + (gen.subnum << 8));
 }
 
 DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);

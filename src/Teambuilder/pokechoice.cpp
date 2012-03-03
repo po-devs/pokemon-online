@@ -1,7 +1,7 @@
 #include "pokechoice.h"
 #include <QHeaderView>
 #include "modelenum.h"
-#include "../../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include <QMouseEvent>
 #include <QApplication>
 

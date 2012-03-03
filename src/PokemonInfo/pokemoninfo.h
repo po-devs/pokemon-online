@@ -534,4 +534,19 @@ private:
     static QString path(const QString &filename);
 };
 
+class GenInfo
+{
+public:
+    static void init(const QString &dir="db/gens/");
+
+    static QString Gen(int gen);
+    static QString Version(const Pokemon::gen &gen);
+private:
+    static QString m_Directory;
+    static QHash<int, QString> m_gens;
+    static QHash<Pokemon::gen, QString> m_versions;
+
+    static QString path(const QString &filename);
+};
+
 #endif // POKEMONINFO_H

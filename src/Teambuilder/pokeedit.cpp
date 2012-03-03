@@ -10,6 +10,7 @@
 #include "theme.h"
 #include "pokemovesmodel.h"
 #include "pokeselection.h"
+#include "poketablemodel.h"
 
 PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
@@ -71,6 +72,10 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(genderUpdated()), SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(genderUpdated()), ui->levelSettings, SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(shinyUpdated()), SLOT(updatePicture()));
+    connect(ui->ivbox, SIGNAL(shinyUpdated()), ui->levelSettings, SLOT(updateShiny()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
     connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
@@ -83,6 +88,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
 
 void PokeEdit::on_pokemonFrame_clicked()
 {
+    PokeTableModel *model = (PokeTableModel*) pokemonModel;
+    model->setGen(poke().gen());
     PokeSelection *p = new PokeSelection(poke().num(), pokemonModel);
     p->setParent(this, Qt::Popup);
     QPoint pos = ui->pokemonFrame->mapToGlobal(ui->pokemonFrame->pos());
@@ -113,7 +120,7 @@ void PokeEdit::setMove(int slot, int move)
             ui->happiness->setValue(0);
         }
     } catch (const QString &s) {
-        QMessageBox::information(this, tr("Invalid moveset"), s);
+        QMessageBox::information(NULL, tr("Invalid moveset"), s);
         m_moves[slot]->clear();
     }
 }
@@ -129,7 +136,7 @@ void PokeEdit::moveEntered(const QModelIndex &index)
         }
     }
 
-    QMessageBox::information(this, tr("Impossible to add move"), tr("No more free moves!"));
+    QMessageBox::information(NULL, tr("Impossible to add move"), tr("No more free moves!"));
 }
 
 PokeEdit::~PokeEdit()
@@ -164,6 +171,27 @@ void PokeEdit::updateAll()
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
+
+    if (poke().gen().num == 1) {
+        ui->happiness->hide();
+        ui->item->hide();
+        ui->itemLabel->hide();
+        ui->happinessLabel->hide();
+        ui->genderSprite->hide();
+    } else {
+        ui->happiness->show();
+        ui->item->show();
+        ui->itemLabel->show();
+        ui->happinessLabel->show();
+        ui->genderSprite->show();
+    }
+    if (poke().gen().num <= 2) {
+        ui->natureLabel->hide();
+        ui->nature->hide();
+    } else {
+        ui->natureLabel->show();
+        ui->nature->show();
+    }
 }
 
 void PokeEdit::setPoke(PokeTeam *poke)
