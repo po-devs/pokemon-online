@@ -8,7 +8,7 @@
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
-#include "battle.h"
+#include "battlebase.h"
 #include <QRegExp>
 #include "analyze.h"
 #include "../Shared/config.h"
@@ -1707,7 +1707,7 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
     if((weatherId >= 0) && (weatherId <= 4)) {
-        BattleSituation * battle = myserver->getBattle(battleId);
+        BattleBase * battle = myserver->getBattle(battleId);
         if (battle) {
             battle->setupLongWeather(weatherId);
         }else{
@@ -1887,7 +1887,7 @@ void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int
         || !testRange("inflictStatus", slot, 0, 5)) {
         return;
     }
-    BattleSituation * battle = myserver->getBattle(battleId);
+    BattleBase * battle = myserver->getBattle(battleId);
     if (battle) {
         if (toFirstPlayer) {
             battle->changeStatus(0, slot, status);

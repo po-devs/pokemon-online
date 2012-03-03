@@ -48,7 +48,6 @@ public:
     void endTurnWeather();
     void endTurnDefrost();
     void callForth(int weather, int turns);
-    void setupLongWeather(int weather);
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
@@ -82,7 +81,6 @@ public:
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
-    void changeStatus(int team, int poke, int status);
     void unthaw(int player);
     void healStatus(int player, int status);
     void healConfused(int player);
@@ -140,7 +138,6 @@ public:
     bool hasMove(int player, int move);
     int getType(int player, int slot);
     bool isFlying(int player);
-    bool hasSubstitute(int slot);
     bool hasMoved(int slot);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
@@ -158,9 +155,8 @@ public:
     /* conversion for sending a message */
     quint8 ypoke(int, int i) const { return i; } /* aka 'your poke', or what you need to know if it's your poke */
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
-    BattleDynamicInfo constructInfo(int player);
-    void notifyInfos(int player = All);
     BattleStats constructStats(int player);
+    BattleDynamicInfo constructInfo(int player);
 
     void changeTempMove(int player, int slot, int move);
     void changeDefMove(int player, int slot, int move);
@@ -223,50 +219,6 @@ public:
 
     bool applyingMoveStatMods;
 
-    struct BasicPokeInfo {
-        Pokemon::uniqueId id;
-        float weight;
-        int type1;
-        int type2;
-        int ability;
-        int level;
-
-        int moves[4];
-        quint8 pps[4];
-        quint8 dvs[6];
-        int stats[6];
-        //The boost in HP is useless but avoids headaches
-        int boosts[8];
-    };
-
-    struct BasicMoveInfo {
-        char critRaise;
-        char repeatMin;
-        char repeatMax;
-        char priority;
-        int flags;
-        int power; /* unsigned char in the game, but can be raised by effects */
-        int accuracy; /* Same */
-        char type;
-        char category; /* Physical/Special/Other */
-        int rate; /* Same */
-        char flinchRate;
-        char recoil;
-        int attack;
-        char targets;
-        char healing;
-        char classification;
-        char status;
-        char statusKind;
-        char minTurns;
-        char maxTurns;
-        quint32 statAffected;
-        quint32 boostOfStat;
-        quint32 rateOfStat;
-        bool kingRock;
-
-        void reset();
-    };
     enum EffectType {
         TurnEffect,
         PokeEffect,

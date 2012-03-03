@@ -24,6 +24,7 @@
 #include "pluginmanager.h"
 #include "analyze.h"
 #include "networkutilities.h"
+#include "battlerby.h"
 
 Server *Server::serverIns = NULL;
 
@@ -1494,7 +1495,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         }
     }
 
-    BattleSituation *battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    BattleBase *battle = c.gen.num == 1 ? (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager) : new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event
@@ -1580,7 +1581,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     bool rated = mybattles.value(battleid)->rated();
 
     QString tier = mybattles.value(battleid)->tier();
-    BattleSituation *battle = mybattles[battleid];
+    BattleBase *battle = mybattles[battleid];
 
     if (winner == 0) {
         winner = battle->id(battle->opponent(battle->spot(loser)));
@@ -1647,7 +1648,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 
 void Server::removeBattle(int battleid)
 {
-    BattleSituation *battle = mybattles.value(battleid);
+    BattleBase *battle = mybattles.value(battleid);
 
     mybattles.remove(battleid);
     battleList.remove(battleid);
@@ -1778,7 +1779,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
     if (!mybattles.contains(idOfBattle)) {
         return; // Invalid behavior
     }
-    BattleSituation *battle = mybattles.value(idOfBattle);
+    BattleBase *battle = mybattles.value(idOfBattle);
     bool forced_allow = myengine->attemptToSpectateBattle(id, battle->id(0), battle->id(1));
     if (!battle->acceptSpectator(id, (auth(id) > 0) || forced_allow)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
@@ -1826,9 +1827,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    BattleSituation *battle = mybattles[idOfBattle];
-
-    battle->removeSpectator(id);
+    mybattles[idOfBattle]->removeSpectator(id);
 }
 
 void Server::disconnectPlayer(int id)
@@ -2045,7 +2044,7 @@ PlayerInterface * Server::playeri(int id) const
     return player(id);
 }
 
-BattleSituation * Server::getBattle(int battleId) const
+BattleBase * Server::getBattle(int battleId) const
 {
     if(mybattles.contains(battleId)) {
         return mybattles.value(battleId);

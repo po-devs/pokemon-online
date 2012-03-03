@@ -645,14 +645,19 @@ void BattleBase::emitCommand(int slot, int players, const QByteArray &toSend)
     callp(BP::emitCommand, slot, players, toSend);
 }
 
-void BattleBase::changeStatus(int player, int status, bool tell, int turns)
+void BattleBase::changeStatus(int team, int poke, int status)
 {
-    (void) player;
-    (void) status;
-    (void) tell;
-    (void) turns;
+    if (isOut(team, poke)) {
+        changeStatus(slot(team, poke), status);
+    } else {
+        this->poke(team, poke).changeStatus(status);
+        notify(All, AbsStatusChange, team, qint8(poke), qint8(status));
+        //Sleep clause
+        if (status != Pokemon::Asleep && currentForcedSleepPoke[team] == currentInternalId(slot(team, poke))) {
+            currentForcedSleepPoke[team] = -1;
+        }
+    }
 }
-
 
 bool BattleBase::acceptSpectator(int id, bool authed) const
 {
@@ -1148,4 +1153,119 @@ std::vector<int> && BattleBase::sortedBySpeed()
 bool BattleBase::attacking()
 {
     return attacker() != -1;
+}
+
+void BattleBase::setupLongWeather(int weather)
+{
+    weatherCount = -1;
+    this->weather = weather;
+}
+
+void BattleBase::notifySituation(int key)
+{
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 6; j++) {
+            notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
+        }
+        for (int k = 0; k < numberOfSlots()/ 2; k++) {
+            int s = slot(i,k);
+            if (!koed(s) && !rearrangeTime()) {
+                notify(key, SendOut, s, true, quint8(k), opoke(s, i, k));
+
+                if (hasSubstitute(s))
+                    notify(key, Substitute, s, hasSubstitute(s));
+            }
+        }
+    }
+
+    notifyInfos(key);
+}
+
+void BattleBase::notifyInfos(int tosend)
+{
+    for (int p = 0; p < numberOfSlots(); p++) {
+        if (!koed(p)) {
+            BattleDynamicInfo infos = constructInfo(p);
+            notify(tosend, DynamicInfo, p, infos);
+            if (tosend == All || tosend == player(p)) {
+                BattleStats stats = constructStats(p);
+                notify(player(p), DynamicStats, p, stats);
+            }
+        }
+    }
+}
+
+BattleStats BattleBase::constructStats(int player)
+{
+    BattleStats ret;
+
+    if (fpoke(player).flags & BasicPokeInfo::Transformed) {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = -1;
+        }
+    } else {
+        for (int i = 0; i < 5; i++) {
+            ret.stats[i] = getStat(player, i+1);
+        }
+    }
+
+    return ret;
+}
+
+BattleDynamicInfo BattleBase::constructInfo(int slot)
+{
+    BattleDynamicInfo ret;
+
+    for (int i = 0; i < 7; i++) {
+        ret.boosts[i] = fpoke(slot).boosts[i+1];
+    }
+
+    ret.flags = 0;
+
+    return ret;
+}
+
+
+void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
+{
+    id = p.num().toPokeRef();
+    weight = PokemonInfo::Weight(p.num());
+    type1 = PokemonInfo::Type1(p.num(), gen);
+    type2 = PokemonInfo::Type2(p.num(), gen);
+    ability = p.ability();
+    flags = 0;
+
+    for (int i = 0; i < 4; i++) {
+        moves[i] = p.move(i).num();
+        pps[i] = p.move(i).PP();
+    }
+
+    for (int i = 1; i < 6; i++)
+        stats[i] = p.normalStat(i);
+
+    for (int i = 0; i < 6; i++) {
+        dvs[i] = p.dvs()[i];
+    }
+
+    for (int i = 0; i < 8; i++) {
+        boosts[i] = 0;
+    }
+
+    level = p.level();
+}
+
+void BattleBase::BasicMoveInfo::reset()
+{
+    memset(this, 0, sizeof(*this));
+}
+
+bool BattleBase::hasSubstitute(int player)
+{
+    return !koed(player) && (fpoke(player).substitute() || fpoke(player).is(BasicPokeInfo::HadSubstitute));
+}
+
+ShallowBattlePoke BattleBase::opoke(int slot, int player, int i) const
+{
+    (void) slot;
+    return poke(player, i);
 }

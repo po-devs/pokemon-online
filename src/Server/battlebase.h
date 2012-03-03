@@ -83,6 +83,7 @@ public:
     const PokeBattle &poke(int player, int poke) const;
     bool koed(int player) const;
     bool isOut(int player, int poke);
+    bool hasSubstitute(int player);
 
     int player(int slot) const;
     /* Returns -1 if none */
@@ -122,6 +123,7 @@ public:
     int currentInternalId(int slot) const;
 
     virtual void changeStatus(int player, int status, bool tell = true, int turns = 0) = 0;
+    virtual void changeStatus(int team, int poke, int status);
 
     /* Sends data to players */
     template <typename ...Params>
@@ -161,7 +163,7 @@ protected:
         return 10000 + id;
     }
 
-    virtual void notifySituation(int dest) = 0;
+    virtual void notifySituation(int dest);
 
     int ratings[2];
     /*.*/
@@ -269,12 +271,81 @@ public:
     int weather;
     int weatherCount;
 
+    void setupLongWeather(int weather);
+
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
     void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
     void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
     void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
 
     void notifyFail(int p);
+    void notifyInfos(int tosend = All);
+
+    virtual BattleDynamicInfo constructInfo(int player);
+    BattleStats constructStats(int player);
+
+    struct BasicPokeInfo {
+        Pokemon::uniqueId id;
+        float weight;
+        int type1;
+        int type2;
+        int ability;
+        int level;
+        quint32 flags;
+
+        enum Flag {
+            Transformed = 1,
+            Substitute = 2,
+            HadSubstitute = 3
+        };
+
+        int moves[4];
+        quint8 pps[4];
+        quint8 dvs[6];
+        int stats[6];
+        //The boost in HP and sdef are useless but avoids headaches
+        int boosts[8];
+
+        void init(const PokeBattle &p, Pokemon::gen gen);
+
+        inline bool substitute() const {return flags & Substitute;}
+        inline void remove(Flag f) {flags &= ~f;}
+        inline void add(Flag f) {flags |= f;}
+        inline bool is(Flag f) {return (flags & f) != 0;}
+    };
+
+    struct BasicMoveInfo {
+        char critRaise;
+        char repeatMin;
+        char repeatMax;
+        char priority;
+        int flags;
+        int power; /* unsigned char in the game, but can be raised by effects */
+        int accuracy; /* Same */
+        char type;
+        char category; /* Physical/Special/Other */
+        int rate; /* Same */
+        char flinchRate;
+        char recoil;
+        int attack;
+        char targets;
+        char healing;
+        char classification;
+        char status;
+        char statusKind;
+        char minTurns;
+        char maxTurns;
+        quint32 statAffected;
+        quint32 boostOfStat;
+        quint32 rateOfStat;
+        bool kingRock;
+
+        void reset();
+    };
+
+    virtual BasicPokeInfo &fpoke(int slot) = 0;
+
+    ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
 };
 
 #endif // BATTLEBASE_H
