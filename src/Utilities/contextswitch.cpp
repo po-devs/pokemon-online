@@ -211,6 +211,7 @@ void ContextCallee::terminate()
     }
 
     ctx->terminate(this);
+    ctx = NULL;
 }
 
 void ContextCallee::wait()

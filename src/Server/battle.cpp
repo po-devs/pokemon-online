@@ -10,7 +10,6 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "pluginmanager.h"
-#include "battlepluginstruct.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
 #include "../Shared/battlecommands.h"
@@ -25,7 +24,6 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
 {
     //qDebug() <<"Created battlesituation " << this;
     publicId() = id;
-    timer = NULL;
     conf.avatar[0] = p1.avatar();
     conf.avatar[1] = p2.avatar();
     conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
@@ -147,50 +145,9 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     buildPlugins(pluginManager);
 }
 
-void BattleSituation::buildPlugins(PluginManager *p)
-{
-    plugins = p->getBattlePlugins(this);
-
-    foreach(BattlePlugin *pl, plugins) {
-        calls.push_back(new BattlePStorage(pl));
-        //qDebug() << "Created battle storage " << calls.back() << " for battle " << this;
-    }
-}
-
-void BattleSituation::removePlugin(BattlePlugin *p)
-{
-    int index = plugins.indexOf(p);
-    //qDebug() << "Removing plugins at index " << index << "(this = " << this << ")";
-
-    if (index != -1) {
-        //qDebug() << "Index is not -1";
-        plugins.removeAt(index);
-        delete calls.takeAt(index);
-        //qDebug() << "Remaining plugin size after operation: " << calls.size();
-    }
-}
-
-void BattleSituation::callp(int function)
-{
-    foreach(BattlePStorage *p, calls) {
-        if (p->call(function, this) == -1) {
-            removePlugin(p->plugin);
-        }
-    }
-}
-
 BattleSituation::~BattleSituation()
 {
-    //qDebug() << "Deleting battle situation " << this;
-    terminate();
-    /* In the case the thread has not quited yet (anyway should quit in like 1 nano second) */
-    wait();
-
-    foreach(BattlePStorage *p, calls) {
-        delete p;
-    }
-    delete timer;
-    //qDebug() << "Deleted battle situation";
+    onDestroy();
 }
 
 void BattleSituation::start(ContextSwitcher &ctx)
@@ -271,27 +228,6 @@ void BattleSituation::engageBattle()
     }
 }
 
-int BattleSituation::spot(int id) const
-{
-    if (conf.ids[0] == id) {
-        return 0;
-    } else if (conf.ids[1] == id) {
-        return 1;
-    } else {
-        return -1;
-    }
-}
-
-int BattleSituation::slot(int player, int poke) const
-{
-    return player + poke*2;
-}
-
-int BattleSituation::slotNum(int slot) const
-{
-    return slot/2;
-}
-
 bool BattleSituation::acceptSpectator(int id, bool authed) const
 {
     QMutexLocker m(&spectatorMutex);
@@ -300,11 +236,6 @@ bool BattleSituation::acceptSpectator(int id, bool authed) const
     if (authed)
         return true;
     return !(clauses() & ChallengeInfo::DisallowSpectator);
-}
-
-void BattleSituation::notifyClause(int clause)
-{
-    notify(All, Clause, intlog2(clause));
 }
 
 void BattleSituation::addSpectator(Player *p)
@@ -380,113 +311,6 @@ void BattleSituation::removeSpectator(int id)
     spectatorMutex.unlock();
 
     notify(All, Spectating, 0, false, qint32(id));
-}
-
-int BattleSituation::id(int spot) const
-{
-    if (spot >= 2) {
-        return spectators.value(spot).first;
-    } else {
-        return conf.ids[spot];
-    }
-}
-
-int BattleSituation::rating(int spot) const
-{
-    return ratings[spot];
-}
-
-int BattleSituation::player(int slot) const
-{
-    return slot % 2;
-}
-
-int BattleSituation::randomOpponent(int slot) const
-{
-    QList<int> opps = revs(slot);
-    if (opps.empty()) return -1;
-
-    return opps[randint(opps.size())];
-}
-
-int BattleSituation::randomValidOpponent(int slot) const
-{
-    QList<int> opps = revs(slot);
-    if (opps.empty())
-        return allRevs(slot).front();
-
-    return opps[randint(opps.size())];
-}
-
-TeamBattle &BattleSituation::team(int spot)
-{
-    return *conf.teams[spot];
-}
-
-const TeamBattle &BattleSituation::team(int spot) const
-{
-    return *conf.teams[spot];
-}
-
-const TeamBattle& BattleSituation::pubteam(int id) const
-{
-    return team(spot(id));
-}
-
-QList<int> BattleSituation::revs(int p) const
-{
-    int player = this->player(p);
-    int opp = opponent(player);
-    QList<int> ret;
-    for (int i = 0; i < numberPerSide(); i++) {
-        if (!koed(slot(opp, i))) {
-            ret.push_back(slot(opp, i));
-        }
-    }
-
-    return ret;
-}
-
-
-QList<int> BattleSituation::allRevs(int p) const
-{
-    int player = this->player(p);
-    int opp = opponent(player);
-    QList<int> ret;
-    for (int i = 0; i < numberPerSide(); i++) {
-        ret.push_back(slot(opp, i));
-    }
-    return ret;
-}
-
-int BattleSituation::opponent(int player) const
-{
-    return 1-player;
-}
-
-int BattleSituation::partner(int spot) const
-{
-    return slot(player(spot), !(spot/2));
-}
-
-const PokeBattle & BattleSituation::poke(int player, int poke) const
-{
-    return team(player).poke(poke);
-}
-
-PokeBattle & BattleSituation::poke(int player, int poke)
-{
-    return team(player).poke(poke);
-}
-
-const PokeBattle &BattleSituation::poke(int slot) const
-{
-    return team(player(slot)).poke(slot/2);
-}
-
-PokeBattle &BattleSituation::poke(int slot)
-{
-    return team(player(slot)).poke(slot/2);
 }
 
 /* The battle loop !! */
@@ -1190,16 +1014,6 @@ void BattleSituation::notifyInfos(int tosend)
     }
 }
 
-bool BattleSituation::koed(int player) const
-{
-    return poke(player).ko();
-}
-
-bool BattleSituation::wasKoed(int player) const
-{
-    return turnMemory(player).contains("WasKoed");
-}
-
 BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
@@ -1748,90 +1562,6 @@ void BattleSituation::battleChoiceReceived(int id, const BattleChoice &b)
     }
 }
 
-void BattleSituation::yield()
-{
-    blocked() = true;
-    ContextCallee::yield();
-    testWin();
-}
-
-void BattleSituation::schedule()
-{
-    blocked() = false;
-    ContextCallee::schedule();
-}
-
-/*****************************************
-  Beware of the multi threading problems.
-  Don't change the order of the instructions.
-  ****************************************/
-void BattleSituation::startClock(int player, bool broadCoast)
-{
-    if (!(clauses() & ChallengeInfo::NoTimeOut) && timeStopped[player]) {
-        startedAt[player] = time(NULL);
-        timeStopped[player] = false;
-
-        (void) broadCoast; // should be used to tell if we tell everyone or not, but meh.
-        notify(player,ClockStart, player, quint16(timeleft[player]));
-    }
-}
-
-/*****************************************
-  Beware of the multi threading problems.
-  Don't change the order of the instructions.
-  ****************************************/
-void BattleSituation::stopClock(int player, bool broadCoast)
-{
-    if (!(clauses() & ChallengeInfo::NoTimeOut)) {
-        if (!timeStopped[player]) {
-            timeStopped[player] = true;
-            timeleft[player] = std::max(0,timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]));
-        }
-
-        if (broadCoast) {
-            timeleft[player] = std::min(int(timeleft[player]+20), 5*60);
-            notify(All,ClockStop,player,quint16(timeleft[player]));
-        } else {
-            notify(player, ClockStop, player, quint16(timeleft[player]));
-        }
-    }
-}
-
-/*****************************************
-  Beware of the multi threading problems.
-  Don't change the order of the instructions.
-  ****************************************/
-int BattleSituation::timeLeft(int player)
-{
-    if (timeStopped[player]) {
-        return timeleft[player];
-    } else {
-        return timeleft[player] - (QAtomicInt(time(NULL)) - startedAt[player]);
-    }
-}
-
-/*****************************************
-  Beware of the multi threading problems.
-  Don't change the order of the instructions.
-  ****************************************/
-void BattleSituation::timerEvent(QTimerEvent *)
-{
-    if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
-        schedule(); // the battle is finished, isn't it?
-    } else {
-        /* If a player takes too long - more than 30 secs - tell the other player the time remaining */
-        if (timeStopped[Player1] && !timeStopped[Player2] && (QAtomicInt(time(NULL)) - startedAt[Player2]) > 30) {
-            notify(Player1, ClockStop, Player2, quint16(timeLeft(Player2)));
-        } else if (timeStopped[Player2] && !timeStopped[Player1] && (QAtomicInt(time(NULL)) - startedAt[Player1]) > 30) {
-            notify(Player2, ClockStop, Player1, quint16(timeLeft(Player1)));
-        }
-    }
-}
-
-/*************************************************
-  End of the warning.
-  ************************************************/
-
 void BattleSituation::battleChat(int id, const QString &str)
 {
     notify(All, BattleChat, spot(id), str);
@@ -1953,6 +1683,12 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
 }
+
+bool BattleSituation::wasKoed(int player) const
+{
+    return turnMemory(player).contains("WasKoed");
+}
+
 
 void BattleSituation::callEntryEffects(int player)
 {
@@ -2187,15 +1923,6 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         }
         calleffects(player,target,"MissAttack");
         return false;
-    }
-}
-
-void BattleSituation::notifyMiss(bool multiTar, int player, int target)
-{
-    if (multiTar) {
-        notify(All, Avoid, target);
-    } else {
-        notify(All, Miss, player);
     }
 }
 
@@ -2893,12 +2620,6 @@ void BattleSituation::unthaw(int player)
 {
     notify(All, StatusMessage, player, qint8(FreeFrozen));
     healStatus(player, Pokemon::Frozen);
-}
-
-void BattleSituation::notifyKO(int player)
-{
-    changeStatus(player,Pokemon::Koed);
-    notify(All, Ko, player);
 }
 
 void BattleSituation::notifyHits(int spot, int number)
@@ -3652,7 +3373,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
             poke(player).oriStatusCount() = poke(player).statusCount();
     }
     else if (status == Pokemon::Asleep) {
-        if (gen() == 2) {
+        if (gen() <= 2) {
             poke(player).statusCount() = 1 + (randint(6));
         } else if (gen() <= 4) {
             poke(player).statusCount() = 1 + (randint(4));
@@ -4440,42 +4161,6 @@ int BattleSituation::linker(int linked, QString relationShip)
     return fromInternalId(pokeMemory(linked)[relationShip + "By"].toInt());
 }
 
-int BattleSituation::countAlive(int player) const
-{
-    int count = 0;
-    for (int i = 0; i < 6; i++) {
-        if (!poke(player, i).ko()) {
-            count += 1;
-        }
-    }
-    return count;
-}
-
-int BattleSituation::countBackUp(int player) const
-{
-    int count = 0;
-    for (int i = numberOfSlots()/2; i < 6; i++) {
-        if (poke(player, i).num() != 0 && !poke(player, i).ko()) {
-            count += 1;
-        }
-    }
-    return count;
-}
-
-bool BattleSituation::canTarget(int attack, int attacker, int defender) const
-{
-    if (MoveInfo::Flags(attack, gen()) & Move::PulsingFlag) {
-        return true;
-    }
-
-    return areAdjacent(attacker, defender);
-}
-
-bool BattleSituation::areAdjacent(int attacker, int defender) const
-{
-    return std::abs(slotNum(attacker)-slotNum(defender)) <= 1;
-}
-
 void BattleSituation::playerForfeit(int forfeiterId)
 {
     if (finished()) {
@@ -4483,78 +4168,6 @@ void BattleSituation::playerForfeit(int forfeiterId)
     }
     forfeiter() = spot(forfeiterId);
     notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
-}
-
-void BattleSituation::endBattle(int result, int winner, int loser)
-{
-    int time1 = std::max(0, timeLeft(Player1));
-    int time2 = std::max(0, timeLeft(Player2));
-    notify(All,ClockStop,Player1,time1);
-    notify(All,ClockStop,Player2,time2);
-    if (result == Tie) {
-        notify(All, BattleEnd, Player1, qint8(Tie));
-
-        emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
-        exit();
-    }
-    if (result == Win || result == Forfeit) {
-        notify(All, BattleEnd, winner, qint8(result));
-        notify(All, EndMessage, winner, winMessage[winner]);
-        notify(All, EndMessage, loser, loseMessage[loser]);
-
-        emit battleFinished(publicId(), result, id(winner), id(loser));
-        exit();
-    }
-}
-
-void BattleSituation::testWin()
-{
-    if (forfeiter() != -1) {
-        exit();
-    }
-
-    /* No one wants a battle that long xd */
-    if (turn() == 1024) {
-        endBattle(Tie, Player1, Player2);
-    }
-
-    /* Mutual Draw */
-    if (drawer() == -2) {
-        endBattle(Tie, Player1, Player2);
-    }
-
-    int time1 = std::max(0, timeLeft(Player1));
-    int time2 = std::max(0, timeLeft(Player2));
-
-    if (time1 == 0 || time2 == 0) {
-        notify(All,ClockStop,Player1,quint16(time1));
-        notify(All,ClockStop,Player2,quint16(time2));
-        notifyClause(ChallengeInfo::NoTimeOut);
-        if (time1 == 0 && time2 ==0) {
-            endBattle(Tie, Player1, Player2);
-        } else if (time1 == 0) {
-            endBattle(Win, Player2, Player1);
-        } else {
-            endBattle(Win, Player1, Player2);
-        }
-    }
-
-    int c1 = countAlive(Player1);
-    int c2 = countAlive(Player2);
-
-    if (c1*c2==0) {
-        if (c1 + c2 == 0) {
-            if ((clauses() & ChallengeInfo::SelfKO) && selfKoer() != -1) {
-                notifyClause(ChallengeInfo::SelfKO);
-                endBattle(Win, opponent(player(selfKoer())), player(selfKoer()));
-            }
-            endBattle(Tie, Player1, Player2);
-        } else if (c1 == 0) {
-            endBattle(Win, Player2, Player1);
-        } else {
-            endBattle(Win, Player1, Player2);
-        }
-    }
 }
 
 void BattleSituation::changePP(int player, int move, int PP)
@@ -4793,39 +4406,6 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
         }
         return PokeFraction(std::max(3-boost, 3), std::max(3+boost, 3));
     }
-}
-
-const BattleConfiguration &BattleSituation::configuration() const
-{
-    return conf;
-}
-
-void BattleSituation::emitCommand(int slot, int players, const QByteArray &toSend)
-{
-    if (players == All) {
-        emit battleInfo(publicId(), qint32(id(Player1)), toSend);
-        emit battleInfo(publicId(), qint32(id(Player2)), toSend);
-
-        spectatorMutex.lock();
-
-        QHashIterator<int, QPair<int, QString> > it(spectators);
-        while(it.hasNext()) {
-            emit battleInfo(publicId(), qint32(it.next().value().first), toSend);
-        }
-        spectatorMutex.unlock();
-    } else if (players == AllButPlayer) {
-        emit battleInfo(publicId(), qint32(id(opponent(player(slot)))), toSend);
-
-        spectatorMutex.lock();
-        QHashIterator<int, QPair<int, QString> >  it(spectators);
-        while(it.hasNext()) {
-            emit battleInfo(publicId(), qint32(it.next().value().first), toSend);
-        }
-        spectatorMutex.unlock();
-    } else {
-        emit battleInfo(publicId(), qint32(id(players)), toSend);
-    }
-    callp(BP::emitCommand, slot, players, toSend);
 }
 
 BattleDynamicInfo BattleSituation::constructInfo(int slot)
