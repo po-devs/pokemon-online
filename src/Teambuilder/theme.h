@@ -22,6 +22,15 @@ public:
         IngameM
     };
 
+    enum ToolIcon {
+        AddTeam,
+        DeleteTeam,
+        ImportTeam,
+        LoadTeam,
+        SaveTeam,
+        ChangeTeamFolder
+    };
+
     static void init(const QString &dir="Themes/" DEFAULT_PO_THEME "/");
     static void Reload(const QString &dir="Themes/" DEFAULT_PO_THEME);
 
@@ -36,6 +45,7 @@ public:
     static QPixmap StatusIcon(int status);
     static QPixmap BattleStatusIcon(int status);
     static QPixmap TypePicture(int type);
+    static QIcon ToolButtonIcon(ToolIcon icon);
     static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
     static QString path(const QString &filename, bool defaultP = false);
 
@@ -73,6 +83,8 @@ private:
     static QVariant value(const QString &key, bool *def);
     static BattleDefaultTheme *m_battleTheme;
     static ThemeAccessor *m_accessor;
+
+    static bool hasPath(const QString &filename);
 };
 
 #endif // THEME_H

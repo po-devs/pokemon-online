@@ -124,6 +124,10 @@ TrainerMenu QPushButton#close:hover {
                                 stop: 1.0 #bd3134);
 }
 
+TrainerMenu QToolButton {
+    icon-size: 16px;
+}
+
 TrainerMenu QPushButton#close:pressed {
     background: #9d0104;
     padding-top: 3px;
