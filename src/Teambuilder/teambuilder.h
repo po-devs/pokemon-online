@@ -33,6 +33,7 @@ private slots:
     void markTeamUpdated();
 signals:
     void done();
+    void reloadMenuBar();
 private:
     TeamHolder &team() {return *m_team;}
     TeamHolder *m_team;

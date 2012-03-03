@@ -94,6 +94,10 @@ QString StatInfo::m_Directory;
 QList<QString> StatInfo::m_stats;
 QList<QString> StatInfo::m_status;
 
+QString GenInfo::m_Directory;
+QHash<int, QString> GenInfo::m_gens;
+QHash<Pokemon::gen, QString> GenInfo::m_versions;
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     int error = 0;
@@ -287,6 +291,53 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
                     container[pokeid] = data;
                 }
             }
+        }
+    }
+}
+
+static void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
+{
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream filestream(&file);
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            QString current = filestream.readLine().trimmed();
+            QString other_data;
+            Pokemon::gen gen;
+            bool ok = Pokemon::gen::extract(current, gen, other_data);
+            if(ok) {
+                container[gen] = other_data;
+            }
+        }
+    }
+}
+
+template <class T, class U>
+static void fill_double(QHash<T, U> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
+{
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+        QTextStream filestream(&file);
+
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            T var1;
+            U var2;
+            filestream >> var1 >> var2;
+            container.insert(var1, var2);
         }
     }
 }
@@ -586,13 +637,13 @@ void PokemonInfo::loadDescriptions()
 
 int PokemonInfo::TrueCount(Pokemon::gen gen)
 {
-    if (gen == 1)
+    if (gen.num == 1)
         return 152;
-    if (gen == 2)
+    if (gen.num == 2)
         return 252;
-    if (gen == 3)
+    if (gen.num == 3)
         return 387;
-    if (gen == 4)
+    if (gen.num == 4)
         return 494;
     return m_trueNumberOfPokes;
 }
@@ -711,13 +762,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 {
     QString archive;
 
-    if (gen == 1)
+    if (gen.num == 1)
         archive = path("rby.zip");
-    else if (gen == 2)
+    else if (gen.num == 2)
         archive = path("gsc.zip");
-    else if (gen == 3)
+    else if (gen.num == 3)
         archive = path("advance.zip");
-    else if (gen == 4)
+    else if (gen.num == 4)
         archive = path("hgss.zip");
     else {
         // TODO: Read this number from somewhere else.
@@ -730,13 +781,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     QString file;
 
-    if (gen == 1)
+    if (gen.num == 1)
         file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
-    else if (gen == 2)
+    else if (gen.num == 2)
         file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
-    else if (gen ==3)
+    else if (gen.num ==3)
         file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
-    else if (gen == 4)
+    else if (gen.num == 4)
         file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
     else
         file = QString("%1/%2%3%4.png").arg(pokeid.toString(), back?"back":"front", (gender==Pokemon::Female)?"f":"", shiney?"s":"");
@@ -751,16 +802,16 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
-        if (gen == 3) {
+        if (gen.num == 3) {
             if (shiney)
                 return PokemonInfo::Picture(pokeid, 3, Pokemon::Male, false, back);
             else
                 return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
-        } else if (gen == 4 && gender == Pokemon::Female) {
+        } else if (gen.num == 4 && gender == Pokemon::Female) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
-        } else if (gen == 4 && shiney) {
+        } else if (gen.num == 4 && shiney) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
-        } else if (gen == 5) {
+        } else if (gen.num == 5) {
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
             } else if (shiney) {
@@ -2564,4 +2615,35 @@ QString PokemonInfo::readModDirectory(const QString &modName)
             return "";
         }
     }
+}
+
+
+void GenInfo::init(const QString &dir)
+{
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    /* This is important, so we make sure we always load the default values, then overwrite  translated ones*/
+    fill_gen_string(m_versions, path("versions.txt"));
+    fill_gen_string(m_versions, trFile(path("versions.txt")));
+
+    fill_double(m_gens, path("gens.txt"));
+    fill_double(m_gens, trFile(path("gens.txt")));
+}
+
+QString GenInfo::Gen(int gen)
+{
+    return m_gens.value(gen);
+}
+
+QString GenInfo::Version(const Pokemon::gen &gen)
+{
+    return m_versions.value(gen);
+}
+
+QString GenInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
 }

@@ -53,7 +53,7 @@ void IvBox::updateAll()
     // Abilities.
 
     for(int i = 0; i < 3; i++) {
-        if(poke().abilities().ab(i) != 0) {
+        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3) {
             m_abilities[i]->setVisible(true);
             m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
             m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
@@ -65,13 +65,55 @@ void IvBox::updateAll()
     updateIVs();
     updateStats();
     updateHiddenPower();
+
+    if (poke().gen() <= 2) {
+        ui->abilityTitle->setVisible(false);
+
+        ui->hpivspin->setDisabled(true);
+        ui->spdefivspin->setDisabled(true);
+
+        for (int i = 0; i < 6; i++) {
+            m_ivchangers[i]->setRange(0, 15);
+        }
+    } else {
+        ui->abilityTitle->setVisible(true);
+
+        ui->hpivspin->setDisabled(false);
+        ui->spdefivspin->setDisabled(false);
+
+        for (int i = 0; i < 6; i++) {
+            m_ivchangers[i]->setRange(0, 31);
+        }
+    }
+
+    if (poke().gen() <= 1) {
+        ui->hiddenPowerPower->setVisible(false);
+        ui->hiddenPowerTitle->setVisible(false);
+        ui->hiddenPowerType->setVisible(false);
+
+        ui->spdefivdesc->hide();
+        ui->spdefivlabel->hide();
+        ui->spdefivspin->hide();
+        ui->spattivdesc->setText(tr("Special: "));
+    } else {
+        ui->hiddenPowerPower->setVisible(true);
+        ui->hiddenPowerTitle->setVisible(true);
+        ui->hiddenPowerType->setVisible(true);
+
+        ui->spdefivdesc->show();
+        ui->spdefivlabel->show();
+        ui->spdefivspin->show();
+        ui->spattivdesc->setText(tr("Sp. Atk: "));
+    }
 }
 
 void IvBox::updateStats()
 {
+    blockSignals(true);
     for(int i = 0; i < 6; i++) {
         updateStat(i);
     }
+    blockSignals(false);
     emit statsUpdated();
 }
 
@@ -87,6 +129,7 @@ void IvBox::updateStat(int stat)
     } else {
         m_statslabel[stat]->setText(QString::number(poke().stat(stat)));
     }
+
     emit statsUpdated();
 }
 
@@ -95,7 +138,7 @@ void IvBox::changeIV(int newValue)
     int stat = sender()->property("ivstat").toInt();
     if(poke().DV(stat) != newValue) {
         poke().setDV(stat, newValue);
-        updateStat(stat);
+        updateIVs();
         updateHiddenPower();
     }
 }
@@ -123,6 +166,11 @@ void IvBox::updateIVs()
 {
     for(int i = 0; i < 6; i++) {
         updateIV(i);
+    }
+
+    if (poke().gen() <= 2) {
+        emit genderUpdated();
+        emit shinyUpdated();
     }
 }
 
