@@ -5,6 +5,7 @@
 #include <QtCore>
 #include <QFontDatabase>
 #include <QPixmapCache>
+#include <QApplication>
 #include "../BattleManager/defaulttheme.h"
 #include "themeaccessor.h"
 
@@ -325,6 +326,37 @@ QVariant Theme::value(const QString &key, bool *def)
     }
 
     return ret;
+}
+
+QIcon Theme::ToolButtonIcon(ToolIcon icon)
+{
+    static QString paths[] = {
+        "add-team-icon",
+        "remove-team-icon",
+        "import-team-icon",
+        "load-team-icon",
+        "save-team-icon",
+        "change-team-folder-icon"
+    };
+
+    static QStyle::StandardPixmap codes[] = {
+        QStyle::SP_ArrowBack,
+        QStyle::SP_TrashIcon,
+        QStyle::SP_FileDialogContentsView,
+        QStyle::SP_DialogOpenButton,
+        QStyle::SP_DialogSaveButton,
+        QStyle::SP_DirIcon,
+    };
+
+    bool def;
+
+    value("pictures/"+paths[icon], &def);
+
+    if (def) {
+        return QApplication::style()->standardIcon(codes[icon]);
+    } else {
+        return Icon(paths[icon]);
+    }
 }
 
 QPixmap Theme::Pic(const QString &way, bool def)
