@@ -28,9 +28,6 @@ public:
 
     bool wasKoed(int player) const;
 
-    /* Starts the battle -- use the time before to connect signals / slots */
-    void start(ContextSwitcher &ctx);
-
     /* requests choice of action from the player */
     bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
     void requestChoices(); /* request from both players */
