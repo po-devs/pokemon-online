@@ -2,13 +2,14 @@
 #include <map>
 #include <algorithm>
 #include "battle.h"
-#include "player.h"
+
 #include "../PokemonInfo/pokemoninfo.h"
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
 #include "tiermachine.h"
 #include "tier.h"
+#include "player.h"
 #include "pluginmanager.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
@@ -226,91 +227,6 @@ void BattleSituation::engageBattle()
     for (int i = 0; i< numberOfSlots(); i++) {
         hasChoice[i] = false;
     }
-}
-
-bool BattleSituation::acceptSpectator(int id, bool authed) const
-{
-    QMutexLocker m(&spectatorMutex);
-    if (spectators.contains(spectatorKey(id)) || this->id(0) == id || this->id(1) == id)
-        return false;
-    if (authed)
-        return true;
-    return !(clauses() & ChallengeInfo::DisallowSpectator);
-}
-
-void BattleSituation::addSpectator(Player *p)
-{
-    /* Simple guard to avoid multithreading problems -- would need to be improved :s */
-    if (!blocked() && !finished()) {
-        pendingSpectators.append(QPointer<Player>(p));
-        QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
-
-        return;
-    }
-
-    int id = p->id();
-
-    int key;
-
-    if (configuration().isInBattle(id)) {
-        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration());
-        key = spot(id);
-    } else {
-        /* Assumption: each id is a different player, so key is unique */
-        key = spectatorKey(id);
-
-        if (spectators.contains(key)) {
-            // Then a guy was put on waitlist and tried again, w/e don't accept him
-            return;
-        }
-
-        spectators[key] = QPair<int, QString>(id, p->name());
-
-        p->spectateBattle(publicId(), configuration());
-
-        if (tier().length() > 0)
-            notify(key, TierSection, Player1, tier());
-
-        notify(key, Rated, Player1, rated());
-
-        typedef QPair<int, QString> pair;
-        foreach (pair spec, spectators) {
-            if (spec.first != id)
-                notify(key, Spectating, 0, true, qint32(spec.first), spec.second);
-        }
-    }
-
-    notify(All, Spectating, 0, true, qint32(id), p->name());
-
-    notify(key, BlankMessage, 0);
-
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 6; j++) {
-            notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
-        }
-        for (int k = 0; k < numberOfSlots()/ 2; k++) {
-            int s = slot(i,k);
-            if (!koed(s) && !rearrangeTime()) {
-                notify(key, SendOut, s, true, quint8(k), opoke(s, i, k));
-                /* Not clean. A pokemon with illusion could always have mimiced transform and then transformed... */
-                if (!pokeMemory(s).contains("IllusionTarget"))
-                    notify(key, ChangeTempPoke,s, quint8(TempSprite), pokenum(s));
-                if (hasSubstitute(s))
-                    notify(key, Substitute, s, hasSubstitute(s));
-            }
-        }
-    }
-
-    notifyInfos(key);
-}
-
-void BattleSituation::removeSpectator(int id)
-{
-    spectatorMutex.lock();
-    spectators.remove(spectatorKey(id));
-    spectatorMutex.unlock();
-
-    notify(All, Spectating, 0, false, qint32(id));
 }
 
 /* The battle loop !! */
@@ -4161,15 +4077,6 @@ int BattleSituation::linker(int linked, QString relationShip)
     return fromInternalId(pokeMemory(linked)[relationShip + "By"].toInt());
 }
 
-void BattleSituation::playerForfeit(int forfeiterId)
-{
-    if (finished()) {
-        return;
-    }
-    forfeiter() = spot(forfeiterId);
-    notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
-}
-
 void BattleSituation::changePP(int player, int move, int PP)
 {
     fpoke(player).pps[move] = PP;
@@ -4222,6 +4129,28 @@ int BattleSituation::getBoostedStat(int player, int stat)
         }
         return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
     }
+}
+
+void BattleSituation::notifySituation(int key)
+{
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 6; j++) {
+            notify(key, AbsStatusChange, i, qint8(j), qint8(poke(i, j).status()));
+        }
+        for (int k = 0; k < numberOfSlots()/ 2; k++) {
+            int s = slot(i,k);
+            if (!koed(s) && !rearrangeTime()) {
+                notify(key, SendOut, s, true, quint8(k), opoke(s, i, k));
+                /* Not clean. A pokemon with illusion could always have mimiced transform and then transformed... */
+                if (!pokeMemory(s).contains("IllusionTarget"))
+                    notify(key, ChangeTempPoke,s, quint8(TempSprite), pokenum(s));
+                if (hasSubstitute(s))
+                    notify(key, Substitute, s, hasSubstitute(s));
+            }
+        }
+    }
+
+    notifyInfos(key);
 }
 
 int BattleSituation::getStat(int player, int stat, int purityLevel)

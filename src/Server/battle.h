@@ -26,15 +26,7 @@ public:
     BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
     ~BattleSituation();
 
-    bool acceptSpectator(int id, bool authed=false) const;
-    /* In case it's one of the battler, resends the current info to the battler */
-    void addSpectator(Player *p);
-    /* Server tells a player forfeited */
-    void playerForfeit(int forfeiterId);
-
     bool wasKoed(int player) const;
-
-    void removeSpectator(int id);
 
     /* Starts the battle -- use the time before to connect signals / slots */
     void start(ContextSwitcher &ctx);
@@ -239,9 +231,7 @@ private:
     QString name(int id);
     QString nick(int slot);
 private:
-    int spectatorKey(int id) const {
-        return 10000 + id;
-    }
+    virtual void notifySituation(int dest);
 
     /* What choice we allow the players to have */
     QList<BattleChoices> options;
