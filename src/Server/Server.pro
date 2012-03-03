@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     sessiondatafactory.cpp \
     battlepluginstruct.cpp \
     battlecounters.cpp \
-    moves/moves1.cpp
+    moves/moves1.cpp \
+    battlebase.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -97,7 +98,8 @@ HEADERS += player.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
     playerstructs.h \
-    networkutilities.h
+    networkutilities.h \
+    battlebase.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
