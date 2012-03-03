@@ -231,7 +231,7 @@ struct MMBlastBurn : public MM
             return;
         }
 
-        turn(b, s)["NoChoice"] = true;
+        fturn(b, s).add(TM::NoChoice);
 
         addFunction(turn(b,s), "MoveSettings", "BlastBurn", &ms);
     }
@@ -473,7 +473,7 @@ struct MMDestinyBond : public MM
 
         int trn = poke(b,s)["DestinyBondTurn"].toInt();
 
-        if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool() )) {
+        if (trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) {
             b.sendMoveMessage(26, 0, s, Pokemon::Ghost, t);
             b.koPoke(t, s, false);
 
@@ -1017,7 +1017,7 @@ struct MMBide : public MM
 
         addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
         MoveEffect::setup(Move::Bide, s, s, b);
-        turn(b,s)["NoChoice"] = true;
+        fturn(b, s).add(TM::NoChoice);
     }
 
     static void ccd(int s, int, BS &b) {
@@ -1118,7 +1118,7 @@ struct MMBounce : public MM
 
     static void ts(int s, int, BS &b) {
         if (poke(b,s).value("Invulnerable").toBool()) {
-            turn(b,s)["NoChoice"] = true;
+            fturn(b, s).add(TM::NoChoice);
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
@@ -1470,11 +1470,11 @@ struct MMEncore : public MM
             return;
         }
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
             turn(b,s)["Failed"] = true;
             return;
         }
-        if (poke(b,t).contains("NoChoice")) {
+        if (fturn(b,t).contains(TM::NoChoice)) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -1515,7 +1515,7 @@ struct MMEncore : public MM
 
             /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
                 and i bet something strange would also happen with charging move) */
-            if (!turn(b,t).contains("NoChoice") && b.choice(t).attackingChoice()) {
+            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice()) {
                 for (int i = 0; i < 4; i ++) {
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);

@@ -18,7 +18,22 @@ BattleRBY::~BattleRBY()
 
 void BattleRBY::beginTurn()
 {
+    turn() += 1;
+    /* Resetting temporary variables */
+    for (int i = 0; i < numberOfSlots(); i++) {
+        turnMem(i).reset();
+        tmove(i).reset();
+    }
 
+    attackCount() = 0;
+
+    requestChoices();
+
+    /* preventing the players from cancelling (like when u-turn/Baton pass) */
+    for (int i = 0; i < numberOfSlots(); i++)
+        couldMove[i] = false;
+
+    analyzeChoices();
 }
 
 void BattleRBY::endTurn()
@@ -89,7 +104,7 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
        (like for an attack like attract), it is imo more effective that other means */
     slotMemory(slot).switchCount += 1;
 
-    turnMemory(slot).flags &= TurnMemory::Incapacitated;
+    turnMem(slot).flags &= TurnMemory::Incapacitated;
 }
 
 BattleChoice& BattleRBY::choice(int p)
@@ -97,3 +112,21 @@ BattleChoice& BattleRBY::choice(int p)
     return choices[p];
 }
 
+BattleChoices BattleRBY::createChoice(int slot)
+{
+    /* First let's see for attacks... */
+    if (koed(slot)) {
+        return BattleChoices::SwitchOnly(slot);
+    }
+
+    BattleChoices ret;
+    ret.numSlot = slot;
+
+    for (int i = 0; i < 4; i++) {
+        if (!isMovePossible(slot,i)) {
+            ret.attackAllowed[i] = false;
+        }
+    }
+
+    return ret;
+}

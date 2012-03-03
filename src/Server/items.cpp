@@ -6,6 +6,7 @@
 typedef ItemMechanics IM;
 typedef BattleSituation BS;
 typedef BattleCounterIndex BC;
+typedef BattleSituation::TurnMemory TM;
 
 QHash<int, ItemMechanics> ItemEffect::mechanics;
 QHash<int, QString> ItemEffect::names;
@@ -257,7 +258,7 @@ struct IMZoomLens : public IM
     }
 
     static void sm(int s, int t, BS &b) {
-        if (turn(b,t)["HasMoved"].toBool() == true) {
+        if (fturn(b,t).contains(TM::HasMoved)) {
             turn(b,s)["Stat6ItemModifier"] = 4;
         }
     }
@@ -435,7 +436,7 @@ struct IMMetronome : public IM
     }
 
     static void btl(int s, int, BS &b) {
-        if (turn(b,s).contains("NoChoice")) {
+        if (fturn(b,s).contains(TM::NoChoice)) {
             /* multiple turn move */
             return;
         }

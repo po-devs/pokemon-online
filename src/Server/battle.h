@@ -28,9 +28,6 @@ public:
 
     bool wasKoed(int player) const;
 
-    /* requests choice of action from the player */
-    bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
-    void requestChoices(); /* request from both players */
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player);
     bool isMovePossible(int player, int slot);
@@ -133,19 +130,14 @@ public:
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
-    int move(int player, int slot);
-    int PP(int player, int slot) const;
-    bool hasMove(int player, int move);
     int getType(int player, int slot);
     bool isFlying(int player);
-    bool hasMoved(int slot);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
     void requestSwitch(int player);
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
     int linker(int linked, QString relationShip);
-    void notifySub(int player, bool sub);
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat);
     /* "Pure" stat is without items */
@@ -247,6 +239,7 @@ private:
         /* Variables that are reset every turn right before everything else happens
             at the very beginning of a turn */
         context turnlong;
+        TurnMemory turnhard;
 
         /* Structs containing raw information */
         BasicPokeInfo fieldpoke;
@@ -339,6 +332,10 @@ public:
 
     context &turnMemory(int slot) {
         return getContext(slot).turnlong;
+    }
+
+    TurnMemory &turnMem(int slot) {
+        return getContext(slot).turnhard;
     }
 
     context &pokeMemory(int slot) {
