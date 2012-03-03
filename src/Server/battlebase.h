@@ -38,10 +38,16 @@ public:
     BattleBase();
     ~BattleBase();
 
+    /* The battle runs in a different thread -- easier to interrutpt the battle & co */
+    void run();
 protected:
     void onDestroy(); //call in the sub class destructor
-public:
 
+    virtual void engageBattle();
+    virtual void beginTurn() = 0;
+    virtual void endTurn() = 0;
+    virtual void initializeEndTurnFunctions() = 0;
+public:
     const TeamBattle &pubteam(int id) const;
     /* returns 0 or 1, or -1 if that player is not involved */
     int spot(int id) const;
@@ -71,6 +77,7 @@ public:
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
     bool koed(int player) const;
+    bool isOut(int player, int poke);
 
     int player(int slot) const;
     /* Returns -1 if none */
@@ -83,6 +90,8 @@ public:
     int countBackUp(int player) const;
     bool canTarget(int attack, int attacker, int defender) const;
     bool areAdjacent(int attacker, int defender) const;
+    /* Returns true or false if an attack is going on or not */
+    bool attacking();
     bool multiples() const {
         return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
     }
@@ -97,9 +106,15 @@ public:
         return clauses() & ChallengeInfo::SleepClause;
     }
 
+    virtual std::vector<int> &&sortedBySpeed();
+
     void notifyClause(int clause);
     void notifyMiss(bool multitar, int player, int target);
     void notifyKO(int player);
+
+    void rearrangeTeams();
+
+    int currentInternalId(int slot) const;
 
     virtual void changeStatus(int player, int status, bool tell = true, int turns = 0) = 0;
 
@@ -115,6 +130,15 @@ public:
     }
 
     void emitCommand(int player, int players, const QByteArray &data);
+
+    void battleChoiceReceived(int id, const BattleChoice &b);
+    void battleChat(int id, const QString &str);
+    void spectatingChat(int id, const QString &str);
+
+    virtual int getStat(int poke, int stat) = 0;
+    virtual void sendPoke(int player, int poke, bool silent = false) = 0;
+protected slots:
+    void clearSpectatorQueue();
 signals:
     /* Due to threading issue, and the signal not being direct,
        The battle might already be deleted when the signal is received.
@@ -146,6 +170,13 @@ protected:
     bool timeStopped[2];
     QBasicTimer *timer;
 
+    /* What choice we allow the players to have */
+    QList<BattleChoices> options;
+    /* Is set to false once a player choses it move */
+    QList<int> hasChoice;
+    /* just indicates if the player could originally move or not */
+    QList<bool> couldMove;
+
     void timerEvent(QTimerEvent *);
 
     void startClock(int player, bool broadCoast = true);
@@ -158,6 +189,17 @@ protected:
     /* if battle ends, stop the battle thread */
     void testWin();
     void endBattle(int result, int winner, int loser); //must always be called from the thread
+
+    bool canCancel(int player);
+    void cancel(int player);
+    void addDraw(int player);
+
+    bool validChoice(const BattleChoice &b);
+    virtual void storeChoice(const BattleChoice &b);
+    bool allChoicesOkForPlayer(int player);
+    bool allChoicesSet();
+
+    virtual BattleChoice &choice (int p) = 0;
 public:
     const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
@@ -214,6 +256,20 @@ protected:
     mutable MTRand_int32 rand_generator;
 
     BattleConfiguration conf;
+public:
+    /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
+    // Public because used by Yawn
+    int currentForcedSleepPoke[2];
+
+    int weather;
+    int weatherCount;
+
+    void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
+    void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
+    void sendItemMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
+    void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
+
+    void notifyFail(int p);
 };
 
 #endif // BATTLEBASE_H
