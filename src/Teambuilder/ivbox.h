@@ -32,7 +32,9 @@ public slots:
 
 signals:
     void statsUpdated();
-
+    /* in gen 2, IVs determine shiny & gender */
+    void genderUpdated();
+    void shinyUpdated();
 private:
     Ui::IvBox *ui;
 

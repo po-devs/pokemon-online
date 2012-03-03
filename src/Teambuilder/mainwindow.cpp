@@ -111,6 +111,7 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
+    GenInfo::init("db/gens/");
     Theme::init(s.value("theme_2").toString());
 
     /* Loading the values */
@@ -239,6 +240,7 @@ void MainEngine::launchTeamBuilder()
     MainEngineRoutine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
+    connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
 }
 
 void MainEngine::launchServerChoice()
