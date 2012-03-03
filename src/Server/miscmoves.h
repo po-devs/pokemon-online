@@ -9,6 +9,7 @@
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
 typedef BattleCounterIndex BC;
+typedef BattleSituation::TurnMemory TM;
 
 struct MMDisable : public MM
 {
@@ -44,7 +45,7 @@ struct MMDisable : public MM
         }
 
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
             return true;
         }
 

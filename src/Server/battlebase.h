@@ -84,6 +84,10 @@ public:
     bool koed(int player) const;
     bool isOut(int player, int poke);
     bool hasSubstitute(int player);
+    int PP(int player, int slot) const;
+    bool hasMove(int player, int move);
+    int move(int player, int slot);
+    bool hasMoved(int slot);
 
     int player(int slot) const;
     /* Returns -1 if none */
@@ -97,6 +101,7 @@ public:
     bool canTarget(int attack, int attacker, int defender) const;
     bool areAdjacent(int attacker, int defender) const;
     /* Returns true or false if an attack is going on or not */
+
     bool attacking();
     bool multiples() const {
         return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
@@ -263,6 +268,12 @@ protected:
     mutable MTRand_int32 rand_generator;
 
     BattleConfiguration conf;
+
+    void requestChoices();
+    /* requests choice of action from the player */
+    bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
+    virtual BattleChoices createChoice(int slot) = 0;
+    virtual bool isMovePossible(int player, int slot);
 public:
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
@@ -280,6 +291,7 @@ public:
 
     void notifyFail(int p);
     void notifyInfos(int tosend = All);
+    void notifySub(int player, bool sub);
 
     virtual BattleDynamicInfo constructInfo(int player);
     BattleStats constructStats(int player);
@@ -343,7 +355,33 @@ public:
         void reset();
     };
 
+    struct TurnMemory {
+        TurnMemory() {
+            reset();
+        }
+
+        void reset() {
+            flags = 0;
+        }
+
+        quint32 flags;
+
+        enum Flag {
+            Incapacitated = 1,
+            NoChoice = 2,
+            HasMoved = 4
+        };
+
+        inline void remove(Flag f) {flags &= ~f;}
+        inline void add(Flag f) {flags |= f;}
+        inline bool contains(Flag f) {return (flags & f) != 0;}
+    };
+
     virtual BasicPokeInfo &fpoke(int slot) = 0;
+    virtual BasicPokeInfo const &fpoke(int slot) const = 0;
+    virtual TurnMemory &turnMem(int slot) = 0;
+    virtual BasicMoveInfo &tmove(int slot) = 0;
+    virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
 };

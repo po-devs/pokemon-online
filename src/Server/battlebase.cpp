@@ -1269,3 +1269,105 @@ ShallowBattlePoke BattleBase::opoke(int slot, int player, int i) const
     (void) slot;
     return poke(player, i);
 }
+
+void BattleBase::requestChoices()
+{
+    for (int i = 0; i < numberOfSlots(); i ++)
+        couldMove[i] = false;
+
+    int count = 0;
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        count += requestChoice(i, false);
+    }
+
+    if (!allChoicesOkForPlayer(Player1)) {
+        notify(Player1, StartChoices, Player1);
+    }
+
+    if (!allChoicesOkForPlayer(Player2)) {
+        notify(Player2, StartChoices, Player2);
+    }
+
+    if (count > 0) {
+        /* Send a brief update on the status */
+        notifyInfos();
+        /* Lock until ALL choices are received */
+        yield();
+    }
+
+    notify(All, BeginTurn, All, turn());
+
+    /* Now all the players gonna do is analyzeChoice(int player) */
+}
+
+
+bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
+{
+    drawer() = -1;
+
+    int player = this->player(slot);
+
+    if (koed(slot) && countBackUp(player) == 0) {
+        return false;
+    }
+
+    /* Custom choices bypass forced choices */
+    if (turnMem(slot).contains(TurnMemory::NoChoice) && !koed(slot) && !custom) {
+        return false;
+    }
+
+    couldMove[slot] = true;
+    hasChoice[slot] = true;
+
+    if (!custom)
+        options[slot] = createChoice(slot);
+
+    notify(player, OfferChoice, slot, options[slot]);
+
+    startClock(player);
+
+    if (acquire) {
+        notify(player, StartChoices, player);
+        yield();
+    }
+
+    /* Now all the players gonna do is analyzeChoice(int player) */
+    return true;
+}
+
+bool BattleBase::isMovePossible(int player, int slot)
+{
+    return PP(player, slot) > 0 ;
+}
+
+int BattleBase::PP(int player, int slot) const
+{
+    return fpoke(player).pps[slot];
+}
+
+
+bool BattleBase::hasMove(int player, int move) {
+    for (int i = 0; i < 4; i++) {
+        if (this->move(player, i) == move) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int BattleBase::move(int player, int slot)
+{
+    return fpoke(player).moves[slot];
+}
+
+
+bool BattleBase::hasMoved(int p)
+{
+    return turnMem(p).contains(TurnMemory::HasMoved) || turnMem(p).contains(TurnMemory::Incapacitated);
+}
+
+void BattleBase::notifySub(int player, bool sub)
+{
+    notify(All, Substitute, player, sub);
+}

@@ -14,6 +14,7 @@
 using namespace BattleCommands;
 
 typedef BattlePStorage BP;
+typedef BattleSituation::TurnMemory TM;
 
 Q_DECLARE_METATYPE(QList<int>)
 
@@ -53,6 +54,7 @@ void BattleSituation::beginTurn()
     /* Resetting temporary variables */
     for (int i = 0; i < numberOfSlots(); i++) {
         turnMemory(i).clear();
+        turnMem(i).reset();
         tmove(i).reset();
     }
 
@@ -598,71 +600,6 @@ void BattleSituation::endTurnStatus(int player)
     }
 }
 
-bool BattleSituation::requestChoice(int slot, bool acquire, bool custom)
-{
-    drawer() = -1;
-
-    int player = this->player(slot);
-
-    if (koed(slot) && countBackUp(player) == 0) {
-        return false;
-    }
-
-    /* Custom choices bypass forced choices */
-    if (turnMemory(slot).contains("NoChoice") && !koed(slot) && !custom) {
-        return false;
-    }
-
-    couldMove[slot] = true;
-    hasChoice[slot] = true;
-
-    if (!custom)
-        options[slot] = createChoice(slot);
-
-    notify(player, OfferChoice, slot, options[slot]);
-
-    startClock(player);
-
-    if (acquire) {
-        notify(player, StartChoices, player);
-        yield();
-    }
-
-    /* Now all the players gonna do is analyzeChoice(int player) */
-    return true;
-}
-
-void BattleSituation::requestChoices()
-{
-    for (int i = 0; i < numberOfSlots(); i ++)
-        couldMove[i] = false;
-
-    int count = 0;
-
-    for (int i = 0; i < numberOfSlots(); i++) {
-        count += requestChoice(i, false);
-    }
-
-    if (!allChoicesOkForPlayer(Player1)) {
-        notify(Player1, StartChoices, Player1);
-    }
-
-    if (!allChoicesOkForPlayer(Player2)) {
-        notify(Player2, StartChoices, Player2);
-    }
-
-    if (count > 0) {
-        /* Send a brief update on the status */
-        notifyInfos();
-        /* Lock until ALL choices are received */
-        yield();
-    }
-
-    notify(All, BeginTurn, All, turn());
-
-    /* Now all the players gonna do is analyzeChoice(int player) */
-}
-
 BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
@@ -713,12 +650,7 @@ BattleChoices BattleSituation::createChoice(int slot)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (PP(player, move) > 0 && turnMemory(player).value("Move" + QString::number(move) + "Blocked").toBool() == false);
-}
-
-int BattleSituation::PP(int player, int slot) const
-{
-    return fpoke(player).pps[slot];
+    return (BattleBase::isMovePossible(player, move) && turnMemory(player).value("Move" + QString::number(move) + "Blocked").toBool() == false);
 }
 
 void BattleSituation::analyzeChoice(int slot)
@@ -730,7 +662,7 @@ void BattleSituation::analyzeChoice(int slot)
     if (choice(slot).attackingChoice()) {
         turnMemory(slot)["Target"] = choice(slot).target();
         if (!wasKoed(slot)) {
-            if (turnMemory(slot).contains("NoChoice"))
+            if (turnMem(slot).contains(TM::NoChoice))
                 /* Automatic move */
                 useAttack(slot, pokeMemory(slot)["LastSpecialMoveUsed"].toInt(), true);
             else {
@@ -817,7 +749,7 @@ void BattleSituation::analyzeChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!koed(i) && !turnMemory(i).contains("NoChoice") && choice(i).attackingChoice()) {
+        if (!koed(i) && !turnMem(i).contains(TM::NoChoice) && choice(i).attackingChoice()) {
             if (!options[i].struggle())
                 MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
             else
@@ -913,16 +845,6 @@ void BattleSituation::analyzeChoices()
     }
 }
 
-bool BattleSituation::hasMoved(int p)
-{
-    return turnMemory(p).value("HasMoved").toBool() || turnMemory(p).value("CantGetToMove").toBool();
-}
-
-void BattleSituation::notifySub(int player, bool sub)
-{
-    notify(All, Substitute, player, sub);
-}
-
 /* Battle functions! Yeah! */
 
 void BattleSituation::sendPoke(int slot, int pok, bool silent)
@@ -988,7 +910,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         }
     }
 
-    turnMemory(slot)["CantGetToMove"] = true;
+    turnMem(slot).add(TurnMemory::Incapacitated);
 
     if (gen() >= 2)
         ItemEffect::setup(poke(slot).item(), slot, *this);
@@ -1125,7 +1047,7 @@ void BattleSituation::sendBack(int player, bool silent)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            if (tmove(opp).attack == Move::Pursuit && !turnMemory(opp)["HasMoved"].toBool()) {
+            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved)) {
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);
@@ -1456,7 +1378,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokeMemory(player)["MoveSlot"] = move;
     }
 
-    turnMemory(player)["HasMoved"] = true;
+    turnMem(player).add(TurnMemory::HasMoved);
     if (gen() >= 5) {
         counters(player).decreaseCounters();
     }
@@ -1648,7 +1570,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
-    if (!specialOccurence && !turnMemory(player).contains("NoChoice")) {
+    if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
         //Pressure
         int ppsum = 1;
 
@@ -1938,15 +1860,6 @@ void BattleSituation::notifyHits(int spot, int number)
     notify(All, Hit, spot, quint8(number));
 }
 
-bool BattleSituation::hasMove(int player, int move) {
-    for (int i = 0; i < 4; i++) {
-        if (this->move(player, i) == move) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 {
     int player = orPlayer == - 1 ? attacker() : orPlayer;
@@ -2109,11 +2022,6 @@ bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
             return true;
     }
     return false;
-}
-
-int BattleSituation::move(int player, int slot)
-{
-    return fpoke(player).moves[slot];
 }
 
 void BattleSituation::inflictRecoil(int source, int target)

@@ -16,6 +16,7 @@ protected:
     int getStat(int poke, int stat);
     void sendPoke(int player, int poke, bool silent);
     BattleChoice &choice (int p);
+    BattleChoices createChoice(int slot);
 private:
     BattleChoice choices[2];
 
@@ -31,27 +32,16 @@ private:
 
     SlotMemory slotzones[2];
 
-    struct TurnMemory {
-        TurnMemory() {
-            reset();
-        }
-
-        void reset() {
-            flags = 0;
-        }
-
-        quint32 flags;
-
-        enum {
-            Incapacitated = 1
-        };
-    };
-
     TurnMemory turnzones[2];
 
+    BasicMoveInfo moves[2];
+
     BasicPokeInfo &fpoke(int i) {return pokes[i];}
+    const BasicPokeInfo &fpoke(int i) const {return pokes[i];}
     SlotMemory &slotMemory(int i) {return slotzones[i];}
-    TurnMemory &turnMemory(int i) {return turnzones[i];}
+    TurnMemory &turnMem(int i) {return turnzones[i];}
+    BasicMoveInfo &tmove(int slot) { return moves[slot];}
+    const BasicMoveInfo &tmove(int slot) const {return moves[slot];}
 };
 
 #endif // BATTLERBY_H

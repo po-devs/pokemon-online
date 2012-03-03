@@ -13,6 +13,7 @@ Q_DECLARE_METATYPE(QList<int>)
 
 using namespace Move;
 typedef BattleCounterIndex BC;
+typedef BS::TurnMemory TM;
 
 int MoveMechanics::num(const QString &name)
 {
@@ -1138,7 +1139,7 @@ struct MMGrudge : public MM
     static void akbst(int s, int t, BS &b) {
         int trn = poke(b,s)["GrudgeTurn"].toInt();
 
-        if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool())) {
+        if (trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) {
             if (!b.koed(t)) {
                 int slot = poke(b, t)["MoveSlot"].toInt();
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
@@ -1456,7 +1457,7 @@ struct MMIceBall : public MM
 
     static void ts(int s, int t, BS &b) {
         if (poke(b,s).contains("LastBallTurn") && poke(b,s)["LastBallTurn"].toInt() + 1 == b.turn() && poke(b,s)["IceBallCount"].toInt() > 0) {
-            turn(b,s)["NoChoice"] = true;
+            fturn(b,s).add(TM::NoChoice);
             MoveEffect::setup(poke(b,s)["LastSpecialMoveUsed"].toInt(),s,t,b);
         }
     }
@@ -1894,7 +1895,7 @@ struct MMMeFirst : public MM
 
     static void daf(int s, int t, BS &b) {
         /* if has moved or is using a multi-turn move */
-        if (b.koed(t) || turn(b,t).value("HasMoved").toBool() || turn(b,t).value("NoChoice").toBool()) {
+        if (b.koed(t) || fturn(b,t).contains(TM::HasMoved) || fturn(b,t).contains(TM::NoChoice)) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -1944,7 +1945,7 @@ struct MMMimic : public MM
             return;
         }
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -2238,7 +2239,7 @@ struct MMRazorWind : public MM
 
     static void ts(int s, int, BS &b) {
         removeFunction(poke(b,s), "TurnSettings", "RazorWind");
-        turn(b,s)["NoChoice"] = true;
+        fturn(b,s).add(TM::NoChoice);
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
         if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
@@ -2328,7 +2329,7 @@ struct MMRage : public MM
     }
 
     static void ts(int s, int, BS &b) {
-        turn(b,s)["NoChoice"] = true;
+        fturn(b,s).add(TM::NoChoice);
         MoveEffect::setup(Move::Rage,s,s,b);
     }
 
@@ -2569,7 +2570,7 @@ struct MMSpite : public MM
             return;
         }
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -2624,7 +2625,7 @@ struct MMSuckerPunch : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (turn(b,t).value("HasMoved").toBool() || tmove(b, t).power == 0) {
+        if (fturn(b,t).contains(TM::HasMoved) || tmove(b, t).power == 0) {
             turn(b,s)["Failed"] = true;
         }
     }
@@ -2974,7 +2975,7 @@ struct MMOutrage : public MM
 
     static void ts(int s, int, BS &b) {
         if (poke(b,s).value("OutrageUntil").toInt() >= b.turn() && poke(b,s)["LastOutrage"].toInt() == b.turn()-1) {
-            turn(b,s)["NoChoice"] = true;
+            fturn(b,s).add(TM::NoChoice);
             MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,s,b);
 
             if (b.gen() >=5) {
@@ -3024,7 +3025,7 @@ struct MMUproar : public MM {
 
 
     static void ts(int s, int, BS &b) {
-        turn(b,s)["NoChoice"] = true;
+        fturn(b,s).add(TM::NoChoice);
         turn(b,s)["UproarBefore"] = true;
         MoveEffect::setup(poke(b,s)["UproarMove"].toInt(),s,s,b);
     }
@@ -3281,7 +3282,7 @@ struct MMPayback : public MM
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
         //In gen 5, switch doesn't increase the power
-        if ( (b.gen() <= 4 && b.hasMoved(t)) || (b.gen() >= 5 && turn(b,t).value("HasMoved").toBool())) {
+        if ( (b.gen() <= 4 && b.hasMoved(t)) || (b.gen() >= 5 && fturn(b,t).contains(TM::HasMoved))) {
             tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
