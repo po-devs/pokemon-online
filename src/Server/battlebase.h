@@ -101,7 +101,7 @@ public:
     void notifyMiss(bool multitar, int player, int target);
     void notifyKO(int player);
 
-    virtual void changeStatus(int player, int status, bool tell = true, int turns = 0);
+    virtual void changeStatus(int player, int status, bool tell = true, int turns = 0) = 0;
 
     /* Sends data to players */
     template <typename ...Params>
@@ -127,6 +127,12 @@ protected:
     QHash<int,QPair<int, QString> > spectators;
     mutable QMutex spectatorMutex;
     QList<QPointer<Player> > pendingSpectators;
+
+    int spectatorKey(int id) const {
+        return 10000 + id;
+    }
+
+    virtual void notifySituation(int dest) = 0;
 
     int ratings[2];
     /*.*/
@@ -161,6 +167,14 @@ public:
     const QList<QPointer<Player> > &getPendingSpectators() const {
         return pendingSpectators;
     }
+
+    bool acceptSpectator(int id, bool authed=false) const;
+    /* In case it's one of the battler, resends the current info to the battler */
+    void addSpectator(Player *p);
+    void removeSpectator(int id);
+
+    /* Server tells a player forfeited */
+    void playerForfeit(int forfeiterId);
 
     struct QuitException {};
 

@@ -1,3 +1,4 @@
+#include "player.h"
 #include "battlebase.h"
 #include "../Shared/battlecommands.h"
 #include "pluginmanager.h"
@@ -453,3 +454,83 @@ void BattleBase::changeStatus(int player, int status, bool tell, int turns)
     (void) tell;
     (void) turns;
 }
+
+
+bool BattleBase::acceptSpectator(int id, bool authed) const
+{
+    QMutexLocker m(&spectatorMutex);
+    if (spectators.contains(spectatorKey(id)) || this->id(0) == id || this->id(1) == id)
+        return false;
+    if (authed)
+        return true;
+    return !(clauses() & ChallengeInfo::DisallowSpectator);
+}
+
+void BattleBase::addSpectator(Player *p)
+{
+    /* Simple guard to avoid multithreading problems -- would need to be improved :s */
+    if (!blocked() && !finished()) {
+        pendingSpectators.append(QPointer<Player>(p));
+        QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
+
+        return;
+    }
+
+    int id = p->id();
+
+    int key;
+
+    if (configuration().isInBattle(id)) {
+        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration());
+        key = spot(id);
+    } else {
+        /* Assumption: each id is a different player, so key is unique */
+        key = spectatorKey(id);
+
+        if (spectators.contains(key)) {
+            // Then a guy was put on waitlist and tried again, w/e don't accept him
+            return;
+        }
+
+        spectators[key] = QPair<int, QString>(id, p->name());
+
+        p->spectateBattle(publicId(), configuration());
+
+        if (tier().length() > 0)
+            notify(key, TierSection, Player1, tier());
+
+        notify(key, Rated, Player1, rated());
+
+        typedef QPair<int, QString> pair;
+        foreach (pair spec, spectators) {
+            if (spec.first != id)
+                notify(key, Spectating, 0, true, qint32(spec.first), spec.second);
+        }
+    }
+
+    notify(All, Spectating, 0, true, qint32(id), p->name());
+
+    notify(key, BlankMessage, 0);
+
+    notifySituation(key);
+}
+
+void BattleBase::removeSpectator(int id)
+{
+    spectatorMutex.lock();
+    spectators.remove(spectatorKey(id));
+    spectatorMutex.unlock();
+
+    notify(All, Spectating, 0, false, qint32(id));
+}
+
+
+void BattleBase::playerForfeit(int forfeiterId)
+{
+    if (finished()) {
+        return;
+    }
+    forfeiter() = spot(forfeiterId);
+    notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
+}
+
