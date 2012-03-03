@@ -38,8 +38,13 @@ public:
     BattleBase();
     ~BattleBase();
 
+    void init(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
+
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
     void run();
+
+    /* Starts the battle -- use the time before to connect signals / slots */
+    void start(ContextSwitcher &ctx);
 protected:
     void onDestroy(); //call in the sub class destructor
 

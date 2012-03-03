@@ -15,10 +15,163 @@ BattleBase::BattleBase()
     timer = NULL;
 }
 
+void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
+{
+    publicId() = id;
+    conf.avatar[0] = p1.avatar();
+    conf.avatar[1] = p2.avatar();
+    conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
+    conf.setTeam(1, new TeamBattle(p2.team(nteam2)));
+    conf.ids[0] = p1.id();
+    conf.ids[1] = p2.id();
+    conf.teamOwnership = true;
+    conf.gen = std::max(p1.gen(), p2.gen());
+    conf.clauses = c.clauses;
+    conf.mode = c.mode;
+
+    ratings[0] = p1.rating(conf.teams[0]->tier);
+    ratings[1] = p2.rating(conf.teams[1]->tier);
+    winMessage[0] = p1.winningMessage();
+    winMessage[1] = p2.winningMessage();
+    loseMessage[0] = p1.losingMessage();
+    loseMessage[1] = p2.losingMessage();
+    attacked() = -1;
+    attacker() = -1;
+    selfKoer() = -1;
+    drawer() = -1;
+    forfeiter() = -1;
+    weather = 0;
+    weatherCount = -1;
+
+    /* timers for battle timeout */
+    timeleft[0] = 5*60;
+    timeleft[1] = 5*60;
+    timeStopped[0] = true;
+    timeStopped[1] = true;
+
+    rated() = c.rated;
+
+    if (mode() == ChallengeInfo::Doubles) {
+        numberOfSlots() = 4;
+    } else if (mode() == ChallengeInfo::Triples) {
+        numberOfSlots() = 6;
+    } else {
+        numberOfSlots() = 2;
+    }
+
+    if (team(0).tier == team(1).tier) {
+        tier() = team(0).tier;
+    }
+    currentForcedSleepPoke[0] = -1;
+    currentForcedSleepPoke[1] = -1;
+    p1.addBattle(publicId());
+    p2.addBattle(publicId());
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        options.push_back(BattleChoices());
+        hasChoice.push_back(false);
+        couldMove.push_back(false);
+    }
+
+    if (clauses() & ChallengeInfo::ChallengeCup) {
+        team(0).generateRandom(gen());
+        team(1).generateRandom(gen());
+    } else {
+        if (clauses() & ChallengeInfo::ItemClause) {
+            QSet<int> alreadyItems[2];
+            for (int i = 0; i < 6; i++) {
+                int o1 = team(0).poke(i).item();
+                int o2 = team(1).poke(i).item();
+
+                if (alreadyItems[0].contains(o1)) {
+                    team(0).poke(i).item() = 0;
+                } else {
+                    alreadyItems[0].insert(o1);
+                }
+                if (alreadyItems[1].contains(o2)) {
+                    team(1).poke(i).item() = 0;
+                } else {
+                    alreadyItems[1].insert(o2);
+                }
+            }
+        }
+        if (clauses() & ChallengeInfo::SpeciesClause) {
+            QSet<int> alreadyPokes[2];
+            for (int i = 0; i < 6; i++) {
+                int o1 = PokemonInfo::OriginalForme(team(0).poke(i).num()).pokenum;
+                int o2 = PokemonInfo::OriginalForme(team(1).poke(i).num()).pokenum;
+
+                if (alreadyPokes[0].contains(o1)) {
+                    team(0).poke(i).num() = Pokemon::NoPoke;
+                } else {
+                    alreadyPokes[0].insert(o1);
+                }
+                if (alreadyPokes[1].contains(o2)) {
+                    team(1).poke(i).num() = Pokemon::NoPoke;
+                } else {
+                    alreadyPokes[1].insert(o2);
+                }
+            }
+        }
+    }
+
+    if (tier().length() > 0) {
+        int maxLevel = TierMachine::obj()->tier(tier()).getMaxLevel();
+
+        if (maxLevel < 100) {
+            for (int i = 0; i < 6; i ++) {
+                if (team(0).poke(i).level() > maxLevel) {
+                    team(0).poke(i).level() = maxLevel;
+                    team(0).poke(i).updateStats(gen());
+                }
+                if (team(1).poke(i).level() > maxLevel) {
+                    team(1).poke(i).level() = maxLevel;
+                    team(1).poke(i).updateStats(gen());
+                }
+            }
+        }
+    }
+
+    buildPlugins(pluginManager);
+}
+
 BattleBase::~BattleBase()
 {
     /* This code needs to be in the derived destructor */
     //onDestroy();
+}
+
+
+void BattleBase::start(ContextSwitcher &ctx)
+{
+    notify(All, BlankMessage,0);
+
+    if (tier().length()>0)
+    {
+        notify(All, TierSection, Player1, tier());
+    }
+
+    if (rated()) {
+        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());
+        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team(1).name, team(0).name, tier());
+
+        notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
+        notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
+    }
+
+    notify(All, Rated, Player1, rated());
+    notify(All, BlankMessage,0);
+
+    /* Beginning of the battle! */
+    turn() = 0; /* here for Truant */
+
+    blocked() = false;
+
+    timer = new QBasicTimer();
+    /* We are only warned of new events every 5 seconds */
+    timer->start(5000,this);
+
+    ContextCallee::start(ctx);
 }
 
 
