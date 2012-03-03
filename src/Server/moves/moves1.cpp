@@ -127,8 +127,6 @@ struct MMBatonPass : public MM
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
-        /* Removing Transform and disable */
-        c.remove("Transformed");
 
         QList<int> boosts;
 
@@ -136,6 +134,7 @@ struct MMBatonPass : public MM
             boosts.push_back(fpoke(b,s).boosts[i]);
         }
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
+        turn(b,s)["BatonPassFlags"] = fpoke(b,s).flags & BS::BasicPokeInfo::Substitute;
 
         /* choice band etc. would force the same move
             if on both the passed & the passer */
@@ -160,12 +159,14 @@ struct MMBatonPass : public MM
             fpoke(b,s).boosts[i] += boosts[i];
         }
 
+        fpoke(b, s).flags |= turn(b,s)["BatonPassFlags"].toInt();
+
         if (b.gen() <= 4) {
             //and we decrease the switch count associated, so mean look & co still work
             inc(slot(b,s)["SwitchCount"], -1);
         }
 
-        if (poke(b,s).value("Substitute").toBool()) {
+        if (fpoke(b,s).substitute()) {
             b.notifySub(s,true);
         }
     }
@@ -1703,7 +1704,9 @@ struct MMBeatUp : public MM {
                     b.inflictSubDamage(t,damage,t);
                 else
                     b.inflictDamage(t,damage,t,true);
-                turn(b,t)["HadSubstitute"] = turn(b,t)["Substitute"];
+                if (!fpoke(b, t).substitute()) {
+                    fpoke(b, t).remove(BS::BasicPokeInfo::HadSubstitute);
+                }
             }
             if (b.koed(t))
                 return;

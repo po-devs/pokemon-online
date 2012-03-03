@@ -7,10 +7,6 @@
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"
-#include "tiermachine.h"
-#include "tier.h"
-#include "player.h"
-#include "pluginmanager.h"
 #include "battlefunctions.h"
 #include "battlecounterindex.h"
 #include "../Shared/battlecommands.h"
@@ -667,20 +663,6 @@ void BattleSituation::requestChoices()
     /* Now all the players gonna do is analyzeChoice(int player) */
 }
 
-void BattleSituation::notifyInfos(int tosend)
-{
-    for (int p = 0; p < numberOfSlots(); p++) {
-        if (!koed(p)) {
-            BattleDynamicInfo infos = constructInfo(p);
-            notify(tosend, DynamicInfo, p, infos);
-            if (tosend == All || tosend == player(p)) {
-                BattleStats stats = constructStats(p);
-                notify(player(p), DynamicStats, p, stats);
-            }
-        }
-    }
-}
-
 BattleChoices BattleSituation::createChoice(int slot)
 {
     /* First let's see for attacks... */
@@ -975,11 +957,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     PokeBattle &p = poke(slot);
 
     /* Give new values to what needed */
-    fpoke(slot).id = p.num().toPokeRef();
-    fpoke(slot).weight = PokemonInfo::Weight(p.num());
-    fpoke(slot).type1 = PokemonInfo::Type1(p.num(), gen());
-    fpoke(slot).type2 = PokemonInfo::Type2(p.num(), gen());
-    fpoke(slot).ability = p.ability();
+    fpoke(slot).init(p, gen());
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
@@ -990,24 +968,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (p.status() == Pokemon::Asleep && gen() >= 5) {
         p.statusCount() = p.oriStatusCount();
     }
-
-    for (int i = 0; i < 4; i++) {
-        fpoke(slot).moves[i] = p.move(i).num();
-        fpoke(slot).pps[i] = p.move(i).PP();
-    }
-
-    for (int i = 1; i < 6; i++)
-        fpoke(slot).stats[i] = p.normalStat(i);
-
-    for (int i = 0; i < 6; i++) {
-        fpoke(slot).dvs[i] = p.dvs()[i];
-    }
-
-    for (int i = 0; i < 8; i++) {
-        fpoke(slot).boosts[i] = 0;
-    }
-
-    fpoke(slot).level = p.level();
 
     /* Increase the "switch count". Switch count is used to see if the pokemon has switched
        (like for an attack like attract), it is imo more effective that other means */
@@ -1803,9 +1763,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 heatOfAttack() = true;
-                turnMemory(target)["HadSubstitute"] = false;
+                fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
-                turnMemory(target)["HadSubstitute"] = sub;
+                if (sub) {
+                    fpoke(target).add(BasicPokeInfo::HadSubstitute);
+                }
 
                 if (tmove(player).power > 1 && repeatCount() == 0) {
                     notify(All, Effective, target, quint8(typemod));
@@ -1892,7 +1854,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 calleffects(player, target, "AfterAttackSuccessful");
             }
 
-            turnMemory(target)["HadSubstitute"] = false;
+            fpoke(target).remove(BasicPokeInfo::HadSubstitute);
         } else {
 
             /* Needs to be called before opponentblock because lightning rod / twave */
@@ -2591,12 +2553,6 @@ void BattleSituation::callForth(int weather, int turns)
     }
 }
 
-void BattleSituation::setupLongWeather(int weather)
-{
-    weatherCount = -1;
-    this->weather = weather;
-}
-
 void BattleSituation::endTurnWeather()
 {
     int weather = this->weather;
@@ -2692,11 +2648,6 @@ bool BattleSituation::isFlying(int player)
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
 }
 
-bool BattleSituation::hasSubstitute(int player)
-{
-    return !koed(player) && (pokeMemory(player).value("Substitute").toBool() || turnMemory(player).value("HadSubstitute").toBool());
-}
-
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
 {
     if (poke(player).status() == status) {
@@ -2736,20 +2687,6 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
     }
     callpeffects(player, player,"AfterStatusChange");
     callieffects(player, player,"AfterStatusChange");
-}
-
-void BattleSituation::changeStatus(int team, int poke, int status)
-{
-    if (isOut(team, poke)) {
-        changeStatus(slot(team, poke), status);
-    } else {
-        this->poke(team, poke).changeStatus(status);
-        notify(All, AbsStatusChange, team, qint8(poke), qint8(status));
-        //Sleep clause
-        if (status != Pokemon::Asleep && currentForcedSleepPoke[team] == currentInternalId(slot(team, poke))) {
-            currentForcedSleepPoke[team] = -1;
-        }
-    }
 }
 
 bool BattleSituation::hasMinimalStatMod(int player, int stat)
@@ -3171,7 +3108,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     int life = pokeMemory(player)["SubstituteLife"].toInt();
 
     if (life <= damage) {
-        pokeMemory(player)["Substitute"] = false;
+        fpoke(player).remove(BasicPokeInfo::Substitute);
         inc(turnMemory(source)["DamageInflicted"], life);
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
@@ -3654,7 +3591,7 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
 
         return p;
     } else {
-        return poke(player, i);
+        return BattleBase::opoke(slot, player, i);
     }
 }
 
@@ -3730,15 +3667,10 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
 
 BattleDynamicInfo BattleSituation::constructInfo(int slot)
 {
-    BattleDynamicInfo ret;
+    BattleDynamicInfo ret = BattleBase::constructInfo(slot);
 
     int player = this->player(slot);
 
-    for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = fpoke(slot).boosts[i+1];
-    }
-
-    ret.flags = 0;
     if (teamMemory(player).contains("Spikes")) {
         switch (teamMemory(player).value("Spikes").toInt()) {
         case 1: ret.flags |= BattleDynamicInfo::Spikes; break;
@@ -3754,23 +3686,6 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     }
     if (teamMemory(player).contains("StealthRock") && teamMemory(player).value("StealthRock").toBool()) {
         ret.flags |= BattleDynamicInfo::StealthRock;
-    }
-
-    return ret;
-}
-
-BattleStats BattleSituation::constructStats(int player)
-{
-    BattleStats ret;
-
-    if (pokeMemory(player).contains("Transformed")) {
-        for (int i = 0; i < 5; i++) {
-            ret.stats[i] = -1;
-        }
-    } else {
-        for (int i = 0; i < 5; i++) {
-            ret.stats[i] = getStat(player, i+1);
-        }
     }
 
     return ret;
@@ -3805,11 +3720,6 @@ bool BattleSituation::isThereUproar()
     }
 
     return false;
-}
-
-void BattleSituation::BasicMoveInfo::reset()
-{
-    memset(this, 0, sizeof(*this));
 }
 
 void BattleSituation::storeChoice(const BattleChoice &b)

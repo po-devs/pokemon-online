@@ -841,13 +841,13 @@ struct MMSubstitute : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (poke(b,s).value("Substitute").toBool() == true) {
+        if (fpoke(b,s).substitute()) {
             b.fail(s, 128);
         }
     }
 
     static void uas(int s, int, BS &b) {
-        poke(b,s)["Substitute"] = true;
+        fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
         poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
@@ -3210,7 +3210,7 @@ struct MMTransform : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (poke(b,t).contains("Transformed") || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
+        if ( fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
             turn(b,s)["Failed"] = true;
 
         Pokemon::uniqueId num = b.pokenum(t);
@@ -3268,7 +3268,7 @@ struct MMTransform : public MM {
             b.acquireAbility(s, b.ability(t));
         }
 
-        poke(b,s)["Transformed"] = true;
+        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
     }
 };
 

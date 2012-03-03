@@ -1420,13 +1420,13 @@ struct AMEccentric : public AM
         if (t == -1)
             return;
 
-        if (poke(b,t).contains("Transformed") || b.hasSubstitute(t))
+        if (fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || b.hasSubstitute(t))
             return;
 
         if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))
             return;
 
-        poke(b,s)["Transformed"] = true;
+        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);

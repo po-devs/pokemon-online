@@ -14,7 +14,7 @@
 class FindBattleData;
 class FindBattleDataAdv;
 class Player;
-class BattleSituation;
+class BattleBase;
 class Analyzer;
 class BattleChoice;
 class ChallengeInfo;
@@ -86,7 +86,7 @@ public:
 
     static Server *serverIns;
 
-    BattleSituation * getBattle(int battleId) const;
+    BattleBase * getBattle(int battleId) const;
 
     const QString &servName() {
         return serverName;
@@ -256,7 +256,7 @@ private:
     Cache<QByteArray, void (*)(QByteArray&)> channelCache;
     Cache<QByteArray, void (*)(QByteArray&)> zchannelCache;
 
-    QHash<int, BattleSituation *> mybattles;
+    QHash<int, BattleBase *> mybattles;
     QHash<qint32, Battle> battleList;
 
 #ifndef SFML_SOCKETS
