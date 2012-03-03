@@ -149,9 +149,47 @@ TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
     color: white;
 }
 
+TeamMenu QRadioButton::indicator {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio.png);
+}
+
+TeamMenu QRadioButton::indicator:checked {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-checked.png);
+}
+
+TeamMenu QRadioButton::indicator:checked:hover {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-checked-hover.png);
+}
+
+TeamMenu QRadioButton::indicator:pressed {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-pressed.png);
+}
+
+TeamMenu QCheckBox::indicator:checked {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-checked.png);
+}
+
+TeamMenu QCheckBox::indicator:checked:hover {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-checked-hover.png);
+}
+
+TeamMenu QCheckBox::indicator:pressed {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-pressed.png);
+}
+
 PokeSelection QPushButton {
 	color: white;
 	background: #459903;
+}
+
+PokeSelection #pokemonSprite {
+    min-width: 96px;
+    min-height: 96px;
+}
+
+PokeSelection #pokemonFrame {
+    width: 110px;
+    height: 110px;
 }
 
 /*\*=============================================*/

@@ -1,7 +1,10 @@
+#include "../PokemonInfo/pokemonstructs.h"
+
 #include <QStackedWidget>
 #include <QTabBar>
 #include <QGridLayout>
 #include <QStringListModel>
+#include <QMenuBar>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "teammenu.h"
@@ -84,4 +87,46 @@ void TeamMenu::updateTabs()
 TeamMenu::~TeamMenu()
 {
     delete ui;
+}
+
+void TeamMenu::addMenus(QMenuBar *menuBar)
+{
+    QMenu *gen = menuBar->addMenu(tr("&Gen."));
+    QActionGroup *gens = new QActionGroup(gen);
+
+    for (int i = GEN_MIN; i <= GEN_MAX; i++) {
+        int n = Gen::nums[i-GEN_MIN];
+
+        gen->addSeparator()->setText(GenInfo::Gen(i));
+
+        for (int j = 0; j < n; j++) {
+            Pokemon::gen g(i, j);
+
+            ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
+            ui->gens[g]->setCheckable(true);
+            ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
+            gens->addAction(ui->gens[g]);
+        }
+    }
+
+    ui->gens[team().team().gen().num]->setChecked(true);
+}
+
+void TeamMenu::genChanged()
+{
+    Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
+
+    if (gen == team().team().gen()) {
+        return;
+    }
+
+    team().team().setGen(gen);
+
+    for (int i = 0; i < 6; i++) {
+        team().team().poke(i).load();
+        team().team().poke(i).runCheck();
+    }
+
+    updateAll();
+    emit teamChanged();
 }

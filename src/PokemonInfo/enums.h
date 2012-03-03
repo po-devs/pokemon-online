@@ -19,8 +19,13 @@ enum {
     HGSS=4, DP=4+(1<<8), DPPt=4+(2<<8),
     BW=5
 };
+enum {
+    NumberOfVersions = 11
+};
 static const int nums[NUMBER_GENS] = {3,2,2,3,1};
 }
+
+
 namespace Version
 {
     enum {
@@ -30,8 +35,7 @@ namespace Version
     };
 
     enum {
-        LastGen = 4,
-        NumberOfGens = 5
+        NumberOfGens = 5,
     };
 
     static const int avatarSize[] = {

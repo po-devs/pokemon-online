@@ -66,6 +66,38 @@ void EvBox::updateAll()
 
     updateMain();
     updateNatureButtons();
+
+    if (poke().gen() <= 1) {
+        ui->sdefboost->hide();
+        ui->sdefdesc->hide();
+        ui->sdefedit->hide();
+        ui->sdeflabel->hide();
+        ui->sdefslider->hide();
+        ui->satkdesc->setText(tr("Special: "));
+    } else {
+        ui->sdefboost->show();
+        ui->sdefdesc->show();
+        ui->sdefedit->show();
+        ui->sdeflabel->show();
+        ui->sdefslider->show();
+        ui->satkdesc->setText(tr("Special Attack: "));
+    }
+
+    if (poke().gen() <= 2) {
+        ui->sdefslider->setDisabled(true);
+        ui->sdefedit->setDisabled(true);
+
+        for (int i = 0; i < 6; i++) {
+            m_boosts[i]->setDisabled(true);
+        }
+    } else {
+        ui->sdefslider->setDisabled(false);
+        ui->sdefedit->setDisabled(false);
+
+        for (int i = 0; i < 6; i++) {
+            m_boosts[i]->setDisabled(false);
+        }
+    }
 }
 
 void EvBox::updateEVs()
@@ -91,6 +123,10 @@ void EvBox::updateEV(int stat)
     }
 
     m_stats[stat]->setText(toColor(QString::number(poke().stat(stat)), color));
+
+    if (poke().gen() <= 2 && stat == SpAttack) {
+        updateEV(SpDefense);
+    }
 }
 
 void EvBox::updateMain()

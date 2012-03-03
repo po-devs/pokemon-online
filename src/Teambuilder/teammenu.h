@@ -1,6 +1,7 @@
 #ifndef TEAMMENU_H
 #define TEAMMENU_H
 
+#include "../PokemonInfo/pokemonstructs.h"
 #include "teambuilderwidget.h"
 #include <QHash>
 
@@ -20,12 +21,14 @@ public:
     ~TeamMenu();
 
     void updateTeam();
+    void addMenus(QMenuBar *);
 signals:
     void switchToTrainer();
 public slots:
     void switchToTab(int index);
 private slots:
     void tabIconChanged();
+    void genChanged();
 private:
     void setupUi();
     void updateTabs();
@@ -36,6 +39,7 @@ private:
         QHash<int, PokeEdit*> pokemons;
         QStringListModel *itemsModel, *natureModel;
         QAbstractItemModel *pokemonModel;
+        QHash<Pokemon::gen, QAction*> gens;
     };
 
     _ui *ui;
