@@ -4,7 +4,6 @@
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
 #include "logmanager.h"
-#include "client.h"
 #include "theme.h"
 #include "spectatorwindow.h"
 #include <cstdlib>
@@ -54,18 +53,17 @@ PokeProxy & BattleInfo::currentPoke(int spot)
     return data->poke(spot);
 }
 
-BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf,
-                           Client *client)
+BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    canLeaveBattle = false;
     question = NULL;
     this->battleId() = battleId;
     this->started() = false;
     ownid() = me.id;
-    _mclient = client;
 
     conf() = _conf;
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
-    info()._myteam.name = me.team.name;
+    info()._myteam.name = me.name;
 
     if (conf().ids[0] == ownid()) {
         conf().receivingMode[0] = BattleConfiguration::Player;
@@ -78,7 +76,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     }
     conf().avatar[info().myself] = me.avatar;
     conf().avatar[info().opponent] = opponent.avatar;
-    conf().name[info().opponent] = opponent.team.name;
+    conf().name[info().opponent] = opponent.name;
 
     info().gen = conf().gen;
 
@@ -215,7 +213,7 @@ void BattleWindow::targetChosen(int i)
 
 void BattleWindow::clickClose()
 {
-    if (battleEnded) {
+    if (battleEnded || canLeaveBattle) {
         forfeit();
         return;
     }
@@ -294,7 +292,7 @@ void BattleWindow::attackClicked(int zone)
             /* Triples still require to choose the target */
             if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
                     || data().numberOfSlots() > 4) {
-                tarZone->updateData(info(), move, gen());
+                tarZone->updateData(info(), move);
                 mystack->setCurrentIndex(TargetTab);
             } else {
                 info().done[data().slotNum(slot)] = true;
@@ -552,6 +550,20 @@ void BattleWindow::onTempPPChange(int spot, int move, int PP)
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
 }
 
+void BattleWindow::onDisconnect(int)
+{
+    canLeaveBattle = true;
+    myclose->setText(tr("&Close"));
+}
+
+void BattleWindow::onReconnect(int)
+{
+    canLeaveBattle = false;
+    if (!battleEnded) {
+        myclose->setText(tr("&Forfeit"));
+    }
+}
+
 void BattleWindow::onOfferChoice(int, const BattleChoices &c)
 {
     if (info().sent) {
@@ -635,11 +647,11 @@ void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
     }
 }
 
-void BattleWindow::addSpectator(bool add, int id)
+void BattleWindow::addSpectator(bool add, int id, const QString &name)
 {
-    BaseBattleWindow::addSpectator(add,id);
+    BaseBattleWindow::addSpectator(add,id, name);
     if (add) {
-        myspecs->addItem(new QIdListWidgetItem(id, client()->name(id)));
+        myspecs->addItem(new QIdListWidgetItem(id, name));
     } else {
         for (int i =0 ; i < myspecs->count(); i++) {
             if ( ((QIdListWidgetItem*)(myspecs->item(i)))->id() == id) {
@@ -723,6 +735,18 @@ void BattleWindow::sendRearrangedTeam()
     }
 }
 
+void BattleWindow::updateTeam(const TeamBattle &b)
+{
+    QString name = info().myteam().name();
+    info()._myteam = b;
+    info()._myteam.name = name;
+
+    test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+    for (int i = 0; i < 6; i++) {
+        mypzone->pokes[i]->changePokemon(poke(i));
+    }
+}
+
 TeamProxy &BattleWindow::team()
 {
     return info().myteam();
@@ -743,7 +767,7 @@ const PokeProxy &BattleWindow::poke(int slot) const
     return *info().myteam().poke(slot);
 }
 
-AttackZone::AttackZone(const PokeProxy &poke, int gen)
+AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
 {
     QGridLayout *l = new QGridLayout(this);
     mymapper = new QSignalMapper(this);
@@ -775,7 +799,7 @@ AttackZone::AttackZone(const PokeProxy &poke, int gen)
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
-OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, int gen)/* : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")*/
+OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)/* : QImageButton("db/BattleWindow/Buttons/0D.png", "db/BattleWindow/Buttons/0H.png")*/
 {
     QVBoxLayout *l = new QVBoxLayout(this);
 
@@ -788,7 +812,7 @@ OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, int ge
     updateAttack(b,p,gen);
 }
 
-void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int gen)
+void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -822,7 +846,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int 
     setAccessibleName(MoveInfo::Name(b.num()));
 }
 
-ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, int gen)
+ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
     : QImageButton(Theme::path("BattleWindow/Buttons/0D.png"), Theme::path("BattleWindow/Buttons/0H.png"))
 {
     QVBoxLayout *l = new QVBoxLayout(this);
@@ -835,7 +859,7 @@ ImageAttackButton::ImageAttackButton(const BattleMove &b, const PokeProxy &p, in
     updateAttack(b,p,gen);
 }
 
-void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, int gen)
+void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)
 {
     name->setText(MoveInfo::Name(b.num()));
     pp->setText(tr("PP %1/%2").arg(b.PP()).arg(b.totalPP()));
@@ -969,10 +993,11 @@ TargetSelection::TargetSelection(const BattleInfo &info)
     connect(bg, SIGNAL(buttonClicked(int)), SIGNAL(targetSelected(int)));
 }
 
-void TargetSelection::updateData(const BattleInfo &info, int move, int gen)
+void TargetSelection::updateData(const BattleInfo &info, int move)
 {
     int slot = info.currentSlot;
     int num = info.numberOfSlots;
+    auto gen = info.gen;
     advbattledata_proxy &data = *info.data;
 
     for (int i = 0; i < num; i++) {

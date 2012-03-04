@@ -9,22 +9,39 @@
 #include "waitingobject.h"
 #include "server.h"
 #include "analyze.h"
+#include <algorithm>
 
-Player::Player(const GenericSocket &sock, int id) : myid(id)
+Player::Player(const GenericSocket &sock, int id)
 {
+    m_bundle.id = id;
+
     myrelay = new Analyzer(sock, id);
     lockCount = 0;
     battleSearch() = false;
     myip = relay().ip();
     server_pass_sent = false;
+    needToUpdate = false;
 
-    myauth = 0;
+    m_bundle.auth = 0;
 
+    doConnections();
+
+    /* Autokick after 3 minutes if still not logged in */
+    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
+}
+
+Player::~Player()
+{
+    delete myrelay;
+}
+
+void Player::doConnections()
+{
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
-    connect(&relay(), SIGNAL(teamReceived(TeamInfo&)), SLOT(recvTeam(TeamInfo&)));
+    connect(&relay(), SIGNAL(teamChanged(const ChangeTeamInfo&)), SLOT(recvTeam(const ChangeTeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
     connect(&relay(), SIGNAL(battleMessage(int,BattleChoice)), SLOT(battleMessage(int,BattleChoice)));
@@ -44,30 +61,26 @@ Player::Player(const GenericSocket &sock, int id) : myid(id)
     connect(&relay(), SIGNAL(battleSpectateEnded(int)), SLOT(quitSpectating(int)));
     connect(&relay(), SIGNAL(battleSpectateChat(int,QString)), SLOT(spectatingChat(int,QString)));
     connect(&relay(), SIGNAL(ladderChange(bool)), SLOT(ladderChange(bool)));
-    connect(&relay(), SIGNAL(showTeamChange(bool)), SLOT(showTeamChange(bool)));
-    connect(&relay(), SIGNAL(tierChanged(QString)), SLOT(changeTier(QString)));
+    connect(&relay(), SIGNAL(tierChanged(quint8,QString)), SLOT(changeTier(quint8,QString)));
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
     connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
+    connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
+    connect(&relay(), SIGNAL(reconnect(int,QByteArray)), SLOT(onReconnect(int,QByteArray)));
+
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
-
-    /* Autokick after 3 minutes if still not logged in */
-    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
-}
-
-Player::~Player()
-{
-    delete myrelay;
 }
 
 void Player::autoKick()
 {
-    if (!isLoggedIn())
+    if (!isLoggedIn()) {
+        blockSignals(false); // In case we autokick an alt that was already disconnected
         kick();
+    }
 }
 
 void Player::ladderChange(bool n)
@@ -75,7 +88,7 @@ void Player::ladderChange(bool n)
     if (!isLoggedIn())
         return;//INV BEHAV
     state().setFlag(LadderEnabled, n);
-    emit updated(id());
+    relay().notifyLadderChange(id(), n);
 }
 
 void Player::cancelBattleSearch()
@@ -100,58 +113,172 @@ void Player::unlock()
         lockCount = 0;
 }
 
-void Player::changeTier(const QString &newtier)
+void Player::setNeedToBeUpdated(bool onlyIfInCommand)
 {
-//    if (tier() == newtier)
-//        return;
-//    if (battling()) {
-//        sendMessage(tr("You can't change tiers while battling."));
-//        return;
-//    }
-//    if (!TierMachine::obj()->exists(newtier)) {
-//        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
-//        return;
-//    }
-//    if (!TierMachine::obj()->isValid(team(), newtier)) {
-//        Tier *tier = &TierMachine::obj()->tier(newtier);
+    needToUpdate = true;
 
-//        if (!tier->allowGen(team().gen)) {
-//            sendMessage(tr("The generation of your team is invalid for that tier."));
-//            return;
-//        }
-
-//        QList<int> indexList;
-//        for(int i = 0; i < 6; i++) {
-//            if (tier->isBanned(team().poke(i))) {
-//                indexList.append(i);
-//            }
-//        }
-
-//        if (indexList.size() > 0) {
-//            foreach(int i, indexList) {
-//                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team().poke(i).num()), newtier, tier->bannedReason(team().poke(i))));
-//            }
-//            return;
-//        } else {
-//            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
-//            return;
-//        }
-//    }
-//    if (Server::serverIns->beforeChangeTier(id(), tier(), newtier)) {
-//        QString oldtier = tier();
-//        executeTierChange(newtier);
-//        Server::serverIns->afterChangeTier(id(), oldtier, tier());
-//    }
+    if (onlyIfInCommand && !isInCommand()) {
+        sendUpdatedIfNeeded();
+    }
 }
 
-void Player::executeTierChange(const QString &newtier)
+bool Player::isInCommand() const
 {
- //   tier() = newtier;
-    findRatings();
+    return relay().isInCommand();
+}
+
+void Player::sendUpdatedIfNeeded()
+{
+    if (needToUpdate) {
+        needToUpdate = false;
+        emit updated(id());
+    }
+}
+
+void Player::changeTier(quint8 teamNum, const QString &newtier)
+{
+    if (!isLoggedIn()) {
+        return;
+    }
+
+    if (teamNum >= teamCount()) {
+        return;
+    }
+    if (team(teamNum).tier == newtier)
+        return;
+    if (battling()) {
+        sendMessage(tr("You can't change tiers while battling."));
+        return;
+    }
+    if (!TierMachine::obj()->exists(newtier)) {
+        sendMessage(tr("The tier %1 doesn't exist!").arg(newtier));
+        return;
+    }
+    if (!TierMachine::obj()->isValid(team(teamNum), newtier)) {
+        Tier *tier = &TierMachine::obj()->tier(newtier);
+
+        if (!tier->allowGen(team(teamNum).gen)) {
+            sendMessage(tr("The generation of your team is invalid for that tier."));
+            return;
+        }
+
+        QList<int> indexList;
+        for(int i = 0; i < 6; i++) {
+            if (tier->isBanned(team(teamNum).poke(i))) {
+                indexList.append(i);
+            }
+        }
+
+        if (indexList.size() > 0) {
+            foreach(int i, indexList) {
+                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team(teamNum).poke(i).num()), newtier,
+                                                                                                            tier->bannedReason(team(teamNum).poke(i))));
+            }
+            return;
+        } else {
+            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+            return;
+        }
+    }
+    if (Server::serverIns->beforeChangeTier(id(), teamNum, team(teamNum).tier, newtier)) {
+        QString oldtier = team(teamNum).tier;
+        executeTierChange(teamNum, newtier);
+        Server::serverIns->afterChangeTier(id(), teamNum, oldtier, team(teamNum).tier);
+    }
+}
+
+void Player::executeTierChange(int num, const QString &newtier)
+{
+    bool oldT(false), newT(false);
+    QString oldTier = team(num).tier;
+
+    for (int i = 0; i < teamCount(); i++) {
+        if (i != num) {
+            if (team(i).tier == oldTier) {
+                oldT = true;
+            }
+            if (team(i).tier == newtier) {
+                newT = true;
+            }
+        }
+    }
+
     cancelChallenges();
+
+    team(num).tier = newtier;
+    if (newT && oldT) {
+        //The list of tiers didn't change overall, no need to recalculate anything
+    } else {
+        syncTiers(oldTier);
+        findRating(team(num).tier);
+    }
 }
 
 void Player::doWhenDC()
+{
+    relay().stopReceiving();
+    cancelChallenges();
+    cancelBattleSearch();
+
+    foreach(int id, battles) {
+        quitSpectating(id);
+    }
+    foreach(int id, battlesSpectated) {
+        quitSpectating(id);
+    }
+    foreach(Player *p, knowledge) {
+        if (p->isLoggedIn()) {
+            p->relay().sendLogout(this->id());
+        }
+    }
+}
+
+void Player::doWhenRC(bool wasLoggedIn)
+{
+    changeState(Player::WaitingReconnect, false);
+
+    if (!wasLoggedIn)
+    {
+        /* make acquaintances again! */
+        foreach(Player *p, knowledge) {
+            if (p->isLoggedIn()) {
+                p->relay().notify(NetworkServ::PlayersList, bundle());
+                relay().notify(NetworkServ::PlayersList, p->bundle());
+            }
+        }
+
+        foreach(int channelId, channels) {
+            channels.remove(channelId);
+
+            emit joinRequested(id(), channelId);
+            /* In case a script kicked us */
+            if (!isLoggedIn()) {
+                return;
+            }
+        }
+
+        if (channels.empty()) {
+            emit joinRequested(id(), 0);
+
+            if (!isLoggedIn()) {
+                return;
+            }
+        }
+    } else {
+        QSet<int> copy = channels;
+        channels.clear();
+        foreach(int channelId, copy) {
+            emit needChannelData(id(), channelId);
+        }
+    }
+
+    foreach(int battleid, battles)
+    {
+        emit resendBattleInfos(this->id(), battleid);
+    }
+}
+
+void Player::doWhenDQ()
 {
     relay().stopReceiving();
     cancelChallenges();
@@ -164,7 +291,9 @@ void Player::doWhenDC()
         quitSpectating(id);
     }
     foreach(Player *p, knowledge) {
-        p->relay().sendLogout(this->id());
+        if (isLoggedIn() && p->isLoggedIn()) {
+            p->relay().sendLogout(this->id());
+        }
         p->knowledge.remove(this);
     }
     knowledge.clear();
@@ -175,7 +304,20 @@ void Player::quitSpectating(int battleId)
     if (battlesSpectated.contains(battleId)) {
         battlesSpectated.remove(battleId);
         emit spectatingStopped(this->id(), battleId);
+    } else if (battles.contains(battleId)) {
+        emit spectatingStopped(this->id(), battleId);
     }
+}
+
+void Player::onReconnect(int id, const QByteArray &hash)
+{
+    if (state()[LoginAttempt]) {
+        return; //INVALID BEHAVIOR
+    }
+
+    state().setFlag(LoginAttempt, true);
+
+    emit reconnect(this->id(), id, hash);
 }
 
 void Player::joinRequested(const QString &name)
@@ -190,6 +332,16 @@ void Player::joinRequested(const QString &name)
     }
 
     emit joinRequested(id(), name);
+}
+
+bool Player::inChannel(int chan) const
+{
+    return channels.contains(chan);
+}
+
+void Player::sendPacket(const QByteArray &packet)
+{
+    relay().sendPacket(packet);
 }
 
 void Player::leaveRequested(int slotid)
@@ -230,7 +382,7 @@ void Player::ipChangeRequested(const QString& ip)
 void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
 {
     battlesSpectated.insert(battleId);
-    relay().notify(NetworkServ::SpectateBattle, qint32(battleId), battle);
+    relay().notify(NetworkServ::SpectateBattle, Flags(1), qint32(battleId), battle);
 }
 
 void Player::cancelChallenges()
@@ -299,15 +451,15 @@ void Player::changeState(int newstate, bool on)
 }
 
 int Player::auth() const {
-    return myauth;
+    return m_bundle.auth;
 }
 
 void Player::setAuth(int auth)  {
-    myauth = auth;
+    m_bundle.auth = auth;
 }
 
 void Player::setName(const QString &newname)  {
-    team().name = newname;
+    m_bundle.name = newname;
 }
 
 void Player::setInfo(const QString &newInfo)  {
@@ -370,9 +522,9 @@ void Player::battleForfeited(int bid)
     emit battleFinished(bid, Forfeit, 0, id());
 }
 
-void Player::battleResult(int battleid, int result, int winner, int loser)
+void Player::battleResult(int battleid, int result, int battlemode, int winner, int loser)
 {
-    relay().sendBattleResult(battleid, result, winner, loser);
+    relay().sendBattleResult(battleid, result, battlemode, winner, loser);
 }
 
 void Player::addBattle(int battleid)
@@ -539,6 +691,11 @@ void Player::challengeStuff(const ChallengeInfo &c)
         return;
     }
 
+    if (c.team >= teamCount()) {
+        sendMessage("You must select a correct team");
+        return;
+    }
+
     if (desc == ChallengeInfo::Sent)
     {
         if (team().invalid() && ! (c.clauses & ChallengeInfo::ChallengeCup)) {
@@ -549,9 +706,11 @@ void Player::challengeStuff(const ChallengeInfo &c)
             sendMessage("You already have challenged 10 people, you can't challenge more!");
             return;
         }
-        if (c.mode < 0 || c.mode > ChallengeInfo::Rotation) {
+        if (c.mode > ChallengeInfo::Rotation) {
             sendMessage("You must challenge to a correct mode");
+            return;
         }
+
         emit sendChallenge(this->id(), id, c);
     } else {
         if (desc == ChallengeInfo::Accepted && !okForBattle()) {
@@ -559,7 +718,7 @@ void Player::challengeStuff(const ChallengeInfo &c)
         }
 
         foreach (Challenge *_c, challengedBy) {
-            if (_c->challenger() == id) {
+            if (_c->challenger() == id && _c->tier() == c.desttier && _c->gen() == c.gen) {
                 _c->manageStuff(this, c);
                 return;
             }
@@ -594,12 +753,6 @@ void Player::findBattle(const FindBattleData& f)
         return;
     }
 
-    if (team().invalid())
-    {
-        sendMessage("Your team is invalid, you can't find battles!");
-        return;
-    }
-
     cancelBattleSearch();
 
     if (Server::serverIns->beforeFindBattle(id())) {
@@ -623,7 +776,7 @@ void Player::startBattle(int battleid, int id, const TeamBattle &team, const Bat
 
 void Player::giveBanList()
 {
-    if (myauth == 0) {
+    if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
     QHash<QString, QString> bannedMembers = SecurityManager::banList();
@@ -636,16 +789,6 @@ void Player::giveBanList()
     }
 }
 
-TeamBattle & Player::team()
-{
-    return m_teams.team(0);
-}
-
-const TeamBattle & Player::team() const
-{
-    return m_teams.team(0);
-}
-
 TeamBattle & Player::team(int i)
 {
     return m_teams.team(i);
@@ -656,7 +799,7 @@ const TeamBattle & Player::team(int i) const
     return m_teams.team(i);
 }
 
-int Player::gen() const
+Pokemon::gen Player::gen() const
 {
     return team().gen;
 }
@@ -668,11 +811,16 @@ int Player::teamCount() const
 
 int Player::rating(const QString &tier)
 {
-    if (m_ratings.contains(tier)) {
-        return m_ratings[tier];
+    if (ratings().contains(tier)) {
+        return ratings()[tier];
     } else {
         return TierMachine::obj()->rating(name(), tier);
     }
+}
+
+QHash<QString, quint16> &Player::ratings()
+{
+    return m_bundle.ratings;
 }
 
 Analyzer & Player::relay()
@@ -710,24 +858,43 @@ bool Player::away() const
     return state()[Away];
 }
 
+bool Player::waitingForReconnect() const
+{
+    return state()[WaitingReconnect] && !isLoggedIn();
+}
+
 bool Player::connected() const
 {
     return relay().isConnected();
 }
 
-PlayerInfo Player::bundle() const
+const QString & Player::name() const
 {
-    PlayerInfo p;
-    p.auth = myauth;
-    p.flags = state();
-    p.flags.setFlag(Battling, battling());
-    p.id = id();
-    p.team = basicInfo();
-    p.avatar = avatar();
-    p.color = color();
-    p.gen = gen();
+    return m_bundle.name;
+}
 
-    return p;
+QString & Player::name()
+{
+    return m_bundle.name;
+}
+
+const QString & Player::info() const
+{
+    return m_bundle.info;
+}
+
+QString & Player::info()
+{
+    return m_bundle.info;
+}
+
+const PlayerInfo& Player::bundle() const
+{
+    //Todo: update those in real time
+    m_bundle.flags.setFlag(PlayerInfo::Away, state()[Away]);
+    m_bundle.flags.setFlag(PlayerInfo::LadderEnabled, state()[LadderEnabled]);
+
+    return m_bundle;
 }
 
 bool Player::isLoggedIn() const
@@ -737,18 +904,73 @@ bool Player::isLoggedIn() const
 
 int Player::id() const
 {
-    return myid;
-}
-
-BasicInfo Player::basicInfo() const
-{
-    BasicInfo ret = {team().name, team().info};
-    return ret;
+    return m_bundle.id;
 }
 
 bool Player::ladder() const
 {
     return spec()[PlayerFlags::LadderEnabled];
+}
+
+void Player::logout()
+{
+    emit logout(id());
+}
+
+bool Player::hasReconnectPass() const
+{
+    return (isLoggedIn() && waiting_pass.length() > 0) || state()[WaitingReconnect];
+}
+
+bool Player::testReconnectData(Player *other, const QByteArray &hash)
+{
+    //test ip first
+    QHostAddress own(ip()), otherHost(other->ip());
+
+    if (reconnectBits() != 0) {
+        if (!own.isInSubnet(otherHost, reconnectBits())) {
+            other->relay().notify(NetworkServ::Reconnect, false, quint8(PlayerFlags::IPMismatch));
+            other->kick();
+            return false;
+        }
+    }
+
+    if (hash != waiting_pass) {
+        other->relay().notify(NetworkServ::Reconnect, false, quint8(PlayerFlags::WrongHash));
+        other->kick();
+        return false;
+    }
+
+    return true;
+}
+
+void Player::associateWith(Player *other)
+{
+    other->relay().disconnect(other);
+    myrelay->disconnect(this);
+
+    myrelay->swapIds(other->myrelay);
+    std::swap(myrelay, other->myrelay);
+
+    other->myip = other->myrelay->ip();
+    myip = myrelay->ip();
+
+    lockCount = 0;
+
+    doConnections();
+
+    blockSignals(false);
+    relay().blockSignals(false);
+
+    /* Updates IP in case it changed */
+    SecurityManager::Member m = SecurityManager::member(name());
+    m.ip = ip().toAscii();
+    SecurityManager::updateMember(m);
+
+    /* Deals with anti DOS */
+    AntiDos::obj()->connecting(ip());
+
+    other->disconnected();
 }
 
 void Player::loggedIn(LoginInfo *info)
@@ -759,8 +981,7 @@ void Player::loggedIn(LoginInfo *info)
     state().setFlag(LoginAttempt, true);
 
     /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl_, VERSION);
-    relay().notify(NetworkServ::ServerName, Server::serverIns->servName());
+    relay().notify(NetworkServ::VersionControl_,ProtocolVersion(), Flags(), ProtocolVersion(), ProtocolVersion(), ProtocolVersion(), Server::serverIns->servName());
 
     if (!testNameValidity(info->trainerName)) {
         return;
@@ -768,12 +989,15 @@ void Player::loggedIn(LoginInfo *info)
 
     spec().setFlag(SupportsZipCompression, info->data[PlayerFlags::SupportsZipCompression]);
     spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
+    spec().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
     state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
+    reconnectBits() = info->reconnectBits;
 
     assignNewColor(info->trainerColor);
+
     if (info->trainerInfo) {
-        this->info() = *info->trainerInfo;
+        assignTrainerInfo(*info->trainerInfo);
     }
 
     if (info->teams) {
@@ -782,7 +1006,6 @@ void Player::loggedIn(LoginInfo *info)
         m_teams.init();
     }
 
-    color() = info->trainerColor;
     name() = info->trainerName;
 
     // If the server is password protected, the login cannot continue until the server password is supplied
@@ -793,7 +1016,7 @@ void Player::loggedIn(LoginInfo *info)
             waiting_pass[i] = uchar((true_rand() % (90-49)) + 49);
         }
 
-        relay().notify(NetworkServ::ServerPass, waiting_pass.toAscii());
+        relay().notify(NetworkServ::ServerPass, waiting_pass);
         waiting_name = info->trainerName;
         return;
     } else {
@@ -805,7 +1028,7 @@ void Player::loggedIn(LoginInfo *info)
 
 void Player::serverPasswordSent(const QByteArray &_hash)
 {
-    if (Server::serverIns->correctPass(_hash, waiting_pass.toAscii())) {
+    if (Server::serverIns->correctPass(_hash, waiting_pass)) {
         server_pass_sent = true;
         waiting_pass.clear();
         testAuthentification(waiting_name);
@@ -819,7 +1042,7 @@ void Player::serverPasswordSent(const QByteArray &_hash)
 void Player::loginSuccess()
 {
     ontologin = true;
-    findTierAndRating();
+    findTierAndRating(true);
 }
 
 void Player::testAuthentification(const QString &name)
@@ -848,7 +1071,7 @@ void Player::testAuthentificationLoaded()
             return;
         }
 
-        myauth = m.authority();
+        setAuth(m.authority());
 
         m.modifyIP(ip().toAscii());
         m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
@@ -858,7 +1081,7 @@ void Player::testAuthentificationLoaded()
         relay().notify(NetworkServ::Register);
         loginSuccess();
     } else {
-        myauth = 0;
+        setAuth(0);
 
         SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), ip());
         /* To tell the player he's not registered */
@@ -867,23 +1090,19 @@ void Player::testAuthentificationLoaded()
     }
 }
 
-void Player::findTierAndRating()
+void Player::findTierAndRating(bool force)
 {
     tiers.clear();
     for (int i = 0; i < m_teams.count(); i++) {
         findTier(i);
         tiers.insert(team(i).tier);
     }
-    findRatings();
+    findRatings(force);
 }
 
 void Player::findTier(int slot)
 {
     team(slot).tier = TierMachine::obj()->findTier(team(slot));
-}
-
-bool Player::hasKnowledgeOf(Player *other) const {
-    return knowledge.contains(other) || hasKnowledgeOf(other);
 }
 
 bool Player::isInSameChannel(const Player *other) const {
@@ -914,14 +1133,14 @@ void Player::acquireRoughKnowledgeOf(Player *other) {
 void Player::findRatings(bool force)
 {
     if (force) {
-        m_ratings.clear();
+        ratings().clear();
     }
 
     QString name = waiting_name.length()>0 ? waiting_name : this->name();
 
     bool one = false;
     foreach(QString tier, tiers) {
-        if (!m_ratings.contains(name)) {
+        if (!ratings().contains(name)) {
             one = true;
             findRating(tier);
         }
@@ -934,22 +1153,22 @@ void Player::findRatings(bool force)
 
 const quint16 &Player::avatar() const
 {
-    return info().avatar;
+    return m_bundle.avatar;
 }
 
 quint16 &Player::avatar()
 {
-    return info().avatar;
+    return m_bundle.avatar;
 }
 
-const QString &Player::winningMessage() const
+const QColor &Player::color() const
 {
-    return info().winning;
+    return m_bundle.color;
 }
 
-const QString &Player::losingMessage() const
+QColor &Player::color()
 {
-    return info().losing;
+    return m_bundle.color;
 }
 
 void Player::findRating(const QString &tier)
@@ -972,9 +1191,9 @@ void Player::ratingLoaded()
 {
     unlock();
     QString tier = sender()->property("tier").toString();
-    m_ratings.insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
+    ratings().insert(tier, TierMachine::obj()->rating(waiting_name.length() > 0 ? waiting_name : name(), tier));
 
-    if (tiers.count() <= m_ratings.count() && m_ratings.keys().toSet().contains(tiers)) {
+    if (tiers.count() <= ratings().count() && ratings().keys().toSet().contains(tiers)) {
         ratingsFound();
     }
 }
@@ -989,14 +1208,55 @@ void Player::ratingsFound()
             emit recvTeam(id(), name());
         waiting_name.clear();
     } else {
-        emit updated(id());
+        setNeedToBeUpdated(true);
+        /* Sends the team tiers to the players.
+          Note: in case of cached tiers for a player, we can end up sending several time
+          that in succession if he changes multiple tiers at the same time */
+        relay().sendTeam(NULL, getTierList());
     }
+}
+
+void Player::sendLoginInfo()
+{
+    if (spec()[ReconnectEnabled]) {
+        if (waiting_pass.length() == 0) {
+            generateReconnectPass();
+        }
+    }
+    relay().sendLogin(bundle(), getTierList(), waiting_pass);
+}
+
+static uchar random_character()
+{
+    return rand();
+}
+
+void Player::generateReconnectPass()
+{
+    waiting_pass.resize(8);
+    std::generate(waiting_pass.begin(), waiting_pass.end(), &random_character);
+}
+
+QStringList Player::getTierList() const
+{
+    QStringList ret;
+    for (int i = 0; i < teamCount(); i++) {
+        ret.push_back(team(i).tier);
+    }
+    return ret;
 }
 
 void Player::assignNewColor(const QColor &c)
 {
     if (c.lightness() <= 140 && c.green() <= 180)
         color() = c;
+}
+
+void Player::assignTrainerInfo(const TrainerInfo &info)
+{
+    avatar() = info.avatar;
+    winningMessage() = info.winning;
+    losingMessage() = info.losing;
 }
 
 bool Player::isLocked() const
@@ -1034,7 +1294,7 @@ void Player::registerRequest() {
 
 void Player::userInfoAsked(const QString &name)
 {
-    if (myauth == 0) {
+    if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
 
@@ -1075,7 +1335,7 @@ void Player::hashReceived(const QByteArray &_hash) {
             m.modifyIP(ip().toAscii());
             m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
             m.hash = hash;
-            myauth = m.authority();
+            setAuth(m.authority());
             SecurityManager::updateMember(m);
 
             loginSuccess();
@@ -1107,39 +1367,90 @@ QString Player::proxyIp() const
     return proxyip;
 }
 
-void Player::recvTeam(TeamInfo &team)
+void Player::recvTeam(const ChangeTeamInfo &cinfo)
 {
-//    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
-//    if (!isLoggedIn())
-//        return;
+    /* If the guy is not logged in, obvious. If he is battling, he could make it so the points lost are on his other team */
+    if (!isLoggedIn())
+        return;
 
-//    QString oldName = name();
+    QString oldName = name();
 
-//    if (team.name != oldName && battling()) {
-//        sendMessage("You can't change names while battling.");
-//        return;
-//    }
+    if (cinfo.name && *cinfo.name != oldName && battling()) {
+        sendMessage("You can't change names while battling.");
+        return;
+    }
 
-//    cancelChallenges();
-//    cancelBattleSearch();
+    if (cinfo.name || cinfo.teams || cinfo.team) {
+        cancelChallenges();
+        cancelBattleSearch();
+    }
 
-//    if (team.name.toLower() == oldName.toLower()) {
-//        assignTeam(team);
-//        /* Clears the wainting name in case it's not clear,
-//           else something bad could happen */
-//        waiting_name = "";
+    if (cinfo.color) {
+        assignNewColor(*cinfo.color);
+    }
+    if (cinfo.info) {
+        assignTrainerInfo(*cinfo.info);
+    }
 
-//        //Still needs to deal with afterChangeTeam event
-//        ontologin = true;
-//        findTierAndRating();
-//        return;
-//    }
+    if (!cinfo.name || cinfo.name->toLower() == oldName.toLower()) {
+        /* Clears the wainting name in case it's not clear,
+           else something bad could happen */
+        waiting_name = "";
 
-//    if (!testNameValidity(team.name))
-//        return;
+        //Still needs to deal with afterChangeTeam event
+        ontologin = true;
 
-//    changeWaitingTeam(team);
-//    testAuthentification(team.name);
+        if (cinfo.teams) {
+            m_teams.init(*cinfo.teams);
+            findTierAndRating(true);
+        } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+            m_teams.team(cinfo.teamNum) = *cinfo.team;
+
+            QString oldTier = team(cinfo.teamNum).tier;
+            findTier(cinfo.teamNum);
+
+            if (oldTier != team(cinfo.teamNum).tier) {
+                syncTiers(oldTier);
+                findRating(team(cinfo.teamNum).tier);
+            } else {
+                if (cinfo.color || cinfo.info) {
+                    emit updated(id());
+                }
+            }
+        } else {
+            emit updated(id());
+        }
+
+        return;
+    }
+
+    if (!testNameValidity(*cinfo.name))
+        return;
+
+    if (cinfo.teams) {
+        m_teams.init(*cinfo.teams);
+    } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+        m_teams.team(cinfo.teamNum) = *cinfo.team;
+    }
+
+    testAuthentification(*cinfo.name);
+}
+
+/* The old tier param is there for us to remove the old tier
+  in the ratings if no team has it anymore.
+
+  The alternative would be to check all of ratings' keys*/
+void Player::syncTiers(QString oldTier)
+{
+    tiers.clear();
+
+    for (int i = 0; i < teamCount(); i++) {
+        tiers.insert(team(i).tier);
+    }
+
+    if (!tiers.contains(oldTier)) {
+        ratings().remove(oldTier);
+    }
 }
 
 void Player::spectatingRequested(int id)
@@ -1156,18 +1467,12 @@ void Player::spectatingRequested(int id)
 
 void Player::sendMessage(const QString &mess, bool html)
 {
-    if (!html)
-        relay().sendMessage(mess);
-    else
-        relay().sendHtmlMessage(mess);
+    relay().sendMessage(mess, html);
 }
 
-void Player::sendChanMessage(int channel, const QString &mess, bool html)
+void Player::sendPlayers(const QVector<reference<PlayerInfo> > & bundles)
 {
-    if (!html)
-        relay().sendChannelMessage(channel, mess);
-    else
-        relay().sendHtmlChannelMessage(channel, mess);
+    relay().notify(NetworkServ::PlayersList, Expander<decltype(bundles)>(bundles));
 }
 
 void Player::tUnban(QString name)

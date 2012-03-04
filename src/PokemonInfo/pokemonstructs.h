@@ -3,8 +3,10 @@
 
 namespace Pokemon {
 class uniqueId;
+class gen;
 }
 unsigned int qHash (const Pokemon::uniqueId &key);
+unsigned int qHash (const Pokemon::gen &key);
 
 #include <QString>
 #include <QSet>
@@ -54,6 +56,48 @@ public:
     // Extracts short data in a "pokenum data_text" form.
     static bool extract_short(const QString &from, quint16 &pokenum, QString &remaining);
 };
+
+class gen
+{
+public:
+    quint8 num;
+    quint8 subnum;
+    gen() : num(GEN_MAX), subnum(0) {}
+    gen(int num, int subnum) : num(num), subnum(subnum) {}
+    gen(const gen &g) { num = g.num; subnum = g.subnum; }
+    gen(quint32 genRef) {
+        subnum = genRef >> 8;
+        num = genRef & 0xFF;
+    }
+    inline bool operator == (const gen &other) const {
+        return (num == other.num) && (subnum == other.subnum);
+    }
+    inline bool operator != (const gen &other) const {
+        return (num != other.num) || (subnum != other.subnum);
+    }
+    inline bool operator < (const gen &other) const {
+        return (num < other.num) || ((num == other.num) && (subnum < other.subnum));
+    }
+    inline bool operator > (const gen &other) const {
+        return (num > other.num) || ((num == other.num) && (subnum > other.subnum));
+    }
+    inline bool operator < (int other) const {
+        return (num < other);
+    }
+    inline bool operator > (int other) const {
+        return (num > other);
+    }
+    inline bool operator <= (int other) const {
+        return (num <= other);
+    }
+    inline bool operator >= (int other) const {
+        return (num >= other);
+    }
+    // Will return true if everything is fine. And false otherwise.
+    static bool extract(const QString &raw, gen &id, QString &info);
+    // Extracts short data in a "pokenum data_text" form.
+    static bool extract_short(const QString &from, quint8 &gen, QString &remaining);
+};
 }
 
 struct AbilityGroup {
@@ -67,6 +111,10 @@ struct AbilityGroup {
 
     int ab(int num) const {
         return _ab[num];
+    }
+
+    bool contains(int num) const {
+        return _ab[0] == num || _ab[1] == num || _ab[2] == num;
     }
 };
 
@@ -99,7 +147,7 @@ public:
 class PokeGeneral
 {
     PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(quint8, gen);
+    PROPERTY(Pokemon::gen, gen);
 public:
     PokeGeneral();
 
@@ -136,9 +184,9 @@ class PokePersonal
     PROPERTY(bool, shiny);
     PROPERTY(quint8, happiness);
     PROPERTY(quint8, level);
-    PROPERTY(quint8, gen);
+    PROPERTY(Pokemon::gen, gen);
 protected:
-    int m_moves[4];
+    quint16 m_moves[4];
 
     quint8 m_DVs[6];
     quint8 m_EVs[6];
@@ -150,7 +198,7 @@ public:
 
     /* -1 if the nature is hindering, 0 if neutral and 1 if it boosts that stat */
     int natureBoost(int stat) const;
-    int move(int moveSlot) const;
+    quint16 move(int moveSlot) const;
     /* resets everything to default values */
     void reset();
     /* Removes / Reset things if they are wrong */
@@ -171,6 +219,11 @@ public:
     int EVSum() const;
 
     void setEV(int stat, quint8 EV);
+
+    enum Flags {
+        hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs,
+        isShiny=0
+    };
 };
 
 /* Contains / loads the graphics of a pokemon */
@@ -185,9 +238,9 @@ public:
 
 
     void setNum(Pokemon::uniqueId num);
-    void setGen(int gen);
+    void setGen(Pokemon::gen gen);
     Pokemon::uniqueId num() const;
-    int gen() const;
+    Pokemon::gen gen() const;
 
     void load(int gender, bool shiny);
     void loadIcon(const Pokemon::uniqueId &pokeid);
@@ -198,7 +251,7 @@ protected:
     QIcon m_icon;
     Pokemon::uniqueId m_num;
     int m_storedgender;
-    int m_gen;
+    Pokemon::gen m_gen;
 
     bool m_storedshininess;
     bool m_uptodate;
@@ -214,8 +267,8 @@ public:
 
     Pokemon::uniqueId num() const;
     void setNum(Pokemon::uniqueId num);
-    void setGen(int gen);
-    int gen() const;
+    void setGen(Pokemon::gen gen);
+    Pokemon::gen gen() const;
     void runCheck();
 
     int stat(int statno) const;
@@ -237,12 +290,12 @@ class Team
     PROPERTY(QString, defaultTier);
 protected:
     PokeTeam m_pokes[6];
-    quint8 m_gen;
+    Pokemon::gen m_gen;
 
 public:
     Team();
-    quint8 gen() const {return m_gen;}
-    void setGen(int gen);
+    Pokemon::gen gen() const {return m_gen;}
+    void setGen(Pokemon::gen gen);
 
     const PokeTeam & poke(int index) const {return m_pokes[index];}
     PokeTeam & poke(int index) {return m_pokes[index];}
@@ -253,6 +306,14 @@ public:
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
     QString exportToTxt() const;
+
+    QString name() const;
+    QString folder() const;
+    QString path() const {return m_path;}
+    void setName(const QString &name);
+    void setFolder(const QString &folder);
+private:
+    mutable QString m_path;
 };
 
 /* Dialog for loading/saving team */
@@ -260,10 +321,6 @@ void saveTTeamDialog(const Team &team, QObject *receiver=NULL, const char *slot=
 void loadTTeamDialog(Team &team, QObject *receiver=NULL, const char *slot=NULL);
 
 DataStream & operator << (DataStream & out,const Team & team);
-
-DataStream & operator >> (DataStream & in,Team & team);
-DataStream & operator >> (DataStream & in,PokeTeam & Pokemon);
-
 
 DataStream & operator << (DataStream & out,const PokePersonal & Pokemon);
 DataStream & operator >> (DataStream & in,PokePersonal & Pokemon);
@@ -273,9 +330,18 @@ inline uint qHash(const Pokemon::uniqueId &key)
     return qHash(key.toPokeRef());
 }
 
+inline uint qHash(const Pokemon::gen &gen)
+{
+    return qHash(gen.num + (gen.subnum << 8));
+}
+
 DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);
 DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id);
 
+DataStream & operator << (DataStream &out, const Pokemon::gen &g);
+DataStream & operator >> (DataStream &in, Pokemon::gen &g);
+
 Q_DECLARE_METATYPE(Pokemon::uniqueId);
+Q_DECLARE_METATYPE(Pokemon::gen);
 
 #endif // POKEMONSTRUCTS_H

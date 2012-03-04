@@ -13,9 +13,7 @@ SOURCES += main.cpp \
     client.cpp \
     analyze.cpp \
     serverchoice.cpp \
-    challenge.cpp \
     battlewindow.cpp \
-    pmwindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
     ranking.cpp \
@@ -34,17 +32,11 @@ SOURCES += main.cpp \
     Teambuilder/evmanager.cpp \
     Teambuilder/pokebody.cpp \
     Teambuilder/advanced.cpp \
-    Teambuilder/pokechoice.cpp \
     Teambuilder/teambody.cpp \
-    Teambuilder/teamimporter.cpp \
     Teambuilder/dockinterface.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    remove_direction_override.cpp \
-	password_wallet.cpp\
-    spectatorwindow.cpp \
-    replayviewer.cpp \
     trainermenu.cpp \
     pokebuttonsholder.cpp \
     pokebutton.cpp \
@@ -54,7 +46,20 @@ SOURCES += main.cpp \
     teammenu.cpp \
     pokeedit.cpp \
     evbox.cpp \
-    pokelevelsettings.cpp
+    pokelevelsettings.cpp \
+    spectatorwindow.cpp \
+    replayviewer.cpp \
+    soundconfigwindow.cpp \
+    password_wallet.cpp \
+    pmsystem.cpp \
+    ivbox.cpp \
+    teamimporter.cpp \
+    challengedialog.cpp \
+    tierratingbutton.cpp \
+    findbattledialog.cpp \
+    teamline.cpp \
+    pokeselection.cpp \
+    pokechoice.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -66,10 +71,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     serverchoice.h \
     ../PokemonInfo/battlestructs.h \
     ../PokemonInfo/networkstructs.h \
-    challenge.h \
     battlewindow.h \
     ../Utilities/functions.h \
-    pmwindow.h \
     controlpanel.h \
     basebattlewindow.h \
     ../PokemonInfo/movesetchecker.h \
@@ -93,18 +96,14 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     Teambuilder/pokeballed.h \
     Teambuilder/teambody.h \
     Teambuilder/pokebody.h \
-    Teambuilder/pokechoice.h \
     Teambuilder/evmanager.h \
-    Teambuilder/teamimporter.h \
     Teambuilder/advanced.h \
     Teambuilder/dockinterface.h \
     Teambuilder/pokebodywidget.h \
     engineinterface.h \
     logmanager.h \
-    poketextedit.h \
-    remove_direction_override.h \
-	password_wallet.h\
-    spectatorwindow.h \
+    poketextedit.h\
+    password_wallet.h\
     ../BattleManager/battlescene.h \
     ../BattleManager/battleinput.h \
     ../BattleManager/battledatatypes.h \
@@ -112,7 +111,6 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    replayviewer.h \
     ../Utilities/coreclasses.h \
     teamholder.h \
     trainermenu.h \
@@ -125,7 +123,20 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teambuilderwidget.h \
     pokeedit.h \
     evbox.h \
-    pokelevelsettings.h
+    pokelevelsettings.h \
+    soundconfigwindow.h \
+    replayviewer.h \
+    password_wallet.h \
+    pmsystem.h \
+    ivbox.h \
+    teamimporter.h \
+    challengedialog.h \
+    tierratingbutton.h \
+    findbattledialog.h \
+    teamline.h \
+    tieractionfactory.h \
+    pokeselection.h \
+    pokechoice.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -137,7 +148,13 @@ FORMS += controlpanel.ui \
     pokebutton.ui \
     pokeedit.ui \
     evbox.ui \
-    pokelevelsettings.ui
+    pokelevelsettings.ui \
+    ivbox.ui \
+    challengedialog.ui \
+    tierratingbutton.ui \
+    findbattledialog.ui \
+    teamline.ui \
+    pokeselection.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

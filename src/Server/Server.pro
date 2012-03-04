@@ -35,15 +35,16 @@ SOURCES += main.cpp \
     sessiondatafactory.cpp \
     battlepluginstruct.cpp \
     battlecounters.cpp \
-    moves/moves1.cpp
+    moves/moves1.cpp \
+    battlebase.cpp \
+    battlerby.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
     serverwidget.cpp \
     battlingoptions.cpp \
     tierwindow.cpp \
-    serverconfig.cpp \
-    confighelper.cpp
+    serverconfig.cpp
 LIBS += -L../../bin \
     -lutilities \
     -lpokemonlib
@@ -97,7 +98,10 @@ HEADERS += player.h \
     battlefunctions.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
-    playerstructs.h
+    playerstructs.h \
+    networkutilities.h \
+    battlebase.h \
+    battlerby.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -107,7 +111,7 @@ HEADERS += player.h \
     serverconfig.h \
     sqlconfig.h \
     tierwindow.h \
-    confighelper.h
+    ../Utilities/confighelper.h
 CONFIG(nogui) { 
     QT -= gui
     DEFINES += PO_NO_GUI

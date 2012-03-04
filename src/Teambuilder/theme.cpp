@@ -5,8 +5,10 @@
 #include <QtCore>
 #include <QFontDatabase>
 #include <QPixmapCache>
+#include <QApplication>
 #include "../BattleManager/defaulttheme.h"
 #include "themeaccessor.h"
+#include "QToolButton"
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
@@ -232,6 +234,18 @@ QPixmap Theme::FrameBall()
     return Sprite("frameball");
 }
 
+QPixmap Theme::unlockedLockedRegistry() {
+    return Sprite("registrylockunlock");
+}
+
+QPixmap Theme::lockedServer() {
+    return Sprite("registrylocked");
+}
+
+QPixmap Theme::unlockedServer() {
+    return Sprite("registryunlocked");
+}
+
 QColor Theme::StatusColor(int status)
 {
     switch (status) {
@@ -296,7 +310,7 @@ void Theme::ChangePics(QImageButton *b, const QString &code)
     while (s.size() < 3)
         s.append("");
 
-    b->changePics(path(s[0], def), path(s[1], def), path(s[2], def));
+    b->changePics(Pic(s[0], def), Pic(s[1], def), Pic(s[2], def));
 }
 
 QVariant Theme::value(const QString &key, bool *def)
@@ -315,9 +329,52 @@ QVariant Theme::value(const QString &key, bool *def)
     return ret;
 }
 
-QPixmap Theme::Pic(const QString &way)
+void Theme::ToolButtonIcon(QToolButton *b, ToolIcon icon)
 {
-    return QPixmap(path(way));
+    static QString paths[] = {
+        "add-team-icon",
+        "remove-team-icon",
+        "import-team-icon",
+        "load-team-icon",
+        "save-team-icon",
+        "change-team-folder-icon"
+    };
+
+    static QStyle::StandardPixmap codes[] = {
+        QStyle::SP_ArrowBack,
+        QStyle::SP_TrashIcon,
+        QStyle::SP_FileDialogContentsView,
+        QStyle::SP_DialogOpenButton,
+        QStyle::SP_DialogSaveButton,
+        QStyle::SP_DirIcon,
+    };
+
+    QString fp = "pictures/"+paths[icon];
+    QSettings ini (path("pictures.ini"), QSettings::IniFormat);
+
+    /* If the .ini doesn't contain anything, it means the css will take care of everything */
+    if (ini.contains(fp)) {
+        QString s = ini.value(fp).toString();
+
+        if (s.isEmpty()) {
+            b->setIcon(QApplication::style()->standardIcon(codes[icon]));
+        } else {
+            b->setIcon(Icon(paths[icon]));
+        }
+    }
+}
+
+QPixmap Theme::Pic(const QString &way, bool def)
+{
+    QPixmap pm;
+
+    if (!QPixmapCache::find(way, &pm)) {
+        pm = QPixmap(path(way, def));
+
+        QPixmapCache::insert(way, pm);
+    }
+
+    return pm;
 }
 
 QPixmap Theme::Sprite(const QString &code)

@@ -149,7 +149,7 @@ void TeamBuilderOld::initTeam()
 
 int TeamBuilderOld::gen() const
 {
-    return team()->gen();
+    return team()->gen().num;
 }
 
 Team* TeamBuilderOld::team()
@@ -289,8 +289,8 @@ void TeamBuilderOld::updateAll()
 
 void TeamBuilderOld::updateTeam()
 {
-    if (gens[team()->gen()-GEN_MIN]) {
-        gens[team()->gen()-GEN_MIN]->setChecked(true);
+    if (gens[team()->gen().num-GEN_MIN]) {
+        gens[team()->gen().num-GEN_MIN]->setChecked(true);
     }
 
     if (m_teamBody) {
@@ -337,7 +337,7 @@ QMenuBar * TeamBuilderOld::createMenuBar(MainEngine *w)
         gens->addAction(this->gens[i]);
     }
 
-    this->gens[team()->gen()-GEN_MIN]->setChecked(true);
+    this->gens[team()->gen().num-GEN_MIN]->setChecked(true);
 
     QMenu *view = menuBar->addMenu(tr("&Options"));
     QAction *items = view->addAction(tr("&Show all items"));

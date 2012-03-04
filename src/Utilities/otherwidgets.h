@@ -59,6 +59,7 @@ public:
     QSize maximumSize() const;
 
     void changePics(const QString &normal, const QString &hovered, const QString &checked = "");
+    void changePics(const QPixmap &normal, const QPixmap &hovered, const QPixmap &checked);
 protected:
     void paintEvent(QPaintEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -103,6 +104,7 @@ public:
     QIdListWidgetItem(int id, const QIcon &icon, const QString &text);
     bool operator<(const QListWidgetItem & item) const;
     int id() const;
+    void setId(int id);
     void setColor(const QColor &c);
 private:
     int myid;
@@ -113,7 +115,7 @@ class QScrollDownTextBrowser : public QTextBrowser
 {
     Q_OBJECT
 public:
-    QScrollDownTextBrowser();
+    QScrollDownTextBrowser(QWidget *parent=0);
     ~QScrollDownTextBrowser() { delete menu; }
 
     void setAutoClear(bool a) {

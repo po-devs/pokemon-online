@@ -7,11 +7,14 @@
 class PlayersWindow : public QWidget
 {
     Q_OBJECT
+
 public:
-    PlayersWindow(QWidget *parent = 0);
+    PlayersWindow(QWidget *parent = 0, int expireDays = 30);
+
 signals:
     void banned(const QString &name);
     void authChanged(const QString &name, int auth);
+
 private slots:
     void ban();
     void unban();
@@ -20,6 +23,7 @@ private slots:
     void admin();
     void owner();
     void clpass();
+
 private:
     QTableWidget *mytable;
 

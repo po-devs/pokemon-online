@@ -2,8 +2,9 @@
 #define CORECLASSES_H
 
 #include <QDataStream>
-#include <QColor>
 #include <QPair>
+#include <QStringList>
+#include <QList>
 
 class DataStream : public QDataStream
 {
@@ -58,9 +59,6 @@ DataStream &operator >>(DataStream &in, QString &s);
 DataStream &operator <<(DataStream &out, const QString &s);
 inline DataStream &operator >>(DataStream &in, QByteArray &s) { return (DataStream&) ::operator >>((QDataStream&)in, s); }
 inline DataStream &operator <<(DataStream &out, const QByteArray &s) { return (DataStream&) ::operator <<((QDataStream&)out, s); }
-inline DataStream &operator<<(DataStream &in, const QColor &c) { return (DataStream&) ::operator <<((QDataStream&)in, c); }
-inline DataStream &operator>>(DataStream &out, QColor &c) { return (DataStream&) ::operator >>((QDataStream&)out, c); }
-
 template <class T1, class T2>
 inline DataStream& operator>>(DataStream& s, QPair<T1, T2>& p)
 {
@@ -228,6 +226,110 @@ inline DataStream &operator>>(DataStream &in, QStringList &list)
 inline DataStream &operator<<(DataStream &out, const QStringList &list)
 {
     return operator<<(out, static_cast<const QList<QString> &>(list));
+}
+
+
+/* Flags are like so: for each byte, 7 bits of flag and one bit to tell if there are higher flags (in network)
+  so as to limit the number of bytes sent by networking. That's why you should never have a flag that's 7,
+    15, 23, etc. because it'd possibly mess the networking */
+struct Flags
+{
+    /* For now no flags need more than 2 bytes. If there really needs to be a huge number of flags this
+      number may increase; however for now there's no reason for dynamic allocation & what not */
+    quint32 data;
+
+    Flags(quint32 data=0);
+
+    bool operator [] (int index) const;
+    void setFlag(int index, bool value);
+    void setFlags(quint32 flags);
+};
+
+DataStream & operator >> (DataStream &in, Flags &p);
+DataStream & operator << (DataStream &out, const Flags &p);
+
+
+struct VersionControl
+{
+    VersionControl(quint8 versionNumber=0);
+
+    QByteArray data;
+    DataStream stream;
+    quint8 versionNumber;
+};
+
+DataStream & operator >> (DataStream &in, VersionControl &v);
+DataStream & operator << (DataStream &out, const VersionControl &v);
+
+/* Way it works: Refreshes a value, if necessary, when it is needed.
+
+  And gives the value.*/
+template <class T, class Lambda>
+struct Cache
+{
+    Cache(Lambda f) {
+        upToDate = false;
+        converter = f;
+    }
+
+    const T& value() const {
+        if (!updated()) {
+            converter(m_value);
+            upToDate = true;
+        }
+        return m_value;
+    }
+
+    void outdate() const {upToDate = false;}
+    bool updated()const {return upToDate;}
+
+    mutable T m_value;
+    mutable bool upToDate;
+    Lambda converter;
+
+    operator T() const {
+        return m_value;
+    }
+};
+
+template <class T>
+class reference
+{
+public:
+    reference(const T *val=0) : mRef(val) {}
+
+    const T *mRef;
+};
+
+template <class T>
+DataStream &operator<<(DataStream &out, const reference<T> &ref)
+{
+    out << (*ref.mRef);
+
+    return out;
+}
+
+/* Serializes a container without count param */
+template <class T>
+class Expander
+{
+public:
+    Expander(const T& ref) : mRef(ref){}
+
+    const T& mRef;
+};
+
+template <class T>
+DataStream &operator<<(DataStream &out, const Expander<T> &list)
+{
+    auto it = list.mRef.begin();
+
+    while (it != list.mRef.end()) {
+        out << *it;
+        ++it;
+    }
+
+    return out;
 }
 
 #endif // CORECLASSES_H

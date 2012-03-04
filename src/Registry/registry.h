@@ -30,6 +30,9 @@ private slots:
     /* timers */
     void updateTBanList();
     void tbanListReceived(QNetworkReply*);
+
+    void updateRegistryAnnouncement();
+
 private:
     QTcpServer forServers;
     QHash<int, Server *> servers;
@@ -42,6 +45,8 @@ private:
     QSet<QString> bannedIPs;
     QSet<QString> tbanIPs;
     QHash<QString, int> ipCounter;
+
+    QString registry_announcement;
 
     QNetworkAccessManager manager;
 

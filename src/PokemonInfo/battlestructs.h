@@ -27,7 +27,7 @@ class BattleMove
 public:
     BattleMove();
 
-    void load(int gen);
+    void load(Pokemon::gen gen);
     operator int () {return num();}
 };
 
@@ -102,7 +102,7 @@ public:
     const BattleMove& move(int i) const;
 
     quint16 normalStat(int stat) const;
-    void updateStats(int gen);
+    void updateStats(Pokemon::gen gen);
 
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
@@ -132,7 +132,7 @@ public:
     /* removes the invalid pokemons */
     TeamBattle(PersonalTeam &other);
 
-    void generateRandom(int gen);
+    void generateRandom(Pokemon::gen gen);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -155,7 +155,7 @@ public:
     QString name;
     QString info;
     QString tier;
-    int gen;
+    Pokemon::gen gen;
 private:
     PokeBattle m_pokemons[6];
     int m_indexes[6];
@@ -370,6 +370,7 @@ struct ChallengeInfo
         Refused,
         InvalidTeam,
         InvalidGen,
+        InvalidTier,
 
         ChallengeDescLast
     };
@@ -438,7 +439,10 @@ struct ChallengeInfo
     qint8 dsc;
     qint32 opp;
     quint8 mode;
+    quint8 team;
     bool rated;
+    QString srctier, desttier;
+    Pokemon::gen gen;
 
     explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, quint8 mode=Singles)
         : clauses(clauses), dsc(desc), opp(opponent), mode(mode)
@@ -464,7 +468,7 @@ struct BattleConfiguration
         Player = 1
     };
 
-    quint8 gen;
+    Pokemon::gen gen;
     quint8 mode;
     qint32 ids[2];
     quint32 clauses;
@@ -484,6 +488,10 @@ struct BattleConfiguration
 
     bool isPlayer(int slot) const {
         return receivingMode[slot] == Player;
+    }
+
+    bool isInBattle(int id) const {
+        return ids[0] == id || ids[1] == id;
     }
 
     void setTeam(int i, TeamBattle *team) {
@@ -592,12 +600,17 @@ struct FindBattleData
     bool sameTier;
     bool ranged;
     quint16 range;
-    //quint32 forcedClauses;
-    //quint32 bannedClauses;
+    quint8 teams;
 };
 
 DataStream& operator >> (DataStream &in, FindBattleData &f);
 DataStream& operator << (DataStream &out, const FindBattleData &f);
 
+struct FindBattleDataAdv : public FindBattleData
+{
+    void shuffle(int total);
+
+    QVector<quint8> shuffled;
+};
 
 #endif // BATTLESTRUCTS_H

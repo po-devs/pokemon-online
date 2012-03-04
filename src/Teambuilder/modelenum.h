@@ -6,7 +6,8 @@ namespace CustomModel {
         PokenumRole = Qt::UserRole+1,
         PokenameRole,
         PokeimageRole,
-        MovenumRole
+        MovenumRole,
+        PokegenRole
     };
 }
 #endif // MODELENUM_H

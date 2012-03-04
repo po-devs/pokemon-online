@@ -47,8 +47,7 @@ bool Analyzer::isConnected() const
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    QDataStream in (commandline);
-    in.setVersion(QDataStream::Qt_4_5);
+    DataStream in (commandline);
     uchar command;
 
     in >> command;
@@ -58,8 +57,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         {
             QString name, desc;
             quint16 num, max, nport;
-            in >> name >> desc >> num >> max >> nport;
-            emit loggedIn(name,desc,num, max, nport);
+            bool passwordProtected;
+            in >> name >> desc >> num >> max >> nport >> passwordProtected;
+            emit loggedIn(name,desc,num, max, nport, passwordProtected);
             break;
         }
     case ServNumChange:
@@ -89,20 +89,31 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             in >> max;
             emit maxChange(max);
         }
+    case ServerPass:
+        {
+            bool toggle;
+            in >> toggle;
+            emit passToggleChanged(toggle);
+        }
     default:
         emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;
     }
 }
 
-void Analyzer::sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port)
+void Analyzer::sendRegistryAnnouncement(const QString &announcement)
 {
-    notify(PlayersList, name, desc, numplayers, ip, max, port);
+    notify(Announcement, announcement);
+}
+
+void Analyzer::sendServer(const QString &name, const QString &desc, quint16 numplayers, const QString &ip,quint16 max, quint16 port, bool passwordProtected)
+{
+    notify(PlayersList, name, desc, numplayers, ip, max, port, passwordProtected);
 }
 
 void Analyzer::sendServerListEnd()
 {
-  notify(ServerListEnd);
+    notify(ServerListEnd);
 }
 
 void Analyzer::sendInvalidName()
@@ -129,17 +140,3 @@ const Network & Analyzer::socket() const
 {
     return mysocket;
 }
-
-void Analyzer::notify(int command)
-{
-    if (!isConnected())
-        return;
-    QByteArray tosend;
-    QDataStream out(&tosend, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_5);
-
-    out << uchar(command);
-
-    emit sendCommand(tosend);
-}
-

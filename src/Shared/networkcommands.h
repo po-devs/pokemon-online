@@ -17,7 +17,7 @@
 enum Command {
     ZipCommand = 0,
     Login,
-    Unused0,
+    Reconnect,
     Logout,
     SendMessage,
     PlayersList,
@@ -36,7 +36,7 @@ enum Command {
     ServDescChange,
     ServNameChange,
     SendPM = 20,
-    Away,
+    OptionsChange,
     GetUserInfo,
     GetUserAlias,
     GetBanList,
@@ -45,9 +45,9 @@ enum Command {
     SpectateBattle,
     SpectatingBattleMessage,
     SpectatingBattleChat,
-    SpectatingBattleFinished = 30,
-    LadderChange,
-    ShowTeamChange,
+    Unused30 = 30,
+    Unused31,
+    Unused32,
     VersionControl_,
     TierSelection,
     ServMaxChange,
@@ -66,15 +66,15 @@ enum Command {
     ChannelBattle,
     RemoveChannel,
     AddChannel = 50,
-    ChannelMessage,
+    Unused51,
     ChanNameChange,
-    HtmlMessage,
-    HtmlChannel,
+    Unused52,
+    Unused53,
     ServerName,
     SpecialPass,
     ServerListEnd,              // Indicates end of transmission for registry.
     SetIP,                      // Indicates that a proxy server sends the real ip of client
-    ServerPass                  // Prompts for the server password
+    ServerPass                 // Prompts for the server password
 };
 
 enum ProtocolError {

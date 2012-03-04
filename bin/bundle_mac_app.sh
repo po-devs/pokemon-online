@@ -26,12 +26,13 @@ function bundle_mac_app() {
        [ -d $toDir/db ] && echo rm -r $toDir/db && rm -r $toDir/db
        [ -d $toDir/Themes ] && echo rm -r $toDir/db && rm -r $toDir/Themes
 
-       for file in languages.txt trans Music db database Themes qml
+       for file in languages.txt trans Music db database Themes qml myplugins
        do
            echo cp -r $file $toDir
            cp -r $file $toDir
        done
    fi # end of SKIP
+   return
 
    fworks=$app/Contents/Frameworks
    zlib=libz.1.dylib

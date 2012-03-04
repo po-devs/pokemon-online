@@ -1,11 +1,11 @@
 #include "client.h"
 #include "mainwindow.h"
-#include "challenge.h"
 #include "logmanager.h"
-#include "Teambuilder/teambuilder_old.h"
+#include "findbattledialog.h"
+#include "teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
-#include "pmwindow.h"
+#include "pmsystem.h"
 #include "controlpanel.h"
 #include "ranking.h"
 #include "poketextedit.h"
@@ -13,16 +13,20 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "soundconfigwindow.h"
 #include "teamholder.h"
+#include "challengedialog.h"
+#include "tieractionfactory.h"
 
 Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
+    waitingOnSecond = false;
+    top = NULL;
     isConnected = true;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
     myteambuilder = NULL;
-    lastAutoPM = time(NULL);
 
     /* different events */
     eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
@@ -130,6 +134,10 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     /* Default channel on to display messages */
     channelPlayers(0);
 
+    /* PM System */
+    pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
+
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
      */
@@ -143,15 +151,22 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
         sortCBN = 0;
     }
     pmFlashing = settings.value("pm_flashing").toBool();
-    if(settings.value("pm_disabled").toBool()) {
-        pmDisabled = 1;
+    if(settings.value("reject_incoming_pms").toBool()) {
+        pmReject = 1;
     } else {
-        pmDisabled = 0;
+        pmReject = 0;
+    }
+    pmsTabbed = settings.value("pms_tabbed").toBool();
+    if(settings.value("pms_tabbed").toBool()) {
+        pmsTabbed = 1;
+    } else {
+        pmsTabbed = 0;
     }
 }
 
 Client::~Client()
 {
+    relay().notify(NetworkCli::Logout);
     writeSettings(this);
 }
 
@@ -164,13 +179,14 @@ void Client::initRelay()
     connect(relay, SIGNAL(disconnected()), SLOT(disconnected()));
     connect(relay, SIGNAL(messageReceived(QString)), SLOT(printLine(QString)));
     connect(relay, SIGNAL(htmlMessageReceived(QString)), SLOT(printHtml(QString)));
+    connect(relay, SIGNAL(channelMessageReceived(QString,int,bool)), SLOT(printChannelMessage(QString, int, bool)));
     connect(relay, SIGNAL(playerReceived(PlayerInfo)), SLOT(playerReceived(PlayerInfo)));
-    connect(relay, SIGNAL(teamChanged(PlayerInfo)), SLOT(teamChanged(PlayerInfo)));
-    connect(relay, SIGNAL(playerLogin(PlayerInfo)), SLOT(playerLogin(PlayerInfo)));
+    connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, TeamBattle, BattleConfiguration)),
-            SLOT(battleStarted(int, int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration)),
+            SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(teamApproved(QStringList)), SLOT(tiersReceived(QStringList)));
     connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
@@ -184,7 +200,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
-    connect(relay, SIGNAL(versionDiff(QString, QString)), SLOT(versionDiff(QString, QString)));
+    connect(relay, SIGNAL(versionDiff(ProtocolVersion, int)), SLOT(versionDiff(ProtocolVersion, int)));
     connect(relay, SIGNAL(serverNameReceived(QString)), SLOT(serverNameReceived(QString)));
     connect(relay, SIGNAL(tierListReceived(QByteArray)), SLOT(tierListReceived(QByteArray)));
     connect(relay, SIGNAL(announcement(QString)), SLOT(announcementReceived(QString)));
@@ -194,7 +210,32 @@ void Client::initRelay()
     connect(relay, SIGNAL(addChannel(QString,int)), SLOT(addChannel(QString,int)));
     connect(relay, SIGNAL(removeChannel(int)), SLOT(removeChannel(int)));
     connect(relay, SIGNAL(channelNameChanged(int,QString)), SLOT(channelNameChanged(int,QString)));
+    connect(relay, SIGNAL(reconnectPassGiven(QByteArray)), SLOT(setReconnectPass(QByteArray)));
+    connect(relay, SIGNAL(reconnectSuccess()), SLOT(cleanData()));
+    connect(relay, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
 }
+
+class TierActionFactoryTeams : public TierActionFactory
+{
+public:
+    TierActionFactoryTeams(TeamHolder *t) {
+        team = t;
+    }
+
+    QList<QAction* > createTierActions(QMenu *m, QObject *o, const char *slot) {
+        QList<QAction* > ret;
+        for (int i = 0; i < team->count(); i++) {
+            //Todo: subclass QAction to show the 6 pokemons in the QAction?
+            ret.push_back(m->addAction(team->team(i).name(), o, slot));
+            ret.back()->setCheckable(true);
+            ret.back()->setProperty("team", i);
+        }
+
+        return ret;
+    }
+
+    TeamHolder *team;
+};
 
 int Client::ownAuth() const
 {
@@ -586,6 +627,13 @@ void Client::activateChannel(const QString& text) {
     }
 }
 
+void Client::cleanData()
+{
+    foreach(Channel *c, mychannels) {
+        c->cleanData();
+    }
+}
+
 void Client::join(const QString& text)
 {
     if (channelByNames.contains(text.toLower())) {
@@ -656,6 +704,7 @@ void Client::ban(int p) {
 void Client::tempban(int p, int time) {
     relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
 }
+
 void Client::pmcp(QString p) {
     int pm = id(p);
     if (!mypms.contains(pm)) {
@@ -670,21 +719,22 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing && !pmDisabled)
+    if(pmFlashing)
         activateWindow(); // activate po window when pm recieved
 
     if (mypms.contains(id)) {
+        if(!pmSystem->isVisible()) {
+            pmSystem->show();
+        }
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
-    p->setParent(this);
-    p->setWindowFlags(Qt::Window);
-    p->show();
+    PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4);
+
+    pmSystem->startPM(p);
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
-    connect(this, SIGNAL(PMDisabled(bool, int)), p, SLOT(disablePM(bool, int)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
@@ -701,13 +751,6 @@ void Client::goAway(int away)
 {
     relay().goAway(away);
     goaway->setChecked(away);
-}
-
-void Client::showTeam(bool b)
-{
-    QSettings s;
-    s.setValue("show_team", b);
-    relay().notify(NetworkCli::ShowTeamChange, b);
 }
 
 void Client::showTimeStamps(bool b)
@@ -730,22 +773,34 @@ void Client::pmFlash(bool b)
     pmFlashing = b;
 }
 
-void Client::togglePM(bool b)
+void Client::toggleIncomingPM(bool b)
 {
     QSettings s;
-    s.setValue("pm_disabled", b);
-    pmDisabled = b;
-    emit PMDisabled(b, player(_mid).auth);
+    s.setValue("reject_incoming_pms", b);
+    pmReject = b;
 }
 
+void Client::togglePMTabs(bool b)
+{
+    QSettings s;
+    s.setValue("pms_tabbed", b);
+    pmsTabbed = b;
+    emit togglePMs(b);
+}
+
+void Client::togglePMLogs(bool b) {
+    QSettings s;
+    s.setValue("pms_logged", b);
+}
 
 void Client::ignoreServerVersion(bool b)
 {
     QSettings s;
+    QString key  = QString("ignore_version_%1_%2").arg(serverVersion.version).arg(serverVersion.subversion);
     if (b) {
-        s.setValue("ignore_version_" + serverVersion, true);
+        s.setValue(key, true);
     } else {
-        s.remove("ignore_version_" + serverVersion);
+        s.remove(key);
     }
 }
 
@@ -753,7 +808,8 @@ void Client::enableLadder(bool b)
 {
     QSettings s;
     s.setValue("enable_ladder", b);
-    relay().notify(NetworkCli::LadderChange, b);
+
+    relay().notify(NetworkCli::OptionsChange, Flags(b));
 }
 
 void Client::setChannelSelected(int id)
@@ -906,7 +962,7 @@ void Client::seeRanking(int id)
     connect(&relay(), SIGNAL(rankingReceived(QString,int)), myRanking, SLOT(showRank(QString,int)));
     connect(&relay(), SIGNAL(rankingStarted(int,int,int)), myRanking, SLOT(startRanking(int,int,int)));
 
-    myRanking->init(name(id), player(id).tier);
+    myRanking->init(name(id), tier(id));
 }
 
 void Client::controlPanel(int id)
@@ -953,7 +1009,8 @@ void Client::openBattleFinder()
         return;
     }
 
-    myBattleFinder = new BattleFinder(this);
+    myBattleFinder = new FindBattleDialog(this);
+    myBattleFinder->setTeam(team());
     myBattleFinder->show();
 
     connect(myBattleFinder, SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
@@ -979,43 +1036,21 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-    time_t current = time(NULL);
-    double difference = difftime(lastAutoPM, current);
-    if (mypms.contains(id)) {
-        if(pmDisabled) { // We're avoiding that people that was actually chatting with the user continue talking avoiding the Disable PM =-)
-            if(player(id).auth <= 0) {
-                if((difference > 6) || (difference < -6)) {
-                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                    lastAutoPM = current;
-                }
-                return;
-            }
-        }
-        registerPermPlayer(id);
-        mypms[id]->printLine(pm);
-    } else {
-        if(pmDisabled) {
-            if(player(id).auth <= 0) {
-                if ((difference > 6) || (difference < -6)) {
-                    myrelay.sendPM(id, "This player is currently ignoring all private messages.");
-                    lastAutoPM = current;
-                }
-                return;
-            } else {
-                registerPermPlayer(id);
-                mypms[id]->printLine(pm);
-            }
-        } else {
-            if (!playerExist(id) || myIgnored.contains(id)) {
-                return;
-            }
-            if (!mypms.contains(id)) {
-                startPM(id);
-            }
-            registerPermPlayer(id);
-            mypms[id]->printLine(pm);
-        }
+    if(!mypms.contains(id) && pmReject) {
+        myrelay.sendPM(id, "This player is rejecting incoming PMs.");
+        return;
     }
+
+    if(!playerExist(id) || myIgnored.contains(id)) {
+        return;
+    }
+
+    if(!mypms.contains(id)) {
+        startPM(id);
+    }
+
+    registerPermPlayer(id);
+    mypms[id]->printLine(pm);
 }
 
 
@@ -1075,6 +1110,7 @@ void Client::channelCommandReceived(int command, int channel, DataStream *stream
 
 QMenuBar * Client::createMenuBar(MainEngine *w)
 {
+    top = w;
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("MainChat");
 
@@ -1092,11 +1128,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
     QSettings s;
-
-    QAction * show = menuActions->addAction(tr("&Show team"));
-    show->setCheckable(true);
-    connect(show, SIGNAL(triggered(bool)), SLOT(showTeam(bool)));
-    show->setChecked(s.value("show_team").toBool());
 
     QAction * ladd = menuActions->addAction(tr("Enable &ladder"));
     ladd->setCheckable(true);
@@ -1167,6 +1198,16 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
 
+    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
+    pmsTabbedToggle->setCheckable(true);
+    connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
+    pmsTabbedToggle->setChecked(s.value("pms_tabbed").toBool());
+
+    QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
+    save_logs->setCheckable(true);
+    connect(save_logs, SIGNAL(triggered(bool)), SLOT(togglePMLogs(bool)));
+    save_logs->setChecked(s.value("pms_logged").toBool());
+
     QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
@@ -1177,10 +1218,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
     pm_flash->setChecked(s.value("pm_flashing").toBool());
 
-    QAction * pm_disable = pmMenu->addAction(tr("Disable PMs"));
-    pm_disable->setCheckable(true);
-    connect(pm_disable, SIGNAL(triggered(bool)), SLOT(togglePM(bool)));
-    pm_disable->setChecked(s.value("pm_disabled").toBool());
+    QAction * pm_reject = pmMenu->addAction(tr("Reject incoming PMs"));
+    pm_reject->setCheckable(true);
+    connect(pm_reject, SIGNAL(triggered(bool)), SLOT(toggleIncomingPM(bool)));
+    pm_reject->setChecked(s.value("reject_incoming_pms").toBool());
 
     QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
 
@@ -1217,12 +1258,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
-    playMusic->setCheckable(true);
-    connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
-    playMusic->setChecked(s.value("play_battle_music").toBool());
-
-    battleMenu->addAction(tr("Change &music folder ..."), this, SLOT(changeMusicFolder()));
+    battleMenu->addAction(tr("&Sound configuration"),this, SLOT(openSoundConfig()));
 
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
@@ -1328,8 +1364,28 @@ void Client::askForPass(const QByteArray &salt) {
     relay().notify(NetworkCli::AskForPass, hash);
 }
 
-void Client::serverPass(const QByteArray &salt) {
+void Client::setReconnectPass(const QByteArray &pass)
+{
+    reconnectPass = pass;
+}
 
+void Client::onReconnectFailure(int reason)
+{
+    QString reasons[] = {
+        tr("Server doesn't have data stored for the reconnection."),
+        tr("There's an error when trying to reconnect."),
+        tr("The disconnection has lasted too long."),
+        tr("Your IP is too different from what's expected.")
+    };
+
+    if (unsigned(reason) < sizeof(reasons)/sizeof(QString) && reason >= 0) {
+        printLine(tr("The server refused the reconnect attempt with the reason: %1").arg(reasons[reason]));
+    } else {
+        printLine(tr("The server refused the reconnect attempt."));
+    }
+}
+
+void Client::serverPass(const QByteArray &salt) {
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveServerPassword(relay().getIp(), serverName, pass, warns);
@@ -1387,14 +1443,9 @@ void Client::sendRegister() {
     }
 }
 
-void Client::changeMusicFolder()
+void Client::reconnect()
 {
-    QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Music Directory"), s.value("battle_music_directory").toString());
-
-    if (dir != "") {
-        s.setValue("battle_music_directory", dir + "/");
-    }
+    relay().connectTo(url, port);
 }
 
 void Client::changeBattleLogFolder()
@@ -1407,6 +1458,21 @@ void Client::changeBattleLogFolder()
     }
 
     LogManager::obj()->changeBaseDirectory(dir);
+}
+
+void Client::openSoundConfig()
+{
+    SoundConfigWindow *w = new SoundConfigWindow();
+
+    foreach(BaseBattleWindowInterface *i, mySpectatingBattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
+
+    foreach(BattleWindow *i, mybattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
 }
 
 void Client::changeButtonStyle(bool old)
@@ -1438,12 +1504,6 @@ void Client::animateHpBar(bool save)
     s.setValue("animate_hp_bar", save);
 }
 
-void Client::playMusic(bool save)
-{
-    QSettings s;
-    s.setValue("play_battle_music", save);
-}
-
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 {
     if (mySpectatingBattles.contains(battleId)) {
@@ -1456,25 +1516,33 @@ bool Client::battling() const
     return mybattles.size() > 0;
 }
 
-void Client::versionDiff(const QString &a, const QString &b)
+void Client::versionDiff(const ProtocolVersion &v, int level)
 {
-    serverVersion = a;
+    serverVersion = v;
 
-    if (a != b) {
-        printHtml(toColor(tr("Your client version (%2) doesn't match with the server's (%1).").arg(a,b), QColor("#e37800")));
+    printHtml(toColor(tr("Your client version doesn't match with the server's (%1).").arg(level <= 0 ? tr("older") : tr("more recent")),
+                      QColor("#e37800")));
 
-        if (b.compare(a) < 0) {
-            QSettings s;
+    if (level <= 0) {
+        QSettings s;
 
-            if (s.contains("ignore_version_" + serverVersion))
-                return;
+        if (s.contains(QString("ignore_version_%1_%2").arg(v.version).arg(v.subversion)))
+            return;
 
-            QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), tr("Your version is older than the server's, there might be some things you can't do.\n\nhttp://www.pokemon-online.eu/downloads.php for updates."),QMessageBox::Ok  | QMessageBox::Ignore,NULL, Qt::Window);
-            int result = update->exec();
-
-            if (result & QMessageBox::Ignore)
-                ignoreServerVersion(true);
+        QString message;
+        switch(level) {
+        case -3: message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems"); break;
+        case -2: message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
+        case -1: message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
+        case 0: message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
         }
+
+        QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), message,
+                                              QMessageBox::Ok | QMessageBox::Ignore, NULL, Qt::Window);
+        int result = update->exec();
+
+        if (result & QMessageBox::Ignore)
+            ignoreServerVersion(true);
     }
 }
 
@@ -1509,8 +1577,6 @@ void Client::announcementReceived(const QString &ann)
 
 void Client::tierListReceived(const QByteArray &tl)
 {
-    mytiermenu->clear();
-    mytiers.clear();
     tierList.clear();
     tierRoot.buildFromRaw(tl);
     tierList = tierRoot.getTierList();
@@ -1520,8 +1586,8 @@ void Client::tierListReceived(const QByteArray &tl)
         tierList = tierRoot.getTierList();
     }
 
-    mytiers = tierRoot.buildMenu(mytiermenu, this);
-    changeTierChecked(player(ownId()).tier);
+    rebuildTierMenu();
+    changeTiersChecked();
 
     QSettings s;
 
@@ -1530,6 +1596,16 @@ void Client::tierListReceived(const QByteArray &tl)
             c->sortAllPlayersByTier();
     }
     emit tierListFormed(tierList);
+}
+
+void Client::rebuildTierMenu()
+{
+    mytiermenu->clear();
+    mytiers.clear();
+
+    TierActionFactoryTeams f(team());
+    mytiers = tierRoot.buildMenu(mytiermenu, this, team()->count() <= 1 ? NULL : &f);
+    singleTeam = team()->count() <= 1;
 }
 
 void Client::sortPlayersCountingTiers(bool byTier)
@@ -1577,14 +1653,16 @@ void Client::movePlayerList(bool right)
     }
 }
 
-void Client::changeTierChecked(const QString &newtier)
+void Client::changeTiersChecked()
 {
+    if (singleTeam != (team()->count() <= 1)) {
+        rebuildTierMenu();
+    }
     foreach(QAction *a, mytiers) {
-        if (a->text() == newtier) {
-            a->setChecked(true);
-        } else {
-            a->setChecked(false);
-        }
+        QString tier = a->property("tier").toString();
+        int team = a->property("team").toInt();
+
+        a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
     }
 }
 
@@ -1592,8 +1670,11 @@ void Client::changeTier()
 {
     QAction *a = (QAction*)sender();
 
-    relay().notify(NetworkCli::TierSelection, a->text());
-    changeTierChecked(player(ownId()).tier);
+    int team = a->property("team").toInt();
+    QString tier = a->property("tier").toString();
+
+    a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
+    relay().notify(NetworkCli::TierSelection, quint8(team), tier);
 }
 
 bool Client::playerExist(int id) const
@@ -1606,26 +1687,22 @@ PlayerInfo Client::player(int id) const
     return myplayersinfo.value(id);
 }
 
-BasicInfo Client::info(int id) const
-{
-    if (myplayersinfo.contains(id))
-        return myplayersinfo[id].team;
-    else
-        return BasicInfo();
-}
-
 void Client::seeInfo(QTreeWidgetItem *it)
 {
+    QTreeWidgetItem *parent = it->parent();
+
     if (dynamic_cast<QIdTreeWidgetItem*>(it))
-        seeInfo(((QIdTreeWidgetItem*)(it))->id());
+        seeInfo(((QIdTreeWidgetItem*)(it))->id(), parent ? parent->text(0) : "");
 }
 
-void Client::seeInfo(int id)
+void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
-        BaseChallengeWindow *mychallenge = new ChallengeWindow(player(id));
-        connect(mychallenge, SIGNAL(challenge(int)), SLOT(sendChallenge(int)));
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
+        mychallenge->setChallenging(tier);
+
+        connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
@@ -1643,10 +1720,12 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            BaseChallengeWindow *mychallenge = new ChallengedWindow(player(c),c);
-            connect(mychallenge, SIGNAL(challenge(int)), SLOT(acceptChallenge(int)));
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team());
+            mychallenge->setChallengeInfo(c);
+
+            connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
-            connect(mychallenge, SIGNAL(cancel(int)), SLOT(refuseChallenge(int)));
+            connect(mychallenge, SIGNAL(cancel(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
             mychallenges.insert(mychallenge);
@@ -1654,25 +1733,31 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    cancelFindBattle(false);
-    BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf, this);
-    connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
-    mybattle->setWindowFlags(Qt::Window);
-    mybattle->client() = this;
-    mybattle->show();
-    mybattle->activateWindow();
+    if (!mybattles.contains(battleId)) {
+        int id = id1== ownId() ? id2: id1;
 
-    connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
-    connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
-    connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
-    connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
-    //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
+        cancelFindBattle(false);
+        BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
+        connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
+        mybattle->setWindowFlags(Qt::Window);
+        mybattle->show();
+        mybattle->activateWindow();
 
-    mybattles[battleId] = mybattle;
+        connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
+        connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
+        connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
+        connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+        //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
-    battleStarted(battleId, ownId(), id);
+        mybattles[battleId] = mybattle;
+
+        battleStarted(battleId, ownId(), id);
+    } else {
+        //We reconnected probably, and our team changed
+        mybattles[battleId]->updateTeam(team);
+    }
 }
 
 void Client::battleStarted(int bid, int id1, int id2)
@@ -1704,9 +1789,7 @@ void Client::battleReceived(int battleid, int id1, int id2)
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
-    QSettings s;
-
-    BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId(), this);
+    BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
 
     battle->setWindowFlags(Qt::Window);
     battle->show();
@@ -1724,7 +1807,7 @@ void Client::stopWatching(int battleId)
     if (mySpectatingBattles.contains(battleId)) {
         mySpectatingBattles[battleId]->close();
         mySpectatingBattles.remove(battleId);
-        relay().notify(NetworkCli::SpectatingBattleFinished, qint32(battleId));
+        relay().notify(NetworkCli::SpectateBattle, Flags(0), qint32(battleId));
     }
 }
 
@@ -1736,9 +1819,11 @@ void Client::forfeitBattle(int id)
 
 void Client::battleFinished(int battleid, int res, int winner, int loser)
 {
-    /* On old servers battleid is always 0 so you don't want to forfeit that battle ... */
-    if ((res == Close || res == Forfeit) && (battleid != 0 || (winner == ownId() || loser == ownId())))
-        disableBattleWindow(battleid);
+    if (res == Close || res == Forfeit) {
+        if (mybattles.contains(battleid) || mySpectatingBattles.contains(battleid)) {
+            disableBattleWindow(battleid);
+        }
+    }
 
     foreach(Channel *c, mychannels) {
         c->battleEnded(battleid, res, winner, loser);
@@ -1774,10 +1859,10 @@ void Client::battleCommand(int battleid, const QByteArray &command)
 
 void Client::disableBattleWindow(int battleid)
 {
-    if (!mybattles.contains(battleid))
+    if (!mybattles.contains(battleid) && !mySpectatingBattles.contains(battleid))
         return;
 
-    BattleWindow *w = mybattles.take(battleid);
+    BaseBattleWindowInterface *w = mybattles.contains(battleid) ? mybattles.take(battleid) : mySpectatingBattles.take(battleid);
     w->disable();
 }
 
@@ -1793,7 +1878,7 @@ void Client::removeBattleWindow(int battleid)
 QString Client::name(int id) const
 {
     if (myplayersinfo.contains(id))
-        return info(id).name;
+        return player(id).name;
     else
         return "~Unknown~";
 }
@@ -1822,17 +1907,11 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
-            BaseChallengeWindow *b;
+            ChallengeDialog *b;
             if (c.desc() == ChallengeInfo::Refused) {
                 printLine(tr("%1 refused your challenge.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
-                }
             } else if (c.desc() == ChallengeInfo::Busy) {
                 printLine(tr("%1 is busy.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
-                }
             } else if (c.desc() == ChallengeInfo::Cancelled) {
                 printLine(tr("%1 cancelled their challenge.").arg(name(c)));
                 while ( (b = getChallengeWindow(c)) ) {
@@ -1840,14 +1919,10 @@ void Client::challengeStuff(const ChallengeInfo &c)
                 }
             } else if (c.desc() == ChallengeInfo::InvalidTeam) {
                 printLine(tr("%1 has an invalid team.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
-                }
             } else if (c.desc() == ChallengeInfo::InvalidGen) {
                 printLine(tr("%1 has a different gen than yours.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
-                }
+            } else if (c.desc() == ChallengeInfo::InvalidTier) {
+                printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
             }
         }
     }
@@ -1875,39 +1950,19 @@ bool Client::away() const
     return player(ownId()).away();
 }
 
-void Client::acceptChallenge(int id)
-{
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Accepted, id));
-}
-
-void Client::refuseChallenge(int id)
-{
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Refused, id));
-}
-
 QString Client::tier(int player) const
 {
-    return this->player(player).tier;
+    return this->player(player).ratings.begin().key();
 }
 
-void Client::sendChallenge(int id)
+QStringList Client::tiers(int player) const
 {
-    QSettings s;
-
-    quint32 clauses = 0;
-
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses |= s.value("clause_"+ChallengeInfo::clause(i)).toBool() ? (1 << i) : 0;
-    }
-
-    int mode = s.value("challenge_with_doubles").toInt();
-
-    relay().sendChallengeStuff(ChallengeInfo(ChallengeInfo::Sent, id, clauses, mode));
+    return this->player(player).ratings.keys();
 }
 
 void Client::clearChallenge()
 {
-    mychallenges.remove(dynamic_cast<BaseChallengeWindow*>(sender()));
+    mychallenges.remove(dynamic_cast<ChallengeDialog*>(sender()));
 }
 
 void Client::errorFromNetwork(int errnum, const QString &errorDesc)
@@ -1931,12 +1986,20 @@ void Client::connected()
         relay().disconnectFromHost();
     s.endGroup();
 
-    relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+    if (reconnectPass.isEmpty()) {
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+    } else {
+        relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
+    }
 }
 
 void Client::disconnected()
 {
     printLine(tr("Disconnected from Server!"));
+
+    if (reconnectPass.length() > 0) {
+        printHtml(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+    }
 
     isConnected = false;
     myregister->setText(tr("&Reconnect"));
@@ -1953,12 +2016,14 @@ Analyzer &Client::relay()
     return myrelay;
 }
 
-void Client::playerLogin(const PlayerInfo& p)
+void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 {
     _mid = p.id;
-    mynick = p.team.name;
+    mynick = p.name;
     myplayersinfo[p.id] = p;
-    mynames[p.team.name] = p.id;
+    mynames[p.name] = p.id;
+
+    tiersReceived(tiers);
 
     if (serverName.size() > 0) {
         QSettings settings;
@@ -1970,6 +2035,16 @@ void Client::playerLogin(const PlayerInfo& p)
     }
 }
 
+void Client::tiersReceived(const QStringList &tiers)
+{
+    if (waitingOnSecond) {
+        waitingOnSecond = false;
+        *team() = secondTeam;
+    }
+    team()->setTiers(tiers);
+    changeTiersChecked();
+}
+
 void Client::playerLogout(int id)
 {
     /* removes the item in the playerlist */
@@ -1979,7 +2054,7 @@ void Client::playerLogout(int id)
 
 void Client::removePlayer(int id)
 {
-    QString name = info(id).name;
+    QString name = player(id).name;
 
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(id))
@@ -1993,7 +2068,7 @@ void Client::removePlayer(int id)
     pmedPlayers.remove(id);
     fade.remove(id);
 
-    QHash<int, PMWindow*>::iterator pm = mypms.find(id);
+    QHash<int, PMStruct*>::iterator pm = mypms.find(id);
     if (pm != mypms.end()) {
         pm.value()->disable();
         disabledpms[name] = pm.value();
@@ -2041,38 +2116,40 @@ QString Client::authedNick(int id) const
 {
     PlayerInfo p = player(id);
 
-    QString nick = p.team.name;
+    QString nick = p.name;
 
     return nick;
 }
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    if (name(p.id) != p.name) {
+        printLine(TeamEvent, p.id, tr("%1 changed names and is now known as %2.").arg(name(p.id), p.name));
+        if (p.id == ownId()) {
+            mynick = p.name;
+        }
+    }
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
-        if (mynames.value(p.team.name) == p.id)
-            mynames.remove(info(p.id).name);
+        if (mynames.value(p.name) == p.id)
+            mynames.remove(player(p.id).name);
         myplayersinfo.remove(p.id);
     }
 
     myplayersinfo.insert(p.id, p);
     refreshPlayer(p.id);
 
-    changeName(p.id, p.team.name);
-
-    if (p.id == ownId()) {
-        changeTierChecked(p.tier);
-    }
+    changeName(p.id, p.name);
 
     foreach(Channel *c, mychannels) {
         if (c->hasPlayer(p.id))
             c->playerReceived(p.id);
         else
-            c->changeName(p.id, p.team.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
+            c->changeName(p.id, p.name); /* Even if the player isn't in the channel, someone in the channel could be battling him, ... */
     }
-    QHash<QString, PMWindow*>::iterator pm = disabledpms.find(name(p.id));
+    QHash<QString, PMStruct*>::iterator pm = disabledpms.find(name(p.id));
     if (pm != disabledpms.end()) {
-        PMWindow *window = pm.value();
+        PMStruct *window = pm.value();
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
@@ -2088,22 +2165,10 @@ void Client::changeName(int player, const QString &name)
     }
 
     if (player == ownId()) {
-        foreach(PMWindow *p, mypms) {
+        foreach(PMStruct *p, mypms) {
             p->changeSelf(name);
         }
     }
-}
-
-void Client::teamChanged(const PlayerInfo &p) {
-    if (name(p.id) != p.team.name) {
-        printLine(TeamEvent, p.id, tr("%1 changed teams and is now known as %2.").arg(name(p.id), p.team.name));
-        if (p.id == ownId()) {
-            mynick = p.team.name;
-        }
-    } else {
-        printLine(TeamEvent, p.id, tr("%1 changed teams.").arg(name(p.id)));
-    }
-    playerReceived(p);
 }
 
 QColor Client::color(int id) const
@@ -2124,15 +2189,15 @@ int Client::id(const QString &name) const
     }
 }
 
-void Client::closeChallengeWindow(BaseChallengeWindow *b)
+void Client::closeChallengeWindow(ChallengeDialog *b)
 {
     mychallenges.remove(b);
     b->forcedClose();
 }
 
-BaseChallengeWindow * Client::getChallengeWindow(int player)
+ChallengeDialog * Client::getChallengeWindow(int player)
 {
-    foreach(BaseChallengeWindow *c, mychallenges) {
+    foreach(ChallengeDialog *c, mychallenges) {
         if (c->id() == player)
             return c;
     }
@@ -2150,28 +2215,41 @@ void Client::openTeamBuilder()
 
     myteambuilder = new QMainWindow();
 
-    TeamBuilderOld *t = new TeamBuilderOld(myteam);
+    secondTeam = *team();
+
+    TeamBuilder *t = new TeamBuilder(&secondTeam);
     myteambuilder->resize(t->size());
     myteambuilder->setCentralWidget(t);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
-    myteambuilder->setMenuBar(t->createMenuBar((MainEngine*)parent()));
+    if (top) {
+        myteambuilder->setMenuBar(t->createMenuBar(top));
+    }
     t->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
     connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
+}
+
+void Client::reloadTeamBuilderBar()
+{
+    if (top) {
+        myteambuilder->setMenuBar(((TeamBuilder*)myteambuilder->centralWidget())->createMenuBar(top));
+    }
 }
 
 void Client::changeTeam()
 {
-    if (battling() && myteam->name() != mynick) {
+    if (battling() && secondTeam.name() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
-        myteam->name() = mynick;
+        secondTeam.name() = mynick;
     }
     cancelFindBattle(false);
-    relay().sendTeam(*myteam);
+    waitingOnSecond = true;
+    relay().sendTeam(secondTeam);
 }
 
 PlayerInfo &Client::playerInfo(int id)
@@ -2269,68 +2347,13 @@ void Client::printLine(int event, int playerid, const QString &line)
     }
 }
 
-/**********************************************************/
-/****************** BATTLE FINDER *************************/
-/**********************************************************/
-
-BattleFinder::BattleFinder(QWidget *parent) : QWidget(parent)
+void Client::printChannelMessage(const QString &mess, int channel, bool html)
 {
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
-    QSettings s;
-
-    QVBoxLayout *ml = new QVBoxLayout(this);
-    ml->setSpacing(10);
-    setWindowFlags(Qt::Window);
-
-    QPushButton *ok, *cancel;
-    ml->addWidget(rated = new QCheckBox(tr("Force rated battles")));
-    ml->addWidget(sameTier = new QCheckBox(tr("Force same tier")));
-    QHBoxLayout *sub2 = new QHBoxLayout();
-    ml->addLayout(sub2);
-    sub2->addWidget(rangeOn = new QCheckBox(tr("Only battle players with a max rating difference of ")));
-    sub2->addWidget(range = new QLineEdit());
-
-    QHBoxLayout *hl = new QHBoxLayout();
-    ml->addLayout(hl);
-    hl->addWidget(ok = new QPushButton(tr("Find Battle")));
-    hl->addWidget(cancel = new QPushButton(tr("Cancel")));
-
-    range->setMaximumWidth(35);
-
-    rated->setChecked(s.value("find_battle_force_rated").toBool());
-    sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    rangeOn->setChecked(s.value("find_battle_range_on").toBool());
-    range->setText(QString::number(s.value("find_battle_range").toInt()));
-    changeEnabled();
-
-    connect(rated, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
-    connect(sameTier, SIGNAL(toggled(bool)), SLOT(changeEnabled()));
-
-    connect(ok, SIGNAL(clicked()), SLOT(close()));
-    connect(cancel, SIGNAL(clicked()), SLOT(close()));
-    connect(ok, SIGNAL(clicked()), SLOT(throwChallenge()));
+    if (hasChannel(channel)) {
+        if (html) {
+            this->channel(channel)->printHtml(mess);
+        } else {
+            this->channel(channel)->printLine(mess);
+        }
+    }
 }
-
-void BattleFinder::changeEnabled()
-{
-}
-
-void BattleFinder::throwChallenge()
-{
-    FindBattleData d;
-    d.rated = rated->isChecked();
-    d.sameTier = sameTier->isChecked();
-    d.range = std::max(range->text().toInt(), 100);
-    d.ranged = rangeOn->isChecked();
-
-    QSettings s;
-
-    s.setValue("find_battle_force_rated", d.rated);
-    s.setValue("find_battle_same_tier", d.sameTier);
-    s.setValue("find_battle_range_on", d.ranged);
-    s.setValue("find_battle_range", d.range);
-
-    emit findBattle(d);
-}
-

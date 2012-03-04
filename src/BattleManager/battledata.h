@@ -111,11 +111,12 @@ public:
     QString name(int player) const { return team(this->player(player)).name();}
     int slotNum(int player) const { return player/2;}
     int spot(int player, int slot=0) {return player+2*slot;}
+    int spotFromId(int id) const { return conf->spot(id);}
     int clauses() const {return conf->clauses;}
     int avatar(int player) const {return conf->avatar[player];}
     int mode() const {return conf->mode;}
     auxTypeRef fieldPoke(int player) {return d()->fieldPoke(player);}
-    int gen() { return conf->gen; }
+    Pokemon::gen gen() { return conf->gen; }
     bool isKoed(int spot) { return poke(spot).isKoed();}
     BattleConfiguration::ReceivingMode role(int player) const { return BattleConfiguration::ReceivingMode(conf->receivingMode[this->player(player)]);}
     bool isPlayer(int spot) const { return role(spot) == BattleConfiguration::Player;}

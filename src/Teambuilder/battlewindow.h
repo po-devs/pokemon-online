@@ -46,15 +46,12 @@ public:
 
 /* The battle window called by the client, online */
 
-class Client;
-
 class BattleWindow : public BaseBattleWindow, public BattleCommandManager<BattleWindow>
 {
     Q_OBJECT
 
 public:
-    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf,
-                 Client *client);
+    BattleWindow(int battleid, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &myteam, const BattleConfiguration &conf);
 
     BattleInfo &info() {
         return *(BattleInfo*)(&BaseBattleWindow::info());
@@ -95,7 +92,10 @@ public:
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
     void onChoiceCanceled(int player);
-    void addSpectator(bool add, int id);
+    void onReconnect(int player);
+    void onDisconnect(int player);
+    void addSpectator(bool add, int id, const QString &);
+    void updateTeam(const TeamBattle &b);
 
     /* Disable / enable buttons */
     void updateChoices();
@@ -154,6 +154,8 @@ private:
     PokeZone *mypzone;
     QPushButton *myswitch, *myattack, *mycancel;
     QMessageBox *question;
+
+    bool canLeaveBattle;
 };
 
 class AbstractAttackButton;
@@ -163,7 +165,7 @@ class AttackZone : public QWidget
 {
     Q_OBJECT
 public:
-    AttackZone(const PokeProxy &poke, int gen);
+    AttackZone(const PokeProxy &poke, Pokemon::gen gen);
 
     AbstractAttackButton *tattacks[4];
     QAbstractButton *attacks[4];
@@ -178,7 +180,7 @@ class AbstractAttackButton
 {
 public:
     //AbstractAttackButton();
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen) = 0;
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen) = 0;
 
     QAbstractButton *pointer() {
         return dynamic_cast<QAbstractButton *> (this);
@@ -192,16 +194,16 @@ class ImageAttackButton : public QImageButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    ImageAttackButton(const BattleMove& b, const PokeProxy &p, int gen);
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen);
+    ImageAttackButton(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
 };
 
 class OldAttackButton : public QPushButton, public AbstractAttackButton
 {
     Q_OBJECT
 public:
-    OldAttackButton(const BattleMove& b, const PokeProxy &p, int gen);
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, int gen);
+    OldAttackButton(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
+    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
 };
 
 class BattlePokeButton;
@@ -243,7 +245,7 @@ class TargetSelection : public QWidget
 public:
     TargetSelection(const BattleInfo &info);
 
-    void updateData(const BattleInfo &info, int move, int gen);
+    void updateData(const BattleInfo &info, int move);
 signals:
     void targetSelected(int target);
 private:

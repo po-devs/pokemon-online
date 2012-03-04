@@ -8,6 +8,7 @@ struct Mechanics
 {
     /* Returns b.turnlong[player], used for convenience cuz shorter */
     static BattleSituation::context & turn(BattleSituation &b, int player);
+    static BattleSituation::TurnMemory & fturn(BattleSituation &b, int player);
     static BattleSituation::context & poke(BattleSituation &b, int player);
     static BattleSituation::BasicPokeInfo & fpoke(BattleSituation &b, int player);
     static BattleSituation::context & team(BattleSituation &b, int player);
@@ -15,7 +16,7 @@ struct Mechanics
     static int move(BattleSituation &b, int source);
     static int type(BattleSituation &b, int source);
     static BattleSituation::priorityBracket makeBracket(int b, int p);
-    static BattleSituation::BasicMoveInfo & tmove(BattleSituation &b, int source);
+    static BattleBase::BasicMoveInfo & tmove(BattleBase &b, int source);
 
     typedef BattleSituation::MechanicsFunction function;
 

@@ -6,6 +6,11 @@ BattleSituation::context & Mechanics::turn(BattleSituation &b, int player)
     return b.turnMemory(player);
 }
 
+BattleSituation::TurnMemory & Mechanics::fturn(BattleSituation &b, int player)
+{
+    return b.turnMem(player);
+}
+
 BattleSituation::context & Mechanics::poke(BattleSituation &b, int player)
 {
     return b.pokeMemory(player);
@@ -36,7 +41,7 @@ int Mechanics::move(BattleSituation &b, int source)
     return tmove(b, source).attack;
 }
 
-BattleSituation::BasicMoveInfo & Mechanics::tmove(BattleSituation &b, int source)
+BattleBase::BasicMoveInfo & Mechanics::tmove(BattleBase &b, int source)
 {
     return b.tmove(source);
 }

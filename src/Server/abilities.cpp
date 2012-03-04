@@ -361,7 +361,7 @@ struct AMFlameBody : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
+        if (b.poke(t).status() == Pokemon::Fine && b.coinflip(3, 10)) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
@@ -757,7 +757,7 @@ struct AMPoisonTouch : public AM {
     static void opa(int s, int t, BS &b) {
         if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
             return;
-        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 20) {
+        if (b.poke(t).status() == Pokemon::Fine && b.coinflip(2, 10)) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
@@ -849,7 +849,7 @@ struct AMShadowTag : public AM {
 
     static void iit(int, int t, BS &b) {
         //Shadow Tag
-        if (!b.hasWorkingAbility(t, Ability::ShadowTag) || b.gen() == 3) turn(b,t)["Trapped"] = true;
+        if (!b.hasWorkingAbility(t, Ability::ShadowTag) || b.gen().num == 3) turn(b,t)["Trapped"] = true;
     }
 };
 
@@ -1205,7 +1205,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.countBackUp(b.player(s)) > 0 && b.ability(t) != Ability::Mummy) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -1420,13 +1420,13 @@ struct AMEccentric : public AM
         if (t == -1)
             return;
 
-        if (poke(b,t).contains("Transformed") || b.hasSubstitute(t))
+        if (fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || b.hasSubstitute(t))
             return;
 
         if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))
             return;
 
-        poke(b,s)["Transformed"] = true;
+        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);

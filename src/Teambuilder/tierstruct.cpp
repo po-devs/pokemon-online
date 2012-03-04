@@ -1,5 +1,6 @@
 #include "../Utilities/coreclasses.h"
 #include "tierstruct.h"
+#include "tieractionfactory.h"
 
 TierNode::TierNode(const QString &s) : name(s)
 {
@@ -187,6 +188,7 @@ QTreeWidgetItem *TierNode::addNode(QTreeWidgetItem *category, const QString &tie
     else
         f.setPixelSize(12);
     ret->setFont(0,f);
+
     category->insertChild(i, ret);
     ret->setExpanded(true);
 
@@ -208,17 +210,27 @@ QStringList TierNode::getTierList()
     return ret;
 }
 
-QList<QAction*> TierNode::buildMenu(QMenu *menu, QObject *c)
+QList<QAction*> TierNode::buildMenu(QMenu *menu, QObject *c, TierActionFactory *f)
 {
     QList<QAction *> ret;
 
     foreach(TierNode *t, subNodes) {
         if (t->isLeaf()) {
-            ret.push_back(menu->addAction(t->name,c,SLOT(changeTier())));
-            ret.back()->setCheckable(true);
+            if (f) {
+                QMenu *newMenu = menu->addMenu(t->name);
+                QList<QAction *> as = f->createTierActions(newMenu, c, SLOT(changeTier()));
+                foreach(QAction *a, as) {
+                    a->setProperty("tier", t->name);
+                }
+                ret.append(as);
+            } else {
+                ret.push_back(menu->addAction(t->name,c,SLOT(changeTier())));
+                ret.back()->setCheckable(true);
+                ret.back()->setProperty("tier", t->name);
+            }
         } else {
             QMenu *newMenu = menu->addMenu(t->name);
-            ret.append(t->buildMenu(newMenu, c));
+            ret.append(t->buildMenu(newMenu, c, f));
         }
     }
 

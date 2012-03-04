@@ -19,6 +19,7 @@ signals:
     void logSavingChanged(bool logSaving);
     void useChannelFileLogChanged(bool useChannelFileLog);
     void useBattleFileLogChanged(bool useBattleFileLog);
+    void inactivePlayersDeleteDaysChanged(int value);
     void latencyChanged(bool lowDelay);
     void safeScriptsChanged(bool safeScripts);
     void proxyServersChanged(const QString &ips);
@@ -40,6 +41,7 @@ private:
     QCheckBox *saveLogs;
     QCheckBox *channelFileLog;
     QCheckBox *battleFileLog;
+    QSpinBox *deleteInactive;
     QCheckBox *lowLatency;
     QCheckBox *safeScripts;
     QCheckBox *trayPopup;

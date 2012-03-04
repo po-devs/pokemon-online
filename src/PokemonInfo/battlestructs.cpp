@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "battlestructs.h"
 #include "networkstructs.h"
 #include "movesetchecker.h"
@@ -58,7 +60,7 @@ BattleMove::BattleMove()
     totalPP() = 0;
 }
 
-void BattleMove::load(int gen) {
+void BattleMove::load(Pokemon::gen gen) {
     PP() = MoveInfo::PP(num(), gen)*(num() == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */
     totalPP() = PP();
 }
@@ -218,16 +220,16 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    updateStats(p.gen());
+    updateStats(p.gen().num);
 }
 
-void PokeBattle::updateStats(int gen)
+void PokeBattle::updateStats(Pokemon::gen gen)
 {
-    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
+    totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen.num, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
     setLife(totalLifePoints());
 
     for (int i = 0; i < 5; i++) {
-        normal_stats[i] = PokemonInfo::FullStat(num(), gen, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
+        normal_stats[i] = PokemonInfo::FullStat(num(), gen.num, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
     }
 }
 
@@ -397,7 +399,7 @@ bool TeamBattle::invalid() const
     return poke(0).num() == Pokemon::NoPoke;
 }
 
-void TeamBattle::generateRandom(int gen)
+void TeamBattle::generateRandom(Pokemon::gen gen)
 {
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
@@ -654,9 +656,7 @@ BattleConfiguration::~BattleConfiguration()
 
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
-    //Used as placeholder for subgen
-    quint8 foo;
-    in >> c.gen >> foo >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
 
     in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
 
@@ -685,9 +685,7 @@ DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 
 DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 {
-    //Used as placeholder for subgen
-    quint8 foo(0);
-    out << c.gen << foo << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
 
     out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
 
@@ -841,24 +839,34 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
 }
 
 DataStream & operator >> (DataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.clauses >> c.mode;
+    in >> c.dsc >> c.opp >> c.clauses >> c.mode >> c.team >> c.gen >> c.srctier >> c.desttier;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.clauses << c.mode;
+    out << c.dsc <<  c.opp << c.clauses << c.mode << c.team << c.gen << c.srctier << c.desttier;
     return out;
 }
 
 DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
-    quint32 flags;
+    Flags network, data;
 
-    in >> flags >> f.range;
+    in >> network >> data;
 
-    f.rated = flags & 0x01;
-    f.sameTier = f.rated || flags & 0x2;
-    f.ranged = f.sameTier && flags & 0x4;
+    f.rated = data[0];
+    f.sameTier = data[1] || f.rated;
+    f.ranged = network[0] && f.sameTier;
+
+    if (network[0]) {
+        in >> f.range;
+    }
+
+    if (network[1]) {
+        in >> f.teams;
+    } else {
+        f.teams = 0;
+    }
 
     if (f.range < 100)
         f.range = 100;
@@ -868,13 +876,33 @@ DataStream & operator >> (DataStream &in, FindBattleData &f)
 
 DataStream & operator << (DataStream &out, const FindBattleData &f)
 {
-    quint32 flags = 0;
+    Flags data, network;
 
-    flags |= f.rated;
-    flags |= f.sameTier << 1;
-    flags |= f.ranged << 2;
+    data.setFlag(0, f.rated);
+    data.setFlag(1, f.sameTier);
+    network.setFlag(0, f.ranged);
+    network.setFlag(1, true);
 
-    out << flags << f.range;
+    out << data << network;
+
+    if (f.ranged) {
+        out << f.range;
+    }
+
+    out << f.teams;
 
     return out;
+}
+
+void FindBattleDataAdv::shuffle(int total)
+{
+    shuffled.clear();
+
+    for (int i = 0; i < total; i++) {
+        if (teams == 0 || ((teams >> i )& 1)) {
+            shuffled.push_back(i);
+        }
+    }
+
+    std::random_shuffle(shuffled.begin(), shuffled.end());
 }

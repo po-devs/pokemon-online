@@ -12,7 +12,7 @@
 #include "pokeballed.h"
 #include "../../Utilities/otherwidgets.h"
 #include "pokemovesmodel.h"
-#include "pokechoice.h"
+#include "../pokechoice.h"
 #include "evmanager.h"
 #include "../theme.h"
 
@@ -336,7 +336,7 @@ void PokeBodyWidget::MoveList::setModel(QAbstractItemModel *model)
 
 void PokeBodyWidget::loadPokemon(PokeTeam &poke)
 {
-    changeGen(poke.gen());
+    changeGen(poke.gen().num);
 
     evchoice->setPokemon(&poke);
     setNature(poke.nature());

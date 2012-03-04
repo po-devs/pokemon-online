@@ -15,6 +15,7 @@ class UserInfo;
 class PlayerInfo;
 class FindBattleData;
 class LoginInfo;
+class ChangeTeamInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkServ
@@ -37,10 +38,7 @@ public:
     ~Analyzer();
 
     /* functions called by the server */
-    void sendMessage(const QString &message);
-    void sendChannelMessage(int chanid, const QString &message);
-    void sendHtmlMessage(const QString &message);
-    void sendHtmlChannelMessage(int chanid, const QString &message);
+    void sendMessage(const QString &message, bool html = false);
     void requestLogIn();
     void sendPlayer(const PlayerInfo &p);
     void sendPlayers(const QList<PlayerInfo> &p);
@@ -48,35 +46,43 @@ public:
     void sendChannelPlayers(int channelid, const QVector<qint32> &ids);
     void sendJoin(int channelid, int playerid);
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
-    void sendLogin(const PlayerInfo &p);
+    void sendLogin(const PlayerInfo &p, const QStringList&, const QByteArray &reconnectPass);
     void sendLogout(int num);
     bool isConnected() const;
     QString ip() const;
-    void sendChallengeStuff(const ChallengeInfo &c);
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
-    void sendBattleResult(qint32 battleid, quint8 res, int win, int los);
+    void sendBattleResult(qint32 battleid, quint8 res, quint8 mode, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
-    void sendTeamChange(const PlayerInfo &p);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
-    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2);
+    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode);
     void finishSpectating(qint32 battleId);
     void notifyAway(qint32 id, bool away);
+    void notifyLadderChange(qint32 id, bool ladder);
     void startRankings(int page, int startingRank, int total);
     void sendRanking(const QString name, int points);
     void stopReceiving();
     void connectTo(const QString &host, quint16 port);
     void setLowDelay(bool lowDelay);
+    void sendPacket(const QByteArray &packet);
+    void sendChallengeStuff(const ChallengeInfo &c);
+    void sendTeam(const QString *name, const QStringList &tierList);
 
     /* Closes the connection */
     void close();
 
     void delay();
 
+    void swapIds(Analyzer *other);
+
     /* Convenience functions to avoid writing a new one every time */
     inline void emitCommand(const QByteArray &command) {
         emit sendCommand(command);
+    }
+
+    inline bool isInCommand() const {
+        return mIsInCommand;
     }
 
     template <typename ...Params>
@@ -93,13 +99,14 @@ public:
 signals:
     /* to send to the network */
     void sendCommand(const QByteArray &command);
+    void packetToSend(const QByteArray &packet);
     /* to send to the client */
     void connectionError(int errorNum, const QString &errorDesc);
     void protocolError(int errorNum, const QString &errorDesc);
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
-    //void teamReceived(TeamInfo &team);
+    void teamChanged(const ChangeTeamInfo&);
     void connected();
     void disconnected();
     void forfeitBattle(int id);
@@ -128,15 +135,18 @@ signals:
     void invalidName();
     void accepted();
     void awayChange(bool away);
-    void showTeamChange(bool);
     void ladderChange(bool);
-    void tierChanged(const QString &);
+    void tierChanged(quint8 team, const QString &);
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
+    void logout();
+    void reconnect(int, const QByteArray&);
+    /* Used to tell the command is finished - and that any pending updated() is good to go */
+    void endCommand();
 public slots:
     /* slots called by the network */
     void error();
@@ -154,16 +164,19 @@ private:
 
     GenericNetwork *mysocket;
     QMutex mutex;
-    bool pingedBack;
+    quint16 pingedBack;
+    quint16 pingSent;
+    bool mIsInCommand;
 };
 
 template<class SocketClass>
-Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(true)
+Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(0), pingSent(0), mIsInCommand(false)
 {
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
+    connect(this, SIGNAL(packetToSend(QByteArray)), &socket(), SLOT(sendPacket(QByteArray)));
 
     socket().setParent(this);
 
