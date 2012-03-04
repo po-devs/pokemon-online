@@ -247,6 +247,7 @@ public slots:
     void ignore(int, bool);
     /* Teambuilder slots */
     void openTeamBuilder();
+    void reloadTeamBuilderBar();
     void changeTeam();
     /* Automatic removal of players in memory */
     void fadeAway();
