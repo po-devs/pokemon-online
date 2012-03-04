@@ -123,12 +123,74 @@ TrainerMenu QPushButton#close:hover {
                                 stop: 0 #ff224b, stop: 0.8 #e40000,
                                 stop: 1.0 #bd3134);
 }
+
 TrainerMenu QPushButton#close:pressed {
     background: #9d0104;
     padding-top: 3px;
     padding-left: 3px;
     padding-bottom: 1px;
     padding-right: 1px;
+}
+
+TrainerMenu QToolButton {
+    background-position: center;
+    background-origin: content;
+    background-repeat: no-repeat;
+}
+
+TrainerMenu QToolButton:pressed {
+    padding-top: 1px;
+    padding-left: 1px;
+    padding-bottom: -1px;
+    padding-right: -1px;
+}
+
+TrainerMenu QToolButton#addTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/At.png);
+}
+
+TrainerMenu QToolButton#addTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/AtH.png);
+}
+
+TrainerMenu QToolButton#removeTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Dt.png);
+}
+
+TrainerMenu QToolButton#removeTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/DtH.png);
+}
+
+TrainerMenu QToolButton#importTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/It.png);
+}
+
+TrainerMenu QToolButton#importTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/ItH.png);
+}
+
+TrainerMenu QToolButton#loadTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Lt.png);
+}
+
+TrainerMenu QToolButton#loadTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/LtH.png);
+}
+
+TrainerMenu QToolButton#saveTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/St.png);
+}
+
+TrainerMenu QToolButton#saveTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/StH.png);
+}
+
+TrainerMenu QToolButton#teamFolderButton {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Cf.png);
+}
+
+TrainerMenu QToolButton#teamFolderButton:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/CfH.png);
 }
 
 TrainerMenu PokeButton {

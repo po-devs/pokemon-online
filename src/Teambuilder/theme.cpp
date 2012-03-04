@@ -329,7 +329,7 @@ QVariant Theme::value(const QString &key, bool *def)
     return ret;
 }
 
-QIcon Theme::ToolButtonIcon(QToolButton *b, ToolIcon icon)
+void Theme::ToolButtonIcon(QToolButton *b, ToolIcon icon)
 {
     static QString paths[] = {
         "add-team-icon",
@@ -357,7 +357,7 @@ QIcon Theme::ToolButtonIcon(QToolButton *b, ToolIcon icon)
         QString s = ini.value(fp).toString();
 
         if (s.isEmpty()) {
-            b->setIcon(QApplication::style()->standardIcon(codes[icon]););
+            b->setIcon(QApplication::style()->standardIcon(codes[icon]));
         } else {
             b->setIcon(Icon(paths[icon]));
         }
