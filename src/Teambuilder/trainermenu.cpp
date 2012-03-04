@@ -14,12 +14,12 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
 {
     ui->setupUi(this);
-    ui->teamFolderButton->setIcon(Theme::ToolButtonIcon(Theme::ChangeTeamFolder));
-    ui->removeTeam->setIcon(Theme::ToolButtonIcon(Theme::DeleteTeam));
-    ui->saveTeam->setIcon(Theme::ToolButtonIcon(Theme::SaveTeam));
-    ui->loadTeam->setIcon(Theme::ToolButtonIcon(Theme::LoadTeam));
-    ui->importTeam->setIcon(Theme::ToolButtonIcon(Theme::ImportTeam));
-    ui->addTeam->setIcon(Theme::ToolButtonIcon(Theme::AddTeam));
+    Theme::ToolButtonIcon(ui->teamFolderButton, Theme::ChangeTeamFolder);
+    Theme::ToolButtonIcon(ui->removeTeam, Theme::DeleteTeam);
+    Theme::ToolButtonIcon(ui->saveTeam, Theme::SaveTeam);
+    Theme::ToolButtonIcon(ui->loadTeam, Theme::LoadTeam);
+    Theme::ToolButtonIcon(ui->importTeam, Theme::ImportTeam);
+    Theme::ToolButtonIcon(ui->addTeam, Theme::AddTeam);
     ui->name->setValidator(new QNickValidator(this));
 
     QPushButton *buttons[6] = {ui->team1, ui->team2, ui->team3, ui->team4, ui->team5, ui->team6};

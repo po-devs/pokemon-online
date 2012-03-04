@@ -8,6 +8,7 @@
 #include <QApplication>
 #include "../BattleManager/defaulttheme.h"
 #include "themeaccessor.h"
+#include "QToolButton"
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {
@@ -328,7 +329,7 @@ QVariant Theme::value(const QString &key, bool *def)
     return ret;
 }
 
-QIcon Theme::ToolButtonIcon(ToolIcon icon)
+QIcon Theme::ToolButtonIcon(QToolButton *b, ToolIcon icon)
 {
     static QString paths[] = {
         "add-team-icon",
@@ -348,14 +349,18 @@ QIcon Theme::ToolButtonIcon(ToolIcon icon)
         QStyle::SP_DirIcon,
     };
 
-    bool def;
+    QString fp = "pictures/"+paths[icon];
+    QSettings ini (path("pictures.ini"), QSettings::IniFormat);
 
-    value("pictures/"+paths[icon], &def);
+    /* If the .ini doesn't contain anything, it means the css will take care of everything */
+    if (ini.contains(fp)) {
+        QString s = ini.value(fp).toString();
 
-    if (def) {
-        return QApplication::style()->standardIcon(codes[icon]);
-    } else {
-        return Icon(paths[icon]);
+        if (s.isEmpty()) {
+            b->setIcon(QApplication::style()->standardIcon(codes[icon]););
+        } else {
+            b->setIcon(Icon(paths[icon]));
+        }
     }
 }
 
