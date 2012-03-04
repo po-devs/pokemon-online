@@ -174,7 +174,7 @@ struct BMAntiSuperEffective : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
-        if (!b.hasSubstitute(s) && turn(b,t)["TypeMod"].toInt() > 4 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
+        if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 4 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
 
@@ -212,7 +212,7 @@ struct BMSuperHP : public BM
     static void uodr(int s, int t, BS &b) {
         if (b.koed(s))
             return;
-        if (turn(b,t)["TypeMod"].toInt() <= 4)
+        if (fturn(b,t).typeMod <= 4)
             return;
         if (b.poke(s).isFull())
             return;

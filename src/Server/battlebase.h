@@ -378,21 +378,27 @@ public:
         void reset() {
             flags = 0;
             damageTaken = 0;
+            typeMod = 0;
         }
 
         quint32 flags;
         quint16 damageTaken;
+        quint8 typeMod;
 
         enum Flag {
             Incapacitated = 1,
             NoChoice = 2,
             HasMoved = 4,
-            WasKoed = 8
+            WasKoed = 8,
+            Failed = 16,
+            FailingMessage = 32
         };
 
         inline void remove(Flag f) {flags &= ~f;}
         inline void add(Flag f) {flags |= f;}
         inline bool contains(Flag f) const {return (flags & f) != 0;}
+        inline bool failed() const { return contains(Failed);}
+        inline bool failingMessage() const { return contains(FailingMessage);}
     };
 
     virtual BasicPokeInfo &fpoke(int slot) = 0;

@@ -428,7 +428,10 @@ void BattleSituation::endTurn()
                 } else if (flags == SlotEffect) {
                     callseffects(player, player, effect);
                 } else if (flags == PokeEffect) {
-                    callpeffects(player, player, effect);
+                    /* Otherwise called in personal end turn */
+                    if (b.bracket == 6 && gen() >= 3) {
+                        callpeffects(player, player, effect);
+                    }
                 } else if (flags == TurnEffect) {
                     calleffects(player, player, effect);
                 } else if (flags == OwnEffect) {
@@ -553,6 +556,10 @@ void BattleSituation::personalEndTurn(int player)
     if (koed(player))
         return;
     endTurnStatus(player);
+    callpeffects(player, player, "EndTurn6.4");//leech seed
+    callpeffects(player, player, "EndTurn6.6");//nightmare
+    callpeffects(player, player, "EndTurn6.8");//curse
+    callpeffects(player, player, "EndTurn6.9");//bind
 
     testWin();
 }
@@ -1274,7 +1281,7 @@ void BattleSituation::inflictConfusedDamage(int player)
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
     tmove(player).attack = Move::NoMove;
-    turnMemory(player)["TypeMod"] = 4;
+    turnMem(player).typeMod = 4;
     turnMemory(player)["Stab"] = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
@@ -1319,9 +1326,9 @@ void BattleSituation::testFlinch(int player, int target)
 
 bool BattleSituation::testFail(int player)
 {
-    if (turnMemory(player)["Failed"].toBool() == true) {
+    if (turnMem(player).failed() == true) {
         /* Silently or not ? */
-        notify(All, Failed, player, turnMemory(player)["FailingMessage"].toBool() ? false : true);
+        notify(All, Failed, player, !turnMem(player).failingMessage());
         return true;
     }
     return false;
@@ -1599,8 +1606,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             pokeMemory(target)["MirrorMoveMemory"] = attack;
         }
 
-        turnMemory(player)["Failed"] = false;
-        turnMemory(player)["FailingMessage"] = true;
+        turnMem(player).remove(TM::Failed);
+        turnMem(player).add(TM::FailingMessage);
 
         if (target != player && !testAccuracy(player, target)) {
             calleffects(player,target,"AttackSomehowFailed");
@@ -1628,7 +1635,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             /* For charge */
             callpeffects(player, target, "BeforeCalculatingDamage");
 
-            int typemod = turnMemory(player)["TypeMod"].toInt();
+            int typemod = turnMem(player).typeMod;
             if (typemod == 0) {
                 /* If it's ineffective we just say it */
                 notify(All, Effective, target, quint8(typemod));
@@ -1645,7 +1652,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             /* Draining moves fail against substitute in gen 2 and earlier */
             if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
-                turnMemory(player)["Failed"] = true;
+                turnMem(player).add(TM::Failed);
                 testFail(player);
                 continue;
             }
@@ -1905,7 +1912,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     }
 
     turnMemory(player)["Stab"] = stab;
-    turnMemory(player)["TypeMod"] = typemod; /* is attack effective? or not? etc. */
+    turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
 }
 
 void BattleSituation::makeTargetList(const QVector<int> &base)
@@ -2682,7 +2689,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     int stab = move["Stab"].toInt();
-    int typemod = move["TypeMod"].toInt();
+    int typemod = turnMem(p).typeMod;
     int randnum;
     if (gen().num == 1) {
         randnum = randint(38) + 217;
@@ -3477,8 +3484,8 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
 
 void BattleSituation::failSilently(int player)
 {
-    turnMemory(player)["FailingMessage"] = false;
-    turnMemory(player)["Failed"] = true;
+    turnMem(player).remove(TM::FailingMessage);
+    turnMem(player).add(TM::Failed);
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)

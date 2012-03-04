@@ -1002,7 +1002,7 @@ struct AMTintedLens : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (turn(b,s)["TypeMod"].toInt() < 4) {
+        if (fturn(b,s).typeMod < 4) {
             turn(b,s)["BasePowerAbilityModifier"] = 20;
         }
     }
