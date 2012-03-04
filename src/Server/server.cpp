@@ -285,7 +285,7 @@ void Server::updateRatings()
     /* Updating ratings of the players online */
     foreach(Player *p, myplayers) {
         if (p->isLoggedIn()) {
-            p->findRating();
+            p->findRatings(true);
         }
     }
 }
@@ -705,9 +705,7 @@ void Server::tiersChanged()
     }
 
     foreach(Player *p, myplayers) {
-        if (!TierMachine::obj()->isValid(p->team(),p->tier())) {
-            p->findTierAndRating();
-        }
+        p->findTierAndRating();
     }
 }
 
@@ -1122,46 +1120,47 @@ void Server::findBattle(int id, const FindBattleData &f)
             continue;
         }
 
-        if (p1->gen() != p2->gen())
-            continue;
+        for (int i = 0; i < p1->teamCount(); i++) {
+            for (int j = 0; j < p2->teamCount(); j++) {
+                const TeamBattle &t1 = p1->team(i);
+                const TeamBattle &t2 = p2->team(j);
 
-        /* We check the tier thing */
-        if ( (f.sameTier || data->sameTier) && p1->tier() != p2->tier() )
-            continue;
+                if (t1.gen != t2.gen)
+                    continue;
 
-        /* The double battle thing */
-        if ( f.mode != data->mode) {
-            continue;
-        }
+                /* We check the tier thing */
+                if ( (f.sameTier || data->sameTier) && t1.tier != t2.tier)
+                    continue;
 
-        /* We check both allow rated if needed */
-        if (f.rated || data->rated) {
-            if (!canHaveRatedBattle(id, key, f.mode, f.rated, data->rated))
-                continue;
-        }
+                /* We check both allow rated if needed */
+                if (f.rated || data->rated) {
+                    if (!canHaveRatedBattle(id, key, t1, t2, f.rated, data->rated))
+                        continue;
+                }
 
-        /* Then the range thing */
-        if (f.ranged)
-            if (p1->rating() - f.range > p2->rating() || p1->rating() + f.range < p2->rating() )
-                continue;
-        if (data->ranged)
-            if (p1->rating() - data->range > p2->rating() || p1->rating() + data->range < p2->rating() )
-                continue;
+                /* Then the range thing */
+                if (f.ranged)
+                    if (p1->rating(t1.tier) - f.range > p2->rating(t2.tier) || p1->rating(t1.tier) + f.range < p2->rating(t2.tier) )
+                        continue;
+                if (data->ranged)
+                    if (p1->rating(t1.tier) - data->range > p2->rating(t2.tier) || p1->rating(t1.tier) + data->range < p2->rating(t2.tier) )
+                        continue;
 
-        //We have a match!
-        ChallengeInfo c;
-        c.opp = key;
-        c.rated =  f.rated || data->rated || (canHaveRatedBattle(p1->id(), p2->id(), f.mode, f.rated, data->rated));
-        c.clauses = TierMachine::obj()->tier(p1->tier()).getClauses();
+                //We have a match!
+                ChallengeInfo c;
+                c.opp = key;
+                c.rated =  f.rated || data->rated || canHaveRatedBattle(id, key, t1, t2, f.rated, data->rated);
+                c.clauses = TierMachine::obj()->tier(t1.tier).getClauses();
+                c.mode = TierMachine::obj()->tier(t1.tier).getMode();
 
-        c.mode = f.mode;
-
-        if (myengine->beforeBattleMatchup(id,key,c)) {
-            player(id)->lastFindBattleIp() = player(key)->ip();
-            player(key)->lastFindBattleIp() = player(id)->ip();
-            startBattle(id,key,c);
-            myengine->afterBattleMatchup(id,key,c);
-            return;
+                if (myengine->beforeBattleMatchup(id,key,c)) {
+                    player(id)->lastFindBattleIp() = player(key)->ip();
+                    player(key)->lastFindBattleIp() = player(id)->ip();
+                    startBattle(id,key,c);
+                    myengine->afterBattleMatchup(id,key,c);
+                    return;
+                }
+            }
         }
     }
 
@@ -1397,7 +1396,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c)
     myengine->afterBattleStarted(id1,id2,c,id);
 }
 
-bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool force2)
+bool Server::canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const TeamBattle &t2, bool force1, bool force2)
 {
     Player *p1 = player(id1);
     Player *p2 = player(id2);
@@ -1405,7 +1404,7 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
         return false;
     if (!force2 && !p2->ladder())
         return false;
-    if (p1->tier() != p2->tier())
+    if (t1.tier != t2.tier)
         return false;
     if (!allowRatedWithSameIp && p1->ip() == p2->ip())
         return false;
@@ -1417,12 +1416,6 @@ bool Server::canHaveRatedBattle(int id1, int id2, int mode, bool force1, bool fo
         if (l2.contains(p1->ip()))
             return false;
     }
-    Tier *t = &TierMachine::obj()->tier(p1->tier());
-    if (!t->allowMode(mode))
-        return false;
-    t = &TierMachine::obj()->tier(p2->tier());
-    if (!t->allowMode(mode))
-        return false;
 //    if (std::abs(p1->rating()-p2->rating()) > 300)
 //        return false;
     return true;
@@ -1459,10 +1452,8 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             QString winn = pw->name();
             QString lose = pl->name();
             TierMachine::obj()->changeRating(winn, lose, tier);
-            pw->rating() = TierMachine::obj()->rating(winn, tier);
-            pl->rating() = TierMachine::obj()->rating(lose, tier);
-            sendPlayer(winner);
-            sendPlayer(loser);
+            pw->findRating(tier);
+            pl->findRating(tier);
         }
         myengine->beforeBattleEnded(winner, loser, desc, battleid);
 

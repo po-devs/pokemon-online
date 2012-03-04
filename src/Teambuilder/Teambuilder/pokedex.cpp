@@ -1,5 +1,6 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "../Utilities/qimagebuttonlr.h"
 #include "pokemovesmodel.h"
 #include "pokedex.h"
 #include "theme.h"

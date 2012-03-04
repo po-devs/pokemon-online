@@ -37,8 +37,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
     conf.clauses = c.clauses;
     conf.mode = c.mode;
 
-    ratings[0] = p1.rating();
-    ratings[1] = p2.rating();
+    ratings[0] = p1.rating(conf.teams[0]->tier);
+    ratings[1] = p2.rating(conf.teams[1]->tier);
     winMessage[0] = p1.winningMessage();
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
@@ -68,8 +68,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         numberOfSlots() = 2;
     }
 
-    if (p1.tier() == p2.tier()) {
-        tier() = p1.tier();
+    if (team(0).tier == team(1).tier) {
+        tier() = team(0).tier;
     }
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
@@ -1601,7 +1601,7 @@ bool BattleSituation::validChoice(const BattleChoice &b)
 
         if (tier().length() > 0) {
             team(player).setIndexes(b.choice.rearrange.pokeIndexes);
-            if (!TierMachine::obj()->isValid(team(player), tier())) {
+            if (!TierMachine::obj()->isValid(team(player), tier()) && !(clauses() & ChallengeInfo::ChallengeCup)) {
                 team(player).resetIndexes();
                 return false;
             } else {

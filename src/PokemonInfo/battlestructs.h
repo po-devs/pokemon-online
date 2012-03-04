@@ -123,14 +123,15 @@ private:
 DataStream & operator >> (DataStream &in, PokeBattle &po);
 DataStream & operator << (DataStream &out, const PokeBattle &po);
 
+class PersonalTeam;
+
 class TeamBattle
 {
 public:
     TeamBattle();
     /* removes the invalid pokemons */
-    TeamBattle(TeamInfo &other);
+    TeamBattle(PersonalTeam &other);
 
-    void init(TeamInfo &other);
     void generateRandom(int gen);
 
     PokeBattle& poke(int i);
@@ -153,6 +154,7 @@ public:
 
     QString name;
     QString info;
+    QString tier;
     int gen;
 private:
     PokeBattle m_pokemons[6];
@@ -590,7 +592,6 @@ struct FindBattleData
     bool sameTier;
     bool ranged;
     quint16 range;
-    quint8 mode;
     //quint32 forcedClauses;
     //quint32 bannedClauses;
 };

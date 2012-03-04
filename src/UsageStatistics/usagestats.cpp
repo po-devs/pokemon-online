@@ -25,8 +25,8 @@ TierRank::TierRank(QString tier) : tier(tier), m(QMutex::Recursive)
     QByteArray content = f.readAll();
 
     if (content.length() > 0) {
-        QDataStream d(&content, QIODevice::ReadOnly);
-        d.setVersion(QDataStream::Qt_4_7);
+        DataStream d(&content, QIODevice::ReadOnly);
+
         d >> uses;
 
         for (int i = 0; i < uses.length(); i++) {
@@ -76,8 +76,7 @@ void TierRank::writeContents()
     QFile f("usage_stats/raw/"+tier+"/ranks.rnk");
     f.open(QIODevice::WriteOnly);
     QByteArray data;
-    QDataStream d(&data, QIODevice::WriteOnly);
-    d.setVersion(QDataStream::Qt_4_7);
+    DataStream d(&data, QIODevice::WriteOnly);
     d << uses;
 
     f.write(data);

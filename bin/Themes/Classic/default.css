@@ -14,6 +14,10 @@ TrainerMenu QLabel#avatar {
     background: #ffffff;
 }
 
+PokeEdit QFrame#pokemonFrame {
+    background: #ffffff;
+}
+
 /*\*=============================================*/
 
 Client QTextEdit {

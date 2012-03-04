@@ -2,6 +2,7 @@
 #define TRAINERMENU_H
 
 #include <QFrame>
+#include "teambuilderwidget.h"
 
 namespace Ui {
     class TrainerMenu;
@@ -9,7 +10,7 @@ namespace Ui {
 
 class TeamHolder;
 
-class TrainerMenu : public QFrame
+class TrainerMenu : public TeamBuilderWidget
 {
     Q_OBJECT
 
@@ -21,7 +22,7 @@ public:
     void updateTeam();
 signals:
     void done();
-    void teamChanged();
+    void editPoke(int);
 private slots:
     void on_close_clicked(){emit done();}
     void on_name_textEdited();

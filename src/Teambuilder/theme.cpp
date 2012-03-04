@@ -1,6 +1,7 @@
 #include "theme.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
+#include "../Utilities/qimagebuttonlr.h"
 #include <QtCore>
 #include <QFontDatabase>
 #include <QPixmapCache>

@@ -50,7 +50,11 @@ SOURCES += main.cpp \
     pokebutton.cpp \
     teamholder.cpp \
     teambuilder.cpp \
-    Teambuilder/teambuilder_old.cpp
+    Teambuilder/teambuilder_old.cpp \
+    teammenu.cpp \
+    pokeedit.cpp \
+    evbox.cpp \
+    pokelevelsettings.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     menu.h \
     mainwindow.h \
@@ -116,7 +120,12 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teamholderinterface.h \
     pokebutton.h \
     teambuilder.h \
-    Teambuilder/teambuilder_old.h
+    Teambuilder/teambuilder_old.h \
+    teammenu.h \
+    teambuilderwidget.h \
+    pokeedit.h \
+    evbox.h \
+    pokelevelsettings.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -125,7 +134,10 @@ QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 FORMS += controlpanel.ui \
     trainermenu.ui \
     pokebuttonsholder.ui \
-    pokebutton.ui
+    pokebutton.ui \
+    pokeedit.ui \
+    evbox.ui \
+    pokelevelsettings.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \

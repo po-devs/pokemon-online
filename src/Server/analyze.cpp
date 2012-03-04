@@ -195,11 +195,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case Login:
         {
             if (socket().id() != 0) {
-                TeamInfo team;
-                bool ladder, show_team;
-                QColor c;
-                in >> team >> ladder >> show_team >> c;
-                emit loggedIn(team,ladder,show_team,c);
+                LoginInfo info;
+                in >> info;
+
+                emit loggedIn(&info);
             } else
                 emit accepted(); // for registry;
 
@@ -223,9 +222,9 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         }
     case SendTeam:
         {
-            TeamInfo team;
-            in >> team;
-            emit teamReceived(team);
+//            TeamInfo team;
+//            in >> team;
+//            emit teamReceived(team);
             break;
         }
     case ChallengeStuff:
