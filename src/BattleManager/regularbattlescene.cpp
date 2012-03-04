@@ -622,7 +622,7 @@ void RegularBattleScene::updateToolTip(int spot)
 
     for (int i = 0; i < 5; i++) {
         // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
-        if (data()->gen() == 1) {
+        if (data()->gen().num == 1) {
             switch (i) {
             case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
             case 3: continue;

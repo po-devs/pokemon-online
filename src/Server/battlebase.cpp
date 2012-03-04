@@ -1491,7 +1491,7 @@ void BattleBase::koPoke(int player, int source, bool straightattack)
     }
 
     // for when to notify the ko
-    if (!attacking() || tmove(attacker()).power == 0 || gen() == 5) {
+    if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         notifyKO(player);
     }
 
@@ -1606,14 +1606,6 @@ void BattleBase::analyzeChoice(int slot)
     } else {
         /* FATAL FATAL */
     }
-}
-
-void BattleBase::useAttack(int player, int attack, bool specialOccurence, bool notify)
-{
-    (void) player;
-    (void) attack;
-    (void) specialOccurence;
-    (void) notify;
 }
 
 void BattleBase::sendBack(int player, bool silent)

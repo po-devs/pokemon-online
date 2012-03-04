@@ -415,8 +415,8 @@ struct MMLeechSeed : public MM
             return;
 
         /* In RBY and stadium 1, toxic count increases also leech seed count */
-        int numerator = b.poke(s).status() == Pokemon::Poisoned && b.poke(s).statusCount() > 0 && b.gen() == 1 ? 15-b.poke(s).statusCount() : 1;
-        int denumerator = b.gen() == 1 ? 16 : 8;
+        int numerator = b.poke(s).status() == Pokemon::Poisoned && b.poke(s).statusCount() > 0 && b.gen().num == 1 ? 15-b.poke(s).statusCount() : 1;
+        int denumerator = b.gen().num == 1 ? 16 : 8;
         int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() * numerator / denumerator, 1));
 
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
@@ -596,12 +596,12 @@ struct MMRoar : public MM
     }
 
     static bool testPhazing(int s, int t, BS &b, bool verbose) {
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             turn(b,s)["Failed"] = true;
             return false;
         }
 
-        if (b.gen() == 2 && !b.hasMoved(t)) {
+        if (b.gen().num == 2 && !b.hasMoved(t)) {
             turn(b,s)["Failed"] = true;
             return false;
         }
@@ -1022,7 +1022,7 @@ struct MMTaunt : public MM
 
             if (b.gen() <= 3) {
                 b.counters(t).addCounter(BC::Taunt, 1);
-            } else if (b.gen() == 4) {
+            } else if (b.gen().num == 4) {
                 b.counters(t).addCounter(BC::Taunt, 2 + (b.randint(3)));
             } else {
                 b.counters(t).addCounter(BC::Taunt, 2);
@@ -1265,7 +1265,7 @@ struct MMHealingWish : public MM
         if (!turn(b,s).contains("HealingWishSuccess"))
             return;
         /* In gen 5, it triggers before entry hazards */
-        addFunction(turn(b,s), b.gen() == 4 ? "AfterSwitchIn" : "UponSwitchIn", "HealingWish", &asi);
+        addFunction(turn(b,s), b.gen().num == 4 ? "AfterSwitchIn" : "UponSwitchIn", "HealingWish", &asi);
 
         /* On gen 5 and further, the pokemon is switched at the end of the turn! */
         if (b.gen() <= 4)
@@ -1374,7 +1374,7 @@ struct MMJumpKick : public MM
         int damage;
         if (b.gen() >= 5)
             damage = b.poke(s).totalLifePoints()/2;
-        else if (b.gen() == 1)
+        else if (b.gen().num == 1)
             damage = 1;
         else {
             int typemod;
@@ -1393,7 +1393,7 @@ struct MMJumpKick : public MM
             }
             turn(b,s)["TypeMod"] = typemod;
             turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
-            if (b.gen() == 4)
+            if (b.gen().num == 4)
                 damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
             else
                 damage = std::min(b.calculateDamage(s,t)/8, b.poke(t).totalLifePoints()/2);
@@ -1611,7 +1611,7 @@ struct MMTeamBarrier : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.gen() == 1) { MMTeamBarrier::daf1(s,s,b); return; }
+        if (b.gen().num == 1) { MMTeamBarrier::daf1(s,s,b); return; }
 
         int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
         int source = b.player(s);
@@ -1626,7 +1626,7 @@ struct MMTeamBarrier : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen() == 1) { MMTeamBarrier::uas1(s,s,b); return; }
+        if (b.gen().num == 1) { MMTeamBarrier::uas1(s,s,b); return; }
 
         int source = b.player(s);
 
@@ -1930,7 +1930,7 @@ struct MMMimic : public MM
 
     static void daf(int s, int t, BS &b) {
         /* Mimic doesn't fail in Gen 1 */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             return;
         }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
@@ -1952,7 +1952,7 @@ struct MMMimic : public MM
     static void uas(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Mimic copies a random move in Gen 1 */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             move = 0;
             while (move == 0) {
                 move = b.move(t, b.randint(4));
@@ -2280,7 +2280,7 @@ struct MMRage : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() == 2) {
+        if (b.gen().num == 2) {
             tmove(b,s).power *= 1 + poke(b,s).value("RagePower").toInt();
         }
     }
@@ -2296,7 +2296,7 @@ struct MMRage : public MM
         poke(b,s).remove("RageBuilt");
 
         // In Gen 1 we are locked into Rage
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             addFunction(poke(b,s), "TurnSettings", "Rage", &ts);
             poke(b,s)["RageMissed"] = false;
         }
@@ -2327,7 +2327,7 @@ struct MMRage : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.gen() == 1 && poke(b,s)["RageMissed"].toBool()) {
+        if (b.gen().num == 1 && poke(b,s)["RageMissed"].toBool()) {
             if (b.coinflip(1,256)) {
                 tmove(b, s).accuracy = 0;
             } else {
@@ -2337,7 +2337,7 @@ struct MMRage : public MM
     }
 
     static void asf(int s, int, BS &b) {
-       if (b.gen() == 1) {
+       if (b.gen().num == 1) {
            poke(b,s)["RageMissed"] = true;
        }
     }
@@ -2578,9 +2578,9 @@ struct MMSpite : public MM
         int slot = poke(b,t)["MoveSlot"].toInt();
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
-        else if (b.gen() == 3)
+        else if (b.gen().num == 3)
             b.losePP(t, slot, 2 + b.randint(4) );
-        else if (b.gen() == 2)
+        else if (b.gen().num == 2)
             b.losePP(t, slot, 1 + b.randint(5) );
 
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
@@ -2845,9 +2845,9 @@ struct MMNaturePower : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
 
         int move;
-        if (b.gen() == 3) {
+        if (b.gen().num == 3) {
             move = Swift;
-        } else if (b.gen() == 4) {
+        } else if (b.gen().num == 4) {
             move = TriAttack;
         } else {
             move = Earthquake;
@@ -3210,7 +3210,7 @@ struct MMTransform : public MM {
         Pokemon::uniqueId num = b.pokenum(t);
 
         /* In Pokemon Stadium Ditto can't transform into an opposing Ditto */
-        if (b.gen() == 1 && num.toPokeRef() == Pokemon::Ditto) {
+        if (b.gen().num == 1 && num.toPokeRef() == Pokemon::Ditto) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -4190,7 +4190,7 @@ struct MMTriAttack : public MM
         if (b.hasWorkingAbility(s, Ability::Encourage))
             return;
         // In Gen 1 Tri Attack has no secondary effects
-        if (b.gen() == 1)
+        if (b.gen().num == 1)
             return;
 
         bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();

@@ -19,6 +19,7 @@ protected:
     BattleChoices createChoice(int slot);
     void analyzeChoices();
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
+    void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
 
     void personalEndTurn(int player);
 private:

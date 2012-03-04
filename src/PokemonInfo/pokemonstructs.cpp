@@ -203,7 +203,7 @@ void PokePersonal::runCheck()
             ability() = ab.ab(0);
     }
 
-    if (gen() == 2)
+    if (gen().num == 2)
         controlGender();
 
     if (!ItemInfo::Exists(item(), gen())) {
@@ -220,7 +220,7 @@ void PokePersonal::runCheck()
         }
     }
 
-    if (gen() == 2) {
+    if (gen().num == 2) {
         setEV(SpDefense, EV(SpAttack));
         setDV(SpDefense, DV(SpAttack));
     }
@@ -299,7 +299,7 @@ void PokePersonal::setEV(int stat, quint8 val)
         val = 100;
     }
 
-    if (gen() == 2 && (stat == SpAttack || stat == SpDefense)) {
+    if (gen().num == 2 && (stat == SpAttack || stat == SpDefense)) {
         m_EVs[SpAttack] = val;
         m_EVs[SpDefense] = val;
     } else {
@@ -316,7 +316,7 @@ quint8 PokePersonal::DV(int stat) const
 
 void PokePersonal::setDV(int stat, quint8 val)
 {
-    if (gen() == 2 && (stat == SpAttack || stat == SpDefense)) {
+    if (gen().num == 2 && (stat == SpAttack || stat == SpDefense)) {
         m_DVs[SpAttack] = val;
         m_DVs[SpDefense] = val;
     } else {
@@ -325,7 +325,7 @@ void PokePersonal::setDV(int stat, quint8 val)
 
     if (gen() <= 2) {
         controlHPDV();
-        if (gen() == 2) {
+        if (gen().num == 2) {
             controlShininess();
             if (stat == Attack)
                 controlGender();
@@ -727,7 +727,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version)
     int num = poke.attribute("Num").toInt();
     int forme = poke.attribute("Forme").toInt();
 
-    if (gen() == 4 && num > 493 && forme == 0 && !PokemonInfo::Exists(Pokemon::uniqueId(num, 0), 4)) {
+    if (gen().num == 4 && num > 493 && forme == 0 && !PokemonInfo::Exists(Pokemon::uniqueId(num, 0), 4)) {
         //Old way
         int indexes[] = {
             479,479,479,479,479,386,386,386,413,413,492,487
