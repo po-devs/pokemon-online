@@ -2,6 +2,7 @@
 #include "../Shared/battlecommands.h"
 
 using namespace BattleCommands;
+typedef BattleBase::TurnMemory TM;
 
 BattleRBY::BattleRBY(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p)
 {
@@ -278,8 +279,168 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
 
 void BattleRBY::useAttack(int player, int attack, bool specialOccurence, bool notify)
 {
-    (void) player;
-    (void) attack;
-    (void) specialOccurence;
-    (void) notify;
+    int oldAttacker = attacker();
+    int oldAttacked = attacked();
+
+    heatOfAttack() = true;
+
+    attacker() = player;
+
+    int attack;
+
+    if (specialOccurence) {
+        attack = move;
+    } else {
+        attack = this->move(player,move);
+        //pokeMemory(player)["MoveSlot"] = move;
+    }
+
+    turnMem(player).add(TurnMemory::HasMoved);
+
+    if (!testStatus(player)) {
+        goto trueend;
+    }
+
+
+    //turnMemory(player)["HasPassedStatus"] = true;
+    //turnMemory(player)["MoveChosen"] = attack;
+
+    fpoke(player).lastMoveUsed = attack;
+
+    notify(All, UseAttack, player, qint16(attack), !tellPlayers);
+
+    int target = opponent(player);
+
+    if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
+        losePP(player, move, 1);
+    }
+
+    foreach(int target, targetList) {
+        heatOfAttack() = true;
+        attacked() = target;
+        if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
+            //pokeMemory(target)["MirrorMoveMemory"] = attack;
+        }
+
+        turnMem(player).remove(TM::Failed);
+        turnMem(player).add(TM::FailingMessage);
+
+        if (target != player && !testAccuracy(player, target)) {
+            continue;
+        }
+        //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
+        /* Protect, ... */
+
+        if (tmove(player).power > 0)
+        {
+            calculateTypeModStab();
+
+            int typemod = turnMem(player).typeMod;
+            if (typemod == 0) {
+                /* If it's ineffective we just say it */
+                notify(All, Effective, target, quint8(typemod));
+                continue;
+            }
+
+            /* Draining moves fail against substitute in gen 2 and earlier */
+            if (hasSubstitute(target) && tmove(player).healing > 0) {
+                turnMem(player).add(TM::Failed);
+                testFail(player);
+                continue;
+            }
+
+            int num = repeatNum(player);
+            bool hit = num > 1;
+
+            testCritical(player, target);
+            int damage = calculateDamage(player, target);
+
+            int hitcount = 0;
+            bool hitting = false;
+            for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
+                heatOfAttack() = true;
+                fpoke(target).remove(BasicPokeInfo::HadSubstitute);
+                bool sub = hasSubstitute(target);
+                if (sub) {
+                    fpoke(target).add(BasicPokeInfo::HadSubstitute);
+                }
+
+                if (tmove(player).power > 1 && repeatCount() == 0) {
+                    notify(All, Effective, target, quint8(typemod));
+                }
+
+                inflictDamage(target, damage, player, true);
+                hitcount += 1;
+                hitting = true;
+
+                healDamage(player, target);
+
+                heatOfAttack() = false;
+
+                /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
+                applyMoveStatMods(player, target);
+
+                if (!sub && !koed(target)) testFlinch(player, target);
+
+                attackCount() += 1;
+            }
+
+            if (hit) {
+                notifyHits(player, hitcount);
+            }
+
+            if (koed(target))
+            {
+                notifyKO(target);
+            }
+
+            fpoke(target).remove(BasicPokeInfo::HadSubstitute);
+        } else {
+
+            /* Needs to be called before opponentblock because lightning rod / twave */
+            int type = tmove(player).type; /* move type */
+
+            if ( target != player &&
+                    ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
+                     ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
+                      && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0))) {
+                notify(All, Failed, player);
+                continue;
+            }
+
+            /* Fail test for leech seed / dream eater */
+
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
+                sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+                continue;
+            }
+
+            applyMoveStatMods(player, target);
+
+            /* Side change may switch player & target */
+            if (attacker() != player) {
+                player = attacker();
+                target = attacked();
+            }
+
+            healDamage(player, target);
+        }
+
+        if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
+            unthaw(target);
+        }
+
+        //pokeMemory(target)["LastAttackToHit"] = attack;
+    }
+
+    heatOfAttack() = false;
+
+    trueend:
+
+    if (koed(player) && tmove(player).power > 0) {
+        notifyKO(player);
+    }
+
+    attacker() = oldAttacker;
+    attacked() = oldAttacked;
 }

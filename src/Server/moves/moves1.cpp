@@ -17,7 +17,7 @@ Q_DECLARE_METATYPE(QList<int>)
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
-    *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
+    *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
     *DetermineGeneralAttackFailure -- battle: this is a battlefield effect, same as above
     *EndTurn -- poke: Called at the end of the turn
     *UponOffensiveDamageReceived -- turn: when the player received damage (not the substitute) from an attack
@@ -49,7 +49,7 @@ struct MMAquaRing : public MM
 
     static void daf(int s, int, BS &b) {
         if (poke(b,s).contains("AquaRinged"))
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
@@ -94,7 +94,7 @@ struct MMBatonPass : public MM
 
     static void daf(int s, int, BS &b) {
         if (b.countBackUp(b.player(s)) == 0) {
-            turn(b,s)["Failed"] =true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -302,7 +302,7 @@ struct MMConversion : public MM
                 break;
             }
             if (i == 3) {
-                turn(b, s)["Failed"] = true;
+                fturn(b, s).add(TM::Failed);
                 return;
             }
         }
@@ -323,7 +323,7 @@ struct MMConversion : public MM
                 }
             }
             if (poss.size() == 0) {
-                turn(b, s)["Failed"] = true;
+                fturn(b, s).add(TM::Failed);
             } else {
                 turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
             }
@@ -358,14 +358,14 @@ struct MMConversion2 : public MM
         if (b.gen() <= 4) {
             if (!poke(b,s).contains("LastAttackToHit"))
             {
-                turn(b,s)["Failed"] = true;
+                fturn(b,s).add(TM::Failed);
                 return;
             }
 
             attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
         } else {
             if (fpoke(b,t).lastMoveUsed == 0) {
-                turn(b,s)["Failed"] = true;
+                fturn(b,s).add(TM::Failed);
                 return;
             }
 
@@ -373,7 +373,7 @@ struct MMConversion2 : public MM
         }
 
         if (attackType == Type::Curse) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
 
@@ -385,7 +385,7 @@ struct MMConversion2 : public MM
             }
         }
         if (poss.size() == 0) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         } else {
             turn(b,s)["Conversion2Type"] = poss[b.randint(poss.size())];
         }
@@ -420,7 +420,7 @@ struct MMCurse : public MM
 
     static void daf(int s, int t, BS &b) {
         if (turn(b,s).value("CurseGhost").toBool() && poke(b,t).value("Cursed").toBool()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -503,13 +503,13 @@ struct MMDetect : public MM
         }
 
         if (fail) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
 
         if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
             if (!testSuccess(poke(b,s)["ProtectiveMoveCount"].toInt(), b)) {
-                turn(b,s)["Failed"] = true;
+                fturn(b,s).add(TM::Failed);
             } else {
                 poke(b,s)["ProtectiveMoveTurn"] = b.turn();
                 inc(poke(b,s)["ProtectiveMoveCount"]);
@@ -599,7 +599,7 @@ struct MMFakeOut : public MM
 
     static void daf(int s, int, BS &b) {
         if (poke(b,s).value("HasMovedOnce").toInt() < b.turn()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 };
@@ -651,7 +651,7 @@ struct MMFeint : public MM
         if (turn(b, t)["DetectUsed"].toBool() == true) {
             turn(b, t)["DetectUsed"] = false;
         } else if (b.gen() <= 4){
-            turn(b, s)["Failed"] = true;
+            fturn(b, s).add(TM::Failed);
         }
     }
 };
@@ -676,7 +676,7 @@ struct MMOHKO : public MM
 
     static void daf(int s, int t, BS &b) {
         if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen().num == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         if (b.hasWorkingAbility(t, Ability::Sturdy)) {
@@ -740,10 +740,10 @@ struct MMBellyDrum : public MM
             }
         } else if (move(b,s) == Move::BellyDrum) {
             if (b.hasMaximalStatMod(s, Attack)) {
-                turn(b,s)["Failed"] = true;
+                fturn(b,s).add(TM::Failed);
             } else if (b.gen() <= 2) {
                 if (b.getStat(s, Attack) == 999) {
-                    turn(b,s)["Failed"] = true;
+                    fturn(b,s).add(TM::Failed);
                 }
             }
         }
@@ -792,7 +792,7 @@ struct MMBlock : public MM
 
     static void daf (int s, int t, BS &b) {
         if (b.linked(t, "Blocked"))
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
     }
 
     static void uas (int s, int t, BS &b) {
@@ -874,7 +874,7 @@ struct MMCopycat : public MM
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
         if (move == 0 || move == Copycat) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -947,7 +947,7 @@ struct MMAssist : public MM
         if (!possible_moves.empty()) {
             turn(b,s)["AssistMove"] = *(possible_moves.begin() + (b.randint(possible_moves.size())));
         } else {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 };
@@ -974,7 +974,7 @@ struct MMBide : public MM
 
     static void daf(int s, int, BS &b) {
         if (poke(b,s)["BideDamageCount"].toInt() == 0) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1089,7 +1089,7 @@ struct MMBounce : public MM
     static void daf(int s, int t, BS &b) {
         if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
             b.notify(All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1300,7 +1300,7 @@ struct MMCounter : public MM
 
     static void daf (int s, int, BS &b) {
         if (!turn(b,s).contains("CounterDamage")) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1325,7 +1325,7 @@ struct MMDoomDesire : public MM
 
     static void daf(int s, int t, BS &b) {
         if (slot(b,t).contains("DoomDesireTurn") && slot(b,t)["DoomDesireTurn"].toInt() >= b.turn()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1376,7 +1376,7 @@ struct MMDoomDesire : public MM
 
                     b.calculateTypeModStab(s, s);
 
-                    int typemod = turn(b,s)["TypeMod"].toInt();
+                    int typemod = fturn(b,s).typeMod;
                     if (typemod == 0) {
                         /* If it's ineffective we just say it */
                         b.notify(All, BattleCommands::Effective, s, quint8(typemod));
@@ -1415,9 +1415,9 @@ struct MMEmbargo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.ability(t) == Ability::Multitype)
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1464,27 +1464,27 @@ struct MMEncore : public MM
     {
         if (b.counters(t).hasCounter(BC::Encore))
         {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
         if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         if (fturn(b,t).contains(TM::NoChoice)) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         int move = poke(b,t)["LastMoveUsed"].toInt();
         bool cont = forbidden_moves.contains(move);
 
         if (cont) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
         int sl = -1;
@@ -1494,7 +1494,7 @@ struct MMEncore : public MM
             }
         }
         if (sl == -1 || b.PP(t,sl) == 0 ) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
     }
@@ -1576,7 +1576,7 @@ struct MMEndeavor : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.poke(s).lifePoints() >= b.poke(t).lifePoints()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
             return;
         }
     }
@@ -1690,7 +1690,7 @@ struct MMBeatUp : public MM {
                 return;
             }
         }
-        turn(b,s)["Failed"] = true;
+        fturn(b,s).add(TM::Failed);
     }
 
     static void cad(int s, int t, BS &b) {
@@ -1780,7 +1780,7 @@ struct MMFling : public MM
 
     static void daf(int s, int, BS &b) {
         if (!turn(b,s).contains("FlingItem")) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -1875,7 +1875,7 @@ struct MMGravity : public MM
 
     static void daf(int s, int, BS &b) {
         if (b.battleMemory().value("Gravity").toBool()) {
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -2126,7 +2126,7 @@ struct MMFastGuard : public MM
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
-    *DetermineAttackFailure -- turn, poke: set turn()["Failed"] to true to make the attack fail
+    *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
     *DetermineGeneralAttackFailure -- battle: this is a battlefield effect, same as above
     *EndTurn -- poke, battle: Called at the end of the turn
     *UponOffensiveDamageReceived -- turn: when the player received damage (not the substitute) from an attack
