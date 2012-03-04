@@ -10,10 +10,7 @@ class PlayerInterface
 {
 public:
     virtual ~PlayerInterface(){}
-    virtual const int& rating() const = 0;
-    virtual const bool& ladder() const = 0;
-    virtual const bool &showteam() const = 0;
-    virtual const QString &tier() const = 0;
+    virtual bool ladder() const = 0;
     virtual const quint16 &avatar() const = 0;
     virtual const QColor &color() const = 0;
     virtual const bool &battleSearch() const = 0;

@@ -221,4 +221,13 @@ Q_OUTOFLINE_TEMPLATE DataStream &operator<<(DataStream &out, const QHash<Key, T>
     return out;
 }
 
+inline DataStream &operator>>(DataStream &in, QStringList &list)
+{
+    return operator>>(in, static_cast<QList<QString> &>(list));
+}
+inline DataStream &operator<<(DataStream &out, const QStringList &list)
+{
+    return operator<<(out, static_cast<const QList<QString> &>(list));
+}
+
 #endif // CORECLASSES_H

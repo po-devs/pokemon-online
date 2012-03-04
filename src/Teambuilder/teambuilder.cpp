@@ -3,14 +3,17 @@
 #include "trainermenu.h"
 #include "teamholder.h"
 #include "mainwindow.h"
+#include "teammenu.h"
 
-TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team)
+TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
 {
     addWidget(trainer = new TrainerMenu(team));
 
     loadSettings(this, defaultSize());
 
+    connect(trainer, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
     connect(trainer, SIGNAL(done()), SIGNAL(done()));
+    connect(trainer, SIGNAL(editPoke(int)), SLOT(editPoke(int)));
 }
 
 TeamBuilder::~TeamBuilder()
@@ -45,11 +48,70 @@ void TeamBuilder::saveAll()
 void TeamBuilder::loadAll()
 {
     team().load();
-    trainer->updateAll();
+    markAllUpdated();
+    currentWidget()->updateAll();
 }
 
 void TeamBuilder::newTeam()
 {
     team() = TeamHolder();
-    trainer->updateAll();
+    markTeamUpdated();
+    currentWidget()->updateTeam();
+}
+
+void TeamBuilder::markAllUpdated()
+{
+    for (int i = 0; i < count(); i++) {
+        if (i != currentIndex()) {
+            widget(i)->setProperty("all-to-update", true);
+        }
+    }
+}
+
+void TeamBuilder::markTeamUpdated()
+{
+    for (int i = 0; i < count(); i++) {
+        if (i != currentIndex()) {
+            widget(i)->setProperty("team-to-update", true);
+        }
+    }
+}
+
+void TeamBuilder::editPoke(int index)
+{
+    if (!teamMenu) {
+        addWidget(teamMenu = new TeamMenu(&team(), index));
+        connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
+        connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
+    }
+
+    switchTo(teamMenu);
+}
+
+void TeamBuilder::switchToTrainer()
+{
+    switchTo(trainer);
+}
+
+TeamBuilderWidget *TeamBuilder::currentWidget()
+{
+    return (TeamBuilderWidget*)(QStackedWidget::currentWidget());
+}
+
+TeamBuilderWidget *TeamBuilder::widget(int i)
+{
+    return (TeamBuilderWidget*)(QStackedWidget::widget(i));
+}
+
+void TeamBuilder::switchTo(TeamBuilderWidget *w)
+{
+    if (w->property("all-to-update").toBool()) {
+        w->updateAll();
+        w->setProperty("all-to-update", false);
+        w->setProperty("team-to-update", false);
+    } else if (w->property("team-to-update").toBool()) {
+        w->updateTeam();
+        w->setProperty("team-to-update", false);
+    }
+    setCurrentWidget(w);
 }

@@ -20,14 +20,25 @@ class Profile : public ProfileInterace
 class TeamHolder : public TeamHolderInterface
 {
     PROPERTY(Profile, profile);
-    PROPERTY(Team, team);
+
+    TeamHolder();
 
     TrainerInfo &info() {return profile().info();}
     QString &name() { return profile().name();}
     QColor &color() { return profile().color();}
 
+    Team &team();
+    const Team &team() const;
+    Team &team(int index);
+    const Team &team(int index) const;
+    int currentTeam() const {return m_currentTeam;}
+    int count() const;
+
     void save();
     void load();
+private:
+    QList<Team> m_teams;
+    int m_currentTeam;
 };
 
 #endif // TEAMHOLDER_H

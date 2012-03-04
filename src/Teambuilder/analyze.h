@@ -33,7 +33,7 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const TeamHolder &team, bool ladder, bool showTeam, const QColor &color);
+    void login(const TeamHolder &team, bool ladder, const QColor &color);
     void sendMessage(const QString &message);
     void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);

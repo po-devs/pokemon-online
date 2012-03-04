@@ -13,7 +13,7 @@
 #include <iostream>
 #include <signal.h>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <execinfo.h>
 #endif
 #include "server.h"
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
     Server * myserver;
     myserver = new Server(serverPorts);
 
-#ifndef WIN32
+#ifndef _WIN32
     /* Occurs on some specific platform, so ignoring it ;_; */
     signal(SIGPIPE, SIG_IGN);
 #endif
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 void stacktrace() 
 { 
     cout << "----------------------------------------------" << endl;

@@ -360,13 +360,12 @@ TeamBattle::TeamBattle() : gen(GEN_MAX)
     }
 }
 
-TeamBattle::TeamBattle(TeamInfo &other)
+TeamBattle::TeamBattle(PersonalTeam &other)
 {
     resetIndexes();
 
-    name = other.name;
-    info = other.info;
-    gen = other.gen;
+    gen = other.gen();
+    tier = other.defaultTier();
 
     if (gen < GEN_MIN || gen > GEN_MAX) {
         gen = GEN_MAX;
@@ -374,7 +373,7 @@ TeamBattle::TeamBattle(TeamInfo &other)
 
     int curs = 0;
     for (int i = 0; i < 6; i++) {
-        poke(curs).init(other.pokemon(i));
+        poke(curs).init(other.poke(i));
         if (poke(curs).num() != 0) {
             ++curs;
         }
@@ -855,7 +854,7 @@ DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
     quint32 flags;
 
-    in >> flags >> f.range >> f.mode;
+    in >> flags >> f.range;
 
     f.rated = flags & 0x01;
     f.sameTier = f.rated || flags & 0x2;
@@ -875,7 +874,7 @@ DataStream & operator << (DataStream &out, const FindBattleData &f)
     flags |= f.sameTier << 1;
     flags |= f.ranged << 2;
 
-    out << flags << f.range << f.mode;
+    out << flags << f.range;
 
     return out;
 }

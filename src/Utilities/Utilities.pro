@@ -9,14 +9,16 @@ SOURCES += otherwidgets.cpp \
     CrossDynamicLib.cpp \
     contextswitch.cpp \
     coro.c \
-    coreclasses.cpp
+    coreclasses.cpp \
+    qimagebuttonlr.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
     CrossDynamicLib.h \
     coro.h \
     contextswitch.h \
-    coreclasses.h
+    coreclasses.h \
+    qimagebuttonlr.h
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

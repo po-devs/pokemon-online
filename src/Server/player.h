@@ -5,6 +5,7 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
 #include "sfmlsocket.h"
+#include "playerstructs.h"
 
 class Challenge;
 class BattleSituation;
@@ -20,35 +21,40 @@ class Player : public QObject, public PlayerInterface
 {
     Q_OBJECT
 
-    PROPERTY(int, rating);
-    PROPERTY(bool, ladder);
-    PROPERTY(bool, showteam);
-    PROPERTY(QString, tier);
-    PROPERTY(quint16, avatar);
-    PROPERTY(QString, defaultTier);
+    PROPERTY(QString, name);
     PROPERTY(QColor, color);
     PROPERTY(bool, battleSearch);
-    PROPERTY(QString, winningMessage);
-    PROPERTY(QString, losingMessage);
+    PROPERTY(TrainerInfo, info);
     PROPERTY(QString, lastFindBattleIp);
+    PROPERTY(Flags, spec);
+    PROPERTY(Flags, state);
 public:
+    enum State
+    {
+        LoginAttempt,
+        LoggedIn,
+        Battling,
+        Away,
+        LadderEnabled
+    };
+
+    enum Spec
+    {
+        SupportsZipCompression,
+        IdsWithMessage
+    };
 
     QSet<int> battlesSpectated;
 
-    enum State
-    {
-        NotLoggedIn=0,
-        LoggedIn=1,
-        Battling=2,
-        Away = 4,
-    };
-
+    bool ladder() const;
     Player(const GenericSocket &sock, int id);
     ~Player();
 
     /* returns all the regular info */
     TeamBattle &team();
     const TeamBattle &team() const;
+    TeamBattle &team(int);
+    const TeamBattle &team(int) const;
     /* Converts the content of the TeamInfo to a basicInfo and returns it */
     BasicInfo basicInfo() const;
 
@@ -59,15 +65,22 @@ public:
     bool hasSentCommand(int commandid) const;
 
     int id() const;
-    QString name() const;
     QString ip() const;
     QString proxyIp() const;
     int gen() const;
+    int teamCount() const;
+    int rating(const QString &tier);
 
+    virtual const quint16& avatar() const;
+    quint16 &avatar();
+    const QString &winningMessage() const;
+    const QString &losingMessage() const;
+
+    bool hasTier(const QString &tier) const;
     bool connected() const;
     bool isLoggedIn() const;
     bool battling() const;
-    bool supportsZip() const; //TODO: update with real value instead of always true
+    bool supportsZip() const;
     void acquireKnowledgeOf(Player *other);
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);
@@ -81,7 +94,6 @@ public:
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
     void changeState(int newstate, bool on);
-    int state() const;
     int auth() const;
     void setAuth (int newAuth);
     void setName (const QString & newName);
@@ -121,7 +133,9 @@ public:
     void unlock();
     bool isLocked() const;
     void findTierAndRating();
-    void findRating();
+    void findTier(int slot);
+    void findRatings(bool force = false);
+    void findRating(const QString &tier);
 
     void executeTierChange(const QString&);
     void executeAwayChange(bool away);
@@ -151,7 +165,7 @@ signals:
     void leaveRequested(int id, int channelid);
     void ipChangeRequested(int id, const QString &ip);
 public slots:
-    void loggedIn(TeamInfo &team,bool,bool, QColor);
+    void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
     void recvTeam(TeamInfo &team);
@@ -175,7 +189,6 @@ public slots:
     void spectatingChat(int id, const QString &chat);
     void quitSpectating(int id);
     void ladderChange(bool);
-    void showTeamChange(bool);
     void changeTier(const QString&);
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
@@ -189,7 +202,6 @@ public slots:
     void ipChangeRequested(const QString &ip);
     void autoKick();
 private:
-    TeamBattle myteam;
     Analyzer *myrelay;
     int lockCount;
 
@@ -201,11 +213,12 @@ private:
     mutable int lastcommand;
     bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
 
-    int m_state;
-    TeamInfo *waiting_team;
-    QString waiting_name;
+    TeamsHolder m_teams;
+    QString waiting_name, waiting_pass;
 
     QSet<int> battles;
+    QSet<QString> tiers;
+    QHash<QString, int> m_ratings;
     QSet<Challenge*> challenged;
     QSet<Challenge*> challengedBy;
 
@@ -244,14 +257,13 @@ private:
     /* The channels a player is on */
     QSet<int> channels;
 
-    void assignTeam(TeamInfo &team);
     void assignNewColor(const QColor &c);
     bool testNameValidity(const QString &name);
     void loginSuccess();
-    void changeWaitingTeam(const TeamInfo &t);
-    void removeWaitingTeam();
     /* only call when sure there is one battle */
     int firstBattleId();
+    /* called when all ratings are found */
+    void ratingsFound();
 
     void testAuthentification(const QString &name);
 };

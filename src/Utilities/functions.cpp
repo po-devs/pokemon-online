@@ -107,16 +107,7 @@ void cropImage(QImage &p)
 
 QString appDataPath(const QString &subfolder, bool createFolder)
 {
-#if defined(Q_OS_MAC)
-    QString path = QDir::homePath() + "/Library/Application Support/Pokemon Online/" + subfolder;
-#elif defined(Q_OS_LINUX)
-    QString path = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
-              + "/Dreambelievers/Pokemon Online/"+subfolder;
-#elif defined(Q_OS_WIN32)
-    QString path = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath()) + "/Pokemon Online/" + subfolder;
-#else
-    QString path = "AppData/"+subfolder;
-#endif
+    QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/" + subfolder;
 
     if (createFolder) {
         QDir d;
