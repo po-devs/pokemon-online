@@ -26,8 +26,6 @@ public:
     BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
     ~BattleSituation();
 
-    bool wasKoed(int player) const;
-
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player);
     bool isMovePossible(int player, int slot);
@@ -81,7 +79,6 @@ public:
     void unthaw(int player);
     void healStatus(int player, int status);
     void healConfused(int player);
-    void healLife(int player, int healing);
     void healDamage(int player, int target);
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
@@ -170,19 +167,6 @@ public:
 	Sunny = 4
     };
 
-    enum StatusFeeling
-    {
-	FeelConfusion,
-	HurtConfusion,
-	FreeConfusion,
-	PrevParalysed,
-	PrevFrozen,
-	FreeFrozen,
-	FeelAsleep,
-	FreeAsleep,
-	HurtBurn,
-	HurtPoison
-    };
 private:
     virtual void notifySituation(int dest);
 
@@ -205,8 +189,6 @@ public:
     void callaeffects(int source, int target, const QString &name);
 
 public:
-    /* The players ordered by speed are stored there */
-    std::vector<int> speedsVector;
     unsigned int currentSlot;
 
     bool applyingMoveStatMods;
@@ -372,6 +354,10 @@ public:
 
     const context &turnMemory(int slot) const {
         return getContext(slot).turnlong;
+    }
+
+    const TurnMemory &turnMem(int slot) const {
+        return getContext(slot).turnhard;
     }
 
     const context &pokeMemory(int slot) const {

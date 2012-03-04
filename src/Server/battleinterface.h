@@ -249,19 +249,19 @@ public:
 //        Sunny = 4
 //    };
 
-//    enum StatusFeeling
-//    {
-//        FeelConfusion,
-//        HurtConfusion,
-//        FreeConfusion,
-//        PrevParalysed,
-//        PrevFrozen,
-//        FreeFrozen,
-//        FeelAsleep,
-//        FreeAsleep,
-//        HurtBurn,
-//        HurtPoison
-//    };
+    enum StatusFeeling
+    {
+        FeelConfusion,
+        HurtConfusion,
+        FreeConfusion,
+        PrevParalysed,
+        PrevFrozen,
+        FreeFrozen,
+        FeelAsleep,
+        FreeAsleep,
+        HurtBurn,
+        HurtPoison
+    };
 
 //    virtual void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="") = 0;
 //    virtual void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1) = 0;

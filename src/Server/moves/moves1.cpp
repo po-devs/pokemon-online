@@ -135,6 +135,7 @@ struct MMBatonPass : public MM
         }
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
         turn(b,s)["BatonPassFlags"] = fpoke(b,s).flags & BS::BasicPokeInfo::Substitute;
+        turn(b,s)["BatonPassLife"] = fpoke(b,s).substituteLife;
 
         /* choice band etc. would force the same move
             if on both the passed & the passer */
@@ -160,6 +161,7 @@ struct MMBatonPass : public MM
         }
 
         fpoke(b, s).flags |= turn(b,s)["BatonPassFlags"].toInt();
+        fpoke(b, s).substituteLife = turn(b,s)["BatonPassLife"].toInt();
 
         if (b.gen() <= 4) {
             //and we decrease the switch count associated, so mean look & co still work
@@ -362,12 +364,12 @@ struct MMConversion2 : public MM
 
             attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
         } else {
-            if (!poke(b,t).contains("LastSpecialMoveUsed")) {
+            if (fpoke(b,t).lastMoveUsed == 0) {
                 turn(b,s)["Failed"] = true;
                 return;
             }
 
-            attackType = MoveInfo::Type(poke(b,t)["LastSpecialMoveUsed"].toInt(), b.gen());
+            attackType = MoveInfo::Type(fpoke(b,t).lastMoveUsed, b.gen());
         }
 
         if (attackType == Type::Curse) {
@@ -808,7 +810,7 @@ struct MMFocusPunch : public MM
 
     static void daf(int s, int, BS &b)
     {
-        if (turn(b,s).contains("DamageTakenByAttack")) {
+        if (turn(b,s).contains("DamageTakenBy")) {
             b.fail(s,47,0,Pokemon::Fighting);
         }
     }
@@ -1273,11 +1275,11 @@ struct MMCounter : public MM
             return;
         }
 
-        if (turn(b, s).value("DamageTakenByAttack").toInt() <= 0) {
+        if (fturn(b, s).damageTaken <= 0) {
             return;
         }
 
-        turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+        turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
         turn(b,s)["CounterTarget"] = source;
     }
 
@@ -1287,8 +1289,8 @@ struct MMCounter : public MM
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && turn(b, s).value("DamageTakenByAttack").toInt() > 0) {
-                turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+                    && fturn(b, s).damageTaken > 0) {
+                turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
                 turn(b,s)["CounterTarget"] = t;
             }
         }

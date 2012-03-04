@@ -4,11 +4,12 @@
 #include "pluginmanager.h"
 #include "tiermachine.h"
 #include "tier.h"
+#include "moves.h"
 
 using namespace BattleCommands;
 
 typedef BattlePStorage BP;
-
+typedef BattleBase::TurnMemory TM;
 
 BattleBase::BattleBase()
 {
@@ -1252,6 +1253,8 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     }
 
     level = p.level();
+    substituteLife = 0;
+    lastMoveUsed = 0;
 }
 
 void BattleBase::BasicMoveInfo::reset()
@@ -1370,4 +1373,250 @@ bool BattleBase::hasMoved(int p)
 void BattleBase::notifySub(int player, bool sub)
 {
     notify(All, Substitute, player, sub);
+}
+
+void BattleBase::setupChoices()
+{
+    /* If there's no choice then the effects are already taken care of */
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (!koed(i) && !turnMem(i).contains(TurnMemory::NoChoice) && choice(i).attackingChoice()) {
+            if (!options[i].struggle())
+                MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
+            else
+                MoveEffect::setup(Move::Struggle, i, i, *this);
+        }
+    }
+}
+
+void BattleBase::inflictRecoil(int source, int target)
+{
+    double recoil = tmove(source).recoil;
+
+    if (recoil == 0)
+        return;
+
+    //Rockhead, MagicGuard
+    if (koed(source)) {
+        return;
+    }
+
+    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
+    if (koed(target)) {
+        return;
+    }
+
+    // If move defeats a sub, no recoil damage is applied in Gen 1.
+    if (hasSubstitute(target)) {
+        return;
+    }
+
+    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
+
+    // "33" means one-third
+    //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
+
+    int damage = std::abs(int(recoil * turnMem(target).damageTaken / 100));
+
+    if (recoil < 0) {
+        inflictDamage(source, damage, source, false);
+
+        /* Self KO Clause! */
+        if (koed(source)) {
+            selfKoer() = source;
+        }
+    } else  {
+        healLife(source, damage);
+    }
+}
+
+void BattleBase::healLife(int player, int healing)
+{
+    if (healing == 0) {
+        healing = 1;
+    }
+    if (!koed(player) && !poke(player).isFull())
+    {
+        healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
+        changeHp(player, poke(player).lifePoints() + healing);
+    }
+}
+
+void BattleBase::changeHp(int player, int newHp)
+{
+    if (newHp > poke(player).totalLifePoints()) {
+        newHp = poke(player).totalLifePoints();
+    }
+
+    if (newHp == poke(player).lifePoints()) {
+        /* no change, so don't bother */
+        return;
+    }
+    poke(player).lifePoints() = newHp;
+
+    notify(this->player(player), ChangeHp, player, quint16(newHp));
+    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
+}
+
+void BattleBase::inflictSubDamage(int player, int damage, int source)
+{
+    (void) source;
+
+    int life = fpoke(player).substituteLife;
+
+    if (life <= damage) {
+        fpoke(player).remove(BasicPokeInfo::Substitute);
+        sendMoveMessage(128, 1, player);
+        notifySub(player, false);
+    } else {
+        fpoke(player).substituteLife = life-damage;
+        sendMoveMessage(128, 3, player);
+    }
+}
+
+void BattleBase::koPoke(int player, int source, bool straightattack)
+{
+    (void) source;
+
+    if (poke(player).ko()) {
+        return;
+    }
+
+    qint16 damage = poke(player).lifePoints();
+
+    changeHp(player, 0);
+
+    if (straightattack) {
+        notify(this->player(player), StraightDamage,player, qint16(damage));
+        notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+    }
+
+    // for when to notify the ko
+    if (!attacking() || tmove(attacker()).power == 0 || gen() == 5) {
+        notifyKO(player);
+    }
+
+    //useful for third gen
+    turnMem(player).add(TurnMemory::WasKoed);
+}
+
+bool BattleBase::wasKoed(int player) const
+{
+    return turnMem(player).contains(TM::WasKoed);
+}
+
+
+void BattleBase::requestSwitchIns()
+{
+    testWin();
+    selfKoer() = -1;
+
+    QSet<int> koedPlayers;
+    QSet<int> koedPokes;
+    QSet<int> sentPokes;
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
+            koedPlayers.insert(player(i));
+            koedPokes.insert(i);
+        }
+    }
+
+    while (koedPokes.size() > 0) {
+        notifyInfos();
+
+        foreach(int p, koedPokes) {
+            requestChoice(p, false);
+        }
+
+        if (!allChoicesOkForPlayer(Player1)) {
+            notify(Player1, StartChoices, Player1);
+        }
+
+        if (!allChoicesOkForPlayer(Player2)) {
+            notify(Player2, StartChoices, Player2);
+        }
+
+        yield();
+
+        /* To clear the cancellable moves list */
+        for (int i = 0; i < numberOfSlots(); i++)
+            couldMove[i] = false;
+
+        foreach(int p, koedPokes) {
+            analyzeChoice(p);
+
+            if (!koed(p)) {
+                sentPokes.insert(p);
+            }
+        }
+
+        koedPokes.clear();
+        koedPlayers.clear();
+
+        testWin();
+
+        for (int i = 0; i < numberOfSlots(); i++) {
+            if (!koedPlayers.contains(player(i)) && koed(i) && countBackUp(player(i)) > 0) {
+                koedPlayers.insert(player(i));
+                koedPokes.insert(i);
+            }
+        }
+    }
+
+//    std::vector<int> sorted = sortedBySpeed();
+
+    /* Each wave calls the abilities in order , then next wave and so on. */
+//    foreach(int p, sorted) {
+//        if (sentPokes.contains(p)) {
+//            callEntryEffects(p);
+//        }
+//    }
+}
+
+void BattleBase::requestEndOfTurnSwitchIns()
+{
+    requestSwitchIns();
+    speedsVector = sortedBySpeed();
+}
+
+
+void BattleBase::analyzeChoice(int slot)
+{
+    attackCount() += 1;
+    /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
+    if (choice(slot).attackingChoice()) {
+        if (!wasKoed(slot)) {
+            if (turnMem(slot).contains(TM::NoChoice))
+                /* Automatic move */
+                useAttack(slot, fpoke(slot).lastMoveUsed, true);
+            else {
+                if (options[slot].struggle()) {
+                    MoveEffect::setup(Move::Struggle,slot,0,*this);
+                    useAttack(slot, Move::Struggle, true);
+                } else {
+                    useAttack(slot, choice(slot).attackSlot());
+                }
+            }
+        }
+    } else if (choice(slot).switchChoice()){
+        if (!koed(slot)) /* if the pokemon isn't ko, it IS sent back */
+            sendBack(slot);
+
+        sendPoke(slot, choice(slot).pokeSlot());
+    } else {
+        /* FATAL FATAL */
+    }
+}
+
+void BattleBase::useAttack(int player, int attack, bool specialOccurence, bool notify)
+{
+    (void) player;
+    (void) attack;
+    (void) specialOccurence;
+    (void) notify;
+}
+
+void BattleBase::sendBack(int player, bool silent)
+{
+    notify(All, SendBack, player, silent);
 }

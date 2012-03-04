@@ -17,6 +17,10 @@ protected:
     void sendPoke(int player, int poke, bool silent);
     BattleChoice &choice (int p);
     BattleChoices createChoice(int slot);
+    void analyzeChoices();
+    void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
+
+    void personalEndTurn(int player);
 private:
     BattleChoice choices[2];
 
@@ -40,6 +44,7 @@ private:
     const BasicPokeInfo &fpoke(int i) const {return pokes[i];}
     SlotMemory &slotMemory(int i) {return slotzones[i];}
     TurnMemory &turnMem(int i) {return turnzones[i];}
+    const TurnMemory &turnMem(int i) const {return turnzones[i];}
     BasicMoveInfo &tmove(int slot) { return moves[slot];}
     const BasicMoveInfo &tmove(int slot) const {return moves[slot];}
 };
