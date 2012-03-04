@@ -367,10 +367,10 @@ void BattleSituation::endTurn()
 
     speedsVector = sortedBySpeed();
 
-    foreach (int player, speedsVector) {
-        /* Counters */
-        if (gen() < 5) {
-            counters(player).decreaseCounters();
+    /* Counters */
+    if (gen() < 5) {
+        for(unsigned i = 0; i < speedsVector.size(); i++) {
+            counters(speedsVector[i]).decreaseCounters();
         }
     }
 
@@ -501,7 +501,7 @@ void BattleSituation::endTurnDefrost()
 {
     // RBY freeze is forever unless hit by fire moves.
     // We think both stadium and cart have permafreeze.
-    if (gen() == 1) {
+    if (gen().num == 1) {
         return;
     }
     foreach(int player, speedsVector) {
@@ -570,7 +570,7 @@ void BattleSituation::endTurnStatus(int player)
 
         notify(All, StatusMessage, player, qint8(HurtBurn));
         //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
-        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen() == 1))), player);
+        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
         break;
     case Pokemon::Poisoned:
         //PoisonHeal
@@ -587,7 +587,7 @@ void BattleSituation::endTurnStatus(int player)
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (poke(player).statusCount() == 0)
-                inflictDamage(player, poke(player).totalLifePoints()/ (gen() == 1 ? 16 : 8), player); // 1/16 in gen 1
+                inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
             else {
                 inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
                 poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
@@ -1085,7 +1085,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen() == 1 && (move == Move::Swift || move == Move::Mimic
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen().num == 1 && (move == Move::Swift || move == Move::Mimic
                                                                                                                         || move == Move::Transform))) {
         return true;
     }
@@ -1104,7 +1104,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(unsigned(30 + (gen() == 1 ? 0 :  poke(player).level() - poke(target).level()) ), 100);
+        bool ret = coinflip(unsigned(30 + (gen().num == 1 ? 0 :  poke(player).level() - poke(target).level()) ), 100);
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -1154,7 +1154,7 @@ void BattleSituation::testCritical(int player, int target)
     }
 
     bool critical;
-    if (gen() == 1) {
+    if (gen().num == 1) {
         int randnum = randint(512);
         int critChance = ((tmove(player).critRaise & 1) * 7 + 1) * (tmove(player).critRaise >= 2 ? 4 : 1);
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
@@ -1187,7 +1187,7 @@ void BattleSituation::testCritical(int player, int target)
 
     /* In GSC, if crit and if you don't got superior boosts in offensive than in their defensive stat, you ignore boosts, burn, and screens,
        otherwise you ignore none of them */
-    if (gen() == 2) {
+    if (gen().num == 2) {
         int stat = 1 + (tmove(player).category - 1) * 2;
         if (fpoke(player).boosts[stat] <= fpoke(target).boosts[stat+1]) {
             turnMemory(player)["CritIgnoresAll"] = true;
@@ -1215,7 +1215,7 @@ bool BattleSituation::testStatus(int player)
             notify(All, StatusMessage, player, qint8(FreeAsleep));
 
             /* In gen 1, pokemon take a full turn to wake up */
-            if (gen() == 1)
+            if (gen().num == 1)
                 return false;
         }
     }
@@ -1857,7 +1857,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     for (int i = 0; i < 2; i++) {
         /* Gen 1 has largely the same type lookup table as Gen 2-5.
           Only 5 type matchups differ, so those 5 are handled here. */
-        if (gen() == 1) {
+        if (gen().num == 1) {
             if((type == Type::Bug && typeadv[i] == Type::Poison) ||
                     (type == Type::Poison && typeadv[i] == Type::Bug)) {
                 typeffs[i] = 4;
@@ -1888,7 +1888,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     }
 
     // Counter hits regardless of type matchups in Gen 1.
-    if (gen() == 1 && tmove(player).attack == Move::Counter) {
+    if (gen().num == 1 && tmove(player).attack == Move::Counter) {
         typemod = 2;
     }
     if (type == Type::Ground && isFlying(target)) {
@@ -2247,15 +2247,15 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     if (negative)
         *negative = !pos;
 
-    if (gen() == 5 && hasWorkingAbility(player, Ability::Simple)) {
+    if (gen() >= 5 && hasWorkingAbility(player, Ability::Simple)) {
         mod *= 2;
     }
 
     /* Gen 1 has only Special, which means no Satk or Sdef.
        For simplicity we map all Sdef changes to Satk and treat
        Satk as meaning "Special". */
-    if (gen() == 1 && stat == 4) {
-        stat = 3;
+    if (gen().num == 1 && stat == SpDefense) {
+        stat = SpAttack;
     }
 
     if (pos)
@@ -2657,7 +2657,7 @@ int BattleSituation::calculateDamage(int p, int t)
         def = getStat(t, Defense);
     } else {
         attack = getStat(p, SpAttack);
-        if(gen() == 1) {
+        if(gen().num == 1) {
             def = getStat(t, SpAttack);
         } else {
             def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
@@ -2684,7 +2684,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int stab = move["Stab"].toInt();
     int typemod = move["TypeMod"].toInt();
     int randnum;
-    if (gen() == 1) {
+    if (gen().num == 1) {
         randnum = randint(38) + 217;
     } else {
         randnum = randint(16) + 85;
@@ -2748,7 +2748,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     power = std::min(power, 65535);
     int damage;
-    if (gen() == 1) {
+    if (gen().num == 1) {
         damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) *
                    attack / def) / 50) + 2;
     } else {
@@ -2763,7 +2763,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     /* Light screen / Reflect */
-    if ( (!crit || (gen() == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
+    if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
             (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
@@ -2813,7 +2813,7 @@ int BattleSituation::calculateDamage(int p, int t)
         damage = damage * 3 / 2;
     }
 
-    if (gen() == 1) { // Gen 1 has no items and crits are already factored in.
+    if (gen().num == 1) { // Gen 1 has no items and crits are already factored in.
         damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
     } else {
         damage = (damage+2)*ch;
@@ -2838,7 +2838,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
 
-        if (gen() == 2)
+        if (gen().num == 2)
             damage += 1;
     }
 
@@ -3190,7 +3190,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
     }
 
-    if (!attacking() || tmove(attacker()).power == 0 || gen() == 5) {
+    if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
         notifyKO(player);
     }
@@ -3514,9 +3514,9 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
                 } else if ((stat == Defense || stat == SpDefense) && boost > 0) {
                     boost = 0;
                 }
-            } else if (gen() == 1){
+            } else if (gen().num == 1){
                 boost = 0;
-            } else if (gen() == 2 && turnMemory(attacker).value("CritIgnoresAll").toBool()) {
+            } else if (gen().num == 2 && turnMemory(attacker).value("CritIgnoresAll").toBool()) {
                 boost = 0;
             }
         }

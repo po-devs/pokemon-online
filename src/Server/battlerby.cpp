@@ -39,6 +39,17 @@ void BattleRBY::beginTurn()
 void BattleRBY::endTurn()
 {
 
+    testWin();
+    requestSwitchIns();
+
+    speedsVector = sortedBySpeed();
+
+    for (unsigned i = 0; i < speedsVector.size(); i++) {
+        /* Disable counter here ? */
+        //counters(speedsVector[i]).decreaseCounters();
+    }
+
+    /* leech seed damage ? Hyper beam count ? */
 }
 
 void BattleRBY::initializeEndTurnFunctions()
@@ -263,4 +274,12 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
             inflictRecoil(source, player);
         }
     }
+}
+
+void BattleRBY::useAttack(int player, int attack, bool specialOccurence, bool notify)
+{
+    (void) player;
+    (void) attack;
+    (void) specialOccurence;
+    (void) notify;
 }

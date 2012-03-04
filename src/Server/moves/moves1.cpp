@@ -293,7 +293,7 @@ struct MMConversion : public MM
 
     static void daf(int s, int, BS &b) {
         /* Conversion doesn't fail in Gen 1 */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             return;
         }
         /* First check if there's even 1 move available */
@@ -332,7 +332,7 @@ struct MMConversion : public MM
 
     static void uas(int s, int t, BS &b) {
         /* Conversion changes the user's types to the opponent's types in Gen 1*/
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             b.sendMoveMessage(172,0,s,type(b,s),t);
             fpoke(b,s).type1 = fpoke(b,t).type1;
             fpoke(b,s).type2 = fpoke(b,t).type2;
@@ -675,7 +675,7 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen().num == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -735,7 +735,7 @@ struct MMBellyDrum : public MM
             b.fail(s, 8);
 
             /* Odd bug with gold, silver, crystal versions in gen 2 */
-            if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
+            if (b.gen() == Gen::GSC && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
         } else if (move(b,s) == Move::BellyDrum) {
@@ -753,7 +753,7 @@ struct MMBellyDrum : public MM
             b.sendMoveMessage(8,1,s,type(b,s));
             b.inflictStatMod(s,Attack,12, s, false);
 
-            if (b.gen() == 2) {
+            if (b.gen().num == 2) {
                 while (b.getStat(s, Attack) == 999) {
                     b.inflictStatMod(s,Attack,-1,s,false);
                 }
@@ -1271,7 +1271,7 @@ struct MMCounter : public MM
             return;
         }
         /* In gen 1, only Normal and Fighting moves are countered */
-        if (b.gen() == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
+        if (b.gen().num == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
             return;
         }
 
@@ -1285,7 +1285,7 @@ struct MMCounter : public MM
 
     static void ms (int s, int, BS &b) {
         //In GSC Sleep Talk + Counter works
-        if (!turn(b,s).contains("CounterDamage") && b.gen() == 2) {
+        if (!turn(b,s).contains("CounterDamage") && b.gen().num == 2) {
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
@@ -1507,7 +1507,7 @@ struct MMEncore : public MM
         } else {
             if (b.gen() <=3)
                 b.counters(t).addCounter(BC::Encore, 2 + (b.randint(4)));
-            else if (b.gen() == 4)
+            else if (b.gen().num == 4)
                 b.counters(t).addCounter(BC::Encore, 3 + (b.randint(5)));
             else
                 b.counters(t).addCounter(BC::Encore, 2);

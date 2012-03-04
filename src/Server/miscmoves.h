@@ -30,7 +30,7 @@ struct MMDisable : public MM
         }
 
         /* Gen 1 Disable works even when opponent hasn't moved yet, but not with 0 PP in all moves */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             for (int i = 0; i<4; i++) {
                 if (b.PP(t, i) > 0) {
                     return false;
@@ -71,7 +71,7 @@ struct MMDisable : public MM
     static void uas (int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         /* Disable disables a random move in gen 1 */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             /* Number of Moves on moveset */
             int moves = 4;
             if (b.move(t,1) == 0) {

@@ -849,7 +849,7 @@ struct AMShadowTag : public AM {
 
     static void iit(int, int t, BS &b) {
         //Shadow Tag
-        if (!b.hasWorkingAbility(t, Ability::ShadowTag) || b.gen() == 3) turn(b,t)["Trapped"] = true;
+        if (!b.hasWorkingAbility(t, Ability::ShadowTag) || b.gen().num == 3) turn(b,t)["Trapped"] = true;
     }
 };
 
