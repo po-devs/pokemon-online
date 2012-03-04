@@ -10,6 +10,7 @@ class QImageButtonP;
 class QImageButtonLR;
 class BattleDefaultTheme;
 class ThemeAccessor;
+class QToolButton;
 
 #define DEFAULT_PO_THEME "Classic"
 
@@ -45,7 +46,7 @@ public:
     static QPixmap StatusIcon(int status);
     static QPixmap BattleStatusIcon(int status);
     static QPixmap TypePicture(int type);
-    static QIcon ToolButtonIcon(ToolIcon icon);
+    static QIcon ToolButtonIcon(QToolButton *b, ToolIcon icon);
     static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
     static QString path(const QString &filename, bool defaultP = false);
 
