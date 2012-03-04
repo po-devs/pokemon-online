@@ -59,39 +59,44 @@ MoveEffect::MoveEffect(int num, Pokemon::gen gen, BattleSituation::BasicMoveInfo
 typedef MoveMechanics MM;
 typedef BattleSituation BS;
 
-void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
+void MoveEffect::setup(int num, int source, int target, BattleBase &b)
 {
     /* first the basic info */
     MoveEffect e(num, b.gen(), MM::tmove(b,source));
 
-    /* then the hard info */
-    QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
+    BattleSituation *_b = dynamic_cast<BattleSituation*>(&b);
 
-    foreach (QString specialEffectS, specialEffects) {
-        std::string s = specialEffectS.toStdString();
+    if (_b) {
+        BattleSituation &b = *_b;
+        /* then the hard info */
+        QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
 
-        int specialEffect = atoi(s.c_str());
+        foreach (QString specialEffectS, specialEffects) {
+            std::string s = specialEffectS.toStdString();
 
-        /* if the effect is invalid or not yet implemented then no need to go further */
-        if (!mechanics.contains(specialEffect)) {
-            break;
-        }
+            int specialEffect = atoi(s.c_str());
 
-        MoveMechanics &m = mechanics[specialEffect];
-        QString &n = names[specialEffect];
+            /* if the effect is invalid or not yet implemented then no need to go further */
+            if (!mechanics.contains(specialEffect)) {
+                break;
+            }
 
-        QHash<QString, MoveMechanics::function>::iterator i;
+            MoveMechanics &m = mechanics[specialEffect];
+            QString &n = names[specialEffect];
 
-        size_t pos = s.find('-');
-        if (pos != std::string::npos) {
-            MM::turn(b,source)[n+"_Arg"] = specialEffectS.mid(pos+1);
-        }
+            QHash<QString, MoveMechanics::function>::iterator i;
 
-        for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-            if (i.key() == "OnSetup") {
-                i.value()(source,target,b);
-            } else {
-                Mechanics::addFunction(MM::turn(b,source), i.key(), n, i.value());
+            size_t pos = s.find('-');
+            if (pos != std::string::npos) {
+                MM::turn(b,source)[n+"_Arg"] = specialEffectS.mid(pos+1);
+            }
+
+            for(i = m.functions.begin(); i != m.functions.end(); ++i) {
+                if (i.key() == "OnSetup") {
+                    i.value()(source,target,b);
+                } else {
+                    Mechanics::addFunction(MM::turn(b,source), i.key(), n, i.value());
+                }
             }
         }
     }
@@ -100,31 +105,37 @@ void MoveEffect::setup(int num, int source, int target, BattleSituation &b)
 
 /* Used by moves like Metronome that may use moves like U-Turn. Then AfterAttackSuccessful would be called twice, and that would
     not be nice because U-Turning twice :s*/
-void MoveEffect::unsetup(int num, int source, BattleSituation &b)
+void MoveEffect::unsetup(int num, int source, BattleBase &b)
 {
-    /* then the hard info */
-    QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
+    BattleSituation *_b = dynamic_cast<BattleSituation*>(&b);
 
-    foreach (QString specialEffectS, specialEffects) {
-        std::string s = specialEffectS.toStdString();
+    if (_b) {
+        BattleSituation &b = *_b;
 
-        int specialEffect = atoi(s.c_str());
+        /* then the hard info */
+        QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
 
-        /* if the effect is invalid or not yet implemented then no need to go further */
-        if (!mechanics.contains(specialEffect)) {
-            break;
-        }
+        foreach (QString specialEffectS, specialEffects) {
+            std::string s = specialEffectS.toStdString();
 
-        MoveMechanics &m = mechanics[specialEffect];
-        QString &n = names[specialEffect];
+            int specialEffect = atoi(s.c_str());
 
-        QHash<QString, MoveMechanics::function>::iterator i;
+            /* if the effect is invalid or not yet implemented then no need to go further */
+            if (!mechanics.contains(specialEffect)) {
+                break;
+            }
 
-        for(i = m.functions.begin(); i != m.functions.end(); ++i) {
-            if (i.key() == "OnSetup") {
-                ;
-            } else {
-                Mechanics::removeFunction(MM::turn(b,source), i.key(), n);
+            MoveMechanics &m = mechanics[specialEffect];
+            QString &n = names[specialEffect];
+
+            QHash<QString, MoveMechanics::function>::iterator i;
+
+            for(i = m.functions.begin(); i != m.functions.end(); ++i) {
+                if (i.key() == "OnSetup") {
+                    ;
+                } else {
+                    Mechanics::removeFunction(MM::turn(b,source), i.key(), n);
+                }
             }
         }
     }
@@ -199,20 +210,6 @@ struct MMUTurn : public MM
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 struct MMHiddenPower : public MM
 {
     MMHiddenPower() {
@@ -232,10 +229,6 @@ struct MMHiddenPower : public MM
         }
     }
 };
-
-
-
-
 
 struct MMTrumpCard : public MM
 {
@@ -849,7 +842,7 @@ struct MMSubstitute : public MM
 
     static void uas(int s, int, BS &b) {
         fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
-        poke(b,s)["SubstituteLife"] = b.poke(s).totalLifePoints()/4;
+        fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
         //	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
@@ -987,7 +980,7 @@ struct MMMetalBurst : public MM
     }
 
     static void daf (int s, int, BS &b) {
-        int dam = turn(b,s).value("DamageTakenByAttack").toInt();
+        int dam = fturn(b,s).damageTaken;
         if (dam == 0) {
             turn(b,s)["Failed"] = true;
             return;
@@ -1458,7 +1451,7 @@ struct MMIceBall : public MM
     static void ts(int s, int t, BS &b) {
         if (poke(b,s).contains("LastBallTurn") && poke(b,s)["LastBallTurn"].toInt() + 1 == b.turn() && poke(b,s)["IceBallCount"].toInt() > 0) {
             fturn(b,s).add(TM::NoChoice);
-            MoveEffect::setup(poke(b,s)["LastSpecialMoveUsed"].toInt(),s,t,b);
+            MoveEffect::setup(fpoke(b,s).lastMoveUsed,s,t,b);
         }
     }
 };

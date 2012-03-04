@@ -553,9 +553,6 @@ void BattleSituation::personalEndTurn(int player)
     if (koed(player))
         return;
     endTurnStatus(player);
-    callpeffects(player, player, "EndTurn681");
-    /* Leech Seed, Nightmare. Warning: Leech Seed and rapid spin are linked */
-    callpeffects(player, player, "EndTurn64");
 
     testWin();
 }
@@ -664,7 +661,7 @@ void BattleSituation::analyzeChoice(int slot)
         if (!wasKoed(slot)) {
             if (turnMem(slot).contains(TM::NoChoice))
                 /* Automatic move */
-                useAttack(slot, pokeMemory(slot)["LastSpecialMoveUsed"].toInt(), true);
+                useAttack(slot, fpoke(slot).lastMoveUsed, true);
             else {
                 if (options[slot].struggle()) {
                     MoveEffect::setup(Move::Struggle,slot,0,*this);
@@ -747,15 +744,7 @@ std::vector<int> && BattleSituation::sortedBySpeed() {
 
 void BattleSituation::analyzeChoices()
 {
-    /* If there's no choice then the effects are already taken care of */
-    for (int i = 0; i < numberOfSlots(); i++) {
-        if (!koed(i) && !turnMem(i).contains(TM::NoChoice) && choice(i).attackingChoice()) {
-            if (!options[i].struggle())
-                MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
-            else
-                MoveEffect::setup(Move::Struggle, i, i, *this);
-        }
-    }
+    setupChoices();
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
@@ -920,12 +909,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     callzeffects(player, slot, "UponSwitchIn");
 }
 
-bool BattleSituation::wasKoed(int player) const
-{
-    return turnMemory(player).contains("WasKoed");
-}
-
-
 void BattleSituation::callEntryEffects(int player)
 {
     if (!koed(player)) {
@@ -1064,7 +1047,7 @@ void BattleSituation::sendBack(int player, bool silent)
         }
     }
 
-    notify(All, SendBack, player, silent);
+    BattleBase::sendBack(player, silent);
 
     if (!koed(player)) {
         callaeffects(player,player,"UponSwitchOut");
@@ -1434,7 +1417,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     //For metronome calling fly / sky attack / ...
-    pokeMemory(player)["LastSpecialMoveUsed"] = attack;
+    fpoke(player).lastMoveUsed = attack;
 
     calleffects(player, player, "MoveSettings");
 
@@ -2038,12 +2021,12 @@ void BattleSituation::inflictRecoil(int source, int target)
     }
 
     // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
-    if (gen() == 1 && koed(target)) {
+    if (gen().num == 1 && koed(target)) {
         return;
     }
 
     // If move defeats a sub, no recoil damage is applied in Gen 1.
-    if (gen() == 1 && hasSubstitute(target)) {
+    if (gen().num == 1 && hasSubstitute(target)) {
         return;
     }
 
@@ -2970,7 +2953,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
             /* If there's a sub its already taken care of */
             inc(turnMemory(source)["DamageInflicted"], damage);
             pokeMemory(player)["DamageTakenByAttack"] = damage;
-            turnMemory(player)["DamageTakenByAttack"] = damage;
+            turnMem(player).damageTaken = damage;
             turnMemory(player)["DamageTakenBy"] = source;
         }
 
@@ -3013,7 +2996,7 @@ void BattleSituation::changeSprite(int player, Pokemon::uniqueId newForme)
 
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
 {
-    int life = pokeMemory(player)["SubstituteLife"].toInt();
+    int life = fpoke(player).substituteLife;
 
     if (life <= damage) {
         fpoke(player).remove(BasicPokeInfo::Substitute);
@@ -3021,7 +3004,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
-        pokeMemory(player)["SubstituteLife"] = life-damage;
+        fpoke(player).substituteLife = life-damage;
         inc(turnMemory(source)["DamageInflicted"], damage);
         sendMoveMessage(128, 3, player);
     }
@@ -3148,18 +3131,6 @@ void BattleSituation::changeAForme(int player, int newforme)
     notify(All, ChangeTempPoke, player, quint8(AestheticForme), quint16(newforme));
 }
 
-void BattleSituation::healLife(int player, int healing)
-{
-    if (healing == 0) {
-        healing = 1;
-    }
-    if (!koed(player) && !poke(player).isFull())
-    {
-        healing = std::min(healing, poke(player).totalLifePoints() - poke(player).lifePoints());
-        changeHp(player, poke(player).lifePoints() + healing);
-    }
-}
-
 void BattleSituation::healDamage(int player, int target)
 {
     int healing = tmove(player).healing;
@@ -3192,18 +3163,13 @@ void BattleSituation::healDamage(int player, int target)
 
 void BattleSituation::changeHp(int player, int newHp)
 {
-    if (newHp > poke(player).totalLifePoints()) {
-        newHp = poke(player).totalLifePoints();
-    }
+    int hp = poke(player).lifePoints();
 
-    if (newHp == poke(player).lifePoints()) {
-        /* no change, so don't bother */
+    BattleBase::changeHp(player, newHp);
+
+    if (hp == poke(player).lifePoints()) {
         return;
     }
-    poke(player).lifePoints() = newHp;
-
-    notify(this->player(player), ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
 
     callieffects(player, player, "AfterHPChange");
     callaeffects(player, player, "AfterHPChange");
@@ -3230,7 +3196,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     }
 
     //useful for third gen
-    turnMemory(player)["WasKoed"] = true;
+    turnMem(player).add(TM::WasKoed);
 
     if (straightattack && player!=source) {
         callpeffects(player, source, "AfterKoedByStraightAttack");

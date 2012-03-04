@@ -149,6 +149,7 @@ public:
 
     virtual int getStat(int poke, int stat) = 0;
     virtual void sendPoke(int player, int poke, bool silent = false) = 0;
+    virtual void sendBack(int player, bool silent = false);
 protected slots:
     void clearSpectatorQueue();
 signals:
@@ -213,6 +214,9 @@ protected:
 
     virtual BattleChoice &choice (int p) = 0;
 public:
+    /* The players ordered by speed are stored there */
+    std::vector<int> speedsVector;
+
     const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
         return spectators;
@@ -272,9 +276,18 @@ protected:
     void requestChoices();
     /* requests choice of action from the player */
     bool requestChoice(int player, bool acq = true /*private arg */, bool custom = false); /* return true if the pokemon has a choice to make (including switching & struggle)*/
+
     virtual BattleChoices createChoice(int slot) = 0;
-    virtual bool isMovePossible(int player, int slot);
+
+    void setupChoices();
+
+    virtual void analyzeChoices() = 0;
+
+    virtual void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false) = 0;
+    virtual void inflictSubDamage(int player, int damage, int source);
 public:
+    virtual bool isMovePossible(int player, int slot);
+
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
     // Public because used by Yawn
     int currentForcedSleepPoke[2];
@@ -304,6 +317,8 @@ public:
         int ability;
         int level;
         quint32 flags;
+        quint16 substituteLife;
+        quint16 lastMoveUsed;
 
         enum Flag {
             Transformed = 1,
@@ -362,28 +377,50 @@ public:
 
         void reset() {
             flags = 0;
+            damageTaken = 0;
         }
 
         quint32 flags;
+        quint16 damageTaken;
 
         enum Flag {
             Incapacitated = 1,
             NoChoice = 2,
-            HasMoved = 4
+            HasMoved = 4,
+            WasKoed = 8
         };
 
         inline void remove(Flag f) {flags &= ~f;}
         inline void add(Flag f) {flags |= f;}
-        inline bool contains(Flag f) {return (flags & f) != 0;}
+        inline bool contains(Flag f) const {return (flags & f) != 0;}
     };
 
     virtual BasicPokeInfo &fpoke(int slot) = 0;
     virtual BasicPokeInfo const &fpoke(int slot) const = 0;
     virtual TurnMemory &turnMem(int slot) = 0;
+    virtual const TurnMemory &turnMem(int slot) const = 0;
     virtual BasicMoveInfo &tmove(int slot) = 0;
     virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
+
+    virtual void inflictRecoil(int x, int target);
+    void healLife(int player, int healing);
+    virtual void changeHp(int player, int newHp);
+    virtual void koPoke(int player, int source, bool straight);
+
+    bool wasKoed(int) const;
+
+    virtual void requestSwitchIns();
+    virtual void requestEndOfTurnSwitchIns();
+
+    /* called just after requestChoice(s) */
+    virtual void analyzeChoice(int player);
+
+    /* Attack... */
+    /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
+    represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
+    virtual void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
 };
 
 #endif // BATTLEBASE_H

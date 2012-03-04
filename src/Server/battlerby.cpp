@@ -130,3 +130,137 @@ BattleChoices BattleRBY::createChoice(int slot)
 
     return ret;
 }
+
+void BattleRBY::analyzeChoices()
+{
+    setupChoices();
+
+    std::map<int, std::vector<int>, std::greater<int> > priorities;
+    std::vector<int> switches;
+
+    std::vector<int> playersByOrder = sortedBySpeed();
+
+    foreach(int i, playersByOrder) {
+        if (choice(i).switchChoice())
+            switches.push_back(i);
+        else if (choice(i).attackingChoice()){
+            priorities[tmove(i).priority].push_back(i);
+        } else {
+            /* Shifting choice */
+            priorities[0].push_back(i);
+        }
+    }
+
+    foreach(int player, switches) {
+        analyzeChoice(player);
+        //callEntryEffects(player);
+
+        personalEndTurn(player);
+        notify(All, BlankMessage, Player1);
+    }
+
+    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
+    std::vector<int> &players = speedsVector;
+    players.clear();
+
+    for (it = priorities.begin(); it != priorities.end(); ++it) {
+        foreach (int player, it->second) {
+            players.push_back(player);
+        }
+    }
+
+    for(unsigned i = 0; i < players.size(); i++) {
+        if (!multiples()) {
+            if (koed(0) || koed(1))
+                break;
+        } else {
+            requestSwitchIns();
+        }
+
+        if (!hasMoved(players[i])) {
+            analyzeChoice(players[i]);
+
+            if (!multiples() && (koed(0) || koed(1))) {
+                testWin();
+                selfKoer() = -1;
+                break;
+            }
+
+            personalEndTurn(players[i]);
+            notify(All, BlankMessage, Player1);
+        }
+        testWin();
+        selfKoer() = -1;
+    }
+}
+
+void BattleRBY::personalEndTurn(int player)
+{
+    if (koed(player))
+        return;
+
+    switch(poke(player).status())
+    {
+    case Pokemon::Burnt:
+        notify(All, StatusMessage, player, qint8(HurtBurn));
+        //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
+        inflictDamage(player, poke(player).totalLifePoints()/16, player);
+        break;
+    case Pokemon::Poisoned:
+        notify(All, StatusMessage, player, qint8(HurtPoison));
+
+        if (poke(player).statusCount() == 0)
+            inflictDamage(player, poke(player).totalLifePoints()/16, player); // 1/16 in gen 1
+        else {
+            inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
+            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+        }
+        break;
+    }
+
+    testWin();
+}
+
+
+void BattleRBY::inflictDamage(int player, int damage, int source, bool straightattack, bool goForSub)
+{
+    if (koed(player)) {
+        return;
+    }
+
+    if (damage == 0) {
+        damage = 1;
+    }
+
+    bool sub = hasSubstitute(player);
+
+    if (sub && (player != source || goForSub) && straightattack) {
+        inflictSubDamage(player, damage, source);
+    } else {
+        damage = std::min(int(poke(player).lifePoints()), damage);
+
+        int hp  = poke(player).lifePoints() - damage;
+
+        if (hp <= 0) {
+            koPoke(player, source, straightattack);
+        } else {
+            if (straightattack) {
+                notify(this->player(player), StraightDamage,player, qint16(damage));
+                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+            }
+
+            changeHp(player, hp);
+        }
+    }
+
+    if (straightattack && player != source) {
+        if (!sub) {
+            /* If there's a sub its already taken care of */
+            turnMem(player).damageTaken = damage;
+        }
+
+        if (damage > 0) {
+            inflictRecoil(source, player);
+        }
+    }
+}

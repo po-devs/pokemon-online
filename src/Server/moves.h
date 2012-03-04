@@ -19,8 +19,8 @@ struct MoveEffect
 {
     MoveEffect(int num, Pokemon::gen gen, BattleSituation::BasicMoveInfo &bmi);
 
-    static void setup(int movenum, int source, int target, BattleSituation &b);
-    static void unsetup(int movenum, int source, BattleSituation &b);
+    static void setup(int movenum, int source, int target, BattleBase &b);
+    static void unsetup(int movenum, int source, BattleBase &b);
 
     static QHash<int, MoveMechanics> mechanics;
     static QHash<int, QString> names;

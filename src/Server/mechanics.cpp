@@ -41,7 +41,7 @@ int Mechanics::move(BattleSituation &b, int source)
     return tmove(b, source).attack;
 }
 
-BattleSituation::BasicMoveInfo & Mechanics::tmove(BattleSituation &b, int source)
+BattleBase::BasicMoveInfo & Mechanics::tmove(BattleBase &b, int source)
 {
     return b.tmove(source);
 }
