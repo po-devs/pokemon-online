@@ -77,7 +77,7 @@ Item {
         id: shader
         image: image
         blendColor: Colors.statusColor(pokemon.status)
-        alpha: (pokemon.status === PokeData.Fine || pokemon.status == PokeData.Koed) ? 0.0 : 0.3
+        alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
     }
 
     property Image pokeSprite: image

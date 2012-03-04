@@ -4,10 +4,12 @@
 #include "teamholder.h"
 #include "mainwindow.h"
 #include "teammenu.h"
+#include "poketablemodel.h"
 
 TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
 {
     addWidget(trainer = new TrainerMenu(team));
+    pokemonModel = new PokeTableModel(team->team().gen(), this);
 
     loadSettings(this, defaultSize());
 
@@ -35,7 +37,46 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load"));
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
 
+    /* Loading mod menu */
+    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QStringList mods = s_mod.childGroups();
+    QActionGroup *modActionGroup = new QActionGroup(menuBar);
+    if (mods.size() > 0) {
+        int general_pos = mods.indexOf("General");
+        if (general_pos != -1) {
+            mods.removeAt(general_pos);
+        }
+        if (mods.size() > 0) {
+            int mod_selected = s_mod.value("active", 0).toInt();
+            bool is_mod_selected = mod_selected > 0;
+            QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
+
+            // No mod option.
+            QAction *action_no_mod = menuMods->addAction(tr("No mod"), this, SLOT(setNoMod()));
+            action_no_mod->setCheckable(true);
+            modActionGroup->addAction(action_no_mod);
+            if (!is_mod_selected) action_no_mod->setChecked(true);
+            menuMods->addSeparator();
+
+            // Add mods to menu.
+            QStringListIterator mods_it(mods);
+            while (mods_it.hasNext()) {
+                QString current = mods_it.next();
+                QAction *ac = menuMods->addAction(current, this, SLOT(changeMod()));
+                ac->setCheckable(true);
+                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
+                    ac->setChecked(true);
+                }
+                modActionGroup->addAction(ac);
+            }
+        }
+    }
+
     w->addThemeMenu(menuBar);
+
+    if (currentWidget()) {
+        currentWidget()->addMenus(menuBar);
+    }
 
     return menuBar;
 }
@@ -80,9 +121,11 @@ void TeamBuilder::markTeamUpdated()
 void TeamBuilder::editPoke(int index)
 {
     if (!teamMenu) {
-        addWidget(teamMenu = new TeamMenu(&team(), index));
+        addWidget(teamMenu = new TeamMenu(pokemonModel, &team(), index));
         connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
         connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
+    } else {
+        teamMenu->switchToTab(index);
     }
 
     switchTo(teamMenu);
@@ -114,4 +157,12 @@ void TeamBuilder::switchTo(TeamBuilderWidget *w)
         w->setProperty("team-to-update", false);
     }
     setCurrentWidget(w);
+
+    emit reloadMenuBar();
+}
+
+//TODO
+void TeamBuilder::setTierList(const QStringList &tiers)
+{
+    trainer->setTiers(tiers);
 }

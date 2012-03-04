@@ -280,9 +280,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QImageButtonLR" name="hpboost" native="true"/>
-   </item>
    <item row="1" column="1">
     <widget class="QImageButtonLR" name="atkboost" native="true"/>
    </item>
@@ -297,6 +294,13 @@
    </item>
    <item row="6" column="1">
     <widget class="QImageButtonLR" name="speedboost" native="true"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QImageButtonLR" name="hpboost" native="true">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

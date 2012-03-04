@@ -10,7 +10,8 @@ SOURCES += otherwidgets.cpp \
     contextswitch.cpp \
     coro.c \
     coreclasses.cpp \
-    qimagebuttonlr.cpp
+    qimagebuttonlr.cpp \
+    confighelper.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -18,7 +19,8 @@ HEADERS += otherwidgets.h \
     coro.h \
     contextswitch.h \
     coreclasses.h \
-    qimagebuttonlr.h
+    qimagebuttonlr.h \
+    confighelper.h
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

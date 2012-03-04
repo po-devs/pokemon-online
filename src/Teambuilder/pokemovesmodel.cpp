@@ -14,23 +14,23 @@ QHash<typename T::value_type, U> map_container_with_value(T container, const U &
     return ret;
 }
 
-PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, int gen, QObject *parent) : QAbstractTableModel(parent), id(id), gen(gen)
+PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen, QObject *parent) : QAbstractTableModel(parent), id(id), gen(gen)
 {
     loadData();
 }
 
-QHash<int, QString> getMoves(const Pokemon::uniqueId &num, int gen, bool root = true) {
+QHash<int, QString> getMoves(const Pokemon::uniqueId &num, Pokemon::gen gen, bool root = true) {
     QHash<int, QString> ret;
-    if (gen != 1 && gen != 3) {
-        ret = getMoves(num, gen-1, false);
+    if (gen.num != 1 && gen.num != 3) {
+        ret = getMoves(num, gen.num-1, false);
     }
-    return ret.unite(map_container_with_value(PokemonInfo::TMMoves(num, gen), root ? QObject::tr("TM/HM") : QObject::tr("%1G TM/HM").arg(gen)))
-              .unite(map_container_with_value(PokemonInfo::TutorMoves(num, gen), root ? QObject::tr("Tutor") : QObject::tr("%1G Tutor").arg(gen)))
-              .unite(map_container_with_value(PokemonInfo::LevelMoves(num, gen), root ? QObject::tr("Level") : QObject::tr("%1G Level").arg(gen)))
-              .unite(map_container_with_value(PokemonInfo::PreEvoMoves(num, gen), root ? QObject::tr("Pre Evo") :QObject:: tr("%1G Pre Evo").arg(gen)))
-              .unite(map_container_with_value(PokemonInfo::EggMoves(num, gen), root ? QObject::tr("Breeding") : QObject::tr("%1G Breeding").arg(gen)))
+    return ret.unite(map_container_with_value(PokemonInfo::TMMoves(num, gen), root ? QObject::tr("TM/HM") : QObject::tr("%1G TM/HM").arg(gen.num)))
+              .unite(map_container_with_value(PokemonInfo::TutorMoves(num, gen), root ? QObject::tr("Tutor") : QObject::tr("%1G Tutor").arg(gen.num)))
+              .unite(map_container_with_value(PokemonInfo::LevelMoves(num, gen), root ? QObject::tr("Level") : QObject::tr("%1G Level").arg(gen.num)))
+              .unite(map_container_with_value(PokemonInfo::PreEvoMoves(num, gen), root ? QObject::tr("Pre Evo") :QObject:: tr("%1G Pre Evo").arg(gen.num)))
+              .unite(map_container_with_value(PokemonInfo::EggMoves(num, gen), root ? QObject::tr("Breeding") : QObject::tr("%1G Breeding").arg(gen.num)))
               .unite((gen == 5 ? map_container_with_value(PokemonInfo::dreamWorldMoves(num), QObject::tr("Dream World")) : QHash<int, QString>()))
-              .unite(map_container_with_value(PokemonInfo::SpecialMoves(num, gen), root ? QObject::tr("Special", "Learning") : QObject::tr("%1G Special").arg(gen)));
+              .unite(map_container_with_value(PokemonInfo::SpecialMoves(num, gen), root ? QObject::tr("Special", "Learning") : QObject::tr("%1G Special").arg(gen.num)));
 }
 
 void PokeMovesModel::loadData()
@@ -157,7 +157,7 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void PokeMovesModel::setPokemon(const Pokemon::uniqueId &id, int gen)
+void PokeMovesModel::setPokemon(const Pokemon::uniqueId &id, Pokemon::gen gen)
 {
     if (id == this->id && gen == this->gen) {
         return;

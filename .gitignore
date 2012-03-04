@@ -39,4 +39,10 @@ bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
 bin/scripts.js
+bin/*.txt
+bin/*.js
+bin/*.json
+bin/tiers.xml
 ui_*.h
+*.Debug
+*.Release

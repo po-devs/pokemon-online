@@ -4,11 +4,11 @@
 
 using namespace CustomModel;
 
-PokeTableModel::PokeTableModel(int gen, QObject *parent) : QAbstractTableModel(parent) {
+PokeTableModel::PokeTableModel(Pokemon::gen gen, QObject *parent) : QAbstractTableModel(parent) {
     this->gen = gen;
 }
 
-void PokeTableModel::setGen(int gen) {
+void PokeTableModel::setGen(Pokemon::gen gen) {
     emit layoutAboutToBeChanged();
     this->gen = gen;
     emit layoutChanged();
@@ -52,9 +52,34 @@ QVariant PokeTableModel::data(const QModelIndex &index, int role) const {
         return PokemonInfo::Name(pokenum);
     case PokeimageRole:
         return PokemonInfo::Picture(pokenum, gen);
+    case PokegenRole:
+        return QVariant::fromValue(gen);
     default:
         break;
     }
 
+    return QVariant();
+}
+
+QVariant PokeTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Vertical) {
+        return QAbstractTableModel::headerData(section, orientation, role);
+    }
+
+    switch (role) {
+    case Qt::DisplayRole:
+        if (section == 0) {
+            return tr("#", "pokemon number");
+        } else {
+            return tr("Name", "PokemonName");
+        }
+    case Qt::ToolTipRole:
+        if (section == 0) {
+            return tr("The dex number of the pokemon");
+        } else  {
+            return tr("The name of the pokemon");
+        }
+    };
     return QVariant();
 }

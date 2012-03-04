@@ -49,17 +49,19 @@ public:
 
 signals:
     void processMember (QSqlQuery *q, void * m, int type=1);
+    void processDailyRun(QSqlQuery *q);
 };
 
 template <class T>
 class InsertThread : public AbstractInsertThread
 {
 public:
-    InsertThread() : finished(false) { connect(this, SIGNAL(finished()), SLOT(deleteLater())); }
+    InsertThread() : finished(false), dailyRunToProcess(false) { connect(this, SIGNAL(finished()), SLOT(deleteLater())); }
     ~InsertThread() { finish(); }
 
     /* update/insert ? */
     void pushMember(const T &m, int desc);
+    void addDailyRun();
     void finish() {finished = true; sem.release(1);}
 
     void run();
@@ -68,6 +70,7 @@ private:
     QMutex memberMutex;
     QSemaphore sem;
     bool finished;
+    bool dailyRunToProcess;
 };
 
 
@@ -89,11 +92,16 @@ void InsertThread<T>::run()
             return;
         }
 
-        memberMutex.lock();
-        QPair<T , int> p = members.takeFirst();
-        memberMutex.unlock();
+        if (dailyRunToProcess) {
+            dailyRunToProcess = false;
+            emit processDailyRun(&sql);
+        } else {
+            memberMutex.lock();
+            QPair<T , int> p = members.takeFirst();
+            memberMutex.unlock();
 
-        emit processMember(&sql, &p.first, p.second);
+            emit processMember(&sql, &p.first, p.second);
+        }
 
         sem.acquire(1);
     }
@@ -107,6 +115,15 @@ void InsertThread<T>::pushMember(const T &member, int desc)
     members.push_back(QPair<T, int> (member, desc) );
 
     memberMutex.unlock();
+
+    sem.release(1);
+}
+
+
+template <class T>
+void InsertThread<T>::addDailyRun()
+{
+    dailyRunToProcess = true;
 
     sem.release(1);
 }

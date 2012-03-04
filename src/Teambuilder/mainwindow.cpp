@@ -25,13 +25,18 @@ MainEngine::MainEngine() : displayer(0)
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "theme_2", "Themes/Classic/");
-    setDefaultValue(s, "profile_location", appDataPath("Profiles", true) + "/profile.xml");
+    setDefaultValue(s, "battle_cry_volume", 100);
+    setDefaultValue(s, "battle_music_volume", 100);
+    setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
+    setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
+    setDefaultValue(s, "team_folder", QDir::homePath() + "/Documents");
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
     setDefaultValue(s, "user_theme_directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
     setDefaultValue(s, "team_location", "Team/trainer.tp");
+    setDefaultValue(s, "team_folder", "Team");
     setDefaultValue(s, "user_theme_directory", "Themes/");
 #endif
     setDefaultValue(s, "battle_music_directory", "Music/Battle/");
@@ -47,7 +52,9 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "show_timestamps", true);
     setDefaultValue(s, "show_timestamps2", true);
     setDefaultValue(s, "pm_flashing", true);
-    setDefaultValue(s, "pm_disabled", false);
+    setDefaultValue(s, "reject_incoming_pms", false);
+    setDefaultValue(s, "pms_tabbed", false);
+    setDefaultValue(s, "pms_logged", true);
     setDefaultValue(s, "animate_hp_bar", true);
     setDefaultValue(s, "sort_players_by_tier", false);
     setDefaultValue(s, "sort_channels_by_name", false);
@@ -104,6 +111,7 @@ MainEngine::MainEngine() : displayer(0)
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
+    GenInfo::init("db/gens/");
     Theme::init(s.value("theme_2").toString());
 
     /* Loading the values */
@@ -232,6 +240,7 @@ void MainEngine::launchTeamBuilder()
     MainEngineRoutine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
+    connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
 }
 
 void MainEngine::launchServerChoice()

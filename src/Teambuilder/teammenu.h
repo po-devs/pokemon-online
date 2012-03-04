@@ -1,6 +1,7 @@
 #ifndef TEAMMENU_H
 #define TEAMMENU_H
 
+#include "../PokemonInfo/pokemonstructs.h"
 #include "teambuilderwidget.h"
 #include <QHash>
 
@@ -8,20 +9,26 @@ class QStackedWidget;
 class QTabBar;
 class TeamHolder;
 class QStringListModel;
+class QAbstractItemModel;
+class PokeEdit;
 
 class TeamMenu : public TeamBuilderWidget
 {
     Q_OBJECT
 
 public:
-    explicit TeamMenu(TeamHolder *team, int index=0);
+    explicit TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
     ~TeamMenu();
 
     void updateTeam();
+    void addMenus(QMenuBar *);
 signals:
     void switchToTrainer();
-private slots:
+public slots:
     void switchToTab(int index);
+private slots:
+    void tabIconChanged();
+    void genChanged();
 private:
     void setupUi();
     void updateTabs();
@@ -29,8 +36,10 @@ private:
     struct _ui {
         QStackedWidget *stack;
         QTabBar *pokemonTabs;
-        QHash<int, QWidget*> pokemons;
+        QHash<int, PokeEdit*> pokemons;
         QStringListModel *itemsModel, *natureModel;
+        QAbstractItemModel *pokemonModel;
+        QHash<Pokemon::gen, QAction*> gens;
     };
 
     _ui *ui;

@@ -10,6 +10,7 @@ class QImageButtonP;
 class QImageButtonLR;
 class BattleDefaultTheme;
 class ThemeAccessor;
+class QToolButton;
 
 #define DEFAULT_PO_THEME "Classic"
 
@@ -20,6 +21,15 @@ public:
         BattleM,
         PokedexM,
         IngameM
+    };
+
+    enum ToolIcon {
+        AddTeam,
+        DeleteTeam,
+        ImportTeam,
+        LoadTeam,
+        SaveTeam,
+        ChangeTeamFolder
     };
 
     static void init(const QString &dir="Themes/" DEFAULT_PO_THEME "/");
@@ -36,6 +46,7 @@ public:
     static QPixmap StatusIcon(int status);
     static QPixmap BattleStatusIcon(int status);
     static QPixmap TypePicture(int type);
+    static void ToolButtonIcon(QToolButton *b, ToolIcon icon);
     static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
     static QString path(const QString &filename, bool defaultP = false);
 
@@ -43,7 +54,7 @@ public:
     static QImageButtonP *PressedButton(const QString &code);
     static QImageButtonLR *LRButton(const QString &code);
     static void ChangePics(QImageButton *b, const QString &code);
-    static QPixmap Pic(const QString &way);
+    static QPixmap Pic(const QString &way, bool def=false);
     static QPixmap Sprite(const QString &key);
     static QIcon Icon(const QString &key);
     static QPixmap BlueBall();
@@ -52,6 +63,9 @@ public:
     static QPixmap BlackBall();
     static QPixmap OrangeBall();
     static QPixmap FrameBall();
+    static QPixmap unlockedLockedRegistry();
+    static QPixmap lockedServer();
+    static QPixmap unlockedServer();
     static QPixmap TrainerSprite(int num);
     static BattleDefaultTheme* getBattleTheme();
     static ThemeAccessor* getAccessor();
@@ -70,6 +84,8 @@ private:
     static QVariant value(const QString &key, bool *def);
     static BattleDefaultTheme *m_battleTheme;
     static ThemeAccessor *m_accessor;
+
+    static bool hasPath(const QString &filename);
 };
 
 #endif // THEME_H

@@ -16,7 +16,7 @@ void Network::onReceipt()
     if (commandStarted == false) {
         /* There it's a new message we are receiving.
            To start receiving it we must know its length, i.e. the 2 first bytes */
-        if (this->bytesAvailable() < 2) {
+        if (this->bytesAvailable() < 4) {
             return;
         }
         /* Ok now we can start */

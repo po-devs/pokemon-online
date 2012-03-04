@@ -1,11 +1,20 @@
+#include <QSortFilterProxyModel>
+#include <QCompleter>
+#include <QLineEdit>
+#include <QMessageBox>
+
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "pokeedit.h"
 #include "ui_pokeedit.h"
 #include "theme.h"
+#include "pokemovesmodel.h"
+#include "pokeselection.h"
+#include "poketablemodel.h"
 
-PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
+PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
+    pokemonModel(pokeModel),
     m_poke(poke)
 {
     ui->setupUi(this);
@@ -15,16 +24,119 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *itemsModel, QAbstractItem
 
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
+    ui->ivbox->setPoke(poke);
+
+    movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
+    QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
+    filter->setSourceModel(movesModel);
+    ui->moveChoice->setModel(filter);
+
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
+    ui->moveChoice->setIconSize(Theme::TypePicture(Type::Normal).size());
+
+    ui->moveChoice->sortByColumn(PokeMovesModel::Name, Qt::AscendingOrder);
+
+    m_moves[0] = ui->move1;
+    m_moves[1] = ui->move2;
+    m_moves[2] = ui->move3;
+    m_moves[3] = ui->move4;
+
+    connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
+
+    /* the four move choice items */
+    for (int i = 0; i < 4; i++)
+    {
+        QCompleter *completer = new QCompleter(m_moves[i]);
+        completer->setModel(ui->moveChoice->model());
+        completer->setCompletionColumn(PokeMovesModel::Name);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+        completer->setCompletionMode(QCompleter::PopupCompletion);
+        completer->setCompletionRole(Qt::DisplayRole);
+        m_moves[i]->setCompleter(completer);
+
+        completer->setProperty("move", i);
+        m_moves[i]->setProperty("move", i);
+
+        connect(completer, SIGNAL(activated(QString)), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(returnPressed()), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(editingFinished()), SLOT(changeMove()));
+    }
 
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
+    connect(ui->levelSettings, SIGNAL(levelUpdated()), ui->ivbox, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(genderUpdated()), SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(genderUpdated()), ui->levelSettings, SLOT(updateGender()));
+    connect(ui->ivbox, SIGNAL(shinyUpdated()), SLOT(updatePicture()));
+    connect(ui->ivbox, SIGNAL(shinyUpdated()), ui->levelSettings, SLOT(updateShiny()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
     connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
+    connect(ui->evbox, SIGNAL(natureChanged(int)), this, SLOT(setNature(int)));
+    connect(ui->evbox, SIGNAL(natureBoostChanged()), ui->ivbox, SLOT(updateStats()));
+    connect(ui->ivbox, SIGNAL(statsUpdated()), ui->evbox, SLOT(updateEVs()));
 
     updateAll();
+}
+
+void PokeEdit::on_pokemonFrame_clicked()
+{
+    PokeTableModel *model = (PokeTableModel*) pokemonModel;
+    model->setGen(poke().gen());
+    PokeSelection *p = new PokeSelection(poke().num(), pokemonModel);
+    p->setParent(this, Qt::Popup);
+    QPoint pos = ui->pokemonFrame->mapToGlobal(ui->pokemonFrame->pos());
+    p->move(pos.x() + ui->pokemonFrame->width()+10, pos.y()-ui->pokemonFrame->height()/2);
+    p->setAttribute(Qt::WA_DeleteOnClose, true);
+    p->show();
+
+    connect(p, SIGNAL(pokemonChosen(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
+}
+
+void PokeEdit::changeMove()
+{
+    int slot = sender()->property("move").toInt();
+    int move = MoveInfo::Number(m_moves[slot]->text());
+
+    setMove(slot, move);
+}
+
+void PokeEdit::setMove(int slot, int move)
+{
+    try {
+        poke().setMove(move, slot, true);
+        m_moves[slot]->setText(MoveInfo::Name(move));
+
+        if (move == Move::Return) {
+            ui->happiness->setValue(255);
+        } else if (move == Move::Frustration) {
+            ui->happiness->setValue(0);
+        }
+    } catch (const QString &s) {
+        QMessageBox::information(NULL, tr("Invalid moveset"), s);
+        m_moves[slot]->clear();
+    }
+}
+
+void PokeEdit::moveEntered(const QModelIndex &index)
+{
+    int num = index.data(CustomModel::MovenumRole).toInt();
+
+    for (int i = 0; i < 4; i++) {
+        if (poke().move(i) == Move::NoMove) {
+            setMove(i, num);
+            return;
+        }
+    }
+
+    QMessageBox::information(NULL, tr("Impossible to add move"), tr("No more free moves!"));
 }
 
 PokeEdit::~PokeEdit()
@@ -45,9 +157,49 @@ void PokeEdit::updateAll()
     setItem(poke().item());
     ui->levelSettings->updateAll();
     ui->evbox->updateAll();
+    ui->ivbox->updateAll();
+
+    movesModel->setPokemon(poke().num(), poke().gen());
+
+    for (int i = 0; i < 4; i++) {
+        if (poke().move(i) != 0) {
+            m_moves[i]->setText(MoveInfo::Name(poke().move(i)));
+        } else {
+            m_moves[i]->clear();
+        }
+    }
 
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
+
+    if (poke().gen().num == 1) {
+        ui->happiness->hide();
+        ui->item->hide();
+        ui->itemLabel->hide();
+        ui->happinessLabel->hide();
+        ui->genderSprite->hide();
+    } else {
+        ui->happiness->show();
+        ui->item->show();
+        ui->itemLabel->show();
+        ui->happinessLabel->show();
+        ui->genderSprite->show();
+    }
+    if (poke().gen().num <= 2) {
+        ui->natureLabel->hide();
+        ui->nature->hide();
+    } else {
+        ui->natureLabel->show();
+        ui->nature->show();
+    }
+}
+
+void PokeEdit::setPoke(PokeTeam *poke)
+{
+    m_poke = poke;
+    ui->ivbox->setPoke(poke);
+    ui->evbox->setPoke(poke);
+    updateAll();
 }
 
 void PokeEdit::updateStats()
@@ -103,6 +255,30 @@ void PokeEdit::setItem(int itemnum)
 void PokeEdit::changeHappiness(int newHappiness)
 {
     poke().happiness() = newHappiness;
+}
+
+void PokeEdit::setNum(const Pokemon::uniqueId &num)
+{
+    if (num == poke().num()) {
+        return;
+    }
+    bool sameForme = num.pokenum == poke().num().pokenum;
+    if (!sameForme) {
+        poke().reset();
+    }
+    poke().setNum(num);
+    poke().load();
+    if (sameForme) {
+        poke().runCheck();
+    }
+
+    emit numChanged();
+    updateAll();
+}
+
+void PokeEdit::setNature(int index)
+{
+    ui->nature->setCurrentIndex(index);
 }
 
 void PokeEdit::changeNature(int newNature)

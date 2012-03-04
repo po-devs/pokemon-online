@@ -67,6 +67,8 @@ public:
     void onVariation(int player, int bonus, int malus);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onPrintHtml(const QString &data);
+    void onReconnect(int player);
+    void onDisconnect(int player);
 
     QString nick(int spot);
     QString rnick(int spot);

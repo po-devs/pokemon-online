@@ -58,6 +58,8 @@ public:
     void resetEvents();
     void restoreEventSettings();
 
+    void cleanData();
+
     void makeReadyToQuit() {
         readyToQuit = true;
     }
@@ -96,7 +98,7 @@ public slots:
     void anchorClicked(const QUrl &url);
 private:
     QTreeWidget *myplayers;
-    QHash<int, QIdTreeWidgetItem *> myplayersitems;
+    QMultiHash<int, QIdTreeWidgetItem *> myplayersitems;
     QHash<QString, QTreeWidgetItem *> mytiersitems;
     QTreeWidget *battleList;
     QHash<int, QIdTreeWidgetItem *> battleItems;
@@ -115,7 +117,8 @@ private:
     bool stillLoading;
 
     QIdTreeWidgetItem *item(int  id);
-    void getBackAllPlayerItems();
+    QList<QIdTreeWidgetItem *> items(int  id);
+    void insertPlayerItems(int playerid);
 };
 
 #endif // CHANNEL_H

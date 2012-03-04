@@ -14,6 +14,7 @@ class ChallengeInfo;
 class Battle;
 class UserInfo;
 class TeamHolder;
+class ProtocolVersion;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -34,15 +35,14 @@ public:
 
     /* functions called by the client */
     void login(const TeamHolder &team, bool ladder, const QColor &color);
-    void sendMessage(const QString &message);
     void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TeamHolder & team);
-    void sendChallengeStuff(const ChallengeInfo &c);
     void sendBattleResult(int id, int result);
     bool isConnected() const;
     void goAway(bool away);
     QString getIp() const;
+    quint32 getCommandCount() const {return commandCount;}
     void disconnectFromHost();
 
     /* Convenience functions to avoid writing a new one every time */
@@ -66,20 +66,20 @@ signals:
     /* Message to appear in all the mainchats */
     void messageReceived(const QString &mess);
     void htmlMessageReceived(const QString &mess);
+    void channelMessageReceived(const QString &mess, int channel, bool html);
     /* Command specific to a channel */
     void channelCommandReceived(int command, int channel, DataStream *stream);
     /* player from the players list */
     void playerReceived(const PlayerInfo &p);
     /* login of a player */
-    void playerLogin(const PlayerInfo &p);
-    /* Change of team of a player */
-    void teamChanged(const PlayerInfo &p);
+    void playerLogin(const PlayerInfo &p, const QStringList& tiers);
+    void teamApproved(const QStringList &tiers);
     /* logout... */
     void playerLogout(int id);
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int battleid, int id, const TeamBattle &myteam, const BattleConfiguration &conf);
+    void battleStarted(int battleid, int id1, int id2, const TeamBattle &myteam, const BattleConfiguration &conf);
     /* battle of strangers */
     void battleStarted(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int srcid, int destid);
@@ -92,7 +92,8 @@ signals:
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
-    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port);
+    void regAnnouncementReceived(const QString &announcement);
+    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QByteArray &tl);
@@ -101,7 +102,7 @@ signals:
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
-    void versionDiff(const QString &a, const QString &b);
+    void versionDiff(const ProtocolVersion&, int level);
     void serverNameReceived(const QString &serverName);
     /* Ranking */
     void rankingStarted(int,int,int);
@@ -111,6 +112,9 @@ signals:
     void addChannel(QString name, int id);
     void channelNameChanged(int id, const QString &name);
     void removeChannel(int id);
+    void reconnectPassGiven(const QByteArray&);
+    void reconnectSuccess();
+    void reconnectFailure(int reason);
 public slots:
     /* slots called by the network */
     void error();
@@ -137,12 +141,17 @@ public slots:
     void getRanking(const QString &tier, const QString &name);
     void getRanking(const QString &tier, int page);
 
+    /* By the challenge window */
+    void sendChallengeStuff(const ChallengeInfo &c);
+
 private:
     /* The connection to the outside */
     Network &socket();
     const Network &socket() const;
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
+
+    quint32 commandCount;
 
     QList<QByteArray> storedCommands;
     QSet<int> channelCommands;

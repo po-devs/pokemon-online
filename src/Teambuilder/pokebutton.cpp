@@ -95,6 +95,15 @@ void PokeButton::dropEvent(QDropEvent * event)
     }
 }
 
+void PokeButton::keyReleaseEvent(QKeyEvent *k)
+{
+    if (k->key() == Qt::Key_Enter || k->key() == Qt::Key_Return || k->key() == Qt::Key_Space) {
+        emit doubleClicked();
+    } else {
+        QPushButton::keyReleaseEvent(k);
+    }
+}
+
 void PokeButton::startDrag()
 {
     QMimeData * data = new QMimeData();

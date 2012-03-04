@@ -6,6 +6,7 @@
 class PokeTextEdit : public QScrollDownTextBrowser
 {
 public:
+    PokeTextEdit(QWidget *parent=0) : QScrollDownTextBrowser(parent){}
     QVariant loadResource(int type, const QUrl &name);
 };
 

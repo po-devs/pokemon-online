@@ -23,6 +23,7 @@ public:
 
     virtual void close() = 0;
     virtual int id() const = 0;
+    virtual void changeId(int newId) = 0;
 signals:
     void isFull(QByteArray command);
     void connected();
@@ -33,6 +34,7 @@ public slots:
     virtual void onDisconnect(){}
     virtual void manageError(QAbstractSocket::SocketError){}
     virtual void send(const QByteArray &message){(void) message;}
+    virtual void sendPacket(const QByteArray&){};
 };
 
 template <class S>
@@ -56,11 +58,13 @@ public:
 
     void close();
     int id() const {return myid;}
+    void changeId(int newId) {myid = newId;}
 
     virtual void onReceipt();
     virtual void onDisconnect();
     virtual void manageError(QAbstractSocket::SocketError);
     virtual void send(const QByteArray &message);
+    virtual void sendPacket(const QByteArray&);
 private:
     /* internal socket */
     S mysocket;
@@ -250,6 +254,12 @@ template <class S>
 const S Network<S>::socket() const
 {
     return mysocket;
+}
+
+template <class S>
+void Network<S>::sendPacket(const QByteArray &p)
+{
+    socket()->write(p);
 }
 
 #endif // NETWORK_H

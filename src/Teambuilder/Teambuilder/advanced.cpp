@@ -327,7 +327,7 @@ void TB_Advanced::changeDV(int stat, int newval)
 
 int TB_Advanced::gen() const
 {
-    return m_poke->gen();
+    return m_poke->gen().num;
 }
 
 int TB_Advanced::stat(QObject *dvchoiceptr)

@@ -9,19 +9,21 @@ Registry::Registry() {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    if (!forPlayers.listen(QHostAddress::Any, 5081))
+    if (!forPlayers.listen(QHostAddress::Any, 8080))
     {
-        printLine("Unable to listen to port 5081 (players)");
+        printLine("Unable to listen to port 8080 (players)");
     } else {
-        printLine("Starting to listen to port 5081");
+        printLine("Starting to listen to port 8080");
     }
 
-    if (!forServers.listen(QHostAddress::Any, 5082))
+    if (!forServers.listen(QHostAddress::Any, 8081))
     {
-        printLine("Unable to listen to port 5082 (servers)");
+        printLine("Unable to listen to port 8081 (servers)");
     } else {
-        printLine("Starting to listen to port 5082");
+        printLine("Starting to listen to port 8081");
     }
+
+    registry_announcement = " ";
 
     connect(&forPlayers, SIGNAL(newConnection()), SLOT(incomingPlayer()));
     connect(&forServers, SIGNAL(newConnection()), SLOT(incomingServer()));
@@ -35,8 +37,10 @@ Registry::Registry() {
     t->setInterval(60*1000);
     t->start();
     connect(t, SIGNAL(timeout()), SLOT(updateTBanList()));
+    connect(t, SIGNAL(timeout()), SLOT(updateRegistryAnnouncement()));
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(tbanListReceived(QNetworkReply*)));
     updateTBanList();
+    updateRegistryAnnouncement();
 }
 
 void Registry::printLine(const QString &line)
@@ -75,6 +79,21 @@ void Registry::tbanListReceived(QNetworkReply* reply){
     }
 
     reply->deleteLater();
+}
+
+void Registry::updateRegistryAnnouncement() {
+    QFile file("announcement.txt");
+    QString newAnnouncement;
+    if(file.open(QIODevice::ReadOnly)) {
+        QTextStream in(file.readAll());
+        newAnnouncement = in.readAll();
+        if(registry_announcement != newAnnouncement) {
+            printLine(QString("New Registry announcement: %1").arg(newAnnouncement));
+            registry_announcement = newAnnouncement;
+        }
+    }
+    file.close();
+    newAnnouncement.clear();
 }
 
 void Registry::incomingServer()
@@ -143,6 +162,10 @@ void Registry::incomingPlayer()
     Player *p = players[id] = new Player(id, newconnection);
 
     connect(players[id], SIGNAL(disconnection(int)), SLOT(disconnection(int)));
+
+    printLine("Sending the registry announcement");
+
+    p->sendRegistryAnnouncement(registry_announcement);
 
     printLine("Sending the server list");
     foreach(Server *s, servers) {

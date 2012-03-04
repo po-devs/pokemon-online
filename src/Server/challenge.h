@@ -23,6 +23,8 @@ public:
     void onPlayerDisconnect(Player *p);
 
     int challenger() const;
+    QString tier() const;
+    Pokemon::gen gen() const;
     int challenged() const;
     ChallengeInfo description() const { return desc; }
 
@@ -31,11 +33,12 @@ public:
     };
 
 signals:
-    void battleStarted(int src, int dest, const ChallengeInfo &desc);
+    void battleStarted(int src, int dest, const ChallengeInfo &desc, int srcteam, int destteam);
 private:
     Player* src;
     Player* dest;
     ChallengeInfo desc;
+    Server *server;
     bool cancelledFromServer;
 };
 

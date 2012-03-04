@@ -30,6 +30,8 @@ public slots:
     void changeShinyness(bool isShiny);
     void changeGender();
 
+    void updateGender();
+    void updateShiny();
 private:
     Ui::PokeLevelSettings *ui;
 
@@ -37,7 +39,6 @@ private:
     PokeTeam &poke() {return *m_poke;}
     const PokeTeam &poke() const {return *m_poke;}
 
-    void updateGender();
     void setGender();
 };
 

@@ -475,7 +475,7 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
         scene.addItem(items[i]);
     }
 
-    int size = Version::avatarSize[info()->gen()-1];
+    int size = Version::avatarSize[info()->gen().num-1];
 
     if (!info()->multiples()) {
         items[info()->spot(myself())]->setPos(50 - size/2, 146 - size);
@@ -622,7 +622,7 @@ void RegularBattleScene::updateToolTip(int spot)
 
     for (int i = 0; i < 5; i++) {
         // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
-        if (data()->gen() == 1) {
+        if (data()->gen().num == 1) {
             switch (i) {
             case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
             case 3: continue;

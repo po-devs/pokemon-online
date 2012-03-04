@@ -38,7 +38,7 @@ namespace BattleCommands {
         Clause,
         DynamicInfo,
         DynamicStats,
-        Spectating,
+        Spectating, // When designated a player, tells if the player disconnects/reconnects from the battle
         SpectatorChat,
         AlreadyStatusMessage,
         ChangeTempPoke,

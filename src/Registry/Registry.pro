@@ -6,6 +6,7 @@ QT -= gui
 TARGET = Registry
 DESTDIR = ../../bin
 TEMPLATE = app
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 SOURCES += main.cpp \
     mainwindow.cpp \
     registry.cpp \
@@ -23,3 +24,6 @@ HEADERS += mainwindow.h \
     antidos.h \
     macro.h
 DEFINES = REGISTRY_SIDE
+
+LIBS += -L../../bin \
+    -lutilities

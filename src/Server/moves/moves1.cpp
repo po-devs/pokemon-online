@@ -1,9 +1,9 @@
-#include "moves.h"
-#include "miscmoves.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "items.h"
-#include "battlecounterindex.h"
-#include "../Shared/battlecommands.h"
+#include "../moves.h"
+#include "../miscmoves.h"
+#include "../../PokemonInfo/pokemoninfo.h"
+#include "../items.h"
+#include "../battlecounterindex.h"
+#include "../../Shared/battlecommands.h"
 
 typedef BS::priorityBracket bracket;
 using namespace Move;
@@ -52,7 +52,7 @@ struct MMAquaRing : public MM
             turn(b,s)["Failed"] = true;
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 1) : makeBracket(6, 0) ;
     }
 
@@ -127,8 +127,6 @@ struct MMBatonPass : public MM
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
-        /* Removing Transform and disable */
-        c.remove("Transformed");
 
         QList<int> boosts;
 
@@ -136,6 +134,8 @@ struct MMBatonPass : public MM
             boosts.push_back(fpoke(b,s).boosts[i]);
         }
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
+        turn(b,s)["BatonPassFlags"] = fpoke(b,s).flags & BS::BasicPokeInfo::Substitute;
+        turn(b,s)["BatonPassLife"] = fpoke(b,s).substituteLife;
 
         /* choice band etc. would force the same move
             if on both the passed & the passer */
@@ -160,12 +160,15 @@ struct MMBatonPass : public MM
             fpoke(b,s).boosts[i] += boosts[i];
         }
 
+        fpoke(b, s).flags |= turn(b,s)["BatonPassFlags"].toInt();
+        fpoke(b, s).substituteLife = turn(b,s)["BatonPassLife"].toInt();
+
         if (b.gen() <= 4) {
             //and we decrease the switch count associated, so mean look & co still work
             inc(slot(b,s)["SwitchCount"], -1);
         }
 
-        if (poke(b,s).value("Substitute").toBool()) {
+        if (fpoke(b,s).substitute()) {
             b.notifySub(s,true);
         }
     }
@@ -230,7 +233,7 @@ struct MMBlastBurn : public MM
             return;
         }
 
-        turn(b, s)["NoChoice"] = true;
+        fturn(b, s).add(TM::NoChoice);
 
         addFunction(turn(b,s), "MoveSettings", "BlastBurn", &ms);
     }
@@ -290,7 +293,7 @@ struct MMConversion : public MM
 
     static void daf(int s, int, BS &b) {
         /* Conversion doesn't fail in Gen 1 */
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             return;
         }
         /* First check if there's even 1 move available */
@@ -329,7 +332,7 @@ struct MMConversion : public MM
 
     static void uas(int s, int t, BS &b) {
         /* Conversion changes the user's types to the opponent's types in Gen 1*/
-        if (b.gen() == 1) {
+        if (b.gen().num == 1) {
             b.sendMoveMessage(172,0,s,type(b,s),t);
             fpoke(b,s).type1 = fpoke(b,t).type1;
             fpoke(b,s).type2 = fpoke(b,t).type2;
@@ -361,12 +364,12 @@ struct MMConversion2 : public MM
 
             attackType = MoveInfo::Type(poke(b,s)["LastAttackToHit"].toInt(), b.gen());
         } else {
-            if (!poke(b,t).contains("LastSpecialMoveUsed")) {
+            if (fpoke(b,t).lastMoveUsed == 0) {
                 turn(b,s)["Failed"] = true;
                 return;
             }
 
-            attackType = MoveInfo::Type(poke(b,t)["LastSpecialMoveUsed"].toInt(), b.gen());
+            attackType = MoveInfo::Type(fpoke(b,t).lastMoveUsed, b.gen());
         }
 
         if (attackType == Type::Curse) {
@@ -403,7 +406,7 @@ struct MMCrushGrip : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints();
+        tmove(b, s).power = tmove(b, s).power * std::max(1, 120 * b.poke(t).lifePoints()/b.poke(t).totalLifePoints());
     }
 };
 
@@ -433,7 +436,7 @@ struct MMCurse : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 8) : makeBracket(10, 0) ;
     }
 
@@ -472,7 +475,7 @@ struct MMDestinyBond : public MM
 
         int trn = poke(b,s)["DestinyBondTurn"].toInt();
 
-        if (trn == b.turn() || (trn+1 == b.turn() && !turn(b,s).value("HasMoved").toBool() )) {
+        if (trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) {
             b.sendMoveMessage(26, 0, s, Pokemon::Ghost, t);
             b.koPoke(t, s, false);
 
@@ -672,7 +675,7 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen() == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
+        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen().num == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -732,7 +735,7 @@ struct MMBellyDrum : public MM
             b.fail(s, 8);
 
             /* Odd bug with gold, silver, crystal versions in gen 2 */
-            if (b.gen() == 2 && move(b,s) == Move::BellyDrum) {
+            if (b.gen() == Gen::GSC && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
         } else if (move(b,s) == Move::BellyDrum) {
@@ -750,7 +753,7 @@ struct MMBellyDrum : public MM
             b.sendMoveMessage(8,1,s,type(b,s));
             b.inflictStatMod(s,Attack,12, s, false);
 
-            if (b.gen() == 2) {
+            if (b.gen().num == 2) {
                 while (b.getStat(s, Attack) == 999) {
                     b.inflictStatMod(s,Attack,-1,s,false);
                 }
@@ -807,7 +810,7 @@ struct MMFocusPunch : public MM
 
     static void daf(int s, int, BS &b)
     {
-        if (turn(b,s).contains("DamageTakenByAttack")) {
+        if (turn(b,s).contains("DamageTakenBy")) {
             b.fail(s,47,0,Pokemon::Fighting);
         }
     }
@@ -904,7 +907,7 @@ struct MMAssist : public MM
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
         }
 
-        bool contains(int move, int gen=GEN_MAX) const {
+        bool contains(int move, Pokemon::gen gen=GEN_MAX) const {
             if (move == Transform) {
                 return gen >= 5;
             } else {
@@ -1016,7 +1019,7 @@ struct MMBide : public MM
 
         addFunction(turn(b,s),"UponOffensiveDamageReceived", "Bide", &udi);
         MoveEffect::setup(Move::Bide, s, s, b);
-        turn(b,s)["NoChoice"] = true;
+        fturn(b, s).add(TM::NoChoice);
     }
 
     static void ccd(int s, int, BS &b) {
@@ -1030,7 +1033,7 @@ struct MMBind : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(3,0) : gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
     }
 
@@ -1117,7 +1120,7 @@ struct MMBounce : public MM
 
     static void ts(int s, int, BS &b) {
         if (poke(b,s).value("Invulnerable").toBool()) {
-            turn(b,s)["NoChoice"] = true;
+            fturn(b, s).add(TM::NoChoice);
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
@@ -1268,26 +1271,26 @@ struct MMCounter : public MM
             return;
         }
         /* In gen 1, only Normal and Fighting moves are countered */
-        if (b.gen() == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
+        if (b.gen().num == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
             return;
         }
 
-        if (turn(b, s).value("DamageTakenByAttack").toInt() <= 0) {
+        if (fturn(b, s).damageTaken <= 0) {
             return;
         }
 
-        turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+        turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
         turn(b,s)["CounterTarget"] = source;
     }
 
     static void ms (int s, int, BS &b) {
         //In GSC Sleep Talk + Counter works
-        if (!turn(b,s).contains("CounterDamage") && b.gen() == 2) {
+        if (!turn(b,s).contains("CounterDamage") && b.gen().num == 2) {
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && turn(b, s).value("DamageTakenByAttack").toInt() > 0) {
-                turn(b,s)["CounterDamage"] = 2 * turn(b,s)["DamageTakenByAttack"].toInt();
+                    && fturn(b, s).damageTaken > 0) {
+                turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
                 turn(b,s)["CounterTarget"] = t;
             }
         }
@@ -1326,7 +1329,7 @@ struct MMDoomDesire : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(1, 0) : gen <= 4 ? makeBracket(7, 0) : makeBracket(3, 0) ;
     }
 
@@ -1418,7 +1421,7 @@ struct MMEmbargo : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(6, 17) : makeBracket(18, 0) ;
     }
 
@@ -1453,7 +1456,7 @@ struct MMEncore : public MM
     };
     static FM forbidden_moves;
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 2 ? makeBracket(9, 0) : gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
     }
 
@@ -1469,11 +1472,11 @@ struct MMEncore : public MM
             return;
         }
         int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && turn(b,t).value("HasMoved").toBool())) {
+        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
             turn(b,s)["Failed"] = true;
             return;
         }
-        if (poke(b,t).contains("NoChoice")) {
+        if (fturn(b,t).contains(TM::NoChoice)) {
             turn(b,s)["Failed"] = true;
             return;
         }
@@ -1504,7 +1507,7 @@ struct MMEncore : public MM
         } else {
             if (b.gen() <=3)
                 b.counters(t).addCounter(BC::Encore, 2 + (b.randint(4)));
-            else if (b.gen() == 4)
+            else if (b.gen().num == 4)
                 b.counters(t).addCounter(BC::Encore, 3 + (b.randint(5)));
             else
                 b.counters(t).addCounter(BC::Encore, 2);
@@ -1514,7 +1517,7 @@ struct MMEncore : public MM
 
             /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
                 and i bet something strange would also happen with charging move) */
-            if (!turn(b,t).contains("NoChoice") && b.choice(t).attackingChoice()) {
+            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice()) {
                 for (int i = 0; i < 4; i ++) {
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);
@@ -1695,7 +1698,7 @@ struct MMBeatUp : public MM {
         int def = PokemonInfo::Stat(b.poke(t).num(), b.gen(), Defense,b.poke(t).level(),0,0);
         for (int i = 0; i < 6; i++) {
             PokeBattle &p = b.poke(source,i);
-            if (p.status() == Pokemon::Fine) {
+            if (p.status() == Pokemon::Fine || i == b.slotNum(s)) {
                 int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.randint(255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
@@ -1703,7 +1706,9 @@ struct MMBeatUp : public MM {
                     b.inflictSubDamage(t,damage,t);
                 else
                     b.inflictDamage(t,damage,t,true);
-                turn(b,t)["HadSubstitute"] = turn(b,t)["Substitute"];
+                if (!fpoke(b, t).substitute()) {
+                    fpoke(b, t).remove(BS::BasicPokeInfo::HadSubstitute);
+                }
             }
             if (b.koed(t))
                 return;
@@ -1711,7 +1716,7 @@ struct MMBeatUp : public MM {
     }
 
     static void bh(int s, int, BS &b) {
-        if (b.poke(s, b.repeatCount()).status() != Pokemon::Fine) {
+        if (b.poke(b.player(s), b.repeatCount()).status() != Pokemon::Fine) {
             turn(b,s)["HitCancelled"] = true;
         } else {
             tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id).baseAttack()/10);
@@ -1874,7 +1879,7 @@ struct MMGravity : public MM
         }
     }
 
-    static ::bracket bracket(int gen) {
+    static ::bracket bracket(Pokemon::gen gen) {
         return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
     }
 

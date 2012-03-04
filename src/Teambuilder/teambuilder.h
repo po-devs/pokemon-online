@@ -27,15 +27,20 @@ public slots:
     void newTeam();
     void editPoke(int);
     void switchToTrainer();
+    void setTierList(const QStringList &tiers); //tells which tiers are available
+
 private slots:
     void markTeamUpdated();
 signals:
     void done();
+    void reloadMenuBar();
 private:
     TeamHolder &team() {return *m_team;}
     TeamHolder *m_team;
     TrainerMenu *trainer;
     TeamMenu *teamMenu;
+
+    QAbstractItemModel *pokemonModel;
 
     void markAllUpdated();
     void switchTo(TeamBuilderWidget *w);

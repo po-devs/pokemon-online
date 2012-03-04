@@ -150,7 +150,7 @@ void LogManager::changeBaseDirectory(const QString &directory)
     this->directory = directory;
 
     QSettings s;
-    s.setValue("logs_directory", directory);
+    s.setValue("logs_directory", directory + "/");
 }
 
 Log * LogManager::createLog(LogType type, const QString &title, bool autolog)
@@ -212,6 +212,10 @@ QString LogManager::getDirectoryForType(LogType type)
     } else if (type == ReplayLog) {
         return directory + "Battle Replays/";
     } else {
-        return directory;
+        if(type == PMLog) {
+            return directory + "Private Messages/";
+        } else {
+            return directory;
+        }
     }
 }

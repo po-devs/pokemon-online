@@ -44,7 +44,7 @@ QWidget *TB_PokemonBody::getWidget()
 
 int TB_PokemonBody::gen()
 {
-    return poke()->gen();
+    return poke()->gen().num;
 }
 
 void TB_PokemonBody::connectWithAdvanced(TB_Advanced *ptr)

@@ -194,7 +194,7 @@ void BattleClientLog::onAvoid(int spot)
 
 void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
 {
-    printLine("StatChange", tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat, data()->gen()), abs(boost) > 1 ? (abs(boost) > 2 ? tr("drastically ") : tr("sharply "))
+    printLine("StatChange", tu(tr("%1's %2 %3%4!").arg(nick(spot), StatInfo::Stat(stat, data()->gen().num), abs(boost) > 1 ? (abs(boost) > 2 ? tr("drastically ") : tr("sharply "))
                                                                                                         : "",
                                                        boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
@@ -284,7 +284,7 @@ void BattleClientLog::onStatusOver(int spot, int status)
 
 void BattleClientLog::onAttackFailing(int, bool silent)
 {
-    printLine("Failed", tr("But if failed!"), silent);
+    printLine("Failed", tr("But it failed!"), silent);
 }
 
 void BattleClientLog::onPlayerMessage(int spot, const QString &message)
@@ -292,7 +292,7 @@ void BattleClientLog::onPlayerMessage(int spot, const QString &message)
     //can be 0 for winning/losing message
     if (message.length() == 0)
         return;
-    printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(message));
+    printHtml("PlayerChat", QString("<span style='color:") + (spot?"#5811b1":"green") + "'><b>" + escapeHtml(data()->name(spot)) + ": </b></span>" + escapeHtml(removeTrollCharacters(message)));
 }
 
 void BattleClientLog::onSpectatorJoin(int id, const QString &name)
@@ -310,7 +310,7 @@ void BattleClientLog::onSpectatorLeave(int id)
 
 void BattleClientLog::onSpectatorChat(int id, const QString &message)
 {
-    printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(message));
+    printHtml("SpectatorChat", toColor(spectators.value(id), Qt::blue) + ": " + escapeHtml(removeTrollCharacters(message)));
 }
 
 void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &q)
@@ -550,4 +550,18 @@ void BattleClientLog::onRearrangeTeam(int, const ShallowShownTeam &team)
 void BattleClientLog::onPrintHtml(const QString &data)
 {
     printHtml("ServerMessage", data);
+}
+
+void BattleClientLog::onReconnect(int player)
+{
+    int spot = data()->spotFromId(player);
+
+    printHtml("Reconnect", toBoldColor(tr("%1 logged back in and is ready to resume the battle!").arg(data()->name(spot)), Qt::blue));
+}
+
+void BattleClientLog::onDisconnect(int player)
+{
+    int spot = data()->spotFromId(player);
+
+    printHtml("Disconnect", toBoldColor(tr("%1 got disconnected!").arg(data()->name(spot)), Qt::blue));
 }

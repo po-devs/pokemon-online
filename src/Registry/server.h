@@ -18,6 +18,7 @@ class Server : public QObject
     PROPERTY(quint16, players);
     PROPERTY(quint16, maxPlayers)
     PROPERTY(quint16, port)
+    PROPERTY(bool, passwordProtected)
     PROPERTY(bool, listed);
 public:
     Server(int id, QTcpSocket *s);
@@ -28,11 +29,12 @@ public:
     void kick();
     QString getAddress(int port) const;
 public slots:
-    void login(const QString &, const QString &, quint16, quint16,quint16);
+    void login(const QString &, const QString &, quint16, quint16,quint16, bool);
     void numChanged(quint16);
     void nameChanged(const QString &);
     void descChanged(const QString &);
     void maxChanged(const quint16);
+    void passToggled(bool);
     void disconnected();
 signals:
     void nameChangedReq(int id, const QString &name);

@@ -3,6 +3,16 @@
 #include <QMessageBox>
 #include "teamholder.h"
 
+QStringList Profile::getProfileList(const QString &path)
+{
+    QDir profilesPath(path);
+    QStringList profilesList;
+    foreach(const QString &name, profilesPath.entryList(QStringList("*.xml"))) {
+        profilesList.append(QUrl::fromPercentEncoding(name.split(".")[0].toUtf8()));
+    }
+    return profilesList;
+}
+
 bool Profile::loadFromFile(const QString &path)
 {
     QFile file(path);
@@ -89,6 +99,16 @@ bool Profile::saveToFile(const QString &path) const
     return true;
 }
 
+void Profile::deleteProfile(const QString &path)
+{
+    QFile file(path);
+    if(file.isOpen()) {
+        QMessageBox::warning(0, QObject::tr("Deleting Profile"), QObject::tr("Couldn't delete profile: %1\n%2").arg(file.fileName(), file.errorString()));
+        return;
+    }
+    file.remove();
+}
+
 TeamHolder::TeamHolder()
 {
     m_teams.push_back(Team());
@@ -117,19 +137,104 @@ Team &TeamHolder::team(int i)
 
 int TeamHolder::count() const
 {
-    return m_teams.size();
+    if (m_tiers.isEmpty())
+        return m_teams.size();
+    else
+        return std::min(m_tiers.size(), m_teams.size());
+}
+
+QString TeamHolder::tier() const
+{
+    return tier(currentTeam());
+}
+
+QString TeamHolder::tier(int team) const
+{
+    return team < m_tiers.size() ? m_tiers[team] : QObject::tr("No Tier");
+}
+
+void TeamHolder::setTiers(const QStringList &tiers)
+{
+    m_tiers = tiers;
 }
 
 void TeamHolder::save()
 {
     QSettings s;
-    team().saveToFile(s.value("team_location").toString());
-    profile().saveToFile(s.value("profile_location").toString());
+
+    QStringList locations;
+
+    for (int i = 0; i < count(); i++) {
+        if (team(i).name().isEmpty()) {
+            QMessageBox::warning(NULL, QObject::tr("Impossible to save team"),
+                                 QObject::tr("The team number %1 could not be saved as it was given no name!").arg(i+1));
+        } else {
+            team(i).saveToFile(team(i).path());
+            locations.push_back(team(i).path());
+        }
+    }
+
+    s.setValue("team_locations", locations);
+    QString path = s.value("profiles_path").toString() + "/" + name() + ".xml";
+    profile().saveToFile(path);
 }
 
 void TeamHolder::load()
 {
     QSettings s;
-    team().loadFromFile(s.value("team_location").toString());
-    profile().loadFromFile(s.value("profile_location").toString());
+
+    m_teams.clear();
+    if (!s.contains("team_locations")) {
+        addTeam();
+        setCurrent(0);
+        team().loadFromFile(s.value("team_location").toString());
+    } else {
+        m_teams.clear();
+
+        QStringList l = s.value("team_locations").toStringList();
+
+        for (int i = 0; i < l.length(); i++) {
+            addTeam();
+            team(i).loadFromFile(l[i]);
+        }
+
+        if (count() == 0) {
+            addTeam();
+            setCurrent(0);
+        } else {
+            if (currentTeam() >= count()) {
+                setCurrent(count()-1);
+            }
+        }
+    }
+
+    if (!team().path().isEmpty()) {
+        s.setValue("team_folder", team().folder());
+    }
+
+    profile().loadFromFile(s.value("current_profile").toString());
+}
+
+void TeamHolder::addTeam()
+{
+    m_teams.push_back(Team());
+
+    if (currentTeam() < count() - 1 && !team(currentTeam()).folder().isEmpty()) {
+        m_teams.back().setFolder(team(currentTeam()).folder());
+    } else {
+        QSettings s;
+
+        m_teams.back().setFolder(s.value("team_folder").toString());
+    }
+}
+
+void TeamHolder::removeTeam()
+{
+    if (count() > 1) {
+        m_teams.removeAt(currentTeam());
+    }
+
+    if (currentTeam() >= count()) {
+        m_currentTeam -= 1;
+    }
 }

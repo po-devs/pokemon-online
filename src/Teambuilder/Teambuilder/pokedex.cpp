@@ -6,7 +6,7 @@
 #include "theme.h"
 #include "poketablemodel.h"
 #include "modelenum.h"
-#include "pokechoice.h"
+#include "../pokechoice.h"
 
 Pokedex::Pokedex(QWidget *parent, QAbstractItemModel *model)
     : QWidget(parent)

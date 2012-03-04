@@ -3,55 +3,47 @@
 #include "../Shared/config.h"
 #include "../Shared/networkcommands.h"
 
-DataStream &operator << (DataStream &out, const BasicInfo& team)
-{
-    out << team.name;
-    out << team.info;
-
-    return out;
-}
-
-DataStream &operator >> (DataStream &in, BasicInfo& team)
-{
-    in >> team.name;
-    in >> team.info;
-
-    /* To avoid server overloads */
-    if (team.info.length() > 250)
-        team.info.resize(250);
-
-    return in;
-}
-
-
 DataStream & operator >> (DataStream &in, PlayerInfo &p)
 {
-    in >> p.id;
-    in >> p.team;
-    in >> p.auth;
-    in >> p.flags;
-    in >> p.rating;
+    VersionControl v;
+    in >> v;
 
-    in >> p.avatar;
-    in >> p.tier;
-    in >> p.color;
-    in >> p.gen;
+    if (v.versionNumber != 0) {
+        return in;
+    }
+
+    Flags network;
+    v.stream >> p.id >> network >> p.flags >> p.name >> p.color >> p.avatar >> p.info >> p.auth;
+
+    qint8 numTiers;
+
+    v.stream >> numTiers;
+
+    for (int i = 0; i < numTiers; i++) {
+        QString tier;
+        quint16 rating;
+        v.stream >> tier >> rating;
+
+        p.ratings.insert(tier, rating);
+    }
 
     return in;
 }
 
 DataStream & operator << (DataStream &out, const PlayerInfo &p)
 {
-    out << p.id;
-    out << p.team;
-    out << p.auth;
-    out << p.flags;
-    out << p.rating;
+    VersionControl v;
 
-    out << p.avatar;
-    out << p.tier;
-    out << p.color;
-    out << p.gen;
+    v.stream << p.id << Flags(0) << p.flags << p.name << p.color << p.avatar << p.info << p.auth << qint8(p.ratings.size());
+
+    QHashIterator<QString, quint16> it(p.ratings);
+
+    while (it.hasNext()) {
+        it.next();
+        v.stream << it.key() << it.value();
+    }
+
+    out << v;
 
     return out;
 }
@@ -77,54 +69,6 @@ DataStream & operator << (DataStream &out, const Battle &p)
     return out;
 }
 
-Flags::Flags(quint32 data) : data(data) {
-}
-
-bool Flags::operator [](int index) const {
-    return data & (1 << index);
-}
-
-void Flags::setFlag(int index, bool value)
-{
-    if (value) {
-        data|= (1 << index);
-    } else {
-        data &=  ~(1 << index);
-    }
-}
-
-void Flags::setFlags(quint32 flags)
-{
-    data = flags;
-}
-
-DataStream &operator << (DataStream &out, const Flags &f)
-{
-    for (int i = 0; i==0 || f.data>>(i*8); i++) {
-        quint8 c = f.data >> (i*8);
-        if (f.data >> ((i+1)*8)) {
-            c |= 1 << 7;
-        }
-        out << c;
-    }
-
-    return out;
-}
-
-DataStream &operator >> (DataStream &in, Flags &f) {
-    f.data = 0;
-
-    quint8 c(0);
-
-    for (int i = 0; i == 0 || c & (1 << 7); i++) {
-        in >> c;
-        f.data |= c << (i * 8);
-        f.data &= ~(1 << (i*8+7)); /* Remove marker bit if present */
-    }
-
-    return in;
-}
-
 ProtocolVersion::ProtocolVersion()
 {
     version = PROTOCOL_VERSION;
@@ -143,35 +87,8 @@ DataStream &operator << (DataStream &out, const ProtocolVersion &p)
     return out;
 }
 
-VersionControl::VersionControl(quint8 versionNumber) : stream(&data, QIODevice::ReadWrite), versionNumber(versionNumber)
-{
-
-}
-
-DataStream & operator >> (DataStream &in, VersionControl &v)
-{
-    quint16 length;
-    in >> length;
-
-    v.data.resize(length);
-    in.readRawData(v.data.data(), length);
-    v.stream >> v.versionNumber;
-
-    return in;
-}
-
-DataStream & operator << (DataStream &out, const VersionControl &v)
-{
-    out << quint16(v.data.length() + 1);
-    out << v.versionNumber;
-    out.writeRawData(v.data, v.data.length());
-
-    return out;
-}
-
 TrainerInfo::TrainerInfo() : avatar(0) {
 }
-
 
 DataStream & operator >> (DataStream &in, TrainerInfo &i)
 {
@@ -223,50 +140,51 @@ DataStream & operator << (DataStream &out, const TrainerInfo &i)
     return out;
 }
 
-
-DataStream & operator << (DataStream & out, const PersonalTeam & team)
-{
-    out << quint8(team.gen());
-
-    for(int index = 0;index<6;index++)
-    {
-        const PokePersonal & poke = team.poke(index);
-        out << poke;
-    }
-
-    return out;
-}
-
 DataStream & operator >> (DataStream & in, PersonalTeam & team)
 {
-    quint8 gen;
+    VersionControl v;
+    in >> v;
 
-    in >> gen;
+    if (v.versionNumber != 0) {
+        return in;
+    }
 
-    team.setGen(gen);
+    Flags network;
+    v.stream >> network;
 
-    for(int i=0;i<6;i++)
+    if (network[0]) {
+        QString s;
+        v.stream >> s;
+        team.defaultTier() = s;
+    }
+
+    v.stream >> team.gen();
+
+    for (int i = 0; i < 6; i++) {
+        team.poke(i).gen() = team.gen();
+    }
+
+    quint8 count = 6;
+
+    if (network[1]) {
+        v.stream >> count;
+    }
+
+    for(int i=0;i<count;i++)
     {
-        in >> team.poke(i);
+        v.stream >> team.poke(i);
+    }
+
+    /* In case the sender overrode the gen parameter in the individual pokemons */
+    for (int i = 0; i < 6; i++) {
+        team.poke(i).gen() = team.gen();
     }
 
     return in;
 }
 
-PersonalTeam::PersonalTeam(): m_gen(GEN_MAX)
+PersonalTeam::PersonalTeam(): m_prop_gen(GEN_MAX)
 {
-}
-
-void PersonalTeam::setGen(int gen)
-{
-    if (this->gen() == gen)
-        return;
-
-    m_gen = gen;
-
-    for (int i = 0; i < 6; i++) {
-        poke(i).gen() = gen;
-    }
 }
 
 LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0)
@@ -328,4 +246,14 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
 #undef test
 
     return in;
+}
+
+ChangeTeamInfo::ChangeTeamInfo()
+{
+    name = 0;
+    color = 0;
+    teams = 0;
+    team = 0;
+    teamNum = 0;
+    info = 0;
 }
