@@ -46,7 +46,7 @@ public:
     static QPixmap StatusIcon(int status);
     static QPixmap BattleStatusIcon(int status);
     static QPixmap TypePicture(int type);
-    static QIcon ToolButtonIcon(QToolButton *b, ToolIcon icon);
+    static void ToolButtonIcon(QToolButton *b, ToolIcon icon);
     static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
     static QString path(const QString &filename, bool defaultP = false);
 
