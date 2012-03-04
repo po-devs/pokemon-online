@@ -2230,7 +2230,15 @@ void Client::openTeamBuilder()
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
     connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
+}
+
+void Client::reloadTeamBuilderBar()
+{
+    if (top) {
+        myteambuilder->setMenuBar(((TeamBuilder*)myteambuilder->centralWidget())->createMenuBar(top));
+    }
 }
 
 void Client::changeTeam()
