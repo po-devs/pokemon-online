@@ -53,21 +53,18 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
-    void notifyHits(int spot, int number);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
-    /* Does not do extra operations,just a setter */
-    void changeStatMod(int player, int stat, int newstatmod);
     void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
     void changePokeForme(int slot, const Pokemon::uniqueId &forme);
     void calculateTypeModStab(int orPlayer = -1, int orTarget = -1);
     void changeAForme(int player, int newforme);
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
-    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true, bool *negative = NULL);
+    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative);
+    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true) {return inflictStatMod(player, stat, mod, attacker, tell, NULL);}
 private:
-    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
 public:
@@ -76,15 +73,9 @@ public:
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
-    void unthaw(int player);
-    void healStatus(int player, int status);
-    void healConfused(int player);
-    void healDamage(int player, int target);
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
-    bool isConfused(int player);
     void inflictConfused(int player, int source, bool tell=true);
-    void inflictConfusedDamage(int player);
     void inflictRecoil(int source, int target);
     void inflictDamage(int player, int damage, int source, bool straightattack = false, bool goForSub = false);
     void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
@@ -98,7 +89,6 @@ public:
     void loseAbility(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
-    void losePP(int player, int move, int loss);
     void gainPP(int player, int move, int gain);
     //Uproarer
     bool isThereUproar();
@@ -114,10 +104,8 @@ public:
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
     bool testStatus(int player);
-    bool testFail(int player);
     void failSilently(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
-    bool hasType(int player, int type);
     bool hasWorkingAbility(int play, int ability);
     bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
@@ -190,8 +178,6 @@ public:
 
 public:
     unsigned int currentSlot;
-
-    bool applyingMoveStatMods;
 
     enum EffectType {
         TurnEffect,

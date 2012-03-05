@@ -71,6 +71,7 @@ QSet<int> ItemInfo::m_GenItems[NUMBER_GENS];
 QList<QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
 QList<int> TypeInfo::m_TypeVsType;
+QList<int> TypeInfo::m_TypeVsTypeGen1;
 QList<int> TypeInfo::m_Categories;
 
 QList<QString> NatureInfo::m_Names;
@@ -2127,6 +2128,17 @@ void TypeInfo::loadEff()
 	    m_TypeVsType.push_back(l3.toInt());
 	}
     }
+
+    temp.clear();
+
+    fill_container_with_file(temp, path("typestable_gen1.txt"));
+
+    foreach (QString l, temp) {
+    QStringList l2 = l.split(' ');
+    foreach (QString l3, l2) {
+        m_TypeVsTypeGen1.push_back(l3.toInt());
+    }
+    }
 }
 
 void TypeInfo::init(const QString &dir)
@@ -2165,9 +2177,13 @@ QString TypeInfo::weatherName(int weather)
     }
 }
 
-int TypeInfo::Eff(int type_attack, int type_defend)
+int TypeInfo::Eff(int type_attack, int type_defend, Pokemon::gen gen)
 {
-    return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
+    if (gen.num == 1) {
+        return m_TypeVsTypeGen1[type_attack * NumberOfTypes() + type_defend];
+    } else {
+        return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
+    }
 }
 
 

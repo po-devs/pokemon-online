@@ -41,6 +41,8 @@ private:
 
     BasicMoveInfo moves[2];
 
+    context pokeMems[2];
+
     BasicPokeInfo &fpoke(int i) {return pokes[i];}
     const BasicPokeInfo &fpoke(int i) const {return pokes[i];}
     SlotMemory &slotMemory(int i) {return slotzones[i];}
@@ -48,6 +50,8 @@ private:
     const TurnMemory &turnMem(int i) const {return turnzones[i];}
     BasicMoveInfo &tmove(int slot) { return moves[slot];}
     const BasicMoveInfo &tmove(int slot) const {return moves[slot];}
+    context &pokeMemory(int slot) { return pokeMems[slot];}
+    const context & pokeMemory(int slot) const {return pokeMems[slot];}
 };
 
 #endif // BATTLERBY_H

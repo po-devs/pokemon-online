@@ -376,7 +376,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static int Number(const QString &type);
-    static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
+    static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GEN_MAX); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
     static int Category(int type);
@@ -395,6 +395,7 @@ private:
     static QList<QString> m_Names;
     static QString m_Directory;
     static QList<int> m_TypeVsType;
+    static QList<int> m_TypeVsTypeGen1;
     static QList<int> m_Categories;
 
     static void loadNames();

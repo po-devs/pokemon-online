@@ -21,7 +21,7 @@ struct MMDisable : public MM
     static void daf(int s, int t, BS &b)
     {
         if (failOn(t, b))
-            turn(b,s)["Failed"] = true;
+            fturn(b,s).add(TM::Failed);
     }
 
     static bool failOn(int t, BS &b) {
