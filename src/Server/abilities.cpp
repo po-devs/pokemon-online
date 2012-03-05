@@ -46,7 +46,7 @@ struct AMAdaptability : public AM {
 
     static void dfs(int s, int, BS &b) {
         /* So the regular stab (3) will become 4 and no stab (2) will stay 2 */
-        turn(b,s)["Stab"] = turn(b,s)["Stab"].toInt() * 4 / 3;
+        fturn(b,s).stab = fturn(b,s).stab * 4 / 3;
     }
 };
 
@@ -75,7 +75,7 @@ struct AMAngerPoint : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.koed(s) && s != t && turn(b,t)["CriticalHit"].toBool() && (b.gen() <= 4 || !b.hasSubstitute(s))) {
+        if (!b.koed(s) && s != t && fturn(b,t).contains(TM::CriticalHit) && (b.gen() <= 4 || !b.hasSubstitute(s))) {
             b.sendAbMessage(3,0,s);
             b.inflictStatMod(s,Attack,12,s);
         }
@@ -248,7 +248,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void pda(int s, int, BS &b) {
-        if (turn(b,s).value("HasPassedStatus").toBool())
+        if (fturn(b,s).contains(TM::HasPassedStatus))
             return;
         if (b.linked(s, "Attract")) {
             int seducer = b.linker(s, "Attract");

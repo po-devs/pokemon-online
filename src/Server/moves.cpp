@@ -889,7 +889,7 @@ struct MMAttract : public MM
     }
 
     static void pda(int s, int, BS &b) {
-        if (turn(b,s).value("HasPassedStatus").toBool())
+        if (fturn(b,s).contains(TM::HasPassedStatus))
             return;
         if (b.linked(s, "Attract")) {
             int seducer = b.linker(s, "Attract");
@@ -1388,7 +1388,7 @@ struct MMJumpKick : public MM
                 typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
             }
             fturn(b,s).typeMod = typemod;
-            turn(b,s)["Stab"] = b.hasType(s, Type::Fighting) ? 3 : 2;
+            fturn(b,s).stab = b.hasType(s, Type::Fighting) ? 3 : 2;
             if (b.gen().num == 4)
                 damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
             else

@@ -51,6 +51,7 @@ public:
 
     void addStatus(int status);
     void removeStatus(int status);
+    bool hasStatus(int status) const;
     bool ko() const {return lifePercent() == 0 || num() == Pokemon::NoPoke || status() == Pokemon::Koed;}
 
     void init(const PokeBattle &poke);

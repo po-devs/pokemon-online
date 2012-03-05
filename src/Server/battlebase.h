@@ -38,6 +38,8 @@ public:
     BattleBase();
     ~BattleBase();
 
+    typedef QVariantHash context;
+
     void init(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
 
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
@@ -216,6 +218,7 @@ protected:
 public:
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
+    bool applyingMoveStatMods;
 
     const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
@@ -379,11 +382,13 @@ public:
             flags = 0;
             damageTaken = 0;
             typeMod = 0;
+            stab = 0;
         }
 
         quint32 flags;
         quint16 damageTaken;
         quint8 typeMod;
+        quint8 stab;
 
         enum Flag {
             Incapacitated = 1,
@@ -391,7 +396,10 @@ public:
             HasMoved = 4,
             WasKoed = 8,
             Failed = 16,
-            FailingMessage = 32
+            FailingMessage = 32,
+            HasPassedStatus = 64,
+            Flinched = 128,
+            CriticalHit = 256
         };
 
         inline void remove(Flag f) {flags &= ~f;}
@@ -405,6 +413,8 @@ public:
     virtual BasicPokeInfo const &fpoke(int slot) const = 0;
     virtual TurnMemory &turnMem(int slot) = 0;
     virtual const TurnMemory &turnMem(int slot) const = 0;
+    virtual context &pokeMemory(int slot) = 0;
+    virtual const context &pokeMemory(int slot) const = 0;
     virtual BasicMoveInfo &tmove(int slot) = 0;
     virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
@@ -427,6 +437,43 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
     represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     virtual void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true) = 0;
+    virtual bool testStatus(int player);
+
+    void healStatus(int player, int status);
+    bool isConfused(int player);
+    void healConfused(int player);
+    void inflictConfusedDamage(int player);
+
+    void losePP(int player, int move, int loss);
+    virtual void changePP(int player, int move, int PP);
+
+    bool testFail(int player);
+    virtual bool testAccuracy(int player, int target, bool silent = false);
+
+    virtual PokeFraction getStatBoost(int player, int stat);
+    virtual void calculateTypeModStab(int player=-1, int target=-1);
+    virtual int repeatNum(int player);
+
+    virtual void testCritical(int player, int target);
+    virtual int calculateDamage(int player, int target);
+    void healDamage(int player, int target);
+    void notifyHits(int spot, int hits);
+    void unthaw(int player);
+    virtual void testFlinch(int player, int target);
+    virtual void applyMoveStatMods(int player, int target);
+    virtual void inflictConfused(int player, int attacker, bool tell);
+    virtual void inflictStatus(int target, int status, int player, int minTurns, int maxTurns);
+    virtual bool canGetStatus(int player, int status);
+    virtual bool canSendPreventSMessage(int player, int attacker);
+    bool hasType(int player, int type);
+    virtual int getType(int player, int slot);
+    virtual bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell=true);
+
+    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    /* Returns false if blocked */
+    virtual bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+    /* Does not do extra operations,just a setter */
+    void changeStatMod(int player, int stat, int newstat);
 };
 
 #endif // BATTLEBASE_H

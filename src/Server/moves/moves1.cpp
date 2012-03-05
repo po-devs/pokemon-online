@@ -1341,7 +1341,7 @@ struct MMDoomDesire : public MM
         tmove(b, s).accuracy = MoveInfo::Acc(move, b.gen());
         slot(b,t)["DoomDesireFailed"] = !b.testAccuracy(s,t,true);
         if (b.gen() <= 4) {
-            turn(b,s)["CriticalHit"] = false;
+            fturn(b,s).remove(TM::CriticalHit);
             tmove(b, s).power = tmove(b, s).power * MoveInfo::Power(move, b.gen());
             slot(b,t)["DoomDesireDamage"] = b.calculateDamage(s, t);
         } else {
@@ -1349,7 +1349,7 @@ struct MMDoomDesire : public MM
             tmove(b, s).type = MoveInfo::Type(tmove(b,s).attack, b.gen());
             b.calculateTypeModStab();
             tmove(b, s).type = Pokemon::Curse;
-            slot(b,t)["DoomDesireStab"] = turn(b,s)["Stab"].toInt();
+            slot(b,t)["DoomDesireStab"] = fturn(b,s).stab;
             slot(b,t)["DoomDesireId"] = b.team(b.player(s)).internalId(b.poke(s));
         }
         b.addEndTurnEffect(BS::SlotEffect, bracket(b.gen()), t, "DoomDesire", &et);
@@ -1382,9 +1382,9 @@ struct MMDoomDesire : public MM
                         b.notify(All, BattleCommands::Effective, s, quint8(typemod));
                         return;
                     }
-                    turn(b,s)["Stab"] = slot(b,s)["DoomDesireStab"];
+                    fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
                     turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
-                    turn(b,s)["CriticalHit"] = false;
+                    fturn(b,s).remove(TM::CriticalHit);
                     tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
                     int t = b.opponent(b.player(s));
@@ -1804,7 +1804,7 @@ struct MMFling : public MM
                 ItemEffect::activate("OnSetup", item, t,s,b);
                 b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
             } else if (item == Item::RazorFang || item == Item::KingsRock) {
-                turn(b,t)["Flinched"] = true; /* king rock, razor fang */
+                fturn(b,t).add(TM::Flinched); /* king rock, razor fang */
             } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
                 switch (item) {
                 case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
