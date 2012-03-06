@@ -1161,18 +1161,7 @@ void BattleSituation::testCritical(int player, int target)
     bool critical;
     if (gen().num == 1) {
         /* In RBY, Focus Energy reduces crit by 75% */
-        int up (1), down(1);
-        if (tmove(player).critRaise & 1) {
-            up *= 4;
-        }
-        if (tmove(player).critRaise & 2) {
-            if (gen() == Gen::RBY) {
-                down = 4;
-            } else {
-                up *= 4;
-            }
-        }
-        PokeFraction critChance(up, down);
+        int critChance = 1 * (tmove(player).critRaise & 1 ? 4 : 1) * (tmove(player).critRaise & 2 ? 4 : 1);
         int randnum = randint(512);
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
         critical = randnum < baseSpeed * critChance;
@@ -1987,16 +1976,6 @@ void BattleSituation::inflictRecoil(int source, int target)
     //Rockhead, MagicGuard
     if (koed(source) ||
             (recoil < 0 && (hasWorkingAbility(source,Ability::RockHead) || hasWorkingAbility(source,Ability::MagicGuard)))) {
-        return;
-    }
-
-    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
-    if (gen().num == 1 && koed(target) && recoil < 0) {
-        return;
-    }
-
-    // If move defeats a sub, no recoil damage is applied in Gen 1.
-    if (gen().num == 1 && hasSubstitute(target)) {
         return;
     }
 

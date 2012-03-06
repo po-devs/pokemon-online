@@ -410,10 +410,8 @@ struct MMLeechSeed : public MM
         if (b.koed(s2))
             return;
 
-        /* In RBY and stadium 1, toxic count increases also leech seed count */
-        int numerator = b.poke(s).status() == Pokemon::Poisoned && b.poke(s).statusCount() > 0 && b.gen().num == 1 ? 15-b.poke(s).statusCount() : 1;
         int denumerator = b.gen().num == 1 ? 16 : 8;
-        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() * numerator / denumerator, 1));
+        int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / denumerator, 1));
 
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
         b.inflictDamage(s, damage, s, false);
@@ -1370,8 +1368,6 @@ struct MMJumpKick : public MM
         int damage;
         if (b.gen() >= 5)
             damage = b.poke(s).totalLifePoints()/2;
-        else if (b.gen().num == 1)
-            damage = 1;
         else {
             int typemod;
             int typeadv[] = {b.getType(t, 1), b.getType(t, 2)};
@@ -3200,13 +3196,7 @@ struct MMTransform : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if ( fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget")))
-            fturn(b,s).add(TM::Failed);
-
-        Pokemon::uniqueId num = b.pokenum(t);
-
-        /* In Pokemon Stadium Ditto can't transform into an opposing Ditto */
-        if (b.gen().num == 1 && num.toPokeRef() == Pokemon::Ditto) {
+        if ( fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget"))) {
             fturn(b,s).add(TM::Failed);
             return;
         }
