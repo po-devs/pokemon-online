@@ -350,7 +350,7 @@ int Server::addChannel(const QString &name, int playerid) {
 
     printLine(QString("Channel %1 was created").arg(chanName));
 
-    channels[chanid] = new Channel(chanName);
+    channels[chanid] = new Channel(chanName, chanid);
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
     channelCache.outdate();zchannelCache.outdate();
@@ -452,28 +452,35 @@ void Server::leaveRequest(int playerid, int channelid, bool keep)
 
     Player *player = this->player(playerid);
 
-    myengine->beforeChannelLeave(playerid, channelid);
+    if (channel.players.contains(player)) {
+        myengine->beforeChannelLeave(playerid, channelid);
 
-    foreach(Player *p, channel.players) {
-        p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
-    }
-
-    foreach(int battleid, player->getBattles()) {
-        Battle &b = battleList[battleid];
-        /* We remove the battle only if only one of the player is in the channel */
-        if (int(channel.players.contains(this->player(b.id1))) + int(channel.players.contains(this->player(b.id2))) < 2) {
-            channel.battleList.remove(battleid);
+        foreach(Player *p, channel.players) {
+            p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
         }
-    }
 
-    printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
-    channel.players.remove(player);
+        foreach(int battleid, player->getBattles()) {
+            Battle &b = battleList[battleid];
+            /* We remove the battle only if only one of the player is in the channel */
+            if (int(channel.players.contains(this->player(b.id1))) + int(channel.players.contains(this->player(b.id2))) < 2) {
+                channel.battleList.remove(battleid);
+            }
+        }
 
-    if (!keep) {
+        printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
+        channel.players.remove(player);
+
+        if (!keep) {
+            player->removeChannel(channelid);
+        } else {
+            channel.disconnectedPlayers.insert(player);
+        }
+
+        myengine->afterChannelLeave(playerid, channelid);
+    } else if (channel.disconnectedPlayers.contains(player)) {
+        channel.disconnectedPlayers.remove(player);
         player->removeChannel(channelid);
     }
-
-    myengine->afterChannelLeave(playerid, channelid);
 
     if (channel.players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
@@ -1846,6 +1853,8 @@ void Server::disconnectPlayer(int id)
             myengine->beforeLogOut(id);
         }
 
+        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
+
         p->doWhenDC();
 
         p->blockSignals(true);
@@ -1871,8 +1880,6 @@ void Server::disconnectPlayer(int id)
 
         QTimer::singleShot(5*60*1000, p, SLOT(autoKick()));
 
-        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
-
         printLine(QString("Disconnected player %1").arg(playerName));
     }
 }
@@ -1887,6 +1894,8 @@ void Server::removePlayer(int id)
         if (loggedIn) {
             myengine->beforeLogOut(id);
         }
+
+        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
 
         p->doWhenDQ();
 
@@ -1908,7 +1917,7 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-        p->deleteLater(); myplayers.remove(id); for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
+        p->deleteLater(); myplayers.remove(id);
 
         if (loggedIn || p->state()[Player::WaitingReconnect])
             mynames.remove(playerName.toLower());

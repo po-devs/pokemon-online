@@ -1,10 +1,11 @@
 #include "../Utilities/otherwidgets.h"
 #include "channel.h"
+#include "player.h"
 
 QNickValidator *Channel::checker = NULL;
 
-Channel::Channel(const QString &name) : name(name), logDay(0) {
-    QDir d("");
+Channel::Channel(const QString &name, int id) : name(name), logDay(0), id(id) {
+    QDir d;
     if(!d.exists("logs/chat/" + name)) {
         d.mkpath("logs/chat/" + name);
     }
@@ -31,6 +32,13 @@ bool Channel::validName(const QString &name) {
 
 Channel::~Channel()
 {
+    foreach(Player *p, players) {
+        p->removeChannel(id);
+    }
+    foreach(Player *p, disconnectedPlayers) {
+        p->removeChannel(id);
+    }
+
     if(logfile.isOpen()) {
         logfile.close();
     }
