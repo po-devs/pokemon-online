@@ -132,6 +132,7 @@ public slots:
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);
+    void overactiveToggleChanged(bool overactiveToggle);
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
@@ -211,6 +212,7 @@ private:
     int amountOfInactiveDays;
     bool lowTCPDelay;
     bool safeScripts;
+    bool overactiveShow;
     bool passwordProtected;
     bool showTrayPopup;
     bool minimizeToTray;
