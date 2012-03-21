@@ -239,6 +239,7 @@ void Server::start(){
     amountOfInactiveDays = s.value("delete_inactive_members_days", 182).toInt();
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
+    overactiveShow = s.value("show_overactive_messages").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
     passwordProtected = s.value("require_password").toBool();
     serverPassword = s.value("server_password").toByteArray();
@@ -836,7 +837,7 @@ void Server::ban(int id, int src) {
 }
 
 void Server::dosKick(int id) {
-    if (playerExist(id)) {
+    if (playerExist(id) && overactiveShow) {
         broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
     }
     silentKick(id);
@@ -1405,6 +1406,11 @@ void Server::safeScriptsChanged(bool safeScripts)
         return;
     this->safeScripts = safeScripts;
     printLine("Safe scripts setting changed", false, true);
+}
+
+void Server::overactiveToggleChanged(bool overactiveToggle)
+{
+    overactiveShow = overactiveToggle;
 }
 
 void Server::proxyServersChanged(const QString &ips)
