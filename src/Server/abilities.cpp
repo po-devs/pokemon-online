@@ -361,7 +361,7 @@ struct AMFlameBody : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 30) {
+        if (b.poke(t).status() == Pokemon::Fine && b.coinflip(3, 10)) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
@@ -757,7 +757,7 @@ struct AMPoisonTouch : public AM {
     static void opa(int s, int t, BS &b) {
         if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
             return;
-        if (b.poke(t).status() == Pokemon::Fine && rand() % 100 < 20) {
+        if (b.poke(t).status() == Pokemon::Fine && b.coinflip(2, 10)) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
