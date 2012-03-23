@@ -105,6 +105,8 @@ public:
     TeamBattle team1, team2;
 
     bool raw, text;
+private:
+    QMutex m;
 };
 
 

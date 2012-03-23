@@ -13,6 +13,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
 #include "theme.h"
+#include "soundconfigwindow.h"
 
 Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
 {
@@ -1221,12 +1222,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
-    QAction *playMusic = battleMenu->addAction(tr("&Enable sounds (Testing! Remove if problems with the sim)"));
-    playMusic->setCheckable(true);
-    connect(playMusic, SIGNAL(triggered(bool)), SLOT(playMusic(bool)));
-    playMusic->setChecked(s.value("play_battle_music").toBool());
-
-    battleMenu->addAction(tr("Change &music folder ..."), this, SLOT(changeMusicFolder()));
+    battleMenu->addAction(tr("&Sound configuration"),this, SLOT(openSoundConfig()));
 
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
@@ -1391,16 +1387,6 @@ void Client::sendRegister() {
     }
 }
 
-void Client::changeMusicFolder()
-{
-    QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Battle Music Directory"), s.value("battle_music_directory").toString());
-
-    if (dir != "") {
-        s.setValue("battle_music_directory", dir + "/");
-    }
-}
-
 void Client::changeBattleLogFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Logs Directory"),
@@ -1411,6 +1397,21 @@ void Client::changeBattleLogFolder()
     }
 
     LogManager::obj()->changeBaseDirectory(dir);
+}
+
+void Client::openSoundConfig()
+{
+    SoundConfigWindow *w = new SoundConfigWindow();
+
+    foreach(BaseBattleWindowInterface *i, mySpectatingBattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
+
+    foreach(BattleWindow *i, mybattles) {
+        connect(w, SIGNAL(cryVolumeChanged(int)), i, SLOT(changeCryVolume(int)));
+        connect(w, SIGNAL(musicVolumeChanged(int)), i, SLOT(changeMusicVolume(int)));
+    }
 }
 
 void Client::changeButtonStyle(bool old)
@@ -1440,12 +1441,6 @@ void Client::animateHpBar(bool save)
 {
     QSettings s;
     s.setValue("animate_hp_bar", save);
-}
-
-void Client::playMusic(bool save)
-{
-    QSettings s;
-    s.setValue("play_battle_music", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
