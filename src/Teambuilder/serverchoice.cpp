@@ -111,9 +111,9 @@ void ServerChoice::addServer(const QString &name, const QString &desc, quint16 n
 
     QString playerStr;
     if(max == 0)
-        playerStr = QString::number(num).rightJustified(3);
+        playerStr = QString::number(num).rightJustified(5);
     else
-        playerStr = QString::number(num).rightJustified(3) + " / " + QString::number(max);
+        playerStr = QString::number(num).rightJustified(5) + " / " + QString::number(max);
     int row = mylist->rowCount();
     mylist->setRowCount(row+1);
 
