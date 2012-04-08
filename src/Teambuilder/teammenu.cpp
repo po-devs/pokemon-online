@@ -26,11 +26,13 @@ void TeamMenu::setupUi()
     QGridLayout *grid = new QGridLayout(this);
     grid->addWidget(ui->stack = new QStackedWidget(), 0, 0, 1, 1);
     grid->addWidget(ui->pokemonTabs = new QTabBar(), 0, 0, 1, 1, Qt::AlignLeft|Qt::AlignTop);
+    grid->setContentsMargins(-1,0,-1,-1);
 
     for (int i = 0; i < 6; i++) {
         ui->pokemonTabs->addTab(PokemonInfo::Icon(i+1), tr("Slot #&%1").arg(i+1));
     }
     ui->pokemonTabs->setCurrentIndex(0);
+    ui->pokemonTabs->setObjectName("pokemonTabs");
 
     QSettings s;
     QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
