@@ -2793,6 +2793,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     bool sub = hasSubstitute(player);
 
+    // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
+    bool survivalFactor = false;
+
     if (sub && (player != source || goForSub) && straightattack) {
         inflictSubDamage(player, damage, source);
     } else {
@@ -2800,15 +2803,13 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
         int hp  = poke(player).lifePoints() - damage;
 
-        bool survivalItem = false;
-
         if (hp <= 0 && straightattack) {
             if  (   (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount()) ||
                     (turnMemory(player).contains("CannotBeKoedBy") && turnMemory(player)["CannotBeKoedBy"].toInt() == source) ||
                     (turnMemory(player).value("CannotBeKoed").toBool() && source != player)) {
                 damage = poke(player).lifePoints() - 1;
                 hp = 1;
-                survivalItem = true;
+                survivalFactor = true;
             }
         }
 
@@ -2817,7 +2818,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         } else {
 
             /* Endure & Focus Sash */
-            if (survivalItem) {
+            if (survivalFactor) {
                 //Gen 5: sturdy
                 if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
                     callaeffects(player, source, "UponSelfSurvival");
@@ -2859,7 +2860,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
             turnMemory(player)["DamageTakenBy"] = source;
         }
 
-        if (damage > 0) {
+        if (damage > 0 || (damage == 0 && survivalFactor)) {
             inflictRecoil(source, player);
             callieffects(source,player, "UponDamageInflicted");
             calleffects(source, player, "UponDamageInflicted");
