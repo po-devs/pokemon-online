@@ -2217,9 +2217,13 @@ void Client::openTeamBuilder()
 
     secondTeam = *team();
 
+    QStackedWidget *central = new QStackedWidget;
+    central->setObjectName("CentralWidget");
+
     TeamBuilder *t = new TeamBuilder(&secondTeam);
     myteambuilder->resize(t->size());
-    myteambuilder->setCentralWidget(t);
+    myteambuilder->setCentralWidget(central);
+    central->addWidget(t);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
     if (top) {
