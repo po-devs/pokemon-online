@@ -1,32 +1,23 @@
-#ifndef TEAMBUILDER_MENU_H
-#define TEAMBUILDER_MENU_H
+#ifndef MENU_H
+#define MENU_H
 
-#include <QtGui>
+#include <QFrame>
 #include "centralwidget.h"
+
+namespace Ui {
+class Menu;
+}
 
 class MainEngine;
 
-/* The plain menu you see when the program starts.
-   When you click a button, it sends a signal to the main window to tell it to
-   change the module displayed
-
-    There are 4 buttons:
-    -Teambuilder
-    -Go Online
-    -See Credits
-    -Exit
-
-    To make it classier, the whole menu is just images,
-    and the background too (thus its inheritance to QImageBackground)
-
- */
-
-class TB_Menu : public QLabel, public CentralWidgetInterface
+class Menu : public QFrame, public CentralWidgetInterface
 {
-        Q_OBJECT
+    Q_OBJECT
+    
 public:
-    TB_Menu();
-    ~TB_Menu();
+    explicit Menu(QWidget *parent = 0);
+    ~Menu();
+
     /* Creates a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 
@@ -35,6 +26,10 @@ signals:
     void goToOnline();
     void goToCredits();
     void goToExit();
+
+    
+private:
+    Ui::Menu *ui;
 };
 
-#endif
+#endif // MENU_H

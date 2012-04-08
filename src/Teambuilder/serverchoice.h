@@ -11,7 +11,7 @@
 class QCompactTable;
 class Analyzer;
 
-class ServerChoice : public QWidget, public CentralWidgetInterface
+class ServerChoice : public QFrame, public CentralWidgetInterface
 {
     Q_OBJECT
 public:

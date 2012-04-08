@@ -1548,7 +1548,7 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
 
 void Client::serverNameReceived(const QString &sName)
 {
-    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(parent());
+    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(topLevelWidget());
     QString titlebase = mainwindow->windowTitle();
     if (serverName.size() > 0) {
         // chop the current title to make room for the new name

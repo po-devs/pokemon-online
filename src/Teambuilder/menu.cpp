@@ -1,43 +1,31 @@
 #include "menu.h"
-#include "theme.h"
+#include "ui_menu.h"
+#include "../Utilities/functions.h"
 #include "mainwindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
 
-TB_Menu::TB_Menu()
+Menu::Menu(QWidget *parent) :
+    QFrame(parent),
+    ui(new Ui::Menu)
 {
-    setPixmap(Theme::Sprite("menubackground"));
+    ui->setupUi(this);
+
     setWindowTitle(tr("Menu"));
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    QImageButtonP *credits,*teambuilder, *online, *exit;
-
-    layout->setMargin(0);
-    layout->setSpacing(0);
-
-    layout->addWidget(teambuilder = Theme::PressedButton("teambuilder"), 0, Qt::AlignCenter);
-    teambuilder->setAccessibleName(tr("Teambuilder"));
-    layout->addWidget(online = Theme::PressedButton("goonline"), 0, Qt::AlignCenter);
-    online->setAccessibleName(tr("Go online"));
-    layout->addWidget(credits = Theme::PressedButton("credits"), 0, Qt::AlignCenter);
-    credits->setAccessibleName(tr("Credits"));
-    layout->addWidget(exit = Theme::PressedButton("quit"), 0, Qt::AlignCenter);
-    exit->setAccessibleName(tr("exit"));
-
-    connect (teambuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
-    connect (online, SIGNAL(clicked()), SIGNAL(goToOnline()));
-    connect (credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
-    connect (exit, SIGNAL(clicked()), SIGNAL(goToExit()));
+    connect (ui->teamBuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
+    connect (ui->goOnline, SIGNAL(clicked()), SIGNAL(goToOnline()));
+    connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
+    connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
 
     loadSettings(this);
 }
 
-TB_Menu::~TB_Menu()
+Menu::~Menu()
 {
     writeSettings(this);
+    delete ui;
 }
 
-QMenuBar * TB_Menu::createMenuBar(MainEngine *w)
+QMenuBar * Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
