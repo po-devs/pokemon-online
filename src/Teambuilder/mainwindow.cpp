@@ -186,6 +186,7 @@ void MainEngine::routine(CentralWidgetInterface *w)
     central->addWidget(dynamic_cast<QWidget*>(w));
     central->removeWidget(central->widget(0));
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
+    loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
 }
 
 void MainEngine::launchMenu(bool first)
