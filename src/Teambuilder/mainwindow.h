@@ -23,7 +23,7 @@ public:
     void addThemeMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
 public slots:
-    void launchMenu();
+    void launchMenu(bool first = false);
     void launchCredits();
     void launchTeamBuilder();
     void goOnline(const QString &url, const quint16 port, const QString &name);
@@ -52,8 +52,11 @@ private:
 
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
+    QStackedWidget *central;
 
     TeamHolder *m_team;
+
+    void routine(CentralWidgetInterface *w);
 public:
     TeamHolder *trainerTeam() {
         return m_team;

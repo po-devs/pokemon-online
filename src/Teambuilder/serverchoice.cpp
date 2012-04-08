@@ -139,8 +139,10 @@ void ServerChoice::connectToLocalhost()
 }
 
 void ServerChoice::setRegistryAnnouncement(const QString &sannouncement) {
-    announcement->insertHtml(sannouncement);
-    announcement->show();
+    if (sannouncement.trimmed().length() > 0) {
+        announcement->insertHtml(sannouncement);
+        announcement->show();
+    }
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected)

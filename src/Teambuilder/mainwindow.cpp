@@ -120,7 +120,7 @@ MainEngine::MainEngine() : displayer(0)
 
     trainerTeam()->load();
 
-    launchMenu();
+    launchMenu(true);
 }
 
 MainEngine::~MainEngine()
@@ -180,22 +180,30 @@ void MainEngine::loadStyleSheet()
     qApp->setStyleSheet(stylesheet.readAll());
 }
 
-#define MainEngineRoutine(widget) \
-    if (displayer) \
-        displayer->deleteLater(); \
-    displayer = new QMainWindow(); \
-    displayer->resize(widget->size()); \
-    displayer->setWindowTitle(tr("Pokemon Online")); \
-    displayer->setCentralWidget(widget);\
-    displayer->setMenuBar(transformMenuBar(widget->createMenuBar(this)));\
-    loadSettings(widget, widget->defaultSize());\
-    displayer->show();
-
-void MainEngine::launchMenu()
+void MainEngine::routine(CentralWidgetInterface *w)
 {
-    TB_Menu *menu = new TB_Menu();
-    MainEngineRoutine(menu);
-    displayer->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    displayer->setWindowTitle(tr("Pokemon Online"));
+    central->addWidget(dynamic_cast<QWidget*>(w));
+    central->removeWidget(central->widget(0));
+    displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
+}
+
+void MainEngine::launchMenu(bool first)
+{
+    Menu *menu = new Menu();
+    if (first) {
+        displayer = new QMainWindow();
+        displayer->resize(menu->size());
+        displayer->setWindowTitle(tr("Pokemon Online"));
+        displayer->setCentralWidget(central = new QStackedWidget);
+        central->setObjectName("CentralWidget");
+        central->addWidget(menu);
+        displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
+        loadSettings(menu, menu->defaultSize());\
+        displayer->show();
+    } else {
+        routine(menu);
+    }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(menu, SIGNAL(goToExit()), SLOT(quit()));
@@ -206,10 +214,10 @@ void MainEngine::launchMenu()
 void MainEngine::launchCredits()
 {
     QFile fichier("db/credits.html");
-    if(!fichier.open(QIODevice::ReadOnly))
-    {
+    if(!fichier.open(QIODevice::ReadOnly)) {
         return;
     }
+
     QDialog d_credit;
     d_credit.setMaximumSize(800,700);
     QVBoxLayout * l = new QVBoxLayout();
@@ -225,7 +233,7 @@ void MainEngine::launchCredits()
     credit->setAttribute(Qt::WA_DeleteOnClose,true);
 
     scroll->adjustSize();
-    //MainEngineRoutine(d_credit);
+    //routine(d_credit);
     d_credit.setLayout(l);
     d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
     d_credit.setStyleSheet(
@@ -237,7 +245,7 @@ void MainEngine::launchCredits()
 void MainEngine::launchTeamBuilder()
 {
     TeamBuilder *TB = new TeamBuilder(trainerTeam());
-    MainEngineRoutine(TB);
+    routine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
     connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
@@ -246,7 +254,7 @@ void MainEngine::launchTeamBuilder()
 void MainEngine::launchServerChoice()
 {
     ServerChoice *choice = new ServerChoice(trainerTeam()->name());
-    MainEngineRoutine(choice);
+    routine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
     connect(choice, SIGNAL(serverChosen(QString,quint16,QString)), this, SLOT(goOnline(QString,quint16,QString)));
@@ -310,14 +318,14 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
     }
 
     Client * client = new Client(trainerTeam(), url, port);
-    MainEngineRoutine(client);
+    routine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
 }
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(displayer->centralWidget())
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(central->currentWidget())
                             ->createMenuBar(this)));
 }
 
@@ -402,4 +410,4 @@ void MainEngine::changeUserThemeFolder()
 }
 
 
-#undef MainEngineRoutine
+#undef routine

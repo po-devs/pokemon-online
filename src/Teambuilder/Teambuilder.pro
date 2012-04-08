@@ -7,7 +7,6 @@ TARGET = Pokemon-Online
 DESTDIR = ../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
-    menu.cpp \
     mainwindow.cpp \
     network.cpp \
     client.cpp \
@@ -59,9 +58,9 @@ SOURCES += main.cpp \
     findbattledialog.cpp \
     teamline.cpp \
     pokeselection.cpp \
-    pokechoice.cpp
+    pokechoice.cpp \
+    menu.cpp
 HEADERS +=  ../PokemonInfo/pokemoninfo.h \
-    menu.h \
     mainwindow.h \
     ../PokemonInfo/pokemonstructs.h \
     ../Utilities/otherwidgets.h \
@@ -136,7 +135,8 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     teamline.h \
     tieractionfactory.h \
     pokeselection.h \
-    pokechoice.h
+    pokechoice.h \
+    menu.h
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
@@ -154,7 +154,8 @@ FORMS += controlpanel.ui \
     tierratingbutton.ui \
     findbattledialog.ui \
     teamline.ui \
-    pokeselection.ui
+    pokeselection.ui \
+    menu.ui
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
