@@ -230,7 +230,7 @@ PokeButton:checked {
 
  /* Style the tab using the tab sub-control. Note that
      it reads QTabBar _not_ QTabWidget */
- QTabBar::tab {
+ QTabBar#pokemonTabs::tab {
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                  stop: 0 #9e9d9b, stop: 0.6 #7e7e7e,
                                  stop: 0.65 #7a7a7a, stop: 1.0 #65696c);
@@ -243,22 +243,22 @@ PokeButton:checked {
 	 margin-right: 2px;
  }
  
- QTabBar::tab:first {
+ QTabBar#pokemonTabs::tab:first {
 	 margin-left: 20px;
  }
 
- QTabBar::tab:selected, QTabBar::tab:hover {
+ QTabBar#pokemonTabs::tab:selected, QTabBar#pokemonTabs::tab:hover {
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                  stop: 0 #fafafa, stop: 0.4 #f4f4f4,
                                  stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
  }
 
- QTabBar::tab:selected {
+ QTabBar#pokemonTabs::tab:selected {
      border-color: #9B9B9B;
      border-top-color: #192a32; /* same as pane color */
  }
 
- QTabBar::tab:!selected {
+ QTabBar#pokemonTabs::tab:!selected {
      margin-bottom: 4px; /* make non-selected tabs look smaller */
  }
  
