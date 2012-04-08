@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,100,0,0,0,0">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item row="0" column="3" colspan="3">
     <widget class="QPushButton" name="done">
      <property name="sizePolicy">
