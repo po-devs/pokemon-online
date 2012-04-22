@@ -307,6 +307,9 @@ QString BaseBattleWindow::name(int spot) const
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    if(reinterpret_cast<size_t>(log) == 0) {
+        return; // log was already deleted from a prior call.
+    }
     log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
     replay->setBinary(replayData.data);
