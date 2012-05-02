@@ -39,10 +39,8 @@ bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
 bin/scripts.js
-bin/*.txt
-bin/*.js
-bin/*.json
-bin/tiers.xml
 ui_*.h
 *.Debug
 *.Release
+# Macs create this file to every folder you go to with the Finder.
+.DS_Store
