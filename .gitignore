@@ -40,3 +40,5 @@ bin/MoveMachine
 bin/BattleManager
 bin/scripts.js
 ui_*.h
+# Macs create this file to every folder you go to with the Finder.
+.DS_Store
