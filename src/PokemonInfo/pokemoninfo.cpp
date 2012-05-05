@@ -1328,8 +1328,12 @@ void PokemonInfo::makeDataConsistent()
 Pokemon::uniqueId PokemonInfo::getRandomPokemon(int gen)
 {
     int total = TrueCount(gen);
-    int random = true_rand() % total;
-    if((random == 0) && (total > 1)) random = 1;
+    if (total == 0)
+    {
+        Pokemon::uniqueId poke(0, 0);
+        return Pokemon::uniqueId(poke);
+    }
+    int random = 1+(true_rand() % (total-1));
     Pokemon::uniqueId poke(random, 0);
     if(HasFormes(poke)) {
         QList<Pokemon::uniqueId> formesList = VisibleFormes(poke, gen);
