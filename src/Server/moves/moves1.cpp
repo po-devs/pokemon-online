@@ -640,6 +640,9 @@ struct MMFaintUser : public MM
             }
         }
 
+        if (b.poke(s).status() == Pokemon::Burnt) {
+            poke(b,s)["WasBurnt"] = true;
+        }
         b.selfKoer() = s;
         b.koPoke(s, s);
     }
