@@ -558,6 +558,13 @@ struct MMDetect : public MM
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
+
+        /* Freefall should print a message here
+           Very wrong place and hack to put it but at least it is */
+        if (move(b,s) == Move::FreeFall) {
+            b.notify(BattleInterface::All, BattleCommands::UseAttack, s, qint16(Move::FreeFall), false);
+        }
+
         /* All other moves fail */
         b.fail(s, 27, 0, Pokemon::Normal, t);
     }
@@ -633,6 +640,9 @@ struct MMFaintUser : public MM
             }
         }
 
+        if (b.poke(s).status() == Pokemon::Burnt) {
+            poke(b,s)["WasBurnt"] = true;
+        }
         b.selfKoer() = s;
         b.koPoke(s, s);
     }
@@ -1085,7 +1095,7 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
-            b.notify(All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
+            b.notify(BattleInterface::All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
             turn(b,s)["Failed"] = true;
         }
     }

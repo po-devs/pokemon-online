@@ -288,7 +288,7 @@ void SecurityManager::updateMember(const Member &m) {
 
 bool SecurityManager::bannedIP(const QString &ip) {
     QHash<QString, int>::const_iterator i = bannedIPs.find(ip);
-    if (i != bannedIPs.end() && i.value() != 0 && i.value() < QDataTime::currentDateTimeUtc().toTime_t()) {
+    if (i != bannedIPs.end() && i.value() != 0 && i.value() < QDateTime::currentDateTimeUtc().toTime_t()) {
        /* We expire the tempban here if we should */
        IPunban(ip);
        return false;
@@ -302,7 +302,7 @@ void SecurityManager::ban(const QString &name) {
         m.ban();
 
         bannedMembers.insert(name.toLower(), std::make_pair(m.ip, m.ban_expire_time));
-        bannedIPs.insert(m.ip);
+        bannedIPs.insert(m.ip, m.ban_expire_time);
 
         updateMember(m);
     }

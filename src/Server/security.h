@@ -36,7 +36,7 @@ public:
         QByteArray salt;
         QByteArray hash;
         QByteArray ip;
-        int ban_expire_time;
+        unsigned int ban_expire_time;
 
         void modifyIP(const QByteArray &ip) {
             this->ip = ip;
