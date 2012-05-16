@@ -658,7 +658,7 @@ void Client::ban(int p) {
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().notify(NetworkCli::PlayerTBan, qint32(p), qint32(time));
 }
 void Client::pmcp(QString p) {
     int pm = id(p);
@@ -674,14 +674,14 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing && !pmDisabled)
+    if((pmFlashing && !pmDisabled) || auth(id) > 0)
         activateWindow(); // activate po window when pm recieved
 
     if (mypms.contains(id)) {
         return;
     }
 
-    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, player(_mid).auth);
+    PMWindow *p = new PMWindow(id, ownName(), name(id), "", auth(id) >= 4, pmDisabled, auth(id));
     p->setParent(this);
     p->setWindowFlags(Qt::Window);
     p->show();
@@ -1006,6 +1006,9 @@ void Client::PMReceived(int id, QString pm)
                 }
                 return;
             } else {
+                if (!mypms.contains(id)) {
+                    startPM(id);
+                }
                 registerPermPlayer(id);
                 mypms[id]->printLine(pm);
             }

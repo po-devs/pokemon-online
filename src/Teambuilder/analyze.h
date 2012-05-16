@@ -99,6 +99,7 @@ signals:
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
+    void tbanListReceived(const QString &n, const QString &ip, const QDateTime &expires);
     void versionDiff(const QString &a, const QString &b);
     void serverNameReceived(const QString &serverName);
     /* Ranking */

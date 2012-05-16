@@ -54,6 +54,19 @@ QString cleanStringForFiles(const QString &title)
     return ret;
 }
 
+QString removeTrollCharacters(const QString& s)
+{
+    // All Non-Spacing Mark characters are banned and will trigger this filter.
+    QString result = s;
+    for (int x = 0;x<result.size();x++) {
+        if ((result.at(x)).category() == QChar::Mark_NonSpacing || (result.at(x)) == QChar(0x202e)) {
+            result.replace(result.at(x), "");
+            x--;
+        }
+    }
+    return result;
+}
+
 void writeSettings(QWidget *w)
 {
     QSettings settings;
@@ -105,7 +118,7 @@ void cropImage(QImage &p)
     }
 }
 
-QString removeTrollCharacters(const QString& s)
+/*QString removeTrollCharacters(const QString& s)
 {
     QString result = s;
     int y = -1;
@@ -129,4 +142,4 @@ QString removeTrollCharacters(const QString& s)
     }
 
     return result;
-}
+}*/

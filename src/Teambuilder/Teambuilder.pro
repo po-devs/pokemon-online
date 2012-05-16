@@ -42,7 +42,7 @@ SOURCES += main.cpp \
     Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-	password_wallet.cpp\
+    password_wallet.cpp\
     spectatorwindow.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp
@@ -148,4 +148,3 @@ CONFIG(debian) {
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
-

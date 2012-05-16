@@ -91,6 +91,8 @@ inline QString toBoldColor(const QString &mess, const QColor &col)
 
 QString cleanStringForFiles(const QString &title);
 
+QString removeTrollCharacters(const QString& s);
+
 inline long int true_rand() {
     return (rand() + unsigned(clock()))%RAND_MAX;
 }

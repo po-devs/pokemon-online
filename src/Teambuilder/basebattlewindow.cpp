@@ -307,6 +307,9 @@ QString BaseBattleWindow::name(int spot) const
 
 void BaseBattleWindow::checkAndSaveLog()
 {
+    if(reinterpret_cast<size_t>(log) == 0) {
+        return; // log was already deleted from a prior call.
+    }
     log->pushList(test->getLog()->getLog());
     log->pushHtml("</body>");
     replay->setBinary(replayData.data);
@@ -338,6 +341,7 @@ void BaseBattleWindow::disable()
 {
     mysend->setDisabled(true);
     myline->setDisabled(true); 
+    checkAndSaveLog();
 
     test->getInput()->entryPoint(BattleEnum::BlankMessage);
     auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("The window was disabled due to one of the players closing the battle window."), Qt::blue)));

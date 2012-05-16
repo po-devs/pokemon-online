@@ -16,6 +16,7 @@ HEADERS += otherwidgets.h \
     CrossDynamicLib.h \
     coro.h \
     contextswitch.h \
+    coreclasses.h\
     confighelper.h
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

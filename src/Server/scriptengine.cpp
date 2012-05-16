@@ -194,7 +194,7 @@ bool ScriptEngine::beforeSpectateBattle(int src, int p1, int p2)
 
 void ScriptEngine::afterSpectateBattle(int src, int p1, int p2)
 {
-    makeEvent("beforeSpectateBattle", src, p1, p2);
+    makeEvent("afterSpectateBattle", src, p1, p2);
 }
 
 

@@ -28,7 +28,7 @@ public:
     /* A member as stored in the file */
     struct Member {
         Member(const QString &name="", const QByteArray &date="", int auth = 0, bool banned = false,
-               const QByteArray &salt="", const QByteArray &hash="", const QByteArray &ip="");
+               const QByteArray &salt="", const QByteArray &hash="", const QByteArray &ip="", int ban_expire_time = 0);
         QString name;
         QByteArray date;
         int auth;
@@ -36,7 +36,7 @@ public:
         QByteArray salt;
         QByteArray hash;
         QByteArray ip;
-
+        unsigned int ban_expire_time;
 
         void modifyIP(const QByteArray &ip) {
             this->ip = ip;
@@ -51,7 +51,7 @@ public:
         }
 
         bool isBanned() const {
-            return banned;
+            return banned && (ban_expire_time == 0 || ban_expire_time > QDateTime::currentDateTimeUtc().toTime_t());
         }
 
         int authority() const {
@@ -74,6 +74,10 @@ public:
             hash = "";
         }
 
+        void setBanExpireTime(int time) {
+            ban_expire_time = time;
+        }
+
         QString toString() const;
 
         static const int saltLength = 7;
@@ -92,6 +96,7 @@ public:
     static void IPunban(const QString &ip);
     static void setAuth(const QString &name, int auth);
     static void clearPass(const QString &name);
+    static void setBanExpireTime(const QString &name, int time);
     static void updateMemberInDatabase(const Member &m, bool add);
     static int maxAuth(const QString &ip);
 
@@ -100,7 +105,7 @@ public:
     static QString ip(const QString &name);
 
     static QStringList membersForIp(const QString &ip);
-    static QHash<QString, QString> banList();
+    static QHash<QString, std::pair<QString, int> > banList();
     static QStringList authList();
     static QStringList userList();
     static void deleteUser(const QString &name);
@@ -118,8 +123,8 @@ private:
 
     static MemoryHolder<Member> holder;
 
-    static QSet<QString> bannedIPs;
-    static QHash<QString, QString> bannedMembers;
+    static QHash<QString, int> bannedIPs;
+    static QHash<QString, std::pair<QString, int> > bannedMembers;
 
     static WaitingObject* getObject();
     static void freeObject(WaitingObject *c);
