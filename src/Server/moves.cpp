@@ -2922,9 +2922,14 @@ struct MMSecretPower : public MM {
         functions["MoveSettings"] = &ms;
     }
 
-    static void ms(int s, int, BS &b) {
-        tmove(b,s).classification = Move::OffensiveStatusInducingMove;
-        tmove(b,s).status = Pokemon::Paralysed;
+    static void ms(int s, int t, BS &b) {
+        if (b.gen() == 5) {
+            tmove(b,s).classification = Move::OffensiveStatChangingMove;
+            b.inflictStatMod(s, Accuracy, -1, t);
+        } else {
+            tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+            tmove(b,s).status = Pokemon::Paralysed;
+        }
         tmove(b,s).rate = 30;
     }
 };
