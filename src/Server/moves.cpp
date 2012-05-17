@@ -2954,7 +2954,7 @@ struct MMOutrage : public MM
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
 
-            if (b.gen() <= 4 && b.gen() >= 3) {
+            if (b.gen() <= 4) {
                 b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Outrage", &aas);
             }
 
