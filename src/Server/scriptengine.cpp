@@ -1467,7 +1467,7 @@ void ScriptEngine::changeTeamPokeEV(int id, int slot, int stat, int newValue)
     }
 }
 
-int ScriptEngine::rand(int min, int max)
+double ScriptEngine::rand(double min, double max)
 {
     if (min == max)
         return min;
