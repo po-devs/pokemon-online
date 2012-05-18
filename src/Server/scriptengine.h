@@ -223,7 +223,7 @@ public:
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE bool loggedIn(int id);
 
-    Q_INVOKABLE int rand(int min, int max);
+    Q_INVOKABLE double rand(double min, double max);
     Q_INVOKABLE long time();
     Q_INVOKABLE QScriptValue getTierList();
 
