@@ -672,7 +672,7 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasWorkingAbility(t, Ability::Encourage) || b.hasSubstitute(s))
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::Encourage) && tmove(b,t).category != Move::StandardMove) || b.hasSubstitute(s))
             return;
 
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
