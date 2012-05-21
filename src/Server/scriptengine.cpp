@@ -12,6 +12,7 @@
 #include <QRegExp>
 #include "analyze.h"
 #include "../Shared/config.h"
+#include <cmath>
 
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
@@ -1471,7 +1472,7 @@ double ScriptEngine::rand(double min, double max)
 {
     if (min == max)
         return min;
-    return (::rand()%(max-min)) + min;
+	return ::floor(myengine.globalObject().property("Math").property("random").call().toNumber() * (max - min) + min);
 }
 
 int ScriptEngine::numPlayers()
