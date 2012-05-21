@@ -1202,6 +1202,8 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int pokenum)
 
 bool ScriptEngine::hasDreamWorldAbility(int id, int index)
 {
+	if (myserver->player(id)->team().gen() < 5)
+		return false;
     if (!loggedIn(id) || index < 0 || index >= 6) {
         return false;
     } else {
@@ -1265,7 +1267,7 @@ QScriptValue ScriptEngine::indexOfTeamPokeMove(int id, int pokeindex, int movenu
 bool ScriptEngine::hasTeamMove(int id, int movenum)
 {
     if (!loggedIn(id)) {
-        printLine("Script Warning in sys.hasTeamMove(id, pokenum): no such player logged in with id " + QString::number(id));
+        printLine("Script Warning in sys.hasTeamMove(id, movenum): no such player logged in with id " + QString::number(id));
         return false;
     }
     for (int i = 0; i < 6; i++) {
@@ -1287,7 +1289,7 @@ QScriptValue ScriptEngine::teamPokeItem(int id, int index)
 bool ScriptEngine::hasTeamItem(int id, int itemnum)
 {
     if (!loggedIn(id)) {
-        printLine("Script Warning in sys.hasTeamPoke(id, pokenum): no such player logged in with id " + QString::number(id));
+        printLine("Script Warning in sys.hasTeamItem(id, itemnum): no such player logged in with id " + QString::number(id));
         return false;
     }
     TeamBattle &t = myserver->player(id)->team();
