@@ -1202,7 +1202,7 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int pokenum)
 
 bool ScriptEngine::hasDreamWorldAbility(int id, int index)
 {
-	if (myserver->player(id)->team().gen() < 5)
+	if (myserver->player(id)->team().gen < 5)
 		return false;
     if (!loggedIn(id) || index < 0 || index >= 6) {
         return false;
