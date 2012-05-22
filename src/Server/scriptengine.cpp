@@ -1471,7 +1471,8 @@ double ScriptEngine::rand(double min, double max)
 {
     if (min == max)
         return min;
-    return (::rand()%(max-min)) + min;
+    double random = myengine.globalObject().property("Math").property("random").call().toNumber();
+    return floor(random * (max - min) + min);
 }
 
 int ScriptEngine::numPlayers()
