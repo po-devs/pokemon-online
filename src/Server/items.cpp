@@ -672,9 +672,14 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::Encourage) && tmove(b,t).category != Move::StandardMove) || b.hasSubstitute(s))
+        int secFlinchRate = tmove(b,t).flinchRate;
+        int cl = tmove(b,t).classification; //copy from Sheer Force code
+        if (turn(b,t).value("HadSecondaryEffect").toBool()) {
+            tmove(b,t).classification = Move::StandardMove;
+            tmove(b,t).flinchRate = 0;
+        }
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::Encourage) && (cl == Move::OffensiveStatChangingMove || cl == Move::OffensiveStatusInducingMove || secFlinchRate != 0)) || b.hasSubstitute(s))
             return;
-
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
         turn(b,t)["RedCardUser"] = s;
         turn(b,t)["RedCardCount"] = slot(b,t)["SwitchCount"];

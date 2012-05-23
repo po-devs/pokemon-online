@@ -1374,7 +1374,7 @@ struct AMEncourage : public AM
         functions["BasePowerModifier"] = &bpm;
     }
 
-    static void bpm(int s, int, BS &b) {
+    static void bpm(int s, int t, BS &b) {
         int cl = tmove(b,s).classification;
 
         /* Self stat changing moves like nitro charge/ancient power are boosted, but not moves like close combat/super power */
@@ -1382,8 +1382,12 @@ struct AMEncourage : public AM
             && (cl != Move::OffensiveSelfStatChangingMove || ((signed char)(tmove(b,s).boostOfStat >> 16)) < 0))
             return;
 
-        tmove(b,s).classification = Move::StandardMove;
-        tmove(b,s).flinchRate = 0;
+        if (b.hasWorkingItem(t, Item::RedCard)) {
+            turn(b,s)["HadSecondaryEffect"] = true;
+        } else {
+            tmove(b,s).classification = Move::StandardMove;
+            tmove(b,s).flinchRate = 0;
+        }
         turn(b,s)["BasePowerAbilityModifier"] = 6;
 
         /* Ugly, to tell life orb not to activate =/ */
