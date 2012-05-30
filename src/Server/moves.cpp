@@ -2685,7 +2685,7 @@ struct MMTorment : public MM {
     }
 
     static void msp(int s, int, BS &b) {
-        if (!poke(b,s).contains("Tormented") || poke(b,s)["LastMoveUsedTurn"].toInt() != b.turn() - 1)
+        if (!poke(b,s).contains("Tormented"))
             return;
         for (int i = 0; i < 4; i++) {
             if (b.move(s,i) == poke(b,s)["LastMoveUsed"].toInt()) {
