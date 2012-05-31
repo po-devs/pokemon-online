@@ -1,6 +1,6 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "evbox.h"
+#include "Teambuilder/evbox.h"
 #include "ui_evbox.h"
 #include "theme.h"
 

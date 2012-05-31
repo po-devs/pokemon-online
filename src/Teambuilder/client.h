@@ -9,7 +9,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 
 class MainEngine;
 class ChallengeDialog;

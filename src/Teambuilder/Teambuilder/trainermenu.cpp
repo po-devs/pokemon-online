@@ -4,11 +4,11 @@
 
 #include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/teamsaver.h"
-#include "trainermenu.h"
+#include "Teambuilder/trainermenu.h"
 #include "ui_trainermenu.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 #include "theme.h"
-#include "teamimporter.h"
+#include "Teambuilder/teamimporter.h"
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)

@@ -1,7 +1,7 @@
-#include "pokeselection.h"
+#include "Teambuilder/pokeselection.h"
 #include "ui_pokeselection.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "modelenum.h"
+#include "Teambuilder/modelenum.h"
 #include "theme.h"
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :

@@ -5,12 +5,12 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "pokeedit.h"
+#include "Teambuilder/pokeedit.h"
 #include "ui_pokeedit.h"
 #include "theme.h"
-#include "pokemovesmodel.h"
-#include "pokeselection.h"
-#include "poketablemodel.h"
+#include "Teambuilder/pokemovesmodel.h"
+#include "Teambuilder/pokeselection.h"
+#include "Teambuilder/poketablemodel.h"
 
 PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),

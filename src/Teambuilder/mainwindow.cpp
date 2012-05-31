@@ -10,8 +10,8 @@
 #include "logmanager.h"
 #include "replayviewer.h"
 #include "../Utilities/functions.h"
-#include "teamholder.h"
-#include "teambuilder.h"
+#include "Teambuilder/teamholder.h"
+#include "Teambuilder/teambuilder.h"
 
 MainEngine::MainEngine() : displayer(0)
 {

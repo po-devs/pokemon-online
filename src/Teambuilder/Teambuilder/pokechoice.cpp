@@ -1,6 +1,6 @@
-#include "pokechoice.h"
+#include "Teambuilder/pokechoice.h"
 #include <QHeaderView>
-#include "modelenum.h"
+#include "Teambuilder/modelenum.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include <QMouseEvent>
 #include <QApplication>

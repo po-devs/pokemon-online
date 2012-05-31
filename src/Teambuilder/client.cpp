@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmsystem.h"
@@ -14,7 +14,7 @@
 #include "channel.h"
 #include "theme.h"
 #include "soundconfigwindow.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 #include "challengedialog.h"
 #include "tieractionfactory.h"
 

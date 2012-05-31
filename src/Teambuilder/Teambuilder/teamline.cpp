@@ -1,4 +1,4 @@
-#include "teamline.h"
+#include "Teambuilder/teamline.h"
 #include "ui_teamline.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"

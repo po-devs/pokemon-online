@@ -4,7 +4,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 
 #include "battlewindow.h"
 

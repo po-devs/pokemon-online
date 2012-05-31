@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "centralwidget.h"
-#include "teambuilderwidget.h"
+#include "Teambuilder/teambuilderwidget.h"
 
 class TeamHolder;
 class TrainerMenu;

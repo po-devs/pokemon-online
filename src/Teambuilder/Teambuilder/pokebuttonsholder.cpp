@@ -1,7 +1,7 @@
 #include <QButtonGroup>
 
 #include "../PokemonInfo/pokemonstructs.h"
-#include "pokebuttonsholder.h"
+#include "Teambuilder/pokebuttonsholder.h"
 #include "ui_pokebuttonsholder.h"
 
 PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
