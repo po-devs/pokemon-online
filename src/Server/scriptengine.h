@@ -225,8 +225,7 @@ public:
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int team, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int team, int slot, int stat);
-    Q_INVOKABLE void setTeamPokeDV(int id, int team, int slot, int stat, int newValue);
-    Q_INVOKABLE void changeTeamPokeIV(int id, int team, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeDV(int id, int team, int slot, int stat, int newValue);
     Q_INVOKABLE void changeTeamPokeEV(int id, int team, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
