@@ -1052,7 +1052,20 @@ struct MMBind : public MM
                         fm.maxTurns : (b.randint(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
+            if (b.gen() == 1)
+                addFunction(poke(b,t), "TurnSettings", "Bind", &ts); // bind moves prevent target moving in gen1
         }
+    }
+
+    static void ts (int s, int, BS &b) {
+        if (!poke(b,s)["TrappedRemainingTurns"].toInt() - 1 <= 0) {
+            turn(b,s)["NoChoice"] = true;
+            addFunction(turn(b,s), "MoveSettings", "Bind", &ms);
+        }
+    }
+
+    static void ms(int s, int, BS &b) {
+        turn(b,s)["TellPlayers"] = false;
     }
 
     static void et (int s, int, BS &b) {
@@ -1063,11 +1076,13 @@ struct MMBind : public MM
             if (!b.linked(s, "Trapped")) {
                 poke(b,s).remove("TrappedBy");
                 b.removeEndTurnEffect(BS::PokeEffect, s, "Bind");
+                removeFunction(poke(b,s), "TurnSettings", "Bind");
                 return;
             }
             if (count <= 0) {
                 poke(b,s).remove("TrappedBy");
                 b.removeEndTurnEffect(BS::PokeEffect, s, "Bind");
+                removeFunction(poke(b,s), "TurnSettings", "Bind");
                 if (count == 0)
                     b.sendMoveMessage(10,1,s,MoveInfo::Type(move, b.gen()),s,move);
             } else {
