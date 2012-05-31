@@ -1997,7 +1997,7 @@ void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
     }
 }
 
-void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, bool is_rated)
+void ScriptEngine::forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated)
 {
     if (!loggedIn(player1) || !loggedIn(player2)) {
         warn("forceBattle", "player is not online.");
@@ -2005,6 +2005,9 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
     }
     if (player1 == player2) {
         warn("forceBattle", "player1 == player2");
+        return;
+    }
+    if(!testRange("forceBattle(player1, player2, team1, team2, clauses, mode, is_rated)", team1, 0, myserver->player(team1)->teamCount()) || testRange("forceBattle(player1, player2, team1, team2, clauses, mode, is_rated)", team2, 0, myserver->player(team2)->teamCount())) {
         return;
     }
     if (!testRange("forceBattle", mode, ChallengeInfo::ModeFirst, ChallengeInfo::ModeLast)) {
@@ -2016,7 +2019,7 @@ void ScriptEngine::forceBattle(int player1, int player2, int clauses, int mode, 
     c.mode = mode;
     c.rated = is_rated;
    
-    myserver->startBattle(player1, player2, c);
+    myserver->startBattle(player1, player2, c, team1, team2);
 }
 
 void ScriptEngine::sendNetworkCommand(int id, int command)
