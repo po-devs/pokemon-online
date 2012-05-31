@@ -12,7 +12,7 @@
 //#include "battleinterface.h"
 #include "battlepluginstruct.h"
 //#include "battlecounters.h"
-
+#include <algorithm>
 
 class BattleBase : public ContextCallee, public BattleInterface
 {
