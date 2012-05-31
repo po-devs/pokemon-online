@@ -1033,6 +1033,54 @@ QScriptValue ScriptEngine::gen(int id)
     }
 }
 
+QScriptValue ScriptEngine::subgen(int id)
+{
+    if(!myserver->playerLoggedIn(id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->gen().subnum;
+    }
+}
+
+QString ScriptEngine::generation(int genNum, int subNum)
+{
+    if(testRange("generation(genNum, subNum)", genNum, 1, 5) && testRange("generation(genNum, subNum)", subNum, 0, 2)) {
+        if(genNum == 1) {
+            if(subNum == 0)
+                return "Stadium";
+            if(subNum == 1)
+                return "RBY";
+            if(subNum == 2)
+                return "Stadium w/ Tradebacks";
+        }
+        if(genNum == 2) {
+            if(subNum == 0)
+                return "Stadium 2";
+            if(subNum == 1)
+                return "GSC";
+        }
+        if(genNum == 3) {
+            if(subNum == 0)
+                return "Advance";
+            if(subNum == 1)
+                return "RSE 200";
+        }
+        if(genNum == 4) {
+            if(subNum == 0)
+                return "HG/SS";
+            if(subNum == 1)
+                return "DP";
+            if(subNum == 2)
+                return "DPP";
+        }
+        if(genNum == 5) {
+            if(subNum == 0)
+                return "B/W";
+        }
+    }
+    return "Unknown";
+}
+
 QScriptValue ScriptEngine::name(int id)
 {
     if (!myserver->playerExist(id)) {
