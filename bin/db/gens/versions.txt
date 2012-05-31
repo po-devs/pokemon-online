@@ -1,7 +1,7 @@
 1:0 Stadium
 1:1 RBY
 1:2 Stadium w/ Tradebacks
-2:0 Stadium2
+2:0 Stadium 2
 2:1 GSC
 3:0 Advance
 3:1 RSE 200
