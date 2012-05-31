@@ -1850,7 +1850,7 @@ void ScriptEngine::changeInfo(int playerId, QString newInfo)
 QScriptValue ScriptEngine::info(int playerId)
 {
     if (loggedIn(playerId)) {
-        return myserver->player(playerId)->team().info;
+        return myserver->player(playerId)->info();
     }else{
         return myengine.undefinedValue();
     }
