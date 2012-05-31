@@ -2,7 +2,7 @@
 #define TEAMMENU_H
 
 #include "../PokemonInfo/pokemonstructs.h"
-#include "teambuilderwidget.h"
+#include "Teambuilder/teambuilderwidget.h"
 #include <QHash>
 
 class QStackedWidget;

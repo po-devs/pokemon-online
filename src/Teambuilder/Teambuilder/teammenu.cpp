@@ -7,9 +7,9 @@
 #include <QMenuBar>
 
 #include "../PokemonInfo/pokemoninfo.h"
-#include "teammenu.h"
-#include "pokeedit.h"
-#include "teamholder.h"
+#include "Teambuilder/teammenu.h"
+#include "Teambuilder/pokeedit.h"
+#include "Teambuilder/teamholder.h"
 
 TeamMenu::TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
     ui(new _ui()), m_team(team)

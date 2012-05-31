@@ -3,7 +3,7 @@
 
 #include <QDragEnterEvent>
 
-#include "pokebutton.h"
+#include "Teambuilder/pokebutton.h"
 #include "ui_pokebutton.h"
 
 PokeButton::PokeButton(QWidget *parent) :

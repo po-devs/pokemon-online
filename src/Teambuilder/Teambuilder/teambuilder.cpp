@@ -1,10 +1,10 @@
 #include "../Utilities/functions.h"
-#include "teambuilder.h"
-#include "trainermenu.h"
-#include "teamholder.h"
+#include "Teambuilder/teambuilder.h"
+#include "Teambuilder/trainermenu.h"
+#include "Teambuilder/teamholder.h"
 #include "mainwindow.h"
-#include "teammenu.h"
-#include "poketablemodel.h"
+#include "Teambuilder/teammenu.h"
+#include "Teambuilder/poketablemodel.h"
 
 TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
 {

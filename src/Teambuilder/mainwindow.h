@@ -5,7 +5,7 @@
 #include "engineinterface.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 
 class PluginManager;
 

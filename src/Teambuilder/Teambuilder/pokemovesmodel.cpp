@@ -1,7 +1,7 @@
-#include "pokemovesmodel.h"
+#include "Teambuilder/pokemovesmodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "theme.h"
-#include "modelenum.h"
+#include "Teambuilder/modelenum.h"
 
 template <class T, class U>
 QHash<typename T::value_type, U> map_container_with_value(T container, const U & value)

@@ -3,7 +3,7 @@
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/networkstructs.h"
-#include "teamholderinterface.h"
+#include "Teambuilder/teamholderinterface.h"
 
 class Profile : public ProfileInterace
 {

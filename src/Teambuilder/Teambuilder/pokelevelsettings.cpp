@@ -1,5 +1,5 @@
 #include "../PokemonInfo/pokemonstructs.h"
-#include "pokelevelsettings.h"
+#include "Teambuilder/pokelevelsettings.h"
 #include "ui_pokelevelsettings.h"
 
 PokeLevelSettings::PokeLevelSettings(QWidget *parent) :

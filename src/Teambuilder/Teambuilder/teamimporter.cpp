@@ -1,4 +1,4 @@
-#include "teamimporter.h"
+#include "Teambuilder/teamimporter.h"
 #include <QGridLayout>
 #include <QPushButton>
 #include <QPlainTextEdit>

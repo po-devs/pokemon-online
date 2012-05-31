@@ -3,7 +3,7 @@
 
 #include <QFrame>
 #include <QCompleter>
-#include "teambuilderwidget.h"
+#include "Teambuilder/teambuilderwidget.h"
 
 namespace Ui {
     class TrainerMenu;

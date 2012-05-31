@@ -1,6 +1,6 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "ivbox.h"
+#include "Teambuilder/ivbox.h"
 #include "ui_ivbox.h"
 #include "theme.h"
 
