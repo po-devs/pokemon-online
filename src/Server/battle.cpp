@@ -737,7 +737,7 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
     }
 }
 
-std::vector<int> && BattleSituation::sortedBySpeed() {
+std::vector<int> BattleSituation::sortedBySpeed() {
     std::vector<int> ret = BattleBase::sortedBySpeed();
 
     if (battleMemory().value("TrickRoomCount").toInt() > 0) {

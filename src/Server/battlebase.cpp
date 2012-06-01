@@ -1113,7 +1113,7 @@ inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> &
     return x.second>y.second;
 }
 
-std::vector<int> && BattleBase::sortedBySpeed()
+std::vector<int> BattleBase::sortedBySpeed()
 {
     std::vector<int> ret;
 
@@ -1121,7 +1121,7 @@ std::vector<int> && BattleBase::sortedBySpeed()
 
     for (int i =0; i < numberOfSlots(); i++) {
         if (!koed(i)) {
-            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
+            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed-1)));
         }
     }
 
@@ -1131,7 +1131,7 @@ std::vector<int> && BattleBase::sortedBySpeed()
     std::sort(speeds.begin(), speeds.end(), &comparePair);
 
     /* Now for the speed tie */
-    for (unsigned i = 0; i < speeds.size()-1; ) {
+    for (unsigned i = 0; i < speeds.size()-1;) {
         unsigned  j;
         for (j = i+1; j < speeds.size(); j++) {
             if (speeds[j].second != speeds[i].second) {
@@ -1150,7 +1150,6 @@ std::vector<int> && BattleBase::sortedBySpeed()
     for (unsigned i =0; i < speeds.size(); i++) {
         ret.push_back(speeds[i].first);
     }
-
     return std::move(ret);
 }
 
