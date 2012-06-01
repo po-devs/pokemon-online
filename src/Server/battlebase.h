@@ -119,7 +119,7 @@ public:
         return clauses() & ChallengeInfo::SleepClause;
     }
 
-    virtual std::vector<int> &&sortedBySpeed();
+    virtual std::vector<int> sortedBySpeed();
 
     void notifyClause(int clause);
     void notifyMiss(bool multitar, int player, int target);

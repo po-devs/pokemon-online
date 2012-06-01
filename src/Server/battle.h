@@ -32,7 +32,7 @@ public:
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
-    std::vector<int> && sortedBySpeed();
+    std::vector<int> sortedBySpeed();
 
     /* Commands for the battle situation */
     void engageBattle();
