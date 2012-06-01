@@ -1121,7 +1121,7 @@ std::vector<int> BattleBase::sortedBySpeed()
 
     for (int i =0; i < numberOfSlots(); i++) {
         if (!koed(i)) {
-            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed-1)));
+            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
         }
     }
 
