@@ -4210,7 +4210,7 @@ struct MMTriAttack : public MM
         if (!b.coinflip(unsigned(1+boost), 5))
             return;
 
-        if (b.poke(t).status() == Pokemon::Koed)
+        if (b.koed(t)) //this because OnFoeOnAttack is called before the status is set to koed to prevent status before fainting
             return;
 
         int status;
