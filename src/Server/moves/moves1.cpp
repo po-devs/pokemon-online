@@ -1421,6 +1421,7 @@ struct MMDoomDesire : public MM
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
+                    turn(b,s)["DoomDesireD"] = true;
                     b.inflictDamage(s, damage, doomuser, true, true);
                 }
             }

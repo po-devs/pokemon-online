@@ -3060,7 +3060,7 @@ void BattleSituation::inflictRecoil(int source, int target)
 {
     double recoil = tmove(source).recoil;
 
-    if (recoil == 0)
+    if (recoil == 0 || turnMemory(target).contains("DoomDesireD")/*weird dd bug*/)
         return;
 
     //Rockhead, MagicGuard
