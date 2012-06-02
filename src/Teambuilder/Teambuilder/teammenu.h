@@ -29,6 +29,7 @@ public slots:
 private slots:
     void tabIconChanged();
     void genChanged();
+    void animatedSpritesChanged(bool enabled);
 private:
     void setupUi();
     void updateTabs();
