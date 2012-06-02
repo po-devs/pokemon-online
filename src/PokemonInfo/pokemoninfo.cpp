@@ -829,6 +829,39 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     return ret;
 }
 
+QMovie *PokemonInfo::AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back)
+{
+    QString archive = path("black_white_animated.zip");
+    QString file = QString("%1/%2%3%4.gif").arg(pokeId.toString(), back?"b":"f", (gender == Pokemon::Female)?"f":"", shiny?"s":"");
+    QByteArray *data = new QByteArray(readZipFile(archive.toUtf8(), file.toUtf8()));
+    QBuffer *animatedSpriteData = new QBuffer(data);
+    QMovie *AnimatedSprite = new QMovie(animatedSpriteData);
+    if(data->length() == 0) {
+        if(gender == Pokemon::Female) {
+            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, shiny, back);
+        }
+        if(shiny) {
+            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, false, back);
+        }
+        if(pokeId.subnum != 0) {
+            return PokemonInfo::AnimatedSprite(OriginalForme(pokeId), Pokemon::Male, false, back);
+        }
+        AnimatedSprite->start();
+        return AnimatedSprite;
+    }
+    AnimatedSprite->start();
+    return AnimatedSprite;
+}
+
+bool PokemonInfo::HasAnimatedSprites()
+{
+    QFile file(path("black_white_animated.zip"));
+    if(file.exists()) {
+        return true;
+    }
+    return false;
+}
+
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 {
     QString archive;
