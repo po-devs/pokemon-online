@@ -652,10 +652,13 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
                 switch (client->auth(id)) {
                 case 1:
                     authSymbol = "@";
+                    break;
                 case 2:
                     authSymbol = "&";
+                    break;
                 case 3:
                     authSymbol = "~";
+                    break;
                 }
             }
             QColor color = client->color(id);

@@ -1179,7 +1179,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
-    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, \&, ~)"));
+    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, &, ~)"));
     IRCSymbols->setCheckable(true);
     connect(IRCSymbols, SIGNAL(triggered(bool)), SLOT(showIRCSymbols(bool)));
     IRCSymbols->setChecked(s.value("IRCSymbols").toBool());
