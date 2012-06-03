@@ -115,6 +115,8 @@ public:
     TierNode tierRoot;
     QStringList tierList;
 public slots:
+    /* exit button warning */
+    void testExit();
     void errorFromNetwork(int errnum, const QString &error);
     void connected();
     void disconnected();
@@ -227,6 +229,7 @@ public slots:
     void toggleAutoJoin(bool);
     void showTimeStamps(bool);
     void showIRCSymbols(bool);
+    void showExitsWarning(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
     void togglePM(bool);

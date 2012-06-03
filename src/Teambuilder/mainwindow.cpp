@@ -58,6 +58,8 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "find_battle_range_on", true);
     setDefaultValue(s, "find_battle_range", 200);
 
+    setDefaultValue(s, "showExitWarning", true);
+
     if (s.value("use_socks5_proxy", false).toBool() == true) {
         s.beginGroup("socks5_proxy");
         QNetworkProxy proxy;

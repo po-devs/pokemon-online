@@ -106,7 +106,7 @@ Client::Client(TrainerTeam *t, const QString &url , const quint16 port) : myteam
 
     connect(mainChat, SIGNAL(tabCloseRequested(int)), SLOT(leaveChannelR(int)));
     connect(mainChat, SIGNAL(currentChanged(int)), SLOT(firstChannelChanged(int)));
-    connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
+    connect(myexit, SIGNAL(clicked()), SLOT(testExit()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
@@ -727,6 +727,12 @@ void Client::showIRCSymbols(bool b)
     s.setValue("IRCSymbols", b);
 }
 
+void Client::showExitsWarning(bool b)
+{
+    QSettings s;
+    s.setValue("showExitWarning", b);
+}
+
 void Client::showTimeStamps2(bool b)
 {
     QSettings s;
@@ -1179,10 +1185,15 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
-    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, \&, ~)"));
+    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, &, ~)"));
     IRCSymbols->setCheckable(true);
     connect(IRCSymbols, SIGNAL(triggered(bool)), SLOT(showIRCSymbols(bool)));
     IRCSymbols->setChecked(s.value("IRCSymbols").toBool());
+
+    QAction * sew = menuActions->addAction(tr("Show exit warning"));
+    sew->setCheckable(true);
+    connect(sew, SIGNAL(triggered(bool)), SLOT(showExitsWarning(bool)));
+    sew->setChecked(s.value("showExitWArning").toBool());
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
 
@@ -2351,5 +2362,40 @@ void BattleFinder::throwChallenge()
     s.setValue("find_battle_mode", d.mode);
 
     emit findBattle(d);
+}
+
+void Client::testExit() {
+    /* Maybe there's some ready-made Qt thingy for this, but I decided to build it manually. */
+    QSettings s;
+    bool showa = s.value("showExitWarning").toBool();
+    if (showa == true && isConnected == true) {
+        QDialog dialog(this);
+        dialog.setWindowTitle(tr("Exit warning"));
+        QVBoxLayout* lla = new QVBoxLayout;
+        lla->addWidget(new QLabel(tr("Do you really want to quit?")));
+
+        // Save choice
+        QCheckBox *choice = new QCheckBox;
+        choice->setText(tr("Display this warning next time (You can change this in Settings -> Show exit warning)"));
+        choice->setChecked(showa);
+        lla->addWidget(choice);
+
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No, Qt::Horizontal);
+        connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        lla->addWidget(buttonBox);
+
+        dialog.setLayout(lla);
+
+        int ret = dialog.exec();
+        if (!ret) {
+            return;
+        }
+        bool showwe = (choice->isChecked()) ? true : false;
+        s.setValue("showExitWarning", showwe);
+        emit done();
+    } else {
+        emit done();
+    }
 }
 
