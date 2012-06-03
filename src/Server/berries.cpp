@@ -376,13 +376,15 @@ struct BMCustap : public BMPinch
 
 struct BMBerryRecoil : public BM
 {
+	/* Jacoba Berry
+	 * Rowap Berry */
     BMBerryRecoil() {
         functions["UponOffensiveDamageReceived"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
         //Magic Guard
-        if (tmove(b,s).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
+        if (tmove(b,t).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
             return;
         }
         b.eatBerry(s);
