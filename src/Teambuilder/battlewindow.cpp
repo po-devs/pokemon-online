@@ -100,7 +100,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     mytab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));
-    mytab->addTab(mypzone = new PokeZone(data().team(info().myself)), tr("&Pokemon"));
+    mytab->addTab(mypzone = new PokeZone(data().team(info().myself), gen()), tr("&Pokemon"));
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
@@ -190,8 +190,8 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     if (snum != pokezone || forced) {
         auto poke1 = team().poke(snum);
         auto poke2 = team().poke(pokezone);
-        mypzone->pokes[snum]->changePokemon(*poke1);
-        mypzone->pokes[pokezone]->changePokemon(*poke2);
+        mypzone->pokes[snum]->changePokemon(*poke1, gen());
+        mypzone->pokes[pokezone]->changePokemon(*poke2, gen());
     }
 
     mystack->setCurrentIndex(snum);
@@ -535,7 +535,7 @@ void BattleWindow::onSendOut(int spot, int prevIndex, ShallowBattlePoke *p, bool
 void BattleWindow::onHpChange(int spot, int)
 {
     if (data().player(spot) == info().myself) {
-        mypzone->pokes[spot]->update();
+        mypzone->pokes[spot]->update(gen());
     }
 }
 
@@ -544,7 +544,7 @@ void BattleWindow::onPPChange(int spot, int move, int PP)
     info().currentPoke(spot).move(move).PP() = PP;
     info().tempPoke(spot).move(move).PP() = PP;
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
-    mypzone->pokes[data().slotNum(spot)]->updateToolTip();
+    mypzone->pokes[data().slotNum(spot)]->updateToolTip(gen());
 }
 
 void BattleWindow::onTempPPChange(int spot, int move, int PP)
@@ -586,7 +586,7 @@ void BattleWindow::onMoveChange(int spot, int slot, int move, bool definite)
     }
     myazones[data().slotNum(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
     if (definite) {
-        mypzone->pokes[data().slotNum(spot)]->updateToolTip();
+        mypzone->pokes[data().slotNum(spot)]->updateToolTip(gen());
     }
 }
 
@@ -609,7 +609,7 @@ void BattleWindow::onKo(int spot)
 void BattleWindow::onPokeballStatusChanged(int player, int poke, int)
 {
     if (player == info().myself) {
-        mypzone->pokes[poke]->update();
+        mypzone->pokes[poke]->update(gen());
     }
 }
 
@@ -631,8 +631,8 @@ void BattleWindow::onRearrangeTeam(int, const ShallowShownTeam &team)
 void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
 {
     if (player == info().myself) {
-        mypzone->pokes[s1]->changePokemon(poke(s1));
-        mypzone->pokes[s2]->changePokemon(poke(s2));
+        mypzone->pokes[s1]->changePokemon(poke(s1), gen());
+        mypzone->pokes[s2]->changePokemon(poke(s2), gen());
     }
 }
 
@@ -720,7 +720,7 @@ void BattleWindow::sendRearrangedTeam()
     /* If the team was rearranged... */
     test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
-        mypzone->pokes[i]->changePokemon(poke(i));
+        mypzone->pokes[i]->changePokemon(poke(i), gen());
     }
 }
 
@@ -865,14 +865,14 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, in
     setAccessibleName(MoveInfo::Name(b.num()));
 }
 
-PokeZone::PokeZone(const TeamProxy &team)
+PokeZone::PokeZone(const TeamProxy &team, int gen)
 {
     QGridLayout *l = new QGridLayout(this);
     mymapper = new QSignalMapper(this);
 
     for (int i = 0; i < 6; i++)
     {
-        l->addWidget(pokes[i] = new PokeButton(*team.poke(i)), i >= 3, i % 3);
+        l->addWidget(pokes[i] = new PokeButton(*team.poke(i), gen), i >= 3, i % 3);
 
         mymapper->setMapping(pokes[i], i);
         connect(pokes[i], SIGNAL(clicked()), mymapper, SLOT(map()));
@@ -882,27 +882,27 @@ PokeZone::PokeZone(const TeamProxy &team)
 }
 
 
-PokeButton::PokeButton(const PokeProxy &p)
+PokeButton::PokeButton(const PokeProxy &p, int gen)
     : p(&p)
 {
     setIconSize(QSize(32,32));
     setIcon(PokemonInfo::Icon(p.num()));
-    update();
+    update(gen);
 
-    updateToolTip();
+    updateToolTip(gen);
 }
 
-void PokeButton::changePokemon(const PokeProxy &p)
+void PokeButton::changePokemon(const PokeProxy &p, int gen)
 {
     this->p = &p;
 
     setIcon(PokemonInfo::Icon(p.num()));
-    update();
+    update(gen);
 
-    updateToolTip();
+    updateToolTip(gen);
 }
 
-void PokeButton::update()
+void PokeButton::update(int gen)
 {
     setText(p->nickname() + "\n" + QString::number(p->life()) + "/" + QString::number(p->totalLife()));
     int status = p->status();
@@ -912,34 +912,39 @@ void PokeButton::update()
         setStyleSheet("background: " + Theme::StatusColor(status).name() + ";");
     }
     
-    updateToolTip();
+    updateToolTip(gen);
     setAccessibleName(PokemonInfo::Name(p->num()));
 }
 
-void PokeButton::updateToolTip()
+void PokeButton::updateToolTip(int gen)
 {
     const PokeProxy &p = *(this->p);
     QString tooltip;
-    if (p.ability() != 0) {
-        tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
-                .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                     AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                     MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                .arg(p.move(2).PP()).arg(p.move(3).PP());
-    } else if (p.ability() == 0) {
-        if (p.item() != 0) {
-            tooltip = tr("%1 lv %2\nItem:%3\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
-                    .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                         MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                         MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                    .arg(p.move(2).PP()).arg(p.move(3).PP());
-        } else {
-            tooltip = tr("%1 lv %2\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
-                    .arg(PokemonInfo::Name(p.num()), QString::number(p.level()),
-                         MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                         MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                    .arg(p.move(2).PP()).arg(p.move(3).PP());
+    QString moven[4];
+    QString ppn[4];
+    QString level = QString::number(p.level());
+    QString name = PokemonInfo::Name(p.num());
+    QString ability = AbilityInfo::Name(p.ability());
+    QString item = ItemInfo::Name(p.item());
+    for (int i = 0; i<4; i++) {
+        moven[i] = MoveInfo::Name(p.move(i).num());
+        if (p.move(i).num() == Move::HiddenPower) {
+            moven[i].append(" [" + TypeInfo::Name(HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5])) + "]");
         }
+        ppn[i] = QString::number(p.move(i).PP());
+    }
+    if (p.ability() != 0 && p.item() != 0) {//item and ability
+        tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
+                .arg(name, level, item, ability, moven[0], moven[1], moven[2], moven[3]).arg(ppn[0]).arg(ppn[1]).arg(ppn[2]).arg(ppn[3]);
+    } else if (p.ability() != 0 && p.item() == 0) {//no item but ability
+        tooltip = tr("%1 lv %2\n\nAbility:%3\n\nMoves:\n--%4 - %8 PP\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP")
+                .arg(name, level, ability, moven[0], moven[1], moven[2], moven[3]).arg(ppn[0]).arg(ppn[1]).arg(ppn[2]).arg(ppn[3]);
+    } else if (p.ability() == 0 && p.item() != 0) {//no ability but item
+        tooltip = tr("%1 lv %2\n\nItem:%3\n\nMoves:\n--%4 - %8 PP\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP")
+                .arg(name, level, item, moven[0], moven[1], moven[2], moven[3]).arg(ppn[0]).arg(ppn[1]).arg(ppn[2]).arg(ppn[3]);
+    } else { //no item, no ability
+        tooltip = tr("%1 lv %2\n\nMoves:\n--%3 - %7 PP\n--%4 - %8 PP\n--%5 - %9 PP\n--%6 - %10 PP")
+                .arg(name, level, moven[0], moven[1], moven[2], moven[3]).arg(ppn[0]).arg(ppn[1]).arg(ppn[2]).arg(ppn[3]);
     }
     setToolTip(tooltip);
 }

@@ -212,7 +212,7 @@ class PokeZone : public QWidget
 {
     Q_OBJECT
 public:
-    PokeZone(const TeamProxy &team);
+    PokeZone(const TeamProxy &team, int gen);
 
     PokeButton *pokes[6];
 signals:
@@ -228,10 +228,10 @@ class PokeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    PokeButton(const PokeProxy &p);
-    void changePokemon(const PokeProxy &p);
-    void update();
-    void updateToolTip();
+    PokeButton(const PokeProxy &p, int gen);
+    void changePokemon(const PokeProxy &p, int gen);
+    void update(int gen);
+    void updateToolTip(int gen);
 private:
 
     const PokeProxy *p;
