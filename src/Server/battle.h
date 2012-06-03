@@ -145,7 +145,7 @@ public:
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
     /* Sends a poke back to his pokeball (not koed) */
-    void sendBack(int player, bool silent = false);
+    void sendBack(int player, bool silent = false, bool redcard = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
     void notifyHits(int spot, int number);
     void sendPoke(int player, int poke, bool silent = false);

@@ -2040,14 +2040,14 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
         AbilityEffect::activate(name, ability(source), source, target, *this);
 }
 
-void BattleSituation::sendBack(int player, bool silent)
+void BattleSituation::sendBack(int player, bool silent, bool redcard)
 {
     /* Just calling pursuit directly here, forgive me for this */
     if (!turnMemory(player).value("BatonPassed").toBool()) {
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            if (tmove(opp).attack == Move::Pursuit && !turnMemory(opp)["HasMoved"].toBool()) {
+            if (tmove(opp).attack == Move::Pursuit && !redcard/*doesn't double damage if redcard sendback*/) {
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);

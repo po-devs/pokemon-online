@@ -721,7 +721,7 @@ struct IMRedCard : public IM
                 switches.push_back(i);
             }
         }
-        b.sendBack(t, true);
+        b.sendBack(t, true, true);
         b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,0,t);
         b.callEntryEffects(t);
