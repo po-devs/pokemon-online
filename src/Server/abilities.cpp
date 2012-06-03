@@ -1657,7 +1657,8 @@ struct AMSturdy : public AM {
 		// It may be possible for both Sturddy and Focus Band to activate
 		// To prevent a message bug, we need to check if it was Sturdy
 		// which prevented the KO
-        if (turn(b,s)["SturdyActivated"].toBool()) {
+
+		if (turn(b,s).contains("SturdyActivated")) {
         	b.sendAbMessage(91, 0, s);
         	turn(b,s)["SurviveReason"] = true;
 		}
