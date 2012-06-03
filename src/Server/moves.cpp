@@ -2961,7 +2961,7 @@ struct MMOutrage : public MM
             poke(b,s)["OutrageMove"] = move(b,s);
         }
         /* In gen 5, even a miss causes outrage to stop */
-        if (b.gen() >= 5)
+        if (b.gen() >= 5 || poke(b,t)["DisabledMove"] == Move::Outrage || poke(b,t)["DisabledMove"] == Move::Thrash || poke(b,t)["DisabledMove"] == Move::PetalDance)
             poke(b,s)["LastOutrage"] = b.turn();
     }
 
