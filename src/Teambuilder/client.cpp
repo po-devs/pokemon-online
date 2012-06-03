@@ -721,6 +721,12 @@ void Client::showTimeStamps(bool b)
     showTS = b;
 }
 
+void Client::showIRCSymbols(bool b)
+{
+    QSettings s;
+    s.setValue("IRCSymbols", b);
+}
+
 void Client::showTimeStamps2(bool b)
 {
     QSettings s;
@@ -1172,6 +1178,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(show_ts, SIGNAL(triggered(bool)), SLOT(showTimeStamps(bool)));
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
+
+    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, \&, ~)"));
+    IRCSymbols->setCheckable(true);
+    connect(IRCSymbols, SIGNAL(triggered(bool)), SLOT(showIRCSymbols(bool)));
+    IRCSymbols->setChecked(s.value("IRCSymbols").toBool());
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
 
