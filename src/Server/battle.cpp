@@ -2047,7 +2047,7 @@ void BattleSituation::sendBack(int player, bool silent, bool redcard)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            if (tmove(opp).attack == Move::Pursuit && !redcard/*doesn't double damage if redcard sendback*/) {
+            if (tmove(opp).attack == Move::Pursuit && !turnMemory(opp)["HasMoved"].toBool() && !redcard/*doesn't double damage if redcard sendback*/) {
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);
