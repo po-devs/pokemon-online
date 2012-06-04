@@ -2391,8 +2391,7 @@ void Client::testExit() {
         if (!ret) {
             return;
         }
-        bool showwe = (choice->isChecked()) ? true : false;
-        s.setValue("showExitWarning", showwe);
+        s.setValue("showExitWarning", choice->isChecked());
         emit done();
     } else {
         emit done();
