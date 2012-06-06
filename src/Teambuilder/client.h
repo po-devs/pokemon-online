@@ -226,7 +226,7 @@ public slots:
     void showBattleEvents(bool);
     void showChannelEvents(bool);
     void showTeamEvents(bool);
-    void toggleAutoJoin(bool);
+    void toggleAutoJoin(bool autojoin);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);

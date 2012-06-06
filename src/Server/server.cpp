@@ -1049,14 +1049,15 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     mybattles[battle]->spectatingChat(player, chat);
 }
 
-void Server::joinRequest(int player, const QString &channel)
+void Server::joinRequest(int player, const QString &channel, bool autoJoin)
 {
     if (!channelExist(channel)) {
         if (channels.size() >= 1000) {
             sendMessage(player, "The server is limited to 1000 channels.");
             return;
         }
-        if (addChannel(channel, player) == -1)
+        // There's no point on autojoining an empty or an inexistent channel.
+        if (addChannel(channel, player) == -1 && autoJoin)
             return;
     }
 
@@ -1176,7 +1177,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
-    connect(p, SIGNAL(joinRequested(int,QString)), SLOT(joinRequest(int,QString)));
+    connect(p, SIGNAL(joinRequested(int,QString,bool)), SLOT(joinRequest(int,QString,bool)));
     connect(p, SIGNAL(joinRequested(int,int)), SLOT(joinChannel(int,int)));
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));

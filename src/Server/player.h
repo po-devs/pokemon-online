@@ -185,7 +185,7 @@ signals:
     void battleSearchCancelled(int);
     void logout(int);
     void unlocked();
-    void joinRequested(int id, const QString &channel);
+    void joinRequested(int id, const QString &channel, bool autoJoin);
     void joinRequested(int id, int channelId);
     void resendBattleInfos(int id, int battleid);
     void leaveRequested(int id, int channelid);
@@ -226,7 +226,7 @@ public slots:
     void tUnban(QString name);
     void testAuthentificationLoaded();
     void ratingLoaded();
-    void joinRequested(const QString &channel);
+    void joinRequested(const QString &channel, bool autoJoin);
     void leaveRequested(int slotid);
     void ipChangeRequested(const QString &ip);
     void autoKick();
@@ -292,6 +292,9 @@ private:
 
     /* The channels a player is on */
     QSet<int> channels;
+
+    /* Autojoin Channels */
+    QStringList additionalChannels;
 
     void assignNewColor(const QColor &c);
     void assignTrainerInfo(const TrainerInfo &info);
