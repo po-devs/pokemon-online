@@ -1049,8 +1049,10 @@ void Player::loginSuccess()
 {
     ontologin = true;
     findTierAndRating(true);
-    foreach(const QString &channel, additionalChannels) {
-        joinRequested(id(), channel, true);
+    if(additionalChannels.length() > 0) {
+        foreach(const QString &channel, additionalChannels) {
+            joinRequested(id(), channel, true);
+        }
     }
 }
 
@@ -1374,6 +1376,12 @@ QString Player::ip() const
 QString Player::proxyIp() const
 {
     return proxyip;
+}
+
+
+QStringList Player::additionalChannelsList() const
+{
+    return additionalChannels;
 }
 
 void Player::recvTeam(const ChangeTeamInfo &cinfo)

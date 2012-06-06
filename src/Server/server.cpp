@@ -1051,13 +1051,16 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
 
 void Server::joinRequest(int player, const QString &channel, bool autoJoin)
 {
+    if(autoJoin && !channelExist(channel)) {
+        return;
+    }
     if (!channelExist(channel)) {
         if (channels.size() >= 1000) {
             sendMessage(player, "The server is limited to 1000 channels.");
             return;
         }
         // There's no point on autojoining an empty or an inexistent channel.
-        if (addChannel(channel, player) == -1 && autoJoin)
+        if (addChannel(channel, player) == -1)
             return;
     }
 
