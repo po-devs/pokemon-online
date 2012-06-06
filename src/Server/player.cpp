@@ -22,6 +22,7 @@ Player::Player(const GenericSocket &sock, int id)
     server_pass_sent = false;
     needToUpdate = false;
 
+
     m_bundle.auth = 0;
 
     doConnections();
@@ -320,7 +321,7 @@ void Player::onReconnect(int id, const QByteArray &hash)
     emit reconnect(this->id(), id, hash);
 }
 
-void Player::joinRequested(const QString &name)
+void Player::joinRequested(const QString &name, bool autoJoin)
 {
     if (!isLoggedIn()) {
         return;
@@ -331,7 +332,7 @@ void Player::joinRequested(const QString &name)
         return;
     }
 
-    emit joinRequested(id(), name);
+    emit joinRequested(id(), name, autoJoin);
 }
 
 bool Player::inChannel(int chan) const
@@ -1023,6 +1024,11 @@ void Player::loggedIn(LoginInfo *info)
         server_pass_sent = true;
     }
 
+    // We'll store the Additional Channels, as if we put the user in one right now, Crash!
+    if(info->additionalChannels) {
+        additionalChannels = *(info->additionalChannels);
+    }
+
     testAuthentification(info->trainerName);
 }
 
@@ -1043,6 +1049,9 @@ void Player::loginSuccess()
 {
     ontologin = true;
     findTierAndRating(true);
+    foreach(const QString &channel, additionalChannels) {
+        joinRequested(id(), channel, true);
+    }
 }
 
 void Player::testAuthentification(const QString &name)

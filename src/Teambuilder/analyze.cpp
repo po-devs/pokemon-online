@@ -24,7 +24,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), comma
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle;
 }
 
-void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
+void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, const QStringList &autoJoin)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
@@ -32,6 +32,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     Flags network;
     network.setFlags( (1 << LoginCommand::HasClientType) | (1 << LoginCommand::HasVersionNumber) | (1 << LoginCommand::HasReconnect)
                       | (1 << LoginCommand::HasTrainerInfo) | (1 << LoginCommand::HasTeams));
+
+    if (autoJoin.length() > 0) {
+        network.setFlag(LoginCommand::HasAdditionalChannels, true);
+    }
 
     if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);
@@ -60,6 +64,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
 
     /* Can reconnect even if the last 2 bytes of the IP are different */
     out << uchar(16);
+
+    if (autoJoin.length() > 0) {
+        out << autoJoin;
+    }
 
     if (color.isValid()) {
         out << color;

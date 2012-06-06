@@ -489,19 +489,15 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
-        if (serverName.size() > 0) {
-            show_events->addSeparator();
+        show_events->addSeparator();
+        if(item->id() != 0)
             action = show_events->addAction(tr("Auto-join"));
-            action->setCheckable(item->id() != 0); // can't disable for main channel
-            action->setChecked(item->id() == 0 ||
-                               autojoinChannels.contains(channelNames.value(item->id())));
-            if (item->id() != 0) {
-                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
-                connect(action, SIGNAL(triggered(bool)), SLOT(toggleAutoJoin(bool)));
-                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-                mychanevents.push_back(action);
-            }
-        }
+            action->setCheckable(true);
+            action->setChecked(globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList().contains(channelNames.value(item->id())));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+            connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleAutoJoin(bool)));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+            mychanevents.push_back(action);
 
         show_events->exec(channels->mapToGlobal(point));
     }
@@ -927,16 +923,16 @@ void Client::showTeamEvents(bool b)
     showPlayerEvents(b, TeamEvent, "show_player_events_team");
 }
 
-void Client::toggleAutoJoin(bool b)
+void Client::toggleAutoJoin(bool autojoin)
 {
-    QString name = channelNames.value(selectedChannel);
-    if (b) {
-        autojoinChannels.append(name);
+    QSettings MySettings;
+    QStringList AutoJoinChannels = MySettings.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+    if(autojoin) {
+        AutoJoinChannels.push_front(channelNames.value(selectedChannel));
     } else {
-        autojoinChannels.removeAll(name);
+        AutoJoinChannels.removeOne(channelNames.value(selectedChannel));
     }
-    QSettings s;
-    s.setValue(QString("autojoinChannels/%1").arg(serverName), autojoinChannels.join("*"));
+    MySettings.setValue(QString("AutoJoinChannels/%1").arg(relay().getIp()), AutoJoinChannels);
 }
 
 void Client::seeRanking(int id)
@@ -1988,7 +1984,8 @@ void Client::connected()
     s.endGroup();
 
     if (reconnectPass.isEmpty()) {
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+        QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
@@ -2025,15 +2022,6 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
     mynames[p.name] = p.id;
 
     tiersReceived(tiers);
-
-    if (serverName.size() > 0) {
-        QSettings settings;
-        autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
-        autojoinChannels.removeAll("");
-        foreach (QString channel, autojoinChannels) {
-            join(channel);
-        }
-    }
 }
 
 void Client::tiersReceived(const QStringList &tiers)
