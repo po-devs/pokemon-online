@@ -26,6 +26,7 @@ private slots:
     void tabChanged(int tabNum);
     void togglePMs(bool toggled);
     void messageReceived(PMStruct *pm);
+    void PMDisconnected(bool value);
 
 private:
     QExposedTabWidget *myPMs;
@@ -49,6 +50,7 @@ public:
     void printLine(QString line, bool self = false);
     void disable();
     void reuse(int id);
+    void disconnected(bool value);
 
     QString name() const {
         return m_name;
