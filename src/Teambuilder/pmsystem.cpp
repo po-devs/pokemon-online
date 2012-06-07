@@ -117,6 +117,13 @@ void PMSystem::messageReceived(PMStruct *pm) {
 
 }
 
+void PMSystem::PMDisconnected(bool value)
+{
+    foreach(PMStruct *pm, myPMWindows) {
+        pm->disconnected(value);
+    }
+}
+
 PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
     : m_ownName(ownName), escape_html(!html)
 {
@@ -243,6 +250,7 @@ void PMStruct::disable()
     m_send->setDisabled(true);
     m_textToSend->setDisabled(true);
 }
+
 void PMStruct::reuse(int id)
 {
     if (this->id() == id) return;
@@ -252,6 +260,21 @@ void PMStruct::reuse(int id)
     m_challenge->setEnabled(true);
     m_send->setEnabled(true);
     m_textToSend->setEnabled(true);
+}
+
+void PMStruct::disconnected(bool value)
+{
+    if(value) {
+        printHtml("<i>" + tr("You've been disconnected from server.") + "</i>");
+        m_challenge->setEnabled(false);
+        m_send->setEnabled(false);
+        m_textToSend->setEnabled(false);
+    } else {
+        printHtml("<i>" + tr("You've been reconnected to the server."), + "</i>");
+        m_challenge->setEnabled(true);
+        m_send->setEnabled(true);
+        m_textToSend->setEnabled(true);
+    }
 }
 
 void PMStruct::closeEvent(QCloseEvent *event) {

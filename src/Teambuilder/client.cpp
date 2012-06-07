@@ -81,6 +81,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
+    mainChat->removeTab(0);
 
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
@@ -137,6 +138,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     /* PM System */
     pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
+    connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
 
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
@@ -1989,6 +1991,8 @@ void Client::connected()
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
+
+    emit PMDisconnected(false);
 }
 
 void Client::disconnected()
@@ -2002,6 +2006,8 @@ void Client::disconnected()
     isConnected = false;
     myregister->setText(tr("&Reconnect"));
     myregister->setEnabled(true);
+
+    emit PMDisconnected(true);
 }
 
 TeamHolder* Client::team()

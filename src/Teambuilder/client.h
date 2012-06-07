@@ -257,8 +257,10 @@ signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
     void tierListFormed(const QStringList &tiers);
-    void PMDisabled(bool b, int starterAuth);
-    void togglePMs(bool b);
+    void PMDisabled(bool value, int starterAuth);
+    void togglePMs(bool value);
+    void PMDisconnected(bool disconnected);
+
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -303,7 +305,6 @@ private:
     QHash<qint32, QString> channelNames;
     QHash<QString, qint32> channelByNames;
     QHash<qint32, Channel *> mychannels;
-    QStringList autojoinChannels;
     /* Ignore */
     QList<int> myIgnored;
 
