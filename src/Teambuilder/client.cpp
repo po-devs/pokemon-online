@@ -1047,10 +1047,19 @@ void Client::PMReceived(int id, QString pm)
         startPM(id);
     }
 
+    if(mypms.contains(id) && mypms[id]->isVisible()) {
+        mypms[id]->show();
+    }
+
     registerPermPlayer(id);
     mypms[id]->printLine(pm);
 }
 
+
+void Client::closePM(int id)
+{
+    mypms[id]->close();
+}
 
 void Client::removePM(int id, const QString name)
 {

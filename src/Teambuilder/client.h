@@ -195,7 +195,8 @@ public slots:
     void pmcp(QString);
     /* PM */
     void startPM(int);
-    void removePM(int, const QString);
+    void closePM(int);
+    void removePM(int id, const QString);
     void PMReceived(int, const QString);
     /* CP */
     void controlPanel(int);
