@@ -483,7 +483,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         {
             QString name;
             in >> name;
-            emit joinRequested(name);
+            emit joinRequested(name, false);
             break;
         }
     case LeaveChannel:

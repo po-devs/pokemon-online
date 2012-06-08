@@ -66,7 +66,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
-    connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
+    connect(&relay(), SIGNAL(joinRequested(QString, bool)), SLOT(joinRequested(QString, bool)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));

@@ -140,7 +140,7 @@ signals:
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
-    void joinRequested(const QString &channel);
+    void joinRequested(const QString &channel, bool autoJoin);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
     void logout();
