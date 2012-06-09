@@ -2465,7 +2465,7 @@ int AbilityInfo::NumberOfAbilities()
 
 void GenderInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("genders_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("genders.txt")));
 }
 
 QString GenderInfo::path(const QString &filename)
@@ -2674,12 +2674,9 @@ void GenInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    /* This is important, so we make sure we always load the default values, then overwrite  translated ones*/
-    fill_gen_string(m_versions, path("versions.txt"));
-    fill_gen_string(m_versions, trFile(path("versions.txt")));
+    fill_gen_string(m_versions, trFile(path("versions")));
 
-    fill_double(m_gens, path("gens.txt"));
-    fill_double(m_gens, trFile(path("gens.txt")));
+    fill_double(m_gens, trFile(path("gens")));
 }
 
 QString GenInfo::Gen(int gen)
