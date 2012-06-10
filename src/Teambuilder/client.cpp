@@ -81,7 +81,6 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     mainChat->setObjectName("MainChat");
     mainChat->setMovable(true);
     mainChat->setTabsClosable(true);
-    mainChat->removeTab(0);
 
     layout->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
