@@ -2465,7 +2465,7 @@ int AbilityInfo::NumberOfAbilities()
 
 void GenderInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("genders_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("genders")));
 }
 
 QString GenderInfo::path(const QString &filename)
