@@ -50,3 +50,13 @@
 .name-auth-1, .name-auth-2, .name-auth-3 {
     font-style: italic;
 }
+
+.word-emphasis {
+    font-style: italic;
+}
+.word-strong {
+    font-weight: bold;
+}
+.word-underline {
+    text-decoration: underline;
+}
