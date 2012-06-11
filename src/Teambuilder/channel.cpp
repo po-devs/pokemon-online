@@ -704,9 +704,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             if (id != ownId())
                 end = end.replace(nameNotInsideTag, addHilightClass);
 
-            // Todo: maybe pull auth symbol from theme for all auth levels?
-            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : ""; 
-
+            QString authSymbol = Theme::AuthSymbol(client->auth(id));
             QColor color = client->color(id);
 
             mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");
