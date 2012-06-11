@@ -2925,9 +2925,9 @@ struct MMSecretPower : public MM {
     static void ms(int s, int, BS &b) {
         if (b.gen() == 5) {
             tmove(b,s).classification = Move::OffensiveStatChangingMove;
-            tmove(b,s).statAffected = Accuracy;
-            tmove(b,s).rateOfStat = 30;
-            tmove(b,s).boostOfStat = uchar(-1);
+            tmove(b,s).statAffected = Accuracy << 16;
+            tmove(b,s).rateOfStat = 30 << 16;
+            tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
             tmove(b,s).classification = Move::OffensiveStatusInducingMove;
             tmove(b,s).status = Pokemon::Paralysed;
