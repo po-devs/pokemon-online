@@ -646,7 +646,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
                 end = end.replace(nameNotInsideTag, addHilightClass);
 
             // Todo: maybe pull auth symbol from theme for all auth levels?
-            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : "";
+            QString authSymbol = Theme::AuthSymbol(client->auth(id));
             QSettings s;
             if (s.value("IRCSymbols").toBool() == true) {
                 switch (client->auth(id)) {
