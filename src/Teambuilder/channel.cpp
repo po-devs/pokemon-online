@@ -662,19 +662,6 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 
             // Todo: maybe pull auth symbol from theme for all auth levels?
             QString authSymbol = Theme::AuthSymbol(client->auth(id));
-            if (s.value("IRCSymbols").toBool() == true) {
-                switch (client->auth(id)) {
-                case 1:
-                    authSymbol = "@";
-                    break;
-                case 2:
-                    authSymbol = "&";
-                    break;
-                case 3:
-                    authSymbol = "~";
-                    break;
-                }
-            }
             QColor color = client->color(id);
 
             mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");

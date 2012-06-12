@@ -721,10 +721,10 @@ void Client::showTimeStamps(bool b)
     showTS = b;
 }
 
-void Client::showIRCSymbols(bool b)
+void Client::showRichenedText(bool b)
 {
     QSettings s;
-    s.setValue("IRCSymbols", b);
+    s.setValue("ClientEmphasize", b);
 }
 
 void Client::showExitsWarning(bool b)
@@ -1185,10 +1185,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts->setChecked(s.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
-    QAction * IRCSymbols = menuActions->addAction(tr("Show IRC auth symbols (@, &, ~)"));
-    IRCSymbols->setCheckable(true);
-    connect(IRCSymbols, SIGNAL(triggered(bool)), SLOT(showIRCSymbols(bool)));
-    IRCSymbols->setChecked(s.value("IRCSymbols").toBool());
+    QAction * textRichened = menuActions->addAction(tr("Enable richened text (// __ **)"));
+    textRichened->setCheckable(true);
+    connect(textRichened, SIGNAL(triggered(bool)), SLOT(showRichenedText(bool)));
+    textRichened->setChecked(s.value("ClientEmphasize").toBool());
 
     QAction * sew = menuActions->addAction(tr("Show exit warning"));
     sew->setCheckable(true);
