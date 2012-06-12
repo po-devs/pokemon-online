@@ -45,6 +45,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "show_player_events_team", false);
     setDefaultValue(s, "show_timestamps", true);
     setDefaultValue(s, "IRCSymbols", false);
+    setDefaultValue(s, "ClientEmphasize", true);
     setDefaultValue(s, "show_timestamps2", true);
     setDefaultValue(s, "pm_flashing", true);
     setDefaultValue(s, "pm_disabled", false);

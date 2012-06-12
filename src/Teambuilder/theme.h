@@ -53,6 +53,7 @@ public:
     static QPixmap OrangeBall();
     static QPixmap FrameBall();
     static QPixmap TrainerSprite(int num);
+    static QString AuthSymbol(int level);
     static BattleDefaultTheme* getBattleTheme();
     static ThemeAccessor* getAccessor();
 private:
@@ -64,6 +65,7 @@ private:
     static QHash<int, QPixmap> m_statusIcons;
     static QHash<int, QPixmap> m_battleIcons;
     static QHash<QString, QColor> m_Colors;
+    static QHash<QString, QString> m_symbols;
     static void loadColors();
     static void loadPixmaps();
 

@@ -618,6 +618,21 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
         const QString addHilightClass("<span class='name-hilight'>\\1</span>");
         QString lineClass = "line";
 
+        QSettings s;
+        if (s.value("ClientEmphasize").toBool()) {
+            const QRegExp emphasisNotInsideTag("/(\\w+)/(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addEmphasisClass("<span class='word-emphasis'>\\1</span>");
+            end = end.replace(emphasisNotInsideTag, addEmphasisClass);
+
+            const QRegExp strongNotInsideTag("\\*(\\w+)\\*(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addStrongClass("<span class='word-strong'>\\1</span>");
+            end = end.replace(strongNotInsideTag, addStrongClass);
+
+            const QRegExp underlineNotInsideTag("\\b_(\\w+)_\\b(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addUnderlineClass("<span class='word-underline'>\\1</span>");
+            end = end.replace(underlineNotInsideTag, addUnderlineClass);
+        }
+
         if (id != ownId() && end.contains(nameNotInsideTag)) { // Add stuff if we are to be flashed
             lineClass = "line line-hilight";
         }
@@ -646,8 +661,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
                 end = end.replace(nameNotInsideTag, addHilightClass);
 
             // Todo: maybe pull auth symbol from theme for all auth levels?
-            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : "";
-            QSettings s;
+            QString authSymbol = Theme::AuthSymbol(client->auth(id));
             if (s.value("IRCSymbols").toBool() == true) {
                 switch (client->auth(id)) {
                 case 1:
