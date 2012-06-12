@@ -228,7 +228,7 @@ public slots:
     void showTeamEvents(bool);
     void toggleAutoJoin(bool);
     void showTimeStamps(bool);
-    void showIRCSymbols(bool);
+    void showRichenedText(bool);
     void showExitsWarning(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
