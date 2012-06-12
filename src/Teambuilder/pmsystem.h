@@ -20,6 +20,7 @@ public:
 
     void startPM(PMStruct *newPM);
     void checkTabbing();
+    void changePMs();
 
 private slots:
     void closeTab(int tabNum);
@@ -82,6 +83,7 @@ private:
     QString m_name;
     QString m_ownName;
     bool escape_html;
+    bool SaveLog;
 
     Log *log;
 

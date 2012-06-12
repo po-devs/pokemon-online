@@ -29,10 +29,12 @@ PMSystem::~PMSystem()
 void PMSystem::startPM(PMStruct *newPM)
 {
     if(tabbedPMs) {
+        newPM->setWindowFlags(Qt::Widget);
         myPMs->addTab(newPM, newPM->name());
         connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
         checkTabbing();
     } else {
+        newPM->setWindowFlags(Qt::Window);
         newPM->show();
     }
     myPMWindows.insert(newPM->id(), newPM);
@@ -60,7 +62,6 @@ void PMSystem::checkTabbing()
 
 void PMSystem::tabChanged(int tabNum)
 {
-    // We're avoiding crash if we don't have any tab on the myPMs.
     if(myPMs->count() <= 0) {
         return;
     }
@@ -72,23 +73,24 @@ void PMSystem::tabChanged(int tabNum)
 void PMSystem::togglePMs(bool toggled)
 {
     tabbedPMs = toggled;
-    if(tabbedPMs) {
+    changePMs();
+}
+
+void PMSystem::changePMs()
+{
+    if(!tabbedPMs) {
         foreach(PMStruct *pm, myPMWindows) {
-            // Otherwise it wont be added to the myPMs :(
-            pm->setWindowFlags(Qt::Widget);
-            myPMs->addTab(pm, pm->name());
-            show();
-        }
-    } else {
-        foreach(PMStruct *pm, myPMWindows) {
-            while(myPMs->count() > 0) {
-                myPMs->removeTab(0);
-            }
-            // Otherwise new window wouldn't show :(
             pm->setWindowFlags(Qt::Window);
             pm->show();
-            hide();
         }
+        hide();
+    } else {
+        foreach(PMStruct *pm, myPMWindows) {
+            pm->hide();
+            pm->setWindowFlags(Qt::Widget);
+            myPMs->addTab(pm, pm->name());
+        }
+        show();
     }
 }
 
@@ -127,10 +129,9 @@ void PMSystem::PMDisconnected(bool value)
 PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
     : m_ownName(ownName), escape_html(!html)
 {
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
     this->id() = id;
     changeName(name);
+    SaveLog = false;
 
     QGridLayout *l = new QGridLayout(this);
     this->setLayout(l);
@@ -145,10 +146,11 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_send = new QPushButton(tr("&Ignore"));
     m_send->setCheckable(true);
 
-    log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
     QSettings s;
     if(s.value("pms_logged").toBool()) {
+        log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
         log->override = Log::OverrideYes;
+        SaveLog = true;
     }
 
     l->addWidget(m_challenge,2,0);
@@ -192,10 +194,6 @@ void PMStruct::printLine(QString line, bool self)
         printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
     } else {
         printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line, false);
-//        if (!QApplication::activeWindow()) {
-//            QApplication::alert(this, 10000);
-//            //raise();
-//        }
     }
 }
 
@@ -209,7 +207,9 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
-    log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
+    if(SaveLog) {
+        log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
+    }
     emit messageReceived(this);
 }
 
