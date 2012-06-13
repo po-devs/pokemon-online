@@ -415,7 +415,7 @@ QString Theme::AuthSymbol(int level)
     auto iterator = m_symbols.find(QString("symbols/auth_%1").arg(level));
     if (iterator != m_symbols.end())
         return *iterator;
-    iterator = m_symbols.find("auth_default");
+    iterator = m_symbols.find("symbols/auth_default");
     if (iterator != m_symbols.end())
         return *iterator; 
     return "";
