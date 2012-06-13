@@ -2266,7 +2266,7 @@ bool BattleSituation::testStatus(int player)
         }
         return false;
     }
-    if (isConfused(player) && turnMemory(player)["NoChoice"].toBool() != true) {
+    if (isConfused(player) && !turnMemory(player).contains("NoChoice")) {
         if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
             inc(pokeMemory(player)["ConfusedCount"], -1);
 
