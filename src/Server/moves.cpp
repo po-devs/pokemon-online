@@ -2230,6 +2230,7 @@ struct MMRazorWind : public MM
                 poke(b,s)["ReleaseTurn"] = b.turn() + 1;
                 turn(b,s)["TellPlayers"] = false;
                 tmove(b, s).power = 0;
+                tmove(b, s).status = Pokemon::Fine;
                 tmove(b, s).targets = Move::User;
                 addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
             }
