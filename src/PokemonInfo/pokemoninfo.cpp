@@ -862,6 +862,12 @@ bool PokemonInfo::HasAnimatedSprites()
     return false;
 }
 
+bool PokemonInfo::HasAnimatedSpritesEnabled()
+{
+    QSettings MySettings;
+    return MySettings.value("animated_sprites").toBool();
+}
+
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 {
     QString archive;
