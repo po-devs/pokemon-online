@@ -2942,7 +2942,7 @@ struct MMOutrage : public MM
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
 
-            if (b.gen() <= 4 && b.gen() >= 3) {
+            if (b.gen() <= 4 && b.gen()) {
                 b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Outrage", &aas);
             }
 
@@ -2961,7 +2961,7 @@ struct MMOutrage : public MM
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
             b.sendMoveMessage(93,0,s,type(b,s));
-            b.inflictConfused(s, s, true);
+            b.inflictConfused(s, s, b.gen() >= 3);
         }
     }
 
