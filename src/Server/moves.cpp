@@ -4191,7 +4191,7 @@ struct MMTriAttack : public MM
         if (!b.coinflip(unsigned(1+boost), 5))
             return;
 
-        if (b.poke(t).status() == Pokemon::Koed)
+        if (b.koed(t))
             return;
 
         int status;
