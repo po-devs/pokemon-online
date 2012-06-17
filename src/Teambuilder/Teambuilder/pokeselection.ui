@@ -92,7 +92,7 @@
   <customwidget>
    <class>TB_PokeChoice</class>
    <extends>QTableView</extends>
-   <header location="global">pokechoice.h</header>
+   <header location="global">Teambuilder/pokechoice.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

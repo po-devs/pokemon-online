@@ -82,6 +82,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="nickname">
+       <property name="text">
+        <string/>
+       </property>
        <property name="placeholderText">
         <string>Pokemon nickname</string>
        </property>
@@ -245,19 +248,19 @@
   <customwidget>
    <class>EvBox</class>
    <extends>QWidget</extends>
-   <header>evbox.h</header>
+   <header>Teambuilder/evbox.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>PokeLevelSettings</class>
    <extends>QFrame</extends>
-   <header>pokelevelsettings.h</header>
+   <header>Teambuilder/pokelevelsettings.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>IvBox</class>
    <extends>QWidget</extends>
-   <header>ivbox.h</header>
+   <header>Teambuilder/ivbox.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
