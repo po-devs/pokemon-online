@@ -211,29 +211,31 @@ struct MMCamouflage : public MM {
 struct MMBlastBurn : public MM
 {
     MMBlastBurn() {
-        functions["UponAttackSuccessful"] = &aas;
+        functions["UponAttackSuccessful"] = &uas;
         functions["AttackSomehowFailed"] = &asf;
     }
 
     // Hyper Beam requires a recharge in Gen 1 Stadium even if it misses.
     static void asf(int s, int, BS &b) {
-        if (b.gen() != 1) {
+        if (b.gen() >= 2) {
             return;
         }
         addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
         poke(b, s)["BlastBurnTurn"] = b.turn();
     }
 
-    static void aas(int s, int, BS &b) {
+    static void uas(int s, int, BS &b) {
         addFunction(poke(b, s), "TurnSettings", "BlastBurn", &ts);
         poke(b, s)["BlastBurnTurn"] = b.turn();
     }
+
     static void ts(int s, int, BS &b) {
-        if (poke(b, s)["BlastBurnTurn"].toInt() < b.turn() - 1) {
+        if (poke(b, s)["BlastBurnTurn"].toInt() != b.turn() - 1) {
             return;
         }
 
         fturn(b, s).add(TM::NoChoice);
+        turn(b,s)["AutomaticMove"] = 0;//So that confusion won't be inflicted on recharge
 
         addFunction(turn(b,s), "MoveSettings", "BlastBurn", &ms);
     }
@@ -241,10 +243,10 @@ struct MMBlastBurn : public MM
     static void ms(int s, int, BS &b) {
         turn(b, s)["TellPlayers"] = false;
         tmove(b, s).targets = Move::User;
-        addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &uas);
+        addFunction(turn(b,s), "UponAttackSuccessful", "BlastBurn", &aas);
     }
 
-    static void uas(int s, int, BS &b) {
+    static void aas(int s, int, BS &b) {
         b.sendMoveMessage(11, 0, s);
     }
 };

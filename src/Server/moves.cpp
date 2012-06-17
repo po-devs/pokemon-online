@@ -2970,7 +2970,7 @@ struct MMOutrage : public MM
             fturn(b,s).add(TM::NoChoice);
             MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,s,b);
 
-            if (b.gen() >=5) {
+            if (b.gen() >= 5) {
                 addFunction(turn(b, s), "AfterAttackSuccessful", "Outrage", &aas);
                 addFunction(turn(b, s), "AttackSomehowFailed", "Outrage", &aas);
             }
