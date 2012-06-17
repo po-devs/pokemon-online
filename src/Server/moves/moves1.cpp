@@ -562,6 +562,9 @@ struct MMDetect : public MM
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
         /* All other moves fail */
+        if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+        }
         b.fail(s, 27, 0, Pokemon::Normal, t);
     }
 };
@@ -1088,7 +1091,7 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
-            b.notify(All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1379,7 +1382,7 @@ struct MMDoomDesire : public MM
                     int typemod = fturn(b,s).typeMod;
                     if (typemod == 0) {
                         /* If it's ineffective we just say it */
-                        b.notify(All, BattleCommands::Effective, s, quint8(typemod));
+                        b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
                         return;
                     }
                     fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
