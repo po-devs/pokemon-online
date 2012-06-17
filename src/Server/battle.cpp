@@ -665,8 +665,12 @@ void BattleSituation::analyzeChoice(int slot)
         turnMemory(slot)["Target"] = choice(slot).target();
         if (!wasKoed(slot)) {
             if (turnMem(slot).contains(TM::NoChoice))
-                /* Automatic move */
-                useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                if (turnMemory(slot).contains("AutomaticMove")) {
+                    useAttack(slot, turnMemory(slot)["AutomaticMove"].toInt(), true);
+                } else {
+                    /* Automatic move */
+                    useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                }
             else {
                 if (options[slot].struggle()) {
                     MoveEffect::setup(Move::Struggle,slot,0,*this);
@@ -1247,7 +1251,7 @@ bool BattleSituation::testStatus(int player)
         }
         return false;
     }
-    if (isConfused(player)) {
+    if (isConfused(player) && tmove(player).attack != 0) {
         if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
             inc(pokeMemory(player)["ConfusedCount"], -1);
 
@@ -1263,7 +1267,7 @@ bool BattleSituation::testStatus(int player)
         }
     }
 
-    if (poke(player).status() == Pokemon::Paralysed) {
+    if (poke(player).status() == Pokemon::Paralysed && tmove(player).attack != 0) {
         //MagicGuard
         if ( (gen() > 4 || !hasWorkingAbility(player, Ability::MagicGuard)) && coinflip(1, 4)) {
             notify(All, StatusMessage, player, qint8(PrevParalysed));
