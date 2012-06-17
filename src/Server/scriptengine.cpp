@@ -1606,7 +1606,7 @@ int ScriptEngine::rand(int min, int max)
 {
     if (min == max)
         return min;
-    return (::rand()%(max-min)) + min;
+    return ::floor(myengine.globalObject().property("Math").property("random").call().toNumber() * (max - min) + min);
 }
 
 int ScriptEngine::numPlayers()
