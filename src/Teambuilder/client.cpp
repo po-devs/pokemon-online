@@ -145,24 +145,13 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     if (settings.value("user_list_at_right").toBool()) {
         s->addWidget(mytab);
     }
-    if(settings.value("sort_channels_by_name").toBool()) {
-        sortCBN = 1;
+    sortCBN = settings.value("sort_channels_by_name").toBool();
+    if(sortCBN) {
         sortChannels();
-    } else {
-        sortCBN = 0;
     }
     pmFlashing = settings.value("pm_flashing").toBool();
-    if(settings.value("reject_incoming_pms").toBool()) {
-        pmReject = 1;
-    } else {
-        pmReject = 0;
-    }
     pmsTabbed = settings.value("pms_tabbed").toBool();
-    if(settings.value("pms_tabbed").toBool()) {
-        pmsTabbed = 1;
-    } else {
-        pmsTabbed = 0;
-    }
+    pmReject = settings.value("reject_incoming_pms").toBool();
 }
 
 Client::~Client()
@@ -1033,7 +1022,7 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-    if(!mypms.contains(id) && pmReject) {
+    if(pmReject) {
         myrelay.sendPM(id, "This player is rejecting incoming PMs.");
         return;
     }
