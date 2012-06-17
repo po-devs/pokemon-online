@@ -84,6 +84,7 @@ public:
     static QPixmap Picture(const QString &url);
     static QMovie  *AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back);
     static bool HasAnimatedSprites();
+    static bool HasAnimatedSpritesEnabled();
     static QPixmap Sub(Pokemon::gen gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
     static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen = GEN_MAX);
