@@ -1387,7 +1387,7 @@ struct AMEncourage : public AM
         turn(b,s)["BasePowerAbilityModifier"] = 6;
 
         /* Ugly, to tell life orb not to activate =/ */
-        turn(b,s)["NoLifeOrbActivation"] = true;
+        turn(b,s)["EncourageBug"] = true;
     }
 };
 
