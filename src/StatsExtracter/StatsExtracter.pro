@@ -15,3 +15,4 @@ TEMPLATE = app
 LIBS += -L../../bin -lpokemonlib -lutilities
 
 SOURCES += main.cpp
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

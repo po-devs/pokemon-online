@@ -81,7 +81,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="winningMessage"/>
+      <widget class="QLineEdit" name="winningMessage">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="losingMessageLabel">
@@ -94,7 +98,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="losingMessage"/>
+      <widget class="QLineEdit" name="losingMessage">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="tieLabel">
@@ -520,7 +528,7 @@
   <customwidget>
    <class>PokeButtonsHolder</class>
    <extends>QWidget</extends>
-   <header>../Teambuilder/pokebuttonsholder.h</header>
+   <header>Teambuilder/pokebuttonsholder.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

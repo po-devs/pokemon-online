@@ -1,6 +1,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include <QtCore>
 #include <ctime>
+#include "../Utilities/coreclasses.h"
 
 /*
  * First we move to a tier.
@@ -554,7 +555,7 @@ bool loadRanks(QList<QPair<Pokemon::uniqueId, qint32> > &ranks, QString filename
     QByteArray content;
 
     content = f.readAll();
-    QDataStream da(&content, QIODevice::ReadOnly);
+    DataStream da(&content, QIODevice::ReadOnly);
     da.setVersion(QDataStream::Qt_4_7);
     da >> ranks;
 
@@ -685,7 +686,7 @@ int main(int argc, char *argv[])
                 }
 
                 QByteArray data;
-                QDataStream d(&data, QIODevice::WriteOnly);
+                DataStream d(&data, QIODevice::WriteOnly);
                 d.setVersion(QDataStream::Qt_4_7);
                 d << finalranks;
 
