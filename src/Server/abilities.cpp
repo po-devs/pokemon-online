@@ -1645,12 +1645,18 @@ struct AMSturdy : public AM {
     static void btd(int s, int, BS &b) {
         if (b.poke(s).isFull()) {
             turn(b,s)["CannotBeKoedAt"] = b.attackCount();
+            turn(b,s)["SturdyActivated"] = true;
         }
     }
 
     static void uss(int s, int , BS &b) {
-        b.sendAbMessage(91, 0, s);
-        turn(b,s)["SurviveReason"] = true;
+        /*  It may be possible for both Sturdy and Focus Band to activate,
+          so we make sure sturdy activated before sending the sturdy message,
+          otherwise we let focus band sending its message */
+        if (turn(b,s)["SturdyActivated"].toBool()) {
+            b.sendAbMessage(91, 0, s);
+            turn(b,s)["SurviveReason"] = true;
+        }
     }
 };
 
