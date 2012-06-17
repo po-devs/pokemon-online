@@ -780,13 +780,15 @@ void Player::giveBanList()
     if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
-    QHash<QString, QString> bannedMembers = SecurityManager::banList();
+    QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
 
-    QHashIterator<QString, QString> it(bannedMembers);
+    QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
 
     while (it.hasNext()) {
         it.next();
-        relay().notify(NetworkServ::GetBanList, it.key(), it.value());
+        if (it.value().second == 0) {
+            relay().notify(NetworkServ::GetBanList, it.key(), it.value().first);
+        }
     }
 }
 
