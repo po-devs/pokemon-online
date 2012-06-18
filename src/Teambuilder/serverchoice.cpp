@@ -13,8 +13,8 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     registry_connection = new Analyzer(true);
     registry_connection->connectTo(
-            settings.value("registry_server", "pokemon-online-registry.dynalias.net").toString(),
-            settings.value("registry_port", 8080).toUInt()
+            settings.value("ServerChoice/registry_server", "pokemon-online-registry.dynalias.net").toString(),
+            settings.value("ServerChoice/registry_port", 8080).toUInt()
     );
     registry_connection->setParent(this);
 
@@ -37,7 +37,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(ui->serverList, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
 
     ui->nameEdit->setText(nick);
-    ui->advServerEdit->setText(settings.value("default_server").toString());
+    ui->advServerEdit->setText(settings.value("ServerChoice/default_server").toString());
     connect(ui->advServerEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
     connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
@@ -56,7 +56,7 @@ void ServerChoice::regServerChosen(int row)
     QString ip = ui->serverList->item(row, 3)->text();
 
     QSettings settings;
-    settings.setValue("default_server", ip);
+    settings.setValue("ServerChoice/default_server", ip);
     if(ip.contains(":")){
         quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
         QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
@@ -71,7 +71,7 @@ void ServerChoice::advServerChosen()
     QString ip = ui->advServerEdit->text().trimmed();
 
     QSettings settings;
-    settings.setValue("default_server", ip);
+    settings.setValue("ServerChoice/default_server", ip);
     if(ip.contains(":")){
         quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
         QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
