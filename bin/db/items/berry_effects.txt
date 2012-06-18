@@ -61,4 +61,4 @@
 10#pinch Accuracy once berry
 11#pinch move first just once
 12-1#Physical recoil
-12-0#Special recoil
+12-2#Special recoil

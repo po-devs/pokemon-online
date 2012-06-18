@@ -2948,7 +2948,7 @@ struct MMOutrage : public MM
 
             poke(b,s)["OutrageMove"] = move(b,s);
         }
-        /* In gen 5, even a miss causes outrage to stop */
+        /* In gen 5, even a miss causes outrage to stop, so we update the outrage count only after the attack is successful */
         if (b.gen() >= 5)
             poke(b,s)["LastOutrage"] = b.turn();
     }
