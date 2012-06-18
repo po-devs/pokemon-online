@@ -185,9 +185,12 @@ void MainEngine::routine(CentralWidgetInterface *w)
 {
     displayer->setWindowTitle(tr("Pokemon Online"));
     central->addWidget(dynamic_cast<QWidget*>(w));
+    QWidget *toDel = central->widget(0);
     central->removeWidget(central->widget(0));
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
     loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
+
+    toDel->deleteLater();
 }
 
 void MainEngine::launchMenu(bool first)

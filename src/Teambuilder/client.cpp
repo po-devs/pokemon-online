@@ -18,7 +18,7 @@
 #include "challengedialog.h"
 #include "tieractionfactory.h"
 
-Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
+Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer())
 {
     waitingOnSecond = false;
     top = NULL;
@@ -156,7 +156,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
 
 Client::~Client()
 {
-    relay().notify(NetworkCli::Logout);
+    relay().logout();
     writeSettings(this);
 }
 
@@ -1037,7 +1037,7 @@ void Client::setPlayer(const UserInfo &ui)
 void Client::PMReceived(int id, QString pm)
 {
     if(pmReject) {
-        myrelay.sendPM(id, "This player is rejecting incoming PMs.");
+        relay().sendPM(id, "This player is rejecting incoming PMs.");
         return;
     }
 
@@ -2028,7 +2028,7 @@ TeamHolder* Client::team()
 
 Analyzer &Client::relay()
 {
-    return myrelay;
+    return *myrelay;
 }
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)

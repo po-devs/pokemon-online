@@ -351,7 +351,7 @@ private:
     QHash<qint32, Battle> battles;
 
     /* Network Relay */
-    Analyzer myrelay;
+    Analyzer *myrelay;
     Analyzer & relay();
 
     /* Password Wallet */
