@@ -208,10 +208,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case Login:
         {
             if (socket().id() != 0) {
-                LoginInfo info;
-                in >> info;
+                LoginInfo *info = new LoginInfo();
+                in >> *info;
 
-                emit loggedIn(&info);
+                emit loggedIn(info);
             } else
                 emit accepted(); // for registry;
 
@@ -483,7 +483,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         {
             QString name;
             in >> name;
-            emit joinRequested(name, false);
+            emit joinRequested(name);
             break;
         }
     case LeaveChannel:

@@ -159,7 +159,6 @@ public:
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue proxyIp(int id);
-    Q_INVOKABLE QScriptValue additionalChannels(int id);
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
     Q_INVOKABLE QScriptValue gen(int id);
     Q_INVOKABLE QScriptValue subgen(int id);

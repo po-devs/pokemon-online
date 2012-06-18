@@ -132,7 +132,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     tim->start();
 
     /* Default channel on to display messages */
-    channelPlayers(0);
+    channelPlayers(-1);
 
     /* PM System */
     pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
@@ -342,28 +342,40 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
         return;
     }
 
-    Channel *c = new Channel(channelNames.value(chanid), chanid, this);
+    Channel *c;
+
+    /* Test if there is a channel or not. If no channel, the already in-place channel space is used
+      for the new channels */
+    if (mychannels.contains(-1))  {
+        c = mychannels[-1];
+        mychannels[chanid] = c;
+        mychannels.remove(-1);
+        c->setId(chanid);
+
+        channelNameChanged(chanid, channelNames.take(chanid));
+
+        // set tab complete for first chan
+        myline->setPlayers(c->playersWidget()->model());
+    } else {
+        c = new Channel(channelNames.value(chanid), chanid, this);
+        mychannels[chanid] = c;
+
+        playersW->addWidget(c->playersWidget());
+        mainChat->addTab(c->mainChat(), c->name());
+        battlesW->addWidget(c->battlesWidget());
+
+        connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
+        connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
+        connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
+        connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
+    }
 
     for(int i =0;i < channels->count(); i++) {
         if (channels->item(i)->text() == c->name())
             channels->item(i)->setIcon(chatot);
     }
 
-    playersW->addWidget(c->playersWidget());
-    mainChat->addTab(c->mainChat(), c->name());
-    battlesW->addWidget(c->battlesWidget());
-    if (mainChat->count() == 1)
-        // set tab complete for first chan
-        myline->setPlayers(c->playersWidget()->model());
-
-    mychannels[chanid] = c;
-
     c->receivePlayerList(ids);
-
-    connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
-    connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
-    connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
-    connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
 }
 
 void Client::channelActivated(Channel *c)
@@ -516,8 +528,8 @@ void Client::channelNameChanged(int id, const QString &name)
     channelByNames[name.toLower()] = id;
 
     for(int i = 0; i < channels->count(); i++) {
-        if (channels->item(id)->text() == old) {
-            channels->item(id)->setText(name);
+        if (channels->item(i)->text() == old) {
+            channels->item(i)->setText(name);
         }
     }
 
@@ -2008,10 +2020,10 @@ void Client::connected()
 
 void Client::disconnected()
 {
-    printLine(tr("Disconnected from Server!"));
-
     if (reconnectPass.length() > 0) {
-        printHtml(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+        printHtml(tr("Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+    } else {
+        printLine(tr("Disconnected from Server!"));
     }
 
     isConnected = false;

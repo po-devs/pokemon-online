@@ -13,6 +13,7 @@
 
 Player::Player(const GenericSocket &sock, int id)
 {
+    loginInfo() = NULL;
     m_bundle.id = id;
 
     myrelay = new Analyzer(sock, id);
@@ -34,6 +35,10 @@ Player::Player(const GenericSocket &sock, int id)
 Player::~Player()
 {
     delete myrelay;
+
+    if (loginInfo()) {
+        delete loginInfo();
+    }
 }
 
 void Player::doConnections()
@@ -66,7 +71,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
-    connect(&relay(), SIGNAL(joinRequested(QString, bool)), SLOT(joinRequested(QString, bool)));
+    connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
@@ -321,7 +326,7 @@ void Player::onReconnect(int id, const QByteArray &hash)
     emit reconnect(this->id(), id, hash);
 }
 
-void Player::joinRequested(const QString &name, bool autoJoin)
+void Player::joinRequested(const QString &name)
 {
     if (!isLoggedIn()) {
         return;
@@ -332,7 +337,7 @@ void Player::joinRequested(const QString &name, bool autoJoin)
         return;
     }
 
-    emit joinRequested(id(), name, autoJoin);
+    emit joinRequested(id(), name);
 }
 
 bool Player::inChannel(int chan) const
@@ -978,6 +983,11 @@ void Player::associateWith(Player *other)
 
 void Player::loggedIn(LoginInfo *info)
 {
+    if (loginInfo()) {
+        delete loginInfo();
+    }
+    loginInfo() = info;
+
     if (state()[LoginAttempt])
         return;
 
@@ -1026,15 +1036,6 @@ void Player::loggedIn(LoginInfo *info)
         server_pass_sent = true;
     }
 
-    // We'll store the Additional Channels, as if we put the user in one right now, Crash!
-    if(info->additionalChannels) {
-        additionalChannels = *(info->additionalChannels);
-    }
-
-    if(info->channel) {
-        qDebug() << *(info->channel);
-    }
-
     testAuthentification(info->trainerName);
 }
 
@@ -1055,10 +1056,15 @@ void Player::loginSuccess()
 {
     ontologin = true;
     findTierAndRating(true);
-    if(additionalChannels.length() > 0) {
-        foreach(const QString &channel, additionalChannels) {
-            joinRequested(id(), channel, true);
+
+    if (loginInfo()) {
+        if(loginInfo()->additionalChannels) {
+            foreach(const QString &channel, *loginInfo()->additionalChannels) {
+                joinRequested(id(), channel);
+            }
         }
+
+        delete loginInfo(), loginInfo() = NULL;
     }
 }
 
@@ -1382,12 +1388,6 @@ QString Player::ip() const
 QString Player::proxyIp() const
 {
     return proxyip;
-}
-
-
-QStringList Player::additionalChannelsList() const
-{
-    return additionalChannels;
 }
 
 void Player::recvTeam(const ChangeTeamInfo &cinfo)

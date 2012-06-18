@@ -29,6 +29,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(Flags, spec);
     PROPERTY(Flags, state);
     PROPERTY(quint8, reconnectBits);
+    PROPERTY(LoginInfo*, loginInfo);
 public:
     enum State
     {
@@ -75,7 +76,6 @@ public:
     int id() const;
     QString ip() const;
     QString proxyIp() const;
-    QStringList additionalChannelsList() const;
     Pokemon::gen gen() const;
     int teamCount() const;
     int rating(const QString &tier);
@@ -186,7 +186,7 @@ signals:
     void battleSearchCancelled(int);
     void logout(int);
     void unlocked();
-    void joinRequested(int id, const QString &channel, bool autoJoin);
+    void joinRequested(int id, const QString &channel);
     void joinRequested(int id, int channelId);
     void resendBattleInfos(int id, int battleid);
     void leaveRequested(int id, int channelid);
@@ -227,7 +227,7 @@ public slots:
     void tUnban(QString name);
     void testAuthentificationLoaded();
     void ratingLoaded();
-    void joinRequested(const QString &channel, bool autoJoin);
+    void joinRequested(const QString &channel);
     void leaveRequested(int slotid);
     void ipChangeRequested(const QString &ip);
     void autoKick();
