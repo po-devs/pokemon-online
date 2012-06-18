@@ -382,7 +382,7 @@ struct BMBerryRecoil : public BM
 
     static void uodr(int s, int t, BS &b) {
         //Magic Guard
-        if (tmove(b,s).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
+        if (tmove(b,t).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
             return;
         }
         b.eatBerry(s);
