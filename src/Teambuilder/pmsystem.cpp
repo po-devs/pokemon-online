@@ -52,11 +52,9 @@ void PMSystem::closeTab(int tabNum)
 void PMSystem::checkTabbing()
 {
     if(myPMs->count() <= 0) {
-        close();
+        hide();
     } else {
-        if(myPMs->count() >= 1) {
-            show();
-        }
+        show();
     }
 }
 
@@ -79,6 +77,9 @@ void PMSystem::togglePMs(bool toggled)
 void PMSystem::changePMs()
 {
     if(!tabbedPMs) {
+        while (myPMs->count() > 0) {
+            myPMs->removeTab(0);
+        }
         foreach(PMStruct *pm, myPMWindows) {
             pm->setWindowFlags(Qt::Window);
             pm->show();
