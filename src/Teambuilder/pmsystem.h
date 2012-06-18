@@ -28,6 +28,7 @@ private slots:
     void togglePMs(bool toggled);
     void messageReceived(PMStruct *pm);
     void PMDisconnected(bool value);
+    void removePM(int pm);
 
 private:
     QExposedTabWidget *myPMs;
