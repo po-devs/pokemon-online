@@ -51,6 +51,11 @@ int Channel::ownId() const {
     return client->ownId();
 }
 
+void Channel::setId(int id)
+{
+    myid = id;
+}
+
 void Channel::setName(const QString &name) {
     myname = name;
     restoreEventSettings();

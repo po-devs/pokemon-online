@@ -364,16 +364,16 @@ int Server::addChannel(const QString &name, int playerid) {
     return chanid;
 }
 
-void Server::joinChannel(int playerid, int channelid) {
+bool Server::joinChannel(int playerid, int channelid) {
     if (!channels.contains(channelid)) {
-        return;
+        return false;
     }
     if (!myengine->beforeChannelJoin(playerid, channelid)) {
-        return;
+        return false;
     }
     /* Because the script might have kicked the player */
     if (!playerExist(playerid)) {
-        return;
+        return false;
     }
 
     Channel &channel = this->channel(channelid);
@@ -419,6 +419,8 @@ void Server::joinChannel(int playerid, int channelid) {
     }
 
     myengine->afterChannelJoin(playerid, channelid);
+
+    return true;
 }
 
 void Server::needChannelData(int playerid, int channelid)
@@ -961,7 +963,11 @@ void Server::processLoginDetails(Player *p)
 
     if (!p->state()[Player::WaitingReconnect]) {
         /* Makes the player join the default channel */
-        joinChannel(id, 0);
+        if (p->loginInfo() && p->loginInfo()->channel && joinRequest(p->id(), *p->loginInfo()->channel)) {
+            //Action done in the if
+        } else {
+            joinChannel(id, 0);
+        }
 #ifndef PO_NO_WELCOME
         broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
               NoChannel, NoSender, true, id);
@@ -1049,34 +1055,30 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     mybattles[battle]->spectatingChat(player, chat);
 }
 
-void Server::joinRequest(int player, const QString &channel, bool autoJoin)
+bool Server::joinRequest(int player, const QString &channel)
 {
-    if(autoJoin && !channelExist(channel)) {
-        return;
-    }
     if (!channelExist(channel)) {
         if (channels.size() >= 1000) {
             sendMessage(player, "The server is limited to 1000 channels.");
-            return;
+            return false;
         }
-        // There's no point on autojoining an empty or an inexistent channel.
         if (addChannel(channel, player) == -1)
-            return;
+            return false;
     }
 
     /* Because scripts might have caused the destruction of the previous channel,
        if the scripter puts some code in addChannel that would cause a masskick */
     if (!channelExist(channel))
-        return;
+        return false;
 
     int channelid = channelids[channel.toLower()];
 
     if (this->channel(channelid).players.contains(this->player(player))) {
         //already in the channel
-        return;
+        return true;
     }
 
-    joinChannel(player, channelid);
+    return joinChannel(player, channelid);
 }
 
 void Server::recvMessage(int id, int channel, const QString &mess)
@@ -1180,7 +1182,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
-    connect(p, SIGNAL(joinRequested(int,QString,bool)), SLOT(joinRequest(int,QString,bool)));
+    connect(p, SIGNAL(joinRequested(int,QString)), SLOT(joinRequest(int,QString)));
     connect(p, SIGNAL(joinRequested(int,int)), SLOT(joinChannel(int,int)));
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));

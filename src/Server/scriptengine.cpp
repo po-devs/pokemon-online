@@ -1014,20 +1014,6 @@ QScriptValue ScriptEngine::proxyIp(int id)
     }
 }
 
-QScriptValue ScriptEngine::additionalChannels(int id)
-{
-    if(!myserver->playerLoggedIn(id)) {
-        return myengine.undefinedValue();
-    } else {
-        QStringList addChannels = myserver->player(id)->additionalChannelsList();
-        QScriptValue ret = myengine.newArray(addChannels.size());
-        for(int i = 0; i < addChannels.size(); i++) {
-            ret.setProperty(i, addChannels[i]);
-        }
-        return ret;
-    }
-}
-
 void ScriptEngine::hostName(const QString &ip, const QScriptValue &function)
 {
     myHostLookups[QHostInfo::lookupHost(ip, this, SLOT(hostInfo_Ready(QHostInfo)))] = function;
