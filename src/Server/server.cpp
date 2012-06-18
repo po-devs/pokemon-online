@@ -967,10 +967,15 @@ void Server::processLoginDetails(Player *p)
 
     if (!p->state()[Player::WaitingReconnect]) {
         /* Makes the player join the default channel */
-        if (p->loginInfo() && p->loginInfo()->channel && joinRequest(p->id(), *p->loginInfo()->channel)) {
-            //Action done in the if
-        } else {
+        if (! (p->loginInfo() && p->loginInfo()->channel && joinRequest(p->id(), *p->loginInfo()->channel)))  {
             joinChannel(id, 0);
+        }
+        if (p->loginInfo()) {
+            if(p->loginInfo()->additionalChannels) {
+                foreach(const QString &channel, *p->loginInfo()->additionalChannels) {
+                    joinRequest(p->id(), channel);
+                }
+            }
         }
 #ifndef PO_NO_WELCOME
         broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
@@ -982,6 +987,10 @@ void Server::processLoginDetails(Player *p)
 
     if (!wasLoggedIn) {
         myengine->afterLogIn(id);
+    }
+
+    if (p->loginInfo()) {
+        delete p->loginInfo(), p->loginInfo()=NULL;
     }
 }
 
@@ -1061,6 +1070,7 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
 
 bool Server::joinRequest(int player, const QString &channel)
 {
+    printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
     if (!channelExist(channel)) {
         if (channels.size() >= 1000) {
             sendMessage(player, "The server is limited to 1000 channels.");
