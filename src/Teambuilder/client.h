@@ -228,6 +228,7 @@ public slots:
     void showChannelEvents(bool);
     void showTeamEvents(bool);
     void toggleAutoJoin(bool autojoin);
+    void toggleDefaultChannel();
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
