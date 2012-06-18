@@ -66,7 +66,7 @@ void SecurityManager::loadMembers()
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
             query.exec("create table trainers (id integer primary key autoincrement, name varchar(20) unique, "
                             "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
-                       "ip varchar(39)), ban_expire_time int;");
+                       "ip varchar(39), ban_expire_time int);");
         } else {
             throw QString("Using a not supported database");
         }
@@ -74,50 +74,52 @@ void SecurityManager::loadMembers()
         query.exec("create index tname_index on trainers (name)");
         query.exec("create index tip_index on trainers (ip)");
 
-        Server::print("importing old db");
         QFile memberFile("members.txt");
+        if (!memberFile.exists()) {
+            Server::print("importing old db");
 
-        if (!memberFile.open(QFile::ReadWrite)) {
-            throw QObject::tr("Error: cannot open the file that contains the members ");
-        }
-
-        clock_t t = clock();
-
-        query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip) values (:name, :laston, :auth,"
-                      ":banned, :salt, :hash, :ip)");
-
-        QSqlDatabase::database().transaction();
-        while (!memberFile.atEnd()) {
-            QByteArray arr = memberFile.readLine();
-            QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
-
-            QStringList ls = s.split('%');
-
-            if (ls.size() == 6 && isValid(ls[0])) {
-                query.bindValue(":name", ls[0]);
-                query.bindValue(":laston",ls[1]);
-                query.bindValue(":auth", ls[2][0].toAscii()-'0');
-                query.bindValue(":banned", ls[2][1] == '1');
-                /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
-                   so i remove them. */
-                if (!ls[3].contains('\\')) {
-                    query.bindValue(":salt", ls[3].trimmed());
-                    query.bindValue(":hash", ls[4].trimmed());
-                } else {
-                    query.bindValue(":salt", "");
-                    query.bindValue(":hash", "");
-                }
-                query.bindValue(":ip", ls[5].trimmed());
-                query.exec();
+            if (!memberFile.open(QFile::ReadWrite)) {
+                throw QObject::tr("Error: cannot open the file that contains the members ");
             }
+
+            clock_t t = clock();
+
+            query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip) values (:name, :laston, :auth,"
+                          ":banned, :salt, :hash, :ip)");
+
+            QSqlDatabase::database().transaction();
+            while (!memberFile.atEnd()) {
+                QByteArray arr = memberFile.readLine();
+                QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
+
+                QStringList ls = s.split('%');
+
+                if (ls.size() == 6 && isValid(ls[0])) {
+                    query.bindValue(":name", ls[0]);
+                    query.bindValue(":laston",ls[1]);
+                    query.bindValue(":auth", ls[2][0].toAscii()-'0');
+                    query.bindValue(":banned", ls[2][1] == '1');
+                    /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
+                       so i remove them. */
+                    if (!ls[3].contains('\\')) {
+                        query.bindValue(":salt", ls[3].trimmed());
+                        query.bindValue(":hash", ls[4].trimmed());
+                    } else {
+                        query.bindValue(":salt", "");
+                        query.bindValue(":hash", "");
+                    }
+                    query.bindValue(":ip", ls[5].trimmed());
+                    query.exec();
+                }
+            }
+
+            QSqlDatabase::database().commit();
+
+            t = clock() - t;
+
+            Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
+            Server::print(query.lastError().text());
         }
-
-        QSqlDatabase::database().commit();
-
-        t = clock() - t;
-
-        Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
-        Server::print(query.lastError().text());
     }
 
     /* Expire old temp bans */
