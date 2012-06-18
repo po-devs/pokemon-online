@@ -673,6 +673,22 @@ bool BattleBase::acceptSpectator(int id, bool authed) const
     return !(clauses() & ChallengeInfo::DisallowSpectator);
 }
 
+void BattleBase::notifyChoices(int p)
+{
+    bool canMove = false;
+    for (int i = 0; i < numberPerSide(); i++) {
+        int slot = this->slot(p, i);
+        if (couldMove[slot]) {
+            notify(p, OfferChoice, slot, options[slot]);
+        }
+        canMove |= hasChoice[slot];
+    }
+
+    if (canMove) {
+        notify(p, StartChoices, p);
+    }
+}
+
 void BattleBase::addSpectator(Player *p)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
@@ -690,6 +706,8 @@ void BattleBase::addSpectator(Player *p)
     if (configuration().isInBattle(id)) {
         p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration());
         key = spot(id);
+
+        notifyChoices(key);
     } else {
         /* Assumption: each id is a different player, so key is unique */
         key = spectatorKey(id);
