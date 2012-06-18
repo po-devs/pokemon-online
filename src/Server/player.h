@@ -38,7 +38,8 @@ public:
         Battling,
         Away,
         LadderEnabled,
-        WaitingReconnect
+        WaitingReconnect,
+        DiscardedId
     };
 
     enum Spec
@@ -99,6 +100,7 @@ public:
     void removeBattle(int battleid);
     bool away() const;
     bool waitingForReconnect() const;
+    bool discarded() const;
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
     void changeState(int newstate, bool on);

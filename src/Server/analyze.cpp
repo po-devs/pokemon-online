@@ -166,6 +166,7 @@ bool Analyzer::isConnected() const
 
 void Analyzer::stopReceiving()
 {
+    blockSignals(true);
     socket().close();
 }
 

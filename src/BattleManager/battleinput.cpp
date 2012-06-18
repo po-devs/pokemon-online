@@ -58,13 +58,13 @@ bool BattleInput::delayed()
 void BattleInput::pause(int ticks)
 {
     delayCount+= ticks;
-    qDebug() << "New delay (+): " << delayCount;
+    //qDebug() << "New delay (+): " << delayCount;
 }
 
 void BattleInput::unpause(int ticks)
 {
     delayCount-=ticks;
-    qDebug() << "New delay (-): " << delayCount;
+    //qDebug() << "New delay (-): " << delayCount;
     if (delayCount < 0) {
         delayCount = 0;
     }

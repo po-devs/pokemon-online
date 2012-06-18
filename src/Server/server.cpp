@@ -880,15 +880,18 @@ void Server::loggedIn(int id, const QString &name)
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            // If the other player is disconnected, we remove him
-            if (player(ids)->waitingForReconnect()) {
-                player(ids)->autoKick();
-            } else {
-                // If registered - kick old one (ghost), otherwise - kick new one to prevent wars.
-                if (SecurityManager::member(name).isProtected()) {
+            if (SecurityManager::member(name).isProtected()) {
+                /* Replaces the other one */
+                if (!player(ids)->waitingForReconnect()) {
                     printLine(tr("%1: replaced by new connection.").arg(name));
                     sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
-                    silentKick(ids);
+                }
+                transferId(id, ids, true);
+                return;
+            } else {
+                // If the other player is disconnected, we remove him
+                if (player(ids)->waitingForReconnect()) {
+                    player(ids)->autoKick();
                 } else {
                     printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
                     sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
@@ -959,6 +962,7 @@ void Server::processLoginDetails(Player *p)
 
     if (!wasLoggedIn) {
         numberOfPlayersLoggedIn += 1;
+        printLine(tr("Adding a player, count: %1").arg(numberOfPlayersLoggedIn));
     }
 
     if (!p->state()[Player::WaitingReconnect]) {
@@ -976,7 +980,7 @@ void Server::processLoginDetails(Player *p)
         p->doWhenRC(wasLoggedIn);
     }
 
-    if (wasLoggedIn) {
+    if (!wasLoggedIn) {
         myengine->afterLogIn(id);
     }
 }
@@ -1164,6 +1168,7 @@ void Server::incomingConnection(int i)
     Player *p = player(id);
 
     connect(p, SIGNAL(loggedIn(int, QString)), SLOT(loggedIn(int, QString)));
+    connect(p, SIGNAL(logout(int)), SLOT(logout(int)));
     connect(p, SIGNAL(recvTeam(int, QString)), SLOT(recvTeam(int, QString)));
     connect(p, SIGNAL(recvMessage(int, int, QString)), SLOT(recvMessage(int, int, QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
@@ -1221,9 +1226,25 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
     }
 
     //proceed to reconnect
+    transferId(sender, id);
+}
+
+void Server::transferId(int sender, int id, bool copyInfo)
+{
+    printLine(QString("Transferring id %1 to %2").arg(sender).arg(id));
+    bool loggedIn = player(id)->isLoggedIn();
     player(id)->associateWith(player(sender));
-    emit player_incomingconnection(id);
-    emit player_authchange(id, authedName(id));
+    /* This flag is triggered when someone logs in without intending to reconnect,
+      but with sufficient info to allow for a reconnect. So we give them the intend
+      to reconnect and update the info */
+    if (copyInfo) {
+        player(id)->changeState(Player::WaitingReconnect, true);
+        sendMessage(id, tr("Your player session was still active on the server, so the data was kept. If you want to update your team/player info, just open the teambuilder and close it."));
+    }
+    if (!loggedIn) {
+        emit player_incomingconnection(id);
+        emit player_authchange(id, authedName(id));
+    }
     player(id)->relay().notify(NetworkServ::Reconnect, true);
     processLoginDetails(player(id));
 }
@@ -1718,6 +1739,7 @@ void Server::sendPlayer(int id)
 void Server::sendLogout(int id)
 {
     numberOfPlayersLoggedIn -= 1;
+    printLine(tr("Removing a player, count: %1").arg(numberOfPlayersLoggedIn));
     Player *source = player(id);
 
     ++lastDataId;
@@ -1773,13 +1795,13 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    printLine(QString("Received disconnection from player %1").arg(name(id)));
+    printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
     disconnectPlayer(id);
 }
 
 void Server::logout(int id)
 {
-    printLine(QString("Received logout from player %1").arg(name(id)));
+    printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
     removePlayer(id);
 }
 
@@ -1892,7 +1914,7 @@ void Server::disconnectPlayer(int id)
 
         QTimer::singleShot(5*60*1000, p, SLOT(autoKick()));
 
-        printLine(QString("Disconnected player %1").arg(playerName));
+        printLine(QString("Disconnected player %1 (%2)").arg(playerName).arg(id));
     }
 }
 
@@ -1915,7 +1937,9 @@ void Server::removePlayer(int id)
 
         QString playerName = p->name();
 
-        AntiDos::obj()->disconnect(p->ip(), id);
+        if (!p->waitingForReconnect() && !p->discarded()) {
+            AntiDos::obj()->disconnect(p->ip(), id);
+        }
 
         foreach(int chanid, p->getChannels()) {
             leaveRequest(id, chanid);
@@ -1934,7 +1958,7 @@ void Server::removePlayer(int id)
         if (loggedIn || p->state()[Player::WaitingReconnect])
             mynames.remove(playerName.toLower());
 
-        printLine(QString("Removed player %1").arg(playerName));
+        printLine(QString("Removed player %1 (%2)").arg(playerName).arg(id));
     }
 }
 
