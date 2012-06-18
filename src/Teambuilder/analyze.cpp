@@ -91,6 +91,19 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, c
     emit sendCommand(tosend);
 }
 
+void Analyzer::logout()
+{
+    if (socket().isValid() && socket().state() == QAbstractSocket::ConnectedState) {
+        notify(Logout);
+
+        /* Waits for the writing to finish */
+        connect(&socket(), SIGNAL(disconnected()), SLOT(deleteLater()));
+        socket().disconnectFromHost();
+    } else {
+        deleteLater();
+    }
+}
+
 void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
 {
     notify(ChallengeStuff, c);
