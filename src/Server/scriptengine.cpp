@@ -522,6 +522,13 @@ void ScriptEngine::kick(int id, int chanid)
     }
 }
 
+void ScriptEngine::disconnect(int id)
+{
+    if (testPlayer("disconnect(id)", id)) {
+        myserver->disconnectPlayer(id);
+    }
+}
+
 void ScriptEngine::updatePlayer(int playerid)
 {
     /* Updates all the info of the player to the other players
