@@ -74,6 +74,8 @@ public:
     }
     void reconnect();
 
+    QString defaultChannel();
+
     enum Status {
         Available = 0,
         Away,
@@ -228,7 +230,7 @@ public slots:
     void showChannelEvents(bool);
     void showTeamEvents(bool);
     void toggleAutoJoin(bool autojoin);
-    void toggleDefaultChannel();
+    void toggleDefaultChannel(bool def);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
@@ -374,6 +376,8 @@ private:
 
     /* The mode of the tier list. If it's single, then a simple checkbox, otherwise another menu for each team for each tier */
     bool singleTeam;
+
+    QSettings globals;
 };
 
 #endif // CLIENT_H
