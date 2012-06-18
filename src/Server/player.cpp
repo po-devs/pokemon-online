@@ -45,6 +45,7 @@ void Player::doConnections()
 {
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
+    connect(&relay(), SIGNAL(logout()), SLOT(logout()));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
     connect(&relay(), SIGNAL(teamChanged(const ChangeTeamInfo&)), SLOT(recvTeam(const ChangeTeamInfo&)));
