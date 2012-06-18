@@ -306,6 +306,7 @@ public:
     void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
 
     void notifyFail(int p);
+    void notifyChoices(int p);
     void notifyInfos(int tosend = All);
     void notifySub(int player, bool sub);
 
