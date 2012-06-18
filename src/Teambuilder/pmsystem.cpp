@@ -90,7 +90,9 @@ void PMSystem::changePMs()
             pm->setWindowFlags(Qt::Widget);
             myPMs->addTab(pm, pm->name());
         }
-        show();
+        if (myPMs->count() > 0) {
+            show();
+        }
     }
 }
 
