@@ -2151,7 +2151,7 @@ bool BattleBase::canGetStatus(int player, int status)
     case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison);
     case Pokemon::Frozen: return !hasType(player, Pokemon::Ice);
     default:
-        return false;
+        return true;
     }
 }
 
