@@ -480,7 +480,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         mychanevents.push_back(action);
 
         show_events->addSeparator();
-        if(item->id() != 0)
+        if(!(globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString() == channelNames.value(item->id()))) {
             action = show_events->addAction(tr("Auto-join"));
             action->setCheckable(true);
             action->setChecked(globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList().contains(channelNames.value(item->id())));
@@ -488,6 +488,14 @@ void Client::showChannelsContextMenu(const QPoint & point)
             connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleAutoJoin(bool)));
             createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
             mychanevents.push_back(action);
+        }
+        action = show_events->addAction(tr("Default Channel"));
+        action->setCheckable(true);
+        action->setChecked(globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString() == channelNames.value(item->id()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered()), this, SLOT(toggleDefaultChannel()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        mychanevents.push_back(action);
 
         show_events->exec(channels->mapToGlobal(point));
     }
@@ -923,6 +931,12 @@ void Client::toggleAutoJoin(bool autojoin)
         AutoJoinChannels.removeOne(channelNames.value(selectedChannel));
     }
     MySettings.setValue(QString("AutoJoinChannels/%1").arg(relay().getIp()), AutoJoinChannels);
+}
+
+void Client::toggleDefaultChannel()
+{
+    QSettings MySettings;
+    MySettings.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelNames.value(selectedChannel));
 }
 
 void Client::seeRanking(int id)
@@ -1984,7 +1998,8 @@ void Client::connected()
 
     if (reconnectPass.isEmpty()) {
         QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), AutoJoinChannels);
+        QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }

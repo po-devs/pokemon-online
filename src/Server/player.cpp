@@ -1029,6 +1029,10 @@ void Player::loggedIn(LoginInfo *info)
         additionalChannels = *(info->additionalChannels);
     }
 
+    if(info->channel) {
+        qDebug() << *(info->channel);
+    }
+
     testAuthentification(info->trainerName);
 }
 
