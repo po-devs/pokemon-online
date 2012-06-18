@@ -145,24 +145,13 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     if (settings.value("user_list_at_right").toBool()) {
         s->addWidget(mytab);
     }
-    if(settings.value("sort_channels_by_name").toBool()) {
-        sortCBN = 1;
+    sortCBN = settings.value("sort_channels_by_name").toBool();
+    if(sortCBN) {
         sortChannels();
-    } else {
-        sortCBN = 0;
     }
     pmFlashing = settings.value("pm_flashing").toBool();
-    if(settings.value("reject_incoming_pms").toBool()) {
-        pmReject = 1;
-    } else {
-        pmReject = 0;
-    }
     pmsTabbed = settings.value("pms_tabbed").toBool();
-    if(settings.value("pms_tabbed").toBool()) {
-        pmsTabbed = 1;
-    } else {
-        pmsTabbed = 0;
-    }
+    pmReject = settings.value("reject_incoming_pms").toBool();
 }
 
 Client::~Client()
@@ -491,7 +480,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         mychanevents.push_back(action);
 
         show_events->addSeparator();
-        if(item->id() != 0)
+        if(!(globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString() == channelNames.value(item->id()))) {
             action = show_events->addAction(tr("Auto-join"));
             action->setCheckable(true);
             action->setChecked(globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList().contains(channelNames.value(item->id())));
@@ -499,6 +488,14 @@ void Client::showChannelsContextMenu(const QPoint & point)
             connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleAutoJoin(bool)));
             createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
             mychanevents.push_back(action);
+        }
+        action = show_events->addAction(tr("Default Channel"));
+        action->setCheckable(true);
+        action->setChecked(globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString() == channelNames.value(item->id()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered()), this, SLOT(toggleDefaultChannel()));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        mychanevents.push_back(action);
 
         show_events->exec(channels->mapToGlobal(point));
     }
@@ -936,6 +933,12 @@ void Client::toggleAutoJoin(bool autojoin)
     MySettings.setValue(QString("AutoJoinChannels/%1").arg(relay().getIp()), AutoJoinChannels);
 }
 
+void Client::toggleDefaultChannel()
+{
+    QSettings MySettings;
+    MySettings.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelNames.value(selectedChannel));
+}
+
 void Client::seeRanking(int id)
 {
     if (!playerExist(id)) {
@@ -1033,7 +1036,7 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-    if(!mypms.contains(id) && pmReject) {
+    if(pmReject) {
         myrelay.sendPM(id, "This player is rejecting incoming PMs.");
         return;
     }
@@ -1994,7 +1997,8 @@ void Client::connected()
 
     if (reconnectPass.isEmpty()) {
         QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), AutoJoinChannels);
+        QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
