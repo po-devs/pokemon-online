@@ -489,7 +489,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         show_events->addSeparator();
 
-        QString name = channel(item->id())->name();
+        QString name = channelNames.value(item->id());
         QString ip = relay().getIp();
 
         if(defaultChannel() != name)  {
