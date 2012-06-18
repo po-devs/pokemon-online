@@ -30,6 +30,24 @@ Menu #menuButtons {
 	background: #111b25;
 }
 
+/********** ServerChoice ***************************/
+
+ServerChoice QWidget#serverChoiceFrame {
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #192c3b, stop: 0.50 #192b39,
+                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left: 11px;
+        padding-right: 11px;
+}
+
+ServerChoice #serverChoice {
+        background: #111b25;
+}
+
 /*=============================================*\*/
 /*************** Platform dependent **************/
 

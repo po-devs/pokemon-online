@@ -15,7 +15,6 @@ SOURCES += main.cpp \
     network.cpp \
     client.cpp \
     analyze.cpp \
-    serverchoice.cpp \
     battlewindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
@@ -36,6 +35,7 @@ SOURCES += main.cpp \
     tierratingbutton.cpp \
     findbattledialog.cpp \
     menu.cpp \
+    serverchoice.cpp \
     Teambuilder/poketablemodel.cpp \
     Teambuilder/pokemovesmodel.cpp \
     Teambuilder/trainermenu.cpp \
@@ -72,7 +72,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     network.h \
     client.h \
     analyze.h \
-    serverchoice.h \
     battlewindow.h \
     controlpanel.h \
     basebattlewindow.h \
@@ -117,7 +116,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/pokelevelsettings.h \
     Teambuilder/ivbox.h \
     Teambuilder/teamimporter.h \
-    Teambuilder/teamline.h
+    Teambuilder/teamline.h \
+    serverchoice.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
@@ -139,7 +139,8 @@ FORMS += Teambuilder/trainermenu.ui \
     challengedialog.ui \
     tierratingbutton.ui \
     findbattledialog.ui \
-    menu.ui
+    menu.ui \
+    serverchoice.ui
 
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
