@@ -1063,16 +1063,6 @@ void Player::loginSuccess()
 {
     ontologin = true;
     findTierAndRating(true);
-
-    if (loginInfo()) {
-        if(loginInfo()->additionalChannels) {
-            foreach(const QString &channel, *loginInfo()->additionalChannels) {
-                joinRequested(id(), channel);
-            }
-        }
-
-        delete loginInfo(), loginInfo() = NULL;
-    }
 }
 
 void Player::testAuthentification(const QString &name)
