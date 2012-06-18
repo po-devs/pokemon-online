@@ -229,6 +229,7 @@ public:
     Q_INVOKABLE void changeTeamPokeEV(int id, int team, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
+    Q_INVOKABLE int playersInMemory();
     Q_INVOKABLE bool loggedIn(int id);
 
     Q_INVOKABLE int rand(int min, int max);

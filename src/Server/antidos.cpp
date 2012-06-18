@@ -1,4 +1,5 @@
 #include "antidos.h"
+#include "server.h"
 
 AntiDosWindow::AntiDosWindow()
 {
@@ -159,6 +160,7 @@ bool AntiDos::connecting(const QString &ip)
     /* Registering the connection */
     loginsPerIp[ip].push_back(time(NULL));
     connectionsPerIp[ip]++;
+    Server::serverIns->printLine(tr("Connections for ip(+conn) %1 are %2").arg(ip).arg(connectionsPerIp[ip]));
 
     return true;
 }
@@ -166,6 +168,7 @@ bool AntiDos::connecting(const QString &ip)
 void AntiDos::disconnect(const QString &ip, int id)
 {
     connectionsPerIp[ip]--;
+    Server::serverIns->printLine(tr("Connections for ip(-disc) %1 are %2").arg(ip).arg(connectionsPerIp[ip]));
     transfersPerId.remove(id);
     sizeOfTransfers.remove(id);
     if (connectionsPerIp[ip]==0) {
@@ -175,7 +178,8 @@ void AntiDos::disconnect(const QString &ip, int id)
 
 bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
 {
-    connectionsPerIp[oldIp]--;    
+    connectionsPerIp[oldIp]--;
+    Server::serverIns->printLine(tr("Connections for ip(-change) %1 are %2").arg(oldIp).arg(connectionsPerIp[oldIp]));
     loginsPerIp[oldIp].pop_back(); // remove a login
     if (connectionsPerIp[oldIp]==0) {
         connectionsPerIp.remove(oldIp);

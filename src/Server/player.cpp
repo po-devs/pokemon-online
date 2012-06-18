@@ -85,7 +85,7 @@ void Player::autoKick()
 {
     if (!isLoggedIn()) {
         blockSignals(false); // In case we autokick an alt that was already disconnected
-        kick();
+        disconnected();
     }
 }
 
@@ -473,7 +473,7 @@ void Player::setInfo(const QString &newInfo)  {
 }
 
 void Player::kick() {
-    relay().close();
+    emit logout(id());
 }
 
 void Player::disconnected()
@@ -871,6 +871,11 @@ bool Player::waitingForReconnect() const
     return state()[WaitingReconnect] && !isLoggedIn();
 }
 
+bool Player::discarded() const
+{
+    return state()[DiscardedId];
+}
+
 bool Player::connected() const
 {
     return relay().isConnected();
@@ -962,6 +967,7 @@ void Player::associateWith(Player *other)
 
     other->myip = other->myrelay->ip();
     myip = myrelay->ip();
+    std::swap(proxyip, other->proxyip);
 
     lockCount = 0;
 
@@ -975,10 +981,10 @@ void Player::associateWith(Player *other)
     m.ip = ip().toAscii();
     SecurityManager::updateMember(m);
 
-    /* Deals with anti DOS */
-    AntiDos::obj()->connecting(ip());
-
-    other->disconnected();
+    if (!isLoggedIn()) {
+        other->changeState(DiscardedId, true);
+    }
+    other->logout();
 }
 
 void Player::loggedIn(LoginInfo *info)

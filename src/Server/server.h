@@ -170,6 +170,7 @@ public slots:
     void ipChangeRequested(int player, const QString &ip);
     void info(int , const QString &);
     void onReconnect(int, int, const QByteArray &);
+    void transferId(int id1, int id2, bool copyInfo=false);
     void needChannelData(int playerId, int chanId);
 
     void kick(int i);

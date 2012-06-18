@@ -1600,6 +1600,11 @@ int ScriptEngine::numPlayers()
     return myserver->numberOfPlayersLoggedIn;
 }
 
+int ScriptEngine::playersInMemory()
+{
+    return myserver->myplayers.size();
+}
+
 bool ScriptEngine::loggedIn(int id)
 {
     return myserver->playerLoggedIn(id);

@@ -188,7 +188,7 @@ void MainEngine::routine(CentralWidgetInterface *w)
     QWidget *toDel = central->widget(0);
     central->removeWidget(central->widget(0));
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
-    loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
+    //loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
 
     toDel->deleteLater();
 }
