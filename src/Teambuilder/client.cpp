@@ -942,6 +942,7 @@ void Client::toggleAutoJoin(bool autojoin)
 
 void Client::toggleDefaultChannel(bool d)
 {
+    toggleAutoJoin(false);
     if (d) {
         globals.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelNames.value(selectedChannel));
     } else {
