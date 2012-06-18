@@ -51,7 +51,8 @@ SOURCES += main.cpp \
     Teambuilder/pokeselection.cpp \
     Teambuilder/ivbox.cpp \
     Teambuilder/teamimporter.cpp \
-    Teambuilder/pokechoice.cpp
+    Teambuilder/pokechoice.cpp \
+    Teambuilder/pokeboxes.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -117,7 +118,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/ivbox.h \
     Teambuilder/teamimporter.h \
     Teambuilder/teamline.h \
-    serverchoice.h
+    serverchoice.h \
+    Teambuilder/pokeboxes.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
@@ -140,7 +142,8 @@ FORMS += Teambuilder/trainermenu.ui \
     tierratingbutton.ui \
     findbattledialog.ui \
     menu.ui \
-    serverchoice.ui
+    serverchoice.ui \
+    Teambuilder/pokeboxes.ui
 
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
