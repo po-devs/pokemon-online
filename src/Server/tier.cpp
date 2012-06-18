@@ -154,9 +154,14 @@ void Tier::loadFromFile()
         query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
         query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
+        QFile in("tier_" + name() + ".txt");
+
+        if (!in.exists()) {
+            return;
+        }
+
         Server::print(QString("Importing old database for tier %1 to table %2").arg(name(), sql_table));
 
-        QFile in("tier_" + name() + ".txt");
         in.open(QIODevice::ReadOnly);
 
         QStringList members = QString::fromUtf8(in.readAll()).split('\n');
