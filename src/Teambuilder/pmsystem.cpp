@@ -38,15 +38,33 @@ void PMSystem::startPM(PMStruct *newPM)
         newPM->show();
     }
     myPMWindows.insert(newPM->id(), newPM);
+
+    connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
+}
+
+void PMSystem::removePM(int pmid)
+{
+    PMStruct *pm = myPMWindows.take(pmid);
+
+    if (pm) {
+        pm->deleteLater();
+
+        if (tabbedPMs) {
+            for (int i = 0; i < myPMs->count(); i++) {
+                if (myPMs->widget(i) == pm) {
+                    myPMs->removeTab(i);
+                    break;
+                }
+            }
+            checkTabbing();
+        }
+    }
 }
 
 void PMSystem::closeTab(int tabNum)
 {
     PMStruct *widget = (PMStruct*) myPMs->widget(tabNum);
-    widget->deleteLater();
-    myPMs->removeTab(tabNum);
-    myPMWindows.remove(widget->id());
-    checkTabbing();
+    removePM(widget->id());
 }
 
 void PMSystem::checkTabbing()
@@ -132,6 +150,8 @@ void PMSystem::PMDisconnected(bool value)
 PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
     : m_ownName(ownName), escape_html(!html)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     this->id() = id;
     changeName(name);
     SaveLog = false;
