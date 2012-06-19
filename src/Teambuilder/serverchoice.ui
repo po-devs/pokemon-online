@@ -156,6 +156,9 @@
            <property name="text">
             <string>&amp;Advanced connection</string>
            </property>
+           <property name="buddy">
+            <cstring>advServerEdit</cstring>
+           </property>
           </widget>
          </item>
          <item row="6" column="0">
