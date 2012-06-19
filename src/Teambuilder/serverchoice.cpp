@@ -37,8 +37,16 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(ui->serverList, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
 
     ui->nameEdit->setText(nick);
-    ui->advServerEdit->setText(settings.value("ServerChoice/default_server").toString());
+    ui->advServerEdit->setText(settings.value("ServerChoice/DefaultServer").toString());
     connect(ui->advServerEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
+
+    savedServers = settings.value("ServerChoice/SavedServers").toStringList();
+    QAction *serverName = new QAction(this);
+    for(int savedCount = 0; savedCount < savedServers.size(); savedCount++) {
+        serverName->setText(savedServers[savedCount]);
+        ui->savedServersList->addAction(serverName);
+    }
+    connect(ui->savedServersList, SIGNAL(triggered(QAction*)), SLOT(advMenuServerChosen(QAction*)));
 
     connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
     connect(ui->advancedConnection, SIGNAL(clicked()), SLOT(advServerChosen()));
@@ -54,31 +62,47 @@ ServerChoice::~ServerChoice()
 void ServerChoice::regServerChosen(int row)
 {
     QString ip = ui->serverList->item(row, 3)->text();
+    QString name = ui->serverList->item(row, 1)->text();
 
     QSettings settings;
-    settings.setValue("ServerChoice/default_server", ip);
+    settings.setValue("ServerChoice/DefaultServer", ip + " - " + name);
     if(ip.contains(":")){
-        quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
-        QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
+        quint16 port = ip.section(":",1,1).toInt();
+        QString fIp = ip.section(":",0,0);
         emit serverChosen(fIp,port, ui->nameEdit->text());
-    }
-    else
+    } else {
         emit serverChosen(ip,5080, ui->nameEdit->text());
+    }
+    savedServers.push_back(ip + " - " + name);
 }
 
 void ServerChoice::advServerChosen()
 {
-    QString ip = ui->advServerEdit->text().trimmed();
-
-    QSettings settings;
-    settings.setValue("ServerChoice/default_server", ip);
-    if(ip.contains(":")){
-        quint16 port = ip.section(":",1,1).toInt(); //Gets port from IP:PORT
-        QString fIp = ip.section(":",0,0);  //Gets IP from IP:PORT
+    QString info = ui->advServerEdit->text().trimmed().split(" - ")[0];
+    QSettings MySettings;
+    MySettings.setValue("ServerChoice/DefaultServer", ui->advServerEdit->text());
+    if(info.contains(":")) {
+        quint16 port = info.section(":",1,1).toInt();
+        QString fIp = info.section(":",0,0);
         emit serverChosen(fIp,port, ui->nameEdit->text());
+    } else {
+        emit serverChosen(info,5080, ui->nameEdit->text());
     }
-    else
-        emit serverChosen(ip,5080, ui->nameEdit->text());
+}
+
+void ServerChoice::advMenuServerChosen(QAction *action)
+{
+    QString info = action->text().trimmed().split(" - ")[0];
+    ui->advServerEdit->setText(action->text());
+    QSettings MySettings;
+    MySettings.setValue("ServerChoice/DefaultServer", action->text());
+    if(info.contains(":")) {
+        quint16 port = info.section(":", 1,1).toInt();
+        QString fIp = info.section(":", 0, 0);
+        emit serverChosen(fIp, port, ui->nameEdit->text());
+    } else {
+        emit serverChosen(info, 5080, ui->nameEdit->text());
+    }
 }
 
 void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected)
@@ -117,7 +141,9 @@ void ServerChoice::showDetails(int row)
     ui->description->insertHtml(descriptionsPerIp[ui->serverList->item(row,3)->text()]);
 
     QString ip = ui->serverList->item(row, 3)->text();
-    ui->advServerEdit->setText(ip);
+    QString name = ui->serverList->item(row, 1)->text();
+
+    ui->advServerEdit->setText(ip + " - " + name);
 }
 
 void ServerChoice::connectionError(int, const QString &mess)
@@ -133,4 +159,5 @@ void ServerChoice::saveSettings() {
     settings.setValue("ServerChoice/ServerNameWidth", ui->serverList->columnWidth(1));
     settings.setValue("ServerChoice/PlayersInfoWidth", ui->serverList->columnWidth(2));
     settings.setValue("ServerChoice/ServerIPWidth", ui->serverList->columnWidth(3));
+    settings.setValue("ServerChoice/SavedServers", savedServers);
 }

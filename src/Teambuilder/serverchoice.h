@@ -28,6 +28,7 @@ private slots:
     void showDetails(int row);
     void regServerChosen(int row);
     void advServerChosen();
+    void advMenuServerChosen(QAction *action);
     void connectionError(int , const QString &mess);
 private:
     Ui::ServerChoice *ui;
@@ -35,6 +36,7 @@ private:
     Analyzer *registry_connection;
 
     QHash<QString, QString> descriptionsPerIp;
+    QStringList savedServers;
 };
 
 #endif // SERVERCHOICE_H
