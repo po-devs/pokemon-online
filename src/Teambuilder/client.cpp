@@ -2242,7 +2242,8 @@ void Client::openTeamBuilder()
 void Client::reloadTeamBuilderBar()
 {
     if (top) {
-        myteambuilder->setMenuBar(((TeamBuilder*)myteambuilder->centralWidget())->createMenuBar(top));
+        TeamBuilder *tb = dynamic_cast<TeamBuilder*>(dynamic_cast<QStackedWidget*>(myteambuilder->centralWidget())->widget(0));
+        myteambuilder->setMenuBar(tb->createMenuBar(top));
     }
 }
 
