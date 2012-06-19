@@ -1972,7 +1972,7 @@ bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
 
 void BattleSituation::inflictRecoil(int source, int target)
 {
-    double recoil = tmove(source).recoil;
+    int recoil = tmove(source).recoil;
 
     if (recoil == 0)
         return;

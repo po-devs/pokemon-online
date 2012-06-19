@@ -346,13 +346,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             goto endloop;
         }
 
-        /* Draining moves fail against substitute in gen 2 and earlier */
-        if (hasSubstitute(target) && tmove(player).healing > 0) {
-            turnMem(player).add(TM::Failed);
-            testFail(player);
-            goto endloop;
-        }
-
         int num = repeatNum(player);
         bool hit = num > 1;
 
@@ -448,6 +441,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     attacker() = oldAttacker;
     attacked() = oldAttacked;
+}
+
+bool BattleRBY::hadSubstitute(int player)
+{
+    return !fpoke(player).substitute() && fpoke(player).is(BasicPokeInfo::HadSubstitute);
 }
 
 bool BattleRBY::testAccuracy(int player, int target, bool silent)
