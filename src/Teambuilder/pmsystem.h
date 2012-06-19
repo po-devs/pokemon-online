@@ -29,6 +29,7 @@ private slots:
     void messageReceived(PMStruct *pm);
     void PMDisconnected(bool value);
     void removePM(int pm);
+    void changeId(int old, int newid);
 
 private:
     QExposedTabWidget *myPMs;
@@ -71,6 +72,7 @@ signals:
     void challengeSent(int id);
     void destroyed(int id, QString name);
     void ignore(int id, bool);
+    void idChanged(int oldid, int newid);
 
 public slots:
     void sendMessage();
