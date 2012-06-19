@@ -20,6 +20,7 @@ protected:
     void analyzeChoices();
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
+    bool testAccuracy(int player, int target, bool silent=false);
 
     void personalEndTurn(int player);
 private:
