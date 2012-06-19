@@ -47,7 +47,7 @@ QList<QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
-QList<QString> MoveInfo::m_SpecialEffects;
+QList<QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
 QList<int> MoveInfo::m_OldMoves;
 QVector<bool> MoveInfo::m_KingRock;
 
@@ -1550,6 +1550,14 @@ void MoveInfo::loadSpecialEffects()
     foreach (QString eff, temp) {
         m_SpecialEffects.push_back(eff.split('#').front());
     }
+
+    temp.clear();
+    fill_container_with_file(temp, path("move_special_effects_rby.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+        m_RbySpecialEffects.push_back(eff.split('#').front());
+    }
 }
 
 QString MoveInfo::Name(int movenum)
@@ -1754,9 +1762,9 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
     return m_MoveMessages[moveeffect][part];
 }
 
-QString MoveInfo::SpecialEffect(int movenum)
+QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
-    return m_SpecialEffects[movenum];
+    return gen == ::Gen::RBY ? m_RbySpecialEffects[movenum] : m_SpecialEffects[movenum];
 }
 
 QString MoveInfo::DetailedDescription(int movenum)

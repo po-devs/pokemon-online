@@ -1146,7 +1146,7 @@ struct MMBounce : public MM
 
             int move = poke(b,s)["2TurnMove"].toInt();
 
-            MoveEffect(move, b.gen(),tmove(b,s));
+            initMove(move, b.gen(),tmove(b,s));
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 
             if (move == ShadowForce) {
@@ -1394,7 +1394,7 @@ struct MMDoomDesire : public MM
                 if (b.gen() <= 4) {
                     b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
                 } else {
-                    MoveEffect e(move, b.gen(), tmove(b,s));
+                    initMove(move, b.gen(), tmove(b,s));
 
                     b.calculateTypeModStab(s, s);
 

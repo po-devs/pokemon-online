@@ -252,7 +252,7 @@ public:
     static QStringList MoveList();
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
-    static QString SpecialEffect(int movenum);
+    static QString SpecialEffect(int movenum, Pokemon::gen gen);
     static void setPower(int movenum, unsigned char power, int moveGen);
     static void setAccuracy(int movenum, char accuracy, int moveGen);
     static void setPP(int movenum, char pp, int moveGen);
@@ -262,7 +262,7 @@ private:
     static QHash<QString, int> m_LowerCaseMoves;
     static QList<QStringList> m_MoveMessages;
     static QList<QString> m_Details;
-    static QList<QString> m_SpecialEffects;
+    static QList<QString> m_SpecialEffects, m_RbySpecialEffects;
     static QList<int> m_OldMoves;
     static QVector<bool> m_KingRock;
 
