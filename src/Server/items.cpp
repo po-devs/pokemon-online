@@ -442,7 +442,7 @@ struct IMMetronome : public IM
         }
         int count = poke(b,s)["IMMetroCount"].toInt();
         int lslot = poke(b,s)["IMLastMoveSlot"].toInt();
-        int slot = poke(b,s)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         bool act = poke(b,s)["IMMetroActivating"].toBool();
         poke(b,s)["IMLastMoveSlot"] = slot;
         poke(b,s)["IMMetroActivating"] = true;

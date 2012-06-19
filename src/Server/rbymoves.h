@@ -13,7 +13,7 @@ struct RBYMechanics : public MechanicsBase<BattleRBY::MechanicsFunction> {
     typedef BattleRBY::MechanicsFunction function;
 };
 
-typedef RBYMechanics MoveMechanics;
+typedef RBYMechanics RBYMoveMechanics;
 
 /* Used to tell us everything about a move */
 struct RBYMoveEffect
@@ -23,7 +23,7 @@ struct RBYMoveEffect
     static void setup(int movenum, int source, int target, BattleBase &b);
     static void unsetup(int movenum, int source, BattleBase &b);
 
-    static QHash<int, MoveMechanics> mechanics;
+    static QHash<int, RBYMoveMechanics> mechanics;
     static QHash<int, QString> names;
     static QHash<QString, int> nums;
 

@@ -115,7 +115,7 @@
 #149#haze
 #73-1#reflect
 #46#focus energy
-#9#bide
+9#bide
 #80#metronome
 #85#mirror move
 #37#self destruct

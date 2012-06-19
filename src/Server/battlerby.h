@@ -10,6 +10,8 @@ public:
     ~BattleRBY();
 
     typedef void (*MechanicsFunction) (int source, int target, BattleRBY &b);
+
+    void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
@@ -19,13 +21,13 @@ protected:
     BattleChoice &choice (int p);
     BattleChoices createChoice(int slot);
     void analyzeChoices();
-    void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     bool testAccuracy(int player, int target, bool silent=false);
     bool hadSubstitute(int player);
     void inflictRecoil(int x, int target);
 
     void personalEndTurn(int player);
+    void setupMove(int i, int move);
 private:
     BattleChoice choices[2];
 
@@ -60,6 +62,8 @@ private:
     context &turnMemory(int slot) { return turnMems[slot];}
     const context & turnMemory(int slot) const {return turnMems[slot];}
 public:
+    /* Calls the effects of source reacting to name */
+    void calleffects(int source, int target, const QString &name);
     /* This time the pokelong effects */
     void callpeffects(int source, int target, const QString &name);
 };

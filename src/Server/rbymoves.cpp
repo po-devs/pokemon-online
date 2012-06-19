@@ -1,5 +1,7 @@
 #include "rbymoves.h"
 
+typedef RBYMoveMechanics MoveMechanics;
+
 QHash<int, MoveMechanics> RBYMoveEffect::mechanics;
 QHash<int, QString> RBYMoveEffect::names;
 QHash<QString, int> RBYMoveEffect::nums;
@@ -8,6 +10,7 @@ QHash<QString, int> RBYMoveEffect::nums;
     so let's do it fast */
 typedef MoveMechanics MM;
 typedef BattleRBY BS;
+typedef BS::TurnMemory TM;
 
 void RBYMoveEffect::setup(int num, int source, int target, BattleBase &b)
 {
@@ -93,9 +96,57 @@ void RBYMoveEffect::unsetup(int num, int source, BattleBase &b)
     MM::tmove(b,source).classification = Move::StandardMove;
 }
 
+struct RBYBide : public MM
+{
+    RBYBide() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
 
-#define REGISTER_MOVE(num, name) mechanics[num] = MM##name(); names[num] = #name; nums[#name] = num;
+    static void uas(int s, int t, BS &b) {
+        t = b.opponent(s);
+        poke(b,s)["BideCount"] = 2 + b.randint(2);
+        poke(b,t).remove("DamageInflicted");
+        poke(b,s)["BideDamage"] = 0;
+        addFunction(poke(b,s), "TurnSettings", "Bide", &ts);
+    }
+
+    static void uas2(int s, int t, BS &b) {
+        t = b.opponent(s);
+
+        inc(poke(b,s)["BideCount"], -1);
+
+        int count = poke(b,s)["BideCount"].toInt();
+
+        inc(poke(b,s)["BideDamage"], poke(b,t).value("DamageInflicted").toInt());
+        if (count > 0) {
+            b.sendMoveMessage(9, 0, s);
+        } else {
+            int damage = poke(b,s)["BideDamage"].toInt();
+
+            b.sendMoveMessage(9, 1, s);
+            if (damage == 0) {
+                b.notifyFail(s);
+            } else {
+                b.inflictDamage(t, 2*damage, s, true);
+            }
+
+            poke(b,s).remove("BideCount");
+            removeFunction(poke(b,s), "TurnSettings", "Bide");
+        }
+    }
+
+    static void ts(int s, int, BS &b) {
+        fturn(b,s).add(TM::KeepAttack);
+        addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
+
+        turn(b,s)["TellPlayers"] = false;
+    }
+};
+
+
+#define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
 {
+    REGISTER_MOVE(9, Bide);
 }

@@ -285,13 +285,14 @@ protected:
 
     virtual BattleChoices createChoice(int slot) = 0;
 
-    void setupChoices();
+    void setupChoices() ;
+    virtual void setupMove(int i, int move) = 0;
 
     virtual void analyzeChoices() = 0;
 
-    virtual void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false) = 0;
     virtual void inflictSubDamage(int player, int damage, int source);
 public:
+    virtual void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false) = 0;
     virtual bool isMovePossible(int player, int slot);
 
     /* Sleep clause necessity: only pokes asleep because of something else than rest are put there */
@@ -326,6 +327,7 @@ public:
         quint32 flags;
         quint16 substituteLife;
         quint16 lastMoveUsed;
+        quint16 lastMoveSlot;
 
         enum Flag {
             Transformed = 1,
@@ -403,7 +405,8 @@ public:
             FailingMessage = 32,
             HasPassedStatus = 64,
             Flinched = 128,
-            CriticalHit = 256
+            CriticalHit = 256,
+            KeepAttack = 512 //For RBY
         };
 
         inline void remove(Flag f) {flags &= ~f;}
