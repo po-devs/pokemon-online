@@ -18,6 +18,12 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     updateSprite();
     updateTypes();
 
+    if (getGen() <= 1) {
+        ui->shiny->hide();
+    } else {
+        ui->shiny->show();
+    }
+
     connect(ui->shiny, SIGNAL(toggled(bool)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateSprite()));
