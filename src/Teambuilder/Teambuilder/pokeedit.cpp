@@ -84,15 +84,6 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     connect(ui->ivbox, SIGNAL(statsUpdated()), ui->evbox, SLOT(updateEVs()));
 
     updateAll();
-
-    QSettings MySettings;
-    animated_sprites = MySettings.value("animated_sprites").toBool();
-}
-
-void PokeEdit::toggleAnimatedSprites(bool enabled)
-{
-    animated_sprites = enabled;
-    updatePicture();
 }
 
 void PokeEdit::on_pokemonFrame_clicked()

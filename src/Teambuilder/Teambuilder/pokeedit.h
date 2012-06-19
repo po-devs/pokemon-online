@@ -24,7 +24,6 @@ class PokeEdit : public QWidget
 public:
     explicit PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemModel, QAbstractItemModel *natureModel);
     ~PokeEdit();
-    void toggleAnimatedSprites(bool enabled);
 
 signals:
     void switchToTrainer();
@@ -57,8 +56,6 @@ private:
     PokeMovesModel *movesModel;
     QAbstractItemModel *pokemonModel;
     PokeTeam *m_poke;
-
-    bool animated_sprites;
 
     PokeTeam &poke() {return *m_poke;}
     const PokeTeam &poke() const {return *m_poke;}

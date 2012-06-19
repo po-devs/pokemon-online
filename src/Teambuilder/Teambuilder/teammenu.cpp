@@ -112,16 +112,6 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     }
 
     ui->gens[team().team().gen().num]->setChecked(true);
-
-    QSettings MySettings;
-    QMenu *opt = menuBar->addMenu(tr("&Options"));
-
-    QAction *animatedSprites = opt->addAction(tr("&Enable Animated Sprites"));
-    animatedSprites->setCheckable(PokemonInfo::HasAnimatedSprites());
-    animatedSprites->setChecked(MySettings.value("animated_sprites").toBool());
-    connect(animatedSprites, SIGNAL(toggled(bool)), this, SLOT(animatedSpritesChanged(bool)));
-
-    opt->addAction(animatedSprites);
 }
 
 void TeamMenu::genChanged()
@@ -141,12 +131,4 @@ void TeamMenu::genChanged()
 
     updateAll();
     emit teamChanged();
-}
-
-void TeamMenu::animatedSpritesChanged(bool enabled)
-{
-    QSettings MySettings;
-    MySettings.setValue("animated_sprites", enabled);
-    PokeEdit *p;
-    p->toggleAnimatedSprites(enabled);
 }
