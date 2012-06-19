@@ -56,7 +56,7 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+        <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
          <item row="0" column="0" colspan="2">
           <widget class="QTableWidget" name="serverList">
            <property name="editTriggers">
@@ -156,9 +156,6 @@
            <property name="text">
             <string>&amp;Advanced connection</string>
            </property>
-           <property name="buddy">
-            <cstring>advServerEdit</cstring>
-           </property>
           </widget>
          </item>
          <item row="6" column="0">
@@ -177,49 +174,13 @@
          </item>
          <item row="5" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <item>
-            <widget class="QLineEdit" name="advServerEdit"/>
-           </item>
-           <item>
-            <widget class="QToolButton" name="savedServersList">
-             <property name="enabled">
+            <widget class="QComboBox" name="advServerEdit">
+             <property name="editable">
               <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>10</horstretch>
-               <verstretch>10</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>15</width>
-               <height>15</height>
-              </size>
-             </property>
-             <property name="baseSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>...</string>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>11</width>
-               <height>11</height>
-              </size>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonFollowStyle</enum>
-             </property>
-             <property name="autoRaise">
-              <bool>false</bool>
-             </property>
-             <property name="arrowType">
-              <enum>Qt::DownArrow</enum>
              </property>
             </widget>
            </item>
