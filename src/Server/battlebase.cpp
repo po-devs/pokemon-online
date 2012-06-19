@@ -1999,7 +1999,7 @@ void BattleBase::applyMoveStatMods(int player, int target)
             return;
         }
 
-        if (rate != 0 && !coinflip(rate, 100)) {
+        if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
             continue;
         }
 
@@ -2043,7 +2043,7 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
 
-    if (rate != 0 && !coinflip(rate, 100)) {
+    if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
         applyingMoveStatMods = false;
         return;
     }
