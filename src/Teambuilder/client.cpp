@@ -134,6 +134,7 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
 
     /* PM System */
     pmSystem = new PMSystem(globals.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    connect(this, SIGNAL(destroyed()), pmSystem, SLOT(deleteLater()));
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
     connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
 
