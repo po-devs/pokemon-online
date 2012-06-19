@@ -302,24 +302,47 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QImageButtonLR" name="atkboost" native="true"/>
+    <widget class="QImageButtonLR" name="atkboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QImageButtonLR" name="defboost" native="true"/>
+    <widget class="QImageButtonLR" name="defboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QImageButtonLR" name="satkboost" native="true"/>
+    <widget class="QImageButtonLR" name="satkboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QImageButtonLR" name="sdefboost" native="true"/>
+    <widget class="QImageButtonLR" name="sdefboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QImageButtonLR" name="speedboost" native="true"/>
+    <widget class="QImageButtonLR" name="speedboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1">
     <widget class="QImageButtonLR" name="hpboost" native="true">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
      </property>
     </widget>
    </item>
