@@ -9,7 +9,7 @@
 #include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 
 class MainEngine;
 class ChallengeDialog;
@@ -73,6 +73,8 @@ public:
         return QSize(800,600);
     }
     void reconnect();
+
+    QString defaultChannel();
 
     enum Status {
         Available = 0,
@@ -195,7 +197,8 @@ public slots:
     void pmcp(QString);
     /* PM */
     void startPM(int);
-    void removePM(int, const QString);
+    void closePM(int);
+    void removePM(int id, const QString);
     void PMReceived(int, const QString);
     /* CP */
     void controlPanel(int);
@@ -226,7 +229,8 @@ public slots:
     void showBattleEvents(bool);
     void showChannelEvents(bool);
     void showTeamEvents(bool);
-    void toggleAutoJoin(bool);
+    void toggleAutoJoin(bool autojoin);
+    void toggleDefaultChannel(bool def);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void pmFlash(bool);
@@ -257,8 +261,10 @@ signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
     void tierListFormed(const QStringList &tiers);
-    void PMDisabled(bool b, int starterAuth);
-    void togglePMs(bool b);
+    void PMDisabled(bool value, int starterAuth);
+    void togglePMs(bool value);
+    void PMDisconnected(bool disconnected);
+
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -303,7 +309,6 @@ private:
     QHash<qint32, QString> channelNames;
     QHash<QString, qint32> channelByNames;
     QHash<qint32, Channel *> mychannels;
-    QStringList autojoinChannels;
     /* Ignore */
     QList<int> myIgnored;
 
@@ -348,7 +353,7 @@ private:
     QHash<qint32, Battle> battles;
 
     /* Network Relay */
-    Analyzer myrelay;
+    Analyzer *myrelay;
     Analyzer & relay();
 
     /* Password Wallet */
@@ -371,6 +376,8 @@ private:
 
     /* The mode of the tier list. If it's single, then a simple checkbox, otherwise another menu for each team for each tier */
     bool singleTeam;
+
+    QSettings globals;
 };
 
 #endif // CLIENT_H

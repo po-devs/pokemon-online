@@ -315,7 +315,7 @@ struct IMLifeOrb : public IM
     }
 
     static void atl(int s, int, BS &b) {
-        if (turn(b,s).value("ActivateLifeOrb").toBool() && !turn(b,s).value("NoLifeOrbActivation").toBool()
+        if (turn(b,s).value("ActivateLifeOrb").toBool() && !turn(b,s).value("NoLifeOrbActivation").toBool() && !turn(b,s).value("EncourageBug").toBool()
                 && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             if (b.gen() >= 5)
                 b.sendItemMessage(21,s);
@@ -673,7 +673,7 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasWorkingAbility(t, Ability::Encourage) || b.hasSubstitute(s))
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::Encourage) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s))
             return;
 
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);

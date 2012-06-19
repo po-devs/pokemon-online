@@ -22,6 +22,7 @@ signals:
     void inactivePlayersDeleteDaysChanged(int value);
     void latencyChanged(bool lowDelay);
     void safeScriptsChanged(bool safeScripts);
+    void overactiveToggleChanged(bool showOveractive);
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePassword);
@@ -46,6 +47,7 @@ private:
     QCheckBox *safeScripts;
     QCheckBox *trayPopup;
     QCheckBox *minimizeToTray;
+    QCheckBox *showOveractive;
     QLineEdit *proxyServers;
     QLineEdit *serverPassword;
     QCheckBox *usePassword;

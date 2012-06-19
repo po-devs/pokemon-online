@@ -83,6 +83,7 @@ public:
     Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
+    Q_INVOKABLE void disconnect(int id); //Disconnects a player. (He can reconnect with all his data)
     /* If you edited his team, updates it for the rest of the world */
     Q_INVOKABLE void updatePlayer(int playerid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
@@ -161,6 +162,8 @@ public:
     Q_INVOKABLE QScriptValue proxyIp(int id);
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
     Q_INVOKABLE QScriptValue gen(int id);
+    Q_INVOKABLE QScriptValue subgen(int id);
+    Q_INVOKABLE QString generation(int genNum, int subNum);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
     Q_INVOKABLE QScriptValue dbAll();
@@ -223,11 +226,11 @@ public:
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int team, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int team, int slot, int stat);
-    Q_INVOKABLE void setTeamPokeDV(int id, int team, int slot, int stat, int newValue);
-    Q_INVOKABLE void changeTeamPokeIV(int id, int team, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeDV(int id, int team, int slot, int stat, int newValue);
     Q_INVOKABLE void changeTeamPokeEV(int id, int team, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
+    Q_INVOKABLE int playersInMemory();
     Q_INVOKABLE bool loggedIn(int id);
 
     Q_INVOKABLE int rand(int min, int max);
@@ -275,7 +278,7 @@ public:
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
     Q_INVOKABLE void modifyPokeStat(int poke, int stat, quint8 value);
 
-    Q_INVOKABLE void forceBattle(int player1, int player2, int clauses, int mode, bool is_rated = false);
+    Q_INVOKABLE void forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
     Q_INVOKABLE bool isServerPrivate();

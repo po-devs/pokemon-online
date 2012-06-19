@@ -1,6 +1,6 @@
 #include "qrcodeplugin.h"
 #include "../Teambuilder/engineinterface.h"
-#include "../Teambuilder/teamholderinterface.h"
+#include "../Teambuilder/Teambuilder/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/otherwidgets.h"
 #ifdef _WIN32

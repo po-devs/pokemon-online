@@ -80,6 +80,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Show tray popup: ", trayPopup = new QCheckBox("Show tooltip when PO is minimized to tray."));
     trayPopup->setChecked(settings.value("show_tray_popup").toBool());
 
+    l->addRow("Show Overactive Messages: ", showOveractive = new QCheckBox("Show Overactive Message when someone goes overactive"));
+    showOveractive->setChecked(settings.value("show_overactive_messages").toBool());
+
     l->addRow("Proxy Servers: ", proxyServers = new QLineEdit(settings.value("proxyservers").toString()));
 
     l->addRow(usePassword = new QCheckBox("Require Password: "), serverPassword = new QLineEdit(settings.value("server_password").toString()));
@@ -119,6 +122,7 @@ void ServerWindow::apply()
     settings.setValue("safe_scripts", safeScripts->isChecked());
     settings.setValue("minimize_to_tray", minimizeToTray->isChecked());
     settings.setValue("show_tray_popup", trayPopup->isChecked());
+    settings.setValue("show_overactive_messages", showOveractive->isChecked());
     settings.setValue("proxyservers", proxyServers->text());
     settings.setValue("server_password", serverPassword->text());
     settings.setValue("require_password", usePassword->isChecked());
@@ -136,6 +140,7 @@ void ServerWindow::apply()
     emit inactivePlayersDeleteDaysChanged(deleteInactive->value());
     emit latencyChanged(lowLatency->isChecked());
     emit safeScriptsChanged(safeScripts->isChecked());
+    emit overactiveToggleChanged(showOveractive->isChecked());
     emit proxyServersChanged(proxyServers->text());
     emit serverPasswordChanged(serverPassword->text());
     emit usePasswordChanged(usePassword->isChecked());

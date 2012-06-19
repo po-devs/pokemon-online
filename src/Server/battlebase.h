@@ -12,7 +12,7 @@
 //#include "battleinterface.h"
 #include "battlepluginstruct.h"
 //#include "battlecounters.h"
-
+#include <algorithm>
 
 class BattleBase : public ContextCallee, public BattleInterface
 {
@@ -38,6 +38,8 @@ public:
     BattleBase();
     ~BattleBase();
 
+    typedef QVariantHash context;
+
     void init(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
 
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
@@ -49,7 +51,7 @@ protected:
     void onDestroy(); //call in the sub class destructor
 
     virtual void engageBattle();
-    virtual void beginTurn() = 0;
+    virtual void beginTurn();
     virtual void endTurn() = 0;
     virtual void initializeEndTurnFunctions() = 0;
 public:
@@ -117,7 +119,7 @@ public:
         return clauses() & ChallengeInfo::SleepClause;
     }
 
-    virtual std::vector<int> &&sortedBySpeed();
+    virtual std::vector<int> sortedBySpeed();
 
     void notifyClause(int clause);
     void notifyMiss(bool multitar, int player, int target);
@@ -214,8 +216,12 @@ protected:
 
     virtual BattleChoice &choice (int p) = 0;
 public:
+    /* This time the pokelong effects */
+    virtual void callpeffects(int source, int target, const QString &name) = 0;
+
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
+    bool applyingMoveStatMods;
 
     const QHash<int, QPair<int, QString> > &getSpectators() const {
         QMutexLocker m(&spectatorMutex);
@@ -303,6 +309,7 @@ public:
     void sendBerryMessage(int item, int src, int part = 0, int foe = -1, int berry = -1, int num=-1);
 
     void notifyFail(int p);
+    void notifyChoices(int p);
     void notifyInfos(int tosend = All);
     void notifySub(int player, bool sub);
 
@@ -378,33 +385,48 @@ public:
         void reset() {
             flags = 0;
             damageTaken = 0;
+            typeMod = 0;
+            stab = 0;
         }
 
         quint32 flags;
         quint16 damageTaken;
+        quint8 typeMod;
+        quint8 stab;
 
         enum Flag {
             Incapacitated = 1,
             NoChoice = 2,
             HasMoved = 4,
-            WasKoed = 8
+            WasKoed = 8,
+            Failed = 16,
+            FailingMessage = 32,
+            HasPassedStatus = 64,
+            Flinched = 128,
+            CriticalHit = 256
         };
 
         inline void remove(Flag f) {flags &= ~f;}
         inline void add(Flag f) {flags |= f;}
         inline bool contains(Flag f) const {return (flags & f) != 0;}
+        inline bool failed() const { return contains(Failed);}
+        inline bool failingMessage() const { return contains(FailingMessage);}
     };
 
     virtual BasicPokeInfo &fpoke(int slot) = 0;
     virtual BasicPokeInfo const &fpoke(int slot) const = 0;
     virtual TurnMemory &turnMem(int slot) = 0;
     virtual const TurnMemory &turnMem(int slot) const = 0;
+    virtual context &pokeMemory(int slot) = 0;
+    virtual const context &pokeMemory(int slot) const = 0;
+    virtual context &turnMemory(int slot) = 0;
+    virtual const context &turnMemory(int slot) const = 0;
     virtual BasicMoveInfo &tmove(int slot) = 0;
     virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
 
-    virtual void inflictRecoil(int x, int target);
+    virtual void inflictRecoil(int x, int target) = 0;
     void healLife(int player, int healing);
     virtual void changeHp(int player, int newHp);
     virtual void koPoke(int player, int source, bool straight);
@@ -421,6 +443,43 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
     represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     virtual void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true) = 0;
+    virtual bool testStatus(int player);
+
+    void healStatus(int player, int status);
+    bool isConfused(int player);
+    void healConfused(int player);
+    void inflictConfusedDamage(int player);
+
+    void losePP(int player, int move, int loss);
+    virtual void changePP(int player, int move, int PP);
+
+    bool testFail(int player);
+    virtual bool testAccuracy(int player, int target, bool silent = false) = 0;
+
+    virtual PokeFraction getStatBoost(int player, int stat);
+    virtual void calculateTypeModStab(int player=-1, int target=-1);
+    virtual int repeatNum(int player);
+
+    virtual void testCritical(int player, int target);
+    virtual int calculateDamage(int player, int target);
+    void healDamage(int player, int target);
+    void notifyHits(int spot, int hits);
+    void unthaw(int player);
+    virtual void testFlinch(int player, int target);
+    virtual void applyMoveStatMods(int player, int target);
+    virtual void inflictConfused(int player, int attacker, bool tell);
+    virtual void inflictStatus(int target, int status, int player, int minTurns, int maxTurns);
+    virtual bool canGetStatus(int player, int status);
+    virtual bool canSendPreventSMessage(int player, int attacker);
+    bool hasType(int player, int type);
+    virtual int getType(int player, int slot);
+    virtual bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell=true);
+
+    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    /* Returns false if blocked */
+    virtual bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+    /* Does not do extra operations,just a setter */
+    void changeStatMod(int player, int stat, int newstat);
 };
 
 #endif // BATTLEBASE_H

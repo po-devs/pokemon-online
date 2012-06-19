@@ -10,11 +10,13 @@ class Player;
 struct Channel {
     QString name;
     QSet<Player *> players;
+    QSet<Player *> disconnectedPlayers;
     QHash<int, Battle> battleList;
     QFile logfile;
     int logDay;
+    int id;
 
-    Channel(const QString &name);
+    Channel(const QString &name, int id);
     ~Channel();
 
     /* other properties can be added later,

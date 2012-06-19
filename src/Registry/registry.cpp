@@ -23,7 +23,7 @@ Registry::Registry() {
         printLine("Starting to listen to port 8081");
     }
 
-    registry_announcement = " ";
+    registry_announcement = "";
 
     connect(&forPlayers, SIGNAL(newConnection()), SLOT(incomingPlayer()));
     connect(&forServers, SIGNAL(newConnection()), SLOT(incomingServer()));
@@ -165,7 +165,9 @@ void Registry::incomingPlayer()
 
     printLine("Sending the registry announcement");
 
-    p->sendRegistryAnnouncement(registry_announcement);
+    if (registry_announcement.length() > 0) {
+        p->sendRegistryAnnouncement(registry_announcement);
+    }
 
     printLine("Sending the server list");
     foreach(Server *s, servers) {

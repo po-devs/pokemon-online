@@ -239,6 +239,7 @@ void Server::start(){
     amountOfInactiveDays = s.value("delete_inactive_members_days", 182).toInt();
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
+    overactiveShow = s.value("show_overactive_messages").toBool();
     proxyServers = s.value("proxyservers").toString().split(",");
     passwordProtected = s.value("require_password").toBool();
     serverPassword = s.value("server_password").toByteArray();
@@ -350,7 +351,7 @@ int Server::addChannel(const QString &name, int playerid) {
 
     printLine(QString("Channel %1 was created").arg(chanName));
 
-    channels[chanid] = new Channel(chanName);
+    channels[chanid] = new Channel(chanName, chanid);
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
     channelCache.outdate();zchannelCache.outdate();
@@ -363,16 +364,16 @@ int Server::addChannel(const QString &name, int playerid) {
     return chanid;
 }
 
-void Server::joinChannel(int playerid, int channelid) {
+bool Server::joinChannel(int playerid, int channelid) {
     if (!channels.contains(channelid)) {
-        return;
+        return false;
     }
     if (!myengine->beforeChannelJoin(playerid, channelid)) {
-        return;
+        return false;
     }
     /* Because the script might have kicked the player */
     if (!playerExist(playerid)) {
-        return;
+        return false;
     }
 
     Channel &channel = this->channel(channelid);
@@ -418,6 +419,8 @@ void Server::joinChannel(int playerid, int channelid) {
     }
 
     myengine->afterChannelJoin(playerid, channelid);
+
+    return true;
 }
 
 void Server::needChannelData(int playerid, int channelid)
@@ -452,28 +455,35 @@ void Server::leaveRequest(int playerid, int channelid, bool keep)
 
     Player *player = this->player(playerid);
 
-    myengine->beforeChannelLeave(playerid, channelid);
+    if (channel.players.contains(player)) {
+        myengine->beforeChannelLeave(playerid, channelid);
 
-    foreach(Player *p, channel.players) {
-        p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
-    }
-
-    foreach(int battleid, player->getBattles()) {
-        Battle &b = battleList[battleid];
-        /* We remove the battle only if only one of the player is in the channel */
-        if (int(channel.players.contains(this->player(b.id1))) + int(channel.players.contains(this->player(b.id2))) < 2) {
-            channel.battleList.remove(battleid);
+        foreach(Player *p, channel.players) {
+            p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
         }
-    }
 
-    printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
-    channel.players.remove(player);
+        foreach(int battleid, player->getBattles()) {
+            Battle &b = battleList[battleid];
+            /* We remove the battle only if only one of the player is in the channel */
+            if (int(channel.players.contains(this->player(b.id1))) + int(channel.players.contains(this->player(b.id2))) < 2) {
+                channel.battleList.remove(battleid);
+            }
+        }
 
-    if (!keep) {
+        printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
+        channel.players.remove(player);
+
+        if (!keep) {
+            player->removeChannel(channelid);
+        } else {
+            channel.disconnectedPlayers.insert(player);
+        }
+
+        myengine->afterChannelLeave(playerid, channelid);
+    } else if (channel.disconnectedPlayers.contains(player)) {
+        channel.disconnectedPlayers.remove(player);
         player->removeChannel(channelid);
     }
-
-    myengine->afterChannelLeave(playerid, channelid);
 
     if (channel.players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
@@ -829,7 +839,7 @@ void Server::ban(int id, int src) {
 }
 
 void Server::dosKick(int id) {
-    if (playerExist(id)) {
+    if (playerExist(id) && overactiveShow) {
         broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
     }
     silentKick(id);
@@ -870,15 +880,18 @@ void Server::loggedIn(int id, const QString &name)
             printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            // If the other player is disconnected, we remove him
-            if (player(ids)->waitingForReconnect()) {
-                player(ids)->autoKick();
-            } else {
-                // If registered - kick old one (ghost), otherwise - kick new one to prevent wars.
-                if (SecurityManager::member(name).isProtected()) {
+            if (SecurityManager::member(name).isProtected()) {
+                /* Replaces the other one */
+                if (!player(ids)->waitingForReconnect()) {
                     printLine(tr("%1: replaced by new connection.").arg(name));
                     sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
-                    silentKick(ids);
+                }
+                transferId(id, ids, true);
+                return;
+            } else {
+                // If the other player is disconnected, we remove him
+                if (player(ids)->waitingForReconnect()) {
+                    player(ids)->autoKick();
                 } else {
                     printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
                     sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
@@ -949,11 +962,21 @@ void Server::processLoginDetails(Player *p)
 
     if (!wasLoggedIn) {
         numberOfPlayersLoggedIn += 1;
+        printLine(tr("Adding a player, count: %1").arg(numberOfPlayersLoggedIn));
     }
 
     if (!p->state()[Player::WaitingReconnect]) {
         /* Makes the player join the default channel */
-        joinChannel(id, 0);
+        if (! (p->loginInfo() && p->loginInfo()->channel && joinRequest(p->id(), *p->loginInfo()->channel)))  {
+            joinChannel(id, 0);
+        }
+        if (p->loginInfo()) {
+            if(p->loginInfo()->additionalChannels) {
+                foreach(const QString &channel, *p->loginInfo()->additionalChannels) {
+                    joinRequest(p->id(), channel);
+                }
+            }
+        }
 #ifndef PO_NO_WELCOME
         broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
               NoChannel, NoSender, true, id);
@@ -962,8 +985,12 @@ void Server::processLoginDetails(Player *p)
         p->doWhenRC(wasLoggedIn);
     }
 
-    if (wasLoggedIn) {
+    if (!wasLoggedIn) {
         myengine->afterLogIn(id);
+    }
+
+    if (p->loginInfo()) {
+        delete p->loginInfo(), p->loginInfo()=NULL;
     }
 }
 
@@ -1041,30 +1068,31 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     mybattles[battle]->spectatingChat(player, chat);
 }
 
-void Server::joinRequest(int player, const QString &channel)
+bool Server::joinRequest(int player, const QString &channel)
 {
+    printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
     if (!channelExist(channel)) {
         if (channels.size() >= 1000) {
             sendMessage(player, "The server is limited to 1000 channels.");
-            return;
+            return false;
         }
         if (addChannel(channel, player) == -1)
-            return;
+            return false;
     }
 
     /* Because scripts might have caused the destruction of the previous channel,
        if the scripter puts some code in addChannel that would cause a masskick */
     if (!channelExist(channel))
-        return;
+        return false;
 
     int channelid = channelids[channel.toLower()];
 
     if (this->channel(channelid).players.contains(this->player(player))) {
         //already in the channel
-        return;
+        return true;
     }
 
-    joinChannel(player, channelid);
+    return joinChannel(player, channelid);
 }
 
 void Server::recvMessage(int id, int channel, const QString &mess)
@@ -1150,6 +1178,7 @@ void Server::incomingConnection(int i)
     Player *p = player(id);
 
     connect(p, SIGNAL(loggedIn(int, QString)), SLOT(loggedIn(int, QString)));
+    connect(p, SIGNAL(logout(int)), SLOT(logout(int)));
     connect(p, SIGNAL(recvTeam(int, QString)), SLOT(recvTeam(int, QString)));
     connect(p, SIGNAL(recvMessage(int, int, QString)), SLOT(recvMessage(int, int, QString)));
     connect(p, SIGNAL(disconnected(int)), SLOT(disconnected(int)));
@@ -1207,9 +1236,25 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
     }
 
     //proceed to reconnect
+    transferId(sender, id);
+}
+
+void Server::transferId(int sender, int id, bool copyInfo)
+{
+    printLine(QString("Transferring id %1 to %2").arg(sender).arg(id));
+    bool loggedIn = player(id)->isLoggedIn();
     player(id)->associateWith(player(sender));
-    emit player_incomingconnection(id);
-    emit player_authchange(id, authedName(id));
+    /* This flag is triggered when someone logs in without intending to reconnect,
+      but with sufficient info to allow for a reconnect. So we give them the intend
+      to reconnect and update the info */
+    if (copyInfo) {
+        player(id)->changeState(Player::WaitingReconnect, true);
+        sendMessage(id, tr("Your player session was still active on the server, so the data was kept. If you want to update your team/player info, just open the teambuilder and close it."));
+    }
+    if (!loggedIn) {
+        emit player_incomingconnection(id);
+        emit player_authchange(id, authedName(id));
+    }
     player(id)->relay().notify(NetworkServ::Reconnect, true);
     processLoginDetails(player(id));
 }
@@ -1398,6 +1443,11 @@ void Server::safeScriptsChanged(bool safeScripts)
         return;
     this->safeScripts = safeScripts;
     printLine("Safe scripts setting changed", false, true);
+}
+
+void Server::overactiveToggleChanged(bool overactiveToggle)
+{
+    overactiveShow = overactiveToggle;
 }
 
 void Server::proxyServersChanged(const QString &ips)
@@ -1699,6 +1749,7 @@ void Server::sendPlayer(int id)
 void Server::sendLogout(int id)
 {
     numberOfPlayersLoggedIn -= 1;
+    printLine(tr("Removing a player, count: %1").arg(numberOfPlayersLoggedIn));
     Player *source = player(id);
 
     ++lastDataId;
@@ -1754,13 +1805,13 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    printLine(QString("Received disconnection from player %1").arg(name(id)));
+    printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
     disconnectPlayer(id);
 }
 
 void Server::logout(int id)
 {
-    printLine(QString("Received logout from player %1").arg(name(id)));
+    printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
     removePlayer(id);
 }
 
@@ -1846,6 +1897,8 @@ void Server::disconnectPlayer(int id)
             myengine->beforeLogOut(id);
         }
 
+        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
+
         p->doWhenDC();
 
         p->blockSignals(true);
@@ -1871,9 +1924,7 @@ void Server::disconnectPlayer(int id)
 
         QTimer::singleShot(5*60*1000, p, SLOT(autoKick()));
 
-        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
-
-        printLine(QString("Disconnected player %1").arg(playerName));
+        printLine(QString("Disconnected player %1 (%2)").arg(playerName).arg(id));
     }
 }
 
@@ -1888,13 +1939,17 @@ void Server::removePlayer(int id)
             myengine->beforeLogOut(id);
         }
 
+        for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
+
         p->doWhenDQ();
 
         p->blockSignals(true);
 
         QString playerName = p->name();
 
-        AntiDos::obj()->disconnect(p->ip(), id);
+        if (!p->waitingForReconnect() && !p->discarded()) {
+            AntiDos::obj()->disconnect(p->ip(), id);
+        }
 
         foreach(int chanid, p->getChannels()) {
             leaveRequest(id, chanid);
@@ -1908,12 +1963,12 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-        p->deleteLater(); myplayers.remove(id); for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
+        p->deleteLater(); myplayers.remove(id);
 
         if (loggedIn || p->state()[Player::WaitingReconnect])
             mynames.remove(playerName.toLower());
 
-        printLine(QString("Removed player %1").arg(playerName));
+        printLine(QString("Removed player %1 (%2)").arg(playerName).arg(id));
     }
 }
 

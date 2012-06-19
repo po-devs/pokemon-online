@@ -4,7 +4,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 
 #include "battlewindow.h"
 
@@ -24,7 +24,7 @@ Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), comma
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle;
 }
 
-void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
+void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, const QString &defaultChannel, const QStringList &autoJoin)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
@@ -32,6 +32,14 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     Flags network;
     network.setFlags( (1 << LoginCommand::HasClientType) | (1 << LoginCommand::HasVersionNumber) | (1 << LoginCommand::HasReconnect)
                       | (1 << LoginCommand::HasTrainerInfo) | (1 << LoginCommand::HasTeams));
+
+    if (!defaultChannel.isEmpty()) {
+        network.setFlag(LoginCommand::HasDefaultChannel, true);
+    }
+
+    if (autoJoin.length() > 0) {
+        network.setFlag(LoginCommand::HasAdditionalChannels, true);
+    }
 
     if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);
@@ -61,6 +69,14 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     /* Can reconnect even if the last 2 bytes of the IP are different */
     out << uchar(16);
 
+    if(!defaultChannel.isEmpty()) {
+        out << defaultChannel;
+    }
+
+    if (autoJoin.length() > 0) {
+        out << autoJoin;
+    }
+
     if (color.isValid()) {
         out << color;
     }
@@ -73,6 +89,19 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color)
     }
 
     emit sendCommand(tosend);
+}
+
+void Analyzer::logout()
+{
+    if (socket().isValid() && socket().state() == QAbstractSocket::ConnectedState) {
+        notify(Logout);
+
+        /* Waits for the writing to finish */
+        connect(&socket(), SIGNAL(disconnected()), SLOT(deleteLater()));
+        socket().disconnectFromHost();
+    } else {
+        deleteLater();
+    }
 }
 
 void Analyzer::sendChallengeStuff(const ChallengeInfo &c)
