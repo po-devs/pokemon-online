@@ -47,7 +47,7 @@ QList<QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QList<QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
-QList<QString> MoveInfo::m_SpecialEffects;
+QList<QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
 QList<int> MoveInfo::m_OldMoves;
 QVector<bool> MoveInfo::m_KingRock;
 
@@ -71,6 +71,7 @@ QSet<int> ItemInfo::m_GenItems[NUMBER_GENS];
 QList<QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
 QList<int> TypeInfo::m_TypeVsType;
+QList<int> TypeInfo::m_TypeVsTypeGen1;
 QList<int> TypeInfo::m_Categories;
 
 QList<QString> NatureInfo::m_Names;
@@ -828,6 +829,45 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     return ret;
 }
 
+QMovie *PokemonInfo::AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back)
+{
+    QString archive = path("black_white_animated.zip");
+    QString file = QString("%1/%2%3%4.gif").arg(pokeId.toString(), back?"b":"f", (gender == Pokemon::Female)?"f":"", shiny?"s":"");
+    QByteArray *data = new QByteArray(readZipFile(archive.toUtf8(), file.toUtf8()));
+    QBuffer *animatedSpriteData = new QBuffer(data);
+    QMovie *AnimatedSprite = new QMovie(animatedSpriteData);
+    if(data->length() == 0) {
+        if(gender == Pokemon::Female) {
+            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, shiny, back);
+        }
+        if(shiny) {
+            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, false, back);
+        }
+        if(pokeId.subnum != 0) {
+            return PokemonInfo::AnimatedSprite(OriginalForme(pokeId), Pokemon::Male, false, back);
+        }
+        AnimatedSprite->start();
+        return AnimatedSprite;
+    }
+    AnimatedSprite->start();
+    return AnimatedSprite;
+}
+
+bool PokemonInfo::HasAnimatedSprites()
+{
+    QFile file(path("black_white_animated.zip"));
+    if(file.exists()) {
+        return true;
+    }
+    return false;
+}
+
+bool PokemonInfo::HasAnimatedSpritesEnabled()
+{
+    QSettings MySettings;
+    return MySettings.value("animated_sprites").toBool();
+}
+
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 {
     QString archive;
@@ -1419,9 +1459,9 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(maxTurns, path("max_turns.txt"));
     fill_container_with_file(minTurns, path("min_turns.txt"));
     fill_container_with_file(minMaxHits, path("min_max_hits.txt"));
-    fill_container_with_file(none0, path("None0.txt"));
-    fill_container_with_file(none1, path("None1.txt"));
-    fill_container_with_file(none2, path("None2.txt"));
+    fill_container_with_file(none0, path("stataffected.txt"));
+    fill_container_with_file(none1, path("statboost.txt"));
+    fill_container_with_file(none2, path("statrate.txt"));
     fill_container_with_file(power, path("power.txt"));
     fill_container_with_file(pp, path("pp.txt"));
     fill_container_with_file(priority, path("priority.txt"));
@@ -1509,6 +1549,14 @@ void MoveInfo::loadSpecialEffects()
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
         m_SpecialEffects.push_back(eff.split('#').front());
+    }
+
+    temp.clear();
+    fill_container_with_file(temp, path("move_special_effects_rby.txt"));
+
+    /* Removing comments, aka anything starting from '#' */
+    foreach (QString eff, temp) {
+        m_RbySpecialEffects.push_back(eff.split('#').front());
     }
 }
 
@@ -1714,9 +1762,9 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
     return m_MoveMessages[moveeffect][part];
 }
 
-QString MoveInfo::SpecialEffect(int movenum)
+QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
-    return m_SpecialEffects[movenum];
+    return gen == ::Gen::RBY ? m_RbySpecialEffects[movenum] : m_SpecialEffects[movenum];
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
@@ -2127,6 +2175,17 @@ void TypeInfo::loadEff()
 	    m_TypeVsType.push_back(l3.toInt());
 	}
     }
+
+    temp.clear();
+
+    fill_container_with_file(temp, path("typestable_gen1.txt"));
+
+    foreach (QString l, temp) {
+    QStringList l2 = l.split(' ');
+    foreach (QString l3, l2) {
+        m_TypeVsTypeGen1.push_back(l3.toInt());
+    }
+    }
 }
 
 void TypeInfo::init(const QString &dir)
@@ -2165,9 +2224,13 @@ QString TypeInfo::weatherName(int weather)
     }
 }
 
-int TypeInfo::Eff(int type_attack, int type_defend)
+int TypeInfo::Eff(int type_attack, int type_defend, Pokemon::gen gen)
 {
-    return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
+    if (gen.num == 1) {
+        return m_TypeVsTypeGen1[type_attack * NumberOfTypes() + type_defend];
+    } else {
+        return m_TypeVsType[type_attack * NumberOfTypes() + type_defend];
+    }
 }
 
 
@@ -2416,7 +2479,7 @@ int AbilityInfo::NumberOfAbilities()
 
 void GenderInfo::loadNames()
 {
-    fill_container_with_file(m_Names, path("genders_en.txt"));
+    fill_container_with_file(m_Names, trFile(path("genders")));
 }
 
 QString GenderInfo::path(const QString &filename)
@@ -2625,12 +2688,9 @@ void GenInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    /* This is important, so we make sure we always load the default values, then overwrite  translated ones*/
-    fill_gen_string(m_versions, path("versions.txt"));
-    fill_gen_string(m_versions, trFile(path("versions.txt")));
+    fill_gen_string(m_versions, trFile(path("versions")));
 
-    fill_double(m_gens, path("gens.txt"));
-    fill_double(m_gens, trFile(path("gens.txt")));
+    fill_double(m_gens, trFile(path("gens")));
 }
 
 QString GenInfo::Gen(int gen)

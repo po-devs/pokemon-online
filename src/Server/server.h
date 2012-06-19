@@ -132,6 +132,7 @@ public slots:
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
     void safeScriptsChanged(bool safeScripts);
+    void overactiveToggleChanged(bool overactiveToggle);
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
@@ -162,13 +163,14 @@ public slots:
     void battleChat(int player, int battle, const QString &chat);
     void resendBattleInfos(int player, int battle);
     void spectatingChat(int player, int battle, const QString &chat);
-    void joinRequest(int player, const QString &chn);
+    bool joinRequest(int player, const QString &chn);
     /* Makes a player join a channel */
-    void joinChannel(int playerid, int chanid);
+    bool joinChannel(int playerid, int chanid);
     void leaveRequest(int player, int chan, bool keepChannelForPlayer=false);
     void ipChangeRequested(int player, const QString &ip);
     void info(int , const QString &);
     void onReconnect(int, int, const QByteArray &);
+    void transferId(int id1, int id2, bool copyInfo=false);
     void needChannelData(int playerId, int chanId);
 
     void kick(int i);
@@ -211,6 +213,7 @@ private:
     int amountOfInactiveDays;
     bool lowTCPDelay;
     bool safeScripts;
+    bool overactiveShow;
     bool passwordProtected;
     bool showTrayPopup;
     bool minimizeToTray;

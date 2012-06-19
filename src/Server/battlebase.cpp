@@ -5,6 +5,7 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "moves.h"
+#include "battlefunctions.h"
 
 using namespace BattleCommands;
 
@@ -134,6 +135,8 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     }
 
     buildPlugins(pluginManager);
+
+    applyingMoveStatMods = false;
 }
 
 BattleBase::~BattleBase()
@@ -142,6 +145,29 @@ BattleBase::~BattleBase()
     //onDestroy();
 }
 
+void BattleBase::beginTurn()
+{
+    turn() += 1;
+    /* Resetting temporary variables */
+    for (int i = 0; i < numberOfSlots(); i++) {
+        turnMemory(i).clear();
+        turnMem(i).reset();
+        tmove(i).reset();
+    }
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        callpeffects(i, i, "TurnSettings");
+    }
+    attackCount() = 0;
+
+    requestChoices();
+
+    /* preventing the players from cancelling (like when u-turn/Baton pass) */
+    for (int i = 0; i < numberOfSlots(); i++)
+        couldMove[i] = false;
+
+    analyzeChoices();
+}
 
 void BattleBase::start(ContextSwitcher &ctx)
 {
@@ -670,6 +696,22 @@ bool BattleBase::acceptSpectator(int id, bool authed) const
     return !(clauses() & ChallengeInfo::DisallowSpectator);
 }
 
+void BattleBase::notifyChoices(int p)
+{
+    bool canMove = false;
+    for (int i = 0; i < numberPerSide(); i++) {
+        int slot = this->slot(p, i);
+        if (couldMove[slot]) {
+            notify(p, OfferChoice, slot, options[slot]);
+        }
+        canMove |= hasChoice[slot];
+    }
+
+    if (canMove) {
+        notify(p, StartChoices, p);
+    }
+}
+
 void BattleBase::addSpectator(Player *p)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
@@ -687,6 +729,8 @@ void BattleBase::addSpectator(Player *p)
     if (configuration().isInBattle(id)) {
         p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration());
         key = spot(id);
+
+        notifyChoices(key);
     } else {
         /* Assumption: each id is a different player, so key is unique */
         key = spectatorKey(id);
@@ -1110,7 +1154,7 @@ inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> &
     return x.second>y.second;
 }
 
-std::vector<int> && BattleBase::sortedBySpeed()
+std::vector<int> BattleBase::sortedBySpeed()
 {
     std::vector<int> ret;
 
@@ -1128,7 +1172,7 @@ std::vector<int> && BattleBase::sortedBySpeed()
     std::sort(speeds.begin(), speeds.end(), &comparePair);
 
     /* Now for the speed tie */
-    for (unsigned i = 0; i < speeds.size()-1; ) {
+    for (unsigned i = 0; i < speeds.size()-1;) {
         unsigned  j;
         for (j = i+1; j < speeds.size(); j++) {
             if (speeds[j].second != speeds[i].second) {
@@ -1147,7 +1191,6 @@ std::vector<int> && BattleBase::sortedBySpeed()
     for (unsigned i =0; i < speeds.size(); i++) {
         ret.push_back(speeds[i].first);
     }
-
     return std::move(ret);
 }
 
@@ -1388,47 +1431,6 @@ void BattleBase::setupChoices()
     }
 }
 
-void BattleBase::inflictRecoil(int source, int target)
-{
-    double recoil = tmove(source).recoil;
-
-    if (recoil == 0)
-        return;
-
-    //Rockhead, MagicGuard
-    if (koed(source)) {
-        return;
-    }
-
-    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
-    if (koed(target)) {
-        return;
-    }
-
-    // If move defeats a sub, no recoil damage is applied in Gen 1.
-    if (hasSubstitute(target)) {
-        return;
-    }
-
-    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
-
-    // "33" means one-third
-    //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
-
-    int damage = std::abs(int(recoil * turnMem(target).damageTaken / 100));
-
-    if (recoil < 0) {
-        inflictDamage(source, damage, source, false);
-
-        /* Self KO Clause! */
-        if (koed(source)) {
-            selfKoer() = source;
-        }
-    } else  {
-        healLife(source, damage);
-    }
-}
-
 void BattleBase::healLife(int player, int healing)
 {
     if (healing == 0) {
@@ -1611,4 +1613,566 @@ void BattleBase::analyzeChoice(int slot)
 void BattleBase::sendBack(int player, bool silent)
 {
     notify(All, SendBack, player, silent);
+}
+
+bool BattleBase::testStatus(int player)
+{
+    if (turnMem(player).contains(TM::HasPassedStatus)) {
+        return true;
+    }
+
+    if (poke(player).status() == Pokemon::Asleep) {
+        if (poke(player).statusCount() > 1) {
+            //Early bird
+            poke(player).statusCount() -= 1;
+            notify(All, StatusMessage, player, qint8(FeelAsleep));
+        } else {
+            healStatus(player, Pokemon::Asleep);
+            notify(All, StatusMessage, player, qint8(FreeAsleep));
+
+            return false;
+        }
+    }
+    if (poke(player).status() == Pokemon::Frozen)
+    {
+        return false;
+    }
+
+    if (turnMem(player).contains(TM::Flinched)) {
+        notify(All, Flinch, player);
+
+        return false;
+    }
+    if (isConfused(player)) {
+        if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
+            inc(pokeMemory(player)["ConfusedCount"], -1);
+
+            notify(All, StatusMessage, player, qint8(FeelConfusion));
+
+            if (coinflip(1, 2)) {
+                inflictConfusedDamage(player);
+                return false;
+            }
+        } else {
+            healConfused(player);
+            notify(All, StatusMessage, player, qint8(FreeConfusion));
+        }
+    }
+
+    if (poke(player).status() == Pokemon::Paralysed) {
+        if (coinflip(1, 4)) {
+            notify(All, StatusMessage, player, qint8(PrevParalysed));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void BattleBase::healStatus(int player, int status)
+{
+    if (poke(player).status() == status || status == 0) {
+        changeStatus(player, Pokemon::Fine);
+    }
+}
+
+void BattleBase::healConfused(int player)
+{
+    poke(player).removeStatus(Pokemon::Confused);
+}
+
+bool BattleBase::isConfused(int player)
+{
+    return poke(player).hasStatus(Pokemon::Confused);
+}
+
+void BattleBase::inflictConfusedDamage(int player)
+{
+    notify(All, StatusMessage, player, qint8(HurtConfusion));
+
+    tmove(player).type = Pokemon::Curse;
+    tmove(player).power = 40;
+    tmove(player).attack = Move::NoMove;
+    turnMem(player).typeMod = 4;
+    turnMem(player).stab = 2;
+    tmove(player).category = Move::Physical;
+    int damage = calculateDamage(player, player);
+    inflictDamage(player, damage, player, true);
+}
+
+void BattleBase::losePP(int player, int move, int loss)
+{
+    int PP = this->PP(player, move);
+
+    PP = std::max(PP-loss, 0);
+    changePP(player, move, PP);
+}
+
+void BattleBase::changePP(int player, int move, int PP)
+{
+    fpoke(player).pps[move] = PP;
+    poke(player).move(move).PP() = PP;
+    notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
+}
+
+bool BattleBase::testFail(int player)
+{
+    if (turnMem(player).failed() == true) {
+        /* Silently or not ? */
+        notify(All, Failed, player, !turnMem(player).failingMessage());
+        return true;
+    }
+    return false;
+}
+
+PokeFraction BattleBase::getStatBoost(int player, int stat)
+{
+    int boost = fpoke(player).boosts[stat];
+
+    /* Boost is 1 if boost == 0,
+       (2+boost)/2 if boost > 0;
+       2/(2+boost) otherwise */
+    int attacker = this->attacker();
+    int attacked = this->attacked();
+
+    if (attacker != -1 && attacked != -1) {
+        //Critical hit
+        if (turnMem(attacker).contains(TM::CriticalHit)) {
+            boost = 0;
+        }
+    }
+
+    if (stat <= 5) {
+        return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    } else if (stat == Accuracy) {
+        /* Accuracy */
+        return PokeFraction(std::max(3+boost, 3), std::max(3-boost, 3));
+    } else {
+        /* Evasion */
+        return PokeFraction(std::max(3-boost, 3), std::max(3+boost, 3));
+    }
+}
+
+void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
+{
+    int player = orPlayer == - 1 ? attacker() : orPlayer;
+    int target = orTarget == - 1 ? attacked() : orTarget;
+
+    int type = tmove(player).type; /* move type */
+    int typeadv[] = {getType(target,1),getType(target,2)};
+    int typepok[] = {getType(player,1),getType(player,2)};
+    int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
+    int typemod = 1;
+
+    for (int i = 0; i < 2; i++) {
+        typemod *= typeffs[i];
+    }
+
+    // Counter hits regardless of type matchups in Gen 1.
+    if (tmove(player).attack == Move::Counter) {
+        typemod = 2;
+    }
+
+    int stab;
+    if(type == Type::Curse) {
+        // Not only Curse -- PO also has Struggle and second type
+        // of single-typed pkmn as the ???-type
+        stab = 2;
+    }else{
+        stab = 2 + (type==typepok[0] || type==typepok[1]);
+    }
+
+    turnMem(player).stab = stab;
+    turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
+}
+
+int BattleBase::repeatNum(int player)
+{
+    if (tmove(player).repeatMin == 0)
+        return 1;
+
+    int min = tmove(player).repeatMin;
+    int max = tmove(player).repeatMax;
+
+    return minMax(min, max, gen().num, randint());
+}
+
+void BattleBase::testCritical(int player, int target)
+{
+    (void) target;
+
+    /* In RBY, Focus Energy reduces crit by 75%; in statium, it's * 4 */
+    int up (1), down(1);
+    if (tmove(player).critRaise & 1) {
+        up *= 4;
+    }
+    if (tmove(player).critRaise & 2) {
+        if (gen() == Gen::RBY) {
+            down = 4;
+        } else {
+            up *= 4;
+        }
+    }
+    PokeFraction critChance(up, down);
+    int randnum = randint(512);
+    int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
+    bool critical = randnum < baseSpeed * critChance;
+
+    if (critical) {
+        turnMem(player).add(TM::CriticalHit);
+        notify(All, CriticalHit, player);
+    } else {
+        turnMem(player).remove(TM::CriticalHit);
+    }
+}
+
+int BattleBase::calculateDamage(int p, int t)
+{
+    PokeBattle &poke = this->poke(p);
+
+    int level = fpoke(p).level;
+    int attack, def;
+    bool crit = turnMem(p).contains(TM::CriticalHit);
+    int ch = 1 + crit;
+
+    int attackused = tmove(p).attack;
+
+    int cat = tmove(p).category;
+    if (cat == Move::Physical) {
+        attack = getStat(p, Attack);
+        def = getStat(t, Defense);
+    } else {
+        attack = getStat(p, SpAttack);
+        def = getStat(t, SpAttack);
+    }
+
+    attack = std::min(attack, 65535);
+
+    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
+        /* explosion / selfdestruct */
+        def/=2;
+        if (def == 0)
+            // prevent division by zero
+            def = 1;
+    }
+
+    int stab = turnMem(p).stab;
+    int typemod = turnMem(p).typeMod;
+    int randnum = randint(38) + 217;
+    int power = tmove(p).power;
+
+    power = std::min(power, 65535);
+    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
+
+    //Guts, burn
+    damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+
+    /* Light screen / Reflect */
+    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        damage = damage * 2 / 3;
+    }
+
+    damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+
+    return damage;
+}
+
+void BattleBase::healDamage(int player, int target)
+{
+    int healing = tmove(player).healing;
+
+    if ((healing > 0 && koed(target)) || (healing < 0 && koed(player)))
+        return;
+
+    if (healing > 0) {
+        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+            sendMoveMessage(60, 0, target, tmove(player).type);
+
+            int damage = poke(target).totalLifePoints() * healing / 100;
+
+            if (gen() >= 5 && damage * 100 / healing < poke(target).totalLifePoints())
+                damage += 1;
+
+            healLife(target, damage);
+        }else{
+            // No HP to heal
+            notifyFail(player);
+        }
+    } else if (healing < 0 &&
+               (gen() > 1 || /* Killing subs with struggle == no recoil. */
+                (gen()== 1 && !hasSubstitute(target)))){
+        /* Struggle: actually recoil damage */
+        notify(All, Recoil, player, true);
+        inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
+    }
+}
+
+void BattleBase::unthaw(int player)
+{
+    notify(All, StatusMessage, player, qint8(FreeFrozen));
+    healStatus(player, Pokemon::Frozen);
+}
+
+void BattleBase::notifyHits(int spot, int number)
+{
+    notify(All, Hit, spot, quint8(number));
+}
+
+
+void BattleBase::testFlinch(int player, int target)
+{
+    int rate = tmove(player).flinchRate;
+
+    if (rate && coinflip(rate, 100)) {
+        turnMem(target).add(TM::Flinched);
+    }
+}
+
+void BattleBase::applyMoveStatMods(int player, int target)
+{
+    applyingMoveStatMods = true;
+    bool sub = hasSubstitute(target);
+
+    BasicMoveInfo &fm = tmove(player);
+
+    /* Moves with 0 power that came until here bypass sub,
+       so we make the function think there's no sub to
+       be more simple. */
+    if (fm.power == 0) {
+        sub = false;
+    }
+
+    int cl= fm.classification;
+
+    /* First we check if there's even an effect... */
+    if (cl != Move::StatAndStatusMove && cl != Move::StatChangingMove && cl != Move::StatusInducingMove
+            && cl != Move::OffensiveSelfStatChangingMove && cl != Move::OffensiveStatusInducingMove
+            && cl != Move::OffensiveStatChangingMove)
+    {
+        applyingMoveStatMods = false;
+        return;
+    }
+
+    if (cl == Move::OffensiveSelfStatChangingMove) {
+        target = player;
+    }
+
+    if (koed(target)) {
+        applyingMoveStatMods = false;
+        return;
+    }
+
+    /* Doing Stat Changes */
+    for (int i = 2; i >= 0; i--) {
+        char stat = fm.statAffected >> (i*8);
+
+        if (!stat)
+            break;
+
+        char increase = char (fm.boostOfStat >> (i*8));
+
+        int rate = char (fm.rateOfStat >> (i*8));
+
+        if (increase < 0 && target != player && sub) {
+            if (rate == 0 && cl != Move::OffensiveStatusInducingMove) {
+                sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+            }
+            applyingMoveStatMods = false;
+            return;
+        }
+
+        if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
+            continue;
+        }
+
+        if (increase > 0) {
+            if (stat == AllStats) {
+                for (int i = 1; i <= 5; i++) {
+                    inflictStatMod(target, i, increase, player);
+                }
+            } else {
+                inflictStatMod(target, stat, increase, player);
+            }
+        } else {
+            /* If we are blocked by a secondary effect, let's stop here */
+            if (!inflictStatMod(target, stat, increase, player)) {
+                //return; or not, hyper cutter blocks only a part of tickle
+            }
+        }
+    }
+
+    /* Now Status */
+
+    if (cl != Move::StatAndStatusMove && cl != Move::StatusInducingMove && cl != Move::OffensiveStatusInducingMove) {
+        applyingMoveStatMods = false;
+        return;
+    }
+
+    if (fm.status > Pokemon::Confused || fm.status == 0) {
+        applyingMoveStatMods = false;
+        return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
+    }
+
+    int rate = fm.rate;
+
+    if (target != player && sub) {
+        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
+            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+        }
+        applyingMoveStatMods = false;
+        return;
+    }
+
+    /* Then we check if the effect hits */
+
+    if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
+        applyingMoveStatMods = false;
+        return;
+    }
+
+    if (fm.status == Pokemon::Confused)
+        inflictConfused(target, player, true);
+    else
+        inflictStatus(target, fm.status, player, fm.minTurns, fm.maxTurns);
+
+    applyingMoveStatMods = false;
+}
+
+void BattleBase::inflictConfused(int player, int attacker, bool tell)
+{
+    //fixme: insomnia/owntempo/...
+    if (isConfused(player)) {
+        if (this->attacker() == attacker && attacker != player && canSendPreventSMessage(player, attacker))
+        {
+            notify(All, AlreadyStatusMessage, player, quint8(Pokemon::Confused));
+        }
+        return;
+    }
+
+    poke(player).addStatus(Pokemon::Confused);
+    pokeMemory(player)["ConfusedCount"] = randint(4) + 1;
+
+    notify(All, StatusChange, player, qint8(Pokemon::Confused), true, !tell);
+}
+
+bool BattleBase::canSendPreventSMessage(int, int attacker)
+{
+    return attacking() && tmove(attacker).rate == 0;
+}
+
+void BattleBase::inflictStatus(int player, int status, int attacker, int minTurns, int maxTurns)
+{
+    //fixme: mist + intimidate
+    if (poke(player).status() != Pokemon::Fine) {
+        if (this->attacker() == attacker &&
+                (tmove(attacker).classification == Move::StatusInducingMove ||
+                 tmove(attacker).classification == Move::StatAndStatusMove) && canSendPreventSMessage(player, attacker)) {
+            if (poke(player).status() == status) {
+                notify(All, AlreadyStatusMessage, player, quint8(poke(player).status()));
+            }
+            else {
+                notify(All, Failed, player);
+            }
+        }
+        return;
+    }
+    if (!canGetStatus(player, status))
+        return;
+
+    if (status == Pokemon::Asleep)
+    {
+        if (sleepClause() && currentForcedSleepPoke[this->player(player)] != -1) {
+            notifyClause(ChallengeInfo::SleepClause);
+            return;
+        } else {
+            currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
+        }
+    } else if (status == Pokemon::Frozen)
+    {
+        if (clauses() & ChallengeInfo::FreezeClause) {
+            for (int i = 0; i < 6; i++) {
+                if (poke(this->player(player),i).status() == Pokemon::Frozen) {
+                    notifyClause(ChallengeInfo::FreezeClause);
+                    return;
+                }
+            }
+        }
+    }
+
+    changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + randint(maxTurns - minTurns + 1));
+}
+
+bool BattleBase::canGetStatus(int player, int status)
+{
+    switch (status) {
+    case Pokemon::Burnt: return !hasType(player, Pokemon::Fire);
+    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison);
+    case Pokemon::Frozen: return !hasType(player, Pokemon::Ice);
+    default:
+        return true;
+    }
+}
+
+bool BattleBase::hasType(int player, int type)
+{
+    return getType(player,1) == type  || getType(player,2) == type;
+}
+
+int BattleBase::getType(int player, int slot)
+{
+    return slot == 1 ? fpoke(player).type1 : fpoke(player).type2;
+}
+
+bool BattleBase::inflictStatMod(int player, int stat, int mod, int attacker, bool tell)
+{
+    /* Gen 1 has only Special, which means no Satk or Sdef.
+       For simplicity we map all Sdef changes to Satk and treat
+       Satk as meaning "Special". */
+    if (gen().num == 1 && stat == SpDefense) {
+        stat = SpAttack;
+    }
+
+    if (mod > 0)
+        return gainStatMod(player, stat, std::abs(mod), attacker, tell);
+    else
+        return loseStatMod(player, stat, std::abs(mod), attacker, tell);
+}
+
+
+
+bool BattleBase::gainStatMod(int player, int stat, int bonus, int , bool tell)
+{
+    int boost = fpoke(player).boosts[stat];
+    if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
+        notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
+        changeStatMod(player, stat, std::min(boost+bonus, 6));
+    }
+
+    return true;
+}
+
+bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
+{
+    if (attacker != player) {
+        /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
+        if(pokeMemory(this->player(player)).value("MistCount").toInt() > 0 && tmove(attacker).power == 0) {
+            sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+            return false;
+        }
+    }
+
+    int boost = fpoke(player).boosts[stat];
+    if (boost > -6) {
+        notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
+        changeStatMod(player, stat, std::max(boost-malus, -6));
+    } else {
+        //fixme: can't decrease message
+    }
+
+    return true;
+}
+
+void BattleBase::changeStatMod(int player, int stat, int newstat)
+{
+    fpoke(player).boosts[stat] = newstat;
 }

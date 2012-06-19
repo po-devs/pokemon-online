@@ -8,8 +8,9 @@ class BattleRBY : public BattleBase
 public:
     BattleRBY(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
     ~BattleRBY();
+
+    typedef void (*MechanicsFunction) (int source, int target, BattleRBY &b);
 protected:
-    void beginTurn();
     void endTurn();
     void initializeEndTurnFunctions();
     void changeStatus(int player, int status, bool tell=false, int turns=0);
@@ -20,6 +21,9 @@ protected:
     void analyzeChoices();
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
+    bool testAccuracy(int player, int target, bool silent=false);
+    bool hadSubstitute(int player);
+    void inflictRecoil(int x, int target);
 
     void personalEndTurn(int player);
 private:
@@ -41,6 +45,9 @@ private:
 
     BasicMoveInfo moves[2];
 
+    context pokeMems[2];
+    context turnMems[2];
+
     BasicPokeInfo &fpoke(int i) {return pokes[i];}
     const BasicPokeInfo &fpoke(int i) const {return pokes[i];}
     SlotMemory &slotMemory(int i) {return slotzones[i];}
@@ -48,6 +55,15 @@ private:
     const TurnMemory &turnMem(int i) const {return turnzones[i];}
     BasicMoveInfo &tmove(int slot) { return moves[slot];}
     const BasicMoveInfo &tmove(int slot) const {return moves[slot];}
+    context &pokeMemory(int slot) { return pokeMems[slot];}
+    const context & pokeMemory(int slot) const {return pokeMems[slot];}
+    context &turnMemory(int slot) { return turnMems[slot];}
+    const context & turnMemory(int slot) const {return turnMems[slot];}
+public:
+    /* This time the pokelong effects */
+    void callpeffects(int source, int target, const QString &name);
 };
+
+Q_DECLARE_METATYPE(BattleRBY::MechanicsFunction)
 
 #endif // BATTLERBY_H

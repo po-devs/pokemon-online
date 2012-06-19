@@ -18,6 +18,8 @@ public:
     int id() const {
         return myid;
     }
+    void setId(int id);
+
     int ownId() const;
     QString name() const {
         return myname;

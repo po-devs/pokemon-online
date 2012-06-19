@@ -2,23 +2,17 @@
 #define MOVES_H
 
 #include "mechanics.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "battle.h"
+#include "battlebase.h"
 
 /* MoveMechanics works by inserting functions into the contexts of the battle situation,
     that are then called when necessary. The functions are inserted by MoveEffect::setup,
     in fact it checks the non-NULL members of type 'function' of a derived class of MoveMechanics
     and insert them into the battle situation according to the name of the effect */
-struct MoveMechanics : public Mechanics
-{
-    static int num(const QString &name);
-};
+typedef Mechanics MoveMechanics;
 
 /* Used to tell us everything about a move */
 struct MoveEffect
 {
-    MoveEffect(int num, Pokemon::gen gen, BattleSituation::BasicMoveInfo &bmi);
-
     static void setup(int movenum, int source, int target, BattleBase &b);
     static void unsetup(int movenum, int source, BattleBase &b);
 

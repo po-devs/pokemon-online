@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
-#include "teambuilder.h"
+#include "Teambuilder/teambuilder.h"
 #include "battlewindow.h"
 #include "basebattlewindow.h"
 #include "pmsystem.h"
@@ -14,11 +14,11 @@
 #include "channel.h"
 #include "theme.h"
 #include "soundconfigwindow.h"
-#include "teamholder.h"
+#include "Teambuilder/teamholder.h"
 #include "challengedialog.h"
 #include "tieractionfactory.h"
 
-Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay()
+Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer())
 {
     waitingOnSecond = false;
     top = NULL;
@@ -35,8 +35,6 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     QSplitter *s = new QSplitter(Qt::Horizontal);
     h->addWidget(s);
     s->setChildrenCollapsible(false);
-
-    QSettings settings;
 
     QTabWidget *mytab = new QTabWidget();
 
@@ -132,41 +130,32 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     tim->start();
 
     /* Default channel on to display messages */
-    channelPlayers(0);
+    channelPlayers(-1);
 
     /* PM System */
-    pmSystem = new PMSystem(settings.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    pmSystem = new PMSystem(globals.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    connect(this, SIGNAL(destroyed()), pmSystem, SLOT(deleteLater()));
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
+    connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
 
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
      */
-    if (settings.value("user_list_at_right").toBool()) {
+    if (globals.value("user_list_at_right").toBool()) {
         s->addWidget(mytab);
     }
-    if(settings.value("sort_channels_by_name").toBool()) {
-        sortCBN = 1;
+    sortCBN = globals.value("sort_channels_by_name").toBool();
+    if(sortCBN) {
         sortChannels();
-    } else {
-        sortCBN = 0;
     }
-    pmFlashing = settings.value("pm_flashing").toBool();
-    if(settings.value("reject_incoming_pms").toBool()) {
-        pmReject = 1;
-    } else {
-        pmReject = 0;
-    }
-    pmsTabbed = settings.value("pms_tabbed").toBool();
-    if(settings.value("pms_tabbed").toBool()) {
-        pmsTabbed = 1;
-    } else {
-        pmsTabbed = 0;
-    }
+    pmFlashing = globals.value("pm_flashing").toBool();
+    pmsTabbed = globals.value("pms_tabbed").toBool();
+    pmReject = globals.value("reject_incoming_pms").toBool();
 }
 
 Client::~Client()
 {
-    relay().notify(NetworkCli::Logout);
+    relay().logout();
     writeSettings(this);
 }
 
@@ -327,8 +316,7 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
 
 void Client::sortChannelsToggle(bool newvalue)
 {
-    QSettings s;
-    s.setValue("sort_channels_by_name", newvalue);
+    globals.setValue("sort_channels_by_name", newvalue);
 
     sortCBN = newvalue;
     sortChannels();
@@ -352,28 +340,40 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
         return;
     }
 
-    Channel *c = new Channel(channelNames.value(chanid), chanid, this);
+    Channel *c;
+
+    /* Test if there is a channel or not. If no channel, the already in-place channel space is used
+      for the new channels */
+    if (mychannels.contains(-1))  {
+        c = mychannels[-1];
+        mychannels[chanid] = c;
+        mychannels.remove(-1);
+        c->setId(chanid);
+
+        channelNameChanged(chanid, channelNames.take(chanid));
+
+        // set tab complete for first chan
+        myline->setPlayers(c->playersWidget()->model());
+    } else {
+        c = new Channel(channelNames.value(chanid), chanid, this);
+        mychannels[chanid] = c;
+
+        playersW->addWidget(c->playersWidget());
+        mainChat->addTab(c->mainChat(), c->name());
+        battlesW->addWidget(c->battlesWidget());
+
+        connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
+        connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
+        connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
+        connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
+    }
 
     for(int i =0;i < channels->count(); i++) {
         if (channels->item(i)->text() == c->name())
             channels->item(i)->setIcon(chatot);
     }
 
-    playersW->addWidget(c->playersWidget());
-    mainChat->addTab(c->mainChat(), c->name());
-    battlesW->addWidget(c->battlesWidget());
-    if (mainChat->count() == 1)
-        // set tab complete for first chan
-        myline->setPlayers(c->playersWidget()->model());
-
-    mychannels[chanid] = c;
-
     c->receivePlayerList(ids);
-
-    connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
-    connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
-    connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
-    connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
 }
 
 void Client::channelActivated(Channel *c)
@@ -416,7 +416,6 @@ void Client::showChannelsContextMenu(const QPoint & point)
         QSettings s;
         s.beginGroup("channelevents");
         s.beginGroup(channelNames.value(item->id()));
-        QSettings globals;
 
         QMenu *show_events = new QMenu(this);
         mychanevents.clear();
@@ -489,22 +488,35 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
-        if (serverName.size() > 0) {
-            show_events->addSeparator();
+        show_events->addSeparator();
+
+        QString name = channelNames.value(item->id());
+        QString ip = relay().getIp();
+
+        if(defaultChannel() != name)  {
             action = show_events->addAction(tr("Auto-join"));
-            action->setCheckable(item->id() != 0); // can't disable for main channel
-            action->setChecked(item->id() == 0 ||
-                               autojoinChannels.contains(channelNames.value(item->id())));
-            if (item->id() != 0) {
-                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
-                connect(action, SIGNAL(triggered(bool)), SLOT(toggleAutoJoin(bool)));
-                createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
-                mychanevents.push_back(action);
-            }
+            action->setCheckable(true);
+            action->setChecked(globals.value(QString("AutoJoinChannels/%1").arg(ip)).toStringList().contains(name));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+            connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleAutoJoin(bool)));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+            mychanevents.push_back(action);
         }
+        action = show_events->addAction(tr("Default Channel"));
+        action->setCheckable(true);
+        action->setChecked(defaultChannel() == name);
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleDefaultChannel(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        mychanevents.push_back(action);
 
         show_events->exec(channels->mapToGlobal(point));
     }
+}
+
+QString Client::defaultChannel()
+{
+    return globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
 }
 
 void Client::addChannel(const QString &name, int id)
@@ -522,8 +534,8 @@ void Client::channelNameChanged(int id, const QString &name)
     channelByNames[name.toLower()] = id;
 
     for(int i = 0; i < channels->count(); i++) {
-        if (channels->item(id)->text() == old) {
-            channels->item(id)->setText(name);
+        if (channels->item(i)->text() == old) {
+            channels->item(i)->setText(name);
         }
     }
 
@@ -755,59 +767,51 @@ void Client::goAway(int away)
 
 void Client::showTimeStamps(bool b)
 {
-    QSettings s;
-    s.setValue("show_timestamps", b);
+    globals.setValue("show_timestamps", b);
     showTS = b;
 }
 
 void Client::showTimeStamps2(bool b)
 {
-    QSettings s;
-    s.setValue("show_timestamps2", b);
+    globals.setValue("show_timestamps2", b);
 }
 
 void Client::pmFlash(bool b)
 {
-    QSettings s;
-    s.setValue("pm_flashing", b);
+    globals.setValue("pm_flashing", b);
     pmFlashing = b;
 }
 
 void Client::toggleIncomingPM(bool b)
 {
-    QSettings s;
-    s.setValue("reject_incoming_pms", b);
+    globals.setValue("reject_incoming_pms", b);
     pmReject = b;
 }
 
 void Client::togglePMTabs(bool b)
 {
-    QSettings s;
-    s.setValue("pms_tabbed", b);
+    globals.setValue("pms_tabbed", b);
     pmsTabbed = b;
     emit togglePMs(b);
 }
 
 void Client::togglePMLogs(bool b) {
-    QSettings s;
-    s.setValue("pms_logged", b);
+    globals.setValue("pms_logged", b);
 }
 
 void Client::ignoreServerVersion(bool b)
 {
-    QSettings s;
     QString key  = QString("ignore_version_%1_%2").arg(serverVersion.version).arg(serverVersion.subversion);
     if (b) {
-        s.setValue(key, true);
+        globals.setValue(key, true);
     } else {
-        s.remove(key);
+        globals.remove(key);
     }
 }
 
 void Client::enableLadder(bool b)
 {
-    QSettings s;
-    s.setValue("enable_ladder", b);
+    globals.setValue("enable_ladder", b);
 
     relay().notify(NetworkCli::OptionsChange, Flags(b));
 }
@@ -841,8 +845,8 @@ void Client::disablePlayerEvents()
 }
 
 void Client::deleteCustomEvents() {
-    QSettings s;
     if (selectedChannel != -1) {
+        QSettings s;
         s.beginGroup("channelevents");
         s.beginGroup(channelNames.value(selectedChannel));
         s.remove(""); // removes all settings
@@ -892,7 +896,6 @@ void Client::showPlayerEvents(bool b, int event, QString option)
             }
         }
         /* make sure every setting is saved */
-        QSettings globals;
         foreach (QString str, eventSettings()) {
             if (!s.contains(str)) {
                 s.setValue(str, globals.value(str).toBool());
@@ -927,16 +930,25 @@ void Client::showTeamEvents(bool b)
     showPlayerEvents(b, TeamEvent, "show_player_events_team");
 }
 
-void Client::toggleAutoJoin(bool b)
+void Client::toggleAutoJoin(bool autojoin)
 {
-    QString name = channelNames.value(selectedChannel);
-    if (b) {
-        autojoinChannels.append(name);
+    QStringList AutoJoinChannels = globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+    if(autojoin) {
+        AutoJoinChannels.push_back(channelNames.value(selectedChannel));
     } else {
-        autojoinChannels.removeAll(name);
+        AutoJoinChannels.removeOne(channelNames.value(selectedChannel));
     }
-    QSettings s;
-    s.setValue(QString("autojoinChannels/%1").arg(serverName), autojoinChannels.join("*"));
+    globals.setValue(QString("AutoJoinChannels/%1").arg(relay().getIp()), AutoJoinChannels);
+}
+
+void Client::toggleDefaultChannel(bool d)
+{
+    toggleAutoJoin(false);
+    if (d) {
+        globals.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelNames.value(selectedChannel));
+    } else {
+        globals.remove(QString("DefaultChannels/%1").arg(relay().getIp()));
+    }
 }
 
 void Client::seeRanking(int id)
@@ -1036,8 +1048,8 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
-    if(!mypms.contains(id) && pmReject) {
-        myrelay.sendPM(id, "This player is rejecting incoming PMs.");
+    if(pmReject) {
+        relay().sendPM(id, "This player is rejecting incoming PMs.");
         return;
     }
 
@@ -1049,10 +1061,19 @@ void Client::PMReceived(int id, QString pm)
         startPM(id);
     }
 
+    if(mypms.contains(id) && mypms[id]->isVisible()) {
+        mypms[id]->show();
+    }
+
     registerPermPlayer(id);
     mypms[id]->printLine(pm);
 }
 
+
+void Client::closePM(int id)
+{
+    mypms[id]->close();
+}
 
 void Client::removePM(int id, const QString name)
 {
@@ -1127,12 +1148,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     goaway->setChecked(this->away());
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
-    QSettings s;
-
     QAction * ladd = menuActions->addAction(tr("Enable &ladder"));
     ladd->setCheckable(true);
     connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
-    ladd->setChecked(s.value("enable_ladder").toBool());
+    ladd->setChecked(globals.value("enable_ladder").toBool());
 
     QMenu* show_events = menuActions->addMenu(tr("Player events"));
     showPEvents = NoEvent;
@@ -1148,7 +1167,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable idle events"));
     action->setCheckable(true);
-    action->setChecked(s.value("show_player_events_idle").toBool());
+    action->setChecked(globals.value("show_player_events_idle").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= IdleEvent;
@@ -1159,7 +1178,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable battle events"));
     action->setCheckable(true);
-    action->setChecked(s.value("show_player_events_battle").toBool());
+    action->setChecked(globals.value("show_player_events_battle").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= BattleEvent;
@@ -1170,7 +1189,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable channel events"));
     action->setCheckable(true);
-    action->setChecked(s.value("show_player_events_channel").toBool());
+    action->setChecked(globals.value("show_player_events_channel").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= ChannelEvent;
@@ -1181,7 +1200,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable team change events"));
     action->setCheckable(true);
-    action->setChecked(s.value("show_player_events_team").toBool());
+    action->setChecked(globals.value("show_player_events_team").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= TeamEvent;
@@ -1193,7 +1212,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * show_ts = menuActions->addAction(tr("Enable &timestamps"));
     show_ts->setCheckable(true);
     connect(show_ts, SIGNAL(triggered(bool)), SLOT(showTimeStamps(bool)));
-    show_ts->setChecked(s.value("show_timestamps").toBool());
+    show_ts->setChecked(globals.value("show_timestamps").toBool());
     showTS = show_ts->isChecked();
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
@@ -1201,52 +1220,52 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
     pmsTabbedToggle->setCheckable(true);
     connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
-    pmsTabbedToggle->setChecked(s.value("pms_tabbed").toBool());
+    pmsTabbedToggle->setChecked(globals.value("pms_tabbed").toBool());
 
     QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
     save_logs->setCheckable(true);
     connect(save_logs, SIGNAL(triggered(bool)), SLOT(togglePMLogs(bool)));
-    save_logs->setChecked(s.value("pms_logged").toBool());
+    save_logs->setChecked(globals.value("pms_logged").toBool());
 
     QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
-    show_ts2->setChecked(s.value("show_timestamps2").toBool());
+    show_ts2->setChecked(globals.value("show_timestamps2").toBool());
 
     QAction * pm_flash = pmMenu->addAction(tr("Make new PMs &flash"));
     pm_flash->setCheckable(true);
     connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
-    pm_flash->setChecked(s.value("pm_flashing").toBool());
+    pm_flash->setChecked(globals.value("pm_flashing").toBool());
 
     QAction * pm_reject = pmMenu->addAction(tr("Reject incoming PMs"));
     pm_reject->setCheckable(true);
     connect(pm_reject, SIGNAL(triggered(bool)), SLOT(toggleIncomingPM(bool)));
-    pm_reject->setChecked(s.value("reject_incoming_pms").toBool());
+    pm_reject->setChecked(globals.value("reject_incoming_pms").toBool());
 
     QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
 
     QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
     connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersCountingTiers(bool)));
-    sortByTier->setChecked(s.value("sort_players_by_tier").toBool());
+    sortByTier->setChecked(globals.value("sort_players_by_tier").toBool());
     sortBT = sortByTier->isChecked();
 
     QAction *sortByAuth = sortMenu->addAction(tr("Sort players by auth &level"));
     sortByAuth->setCheckable(true);
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
-    sortByAuth->setChecked(s.value("sort_players_by_auth").toBool());
+    sortByAuth->setChecked(globals.value("sort_players_by_auth").toBool());
     sortBA = sortByAuth->isChecked();
 
     QAction *sortChannelsName = menuActions->addAction(tr("Sort channels by name"));
     sortChannelsName->setCheckable(true);
-    sortChannelsName->setChecked(s.value("sort_channels_by_name").toBool());
+    sortChannelsName->setChecked(globals.value("sort_channels_by_name").toBool());
     connect(sortChannelsName, SIGNAL(triggered(bool)), SLOT(sortChannelsToggle(bool)));
     sortCBN = sortChannelsName->isChecked();
 
     QAction *list_right = menuActions->addAction(tr("Move player list to &right"));
     list_right->setCheckable(true);
     connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
-    list_right->setChecked(s.value("user_list_at_right").toBool());
+    list_right->setChecked(globals.value("user_list_at_right").toBool());
 
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
 
@@ -1263,22 +1282,22 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
-    animateHpBar->setChecked(s.value("animate_hp_bar").toBool());
+    animateHpBar->setChecked(globals.value("animate_hp_bar").toBool());
 
     QAction *oldStyleButtons = battleMenu->addAction(tr("Old school buttons"));
     oldStyleButtons->setCheckable(true);
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
-    oldStyleButtons->setChecked(s.value("old_attack_buttons").toBool());
+    oldStyleButtons->setChecked(globals.value("old_attack_buttons").toBool());
 
     QAction *oldBattleWindow = battleMenu->addAction(tr("Old battle window"));
     oldBattleWindow->setCheckable(true);
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
-    oldBattleWindow->setChecked(s.value("old_battle_window", true).toBool());
+    oldBattleWindow->setChecked(globals.value("old_battle_window", true).toBool());
 
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
-    dontUseNicknames->setChecked(s.value("use_pokemon_names").toBool());
+    dontUseNicknames->setChecked(globals.value("use_pokemon_names").toBool());
 
     mymenubar = menuBar;
 
@@ -1477,20 +1496,17 @@ void Client::openSoundConfig()
 
 void Client::changeButtonStyle(bool old)
 {
-    QSettings s;
-    s.setValue("old_attack_buttons",old);
+    globals.setValue("old_attack_buttons",old);
 }
 
 void Client::changeBattleWindow(bool old)
 {
-    QSettings s;
-    s.setValue("old_battle_window",old);
+    globals.setValue("old_battle_window",old);
 }
 
 void Client::changeNicknames(bool old)
 {
-    QSettings s;
-    s.setValue("use_pokemon_names",old);
+    globals.setValue("use_pokemon_names",old);
 }
 
 void Client::saveBattleLogs(bool save)
@@ -1500,8 +1516,7 @@ void Client::saveBattleLogs(bool save)
 
 void Client::animateHpBar(bool save)
 {
-    QSettings s;
-    s.setValue("animate_hp_bar", save);
+    globals.setValue("animate_hp_bar", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -1524,9 +1539,7 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
                       QColor("#e37800")));
 
     if (level <= 0) {
-        QSettings s;
-
-        if (s.contains(QString("ignore_version_%1_%2").arg(v.version).arg(v.subversion)))
+        if (globals.contains(QString("ignore_version_%1_%2").arg(v.version).arg(v.subversion)))
             return;
 
         QString message;
@@ -1548,15 +1561,11 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
 
 void Client::serverNameReceived(const QString &sName)
 {
-    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(parent());
+    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(topLevelWidget());
     QString titlebase = mainwindow->windowTitle();
     if (serverName.size() > 0) {
         // chop the current title to make room for the new name
         titlebase.chop(3 + serverName.size());
-        // automatically copy settings to new name
-        QSettings settings;
-        QVariant ajc = settings.value(QString("autojoinChannels/%1").arg(serverName));
-        settings.setValue(QString("autojoinChannels/%1").arg(sName), ajc);
     }
     serverName = sName;
     if (serverName.size() > 0) {
@@ -1589,9 +1598,7 @@ void Client::tierListReceived(const QByteArray &tl)
     rebuildTierMenu();
     changeTiersChecked();
 
-    QSettings s;
-
-    if (s.value("sort_players_by_tier").toBool()) {
+    if (globals.value("sort_players_by_tier").toBool()) {
         foreach(Channel *c, mychannels)
             c->sortAllPlayersByTier();
     }
@@ -1611,8 +1618,7 @@ void Client::rebuildTierMenu()
 void Client::sortPlayersCountingTiers(bool byTier)
 {
     sortBT = byTier;
-    QSettings s;
-    s.setValue("sort_players_by_tier", sortBT);
+    globals.setValue("sort_players_by_tier", sortBT);
 
     if (sortBT) {
         foreach(Channel *c, mychannels)
@@ -1626,8 +1632,7 @@ void Client::sortPlayersCountingTiers(bool byTier)
 void Client::sortPlayersByAuth(bool byAuth)
 {
     sortBA = byAuth;
-    QSettings s;
-    s.setValue("sort_players_by_auth", sortBA);
+    globals.setValue("sort_players_by_auth", sortBA);
 
     if (sortBT) {
         foreach(Channel *c, mychannels)
@@ -1640,8 +1645,7 @@ void Client::sortPlayersByAuth(bool byAuth)
 
 void Client::movePlayerList(bool right)
 {
-    QSettings s;
-    s.setValue("user_list_at_right", right);
+    globals.setValue("user_list_at_right", right);
 
     QWidget *mytab = playersW->parentWidget()->parentWidget();
     QWidget *chatcontainer = mainChat->parentWidget();
@@ -1987,23 +1991,29 @@ void Client::connected()
     s.endGroup();
 
     if (reconnectPass.isEmpty()) {
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>());
+        QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+        QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
+        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
+
+    emit PMDisconnected(false);
 }
 
 void Client::disconnected()
 {
-    printLine(tr("Disconnected from Server!"));
-
     if (reconnectPass.length() > 0) {
-        printHtml(tr("If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved."));
+        printHtml(tr("<hr><br>Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved.<br><hr>"));
+    } else {
+        printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
     }
 
     isConnected = false;
     myregister->setText(tr("&Reconnect"));
     myregister->setEnabled(true);
+
+    emit PMDisconnected(true);
 }
 
 TeamHolder* Client::team()
@@ -2013,7 +2023,7 @@ TeamHolder* Client::team()
 
 Analyzer &Client::relay()
 {
-    return myrelay;
+    return *myrelay;
 }
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
@@ -2024,15 +2034,6 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
     mynames[p.name] = p.id;
 
     tiersReceived(tiers);
-
-    if (serverName.size() > 0) {
-        QSettings settings;
-        autojoinChannels = settings.value(QString("autojoinChannels/%1").arg(serverName)).toString().split("*");
-        autojoinChannels.removeAll("");
-        foreach (QString channel, autojoinChannels) {
-            join(channel);
-        }
-    }
 }
 
 void Client::tiersReceived(const QStringList &tiers)
@@ -2217,9 +2218,13 @@ void Client::openTeamBuilder()
 
     secondTeam = *team();
 
+    QStackedWidget *central = new QStackedWidget;
+    central->setObjectName("CentralWidget");
+
     TeamBuilder *t = new TeamBuilder(&secondTeam);
     myteambuilder->resize(t->size());
-    myteambuilder->setCentralWidget(t);
+    myteambuilder->setCentralWidget(central);
+    central->addWidget(t);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
     if (top) {
@@ -2237,7 +2242,8 @@ void Client::openTeamBuilder()
 void Client::reloadTeamBuilderBar()
 {
     if (top) {
-        myteambuilder->setMenuBar(((TeamBuilder*)myteambuilder->centralWidget())->createMenuBar(top));
+        TeamBuilder *tb = dynamic_cast<TeamBuilder*>(dynamic_cast<QStackedWidget*>(myteambuilder->centralWidget())->widget(0));
+        myteambuilder->setMenuBar(tb->createMenuBar(top));
     }
 }
 

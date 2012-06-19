@@ -29,38 +29,56 @@ PMSystem::~PMSystem()
 void PMSystem::startPM(PMStruct *newPM)
 {
     if(tabbedPMs) {
+        newPM->setWindowFlags(Qt::Widget);
         myPMs->addTab(newPM, newPM->name());
-        connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
         checkTabbing();
     } else {
+        newPM->setWindowFlags(Qt::Window);
         newPM->show();
     }
     myPMWindows.insert(newPM->id(), newPM);
+
+    connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
+    connect(newPM, SIGNAL(idChanged(int,int)), SLOT(changeId(int,int)));
+    connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
+}
+
+void PMSystem::removePM(int pmid)
+{
+    PMStruct *pm = myPMWindows.take(pmid);
+
+    if (pm) {
+        pm->deleteLater();
+
+        if (tabbedPMs) {
+            for (int i = 0; i < myPMs->count(); i++) {
+                if (myPMs->widget(i) == pm) {
+                    myPMs->removeTab(i);
+                    break;
+                }
+            }
+            checkTabbing();
+        }
+    }
 }
 
 void PMSystem::closeTab(int tabNum)
 {
     PMStruct *widget = (PMStruct*) myPMs->widget(tabNum);
-    widget->deleteLater();
-    myPMs->removeTab(tabNum);
-    myPMWindows.remove(widget->id());
-    checkTabbing();
+    removePM(widget->id());
 }
 
 void PMSystem::checkTabbing()
 {
     if(myPMs->count() <= 0) {
-        close();
+        hide();
     } else {
-        if(myPMs->count() >= 1) {
-            show();
-        }
+        show();
     }
 }
 
 void PMSystem::tabChanged(int tabNum)
 {
-    // We're avoiding crash if we don't have any tab on the myPMs.
     if(myPMs->count() <= 0) {
         return;
     }
@@ -72,24 +90,35 @@ void PMSystem::tabChanged(int tabNum)
 void PMSystem::togglePMs(bool toggled)
 {
     tabbedPMs = toggled;
-    if(tabbedPMs) {
-        foreach(PMStruct *pm, myPMWindows) {
-            // Otherwise it wont be added to the myPMs :(
-            pm->setWindowFlags(Qt::Widget);
-            myPMs->addTab(pm, pm->name());
-            show();
+    changePMs();
+}
+
+void PMSystem::changePMs()
+{
+    if(!tabbedPMs) {
+        while (myPMs->count() > 0) {
+            myPMs->removeTab(0);
         }
-    } else {
         foreach(PMStruct *pm, myPMWindows) {
-            while(myPMs->count() > 0) {
-                myPMs->removeTab(0);
-            }
-            // Otherwise new window wouldn't show :(
             pm->setWindowFlags(Qt::Window);
             pm->show();
-            hide();
+        }
+        hide();
+    } else {
+        foreach(PMStruct *pm, myPMWindows) {
+            pm->hide();
+            pm->setWindowFlags(Qt::Widget);
+            myPMs->addTab(pm, pm->name());
+        }
+        if (myPMs->count() > 0) {
+            show();
         }
     }
+}
+
+void PMSystem::changeId(int old, int newid)
+{
+    myPMWindows[newid] = myPMWindows.take(old);
 }
 
 void PMSystem::messageReceived(PMStruct *pm) {
@@ -117,13 +146,21 @@ void PMSystem::messageReceived(PMStruct *pm) {
 
 }
 
+void PMSystem::PMDisconnected(bool value)
+{
+    foreach(PMStruct *pm, myPMWindows) {
+        pm->disconnected(value);
+    }
+}
+
 PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
     : m_ownName(ownName), escape_html(!html)
 {
-    setAttribute(Qt::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_DeleteOnClose);
 
     this->id() = id;
     changeName(name);
+    SaveLog = false;
 
     QGridLayout *l = new QGridLayout(this);
     this->setLayout(l);
@@ -138,10 +175,11 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_send = new QPushButton(tr("&Ignore"));
     m_send->setCheckable(true);
 
-    log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
     QSettings s;
     if(s.value("pms_logged").toBool()) {
+        log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
         log->override = Log::OverrideYes;
+        SaveLog = true;
     }
 
     l->addWidget(m_challenge,2,0);
@@ -185,10 +223,6 @@ void PMStruct::printLine(QString line, bool self)
         printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
     } else {
         printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line, false);
-//        if (!QApplication::activeWindow()) {
-//            QApplication::alert(this, 10000);
-//            //raise();
-//        }
     }
 }
 
@@ -202,7 +236,9 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
-    log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
+    if(SaveLog) {
+        log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
+    }
     emit messageReceived(this);
 }
 
@@ -243,15 +279,35 @@ void PMStruct::disable()
     m_send->setDisabled(true);
     m_textToSend->setDisabled(true);
 }
+
 void PMStruct::reuse(int id)
 {
     if (this->id() == id) return;
+
+    int oldid = this->id();
 
     this->id() = id;
     printHtml("<i>" + tr("The player has logged on again") + "</i>");
     m_challenge->setEnabled(true);
     m_send->setEnabled(true);
     m_textToSend->setEnabled(true);
+
+    emit idChanged(oldid, id);
+}
+
+void PMStruct::disconnected(bool value)
+{
+    if(value) {
+        printHtml("<i>" + tr("You've been disconnected from server.") + "</i>");
+        m_challenge->setEnabled(false);
+        m_send->setEnabled(false);
+        m_textToSend->setEnabled(false);
+    } else {
+        printHtml("<i>" + tr("You've been reconnected to the server."), + "</i>");
+        m_challenge->setEnabled(true);
+        m_send->setEnabled(true);
+        m_textToSend->setEnabled(true);
+    }
 }
 
 void PMStruct::closeEvent(QCloseEvent *event) {

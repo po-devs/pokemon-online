@@ -60,5 +60,5 @@
 6#Anti super effective: gain hp after being hit by a super effective attack
 10#pinch Accuracy once berry
 11#pinch move first just once
-12-0#Physical recoil
-12-1#Special recoil
+12-1#Physical recoil
+12-2#Special recoil

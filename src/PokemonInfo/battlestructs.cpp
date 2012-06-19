@@ -325,6 +325,11 @@ void ShallowBattlePoke::changeStatus(int status)
     fullStatus() = fullStatus() | (1 << status);
 }
 
+bool ShallowBattlePoke::hasStatus(int status) const
+{
+    return fullStatus() & (1 << status);
+}
+
 void ShallowBattlePoke::addStatus(int status)
 {
     if (status <= Pokemon::Poisoned) {

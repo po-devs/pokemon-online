@@ -13,6 +13,7 @@
 
 Player::Player(const GenericSocket &sock, int id)
 {
+    loginInfo() = NULL;
     m_bundle.id = id;
 
     myrelay = new Analyzer(sock, id);
@@ -21,6 +22,7 @@ Player::Player(const GenericSocket &sock, int id)
     myip = relay().ip();
     server_pass_sent = false;
     needToUpdate = false;
+
 
     m_bundle.auth = 0;
 
@@ -33,12 +35,17 @@ Player::Player(const GenericSocket &sock, int id)
 Player::~Player()
 {
     delete myrelay;
+
+    if (loginInfo()) {
+        delete loginInfo();
+    }
 }
 
 void Player::doConnections()
 {
     connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
+    connect(&relay(), SIGNAL(logout()), SLOT(logout()));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
     connect(&relay(), SIGNAL(teamChanged(const ChangeTeamInfo&)), SLOT(recvTeam(const ChangeTeamInfo&)));
@@ -79,7 +86,7 @@ void Player::autoKick()
 {
     if (!isLoggedIn()) {
         blockSignals(false); // In case we autokick an alt that was already disconnected
-        kick();
+        disconnected();
     }
 }
 
@@ -467,7 +474,7 @@ void Player::setInfo(const QString &newInfo)  {
 }
 
 void Player::kick() {
-    relay().close();
+    emit logout(id());
 }
 
 void Player::disconnected()
@@ -779,13 +786,15 @@ void Player::giveBanList()
     if (auth() == 0) {
         return; //INVALID BEHAVIOR
     }
-    QHash<QString, QString> bannedMembers = SecurityManager::banList();
+    QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
 
-    QHashIterator<QString, QString> it(bannedMembers);
+    QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
 
     while (it.hasNext()) {
         it.next();
-        relay().notify(NetworkServ::GetBanList, it.key(), it.value());
+        if (it.value().second == 0) {
+            relay().notify(NetworkServ::GetBanList, it.key(), it.value().first);
+        }
     }
 }
 
@@ -861,6 +870,11 @@ bool Player::away() const
 bool Player::waitingForReconnect() const
 {
     return state()[WaitingReconnect] && !isLoggedIn();
+}
+
+bool Player::discarded() const
+{
+    return state()[DiscardedId];
 }
 
 bool Player::connected() const
@@ -954,6 +968,7 @@ void Player::associateWith(Player *other)
 
     other->myip = other->myrelay->ip();
     myip = myrelay->ip();
+    std::swap(proxyip, other->proxyip);
 
     lockCount = 0;
 
@@ -967,14 +982,19 @@ void Player::associateWith(Player *other)
     m.ip = ip().toAscii();
     SecurityManager::updateMember(m);
 
-    /* Deals with anti DOS */
-    AntiDos::obj()->connecting(ip());
-
-    other->disconnected();
+    if (!isLoggedIn()) {
+        other->changeState(DiscardedId, true);
+    }
+    other->logout();
 }
 
 void Player::loggedIn(LoginInfo *info)
 {
+    if (loginInfo()) {
+        delete loginInfo();
+    }
+    loginInfo() = info;
+
     if (state()[LoginAttempt])
         return;
 

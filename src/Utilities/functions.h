@@ -20,7 +20,7 @@ QString escapeHtml(const QString &toConvert);
 #define PROPERTY(type, name) \
 public: \
     inline type& name() { return m_prop_##name;}\
-    inline const type &name() const { return m_prop_##name;} \
+    inline type const &name() const { return m_prop_##name;} \
 private: \
     type m_prop_##name;\
 public:

@@ -1,33 +1,17 @@
 #ifndef MECHANICS_H
 #define MECHANICS_H
 
-#include <QtCore>
+#include "mechanicsbase.h"
 #include "battle.h"
 
-struct Mechanics
+struct Mechanics : public MechanicsBase<BattleSituation::MechanicsFunction>
 {
-    /* Returns b.turnlong[player], used for convenience cuz shorter */
-    static BattleSituation::context & turn(BattleSituation &b, int player);
-    static BattleSituation::TurnMemory & fturn(BattleSituation &b, int player);
-    static BattleSituation::context & poke(BattleSituation &b, int player);
-    static BattleSituation::BasicPokeInfo & fpoke(BattleSituation &b, int player);
-    static BattleSituation::context & team(BattleSituation &b, int player);
-    static BattleSituation::context & slot(BattleSituation &b, int player);
-    static int move(BattleSituation &b, int source);
-    static int type(BattleSituation &b, int source);
+    static BattleBase::context & team(BattleSituation &b, int player);
+    static BattleBase::context & slot(BattleSituation &b, int player);
+
     static BattleSituation::priorityBracket makeBracket(int b, int p);
-    static BattleBase::BasicMoveInfo & tmove(BattleBase &b, int source);
 
     typedef BattleSituation::MechanicsFunction function;
-
-    QHash<QString, function> functions;
-
-    static void addFunction(BattleSituation::context &c, const QString &effect, const QString &name, Mechanics::function f);
-    static void removeFunction(BattleSituation::context &c, const QString &effect, const QString &name);
 };
-
-/* For use with QVariants */
-Q_DECLARE_METATYPE(QSharedPointer<QSet<QString> >)
-Q_DECLARE_METATYPE(Mechanics::function)
 
 #endif // MECHANICS_H

@@ -166,6 +166,7 @@ bool Analyzer::isConnected() const
 
 void Analyzer::stopReceiving()
 {
+    blockSignals(true);
     socket().close();
 }
 
@@ -208,10 +209,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     case Login:
         {
             if (socket().id() != 0) {
-                LoginInfo info;
-                in >> info;
+                LoginInfo *info = new LoginInfo();
+                in >> *info;
 
-                emit loggedIn(&info);
+                emit loggedIn(info);
             } else
                 emit accepted(); // for registry;
 

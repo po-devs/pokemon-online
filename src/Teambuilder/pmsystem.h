@@ -20,12 +20,16 @@ public:
 
     void startPM(PMStruct *newPM);
     void checkTabbing();
+    void changePMs();
 
 private slots:
     void closeTab(int tabNum);
     void tabChanged(int tabNum);
     void togglePMs(bool toggled);
     void messageReceived(PMStruct *pm);
+    void PMDisconnected(bool value);
+    void removePM(int pm);
+    void changeId(int old, int newid);
 
 private:
     QExposedTabWidget *myPMs;
@@ -49,6 +53,7 @@ public:
     void printLine(QString line, bool self = false);
     void disable();
     void reuse(int id);
+    void disconnected(bool value);
 
     QString name() const {
         return m_name;
@@ -67,6 +72,7 @@ signals:
     void challengeSent(int id);
     void destroyed(int id, QString name);
     void ignore(int id, bool);
+    void idChanged(int oldid, int newid);
 
 public slots:
     void sendMessage();
@@ -80,6 +86,7 @@ private:
     QString m_name;
     QString m_ownName;
     bool escape_html;
+    bool SaveLog;
 
     Log *log;
 

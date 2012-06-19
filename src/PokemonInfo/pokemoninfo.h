@@ -3,7 +3,7 @@
 
 #include "pokemonstructs.h"
 #include <QtCore>
-
+#include <QMovie>
 class PokeBaseStats;
 class QPixmap;
 
@@ -82,6 +82,9 @@ public:
     static int Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX);
     static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
     static QPixmap Picture(const QString &url);
+    static QMovie  *AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back);
+    static bool HasAnimatedSprites();
+    static bool HasAnimatedSpritesEnabled();
     static QPixmap Sub(Pokemon::gen gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid);
     static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen = GEN_MAX);
@@ -249,7 +252,7 @@ public:
     static QStringList MoveList();
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
-    static QString SpecialEffect(int movenum);
+    static QString SpecialEffect(int movenum, Pokemon::gen gen);
     static void setPower(int movenum, unsigned char power, int moveGen);
     static void setAccuracy(int movenum, char accuracy, int moveGen);
     static void setPP(int movenum, char pp, int moveGen);
@@ -259,7 +262,7 @@ private:
     static QHash<QString, int> m_LowerCaseMoves;
     static QList<QStringList> m_MoveMessages;
     static QList<QString> m_Details;
-    static QList<QString> m_SpecialEffects;
+    static QList<QString> m_SpecialEffects, m_RbySpecialEffects;
     static QList<int> m_OldMoves;
     static QVector<bool> m_KingRock;
 
@@ -376,7 +379,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static int Number(const QString &type);
-    static int Eff(int type_attack, int type_defend); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
+    static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GEN_MAX); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
     static int Category(int type);
@@ -395,6 +398,7 @@ private:
     static QList<QString> m_Names;
     static QString m_Directory;
     static QList<int> m_TypeVsType;
+    static QList<int> m_TypeVsTypeGen1;
     static QList<int> m_Categories;
 
     static void loadNames();

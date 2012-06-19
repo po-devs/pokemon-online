@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PokeButtonsHolder</class>
+ <widget class="QWidget" name="PokeButtonsHolder">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="PokeButton" name="pokemon0">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="PokeButton" name="pokemon2">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="PokeButton" name="pokemon3">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="PokeButton" name="pokemon4">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="PokeButton" name="pokemon5">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="PokeButton" name="pokemon1">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PokeButton</class>
+   <extends>QPushButton</extends>
+   <header>Teambuilder/pokebutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>pokemon0</tabstop>
+  <tabstop>pokemon1</tabstop>
+  <tabstop>pokemon2</tabstop>
+  <tabstop>pokemon3</tabstop>
+  <tabstop>pokemon4</tabstop>
+  <tabstop>pokemon5</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

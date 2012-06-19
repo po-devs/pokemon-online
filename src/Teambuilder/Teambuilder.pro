@@ -3,16 +3,18 @@ QT += network \
     phonon \
     declarative \
     opengl
+
 TARGET = Pokemon-Online
+
 DESTDIR = ../../bin
+
 TEMPLATE = app
+
 SOURCES += main.cpp \
-    menu.cpp \
     mainwindow.cpp \
     network.cpp \
     client.cpp \
     analyze.cpp \
-    serverchoice.cpp \
     battlewindow.cpp \
     controlpanel.cpp \
     basebattlewindow.cpp \
@@ -22,61 +24,58 @@ SOURCES += main.cpp \
     tierstruct.cpp \
     theme.cpp \
     rearrangewindow.cpp \
-    poketablemodel.cpp \
-    pokemovesmodel.cpp \
-    Teambuilder/pokedex.cpp \
-    Teambuilder/box.cpp \
-    Teambuilder/trainerbody.cpp \
-    Teambuilder/avatarbox.cpp \
-    Teambuilder/pokeballed.cpp \
-    Teambuilder/evmanager.cpp \
-    Teambuilder/pokebody.cpp \
-    Teambuilder/advanced.cpp \
-    Teambuilder/teambody.cpp \
-    Teambuilder/dockinterface.cpp \
-    Teambuilder/pokebodywidget.cpp \
     logmanager.cpp \
     poketextedit.cpp \
-    trainermenu.cpp \
-    pokebuttonsholder.cpp \
-    pokebutton.cpp \
-    teamholder.cpp \
-    teambuilder.cpp \
-    Teambuilder/teambuilder_old.cpp \
-    teammenu.cpp \
-    pokeedit.cpp \
-    evbox.cpp \
-    pokelevelsettings.cpp \
     spectatorwindow.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp \
     password_wallet.cpp \
     pmsystem.cpp \
-    ivbox.cpp \
-    teamimporter.cpp \
     challengedialog.cpp \
     tierratingbutton.cpp \
     findbattledialog.cpp \
-    teamline.cpp \
-    pokeselection.cpp \
-    pokechoice.cpp
-HEADERS +=  ../PokemonInfo/pokemoninfo.h \
-    menu.h \
-    mainwindow.h \
-    ../PokemonInfo/pokemonstructs.h \
+    menu.cpp \
+    serverchoice.cpp \
+    Teambuilder/poketablemodel.cpp \
+    Teambuilder/pokemovesmodel.cpp \
+    Teambuilder/trainermenu.cpp \
+    Teambuilder/pokebuttonsholder.cpp \
+    Teambuilder/pokebutton.cpp \
+    Teambuilder/teamholder.cpp \
+    Teambuilder/teambuilder.cpp \
+    Teambuilder/teammenu.cpp \
+    Teambuilder/pokeedit.cpp \
+    Teambuilder/evbox.cpp \
+    Teambuilder/pokelevelsettings.cpp \
+    Teambuilder/teamline.cpp \
+    Teambuilder/pokeselection.cpp \
+    Teambuilder/ivbox.cpp \
+    Teambuilder/teamimporter.cpp \
+    Teambuilder/pokechoice.cpp \
+    Teambuilder/pokeboxes.cpp
+
+HEADERS += ../PokemonInfo/pokemonstructs.h \
+    ../PokemonInfo/battlestructs.h \
+    ../PokemonInfo/networkstructs.h \
+    ../PokemonInfo/pokemoninfo.h \
+    ../PokemonInfo/movesetchecker.h \
+    ../BattleManager/battlescene.h \
+    ../BattleManager/battleinput.h \
+    ../BattleManager/battledatatypes.h \
+    ../BattleManager/battledata.h \
+    ../BattleManager/battleclientlog.h \
+    ../Utilities/functions.h \
+    ../Utilities/coreclasses.h \
     ../Utilities/otherwidgets.h \
+    ../Shared/config.h \
+    ../Shared/networkcommands.h \
+    mainwindow.h \
     network.h \
     client.h \
     analyze.h \
-    serverchoice.h \
-    ../PokemonInfo/battlestructs.h \
-    ../PokemonInfo/networkstructs.h \
     battlewindow.h \
-    ../Utilities/functions.h \
     controlpanel.h \
     basebattlewindow.h \
-    ../PokemonInfo/movesetchecker.h \
-    ../Shared/config.h \
     ranking.h \
     pluginmanager.h \
     plugininterface.h \
@@ -85,76 +84,67 @@ HEADERS +=  ../PokemonInfo/pokemoninfo.h \
     tierstruct.h \
     theme.h \
     rearrangewindow.h \
-    ../Shared/networkcommands.h \
-    poketablemodel.h \
-    modelenum.h \
-    pokemovesmodel.h \
-    Teambuilder/pokedex.h \
-    Teambuilder/box.h \
-    Teambuilder/trainerbody.h \
-    Teambuilder/avatarbox.h \
-    Teambuilder/pokeballed.h \
-    Teambuilder/teambody.h \
-    Teambuilder/pokebody.h \
-    Teambuilder/evmanager.h \
-    Teambuilder/advanced.h \
-    Teambuilder/dockinterface.h \
-    Teambuilder/pokebodywidget.h \
     engineinterface.h \
     logmanager.h \
     poketextedit.h\
     password_wallet.h\
-    ../BattleManager/battlescene.h \
-    ../BattleManager/battleinput.h \
-    ../BattleManager/battledatatypes.h \
-    ../BattleManager/battledata.h \
-    ../BattleManager/battleclientlog.h \
     basebattlewindowinterface.h \
     themeaccessor.h \
-    ../Utilities/coreclasses.h \
-    teamholder.h \
-    trainermenu.h \
-    pokebuttonsholder.h \
-    teamholderinterface.h \
-    pokebutton.h \
-    teambuilder.h \
-    Teambuilder/teambuilder_old.h \
-    teammenu.h \
-    teambuilderwidget.h \
-    pokeedit.h \
-    evbox.h \
-    pokelevelsettings.h \
     soundconfigwindow.h \
     replayviewer.h \
     password_wallet.h \
     pmsystem.h \
-    ivbox.h \
-    teamimporter.h \
     challengedialog.h \
     tierratingbutton.h \
     findbattledialog.h \
-    teamline.h \
     tieractionfactory.h \
-    pokeselection.h \
-    pokechoice.h
+    menu.h \
+    Teambuilder/pokeselection.h \
+    Teambuilder/pokechoice.h \
+    Teambuilder/poketablemodel.h \
+    Teambuilder/modelenum.h \
+    Teambuilder/pokemovesmodel.h \
+    Teambuilder/teamholder.h \
+    Teambuilder/trainermenu.h \
+    Teambuilder/pokebuttonsholder.h \
+    Teambuilder/teamholderinterface.h \
+    Teambuilder/pokebutton.h \
+    Teambuilder/teambuilder.h \
+    Teambuilder/teammenu.h \
+    Teambuilder/teambuilderwidget.h \
+    Teambuilder/pokeedit.h \
+    Teambuilder/evbox.h \
+    Teambuilder/pokelevelsettings.h \
+    Teambuilder/ivbox.h \
+    Teambuilder/teamimporter.h \
+    Teambuilder/teamline.h \
+    serverchoice.h \
+    Teambuilder/pokeboxes.h
+
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
     -lbattlelib
+
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-FORMS += controlpanel.ui \
-    trainermenu.ui \
-    pokebuttonsholder.ui \
-    pokebutton.ui \
-    pokeedit.ui \
-    evbox.ui \
-    pokelevelsettings.ui \
-    ivbox.ui \
+
+FORMS += Teambuilder/trainermenu.ui \
+    Teambuilder/pokebuttonsholder.ui \
+    Teambuilder/pokebutton.ui \
+    Teambuilder/pokeedit.ui \
+    Teambuilder/evbox.ui \
+    Teambuilder/pokelevelsettings.ui \
+    Teambuilder/ivbox.ui \
+    Teambuilder/teamline.ui \
+    Teambuilder/pokeselection.ui \
+    controlpanel.ui \
     challengedialog.ui \
     tierratingbutton.ui \
     findbattledialog.ui \
-    teamline.ui \
-    pokeselection.ui
+    menu.ui \
+    serverchoice.ui \
+    Teambuilder/pokeboxes.ui
+
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
     translation_es.ts \
@@ -171,18 +161,24 @@ TRANSLATIONS = translation_cz.ts \
     translation_sv.ts \
     translation_zh-cn.ts \
     translation_tr.ts
-RC_FILE = myapp.rc
-RESOURCES += 
 
+RC_FILE = myapp.rc
+
+RESOURCES += 
 
 macx {
    LIBS += -framework CoreFoundation
    ICON = pokemononline.icns
    QMAKE_INFO_PLIST = Info.plist
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-   QMAKE_POST_LINK = macdeployqt $${DESTDIR}/$${TARGET}.app
+   LINKLIBS = libutilities.1.0.0.dylib libpokemonlib.1.0.0.dylib libbattlelib.1.0.0.dylib
+   QMAKE_POST_LINK = mkdir -p $${DESTDIR}/$${TARGET}.app/Contents/Frameworks;
+   for(L, LINKLIBS) {
+       QMAKE_POST_LINK += cp -f $${DESTDIR}/$${L} $${DESTDIR}/$${TARGET}.app/Contents/Frameworks/;
+       QMAKE_POST_LINK += ln -s $${L} $${DESTDIR}/$${TARGET}.app/Contents/Frameworks/$$replace(L, 1.0.0, 1);
+   }
+   QMAKE_POST_LINK += macdeployqt $${DESTDIR}/$${TARGET}.app
 }
-
 
 CONFIG(debian) {
     DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"

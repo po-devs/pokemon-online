@@ -29,6 +29,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(Flags, spec);
     PROPERTY(Flags, state);
     PROPERTY(quint8, reconnectBits);
+    PROPERTY(LoginInfo*, loginInfo);
 public:
     enum State
     {
@@ -37,7 +38,8 @@ public:
         Battling,
         Away,
         LadderEnabled,
-        WaitingReconnect
+        WaitingReconnect,
+        DiscardedId
     };
 
     enum Spec
@@ -98,6 +100,7 @@ public:
     void removeBattle(int battleid);
     bool away() const;
     bool waitingForReconnect() const;
+    bool discarded() const;
     bool inSearchForBattle() const { return battleSearch(); }
     void cancelBattleSearch();
     void changeState(int newstate, bool on);
@@ -292,6 +295,9 @@ private:
 
     /* The channels a player is on */
     QSet<int> channels;
+
+    /* Autojoin Channels */
+    QStringList additionalChannels;
 
     void assignNewColor(const QColor &c);
     void assignTrainerInfo(const TrainerInfo &info);
