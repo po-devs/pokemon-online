@@ -469,8 +469,10 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+    acc = acc*255/100;
+
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(255*30, 256*100);
+        bool ret = coinflip(255*30/100, 256);
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -479,7 +481,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
 
     acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion);
 
-    if (coinflip(unsigned(acc)*255, 100*256)) {
+    if (coinflip(acc, 256)) {
         return true;
     } else {
         if (!silent) {
