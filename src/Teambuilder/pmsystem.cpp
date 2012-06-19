@@ -115,6 +115,11 @@ void PMSystem::changePMs()
     }
 }
 
+void PMSystem::changeId(int old, int newid)
+{
+    myPMWindows[newid] = myPMWindows.take(old);
+}
+
 void PMSystem::messageReceived(PMStruct *pm) {
     if(isVisible()) {
         if(pm->state == PMStruct::NewMessage) {
@@ -278,11 +283,15 @@ void PMStruct::reuse(int id)
 {
     if (this->id() == id) return;
 
+    int oldid = this->id();
+
     this->id() = id;
     printHtml("<i>" + tr("The player has logged on again") + "</i>");
     m_challenge->setEnabled(true);
     m_send->setEnabled(true);
     m_textToSend->setEnabled(true);
+
+    emit idChanged(oldid, id);
 }
 
 void PMStruct::disconnected(bool value)
