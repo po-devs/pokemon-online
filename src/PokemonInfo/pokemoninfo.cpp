@@ -1459,9 +1459,9 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(maxTurns, path("max_turns.txt"));
     fill_container_with_file(minTurns, path("min_turns.txt"));
     fill_container_with_file(minMaxHits, path("min_max_hits.txt"));
-    fill_container_with_file(none0, path("None0.txt"));
-    fill_container_with_file(none1, path("None1.txt"));
-    fill_container_with_file(none2, path("None2.txt"));
+    fill_container_with_file(none0, path("stataffected.txt"));
+    fill_container_with_file(none1, path("statboost.txt"));
+    fill_container_with_file(none2, path("statrate.txt"));
     fill_container_with_file(power, path("power.txt"));
     fill_container_with_file(pp, path("pp.txt"));
     fill_container_with_file(priority, path("priority.txt"));
