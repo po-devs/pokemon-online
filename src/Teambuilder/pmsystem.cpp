@@ -31,7 +31,6 @@ void PMSystem::startPM(PMStruct *newPM)
     if(tabbedPMs) {
         newPM->setWindowFlags(Qt::Widget);
         myPMs->addTab(newPM, newPM->name());
-        connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
         checkTabbing();
     } else {
         newPM->setWindowFlags(Qt::Window);
@@ -39,6 +38,8 @@ void PMSystem::startPM(PMStruct *newPM)
     }
     myPMWindows.insert(newPM->id(), newPM);
 
+    connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
+    connect(newPM, SIGNAL(idChanged(int,int)), SLOT(changeId(int,int)));
     connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
 }
 
