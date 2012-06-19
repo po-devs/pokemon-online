@@ -36,7 +36,6 @@ public:
 
     /* Commands for the battle situation */
     void engageBattle();
-    void beginTurn();
     void endTurn();
     void personalEndTurn(int source);
     void endTurnStatus(int player);
@@ -374,6 +373,7 @@ private:
     QVector<int> indexes;
 };
 
+Q_DECLARE_METATYPE(BattleSituation::MechanicsFunction)
 Q_DECLARE_METATYPE(QSharedPointer<QSet<int> >)
 
 #endif // BATTLE_H

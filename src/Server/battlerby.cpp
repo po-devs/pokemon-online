@@ -1,5 +1,6 @@
 #include "battlerby.h"
 #include "../Shared/battlecommands.h"
+#include "rbymoves.h"
 
 using namespace BattleCommands;
 typedef BattleBase::TurnMemory TM;
@@ -15,26 +16,6 @@ BattleRBY::BattleRBY(Player &p1, Player &p2, const ChallengeInfo &additionnalDat
 BattleRBY::~BattleRBY()
 {
     onDestroy();
-}
-
-void BattleRBY::beginTurn()
-{
-    turn() += 1;
-    /* Resetting temporary variables */
-    for (int i = 0; i < numberOfSlots(); i++) {
-        turnMem(i).reset();
-        tmove(i).reset();
-    }
-
-    attackCount() = 0;
-
-    requestChoices();
-
-    /* preventing the players from cancelling (like when u-turn/Baton pass) */
-    for (int i = 0; i < numberOfSlots(); i++)
-        couldMove[i] = false;
-
-    analyzeChoices();
 }
 
 void BattleRBY::endTurn()
@@ -246,6 +227,8 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         damage = 1;
     }
 
+    pokeMemory(player)["DamageInflicted"] = damage;
+
     bool sub = hasSubstitute(player);
 
     if (sub && (player != source || goForSub) && straightattack) {
@@ -329,7 +312,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     turnMem(player).remove(TM::Failed);
     turnMem(player).add(TM::FailingMessage);
 
+    // Miss
     if (target != player && !testAccuracy(player, target)) {
+        pokeMemory(player).remove("DamageInflicted");
         goto endloop;
     }
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
@@ -464,7 +449,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     int move = tmove(player).attack;
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform) {
+    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform || move == Move::Bide) {
         return true;
     }
 
@@ -494,5 +479,65 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
         }
         //Hi jump kick, jump kick
         return false;
+    }
+}
+
+
+void BattleRBY::inflictRecoil(int source, int target)
+{
+    int recoil = tmove(source).recoil;
+
+    if (recoil == 0)
+        return;
+
+    //Rockhead, MagicGuard
+    if (koed(source)) {
+        return;
+    }
+
+    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
+    if (koed(target) && recoil < 0) {
+        return;
+    }
+
+    // If move defeats a sub, no recoil damage is applied in RBY.
+    if (hadSubstitute(target)) {
+        return;
+    }
+
+    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
+
+    // "33" means one-third
+    //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
+
+    int damage = std::abs(int(recoil * turnMem(target).damageTaken / 100));
+
+    if (recoil < 0) {
+        inflictDamage(source, damage, source, false);
+
+        /* Self KO Clause! */
+        if (koed(source)) {
+            selfKoer() = source;
+        }
+    } else  {
+        healLife(source, damage);
+    }
+}
+
+void BattleRBY::callpeffects(int source, int target, const QString &name)
+{
+    if (pokeMemory(source).contains("Effect_" + name)) {
+        turnMemory(source)["PokeEffectCall"] = true;
+        QSet<QString> &effects = *pokeMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
+
+        foreach(QString effect, effects) {
+            MechanicsFunction f = pokeMemory(source).value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
+
+            /* If a pokemons dies from leechseed,its status changes, and so nightmare function would be removed
+               but still be in the foreach, causing a crash */
+            if(f)
+                f(source, target, *this);
+        }
+        turnMemory(source)["PokeEffectCall"] = false;
     }
 }

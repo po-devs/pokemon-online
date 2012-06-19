@@ -37,7 +37,9 @@ SOURCES += main.cpp \
     battlecounters.cpp \
     moves/moves1.cpp \
     battlebase.cpp \
-    battlerby.cpp
+    battlerby.cpp \
+    rbymoves.cpp \
+    mechanicsbase.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -101,7 +103,9 @@ HEADERS += player.h \
     playerstructs.h \
     networkutilities.h \
     battlebase.h \
-    battlerby.h
+    battlerby.h \
+    rbymoves.h \
+    mechanicsbase.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

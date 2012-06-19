@@ -1,18 +1,25 @@
-#ifndef MOVES_H
-#define MOVES_H
+#ifndef RBYMOVES_H
+#define RBYMOVES_H
 
-#include "mechanics.h"
-#include "battlebase.h"
+#include "mechanicsbase.h"
+#include "battlerby.h"
 
 /* MoveMechanics works by inserting functions into the contexts of the battle situation,
     that are then called when necessary. The functions are inserted by MoveEffect::setup,
     in fact it checks the non-NULL members of type 'function' of a derived class of MoveMechanics
     and insert them into the battle situation according to the name of the effect */
-typedef Mechanics MoveMechanics;
+
+struct RBYMechanics : public MechanicsBase<BattleRBY::MechanicsFunction> {
+    typedef BattleRBY::MechanicsFunction function;
+};
+
+typedef RBYMechanics MoveMechanics;
 
 /* Used to tell us everything about a move */
-struct MoveEffect
+struct RBYMoveEffect
 {
+    RBYMoveEffect(int num, Pokemon::gen gen, BattleBase::BasicMoveInfo &bmi);
+
     static void setup(int movenum, int source, int target, BattleBase &b);
     static void unsetup(int movenum, int source, BattleBase &b);
 
@@ -23,4 +30,4 @@ struct MoveEffect
     static void init();
 };
 
-#endif // MOVES_H
+#endif // RBYMOVES_H

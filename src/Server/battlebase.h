@@ -51,7 +51,7 @@ protected:
     void onDestroy(); //call in the sub class destructor
 
     virtual void engageBattle();
-    virtual void beginTurn() = 0;
+    virtual void beginTurn();
     virtual void endTurn() = 0;
     virtual void initializeEndTurnFunctions() = 0;
 public:
@@ -216,6 +216,9 @@ protected:
 
     virtual BattleChoice &choice (int p) = 0;
 public:
+    /* This time the pokelong effects */
+    virtual void callpeffects(int source, int target, const QString &name) = 0;
+
     /* The players ordered by speed are stored there */
     std::vector<int> speedsVector;
     bool applyingMoveStatMods;
@@ -416,12 +419,14 @@ public:
     virtual const TurnMemory &turnMem(int slot) const = 0;
     virtual context &pokeMemory(int slot) = 0;
     virtual const context &pokeMemory(int slot) const = 0;
+    virtual context &turnMemory(int slot) = 0;
+    virtual const context &turnMemory(int slot) const = 0;
     virtual BasicMoveInfo &tmove(int slot) = 0;
     virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
 
-    virtual void inflictRecoil(int x, int target);
+    virtual void inflictRecoil(int x, int target) = 0;
     void healLife(int player, int healing);
     virtual void changeHp(int player, int newHp);
     virtual void koPoke(int player, int source, bool straight);

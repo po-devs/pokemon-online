@@ -15,45 +15,6 @@ using namespace Move;
 typedef BattleCounterIndex BC;
 typedef BS::TurnMemory TM;
 
-int MoveMechanics::num(const QString &name)
-{
-    if (!MoveEffect::nums.contains(name)) {
-        return 0;
-    } else {
-        return MoveEffect::nums[name];
-    }
-}
-
-MoveEffect::MoveEffect(int num, Pokemon::gen gen, BattleSituation::BasicMoveInfo &data)
-{
-    /* Different steps: critical raise, number of times, ... */
-    data.critRaise = MoveInfo::CriticalRaise(num, gen);
-    data.repeatMin = MoveInfo::RepeatMin(num, gen);
-    data.repeatMax = MoveInfo::RepeatMax(num, gen);
-    data.priority = MoveInfo::SpeedPriority(num, gen);
-    data.flags = MoveInfo::Flags(num, gen);
-    data.power = MoveInfo::Power(num, gen);
-    data.accuracy = MoveInfo::Acc(num, gen);
-    data.type = MoveInfo::Type(num, gen);
-    data.category = MoveInfo::Category(num, gen);
-    data.rate = MoveInfo::EffectRate(num, gen);
-    //(*this)["StatEffect"] = MoveInfo::Effect(num, gen);
-    data.flinchRate = MoveInfo::FlinchRate(num, gen);
-    data.recoil = MoveInfo::Recoil(num, gen);
-    data.attack = num;
-    data.targets = MoveInfo::Target(num, gen);
-    data.healing = MoveInfo::Healing(num, gen);
-    data.classification = MoveInfo::Classification(num, gen);
-    data.status = MoveInfo::Status(num, gen);
-    data.statusKind = MoveInfo::StatusKind(num, gen);
-    data.minTurns = MoveInfo::MinTurns(num, gen);
-    data.maxTurns = MoveInfo::MaxTurns(num, gen);
-    data.statAffected = MoveInfo::StatAffected(num, gen);
-    data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
-    data.rateOfStat = MoveInfo::RateOfStat(num, gen);
-    data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
-}
-
 /* There's gonna be tons of structures inheriting it,
     so let's do it fast */
 typedef MoveMechanics MM;
@@ -62,14 +23,14 @@ typedef BattleSituation BS;
 void MoveEffect::setup(int num, int source, int target, BattleBase &b)
 {
     /* first the basic info */
-    MoveEffect e(num, b.gen(), MM::tmove(b,source));
+    MM::initMove(num, b.gen(), MM::tmove(b,source));
 
-    BattleSituation *_b = dynamic_cast<BattleSituation*>(&b);
+    BS *_b = dynamic_cast<BS*>(&b);
 
     if (_b) {
-        BattleSituation &b = *_b;
+        BS &b = *_b;
         /* then the hard info */
-        QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
+        QStringList specialEffects = MoveInfo::SpecialEffect(num, b.gen()).split('|');
 
         foreach (QString specialEffectS, specialEffects) {
             std::string s = specialEffectS.toStdString();
@@ -107,13 +68,13 @@ void MoveEffect::setup(int num, int source, int target, BattleBase &b)
     not be nice because U-Turning twice :s*/
 void MoveEffect::unsetup(int num, int source, BattleBase &b)
 {
-    BattleSituation *_b = dynamic_cast<BattleSituation*>(&b);
+    BS *_b = dynamic_cast<BS*>(&b);
 
     if (_b) {
-        BattleSituation &b = *_b;
+        BS &b = *_b;
 
         /* then the hard info */
-        QStringList specialEffects = MoveInfo::SpecialEffect(num).split('|');
+        QStringList specialEffects = MoveInfo::SpecialEffect(num, b.gen()).split('|');
 
         foreach (QString specialEffectS, specialEffects) {
             std::string s = specialEffectS.toStdString();

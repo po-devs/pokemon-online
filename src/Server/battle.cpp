@@ -46,30 +46,6 @@ void BattleSituation::engageBattle()
         callEntryEffects(p);
 }
 
-void BattleSituation::beginTurn()
-{
-    turn() += 1;
-    /* Resetting temporary variables */
-    for (int i = 0; i < numberOfSlots(); i++) {
-        turnMemory(i).clear();
-        turnMem(i).reset();
-        tmove(i).reset();
-    }
-
-    for (int i = 0; i < numberOfSlots(); i++) {
-        callpeffects(i, i, "TurnSettings");
-    }
-    attackCount() = 0;
-
-    requestChoices();
-
-    /* preventing the players from cancelling (like when u-turn/Baton pass) */
-    for (int i = 0; i < numberOfSlots(); i++)
-        couldMove[i] = false;
-
-    analyzeChoices();
-}
-
 void BattleSituation::initializeEndTurnFunctions()
 {
     /* Gen 2:

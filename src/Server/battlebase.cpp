@@ -145,6 +145,29 @@ BattleBase::~BattleBase()
     //onDestroy();
 }
 
+void BattleBase::beginTurn()
+{
+    turn() += 1;
+    /* Resetting temporary variables */
+    for (int i = 0; i < numberOfSlots(); i++) {
+        turnMemory(i).clear();
+        turnMem(i).reset();
+        tmove(i).reset();
+    }
+
+    for (int i = 0; i < numberOfSlots(); i++) {
+        callpeffects(i, i, "TurnSettings");
+    }
+    attackCount() = 0;
+
+    requestChoices();
+
+    /* preventing the players from cancelling (like when u-turn/Baton pass) */
+    for (int i = 0; i < numberOfSlots(); i++)
+        couldMove[i] = false;
+
+    analyzeChoices();
+}
 
 void BattleBase::start(ContextSwitcher &ctx)
 {
@@ -1405,47 +1428,6 @@ void BattleBase::setupChoices()
             else
                 MoveEffect::setup(Move::Struggle, i, i, *this);
         }
-    }
-}
-
-void BattleBase::inflictRecoil(int source, int target)
-{
-    int recoil = tmove(source).recoil;
-
-    if (recoil == 0)
-        return;
-
-    //Rockhead, MagicGuard
-    if (koed(source)) {
-        return;
-    }
-
-    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
-    if (koed(target) && recoil < 0) {
-        return;
-    }
-
-    // If move defeats a sub, no recoil damage is applied in RBY.
-    if (hadSubstitute(target)) {
-        return;
-    }
-
-    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
-
-    // "33" means one-third
-    //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
-
-    int damage = std::abs(int(recoil * turnMem(target).damageTaken / 100));
-
-    if (recoil < 0) {
-        inflictDamage(source, damage, source, false);
-
-        /* Self KO Clause! */
-        if (koed(source)) {
-            selfKoer() = source;
-        }
-    } else  {
-        healLife(source, damage);
     }
 }
 
