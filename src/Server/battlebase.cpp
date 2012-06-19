@@ -1410,7 +1410,7 @@ void BattleBase::setupChoices()
 
 void BattleBase::inflictRecoil(int source, int target)
 {
-    double recoil = tmove(source).recoil;
+    int recoil = tmove(source).recoil;
 
     if (recoil == 0)
         return;
@@ -1425,8 +1425,8 @@ void BattleBase::inflictRecoil(int source, int target)
         return;
     }
 
-    // If move defeats a sub, no recoil damage is applied in Gen 1.
-    if (hasSubstitute(target)) {
+    // If move defeats a sub, no recoil damage is applied in RBY.
+    if (hadSubstitute(target)) {
         return;
     }
 
