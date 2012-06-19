@@ -4,7 +4,6 @@
 #include "pluginmanager.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "moves.h"
 #include "battlefunctions.h"
 
 using namespace BattleCommands;
@@ -1422,11 +1421,11 @@ void BattleBase::setupChoices()
 {
     /* If there's no choice then the effects are already taken care of */
     for (int i = 0; i < numberOfSlots(); i++) {
-        if (!koed(i) && !turnMem(i).contains(TurnMemory::NoChoice) && choice(i).attackingChoice()) {
+        if (!koed(i) && !turnMem(i).contains(TurnMemory::NoChoice) && !turnMem(i).contains(TurnMemory::KeepAttack) && choice(i).attackingChoice()) {
             if (!options[i].struggle())
-                MoveEffect::setup(move(i,choice(i).pokeSlot()), i, i, *this);
+                setupMove(i, move(i,choice(i).pokeSlot()));
             else
-                MoveEffect::setup(Move::Struggle, i, i, *this);
+                setupMove(i, Move::Struggle);
         }
     }
 }
@@ -1588,12 +1587,12 @@ void BattleBase::analyzeChoice(int slot)
     /* It's already verified that the choice is valid, by battleChoiceReceived, called in a different thread */
     if (choice(slot).attackingChoice()) {
         if (!wasKoed(slot)) {
-            if (turnMem(slot).contains(TM::NoChoice))
+            if (turnMem(slot).contains(TM::NoChoice) || turnMem(slot).contains(TM::KeepAttack))
                 /* Automatic move */
                 useAttack(slot, fpoke(slot).lastMoveUsed, true);
             else {
                 if (options[slot].struggle()) {
-                    MoveEffect::setup(Move::Struggle,slot,0,*this);
+                    setupMove(slot, Move::Struggle);
                     useAttack(slot, Move::Struggle, true);
                 } else {
                     useAttack(slot, choice(slot).attackSlot());

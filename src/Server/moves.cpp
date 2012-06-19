@@ -199,7 +199,7 @@ struct MMTrumpCard : public MM
 
     static void bcd(int s, int, BS &b)
     {
-        int n = b.PP(s,poke(b,s)["MoveSlot"].toInt());
+        int n = b.PP(s,fpoke(b,s).lastMoveSlot);
         int mult;
         switch(n) {
         case 0: mult = 200; break;
@@ -1089,7 +1089,7 @@ struct MMGrudge : public MM
 
         if (trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) {
             if (!b.koed(t)) {
-                int slot = poke(b, t)["MoveSlot"].toInt();
+                int slot = fpoke(b, t).lastMoveSlot;
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
                 b.losePP(t, slot, 48);
             }
@@ -1544,7 +1544,7 @@ struct MMLastResort : public MM
             return;
         }
         bool succ = true;
-        int slot = poke(b,s)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         for (int i = 0; i < 4; i++) {
             if (i != slot && b.move(s,i) != 0 && !poke(b,s).value(QString("Move%1Used").arg(i)).toBool()) {
                 succ= false;
@@ -1911,7 +1911,7 @@ struct MMMimic : public MM
                 move = b.move(t, b.randint(4));
             }
         }
-        int slot = poke(b,s)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         b.changeTempMove(s, slot, move);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
@@ -2355,7 +2355,7 @@ struct MMSketch : public MM
     static void uas(int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         b.sendMoveMessage(111,0,s,type(b,s),t,mv);
-        int slot = poke(b,s)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         b.changeDefMove(s, slot, mv);
 
     }
@@ -2521,7 +2521,7 @@ struct MMSpite : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        int slot = poke(b,t)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         if (b.PP(t,slot) == 0) {
             fturn(b,s).add(TM::Failed);
             return;
@@ -2529,7 +2529,7 @@ struct MMSpite : public MM
     }
     static void uas(int s, int t, BS &b)
     {
-        int slot = poke(b,t)["MoveSlot"].toInt();
+        int slot = fpoke(b,s).lastMoveSlot;
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
         else if (b.gen().num == 3)

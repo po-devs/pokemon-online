@@ -10,6 +10,7 @@
 #include "challenge.h"
 #include "battle.h"
 #include "moves.h"
+#include "rbymoves.h"
 #include "items.h"
 #include "abilities.h"
 #include "security.h"
@@ -152,6 +153,7 @@ void Server::start(){
     printLine(tr("Pokemon database loaded"));
 
     MoveEffect::init();
+    RBYMoveEffect::init();
     ItemEffect::init();
     AbilityEffect::init();
 

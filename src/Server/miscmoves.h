@@ -129,7 +129,7 @@ struct MMDisable : public MM
     static void mp(int s, int, BS &b) {
         if(move(b,s) == poke(b,s)["DisabledMove"]) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(28,1,s,0,s,b.move(s,poke(b,s)["MoveSlot"].toInt()));
+            b.sendMoveMessage(28,1,s,0,s,b.move(s,fpoke(b,s).lastMoveSlot));
         }
     }
 };

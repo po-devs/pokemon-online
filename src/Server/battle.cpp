@@ -920,7 +920,7 @@ void BattleSituation::calleffects(int source, int target, const QString &name)
         QSet<QString> &effects = *turn.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = turn.value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MechanicsFunction f = turn.value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
 
             if (f)
                 f(source, target, *this);
@@ -936,7 +936,7 @@ void BattleSituation::callpeffects(int source, int target, const QString &name)
         QSet<QString> &effects = *pokeMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = pokeMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MechanicsFunction f = pokeMemory(source).value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
 
             /* If a pokemons dies from leechseed,its status changes, and so nightmare function would be removed
                but still be in the foreach, causing a crash */
@@ -953,7 +953,7 @@ void BattleSituation::callbeffects(int source, int target, const QString &name, 
         QSet<QString> &effects = *battleMemory().value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = battleMemory().value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MechanicsFunction f = battleMemory().value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
 
             if(f) f(source, target, *this);
 
@@ -968,7 +968,7 @@ void BattleSituation::callzeffects(int source, int target, const QString &name)
         QSet<QString> &effects = *teamMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = teamMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MechanicsFunction f = teamMemory(source).value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
 
             if (f)
                 f(source, target, *this);
@@ -982,7 +982,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
         QSet<QString> &effects = *slotMemory(source).value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
 
         foreach(QString effect, effects) {
-            MoveMechanics::function f = slotMemory(source).value("Effect_" + name + "_" + effect).value<MoveMechanics::function>();
+            MechanicsFunction f = slotMemory(source).value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
 
             if (f)
                 f(source, target, *this);
@@ -1321,7 +1321,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
         }
         attack = this->move(player,move);
-        pokeMemory(player)["MoveSlot"] = move;
+        fpoke(player).lastMoveSlot = move;
     }
 
     turnMem(player).add(TurnMemory::HasMoved);
@@ -3448,4 +3448,9 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     /* If the move is encored, a random target is picked. */
     if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
         choice(b.slot()).choice.attack.attackTarget = b.slot();
+}
+
+void BattleSituation::setupMove(int i, int move)
+{
+    MoveEffect::setup(move,i,0,*this);
 }

@@ -227,7 +227,7 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         damage = 1;
     }
 
-    pokeMemory(player)["DamageInflicted"] = damage;
+    pokeMemory(source)["DamageInflicted"] = damage;
 
     bool sub = hasSubstitute(player);
 
@@ -278,7 +278,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         attack = move;
     } else {
         attack = this->move(player,move);
-        //pokeMemory(player)["MoveSlot"] = move;
+        fpoke(player).lastMoveSlot = move;
     }
 
     turnMem(player).add(TurnMemory::HasMoved);
@@ -287,13 +287,12 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         goto trueend;
     }
 
-
     turnMem(player).add(TM::HasPassedStatus);
     //turnMemory(player)["MoveChosen"] = attack;
 
     fpoke(player).lastMoveUsed = attack;
 
-    notify(All, UseAttack, player, qint16(attack), !tellPlayers);
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
 
     if (tmove(player).targets == Move::User || tmove(player).targets == Move::All || tmove(player).targets == Move::Field) {
         target = player;
@@ -320,7 +319,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
     /* Protect, ... */
 
-    if (tmove(player).power > 0)
+    if (tmove(player).power > 0 && player != target)
     {
         calculateTypeModStab();
 
@@ -354,6 +353,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             inflictDamage(target, damage, player, true);
             hitcount += 1;
 
+            calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
             heatOfAttack() = false;
@@ -403,6 +403,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         }
 
         applyMoveStatMods(player, target);
+        calleffects(player, target, "UponAttackSuccessful");
 
         /* Side change may switch player & target */
         if (attacker() != player) {
@@ -449,7 +450,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     int move = tmove(player).attack;
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform || move == Move::Bide) {
+    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform) {
         return true;
     }
 
@@ -540,4 +541,27 @@ void BattleRBY::callpeffects(int source, int target, const QString &name)
         }
         turnMemory(source)["PokeEffectCall"] = false;
     }
+}
+
+void BattleRBY::calleffects(int source, int target, const QString &name)
+{
+    context &turn = turnMemory(source);
+    if (turn.contains("Effect_" + name)) {
+        turn["TurnEffectCall"] = true;
+        turn["TurnEffectCalled"] = name;
+        QSet<QString> &effects = *turn.value("Effect_" + name).value<QSharedPointer<QSet<QString> > >();
+
+        foreach(QString effect, effects) {
+            MechanicsFunction f = turn.value("Effect_" + name + "_" + effect).value<MechanicsFunction>();
+
+            if (f)
+                f(source, target, *this);
+        }
+        turn["TurnEffectCall"] = false;
+    }
+}
+
+void BattleRBY::setupMove(int i, int move)
+{
+    RBYMoveEffect::setup(move,i,0,*this);
 }
