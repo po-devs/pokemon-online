@@ -449,7 +449,7 @@ public:
     virtual void changePP(int player, int move, int PP);
 
     bool testFail(int player);
-    virtual bool testAccuracy(int player, int target, bool silent = false);
+    virtual bool testAccuracy(int player, int target, bool silent = false) = 0;
 
     virtual PokeFraction getStatBoost(int player, int stat);
     virtual void calculateTypeModStab(int player=-1, int target=-1);

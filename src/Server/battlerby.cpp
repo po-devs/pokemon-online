@@ -449,3 +449,45 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     attacker() = oldAttacker;
     attacked() = oldAttacked;
 }
+
+bool BattleRBY::testAccuracy(int player, int target, bool silent)
+{
+    int acc = tmove(player).accuracy;
+    int tarChoice = tmove(player).targets;
+    bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
+
+
+    //OHKO
+    int move = tmove(player).attack;
+
+    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
+    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform) {
+        return true;
+    }
+
+    //test for dig/fly here
+
+    if (acc == 0 || acc == 101) {
+        return true;
+    }
+
+    if (MoveInfo::isOHKO(move, gen())) {
+        bool ret = coinflip(255*30, 256*100);
+        if (!ret && !silent) {
+            notifyMiss(multiTar, player, target);
+        }
+        return ret;
+    }
+
+    acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion);
+
+    if (coinflip(unsigned(acc)*255, 100*256)) {
+        return true;
+    } else {
+        if (!silent) {
+            notifyMiss(multiTar, player, target);
+        }
+        //Hi jump kick, jump kick
+        return false;
+    }
+}

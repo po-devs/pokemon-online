@@ -1743,48 +1743,6 @@ bool BattleBase::testFail(int player)
     return false;
 }
 
-bool BattleBase::testAccuracy(int player, int target, bool silent)
-{
-    int acc = tmove(player).accuracy;
-    int tarChoice = tmove(player).targets;
-    bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
-
-
-    //OHKO
-    int move = tmove(player).attack;
-
-    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform) {
-        return true;
-    }
-
-    //test for dig/fly here
-
-    if (acc == 0 || acc == 101) {
-        return true;
-    }
-
-    if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(30, 100);
-        if (!ret && !silent) {
-            notifyMiss(multiTar, player, target);
-        }
-        return ret;
-    }
-
-    acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion);
-
-    if (coinflip(unsigned(acc), 100)) {
-        return true;
-    } else {
-        if (!silent) {
-            notifyMiss(multiTar, player, target);
-        }
-        //Hi jump kick, jump kick
-        return false;
-    }
-}
-
 PokeFraction BattleBase::getStatBoost(int player, int stat)
 {
     int boost = fpoke(player).boosts[stat];
