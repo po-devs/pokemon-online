@@ -381,6 +381,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
 
             attackCount() += 1;
+
+            /* A broken sub stops a multi-hit attack */
+            if (hadSubstitute(target)) {
+                break;
+            }
         }
 
         if (hit) {
