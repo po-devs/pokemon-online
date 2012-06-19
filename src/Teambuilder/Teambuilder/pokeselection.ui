@@ -15,7 +15,11 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="5">
-    <widget class="TB_PokeChoice" name="pokemonList"/>
+    <widget class="TB_PokeChoice" name="pokemonList">
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1" colspan="2">
     <widget class="QFrame" name="pokemonFrame">
