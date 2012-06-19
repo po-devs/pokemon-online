@@ -37,16 +37,25 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(ui->serverList, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
 
     ui->nameEdit->setText(nick);
-    ui->advServerEdit->setText(settings.value("ServerChoice/DefaultServer").toString());
-    connect(ui->advServerEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
+    ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
+    connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
-    savedServers = settings.value("ServerChoice/SavedServers").toStringList();
-    QAction *serverName = new QAction(this);
-    for(int savedCount = 0; savedCount < savedServers.size(); savedCount++) {
-        serverName->setText(savedServers[savedCount]);
-        ui->savedServersList->addAction(serverName);
+    QCompleter *completer = new QCompleter(ui->advServerEdit);
+    QStringList res = settings.value("ServerChoice/SavedServers").toStringList();
+
+    foreach (QString r, res) {
+        if (r.contains("-")) {
+            savedServers.push_back(QStringList() << r.section("-", -1).trimmed() << r.section("-", 0, -2).trimmed());
+        } else {
+            savedServers.push_back(QStringList() << r << "");
+        }
     }
-    connect(ui->savedServersList, SIGNAL(triggered(QAction*)), SLOT(advMenuServerChosen(QAction*)));
+
+    QStringListModel *m = new QStringListModel(res, completer);
+
+    completer->setModel(m);
+    ui->advServerEdit->setCompleter(completer);
+    ui->advServerEdit->setModel(m);
 
     connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
     connect(ui->advancedConnection, SIGNAL(clicked()), SLOT(advServerChosen()));
@@ -65,7 +74,7 @@ void ServerChoice::regServerChosen(int row)
     QString name = ui->serverList->item(row, 1)->text();
 
     QSettings settings;
-    settings.setValue("ServerChoice/DefaultServer", ip + " - " + name);
+    settings.setValue("ServerChoice/DefaultServer", name  + " - " + ip);
     if(ip.contains(":")){
         quint16 port = ip.section(":",1,1).toInt();
         QString fIp = ip.section(":",0,0);
@@ -73,35 +82,48 @@ void ServerChoice::regServerChosen(int row)
     } else {
         emit serverChosen(ip,5080, ui->nameEdit->text());
     }
-    savedServers.push_back(ip + " - " + name);
+    addSavedServer(ip, name);
 }
 
 void ServerChoice::advServerChosen()
 {
-    QString info = ui->advServerEdit->text().trimmed().split(" - ")[0];
+    QString info = ui->advServerEdit->currentText();
+    QString ip = info.section("-", -1).trimmed();
+    QString name = info.contains("-") ? info.section("-", 0, -2).trimmed() : "";
+
     QSettings MySettings;
-    MySettings.setValue("ServerChoice/DefaultServer", ui->advServerEdit->text());
+    MySettings.setValue("ServerChoice/DefaultServer", ui->advServerEdit->currentText());
     if(info.contains(":")) {
-        quint16 port = info.section(":",1,1).toInt();
-        QString fIp = info.section(":",0,0);
+        quint16 port = ip.section(":",1,1).toInt();
+        QString fIp = ip.section(":",0,0);
         emit serverChosen(fIp,port, ui->nameEdit->text());
     } else {
         emit serverChosen(info,5080, ui->nameEdit->text());
     }
+    addSavedServer(ip, name);
 }
 
-void ServerChoice::advMenuServerChosen(QAction *action)
+void ServerChoice::addSavedServer(const QString &ip, const QString &name)
 {
-    QString info = action->text().trimmed().split(" - ")[0];
-    ui->advServerEdit->setText(action->text());
-    QSettings MySettings;
-    MySettings.setValue("ServerChoice/DefaultServer", action->text());
-    if(info.contains(":")) {
-        quint16 port = info.section(":", 1,1).toInt();
-        QString fIp = info.section(":", 0, 0);
-        emit serverChosen(fIp, port, ui->nameEdit->text());
+    if (name.length() == 0) {
+        for (int i = 0; i < savedServers.length(); i++) {
+            if (savedServers[i][0] == ip) {
+                savedServers.push_front(savedServers.takeAt(i));
+                return;
+            }
+        }
+        savedServers.push_front(QStringList() << ip << name);
     } else {
-        emit serverChosen(info, 5080, ui->nameEdit->text());
+        for (int i = 0; i < savedServers.length(); i++) {
+            if (savedServers[i][0] == ip || savedServers[i][1] == name) {
+                savedServers.removeAt(i);
+                break;
+            }
+        }
+        savedServers.push_front(QStringList() << ip << name);
+    }
+    if (savedServers.length() > 10) {
+        savedServers.erase(savedServers.begin()+10, savedServers.end());
     }
 }
 
@@ -143,7 +165,7 @@ void ServerChoice::showDetails(int row)
     QString ip = ui->serverList->item(row, 3)->text();
     QString name = ui->serverList->item(row, 1)->text();
 
-    ui->advServerEdit->setText(ip + " - " + name);
+    ui->advServerEdit->setItemText(ui->advServerEdit->currentIndex(), name + " - " + ip);
 }
 
 void ServerChoice::connectionError(int, const QString &mess)
@@ -159,5 +181,14 @@ void ServerChoice::saveSettings() {
     settings.setValue("ServerChoice/ServerNameWidth", ui->serverList->columnWidth(1));
     settings.setValue("ServerChoice/PlayersInfoWidth", ui->serverList->columnWidth(2));
     settings.setValue("ServerChoice/ServerIPWidth", ui->serverList->columnWidth(3));
-    settings.setValue("ServerChoice/SavedServers", savedServers);
+
+    QStringList res;
+    foreach (QStringList list, savedServers) {
+        if (list[1].length() > 0) {
+            res << QString("%1 - %2").arg(list[1], list[0]);
+        } else {
+            res << list[0];
+        }
+    }
+    settings.setValue("ServerChoice/SavedServers", res);
 }
