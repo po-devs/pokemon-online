@@ -123,7 +123,7 @@ void TeamBuilder::markTeamUpdated()
 void TeamBuilder::openBoxes()
 {
     if(!boxesMenu) {
-        addWidget(boxesMenu = new PokeBoxes(this));
+        addWidget(boxesMenu = new PokeBoxes(this, &team()));
     }
     switchTo(boxesMenu);
 }
