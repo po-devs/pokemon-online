@@ -27,3 +27,10 @@ DEFINES = REGISTRY_SIDE
 
 LIBS += -L../../bin \
     -lutilities
+
+CONFIG(webconf) {
+    include(../bfHttpServer/src/bfHttpServer.pri)
+    HEADERS += webinterface.h
+    SOURCES += webinterface.cpp
+    DEFINES += USE_WEBCONF
+}
