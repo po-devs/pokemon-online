@@ -300,24 +300,31 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         goto trueend;
     }
 
-    fpoke(player).lastMoveUsed = attack;
-
     calleffects(player, target, "MoveSettings");
 
-    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
+    if (!turnMem(player).contains(TM::BuildUp)) {
+        fpoke(player).lastMoveUsed = attack;
+    }
+
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers") && !turnMem(player).contains(TM::BuildUp)));
 
     if (tmove(player).targets == Move::User || tmove(player).targets == Move::All || tmove(player).targets == Move::Field) {
         target = player;
     }
 
-    if (!specialOccurence) {
-        losePP(player, move, 1);
-    } else {
-        if (turnMem(player).contains(TurnMemory::UsePP)) {
-            losePP(player, fpoke(player).lastMoveSlot, 1);
-        } else {
+    if (!turnMem(player).contains(TM::BuildUp)) {
+        if (!specialOccurence) {
             /* Placed there. DamageReceived is used by Counter */
             pokeMemory(opponent(player)).remove("DamageReceived");
+
+            losePP(player, move, 1);
+        } else {
+            if (turnMem(player).contains(TurnMemory::UsePP)) {
+                /* Placed there. DamageReceived is used by Counter */
+                pokeMemory(opponent(player)).remove("DamageReceived");
+
+                losePP(player, fpoke(player).lastMoveSlot, 1);
+            }
         }
     }
 
@@ -333,12 +340,13 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     // Miss
     if (target != player && !testAccuracy(player, target)) {
         pokeMemory(player).remove("DamageInflicted");
+        calleffects(player,target,"AttackSomehowFailed");
         goto endloop;
     }
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
     /* Protect, ... */
 
-    if (tmove(player).power > 0 && player != target)
+    if (tmove(player).power > 0 && player != target && !turnMem(player).contains(TM::BuildUp))
     {
         calculateTypeModStab();
 
@@ -351,7 +359,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
         calleffects(player, target, "DetermineAttackFailure");
         if (testFail(player)){
-            //calleffects(player,target,"AttackSomehowFailed");
+            calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 
@@ -491,6 +499,14 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
 
     if (acc == 0 || acc == 101) {
         return true;
+    }
+
+    /* For deliberate misses, like with counter */
+    if (acc < 0 || pokeMemory(target).value("Invulnerable").toBool()) {
+        if (!silent) {
+            notifyMiss(multiTar, player, target);
+        }
+        return false;
     }
 
     acc = acc*255/100;

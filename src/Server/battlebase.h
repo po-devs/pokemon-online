@@ -407,7 +407,8 @@ public:
             Flinched = 128,
             CriticalHit = 256,
             KeepAttack = 512, //For RBY
-            UsePP = 1024 //For RBY
+            UsePP = 1024, //For RBY
+            BuildUp = 2048 //For RBY
         };
 
         inline void remove(Flag f) {flags &= ~f;}
@@ -434,6 +435,8 @@ public:
     void healLife(int player, int healing);
     virtual void changeHp(int player, int newHp);
     virtual void koPoke(int player, int source, bool straight);
+
+    void changeSprite(int player, Pokemon::uniqueId newForme);
 
     bool wasKoed(int) const;
 

@@ -136,7 +136,6 @@ public:
 
     void changeTempMove(int player, int slot, int move);
     void changeDefMove(int player, int slot, int move);
-    void changeSprite(int player, Pokemon::uniqueId newForme);
 
     enum WeatherM
     {
