@@ -27,9 +27,12 @@ public:
 public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
+
 signals:
     void done();
+    void openBoxes();
     void editPoke(int);
+
 private slots:
     void on_close_clicked(){ emit done(); }
     void on_name_textEdited();
@@ -53,6 +56,7 @@ private slots:
     void on_newProfile_clicked();
     void on_teamTier_textEdited();
     void setTier(const QString &tier);
+
 private:
     void setupData();
     void updateData();

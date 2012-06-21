@@ -2,12 +2,13 @@
 #define POKEBOXES_H
 
 #include <QFrame>
+#include "Teambuilder/teambuilderwidget.h"
 
 namespace Ui {
 class PokeBoxes;
 }
 
-class PokeBoxes : public QFrame
+class PokeBoxes : public TeamBuilderWidget
 {
     Q_OBJECT
     
