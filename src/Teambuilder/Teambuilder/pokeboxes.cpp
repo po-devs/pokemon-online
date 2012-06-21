@@ -2,7 +2,7 @@
 #include "ui_pokeboxes.h"
 
 PokeBoxes::PokeBoxes(QWidget *parent) :
-    QFrame(parent),
+    TeamBuilderWidget(parent),
     ui(new Ui::PokeBoxes)
 {
     ui->setupUi(this);
