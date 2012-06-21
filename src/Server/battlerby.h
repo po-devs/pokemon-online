@@ -13,6 +13,7 @@ public:
 
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
     void losePP(int player, int move, int loss=1);
+    void calculateDamage(int player, int target);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();

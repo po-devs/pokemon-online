@@ -465,7 +465,7 @@ public:
     virtual int repeatNum(int player);
 
     virtual void testCritical(int player, int target);
-    virtual int calculateDamage(int player, int target);
+    virtual int calculateDamage(int player, int target) = 0;
     void healDamage(int player, int target);
     void notifyHits(int spot, int hits);
     void unthaw(int player);
