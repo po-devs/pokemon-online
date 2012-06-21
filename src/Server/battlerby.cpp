@@ -227,7 +227,10 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         damage = 1;
     }
 
-    pokeMemory(source)["DamageInflicted"] = damage;
+    if (straightattack) {
+        pokeMemory(source)["DamageInflicted"] = damage; //For bide
+    }
+    pokeMemory(player)["DamageReceived"] = damage; //For counter
 
     bool sub = hasSubstitute(player);
 
@@ -299,6 +302,8 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     fpoke(player).lastMoveUsed = attack;
 
+    calleffects(player, target, "MoveSettings");
+
     notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
 
     if (tmove(player).targets == Move::User || tmove(player).targets == Move::All || tmove(player).targets == Move::Field) {
@@ -307,6 +312,13 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     if (!specialOccurence) {
         losePP(player, move, 1);
+    } else {
+        if (turnMem(player).contains(TurnMemory::UsePP)) {
+            losePP(player, fpoke(player).lastMoveSlot, 1);
+        } else {
+            /* Placed there. DamageReceived is used by Counter */
+            pokeMemory(opponent(player)).remove("DamageReceived");
+        }
     }
 
     heatOfAttack() = true;
@@ -334,6 +346,12 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         if (typemod == 0) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(typemod));
+            goto endloop;
+        }
+
+        calleffects(player, target, "DetermineAttackFailure");
+        if (testFail(player)){
+            //calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 

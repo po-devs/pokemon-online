@@ -165,7 +165,7 @@ struct RBYBind : public MM
             addFunction(turn(b,s), "UponAttackSuccessful", "Bind", &uas2);
             addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
             /* Bind does the same damage every turn */
-            addFunction(turn(b,s), "CustomAttackingDamage", &cad);
+            addFunction(turn(b,s), "CustomAttackingDamage", "Bind", &cad);
         }
     }
 
@@ -211,10 +211,49 @@ struct RBYBind : public MM
     }
 };
 
+struct RBYCounter : public MM
+{
+    RBYCounter() {
+        functions["MoveSettings"] = &ms;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void ms(int s, int t, BS &b) {
+        /* If both use counter, it misses */
+        t = b.opponent(s);
+        if (move(b, t) == move(b, s)) {
+            tmove(b,s).accuracy = -1;
+        }
+    }
+
+    static void daf(int s, int t, BS &b) {
+        int type = MoveInfo::Type(fpoke(b,t).lastMoveUsed, b.gen());
+
+        if (type != Type::Normal && type != Type::Fighting) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+
+        int damage = poke(b, s).value("DamageReceived").toInt();
+
+        if (damage == 0) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+    }
+
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = 2 * poke(b,s).value("DamageReceived").toInt();
+    }
+};
+
 
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
 {
     REGISTER_MOVE(9, Bide);
+    REGISTER_MOVE(10, Bind);
+    REGISTER_MOVE(22, Counter);
 }
