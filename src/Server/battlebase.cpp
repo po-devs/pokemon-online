@@ -1922,7 +1922,7 @@ void BattleBase::testFlinch(int player, int target)
 {
     int rate = tmove(player).flinchRate;
 
-    if (rate && coinflip(rate, 100)) {
+    if (rate && coinflip(rate*255/100, 256)) {
         turnMem(target).add(TM::Flinched);
     }
 }
