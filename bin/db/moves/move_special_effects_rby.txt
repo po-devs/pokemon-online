@@ -17,7 +17,7 @@
 
 
 #107#whirlwind
-#13-3_16*2_239*2_327_87_542_479#Fly
+13-3#Fly
 10#bind-inflict damage every turn
 
 
@@ -89,7 +89,7 @@
 
 
 #43#Fissure
-#13-1_89*2_222*2#Dig
+13-1#Dig
 
 
 

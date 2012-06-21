@@ -2872,11 +2872,6 @@ void BattleSituation::changeDefMove(int player, int slot, int move)
     changePP(player,slot,poke(player).move(slot).totalPP());
 }
 
-void BattleSituation::changeSprite(int player, Pokemon::uniqueId newForme)
-{
-    notify(All, ChangeTempPoke, player, quint8(TempSprite), newForme);
-}
-
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
 {
     int life = fpoke(player).substituteLife;

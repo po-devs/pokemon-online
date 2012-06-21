@@ -248,6 +248,49 @@ struct RBYCounter : public MM
     }
 };
 
+struct RBYDig : public MM
+{
+    RBYDig() {
+        functions["MoveSettings"] = &ms;
+        functions["UponAttackSucessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        fturn(b, s).add(TM::BuildUp);
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int arg = turn(b,s)["Dig_Arg"].toInt();
+
+        b.sendMoveMessage(13,arg,s,type(b,s), t);
+
+        poke(b,s)["DigChargeTurn"] = b.turn();
+        poke(b,s)["Invulnerable"] = true;
+        b.changeSprite(s, -1);
+
+        addFunction(poke(b,s), "TurnSettings", "Dig", &ts);
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (poke(b,s).value("DigChargeTurn") != b.turn()-1) {
+            return;
+        }
+        //Dig uses its PP on the second turn
+        fturn(b,s).add(TM::UsePP);
+        addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
+        addFunction(turn(b,s), "UponAttackSucessful", "Dig", &uas2);
+    }
+
+    static void asf(int s, int, BS &b) {
+        poke(b,s).remove("Invulnerable");
+        b.changeSprite(s, 0);
+    }
+
+    static void uas2(int s, int t, BS &b) {
+        asf(s, t, b);
+    }
+};
+
 
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
@@ -256,4 +299,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(10, Bind);
     REGISTER_MOVE(22, Counter);
+    REGISTER_MOVE(13, Dig);
 }

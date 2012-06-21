@@ -1699,6 +1699,11 @@ void BattleBase::inflictConfusedDamage(int player)
     inflictDamage(player, damage, player, true);
 }
 
+void BattleBase::changeSprite(int player, Pokemon::uniqueId newForme)
+{
+    notify(All, ChangeTempPoke, player, quint8(TempSprite), newForme);
+}
+
 void BattleBase::losePP(int player, int move, int loss)
 {
     int PP = this->PP(player, move);
