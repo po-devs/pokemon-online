@@ -12,6 +12,7 @@ public:
     typedef void (*MechanicsFunction) (int source, int target, BattleRBY &b);
 
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
+    void losePP(int player, int move, int loss=1);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();

@@ -283,12 +283,19 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     turnMem(player).add(TurnMemory::HasMoved);
 
+    calleffects(player,player,"EvenWhenCantMove");
+
     if (!testStatus(player)) {
         goto trueend;
     }
 
     turnMem(player).add(TM::HasPassedStatus);
     //turnMemory(player)["MoveChosen"] = attack;
+
+    callpeffects(player, target, "MovePossible");
+    if (turnMemory(player).contains("ImpossibleToMove")) {
+        goto trueend;
+    }
 
     fpoke(player).lastMoveUsed = attack;
 
@@ -298,7 +305,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         target = player;
     }
 
-    if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
+    if (!specialOccurence) {
         losePP(player, move, 1);
     }
 
@@ -564,4 +571,16 @@ void BattleRBY::calleffects(int source, int target, const QString &name)
 void BattleRBY::setupMove(int i, int move)
 {
     RBYMoveEffect::setup(move,i,0,*this);
+}
+
+void BattleRBY::losePP(int player, int move, int loss)
+{
+    int PP = this->PP(player, move) - loss;
+
+    //RBY bug: PPs loop over
+    if (PP < 0) {
+        PP = 63;
+    }
+
+    changePP(player, move, PP);
 }
