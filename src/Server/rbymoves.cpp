@@ -277,6 +277,7 @@ struct RBYDig : public MM
         }
         //Dig uses its PP on the second turn
         fturn(b,s).add(TM::UsePP);
+        fturn(b,s).add(TM::NoChoice);
         addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
         addFunction(turn(b,s), "UponAttackSucessful", "Dig", &uas2);
     }
