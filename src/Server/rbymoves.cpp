@@ -1,4 +1,5 @@
 #include "rbymoves.h"
+#include "battlefunctions.h"
 
 typedef RBYMoveMechanics MoveMechanics;
 
@@ -140,6 +141,64 @@ struct RBYBide : public MM
         addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
 
         turn(b,s)["TellPlayers"] = false;
+    }
+};
+
+struct RBYBind : public MM
+{
+    RBYBind() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        poke(b,s)["BindCount"] = minMax(tmove(b,s).minTurns-1, tmove(b,s).maxTurns-1, b.gen().num, b.randint());
+        poke(b,s)["LastBind"] = b.turn();
+        poke(b,t)["Bound"] = true;
+        addFunction(poke(b,s), "TurnSettings", "Bind", &ts);
+        addFunction(poke(b,t), "MovePossible", "Bind", &mp);
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (poke(b,s).value("LastBind").toInt() == b.turn()-1 && poke(b,s).value("BindCount").toInt() > 0) {
+            fturn(b,s).add(TM::KeepAttack);
+            addFunction(turn(b,s), "UponAttackSuccessful", "Bind", &uas2);
+            addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
+        }
+    }
+
+    static void ewcm(int s, int, BS &b) {
+        int t = b.opponent(s);
+
+        if (!poke(b,t).contains("Bound")) {
+            fturn(b,s).add(TM::UsePP); //If the opponent switched out, we use an additional PP
+        }
+    }
+
+    static void mp(int s, int t, BS &b) {
+        t = b.opponent(s);
+        /* Either Bind was used last turn and is ongoing, or was used this turn (and may have finished) */
+        if (( (poke(b,s).contains("Bound") || poke(b,t).contains("BindCount")) && poke(b,t).value("LastBind").toInt() >= b.turn()-1) || poke(b,t).value("LastBind").toInt() == b.turn()) {
+            turn(b,s)["ImpossibleToMove"] = true;
+        }
+    }
+
+    static void uas2(int s, int t, BS &b) {
+        // If the opponent switched, we start all over again
+        if (!poke(b,t).contains("Bound")) {
+            uas(s, t, b);
+            return;
+        }
+        poke(b,s)["LastBind"] = b.turn();
+        inc(poke(b,t)["BindCount"], -1);
+
+        int count = poke(b,t)["BindCount"].toInt();
+
+        if (count == 0) {
+            poke(b,s).remove("BindCount");
+            poke(b,t).remove("Bound");
+            removeFunction(poke(b,s), "TurnSettings", "Bind");
+            removeFunction(poke(b,t), "MovePossible", "Bind");
+        }
     }
 };
 

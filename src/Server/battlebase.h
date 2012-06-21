@@ -406,7 +406,8 @@ public:
             HasPassedStatus = 64,
             Flinched = 128,
             CriticalHit = 256,
-            KeepAttack = 512 //For RBY
+            KeepAttack = 512, //For RBY
+            UsePP = 1024 //For RBY
         };
 
         inline void remove(Flag f) {flags &= ~f;}
@@ -453,7 +454,7 @@ public:
     void healConfused(int player);
     void inflictConfusedDamage(int player);
 
-    void losePP(int player, int move, int loss);
+    virtual void losePP(int player, int move, int loss);
     virtual void changePP(int player, int move, int PP);
 
     bool testFail(int player);

@@ -18,7 +18,7 @@
 
 #107#whirlwind
 #13-3_16*2_239*2_327_87_542_479#Fly
-#10#bind-inflict damage every turn
+10#bind-inflict damage every turn
 
 
 #126#stomp
@@ -33,7 +33,7 @@
 #43#Horn Drill
 
 
-#10#wrap
+10#wrap
 
 #93#thrash
 
@@ -81,7 +81,7 @@
 #93#petal dance
 
 #30-40#dragon rage
-#10#Fire spin
+10#Fire spin
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-#10#Clamp
+10#Clamp
 
 #104-2#skull bash
 
