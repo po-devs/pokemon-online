@@ -83,7 +83,7 @@
             </widget>
            </item>
            <item row="0" column="1" colspan="2">
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="boxInfoLabel">
              <property name="text">
               <string>Box #X Slot #X</string>
              </property>
@@ -95,14 +95,14 @@
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="nickNameLabel">
                <property name="text">
                 <string>Name</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="speciesLabel">
                <property name="text">
                 <string>Species</string>
                </property>
@@ -111,7 +111,7 @@
             </layout>
            </item>
            <item row="1" column="2">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="levelLabel">
              <property name="text">
               <string>Lv. 100</string>
              </property>
@@ -123,21 +123,21 @@
            <item row="2" column="1" colspan="2">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="genderLabel">
                <property name="text">
                 <string>Gender</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="type1Label">
                <property name="text">
                 <string>Type1</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="type2Label">
                <property name="text">
                 <string>Type2</string>
                </property>
@@ -157,7 +157,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="label_9">
+            <widget class="QLabel" name="natureLabel">
              <property name="text">
               <string>Timid</string>
              </property>
@@ -171,7 +171,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLabel" name="label_11">
+            <widget class="QLabel" name="movesLabel">
              <property name="text">
               <string>Move1
 Move2
@@ -185,28 +185,28 @@ Move4</string>
          <item row="1" column="1">
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="storeButton">
              <property name="text">
               <string>Store</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="withdrawButton">
              <property name="text">
               <string>Withdraw</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="switchButton">
              <property name="text">
               <string>Switch</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="deleteButton">
              <property name="text">
               <string>Delete</string>
              </property>
@@ -241,6 +241,9 @@ Move4</string>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QTabWidget" name="boxes">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Tab 1</string>
