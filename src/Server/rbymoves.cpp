@@ -153,6 +153,7 @@ struct RBYBind : public MM
     static void uas(int s, int t, BS &b) {
         poke(b,s)["BindCount"] = minMax(tmove(b,s).minTurns-1, tmove(b,s).maxTurns-1, b.gen().num, b.randint());
         poke(b,s)["LastBind"] = b.turn();
+        poke(b,s)["BindDamage"] = poke(b,s)["DamageInflicted"];
         poke(b,t)["Bound"] = true;
         addFunction(poke(b,s), "TurnSettings", "Bind", &ts);
         addFunction(poke(b,t), "MovePossible", "Bind", &mp);
@@ -163,6 +164,14 @@ struct RBYBind : public MM
             fturn(b,s).add(TM::KeepAttack);
             addFunction(turn(b,s), "UponAttackSuccessful", "Bind", &uas2);
             addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
+            /* Bind does the same damage every turn */
+            addFunction(turn(b,s), "CustomAttackingDamage", &cad);
+        }
+    }
+
+    static void cad(int s, int t, BS &b) {
+        if (poke(b,t).contains("Bound")) {
+            turn(b,s)["CustomDamage"] = poke(b,s)["BindDamage"];
         }
     }
 

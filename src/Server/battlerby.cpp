@@ -341,7 +341,15 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         bool hit = num > 1;
 
         testCritical(player, target);
-        int damage = calculateDamage(player, target);
+
+        calleffects(player, target, "CustomAttackingDamage");
+
+        int damage;
+        if (turnMemory(player).contains("CustomDamage")) {
+            damage = turnMemory(player).value("CustomDamage").toInt();
+        } else {
+            damage = calculateDamage(player, target);
+        }
 
         int hitcount = 0;
 
@@ -583,4 +591,55 @@ void BattleRBY::losePP(int player, int move, int loss)
     }
 
     changePP(player, move, PP);
+}
+
+int BattleRBY::calculateDamage(int p, int t)
+{
+    PokeBattle &poke = this->poke(p);
+
+    int level = fpoke(p).level;
+    int attack, def;
+    bool crit = turnMem(p).contains(TM::CriticalHit);
+    int ch = 1 + crit;
+
+    int attackused = tmove(p).attack;
+
+    int cat = tmove(p).category;
+    if (cat == Move::Physical) {
+        attack = getStat(p, Attack);
+        def = getStat(t, Defense);
+    } else {
+        attack = getStat(p, SpAttack);
+        def = getStat(t, SpAttack);
+    }
+
+    attack = std::min(attack, 65535);
+
+    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
+        /* explosion / selfdestruct */
+        def/=2;
+        if (def == 0)
+            // prevent division by zero
+            def = 1;
+    }
+
+    int stab = turnMem(p).stab;
+    int typemod = turnMem(p).typeMod;
+    int randnum = randint(38) + 217;
+    int power = tmove(p).power;
+
+    power = std::min(power, 65535);
+    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
+
+    //Guts, burn
+    damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+
+    /* Light screen / Reflect */
+    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        damage = damage * 2 / 3;
+    }
+
+    damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+
+    return damage;
 }
