@@ -464,6 +464,18 @@ struct RBYHaze : public MM
     }
 };
 
+struct RBYHiJumpKick : public MM
+{
+    RBYHiJumpKick() {
+        functions["AttackSomehowFailed"] = &asf;
+    }
+
+    static void asf(int s, int, BS &b) {
+        //1 damage if you miss the attack
+        b.inflictDamage(s, 1, s, true);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -477,5 +489,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(31, DreamEater);
     REGISTER_MOVE(37, Explosion);
     REGISTER_MOVE(46, FocusEnergy);
+    REGISTER_MOVE(64, HiJumpKick);
     REGISTER_MOVE(149, Haze);
 }
