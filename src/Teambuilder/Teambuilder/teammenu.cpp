@@ -136,6 +136,10 @@ void TeamMenu::genChanged()
         team().team().poke(i).runCheck();
     }
 
+    QSettings s;
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    ui->itemsModel->setStringList(itemList);
+
     updateAll();
     emit teamChanged();
 }
