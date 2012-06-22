@@ -115,6 +115,8 @@ BattleChoices BattleRBY::createChoice(int slot)
     BattleChoices ret;
     ret.numSlot = slot;
 
+    callpeffects(slot, slot, "MovesPossible");
+
     for (int i = 0; i < 4; i++) {
         if (!isMovePossible(slot,i)) {
             ret.attackAllowed[i] = false;

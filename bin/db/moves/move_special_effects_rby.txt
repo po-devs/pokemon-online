@@ -48,7 +48,7 @@
 
 
 #30-20#sonic boom
-#28#disable
+28#disable
 
 
 

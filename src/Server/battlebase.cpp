@@ -1383,7 +1383,7 @@ bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
 
 bool BattleBase::isMovePossible(int player, int slot)
 {
-    return PP(player, slot) > 0 ;
+    return PP(player, slot) > 0 && !turnMemory(player).contains(QString("Move%1Blocked").arg(slot));
 }
 
 int BattleBase::PP(int player, int slot) const
