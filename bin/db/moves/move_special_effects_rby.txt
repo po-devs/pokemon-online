@@ -24,7 +24,7 @@
 #126#stomp
 
 
-#64#jump kick
+64#jump kick
 
 
 
@@ -134,7 +134,7 @@
 
 
 #60#softboiled
-#64#high jump kick
+64#high jump kick
 
 31#dream eater
 
