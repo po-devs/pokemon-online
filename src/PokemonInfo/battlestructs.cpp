@@ -161,12 +161,8 @@ void PokeBattle::init(PokePersonal &poke)
         num().subnum = ItemInfo::DriveForme(item());
     }
 
-	if (PokemonInfo::OriginalForme(num()) == Pokemon::Keldeo) {
-		num().subnum = poke.hasMove(Move::SecretSword) ? 1 : 0;
-	}
-
-	if (num() == Pokemon::Kyurem_B && !poke.hasMove(Move::IceBurn)) {
-
+	if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
+        num() = Pokemon::Keldeo;
 	}
 
     Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
