@@ -265,7 +265,7 @@ void PokeEdit::changeHappiness(int newHappiness)
 
 void PokeEdit::setNum(Pokemon::uniqueId num)
 {
-    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SacredSword)) {
+    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
         num = Pokemon::Keldeo;
     }
 
