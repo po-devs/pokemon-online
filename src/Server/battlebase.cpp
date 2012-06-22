@@ -1589,7 +1589,12 @@ void BattleBase::analyzeChoice(int slot)
         if (!wasKoed(slot)) {
             if (turnMem(slot).contains(TM::NoChoice) || turnMem(slot).contains(TM::KeepAttack))
                 /* Automatic move */
-                useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                if (turnMemory(slot).contains("AutomaticMove")) {
+                    useAttack(slot, turnMemory(slot)["AutomaticMove"].toInt(), true);
+                } else {
+                    /* Automatic move */
+                    useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                }
             else {
                 if (options[slot].struggle()) {
                     setupMove(slot, Move::Struggle);
@@ -1642,7 +1647,7 @@ bool BattleBase::testStatus(int player)
 
         return false;
     }
-    if (isConfused(player)) {
+    if (isConfused(player) && tmove(player).attack != 0) {
         if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
             inc(pokeMemory(player)["ConfusedCount"], -1);
 
@@ -1851,10 +1856,7 @@ void BattleBase::healDamage(int player, int target)
             // No HP to heal
             notifyFail(player);
         }
-    } else if (healing < 0 &&
-               (gen() > 1 || /* Killing subs with struggle == no recoil. */
-                (gen()== 1 && !hasSubstitute(target)))){
-        /* Struggle: actually recoil damage */
+    } else if (healing < 0){
         notify(All, Recoil, player, true);
         inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
     }
@@ -1878,6 +1880,7 @@ void BattleBase::testFlinch(int player, int target)
 
     if (rate && coinflip(rate*255/100, 256)) {
         turnMem(target).add(TM::Flinched);
+        pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
     }
 }
 
@@ -2039,6 +2042,7 @@ void BattleBase::inflictStatus(int player, int status, int attacker, int minTurn
             return;
         } else {
             currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
+            pokeMemory(player).remove("Recharging"); //For RBY Hyper Beam
         }
     } else if (status == Pokemon::Frozen)
     {

@@ -306,7 +306,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     calleffects(player, target, "MoveSettings");
 
-    if (!turnMem(player).contains(TM::BuildUp)) {
+    if (!turnMem(player).contains(TM::BuildUp) && attack != 0 && attack != Move::Struggle) {
         fpoke(player).lastMoveUsed = attack;
     }
 
@@ -401,6 +401,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             inflictDamage(target, damage, player, true);
             hitcount += 1;
 
+            /* A broken sub stops a multi-hit attack */
+            if (hadSubstitute(target)) {
+                break;
+            }
+
             calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
@@ -414,12 +419,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
 
             attackCount() += 1;
-
-            /* A broken sub stops a multi-hit attack */
-            if (hadSubstitute(target)) {
-                break;
-            }
         }
+
+        heatOfAttack() = false;
 
         if (hit) {
             notifyHits(player, hitcount);

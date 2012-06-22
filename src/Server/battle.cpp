@@ -1380,7 +1380,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     //For metronome calling fly / sky attack / ...
-    fpoke(player).lastMoveUsed = attack;
+    if (attack != 0) {
+        fpoke(player).lastMoveUsed = attack;
+    }
 
     calleffects(player, player, "MoveSettings");
 

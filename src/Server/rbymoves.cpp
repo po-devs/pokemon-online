@@ -147,7 +147,12 @@ struct RBYBide : public MM
 struct RBYBind : public MM
 {
     RBYBind() {
+        functions["MoveSettings"] = &ms;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int , int t, BS &b) {
+        poke(b,t).remove("Recharging"); //Bind removes recharging from hyper beam
     }
 
     static void uas(int s, int t, BS &b) {
@@ -476,12 +481,56 @@ struct RBYHiJumpKick : public MM
     }
 };
 
+struct RBYHyperBeam : public MM
+{
+    RBYHyperBeam() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (b.koed(t)) {
+            return;
+        }
+
+        poke(b,s)["Recharging"] = b.turn()+1;
+        addFunction(turn(b,s), "TurnSettings", "HyperBeam", &ts);
+    }
+
+    static void ms(int s, int, BS &b) {
+        if (!poke(b,s).contains("Recharging")) {
+            //Opponent used bind, Restore hyper beam
+            fturn(b,s).add(TM::UsePP);
+            tmove(b,s).attack = fpoke(b,s).lastMoveUsed;
+        } else {
+            turn(b, s)["TellPlayers"] = false;
+            tmove(b, s).targets = Move::User;
+            addFunction(turn(b,s), "UponAttackSuccessful", "HyperBeam", &aas);
+        }
+    }
+
+    static void aas(int s, int, BS &b) {
+        b.sendMoveMessage(11, 0, s);
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (!poke(b,s).contains("Recharging") || poke(b,s)["Recharging"].toInt() != b.turn()) {
+            return;
+        }
+
+        fturn(b, s).add(TM::NoChoice);
+        turn(b,s)["AutomaticMove"] = 0;//So that confusion won't be inflicted on recharge
+
+        addFunction(turn(b,s), "MoveSettings", "HyperBeam", &ms);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
 {
     REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(10, Bind);
+    REGISTER_MOVE(11, HyperBeam);
     REGISTER_MOVE(22, Counter);
     REGISTER_MOVE(13, Dig);
     REGISTER_MOVE(28, Disable);
