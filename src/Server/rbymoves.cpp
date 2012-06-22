@@ -362,6 +362,17 @@ struct RBYDisable : public MM
     }
 };
 
+struct RBYDragonRage : public MM
+{
+    RBYDragonRage() {
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void cad(int s, int , BS &b) {
+        turn(b,s)["CustomDamage"] = turn(b,s)["DragonRage_Arg"];
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -371,4 +382,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(22, Counter);
     REGISTER_MOVE(13, Dig);
     REGISTER_MOVE(28, Disable);
+    REGISTER_MOVE(30, DragonRage);
 }

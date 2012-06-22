@@ -47,7 +47,7 @@
 #107#roar
 
 
-#30-20#sonic boom
+30-20#sonic boom
 28#disable
 
 
@@ -80,7 +80,7 @@
 
 #93#petal dance
 
-#30-40#dragon rage
+30-40#dragon rage
 10#Fire spin
 
 
