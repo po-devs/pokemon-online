@@ -30,6 +30,7 @@ signals:
 
 private slots:
     void on_done_clicked() {emit switchToTrainer();}
+    void changeForme(int pokeref);
 
 public slots:
     void updateStats();

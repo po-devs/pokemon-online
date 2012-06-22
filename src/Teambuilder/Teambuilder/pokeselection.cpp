@@ -24,12 +24,19 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
         ui->shiny->show();
     }
 
+
     connect(ui->shiny, SIGNAL(toggled(bool)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateTypes()));
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
     connect(ui->done, SIGNAL(clicked()), SLOT(finish()));
+}
+
+void PokeSelection::show()
+{
+    QWidget::show();
+    ui->pokemonList->setFocus();
 }
 
 void PokeSelection::setNum(const Pokemon::uniqueId &num)

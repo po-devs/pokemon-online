@@ -2544,7 +2544,7 @@ int BattleSituation::calculateDamage(int p, int t)
         if(gen().num == 1) {
             def = getStat(t, SpAttack);
         } else {
-            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
+            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SecretSword) ? Defense : SpDefense);
         }
     }
 
