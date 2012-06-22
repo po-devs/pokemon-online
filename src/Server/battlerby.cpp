@@ -378,6 +378,8 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         int damage;
         if (turnMemory(player).contains("CustomDamage")) {
             damage = turnMemory(player).value("CustomDamage").toInt();
+        } else if (MoveInfo::isOHKO(attack, gen())) {
+            damage = poke(target).lifePoints();
         } else {
             damage = calculateDamage(player, target);
         }
@@ -517,7 +519,14 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     acc = acc*255/100;
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(255*30/100, 256);
+        bool ret;
+
+        if (getStat(player, Speed) >= getStat(target, Speed)) {
+            ret = false;
+        } else {
+            ret = coinflip(255*30/100, 256);
+        }
+
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
