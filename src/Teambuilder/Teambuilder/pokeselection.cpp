@@ -62,6 +62,8 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
         ui->altForme->setMenu(m);
         ui->altForme->setEnabled(true);
     } else {
+        delete ui->altForme->menu();
+        ui->altForme->setMenu(0);
         ui->altForme->setDisabled(true);
     }
 }
