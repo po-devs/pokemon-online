@@ -2037,7 +2037,7 @@ struct MMMetronome : public MM
         MMMetroSet() {
             (*this).unite(MMAssist::forbidden_moves );
 
-            (*this) << Move::GiftPass << Move::YouFirst << Move::FreezeBolt << Move::ColdFlare
+            (*this) << Move::GiftPass << Move::YouFirst << Move::IceBurn << Move::FreezeShock
                                                  << Move::NaturePower << Move::Stall << Move::FastGuard << Move::RagePower
                                                  << Move::AncientSong << Move::SacredSword << Move::TechnoBuster << Move::Transform
                                                  << Move::V_Generate << Move::WideGuard << Move::BackOut;
