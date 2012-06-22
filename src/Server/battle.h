@@ -103,7 +103,6 @@ public:
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
     bool testStatus(int player);
-    void failSilently(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasWorkingAbility(int play, int ability);
     bool opponentsHaveWorkingAbility(int play, int ability);

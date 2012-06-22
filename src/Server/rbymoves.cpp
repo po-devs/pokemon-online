@@ -466,6 +466,9 @@ struct RBYHaze : public MM
 
         poke(b,s).remove("Focused");
         poke(b,t).remove("Focused");
+
+        b.poke(s).removeStatus(Pokemon::Seeded);
+        b.poke(t).removeStatus(Pokemon::Seeded);
     }
 };
 
@@ -524,6 +527,26 @@ struct RBYHyperBeam : public MM
     }
 };
 
+struct RBYLeechSeed : public MM
+{
+    RBYLeechSeed() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasType(t, Type::Grass) || b.poke(t).hasStatus(Pokemon::Seeded)) {
+            b.failSilently(s);
+            b.sendMoveMessage(72, 0, s, Type::Grass);
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.sendMoveMessage(72, 1, s, Type::Grass, t);
+        b.poke(t).addStatus(Pokemon::Seeded);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -539,5 +562,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(37, Explosion);
     REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(64, HiJumpKick);
+    REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(149, Haze);
 }

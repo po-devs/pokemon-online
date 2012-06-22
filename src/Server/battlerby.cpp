@@ -213,7 +213,19 @@ void BattleRBY::personalEndTurn(int player)
         break;
     }
 
-    // Todo: leech seed damage
+    if (poke(player).hasStatus(Pokemon::Seeded)) {
+        //Leech Seed increases toxic count by 1
+        if (poke(player).status() == Pokemon::Poisoned) {
+            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+        }
+        int source = opponent(player);
+
+        if (!koed(source)) {
+            sendMoveMessage(72, 2, player, Pokemon::Grass);
+            inflictDamage(player, poke(player).totalLifePoints()/16, player);
+            healLife(source, poke(player).totalLifePoints()/16);
+        }
+    }
 
     testWin();
 }
