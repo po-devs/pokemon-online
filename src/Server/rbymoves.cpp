@@ -292,6 +292,75 @@ struct RBYDig : public MM
     }
 };
 
+struct RBYDisable : public MM
+{
+    RBYDisable() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (poke(b,t).contains("DisableCount")) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+        bool enoughPPs = false;
+        for (int i = 0; i < 4; i++) {
+            if (b.PP(t, i) > 0) {
+                enoughPPs = true;
+            }
+        }
+        if (!enoughPPs) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int count = 1 + b.randint(8); //1-8 count
+        QVector<int> possibilities;
+        for (int i = 0; i < 4; i++) {
+            if (b.PP(t, i) > 0) {
+                possibilities.push_back(i);
+            }
+        }
+        if (possibilities.size() == 0) {
+            return; //Should be impossible
+        }
+        int slot = possibilities[b.randint(possibilities.size())];
+
+        poke(b,t)["DisableCount"] = count;
+        poke(b,t)["DisableSlot"] = slot;
+
+        addFunction(poke(b,t), "MovePossible", "Disable", &mp);
+        addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
+
+        b.sendMoveMessage(28, 0, s, 0, t, b.move(t, slot));
+    }
+
+    static void mp(int s, int , BS &b) {
+        inc(poke(b,s)["DisableCount"], -1);
+        int slot = poke(b,s).value("DisableSlot").toInt();
+
+        if (poke(b,s).value("DisableCount").toInt() <= 0) {
+            poke(b,s).remove("DisableCount");
+            b.sendMoveMessage(28, 2, s, 0, s, b.move(s, slot));
+            return;
+        }
+
+        if (move(b,s) == b.move(s, slot)) {
+            b.sendMoveMessage(28, 1, s, 0, s, b.move(s, slot));
+            turn(b,s)["ImpossibleToMove"] = true;
+        }
+    }
+
+    static void msp(int s, int , BS &b) {
+        if (!poke(b,s).contains("DisableCount")) {
+            return;
+        }
+        poke(b,s)[QString("Move%1Blocked").arg(poke(b,s)["DisableSlot"].toInt())] = true;
+    }
+};
 
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
@@ -301,4 +370,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(10, Bind);
     REGISTER_MOVE(22, Counter);
     REGISTER_MOVE(13, Dig);
+    REGISTER_MOVE(28, Disable);
 }
