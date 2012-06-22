@@ -358,6 +358,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         if (typemod == 0) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(typemod));
+            calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 

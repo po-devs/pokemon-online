@@ -14,6 +14,7 @@ public:
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
     void losePP(int player, int move, int loss=1);
     int calculateDamage(int player, int target);
+    bool hadSubstitute(int player);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
@@ -25,7 +26,6 @@ protected:
     void analyzeChoices();
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     bool testAccuracy(int player, int target, bool silent=false);
-    bool hadSubstitute(int player);
     void inflictRecoil(int x, int target);
 
     void personalEndTurn(int player);
