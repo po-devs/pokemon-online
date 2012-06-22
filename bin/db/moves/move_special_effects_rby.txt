@@ -136,7 +136,7 @@
 #60#softboiled
 #64#high jump kick
 
-#31|1#dream eater
+31#dream eater
 
 
 #1#Leech Life
