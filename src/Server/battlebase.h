@@ -314,6 +314,8 @@ public:
     void notifyInfos(int tosend = All);
     void notifySub(int player, bool sub);
 
+    void failSilently(int player);
+
     virtual BattleDynamicInfo constructInfo(int player);
     BattleStats constructStats(int player);
 

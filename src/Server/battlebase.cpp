@@ -2133,3 +2133,9 @@ void BattleBase::changeStatMod(int player, int stat, int newstat)
 {
     fpoke(player).boosts[stat] = newstat;
 }
+
+void BattleBase::failSilently(int player)
+{
+    turnMem(player).remove(TM::FailingMessage);
+    turnMem(player).add(TM::Failed);
+}

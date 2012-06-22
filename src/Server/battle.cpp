@@ -3317,12 +3317,6 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnMemory(player)["MoveChosen"].toInt());
 }
 
-void BattleSituation::failSilently(int player)
-{
-    turnMem(player).remove(TM::FailingMessage);
-    turnMem(player).add(TM::Failed);
-}
-
 PokeFraction BattleSituation::getStatBoost(int player, int stat)
 {
     int boost = fpoke(player).boosts[stat];
