@@ -373,6 +373,19 @@ struct RBYDragonRage : public MM
     }
 };
 
+struct RBYDreamEater : public MM
+{
+    RBYDreamEater() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int t, BS &b) {
+        if (b.poke(t).status() != Pokemon::Asleep) {
+            tmove(b,s).accuracy = -1;
+        }
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -383,4 +396,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(13, Dig);
     REGISTER_MOVE(28, Disable);
     REGISTER_MOVE(30, DragonRage);
+    REGISTER_MOVE(31, DreamEater);
 }
