@@ -3,6 +3,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/modelenum.h"
 #include "theme.h"
+#include <QMenu>
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
     ui(new Ui::PokeSelection)
@@ -10,7 +11,7 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     ui->setupUi(this);
     ui->pokemonList->setModel(pokemonModel);
 
-    m_num = pokemon;
+    setNum(pokemon);
 
     ui->pokemonList->setCurrentIndex(pokemonModel->index(pokemon.pokenum, 1));
     ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
@@ -42,6 +43,35 @@ void PokeSelection::show()
 void PokeSelection::setNum(const Pokemon::uniqueId &num)
 {
     m_num = num;
+
+    if (PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) {
+        QMenu *m = new QMenu(ui->altForme);
+        QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(num, getGen());
+
+        QSignalMapper *mapper = new QSignalMapper(m);
+        foreach(Pokemon::uniqueId forme, formes) {
+            QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
+            ac->setCheckable(true);
+            if (forme == num) {
+                ac->setChecked(true);
+            }
+            mapper->setMapping(ac, forme.toPokeRef());
+        }
+        connect(mapper, SIGNAL(mapped(int)), SLOT(changeForme(int)));
+
+        ui->altForme->setMenu(m);
+        ui->altForme->setEnabled(true);
+    } else {
+        ui->altForme->setDisabled(true);
+    }
+}
+
+void PokeSelection::changeForme(int pokeref)
+{
+    setNum(Pokemon::uniqueId(pokeref));
+
+    updateTypes();
+    updateSprite();
 }
 
 void PokeSelection::finish()
