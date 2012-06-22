@@ -407,6 +407,34 @@ struct RBYExplosion : public MM
     }
 };
 
+struct RBYFocusEnergy : public MM
+{
+    RBYFocusEnergy() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).contains("Focused")) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(46, 0, s);
+        poke(b,s)["Focused"] = true;
+        addFunction(poke(b,s), "TurnSettings", "FocusEnergy", &ts);
+    }
+
+    static void ts(int s, int, BS &b) {
+        addFunction(turn(b,s), "MoveSettings", "FocusEnergy", &ms);
+    }
+
+    static void ms(int s, int, BS &b) {
+        tmove(b,s).critRaise+=2;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -419,4 +447,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(30, DragonRage);
     REGISTER_MOVE(31, DreamEater);
     REGISTER_MOVE(37, Explosion);
+    REGISTER_MOVE(46, FocusEnergy);
 }
