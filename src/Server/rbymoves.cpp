@@ -227,7 +227,7 @@ struct RBYCounter : public MM
     static void ms(int s, int t, BS &b) {
         /* If both use counter, it misses */
         t = b.opponent(s);
-        if (move(b, t) == move(b, s)) {
+        if (move(b, t) == move(b, s) || turn(b,s).contains("MetronomeCall")) {
             tmove(b,s).accuracy = -1;
         }
     }
@@ -547,6 +547,55 @@ struct RBYLeechSeed : public MM
     }
 };
 
+struct RBYLightScreen : public MM
+{
+    RBYLightScreen() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int cat = turn(b,s)["LightScreen_Arg"].toInt();
+        if (poke(b,s).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        int cat = turn(b,s)["LightScreen_Arg"].toInt();
+
+        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
+        poke(b,s)["Barrier" + QString::number(cat) + "Count"] = 1;
+    }
+};
+
+struct RBYMetronome : public MM
+{
+    RBYMetronome() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
+        turn(b,s)["MetronomeCall"] = true;
+
+        while (1) {
+            int move = b.randint(MoveInfo::NumberOfMoves());
+
+            bool correctMove = move != 0 && move != Move::Struggle && MoveInfo::Exists(move, b.gen()) && move != Move::Metronome;
+
+            if (correctMove) {
+                BS::BasicMoveInfo info = tmove(b,s);
+                RBYMoveEffect::setup(move,s,t,b);
+                b.useAttack(s,move,true,true);
+                RBYMoveEffect::unsetup(move, s, b);
+                tmove(b,s) = info;
+                break;
+            }
+        }
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -563,5 +612,7 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(64, HiJumpKick);
     REGISTER_MOVE(72, LeechSeed);
+    REGISTER_MOVE(73, LightScreen);
+    REGISTER_MOVE(85, Metronome);
     REGISTER_MOVE(149, Haze);
 }

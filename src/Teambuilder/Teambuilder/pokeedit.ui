@@ -249,16 +249,6 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QPushButton" name="altForme">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Alternate Formes</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
@@ -292,7 +282,6 @@
   <tabstop>nature</tabstop>
   <tabstop>item</tabstop>
   <tabstop>happiness</tabstop>
-  <tabstop>altForme</tabstop>
   <tabstop>move1</tabstop>
   <tabstop>move2</tabstop>
   <tabstop>move3</tabstop>

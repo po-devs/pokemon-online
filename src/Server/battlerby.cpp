@@ -675,6 +675,11 @@ int BattleRBY::calculateDamage(int p, int t)
         def = getStat(t, SpAttack);
     }
 
+    /* Light screen / Reflect */
+    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        def = std::min(1024, def*2);
+    }
+
     attack = std::min(attack, 65535);
 
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
@@ -695,11 +700,6 @@ int BattleRBY::calculateDamage(int p, int t)
 
     //Guts, burn
     damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
-
-    /* Light screen / Reflect */
-    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        damage = damage * 2 / 3;
-    }
 
     damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
 
