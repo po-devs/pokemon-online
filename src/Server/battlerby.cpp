@@ -297,9 +297,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     turnMem(player).add(TM::HasPassedStatus);
     //turnMemory(player)["MoveChosen"] = attack;
 
-    callpeffects(player, target, "MovePossible");
-    if (turnMemory(player).contains("ImpossibleToMove")) {
-        goto trueend;
+    if (!specialOccurence) {
+        callpeffects(player, target, "MovePossible");
+        if (turnMemory(player).contains("ImpossibleToMove")) {
+            goto trueend;
+        }
     }
 
     calleffects(player, target, "MoveSettings");
