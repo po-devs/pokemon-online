@@ -24,6 +24,7 @@ private slots:
     void updateTypes();
     void updateSprite();
     void setNum(const Pokemon::uniqueId&);
+    void changeForme(int);
     void finish();
 private:
     Ui::PokeSelection *ui;
