@@ -434,7 +434,7 @@ public:
     virtual void inflictRecoil(int x, int target) = 0;
     void healLife(int player, int healing);
     virtual void changeHp(int player, int newHp);
-    virtual void koPoke(int player, int source, bool straight);
+    virtual void koPoke(int player, int source, bool straight=false);
 
     void changeSprite(int player, Pokemon::uniqueId newForme);
 

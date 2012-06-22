@@ -118,7 +118,7 @@
 9#bide
 #80#metronome
 #85#mirror move
-#37#self destruct
+37#self destruct
 
 
 
@@ -151,7 +151,7 @@
 #82#Splash
 
 
-#37#explosion
+37#explosion
 
 
 #106#rest

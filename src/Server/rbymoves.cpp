@@ -386,6 +386,27 @@ struct RBYDreamEater : public MM
     }
 };
 
+struct RBYExplosion : public MM
+{
+    RBYExplosion() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["AttackSomehowFailed"] = &asf;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        /* Explosion doesn't faint the user if it breaks a sub */
+        if (!b.hadSubstitute(t)) {
+            b.selfKoer() = s;
+            b.koPoke(s, s);
+        }
+    }
+
+    static void asf(int s, int, BS &b) {
+        b.selfKoer() = s;
+        b.koPoke(s, s);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -397,4 +418,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(28, Disable);
     REGISTER_MOVE(30, DragonRage);
     REGISTER_MOVE(31, DreamEater);
+    REGISTER_MOVE(37, Explosion);
 }
