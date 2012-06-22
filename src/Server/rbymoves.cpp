@@ -547,6 +547,28 @@ struct RBYLeechSeed : public MM
     }
 };
 
+struct RBYLightScreen : public MM
+{
+    RBYLightScreen() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int cat = turn(b,s)["LightScreen_Arg"].toInt();
+        if (poke(b,s).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        int cat = turn(b,s)["LightScreen_Arg"].toInt();
+
+        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
+        poke(b,s)["Barrier" + QString::number(cat) + "Count"] = 1;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -563,5 +585,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(46, FocusEnergy);
     REGISTER_MOVE(64, HiJumpKick);
     REGISTER_MOVE(72, LeechSeed);
+    REGISTER_MOVE(73, LightScreen);
     REGISTER_MOVE(149, Haze);
 }
