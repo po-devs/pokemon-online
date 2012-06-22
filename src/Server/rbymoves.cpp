@@ -431,7 +431,36 @@ struct RBYFocusEnergy : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        tmove(b,s).critRaise+=2;
+        if (poke(b,s).contains("Focused")) {
+            tmove(b,s).critRaise+=2;
+        }
+    }
+};
+
+struct RBYHaze : public MM
+{
+    RBYHaze() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        int t = b.opponent(s);
+        b.healStatus(t, b.poke(t).status());
+
+        for (int i = Attack; i < AllStats; i++) {
+            b.changeStatMod(s, i, 0);
+            b.changeStatMod(t, i, 0);
+        }
+        b.healConfused(s);
+        b.healConfused(t);
+
+        poke(b,s).remove("Barrier1Count");
+        poke(b,s).remove("Barrier2Count");
+        poke(b,t).remove("Barrier1Count");
+        poke(b,t).remove("Barrier2Count");
+
+        poke(b,s).remove("Focused");
+        poke(b,t).remove("Focused");
     }
 };
 
@@ -448,4 +477,5 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(31, DreamEater);
     REGISTER_MOVE(37, Explosion);
     REGISTER_MOVE(46, FocusEnergy);
+    REGISTER_MOVE(149, Haze);
 }
