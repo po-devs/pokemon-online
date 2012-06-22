@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QMenuBar>
+#include <QShortcut>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/teammenu.h"
@@ -28,9 +29,15 @@ void TeamMenu::setupUi()
     grid->addWidget(ui->pokemonTabs = new QTabBar(), 0, 0, 1, 1, Qt::AlignLeft|Qt::AlignTop);
     grid->setContentsMargins(-1,0,-1,-1);
 
+    QSignalMapper *shortcutMapper = new QSignalMapper(this);
     for (int i = 0; i < 6; i++) {
         ui->pokemonTabs->addTab(PokemonInfo::Icon(i+1), tr("Slot #&%1").arg(i+1));
+        QShortcut *shortcut = new QShortcut(QKeySequence(QString("Ctrl+%1").arg(i+1)), this);
+        connect(shortcut, SIGNAL(activated()), shortcutMapper, SLOT(map()));
+        shortcutMapper->setMapping(shortcut, i);
     }
+    connect(shortcutMapper, SIGNAL(mapped(int)), SLOT(switchToTab(int)));
+
     ui->pokemonTabs->setCurrentIndex(0);
     ui->pokemonTabs->setObjectName("pokemonTabs");
 

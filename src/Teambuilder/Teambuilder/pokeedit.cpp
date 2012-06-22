@@ -2,6 +2,7 @@
 #include <QCompleter>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QMenu>
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
@@ -118,6 +119,13 @@ void PokeEdit::setMove(int slot, int move)
             ui->happiness->setValue(255);
         } else if (move == Move::Frustration) {
             ui->happiness->setValue(0);
+        }
+        if (poke().num().pokenum == Pokemon::Keldeo) {
+            if (poke().hasMove(Move::SecretSword)) {
+                ui->altForme->setEnabled(true);
+            } else {
+                setNum(Pokemon::Keldeo);
+            }
         }
     } catch (const QString &s) {
         QMessageBox::information(NULL, tr("Invalid moveset"), s);
@@ -249,6 +257,7 @@ void PokeEdit::setItem(int itemnum)
             low = mid;
         }
     }
+
     updateItemSprite(poke().item());
 }
 
@@ -257,11 +266,17 @@ void PokeEdit::changeHappiness(int newHappiness)
     poke().happiness() = newHappiness;
 }
 
+void PokeEdit::changeForme(int pokeref)
+{
+    setNum(Pokemon::uniqueId(pokeref));
+}
+
 void PokeEdit::setNum(const Pokemon::uniqueId &num)
 {
     if (num == poke().num()) {
         return;
     }
+
     bool sameForme = num.pokenum == poke().num().pokenum;
     if (!sameForme) {
         poke().reset();
@@ -270,6 +285,30 @@ void PokeEdit::setNum(const Pokemon::uniqueId &num)
     poke().load();
     if (sameForme) {
         poke().runCheck();
+    }
+
+    if (PokemonInfo::HasFormes(poke().num()) && PokemonInfo::AFormesShown(poke().num())) {
+        QMenu *m = new QMenu(ui->altForme);
+        QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(poke().num(), poke().gen());
+
+        QSignalMapper *mapper = new QSignalMapper(m);
+        foreach(Pokemon::uniqueId forme, formes) {
+            QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
+            ac->setCheckable(true);
+            if (forme == poke().num()) {
+                ac->setChecked(true);
+            }
+            mapper->setMapping(ac, forme.toPokeRef());
+        }
+        connect(mapper, SIGNAL(mapped(int)), SLOT(changeForme(int)));
+
+
+        ui->altForme->setEnabled(poke().num() != Pokemon::Keldeo || poke().hasMove(Move::SecretSword));
+        ui->altForme->setMenu(m);
+    } else {
+        ui->altForme->setDisabled(true);
+        delete ui->altForme->menu();
+        ui->altForme->setMenu(0);
     }
 
     emit numChanged();
@@ -291,5 +330,20 @@ void PokeEdit::changeItem(const QString &itemName)
 {
     int itemNum = ItemInfo::Number(itemName);
     poke().item() = itemNum;
+    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb) {
+        setNum(Pokemon::Giratina_O); 
+    } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
+        setNum(Pokemon::Giratina); 
+    } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4) {
+        poke().item() = 0;
+    }
+    if (poke().num().pokenum == Pokemon::Arceus) {
+        int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+    }
+    if (poke().num().pokenum == Pokemon::Genesect) {
+        int subnum = ItemInfo::isDrive(itemNum) ? ItemInfo::DriveForme(itemNum) : 0;
+        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+    }
     updateItemSprite(poke().item());
 }
