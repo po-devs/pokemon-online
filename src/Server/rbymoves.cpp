@@ -775,6 +775,41 @@ struct RBYRest : public MM
     }
 };
 
+struct RBYRazorWind : public MM
+{
+    RBYRazorWind() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+        fturn(b,s).add(TM::BuildUp);
+
+        int mv = move(b,s);
+
+        b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
+        /* Skull bash */
+
+        poke(b,s)["ChargingMove"] = mv;
+        poke(b,s)["ReleaseTurn"] = b.turn() + 1;
+        turn(b,s)["TellPlayers"] = false;
+        tmove(b, s).power = 0;
+        tmove(b, s).status = Pokemon::Fine;
+        tmove(b, s).targets = Move::User;
+        addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (poke(b,s).value("ReleaseTurn").toInt() != b.turn()) {
+            return;
+        }
+        fturn(b,s).add(TM::NoChoice);
+        fturn(b,s).add(TM::UsePP);
+        int mv = poke(b,s)["ChargingMove"].toInt();
+        initMove(mv, b.gen(), tmove(b, s));
+    }
+};
+
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -800,6 +835,7 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(93, PetalDance);
     REGISTER_MOVE(99, Psywave);
     REGISTER_MOVE(102, Rage);
+    REGISTER_MOVE(104, RazorWind);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(149, Haze);
 }
