@@ -141,7 +141,7 @@
 
 #1#Leech Life
 
-#104-1#sky attack
+104-1#sky attack
 #137#transform
 
 
@@ -162,5 +162,5 @@
 #192#Tri Attack
 #130#super fang
 
-#8-25|128#SUBSTITUTE
+128#SUBSTITUTE
 #127#struggle
