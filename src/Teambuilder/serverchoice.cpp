@@ -41,6 +41,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
     QCompleter *completer = new QCompleter(ui->advServerEdit);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
     QStringList res = settings.value("ServerChoice/SavedServers").toStringList();
 
     foreach (QString r, res) {
