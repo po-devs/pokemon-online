@@ -11,7 +11,7 @@
 
 
 #43#Guillotine
-#104-0#razor wind
+104-0#razor wind
 
 
 
@@ -74,7 +74,7 @@
 #72#leech seed
 #191#Growth
 
-#104-3#solar beam
+104-3#solar beam
 
 
 
@@ -128,7 +128,7 @@
 
 10#Clamp
 
-#104-2#skull bash
+104-2#skull bash
 
 
 
@@ -154,7 +154,7 @@
 37#explosion
 
 
-#106#rest
+106#rest
 
 
 
