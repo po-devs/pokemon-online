@@ -35,7 +35,7 @@
 
 10#wrap
 
-#93#thrash
+93#thrash
 
 
 
@@ -67,7 +67,7 @@
 
 #52#Low kick
 22#counter
-#91#seismic toss
+91#seismic toss
 
 #1#leech
 #1#mega drain
@@ -78,7 +78,7 @@
 
 
 
-#93#petal dance
+93#petal dance
 
 30-40#dragon rage
 10#Fire spin
@@ -99,7 +99,7 @@
 
 #102#rage
 
-#91#night shade
+91#night shade
 81#mimic
 
 
