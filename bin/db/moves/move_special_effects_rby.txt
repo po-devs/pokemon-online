@@ -160,7 +160,7 @@
 
 #19#conversion
 #192#Tri Attack
-#130#super fang
+130#super fang
 
 128#SUBSTITUTE
 #127#struggle
