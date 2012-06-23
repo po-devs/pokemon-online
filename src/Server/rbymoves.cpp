@@ -302,6 +302,7 @@ struct RBYDisable : public MM
     RBYDisable() {
         functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+        functions["AttackSomehowFailed"] = &asf;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -341,6 +342,12 @@ struct RBYDisable : public MM
         addFunction(poke(b,t), "MovesPossible", "Disable", &msp);
 
         b.sendMoveMessage(28, 0, s, 0, t, b.move(t, slot));
+        b.callpeffects(t, s, "UponOffensiveDamageReceived");
+    }
+
+    static void asf(int s, int t, BS &b) {
+        //RBY Bug: Disable builds up rage whenever
+        b.callpeffects(t, s, "UponOffensiveDamageReceived");
     }
 
     static void mp(int s, int , BS &b) {
@@ -717,6 +724,35 @@ struct RBYPsywave : public MM
     }
 };
 
+struct RBYRage : public MM
+{
+    RBYRage() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(poke(b,s), "TurnSettings", "Rage", &ts);
+        addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+    }
+
+    static void ts(int s, int, BS &b) {
+        fturn(b,s).add(TM::NoChoice);
+        addFunction(turn(b,s), "AttackSomehowFailed", "Rage", &asf);
+    }
+
+    static void uodr(int s, int, BS &b) {
+        if (!b.koed(s)) {
+            b.gainStatMod(s, Attack, 1, s);
+            b.sendMoveMessage(102, 0, s);
+        }
+    }
+
+    static void asf(int s, int, BS &b) {
+        //Rage becomes bad accuracy once it misses...
+        tmove(b,s).accuracy = 1;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -741,5 +777,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(93, PetalDance);
     REGISTER_MOVE(99, Psywave);
+    REGISTER_MOVE(102, Rage);
     REGISTER_MOVE(149, Haze);
 }
