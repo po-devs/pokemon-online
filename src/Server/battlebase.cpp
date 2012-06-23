@@ -1845,7 +1845,8 @@ void BattleBase::healDamage(int player, int target)
         return;
 
     if (healing > 0) {
-        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+        //In RBY, if the HP difference is 255, it fails
+        if(poke(target).lifePoints() < poke(target).totalLifePoints() && (gen() != Gen::RBY || (poke(target).totalLifePoints()-poke(target).lifePoints()) % 256 != 255)) {
             sendMoveMessage(60, 0, target, tmove(player).type);
 
             int damage = poke(target).totalLifePoints() * healing / 100;
