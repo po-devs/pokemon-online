@@ -90,6 +90,7 @@ public:
     bool hasMove(int player, int move);
     int move(int player, int slot);
     bool hasMoved(int slot);
+    Pokemon::uniqueId pokenum(int player);
 
     int player(int slot) const;
     /* Returns -1 if none */

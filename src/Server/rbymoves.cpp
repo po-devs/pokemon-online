@@ -857,6 +857,42 @@ struct RBYConversion : public MM
     }
 };
 
+struct RBYTransform : public MM
+{
+    RBYTransform() {
+        functions["UponAttackSucessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        /* Give new values to what needed */
+        Pokemon::uniqueId num = b.pokenum(t);
+
+        b.sendMoveMessage(137,0,s,0,s,num.pokenum);
+
+        BS::BasicPokeInfo &po = fpoke(b,s);
+        BS::BasicPokeInfo &pt = fpoke(b,t);
+
+        po.id = num;
+        po.weight = PokemonInfo::Weight(num);
+        po.type1 = PokemonInfo::Type1(num, b.gen());
+        po.type2 = PokemonInfo::Type2(num, b.gen());
+
+        b.changeSprite(s, num);
+
+        for (int i = 0; i < 4; i++) {
+            b.changeTempMove(s,i,b.move(t,i));
+            b.changePP(s, i, 5);
+        }
+
+        for (int i = 1; i < 6; i++)
+            po.stats[i] = pt.stats[i];
+
+        for (int i = 0; i < 8; i++) {
+            po.boosts[i] = pt.boosts[i];
+        }
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -887,5 +923,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(137, Transform);
     REGISTER_MOVE(149, Haze);
 }

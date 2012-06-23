@@ -1925,10 +1925,6 @@ int BattleSituation::weight(int player) {
     return ret;
 }
 
-Pokemon::uniqueId BattleSituation::pokenum(int player) {
-    return fpoke(player).id;
-}
-
 bool BattleSituation::hasWorkingItem(int player, int it)
 {
     //Klutz

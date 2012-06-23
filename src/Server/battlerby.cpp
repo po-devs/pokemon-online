@@ -671,11 +671,11 @@ int BattleRBY::calculateDamage(int p, int t)
 
     int cat = tmove(p).category;
     if (cat == Move::Physical) {
-        attack = getStat(p, Attack);
-        def = getStat(t, Defense);
+        attack = crit ? this->poke(p).normalStat(Attack) : getStat(p, Attack);
+        def = crit ? this->poke(t).normalStat(Defense) : getStat(t, Defense);
     } else {
-        attack = getStat(p, SpAttack);
-        def = getStat(t, SpAttack);
+        attack = crit ? this->poke(p).normalStat(SpAttack) : getStat(p, SpAttack);
+        def = crit ? this->poke(t).normalStat(SpAttack) : getStat(t, SpAttack);
     }
 
     /* Light screen / Reflect */
