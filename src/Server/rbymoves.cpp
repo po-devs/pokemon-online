@@ -665,6 +665,47 @@ struct RBYMist : public MM
     }
 };
 
+struct RBYNightShade : public MM
+{
+    RBYNightShade() {
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void cad(int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = b.poke(s).level();
+    }
+};
+
+struct RBYPetalDance : public MM
+{
+    RBYPetalDance() {
+        functions["MoveSettings"] = &ms;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        poke(b,s)["PetalDanceCount"] = 3 + b.randint(2);
+        addFunction(poke(b,s), "TurnSettings", "PetalDance", &ts);
+    }
+
+    static void uas(int s, int, BS &b) {
+        inc(poke(b,s)["PetalDanceCount"], -1);
+        if (poke(b,s).value("PetalDanceCount").toInt() <= 0) {
+            poke(b,s).remove("PetalDanceCount");
+            b.inflictConfused(s, s, false);
+        }
+    }
+
+    static void ts(int s, int, BS &b) {
+        if (!poke(b,s).contains("PetalDanceCount")) {
+            return;
+        }
+        addFunction(poke(b,s), "UponAttackSuccessful", "PetalDance", &uas);
+        addFunction(poke(b,s), "AttackSomehowFailed", "PetalDance", &uas);
+        fturn(b,s).add(TM::NoChoice);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -686,5 +727,7 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(81, Mimic);
     REGISTER_MOVE(85, MirrorMove);
     REGISTER_MOVE(86, Mist);
+    REGISTER_MOVE(91, NightShade);
+    REGISTER_MOVE(93, PetalDance);
     REGISTER_MOVE(149, Haze);
 }
