@@ -478,7 +478,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         BattleConfiguration conf;
         Flags f;
         qint32 battleId;
-        in >> battleId;
+        in >> f >> battleId;
 
         if (f[0]) {
             in >> conf;
