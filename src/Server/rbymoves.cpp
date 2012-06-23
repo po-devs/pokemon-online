@@ -845,6 +845,18 @@ struct RBYSuperFang : public MM
     }
 };
 
+struct RBYConversion : public MM
+{
+    RBYConversion() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        fpoke(b,s).type1 = fpoke(b,t).type1;
+        fpoke(b,s).type2 = fpoke(b,t).type2;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -852,6 +864,7 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(9, Bide);
     REGISTER_MOVE(10, Bind);
     REGISTER_MOVE(11, HyperBeam);
+    REGISTER_MOVE(19, Conversion);
     REGISTER_MOVE(22, Counter);
     REGISTER_MOVE(13, Dig);
     REGISTER_MOVE(28, Disable);
