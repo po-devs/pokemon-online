@@ -162,7 +162,7 @@ ContextCallee::ContextCallee(long stacksize) : ctx(NULL), stacksize(stacksize), 
 
 ContextCallee::~ContextCallee()
 {
-    qDebug() << "Destroying context callee " << this;
+    //qDebug() << "Destroying context callee " << this;
     if (!finished()) {
         qCritical() << "Context callee killed without being normally exited, will probably cause a crash or some kind of problem."
                 " You need to wait() before calling the destructor, to make sure it's ended.";
@@ -171,7 +171,7 @@ ContextCallee::~ContextCallee()
     (void) coro_destroy(&context);
 
     free(stack);
-    qDebug() << "Destroyed context callee " << this;
+    //qDebug() << "Destroyed context callee " << this;
 }
 
 void ContextCallee::start(ContextSwitcher &ctx)
