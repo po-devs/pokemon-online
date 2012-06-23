@@ -100,7 +100,7 @@
 #102#rage
 
 #91#night shade
-#81#mimic
+81#mimic
 
 
 #60#recover
@@ -117,7 +117,7 @@
 46#focus energy
 9#bide
 80#metronome
-#85#mirror move
+85#mirror move
 37#self destruct
 
 

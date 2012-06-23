@@ -614,6 +614,34 @@ struct RBYMimic : public MM
     }
 };
 
+struct RBYMirrorMove : public MM
+{
+    RBYMirrorMove() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        int lastMove = fpoke(b,t).lastMoveUsed;
+
+        if (lastMove == 0 || lastMove == Move::MirrorMove) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+        removeFunction(turn(b,s), "DetermineAttackFailure", "MirrorMove");
+        removeFunction(turn(b,s), "UponAttackSuccessful", "MirrorMove");
+
+        int move = fpoke(b,t).lastMoveUsed;
+        BS::BasicMoveInfo info = tmove(b,s);
+        RBYMoveEffect::setup(move,s,s,b);
+        b.useAttack(s,move,true,true);
+        RBYMoveEffect::unsetup(move,s,b);
+        tmove(b,s) = info;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -631,7 +659,8 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(64, HiJumpKick);
     REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(73, LightScreen);
+    REGISTER_MOVE(80, Metronome);
     REGISTER_MOVE(81, Mimic);
-    REGISTER_MOVE(85, Metronome);
+    REGISTER_MOVE(85, MirrorMove);
     REGISTER_MOVE(149, Haze);
 }
