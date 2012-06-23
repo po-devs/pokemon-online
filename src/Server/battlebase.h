@@ -335,7 +335,7 @@ public:
         enum Flag {
             Transformed = 1,
             Substitute = 2,
-            HadSubstitute = 3
+            HadSubstitute = 4
         };
 
         int moves[4];
