@@ -158,7 +158,7 @@
 
 
 
-#19#conversion
+19#conversion
 #192#Tri Attack
 130#super fang
 
