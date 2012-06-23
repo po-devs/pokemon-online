@@ -119,6 +119,11 @@ void PokeEdit::setMove(int slot, int move)
         } else if (move == Move::Frustration) {
             ui->happiness->setValue(0);
         }
+        if (poke().num().pokenum == Pokemon::Keldeo) {
+            if (!poke().hasMove(Move::SecretSword)) {
+                setNum(Pokemon::Keldeo);
+            }
+        }
     } catch (const QString &s) {
         QMessageBox::information(NULL, tr("Invalid moveset"), s);
         m_moves[slot]->clear();
@@ -249,6 +254,7 @@ void PokeEdit::setItem(int itemnum)
             low = mid;
         }
     }
+
     updateItemSprite(poke().item());
 }
 
@@ -257,17 +263,25 @@ void PokeEdit::changeHappiness(int newHappiness)
     poke().happiness() = newHappiness;
 }
 
-void PokeEdit::setNum(const Pokemon::uniqueId &num)
+void PokeEdit::setNum(Pokemon::uniqueId num)
 {
+    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
+        num = Pokemon::Keldeo;
+    }
+
     if (num == poke().num()) {
         return;
     }
+
     bool sameForme = num.pokenum == poke().num().pokenum;
+
     if (!sameForme) {
         poke().reset();
     }
+
     poke().setNum(num);
     poke().load();
+
     if (sameForme) {
         poke().runCheck();
     }
@@ -291,5 +305,20 @@ void PokeEdit::changeItem(const QString &itemName)
 {
     int itemNum = ItemInfo::Number(itemName);
     poke().item() = itemNum;
+    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb) {
+        setNum(Pokemon::Giratina_O); 
+    } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
+        setNum(Pokemon::Giratina); 
+    } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4) {
+        poke().item() = 0;
+    }
+    if (poke().num().pokenum == Pokemon::Arceus) {
+        int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+    }
+    if (poke().num().pokenum == Pokemon::Genesect) {
+        int subnum = ItemInfo::isDrive(itemNum) ? ItemInfo::DriveForme(itemNum) : 0;
+        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+    }
     updateItemSprite(poke().item());
 }

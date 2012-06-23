@@ -90,6 +90,7 @@ public:
     bool hasMove(int player, int move);
     int move(int player, int slot);
     bool hasMoved(int slot);
+    Pokemon::uniqueId pokenum(int player);
 
     int player(int slot) const;
     /* Returns -1 if none */
@@ -314,6 +315,8 @@ public:
     void notifyInfos(int tosend = All);
     void notifySub(int player, bool sub);
 
+    void failSilently(int player);
+
     virtual BattleDynamicInfo constructInfo(int player);
     BattleStats constructStats(int player);
 
@@ -406,7 +409,9 @@ public:
             HasPassedStatus = 64,
             Flinched = 128,
             CriticalHit = 256,
-            KeepAttack = 512 //For RBY
+            KeepAttack = 512, //For RBY
+            UsePP = 1024, //For RBY
+            BuildUp = 2048 //For RBY
         };
 
         inline void remove(Flag f) {flags &= ~f;}
@@ -432,7 +437,9 @@ public:
     virtual void inflictRecoil(int x, int target) = 0;
     void healLife(int player, int healing);
     virtual void changeHp(int player, int newHp);
-    virtual void koPoke(int player, int source, bool straight);
+    virtual void koPoke(int player, int source, bool straight=false);
+
+    void changeSprite(int player, Pokemon::uniqueId newForme);
 
     bool wasKoed(int) const;
 
@@ -453,8 +460,9 @@ public:
     void healConfused(int player);
     void inflictConfusedDamage(int player);
 
-    void losePP(int player, int move, int loss);
+    virtual void losePP(int player, int move, int loss);
     virtual void changePP(int player, int move, int PP);
+    virtual void changeTempMove(int player, int slot, int move);
 
     bool testFail(int player);
     virtual bool testAccuracy(int player, int target, bool silent = false) = 0;
@@ -464,7 +472,7 @@ public:
     virtual int repeatNum(int player);
 
     virtual void testCritical(int player, int target);
-    virtual int calculateDamage(int player, int target);
+    virtual int calculateDamage(int player, int target) = 0;
     void healDamage(int player, int target);
     void notifyHits(int spot, int hits);
     void unthaw(int player);

@@ -1050,16 +1050,6 @@ struct MMBind : public MM
                         fm.maxTurns : (b.randint(fm.maxTurns+1-fm.minTurns)) + fm.minTurns; /* Grip claw = max turns */
             poke(b,t)["TrappedMove"] = move(b,s);
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Bind", &et);
-            if (b.gen() <= 1) {
-                addFunction(poke(b,t), "TurnSettings", "Bind", &ts); // bind moves prevent target moving in gen1
-            }
-        }
-    }
-
-    static void ts (int s, int, BS &b) {
-        if (poke(b,s)["TrappedRemainingTurns"].toInt() > 0) {
-            fturn(b,s).add(TM::NoChoice);
-            addFunction(turn(b,s), "MoveSettings", "Bind", &ms);
         }
     }
 
@@ -2037,7 +2027,7 @@ struct MMMetronome : public MM
         MMMetroSet() {
             (*this).unite(MMAssist::forbidden_moves );
 
-            (*this) << Move::GiftPass << Move::YouFirst << Move::FreezeBolt << Move::ColdFlare
+            (*this) << Move::GiftPass << Move::YouFirst << Move::IceBurn << Move::FreezeShock
                                                  << Move::NaturePower << Move::Stall << Move::FastGuard << Move::RagePower
                                                  << Move::AncientSong << Move::SacredSword << Move::TechnoBuster << Move::Transform
                                                  << Move::V_Generate << Move::WideGuard << Move::BackOut;

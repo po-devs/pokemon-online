@@ -1380,7 +1380,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     //For metronome calling fly / sky attack / ...
-    fpoke(player).lastMoveUsed = attack;
+    if (attack != 0) {
+        fpoke(player).lastMoveUsed = attack;
+    }
 
     calleffects(player, player, "MoveSettings");
 
@@ -1921,10 +1923,6 @@ int BattleSituation::weight(int player) {
     //        ret = 1;
 
     return ret;
-}
-
-Pokemon::uniqueId BattleSituation::pokenum(int player) {
-    return fpoke(player).id;
 }
 
 bool BattleSituation::hasWorkingItem(int player, int it)
@@ -2542,7 +2540,7 @@ int BattleSituation::calculateDamage(int p, int t)
         if(gen().num == 1) {
             def = getStat(t, SpAttack);
         } else {
-            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SkinSword) ? Defense : SpDefense);
+            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SecretSword) ? Defense : SpDefense);
         }
     }
 
@@ -2856,13 +2854,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         turnMemory(player)["DamageTaken"] = damage;
 }
 
-void BattleSituation::changeTempMove(int player, int slot, int move)
-{
-    fpoke(player).moves[slot] = move;
-    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
-}
-
 void BattleSituation::changeDefMove(int player, int slot, int move)
 {
     poke(player).move(slot).num() = move;
@@ -2870,11 +2861,6 @@ void BattleSituation::changeDefMove(int player, int slot, int move)
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(DefMove), quint8(slot), quint16(move));
     changePP(player,slot,poke(player).move(slot).totalPP());
-}
-
-void BattleSituation::changeSprite(int player, Pokemon::uniqueId newForme)
-{
-    notify(All, ChangeTempPoke, player, quint8(TempSprite), newForme);
 }
 
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
@@ -3318,12 +3304,6 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
 {
     failSilently(player);
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnMemory(player)["MoveChosen"].toInt());
-}
-
-void BattleSituation::failSilently(int player)
-{
-    turnMem(player).remove(TM::FailingMessage);
-    turnMem(player).add(TM::Failed);
 }
 
 PokeFraction BattleSituation::getStatBoost(int player, int stat)

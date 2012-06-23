@@ -12,18 +12,21 @@ public:
     typedef void (*MechanicsFunction) (int source, int target, BattleRBY &b);
 
     void inflictDamage(int player, int damage, int source, bool straightattack=false, bool goForSub=false);
+    void losePP(int player, int move, int loss=1);
+    int calculateDamage(int player, int target);
+    bool hadSubstitute(int player);
+    void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
+    void changeTempMove(int player, int slot, int move);
+    void changeStatus(int player, int status, bool tell=false, int turns=0);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
-    void changeStatus(int player, int status, bool tell=false, int turns=0);
     int getStat(int poke, int stat);
     void sendPoke(int player, int poke, bool silent);
     BattleChoice &choice (int p);
     BattleChoices createChoice(int slot);
     void analyzeChoices();
-    void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     bool testAccuracy(int player, int target, bool silent=false);
-    bool hadSubstitute(int player);
     void inflictRecoil(int x, int target);
 
     void personalEndTurn(int player);

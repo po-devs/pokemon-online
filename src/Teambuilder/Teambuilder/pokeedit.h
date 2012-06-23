@@ -2,13 +2,10 @@
 #define POKEEDIT_H
 
 #include <QWidget>
+#include "../PokemonInfo/pokemonstructs.h"
 
 namespace Ui {
     class PokeEdit;
-}
-
-namespace Pokemon {
-    class uniqueId;
 }
 
 class PokeTeam;
@@ -42,7 +39,7 @@ public slots:
     void changeNature(int newNature);
     void changeItem(const QString &newItem);
     void setNature(int index);
-    void setNum(const Pokemon::uniqueId &num);
+    void setNum(Pokemon::uniqueId num);
 signals:
     void numChanged();
 private slots:

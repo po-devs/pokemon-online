@@ -17,13 +17,14 @@ class PokeSelection : public QWidget
 public:
     explicit PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel);
     ~PokeSelection();
-
+    void show();
 signals:
     void pokemonChosen(Pokemon::uniqueId);
 private slots:
     void updateTypes();
     void updateSprite();
     void setNum(const Pokemon::uniqueId&);
+    void changeForme(int);
     void finish();
 private:
     Ui::PokeSelection *ui;

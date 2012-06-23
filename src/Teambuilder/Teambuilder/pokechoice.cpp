@@ -105,3 +105,13 @@ void TB_PokeChoice::startDrag()
         drag->exec(Qt::MoveAction);
     }
 }
+
+void TB_PokeChoice::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Space)
+    {
+        emit activated(currentIndex());
+    } else {
+        QTableView::keyPressEvent(event);
+    }
+}

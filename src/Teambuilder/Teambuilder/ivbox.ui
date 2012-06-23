@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>226</width>
-    <height>361</height>
+    <width>236</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -251,6 +251,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>hpivspin</tabstop>
+  <tabstop>attivspin</tabstop>
+  <tabstop>defivspin</tabstop>
+  <tabstop>spattivspin</tabstop>
+  <tabstop>spdefivspin</tabstop>
+  <tabstop>speedivspin</tabstop>
+  <tabstop>hiddenPowerType</tabstop>
+  <tabstop>ability1</tabstop>
+  <tabstop>ability2</tabstop>
+  <tabstop>ability3</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

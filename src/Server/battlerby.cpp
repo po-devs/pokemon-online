@@ -115,6 +115,8 @@ BattleChoices BattleRBY::createChoice(int slot)
     BattleChoices ret;
     ret.numSlot = slot;
 
+    callpeffects(slot, slot, "MovesPossible");
+
     for (int i = 0; i < 4; i++) {
         if (!isMovePossible(slot,i)) {
             ret.attackAllowed[i] = false;
@@ -211,7 +213,19 @@ void BattleRBY::personalEndTurn(int player)
         break;
     }
 
-    // Todo: leech seed damage
+    if (poke(player).hasStatus(Pokemon::Seeded)) {
+        //Leech Seed increases toxic count by 1
+        if (poke(player).status() == Pokemon::Poisoned) {
+            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+        }
+        int source = opponent(player);
+
+        if (!koed(source)) {
+            sendMoveMessage(72, 2, player, Pokemon::Grass);
+            inflictDamage(player, poke(player).totalLifePoints()/16, player);
+            healLife(source, poke(player).totalLifePoints()/16);
+        }
+    }
 
     testWin();
 }
@@ -227,7 +241,10 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         damage = 1;
     }
 
-    pokeMemory(source)["DamageInflicted"] = damage;
+    if (straightattack) {
+        pokeMemory(source)["DamageInflicted"] = damage; //For bide
+    }
+    pokeMemory(player)["DamageReceived"] = damage; //For counter
 
     bool sub = hasSubstitute(player);
 
@@ -254,6 +271,7 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         if (!sub) {
             /* If there's a sub its already taken care of */
             turnMem(player).damageTaken = damage;
+            callpeffects(player, source, "UponOffensiveDamageReceived");
         }
 
         if (damage > 0) {
@@ -283,6 +301,8 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     turnMem(player).add(TurnMemory::HasMoved);
 
+    calleffects(player,player,"EvenWhenCantMove");
+
     if (!testStatus(player)) {
         goto trueend;
     }
@@ -290,16 +310,39 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     turnMem(player).add(TM::HasPassedStatus);
     //turnMemory(player)["MoveChosen"] = attack;
 
-    fpoke(player).lastMoveUsed = attack;
+    if (!specialOccurence) {
+        callpeffects(player, target, "MovePossible");
+        if (turnMemory(player).contains("ImpossibleToMove")) {
+            goto trueend;
+        }
+    }
 
-    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
+    calleffects(player, target, "MoveSettings");
+
+    if (!turnMem(player).contains(TM::BuildUp) && attack != 0 && attack != Move::Struggle) {
+        fpoke(player).lastMoveUsed = attack;
+    }
+
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers") && !turnMem(player).contains(TM::BuildUp)));
 
     if (tmove(player).targets == Move::User || tmove(player).targets == Move::All || tmove(player).targets == Move::Field) {
         target = player;
     }
 
-    if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
-        losePP(player, move, 1);
+    if (!turnMem(player).contains(TM::BuildUp)) {
+        if (!specialOccurence) {
+            /* Placed there. DamageReceived is used by Counter */
+            pokeMemory(opponent(player)).remove("DamageReceived");
+
+            losePP(player, move, 1);
+        } else {
+            if (turnMem(player).contains(TurnMemory::UsePP)) {
+                /* Placed there. DamageReceived is used by Counter */
+                pokeMemory(opponent(player)).remove("DamageReceived");
+
+                losePP(player, fpoke(player).lastMoveSlot, 1);
+            }
+        }
     }
 
     heatOfAttack() = true;
@@ -314,12 +357,13 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     // Miss
     if (target != player && !testAccuracy(player, target)) {
         pokeMemory(player).remove("DamageInflicted");
+        calleffects(player,target,"AttackSomehowFailed");
         goto endloop;
     }
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
     /* Protect, ... */
 
-    if (tmove(player).power > 0 && player != target)
+    if (tmove(player).power > 0 && player != target && !turnMem(player).contains(TM::BuildUp))
     {
         calculateTypeModStab();
 
@@ -327,6 +371,13 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         if (typemod == 0) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(typemod));
+            calleffects(player,target,"AttackSomehowFailed");
+            goto endloop;
+        }
+
+        calleffects(player, target, "DetermineAttackFailure");
+        if (testFail(player)){
+            calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 
@@ -334,7 +385,17 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         bool hit = num > 1;
 
         testCritical(player, target);
-        int damage = calculateDamage(player, target);
+
+        calleffects(player, target, "CustomAttackingDamage");
+
+        int damage;
+        if (turnMemory(player).contains("CustomDamage")) {
+            damage = turnMemory(player).value("CustomDamage").toInt();
+        } else if (MoveInfo::isOHKO(attack, gen())) {
+            damage = poke(target).lifePoints();
+        } else {
+            damage = calculateDamage(player, target);
+        }
 
         int hitcount = 0;
 
@@ -353,6 +414,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             inflictDamage(target, damage, player, true);
             hitcount += 1;
 
+            /* A broken sub stops a multi-hit attack */
+            if (hadSubstitute(target)) {
+                break;
+            }
+
             calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
@@ -366,12 +432,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
 
             attackCount() += 1;
-
-            /* A broken sub stops a multi-hit attack */
-            if (hadSubstitute(target)) {
-                break;
-            }
         }
+
+        heatOfAttack() = false;
 
         if (hit) {
             notifyHits(player, hitcount);
@@ -445,7 +508,6 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     int tarChoice = tmove(player).targets;
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
-
     //OHKO
     int move = tmove(player).attack;
 
@@ -460,10 +522,28 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
-    acc = acc*255/100;
+    /* For deliberate misses, like with counter */
+    if (acc < 0 || pokeMemory(target).value("Invulnerable").toBool()) {
+        if (!silent) {
+            notifyMiss(multiTar, player, target);
+        }
+        return false;
+    }
+
+    //Keep acc 1 for rage
+    if (acc != 1) {
+        acc = acc*255/100;
+    }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(255*30/100, 256);
+        bool ret;
+
+        if (getStat(player, Speed) >= getStat(target, Speed)) {
+            ret = false;
+        } else {
+            ret = coinflip(255*30/100, 256);
+        }
+
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -564,4 +644,75 @@ void BattleRBY::calleffects(int source, int target, const QString &name)
 void BattleRBY::setupMove(int i, int move)
 {
     RBYMoveEffect::setup(move,i,0,*this);
+}
+
+void BattleRBY::losePP(int player, int move, int loss)
+{
+    int PP = this->PP(player, move) - loss;
+
+    //RBY bug: PPs loop over
+    if (PP < 0) {
+        PP = 63;
+    }
+
+    changePP(player, move, PP);
+}
+
+int BattleRBY::calculateDamage(int p, int t)
+{
+    PokeBattle &poke = this->poke(p);
+
+    int level = fpoke(p).level;
+    int attack, def;
+    bool crit = turnMem(p).contains(TM::CriticalHit);
+    int ch = 1 + crit;
+
+    int attackused = tmove(p).attack;
+
+    int cat = tmove(p).category;
+    if (cat == Move::Physical) {
+        attack = crit ? this->poke(p).normalStat(Attack) : getStat(p, Attack);
+        def = crit ? this->poke(t).normalStat(Defense) : getStat(t, Defense);
+    } else {
+        attack = crit ? this->poke(p).normalStat(SpAttack) : getStat(p, SpAttack);
+        def = crit ? this->poke(t).normalStat(SpAttack) : getStat(t, SpAttack);
+    }
+
+    /* Light screen / Reflect */
+    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        def = std::min(1024, def*2);
+    }
+
+    attack = std::min(attack, 65535);
+
+    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
+        /* explosion / selfdestruct */
+        def/=2;
+        if (def == 0)
+            // prevent division by zero
+            def = 1;
+    }
+
+    int stab = turnMem(p).stab;
+    int typemod = turnMem(p).typeMod;
+    int randnum = randint(38) + 217;
+    int power = tmove(p).power;
+
+    power = std::min(power, 65535);
+    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
+
+    //Guts, burn
+    damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+
+    damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+
+    return damage;
+}
+
+
+void BattleRBY::changeTempMove(int player, int slot, int move)
+{
+    fpoke(player).moves[slot] = move;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    changePP(player,slot,MoveInfo::PP(move, gen()));
 }
