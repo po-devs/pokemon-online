@@ -809,6 +809,30 @@ struct RBYRazorWind : public MM
     }
 };
 
+struct RBYSubstitute : public MM
+{
+    RBYSubstitute() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (fpoke(b,s).substitute()) {
+            b.failSilently(s);
+            b.sendMoveMessage(128, 0, s,0,s);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*25/100,1));
+        if (!b.koed(s)) {
+            fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
+            fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
+            b.sendMoveMessage(128,4,s);
+            b.notifySub(s,true);
+        }
+    }
+};
 
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
@@ -837,5 +861,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(102, Rage);
     REGISTER_MOVE(104, RazorWind);
     REGISTER_MOVE(106, Rest);
+    REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(149, Haze);
 }
