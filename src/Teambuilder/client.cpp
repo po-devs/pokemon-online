@@ -1799,7 +1799,7 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
     battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
-    connect(this, SIGNAL(destroyed()), battle, SLOT(deleteLater())()));
+    connect(this, SIGNAL(destroyed()), battle, SLOT(deleteLater()));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
