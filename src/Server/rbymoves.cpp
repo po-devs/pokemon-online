@@ -706,6 +706,17 @@ struct RBYPetalDance : public MM
     }
 };
 
+struct RBYPsywave : public MM
+{
+    RBYPsywave() {
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void cad (int s, int, BS &b) {
+        turn(b,s)["CustomDamage"] = 1 + b.randint(fpoke(b,s).level * 15/10);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -729,5 +740,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(86, Mist);
     REGISTER_MOVE(91, NightShade);
     REGISTER_MOVE(93, PetalDance);
+    REGISTER_MOVE(99, Psywave);
     REGISTER_MOVE(149, Haze);
 }
