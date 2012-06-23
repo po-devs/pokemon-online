@@ -467,6 +467,9 @@ struct RBYHaze : public MM
         poke(b,s).remove("Focused");
         poke(b,t).remove("Focused");
 
+        poke(b,s).remove("Misted");
+        poke(b,t).remove("Misted");
+
         b.poke(s).removeStatus(Pokemon::Seeded);
         b.poke(t).removeStatus(Pokemon::Seeded);
     }
@@ -642,6 +645,26 @@ struct RBYMirrorMove : public MM
     }
 };
 
+
+struct RBYMist : public MM
+{
+    RBYMist() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (poke(b,s).contains("Misted"))
+            fturn(b,s).add(TM::Failed);
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(86,0,s,Pokemon::Ice);
+
+        poke(b,s)["Misted"] = true;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -662,5 +685,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(80, Metronome);
     REGISTER_MOVE(81, Mimic);
     REGISTER_MOVE(85, MirrorMove);
+    REGISTER_MOVE(86, Mist);
     REGISTER_MOVE(149, Haze);
 }
