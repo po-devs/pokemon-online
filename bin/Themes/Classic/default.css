@@ -111,9 +111,9 @@ PokeEdit #pokemonFrame {
 }
 
 QLabel#appLogo {
-	margin-left: 60px;
-	margin-right: 60px;
-	margin-top: 30px;
+	margin-left: 40px;
+	margin-right: 40px;
+	margin-top: 15px;
 	margin-bottom: 30px;
 }
 
