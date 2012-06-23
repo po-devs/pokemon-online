@@ -2,12 +2,14 @@
 #include "ui_menu.h"
 #include "../Utilities/functions.h"
 #include "mainwindow.h"
+#include "theme.h"
 
 Menu::Menu(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
+    ui->appLogo->setPixmap(Theme::Sprite("logo"));
 
     setWindowTitle(tr("Menu"));
 
