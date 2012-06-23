@@ -2112,7 +2112,7 @@ bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool
 {
     if (attacker != player) {
         /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
-        if(pokeMemory(this->player(player)).value("MistCount").toInt() > 0 && tmove(attacker).power == 0) {
+        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
             sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             return false;
         }
