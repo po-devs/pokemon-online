@@ -24,7 +24,7 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue(s, "theme_2", "Themes/Classic/");
+    setDefaultValue(s, "Theme", "Themes/Classic/");
     setDefaultValue(s, "battle_cry_volume", 100);
     setDefaultValue(s, "battle_music_volume", 100);
     setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
@@ -113,7 +113,7 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     GenInfo::init("db/gens/");
-    Theme::init(s.value("theme_2").toString());
+    Theme::init(s.value("Theme").toString());
 
     /* Loading the values */
     QApplication::setStyle("plastique");
@@ -283,7 +283,7 @@ void MainEngine::changeTheme(const QString &theme)
     QString fullTheme = Theme::FindTheme(theme);
     qDebug() << fullTheme;
     if (!fullTheme.isNull()) {
-        settings.setValue("theme_2", fullTheme);
+        settings.setValue("Theme", fullTheme);
 
         Theme::Reload(fullTheme);
         loadStyleSheet();
@@ -388,7 +388,7 @@ void MainEngine::rebuildThemeMenu()
         }
     }
 
-    QString theme = s.value("theme_2").toString().section('/', -2, -2);
+    QString theme = s.value("Theme").toString().section('/', -2, -2);
 
     QActionGroup *ag = new QActionGroup(themeMenu);
     foreach(QString baseName, themes) {
