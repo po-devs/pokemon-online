@@ -156,7 +156,7 @@ void EvBox::changeToPlusBoost()
     int plus = sender()->property("stat").toInt();
     int minus = NatureInfo::StatHindered(poke().nature());
 
-    if (minus == plus) {
+    if (minus == plus || minus == 0) {
         minus = plus == Attack ? Defense : Attack;
     }
 
@@ -169,7 +169,7 @@ void EvBox::changeToMinusBoost()
     int minus = sender()->property("stat").toInt();
     int plus = NatureInfo::StatBoosted(poke().nature());
 
-    if (minus == plus) {
+    if (minus == plus || plus == 0) {
         plus = minus == Attack ? Defense : Attack;
     }
 
