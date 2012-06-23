@@ -834,6 +834,17 @@ struct RBYSubstitute : public MM
     }
 };
 
+struct RBYSuperFang : public MM
+{
+    RBYSuperFang() {
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void cad(int s, int t, BS &b) {
+        turn(b,s)["CustomDamage"] = std::max(int(b.poke(t).lifePoints()), 1);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -862,5 +873,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(104, RazorWind);
     REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(128, Substitute);
+    REGISTER_MOVE(130, SuperFang);
     REGISTER_MOVE(149, Haze);
 }
