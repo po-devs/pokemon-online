@@ -964,7 +964,7 @@ void Server::processLoginDetails(Player *p)
 
     if (!wasLoggedIn) {
         numberOfPlayersLoggedIn += 1;
-        printLine(tr("Adding a player, count: %1").arg(numberOfPlayersLoggedIn));
+        //printLine(tr("Adding a player, count: %1").arg(numberOfPlayersLoggedIn));
     }
 
     if (!p->state()[Player::WaitingReconnect]) {
@@ -1243,7 +1243,7 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
 
 void Server::transferId(int sender, int id, bool copyInfo)
 {
-    printLine(QString("Transferring id %1 to %2").arg(sender).arg(id));
+    //printLine(QString("Transferring id %1 to %2").arg(sender).arg(id));
     bool loggedIn = player(id)->isLoggedIn();
     player(id)->associateWith(player(sender));
     /* This flag is triggered when someone logs in without intending to reconnect,
@@ -1751,7 +1751,7 @@ void Server::sendPlayer(int id)
 void Server::sendLogout(int id)
 {
     numberOfPlayersLoggedIn -= 1;
-    printLine(tr("Removing a player, count: %1").arg(numberOfPlayersLoggedIn));
+    //printLine(tr("Removing a player, count: %1").arg(numberOfPlayersLoggedIn));
     Player *source = player(id);
 
     ++lastDataId;
@@ -1807,13 +1807,13 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
+    //printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
     disconnectPlayer(id);
 }
 
 void Server::logout(int id)
 {
-    printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
+    //printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
     removePlayer(id);
 }
 
