@@ -75,6 +75,7 @@ void TeamMenu::tabIconChanged()
     int slot = sender()->property("slot").toInt();
 
     ui->pokemonTabs->setTabIcon(slot, PokemonInfo::Icon(team().team().poke(slot).num()));
+    emit teamChanged();
 }
 
 void TeamMenu::updateTeam()
