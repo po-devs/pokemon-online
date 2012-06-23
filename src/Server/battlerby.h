@@ -17,10 +17,10 @@ public:
     bool hadSubstitute(int player);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     void changeTempMove(int player, int slot, int move);
+    void changeStatus(int player, int status, bool tell=false, int turns=0);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
-    void changeStatus(int player, int status, bool tell=false, int turns=0);
     int getStat(int poke, int stat);
     void sendPoke(int player, int poke, bool silent);
     BattleChoice &choice (int p);
