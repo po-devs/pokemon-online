@@ -133,7 +133,6 @@ public:
     BattleStats constructStats(int player);
     BattleDynamicInfo constructInfo(int player);
 
-    void changeTempMove(int player, int slot, int move);
     void changeDefMove(int player, int slot, int move);
 
     enum WeatherM

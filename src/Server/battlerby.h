@@ -16,6 +16,7 @@ public:
     int calculateDamage(int player, int target);
     bool hadSubstitute(int player);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
+    void changeTempMove(int player, int slot, int move);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();

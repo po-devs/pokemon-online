@@ -705,3 +705,11 @@ int BattleRBY::calculateDamage(int p, int t)
 
     return damage;
 }
+
+
+void BattleRBY::changeTempMove(int player, int slot, int move)
+{
+    fpoke(player).moves[slot] = move;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    changePP(player,slot,MoveInfo::PP(move, gen()));
+}

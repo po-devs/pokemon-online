@@ -461,6 +461,7 @@ public:
 
     virtual void losePP(int player, int move, int loss);
     virtual void changePP(int player, int move, int PP);
+    virtual void changeTempMove(int player, int slot, int move);
 
     bool testFail(int player);
     virtual bool testAccuracy(int player, int target, bool silent = false) = 0;

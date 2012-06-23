@@ -596,6 +596,24 @@ struct RBYMetronome : public MM
     }
 };
 
+struct RBYMimic : public MM
+{
+    RBYMimic() {
+        functions["UopnAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        int move = 0;
+        /* Mimic copies a random move in Gen 1 */
+        while (move == 0) {
+            move = b.move(t, b.randint(4));
+        }
+        int slot = fpoke(b,s).lastMoveSlot;
+        b.changeTempMove(s, slot, move);
+        b.sendMoveMessage(81,0,s,type(b,s),t,move);
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -613,6 +631,7 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(64, HiJumpKick);
     REGISTER_MOVE(72, LeechSeed);
     REGISTER_MOVE(73, LightScreen);
+    REGISTER_MOVE(81, Mimic);
     REGISTER_MOVE(85, Metronome);
     REGISTER_MOVE(149, Haze);
 }
