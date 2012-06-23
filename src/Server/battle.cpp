@@ -851,6 +851,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     team(player).switchPokemon(snum, pok);
 
     PokeBattle &p = poke(slot);
+    p.status() = p.fullStatus(); //Clear any remnant status
 
     /* Give new values to what needed */
     fpoke(slot).init(p, gen());
