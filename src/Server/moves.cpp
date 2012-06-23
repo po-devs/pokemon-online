@@ -2272,7 +2272,6 @@ struct MMRage : public MM
                 }
             }
         }
-
     }
 
     static void ts(int s, int, BS &b) {

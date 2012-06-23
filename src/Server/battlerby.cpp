@@ -271,6 +271,7 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         if (!sub) {
             /* If there's a sub its already taken care of */
             turnMem(player).damageTaken = damage;
+            callpeffects(player, source, "UponOffensiveDamageReceived");
         }
 
         if (damage > 0) {
@@ -507,7 +508,6 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     int tarChoice = tmove(player).targets;
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
-
     //OHKO
     int move = tmove(player).attack;
 
@@ -530,7 +530,10 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
         return false;
     }
 
-    acc = acc*255/100;
+    //Keep acc 1 for rage
+    if (acc != 1) {
+        acc = acc*255/100;
+    }
 
     if (MoveInfo::isOHKO(move, gen())) {
         bool ret;
