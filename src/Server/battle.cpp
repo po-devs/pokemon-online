@@ -2774,6 +2774,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
 
+    qDebug() << "Sub: " << sub << ",player " << player << ", source " << source << ", go " << goForSub << ", straight " << straightattack;
+
     if (sub && (player != source || goForSub) && straightattack) {
         inflictSubDamage(player, damage, source);
     } else {
