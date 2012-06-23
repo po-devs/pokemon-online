@@ -29,6 +29,9 @@ public slots:
     void switchToTrainer();
     void setTierList(const QStringList &tiers); //tells which tiers are available
 
+    void setNoMod(){}
+    void changeMod(){}
+
 private slots:
     void markTeamUpdated();
 signals:
