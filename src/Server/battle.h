@@ -109,7 +109,6 @@ public:
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     int weight(int player);
-    Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
