@@ -85,7 +85,11 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
     team(player).switchPokemon(snum, pok);
 
     PokeBattle &p = poke(slot);
-    p.fullStatus() = p.status(); //Clear any remnant status
+
+    //Clears secondary statuses
+    int st = p.status();
+    p.fullStatus() = 0;
+    p.changeStatus(st);
 
     /* Give new values to what needed */
     fpoke(slot).init(p, gen());
