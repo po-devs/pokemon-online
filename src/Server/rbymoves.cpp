@@ -753,6 +753,28 @@ struct RBYRage : public MM
     }
 };
 
+struct RBYRest : public MM
+{
+    RBYRest() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.poke(s).totalLifePoints() == b.poke(s).lifePoints() || (b.poke(s).totalLifePoints()-b.poke(s).lifePoints()) % 256 == 255) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.healLife(s, b.poke(s).totalLifePoints());
+        b.sendMoveMessage(106,0,s,type(b,s));
+        b.changeStatus(s, Pokemon::Asleep,false);
+        b.poke(s).statusCount() =  2;
+        b.poke(s).oriStatusCount() = 2;
+    }
+};
+
 #define REGISTER_MOVE(num, name) mechanics[num] = RBY##name(); names[num] = #name; nums[#name] = num;
 
 void RBYMoveEffect::init()
@@ -778,5 +800,6 @@ void RBYMoveEffect::init()
     REGISTER_MOVE(93, PetalDance);
     REGISTER_MOVE(99, Psywave);
     REGISTER_MOVE(102, Rage);
+    REGISTER_MOVE(106, Rest);
     REGISTER_MOVE(149, Haze);
 }

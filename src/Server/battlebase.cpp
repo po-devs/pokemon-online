@@ -1627,7 +1627,6 @@ bool BattleBase::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Asleep) {
         if (poke(player).statusCount() > 1) {
-            //Early bird
             poke(player).statusCount() -= 1;
             notify(All, StatusMessage, player, qint8(FeelAsleep));
         } else {
