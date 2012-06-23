@@ -1383,7 +1383,7 @@ bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
 
 bool BattleBase::isMovePossible(int player, int slot)
 {
-    return PP(player, slot) > 0 ;
+    return PP(player, slot) > 0 && !turnMemory(player).contains(QString("Move%1Blocked").arg(slot));
 }
 
 int BattleBase::PP(int player, int slot) const
@@ -1589,7 +1589,12 @@ void BattleBase::analyzeChoice(int slot)
         if (!wasKoed(slot)) {
             if (turnMem(slot).contains(TM::NoChoice) || turnMem(slot).contains(TM::KeepAttack))
                 /* Automatic move */
-                useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                if (turnMemory(slot).contains("AutomaticMove")) {
+                    useAttack(slot, turnMemory(slot)["AutomaticMove"].toInt(), true);
+                } else {
+                    /* Automatic move */
+                    useAttack(slot, fpoke(slot).lastMoveUsed, true);
+                }
             else {
                 if (options[slot].struggle()) {
                     setupMove(slot, Move::Struggle);
@@ -1622,7 +1627,6 @@ bool BattleBase::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Asleep) {
         if (poke(player).statusCount() > 1) {
-            //Early bird
             poke(player).statusCount() -= 1;
             notify(All, StatusMessage, player, qint8(FeelAsleep));
         } else {
@@ -1642,13 +1646,14 @@ bool BattleBase::testStatus(int player)
 
         return false;
     }
-    if (isConfused(player)) {
+    if (isConfused(player) && tmove(player).attack != 0) {
         if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
             inc(pokeMemory(player)["ConfusedCount"], -1);
 
             notify(All, StatusMessage, player, qint8(FeelConfusion));
 
             if (coinflip(1, 2)) {
+                pokeMemory(player).remove("PetalDanceCount"); //RBY
                 inflictConfusedDamage(player);
                 return false;
             }
@@ -1660,6 +1665,7 @@ bool BattleBase::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         if (coinflip(1, 4)) {
+            pokeMemory(player).remove("PetalDanceCount"); //RBY
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }
@@ -1697,6 +1703,11 @@ void BattleBase::inflictConfusedDamage(int player)
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
     inflictDamage(player, damage, player, true);
+}
+
+void BattleBase::changeSprite(int player, Pokemon::uniqueId newForme)
+{
+    notify(All, ChangeTempPoke, player, quint8(TempSprite), newForme);
 }
 
 void BattleBase::losePP(int player, int move, int loss)
@@ -1825,57 +1836,6 @@ void BattleBase::testCritical(int player, int target)
     }
 }
 
-int BattleBase::calculateDamage(int p, int t)
-{
-    PokeBattle &poke = this->poke(p);
-
-    int level = fpoke(p).level;
-    int attack, def;
-    bool crit = turnMem(p).contains(TM::CriticalHit);
-    int ch = 1 + crit;
-
-    int attackused = tmove(p).attack;
-
-    int cat = tmove(p).category;
-    if (cat == Move::Physical) {
-        attack = getStat(p, Attack);
-        def = getStat(t, Defense);
-    } else {
-        attack = getStat(p, SpAttack);
-        def = getStat(t, SpAttack);
-    }
-
-    attack = std::min(attack, 65535);
-
-    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
-        /* explosion / selfdestruct */
-        def/=2;
-        if (def == 0)
-            // prevent division by zero
-            def = 1;
-    }
-
-    int stab = turnMem(p).stab;
-    int typemod = turnMem(p).typeMod;
-    int randnum = randint(38) + 217;
-    int power = tmove(p).power;
-
-    power = std::min(power, 65535);
-    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
-
-    //Guts, burn
-    damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
-
-    /* Light screen / Reflect */
-    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        damage = damage * 2 / 3;
-    }
-
-    damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
-
-    return damage;
-}
-
 void BattleBase::healDamage(int player, int target)
 {
     int healing = tmove(player).healing;
@@ -1884,7 +1844,8 @@ void BattleBase::healDamage(int player, int target)
         return;
 
     if (healing > 0) {
-        if(poke(target).lifePoints() < poke(target).totalLifePoints()) {
+        //In RBY, if the HP difference is 255, it fails
+        if(poke(target).lifePoints() < poke(target).totalLifePoints() && (gen() != Gen::RBY || (poke(target).totalLifePoints()-poke(target).lifePoints()) % 256 != 255)) {
             sendMoveMessage(60, 0, target, tmove(player).type);
 
             int damage = poke(target).totalLifePoints() * healing / 100;
@@ -1897,10 +1858,7 @@ void BattleBase::healDamage(int player, int target)
             // No HP to heal
             notifyFail(player);
         }
-    } else if (healing < 0 &&
-               (gen() > 1 || /* Killing subs with struggle == no recoil. */
-                (gen()== 1 && !hasSubstitute(target)))){
-        /* Struggle: actually recoil damage */
+    } else if (healing < 0){
         notify(All, Recoil, player, true);
         inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
     }
@@ -1922,8 +1880,9 @@ void BattleBase::testFlinch(int player, int target)
 {
     int rate = tmove(player).flinchRate;
 
-    if (rate && coinflip(rate, 100)) {
+    if (rate && coinflip(rate*255/100, 256)) {
         turnMem(target).add(TM::Flinched);
+        pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
     }
 }
 
@@ -2085,6 +2044,7 @@ void BattleBase::inflictStatus(int player, int status, int attacker, int minTurn
             return;
         } else {
             currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
+            pokeMemory(player).remove("Recharging"); //For RBY Hyper Beam
         }
     } else if (status == Pokemon::Frozen)
     {
@@ -2154,7 +2114,7 @@ bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool
 {
     if (attacker != player) {
         /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
-        if(pokeMemory(this->player(player)).value("MistCount").toInt() > 0 && tmove(attacker).power == 0) {
+        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
             sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             return false;
         }
@@ -2174,4 +2134,22 @@ bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool
 void BattleBase::changeStatMod(int player, int stat, int newstat)
 {
     fpoke(player).boosts[stat] = newstat;
+}
+
+void BattleBase::failSilently(int player)
+{
+    turnMem(player).remove(TM::FailingMessage);
+    turnMem(player).add(TM::Failed);
+}
+
+
+void BattleBase::changeTempMove(int player, int slot, int move)
+{
+    fpoke(player).moves[slot] = move;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
+}
+
+Pokemon::uniqueId BattleBase::pokenum(int player) {
+    return fpoke(player).id;
 }

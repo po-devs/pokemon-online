@@ -553,7 +553,6 @@ void PokemonInfo::clearData()
     m_DirectEvos.clear();
     m_AestheticFormes.clear();
     m_Moves.clear();
-    m_VisiblePokesPlainList.clear();
 }
 
 void PokemonInfo::loadClassifications()

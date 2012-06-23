@@ -103,14 +103,12 @@ public:
     void testCritical(int player, int target);
     void testFlinch(int player, int target);
     bool testStatus(int player);
-    void failSilently(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasWorkingAbility(int play, int ability);
     bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
     int weight(int player);
-    Pokemon::uniqueId pokenum(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
@@ -134,9 +132,7 @@ public:
     BattleStats constructStats(int player);
     BattleDynamicInfo constructInfo(int player);
 
-    void changeTempMove(int player, int slot, int move);
     void changeDefMove(int player, int slot, int move);
-    void changeSprite(int player, Pokemon::uniqueId newForme);
 
     enum WeatherM
     {

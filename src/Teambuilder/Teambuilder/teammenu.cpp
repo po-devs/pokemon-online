@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QMenuBar>
+#include <QShortcut>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/teammenu.h"
@@ -28,9 +29,15 @@ void TeamMenu::setupUi()
     grid->addWidget(ui->pokemonTabs = new QTabBar(), 0, 0, 1, 1, Qt::AlignLeft|Qt::AlignTop);
     grid->setContentsMargins(-1,0,-1,-1);
 
+    QSignalMapper *shortcutMapper = new QSignalMapper(this);
     for (int i = 0; i < 6; i++) {
         ui->pokemonTabs->addTab(PokemonInfo::Icon(i+1), tr("Slot #&%1").arg(i+1));
+        QShortcut *shortcut = new QShortcut(QKeySequence(QString("Ctrl+%1").arg(i+1)), this);
+        connect(shortcut, SIGNAL(activated()), shortcutMapper, SLOT(map()));
+        shortcutMapper->setMapping(shortcut, i);
     }
+    connect(shortcutMapper, SIGNAL(mapped(int)), SLOT(switchToTab(int)));
+
     ui->pokemonTabs->setCurrentIndex(0);
     ui->pokemonTabs->setObjectName("pokemonTabs");
 
@@ -68,6 +75,7 @@ void TeamMenu::tabIconChanged()
     int slot = sender()->property("slot").toInt();
 
     ui->pokemonTabs->setTabIcon(slot, PokemonInfo::Icon(team().team().poke(slot).num()));
+    emit teamChanged();
 }
 
 void TeamMenu::updateTeam()
@@ -104,6 +112,11 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
         for (int j = 0; j < n; j++) {
             Pokemon::gen g(i, j);
 
+            //Temporary until we implement subgens
+            if (j != 0 && g != Gen::RBY) {
+                continue;
+            }
+
             ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
             ui->gens[g]->setCheckable(true);
             ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
@@ -111,7 +124,7 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
         }
     }
 
-    ui->gens[team().team().gen().num]->setChecked(true);
+    ui->gens[team().team().gen()]->setChecked(true);
 }
 
 void TeamMenu::genChanged()
@@ -128,6 +141,10 @@ void TeamMenu::genChanged()
         team().team().poke(i).load();
         team().team().poke(i).runCheck();
     }
+
+    QSettings s;
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    ui->itemsModel->setStringList(itemList);
 
     updateAll();
     emit teamChanged();

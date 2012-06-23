@@ -253,6 +253,7 @@ void PokePersonal::runCheck()
 
         MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
     }
+
 }
 
 int PokePersonal::addMove(int moveNum, bool check) throw(QString)
