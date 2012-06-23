@@ -2858,13 +2858,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         turnMemory(player)["DamageTaken"] = damage;
 }
 
-void BattleSituation::changeTempMove(int player, int slot, int move)
-{
-    fpoke(player).moves[slot] = move;
-    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
-}
-
 void BattleSituation::changeDefMove(int player, int slot, int move)
 {
     poke(player).move(slot).num() = move;

@@ -2139,3 +2139,11 @@ void BattleBase::failSilently(int player)
     turnMem(player).remove(TM::FailingMessage);
     turnMem(player).add(TM::Failed);
 }
+
+
+void BattleBase::changeTempMove(int player, int slot, int move)
+{
+    fpoke(player).moves[slot] = move;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
+}
