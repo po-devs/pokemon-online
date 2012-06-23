@@ -111,7 +111,7 @@ PokeEdit #pokemonFrame {
 }
 
 QLabel#appLogo {
-	background: #841b17;
+	image : url("Themes/Classic/Trainer Sprites/30.png");
 	margin-left: 60px;
 	margin-right: 60px;
 	margin-top: 30px;
