@@ -102,7 +102,7 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 %s's rage builds up!
 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
-%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!
+%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!
 %s recycled %i!
 %s went to sleep and became healthy!
 %s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!

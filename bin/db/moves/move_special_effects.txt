@@ -551,8 +551,8 @@
 
 
 
-
-
+104-4#freeze shock
+104-5#ice burn
 
 
 
