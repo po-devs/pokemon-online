@@ -23,7 +23,7 @@
    <item row="0" column="0" colspan="4">
     <widget class="QLabel" name="appLogo">
      <property name="text">
-      <string>APP LOGO</string>
+      <string/>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
