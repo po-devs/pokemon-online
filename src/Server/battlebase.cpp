@@ -1654,6 +1654,7 @@ bool BattleBase::testStatus(int player)
             notify(All, StatusMessage, player, qint8(FeelConfusion));
 
             if (coinflip(1, 2)) {
+                pokeMemory(player).remove("PetalDanceCount"); //RBY
                 inflictConfusedDamage(player);
                 return false;
             }
@@ -1665,6 +1666,7 @@ bool BattleBase::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Paralysed) {
         if (coinflip(1, 4)) {
+            pokeMemory(player).remove("PetalDanceCount"); //RBY
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }
