@@ -2192,7 +2192,7 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
         }
     } else {
         foreach(Player *p, g2) {
-            if (p->spec()[group]) {
+            if (group == All || p->spec()[group]) {
                 p->sendPacket(packet);
             }
         }
