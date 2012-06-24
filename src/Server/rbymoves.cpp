@@ -506,7 +506,7 @@ struct RBYHyperBeam : public MM
         }
 
         poke(b,s)["Recharging"] = b.turn()+1;
-        addFunction(turn(b,s), "TurnSettings", "HyperBeam", &ts);
+        addFunction(poke(b,s), "TurnSettings", "HyperBeam", &ts);
     }
 
     static void ms(int s, int, BS &b) {
@@ -609,7 +609,7 @@ struct RBYMetronome : public MM
 struct RBYMimic : public MM
 {
     RBYMimic() {
-        functions["UopnAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
