@@ -57,7 +57,7 @@ void RegistryWebInterface::showBans(Pillow::HttpConnection *conn)
 {
     conn->writeHeaders(200);
     conn->writeContent(header);
-    conn->writeContent(QString("<h1>Registry bans</h1><h2>AntiDOS bans</h2><ul>").toUtf8());
+    conn->writeContent(QString("<h1>Registry bans</h1><h2>Web bans</h2><ul>").toUtf8());
     QString const ipline = "<li>IP: %1</li>";
     foreach (QString const &ip, regptr->bannedIPs) {
 	conn->writeContent(ipline.arg(ip).toUtf8());
@@ -68,7 +68,7 @@ void RegistryWebInterface::showBans(Pillow::HttpConnection *conn)
 	if (ip.size() > 0)
 	    conn->writeContent(ipline.arg(ip).toUtf8());
     }
-    conn->writeContent(QString("</ul>").toUtf8());
+    conn->writeContent(QString("</ul><form method='POST' enctype='application/x-www-form-urlencoded' action='/updatebans'><h2>Modify bans</h2><br><label for='add'>Add IP ban</label><input type='text' name='add'><br><label for='remove'>Remove IP ban</label><input type='text' name='remove'><br><input type='submit'></form>").toUtf8());
     conn->writeContent(footer);
     conn->endContent();
 }
@@ -76,6 +76,12 @@ void RegistryWebInterface::updateBans(Pillow::HttpConnection *conn)
 {
     // conn->requestParamValue("remove")
     // conn->requestParamValue("add")
+    QMap<QString,QString> post = parsePost(conn->requestContent());
+    if (post.contains("remove"))
+        regptr->bannedIPs.remove(post["remove"]);
+    if (post.contains("add") && post["add"].size() > 0)
+        regptr->bannedIPs.insert(post["add"]);
+
     Pillow::HttpHeaderCollection headers;
     headers.push_back(qMakePair(QByteArray("Location"), QByteArray("/bans?updated=true")));
     conn->writeResponse(303, headers);
@@ -90,11 +96,16 @@ void RegistryWebInterface::showAnnouncement(Pillow::HttpConnection *conn)
 }
 void RegistryWebInterface::updateAnnouncement(Pillow::HttpConnection *conn)
 {
-    qDebug() << "query string:" << conn->requestQueryStringDecoded();
-    qDebug() << "content:" << conn->requestContent();
     QMap<QString,QString> post = parsePost(conn->requestContent());
-    if (post.contains("announcement"))
+    if (post.contains("announcement")) {
         regptr->registry_announcement = post["announcement"];
+	QFile file("announcement.txt");
+        if (file.open(QIODevice::WriteOnly)) {
+	    QTextStream out(&file);
+	    out << regptr->registry_announcement;
+	    file.close();
+	}
+    }
 
     Pillow::HttpHeaderCollection headers;
     headers.push_back(qMakePair(QByteArray("Location"), QByteArray("/announcement?updated=true")));
