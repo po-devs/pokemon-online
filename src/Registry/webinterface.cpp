@@ -22,15 +22,15 @@ RegistryWebInterface::~RegistryWebInterface() {}
 
 namespace {
     QByteArray const header = QString(
-            "<html>"
-	    "<head>"
-	    "<title>Pokemon Online Registry</title>"
-	    "</head>"
-	    "<body>"
-	    "<a href='/index'>Server listing</a> "
-	    "| <a href='/announcement'>Announcement</a> "
-	    "| <a href='/bans'> Registry bans</a>"
-	    "<hr>").toUtf8();
+        "<html>"
+        "<head>"
+        "<title>Pokemon Online Registry</title>"
+        "</head>"
+        "<body>"
+        "<a href='/index'>Server listing</a> "
+        "| <a href='/announcement'>Announcement</a> "
+        "| <a href='/bans'> Registry bans</a>"
+        "<hr>").toUtf8();
     QByteArray const footer = QString("</ul></body></html>").toUtf8();
 }
 
@@ -42,12 +42,12 @@ void RegistryWebInterface::showServers(Pillow::HttpConnection *conn)
     conn->writeContent(QByteArray("<h1>Servers</h1><ul>"));
     foreach (Server* server, regptr->servers) {
         conn->writeContent(serverInfo
-	    .arg(server->ip())
+            .arg(server->ip())
             .arg(escapeHtml(server->name()))
-	    .arg(server->desc())
-	    .arg(server->players())
-	    .arg(server->maxPlayers()).toUtf8()
-	);
+            .arg(server->desc())
+            .arg(server->players())
+            .arg(server->maxPlayers()).toUtf8()
+    );
     }
     conn->writeContent(QByteArray("</ul>"));
     conn->writeContent(footer);
@@ -60,13 +60,13 @@ void RegistryWebInterface::showBans(Pillow::HttpConnection *conn)
     conn->writeContent(QString("<h1>Registry bans</h1><h2>Web bans</h2><ul>").toUtf8());
     QString const ipline = "<li>IP: %1</li>";
     foreach (QString const &ip, regptr->bannedIPs) {
-	conn->writeContent(ipline.arg(ip).toUtf8());
+    conn->writeContent(ipline.arg(ip).toUtf8());
 
     }
     conn->writeContent(QString("</ul><h2>From network banlists</h2><ul>").toUtf8());
     foreach (QString const &ip, regptr->tbanIPs) {
-	if (ip.size() > 0)
-	    conn->writeContent(ipline.arg(ip).toUtf8());
+    if (ip.size() > 0)
+        conn->writeContent(ipline.arg(ip).toUtf8());
     }
     conn->writeContent(QString("</ul><form method='POST' enctype='application/x-www-form-urlencoded' action='/updatebans'><h2>Modify bans</h2><br><label for='add'>Add IP ban</label><input type='text' name='add'><br><label for='remove'>Remove IP ban</label><input type='text' name='remove'><br><input type='submit'></form>").toUtf8());
     conn->writeContent(footer);
@@ -74,8 +74,6 @@ void RegistryWebInterface::showBans(Pillow::HttpConnection *conn)
 }
 void RegistryWebInterface::updateBans(Pillow::HttpConnection *conn)
 {
-    // conn->requestParamValue("remove")
-    // conn->requestParamValue("add")
     QMap<QString,QString> post = parsePost(conn->requestContent());
     if (post.contains("remove"))
         regptr->bannedIPs.remove(post["remove"]);
@@ -99,12 +97,12 @@ void RegistryWebInterface::updateAnnouncement(Pillow::HttpConnection *conn)
     QMap<QString,QString> post = parsePost(conn->requestContent());
     if (post.contains("announcement")) {
         regptr->registry_announcement = post["announcement"];
-	QFile file("announcement.txt");
-        if (file.open(QIODevice::WriteOnly)) {
-	    QTextStream out(&file);
-	    out << regptr->registry_announcement;
-	    file.close();
-	}
+        QFile file("announcement.txt");
+            if (file.open(QIODevice::WriteOnly)) {
+            QTextStream out(&file);
+            out << regptr->registry_announcement;
+            file.close();
+        }
     }
 
     Pillow::HttpHeaderCollection headers;
@@ -124,9 +122,9 @@ QMap<QString,QString> RegistryWebInterface::parsePost(QByteArray const& in)
     QList<QByteArray> key_vals = decoded.replace('+', ' ').split('&');
     foreach(const QByteArray key_eq_val, key_vals) {
         const QList<QByteArray> key_val = key_eq_val.split('=');
-	const QString key = QUrl::fromPercentEncoding(key_val[0]);
-	const QString value = key_val.size() > 0 ? QUrl::fromPercentEncoding(key_val[1]) : "";
-	POST[key] = value;
+    const QString key = QUrl::fromPercentEncoding(key_val[0]);
+    const QString value = key_val.size() > 0 ? QUrl::fromPercentEncoding(key_val[1]) : "";
+    POST[key] = value;
     }
     return POST;
 }
