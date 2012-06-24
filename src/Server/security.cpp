@@ -461,8 +461,8 @@ void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_t
         if (!q->next()) {
             holder.addNonExistant(name.toString());
         } else {
-            Member m(name.toString(), q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
-                                      q->value(4).toByteArray(), q->value(5).toByteArray(), q->value(6).toInt());
+            Member m(name.toString(), q->value(0).toString(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+                                      q->value(4).toByteArray(), q->value(5).toString(), q->value(6).toInt());
             holder.addMemberInMemory(m);
         }
         q->finish();
