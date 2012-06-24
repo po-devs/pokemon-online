@@ -1999,7 +1999,7 @@ void Client::connected()
     if (reconnectPass.isEmpty()) {
         QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
         QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), DefaultChannel, AutoJoinChannels);
+        relay().login(*team(), s.value("enable_ladder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
