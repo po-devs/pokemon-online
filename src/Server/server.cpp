@@ -1547,7 +1547,13 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         }
     }
 
-    BattleBase *battle = c.gen.num == 1 ? (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager) : new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    BattleBase *battle;
+    if (c.gen <= 1) {
+        battle = (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    } else {
+        battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    }
+
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event

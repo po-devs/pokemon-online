@@ -26,7 +26,7 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     conf.ids[0] = p1.id();
     conf.ids[1] = p2.id();
     conf.teamOwnership = true;
-    conf.gen = std::max(p1.gen(), p2.gen());
+    conf.gen = c.gen;
     conf.clauses = c.clauses;
     conf.mode = c.mode;
 
