@@ -428,6 +428,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit playerBanned(p,src);
         break;
     }
+    case PlayerTBan: {
+        qint32 p, src, time;
+        in >> p >> src >> time;
+        emit playerTempBanned(p, src, time);
+    }
     case SendTeam: {
         Flags network;
         in >> network;

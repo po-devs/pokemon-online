@@ -184,6 +184,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
+    connect(relay, SIGNAL(playerTempBanned(int,int,int)), SLOT(playerTempBanned(int,int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
@@ -1326,6 +1327,16 @@ void Client::playerBanned(int dest, int src) {
     printHtml(toBoldColor(mess, Qt::red));
 }
 
+void Client::playerTempBanned(int dest, int src, int time)
+{
+    QString mess;
+    if(src == 0) {
+        mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(int(time));
+    } else {
+        mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(int(time));
+    }
+    printHtml(toBoldColor(mess, Qt::red));
+}
 
 void Client::askForPass(const QByteArray &salt) {
 
