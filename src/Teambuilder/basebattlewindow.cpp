@@ -349,6 +349,7 @@ void BaseBattleWindow::disable()
 void BaseBattleWindow::clickClose()
 {
     emit closedBW(battleId());
+    close();
     return;
 }
 
