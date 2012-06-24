@@ -46,10 +46,27 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         witem = new QTableWidgetItem(authgrade[q.value(1).toInt()]);
         mytable->setItem(i, 1, witem);
 
-        qDebug() << q.value(6).toInt();
         QString bannedString = "Banned";
-        if(q.value(6).toInt() != 0) {
-            bannedString.append(QString(" (" + q.value(6).toString() + " minute(s))"));
+        int expiration = q.value(6).toInt() - QDateTime::currentDateTimeUtc().toTime_t();
+        if(expiration < 0) {
+            bannedString = "Expires on Login";
+        } else {
+            if(expiration < 60) {
+                if(expiration == 1) {
+                    bannedString.append(QString(" (%1 second)").arg(expiration));
+                } else {
+                    bannedString.append(QString(" (%2 seconds)").arg(expiration));
+                }
+            } else {
+                if(expiration >= 60) {
+                    expiration = expiration / 60;
+                    if(expiration == 1) {
+                        bannedString.append(QString(" (%1 minute)").arg(expiration));
+                    } else {
+                        bannedString.append(QString(" (%2 minutes)").arg(expiration));
+                    }
+                }
+            }
         }
         witem = new QTableWidgetItem(q.value(2).toBool() ? bannedString : "Fine");
         mytable->setItem(i, 2, witem);

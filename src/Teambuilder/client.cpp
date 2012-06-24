@@ -1330,10 +1330,19 @@ void Client::playerBanned(int dest, int src) {
 void Client::playerTempBanned(int dest, int src, int time)
 {
     QString mess;
+    time = int(time);
     if(src == 0) {
-        mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(int(time));
+        if(time == 1) {
+            mess = tr("%1 was banned by the server for %2 minute!").arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(time);
+        }
     } else {
-        mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(int(time));
+        if(time == 1) {
+            mess = tr("%1 banned %2 for %3 minute!").arg(name(src)).arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(time);
+        }
     }
     printHtml(toBoldColor(mess, Qt::red));
 }

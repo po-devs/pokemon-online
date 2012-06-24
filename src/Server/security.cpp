@@ -84,8 +84,8 @@ void SecurityManager::loadMembers()
 
             clock_t t = clock();
 
-            query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip) values (:name, :laston, :auth,"
-                          ":banned, :salt, :hash, :ip)");
+            query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip, ban_expire_time) values (:name, :laston, :auth,"
+                          ":banned, :salt, :hash, :ip, :banexpire)");
 
             QSqlDatabase::database().transaction();
             while (!memberFile.atEnd()) {
@@ -109,6 +109,7 @@ void SecurityManager::loadMembers()
                         query.bindValue(":hash", "");
                     }
                     query.bindValue(":ip", ls[5].trimmed());
+                    query.bindValue(":banexpire", ls[6]);
                     query.exec();
                 }
             }
@@ -143,7 +144,7 @@ void SecurityManager::loadMembers()
 
     while (query.next()) {
         bannedIPs.insert(query.value(1).toString(), query.value(2).toInt());
-        bannedMembers.insert(query.value(0).toString(), std::make_pair(query.value(1).toString(), query.value(2).toInt()));
+        bannedMembers.insert(query.value(0).toString().toLower(), std::make_pair(query.value(1).toString(), query.value(2).toInt()));
     }
 
 //    //Uncomment if you want to test the database connection
@@ -305,7 +306,7 @@ void SecurityManager::ban(const QString &name) {
         m.ban();
 
         bannedMembers.insert(name.toLower(), std::make_pair(m.ip, m.ban_expire_time));
-        bannedIPs.insert(m.ip, 0);
+        bannedIPs.insert(m.ip, m.ban_expire_time);
 
         updateMember(m);
     }
@@ -434,9 +435,9 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
     SecurityManager::Member *m = (SecurityManager::Member*) m2;
 
     if (update)
-        q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip where name=:name");
+        q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip, ban_expire_time=:banexpire where name=:name");
     else
-        q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip) values(:name, :laston, :auth, :banned, :salt, :hash, :ip)");
+        q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip, ban_expire_time) values(:name, :laston, :auth, :banned, :salt, :hash, :ip, :banexpire)");
 
     q->bindValue(":name", m->name);
     q->bindValue(":laston", m->date);
@@ -445,6 +446,7 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
     q->bindValue(":hash", m->hash);
     q->bindValue(":salt", m->salt);
     q->bindValue(":ip", m->ip);
+    q->bindValue(":banexpire", m->ban_expire_time);
 
     q->exec();
     q->finish();
@@ -453,14 +455,14 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
 void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_type)
 {
     if (query_type == SecurityManager::GetInfoOnUser) {
-        q->prepare("select laston, auth, banned, salt, hash, ip from trainers where name=? limit 1");
+        q->prepare("select laston, auth, banned, salt, hash, ip, ban_expire_time from trainers where name=? limit 1");
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
             holder.addNonExistant(name.toString());
         } else {
             Member m(name.toString(), q->value(0).toByteArray(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
-                                      q->value(4).toByteArray(), q->value(5).toByteArray());
+                                      q->value(4).toByteArray(), q->value(5).toByteArray(), q->value(6).toInt());
             holder.addMemberInMemory(m);
         }
         q->finish();
