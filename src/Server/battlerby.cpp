@@ -462,10 +462,10 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             goto endloop;
         }
 
-        /* Fail test for leech seed / dream eater */
 
-        if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
-            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+        calleffects(player, target, "DetermineAttackFailure");
+        if (testFail(player)){
+            calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 
