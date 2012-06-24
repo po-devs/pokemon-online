@@ -797,6 +797,22 @@ void Player::giveBanList()
     }
 }
 
+void Player::giveTBanList()
+{
+    if (auth() == 0) {
+        return; // INVALID BEHAVIOR
+    }
+    QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
+
+    QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
+
+    while (it.hasNext()) {
+        it.next();
+        if (it.value().second != 0)
+            relay().notify(NetworkServ::GetTBanList, it.key(), it.value().first, it.value().second);
+    }
+}
+
 TeamBattle & Player::team(int i)
 {
     return m_teams.team(i);
