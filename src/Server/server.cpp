@@ -1534,11 +1534,11 @@ void Server::playerBan(int src, int dest)
         return;
     }
 
-    if (myengine->beforePlayerBan(src, dest)) {
+    if (myengine->beforePlayerBan(src, dest, 0)) {
         if (!playerExist(src) || !playerExist(dest))
             return;
         ban(dest,src);
-        myengine->afterPlayerBan(src, dest);
+        myengine->afterPlayerBan(src, dest, 0);
     }
 }
 
@@ -1552,17 +1552,17 @@ void Server::playerTempBan(int src, int dest, int time)
     }
     int maxauth = SecurityManager::maxAuth(player(dest)->ip());
 
-    //if (player(src)->auth() <= maxauth) {
-    //    player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
-    //    return;
-    //}
+    if (player(src)->auth() <= maxauth) {
+        player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
+        return;
+    }
 
-    if(myengine->beforePlayerBan(src, dest)) {
+    if(myengine->beforePlayerBan(src, dest, time)) {
         if(!playerExist(src) || !playerExist(dest)) {
             return;
         }
         tempBan(dest, src, time);
-        myengine->afterPlayerBan(src, dest);
+        myengine->afterPlayerBan(src, dest, time);
     }
 }
 
