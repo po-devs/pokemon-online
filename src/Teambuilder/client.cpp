@@ -1061,7 +1061,7 @@ void Client::PMReceived(int id, QString pm)
         startPM(id);
     }
 
-    if(mypms.contains(id) && mypms[id]->isVisible()) {
+    if(mypms.contains(id) && !mypms[id]->isVisible()) {
         mypms[id]->show();
     }
 
