@@ -2,6 +2,9 @@
 #include "antidos.h"
 #include "server.h"
 #include "player.h"
+#ifdef USE_WEBCONF
+#include "webinterface.h"
+#endif
 
 Registry::Registry() {
     linecount = 0;
@@ -22,6 +25,10 @@ Registry::Registry() {
     } else {
         printLine("Starting to listen to port 8081");
     }
+
+#ifdef USE_WEBCONF
+    web_interface = new RegistryWebInterface(this);
+#endif
 
     registry_announcement = "";
 

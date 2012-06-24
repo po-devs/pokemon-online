@@ -7,6 +7,9 @@
 class Player;
 class Server;
 class QScrollDownTextBrowser;
+#ifdef USE_WEBCONF
+class RegistryWebInterface;
+#endif
 
 class Registry: public QObject
 {
@@ -54,6 +57,10 @@ private:
     int linecount;
 
     int freeid() const;
+#ifdef USE_WEBCONF
+    RegistryWebInterface *web_interface;
+    friend class RegistryWebInterface;
+#endif
 };
 
 #endif // REGISTRY_H
