@@ -95,6 +95,7 @@ void TeamBuilder::loadAll()
 
 void TeamBuilder::newTeam()
 {
+    switchToTrainer();
     team() = TeamHolder();
     markTeamUpdated();
     currentWidget()->updateTeam();
@@ -124,11 +125,11 @@ void TeamBuilder::editPoke(int index)
         addWidget(teamMenu = new TeamMenu(pokemonModel, &team(), index));
         connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
         connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
-    } else {
-        teamMenu->switchToTab(index);
     }
 
     switchTo(teamMenu);
+
+    teamMenu->switchToTab(index);
 }
 
 void TeamBuilder::switchToTrainer()

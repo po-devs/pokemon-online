@@ -80,11 +80,11 @@ void TeamMenu::tabIconChanged()
 
 void TeamMenu::updateTeam()
 {
-    updateTabs();
-
     foreach(PokeEdit *p, ui->pokemons) {
         p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
+
+    updateTabs();
 }
 
 void TeamMenu::updateTabs()
