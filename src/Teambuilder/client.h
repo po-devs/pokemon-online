@@ -187,9 +187,10 @@ public slots:
     void askForPass(const QByteArray &salt);
     /* A popup that asks for a server pass */
     void serverPass(const QByteArray &salt);
-    /* When someone is kicked */
+    /* When someone is kicked, banned or temp banned */
     void playerKicked(int,int);
     void playerBanned(int,int);
+    void playerTempBanned(int dest, int src, int time);
     /* When you kick someone */
     void kick(int);
     void ban(int);

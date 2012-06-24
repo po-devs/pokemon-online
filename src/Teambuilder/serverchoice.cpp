@@ -14,8 +14,8 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     registry_connection = new Analyzer(true);
     registry_connection->connectTo(
-            settings.value("ServerChoice/registry_server", "pokemon-online-registry.dynalias.net").toString(),
-            settings.value("ServerChoice/registry_port", 8080).toUInt()
+            settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
+            settings.value("ServerChoice/RegistryPort", 8080).toUInt()
     );
     registry_connection->setParent(this);
 

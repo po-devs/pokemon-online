@@ -8,6 +8,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
+    resize(726, this->height());
 
     QGridLayout *mylayout = new QGridLayout(this);
 
@@ -35,7 +36,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         mytable->setRowCount(q.value(0).toInt());
     }
 
-    q.exec("select name, auth, banned, hash, ip, laston from trainers order by name asc");
+    q.exec("select name, auth, banned, hash, ip, laston, ban_expire_time from trainers order by name asc");
 
     int i = 0;
 
@@ -46,7 +47,29 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         witem = new QTableWidgetItem(authgrade[q.value(1).toInt()]);
         mytable->setItem(i, 1, witem);
 
-        witem = new QTableWidgetItem(q.value(2).toBool() ? "Banned" : "Fine");
+        QString bannedString = "Banned";
+        int expiration = q.value(6).toInt() - QDateTime::currentDateTimeUtc().toTime_t();
+        if(expiration < 0) {
+            bannedString = "Expires on Login";
+        } else {
+            if(expiration < 60) {
+                if(expiration == 1) {
+                    bannedString.append(QString(" (%1 second)").arg(expiration));
+                } else {
+                    bannedString.append(QString(" (%2 seconds)").arg(expiration));
+                }
+            } else {
+                if(expiration >= 60) {
+                    expiration = expiration / 60;
+                    if(expiration == 1) {
+                        bannedString.append(QString(" (%1 minute)").arg(expiration));
+                    } else {
+                        bannedString.append(QString(" (%2 minutes)").arg(expiration));
+                    }
+                }
+            }
+        }
+        witem = new QTableWidgetItem(q.value(2).toBool() ? bannedString : "Fine");
         mytable->setItem(i, 2, witem);
 
         witem = new QTableWidgetItem(q.value(3).toString().length() > 0 ? "Yes" : "No");

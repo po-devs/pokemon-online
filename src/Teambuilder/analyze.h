@@ -94,6 +94,7 @@ signals:
     void notRegistered(bool);
     void playerKicked(int p, int src);
     void playerBanned(int p, int src);
+    void playerTempBanned(int p, int src, int time);
     void regAnnouncementReceived(const QString &announcement);
     void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
     void PMReceived(int id, const QString &mess);
@@ -105,6 +106,8 @@ signals:
     void userAliasReceived(const QString &s);
     void banListReceived(const QString &n, const QString &ip);
     void versionDiff(const ProtocolVersion&, int level);
+    void tbanListReceived(const QString &n, const QString &ip, const QDateTime &expires);
+
     void serverNameReceived(const QString &serverName);
     /* Ranking */
     void rankingStarted(int,int,int);
