@@ -266,7 +266,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                 quint8 num;
                 in >> num;
 
-                if (oldTeams) {
+                if (!oldTeams) {
                     num = num > 6 ? 6 : num;
 
                     QList<PersonalTeam> teams;
@@ -278,16 +278,19 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                     }
 
                     cinfo.teams = &teams;
+
+                    emit teamChanged(cinfo);
                 } else {
                     PersonalTeam t;
                     in >> t;
 
                     cinfo.teamNum = num;
                     cinfo.team = &t;
+
+                    emit teamChanged(cinfo);
                 }
             }
 #undef mkptr
-            emit teamChanged(cinfo);
             break;
         }
     case ChallengeStuff:

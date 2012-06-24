@@ -271,6 +271,7 @@ struct RBYDig : public MM
 
         poke(b,s)["DigChargeTurn"] = b.turn();
         poke(b,s)["Invulnerable"] = true;
+        poke(b,s)["ChargeMove"] = move(b,s);
         b.changeSprite(s, -1);
 
         addFunction(poke(b,s), "TurnSettings", "Dig", &ts);
@@ -285,6 +286,7 @@ struct RBYDig : public MM
         fturn(b,s).add(TM::NoChoice);
         addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
         addFunction(turn(b,s), "UponAttackSucessful", "Dig", &uas2);
+        initMove(poke(b,s).value("ChargeMove").toInt(), b.gen(), tmove(b,s));
     }
 
     static void asf(int s, int, BS &b) {
@@ -506,7 +508,7 @@ struct RBYHyperBeam : public MM
         }
 
         poke(b,s)["Recharging"] = b.turn()+1;
-        addFunction(turn(b,s), "TurnSettings", "HyperBeam", &ts);
+        addFunction(poke(b,s), "TurnSettings", "HyperBeam", &ts);
     }
 
     static void ms(int s, int, BS &b) {
@@ -609,7 +611,7 @@ struct RBYMetronome : public MM
 struct RBYMimic : public MM
 {
     RBYMimic() {
-        functions["UopnAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -738,6 +740,11 @@ struct RBYRage : public MM
     static void ts(int s, int, BS &b) {
         fturn(b,s).add(TM::NoChoice);
         addFunction(turn(b,s), "AttackSomehowFailed", "Rage", &asf);
+
+        initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
+        if (poke(b,s).contains("RageFailed")) {
+            tmove(b,s).accuracy = 1;
+        }
     }
 
     static void uodr(int s, int, BS &b) {
@@ -748,8 +755,7 @@ struct RBYRage : public MM
     }
 
     static void asf(int s, int, BS &b) {
-        //Rage becomes bad accuracy once it misses...
-        tmove(b,s).accuracy = 1;
+        poke(b,s)["RageFailed"] = true;
     }
 };
 
@@ -825,7 +831,9 @@ struct RBYSubstitute : public MM
 
     static void uas(int s, int, BS &b) {
         b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*25/100,1));
-        if (!b.koed(s)) {
+        if (b.koed(s)) {
+            b.koPoke(s, s);
+        } else {
             fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
             fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
             b.sendMoveMessage(128,4,s);

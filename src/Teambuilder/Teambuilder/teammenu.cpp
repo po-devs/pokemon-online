@@ -66,6 +66,8 @@ void TeamMenu::switchToTab(int index)
         ui->pokemons[index]->setProperty("slot", index);
         connect(ui->pokemons[index], SIGNAL(switchToTrainer()), SIGNAL(switchToTrainer()));
         connect(ui->pokemons[index], SIGNAL(numChanged()), SLOT(tabIconChanged()));
+        connect(ui->pokemons[index], SIGNAL(nameChanged()), SIGNAL(teamChanged()));
+        connect(ui->pokemons[index], SIGNAL(itemChanged()), SIGNAL(teamChanged()));
     }
     ui->stack->setCurrentWidget(ui->pokemons[index]);
 }
@@ -80,11 +82,11 @@ void TeamMenu::tabIconChanged()
 
 void TeamMenu::updateTeam()
 {
-    updateTabs();
-
     foreach(PokeEdit *p, ui->pokemons) {
         p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
+
+    updateTabs();
 }
 
 void TeamMenu::updateTabs()

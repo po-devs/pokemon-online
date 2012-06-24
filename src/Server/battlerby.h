@@ -18,6 +18,7 @@ public:
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     void changeTempMove(int player, int slot, int move);
     void changeStatus(int player, int status, bool tell=false, int turns=0);
+    virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
@@ -28,6 +29,8 @@ protected:
     void analyzeChoices();
     bool testAccuracy(int player, int target, bool silent=false);
     void inflictRecoil(int x, int target);
+    int getBoostedStat(int p, int stat);
+    bool loseStatMod(int player, int stat, int malus, int attacker, bool tell);
 
     void personalEndTurn(int player);
     void setupMove(int i, int move);

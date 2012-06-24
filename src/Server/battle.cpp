@@ -403,7 +403,7 @@ void BattleSituation::endTurn()
                     callseffects(player, player, effect);
                 } else if (flags == PokeEffect) {
                     /* Otherwise called in personal end turn */
-                    if (b.bracket == 6 && gen() >= 3) {
+                    if (!(b.bracket == 6 && gen() < 3)) {
                         callpeffects(player, player, effect);
                     }
                 } else if (flags == TurnEffect) {
@@ -851,7 +851,11 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     team(player).switchPokemon(snum, pok);
 
     PokeBattle &p = poke(slot);
-    p.fullStatus() = p.status(); //Clear any remnant status
+
+    //Clears secondary statuses
+    int st = p.status();
+    p.fullStatus() = 0;
+    p.changeStatus(st);
 
     /* Give new values to what needed */
     fpoke(slot).init(p, gen());

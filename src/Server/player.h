@@ -85,6 +85,9 @@ public:
     virtual const quint16& avatar() const;
     quint16 &avatar();
 
+    virtual const QString& description() const;
+    QString &description();
+
     bool hasTier(const QString &tier) const;
     bool connected() const;
     bool isLoggedIn() const;
