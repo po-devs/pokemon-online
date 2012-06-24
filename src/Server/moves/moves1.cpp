@@ -616,7 +616,7 @@ struct MMDreamingTarget : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Asleep || b.hasSubstitute(t)) {
+        if (b.poke(t).status() != Pokemon::Asleep || (tmove(b,s).power == 0 && b.hasSubstitute(t))) {
             b.fail(s, 31, 0, type(b,s), t);
         }
     }
