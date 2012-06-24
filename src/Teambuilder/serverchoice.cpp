@@ -38,6 +38,7 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     ui->nameEdit->setText(nick);
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
+    connect(ui->nameEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
     QCompleter *completer = new QCompleter(ui->advServerEdit);
