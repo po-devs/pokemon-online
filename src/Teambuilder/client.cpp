@@ -1136,7 +1136,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     menuBar->setObjectName("MainChat");
 
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
-    menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
 
