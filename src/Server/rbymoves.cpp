@@ -260,7 +260,7 @@ struct RBYDig : public MM
 {
     RBYDig() {
         functions["MoveSettings"] = &ms;
-        functions["UponAttackSucessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void ms(int s, int, BS &b) {
@@ -815,6 +815,7 @@ struct RBYRazorWind : public MM
         fturn(b,s).add(TM::UsePP);
         int mv = poke(b,s)["ChargingMove"].toInt();
         initMove(mv, b.gen(), tmove(b, s));
+        turn(b,s)["AutomaticMove"] = mv;
     }
 };
 
