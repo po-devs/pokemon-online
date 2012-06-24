@@ -23,6 +23,8 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     conf.avatar[1] = p2.avatar();
     conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
     conf.setTeam(1, new TeamBattle(p2.team(nteam2)));
+    team(0).name = p1.name();
+    team(1).name = p2.name();
     conf.ids[0] = p1.id();
     conf.ids[1] = p2.id();
     conf.teamOwnership = true;
