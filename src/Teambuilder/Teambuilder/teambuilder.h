@@ -32,6 +32,8 @@ public slots:
     void setNoMod(){}
     void changeMod(){}
 
+    void importTeam();
+    void exportTeam();
 private slots:
     void markTeamUpdated();
 signals:

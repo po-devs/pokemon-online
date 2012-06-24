@@ -59,6 +59,11 @@ void TrainerMenu::on_teamName_textEdited()
     updateButtonName();
 }
 
+void TrainerMenu::openImportDialog()
+{
+    on_importTeam_clicked();
+}
+
 void TrainerMenu::on_importTeam_clicked()
 {
     TeamImporter *i = new TeamImporter();
