@@ -1059,6 +1059,15 @@ QScriptValue ScriptEngine::subgen(int id, int team)
     }
 }
 
+QScriptValue ScriptEngine::teamCount(int id)
+{
+    if (!testPlayer("teamCount(id)", id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->teamCount();
+    }
+}
+
 QString ScriptEngine::generation(int genNum, int subNum)
 {
     if(testRange("generation(genNum, subNum)", genNum, 1, 5) && testRange("generation(genNum, subNum)", subNum, 0, 2)) {

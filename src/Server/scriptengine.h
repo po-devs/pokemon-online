@@ -163,6 +163,7 @@ public:
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
     Q_INVOKABLE QScriptValue gen(int id, int team);
     Q_INVOKABLE QScriptValue subgen(int id, int team);
+    Q_INVOKABLE QScriptValue teamCount(int id);
     Q_INVOKABLE QString generation(int genNum, int subNum);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
