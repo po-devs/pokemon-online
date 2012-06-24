@@ -35,6 +35,10 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&New"),this,SLOT(newTeam()),tr("Ctrl+N", "New"));
     menuFichier->addAction(tr("&Save all"),this,SLOT(saveAll()),tr("Ctrl+S", "Save"));
     menuFichier->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load"));
+    menuFichier->addSeparator();
+    menuFichier->addAction(tr("&Import team"), this, SLOT(importTeam()));
+    menuFichier->addAction(tr("&Export team"), this, SLOT(exportTeam()));
+    menuFichier->addSeparator();
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
 
     /* Loading mod menu */
@@ -99,6 +103,26 @@ void TeamBuilder::newTeam()
     team() = TeamHolder();
     markTeamUpdated();
     currentWidget()->updateTeam();
+}
+
+void TeamBuilder::importTeam()
+{
+    switchToTrainer();
+    trainer->openImportDialog();
+}
+
+void TeamBuilder::exportTeam()
+{
+    QTextEdit *exporting = new QTextEdit(this);
+    exporting->setObjectName("exporting");
+    exporting->setWindowFlags(Qt::Window);
+    exporting->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    exporting->setText(team().team().exportToTxt());
+    exporting->setReadOnly(true);
+
+    exporting->show();
+    exporting->resize(500,700);
 }
 
 void TeamBuilder::markAllUpdated()

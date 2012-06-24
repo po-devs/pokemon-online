@@ -27,6 +27,7 @@ public:
 public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
+    void openImportDialog();
 signals:
     void done();
     void editPoke(int);
