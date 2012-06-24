@@ -1763,7 +1763,7 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
 
 QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
-    return gen == ::Gen::RBY ? m_RbySpecialEffects[movenum] : m_SpecialEffects[movenum];
+    return gen <= 1 ? m_RbySpecialEffects[movenum] : m_SpecialEffects[movenum];
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
