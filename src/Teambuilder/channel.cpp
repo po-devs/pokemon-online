@@ -620,16 +620,16 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 
         QSettings s;
         if (s.value("ClientEmphasize").toBool()) {
-            const QRegExp emphasisNotInsideTag("/(\\w+)/(?![^\\s<]*>)", Qt::CaseInsensitive);
-            const QString addEmphasisClass("<span class='word-emphasis'>\\1</span>");
+            const QRegExp emphasisNotInsideTag("/(\\S+)/(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addEmphasisClass("<em>\\1</em>");
             end = end.replace(emphasisNotInsideTag, addEmphasisClass);
 
-            const QRegExp strongNotInsideTag("\\*(\\w+)\\*(?![^\\s<]*>)", Qt::CaseInsensitive);
-            const QString addStrongClass("<span class='word-strong'>\\1</span>");
+            const QRegExp strongNotInsideTag("\\*(\\S+)\\*(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addStrongClass("<strong>\\1</strong>");
             end = end.replace(strongNotInsideTag, addStrongClass);
 
-            const QRegExp underlineNotInsideTag("\\b_(\\w+)_\\b(?![^\\s<]*>)", Qt::CaseInsensitive);
-            const QString addUnderlineClass("<span class='word-underline'>\\1</span>");
+            const QRegExp underlineNotInsideTag("_(\\S+)_(?![^\\s<]*>)", Qt::CaseInsensitive);
+            const QString addUnderlineClass("<u>\\1</u>");
             end = end.replace(underlineNotInsideTag, addUnderlineClass);
         }
 
