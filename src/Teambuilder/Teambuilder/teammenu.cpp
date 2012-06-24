@@ -13,7 +13,7 @@
 #include "Teambuilder/teamholder.h"
 
 TeamMenu::TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
-    ui(new _ui()), m_team(team)
+    ui(new _ui()), m_team(team), lastGen(team->team().gen())
 {
     ui->pokemonModel = pokeModel;
     setupUi();
@@ -82,11 +82,23 @@ void TeamMenu::tabIconChanged()
 
 void TeamMenu::updateTeam()
 {
+    if (lastGen != team().team().gen()) {
+        lastGen = team().team().gen();
+        updateItemModel();
+    }
+
     foreach(PokeEdit *p, ui->pokemons) {
         p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
 
     updateTabs();
+}
+
+void TeamMenu::updateItemModel()
+{
+    QSettings s;
+    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    ui->itemsModel->setStringList(itemList);
 }
 
 void TeamMenu::updateTabs()
@@ -144,10 +156,7 @@ void TeamMenu::genChanged()
         team().team().poke(i).runCheck();
     }
 
-    QSettings s;
-    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
-    ui->itemsModel->setStringList(itemList);
-
+    updateItemModel();
     updateAll();
     emit teamChanged();
 }
