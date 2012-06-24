@@ -122,28 +122,29 @@ void PMSystem::changeId(int old, int newid)
 }
 
 void PMSystem::messageReceived(PMStruct *pm) {
-    if(isVisible()) {
-        if(pm->state == PMStruct::NewMessage) {
-            return;
-        }
-        if(pm == myPMs->currentWidget()) {
-            return;
-        }
-        pm->state = PMStruct::NewMessage;
-        for(int i = 0; i < myPMs->count(); i++) {
-            if(myPMs->widget(i) == pm) {
-                myPMs->tabBar()->setTabTextColor(i, QColor(Qt::red));
+    if (tabbedPMs) {
+        if(isVisible()) {
+            if(pm->state == PMStruct::NewMessage) {
+                return;
             }
-        }
-    } else {
-        show();
-        for(int i = 0; i < myPMs->count(); i++) {
-            if(myPMs->widget(i) == pm) {
-                myPMs->setCurrentIndex(i);
+            if(pm == myPMs->currentWidget()) {
+                return;
+            }
+            pm->state = PMStruct::NewMessage;
+            for(int i = 0; i < myPMs->count(); i++) {
+                if(myPMs->widget(i) == pm) {
+                    myPMs->tabBar()->setTabTextColor(i, QColor(Qt::red));
+                }
+            }
+        } else {
+            show();
+            for(int i = 0; i < myPMs->count(); i++) {
+                if(myPMs->widget(i) == pm) {
+                    myPMs->setCurrentIndex(i);
+                }
             }
         }
     }
-
 }
 
 void PMSystem::PMDisconnected(bool value)
@@ -239,6 +240,7 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
     if(SaveLog) {
         log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     }
+    show();
     emit messageReceived(this);
 }
 

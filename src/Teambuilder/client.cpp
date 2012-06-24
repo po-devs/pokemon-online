@@ -213,7 +213,7 @@ public:
 
     QList<QAction* > createTierActions(QMenu *m, QObject *o, const char *slot) {
         QList<QAction* > ret;
-        for (int i = 0; i < team->count(); i++) {
+        for (int i = 0; i < team->officialCount(); i++) {
             //Todo: subclass QAction to show the 6 pokemons in the QAction?
             ret.push_back(m->addAction(team->team(i).name(), o, slot));
             ret.back()->setCheckable(true);
@@ -702,7 +702,7 @@ void Client::watchBattleOf(int player)
 
 void Client::watchBattleRequ(int id)
 {
-    relay().notify(NetworkCli::SpectateBattle, qint32(id));
+    relay().notify(NetworkCli::SpectateBattle, qint32(id), Flags(1));
 }
 
 void Client::kick(int p) {
@@ -1136,7 +1136,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     menuBar->setObjectName("MainChat");
 
     QMenu *menuFichier = menuBar->addMenu(tr("&File"));
-    menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
 
@@ -1611,8 +1611,8 @@ void Client::rebuildTierMenu()
     mytiers.clear();
 
     TierActionFactoryTeams f(team());
-    mytiers = tierRoot.buildMenu(mytiermenu, this, team()->count() <= 1 ? NULL : &f);
-    singleTeam = team()->count() <= 1;
+    mytiers = tierRoot.buildMenu(mytiermenu, this, team()->officialCount() <= 1 ? NULL : &f);
+    singleTeam = team()->officialCount() <= 1;
 }
 
 void Client::sortPlayersCountingTiers(bool byTier)
@@ -1659,14 +1659,14 @@ void Client::movePlayerList(bool right)
 
 void Client::changeTiersChecked()
 {
-    if (singleTeam != (team()->count() <= 1)) {
+    if (singleTeam != (team()->officialCount() <= 1)) {
         rebuildTierMenu();
     }
     foreach(QAction *a, mytiers) {
         QString tier = a->property("tier").toString();
         int team = a->property("team").toInt();
 
-        a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
+        a->setChecked(team < this->team()->officialCount() && this->team()->tier(team) == tier);
     }
 }
 
@@ -1677,7 +1677,7 @@ void Client::changeTier()
     int team = a->property("team").toInt();
     QString tier = a->property("tier").toString();
 
-    a->setChecked(team < this->team()->count() && this->team()->tier(team) == tier);
+    a->setChecked(team < this->team()->officialCount() && this->team()->tier(team) == tier);
     relay().notify(NetworkCli::TierSelection, quint8(team), tier);
 }
 
@@ -1799,6 +1799,7 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
     battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
+    connect(this, SIGNAL(destroyed()), battle, SLOT(deleteLater()));
     connect(battle, SIGNAL(closedBW(int)), SLOT(stopWatching(int)));
     connect(battle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
 
@@ -1811,7 +1812,7 @@ void Client::stopWatching(int battleId)
     if (mySpectatingBattles.contains(battleId)) {
         mySpectatingBattles[battleId]->close();
         mySpectatingBattles.remove(battleId);
-        relay().notify(NetworkCli::SpectateBattle, Flags(0), qint32(battleId));
+        relay().notify(NetworkCli::SpectateBattle, qint32(battleId), Flags(0));
     }
 }
 

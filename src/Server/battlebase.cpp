@@ -1297,6 +1297,14 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     level = p.level();
     substituteLife = 0;
     lastMoveUsed = 0;
+
+    if (gen <= 1) {
+        if (p.status() == Pokemon::Paralysed) {
+            stats[Speed] /= 4;
+        } else if (p.status() == Pokemon::Burnt) {
+            stats[Attack] /= 2;
+        }
+    }
 }
 
 void BattleBase::BasicMoveInfo::reset()
@@ -1702,7 +1710,7 @@ void BattleBase::inflictConfusedDamage(int player)
     turnMem(player).stab = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
-    inflictDamage(player, damage, player, true);
+    inflictDamage(player, damage, player, true, gen() <= 1); //in RBY the damage is to the sub
 }
 
 void BattleBase::changeSprite(int player, Pokemon::uniqueId newForme)
@@ -1893,13 +1901,6 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     BasicMoveInfo &fm = tmove(player);
 
-    /* Moves with 0 power that came until here bypass sub,
-       so we make the function think there's no sub to
-       be more simple. */
-    if (fm.power == 0) {
-        sub = false;
-    }
-
     int cl= fm.classification;
 
     /* First we check if there's even an effect... */
@@ -1974,11 +1975,22 @@ void BattleBase::applyMoveStatMods(int player, int target)
     int rate = fm.rate;
 
     if (target != player && sub) {
-        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
-            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+        bool fail = false;
+
+        if (cl == Move::OffensiveStatusInducingMove) {
+            //Secondary status
+            fail = fm.status == Pokemon::Poisoned || fm.status == Pokemon::Paralysed || fm.status == Pokemon::Burnt || fm.status == Pokemon::Frozen;
+        } else if (cl == Move::StatusInducingMove) {
+            //Primary status
+            fail = fm.status == Pokemon::Poisoned || fm.status == Pokemon::Confused;
         }
-        applyingMoveStatMods = false;
-        return;
+        if (fail) {
+            if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
+                sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+            }
+            applyingMoveStatMods = false;
+            return;
+        }
     }
 
     /* Then we check if the effect hits */
@@ -2105,27 +2117,6 @@ bool BattleBase::gainStatMod(int player, int stat, int bonus, int , bool tell)
     if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
-    }
-
-    return true;
-}
-
-bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
-{
-    if (attacker != player) {
-        /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
-        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
-            sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
-            return false;
-        }
-    }
-
-    int boost = fpoke(player).boosts[stat];
-    if (boost > -6) {
-        notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
-        changeStatMod(player, stat, std::max(boost-malus, -6));
-    } else {
-        //fixme: can't decrease message
     }
 
     return true;

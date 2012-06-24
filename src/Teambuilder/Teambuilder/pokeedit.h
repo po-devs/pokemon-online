@@ -42,11 +42,14 @@ public slots:
     void setNum(Pokemon::uniqueId num);
 signals:
     void numChanged();
+    void nameChanged();
+    void itemChanged();
 private slots:
     void changeMove();
     void moveEntered(const QModelIndex&);
 
     void on_pokemonFrame_clicked();
+    void on_nickname_textChanged(const QString &);
 private:
     Ui::PokeEdit *ui;
     QLineEdit *m_moves[4];

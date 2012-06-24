@@ -626,6 +626,10 @@ ChallengeDialog QCheckBox {
 	color: #0ca0dd;
 }
 
+ChallengeDialog QLabel#avatar {
+	background: white;
+}
+
 #PlayerInfo {
 	background: transparent;
 	border: 0;

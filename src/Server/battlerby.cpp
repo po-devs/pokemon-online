@@ -62,11 +62,17 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     else {
         poke(player).statusCount() = 0;
     }
+
+    if (status == Pokemon::Paralysed) {
+        fpoke(player).stats[Speed] = getBoostedStat(player, Speed)/4;
+    } else if (status == Pokemon::Burnt) {
+        fpoke(player).stats[Attack] = getBoostedStat(player, Attack)/2;
+    }
 }
 
 int BattleRBY::getStat(int poke, int stat)
 {
-    return fpoke(poke).stats[stat];
+    return std::min(fpoke(poke).stats[stat], 999);
 }
 
 void BattleRBY::sendPoke(int slot, int pok, bool silent)
@@ -85,7 +91,11 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
     team(player).switchPokemon(snum, pok);
 
     PokeBattle &p = poke(slot);
-    p.fullStatus() = p.status(); //Clear any remnant status
+
+    //Clears secondary statuses
+    int st = p.status();
+    p.fullStatus() = 0;
+    p.changeStatus(st);
 
     /* Give new values to what needed */
     fpoke(slot).init(p, gen());
@@ -458,10 +468,10 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             goto endloop;
         }
 
-        /* Fail test for leech seed / dream eater */
 
-        if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
-            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+        calleffects(player, target, "DetermineAttackFailure");
+        if (testFail(player)){
+            calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
 
@@ -715,4 +725,52 @@ void BattleRBY::changeTempMove(int player, int slot, int move)
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
     changePP(player,slot,MoveInfo::PP(move, gen()));
+}
+
+int BattleRBY::getBoostedStat(int p, int stat)
+{
+    return poke(p).normalStat(p) * getStatBoost(p, stat);
+}
+
+bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
+{
+    if (attacker != player) {
+        /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
+        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
+            sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+            return false;
+        }
+    }
+
+    int boost = fpoke(player).boosts[stat];
+    if (boost > -6) {
+        notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
+        changeStatMod(player, stat, std::max(boost-malus, -6));
+    } else {
+        //fixme: can't decrease message
+    }
+
+    if (poke(player).status() == Pokemon::Burnt && stat == Attack) {
+        fpoke(player).stats[stat] = getBoostedStat(player, Attack) / 2;
+    } else if (poke(player).status() == Pokemon::Paralysed && stat == Speed) {
+        fpoke(player).stats[stat] = getBoostedStat(player, Speed) / 2;
+    } else {
+        fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    }
+
+    return true;
+}
+
+
+bool BattleRBY::gainStatMod(int player, int stat, int bonus, int , bool tell)
+{
+    int boost = fpoke(player).boosts[stat];
+    if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
+        notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
+        changeStatMod(player, stat, std::min(boost+bonus, 6));
+    }
+
+    fpoke(player).stats[stat] = getBoostedStat(player, stat);
+
+    return true;
 }

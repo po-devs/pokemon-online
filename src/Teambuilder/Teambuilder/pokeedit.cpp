@@ -86,6 +86,13 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     updateAll();
 }
 
+void PokeEdit::on_nickname_textChanged(const QString &s)
+{
+    poke().nickname() = s;
+
+    emit nameChanged();
+}
+
 void PokeEdit::on_pokemonFrame_clicked()
 {
     PokeTableModel *model = (PokeTableModel*) pokemonModel;
@@ -202,8 +209,13 @@ void PokeEdit::updateAll()
 void PokeEdit::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
-    ui->ivbox->setPoke(poke);
+
+    ui->evbox->blockSignals(true);
     ui->evbox->setPoke(poke);
+    ui->ivbox->setPoke(poke);
+    ui->levelSettings->setPoke(poke);
+    ui->evbox->blockSignals(false);
+
     updateAll();
 }
 
@@ -282,6 +294,10 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
     poke().setNum(num);
     poke().load();
 
+    if (!sameForme) {
+        poke().nickname() = PokemonInfo::Name(num);
+    }
+
     if (sameForme) {
         poke().runCheck();
     }
@@ -321,4 +337,5 @@ void PokeEdit::changeItem(const QString &itemName)
         setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
     }
     updateItemSprite(poke().item());
+    emit itemChanged();
 }

@@ -52,7 +52,7 @@ void FindBattleDialog::throwChallenge()
 
 void FindBattleDialog::setTeam(TeamHolder *t)
 {
-    for (int i = 0; i < t->count(); i++) {
+    for (int i = 0; i < t->officialCount(); i++) {
         TeamLine *line = new TeamLine();
         line->setTeamTier(t->team(i), t->tier(i));
         teamLines.append(line);
