@@ -29,7 +29,7 @@ QString SecurityManager::Member::toString() const
         auth[0] += this->authority();
     if (this->isBanned())
         auth[1] = '1';
-    return QString("%1%%2%%3%%4%%5%%6\n").arg(name, date, auth, salt, hash, ip);
+    return QString("%1%%2%%3%%4%%5%%6%%7\n").arg(name, date, auth, salt, hash, ip).arg(ban_expire_time);
 }
 
 void SecurityManager::loadMembers()
@@ -94,7 +94,7 @@ void SecurityManager::loadMembers()
 
                 QStringList ls = s.split('%');
 
-                if (ls.size() == 6 && isValid(ls[0])) {
+                if (ls.size() >= 6 && isValid(ls[0])) {
                     query.bindValue(":name", ls[0]);
                     query.bindValue(":laston",ls[1]);
                     query.bindValue(":auth", ls[2][0].toAscii()-'0');
@@ -102,14 +102,18 @@ void SecurityManager::loadMembers()
                     /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
                        so i remove them. */
                     if (!ls[3].contains('\\')) {
-                        query.bindValue(":salt", ls[3].trimmed());
-                        query.bindValue(":hash", ls[4].trimmed());
+                        query.bindValue(":salt", ls[3].trimmed().toAscii());
+                        query.bindValue(":hash", ls[4].trimmed().toAscii());
                     } else {
                         query.bindValue(":salt", "");
                         query.bindValue(":hash", "");
                     }
                     query.bindValue(":ip", ls[5].trimmed());
-                    query.bindValue(":banexpire", ls[6]);
+                    if (ls.size() >= 7) {
+                        query.bindValue(":banexpire", ls[6]);
+                    } else {
+                        query.bindValue(":banexpire", 0);
+                    }
                     query.exec();
                 }
             }
@@ -478,11 +482,11 @@ void SecurityManager::exportDatabase()
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.exec("select name, laston, auth, banned, salt, hash, ip from trainers order by name asc");
+    q.exec("select name, laston, auth, banned, salt, hash, ip, ban_expire_time from trainers order by name asc");
 
     while (q.next()) {
-        Member m(q.value(0).toString(), q.value(1).toByteArray(), q.value(2).toInt(), q.value(3).toBool(), q.value(4).toByteArray(), q.value(5).toByteArray()
-                 , q.value(6).toByteArray());
+        Member m(q.value(0).toString(), q.value(1).toString(), q.value(2).toInt(), q.value(3).toBool(), q.value(4).toByteArray(), q.value(5).toByteArray()
+                 , q.value(6).toString(), q.value(7).toInt());
         out.write(m.toString().toUtf8());
     }
 
