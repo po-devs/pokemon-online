@@ -202,8 +202,13 @@ void PokeEdit::updateAll()
 void PokeEdit::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
-    ui->ivbox->setPoke(poke);
+
+    ui->evbox->blockSignals(true);
     ui->evbox->setPoke(poke);
+    ui->ivbox->setPoke(poke);
+    ui->levelSettings->setPoke(poke);
+    ui->evbox->blockSignals(false);
+
     updateAll();
 }
 
