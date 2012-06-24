@@ -8,6 +8,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
+    resize(726, this->height());
 
     QGridLayout *mylayout = new QGridLayout(this);
 
