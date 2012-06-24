@@ -1297,6 +1297,14 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     level = p.level();
     substituteLife = 0;
     lastMoveUsed = 0;
+
+    if (gen <= 1) {
+        if (p.status() == Pokemon::Paralysed) {
+            stats[Speed] /= 4;
+        } else if (p.status() == Pokemon::Burnt) {
+            stats[Attack] /= 2;
+        }
+    }
 }
 
 void BattleBase::BasicMoveInfo::reset()
@@ -2109,27 +2117,6 @@ bool BattleBase::gainStatMod(int player, int stat, int bonus, int , bool tell)
     if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
-    }
-
-    return true;
-}
-
-bool BattleBase::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
-{
-    if (attacker != player) {
-        /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
-        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
-            sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
-            return false;
-        }
-    }
-
-    int boost = fpoke(player).boosts[stat];
-    if (boost > -6) {
-        notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
-        changeStatMod(player, stat, std::max(boost-malus, -6));
-    } else {
-        //fixme: can't decrease message
     }
 
     return true;
