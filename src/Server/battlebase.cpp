@@ -1637,6 +1637,8 @@ bool BattleBase::testStatus(int player)
         if (poke(player).statusCount() > 1) {
             poke(player).statusCount() -= 1;
             notify(All, StatusMessage, player, qint8(FeelAsleep));
+
+            return false;
         } else {
             healStatus(player, Pokemon::Asleep);
             notify(All, StatusMessage, player, qint8(FreeAsleep));
