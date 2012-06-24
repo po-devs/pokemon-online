@@ -89,14 +89,9 @@ void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers, const QB
 
 }
 
-void Analyzer::notifyAway(qint32 id, bool away)
+void Analyzer::notifyOptionsChange(qint32 id, bool away, bool ladder)
 {
-    notify(OptionsChange, id, Flags(away << 1));
-}
-
-void Analyzer::notifyLadderChange(qint32 id, bool ladder)
-{
-    notify(OptionsChange, id, Flags(ladder));
+    notify(OptionsChange, id, Flags(ladder + (away << 1)));
 }
 
 void Analyzer::sendLogout(int num)
