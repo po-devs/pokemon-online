@@ -171,12 +171,14 @@ struct RBYBind : public MM
             addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
             /* Bind does the same damage every turn */
             addFunction(turn(b,s), "CustomAttackingDamage", "Bind", &cad);
+            initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
         }
     }
 
     static void cad(int s, int t, BS &b) {
         if (poke(b,t).contains("Bound")) {
             turn(b,s)["CustomDamage"] = poke(b,s)["BindDamage"];
+            //b.sendMoveMessage(10, 0, t, type(b,s), s, move(b,s));
         }
     }
 
@@ -203,15 +205,16 @@ struct RBYBind : public MM
             return;
         }
         poke(b,s)["LastBind"] = b.turn();
-        inc(poke(b,t)["BindCount"], -1);
+        inc(poke(b,s)["BindCount"], -1);
 
-        int count = poke(b,t)["BindCount"].toInt();
+        int count = poke(b,s)["BindCount"].toInt();
 
         if (count == 0) {
             poke(b,s).remove("BindCount");
             poke(b,t).remove("Bound");
             removeFunction(poke(b,s), "TurnSettings", "Bind");
             removeFunction(poke(b,t), "MovePossible", "Bind");
+            b.sendMoveMessage(10, 1, t, type(b,s), s, move(b,s));
         }
     }
 };
