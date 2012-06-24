@@ -1936,6 +1936,10 @@ void Client::challengeStuff(const ChallengeInfo &c)
 
 void Client::awayChanged(int id, bool away)
 {
+    if (player(id).away() == away) {
+        return;
+    }
+
     if (away) {
         printLine(IdleEvent, id, tr("%1 is idling.").arg(name(id)));
     } else {
