@@ -842,7 +842,7 @@ void Server::ban(int id, int src) {
 
 void Server::tempBan(int dest, int src, int time)
 {
-    time = std::max(1, std::min(time, 1440));
+    std::max(1, std::min(time, 1440));
     notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
     if(src == 0) {
         printLine("The server banned " + name(dest) + " for " + int(time) + " minutes");
