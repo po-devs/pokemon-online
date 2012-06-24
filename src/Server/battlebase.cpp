@@ -1702,7 +1702,7 @@ void BattleBase::inflictConfusedDamage(int player)
     turnMem(player).stab = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
-    inflictDamage(player, damage, player, true);
+    inflictDamage(player, damage, player, true, gen() <= 1); //in RBY the damage is to the sub
 }
 
 void BattleBase::changeSprite(int player, Pokemon::uniqueId newForme)
@@ -1893,13 +1893,6 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     BasicMoveInfo &fm = tmove(player);
 
-    /* Moves with 0 power that came until here bypass sub,
-       so we make the function think there's no sub to
-       be more simple. */
-    if (fm.power == 0) {
-        sub = false;
-    }
-
     int cl= fm.classification;
 
     /* First we check if there's even an effect... */
@@ -1973,13 +1966,24 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     int rate = fm.rate;
 
-//    if (target != player && sub) {
-//        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
-//            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
-//        }
-//        applyingMoveStatMods = false;
-//        return;
-//    }
+    if (target != player && sub) {
+        bool fail = false;
+
+        if (cl == Move::OffensiveStatusInducingMove) {
+            //Secondary status
+            fail = fm.status == Pokemon::Poisoned || fm.status == Pokemon::Paralysed || fm.status == Pokemon::Burnt || fm.status == Pokemon::Frozen;
+        } else if (cl == Move::StatusInducingMove) {
+            //Primary status
+            fail = fm.status == Pokemon::Poisoned || fm.status == Pokemon::Confused;
+        }
+        if (fail) {
+            if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
+                sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+            }
+            applyingMoveStatMods = false;
+            return;
+        }
+    }
 
     /* Then we check if the effect hits */
 
