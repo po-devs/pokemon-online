@@ -258,7 +258,7 @@ void Server::start(){
     }
 
     if (s.value("process_database_clearing_on_startup", true).toBool()) {
-        SecurityManager::processDailyRun(amountOfInactiveDays);
+        SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
     QTimer *t2 = new QTimer(this);

@@ -27,22 +27,22 @@ public:
 
     /* A member as stored in the file */
     struct Member {
-        Member(const QString &name="", const QByteArray &date="", int auth = 0, bool banned = false,
-               const QByteArray &salt="", const QByteArray &hash="", const QByteArray &ip="", int ban_expire_time = 0);
+        Member(const QString &name="", const QString &date="", int auth = 0, bool banned = false,
+               const QByteArray &salt="", const QByteArray &hash="", const QString &ip="", int ban_expire_time = 0);
         QString name;
-        QByteArray date;
+        QString date;
         int auth;
         bool banned;
         QByteArray salt;
         QByteArray hash;
-        QByteArray ip;
+        QString ip;
         unsigned int ban_expire_time;
 
-        void modifyIP(const QByteArray &ip) {
+        void modifyIP(const QString &ip) {
             this->ip = ip;
         }
 
-        void modifyDate(const QByteArray &date) {
+        void modifyDate(const QString &date) {
             this->date = date;
         }
 
@@ -114,7 +114,7 @@ public:
        only from there), so hangs the server */
     static void exportDatabase();
 
-    static void processDailyRun(int maxdays);
+    static void processDailyRun(int maxdays, bool async=true);
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);
     static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
