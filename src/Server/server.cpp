@@ -1218,7 +1218,7 @@ void Server::awayChanged(int src, bool away)
         foreach(Player *p, channel(chanid).players) {
             /* That test avoids to send twice the same data to the client */
             if (!p->hasSentCommand(lastDataId)) {
-                p->relay().notifyAway(src, away);
+                p->relay().notifyOptionsChange(src, away, p->state()[Player::LadderEnabled]);
             }
         }
     }

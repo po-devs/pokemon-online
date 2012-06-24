@@ -94,8 +94,11 @@ void Player::ladderChange(bool n)
 {
     if (!isLoggedIn())
         return;//INV BEHAV
+    if (state()[LadderEnabled] == n) {
+        return;
+    }
     state().setFlag(LadderEnabled, n);
-    relay().notifyLadderChange(id(), n);
+    relay().notifyOptionsChange(id(), away(), n);
 }
 
 void Player::cancelBattleSearch()
