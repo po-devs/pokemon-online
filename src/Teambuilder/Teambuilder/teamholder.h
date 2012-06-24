@@ -39,6 +39,7 @@ class TeamHolder : public TeamHolderInterface
     int currentTeam() const {return m_currentTeam;}
     void setCurrent(int t) {m_currentTeam = t;}
     int count() const;
+    int officialCount() const;
 
     QString tier(int team) const;
     QString tier() const;

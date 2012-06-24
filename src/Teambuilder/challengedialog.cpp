@@ -90,7 +90,7 @@ void ChallengeDialog::setTeam(TeamHolder *t)
     this->team = t;
 
     QMenu *m = new QMenu(ui->teamChoice);
-    for (int i = 0; i < team->count(); i++) {
+    for (int i = 0; i < team->officialCount(); i++) {
         if (cinfo.desttier.isEmpty() || team->tier(i) == cinfo.desttier) {
             QAction *a = m->addAction(QString ("%1 (%2)").arg(team->team(i).name(), team->tier(i)), this, SLOT(changeCurrentTeam()));
             a->setProperty("slot", i);
@@ -125,7 +125,7 @@ void ChallengeDialog::changeCurrentTeam()
 {
     int slot = sender()->property("slot").toInt();
 
-    slot = std::min(slot, team->count());
+    slot = std::min(slot, team->officialCount());
     team->setCurrent(slot);
 
     updateCurrentTeam();
