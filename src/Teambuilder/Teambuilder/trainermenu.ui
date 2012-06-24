@@ -245,6 +245,9 @@
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <widget class="QPushButton" name="boxCenter">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Box Center</string>
            </property>
@@ -252,6 +255,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pokedex">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Pokedex</string>
            </property>
