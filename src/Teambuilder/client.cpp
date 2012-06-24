@@ -184,6 +184,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
+    connect(relay, SIGNAL(playerTempBanned(int,int,int)), SLOT(playerTempBanned(int,int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
@@ -714,7 +715,7 @@ void Client::ban(int p) {
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().notify(NetworkCli::PlayerTBan, qint32(p), qint32(time));
 }
 
 void Client::pmcp(QString p) {
@@ -1000,7 +1001,7 @@ void Client::controlPanel(int id)
     connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
-    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,int)), myCP, SLOT(addNameToTBanList(QString, QString,int)));
+    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,QDateTime)), myCP, SLOT(addNameToTBanList(QString, QString,QDateTime)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
     connect(myCP, SIGNAL(getTBanList()), &relay(), SLOT(getTBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
@@ -1327,6 +1328,25 @@ void Client::playerBanned(int dest, int src) {
     printHtml(toBoldColor(mess, Qt::red));
 }
 
+void Client::playerTempBanned(int dest, int src, int time)
+{
+    QString mess;
+    time = int(time);
+    if(src == 0) {
+        if(time == 1) {
+            mess = tr("%1 was banned by the server for %2 minute!").arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(time);
+        }
+    } else {
+        if(time == 1) {
+            mess = tr("%1 banned %2 for %3 minute!").arg(name(src)).arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(time);
+        }
+    }
+    printHtml(toBoldColor(mess, Qt::red));
+}
 
 void Client::askForPass(const QByteArray &salt) {
 

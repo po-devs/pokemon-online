@@ -182,6 +182,7 @@ signals:
     void info(int id, const QString &);
     void playerKick(int,int);
     void playerBan(int,int);
+    void playerTempBan(int, int, int);
     void PMReceived(int, int, const QString &);
     void awayChange(int, bool);
     void spectatingRequested(int, int);
@@ -212,12 +213,14 @@ public slots:
     void hashReceived(const QByteArray &hash);
     void playerKick(int);
     void playerBan(int);
+    void playerTempBan(int player, int time);
     void onReconnect(int id, const QByteArray &hash);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
-    //void CPTBan(const QString &name, int time);
+    void CPTBan(const QString &name, int time);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
+    void giveTBanList();
     void giveBanList();
     void awayChange(bool away);
     void spectatingRequested(int id);
@@ -317,27 +320,6 @@ private:
     void doConnections();
 
     void testAuthentification(const QString &name);
-};
-
-class TempBan : public QObject
-{
-    Q_OBJECT
-public:
-        TempBan(const QString& na,const int& ti);
-        ~TempBan();
-        void start();
-        int time() const;
-        QString name() const;
-signals:
-        void end(QString);
-
-public slots:
-        void done();
-
-private:
-        QTimer *mytimer;
-        QString myname;
-        int mytime;
 };
 
 #endif // PLAYER_H

@@ -94,13 +94,13 @@ void ControlPanel::addNameToBanList(const QString &name, const QString &ip)
     banTable->setItem(rowcount, 1, new QTableWidgetItem(ip));
 }
 
-void ControlPanel::addNameToTBanList(const QString &name, const QString &ip, int time)
+void ControlPanel::addNameToTBanList(const QString &name, const QString &ip, const QDateTime& expires)
 {
     int rowcount = tbanTable->rowCount();
     tbanTable->setRowCount(rowcount+1);
     tbanTable->setItem(rowcount, 0, new QTableWidgetItem(name));
     tbanTable->setItem(rowcount, 1, new QTableWidgetItem(ip));
-    tbanTable->setItem(rowcount, 2, new QTableWidgetItem(QString::number(time)));
+    tbanTable->setItem(rowcount, 2, new QTableWidgetItem(expires.toLocalTime().toString("yyyy.MM.dd hh:mm:ss")));
 }
 
 void ControlPanel::on_unban_clicked()

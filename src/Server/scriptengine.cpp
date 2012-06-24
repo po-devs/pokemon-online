@@ -422,14 +422,14 @@ void ScriptEngine::afterPlayerKick(int src, int dest)
     makeEvent("afterPlayerKick", src, dest);
 }
 
-bool ScriptEngine::beforePlayerBan(int src, int dest)
+bool ScriptEngine::beforePlayerBan(int src, int dest, int time)
 {
-    return makeSEvent("beforePlayerBan", src, dest);
+    return makeSEvent("beforePlayerBan", src, dest, time);
 }
 
-void ScriptEngine::afterPlayerBan(int src, int dest)
+void ScriptEngine::afterPlayerBan(int src, int dest, int time)
 {
-    makeEvent("afterPlayerBan", src, dest);
+    makeEvent("afterPlayerBan", src, dest, time);
 }
 
 bool ScriptEngine::beforePlayerAway(int src, bool away)
@@ -903,6 +903,15 @@ QScriptValue ScriptEngine::dbExpire(const QString &name)
         QDate tempDate;
         tempDate = QDate::fromString(SecurityManager::member(name).date, "yyyy-MM-dd");
         return myserver->playerDeleteDays() - tempDate.daysTo(QDate::currentDate());
+    }
+}
+
+QScriptValue ScriptEngine::dbTempBanTime(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return SecurityManager::member(name).ban_expire_time - QDateTime::currentDateTimeUtc().toTime_t();
     }
 }
 
@@ -1806,6 +1815,21 @@ QScriptValue ScriptEngine::banList()
 void ScriptEngine::ban(QString name)
 {
     SecurityManager::ban(name);
+    if(loggedIn(myserver->id(name))) {
+        myserver->kick(myserver->id(name));
+    }
+}
+
+void ScriptEngine::tempBan(QString name, int time)
+{
+    if(time < 0) {
+        return;
+    }
+    SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    SecurityManager::ban(name);
+    if(loggedIn(myserver->id(name))) {
+        myserver->kick(myserver->id(name));
+    }
 }
 
 void ScriptEngine::unban(QString name)

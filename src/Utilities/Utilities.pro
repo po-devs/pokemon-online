@@ -21,6 +21,7 @@ HEADERS += otherwidgets.h \
     coreclasses.h \
     qimagebuttonlr.h \
     confighelper.h
+
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
