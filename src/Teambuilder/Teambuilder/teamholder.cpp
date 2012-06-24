@@ -135,12 +135,17 @@ Team &TeamHolder::team(int i)
     return m_teams[i];
 }
 
-int TeamHolder::count() const
+int TeamHolder::officialCount() const
 {
     if (m_tiers.isEmpty())
         return m_teams.size();
     else
         return std::min(m_tiers.size(), m_teams.size());
+}
+
+int TeamHolder::count() const
+{
+    return m_teams.size();
 }
 
 QString TeamHolder::tier() const
