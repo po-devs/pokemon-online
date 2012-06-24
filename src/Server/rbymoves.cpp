@@ -834,7 +834,7 @@ struct RBYSubstitute : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*25/100,1));
+        b.changeHp(s, b.poke(s).lifePoints() - std::min(std::max(b.poke(s).totalLifePoints()*25/100,1), b.poke(s).lifePoints()));
         if (b.koed(s)) {
             b.koPoke(s, s);
         } else {
