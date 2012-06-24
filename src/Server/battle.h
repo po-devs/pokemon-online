@@ -71,6 +71,7 @@ public:
     bool canSendPreventSMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
     /* Does not do extra operations,just a setter */
+    virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     bool canGetStatus(int player, int status);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);

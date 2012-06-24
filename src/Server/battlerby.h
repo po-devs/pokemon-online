@@ -17,6 +17,7 @@ public:
     bool hadSubstitute(int player);
     void useAttack(int player, int attack, bool specialOccurence=false, bool notify=true);
     void changeTempMove(int player, int slot, int move);
+    virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell=false, int turns=0);
     virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
 protected:
