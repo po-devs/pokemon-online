@@ -318,7 +318,7 @@ bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo 
 
     startStopEvent();
 
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
 
     return !endStopEvent();
 }
@@ -328,7 +328,7 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
     if (!myscript.property("afterChallengeIssued", QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
 }
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
