@@ -425,13 +425,17 @@ QTextEdit#MainChat {
 	background-color: white;
 }
 
-#Announcement {
+#Announcement, ServerChoice #announcement {
 	border-radius: 2px;
 	border: 1px solid grey;
 	font-size: 11px;
 	background: #ffffcd;
 	padding: 2px;
 	text-align: center;
+}
+
+ServerChoice #announcement {
+    font-size: 16px;
 }
 
 QSlider::groove:horizontal {

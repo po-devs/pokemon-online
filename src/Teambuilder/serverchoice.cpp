@@ -8,6 +8,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     ui(new Ui::ServerChoice)
 {
     ui->setupUi(this);
+    ui->announcement->hide();
 
     QSettings settings;
 
@@ -20,6 +21,7 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
+    connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
 
     connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16, bool)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16, bool)));
 
