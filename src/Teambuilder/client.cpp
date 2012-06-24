@@ -999,7 +999,7 @@ void Client::controlPanel(int id)
     connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
-    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,int)), myCP, SLOT(addNameToTBanList(QString, QString,int)));
+    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,QDateTime)), myCP, SLOT(addNameToTBanList(QString, QString,QDateTime)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
     connect(myCP, SIGNAL(getTBanList()), &relay(), SLOT(getTBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
