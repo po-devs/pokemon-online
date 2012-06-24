@@ -839,7 +839,7 @@ struct RBYSubstitute : public MM
             b.koPoke(s, s);
         } else {
             fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
-            fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
+            fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4+1;
             b.sendMoveMessage(128,4,s);
             b.notifySub(s,true);
         }
