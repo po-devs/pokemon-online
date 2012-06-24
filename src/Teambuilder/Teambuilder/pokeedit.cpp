@@ -282,6 +282,10 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
     poke().setNum(num);
     poke().load();
 
+    if (!sameForme) {
+        poke().nickname() = PokemonInfo::Name(num);
+    }
+
     if (sameForme) {
         poke().runCheck();
     }
