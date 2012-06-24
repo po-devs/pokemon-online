@@ -619,7 +619,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
         QString lineClass = "line";
 
         QSettings s;
-        if (s.value("ClientEmphasize").toBool()) {
+        if (!end.contains("<a ") && s.value("ClientEmphasize").toBool()) {
             const QRegExp emphasisNotInsideTag("/(\\S+)/(?![^\\s<]*>)", Qt::CaseInsensitive);
             const QString addEmphasisClass("<em>\\1</em>");
             end = end.replace(emphasisNotInsideTag, addEmphasisClass);
