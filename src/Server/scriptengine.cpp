@@ -639,7 +639,7 @@ void ScriptEngine::changePokeNum(int id, int team, int slot, int num)
 {
     if (!testPlayer("changePokeNum", id) || !testRange("changePokeNum", slot, 0, 5) || !testTeamCount("changePokeNum", id, team))
         return;
-    if (!PokemonInfo::Exists(num, myserver->player(id)->gen()))
+    if (!PokemonInfo::Exists(num, myserver->player(id)->gen(team)))
         return;
     myserver->player(id)->team(team).poke(slot).num() = num;
 }
@@ -650,7 +650,7 @@ void ScriptEngine::changePokeLevel(int id, int team, int slot, int level)
         return;
     Player *p = myserver->player(id);
     p->team(team).poke(slot).level() = level;
-    p->team(team).poke(slot).updateStats(p->gen());
+    p->team(team).poke(slot).updateStats(p->gen(team));
 }
 
 void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int move)
@@ -661,7 +661,7 @@ void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int mo
         return;
     Player *p = myserver->player(id);
     p->team(team).poke(pslot).move(mslot).num() = move;
-    p->team(team).poke(pslot).move(mslot).load(p->gen());
+    p->team(team).poke(pslot).move(mslot).load(p->gen(team));
 }
 
 void ScriptEngine::changePokeGender(int id, int team, int pokeslot, int gender)
@@ -1041,21 +1041,21 @@ void ScriptEngine::hostInfo_Ready(const QHostInfo &myInfo)
     }
 }
 
-QScriptValue ScriptEngine::gen(int id)
+QScriptValue ScriptEngine::gen(int id, int team)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!testTeamCount("gen(id, team)", id, team)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->gen().num;
+        return myserver->player(id)->gen(team).num;
     }
 }
 
-QScriptValue ScriptEngine::subgen(int id)
+QScriptValue ScriptEngine::subgen(int id, int team)
 {
-    if(!myserver->playerLoggedIn(id)) {
+    if (!testTeamCount("subgen(id, team)", id, team)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->gen().subnum;
+        return myserver->player(id)->gen(team).subnum;
     }
 }
 
@@ -1410,7 +1410,7 @@ QScriptValue ScriptEngine::teamPokeItem(int id, int team, int index)
 
 bool ScriptEngine::hasTeamItem(int id, int team, int itemnum)
 {
-    if(testPlayer("hasTeamItem", id) || testTeamCount("hasTeamItem", id, team)) {
+    if(testPlayer("hasTeamItem", id) && testTeamCount("hasTeamItem", id, team)) {
         TeamBattle &t = myserver->player(id)->team(team);
         for (int i = 0; i < 6; i++) {
             if (t.poke(i).item() == itemnum) {

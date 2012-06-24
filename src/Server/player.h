@@ -77,7 +77,7 @@ public:
     int id() const;
     QString ip() const;
     QString proxyIp() const;
-    Pokemon::gen gen() const;
+    Pokemon::gen gen(int team) const;
     int teamCount() const;
     int rating(const QString &tier);
     bool hasReconnectPass() const;

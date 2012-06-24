@@ -808,9 +808,9 @@ const TeamBattle & Player::team(int i) const
     return m_teams.team(i);
 }
 
-Pokemon::gen Player::gen() const
+Pokemon::gen Player::gen(int team) const
 {
-    return team().gen;
+    return this->team(team).gen;
 }
 
 int Player::teamCount() const
