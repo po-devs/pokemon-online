@@ -240,7 +240,7 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
     if(SaveLog) {
         log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     }
-    show();
+
     emit messageReceived(this);
 }
 
