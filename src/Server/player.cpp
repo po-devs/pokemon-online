@@ -1181,6 +1181,16 @@ quint16 &Player::avatar()
     return m_bundle.avatar;
 }
 
+const QString &Player::description() const
+{
+    return m_bundle.info;
+}
+
+QString &Player::description()
+{
+    return m_bundle.info;
+}
+
 const QColor &Player::color() const
 {
     return m_bundle.color;
@@ -1277,6 +1287,7 @@ void Player::assignTrainerInfo(const TrainerInfo &info)
     avatar() = info.avatar;
     winningMessage() = info.winning;
     losingMessage() = info.losing;
+    description() = info.info;
 }
 
 bool Player::isLocked() const
