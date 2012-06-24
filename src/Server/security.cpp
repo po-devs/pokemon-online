@@ -16,8 +16,8 @@ int SecurityManager::dailyRunDays = 182;
 LoadThread ** SecurityManager::threads = NULL;
 InsertThread<SecurityManager::Member> * SecurityManager::ithread = NULL;
 
-SecurityManager::Member::Member(const QString &name, const QByteArray &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
-                                const QByteArray &ip, int ban_expire_time)
+SecurityManager::Member::Member(const QString &name, const QString &date, int auth, bool banned, const QByteArray &salt, const QByteArray &hash,
+                                const QString &ip, int ban_expire_time)
     :name(name.toLower()), date(date), auth(auth), banned(banned), salt(salt), hash(hash), ip(ip), ban_expire_time(ban_expire_time)
 {
 }
@@ -166,9 +166,9 @@ void SecurityManager::init()
 
     ithread = new InsertThread<Member>();
     connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), instance, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
+    connect(ithread, SIGNAL(processDailyRun(QSqlQuery*)), instance, SLOT(dailyRunEx(QSqlQuery*)));
 
     ithread->start();
-
 
     loadMembers();
 }
@@ -273,7 +273,7 @@ void SecurityManager::deleteUser(const QString &name)
 }
 
 void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
-    Member m(name.toLower(), date.toAscii(), 0, false, "", "", ip.toAscii(), 0);
+    Member m(name.toLower(), date, 0, false, "", "", ip, 0);
     holder.addMemberInMemory(m);
     updateMemberInDatabase(m, true);
 }
@@ -487,16 +487,23 @@ void SecurityManager::exportDatabase()
     Server::print("Member database exported!");
 }
 
-void SecurityManager::processDailyRun(int maxdays)
+void SecurityManager::processDailyRun(int maxdays, bool async)
 {
+    qDebug() << "Set daily run days to " << maxdays;
     dailyRunDays = maxdays;
-    ithread->addDailyRun();
+    if (async) {
+        ithread->addDailyRun();
+    } else {
+        QSqlQuery q;
+        dailyRunEx(&q);
+    }
 }
 
 void SecurityManager::dailyRunEx(QSqlQuery *q)
 {
     QString limit = QDate::currentDate().addDays(-dailyRunDays).toString("yyyy-MM-dd");
 
+    qDebug() << "Processing daily run for members with limit " << limit;
     if (SQLCreator::databaseType == SQLCreator::MySQL) {
         q->prepare("delete from trainers where laston<? and auth=0 and banned=0");
     } else {
@@ -506,6 +513,7 @@ void SecurityManager::dailyRunEx(QSqlQuery *q)
 
     q->exec();
     q->finish();
+    qDebug() << "Daily run for members finished";
 }
 
 /* Used for threads */

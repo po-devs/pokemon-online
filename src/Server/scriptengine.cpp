@@ -891,7 +891,7 @@ QScriptValue ScriptEngine::dbLastOn(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return QString(SecurityManager::member(name).date);
+        return SecurityManager::member(name).date;
     }
 }
 

@@ -1096,8 +1096,8 @@ void Player::testAuthentificationLoaded()
 
         setAuth(m.authority());
 
-        m.modifyIP(ip().toAscii());
-        m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
+        m.modifyIP(ip());
+        m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
         SecurityManager::updateMember(m);
 
         /* To tell the player he's not registered */
