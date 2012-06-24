@@ -946,6 +946,15 @@ QScriptValue ScriptEngine::tier(int id, int team)
     return myserver->player(id)->team(team).tier;
 }
 
+bool ScriptEngine::hasTier(int id, const QString &tier)
+{
+    if (!testPlayer("hasTier", id)) {
+        return false;
+    }
+
+    return myserver->player(id)->hasTier(tier);
+}
+
 QScriptValue ScriptEngine::ranking(int id, int team)
 {
     if(!testPlayer("ranking", id) || !testTeamCount("ranking", id, team)) {

@@ -175,6 +175,7 @@ public:
     Q_INVOKABLE int dbExpiration();
     Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id, int team);
+    Q_INVOKABLE bool hasTier(int id, const QString &tier);
     Q_INVOKABLE QScriptValue ranking(int id, int team);
     Q_INVOKABLE QScriptValue ratedBattles(int id, int team);
     Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);
