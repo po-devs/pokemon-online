@@ -26,6 +26,10 @@ IvBox::IvBox(QWidget *parent) :
         connect(m_ivchangers[i], SIGNAL(valueChanged(int)), this, SLOT(changeIV(int)));
     }
 
+    for (int i = 0; i < 3; i++) {
+        connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
+    }
+
     for(int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++) {
         ui->hiddenPowerType->addItem(TypeInfo::Name(i));
     }
@@ -57,7 +61,10 @@ void IvBox::updateAll()
             m_abilities[i]->setVisible(true);
             m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
             m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
-            connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
+
+            if (poke().abilities().ab(i) == poke().ability()) {
+                m_abilities[i]->setChecked(true);
+            }
         } else {
              m_abilities[i]->setVisible(false);
         }
