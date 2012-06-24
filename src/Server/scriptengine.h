@@ -68,8 +68,8 @@ public:
     void afterPlayerAway(int src, bool away);
     bool beforePlayerKick(int src, int dest);
     void afterPlayerKick(int src, int dest);
-    bool beforePlayerBan(int src, int dest);
-    void afterPlayerBan(int src, int dest);
+    bool beforePlayerBan(int src, int dest, int time);
+    void afterPlayerBan(int src, int dest, int time);
     void battleSetup(int src, int dest, int battleId);
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
@@ -171,6 +171,7 @@ public:
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE QScriptValue dbExpire(const QString &name);
+    Q_INVOKABLE QScriptValue dbTempBanTime(const QString &name);
     Q_INVOKABLE int dbExpiration();
     Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id, int team);
@@ -255,6 +256,7 @@ public:
    
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);
+    Q_INVOKABLE void tempBan(QString name, int time);
     Q_INVOKABLE void unban(QString name);
 
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
