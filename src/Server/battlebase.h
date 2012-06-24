@@ -486,9 +486,9 @@ public:
     virtual int getType(int player, int slot);
     virtual bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell=true);
 
-    bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     /* Returns false if blocked */
-    virtual bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
+    virtual bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true)=0;
     /* Does not do extra operations,just a setter */
     void changeStatMod(int player, int stat, int newstat);
 };
