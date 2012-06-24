@@ -271,6 +271,7 @@ struct RBYDig : public MM
 
         poke(b,s)["DigChargeTurn"] = b.turn();
         poke(b,s)["Invulnerable"] = true;
+        poke(b,s)["ChargeMove"] = move(b,s);
         b.changeSprite(s, -1);
 
         addFunction(poke(b,s), "TurnSettings", "Dig", &ts);
@@ -285,6 +286,7 @@ struct RBYDig : public MM
         fturn(b,s).add(TM::NoChoice);
         addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
         addFunction(turn(b,s), "UponAttackSucessful", "Dig", &uas2);
+        initMove(poke(b,s).value("ChargeMove").toInt(), b.gen(), tmove(b,s));
     }
 
     static void asf(int s, int, BS &b) {
