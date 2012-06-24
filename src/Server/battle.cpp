@@ -403,7 +403,7 @@ void BattleSituation::endTurn()
                     callseffects(player, player, effect);
                 } else if (flags == PokeEffect) {
                     /* Otherwise called in personal end turn */
-                    if (b.bracket == 6 && gen() >= 3) {
+                    if (!(b.bracket == 6 && gen() < 3)) {
                         callpeffects(player, player, effect);
                     }
                 } else if (flags == TurnEffect) {
