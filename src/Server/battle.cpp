@@ -2447,7 +2447,9 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
 
     notify(All, StatusChange, player, qint8(status), turns > 0, !tell);
     notify(All, AbsStatusChange, this->player(player), qint8(this->slotNum(player)), qint8(status), turns > 0);
-    poke(player).addStatus(status);
+    if (status != Pokemon::Fine) {
+        poke(player).addStatus(status);
+    }
     if (turns != 0) {
         poke(player).statusCount() = turns;
         if (status == Pokemon::Asleep)
