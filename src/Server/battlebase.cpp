@@ -1973,13 +1973,13 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     int rate = fm.rate;
 
-    if (target != player && sub) {
-        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
-            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
-        }
-        applyingMoveStatMods = false;
-        return;
-    }
+//    if (target != player && sub) {
+//        if (rate == 0 && cl != Move::OffensiveStatChangingMove) {
+//            sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
+//        }
+//        applyingMoveStatMods = false;
+//        return;
+//    }
 
     /* Then we check if the effect hits */
 
