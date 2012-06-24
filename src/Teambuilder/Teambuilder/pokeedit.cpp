@@ -86,6 +86,13 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     updateAll();
 }
 
+void PokeEdit::on_nickname_textChanged(const QString &s)
+{
+    poke().nickname() = s;
+
+    emit nameChanged();
+}
+
 void PokeEdit::on_pokemonFrame_clicked()
 {
     PokeTableModel *model = (PokeTableModel*) pokemonModel;
@@ -330,4 +337,5 @@ void PokeEdit::changeItem(const QString &itemName)
         setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
     }
     updateItemSprite(poke().item());
+    emit itemChanged();
 }
