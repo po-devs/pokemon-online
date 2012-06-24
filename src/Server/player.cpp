@@ -57,6 +57,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
+    connect(&relay(), SIGNAL(tempBan(int,int)), SLOT(playerTempBan(int,int)));
     connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
     connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
@@ -610,6 +611,19 @@ void Player::playerBan(int p) {
     }
 
     emit playerBan(id(),p);
+}
+
+void Player::playerTempBan(int player, int time)
+{
+    if(!isLoggedIn()) {
+        emit info(id(), "Tried to temp ban while not logged in");
+        kick();
+        return;
+    }
+    if(auth() < 1) {
+        return;
+    }
+    emit playerTempBan(id(), player, time);
 }
 
 void Player::CPBan(const QString &name)

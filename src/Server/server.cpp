@@ -840,6 +840,21 @@ void Server::ban(int id, int src) {
     player(id)->kick();
 }
 
+void Server::tempBan(int dest, int src, int time)
+{
+    time = std::max(1, std::min(time, 1440));
+    notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
+    if(src == 0) {
+        printLine("The server banned " + name(dest) + " for " + int(time) + " minutes");
+    } else {
+        printLine(name(dest) + " was banned by " + name(src) + " for " + int(time) + " minutes");
+    }
+    SecurityManager::setBanExpireTime(name(dest), QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    SecurityManager::ban(name(dest));
+    player(dest)->kick();
+}
+
+
 void Server::dosKick(int id) {
     if (playerExist(id) && overactiveShow) {
         broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
@@ -1189,6 +1204,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
+    connect(p, SIGNAL(playerTempBan(int,int,int)), SLOT(playerTempBan(int, int, int)));
     connect(p, SIGNAL(PMReceived(int,int,QString)), SLOT(recvPM(int,int,QString)));
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
@@ -1518,6 +1534,29 @@ void Server::playerBan(int src, int dest)
     }
 }
 
+void Server::playerTempBan(int src, int dest, int time)
+{
+    if(!playerExist(dest)) {
+        return;
+    }
+    if(player(dest)->auth() >= player(src)->auth()) {
+        return;
+    }
+    int maxauth = SecurityManager::maxAuth(player(dest)->ip());
+
+    //if (player(src)->auth() <= maxauth) {
+    //    player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
+    //    return;
+    //}
+
+    if(myengine->beforePlayerBan(src, dest)) {
+        if(!playerExist(src) || !playerExist(dest)) {
+            return;
+        }
+        tempBan(dest, src, time);
+        myengine->afterPlayerBan(src, dest);
+    }
+}
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, int team2)
 {

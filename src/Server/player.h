@@ -182,6 +182,7 @@ signals:
     void info(int id, const QString &);
     void playerKick(int,int);
     void playerBan(int,int);
+    void playerTempBan(int, int, int);
     void PMReceived(int, int, const QString &);
     void awayChange(int, bool);
     void spectatingRequested(int, int);
@@ -212,6 +213,7 @@ public slots:
     void hashReceived(const QByteArray &hash);
     void playerKick(int);
     void playerBan(int);
+    void playerTempBan(int player, int time);
     void onReconnect(int id, const QByteArray &hash);
     void CPBan(const QString &name);
     void CPUnban(const QString &name);
