@@ -761,7 +761,7 @@ void Client::registerPermPlayer(int id)
 
 void Client::goAway(int away)
 {
-    relay().goAway(away);
+    relay().notify(NetworkCli::OptionsChange, Flags(ladder->isChecked()  + (away << 1)));
     goaway->setChecked(away);
 }
 
@@ -813,7 +813,8 @@ void Client::enableLadder(bool b)
 {
     globals.setValue("enable_ladder", b);
 
-    relay().notify(NetworkCli::OptionsChange, Flags(b));
+    relay().notify(NetworkCli::OptionsChange, Flags(b && (goaway->isChecked() << 1)));
+    ladder->setChecked(b);
 }
 
 void Client::setChannelSelected(int id)
@@ -1148,10 +1149,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     goaway->setChecked(this->away());
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
-    QAction * ladd = menuActions->addAction(tr("Enable &ladder"));
-    ladd->setCheckable(true);
-    connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
-    ladd->setChecked(globals.value("enable_ladder").toBool());
+    ladder = menuActions->addAction(tr("Enable &ladder"));
+    ladder->setCheckable(true);
+    connect(ladder, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
+    ladder->setChecked(globals.value("enable_ladder").toBool());
 
     QMenu* show_events = menuActions->addMenu(tr("Player events"));
     showPEvents = NoEvent;
