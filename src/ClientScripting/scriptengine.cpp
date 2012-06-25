@@ -7,6 +7,7 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
+    myengine.globalObject().setProperty("client",myengine.newQObject(dynamic_cast<QObject*>(c)));
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);

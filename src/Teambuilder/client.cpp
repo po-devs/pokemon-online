@@ -1261,7 +1261,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
-    connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersCountingTiers(bool)));
+    connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersByTiers(bool)));
     sortByTier->setChecked(globals.value("sort_players_by_tier").toBool());
     sortBT = sortByTier->isChecked();
 
@@ -1661,7 +1661,7 @@ void Client::rebuildTierMenu()
     singleTeam = team()->officialCount() <= 1;
 }
 
-void Client::sortPlayersCountingTiers(bool byTier)
+void Client::sortPlayersByTiers(bool byTier)
 {
     sortBT = byTier;
     globals.setValue("sort_players_by_tier", sortBT);
