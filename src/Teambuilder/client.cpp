@@ -1112,7 +1112,7 @@ void Client::sendText()
     if (text.length() > 0) {
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
-            if (s1.length() > 0) {
+            if (s1.length() > 0 && call("beforeSendMessage(QString,int)", s1, cid)) {
                 relay().sendChanMessage(cid, s1);
             }
         }
@@ -1322,11 +1322,13 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 void Client::addPlugin(OnlineClientPlugin *o)
 {
     plugins.insert(o);
+    hooks.insert(o, o->getHooks());
 }
 
 void Client::removePlugin(OnlineClientPlugin *o)
 {
     plugins.remove(o);
+    hooks.remove(o);
 }
 
 void Client::playerKicked(int dest, int src) {
