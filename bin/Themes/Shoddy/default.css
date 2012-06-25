@@ -1,10 +1,18 @@
-TeamPokeButton {
-	width: 127px;
-	height: 61px;
+PokeButton {
+    min-width: 170px;
+    height: 90px;
 }
 
-#PlayerInfo, #Announcement {
-	background: transparent;
-	border: 0;
-	padding: 0;
+PokeEdit #pokemonSprite {
+	margin: 9px;
+}
+
+PokeEdit #itemSprite {
+	margin: 9px;
+}
+
+PokeEdit #pokemonFrame {
+	height: 110px;
+	width: 110px;
+	/*border-radius: 4px;*/
 }
