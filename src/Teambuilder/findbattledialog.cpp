@@ -14,10 +14,10 @@ FindBattleDialog::FindBattleDialog(QWidget *parent) :
     setWindowFlags(Qt::Window);
     setAttribute(Qt::WA_DeleteOnClose, true);
 
-    ui->rated->setChecked(s.value("find_battle_force_rated").toBool());
-    ui->sameTier->setChecked(s.value("find_battle_same_tier").toBool());
-    ui->rangeOn->setChecked(s.value("find_battle_range_on").toBool());
-    ui->range->setText(QString::number(s.value("find_battle_range").toInt()));
+    ui->rated->setChecked(s.value("FindBattle/ForceRated").toBool());
+    ui->sameTier->setChecked(s.value("FindBattle/SameTier").toBool());
+    ui->rangeOn->setChecked(s.value("FindBattle/RangeOn").toBool());
+    ui->range->setText(QString::number(s.value("FindBattle/Range").toInt()));
 
     connect(ui->findbattle, SIGNAL(clicked()), SLOT(close()));
     connect(ui->cancel, SIGNAL(clicked()), SLOT(close()));
@@ -41,10 +41,11 @@ void FindBattleDialog::throwChallenge()
 
     QSettings s;
 
-    s.setValue("find_battle_force_rated", d.rated);
-    s.setValue("find_battle_same_tier", d.sameTier);
-    s.setValue("find_battle_range_on", d.ranged);
-    s.setValue("find_battle_range", d.range);
+    s.setValue("FindBattle/ForceRated", d.rated);
+    s.setValue("FindBattle/SameTier", d.sameTier);
+    s.setValue("FindBattle/RangeOn", d.ranged);
+    s.setValue("FindBattle/Range", d.range);
+    s.setValue("FindBattle/Teams", d.teams);
 
     emit findBattle(d);
 }
@@ -52,11 +53,16 @@ void FindBattleDialog::throwChallenge()
 
 void FindBattleDialog::setTeam(TeamHolder *t)
 {
+    QSettings s;
+    int teams = s.value("FindBattle/Teams").toInt();
+
     for (int i = 0; i < t->officialCount(); i++) {
         TeamLine *line = new TeamLine();
         line->setTeamTier(t->team(i), t->tier(i));
         teamLines.append(line);
         ui->teams->addWidget(line);
+
+        line->setChecked(teams == 0 || (teams & (1 << i)));
     }
 }
 
