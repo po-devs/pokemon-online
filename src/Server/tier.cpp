@@ -662,7 +662,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     if (elem.hasAttribute("tableName") && elem.attribute("tableName").length() > 0) {
         sql_table = elem.attribute("tableName");
     }
-    gen = elem.attribute("gen", QString::number(GEN_MAX)).toInt();
+    gen = Pokemon::gen(elem.attribute("gen", QString::number(GEN_MAX)).toInt(), elem.attribute("subgen").toInt());
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -749,6 +749,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
 
     dest.setAttribute("banParent", banParentS);
     dest.setAttribute("gen", gen.num);
+    dest.setAttribute("subgen", gen.subnum);
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
