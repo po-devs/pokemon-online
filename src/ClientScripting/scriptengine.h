@@ -20,18 +20,22 @@
 class Server;
 class ChallengeInfo;
 
-class ScriptEngine : public QObject, public OnlineClientPlugin
+class ScriptEngine : public OnlineClientPlugin
 {
     Q_OBJECT
 public:
     ScriptEngine(ClientInterface *c);
     ~ScriptEngine();
 
+    QHash<QString, Hook> getHooks();
+
     /* Events */
     void stepEvent();
 
     void clientStartUp();
     void clientShutDown();
+
+    int beforeSendMessage(const QString &message, int channel);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.

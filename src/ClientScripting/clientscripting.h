@@ -3,6 +3,9 @@
 
 #include "ClientScripting_global.h"
 #include "../Teambuilder/plugininterface.h"
+#include <QPointer>
+
+class ScriptEngine;
 
 extern "C" {
 CLIENTSCRIPTINGSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
@@ -23,6 +26,8 @@ public:
     bool hasConfigurationWidget() const;
 
     OnlineClientPlugin *getOnlinePlugin(ClientInterface *);
+private:
+    QPointer<ScriptEngine> engine;
 };
 
 
