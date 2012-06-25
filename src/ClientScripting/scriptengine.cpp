@@ -32,7 +32,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
     } else {
-        printLine("Script Check: OK");
+        //printLine("Script Check: OK");
         if(triggerStartUp) {
             clientStartUp();
         }

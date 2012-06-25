@@ -19,7 +19,7 @@ bool ClientScripting::hasConfigurationWidget() const
 
 QString ClientScripting::pluginName() const
 {
-    return QObject::tr("Scripts");
+    return QObject::tr("Script Window");
 }
 
 QWidget *ClientScripting::getConfigurationWidget()
