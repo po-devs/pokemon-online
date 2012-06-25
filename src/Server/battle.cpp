@@ -2113,6 +2113,14 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         return; // Other status effects than status and confusion are, on PO, dealt as special moves. Should probably be changed
     }
 
+    if (fm.status == -1) {
+        switch(randint(3)) {
+        case 0: fm.status = Pokemon::Paralysed; break;
+        case 1: fm.status = Pokemon::Burnt; break;
+        default: case 2: fm.status = Pokemon::Frozen; break;
+        }
+    }
+
     int rate = fm.rate;
 
     if (target != player && sub) {
