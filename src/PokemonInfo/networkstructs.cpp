@@ -19,6 +19,7 @@ DataStream & operator >> (DataStream &in, PlayerInfo &p)
 
     v.stream >> numTiers;
 
+    p.ratings.clear();
     for (int i = 0; i < numTiers; i++) {
         QString tier;
         quint16 rating;
