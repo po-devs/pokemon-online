@@ -230,11 +230,7 @@ Move4</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true">
-        <property name="toolTip">
-         <string>Remove team</string>
-        </property>
-       </widget>
+       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true"/>
       </item>
      </layout>
     </widget>

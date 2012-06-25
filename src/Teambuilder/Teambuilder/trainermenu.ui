@@ -20,14 +20,14 @@
    <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="6">
+   <item row="3" column="6">
     <widget class="QPushButton" name="close">
      <property name="text">
       <string>Close</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="2">
+   <item row="0" column="0" rowspan="4">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="trainerNameLabel">
@@ -282,7 +282,7 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="5" colspan="2">
+   <item row="1" column="5" colspan="2">
     <widget class="QFrame" name="teambuilderFrame">
      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0,0,0">
       <item>
@@ -296,11 +296,7 @@
        </widget>
       </item>
       <item>
-       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true">
-        <property name="toolTip">
-         <string>Remove team</string>
-        </property>
-       </widget>
+       <widget class="PokeButtonsHolder" name="pokemonButtons" native="true"/>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -540,6 +536,19 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="2" column="6">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
