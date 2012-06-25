@@ -4,22 +4,27 @@
 #
 #-------------------------------------------------
 
-QT       += script
+QT       += script network
 
 TARGET = ClientScripting
 TEMPLATE = lib
 DESTDIR = ../../bin/myplugins
 LIBS += -L../../bin \
-    -lutilities
+    -lutilities \
+    -lpokemonlib
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 
 SOURCES += clientscripting.cpp \
-    scriptwindow.cpp
+    scriptwindow.cpp \
+    scriptengine.cpp \
+    scriptutils.cpp
 
 HEADERS += clientscripting.h\
         ClientScripting_global.h \
-    scriptwindow.h
+    scriptwindow.h \
+    scriptengine.h \
+    scriptutils.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
