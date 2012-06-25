@@ -224,7 +224,7 @@ public slots:
     void changeBattleWindow(bool old);
     void changeNicknames(bool old);
     void enableLadder(bool);
-    void sortPlayersCountingTiers(bool);
+    void sortPlayersByTiers(bool);
     void sortPlayersByAuth(bool);
     void setChannelSelected(int);
     void enablePlayerEvents();
