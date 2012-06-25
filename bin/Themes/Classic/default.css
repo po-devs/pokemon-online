@@ -1,4 +1,6 @@
 
+
+
 QToolTip {
     color: black;
 }
@@ -6,7 +8,7 @@ QToolTip {
 /* Main Widgets */
 
 TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client {
-    background: #070a0f;
+    background: #5c707e;
     border-radius: 20px;
 }
 
@@ -18,8 +20,8 @@ Menu QWidget#menuButtonsFrame {
     border-radius: 15px;
     border: 1px solid #304250;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #192c3b, stop: 0.50 #192b39,
-                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+                                stop: 0 #6fa5cf, stop: 0.50 #84b2d5,
+                                stop: 0.51 #455d6f, stop: 1.0 #2f3f4c);
 	padding-top: 18px;
 	padding-bottom: 18px;
 	padding-left: 11px;
@@ -36,8 +38,8 @@ ServerChoice QWidget#serverChoiceFrame {
     border-radius: 15px;
     border: 1px solid #304250;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #192c3b, stop: 0.50 #192b39,
-                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+                                stop: 0 #6fa5cf, stop: 0.50 #84b2d5,
+                                stop: 0.51 #455d6f, stop: 1.0 #56738a);
         padding-top: 18px;
         padding-bottom: 18px;
         padding-left: 11px;
@@ -45,7 +47,7 @@ ServerChoice QWidget#serverChoiceFrame {
 }
 
 ServerChoice #serverChoice {
-        background: #111b25;
+        background: #a8cdea;
 }
 
 /*=============================================*\*/
@@ -91,8 +93,8 @@ PokeEdit #itemSprite {
 
 PokeEdit #pokemonFrame {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #1a2d3c, stop: 0.495 #172c3d,
-                                stop: 0.505 #0d161f, stop: 1.0 #16242f);
+                                stop: 0 #528bb8, stop: 0.495 #528bb8,
+                                stop: 0.505 #305174, stop: 1.0 #305174);
 	height: 110px;
 	width: 110px;
 	/*border-radius: 4px;*/
@@ -101,8 +103,8 @@ PokeEdit #pokemonFrame {
 
 #CentralWidget {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-							stop: 0 #192c3b, stop: 0.55 #192b39,
-							stop: 0.56 #11181e, stop: 1.0 #12202b);
+							stop: 0 #6fa5cf, stop: 0.55 #84b2d5,
+							stop: 0.56 #617b91, stop: 1.0 #6f8ca4);
 	
     padding-top: 24px;
     padding-bottom: 20px;
@@ -138,13 +140,13 @@ TrainerMenu QFrame#teambuilderFrame {
     border-radius: 15px;
     border: 1px solid #304250;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #192c3b, stop: 0.59 #192b39,
-                                stop: 0.60 #11181e, stop: 1.0 #12202b);
+                                stop: 0 #355e7e, stop: 0.59 #325d7e,
+                                stop: 0.60 #374652, stop: 1.0 #344654);
 }
 
 TrainerMenu QPushButton {
     color: white;
-    background: #8e8e8e;
+    background: #b1b1b1;
 }
 
 TrainerMenu QPushButton#close {
@@ -242,7 +244,7 @@ TrainerMenu PokeButton {
 }
 
 PokeButton:checked {
-    background: #40491e;
+    background: #491e1e;
 }
 
  /* Style the tab using the tab sub-control. Note that
@@ -435,7 +437,7 @@ QTextEdit#MainChat {
 }
 
 ServerChoice #announcement {
-    font-size: 16px;
+	font-size: 16px;
 }
 
 QSlider::groove:horizontal {
@@ -504,7 +506,7 @@ QProgressBar#LifePoints::chunk{
 }
 
 BaseBattleWindow {
-	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #abc0d5, stop: 0.5 #ccc9c9, stop: 1 #abc0d5);
 }
 
 BaseBattleWindow QLabel#TrainerNick {
@@ -564,7 +566,7 @@ OldAttackButton{
 }
 
 BattleWindow QTabWidget#Modified::pane {
-	border: 3px solid #e2e1e1;
+	border: 3px solid #abc0d5;
 	padding: 0;
 	margin: 0;
 	border-radius: 8px;
@@ -619,7 +621,7 @@ QTabWidget#Modified > QTabBar::tab:top:last, QTabWidget#Modified > QTabBar::tab:
 
 
 ChallengeDialog {
-	background: #111b25;
+	background: #abc0d5;
 }
 
 ChallengeDialog QLabel#name, ChallengeDialog QGroupBox::title {
@@ -627,7 +629,7 @@ ChallengeDialog QLabel#name, ChallengeDialog QGroupBox::title {
 }
 
 ChallengeDialog QCheckBox {
-	color: #0ca0dd;
+	color: #939393;
 }
 
 ChallengeDialog QLabel#avatar {
@@ -646,7 +648,7 @@ BaseChallengeWindow QLabel {
 }
 
 BattleWindow QStackedWidget {
-	background: #9d9f9d;
+	background: #d9d9d9;
 }
 
 /*
@@ -674,3 +676,4 @@ QTabBar::tab:left:last, QTabBar::tab:right:last {
 }
 
  */
+
