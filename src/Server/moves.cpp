@@ -4131,50 +4131,6 @@ struct MMGrowth : public MM
     }
 };
 
-struct MMTriAttack : public MM
-{
-    MMTriAttack() {
-        functions["OnFoeOnAttack"] = &uas;
-    }
-
-    static void uas(int s, int t, BS &b) {
-        if (b.hasWorkingAbility(t, Ability::ShieldDust))
-            return;
-        // Do not apply extra effects with Sheer Force
-        if (b.hasWorkingAbility(s, Ability::Encourage))
-            return;
-        // In Gen 1 Tri Attack has no secondary effects
-        if (b.gen().num == 1)
-            return;
-
-        bool boost = b.hasWorkingAbility(s, Ability::SereneGrace) ||  team(b, b.player(t)).value("RainbowCount").toInt();
-
-        if (!b.coinflip(unsigned(1+boost), 5))
-            return;
-
-        if (b.koed(t))
-            return;
-
-        int status;
-        switch (b.randint(3)) {
-        case 0:
-            status = Pokemon::Paralysed;
-            break;
-        case 1:
-            status = Pokemon::Burnt;
-            break;
-        case 2:
-        default:
-            status = Pokemon::Frozen;
-            break;
-        }
-
-        if (b.canGetStatus(t, status) || b.gen() <= 2) {
-            b.inflictStatus(t, status, s);
-        }
-    }
-};
-
 struct MMCrossThunder : public MM
 {
     MMCrossThunder() {
@@ -4401,7 +4357,7 @@ void MoveEffect::init()
     REGISTER_MOVE(189, FireBurst);
     REGISTER_MOVE(190, SideChange);
     REGISTER_MOVE(191, Growth);
-    REGISTER_MOVE(192, TriAttack);
+    //REGISTER_MOVE(192, TriAttack);
     REGISTER_MOVE(193, CrossFlame);
     REGISTER_MOVE(194, CrossThunder);
     REGISTER_MOVE(195, WillOWisp);
