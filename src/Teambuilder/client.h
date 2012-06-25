@@ -11,6 +11,7 @@
 #include "password_wallet.h"
 #include "Teambuilder/teamholder.h"
 #include "clientinterface.h"
+#include "plugininterface.h"
 
 class MainEngine;
 class ChallengeDialog;
@@ -387,6 +388,20 @@ private:
 
     QSet<OnlineClientPlugin*> plugins;
     PluginManager *pluginManager;
+    QHash<OnlineClientPlugin*, QHash<QString, OnlineClientPlugin::Hook> > hooks;
+
+    template<class T1, class T2>
+    bool call(const QString &f, T1 arg1, T2 arg2)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2)>(hooks[p][f])))(arg1, arg2);
+            }
+        }
+
+        return ret;
+    }
 };
 
 #endif // CLIENT_H

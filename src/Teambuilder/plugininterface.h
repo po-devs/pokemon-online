@@ -2,6 +2,7 @@
 #define PLUGININTERFACE_H
 
 #include <QString>
+#include <QHash>
 
 /* An interface Client Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to
@@ -11,13 +12,19 @@ class QWidget;
 class MainEngineInterface;
 class ClientInterface;
 
-class OnlineClientPlugin
+class OnlineClientPlugin : public QObject
 {
 public:
     virtual ~OnlineClientPlugin(){}
 
     virtual void clientStartUp() {}
     virtual void clientShutDown() {}
+
+    typedef int (OnlineClientPlugin::*Hook) ();
+
+    virtual QHash<QString, Hook> getHooks(){
+        return QHash<QString, Hook>();
+    }
 };
 
 class ClientPlugin

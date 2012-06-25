@@ -24,6 +24,15 @@ ScriptEngine::~ScriptEngine()
 {
 }
 
+QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
+{
+    QHash<QString, Hook> ret;
+
+    ret.insert("beforeSendMessage(QString,int)", (Hook)(&ScriptEngine::beforeSendMessage));
+
+    return ret;
+}
+
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
     myscript = myengine.evaluate(script);
@@ -75,6 +84,11 @@ void ScriptEngine::warn(const QString &function, const QString &message)
 void ScriptEngine::clientStartUp()
 {
     evaluate(myscript.property("clientStartUp").call(myscript, QScriptValueList()));
+}
+
+int ScriptEngine::beforeSendMessage(const QString &message, int channel)
+{
+    return makeSEvent("beforeSendMessage", message, channel);
 }
 
 void ScriptEngine::stepEvent()
@@ -241,7 +255,7 @@ int ScriptEngine::pokeType2(int id, int gen)
 }
 
 /**
- * Function will perform a GET-Request server side
+ * Function will perform a GET-Request client side
  * @param urlstring web-url
  * @author Remco vd Zon
  */
@@ -255,14 +269,14 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     QNetworkRequest request;
 
     request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    request.setRawHeader("User-Agent", "Pokemon-Online clientscript");
 
     QNetworkReply *reply = manager.get(request);
     webCallEvents[reply] = callback;
 }
 
 /**
- * Function will perform a POST-Request server side
+ * Function will perform a POST-Request client side
  * @param urlstring web-url
  * @param params_array javascript array [key]=>value.
  * @author Remco vd Zon
@@ -278,7 +292,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     QByteArray postData;
 
     request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    request.setRawHeader("User-Agent", "Pokemon-Online clientscript");
 
     //parse the POST fields
     QScriptValueIterator it(params_array);
@@ -314,7 +328,7 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
 }
 
 /**
- * Function will perform a GET-Request server side, synchronously
+ * Function will perform a GET-Request client side, synchronously
  * @param urlstring web-url
  * @author Remco cd Zon and Toni Fadjukoff
  */
@@ -323,7 +337,7 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
     QNetworkRequest request;
 
     request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    request.setRawHeader("User-Agent", "Pokemon-Online clientscript");
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(synchronousWebCall_replyFinished(QNetworkReply*)));
     manager->get(request);
@@ -335,7 +349,7 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
 }
 
 /**
- * Function will perform a POST-Request server side, synchronously
+ * Function will perform a POST-Request client side, synchronously
  * @param urlstring web-url
  * @param params_array javascript array [key]=>value.
  * @author Remco vd Zon and Toni Fadjukoff
@@ -347,7 +361,7 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QS
     QByteArray postData;
 
     request.setUrl(QUrl(urlstring));
-    request.setRawHeader("User-Agent", "Pokemon-Online serverscript");
+    request.setRawHeader("User-Agent", "Pokemon-Online clientscript");
 
     //parse the POST fields
     QScriptValueIterator it(params_array);
