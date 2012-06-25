@@ -187,6 +187,9 @@ struct RBYBind : public MM
 
         if (!poke(b,t).contains("Bound")) {
             fturn(b,s).add(TM::UsePP); //If the opponent switched out, we use an additional PP
+        } else {
+            tmove(b,s).accuracy = 0;
+            tmove(b,s).power = 0;
         }
     }
 
