@@ -36,8 +36,13 @@ public slots:
 
     void importTeam();
     void exportTeam();
+    void addTeam();
+    void openTeam();
+    void saveTeam();
 private slots:
     void markTeamUpdated();
+    void updateCurrentTeamAndNotify();
+    void onSaveTeam();
 signals:
     void done();
     void reloadMenuBar();
