@@ -662,7 +662,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     if (elem.hasAttribute("tableName") && elem.attribute("tableName").length() > 0) {
         sql_table = elem.attribute("tableName");
     }
-    gen = Pokemon::gen(elem.attribute("gen", QString::number(GEN_MAX)).toInt(), elem.attribute("subgen").toInt());
+    m_gen = Pokemon::gen(elem.attribute("gen", QString::number(GEN_MAX)).toInt(), elem.attribute("subgen").toInt());
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -673,7 +673,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     displayOrder = elem.attribute("displayOrder", "0").toInt();
 
     clauses = 0;
-//    bannedSets.clear();
+//    bannedSets.clear(); subgen="1"
 //    restrictedSets.clear();
 
     m_count = -1;
@@ -748,8 +748,8 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     }
 
     dest.setAttribute("banParent", banParentS);
-    dest.setAttribute("gen", gen.num);
-    dest.setAttribute("subgen", gen.subnum);
+    dest.setAttribute("gen", m_gen.num);
+    dest.setAttribute("subgen", m_gen.subnum);
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
@@ -961,7 +961,7 @@ void Tier::importRestrictedPokes(const QString &s)
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
     banPokes = true;
     parent = NULL;
-    gen = GEN_MAX;
+    m_gen = GEN_MAX;
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
@@ -995,9 +995,9 @@ int Tier::getMode() const
 
 bool Tier::allowGen(Pokemon::gen gen) const
 {
-    if (this->gen == 0)
+    if (this->m_gen == 0)
         return true;
-    return this->gen == gen;
+    return this->m_gen == gen;
 }
 
 int Tier::getClauses() const
@@ -1021,7 +1021,7 @@ Tier *Tier::dataClone() const
     t.maxRestrictedPokes = maxRestrictedPokes;
     t.numberOfPokemons = numberOfPokemons;
     t.maxLevel = maxLevel;
-    t.gen = gen;
+    t.m_gen = m_gen;
     t.banParentS = banParentS;
     t.bannedItems = bannedItems;
     t.bannedMoves = bannedMoves;

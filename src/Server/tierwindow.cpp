@@ -149,7 +149,7 @@ void TierWindow::openTierEdit(Tier *t)
 //    HGSS=4, DP=4+(1<<8), DPPt=4+(2<<8),
 //    BW=5
 
-    helper->addConfigHelper(new ConfigCombo<Pokemon::gen>("Generation", t->gen, QStringList() << "Any" << "1st Gen (Stadium)" << "1st Gen (RBY)" << "1st Gen (Stadium with Tradebacks)"
+    helper->addConfigHelper(new ConfigCombo<Pokemon::gen>("Generation", t->m_gen, QStringList() << "Any" << "1st Gen (Stadium)" << "1st Gen (RBY)" << "1st Gen (Stadium with Tradebacks)"
                                                     << "2nd Gen (Stadium 2)" << "2nd Gen (GSC)"
                                                     << "3rd Gen (Adv)" << "3rd Gen (RSE 200)"
                                                     << "4th Gen (HGSS)" << "4th Gen (DP)" << "4th Gen (DPPt)"

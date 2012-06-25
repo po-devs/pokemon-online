@@ -170,7 +170,7 @@ void Player::changeTier(quint8 teamNum, const QString &newtier)
         Tier *tier = &TierMachine::obj()->tier(newtier);
 
         if (!tier->allowGen(team(teamNum).gen)) {
-            sendMessage(tr("The generation of your team is invalid for that tier."));
+            sendMessage(tr("The generation of your team (%1) is invalid for the tier %2 which is in generation %3.").arg(GenInfo::Version(team(teamNum).gen), tier->name(), GenInfo::Version(tier->gen())));
             return;
         }
 
