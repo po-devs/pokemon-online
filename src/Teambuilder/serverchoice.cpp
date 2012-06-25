@@ -8,18 +8,20 @@ ServerChoice::ServerChoice(const QString &nick) :
     ui(new Ui::ServerChoice)
 {
     ui->setupUi(this);
+    ui->announcement->hide();
 
     QSettings settings;
 
     registry_connection = new Analyzer(true);
     registry_connection->connectTo(
-            settings.value("ServerChoice/registry_server", "pokemon-online-registry.dynalias.net").toString(),
-            settings.value("ServerChoice/registry_port", 8080).toUInt()
+            settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
+            settings.value("ServerChoice/RegistryPort", 8080).toUInt()
     );
     registry_connection->setParent(this);
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
+    connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
 
     connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16, bool)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16, bool)));
 
@@ -38,6 +40,7 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     ui->nameEdit->setText(nick);
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
+    connect(ui->nameEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
     QCompleter *completer = new QCompleter(ui->advServerEdit);

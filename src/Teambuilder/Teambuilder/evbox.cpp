@@ -112,7 +112,10 @@ void EvBox::updateEV(int stat)
     int ev = poke().EV(stat);
 
     m_sliders[stat]->setValue(ev);
+
+    m_evs[stat]->blockSignals(true);
     m_evs[stat]->setText(QString::number(ev));
+    m_evs[stat]->blockSignals(false);
 
     /* first the color : red if the stat is hindered by the nature, black if normal, blue if the stat is enhanced */
     QColor color;
@@ -138,7 +141,7 @@ void EvBox::updateMain()
 void EvBox::changeEV(int newValue)
 {
     int stat = sender()->property("stat").toInt();
-    poke().setEV(stat, newValue);
+    poke().setEV(stat, newValue/4*4);
     updateEV(stat);
     updateMain();
 }

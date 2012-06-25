@@ -428,6 +428,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit playerBanned(p,src);
         break;
     }
+    case PlayerTBan: {
+        qint32 p, src, time;
+        in >> p >> src >> time;
+        emit playerTempBanned(p, src, time);
+    }
     case SendTeam: {
         Flags network;
         in >> network;
@@ -474,6 +479,13 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit awayChanged(id, f[1]);
         break;
     }
+    case GetTBanList: {
+        QString s, i;
+        QDateTime dt;
+        in >> s >> i >> dt;
+        emit tbanListReceived(s,i,dt);
+        break;
+        }
     case SpectateBattle: {
         BattleConfiguration conf;
         Flags f;

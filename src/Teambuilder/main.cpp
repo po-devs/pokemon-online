@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
         //a.installEventFilter(&HotKeyEvent);
 
         /* Names to use later for QSettings */
-        QCoreApplication::setApplicationName("Pokeymon-Online");
+        QCoreApplication::setApplicationName("Pokemon-Online");
         QCoreApplication::setOrganizationName("Dreambelievers");
 
         QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
