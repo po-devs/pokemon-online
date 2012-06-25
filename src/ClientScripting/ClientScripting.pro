@@ -9,13 +9,19 @@ QT       += script
 TARGET = ClientScripting
 TEMPLATE = lib
 DESTDIR = ../../bin/myplugins
+LIBS += -L../../bin \
+    -lutilities
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 
-SOURCES += clientscripting.cpp
+SOURCES += clientscripting.cpp \
+    scriptwindow.cpp
 
 HEADERS += clientscripting.h\
-        ClientScripting_global.h
+        ClientScripting_global.h \
+    scriptwindow.h
+
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -37,3 +43,6 @@ unix:!symbian {
 }
 
 include(../Shared/Common.pri)
+
+FORMS += \
+    scriptwindow.ui

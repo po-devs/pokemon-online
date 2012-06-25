@@ -1,6 +1,6 @@
 #include "clientscripting.h"
 #include "../Teambuilder/engineinterface.h"
-#include <QtCore>
+#include "scriptwindow.h"
 
 ClientPlugin* createPluginClass(MainEngineInterface*)
 {
@@ -23,5 +23,5 @@ QString ClientScripting::pluginName() const
 
 QWidget *ClientScripting::getConfigurationWidget()
 {
-    return NULL;
+    return new ScriptWindow();
 }
