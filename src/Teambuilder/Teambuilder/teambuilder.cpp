@@ -33,15 +33,18 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("TeamBuilder");
-    QMenu *menuFichier = menuBar->addMenu(tr("&File"));
-    menuFichier->addAction(tr("&New"),this,SLOT(newTeam()),tr("Ctrl+N", "New"));
-    menuFichier->addAction(tr("&Save all"),this,SLOT(saveAll()),tr("Ctrl+S", "Save"));
-    menuFichier->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load"));
-    menuFichier->addSeparator();
-    menuFichier->addAction(tr("&Import team"), this, SLOT(importTeam()));
-    menuFichier->addAction(tr("&Export team"), this, SLOT(exportTeam()));
-    menuFichier->addSeparator();
-    menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
+    QMenu *fileMenu = menuBar->addMenu(tr("&File"));
+    fileMenu->addAction(tr("&New"),this,SLOT(newTeam()),tr("Ctrl+N", "New"));
+    fileMenu->addAction(tr("&Save all"),this,SLOT(saveAll()),tr("Ctrl+S", "Save all"));
+    fileMenu->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load all"));
+    fileMenu->addSeparator();
+    fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
+    QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
+    teamMenu->addAction(tr("&Add team"), this, SLOT(addTeam()), tr("Ctrl+A", "Add team"));
+    teamMenu->addAction(tr("&Open team"), this, SLOT(openTeam()), tr("Ctrl+O", "Open team"));
+    teamMenu->addAction(tr("&Save team"), this, SLOT(saveTeam()), tr("Ctrl+Shift+S", "Save team"));
+    teamMenu->addAction(tr("&Import team"), this, SLOT(importTeam()), tr("Ctrl+I", "Import team"));
+    teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
 
     /* Loading mod menu */
     QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
@@ -105,6 +108,40 @@ void TeamBuilder::newTeam()
     team() = TeamHolder();
     markTeamUpdated();
     currentWidget()->updateTeam();
+}
+
+void TeamBuilder::addTeam()
+{
+    team().addTeam();
+
+    if (trainer) {
+        trainer->updateAll();
+    }
+
+    switchToTrainer();
+}
+
+void TeamBuilder::openTeam()
+{
+    loadTTeamDialog(team().team(), this, SLOT(updateCurrentTeamAndNotify()));
+}
+
+void TeamBuilder::updateCurrentTeamAndNotify()
+{
+    markTeamUpdated();
+    currentWidget()->updateTeam();
+}
+
+void TeamBuilder::saveTeam()
+{
+    saveTTeamDialog(team().team(), this, SLOT(onSaveTeam()));
+}
+
+void TeamBuilder::onSaveTeam()
+{
+    if (trainer) {
+        trainer->updateTeam();
+    }
 }
 
 void TeamBuilder::importTeam()
