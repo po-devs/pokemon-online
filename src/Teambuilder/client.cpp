@@ -19,6 +19,7 @@
 #include "tieractionfactory.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include <QtScript/QScriptEngine>
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
@@ -1113,12 +1114,17 @@ void Client::sendText()
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
             if (s1.length() > 0 && call("beforeSendMessage(QString,int)", s1, cid)) {
-                relay().sendChanMessage(cid, s1);
+                sendMessage(s1, cid);
             }
         }
     }
 
     myline->clear();
+}
+
+void Client::sendMessage(const QString &mess, int channel)
+{
+    relay().sendChanMessage(channel, mess);
 }
 
 bool Client::hasChannel(int channelid) const
@@ -1329,6 +1335,22 @@ void Client::removePlugin(OnlineClientPlugin *o)
 {
     plugins.remove(o);
     hooks.remove(o);
+}
+
+Q_DECLARE_METATYPE(Analyzer*)
+typedef Analyzer* T;
+
+static QScriptValue analyzerTo(QScriptEngine *e, const T& r) {
+    return e->newQObject(r);
+}
+
+static void analyzerFrom(const QScriptValue&s, T&r) {
+    r = dynamic_cast<T>(s.toQObject());
+}
+
+void Client::registerMetaTypes(QScriptEngine *e)
+{
+    qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
 }
 
 void Client::playerKicked(int dest, int src) {

@@ -4,6 +4,8 @@
 #include "../Teambuilder/clientinterface.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
+    c->registerMetaTypes(&myengine);
+
     myclient = c;
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
