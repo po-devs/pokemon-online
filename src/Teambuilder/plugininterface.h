@@ -9,6 +9,16 @@
 
 class QWidget;
 class MainEngineInterface;
+class ClientInterface;
+
+class OnlineClientPlugin
+{
+public:
+    virtual ~OnlineClientPlugin(){}
+
+    virtual void clientStartUp() {}
+    virtual void clientShutDown() {}
+};
 
 class ClientPlugin
 {
@@ -25,6 +35,10 @@ public:
 
     virtual bool hasConfigurationWidget() const {
         return false;
+    }
+
+    virtual OnlineClientPlugin *getOnlinePlugin(ClientInterface*) {
+        return NULL;
     }
 };
 

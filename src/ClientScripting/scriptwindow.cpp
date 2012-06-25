@@ -1,6 +1,7 @@
 #include "scriptwindow.h"
 #include "ui_scriptwindow.h"
 #include "../Utilities/functions.h"
+#include "scriptutils.h"
 
 ScriptWindow::ScriptWindow(QWidget *parent) :
     QDialog(parent),
@@ -8,11 +9,7 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QDir d(appDataPath("Scripts/", true));
-    QFile f(d.absoluteFilePath("scripts.js"));
-    f.open(QIODevice::ReadOnly);
-
-    ui->scripts->insertPlainText(QString::fromUtf8(f.readAll()));
+    ui->scripts->insertPlainText(ScriptUtils::loadScripts());
 }
 
 void ScriptWindow::accept() {
