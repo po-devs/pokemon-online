@@ -394,7 +394,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         int num = repeatNum(player);
         bool hit = num > 1;
 
-        testCritical(player, target);
+        if (tmove(s).power > 1) {
+            testCritical(player, target);
+        }
 
         calleffects(player, target, "CustomAttackingDamage");
 
