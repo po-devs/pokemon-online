@@ -18,6 +18,7 @@ public:
     ~TeamLine();
 
     bool isChecked() const;
+    void setChecked(bool checked);
     void setTeamTier(const Team &team, const QString &tier);
 private:
     Ui::TeamLine *ui;
