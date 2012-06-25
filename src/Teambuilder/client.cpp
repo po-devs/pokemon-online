@@ -17,8 +17,10 @@
 #include "Teambuilder/teamholder.h"
 #include "challengedialog.h"
 #include "tieractionfactory.h"
+#include "pluginmanager.h"
+#include "plugininterface.h"
 
-Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer())
+Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
     waitingOnSecond = false;
     top = NULL;
@@ -151,10 +153,20 @@ Client::Client(TeamHolder *t, const QString &url , const quint16 port) : myteam(
     pmFlashing = globals.value("pm_flashing").toBool();
     pmsTabbed = globals.value("pms_tabbed").toBool();
     pmReject = globals.value("reject_incoming_pms").toBool();
+
+    pluginManager->launchClient(this);
+    foreach(OnlineClientPlugin *pl, plugins) {
+        pl->clientStartUp();
+    }
 }
 
 Client::~Client()
 {
+    foreach(OnlineClientPlugin *pl, plugins) {
+        pl->clientShutDown();
+    }
+    pluginManager->quitClient();
+
     relay().logout();
     writeSettings(this);
 }
@@ -1305,6 +1317,16 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     mymenubar = menuBar;
 
     return menuBar;
+}
+
+void Client::addPlugin(OnlineClientPlugin *o)
+{
+    plugins.insert(o);
+}
+
+void Client::removePlugin(OnlineClientPlugin *o)
+{
+    plugins.remove(o);
 }
 
 void Client::playerKicked(int dest, int src) {

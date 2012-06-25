@@ -21,8 +21,8 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
-private:
 
+    OnlineClientPlugin *getOnlinePlugin(ClientInterface *);
 };
 
 

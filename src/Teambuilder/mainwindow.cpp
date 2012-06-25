@@ -322,7 +322,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
         return;
     }
 
-    Client * client = new Client(trainerTeam(), url, port);
+    Client * client = new Client(pluginManager, trainerTeam(), url, port);
     routine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));

@@ -119,7 +119,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/teamimporter.h \
     Teambuilder/teamline.h \
     serverchoice.h \
-    Teambuilder/pokeboxes.h
+    Teambuilder/pokeboxes.h \
+    clientinterface.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
