@@ -37,7 +37,7 @@ public:
     void login(const TeamHolder &team, bool ladder, const QColor &color, const QString &defaultChannel, const QStringList &autoJoin);
     /* Sends a logout message, and deletes the analyzer */
     void logout();
-    void sendChanMessage(int channelid, const QString &message);
+    Q_INVOKABLE void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TeamHolder & team);
     void sendBattleResult(int id, int result);

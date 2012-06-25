@@ -1114,17 +1114,12 @@ void Client::sendText()
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
             if (s1.length() > 0 && call("beforeSendMessage(QString,int)", s1, cid)) {
-                sendMessage(s1, cid);
+                relay().sendChanMessage(cid, s1);
             }
         }
     }
 
     myline->clear();
-}
-
-void Client::sendMessage(const QString &mess, int channel)
-{
-    relay().sendChanMessage(channel, mess);
 }
 
 bool Client::hasChannel(int channelid) const
