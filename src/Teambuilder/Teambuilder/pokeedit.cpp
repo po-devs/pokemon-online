@@ -277,10 +277,6 @@ void PokeEdit::changeHappiness(int newHappiness)
 
 void PokeEdit::setNum(Pokemon::uniqueId num)
 {
-    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
-        num = Pokemon::Keldeo;
-    }
-
     if (num == poke().num()) {
         return;
     }
@@ -289,6 +285,14 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
 
     if (!sameForme) {
         poke().reset();
+    }
+
+    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
+        try {
+            poke().addMove(Move::SecretSword);
+        } catch(const QString &) {
+            poke().setMove(Move::SecretSword, 0, false);
+        }
     }
 
     poke().setNum(num);
