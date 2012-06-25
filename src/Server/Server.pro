@@ -124,7 +124,7 @@ CONFIG(sfml) {
     DEFINES += SFML_SOCKETS
     SOURCES += sfmlsocket.cpp
     LIBS += -L/usr/local/lib \
-        -lboost_system-mt
+        -lboost_system
 }
 CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
