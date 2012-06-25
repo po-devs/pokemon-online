@@ -550,7 +550,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     if (MoveInfo::isOHKO(move, gen())) {
         bool ret;
 
-        if (getStat(player, Speed) >= getStat(target, Speed)) {
+        if (getStat(player, Speed) < getStat(target, Speed)) {
             ret = false;
         } else {
             ret = coinflip(255*30/100, 256);
