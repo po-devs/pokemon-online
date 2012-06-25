@@ -752,7 +752,7 @@ struct RBYRage : public MM
 
     static void uodr(int s, int, BS &b) {
         if (!b.koed(s)) {
-            b.gainStatMod(s, Attack, 1, s);
+            b.gainStatMod(s, Attack, 1, s, false);
             b.sendMoveMessage(102, 0, s);
         }
     }
