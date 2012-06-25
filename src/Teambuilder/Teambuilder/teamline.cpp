@@ -20,6 +20,11 @@ bool TeamLine::isChecked() const
     return ui->teamName->isChecked();
 }
 
+void TeamLine::setChecked(bool checked)
+{
+    ui->teamName->setChecked(checked);
+}
+
 void TeamLine::setTeamTier(const Team &team, const QString &tier)
 {
     ui->teamName->setText(tr("%1 (%2)", "Team and tier in find battle").arg(team.name(), tier));

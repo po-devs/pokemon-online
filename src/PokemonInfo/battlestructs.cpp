@@ -892,7 +892,7 @@ DataStream & operator << (DataStream &out, const FindBattleData &f)
     network.setFlag(0, f.ranged);
     network.setFlag(1, true);
 
-    out << data << network;
+    out << network << data;
 
     if (f.ranged) {
         out << f.range;
