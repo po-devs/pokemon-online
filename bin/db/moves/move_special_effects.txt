@@ -159,7 +159,7 @@
 
 
 19#conversion
-192#Tri Attack
+#192#Tri Attack
 130#super fang
 
 8-25|128#SUBSTITUTE
