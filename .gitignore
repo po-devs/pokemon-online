@@ -38,7 +38,13 @@ bin/Registry
 bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
-bin/scripts.js
+bin/*.js
+bin/*.txt
+bin/*.json
+bin/*.html
+bin/*.py
+bin/pastebin_user_key
+bin/*.xml
 ui_*.h
 *.Debug
 *.Release
