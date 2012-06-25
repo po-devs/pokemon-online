@@ -183,6 +183,7 @@ public slots:
     void banName(const QString &name);
     void playerKick(int src, int dest);
     void playerBan(int src, int dest);
+    void playerTempBan(int src, int dest, int time);
     void awayChanged(int src, bool away);
     void sendPlayer(int id);
     void tiersChanged();
@@ -198,6 +199,7 @@ public slots:
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
+    void tempBan(int dest, int src, int time);
 
     Analyzer *registry_connection;
     QString serverName, serverDesc;

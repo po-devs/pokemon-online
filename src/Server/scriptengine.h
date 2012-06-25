@@ -68,8 +68,8 @@ public:
     void afterPlayerAway(int src, bool away);
     bool beforePlayerKick(int src, int dest);
     void afterPlayerKick(int src, int dest);
-    bool beforePlayerBan(int src, int dest);
-    void afterPlayerBan(int src, int dest);
+    bool beforePlayerBan(int src, int dest, int time);
+    void afterPlayerBan(int src, int dest, int time);
     void battleSetup(int src, int dest, int battleId);
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
@@ -161,8 +161,9 @@ public:
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue proxyIp(int id);
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
-    Q_INVOKABLE QScriptValue gen(int id);
-    Q_INVOKABLE QScriptValue subgen(int id);
+    Q_INVOKABLE QScriptValue gen(int id, int team);
+    Q_INVOKABLE QScriptValue subgen(int id, int team);
+    Q_INVOKABLE QScriptValue teamCount(int id);
     Q_INVOKABLE QString generation(int genNum, int subNum);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
@@ -171,9 +172,11 @@ public:
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE QScriptValue dbExpire(const QString &name);
+    Q_INVOKABLE QScriptValue dbTempBanTime(const QString &name);
     Q_INVOKABLE int dbExpiration();
     Q_INVOKABLE bool dbRegistered(const QString &name);
     Q_INVOKABLE QScriptValue tier(int id, int team);
+    Q_INVOKABLE bool hasTier(int id, const QString &tier);
     Q_INVOKABLE QScriptValue ranking(int id, int team);
     Q_INVOKABLE QScriptValue ratedBattles(int id, int team);
     Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);
@@ -255,6 +258,7 @@ public:
    
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);
+    Q_INVOKABLE void tempBan(QString name, int time);
     Q_INVOKABLE void unban(QString name);
 
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);

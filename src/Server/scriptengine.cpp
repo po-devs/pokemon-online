@@ -318,7 +318,7 @@ bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo 
 
     startStopEvent();
 
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
 
     return !endStopEvent();
 }
@@ -328,7 +328,7 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
     if (!myscript.property("afterChallengeIssued", QScriptValue::ResolveLocal).isValid())
         return;
 
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
 }
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
@@ -422,14 +422,14 @@ void ScriptEngine::afterPlayerKick(int src, int dest)
     makeEvent("afterPlayerKick", src, dest);
 }
 
-bool ScriptEngine::beforePlayerBan(int src, int dest)
+bool ScriptEngine::beforePlayerBan(int src, int dest, int time)
 {
-    return makeSEvent("beforePlayerBan", src, dest);
+    return makeSEvent("beforePlayerBan", src, dest, time);
 }
 
-void ScriptEngine::afterPlayerBan(int src, int dest)
+void ScriptEngine::afterPlayerBan(int src, int dest, int time)
 {
-    makeEvent("afterPlayerBan", src, dest);
+    makeEvent("afterPlayerBan", src, dest, time);
 }
 
 bool ScriptEngine::beforePlayerAway(int src, bool away)
@@ -639,7 +639,7 @@ void ScriptEngine::changePokeNum(int id, int team, int slot, int num)
 {
     if (!testPlayer("changePokeNum", id) || !testRange("changePokeNum", slot, 0, 5) || !testTeamCount("changePokeNum", id, team))
         return;
-    if (!PokemonInfo::Exists(num, myserver->player(id)->gen()))
+    if (!PokemonInfo::Exists(num, myserver->player(id)->gen(team)))
         return;
     myserver->player(id)->team(team).poke(slot).num() = num;
 }
@@ -650,7 +650,7 @@ void ScriptEngine::changePokeLevel(int id, int team, int slot, int level)
         return;
     Player *p = myserver->player(id);
     p->team(team).poke(slot).level() = level;
-    p->team(team).poke(slot).updateStats(p->gen());
+    p->team(team).poke(slot).updateStats(p->gen(team));
 }
 
 void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int move)
@@ -661,7 +661,7 @@ void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int mo
         return;
     Player *p = myserver->player(id);
     p->team(team).poke(pslot).move(mslot).num() = move;
-    p->team(team).poke(pslot).move(mslot).load(p->gen());
+    p->team(team).poke(pslot).move(mslot).load(p->gen(team));
 }
 
 void ScriptEngine::changePokeGender(int id, int team, int pokeslot, int gender)
@@ -891,7 +891,7 @@ QScriptValue ScriptEngine::dbLastOn(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return QString(SecurityManager::member(name).date);
+        return SecurityManager::member(name).date;
     }
 }
 
@@ -903,6 +903,15 @@ QScriptValue ScriptEngine::dbExpire(const QString &name)
         QDate tempDate;
         tempDate = QDate::fromString(SecurityManager::member(name).date, "yyyy-MM-dd");
         return myserver->playerDeleteDays() - tempDate.daysTo(QDate::currentDate());
+    }
+}
+
+QScriptValue ScriptEngine::dbTempBanTime(const QString &name)
+{
+    if (!SecurityManager::exist(name)) {
+        return myengine.undefinedValue();
+    } else {
+        return SecurityManager::member(name).ban_expire_time - QDateTime::currentDateTimeUtc().toTime_t();
     }
 }
 
@@ -944,6 +953,15 @@ QScriptValue ScriptEngine::tier(int id, int team)
         return myengine.undefinedValue();
     }
     return myserver->player(id)->team(team).tier;
+}
+
+bool ScriptEngine::hasTier(int id, const QString &tier)
+{
+    if (!testPlayer("hasTier", id)) {
+        return false;
+    }
+
+    return myserver->player(id)->hasTier(tier);
 }
 
 QScriptValue ScriptEngine::ranking(int id, int team)
@@ -1041,21 +1059,30 @@ void ScriptEngine::hostInfo_Ready(const QHostInfo &myInfo)
     }
 }
 
-QScriptValue ScriptEngine::gen(int id)
+QScriptValue ScriptEngine::gen(int id, int team)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!testTeamCount("gen(id, team)", id, team)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->gen().num;
+        return myserver->player(id)->gen(team).num;
     }
 }
 
-QScriptValue ScriptEngine::subgen(int id)
+QScriptValue ScriptEngine::subgen(int id, int team)
 {
-    if(!myserver->playerLoggedIn(id)) {
+    if (!testTeamCount("subgen(id, team)", id, team)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->gen().subnum;
+        return myserver->player(id)->gen(team).subnum;
+    }
+}
+
+QScriptValue ScriptEngine::teamCount(int id)
+{
+    if (!testPlayer("teamCount(id)", id)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->teamCount();
     }
 }
 
@@ -1410,7 +1437,7 @@ QScriptValue ScriptEngine::teamPokeItem(int id, int team, int index)
 
 bool ScriptEngine::hasTeamItem(int id, int team, int itemnum)
 {
-    if(testPlayer("hasTeamItem", id) || testTeamCount("hasTeamItem", id, team)) {
+    if(testPlayer("hasTeamItem", id) && testTeamCount("hasTeamItem", id, team)) {
         TeamBattle &t = myserver->player(id)->team(team);
         for (int i = 0; i < 6; i++) {
             if (t.poke(i).item() == itemnum) {
@@ -1788,6 +1815,21 @@ QScriptValue ScriptEngine::banList()
 void ScriptEngine::ban(QString name)
 {
     SecurityManager::ban(name);
+    if(loggedIn(myserver->id(name))) {
+        myserver->kick(myserver->id(name));
+    }
+}
+
+void ScriptEngine::tempBan(QString name, int time)
+{
+    if(time < 0) {
+        return;
+    }
+    SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    SecurityManager::ban(name);
+    if(loggedIn(myserver->id(name))) {
+        myserver->kick(myserver->id(name));
+    }
 }
 
 void ScriptEngine::unban(QString name)

@@ -31,6 +31,7 @@ private slots:
     void genChanged();
 private:
     void setupUi();
+    void updateItemModel();
     void updateTabs();
 
     struct _ui {
@@ -45,6 +46,7 @@ private:
     _ui *ui;
 
     TeamHolder *m_team;
+    Pokemon::gen lastGen;
     TeamHolder &team() { return *m_team;}
     const TeamHolder &team() const { return *m_team;}
 };

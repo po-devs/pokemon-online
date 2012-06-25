@@ -8,6 +8,7 @@
 class TeamHolder;
 class TrainerMenu;
 class TeamMenu;
+class PokeBoxes;
 
 class TeamBuilder : public QStackedWidget, public CentralWidgetInterface
 {
@@ -25,6 +26,7 @@ public slots:
     void saveAll();
     void loadAll();
     void newTeam();
+    void openBoxes();
     void editPoke(int);
     void switchToTrainer();
     void setTierList(const QStringList &tiers); //tells which tiers are available
@@ -44,6 +46,7 @@ private:
     TeamHolder *m_team;
     TrainerMenu *trainer;
     TeamMenu *teamMenu;
+    PokeBoxes *boxesMenu;
 
     QAbstractItemModel *pokemonModel;
 

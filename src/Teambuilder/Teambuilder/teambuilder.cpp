@@ -4,9 +4,10 @@
 #include "Teambuilder/teamholder.h"
 #include "mainwindow.h"
 #include "Teambuilder/teammenu.h"
+#include "Teambuilder/pokeboxes.h"
 #include "Teambuilder/poketablemodel.h"
 
-TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
+TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
     addWidget(trainer = new TrainerMenu(team));
     pokemonModel = new PokeTableModel(team->team().gen(), this);
@@ -15,6 +16,7 @@ TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL)
 
     connect(trainer, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
     connect(trainer, SIGNAL(done()), SIGNAL(done()));
+    connect(trainer, SIGNAL(openBoxes()), SLOT(openBoxes()));
     connect(trainer, SIGNAL(editPoke(int)), SLOT(editPoke(int)));
 }
 
@@ -141,6 +143,14 @@ void TeamBuilder::markTeamUpdated()
             widget(i)->setProperty("team-to-update", true);
         }
     }
+}
+
+void TeamBuilder::openBoxes()
+{
+    if(!boxesMenu) {
+        addWidget(boxesMenu = new PokeBoxes(this, &team()));
+    }
+    switchTo(boxesMenu);
 }
 
 void TeamBuilder::editPoke(int index)

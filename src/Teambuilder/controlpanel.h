@@ -20,7 +20,7 @@ public slots:
     void setPlayer(const UserInfo &ui);
     void addAlias(const QString &name);
     void addNameToBanList(const QString &name, const QString &ip);
-    void addNameToTBanList(const QString &name, const QString &ip, int time);
+    void addNameToTBanList(const QString &name, const QString &ip, const QDateTime& time);
 signals:
     void getUserInfo(const QString &name);
     void getBanList();

@@ -23,10 +23,12 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     conf.avatar[1] = p2.avatar();
     conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
     conf.setTeam(1, new TeamBattle(p2.team(nteam2)));
+    team(0).name = p1.name();
+    team(1).name = p2.name();
     conf.ids[0] = p1.id();
     conf.ids[1] = p2.id();
     conf.teamOwnership = true;
-    conf.gen = std::max(p1.gen(), p2.gen());
+    conf.gen = c.gen;
     conf.clauses = c.clauses;
     conf.mode = c.mode;
 
@@ -1637,6 +1639,8 @@ bool BattleBase::testStatus(int player)
         if (poke(player).statusCount() > 1) {
             poke(player).statusCount() -= 1;
             notify(All, StatusMessage, player, qint8(FeelAsleep));
+
+            return false;
         } else {
             healStatus(player, Pokemon::Asleep);
             notify(All, StatusMessage, player, qint8(FreeAsleep));

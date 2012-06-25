@@ -184,6 +184,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(notRegistered(bool)), myregister, SLOT(setEnabled(bool)));
     connect(relay, SIGNAL(playerKicked(int,int)),SLOT(playerKicked(int,int)));
     connect(relay, SIGNAL(playerBanned(int,int)),SLOT(playerBanned(int,int)));
+    connect(relay, SIGNAL(playerTempBanned(int,int,int)), SLOT(playerTempBanned(int,int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
@@ -714,7 +715,7 @@ void Client::ban(int p) {
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().notify(NetworkCli::PlayerTBan, qint32(p), qint32(time));
 }
 
 void Client::pmcp(QString p) {
@@ -750,6 +751,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
+    connect(this, SIGNAL(destroyed()), p, SLOT(deleteLater()));
 
     mypms[id] = p;
 }
@@ -761,7 +763,7 @@ void Client::registerPermPlayer(int id)
 
 void Client::goAway(int away)
 {
-    relay().goAway(away);
+    relay().notify(NetworkCli::OptionsChange, Flags(ladder->isChecked()  + (away << 1)));
     goaway->setChecked(away);
 }
 
@@ -813,7 +815,8 @@ void Client::enableLadder(bool b)
 {
     globals.setValue("enable_ladder", b);
 
-    relay().notify(NetworkCli::OptionsChange, Flags(b));
+    relay().notify(NetworkCli::OptionsChange, Flags(b && (goaway->isChecked() << 1)));
+    ladder->setChecked(b);
 }
 
 void Client::setChannelSelected(int id)
@@ -999,7 +1002,7 @@ void Client::controlPanel(int id)
     connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
-    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,int)), myCP, SLOT(addNameToTBanList(QString, QString,int)));
+    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,QDateTime)), myCP, SLOT(addNameToTBanList(QString, QString,QDateTime)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
     connect(myCP, SIGNAL(getTBanList()), &relay(), SLOT(getTBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
@@ -1061,7 +1064,7 @@ void Client::PMReceived(int id, QString pm)
         startPM(id);
     }
 
-    if(mypms.contains(id) && mypms[id]->isVisible()) {
+    if(mypms.contains(id) && !mypms[id]->isVisible()) {
         mypms[id]->show();
     }
 
@@ -1148,10 +1151,10 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     goaway->setChecked(this->away());
     connect(goaway, SIGNAL(triggered(bool)), this, SLOT(goAwayB(bool)));
 
-    QAction * ladd = menuActions->addAction(tr("Enable &ladder"));
-    ladd->setCheckable(true);
-    connect(ladd, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
-    ladd->setChecked(globals.value("enable_ladder").toBool());
+    ladder = menuActions->addAction(tr("Enable &ladder"));
+    ladder->setCheckable(true);
+    connect(ladder, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
+    ladder->setChecked(globals.value("enable_ladder").toBool());
 
     QMenu* show_events = menuActions->addMenu(tr("Player events"));
     showPEvents = NoEvent;
@@ -1326,6 +1329,25 @@ void Client::playerBanned(int dest, int src) {
     printHtml(toBoldColor(mess, Qt::red));
 }
 
+void Client::playerTempBanned(int dest, int src, int time)
+{
+    QString mess;
+    time = int(time);
+    if(src == 0) {
+        if(time == 1) {
+            mess = tr("%1 was banned by the server for %2 minute!").arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(time);
+        }
+    } else {
+        if(time == 1) {
+            mess = tr("%1 banned %2 for %3 minute!").arg(name(src)).arg(name(dest)).arg(time);
+        } else {
+            mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(time);
+        }
+    }
+    printHtml(toBoldColor(mess, Qt::red));
+}
 
 void Client::askForPass(const QByteArray &salt) {
 
@@ -1935,6 +1957,10 @@ void Client::challengeStuff(const ChallengeInfo &c)
 
 void Client::awayChanged(int id, bool away)
 {
+    if (player(id).away() == away) {
+        return;
+    }
+
     if (away) {
         printLine(IdleEvent, id, tr("%1 is idling.").arg(name(id)));
     } else {
@@ -1994,7 +2020,7 @@ void Client::connected()
     if (reconnectPass.isEmpty()) {
         QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
         QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-        relay().login(*team(), s.value("enable_ladder").toBool(), s.value("trainer_color").value<QColor>(), DefaultChannel, AutoJoinChannels);
+        relay().login(*team(), s.value("enable_ladder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }

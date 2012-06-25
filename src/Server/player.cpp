@@ -57,11 +57,13 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(wannaRegister()), SLOT(registerRequest()));
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
+    connect(&relay(), SIGNAL(tempBan(int,int)), SLOT(playerTempBan(int,int)));
     connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
-    //connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
+    connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
+    connect(&relay(), SIGNAL(tbanListRequested()), SLOT(giveTBanList()));
     connect(&relay(), SIGNAL(banListRequested()), SLOT(giveBanList()));
     connect(&relay(), SIGNAL(awayChange(bool)), SLOT(awayChange(bool)));
     connect(&relay(), SIGNAL(battleSpectateRequested(int)), SLOT(spectatingRequested(int)));
@@ -94,8 +96,11 @@ void Player::ladderChange(bool n)
 {
     if (!isLoggedIn())
         return;//INV BEHAV
+    if (state()[LadderEnabled] == n) {
+        return;
+    }
     state().setFlag(LadderEnabled, n);
-    relay().notifyLadderChange(id(), n);
+    relay().notifyOptionsChange(id(), away(), n);
 }
 
 void Player::cancelBattleSearch()
@@ -611,6 +616,19 @@ void Player::playerBan(int p) {
     emit playerBan(id(),p);
 }
 
+void Player::playerTempBan(int player, int time)
+{
+    if(!isLoggedIn()) {
+        emit info(id(), "Tried to temp ban while not logged in");
+        kick();
+        return;
+    }
+    if(auth() < 1) {
+        return;
+    }
+    emit playerTempBan(id(), player, time);
+}
+
 void Player::CPBan(const QString &name)
 {
     if (auth() < 2) {
@@ -642,24 +660,24 @@ void Player::CPUnban(const QString &name)
     out.write((this->name() + " unbanned " + name + ".\n").toUtf8());
 }
 
-//void Player::CPTBan(const QString &name, int time)
-//{
-//    if (auth() < 1) {
-//        return; //INVALID BEHAVIOR
-//    }
-//    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
-//    if (maxAuth >= auth()) {
-//        sendMessage(name + " has authority " + maxAuth + " under another nick.");
-//        return;
-//    }
-//    /* Checking the time boundaries */
-//    time = std::max(1, std::min(time, 1440));
-//    SecurityManager::ban(name);
-//    TempBan *tBan = new TempBan(name,time);
-//    tBan->start();
-//    connect(tBan,SIGNAL(end(QString)),this,SLOT(tUnban(QString)));
-//    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
-//}
+void Player::CPTBan(const QString &name, int time)
+{
+    if (auth() < 1) {
+        return; //INVALID BEHAVIOR
+    }
+    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
+    if (maxAuth >= auth()) {
+        sendMessage(name + " has authority " + maxAuth + " under another nick.");
+        return;
+    }
+    /* Checking the time boundaries */
+    if (auth() < 2) {
+        time = std::max(1, std::min(time, 1440));
+    }
+    SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time*60);
+    SecurityManager::ban(name);
+    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
+}
 
 void Player::playerKick(int p) {
     if (!isLoggedIn()) {
@@ -787,14 +805,28 @@ void Player::giveBanList()
         return; //INVALID BEHAVIOR
     }
     QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
+    QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
+
+    while (it.hasNext()) {
+        it.next();
+        if (it.value().second != 0)
+            relay().notify(NetworkServ::GetTBanList, it.key(), it.value().first, it.value().second);
+    }
+}
+
+void Player::giveTBanList()
+{
+    if (auth() == 0) {
+        return; // INVALID BEHAVIOR
+    }
+    QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
 
     QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
 
     while (it.hasNext()) {
         it.next();
-        if (it.value().second == 0) {
-            relay().notify(NetworkServ::GetBanList, it.key(), it.value().first);
-        }
+        if (it.value().second != 0)
+            relay().notify(NetworkServ::GetTBanList, it.key(), it.value().first, it.value().second);
     }
 }
 
@@ -808,9 +840,9 @@ const TeamBattle & Player::team(int i) const
     return m_teams.team(i);
 }
 
-Pokemon::gen Player::gen() const
+Pokemon::gen Player::gen(int team) const
 {
-    return team().gen;
+    return this->team(team).gen;
 }
 
 int Player::teamCount() const
@@ -1093,8 +1125,8 @@ void Player::testAuthentificationLoaded()
 
         setAuth(m.authority());
 
-        m.modifyIP(ip().toAscii());
-        m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
+        m.modifyIP(ip());
+        m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
         SecurityManager::updateMember(m);
 
         /* To tell the player he's not registered */
@@ -1509,32 +1541,4 @@ void Player::sendPlayers(const QVector<reference<PlayerInfo> > & bundles)
 void Player::tUnban(QString name)
 {
     SecurityManager::unban(name);
-}
-
-TempBan::TempBan(const QString& na,const int& ti) : myname(na), mytime(ti)
-{
-}
-TempBan::~TempBan()
-{
-}
-void TempBan::start()
-{
-    //    mytimer = new QTimer();
-    //    mytimer->start(mytime*60*1000);
-    //    connect(mytimer,SIGNAL(timeout()),this,SLOT(done()));
-}
-
-QString TempBan::name() const
-{
-    return myname;
-}
-
-int TempBan::time() const
-{
-    return mytime;
-}
-
-void TempBan::done()
-{
-    emit end(myname);
 }

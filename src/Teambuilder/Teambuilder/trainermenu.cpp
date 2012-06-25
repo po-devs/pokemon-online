@@ -35,6 +35,7 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     connect(bg, SIGNAL(buttonClicked(int)), SLOT(changeCurrentTeam(int)));
 
     connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
+    connect(ui->boxCenter, SIGNAL(clicked()), SIGNAL(openBoxes()));
     connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
 
     loadProfileList();

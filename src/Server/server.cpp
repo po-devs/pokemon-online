@@ -258,7 +258,7 @@ void Server::start(){
     }
 
     if (s.value("process_database_clearing_on_startup", true).toBool()) {
-        SecurityManager::processDailyRun(amountOfInactiveDays);
+        SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
     QTimer *t2 = new QTimer(this);
@@ -840,6 +840,29 @@ void Server::ban(int id, int src) {
     player(id)->kick();
 }
 
+void Server::tempBan(int dest, int src, int time)
+{
+    SecurityManager::setBanExpireTime(name(dest), QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    time = int(std::max(1, std::min(time, 1440)));
+    if(src == 0) {
+        if(time == 1) {
+            printLine(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
+        } else {
+            printLine(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
+        }
+    } else {
+        if(time == 1) {
+            printLine(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
+        } else {
+            printLine(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
+        }
+    }
+    notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
+    SecurityManager::ban(name(dest));
+    player(dest)->kick();
+}
+
+
 void Server::dosKick(int id) {
     if (playerExist(id) && overactiveShow) {
         broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
@@ -1189,6 +1212,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(info(int,QString)), SLOT(info(int,QString)));
     connect(p, SIGNAL(playerKick(int,int)), SLOT(playerKick(int, int)));
     connect(p, SIGNAL(playerBan(int,int)), SLOT(playerBan(int, int)));
+    connect(p, SIGNAL(playerTempBan(int,int,int)), SLOT(playerTempBan(int, int, int)));
     connect(p, SIGNAL(PMReceived(int,int,QString)), SLOT(recvPM(int,int,QString)));
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
@@ -1218,7 +1242,7 @@ void Server::awayChanged(int src, bool away)
         foreach(Player *p, channel(chanid).players) {
             /* That test avoids to send twice the same data to the client */
             if (!p->hasSentCommand(lastDataId)) {
-                p->relay().notifyAway(src, away);
+                p->relay().notifyOptionsChange(src, away, p->state()[Player::LadderEnabled]);
             }
         }
     }
@@ -1510,14 +1534,37 @@ void Server::playerBan(int src, int dest)
         return;
     }
 
-    if (myengine->beforePlayerBan(src, dest)) {
+    if (myengine->beforePlayerBan(src, dest, 0)) {
         if (!playerExist(src) || !playerExist(dest))
             return;
         ban(dest,src);
-        myengine->afterPlayerBan(src, dest);
+        myengine->afterPlayerBan(src, dest, 0);
     }
 }
 
+void Server::playerTempBan(int src, int dest, int time)
+{
+    if(!playerExist(dest)) {
+        return;
+    }
+    if(player(dest)->auth() >= player(src)->auth()) {
+        return;
+    }
+    int maxauth = SecurityManager::maxAuth(player(dest)->ip());
+
+    if (player(src)->auth() <= maxauth) {
+        player(src)->sendMessage("That player has authority level superior or equal to yours under another nick.");
+        return;
+    }
+
+    if(myengine->beforePlayerBan(src, dest, time)) {
+        if(!playerExist(src) || !playerExist(dest)) {
+            return;
+        }
+        tempBan(dest, src, time);
+        myengine->afterPlayerBan(src, dest, time);
+    }
+}
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, int team2)
 {
@@ -1547,7 +1594,13 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         }
     }
 
-    BattleBase *battle = c.gen.num == 1 ? (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager) : new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    BattleBase *battle;
+    if (c.gen <= 1) {
+        battle = (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    } else {
+        battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    }
+
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event
@@ -2186,7 +2239,7 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
         }
     } else {
         foreach(Player *p, g2) {
-            if (p->spec()[group]) {
+            if (group == All || p->spec()[group]) {
                 p->sendPacket(packet);
             }
         }
