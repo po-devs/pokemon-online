@@ -100,7 +100,13 @@ void ServerWidget::showContextMenu(const QPoint &p) {
         QSignalMapper *mymapper2 = new QSignalMapper(menu);
         QAction *viewinfo2 = menu->addAction("&Ban", mymapper2, SLOT(map()));
         mymapper2->setMapping(viewinfo2, item->id());
-        connect(mymapper2, SIGNAL(mapped(int)), server, SLOT(ban(int)));
+        connect(mymapper2, SIGNAL(mapped(int)), SLOT(tempBanDialog(int)));
+
+        QSignalMapper *mymapper4 = new QSignalMapper(menu);
+        QAction *viewinfo3 = menu->addAction("&Temp Ban", mymapper4, SLOT(map()));
+        mymapper4->setMapping(viewinfo3, item->id());
+        connect(mymapper4, SIGNAL(mapped(int)), this, SLOT(openTempBanDialog(int)));
+
 
         menu->exec(mapToGlobal(p));
     }
@@ -109,6 +115,12 @@ void ServerWidget::showContextMenu(const QPoint &p) {
 void ServerWidget::clearChat()
 {
     mymainchat->clear();
+}
+
+void ServerWidget::openTempBanDialog(int pId)
+{
+    int time = QInputDialog::getInteger(this, "Temp Ban " + server->name(pId), "Input the amount of minutes that you want to ban " + server->name(pId), 1, 1, 3600);
+    server->tempBan(pId, 0, time);
 }
 
 void ServerWidget::openPluginConfig()
