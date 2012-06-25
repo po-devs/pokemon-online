@@ -49,38 +49,39 @@ public:
 
     void addPlugin(OnlineClientPlugin *o);
     void removePlugin(OnlineClientPlugin *o);
+    void registerMetaTypes(QScriptEngine *);
 
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
     void printLine(int event, int playerid, const QString &line);
-    void cancelFindBattle(bool verbose=true);
-    bool playerExist(int id) const;
-    QString name(int id) const;
-    QString ownName() const;
-    bool battling() const;
-    bool busy() const;
-    bool hasChannel(int channelid) const;
-    bool away() const;
-    int id(const QString &name) const;
-    int currentChannel() const;
+    Q_INVOKABLE void cancelFindBattle(bool verbose=true);
+    Q_INVOKABLE bool playerExist(int id) const;
+    Q_INVOKABLE QString name(int id) const;
+    Q_INVOKABLE QString ownName() const;
+    Q_INVOKABLE bool battling() const;
+    Q_INVOKABLE bool busy() const;
+    Q_INVOKABLE bool hasChannel(int channelid) const;
+    Q_INVOKABLE bool away() const;
+    Q_INVOKABLE int id(const QString &name) const;
+    Q_INVOKABLE int currentChannel() const;
     Channel *channel(int channelid);
-    int ownId() const ;
-    int ownAuth() const ;
-    int auth(int id) const ;
-    bool isIgnored(int id) const;
-    QString authedNick(int id) const;
-    QColor color(int id) const;
-    QString tier(int player) const;
-    QStringList tiers(int player) const;
+    Q_INVOKABLE int ownId() const ;
+    Q_INVOKABLE int ownAuth() const ;
+    Q_INVOKABLE int auth(int id) const ;
+    Q_INVOKABLE bool isIgnored(int id) const;
+    Q_INVOKABLE QString authedNick(int id) const;
+    Q_INVOKABLE QColor color(int id) const;
+    Q_INVOKABLE QString tier(int player) const;
+    Q_INVOKABLE QStringList tiers(int player) const;
     void changeName(int player, const QString &name);
     /* Resets fade away counter */
     void refreshPlayer(int id);
     QSize defaultSize() const {
         return QSize(800,600);
     }
-    void reconnect();
+    Q_INVOKABLE void reconnect();
 
-    QString defaultChannel();
+    Q_INVOKABLE QString defaultChannel();
 
     enum Status {
         Available = 0,
@@ -102,7 +103,7 @@ public:
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
 
-    QStringList getTierList() const {
+    Q_INVOKABLE QStringList getTierList() const {
         return tierList;
     }
 
@@ -136,6 +137,7 @@ public slots:
     void printChannelMessage(const QString &mess, int channel, bool html);
     /* sends what's in the line edit */
     void sendText();
+    void sendMessage(const QString &mess, int channel);
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
     void announcementReceived(const QString &);
@@ -361,7 +363,10 @@ private:
 
     /* Network Relay */
     Analyzer *myrelay;
-    Analyzer & relay();
+    Analyzer &relay();
+public:
+    Q_INVOKABLE Analyzer *network() {return myrelay;}
+private:
 
     /* Password Wallet */
     PasswordWallet wallet;

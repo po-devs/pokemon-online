@@ -3,6 +3,7 @@
 
 class QString;
 class OnlineClientPlugin;
+class QScriptEngine;
 
 class ClientInterface {
 public:
@@ -13,6 +14,7 @@ public:
 
     virtual void addPlugin(OnlineClientPlugin *o) = 0;
     virtual void removePlugin(OnlineClientPlugin *o) = 0;
+    virtual void registerMetaTypes(QScriptEngine *){}
 };
 
 #endif // CLIENTINTERFACE_H

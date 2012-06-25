@@ -2,7 +2,8 @@ QT += network \
     xml \
     phonon \
     declarative \
-    opengl
+    opengl \
+    script
 
 TARGET = Pokemon-Online
 
