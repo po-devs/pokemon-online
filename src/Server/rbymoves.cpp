@@ -189,7 +189,7 @@ struct RBYBind : public MM
             fturn(b,s).add(TM::UsePP); //If the opponent switched out, we use an additional PP
         } else {
             tmove(b,s).accuracy = 0;
-            tmove(b,s).power = 0;
+            tmove(b,s).power = 1;
         }
     }
 
