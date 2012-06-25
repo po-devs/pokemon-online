@@ -103,6 +103,7 @@ public:
     void insertMember(QSqlQuery *q, void *data, int type);
     int getMode() const;
     bool allowGen(Pokemon::gen gen) const;
+    Pokemon::gen gen() const {return m_gen;}
     int getClauses() const;
     int getMaxLevel() const;
     void fixTeam(TeamBattle &t) const;
@@ -158,7 +159,7 @@ private:
     int maxRestrictedPokes;
     int numberOfPokemons;
     int maxLevel;
-    Pokemon::gen gen;
+    Pokemon::gen m_gen;
     QString banParentS;
     Tier *parent;
     QSet<int> bannedItems;
