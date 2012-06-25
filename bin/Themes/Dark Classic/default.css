@@ -435,7 +435,7 @@ QTextEdit#MainChat {
 }
 
 ServerChoice #announcement {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 QSlider::groove:horizontal {
