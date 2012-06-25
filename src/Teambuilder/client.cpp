@@ -751,6 +751,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
+    connect(this, SIGNAL(destroyed()), p, SLOT(deleteLater()));
 
     mypms[id] = p;
 }
