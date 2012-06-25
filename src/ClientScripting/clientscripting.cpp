@@ -24,10 +24,12 @@ QString ClientScripting::pluginName() const
 
 QWidget *ClientScripting::getConfigurationWidget()
 {
-    return new ScriptWindow();
+    ScriptWindow *ret = new ScriptWindow();
+    QObject::connect(ret, SIGNAL(scriptChanged(QString)), engine.data(), SLOT(changeScript(QString)));
+    return ret;
 }
 
 OnlineClientPlugin* ClientScripting::getOnlinePlugin(ClientInterface *c)
 {
-    return new ScriptEngine(c);
+    return engine = new ScriptEngine(c);
 }
