@@ -56,7 +56,7 @@
      <item>
       <widget class="QLabel" name="informationsLabel">
        <property name="text">
-        <string>Informations</string>
+        <string>Information</string>
        </property>
        <property name="buddy">
         <cstring>infos</cstring>
@@ -288,7 +288,7 @@
       <item>
        <widget class="QLabel" name="teambuilderLabel">
         <property name="text">
-         <string>Teambuilder</string>
+         <string>Team Builder</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
