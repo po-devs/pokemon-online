@@ -30,6 +30,7 @@ public:
     
 public slots:
     void showContextMenu(const QPoint &p);
+    void openTempBanDialog(int pId);
     void openConfig();
     void openPlayers();
     void openAntiDos();
