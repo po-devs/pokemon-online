@@ -1,9 +1,10 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "mainwindow.h"
+#include "clientinterface.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager(MainEngine *t) : engine(t)
+PluginManager::PluginManager(MainEngine *t) : engine(t), client(NULL)
 {
     QSettings s;
 
@@ -15,7 +16,7 @@ PluginManager::PluginManager(MainEngine *t) : engine(t)
         try {
              l = new cross::DynamicLibrary(plugin.toAscii().constData());
         } catch (const std::exception &e) {
-            qDebug() << "Error when loading plugin " << plugin <<  ": " << e.what();
+            qDebug() << "Error when loading plugin " << plugin << ": " << e.what();
             continue;
         }
 
@@ -82,6 +83,15 @@ void PluginManager::addPlugin(const QString &path)
         return;
     }
 
+    if (client) {
+        OnlineClientPlugin *ocp = s->getOnlinePlugin(client);
+
+        if (ocp) {
+            clientPlugins.insert(s, ocp);
+            client->addPlugin(ocp);
+        }
+    }
+
     this->plugins.push_back(s);
     filenames.push_back(path);
 
@@ -91,6 +101,12 @@ void PluginManager::addPlugin(const QString &path)
 void PluginManager::freePlugin(int index)
 {
     if (index < plugins.size() && index >= 0) {
+        ClientPlugin *p = plugins[index];
+        if (client && clientPlugins.contains(p)) {
+            client->removePlugin(clientPlugins[p]);
+            delete clientPlugins[p];
+            clientPlugins.remove(p);
+        }
         delete plugins[index];
         delete libraries[index];
         plugins.erase(plugins.begin() + index, plugins.begin() + index + 1);
@@ -139,6 +155,34 @@ ClientPlugin * PluginManager::plugin(const QString &name) const
 
     return NULL;
 }
+
+void PluginManager::launchClient(ClientInterface *c)
+{
+    client = c;
+
+    foreach(ClientPlugin *pl, plugins) {
+        OnlineClientPlugin *o = pl->getOnlinePlugin(c);
+
+        if (o) {
+            c->addPlugin(o);
+            clientPlugins.insert(pl, o);
+        }
+    }
+}
+
+void PluginManager::quitClient()
+{
+    foreach(OnlineClientPlugin *o, clientPlugins) {
+        delete o;
+    }
+
+    clientPlugins.clear();
+    client = NULL;
+}
+
+/*************************************************************/
+/*************************************************************/
+/*************************************************************/
 
 PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
     : pl(pl)

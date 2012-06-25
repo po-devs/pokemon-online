@@ -10,6 +10,7 @@
 #include "tierstruct.h"
 #include "password_wallet.h"
 #include "Teambuilder/teamholder.h"
+#include "clientinterface.h"
 
 class MainEngine;
 class ChallengeDialog;
@@ -27,22 +28,26 @@ class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
 class DataStream;
+class PluginManager;
 
 /* The class for going online.
 
     It displays the mainchat, the players list, ... and also have the dialog engine in it*/
 
-class Client : public QWidget, public CentralWidgetInterface
+class Client : public QWidget, public ClientInterface, public CentralWidgetInterface
 {
     Q_OBJECT
 
     friend class Channel;
 public:
-    Client(TeamHolder *, const QString &url, const quint16 port);
+    Client(PluginManager*, TeamHolder *, const QString &url, const quint16 port);
     ~Client();
 
     TeamHolder *team();
     QMenuBar *createMenuBar(MainEngine *w);
+
+    void addPlugin(OnlineClientPlugin *o);
+    void removePlugin(OnlineClientPlugin *o);
 
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
@@ -379,6 +384,9 @@ private:
     bool singleTeam;
 
     QSettings globals;
+
+    QSet<OnlineClientPlugin*> plugins;
+    PluginManager *pluginManager;
 };
 
 #endif // CLIENT_H
