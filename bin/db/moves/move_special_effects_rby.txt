@@ -71,7 +71,7 @@
 
 #1#leech
 #1#mega drain
-#72#leech seed
+72#leech seed
 #191#Growth
 
 104-3#solar beam
