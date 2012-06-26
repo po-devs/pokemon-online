@@ -279,9 +279,9 @@ void TrainerMenu::on_saveProfile_clicked()
         return;
     }
     if(ui->profileList->findText(ui->name->text()) == -1) {
-        path = s.value("profiles_path").toString() + "/" + ui->name->text() + ".xml";
+        path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->name->text()) + ".xml";
     } else {
-        path = s.value("profiles_path").toString() + "/" + ui->profileList->currentText() + ".xml";
+        path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
     }
     if(team().profile().saveToFile(path)) {
         // We need to re-do the check again since if name contains illegal char, why we would want to add it
