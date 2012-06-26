@@ -3,13 +3,22 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/modelenum.h"
 #include "theme.h"
+#include "modelenum.h"
 #include <QMenu>
+#include <QCompleter>
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
     ui(new Ui::PokeSelection)
 {
     ui->setupUi(this);
     ui->pokemonList->setModel(pokemonModel);
+
+    QCompleter *completer = new QCompleter(pokemonModel, ui->pokeEdit);
+    completer->setCompletionColumn(1);
+    completer->setCompletionRole(Qt::DisplayRole);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    ui->pokeEdit->setCompleter(completer);
 
     setNum(pokemon);
 
@@ -25,7 +34,9 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
         ui->shiny->show();
     }
 
+    ui->baseStats->setGen(getGen());
 
+    connect(completer, SIGNAL(activated(QModelIndex)), SLOT(setPokemon(QModelIndex)));
     connect(ui->shiny, SIGNAL(toggled(bool)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateSprite()));
@@ -40,9 +51,23 @@ void PokeSelection::show()
     ui->pokemonList->setFocus();
 }
 
+void PokeSelection::setPokemon(const QModelIndex &p)
+{
+    setNum(p.data(CustomModel::PokenumRole).toInt());
+}
+
 void PokeSelection::setNum(const Pokemon::uniqueId &num)
 {
+    if (m_num == num) {
+        return;
+    }
     m_num = num;
+
+    ui->pokeEdit->setText(PokemonInfo::Name(num));
+    ui->pokemonList->setCurrentIndex(ui->pokemonList->model()->index(num.pokenum, 1));
+    ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
+
+    ui->baseStats->setNum(num);
 
     if (PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) {
         QMenu *m = new QMenu(ui->altForme);

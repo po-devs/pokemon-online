@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BaseStatsWidget</class>
+ <widget class="QWidget" name="BaseStatsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>229</width>
+    <height>198</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="hp">
+     <property name="text">
+      <string>HP</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QProgressBar" name="hpbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="atk">
+     <property name="text">
+      <string>Atk</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QProgressBar" name="atkbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="def">
+     <property name="text">
+      <string>Def</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QProgressBar" name="defbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="spatk">
+     <property name="text">
+      <string>Sp. Atk</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QProgressBar" name="spatkbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="spdef">
+     <property name="text">
+      <string>Sp. Def</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QProgressBar" name="spdefbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="speed">
+     <property name="text">
+      <string>Speed</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QProgressBar" name="speedbar">
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string>%v</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

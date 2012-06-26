@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" rowspan="6">
+   <item row="0" column="0" rowspan="7">
     <widget class="TB_PokeChoice" name="pokemonList">
      <property name="tabKeyNavigation">
       <bool>false</bool>
@@ -61,6 +61,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
    <item row="2" column="2">
@@ -68,16 +71,12 @@
      <property name="text">
       <string/>
      </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="2">
-    <widget class="QPushButton" name="done">
-     <property name="text">
-      <string>Change species</string>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
+   <item row="4" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -90,7 +89,20 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="1" colspan="2">
+   <item row="3" column="1" colspan="2">
+    <widget class="BaseStatsWidget" name="baseStats" native="true"/>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLineEdit" name="pokeEdit"/>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QPushButton" name="done">
+     <property name="text">
+      <string>Change species</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
     <widget class="QPushButton" name="altForme">
      <property name="enabled">
       <bool>false</bool>
@@ -106,7 +118,13 @@
   <customwidget>
    <class>TB_PokeChoice</class>
    <extends>QTableView</extends>
-   <header location="global">Teambuilder/pokechoice.h</header>
+   <header>Teambuilder/pokechoice.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BaseStatsWidget</class>
+   <extends>QWidget</extends>
+   <header>Teambuilder/basestatswidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
