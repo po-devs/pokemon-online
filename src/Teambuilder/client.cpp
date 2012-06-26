@@ -1399,6 +1399,7 @@ void Client::askForPass(const QByteArray &salt) {
 
     /* Create a dialog for password input */
     QDialog dialog(this);
+    dialog.setObjectName("passwordDialog");
     dialog.setWindowTitle(tr("Enter your password"));
     QVBoxLayout* layout = new QVBoxLayout;
     // Label
