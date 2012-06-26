@@ -202,6 +202,11 @@ void ScriptEngine::afterChatMessage(int src, const QString &message, int channel
     makeEvent("afterChatMessage", src, message, channel);
 }
 
+bool ScriptEngine::beforeNewPM(int src)
+{
+    return makeSEvent("beforeNewPM", src);
+}
+
 bool ScriptEngine::beforeSpectateBattle(int src, int p1, int p2)
 {
     return makeSEvent("beforeSpectateBattle", src, p1, p2);
