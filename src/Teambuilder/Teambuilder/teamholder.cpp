@@ -180,7 +180,7 @@ void TeamHolder::save()
     }
 
     s.setValue("team_locations", locations);
-    QString path = s.value("profiles_path").toString() + "/" + name() + ".xml";
+    QString path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(name()) + ".xml";
     profile().saveToFile(path);
 }
 
