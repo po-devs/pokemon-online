@@ -1,4 +1,4 @@
-#ifndef CLIENTINTERFACE_H
+﻿#ifndef CLIENTINTERFACE_H
 #define CLIENTINTERFACE_H
 
 class QString;
