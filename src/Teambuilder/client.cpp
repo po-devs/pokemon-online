@@ -2121,7 +2121,6 @@ void Client::tiersReceived(const QStringList &tiers)
 
 void Client::playerLogout(int id)
 {
-    call("playerLogout(int)", id);
     /* removes the item in the playerlist */
     removePlayer(id);
 }
@@ -2129,6 +2128,8 @@ void Client::playerLogout(int id)
 
 void Client::removePlayer(int id)
 {
+    call("playerLogout(int)", id);
+
     QString name = player(id).name;
 
     foreach(Channel *c, mychannels) {
