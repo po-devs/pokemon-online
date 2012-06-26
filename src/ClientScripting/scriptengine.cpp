@@ -39,8 +39,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
-    ret.insert("playerLogin(int)", (Hook)(&ScriptEngine::playerLogIn));
-    ret.insert("playerLogout(int)", (Hook)(&ScriptEngine::playerLogOut));
+    ret.insert("playerLogIn(int)", (Hook)(&ScriptEngine::playerLogIn));
+    ret.insert("playerLogOut(int)", (Hook)(&ScriptEngine::playerLogOut));
 
     return ret;
 }

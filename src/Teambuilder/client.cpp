@@ -2128,7 +2128,7 @@ void Client::playerLogout(int id)
 
 void Client::removePlayer(int id)
 {
-    call("playerLogout(int)", id);
+    call("playerLogOut(int)", id);
 
     QString name = player(id).name;
 
@@ -2236,7 +2236,7 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 
     if (newPlayer) {
-        call("playerLogin(int)", id);
+        call("playerLogIn(int)", p.id);
     }
 }
 
