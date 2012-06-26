@@ -68,7 +68,6 @@ void BattleSituation::initializeEndTurnFunctions()
         ownEndFunctions.push_back(QPair<int, VoidFunction>(10, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(ItemEffect, 5, 0); /* Black Sludge, Leftovers */
-        addEndTurnEffect(ItemEffect, 8, 0); /* Status Berries */
     }
     /* Gen 4:
     1.0 Reflect wears off: "your team's reflect wore off"
