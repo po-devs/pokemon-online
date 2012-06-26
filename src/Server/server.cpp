@@ -916,8 +916,8 @@ void Server::loggedIn(int id, const QString &name)
                     player(ids)->autoKick();
                 } else {
                     transferId(id, ids, true);
+                    return;
                 }
-                return;
             } else {
                 // If the other player is disconnected, we remove him
                 if (player(ids)->waitingForReconnect()) {
