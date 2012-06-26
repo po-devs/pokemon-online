@@ -8,6 +8,7 @@ namespace Ui {
 class PokeSelection;
 }
 
+class AdvancedSearch;
 class QAbstractItemModel;
 
 class PokeSelection : public QWidget
@@ -27,6 +28,7 @@ private slots:
     void setPokemon(const QModelIndex &);
     void changeForme(int);
     void finish();
+    void toggleSearchWindow();
 private:
     Ui::PokeSelection *ui;
 
@@ -37,6 +39,10 @@ private:
     Pokemon::gen getGen();
 
     Pokemon::uniqueId m_num;
+
+    //ui stuff
+    AdvancedSearch *search;
+    int oldwidth, newwidth;
 };
 
 #endif // POKESELECTION_H

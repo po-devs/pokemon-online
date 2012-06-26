@@ -6,9 +6,10 @@
 #include "modelenum.h"
 #include <QMenu>
 #include <QCompleter>
+#include "advancedsearch.h"
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
-    ui(new Ui::PokeSelection)
+    ui(new Ui::PokeSelection), search(NULL), newwidth(0)
 {
     ui->setupUi(this);
     ui->pokemonList->setModel(pokemonModel);
@@ -43,6 +44,42 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateTypes()));
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
     connect(ui->done, SIGNAL(clicked()), SLOT(finish()));
+    connect(ui->pokemonFrame, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
+}
+
+void PokeSelection::toggleSearchWindow()
+{
+    if (search) {
+        QGridLayout *gl = (QGridLayout*)layout();
+        gl->removeWidget(search);
+        search->deleteLater();
+        search = NULL;
+
+        setFixedWidth(oldwidth);
+    } else {
+        //Tricks to get a window at the correct size. Qt is annoying, not allowing resize() to work
+        //properly on windows, i have to use setFixedWidth on the top level window :(
+        oldwidth = width();
+
+        QGridLayout *gl = (QGridLayout*)layout();
+        search = new AdvancedSearch(this);
+
+        ui->pokemonList->setFixedWidth(ui->pokemonList->width());
+        ui->pokeEdit->setFixedWidth(ui->pokeEdit->width());
+        ui->done->setFixedWidth(ui->done->width());
+        search->setResultsWidth(ui->pokemonList->width()+10);
+
+        if (newwidth) {
+            setFixedWidth(newwidth);
+        }
+
+        gl->addWidget(search, 0, 4, gl->rowCount(), 1);
+        search->show();
+
+        if (newwidth == 0) {
+            newwidth = width();
+        }
+    }
 }
 
 void PokeSelection::show()
