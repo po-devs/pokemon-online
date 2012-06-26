@@ -1,4 +1,4 @@
-#include "scriptengine.h"
+﻿#include "scriptengine.h"
 #include "scriptutils.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Teambuilder/clientinterface.h"
@@ -36,6 +36,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
+    ret.insert("playerLogin(int)", (Hook)(&ScriptEngine::playerLogIn));
+    ret.insert("playerLogout(int)", (Hook)(&ScriptEngine::playerLogOut));
 
     return ret;
 }
@@ -117,6 +119,18 @@ int ScriptEngine::beforePMReceived(int id, const QString &message)
 int ScriptEngine::afterPMReceived(int id, const QString &message)
 {
     makeEvent("afterPMReceived", id, message);
+    return true;
+}
+
+int ScriptEngine::playerLogIn(int id)
+{
+    makeEvent("playerLogIn", id);
+    return true;
+}
+
+int ScriptEngine::playerLogOut(int id)
+{
+    makeEvent("playerLogOut", id);
     return true;
 }
 
@@ -283,6 +297,144 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+void ScriptEngine::saveSetting(const QString &key, const QVariant &val)
+{
+    QSettings s;
+    s.setValue(key, val);
+}
+
+QScriptValue ScriptEngine::getSetting(const QString &key)
+{
+    QSettings s;
+    return s.value(key).toString();
+}
+
+void ScriptEngine::saveVal(const QString &key, const QVariant &val)
+{
+    QSettings s;
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &key)
+{
+    QSettings s;
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &key)
+{
+    QSettings s;
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::Append)) {
+        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::deleteFile(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.remove();
+}
+
+QScriptValue ScriptEngine::getValKeys()
+{
+    QSettings s;
+    QStringList list = s.childKeys();
+    QStringList result_data;
+
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getValKeys(const QString &file)
+{
+    QSettings s(file, QSettings::IniFormat);
+    QStringList list = s.childKeys();
+    QStringList result_data;
+
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
+    }
+
+    return QString::fromUtf8(out.readAll());
+}
+
 /**
  * Function will perform a GET-Request client side
  * @param urlstring web-url
@@ -415,6 +567,18 @@ void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
 
 QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md4(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md4);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md5(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(text.toUtf8());
     return hash.result().toHex();
 }

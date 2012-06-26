@@ -1,4 +1,4 @@
-#include "client.h"
+﻿#include "client.h"
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
@@ -2121,6 +2121,7 @@ void Client::tiersReceived(const QStringList &tiers)
 
 void Client::playerLogout(int id)
 {
+    call("playerLogout(int)", id);
     /* removes the item in the playerlist */
     removePlayer(id);
 }
@@ -2208,6 +2209,8 @@ void Client::playerReceived(const PlayerInfo &p)
         if (mynames.value(p.name) == p.id)
             mynames.remove(player(p.id).name);
         myplayersinfo.remove(p.id);
+    } else {
+        call("playerLogin(int)", p.id);
     }
 
     myplayersinfo.insert(p.id, p);
