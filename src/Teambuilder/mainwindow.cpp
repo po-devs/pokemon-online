@@ -61,11 +61,6 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "show_all_items", false);
     setDefaultValue(s, "animated_sprites", false);
 
-    setDefaultValue(s, "find_battle_force_rated", false);
-    setDefaultValue(s, "find_battle_same_tier", true);
-    setDefaultValue(s, "find_battle_range_on", true);
-    setDefaultValue(s, "find_battle_range", 200);
-
     if (s.value("use_socks5_proxy", false).toBool() == true) {
         s.beginGroup("socks5_proxy");
         QNetworkProxy proxy;
