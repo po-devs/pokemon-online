@@ -8,9 +8,12 @@
 
 #include <QScriptValueIterator>
 
+#ifndef PO_SCRIPT_SAFE_ONLY
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#endif
+
 #include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
@@ -52,10 +55,13 @@ public:
     /* Print on the client. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
+    Q_INVOKABLE bool validColor(const QString &color);
+
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
     Q_INVOKABLE void callQuickly(const QString &s, int delay);
     /* Accepts function as 1st parameter. */
+    Q_INVOKABLE void quickCall(const QScriptValue &func, int delay);
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
@@ -76,6 +82,7 @@ public:
 
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
@@ -96,15 +103,19 @@ public:
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
-    Q_INVOKABLE QScriptValue getFileContent(const QString &path);/* GET call */
+    Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+
+    /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
 
     /* POST call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
-/* synchronous GET call */
+    /* synchronous GET call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
+#endif
+
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
 
@@ -125,10 +136,13 @@ private:
     QTimer * step_timer;
     QVector<bool> stopevents;
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     QNetworkAccessManager manager;
+    QHash<QNetworkReply*,QScriptValue> webCallEvents;
+#endif
+
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
-    QHash<QNetworkReply*,QScriptValue> webCallEvents;
     QHash<int,QScriptValue> myHostLookups;
 
     void startStopEvent() {stopevents.push_back(false);}
@@ -138,8 +152,10 @@ private:
         return res;
     }
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     QEventLoop sync_loop;
     QString sync_data;
+#endif
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);

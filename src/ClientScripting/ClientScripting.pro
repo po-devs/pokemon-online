@@ -51,3 +51,5 @@ include(../Shared/Common.pri)
 
 FORMS += \
     scriptwindow.ui
+
+CONFIG(safescriptonly):DEFINES += PO_SCRIPT_SAFE_ONLY

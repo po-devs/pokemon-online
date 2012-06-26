@@ -2198,6 +2198,8 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    bool newPlayer = false;
+
     if (name(p.id) != p.name) {
         printLine(TeamEvent, p.id, tr("%1 changed names and is now known as %2.").arg(name(p.id), p.name));
         if (p.id == ownId()) {
@@ -2210,7 +2212,7 @@ void Client::playerReceived(const PlayerInfo &p)
             mynames.remove(player(p.id).name);
         myplayersinfo.remove(p.id);
     } else {
-        call("playerLogin(int)", p.id);
+        newPlayer = true;
     }
 
     myplayersinfo.insert(p.id, p);
@@ -2230,6 +2232,10 @@ void Client::playerReceived(const PlayerInfo &p)
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
+    }
+
+    if (newPlayer) {
+        call("playerLogin(int)", id);
     }
 }
 
