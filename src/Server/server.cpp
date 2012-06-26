@@ -400,6 +400,7 @@ bool Server::joinChannel(int playerid, int channelid) {
     player->sendPlayers(bundles);
 
     relay.sendChannelPlayers(channelid, ids);
+    channel.disconnectedPlayers.remove(player);
     channel.players.insert(player);
     player->addChannel(channelid);
 
