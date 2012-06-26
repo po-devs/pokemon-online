@@ -14,7 +14,10 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+#endif
+
     changeScript(ScriptUtils::loadScripts());
 
     QTimer *step_timer = new QTimer(this);
@@ -156,6 +159,12 @@ void ScriptEngine::clearChat()
     //emit clearTheChat();
 }
 
+bool ScriptEngine::validColor(const QString &color)
+{
+    QColor colorName = QColor(color);
+    return colorName.isValid() && colorName.lightness() <= 140 && colorName.green() <= 180;
+}
+
 void ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
@@ -196,6 +205,18 @@ void ScriptEngine::timer()
 void ScriptEngine::timer_step()
 {
     this->stepEvent();
+}
+
+void ScriptEngine::quickCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) return;
+    if (func.isFunction()) {
+        QTimer *t = new QTimer(this);
+        timerEventsFunc[t] = func;
+        t->setSingleShot(true);
+        t->start(delay);
+        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    }
 }
 
 void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
@@ -297,6 +318,7 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+#ifndef PO_SCRIPT_SAFE_ONLY
 void ScriptEngine::saveSetting(const QString &key, const QVariant &val)
 {
     QSettings s;
@@ -564,6 +586,7 @@ void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
     sync_data = reply->readAll();
     sync_loop.exit();
 }
+#endif
 
 QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
