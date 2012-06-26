@@ -24,6 +24,7 @@ private slots:
     void updateTypes();
     void updateSprite();
     void setNum(const Pokemon::uniqueId&);
+    void setPokemon(const QModelIndex &);
     void changeForme(int);
     void finish();
 private:

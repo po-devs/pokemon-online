@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     Teambuilder/ivbox.cpp \
     Teambuilder/teamimporter.cpp \
     Teambuilder/pokechoice.cpp \
-    Teambuilder/pokeboxes.cpp
+    Teambuilder/pokeboxes.cpp \
+    Teambuilder/basestatswidget.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -121,7 +122,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/teamline.h \
     serverchoice.h \
     Teambuilder/pokeboxes.h \
-    clientinterface.h
+    clientinterface.h \
+    Teambuilder/basestatswidget.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
@@ -145,7 +147,8 @@ FORMS += Teambuilder/trainermenu.ui \
     findbattledialog.ui \
     menu.ui \
     serverchoice.ui \
-    Teambuilder/pokeboxes.ui
+    Teambuilder/pokeboxes.ui \
+    Teambuilder/basestatswidget.ui
 
 TRANSLATIONS = translation_cz.ts \
     translation_de.ts \
