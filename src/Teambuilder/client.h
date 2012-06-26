@@ -406,6 +406,19 @@ private:
 
         return ret;
     }
+
+    template<class T1, class T2, class T3>
+    bool call(const QString &f, T1 arg1, T2 arg2, T3 arg3)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3)>(hooks[p][f])))(arg1, arg2, arg3);
+            }
+        }
+
+        return ret;
+    }
 };
 
 #endif // CLIENT_H
