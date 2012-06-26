@@ -41,7 +41,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
     QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
     teamMenu->addAction(tr("&Add team"), this, SLOT(addTeam()), tr("Ctrl+A", "Add team"));
-    teamMenu->addAction(tr("&Open team"), this, SLOT(openTeam()), tr("Ctrl+O", "Open team"));
+    teamMenu->addAction(tr("&Load team"), this, SLOT(openTeam()), tr("Ctrl+Shift+L", "Load team"));
     teamMenu->addAction(tr("&Save team"), this, SLOT(saveTeam()), tr("Ctrl+Shift+S", "Save team"));
     teamMenu->addAction(tr("&Import team"), this, SLOT(importTeam()), tr("Ctrl+I", "Import team"));
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
