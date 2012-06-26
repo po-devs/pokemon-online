@@ -36,6 +36,10 @@ public:
     void clientShutDown();
 
     int beforeSendMessage(const QString &message, int channel);
+    int beforeChannelMessage(const QString &message, int channel, bool html);
+    int afterChannelMessage(const QString &message, int channel, bool html);
+    int beforePMReceived(int id, const QString &message);
+    int afterPMReceived(int id, const QString &message);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
