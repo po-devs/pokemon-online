@@ -639,6 +639,7 @@ void Player::CPBan(const QString &name)
         sendMessage(name + " has authority equal or superior to yours under another nick.");
         return;
     }
+    SecurityManager::setBanExpireTime(name, 0);
     SecurityManager::ban(name);
     emit info(id(), "Banned player " + name + " with CP.");
 
