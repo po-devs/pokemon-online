@@ -42,7 +42,7 @@ private:
     QSet<QString> names;
     QSet<QString> serverAddresses;
 
-    QTcpServer forPlayers;
+    QTcpServer forPlayers[2];
     QHash<int, Player *> players;
 
     QSet<QString> bannedIPs;

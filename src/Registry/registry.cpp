@@ -12,7 +12,13 @@ Registry::Registry() {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    if (!forPlayers.listen(QHostAddress::Any, 8080))
+    if (!forPlayers[1].listen(QHostAddress::Any, 5090))
+    {
+        printLine("Unable to listen to port 5090 (players)");
+    } else {
+        printLine("Starting to listen to port 5090");
+    }
+    if (!forPlayers[0].listen(QHostAddress::Any, 8080))
     {
         printLine("Unable to listen to port 8080 (players)");
     } else {
@@ -32,7 +38,8 @@ Registry::Registry() {
 
     registry_announcement = "";
 
-    connect(&forPlayers, SIGNAL(newConnection()), SLOT(incomingPlayer()));
+    connect(&forPlayers[0], SIGNAL(newConnection()), SLOT(incomingPlayer()));
+    connect(&forPlayers[1], SIGNAL(newConnection()), SLOT(incomingPlayer()));
     connect(&forServers, SIGNAL(newConnection()), SLOT(incomingServer()));
 
     AntiDos::obj()->init();
@@ -147,7 +154,7 @@ void Registry::incomingPlayer()
 {
     int id = freeid();
 
-    QTcpSocket * newconnection = forPlayers.nextPendingConnection();
+    QTcpSocket * newconnection = qobject_cast<QTcpServer*>(sender())->nextPendingConnection();
     QString ip = newconnection->peerAddress().toString();
 
     printLine(QString("Incoming player connection from IP %1 on slot %2").arg(ip).arg(id));
