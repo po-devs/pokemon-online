@@ -911,7 +911,12 @@ void Server::loggedIn(int id, const QString &name)
                     printLine(tr("%1: replaced by new connection.").arg(name));
                     sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
                 }
-                transferId(id, ids, true);
+                //When the client didn't intend to reconnect, we transfer only if the player was battling and there's a battle to save.
+                if (!player(ids)->battling()) {
+                    player(ids)->autoKick();
+                } else {
+                    transferId(id, ids, true);
+                }
                 return;
             } else {
                 // If the other player is disconnected, we remove him
