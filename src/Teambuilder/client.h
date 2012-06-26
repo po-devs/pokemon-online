@@ -1,4 +1,4 @@
-#ifndef CLIENT_H
+﻿#ifndef CLIENT_H
 #define CLIENT_H
 
 #include <QtGui>
@@ -393,6 +393,19 @@ private:
     QSet<OnlineClientPlugin*> plugins;
     PluginManager *pluginManager;
     QHash<OnlineClientPlugin*, QHash<QString, OnlineClientPlugin::Hook> > hooks;
+
+    template<class T1>
+    bool call(const QString &f, T1 arg1)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1)>(hooks[p][f])))(arg1);
+            }
+        }
+
+        return ret;
+    }
 
     template<class T1, class T2>
     bool call(const QString &f, T1 arg1, T2 arg2)
