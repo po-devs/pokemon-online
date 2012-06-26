@@ -93,6 +93,7 @@ public:
     bool isLoggedIn() const;
     bool battling() const;
     bool supportsZip() const;
+    bool hasKnowledgeOf(Player *other) const;
     void acquireKnowledgeOf(Player *other);
     void acquireRoughKnowledgeOf(Player *other);
     void addChannel(int chanid);
