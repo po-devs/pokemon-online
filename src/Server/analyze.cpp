@@ -1,3 +1,7 @@
+/**
+ * See network protocol here: http://wiki.pokemon-online.eu/view/Network_Protocol_v2
+*/
+
 #include "analyze.h"
 #include "network.h"
 #include "player.h"
