@@ -1064,6 +1064,9 @@ void Client::setPlayer(const UserInfo &ui)
 
 void Client::PMReceived(int id, QString pm)
 {
+    if (!call("beforePMReceived(int,QString)",id,pm)) {
+        return;
+    }
     if(pmReject) {
         relay().sendPM(id, "This player is rejecting incoming PMs.");
         return;
@@ -1083,6 +1086,7 @@ void Client::PMReceived(int id, QString pm)
 
     registerPermPlayer(id);
     mypms[id]->printLine(pm);
+    call("afterPMReceived(int,QString)",id,pm);
 }
 
 
@@ -2424,11 +2428,12 @@ void Client::printLine(int event, int playerid, const QString &line)
 
 void Client::printChannelMessage(const QString &mess, int channel, bool html)
 {
-    if (hasChannel(channel)) {
+    if (hasChannel(channel) && call("beforeChannelMessage(QString,int,bool)", mess, channel, html)) {
         if (html) {
             this->channel(channel)->printHtml(mess);
         } else {
             this->channel(channel)->printLine(mess);
         }
+        call("afterChannelMessage(QString,int,bool)", mess, channel, html);
     }
 }
