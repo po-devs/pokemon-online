@@ -298,9 +298,13 @@ PokeButton:checked {
 								 stop: 0.6 #417b9f, stop: 1.0 #154477);
  }
  
- PokeEdit #levelSettings {
-	 margin-top: 9px;
- }
+PokeEdit #levelSettings {
+    margin-top: 9px;
+}
+
+PokeEdit #speciesLabel {
+    font-size: 15px;
+}
 
 TeamMenu QLabel {
     color: white;
