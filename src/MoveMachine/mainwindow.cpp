@@ -674,7 +674,7 @@ void MainWindow::moveChosen(QListWidgetItem *it)
 
     moves.insert(movenum);
 
-    QListWidget *container = (QListWidget*)ui->pokeMoves->currentWidget()->children().front();
+    QListWidget *container = ui->pokeMoves->currentWidget()->findChild<QListWidget*>();
 
     addMoves(gen(), cat, container);
 }
