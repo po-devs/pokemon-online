@@ -688,11 +688,11 @@ void ScriptEngine::changePokeName(int id, int team, int pokeslot, const QString 
 bool ScriptEngine::hasLegalTeamForTier(int id, int team, const QString &tier)
 {
     if(!testPlayer("hasLegalTeamForTier", id) || !testTeamCount("hasLegalTeamForTier", id, team)) {
-        if (!TierMachine::obj()->exists(tier))
-            return false;
-        return TierMachine::obj()->isValid(myserver->player(id)->team(team),tier);
+        return false;
     }
-    return false;
+    if (!TierMachine::obj()->exists(tier))
+        return false;
+    return TierMachine::obj()->isValid(myserver->player(id)->team(team),tier);
 }
 
 int ScriptEngine::maxAuth(const QString &ip)
