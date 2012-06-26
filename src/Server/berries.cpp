@@ -7,17 +7,9 @@ typedef BattleSituation BS;
 
 struct BMStatusBerry : public BM
 {
-    /* In gen 2, status berries activate at end of turn */
     BMStatusBerry() {
-        functions["UponSetup"] = &ascheck;
-        functions["AfterStatusChange"] = &ascheck;
-        functions["EndTurn8.0"] = &asc;
-    }
-
-    static void ascheck(int s, int, BS &b) {
-        if (b.gen() > 2) {
-            asc(s, s, b);
-        }
+        functions["UponSetup"] = &asc;
+        functions["AfterStatusChange"] = &asc;
     }
 
     static void asc(int s, int, BS &b) {
