@@ -1408,6 +1408,7 @@ struct MMDoomDesire : public MM
                             break;
                         }
                     }
+                    tmove(b, doomuser).recoil = 0;
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
