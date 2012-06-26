@@ -914,7 +914,7 @@ void Server::loggedIn(int id, const QString &name)
                 }
                 //When the client didn't intend to reconnect, we transfer only if the player was battling and there's a battle to save.
                 if (!player(ids)->battling()) {
-                    player(ids)->autoKick();
+                    player(ids)->kick();
                 } else {
                     transferId(id, ids, true);
                     return;
