@@ -632,7 +632,7 @@ ChallengeDialog QCheckBox {
 }
 
 ChallengeDialog QLabel#avatar {
-	background: white;
+        /*background: white;*/
 }
 
 #PlayerInfo {
