@@ -14,10 +14,10 @@ FindBattleDialog::FindBattleDialog(QWidget *parent) :
     setWindowFlags(Qt::Window);
     setAttribute(Qt::WA_DeleteOnClose, true);
 
-    ui->rated->setChecked(s.value("FindBattle/ForceRated").toBool());
-    ui->sameTier->setChecked(s.value("FindBattle/SameTier").toBool());
-    ui->rangeOn->setChecked(s.value("FindBattle/RangeOn").toBool());
-    ui->range->setText(QString::number(s.value("FindBattle/Range").toInt()));
+    ui->rated->setChecked(s.value("FindBattle/ForceRated", false).toBool());
+    ui->sameTier->setChecked(s.value("FindBattle/SameTier", true).toBool());
+    ui->rangeOn->setChecked(s.value("FindBattle/RangeOn", true).toBool());
+    ui->range->setText(QString::number(s.value("FindBattle/Range", 200).toInt()));
 
     connect(ui->findbattle, SIGNAL(clicked()), SLOT(close()));
     connect(ui->cancel, SIGNAL(clicked()), SLOT(close()));
