@@ -1141,8 +1141,14 @@ void Server::recvPM(int src, int dest, const QString &mess)
 {
     if (playerLoggedIn(dest)) {
         Player *d = player(dest);
+        Player *s = player(src);
+        if(!d->hasKnowledgeOf(s)) {
+            if (!myengine->beforeNewPM(src)) {
+                return;
+            }
+        }
 
-        d->acquireRoughKnowledgeOf(player(src));
+        d->acquireRoughKnowledgeOf(s);
         d->relay().sendPM(src, mess);
     }
 }

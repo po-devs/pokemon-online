@@ -1166,6 +1166,11 @@ bool Player::isInSameChannel(const Player *other) const {
     return false;
 }
 
+bool Player::hasKnowledgeOf(Player *other) const
+{
+    return knowledge.contains(other);
+}
+
 void Player::acquireKnowledgeOf(Player *other) {
     if (!isInSameChannel(other)) {
         relay().sendPlayer(other->bundle());
