@@ -34,12 +34,15 @@ public:
     bool attemptToSpectateBattle(int src, int p1, int p2);
     void stepEvent();
 
+    void serverStartUp();
+    void serverShutDown();
+
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
-    void serverStartUp();
-    void serverShutDown();
+    /* When a PM window is opened the first by src time towards another player */
+    bool beforeNewPM(int src);
     void beforeLogOut(int src);
     void afterLogOut(int src);
     bool beforeLogIn(int src);
