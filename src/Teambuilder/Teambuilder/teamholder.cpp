@@ -179,8 +179,8 @@ void TeamHolder::save()
         }
     }
 
-    s.setValue("team_locations", locations);
-    QString path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(name()) + ".xml";
+    s.setValue("Teams/Locations", locations);
+    QString path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(name()) + ".xml";
     profile().saveToFile(path);
 }
 
@@ -189,14 +189,11 @@ void TeamHolder::load()
     QSettings s;
 
     m_teams.clear();
-    if (!s.contains("team_locations")) {
+    if (!s.contains("Teams/Locations")) {
         addTeam();
         setCurrent(0);
-        team().loadFromFile(s.value("team_location").toString());
     } else {
-        m_teams.clear();
-
-        QStringList l = s.value("team_locations").toStringList();
+        QStringList l = s.value("Teams/Locations").toStringList();
 
         for (int i = 0; i < l.length(); i++) {
             addTeam();
@@ -214,10 +211,10 @@ void TeamHolder::load()
     }
 
     if (!team().path().isEmpty()) {
-        s.setValue("team_folder", team().folder());
+        s.setValue("Teams/Folder", team().folder());
     }
 
-    profile().loadFromFile(s.value("current_profile").toString());
+    profile().loadFromFile(s.value("Profile/Current").toString());
 }
 
 void TeamHolder::addTeam()
@@ -229,7 +226,7 @@ void TeamHolder::addTeam()
     } else {
         QSettings s;
 
-        m_teams.back().setFolder(s.value("team_folder").toString());
+        m_teams.back().setFolder(s.value("Teams/Folder").toString());
     }
 }
 

@@ -42,7 +42,7 @@ void TeamMenu::setupUi()
     ui->pokemonTabs->setObjectName("pokemonTabs");
 
     QSettings s;
-    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    QStringList itemList = s.value("TeamBuilder/ShowAllItems").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
     ui->itemsModel = new QStringListModel(itemList, this);
 
     QStringList natures;
@@ -97,7 +97,7 @@ void TeamMenu::updateTeam()
 void TeamMenu::updateItemModel()
 {
     QSettings s;
-    QStringList itemList = s.value("show_all_items").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
+    QStringList itemList = s.value("TeamBuilder/ShowAllItems").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
     ui->itemsModel->setStringList(itemList);
 }
 

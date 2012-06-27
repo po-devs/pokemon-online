@@ -180,13 +180,13 @@ void TrainerMenu::on_teamFolderButton_clicked()
     QSettings s;
 
     QString folder = QFileDialog::getExistingDirectory(NULL, tr("Folder in which to save the team"), team().team().folder().isEmpty() ?
-                                                           s.value("team_folder").toString() : team().team().folder());
+                                                           s.value("Teams/Folder").toString() : team().team().folder());
 
     if (folder.length() > 0) {
         team().team().setFolder(folder);
 
         QSettings s;
-        s.setValue("team_folder", folder);
+        s.setValue("Teams/Folder", folder);
     }
 }
 
@@ -247,7 +247,7 @@ void TrainerMenu::loadProfileList()
 {
     QSettings s;
     ui->profileList->blockSignals(true);
-    ui->profileList->addItems(team().profile().getProfileList(s.value("profiles_path").toString()));
+    ui->profileList->addItems(team().profile().getProfileList(s.value("Profile/Path").toString()));
     ui->profileList->blockSignals(false);
 
     for (int i = 0; i < ui->profileList->count(); i++) {
@@ -264,8 +264,8 @@ void TrainerMenu::on_profileList_currentIndexChanged(int)
         return;
     }
     QSettings s;
-    QString path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
-    s.setValue("current_profile", path);
+    QString path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
+    s.setValue("Profile/Current", path);
     team().profile().loadFromFile(path);
     updateData();
 }
@@ -279,9 +279,9 @@ void TrainerMenu::on_saveProfile_clicked()
         return;
     }
     if(ui->profileList->findText(ui->name->text()) == -1) {
-        path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->name->text()) + ".xml";
+        path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(ui->name->text()) + ".xml";
     } else {
-        path = s.value("profiles_path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
+        path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
     }
     if(team().profile().saveToFile(path)) {
         // We need to re-do the check again since if name contains illegal char, why we would want to add it
@@ -290,7 +290,7 @@ void TrainerMenu::on_saveProfile_clicked()
             ui->profileList->addItem(ui->name->text());
             ui->profileList->setCurrentIndex(ui->profileList->findText(ui->name->text()));
         }
-        s.setValue("current_profile", path);
+        s.setValue("Profile/Current", path);
     }
 }
 
@@ -301,7 +301,7 @@ void TrainerMenu::on_deleteProfile_clicked()
         return;
     }
     QSettings s;
-    QString path = s.value("profiles_path").toString() + "/" + ui->profileList->currentText() + ".xml";
+    QString path = s.value("Profile/Path").toString() + "/" + ui->profileList->currentText() + ".xml";
     ui->profileList->removeItem(ui->profileList->currentIndex());
     team().profile().deleteProfile(path);
 }
