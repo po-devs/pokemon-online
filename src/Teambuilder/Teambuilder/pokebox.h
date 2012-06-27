@@ -43,15 +43,18 @@ signals:
 
 protected:
     void addGraphicsItem(int spot);
-    QPointF calculatePos(int spot, const QSize& itemSize = QSize(32,32));
+    QPointF calculatePos(int spot);
     int calculateSpot(const QPoint &graphicViewPos);
     void drawBackground(QPainter *painter, const QRectF &rect);
     PokeBoxItem* currentItem();
     void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
 
+    void updateSpots(int i, int j);
 private:
     QVector<PokeBoxItem*> m_Pokemons;
     QString m_Name;
@@ -59,6 +62,7 @@ private:
     int currentPokemon;
 
     QPixmap m_Empty, m_Occupied, m_Hover, m_Clicked;
+    QPoint oldMousePos;
 };
 
 #endif // POKEBOX_H
