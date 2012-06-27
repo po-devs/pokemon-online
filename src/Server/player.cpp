@@ -810,8 +810,8 @@ void Player::giveBanList()
 
     while (it.hasNext()) {
         it.next();
-        if (it.value().second != 0)
-            relay().notify(NetworkServ::GetTBanList, it.key(), it.value().first, it.value().second);
+        if (it.value().second == 0)
+            relay().notify(NetworkServ::GetBanList, it.key(), it.value().first);
     }
 }
 
