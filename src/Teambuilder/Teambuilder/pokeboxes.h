@@ -23,6 +23,7 @@ public:
     void changePoke(PokeTeam *poke);
     void updatePoke();
 
+    void updateTeam();
 public slots:
     void changeTeamPoke(int index);
 
