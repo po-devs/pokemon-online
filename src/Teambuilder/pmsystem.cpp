@@ -177,7 +177,7 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_send->setCheckable(true);
 
     QSettings s;
-    if(s.value("pms_logged").toBool()) {
+    if(s.value("PMs/logged").toBool()) {
         log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
         log->override = Log::OverrideYes;
         SaveLog = true;
@@ -210,7 +210,7 @@ void PMStruct::printLine(QString line, bool self)
         return;
 
     QSettings s;
-    bool tt = s.value("show_timestamps2").toBool();
+    bool tt = s.value("PMs/ShowTimeStamps").toBool();
     QString timeStr = "";
 
     if (tt)
@@ -230,7 +230,7 @@ void PMStruct::printLine(QString line, bool self)
 void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
 {
     QSettings s;
-    bool tt = s.value("show_timestamps2").toBool();
+    bool tt = s.value("PMs/ShowTimeStamps").toBool();
     QString timeStr = "";
 
     if (tt && timestamps)

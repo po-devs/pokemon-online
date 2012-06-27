@@ -240,7 +240,7 @@ void RegularBattleScene::animateHpBar()
     const int goal = data()->poke(spot).life();
 
     QSettings s;
-    if (!s.value("animate_hp_bar").toBool()) {
+    if (!s.value("Battle/AnimateHp").toBool()) {
         updateHp(spot);
         info.animatedSpot = -1;
         unpause();

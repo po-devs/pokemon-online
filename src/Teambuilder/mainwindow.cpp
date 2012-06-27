@@ -24,40 +24,39 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue(s, "Theme", "Themes/Classic/");
-    setDefaultValue(s, "battle_cry_volume", 100);
-    setDefaultValue(s, "battle_music_volume", 100);
+    setDefaultValue(s, "Themes/Current", "Themes/Classic/");
+    setDefaultValue(s, "BattleAudio/CryVolume", 100);
+    setDefaultValue(s, "BattleAudio/MusicVolume", 100);
+    setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
+    setDefaultValue(s, "BattleAudio/PlayMusic", false);
+    setDefaultValue(s, "BattleAudio/PlaySounds", false);
     setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
     setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
     setDefaultValue(s, "team_folder", QDir::homePath() + "/Documents");
     setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
-    setDefaultValue(s, "user_theme_directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
+    setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
     setDefaultValue(s, "team_location", "Team/trainer.tp");
     setDefaultValue(s, "team_folder", "Team");
-    setDefaultValue(s, "user_theme_directory", "Themes/");
+    setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
-    setDefaultValue(s, "battle_music_directory", "Music/Battle/");
-    setDefaultValue(s, "play_battle_music", false);
-    setDefaultValue(s, "play_battle_sounds", false);
-    setDefaultValue(s, "flash_when_enemy_moves", true);
-    setDefaultValue(s, "show_team", true);
+    setDefaultValue(s, "Battle/FlashOnMove", true);
+    setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "enable_ladder", true);
-    setDefaultValue(s, "show_player_events_idle", false);
-    setDefaultValue(s, "show_player_events_battle", false);
-    setDefaultValue(s, "show_player_events_channel", false);
-    setDefaultValue(s, "show_player_events_team", false);
-    setDefaultValue(s, "show_timestamps", true);
-    setDefaultValue(s, "show_timestamps2", true);
-    setDefaultValue(s, "pm_flashing", true);
-    setDefaultValue(s, "reject_incoming_pms", false);
-    setDefaultValue(s, "pms_tabbed", false);
-    setDefaultValue(s, "pms_logged", true);
-    setDefaultValue(s, "animate_hp_bar", true);
     setDefaultValue(s, "sort_players_by_tier", false);
     setDefaultValue(s, "sort_channels_by_name", false);
+    setDefaultValue(s, "show_timestamps", true);
+    setDefaultValue(s, "PlayerEvents/ShowIdle", false);
+    setDefaultValue(s, "PlayerEvents/ShowBattle", false);
+    setDefaultValue(s, "PlayerEvents/ShowChannel", false);
+    setDefaultValue(s, "PlayerEvents/ShowTeam", false);
+    setDefaultValue(s, "PMs/ShowTimeStamps", true);
+    setDefaultValue(s, "PMs/Flash", true);
+    setDefaultValue(s, "PMs/RejectIncoming", false);
+    setDefaultValue(s, "PMs/Tabbed", false);
+    setDefaultValue(s, "PMs/logged", true);
     setDefaultValue(s, "show_all_items", false);
     setDefaultValue(s, "animated_sprites", false);
 
@@ -108,7 +107,7 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     GenInfo::init("db/gens/");
-    Theme::init(s.value("Theme").toString());
+    Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
     QApplication::setStyle("plastique");
@@ -278,7 +277,7 @@ void MainEngine::changeTheme(const QString &theme)
     QString fullTheme = Theme::FindTheme(theme);
     qDebug() << fullTheme;
     if (!fullTheme.isNull()) {
-        settings.setValue("Theme", fullTheme);
+        settings.setValue("Themes/Current", fullTheme);
 
         Theme::Reload(fullTheme);
         loadStyleSheet();
@@ -383,7 +382,7 @@ void MainEngine::rebuildThemeMenu()
         }
     }
 
-    QString theme = s.value("Theme").toString().section('/', -2, -2);
+    QString theme = s.value("Themes/Current").toString().section('/', -2, -2);
 
     QActionGroup *ag = new QActionGroup(themeMenu);
     foreach(QString baseName, themes) {
@@ -401,10 +400,10 @@ void MainEngine::rebuildThemeMenu()
 void MainEngine::changeUserThemeFolder()
 {
     QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(displayer, tr("User Theme Directory"), s.value("user_theme_directory").toString());
+    QString dir = QFileDialog::getExistingDirectory(displayer, tr("User Theme Directory"), s.value("Themes/Directory").toString());
 
     if (dir != "") {
-        s.setValue("user_theme_directory", dir + "/");
+        s.setValue("Themes/Directory", dir + "/");
     }
     rebuildThemeMenu();
 }
