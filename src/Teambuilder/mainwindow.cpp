@@ -244,7 +244,7 @@ void MainEngine::launchCredits()
 
 void MainEngine::launchTeamBuilder()
 {
-    TeamBuilder *TB = new TeamBuilder(trainerTeam());
+    TeamBuilder *TB = new TeamBuilder(trainerTeam(), false);
     routine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));

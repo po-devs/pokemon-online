@@ -14,7 +14,7 @@ class TeamBuilder : public QStackedWidget, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
-    TeamBuilder(TeamHolder *team);
+    TeamBuilder(TeamHolder *team, bool loadSettings=true);
     ~TeamBuilder();
 
     virtual QSize defaultSize() const;

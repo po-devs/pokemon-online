@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>737</width>
-    <height>524</height>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -258,9 +258,6 @@
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <widget class="QPushButton" name="boxCenter">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="text">
             <string>Box Center</string>
            </property>

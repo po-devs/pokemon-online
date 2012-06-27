@@ -7,12 +7,14 @@
 #include "Teambuilder/pokeboxes.h"
 #include "Teambuilder/poketablemodel.h"
 
-TeamBuilder::TeamBuilder(TeamHolder *team) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
+TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
     addWidget(trainer = new TrainerMenu(team));
     pokemonModel = new PokeTableModel(team->team().gen(), this);
 
-    loadSettings(this, defaultSize());
+    if (load) {
+        loadSettings(this, defaultSize());
+    }
 
     connect(trainer, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
     connect(trainer, SIGNAL(done()), SIGNAL(done()));
