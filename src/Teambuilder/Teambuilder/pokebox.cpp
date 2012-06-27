@@ -21,6 +21,7 @@ PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemo
 
     m_Pokemons.resize(30);
 
+    setMouseTracking(true);
     setScene(new QGraphicsScene(this));
     setSceneRect(0, 0, width() - 10, 160);
 
@@ -144,13 +145,20 @@ void PokeBox::changeCurrent(const PokeTeam &poke)
     m_Pokemons[currentPokemon]->changePoke(new PokeTeam(poke));
 }
 
+void PokeBox::updateSpots(int i, int j)
+{
+    updateScene(QList<QRectF>() << QRectF(calculatePos(i), m_Occupied.size())
+                                << QRectF(calculatePos(j), m_Occupied.size()));
+}
+
 void PokeBox::changeCurrentSpot(int newSpot, bool f)
 {
     if(newSpot == currentPokemon && !f) {
         return;
     }
-    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPokemon, m_Occupied.size()), m_Occupied.size())
-                                << QRectF(calculatePos(newSpot, m_Occupied.size()), m_Occupied.size()));
+
+    updateSpots(currentPokemon, newSpot);
+
     currentPokemon = newSpot;
 }
 
@@ -227,11 +235,11 @@ void PokeBox::addGraphicsItem(int spot)
     m_Pokemons[spot]->setBox(this);
 }
 
-QPointF PokeBox::calculatePos(int spot, const QSize &itemSize)
+QPointF PokeBox::calculatePos(int spot)
 {
     QPointF m_Pos;
-    m_Pos.setX((spot % 10) * 64 + 24 - itemSize.width() / 2);
-    m_Pos.setY((spot / 10) * 50 + 24 - itemSize.height() / 2);
+    m_Pos.setX((spot % 10) * 64);
+    m_Pos.setY((spot / 10) * 50);
 
     return m_Pos;
 }
@@ -241,8 +249,8 @@ int PokeBox::calculateSpot(const QPoint &graphicViewPos)
     QPointF m_Pos = mapToScene(graphicViewPos);
     int x, y;
 
-    x = int((m_Pos.x() - 24) / 64 + 0.5);
-    y = int((m_Pos.y() - 24) / 50 + 0.5);
+    x = int((m_Pos.x()) / 64);
+    y = int((m_Pos.y()) / 50);
 
     if (x < 10 && y < 3 && x >= 0 && y >= 0) {
         return y * 10 + x;
@@ -258,7 +266,7 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
     for (int i = 0; i < m_Pokemons.size(); i++) {
         QPixmap type;
 
-        if (i == currentPokemon) {
+        if (i == currentPokemon || calculateSpot(oldMousePos) == i) {
             type = m_Hover;
         } else if (m_Pokemons[i]) {
             type = m_Occupied;
@@ -266,7 +274,7 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
             type = m_Empty;
         }
 
-        QPointF self_back_pos = calculatePos(i, type.size());
+        QPointF self_back_pos = calculatePos(i);
         QRectF intersection = rect.intersect(QRectF(self_back_pos, type.size()));
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
                                 type.width(), type.height());
@@ -303,6 +311,15 @@ void PokeBox::mousePressEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mousePressEvent(event);
+}
+
+void PokeBox::mouseMoveEvent(QMouseEvent *event)
+{
+    QPoint swap = oldMousePos;
+    oldMousePos = event->pos();
+    updateSpots(calculateSpot(swap), calculateSpot(oldMousePos));
+
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void PokeBox::dragEnterEvent(QDragEnterEvent *event)
