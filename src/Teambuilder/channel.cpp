@@ -432,7 +432,8 @@ void Channel::dealWithCommand(int command, DataStream *stream)
             printHtml(tr("<i>You are not in the channel anymore</i>"));
             emit quitChannel(this->id());
         } else {
-            if (client->hasLoggedOut(id) && client->hasPlayerInfo(id)) {
+            if (client->hasPlayer(id) && client->hasPlayerInfo(id)) {
+                client->call("onPlayerRemoved(int)", id);
                 client->removePlayer(id);
             }
         }

@@ -439,8 +439,10 @@ void Client::showChannelsContextMenu(const QPoint & point)
         foreach (QString str, eventSettings()) {
             if (s.contains(str)) {
                 found = true;
+                break;
             }
         }
+
         if (found) {
             action = show_events->addAction(tr("Custom settings"));
             action->setEnabled(false);
@@ -452,6 +454,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
             action = show_events->addAction(tr("Global settings"));
             action->setEnabled(false);
         }
+
         show_events->addSeparator();
 
         action = show_events->addAction(tr("Enable all events"));
@@ -2101,12 +2104,19 @@ Analyzer &Client::relay()
     return *myrelay;
 }
 
+QString Client::getAnnouncement()
+{
+    return announcement->document()->toPlainText();
+}
+
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 {
     _mid = p.id;
     mynick = p.name;
     myplayersinfo[p.id] = p;
     mynames[p.name] = p.id;
+
+    mylowernames[p.name.toLower()] = p.id;
 
     tiersReceived(tiers);
 }
@@ -2127,8 +2137,16 @@ void Client::playerLogout(int id)
     removePlayer(id);
 }
 
-bool Client::hasLoggedOut (int id)
+bool Client::hasPlayer (int id)
 {
+    if (pmedPlayers.contains(id)) {
+        return true;
+    }
+
+    if (mypms.contains(id)) {
+        return true;
+    }
+
     foreach (Channel *c, mychannels) {
         if (c->hasPlayer(id)) {
             return false;
@@ -2163,8 +2181,13 @@ void Client::removePlayer(int id)
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
-    if (mynames.value(name) == id)
+    if (mynames.value(name) == id) {
         mynames.remove(name);
+    }
+
+    if (mylowernames.value(name.toLower()) == id) {
+        mylowernames.remove(name.toLower());
+    }
 }
 
 void Client::fadeAway()
@@ -2218,10 +2241,17 @@ void Client::playerReceived(const PlayerInfo &p)
             mynick = p.name;
         }
     }
+
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
-        if (mynames.value(p.name) == p.id)
+        if (mynames.value(p.name) == p.id) {
             mynames.remove(player(p.id).name);
+        }
+
+        if (mylowernames.value(p.name.toLower()) == p.id) {
+            mylowernames.remove(player(p.id).name.toLower());
+        }
+
         myplayersinfo.remove(p.id);
     } else {
         newPlayer = true;
@@ -2247,13 +2277,14 @@ void Client::playerReceived(const PlayerInfo &p)
     }
 
     if (newPlayer) {
-        call("playerLogIn(int)", p.id);
+        call("onPlayerReceived(int)", p.id);
     }
 }
 
 void Client::changeName(int player, const QString &name)
 {
     mynames[name] = player;
+    mylowernames[name.toLower()] = player;
 
     if (mypms.contains(player)) {
         mypms[player]->changeName(name);
@@ -2277,8 +2308,10 @@ QColor Client::color(int id) const
 
 int Client::id(const QString &name) const
 {
-    if (mynames.contains(name)) {
-        return mynames[name];
+    QString nameToLower = name.toLower();
+
+    if (mylowernames.contains(nameToLower)) {
+        return mylowernames[nameToLower];
     } else {
         return -1;
     }
@@ -2347,6 +2380,7 @@ void Client::changeTeam()
         printLine(tr("You can't change teams while battling, so your nick was kept."));
         secondTeam.name() = mynick;
     }
+
     cancelFindBattle(false);
     waitingOnSecond = true;
     relay().sendTeam(secondTeam);
@@ -2405,16 +2439,20 @@ void Client::ignore(int id)
 
 void Client::ignore(int id, bool ign)
 {
-    if (ign)
+    if (ign) {
         ignore(id);
-    else
+    }
+    else {
         removeIgnore(id);
+    }
 }
 
 void Client::removeIgnore(int id)
 {
-    if (!myIgnored.contains(id))
+    if (!myIgnored.contains(id)) {
         return;
+    }
+
     printLine(id, tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
     updateState(id);
