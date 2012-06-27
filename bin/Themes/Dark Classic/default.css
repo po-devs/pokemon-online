@@ -298,10 +298,6 @@ PokeEdit #done:hover {
                                                                  stop: 0 #3e8aab, stop: 0.4 #448eb5,
                                                                  stop: 0.6 #417b9f, stop: 1.0 #154477);
 }
-
-PokeSelection #changeSpecies {
-    background: #3975b8;
-}
  
 PokeEdit #levelSettings {
     margin-top: 9px;
@@ -347,9 +343,14 @@ TeamMenu QCheckBox::indicator:pressed {
     image: url(Themes/Classic/Teambuilder/check-icons/check-pressed.png);
 }
 
-PokeSelection QPushButton {
-	color: white;
-	background: #459903;
+PokeSelection QPushButton#altForme {
+    color: white;
+    background: #459903;
+}
+
+PokeSelection QPushButton#changeSpecies {
+    color: white;
+    background: #3975b8;
 }
 
 PokeSelection #pokemonSprite {
