@@ -1,14 +1,21 @@
-#include "pokebox.h"
-#include "pokeboxitem.h"
 #include <QDomElement>
 #include <QFileInfo>
 #include <QUrl>
 #include <QMessageBox>
+#include <QMouseEvent>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include "pokebox.h"
+#include "pokeboxitem.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "theme.h"
+
+Q_DECLARE_METATYPE(PokeBox*)
 
 PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0)
 {
     m_Pokemons.resize(30);
+    m_Background = Theme::Sprite("smallbox");
 
     setScene(new QGraphicsScene(this));
     setSceneRect(0, 0, width() - 10, 160);
@@ -264,20 +271,80 @@ PokeBoxItem *PokeBox::currentItem()
 
 void PokeBox::mousePressEvent(QMouseEvent *event)
 {
-    (void) event;
+    /* To let other items than the first clicked have the mouse */
+    if (scene()->mouseGrabberItem())
+        scene()->mouseGrabberItem()->ungrabMouse();
+
+    int spot = calculateSpot(event->pos());
+
+    if (spot != -1) {
+        changeCurrentSpot(spot);
+
+        /* To grab the mouse even if the mouse is a few
+           pixels amiss */
+        if (m_Pokemons[spot] != NULL) {
+            m_Pokemons[spot]->grabMouse();
+            emit show(m_Pokemons[spot]->poke);
+        }
+    }
+
+    QGraphicsView::mousePressEvent(event);
 }
 
 void PokeBox::dragEnterEvent(QDragEnterEvent *event)
 {
-    (void) event;
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
 }
 
 void PokeBox::dropEvent(QDropEvent *event)
 {
-    (void) event;
+    int spot;
+
+    if ( (spot = calculateSpot(event->pos())) == -1 ) {
+        return;
+    }
+
+    const QMimeData *data = event->mimeData();
+
+    if(!data->property("Box").isNull() && !data->property("Item").isNull()) {
+        event->accept();
+
+        PokeBox *box = data->property("Box").value<PokeBox*>();
+        int item = data->property("Item").toInt();
+
+        if (box == this && item == spot)
+            return;
+
+        changeCurrentSpot(spot);
+
+        std::swap(m_Pokemons[spot], box->m_Pokemons[item]);
+
+        addGraphicsItem(spot);
+
+        if (box->m_Pokemons[item])
+            box->addGraphicsItem(item);
+
+        saveBox();
+        if (box != this)
+            box->saveBox();
+
+    } else if (!data->property("TeamSlot").isNull()) {
+        event->accept();
+
+        int slot = data->property("TeamSlot").toInt();
+        emit switchWithTeam(getNum(), currentPokemon, slot);
+    }
 }
 
 void PokeBox::dragMoveEvent(QDragMoveEvent *event)
 {
-    (void) event;
+    int spot = calculateSpot(event->pos());
+
+    if (spot != -1) {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+
+        changeCurrentSpot(spot);
+    }
 }
