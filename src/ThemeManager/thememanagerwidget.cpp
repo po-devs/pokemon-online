@@ -48,7 +48,7 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
     document.setContent(data);
     qDebug() << data;
     qDebug() << document.firstChild().nodeName();
-    QDomElement themeNode = document.firstChild().firstChildElement("theme");
+    QDomElement themeNode = document.firstChild().firstChildElement("Themes/Current");
     while (!themeNode.isNull()) {
 
         QString name = themeNode.attribute("name");
@@ -65,7 +65,7 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
             images << imageNode.firstChild().toText().data();
             imageNode = imageNode.nextSiblingElement("preview");
         }
-        themeNode = themeNode.nextSiblingElement("theme");
+        themeNode = themeNode.nextSiblingElement("Themes/Current");
 
         qDebug() << "before creating themewidget";
         ThemeWidget *widget = new ThemeWidget(name, author, version, downloadUrl, forumId, directDownload);
