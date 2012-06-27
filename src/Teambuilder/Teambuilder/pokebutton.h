@@ -20,6 +20,7 @@ public:
 
     void setNumber(int x);
     void setPokemon(PokeTeam &poke);
+    void updateAll();
 signals:
     void pokemonOrderChanged(int start, int end);
     void doubleClicked();

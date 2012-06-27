@@ -19,11 +19,21 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     loadBoxes();
 
     connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
+    connect(ui->storeButton, SIGNAL(clicked()), SLOT(storePokemon()));
+    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deletePokemon()));
+    connect(ui->withdrawButton, SIGNAL(clicked()), SLOT(withdrawPokemon()));
+    connect(ui->switchButton, SIGNAL(clicked()), SLOT(switchPokemon()));
 }
 
 PokeBoxes::~PokeBoxes()
 {
     delete ui;
+}
+
+void PokeBoxes::showPoke(PokeTeam *poke)
+{
+    changePoke(poke);
+    updatePoke();
 }
 
 void PokeBoxes::updateTeam()
@@ -102,13 +112,115 @@ void PokeBoxes::loadBoxes()
     }
 }
 
+void PokeBoxes::switchBoxTeam(int box, int boxslot, int teamslot)
+{
+    ui->boxes->setCurrentIndex(box);
+    currentBox()->changeCurrentSpot(boxslot);
+
+    ui->pokemonButtons->setCurrentSlot(teamslot);
+
+    try {
+        currentBox()->getCurrent();
+        if (team().team().poke(teamslot).num() == 0)
+            withdrawPokemon();
+        else
+            switchPokemon();
+    } catch (const QString&) {
+        try {
+            storePokemon();
+        } catch (const QString&) {
+
+        }
+    }
+}
+
 void PokeBoxes::addBox(const QString &name)
 {
     PokeBox *box = new PokeBox(boxes.size(), name);
     boxes.push_back(box);
     box->setParent(this);
     ui->boxes->addTab(box, box->getBoxName());
-    connect(box,SIGNAL(switchWithTeam(int,int,int)),SLOT(switchBoxTeam(int,int,int)));
+    connect(box, SIGNAL(switchWithTeam(int,int,int)), SLOT(switchBoxTeam(int,int,int)));
     connect(box, SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
+}
+
+void PokeBoxes::storePokemon()
+{
+    try {
+        currentBox()->addPokemonToBox(team().team().poke(currentPoke()));
+        currentBox()->saveBox();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
+}
+
+void PokeBoxes::withdrawPokemon()
+{
+    try {
+        setCurrentTeamPoke(currentBox()->getCurrent());
+        updateSpot(currentPoke());
+        emit teamChanged();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
+}
+
+void PokeBoxes::switchPokemon()
+{
+    try {
+        PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
+        currentBox()->changeCurrent(*currentPokeTeam());
+        currentBox()->saveBox();
+        setCurrentTeamPoke(p);
+
+        /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
+           Hence no memory leaks */
+        delete p;
+
+        updateSpot(currentPoke());
+        teamChanged();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
+}
+
+void PokeBoxes::deletePokemon()
+{
+    try {
+        currentBox()->deleteCurrent();
+        currentBox()->saveBox();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
+}
+
+int PokeBoxes::currentPoke() const
+{
+    return std::max(ui->pokemonButtons->currentSlot(), 0);
+}
+
+PokeBox *PokeBoxes::currentBox()
+{
+    return boxes[ui->boxes->currentIndex()];
+}
+
+void PokeBoxes::updateSpot(int i)
+{
+    ui->pokemonButtons->updatePoke(i);
+}
+
+void PokeBoxes::setCurrentTeamPoke(PokeTeam *p)
+{
+    *currentPokeTeam() = *p;
+
+    if (p->gen() != team().team().gen()) {
+        p->setGen(team().team().gen());
+        p->runCheck();
+    }
+}
+
+PokeTeam *PokeBoxes::currentPokeTeam()
+{
+    return &team().team().poke(currentPoke());
 }
 

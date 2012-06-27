@@ -27,6 +27,13 @@ public:
 public slots:
     void changeTeamPoke(int index);
 
+    void showPoke(PokeTeam *poke);
+    void switchBoxTeam(int,int,int);
+
+    void storePokemon();
+    void switchPokemon();
+    void deletePokemon();
+    void withdrawPokemon();
 private:
     PokeTeam *m_poke;
     TeamHolder *m_team;
@@ -39,6 +46,14 @@ private:
 
     void loadBoxes();
     void addBox(const QString &name);
+
+    PokeBox *currentBox();
+
+    void updateSpot(int i);
+    int currentPoke() const;
+
+    void setCurrentTeamPoke(PokeTeam *p);
+    PokeTeam *currentPokeTeam();
 };
 
 #endif // POKEBOXES_H

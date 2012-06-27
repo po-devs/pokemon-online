@@ -31,13 +31,19 @@ void PokeButton::setNumber(int x)
 
 void PokeButton::setPokemon(PokeTeam &poke)
 {
+    m_poke = &poke;
+    updateAll();
+}
+
+void PokeButton::updateAll()
+{
+    PokeTeam &poke = *m_poke;
+
     ui->level->setText(tr("Lv. %1").arg(poke.level()));
     ui->item->setPixmap(ItemInfo::Icon(poke.item()));
     ui->species->setText(PokemonInfo::Name(poke.num()));
     ui->nickname->setText(poke.nickname().isEmpty() ? ui->species->text() : poke.nickname());
     ui->sprite->setPixmap(poke.picture());
-
-    m_poke = &poke;
 }
 
 void PokeButton::mouseMoveEvent(QMouseEvent * event)
