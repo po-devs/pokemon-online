@@ -1161,6 +1161,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
 
     w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
 
     QMenu * menuActions = menuBar->addMenu(tr("&Options"));
     goaway = menuActions->addAction(tr("&Idle"));
