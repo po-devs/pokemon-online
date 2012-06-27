@@ -158,6 +158,10 @@ void PokeBattle::init(PokePersonal &poke)
         num().subnum = ItemInfo::DriveForme(item());
     }
 
+	if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
+        num().subnum = 0;
+	}
+
     Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
 
     if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Hihidaruma || ori == Pokemon::Meloia) {
