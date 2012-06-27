@@ -79,6 +79,8 @@ void ThemeManagerWidget::downloadFinished(QNetworkReply *reply)
 
 void ThemeManagerWidget::downloadProgress(qint64 done, qint64 total)
 {
+    (void) done;
+    (void) total;
     //double percent = total <= 0 ? 0 : static_cast<double>(done)/total;
     //ui->progressBar->setValue(percent);
 }
