@@ -68,7 +68,7 @@
     <widget class="QLineEdit" name="pokeEdit"/>
    </item>
    <item row="8" column="1" colspan="2">
-    <widget class="QPushButton" name="done">
+    <widget class="QPushButton" name="changeSpecies">
      <property name="text">
       <string>&amp;Change species</string>
      </property>

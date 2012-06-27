@@ -2,6 +2,7 @@
 #define ADVANCEDSEARCH_H
 
 #include <QWidget>
+#include "../PokemonInfo/pokemonstructs.h"
 
 namespace Ui {
 class AdvancedSearch;
@@ -15,9 +16,12 @@ public:
     explicit AdvancedSearch(QWidget *parent = 0);
     ~AdvancedSearch();
     
+    void setGen(const Pokemon::gen &gen);
     void setResultsWidth(int px);
 private:
     Ui::AdvancedSearch *ui;
+
+    Pokemon::gen gen;
 };
 
 #endif // ADVANCEDSEARCH_H

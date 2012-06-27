@@ -278,27 +278,35 @@ PokeButton:checked {
      border-top-color: #192a32; /* same as pane color */
  }
 
- QTabBar#pokemonTabs::tab:!selected {
+QTabBar#pokemonTabs::tab:!selected {
      margin-bottom: 4px; /* make non-selected tabs look smaller */
- }
+}
+
+PokeEdit #done, PokeSelection #changeSpecies {
+    background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
+        stop: 0 #016d9c, stop: 0.4 #005e90,
+        stop: 0.6 #045283, stop: 1.0 #0f3258);
+    border: 1px solid #76859a;
+    padding: 3px;
+    color: white;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+PokeEdit #done {
+    border-top-color: #025780;
+}
+
+PokeSelection #changeSpecies {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
  
- PokeEdit #done {
-	 background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
-								 stop: 0 #016d9c, stop: 0.4 #005e90,
-								 stop: 0.6 #045283, stop: 1.0 #0f3258);
-	 border: 1px solid #76859a;
-	 border-top-color: #025780;
-	 border-bottom-left-radius: 4px;
-     border-bottom-right-radius: 4px;
-	 padding: 3px;
-	 color: white;
- }
- 
- PokeEdit #done:hover {
+PokeEdit #done:hover, PokeSelection #changeSpecies:hover {
 	 background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
 								 stop: 0 #3e8aab, stop: 0.4 #448eb5,
 								 stop: 0.6 #417b9f, stop: 1.0 #154477);
- }
+}
  
 PokeEdit #levelSettings {
     margin-top: 9px;

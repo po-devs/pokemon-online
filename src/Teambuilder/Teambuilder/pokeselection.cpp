@@ -43,7 +43,7 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateTypes()));
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
-    connect(ui->done, SIGNAL(clicked()), SLOT(finish()));
+    connect(ui->changeSpecies, SIGNAL(clicked()), SLOT(finish()));
     connect(ui->pokemonFrame, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
 }
 
@@ -63,10 +63,11 @@ void PokeSelection::toggleSearchWindow()
 
         QGridLayout *gl = (QGridLayout*)layout();
         search = new AdvancedSearch(this);
+        search->setGen(getGen());
 
         ui->pokemonList->setFixedWidth(ui->pokemonList->width());
         ui->pokeEdit->setFixedWidth(ui->pokeEdit->width());
-        ui->done->setFixedWidth(ui->done->width());
+        ui->changeSpecies->setFixedWidth(ui->changeSpecies->width());
         search->setResultsWidth(ui->pokemonList->width()+10);
 
         if (newwidth) {
