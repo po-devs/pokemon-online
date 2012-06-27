@@ -51,12 +51,12 @@ ServerChoice #serverChoice {
 /*=============================================*\*/
 /*************** Platform dependent **************/
 
-PokeButton QLabel#nickname, PokeButton QLabel#number {
+PokeButton QLabel#nickname, PokeButton QLabel#number, PokeBoxes #nickNameLabel {
     color: white;
     font-size: 15px;
 }
 
-PokeButton QLabel#species {
+PokeButton QLabel#species, PokeBoxes QFrame#innerSelectedFrame QLabel#speciesLabel {
     font-size: 11px;
     color: #90979f;
 }
@@ -66,7 +66,7 @@ PokeButton QLabel#itemLabel {
     color: #dfe6ec;
 }
 
-PokeButton QLabel#level {
+PokeButton QLabel#level, PokeBoxes #levelLabel {
     font-size: 12px;
     color: white;
 }
@@ -75,7 +75,7 @@ PokeButton QLabel#level {
 
 PokeButton {
     min-width: 170px;
-    height: 90px;
+    height: 80px;
 }
 
 TrainerMenu QLabel#avatar {
@@ -273,6 +273,11 @@ PokeBoxes QFrame#innerSelectedFrame QLabel {
     color: white;
 }
 
+PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
+    width: 96px;
+    height: 96px;
+    border: 0;
+}
 
  /* Style the tab using the tab sub-control. Note that
      it reads QTabBar _not_ QTabWidget */

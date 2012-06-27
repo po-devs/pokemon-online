@@ -23,6 +23,12 @@ PokeBoxes::~PokeBoxes()
     delete ui;
 }
 
+void PokeBoxes::updateTeam()
+{
+    ui->pokemonButtons->setTeam(team().team());
+    updatePoke();
+}
+
 void PokeBoxes::changePoke(PokeTeam *poke)
 {
     this->m_poke = poke;
@@ -41,7 +47,7 @@ void PokeBoxes::updatePoke()
     } else {
         ui->type2Label->setVisible(false);
     }
-    ui->natureLabel->setText(QString("%1").arg(NatureInfo::Name(poke().nature())));
+    ui->nature->setText(QString("%1").arg(NatureInfo::Name(poke().nature())));
     ui->itemSprite->setPixmap(ItemInfo::Icon(poke().item()));
     ui->genderLabel->setPixmap(Theme::GenderPicture(poke().gender()));
     ui->levelLabel->setText(tr("Lv. %1").arg(poke().level()));
@@ -53,7 +59,7 @@ void PokeBoxes::updatePoke()
             movesInfo.append(QString("%1\n").arg(MoveInfo::Name(poke().move(movesCount))));
         }
     }
-    ui->movesLabel->setText(movesInfo);
+    ui->moves->setText(movesInfo);
 }
 
 void PokeBoxes::changeTeamPoke(int index)
