@@ -108,9 +108,8 @@ signals:
     /* From the control panel */
     void userInfoReceived(const UserInfo &ui);
     void userAliasReceived(const QString &s);
-    void banListReceived(const QString &n, const QString &ip);
+    void banListReceived(const QString &n, const QString &ip, const QDateTime &expires);
     void versionDiff(const ProtocolVersion&, int level);
-    void tbanListReceived(const QString &n, const QString &ip, const QDateTime &expires);
 
     void serverNameReceived(const QString &serverName);
     /* Ranking */
@@ -143,9 +142,7 @@ public slots:
     /* By the control panel */
     void getUserInfo(const QString &name);
     void getBanList();
-    void getTBanList();
     void CPUnban(const QString &name);
-    void CPTUnban(const QString &name);
     /* By the rankings window */
     void getRanking(const QString &tier, const QString &name);
     void getRanking(const QString &tier, int page);

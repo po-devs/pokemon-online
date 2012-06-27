@@ -61,7 +61,3 @@ CONFIG(po_registry) {
 macx:QMAKE_CC=echo
 
 message(Following modules will be build: $$SUBDIRS)
-
-SUBDIRS += \
-    src/ClientScripting \
-    src/SettingsPlugin
