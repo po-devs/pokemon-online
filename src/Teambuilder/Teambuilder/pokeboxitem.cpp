@@ -10,6 +10,8 @@ Q_DECLARE_METATYPE(PokeBox*)
 
 PokeBoxItem::PokeBoxItem(PokeTeam *poke, PokeBox *box) : poke(NULL), m_Box(box)
 {
+    setCursor(Qt::OpenHandCursor);
+
     changePoke(poke);
     setFlags(QGraphicsItem::ItemIsMovable);
 }
@@ -42,17 +44,31 @@ void PokeBoxItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+void PokeBoxItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    setCursor(QApplication::mouseButtons() == Qt::NoButton ? Qt::OpenHandCursor : Qt::ClosedHandCursor);
+
+    QGraphicsPixmapItem::hoverMoveEvent(event);
+}
+
 void PokeBoxItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!isUnderMouse()) {
         event->ignore();
         return;
     }
+    setCursor(Qt::ClosedHandCursor);
     if(event->button() == Qt::LeftButton)
     {
         startPos = event->pos();
     }
     QGraphicsPixmapItem::mousePressEvent(event);
+}
+
+void PokeBoxItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    setCursor(Qt::OpenHandCursor);
+    QGraphicsPixmapItem::mouseReleaseEvent(event);
 }
 
 void PokeBoxItem::startDrag()

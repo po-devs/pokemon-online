@@ -18,8 +18,12 @@ public:
     PokeTeam *poke;
 
 protected:
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
     void startDrag();
 
     QPointF startPos;
