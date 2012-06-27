@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>328</width>
+    <width>366</width>
     <height>335</height>
    </rect>
   </property>
@@ -180,13 +180,16 @@
       <item>
        <widget class="QSpinBox" name="time">
         <property name="suffix">
-         <string/>
+         <string> minutes</string>
         </property>
         <property name="minimum">
          <number>1</number>
         </property>
         <property name="maximum">
          <number>1440</number>
+        </property>
+        <property name="value">
+         <number>60</number>
         </property>
        </widget>
       </item>
@@ -267,118 +270,40 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="banList">
-   <attribute name="title">
-    <string>Ban list</string>
-   </attribute>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
-     <number>10</number>
-    </property>
-    <item row="0" column="0" colspan="3">
-     <widget class="QTableWidget" name="banTable">
-      <property name="locale">
-       <locale language="English" country="UnitedStates"/>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-      <property name="alternatingRowColors">
-       <bool>true</bool>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <property name="showGrid">
-       <bool>false</bool>
-      </property>
-      <property name="gridStyle">
-       <enum>Qt::SolidLine</enum>
-      </property>
-      <property name="sortingEnabled">
-       <bool>true</bool>
-      </property>
-      <property name="cornerButtonEnabled">
-       <bool>false</bool>
-      </property>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>true</bool>
-      </attribute>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="verticalHeaderDefaultSectionSize">
-       <number>19</number>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Username</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Banned IP</string>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="refresh">
-      <property name="text">
-       <string>Refresh</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="unban">
-      <property name="text">
-       <string>Unban</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="banIP">
-      <property name="text">
-       <string>Ban IP ...</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="tab">
+  <widget class="QWidget" name="bans">
    <property name="cursor">
     <cursorShape>ArrowCursor</cursorShape>
    </property>
    <attribute name="title">
-    <string>Temporary bans</string>
+    <string>Bans</string>
    </attribute>
    <layout class="QGridLayout" name="gridLayout_2">
     <property name="margin">
      <number>10</number>
     </property>
     <item row="3" column="2">
-     <widget class="QPushButton" name="tbanIP">
+     <widget class="QPushButton" name="banIP">
       <property name="text">
        <string>Ban IP ...</string>
       </property>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QPushButton" name="tunban">
+     <widget class="QPushButton" name="unban">
       <property name="text">
        <string>Unban</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QPushButton" name="trefresh">
+     <widget class="QPushButton" name="refresh">
       <property name="text">
        <string>Refresh</string>
       </property>
      </widget>
     </item>
     <item row="0" column="0" colspan="3">
-     <widget class="QTableWidget" name="tbanTable">
+     <widget class="QTableWidget" name="banTable">
       <property name="locale">
        <locale language="English" country="UnitedStates"/>
       </property>
@@ -401,22 +326,19 @@
        <enum>Qt::SolidLine</enum>
       </property>
       <property name="sortingEnabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="cornerButtonEnabled">
        <bool>false</bool>
       </property>
-      <attribute name="horizontalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
       <attribute name="horizontalHeaderCascadingSectionResizes">
-       <bool>true</bool>
+       <bool>false</bool>
       </attribute>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>100</number>
       </attribute>
       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-       <bool>false</bool>
+       <bool>true</bool>
       </attribute>
       <attribute name="horizontalHeaderStretchLastSection">
        <bool>true</bool>
@@ -425,9 +347,6 @@
        <bool>false</bool>
       </attribute>
       <attribute name="verticalHeaderCascadingSectionResizes">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="verticalHeaderHighlightSections">
        <bool>false</bool>
       </attribute>
       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
@@ -448,9 +367,19 @@
       </column>
       <column>
        <property name="text">
-        <string>Time left</string>
+        <string>Expires</string>
        </property>
       </column>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QDateTimeEdit" name="expireEdit"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="updateBantime">
+      <property name="text">
+       <string>Set Expire</string>
+      </property>
      </widget>
     </item>
    </layout>

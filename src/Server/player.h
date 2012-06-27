@@ -221,7 +221,6 @@ public slots:
     void CPTBan(const QString &name, int time);
     void receivePM(int, const QString&);
     void userInfoAsked(const QString& name);
-    void giveTBanList();
     void giveBanList();
     void awayChange(bool away);
     void spectatingRequested(int id);
@@ -233,7 +232,6 @@ public slots:
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
     void displayRankings();
-    void tUnban(QString name);
     void testAuthentificationLoaded();
     void ratingLoaded();
     void joinRequested(const QString &channel);

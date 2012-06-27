@@ -472,16 +472,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             emit tempBan(id, time);
             break;
         }
-    case CPTUnban:
-        {
-            QString name;
-            in >> name;
-            emit tunbanRequested(name);
-            break;
-        }
-    case GetTBanList:
-        emit tbanListRequested();
-        break;
     case JoinChannel:
         {
             QString name;

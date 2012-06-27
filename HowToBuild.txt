@@ -1,17 +1,18 @@
 ---- How to build ----
 
 Prerequisites:
-- Qt SDK, version 4.5 or newer. Currently, version 4.7.4 recommended.
+- Qt SDK, version 4.5 or newer. Currently, version 4.8.2 recommended.
   Get it from http://qt.nokia.com
-- C++ compiler which manages new C++0x stuff. GCC 4.4+ recommended.
+- C++ compiler which manages new C++0x stuff. GCC 4.5+ required.
 - libzip installation. Windows .dll is included, others can download
   from http://www.nih.at/libzip/
+- libqrencode is required for QRCodePlugin (po_clientplugins)
 - Optional: git for updating the source
 - Optional: Shaders plugin for QML for the new battle window.
             Homepage: https://qt.gitorious.org/qt-labs/qml1-shadersplugin
 
 Platform specific notes:
-- For Windows, mingw 4.4 that comes from Qt SDK download is good.
+- For Windows, mingw 4.5 that comes from Qt SDK download is good.
 - For Mac, you need to get newer GCC from Macports or some other place.
   Apple default Clang/GCC 4.2 does not support compiling PO.
   Furthermore, this requires you to heavily modify .pro files
