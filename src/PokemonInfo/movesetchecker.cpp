@@ -234,7 +234,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
 
                 int ab2;
-                AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+                AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);
                 if (ability == ab.ab(0)) {
                     ab2 = PokemonInfo::Abilities(pokemon, g).ab(0);
                 } else if (ability == ab.ab(1)) {
@@ -272,7 +272,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         }
 
         if (g == 5) {
-            AbilityGroup ab = PokemonInfo::Abilities(pokeid);
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);
 
             if (ability == ab.ab(2)) {
                 if (moves.size() == 1 && PokemonInfo::dreamWorldMoves(pokeid).contains(moves)) {

@@ -339,7 +339,7 @@ bool MoveSet::hasHiddenPower() const {
 
 void MoveSet::complete(Skeleton &m) const
 {
-    AbilityGroup ab = PokemonInfo::Abilities(num);
+    AbilityGroup ab = PokemonInfo::Abilities(num, gen);
     int tot = abilities[0] + abilities[1] + abilities[2];
 
     m.addDefaultValue("pokemon", PokemonInfo::Name(num));
@@ -863,7 +863,7 @@ int main(int argc, char *argv[])
             QMap<RawSet, MoveSet> leadsets;
             GlobalThings globals;
 
-            AbilityGroup defAb = PokemonInfo::Abilities(pokemon);
+            AbilityGroup defAb = PokemonInfo::Abilities(pokemon, GEN_MAX);
 
             foreach(Bcc b, buffers[pokemon]) {
                 char *buffer = b.buffer.data();
@@ -891,7 +891,7 @@ int main(int argc, char *argv[])
             abilities[defAb.ab(0)] = globals.abilities[0];
             int totAbilities = globals.abilities[0];
             for (int i = 1; i < 3; i++) {
-                if (globals.abilities[i] > 0 && PokemonInfo::Abilities(pokemon).ab(i) != 0) {
+                if (globals.abilities[i] > 0 && PokemonInfo::Abilities(pokemon, GEN_MAX).ab(i) != 0) {
                     abilities[defAb.ab(i)] = globals.abilities[i];
                     totAbilities += globals.abilities[i];
                 }

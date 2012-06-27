@@ -586,7 +586,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->moveList->setSelectionMode(QAbstractItemView::SingleSelection);
 
     /* Adding the move names */
-    for (int i = 0; i < MoveInfo::NumberOfMoves(); i++)
+    for (int i = 0; i < MoveInfo::NumberOfMoves(GEN_MAX); i++)
     {
         QIdListWidgetItem *it= new QIdListWidgetItem(i, MoveInfo::Name(i));
         ui->moveList->addItem(it);

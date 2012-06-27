@@ -35,7 +35,7 @@ void PokeBoxes::updatePoke()
     ui->pokemonSprite->setPixmap(poke().picture());
     ui->pokemonSprite->setFixedSize(poke().picture().size());
     ui->type1Label->setPixmap(Theme::TypePicture(PokemonInfo::Type1(poke().num(), poke().gen())));
-    if(PokemonInfo::Type2(poke().num()) != Type::Curse) {
+    if(PokemonInfo::Type2(poke().num(), poke().gen()) != Type::Curse) {
         ui->type2Label->setVisible(true);
         ui->type2Label->setPixmap(Theme::TypePicture(PokemonInfo::Type2(poke().num(), poke().gen())));
     } else {
