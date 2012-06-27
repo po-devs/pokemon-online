@@ -131,7 +131,6 @@ signals:
     void PMsent(int id, const QString);
     void getUserInfo(const QString &name);
     void banListRequested();
-    void tbanListRequested();
     /* Registry socket signals */
     void ipRefused();
     void nameTaken();
