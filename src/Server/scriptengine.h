@@ -1,4 +1,4 @@
-#ifndef SCRIPTENGINE_H
+﻿#ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
 #include <QtCore>
@@ -93,9 +93,14 @@ public:
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
     Q_INVOKABLE QScriptValue getColor(int id);
+
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+
+    Q_INVOKABLE QString getDescription();
+    Q_INVOKABLE void changeDescription(const QString &html);
+
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 
     // Q_INVOKABLE void setTimer(int ms); // Causes crash
@@ -300,22 +305,31 @@ public:
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
+
     Q_INVOKABLE void removeVal(const QString &key);
     Q_INVOKABLE void removeVal(const QString &file, const QString &key);
+
     Q_INVOKABLE QScriptValue getVal(const QString &key);
     Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
+
     // Returns an array of Script_* key names in config.
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
+
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+
     // Direct file access.
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
     Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+
     /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
     /* POST call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array);
+
     /* synchronous GET call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */

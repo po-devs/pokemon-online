@@ -1,4 +1,4 @@
-#include "client.h"
+﻿#include "client.h"
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
@@ -1980,22 +1980,24 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
-            ChallengeDialog *b;
-            if (c.desc() == ChallengeInfo::Refused) {
-                printLine(tr("%1 refused your challenge.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Busy) {
-                printLine(tr("%1 is busy.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Cancelled) {
-                printLine(tr("%1 cancelled their challenge.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
+            if (c.opponent() != ownId()) {
+                ChallengeDialog *b;
+                if (c.desc() == ChallengeInfo::Refused) {
+                    printLine(tr("%1 refused your challenge.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Busy) {
+                    printLine(tr("%1 is busy.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Cancelled) {
+                    printLine(tr("%1 cancelled their challenge.").arg(name(c)));
+                    while ( (b = getChallengeWindow(c)) ) {
+                        closeChallengeWindow(b);
+                    }
+                } else if (c.desc() == ChallengeInfo::InvalidTeam) {
+                    printLine(tr("%1 has an invalid team.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidGen) {
+                    printLine(tr("%1 has a different gen than yours.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidTier) {
+                    printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
                 }
-            } else if (c.desc() == ChallengeInfo::InvalidTeam) {
-                printLine(tr("%1 has an invalid team.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidGen) {
-                printLine(tr("%1 has a different gen than yours.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidTier) {
-                printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
             }
         }
     }
@@ -2125,6 +2127,17 @@ void Client::playerLogout(int id)
     removePlayer(id);
 }
 
+bool Client::hasLoggedOut (int id)
+{
+    foreach (Channel *c, mychannels) {
+        if (c->hasPlayer(id)) {
+            return false;
+        }
+
+    }
+
+    return true;
+}
 
 void Client::removePlayer(int id)
 {
@@ -2197,6 +2210,8 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    bool newPlayer = false;
+
     if (name(p.id) != p.name) {
         printLine(TeamEvent, p.id, tr("%1 changed names and is now known as %2.").arg(name(p.id), p.name));
         if (p.id == ownId()) {
@@ -2208,6 +2223,8 @@ void Client::playerReceived(const PlayerInfo &p)
         if (mynames.value(p.name) == p.id)
             mynames.remove(player(p.id).name);
         myplayersinfo.remove(p.id);
+    } else {
+        newPlayer = true;
     }
 
     myplayersinfo.insert(p.id, p);
@@ -2227,6 +2244,10 @@ void Client::playerReceived(const PlayerInfo &p)
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
+    }
+
+    if (newPlayer) {
+        call("playerLogIn(int)", p.id);
     }
 }
 
@@ -2329,6 +2350,11 @@ void Client::changeTeam()
     cancelFindBattle(false);
     waitingOnSecond = true;
     relay().sendTeam(secondTeam);
+}
+
+bool Client::hasPlayerInfo (int id)
+{
+    return myplayersinfo.contains(id);
 }
 
 PlayerInfo &Client::playerInfo(int id)

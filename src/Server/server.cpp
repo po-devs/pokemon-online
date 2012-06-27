@@ -1,4 +1,4 @@
-#include <QtNetwork>
+﻿#include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -356,7 +356,8 @@ int Server::addChannel(const QString &name, int playerid) {
     channels[chanid] = new Channel(chanName, chanid);
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
-    channelCache.outdate();zchannelCache.outdate();
+    channelCache.outdate();
+    zchannelCache.outdate();
 
     notifyGroup(All, NetworkServ::AddChannel, chanName, qint32(chanid));
 
@@ -666,7 +667,13 @@ void Server::changeScript(const QString &script)
     myengine->changeScript(script);
 }
 
-void Server::setAllAnnouncement(const QString &html) {
+QString Server::description()
+{
+    return this->serverDesc;
+}
+
+void Server::setAllAnnouncement(const QString &html)
+{
     notifyGroup(SupportsZip, makeZipPacket(NetworkServ::Announcement, html));
     notifyOppGroup(SupportsZip, NetworkServ::Announcement, html);
 }

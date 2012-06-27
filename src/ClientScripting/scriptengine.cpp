@@ -1,4 +1,4 @@
-#include "scriptengine.h"
+﻿#include "scriptengine.h"
 #include "scriptutils.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Teambuilder/clientinterface.h"
@@ -14,7 +14,10 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
 
+#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+#endif
+
     changeScript(ScriptUtils::loadScripts());
 
     QTimer *step_timer = new QTimer(this);
@@ -36,6 +39,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
+    ret.insert("playerLogIn(int)", (Hook)(&ScriptEngine::playerLogIn));
+    ret.insert("playerLogOut(int)", (Hook)(&ScriptEngine::playerLogOut));
 
     return ret;
 }
@@ -120,6 +125,18 @@ int ScriptEngine::afterPMReceived(int id, const QString &message)
     return true;
 }
 
+int ScriptEngine::playerLogIn(int id)
+{
+    makeEvent("playerLogIn", id);
+    return true;
+}
+
+int ScriptEngine::playerLogOut(int id)
+{
+    makeEvent("playerLogOut", id);
+    return true;
+}
+
 void ScriptEngine::stepEvent()
 {
     evaluate(myscript.property("step").call(myscript, QScriptValueList()));
@@ -140,6 +157,13 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
 void ScriptEngine::clearChat()
 {
     //emit clearTheChat();
+}
+
+bool ScriptEngine::validColor(const QString &color)
+{
+    QColor colorName = QColor(color);
+
+    return colorName.isValid() && colorName.lightness() <= 140 && colorName.green() <= 180;
 }
 
 void ScriptEngine::callLater(const QString &expr, int delay)
@@ -182,6 +206,18 @@ void ScriptEngine::timer()
 void ScriptEngine::timer_step()
 {
     this->stepEvent();
+}
+
+void ScriptEngine::quickCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) return;
+    if (func.isFunction()) {
+        QTimer *t = new QTimer(this);
+        timerEventsFunc[t] = func;
+        t->setSingleShot(true);
+        t->start(delay);
+        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    }
 }
 
 void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
@@ -281,6 +317,320 @@ int ScriptEngine::pokeType2(int id, int gen)
         warn("pokeType2", "generation is not supported.");
     }
     return result;
+}
+QScriptValue ScriptEngine::pokemon(int num)
+{
+    return PokemonInfo::Name(num);
+}
+
+QScriptValue ScriptEngine::pokeNum(const QString &name)
+{
+    QString copy = name;
+    bool up = true;
+    for (int i = 0; i < copy.length(); i++) {
+        if (up) {
+            copy[i] = copy[i].toUpper();
+            up = false;
+        } else {
+            if (copy[i] == '-' || copy[i] == ' ')
+                up = true;
+            copy[i] = copy[i].toLower();
+        }
+    }
+    Pokemon::uniqueId num = PokemonInfo::Number(copy);
+    if (num.toPokeRef() == Pokemon::NoPoke) {
+        return myengine.undefinedValue();
+    } else {
+        return num.toPokeRef();
+    }
+}
+
+QScriptValue ScriptEngine::move(int num)
+{
+    if (num < 0  || num >= MoveInfo::NumberOfMoves()) {
+        return myengine.undefinedValue();
+    } else {
+        return MoveInfo::Name(num);
+    }
+}
+
+QString convertToSerebiiName(const QString input)
+{
+    QString truename = input;
+    bool blankbefore = true;
+    for (int i = 0; i < truename.length(); i++) {
+        if (truename[i].isSpace()) {
+            blankbefore = true;
+        } else {
+            if (blankbefore) {
+                truename[i] = truename[i].toUpper();
+                blankbefore = false;
+            } else {
+                truename[i] = truename[i].toLower();
+            }
+        }
+    }
+    return truename;
+}
+
+QScriptValue ScriptEngine::moveNum(const QString &name)
+{
+    int num = MoveInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+QScriptValue ScriptEngine::item(int num)
+{
+    if (ItemInfo::Exists(num)) {
+        return ItemInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::itemNum(const QString &name)
+{
+    int num = ItemInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+
+QScriptValue ScriptEngine::nature(int num)
+{
+    if (num >= 0 && num < NatureInfo::NumberOfNatures()) {
+        return NatureInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::natureNum(const QString &name)
+{
+    return NatureInfo::Number(convertToSerebiiName(name));
+}
+
+QScriptValue ScriptEngine::ability(int num)
+{
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities()) {
+        return AbilityInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::abilityNum(const QString &ability)
+{
+    return AbilityInfo::Number(ability);
+}
+
+QScriptValue ScriptEngine::genderNum(QString genderName)
+{
+    if(genderName.toLower() == "genderless") {
+        return 0;
+    }
+    if(genderName.toLower() == "male") {
+        return 1;
+    }
+    if(genderName.toLower() == "female") {
+        return 2;
+    }
+    return "";
+}
+
+QString ScriptEngine::gender(int genderNum)
+{
+    switch(genderNum) {
+    case 0:
+        return "genderless";
+    case 1:
+        return "male";
+    case 2:
+        return "female";
+    }
+    return "";
+}
+
+int ScriptEngine::moveType(int moveNum, int gen)
+{
+    return MoveInfo::Type(moveNum, gen);
+}
+
+#ifndef PO_SCRIPT_SAFE_ONLY
+void ScriptEngine::saveSetting(const QString &key, const QVariant &val)
+{
+    QSettings s;
+
+    if (s.childKeys().contains(key, Qt::CaseInsensitive)) {
+        s.setValue(key, val);
+    }
+}
+
+QScriptValue ScriptEngine::getSetting(const QString &key)
+{
+    QSettings s;
+    return s.value(key).toString();
+}
+
+void ScriptEngine::saveVal(const QString &key, const QVariant &val)
+{
+    QSettings s;
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &key)
+{
+    QSettings s;
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &key)
+{
+    QSettings s;
+    s.remove("Script_"+key);
+}
+
+void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.setValue("Script_"+key, val);
+}
+
+QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    return s.value("Script_"+key).toString();
+}
+
+void ScriptEngine::removeVal(const QString &file, const QString &key)
+{
+    QSettings s(file, QSettings::IniFormat);
+    s.remove("Script_"+key);
+}
+
+QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QScriptValue ret = myengine.newArray(files.count());
+
+    for (int i = 0; i < files.size(); i++) {
+        ret.setProperty(i, files[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QScriptValue ret = myengine.newArray(dirs.size());
+
+    for (int i = 0; i < dirs.size(); i++) {
+        ret.setProperty(i, dirs[i]);
+    }
+
+    return ret;
+}
+
+void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::Append)) {
+        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.write(content.toUtf8());
+}
+
+void ScriptEngine::deleteFile(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    out.remove();
+}
+
+QScriptValue ScriptEngine::getValKeys()
+{
+    QSettings s;
+    QStringList list = s.childKeys();
+    QStringList result_data;
+
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getValKeys(const QString &file)
+{
+    QSettings s(file, QSettings::IniFormat);
+    QStringList list = s.childKeys();
+    QStringList result_data;
+
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
+    }
+
+    return QString::fromUtf8(out.readAll());
 }
 
 /**
@@ -412,9 +762,22 @@ void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
     sync_data = reply->readAll();
     sync_loop.exit();
 }
+#endif
 
 QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md4(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md4);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md5(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(text.toUtf8());
     return hash.result().toHex();
 }
