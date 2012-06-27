@@ -16,8 +16,7 @@ PokeBoxItem::PokeBoxItem(PokeTeam *poke, PokeBox *box) : poke(NULL), m_Box(box)
 
 void PokeBoxItem::changePoke(PokeTeam *poke)
 {
-    delete this->poke;
-    this->poke = poke;
+    delete this->poke, this->poke = poke;
     setPixmap(PokemonInfo::Icon(poke->num()));
 }
 
