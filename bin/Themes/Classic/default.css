@@ -77,7 +77,7 @@ PokeButton QLabel#level, PokeBoxes #levelLabel {
 
 PokeButton {
     min-width: 170px;
-    height: 80px;
+    height: 85px;
 }
 
 TrainerMenu QLabel#avatar {

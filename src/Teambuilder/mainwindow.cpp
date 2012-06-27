@@ -30,34 +30,32 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
     setDefaultValue(s, "BattleAudio/PlayMusic", false);
     setDefaultValue(s, "BattleAudio/PlaySounds", false);
-    setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
-    setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
+    setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
+    setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
-    setDefaultValue(s, "team_folder", QDir::homePath() + "/Documents");
-    setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
+    setDefaultValue(s, "Teams/Folder", QDir::homePath() + "/Documents");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "team_location", "Team/trainer.tp");
-    setDefaultValue(s, "team_folder", "Team");
+    setDefaultValue(s, "Teams/Folder", "Team");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
-    setDefaultValue(s, "enable_ladder", true);
-    setDefaultValue(s, "sort_players_by_tier", false);
-    setDefaultValue(s, "sort_channels_by_name", false);
-    setDefaultValue(s, "show_timestamps", true);
+    setDefaultValue(s, "Client/EnableLadder", true);
+    setDefaultValue(s, "Client/SortPlayersByTier", false);
+    setDefaultValue(s, "Client/SortChannelsByName", true);
+    setDefaultValue(s, "Client/ShowTimestamps", true);
     setDefaultValue(s, "PlayerEvents/ShowIdle", false);
     setDefaultValue(s, "PlayerEvents/ShowBattle", false);
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
     setDefaultValue(s, "PlayerEvents/ShowTeam", false);
-    setDefaultValue(s, "PMs/ShowTimeStamps", true);
+    setDefaultValue(s, "PMs/ShowTimestamps", true);
     setDefaultValue(s, "PMs/Flash", true);
     setDefaultValue(s, "PMs/RejectIncoming", false);
-    setDefaultValue(s, "PMs/Tabbed", false);
-    setDefaultValue(s, "PMs/logged", true);
-    setDefaultValue(s, "show_all_items", false);
+    setDefaultValue(s, "PMs/Tabbed", true);
+    setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
 
     if (s.value("use_socks5_proxy", false).toBool() == true) {
@@ -96,7 +94,7 @@ MainEngine::MainEngine() : displayer(0)
     }
 
     PokemonInfo::init("db/pokes/", FillMode::Client, modname);
-    MoveSetChecker::init("db/pokes/", s.value("enforce_min_levels").toBool());
+    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");

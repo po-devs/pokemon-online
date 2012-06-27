@@ -225,13 +225,13 @@ void ChallengeDialog::setChallenging(const QString &tier)
     challenging = true;
 
     QSettings s;
-    setMode(s.value("challenge_with_doubles").toInt());
+    setMode(s.value("Challenge/Mode").toInt());
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        clauses[i]->setChecked(s.value("clause_"+ChallengeInfo::clause(i)).toBool());
+        clauses[i]->setChecked(s.value("Challenge/Clause/"+ChallengeInfo::clause(i)).toBool());
     }
 
-    setTierChecked(tier.length() == 0 ? s.value("challenge/tier").toString() : tier);
+    setTierChecked(tier.length() == 0 ? s.value("Challenge/Tier").toString() : tier);
 }
 
 void ChallengeDialog::setTierChecked(const QString &tier)
@@ -249,12 +249,12 @@ void ChallengeDialog::saveData()
     QSettings s;
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        s.setValue("clause_"+ChallengeInfo::clause(i), clauses[i]->isChecked());
+        s.setValue("Challenge/Clause/"+ChallengeInfo::clause(i), clauses[i]->isChecked());
     }
 
-    s.setValue("challenge_with_doubles", ui->mode->currentIndex());
+    s.setValue("Challenge/Move", ui->mode->currentIndex());
 
     if (tierGroup->checkedButton()) {
-        s.setValue("challenge/tier", tierGroup->checkedButton()->property("tier").toString());
+        s.setValue("Challenge/Tier", tierGroup->checkedButton()->property("tier").toString());
     }
 }
