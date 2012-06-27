@@ -6,7 +6,7 @@
 
 TARGET = ThemeManager
 TEMPLATE = lib
-DESTDIR = ../../bin/Pokemon-Online.app/Contents/Resources/myplugins
+DESTDIR = ../../bin/myplugins
 
 QT += network xml
 
@@ -32,5 +32,5 @@ FORMS += \
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-macx:QMAKE_POST_LINK = (cd $$DESTDIR && ./fix.sh)
+macx:QMAKE_POST_LINK = (cd $$DESTDIR && ./fix_plugin_linking.py)
 
