@@ -55,7 +55,9 @@ SOURCES += main.cpp \
     Teambuilder/pokechoice.cpp \
     Teambuilder/pokeboxes.cpp \
     Teambuilder/basestatswidget.cpp \
-    Teambuilder/advancedsearch.cpp
+    Teambuilder/advancedsearch.cpp \
+    Teambuilder/pokebox.cpp \
+    Teambuilder/pokeboxitem.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -125,7 +127,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/pokeboxes.h \
     clientinterface.h \
     Teambuilder/basestatswidget.h \
-    Teambuilder/advancedsearch.h
+    Teambuilder/advancedsearch.h \
+    Teambuilder/pokebox.h \
+    Teambuilder/pokeboxitem.h
 
 LIBS += -L../../bin \
     -lpokemonlib \

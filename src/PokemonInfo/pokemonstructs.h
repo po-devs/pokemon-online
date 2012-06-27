@@ -150,6 +150,7 @@ class PokeGeneral
     PROPERTY(Pokemon::gen, gen);
 public:
     PokeGeneral();
+    virtual ~PokeGeneral(){}
 
     const AbilityGroup &abilities() const;
     int genderAvail() const;
