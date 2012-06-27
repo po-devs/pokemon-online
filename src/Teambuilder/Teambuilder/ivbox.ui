@@ -172,7 +172,10 @@
      <item>
       <widget class="QLabel" name="abilityTitle">
        <property name="text">
-        <string>Ability</string>
+        <string>&amp;Ability</string>
+       </property>
+       <property name="buddy">
+        <cstring>ability1</cstring>
        </property>
       </widget>
      </item>
@@ -220,7 +223,10 @@
      <item>
       <widget class="QLabel" name="hiddenPowerTitle">
        <property name="text">
-        <string>Hidden Power</string>
+        <string>&amp;Hidden Power</string>
+       </property>
+       <property name="buddy">
+        <cstring>hiddenPowerType</cstring>
        </property>
       </widget>
      </item>

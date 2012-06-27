@@ -837,6 +837,7 @@ void Server::ban(int id, int src) {
         printLine("The server banned " + name(id) + "!");
     else
         printLine(name(id) + " was banned by " + name(src));
+    SecurityManager::setBanExpireTime(name(id), 0);
     SecurityManager::ban(name(id));
     player(id)->kick();
 }

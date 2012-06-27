@@ -120,10 +120,10 @@ LogManager::LogManager()
     QSettings s;
 
     setDefaultValue(s, "logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
-    setDefaultValue(s, "save_battle_logs", false);
+    setDefaultValue(s, "Battle/SaveLogs", false);
 
     directory = s.value("logs_directory").toString();
-    flags |= (s.value("save_battle_logs").toBool() << (BattleLog|ReplayLog));
+    flags |= (s.value("Battle/SaveLogs").toBool() << (BattleLog|ReplayLog));
 
     QDir d;
     d.mkpath(getDirectory());
@@ -140,7 +140,7 @@ void LogManager::changeLogSaving(LogType type, bool save)
 {
     if (type == BattleLog) {
         QSettings s;
-        s.setValue("save_battle_logs", save);
+        s.setValue("Battle/SaveLogs", save);
     }
     flags &= (0XFFFF ^ (1 << type));
 }

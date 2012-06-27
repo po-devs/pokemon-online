@@ -2006,11 +2006,10 @@ struct MMMetronome : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
 
         while (1) {
-            int move = b.randint(MoveInfo::NumberOfMoves());
+            int move = b.randint(MoveInfo::NumberOfMoves(b.gen()));
 
             bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
-                                                      (b.gen() >= 5 && !forbidden.contains(move)))
-                    && MoveInfo::Exists(move, b.gen());
+                                                      (b.gen() >= 5 && !forbidden.contains(move)));
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);

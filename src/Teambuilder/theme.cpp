@@ -131,7 +131,7 @@ void Theme::Reload(const QString &dir)
 QStringList Theme::SearchPath()
 {
     QSettings settings;
-    QString userPath = settings.value("user_theme_directory").toString();
+    QString userPath = settings.value("Themes/Directory").toString();
     if (userPath.rightRef(1) != "/") {
         userPath += "/";
     }
