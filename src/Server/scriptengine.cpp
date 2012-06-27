@@ -1922,9 +1922,9 @@ void ScriptEngine::changeDescription(const QString &html)
     myserver->regDescChanged(html);
 }
 
-QScriptValue ScriptEngine::getDescription()
+QString ScriptEngine::getDescription()
 {
-    return QString::fromUtf8(myserver->description());
+    return myserver->description();
 }
 
 /* Causes crash...

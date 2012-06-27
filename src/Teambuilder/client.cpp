@@ -1980,22 +1980,24 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
-            ChallengeDialog *b;
-            if (c.desc() == ChallengeInfo::Refused) {
-                printLine(tr("%1 refused your challenge.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Busy) {
-                printLine(tr("%1 is busy.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Cancelled) {
-                printLine(tr("%1 cancelled their challenge.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
+            if (c.opponent() != ownId()) {
+                ChallengeDialog *b;
+                if (c.desc() == ChallengeInfo::Refused) {
+                    printLine(tr("%1 refused your challenge.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Busy) {
+                    printLine(tr("%1 is busy.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Cancelled) {
+                    printLine(tr("%1 cancelled their challenge.").arg(name(c)));
+                    while ( (b = getChallengeWindow(c)) ) {
+                        closeChallengeWindow(b);
+                    }
+                } else if (c.desc() == ChallengeInfo::InvalidTeam) {
+                    printLine(tr("%1 has an invalid team.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidGen) {
+                    printLine(tr("%1 has a different gen than yours.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidTier) {
+                    printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
                 }
-            } else if (c.desc() == ChallengeInfo::InvalidTeam) {
-                printLine(tr("%1 has an invalid team.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidGen) {
-                printLine(tr("%1 has a different gen than yours.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidTier) {
-                printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
             }
         }
     }
