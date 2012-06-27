@@ -288,6 +288,7 @@ void TrainerMenu::on_saveProfile_clicked()
         // before checking if it was successfully saved.
         if(ui->profileList->findText(ui->name->text()) == -1) {
             ui->profileList->addItem(ui->name->text());
+            ui->profileList->setCurrentIndex(ui->profileList->findText(ui->name->text()));
         }
         s.setValue("current_profile", path);
     }
