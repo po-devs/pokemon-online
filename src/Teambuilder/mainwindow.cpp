@@ -333,7 +333,7 @@ void MainEngine::quit()
 {
     /* Has to be deleted here, otherwise windows error if the libraries are not detached */
     delete pluginManager, pluginManager = NULL;
-    exit(0);
+    displayer->close();
 }
 
 void MainEngine::loadTeamDialog()
