@@ -53,3 +53,6 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+macx:QMAKE_POST_LINK = (cd $$DESTDIR && ./fix_plugin_linking.py)
+
