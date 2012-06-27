@@ -7,7 +7,7 @@ QToolTip {
 
 /* Main Widgets */
 
-TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client {
+TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
     background: #5c707e;
     border-radius: 20px;
 }
@@ -54,6 +54,7 @@ ServerChoice #serverChoice {
 /*************** Platform dependent **************/
 
 PokeButton QLabel#nickname, PokeButton QLabel#number {
+    color: white;
     font-size: 15px;
 }
 
@@ -69,6 +70,7 @@ PokeButton QLabel#itemLabel {
 
 PokeButton QLabel#level {
     font-size: 12px;
+    color: white;
 }
 
 /*=============================================*\*/
@@ -143,6 +145,15 @@ TrainerMenu QFrame#teambuilderFrame {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #355e7e, stop: 0.59 #325d7e,
                                 stop: 0.60 #374652, stop: 1.0 #344654);
+}
+
+PokeBoxes QFrame#teamFrame, PokeBoxes QFrame#selectedFrame {
+    margin-top: 5px;
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #355e7e, stop: 0.50 #325d7e,
+                                stop: 0.51 #374652, stop: 1.0 #344654);
 }
 
 TrainerMenu QPushButton {
@@ -239,7 +250,7 @@ TrainerMenu QToolButton#teamFolderButton:hover {
     background-image: url(Themes/Classic/Teambuilder/trainer/CfH.png);
 }
 
-TrainerMenu PokeButton {
+TrainerMenu PokeButton, PokeBoxes PokeButton {
     background: #111b25;
     border-color: #0a131c;
 }
@@ -247,6 +258,20 @@ TrainerMenu PokeButton {
 PokeButton:checked {
     background: #491e1e;
 }
+
+
+/**** box ***/
+
+PokeBoxes QFrame#innerSelectedFrame {
+    background: #111b25;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+PokeBoxes QFrame#innerSelectedFrame QLabel {
+    color: white;
+}
+
 
  /* Style the tab using the tab sub-control. Note that
      it reads QTabBar _not_ QTabWidget */
