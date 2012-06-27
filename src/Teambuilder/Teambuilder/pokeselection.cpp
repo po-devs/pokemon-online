@@ -80,6 +80,8 @@ void PokeSelection::toggleSearchWindow()
         if (newwidth == 0) {
             newwidth = width();
         }
+
+        connect(search, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     }
 }
 

@@ -598,7 +598,7 @@ struct RBYMetronome : public MM
         turn(b,s)["MetronomeCall"] = true;
 
         while (1) {
-            int move = b.randint(MoveInfo::NumberOfMoves());
+            int move = b.randint(MoveInfo::NumberOfMoves(b.gen()));
 
             bool correctMove = move != 0 && move != Move::Struggle && MoveInfo::Exists(move, b.gen()) && move != Move::Metronome;
 

@@ -18,6 +18,11 @@ public:
     
     void setGen(const Pokemon::gen &gen);
     void setResultsWidth(int px);
+public slots:
+    void search();
+    void emitNum(const QModelIndex&);
+signals:
+    void pokemonSelected(const Pokemon::uniqueId &id);
 private:
     Ui::AdvancedSearch *ui;
 
