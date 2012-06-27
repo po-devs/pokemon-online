@@ -6,10 +6,9 @@
 #include <QMessageBox>
 #include "../PokemonInfo/pokemonstructs.h"
 
-PokeBox::PokeBox(int boxNum, const QString &file)
+PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0)
 {
     m_Pokemons.resize(30);
-    m_Num = boxNum;
 
     setScene(new QGraphicsScene(this));
     setSceneRect(0, 0, width() - 10, 160);
@@ -25,7 +24,27 @@ void PokeBox::deleteBox()
 
 void PokeBox::saveBox()
 {
-    //TODO
+    QDomDocument doc;
+
+    QDomElement box = doc.createElement("Box");
+    box.setAttribute("Num", getNum());
+    box.setAttribute("Version", "1");
+    doc.appendChild(box);
+
+    for(int i = 0; i < m_Pokemons.size(); i++) {
+        if (m_Pokemons[i]) {
+            QDomElement slot = doc.createElement("Slot");
+            slot.setAttribute("Num", i);
+            box.appendChild(slot);
+            QDomElement pokemon = doc.createElement("Pokemon");
+            slot.appendChild(m_Pokemons[i]->poke->toXml(pokemon));
+        }
+    }
+
+    QFile out(QString(getBoxPath() + "/%1.box").arg(QString::fromUtf8(QUrl::toPercentEncoding(getBoxName()))));
+    out.open(QIODevice::WriteOnly);
+    QTextStream str(&out);
+    doc.save(str,4);
 }
 
 void PokeBox::loadBox()
@@ -46,34 +65,38 @@ void PokeBox::loadBox()
     QDomElement slot = box.firstChildElement("Slot");
     int version = box.attribute("Version", "0").toInt();
 
-    while (!slot.isNull()) {
-        if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > m_Pokemons.size())
-            break;
-        int num = slot.attribute("Num").toInt();
+    try {
+        while (!slot.isNull()) {
+            if (slot.attribute("Num").toInt() < 0 || slot.attribute("Num").toInt() > m_Pokemons.size())
+                break;
+            int num = slot.attribute("Num").toInt();
 
-        if (m_Pokemons[num] != NULL)
-            break;
+            if (m_Pokemons[num] != NULL)
+                break;
 
-        QDomElement poke = slot.firstChildElement("Pokemon");
+            QDomElement poke = slot.firstChildElement("Pokemon");
 
-        if (poke.isNull())
-            break;
+            if (poke.isNull())
+                break;
 
-        PokeTeam p;
-        p.loadFromXml(poke, version);
+            PokeTeam p;
+            p.loadFromXml(poke, version);
 
-        addPokemonToBox(p,num);
+            addPokemonToBox(p,num);
 
-        slot = slot.nextSiblingElement("Slot");
+            slot = slot.nextSiblingElement("Slot");
+        }
+    } catch(const QString &ex) {
+        qDebug() << "Error when loading box " << getBoxName() << ": " << ex;
     }
 }
 
 void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
 {
     if(isFull()) {
-        QMessageBox::critical(0, QString(tr("Box #%1 - %2").arg(getNum()).arg(getBoxName())), QObject::tr("Could not add the Pokemon to the box, the box is full."), QMessageBox::Ok);
-        return;
+        throw tr("Could not add the Pokemon to the box, the box is full.");
     }
+
     int spot = slot == -1 ? (m_Pokemons[currentPokemon] == NULL ? currentPokemon : freeSpot()) : slot;
     m_Pokemons[spot] = new PokeBoxItem(new PokeTeam(poke), this);
 
@@ -84,18 +107,18 @@ void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
 PokeTeam *PokeBox::getCurrent()
 {
     if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box #%1 - %2").arg(getNum()).arg(getBoxName())), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return NULL;
+        throw tr("There's no Pokemon there.");
     }
+
     return m_Pokemons[currentPokemon]->poke;
 }
 
 void PokeBox::deleteCurrent()
 {
     if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box #%1 - %2").arg(getNum()).arg(getBoxName())), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return;
+        throw tr("There's no Pokemon there.");
     }
+
     scene()->removeItem(m_Pokemons[currentPokemon]);
     delete m_Pokemons[currentPokemon];
     m_Pokemons[currentPokemon] = NULL;
@@ -104,9 +127,9 @@ void PokeBox::deleteCurrent()
 void PokeBox::changeCurrent(const PokeTeam &poke)
 {
     if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box #%1 - %2").arg(getNum()).arg(getBoxName())), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return;
+        throw tr("There's no Pokemon there.");
     }
+
     m_Pokemons[currentPokemon]->changePoke(new PokeTeam(poke));
 }
 

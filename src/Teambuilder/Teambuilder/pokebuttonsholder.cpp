@@ -19,7 +19,7 @@ PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
 
     pokemonButtons[0]->setChecked(true);
 
-    QButtonGroup *group = new QButtonGroup(this);
+    group = new QButtonGroup(this);
     QSignalMapper *mapper = new QSignalMapper(this);
 
     for (int i = 0; i < 6; i++) {
@@ -43,10 +43,20 @@ int PokeButtonsHolder::currentSlot() const
     return group->checkedId();
 }
 
+void PokeButtonsHolder::setCurrentSlot(int slot)
+{
+    group->button(slot)->setChecked(true);
+}
+
 void PokeButtonsHolder::setTeam(Team &team)
 {
     m_team = &team;
     for (int i = 0; i < 6; i++) {
         pokemonButtons[i]->setPokemon(team.poke(i));
     }
+}
+
+void PokeButtonsHolder::updatePoke(int slot)
+{
+    pokemonButtons[slot]->updateAll();
 }
