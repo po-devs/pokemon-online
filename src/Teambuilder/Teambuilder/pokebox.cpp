@@ -14,8 +14,12 @@ Q_DECLARE_METATYPE(PokeBox*)
 
 PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0)
 {
+    m_Empty = Theme::Sprite("boxempty");
+    m_Clicked = Theme::Sprite("boxclicked");
+    m_Occupied = Theme::Sprite("boxoccupied");
+    m_Hover = Theme::Sprite("boxhover");
+
     m_Pokemons.resize(30);
-    m_Background = Theme::Sprite("smallbox");
 
     setScene(new QGraphicsScene(this));
     setSceneRect(0, 0, width() - 10, 160);
@@ -108,7 +112,7 @@ void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
     m_Pokemons[spot] = new PokeBoxItem(new PokeTeam(poke), this);
 
     addGraphicsItem(spot);
-    changeCurrentSpot(spot);
+    changeCurrentSpot(spot, true);
 }
 
 PokeTeam *PokeBox::getCurrent()
@@ -140,13 +144,13 @@ void PokeBox::changeCurrent(const PokeTeam &poke)
     m_Pokemons[currentPokemon]->changePoke(new PokeTeam(poke));
 }
 
-void PokeBox::changeCurrentSpot(int newSpot)
+void PokeBox::changeCurrentSpot(int newSpot, bool f)
 {
-    if(newSpot == currentPokemon) {
+    if(newSpot == currentPokemon && !f) {
         return;
     }
-    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPokemon, m_Background.size()), m_Background.size())
-                                << QRectF(calculatePos(newSpot, m_Background.size()), m_Background.size()));
+    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPokemon, m_Occupied.size()), m_Occupied.size())
+                                << QRectF(calculatePos(newSpot, m_Occupied.size()), m_Occupied.size()));
     currentPokemon = newSpot;
 }
 
@@ -251,12 +255,22 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsView::drawBackground(painter, rect);
 
-    if(currentPokemon != -1) {
-        QPointF self_back_pos = calculatePos(currentPokemon, m_Background.size());
-        QRectF intersection = rect.intersect(QRectF(self_back_pos, m_Background.size()));
+    for (int i = 0; i < m_Pokemons.size(); i++) {
+        QPixmap type;
+
+        if (i == currentPokemon) {
+            type = m_Hover;
+        } else if (m_Pokemons[i]) {
+            type = m_Occupied;
+        } else {
+            type = m_Empty;
+        }
+
+        QPointF self_back_pos = calculatePos(i, type.size());
+        QRectF intersection = rect.intersect(QRectF(self_back_pos, type.size()));
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
-                                m_Background.width(), m_Background.height());
-        painter->drawPixmap(intersection, m_Background, srcRect);
+                                type.width(), type.height());
+        painter->drawPixmap(intersection, type, srcRect);
     }
 }
 

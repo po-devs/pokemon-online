@@ -22,7 +22,7 @@ public:
     PokeTeam *getCurrent();
     void deleteCurrent();
     void changeCurrent(const PokeTeam &poke);
-    void changeCurrentSpot(int newSpot);
+    void changeCurrentSpot(int newSpot, bool forceUpdate=false);
 
     QString getBoxName() const;
     void setName(const QString &name);
@@ -55,9 +55,10 @@ protected:
 private:
     QVector<PokeBoxItem*> m_Pokemons;
     QString m_Name;
-    QPixmap m_Background;
     int m_Num;
     int currentPokemon;
+
+    QPixmap m_Empty, m_Occupied, m_Hover, m_Clicked;
 };
 
 #endif // POKEBOX_H

@@ -707,3 +707,24 @@ void QDraggableLabel::mousePressEvent(QMouseEvent *)
 
     drag->exec();
 }
+
+QDragReactiveTabWidget::QDragReactiveTabWidget(QWidget *parent)
+    :QTabWidget(parent)
+{
+    setAcceptDrops(true);
+}
+
+void QDragReactiveTabWidget::dragEnterEvent(QDragEnterEvent * event)
+{
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+}
+
+void QDragReactiveTabWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+    int tab = tabBar()->tabAt(event->pos());
+
+    if (tab != -1) {
+        setCurrentIndex(tab);
+    }
+}
