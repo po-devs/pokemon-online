@@ -16,6 +16,8 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     changePoke(&team().team().poke(0));
     updatePoke();
 
+    loadBoxes();
+
     connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
 }
 
