@@ -488,9 +488,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
     case GetTBanList: {
         QString s, i;
-        QDateTime dt;
+        quint32 dt;
         in >> s >> i >> dt;
-        emit tbanListReceived(s,i,dt);
+        emit tbanListReceived(s,i,QDateTime::fromTime_t(dt));
         break;
         }
     case SpectateBattle: {
