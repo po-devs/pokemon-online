@@ -600,7 +600,7 @@ struct RBYMetronome : public MM
         while (1) {
             int move = b.randint(MoveInfo::NumberOfMoves(b.gen()));
 
-            bool correctMove = move != 0 && move != Move::Struggle && MoveInfo::Exists(move, b.gen()) && move != Move::Metronome;
+            bool correctMove = move != 0 && move != Move::Struggle && move != Move::Metronome;
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
