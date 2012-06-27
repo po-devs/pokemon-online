@@ -182,11 +182,6 @@ void Analyzer::CPUnban(const QString &name)
     notify(NetworkCli::CPUnban, name);
 }
 
-void Analyzer::CPTUnban(const QString &name)
-{
-    notify(NetworkCli::CPUnban, name);
-}
-
 void Analyzer::goAway(bool away)
 {
     notify(OptionsChange, Flags(away << 1));
@@ -475,8 +470,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
     case GetBanList: {
         QString s, i;
-        in >> s >> i;
-        emit banListReceived(s,i);
+        quint32 dt;
+        in >> s >> i >> dt;
+        emit banListReceived(s,i,QDateTime::fromTime_t(dt));
         break;
     }
     case OptionsChange: {
@@ -486,13 +482,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit awayChanged(id, f[1]);
         break;
     }
-    case GetTBanList: {
-        QString s, i;
-        quint32 dt;
-        in >> s >> i >> dt;
-        emit tbanListReceived(s,i,QDateTime::fromTime_t(dt));
-        break;
-        }
     case SpectateBattle: {
         BattleConfiguration conf;
         Flags f;
@@ -659,9 +648,4 @@ const Network & Analyzer::socket() const
 void Analyzer::getBanList()
 {
     notify(GetBanList);
-}
-
-void Analyzer::getTBanList()
-{
-    notify(GetTBanList);
 }

@@ -63,7 +63,6 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
-    connect(&relay(), SIGNAL(tbanListRequested()), SLOT(giveTBanList()));
     connect(&relay(), SIGNAL(banListRequested()), SLOT(giveBanList()));
     connect(&relay(), SIGNAL(awayChange(bool)), SLOT(awayChange(bool)));
     connect(&relay(), SIGNAL(battleSpectateRequested(int)), SLOT(spectatingRequested(int)));
@@ -650,9 +649,18 @@ void Player::CPBan(const QString &name)
 
 void Player::CPUnban(const QString &name)
 {
-    if (auth() < 2) {
+    if (auth() < 1) {
         return; //INVALID BEHAVIOR
     }
+
+    if (auth() < 2) {
+        int MAX_MOD_UNBAN = 1440*60; // One full day for mods
+        SecurityManager::Member member = SecurityManager::member(name);
+		if (member.ban_expire_time > MAX_MOD_UNBAN + QDateTime::currentDateTimeUtc().toTime_t()) {
+            return; //INVALID BEHAVIOR
+		}
+    }
+
     SecurityManager::unban(name);
     emit info(id(), "Unbanned player " + name + " with CP.");
 
@@ -810,24 +818,7 @@ void Player::giveBanList()
 
     while (it.hasNext()) {
         it.next();
-        if (it.value().second == 0)
-            relay().notify(NetworkServ::GetBanList, it.key(), it.value().first);
-    }
-}
-
-void Player::giveTBanList()
-{
-    if (auth() == 0) {
-        return; // INVALID BEHAVIOR
-    }
-    QHash<QString, std::pair<QString, int> > bannedMembers = SecurityManager::banList();
-
-    QHashIterator<QString, std::pair<QString, int> > it(bannedMembers);
-
-    while (it.hasNext()) {
-        it.next();
-        if (it.value().second != 0)
-            relay().notify(NetworkServ::GetTBanList, it.key(), it.value().first, it.value().second);
+        relay().notify(NetworkServ::GetBanList, it.key(), it.value().first, it.value().second);
     }
 }
 
@@ -1542,9 +1533,4 @@ void Player::sendMessage(const QString &mess, bool html)
 void Player::sendPlayers(const QVector<reference<PlayerInfo> > & bundles)
 {
     relay().notify(NetworkServ::PlayersList, Expander<decltype(bundles)>(bundles));
-}
-
-void Player::tUnban(QString name)
-{
-    SecurityManager::unban(name);
 }

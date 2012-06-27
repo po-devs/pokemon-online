@@ -1014,13 +1014,10 @@ void Client::controlPanel(int id)
     connect(&relay(), SIGNAL(userInfoReceived(UserInfo)), this, SLOT(setPlayer(UserInfo)));
     connect(&relay(), SIGNAL(userAliasReceived(QString)), myCP, SLOT(addAlias(QString)));
     connect(this, SIGNAL(userInfoReceived(UserInfo)), myCP, SLOT(setPlayer(UserInfo)));
-    connect(&relay(), SIGNAL(banListReceived(QString,QString)), myCP, SLOT(addNameToBanList(QString, QString)));
-    connect(&relay(), SIGNAL(tbanListReceived(QString,QString,QDateTime)), myCP, SLOT(addNameToTBanList(QString, QString,QDateTime)));
+    connect(&relay(), SIGNAL(banListReceived(QString,QString,QDateTime)), myCP, SLOT(addNameToBanList(QString, QString, QDateTime)));
     connect(myCP, SIGNAL(getBanList()), &relay(), SLOT(getBanList()));
-    connect(myCP, SIGNAL(getTBanList()), &relay(), SLOT(getTBanList()));
     connect(myCP, SIGNAL(banRequested(QString)), SLOT(requestBan(QString)));
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
-    connect(myCP, SIGNAL(tunbanRequested(QString)), &relay(), SLOT(CPTUnban(QString)));
     connect(myCP, SIGNAL(tempBanRequested(QString, int)),this, SLOT(requestTempBan(QString,int)));
     connect(myCP, SIGNAL(pmcp(QString)), SLOT(pmcp(QString)));
 }
