@@ -1605,23 +1605,7 @@ int MoveInfo::Number(const QString &movename)
 
 int MoveInfo::NumberOfMoves(Pokemon::gen g)
 {
-    int total = m_Names.size();
-
-    if (g == GEN_MAX) {
-        return total;
-    } else {
-        int hc;
-        if (g <= 1) {
-            hc = 166; //Struggle
-        } else if (g <= 2) {
-            hc = 252; //Beat Up
-        } else if (g <= 3) {
-            hc = 355; //Psycho Boost
-        } else if (g <= 4 || 1) {
-            hc = 468; //ShadowForce
-        }
-        return std::min(hc, total); //safety check, in case db was edited
-    }
+    return gen(g).power.size();
 }
 
 int MoveInfo::FlinchRate(int num, Pokemon::gen g)
