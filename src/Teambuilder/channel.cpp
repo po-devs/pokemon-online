@@ -1,4 +1,4 @@
-#include "channel.h"
+﻿#include "channel.h"
 #include "client.h"
 #include "poketextedit.h"
 #include "theme.h"
@@ -431,6 +431,10 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         if (id == ownId()) {
             printHtml(tr("<i>You are not in the channel anymore</i>"));
             emit quitChannel(this->id());
+        } else {
+            if (client->hasLoggedOut(id) && client->hasPlayerInfo(id)) {
+                client->removePlayer(id);
+            }
         }
     } else if (command == NetworkCli::ChannelBattle) {
         qint32 id, id1, id2;
@@ -438,7 +442,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         emit battleReceived2(id, id1, id2);
         battleReceived(id, id1, id2);
     } else{
-        printHtml(tr("<i>Unkown command received: %1. Maybe the client should be updated?</i>").arg(command));
+        printHtml(tr("<i>Unknown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
 }
 
