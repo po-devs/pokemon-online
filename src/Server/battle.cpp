@@ -2969,7 +2969,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 {
     PokeBattle &p  = this->poke(player,poke);
     p.num() = newforme;
-    p.ability() = PokemonInfo::Abilities(newforme).ab(0);
+    p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
 
     for (int i = 1; i < 6; i++)
         p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
@@ -2986,8 +2986,8 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         for (int i = 1; i < 6; i++)
             fpoke(slot).stats[i] = p.normalStat(i);
 
-        fpoke(slot).type1 = PokemonInfo::Type1(newforme);
-        fpoke(slot).type2 = PokemonInfo::Type2(newforme);
+        fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
+        fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
@@ -2998,8 +2998,8 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     PokeBattle &p  = this->poke(slot);
 
     fpoke(slot).id = newforme;
-    fpoke(slot).type1 = PokemonInfo::Type1(newforme);
-    fpoke(slot).type2 = PokemonInfo::Type2(newforme);
+    fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
+    fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
 
     for (int i = 1; i < 6; i++)
         fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);

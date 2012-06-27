@@ -1,6 +1,6 @@
 ---- How to build ----
 
-Prerequirities:
+Prerequisites:
 - Qt SDK, version 4.5 or newer. Currently, version 4.8.2 recommended.
   Get it from http://qt.nokia.com
 - C++ compiler which manages new C++0x stuff. GCC 4.5+ required.

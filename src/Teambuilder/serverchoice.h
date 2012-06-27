@@ -28,6 +28,9 @@ private slots:
     void regServerChosen(int row);
     void advServerChosen();
     void connectionError(int , const QString &mess);
+    void connected();
+    void anchorClicked(const QUrl&);
+    void timeout();
 private:
     Ui::ServerChoice *ui;
 
@@ -35,6 +38,8 @@ private:
 
     QHash<QString, QString> descriptionsPerIp;
     QList<QStringList> savedServers;
+
+    bool wasConnected;
 
     void addSavedServer(const QString &ip, const QString &name="");
 };

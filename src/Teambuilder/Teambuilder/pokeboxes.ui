@@ -19,9 +19,9 @@
   <property name="frameShadow">
    <enum>QFrame::Raised</enum>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_3" rowstretch="0,100">
    <item row="0" column="0">
-    <widget class="QFrame" name="frame_2">
+    <widget class="QFrame" name="selectedFrame">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -36,50 +36,58 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QFrame" name="frame_3">
+       <widget class="QFrame" name="innerSelectedFrame">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QGridLayout" name="gridLayout_2">
+        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,100">
          <item row="0" column="0" colspan="2">
-          <layout class="QGridLayout" name="gridLayout">
+          <layout class="QGridLayout" name="gridLayout" columnminimumwidth="0,130,0">
            <item row="0" column="0" rowspan="3">
-            <widget class="QFrame" name="frame_4">
+            <widget class="QFrame" name="pokemonFrame">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <widget class="QLabel" name="itemSprite">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>40</y>
-                <width>71</width>
-                <height>17</height>
-               </rect>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <property name="margin">
+               <number>0</number>
               </property>
-              <property name="text">
-               <string>Item Sprite</string>
+              <property name="spacing">
+               <number>0</number>
               </property>
-             </widget>
-             <widget class="QLabel" name="pokemonSprite">
-              <property name="geometry">
-               <rect>
-                <x>17</x>
-                <y>20</y>
-                <width>81</width>
-                <height>20</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Poke Avatar</string>
-              </property>
-             </widget>
+              <item row="0" column="0">
+               <widget class="QLabel" name="pokemonSprite">
+                <property name="text">
+                 <string>Poke Avatar</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="itemSprite">
+                <property name="text">
+                 <string>Item Sprite</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="0" column="1" colspan="2">
@@ -99,12 +107,18 @@
                <property name="text">
                 <string>Name</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="speciesLabel">
                <property name="text">
                 <string>Species</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
@@ -148,35 +162,41 @@
           </layout>
          </item>
          <item row="1" column="0">
-          <layout class="QFormLayout" name="formLayout">
+          <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,100">
            <item row="0" column="0">
-            <widget class="QLabel" name="label_8">
+            <widget class="QLabel" name="natureLabel">
              <property name="text">
               <string>Nature</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="natureLabel">
+            <widget class="QLabel" name="nature">
              <property name="text">
               <string>Timid</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_10">
+            <widget class="QLabel" name="movesLabel">
              <property name="text">
-              <string>Move</string>
+              <string>Moves</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLabel" name="movesLabel">
+            <widget class="QLabel" name="moves">
              <property name="text">
               <string>Move1
 Move2
 Move3
 Move4</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
              </property>
             </widget>
            </item>
@@ -221,7 +241,7 @@ Move4</string>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="teamFrame">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -238,18 +258,8 @@ Move4</string>
    <item row="1" column="0" colspan="2">
     <widget class="QTabWidget" name="boxes">
      <property name="currentIndex">
-      <number>0</number>
+      <number>-1</number>
      </property>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Tab 1</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Tab 2</string>
-      </attribute>
-     </widget>
     </widget>
    </item>
   </layout>

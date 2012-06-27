@@ -39,7 +39,8 @@ CONFIG(po_clientplugins) {
     SUBDIRS += src/ThemeManager \
                src/CSSChanger \
                src/QRCodePlugin \
-               src/ClientScripting
+               src/ClientScripting \
+               src/SettingsPlugin
 }
 
 CONFIG(po_server) {
@@ -60,6 +61,3 @@ CONFIG(po_registry) {
 macx:QMAKE_CC=echo
 
 message(Following modules will be build: $$SUBDIRS)
-
-SUBDIRS += \
-    src/ClientScripting

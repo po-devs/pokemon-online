@@ -23,7 +23,18 @@ Menu::Menu(QWidget *parent) :
 
 Menu::~Menu()
 {
-    writeSettings(this);
+    /* We only save size settings on the first main screen window. We don't save the size if the user went online and maximized their
+      online window for example.
+
+      An improvement of this could be saving the size only if the user resized the window during the widget's lifetime
+ */
+    static bool menuLoaded = false;
+
+    if (!menuLoaded) {
+        writeSettings(this);
+        menuLoaded = true;
+    }
+
     delete ui;
 }
 
@@ -36,6 +47,7 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
     w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
 
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");

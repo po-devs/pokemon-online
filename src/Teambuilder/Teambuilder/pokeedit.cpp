@@ -184,26 +184,16 @@ void PokeEdit::updateAll()
     ui->type2->setVisible(poke().type2() != Type::Curse);
     ui->genderSprite->setVisible(poke().gender() != Pokemon::Neutral);
 
-    if (poke().gen().num == 1) {
-        ui->happiness->hide();
-        ui->item->hide();
-        ui->itemLabel->hide();
-        ui->happinessLabel->hide();
-        ui->genderSprite->hide();
-    } else {
-        ui->happiness->show();
-        ui->item->show();
-        ui->itemLabel->show();
-        ui->happinessLabel->show();
-        ui->genderSprite->show();
-    }
-    if (poke().gen().num <= 2) {
-        ui->natureLabel->hide();
-        ui->nature->hide();
-    } else {
-        ui->natureLabel->show();
-        ui->nature->show();
-    }
+    bool g1 = poke().gen().num == 1;
+    ui->happiness->setVisible(!g1);
+    ui->item->setVisible(!g1);
+    ui->itemLabel->setVisible(!g1);
+    ui->happinessLabel->setVisible(!g1);
+    ui->genderSprite->setVisible(!g1);
+
+    bool g2 = poke().gen().num <= 2;
+    ui->natureLabel->setVisible(!g2);
+    ui->nature->setVisible(!g2);
 }
 
 void PokeEdit::setPoke(PokeTeam *poke)

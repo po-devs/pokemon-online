@@ -5,17 +5,21 @@
 #include "theme.h"
 
 ServerChoice::ServerChoice(const QString &nick) :
-    ui(new Ui::ServerChoice)
+    ui(new Ui::ServerChoice), wasConnected(false)
 {
     ui->setupUi(this);
     ui->announcement->hide();
 
+    connect(ui->description, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
+
     QSettings settings;
 
     registry_connection = new Analyzer(true);
+    connect(registry_connection, SIGNAL(connected()), SLOT(connected()));
+
     registry_connection->connectTo(
-            settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
-            settings.value("ServerChoice/RegistryPort", 8080).toUInt()
+        settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
+        settings.value("ServerChoice/RegistryPort", 8080).toUInt()
     );
     registry_connection->setParent(this);
 
@@ -63,6 +67,9 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
     connect(ui->advancedConnection, SIGNAL(clicked()), SLOT(advServerChosen()));
+
+    QTimer *t = new QTimer(this);
+    t->singleShot(5000, this, SLOT(timeout()));
 }
 
 ServerChoice::~ServerChoice()
@@ -70,6 +77,33 @@ ServerChoice::~ServerChoice()
     saveSettings();
     writeSettings(this);
     delete ui;
+}
+
+void ServerChoice::anchorClicked(const QUrl &url)
+{
+    if (wasConnected) {
+        return;
+    }
+    if (url.scheme() == "po") {
+        if (url.path() == "change-port") {
+            ui->description->setText(tr("Connecting to registry...")+"\n");
+
+            QSettings settings;
+            QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
+            int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
+            int newport = port == 8080 ? 5090 : 8080;
+
+            registry_connection->connectTo(host, newport);
+
+            settings.setValue("ServerChoice/RegistryPort", newport);
+        }
+    }
+}
+
+void ServerChoice::connected()
+{
+    wasConnected = true;
+    ui->description->setText(tr("Connected to the registry!"));
 }
 
 void ServerChoice::regServerChosen(int row)
@@ -176,7 +210,20 @@ void ServerChoice::connectionError(int, const QString &mess)
 {
     ui->serverList->setCurrentCell(-1,-1);
     ui->description->clear();
-    ui->description->insertPlainText(tr("Disconnected from the registry: %1").arg(mess));
+    ui->description->insertPlainText(tr("Disconnected from the registry: %1").arg(mess) + "\n");
+
+    if (!wasConnected) {
+        ui->description->insertHtml(tr("You can try a different connection by <a href='po:change-port'>changing ports</a>."));
+    }
+}
+
+void ServerChoice::timeout()
+{
+    if (wasConnected) {
+        return;
+    }
+
+    ui->description->insertHtml(tr("Connection is taking longer than expected... You can try a <a href='po:change-port'>different connection</a>."));
 }
 
 void ServerChoice::saveSettings() {

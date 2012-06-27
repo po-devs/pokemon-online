@@ -215,6 +215,9 @@ void Analyzer::getRanking(const QString &tier, int page)
 
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
+    if (mysocket.state() != QAbstractSocket::UnconnectedState) {
+        mysocket.close();
+    }
     mysocket.connectToHost(host, port);
 }
 

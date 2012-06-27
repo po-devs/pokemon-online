@@ -107,9 +107,9 @@ void IvBox::updateAll()
         ui->hiddenPowerTitle->setVisible(true);
         ui->hiddenPowerType->setVisible(true);
 
-        ui->spdefivdesc->show();
-        ui->spdefivlabel->show();
-        ui->spdefivspin->show();
+        ui->spdefivdesc->setVisible(true);
+        ui->spdefivlabel->setVisible(true);
+        ui->spdefivspin->setVisible(true);
         ui->spattivdesc->setText(tr("Sp. Atk: "));
     }
 }

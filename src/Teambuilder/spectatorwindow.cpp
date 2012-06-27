@@ -26,7 +26,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
     data2->team(1).setName(conf.getName(1));
 
     QSettings s;
-    bool usePokemonNames = s.value("use_pokemon_names").toBool();
+    bool usePokemonNames = s.value("Battle/NoNicknames").toBool();
 
     log = new BattleClientLog(data, Theme::getBattleTheme(), !usePokemonNames);
     input = new BattleInput(&conf);
@@ -37,7 +37,7 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
     /* All the previous message which didn't get a chance to be emitted */
     log->emitAll();
 
-    bool qml = !(s.value("old_battle_window", true).toBool() || conf.mode != ChallengeInfo::Singles || qmlcount > 0);
+    bool qml = !(s.value("Battle/OldWindow", true).toBool() || conf.mode != ChallengeInfo::Singles || qmlcount > 0);
 
     if (qml) {
         BattleScene *scene = new BattleScene(data2);

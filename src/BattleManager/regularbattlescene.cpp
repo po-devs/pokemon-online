@@ -240,7 +240,7 @@ void RegularBattleScene::animateHpBar()
     const int goal = data()->poke(spot).life();
 
     QSettings s;
-    if (!s.value("animate_hp_bar").toBool()) {
+    if (!s.value("Battle/AnimateHp").toBool()) {
         updateHp(spot);
         info.animatedSpot = -1;
         unpause();
@@ -614,7 +614,7 @@ void RegularBattleScene::updateToolTip(int spot)
 
     tooltip += nick(spot) + "\n";
     tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), data()->gen()));
-    int type2 = PokemonInfo::Type2(poke.num());
+    int type2 = PokemonInfo::Type2(poke.num(), data()->gen());
     if (type2 != Pokemon::Curse) {
         tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num(), data()->gen()));
     }

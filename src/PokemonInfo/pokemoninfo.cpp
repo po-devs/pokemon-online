@@ -1506,7 +1506,7 @@ void MoveInfo::loadMoveMessages()
 void MoveInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
-    if (NumberOfMoves() != 0)
+    if (NumberOfMoves(GEN_MAX) != 0)
         return;
 
     m_Directory = dir;
@@ -1603,9 +1603,9 @@ int MoveInfo::Number(const QString &movename)
     return m_LowerCaseMoves.value(movename.toLower());
 }
 
-int MoveInfo::NumberOfMoves()
+int MoveInfo::NumberOfMoves(Pokemon::gen g)
 {
-    return m_Names.size();
+    return gen(g).power.size();
 }
 
 int MoveInfo::FlinchRate(int num, Pokemon::gen g)
@@ -2397,7 +2397,7 @@ QString AbilityInfo::path(const QString &filename)
 
 void AbilityInfo::init(const QString &dir)
 {
-    if (NumberOfAbilities() != 0)
+    if (NumberOfAbilities(GEN_MAX) != 0)
         return;
 
     m_Directory = dir;
@@ -2459,20 +2459,34 @@ int AbilityInfo::ConvertFromOldAbility(int oldability)
 
 int AbilityInfo::Number(const QString &pokename)
 {
-    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (NumberOfAbilities());
+    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (m_Names.size());
 }
 
 QString AbilityInfo::Name(int abnum)
 {
-    if (abnum >=0 && abnum < NumberOfAbilities())
+    if (abnum >=0 && abnum < NumberOfAbilities(GEN_MAX))
 	return m_Names[abnum];
     else
 	return 0;
 }
 
-int AbilityInfo::NumberOfAbilities()
+int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
 {
-    return m_Names.size();
+    int total = m_Names.size();
+
+    if (g == GEN_MAX) {
+        return total;
+    } else {
+        int hc;
+        if (g <= 2) {
+            hc = 1; //No Ability
+        } else if (g <= 3) {
+            hc = 77; //Air lock
+        } else if (g <= 4 || 1) {
+            hc = 125; //Bad dreams
+        }
+        return std::min(hc, total); //safety check, in case db was edited
+    }
 }
 
 

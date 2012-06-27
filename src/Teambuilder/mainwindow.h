@@ -21,6 +21,7 @@ public:
     ~MainEngine();
 
     void addThemeMenu(QMenuBar *m);
+    void addStyleMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
 public slots:
     void launchMenu(bool first = false);
@@ -37,6 +38,7 @@ public slots:
     void loadTeamDialog();
     void loadReplayDialog();
     void loadStyleSheet();
+    void changeStyle();
     void showReplay(QString);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */

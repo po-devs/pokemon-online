@@ -32,7 +32,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     myteambuilder = NULL;
 
     /* different events */
-    eventlist << "show_player_events_idle" << "show_player_events_battle" << "show_player_events_channel" << "show_player_events_team";
+    eventlist << "PlayerEvents/ShowIdle" << "PlayerEvents/ShowBattle" << "PlayerEvents/ShowChannel" << "PlayerEvents/ShowTeam";
 
     QHBoxLayout *h = new QHBoxLayout(this);
     QSplitter *s = new QSplitter(Qt::Horizontal);
@@ -136,7 +136,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     channelPlayers(-1);
 
     /* PM System */
-    pmSystem = new PMSystem(globals.value("pms_tabbed").toBool()); // We leave it here for future use. :)
+    pmSystem = new PMSystem(globals.value("PMs/Tabbed").toBool()); // We leave it here for future use. :)
     connect(this, SIGNAL(destroyed()), pmSystem, SLOT(deleteLater()));
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
     connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
@@ -144,16 +144,16 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
      */
-    if (globals.value("user_list_at_right").toBool()) {
+    if (globals.value("Client/UserListAtRight").toBool()) {
         s->addWidget(mytab);
     }
-    sortCBN = globals.value("sort_channels_by_name").toBool();
+    sortCBN = globals.value("Client/SortChannelsByName").toBool();
     if(sortCBN) {
         sortChannels();
     }
-    pmFlashing = globals.value("pm_flashing").toBool();
-    pmsTabbed = globals.value("pms_tabbed").toBool();
-    pmReject = globals.value("reject_incoming_pms").toBool();
+    pmFlashing = globals.value("PMs/Flash").toBool();
+    pmsTabbed = globals.value("PMs/Tabbed").toBool();
+    pmReject = globals.value("PMs/RejectIncoming").toBool();
 
     pluginManager->launchClient(this);
     foreach(OnlineClientPlugin *pl, plugins) {
@@ -330,7 +330,7 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
 
 void Client::sortChannelsToggle(bool newvalue)
 {
-    globals.setValue("sort_channels_by_name", newvalue);
+    globals.setValue("Client/SortChannelsByName", newvalue);
 
     sortCBN = newvalue;
     sortChannels();
@@ -468,8 +468,8 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         action = show_events->addAction(tr("Enable idle events"));
         action->setCheckable(true);
-        action->setChecked(s.value("show_player_events_idle",
-                                   globals.value("show_player_events_idle").toBool()).toBool());
+        action->setChecked(s.value("PlayerEvents/ShowIdle",
+                                   globals.value("PlayerEvents/ShowIdle").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -477,8 +477,8 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         action = show_events->addAction(tr("Enable battle events"));
         action->setCheckable(true);
-        action->setChecked(s.value("show_player_events_battle",
-                                   globals.value("show_player_events_battle").toBool()).toBool());
+        action->setChecked(s.value("PlayerEvents/ShowBattle",
+                                   globals.value("PlayerEvents/ShowBattle").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -486,8 +486,8 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         action = show_events->addAction(tr("Enable channel events"));
         action->setCheckable(true);
-        action->setChecked(s.value("show_player_events_channel",
-                                   globals.value("show_player_events_channel").toBool()).toBool());
+        action->setChecked(s.value("PlayerEvents/ShowChannel",
+                                   globals.value("PlayerEvents/ShowChannel").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -495,8 +495,8 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         action = show_events->addAction(tr("Enable team change events"));
         action->setCheckable(true);
-        action->setChecked(s.value("show_player_events_team",
-                                   globals.value("show_player_events_team").toBool()).toBool());
+        action->setChecked(s.value("PlayerEvents/ShowTeam",
+                                   globals.value("PlayerEvents/ShowTeam").toBool()).toBool());
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
         connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
@@ -782,36 +782,36 @@ void Client::goAway(int away)
 
 void Client::showTimeStamps(bool b)
 {
-    globals.setValue("show_timestamps", b);
+    globals.setValue("Client/ShowTimestamps", b);
     showTS = b;
 }
 
 void Client::showTimeStamps2(bool b)
 {
-    globals.setValue("show_timestamps2", b);
+    globals.setValue("PMs/ShowTimestamps", b);
 }
 
 void Client::pmFlash(bool b)
 {
-    globals.setValue("pm_flashing", b);
+    globals.setValue("PMs/Flash", b);
     pmFlashing = b;
 }
 
 void Client::toggleIncomingPM(bool b)
 {
-    globals.setValue("reject_incoming_pms", b);
+    globals.setValue("PMs/RejectIncoming", b);
     pmReject = b;
 }
 
 void Client::togglePMTabs(bool b)
 {
-    globals.setValue("pms_tabbed", b);
+    globals.setValue("PMs/Tabbed", b);
     pmsTabbed = b;
     emit togglePMs(b);
 }
 
 void Client::togglePMLogs(bool b) {
-    globals.setValue("pms_logged", b);
+    globals.setValue("PMs/Logged", b);
 }
 
 void Client::ignoreServerVersion(bool b)
@@ -826,7 +826,7 @@ void Client::ignoreServerVersion(bool b)
 
 void Client::enableLadder(bool b)
 {
-    globals.setValue("enable_ladder", b);
+    globals.setValue("Client/EnableLadder", b);
 
     relay().notify(NetworkCli::OptionsChange, Flags(b && (goaway->isChecked() << 1)));
     ladder->setChecked(b);
@@ -928,22 +928,22 @@ void Client::showPlayerEvents(bool b, int event, QString option)
 
 void Client::showIdleEvents(bool b)
 {
-    showPlayerEvents(b, IdleEvent, "show_player_events_idle");
+    showPlayerEvents(b, IdleEvent, "PlayerEvents/ShowIdle");
 }
 
 void Client::showBattleEvents(bool b)
 {
-    showPlayerEvents(b, BattleEvent, "show_player_events_battle");
+    showPlayerEvents(b, BattleEvent, "PlayerEvents/ShowBattle");
 }
 
 void Client::showChannelEvents(bool b)
 {
-    showPlayerEvents(b, ChannelEvent, "show_player_events_channel");
+    showPlayerEvents(b, ChannelEvent, "PlayerEvents/ShowChannel");
 }
 
 void Client::showTeamEvents(bool b)
 {
-    showPlayerEvents(b, TeamEvent, "show_player_events_team");
+    showPlayerEvents(b, TeamEvent, "PlayerEvents/ShowTeam");
 }
 
 void Client::toggleAutoJoin(bool autojoin)
@@ -1161,6 +1161,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
 
     w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
 
     QMenu * menuActions = menuBar->addMenu(tr("&Options"));
     goaway = menuActions->addAction(tr("&Idle"));
@@ -1171,7 +1172,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     ladder = menuActions->addAction(tr("Enable &ladder"));
     ladder->setCheckable(true);
     connect(ladder, SIGNAL(triggered(bool)), SLOT(enableLadder(bool)));
-    ladder->setChecked(globals.value("enable_ladder").toBool());
+    ladder->setChecked(globals.value("Client/EnableLadder").toBool());
 
     QMenu* show_events = menuActions->addMenu(tr("Player events"));
     showPEvents = NoEvent;
@@ -1187,7 +1188,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable idle events"));
     action->setCheckable(true);
-    action->setChecked(globals.value("show_player_events_idle").toBool());
+    action->setChecked(globals.value("PlayerEvents/ShowIdle").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showIdleEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= IdleEvent;
@@ -1198,7 +1199,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable battle events"));
     action->setCheckable(true);
-    action->setChecked(globals.value("show_player_events_battle").toBool());
+    action->setChecked(globals.value("PlayerEvents/ShowBattle").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showBattleEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= BattleEvent;
@@ -1209,7 +1210,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable channel events"));
     action->setCheckable(true);
-    action->setChecked(globals.value("show_player_events_channel").toBool());
+    action->setChecked(globals.value("PlayerEvents/ShowChannel").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showChannelEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= ChannelEvent;
@@ -1220,7 +1221,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     action = show_events->addAction(tr("Enable team change events"));
     action->setCheckable(true);
-    action->setChecked(globals.value("show_player_events_team").toBool());
+    action->setChecked(globals.value("PlayerEvents/ShowTeam").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
     if(action->isChecked()) {
         showPEvents |= TeamEvent;
@@ -1232,7 +1233,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * show_ts = menuActions->addAction(tr("Enable &timestamps"));
     show_ts->setCheckable(true);
     connect(show_ts, SIGNAL(triggered(bool)), SLOT(showTimeStamps(bool)));
-    show_ts->setChecked(globals.value("show_timestamps").toBool());
+    show_ts->setChecked(globals.value("Client/ShowTimestamps").toBool());
     showTS = show_ts->isChecked();
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
@@ -1240,52 +1241,52 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
     pmsTabbedToggle->setCheckable(true);
     connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
-    pmsTabbedToggle->setChecked(globals.value("pms_tabbed").toBool());
+    pmsTabbedToggle->setChecked(globals.value("PMs/Tabbed").toBool());
 
     QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
     save_logs->setCheckable(true);
     connect(save_logs, SIGNAL(triggered(bool)), SLOT(togglePMLogs(bool)));
-    save_logs->setChecked(globals.value("pms_logged").toBool());
+    save_logs->setChecked(globals.value("PMs/Logged").toBool());
 
     QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
-    show_ts2->setChecked(globals.value("show_timestamps2").toBool());
+    show_ts2->setChecked(globals.value("PMs/ShowTimestamps").toBool());
 
     QAction * pm_flash = pmMenu->addAction(tr("Make new PMs &flash"));
     pm_flash->setCheckable(true);
     connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
-    pm_flash->setChecked(globals.value("pm_flashing").toBool());
+    pm_flash->setChecked(globals.value("PMs/Flash").toBool());
 
     QAction * pm_reject = pmMenu->addAction(tr("Reject incoming PMs"));
     pm_reject->setCheckable(true);
     connect(pm_reject, SIGNAL(triggered(bool)), SLOT(toggleIncomingPM(bool)));
-    pm_reject->setChecked(globals.value("reject_incoming_pms").toBool());
+    pm_reject->setChecked(globals.value("PMs/RejectIncoming").toBool());
 
     QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
 
     QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
     sortByTier->setCheckable(true);
     connect(sortByTier, SIGNAL(triggered(bool)), SLOT(sortPlayersByTiers(bool)));
-    sortByTier->setChecked(globals.value("sort_players_by_tier").toBool());
+    sortByTier->setChecked(globals.value("Client/SortPlayersByTier").toBool());
     sortBT = sortByTier->isChecked();
 
     QAction *sortByAuth = sortMenu->addAction(tr("Sort players by auth &level"));
     sortByAuth->setCheckable(true);
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
-    sortByAuth->setChecked(globals.value("sort_players_by_auth").toBool());
+    sortByAuth->setChecked(globals.value("Client/SortPlayersByAuth").toBool());
     sortBA = sortByAuth->isChecked();
 
     QAction *sortChannelsName = menuActions->addAction(tr("Sort channels by name"));
     sortChannelsName->setCheckable(true);
-    sortChannelsName->setChecked(globals.value("sort_channels_by_name").toBool());
+    sortChannelsName->setChecked(globals.value("Client/SortChannelsByName").toBool());
     connect(sortChannelsName, SIGNAL(triggered(bool)), SLOT(sortChannelsToggle(bool)));
     sortCBN = sortChannelsName->isChecked();
 
     QAction *list_right = menuActions->addAction(tr("Move player list to &right"));
     list_right->setCheckable(true);
     connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
-    list_right->setChecked(globals.value("user_list_at_right").toBool());
+    list_right->setChecked(globals.value("Client/UserListAtRight").toBool());
 
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
 
@@ -1302,22 +1303,22 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction *animateHpBar = battleMenu->addAction(tr("Animate HP Bar"));
     animateHpBar->setCheckable(true);
     connect(animateHpBar, SIGNAL(triggered(bool)), SLOT(animateHpBar(bool)));
-    animateHpBar->setChecked(globals.value("animate_hp_bar").toBool());
+    animateHpBar->setChecked(globals.value("Battle/AnimateHp").toBool());
 
     QAction *oldStyleButtons = battleMenu->addAction(tr("Old school buttons"));
     oldStyleButtons->setCheckable(true);
     connect(oldStyleButtons, SIGNAL(triggered(bool)), SLOT(changeButtonStyle(bool)));
-    oldStyleButtons->setChecked(globals.value("old_attack_buttons").toBool());
+    oldStyleButtons->setChecked(globals.value("Battle/OldAttackButtons").toBool());
 
     QAction *oldBattleWindow = battleMenu->addAction(tr("Old battle window"));
     oldBattleWindow->setCheckable(true);
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
-    oldBattleWindow->setChecked(globals.value("old_battle_window", true).toBool());
+    oldBattleWindow->setChecked(globals.value("Battle/OldWindow", true).toBool());
 
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
-    dontUseNicknames->setChecked(globals.value("use_pokemon_names").toBool());
+    dontUseNicknames->setChecked(globals.value("Battle/NoNicknames").toBool());
 
     mymenubar = menuBar;
 
@@ -1564,17 +1565,17 @@ void Client::openSoundConfig()
 
 void Client::changeButtonStyle(bool old)
 {
-    globals.setValue("old_attack_buttons",old);
+    globals.setValue("Battle/OldAttackButtons",old);
 }
 
 void Client::changeBattleWindow(bool old)
 {
-    globals.setValue("old_battle_window",old);
+    globals.setValue("Battle/OldWindow",old);
 }
 
 void Client::changeNicknames(bool old)
 {
-    globals.setValue("use_pokemon_names",old);
+    globals.setValue("Battle/NoNicknames",old);
 }
 
 void Client::saveBattleLogs(bool save)
@@ -1584,7 +1585,7 @@ void Client::saveBattleLogs(bool save)
 
 void Client::animateHpBar(bool save)
 {
-    globals.setValue("animate_hp_bar", save);
+    globals.setValue("Battle/AnimateHp", save);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
@@ -1666,7 +1667,7 @@ void Client::tierListReceived(const QByteArray &tl)
     rebuildTierMenu();
     changeTiersChecked();
 
-    if (globals.value("sort_players_by_tier").toBool()) {
+    if (globals.value("Client/SortPlayersByTier").toBool()) {
         foreach(Channel *c, mychannels)
             c->sortAllPlayersByTier();
     }
@@ -1686,7 +1687,7 @@ void Client::rebuildTierMenu()
 void Client::sortPlayersByTiers(bool byTier)
 {
     sortBT = byTier;
-    globals.setValue("sort_players_by_tier", sortBT);
+    globals.setValue("Client/SortPlayersByTier", sortBT);
 
     if (sortBT) {
         foreach(Channel *c, mychannels)
@@ -1700,7 +1701,7 @@ void Client::sortPlayersByTiers(bool byTier)
 void Client::sortPlayersByAuth(bool byAuth)
 {
     sortBA = byAuth;
-    globals.setValue("sort_players_by_auth", sortBA);
+    globals.setValue("Client/SortPlayersByAuth", sortBA);
 
     if (sortBT) {
         foreach(Channel *c, mychannels)
@@ -1713,7 +1714,7 @@ void Client::sortPlayersByAuth(bool byAuth)
 
 void Client::movePlayerList(bool right)
 {
-    globals.setValue("user_list_at_right", right);
+    globals.setValue("Client/UserListAtRight", right);
 
     QWidget *mytab = playersW->parentWidget()->parentWidget();
     QWidget *chatcontainer = mainChat->parentWidget();
@@ -1878,9 +1879,13 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 void Client::stopWatching(int battleId)
 {
     if (mySpectatingBattles.contains(battleId)) {
-        mySpectatingBattles[battleId]->close();
+        if (dynamic_cast<Analyzer*>(sender())) {
+            mySpectatingBattles[battleId]->disable();
+        } else {
+            relay().notify(NetworkCli::SpectateBattle, qint32(battleId), Flags(0));
+            mySpectatingBattles[battleId]->close();
+        }
         mySpectatingBattles.remove(battleId);
-        relay().notify(NetworkCli::SpectateBattle, qint32(battleId), Flags(0));
     }
 }
 
@@ -2066,7 +2071,7 @@ void Client::connected()
     if (reconnectPass.isEmpty()) {
         QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
         QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-        relay().login(*team(), s.value("enable_ladder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
+        relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }

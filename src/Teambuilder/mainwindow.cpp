@@ -24,41 +24,38 @@ MainEngine::MainEngine() : displayer(0)
 
     QSettings s;
     /* initializing the default init values if not there */
-    setDefaultValue(s, "Theme", "Themes/Classic/");
-    setDefaultValue(s, "battle_cry_volume", 100);
-    setDefaultValue(s, "battle_music_volume", 100);
-    setDefaultValue(s, "profiles_path", appDataPath("Profiles", true));
-    setDefaultValue(s, "current_profile", appDataPath("Profiles", false));
+    setDefaultValue(s, "Themes/Current", "Themes/Classic/");
+    setDefaultValue(s, "BattleAudio/CryVolume", 100);
+    setDefaultValue(s, "BattleAudio/MusicVolume", 100);
+    setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
+    setDefaultValue(s, "BattleAudio/PlayMusic", false);
+    setDefaultValue(s, "BattleAudio/PlaySounds", false);
+    setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
+    setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
-    setDefaultValue(s, "team_folder", QDir::homePath() + "/Documents");
-    setDefaultValue(s, "team_location", QDir::homePath() + "/Documents/trainer.tp");
-    setDefaultValue(s, "user_theme_directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
+    setDefaultValue(s, "Teams/Folder", QDir::homePath() + "/Documents");
+    setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "team_location", "Team/trainer.tp");
-    setDefaultValue(s, "team_folder", "Team");
-    setDefaultValue(s, "user_theme_directory", "Themes/");
+    setDefaultValue(s, "Teams/Folder", "Team");
+    setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
-    setDefaultValue(s, "battle_music_directory", "Music/Battle/");
-    setDefaultValue(s, "play_battle_music", false);
-    setDefaultValue(s, "play_battle_sounds", false);
-    setDefaultValue(s, "flash_when_enemy_moves", true);
-    setDefaultValue(s, "show_team", true);
-    setDefaultValue(s, "enable_ladder", true);
-    setDefaultValue(s, "show_player_events_idle", false);
-    setDefaultValue(s, "show_player_events_battle", false);
-    setDefaultValue(s, "show_player_events_channel", false);
-    setDefaultValue(s, "show_player_events_team", false);
-    setDefaultValue(s, "show_timestamps", true);
-    setDefaultValue(s, "show_timestamps2", true);
-    setDefaultValue(s, "pm_flashing", true);
-    setDefaultValue(s, "reject_incoming_pms", false);
-    setDefaultValue(s, "pms_tabbed", false);
-    setDefaultValue(s, "pms_logged", true);
-    setDefaultValue(s, "animate_hp_bar", true);
-    setDefaultValue(s, "sort_players_by_tier", false);
-    setDefaultValue(s, "sort_channels_by_name", false);
-    setDefaultValue(s, "show_all_items", false);
+    setDefaultValue(s, "Battle/FlashOnMove", true);
+    setDefaultValue(s, "Battle/AnimateHp", true);
+    setDefaultValue(s, "Client/EnableLadder", true);
+    setDefaultValue(s, "Client/SortPlayersByTier", false);
+    setDefaultValue(s, "Client/SortChannelsByName", true);
+    setDefaultValue(s, "Client/ShowTimestamps", true);
+    setDefaultValue(s, "PlayerEvents/ShowIdle", false);
+    setDefaultValue(s, "PlayerEvents/ShowBattle", false);
+    setDefaultValue(s, "PlayerEvents/ShowChannel", false);
+    setDefaultValue(s, "PlayerEvents/ShowTeam", false);
+    setDefaultValue(s, "PMs/ShowTimestamps", true);
+    setDefaultValue(s, "PMs/Flash", true);
+    setDefaultValue(s, "PMs/RejectIncoming", false);
+    setDefaultValue(s, "PMs/Tabbed", true);
+    setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
 
     if (s.value("use_socks5_proxy", false).toBool() == true) {
@@ -97,7 +94,7 @@ MainEngine::MainEngine() : displayer(0)
     }
 
     PokemonInfo::init("db/pokes/", FillMode::Client, modname);
-    MoveSetChecker::init("db/pokes/", s.value("enforce_min_levels").toBool());
+    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");
     TypeInfo::init("db/types/");
@@ -108,10 +105,10 @@ MainEngine::MainEngine() : displayer(0)
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
     GenInfo::init("db/gens/");
-    Theme::init(s.value("Theme").toString());
+    Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
-    QApplication::setStyle("plastique");
+    QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
     trainerTeam()->load();
@@ -174,6 +171,18 @@ void MainEngine::loadStyleSheet()
     QFile stylesheet(Theme::path("default.css"));
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
+}
+
+void MainEngine::changeStyle()
+{
+    QAction * a = qobject_cast<QAction *>(sender());
+    if(!a) {
+        return;
+    }
+    QString style = a->text();
+    qApp->setStyle(QStyleFactory::create(style));
+    QSettings setting;
+    setting.setValue("application_style",style);
 }
 
 void MainEngine::routine(CentralWidgetInterface *w)
@@ -244,7 +253,7 @@ void MainEngine::launchCredits()
 
 void MainEngine::launchTeamBuilder()
 {
-    TeamBuilder *TB = new TeamBuilder(trainerTeam());
+    TeamBuilder *TB = new TeamBuilder(trainerTeam(), false);
     routine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
@@ -278,7 +287,7 @@ void MainEngine::changeTheme(const QString &theme)
     QString fullTheme = Theme::FindTheme(theme);
     qDebug() << fullTheme;
     if (!fullTheme.isNull()) {
-        settings.setValue("Theme", fullTheme);
+        settings.setValue("Themes/Current", fullTheme);
 
         Theme::Reload(fullTheme);
         loadStyleSheet();
@@ -333,7 +342,7 @@ void MainEngine::quit()
 {
     /* Has to be deleted here, otherwise windows error if the libraries are not detached */
     delete pluginManager, pluginManager = NULL;
-    exit(0);
+    displayer->close();
 }
 
 void MainEngine::loadTeamDialog()
@@ -364,6 +373,26 @@ void MainEngine::addThemeMenu(QMenuBar *menuBar)
     rebuildThemeMenu();
 }
 
+void MainEngine::addStyleMenu(QMenuBar *menuBar)
+{
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    QActionGroup *ag = new QActionGroup(menuBar);
+
+    QSettings settings;
+    QString curStyle = settings.value("application_style", "plastique").toString();
+
+    foreach(QString s , style) {
+        QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
+        ac->setCheckable(true);
+
+        if (s.toLower() == curStyle.toLower()) {
+            ac->setChecked(true);
+        }
+        ag->addAction(ac);
+    }
+}
+
 void MainEngine::rebuildThemeMenu()
 {
     themeMenu->clear();
@@ -383,7 +412,7 @@ void MainEngine::rebuildThemeMenu()
         }
     }
 
-    QString theme = s.value("Theme").toString().section('/', -2, -2);
+    QString theme = s.value("Themes/Current").toString().section('/', -2, -2);
 
     QActionGroup *ag = new QActionGroup(themeMenu);
     foreach(QString baseName, themes) {
@@ -401,10 +430,10 @@ void MainEngine::rebuildThemeMenu()
 void MainEngine::changeUserThemeFolder()
 {
     QSettings s;
-    QString dir = QFileDialog::getExistingDirectory(displayer, tr("User Theme Directory"), s.value("user_theme_directory").toString());
+    QString dir = QFileDialog::getExistingDirectory(displayer, tr("User Theme Directory"), s.value("Themes/Directory").toString());
 
     if (dir != "") {
-        s.setValue("user_theme_directory", dir + "/");
+        s.setValue("Themes/Directory", dir + "/");
     }
     rebuildThemeMenu();
 }
