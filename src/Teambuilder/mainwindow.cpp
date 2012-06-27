@@ -108,7 +108,7 @@ MainEngine::MainEngine() : displayer(0)
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
-    QApplication::setStyle("plastique");
+    QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
     trainerTeam()->load();
@@ -171,6 +171,18 @@ void MainEngine::loadStyleSheet()
     QFile stylesheet(Theme::path("default.css"));
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
+}
+
+void MainEngine::changeStyle()
+{
+    QAction * a = qobject_cast<QAction *>(sender());
+    if(!a) {
+        return;
+    }
+    QString style = a->text();
+    qApp->setStyle(QStyleFactory::create(style));
+    QSettings setting;
+    setting.setValue("application_style",style);
 }
 
 void MainEngine::routine(CentralWidgetInterface *w)
@@ -359,6 +371,26 @@ void MainEngine::addThemeMenu(QMenuBar *menuBar)
 {
     themeMenu = menuBar->addMenu(tr("&Theme"));
     rebuildThemeMenu();
+}
+
+void MainEngine::addStyleMenu(QMenuBar *menuBar)
+{
+    QMenu * menuStyle = menuBar->addMenu(tr("&Style"));
+    QStringList style = QStyleFactory::keys();
+    QActionGroup *ag = new QActionGroup(menuBar);
+
+    QSettings settings;
+    QString curStyle = settings.value("application_style", "plastique").toString();
+
+    foreach(QString s , style) {
+        QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
+        ac->setCheckable(true);
+
+        if (s.toLower() == curStyle.toLower()) {
+            ac->setChecked(true);
+        }
+        ag->addAction(ac);
+    }
 }
 
 void MainEngine::rebuildThemeMenu()

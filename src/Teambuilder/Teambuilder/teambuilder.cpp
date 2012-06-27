@@ -86,6 +86,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     }
 
     w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
 
     if (currentWidget()) {
         currentWidget()->addMenus(menuBar);

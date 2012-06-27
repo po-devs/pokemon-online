@@ -47,6 +47,7 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
     w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
 
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");
