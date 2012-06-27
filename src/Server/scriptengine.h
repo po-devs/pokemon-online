@@ -93,9 +93,14 @@ public:
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
     Q_INVOKABLE QScriptValue getColor(int id);
+
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+
+    Q_INVOKABLE QString getDescription();
+    Q_INVOKABLE void changeDescription(const QString &html);
+
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 
     // Q_INVOKABLE void setTimer(int ms); // Causes crash
