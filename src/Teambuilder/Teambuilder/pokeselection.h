@@ -42,7 +42,7 @@ private:
 
     //ui stuff
     AdvancedSearch *search;
-    int oldwidth, newwidth;
+    int oldwidth, newwidth, oldx;
 };
 
 #endif // POKESELECTION_H

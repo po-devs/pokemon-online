@@ -56,10 +56,12 @@ void PokeSelection::toggleSearchWindow()
         search = NULL;
 
         setFixedWidth(oldwidth);
+        move(oldx, y());
     } else {
         //Tricks to get a window at the correct size. Qt is annoying, not allowing resize() to work
         //properly on windows, i have to use setFixedWidth on the top level window :(
         oldwidth = width();
+        oldx = x();
 
         QGridLayout *gl = (QGridLayout*)layout();
         search = new AdvancedSearch(this);
@@ -68,7 +70,7 @@ void PokeSelection::toggleSearchWindow()
         ui->pokemonList->setFixedWidth(ui->pokemonList->width());
         ui->pokeEdit->setFixedWidth(ui->pokeEdit->width());
         ui->changeSpecies->setFixedWidth(ui->changeSpecies->width());
-        search->setResultsWidth(ui->pokemonList->width()+10);
+        search->setResultsWidth(ui->pokemonList->width());
 
         if (newwidth) {
             setFixedWidth(newwidth);
@@ -82,6 +84,13 @@ void PokeSelection::toggleSearchWindow()
         }
 
         connect(search, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
+
+        /* Moving the widget if it goes out of bounds */
+        QWidget *top = ((QWidget*)parent())->window();
+
+        if (x() + width() > top->x() + top->width()) {
+            move(std::max(top->x(), top->x()+(top->width()-width())/2), y());
+        }
     }
 }
 
