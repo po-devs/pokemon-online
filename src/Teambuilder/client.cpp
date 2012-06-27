@@ -1878,9 +1878,13 @@ void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 void Client::stopWatching(int battleId)
 {
     if (mySpectatingBattles.contains(battleId)) {
-        mySpectatingBattles[battleId]->close();
+        if (dynamic_cast<Analyzer*>(sender())) {
+            mySpectatingBattles[battleId]->disable();
+        } else {
+            relay().notify(NetworkCli::SpectateBattle, qint32(battleId), Flags(0));
+            mySpectatingBattles[battleId]->close();
+        }
         mySpectatingBattles.remove(battleId);
-        relay().notify(NetworkCli::SpectateBattle, qint32(battleId), Flags(0));
     }
 }
 
