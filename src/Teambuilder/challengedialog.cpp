@@ -252,7 +252,7 @@ void ChallengeDialog::saveData()
         s.setValue("Challenge/Clause/"+ChallengeInfo::clause(i), clauses[i]->isChecked());
     }
 
-    s.setValue("Challenge/Move", ui->mode->currentIndex());
+    s.setValue("Challenge/Mode", ui->mode->currentIndex());
 
     if (tierGroup->checkedButton()) {
         s.setValue("Challenge/Tier", tierGroup->checkedButton()->property("tier").toString());
