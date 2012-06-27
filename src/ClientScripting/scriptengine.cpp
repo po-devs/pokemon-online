@@ -2,6 +2,7 @@
 #include "scriptutils.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Teambuilder/clientinterface.h"
+#include "scriptwindow.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     c->registerMetaTypes(&myengine);
@@ -14,16 +15,22 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
 
-#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-#endif
-
     changeScript(ScriptUtils::loadScripts());
 
     QTimer *step_timer = new QTimer(this);
     step_timer->setSingleShot(false);
     step_timer->start(1000);
     connect(step_timer, SIGNAL(timeout()), SLOT(timer_step()));
+
+    QSettings s;
+    safeScripts = s.value("ScriptWindow/safeScripts", false).toBool();
+
+    QSettings ini(QSettings::IniFormat, QSettings::UserScope,
+                  QCoreApplication::organizationName(),
+                  QCoreApplication::applicationName());
+    datalocation = QFileInfo(ini.fileName()).absolutePath() + "poclient_scriptdata";
+
 }
 
 ScriptEngine::~ScriptEngine()
@@ -39,8 +46,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
-    ret.insert("playerLogIn(int)", (Hook)(&ScriptEngine::playerLogIn));
-    ret.insert("playerLogOut(int)", (Hook)(&ScriptEngine::playerLogOut));
+    ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
+    ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
 
     return ret;
 }
@@ -58,6 +65,21 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
             clientStartUp();
         }
     }
+}
+
+void ScriptEngine::changeSafeScripts(bool safe)
+{
+    if (safeScripts == safe) {
+        return;
+    }
+
+    QString bts = "on";
+    if (!safe) {
+        bts = "off";
+    }
+
+    printLine(QString("Safe Scripts was turned %1.").arg(bts));
+    safeScripts = safe;
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -90,7 +112,7 @@ void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
 
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
-    printLine(QString("Script Warning in %1: %2").arg(function, message));
+    printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
 }
 
 void ScriptEngine::clientStartUp()
@@ -125,15 +147,15 @@ int ScriptEngine::afterPMReceived(int id, const QString &message)
     return true;
 }
 
-int ScriptEngine::playerLogIn(int id)
+int ScriptEngine::onPlayerReceived(int id)
 {
-    makeEvent("playerLogIn", id);
+    makeEvent("onPlayerReceived", id);
     return true;
 }
 
-int ScriptEngine::playerLogOut(int id)
+int ScriptEngine::onPlayerRemoved(int id)
 {
-    makeEvent("playerLogOut", id);
+    makeEvent("onPlayerRemoved", id);
     return true;
 }
 
@@ -163,7 +185,7 @@ bool ScriptEngine::validColor(const QString &color)
 {
     QColor colorName = QColor(color);
 
-    return colorName.isValid() && colorName.lightness() <= 140 && colorName.green() <= 180;
+    return colorName.isValid();
 }
 
 void ScriptEngine::callLater(const QString &expr, int delay)
@@ -248,6 +270,11 @@ QScriptValue ScriptEngine::eval(const QString &script)
 
 void ScriptEngine::hostName(const QString &ip, const QScriptValue &function)
 {
+    if (safeScripts) {
+        warn("hostName(ip, function)", "Safe scripts is on.");
+        return;
+    }
+
     myHostLookups[QHostInfo::lookupHost(ip, this, SLOT(hostInfo_Ready(QHostInfo)))] = function;
 }
 
@@ -455,9 +482,23 @@ int ScriptEngine::moveType(int moveNum, int gen)
     return MoveInfo::Type(moveNum, gen);
 }
 
-#ifndef PO_SCRIPT_SAFE_ONLY
+bool ScriptEngine::isSafeScripts()
+{
+    return safeScripts;
+}
+
 void ScriptEngine::saveSetting(const QString &key, const QVariant &val)
 {
+    if (safeScripts) {
+        warn("saveSetting(key, val)", "Safe scripts is on.");
+        return;
+    }
+
+    if (key.toLower() == "scriptwindow/safescripts" || key.toLower() == "scriptwindow\\safescripts") {
+        warn("saveSetting(key, val)", "Safe scripts setting may not be changed using saveSetting. Use the script window instead.");
+        return;
+    }
+
     QSettings s;
 
     if (s.childKeys().contains(key, Qt::CaseInsensitive)) {
@@ -473,49 +514,82 @@ QScriptValue ScriptEngine::getSetting(const QString &key)
 
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
 {
+    if (safeScripts) {
+        QSettings s(datalocation, QSettings::IniFormat);
+        s.setValue(key, val);
+        return;
+    }
+
     QSettings s;
     s.setValue("Script_"+key, val);
 }
 
 QScriptValue ScriptEngine::getVal(const QString &key)
 {
+    if (safeScripts) {
+        QSettings s(datalocation, QSettings::IniFormat);
+        return s.value(key).toString();
+    }
+
     QSettings s;
     return s.value("Script_"+key).toString();
 }
 
 void ScriptEngine::removeVal(const QString &key)
 {
+    if (safeScripts) {
+        QSettings s(datalocation, QSettings::IniFormat);
+        s.remove(key);
+        return;
+    }
+
     QSettings s;
     s.remove("Script_"+key);
 }
 
 void ScriptEngine::saveVal(const QString &file, const QString &key, const QVariant &val)
 {
-    QSettings s(file, QSettings::IniFormat);
+    if (safeScripts) {
+        this->saveVal(key, val);
+        return;
+    }
+
+    QSettings s(appDataPath("Scripts/", true)+file, QSettings::IniFormat);
     s.setValue("Script_"+key, val);
 }
 
 QScriptValue ScriptEngine::getVal(const QString &file, const QString &key)
 {
-    QSettings s(file, QSettings::IniFormat);
+    if (safeScripts) {
+        return this->getVal(key);
+    }
+
+    QSettings s(appDataPath("Scripts/", true)+file, QSettings::IniFormat);
     return s.value("Script_"+key).toString();
 }
 
 void ScriptEngine::removeVal(const QString &file, const QString &key)
 {
-    QSettings s(file, QSettings::IniFormat);
+    if (safeScripts) {
+        this->removeVal(key);
+        return;
+    }
+
+    QSettings s(appDataPath("Scripts/", true)+file, QSettings::IniFormat);
     s.remove("Script_"+key);
 }
 
-QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
+QScriptValue ScriptEngine::filesForDirectory (const QString &dir_)
 {
+    QString dir = dir_;
+
     QDir directory(dir);
 
     if(!directory.exists()) {
         return myengine.undefinedValue();
     }
 
-    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QStringList files = directory.entryList(QDir::Files);
     QScriptValue ret = myengine.newArray(files.count());
 
     for (int i = 0; i < files.size(); i++) {
@@ -525,19 +599,23 @@ QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
     return ret;
 }
 
-QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
+QScriptValue ScriptEngine::dirsForDirectory (const QString &dir_)
 {
+    QString dir = dir_;
+
     QDir directory(dir);
 
     if(!directory.exists()) {
         return myengine.undefinedValue();
     }
 
-    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QStringList dirs = directory.entryList(QDir::Dirs);
     QScriptValue ret = myengine.newArray(dirs.size());
 
     for (int i = 0; i < dirs.size(); i++) {
-        ret.setProperty(i, dirs[i]);
+        if (dirs[i] != "." && dirs[i] != "..") {
+            ret.setProperty(i, dirs[i]);
+        }
     }
 
     return ret;
@@ -545,6 +623,11 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
 {
+    if (safeScripts) {
+        warn("appendToFile(filename, content)", "Safe scripts is on.");
+        return;
+    }
+
     QFile out(fileName);
 
     if (!out.open(QIODevice::Append)) {
@@ -557,6 +640,11 @@ void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
 
 void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
 {
+    if (safeScripts) {
+        warn("writeToFile(filename, content)", "Safe scripts is on.");
+        return;
+    }
+
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -569,6 +657,11 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
 
 void ScriptEngine::deleteFile(const QString &fileName)
 {
+    if (safeScripts) {
+        warn("deleteFile(filename)", "Safe scripts is on.");
+        return;
+    }
+
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -581,28 +674,53 @@ void ScriptEngine::deleteFile(const QString &fileName)
 
 QScriptValue ScriptEngine::getValKeys()
 {
-    QSettings s;
-    QStringList list = s.childKeys();
-    QStringList result_data;
+    if (safeScripts) {
+        QSettings s(datalocation, QSettings::IniFormat);
 
-    QStringListIterator it(list);
-    while (it.hasNext()) {
-        QString v = it.next();
-        if (v.startsWith("Script_")) {
-            result_data.append(v.mid(7));
+        QStringList list = s.childKeys();
+        QStringList result_data;
+
+        QStringListIterator it(list);
+        while (it.hasNext()) {
+            QString v = it.next();
+            result_data.append(v);
         }
+        int len = result_data.length();
+        QScriptValue result_array = myengine.newArray(len);
+        for (int i = 0; i < len; ++i) {
+            result_array.setProperty(i, result_data.at(i));
+        }
+        return result_array;
     }
-    int len = result_data.length();
-    QScriptValue result_array = myengine.newArray(len);
-    for (int i = 0; i < len; ++i) {
-        result_array.setProperty(i, result_data.at(i));
+    else {
+        QSettings s;
+
+        QStringList list = s.childKeys();
+        QStringList result_data;
+
+        QStringListIterator it(list);
+        while (it.hasNext()) {
+            QString v = it.next();
+            if (v.startsWith("Script_")) {
+                result_data.append(v.mid(7));
+            }
+        }
+        int len = result_data.length();
+        QScriptValue result_array = myengine.newArray(len);
+        for (int i = 0; i < len; ++i) {
+            result_array.setProperty(i, result_data.at(i));
+        }
+        return result_array;
     }
-    return result_array;
 }
 
 QScriptValue ScriptEngine::getValKeys(const QString &file)
 {
-    QSettings s(file, QSettings::IniFormat);
+    if (safeScripts) {
+        return this->getValKeys();
+    }
+
+    QSettings s(appDataPath("Scripts/")+file, QSettings::IniFormat);
     QStringList list = s.childKeys();
     QStringList result_data;
 
@@ -623,11 +741,16 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
 
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
+    if (safeScripts) {
+        warn("getFileContent(fileName)", "Safe scripts is on.");
+        return "";
+    }
+
     QFile out(fileName);
 
     if (!out.open(QIODevice::ReadOnly)) {
         printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
-        return myengine.undefinedValue();
+        return "";
     }
 
     return QString::fromUtf8(out.readAll());
@@ -640,6 +763,11 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
  */
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
 {
+    if (safeScripts) {
+        warn("webCall(url, callback)", "Safe scripts is on.");
+        return;
+    }
+
     if (!callback.isString() && !callback.isFunction()) {
         printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
         return;
@@ -662,6 +790,11 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
  */
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
 {
+    if (safeScripts) {
+        warn("webCall(url, callback, postargs)", "Safe scripts is on.");
+        return;
+    }
+
     if (!callback.isString() && !callback.isFunction()) {
         printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
         return;
@@ -685,7 +818,8 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     webCallEvents[reply] = callback;
 }
 
-void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
+void ScriptEngine::webCall_replyFinished(QNetworkReply* reply)
+{
     QScriptValue val = webCallEvents.take(reply);
     if (val.isString()) {
         //escape reply before sending it to the javascript evaluator
@@ -711,7 +845,13 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
  * @param urlstring web-url
  * @author Remco cd Zon and Toni Fadjukoff
  */
-QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
+{
+    if (safeScripts) {
+        warn("synchronousWebCall(url)", "Safe scripts is on.");
+        return QScriptValue();
+    }
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
 
@@ -735,6 +875,11 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
 {
+    if (safeScripts) {
+        warn("synchronousWebCall(url, postargs)", "Safe scripts is on.");
+        return QScriptValue();
+    }
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
     QByteArray postData;
@@ -762,7 +907,6 @@ void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
     sync_data = reply->readAll();
     sync_loop.exit();
 }
-#endif
 
 QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
@@ -780,4 +924,15 @@ QString ScriptEngine::md5(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(text.toUtf8());
     return hash.result().toHex();
+}
+
+QString ScriptEngine::hexColor(const QString &colorname)
+{
+    if (!QColor::isValidColor(colorname)) {
+        return "#000000";
+    }
+
+    QColor color = QColor(colorname);
+
+    return color.name();
 }

@@ -1,4 +1,4 @@
-#ifndef SCRIPTWINDOW_H
+﻿#ifndef SCRIPTWINDOW_H
 #define SCRIPTWINDOW_H
 
 #include <QDialog>
@@ -18,6 +18,8 @@ public:
     void accept();
 signals:
     void scriptChanged(const QString&);
+public slots:
+    void safeScriptsChanged(int newStatus);
 private:
     Ui::ScriptWindow *ui;
 };

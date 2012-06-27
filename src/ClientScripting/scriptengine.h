@@ -2,26 +2,17 @@
 #define SCRIPTENGINE_H
 
 #include <QtCore>
-#include <QTextEdit>
-
 #include <QtScript>
 
-#include <QScriptValueIterator>
-
-#ifndef PO_SCRIPT_SAFE_ONLY
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#endif
 
 #include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/functions.h"
 #include "../Teambuilder/plugininterface.h"
-
-class Server;
-class ChallengeInfo;
 
 class ScriptEngine : public OnlineClientPlugin
 {
@@ -43,8 +34,8 @@ public:
     int afterChannelMessage(const QString &message, int channel, bool html);
     int beforePMReceived(int id, const QString &message);
     int afterPMReceived(int id, const QString &message);
-    int playerLogIn(int id);
-    int playerLogOut(int id);
+    int onPlayerReceived(int id);
+    int onPlayerRemoved(int id);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
@@ -55,14 +46,18 @@ public:
     /* Print on the client. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
+
     Q_INVOKABLE bool validColor(const QString &color);
+    Q_INVOKABLE QString hexColor(const QString &colorname);
 
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE void callLater(const QString &s, int delay);
     Q_INVOKABLE void callQuickly(const QString &s, int delay);
+
     /* Accepts function as 1st parameter. */
     Q_INVOKABLE void quickCall(const QScriptValue &func, int delay);
     Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
+
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
@@ -94,9 +89,10 @@ public:
     Q_INVOKABLE QString md4(const QString &text);
     Q_INVOKABLE QString md5(const QString &text);
 
+    Q_INVOKABLE bool isSafeScripts();
+
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
 
-#ifndef PO_SCRIPT_SAFE_ONLY
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
@@ -113,8 +109,8 @@ public:
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
 
-    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
-    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir_);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir_);
 
     // Direct file access.
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
@@ -131,7 +127,6 @@ public:
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
-#endif
 
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
@@ -146,6 +141,8 @@ private slots:
 
     void hostInfo_Ready(const QHostInfo &myInfo);
 
+    void changeSafeScripts(bool safe);
+
 private:
     ClientInterface *myclient;
     QScriptEngine myengine;
@@ -153,10 +150,8 @@ private:
     QTimer * step_timer;
     QVector<bool> stopevents;
 
-#ifndef PO_SCRIPT_SAFE_ONLY
     QNetworkAccessManager manager;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
-#endif
 
     QHash<QTimer*,QString> timerEvents;
     QHash<QTimer*,QScriptValue> timerEventsFunc;
@@ -169,10 +164,11 @@ private:
         return res;
     }
 
-#ifndef PO_SCRIPT_SAFE_ONLY
     QEventLoop sync_loop;
     QString sync_data;
-#endif
+
+    bool safeScripts;
+    QString datalocation;
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);
