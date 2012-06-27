@@ -74,6 +74,20 @@ public:
     Q_INVOKABLE int pokeType1(int id, int gen = GEN_MAX);
     Q_INVOKABLE int pokeType2(int id, int gen = GEN_MAX);
 
+    Q_INVOKABLE QScriptValue pokemon(int num);
+    Q_INVOKABLE QScriptValue pokeNum(const QString &name);
+    Q_INVOKABLE QScriptValue move(int num);
+    Q_INVOKABLE QScriptValue moveNum(const QString &name);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
+    Q_INVOKABLE QScriptValue item(int num);
+    Q_INVOKABLE QScriptValue itemNum(const QString &item);
+    Q_INVOKABLE QScriptValue nature(int num);
+    Q_INVOKABLE QScriptValue natureNum(const QString &nature);
+    Q_INVOKABLE QScriptValue ability(int num);
+    Q_INVOKABLE QScriptValue abilityNum(const QString &nature);
+    Q_INVOKABLE QScriptValue genderNum(QString genderName);
+    Q_INVOKABLE QString gender(int genderNum);
+
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE QString sha1(const QString &text);
@@ -98,6 +112,9 @@ public:
     // Returns an array of Script_* key names in config.
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
+
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
 
     // Direct file access.
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);

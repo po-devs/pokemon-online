@@ -76,6 +76,10 @@ public:
     void changeName(int player, const QString &name);
     /* Resets fade away counter */
     void refreshPlayer(int id);
+
+    bool hasLoggedOut(int id);
+    bool hasPlayerInfo(int id);
+
     QSize defaultSize() const {
         return QSize(800,600);
     }

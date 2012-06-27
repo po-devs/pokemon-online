@@ -162,6 +162,7 @@ void ScriptEngine::clearChat()
 bool ScriptEngine::validColor(const QString &color)
 {
     QColor colorName = QColor(color);
+
     return colorName.isValid() && colorName.lightness() <= 140 && colorName.green() <= 180;
 }
 
@@ -317,12 +318,151 @@ int ScriptEngine::pokeType2(int id, int gen)
     }
     return result;
 }
+QScriptValue ScriptEngine::pokemon(int num)
+{
+    return PokemonInfo::Name(num);
+}
+
+QScriptValue ScriptEngine::pokeNum(const QString &name)
+{
+    QString copy = name;
+    bool up = true;
+    for (int i = 0; i < copy.length(); i++) {
+        if (up) {
+            copy[i] = copy[i].toUpper();
+            up = false;
+        } else {
+            if (copy[i] == '-' || copy[i] == ' ')
+                up = true;
+            copy[i] = copy[i].toLower();
+        }
+    }
+    Pokemon::uniqueId num = PokemonInfo::Number(copy);
+    if (num.toPokeRef() == Pokemon::NoPoke) {
+        return myengine.undefinedValue();
+    } else {
+        return num.toPokeRef();
+    }
+}
+
+QScriptValue ScriptEngine::move(int num)
+{
+    if (num < 0  || num >= MoveInfo::NumberOfMoves()) {
+        return myengine.undefinedValue();
+    } else {
+        return MoveInfo::Name(num);
+    }
+}
+
+QString convertToSerebiiName(const QString input)
+{
+    QString truename = input;
+    bool blankbefore = true;
+    for (int i = 0; i < truename.length(); i++) {
+        if (truename[i].isSpace()) {
+            blankbefore = true;
+        } else {
+            if (blankbefore) {
+                truename[i] = truename[i].toUpper();
+                blankbefore = false;
+            } else {
+                truename[i] = truename[i].toLower();
+            }
+        }
+    }
+    return truename;
+}
+
+QScriptValue ScriptEngine::moveNum(const QString &name)
+{
+    int num = MoveInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+QScriptValue ScriptEngine::item(int num)
+{
+    if (ItemInfo::Exists(num)) {
+        return ItemInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::itemNum(const QString &name)
+{
+    int num = ItemInfo::Number(convertToSerebiiName(name));
+    return num == 0 ? myengine.undefinedValue() : num;
+}
+
+
+QScriptValue ScriptEngine::nature(int num)
+{
+    if (num >= 0 && num < NatureInfo::NumberOfNatures()) {
+        return NatureInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::natureNum(const QString &name)
+{
+    return NatureInfo::Number(convertToSerebiiName(name));
+}
+
+QScriptValue ScriptEngine::ability(int num)
+{
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities()) {
+        return AbilityInfo::Name(num);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::abilityNum(const QString &ability)
+{
+    return AbilityInfo::Number(ability);
+}
+
+QScriptValue ScriptEngine::genderNum(QString genderName)
+{
+    if(genderName.toLower() == "genderless") {
+        return 0;
+    }
+    if(genderName.toLower() == "male") {
+        return 1;
+    }
+    if(genderName.toLower() == "female") {
+        return 2;
+    }
+    return "";
+}
+
+QString ScriptEngine::gender(int genderNum)
+{
+    switch(genderNum) {
+    case 0:
+        return "genderless";
+    case 1:
+        return "male";
+    case 2:
+        return "female";
+    }
+    return "";
+}
+
+int ScriptEngine::moveType(int moveNum, int gen)
+{
+    return MoveInfo::Type(moveNum, gen);
+}
 
 #ifndef PO_SCRIPT_SAFE_ONLY
 void ScriptEngine::saveSetting(const QString &key, const QVariant &val)
 {
     QSettings s;
-    s.setValue(key, val);
+
+    if (s.childKeys().contains(key, Qt::CaseInsensitive)) {
+        s.setValue(key, val);
+    }
 }
 
 QScriptValue ScriptEngine::getSetting(const QString &key)
@@ -365,6 +505,42 @@ void ScriptEngine::removeVal(const QString &file, const QString &key)
 {
     QSettings s(file, QSettings::IniFormat);
     s.remove("Script_"+key);
+}
+
+QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QScriptValue ret = myengine.newArray(files.count());
+
+    for (int i = 0; i < files.size(); i++) {
+        ret.setProperty(i, files[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QScriptValue ret = myengine.newArray(dirs.size());
+
+    for (int i = 0; i < dirs.size(); i++) {
+        ret.setProperty(i, dirs[i]);
+    }
+
+    return ret;
 }
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)

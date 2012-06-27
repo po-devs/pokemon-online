@@ -2125,11 +2125,20 @@ void Client::playerLogout(int id)
     removePlayer(id);
 }
 
+bool Client::hasLoggedOut (int id)
+{
+    foreach (Channel *c, mychannels) {
+        if (c->hasPlayer(id)) {
+            return false;
+        }
+
+    }
+
+    return true;
+}
 
 void Client::removePlayer(int id)
 {
-    call("playerLogOut(int)", id);
-
     QString name = player(id).name;
 
     foreach(Channel *c, mychannels) {
@@ -2339,6 +2348,11 @@ void Client::changeTeam()
     cancelFindBattle(false);
     waitingOnSecond = true;
     relay().sendTeam(secondTeam);
+}
+
+bool Client::hasPlayerInfo (int id)
+{
+    return myplayersinfo.contains(id);
 }
 
 PlayerInfo &Client::playerInfo(int id)
