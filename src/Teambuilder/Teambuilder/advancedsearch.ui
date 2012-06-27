@@ -98,7 +98,7 @@
          <widget class="QLineEdit" name="hpedit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
@@ -139,7 +139,7 @@
          <widget class="QLineEdit" name="atkedit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
@@ -180,7 +180,7 @@
          <widget class="QLineEdit" name="defedit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
@@ -221,7 +221,7 @@
          <widget class="QLineEdit" name="spatkedit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
@@ -262,7 +262,7 @@
          <widget class="QLineEdit" name="spdefedit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
@@ -303,7 +303,7 @@
          <widget class="QLineEdit" name="speededit">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>35</width>
             <height>0</height>
            </size>
           </property>
