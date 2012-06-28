@@ -1,4 +1,4 @@
-#include "server.h"
+﻿#include "server.h"
 #include "player.h"
 #include "security.h"
 #include "antidos.h"
@@ -24,10 +24,10 @@ ScriptEngine::ScriptEngine(Server *s) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
     myengine.globalObject().setProperty(
-        "SESSION",
-        myengine.newQObject(mySessionDataFactory),
-        QScriptValue::ReadOnly | QScriptValue::Undeletable
-    );
+                "SESSION",
+                myengine.newQObject(mySessionDataFactory),
+                QScriptValue::ReadOnly | QScriptValue::Undeletable
+                );
 
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
@@ -189,7 +189,7 @@ bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
 
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
-    printLine(QString("Script Warning in %1: %2").arg(function, message));
+    printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
 }
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
@@ -476,7 +476,7 @@ void ScriptEngine::sendMessage(int id, const QString &mess)
 void ScriptEngine::sendMessage(int id, const QString &mess, int channel)
 {
     if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
-        testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
+            testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
     {
         myserver->broadCast(mess, channel, Server::NoSender, false, id);
     }
@@ -489,7 +489,7 @@ void ScriptEngine::sendHtmlAll(const QString &mess)
 
 void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
 {
-    if (testChannel("sendAll(mess, channel)", channel)) {
+    if (testChannel("sendHtmlAll(mess, channel)", channel)) {
 
         myserver->broadCast(mess, channel, Server::NoSender, true);
     }
@@ -497,15 +497,15 @@ void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
 
 void ScriptEngine::sendHtmlMessage(int id, const QString &mess)
 {
-    if (testPlayer("sendMessage(id, mess)", id)) {
+    if (testPlayer("sendHtmlMessage(id, mess)", id)) {
         myserver->broadCast(mess, Server::NoChannel, Server::NoSender, true, id);
     }
 }
 
 void ScriptEngine::sendHtmlMessage(int id, const QString &mess, int channel)
 {
-    if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
-        testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
+    if (testChannel("sendHtmlMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
+            testPlayerInChannel("sendHtmlMessage(id, mess, channel)", id, channel))
     {
         myserver->broadCast(mess, channel, Server::NoSender, true, id);
     }
@@ -521,7 +521,7 @@ void ScriptEngine::kick(int id)
 void ScriptEngine::kick(int id, int chanid)
 {
     if (testPlayer("kick(id, channel)", id) && testChannel("kick(id, channel)", chanid)
-        && testPlayerInChannel("kick(id, channel)", id, chanid))
+            && testPlayerInChannel("kick(id, channel)", id, chanid))
     {
         myserver->leaveRequest(id, chanid);
     }
@@ -721,8 +721,8 @@ QScriptValue ScriptEngine::memoryDump()
     ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
     ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
     ret += QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\tTransfers Per Id> %3\n\tSize of Transfers> %4\n\tKicks per IP> %5\n").arg(AntiDos::obj()->connectionsPerIp.count()).arg(
-            AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
-           .arg(AntiDos::obj()->kicksPerIp.count());
+                AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
+            .arg(AntiDos::obj()->kicksPerIp.count());
     ret += QString("-------------------------\n-------------------------\n");
 
     foreach (QString tier, TierMachine::obj()->tierList().split('\n')) {
@@ -758,24 +758,26 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
-void ScriptEngine::callLater(const QString &expr, int delay)
+int ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
-	//qDebug() << "Call Later in " << delay << expr;
+
     QTimer *t = new QTimer();
 
     timerEvents[t] = expr;
     t->setSingleShot(true);
     t->start(delay*1000);
     connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
-void ScriptEngine::callQuickly(const QString &expr, int delay)
+int ScriptEngine::callQuickly(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
 
     QTimer *t = new QTimer(this);
@@ -784,17 +786,35 @@ void ScriptEngine::callQuickly(const QString &expr, int delay)
     t->setSingleShot(true);
     t->start(delay);
     connect(t, SIGNAL(timeout()), SLOT(timer()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalTimer(const QString &expr, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    QTimer *t = new QTimer();
+
+    timerEvents[t] = expr;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
 void ScriptEngine::timer()
 {
-	//qDebug() << "timer()";
     QTimer *t = (QTimer*) sender();
-	//qDebug() << timerEvents[t];
     eval(timerEvents[t]);
 
-    timerEvents.remove(t);
-    t->deleteLater();
+    if (t->isSingleShot()) {
+        timerEvents.remove(t);
+        t->deleteLater();
+    }
 }
 
 void ScriptEngine::timer_step()
@@ -802,26 +822,112 @@ void ScriptEngine::timer_step()
     this->stepEvent();
 }
 
-void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+int ScriptEngine::quickCall(const QScriptValue &func, int delay)
 {
-    if (delay <= 0) return;
-    if (func.isFunction()) {
-        QTimer *t = new QTimer(this);
-        timerEventsFunc[t] = func;
-        t->setSingleShot(true);
-        t->start(delay*1000);
-        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    if (delay <= 0) {
+        return -1;
     }
+
+    if (!func.isFunction()) {
+        warn("quickCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    if (!func.isFunction()) {
+        warn("delayedCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay*1000);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    if (!func.isFunction()) {
+        warn("intervalCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
 }
 
 void ScriptEngine::timerFunc()
 {
     QTimer *t = (QTimer*) sender();
     timerEventsFunc[t].call();
-    timerEventsFunc.remove(t);
-    t->deleteLater();
+
+    if (t->isSingleShot()) {
+        timerEventsFunc.remove(t);
+        t->deleteLater();
+    }
 }
 
+bool ScriptEngine::stopTimer(int timerId)
+{
+    QHashIterator <QTimer*, QString> it (timerEvents);
+    while (it.hasNext()) {
+        it.next();
+        QTimer *timer = it.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEvents.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    // Checking the function timers.
+    QHashIterator <QTimer*, QScriptValue> itfunc (timerEventsFunc);
+    while (itfunc.hasNext()) {
+        itfunc.next();
+        QTimer *timer = itfunc.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEventsFunc.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    return false; // No timer found.
+}
 
 QScriptValue ScriptEngine::eval(const QString &script)
 {
@@ -1275,12 +1381,12 @@ QScriptValue ScriptEngine::genderNum(QString genderName)
 QString ScriptEngine::gender(int genderNum)
 {
     switch(genderNum) {
-        case 0:
-            return "genderless";
-        case 1:
-            return "male";
-        case 2:
-            return "female";
+    case 0:
+        return "genderless";
+    case 1:
+        return "male";
+    case 2:
+        return "female";
     }
     return "";
 }
@@ -1584,7 +1690,7 @@ QScriptValue ScriptEngine::teamPokeNature(int id, int team, int index)
 QScriptValue ScriptEngine::teamPokeEV(int id, int team, int index, int stat)
 {
     if (!testPlayer("teamPokeEV", id) || !testTeamCount("teamPokeEV", id, team)) {
-            return myengine.undefinedValue();
+        return myengine.undefinedValue();
     }
     if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
         return myengine.undefinedValue();
@@ -1887,27 +1993,44 @@ QScriptValue ScriptEngine::weather(int weatherId)
     }
 }
 
-void ScriptEngine::setAnnouncement(const QString &html, int id) {
+void ScriptEngine::setAnnouncement(const QString &html, int id)
+{
     if (testPlayer("setAnnouncment(html, id)", id)) {
-        myserver->setAnnouncement(id, html); }
+        myserver->setAnnouncement(id, html);
     }
-void ScriptEngine::setAnnouncement(const QString &html) {
-        myserver->setAllAnnouncement(html);
-    }
+}
+void ScriptEngine::setAnnouncement(const QString &html)
+{
+    myserver->setAllAnnouncement(html);
+}
 
-void ScriptEngine::changeAnnouncement(const QString &html) {
-        QSettings settings("config", QSettings::IniFormat);
-        settings.setValue("server_announcement", html);
-        myserver->announcementChanged(html);
-    }
+void ScriptEngine::changeAnnouncement(const QString &html)
+{
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("server_announcement", html);
+    myserver->announcementChanged(html);
+}
 
 void ScriptEngine::makeServerPublic(bool isPublic)
 {
     myserver->regPrivacyChanged(!isPublic);
 }
 
-QScriptValue ScriptEngine::getAnnouncement() {
+QScriptValue ScriptEngine::getAnnouncement()
+{
     return QString::fromUtf8(myserver->serverAnnouncement);
+}
+
+void ScriptEngine::changeDescription(const QString &html)
+{
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("server_description", html);
+    myserver->regDescChanged(html);
+}
+
+QString ScriptEngine::getDescription()
+{
+    return myserver->description();
 }
 
 /* Causes crash...
@@ -1929,14 +2052,20 @@ int ScriptEngine::teamPokeAbility(int id, int team, int slot)
 
 void ScriptEngine::changeName(int playerId, QString newName)
 {
-    if (!loggedIn(playerId)) return;
+    if (!loggedIn(playerId)) {
+        return;
+    }
+
     myserver->player(playerId)->setName(newName);
     myserver->sendPlayer(playerId);
 }
 
 void ScriptEngine::changeInfo(int playerId, QString newInfo)
 {
-    if (!loggedIn(playerId)) return;
+    if (!loggedIn(playerId)) {
+        return;
+    }
+
     myserver->player(playerId)->setInfo(newInfo);
     myserver->sendPlayer(playerId);
 }
@@ -1956,9 +2085,9 @@ void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
     bool res = PokemonInfo::modifyAbility(Pokemon::uniqueId(id), slot, ability, gen);
     if (!res) {
         warn(
-            "modifyPokeAbility",
-            QString("slot out of range or pokemon do not exist in gen %1.").arg(QString::number(gen))
-        );
+                    "modifyPokeAbility",
+                    QString("slot out of range or pokemon do not exist in gen %1.").arg(QString::number(gen))
+                    );
     }
 }
 
@@ -1974,8 +2103,8 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
 {
     Pokemon::uniqueId pokemon(poke);
     if (PokemonInfo::Exists(pokemon, gen)
-        && (slot >= 0) && (slot <= 2)
-        && (gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+            && (slot >= 0) && (slot <= 2)
+            && (gen >= GEN_MIN) && (gen <= GEN_MAX)) {
         return PokemonInfo::Abilities(pokemon, gen).ab(slot);
     }
     return myengine.undefinedValue();
@@ -2025,7 +2154,7 @@ QScriptValue ScriptEngine::teamPokeNick(int id, int team, int index)
 void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
 {
     if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
-        || !testRange("inflictStatus", slot, 0, 5)) {
+            || !testRange("inflictStatus", slot, 0, 5)) {
         return;
     }
     BattleBase * battle = myserver->getBattle(battleId);
@@ -2111,7 +2240,7 @@ void ScriptEngine::forceBattle(int player1, int player2, int team1, int team2, i
     c.clauses = clauses;
     c.mode = mode;
     c.rated = is_rated;
-   
+
     myserver->startBattle(player1, player2, c, team1, team2);
 }
 
@@ -2195,6 +2324,42 @@ void ScriptEngine::removeVal(const QString &file, const QString &key)
 {
     QSettings s(file, QSettings::IniFormat);
     s.remove("Script_"+key);
+}
+
+QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QScriptValue ret = myengine.newArray(files.count());
+
+    for (int i = 0; i < files.size(); i++) {
+        ret.setProperty(i, files[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QScriptValue ret = myengine.newArray(dirs.size());
+
+    for (int i = 0; i < dirs.size(); i++) {
+        ret.setProperty(i, dirs[i]);
+    }
+
+    return ret;
 }
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
@@ -2458,4 +2623,34 @@ QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
     hash.addData(text.toUtf8());
     return hash.result().toHex();
+}
+
+QString ScriptEngine::md4(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md4);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md5(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::hexColor(const QString &colorname)
+{
+    if (!QColor::isValidColor(colorname)) {
+        return "#000000";
+    }
+
+    QColor color = QColor(colorname);
+
+    return color.name();
+}
+
+bool ScriptEngine::validColor(const QString &color)
+{
+    QColor colorName = QColor(color);
+
+    return colorName.isValid();
 }

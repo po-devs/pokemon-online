@@ -1,4 +1,4 @@
-#ifndef CLIENT_H
+﻿#ifndef CLIENT_H
 #define CLIENT_H
 
 #include <QtGui>
@@ -54,6 +54,7 @@ public:
     /* Prints a line to all the channels which have that player */
     void printLine(int playerid, const QString &line);
     void printLine(int event, int playerid, const QString &line);
+
     Q_INVOKABLE void cancelFindBattle(bool verbose=true);
     Q_INVOKABLE bool playerExist(int id) const;
     Q_INVOKABLE QString name(int id) const;
@@ -65,23 +66,33 @@ public:
     Q_INVOKABLE int id(const QString &name) const;
     Q_INVOKABLE int currentChannel() const;
     Channel *channel(int channelid);
-    Q_INVOKABLE int ownId() const ;
-    Q_INVOKABLE int ownAuth() const ;
-    Q_INVOKABLE int auth(int id) const ;
+    Q_INVOKABLE int ownId() const;
+    Q_INVOKABLE int ownAuth() const;
+
+    Q_INVOKABLE int auth(int id) const;
     Q_INVOKABLE bool isIgnored(int id) const;
+
     Q_INVOKABLE QString authedNick(int id) const;
     Q_INVOKABLE QColor color(int id) const;
+
     Q_INVOKABLE QString tier(int player) const;
     Q_INVOKABLE QStringList tiers(int player) const;
+
     void changeName(int player, const QString &name);
     /* Resets fade away counter */
     void refreshPlayer(int id);
+
+    bool hasPlayer(int id);
+    bool hasPlayerInfo(int id);
+
     QSize defaultSize() const {
         return QSize(800,600);
     }
     Q_INVOKABLE void reconnect();
 
     Q_INVOKABLE QString defaultChannel();
+
+    Q_INVOKABLE QString announcement();
 
     enum Status {
         Available = 0,
@@ -95,8 +106,8 @@ public:
     void seeChallenge(const ChallengeInfo &c);
 
     PlayerInfo player(int id) const;
-
     void removePlayer(int id);
+
     void removeBattleWindow(int id);
     void disableBattleWindow(int id);
 
@@ -117,6 +128,7 @@ public:
         TeamEvent = 8,
         AnyEvent = 15
     };
+
     int showPEvents;
     bool sortBT;
     bool sortBA;
@@ -125,16 +137,20 @@ public:
     bool pmFlashing;
     bool pmsTabbed;
     bool pmReject;
+
     TierNode tierRoot;
     QStringList tierList;
 public slots:
     void errorFromNetwork(int errnum, const QString &error);
+
     void connected();
     void disconnected();
+
     /* message received from the server */
     void printLine(const QString &line);
     void printHtml(const QString &html);
     void printChannelMessage(const QString &mess, int channel, bool html);
+
     /* sends what's in the line edit */
     void sendText();
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
@@ -296,7 +312,7 @@ private:
     /* Line the user types in */
 //    QLineEdit *myline;
     QIRCLineEdit *myline;
-    SmallPokeTextEdit *announcement;
+    SmallPokeTextEdit *server_announcement;
     /* Where players are displayed */
     QStackedWidget *playersW, *battlesW;
     QExposedTabWidget *mainChat;
@@ -357,6 +373,7 @@ private:
        log out for real */
     QSet<int> pmedPlayers;
     QHash<QString, int> mynames;
+    QHash<QString, int> mylowernames;
 
     QHash<qint32, Battle> battles;
 
@@ -393,6 +410,19 @@ private:
     QSet<OnlineClientPlugin*> plugins;
     PluginManager *pluginManager;
     QHash<OnlineClientPlugin*, QHash<QString, OnlineClientPlugin::Hook> > hooks;
+
+    template<class T1>
+    bool call(const QString &f, T1 arg1)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1)>(hooks[p][f])))(arg1);
+            }
+        }
+
+        return ret;
+    }
 
     template<class T1, class T2>
     bool call(const QString &f, T1 arg1, T2 arg2)

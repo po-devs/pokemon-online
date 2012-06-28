@@ -1,4 +1,4 @@
-#ifndef SERVER_H
+﻿#ifndef SERVER_H
 #define SERVER_H
 
 #include "../Utilities/contextswitch.h"
@@ -100,6 +100,7 @@ public:
     bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
 
     int playerDeleteDays() const { return amountOfInactiveDays; }
+    QString description();
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
     void processLoginDetails(Player *p);
