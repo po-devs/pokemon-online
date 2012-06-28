@@ -87,7 +87,7 @@ void ScriptEngine::changeWarnings(bool warn)
         return;
     }
 
-    QString bts = warn ? "won't" : "will";
+    QString bts = warn ? "will now" : "won't";
 
     printLine(QString("Warnings %1 be displayed.").arg(bts));
     warnings = warn;
