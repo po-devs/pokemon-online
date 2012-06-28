@@ -58,6 +58,23 @@ CONFIG(po_registry) {
     SUBDIRS += src/Registry
 }
 
+TRANSLATIONS = translation_cz.ts \
+    src/trans/translation_de.ts \
+    src/trans/translation_es.ts \
+    src/trans/translation_fi.ts \
+    src/trans/translation_fr.ts \
+    src/trans/translation_he.ts \
+    src/trans/translation_it.ts \
+    src/trans/translation_jp.ts \
+    src/trans/translation_ko.ts \
+    src/trans/translation_pl.ts \
+    src/trans/translation_pt-br.ts \
+    src/trans/translation_ru.ts \
+    src/trans/translation_th.ts \
+    src/trans/translation_sv.ts \
+    src/trans/translation_zh-cn.ts \
+    src/trans/translation_tr.ts
+
 macx:QMAKE_CC=echo
 
 message(Following modules will be build: $$SUBDIRS)
