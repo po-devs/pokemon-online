@@ -14,12 +14,12 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
 
     QSettings s;
     s.beginGroup("ScriptWindow");
-    if (s.childKeys().contains("safeScripts")) {
-        ui->checkBox->setChecked(s.value("safeScripts").toBool());
-    }
+    ui->checkBox->setChecked(s.value("safeScripts", true).toBool());
+    ui->warn->setChecked(s.value("warn", false).toBool());
     s.endGroup();
 
     connect(ui->checkBox, SIGNAL(stateChanged(int)), this, SLOT(safeScriptsChanged(int)));
+    connect(ui->warn, SIGNAL(stateChanged(int)), this, SLOT(warningsChanged(int)));
 }
 
 void ScriptWindow::accept()
@@ -55,6 +55,23 @@ void ScriptWindow::safeScriptsChanged(int newStatus)
     } else {
         s.setValue("safeScripts", false);
         emit safeScriptsChanged(false);
+    }
+
+    s.endGroup();
+}
+
+void ScriptWindow::warningsChanged(int newStatus)
+{
+    QSettings s;
+
+    s.beginGroup("ScriptWindow");
+
+    if (newStatus == Qt::Checked) {
+        s.setValue("warn", true);
+        emit warningsChanged(true);
+    } else {
+        s.setValue("warn", false);
+        emit warningsChanged(false);
     }
 
     s.endGroup();

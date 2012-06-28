@@ -189,7 +189,7 @@ bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
 
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
-    printLine(QString("Script Warning in %1: %2").arg(function, message));
+    printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
 }
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
@@ -489,7 +489,7 @@ void ScriptEngine::sendHtmlAll(const QString &mess)
 
 void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
 {
-    if (testChannel("sendAll(mess, channel)", channel)) {
+    if (testChannel("sendHtmlAll(mess, channel)", channel)) {
 
         myserver->broadCast(mess, channel, Server::NoSender, true);
     }
@@ -497,15 +497,15 @@ void ScriptEngine::sendHtmlAll(const QString &mess, int channel)
 
 void ScriptEngine::sendHtmlMessage(int id, const QString &mess)
 {
-    if (testPlayer("sendMessage(id, mess)", id)) {
+    if (testPlayer("sendHtmlMessage(id, mess)", id)) {
         myserver->broadCast(mess, Server::NoChannel, Server::NoSender, true, id);
     }
 }
 
 void ScriptEngine::sendHtmlMessage(int id, const QString &mess, int channel)
 {
-    if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
-            testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
+    if (testChannel("sendHtmlMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
+            testPlayerInChannel("sendHtmlMessage(id, mess, channel)", id, channel))
     {
         myserver->broadCast(mess, channel, Server::NoSender, true, id);
     }
@@ -758,24 +758,26 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
-void ScriptEngine::callLater(const QString &expr, int delay)
+int ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
-    //qDebug() << "Call Later in " << delay << expr;
+
     QTimer *t = new QTimer();
 
     timerEvents[t] = expr;
     t->setSingleShot(true);
     t->start(delay*1000);
     connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
-void ScriptEngine::callQuickly(const QString &expr, int delay)
+int ScriptEngine::callQuickly(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
 
     QTimer *t = new QTimer(this);
@@ -784,17 +786,35 @@ void ScriptEngine::callQuickly(const QString &expr, int delay)
     t->setSingleShot(true);
     t->start(delay);
     connect(t, SIGNAL(timeout()), SLOT(timer()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalTimer(const QString &expr, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    QTimer *t = new QTimer();
+
+    timerEvents[t] = expr;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
 void ScriptEngine::timer()
 {
-    //qDebug() << "timer()";
     QTimer *t = (QTimer*) sender();
-    //qDebug() << timerEvents[t];
     eval(timerEvents[t]);
 
-    timerEvents.remove(t);
-    t->deleteLater();
+    if (t->isSingleShot()) {
+        timerEvents.remove(t);
+        t->deleteLater();
+    }
 }
 
 void ScriptEngine::timer_step()
@@ -802,26 +822,112 @@ void ScriptEngine::timer_step()
     this->stepEvent();
 }
 
-void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+int ScriptEngine::quickCall(const QScriptValue &func, int delay)
 {
-    if (delay <= 0) return;
-    if (func.isFunction()) {
-        QTimer *t = new QTimer(this);
-        timerEventsFunc[t] = func;
-        t->setSingleShot(true);
-        t->start(delay*1000);
-        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    if (delay <= 0) {
+        return -1;
     }
+
+    if (!func.isFunction()) {
+        warn("quickCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    if (!func.isFunction()) {
+        warn("delayedCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay*1000);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    if (!func.isFunction()) {
+        warn("intervalCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
 }
 
 void ScriptEngine::timerFunc()
 {
     QTimer *t = (QTimer*) sender();
     timerEventsFunc[t].call();
-    timerEventsFunc.remove(t);
-    t->deleteLater();
+
+    if (t->isSingleShot()) {
+        timerEventsFunc.remove(t);
+        t->deleteLater();
+    }
 }
 
+bool ScriptEngine::stopTimer(int timerId)
+{
+    QHashIterator <QTimer*, QString> it (timerEvents);
+    while (it.hasNext()) {
+        it.next();
+        QTimer *timer = it.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEvents.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    // Checking the function timers.
+    QHashIterator <QTimer*, QScriptValue> itfunc (timerEventsFunc);
+    while (itfunc.hasNext()) {
+        itfunc.next();
+        QTimer *timer = itfunc.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEventsFunc.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    return false; // No timer found.
+}
 
 QScriptValue ScriptEngine::eval(const QString &script)
 {
@@ -1946,14 +2052,20 @@ int ScriptEngine::teamPokeAbility(int id, int team, int slot)
 
 void ScriptEngine::changeName(int playerId, QString newName)
 {
-    if (!loggedIn(playerId)) return;
+    if (!loggedIn(playerId)) {
+        return;
+    }
+
     myserver->player(playerId)->setName(newName);
     myserver->sendPlayer(playerId);
 }
 
 void ScriptEngine::changeInfo(int playerId, QString newInfo)
 {
-    if (!loggedIn(playerId)) return;
+    if (!loggedIn(playerId)) {
+        return;
+    }
+
     myserver->player(playerId)->setInfo(newInfo);
     myserver->sendPlayer(playerId);
 }
@@ -2511,4 +2623,34 @@ QString ScriptEngine::sha1(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Sha1);
     hash.addData(text.toUtf8());
     return hash.result().toHex();
+}
+
+QString ScriptEngine::md4(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md4);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::md5(const QString &text) {
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(text.toUtf8());
+    return hash.result().toHex();
+}
+
+QString ScriptEngine::hexColor(const QString &colorname)
+{
+    if (!QColor::isValidColor(colorname)) {
+        return "#000000";
+    }
+
+    QColor color = QColor(colorname);
+
+    return color.name();
+}
+
+bool ScriptEngine::validColor(const QString &color)
+{
+    QColor colorName = QColor(color);
+
+    return colorName.isValid();
 }

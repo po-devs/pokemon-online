@@ -39,41 +39,60 @@ public:
 
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
+
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
+
     /* When a PM window is opened the first by src time towards another player */
     bool beforeNewPM(int src);
+
     void beforeLogOut(int src);
     void afterLogOut(int src);
+
     bool beforeLogIn(int src);
     void afterLogIn(int src);
+
     bool beforeChannelCreated(int channelid, const QString &channelname, int playerid);
     void afterChannelCreated(int channelid, const QString &channelname, int playerid);
+
     bool beforeChannelDestroyed(int channelid);
     void afterChannelDestroyed(int channelid);
+
     bool beforeChannelJoin(int src, int channelid);
     void afterChannelJoin(int src, int channelid);
+
     void beforeChannelLeave(int src, int channelid);
     void afterChannelLeave(int src, int channelid);
+
     void beforeChangeTeam(int src);
     void afterChangeTeam(int src);
+
     bool beforeChangeTier(int src, int teamSlot, const QString& oldTier, const QString &newTier);
     void afterChangeTier(int src, int teamSlot, const QString& oldTier, const QString &newTier);
+
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
+
     bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc);
     void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc);
+
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc, int battleid, int team1, int team2);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc, int battleid, int team1, int team2);
+
     void beforeBattleEnded(int winner, int loser, int desc, int battleid);
     void afterBattleEnded(int winner, int loser, int desc, int battleid);
+
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
+
     bool beforePlayerKick(int src, int dest);
     void afterPlayerKick(int src, int dest);
+
     bool beforePlayerBan(int src, int dest, int time);
     void afterPlayerBan(int src, int dest, int time);
+
     void battleSetup(int src, int dest, int battleId);
+
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
 
@@ -82,10 +101,13 @@ public:
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
+
     Q_INVOKABLE void sendAll(const QString &mess, int channel);
     Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
+
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
+
     Q_INVOKABLE void disconnect(int id); //Disconnects a player. (He can reconnect with all his data)
     /* If you edited his team, updates it for the rest of the world */
     Q_INVOKABLE void updatePlayer(int playerid);
@@ -112,16 +134,20 @@ public:
     Q_INVOKABLE void stopEvent();
 
     Q_INVOKABLE void shutDown();
+
     Q_INVOKABLE void sendMessage(int id, const QString &mess);
     Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
+
     Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess);
     Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess, int channel);
+
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
     Q_INVOKABLE void changeAuth(int id, int auth);
     Q_INVOKABLE void changeDbAuth(const QString &name, int auth);
     Q_INVOKABLE void changeAway(int id, bool away);
+
     Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
     Q_INVOKABLE void changePokeLevel(int id, int team, int slot, int level);
     Q_INVOKABLE void changePokeNum(int id, int team, int slot, int num);
@@ -129,6 +155,7 @@ public:
     Q_INVOKABLE void changePokeMove(int id, int team, int pokeslot, int moveslot, int move);
     Q_INVOKABLE void changePokeGender(int id, int team, int pokeslot, int gender);
     Q_INVOKABLE void changePokeName(int id, int team, int pokeslot, const QString &name);
+
     Q_INVOKABLE void changeTier(int id, int team, const QString &tier);
     Q_INVOKABLE void reloadTiers();
     /* Export the SQL databases to old style txt files */
@@ -143,11 +170,22 @@ public:
     Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
 
     Q_INVOKABLE void clearChat();
+
     /* Accepts string as 1st parameter. */
-    Q_INVOKABLE void callLater(const QString &s, int delay);
-    Q_INVOKABLE void callQuickly(const QString &s, int delay);
+    Q_INVOKABLE int callLater(const QString &s, int delay);
+    Q_INVOKABLE int callQuickly(const QString &s, int delay);
+
     /* Accepts function as 1st parameter. */
-    Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay);
+
+    /* Interval timers. */
+    Q_INVOKABLE int intervalTimer(const QString &expr, int delay);
+    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay);
+
+    /* Stops a timer. */
+    Q_INVOKABLE bool stopTimer(int timerId);
+
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
 
@@ -299,6 +337,11 @@ public:
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
     
     Q_INVOKABLE QString sha1(const QString &text);
+    Q_INVOKABLE QString md4(const QString &text);
+    Q_INVOKABLE QString md5(const QString &text);
+
+    Q_INVOKABLE bool validColor(const QString &color);
+    Q_INVOKABLE QString hexColor(const QString &colorname);
 
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
@@ -370,7 +413,10 @@ private:
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
     QHash<int,QScriptValue> myHostLookups;
 
-    void startStopEvent() {stopevents.push_back(false);}
+    void startStopEvent() {
+        stopevents.push_back(false);
+    }
+
     bool endStopEvent() {
         bool res = stopevents.back();
         stopevents.pop_back();

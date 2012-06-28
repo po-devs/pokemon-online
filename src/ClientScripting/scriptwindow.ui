@@ -41,6 +41,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="warn">
+     <property name="text">
+      <string>Show Warnings</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -54,7 +61,6 @@
  </widget>
  <tabstops>
   <tabstop>scripts</tabstop>
-  <tabstop>checkBox</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

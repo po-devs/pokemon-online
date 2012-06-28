@@ -25,6 +25,7 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
 
     QSettings s;
     safeScripts = s.value("ScriptWindow/safeScripts", true).toBool();
+    warnings = s.value("ScriptWindow/warn", true).toBool();
 
     datalocation = appDataPath("Scripts/", true) + "/data.ini";
 
@@ -58,7 +59,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
-        onScriptChanged(myscript, oldScript, true);
+        evaluate(oldScript.property("onScriptChanged").call(oldScript, QScriptValueList() << myscript << oldScript << true));
     } else {
         //printLine("Script Check: OK");
         if(triggerStartUp) {
@@ -78,6 +79,18 @@ void ScriptEngine::changeSafeScripts(bool safe)
 
     printLine(QString("Safe Scripts was turned %1.").arg(bts));
     safeScripts = safe;
+}
+
+void ScriptEngine::changeWarnings(bool warn)
+{
+    if (warnings == warn) {
+        return;
+    }
+
+    QString bts = warn ? "won't" : "will";
+
+    printLine(QString("Warnings %1 be displayed.").arg(bts));
+    warnings = warn;
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -110,6 +123,10 @@ void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
 
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
+    if (!warnings) {
+        return;
+    }
+
     printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
 }
 
@@ -176,7 +193,7 @@ void ScriptEngine::clientShutDown()
 
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
-    if (expr.isError()) {
+    if (expr.isError() && warnings) {
         printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()));
     }
 }
@@ -186,17 +203,10 @@ void ScriptEngine::clearChat()
     //emit clearTheChat();
 }
 
-bool ScriptEngine::validColor(const QString &color)
-{
-    QColor colorName = QColor(color);
-
-    return colorName.isValid();
-}
-
-void ScriptEngine::callLater(const QString &expr, int delay)
+int ScriptEngine::callLater(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
 
     QTimer *t = new QTimer();
@@ -205,12 +215,14 @@ void ScriptEngine::callLater(const QString &expr, int delay)
     t->setSingleShot(true);
     t->start(delay*1000);
     connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
-void ScriptEngine::callQuickly(const QString &expr, int delay)
+int ScriptEngine::callQuickly(const QString &expr, int delay)
 {
     if (delay <= 0) {
-        return;
+        return -1;
     }
 
     QTimer *t = new QTimer(this);
@@ -219,6 +231,24 @@ void ScriptEngine::callQuickly(const QString &expr, int delay)
     t->setSingleShot(true);
     t->start(delay);
     connect(t, SIGNAL(timeout()), SLOT(timer()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalTimer(const QString &expr, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    QTimer *t = new QTimer();
+
+    timerEvents[t] = expr;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+
+    return t->timerId();
 }
 
 void ScriptEngine::timer()
@@ -226,8 +256,10 @@ void ScriptEngine::timer()
     QTimer *t = (QTimer*) sender();
     eval(timerEvents[t]);
 
-    timerEvents.remove(t);
-    t->deleteLater();
+    if (t->isSingleShot()) {
+        timerEvents.remove(t);
+        t->deleteLater();
+    }
 }
 
 void ScriptEngine::timer_step()
@@ -235,38 +267,112 @@ void ScriptEngine::timer_step()
     this->stepEvent();
 }
 
-void ScriptEngine::quickCall(const QScriptValue &func, int delay)
+int ScriptEngine::quickCall(const QScriptValue &func, int delay)
 {
-    if (delay <= 0) return;
-    if (func.isFunction()) {
-        QTimer *t = new QTimer(this);
-        timerEventsFunc[t] = func;
-        t->setSingleShot(true);
-        t->start(delay);
-        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    if (delay <= 0) {
+        return -1;
     }
+
+    if (!func.isFunction()) {
+        warn("quickCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
 }
 
-void ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+int ScriptEngine::delayedCall(const QScriptValue &func, int delay)
 {
-    if (delay <= 0) return;
-    if (func.isFunction()) {
-        QTimer *t = new QTimer(this);
-        timerEventsFunc[t] = func;
-        t->setSingleShot(true);
-        t->start(delay*1000);
-        connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+    if (delay <= 0) {
+        return -1;
     }
+
+    if (!func.isFunction()) {
+        warn("delayedCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(true);
+    t->start(delay*1000);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
+}
+
+int ScriptEngine::intervalCall(const QScriptValue &func, int delay)
+{
+    if (delay <= 0) {
+        return -1;
+    }
+
+    if (!func.isFunction()) {
+        warn("intervalCall(func, delay)", "No function passed to first parameter.");
+        return -1;
+    }
+
+    QTimer *t = new QTimer(this);
+    timerEventsFunc[t] = func;
+    t->setSingleShot(false);
+    t->start(delay);
+    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
+
+    return t->timerId();
 }
 
 void ScriptEngine::timerFunc()
 {
     QTimer *t = (QTimer*) sender();
     timerEventsFunc[t].call();
-    timerEventsFunc.remove(t);
-    t->deleteLater();
+
+    if (t->isSingleShot()) {
+        timerEventsFunc.remove(t);
+        t->deleteLater();
+    }
 }
 
+bool ScriptEngine::stopTimer(int timerId)
+{
+    QHashIterator <QTimer*, QString> it (timerEvents);
+    while (it.hasNext()) {
+        it.next();
+        QTimer *timer = it.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEvents.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    // Checking the function timers.
+    QHashIterator <QTimer*, QScriptValue> itfunc (timerEventsFunc);
+    while (itfunc.hasNext()) {
+        itfunc.next();
+        QTimer *timer = itfunc.key();
+
+        if (timer->timerId() == timerId) {
+            timer->stop();
+            timer->blockSignals(true);
+
+            timerEventsFunc.remove(timer);
+            timer->deleteLater();
+            return true; // Timer found.
+        }
+    }
+
+    return false; // No timer found.
+}
 
 QScriptValue ScriptEngine::eval(const QString &script)
 {
@@ -313,8 +419,11 @@ void ScriptEngine::printLine(const QString &s)
 void ScriptEngine::stopEvent()
 {
     if (stopevents.size() == 0) {
-        printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
-    } else {
+        if (warnings) {
+            printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
+        }
+    }
+    else {
         stopevents.back() = true;
     }
 }
@@ -487,6 +596,11 @@ bool ScriptEngine::isSafeScripts()
     return safeScripts;
 }
 
+bool ScriptEngine::showingWarnings()
+{
+    return warnings;
+}
+
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
 {
     QSettings s(datalocation, QSettings::IniFormat);
@@ -530,7 +644,7 @@ QScriptValue ScriptEngine::getValKeys()
 bool isKeyIllegal(const QString &key_)
 {
     QString key = key_.toLower();
-    return key == "scriptwindow/safescripts" || key == "scriptwindow\\safescripts";
+    return key.contains("scriptwindow/") || key.contains("scriptwindow\\");
 }
 
 void ScriptEngine::saveRegVal(const QString &key, const QVariant &val)
@@ -541,7 +655,7 @@ void ScriptEngine::saveRegVal(const QString &key, const QVariant &val)
     }
 
     if (isKeyIllegal(key)) {
-        warn("saveRegVal(key, val)", "Safe scripts setting cannot be changed by scripts.");
+        warn("saveRegVal(key, val)", "Plugin settings cannot be changed by scripts.");
         return;
     }
 
@@ -557,7 +671,7 @@ QScriptValue ScriptEngine::getRegVal(const QString &key)
     }
 
     if (isKeyIllegal(key)) {
-        warn("getRegVal(key)", "Safe scripts setting cannot be read using getRegVal. Use isSafeScripts() instead.");
+        warn("getRegVal(key)", "Plugin settings cannot be read by scripts.");
         return "";
     }
 
@@ -573,7 +687,7 @@ void ScriptEngine::removeRegVal(const QString &key)
     }
 
     if (isKeyIllegal(key)) {
-        warn("removeRegVal(key)", "Safe scripts setting cannot be changed by scripts.");
+        warn("removeRegVal(key)", "Plugin settings cannot be changed by scripts.");
         return;
     }
 
@@ -660,7 +774,7 @@ void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::Append)) {
-        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        warn("sys.appendToFile(filename, content)", "Error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -677,7 +791,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        warn("writeToFile(filename, content)", "Error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -694,7 +808,7 @@ void ScriptEngine::deleteFile(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        warn("deleteFile(filename)", "Error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -711,7 +825,7 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::ReadOnly)) {
-        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        warn("getFileContent(filename)", "Error when opening " + fileName + ": " + out.errorString());
         return myengine.undefinedValue();
     }
 
@@ -731,7 +845,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     }
 
     if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
+        warn("webCall(urlstring, callback)", "Callback is not a string or a function.");
         return;
     }
 
@@ -758,7 +872,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     }
 
     if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
+        warn("webCall(urlstring, callback, params_array)", "Callback is not a string or a function.");
         return;
     }
 
@@ -811,7 +925,7 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
 {
     if (safeScripts) {
         warn("synchronousWebCall(url)", "Safe scripts is on.");
-        return "";
+        return myengine.undefinedValue();
     }
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -837,11 +951,6 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
 {
-    if (safeScripts) {
-        warn("synchronousWebCall(url, postargs)", "Safe scripts is on.");
-        return "";
-    }
-
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
     QByteArray postData;
@@ -897,4 +1006,11 @@ QString ScriptEngine::hexColor(const QString &colorname)
     QColor color = QColor(colorname);
 
     return color.name();
+}
+
+bool ScriptEngine::validColor(const QString &color)
+{
+    QColor colorName = QColor(color);
+
+    return colorName.isValid();
 }
