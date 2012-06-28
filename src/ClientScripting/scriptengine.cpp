@@ -940,6 +940,11 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
 {
+    if (safeScripts) {
+        warn("synchronousWebCall(url)", "Safe scripts is on.");
+        return myengine.undefinedValue();
+    }
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
     QByteArray postData;
