@@ -28,6 +28,8 @@ PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemo
 
     QFileInfo f(file);
     m_Name = QUrl::fromPercentEncoding(f.baseName().toUtf8());
+
+    loadBox();
 }
 
 void PokeBox::deleteBox()
@@ -65,6 +67,11 @@ void PokeBox::loadBox()
     QDomDocument doc;
 
     QFile in(QString(getBoxPath() + "/%1.box").arg(QString::fromUtf8(QUrl::toPercentEncoding(getBoxName()))));
+    if (!in.exists()) {
+        //Touch file, in case the file didn't exist, at least the box is saved
+        in.open(QIODevice::Append);
+        return;
+    }
     in.open(QIODevice::ReadOnly);
 
     if(!doc.setContent(&in))
@@ -239,8 +246,8 @@ void PokeBox::addGraphicsItem(int spot)
 QPointF PokeBox::calculatePos(int spot, const QSize &itemSize)
 {
     QPointF m_Pos;
-    m_Pos.setX((spot % 10) * 66 + 24 - itemSize.width() / 2);
-    m_Pos.setY((spot / 10) * 52 + 24 - itemSize.height() / 2);
+    m_Pos.setX((spot % 10) * 66 + (66-itemSize.width()) / 2);
+    m_Pos.setY((spot / 10) * 52 + (66-itemSize.height()) / 2);
 
     return m_Pos;
 }
@@ -250,8 +257,12 @@ int PokeBox::calculateSpot(const QPoint &graphicViewPos)
     QPointF m_Pos = mapToScene(graphicViewPos);
     int x, y;
 
-    x = int((m_Pos.x() - 24) / 66 + 0.5);
-    y = int((m_Pos.y() - 24) / 52 + 0.5);
+    if (m_Pos.x() < 0 || m_Pos.y() < 0) {
+        return -1;
+    }
+
+    x = int(m_Pos.x() / 66 );
+    y = int(m_Pos.y() / 52 );
 
     if (x < 10 && y < 3 && x >= 0 && y >= 0) {
         return y * 10 + x;
