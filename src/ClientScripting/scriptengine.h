@@ -36,6 +36,8 @@ public:
     int afterPMReceived(int id, const QString &message);
     int onPlayerReceived(int id);
     int onPlayerRemoved(int id);
+    int onScriptChanged(const QScriptValue &newscript, const QScriptValue oldscript
+                                       , bool exceptionCaught);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
@@ -95,19 +97,15 @@ public:
 
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
-    Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
-    Q_INVOKABLE void saveSetting (const QString &key, const QVariant &val);
-
     Q_INVOKABLE void removeVal(const QString &key);
-    Q_INVOKABLE void removeVal(const QString &file, const QString &key);
-
     Q_INVOKABLE QScriptValue getVal(const QString &key);
-    Q_INVOKABLE QScriptValue getVal(const QString &file, const QString &key);
-    Q_INVOKABLE QScriptValue getSetting(const QString &key);
-
-    // Returns an array of Script_* key names in config.
     Q_INVOKABLE QScriptValue getValKeys();
-    Q_INVOKABLE QScriptValue getValKeys(const QString &file);
+
+    /* Save vals in the system registry. */
+    Q_INVOKABLE void saveRegVal(const QString &key, const QVariant &val);
+    Q_INVOKABLE void removeRegVal(const QString &key);
+    Q_INVOKABLE QScriptValue getRegVal(const QString &key);
+    Q_INVOKABLE QScriptValue getRegKeys();
 
     Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir_);
     Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir_);
