@@ -394,6 +394,10 @@ PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
     border: 0;
 }
 
+PokeBoxes #movesLabel, PokeBoxes #natureLabel {
+    font-weight: bold;
+}
+
 PokeBoxes #boxes {
     border: 1px solid red;
     border-radius: 10px;

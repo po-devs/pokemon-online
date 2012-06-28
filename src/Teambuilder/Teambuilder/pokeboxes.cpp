@@ -108,8 +108,8 @@ void PokeBoxes::loadBoxes()
             }
             files = f;
         } else {
-            files << tr("Box A.box") << tr("Box B.box") << tr("Box C.box") << tr("Box D.box") << tr("Box E.box") <<
-                     tr("Box F.box") << tr("Box G.box") << tr("Box H.box");
+            files << tr("Box%20A.box") << tr("Box%20B.box") << tr("Box%20C.box") << tr("Box%20D.box") << tr("Box%20E.box") <<
+                     tr("Box%20F.box") << tr("Box%20G.box") << tr("Box%20H.box");
         }
     }
 

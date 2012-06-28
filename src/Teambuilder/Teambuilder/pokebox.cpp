@@ -11,8 +11,6 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "theme.h"
 
-Q_DECLARE_METATYPE(PokeBox*)
-
 PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0), isLoaded(false)
 {
     m_Empty = Theme::Sprite("boxempty");
@@ -374,11 +372,14 @@ void PokeBox::dropEvent(QDropEvent *event)
 
     const QMimeData *data = event->mimeData();
 
-    if(!data->property("Box").isNull() && !data->property("Item").isNull()) {
+    bool b1 = data->data("Box").isNull();
+    bool b2 = data->data("Item").isNull();
+
+    if(!b1 && !b2) {
         event->accept();
 
-        PokeBox *box = data->property("Box").value<PokeBox*>();
-        int item = data->property("Item").toInt();
+        PokeBox *box = (PokeBox*)(intptr_t)data->data("Box").toLongLong();
+        int item = data->data("Item").toInt();
 
         if (box == this && item == spot)
             return;
@@ -396,10 +397,10 @@ void PokeBox::dropEvent(QDropEvent *event)
         if (box != this)
             box->saveBox();
 
-    } else if (!data->property("TeamSlot").isNull()) {
+    } else if (!data->data("TeamSlot").isNull()) {
         event->accept();
 
-        int slot = data->property("TeamSlot").toInt();
+        int slot = data->data("TeamSlot").toInt();
         emit switchWithTeam(getNum(), currentPokemon, slot);
     }
 }

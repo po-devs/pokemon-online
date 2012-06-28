@@ -442,6 +442,10 @@ QTabWidget#boxes > QTabBar::tab:selected {
         background: #66ace1;
 }
 
+PokeBoxes #movesLabel, PokeBoxes #natureLabel {
+    font-weight: bold;
+}
+
 QTabWidget#boxes > QTabBar::tab:top:selected , QTabWidget#boxes > QTabBar::tab:bottom:selected {
         /* expand/overlap to the left and right by 4px */
         margin-left: -2px;

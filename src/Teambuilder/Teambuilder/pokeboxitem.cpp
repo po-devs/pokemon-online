@@ -6,8 +6,6 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
-Q_DECLARE_METATYPE(PokeBox*)
-
 PokeBoxItem::PokeBoxItem(PokeTeam *poke, PokeBox *box) : poke(NULL), m_Box(box)
 {
     setCursor(Qt::OpenHandCursor);
@@ -74,10 +72,9 @@ void PokeBoxItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void PokeBoxItem::startDrag()
 {
     QMimeData * data = new QMimeData();
-    QVariant v;
-    v.setValue(m_Box);
-    data->setProperty("Box", v);
-    data->setProperty("Item", m_Box->getNumOf(this));
+
+    data->setData("Box", QByteArray::number(intptr_t(m_Box)));
+    data->setData("Item", QByteArray::number(m_Box->getNumOf(this)));
     data->setImageData(pixmap());
     QDrag * drag = new QDrag(m_Box->parentWidget());
     drag->setMimeData(data);
