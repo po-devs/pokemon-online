@@ -127,7 +127,7 @@ void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
     m_Pokemons[spot] = new PokeBoxItem(new PokeTeam(poke), this);
 
     addGraphicsItem(spot);
-    changeCurrentSpot(spot, true);
+    changeCurrentSpot(spot);
 }
 
 PokeTeam *PokeBox::getCurrent()
@@ -165,9 +165,9 @@ void PokeBox::updateSpots(int i, int j)
                                 << QRectF(calculatePos(j, m_Clicked.size()), m_Clicked.size()));
 }
 
-void PokeBox::changeCurrentSpot(int newSpot, bool f)
+void PokeBox::changeCurrentSpot(int newSpot)
 {
-    if(newSpot == currentPokemon && !f) {
+    if(newSpot == currentPokemon) {
         return;
     }
 
@@ -302,7 +302,7 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
         QPointF self_back_pos = calculatePos(i, m_Clicked.size());
         QRectF intersection = rect.intersect(QRectF(self_back_pos, m_Clicked.size()));
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
-                                type.width(), type.height());
+                                std::min(qreal(type.width()),intersection.width()), std::min(qreal(type.height()),intersection.height()));
         painter->drawPixmap(intersection, type, srcRect);
     }
 }
