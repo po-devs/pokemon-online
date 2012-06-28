@@ -72,11 +72,11 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     QVBoxLayout *layout = new QVBoxLayout(container);
     layout->setMargin(0);
 
-    layout->addWidget(announcement = new SmallPokeTextEdit());
-    announcement->setObjectName("Announcement");
-    announcement->setOpenExternalLinks(true);
-    announcement->hide();
-    announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(server_announcement = new SmallPokeTextEdit());
+    server_announcement->setObjectName("Announcement");
+    server_announcement->setOpenExternalLinks(true);
+    server_announcement->hide();
+    server_announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     layout->addWidget(mainChat = new QExposedTabWidget(), 100);
     mainChat->setObjectName("MainChat");
@@ -1650,9 +1650,9 @@ void Client::announcementReceived(const QString &ann)
     if (ann.length() == 0)
         return;
 
-    announcement->setText(ann);
-    announcement->setAlignment(Qt::AlignCenter);
-    announcement->show();
+    server_announcement->setText(ann);
+    server_announcement->setAlignment(Qt::AlignCenter);
+    server_announcement->show();
 }
 
 void Client::tierListReceived(const QByteArray &tl)
@@ -2104,9 +2104,9 @@ Analyzer &Client::relay()
     return *myrelay;
 }
 
-QString Client::getAnnouncement()
+QString Client::announcement()
 {
-    return announcement->document()->toPlainText();
+    return server_announcement->document()->toPlainText();
 }
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)

@@ -92,7 +92,7 @@ public:
 
     Q_INVOKABLE QString defaultChannel();
 
-    Q_INVOKABLE QString getAnnouncement();
+    Q_INVOKABLE QString announcement();
 
     enum Status {
         Available = 0,
@@ -312,7 +312,7 @@ private:
     /* Line the user types in */
 //    QLineEdit *myline;
     QIRCLineEdit *myline;
-    SmallPokeTextEdit *announcement;
+    SmallPokeTextEdit *server_announcement;
     /* Where players are displayed */
     QStackedWidget *playersW, *battlesW;
     QExposedTabWidget *mainChat;
