@@ -24,6 +24,10 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     connect(ui->withdrawButton, SIGNAL(clicked()), SLOT(withdrawPokemon()));
     connect(ui->switchButton, SIGNAL(clicked()), SLOT(switchPokemon()));
     connect(ui->boxes, SIGNAL(currentChanged(int)), SLOT(currentBoxChanged(int)));
+    connect(ui->addBox, SIGNAL(clicked()), SLOT(newBox()));
+    connect(ui->editBoxName, SIGNAL(clicked()), SLOT(editBoxName()));
+    connect(ui->deleteBox, SIGNAL(clicked()), SLOT(deleteBox()));
+    connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
 }
 
 PokeBoxes::~PokeBoxes()
@@ -155,6 +159,66 @@ void PokeBoxes::addBox(const QString &name)
 
     connect(box, SIGNAL(switchWithTeam(int,int,int)), SLOT(switchBoxTeam(int,int,int)));
     connect(box, SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
+}
+
+void PokeBoxes::newBox()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("New Box"),
+                                         tr("Enter the new name for the new box:"), QLineEdit::Normal,
+                                          tr("New Box"), &ok);
+    if (ok && !text.isEmpty() && !existBox(text)) {
+        addBox(QString::fromUtf8(QUrl::toPercentEncoding(text))+".box");
+    }
+}
+
+void PokeBoxes::editBoxName()
+{
+    bool ok;
+    PokeBox *box = currentBox();
+    QString text = QInputDialog::getText(this, tr("Edit Box Name"),
+                                         tr("Enter the new name for the box %1:").arg(box->getBoxName()), QLineEdit::Normal,
+                                          box->getBoxName(), &ok);
+    if (ok && !text.isEmpty() && !existBox(text)) {
+         box->reName(text);
+         ui->boxes->setTabText(box->getNum(), text);
+     }
+}
+
+void PokeBoxes::deleteBox()
+{
+    if (boxes.size() <= 1)
+        return;
+
+    int res = QMessageBox::question(this, tr("Destroying a box"), tr("Do you want to delete box %1?").arg(currentBox()->getBoxName()), QMessageBox::Yes | QMessageBox::No);
+
+    if (res == QMessageBox::Yes) {
+        deleteBox(currentBox()->getNum());
+    }
+}
+
+void PokeBoxes::deleteBox(int num)
+{
+    boxes[num]->deleteBox();
+
+    PokeBox *b = boxes[num];
+    boxes.removeAt(num);
+
+    for (int i = num; i < boxes.size(); i++) {
+        boxes[i]->setNum(i);
+    }
+
+    delete b;
+}
+
+bool PokeBoxes::existBox(const QString &name) const
+{
+    foreach(PokeBox *box, boxes) {
+        if (box->getBoxName() == name)
+            return true;
+    }
+
+    return false;
 }
 
 void PokeBoxes::storePokemon()
