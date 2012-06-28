@@ -134,7 +134,7 @@ void Channel::anchorClicked(const QUrl &url)
         } else if (path == "reconnect") {
             client->reconnect();
         } else if (path.leftRef(6) == "watch/") {
-            client->watchBattleRequ(QString::number(path.mid(6)));
+            client->watchBattleRequ(path.mid(6).toInt());
         } else if (path.leftRef(3) == "pm/") {
             QString player = path.mid(3);
             int id = player.toInt();
