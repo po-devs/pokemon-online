@@ -73,7 +73,7 @@ void PokeBoxItem::startDrag()
 {
     QMimeData * data = new QMimeData();
 
-    data->setData("Box", QByteArray::number(intptr_t(m_Box)));
+    data->setData("Box", QByteArray::number(qlonglong(m_Box)));
     data->setData("Item", QByteArray::number(m_Box->getNumOf(this)));
     data->setImageData(pixmap());
     QDrag * drag = new QDrag(m_Box->parentWidget());
