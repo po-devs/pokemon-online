@@ -1,4 +1,5 @@
 #include <QDomElement>
+#include <QApplication>
 #include <QFileInfo>
 #include <QUrl>
 #include <QMessageBox>
@@ -147,8 +148,8 @@ void PokeBox::changeCurrent(const PokeTeam &poke)
 
 void PokeBox::updateSpots(int i, int j)
 {
-    updateScene(QList<QRectF>() << QRectF(calculatePos(i), m_Occupied.size())
-                                << QRectF(calculatePos(j), m_Occupied.size()));
+    updateScene(QList<QRectF>() << QRectF(calculatePos(i, m_Clicked.size()), m_Clicked.size())
+                                << QRectF(calculatePos(j, m_Clicked.size()), m_Clicked.size()));
 }
 
 void PokeBox::changeCurrentSpot(int newSpot, bool f)
@@ -235,11 +236,11 @@ void PokeBox::addGraphicsItem(int spot)
     m_Pokemons[spot]->setBox(this);
 }
 
-QPointF PokeBox::calculatePos(int spot)
+QPointF PokeBox::calculatePos(int spot, const QSize &itemSize)
 {
     QPointF m_Pos;
-    m_Pos.setX((spot % 10) * 64);
-    m_Pos.setY((spot / 10) * 50);
+    m_Pos.setX((spot % 10) * 66 + 24 - itemSize.width() / 2);
+    m_Pos.setY((spot / 10) * 52 + 24 - itemSize.height() / 2);
 
     return m_Pos;
 }
@@ -249,8 +250,8 @@ int PokeBox::calculateSpot(const QPoint &graphicViewPos)
     QPointF m_Pos = mapToScene(graphicViewPos);
     int x, y;
 
-    x = int((m_Pos.x()) / 64);
-    y = int((m_Pos.y()) / 50);
+    x = int((m_Pos.x() - 24) / 66 + 0.5);
+    y = int((m_Pos.y() - 24) / 52 + 0.5);
 
     if (x < 10 && y < 3 && x >= 0 && y >= 0) {
         return y * 10 + x;
@@ -266,16 +267,23 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
     for (int i = 0; i < m_Pokemons.size(); i++) {
         QPixmap type;
 
-        if (i == currentPokemon || calculateSpot(oldMousePos) == i) {
-            type = m_Hover;
+        if (calculateSpot(oldMousePos) == i) {
+            //Not really the best but w/e
+            if (QApplication::mouseButtons() != Qt::NoButton) {
+                type = m_Clicked;
+            } else {
+                type = m_Hover;
+            }
+        } else if (i == currentPokemon) {
+            type = m_Clicked;
         } else if (m_Pokemons[i]) {
             type = m_Occupied;
         } else {
             type = m_Empty;
         }
 
-        QPointF self_back_pos = calculatePos(i);
-        QRectF intersection = rect.intersect(QRectF(self_back_pos, type.size()));
+        QPointF self_back_pos = calculatePos(i, m_Clicked.size());
+        QRectF intersection = rect.intersect(QRectF(self_back_pos, m_Clicked.size()));
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
                                 type.width(), type.height());
         painter->drawPixmap(intersection, type, srcRect);
@@ -293,6 +301,8 @@ PokeBoxItem *PokeBox::currentItem()
 
 void PokeBox::mousePressEvent(QMouseEvent *event)
 {
+    updateSpots(calculateSpot(event->pos()), -1);
+
     /* To let other items than the first clicked have the mouse */
     if (scene()->mouseGrabberItem())
         scene()->mouseGrabberItem()->ungrabMouse();
@@ -311,6 +321,13 @@ void PokeBox::mousePressEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mousePressEvent(event);
+}
+
+void PokeBox::mouseReleaseEvent(QMouseEvent *event)
+{
+    updateSpots(calculateSpot(event->pos()), -1);
+
+    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void PokeBox::mouseMoveEvent(QMouseEvent *event)
