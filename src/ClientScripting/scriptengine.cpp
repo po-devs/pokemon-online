@@ -52,20 +52,16 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
-    QScriptValue oldScript = myscript;
-
     myscript = myengine.evaluate(script);
     myengine.globalObject().setProperty("script", myscript);
 
     if (myscript.isError()) {
         printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
-        evaluate(oldScript.property("onScriptChanged").call(oldScript, QScriptValueList() << myscript << oldScript << true));
     } else {
         //printLine("Script Check: OK");
         if(triggerStartUp) {
             clientStartUp();
         }
-        onScriptChanged(myscript, oldScript, false);
     }
 }
 
@@ -171,13 +167,6 @@ int ScriptEngine::onPlayerReceived(int id)
 int ScriptEngine::onPlayerRemoved(int id)
 {
     makeEvent("onPlayerRemoved", id);
-    return true;
-}
-
-int ScriptEngine::onScriptChanged(const QScriptValue &newscript, const QScriptValue oldscript
-                                  , bool exceptionCaught)
-{
-    makeEvent("onScriptChanged", newscript, oldscript, exceptionCaught);
     return true;
 }
 
