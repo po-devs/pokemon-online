@@ -20,7 +20,7 @@ class PokeBoxes :  public TeamBuilderWidget
 public:
     explicit PokeBoxes(QWidget *parent = 0, TeamHolder *nteam = NULL);
     ~PokeBoxes();
-    void changePoke(PokeTeam *poke);
+    void changePoke(PokeTeam *poke, int slot = -1, int box=-1);
     void updatePoke();
 
     void updateTeam();
@@ -43,6 +43,7 @@ public slots:
     void deleteBox();
 private:
     PokeTeam *m_poke;
+    int displayedBox, displayedSlot;
     TeamHolder *m_team;
     Ui::PokeBoxes *ui;
     QList<PokeBox*> boxes;

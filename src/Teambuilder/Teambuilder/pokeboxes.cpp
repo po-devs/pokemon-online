@@ -13,7 +13,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     ui->setupUi(this);
 
     ui->pokemonButtons->setTeam(team().team());
-    changePoke(&team().team().poke(0));
+    changePoke(&team().team().poke(0), 0);
     updatePoke();
 
     loadBoxes();
@@ -42,23 +42,42 @@ void PokeBoxes::currentBoxChanged(int b)
 
 void PokeBoxes::showPoke(PokeTeam *poke)
 {
-    changePoke(poke);
+    PokeBox *box = qobject_cast<PokeBox*>(sender());
+
+    if (box) {
+        changePoke(poke, box->currentSlot(), box->getNum());
+    } else {
+        changePoke(poke);
+    }
     updatePoke();
 }
 
 void PokeBoxes::updateTeam()
 {
     ui->pokemonButtons->setTeam(team().team());
+
+    if (displayedBox == -1) {
+        changePoke(&team().team().poke(displayedSlot));
+    }
     updatePoke();
 }
 
-void PokeBoxes::changePoke(PokeTeam *poke)
+void PokeBoxes::changePoke(PokeTeam *poke, int slot, int box)
 {
+    this->displayedBox = box;
+    if (slot != -1) {
+        this->displayedSlot = slot;
+    }
     this->m_poke = poke;
 }
 
 void PokeBoxes::updatePoke()
 {
+    if (displayedBox != -1) {
+        ui->boxInfoLabel->setText(tr("Box %1 slot %2").arg(displayedBox+1).arg(displayedSlot+1));
+    } else {
+        ui->boxInfoLabel->setText(tr("Team slot %1").arg(displayedSlot+1));
+    }
     ui->nickNameLabel->setText(poke().nickname());
     ui->speciesLabel->setText(PokemonInfo::Name(poke().num()));
     ui->pokemonSprite->setPixmap(poke().picture());
@@ -87,7 +106,7 @@ void PokeBoxes::updatePoke()
 
 void PokeBoxes::changeTeamPoke(int index)
 {
-    changePoke(&team().team().poke(index));
+    changePoke(&team().team().poke(index), index);
     updatePoke();
 }
 
