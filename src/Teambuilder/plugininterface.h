@@ -30,7 +30,7 @@ public:
 class ClientPlugin
 {
 public:
-    virtual ~ClientPlugin();
+    virtual ~ClientPlugin() {}
 
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */

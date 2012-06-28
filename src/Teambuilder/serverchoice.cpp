@@ -23,6 +23,8 @@ ServerChoice::ServerChoice(const QString &nick) :
     );
     registry_connection->setParent(this);
 
+    ui->switchPort->setIcon(QApplication::style()->standardIcon(QStyle::SP_BrowserReload));
+
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
@@ -86,18 +88,28 @@ void ServerChoice::anchorClicked(const QUrl &url)
     }
     if (url.scheme() == "po") {
         if (url.path() == "change-port") {
-            ui->description->setText(tr("Connecting to registry...")+"\n");
-
-            QSettings settings;
-            QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
-            int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
-            int newport = port == 8080 ? 5090 : 8080;
-
-            registry_connection->connectTo(host, newport);
-
-            settings.setValue("ServerChoice/RegistryPort", newport);
+            on_switchPort_clicked();
         }
     }
+}
+
+void ServerChoice::on_switchPort_clicked()
+{
+    while (ui->serverList->rowCount() > 0) {
+        ui->serverList->removeRow(0);
+    }
+    descriptionsPerIp.clear();
+
+    ui->description->setText(tr("Connecting to registry...")+"\n");
+
+    QSettings settings;
+    QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
+    int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
+    int newport = port == 8080 ? 5090 : 8080;
+
+    registry_connection->connectTo(host, newport);
+
+    settings.setValue("ServerChoice/RegistryPort", newport);
 }
 
 void ServerChoice::connected()
