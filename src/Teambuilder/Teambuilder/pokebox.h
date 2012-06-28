@@ -22,7 +22,7 @@ public:
     PokeTeam *getCurrent();
     void deleteCurrent();
     void changeCurrent(const PokeTeam &poke);
-    void changeCurrentSpot(int newSpot, bool forceUpdate=false);
+    void changeCurrentSpot(int newSpot);
 
     QString getBoxName() const;
     void setName(const QString &name);
