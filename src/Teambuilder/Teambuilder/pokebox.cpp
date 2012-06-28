@@ -303,7 +303,11 @@ void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
         }
 
         QPointF self_back_pos = calculatePos(i, m_Clicked.size());
-        QRectF intersection = rect.intersect(QRectF(self_back_pos, m_Clicked.size()));
+        QRectF selfRect = QRectF(self_back_pos, m_Clicked.size());
+        if (!rect.intersects(selfRect)) {
+            continue;
+        }
+        QRectF intersection = rect.intersect(selfRect);
         QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
                                 std::min(qreal(type.width()),intersection.width()), std::min(qreal(type.height()),intersection.height()));
         painter->drawPixmap(intersection, type, srcRect);
