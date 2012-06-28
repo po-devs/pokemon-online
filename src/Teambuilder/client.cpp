@@ -1614,11 +1614,18 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
             return;
 
         QString message;
-        switch(level) {
-        case -3: message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems"); break;
-        case -2: message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
-        case -1: message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
-        case 0: message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
+        switch (level) {
+        case -3:
+            message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems");
+            break;
+        case -2:
+            message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
+            break;
+        case -1:
+            message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
+            break;
+        case 0:
+            message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
         }
 
         QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), message,

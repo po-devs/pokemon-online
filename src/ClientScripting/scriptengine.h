@@ -36,8 +36,6 @@ public:
     int afterPMReceived(int id, const QString &message);
     int onPlayerReceived(int id);
     int onPlayerRemoved(int id);
-    int onScriptChanged(const QScriptValue &newscript, const QScriptValue oldscript
-                                       , bool exceptionCaught);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
