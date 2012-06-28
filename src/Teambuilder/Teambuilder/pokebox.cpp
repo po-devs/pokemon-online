@@ -13,7 +13,7 @@
 
 Q_DECLARE_METATYPE(PokeBox*)
 
-PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0)
+PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0), isLoaded(false)
 {
     m_Empty = Theme::Sprite("boxempty");
     m_Clicked = Theme::Sprite("boxclicked");
@@ -29,7 +29,19 @@ PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemo
     QFileInfo f(file);
     m_Name = QUrl::fromPercentEncoding(f.baseName().toUtf8());
 
-    loadBox();
+    if (!f.exists()) {
+        QFile in(file);
+        in.open(QIODevice::WriteOnly);
+        in.close();
+    }
+}
+
+void PokeBox::loadIfNeeded()
+{
+    if (!isLoaded) {
+        loadBox();
+        isLoaded = true;
+    }
 }
 
 void PokeBox::deleteBox()
@@ -67,11 +79,7 @@ void PokeBox::loadBox()
     QDomDocument doc;
 
     QFile in(QString(getBoxPath() + "/%1.box").arg(QString::fromUtf8(QUrl::toPercentEncoding(getBoxName()))));
-    if (!in.exists()) {
-        //Touch file, in case the file didn't exist, at least the box is saved
-        in.open(QIODevice::Append);
-        return;
-    }
+
     in.open(QIODevice::ReadOnly);
 
     if(!doc.setContent(&in))

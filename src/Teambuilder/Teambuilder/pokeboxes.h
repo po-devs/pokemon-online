@@ -26,6 +26,7 @@ public:
     void updateTeam();
 public slots:
     void changeTeamPoke(int index);
+    void currentBoxChanged(int b);
 
     void showPoke(PokeTeam *poke);
     void switchBoxTeam(int,int,int);

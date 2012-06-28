@@ -23,11 +23,17 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deletePokemon()));
     connect(ui->withdrawButton, SIGNAL(clicked()), SLOT(withdrawPokemon()));
     connect(ui->switchButton, SIGNAL(clicked()), SLOT(switchPokemon()));
+    connect(ui->boxes, SIGNAL(currentChanged(int)), SLOT(currentBoxChanged(int)));
 }
 
 PokeBoxes::~PokeBoxes()
 {
     delete ui;
+}
+
+void PokeBoxes::currentBoxChanged(int b)
+{
+    boxes[b]->loadIfNeeded();
 }
 
 void PokeBoxes::showPoke(PokeTeam *poke)
@@ -139,7 +145,14 @@ void PokeBoxes::addBox(const QString &name)
     PokeBox *box = new PokeBox(boxes.size(), name);
     boxes.push_back(box);
     box->setParent(this);
+
+    /* Always load the first box */
+    if (boxes.size() == 1) {
+        box->loadBox();
+    }
+
     ui->boxes->addTab(box, box->getBoxName());
+
     connect(box, SIGNAL(switchWithTeam(int,int,int)), SLOT(switchBoxTeam(int,int,int)));
     connect(box, SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
 }

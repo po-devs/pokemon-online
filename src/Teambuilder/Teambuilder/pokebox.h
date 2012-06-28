@@ -37,6 +37,8 @@ public:
     int getNumOf(const PokeBoxItem *item) const;
 
     static QString getBoxPath();
+public slots:
+    void loadIfNeeded();
 signals:
     void switchWithTeam(int boxNumber, int boxSlot, int teamSlot);
     void show(PokeTeam *team);
@@ -61,6 +63,8 @@ private:
     QString m_Name;
     int m_Num;
     int currentPokemon;
+
+    bool isLoaded;
 
     QPixmap m_Empty, m_Occupied, m_Hover, m_Clicked;
     QPoint oldMousePos;
