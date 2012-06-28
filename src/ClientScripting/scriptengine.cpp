@@ -472,7 +472,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
 
 QScriptValue ScriptEngine::move(int num)
 {
-    if (num < 0  || num >= MoveInfo::NumberOfMoves()) {
+    if (num < 0  || num >= MoveInfo::NumberOfMoves(GEN_MAX)) {
         return myengine.undefinedValue();
     } else {
         return MoveInfo::Name(num);
@@ -536,7 +536,7 @@ QScriptValue ScriptEngine::natureNum(const QString &name)
 
 QScriptValue ScriptEngine::ability(int num)
 {
-    if (num >= 0 && num < AbilityInfo::NumberOfAbilities()) {
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GEN_MAX)) {
         return AbilityInfo::Name(num);
     } else {
         return myengine.undefinedValue();
