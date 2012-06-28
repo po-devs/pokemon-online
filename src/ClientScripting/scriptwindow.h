@@ -18,8 +18,11 @@ public:
     void accept();
 signals:
     void scriptChanged(const QString&);
+    void safeScriptsChanged(bool safe);
+    void warningsChanged(bool warn);
 public slots:
     void safeScriptsChanged(int newStatus);
+    void warningsChanged(int newStatus);
 private:
     Ui::ScriptWindow *ui;
 };

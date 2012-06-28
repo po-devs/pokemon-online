@@ -53,12 +53,19 @@ public:
     Q_INVOKABLE QString hexColor(const QString &colorname);
 
     /* Accepts string as 1st parameter. */
-    Q_INVOKABLE void callLater(const QString &s, int delay);
-    Q_INVOKABLE void callQuickly(const QString &s, int delay);
+    Q_INVOKABLE int callLater(const QString &s, int delay);
+    Q_INVOKABLE int callQuickly(const QString &s, int delay);
 
     /* Accepts function as 1st parameter. */
-    Q_INVOKABLE void quickCall(const QScriptValue &func, int delay);
-    Q_INVOKABLE void delayedCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay);
+
+    /* Interval timers. */
+    Q_INVOKABLE int intervalTimer(const QString &expr, int delay);
+    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay);
+
+    /* Stops a timer. */
+    Q_INVOKABLE bool stopTimer(int timerId);
 
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
@@ -92,6 +99,7 @@ public:
     Q_INVOKABLE QString md5(const QString &text);
 
     Q_INVOKABLE bool isSafeScripts();
+    Q_INVOKABLE bool showingWarnings();
 
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
 
@@ -140,6 +148,7 @@ private slots:
     void hostInfo_Ready(const QHostInfo &myInfo);
 
     void changeSafeScripts(bool safe);
+    void changeWarnings(bool warn);
 
 private:
     ClientInterface *myclient;
@@ -166,6 +175,8 @@ private:
     QString sync_data;
 
     bool safeScripts;
+    bool warnings;
+
     QString datalocation;
 
     void evaluate(const QScriptValue &expr);
