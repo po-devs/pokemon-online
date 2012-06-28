@@ -34,7 +34,7 @@ public slots:
     virtual void onDisconnect(){}
     virtual void manageError(QAbstractSocket::SocketError){}
     virtual void send(const QByteArray &message){(void) message;}
-    virtual void sendPacket(const QByteArray&){};
+    virtual void sendPacket(const QByteArray&){}
 };
 
 template <class S>
