@@ -94,6 +94,8 @@ public:
 
     Q_INVOKABLE QString announcement();
 
+    Q_INVOKABLE void flash(int ms = 0);
+
     enum Status {
         Available = 0,
         Away,

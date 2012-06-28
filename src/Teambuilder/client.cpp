@@ -1646,6 +1646,15 @@ void Client::serverNameReceived(const QString &sName)
     }
 }
 
+void Client::flash(int ms)
+{
+    /* Only activates if no window has focus */
+    if (!QApplication::activeWindow()) {
+        QApplication::alert(this, ms);
+        this->raise();
+    }
+}
+
 void Client::announcementReceived(const QString &ann)
 {
     if (ann.length() == 0)
