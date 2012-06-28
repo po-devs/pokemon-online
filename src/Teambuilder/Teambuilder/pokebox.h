@@ -43,11 +43,12 @@ signals:
 
 protected:
     void addGraphicsItem(int spot);
-    QPointF calculatePos(int spot);
+    QPointF calculatePos(int spot, const QSize& itemSize = QSize(32,32));
     int calculateSpot(const QPoint &graphicViewPos);
     void drawBackground(QPainter *painter, const QRectF &rect);
     PokeBoxItem* currentItem();
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
     void dragEnterEvent(QDragEnterEvent *event);
