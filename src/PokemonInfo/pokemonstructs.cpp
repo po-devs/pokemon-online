@@ -680,7 +680,7 @@ bool Team::saveToFile(const QString &path) const
 void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
-    QString defaultPath = s.value("team_folder").toString();
+    QString defaultPath = s.value("Teams/Folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
@@ -701,7 +701,7 @@ void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
 void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
 {
     QSettings s;
-    QString defaultPath = s.value("team_folder").toString();
+    QString defaultPath = s.value("Teams/Folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath);
     f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);

@@ -27,7 +27,8 @@ signals:
     void goToCredits();
     void goToExit();
 
-    
+protected:
+
 private:
     Ui::Menu *ui;
 };

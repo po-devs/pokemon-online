@@ -774,7 +774,7 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
 
     QSettings s;
 
-    bool old = s.value("old_attack_buttons").toBool();
+    bool old = s.value("Battle/OldAttackButtons").toBool();
 
     if (!old) {
         l->setSpacing(2);

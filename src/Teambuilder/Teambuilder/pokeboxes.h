@@ -6,6 +6,8 @@
 
 class PokeTeam;
 class TeamHolder;
+class PokeBoxItem;
+class PokeBox;
 
 namespace Ui {
 class PokeBoxes;
@@ -21,17 +23,47 @@ public:
     void changePoke(PokeTeam *poke);
     void updatePoke();
 
+    void updateTeam();
+signals:
+    void done();
 public slots:
     void changeTeamPoke(int index);
+    void currentBoxChanged(int b);
 
+    void showPoke(PokeTeam *poke);
+    void switchBoxTeam(int,int,int);
+
+    void storePokemon();
+    void switchPokemon();
+    void deletePokemon();
+    void withdrawPokemon();
+
+    void newBox();
+    void editBoxName();
+    void deleteBox();
 private:
     PokeTeam *m_poke;
     TeamHolder *m_team;
     Ui::PokeBoxes *ui;
+    QList<PokeBox*> boxes;
     const PokeTeam &poke() const {return *m_poke;}
     const TeamHolder &team() const {return *m_team;}
     PokeTeam &poke() {return *m_poke;}
     TeamHolder &team() {return *m_team;}
+
+    void loadBoxes();
+    void addBox(const QString &name);
+
+    bool existBox(const QString &name) const;
+    void deleteBox(int num);
+
+    PokeBox *currentBox();
+
+    void updateSpot(int i);
+    int currentPoke() const;
+
+    void setCurrentTeamPoke(PokeTeam *p);
+    PokeTeam *currentPokeTeam();
 };
 
 #endif // POKEBOXES_H

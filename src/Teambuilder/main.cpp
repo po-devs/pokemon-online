@@ -64,6 +64,9 @@ int main(int argc, char *argv[])
     {
         //HotKeyClass HotKeyEvent;
         QApplication a(argc, argv);
+
+        a.setQuitOnLastWindowClosed(true);
+
         //a.installEventFilter(&HotKeyEvent);
 
         /* Names to use later for QSettings */

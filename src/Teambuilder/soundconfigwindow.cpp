@@ -8,11 +8,11 @@ SoundConfigWindow::SoundConfigWindow()
 {
     QSettings s;
 
-    cryVolume = s.value("battle_cry_volume").toInt();
-    musicVolume = s.value("battle_music_volume").toInt();
-    musicPath = s.value("battle_music_directory").toString();
-    playMusic = s.value("play_battle_music", false).toBool();
-    playCries = s.value("play_battle_sounds").toBool();
+    cryVolume = s.value("BattleAudio/CryVolume").toInt();
+    musicVolume = s.value("BattleAudio/MusicVolume").toInt();
+    musicPath = s.value("BattleAudio/MusicDirectory").toString();
+    playMusic = s.value("BattleAudio/PlayMusic", false).toBool();
+    playCries = s.value("BattleAudio/PlaySounds").toBool();
 
     ConfigForm *form = new ConfigForm(tr("&Apply sound settings"), "", this);
 
@@ -47,11 +47,11 @@ void SoundConfigWindow::saveChanges()
 {
     QSettings s;
 
-    s.setValue("battle_cry_volume", cryVolume);
-    s.setValue("battle_music_volume", musicVolume);
-    s.setValue("battle_music_directory", musicPath);
-    s.setValue("play_battle_music", playMusic);
-    s.setValue("play_battle_sounds", playCries);
+    s.setValue("BattleAudio/CryVolume", cryVolume);
+    s.setValue("BattleAudio/MusicVolume", musicVolume);
+    s.setValue("BattleAudio/MusicDirectory", musicPath);
+    s.setValue("BattleAudio/PlayMusic", playMusic);
+    s.setValue("BattleAudio/PlaySounds", playCries);
 
     emit cryVolumeChanged(cryVolume);
     emit musicVolumeChanged(musicVolume);

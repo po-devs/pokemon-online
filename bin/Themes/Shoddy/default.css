@@ -1,6 +1,6 @@
 PokeButton {
     min-width: 170px;
-    height: 90px;
+    height: 85px;
 }
 
 PokeEdit #pokemonSprite {
@@ -15,4 +15,15 @@ PokeEdit #pokemonFrame {
 	height: 110px;
 	width: 110px;
 	/*border-radius: 4px;*/
+}
+
+PokeSelection #pokemonSprite {
+    min-width: 96px;
+    min-height: 96px;
+}
+
+PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
+    width: 96px;
+    height: 96px;
+    border: 0;
 }

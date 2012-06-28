@@ -57,7 +57,7 @@ enum Command {
     CPTBan,
     CPTUnban = 40,
     PlayerTBan,
-    GetTBanList,
+    Unused42,
     BattleList,
     ChannelsList,
     ChannelPlayers,
@@ -68,8 +68,8 @@ enum Command {
     AddChannel = 50,
     Unused51,
     ChanNameChange,
-    Unused52,
     Unused53,
+    Unused54,
     ServerName,
     SpecialPass,
     ServerListEnd,              // Indicates end of transmission for registry.

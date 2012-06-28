@@ -131,8 +131,8 @@ void BaseBattleWindow::init()
     mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 2);
 
     QSettings s;
-    musicOn->setChecked(s.value("play_battle_music").toBool() || s.value("play_battle_cries").toBool());
-    flashWhenMoveDone->setChecked(s.value("flash_when_enemy_moves").toBool());
+    musicOn->setChecked(s.value("BattleAudio/PlayMusic").toBool() || s.value("play_battle_cries").toBool());
+    flashWhenMoveDone->setChecked(s.value("Battle/FlashOnMove").toBool());
 
     QVBoxLayout *chat = new QVBoxLayout();
     columns->addLayout(chat);
@@ -202,12 +202,12 @@ void BaseBattleWindow::musicPlayStop()
     }
 
     QSettings s;
-    audioOutput->setVolume(float(s.value("battle_music_volume").toInt())/100);
-    cryOutput->setVolume(float(s.value("battle_cry_volume").toInt())/100);
+    audioOutput->setVolume(float(s.value("BattleAudio/MusicVolume").toInt())/100);
+    cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 
     if (musicPlayed()) {
-        playBattleCries() = s.value("play_battle_sounds").toBool();
-        playBattleMusic() = s.value("play_battle_music").toBool() || !s.value("play_battle_cries").toBool();
+        playBattleCries() = s.value("BattleAudio/PlaySounds").toBool();
+        playBattleMusic() = s.value("BattleAudio/PlayMusic").toBool() || !s.value("play_battle_cries").toBool();
     }
 
     if (!playBattleMusic()) {
@@ -215,7 +215,7 @@ void BaseBattleWindow::musicPlayStop()
     }
 
     /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
-    QDir directory = QDir(s.value("battle_music_directory").toString());
+    QDir directory = QDir(s.value("BattleAudio/MusicDirectory").toString());
     QStringList files = directory.entryList(QStringList() << "*.mp3" << "*.ogg" << "*.wav" << "*.it" << "*.mid" << "*.m4a" << "*.mp4",
                                             QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 

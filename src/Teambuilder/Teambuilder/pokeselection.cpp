@@ -3,13 +3,23 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/modelenum.h"
 #include "theme.h"
+#include "modelenum.h"
 #include <QMenu>
+#include <QCompleter>
+#include "advancedsearch.h"
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
-    ui(new Ui::PokeSelection)
+    ui(new Ui::PokeSelection), search(NULL), newwidth(0)
 {
     ui->setupUi(this);
     ui->pokemonList->setModel(pokemonModel);
+
+    QCompleter *completer = new QCompleter(pokemonModel, ui->pokeEdit);
+    completer->setCompletionColumn(1);
+    completer->setCompletionRole(Qt::DisplayRole);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    ui->pokeEdit->setCompleter(completer);
 
     setNum(pokemon);
 
@@ -25,13 +35,63 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
         ui->shiny->show();
     }
 
+    ui->baseStats->setGen(getGen());
 
+    connect(completer, SIGNAL(activated(QModelIndex)), SLOT(setPokemon(QModelIndex)));
     connect(ui->shiny, SIGNAL(toggled(bool)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateSprite()));
     connect(ui->pokemonList, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(updateTypes()));
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
-    connect(ui->done, SIGNAL(clicked()), SLOT(finish()));
+    connect(ui->changeSpecies, SIGNAL(clicked()), SLOT(finish()));
+    connect(ui->pokemonFrame, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
+}
+
+void PokeSelection::toggleSearchWindow()
+{
+    if (search) {
+        QGridLayout *gl = (QGridLayout*)layout();
+        gl->removeWidget(search);
+        search->deleteLater();
+        search = NULL;
+
+        setFixedWidth(oldwidth);
+        move(oldx, y());
+    } else {
+        //Tricks to get a window at the correct size. Qt is annoying, not allowing resize() to work
+        //properly on windows, i have to use setFixedWidth on the top level window :(
+        oldwidth = width();
+        oldx = x();
+
+        QGridLayout *gl = (QGridLayout*)layout();
+        search = new AdvancedSearch(this);
+        search->setGen(getGen());
+
+        ui->pokemonList->setFixedWidth(ui->pokemonList->width());
+        ui->pokeEdit->setFixedWidth(ui->pokeEdit->width());
+        ui->changeSpecies->setFixedWidth(ui->changeSpecies->width());
+        search->setResultsWidth(ui->pokemonList->width());
+
+        if (newwidth) {
+            setFixedWidth(newwidth);
+        }
+
+        gl->addWidget(search, 0, 4, gl->rowCount(), 1);
+        search->show();
+
+        if (newwidth == 0) {
+            newwidth = width();
+        }
+
+        connect(search, SIGNAL(pokemonSelected(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
+
+        /* Moving the widget if it goes out of bounds */
+        QWidget *top = ((QWidget*)parent())->window();
+
+        if (x() + width() > top->x() + top->width()) {
+            move(std::max(top->x(), top->x()+(top->width()-width())/2), y());
+        }
+    }
 }
 
 void PokeSelection::show()
@@ -40,9 +100,23 @@ void PokeSelection::show()
     ui->pokemonList->setFocus();
 }
 
+void PokeSelection::setPokemon(const QModelIndex &p)
+{
+    setNum(p.data(CustomModel::PokenumRole).toInt());
+}
+
 void PokeSelection::setNum(const Pokemon::uniqueId &num)
 {
+    if (m_num == num) {
+        return;
+    }
     m_num = num;
+
+    ui->pokeEdit->setText(PokemonInfo::Name(num));
+    ui->pokemonList->setCurrentIndex(ui->pokemonList->model()->index(num.pokenum, 1));
+    ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
+
+    ui->baseStats->setNum(num);
 
     if (PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) {
         QMenu *m = new QMenu(ui->altForme);
