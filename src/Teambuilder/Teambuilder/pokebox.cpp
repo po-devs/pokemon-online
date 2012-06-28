@@ -26,11 +26,11 @@ PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemo
     setScene(new QGraphicsScene(this));
     setSceneRect(0, 0, width() - 10, 160);
 
-    QFileInfo f(file);
+    QFileInfo f(getBoxPath() + "/" + file);
     m_Name = QUrl::fromPercentEncoding(f.baseName().toUtf8());
 
     if (!f.exists()) {
-        QFile in(file);
+        QFile in(getBoxPath() + "/" + file);
         in.open(QIODevice::WriteOnly);
         in.close();
     }
