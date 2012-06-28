@@ -191,6 +191,7 @@ void TeamBuilder::openBoxes()
 {
     if(!boxesMenu) {
         addWidget(boxesMenu = new PokeBoxes(this, &team()));
+        connect(boxesMenu, SIGNAL(done()), SLOT(switchToTrainer()));
     }
     switchTo(boxesMenu);
 }

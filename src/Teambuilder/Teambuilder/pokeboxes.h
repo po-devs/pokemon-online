@@ -24,6 +24,8 @@ public:
     void updatePoke();
 
     void updateTeam();
+signals:
+    void done();
 public slots:
     void changeTeamPoke(int index);
     void currentBoxChanged(int b);
@@ -35,6 +37,10 @@ public slots:
     void switchPokemon();
     void deletePokemon();
     void withdrawPokemon();
+
+    void newBox();
+    void editBoxName();
+    void deleteBox();
 private:
     PokeTeam *m_poke;
     TeamHolder *m_team;
@@ -47,6 +53,9 @@ private:
 
     void loadBoxes();
     void addBox(const QString &name);
+
+    bool existBox(const QString &name) const;
+    void deleteBox(int num);
 
     PokeBox *currentBox();
 

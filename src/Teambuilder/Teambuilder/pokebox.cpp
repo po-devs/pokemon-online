@@ -44,7 +44,9 @@ void PokeBox::loadIfNeeded()
 
 void PokeBox::deleteBox()
 {
-    //TODO
+    QDir d(getBoxPath());
+    QString file = QString::fromUtf8(QUrl::toPercentEncoding(getBoxName()))+".box";
+    d.remove(file);
 }
 
 void PokeBox::saveBox()
@@ -189,7 +191,8 @@ void PokeBox::setName(const QString &name)
 void PokeBox::reName(const QString &newName)
 {
     QDir m_Dir(getBoxPath());
-    m_Dir.rename(getBoxName() + ".box", newName + ".box");
+    m_Dir.rename(QString::fromUtf8(QUrl::toPercentEncoding(getBoxName())) + ".box",
+                    QString::fromUtf8(QUrl::toPercentEncoding(newName)) + ".box");
     setName(newName);
 }
 

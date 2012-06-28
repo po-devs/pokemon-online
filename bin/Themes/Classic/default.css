@@ -424,8 +424,10 @@ QTabWidget#boxes > QTabBar::tab:top, QTabWidget#boxes > QTabBar::tab:bottom {
         border: 1px solid #676a6c;
         border-radius: 5px;
         height: 23px;
-        min-width: 90px;
+        min-width: 100px;
         padding: 2px;
+        /*padding-left: 16px;
+        padding-right: 16px;*/
 }
 
 QTabWidget#boxes  > QTabBar::tab::title {
