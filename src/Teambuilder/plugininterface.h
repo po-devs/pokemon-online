@@ -30,6 +30,8 @@ public:
 class ClientPlugin
 {
 public:
+    virtual ~ClientPlugin();
+
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
     virtual QString pluginName() const = 0;
