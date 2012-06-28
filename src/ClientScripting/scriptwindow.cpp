@@ -3,6 +3,8 @@
 #include "../Utilities/functions.h"
 #include "scriptutils.h"
 
+#include <QtGui/QMessageBox>
+
 ScriptWindow::ScriptWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ScriptWindow)
@@ -35,6 +37,20 @@ void ScriptWindow::accept()
     emit scriptChanged(text);
 
     QDialog::accept();
+}
+
+void ScriptWindow::reject()
+{
+    QMessageBox *warn = new QMessageBox(QMessageBox::Question, tr("Are you sure?"),
+                                        tr("Do you really want to close the scripts window and lose all your changes?"),
+                                        QMessageBox::Yes | QMessageBox::No, NULL, Qt::Window);
+    warn->setDefaultButton(QMessageBox::No);
+
+    int result = warn->exec();
+
+    if (result & QMessageBox::Yes) {
+        QDialog::reject();
+    }
 }
 
 ScriptWindow::~ScriptWindow()

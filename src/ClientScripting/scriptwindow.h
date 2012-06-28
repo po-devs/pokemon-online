@@ -16,6 +16,7 @@ public:
     ~ScriptWindow();
     
     void accept();
+    void reject();
 signals:
     void scriptChanged(const QString&);
     void safeScriptsChanged(bool safe);
