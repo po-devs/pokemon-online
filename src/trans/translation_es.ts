@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/advancedsearch.ui" line="14"/>
-        <source>Form</source>
+        <source>Advanced search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -20,8 +20,8 @@
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/advancedsearch.ui" line="28"/>
-        <source>Type  1</source>
-        <translation type="unfinished"></translation>
+        <source>Type 1</source>
+        <translation type="unfinished">Tipo 1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/advancedsearch.ui" line="51"/>
@@ -1648,114 +1648,114 @@ Ese servidor requiere contraseña para entrar.</translation>
         <translation>Nombre de usuario:</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="48"/>
-        <location filename="../Teambuilder/controlpanel.ui" line="267"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="51"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="273"/>
         <source>Search</source>
         <translation>Buscar</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="59"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="62"/>
         <source>Status: </source>
         <translation>Estado: </translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="72"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="75"/>
         <location filename="../Teambuilder/controlpanel.cpp" line="71"/>
         <source>Online</source>
         <translation>Conectado</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="89"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="92"/>
         <source>Authority: </source>
         <translation>Autoridad:</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="119"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="122"/>
         <source>IP Address: </source>
         <translation>Dirección IP:</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="146"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="149"/>
         <source>Last Appearance:</source>
         <translation>Ultima aparición:</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="176"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="179"/>
         <source>Temporary Ban:</source>
         <translation>Expulsar temporalmente:</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="183"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="189"/>
         <source> minutes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="199"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="205"/>
         <source>Temp Ban</source>
         <translation>Expulsar</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="210"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="216"/>
         <source>Mute</source>
         <translation>Silenciar</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="217"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="223"/>
         <source>Kick</source>
         <translation>Patear</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="224"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="230"/>
         <source>Ban</source>
         <translation>Expulsar</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="231"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="237"/>
         <source>PM User</source>
         <translation>Mensaje Privado</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="278"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="284"/>
         <source>Bans</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="370"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="376"/>
         <source>Expires</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="381"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="387"/>
         <source>Set Expire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="360"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="366"/>
         <source>Username</source>
         <translation>Nombre de usuario</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="365"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="371"/>
         <source>Banned IP</source>
         <translation>IP Expulsada</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="301"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="307"/>
         <source>Refresh</source>
         <translation>Actualizar</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="241"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="247"/>
         <source>User alias</source>
         <translation>Alias de usuario</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="294"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="300"/>
         <source>Unban</source>
         <translation>Remover explusión</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/controlpanel.ui" line="287"/>
+        <location filename="../Teambuilder/controlpanel.ui" line="293"/>
         <source>Ban IP ...</source>
         <translation>Explusar IP...</translation>
     </message>
@@ -1830,7 +1830,7 @@ Ese servidor requiere contraseña para entrar.</translation>
     <name>EvBox</name>
     <message>
         <location filename="../Teambuilder/Teambuilder/evbox.ui" line="14"/>
-        <source>Form</source>
+        <source>EVs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1973,11 +1973,6 @@ Efecto: %5</translation>
 <context>
     <name>IvBox</name>
     <message>
-        <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="185"/>
         <source>Ability 1</source>
         <translation type="unfinished"></translation>
@@ -1995,6 +1990,11 @@ Efecto: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="20"/>
         <source>Final Stats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="14"/>
+        <source>DVs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2329,12 +2329,12 @@ Efecto: %6</translation>
     <message>
         <location filename="../Teambuilder/pmsystem.cpp" line="175"/>
         <source>&amp;Challenge</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Retar</translation>
     </message>
     <message>
         <location filename="../Teambuilder/pmsystem.cpp" line="176"/>
         <source>&amp;Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Ignorar</translation>
     </message>
     <message>
         <location filename="../Teambuilder/pmsystem.cpp" line="303"/>
@@ -2453,7 +2453,7 @@ Efecto: %6</translation>
     <message>
         <location filename="../Server/playerswindow.cpp" line="102"/>
         <source>&amp;Ban</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Banear</translation>
     </message>
     <message>
         <location filename="../Server/playerswindow.cpp" line="103"/>
@@ -2624,7 +2624,7 @@ Move4</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="95"/>
         <source>Lv. %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nv. %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="134"/>
@@ -2746,7 +2746,7 @@ Move4</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebutton.cpp" line="42"/>
         <source>Lv. %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nv. %1</translation>
     </message>
 </context>
 <context>
@@ -2834,7 +2834,7 @@ Move4</source>
     <name>PokeLevelSettings</name>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="14"/>
-        <source>Frame</source>
+        <source>Level and gender</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3477,7 +3477,7 @@ Move4</source>
     <message>
         <location filename="../BattleManager/regularbattlescene.cpp" line="358"/>
         <source>Lv. %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nv. %1</translation>
     </message>
     <message>
         <location filename="../BattleManager/regularbattlescene.cpp" line="627"/>
@@ -4041,7 +4041,7 @@ Your language needs to be set to English to import English teams.</source>
     <name>TeamLine</name>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamline.ui" line="14"/>
-        <source>Form</source>
+        <source>Team &amp; Tier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
