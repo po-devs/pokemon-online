@@ -470,12 +470,12 @@ Aiguisage
 Garde Large
 PartageGarde
 PartageForce
-Zone …trange
+Zone √âtrange
 Choc Psy
 Choc Venin
-AllËgement
+All√®gement
 PoudreFureur
-LÈvikinÈsie
+L√©vikin√©sie
 Zone Magique
 Anti-Air
 Yama Arashi
@@ -484,8 +484,8 @@ Cradovague
 Papillodance
 Tacle lourd
 Synchropeine
-Boule …lek
-DÈtrempage
+Boule √âlek
+D√©trempage
 Nitrocharge
 Enroulement
 Balayette
@@ -493,13 +493,13 @@ Bombe acide
 Tricherie
 Rayon simple
 Ten-danse
-AprËs Vous
+Apr√®s Vous
 Chant Canon
 Echo
 Chatiment
 Bain de Smog
-ForceAjoutÈe
-PrÈvention
+ForceAjout√©e
+Pr√©vention
 Interversion
 Ebullition
 Exuviation
@@ -509,7 +509,7 @@ Chute Libre
 Chgt Vitesse
 Projection
 Calcination
-¿ la Queue
+√Ä la Queue
 Acrobatie
 Ten-danse
 Vengeance
@@ -519,17 +519,17 @@ Feu d'Enfer
 Aire d'Eau
 Aire de Feu
 Aire d'Herbe
-Change…clair
+Change√âclair
 Survinsecte
-PiÈtisol
-Souffle GlacÈ
+Pi√©tisol
+Souffle Glac√©
 Draco-Queue
 Rengorgement
-Toile …lek
+Toile √âlek
 Eclair Fou
 Tunnelier
 Double Baffe
-CrËvecoeur
+Cr√®vecoeur
 Encornebois
 Lame Sainte
 Coquilame
@@ -541,20 +541,20 @@ Explonuit
 Frappe Psy
 Plumo-Queue
 Vent Violent
-PeignÈe
-LancÈcrou
+Peign√©e
+Lanc√©crou
 Incendie
 TechnoBuster
 ChantAntique
 Lame Ouinte
-Aire GlaciËre
+Aire Glaci√®re
 ChargeFoudre
 Flamme Bleue
 Danse du Feu
-…clair GelÈ
-Feu glacÈ
+√âclair Gel√©
+Feu glac√©
 Aboiement
 Chute Glace
 CoupVictoire
 Flamme Croix
-…clair Croix
+√âclair Croix
