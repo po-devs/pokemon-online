@@ -41,15 +41,13 @@ Item {
     }
 
     Tooltip {
-        id: tooltip
-        shown: false
+        shown: mouseArea.containsMouse
         text: pokemon.numRef === 0 ? "" : pokemon.nick + " - " + pokemon.lifePercent + "%"
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: tooltip.shown = true
-        onExited: tooltip.shown = false
     }
 }

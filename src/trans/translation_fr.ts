@@ -741,12 +741,12 @@
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="549"/>
         <source>Your team: </source>
-        <translation type="unfinished">Votre équipe:</translation>
+        <translation type="unfinished">Votre équipe: </translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="550"/>
         <source>Opponent&apos;s team: </source>
-        <translation type="unfinished">Équipe de l&apos;ennemi:</translation>
+        <translation type="unfinished">Équipe de l&apos;ennemi: </translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="563"/>
