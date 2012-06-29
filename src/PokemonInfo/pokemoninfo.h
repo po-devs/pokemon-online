@@ -67,7 +67,6 @@ public:
     /* Self-explainable functions */
     static int TrueCount(Pokemon::gen gen); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
-    static int NumberOfVisiblePokes(); // base + visible forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
@@ -183,10 +182,8 @@ private:
     static QHash<Pokemon::uniqueId, QString> m_Options;
 
     static int m_trueNumberOfPokes;
-    // To get random pokemon faster.
-    static QList<Pokemon::uniqueId> m_VisiblePokesPlainList;
 
-    static void loadNames();
+    static void loadNames(bool init = false);
     static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
@@ -311,7 +308,7 @@ private:
     }
 
     static void loadNames();
-    static void loadMoveMessages();
+    static void loadMoveMessages(bool init = false);
     static void loadDetails();
     static void loadSpecialEffects();
 
@@ -376,7 +373,7 @@ private:
     static void loadEffects();
     static void loadFlingData();
     static void loadGenData();
-    static void loadMessages();
+    static void loadMessages(bool init = false);
     static QString path(const QString &filename);
 };
 
@@ -493,7 +490,7 @@ private:
     static QList<int> m_OldAbilities;
 
     static void loadNames();
-    static void loadMessages();
+    static void loadMessages(bool init=false);
     static void loadEffects();
     static QString path(const QString &filename);
 };

@@ -1,165 +1,165 @@
 
-Diminue le pourcentage de rencontre avec des Pokémons sauvages.
-Fait tomber la pluie tant que le Pokémon est en jeu.
-La vitesse du Pokémon augmente à chaque tour.
-Annule les coups critiques du Pokémon ennemi.
+Diminue le pourcentage de rencontre avec des PokÃ©mons sauvages.
+Fait tomber la pluie tant que le PokÃ©mon est en jeu.
+La vitesse du PokÃ©mon augmente Ã  chaque tour.
+Annule les coups critiques du PokÃ©mon ennemi.
 Immunise contre les attaques OHKO.
 Evite l'utilisation d'attaques auto-destructrices.
 Immunise contre la paralysie.
-Augmente l'esquive de 20% lors d'une Tempête de Sable et immunise contre ses dégâts.
-A une chance sur trois de paralyser le Pokémon adverse lors d'une attaque directe.
-Les attaques éléctriques reçues par votre Pokémon régénèrent 1/4 de ses PV.
-Les attaques eau reçues par votre Pokémon régénèrent 1/4 de ses PV.
+Augmente l'esquive de 20% lors d'une TempÃªte de Sable et immunise contre ses dÃ©gÃ¢ts.
+A une chance sur trois de paralyser le PokÃ©mon adverse lors d'une attaque directe.
+Les attaques Ã©lÃ©ctriques reÃ§ues par votre PokÃ©mon rÃ©gÃ©nÃ¨rent 1/4 de ses PV.
+Les attaques eau reÃ§ues par votre PokÃ©mon rÃ©gÃ©nÃ¨rent 1/4 de ses PV.
 Immunise contre le charme.
 Annule les effets du climat.
-Double la précision du Pokémon.
-Empêche le Pokémon d'être endormi.
-Change son type en celui de la dernière attaque employée à l'encontre de ce Pokémon.
+Double la prÃ©cision du PokÃ©mon.
+EmpÃªche le PokÃ©mon d'Ãªtre endormi.
+Change son type en celui de la derniÃ¨re attaque employÃ©e Ã  l'encontre de ce PokÃ©mon.
 Immunise contre le poison.
-Annule les dégâts de type Feu et augmente la puissance des attaques de type Feu lorsque le Pokémon subit une attaque de type Feu ou une brûlure.
-Empêche le cumul d'effets.
+Annule les dÃ©gÃ¢ts de type Feu et augmente la puissance des attaques de type Feu lorsque le PokÃ©mon subit une attaque de type Feu ou une brÃ»lure.
+EmpÃªche le cumul d'effets.
 Immunise contre la Confusion.
-Evite au Pokémon d'être changé de force.
-Diminue d'un niveau l'attaque du Pokémon adverse.
-Empêche la fuite et le changement du Pokémon adverse.
-Fait perdre 1/16 des PV du Pokémon adverse lors d'une attaque directe.
-Ne subit les dégats que d'attaques super efficaces.
+Evite au PokÃ©mon d'Ãªtre changÃ© de force.
+Diminue d'un niveau l'attaque du PokÃ©mon adverse.
+EmpÃªche la fuite et le changement du PokÃ©mon adverse.
+Fait perdre 1/16 des PV du PokÃ©mon adverse lors d'une attaque directe.
+Ne subit les dÃ©gats que d'attaques super efficaces.
 Immunise contre les attaques de type Sol.
-A une chance sur trois de provoquer l'empoisonnement, le sommeil ou la paralysie du Pokémon adverse lors d'une attaque directe.
-Transfère l'altération d'état au Pokémon adverse.
-Empêche la diminution de stats.
-Le Pokémon est soigné de ses altérations d'état lorsqu'il est changé, ou en fin de combat.
-Attire toutes les attaques éléctriques.
-Double les chances de réussite des effets secondaires des attaques.
+A une chance sur trois de provoquer l'empoisonnement, le sommeil ou la paralysie du PokÃ©mon adverse lors d'une attaque directe.
+TransfÃ¨re l'altÃ©ration d'Ã©tat au PokÃ©mon adverse.
+EmpÃªche la diminution de stats.
+Le PokÃ©mon est soignÃ© de ses altÃ©rations d'Ã©tat lorsqu'il est changÃ©, ou en fin de combat.
+Attire toutes les attaques Ã©lÃ©ctriques.
+Double les chances de rÃ©ussite des effets secondaires des attaques.
 Double la vitesse par temps de pluie.
 Augmente la vitesse au soleil.
-Augmente les chances de rencontrer des Pokémons sauvages.
-Copie la capacité spéciale du Pokémon adverse.
-Double l'attaque du Pokémon.
-A une chance sur trois de provoquer l'empoisonnement du Pokémon adverse lors d'une attaque directe.
+Augmente les chances de rencontrer des PokÃ©mons sauvages.
+Copie la capacitÃ© spÃ©ciale du PokÃ©mon adverse.
+Double l'attaque du PokÃ©mon.
+A une chance sur trois de provoquer l'empoisonnement du PokÃ©mon adverse lors d'une attaque directe.
 Immunise contre la Peur.
 Immunise contre le Gel.
-Immunise contre la Brûlure.
-Empêche la fuite et le changement des Pokémons de type Acier.
-Annule les effets dûs aux attaques sonores.
-Régénère 1/16 de ses PV par temps de pluie.
-Déclenche une tempête de sable tant que le Pokémon est en jeu.
-Double l'utilisation de PP des attaques offensives du Pokémon adverse.
-Les dégâts provoqués par les attaques des types Feu ou Glace sont divisés par 2.
-Réduit le nombre de tours de sommeil du Pokémon.
-A une chance sur trois de provoquer la Brûlure du Pokémon adverse lors d'une attaque directe.
-Assure la fuite contre les Pokémons sauvages.
-Empêche la perte de précision.
-Empêche la diminution d'attaque du Pokémon.
-Permet au Pokémon de ramasser des objets après un combat.
-Votre Pokémon n'attaque qu'un tour sur deux.
-Augmente votre attaque de 50% mais baisse votre précision de 20%.
-A une chance sur trois d'attirer le Pokémon adverse lors d'une attaque directe.
-Double l'attaque spéciale en 2VS2 si le partenaire à la capacité "Minus".
-Double l'attaque spéciale en 2VS2 si le partenaire à la capacité "Plus".
-Change le type et la forme du Pokémon selon le climat.
-Empêche la perte de l'objet tenu.
-A chaque tour, le Pokémon a 1 chance sur 3 d'être soigné de ses altérations d'état.
-Augmente de 50% l'attaque du Pokémon s'il subit un changement de statut.
-Augmente la défense de 50% lorsque le Pokémon subit un changement de statut.
+Immunise contre la BrÃ»lure.
+EmpÃªche la fuite et le changement des PokÃ©mons de type Acier.
+Annule les effets dÃ»s aux attaques sonores.
+RÃ©gÃ©nÃ¨re 1/16 de ses PV par temps de pluie.
+DÃ©clenche une tempÃªte de sable tant que le PokÃ©mon est en jeu.
+Double l'utilisation de PP des attaques offensives du PokÃ©mon adverse.
+Les dÃ©gÃ¢ts provoquÃ©s par les attaques des types Feu ou Glace sont divisÃ©s par 2.
+RÃ©duit le nombre de tours de sommeil du PokÃ©mon.
+A une chance sur trois de provoquer la BrÃ»lure du PokÃ©mon adverse lors d'une attaque directe.
+Assure la fuite contre les PokÃ©mons sauvages.
+EmpÃªche la perte de prÃ©cision.
+EmpÃªche la diminution d'attaque du PokÃ©mon.
+Permet au PokÃ©mon de ramasser des objets aprÃ¨s un combat.
+Votre PokÃ©mon n'attaque qu'un tour sur deux.
+Augmente votre attaque de 50% mais baisse votre prÃ©cision de 20%.
+A une chance sur trois d'attirer le PokÃ©mon adverse lors d'une attaque directe.
+Double l'attaque spÃ©ciale en 2VS2 si le partenaire Ã  la capacitÃ© "Minus".
+Double l'attaque spÃ©ciale en 2VS2 si le partenaire Ã  la capacitÃ© "Plus".
+Change le type et la forme du PokÃ©mon selon le climat.
+EmpÃªche la perte de l'objet tenu.
+A chaque tour, le PokÃ©mon a 1 chance sur 3 d'Ãªtre soignÃ© de ses altÃ©rations d'Ã©tat.
+Augmente de 50% l'attaque du PokÃ©mon s'il subit un changement de statut.
+Augmente la dÃ©fense de 50% lorsque le PokÃ©mon subit un changement de statut.
 Les attaques drainantes font perdre des PV au lanceur.
-Augmente les dommages des attaques Plante de 50% lorsque le Pokémon est faible.
-Augmente les dommages des attaques Feu de 50% lorsque le Pokémon est faible.
-Augmente de 50% les dommages des attaques de type Eau lorsque le Pokémon est faible.
-Augmente les dommages des attaques Insecte de 50% lorsque le Pokémon est faible.
-Le Pokémon ne subit pas de dégats du recul.
-Crée un temps ensoleillé tant que le Pokémon est en jeu.
-Empêche la fuite et le changement du Pokémon adverse, s'il est au sol.
-Empêche le Pokémon d'être endormi.
-Empêche la diminution de stats.
-Double l'attaque du Pokémon.
+Augmente les dommages des attaques Plante de 50% lorsque le PokÃ©mon est faible.
+Augmente les dommages des attaques Feu de 50% lorsque le PokÃ©mon est faible.
+Augmente de 50% les dommages des attaques de type Eau lorsque le PokÃ©mon est faible.
+Augmente les dommages des attaques Insecte de 50% lorsque le PokÃ©mon est faible.
+Le PokÃ©mon ne subit pas de dÃ©gats du recul.
+CrÃ©e un temps ensoleillÃ© tant que le PokÃ©mon est en jeu.
+EmpÃªche la fuite et le changement du PokÃ©mon adverse, s'il est au sol.
+EmpÃªche le PokÃ©mon d'Ãªtre endormi.
+EmpÃªche la diminution de stats.
+Double l'attaque du PokÃ©mon.
 Bloque les coups critiques.
 Annule les effets du climat.
-Augmente l'esquive de 20% lorsque le Pokémon est confus.
-Immunise contre les attaques Electrik et augmente la Vitesse si touché par une de ces attaques.
-Augmente l'attaque si le Pokémon adverse est de même sexe, la diminue s'il est de sexe opposé.
-Augmente la vitesse du Pokémon lorsqu'il est apeuré.
-Augmente l'esquive de 20% en temps de grêle et immunise contre les effets de la grêle.
+Augmente l'esquive de 20% lorsque le PokÃ©mon est confus.
+Immunise contre les attaques Electrik et augmente la Vitesse si touchÃ© par une de ces attaques.
+Augmente l'attaque si le PokÃ©mon adverse est de mÃªme sexe, la diminue s'il est de sexe opposÃ©.
+Augmente la vitesse du PokÃ©mon lorsqu'il est apeurÃ©.
+Augmente l'esquive de 20% en temps de grÃªle et immunise contre les effets de la grÃªle.
 Utilise les baies lorsque les PV descendent en dessous de 50%.
-L'attaque de votre Pokémon est fortement augmentée lorsqu'il subit un coup critique.
-Augmente la vitesse lorsqu'un objet tenu est utilisé.
-Divise par 2 la puissance des attaques feu lancées contre ce Pokémon.
+L'attaque de votre PokÃ©mon est fortement augmentÃ©e lorsqu'il subit un coup critique.
+Augmente la vitesse lorsqu'un objet tenu est utilisÃ©.
+Divise par 2 la puissance des attaques feu lancÃ©es contre ce PokÃ©mon.
 Double les effets des modifications de stats.
-Fait perdre 1/8 des PV en temps ensoleillé, mais en fait gagner 1/8 en temps de pluie.
-Augmente l'attaque ou l'attaque spéciale du Pokémon selon la statistique la plus faible du Pokémon adverse.
+Fait perdre 1/8 des PV en temps ensoleillÃ©, mais en fait gagner 1/8 en temps de pluie.
+Augmente l'attaque ou l'attaque spÃ©ciale du PokÃ©mon selon la statistique la plus faible du PokÃ©mon adverse.
 Augmente la puissance des attaques de "Poing".
-Récupère 1/8 des PV lors d'un empoisonnement.
-Si ce Pokémon utilise une attaque de son type, la puissance de l'attaque est multipliée par 2 au lieu de 1.5.
+RÃ©cupÃ¨re 1/8 des PV lors d'un empoisonnement.
+Si ce PokÃ©mon utilise une attaque de son type, la puissance de l'attaque est multipliÃ©e par 2 au lieu de 1.5.
 Utilise toujours le nombre de coups maximum d'une attaque en comptant plusieurs.
-Soigne les altérations d'état par temps de pluie.
-Augmente l'attaque spéciale de 50% par temps ensoleillé, mais diminue les PV de 1/16.
-Augmente la vitesse de 50% lorsque le Pokémon subit une altération d'état.
-Toutes les attaques du Pokémon sont considérées comme étant de type Normal.
+Soigne les altÃ©rations d'Ã©tat par temps de pluie.
+Augmente l'attaque spÃ©ciale de 50% par temps ensoleillÃ©, mais diminue les PV de 1/16.
+Augmente la vitesse de 50% lorsque le PokÃ©mon subit une altÃ©ration d'Ã©tat.
+Toutes les attaques du PokÃ©mon sont considÃ©rÃ©es comme Ã©tant de type Normal.
 Triple la puissance des coups critiques.
-Ne subit de dégats que d'attaques directes.
-Toutes les attaques de tous les Pokémons ont une précision de 100% tant que ce Pokémon est en combat.
-Le Pokémon attaque toujours en second.
+Ne subit de dÃ©gats que d'attaques directes.
+Toutes les attaques de tous les PokÃ©mons ont une prÃ©cision de 100% tant que ce PokÃ©mon est en combat.
+Le PokÃ©mon attaque toujours en second.
 Double la puissance des attaques de puissance 60 ou moins.
-Soigne les altérations d'état par temps ensoleillé.
-Empêche l'utilisation des objets tenus en combat.
-Annule la capacité du Pokémon adverse.
+Soigne les altÃ©rations d'Ã©tat par temps ensoleillÃ©.
+EmpÃªche l'utilisation des objets tenus en combat.
+Annule la capacitÃ© du PokÃ©mon adverse.
 Double le taux de coups critiques.
-Enlève 1/4 des PV au Pokémon assénant le coup final.
-Alerte lorsque le Pokémon adverse possède des attaques "super efficaces".
-Alerte le Pokémon de l'attaque la plus puissante du Pokémon adverse.
-Ignore les améliorations de statistiques du Pokémon adverse à l'exception de sa Vitesse.
-Double les dégâts des attaques "peu efficaces".
-Divise par deux les dégâts des attaques "super efficaces" à l'encontre du Pokémon.
-Divise par deux l'attaque et la vitesse du Pokémon pendant 5 tours.
-Permet de toucher les Pokémons de type Spectre avec des attaques de type Normal ou Combat.
+EnlÃ¨ve 1/4 des PV au PokÃ©mon assÃ©nant le coup final.
+Alerte lorsque le PokÃ©mon adverse possÃ¨de des attaques "super efficaces".
+Alerte le PokÃ©mon de l'attaque la plus puissante du PokÃ©mon adverse.
+Ignore les amÃ©liorations de statistiques du PokÃ©mon adverse Ã  l'exception de sa Vitesse.
+Double les dÃ©gÃ¢ts des attaques "peu efficaces".
+Divise par deux les dÃ©gÃ¢ts des attaques "super efficaces" Ã  l'encontre du PokÃ©mon.
+Divise par deux l'attaque et la vitesse du PokÃ©mon pendant 5 tours.
+Permet de toucher les PokÃ©mons de type Spectre avec des attaques de type Normal ou Combat.
 Absorbe toutes les attaques Eau.
-Régénère 1/16 des PV par temps de grêle et immunise contre la grêle.
-Divise par deux les dégâts des attaques "super efficaces" à l'encontre du Pokémon.
-Quand ce pokémon arrive dans le combat, une tempête de neige se déclenche.
-Trouve du Miel après un combat.
-Permet de voir l'objet tenu du Pokémon adverse.
-Augmente la puissance des attaques infligeant des dégâts de recul.
-Le type et la couleur du Pokémon changent en fonction de la plaque qu'il porte.
-Augmente l'attaque et la défense spéciale de 50% par temps ensoleillé.
-Fait perdre 1/8 de ses PV au Pokémon adverse s'il est endormi.
-Dérobe l'objet tenu par l'ennemi si le Pokémon subit une attaque directe. Aucun effet si le Pokémon tient déjà un objet.
-Annule les effets secondaires des attaques que le Pokémon utilise, mais en multiplie la puissance par 1,3.
-Inverse les altérations de stats du Pokémon.
-Empêche l'ennemi d'utiliser des Baies.
-Augmente l'attaque de 2 niveaux si les stats du Pokémon sont diminuées par une capacité ou une capacité spéciale de l'ennemi.
-Divise l'Attaque et l'Attaque Spéciale par 2 quand le Pokémon a perdu la moitié de ses PV max ou plus.
-A 30% de chance d'empêcher un ennemi de réutiliser une attaque qui a touché le Pokémon.
-A 1 chance sur 3 de guérir les altérations de statut des Pokémon alliés à chaque tour.
-Réduit de 1/4 les dégâts infligés aux alliés.
-Perte d'un point de Défense et gain d'un point de Vitesse chaque fois que le Pokémon subit une attaque physique.
-Le poids du Pokémon est doublé.
-Divise le poids du Pokémon par 2.
-Divise les dégâts par 2 tant que le Pokémon possède ses PV max.
-Multiplie la puissance des attaques spéciales du Pokémon par 1,5 quand il est empoisonné.
-Multiplie la puissance des attaques spéciales du Pokémon par 1,5 quand il souffre du statut Brûlure.
-A la fin d'un tour, les Baies utilisées ont 1 chance sur 2 de repousser. Elles repoussent à tous les coups si le soleil brille.
-Ignore les dégâts des capacités alliées.
-A la fin de chaque tour, aléatoirement, une stat augmente de 2 niveaux et une autre diminue de 1 niveau.
-Ne subit aucun dégât pendant une tempête de sable ou quand il grêle.
-A 20% de chance d'empoisonner l'ennemi si le Pokémon utilise une attaque directe.
-Restaure 1/3 des PV si le pokemon est retiré.
-Immunise contre les baisses de défense.
-Lors d'une tempête de sable, ignore les dégâts causés par la météo et double la Vitesse.
+RÃ©gÃ©nÃ¨re 1/16 des PV par temps de grÃªle et immunise contre la grÃªle.
+Divise par deux les dÃ©gÃ¢ts des attaques "super efficaces" Ã  l'encontre du PokÃ©mon.
+Quand ce pokÃ©mon arrive dans le combat, une tempÃªte de neige se dÃ©clenche.
+Trouve du Miel aprÃ¨s un combat.
+Permet de voir l'objet tenu du PokÃ©mon adverse.
+Augmente la puissance des attaques infligeant des dÃ©gÃ¢ts de recul.
+Le type et la couleur du PokÃ©mon changent en fonction de la plaque qu'il porte.
+Augmente l'attaque et la dÃ©fense spÃ©ciale de 50% par temps ensoleillÃ©.
+Fait perdre 1/8 de ses PV au PokÃ©mon adverse s'il est endormi.
+DÃ©robe l'objet tenu par l'ennemi si le PokÃ©mon subit une attaque directe. Aucun effet si le PokÃ©mon tient dÃ©jÃ  un objet.
+Annule les effets secondaires des attaques que le PokÃ©mon utilise, mais en multiplie la puissance par 1,3.
+Inverse les altÃ©rations de stats du PokÃ©mon.
+EmpÃªche l'ennemi d'utiliser des Baies.
+Augmente l'attaque de 2 niveaux si les stats du PokÃ©mon sont diminuÃ©es par une capacitÃ© ou une capacitÃ© spÃ©ciale de l'ennemi.
+Divise l'Attaque et l'Attaque SpÃ©ciale par 2 quand le PokÃ©mon a perdu la moitiÃ© de ses PV max ou plus.
+A 30% de chance d'empÃªcher un ennemi de rÃ©utiliser une attaque qui a touchÃ© le PokÃ©mon.
+A 1 chance sur 3 de guÃ©rir les altÃ©rations de statut des PokÃ©mon alliÃ©s Ã  chaque tour.
+RÃ©duit de 1/4 les dÃ©gÃ¢ts infligÃ©s aux alliÃ©s.
+Perte d'un point de DÃ©fense et gain d'un point de Vitesse chaque fois que le PokÃ©mon subit une attaque physique.
+Le poids du PokÃ©mon est doublÃ©.
+Divise le poids du PokÃ©mon par 2.
+Divise les dÃ©gÃ¢ts par 2 tant que le PokÃ©mon possÃ¨de ses PV max.
+Multiplie la puissance des attaques spÃ©ciales du PokÃ©mon par 1,5 quand il est empoisonnÃ©.
+Multiplie la puissance des attaques spÃ©ciales du PokÃ©mon par 1,5 quand il souffre du statut BrÃ»lure.
+A la fin d'un tour, les Baies utilisÃ©es ont 1 chance sur 2 de repousser. Elles repoussent Ã  tous les coups si le soleil brille.
+Ignore les dÃ©gÃ¢ts des capacitÃ©s alliÃ©es.
+A la fin de chaque tour, alÃ©atoirement, une stat augmente de 2 niveaux et une autre diminue de 1 niveau.
+Ne subit aucun dÃ©gÃ¢t pendant une tempÃªte de sable ou quand il grÃªle.
+A 20% de chance d'empoisonner l'ennemi si le PokÃ©mon utilise une attaque directe.
+Restaure 1/3 des PV si le pokemon est retirÃ©.
+Immunise contre les baisses de dÃ©fense.
+Lors d'une tempÃªte de sable, ignore les dÃ©gÃ¢ts causÃ©s par la mÃ©tÃ©o et double la Vitesse.
 Augmente l'esquive contre les attaques de statut.
-Multiplie la puissance d'une capacité par 1,3 lorsqu'elle est lancée en dernier dans un tour.
-Entre au combat en prenant l'apparence du dernier Pokémon de l'équipe.
-Entre au combat en prenant l'apparence du Pokémon adverse en face de lui.
-Permet d'utiliser des capacités en ignorant les effets de Protection, Mur Lumière, Rune Protect et Brume.
-La capacité spéciale de l'ennemi devient Momie si le Pokémon est touché par une attaque directe.
-Augmente l'Attaque de 1 niveau lorsque le Pokémon met un ennemi KO.
-Augmente l'attaque de 1 niveau si le Pokémon subit des dégâts d'une capacité Ténèbres.
-Augmente la Vitesse de 1 niveau lorsque le Pokémon subit des dégâts d'une attaque de type Spectre, Ténèbres ou Insecte.
-Renvoie au lanceur les altérations de statut et les diminutions de stats.
-Augmente l'Attaque de 1 niveau et ignore les dégâts si le Pokémon est attaqué par une capacité Plante.
-Permet d'utiliser les attaques de statut en priorité.
-Lors d'une tempête de sable, ignore les dégâts causés par la météo et multiplie par 1,3 la puissance des capacités Sol, Roche et Acier.
-Fait perdre 1/8 des PV des adversaires réussissant une attaque directe sur le Pokémon.
-Lorsque le Pokémon atteint la moitié de ses PV max, il change de forme.
-Multiplie par 1,1 la Précision du Pokémon et de ses alliés.
-Permet d'utiliser des capacités sans subir l'effet des capacités spéciales de l'ennemi. Aucun effet sur les capacités spéciales ayant un effet après l'attaque.
-Permet d'utiliser des capacités sans subir l'effet des capacités spéciales de l'ennemi. Aucun effet sur les capacités spéciales ayant un effet après l'attaque.
+Multiplie la puissance d'une capacitÃ© par 1,3 lorsqu'elle est lancÃ©e en dernier dans un tour.
+Entre au combat en prenant l'apparence du dernier PokÃ©mon de l'Ã©quipe.
+Entre au combat en prenant l'apparence du PokÃ©mon adverse en face de lui.
+Permet d'utiliser des capacitÃ©s en ignorant les effets de Protection, Mur LumiÃ¨re, Rune Protect et Brume.
+La capacitÃ© spÃ©ciale de l'ennemi devient Momie si le PokÃ©mon est touchÃ© par une attaque directe.
+Augmente l'Attaque de 1 niveau lorsque le PokÃ©mon met un ennemi KO.
+Augmente l'attaque de 1 niveau si le PokÃ©mon subit des dÃ©gÃ¢ts d'une capacitÃ© TÃ©nÃ¨bres.
+Augmente la Vitesse de 1 niveau lorsque le PokÃ©mon subit des dÃ©gÃ¢ts d'une attaque de type Spectre, TÃ©nÃ¨bres ou Insecte.
+Renvoie au lanceur les altÃ©rations de statut et les diminutions de stats.
+Augmente l'Attaque de 1 niveau et ignore les dÃ©gÃ¢ts si le PokÃ©mon est attaquÃ© par une capacitÃ© Plante.
+Permet d'utiliser les attaques de statut en prioritÃ©.
+Lors d'une tempÃªte de sable, ignore les dÃ©gÃ¢ts causÃ©s par la mÃ©tÃ©o et multiplie par 1,3 la puissance des capacitÃ©s Sol, Roche et Acier.
+Fait perdre 1/8 des PV des adversaires rÃ©ussissant une attaque directe sur le PokÃ©mon.
+Lorsque le PokÃ©mon atteint la moitiÃ© de ses PV max, il change de forme.
+Multiplie par 1,1 la PrÃ©cision du PokÃ©mon et de ses alliÃ©s.
+Permet d'utiliser des capacitÃ©s sans subir l'effet des capacitÃ©s spÃ©ciales de l'ennemi. Aucun effet sur les capacitÃ©s spÃ©ciales ayant un effet aprÃ¨s l'attaque.
+Permet d'utiliser des capacitÃ©s sans subir l'effet des capacitÃ©s spÃ©ciales de l'ennemi. Aucun effet sur les capacitÃ©s spÃ©ciales ayant un effet aprÃ¨s l'attaque.
