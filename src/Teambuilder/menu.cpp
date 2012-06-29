@@ -62,7 +62,7 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");
     in.open(QIODevice::ReadOnly);
-    QStringList langs = QString::fromUtf8(in.readAll()).split('\n');
+    QStringList langs = QString::fromUtf8(in.readAll()).trimmed().split('\n');
     foreach(QString a, langs) {
         langMenu->addAction(a,w, SLOT(changeLanguage()));
     }
