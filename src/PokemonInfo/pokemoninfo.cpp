@@ -45,7 +45,7 @@ QString MoveInfo::m_Directory;
 MoveInfo::Gen MoveInfo::gens[Version::NumberOfGens];
 QList<QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
-QList<QStringList> MoveInfo::m_MoveMessages;
+QHash<int, QStringList> MoveInfo::m_MoveMessages;
 QList<QString> MoveInfo::m_Details;
 QList<QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
 QList<int> MoveInfo::m_OldMoves;
@@ -60,8 +60,8 @@ QList<QString> ItemInfo::m_SortedNames[NUMBER_GENS];
 QList<QString> ItemInfo::m_SortedUsefulNames[NUMBER_GENS];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[NUMBER_GENS];
 QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
-QList<QStringList> ItemInfo::m_RegMessages;
-QList<QStringList> ItemInfo::m_BerryMessages;
+QHash<int, QStringList> ItemInfo::m_RegMessages;
+QHash<int, QStringList> ItemInfo::m_BerryMessages;
 QList<int> ItemInfo::m_Powers;
 QList<int> ItemInfo::m_BerryPowers;
 QList<int> ItemInfo::m_BerryTypes;
@@ -83,7 +83,7 @@ QString CategoryInfo::m_Directory;
 QList<QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
 QList<AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
-QList<QStringList> AbilityInfo::m_Messages;
+QHash<int, QStringList> AbilityInfo::m_Messages;
 QList<int> AbilityInfo::m_OldAbilities;
 
 QList<QString> GenderInfo::m_Names;
@@ -143,16 +143,18 @@ void fill_check_mode_path(FillMode::FillModeType, QString &) {
 
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
         QFile file(files[i]);
-    
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-    
+
         QTextStream filestream(&file);
-    
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -163,6 +165,8 @@ static void fill_container_with_file(QStringList &container, const QString & fil
 
 static void fill_container_with_file(QList<QString> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -183,6 +187,8 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
 
 static void fill_container_with_file(QVector<char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -205,6 +211,8 @@ static void fill_container_with_file(QVector<char> &container, const QString & f
 
 static void fill_container_with_file(QVector<bool> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -227,6 +235,8 @@ static void fill_container_with_file(QVector<bool> &container, const QString & f
 
 static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -249,6 +259,8 @@ static void fill_container_with_file(QVector<unsigned char> &container, const QS
 
 static void fill_container_with_file(QVector<signed char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -299,6 +311,8 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
 static void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
+    container.clear();
+
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
     for (int i = 0; i < files_count; ++i) {
@@ -322,6 +336,8 @@ static void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QStri
 template <class T, class U>
 static void fill_double(QHash<T, U> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
 {
+    container.clear();
+
     QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
     fill_check_mode_path(m, files[1]);
     int files_count = fill_count_files(filename, m);
@@ -450,7 +466,7 @@ int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int sta
             return calc_stat(gen.num, basestat, level, dv, ev) + level + 5;
         }
     }
-        return calc_stat(gen.num, basestat, level, dv, ev);
+    return calc_stat(gen.num, basestat, level, dv, ev);
 }
 
 int PokemonInfo::FullStat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int nature, int stat, int level, quint8 dv, quint8 ev)
@@ -523,6 +539,13 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
     loadMinLevels();
 
     makeDataConsistent();
+}
+
+void PokemonInfo::retranslate()
+{
+    loadNames();
+    loadClassifications();
+    loadDescriptions();
 }
 
 void PokemonInfo::clearData()
@@ -613,6 +636,17 @@ void PokemonInfo::loadHeights()
 
         if(Pokemon::uniqueId::extract(current, pokeid, height))
             m_Height[pokeid] = height;
+    }
+
+    // Loading weights too for grass knot and low kick...
+    fill_container_with_file(temp, path("poke_weight.txt"), m_CurrentMode);
+    for(int i = 0; i < temp.size(); i++) {
+        QString current = temp[i].trimmed();
+        QString weight;
+        Pokemon::uniqueId id;
+        bool ok = Pokemon::uniqueId::extract(current, id, weight);
+        if(ok)
+            m_Weights[id] = weight;
     }
 }
 
@@ -955,7 +989,7 @@ QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 bool PokemonInfo::HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen)
 {
     return m_Moves[pokeid].regularMoves[gen.num-GEN_MIN].contains(move) || m_Moves[pokeid].specialMoves[gen.num-GEN_MIN].contains(move)
-                || m_Moves[pokeid].eggMoves[gen.num-GEN_MIN].contains(move) || m_Moves[pokeid].preEvoMoves[gen.num-GEN_MIN].contains(move);
+            || m_Moves[pokeid].eggMoves[gen.num-GEN_MIN].contains(move) || m_Moves[pokeid].preEvoMoves[gen.num-GEN_MIN].contains(move);
 }
 
 QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
@@ -1048,6 +1082,8 @@ int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadNames()
 {
+    m_VisiblePokesPlainList.clear();
+
     QStringList temp;
     fill_container_with_file(temp, trFile(path("pokemons")), m_CurrentMode);
 
@@ -1072,18 +1108,6 @@ void PokemonInfo::loadNames()
             }
             m_MaxForme[id.pokenum] = max_forme;
         }
-    }
-
-    // Loading weights too for grass knot and low kick...
-    temp.clear();
-    fill_container_with_file(temp, path("poke_weight.txt"), m_CurrentMode);
-    for(int i = 0; i < temp.size(); i++) {
-        QString current = temp[i].trimmed();
-        QString weight;
-        Pokemon::uniqueId id;
-        bool ok = Pokemon::uniqueId::extract(current, id, weight);
-        if(ok)
-            m_Weights[id] = weight;
     }
 }
 
@@ -1470,22 +1494,27 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_container_with_file(type, path("type.txt"));
 
     /* Not needed because HM pokemon can be traded between gens got gen 1 & 2*/
-//    if (gen == 1) {
-//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength <<Move::Fly;
-//    } else if (gen == 2) {
-//        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength << Move::Whirlpool
-//                        << Move::Waterfall << Move::Fly;
-//    }
+    //    if (gen == 1) {
+    //        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength <<Move::Fly;
+    //    } else if (gen == 2) {
+    //        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength << Move::Whirlpool
+    //                        << Move::Waterfall << Move::Fly;
+    //    }
 
     if (gen == 3) {
         HMs << Move::Cut << Move::Flash << Move::Surf << Move::RockSmash << Move::Strength << Move::Dive
-                << Move::Waterfall << Move::Fly;
+            << Move::Waterfall << Move::Fly;
     } else if (gen == 4) {
         HMs << Move::Cut << Move::Surf << Move::RockSmash << Move::Strength
-                << Move::Waterfall << Move::Fly << Move::RockClimb;
+            << Move::Waterfall << Move::Fly << Move::RockClimb;
     } else if (gen == 5) {
         HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
     }
+}
+
+void MoveInfo::Gen::retranslate()
+{
+    fill_container_with_file(effect, trFile(path("effect")));
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -1493,14 +1522,27 @@ QString MoveInfo::Gen::path(const QString &fileName)
     return dir + fileName;
 }
 
-void MoveInfo::loadMoveMessages()
+template <class T>
+static void loadMessages(const QString &path, T &container)
 {
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("move_message")));
+    fill_container_with_file(temp, path);
 
-    foreach(QString str, temp) {
-	m_MoveMessages.push_back(str.split('|'));
+    for (int i = 0; i < temp.length(); i++) {
+        QStringList split = temp[i].split('|');
+        for (int j = 0; j < split.length(); j++) {
+            if (container[i].length() > j) {
+                container[i][j] = split[j];
+            } else {
+                container[i].push_back(split[j]);
+            }
+        }
     }
+}
+
+void MoveInfo::loadMoveMessages()
+{
+    loadMessages(trFile(path("move_message")), m_MoveMessages);
 }
 
 void MoveInfo::init(const QString &dir)
@@ -1524,6 +1566,17 @@ void MoveInfo::init(const QString &dir)
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].load(dir, i+1);
+    }
+}
+
+void MoveInfo::retranslate()
+{
+    loadNames();
+    loadMoveMessages();
+    loadDetails();
+
+    for (int i = 0; i < Version::NumberOfGens; i++) {
+        gens[i].retranslate();
     }
 }
 
@@ -1755,8 +1808,8 @@ int MoveInfo::StatusKind(int movenum, Pokemon::gen g)
 
 QString MoveInfo::MoveMessage(int moveeffect, int part)
 {
-    if (moveeffect < 0 || moveeffect >= m_MoveMessages.size() || part < 0 || part >= m_MoveMessages[moveeffect].size()) {
-	return "";
+    if (!m_MoveMessages.contains(moveeffect) || part < 0 || part >= m_MoveMessages[moveeffect].size()) {
+        return "";
     }
     return m_MoveMessages[moveeffect][part];
 }
@@ -1809,30 +1862,21 @@ void ItemInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+    loadGenData();
     loadNames();
+    loadEffects();
+    loadFlingData();
+    loadMessages();
 }
 
-void ItemInfo::loadNames()
+void ItemInfo::retranslate()
 {
-    fill_container_with_file(m_RegItemNames, trFile(path("items")));
+    loadNames();
+    loadMessages();
+}
 
-    m_ItemNamesH.reserve(m_RegItemNames.size());
-
-    QStringList::const_iterator it = m_RegItemNames.begin();
-    for (int i = 0; it != m_RegItemNames.end(); i++, ++it) {
-	m_ItemNamesH.insert(*it, i);
-    }
-
-    fill_container_with_file(m_BerryNames, trFile(path("berries")));
-    m_BerryNamesH.reserve(m_BerryNames.size());
-
-    QStringList::const_iterator it2 = m_BerryNames.begin();
-    for (int i = 0; it2 != m_BerryNames.end(); i++, ++it2) {
-	m_BerryNamesH.insert(*it2, i+8000);
-    }
-
-    fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
-    fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
+void ItemInfo::loadGenData()
+{
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
     for (int g = GEN_MIN_ITEMS; g <= GEN_MAX; g++) {
@@ -1844,6 +1888,32 @@ void ItemInfo::loadNames()
         foreach(int b, tempb) {
             m_GenItems[i].insert(b+8000);
         }
+    }
+}
+
+void ItemInfo::loadNames()
+{
+    fill_container_with_file(m_RegItemNames, trFile(path("items")));
+
+    m_ItemNamesH.reserve(m_RegItemNames.size());
+
+    QStringList::const_iterator it = m_RegItemNames.begin();
+    for (int i = 0; it != m_RegItemNames.end(); i++, ++it) {
+        m_ItemNamesH[*it] = i;
+    }
+
+    fill_container_with_file(m_BerryNames, trFile(path("berries")));
+    m_BerryNamesH.reserve(m_BerryNames.size());
+
+    QStringList::const_iterator it2 = m_BerryNames.begin();
+    for (int i = 0; it2 != m_BerryNames.end(); i++, ++it2) {
+        m_BerryNamesH[*it2] = i+8000;
+    }
+
+    /* clears in case of retranslate */
+    for (int i = 0; i < NUMBER_GENS; i++) {
+        m_SortedNames[i].clear();
+        m_SortedUsefulNames[i].clear();
     }
 
     int mg = GEN_MAX - GEN_MIN;
@@ -1877,7 +1947,23 @@ void ItemInfo::loadNames()
             qSort(m_SortedUsefulNames[g]);
         }
     }
+}
 
+void ItemInfo::loadMessages()
+{
+    ::loadMessages(trFile(path("item_messages")), m_RegMessages);
+    ::loadMessages(trFile(path("berry_messages")), m_BerryMessages);
+}
+
+void ItemInfo::loadFlingData()
+{
+    fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
+    fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
+    fill_container_with_file(m_Powers, path("items_pow.txt"));
+}
+
+void ItemInfo::loadEffects()
+{
     for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
         QStringList temp;
         fill_container_with_file(temp, path("item_effects_%1G.txt").arg(i));
@@ -1903,39 +1989,25 @@ void ItemInfo::loadNames()
     fill_container_with_file(temp, path("berry_effects.txt"));
     /* Removing comments, aka anything starting from '#' */
     foreach (QString eff, temp) {
-	QStringList effects = eff.split('#').front().split('|');
-	QList<Effect> toPush;
-	foreach(QString eff, effects) {
-	    std::string s = eff.toStdString();
-	    size_t pos = s.find('-');
-	    if (pos != std::string::npos) {
+        QStringList effects = eff.split('#').front().split('|');
+        QList<Effect> toPush;
+        foreach(QString eff, effects) {
+            std::string s = eff.toStdString();
+            size_t pos = s.find('-');
+            if (pos != std::string::npos) {
                 toPush.push_back(Effect(atoi(s.c_str())+8000, eff.mid(pos+1)));
-	    } else {
+            } else {
                 toPush.push_back(Effect(atoi(s.c_str())+8000));
-	    }
-	}
-	m_BerryEffects.push_back(toPush);
+            }
+        }
+        m_BerryEffects.push_back(toPush);
     }
-
-    temp.clear();
-    fill_container_with_file(temp, trFile(path("item_messages")));
-    foreach (QString eff, temp) {
-	m_RegMessages.push_back(eff.split('|'));
-    }
-
-    temp.clear();
-    fill_container_with_file(temp, trFile(path("berry_messages")));
-    foreach (QString eff, temp) {
-	m_BerryMessages.push_back(eff.split('|'));
-    }
-
-    fill_container_with_file(m_Powers, path("items_pow.txt"));
 }
 
 QList<ItemInfo::Effect> ItemInfo::Effects(int item, Pokemon::gen gen)
 {
     if (!Exists(item, gen)) {
-	return QList<ItemInfo::Effect>();
+        return QList<ItemInfo::Effect>();
     } else {
         return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen.num-GEN_MIN][item];
     }
@@ -1944,16 +2016,16 @@ QList<ItemInfo::Effect> ItemInfo::Effects(int item, Pokemon::gen gen)
 QString ItemInfo::Message(int effect, int part)
 {
     if (effect < 8000) {
-	if (m_RegMessages.size() <= effect || m_RegMessages[effect].size() <= part) {
-	    return "";
-	}
-	return m_RegMessages[effect][part];
+        if (!m_RegMessages.contains(effect) || m_RegMessages[effect].size() <= part) {
+            return "";
+        }
+        return m_RegMessages[effect][part];
     } else {
-	effect = effect-8000;
-	if (m_BerryMessages.size() <= effect || m_BerryMessages[effect].size() <= part) {
-	    return "";
-	}
-	return m_BerryMessages[effect][part];
+        effect = effect-8000;
+        if (!m_BerryMessages.contains(effect) || m_BerryMessages[effect].size() <= part) {
+            return "";
+        }
+        return m_BerryMessages[effect][part];
     }
 }
 
@@ -1969,9 +2041,9 @@ int ItemInfo::NumberOfItems()
 
 int ItemInfo::Power(int itemnum) {
     if (isBerry(itemnum)) {
-	return 10;
+        return 10;
     } else if (Exists(itemnum)) {
-	return m_Powers[itemnum];
+        return m_Powers[itemnum];
     } else return 0;
 }
 
@@ -2049,12 +2121,12 @@ QPixmap ItemInfo::HeldItem()
 QString ItemInfo::Name(int itemnum)
 {
     if ( itemnum < 0 || (itemnum < 8000 && m_RegItemNames.size() <= itemnum) || (itemnum >= 8000 && m_BerryNames.size() + 8000 <= itemnum) ) {
-	return 0;
+        return 0;
     }
     if (itemnum < 8000) {
-	return m_RegItemNames[itemnum];
+        return m_RegItemNames[itemnum];
     } else {
-	return m_BerryNames[itemnum-8000];
+        return m_BerryNames[itemnum-8000];
     }
 }
 
@@ -2116,11 +2188,11 @@ int ItemInfo::DriveForme(int itemnum)
 int ItemInfo::Number(const QString &itemname)
 {
     if (m_BerryNamesH.contains(itemname)) {
-	return m_BerryNamesH[itemname];
+        return m_BerryNamesH[itemname];
     } else if (m_ItemNamesH.contains(itemname)) {
-	return m_ItemNamesH[itemname];
+        return m_ItemNamesH[itemname];
     } else {
-	return 0;
+        return 0;
     }
 }
 
@@ -2138,7 +2210,7 @@ int PokemonInfo::BaseGender(const Pokemon::uniqueId &pokeid)
     int avail = Gender(pokeid);
 
     return (avail == Pokemon::MaleAvail || avail == Pokemon::MaleAndFemaleAvail) ?
-            Pokemon::Male : (avail == Pokemon::NeutralAvail ? Pokemon::Neutral : Pokemon::Female);
+                Pokemon::Male : (avail == Pokemon::NeutralAvail ? Pokemon::Neutral : Pokemon::Female);
 }
 
 QList<QString> ItemInfo::SortedNames(Pokemon::gen gen)
@@ -2151,9 +2223,33 @@ QList<QString> ItemInfo::SortedUsefulNames(Pokemon::gen gen)
     return m_SortedUsefulNames[gen.num-GEN_MIN];
 }
 
+void TypeInfo::init(const QString &dir)
+{
+    if (NumberOfTypes() != 0)
+        return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+    loadCategories();
+    loadEff();
+}
+
+void TypeInfo::retranslate()
+{
+    loadNames();
+}
+
 void TypeInfo::loadNames()
 {
     fill_container_with_file(m_Names, trFile(path("types")));
+}
+
+void TypeInfo::loadCategories()
+{
     fill_container_with_file(m_Categories, path("category.txt"));
 }
 
@@ -2169,10 +2265,10 @@ void TypeInfo::loadEff()
     fill_container_with_file(temp, path("typestable.txt"));
 
     foreach (QString l, temp) {
-	QStringList l2 = l.split(' ');
-	foreach (QString l3, l2) {
-	    m_TypeVsType.push_back(l3.toInt());
-	}
+        QStringList l2 = l.split(' ');
+        foreach (QString l3, l2) {
+            m_TypeVsType.push_back(l3.toInt());
+        }
     }
 
     temp.clear();
@@ -2180,25 +2276,11 @@ void TypeInfo::loadEff()
     fill_container_with_file(temp, path("typestable_gen1.txt"));
 
     foreach (QString l, temp) {
-    QStringList l2 = l.split(' ');
-    foreach (QString l3, l2) {
-        m_TypeVsTypeGen1.push_back(l3.toInt());
+        QStringList l2 = l.split(' ');
+        foreach (QString l3, l2) {
+            m_TypeVsTypeGen1.push_back(l3.toInt());
+        }
     }
-    }
-}
-
-void TypeInfo::init(const QString &dir)
-{
-    if (NumberOfTypes() != 0)
-        return;
-
-    m_Directory = dir;
-
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-
-    loadNames();
-    loadEff();
 }
 
 int TypeInfo::TypeForWeather(int weather) {
@@ -2215,11 +2297,11 @@ QString TypeInfo::weatherName(int weather)
 {
     // Supposed to be lowercase and unique.
     switch(weather) {
-        case Hail: return "hailstorm";
-        case Rain: return "rain";
-        case SandStorm: return "sandstorm";
-        case Sunny: return "sunny";
-        default: return "normal";
+    case Hail: return QObject::tr("hailstorm");
+    case Rain: return QObject::tr("rain");
+    case SandStorm: return QObject::tr("sandstorm");
+    case Sunny: return QObject::tr("sunny");
+    default: return QObject::tr("normal", "weather");
     }
 }
 
@@ -2261,16 +2343,6 @@ void TypeInfo::modifyTypeChart(int type_attack, int type_defend, int value)
     m_TypeVsType[type_attack * NumberOfTypes() + type_defend] = value;
 }
 
-void NatureInfo::loadNames()
-{
-    fill_container_with_file(m_Names, trFile(path("nature")));
-}
-
-QString NatureInfo::path(const QString &filename)
-{
-    return m_Directory + filename;
-}
-
 void NatureInfo::init(const QString &dir)
 {
     if (NumberOfNatures() != 0)
@@ -2282,6 +2354,21 @@ void NatureInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+}
+
+void NatureInfo::retranslate()
+{
+    loadNames();
+}
+
+void NatureInfo::loadNames()
+{
+    fill_container_with_file(m_Names, trFile(path("nature")));
+}
+
+QString NatureInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
 }
 
 QString NatureInfo::Name(int naturenum)
@@ -2343,17 +2430,6 @@ int NatureInfo::StatHindered(int nature)
     return Boost(nature, ConvertToStat((nature%5)+1)) == 0 ? 0 : ConvertToStat((nature%5)+1);
 }
 
-
-void CategoryInfo::loadNames()
-{
-    fill_container_with_file(m_Names, trFile(path("categories")));
-}
-
-QString CategoryInfo::path(const QString& file)
-{
-    return m_Directory+file;
-}
-
 void CategoryInfo::init(const QString &dir)
 {
     if (NumberOfCategories() != 0)
@@ -2367,6 +2443,21 @@ void CategoryInfo::init(const QString &dir)
     loadNames();
 }
 
+void CategoryInfo::retranslate()
+{
+    loadNames();
+}
+
+void CategoryInfo::loadNames()
+{
+    fill_container_with_file(m_Names, trFile(path("categories")));
+}
+
+QString CategoryInfo::path(const QString& file)
+{
+    return m_Directory+file;
+}
+
 QString CategoryInfo::Name(int catnum)
 {
     return m_Names[catnum];
@@ -2375,24 +2466,6 @@ QString CategoryInfo::Name(int catnum)
 int CategoryInfo::NumberOfCategories()
 {
     return m_Names.size();
-}
-
-void AbilityInfo::loadNames()
-{
-    fill_container_with_file(m_Names, trFile(path("abilities")));
-}
-
-QString AbilityInfo::Message(int ab, int part) {
-    if (ab < 0 || ab >= m_Messages.size() || part < 0 || part >= m_Messages[ab].size()) {
-        return "";
-    }
-
-    return m_Messages[ab][part];
-}
-
-QString AbilityInfo::path(const QString &filename)
-{
-    return m_Directory + filename;
 }
 
 void AbilityInfo::init(const QString &dir)
@@ -2406,14 +2479,39 @@ void AbilityInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
+    loadMessages();
     loadEffects();
 
-    QStringList temp;
-    fill_container_with_file(temp, path("ability_messages.txt"));
     fill_container_with_file(m_OldAbilities, path("oldabilities.txt"));
-    foreach (QString eff, temp) {
-        m_Messages.push_back(eff.split('|'));
+}
+
+void AbilityInfo::retranslate()
+{
+    loadNames();
+    loadMessages();
+}
+
+void AbilityInfo::loadMessages()
+{
+    ::loadMessages(trFile(path("ability_messages")), m_Messages);
+}
+
+void AbilityInfo::loadNames()
+{
+    fill_container_with_file(m_Names, trFile(path("abilities")));
+}
+
+QString AbilityInfo::Message(int ab, int part) {
+    if (!m_Messages.contains(ab) || part < 0 || part >= m_Messages[ab].size()) {
+        return "";
     }
+
+    return m_Messages[ab][part];
+}
+
+QString AbilityInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
 }
 
 bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
@@ -2465,9 +2563,9 @@ int AbilityInfo::Number(const QString &pokename)
 QString AbilityInfo::Name(int abnum)
 {
     if (abnum >=0 && abnum < NumberOfAbilities(GEN_MAX))
-	return m_Names[abnum];
+        return m_Names[abnum];
     else
-	return 0;
+        return 0;
 }
 
 int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
@@ -2489,17 +2587,6 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
     }
 }
 
-
-void GenderInfo::loadNames()
-{
-    fill_container_with_file(m_Names, trFile(path("genders")));
-}
-
-QString GenderInfo::path(const QString &filename)
-{
-    return m_Directory + filename;
-}
-
 void GenderInfo::init(const QString &dir)
 {
     if (NumberOfGenders() != 0)
@@ -2513,6 +2600,21 @@ void GenderInfo::init(const QString &dir)
     loadNames();
 }
 
+void GenderInfo::retranslate()
+{
+    loadNames();
+}
+
+void GenderInfo::loadNames()
+{
+    fill_container_with_file(m_Names, trFile(path("genders")));
+}
+
+QString GenderInfo::path(const QString &filename)
+{
+    return m_Directory + filename;
+}
+
 QString GenderInfo::Name(int abnum)
 {
     return m_Names[abnum];
@@ -2520,21 +2622,21 @@ QString GenderInfo::Name(int abnum)
 
 int GenderInfo::Default(int genderAvail) {
     switch(genderAvail) {
-	case Pokemon::MaleAndFemaleAvail:
-	    return Pokemon::Male;
-	    break;
-	default:
-	    return genderAvail;
+    case Pokemon::MaleAndFemaleAvail:
+        return Pokemon::Male;
+        break;
+    default:
+        return genderAvail;
     }
 }
 
 bool GenderInfo::Possible(int gender, int genderAvail) {
     if (genderAvail == Pokemon::MaleAndFemaleAvail) {
-	if(gender == Pokemon::Neutral) {
-	    return false;
-	}
+        if(gender == Pokemon::Neutral) {
+            return false;
+        }
     } else if (gender != genderAvail) {
-	return false;
+        return false;
     }
     return true;
 }
@@ -2592,13 +2694,19 @@ QPair<quint8, quint8> HiddenPowerInfo::AttDefDVsForGen2(int type)
 void StatInfo::init(const QString &dir)
 {
     if (m_stats.size() != 0)
-	return;
+        return;
 
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
+    fill_container_with_file(m_stats, trFile(path("stats")));
+    fill_container_with_file(m_status, trFile(path("status")));
+}
+
+void StatInfo::retranslate()
+{
     fill_container_with_file(m_stats, trFile(path("stats")));
     fill_container_with_file(m_status, trFile(path("status")));
 }
@@ -2625,14 +2733,14 @@ QString StatInfo::Status(int stat)
 QString StatInfo::ShortStatus(int stat)
 {
     switch (stat) {
-    case Pokemon::Koed: return "Ko";
-    case Pokemon::Fine: return "";
-    case Pokemon::Paralysed: return "Par";
-    case Pokemon::Asleep: return "Slp";
-    case Pokemon::Frozen: return "Frz";
-    case Pokemon::Burnt: return "Brn";
-    case Pokemon::Poisoned: return "Psn";
-    case Pokemon::Confused: return "Cfs";
+    case Pokemon::Koed: return QObject::tr("Ko", "Short Status");
+    case Pokemon::Fine: return QObject::tr("", "Short Status");
+    case Pokemon::Paralysed: return QObject::tr("Par", "Short Status");
+    case Pokemon::Asleep: return QObject::tr("Slp", "Short Status");
+    case Pokemon::Frozen: return QObject::tr("Frz", "Short Status");
+    case Pokemon::Burnt: return QObject::tr("Brn", "Short Status");
+    case Pokemon::Poisoned: return QObject::tr("Psn", "Short Status");
+    case Pokemon::Confused: return QObject::tr("Cfs", "Short Status");
     default:
         return "";
     }
@@ -2702,7 +2810,12 @@ void GenInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     fill_gen_string(m_versions, trFile(path("versions")));
+    fill_double(m_gens, trFile(path("gens")));
+}
 
+void GenInfo::retranslate()
+{
+    fill_gen_string(m_versions, trFile(path("versions")));
     fill_double(m_gens, trFile(path("gens")));
 }
 

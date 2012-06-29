@@ -38,6 +38,16 @@ Menu::~Menu()
     delete ui;
 }
 
+bool Menu::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        e->accept();
+    }
+
+    return QFrame::event(e);
+}
+
 QMenuBar * Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();

@@ -294,7 +294,6 @@ void MainEngine::changeTheme(const QString &theme)
     }
 }
 
-
 void MainEngine::changeLanguage()
 {
     QAction * a = qobject_cast<QAction *>(sender());
@@ -312,7 +311,23 @@ void MainEngine::changeLanguage()
 
     setting.setValue("language",lang);
 
-    QMessageBox::information(displayer, tr("Language Change"), tr("Restart the application to see the changes."));
+    extern QTranslator translator;
+    extern QTranslator qtTranslator;
+
+    qtTranslator.load(QString("qt_") + lang,
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    translator.load(QString("trans/translation_") + lang);
+
+    PokemonInfo::retranslate();
+    MoveInfo::retranslate();
+    ItemInfo::retranslate();
+    TypeInfo::retranslate();
+    NatureInfo::retranslate();
+    CategoryInfo::retranslate();
+    AbilityInfo::retranslate();
+    GenderInfo::retranslate();
+    StatInfo::retranslate();
+    GenInfo::retranslate();
 }
 
 void MainEngine::goOnline(const QString &url, const quint16 port, const QString& nick)

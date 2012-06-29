@@ -139,6 +139,8 @@ public:
 
     static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, Pokemon::gen gen = GEN_MAX);
     static bool modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value);
+
+    static void retranslate();
 private:
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.
@@ -209,6 +211,7 @@ class MoveInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/moves/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int movenum);
@@ -260,7 +263,7 @@ public:
 private:
     static QList<QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
-    static QList<QStringList> m_MoveMessages;
+    static QHash<int, QStringList> m_MoveMessages;
     static QList<QString> m_Details;
     static QList<QString> m_SpecialEffects, m_RbySpecialEffects;
     static QList<int> m_OldMoves;
@@ -268,6 +271,8 @@ private:
 
     struct Gen {
         void load(const QString &path, int gen);
+        void retranslate();
+
         QString path(const QString &fileName);
 
         int gen;
@@ -324,6 +329,7 @@ public:
 
     /* directory where all the data is */
     static void init(const QString &dir="db/items/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static int NumberOfItems();
@@ -358,8 +364,8 @@ private:
     static QString m_Directory;
     static QList<QList<Effect> > m_RegEffects[NUMBER_GENS];
     static QList<QList<Effect> > m_BerryEffects;
-    static QList<QStringList> m_RegMessages;
-    static QList<QStringList> m_BerryMessages;
+    static QHash<int, QStringList> m_RegMessages;
+    static QHash<int, QStringList> m_BerryMessages;
     static QList<int> m_Powers;
     static QList<int> m_BerryPowers;
     static QList<int> m_BerryTypes;
@@ -367,6 +373,10 @@ private:
     static QSet<int> m_GenItems[NUMBER_GENS];
 
     static void loadNames();
+    static void loadEffects();
+    static void loadFlingData();
+    static void loadGenData();
+    static void loadMessages();
     static QString path(const QString &filename);
 };
 
@@ -375,6 +385,7 @@ class TypeInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/types/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int typenum);
@@ -402,6 +413,7 @@ private:
     static QList<int> m_Categories;
 
     static void loadNames();
+    static void loadCategories();
     static void loadEff();
     static QString path(const QString &filename);
 };
@@ -411,6 +423,7 @@ class NatureInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/natures/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int naturenum);
@@ -436,6 +449,7 @@ class CategoryInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/categories/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int catnum);
@@ -459,6 +473,7 @@ public:
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/abilities/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int abnum);
@@ -474,10 +489,11 @@ private:
     static QList<QString> m_Names;
     static QString m_Directory;
     static QList<Effect> m_Effects[NUMBER_GENS];
-    static QList<QStringList> m_Messages;
+    static QHash<int, QStringList> m_Messages;
     static QList<int> m_OldAbilities;
 
     static void loadNames();
+    static void loadMessages();
     static void loadEffects();
     static QString path(const QString &filename);
 };
@@ -487,6 +503,7 @@ class GenderInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/genders/");
+    static void retranslate();
 
     /* Self-explainable functions */
     static QString Name(int gender);
@@ -526,6 +543,7 @@ class StatInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/stats/");
+    static void retranslate();
 
     static QString Stat(int stat, int gen = GEN_MAX);
     static QString Status(int status);
@@ -542,6 +560,7 @@ class GenInfo
 {
 public:
     static void init(const QString &dir="db/gens/");
+    static void retranslate();
 
     static QString Gen(int gen);
     static QString Version(const Pokemon::gen &gen);
