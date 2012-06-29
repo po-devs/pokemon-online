@@ -72,8 +72,20 @@ Item {
             if (shown) {
                 var s = pokemon.nick;
                 s += "<pre>";
-                var stats = ["Attack.....", "Defense....", "Sp. Attack.", "Sp. Defense", "Speed......", "Accuracy...", "Evasion...."];
+                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
+                var max = 0;
                 var boost,stat,i;
+
+                for (i = 0; i < stats.length; i++) {
+                    if (stats[i].length > max) {
+                        max = stats[i].length;
+                    }
+                }
+                for (i = 0; i < stats.length; i++) {
+                    while (stats[i].length < max) {
+                        stats[i] += ".";
+                    }
+                }
 
                 for (i = 0; i < 5; i++) {
                     s += "\n" + stats[i] + " ";

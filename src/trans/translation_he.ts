@@ -4135,80 +4135,80 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2300"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2303"/>
         <source>hailstorm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2301"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2304"/>
         <source>rain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2302"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2305"/>
         <source>sandstorm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2303"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2306"/>
         <source>sunny</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2304"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2307"/>
         <source>normal</source>
         <comment>weather</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2717"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2724"/>
         <source>Special</source>
         <comment>Stat</comment>
         <translation type="unfinished">מיוחד</translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2728"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2735"/>
         <source>koed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2736"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2743"/>
         <source>Ko</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2738"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2745"/>
         <source>Par</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2739"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2746"/>
         <source>Slp</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2740"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2747"/>
         <source>Frz</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2741"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2748"/>
         <source>Brn</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2742"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2749"/>
         <source>Psn</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2743"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2750"/>
         <source>Cfs</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
@@ -5791,8 +5791,8 @@ Your language needs to be set to English to import English teams.</source>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="26"/>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Close</source>
+        <translation type="unfinished">&amp;סגור</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="35"/>
