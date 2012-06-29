@@ -1378,6 +1378,7 @@ void Server::findBattle(int id, const FindBattleData &_f)
                 c.rated =  f.rated || data->rated || canHaveRatedBattle(id, key, t1, t2, f.rated, data->rated);
                 c.clauses = TierMachine::obj()->tier(t1.tier).getClauses();
                 c.mode = TierMachine::obj()->tier(t1.tier).getMode();
+                c.gen = t1.gen;
 
                 if ((!c.clauses & ChallengeInfo::ChallengeCup) && (t1.invalid() || t2.invalid())) {
                     continue;
