@@ -10,6 +10,7 @@ ClientPlugin* createPluginClass(MainEngineInterface*)
 
 ClientScripting::ClientScripting()
 {
+    delete engine;
 }
 
 bool ClientScripting::hasConfigurationWidget() const

@@ -9,8 +9,7 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
-    myengine.globalObject().setProperty("client",
-                                        myengine.newQObject(dynamic_cast<QObject*>(c)));
+    myengine.globalObject().setProperty("client",myengine.newQObject(dynamic_cast<QObject*>(c)));
 
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
@@ -29,8 +28,10 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     warnings = s.value("ScriptWindow/warn", true).toBool();
 
     datalocation = appDataPath("Scripts/", true) + "/data.ini";
-
     myengine.installTranslatorFunctions();
+
+    includedFiles = myengine.newArray();
+    includedFilesIndex = 0;
 }
 
 ScriptEngine::~ScriptEngine()
@@ -54,7 +55,7 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
-    myscript = myengine.evaluate(script);
+    myscript = myengine.evaluate(script, "scripts.js");
     myengine.globalObject().setProperty("script", myscript);
 
     if (myscript.isError()) {
@@ -189,13 +190,9 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
     }
 }
 
+
 QScriptValue ScriptEngine::importPlugin(const QString &name_)
 {
-    if (safeScripts) {
-        warn("importPlugin(path)", "Safe scripts is on.");
-        return false;
-    }
-
     QDir dir;
     dir.mkdir("script");
     // See: http://qt-project.org/doc/qt-4.8/plugins-howto.html
@@ -229,6 +226,34 @@ QScriptValue ScriptEngine::importedPlugins()
     }
 
     return arr;
+}
+
+QScriptValue ScriptEngine::import(const QString &fileName)
+{
+    QString url = "Scripts/"+fileName;
+    QFile in(url);
+
+    if (!in.open(QIODevice::ReadOnly)) {
+        warn("import(fileName)", "The file Scripts/" + fileName + " is not readable.");
+        return myengine.undefinedValue();
+    }
+
+    includedFiles.setProperty(includedFilesIndex, fileName);
+    ++includedFilesIndex;
+
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()), "Scripts/" + fileName);
+    evaluate(import);
+    return import;
+}
+
+QScriptValue ScriptEngine::include(const QString &fileName)
+{
+    return this->import(fileName);
+}
+
+QScriptValue ScriptEngine::importedFiles()
+{
+    return includedFiles;
 }
 
 void ScriptEngine::clearChat()

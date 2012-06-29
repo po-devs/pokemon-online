@@ -1,4 +1,4 @@
-#ifndef PLAYER_H
+﻿#ifndef PLAYER_H
 #define PLAYER_H
 
 #include "../PokemonInfo/networkstructs.h"
@@ -250,6 +250,7 @@ private:
     mutable int lastcommand;
     mutable PlayerInfo m_bundle;
 
+    int server_pass_attempts;
     bool server_pass_sent; // XXX: maybe integrate into state? Probably needs client side things too
     /* When you want to break down in Analyzer a command in several signals, but you don't want to
       send the updated player info to every player online, use setNeedToUpdate(true) instead of

@@ -1387,12 +1387,16 @@ void Client::playerTempBanned(int dest, int src, int time)
     printHtml(toBoldColor(mess, Qt::red));
 }
 
-void Client::askForPass(const QByteArray &salt) {
+void Client::askForPass(const QByteArray &salt)
+{
+    server_pass_invalid = false;
 
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
-    if (!warns.empty()) warns.prepend(""); // for join()
+    if (!warns.empty()) {
+        warns.prepend(""); // for join()
+    }
 
     /* Create a dialog for password input */
     QDialog dialog(this);
@@ -1465,15 +1469,24 @@ void Client::onReconnectFailure(int reason)
     }
 }
 
-void Client::serverPass(const QByteArray &salt) {
+void Client::serverPass(const QByteArray &salt)
+{
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveServerPassword(relay().getIp(), serverName, pass, warns);
-    if (!warns.empty()) warns.prepend(""); // for join()
+    if (!warns.empty()) {
+        warns.prepend(""); // for join()
+    }
 
     /* Create a dialog for password input */
     QDialog dialog(this);
-    dialog.setWindowTitle(tr("Enter the server password"));
+    QString title = tr("Enter the server password");
+
+    if (server_pass_invalid) {
+        title = tr("The password was incorrect");
+    }
+    dialog.setWindowTitle(title);
+
     QVBoxLayout* layout = new QVBoxLayout;
     // Label
     layout->addWidget(new QLabel(tr("Enter the password for this server.\n"
@@ -1510,8 +1523,11 @@ void Client::serverPass(const QByteArray &salt) {
         // TODO: ipv6 support in the future
         wallet.saveServerPassword(relay().getIp(), serverName, pass);
     }
+
     QByteArray hash = QCryptographicHash::hash(QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5)+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::ServerPass, hash);
+
+    server_pass_invalid = true; // Will be reset later.
 }
 
 void Client::sendRegister() {
@@ -1519,7 +1535,7 @@ void Client::sendRegister() {
         relay().notify(NetworkCli::Register);
         myregister->setDisabled(true);
     } else {
-        relay().connectTo(url, port);
+        reconnect();
     }
 }
 
@@ -1605,10 +1621,17 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
 
         QString message;
         switch (level) {
-        case -3: message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems"); break;
-        case -2: message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
-        case -1: message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
-        case 0: message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
+        case -3:
+            message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems");
+            break;
+        case -2:
+            message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
+            break;
+        case -1:
+            message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
+            break;
+        case 0:
+            message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
         }
 
         QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), message,

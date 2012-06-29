@@ -50,6 +50,10 @@ public:
     Q_INVOKABLE QScriptValue importPlugin(const QString &name);
     Q_INVOKABLE QScriptValue importedPlugins();
 
+    Q_INVOKABLE QScriptValue import(const QString &fileName);
+    Q_INVOKABLE QScriptValue include(const QString &fileName);
+    Q_INVOKABLE QScriptValue importedFiles();
+
     /* Print on the client. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
@@ -190,6 +194,9 @@ private:
     bool warnings;
 
     QString datalocation;
+
+    QScriptValue includedFiles;
+    int includedFilesIndex;
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * See network protocol here: http://wiki.pokemon-online.eu/view/Network_Protocol_v2
 */
 
@@ -48,7 +48,9 @@ public:
     bool isConnected() const;
     void goAway(bool away);
     QString getIp() const;
-    quint32 getCommandCount() const {return commandCount;}
+    quint32 getCommandCount() const {
+        return commandCount;
+    }
     void disconnectFromHost();
 
     /* Convenience functions to avoid writing a new one every time */

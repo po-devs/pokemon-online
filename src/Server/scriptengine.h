@@ -98,6 +98,8 @@ public:
 
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
+    Q_INVOKABLE QScriptValue include(const QString &fileName);
+
     /* Functions called in scripts */
     Q_INVOKABLE void sendAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess);
@@ -343,8 +345,16 @@ public:
     Q_INVOKABLE bool validColor(const QString &color);
     Q_INVOKABLE QString hexColor(const QString &colorname);
 
+    Q_INVOKABLE bool dirExists (const QString &dir);
+
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
+    Q_INVOKABLE void mkpath (const QString &path);
+    Q_INVOKABLE void mkdir (const QString &dir);
+
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
@@ -359,14 +369,13 @@ public:
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
 
-    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
-    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
-
     // Direct file access.
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
     Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+
+#endif // PO_SCRIPT_SAFE_ONLY
 
     /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
@@ -377,7 +386,6 @@ public:
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
-#endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
     /* Calls the underlying OS for a command */
@@ -393,10 +401,8 @@ private slots:
     void timer();
     void timer_step();
     void timerFunc();
-#ifndef PO_SCRIPT_SAFE_ONLY
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
-#endif
     void hostInfo_Ready(const QHostInfo &myInfo);
     
 private:
