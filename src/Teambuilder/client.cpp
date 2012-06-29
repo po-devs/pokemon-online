@@ -1484,6 +1484,8 @@ void Client::serverPass(const QByteArray &salt)
 
     if (server_pass_invalid) {
         title = tr("The password was incorrect");
+        dialog.setWindowIcon(QApplication::style()->standardIcon(
+                                 QStyle::SP_MessageBoxWarning));
     }
     dialog.setWindowTitle(title);
 
