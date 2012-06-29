@@ -23,7 +23,7 @@
    <item row="3" column="6">
     <widget class="QPushButton" name="close">
      <property name="text">
-      <string>Close</string>
+      <string>&amp;Close</string>
      </property>
     </widget>
    </item>
@@ -573,6 +573,36 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>name</tabstop>
+  <tabstop>colorButton</tabstop>
+  <tabstop>infos</tabstop>
+  <tabstop>winningMessage</tabstop>
+  <tabstop>losingMessage</tabstop>
+  <tabstop>tieMessage</tabstop>
+  <tabstop>avatarNumber</tabstop>
+  <tabstop>profileList</tabstop>
+  <tabstop>saveProfile</tabstop>
+  <tabstop>newProfile</tabstop>
+  <tabstop>deleteProfile</tabstop>
+  <tabstop>boxCenter</tabstop>
+  <tabstop>pokedex</tabstop>
+  <tabstop>teamName</tabstop>
+  <tabstop>teamTier</tabstop>
+  <tabstop>loadTeam</tabstop>
+  <tabstop>saveTeam</tabstop>
+  <tabstop>teamFolderButton</tabstop>
+  <tabstop>importTeam</tabstop>
+  <tabstop>team1</tabstop>
+  <tabstop>team2</tabstop>
+  <tabstop>team4</tabstop>
+  <tabstop>team3</tabstop>
+  <tabstop>team5</tabstop>
+  <tabstop>team6</tabstop>
+  <tabstop>addTeam</tabstop>
+  <tabstop>removeTeam</tabstop>
+  <tabstop>close</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

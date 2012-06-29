@@ -166,6 +166,14 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pokemonList</tabstop>
+  <tabstop>pokeEdit</tabstop>
+  <tabstop>pokemonFrame</tabstop>
+  <tabstop>shiny</tabstop>
+  <tabstop>altForme</tabstop>
+  <tabstop>changeSpecies</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
