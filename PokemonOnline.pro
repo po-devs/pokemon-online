@@ -58,7 +58,7 @@ CONFIG(po_registry) {
     SUBDIRS += src/Registry
 }
 
-TRANSLATIONS = translation_cz.ts \
+TRANSLATIONS = src/trans/translation_cz.ts \
     src/trans/translation_de.ts \
     src/trans/translation_es.ts \
     src/trans/translation_fi.ts \
