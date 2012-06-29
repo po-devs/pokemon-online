@@ -39,7 +39,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
-
+QTranslator qtTranslator, translator;
 
 int main(int argc, char *argv[])
 {
@@ -82,7 +82,10 @@ int main(int argc, char *argv[])
 
         QString locale = settings.value("language").toString();
 
-        QTranslator translator;
+        qtTranslator.load(QString("qt_") + locale,
+                QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        a.installTranslator(&qtTranslator);
+
         translator.load(QString("trans/translation_") + locale);
         a.installTranslator(&translator);
 
