@@ -298,453 +298,463 @@
         <translation type="unfinished">Le combat entre %1 et %2 est en cours!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="110"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="91"/>
+        <source>the foe&apos;s %1</source>
+        <translation type="unfinished">%1 ennemi</translation>
+    </message>
+    <message>
+        <location filename="../BattleManager/battleclientlog.cpp" line="93"/>
+        <source>%1&apos;s %2</source>
+        <translation type="unfinished">%2 de %1</translation>
+    </message>
+    <message>
+        <location filename="../BattleManager/battleclientlog.cpp" line="114"/>
         <source>%1 fainted!</source>
         <translation type="unfinished">%1 est K.O.!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="117"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="121"/>
         <source>%1 sent out %2! (%3)</source>
         <translation type="unfinished">%1 envoie %2! (%3)</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="119"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="123"/>
         <source>%1 sent out %2!</source>
         <translation type="unfinished">%1 envoie %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="121"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="125"/>
         <source>%1&apos;s previous position in the team: %2.</source>
         <translation type="unfinished">Ancienne position de %1 dans l&apos;équipe: %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="122"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="126"/>
         <source>%1&apos;s new place on the field: %2.</source>
         <translation type="unfinished">Nouvelle position de %1 dans l&apos;équipe: %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="123"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="127"/>
         <source>%1&apos;s life: %2%.</source>
         <translation type="unfinished">Vie de %1: %2%.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="124"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="128"/>
         <source>%1&apos;s status: %2.</source>
         <translation type="unfinished">Statut de %1: %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="125"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="129"/>
         <source>%1&apos;s level: %2.</source>
         <translation type="unfinished">Niveau de %1: %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="126"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="130"/>
         <source>%1&apos;s shininess: %2.</source>
         <translation type="unfinished">%1 est shiny? %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="127"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="131"/>
         <source>%1&apos;s gender: %2.</source>
         <translation type="unfinished">Sexe de %1! %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="132"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="136"/>
         <source>%1 called %2 back!</source>
         <translation type="unfinished">%1 a rappelé %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="138"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="142"/>
         <source>%1 used %2!</source>
         <translation type="unfinished">%1 a utilisé %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="145"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="149"/>
         <source>Start of turn %1</source>
         <translation type="unfinished">Début du tour %1</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="151"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="155"/>
         <source>%1&apos;s new HP is %2/%3.</source>
         <translation type="unfinished">Nouveaux PVs de %1: %2/%3.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="153"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="157"/>
         <source>%1&apos;s new HP is %2%.</source>
         <translation type="unfinished">Nouvelle vie de %1: %2%.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="159"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="163"/>
         <source>Hit %1 times!</source>
         <translation type="unfinished">Touché %1 fois!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="166"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="170"/>
         <source>It had no effect!</source>
         <translation type="unfinished">Ca n&apos;a eu aucun effet!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="170"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="174"/>
         <source>It&apos;s not very effective...</source>
         <translation type="unfinished">Ce n&apos;est pas très efficace...</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="174"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="178"/>
         <source>It&apos;s super effective!</source>
         <translation type="unfinished">C&apos;est super efficace!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="182"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="186"/>
         <source>A critical hit!</source>
         <translation type="unfinished">Coup critique!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="187"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="191"/>
         <source>The attack of %1 missed!</source>
         <translation type="unfinished">%1 rate son attaque!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="192"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="196"/>
         <source>%1 avoided the attack!</source>
         <translation type="unfinished">%1 a évité l&apos;attaque!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="197"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>%1&apos;s %2 %3%4!</source>
         <translation type="unfinished">%2 de %1 %4%3!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="197"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>drastically </source>
         <translation type="unfinished"> énormément</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="197"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>sharply </source>
         <translation type="unfinished"> beaucoup</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="199"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
         <source>rose</source>
         <translation type="unfinished">augmente</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="199"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
         <source>fell</source>
         <translation type="unfinished">baisse</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="205"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="209"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
         <translation type="unfinished">%1 est paralysé! Il ne peut pas bouger!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="206"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="210"/>
         <source>%1 fell asleep!</source>
         <translation type="unfinished">%1 s&apos;endort!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="207"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="211"/>
         <source>%1 was frozen solid!</source>
         <translation type="unfinished">%1 est congelé!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="208"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="212"/>
         <source>%1 was burned!</source>
         <translation type="unfinished">%1 est brûlé!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="209"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="213"/>
         <source>%1 was poisoned!</source>
         <translation type="unfinished">%1 est empoisonné!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="210"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="214"/>
         <source>%1 was badly poisoned!</source>
         <translation type="unfinished">%1 est gravement empoisonné!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="218"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="222"/>
         <source>%1 became confused!</source>
         <translation type="unfinished">%1 devient confus!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="221"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="225"/>
         <source>%1 had its status changed to: %2.</source>
         <translation type="unfinished">Le statut de %1 est changé en: %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="226"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="230"/>
         <source>Pokemon number %1 of %2 had its status changed to: %3.</source>
         <translation type="unfinished">Le pokémon numéro %1 de %2 a eu un changement de statut: %3.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="231"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="235"/>
         <source>%1 is already %2.</source>
         <translation type="unfinished">%1 est déjà %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="238"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="242"/>
         <source>%1 is confused!</source>
         <translation type="unfinished">%1 est confus!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="241"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="245"/>
         <source>%1 is paralyzed! It can&apos;t move!</source>
         <translation type="unfinished">%1 est paralysé! Il ne peut pas attaquer!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="244"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="248"/>
         <source>%1 is fast asleep!</source>
         <translation type="unfinished">%1 dort!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="247"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="251"/>
         <source>%1 is frozen solid!</source>
         <translation type="unfinished">%1 est gelé!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="257"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="261"/>
         <source>It hurt itself in its confusion!</source>
         <translation type="unfinished">Le pokémon se blesse dans sa confusion!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="260"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="264"/>
         <source>%1 is hurt by its burn!</source>
         <translation type="unfinished">%1 souffre de sa brûlure!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="263"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="267"/>
         <source>%1 is hurt by poison!</source>
         <translation type="unfinished">%1 souffre du poison!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="273"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="277"/>
         <source>%1 snapped out its confusion!</source>
         <translation type="unfinished">%1 n&apos;est plus confus!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="276"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="280"/>
         <source>%1 woke up!</source>
         <translation type="unfinished">%1 se réveille!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="279"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="283"/>
         <source>%1 thawed out!</source>
         <translation type="unfinished">%1 a dégelé!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="287"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="291"/>
         <source>But it failed!</source>
         <translation type="unfinished">Mais l&apos;attaque a échoué!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="302"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="306"/>
         <source>%1 is watching the battle.</source>
         <translation type="unfinished">%1 regarde le combat.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="307"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="311"/>
         <source>%1 stopped watching the battle.</source>
         <translation type="unfinished">%1 arrête de regarder le combat.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="335"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="339"/>
         <source>But there was no target...</source>
         <translation type="unfinished">Mais il n&apos;y a pas de pokémon cible...</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="355"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="359"/>
         <source>%1 flinched!</source>
         <translation type="unfinished">%1 est paralysé par la peur!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="360"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="364"/>
         <source>%1 is hit with recoil!</source>
         <translation type="unfinished">%1 est blessé par le recul!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="365"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="369"/>
         <source>%1 had its energy drained!</source>
         <translation type="unfinished">%1 s&apos;est fait absorber sa vie!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="373"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="377"/>
         <source>%1&apos;s Snow Warning whipped up a hailstorm!</source>
         <translation type="unfinished">Alerte neige de %1 a fait tomber la grêle!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="374"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="378"/>
         <source>%1&apos;s Drizzle made it rain!</source>
         <translation type="unfinished">Déluge de %1 fait tomber la pluie!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="375"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="379"/>
         <source>%1&apos;s Sand Stream whipped up a sandstorm!</source>
         <translation type="unfinished">Sable volant de %1 a déclenché une tempête de sable!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="376"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="380"/>
         <source>%1&apos;s Drought intensified the sun&apos;s rays!</source>
         <translation type="unfinished">Sécheresse de %1 intensifie les rayons du soleil!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="380"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="384"/>
         <source>A hailstorm brewed!</source>
         <translation type="unfinished">La grêle commence à tomber!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="381"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="385"/>
         <source>It started to rain!</source>
         <translation type="unfinished">Il commence à pleuvoir!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="382"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="386"/>
         <source>A sandstorm brewed!</source>
         <translation type="unfinished">Une tempête de sable a commence!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="383"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="387"/>
         <source>The sunlight turned harsh!</source>
         <translation type="unfinished">La lumière du soleil s&apos;intensifie!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="398"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="402"/>
         <source>Hail continues to fall!</source>
         <translation type="unfinished">La grêle continue!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="399"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="403"/>
         <source>The sandstorm rages!</source>
         <translation type="unfinished">La tempête de sable fait rage!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="400"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="404"/>
         <source>The sunlight is strong!</source>
         <translation type="unfinished">Les rayons du soleil continuent à briller!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="401"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="405"/>
         <source>Rain continues to fall!</source>
         <translation type="unfinished">La pluie continue!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="410"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="414"/>
         <source>The hail subsided!</source>
         <translation type="unfinished">La grêle s&apos;est arrêtée!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="411"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="415"/>
         <source>The sandstorm subsided!</source>
         <translation type="unfinished">La tempête de sable s&apos;est calmée.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="412"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="416"/>
         <source>The sunlight faded!</source>
         <translation type="unfinished">Les rayons du soleil s&apos;atténuent!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="413"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="417"/>
         <source>The rain stopped!</source>
         <translation type="unfinished">La pluie cesse de tomber!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="422"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="426"/>
         <source>%1 is buffeted by the hail!</source>
         <translation type="unfinished">%1 est frappé par la grêle!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="423"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="427"/>
         <source>%1 is buffeted by the sandstorm!</source>
         <translation type="unfinished">%1 est frappé par la tempête de sable!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="430"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="434"/>
         <source>%1 lost %2% of its health!</source>
         <translation type="unfinished">%1 a perdu %2% de sa vie!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="432"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="436"/>
         <source>%1 lost %2 HP! (%3% of its health)</source>
         <translation type="unfinished">%1 a perdu %2 PV! (%3% de sa vie)</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="465"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="469"/>
         <source>Tie between %1 and %2!</source>
         <translation type="unfinished">Match nul entre %1 et %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="467"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="471"/>
         <source>%1 forfeited against %2!</source>
         <translation type="unfinished">%1 a abandonné contre %2.</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="469"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="473"/>
         <source>%1 won the battle!</source>
         <translation type="unfinished">%1 a gagné le combat!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="485"/>
         <location filename="../BattleManager/battleclientlog.cpp" line="489"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="493"/>
         <source>Rule: </source>
         <translation type="unfinished">Règle: </translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="485"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="489"/>
         <source>Rated</source>
-        <translation type="unfinished">Match officiel</translation>
+        <translation>Match classé</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="485"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="489"/>
         <source>Unrated</source>
         <translation type="unfinished">Match amical</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="501"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="505"/>
         <source>Tier: </source>
         <translation type="unfinished">Catégorie: </translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="502"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="506"/>
         <source>Mode: </source>
         <translation type="unfinished">Mode: </translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="508"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="512"/>
         <source>%1 shifted spots to the middle!</source>
         <translation type="unfinished">%1 est passé au centre!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="510"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="514"/>
         <source>%1 shifted spots with %2!</source>
         <translation type="unfinished">%1 a échangé de place avec %2!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="516"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="520"/>
         <source>%1+%2, %3</source>
         <translation type="unfinished">%1+%2, %3</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="516"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="520"/>
         <source>Variation: </source>
         <translation type="unfinished">Variation: </translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="545"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="549"/>
         <source>Your team: </source>
         <translation type="unfinished">Votre équipe:</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="546"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="550"/>
         <source>Opponent&apos;s team: </source>
         <translation type="unfinished">Équipe de l&apos;ennemi:</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="559"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="563"/>
         <source>%1 logged back in and is ready to resume the battle!</source>
         <translation type="unfinished">%1 s&apos;est reconnecté et est prêt pour reprendre le combat!</translation>
     </message>
     <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="566"/>
+        <location filename="../BattleManager/battleclientlog.cpp" line="570"/>
         <source>%1 got disconnected!</source>
         <translation type="unfinished">%1 a été déconnecté!</translation>
     </message>
@@ -1518,14 +1528,12 @@ Il est recommandé d&apos;utiliser un mot de passe différent pour chaque serveu
         <source>%1 was banned by the server for %n minute(s)!</source>
         <translation type="unfinished">
             <numerusform></numerusform>
-            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../Teambuilder/client.cpp" line="1385"/>
         <source>%1 banned %2 for %n minute(s)!</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -3363,80 +3371,80 @@ Move4</source>
         <translation type="unfinished">%1 ne peut pas apprendre les attaques suivantes ensemble: %2.</translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2290"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2300"/>
         <source>hailstorm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2291"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2301"/>
         <source>rain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2292"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2302"/>
         <source>sandstorm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2293"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2303"/>
         <source>sunny</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2294"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2304"/>
         <source>normal</source>
         <comment>weather</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2707"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2717"/>
         <source>Special</source>
         <comment>Stat</comment>
         <translation type="unfinished">Spécial</translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2718"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2728"/>
         <source>koed</source>
         <translation type="unfinished">ko</translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2726"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2736"/>
         <source>Ko</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2728"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2738"/>
         <source>Par</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2729"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2739"/>
         <source>Slp</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2730"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2740"/>
         <source>Frz</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2731"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2741"/>
         <source>Brn</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2732"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2742"/>
         <source>Psn</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2733"/>
+        <location filename="../PokemonInfo/pokemoninfo.cpp" line="2743"/>
         <source>Cfs</source>
         <comment>Short Status</comment>
         <translation type="unfinished"></translation>

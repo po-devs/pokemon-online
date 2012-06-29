@@ -87,7 +87,11 @@ QString BattleClientLog::nick(int spot)
     if (data()->role(spot) == BattleConfiguration::Player) {
         return rnick(spot);
     } else {
-        return QString("%1's %2").arg(data()->name(spot), rnick(spot));
+        if (data()->role(data()->opponent(spot)) == BattleConfiguration::Player) {
+            return tr("the foe's %1").arg(rnick(spot));
+        } else {
+            return tr("%1's %2").arg(data()->name(spot), rnick(spot));
+        }
     }
 }
 
