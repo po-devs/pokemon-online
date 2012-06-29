@@ -31,6 +31,7 @@ public:
     bool isEmpty() const;
     int freeSpot() const;
 
+    int currentSlot() const;
     int getNum() const;
     void setNum(int number);
 

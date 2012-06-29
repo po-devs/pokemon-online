@@ -28,7 +28,7 @@ signals:
     void goToExit();
 
 protected:
-
+    bool event(QEvent *e);
 private:
     Ui::Menu *ui;
 };

@@ -31,6 +31,8 @@ private slots:
     void connected();
     void anchorClicked(const QUrl&);
     void timeout();
+
+    void on_switchPort_clicked();
 private:
     Ui::ServerChoice *ui;
 

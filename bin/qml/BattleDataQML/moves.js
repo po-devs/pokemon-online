@@ -13,6 +13,7 @@ effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 effects[BattleData.TakeDown] = "Moves/TakeDown.qml";
 effects[BattleData.QuickAttack] = "Moves/QuickAttack.qml";
 effects[BattleData.U_turn] = "Moves/UTurn.qml";
+effects[BattleData.VoltSwitch] = effects[BattleData.U_turn];
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
 effects[BattleData.BoneRush] = "Moves/BoneRush.qml";

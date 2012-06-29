@@ -219,6 +219,11 @@ int PokeBox::freeSpot() const {
     }
 }
 
+int PokeBox::currentSlot() const
+{
+    return currentPokemon;
+}
+
 int PokeBox::getNum() const
 {
     return this->m_Num;
