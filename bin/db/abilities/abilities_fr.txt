@@ -3,18 +3,18 @@ Puanteur
 Crachin
 Turbo
 Armurebaston
-Fermeté
+FermetÃ©
 Moiteur
-Échauffement
+Ã‰chauffement
 Voile sable
 Static
 Absorb Volt
 Absorb Eau
-Benêt
+BenÃªt
 Ciel Gris
-Oeil Composé
+Oeil ComposÃ©
 Insomnia
-Déguisement
+DÃ©guisement
 Vaccin
 Torche
 Ecran poudre
@@ -24,13 +24,13 @@ Intimidation
 Marque Ombre
 Peau dure
 Garde magic
-Lévitation
+LÃ©vitation
 Pose Spore
 Synchro
 Corps Sain
-Médic Nature
+MÃ©dic Nature
 Paratonnerre
-Sérénité
+SÃ©rÃ©nitÃ©
 Glissade
 Chlorophylle
 Lumiattirance
@@ -40,7 +40,7 @@ Point Poison
 Attention
 Armumagma
 Ignifu voile
-Magnépiège
+MagnÃ©piÃ¨ge
 Anti bruit
 Cuvette
 Sable volant
@@ -52,7 +52,7 @@ Fuite
 Regard Vif
 Hyper Cutter
 Rammassage
-Absentéisme 
+AbsentÃ©isme 
 Agitation
 Joli Sourire
 Plus
@@ -61,39 +61,39 @@ Meteo
 Glue
 Mue
 Cran
-Écaille Spéciale
+Ã‰caille SpÃ©ciale
 Suintement
 Engrais
 Brasier
 Torrent
 Essaim
-Tête de Roc
-Sécheresse
-Piège
+TÃªte de Roc
+SÃ©cheresse
+PiÃ¨ge
 Esprit Vital
-Ecran fumée
+Ecran fumÃ©e
 Force Pure
 Coque Armure
 Air Lock
 Tempo perso
-Motorisé
-Rivalité
+MotorisÃ©
+RivalitÃ©
 Impassible
 Rideau Neige
 Gloutonnerie
-Colérique
-Délestage
+ColÃ©rique
+DÃ©lestage
 Ignifuge
 Simple
 Dry Skin
-Télécharge
+TÃ©lÃ©charge
 Poing de Fer
 Soin Poison
-Adaptabilité
+AdaptabilitÃ©
 Multi coups
 Hydratation
 Force soleil
-Pied Véloce
+Pied VÃ©loce
 Normalise
 Sniper
 Garde Magik
@@ -106,11 +106,11 @@ Brise Moule
 Chanceux
 Boom Final
 Anticipation
-Prédiction
+PrÃ©diction
 Inconscient
-Lumiteintée
+LumiteintÃ©e
 Filtre
-Début calme
+DÃ©but calme
 Querelleur
 Lavabo
 Corps Gel
@@ -118,31 +118,31 @@ Solide Roc
 Alerte Neige
 Cherche Miel
 Fouille
-Téméraire
+TÃ©mÃ©raire
 Multitype
 Don Floral
-Mauvais Rêve
+Mauvais RÃªve
 Pickpocket
 Sans Limite
 Contestation
 Tension
-Acharné
-Défaitiste
+AcharnÃ©
+DÃ©faitiste
 Corps Maudit
-Cœur Soin
+CÂœur Soin
 Garde amie
-Armurouillée
+ArmurouillÃ©e
 Heavy Metal
 Light Metal
-Multécaille
+MultÃ©caille
 Rage Poison
-Rage Brûlure
-Récolte
-Télépathe
+Rage BrÃ»lure
+RÃ©colte
+TÃ©lÃ©pathe
 Lunatique
 Envelocape
 Toxitouche
-Régé-Force
+RÃ©gÃ©-Force
 Coeur de coq
 Baigne Sable
 Peau Miracle
@@ -152,14 +152,14 @@ Imposteur
 Infiltration
 Momie
 Impudence
-Cœur Noble
+CÂœur Noble
 Phobique
 Miroir Magik
 Herbivore
 Farceur
 Force Sable
-Épine de Fer
+Ã‰pine de Fer
 Mode Transe
 Victorieux
 TurboBrasier
-Téra-Voltage
+TÃ©ra-Voltage
