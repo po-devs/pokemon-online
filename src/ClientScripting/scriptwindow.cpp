@@ -16,12 +16,17 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
 
     QSettings s;
     s.beginGroup("ScriptWindow");
+
+    warnOnClose = s.value("warnOnClose", true).toBool();
+
     ui->checkBox->setChecked(s.value("safeScripts", true).toBool());
     ui->warn->setChecked(s.value("warn", false).toBool());
+    ui->warnOnClose->setChecked(warnOnClose);
     s.endGroup();
 
     connect(ui->checkBox, SIGNAL(stateChanged(int)), this, SLOT(safeScriptsChanged(int)));
     connect(ui->warn, SIGNAL(stateChanged(int)), this, SLOT(warningsChanged(int)));
+    connect(ui->warnOnClose, SIGNAL(stateChanged(int)), this, SLOT(warnOnCloseChanged(int)));
 }
 
 void ScriptWindow::accept()
@@ -41,6 +46,11 @@ void ScriptWindow::accept()
 
 void ScriptWindow::reject()
 {
+    if (!warnOnClose) {
+        QDialog::reject();
+        return;
+    }
+
     QMessageBox *warn = new QMessageBox(QMessageBox::Question, tr("Are you sure?"),
                                         tr("Do you really want to close the scripts window and lose all your changes?"),
                                         QMessageBox::Yes | QMessageBox::No, NULL, Qt::Window);
@@ -88,6 +98,23 @@ void ScriptWindow::warningsChanged(int newStatus)
     } else {
         s.setValue("warn", false);
         emit warningsChanged(false);
+    }
+
+    s.endGroup();
+}
+
+void ScriptWindow::warnOnCloseChanged(int newStatus)
+{
+    QSettings s;
+
+    s.beginGroup("ScriptWindow");
+
+    if (newStatus == Qt::Checked) {
+        s.setValue("warnOnClose", true);
+        warnOnClose = true;
+    } else {
+        s.setValue("warnOnClose", false);
+        warnOnClose = false;
     }
 
     s.endGroup();

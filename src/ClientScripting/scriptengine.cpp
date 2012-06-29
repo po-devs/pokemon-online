@@ -32,6 +32,9 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
 
     includedFiles = myengine.newArray();
     includedFilesIndex = 0;
+
+    QDir dir;
+    dir.mkdir("script"); // for sys.import{Plugin}
 }
 
 ScriptEngine::~ScriptEngine()
@@ -193,8 +196,6 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
 
 QScriptValue ScriptEngine::importPlugin(const QString &name_)
 {
-    QDir dir;
-    dir.mkdir("script");
     // See: http://qt-project.org/doc/qt-4.8/plugins-howto.html
 
     QString name = name_;
@@ -230,7 +231,7 @@ QScriptValue ScriptEngine::importedPlugins()
 
 QScriptValue ScriptEngine::import(const QString &fileName)
 {
-    QString url = "Scripts/"+fileName;
+    QString url = "script/"+fileName;
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
