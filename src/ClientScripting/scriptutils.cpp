@@ -1,4 +1,4 @@
-#include "scriptutils.h"
+﻿#include "scriptutils.h"
 #include "../Utilities/functions.h"
 
 QString ScriptUtils::loadScripts()

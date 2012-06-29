@@ -9,7 +9,8 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
-    myengine.globalObject().setProperty("client", myengine.newQObject(dynamic_cast<QObject*>(c)));
+    myengine.globalObject().setProperty("client",
+                                        myengine.newQObject(dynamic_cast<QObject*>(c)));
 
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
@@ -29,6 +30,7 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
 
     datalocation = appDataPath("Scripts/", true) + "/data.ini";
 
+    myengine.installTranslatorFunctions();
 }
 
 ScriptEngine::~ScriptEngine()
@@ -185,6 +187,48 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
     if (expr.isError() && warnings) {
         printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()));
     }
+}
+
+QScriptValue ScriptEngine::importPlugin(const QString &name_)
+{
+    if (safeScripts) {
+        warn("importPlugin(path)", "Safe scripts is on.");
+        return false;
+    }
+
+    QDir dir;
+    dir.mkdir("script");
+    // See: http://qt-project.org/doc/qt-4.8/plugins-howto.html
+
+    QString name = name_;
+    QScriptValue res = myengine.importExtension(name);
+
+    if (res.isUndefined()) {
+        return true;
+    }
+
+    return res; // An exception has been caught.
+}
+
+QScriptValue ScriptEngine::importedPlugins()
+{
+    QStringList plugins = myengine.importedExtensions();
+    int size = plugins.size();
+
+    if (size == 0) {
+        return myengine.newArray();
+    }
+
+    QStringListIterator it(plugins);
+
+    QScriptValue arr = myengine.newArray(size);
+    int now = 0;
+    while (it.hasNext()) {
+        arr.setProperty(now, it.next());
+        now++;
+    }
+
+    return arr;
 }
 
 void ScriptEngine::clearChat()
@@ -472,7 +516,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
 
 QScriptValue ScriptEngine::move(int num)
 {
-    if (num < 0  || num >= MoveInfo::NumberOfMoves()) {
+    if (num < 0  || num >= MoveInfo::NumberOfMoves(GEN_MAX)) {
         return myengine.undefinedValue();
     } else {
         return MoveInfo::Name(num);
@@ -536,7 +580,7 @@ QScriptValue ScriptEngine::natureNum(const QString &name)
 
 QScriptValue ScriptEngine::ability(int num)
 {
-    if (num >= 0 && num < AbilityInfo::NumberOfAbilities()) {
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GEN_MAX)) {
         return AbilityInfo::Name(num);
     } else {
         return myengine.undefinedValue();
@@ -711,6 +755,35 @@ QScriptValue ScriptEngine::getRegKeys()
     return result_array;
 }
 
+bool ScriptEngine::dirExists (const QString &dir)
+{
+    QDir directory(dir);
+
+    return directory.exists();
+}
+
+void ScriptEngine::mkdir(const QString &dir)
+{
+    if (safeScripts) {
+        warn("mkdir(dir)", "Safe scripts is on.");
+        return;
+    }
+
+    QDir dir_;
+    dir_.mkdir(dir);
+}
+
+void ScriptEngine::mkpath(const QString &path)
+{
+    if (safeScripts) {
+        warn("mkpath(path)", "Safe scripts is on.");
+        return;
+    }
+
+    QDir dir;
+    dir.mkpath(path);
+}
+
 QScriptValue ScriptEngine::filesForDirectory (const QString &dir_)
 {
     QString dir = dir_;
@@ -718,7 +791,7 @@ QScriptValue ScriptEngine::filesForDirectory (const QString &dir_)
     QDir directory(dir);
 
     if(!directory.exists()) {
-        return myengine.undefinedValue();
+        return myengine.newArray();
     }
 
     QStringList files = directory.entryList(QDir::Files);
@@ -738,7 +811,7 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir_)
     QDir directory(dir);
 
     if(!directory.exists()) {
-        return myengine.undefinedValue();
+        return myengine.newArray();
     }
 
     QStringList dirs = directory.entryList(QDir::Dirs);
@@ -940,6 +1013,11 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
  */
 QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QScriptValue &params_array)
 {
+    if (safeScripts) {
+        warn("synchronousWebCall(url)", "Safe scripts is on.");
+        return myengine.undefinedValue();
+    }
+
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
     QByteArray postData;

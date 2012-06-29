@@ -43,6 +43,13 @@ public:
        */
     Q_INVOKABLE void stopEvent();
 
+    /* Imports a plugin.
+      See: http://qt-project.org/doc/qt-4.8/qscriptengine.html#importExtension
+      and http://qt-project.org/doc/qt-4.8/qtscriptextensions.html
+      */
+    Q_INVOKABLE QScriptValue importPlugin(const QString &name);
+    Q_INVOKABLE QScriptValue importedPlugins();
+
     /* Print on the client. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
@@ -116,6 +123,11 @@ public:
     Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir_);
     Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir_);
 
+    /* Directory functions */
+    Q_INVOKABLE bool dirExists (const QString &dir);
+    Q_INVOKABLE void mkpath (const QString &path);
+    Q_INVOKABLE void mkdir (const QString &dir);
+
     // Direct file access.
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
@@ -162,7 +174,9 @@ private:
     QHash<QTimer*,QScriptValue> timerEventsFunc;
     QHash<int,QScriptValue> myHostLookups;
 
-    void startStopEvent() {stopevents.push_back(false);}
+    void startStopEvent() {
+        stopevents.push_back(false);
+    }
     bool endStopEvent() {
         bool res = stopevents.back();
         stopevents.pop_back();
