@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import pokemononline.battlemanager.proxies 1.0
 import "colors.js" as Colors
 import "effects.js" as Effects

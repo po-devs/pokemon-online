@@ -1,7 +1,8 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import pokemononline.battlemanager.proxies 1.0
 import Qt.labs.shaders 1.0
 import "colors.js" as Colors
+import "Utilities" 1.0
 
 Item {
     id: main
@@ -39,4 +40,16 @@ Item {
         alpha: pokemon.status === 0 ? 0.0 : 0.5
     }
 
+    Tooltip {
+        id: tooltip
+        shown: false
+        text: pokemon.numRef === 0 ? "" : pokemon.nick + " - " + pokemon.lifePercent + "%"
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: tooltip.shown = true
+        onExited: tooltip.shown = false
+    }
 }
