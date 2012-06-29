@@ -37,7 +37,6 @@ QSet<Pokemon::uniqueId> PokemonInfo::m_AestheticFormes;
 QHash<int, QList<int> > PokemonInfo::m_Evolutions;
 QHash<int, int> PokemonInfo::m_OriginalEvos;
 QHash<int, QList<int> > PokemonInfo::m_DirectEvos;
-QList<Pokemon::uniqueId> PokemonInfo::m_VisiblePokesPlainList;
 QHash<int, int> PokemonInfo::m_PreEvos;
 FillMode::FillModeType PokemonInfo::m_CurrentMode = FillMode::NoMod;
 
@@ -510,7 +509,7 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
 
     clearData();
 
-    loadNames();
+    loadNames(true);
     loadEvos();
     loadMoves();
 
@@ -553,7 +552,6 @@ void PokemonInfo::clearData()
     m_Names.clear();
     m_Options.clear();
     m_MaxForme.clear();
-    m_VisiblePokesPlainList.clear();
     m_Weights.clear();
     m_Genders.clear();
     for (int i = 0; i < NUMBER_GENS; ++i) {
@@ -685,10 +683,6 @@ int PokemonInfo::TrueCount(Pokemon::gen gen)
 int PokemonInfo::NumberOfPokemons()
 {
     return m_Names.size();
-}
-
-int PokemonInfo::NumberOfVisiblePokes() {
-    return m_VisiblePokesPlainList.size();
 }
 
 QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
@@ -1080,12 +1074,10 @@ int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
     return m_SpecialStats[pokeid.pokenum];
 }
 
-void PokemonInfo::loadNames()
+void PokemonInfo::loadNames(bool init)
 {
-    m_VisiblePokesPlainList.clear();
-
     QStringList temp;
-    fill_container_with_file(temp, trFile(path("pokemons")), m_CurrentMode);
+    fill_container_with_file(temp, init ? path("pokemons.txt") : trFile(path("pokemons")), m_CurrentMode);
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -1097,10 +1089,6 @@ void PokemonInfo::loadNames()
             m_Names[id] = name;
             m_Options[id] = options;
 
-            if (AFormesShown(id)) {
-                m_VisiblePokesPlainList.append(id);
-            }
-
             // Calculate a number of formes a given base pokemon have.
             quint16 max_forme = m_MaxForme.value(id.pokenum, 0);
             if(max_forme < id.subnum){
@@ -1108,6 +1096,10 @@ void PokemonInfo::loadNames()
             }
             m_MaxForme[id.pokenum] = max_forme;
         }
+    }
+
+    if (init) {
+        loadNames(false);
     }
 }
 
@@ -1464,6 +1456,31 @@ bool PokemonInfo::modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int a
     }
 }
 
+
+void MoveInfo::init(const QString &dir)
+{
+    /* makes sure it isn't already initialized */
+    if (NumberOfMoves(GEN_MAX) != 0)
+        return;
+
+    m_Directory = dir;
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    loadNames();
+    loadMoveMessages(true);
+    loadDetails();
+    loadSpecialEffects();
+
+    fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
+    fill_container_with_file(m_KingRock, path("king_rock.txt"));
+
+    for (int i = 0; i < Version::NumberOfGens; i++) {
+        gens[i].load(dir, i+1);
+    }
+}
+
 void MoveInfo::Gen::load(const QString &dir, int gen)
 {
     this->gen = gen;
@@ -1529,43 +1546,25 @@ static void loadMessages(const QString &path, T &container)
     fill_container_with_file(temp, path);
 
     for (int i = 0; i < temp.length(); i++) {
-        QStringList split = temp[i].split('|');
-        for (int j = 0; j < split.length(); j++) {
-            if (container[i].length() > j) {
-                container[i][j] = split[j];
-            } else {
-                container[i].push_back(split[j]);
+        if (temp[i].length() > 0) {
+            QStringList split = temp[i].split('|');
+            for (int j = 0; j < split.length(); j++) {
+                if (container[i].length() > j) {
+                    container[i][j] = split[j];
+                } else {
+                    container[i].push_back(split[j]);
+                }
             }
         }
     }
 }
 
-void MoveInfo::loadMoveMessages()
+void MoveInfo::loadMoveMessages(bool init)
 {
-    loadMessages(trFile(path("move_message")), m_MoveMessages);
-}
+    loadMessages(init ? path("move_message.txt") : trFile(path("move_message")), m_MoveMessages);
 
-void MoveInfo::init(const QString &dir)
-{
-    /* makes sure it isn't already initialized */
-    if (NumberOfMoves(GEN_MAX) != 0)
-        return;
-
-    m_Directory = dir;
-
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-
-    loadNames();
-    loadMoveMessages();
-    loadDetails();
-    loadSpecialEffects();
-
-    fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
-    fill_container_with_file(m_KingRock, path("king_rock.txt"));
-
-    for (int i = 0; i < Version::NumberOfGens; i++) {
-        gens[i].load(dir, i+1);
+    if (init) {
+        loadMoveMessages(false);
     }
 }
 
@@ -1866,7 +1865,7 @@ void ItemInfo::init(const QString &dir)
     loadNames();
     loadEffects();
     loadFlingData();
-    loadMessages();
+    loadMessages(true);
 }
 
 void ItemInfo::retranslate()
@@ -1949,10 +1948,14 @@ void ItemInfo::loadNames()
     }
 }
 
-void ItemInfo::loadMessages()
+void ItemInfo::loadMessages(bool init)
 {
-    ::loadMessages(trFile(path("item_messages")), m_RegMessages);
-    ::loadMessages(trFile(path("berry_messages")), m_BerryMessages);
+    ::loadMessages(init ? path("item_messages.txt") : trFile(path("item_messages")), m_RegMessages);
+    ::loadMessages(init ? path("berry_messages.txt") : trFile(path("berry_messages")), m_BerryMessages);
+
+    if (init) {
+        loadMessages(false);
+    }
 }
 
 void ItemInfo::loadFlingData()
@@ -2479,7 +2482,7 @@ void AbilityInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     loadNames();
-    loadMessages();
+    loadMessages(true);
     loadEffects();
 
     fill_container_with_file(m_OldAbilities, path("oldabilities.txt"));
@@ -2491,9 +2494,13 @@ void AbilityInfo::retranslate()
     loadMessages();
 }
 
-void AbilityInfo::loadMessages()
+void AbilityInfo::loadMessages(bool init)
 {
-    ::loadMessages(trFile(path("ability_messages")), m_Messages);
+    ::loadMessages(init ? path("ability_messages.txt") : trFile(path("ability_messages")), m_Messages);
+
+    if (init) {
+        loadMessages(false);
+    }
 }
 
 void AbilityInfo::loadNames()
