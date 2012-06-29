@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import pokemononline.battlemanager.proxies 1.0
+import "Utilities" 1.0
 import "colors.js" as Colors
 import "effects.js" as Effects
 import "moves.js" as Moves
@@ -62,6 +63,67 @@ Item {
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         onSourceChanged: shader.grab();
+    }
+
+    Tooltip {
+        id: tooltip
+        shown: mouseArea.containsMouse
+        onShownChanged: {
+            if (shown) {
+                var s = pokemon.nick;
+                s += "<pre>";
+                var stats = ["Attack.....", "Defense....", "Sp. Attack.", "Sp. Defense", "Speed......", "Accuracy...", "Evasion...."];
+                var boost,stat,i;
+
+                for (i = 0; i < 5; i++) {
+                    s += "\n" + stats[i] + " ";
+                    stat = fieldPokemon.stat(i+1);
+                    boost = fieldPokemon.statBoost(i+1);
+
+                    if (stat === 0) {
+                        if (boost >= 0) {
+                            s += "+" + boost
+                        } else {
+                            s += "" + boost
+                        }
+                    } else {
+                        if (stat === -1) {
+                            s += "???"
+                        } else {
+                            s += stat
+                        }
+                        if (boost >= 0) {
+                            s += "(+" + boost + ")"
+                        } else {
+                            s += "(" + boost + ")"
+                        }
+                    }
+                }
+
+                for (i = 5; i < 7; i++) {
+                    boost = fieldPokemon.statBoost(i+1);
+                    if (boost !==0) {
+                        s += "\n" + stats[i] + " ";
+
+                        if (boost > 0) {
+                            s += "+" + boost;
+                        } else if (boost < 0) {
+                            s += +boost;
+                        }
+                    }
+                }
+
+                s += "</pre>"
+
+                text = s;
+            }
+        }
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: image
+        hoverEnabled: true
     }
 
     Image {
