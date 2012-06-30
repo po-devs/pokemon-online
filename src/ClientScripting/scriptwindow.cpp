@@ -31,8 +31,8 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
 
 void ScriptWindow::accept()
 {
-    QDir d(appDataPath("Scripts/", true));
-    QFile f(d.absoluteFilePath("scripts.js"));
+    ensureDir("script");
+    QFile f("script/scripts.js");
     f.open(QIODevice::WriteOnly);
 
     QString text = ui->scripts->toPlainText();

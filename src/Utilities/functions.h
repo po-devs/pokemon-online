@@ -148,6 +148,8 @@ T& pack(T &cont, const U &item, Params&&...params) {
     return pack(cont, std::forward<Params>(params)...);
 }
 
+void ensureDir(const QString &dir);
+
 /* Returns the folder in which you can store boxes, mods, profiles, all the application data.
   The createFolder param is whether or not you want to force-create the subfolder */
 QString appDataPath(const QString &subfolder, bool createFolder=false);
