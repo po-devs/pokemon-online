@@ -232,7 +232,7 @@ QScriptValue ScriptEngine::import(const QString &fileName)
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("import(fileName)", "The file Scripts/" + fileName + " is not readable.");
+        warn("import(fileName)", "The file script/" + fileName + " is not readable.");
         return myengine.undefinedValue();
     }
 

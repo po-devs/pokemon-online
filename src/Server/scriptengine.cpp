@@ -86,11 +86,11 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
 QScriptValue ScriptEngine::import(const QString &fileName)
 {
-    QString url = "scripts/"+fileName;
+    QString url = "script/"+fileName;
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("import(fileName)", "The file scripts/" + fileName + " is not readable.");
+        warn("import(fileName)", "The file script/" + fileName + " is not readable.");
         return myengine.undefinedValue();
     }
 
