@@ -1,33 +1,33 @@
-(Inget fˆremÂl)
+Ôªø(Inget f√∂rem√•l)
 
 
-%s Âterst‰llde sina stats med white herb!
+%s √•terst√§llde sina stats med white herb!
 %s stod ut tack vare sin focus band!
 %s stod ut tack vare sin focus sash!
 
-%s blev fullt laddad med hj‰lp av sin power herb!
+%s blev fullt laddad med hj√§lp av sin power herb!
 
 
 
-%s anv‰nde sin power herb fˆr att attackera omedelbart!
-%s Âterst‰llde lite HP med Leftovers!
+%s anv√§nde sin power herb f√∂r att attackera omedelbart!
+%s √•terst√§llde lite HP med Leftovers!
 
 
 
-%s Âterst‰llde lite HP med Black Sludge!|%s skadades av Black Sludge!
+%s √•terst√§llde lite HP med Black Sludge!|%s skadades av Black Sludge!
 
-%s Âterst‰llde lite HP med sin Berry Juice!
+%s √•terst√§llde lite HP med sin Berry Juice!
 %s's Flame Orb aktiverad!|%s's Toxic Orb aktiverad!
 
 %s skadas av sin Life Orb!
 
 
-%ss shell bell Âterst‰llde dess HP lite grann!
+%ss shell bell √•terst√§llde dess HP lite grann!
 
 
 
 
-%s skadas av sin Sticky Barb!|%s skadas av %fs sticky Barb!|The Sticky Barb ‰r nu f‰st vid %s!
+%s skadas av sin Sticky Barb!|%s skadas av %fs sticky Barb!|The Sticky Barb √§r nu f√§st vid %s!
 
 
 

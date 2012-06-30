@@ -1,5 +1,5 @@
-(Kein Item)
-Großwurzel
+ï»¿(Kein Item)
+GroÃŸwurzel
 Blauer Schal
 Blendpuder
 Wahlband
@@ -10,25 +10,25 @@ Expertengurt
 Fokus-Band
 Fokus-Gurt
 Lahmrauch
-Grüner Schal
+GrÃ¼ner Schal
 Schwerschwf.
 Laxrauch
-Überreste
-Glücksrauch
+Ãœberreste
+GlÃ¼cksrauch
 Mentalkraut
 Metallstaub
 Muskelband
-Schrägrauch
+SchrÃ¤grauch
 Rosa Schal
 Energiekraut
 Scheuchrauch
 Flottstaub
-Düsterumhang
+DÃ¼sterumhang
 Roter Schal
 Steinrauch
 Rosenrauch
 Seerauch
-Wechselhülle
+WechselhÃ¼lle
 Seidenschal
 Silberstaub
 Glattbrocken
@@ -36,22 +36,22 @@ Pudersand
 Sanftglocke
 Wellenrauch
 Schlohktaut
-Großlinse
+GroÃŸlinse
 Schlauglas
 Gelber Schal
 Zoomlinse
-Münzamulett
+MÃ¼nzamulett
 Gegengift
 Aufwecker
 Beerensaft
 Riesenperle
 Riesenpilz
 Schwarzgurt
-Schw. Flöte
+Schw. FlÃ¶te
 Giftschleim
 Schattenglas
-Blaue Flöte
-Indigostück
+Blaue FlÃ¶te
+IndigostÃ¼ck
 Feuerheiler
 Kalzium
 Carbon
@@ -65,17 +65,17 @@ Elixier
 Kraftwurzel
 Energiestaub
 Fluchtseil
-Äther
+Ã„ther
 Ewigstein
 EP-Teiler
 Feuerstein
-Heiß-Orb
+HeiÃŸ-Orb
 Eneco-Rute
 Tafelwasser
 Hyperheiler
 Top-Genesung
 Neumulch
-Grünstück
+GrÃ¼nstÃ¼ck
 Wachsmulch
 Megablock
 Heilpuder
@@ -92,10 +92,10 @@ Limonade
 Leben-Orb
 Kugelblitz
 Lichtlehm
-Glücks-Ei
+GlÃ¼cks-Ei
 Magnet
 Top-Elixier
-Top-Äther
+Top-Ã„ther
 Top-Trank
 Top-Schutz
 Top-Beleber
@@ -107,7 +107,7 @@ Mondstein
 Zauberwasser
 Ewiges Eis
 Nugget
-Spezialität
+SpezialitÃ¤t
 Para-Heiler
 Perle
 Pokepuppe
@@ -117,22 +117,22 @@ AP-Plus
 Protein
 Sondebonbon
 Scharfzahn
-Rote Flöte
-Purpurstück
+Rote FlÃ¶te
+PurpurstÃ¼ck
 Schutz
 Vitalkraut
 Beleber
 Zauberasche
 Scope-Linse
 Seegesang
-Küstensalz
-Küstenschale
+KÃ¼stensalz
+KÃ¼stenschale
 Rauchball
 Sprudel
 Seelentau
 Bannsticker
 Stabil-Mulch
-Sternenstück
+SternenstÃ¼ck
 Sternenstaub
 Sonnenstein
 Supertrank
@@ -140,18 +140,18 @@ Superschutz
 Donnerstein
 Minipilz
 Toxik-Orb
-Krummlöffel
+KrummlÃ¶ffel
 Up-Grade
 Wasserstein
-Weiße Flöte
+WeiÃŸe FlÃ¶te
 X-Treffer
 X-Angriff
 X-Verteidigung
 X-Spezial
 X-Spezial Ver
 X-Tempo
-Gelbe Flöte
-Gelbstück
+Gelbe FlÃ¶te
+GelbstÃ¼ck
 Zink
 Eisbrocken
 Lucky Punch
@@ -159,8 +159,8 @@ Dubios Disc
 Hackattack
 Adamant Orb
 Nassbrocken
-Heißbrocken
-Weißorb
+HeiÃŸbrocken
+WeiÃŸorb
 Machoand
 Lauchstange
 Drachenzahn
@@ -177,7 +177,7 @@ Stromisierer
 Magmarisierer
 Spiritkern
 Ovaler Stein
-Schützer
+SchÃ¼tzer
 Flinkklaue
 Scharfklaue
 Leuchtstein
@@ -190,7 +190,7 @@ Fausttafel
 Feuertafel
 Griffklaue
 Frosttafel
-Käfertafel
+KÃ¤fertafel
 Eisentafel
 Wiesentafel
 Hirntafel

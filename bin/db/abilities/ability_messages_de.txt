@@ -1,4 +1,4 @@
-
+ï»¿
 
 %s's Aftermath damages %f!
 %s is extremely pissed off!
@@ -12,7 +12,7 @@
 %s's Cute Charm infatuated %f!
 %s won't flinch because of its Inner Focus!
 %s's Download activates!
-Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
+Hagelalarm von %s lÃ¤Ã¤st einen Hagelsturm aufkommen !|Niesel von %s lÃ¤sst Regen aufkommen !|Sandsturm von %s lÃ¤sst einen Sandsturm aufkommen !|DÃ¼rre von %s intensiviert die Sonnenstrahlen !
 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 %s's Effect Spore activates!
 
@@ -32,7 +32,7 @@ Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen a
 %s's %a prevented its stats from being lowered!
 %s's %a heals it!
 %s's %a cures it!
-Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedroher von %s !
+Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrÃ¼ckte Bedroher von %s !
 
 
 %s's Leaf Guard prevents it from being affected by any status from the opponent!
@@ -44,7 +44,7 @@ Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedrohe
 
 %s's Own Tempo cures its confusion!
 Aufheber von %s regeneriert einige KP !
-%s übt seine Fähigkeit Erzwinger aus !
+%s Ã¼bt seine FÃ¤higkeit Erzwinger aus !
 
 
 

@@ -1,11 +1,11 @@
-Fuerte
-Huraña
+ï»¿Fuerte
+HuraÃ±a
 Audaz
 Firme
-Pícara
+PÃ­cara
 Osada	
-Dócil
-Plácida
+DÃ³cil
+PlÃ¡cida
 Agitada
 Floja
 Miedosa
@@ -16,7 +16,7 @@ Ingenua
 Modesta
 Afable
 Mansa
-Tímida
+TÃ­mida
 Alocada
 Serena
 Amable

@@ -1,10 +1,10 @@
-Normal
+﻿Normal
 Kampf
 Flug
 Gift
 Boden
 Gestein
-K�fer
+Käfer
 Geist
 Stahl
 Feuer

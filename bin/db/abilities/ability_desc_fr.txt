@@ -1,4 +1,4 @@
-
+﻿
 Diminue le pourcentage de rencontre avec des Pokémons sauvages.
 Fait tomber la pluie tant que le Pokémon est en jeu.
 La vitesse du Pokémon augmente à chaque tour.

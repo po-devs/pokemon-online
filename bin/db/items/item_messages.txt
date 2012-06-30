@@ -1,4 +1,4 @@
-(No Item)
+﻿(No Item)
 
 
 %s restored its stats using White Herb!

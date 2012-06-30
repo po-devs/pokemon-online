@@ -1,169 +1,169 @@
-
-PorÁ„o de HP recuperada aumenta quando usado ataques de roubo de HP
+Ôªø
+Por√ß√£o de HP recuperada aumenta quando usado ataques de roubo de HP
 Quando anexada, Gera Status de Beleza em Super Contests
-Aumenta Evas„o
-Multiplica o ataque por x1.5, mas sÛ permite a utilizaÁ„o de um ataque atÈ o PokÈmon ser chamado de volta
-Multiplica a velocidade por x1.5, mas sÛ permite a utilizaÁ„o de um ataque atÈ o PokÈmon ser chamado de volta
-Multiplica SP. Ataque por x1.5, mas sÛ permite a utilizaÁ„o de um ataque atÈ o PokÈmon ser chamado de volta
-Se o usu·rio se apaixonar, o inimigo tambÈm ira se apaixonar
+Aumenta Evas√£o
+Multiplica o ataque por x1.5, mas s√≥ permite a utiliza√ß√£o de um ataque at√© o Pok√©mon ser chamado de volta
+Multiplica a velocidade por x1.5, mas s√≥ permite a utiliza√ß√£o de um ataque at√© o Pok√©mon ser chamado de volta
+Multiplica SP. Ataque por x1.5, mas s√≥ permite a utiliza√ß√£o de um ataque at√© o Pok√©mon ser chamado de volta
+Se o usu√°rio se apaixonar, o inimigo tamb√©m ira se apaixonar
 Aumenta ligeiramente o poder de um ataque Super Efetivo
-Talvez impeÁa a derrota do usu·rio, deixando-o com 1 HP de um ataque que iria derrot·-lo
+Talvez impe√ßa a derrota do usu√°rio, deixando-o com 1 HP de um ataque que iria derrot√°-lo
 Deixa com 1 de HP se atingido por um ataque que o derrota com o HP completo
-O usu·rio sempre ataca por ultimo
+O usu√°rio sempre ataca por ultimo
 Quando ligado, aumenta o status de Smart em Super Contests
-Titular sempre ˙ltimos atentados
-A chance do inimigo de causar um Critical Hit È reduzido em 5%; anexar a um Wobbuffet fÍmea e cruzar para conseguir Wynaut
+Titular sempre √∫ltimos atentados
+A chance do inimigo de causar um Critical Hit √© reduzido em 5%; anexar a um Wobbuffet f√™mea e cruzar para conseguir Wynaut
 Aumenta 1/16 do HP por cada turno
 Dobra s quantidade de dinheiro recebido quando equipado em um dos seus 6 Pokemons
-Remove o status de Apaixonado; sÛ pode ser usado uma vez
-Se ligado a Ditto, sua defesa e SP. Defesa s„o multiplicadas por x2
-Aumenta ligeiramente o poder dos ataques fÌsicos
-Aumenta o poder de ataques psÌquicos
+Remove o status de Apaixonado; s√≥ pode ser usado uma vez
+Se ligado a Ditto, sua defesa e SP. Defesa s√£o multiplicadas por x2
+Aumenta ligeiramente o poder dos ataques f√≠sicos
+Aumenta o poder de ataques ps√≠quicos
 Quando ligado, levanta Cute stat em Super Contests
-Permite que o usu·rio omita o primeiro turno de ataques requerem carregamento; sÛ pode ser usado uma vez
-Abaixa a taxa de encontro de PokÈmon selvagens se equipado para primeiro PokÈmon da equipe
-Se ligado a Ditto, sua defesa e SP. Defesa s„o multiplicadas por x2
+Permite que o usu√°rio omita o primeiro turno de ataques requerem carregamento; s√≥ pode ser usado uma vez
+Abaixa a taxa de encontro de Pok√©mon selvagens se equipado para primeiro Pok√©mon da equipe
+Se ligado a Ditto, sua defesa e SP. Defesa s√£o multiplicadas por x2
 Evolui Dusclops para Dusknoir quando equipado e trocado
 Quando conectado, aumenta o status Cool em Super Contests
 Aumenta o poder de ataques de Pedra
 Aumenta o poder de ataques de Grama
-Todo ataque do tipo ·gua sofre um aumento de 5%; atribuir a um Marill do sexo feminino e cruzar para conseguir Azurill
-Sempre permite que o usu·rio seja trocado
+Todo ataque do tipo √°gua sofre um aumento de 5%; atribuir a um Marill do sexo feminino e cruzar para conseguir Azurill
+Sempre permite que o usu√°rio seja trocado
 Qualquer ataque do tipo Normal tem o poder aumentado em 10%
 Qualquer ataque do tipo Inseto tem o poder aumentado em 10%
-Prolonga o n˙mero de turnos do Sandstorm
+Prolonga o n√∫mero de turnos do Sandstorm
 Qualquer ataque do tipo Terra tem o poder aumentado em 10%
-Gera felicidade f·cil
-Aumenta o poder de ataques de ¡gua
-Curas qualquer efeito de status; sÛ pode ser usado uma vez
-Aumenta ligeiramente a precis„o dos movimentos
+Gera felicidade f√°cil
+Aumenta o poder de ataques de √Ågua
+Curas qualquer efeito de status; s√≥ pode ser usado uma vez
+Aumenta ligeiramente a precis√£o dos movimentos
 Aumenta ligeiramente o poder dos ataques especiais
 Quando ligado, aumenta o status Tough em Super Contests
-Precis„o aumenta se o usu·rio È atacado por um inimigo primeiro em um turno
+Precis√£o aumenta se o usu√°rio √© atacado por um inimigo primeiro em um turno
 Dobra o dinheiro ganho nas batalhas
-Cura um PokÈmon do efeito de status Envenenado (Poison)
-Desperta um PokÈmon com o efeito de status Dormindo (Sleep) 
+Cura um Pok√©mon do efeito de status Envenenado (Poison)
+Desperta um Pok√©mon com o efeito de status Dormindo (Sleep) 
 Recupera 20 HP
-PÈrola rara. Vende a preÁo alto.
-Cogumelo Raro. Vende a preÁo alto.
+P√©rola rara. Vende a pre√ßo alto.
+Cogumelo Raro. Vende a pre√ßo alto.
 Qualquer ataque do tipo Lutador tem o poder aumentado em 10%
-Diminui a taxa de encontrar PokÈmons Selv·gens
-Aos poucos, recupera HP do usu·rio do tipo Venenoso; reduz HP para todos os outros tipos
+Diminui a taxa de encontrar Pok√©mons Selv√°gens
+Aos poucos, recupera HP do usu√°rio do tipo Venenoso; reduz HP para todos os outros tipos
 Qualquer ataque do tipo Noturno tem o poder aumentado em 10%
 Cura de sono (Sleep)
 Um fragmento de uma grande placa
-Cura um PokÈmon do efeito de status Queimando (Burn)
-Aumenta um pouco a base de SP. Ataque do PokÈmon
-Aumenta um pouco a base de Velocidade do PokÈmon
+Cura um Pok√©mon do efeito de status Queimando (Burn)
+Aumenta um pouco a base de SP. Ataque do Pok√©mon
+Aumenta um pouco a base de Velocidade do Pok√©mon
 Qualquer ataque do tipo Fogo tem o poder aumentado em 10%
-Abaixa a chance de encontrar um PokÈmon Selvagem, se o usu·rio for o primeiro da equipe
+Abaixa a chance de encontrar um Pok√©mon Selvagem, se o usu√°rio for o primeiro da equipe
 Desacelera o crescimento da Berry. Retarda o secamento do solo
 Multiplica a SP. Defesa do Clamperl por x2
-Chance de Critical Hit È aumentada
+Chance de Critical Hit √© aumentada
 Evolui Seadra para Kingdra quando equipado e trocado
-Restaura 10 PP para cada ataque de um PokÈmon selecionado
-Restaura 200 HP de um PokÈmon; tem um sabor amargo
-Restaura 50 HP de um PokÈmon; tem um sabor amargo
+Restaura 10 PP para cada ataque de um Pok√©mon selecionado
+Restaura 200 HP de um Pok√©mon; tem um sabor amargo
+Restaura 50 HP de um Pok√©mon; tem um sabor amargo
 Retorna para fora Cavernas
-Restaura 10 PP de um ataque selecionado do PokÈmon
-Impede o usu·rio de evoluir quando equipado
-Este PokÈmon recebe EXP de batalha, mesmo se ele n„o for usado, quando equipado
+Restaura 10 PP de um ataque selecionado do Pok√©mon
+Impede o usu√°rio de evoluir quando equipado
+Este Pok√©mon recebe EXP de batalha, mesmo se ele n√£o for usado, quando equipado
 Uma pedra que pode ser usado para evoluir Growlithe, Vulpix e Eevee
-Induz ao status Queimando (Burn) ao usu·rio
-Distrai PokÈmons Selv·gens assim vocÍ pode fugir
-Restaura 50 HP de um PokÈmon
-Cura um PokÈmon de qualquer efeito status
-Restaura todo o HP de um PokÈmon e cur·-lo de eventuais efeitos de status
+Induz ao status Queimando (Burn) ao usu√°rio
+Distrai Pok√©mons Selv√°gens assim voc√™ pode fugir
+Restaura 50 HP de um Pok√©mon
+Cura um Pok√©mon de qualquer efeito status
+Restaura todo o HP de um Pok√©mon e cur√°-lo de eventuais efeitos de status
 Aumenta a quantidade de planta que cresce onde as plantas falham
-Um pedaÁo de uma grande placa
+Um peda√ßo de uma grande placa
 Aumenta a velocidades de crescimento de Berrys. Aumenta a velocidades de secamento do solo
-Status n„o podem ser reduzidos
-Cura um PokÈmon de qualquer efeito de status; tem um sabor amargo
-Uma escama rara. Vende a preÁo Alto
-Esfrega em ·rvores para atrair PokÈmons Selv·gens
-Aumenta um pouco a base de HP do PokÈmon
-Restaura 200 HP de um PokÈmon
-Descongela um PokÈmon com a condiÁ„o de status Congelado (Frozen)
-Aumenta um pouco a base de Defesa do PokÈmon 
+Status n√£o podem ser reduzidos
+Cura um Pok√©mon de qualquer efeito de status; tem um sabor amargo
+Uma escama rara. Vende a pre√ßo Alto
+Esfrega em √°rvores para atrair Pok√©mons Selv√°gens
+Aumenta um pouco a base de HP do Pok√©mon
+Restaura 200 HP de um Pok√©mon
+Descongela um Pok√©mon com a condi√ß√£o de status Congelado (Frozen)
+Aumenta um pouco a base de Defesa do Pok√©mon 
 Talvez cause Flinch no oponente
-Cura um PokÈmon de qualquer efeito status
+Cura um Pok√©mon de qualquer efeito status
 Uma pedra que pode ser usada para evoluir Gloom, Weepinbell, Exeggcute e Nuzleaf
-Restaura 80 HP de um PokÈmon
-Aumenta dano de ataque, mas diminui o HP sempre que vocÍ causa um dano
+Restaura 80 HP de um Pok√©mon
+Aumenta dano de ataque, mas diminui o HP sempre que voc√™ causa um dano
 Multiplica o SP. Ataque de Pikachu por x2
 Prolonga o efeito do Reflect e Light Screen
-PokÈmon a quem este item est· anexado ganha mais EXP no campo de batalha
-Qualquer ataque do tipo ElÈtrico tem o poder aumentado em 10%
-Restaura todos os PP para cada ataque de um PokÈmon selecionado
-Restaura todos os PP de um ataque de um PokÈmon selecionado
-Restaura todo o HP de um PokÈmon
-Repele PokÈmon para 250 passos
-Revive um PokÈmon desmaiado e restaura totalmente o HP
-Qualquer ataque do tipo AÁo tem o poder aumentado em 10%
+Pok√©mon a quem este item est√° anexado ganha mais EXP no campo de batalha
+Qualquer ataque do tipo El√©trico tem o poder aumentado em 10%
+Restaura todos os PP para cada ataque de um Pok√©mon selecionado
+Restaura todos os PP de um ataque de um Pok√©mon selecionado
+Restaura todo o HP de um Pok√©mon
+Repele Pok√©mon para 250 passos
+Revive um Pok√©mon desmaiado e restaura totalmente o HP
+Qualquer ataque do tipo A√ßo tem o poder aumentado em 10%
 Aumenta o poder do ataque se usado consecutivamente
 Qualquer ataque do tipo Grama tem o poder aumentado em 10%
-Restaura 100 HP de um PokÈmon
+Restaura 100 HP de um Pok√©mon
 Uma pedra que pode ser usado para evoluir Nidorina, Nidorino, Clefairy, Jigglypuff e Skitty
-Qualquer ataque do tipo ¡gua tem o poder aumentado em 10%
+Qualquer ataque do tipo √Ågua tem o poder aumentado em 10%
 Qualquer ataque do tipo Gelo tem o poder aumentado em 10%
-Vendea preÁo Alto
-Cura um PokÈmon de qualquer efeito status
-Cura um PokÈmon do efeito de status Paralizado (Paralyze)
-PÈrola rara. Vende a preÁo elevado.
-Distrai PokÈmons Selv·gens
-Restaura 20 HP de um PokÈmon
-Maximiza o PP de um ataque de um PokÈmon selecionado
-Aumenta o PP m·ximo para um ataque de um PokÈmon selecionado
-Aumenta um pouco a base de Ataque do PokÈmon
-Aumenta level do PokÈmon em 1
-Levanta chance de provocar Flinch no advers·rio
-Cura a AtraÁ„o
+Vendea pre√ßo Alto
+Cura um Pok√©mon de qualquer efeito status
+Cura um Pok√©mon do efeito de status Paralizado (Paralyze)
+P√©rola rara. Vende a pre√ßo elevado.
+Distrai Pok√©mons Selv√°gens
+Restaura 20 HP de um Pok√©mon
+Maximiza o PP de um ataque de um Pok√©mon selecionado
+Aumenta o PP m√°ximo para um ataque de um Pok√©mon selecionado
+Aumenta um pouco a base de Ataque do Pok√©mon
+Aumenta level do Pok√©mon em 1
+Levanta chance de provocar Flinch no advers√°rio
+Cura a Atra√ß√£o
 Um fragmento de uma grande placa
-Repele PokÈmon para 50 Passos
-Revive um PokÈmon desmaiado e restaura totalmente o HP; tem um sabor amargo
-HP Revive um PokÈmon desmaiado e restaura metade do seu max
-Revive todos os PokÈmon desmaiados e restaura totalmente seus HPs
+Repele Pok√©mon para 50 Passos
+Revive um Pok√©mon desmaiado e restaura totalmente o HP; tem um sabor amargo
+HP Revive um Pok√©mon desmaiado e restaura metade do seu max
+Revive todos os Pok√©mon desmaiados e restaura totalmente seus HPs
 Aumenta as chances de conseguir um Critical Hit
-Restaura o HP  1/8 do HP m·ximo quando o dano È infligido sobre o advers·rio
-Quando equipado, o usu·rio recupera uma pequena quantidade de HP a cada turno.
-N„o tem nenhum efeito ou propÛsito na regi„o de Sinnoh; ˙til somente na regi„o de Hoenn.
-VocÍ sempre fugir· de um PokÈmon Selv·gem sem falhar
-Restaura 60 HP de um PokÈmon
+Restaura o HP  1/8 do HP m√°ximo quando o dano √© infligido sobre o advers√°rio
+Quando equipado, o usu√°rio recupera uma pequena quantidade de HP a cada turno.
+N√£o tem nenhum efeito ou prop√≥sito na regi√£o de Sinnoh; √∫til somente na regi√£o de Hoenn.
+Voc√™ sempre fugir√° de um Pok√©mon Selv√°gem sem falhar
+Restaura 60 HP de um Pok√©mon
 Aumenta Sp. Ataque e Sp Defesa do Latios & Latias em 50%.
 Qualquer ataque do tipo Fantasma tem o poder aumentado em 10%
-Aumenta o tempo de permanÍncia das Berries em ·rvores
-Raro PedaÁo de Estrela. Vende em preÁo alto.
-Poira bonita. Vende empreÁo Baixo
+Aumenta o tempo de perman√™ncia das Berries em √°rvores
+Raro Peda√ßo de Estrela. Vende em pre√ßo alto.
+Poira bonita. Vende empre√ßo Baixo
 Uma pedra que pode ser usada para evoluir Gloom e Sunkern
-Restaura 500 HP de um PokÈmon
-Repele PokÈmon para 150 Passos
+Restaura 500 HP de um Pok√©mon
+Repele Pok√©mon para 150 Passos
 Uma pedra que pode ser usada para evoluir Pikachu e Eevee
 Um cogumelo de pequeno porte. Venda baixa.
-Induz ao status de Envenenado (Poison) ao usu·rio
-Qualquer ataque do tipo PsÌquico tem o poder aumentado em 10%
+Induz ao status de Envenenado (Poison) ao usu√°rio
+Qualquer ataque do tipo Ps√≠quico tem o poder aumentado em 10%
 Evolui Porygon para Porygon2 quando equipado e trocado
 Uma pedra que pode ser usado para evoluir Poliwhirl, Shellder, Staryu, Eevee e Lombre
-Aumenta chance de encontrar PokÈmons Selv·gens
-Precis„o È Aumentada
-Ataque È Aumentada
-Defesa È Aumentada
-Ataque Especial È Aumentado
-Defesa Especial È Aumentada
-Velocidade È Aumentada
-Cura a Confus„o
+Aumenta chance de encontrar Pok√©mons Selv√°gens
+Precis√£o √© Aumentada
+Ataque √© Aumentada
+Defesa √© Aumentada
+Ataque Especial √© Aumentado
+Defesa Especial √© Aumentada
+Velocidade √© Aumentada
+Cura a Confus√£o
 Um fragmento de uma grande placa
-Aumenta um pouco a base de SP. Defesa do PokÈmon
-Prolonga o n˙mero de turnos da chuva de Granizo (Hail)
+Aumenta um pouco a base de SP. Defesa do Pok√©mon
+Prolonga o n√∫mero de turnos da chuva de Granizo (Hail)
 Se ligado a Chansey, aumenta a chance de Critical Hit
 Evolui para Porygon2 Porygon-Z quando equipado e trocado
 Qualquer ataque do tipo Voador tem o poder aumentado em 10%
-Aumenta o ataque do tipo AÁo e Drag„o de Dialga
-Prolonga o n˙mero de turnos do Rain Dance
-Prolonga o n˙mero de turnos de Sunny Day
-Gera o Drag„o de ¡gua e move-se tipo de Palkia
+Aumenta o ataque do tipo A√ßo e Drag√£o de Dialga
+Prolonga o n√∫mero de turnos do Rain Dance
+Prolonga o n√∫mero de turnos de Sunny Day
+Gera o Drag√£o de √Ågua e move-se tipo de Palkia
 Corta a Velocidade na metade, mas aumenta os valores de Effort
 Se ligado a Farfetch'd, aumenta o valor de Critical Hit
-Qualquer ataque do tipo Drag„o tem o poder aumentado em 10%
+Qualquer ataque do tipo Drag√£o tem o poder aumentado em 10%
 Qualquer ataque do tipo Venenoso tem o poder aumentado em 10%
 Diminui a velocidade, aumenta EV de Velocidade
 Diminui a velocidade, aumenta o EV para Sp.Defensa
@@ -171,36 +171,36 @@ Diminui a velocidade, aumenta EV de Defesa
 Diminui a velocidade, aumenta o EV para o ataque
 Diminui a velocidade, aumenta o EV para Sp.Attack
 Diminui a velocidade, aumenta o EV para HP
-Evolui um Kirlia macho e fÍmea Snowrunt para Gallade e Froslass quando equipado e passado de level
+Evolui um Kirlia macho e f√™mea Snowrunt para Gallade e Froslass quando equipado e passado de level
 Murkrow e Misdreavus evoluem em Honchkrow e Mismagius quando equipados e passados de level
 Evolui Electabuzz para Electivire quando equipado e trocado
 Evolui Magmar para Magmortar quando equipado e trocado
 Um item fundamental para previnir que a Stone Tower entre em colapso. Usado para chamar Spiritomb
-Evolui Happiny para Chansey quando equipado e passado de level de manh„ ou tarde (4:00-7:59)
+Evolui Happiny para Chansey quando equipado e passado de level de manh√£ ou tarde (4:00-7:59)
 Evolui Rhydon para Rhyperior quando equipado e trocado
-O usu·rio deste item pode atacar primeiro
-Evolui Sneasel para Weavile quando equipado e passado de level ‡ noite (PM 8:00 - 4h00)
+O usu√°rio deste item pode atacar primeiro
+Evolui Sneasel para Weavile quando equipado e passado de level √† noite (PM 8:00 - 4h00)
 Evolui Togetic e Roselia para Roserade Togekiss e quando equipado e passado de level
-Quando equipado, o usu·rio recebe dano a cada turno; o advers·rio receber· dano a cada turno se utilizar um ataque fÌsico
+Quando equipado, o usu√°rio recebe dano a cada turno; o advers√°rio receber√° dano a cada turno se utilizar um ataque f√≠sico
 Evolui Clamperl para Huntail quando equipado etrocado
-Aumenta o poder dos ataques Drag„o
+Aumenta o poder dos ataques Drag√£o
 Aumenta o poder de ataques Noturnos
 Aumenta o poder dos ataques de Terra
 Aumenta o poder dos ataques Lutadores
 Aumenta o poder dos ataques de Fogo
-prolonga o n˙mero de turnos de ataques de armadilha
+prolonga o n√∫mero de turnos de ataques de armadilha
 Aumenta o poder dos ataques de Gelo
 Aumenta o poder dos ataques Insetos
-Aumenta o poder dos ataques de AÁo
+Aumenta o poder dos ataques de A√ßo
 Aumenta o poder dos ataques de Grama
-Aumenta o poder dos ataques PsÌquicos
+Aumenta o poder dos ataques Ps√≠quicos
 Aumenta o poder dos ataques Voadores
-Aumenta o poder dos ataques de ¡gua
+Aumenta o poder dos ataques de √Ågua
 Aumenta o poder dos ataques Fantasmas
 Aumenta o poder dos ataques de Pedra
 Se ligado a Cubone ou Marowak, multiplica-se o seu ataque por x2
 Aumenta o poder dos ataques Venenosos
-Aumenta o poder dos ataques ElÈtricos
+Aumenta o poder dos ataques El√©tricos
 Revive Shieldon
 Revive Anorith
 Revive Kabuto
@@ -210,7 +210,7 @@ Revive Aerodactyl
 Um osso precioso. Vender por dinheiro
 Revive Lileep
 Revive Cranidos
-Diminui a velocidade do usu·rio, tambÈm faz com que ataques Voadores e a Abilidade de Levitar tornem-se vuner·veis a ataques de Terra, quando equipado a eles
+Diminui a velocidade do usu√°rio, tamb√©m faz com que ataques Voadores e a Abilidade de Levitar tornem-se vuner√°veis a ataques de Terra, quando equipado a eles
 Air Mail
 Bloom Mail
 Brick Mail

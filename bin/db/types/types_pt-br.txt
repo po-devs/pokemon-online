@@ -1,4 +1,4 @@
-Normal
+ÔªøNormal
 Lutador
 Voador
 Venenoso
@@ -6,13 +6,13 @@ Terra
 Pedra
 Inseto
 Fantasma
-Met·lico
+Met√°lico
 Fogo
-¡gua
+√Ågua
 Planta
 Eletrico
 Psiquico
 Gelo
-Drag„o
+Drag√£o
 Noturno
 ???

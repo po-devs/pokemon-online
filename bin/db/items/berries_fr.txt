@@ -1,4 +1,4 @@
-Baie Ceriz
+ï»¿Baie Ceriz
 Baie Maron
 Baie Pecha
 Baie Fraive
@@ -39,13 +39,13 @@ Baie Parma
 Baie Ratam
 Baie Nanone
 Baie Pomroz
-Baie Kébia
+Baie KÃ©bia
 Baie Jouca
 Baie Cobaba
 Baie Yapap
 Baie Panga
 Baie Charti
-Baie Sédra
+Baie SÃ©dra
 Baie Fraigo
 Baie Lampou
 Baie Babiri
@@ -59,6 +59,6 @@ Baie Lansat
 Baie Frista
 Baie Enigma
 Baie Micle
-Baie Chérim
+Baie ChÃ©rim
 Baie Jaboca
 Baie Pommo

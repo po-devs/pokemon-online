@@ -1,22 +1,22 @@
-
+ï»¿
 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 A ring of water surrounds %s!|Aquaring recovered %s's hp a little.
 A soothing aroma wafted through the area!|A bell chimed!
 
 
 
-%q ú÷ó!
+%q ÃºÃ·Ã³!
 %s hasn't enough energy left!|%s cut its own HP and maximized its attack!
 %s is storing energy!|%s unleashed energy!
 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
-%s çééá ìäéèòï!
-%f ìà éëåì éåúø ìáøåç!
+%s Ã§Ã©Ã©Ã¡ Ã¬Ã¤Ã©Ã¨Ã²Ã¯!
+%f Ã¬Ã  Ã©Ã«Ã¥Ã¬ Ã©Ã¥ÃºÃ¸ Ã¬Ã¡Ã¸Ã¥Ã§!
 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
 %s shattered %tf's team protections!
 
 %s ate %f's %i!
 %s transformed into the %t type!
-%s äúçéì ìèòåï çùîì!
+%s Ã¤ÃºÃ§Ã©Ã¬ Ã¬Ã¨Ã²Ã¥Ã¯ Ã§Ã¹Ã®Ã¬!
 %s transformed into the %t type!
 %s transformed into the %t type!
 
@@ -25,11 +25,11 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s crushed %f!
 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 %s took %f down with it!|%s is trying to take its foe with it!
-%s äâï òì òöîå!
+%s Ã¤Ã¢Ã¯ Ã²Ã¬ Ã²Ã¶Ã®Ã¥!
 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
 
-%f òø!
+%f Ã²Ã¸!
 %f can't use items anymore!|%s can use items again!
 %s's Encore ended!|%f received an encore!
 
@@ -41,10 +41,10 @@ A soothing aroma wafted through the area!|A bell chimed!
 
 
 
-äéëåìú: Sturdy ùì%f âøîä ìîäìê ìäëùì!
+Ã¤Ã©Ã«Ã¥Ã¬Ãº: Sturdy Ã¹Ã¬%f Ã¢Ã¸Ã®Ã¤ Ã¬Ã®Ã¤Ã¬Ãª Ã¬Ã¤Ã«Ã¹Ã¬!
 
 %s threw %i at %f!
-%s îçæ÷ àú òöîå!
+%s Ã®Ã§Ã¦Ã· Ã Ãº Ã²Ã¶Ã®Ã¥!
 %s lost its focus!|%s is tightening its focus!
 
 
@@ -55,14 +55,14 @@ Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne bec
 %f's %m lost all its PP because of %s' Grudge!
 %s swapped its boosts with %f!
 
-ñåôú ùìâéí äúçéìä!|äúçéì ìøãú âùí!|ñåôú çåì îúçåììú!|äùîù äúçæ÷ä!
+Ã±Ã¥Ã´Ãº Ã¹Ã¬Ã¢Ã©Ã­ Ã¤ÃºÃ§Ã©Ã¬Ã¤!|Ã¤ÃºÃ§Ã©Ã¬ Ã¬Ã¸Ã£Ãº Ã¢Ã¹Ã­!|Ã±Ã¥Ã´Ãº Ã§Ã¥Ã¬ Ã®ÃºÃ§Ã¥Ã¬Ã¬Ãº!|Ã¤Ã¹Ã®Ã¹ Ã¤ÃºÃ§Ã¦Ã·Ã¤!
 %s is in love with %f!|%f Fell in love!|%s is immobilized by love!
 %f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
-%s äçæéø ìòöîå îòè çééí!
-%s ğøôà!
-%s äúçìéó àú ääâğä òí ääú÷ôä!
+%s Ã¤Ã§Ã¦Ã©Ã¸ Ã¬Ã²Ã¶Ã®Ã¥ Ã®Ã²Ã¨ Ã§Ã©Ã©Ã­!
+%s Ã°Ã¸Ã´Ã !
+%s Ã¤ÃºÃ§Ã¬Ã©Ã³ Ã Ãº Ã¤Ã¤Ã¢Ã°Ã¤ Ã²Ã­ Ã¤Ã¤ÃºÃ·Ã´Ã¤!
 
-%s äúøñ÷ òì ä÷ø÷ò!
+%s Ã¤ÃºÃ¸Ã±Ã· Ã²Ã¬ Ã¤Ã·Ã¸Ã·Ã²!
 
 
 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
@@ -76,13 +76,13 @@ Reflect raised %ts's team defense!|Light Screen raised %ts's team special defens
 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
 %s cleared the field around %tf's team!
-ù÷ùå÷ àãîä áøîä %d!
+Ã¹Ã·Ã¹Ã¥Ã· Ã Ã£Ã®Ã¤ Ã¡Ã¸Ã®Ã¤ %d!
 
 
 %s learned %m!
-àáì ùåí ãáø ìà ÷øä!
+Ã Ã¡Ã¬ Ã¹Ã¥Ã­ Ã£Ã¡Ã¸ Ã¬Ã  Ã·Ã¸Ã¤!
 
-%s æää àú %f!
+%s Ã¦Ã¤Ã¤ Ã Ãº %f!
 
 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
 %s regained health!|%s regained a lot of health!|%s regained little health!
@@ -90,29 +90,29 @@ Electric's power has been weakened!|Fire's power has been weakened!
 
 
 
-%s ëòú çåìí ñéåè!
+%s Ã«Ã²Ãº Ã§Ã¥Ã¬Ã­ Ã±Ã©Ã¥Ã¨!
 %s calmed down!|%s became confused due to fatigue!
-äìåçîéí äúçì÷å áçééí ùìäí!
-All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+Ã¤Ã¬Ã¥Ã§Ã®Ã©Ã­ Ã¤ÃºÃ§Ã¬Ã·Ã¥ Ã¡Ã§Ã©Ã©Ã­ Ã¹Ã¬Ã¤Ã­!
+All PokÃ©mon hearing the song will faint in three turns!|%s's perish count fell to %d.
 %s's present healed %f some HP!
 %s copied %f's stat changes!
-%s äáéà àú äñèèåñ ùìå ì%f!
+%s Ã¤Ã¡Ã©Ã  Ã Ãº Ã¤Ã±Ã¨Ã¨Ã¥Ã± Ã¹Ã¬Ã¥ Ã¬%f!
 
 
 
-%s äúçéì ìäúòöáï!
+%s Ã¤ÃºÃ§Ã©Ã¬ Ã¬Ã¤ÃºÃ²Ã¶Ã¡Ã¯!
 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!|%s absorbed light!
-%s îçæø %i!
-%s äìê ìéùåï åğäéä áøéà!
+%s Ã®Ã§Ã¦Ã¸ %i!
+%s Ã¤Ã¬Ãª Ã¬Ã©Ã¹Ã¥Ã¯ Ã¥Ã°Ã¤Ã©Ã¤ Ã¡Ã¸Ã©Ã !
 %f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!|%f was dragged out!
 %s copied %f's %a!
 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
 
-%s äòúé÷ àú ä%m!
-%s äçìéó éëåìåú òí äéøéá!
+%s Ã¤Ã²ÃºÃ©Ã· Ã Ãº Ã¤%m!
+%s Ã¤Ã§Ã¬Ã©Ã³ Ã©Ã«Ã¥Ã¬Ã¥Ãº Ã²Ã­ Ã¤Ã©Ã¸Ã©Ã¡!
 
-äDamp ùì%s îğò îæä ìòáåã!
+Ã¤Damp Ã¹Ã¬%s Ã®Ã°Ã² Ã®Ã¦Ã¤ Ã¬Ã²Ã¡Ã¥Ã£!
 
 
 
@@ -120,35 +120,35 @@ All Pokémon hearing the song will faint in three turns!|%s's perish count fell t
 
 
 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
-%s ùåçøø!
+%s Ã¹Ã¥Ã§Ã¸Ã¸!
 It reduced the PP of %f's %m by 4!
 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 %s stockpiled %d!
 
-%s ÷áì îëä îääãó!
+%s Ã·Ã¡Ã¬ Ã®Ã«Ã¤ Ã®Ã¤Ã¤Ã£Ã³!
 %s already has a substitute.|%s's substitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!|%s made a substitute!
 
 
-%s áìò!
+%s Ã¡Ã¬Ã²!
 %s switched items with %f!|%s obtained one %i!
 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
 %s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
 %f is now tormented!
 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
-%s äùúğä àì %p!
+%s Ã¤Ã¹ÃºÃ°Ã¤ Ã Ã¬ %p!
 %s twisted the dimensions!|The twisted dimensions returned to normal!
 
 
 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
-äîùàìä ùì %q äúâùîä!
-%f áòì àéğñåîğéä!
+Ã¤Ã®Ã¹Ã Ã¬Ã¤ Ã¹Ã¬ %q Ã¤ÃºÃ¢Ã¹Ã®Ã¤!
+%f Ã¡Ã²Ã¬ Ã Ã©Ã°Ã±Ã¥Ã®Ã°Ã©Ã¤!
 %s made %f feel drowsy!|%s yawns!
 
 
 
 
-ëì ëéğåéé äñèèåñéí ğîç÷å!
-%s ğçú òì äàãîä!
+Ã«Ã¬ Ã«Ã©Ã°Ã¥Ã©Ã© Ã¤Ã±Ã¨Ã¨Ã¥Ã±Ã©Ã­ Ã°Ã®Ã§Ã·Ã¥!
+%s Ã°Ã§Ãº Ã²Ã¬ Ã¤Ã Ã£Ã®Ã¤!
 %s planted its roots!| %s absorbed nutrients with its roots!
 
 

@@ -1,4 +1,4 @@
-
+﻿
 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 %s surrounded itself with a veil of water!|Aquaring restored %s's HP.
 A soothing aroma wafted through the area!|A bell chimed!
@@ -93,7 +93,7 @@ Electric's power has been weakened!|Fire's power has been weakened!
 %s has a nightmare!
 %s calmed down!|%s became confused due to fatigue!
 The battlers shared their pain!
-All Pok�mon hearing the song will faint in three turns!|%s's perish count fell to %d.
+All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
 %s's present healed %f some HP!
 %s copied %f's stat changes!
 %s moved its status onto %f!

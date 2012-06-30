@@ -1,4 +1,4 @@
-(Sin habilidad)
+Ôªø(Sin habilidad)
 Hedor
 Llovizna
 Impulso
@@ -7,11 +7,11 @@ Robustez
 Humedad
 Flexibilidad
 Velo arena
-Elec. Est·t.
+Elec. Est√°t.
 Absor. Elec.
 Absor. Agua
 Despiste
-AclimataciÛn
+Aclimataci√≥n
 Ojocompuesto
 Insomnio
 Cambio Color
@@ -20,31 +20,31 @@ Absor. Fuego
 Polvo Escudo
 Ritmo Propio
 Ventosas
-IntimidaciÛn
+Intimidaci√≥n
 Sombratrampa
 Piel Tosca
 Superguarda
-LevitaciÛn
+Levitaci√≥n
 Efec. Espora
-SincronÌa
+Sincron√≠a
 Cuerpo Puro
 Cura Natural
 Pararrayos
 Dicha
-Nado R·pido
+Nado R√°pido
 Clorofila
-IluminaciÛn
+Iluminaci√≥n
 Rastro
 Potencia
-Punto TÛxico
+Punto T√≥xico
 Foco Interno
 Escudo Magma
 Velo Agua
-Im·n
+Im√°n
 Insonorizar
 Cura Lluvia
 Chorro Arena
-PresiÛn
+Presi√≥n
 Sebo
 Madrugar
 Cuerpo Llama
@@ -55,48 +55,48 @@ Recogida
 Ausente
 Entusiasmo
 Gran Encanto
-M·s
+M√°s
 Menos
-PredicciÛn
+Predicci√≥n
 Viscosidad
 Mudar
 Agallas
 Escama Esp.
-Lodo LÌquido
+Lodo L√≠quido
 Espesura
 Mar Llamas
 Torrente
 Enjambre
 Cabeza Roca
-SequÌa
+Sequ√≠a
 Trampa Arena
-EspÌr. Vital
+Esp√≠r. Vital
 Humo Blanco
-EnergÌa Pura
-CaparazÛn
+Energ√≠a Pura
+Caparaz√≥n
 Bucle Aire
 Tumbos
 Electromotor
 Rivalidad
 Impasible
-Manto NÌveo
+Manto N√≠veo
 Gula
 Irascible
 Liviano
-IgnÌfugo
+Ign√≠fugo
 Simple
 Piel Seca
 Descarga
-PuÒo FÈrreo
-AntÌdoto
+Pu√±o F√©rreo
+Ant√≠doto
 Adaptable
 Encadenado
-HidrataciÛn
+Hidrataci√≥n
 Poder Solar
-Pies R·pidos
+Pies R√°pidos
 Normalidad
 Francotirador
-Muro M·gico
+Muro M√°gico
 Indefenso
 Rezagado
 Experto
@@ -105,57 +105,57 @@ Zoquete
 Rompemoldes
 Afortunado
 Resquicio
-AnticipaciÛn
+Anticipaci√≥n
 Alerta
 Ignorante
 Cromolente
 Filtro
 Inicio Lento
-IntrÈpido
+Intr√©pido
 Colector
-GÈlido
-Roca SÛlida
+G√©lido
+Roca S√≥lida
 Nevada
 Recogemiel
 Cacheo
 Audaz
 Multitipo
 Don Floral
-Mal SueÒo
+Mal Sue√±o
 Hurto
 Potencia Bruta
-RespondÛn
+Respond√≥n
 Nerviosismo
 Competitivo
 Flaqueza
 Cue. Maldito
 Alma Cura
 Compiescolta
-Arm. Fr·gil
+Arm. Fr√°gil
 Met. Pesado
 Met. Liviano
-CompensaciÛn
-Õm. TÛxico
-Õm. Ardiente
+Compensaci√≥n
+√çm. T√≥xico
+√çm. Ardiente
 Cosecha
-TelepatÌa
+Telepat√≠a
 Veleta
 Funda
-Toque TÛxico
-RegeneraciÛn
+Toque T√≥xico
+Regeneraci√≥n
 Sacapecho
-Õmpetu Arena
+√çmpetu Arena
 Piel Milagro
-C·lc. Final
-IlusiÛn
+C√°lc. Final
+Ilusi√≥n
 Impostor
 Allanamiento
 Momia
 Autoestima
 Justiciero
-CobardÌa
-Espejom·gico
-HerbÌvoro
+Cobard√≠a
+Espejom√°gico
+Herb√≠voro
 Bromista
 Poder Arena
 Punta Acero

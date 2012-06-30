@@ -1,50 +1,50 @@
-
+ï»¿
 
 %ss Aftermath skadar %f!
-%s är extremt förbannad!
-%ss Anticipation gör den skakis!
+%s Ã¤r extremt fÃ¶rbannad!
+%ss Anticipation gÃ¶r den skakis!
 
-%f har dåliga drömmar!
+%f har dÃ¥liga drÃ¶mmar!
 
 
-%ss Color Change ändrade dess element till %t!
+%ss Color Change Ã¤ndrade dess element till %t!
 
-%ss Cute Charm förblindade %f!
+%ss Cute Charm fÃ¶rblindade %f!
 %ss Download aktiveras!
 
-%ss Snow Warning orsakade hagel!|%ss Drizzle orsakade regnväder!|%ss Sandstream orsakade en sandstorm!|%ss Drought stärkte solens strålar!
-%s återställde HP genom sin Dry Skin!|%ss Dry Skin skadade den!
+%ss Snow Warning orsakade hagel!|%ss Drizzle orsakade regnvÃ¤der!|%ss Sandstream orsakade en sandstorm!|%ss Drought stÃ¤rkte solens strÃ¥lar!
+%s Ã¥terstÃ¤llde HP genom sin Dry Skin!|%ss Dry Skin skadade den!
 %ss Effect Spore aktiveras!
 
 %ss %a aktiveras!
-%ss ökade sin eldstyrka!
+%ss Ã¶kade sin eldstyrka!
 
-%s ändrade dess element till %t!
-%ss Forewarn förvarnar den om %m!
-%s vet att motståndaren håller %i med hjälp av Frisk!
-%ss Shield Dust blockerade de sekundära effekterna!
-
-
+%s Ã¤ndrade dess element till %t!
+%ss Forewarn fÃ¶rvarnar den om %m!
+%s vet att motstÃ¥ndaren hÃ¥ller %i med hjÃ¤lp av Frisk!
+%ss Shield Dust blockerade de sekundÃ¤ra effekterna!
 
 
-%ss Hydration återställer dess status!
-%ss %a hindrar sina stats från att bli dämpade!
-%ss %a hindrar sina stats från att bli dämpade!
+
+
+%ss Hydration Ã¥terstÃ¤ller dess status!
+%ss %a hindrar sina stats frÃ¥n att bli dÃ¤mpade!
+%ss %a hindrar sina stats frÃ¥n att bli dÃ¤mpade!
 %ss %a helar det!
 %ss %a botar det!
-%s skrämmer %f!|%fs Substitut blockerar intimidate!
+%s skrÃ¤mmer %f!|%fs Substitut blockerar intimidate!
 
 
-%ss Leaf Guard skyddar den från motståndarens försök till statusförändring!
+%ss Leaf Guard skyddar den frÃ¥n motstÃ¥ndarens fÃ¶rsÃ¶k till statusfÃ¶rÃ¤ndring!
 
 
 %s har Mold Breaker!
-%ss Motor Drive ökar dess speed!
+%ss Motor Drive Ã¶kar dess speed!
 
 
-%ss Own Tempo botar dess förvirring!
-%s läker med sin Poison Heal!
-%s utövar sin Pressure!
+%ss Own Tempo botar dess fÃ¶rvirring!
+%s lÃ¤ker med sin Poison Heal!
+%s utÃ¶var sin Pressure!
 
 
 
@@ -53,18 +53,18 @@
 
 
 %ss Shed Skin botar dess status!
-%s startar med halv styrka!|%ss Slow Start slutade! Den är på full styrka!
+%s startar med halv styrka!|%ss Slow Start slutade! Den Ã¤r pÃ¥ full styrka!
 %s skadas av solen!
 %ss Sound Proof blockerar attacken!
-%ss Speed Boost ökar dess speed!
+%ss Speed Boost Ã¶kar dess speed!
 
-%ss SteadFast ökar dess speed!
-%ss Synchronize ändrar statusen hos %f!
-
-
+%ss SteadFast Ã¶kar dess speed!
+%ss Synchronize Ã¤ndrar statusen hos %f!
 
 
-%s spårade %fs %a!
+
+
+%s spÃ¥rade %fs %a!
 %s vilar helt oengagerad!
 
 
