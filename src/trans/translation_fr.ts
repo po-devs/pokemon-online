@@ -2368,7 +2368,7 @@ Effet: %6</translation>
     <message>
         <location filename="../Teambuilder/pmsystem.cpp" line="292"/>
         <source>The player has logged on again</source>
-        <translation type="unfinished">Le joueur s&apos;est reconnecté.s</translation>
+        <translation type="unfinished">Le joueur s&apos;est reconnecté.</translation>
     </message>
 </context>
 <context>
