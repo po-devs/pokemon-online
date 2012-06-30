@@ -960,8 +960,6 @@ void Server::processLoginDetails(Player *p)
 
     int id = p->id();
 
-    p->changeState(Player::LoggedIn, true);
-
     if (!wasLoggedIn) {
         groups[All].insert(p);
         if (p->supportsZip()) {
@@ -977,7 +975,6 @@ void Server::processLoginDetails(Player *p)
 
         if(!myengine->beforeLogIn(id) && playerExist(id)) {
             mynames.remove(p->name().toLower());
-            p->changeState(Player::LoggedIn, false);
             silentKick(id);
             return;
         }
@@ -985,6 +982,8 @@ void Server::processLoginDetails(Player *p)
         if (!playerExist(id))
             return;
     }
+
+    p->changeState(Player::LoggedIn, true);
 
     p->sendLoginInfo();
 
