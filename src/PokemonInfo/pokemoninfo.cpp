@@ -748,6 +748,7 @@ QPixmap PokemonInfo::Picture(const QString &url)
     bool shiny=false;
     bool back = false;
     bool substitute = false;
+    bool cropped = false;
 
     foreach (QString param, params) {
         QString par = param.section('=', 0,0);
@@ -776,13 +777,23 @@ QPixmap PokemonInfo::Picture(const QString &url)
             gender = val == "male" ? Pokemon::Male : (val == "female"?Pokemon::Female : Pokemon::Neutral);
         } else if (par == "back") {
             back = val == "true";
+        } else if (par == "cropped") {
+            cropped = val == "true";
         }
     }
 
     if (substitute) {
         return Sub(gen, back);
     } else {
-        return Picture(num, gen, gender, shiny, back);
+        QPixmap ret = Picture(num, gen, gender, shiny, back);
+
+        if (cropped) {
+            QImage img = ret.toImage();
+            cropImage(img);
+            ret = QPixmap::fromImage(img);
+        }
+
+        return ret;
     }
 }
 
