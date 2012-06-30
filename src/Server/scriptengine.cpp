@@ -29,9 +29,7 @@ ScriptEngine::ScriptEngine(Server *s) {
                 QScriptValue::ReadOnly | QScriptValue::Undeletable
                 );
 
-#ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-#endif
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
@@ -52,7 +50,7 @@ ScriptEngine::~ScriptEngine()
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
     mySessionDataFactory->disableAll();
-    myscript = myengine.evaluate(script);
+    myscript = myengine.evaluate(script, "scripts.js");
     myengine.globalObject().setProperty("script", myscript);
 
     if (myscript.isError()) {
@@ -86,18 +84,24 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     // Error check?
 }
 
-QScriptValue ScriptEngine::import(const QString &fileName) {
-    QString url = "scripts/"+fileName;
+QScriptValue ScriptEngine::import(const QString &fileName)
+{
+    QString url = "script/"+fileName;
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
-        return QScriptValue();
+        warn("import(fileName)", "The file script/" + fileName + " is not readable.");
+        return myengine.undefinedValue();
     }
 
-    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()), "scripts/" + fileName);
     evaluate(import);
     return import;
+}
+
+QScriptValue ScriptEngine::include(const QString &fileName)
+{
+    return this->import(fileName);
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)
@@ -2266,8 +2270,82 @@ QScriptValue ScriptEngine::avatar(int playerId)
     return myserver->player(playerId)->avatar();
 }
 
+bool ScriptEngine::dirExists (const QString &dir)
+{
+    QDir directory(dir);
+
+    return directory.exists();
+}
+QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QScriptValue ret = myengine.newArray(files.count());
+
+    for (int i = 0; i < files.size(); i++) {
+        ret.setProperty(i, files[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
+{
+    QDir directory(dir);
+
+    if(!directory.exists()) {
+        return myengine.undefinedValue();
+    }
+
+    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QScriptValue ret = myengine.newArray(dirs.size());
+
+    for (int i = 0; i < dirs.size(); i++) {
+        ret.setProperty(i, dirs[i]);
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::getValKeys()
+{
+    QSettings s;
+    QStringList list = s.childKeys();
+    QStringList result_data;
+
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
+void ScriptEngine::mkdir(const QString &dir)
+{
+    QDir dir_;
+    dir_.mkdir(dir);
+}
+
+void ScriptEngine::mkpath(const QString &path)
+{
+    QDir dir;
+    dir.mkpath(path);
+}
 
 void ScriptEngine::saveVal(const QString &key, const QVariant &val)
 {
@@ -2303,42 +2381,6 @@ void ScriptEngine::removeVal(const QString &file, const QString &key)
 {
     QSettings s(file, QSettings::IniFormat);
     s.remove("Script_"+key);
-}
-
-QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
-{
-    QDir directory(dir);
-
-    if(!directory.exists()) {
-        return myengine.undefinedValue();
-    }
-
-    QStringList files = directory.entryList(QDir::Files, QDir::Name);
-    QScriptValue ret = myengine.newArray(files.count());
-
-    for (int i = 0; i < files.size(); i++) {
-        ret.setProperty(i, files[i]);
-    }
-
-    return ret;
-}
-
-QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
-{
-    QDir directory(dir);
-
-    if(!directory.exists()) {
-        return myengine.undefinedValue();
-    }
-
-    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
-    QScriptValue ret = myengine.newArray(dirs.size());
-
-    for (int i = 0; i < dirs.size(); i++) {
-        ret.setProperty(i, dirs[i]);
-    }
-
-    return ret;
 }
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
@@ -2377,6 +2419,41 @@ void ScriptEngine::deleteFile(const QString &fileName)
     out.remove();
 }
 
+QScriptValue ScriptEngine::getValKeys(const QString &file)
+{
+    QSettings s(file, QSettings::IniFormat);
+    QStringList list = s.childKeys();
+    QStringList result_data;
+    
+    QStringListIterator it(list);
+    while (it.hasNext()) {
+        QString v = it.next();
+        if (v.startsWith("Script_")) {
+            result_data.append(v.mid(7));
+        }
+    }
+    int len = result_data.length();
+    QScriptValue result_array = myengine.newArray(len);
+    for (int i = 0; i < len; ++i) {
+        result_array.setProperty(i, result_data.at(i));
+    }
+    return result_array;
+}
+
+QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
+    }
+
+    return QString::fromUtf8(out.readAll());
+}
+
+#endif // PO_SCRIPT_SAFE_ONLY
+
 /**
  * Function will perform a GET-Request server side
  * @param urlstring web-url
@@ -2410,7 +2487,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
         printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
         return;
     }
-    
+
     QNetworkRequest request;
     QByteArray postData;
 
@@ -2429,7 +2506,8 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
     webCallEvents[reply] = callback;
 }
 
-void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
+void ScriptEngine::webCall_replyFinished(QNetworkReply* reply)
+{
     QScriptValue val = webCallEvents.take(reply);
     if (val.isString()) {
         //escape reply before sending it to the javascript evaluator
@@ -2455,7 +2533,8 @@ void ScriptEngine::webCall_replyFinished(QNetworkReply* reply){
  * @param urlstring web-url
  * @author Remco cd Zon and Toni Fadjukoff
  */
-QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring) {
+QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring)
+{
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
 
@@ -2502,66 +2581,11 @@ QScriptValue ScriptEngine::synchronousWebCall(const QString &urlstring, const QS
     return sync_data;
 }
 
-void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply) {
+void ScriptEngine::synchronousWebCall_replyFinished(QNetworkReply* reply)
+{
     sync_data = reply->readAll();
     sync_loop.exit();
 }
-
-QScriptValue ScriptEngine::getValKeys()
-{
-    QSettings s;
-    QStringList list = s.childKeys();
-    QStringList result_data;
-    
-    QStringListIterator it(list);
-    while (it.hasNext()) {
-        QString v = it.next();
-        if (v.startsWith("Script_")) {
-            result_data.append(v.mid(7));
-        }
-    }
-    int len = result_data.length();
-    QScriptValue result_array = myengine.newArray(len);
-    for (int i = 0; i < len; ++i) {
-        result_array.setProperty(i, result_data.at(i));
-    }
-    return result_array;
-}
-
-QScriptValue ScriptEngine::getValKeys(const QString &file)
-{
-    QSettings s(file, QSettings::IniFormat);
-    QStringList list = s.childKeys();
-    QStringList result_data;
-    
-    QStringListIterator it(list);
-    while (it.hasNext()) {
-        QString v = it.next();
-        if (v.startsWith("Script_")) {
-            result_data.append(v.mid(7));
-        }
-    }
-    int len = result_data.length();
-    QScriptValue result_array = myengine.newArray(len);
-    for (int i = 0; i < len; ++i) {
-        result_array.setProperty(i, result_data.at(i));
-    }
-    return result_array;
-}
-
-QScriptValue ScriptEngine::getFileContent(const QString &fileName)
-{
-    QFile out(fileName);
-
-    if (!out.open(QIODevice::ReadOnly)) {
-        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
-        return myengine.undefinedValue();
-    }
-
-    return QString::fromUtf8(out.readAll());
-}
-
-#endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
 int ScriptEngine::system(const QString &command)

@@ -1,4 +1,4 @@
-#ifndef FUNCTIONS_H
+﻿#ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
 #include <QtCore>
@@ -147,6 +147,8 @@ T& pack(T &cont, const U &item, Params&&...params) {
     cont << item;
     return pack(cont, std::forward<Params>(params)...);
 }
+
+void ensureDir(const QString &dir);
 
 /* Returns the folder in which you can store boxes, mods, profiles, all the application data.
   The createFolder param is whether or not you want to force-create the subfolder */

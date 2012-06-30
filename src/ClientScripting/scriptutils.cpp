@@ -1,10 +1,11 @@
-#include "scriptutils.h"
+﻿#include "scriptutils.h"
 #include "../Utilities/functions.h"
 
 QString ScriptUtils::loadScripts()
 {
-    QDir d(appDataPath("Scripts/", true));
-    QFile f(d.absoluteFilePath("scripts.js"));
+    ensureDir("script");
+
+    QFile f("script/scripts.js");
     f.open(QIODevice::ReadOnly);
 
     return QString::fromUtf8(f.readAll());

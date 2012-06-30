@@ -1387,12 +1387,16 @@ void Client::playerTempBanned(int dest, int src, int time)
     printHtml(toBoldColor(mess, Qt::red));
 }
 
-void Client::askForPass(const QByteArray &salt) {
+void Client::askForPass(const QByteArray &salt)
+{
+    server_pass_invalid = false;
 
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
-    if (!warns.empty()) warns.prepend(""); // for join()
+    if (!warns.empty()) {
+        warns.prepend(""); // for join()
+    }
 
     /* Create a dialog for password input */
     QDialog dialog(this);
@@ -1465,15 +1469,26 @@ void Client::onReconnectFailure(int reason)
     }
 }
 
-void Client::serverPass(const QByteArray &salt) {
+void Client::serverPass(const QByteArray &salt)
+{
     QString pass;
     QStringList warns;
     bool ok = wallet.retrieveServerPassword(relay().getIp(), serverName, pass, warns);
-    if (!warns.empty()) warns.prepend(""); // for join()
+    if (!warns.empty()) {
+        warns.prepend(""); // for join()
+    }
 
     /* Create a dialog for password input */
     QDialog dialog(this);
-    dialog.setWindowTitle(tr("Enter the server password"));
+    QString title = tr("Enter the server password");
+
+    if (server_pass_invalid) {
+        title = tr("The password was incorrect");
+        dialog.setWindowIcon(QApplication::style()->standardIcon(
+                                 QStyle::SP_MessageBoxWarning));
+    }
+    dialog.setWindowTitle(title);
+
     QVBoxLayout* layout = new QVBoxLayout;
     // Label
     layout->addWidget(new QLabel(tr("Enter the password for this server.\n"
@@ -1510,8 +1525,11 @@ void Client::serverPass(const QByteArray &salt) {
         // TODO: ipv6 support in the future
         wallet.saveServerPassword(relay().getIp(), serverName, pass);
     }
+
     QByteArray hash = QCryptographicHash::hash(QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5)+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::ServerPass, hash);
+
+    server_pass_invalid = true; // Will be reset later.
 }
 
 void Client::sendRegister() {
@@ -1519,7 +1537,7 @@ void Client::sendRegister() {
         relay().notify(NetworkCli::Register);
         myregister->setDisabled(true);
     } else {
-        relay().connectTo(url, port);
+        reconnect();
     }
 }
 
@@ -1622,8 +1640,9 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
                                               QMessageBox::Ok | QMessageBox::Ignore, NULL, Qt::Window);
         int result = update->exec();
 
-        if (result & QMessageBox::Ignore)
+        if (result & QMessageBox::Ignore) {
             ignoreServerVersion(true);
+        }
     }
 }
 
@@ -1639,6 +1658,15 @@ void Client::serverNameReceived(const QString &sName)
     if (serverName.size() > 0) {
         QString newTitle = titlebase + " - " + serverName;
         mainwindow->setWindowTitle(newTitle);
+    }
+}
+
+void Client::flash(int ms)
+{
+    /* Only activates if no window has focus */
+    if (!QApplication::activeWindow()) {
+        QApplication::alert(this, ms);
+        this->raise();
     }
 }
 
@@ -2431,8 +2459,14 @@ void Client::requestTempBan(const QString &name, int time)
 
 void Client::ignore(int id)
 {
-    if (myIgnored.contains(id))
+    if (myIgnored.contains(id)) {
         return;
+    }
+
+    if (!hasPlayerInfo(id)) {
+        return;
+    }
+
     printLine(id, tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
     updateState(id);
@@ -2451,6 +2485,10 @@ void Client::ignore(int id, bool ign)
 void Client::removeIgnore(int id)
 {
     if (!myIgnored.contains(id)) {
+        return;
+    }
+
+    if (!hasPlayerInfo(id)) {
         return;
     }
 

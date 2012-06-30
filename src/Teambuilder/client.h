@@ -94,6 +94,8 @@ public:
 
     Q_INVOKABLE QString announcement();
 
+    Q_INVOKABLE void flash(int ms = 0);
+
     enum Status {
         Available = 0,
         Away,
@@ -343,6 +345,8 @@ private:
     QHash<int, BattleWindow* > mybattles;
     QAction *goaway, *ladder;
 
+    bool server_pass_invalid;
+
     bool findingBattle;
     bool isConnected;
     QString url;
@@ -381,7 +385,9 @@ private:
     Analyzer *myrelay;
     Analyzer &relay();
 public:
-    Q_INVOKABLE Analyzer *network() {return myrelay;}
+    Q_INVOKABLE Analyzer *network() {
+        return myrelay;
+    }
 private:
 
     /* Password Wallet */

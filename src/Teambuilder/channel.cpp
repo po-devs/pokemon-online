@@ -134,7 +134,16 @@ void Channel::anchorClicked(const QUrl &url)
         } else if (path == "reconnect") {
             client->reconnect();
         } else if (path.leftRef(6) == "watch/") {
-            client->watchBattleRequ(path.mid(6).toInt());
+            int id = path.mid(6).toInt();
+            client->watchBattleRequ(id);
+        } else if (path.leftRef(12) == "watchplayer/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                client->watchBattleOf(client->id(player));
+            } else {
+                client->watchBattleOf(id);
+            }
         } else if (path.leftRef(3) == "pm/") {
             QString player = path.mid(3);
             int id = player.toInt();
@@ -143,6 +152,19 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->startPM(id);
             }
+        } else if (path.leftRef(3) == "ignore/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->ignore(pid, !client->isIgnored(pid));
+            } else {
+                client->ignore(id, !client->isIgnored(id));
+            }
+        } else if (path == "findbattle") {
+            client->openBattleFinder();
+        } else if (path == "teambuilder") {
+            client->openTeamBuilder();
         }
     } else {
         QDesktopServices::openUrl(url);

@@ -1,4 +1,4 @@
-#include "../Shared/config.h"
+﻿#include "../Shared/config.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "player.h"
@@ -21,6 +21,7 @@ Player::Player(const GenericSocket &sock, int id)
     battleSearch() = false;
     myip = relay().ip();
     server_pass_sent = false;
+    server_pass_attempts = 0;
     needToUpdate = false;
 
 
@@ -1074,11 +1075,17 @@ void Player::serverPasswordSent(const QByteArray &_hash)
 {
     if (Server::serverIns->correctPass(_hash, waiting_pass)) {
         server_pass_sent = true;
+        server_pass_attempts = 0;
         waiting_pass.clear();
         testAuthentification(waiting_name);
     } else {
+        if (server_pass_attempts > 2) {
+            kick();
+            return;
+        }
+
         // Retry the password prompt
-        // XXX: maybe make a counter of 3 or something in retry attempts?
+        ++server_pass_attempts;
         relay().notify(NetworkServ::ServerPass, waiting_pass);
     }
 }

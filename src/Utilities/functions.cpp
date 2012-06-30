@@ -1,4 +1,4 @@
-#include "functions.h"
+﻿#include "functions.h"
 
 #include <QtGui>
 
@@ -108,13 +108,18 @@ void cropImage(QImage &p)
     }
 }
 
+void ensureDir(const QString &dir)
+{
+    QDir path;
+    path.mkpath(dir);
+}
+
 QString appDataPath(const QString &subfolder, bool createFolder)
 {
     QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/" + subfolder;
 
     if (createFolder) {
-        QDir d;
-        d.mkpath(path);
+        ensureDir(path);
     }
 
     return path;

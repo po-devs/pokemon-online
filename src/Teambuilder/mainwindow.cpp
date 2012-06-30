@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "menu.h"
 #include "client.h"
@@ -30,6 +30,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
     setDefaultValue(s, "BattleAudio/PlayMusic", false);
     setDefaultValue(s, "BattleAudio/PlaySounds", false);
+
     setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
@@ -40,21 +41,26 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "Teams/Folder", "Team");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
+
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
+
     setDefaultValue(s, "Client/EnableLadder", true);
     setDefaultValue(s, "Client/SortPlayersByTier", false);
     setDefaultValue(s, "Client/SortChannelsByName", true);
     setDefaultValue(s, "Client/ShowTimestamps", true);
+
     setDefaultValue(s, "PlayerEvents/ShowIdle", false);
     setDefaultValue(s, "PlayerEvents/ShowBattle", false);
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
     setDefaultValue(s, "PlayerEvents/ShowTeam", false);
+
     setDefaultValue(s, "PMs/ShowTimestamps", true);
     setDefaultValue(s, "PMs/Flash", true);
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
+
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
 
