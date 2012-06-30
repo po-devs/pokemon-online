@@ -161,6 +161,10 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->ignore(id, !client->isIgnored(id));
             }
+        } else if (path == "findbattle") {
+            client->openBattleFinder();
+        } else if (path == "teambuilder") {
+            client->openTeamBuilder();
         }
     } else {
         QDesktopServices::openUrl(url);

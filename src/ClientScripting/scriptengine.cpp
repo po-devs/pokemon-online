@@ -32,9 +32,6 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
 
     includedFiles = myengine.newArray();
     includedFilesIndex = 0;
-
-    QDir dir;
-    dir.mkdir("script"); // for sys.import{Plugin}
 }
 
 ScriptEngine::~ScriptEngine()

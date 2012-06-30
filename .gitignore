@@ -1,4 +1,4 @@
-*.o
+﻿*.o
 moc_*
 bin/Server
 bin/lib*.so
@@ -11,6 +11,7 @@ bin/config*
 bin/logs.txt
 bin/pokemon
 bin/members.txt
+bin/tier_*.txt
 bin/*.dll
 bin/stdout.txt
 bin/serverplugins

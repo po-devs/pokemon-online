@@ -17,7 +17,7 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     QSettings s;
     s.beginGroup("ScriptWindow");
 
-    warnOnClose = s.value("warnOnClose", true).toBool();
+    warnOnClose = s.value("warnOnClose", false).toBool();
 
     ui->checkBox->setChecked(s.value("safeScripts", true).toBool());
     ui->warn->setChecked(s.value("warn", false).toBool());
