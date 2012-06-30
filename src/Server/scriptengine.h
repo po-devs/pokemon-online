@@ -210,7 +210,7 @@ public:
     Q_INVOKABLE QScriptValue gen(int id, int team);
     Q_INVOKABLE QScriptValue subgen(int id, int team);
     Q_INVOKABLE QScriptValue teamCount(int id);
-    Q_INVOKABLE QString generation(int genNum, int subNum);
+    Q_INVOKABLE QScriptValue generation(int genNum, int subNum);
     Q_INVOKABLE QScriptValue dbAuth(const QString &name);
     Q_INVOKABLE QScriptValue dbAuths();
     Q_INVOKABLE QScriptValue dbAll();
@@ -280,6 +280,7 @@ public:
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE int playersInMemory();
+    Q_INVOKABLE bool exists(int id);
     Q_INVOKABLE bool loggedIn(int id);
 
     Q_INVOKABLE int rand(int min, int max);

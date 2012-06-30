@@ -156,7 +156,7 @@ bool ScriptEngine::testTeamCount(const QString &function, int id, int team)
 
 bool ScriptEngine::testPlayer(const QString &function, int id)
 {
-    if (!loggedIn(id)) {
+    if (!myserver->playerExist(id)) {
         if (function.length() > 0)
             warn(function, QString("No player numbered %1 existing").arg(id));
         return false;
@@ -936,7 +936,7 @@ QScriptValue ScriptEngine::eval(const QString &script)
 
 QScriptValue ScriptEngine::auth(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->auth(id);
@@ -1033,7 +1033,7 @@ int ScriptEngine::dbExpiration()
 
 QScriptValue ScriptEngine::battling(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->battling();
@@ -1042,7 +1042,7 @@ QScriptValue ScriptEngine::battling(int id)
 
 QScriptValue ScriptEngine::away(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->away();
@@ -1051,7 +1051,7 @@ QScriptValue ScriptEngine::away(int id)
 
 QScriptValue ScriptEngine::getColor(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->color().name();
@@ -1116,7 +1116,7 @@ QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
 
 QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
@@ -1125,7 +1125,7 @@ QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
 
 QScriptValue ScriptEngine::ladderEnabled(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->ladder();
@@ -1134,7 +1134,7 @@ QScriptValue ScriptEngine::ladderEnabled(int id)
 
 QScriptValue ScriptEngine::ip(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->ip();
@@ -1143,7 +1143,7 @@ QScriptValue ScriptEngine::ip(int id)
 
 QScriptValue ScriptEngine::proxyIp(int id)
 {
-    if (!myserver->playerLoggedIn(id)) {
+    if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->proxyIp();
@@ -1197,43 +1197,12 @@ QScriptValue ScriptEngine::teamCount(int id)
     }
 }
 
-QString ScriptEngine::generation(int genNum, int subNum)
+QScriptValue ScriptEngine::generation(int genNum, int subNum)
 {
-    if(testRange("generation(genNum, subNum)", genNum, 1, 5) && testRange("generation(genNum, subNum)", subNum, 0, 2)) {
-        if(genNum == 1) {
-            if(subNum == 0)
-                return "Stadium";
-            if(subNum == 1)
-                return "RBY";
-            if(subNum == 2)
-                return "Stadium w/ Tradebacks";
-        }
-        if(genNum == 2) {
-            if(subNum == 0)
-                return "Stadium 2";
-            if(subNum == 1)
-                return "GSC";
-        }
-        if(genNum == 3) {
-            if(subNum == 0)
-                return "Advance";
-            if(subNum == 1)
-                return "RSE 200";
-        }
-        if(genNum == 4) {
-            if(subNum == 0)
-                return "HG/SS";
-            if(subNum == 1)
-                return "DP";
-            if(subNum == 2)
-                return "DPP";
-        }
-        if(genNum == 5) {
-            if(subNum == 0)
-                return "B/W";
-        }
+    if(testRange("generation(genNum, subNum)", genNum, GEN_MIN, GEN_MAX) && testRange("generation(genNum, subNum)", subNum, 0, Gen::nums[genNum] - 1)) {
+        return GenInfo::Version(Pokemon::gen(genNum, subNum));
     }
-    return "Unknown";
+    return myengine.undefinedValue();
 }
 
 QScriptValue ScriptEngine::name(int id)
@@ -1748,6 +1717,11 @@ int ScriptEngine::numPlayers()
 int ScriptEngine::playersInMemory()
 {
     return myserver->myplayers.size();
+}
+
+bool ScriptEngine::exists(int id)
+{
+    return myserver->playerExist(id);
 }
 
 bool ScriptEngine::loggedIn(int id)
