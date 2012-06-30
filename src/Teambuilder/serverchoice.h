@@ -3,6 +3,7 @@
 
 #include "centralwidget.h"
 
+class ServerInfo;
 class Analyzer;
 
 namespace Ui {
@@ -18,14 +19,13 @@ public:
     ~ServerChoice();
 
     void saveSettings();
-public slots:
-    void addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
 signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();
 private slots:
-    void showDetails(int row);
-    void regServerChosen(int row);
+    void serverAdded();
+    void showDetails(const QModelIndex&);
+    void regServerChosen(const QModelIndex&);
     void advServerChosen();
     void connectionError(int , const QString &mess);
     void connected();
@@ -37,8 +37,8 @@ private:
     Ui::ServerChoice *ui;
 
     Analyzer *registry_connection;
+    QSortFilterProxyModel *filter;
 
-    QHash<QString, QString> descriptionsPerIp;
     QList<QStringList> savedServers;
 
     bool wasConnected;

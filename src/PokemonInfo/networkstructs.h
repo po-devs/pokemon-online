@@ -187,4 +187,19 @@ struct ChangeTeamInfo
 
 DataStream & operator >> (DataStream & in, LoginInfo & team);
 
+struct ServerInfo
+{
+    ServerInfo();
+
+    QString name;
+    QString desc;
+    quint16 num;
+    QString ip;
+    quint16 max;
+    quint16 port;
+    bool passwordProtected;
+};
+
+DataStream & operator >> (DataStream & in, ServerInfo & info);
+
 #endif // NETWORKSTRUCTS_H

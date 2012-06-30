@@ -336,11 +336,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         } else {
             // Registry socket;
-            QString servName, servDesc, ip;
-            quint16 numPlayers, max, port;
-            bool passwordProtected;
-            in >> servName >> servDesc >> numPlayers >> ip >> max >> port >> passwordProtected;
-            emit serverReceived(servName, servDesc, numPlayers, ip, max, port, passwordProtected);
+            ServerInfo s;
+            in >> s;
+
+            emit serverReceived(s);
         }
     }
     case Login: {
