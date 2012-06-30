@@ -1,4 +1,4 @@
-No Effect
+﻿No Effect
 
 Good chance for a critical hit.
 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.

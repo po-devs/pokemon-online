@@ -1,4 +1,4 @@
-0:0 Missingno
+﻿0:0 Missingno
 1:0 Bulbasaur
 2:0 Ivysaur
 3:0 Venusaur

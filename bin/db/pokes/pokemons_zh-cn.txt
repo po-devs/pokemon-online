@@ -1,4 +1,4 @@
-0:0 Missingno
+﻿0:0 Missingno
 1:0 妙蛙种子
 2:0 妙蛙草
 3:0 妙蛙花

@@ -1,4 +1,4 @@
-1:0 Stadium
+﻿1:0 Stadium
 1:1 RBY
 1:2 Stadium w/ Tradebacks
 2:0 Stadium 2

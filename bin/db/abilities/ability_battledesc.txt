@@ -1,4 +1,4 @@
-
+﻿
 If this Pokemon is first on your belt, the chance of a wild encounter drops.
 Rain Dance is in effect while this Pokemon is in battle.
 This Pokemon's Speed rises one level every turn.
