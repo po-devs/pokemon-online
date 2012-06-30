@@ -51,7 +51,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
 
     /* Loading mod menu */
-    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QSettings s_mod(appDataPath("Mods") + "/mods.ini", QSettings::IniFormat);
     QStringList mods = s_mod.childGroups();
     QActionGroup *modActionGroup = new QActionGroup(menuBar);
     if (mods.size() > 0) {

@@ -15,24 +15,7 @@ namespace FillMode {
     };
 }
 
-// OS specific paths.
-// Linux: XDG_CONFIG_HOME environment variable (see f.d.o. for details).
-// Windows: APPDATA environment variable.
-// Mac: somewhere in Library.
-// Other: "Mods" in current directory.
-#if defined(Q_OS_MAC)
-        static QString PoModLocalPath = QDir::homePath() + "/Library/Application Support/Pokemon Online/Mods/";
-#elif defined(Q_OS_LINUX)
-        static QString PoModLocalPath = QProcessEnvironment::systemEnvironment().value("XDG_CONFIG_HOME", QDir::homePath() + "/.config")
-              + "/Dreambelievers/Pokemon Online/Mods/";
-#elif defined(Q_OS_WIN32)
-        static QString PoModLocalPath = QProcessEnvironment::systemEnvironment().value("APPDATA", QDir::homePath())
-              + "/Pokemon Online/Mods/";
-#else
-        static QString PoModLocalPath = "Mods/";
-#endif
-
-        static QString PoCurrentModPath;
+static QString PoCurrentModPath;
 
 // Mods are only for files in db/pokes directory.
 inline int fill_count_files(const QString &filename);
