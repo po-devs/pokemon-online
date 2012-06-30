@@ -70,7 +70,7 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
-    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QSettings s_mod(appDataPath("Mods") + "/mods.ini", QSettings::IniFormat);
     QStringList mods = s_mod.childGroups();
     QString modname;
 

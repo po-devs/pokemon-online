@@ -2794,16 +2794,16 @@ QString PokemonInfo::readModDirectory(const QString &modName)
         return ""; // from current directory, mod_db/*
     }
 
-    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
+    QSettings s_mod(appDataPath("Mods") + "/mods.ini", QSettings::IniFormat);
     int mod_id = s_mod.value(modName + "/id", 0).toInt();
     if (mod_id == 0) {
-        return "";
+        return QString();
     } else {
-        QString result = PoModLocalPath + QString::number(mod_id) + "/";
+        QString result = appDataPath("Mods") + "/" + QString::number(mod_id) + "/";
         if (QDir(result).exists()) {
             return result;
         } else {
-            return "";
+            return QString();
         }
     }
 }
