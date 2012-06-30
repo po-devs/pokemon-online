@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#find db -name "*.txt" -exec ./add-bom.sh {} \;;find db -name "*.txt~"
+
 
 set -o nounset
 set -o errexit
@@ -114,20 +116,21 @@ function parseArgs() {
 
 function processFile() {
   if [ $(uname) == "Darwin" ] ; then
-    TEMPFILENAME=$($TMP_CMD $TMP_OPTS)
+#    TEMPFILENAME=$($TMP_CMD $TMP_OPTS)
+    TEMPFILENAME=$1~
   else
-    TEMPFILENAME=$($TMP_CMD $TMP_OPTS"$(dirname "$1")")
+    TEMPFILENAME=$1~
   fi
   echo "Processing $1 using temp file $TEMPFILENAME"
 
 #Convert to utf-8
-  iconv -t utf-8 "$1" -o "$TEMPFILENAME"
+  iconv -t utf-8 "$1" -o "$1~"
 #Remove BOM if there
-  cat "$TEMPFILENAME" | $SED_EXEC '1 s/\xEF\xBB\xBF//' > "$1"
+  cat "$1~" | $SED_EXEC '1 s/\xEF\xBB\xBF//' > "$1"
 #Add BOM
-  cat "$1" | $SED_EXEC '0,/\(\)/ s//\xEF\xBB\xBF\0/' > "$TEMPFILENAME"
+  cat "$1" | $SED_EXEC '0,/\(\)/ s//\xEF\xBB\xBF\0/' > "$1~"
 
-  mv "$TEMPFILENAME" "$1"
+  mv "$1~" "$1"
 }
 
 
