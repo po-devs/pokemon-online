@@ -7,6 +7,9 @@
 class Player;
 class Server;
 class QScrollDownTextBrowser;
+#ifdef USE_WEBCONF
+class RegistryWebInterface;
+#endif
 
 class Registry: public QObject
 {
@@ -39,7 +42,7 @@ private:
     QSet<QString> names;
     QSet<QString> serverAddresses;
 
-    QTcpServer forPlayers;
+    QTcpServer forPlayers[2];
     QHash<int, Player *> players;
 
     QSet<QString> bannedIPs;
@@ -54,6 +57,10 @@ private:
     int linecount;
 
     int freeid() const;
+#ifdef USE_WEBCONF
+    RegistryWebInterface *web_interface;
+    friend class RegistryWebInterface;
+#endif
 };
 
 #endif // REGISTRY_H
