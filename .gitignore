@@ -11,7 +11,6 @@ bin/config*
 bin/logs.txt
 bin/pokemon
 bin/members.txt
-bin/tier_*.txt
 bin/*.dll
 bin/stdout.txt
 bin/serverplugins
@@ -51,3 +50,7 @@ ui_*.h
 *.Release
 # Macs create this file to every folder you go to with the Finder.
 .DS_Store
+
+src/*/release
+src/*/debug
+.autosave
