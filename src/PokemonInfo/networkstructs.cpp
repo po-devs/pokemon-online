@@ -267,4 +267,6 @@ ServerInfo::ServerInfo()
 DataStream & operator >> (DataStream &in, ServerInfo &info)
 {
     in >> info.name >> info.desc >> info.num >> info.ip >> info.max >> info.port >> info.passwordProtected;
+
+    return in;
 }
