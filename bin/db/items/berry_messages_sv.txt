@@ -1,13 +1,13 @@
-%s åt sin %i!
-%s kom ur sin förvirring!|%ss status-återställdes!|%s är inte längre paralyserad!|%ss brännskador läkte!|%s tinade upp!|%s vaknade!|%s är botad från förgiftningen!|%s är botad från förgiftningen!
-%ss %ms PP återställdes!
-%s återställde lite HP!
-%ss %i försvagade %ms styrka!
-%ss %i försvagade %ms styrka!
-%s återställde lite HP
-%i ökade %ss %st!
+ï»¿%s Ã¥t sin %i!
+%s kom ur sin fÃ¶rvirring!|%ss status-Ã¥terstÃ¤lldes!|%s Ã¤r inte lÃ¤ngre paralyserad!|%ss brÃ¤nnskador lÃ¤kte!|%s tinade upp!|%s vaknade!|%s Ã¤r botad frÃ¥n fÃ¶rgiftningen!|%s Ã¤r botad frÃ¥n fÃ¶rgiftningen!
+%ss %ms PP Ã¥terstÃ¤lldes!
+%s Ã¥terstÃ¤llde lite HP!
+%ss %i fÃ¶rsvagade %ms styrka!
+%ss %i fÃ¶rsvagade %ms styrka!
+%s Ã¥terstÃ¤llde lite HP
+%i Ã¶kade %ss %st!
 
-%i ökade skarpt %ss %st!
-%s fokuserar på sitt mål!
-%s planerar redan sitt nästa drag!
+%i Ã¶kade skarpt %ss %st!
+%s fokuserar pÃ¥ sitt mÃ¥l!
+%s planerar redan sitt nÃ¤sta drag!
 %f skadas av rekylen

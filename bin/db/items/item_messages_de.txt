@@ -1,4 +1,4 @@
-(No Item)
+ï»¿(No Item)
 
 
 Schlohkraut neutralisiert Statuswerte von %s !
@@ -10,7 +10,7 @@ Schlohkraut neutralisiert Statuswerte von %s !
 
 
 %s used its power herb to attack immediately!
-Überreste von %s füllte einige KP auf !
+Ãœberreste von %s fÃ¼llte einige KP auf !
 
 
 

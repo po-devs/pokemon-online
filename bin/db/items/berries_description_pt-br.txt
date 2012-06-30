@@ -1,63 +1,63 @@
-Ele pode ser usado ou segurado por um PokÈmon para recuperar da paralisia.
-Ele pode ser usado ou segurado por um PokÈmon para acordar.
-Ele pode ser usado ou segurado por um PokÈmon para recuperar-se de veneno.
-Ele pode ser usado ou segurado por um PokÈmon para se recuperar de uma queimadura.
-Ele pode ser usado ou segurado por um PokÈmon para descongelar ele.
-Ele pode ser usado ou segurado por um PokÈmon para restaurar 10 PP de um ataque.
-Ele pode ser usado ou segurado por um PokÈmon para se curar por apenas 10 HP.
-Ele pode ser usado ou segurado por um PokÈmon para se recuperar de confus„o.
-Ele pode ser usado ou segurado por um PokÈmon para se recuperar de algum problema de status.
-Ele pode ser usado ou segurado por um PokÈmon para curar um pouco do HP.
-Se realizada por um PokÈmon, ele restaura HP do usu·rio um pouco, mas tambÈm pode causar confus„o.
-Se realizada por um PokÈmon, ele restaura HP do usu·rio um pouco, mas tambÈm pode causar confus„o.
-Se realizada por um PokÈmon, ele restaura HP do usu·rio um pouco, mas tambÈm pode causar confus„o.
-Se realizada por um PokÈmon, ele restaura HP do usu·rio um pouco, mas tambÈm pode causar confus„o.
-Se realizada por um PokÈmon, ele restaura HP do usu·rio um pouco, mas tambÈm pode causar confus„o.
-Enterr·-la no solo macio para crescer uma Razz Plant.
-Enterr·-la no solo macio para crescer uma Bluk Plant.
-Enterr·-la no solo macio para crescer uma Plant.
-Enterr·-la no solo macio para crescer uma Wepear Plant.
-Enterr·-la no solo macio para crescer uma Pinap Plant.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas ela tambÈm reduz a sua base de HP.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas ela tambÈm reduz a sua base de Attack.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas tambÈm reduz o sua base de Defesa.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas tambÈm diminui a sua base de Sp. Atk.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas tambÈm diminui a sua base de Sp. Def.
-Us·-lo em um PokÈmon faz com que seja mais amig·vel, mas tambÈm diminui a sua base de Speed.
-Enterr·-la no solo macio para crescer uma Cornn Plant.
-Enterr·-la no solo macio para crescer uma Magost Plant.
-Enterr·-la no solo macio para crescer uma Rabuta Plant.
-Enterr·-la no solo macio para crescer uma Nomel Plant.
-Enterr·-la no solo macio para crescer uma Spelon Plant.
-Enterr·-la no solo macio para crescer uma Pamtre Plant.
-Enterr·-la no solo macio para crescer uma Watmel Plant.
-Enterr·-la no solo macio para crescer uma Durin Plant.
-Enterr·-la no solo macio para crescer uma Belue Plant.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Fogo.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo ¡gua.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo ElÈtrico.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Grama.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Gelo.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Lutador.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Venenoso.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Terra.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Voador.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo PsÌquico.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Inseto.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Pedra.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Fantasma.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Drag„o.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo Noturno.
-Se realizada por um PokÈmon, que enfraquece o ataque do advers·rio Super Efetivo do tipo AÁo
-Se realizada por um PokÈmon, ele aumenta seu status de Ataque um pouco.
-Se realizada por um PokÈmon, ele aumenta seu status de Defesa um pouco.
-Se realizada por um PokÈmon, ele aumenta seu status de velocidade um pouco.
-Se realizada por um PokÈmon, ele aumenta seu status de SP. Atk um pouco.
-Se realizada por um PokÈmon, ele aumenta seu status de SP. Def stat um pouco.
-Se realizada por um PokÈmon, ele aumenta a sua taxa de acerto crÌtico um pouco.
-Se realizada por um PokÈmon, ele aumenta bruscamente uma de seus status um pouco.
-Se realizada por um PokÈmon, ele restaura seu HP se for atingido por um ataque super efetivo do inimigo.
-Se realizada por um PokÈmon, ele aumenta a precis„o de um ataque apenas um pouco e sÛ uma vez.
-Se realizada por um PokÈmon, ele se movimenta primeiro apenas um pouco e sÛ uma vez.
-Se realizada por um PokÈmon, e se o advers·rio usar um ataque fÌsico, o advers·rio tambÈm tem leva o dano.
-Se realizada por um PokÈmon, e se o advers·rio usar um ataque especial, o advers·rio tambÈm leva o dano.
+ÔªøEle pode ser usado ou segurado por um Pok√©mon para recuperar da paralisia.
+Ele pode ser usado ou segurado por um Pok√©mon para acordar.
+Ele pode ser usado ou segurado por um Pok√©mon para recuperar-se de veneno.
+Ele pode ser usado ou segurado por um Pok√©mon para se recuperar de uma queimadura.
+Ele pode ser usado ou segurado por um Pok√©mon para descongelar ele.
+Ele pode ser usado ou segurado por um Pok√©mon para restaurar 10 PP de um ataque.
+Ele pode ser usado ou segurado por um Pok√©mon para se curar por apenas 10 HP.
+Ele pode ser usado ou segurado por um Pok√©mon para se recuperar de confus√£o.
+Ele pode ser usado ou segurado por um Pok√©mon para se recuperar de algum problema de status.
+Ele pode ser usado ou segurado por um Pok√©mon para curar um pouco do HP.
+Se realizada por um Pok√©mon, ele restaura HP do usu√°rio um pouco, mas tamb√©m pode causar confus√£o.
+Se realizada por um Pok√©mon, ele restaura HP do usu√°rio um pouco, mas tamb√©m pode causar confus√£o.
+Se realizada por um Pok√©mon, ele restaura HP do usu√°rio um pouco, mas tamb√©m pode causar confus√£o.
+Se realizada por um Pok√©mon, ele restaura HP do usu√°rio um pouco, mas tamb√©m pode causar confus√£o.
+Se realizada por um Pok√©mon, ele restaura HP do usu√°rio um pouco, mas tamb√©m pode causar confus√£o.
+Enterr√°-la no solo macio para crescer uma Razz Plant.
+Enterr√°-la no solo macio para crescer uma Bluk Plant.
+Enterr√°-la no solo macio para crescer uma Plant.
+Enterr√°-la no solo macio para crescer uma Wepear Plant.
+Enterr√°-la no solo macio para crescer uma Pinap Plant.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas ela tamb√©m reduz a sua base de HP.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas ela tamb√©m reduz a sua base de Attack.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas tamb√©m reduz o sua base de Defesa.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas tamb√©m diminui a sua base de Sp. Atk.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas tamb√©m diminui a sua base de Sp. Def.
+Us√°-lo em um Pok√©mon faz com que seja mais amig√°vel, mas tamb√©m diminui a sua base de Speed.
+Enterr√°-la no solo macio para crescer uma Cornn Plant.
+Enterr√°-la no solo macio para crescer uma Magost Plant.
+Enterr√°-la no solo macio para crescer uma Rabuta Plant.
+Enterr√°-la no solo macio para crescer uma Nomel Plant.
+Enterr√°-la no solo macio para crescer uma Spelon Plant.
+Enterr√°-la no solo macio para crescer uma Pamtre Plant.
+Enterr√°-la no solo macio para crescer uma Watmel Plant.
+Enterr√°-la no solo macio para crescer uma Durin Plant.
+Enterr√°-la no solo macio para crescer uma Belue Plant.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Fogo.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo √Ågua.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo El√©trico.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Grama.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Gelo.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Lutador.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Venenoso.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Terra.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Voador.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Ps√≠quico.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Inseto.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Pedra.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Fantasma.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Drag√£o.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo Noturno.
+Se realizada por um Pok√©mon, que enfraquece o ataque do advers√°rio Super Efetivo do tipo A√ßo
+Se realizada por um Pok√©mon, ele aumenta seu status de Ataque um pouco.
+Se realizada por um Pok√©mon, ele aumenta seu status de Defesa um pouco.
+Se realizada por um Pok√©mon, ele aumenta seu status de velocidade um pouco.
+Se realizada por um Pok√©mon, ele aumenta seu status de SP. Atk um pouco.
+Se realizada por um Pok√©mon, ele aumenta seu status de SP. Def stat um pouco.
+Se realizada por um Pok√©mon, ele aumenta a sua taxa de acerto cr√≠tico um pouco.
+Se realizada por um Pok√©mon, ele aumenta bruscamente uma de seus status um pouco.
+Se realizada por um Pok√©mon, ele restaura seu HP se for atingido por um ataque super efetivo do inimigo.
+Se realizada por um Pok√©mon, ele aumenta a precis√£o de um ataque apenas um pouco e s√≥ uma vez.
+Se realizada por um Pok√©mon, ele se movimenta primeiro apenas um pouco e s√≥ uma vez.
+Se realizada por um Pok√©mon, e se o advers√°rio usar um ataque f√≠sico, o advers√°rio tamb√©m tem leva o dano.
+Se realizada por um Pok√©mon, e se o advers√°rio usar um ataque especial, o advers√°rio tamb√©m leva o dano.

@@ -1,6 +1,6 @@
-fine
+﻿fine
 paralysiert
-schl�ft
+schläft
 froren
 brennteinge
 vergiftet

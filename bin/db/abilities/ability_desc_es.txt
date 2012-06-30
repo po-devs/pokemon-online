@@ -1,18 +1,18 @@
-
+Ôªø
 Es posible que el rival retroceda por el mal olor.
 Hace que llueva cuando entra en combate.
 Aumenta la Velocidad gradualmente.
-Bloquea golpes crÌticos.
+Bloquea golpes cr√≠ticos.
 Evita que el rival pueda debilitar de un solo golpe.
-Evita que un PokÈmon pueda autodestruirse.
+Evita que un Pok√©mon pueda autodestruirse.
 Evita ser paralizado.
-Aumenta la EvasiÛn en las tormentas de arena.
-Puede paralizar al mÌnimo contacto.
-Recupera PS al recibir ataques elÈctricos.
+Aumenta la Evasi√≥n en las tormentas de arena.
+Puede paralizar al m√≠nimo contacto.
+Recupera PS al recibir ataques el√©ctricos.
 Recupera PS al recibir ataques de tipo Agua.
-Evita que el PokÈmon se enamore.
-Anula los efectos del tiempo atmosfÈrico.
-Aumenta la PrecisiÛn del PokÈmon.
+Evita que el Pok√©mon se enamore.
+Anula los efectos del tiempo atmosf√©rico.
+Aumenta la Precisi√≥n del Pok√©mon.
 Evita el quedarse dormido.
 Cambia el tipo al del movimiento rival.
 Evita el envenenamiento.
@@ -23,41 +23,41 @@ Anula movs. y objetos que fuerzan el relevo.
 Baja el Ataque del rival.
 Evita que el enemigo huya.
 Hiere al tacto.
-Solo hacen daÒo los movimientos muy eficaces.
+Solo hacen da√±o los movimientos muy eficaces.
 Da inmunidad frente a los ataques de tipo Tierra.
 Puede dormir, envenenar o paralizar al contacto.
-Contagia envenenamiento, par·lisis o quemaduras.
-Evita que bajen las caracterÌsticas.
-Cura problemas de estado al cambiar de PokÈmon.
-Aumenta el At. Esp. ante movs. de tipo ElÈctrico.
+Contagia envenenamiento, par√°lisis o quemaduras.
+Evita que bajen las caracter√≠sticas.
+Cura problemas de estado al cambiar de Pok√©mon.
+Aumenta el At. Esp. ante movs. de tipo El√©ctrico.
 Aumenta la probabilidad de efectos secundarios.
 Sube la Velocidad cuando hay lluvia.
 Sube la Velocidad cuando hay sol.
-Aumenta la probabilidad de encontrar PokÈmon.
-El PokÈmon copia la habilidad del rival.
+Aumenta la probabilidad de encontrar Pok√©mon.
+El Pok√©mon copia la habilidad del rival.
 Aumenta el Ataque.
-Puede envenenar al mÌnimo contacto.
+Puede envenenar al m√≠nimo contacto.
 Evita el retroceso.
-Evita la congelaciÛn.
+Evita la congelaci√≥n.
 Evita las quemaduras.
-Impide huir a los PokÈmon de tipo Acero.
+Impide huir a los Pok√©mon de tipo Acero.
 Evita ataques de sonido.
-El PokÈmon gana PS gradualmente si llueve.
+El Pok√©mon gana PS gradualmente si llueve.
 Crea una tormenta de arena en el combate.
 Hace que los PP del rival se acaben antes.
-Aten˙a los ataques de tipo Fuego y Hielo.
-El PokÈmon se despierta r·pidamente.
-Puede quemar al mÌnimo contacto.
-Permite escapar de todos los PokÈmon salvajes.
-Evita que disminuya la PrecisiÛn.
+Aten√∫a los ataques de tipo Fuego y Hielo.
+El Pok√©mon se despierta r√°pidamente.
+Puede quemar al m√≠nimo contacto.
+Permite escapar de todos los Pok√©mon salvajes.
+Evita que disminuya la Precisi√≥n.
 Evita que disminuya el Ataque.
-El PokÈmon puede encontrar objetos.
-El PokÈmon no atacar· en turnos consecutivos.
-Aumenta el Ataque, pero reduce la PrecisiÛn.
-Tocar al PokÈmon puede causar enamoramiento.
-Potencia el At. Esp. si otro tiene M·s o Menos.
-Potencia el At. Esp. si otro tiene M·s o Menos.
-Se transforma con el tiempo atmosfÈrico.
+El Pok√©mon puede encontrar objetos.
+El Pok√©mon no atacar√° en turnos consecutivos.
+Aumenta el Ataque, pero reduce la Precisi√≥n.
+Tocar al Pok√©mon puede causar enamoramiento.
+Potencia el At. Esp. si otro tiene M√°s o Menos.
+Potencia el At. Esp. si otro tiene M√°s o Menos.
+Se transforma con el tiempo atmosf√©rico.
 Impide el robo de objetos.
 Cura los problemas de estado mudando la piel.
 Sube el Ataque si sufre un problema de estado.
@@ -67,87 +67,87 @@ Potencia los ataques de tipo Planta en un apuro.
 Potencia los ataques de tipo Fuego en un apuro.
 Potencia los ataques de tipo Agua en un apuro.
 Potencia los ataques de tipo Bicho en un apuro.
-Impide que el PokÈmon se daÒe con sus movs.
-El sol sale si el PokÈmon entra en combate.
+Impide que el Pok√©mon se da√±e con sus movs.
+El sol sale si el Pok√©mon entra en combate.
 Evita que el rival huya.
 Evita el quedarse dormido.
-Evita que bajen las caracterÌsticas.
+Evita que bajen las caracter√≠sticas.
 Aumenta el Ataque.
-Impide recibir daÒo crÌtico.
-Anula los efectos del tiempo atmosfÈrico.
-Sube la EvasiÛn si el PokÈmon est· confuso.
-Sube la Velocidad si le da un ataque elÈctrico.
-Si el objetivo es del mismo sexo, inflige m·s daÒo.
+Impide recibir da√±o cr√≠tico.
+Anula los efectos del tiempo atmosf√©rico.
+Sube la Evasi√≥n si el Pok√©mon est√° confuso.
+Sube la Velocidad si le da un ataque el√©ctrico.
+Si el objetivo es del mismo sexo, inflige m√°s da√±o.
 Cada vez que retrocede sube su Velocidad.
-Sube la EvasiÛn durante una tormenta de granizo.
-Fomenta el uso r·pido de la Baya que porte.
-Sube el Ataque al m·ximo tras un golpe crÌtico.
+Sube la Evasi√≥n durante una tormenta de granizo.
+Fomenta el uso r√°pido de la Baya que porte.
+Sube el Ataque al m√°ximo tras un golpe cr√≠tico.
 Sube la Veloc. si usa o pierde un objeto llevado.
-Aten˙a los movimientos de tipo Fuego.
-Aumenta los cambios en las caracterÌsticas.
+Aten√∫a los movimientos de tipo Fuego.
+Aumenta los cambios en las caracter√≠sticas.
 Pierde PS si hace calor. Los recupera con agua.
 Adapta su fuerza para cada rival.
-Aumenta la fuerza de los puÒetazos.
-Recupera PS si el PokÈmon ha sido envenenado.
+Aumenta la fuerza de los pu√±etazos.
+Recupera PS si el Pok√©mon ha sido envenenado.
 Potencia los movimientos del mismo tipo.
-Aumenta la frecuencia de los movimientos m˙ltiples.
-Cura los problemas de estado si est· lloviendo.
+Aumenta la frecuencia de los movimientos m√∫ltiples.
+Cura los problemas de estado si est√° lloviendo.
 Si hace sol, baja los PS, pero potencia el At. Esp.
 Potencia la Velocidad si hay problemas de estado.
 Todos los movimientos se vuelven de tipo Normal.
-Potencia los movimientos si se vuelven crÌticos.
-Solo daÒan al PokÈmon los ataques directos.
-El movimiento del PokÈmon y el del rival acertar·n.
-El PokÈmon se mueve tras todos los dem·s.
-Potencia los movimientos m·s dÈbiles del PokÈmon.
+Potencia los movimientos si se vuelven cr√≠ticos.
+Solo da√±an al Pok√©mon los ataques directos.
+El movimiento del Pok√©mon y el del rival acertar√°n.
+El Pok√©mon se mueve tras todos los dem√°s.
+Potencia los movimientos m√°s d√©biles del Pok√©mon.
 Evita los problemas de estado si hace sol.
-El PokÈmon no puede usar objetos equipados.
+El Pok√©mon no puede usar objetos equipados.
 Usa movimientos sin que importen las habilidades.
-Aumenta la probabilidad de dar golpes crÌticos.
-DaÒa al agresor que le ha dado el golpe de gracia.
-PrevÈ los movimientos peligrosos del rival.
-Determina el movimiento m·s potente del rival.
-Ignora mejoras en las caracterÌsticas del rival.
+Aumenta la probabilidad de dar golpes cr√≠ticos.
+Da√±a al agresor que le ha dado el golpe de gracia.
+Prev√© los movimientos peligrosos del rival.
+Determina el movimiento m√°s potente del rival.
+Ignora mejoras en las caracter√≠sticas del rival.
 Potencia los movimientos poco eficaces.
 Mitiga los movimientos supereficaces.
 Baja a la mitad el Ataque y la Velocidad por un tiempo.
-Movs. tipo Lucha y Normal golpean PokÈmon Fantasma.
+Movs. tipo Lucha y Normal golpean Pok√©mon Fantasma.
 Atrae agua para aumentar el At. Esp.
 Recupera algunos PS en tormentas de granizo.
 Mitiga los movimientos supereficaces.
-El PokÈmon invoca una tormenta de granizo.
-El PokÈmon recoge Miel de donde puede.
-El PokÈmon puede ver el objeto que lleva el rival.
-Potencia los movimientos que daÒan al usuario.
+El Pok√©mon invoca una tormenta de granizo.
+El Pok√©mon recoge Miel de donde puede.
+El Pok√©mon puede ver el objeto que lleva el rival.
+Potencia los movimientos que da√±an al usuario.
 Cambia el tipo al de la Tabla que lleve.
-Potencia los PokÈmon del equipo si est· soleado.
+Potencia los Pok√©mon del equipo si est√° soleado.
 Reduce los PS de un rival mientras duerme.
 Al ser golpeado, roba el objeto del objetivo.
 Sube la potencia y anula los efectos secundarios.
-Invierte los cambios en las caracterÌsticas.
+Invierte los cambios en las caracter√≠sticas.
 Pone nervioso al rival y le impide usar Bayas.
-Sube el Ataque si bajan las caracterÌsticas.
-Baja las caracterÌsticas al llegar a la mitad los PS.
+Sube el Ataque si bajan las caracter√≠sticas.
+Baja las caracter√≠sticas al llegar a la mitad los PS.
 Puede anular el movimiento usado en su contra.
 Puede curar los cambios de estado de aliados vecinos.
-Reduce el daÒo que sufren los aliados.
-Un ataque fÌsico baja la Defensa y sube la Veloc.
-Duplica el peso del PokÈmon.
-Reduce a la mitad el peso del PokÈmon.
-Reduce el daÒo sufrido si los PS est·n al m·ximo.
-Aumenta la potencia fÌsica si est· envenenado.
+Reduce el da√±o que sufren los aliados.
+Un ataque f√≠sico baja la Defensa y sube la Veloc.
+Duplica el peso del Pok√©mon.
+Reduce a la mitad el peso del Pok√©mon.
+Reduce el da√±o sufrido si los PS est√°n al m√°ximo.
+Aumenta la potencia f√≠sica si est√° envenenado.
 Potencia el Ataque Especial al ser quemado.
 Permite reutilizar varias veces una misma Baya.
 Elude los ataques de aliados en batalla.
-Sube una caracterÌstica mucho, pero baja otra.
-Anula los daÒos causados por el tiempo atmosfÈrico.
+Sube una caracter√≠stica mucho, pero baja otra.
+Anula los da√±os causados por el tiempo atmosf√©rico.
 Puede envenenar al objetivo con solo tocarlo.
-Recupera unos pocos PS al cambiar de PokÈmon.
+Recupera unos pocos PS al cambiar de Pok√©mon.
 Protege de los ataques que bajan la Defensa.
 Aumenta la Velocidad en tormentas de arena.
 Dificulta que le afecten los ataques de estado.
-Potencia el movimiento si es el ˙ltimo en atacar.
-Se convierte en el ˙ltimo PokÈmon del equipo.
+Potencia el movimiento si es el √∫ltimo en atacar.
+Se convierte en el √∫ltimo Pok√©mon del equipo.
 Se transforma en el que tiene enfrente.
 Ataca rodeando la barrera del rival.
 Contagia Momia al rival que lo toque.
@@ -158,8 +158,8 @@ Permite devolver los ataques de estado.
 Sube el Ataque al recibir uno de tipo Planta.
 Permite lanzar primero un ataque de estado.
 Potencia algunos movimientos en tormentas de arena.
-El PokÈmon que lo toque recibe daÒo.
+El Pok√©mon que lo toque recibe da√±o.
 Cambia de forma en un apuro.
-Sube la PrecisiÛn de todo el equipo.
+Sube la Precisi√≥n de todo el equipo.
 Usa movimientos sin que importen las habilidades.
 Usa movimientos sin que importen las habilidades.

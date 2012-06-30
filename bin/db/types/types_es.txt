@@ -1,4 +1,4 @@
-Normal
+ï»¿Normal
 Lucha
 Volador
 Veneno
@@ -11,8 +11,8 @@ Fuego
 Agua
 Planta
 Electrico
-Psíquico
+PsÃ­quico
 Hielo
-Dragón
+DragÃ³n
 Siniestro
 ???

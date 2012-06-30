@@ -1,48 +1,48 @@
-
+ï»¿
 
 Boom Final du %s blesse %f!
-%s est vraiment frustré!
+%s est vraiment frustrÃ©!
 Anticipation du %s le fait trembler!
 
-%f est tourmenté par Mauvais Rêve!
+%f est tourmentÃ© par Mauvais RÃªve!
 
 
-Déguisement du %s le change pour le type %t!
+DÃ©guisement du %s le change pour le type %t!
 
-%f tombe amoureux de %s à cause de Joli Sourire!
-Attention du %s l'empêche d'avoir peur!
-Télécharge du %s s'active!
-Alerte Neige du %s provoque une tempête de grêle!|Crachin du %s fait tomber la pluie!|Sable Volant du %s provoque une tempête de sable!|Sécheresse du %s intensifie les rayons du soleil!
-%s récupère des PV grâce à Peau Sèche!|Peau Sèche du %s lui fait perdre des PV!
+%f tombe amoureux de %s Ã  cause de Joli Sourire!
+Attention du %s l'empÃªche d'avoir peur!
+TÃ©lÃ©charge du %s s'active!
+Alerte Neige du %s provoque une tempÃªte de grÃªle!|Crachin du %s fait tomber la pluie!|Sable Volant du %s provoque une tempÃªte de sable!|SÃ©cheresse du %s intensifie les rayons du soleil!
+%s rÃ©cupÃ¨re des PV grÃ¢ce Ã  Peau SÃ¨che!|Peau SÃ¨che du %s lui fait perdre des PV!
 Pose Spore du %s s'active!
 
 %s's %a s'active!
-Torche de%s augmente la puissance des ses capacités de type Feu!|Torche du %s rend %m inefficace!
+Torche de%s augmente la puissance des ses capacitÃ©s de type Feu!|Torche du %s rend %m inefficace!
 
 %s change son type pour %t!
-Prédiction du %s l'avertit de %m!
-Fouille du %s lui dévoile %i tenu!
-Ecran Poudre du %s empêche le cumul d'effets!
+PrÃ©diction du %s l'avertit de %m!
+Fouille du %s lui dÃ©voile %i tenu!
+Ecran Poudre du %s empÃªche le cumul d'effets!
 
 
 
 
-Hydratation du %s le guéri de son altération de statut!
-%a du %s empêche la diminution de stats!
-%a du %s a empêché ses stats d'être diminués!
+Hydratation du %s le guÃ©ri de son altÃ©ration de statut!
+%a du %s empÃªche la diminution de stats!
+%a du %s a empÃªchÃ© ses stats d'Ãªtre diminuÃ©s!
 %a du %s lui restaure des PV!
-%a du %s le guérit!
-%s intimide %f!|Le clone du %f empêche Intimidation du %s de fonctionner!
+%a du %s le guÃ©rit!
+%s intimide %f!|Le clone du %f empÃªche Intimidation du %s de fonctionner!
 
 
-Feuille Garde du %s bloque les altérations de statut!
-%a du %s reçoit l'attaque!
+Feuille Garde du %s bloque les altÃ©rations de statut!
+%a du %s reÃ§oit l'attaque!
 
 %s a Brise Moule!
-Motorisé du %s augmente sa stat Vitesse!
+MotorisÃ© du %s augmente sa stat Vitesse!
 
 
-Tempo Perso du %s l'empêche d'être confus!
+Tempo Perso du %s l'empÃªche d'Ãªtre confus!
 Soin Poison du %s lui restaure des PV!
 %s exerce Pression!
 
@@ -53,8 +53,8 @@ Peau Dure du %s blesse %f!
 
 
 %s's Mue soigne le statut!
-%s ne peut pas bouger à cause de Début Calme!|%s retrouve enfin ses facultés!
-%s a perdu quelques PV à cause de Force Soleil
+%s ne peut pas bouger Ã  cause de DÃ©but Calme!|%s retrouve enfin ses facultÃ©s!
+%s a perdu quelques PV Ã  cause de Force Soleil
 %s's Anti Bruit bloque l'attaque!
 %s's Turbo augmente sa vitesse!
 
@@ -69,7 +69,7 @@ Peau Dure du %s blesse %f!
 
 
 %s's %a absorbe l'attaque!|%s's %a rend l'attaque inutile!
-%s's Garde Magic déjoue the l'attaque!
+%s's Garde Magic dÃ©joue the l'attaque!
 
 
 

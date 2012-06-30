@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #find db -name "*.txt" -exec ./add-bom.sh {} \;;find db -name "*.txt~"
-
+#find db -name "*.txt~" -exec rm {} \;
 
 set -o nounset
 set -o errexit
@@ -124,7 +124,7 @@ function processFile() {
   echo "Processing $1 using temp file $TEMPFILENAME"
 
 #Convert to utf-8
-  iconv -t utf-8 "$1" -o "$1~"
+  (iconv -t utf-8 "$1" -o "$1~" || iconv -f iso−8859−1 -t utf-8 "$1" -o "$1~")
 #Remove BOM if there
   cat "$1~" | $SED_EXEC '1 s/\xEF\xBB\xBF//' > "$1"
 #Add BOM
