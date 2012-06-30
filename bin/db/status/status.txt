@@ -1,4 +1,4 @@
-fine
+﻿fine
 paralyzed
 asleep
 frozen

@@ -1,4 +1,4 @@
-Kraftpunkte
+﻿Kraftpunkte
 Angriff
 Verteidigung
 Sp. Angriff

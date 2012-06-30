@@ -1,4 +1,4 @@
-%s ate its %i!
+﻿%s ate its %i!
 %s snapped out of its confusion!|%s's status cleared!|%s is not paralyzed anymore!|%s woke up!|%s thawed out!|%s healed from its burnt!|%s is cured from its poison!
 %s's %m's PPs are restored!
 %s restored some HP!

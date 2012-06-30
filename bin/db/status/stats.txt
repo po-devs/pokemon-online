@@ -1,4 +1,4 @@
-Life Points
+﻿Life Points
 Attack
 Defense
 Sp. Att.

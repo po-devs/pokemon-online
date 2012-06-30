@@ -1,4 +1,4 @@
-0:0 (Kein Pokémon)
+﻿0:0 (Kein Pokémon)
 1:0 Bisasam
 2:0 Bisaknosp
 3:0 Bisaflor

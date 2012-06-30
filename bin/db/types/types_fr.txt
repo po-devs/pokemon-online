@@ -1,4 +1,4 @@
-Normal
+﻿Normal
 Combat
 Vol
 Poison

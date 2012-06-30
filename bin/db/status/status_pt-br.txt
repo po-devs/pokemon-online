@@ -1,4 +1,4 @@
-normal
+﻿normal
 paralizado
 dormindo
 congelado

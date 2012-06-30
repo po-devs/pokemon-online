@@ -1,4 +1,4 @@
-0:0 Missingno
+﻿0:0 Missingno
 1:0 Bulbizarre
 2:0 Herbizarre
 3:0 Florizarre

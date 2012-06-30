@@ -1,4 +1,4 @@
-(No Description)
+﻿(No Description)
 Pounds the foe with forelegs or tail.
 A chopping attack with a high critical-hit ratio.
 Repeatedly slaps the foe 2 to 5 times.
