@@ -1004,7 +1004,7 @@ void Server::processLoginDetails(Player *p)
         //printLine(tr("Adding a player, count: %1").arg(numberOfPlayersLoggedIn));
     }
 
-    if (!p->state()[Player::WaitingReconnect]) {
+    if (!p->state()[Player::WaitingReconnect] && !wasLoggedIn) {
         /* Makes the player join the default channel */
         if (! (p->loginInfo() && p->loginInfo()->channel && joinRequest(p->id(), *p->loginInfo()->channel)))  {
             joinChannel(id, 0);
