@@ -245,12 +245,17 @@ void ScriptEngine::serverShutDown()
 
 bool ScriptEngine::beforeLogIn(int src)
 {
-    return makeSEvent("beforeLogIn", src);
+    bool login = makeSEvent("beforeLogIn", src);
+
+    if (login && exists(src)) {
+        mySessionDataFactory->handleUserLogIn(src);
+    }
+
+    return login;
 }
 
 void ScriptEngine::afterLogIn(int src)
 {
-    mySessionDataFactory->handleUserLogIn(src);
     makeEvent("afterLogIn", src);
 }
 
