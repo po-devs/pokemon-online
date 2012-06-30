@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
         /* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokemon-Online");
         QCoreApplication::setOrganizationName("Dreambelievers");
+        QCoreApplication::setApplicationVersion("2.0.00");
 
         QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 

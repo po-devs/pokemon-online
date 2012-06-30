@@ -548,6 +548,7 @@ void Channel::cleanTier(QTreeWidgetItem *tier)
 
 void Channel::cleanData()
 {
+    ownPlayers.clear();
     myplayers->clear();
     myplayersitems.clear();
     mytiersitems.clear();
