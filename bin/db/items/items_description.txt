@@ -1,10 +1,10 @@
-
+ï»¿
 Portion of HP recovered increases when using HP-stealing moves
 When Attached, Raises Beauty Stat in Super Contests
 Raises Evasiveness
-Boosts Attack by x1.5, but only allows the use of one attack until the Pokémon is called back
-Raises Speed by x1.5, but only allows the use of one attack until the Pokémon is called back
-Raises Sp. Attack by x1.5, but only allows the use of one attack until the Pokémon is called back
+Boosts Attack by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
+Raises Speed by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
+Raises Sp. Attack by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
 If user becomes infatuated, foe becomes infatuated as well
 Slightly raises power of Super Effective moves
 May prevent fainting by leaving the user with 1 HP from a KOing move
@@ -21,7 +21,7 @@ Slightly raises power of Physical moves
 Raises power of Psychic attacks
 When attached, raises Cute stat in Super Contests
 Allows user to omit first turn of charge-up required moves; can only be used once
-Lowers encounter rate of wild Pokémon if equipped to first Pokémon of party
+Lowers encounter rate of wild PokÃ©mon if equipped to first PokÃ©mon of party
 If attached to Ditto, its Defense and Sp. Defense are raised by x2
 Evolves Dusclops into Dusknoir when equipped and traded
 When attached, raises Cool stat in Super Contests
@@ -41,109 +41,109 @@ Slightly raises power of special moves
 When attached, raises Tough stat in Super Contests
 Accuracy increases if user is attacked by foe first in a turn
 Double Money is Earnt from Battles
-Cures one Pokémon of the Poison status effect
-Awakens one Pokémon with the Sleep status effect
+Cures one PokÃ©mon of the Poison status effect
+Awakens one PokÃ©mon with the Sleep status effect
 Recovers 20 HP
 Rare Pearl. Sells high. 
 Rare Mushroom. Sells high. 
 Any Fighting-type move's power is increased by 10%
-Lowers Wild Pokémon Encounter Rate
+Lowers Wild PokÃ©mon Encounter Rate
 Gradually recovers HP of Poison type holders; lowers HP for all others
 Any Dark Type Move's Power is increased by 10%
 Heals from Sleep
 A shard of a bigger plate
-Cures one Pokémon of the Burn status effect
-Raises a single Pokémon's base Special Attack stat
-Raises a single Pokémon's base Speed stat
+Cures one PokÃ©mon of the Burn status effect
+Raises a single PokÃ©mon's base Special Attack stat
+Raises a single PokÃ©mon's base Speed stat
 Any Fire-type move's power is increased by 10%
-Wild Pokémon Encounter Rate Lowers if holder is first in the party
+Wild PokÃ©mon Encounter Rate Lowers if holder is first in the party
 Slows Berry Growth. Slows Soil Drying
 Clamperl's Special Defense increases by x2
 Critical Hit Ratio is Raised
 Evolves Seadra into Kingdra when equipped and traded
-Restores 10 PP to every move of a selected Pokémon
-Restores 200 HP to one Pokémon; it has a bitter taste
-Restores 50 HP to one Pokémon; it has a bitter taste
+Restores 10 PP to every move of a selected PokÃ©mon
+Restores 200 HP to one PokÃ©mon; it has a bitter taste
+Restores 50 HP to one PokÃ©mon; it has a bitter taste
 Returns you to outside Caves
-Restores 10 PP to one Pokémon's selected move
+Restores 10 PP to one PokÃ©mon's selected move
 Prevents user from evolving when equipped
-This Pokémon gets EXP from battle even if it isnt used when equipped
+This PokÃ©mon gets EXP from battle even if it isnt used when equipped
 A stone that can be used to evolve Growlithe, Vulpix and Eevee
 Induces Burn status to holder
-Distracts Wild Pokémon so you can Flee
-Restores 50 HP to one Pokémon
-Cures one Pokémon of any status effect
-Restores all HP to one Pokémon and cures them of any status effects
+Distracts Wild PokÃ©mon so you can Flee
+Restores 50 HP to one PokÃ©mon
+Cures one PokÃ©mon of any status effect
+Restores all HP to one PokÃ©mon and cures them of any status effects
 Increases amount of plant growing where plants failed
 A shard of a bigger plate
 Speeds Berry Growth. Speeds Soil Drying
 Stats cannot be lowered
-Cures one Pokémon of any status effect; it has a bitter taste
+Cures one PokÃ©mon of any status effect; it has a bitter taste
 A rare scale. Sells High
-Smear on trees to lure Wild Pokémon
-Raises a single Pokémon's base HP
-Restores 200 HP to one Pokémon
-Defrosts one Pokémon with the Frozen status condition
-Raises a single Pokémon's base Defense stat
+Smear on trees to lure Wild PokÃ©mon
+Raises a single PokÃ©mon's base HP
+Restores 200 HP to one PokÃ©mon
+Defrosts one PokÃ©mon with the Frozen status condition
+Raises a single PokÃ©mon's base Defense stat
 May cause opponent to Flinch
-Cures one Pokémon of any status effect
+Cures one PokÃ©mon of any status effect
 A stone that can be used to evolve Gloom, Weepinbell, Exeggcute, and Nuzleaf
-Restores 80 HP to one Pokémon
+Restores 80 HP to one PokÃ©mon
 Increases attack damage but decreases HP whenever you deal damage
 Pikachu's Special Attack increases by x2
 Prolongs effect of Reflect and Light Screen
-Pokémon this item is attached to gets more EXP in battle
+PokÃ©mon this item is attached to gets more EXP in battle
 Any Electric-type move's power is increased by 10%
-Restores all PP to every move of a selected Pokémon
-Restores all PP to one move of a selected Pokémon
-Restores all HP to one Pokémon
-Repels Pokémon for 250 Steps
-Revives a fainted Pokémon and fully restores it's HP
+Restores all PP to every move of a selected PokÃ©mon
+Restores all PP to one move of a selected PokÃ©mon
+Restores all HP to one PokÃ©mon
+Repels PokÃ©mon for 250 Steps
+Revives a fainted PokÃ©mon and fully restores it's HP
 Any Steel-type move's power is increased by 10%
 Raises power of move if used consecutively
 Any Grass-type move's power is increased by 10%
-Restores 100 HP to one Pokémon
+Restores 100 HP to one PokÃ©mon
 A stone that can be used to evolve Nidorina, Nidorino, Clefairy, Jigglypuff and Skitty
 Any Water-type move's power is increased by 10%
 Any Ice-type move's power is increased by 10%
 Sells High
-Cures one Pokémon of any status effect
-Cures one Pokémon of the Paralyze status effect
+Cures one PokÃ©mon of any status effect
+Cures one PokÃ©mon of the Paralyze status effect
 Rare Pearl. Sells high. 
-Distracts Wild Pokémon
-Restores 20 HP to one Pokémon
-Maximizes the PP of one move of a selected Pokémon
-Raises the maximum PP for one move of a selected Pokémon
-Raises a single Pokémon's base Attack stat
-Raises a single Pokémon's Level by one
+Distracts Wild PokÃ©mon
+Restores 20 HP to one PokÃ©mon
+Maximizes the PP of one move of a selected PokÃ©mon
+Raises the maximum PP for one move of a selected PokÃ©mon
+Raises a single PokÃ©mon's base Attack stat
+Raises a single PokÃ©mon's Level by one
 Raises chance of causing the foe to Flinch
 Heals from Attraction
 A shard of a bigger plate
-Repels Pokémon for 50 Steps
-Revives a fainted Pokémon and fully restores it's HP; has a bitter taste
-Revives a fainted Pokémon and restores half of it's max HP
-Revives all fainted Pokémon and fully restores their HP
+Repels PokÃ©mon for 50 Steps
+Revives a fainted PokÃ©mon and fully restores it's HP; has a bitter taste
+Revives a fainted PokÃ©mon and restores half of it's max HP
+Revives all fainted PokÃ©mon and fully restores their HP
 Increases chances of landing a Critical Hit
 User restores 1/8th of maximum HP when damage is inflicted onto the opponent
 When equipped, the user recovers a small amount of HP every turn.
 Has no effect or purpose in the Sinnoh region; useful only in the Hoenn region.
-You will always run from Wild Pokémon without fail
-Restores 60 HP to one Pokémon
+You will always run from Wild PokÃ©mon without fail
+Restores 60 HP to one PokÃ©mon
 Raises Latios & Latias' Sp. Attack and Sp. Defense by 50%.
 Any Ghost-type move's power is increased by 10%
 Increases time Berries stay on trees
 Rare Star Piece. Sells high. 
 Pretty Dust. Sells Low
 A stone that can be used to evolve Gloom and Sunkern
-Restores 500 HP to one Pokémon
-Repels Pokémon for 150 Steps
+Restores 500 HP to one PokÃ©mon
+Repels PokÃ©mon for 150 Steps
 A stone that can be used to evolve Pikachu and Eevee
 A small mushroom. Sell low. 
 Induces Poison status to holder
 Any Psychic-type move's power is increased by 10%
 Evolves Porygon into Porygon2 when equipped and traded
 A stone that can be used to evolve Poliwhirl, Shellder, Staryu, Eevee and Lombre
-Increases Wild Pokémon Rate
+Increases Wild PokÃ©mon Rate
 Accuracy Is Raised
 Attack Is Raised
 Defense Is Raised
@@ -152,7 +152,7 @@ Special Defense Is Raised
 Speed Is Raised
 Heals from Confusion
 A shard of a bigger plate
-Raises a single Pokémon's base Special Defense stat
+Raises a single PokÃ©mon's base Special Defense stat
 Prolongs number of turns of Hail
 If attached to Chansey, Critical Hit ratio rises
 Evolves Porygon2 into Porygon-Z when equipped and traded
@@ -178,7 +178,7 @@ Evolves Magmar into Magmortar when equipped and traded
 A vital item to keep the Stone Tower from Collapsing. Used to call Spiritomb
 Evolves Happiny into Chansey when equipped and leveled at Morning or Day (4:00am - 7:59pm)
 Evolves Rhydon into Rhyperior when equipped and traded
-The Pokémon holding this may attack first
+The PokÃ©mon holding this may attack first
 Evolves Sneasel into Weavile when equipped and leveled up at Night (8:00pm - 4:00am)
 Evolves Togetic and Roselia into Togekiss and Roserade when equipped and leveled up
 When equipped, the user receives damage every turn; the opponent will receive damage every turn instead if they use a physical attack
@@ -210,7 +210,7 @@ Revives into Aerodactyle
 A Valuable Bone. Sell for money
 Revives into Lileep
 Revives into Cranidos
-Lowers speed of holder, also makes Flying-types and Levitate Ability using Pokémon vulnerable to Ground moves when equipped to them
+Lowers speed of holder, also makes Flying-types and Levitate Ability using PokÃ©mon vulnerable to Ground moves when equipped to them
 Air Mail
 Bloom Mail
 Brick Mail

@@ -1,4 +1,4 @@
-Baya Zreza
+﻿Baya Zreza
 Baya Atania
 Baya Meloc
 Baya Safre
@@ -48,7 +48,7 @@ Baya Alcho
 Baya Drasi
 Baya Anjiro
 Baya Dillo
-Baya Barib�
+Baya Baribá
 Baya Chilan
 Baya Lichi
 Baya Gonlan

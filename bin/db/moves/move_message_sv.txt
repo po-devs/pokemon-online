@@ -1,18 +1,18 @@
-
-%f fick sin energi dränerad!|%s förtärde %fs drömmar!|%s tar skada från %fs Liquid Ooze!En ring av vatten omringar %s!|Aquaring återhämtade %ss hp lite grann.En lugnande arom spred sig i området!|En klocka ringde!
+ï»¿
+%f fick sin energi drÃ¤nerad!|%s fÃ¶rtÃ¤rde %fs drÃ¶mmar!|%s tar skada frÃ¥n %fs Liquid Ooze!En ring av vatten omringar %s!|Aquaring Ã¥terhÃ¤mtade %ss hp lite grann.En lugnande arom spred sig i omrÃ¥det!|En klocka ringde!
 
 
 
 %q attackerade!
-%s har inte tillräckligt med energi kvar!|%s offrade sin egen HP och maximerade sin styrka!
-%s lagrar energi!|%s släppte lös energi!
-%s skadades av %m!|%s är fri från %m!|%f fastnade inom svirlande magma!
-%s måste ladda!
-%f kan inte fly längre!
-%s språngade upp!|%s grävde ned sig under jorden!|%s gömde sig undervattens!|%s flög högt upp mot skyn!|%s försvann omedelbart!
+%s har inte tillrÃ¤ckligt med energi kvar!|%s offrade sin egen HP och maximerade sin styrka!
+%s lagrar energi!|%s slÃ¤ppte lÃ¶s energi!
+%s skadades av %m!|%s Ã¤r fri frÃ¥n %m!|%f fastnade inom svirlande magma!
+%s mÃ¥ste ladda!
+%f kan inte fly lÃ¤ngre!
+%s sprÃ¥ngade upp!|%s grÃ¤vde ned sig under jorden!|%s gÃ¶mde sig undervattens!|%s flÃ¶g hÃ¶gt upp mot skyn!|%s fÃ¶rsvann omedelbart!
 %s splittrades %tfs lag skyddade!
 
-%s åt %fs %i!
+%s Ã¥t %fs %i!
 %s transformerades till %t typen!
 %s lagrade elektricitet!
 %s transformerades till %t typen!
@@ -21,17 +21,17 @@
 
 %s bad %f!%f gav sin %i till %s|%s stal %fs %i!
 %s krossade %f!
-%s offrade sin egen HP och la en förbannelse på %f!|%s tar förbannelsens effekter!
-%s tog %f ned med den!|%s försöker ta motståndaren ned med sig!
-%s skyddade sig själv!
+%s offrade sin egen HP och la en fÃ¶rbannelse pÃ¥ %f!|%s tar fÃ¶rbannelsens effekter!
+%s tog %f ned med den!|%s fÃ¶rsÃ¶ker ta motstÃ¥ndaren ned med sig!
+%s skyddade sig sjÃ¤lv!
 %fs %m slutade fungera!|%s's %m fungerar inte!|%s fungerar igen!
-%s tog %m attacken!|%s förutspådde en attack!|%s valde Doom Desire som sin destination!
+%s tog %m attacken!|%s fÃ¶rutspÃ¥dde en attack!|%s valde Doom Desire som sin destination!
 
-%f är vaken!
-%f kan inte längre använda föremål!|%s kan använda föremål igen!
-%s's Encore tog slut!|%s kan inte använda %m på grund av Encore!|%f tvingas använda %m!|%f fick en encore!
+%f Ã¤r vaken!
+%f kan inte lÃ¤ngre anvÃ¤nda fÃ¶remÃ¥l!|%s kan anvÃ¤nda fÃ¶remÃ¥l igen!
+%s's Encore tog slut!|%s kan inte anvÃ¤nda %m pÃ¥ grund av Encore!|%f tvingas anvÃ¤nda %m!|%f fick en encore!
 
-%s uthärdade träffen!|%s stålsätter sig!
+%s uthÃ¤rdade trÃ¤ffen!|%s stÃ¥lsÃ¤tter sig!
 
 
 
@@ -43,103 +43,103 @@
 
 %s kastade %i mot %f!
 %s pumpade sig!
-%s förlorade sin fokus!|%s bättrar sin fokus!
+%s fÃ¶rlorade sin fokus!|%s bÃ¤ttrar sin fokus!
 
 
 
-%fs %a är nollställd!
+%fs %a Ã¤r nollstÃ¤lld!
 
-Gravitationen ökade!|Gravitationen blev normal igen!|%s kunde inte hålla sig i luften på grund av gravitationen!
-%fs %m förlorade all sin PP på grund av %ss Grudge!
-%s växlade sina buffar med %f!Det började hagla!|Det började regna!|Det blåste upp en sandstorm!|Solljuset blev starkare!
-%s är förälskad i %f!|%f blev förälskad!|%s är immobiliserad av kärlek!
-%f kan inte hela!|%s kan inte använda %m på grund av Heal Block!|%ss heal block avtog!
-%s återfick hälsa!
-%s är helad!
-%s växlade sin defense med attack!
+Gravitationen Ã¶kade!|Gravitationen blev normal igen!|%s kunde inte hÃ¥lla sig i luften pÃ¥ grund av gravitationen!
+%fs %m fÃ¶rlorade all sin PP pÃ¥ grund av %ss Grudge!
+%s vÃ¤xlade sina buffar med %f!Det bÃ¶rjade hagla!|Det bÃ¶rjade regna!|Det blÃ¥ste upp en sandstorm!|Solljuset blev starkare!
+%s Ã¤r fÃ¶rÃ¤lskad i %f!|%f blev fÃ¶rÃ¤lskad!|%s Ã¤r immobiliserad av kÃ¤rlek!
+%f kan inte hela!|%s kan inte anvÃ¤nda %m pÃ¥ grund av Heal Block!|%ss heal block avtog!
+%s Ã¥terfick hÃ¤lsa!
+%s Ã¤r helad!
+%s vÃ¤xlade sin defense med attack!
 
 %s kraschade till marken!
 
 
-%s förseglade motståndarens drag!|%s kan inte använda den förseglade %m!
-%s flyter på ett magnetfält!|Magnetfältet som %s flöt på avtog!
+%s fÃ¶rseglade motstÃ¥ndarens drag!|%s kan inte anvÃ¤nda den fÃ¶rseglade %m!
+%s flyter pÃ¥ ett magnetfÃ¤lt!|MagnetfÃ¤ltet som %s flÃ¶t pÃ¥ avtog!
 
 %s knockade bort %fs %i!
 
-%f undvek fröet!|%f blev sådd!|%ss hälsa dräneras av leech seed.
-Reflect ökade %tss lags defense!|Light Screen ökade %tss lags special defense!|%tss reflect avtog!|%tss light screen avtog!
-%s siktar på %f!
-%tss lag är skyddad från fullträffar!|%tss lucky chant avtog!
-%s döljer sig själv med Magic Coat!|%ss %m studsade tillbaka med Magic Coat!
-%s rensade fältet runt %tfs lag!
-Magnitude nivå %d!
+%f undvek frÃ¶et!|%f blev sÃ¥dd!|%ss hÃ¤lsa drÃ¤neras av leech seed.
+Reflect Ã¶kade %tss lags defense!|Light Screen Ã¶kade %tss lags special defense!|%tss reflect avtog!|%tss light screen avtog!
+%s siktar pÃ¥ %f!
+%tss lag Ã¤r skyddad frÃ¥n fulltrÃ¤ffar!|%tss lucky chant avtog!
+%s dÃ¶ljer sig sjÃ¤lv med Magic Coat!|%ss %m studsade tillbaka med Magic Coat!
+%s rensade fÃ¤ltet runt %tfs lag!
+Magnitude nivÃ¥ %d!
 
 
-%s lärde sig %m!
-Men inget hände!
+%s lÃ¤rde sig %m!
+Men inget hÃ¤nde!
 
-%s identifierade %f!Dimma svepte in över 
+%s identifierade %f!Dimma svepte in Ã¶ver 
 
-%tss lag!|%tss Dimman avtog!|Dimman motverkar %f från att sänka dess stats!
-%s återfick hälsa!|%s återfick mycket hälsa!|%s återfick lite hälsa!Elektrisk styrka har försämrats!|Eld styrka har försämrats!
+%tss lag!|%tss Dimman avtog!|Dimman motverkar %f frÃ¥n att sÃ¤nka dess stats!
+%s Ã¥terfick hÃ¤lsa!|%s Ã¥terfick mycket hÃ¤lsa!|%s Ã¥terfick lite hÃ¤lsa!Elektrisk styrka har fÃ¶rsÃ¤mrats!|Eld styrka har fÃ¶rsÃ¤mrats!
 
 
 
-%s har en mardröm!
-%s lugnade ned sig!|%s blev förvirrad av utmattning!Utmanarna delade på smärtan!Alla Pokémon som hör sången svimmar efter tre rundor!|%ss perish räkning föll till %d.
+%s har en mardrÃ¶m!
+%s lugnade ned sig!|%s blev fÃ¶rvirrad av utmattning!Utmanarna delade pÃ¥ smÃ¤rtan!Alla PokÃ©mon som hÃ¶r sÃ¥ngen svimmar efter tre rundor!|%ss perish rÃ¤kning fÃ¶ll till %d.
 %ss present helade %f some HP!
-%s kopierade %fs stats-förändringar!
+%s kopierade %fs stats-fÃ¶rÃ¤ndringar!
 %s flyttade sin status till %f!
 
 
 
 
-%s kom loss ur %fs %m!|%s blåste bort Leech Seed!|%s blåste bort Spikes!|%s blåste bort Toxic Spikes!|%s blåste bort Stealth Rock!
-%s förberedde en vindpust!|%s blev osynlig i ett starkt ljus!|%s sänkte sitt huvud!
-%s återvann %i!
-%s gick till sömns och blev frisk!
-%f höll fast i marken med sina Suction Cups!|%f har lagt rötterna i jorden!|%f blev utdragen!
+%s kom loss ur %fs %m!|%s blÃ¥ste bort Leech Seed!|%s blÃ¥ste bort Spikes!|%s blÃ¥ste bort Toxic Spikes!|%s blÃ¥ste bort Stealth Rock!
+%s fÃ¶rberedde en vindpust!|%s blev osynlig i ett starkt ljus!|%s sÃ¤nkte sitt huvud!
+%s Ã¥tervann %i!
+%s gick till sÃ¶mns och blev frisk!
+%f hÃ¶ll fast i marken med sina Suction Cups!|%f har lagt rÃ¶tterna i jorden!|%f blev utdragen!
 %s kopierade %fs %a!
-%tss lag doldes i en mystisk slöja!|%tss lag är inte längre skyddade av Safeguard!|Safeguard hindrar %f från statuspåverkan!
+%tss lag doldes i en mystisk slÃ¶ja!|%tss lag Ã¤r inte lÃ¤ngre skyddade av Safeguard!|Safeguard hindrar %f frÃ¥n statuspÃ¥verkan!
 
 %s sketchade %m!
-%s växlade förmågor med sitt mål!
+%s vÃ¤xlade fÃ¶rmÃ¥gor med sitt mÃ¥l!
 
 %ss Damp hindrar den att fungera!
 
 
 
-%f högg åt sig %ss %m!|%s väntar på ett mål att göra sitt drag!
+%f hÃ¶gg Ã¥t sig %ss %m!|%s vÃ¤ntar pÃ¥ ett mÃ¥l att gÃ¶ra sitt drag!
 %s absorberade ljuset!
 
-Spikes spriddes ut överallt kring %tfs lag!|%s skadas av spikes!
-%s släppte lös!Det reducerade PP från %fs %m med 4!Spetsiga stenar flyter i luften kring %tfs lag!|Spetsiga stenar skar in i %s!
+Spikes spriddes ut Ã¶verallt kring %tfs lag!|%s skadas av spikes!
+%s slÃ¤ppte lÃ¶s!Det reducerade PP frÃ¥n %fs %m med 4!Spetsiga stenar flyter i luften kring %tfs lag!|Spetsiga stenar skar in i %s!
 %s hamstrade %d!
 
 %s skadas av rekylen!
-%s har redan ett substitut.|%ss substitut avtog!|%fs substitut blockerade %m!|%ss substitut tog smällen!|%s skapade ett substitut!
+%s har redan ett substitut.|%ss substitut avtog!|%fs substitut blockerade %m!|%ss substitut tog smÃ¤llen!|%s skapade ett substitut!
 
 
 %s svalde!
-%s bytte föremål med %f!|%s erhöll en %i!En tailwind började blåsa bakom %tss lag!|%tss lags tailwind avtog!
-%s kan inte använda %m efter taunt!|%f föll för taunt!|%ss taunt slutade!
-%s kan inte använda %m på grund av torment!|%f är nu plågad!
-Poison spriddes ut överallt kring %tfs lag!|Poison spikes kring %ss lag försvann!
+%s bytte fÃ¶remÃ¥l med %f!|%s erhÃ¶ll en %i!En tailwind bÃ¶rjade blÃ¥sa bakom %tss lag!|%tss lags tailwind avtog!
+%s kan inte anvÃ¤nda %m efter taunt!|%f fÃ¶ll fÃ¶r taunt!|%ss taunt slutade!
+%s kan inte anvÃ¤nda %m pÃ¥ grund av torment!|%f Ã¤r nu plÃ¥gad!
+Poison spriddes ut Ã¶verallt kring %tfs lag!|Poison spikes kring %ss lag fÃ¶rsvann!
 %s transformerades till %p!
-%s förändrade dimensionerna!|De förändrade dimensionerna återgick till normala!
-Träff!
+%s fÃ¶rÃ¤ndrade dimensionerna!|De fÃ¶rÃ¤ndrade dimensionerna Ã¥tergick till normala!
+TrÃ¤ff!
 
-%s orsakade tumult!|%s gör tumult!|%s lugnade ned sig!|%s Vaknade!|%s håller sig vaken på grund av tumultet!
-%qs önskan gick i uppfyllelse!
+%s orsakade tumult!|%s gÃ¶r tumult!|%s lugnade ned sig!|%s Vaknade!|%s hÃ¥ller sig vaken pÃ¥ grund av tumultet!
+%qs Ã¶nskan gick i uppfyllelse!
 %f har nu insomnia!
-%s gjorde %f dåsig!|%s jäspar!
+%s gjorde %f dÃ¥sig!|%s jÃ¤spar!
 
 
 
 
-All stats-förändring likviderades!
-%s landade på marken!
-%s planterade sina rötter!| %s absorberade näring genom rötterna!
+All stats-fÃ¶rÃ¤ndring likviderades!
+%s landade pÃ¥ marken!
+%s planterade sina rÃ¶tter!| %s absorberade nÃ¤ring genom rÃ¶tterna!
 
 
 

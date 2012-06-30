@@ -1,4 +1,4 @@
-
+Ôªø
 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 %s surrounded itself with a veil of water!|Aquaring restored %s's HP.
 A soothing aroma wafted through the area!|A bell chimed!
@@ -14,7 +14,7 @@ A soothing aroma wafted through the area!|A bell chimed!
 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
 %s shattered %tf's team protections!
 
-%s stahl %i von %f und aﬂ sie!
+%s stahl %i von %f und a√ü sie!
 %s transformed into the %t type!
 %s began charging power!
 %s transformed into the %t type!
@@ -45,7 +45,7 @@ It doesn't affect %s!
 
 %s flung its %i!
 %s is getting pumped!
-%s hat seinen Fokus verloren !|%s verst‰rkt seinen Fokus !
+%s hat seinen Fokus verloren !|%s verst√§rkt seinen Fokus !
 %s became the center of attention!
 
 
@@ -55,11 +55,11 @@ Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne bec
 %f's %m lost all its PP because of %s' Grudge!
 %s swapped its boosts with %f!
 
-A hailstorm brewed!|It started to rain!|A sandstorm brewed!|Das Sonnenlicht wird st‰rker !,
+A hailstorm brewed!|It started to rain!|A sandstorm brewed!|Das Sonnenlicht wird st√§rker !,
 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 %s erholt sich !
-%s erholt sich !|Der Wunschtraum erf¸llt sich !|Es wurde von mystischem Mondlicht umh¸llt !
+%s erholt sich !|Der Wunschtraum erf√ºllt sich !|Es wurde von mystischem Mondlicht umh√ºllt !
 %s swapped its defense and attack!
 %s is ready to help %f!
 %s kept going and crashed!
@@ -93,7 +93,7 @@ Electric's power has been weakened!|Fire's power has been weakened!
 %s has a nightmare!
 %s calmed down!|%s became confused due to fatigue!
 The battlers shared their pain!
-All PokÈmon hearing the song will faint in three turns!|%s's perish count fell to %d.
+All Pok√©mon hearing the song will faint in three turns!|%s's perish count fell to %d.
 %s's present healed %f some HP!
 %s copied %f's stat changes!
 %s moved its status onto %f!
@@ -126,7 +126,7 @@ Um das Team von %tf schweben spitze Steine !|%s wurde von spitzen Steinen getrof
 %s stockpiled %d!
 
 %s is hit with recoil!
-%s hat bereits einen Delegator.|Delegator von %s verschwindet !|Delegator von %f f‰ngt %m ab !|Delegator von %s f‰ngt den Angriff ab !|%s erschafft einen Delegator !
+%s hat bereits einen Delegator.|Delegator von %s verschwindet !|Delegator von %f f√§ngt %m ab !|Delegator von %s f√§ngt den Angriff ab !|%s erschafft einen Delegator !
 
 
 %s swallowed!
