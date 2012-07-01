@@ -70,7 +70,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, c
 
     out << uchar(Login) << ProtocolVersion() << network;
 
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
     out << QString("windows");
 #elif defined(Q_OS_LINUX)
     out << QString("linux");
