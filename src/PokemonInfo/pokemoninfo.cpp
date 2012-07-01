@@ -1862,7 +1862,7 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
 
 QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
-    return gen <= 1 ? m_RbySpecialEffects[movenum] : m_SpecialEffects[movenum];
+    return gen <= 1 ? m_RbySpecialEffects.value(movenum) : m_SpecialEffects.value(movenum);
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
@@ -2051,7 +2051,7 @@ QList<ItemInfo::Effect> ItemInfo::Effects(int item, Pokemon::gen gen)
     if (!Exists(item, gen)) {
         return QList<ItemInfo::Effect>();
     } else {
-        return isBerry(item) ? m_BerryEffects[item-8000] : m_RegEffects[gen.num-GEN_MIN][item];
+        return isBerry(item) ? m_BerryEffects.value(item-8000) : m_RegEffects[gen.num-GEN_MIN].value(item);
     }
 }
 
@@ -2585,7 +2585,7 @@ void AbilityInfo::loadEffects()
 }
 
 AbilityInfo::Effect AbilityInfo::Effects(int abnum, Pokemon::gen gen) {
-    return m_Effects[gen.num-GEN_MIN][abnum];
+    return m_Effects[gen.num-GEN_MIN].value(abnum);
 }
 
 QString AbilityInfo::Desc(int ab)
