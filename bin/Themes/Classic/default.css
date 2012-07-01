@@ -4,6 +4,11 @@ QToolTip {
 
 /* Because styles other than plastique suck... */
 QSplitter::handle {
+/* Find the right image and add :  image: url(images/splitter.png
+   Just look at how Plastique style's splitter is when there's no css
+   and you'll understand.
+
+   In the meantime, without the image, it's not as good. */
 	width: 5px;
 	height: 5px;
 	background-color: transparent;
