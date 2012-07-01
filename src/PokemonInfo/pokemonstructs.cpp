@@ -720,7 +720,8 @@ void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
 void PokeTeam::loadFromXml(const QDomElement &poke, int version)
 {
     if (poke.hasAttribute("Gen")) {
-        setGen(Pokemon::gen(poke.attribute("Gen").toInt(), poke.attribute("SubGen").toInt()));
+        setGen(Pokemon::gen(poke.attribute("Gen", QString::number(GEN_MAX)).toInt(),
+                            poke.attribute("SubGen", QString::number(Gen::nums[poke.attribute("Gen", QString::number(GEN_MAX)).toInt()]-1)).toInt()));
     }
 
     reset();
@@ -826,10 +827,11 @@ bool Team::loadFromFile(const QString &path)
         return false;
     }
 
-    int gen = team.attribute("gen", "4").toInt();
+    int gen = team.attribute("gen", QString::number(GEN_MAX)).toInt();
     if (gen < GEN_MIN || gen > GEN_MAX)
         gen = GEN_MAX;
-    setGen(Pokemon::gen(team.attribute("gen", QString::number(GEN_MAX)).toInt(), team.attribute("subgen", "0").toInt()));
+    setGen(Pokemon::gen(team.attribute("gen", QString::number(GEN_MAX)).toInt(),
+                        team.attribute("subgen", QString::number(Gen::nums[team.attribute("gen", QString::number(GEN_MAX)).toInt()]-1)).toInt()));
     defaultTier() = team.attribute("defaultTier");
 
     QDomElement poke = team.firstChildElement("Pokemon");

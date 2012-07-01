@@ -62,7 +62,7 @@ class gen
 public:
     quint8 num;
     quint8 subnum;
-    gen() : num(GEN_MAX), subnum(0) {}
+    gen() : num(GEN_MAX), subnum(Gen::nums[GEN_MAX]-1) {}
     gen(int num, int subnum) : num(num), subnum(subnum) {}
     gen(const gen &g) { num = g.num; subnum = g.subnum; }
     gen(quint32 genRef) {

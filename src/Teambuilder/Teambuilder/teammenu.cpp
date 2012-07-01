@@ -126,11 +126,6 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
         for (int j = 0; j < n; j++) {
             Pokemon::gen g(i, j);
 
-            //Temporary until we implement subgens
-            if (j != 0 && g != Gen::RBY) {
-                continue;
-            }
-
             ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
             ui->gens[g]->setCheckable(true);
             ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
