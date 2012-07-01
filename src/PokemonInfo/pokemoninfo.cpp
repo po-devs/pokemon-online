@@ -808,13 +808,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     else if (gen.num == 3)
         archive = path("advance.zip");
     else if (gen.num == 4)
-        archive = path("hgss.zip");
+        archive = path("generation-4.zip");
     else {
         // TODO: Read this number from somewhere else.
         if (pokeid.pokenum > 649) {
-            archive = PoCurrentModPath + "mod_" + path("mod_sprites.zip");
+            archive = PoCurrentModPath + "mod_" + path("sprites.zip");
         } else {
-            archive = path("black_white.zip");
+            archive = path("black-white.zip");
         }
     }
 
@@ -825,11 +825,11 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     else if (gen.num == 2)
         file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
     else if (gen.num ==3)
-        file = QString("%1/%2%3.png").arg(pokeid.toString(), back?"3Gback":"RFLG", shiney?"s":"");
+        file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num == 4)
-        file = QString("%1/DP%2%3%4.png").arg(pokeid.toString(), back?"b":"", (gender==Pokemon::Female)?"f":"m", shiney?"s":"");
+        file = QString("heartgold-soulsilver/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
     else
-        file = QString("%1/%2%3%4.png").arg(pokeid.toString(), back?"back":"front", (gender==Pokemon::Female)?"f":"", shiney?"s":"");
+        file = QString("black-white/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
 
     QPixmap ret;
 
@@ -911,10 +911,20 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
     QString archive;
     if (gen <= 3)
         archive = path("advance.zip");
+    else if (gen == 4)
+        archive = path("generation-4.zip");
     else
-        archive = path("hgss.zip");
+        archive = path("black-white.zip");
 
-    QString file = QString("sub%1%2.png").arg(back?"b":"").arg(gen>=4?"":"3G");
+    QString file;
+
+    if (gen <= 3) {
+        file = QString("advance/%1substitute.png").arg(back?"back/":"");
+    } else if (gen <= 4) {
+        file = QString("heartgold-soulsilver/%1substitute.png").arg(back?"back/":"");
+    } else {
+        file = QString("black-white/%1substitute.png").arg(back?"back/":"");
+    }
 
     QPixmap ret;
 
