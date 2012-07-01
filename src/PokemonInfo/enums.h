@@ -13,16 +13,16 @@ static const int NUMBER_GENS = (GEN_MAX-GEN_MIN+1);
 namespace Gen
 {
 enum {
-    Stadium=1, RBY=1+(1<<8), StadiumWithTradebacks=(1+(2<<8)),
-    Stadium2=2, GSC=2+(1<<8),
-    Adv=3, RSE200=3+(1<<8),
-    HGSS=4, DP=4+(1<<8), DPPt=4+(2<<8),
-    BW=5
+    RBY=1, Stadium=1+(1<<8), StadiumWithTradebacks=(1+(2<<8)),
+    GSC=2, Stadium2=2+(1<<8),
+    RSE200=3, Adv=3+(1<<8),
+    DP=4, DPPt=4+(1<<8), HGSS=4+(2<<8),
+    BW=5, BW2=5+(1<<8)
 };
 enum {
-    NumberOfVersions = 11
+    NumberOfVersions = 12
 };
-static const int nums[NUMBER_GENS] = {3,2,2,3,1};
+static const int nums[NUMBER_GENS] = {3,2,2,3,2};
 }
 
 
@@ -35,7 +35,7 @@ namespace Version
     };
 
     enum {
-        NumberOfGens = 5,
+        NumberOfGens = 5
     };
 
     static const int avatarSize[] = {

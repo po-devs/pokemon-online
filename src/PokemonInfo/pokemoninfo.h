@@ -15,12 +15,10 @@ namespace FillMode {
     };
 }
 
-static QString PoCurrentModPath;
-
-// Mods are only for files in db/pokes directory.
-inline int fill_count_files(const QString &filename);
-// Will prepend filename with correct path in the system for client.
-inline void fill_check_mode_path(FillMode::FillModeType m, QString &filename);
+struct PokemonInfoConfig {
+    static void changeTranslation(const QString& ts = QString());
+    static void changeMod(const QString &mod, FillMode::FillModeType mode);
+};
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
@@ -59,16 +57,16 @@ public:
     static int Weight(const Pokemon::uniqueId &pokeid);
     static int Gender(const Pokemon::uniqueId &pokeid);
     static int BaseGender(const Pokemon::uniqueId &pokeid);
-    static QByteArray Cry(const Pokemon::uniqueId &pokeid);
+    static QByteArray Cry(const Pokemon::uniqueId &pokeid, bool mod=true);
     static int Type1(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static int Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
-    static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false, bool mod=true);
     static QPixmap Picture(const QString &url);
     static QMovie  *AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back);
     static bool HasAnimatedSprites();
     static bool HasAnimatedSpritesEnabled();
     static QPixmap Sub(Pokemon::gen gen=5, bool back = false);
-    static QPixmap Icon(const Pokemon::uniqueId &pokeid);
+    static QPixmap Icon(const Pokemon::uniqueId &pokeid, bool mod = true);
     static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen);
     static QSet<int> Moves(const Pokemon::uniqueId &pokeid, Pokemon::gen);
     static QSet<int> EggMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
@@ -166,7 +164,7 @@ private:
 
     static int m_trueNumberOfPokes;
 
-    static void loadNames(bool init = false);
+    static void loadNames();
     static void loadEvos();
     static void loadBaseStats();
     static void loadMoves();
@@ -183,7 +181,6 @@ private:
     // Clears pokemon data. Call reloadMod() after that to refill data.
     static void clearData();
     static FillMode::FillModeType m_CurrentMode;
-    static QString readModDirectory(const QString &modName);
 };
 
 class MoveInfo
@@ -290,7 +287,7 @@ private:
     }
 
     static void loadNames();
-    static void loadMoveMessages(bool init = false);
+    static void loadMoveMessages();
     static void loadDetails();
     static void loadSpecialEffects();
 
@@ -355,7 +352,7 @@ private:
     static void loadEffects();
     static void loadFlingData();
     static void loadGenData();
-    static void loadMessages(bool init = false);
+    static void loadMessages();
     static QString path(const QString &filename);
 };
 
@@ -385,11 +382,11 @@ private:
         Sunny = 4
     };
 
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QString m_Directory;
-    static QList<int> m_TypeVsType;
-    static QList<int> m_TypeVsTypeGen1;
-    static QList<int> m_Categories;
+    static QHash<int, QVector<int> > m_TypeVsType;
+    static QHash<int, QVector<int> > m_TypeVsTypeGen1;
+    static QHash<int, int> m_Categories;
 
     static void loadNames();
     static void loadCategories();
@@ -417,7 +414,7 @@ public:
     static int ConvertStat(int stat);
     static int ConvertToStat(int stat);
 private:
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QString m_Directory;
     static void loadNames();
     static QString path(const QString &filename);
@@ -434,7 +431,7 @@ public:
     static QString Name(int catnum);
     static int NumberOfCategories();
 private:
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QString m_Directory;
 
     static void loadNames();
@@ -474,7 +471,7 @@ private:
     static QHash<int,QString> m_BattleDesc;
 
     static void loadNames();
-    static void loadMessages(bool init=false);
+    static void loadMessages();
     static void loadEffects();
     static QString path(const QString &filename);
 };
@@ -492,7 +489,7 @@ public:
     static int Default(int genderAvail);
     static bool Possible(int gender, int genderAvail);
 private:
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QString m_Directory;
 
     static void loadNames();
@@ -531,8 +528,8 @@ public:
     static QString ShortStatus(int status);
 private:
     static QString m_Directory;
-    static QList<QString> m_stats;
-    static QList<QString> m_status;
+    static QHash<int, QString> m_stats;
+    static QHash<int, QString> m_status;
 
     static QString path(const QString &filename);
 };

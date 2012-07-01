@@ -59,7 +59,10 @@ HEADERS +=\
     battlesceneflow.h \
     param.h \
     regularbattlescene.h \
-    ../Shared/battlecommands.h
+    ../Shared/battlecommands.h \
+    ../PokemonInfo/pokemonstructs.h \
+    ../PokemonInfo/pokemoninfo.h \
+    ../PokemonInfo/battlestructs.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

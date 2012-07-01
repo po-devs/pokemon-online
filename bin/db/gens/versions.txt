@@ -1,11 +1,12 @@
-﻿1:0 Stadium
-1:1 RBY
+﻿1:0 RBY
+1:1 Stadium
 1:2 Stadium w/ Tradebacks
-2:0 Stadium 2
-2:1 GSC
-3:0 Advance
-3:1 RSE 200
-4:0 HGSS
-4:1 DP
-4:2 DPPt
+2:0 Gsc
+2:1 Stadium 2
+3:0 RSE 200
+3:1 Advance
+4:0 DP
+4:1 DPPt
+4:2 HGSS
 5:0 BW
+5:1 BW2
