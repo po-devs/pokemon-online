@@ -2,6 +2,18 @@ QToolTip {
     color: black;
 }
 
+/* Because styles other than plastique suck... */
+QSplitter::handle {
+	width: 5px;
+	height: 5px;
+	background-color: transparent;
+}
+
+/* Because styles other than plastique suck... */
+QSplitter::handle:hover {
+	background-color: rgba(255,255,255,140);
+}
+
 /* Main Widgets */
 
 TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
