@@ -12,6 +12,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
 {
     ui->setupUi(this);
 
+    ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
     ui->pokemonButtons->setTeam(team().team());
     changePoke(&team().team().poke(0), 0);
     updatePoke();
@@ -27,6 +28,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     connect(ui->addBox, SIGNAL(clicked()), SLOT(newBox()));
     connect(ui->editBoxName, SIGNAL(clicked()), SLOT(editBoxName()));
     connect(ui->deleteBox, SIGNAL(clicked()), SLOT(deleteBox()));
+    connect(ui->boxes, SIGNAL(tabCloseRequested(int)), SLOT(deleteBox(int)));
     connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
 }
 
@@ -131,8 +133,7 @@ void PokeBoxes::loadBoxes()
             }
             files = f;
         } else {
-            files << tr("Box%20A.box") << tr("Box%20B.box") << tr("Box%20C.box") << tr("Box%20D.box") << tr("Box%20E.box") <<
-                     tr("Box%20F.box") << tr("Box%20G.box") << tr("Box%20H.box");
+            files << tr("Box%201.box") << tr("Box%202.box");
         }
     }
 
@@ -204,19 +205,23 @@ void PokeBoxes::editBoxName()
      }
 }
 
-void PokeBoxes::deleteBox()
+void PokeBoxes::deleteBox(int num)
 {
     if (boxes.size() <= 1)
         return;
 
-    int res = QMessageBox::question(this, tr("Destroying a box"), tr("Do you want to delete box %1?").arg(currentBox()->getBoxName()), QMessageBox::Yes | QMessageBox::No);
+    if (num == -1) {
+        num = currentBox()->getNum();
+    }
+
+    int res = QMessageBox::question(this, tr("Destroying a box"), tr("Do you want to delete box %1 permanently?").arg(boxes[num]->getBoxName()), QMessageBox::Yes | QMessageBox::No);
 
     if (res == QMessageBox::Yes) {
-        deleteBox(currentBox()->getNum());
+        doDeleteBox(num);
     }
 }
 
-void PokeBoxes::deleteBox(int num)
+void PokeBoxes::doDeleteBox(int num)
 {
     boxes[num]->deleteBox();
 

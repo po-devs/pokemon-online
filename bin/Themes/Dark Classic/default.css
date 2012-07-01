@@ -176,10 +176,10 @@ TrainerMenu QPushButton#close {
     color: white;
     margin-top: 10px;
     margin-right: 30px;
+    min-height: 27px;
     margin-bottom: 8px;
     border: 1px solid #7f8585;
     border-radius: 3px;
-    padding: 2px;
 
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fe001b, stop: 0.8 #d40000,
@@ -325,6 +325,10 @@ PokeEdit #done:hover {
                                                                  stop: 0 #3e8aab, stop: 0.4 #448eb5,
                                                                  stop: 0.6 #417b9f, stop: 1.0 #154477);
 }
+
+PokeEdit #done:pressed {
+    background: #045283;
+}
  
 PokeEdit #levelSettings {
     margin-top: 9px;
@@ -421,57 +425,46 @@ PokeBoxes #boxes:pane {
 PokeBoxes #boxes QGraphicsView {
     background: white;
     border-radius: 10px;
-    border: 1px solid #64aaf1;
+    border: 1px solid #C4C4C3;
 }
+QTabWidget#boxes::tab-bar {
+    left: 20px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabWidget#boxes QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabWidget#boxes QTabBar::tab:selected, QTabWidget#MainChat QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabWidget#boxes QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabWidget#boxes QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
 
 PokeBoxes #boxes QGraphicsScene {
 }
 
-/* Style the tab using the tab sub-control. Note that
-it reads QTabBar _not_ QTabWidget */
-QTabWidget#boxes > QTabBar::tab:top, QTabWidget#boxes > QTabBar::tab:bottom {
-        background: #bababa;
-        border: 1px solid #676a6c;
-        border-radius: 5px;
-        height: 23px;
-        min-width: 90px;
-        padding: 2px;
-}
-
-QTabWidget#boxes  > QTabBar::tab::title {
-        font-weight:bold;
-        font-family:Trebuchet MS;
-        font-size: 14px;
-}
-
-QTabWidget#boxes > QTabBar::tab:hover{
-        border-color: #077cff;
-        color: white;
-        background: #88bcf1;
-}
-
-QTabWidget#boxes > QTabBar::tab:selected {
-        border-color: #077cff;
-        color: white;
-        background: #66ace1;
-}
-
 PokeBoxes #movesLabel, PokeBoxes #natureLabel {
     font-weight: bold;
-}
-
-QTabWidget#boxes > QTabBar::tab:top:selected , QTabWidget#boxes > QTabBar::tab:bottom:selected {
-        /* expand/overlap to the left and right by 4px */
-        margin-left: -2px;
-        margin-right: -2px;
-}
-
-QTabWidget#boxes > QTabBar::tab:top:first,QTabWidget#boxes > QTabBar::tab:bottom:first {
-        margin-left: 15px;
-}
-
-QTabWidget#boxes > QTabBar::tab:top:last, QTabWidget#boxes > QTabBar::tab:bottom:last {
-        margin-right: 0px;
 }
 
 /*\*=============================================*/

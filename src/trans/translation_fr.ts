@@ -4294,7 +4294,7 @@ Votre language doit être réglé en anglais si vous voulez importer des équipe
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="301"/>
         <source>Team Builder</source>
-        <translation type="unfinished">Team Bulder</translation>
+        <translation type="unfinished">Team Builder</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="395"/>
