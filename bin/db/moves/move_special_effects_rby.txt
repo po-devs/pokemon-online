@@ -1,166 +1,166 @@
-﻿#156 is free
-
-
-
-
-
-
-
-
-
-
-
-#43#Guillotine
-104-0#razor wind
-
-
-
-
-#107#whirlwind
-13-3#Fly
-10#bind-inflict damage every turn
-
-
-#126#stomp
-
-
-64#jump kick
-
-
-
-
-
-#43#Horn Drill
-
-
-10#wrap
-
-93#thrash
-
-
-
-
-
-
-
-
-#107#roar
-
-
-30-20#sonic boom
-28#disable
-
-
-
-#86#mist
-
-
-
-
-#38#blizzard
-
-
-
-11#Hyper beam
-
-
-
-#52#Low kick
-22#counter
-91#seismic toss
-
-#1#leech
-#1#mega drain
-72#leech seed
-#191#Growth
-
-104-3#solar beam
-
-
-
-93#petal dance
-
-30-40#dragon rage
-10#Fire spin
-
-
-
-#152#Thunder
-
-
-#43#Fissure
-13-1#Dig
-
-
-
-
-
-
-
-102#rage
-
-91#night shade
-81#mimic
-
-
-#60#recover
-
-#83#minimize
-
-
-
-#154#defense curl
-
-73-2#light screen
-149#haze
-73-1#reflect
-46#focus energy
-9#bide
-80#metronome
-85#mirror move
-37#self destruct
-
-
-
-
-
-
-
-10#Clamp
-
-104-2#skull bash
-
-
-
-
-#60#softboiled
-64#high jump kick
-
-31#dream eater
-
-
-#1#Leech Life
-
-104-1#sky attack
-137#transform
-
-
-
-
-99#psywave
-#82#Splash
-
-
-37#explosion
-
-
-106#rest
-
-
-
-19#conversion
-#192#Tri Attack
-130#super fang
-
-128#SUBSTITUTE
-#127#struggle
+﻿0 #156 is free
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+10 
+11 
+12 #43#Guillotine
+13 104-0#razor wind
+14 
+15 
+16 
+17 
+18 #107#whirlwind
+19 13-3#Fly
+20 10#bind-inflict damage every turn
+21 
+22 
+23 #126#stomp
+24 
+25 
+26 64#jump kick
+27 
+28 
+29 
+30 
+31 
+32 #43#Horn Drill
+33 
+34 
+35 10#wrap
+36 
+37 93#thrash
+38 
+39 
+40 
+41 
+42 
+43 
+44 
+45 
+46 #107#roar
+47 
+48 
+49 30-20#sonic boom
+50 28#disable
+51 
+52 
+53 
+54 #86#mist
+55 
+56 
+57 
+58 
+59 #38#blizzard
+60 
+61 
+62 
+63 11#Hyper beam
+64 
+65 
+66 
+67 #52#Low kick
+68 22#counter
+69 91#seismic toss
+70 
+71 #1#leech
+72 #1#mega drain
+73 72#leech seed
+74 #191#Growth
+75 
+76 104-3#solar beam
+77 
+78 
+79 
+80 93#petal dance
+81 
+82 30-40#dragon rage
+83 10#Fire spin
+84 
+85 
+86 
+87 #152#Thunder
+88 
+89 
+90 #43#Fissure
+91 13-1#Dig
+92 
+93 
+94 
+95 
+96 
+97 
+98 
+99 102#rage
+100 
+101 91#night shade
+102 81#mimic
+103 
+104 
+105 #60#recover
+106 
+107 #83#minimize
+108 
+109 
+110 
+111 #154#defense curl
+112 
+113 73-2#light screen
+114 149#haze
+115 73-1#reflect
+116 46#focus energy
+117 9#bide
+118 80#metronome
+119 85#mirror move
+120 37#self destruct
+121 
+122 
+123 
+124 
+125 
+126 
+127 
+128 10#Clamp
+129 
+130 104-2#skull bash
+131 
+132 
+133 
+134 
+135 #60#softboiled
+136 64#high jump kick
+137 
+138 31#dream eater
+139 
+140 
+141 #1#Leech Life
+142 
+143 104-1#sky attack
+144 137#transform
+145 
+146 
+147 
+148 
+149 99#psywave
+150 #82#Splash
+151 
+152 
+153 37#explosion
+154 
+155 
+156 106#rest
+157 
+158 
+159 
+160 19#conversion
+161 #192#Tri Attack
+162 130#super fang
+163 
+164 128#SUBSTITUTE
+165 #127#struggle

@@ -1,561 +1,561 @@
-﻿#156 is free
-
-
-
-
-
-
-
-
-
-
-
-43#Guillotine
-104-0#razor wind
-
-
-
-
-107#whirlwind
-13-3_16*2_239*2_327_87_542_479#Fly
-10#bind-inflict damage every turn
-
-
-126#stomp
-
-
-64#jump kick
-
-
-
-
-
-43#Horn Drill
-
-
-10#wrap
-
-93#thrash
-
-
-
-
-
-
-
-
-107#roar
-
-
-30-20#sonic boom
-28#disable
-
-
-
-86#mist
-
-
-
-
-38#blizzard
-
-
-
-11#Hyper beam
-
-
-
-52#Low kick
-22-1#counter: 1 is physical
-91#seismic toss
-
-#1#leech
-#1#mega drain
-72#leech seed
-191#Growth
-
-104-3#solar beam
-
-
-
-93#petal dance
-
-30-40#dragon rage
-10#Fire spin
-
-
-
-152#Thunder
-
-
-43#Fissure
-13-1_89*2_222*2#Dig
-
-
-
-
-
-
-
-102#rage
-
-91#night shade
-81#mimic
-
-
-60#recover
-
-83#minimize
-
-
-
-154#defense curl
-
-73-2#light screen
-149#haze
-73-1#reflect
-46#focus energy
-9#bide
-80#metronome
-85#mirror move
-37#self destruct
-
-
-
-
-
-
-
-10#Clamp
-
-104-2#skull bash
-
-
-
-
-#60#softboiled
-64#high jump kick
-
-31|1#dream eater
-
-
-#1#Leech Life
-
-104-1#sky attack
-137#transform
-
-
-
-
-99#psywave
-82#Splash
-
-
-37#explosion
-
-
-106#rest
-
-
-
-19#conversion
-#192#Tri Attack
-130#super fang
-
-8-25|128#SUBSTITUTE
-#127#struggle
-111#sketch
-139#triple kick
-23#thief
-12#spider web.
-74#Mind reader
-31|92#nightmare
-153#flame wheel
-115#snore
-25#curse
-44#flail
-20#conversion2
-
-
-44#flail
-123#spite
-
-27#Protect
-
-
-
-
-8-50#belly drum
-
-
-
-121#spikes
-
-84-7#7 is ghost -- fore sight
-26#destiny bond
-95#perish song
-
-27#detect
-
-74#lock on
-93#outrage
-57-3#sandstorm
-#1#Giga drain
-35#endure
-
-66#rollout
-41#false swipe
-196#Swagger
-#60#healing - milk drink
-
-50#fury cutter
-
-12#mean look
-58#attract
-115|116#115 = works only if asleep, 116 is sleep talk
-3#heal bell
-49-0#return
-96#present
-49-1#frustration
-109#safeguard
-94#pain split
-153#sacred fire
-78#magnitude
-
-
-
-6#baton pass
-33#encore
-
-103#rapid spin
-
-
-
-
-87#morning sun
-87#synthesis
-87#moon light
-65#hidden power
-
-
-57-2#rain dance
-57-4#sunny day
-
-22-2#mirror coat
-97#psychup
-
-
-
-29#Future sight
-
-10#whirlpool
-7#beat up
-40#fake out
-141#uproar
-125#stock pile
-122#spit up
-131#swallow
-
-57-1#hail
-135#torment
-
-195#will-o-wisp
-37|165#memento
-39#facade
-47#focus punch
-117-1#smelling salt
-48#follow me
-90#nature power
-18#charge
-134#taunt
-63#helping hand
-132#trick
-108#role play
-142#wish
-4#assist
-151#ingrain
-
-76#magic coat
-105#recycle
-146#revenge
-14#brick break
-144#yawn
-70#knock off
-34#endeavor
-36#eruption
-112#skill swap
-67#imprison
-164#Refresh
-54#grudge
-118#snatch
-110#secret power
-13-2_57*2#dive
-
-17#camouflage
-
-
-
-
-
-
-88-12#mud sport
-66#ice ball
-
-#60#slack off
-
-
-
-11#blast burn -- one turn slacking off
-11#hydro cannon
-
-
-113#weather ball
-3#aromatherapy
-
-
-
-84-7#odor sleuth
-
-
-
-
-
-
-36#water spout
-
-
-
-
-10#sand tomb
-43#sheer cold
-
-
-
-
-
-12#block, aka mean look
-
-
-11#frenzy plant
-
-13-0_16*2_239*2_327_87_542_479#bounce
-
-
-23#covet
-
-
-88-9#water sport
-
-
-
-
-
-
-29#doom desire
-
-150#|60#roost
-53#gravity
-84-16#16 is dark -- miracle eye
-117-2#wake up slap
-
-56-0#gyro ball. 0 is to tell it's up to us to be slow
-61#healing wish
-15#brine
-89#natural gift
-42#only works when protect detect
-16#Pluck
-133#tailwind
-120#Acupressure
-119#metal burst
-140#U-turn
-
-145#payback
-5#assurance
-32#embargo
-45#fling
-98#psycho shift
-148#trump card
-59#heal block
-24#wring out
-62#power trick
-51#gastro acid
-75#lucky chant
-79#me first
-21#copycat
-55-1_3#power swap
-55-2_4#guard swap
-100#punishment
-71#last resort
-143-15#worry seed
-129#sucker punch
-136#toxic spikes
-55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
-2#restore hp every turn
-68#magnet rise
-153#flareBlitz
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#1#Drain punch
-
-
-
-
-
-132#switcheroo
-11#Giga impact
-
-
-146#avalanche
-
-
-
-
-
-
-
-
-#nothing but gotta fill the line
-
-
-
-77#defog
-138#trick room
-
-
-
-
-
-11#rock wrecker
-
-
-
-
-
-101#Captivate
-124#stealth rock
-52#grass knot
-147#chatter
-69#judgment
-16#like pluck
-
-
-
-
-
-60#heal order--healing
-
-
-11#roar of time
-
-61#Lunar dance
-24#crush grip
-10#magma storm
-
-
-
-13-4#shadow force
-
-169#Wide guard
-155-2_4#Guard Share
-155-1_3#Power Share
-168#Wonder Room
-
-117-5#Venom Shock
-
-48#Rage power
-174#Telekinesis
-156#Magic Room
-175#Strike Down
-
-189#Flame Burst
-
-
-167#HeavyBomber
-186#Synchro Noise
-182#Eleci Ball
-157#Soak
-
-
-
-
-187#Trickery
-143-86#Simple Beam
-158#Assemble Crew
-176#You First
-184#A Capella
-181#Echo Voice
-
-149#Clear Smog
-185#Assist Power
-170#Fast Guard
-190#Side Change
-
-159#Shell Crack
-
-117-0#Evil Eye
-13-5_16*2_239*2_327_87_542#Free Fall
-
-107#Overhead Throw
-160#Complete Burn
-177#Stall
-173#Acrobat
-172#Mirror Type
-188#Retaliation
-161#Desperation
-162#Gift Pass
-
-180#Water Oath
-178#Fire Oath
-179#Grass Oath
-140#Volt Change
-
-
-
-107#Dragon Tail
-
-
-
-
-
-
-
-
-
-167#Heat Stamp
-
-126#Heart roller
-
-
-
-
-152#Wind Storm
-
-
-
-183#Techno buster
-166#Ancient Song
-
-
-
-
-
-104-4#freeze shock
-104-5#ice burn
-
-
-
-193#Cross Flame
-194#Cross Thunder
-#
+﻿0 #156 is free
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+10 
+11 
+12 43#Guillotine
+13 104-0#razor wind
+14 
+15 
+16 
+17 
+18 107#whirlwind
+19 13-3_16*2_239*2_327_87_542_479#Fly
+20 10#bind-inflict damage every turn
+21 
+22 
+23 126#stomp
+24 
+25 
+26 64#jump kick
+27 
+28 
+29 
+30 
+31 
+32 43#Horn Drill
+33 
+34 
+35 10#wrap
+36 
+37 93#thrash
+38 
+39 
+40 
+41 
+42 
+43 
+44 
+45 
+46 107#roar
+47 
+48 
+49 30-20#sonic boom
+50 28#disable
+51 
+52 
+53 
+54 86#mist
+55 
+56 
+57 
+58 
+59 38#blizzard
+60 
+61 
+62 
+63 11#Hyper beam
+64 
+65 
+66 
+67 52#Low kick
+68 22-1#counter: 1 is physical
+69 91#seismic toss
+70 
+71 #1#leech
+72 #1#mega drain
+73 72#leech seed
+74 191#Growth
+75 
+76 104-3#solar beam
+77 
+78 
+79 
+80 93#petal dance
+81 
+82 30-40#dragon rage
+83 10#Fire spin
+84 
+85 
+86 
+87 152#Thunder
+88 
+89 
+90 43#Fissure
+91 13-1_89*2_222*2#Dig
+92 
+93 
+94 
+95 
+96 
+97 
+98 
+99 102#rage
+100 
+101 91#night shade
+102 81#mimic
+103 
+104 
+105 60#recover
+106 
+107 83#minimize
+108 
+109 
+110 
+111 154#defense curl
+112 
+113 73-2#light screen
+114 149#haze
+115 73-1#reflect
+116 46#focus energy
+117 9#bide
+118 80#metronome
+119 85#mirror move
+120 37#self destruct
+121 
+122 
+123 
+124 
+125 
+126 
+127 
+128 10#Clamp
+129 
+130 104-2#skull bash
+131 
+132 
+133 
+134 
+135 #60#softboiled
+136 64#high jump kick
+137 
+138 31|1#dream eater
+139 
+140 
+141 #1#Leech Life
+142 
+143 104-1#sky attack
+144 137#transform
+145 
+146 
+147 
+148 
+149 99#psywave
+150 82#Splash
+151 
+152 
+153 37#explosion
+154 
+155 
+156 106#rest
+157 
+158 
+159 
+160 19#conversion
+161 #192#Tri Attack
+162 130#super fang
+163 
+164 8-25|128#SUBSTITUTE
+165 #127#struggle
+166 111#sketch
+167 139#triple kick
+168 23#thief
+169 12#spider web.
+170 74#Mind reader
+171 31|92#nightmare
+172 153#flame wheel
+173 115#snore
+174 25#curse
+175 44#flail
+176 20#conversion2
+177 
+178 
+179 44#flail
+180 123#spite
+181 
+182 27#Protect
+183 
+184 
+185 
+186 
+187 8-50#belly drum
+188 
+189 
+190 
+191 121#spikes
+192 
+193 84-7#7 is ghost -- fore sight
+194 26#destiny bond
+195 95#perish song
+196 
+197 27#detect
+198 
+199 74#lock on
+200 93#outrage
+201 57-3#sandstorm
+202 #1#Giga drain
+203 35#endure
+204 
+205 66#rollout
+206 41#false swipe
+207 196#Swagger
+208 #60#healing - milk drink
+209 
+210 50#fury cutter
+211 
+212 12#mean look
+213 58#attract
+214 115|116#115 = works only if asleep, 116 is sleep talk
+215 3#heal bell
+216 49-0#return
+217 96#present
+218 49-1#frustration
+219 109#safeguard
+220 94#pain split
+221 153#sacred fire
+222 78#magnitude
+223 
+224 
+225 
+226 6#baton pass
+227 33#encore
+228 
+229 103#rapid spin
+230 
+231 
+232 
+233 
+234 87#morning sun
+235 87#synthesis
+236 87#moon light
+237 65#hidden power
+238 
+239 
+240 57-2#rain dance
+241 57-4#sunny day
+242 
+243 22-2#mirror coat
+244 97#psychup
+245 
+246 
+247 
+248 29#Future sight
+249 
+250 10#whirlpool
+251 7#beat up
+252 40#fake out
+253 141#uproar
+254 125#stock pile
+255 122#spit up
+256 131#swallow
+257 
+258 57-1#hail
+259 135#torment
+260 
+261 195#will-o-wisp
+262 37|165#memento
+263 39#facade
+264 47#focus punch
+265 117-1#smelling salt
+266 48#follow me
+267 90#nature power
+268 18#charge
+269 134#taunt
+270 63#helping hand
+271 132#trick
+272 108#role play
+273 142#wish
+274 4#assist
+275 151#ingrain
+276 
+277 76#magic coat
+278 105#recycle
+279 146#revenge
+280 14#brick break
+281 144#yawn
+282 70#knock off
+283 34#endeavor
+284 36#eruption
+285 112#skill swap
+286 67#imprison
+287 164#Refresh
+288 54#grudge
+289 118#snatch
+290 110#secret power
+291 13-2_57*2#dive
+292 
+293 17#camouflage
+294 
+295 
+296 
+297 
+298 
+299 
+300 88-12#mud sport
+301 66#ice ball
+302 
+303 #60#slack off
+304 
+305 
+306 
+307 11#blast burn -- one turn slacking off
+308 11#hydro cannon
+309 
+310 
+311 113#weather ball
+312 3#aromatherapy
+313 
+314 
+315 
+316 84-7#odor sleuth
+317 
+318 
+319 
+320 
+321 
+322 
+323 36#water spout
+324 
+325 
+326 
+327 
+328 10#sand tomb
+329 43#sheer cold
+330 
+331 
+332 
+333 
+334 
+335 12#block, aka mean look
+336 
+337 
+338 11#frenzy plant
+339 
+340 13-0_16*2_239*2_327_87_542_479#bounce
+341 
+342 
+343 23#covet
+344 
+345 
+346 88-9#water sport
+347 
+348 
+349 
+350 
+351 
+352 
+353 29#doom desire
+354 
+355 150#|60#roost
+356 53#gravity
+357 84-16#16 is dark -- miracle eye
+358 117-2#wake up slap
+359 
+360 56-0#gyro ball. 0 is to tell it's up to us to be slow
+361 61#healing wish
+362 15#brine
+363 89#natural gift
+364 42#only works when protect detect
+365 16#Pluck
+366 133#tailwind
+367 120#Acupressure
+368 119#metal burst
+369 140#U-turn
+370 
+371 145#payback
+372 5#assurance
+373 32#embargo
+374 45#fling
+375 98#psycho shift
+376 148#trump card
+377 59#heal block
+378 24#wring out
+379 62#power trick
+380 51#gastro acid
+381 75#lucky chant
+382 79#me first
+383 21#copycat
+384 55-1_3#power swap
+385 55-2_4#guard swap
+386 100#punishment
+387 71#last resort
+388 143-15#worry seed
+389 129#sucker punch
+390 136#toxic spikes
+391 55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
+392 2#restore hp every turn
+393 68#magnet rise
+394 153#flareBlitz
+395 
+396 
+397 
+398 
+399 
+400 
+401 
+402 
+403 
+404 
+405 
+406 
+407 
+408 
+409 #1#Drain punch
+410 
+411 
+412 
+413 
+414 
+415 132#switcheroo
+416 11#Giga impact
+417 
+418 
+419 146#avalanche
+420 
+421 
+422 
+423 
+424 
+425 
+426 
+427 
+428 #nothing but gotta fill the line
+429 
+430 
+431 
+432 77#defog
+433 138#trick room
+434 
+435 
+436 
+437 
+438 
+439 11#rock wrecker
+440 
+441 
+442 
+443 
+444 
+445 101#Captivate
+446 124#stealth rock
+447 52#grass knot
+448 147#chatter
+449 69#judgment
+450 16#like pluck
+451 
+452 
+453 
+454 
+455 
+456 60#heal order--healing
+457 
+458 
+459 11#roar of time
+460 
+461 61#Lunar dance
+462 24#crush grip
+463 10#magma storm
+464 
+465 
+466 
+467 13-4#shadow force
+468 
+469 169#Wide guard
+470 155-2_4#Guard Share
+471 155-1_3#Power Share
+472 168#Wonder Room
+473 
+474 117-5#Venom Shock
+475 
+476 48#Rage power
+477 174#Telekinesis
+478 156#Magic Room
+479 175#Strike Down
+480 
+481 189#Flame Burst
+482 
+483 
+484 167#HeavyBomber
+485 186#Synchro Noise
+486 182#Eleci Ball
+487 157#Soak
+488 
+489 
+490 
+491 
+492 187#Trickery
+493 143-86#Simple Beam
+494 158#Assemble Crew
+495 176#You First
+496 184#A Capella
+497 181#Echo Voice
+498 
+499 149#Clear Smog
+500 185#Assist Power
+501 170#Fast Guard
+502 190#Side Change
+503 
+504 159#Shell Crack
+505 
+506 117-0#Evil Eye
+507 13-5_16*2_239*2_327_87_542#Free Fall
+508 
+509 107#Overhead Throw
+510 160#Complete Burn
+511 177#Stall
+512 173#Acrobat
+513 172#Mirror Type
+514 188#Retaliation
+515 161#Desperation
+516 162#Gift Pass
+517 
+518 180#Water Oath
+519 178#Fire Oath
+520 179#Grass Oath
+521 140#Volt Change
+522 
+523 
+524 
+525 107#Dragon Tail
+526 
+527 
+528 
+529 
+530 
+531 
+532 
+533 
+534 
+535 167#Heat Stamp
+536 
+537 126#Heart roller
+538 
+539 
+540 
+541 
+542 152#Wind Storm
+543 
+544 
+545 
+546 183#Techno buster
+547 166#Ancient Song
+548 
+549 
+550 
+551 
+552 
+553 104-4#freeze shock
+554 104-5#ice burn
+555 
+556 
+557 
+558 193#Cross Flame
+559 194#Cross Thunder
+560 #

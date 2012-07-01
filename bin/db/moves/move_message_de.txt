@@ -1,156 +1,156 @@
-﻿
-%f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
-%s surrounded itself with a veil of water!|Aquaring restored %s's HP.
-A soothing aroma wafted through the area!|A bell chimed!
-
-
-
-%q attacked!
-%s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
-%s is storing energy!|%s unleashed energy!
-%s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
-%s must recharge!
-%f can no longer escape!
-%s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
-%s shattered %tf's team protections!
-
-%s stahl %i von %f und aß sie!
-%s transformed into the %t type!
-%s began charging power!
-%s transformed into the %t type!
-%s transformed into the %t type!
-
-
-%s begged %f!%f gave its %i to %s|%s stole %f's %i!
-
-%s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
-%s took %f down with it!|%s is trying to take its foe with it!
-%s protected itself!
-%f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
-%s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
-
-It doesn't affect %s!
-%f can't use items anymore!|%s can use items again!
-%s's Encore ended!|%f received an encore!
-
-%s endured the hit!|%s braced itself!
-
-
-
-
-
-
-
-%f's Sturdy made the attack fail!|It's a one hit KO!
-
-%s flung its %i!
-%s is getting pumped!
-%s hat seinen Fokus verloren !|%s verstärkt seinen Fokus !
-%s became the center of attention!
-
-
-%f's %a is nullified!
-
-Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
-%f's %m lost all its PP because of %s' Grudge!
-%s swapped its boosts with %f!
-
-A hailstorm brewed!|It started to rain!|A sandstorm brewed!|Das Sonnenlicht wird stärker !,
-%s is in love with %f!|%f fell in love!|%s is immobilized by love!
-%f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
-%s erholt sich !
-%s erholt sich !|Der Wunschtraum erfüllt sich !|Es wurde von mystischem Mondlicht umhüllt !
-%s swapped its defense and attack!
-%s is ready to help %f!
-%s kept going and crashed!
-
-
-%s sealed the opponent's move(s)!|%s cannot use the sealed %m!
-%s levitated on electromagnetism!|%s electromagnetism wore off!
-
-%s knocked off %f's %i!
-
-Es hat keine Wirkung auf %s...|%f wurde bepflanzt !|Egelsamen schadet %s !
-Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
-%s took aim at %f!
-%ts's team is protected from critical hits!|%ts's lucky chant wore off!
-%s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
-%s cleared the field around %tf's team!
-Magnitude %d!
-
-
-%s learned %m!
-But nothing happened!
-
-%s identified %f!
-
-%ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
-%s erholt sich !|%s erholt sich komplett !|%s erholt sich ein wenig !
-Electric's power has been weakened!|Fire's power has been weakened!
-
-
-
-%s has a nightmare!
-%s calmed down!|%s became confused due to fatigue!
-The battlers shared their pain!
-All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
-%s's present healed %f some HP!
-%s copied %f's stat changes!
-%s moved its status onto %f!
-
-
-
-%s's rage builds up!
-%s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
-%s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!
-%s recycled %i!
-%s went to sleep and became healthy!
-%s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
-%s copied %f's %a!
-%ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
-
-%s sketched %m!
-%s swapped abilities with its target!
-
-%s's Damp prevents it from working!
-
-
-
-%s snatched %f's %m!|%s waits for a target to make a move!
-
-
-Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
-%s released!
-It reduced the PP of %f's %m by 4!
-Um das Team von %tf schweben spitze Steine !|%s wurde von spitzen Steinen getroffen !
-%s stockpiled %d!
-
-%s is hit with recoil!
-%s hat bereits einen Delegator.|Delegator von %s verschwindet !|Delegator von %f fängt %m ab !|Delegator von %s fängt den Angriff ab !|%s erschafft einen Delegator !
-
-
-%s swallowed!
-%s switched items with %f!|%s obtained one %i!
-A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
-%s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
-%f is now tormented!
-Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
-%s transformed into %p!
-%s twisted the dimensions!|The twisted dimensions returned to normal!
-
-
-%s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
-%q's wish came true!
-%f now has insomnia!
-%s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
-
-
-
-
-All stat changes were elimnated!
-%s landed on the ground!
-%s planted its roots!|%s absorbed nutrients with its roots!
-
-
-
-
+﻿0 
+1 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
+2 %s surrounded itself with a veil of water!|Aquaring restored %s's HP.
+3 A soothing aroma wafted through the area!|A bell chimed!
+4 
+5 
+6 
+7 %q attacked!
+8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
+9 %s is storing energy!|%s unleashed energy!
+10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
+11 %s must recharge!
+12 %f can no longer escape!
+13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
+14 %s shattered %tf's team protections!
+15 
+16 %s stahl %i von %f und aß sie!
+17 %s transformed into the %t type!
+18 %s began charging power!
+19 %s transformed into the %t type!
+20 %s transformed into the %t type!
+21 
+22 
+23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
+24 
+25 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
+26 %s took %f down with it!|%s is trying to take its foe with it!
+27 %s protected itself!
+28 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
+29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
+30 
+31 It doesn't affect %s!
+32 %f can't use items anymore!|%s can use items again!
+33 %s's Encore ended!|%f received an encore!
+34 
+35 %s endured the hit!|%s braced itself!
+36 
+37 
+38 
+39 
+40 
+41 
+42 
+43 %f's Sturdy made the attack fail!|It's a one hit KO!
+44 
+45 %s flung its %i!
+46 %s is getting pumped!
+47 %s hat seinen Fokus verloren !|%s verstärkt seinen Fokus !
+48 %s became the center of attention!
+49 
+50 
+51 %f's %a is nullified!
+52 
+53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
+54 %f's %m lost all its PP because of %s' Grudge!
+55 %s swapped its boosts with %f!
+56 
+57 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|Das Sonnenlicht wird stärker !,
+58 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
+59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+60 %s erholt sich !
+61 %s erholt sich !|Der Wunschtraum erfüllt sich !|Es wurde von mystischem Mondlicht umhüllt !
+62 %s swapped its defense and attack!
+63 %s is ready to help %f!
+64 %s kept going and crashed!
+65 
+66 
+67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
+68 %s levitated on electromagnetism!|%s electromagnetism wore off!
+69 
+70 %s knocked off %f's %i!
+71 
+72 Es hat keine Wirkung auf %s...|%f wurde bepflanzt !|Egelsamen schadet %s !
+73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
+74 %s took aim at %f!
+75 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
+76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
+77 %s cleared the field around %tf's team!
+78 Magnitude %d!
+79 
+80 
+81 %s learned %m!
+82 But nothing happened!
+83 
+84 %s identified %f!
+85 
+86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
+87 %s erholt sich !|%s erholt sich komplett !|%s erholt sich ein wenig !
+88 Electric's power has been weakened!|Fire's power has been weakened!
+89 
+90 
+91 
+92 %s has a nightmare!
+93 %s calmed down!|%s became confused due to fatigue!
+94 The battlers shared their pain!
+95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+96 %s's present healed %f some HP!
+97 %s copied %f's stat changes!
+98 %s moved its status onto %f!
+99 
+100 
+101 
+102 %s's rage builds up!
+103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
+104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!
+105 %s recycled %i!
+106 %s went to sleep and became healthy!
+107 %s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
+108 %s copied %f's %a!
+109 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
+110 
+111 %s sketched %m!
+112 %s swapped abilities with its target!
+113 
+114 %s's Damp prevents it from working!
+115 
+116 
+117 
+118 %s snatched %f's %m!|%s waits for a target to make a move!
+119 
+120 
+121 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
+122 %s released!
+123 It reduced the PP of %f's %m by 4!
+124 Um das Team von %tf schweben spitze Steine !|%s wurde von spitzen Steinen getroffen !
+125 %s stockpiled %d!
+126 
+127 %s is hit with recoil!
+128 %s hat bereits einen Delegator.|Delegator von %s verschwindet !|Delegator von %f fängt %m ab !|Delegator von %s fängt den Angriff ab !|%s erschafft einen Delegator !
+129 
+130 
+131 %s swallowed!
+132 %s switched items with %f!|%s obtained one %i!
+133 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
+134 %s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
+135 %f is now tormented!
+136 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
+137 %s transformed into %p!
+138 %s twisted the dimensions!|The twisted dimensions returned to normal!
+139 
+140 
+141 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
+142 %q's wish came true!
+143 %f now has insomnia!
+144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
+145 
+146 
+147 
+148 
+149 All stat changes were elimnated!
+150 %s landed on the ground!
+151 %s planted its roots!|%s absorbed nutrients with its roots!
+152 
+153 
+154 
+155 

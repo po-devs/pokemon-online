@@ -1,305 +1,305 @@
-﻿(Kein Item)
-Großwurzel
-Blauer Schal
-Blendpuder
-Wahlband
-Wahlschal
-Wahlglas
-Fatumknoten
-Expertengurt
-Fokus-Band
-Fokus-Gurt
-Lahmrauch
-Grüner Schal
-Schwerschwf.
-Laxrauch
-Überreste
-Glücksrauch
-Mentalkraut
-Metallstaub
-Muskelband
-Schrägrauch
-Rosa Schal
-Energiekraut
-Scheuchrauch
-Flottstaub
-Düsterumhang
-Roter Schal
-Steinrauch
-Rosenrauch
-Seerauch
-Wechselhülle
-Seidenschal
-Silberstaub
-Glattbrocken
-Pudersand
-Sanftglocke
-Wellenrauch
-Schlohktaut
-Großlinse
-Schlauglas
-Gelber Schal
-Zoomlinse
-Münzamulett
-Gegengift
-Aufwecker
-Beerensaft
-Riesenperle
-Riesenpilz
-Schwarzgurt
-Schw. Flöte
-Giftschleim
-Schattenglas
-Blaue Flöte
-Indigostück
-Feuerheiler
-Kalzium
-Carbon
-Holzkohle
-Schutzband
-Feuchtmulch
-Abyssplatte
-Angriffsplus
-Drachenhaut
-Elixier
-Kraftwurzel
-Energiestaub
-Fluchtseil
-Äther
-Ewigstein
-EP-Teiler
-Feuerstein
-Heiß-Orb
-Eneco-Rute
-Tafelwasser
-Hyperheiler
-Top-Genesung
-Neumulch
-Grünstück
-Wachsmulch
-Megablock
-Heilpuder
-Herzschuppe
-Honig
-KP-Plus
-Hypertrank
-Eisheiler
-Eisen
-Kingstein
-Lavakeks
-Blattstein
-Limonade
-Leben-Orb
-Kugelblitz
-Lichtlehm
-Glücks-Ei
-Magnet
-Top-Elixier
-Top-Äther
-Top-Trank
-Top-Schutz
-Top-Beleber
-Metalmantel
-Metronom
-Wundersaat
-Kuhmuh-Milch
-Mondstein
-Zauberwasser
-Ewiges Eis
-Nugget
-Spezialität
-Para-Heiler
-Perle
-Pokepuppe
-Trank
-AP-Top
-AP-Plus
-Protein
-Sondebonbon
-Scharfzahn
-Rote Flöte
-Purpurstück
-Schutz
-Vitalkraut
-Beleber
-Zauberasche
-Scope-Linse
-Seegesang
-Küstensalz
-Küstenschale
-Rauchball
-Sprudel
-Seelentau
-Bannsticker
-Stabil-Mulch
-Sternenstück
-Sternenstaub
-Sonnenstein
-Supertrank
-Superschutz
-Donnerstein
-Minipilz
-Toxik-Orb
-Krummlöffel
-Up-Grade
-Wasserstein
-Weiße Flöte
-X-Treffer
-X-Angriff
-X-Verteidigung
-X-Spezial
-X-Spezial Ver
-X-Tempo
-Gelbe Flöte
-Gelbstück
-Zink
-Eisbrocken
-Lucky Punch
-Dubios Disc
-Hackattack
-Adamant Orb
-Nassbrocken
-Heißbrocken
-Weißorb
-Machoand
-Lauchstange
-Drachenzahn
-Giftstich
-Machtkette
-Machtband
-Machtgurt
-Machtreif
-Machtlinse
-Machtgewicht
-Funkelstein
-Finsterstein
-Stromisierer
-Magmarisierer
-Spiritkern
-Ovaler Stein
-Schützer
-Flinkklaue
-Scharfklaue
-Leuchtstein
-Klettdorn
-Abysszahn
-Dracotafel
-Furchttafel
-Erdtafel
-Fausttafel
-Feuertafel
-Griffklaue
-Frosttafel
-Käfertafel
-Eisentafel
-Wiesentafel
-Hirntafel
-Wolkentafel
-Wassertafel
-Spuktafel
-Steintafel
-Kampfknochen
-Gifttafel
-Blitztafel
-Panzerfossil
-Klauenfossil
-Domfossil
-Granitstein
-Helixfossil
-Altbernstein
-Steinknochen
-Wurzelfossil
-Kopffossil
-Eisenkugel
-Griseous Orb
-Air Mail
-Bloom Mail
-Brick Mail
-Bubble Mail
-Flame Mail
-Grass Mail
-Harbor Mail
-Heart Mail
-Mosaic Mail
-Snow Mail
-Space Mail
-Steel Mail
-Tunnel Mail
-Aqua Cassette
-Lightning Cassette
-Blaze Cassette
-Freeze Cassette
-Heart Sweets
-Clean Scale
-Evolution Stone
-Pumice Stone
-Rugged Helmet
-Balloon
-Red Card
-Bull's Eye
-Pressure Band
-Bulb
-Rechargeable Battery
-Escape Button
-Fire Jewel
-Water Jewel
-Electric Jewel
-Grass Jewel
-Ice Jewel
-Fight Jewel
-Poison Jewel
-Earth Jewel
-Flight Jewel
-Psychic Jewel
-Bug jewel
-Rock Jewel
-Ghost Jewel
-Dragon Jewel
-Dark Jewel
-Steel Jewel
-Normal Jewel
-Strength Wing
-Power Wing
-Resistance Wing
-Wisdom Wing
-Mind Wing
-Instant Wing
-Beautiful Wing
-Dream Ball
-Fragrant Mushroom
-Huge Gold Orb
-Round Pearl
-Comet Piece
-Ancient Bronze Coin
-Ancient Silver Coin
-Ancient Gold Coin
-Ancient Vase
-Ancient Bracelet
-Ancient Statue
-Ancient Crown
-Hiun Ice-cream
-Dire Hit 2
-X Speed 2
-X Special 2
-X Sp. Def 2
-X Defend 2
-X Attack 2
-X Accuracy 2
-X Speed 3
-X Special 3
-X Sp. Def 3
-X Defend 3
-X Attack 3
-X Accuracy 3
-X Speed 6
-X Special 6
-X Sp. Def 6
-X Defend 6
-X Attack 6
-X Accuracy 6
-Skill Call
-Item Drop
-Item Call
-Flat Call
-Dire Hit 3
-Berserk Gene
+﻿0 (Kein Item)
+1 Großwurzel
+2 Blauer Schal
+3 Blendpuder
+4 Wahlband
+5 Wahlschal
+6 Wahlglas
+7 Fatumknoten
+8 Expertengurt
+9 Fokus-Band
+10 Fokus-Gurt
+11 Lahmrauch
+12 Grüner Schal
+13 Schwerschwf.
+14 Laxrauch
+15 Überreste
+16 Glücksrauch
+17 Mentalkraut
+18 Metallstaub
+19 Muskelband
+20 Schrägrauch
+21 Rosa Schal
+22 Energiekraut
+23 Scheuchrauch
+24 Flottstaub
+25 Düsterumhang
+26 Roter Schal
+27 Steinrauch
+28 Rosenrauch
+29 Seerauch
+30 Wechselhülle
+31 Seidenschal
+32 Silberstaub
+33 Glattbrocken
+34 Pudersand
+35 Sanftglocke
+36 Wellenrauch
+37 Schlohktaut
+38 Großlinse
+39 Schlauglas
+40 Gelber Schal
+41 Zoomlinse
+42 Münzamulett
+43 Gegengift
+44 Aufwecker
+45 Beerensaft
+46 Riesenperle
+47 Riesenpilz
+48 Schwarzgurt
+49 Schw. Flöte
+50 Giftschleim
+51 Schattenglas
+52 Blaue Flöte
+53 Indigostück
+54 Feuerheiler
+55 Kalzium
+56 Carbon
+57 Holzkohle
+58 Schutzband
+59 Feuchtmulch
+60 Abyssplatte
+61 Angriffsplus
+62 Drachenhaut
+63 Elixier
+64 Kraftwurzel
+65 Energiestaub
+66 Fluchtseil
+67 Äther
+68 Ewigstein
+69 EP-Teiler
+70 Feuerstein
+71 Heiß-Orb
+72 Eneco-Rute
+73 Tafelwasser
+74 Hyperheiler
+75 Top-Genesung
+76 Neumulch
+77 Grünstück
+78 Wachsmulch
+79 Megablock
+80 Heilpuder
+81 Herzschuppe
+82 Honig
+83 KP-Plus
+84 Hypertrank
+85 Eisheiler
+86 Eisen
+87 Kingstein
+88 Lavakeks
+89 Blattstein
+90 Limonade
+91 Leben-Orb
+92 Kugelblitz
+93 Lichtlehm
+94 Glücks-Ei
+95 Magnet
+96 Top-Elixier
+97 Top-Äther
+98 Top-Trank
+99 Top-Schutz
+100 Top-Beleber
+101 Metalmantel
+102 Metronom
+103 Wundersaat
+104 Kuhmuh-Milch
+105 Mondstein
+106 Zauberwasser
+107 Ewiges Eis
+108 Nugget
+109 Spezialität
+110 Para-Heiler
+111 Perle
+112 Pokepuppe
+113 Trank
+114 AP-Top
+115 AP-Plus
+116 Protein
+117 Sondebonbon
+118 Scharfzahn
+119 Rote Flöte
+120 Purpurstück
+121 Schutz
+122 Vitalkraut
+123 Beleber
+124 Zauberasche
+125 Scope-Linse
+126 Seegesang
+127 Küstensalz
+128 Küstenschale
+129 Rauchball
+130 Sprudel
+131 Seelentau
+132 Bannsticker
+133 Stabil-Mulch
+134 Sternenstück
+135 Sternenstaub
+136 Sonnenstein
+137 Supertrank
+138 Superschutz
+139 Donnerstein
+140 Minipilz
+141 Toxik-Orb
+142 Krummlöffel
+143 Up-Grade
+144 Wasserstein
+145 Weiße Flöte
+146 X-Treffer
+147 X-Angriff
+148 X-Verteidigung
+149 X-Spezial
+150 X-Spezial Ver
+151 X-Tempo
+152 Gelbe Flöte
+153 Gelbstück
+154 Zink
+155 Eisbrocken
+156 Lucky Punch
+157 Dubios Disc
+158 Hackattack
+159 Adamant Orb
+160 Nassbrocken
+161 Heißbrocken
+162 Weißorb
+163 Machoand
+164 Lauchstange
+165 Drachenzahn
+166 Giftstich
+167 Machtkette
+168 Machtband
+169 Machtgurt
+170 Machtreif
+171 Machtlinse
+172 Machtgewicht
+173 Funkelstein
+174 Finsterstein
+175 Stromisierer
+176 Magmarisierer
+177 Spiritkern
+178 Ovaler Stein
+179 Schützer
+180 Flinkklaue
+181 Scharfklaue
+182 Leuchtstein
+183 Klettdorn
+184 Abysszahn
+185 Dracotafel
+186 Furchttafel
+187 Erdtafel
+188 Fausttafel
+189 Feuertafel
+190 Griffklaue
+191 Frosttafel
+192 Käfertafel
+193 Eisentafel
+194 Wiesentafel
+195 Hirntafel
+196 Wolkentafel
+197 Wassertafel
+198 Spuktafel
+199 Steintafel
+200 Kampfknochen
+201 Gifttafel
+202 Blitztafel
+203 Panzerfossil
+204 Klauenfossil
+205 Domfossil
+206 Granitstein
+207 Helixfossil
+208 Altbernstein
+209 Steinknochen
+210 Wurzelfossil
+211 Kopffossil
+212 Eisenkugel
+213 Griseous Orb
+214 Air Mail
+215 Bloom Mail
+216 Brick Mail
+217 Bubble Mail
+218 Flame Mail
+219 Grass Mail
+220 Harbor Mail
+221 Heart Mail
+222 Mosaic Mail
+223 Snow Mail
+224 Space Mail
+225 Steel Mail
+226 Tunnel Mail
+227 Aqua Cassette
+228 Lightning Cassette
+229 Blaze Cassette
+230 Freeze Cassette
+231 Heart Sweets
+232 Clean Scale
+233 Evolution Stone
+234 Pumice Stone
+235 Rugged Helmet
+236 Balloon
+237 Red Card
+238 Bull's Eye
+239 Pressure Band
+240 Bulb
+241 Rechargeable Battery
+242 Escape Button
+243 Fire Jewel
+244 Water Jewel
+245 Electric Jewel
+246 Grass Jewel
+247 Ice Jewel
+248 Fight Jewel
+249 Poison Jewel
+250 Earth Jewel
+251 Flight Jewel
+252 Psychic Jewel
+253 Bug jewel
+254 Rock Jewel
+255 Ghost Jewel
+256 Dragon Jewel
+257 Dark Jewel
+258 Steel Jewel
+259 Normal Jewel
+260 Strength Wing
+261 Power Wing
+262 Resistance Wing
+263 Wisdom Wing
+264 Mind Wing
+265 Instant Wing
+266 Beautiful Wing
+267 Dream Ball
+268 Fragrant Mushroom
+269 Huge Gold Orb
+270 Round Pearl
+271 Comet Piece
+272 Ancient Bronze Coin
+273 Ancient Silver Coin
+274 Ancient Gold Coin
+275 Ancient Vase
+276 Ancient Bracelet
+277 Ancient Statue
+278 Ancient Crown
+279 Hiun Ice-cream
+280 Dire Hit 2
+281 X Speed 2
+282 X Special 2
+283 X Sp. Def 2
+284 X Defend 2
+285 X Attack 2
+286 X Accuracy 2
+287 X Speed 3
+288 X Special 3
+289 X Sp. Def 3
+290 X Defend 3
+291 X Attack 3
+292 X Accuracy 3
+293 X Speed 6
+294 X Special 6
+295 X Sp. Def 6
+296 X Defend 6
+297 X Attack 6
+298 X Accuracy 6
+299 Skill Call
+300 Item Drop
+301 Item Call
+302 Flat Call
+303 Dire Hit 3
+304 Berserk Gene
