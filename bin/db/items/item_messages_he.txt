@@ -1,37 +1,15 @@
 ﻿0 (No Item)
-1 
-2 
-3 
 4 %s ðéöì áæëåú äFocus Band!
 5 %s ðéöì áæëåú äFocus Sash!
-6 
 7 %s ðèòï ìçìåèéï áæëåú äPower Herb!
-8 
-9 
-10 
 11 %s äùúîù áPower Herb ùìå ëãé ìú÷åó îéã!
 12 %s äçæéø ìòöîå îòè çééí áæëåú äLeftovers!
-13 
-14 
-15 
 16 %s  äçæéø ìòöîå îòè çééí áæëåú ä Black Sludge!| %s ðéæå÷ îä Black Sludge!
-17 
 18 %s  äçæéø ìòöîå îòè çééí áæëåú äBerry Juice!
 19 äFlame Orb ùì %s äåôòì! | äToxic Orb ùì %s äåôòì!
-20 
 21 %s ðéæå÷ áâìì äLife Orb!
-22 
-23 
 24 äShell Bell ùì %s äçæéø ìå îòè çééí!
-25 
-26 
-27 
-28 
 29 %s is hurt by its Sticky Barb!
-30 
-31 
-32 
-33 
 34 %f is hurt by %s's Rugged Helmet!
 35 %s's Balloon popped!|%s is floating on a balloon!
 36 %s's %i raised its %st!

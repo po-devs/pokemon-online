@@ -1,37 +1,16 @@
 ﻿0 (Inget föremål)
-1 
-2 
 3 %s återställde sina stats med white herb!
 4 %s stod ut tack vare sin focus band!
 5 %s stod ut tack vare sin focus sash!
-6 
 7 %s blev fullt laddad med hjälp av sin power herb!
-8 
-9 
-10 
 11 %s använde sin power herb för att attackera omedelbart!
 12 %s återställde lite HP med Leftovers!
-13 
-14 
-15 
 16 %s återställde lite HP med Black Sludge!|%s skadades av Black Sludge!
-17 
 18 %s återställde lite HP med sin Berry Juice!
 19 %s's Flame Orb aktiverad!|%s's Toxic Orb aktiverad!
-20 
 21 %s skadas av sin Life Orb!
-22 
-23 
 24 %ss shell bell återställde dess HP lite grann!
-25 
-26 
-27 
-28 
 29 %s skadas av sin Sticky Barb!|%s skadas av %fs sticky Barb!|The Sticky Barb är nu fäst vid %s!
-30 
-31 
-32 
-33 
 34 %f is hurt by %s's Rugged Helmet!
 35 %s's Balloon popped!|%s is floating on a balloon!
 36 %s's %i raised its %st!

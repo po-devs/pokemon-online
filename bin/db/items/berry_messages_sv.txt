@@ -6,7 +6,6 @@
 5 %ss %i försvagade %ms styrka!
 6 %s återställde lite HP
 7 %i ökade %ss %st!
-8 
 9 %i ökade skarpt %ss %st!
 10 %s fokuserar på sitt mål!
 11 %s planerar redan sitt nästa drag!

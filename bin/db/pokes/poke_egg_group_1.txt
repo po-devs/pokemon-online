@@ -28,8 +28,6 @@
 27 Ground
 28 Ground
 29 Monster
-30 
-31 
 32 Monster
 33 Monster
 34 Monster
@@ -142,14 +140,9 @@
 141 Water 1
 142 Flying
 143 Monster
-144 
-145 
-146 
 147 Water 1
 148 Water 1
 149 Water 1
-150 
-151 
 152 Monster
 153 Monster
 154 Monster
@@ -199,7 +192,6 @@
 198 Flying
 199 Monster
 200 Indeterminate
-201 
 202 Indeterminate
 203 Ground
 204 Bug
@@ -241,15 +233,9 @@
 240 HumanShape
 241 Ground
 242 Fairy
-243 
-244 
-245 
 246 Monster
 247 Monster
 248 Monster
-249 
-250 
-251 
 252 Monster
 253 Monster
 254 Monster
@@ -358,7 +344,6 @@
 357 Monster
 358 Indeterminate
 359 Ground
-360 
 361 Fairy
 362 Fairy
 363 Water 1
@@ -375,16 +360,6 @@
 374 Mineral
 375 Mineral
 376 Mineral
-377 
-378 
-379 
-380 
-381 
-382 
-383 
-384 
-385 
-386 
 387 Monster
 388 Monster
 389 Monster
@@ -478,20 +453,8 @@
 477 Indeterminate
 478 Fairy
 479 Indeterminate
-480 
-481 
-482 
-483 
-484 
-485 
-486 
-487 
-488 
 489 Water 1
 490 Water 1
-491 
-492 
-493 
 494
 495 Ground
 496 Ground
