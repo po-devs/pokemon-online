@@ -165,11 +165,6 @@ PokeBoxes QFrame#teamFrame, PokeBoxes QFrame#selectedFrame {
                                 stop: 0.51 #374652, stop: 1.0 #344654);
 }
 
-TrainerMenu QPushButton {
-    color: white;
-    background: #b1b1b1;
-}
-
 TrainerMenu QPushButton#close {
 /*    background: #b10305;*/
     margin-top: 10px;
@@ -178,6 +173,7 @@ TrainerMenu QPushButton#close {
     border: 1px solid #7f8585;
     border-radius: 3px;
     padding: 2px;
+    color: white;
 
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fe001b, stop: 0.8 #d40000,
