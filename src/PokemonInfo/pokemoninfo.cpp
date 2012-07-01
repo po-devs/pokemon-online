@@ -79,7 +79,7 @@ QString NatureInfo::m_Directory;
 QList<QString> CategoryInfo::m_Names;
 QString CategoryInfo::m_Directory;
 
-QHash<int,QString> AbilityInfo::m_Names;
+QHash<int,QString> AbilityInfo::m_Names, AbilityInfo::m_Desc, AbilityInfo::m_BattleDesc;
 QString AbilityInfo::m_Directory;
 QHash<int,AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
 QHash<int, QStringList> AbilityInfo::m_Messages;
@@ -420,22 +420,22 @@ static void fill_container_with_file(T &container, const QString & filename, Fil
     }
 }
 
-static QString get_line(const QString & filename, int linenum)
-{
-    QFile file(filename);
+//static QString get_line(const QString & filename, int linenum)
+//{
+//    QFile file(filename);
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+//    file.open(QIODevice::ReadOnly | QIODevice::Text);
 
-    QTextStream filestream(&file);
+//    QTextStream filestream(&file);
 
-    /* discarding all the uninteresting lines, should find a more effective way */
-    for (int i = 0; i < linenum; i++)
-    {
-        filestream.readLine();
-    }
+//    /* discarding all the uninteresting lines, should find a more effective way */
+//    for (int i = 0; i < linenum; i++)
+//    {
+//        filestream.readLine();
+//    }
 
-    return filestream.readLine();
-}
+//    return filestream.readLine();
+//}
 
 static QString trFile(const QString &beg)
 {
@@ -2543,6 +2543,8 @@ void AbilityInfo::loadMessages(bool init)
 void AbilityInfo::loadNames()
 {
     fill_int_str(m_Names, trFile(path("abilities")));
+    fill_int_str(m_Desc, trFile(path("ability_desc")));
+    fill_int_str(m_BattleDesc, trFile(path("ability_battledesc")));
 }
 
 QString AbilityInfo::Message(int ab, int part) {
@@ -2588,12 +2590,12 @@ AbilityInfo::Effect AbilityInfo::Effects(int abnum, Pokemon::gen gen) {
 
 QString AbilityInfo::Desc(int ab)
 {
-    return get_line(trFile(path("ability_desc")), ab);
+    return m_Desc[ab];
 }
 
 QString AbilityInfo::EffectDesc(int abnum)
 {
-    return get_line(trFile(path("ability_battledesc")), abnum);
+    return m_BattleDesc[abnum];
 }
 
 int AbilityInfo::ConvertFromOldAbility(int oldability)

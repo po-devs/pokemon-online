@@ -6,7 +6,6 @@
 5 %s's %i weakened %m's power!
 6 %s restored a some HP
 7 The %i raised %s's %st!
-8 
 9 The %i sharply raised %s's %st!
 10 %s is focusing on the target!
 11 %s is already preparing its next move!

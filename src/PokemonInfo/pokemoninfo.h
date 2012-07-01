@@ -470,6 +470,8 @@ private:
     static QHash<int,Effect> m_Effects[NUMBER_GENS];
     static QHash<int,QStringList> m_Messages;
     static QHash<int,int> m_OldAbilities;
+    static QHash<int,QString> m_Desc;
+    static QHash<int,QString> m_BattleDesc;
 
     static void loadNames();
     static void loadMessages(bool init=false);

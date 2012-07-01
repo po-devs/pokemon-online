@@ -1,37 +1,26 @@
 ﻿0 No Effect
-1 
 2 Good chance for a critical hit.
 3 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
 4 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
-5 
 6 {In internal battles, player obtains money after battle when using, if the player wins. If this attack is successful, an amount equal to five times the user's current level (during attack's use) is added to the money to be obtained. Not obtained if fleeing occurred in the battle.}
 7 May burn opponent. (10%)
 8 May freeze opponent. (10%)
 9 May paralyze opponent. (10%)
-10 
-11 
 12 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
 13 Two-turn attack. Good chance for a critical hit.
 14 Increases user's Attack by 2 stages.
-15 
 16  is doubled if opponent is using Fly or Bounce.
-17 
 18 { Ends wild battles. In trainer battles, replaces opponent with a random non-active Pokémon in opponent's party; fails if opponent's party has no non-active Pokémon. Fails either way if Ingrain is in effect for opponent. Priority level -6.}
 19 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Gust, Thunder, Twister, and Sky Uppercut.
 20 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [three to six] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.} (100%)
-21 
-22 
 23 May cause opponent to flinch. Power is doubled if Minimize is in effect for opponent.
 24 Strikes twice.
-25 
 26 If this attack misses or becomes ineffective, user loses half of the damage the attack would have dealt (ignoring type immunities, not considered recoil damage), but not [less than 1 HP or] more HP than half of opponent's total HP.
 27 May cause opponent to flinch.
 28 Decreases opponent's Accuracy by 1 stage.
 29 May cause opponent to flinch.
-30 
 31 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
 32 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
-33 
 34 May paralyze opponent. (30%)
 35 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [three to six] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.} (100%)
 36 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
@@ -53,8 +42,6 @@
 52 May burn opponent. (10%)
 53 May burn opponent. (10%)
 54 For five rounds, including the current round, attacks and abilities can't reduce the stat stages of each active Pokémon on the user's side if they are used by other Pokémon. During effect, this attack fails for user's party.
-55 
-56 
 57 If opponent is using Dive, this attack's power is doubled.
 58 May freeze opponent. (10%)
 59 May freeze opponent. During Hail, this attack hits without fail. (10%)
@@ -62,13 +49,10 @@
 61 May decrease opponent's Speed by 1 stage.
 62 May decrease opponent's Attack by 1 stage.
 63 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
-64 
-65 
 66 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 67 This attack's power is 20 if the weight of the opponent's original species is 10 kilograms (kg) or less [or less than 10 kg], else 40 if 25 kg or less, else 60 if 50 kg or less, else 80 if 100 kg or less, else 100 if 200 kg or less, else 120.
 68 If the last non-user who hit the user with a physical attack this round is one of user's opposing Pokémon, and there is a Pokemon at that non-user's position, deals damage to the Pokémon at that non-user's position equal to 2 times the amount of HP lost by user due to that attack. Fails if that amount is 0. Affected by type immunities. For multi-hit attacks, returns HP based on the last hit of that attack. Priority level -5.
 69 Deals damage to opponent equal to user's level. Affected by type immunities.
-70 
 71 If this attack is successful, user gains half of HP lost by opponent due to this attack.
 72 If this attack is successful, user gains half of HP lost by opponent due to this attack.
 73 {During effect, at the end of every round, if there is a Pokémon at user's position, opponent loses 1/8 of total HP, and the Pokémon at user's position gains HP lost by opponent. Effect ends when opponent is switched or uses Rapid Spin. Fails if opponent's current type includes Grass.}
@@ -86,7 +70,6 @@
 85 May paralyze opponent. (10%)
 86 Paralyzes opponent. (Not affected by type immunities.)
 87 May paralyze opponent. During Rain Dance, this attack hits without fail. Otherwise, during Sunny Day, this attack's accuracy is 50. Can hit opponent even if it is using Fly or Bounce. (30%)
-88 
 89 is doubled if opponent is using Dig.
 90 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
 91 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Earthquake and Magnitude, and user doesn't lose HP because of Sandstorm and Hail.
@@ -119,7 +102,6 @@
 118 Uses a random move other than the following:  Metronome, Struggle, Sketch, Mimic, Chatter, Sleep Talk, Assist, Mirror Move, Counter, Mirror Coat, Protect, Detect, Endure, Destiny Bond, Thief, Follow Me, Snatch, Helping Hand, Covet, Trick, Focus Punch, Feint, Copycat, Me First, Switcheroo, or any move user knows.
 119 Uses with no target the last move that targeted the user, was not prevented from being used, was not used by another move, can be used with this attack, and has a target of "single non-user", "all opposing Pokémon", "opposing Pokémon selected at random", "all non-users", or "no target". Fails if the affected move is Encore. The affected move is reset for a Pokémon when it is replaced or one of its opposing Pokémon is replaced. (A two-turn attack targets a Pokémon on both turns of use.)
 120 User faints as part of this attack's use. Opponent's Defense is temporarily halved in damage calculation. Fails if no target exists (doesn't cause fainting).
-121 
 122 May paralyze opponent. (30%)
 123 May poison opponent. (40%)
 124 May poison opponent. (30%)
@@ -222,7 +204,6 @@
 221 May burn opponent. If user is frozen and it chose this move for use, it becomes defrosted before this attack is used. (50%)
 222 This attack's power is 10 (5% chance), 30 (10%), 50 (20%), 70 (30%), 90 (20%), 110 (10%), or 150 (5%) (Magnitude 4 through 10, respectively). If an opponent is using Dig, this attack's power is doubled for that opponent.
 223 May confuse opponent. (100%)
-224 
 225 May paralyze opponent. (30%)
 226 Replaces user's Pokémon with a different non-active Pokémon in user's party of user's choice and transfers user's stat stages, confusion, and effects of certain moves to the new Pokémon.
 227 Effect lasts for four to eight rounds, including the current round. During effect, opponent, during each of its turns, uses the last move it used before this attack was used, with no target, and opponent chooses that move for use automatically and can't choose any other move for use. (Opponent can switch or flee as normal.) This attack fails if there is no affected move; the affected move is Transform, Mimic, Sketch, Mirror Move, Encore, or Struggle; if opponent doesn't have affected move; or if affected move has zero PP. During effect, this attack fails against opponent. Effect ends when opponent is replaced. At the beginning of opponent's turn and at the end of the round, if affected move has changed, effect ends. At the end of the round, if affected move has zero PP, effect ends.
@@ -302,7 +283,6 @@
 301 User uses this attack for five turns, during which user can't take any other action. A multiplier, X (which begins at 0), increases by 1 whenever this attack is successful. Effect ends and X is reset to 0 when user is replaced; when this attack is prevented from being used, misses, or becomes ineffective; when the attack is used for five turns; or when user falls asleep or becomes frozen. This attack's power is multiplied by 2 to the power of X. If user is asleep, this attack's effect lasts one turn.
 302 May cause opponent to flinch.
 303 User gains half of total HP. Fails if user's HP is full.
-304 
 305 May badly poison opponent. (30%)
 306 May decrease opponent's Defense by 1 stage.
 307 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
@@ -335,7 +315,6 @@
 334 Increases user's Defense by 2 stages.
 335 {During effect, opponent cannot switch or flee. Effect ends when user or opponent is switched. During effect, this attack fails against opponent.}
 336 Increases user's Attack by 1 stage.
-337 
 338 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
 339 Increases user's Attack and Defense by 1 stage.
 340 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Gust, Thunder, Twister, and Sky Uppercut. May paralyze opponent. (30%)
@@ -399,14 +378,9 @@
 398 May poison opponent. (30%)
 399 May cause opponent to flinch.
 400 Good chance for a critical hit.
-401 
-402 
 403 May cause opponent to flinch.
-404 
 405 May decrease opponent's Special Defense by 1 stage.
-406 
 407 May cause opponent to flinch.
-408 
 409 If this attack is successful, user gains half of HP lost by opponent due to this attack.
 410 Priority level 1.
 411 May decrease opponent's Special Defense by 1 stage.
@@ -436,7 +410,6 @@
 435 May paralyze opponent. (30%)
 436 May burn opponent. (30%)
 437 If this attack is successful, decreases user's Special Attack by 2 stages.
-438 
 439 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
 440 Good chance for a critical hit. May poison opponent. (10%)
 441 May poison opponent. (30%)

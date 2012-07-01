@@ -1,37 +1,17 @@
 ﻿0 (No Item)
-1 
-2 
 3 %s restored its stats using White Herb!
 4 %s hung on thanks to its Focus Band!
 5 %s hung on using its Focus Sash!
-6 
 7 %s used its Mental Herb to come back to his senses!
-8 
-9 
-10 
 11 %s used its power herb to attack immediately!
 12 %s restored a little HP using its Leftovers!
-13 
-14 
-15 
 16 %s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
 17 %s's Quick Claw activated!
 18 %s restored a little HP using its Berry Juice!
 19 %s's Flame Orb activated!|%s's Toxic Orb activated!
-20 
 21 %s is hurt by its Life Orb!
-22 
-23 
 24 %s's shell bell restored its HP a little!
-25 
-26 
-27 
-28 
 29 %s is hurt by its Sticky Barb!
-30 
-31 
-32 
-33 
 34 %f is hurt by %s's Rocky Helmet!
 35 %s's Air Balloon popped!|%s is floating on a balloon!
 36 %s's %i raised its %st!

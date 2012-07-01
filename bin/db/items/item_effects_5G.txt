@@ -1,30 +1,19 @@
 ﻿0 
-1 
-2 
 3 1-7_2#bright powder
 4 2|1-1_10#choice band
 5 2|1-5_10#choice scarf
 6 2|1-3_10#choice specs
-7 
-8 
 9 4#focus band
 10 5#focus sash
 11 6#full incense
-12 
 13 6#lagging tail
 14 1-7_1#lax incense
 15 12#Leftovers
-16 
-17 
 18 8-132_10_2_4#Metal Powder
 19 9-1#Muscle Band
 20 10-13#Odd Incense 
-21 
 22 #11#Power Herb
-23 
 24 8-132_20_5#Quick Powder
-25 
-26 
 27 10-5#Rock Incense 
 28 10-11#Rose Incense 
 29 10-10#Sea Incense
@@ -33,129 +22,36 @@
 32 10-7#Silver Powder
 33 #14-3#Smooth Rock 
 34 10-4Soft Sand
-35 
 36 10-10#Wave Incense 
 37 3#white herb
 38 1-6_2#Wide Lens 
 39 9-2#Wise Glasses
-40 
 41 15#Zoom Lens
-42 
-43 
-44 
 45 18#Berry Juice
-46 
-47 
 48 10-1#black belt
-49 
 50 16#black sludge
 51 10-16#dark glasses
-52 
-53 
-54 
-55 
-56 
 57 10-9#charcoal
-58 
-59 
 60 8-366_20_4#deepseascale
-61 
 62 10-15#Dragon Scale
-63 
-64 
-65 
-66 
-67 
-68 
-69 
-70 
 71 19-4#Flame Orb
-72 
-73 
-74 
-75 
-76 
-77 
-78 
-79 
-80 
-81 
-82 
-83 
-84 
-85 
-86 
 87 #20#king's rock
-88 
-89 
-90 
 91 21#Life Orb
 92 8-25_20_1_3#Light Ball
-93 
-94 
 95 10-12#Magnet
-96 
-97 
-98 
-99 
-100 
 101 10-8#Steel
 102 22#Metronome
 103 10-11#Miracle seed
-104 
-105 
 106 10-10#Mystic water
 107 10-14#Nevermelt Ice
-108 
-109 
-110 
-111 
-112 
-113 
-114 
-115 
-116 
-117 
-118 
-119 
-120 
-121 
-122 
-123 
-124 
 125 23#Scope Lens
 126 24#Shell Bell
-127 
-128 
-129 
-130 
 131 8-380/381_10_3_4#Soul Dew
 132 10-7#Spell Tag
-133 
-134 
-135 
-136 
-137 
-138 
-139 
-140 
 141 19-5#Toxic Orb 
 142 10-13#Twistedspoon
-143 
-144 
-145 
-146 
-147 
-148 
-149 
-150 
-151 
-152 
-153 
-154 
 155 #14-1#Icy Rock
 156 26-113#Lucky Punch
-157 
 158 10-2#Sharp Beak
 159 27-483_15_8#Adamant Orb
 160 #14-2#Damp Rock 
@@ -171,16 +67,8 @@
 170 1-5_-10#Power Bracer
 171 1-5_-10#Power Lens 
 172 1-5_-10#Power Weight 
-173 
-174 
-175 
-176 
-177 
-178 
-179 
 180 17#Quick Claw
 181 23#Razor Claw 
-182 
 183 28#Sticky Barb
 184 8-366_20_3#Deepseatooth
 185 29-15|10-15#Draco Plate
@@ -201,15 +89,7 @@
 200 8-104/105_20_1#Thick Club
 201 29-3|10-3#Toxic Plate 
 202 29-12|10-12#Zap Plate
-203 
-204 
-205 
 206 10-5#Hard stone
-207 
-208 
-209 
-210 
-211 
 212 1-5_-10#Iron Ball
 213 27-487_15_7#Griseous Orb
 214 31#Air Mail
@@ -229,15 +109,11 @@
 228 32-12#Shock Drive
 229 32-9#Burn Drive
 230 32-14#Chill Drive
-231 
-232 
 233 33#Evolution Stone
 234 #Pumice Stone
 235 34#Rugged Helmet
 236 35#Balloon
 237 38#Red Card
-238 
-239 
 240 36-10#Bulb
 241 36-12#Rechargeable battery
 242 39#Escape Button
@@ -258,57 +134,4 @@
 257 37-16#Dark Jewel
 258 37-8#Steel Jewel
 259 37-0#Normal Jewel
-260 
-261 
-262 
-263 
-264 
-265 
-266 
-267 
-268 
-269 
-270 
-271 
-272 
-273 
-274 
-275 
-276 
-277 
-278 
-279 
-280 
-281 
-282 
-283 
-284 
-285 
-286 
-287 
-288 
-289 
-290 
-291 
-292 
-293 
-294 
-295 
-296 
-297 
-298 
-299 
-300 
-301 
-302 
-303 
-304 
-305 
-306 
-307 
-308 
-309 
-310 
-311 
-312 
 313 #
