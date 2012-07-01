@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                 QLibraryInfo::location(QLibraryInfo::TranslationsPath));
         a.installTranslator(&qtTranslator);
 
-        translator.load(QString("trans/translation_") + locale);
+        translator.load(QString("trans/%1/translation_%1").arg(locale));
         a.installTranslator(&translator);
 
         /* icon ;) */
