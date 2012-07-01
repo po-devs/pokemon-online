@@ -442,11 +442,9 @@ static QString trFile(const QString &beg)
     QSettings s;
     QString locale = s.value("language").toString();
 
-    if (QFile::exists(beg + "_" + locale + ".txt")) {
-        return beg + "_" + locale + ".txt";
-    } else {
-        return beg + ".txt";
-    }
+    QString transPath = "trans/" + locale + "/" + beg;
+
+    return QFile::exists(transPath) ? transPath : beg;
 }
 
 QString PokemonInfo::Desc(const Pokemon::uniqueId &pokeid, int cartridge)
@@ -617,7 +615,7 @@ void PokemonInfo::clearData()
 
 void PokemonInfo::loadClassifications()
 {
-    fill_int_str(m_Classification, trFile(path("classification")), m_CurrentMode);
+    fill_int_str(m_Classification, trFile(path("classification.txt")), m_CurrentMode);
 }
 
 void PokemonInfo::loadGenderRates()
@@ -1112,7 +1110,7 @@ int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
 void PokemonInfo::loadNames(bool init)
 {
     QStringList temp;
-    fill_container_with_file(temp, init ? path("pokemons.txt") : trFile(path("pokemons")), m_CurrentMode);
+    fill_container_with_file(temp, init ? path("pokemons.txt") : trFile(path("pokemons.txt")), m_CurrentMode);
 
     for(int i = 0; i < temp.size(); i++) {
         QString current = temp[i].trimmed();
@@ -1526,7 +1524,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_int_char(causedEffect, path("caused_effect.txt"));
     fill_int_char(critRate, path("crit_rate.txt"));
     fill_int_char(damageClass, path("damage_class.txt"));
-    fill_int_str(effect, trFile(path("effect")));
+    fill_int_str(effect, trFile(path("effect.txt")));
     fill_int_char(effectChance, path("effect_chance.txt"));
     fill_double(flags, path("flags.txt"));
     fill_int_char(flinchChance, path("flinch_chance.txt"));
@@ -1566,7 +1564,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
 
 void MoveInfo::Gen::retranslate()
 {
-    fill_int_str(effect, trFile(path("effect")));
+    fill_int_str(effect, trFile(path("effect.txt")));
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -1598,7 +1596,7 @@ static void loadMessages(const QString &path, T &container)
 
 void MoveInfo::loadMoveMessages(bool init)
 {
-    loadMessages(init ? path("move_message.txt") : trFile(path("move_message")), m_MoveMessages);
+    loadMessages(init ? path("move_message.txt") : trFile(path("move_message.txt")), m_MoveMessages);
 
     if (init) {
         loadMoveMessages(false);
@@ -1618,7 +1616,7 @@ void MoveInfo::retranslate()
 
 void MoveInfo::loadNames()
 {
-    fill_int_str(m_Names, trFile(path("moves")));
+    fill_int_str(m_Names, trFile(path("moves.txt")));
 
     QHashIterator<int, QString> it(m_Names);
 
@@ -1630,7 +1628,7 @@ void MoveInfo::loadNames()
 
 void MoveInfo::loadDetails()
 {
-    fill_int_str(m_Details, trFile(path("move_description")));
+    fill_int_str(m_Details, trFile(path("move_description.txt")));
 }
 
 void MoveInfo::loadSpecialEffects()
@@ -1932,10 +1930,10 @@ void ItemInfo::loadGenData()
 
 void ItemInfo::loadNames()
 {
-    fill_int_str(m_RegItemNames, trFile(path("items")));
+    fill_int_str(m_RegItemNames, trFile(path("items.txt")));
     m_ItemNamesH = reverse_hash(m_RegItemNames);
 
-    fill_int_str(m_BerryNames, trFile(path("berries")));
+    fill_int_str(m_BerryNames, trFile(path("berries.txt")));
     m_BerryNamesH.reserve(m_BerryNames.size());
 
     QHash<int, QString>::const_iterator it2 = m_BerryNames.constBegin();
@@ -1984,8 +1982,8 @@ void ItemInfo::loadNames()
 
 void ItemInfo::loadMessages(bool init)
 {
-    ::loadMessages(init ? path("item_messages.txt") : trFile(path("item_messages")), m_RegMessages);
-    ::loadMessages(init ? path("berry_messages.txt") : trFile(path("berry_messages")), m_BerryMessages);
+    ::loadMessages(init ? path("item_messages.txt") : trFile(path("item_messages.txt")), m_RegMessages);
+    ::loadMessages(init ? path("berry_messages.txt") : trFile(path("berry_messages.txt")), m_BerryMessages);
 
     if (init) {
         loadMessages(false);
@@ -2285,7 +2283,7 @@ void TypeInfo::retranslate()
 
 void TypeInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("types")));
+    fill_container_with_file(m_Names, trFile(path("types.txt")));
 }
 
 void TypeInfo::loadCategories()
@@ -2403,7 +2401,7 @@ void NatureInfo::retranslate()
 
 void NatureInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("nature")));
+    fill_container_with_file(m_Names, trFile(path("nature.txt")));
 }
 
 QString NatureInfo::path(const QString &filename)
@@ -2490,7 +2488,7 @@ void CategoryInfo::retranslate()
 
 void CategoryInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("categories")));
+    fill_container_with_file(m_Names, trFile(path("categories.txt")));
 }
 
 QString CategoryInfo::path(const QString& file)
@@ -2533,7 +2531,7 @@ void AbilityInfo::retranslate()
 
 void AbilityInfo::loadMessages(bool init)
 {
-    ::loadMessages(init ? path("ability_messages.txt") : trFile(path("ability_messages")), m_Messages);
+    ::loadMessages(init ? path("ability_messages.txt") : trFile(path("ability_messages.txt")), m_Messages);
 
     if (init) {
         loadMessages(false);
@@ -2542,9 +2540,9 @@ void AbilityInfo::loadMessages(bool init)
 
 void AbilityInfo::loadNames()
 {
-    fill_int_str(m_Names, trFile(path("abilities")));
-    fill_int_str(m_Desc, trFile(path("ability_desc")));
-    fill_int_str(m_BattleDesc, trFile(path("ability_battledesc")));
+    fill_int_str(m_Names, trFile(path("abilities.txt")));
+    fill_int_str(m_Desc, trFile(path("ability_desc.txt")));
+    fill_int_str(m_BattleDesc, trFile(path("ability_battledesc.txt")));
 }
 
 QString AbilityInfo::Message(int ab, int part) {
@@ -2652,7 +2650,7 @@ void GenderInfo::retranslate()
 
 void GenderInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("genders")));
+    fill_container_with_file(m_Names, trFile(path("genders.txt")));
 }
 
 QString GenderInfo::path(const QString &filename)
@@ -2746,14 +2744,14 @@ void StatInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    fill_container_with_file(m_stats, trFile(path("stats")));
-    fill_container_with_file(m_status, trFile(path("status")));
+    fill_container_with_file(m_stats, trFile(path("stats.txt")));
+    fill_container_with_file(m_status, trFile(path("status.txt")));
 }
 
 void StatInfo::retranslate()
 {
-    fill_container_with_file(m_stats, trFile(path("stats")));
-    fill_container_with_file(m_status, trFile(path("status")));
+    fill_container_with_file(m_stats, trFile(path("stats.txt")));
+    fill_container_with_file(m_status, trFile(path("status.txt")));
 }
 
 QString StatInfo::Stat(int stat, int gen)
@@ -2854,14 +2852,14 @@ void GenInfo::init(const QString &dir)
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
-    fill_gen_string(m_versions, trFile(path("versions")));
-    fill_double(m_gens, trFile(path("gens")));
+    fill_gen_string(m_versions, trFile(path("versions.txt")));
+    fill_double(m_gens, trFile(path("gens.txt")));
 }
 
 void GenInfo::retranslate()
 {
-    fill_gen_string(m_versions, trFile(path("versions")));
-    fill_double(m_gens, trFile(path("gens")));
+    fill_gen_string(m_versions, trFile(path("versions.txt")));
+    fill_double(m_gens, trFile(path("gens.txt")));
 }
 
 QString GenInfo::Gen(int gen)
