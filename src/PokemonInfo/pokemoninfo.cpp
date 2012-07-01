@@ -14,7 +14,7 @@
 QString PokemonInfo::m_Directory;
 QMap<Pokemon::uniqueId, QString> PokemonInfo::m_Names;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Weights;
-QHash<int, QHash<quint16, QString> > PokemonInfo::m_Desc;
+QHash<int, QHash<int, QString> > PokemonInfo::m_Desc;
 QHash<int, QString> PokemonInfo::m_Classification;
 QHash<int, int> PokemonInfo::m_GenderRates;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
@@ -26,7 +26,7 @@ QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinLevels[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinEggLevels[NUMBER_GENS];
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[NUMBER_GENS][3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
-QVector<int> PokemonInfo::m_SpecialStats;
+QHash<Pokemon::uniqueId,int> PokemonInfo::m_SpecialStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
@@ -42,28 +42,28 @@ FillMode::FillModeType PokemonInfo::m_CurrentMode = FillMode::NoMod;
 
 QString MoveInfo::m_Directory;
 MoveInfo::Gen MoveInfo::gens[Version::NumberOfGens];
-QList<QString> MoveInfo::m_Names;
+QHash<int,QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QHash<int, QStringList> MoveInfo::m_MoveMessages;
-QList<QString> MoveInfo::m_Details;
-QList<QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
-QList<int> MoveInfo::m_OldMoves;
-QVector<bool> MoveInfo::m_KingRock;
+QHash<int,QString> MoveInfo::m_Details;
+QHash<int,QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
+QHash<int,int> MoveInfo::m_OldMoves;
+QHash<int,bool> MoveInfo::m_KingRock;
 
 QString ItemInfo::m_Directory;
-QList<QString> ItemInfo::m_BerryNames;
-QList<QString> ItemInfo::m_RegItemNames;
+QHash<int,QString> ItemInfo::m_BerryNames;
+QHash<int,QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
 QList<QString> ItemInfo::m_SortedNames[NUMBER_GENS];
 QList<QString> ItemInfo::m_SortedUsefulNames[NUMBER_GENS];
-QList<QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[NUMBER_GENS];
-QList<QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
+QHash<int,QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[NUMBER_GENS];
+QHash<int,QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QHash<int, QStringList> ItemInfo::m_RegMessages;
 QHash<int, QStringList> ItemInfo::m_BerryMessages;
-QList<int> ItemInfo::m_Powers;
-QList<int> ItemInfo::m_BerryPowers;
-QList<int> ItemInfo::m_BerryTypes;
+QHash<int,int> ItemInfo::m_Powers;
+QHash<int,int> ItemInfo::m_BerryPowers;
+QHash<int,int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
 QSet<int> ItemInfo::m_GenItems[NUMBER_GENS];
 
@@ -79,11 +79,11 @@ QString NatureInfo::m_Directory;
 QList<QString> CategoryInfo::m_Names;
 QString CategoryInfo::m_Directory;
 
-QList<QString> AbilityInfo::m_Names;
+QHash<int,QString> AbilityInfo::m_Names;
 QString AbilityInfo::m_Directory;
-QList<AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
+QHash<int,AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
 QHash<int, QStringList> AbilityInfo::m_Messages;
-QList<int> AbilityInfo::m_OldAbilities;
+QHash<int,int> AbilityInfo::m_OldAbilities;
 
 QList<QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -140,6 +140,21 @@ int fill_count_files(const QString &filename, FillMode::FillModeType m) {
 void fill_check_mode_path(FillMode::FillModeType, QString &) {
 }
 
+template <class T, class U>
+static QHash<U,T> reverse_hash(const QHash<T,U> &hash) {
+    QHashIterator<T,U> it(hash);
+    QHash<U,T> ret;
+
+    ret.reserve(hash.size());
+
+    while (it.hasNext()) {
+        it.next();
+        ret[it.value()] = it.key();
+    }
+
+    return ret;
+}
+
 static void fill_container_with_file(QStringList &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     container.clear();
@@ -184,7 +199,7 @@ static void fill_container_with_file(QList<QString> &container, const QString & 
     }
 }
 
-static void fill_container_with_file(QVector<char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
+static void fill_int_char(QHash<int, char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     container.clear();
 
@@ -201,14 +216,14 @@ static void fill_container_with_file(QVector<char> &container, const QString & f
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
-            int var;
-            filestream >> var;
-            container << var;
+            int line, var;
+            filestream >> line >> var;
+            container[line] = var;
         }
     }
 }
 
-static void fill_container_with_file(QVector<bool> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
+static void fill_int_bool(QHash<int, bool> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     container.clear();
 
@@ -225,14 +240,14 @@ static void fill_container_with_file(QVector<bool> &container, const QString & f
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
-            int var;
-            filestream >> var;
-            container << var;
+            int line, var;
+            filestream >> line >> var;
+            container[line] = var;
         }
     }
 }
 
-static void fill_container_with_file(QVector<unsigned char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
+static void fill_int_char(QHash<int, unsigned char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     container.clear();
 
@@ -249,14 +264,14 @@ static void fill_container_with_file(QVector<unsigned char> &container, const QS
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
-            int var;
-            filestream >> var;
-            container << var;
+            int line, var;
+            filestream >> line >> var;
+            container[line] = var;
         }
     }
 }
 
-static void fill_container_with_file(QVector<signed char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
+static void fill_int_char(QHash<int, signed char> &container, const QString & filename, FillMode::FillModeType m = FillMode::NoMod)
 {
     container.clear();
 
@@ -273,9 +288,9 @@ static void fill_container_with_file(QVector<signed char> &container, const QStr
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
-            int var;
-            filestream >> var;
-            container << var;
+            int line, var;
+            filestream >> line >> var;
+            container[line] = var;
         }
     }
 }
@@ -354,6 +369,30 @@ static void fill_double(QHash<T, U> &container, const QString &filename, FillMod
             U var2;
             filestream >> var1 >> var2;
             container.insert(var1, var2);
+        }
+    }
+}
+
+static void fill_int_str(QHash<int, QString> &container, const QString &filename, FillMode::FillModeType m = FillMode::NoMod)
+{
+    container.clear();
+
+    QString files[] = { filename, PoCurrentModPath + "mod_" + filename };
+    fill_check_mode_path(m, files[1]);
+    int files_count = fill_count_files(filename, m);
+    for (int i = 0; i < files_count; ++i) {
+        QFile file(files[i]);
+
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+        QTextStream filestream(&file);
+
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            int var1;
+            filestream >> var1;
+            container.insert(var1, filestream.readLine().trimmed());
         }
     }
 }
@@ -529,7 +568,7 @@ void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
     }
 
     fill_uid_int(m_LevelBalance, path("level_balance.txt"), m_CurrentMode);
-    fill_container_with_file(m_SpecialStats, path("specialstat.txt"), m_CurrentMode);
+    fill_uid_int(m_SpecialStats, path("specialstat.txt"), m_CurrentMode);
     loadClassifications();
     loadGenderRates();
     loadHeights();
@@ -578,28 +617,12 @@ void PokemonInfo::clearData()
 
 void PokemonInfo::loadClassifications()
 {
-    QStringList temp;
-    fill_container_with_file(temp, trFile(path("classification")), m_CurrentMode);
-    for(int i = 0; i < temp.size(); i++) {
-        QString current = temp[i].trimmed();
-        QString description;
-        quint16 pokenum;
-        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
-        if(ok) m_Classification[pokenum] = description;
-    }
+    fill_int_str(m_Classification, trFile(path("classification")), m_CurrentMode);
 }
 
 void PokemonInfo::loadGenderRates()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("gender_rate.txt"), m_CurrentMode);
-    for(int i = 0; i < temp.size(); i++) {
-        QString current = temp[i].trimmed();
-        QString description;
-        quint16 pokenum;
-        bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
-        if(ok) m_GenderRates[pokenum] = description.toInt();
-    }
+    fill_double(m_GenderRates, path("gender_rate.txt"), m_CurrentMode);
 }
 
 void PokemonInfo::loadMinLevels()
@@ -652,17 +675,8 @@ void PokemonInfo::loadDescriptions()
 {
     static const int CARTS_LEN = 3;
     int carts[] = { 14, 15, 16 };
-    for(int i = 0; i < CARTS_LEN; i++)
-    {
-        QStringList temp;
-        fill_container_with_file(temp, trFile(path("description_%1").arg(carts[i])), m_CurrentMode);
-        for(int j = 0; j < temp.size(); j++) {
-            QString current = temp[j].trimmed();
-            QString description;
-            quint16 pokenum;
-            bool ok = Pokemon::uniqueId::extract_short(current, pokenum, description);
-            if(ok) m_Desc[carts[i]][pokenum] = description;
-        }
+    for(int i = 0; i < CARTS_LEN; i++) {
+        fill_int_str(m_Desc[carts[i]], trFile(path("description_%1").arg(carts[i])));
     }
 }
 
@@ -1494,8 +1508,8 @@ void MoveInfo::init(const QString &dir)
     loadDetails();
     loadSpecialEffects();
 
-    fill_container_with_file(m_OldMoves, path("oldmoves.txt"));
-    fill_container_with_file(m_KingRock, path("king_rock.txt"));
+    fill_double(m_OldMoves, path("oldmoves.txt"));
+    fill_int_bool(m_KingRock, path("king_rock.txt"));
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].load(dir, i+1);
@@ -1507,29 +1521,29 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     this->gen = gen;
     this->dir = QString("%1%2G/").arg(dir).arg(gen);
 
-    fill_container_with_file(accuracy, path("accuracy.txt"));
-    fill_container_with_file(category, path("category.txt"));
-    fill_container_with_file(causedEffect, path("caused_effect.txt"));
-    fill_container_with_file(critRate, path("crit_rate.txt"));
-    fill_container_with_file(damageClass, path("damage_class.txt"));
-    fill_container_with_file(effect, trFile(path("effect")));
-    fill_container_with_file(effectChance, path("effect_chance.txt"));
-    fill_container_with_file(flags, path("flags.txt"));
-    fill_container_with_file(flinchChance, path("flinch_chance.txt"));
-    fill_container_with_file(healing, path("healing.txt"));
-    fill_container_with_file(maxTurns, path("max_turns.txt"));
-    fill_container_with_file(minTurns, path("min_turns.txt"));
-    fill_container_with_file(minMaxHits, path("min_max_hits.txt"));
-    fill_container_with_file(none0, path("stataffected.txt"));
-    fill_container_with_file(none1, path("statboost.txt"));
-    fill_container_with_file(none2, path("statrate.txt"));
-    fill_container_with_file(power, path("power.txt"));
-    fill_container_with_file(pp, path("pp.txt"));
-    fill_container_with_file(priority, path("priority.txt"));
-    fill_container_with_file(range, path("range.txt"));
-    fill_container_with_file(recoil, path("recoil.txt"));
-    fill_container_with_file(status, path("status.txt"));
-    fill_container_with_file(type, path("type.txt"));
+    fill_int_char(accuracy, path("accuracy.txt"));
+    fill_int_char(category, path("category.txt"));
+    fill_int_char(causedEffect, path("caused_effect.txt"));
+    fill_int_char(critRate, path("crit_rate.txt"));
+    fill_int_char(damageClass, path("damage_class.txt"));
+    fill_int_str(effect, trFile(path("effect")));
+    fill_int_char(effectChance, path("effect_chance.txt"));
+    fill_double(flags, path("flags.txt"));
+    fill_int_char(flinchChance, path("flinch_chance.txt"));
+    fill_int_char(healing, path("healing.txt"));
+    fill_int_char(maxTurns, path("max_turns.txt"));
+    fill_int_char(minTurns, path("min_turns.txt"));
+    fill_int_char(minMaxHits, path("min_max_hits.txt"));
+    fill_double(stataffected, path("stataffected.txt"));
+    fill_double(statboost, path("statboost.txt"));
+    fill_double(statrate, path("statrate.txt"));
+    fill_int_char(power, path("power.txt"));
+    fill_int_char(pp, path("pp.txt"));
+    fill_int_char(priority, path("priority.txt"));
+    fill_int_char(range, path("range.txt"));
+    fill_int_char(recoil, path("recoil.txt"));
+    fill_int_char(status, path("status.txt"));
+    fill_int_char(type, path("type.txt"));
 
     /* Not needed because HM pokemon can be traded between gens got gen 1 & 2*/
     //    if (gen == 1) {
@@ -1552,7 +1566,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
 
 void MoveInfo::Gen::retranslate()
 {
-    fill_container_with_file(effect, trFile(path("effect")));
+    fill_int_str(effect, trFile(path("effect")));
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -1563,17 +1577,19 @@ QString MoveInfo::Gen::path(const QString &fileName)
 template <class T>
 static void loadMessages(const QString &path, T &container)
 {
-    QStringList temp;
-    fill_container_with_file(temp, path);
+    QHash<int, QString> temp;
+    fill_int_str(temp, path);
 
-    for (int i = 0; i < temp.length(); i++) {
-        if (temp[i].length() > 0) {
-            QStringList split = temp[i].split('|');
+    QHashIterator<int, QString> it(temp);
+    while (it.hasNext()) {
+        it.next();
+        if (it.value().length() > 0) {
+            QStringList split = it.value().split('|');
             for (int j = 0; j < split.length(); j++) {
-                if (container[i].length() > j) {
-                    container[i][j] = split[j];
+                if (container[it.key()].length() > j) {
+                    container[it.key()][j] = split[j];
                 } else {
-                    container[i].push_back(split[j]);
+                    container[it.key()].push_back(split[j]);
                 }
             }
         }
@@ -1602,33 +1618,43 @@ void MoveInfo::retranslate()
 
 void MoveInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("moves")));
-    for (int i = 0; i < m_Names.size(); i++) {
-        m_LowerCaseMoves.insert(m_Names[i].toLower(),i);
+    fill_int_str(m_Names, trFile(path("moves")));
+
+    QHashIterator<int, QString> it(m_Names);
+
+    while(it.hasNext()) {
+        it.next();
+        m_LowerCaseMoves.insert(it.value().toLower(),it.key());
     }
 }
 
 void MoveInfo::loadDetails()
 {
-    fill_container_with_file(m_Details, trFile(path("move_description")));
+    fill_int_str(m_Details, trFile(path("move_description")));
 }
 
 void MoveInfo::loadSpecialEffects()
 {
-    QStringList temp;
-    fill_container_with_file(temp, path("move_special_effects.txt"));
+    {
+        fill_int_str(m_SpecialEffects, path("move_special_effects.txt"));
 
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        m_SpecialEffects.push_back(eff.split('#').front());
+        /* Removing comments, aka anything starting from '#' */
+        QMutableHashIterator<int,QString> it(m_SpecialEffects);
+        while(it.hasNext()) {
+            it.next();
+            it.value() = it.value().section('#', 0, 0);
+        }
     }
 
-    temp.clear();
-    fill_container_with_file(temp, path("move_special_effects_rby.txt"));
+    {
+        fill_int_str(m_RbySpecialEffects, path("move_special_effects_rby.txt"));
 
-    /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        m_RbySpecialEffects.push_back(eff.split('#').front());
+        /* Removing comments, aka anything starting from '#' */
+        QMutableHashIterator<int,QString> it(m_RbySpecialEffects);
+        while(it.hasNext()) {
+            it.next();
+            it.value() = it.value().section('#', 0, 0);
+        }
     }
 }
 
@@ -1678,7 +1704,7 @@ int MoveInfo::Number(const QString &movename)
 
 int MoveInfo::NumberOfMoves(Pokemon::gen g)
 {
-    return gen(g).power.size();
+    return gen(g).power.count();
 }
 
 int MoveInfo::FlinchRate(int num, Pokemon::gen g)
@@ -1783,17 +1809,17 @@ int MoveInfo::EffectRate(int movenum, Pokemon::gen g)
 
 quint32 MoveInfo::StatAffected(int movenum, Pokemon::gen g)
 {
-    return gen(g).none0[movenum];
+    return gen(g).stataffected[movenum];
 }
 
 quint32 MoveInfo::BoostOfStat(int movenum, Pokemon::gen g)
 {
-    return gen(g).none1[movenum];
+    return gen(g).statboost[movenum];
 }
 
 quint32 MoveInfo::RateOfStat(int movenum, Pokemon::gen g)
 {
-    return gen(g).none2[movenum];
+    return gen(g).statrate[movenum];
 }
 
 int MoveInfo::Target(int movenum, Pokemon::gen g)
@@ -1864,13 +1890,6 @@ QString MoveInfo::path(const QString &file)
 //    }
 //}
 
-
-
-QStringList MoveInfo::MoveList()
-{
-    return m_Names;
-}
-
 void ItemInfo::init(const QString &dir)
 {
     /* makes sure it isn't already initialized */
@@ -1913,20 +1932,14 @@ void ItemInfo::loadGenData()
 
 void ItemInfo::loadNames()
 {
-    fill_container_with_file(m_RegItemNames, trFile(path("items")));
+    fill_int_str(m_RegItemNames, trFile(path("items")));
+    m_ItemNamesH = reverse_hash(m_RegItemNames);
 
-    m_ItemNamesH.reserve(m_RegItemNames.size());
-
-    QStringList::const_iterator it = m_RegItemNames.begin();
-    for (int i = 0; it != m_RegItemNames.end(); i++, ++it) {
-        m_ItemNamesH[*it] = i;
-    }
-
-    fill_container_with_file(m_BerryNames, trFile(path("berries")));
+    fill_int_str(m_BerryNames, trFile(path("berries")));
     m_BerryNamesH.reserve(m_BerryNames.size());
 
-    QStringList::const_iterator it2 = m_BerryNames.begin();
-    for (int i = 0; it2 != m_BerryNames.end(); i++, ++it2) {
+    QHash<int, QString>::const_iterator it2 = m_BerryNames.constBegin();
+    for (int i = 0; it2 != m_BerryNames.constEnd(); i++, ++it2) {
         m_BerryNamesH[*it2] = i+8000;
     }
 
@@ -1938,10 +1951,10 @@ void ItemInfo::loadNames()
 
     int mg = GEN_MAX - GEN_MIN;
 
-    m_SortedNames[mg] << m_RegItemNames << m_BerryNames;
+    m_SortedNames[mg] << m_RegItemNames.values() << m_BerryNames.values();
     qSort(m_SortedNames[mg]);
 
-    m_SortedUsefulNames[mg] << m_BerryNames;
+    m_SortedUsefulNames[mg] << m_BerryNames.values();
     for (int i = 0; i < m_RegItemNames.size(); i++) {
         if (isUseful(i))
             m_SortedUsefulNames[mg].push_back(m_RegItemNames[i]);
@@ -1981,20 +1994,22 @@ void ItemInfo::loadMessages(bool init)
 
 void ItemInfo::loadFlingData()
 {
-    fill_container_with_file(m_BerryPowers, path("berry_pow.txt"));
-    fill_container_with_file(m_BerryTypes, path("berry_type.txt"));
-    fill_container_with_file(m_Powers, path("items_pow.txt"));
+    fill_double(m_BerryPowers, path("berry_pow.txt"));
+    fill_double(m_BerryTypes, path("berry_type.txt"));
+    fill_double(m_Powers, path("items_pow.txt"));
 }
 
 void ItemInfo::loadEffects()
 {
     for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
-        QStringList temp;
-        fill_container_with_file(temp, path("item_effects_%1G.txt").arg(i));
+        QHash<int,QString> temp;
+        fill_int_str(temp, path("item_effects_%1G.txt").arg(i));
 
         /* Removing comments, aka anything starting from '#' */
-        foreach (QString eff, temp) {
-            QStringList effects = eff.split('#').front().split('|');
+        QHashIterator<int,QString> it(temp);
+        while(it.hasNext()) {
+            it.next();
+            QStringList effects = it.value().split('#').front().split('|');
             QList<Effect> toPush;
             foreach(QString eff, effects) {
                 std::string s = eff.toStdString();
@@ -2005,26 +2020,29 @@ void ItemInfo::loadEffects()
                     toPush.push_back(Effect(atoi(s.c_str())));
                 }
             }
-            m_RegEffects[i-GEN_MIN].push_back(toPush);
+            m_RegEffects[i-GEN_MIN][it.key()] = toPush;
         }
     }
 
-    QStringList temp;
-    fill_container_with_file(temp, path("berry_effects.txt"));
+    QHash<int,QString> temp;
+    fill_int_str(temp, path("berry_effects.txt"));
+
     /* Removing comments, aka anything starting from '#' */
-    foreach (QString eff, temp) {
-        QStringList effects = eff.split('#').front().split('|');
+    QHashIterator<int,QString> it(temp);
+    while(it.hasNext()) {
+        it.next();
+        QStringList effects = it.value().split('#').front().split('|');
         QList<Effect> toPush;
         foreach(QString eff, effects) {
             std::string s = eff.toStdString();
             size_t pos = s.find('-');
             if (pos != std::string::npos) {
-                toPush.push_back(Effect(atoi(s.c_str())+8000, eff.mid(pos+1)));
+                toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
             } else {
-                toPush.push_back(Effect(atoi(s.c_str())+8000));
+                toPush.push_back(Effect(atoi(s.c_str())));
             }
         }
-        m_BerryEffects.push_back(toPush);
+        m_BerryEffects[it.key()] = toPush;
     }
 }
 
@@ -2041,13 +2059,13 @@ QString ItemInfo::Message(int effect, int part)
 {
     if (effect < 8000) {
         if (!m_RegMessages.contains(effect) || m_RegMessages[effect].size() <= part) {
-            return "";
+            return QString();
         }
         return m_RegMessages[effect][part];
     } else {
         effect = effect-8000;
         if (!m_BerryMessages.contains(effect) || m_BerryMessages[effect].size() <= part) {
-            return "";
+            return QString();
         }
         return m_BerryMessages[effect][part];
     }
@@ -2144,9 +2162,6 @@ QPixmap ItemInfo::HeldItem()
 
 QString ItemInfo::Name(int itemnum)
 {
-    if ( itemnum < 0 || (itemnum < 8000 && m_RegItemNames.size() <= itemnum) || (itemnum >= 8000 && m_BerryNames.size() + 8000 <= itemnum) ) {
-        return 0;
-    }
     if (itemnum < 8000) {
         return m_RegItemNames[itemnum];
     } else {
@@ -2193,6 +2208,7 @@ int ItemInfo::DriveType(int itemnum)
 {
     return Effects(itemnum, GEN_MAX).front().args.toInt();
 }
+
 int ItemInfo::DriveForme(int itemnum)
 {
     switch(itemnum) {
@@ -2506,7 +2522,7 @@ void AbilityInfo::init(const QString &dir)
     loadMessages(true);
     loadEffects();
 
-    fill_container_with_file(m_OldAbilities, path("oldabilities.txt"));
+    fill_double(m_OldAbilities, path("oldabilities.txt"));
 }
 
 void AbilityInfo::retranslate()
@@ -2526,12 +2542,12 @@ void AbilityInfo::loadMessages(bool init)
 
 void AbilityInfo::loadNames()
 {
-    fill_container_with_file(m_Names, trFile(path("abilities")));
+    fill_int_str(m_Names, trFile(path("abilities")));
 }
 
 QString AbilityInfo::Message(int ab, int part) {
     if (!m_Messages.contains(ab) || part < 0 || part >= m_Messages[ab].size()) {
-        return "";
+        return QString();
     }
 
     return m_Messages[ab][part];
@@ -2550,15 +2566,17 @@ bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
 void AbilityInfo::loadEffects()
 {
     for (int i = GEN_MIN_ABILITIES; i <= GEN_MAX; i++) {
-        QStringList m_temp;
-        fill_container_with_file(m_temp,path("ability_effects_%1G.txt").arg(i));
+        QHash<int, QString> m_temp;
+        fill_int_str(m_temp,path("ability_effects_%1G.txt").arg(i));
 
-        foreach(QString str, m_temp) {
-            QStringList content = str.split('#').front().split('-');
+        QHashIterator<int, QString> it(m_temp);
+        while (it.hasNext()) {
+            it.next();
+            QStringList content = it.value().section('#', 0, 0).split('-');
             if (content.size() == 1) {
-                m_Effects[i-GEN_MIN].push_back(Effect(content[0].toInt()));
+                m_Effects[i-GEN_MIN].insert(it.key(), Effect(content[0].toInt()));
             } else {
-                m_Effects[i-GEN_MIN].push_back(Effect(content[0].toInt(), content[1].toInt()));
+                m_Effects[i-GEN_MIN].insert(it.key(), Effect(content[0].toInt(), content[1].toInt()));
             }
         }
     }
@@ -2583,17 +2601,14 @@ int AbilityInfo::ConvertFromOldAbility(int oldability)
     return m_OldAbilities[oldability];
 }
 
-int AbilityInfo::Number(const QString &pokename)
+int AbilityInfo::Number(const QString &ability)
 {
-    return (qFind(m_Names.begin(), m_Names.end(), pokename)-m_Names.begin()) % (m_Names.size());
+    return m_Names.key(ability, 0);
 }
 
 QString AbilityInfo::Name(int abnum)
 {
-    if (abnum >=0 && abnum < NumberOfAbilities(GEN_MAX))
-        return m_Names[abnum];
-    else
-        return 0;
+    return m_Names[abnum];
 }
 
 int AbilityInfo::NumberOfAbilities(Pokemon::gen g)

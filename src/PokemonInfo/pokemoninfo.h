@@ -129,7 +129,7 @@ private:
     // Is a map because we need it to be sorted.
     static QMap<Pokemon::uniqueId, QString> m_Names;
     static QHash<Pokemon::uniqueId, QString> m_Weights;
-    static QHash<int, QHash<quint16, QString> > m_Desc;
+    static QHash<int, QHash<int, QString> > m_Desc;
     static QHash<int, QString> m_Classification;
     static QHash<int, int> m_GenderRates;
     static QHash<Pokemon::uniqueId, QString> m_Height;
@@ -139,7 +139,7 @@ private:
     static QHash<Pokemon::uniqueId, int> m_Genders;
     static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
-    static QVector<int> m_SpecialStats;
+    static QHash<Pokemon::uniqueId, int> m_SpecialStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
     static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
     static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
@@ -232,7 +232,6 @@ public:
     static int StatusKind(int movenum, Pokemon::gen gen);
     static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
-    static QStringList MoveList();
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
@@ -241,13 +240,13 @@ public:
     static void setPP(int movenum, char pp, int moveGen);
     static void setPriority(int movenum, signed char priority, int moveGen);
 private:
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
     static QHash<int, QStringList> m_MoveMessages;
-    static QList<QString> m_Details;
-    static QList<QString> m_SpecialEffects, m_RbySpecialEffects;
-    static QList<int> m_OldMoves;
-    static QVector<bool> m_KingRock;
+    static QHash<int, QString> m_Details;
+    static QHash<int, QString> m_SpecialEffects, m_RbySpecialEffects;
+    static QHash<int,int> m_OldMoves;
+    static QHash<int,bool> m_KingRock;
 
     struct Gen {
         void load(const QString &path, int gen);
@@ -258,29 +257,29 @@ private:
         int gen;
         QString dir;
 
-        QVector<char> accuracy;
-        QVector<char> category;
-        QVector<char> causedEffect;
-        QVector<char> critRate;
-        QVector<char> damageClass;
-        QStringList effect;
-        QVector<char> effectChance;
-        QVector<int> flags;
-        QVector<char> flinchChance;
-        QVector<signed char> healing;
-        QVector<char> maxTurns;
-        QVector<char> minTurns;
-        QVector<char> minMaxHits;
-        QVector<long> none0;
-        QVector<long> none1;
-        QVector<long> none2;
-        QVector<unsigned char> power;
-        QVector<char> pp;
-        QVector<signed char> priority;
-        QVector<char> range;
-        QVector<signed char> recoil;
-        QVector<char> status;
-        QVector<char> type;
+        QHash<int, char> accuracy;
+        QHash<int, char> category;
+        QHash<int, char> causedEffect;
+        QHash<int, char> critRate;
+        QHash<int, char> damageClass;
+        QHash<int, QString> effect;
+        QHash<int, char> effectChance;
+        QHash<int, int> flags;
+        QHash<int, char> flinchChance;
+        QHash<int, signed char> healing;
+        QHash<int, char> maxTurns;
+        QHash<int, char> minTurns;
+        QHash<int, char> minMaxHits;
+        QHash<int,long> stataffected;
+        QHash<int,long> statboost;
+        QHash<int,long> statrate;
+        QHash<int, unsigned char> power;
+        QHash<int, char> pp;
+        QHash<int, signed char> priority;
+        QHash<int, char> range;
+        QHash<int, signed char> recoil;
+        QHash<int, char> status;
+        QHash<int, char> type;
         QSet<int> HMs;
     };
 
@@ -335,20 +334,20 @@ public:
     static QPixmap Icon(int itemnum);
     static QPixmap HeldItem();
 private:
-    static QList<QString> m_BerryNames;
-    static QList<QString> m_RegItemNames;
+    static QHash<int,QString> m_BerryNames;
+    static QHash<int,QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
     static QList<QString> m_SortedNames[NUMBER_GENS];
     static QList<QString> m_SortedUsefulNames[NUMBER_GENS];
     static QString m_Directory;
-    static QList<QList<Effect> > m_RegEffects[NUMBER_GENS];
-    static QList<QList<Effect> > m_BerryEffects;
+    static QHash<int, QList<Effect> > m_RegEffects[NUMBER_GENS];
+    static QHash<int, QList<Effect> > m_BerryEffects;
     static QHash<int, QStringList> m_RegMessages;
     static QHash<int, QStringList> m_BerryMessages;
-    static QList<int> m_Powers;
-    static QList<int> m_BerryPowers;
-    static QList<int> m_BerryTypes;
+    static QHash<int,int> m_Powers;
+    static QHash<int,int> m_BerryPowers;
+    static QHash<int,int> m_BerryTypes;
     static QList<int> m_UsefulItems;
     static QSet<int> m_GenItems[NUMBER_GENS];
 
@@ -448,7 +447,7 @@ public:
     struct Effect {
         int num;
         int arg;
-        Effect(int i, int q=0) : num(i), arg(q){}
+        Effect(int i=0, int q=0) : num(i), arg(q){}
     };
 public:
     /* directory where all the data is */
@@ -466,11 +465,11 @@ public:
     static bool Exists(int ability, Pokemon::gen gen);
     static int ConvertFromOldAbility(int oldability);
 private:
-    static QList<QString> m_Names;
+    static QHash<int, QString> m_Names;
     static QString m_Directory;
-    static QList<Effect> m_Effects[NUMBER_GENS];
-    static QHash<int, QStringList> m_Messages;
-    static QList<int> m_OldAbilities;
+    static QHash<int,Effect> m_Effects[NUMBER_GENS];
+    static QHash<int,QStringList> m_Messages;
+    static QHash<int,int> m_OldAbilities;
 
     static void loadNames();
     static void loadMessages(bool init=false);

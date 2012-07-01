@@ -1,64 +1,64 @@
-﻿Baie Ceriz
-Baie Maron
-Baie Pecha
-Baie Fraive
-Baie Willia
-Baie Mepo
-Baie Oran
-Baie Kika
-Baie Prine
-Baie Sitrus
-Baie Figuy
-Baie Wiki
-Baie Mago
-Baie Gowav
-Baie Papaya
-Baie Framby
-Baie Remu
-Baie Nanab
-Baie Repoi
-Baie Nanana
-Baie Grena
-Baie Alga
-Baie Qualot
-Baie Lonme
-Baie Resin
-Baie Tamato
-Baie Siam
-Baie Mangou
-Baie Rabuta
-Baie Tronci
-Baie Kiwan
-Baie Palma
-Baie Stekpa
-Baie Durin
-Baie Myrte
-Baie Chocco
-Baie Pocpoc
-Baie Parma
-Baie Ratam
-Baie Nanone
-Baie Pomroz
-Baie Kébia
-Baie Jouca
-Baie Cobaba
-Baie Yapap
-Baie Panga
-Baie Charti
-Baie Sédra
-Baie Fraigo
-Baie Lampou
-Baie Babiri
-Baie Zalis
-Baie Lichii
-Baie Lingan
-Baie Sailak
-Baie Pitaye
-Baie Abriko
-Baie Lansat
-Baie Frista
-Baie Enigma
-Baie Micle
-Baie Chérim
-Baie Jaboca
-Baie Pommo
+﻿0 Baie Ceriz
+1 Baie Maron
+2 Baie Pecha
+3 Baie Fraive
+4 Baie Willia
+5 Baie Mepo
+6 Baie Oran
+7 Baie Kika
+8 Baie Prine
+9 Baie Sitrus
+10 Baie Figuy
+11 Baie Wiki
+12 Baie Mago
+13 Baie Gowav
+14 Baie Papaya
+15 Baie Framby
+16 Baie Remu
+17 Baie Nanab
+18 Baie Repoi
+19 Baie Nanana
+20 Baie Grena
+21 Baie Alga
+22 Baie Qualot
+23 Baie Lonme
+24 Baie Resin
+25 Baie Tamato
+26 Baie Siam
+27 Baie Mangou
+28 Baie Rabuta
+29 Baie Tronci
+30 Baie Kiwan
+31 Baie Palma
+32 Baie Stekpa
+33 Baie Durin
+34 Baie Myrte
+35 Baie Chocco
+36 Baie Pocpoc
+37 Baie Parma
+38 Baie Ratam
+39 Baie Nanone
+40 Baie Pomroz
+41 Baie Kébia
+42 Baie Jouca
+43 Baie Cobaba
+44 Baie Yapap
+45 Baie Panga
+46 Baie Charti
+47 Baie Sédra
+48 Baie Fraigo
+49 Baie Lampou
+50 Baie Babiri
+51 Baie Zalis
+52 Baie Lichii
+53 Baie Lingan
+54 Baie Sailak
+55 Baie Pitaye
+56 Baie Abriko
+57 Baie Lansat
+58 Baie Frista
+59 Baie Enigma
+60 Baie Micle
+61 Baie Chérim
+62 Baie Jaboca
+63 Baie Pommo

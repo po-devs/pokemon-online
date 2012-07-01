@@ -1,91 +1,91 @@
-﻿
-
-%s's Aftermath damages %f!
-%s is extremely pissed off!
-%s's Anticipation makes it shiver!
-
-%f has bad dreams!
-
-
-%s's Color Change changes its type to %t!
-
-%s's Cute Charm infatuated %f!
-%s won't flinch because of its Inner Focus!
-%s's Download activates!
-Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
-%s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
-%s's Effect Spore activates!
-
-%s's %a activates!
-%s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
-
-%s changed its type to %t!
-%s's Forewarn makes it wary of %m!
-%s knows its foe holds %i because of Frisk!
-%s's Shield Dust blocked the secondary effects!
-
-
-
-
-%s's Hydration heals its status!
-%s's %a prevents its stat from being lowered!
-%s's %a prevented its stats from being lowered!
-%s's %a heals it!
-%s's %a cures it!
-Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedroher von %s !
-
-
-%s's Leaf Guard prevents it from being affected by any status from the opponent!
-%s's %a took the attack!
-
-%s has Mold Breaker!
-%s's Motor Drive raises its speed!
-
-
-%s's Own Tempo cures its confusion!
-Aufheber von %s regeneriert einige KP !
-%s übt seine Fähigkeit Erzwinger aus !
-
-
-
-%s's Rough Skin hurts %f
-
-
-
-%s's Shed Skin heals its status!
-%s can't get it going because of it's Slow Start!|%s finally got its act together!
-%s lost some HP because of Solar Power!
-%s's Sound Proof blocks the attack!
-%s's Speed Boost increases its speed!
-
-%s's SteadFast increases its speed!
-%s's Synchronize changes the status of %f!
-
-
-
-
-%s traced %f's %a!
-%s is carelessly slacking off!
-
-
-%s's %a absorbs the attack!|%s's %a made the attack useless!
-%s's Wonder Guard evades the attack!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+﻿0 
+1 
+2 %s's Aftermath damages %f!
+3 %s is extremely pissed off!
+4 %s's Anticipation makes it shiver!
+5 
+6 %f has bad dreams!
+7 
+8 
+9 %s's Color Change changes its type to %t!
+10 
+11 %s's Cute Charm infatuated %f!
+12 %s won't flinch because of its Inner Focus!
+13 %s's Download activates!
+14 Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
+15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
+16 %s's Effect Spore activates!
+17 
+18 %s's %a activates!
+19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
+20 
+21 %s changed its type to %t!
+22 %s's Forewarn makes it wary of %m!
+23 %s knows its foe holds %i because of Frisk!
+24 %s's Shield Dust blocked the secondary effects!
+25 
+26 
+27 
+28 
+29 %s's Hydration heals its status!
+30 %s's %a prevents its stat from being lowered!
+31 %s's %a prevented its stats from being lowered!
+32 %s's %a heals it!
+33 %s's %a cures it!
+34 Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedroher von %s !
+35 
+36 
+37 %s's Leaf Guard prevents it from being affected by any status from the opponent!
+38 %s's %a took the attack!
+39 
+40 %s has Mold Breaker!
+41 %s's Motor Drive raises its speed!
+42 
+43 
+44 %s's Own Tempo cures its confusion!
+45 Aufheber von %s regeneriert einige KP !
+46 %s übt seine Fähigkeit Erzwinger aus !
+47 
+48 
+49 
+50 %s's Rough Skin hurts %f
+51 
+52 
+53 
+54 %s's Shed Skin heals its status!
+55 %s can't get it going because of it's Slow Start!|%s finally got its act together!
+56 %s lost some HP because of Solar Power!
+57 %s's Sound Proof blocks the attack!
+58 %s's Speed Boost increases its speed!
+59 
+60 %s's SteadFast increases its speed!
+61 %s's Synchronize changes the status of %f!
+62 
+63 
+64 
+65 
+66 %s traced %f's %a!
+67 %s is carelessly slacking off!
+68 
+69 
+70 %s's %a absorbs the attack!|%s's %a made the attack useless!
+71 %s's Wonder Guard evades the attack!
+72 
+73 
+74 
+75 
+76 
+77 
+78 
+79 
+80 
+81 
+82 
+83 
+84 
+85 
+86 
+87 
+88 
+89 
+90 
