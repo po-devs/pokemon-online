@@ -40,7 +40,7 @@ public slots:
 
     void newBox();
     void editBoxName();
-    void deleteBox();
+    void deleteBox(int num=-1);
 private:
     PokeTeam *m_poke;
     int displayedBox, displayedSlot;
@@ -56,7 +56,7 @@ private:
     void addBox(const QString &name);
 
     bool existBox(const QString &name) const;
-    void deleteBox(int num);
+    void doDeleteBox(int num);
 
     PokeBox *currentBox();
 
