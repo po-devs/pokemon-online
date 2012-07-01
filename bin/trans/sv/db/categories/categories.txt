@@ -1,3 +1,3 @@
-﻿Annan
-Fysisk
-Special
+﻿0 Annan
+1 Fysisk
+2 Special
