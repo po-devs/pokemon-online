@@ -1,7 +1,7 @@
-﻿enamorado
-paralizado
-dormido
-congelado
-quemado
-envenenado
-confused
+﻿0 enamorado
+1 paralizado
+2 dormido
+3 congelado
+4 quemado
+5 envenenado
+6 confused
