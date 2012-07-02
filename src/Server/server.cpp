@@ -139,7 +139,7 @@ void Server::start(){
 
     /* Really useful for headless servers */
     GenInfo::init("db/gens/");
-    PokemonInfo::init("db/pokes/", FillMode::Server);
+    PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     ItemInfo::init("db/items/");
     MoveInfo::init("db/moves/");

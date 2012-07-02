@@ -2364,6 +2364,9 @@ void Client::openTeamBuilder()
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
+    if (top) {
+        connect(t, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
+    }
     connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
 }
 

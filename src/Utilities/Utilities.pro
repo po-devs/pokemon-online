@@ -1,7 +1,6 @@
 TARGET = utilities
 TEMPLATE = lib
 DESTDIR = ../../bin
-DEFINES += SERVER_SIDE
 DEFINES -= UNICODE
 SOURCES += otherwidgets.cpp \
     mtrand.cpp \

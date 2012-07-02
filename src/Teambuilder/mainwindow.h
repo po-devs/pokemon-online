@@ -27,6 +27,7 @@ public slots:
     void launchMenu(bool first = false);
     void launchCredits();
     void launchTeamBuilder();
+    void reloadPokemonDatabase();
     void goOnline(const QString &url, const quint16 port, const QString &name);
     void launchServerChoice();
     void changeLanguage();

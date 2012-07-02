@@ -9,6 +9,29 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[NUMBER_GENS];
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::eventCombinations[NUMBER_GENS];
 QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::breedingCombinations[NUMBER_GENS];
+
+static void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QString &filename, bool trans = false)
+{
+    container.clear();
+
+    foreach(QString fileName, PokemonInfoConfig::allFiles(filename, trans)) {
+        QFile file(fileName);
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream filestream(&file);
+        /* discarding all the uninteresting lines, should find a more effective way */
+        while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
+        {
+            QString current = filestream.readLine().trimmed();
+            QString other_data;
+            Pokemon::uniqueId pokeid;
+            bool ok = Pokemon::uniqueId::extract(current, pokeid, other_data);
+            if(ok) {
+                container[pokeid] = other_data;
+            }
+        }
+    }
+}
+
 QString MoveSetChecker::dir;
 bool MoveSetChecker::enforceMinLevels = true;
 
@@ -19,23 +42,24 @@ QString MoveSetChecker::path(const QString &arg)
 
 void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHash<Pokemon::uniqueId, QList<QSet<int> > > *set)
 {
-    QFile in(file);
-    in.open(QIODevice::ReadOnly);
-    QList<QByteArray> pokes = in.readAll().split('\n');
+    QHash<Pokemon::uniqueId, QString> temp;
+    fill_uid_str(temp, file);
 
-    foreach(QByteArray poke, pokes) {
-        Pokemon::uniqueId id;
-        QString data;
-        if (!id.extract(QString(poke), id, data))
-            continue;
+    QHashIterator<Pokemon::uniqueId, QString> it(temp);
+
+    while(it.hasNext()) {
+        it.next();
+
+        Pokemon::uniqueId id = it.key();
         /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
            the base forme */
         if (!legalCombinations[gen.num-GEN_MIN].contains(id))
             legalCombinations[gen.num-GEN_MIN].insert(id, QList<QSet<int > >());
-        set[gen.num-GEN_MIN].insert(id, QList<QSet<int > >());
 
-        if (data.length() > 0) {
-            QStringList combs = data.split('|');
+        set[gen.num-GEN_MIN][id] = QList<QSet<int > >();
+
+        if (it.value().length() > 0) {
+            QStringList combs = it.value().split('|');
             foreach(QString comb, combs) {
                 QStringList moves = comb.split(' ');
                 QSet<int> toPush;
@@ -55,6 +79,12 @@ void MoveSetChecker::init(const QString &dir, bool enf)
     MoveSetChecker::enforceMinLevels = enf;
 
     QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+
+    for(int i = 0; i < NUMBER_GENS; i++) {
+        legalCombinations[i].clear();
+        breedingCombinations[i].clear();
+        eventCombinations[i].clear();
+    }
 
     for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
         /* Egg move combinations */
