@@ -2,8 +2,8 @@
 3 %s restored its stats using White Herb!
 4 %s hung on thanks to its Focus Band!
 5 %s hung on using its Focus Sash!
-7 %s used its Mental Herb to come back to his senses!
-11 %s used its power herb to attack immediately!
+7 %s used its Mental Herb to come back to its senses!
+11 %s used its Power Herb to attack immediately!
 12 %s restored a little HP using its Leftovers!
 16 %s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
 17 %s's Quick Claw activated!
