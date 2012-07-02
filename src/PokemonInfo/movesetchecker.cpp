@@ -35,9 +35,13 @@ static void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QSt
 QString MoveSetChecker::dir;
 bool MoveSetChecker::enforceMinLevels = true;
 
-QString MoveSetChecker::path(const QString &arg)
+QString MoveSetChecker::path(const QString &arg, const Pokemon::gen & g)
 {
-    return dir + arg;
+    if (g != 0) {
+        return QString("%1/%2G/%3").arg(dir).arg(g.num).arg(arg);
+    } else {
+        return dir + arg;
+    }
 }
 
 void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHash<Pokemon::uniqueId, QList<QSet<int> > > *set)
@@ -88,10 +92,10 @@ void MoveSetChecker::init(const QString &dir, bool enf)
 
     for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
         /* Egg move combinations */
-        loadCombinations(path("legal_combinations_" + QString::number(gen) + "G.txt"), gen, breedingCombinations);
+        loadCombinations(path("legal_combinations.txt", gen), gen, breedingCombinations);
 
         /* Event move combinations */
-        loadCombinations(path("event_combinations_" + QString::number(gen) + "G.txt"), gen, eventCombinations);
+        loadCombinations(path("event_combinations.txt", gen), gen, eventCombinations);
 
         foreach(Pokemon::uniqueId id, ids) {
             if (!PokemonInfo::IsForme(id))

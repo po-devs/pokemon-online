@@ -561,17 +561,17 @@ void PokemonInfo::init(const QString &dir)
     loadEvos();
     loadMoves();
 
-    fill_uid_int(m_Genders, path("poke_gender.txt"));
+    fill_uid_int(m_Genders, path("gender.txt"));
 
     for (int i = 0; i < NUMBER_GENS; i++) {
         Pokemon::gen gen = i+GEN_MIN;
 
-        fill_uid_int(m_Type1[i], path(QString("poke_type1-%1G.txt").arg(gen.num)));
-        fill_uid_int(m_Type2[i], path(QString("poke_type2-%1G.txt").arg(gen.num)));
+        fill_uid_int(m_Type1[i], path(QString("type1.txt"),gen));
+        fill_uid_int(m_Type2[i], path(QString("type2.txt"),gen));
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
-                fill_uid_int(m_Abilities[i][j], path(QString("poke_ability%1_%2G.txt").arg(j+1).arg(gen.num)));
+                fill_uid_int(m_Abilities[i][j], path(QString("ability%1.txt").arg(j+1), gen));
             }
         }
     }
@@ -612,7 +612,7 @@ void PokemonInfo::loadMinLevels()
         m_MinEggLevels[i].clear();
 
         QHash<Pokemon::uniqueId, QString> temp;
-        fill_uid_str(temp, path(QString("minlevels_G%1.txt").arg(GEN_MIN+i)));
+        fill_uid_str(temp, path("minlevels.txt", GEN_MIN+i));
 
         QHashIterator<Pokemon::uniqueId, QString> it(temp);
 
@@ -772,19 +772,7 @@ QPixmap PokemonInfo::Picture(const QString &url)
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
 {
-    QString archive;
-
-    if (gen.num == 1)
-        archive = path("rby.zip");
-    else if (gen.num == 2)
-        archive = path("gsc.zip");
-    else if (gen.num == 3)
-        archive = path("advance.zip");
-    else if (gen.num == 4)
-        archive = path("generation-4.zip");
-    else {
-        archive = path("black-white.zip");
-    }
+    QString archive = path("%1G/sprites.zip").arg(gen.num);
 
     if (mod && modPath.length() > 0 && QFile::exists(modPath+archive)) {
         archive.prepend(modPath);
@@ -892,13 +880,7 @@ bool PokemonInfo::HasAnimatedSpritesEnabled()
 
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 {
-    QString archive;
-    if (gen <= 3)
-        archive = path("advance.zip");
-    else if (gen == 4)
-        archive = path("generation-4.zip");
-    else
-        archive = path("black-white.zip");
+    QString archive = path("%1G/sprites.zip").arg(gen.num);
 
     QString file;
 
@@ -918,9 +900,13 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
-    if (data.length()==0)
-        return ret;
-
+    if (data.length()==0) {
+        if (gen.num < GEN_MAX) {
+            return Sub(gen.num + 1, back);
+        } else {
+            return ret;
+        }
+    }
 
     ret.loadFromData(data, "png");
 
@@ -967,7 +953,7 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
 QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid, bool mod)
 {
     quint16 num = pokeid.pokenum;
-    QString archive = "cries.zip";
+    QString archive = path("cries.zip");
 
     // TODO: Read this number from somewhere else.
     if (mod && modPath.length() > 0 && QFile::exists(modPath+archive)) {
@@ -1062,7 +1048,7 @@ void PokemonInfo::loadBaseStats()
     m_BaseStats.clear();
 
     QHash<Pokemon::uniqueId, QString> temp;
-    fill_uid_str(temp, path("poke_stats.txt"));
+    fill_uid_str(temp, path("stats.txt"));
 
     QHashIterator<Pokemon::uniqueId, QString> it(temp);
 
@@ -1239,58 +1225,48 @@ bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 
 void PokemonInfo::loadMoves()
 {
-    static const int filesize = 29;
-
-    QString fileNames[filesize] = {
-        path("1G_tm_and_hm_moves.txt"), path("1G_level_moves.txt"),
-        path("1G_special_moves.txt"), path("1G_pre_evo_moves.txt"),
-
-        path("2G_tm_and_hm_moves.txt"), path("2G_egg_moves.txt"), path("2G_level_moves.txt"),
-        path("2G_tutor_moves.txt"), path("2G_special_moves.txt"), path("2G_pre_evo_moves.txt"),
-
-        path("3G_tm_and_hm_moves.txt"), path("3G_egg_moves.txt"), path("3G_level_moves.txt"),
-        path("3G_tutor_moves.txt"), path("3G_special_moves.txt"), path("3G_pre_evo_moves.txt"),
-
-        path("4G_tm_and_hm_moves.txt"), path("4G_pre_evo_moves.txt"), path("4G_egg_moves.txt"),
-        path("4G_level_moves.txt"), path("4G_tutor_moves.txt"), path("4G_special_moves.txt"),
-
-        path("5G_tm_and_hm_moves.txt"), path("5G_pre_evo_moves.txt"), path("5G_egg_moves.txt"),
-        path("5G_level_moves.txt"), path("5G_tutor_moves.txt"), path("5G_special_moves.txt"),
-        path("5G_dw_moves.txt")
-    };
-
     m_Moves.clear();
 
-    for (int i = 0; i < filesize; i++) {
-        QHash<Pokemon::uniqueId, QString> temp;
-        fill_uid_str(temp, fileNames[i]);
+    for (int gc = 0; gc < NUMBER_GENS; gc++) {
+        int g = gc + GEN_MIN;
 
-        QHashIterator<Pokemon::uniqueId, QString> it(temp);
+        QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt",g) << path("level/moves.txt",g) << path("special_moves.txt",g) << path("pre_evo_moves.txt",g);
 
-        while(it.hasNext()) {
-            it.next();
+        if (g > 1) {
+            fileNames << path("egg_moves.txt", g) << path("tutor_moves.txt", g);
+        }
 
-            QStringList move_list = it.value().split(' ');
+        if (g >= 5) {
+            fileNames << path("dw_moves.txt", g);
+        }
 
-            QSet<int> data_set;
-            for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
-                int move = move_list[ml_counter].toInt();
-                if(move != 0)
-                    data_set.insert(move);
+        for (int i = 0; i < fileNames.count(); i++) {
+            QHash<Pokemon::uniqueId, QString> temp;
+            fill_uid_str(temp, fileNames[i]);
+
+            QHashIterator<Pokemon::uniqueId, QString> it(temp);
+
+            while(it.hasNext()) {
+                it.next();
+
+                QStringList move_list = it.value().split(' ');
+
+                QSet<int> data_set;
+                for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
+                    int move = move_list[ml_counter].toInt();
+                    if(move != 0)
+                        data_set.insert(move);
+                }
+                /* Should create an item with pokeid key in m_Moves if it does not exist. */
+                PokemonMoves &moves = m_Moves[it.key()];
+
+                QSet<int> *refs[] = {
+                    &moves.TMMoves[gc], &moves.levelMoves[gc], &moves.specialMoves[gc], &moves.preEvoMoves[gc], &moves.eggMoves[gc],
+                    &moves.tutorMoves[gc], &moves.dreamWorldMoves
+                };
+
+                *refs[i] = data_set;
             }
-            /* Should create an item with pokeid key in m_Moves if it does not exist. */
-            PokemonMoves &moves = m_Moves[it.key()];
-
-            QSet<int> *refs[filesize] = {
-                &moves.TMMoves[0], &moves.levelMoves[0], &moves.specialMoves[0], &moves.preEvoMoves[0],
-                &moves.TMMoves[1], &moves.eggMoves[1], &moves.levelMoves[1], &moves.tutorMoves[1], &moves.specialMoves[1], &moves.preEvoMoves[1],
-                &moves.TMMoves[2], &moves.eggMoves[2], &moves.levelMoves[2], &moves.tutorMoves[2], &moves.specialMoves[2], &moves.preEvoMoves[2],
-                &moves.TMMoves[3], &moves.preEvoMoves[3], &moves.eggMoves[3], &moves.levelMoves[3], &moves.tutorMoves[3], &moves.specialMoves[3],
-                &moves.TMMoves[4], &moves.preEvoMoves[4], &moves.eggMoves[4], &moves.levelMoves[4], &moves.tutorMoves[4], &moves.specialMoves[4],
-                &moves.dreamWorldMoves
-            };
-
-            *refs[i] = data_set;
         }
     }
 
@@ -1318,9 +1294,13 @@ void PokemonInfo::loadMoves()
     }
 }
 
-QString PokemonInfo::path(const QString &filename)
+QString PokemonInfo::path(const QString &filename, const Pokemon::gen &g)
 {
-    return m_Directory + filename;
+    if (g != 0) {
+        return QString("%1/%2G/%3").arg(m_Directory).arg(g.num).arg(filename);
+    } else {
+        return m_Directory + filename;
+    }
 }
 
 QList<Pokemon::uniqueId> PokemonInfo::AllIds()
@@ -2708,9 +2688,9 @@ void StatInfo::retranslate()
     fill_int_str(m_status, path("status.txt"), true);
 }
 
-QString StatInfo::Stat(int stat, int gen)
+QString StatInfo::Stat(int stat, const Pokemon::gen & gen)
 {
-    if (stat == SpAttack && gen == 1) {
+    if ( (stat == SpAttack || stat == SpDefense) && gen.num == 1) {
         return QObject::tr("Special", "Stat");
     }
     if (stat >= 0 && stat <= Evasion)

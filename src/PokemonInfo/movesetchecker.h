@@ -27,7 +27,7 @@ private:
 
     static QString dir;
 
-    static QString path(const QString &arg);
+    static QString path(const QString &arg, const Pokemon::gen & g = 0);
 };
 
 #endif // MOVESETCHECKER_H
