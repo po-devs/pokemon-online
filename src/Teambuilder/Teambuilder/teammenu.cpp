@@ -118,7 +118,7 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
 
-    for (int i = GEN_MIN; i <= GEN_MAX; i++) {
+    for (int i = 0; i < NUMBER_GENS; i++) {
         int n = Gen::nums[i-GEN_MIN];
 
         gen->addSeparator()->setText(GenInfo::Gen(i));
@@ -129,11 +129,10 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
             ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
             ui->gens[g]->setCheckable(true);
             ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
+            ui->gens[g]->setChecked(g == team().team().gen());
             gens->addAction(ui->gens[g]);
         }
     }
-
-    ui->gens[team().team().gen()]->setChecked(true);
 }
 
 void TeamMenu::genChanged()
