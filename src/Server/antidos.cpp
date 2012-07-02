@@ -10,36 +10,36 @@ AntiDosWindow::AntiDosWindow()
 
     QSpinBox *mppip = new QSpinBox();
     mppip->setRange(1,8);
-    mppip->setValue(settings.value("max_people_per_ip").toInt());
+    mppip->setValue(settings.value("AntiDOS/MaxPeoplePerIp").toInt());
     mylayout->addRow(tr("Max number of people connected with the same ip"), mppip);
 
     QSpinBox *mcpus = new QSpinBox();
     mcpus->setRange(15,150);
-    mcpus->setValue(settings.value("max_commands_per_user").toInt());
+    mcpus->setValue(settings.value("AntiDOS/MaxCommandsPerUser").toInt());
     mylayout->addRow(tr("Max number of times someone is active within a minute"), mcpus);
 
     QSpinBox *mkbpus = new QSpinBox();
     mkbpus->setRange(5,150);
-    mkbpus->setValue(settings.value("max_kbyte_per_user").toInt());
+    mkbpus->setValue(settings.value("AntiDOS/MaxKBPerUser").toInt());
     mkbpus->setSuffix(" kB");
     mylayout->addRow(tr("Maximum upload from user per minute"), mkbpus);
 
     QSpinBox *mlpip = new QSpinBox();
     mlpip->setRange(2,30);
-    mlpip->setValue(settings.value("max_login_per_ip").toInt());
+    mlpip->setValue(settings.value("AntiDOS/MaxConnectionRatePerIP").toInt());
     mylayout->addRow(tr("Max number of times the same ip attempts to log in per minute"), mlpip);
 
     QSpinBox *baxk = new QSpinBox();
     baxk->setRange(1,30);
-    baxk->setValue(settings.value("ban_after_X_kicks").toInt());
+    baxk->setValue(settings.value("AntiDOS/NumberOfInfractionsBeforeBan").toInt());
     mylayout->addRow(tr("Bans after X antidos kicks per 15 minutes"), baxk);
 
     trusted_ips = new QLineEdit();
-    trusted_ips->setText(settings.value("trusted_ips").toString());
+    trusted_ips->setText(settings.value("AntiDOS/TrustedIps").toString());
     mylayout->addRow(tr("Trusted IPs (seperated by comma)"),trusted_ips);
 
     QCheckBox *aDosOn = new QCheckBox(tr("Turn AntiDos ON"));
-    aDosOn->setChecked(!settings.value("antidos_off").toBool());
+    aDosOn->setChecked(!settings.value("AntiDOS/Disabled").toBool());
     mylayout->addWidget(aDosOn);
 
     QPushButton *ok = new QPushButton("&Apply");
@@ -73,13 +73,13 @@ void AntiDosWindow::apply()
     QSettings settings("config", QSettings::IniFormat);
     /* initializing the default init values if not there */
 
-    settings.setValue("max_people_per_ip", obj->max_people_per_ip);
-    settings.setValue("max_commands_per_user", obj->max_commands_per_user);
-    settings.setValue("max_kbyte_per_user", obj->max_kb_per_user);
-    settings.setValue("max_login_per_ip", obj->max_login_per_ip);
-    settings.setValue("ban_after_X_kicks", obj->ban_after_x_kicks);
-    settings.setValue("trusted_ips", obj->trusted_ips.join(","));
-    settings.setValue("antidos_off", !obj->on);
+    settings.setValue("AntiDOS/MaxPeoplePerIp", obj->max_people_per_ip);
+    settings.setValue("AntiDOS/MaxCommandsPerUser", obj->max_commands_per_user);
+    settings.setValue("AntiDOS/MaxKBPerUser", obj->max_kb_per_user);
+    settings.setValue("AntiDOS/MaxConnectionRatePerIP", obj->max_login_per_ip);
+    settings.setValue("AntiDOS/NumberOfInfractionsBeforeBan", obj->ban_after_x_kicks);
+    settings.setValue("AntiDOS/TrustedIps", obj->trusted_ips.join(","));
+    settings.setValue("AntiDOS/Disabled", !obj->on);
 
     close();
 }
@@ -91,36 +91,14 @@ AntiDos::AntiDos() {
 
 void AntiDos::init() {
     QSettings settings("config", QSettings::IniFormat);
-    /* initializing the default init values if not there */
-    if (settings.value("trusted_ips").isNull()) {
-        settings.setValue("trusted_ips", "127.0.0.1");
-    }
-    if (settings.value("max_people_per_ip").isNull()) {
-        settings.setValue("max_people_per_ip", 2);
-    }
-    if (settings.value("max_commands_per_user").isNull()) {
-        settings.setValue("max_commands_per_user", 50);
-    }
-    if (settings.value("max_kbyte_per_user").isNull()) {
-        settings.setValue("max_kbyte_per_user", 25);
-    }
-    if (settings.value("max_login_per_ip").isNull()) {
-        settings.setValue("max_login_per_ip", 6);
-    }
-    if (settings.value("ban_after_X_kicks").isNull()) {
-        settings.setValue("ban_after_X_kicks", 10);
-    }
-    if (settings.value("antidos_off").isNull()) {
-        settings.setValue("antidos_off", false);
-    }
 
-    trusted_ips = settings.value("trusted_ips").toString().split(QRegExp("\\s*,\\s*"));
-    max_people_per_ip = settings.value("max_people_per_ip").toInt();
-    max_commands_per_user = settings.value("max_commands_per_user").toInt();
-    max_kb_per_user = settings.value("max_kbyte_per_user").toInt();
-    max_login_per_ip = settings.value("max_login_per_ip").toInt();
-    ban_after_x_kicks = settings.value("ban_after_X_kicks").toInt();
-    on = !settings.value("antidos_off").toBool();
+    trusted_ips = settings.value("AntiDOS/TrustedIps").toString().split(QRegExp("\\s*,\\s*"));
+    max_people_per_ip = settings.value("AntiDOS/MaxPeoplePerIp").toInt();
+    max_commands_per_user = settings.value("AntiDOS/MaxCommandsPerUser").toInt();
+    max_kb_per_user = settings.value("AntiDOS/MaxKBPerUser").toInt();
+    max_login_per_ip = settings.value("AntiDOS/MaxConnectionRatePerIP").toInt();
+    ban_after_x_kicks = settings.value("AntiDOS/NumberOfInfractionsBeforeBan").toInt();
+    on = !settings.value("AntiDOS/Disabled").toBool();
 }
 
 bool AntiDos::connecting(const QString &ip)

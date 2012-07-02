@@ -66,19 +66,19 @@ int main(int argc, char *argv[])
                 fprintf(stderr, "No server announcement provided.\n");
                 return 1;
             }
-            s.setValue("server_announcement", argv[i]);
+            s.setValue("Server/Announcement", argv[i]);
         } else if(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--channel") == 0){
             if (++i == argc){
                 fprintf(stderr, "No main channel name provided.\n");
                 return 1;
             }
-            s.setValue("mainchanname", argv[i]);
+            s.setValue("Channels/MainChannel", argv[i]);
         } else if(strcmp( argv[i], "-d") == 0 || strcmp(argv[i], "--desc") == 0){
             if (++i == argc){
                 fprintf(stderr, "No server description provided.\n");
                 return 1;
             }
-            s.setValue("server_description", argv[i]);
+            s.setValue("Server/Description", argv[i]);
         } else if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
             fprintf(stdout, "Server for Pokeymon-Online Help\n");
             fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
         } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
             showWindow = false;
         } else if(strcmp(argv[i], "-L") == 0 || strcmp(argv[i], "--low-latency") ==0){
-            s.setValue("low_TCP_delay", true);
+            s.setValue("Network/LowTCPDelay", true);
         } else if(strcmp( argv[i], "-n") == 0 || strcmp(argv[i], "--name") == 0){
             if (++i == argc){
                 fprintf(stderr, "No server name provided.\n");
                 return 1;
             }
-            s.setValue("server_name", argv[i]);
+            s.setValue("Server/Name", argv[i]);
         } else if(strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--port") == 0){
             if (++i == argc){
                 fprintf(stderr, "No server port provided.\n");
@@ -113,20 +113,20 @@ int main(int argc, char *argv[])
             }
             ports.append(argv[i]);
         } else if(strcmp(argv[i], "-P") == 0 || strcmp(argv[i], "--private") == 0){
-            s.setValue("server_private", 1);
+            s.setValue("Server/Private", 1);
         }
     }
 
     fprintf(stderr, "\n-----------------------\nNew Server, starting logs\n-----------------------\n\n");
 
     if (ports.isEmpty()) {
-        if (s.value("server_port").isNull())
-            s.setValue("server_port", 5080);
+        if (s.value("Network/Ports").isNull())
+            s.setValue("Network/Ports", 5080);
     } else
-        s.setValue("server_port", ports.join(","));
+        s.setValue("Network/Ports", ports.join(","));
 
     QList<quint16> serverPorts;
-    foreach (QString sport, s.value("server_port").toString().split(",")) {
+    foreach (QString sport, s.value("Network/Ports").toString().split(",")) {
         serverPorts.append(quint16(sport.toInt()));
     }
     Server * myserver;

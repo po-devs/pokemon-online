@@ -1986,7 +1986,7 @@ void ScriptEngine::setAnnouncement(const QString &html)
 void ScriptEngine::changeAnnouncement(const QString &html)
 {
     QSettings settings("config", QSettings::IniFormat);
-    settings.setValue("server_announcement", html);
+    settings.setValue("Server/Announcement", html);
     myserver->announcementChanged(html);
 }
 
@@ -2003,7 +2003,7 @@ QScriptValue ScriptEngine::getAnnouncement()
 void ScriptEngine::changeDescription(const QString &html)
 {
     QSettings settings("config", QSettings::IniFormat);
-    settings.setValue("server_description", html);
+    settings.setValue("Server/Description", html);
     myserver->regDescChanged(html);
 }
 
