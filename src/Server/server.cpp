@@ -92,42 +92,32 @@ void Server::start(){
 
     QSettings s("config", QSettings::IniFormat);
 
-    if (!s.contains("sql_driver")) {
-        s.setValue("sql_driver", SQLCreator::SQLite);
-    }
-    if (!s.contains("sql_db_name")) {
-        s.setValue("sql_db_name", "pokemon");
-    }
-    if (!s.contains("sql_db_port")) {
-        s.setValue("sql_db_port", 5432);
-    }
-    if (!s.contains("sql_db_user")) {
-        s.setValue("sql_db_user", "postgres");
-    }
-    if (!s.contains("sql_db_pass")) {
-        s.setValue("sql_db_pass", "admin");
-    }
-    if (!s.contains("sql_db_host")) {
-        s.setValue("sql_db_host", "localhost");
-    }
-    if (!s.contains("show_log_messages")) {
-        s.setValue("show_log_messages", true);
-    }
-    if (!s.contains("safe_scripts")) {
-        s.setValue("safe_scripts", true);
-    }
-    if (!s.contains("server_password")) {
-        s.setValue("server_password", "");
-    }
-    if (!s.contains("require_password")) {
-        s.setValue("require_password", false);
-    }
-    if (!s.contains("show_tray_popup")) {
-        s.setValue("show_tray_popup", true);
-    }
-    if (!s.contains("minimize_to_tray")) {
-        s.setValue("minimize_to_tray", true);
-    }
+    auto setDefaultValue = [&s](const char* key, const QVariant &defaultValue) {
+            if (!s.contains(key)) {
+                s.setValue(key, defaultValue);
+            }
+    };
+
+    setDefaultValue("sql_driver", SQLCreator::SQLite);
+    setDefaultValue("sql_db_name", "pokemon");
+    setDefaultValue("sql_db_port", 5432);
+    setDefaultValue("sql_db_user", "postgres");
+    setDefaultValue("sql_db_pass", "admin");
+    setDefaultValue("sql_db_host", "localhost");
+    setDefaultValue("show_log_messages", true);
+    setDefaultValue("safe_scripts", false);
+    setDefaultValue("server_password", "pikachu");
+    setDefaultValue("require_password", false);
+    setDefaultValue("show_tray_popup", true);
+    setDefaultValue("minimize_to_tray", true);
+    setDefaultValue("battles_with_same_ip_unrated", true);
+    setDefaultValue("rated_battles_memory_number", 5);
+    setDefaultValue("logs_channel_files", false);
+    setDefaultValue("logs_battle_files", false);
+    setDefaultValue("delete_inactive_members_days", 182);
+    setDefaultValue("process_ratings_on_startup", true);
+    setDefaultValue("process_database_clearing_on_startup", true);
+    setDefaultValue("show_log_messages", false);
 
     try {
         SQLCreator::createSQLConnection();
@@ -208,21 +198,8 @@ void Server::start(){
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
     connect(AntiDos::obj(), SIGNAL(ban(QString)), SLOT(dosBan(QString)));
 
-    if (s.value("battles_with_same_ip_unrated").isNull()) {
-        s.setValue("battles_with_same_ip_unrated", true);
-    }
-    if (s.value("rated_battles_memory_number").isNull()) {
-        s.setValue("rated_battles_memory_number", 5);
-    }
-
     loadRatedBattlesSettings();
 
-    if (s.value("logs_channel_files").isNull()) {
-        s.setValue("logs_channel_files", false);
-    }
-    if (s.value("logs_battle_files").isNull()) {
-        s.setValue("logs_battle_files", false);
-    }
     useChannelFileLog = s.value("logs_channel_files").toBool();
     useBattleFileLog = s.value("logs_battle_files").toBool();
 
@@ -239,7 +216,7 @@ void Server::start(){
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
     serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
     serverPrivate = quint16(s.value("server_private").toInt());
-    amountOfInactiveDays = s.value("delete_inactive_members_days", 182).toInt();
+    amountOfInactiveDays = s.value("delete_inactive_members_days").toInt();
     lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
     safeScripts = s.value("safe_scripts").toBool();
     overactiveShow = s.value("show_overactive_messages").toBool();
@@ -254,11 +231,11 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("process_ratings_on_startup", true).toBool()) {
+    if (s.value("process_ratings_on_startup").toBool()) {
         TierMachine::obj()->processDailyRun();
     }
 
-    if (s.value("process_database_clearing_on_startup", true).toBool()) {
+    if (s.value("process_database_clearing_on_startup").toBool()) {
         SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
