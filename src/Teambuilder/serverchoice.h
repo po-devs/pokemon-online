@@ -19,6 +19,8 @@ public:
     ~ServerChoice();
 
     void saveSettings();
+
+    QMenuBar *createMenuBar(MainEngine *);
 signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();

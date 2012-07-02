@@ -31,8 +31,9 @@ public slots:
     void switchToTrainer();
     void setTierList(const QStringList &tiers); //tells which tiers are available
 
-    void setNoMod(){}
-    void changeMod(){}
+    void setNoMod();
+    void changeMod();
+    void installMod();
 
     void importTeam();
     void exportTeam();
@@ -46,6 +47,7 @@ private slots:
 signals:
     void done();
     void reloadMenuBar();
+    void reloadDb();
 private:
     TeamHolder &team() {return *m_team;}
     TeamHolder *m_team;

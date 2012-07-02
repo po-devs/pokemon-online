@@ -15,10 +15,14 @@ namespace FillMode {
     };
 }
 
-struct PokemonInfoConfig {
-    static void changeTranslation(const QString& ts = QString());
-    static void changeMod(const QString &mod, FillMode::FillModeType mode);
-};
+namespace PokemonInfoConfig {
+    void changeTranslation(const QString& ts = QString());
+    void changeMod(const QString &mod, FillMode::FillModeType mode);
+
+    QStringList allFiles(const QString &filename, bool trans=false);
+    QString currentMod();
+    QString currentModPath();
+}
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
 
@@ -42,8 +46,7 @@ class PokemonInfo
 {
 public:
     /* directory where all the data is */
-    static void init(const QString &dir="db/pokes/", FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
-    static void reloadMod(FillMode::FillModeType mode = FillMode::NoMod, const QString &modName = "");
+    static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
     static int TrueCount(Pokemon::gen gen); // pokes without counting forms
@@ -178,9 +181,6 @@ private:
     static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
-    // Clears pokemon data. Call reloadMod() after that to refill data.
-    static void clearData();
-    static FillMode::FillModeType m_CurrentMode;
 };
 
 class MoveInfo

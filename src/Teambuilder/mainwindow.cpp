@@ -55,6 +55,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
 
@@ -70,41 +71,10 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
-    QSettings s_mod(appDataPath("Mods") + "/mods.ini", QSettings::IniFormat);
-    QStringList mods = s_mod.childGroups();
-    QString modname;
+    PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString(), FillMode::Client);
 
-    if (mods.size() > 0) {
-        int general_pos = mods.indexOf("General");
-        if (general_pos != -1) {
-            mods.removeAt(general_pos);
-        }
-        if (mods.size() > 0) {
-            int mod_selected = s_mod.value("active", 0).toInt();
-            bool is_mod_selected = mod_selected > 0;
+    reloadPokemonDatabase();
 
-            QStringListIterator mods_it(mods);
-            while (mods_it.hasNext()) {
-                QString current = mods_it.next();
-                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
-                    modname = current;
-                }
-            }
-        }
-    }
-
-    PokemonInfo::init("db/pokes/", FillMode::Client, modname);
-    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
-    ItemInfo::init("db/items/");
-    MoveInfo::init("db/moves/");
-    TypeInfo::init("db/types/");
-    NatureInfo::init("db/natures/");
-    CategoryInfo::init("db/categories/");
-    AbilityInfo::init("db/abilities/");
-    GenderInfo::init("db/genders/");
-    HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
-    GenInfo::init("db/gens/");
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
@@ -120,6 +90,24 @@ MainEngine::~MainEngine()
 {
     delete pluginManager, pluginManager = NULL;
     delete m_team, m_team = NULL;
+}
+
+void MainEngine::reloadPokemonDatabase()
+{
+    QSettings s;
+
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    GenderInfo::init("db/genders/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
+    GenInfo::init("db/gens/");
 }
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
@@ -258,6 +246,7 @@ void MainEngine::launchTeamBuilder()
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
     connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
+    connect(TB, SIGNAL(reloadDb()), SLOT(reloadPokemonDatabase()));
 }
 
 void MainEngine::launchServerChoice()

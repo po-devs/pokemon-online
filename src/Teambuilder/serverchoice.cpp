@@ -4,6 +4,7 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverchoicemodel.h"
+#include "mainwindow.h"
 
 ServerChoice::ServerChoice(const QString &nick) :
     ui(new Ui::ServerChoice), wasConnected(false)
@@ -89,6 +90,21 @@ ServerChoice::~ServerChoice()
     saveSettings();
     writeSettings(this);
     delete ui;
+}
+
+QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
+{
+    QMenuBar *ret = new QMenuBar();
+
+    //TODO : Add menu allowing to change port / registry IP / ??
+
+    QMenu *fileMenu = ret->addMenu(tr("&File"));
+    fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
+
+    w->addThemeMenu(ret);
+    w->addStyleMenu(ret);
+
+    return ret;
 }
 
 void ServerChoice::serverAdded()

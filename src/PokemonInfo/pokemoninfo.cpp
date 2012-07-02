@@ -132,46 +132,67 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     return ret;
 }
 
-static QString transPath, modPath;
+namespace PokemonInfoConfig {
+    static QString transPath, modPath;
 
-void PokemonInfoConfig::changeTranslation(const QString &ts)
-{
-    if (ts.length() > 0) {
-        transPath = QString("trans/%1/").arg(ts);
-    } else {
-        transPath.clear();
-    }
-}
-
-void PokemonInfoConfig::changeMod(const QString &mod, FillMode::FillModeType mode)
-{
-    if (mod.length() == 0 || mode == FillMode::NoMod) {
-        modPath.clear();
-    } else {
-        QString cleanMod = QString::fromUtf8(QUrl::toPercentEncoding(mod));
-        if (mode == FillMode::Client) {
-            modPath = appDataPath("Mods") + "/" + cleanMod + "/";
+    void changeTranslation(const QString &ts)
+    {
+        if (ts.length() > 0) {
+            transPath = QString("trans/%1/").arg(ts);
         } else {
-            modPath = QString("Mods/%1/").arg(cleanMod);
+            transPath.clear();
         }
     }
-}
 
-static QStringList allFiles(const QString &filename, bool trans=false) {
-    QStringList ret;
-
-    ret << filename;
-
-    if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
-        ret << (transPath + filename);
+    void changeMod(const QString &mod, FillMode::FillModeType mode)
+    {
+        if (mod.length() == 0 || mode == FillMode::NoMod) {
+            modPath.clear();
+        } else {
+            //QString cleanMod = QString::fromUtf8(QUrl::toPercentEncoding(mod));
+            if (mode == FillMode::Client) {
+                modPath = appDataPath("Mods") + "/" + mod + "/";
+            } else {
+                modPath = QString("Mods/%1/").arg(mod);
+            }
+            if (!QDir(modPath).exists()) {
+                modPath.clear();
+            }
+        }
     }
 
-    if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
-        ret << (modPath + filename);
+    QString currentModPath()
+    {
+        return modPath;
     }
 
-    return ret;
+    QString currentMod()
+    {
+        if (modPath.length() == 0) {
+            return QString();
+        }
+
+        return QDir(modPath).dirName();
+    }
+
+    QStringList allFiles(const QString &filename, bool trans) {
+        QStringList ret;
+
+        ret << filename;
+
+        if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
+            ret << (transPath + filename);
+        }
+
+        if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
+            ret << (modPath + filename);
+        }
+
+        return ret;
+    }
 }
+
+using namespace PokemonInfoConfig;
 
 template <class T, class U>
 static QHash<U,T> reverse_hash(const QHash<T,U> &hash) {
@@ -501,26 +522,14 @@ int PokemonInfo::BoostedStat(int stat, int boost)
     return stat * std::max(2, 2+boost) / std::max(2, 2-boost);
 }
 
-void PokemonInfo::init(const QString &dir, FillMode::FillModeType mode, const QString &modName)
+void PokemonInfo::init(const QString &dir)
 {
-    /* makes sure it isn't already initialized */
-    if (NumberOfPokemons() != 0) return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     // Load db/pokes data.
-    reloadMod(mode, modName);
-}
-
-void PokemonInfo::reloadMod(FillMode::FillModeType mode, const QString &modName)
-{
-    PokemonInfoConfig::changeMod(modName, mode);
-
-    clearData();
-
     loadNames();
     loadEvos();
     loadMoves();
@@ -557,35 +566,6 @@ void PokemonInfo::retranslate()
     loadNames();
     loadClassifications();
     loadDescriptions();
-}
-
-void PokemonInfo::clearData()
-{
-    m_Names.clear();
-    m_Options.clear();
-    m_MaxForme.clear();
-    m_Weights.clear();
-    m_Genders.clear();
-    for (int i = 0; i < NUMBER_GENS; ++i) {
-        m_Type1[i].clear();
-        m_Type2[i].clear();
-        for (int j = 0; j < 3; ++j) {
-            m_Abilities[i][j].clear();
-        }
-        m_MinLevels[i].clear();
-    }
-    m_LevelBalance.clear();
-    m_Classification.clear();
-    m_GenderRates.clear();
-    m_Height.clear();
-    m_Desc.clear();
-    m_BaseStats.clear();
-    m_Evolutions.clear();
-    m_OriginalEvos.clear();
-    m_PreEvos.clear();
-    m_DirectEvos.clear();
-    m_AestheticFormes.clear();
-    m_Moves.clear();
 }
 
 void PokemonInfo::loadClassifications()
@@ -1472,10 +1452,6 @@ bool PokemonInfo::modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int a
 
 void MoveInfo::init(const QString &dir)
 {
-    /* makes sure it isn't already initialized */
-    if (NumberOfMoves(GEN_MAX) != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -1857,10 +1833,6 @@ QString MoveInfo::path(const QString &file)
 
 void ItemInfo::init(const QString &dir)
 {
-    /* makes sure it isn't already initialized */
-    if (NumberOfItems() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2232,9 +2204,6 @@ QList<QString> ItemInfo::SortedUsefulNames(Pokemon::gen gen)
 
 void TypeInfo::init(const QString &dir)
 {
-    if (NumberOfTypes() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2358,9 +2327,6 @@ void TypeInfo::modifyTypeChart(int type_attack, int type_defend, int value)
 
 void NatureInfo::init(const QString &dir)
 {
-    if (NumberOfNatures() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2445,9 +2411,6 @@ int NatureInfo::StatHindered(int nature)
 
 void CategoryInfo::init(const QString &dir)
 {
-    if (NumberOfCategories() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2483,9 +2446,6 @@ int CategoryInfo::NumberOfCategories()
 
 void AbilityInfo::init(const QString &dir)
 {
-    if (NumberOfAbilities(GEN_MAX) != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2605,9 +2565,6 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
 
 void GenderInfo::init(const QString &dir)
 {
-    if (NumberOfGenders() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -2709,9 +2666,6 @@ QPair<quint8, quint8> HiddenPowerInfo::AttDefDVsForGen2(int type)
 
 void StatInfo::init(const QString &dir)
 {
-    if (m_stats.size() != 0)
-        return;
-
     m_Directory = dir;
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));

@@ -6,6 +6,15 @@
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeboxes.h"
 #include "Teambuilder/poketablemodel.h"
+#include "../PokemonInfo/pokemoninfo.h"
+
+#ifdef _WIN32
+#include "../../SpecialIncludes/zip.h"
+#else
+#include <zip.h>
+#endif
+
+#include <cerrno>
 
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
@@ -51,39 +60,39 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
 
     /* Loading mod menu */
-    QSettings s_mod(appDataPath("Mods") + "/mods.ini", QSettings::IniFormat);
-    QStringList mods = s_mod.childGroups();
-    QActionGroup *modActionGroup = new QActionGroup(menuBar);
-    if (mods.size() > 0) {
-        int general_pos = mods.indexOf("General");
-        if (general_pos != -1) {
-            mods.removeAt(general_pos);
-        }
-        if (mods.size() > 0) {
-            int mod_selected = s_mod.value("active", 0).toInt();
-            bool is_mod_selected = mod_selected > 0;
-            QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
+    QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
+    QActionGroup *group = new QActionGroup(menuMods);
 
-            // No mod option.
-            QAction *action_no_mod = menuMods->addAction(tr("No mod"), this, SLOT(setNoMod()));
-            action_no_mod->setCheckable(true);
-            modActionGroup->addAction(action_no_mod);
-            if (!is_mod_selected) action_no_mod->setChecked(true);
-            menuMods->addSeparator();
+    QString currentMod = PokemonInfoConfig::currentMod();
+    // No mod option.
+    QAction *noMod = menuMods->addAction(tr("&No mod"), this, SLOT(setNoMod()));
+    noMod->setCheckable(true);
+    noMod->setChecked(currentMod.length()==0);
+    group->addAction(noMod);
 
-            // Add mods to menu.
-            QStringListIterator mods_it(mods);
-            while (mods_it.hasNext()) {
-                QString current = mods_it.next();
-                QAction *ac = menuMods->addAction(current, this, SLOT(changeMod()));
-                ac->setCheckable(true);
-                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
-                    ac->setChecked(true);
-                }
-                modActionGroup->addAction(ac);
+    menuMods->addSeparator();
+
+    QDir modDir(appDataPath("Mods"));
+    if (modDir.exists()) {
+        QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
+
+        foreach(QString dir, dirs) {
+            modDir.cd(dir);
+
+            if (modDir.exists("mod.ini")) {
+                QAction *mod = menuMods->addAction(modDir.dirName(), this, SLOT(changeMod()));
+                mod->setProperty("name", modDir.dirName());
+                mod->setCheckable(true);
+                mod->setChecked(currentMod == modDir.dirName());
+                group->addAction(mod);
             }
+
+            modDir.cdUp();
         }
     }
+
+    menuMods->addSeparator();
+    menuMods->addAction(tr("&Install new mod..."), this, SLOT(installMod()));
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
@@ -105,6 +114,125 @@ void TeamBuilder::loadAll()
     team().load();
     markAllUpdated();
     currentWidget()->updateAll();
+}
+
+void TeamBuilder::setNoMod()
+{
+    PokemonInfoConfig::changeMod("", FillMode::NoMod);
+    emit reloadDb();
+
+    markTeamUpdated();
+    currentWidget()->updateTeam();
+}
+
+void TeamBuilder::changeMod()
+{
+    QString mod = sender()->property("name").toString();
+    PokemonInfoConfig::changeMod(mod, FillMode::Client);
+    emit reloadDb();
+
+    markTeamUpdated();
+    currentWidget()->updateTeam();
+}
+
+void TeamBuilder::installMod()
+{
+    /* Todo: thread this, and print updated status ? */
+    QString archivePath = QFileDialog::getOpenFileName(this, tr("Install mod file"), QDesktopServices::storageLocation(QDesktopServices::HomeLocation), tr("archive (*.zip)"));
+
+    if (archivePath.isNull()) {
+        return;
+    }
+
+    QString modName = QFileInfo(archivePath).baseName();
+
+    /****************************/
+    /* Extracting the zip... :) */
+    /****************************/
+
+    int error = 0;
+    char buffer[4096];
+    int readsize = 0;
+
+    zip * archive = zip_open(archivePath.toStdString().c_str(), 0, &error);
+
+    if (!archive)
+    {
+        zip_error_to_str(buffer, 4096, error, errno);
+        QMessageBox::critical(this, tr("Impossible to open the archive"), tr("Pokemon Online failed to open the file %1 as an archive (%2).").arg(archivePath, buffer));
+        return;
+    }
+
+    zip_file *file = zip_fopen(archive, "mod.ini", 0);
+
+    if (!file)
+    {
+        QMessageBox::critical(this, tr("Incomplete archive"), tr("The file mod.ini couldn't be opened at the base of the archive (%1).").arg(zip_strerror(archive)));
+        zip_close(archive);
+        return;
+    }
+
+    QDir modDir(appDataPath("Mods", true));
+    modDir.mkdir(modName);
+    modDir.cd(modName);
+
+    QFile out(modDir.absoluteFilePath("mod.ini"));
+    out.open(QIODevice::WriteOnly);
+
+    do
+    {
+        out.write(buffer, readsize);
+
+        readsize = zip_fread(file, buffer, 4096);
+    } while (readsize > 0) ;
+
+    out.close();
+
+    zip_fclose(file), file = NULL;
+
+    /* Now reads all other files */
+    int numFiles = zip_get_num_entries(archive, 0);
+
+    qDebug() << "Number of files in the archive: " << numFiles;
+
+    for (int i = 0; i < numFiles; i++) {
+        QString name = zip_get_name(archive, i, 0);
+
+        qDebug() << "File " << i << ": " << name;
+
+        /* Mod.ini is already open */
+        if (name != "mod.ini") {
+            file = zip_fopen_index(archive, i, 0);
+
+            if (!file) {
+                qDebug() << "Opening failed for some reason";
+                //error
+                continue;
+            }
+
+            modDir.mkpath(QFileInfo(name).path());
+            QFile out(modDir.absoluteFilePath(name));
+            out.open(QIODevice::WriteOnly);
+
+            readsize = 0;
+
+            do
+            {
+                out.write(buffer, readsize);
+
+                readsize = zip_fread(file, buffer, 4096);
+            } while (readsize > 0) ;
+
+            out.close();
+
+            zip_fclose(file), file = NULL;
+        }
+    }
+
+    zip_close(archive);
+
+    //Done
+    emit reloadMenuBar();
 }
 
 void TeamBuilder::newTeam()
