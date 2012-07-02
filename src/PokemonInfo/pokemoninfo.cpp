@@ -190,6 +190,33 @@ namespace PokemonInfoConfig {
 
         return ret;
     }
+
+    QStringList availableMods(FillMode::FillModeType mode)
+    {
+        QStringList ret;
+
+        if (mode == FillMode::NoMod) {
+            return ret;
+        }
+
+        QDir modDir(mode == FillMode::Client ? appDataPath("Mods") : "Mods");
+
+        if (modDir.exists()) {
+            QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
+
+            foreach(QString dir, dirs) {
+                modDir.cd(dir);
+
+                if (modDir.exists("mod.ini")) {
+                    ret << modDir.dirName();
+                }
+
+                modDir.cdUp();
+            }
+        }
+
+        return ret;
+    }
 }
 
 using namespace PokemonInfoConfig;

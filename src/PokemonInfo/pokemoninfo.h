@@ -22,6 +22,8 @@ namespace PokemonInfoConfig {
     QStringList allFiles(const QString &filename, bool trans=false);
     QString currentMod();
     QString currentModPath();
+
+    QStringList availableMods(FillMode::FillModeType mode);
 }
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */

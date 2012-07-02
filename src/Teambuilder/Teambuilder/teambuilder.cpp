@@ -72,23 +72,14 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
 
     menuMods->addSeparator();
 
-    QDir modDir(appDataPath("Mods"));
-    if (modDir.exists()) {
-        QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
+    QStringList mods = PokemonInfoConfig::availableMods(FillMode::Client);
 
-        foreach(QString dir, dirs) {
-            modDir.cd(dir);
-
-            if (modDir.exists("mod.ini")) {
-                QAction *mod = menuMods->addAction(modDir.dirName(), this, SLOT(changeMod()));
-                mod->setProperty("name", modDir.dirName());
-                mod->setCheckable(true);
-                mod->setChecked(currentMod == modDir.dirName());
-                group->addAction(mod);
-            }
-
-            modDir.cdUp();
-        }
+    foreach(QString smod, mods) {
+        QAction *mod = menuMods->addAction(smod, this, SLOT(changeMod()));
+        mod->setProperty("name", smod);
+        mod->setCheckable(true);
+        mod->setChecked(currentMod == smod);
+        group->addAction(mod);
     }
 
     menuMods->addSeparator();
