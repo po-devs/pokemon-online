@@ -119,9 +119,9 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     QActionGroup *gens = new QActionGroup(gen);
 
     for (int i = 0; i < NUMBER_GENS; i++) {
-        int n = Gen::nums[i-GEN_MIN];
+        int n = Gen::nums[i];
 
-        gen->addSeparator()->setText(GenInfo::Gen(i));
+        gen->addSeparator()->setText(GenInfo::Gen(i+GEN_MIN));
 
         for (int j = 0; j < n; j++) {
             Pokemon::gen g(i, j);
