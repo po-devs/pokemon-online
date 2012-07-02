@@ -51,10 +51,10 @@ BattlingOptionsWindow::BattlingOptionsWindow()
     fl->addWidget(apply = new QPushButton(tr("&Apply")));
 
     QSettings s("config", QSettings::IniFormat);
-    sameIp->setChecked(s.value("battles_with_same_ip_unrated").toBool());
-    diffIps->setValue(s.value("rated_battles_memory_number").toInt());
-    allowCRated->setChecked(s.value("rated_battle_through_challenge").toBool());
-    processOnStartUp->setChecked(s.value("process_ratings_on_startup", true).toBool());
+    sameIp->setChecked(s.value("Battles/ForceUnratedForSameIP").toBool());
+    diffIps->setValue(s.value("Battles/ConsecutiveFindBattlesWithDifferentIPs").toInt());
+    allowCRated->setChecked(s.value("Battles/RatedThroughChallenge").toBool());
+    processOnStartUp->setChecked(s.value("Ladder/ProcessRatingsOnStartUp", true).toBool());
 
     updateLabel();
 
@@ -75,16 +75,16 @@ void BattlingOptionsWindow::applyChanges()
 {
     QSettings s("config", QSettings::IniFormat);
 
-    s.setValue("battles_with_same_ip_unrated", sameIp->isChecked());
-    s.setValue("rated_battles_memory_number", diffIps->value());
-    s.setValue("rated_battle_through_challenge", allowCRated->isChecked());
+    s.setValue("Battles/ForceUnratedForSameIP", sameIp->isChecked());
+    s.setValue("Battles/ConsecutiveFindBattlesWithDifferentIPs", diffIps->value());
+    s.setValue("Battles/RatedThroughChallenge", allowCRated->isChecked());
 
-    s.setValue("ladder_months_expiration", months->value());
-    s.setValue("ladder_period_duration", hours->value());
-    s.setValue("ladder_percent_per_period", percent->value());
-    s.setValue("ladder_bonus_time", periods->value());
-    s.setValue("ladder_max_decay", max_decay->value());
-    s.setValue("process_ratings_on_startup", processOnStartUp->isChecked());
+    s.setValue("Ladder/MonthsExpiration", months->value());
+    s.setValue("Ladder/PeriodDuration", hours->value());
+    s.setValue("Ladder/DecayPerPeriod", percent->value());
+    s.setValue("Ladder/BonusPeriods", periods->value());
+    s.setValue("Ladder/MaxDecay", max_decay->value());
+    s.setValue("Ladder/ProcessRatingsOnStartUp", processOnStartUp->isChecked());
 
     emit settingsChanged();
 

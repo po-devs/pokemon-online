@@ -29,39 +29,39 @@ SQLConfigWindow::SQLConfigWindow()
     b->addItem("PostGreSQL");
     b->addItem("MySQL");
     v->addLayout(new QSideBySide(new QLabel(tr("SQL Database type: ")), b));
-    if (s.value("sql_driver").toInt() == SQLCreator::PostGreSQL) {
+    if (s.value("SQL/Driver").toInt() == SQLCreator::PostGreSQL) {
         b->setCurrentIndex(1);
-    } else if (s.value("sql_driver").toInt() == SQLCreator::MySQL) {
+    } else if (s.value("SQL/Driver").toInt() == SQLCreator::MySQL) {
         b->setCurrentIndex(2);
     }
 
     name = new QLineEdit();
-    name->setText(s.value("sql_db_name").toString());
+    name->setText(s.value("SQL/Database").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Database name: ")), name));
     
     schema = new QLineEdit();
-    schema->setText(s.value("sql_db_schema", "").toString());
+    schema->setText(s.value("SQL/DatabaseSchema", "").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Schema: ")), schema));
 
     user = new QLineEdit();
-    user->setText(s.value("sql_db_user").toString());
+    user->setText(s.value("SQL/User").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("User: ")), user));
 
     pass = new QLineEdit();
-    pass->setText(s.value("sql_db_pass").toString());
+    pass->setText(s.value("SQL/Pass").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Password: ")), pass));
 
     host = new QLineEdit();
-    host->setText(s.value("sql_db_host").toString());
+    host->setText(s.value("SQL/Host").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Host: ")), host));
 
     port = new QSpinBox();
     port->setRange(0, 65535);
-    port->setValue(s.value("sql_db_port").toInt());
+    port->setValue(s.value("SQL/Port").toInt());
     v->addLayout(new QSideBySide(new QLabel(tr("Port: ")), port));
 
     doVacuum = new QCheckBox("Do VACUUM on start if possible (recommended).");
-    doVacuum->setChecked(s.value("sql_do_vacuum", true).toBool());
+    doVacuum->setChecked(s.value("SQL/VacuumOnStartup", true).toBool());
     v->addWidget(doVacuum);
 
     QPushButton *exporting = new QPushButton(tr("&Export"));
@@ -92,14 +92,14 @@ void SQLConfigWindow::apply()
 {
     QSettings s("config", QSettings::IniFormat);
 
-    s.setValue("sql_driver", b->currentIndex());
-    s.setValue("sql_db_name", name->text());
-    s.setValue("sql_db_port", port->value());
-    s.setValue("sql_db_user", user->text());
-    s.setValue("sql_db_pass", pass->text());
-    s.setValue("sql_db_host", host->text());
-    s.setValue("sql_db_schema", schema->text());
-    s.setValue("sql_do_vacuum", doVacuum->isChecked());
+    s.setValue("SQL/Driver", b->currentIndex());
+    s.setValue("SQL/Database", name->text());
+    s.setValue("SQL/Port", port->value());
+    s.setValue("SQL/User", user->text());
+    s.setValue("SQL/Pass", pass->text());
+    s.setValue("SQL/Host", host->text());
+    s.setValue("SQL/DatabaseSchema", schema->text());
+    s.setValue("SQL/VacuumOnStartup", doVacuum->isChecked());
 }
 
 void SQLConfigWindow::exportDatabase()

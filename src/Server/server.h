@@ -128,7 +128,6 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
-    void useBattleFileLogChanged(bool logging);
     void inactivePlayersDeleteDaysChanged(int newValue);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
@@ -211,7 +210,6 @@ private:
     QList<quint16>  serverPorts;
     QStringList proxyServers;
     bool showLogMessages;
-    bool useBattleFileLog;
     bool useChannelFileLog;
     int amountOfInactiveDays;
     bool lowTCPDelay;

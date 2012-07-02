@@ -38,9 +38,12 @@ static void updateZippedChannelCache(QByteArray&val) {
     val = makeZipPacket(NetworkServ::ChannelsList, Server::serverIns->channelNames);
 }
 
+//channelCache([&](QByteArray &val) {val = makePacket(NetworkServ::ChannelsList, channelNames);}),
+//zchannelCache([&](QByteArray &val) {val = makeZipPacket(NetworkServ::ChannelsList, channelNames);}),
+
 Server::Server(quint16 port) : registry_connection(NULL), serverPorts(), showLogMessages(true),
-    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), channelCache(&updateChannelCache),
-    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
+    lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0),
+    channelCache(&updateChannelCache), zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
 {
     serverPorts << port;
 }
@@ -98,26 +101,48 @@ void Server::start(){
             }
     };
 
-    setDefaultValue("sql_driver", SQLCreator::SQLite);
-    setDefaultValue("sql_db_name", "pokemon");
-    setDefaultValue("sql_db_port", 5432);
-    setDefaultValue("sql_db_user", "postgres");
-    setDefaultValue("sql_db_pass", "admin");
-    setDefaultValue("sql_db_host", "localhost");
-    setDefaultValue("show_log_messages", true);
-    setDefaultValue("safe_scripts", false);
-    setDefaultValue("server_password", "pikachu");
-    setDefaultValue("require_password", false);
-    setDefaultValue("show_tray_popup", true);
-    setDefaultValue("minimize_to_tray", true);
-    setDefaultValue("battles_with_same_ip_unrated", true);
-    setDefaultValue("rated_battles_memory_number", 5);
-    setDefaultValue("logs_channel_files", false);
-    setDefaultValue("logs_battle_files", false);
-    setDefaultValue("delete_inactive_members_days", 182);
-    setDefaultValue("process_ratings_on_startup", true);
-    setDefaultValue("process_database_clearing_on_startup", true);
-    setDefaultValue("show_log_messages", false);
+    setDefaultValue("SQL/Driver", SQLCreator::SQLite);
+    setDefaultValue("SQL/Database", "pokemon");
+    setDefaultValue("SQL/Port", 5432);
+    setDefaultValue("SQL/User", "postgres");
+    setDefaultValue("SQL/Pass", "admin");
+    setDefaultValue("SQL/Host", "localhost");
+    setDefaultValue("SQL/DatabaseSchema", "");
+    setDefaultValue("SQL/VacuumOnStartup", true);
+    setDefaultValue("GUI/ShowLogMessages", false);
+    setDefaultValue("GUI/ShowTrayPopup", true);
+    setDefaultValue("GUI/MinimizeToTray", true);
+    setDefaultValue("Scripts/SafeMode", false);
+    setDefaultValue("Server/Password", "pikachu");
+    setDefaultValue("Server/RequirePassword", false);
+    setDefaultValue("Server/Private", false);
+    setDefaultValue("Server/Name", QString());
+    setDefaultValue("Server/Announcement", QString());
+    setDefaultValue("Server/Description", QString());
+    setDefaultValue("Server/MaxPlayers", 0);
+    setDefaultValue("Channels/LoggingEnabled", false);
+    setDefaultValue("Channels/MainChannel", QString());
+    setDefaultValue("Ladder/MonthsExpiration", 3);
+    setDefaultValue("Ladder/PeriodDuration", 24);
+    setDefaultValue("Ladder/DecayPerPeriod", 5);
+    setDefaultValue("Ladder/BonusPeriods", 5);
+    setDefaultValue("Ladder/MaxDecay", 50);
+    setDefaultValue("Ladder/ProcessRatingsOnStartUp", true);
+    setDefaultValue("Battles/ForceUnratedForSameIP", true);
+    setDefaultValue("Battles/ConsecutiveFindBattlesWithDifferentIPs", 5);
+    setDefaultValue("Battles/RatedThroughChallenge", false);
+    setDefaultValue("Network/ProxyServers", QString());
+    setDefaultValue("Network/LowTCPDelay", false);
+    setDefaultValue("AntiDOS/ShowOveractiveMessages", false);
+    setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1");
+    setDefaultValue("AntiDOS/MaxPeoplePerIp", 2);
+    setDefaultValue("AntiDOS/MaxCommandsPerUser", 50);
+    setDefaultValue("AntiDOS/MaxKBPerUser", 25);
+    setDefaultValue("AntiDOS/MaxConnectionRatePerIP", 6);
+    setDefaultValue("AntiDOS/NumberOfInfractionsBeforeBan", 10);
+    setDefaultValue("AntiDOS/Disabled", false);
+    setDefaultValue("Players/InactiveThresholdInDays", 182);
+    setDefaultValue("Players/ClearInactivesOnStartup", true);
 
     try {
         SQLCreator::createSQLConnection();
@@ -200,8 +225,7 @@ void Server::start(){
 
     loadRatedBattlesSettings();
 
-    useChannelFileLog = s.value("logs_channel_files").toBool();
-    useBattleFileLog = s.value("logs_battle_files").toBool();
+    useChannelFileLog = s.value("Channels/LoggingEnabled").toBool();
 
     /*
       The timer for clearing the last rated battles memory, set to 3 hours
@@ -210,32 +234,32 @@ void Server::start(){
     connect(t, SIGNAL(timeout()), this, SLOT(clearRatedBattlesHistory()));
     t->start(3*3600*1000);
 
-    serverName = s.value("server_name").toString();
-    serverDesc = s.value("server_description").toString();
-    serverAnnouncement = s.value("server_announcement").toByteArray();
+    serverName = s.value("Server/Name").toString();
+    serverDesc = s.value("Server/Description").toString();
+    serverAnnouncement = s.value("Server/Announcement").toByteArray();
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
-    serverPlayerMax = quint16(s.value("server_maxplayers").toInt());
-    serverPrivate = quint16(s.value("server_private").toInt());
-    amountOfInactiveDays = s.value("delete_inactive_members_days").toInt();
-    lowTCPDelay = quint16(s.value("low_TCP_delay").toBool());
-    safeScripts = s.value("safe_scripts").toBool();
-    overactiveShow = s.value("show_overactive_messages").toBool();
-    proxyServers = s.value("proxyservers").toString().split(",");
-    passwordProtected = s.value("require_password").toBool();
-    serverPassword = s.value("server_password").toByteArray();
-    showTrayPopup = s.value("show_tray_popup").toBool();
-    minimizeToTray = s.value("minimize_to_tray").toBool();
+    serverPlayerMax = quint16(s.value("Server/MaxPlayers").toInt());
+    serverPrivate = quint16(s.value("Server/Private").toInt());
+    amountOfInactiveDays = s.value("Players/InactiveThresholdInDays").toInt();
+    lowTCPDelay = quint16(s.value("Network/LowTCPDelay").toBool());
+    safeScripts = s.value("Scripts/SafeMode").toBool();
+    overactiveShow = s.value("AntiDOS/ShowOveractiveMessages").toBool();
+    proxyServers = s.value("Network/ProxyServers").toString().split(",");
+    passwordProtected = s.value("Server/RequirePassword").toBool();
+    serverPassword = s.value("Server/Password").toByteArray();
+    showTrayPopup = s.value("GUI/ShowTrayPopup").toBool();
+    minimizeToTray = s.value("GUI/MinimizeToTray").toBool();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("process_ratings_on_startup").toBool()) {
+    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool()) {
         TierMachine::obj()->processDailyRun();
     }
 
-    if (s.value("process_database_clearing_on_startup").toBool()) {
+    if (s.value("Players/ClearInactivesOnStartup").toBool()) {
         SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
@@ -246,7 +270,7 @@ void Server::start(){
     myengine = new ScriptEngine(this);
     myengine->serverStartUp();
 
-    this->showLogMessages = s.value("show_log_messages").toBool();
+    this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
     if (serverPrivate != 1)
         connectToRegistry();
@@ -310,7 +334,7 @@ int Server::addChannel(const QString &name, int playerid) {
     if (channelids.size() == 0) {
         /* Time to add the default channel */
         QSettings s("config", QSettings::IniFormat);
-        chanName = s.value("mainchanname").toString();
+        chanName = s.value("Channels/MainChannel").toString();
         if (!Channel::validName(chanName)) {
             static const char* places [] = {
                 "Radio Tower", "Pallet Town", "Icy cave", "Stark Mountain", "Mount Silver", "Route 202", "Old Power Plant", "Mewtwo's Cave",
@@ -503,9 +527,9 @@ void Server::removeChannel(int channelid) {
 void Server::loadRatedBattlesSettings()
 {
     QSettings s("config", QSettings::IniFormat);
-    allowRatedWithSameIp = !s.value("battles_with_same_ip_unrated").toBool();
-    diffIpsForRatedBattles = s.value("rated_battles_memory_number").toInt();
-    allowThroughChallenge = s.value("rated_battle_through_challenge").toInt();
+    allowRatedWithSameIp = !s.value("Battles/ForceUnratedForSameIP").toBool();
+    diffIpsForRatedBattles = s.value("Battles/ConsecutiveFindBattlesWithDifferentIPs").toInt();
+    allowThroughChallenge = s.value("Battles/RatedThroughChallenge").toInt();
 
     TierMachine::obj()->loadDecaySettings();
 }
@@ -1431,14 +1455,6 @@ void Server::useChannelFileLogChanged(bool logging)
         return;
     useChannelFileLog = logging;
     printLine("Channel File Logging changed", false, true);
-}
-
-void Server::useBattleFileLogChanged(bool logging)
-{
-    if (useBattleFileLog == logging)
-        return;
-    useBattleFileLog = logging;
-    printLine("Battle File Logging changed", false, true);
 }
 
 void Server::inactivePlayersDeleteDaysChanged(int newValue) {
