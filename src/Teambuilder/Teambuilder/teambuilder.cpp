@@ -129,10 +129,32 @@ void TeamBuilder::changeMod()
 {
     QString mod = sender()->property("name").toString();
     PokemonInfoConfig::changeMod(mod, FillMode::Client);
+
+    QSettings settings;
+    settings.setValue("Mods/CurrentMod", mod);
+
     emit reloadDb();
 
     markTeamUpdated();
     currentWidget()->updateTeam();
+}
+
+static void recurseRemove(const QString &path) {
+    QDir d(path);
+
+    QStringList files = d.entryList(QDir::Files | QDir::Hidden | QDir::System);
+
+    foreach(QString file, files) {
+        d.remove(file);
+    }
+
+    QStringList dirs = d.entryList(QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot);
+
+    foreach(QString dir, dirs) {
+        recurseRemove(d.absoluteFilePath(dir));
+    }
+
+    d.rmdir(d.absolutePath());
 }
 
 void TeamBuilder::installMod()
@@ -173,6 +195,13 @@ void TeamBuilder::installMod()
     }
 
     QDir modDir(appDataPath("Mods", true));
+
+    //First remove the mod file if existing
+    if (modDir.exists(modName)) {
+        qDebug() << "Removing old mod with same name.";
+        recurseRemove(modDir.absoluteFilePath(modName));
+    }
+
     modDir.mkdir(modName);
     modDir.cd(modName);
 
@@ -233,6 +262,11 @@ void TeamBuilder::installMod()
 
     //Done
     emit reloadMenuBar();
+
+    /* If the **** user overwrote his current mod */
+    if (modName == PokemonInfoConfig::currentMod()) {
+        emit reloadDb();
+    }
 }
 
 void TeamBuilder::newTeam()
