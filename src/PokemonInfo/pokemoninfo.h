@@ -181,7 +181,7 @@ private:
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
-    static QString path(const QString &filename);
+    static QString path(const QString &filename, const Pokemon::gen &g = 0);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
 };
 
@@ -525,7 +525,7 @@ public:
     static void init(const QString &dir="db/stats/");
     static void retranslate();
 
-    static QString Stat(int stat, int gen = GEN_MAX);
+    static QString Stat(int stat, const Pokemon::gen &gen);
     static QString Status(int status);
     static QString ShortStatus(int status);
 private:
