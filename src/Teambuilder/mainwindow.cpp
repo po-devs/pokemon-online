@@ -34,10 +34,10 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
-    setDefaultValue(s, "Teams/Folder", QDir::homePath() + "/Documents");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "Teams/Folder", "Team");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
     setDefaultValue(s, "Battle/FlashOnMove", true);
