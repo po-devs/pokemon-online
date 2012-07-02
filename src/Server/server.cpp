@@ -143,6 +143,7 @@ void Server::start(){
     setDefaultValue("AntiDOS/Disabled", false);
     setDefaultValue("Players/InactiveThresholdInDays", 182);
     setDefaultValue("Players/ClearInactivesOnStartup", true);
+    setDefaultValue("Mods/CurrentMod", "");
 
     try {
         SQLCreator::createSQLConnection();
@@ -152,19 +153,7 @@ void Server::start(){
 
     printLine(tr("Starting loading pokemon database..."));
 
-    /* Really useful for headless servers */
-    GenInfo::init("db/gens/");
-    PokemonInfo::init("db/pokes/");
-    MoveSetChecker::init("db/pokes/");
-    ItemInfo::init("db/items/");
-    MoveInfo::init("db/moves/");
-    TypeInfo::init("db/types/");
-    NatureInfo::init("db/natures/");
-    CategoryInfo::init("db/categories/");
-    AbilityInfo::init("db/abilities/");
-    HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
-    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
+    changeDbMod(s.value("Mods/CurrentMod").toString());
 
     printLine(tr("Pokemon database loaded"));
 
@@ -300,6 +289,25 @@ void Server::processDailyRun()
     /* Running delayed as otherwise the message would be sent after the lag, not before */
     QTimer::singleShot(1000, this, SLOT(updateDatabase()));
     QTimer::singleShot(1000, this, SLOT(updateRatings()));
+}
+
+void Server::changeDbMod(const QString &mod)
+{
+    PokemonInfoConfig::changeMod(mod, FillMode::Server);
+
+    /* Really useful for headless servers */
+    GenInfo::init("db/gens/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/");
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
+    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 }
 
 void Server::updateDatabase()

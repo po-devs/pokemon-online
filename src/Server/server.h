@@ -138,6 +138,7 @@ public slots:
     void usePasswordChanged(bool usePass);
     void showTrayPopupChanged(bool show);
     void minimizeToTrayChanged(bool allow);
+    void changeDbMod(const QString &mod);
 
     void nameTaken();
     void ipRefused();
