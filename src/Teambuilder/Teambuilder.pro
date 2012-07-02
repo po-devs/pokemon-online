@@ -136,8 +136,10 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
-    -lbattlelib \
-    -lzip
+    -lbattlelib
+
+windows: { LIBS += -lzip-2 }
+!windows: { LIBS += -lzip }
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

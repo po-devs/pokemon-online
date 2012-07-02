@@ -20,8 +20,11 @@ HEADERS += pokemonstructs.h \
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 LIBS += -L../../bin \
-    -lutilities \
-    -lzip
+    -lutilities
+
+windows: { LIBS += -lzip-2 }
+!windows: { LIBS += -lzip }
+
 OTHER_FILES += 
 
 include(../Shared/Common.pri)
