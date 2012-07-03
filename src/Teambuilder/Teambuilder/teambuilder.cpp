@@ -72,7 +72,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
 
     menuMods->addSeparator();
 
-    QStringList mods = PokemonInfoConfig::availableMods(FillMode::Client);
+    QStringList mods = PokemonInfoConfig::availableMods();
 
     foreach(QString smod, mods) {
         QAction *mod = menuMods->addAction(smod, this, SLOT(changeMod()));

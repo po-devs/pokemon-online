@@ -86,6 +86,9 @@ public:
     static bool extract(const QString &raw, gen &id, QString &info);
     // Extracts short data in a "pokenum data_text" form.
     static bool extract_short(const QString &from, quint8 &gen, QString &remaining);
+
+    /* gen(i, wholeGen) is a gen that contains the union of the infos of all the subgens */
+    static const decltype(subnum) wholeGen = -1;
 };
 
 }

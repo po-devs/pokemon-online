@@ -18,7 +18,7 @@ ModsWindow::ModsWindow(QWidget *parent) :
     QSettings s;
     QString currentMod = s.value("Mods/CurrentMod").toString();
 
-    foreach(QString mod, PokemonInfoConfig::availableMods(FillMode::Server)) {
+    foreach(QString mod, PokemonInfoConfig::availableMods()) {
         ui->comboBox->addItem(mod);
 
         if (mod == currentMod) {

@@ -287,7 +287,6 @@ public:
     Q_INVOKABLE long time();
     Q_INVOKABLE QScriptValue getTierList();
 
-    Q_INVOKABLE void modifyTypeChart(int type_attack, int type_defend, const QString &modifier);
     Q_INVOKABLE QScriptValue type(int id);
     Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
 
@@ -308,7 +307,6 @@ public:
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
-    Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GenInfo::GenMax());
     Q_INVOKABLE void changePokeAbility(int id, int team, int slot, int ability);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());
     Q_INVOKABLE void changePokeHappiness(int id, int team, int slot, int value);
@@ -322,7 +320,6 @@ public:
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
-    Q_INVOKABLE void modifyPokeStat(int poke, int stat, quint8 value);
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);

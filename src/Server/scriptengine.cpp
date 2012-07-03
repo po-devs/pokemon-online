@@ -1755,16 +1755,6 @@ void ScriptEngine::shutDown()
     exit(0);
 }
 
-void ScriptEngine::modifyTypeChart(int type_attack, int type_defend, const QString &modifier)
-{
-    QString compare_to = modifier.toLower();
-    QString modifiers[] = { "none", "ineffective", "normal", "effective" };
-    int real_modifiers[] = { 0, 1, 2, 4 };
-    int i = 0;
-    while((i < 4) && (modifiers[i] != compare_to)) i++;
-    if(i < 4) TypeInfo::modifyTypeChart(type_attack, type_defend, real_modifiers[i]);
-}
-
 QScriptValue ScriptEngine::type(int id)
 {
     if (id >= 0  && id < TypeInfo::NumberOfTypes()) {
@@ -2039,17 +2029,6 @@ QScriptValue ScriptEngine::info(int playerId)
     }
 }
 
-void ScriptEngine::modifyPokeAbility(int id, int slot, int ability, int gen)
-{
-    bool res = PokemonInfo::modifyAbility(Pokemon::uniqueId(id), slot, ability, gen);
-    if (!res) {
-        warn(
-                    "modifyPokeAbility",
-                    QString("slot out of range or pokemon do not exist in gen %1.").arg(QString::number(gen))
-                    );
-    }
-}
-
 void ScriptEngine::changePokeAbility(int id, int team, int slot, int ability)
 {
     if (!testPlayer("changePokeAbility", id) || !testRange("changePokeAbility", slot, 0, 5) || !testTeamCount("changePokeAbility", id, team)) {
@@ -2125,14 +2104,6 @@ void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int
         }
     }else{
         warn("inflictStatus", "can't find a battle with specified id.");
-    }
-}
-
-void ScriptEngine::modifyPokeStat(int poke, int stat, quint8 value)
-{
-    bool res = PokemonInfo::modifyBaseStat(Pokemon::uniqueId(poke), stat, value);
-    if (!res) {
-        warn("modifyPokeStat", "unable to modify.");
     }
 }
 
