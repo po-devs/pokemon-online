@@ -96,6 +96,7 @@ void MainEngine::reloadPokemonDatabase()
 {
     QSettings s;
 
+    GenInfo::init("db/gens/");
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
     ItemInfo::init("db/items/");
@@ -107,7 +108,6 @@ void MainEngine::reloadPokemonDatabase()
     GenderInfo::init("db/genders/");
     HiddenPowerInfo::init("db/types/");
     StatInfo::init("db/status/");
-    GenInfo::init("db/gens/");
 }
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)

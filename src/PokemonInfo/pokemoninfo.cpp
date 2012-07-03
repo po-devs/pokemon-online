@@ -1,3 +1,5 @@
+#include "pokemon.h"
+
 #include <QPixmapCache>
 
 #include "pokemoninfo.h"
@@ -40,12 +42,11 @@ QHash<int, QList<int> > PokemonInfo::m_DirectEvos;
 QHash<int, int> PokemonInfo::m_PreEvos;
 
 QString MoveInfo::m_Directory;
-MoveInfo::Gen MoveInfo::gens[Version::NumberOfGens];
+QHash<Pokemon::gen, MoveInfo::Gen> MoveInfo::gens;
 QHash<int,QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QHash<int, QStringList> MoveInfo::m_MoveMessages;
 QHash<int,QString> MoveInfo::m_Details;
-QHash<int,QString> MoveInfo::m_SpecialEffects, MoveInfo::m_RbySpecialEffects;
 QHash<int,int> MoveInfo::m_OldMoves;
 QHash<int,bool> MoveInfo::m_KingRock;
 
@@ -96,6 +97,8 @@ QHash<int, QString> StatInfo::m_status;
 QString GenInfo::m_Directory;
 QHash<int, QString> GenInfo::m_gens;
 QHash<Pokemon::gen, QString> GenInfo::m_versions;
+QHash<int, int> GenInfo::m_NumberOfSubgens;
+int GenInfo::genMin, GenInfo::genMax;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
@@ -1467,20 +1470,31 @@ void MoveInfo::init(const QString &dir)
     loadNames();
     loadMoveMessages();
     loadDetails();
-    loadSpecialEffects();
 
     fill_double(m_OldMoves, path("oldmoves.txt"));
     fill_int_bool(m_KingRock, path("king_rock.txt"));
 
-    for (int i = 0; i < Version::NumberOfGens; i++) {
-        gens[i].load(dir, i+1);
+    for (int i = 0; i < GenInfo::NumberOfGens(); i++) {
+        for (int j = 0; j < GenInfo::NumberOfSubgens(i+GenInfo::GenMin()); i++) {
+            Pokemon::gen g (i+GenInfo::GenMin(), j);
+            gens[g].load(dir, g);
+
+            if (g.subnum != 0) {
+                gens[g].parent = &gens[Pokemon::gen(g.num, g.subnum-1)];
+            }
+        }
     }
 }
 
-void MoveInfo::Gen::load(const QString &dir, int gen)
+void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
 {
     this->gen = gen;
-    this->dir = QString("%1%2G/").arg(dir).arg(gen);
+
+    if (gen.subnum == 0) {
+        this->dir = QString("%1%2G/").arg(dir).arg(gen.num);
+    } else {
+        this->dir = QString("%1%2G/Subgen %3/").arg(dir).arg(gen.num).arg(gen.subnum);
+    }
 
     fill_int_char(accuracy, path("accuracy.txt"));
     fill_int_char(category, path("category.txt"));
@@ -1488,6 +1502,7 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_int_char(critRate, path("crit_rate.txt"));
     fill_int_char(damageClass, path("damage_class.txt"));
     fill_int_str(effect, path("effect.txt"), true);
+    fill_int_str(specialEffect, path("special_effect.txt"));
     fill_int_char(effectChance, path("effect_chance.txt"));
     fill_double(flags, path("flags.txt"));
     fill_int_char(flinchChance, path("flinch_chance.txt"));
@@ -1506,6 +1521,13 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     fill_int_char(status, path("status.txt"));
     fill_int_char(type, path("type.txt"));
 
+    /* Removing comments, aka anything starting from '#' */
+    QMutableHashIterator<int,QString> it(specialEffect);
+    while(it.hasNext()) {
+        it.next();
+        it.value() = it.value().section('#', 0, 0);
+    }
+
     /* Not needed because HM pokemon can be traded between gens got gen 1 & 2*/
     //    if (gen == 1) {
     //        HMs << Move::Cut << Move::Flash << Move::Surf << Move::Strength <<Move::Fly;
@@ -1514,13 +1536,13 @@ void MoveInfo::Gen::load(const QString &dir, int gen)
     //                        << Move::Waterfall << Move::Fly;
     //    }
 
-    if (gen == 3) {
+    if (gen.num == 3) {
         HMs << Move::Cut << Move::Flash << Move::Surf << Move::RockSmash << Move::Strength << Move::Dive
             << Move::Waterfall << Move::Fly;
-    } else if (gen == 4) {
+    } else if (gen.num == 4) {
         HMs << Move::Cut << Move::Surf << Move::RockSmash << Move::Strength
             << Move::Waterfall << Move::Fly << Move::RockClimb;
-    } else if (gen == 5) {
+    } else if (gen.num == 5) {
         HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
     }
 }
@@ -1592,39 +1614,29 @@ void MoveInfo::loadDetails()
     fill_int_str(m_Details, path("move_description.txt"), true);
 }
 
-void MoveInfo::loadSpecialEffects()
-{
-    {
-        fill_int_str(m_SpecialEffects, path("move_special_effects.txt"));
-
-        /* Removing comments, aka anything starting from '#' */
-        QMutableHashIterator<int,QString> it(m_SpecialEffects);
-        while(it.hasNext()) {
-            it.next();
-            it.value() = it.value().section('#', 0, 0);
-        }
-    }
-
-    {
-        fill_int_str(m_RbySpecialEffects, path("move_special_effects_rby.txt"));
-
-        /* Removing comments, aka anything starting from '#' */
-        QMutableHashIterator<int,QString> it(m_RbySpecialEffects);
-        while(it.hasNext()) {
-            it.next();
-            it.value() = it.value().section('#', 0, 0);
-        }
-    }
-}
-
 QString MoveInfo::Name(int movenum)
 {
     return Exists(movenum, GEN_MAX) ? m_Names[movenum] : m_Names[0];
 }
 
+#define move_find(var, mv, g) do {\
+    Gen *G = &gens[g]; \
+    while (!G->var.contains(mv) && G->parent != 0) { \
+        G = G->parent; \
+    } \
+    return G->var.value(mv);\
+    } while(0)
+
+#define move_find2(type, res, var, mv, g) \
+    Gen *G = &gens[g]; \
+    while (!G->var.contains(mv) && G->parent != 0) { \
+        G = G->parent; \
+    } \
+    type res = G->var.value(mv)
+
 int MoveInfo::Type(int movenum, Pokemon::gen g)
 {
-    return gen(g).type[movenum];
+    move_find(type, movenum, g);
 }
 
 int MoveInfo::ConvertFromOldMove(int oldmovenum)
@@ -1635,7 +1647,7 @@ int MoveInfo::ConvertFromOldMove(int oldmovenum)
 int MoveInfo::Category(int movenum, Pokemon::gen g)
 {
     if (g >= 4)
-        return gen(g).damageClass[movenum];
+        move_find(damageClass, movenum, g);
 
     if (Power(movenum, g) == 0)
         return Move::Other;
@@ -1645,7 +1657,7 @@ int MoveInfo::Category(int movenum, Pokemon::gen g)
 
 int MoveInfo::Classification(int movenum, Pokemon::gen g)
 {
-    return gen(g).category[movenum];
+    move_find(category, movenum, g);
 }
 
 bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
@@ -1663,22 +1675,22 @@ int MoveInfo::Number(const QString &movename)
 
 int MoveInfo::NumberOfMoves(Pokemon::gen g)
 {
-    return gen(g).power.count();
+    return gens[Pokemon::gen(g.num, 0)].power.count();
 }
 
-int MoveInfo::FlinchRate(int num, Pokemon::gen g)
+int MoveInfo::FlinchRate(int movenum, Pokemon::gen g)
 {
-    return gen(g).flinchChance[num];
+    move_find(flinchChance, movenum, g);;
 }
 
 int MoveInfo::Recoil(int movenum, Pokemon::gen g)
 {
-    return gen(g).recoil[movenum];
+    move_find(recoil, movenum, g);
 }
 
 QString MoveInfo::Description(int movenum, Pokemon::gen g)
 {
-    QString r = gen(g).effect[movenum];
+    move_find2(QString, r, effect, movenum, g);
     r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
 
     return r;
@@ -1686,7 +1698,7 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
 
 int MoveInfo::Power(int movenum, Pokemon::gen g)
 {
-    return gen(g).power[movenum];
+    move_find(power, movenum, g);
 }
 
 QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
@@ -1703,12 +1715,12 @@ QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
 
 int MoveInfo::PP(int movenum, Pokemon::gen g)
 {
-    return gen(g).pp[movenum];
+    move_find(pp, movenum, g);
 }
 
 int MoveInfo::Acc(int movenum, Pokemon::gen g)
 {
-    return gen(g).accuracy[movenum];
+    move_find(accuracy, movenum, g);
 }
 
 QString MoveInfo::AccS(int movenum, Pokemon::gen gen)
@@ -1723,32 +1735,34 @@ QString MoveInfo::AccS(int movenum, Pokemon::gen gen)
 
 int MoveInfo::CriticalRaise(int movenum, Pokemon::gen g)
 {
-    return gen(g).critRate[movenum];
+    move_find(critRate, movenum, g);
 }
 
 int MoveInfo::RepeatMin(int movenum, Pokemon::gen g)
 {
-    return gen(g).minMaxHits[movenum] & 0xF;
+    move_find2(int, res, minMaxHits, movenum, g);
+    return res & 0xF;
 }
 
 int MoveInfo::RepeatMax(int movenum, Pokemon::gen g)
 {
-    return gen(g).minMaxHits[movenum] >> 4;
+    move_find2(int, res, minMaxHits, movenum, g);
+    return res >> 4;
 }
 
 int MoveInfo::SpeedPriority(int movenum, Pokemon::gen g)
 {
-    return gen(g).priority[movenum];
+    move_find(priority, movenum, g);
 }
 
 int MoveInfo::Flags(int movenum, Pokemon::gen g)
 {
-    return gen(g).flags[movenum];
+    move_find(flags, movenum, g);
 }
 
 bool MoveInfo::Exists(int movenum, Pokemon::gen g)
 {
-    return gen(g).power.size() > movenum;
+    return NumberOfMoves(g) > movenum;
 }
 
 bool MoveInfo::isOHKO(int movenum, Pokemon::gen gen)
@@ -1758,57 +1772,57 @@ bool MoveInfo::isOHKO(int movenum, Pokemon::gen gen)
 
 bool MoveInfo::isHM(int movenum, Pokemon::gen g)
 {
-    return gen(g).HMs.contains(movenum);
+    return gens[g].HMs.contains(movenum);
 }
 
 int MoveInfo::EffectRate(int movenum, Pokemon::gen g)
 {
-    return gen(g).effectChance[movenum];
+    move_find(effectChance, movenum, g);
 }
 
 quint32 MoveInfo::StatAffected(int movenum, Pokemon::gen g)
 {
-    return gen(g).stataffected[movenum];
+    move_find(stataffected, movenum, g);
 }
 
 quint32 MoveInfo::BoostOfStat(int movenum, Pokemon::gen g)
 {
-    return gen(g).statboost[movenum];
+    move_find(statboost, movenum, g);
 }
 
 quint32 MoveInfo::RateOfStat(int movenum, Pokemon::gen g)
 {
-    return gen(g).statrate[movenum];
+    move_find(statrate, movenum, g);
 }
 
 int MoveInfo::Target(int movenum, Pokemon::gen g)
 {
-    return gen(g).range[movenum];
+    move_find(range, movenum, g);
 }
 
 int MoveInfo::Healing(int movenum, Pokemon::gen g)
 {
-    return gen(g).healing[movenum];
+    move_find(healing, movenum, g);
 }
 
 int MoveInfo::MinTurns(int movenum, Pokemon::gen g)
 {
-    return gen(g).minTurns[movenum];
+    move_find(minTurns, movenum, g);
 }
 
 int MoveInfo::MaxTurns(int movenum, Pokemon::gen g)
 {
-    return gen(g).maxTurns[movenum];
+    move_find(maxTurns, movenum, g);
 }
 
 int MoveInfo::Status(int movenum, Pokemon::gen g)
 {
-    return gen(g).causedEffect[movenum];
+    move_find(causedEffect, movenum, g);
 }
 
 int MoveInfo::StatusKind(int movenum, Pokemon::gen g)
 {
-    return gen(g).status[movenum];
+    move_find(status, movenum, g);
 }
 
 QString MoveInfo::MoveMessage(int moveeffect, int part)
@@ -1821,7 +1835,7 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
 
 QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
-    return gen <= 1 ? m_RbySpecialEffects.value(movenum) : m_SpecialEffects.value(movenum);
+    move_find(specialEffect, movenum, gen);
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
@@ -1833,6 +1847,9 @@ QString MoveInfo::path(const QString &file)
 {
     return m_Directory+file;
 }
+
+#undef move_find
+#undef move_find2
 
 ///////////////////////////////////////////////////////
 /////////////// ITEMINFO //////////////////////////////
@@ -2728,26 +2745,6 @@ QString StatInfo::path(const QString &filename)
     return m_Directory + filename;
 }
 
-void MoveInfo::setPower(int movenum, unsigned char power, int moveGen)
-{
-    gen(moveGen).power[movenum] = power;
-}
-
-void MoveInfo::setAccuracy(int movenum, char accuracy, int moveGen)
-{
-    gen(moveGen).accuracy[movenum] = accuracy;
-}
-
-void MoveInfo::setPP(int movenum, char pp, int moveGen)
-{
-    gen(moveGen).pp[movenum] = pp;
-}
-
-void MoveInfo::setPriority(int movenum, signed char priority, int moveGen)
-{
-    gen(moveGen).priority[movenum] = priority;
-}
-
 bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value)
 {
     if ((stat >= Hp) && (stat <= Speed) && Exists(pokeid)) {
@@ -2767,6 +2764,29 @@ void GenInfo::init(const QString &dir)
 
     fill_gen_string(m_versions, path("versions.txt"), true);
     fill_double(m_gens, path("gens.txt"), true);
+
+    m_NumberOfSubgens.clear();
+    genMax = genMin = m_gens.begin().key();
+
+    foreach(Pokemon::gen g, m_versions.keys()) {
+        m_NumberOfSubgens[g.num] += 1;
+
+        if (genMax < g.num) {
+            genMax = g.num;
+        }
+
+        if (genMin > g.num) {
+            genMin = g.num;
+        }
+    }
+}
+
+int GenInfo::NumberOfGens() {
+    return m_gens.count();
+}
+
+int GenInfo::NumberOfSubgens(int gen) {
+    return m_NumberOfSubgens.value(gen);
 }
 
 void GenInfo::retranslate()

@@ -1,9 +1,12 @@
 #ifndef POKEMONINFO_H
 #define POKEMONINFO_H
 
+#include "pokemon.h"
+#include "geninfo.h"
 #include "pokemonstructs.h"
 #include <QtCore>
 #include <QMovie>
+
 class PokeBaseStats;
 class QPixmap;
 
@@ -234,26 +237,27 @@ public:
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
-    static void setPower(int movenum, unsigned char power, int moveGen);
-    static void setAccuracy(int movenum, char accuracy, int moveGen);
-    static void setPP(int movenum, char pp, int moveGen);
-    static void setPriority(int movenum, signed char priority, int moveGen);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
     static QHash<int, QStringList> m_MoveMessages;
     static QHash<int, QString> m_Details;
-    static QHash<int, QString> m_SpecialEffects, m_RbySpecialEffects;
     static QHash<int,int> m_OldMoves;
     static QHash<int,bool> m_KingRock;
 
     struct Gen {
-        void load(const QString &path, int gen);
+        Gen() {
+            parent = NULL;
+        }
+
+        Gen *parent;
+
+        void load(const QString &path, Pokemon::gen gen);
         void retranslate();
 
         QString path(const QString &fileName);
 
-        int gen;
+        Pokemon::gen gen;
         QString dir;
 
         QHash<int, char> accuracy;
@@ -262,6 +266,7 @@ private:
         QHash<int, char> critRate;
         QHash<int, char> damageClass;
         QHash<int, QString> effect;
+        QHash<int, QString> specialEffect;
         QHash<int, char> effectChance;
         QHash<int, int> flags;
         QHash<int, char> flinchChance;
@@ -283,15 +288,11 @@ private:
     };
 
     static QString m_Directory;
-    static Gen gens[Version::NumberOfGens];
-    static Gen & gen(Pokemon::gen gen) {
-        return gens[gen.num-1];
-    }
+    static QHash<Pokemon::gen, Gen> gens;
 
     static void loadNames();
     static void loadMoveMessages();
     static void loadDetails();
-    static void loadSpecialEffects();
 
     static QString path(const QString &filename);
 };
@@ -532,22 +533,6 @@ private:
     static QString m_Directory;
     static QHash<int, QString> m_stats;
     static QHash<int, QString> m_status;
-
-    static QString path(const QString &filename);
-};
-
-class GenInfo
-{
-public:
-    static void init(const QString &dir="db/gens/");
-    static void retranslate();
-
-    static QString Gen(int gen);
-    static QString Version(const Pokemon::gen &gen);
-private:
-    static QString m_Directory;
-    static QHash<int, QString> m_gens;
-    static QHash<Pokemon::gen, QString> m_versions;
 
     static QString path(const QString &filename);
 };
