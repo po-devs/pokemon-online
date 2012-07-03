@@ -6,7 +6,6 @@ static const int GEN_MIN = 1;
 static const int GEN_MIN_ITEMS = 2;
 static const int GEN_MIN_ABILITIES = 3;
 // Number of gens
-static const int NUMBER_GENS = (GenInfo::GenMax()-GEN_MIN+1);
 
 #include <numeric>
 

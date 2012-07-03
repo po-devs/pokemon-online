@@ -130,11 +130,22 @@ public:
     static void retranslate();
 private:
     struct Gen {
-        PokemonMoves moves;
+        Pokemon::gen gen;
+        QString dir;
+
+        void load(const QString &path, const Pokemon::gen &gen, Gen *parent=NULL);
+        void loadMoves(Gen *parent);
+        void loadMinLevels(Gen *parent);
+
+        QString path(const QString &filename);
+
+        QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
 
         QHash<Pokemon::uniqueId, int> m_MinLevels;
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
+
+    static QHash<Pokemon::gen, int> gens;
 
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
@@ -181,12 +192,10 @@ private:
     static void loadNames();
     static void loadEvos();
     static void loadBaseStats();
-    static void loadMoves();
     static void loadClassifications();
     static void loadGenderRates();
     static void loadHeights();
     static void loadDescriptions();
-    static void loadMinLevels();
     // Call this after loading all data.
     static void makeDataConsistent();
     static QSet<int> getMoves(const QString &filename, int Pokenum);
