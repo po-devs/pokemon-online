@@ -22,15 +22,12 @@ QHash<int, int> PokemonInfo::m_GenderRates;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Height;
 
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type1[NUMBER_GENS];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Type2[NUMBER_GENS];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinLevels[NUMBER_GENS];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_MinEggLevels[NUMBER_GENS];
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_Abilities[NUMBER_GENS][3];
+QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type1;
+QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type2;
+QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Abilities[3];
 QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId,int> PokemonInfo::m_SpecialStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
-QHash<Pokemon::uniqueId, PokemonMoves> PokemonInfo::m_Moves;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
@@ -55,9 +52,9 @@ QHash<int,QString> ItemInfo::m_BerryNames;
 QHash<int,QString> ItemInfo::m_RegItemNames;
 QHash<QString, int> ItemInfo::m_BerryNamesH;
 QHash<QString, int> ItemInfo::m_ItemNamesH;
-QList<QString> ItemInfo::m_SortedNames[NUMBER_GENS];
-QList<QString> ItemInfo::m_SortedUsefulNames[NUMBER_GENS];
-QHash<int,QList<ItemInfo::Effect> > ItemInfo::m_RegEffects[NUMBER_GENS];
+QVector<QList<QString> > ItemInfo::m_SortedNames;
+QVector<QList<QString> > ItemInfo::m_SortedUsefulNames;
+QVector<QHash<int,QList<ItemInfo::Effect> > > ItemInfo::m_RegEffects;
 QHash<int,QList<ItemInfo::Effect> > ItemInfo::m_BerryEffects;
 QHash<int, QStringList> ItemInfo::m_RegMessages;
 QHash<int, QStringList> ItemInfo::m_BerryMessages;
@@ -65,7 +62,7 @@ QHash<int,int> ItemInfo::m_Powers;
 QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QSet<int> ItemInfo::m_GenItems[NUMBER_GENS];
+QVector<QSet<int> > ItemInfo;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -81,7 +78,7 @@ QString CategoryInfo::m_Directory;
 
 QHash<int,QString> AbilityInfo::m_Names, AbilityInfo::m_Desc, AbilityInfo::m_BattleDesc;
 QString AbilityInfo::m_Directory;
-QHash<int,AbilityInfo::Effect> AbilityInfo::m_Effects[NUMBER_GENS];
+QVector<QHash<int,AbilityInfo::Effect> > AbilityInfo::m_Effects;
 QHash<int, QStringList> AbilityInfo::m_Messages;
 QHash<int,int> AbilityInfo::m_OldAbilities;
 
@@ -181,7 +178,9 @@ namespace PokemonInfoConfig {
     QStringList allFiles(const QString &filename, bool trans) {
         QStringList ret;
 
-        ret << filename;
+        if (QFile::exists(filename)) {
+            ret << filename;
+        }
 
         if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
             ret << (transPath + filename);
@@ -566,6 +565,18 @@ void PokemonInfo::init(const QString &dir)
 
     fill_uid_int(m_Genders, path("gender.txt"));
 
+    m_Type1.clear();
+    m_Type2.clear();
+    m_Abilities[0].clear();
+    m_Abilities[1].clear();
+    m_Abilities[2].clear();
+
+    m_Type1.resize(GenInfo::NumberOfGens());
+    m_Type2.resize(GenInfo::NumberOfGens());
+    m_Abilities[0].resize(GenInfo::NumberOfGens());
+    m_Abilities[1].resize(GenInfo::NumberOfGens());
+    m_Abilities[2].resize(GenInfo::NumberOfGens());
+
     for (int i = 0; i < NUMBER_GENS; i++) {
         Pokemon::gen gen = i+GEN_MIN;
 
@@ -574,7 +585,7 @@ void PokemonInfo::init(const QString &dir)
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
-                fill_uid_int(m_Abilities[i][j], path(QString("ability%1.txt").arg(j+1), gen));
+                fill_uid_int(m_Abilities[j][i], path(QString("ability%1.txt").arg(j+1), gen));
             }
         }
     }
@@ -718,7 +729,7 @@ QPixmap PokemonInfo::Picture(const QString &url)
 {
     QStringList params = url.split('&');
 
-    Pokemon::gen gen = GEN_MAX;
+    Pokemon::gen gen = GenInfo::GenMax();
     int gender = 0;
     Pokemon::uniqueId num = Pokemon::NoPoke;
     bool shiny=false;
@@ -904,7 +915,7 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
     QByteArray data = readZipFile(archive.toUtf8(),file.toUtf8());
 
     if (data.length()==0) {
-        if (gen.num < GEN_MAX) {
+        if (gen.num < GenInfo::GenMax()) {
             return Sub(gen.num + 1, back);
         } else {
             return ret;
@@ -1035,7 +1046,7 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, Pokemon::ge
     AbilityGroup ret;
 
     for (int i = 0; i < 3; i++) {
-        ret._ab[i] = m_Abilities[gen.num-GEN_MIN][i].value(pokeid);
+        ret._ab[i] = m_Abilities[i][gen.num-GEN_MIN].value(pokeid);
     }
 
     return ret;
@@ -1043,7 +1054,7 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, Pokemon::ge
 
 int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen gen)
 {
-    return m_Abilities[gen.num-GEN_MIN][slot].value(pokeid);
+    return m_Abilities[slot][gen.num-GEN_MIN].value(pokeid);
 }
 
 void PokemonInfo::loadBaseStats()
@@ -1408,27 +1419,27 @@ void PokemonInfo::makeDataConsistent()
             m_Genders[id] = m_Genders.value(OriginalForme(id), Pokemon::NeutralAvail);
         }
 
-        for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
+        for (int gen = GEN_MIN; gen <= GenInfo::GenMax(); gen++) {
             int i = gen-GEN_MIN;
 
             if (!Exists(id, gen))
                 continue;
 
             for (int j = 0; j < 3; j++) {
-                if(!m_Abilities[i][j].contains(id)) {
-                    m_Abilities[i][j][id] = m_Abilities[i][j].value(OriginalForme(id), Ability::NoAbility);
+                if(!m_Abilities[j][i].contains(id)) {
+                    m_Abilities[j][i][id] = m_Abilities[j][i].value(id.original(), Ability::NoAbility);
                 }
             }
 
             if(!m_Type1[i].contains(id)) {
-                m_Type1[i][id] = m_Type1[i].value(OriginalForme(id), Pokemon::Normal);
+                m_Type1[i][id] = m_Type1[i].value(id.original(), Pokemon::Normal);
             }
             if(!m_Type2[i].contains(id)) {
-                m_Type2[i][id] = m_Type2[i].value(OriginalForme(id), Pokemon::Curse);
+                m_Type2[i][id] = m_Type2[i].value(id.original(), Pokemon::Curse);
             }
             if (!m_MinLevels[i].contains(id)) {
-                m_MinLevels[i][id] = m_MinLevels[i].value(OriginalForme(id), 100);
-                m_MinEggLevels[i][id] = m_MinEggLevels[i].value(OriginalForme(id), 100);
+                m_MinLevels[i][id] = m_MinLevels[i].value(id.original(), 100);
+                m_MinEggLevels[i][id] = m_MinEggLevels[i].value(id.original(), 100);
             }
         }
     }
@@ -1448,17 +1459,6 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon(Pokemon::gen gen)
     }
     return Pokemon::uniqueId(poke);
 }
-
-bool PokemonInfo::modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, Pokemon::gen gen)
-{
-    if ((slot >= 0) && (slot <= 2) && Exists(pokeid, gen)) {
-        m_Abilities[gen.num - GEN_MIN][slot][pokeid] = ability;
-        return true;
-    }else{
-        return false;
-    }
-}
-
 
 void MoveInfo::init(const QString &dir)
 {
@@ -1616,7 +1616,7 @@ void MoveInfo::loadDetails()
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exists(movenum, GEN_MAX) ? m_Names[movenum] : m_Names[0];
+    return Exists(movenum, GenInfo::GenMax()) ? m_Names[movenum] : m_Names[0];
 }
 
 #define move_find(var, mv, g) do {\
@@ -1879,7 +1879,10 @@ void ItemInfo::loadGenData()
 {
     fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
 
-    for (int g = GEN_MIN_ITEMS; g <= GEN_MAX; g++) {
+    m_GenItems.clear();
+    m_GenItems.resize(GenInfo::NumberOfGens());
+
+    for (int g = GEN_MIN_ITEMS; g <= GenInfo::GenMax(); g++) {
         int i = g-GEN_MIN;
         fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(g)));
 
@@ -1906,13 +1909,12 @@ void ItemInfo::loadNames()
         m_BerryNamesH[*it2] = i+8000;
     }
 
-    /* clears in case of retranslate */
-    for (int i = 0; i < NUMBER_GENS; i++) {
-        m_SortedNames[i].clear();
-        m_SortedUsefulNames[i].clear();
-    }
+    m_SortedNames.clear();
+    m_SortedUsefulNames.clear();
+    m_SortedNames.resize(GenInfo::NumberOfGens());
+    m_SortedUsefulNames.resize(GenInfo::NumberOfGens());
 
-    int mg = GEN_MAX - GEN_MIN;
+    int mg = GenInfo::GenMax() - GEN_MIN;
 
     m_SortedNames[mg] << m_RegItemNames.values() << m_BerryNames.values();
     qSort(m_SortedNames[mg]);
@@ -1924,7 +1926,7 @@ void ItemInfo::loadNames()
     }
     qSort(m_SortedUsefulNames[mg]);
 
-    for (int j = GEN_MAX-1; j >= GEN_MIN_ITEMS; j--) {
+    for (int j = GenInfo::GenMax()-1; j >= GEN_MIN_ITEMS; j--) {
         int g = j-GEN_MIN;
         for (int i = 0; i < m_SortedNames[g+1].size(); i++) {
             if (Exists(Number(m_SortedNames[g+1][i]), j))
@@ -1960,9 +1962,10 @@ void ItemInfo::loadFlingData()
 
 void ItemInfo::loadEffects()
 {
-    for (int i = GEN_MIN_ITEMS; i <= GEN_MAX; i++) {
-        m_RegEffects[i-GEN_MIN].clear();
+    m_RegEffects.clear();
+    m_RegEffects.resize(GenInfo::NumberOfGens());
 
+    for (int i = GEN_MIN_ITEMS; i <= GenInfo::GenMax(); i++) {
         QHash<int,QString> temp;
         fill_int_str(temp, path("item_effects_%1G.txt").arg(i));
 
@@ -2041,7 +2044,7 @@ QString ItemInfo::path(const QString &file)
 
 int ItemInfo::NumberOfItems()
 {
-    return m_SortedNames[GEN_MAX-GEN_MIN].size();
+    return m_SortedNames[GenInfo::GenMax()-GEN_MIN].size();
 }
 
 int ItemInfo::Power(int itemnum) {
@@ -2164,12 +2167,12 @@ bool ItemInfo::isUseful(int itemnum)
 
 int ItemInfo::PlateType(int itemnum)
 {
-    return Effects(itemnum, GEN_MAX).front().args.toInt();
+    return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
 }
 
 int ItemInfo::DriveType(int itemnum)
 {
-    return Effects(itemnum, GEN_MAX).front().args.toInt();
+    return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
 }
 
 int ItemInfo::DriveForme(int itemnum)
@@ -2344,11 +2347,6 @@ int TypeInfo::Category(int type)
     return m_Categories.value(type);
 }
 
-void TypeInfo::modifyTypeChart(int type_attack, int type_defend, int value)
-{
-    m_TypeVsType[type_attack][type_defend] = value;
-}
-
 void NatureInfo::init(const QString &dir)
 {
     m_Directory = dir;
@@ -2520,9 +2518,10 @@ bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
 
 void AbilityInfo::loadEffects()
 {
-    for (int i = GEN_MIN_ABILITIES; i <= GEN_MAX; i++) {
-        m_Effects[i-GEN_MIN].clear();
+    m_Effects.clear();
+    m_Effects.resize(GenInfo::NumberOfGens());
 
+    for (int i = GEN_MIN_ABILITIES; i <= GenInfo::GenMax(); i++) {
         QHash<int, QString> m_temp;
         fill_int_str(m_temp,path("ability_effects_%1G.txt").arg(i));
 
@@ -2572,7 +2571,7 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
 {
     int total = m_Names.size();
 
-    if (g == GEN_MAX) {
+    if (g == GenInfo::GenMax()) {
         return total;
     } else {
         int hc;
@@ -2743,16 +2742,6 @@ QString StatInfo::ShortStatus(int stat)
 QString StatInfo::path(const QString &filename)
 {
     return m_Directory + filename;
-}
-
-bool PokemonInfo::modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value)
-{
-    if ((stat >= Hp) && (stat <= Speed) && Exists(pokeid)) {
-        m_BaseStats[pokeid].setBaseStat(stat, value);
-        return true;
-    }else{
-        return false;
-    }
 }
 
 void GenInfo::init(const QString &dir)

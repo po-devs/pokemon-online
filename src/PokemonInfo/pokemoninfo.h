@@ -35,14 +35,14 @@ struct PokemonMoves
 {
     //QSet<int> moves;
     /* All moves except egg & special */
-    QSet<int> regularMoves[NUMBER_GENS];
-    QSet<int> TMMoves[NUMBER_GENS];
-    QSet<int> preEvoMoves[NUMBER_GENS];
-    QSet<int> levelMoves[NUMBER_GENS];
-    QSet<int> eggMoves[NUMBER_GENS];
-    QSet<int> specialMoves[NUMBER_GENS];
-    QSet<int> tutorMoves[NUMBER_GENS];
-    QSet<int> genMoves[NUMBER_GENS];
+    QSet<int> regularMoves;
+    QSet<int> TMMoves;
+    QSet<int> preEvoMoves;
+    QSet<int>levelMoves;
+    QSet<int> eggMoves;
+    QSet<int> specialMoves;
+    QSet<int> tutorMoves;
+    QSet<int> genMoves;
     QSet<int> dreamWorldMoves;
 };
 
@@ -68,7 +68,7 @@ public:
     static QByteArray Cry(const Pokemon::uniqueId &pokeid, bool mod=true);
     static int Type1(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static int Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
-    static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GEN_MAX, int gender = Pokemon::Male, bool shiney = false, bool backimage = false, bool mod=true);
+    static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GenInfo::GenMax(), int gender = Pokemon::Male, bool shiney = false, bool backimage = false, bool mod=true);
     static QPixmap Picture(const QString &url);
     static QMovie  *AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back);
     static bool HasAnimatedSprites();
@@ -123,13 +123,21 @@ public:
     static QString Desc(const Pokemon::uniqueId &pokeid, int cartridge);
     static QString Height(const Pokemon::uniqueId &pokeid);
     // Will NOT return Missingno.
-    static Pokemon::uniqueId getRandomPokemon(Pokemon::gen gen=GEN_MAX);
-
-    static bool modifyAbility(const Pokemon::uniqueId &pokeid, int slot, int ability, Pokemon::gen gen = GEN_MAX);
-    static bool modifyBaseStat(const Pokemon::uniqueId &pokeid, int stat, quint8 value);
+    static Pokemon::uniqueId getRandomPokemon(Pokemon::gen gen=GenInfo::GenMax());
 
     static void retranslate();
 private:
+    struct Gen {
+        PokemonMoves moves;
+
+        QHash<Pokemon::uniqueId, int> m_MinLevels;
+        QHash<Pokemon::uniqueId, int> m_MinEggLevels;
+    };
+
+    QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
+    QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
+    QVector<QHash<Pokemon::uniqueId, int> > m_Abilities [3];
+
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.
     // Is a map because we need it to be sorted.
@@ -140,15 +148,11 @@ private:
     static QHash<int, int> m_GenderRates;
     static QHash<Pokemon::uniqueId, QString> m_Height;
     static QString m_Directory;
-    static QHash<Pokemon::uniqueId, int> m_Type1[NUMBER_GENS];
-    static QHash<Pokemon::uniqueId, int> m_Type2[NUMBER_GENS];
+
     static QHash<Pokemon::uniqueId, int> m_Genders;
-    static QHash<Pokemon::uniqueId, int> m_Abilities[NUMBER_GENS][3];
     static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_SpecialStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
-    static QHash<Pokemon::uniqueId, int> m_MinLevels[NUMBER_GENS];
-    static QHash<Pokemon::uniqueId, int> m_MinEggLevels[NUMBER_GENS];
 
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;
@@ -313,7 +317,7 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, Pokemon::gen gen=GEN_MAX);
+    static bool Exists(int itemnum, Pokemon::gen gen=GenInfo::GenMax());
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isDrive(int itemnum);
@@ -338,10 +342,10 @@ private:
     static QHash<int,QString> m_RegItemNames;
     static QHash<QString, int> m_BerryNamesH;
     static QHash<QString, int> m_ItemNamesH;
-    static QList<QString> m_SortedNames[NUMBER_GENS];
-    static QList<QString> m_SortedUsefulNames[NUMBER_GENS];
+    static QVector<QList<QString> > m_SortedNames;
+    static QVector<QList<QString> > m_SortedUsefulNames;
     static QString m_Directory;
-    static QHash<int, QList<Effect> > m_RegEffects[NUMBER_GENS];
+    static QVector<QHash<int, QList<Effect> > > m_RegEffects;
     static QHash<int, QList<Effect> > m_BerryEffects;
     static QHash<int, QStringList> m_RegMessages;
     static QHash<int, QStringList> m_BerryMessages;
@@ -349,7 +353,7 @@ private:
     static QHash<int,int> m_BerryPowers;
     static QHash<int,int> m_BerryTypes;
     static QList<int> m_UsefulItems;
-    static QSet<int> m_GenItems[NUMBER_GENS];
+    static QVector<QSet<int> > m_GenItems;
 
     static void loadNames();
     static void loadEffects();
@@ -369,11 +373,10 @@ public:
     /* Self-explainable functions */
     static QString Name(int typenum);
     static int Number(const QString &type);
-    static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GEN_MAX); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
+    static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GenInfo::GenMax()); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
     static int Category(int type);
-    static void modifyTypeChart(int type_attack, int type_defend, int value);
     static QString weatherName(int weather);
 private:
     enum Weather
@@ -467,7 +470,7 @@ public:
 private:
     static QHash<int, QString> m_Names;
     static QString m_Directory;
-    static QHash<int,Effect> m_Effects[NUMBER_GENS];
+    static QVector<QHash<int,Effect> > m_Effects;
     static QHash<int,QStringList> m_Messages;
     static QHash<int,int> m_OldAbilities;
     static QHash<int,QString> m_Desc;

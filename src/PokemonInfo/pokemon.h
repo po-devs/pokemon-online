@@ -38,6 +38,15 @@ public:
     bool operator > (const uniqueId &other) const {
         return (pokenum > other.pokenum) || ((pokenum == other.pokenum) && (subnum > other.subnum));
     }
+
+    inline uniqueId original() const {
+        return uniqueId(pokenum);
+    }
+
+    inline bool isForme() const {
+        return subnum != 0;
+    }
+
     QString toString() const;
     QString toLine(const QString &data) const;
     quint32 toPokeRef() const;

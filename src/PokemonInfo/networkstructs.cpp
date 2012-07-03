@@ -184,7 +184,7 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
-PersonalTeam::PersonalTeam(): m_prop_gen(GEN_MAX)
+PersonalTeam::PersonalTeam(): m_prop_gen(GenInfo::GenMax())
 {
 }
 

@@ -5,10 +5,8 @@
 static const int GEN_MIN = 1;
 static const int GEN_MIN_ITEMS = 2;
 static const int GEN_MIN_ABILITIES = 3;
-// Maximum Generation supported.
-static const int GEN_MAX = 5;
 // Number of gens
-static const int NUMBER_GENS = (GEN_MAX-GEN_MIN+1);
+static const int NUMBER_GENS = (GenInfo::GenMax()-GEN_MIN+1);
 
 #include <numeric>
 
@@ -20,16 +18,6 @@ enum {
     RSE200=3, Adv=3+(1<<8),
     DP=4, DPPt=4+(1<<8), HGSS=4+(2<<8),
     BW=5, BW2=5+(1<<8)
-};
-
-static constexpr int nums[NUMBER_GENS] = {3,2,2,3,2};
-
-constexpr int sum(int const array[NUMBER_GENS], int x) {
-    return nums[x] + ( (x + 1 < NUMBER_GENS ) ? sum(array, x+1) : 0);
-}
-
-enum {
-    NumberOfVersions = sum(nums, 0)
 };
 
 }

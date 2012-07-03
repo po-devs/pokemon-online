@@ -364,7 +364,7 @@ DataStream & operator << (DataStream &out, const ShallowBattlePoke &po)
     return out;
 }
 
-TeamBattle::TeamBattle() : gen(GEN_MAX)
+TeamBattle::TeamBattle() : gen(GenInfo::GenMax())
 {
     for (int i = 0; i < 6; i++) {
         m_indexes[i] = i;
@@ -378,8 +378,8 @@ TeamBattle::TeamBattle(PersonalTeam &other)
     gen = other.gen();
     tier = other.defaultTier();
 
-    if (gen < GEN_MIN || gen > GEN_MAX) {
-        gen = GEN_MAX;
+    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
+        gen = GenInfo::GenMax();
     }
 
     int curs = 0;

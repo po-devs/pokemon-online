@@ -119,7 +119,7 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     QActionGroup *gens = new QActionGroup(gen);
 
     for (int i = 0; i < NUMBER_GENS; i++) {
-        int n = Gen::nums[i];
+        int n = GenInfo::NumberOfSubgens(i);
 
         gen->addSeparator()->setText(GenInfo::Gen(i+GEN_MIN));
 
