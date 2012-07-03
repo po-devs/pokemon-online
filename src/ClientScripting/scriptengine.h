@@ -73,14 +73,14 @@ public:
 
     Q_INVOKABLE QScriptValue getScript();
 
-    Q_INVOKABLE int pokeType1(int id, int gen = GEN_MAX);
-    Q_INVOKABLE int pokeType2(int id, int gen = GEN_MAX);
+    Q_INVOKABLE int pokeType1(int id, int gen = GenInfo::GenMax());
+    Q_INVOKABLE int pokeType2(int id, int gen = GenInfo::GenMax());
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
     Q_INVOKABLE QScriptValue move(int num);
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
-    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GenInfo::GenMax());
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);

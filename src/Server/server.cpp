@@ -884,7 +884,11 @@ void Server::tempBan(int dest, int src, int time)
 
 void Server::dosKick(int id) {
     if (playerExist(id) && overactiveShow) {
-        broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
+        if (playerLoggedIn(id)) {
+            broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), player(id)->ip()));
+        } else {
+            broadCast(tr("IP %1 is being overactive.").arg(player(id)->ip()));
+        }
     }
     silentKick(id);
 }

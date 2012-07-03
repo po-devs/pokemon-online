@@ -1,14 +1,9 @@
-namespace Pokemon {
-    class uniqueId;
-}
-unsigned int qHash (const Pokemon::uniqueId &key);
-
 #include "movesetchecker.h"
 #include "pokemoninfo.h"
 
-QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::legalCombinations[NUMBER_GENS];
-QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::eventCombinations[NUMBER_GENS];
-QHash<Pokemon::uniqueId, QList<QSet<int > > > MoveSetChecker::breedingCombinations[NUMBER_GENS];
+QHash<Pokemon::gen, QHash<Pokemon::uniqueId, QList<QSet<int > > > > MoveSetChecker::legalCombinations;
+QHash<Pokemon::gen, QHash<Pokemon::uniqueId, QList<QSet<int > > > > MoveSetChecker::eventCombinations;
+QHash<Pokemon::gen, QHash<Pokemon::uniqueId, QList<QSet<int > > > > MoveSetChecker::breedingCombinations;
 
 static void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QString &filename, bool trans = false)
 {
@@ -44,7 +39,7 @@ QString MoveSetChecker::path(const QString &arg, const Pokemon::gen & g)
     }
 }
 
-void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHash<Pokemon::uniqueId, QList<QSet<int> > > *set)
+void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHash<Pokemon::gen, QHash<Pokemon::uniqueId, QList<QSet<int> > > > &set)
 {
     QHash<Pokemon::uniqueId, QString> temp;
     fill_uid_str(temp, file);
@@ -57,10 +52,10 @@ void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHa
         Pokemon::uniqueId id = it.key();
         /* Even if the hash is empty, it proves it's here, otherwise it would be filled by the data of
            the base forme */
-        if (!legalCombinations[gen.num-GEN_MIN].contains(id))
-            legalCombinations[gen.num-GEN_MIN].insert(id, QList<QSet<int > >());
+        if (!legalCombinations[gen].contains(id))
+            legalCombinations[gen].insert(id, QList<QSet<int > >());
 
-        set[gen.num-GEN_MIN][id] = QList<QSet<int > >();
+        set[gen][id] = QList<QSet<int > >();
 
         if (it.value().length() > 0) {
             QStringList combs = it.value().split('|');
@@ -70,8 +65,8 @@ void MoveSetChecker::loadCombinations(const QString &file, Pokemon::gen gen, QHa
                 foreach(QString move, moves) {
                     toPush.insert(move.toInt());
                 }
-                legalCombinations[gen.num-GEN_MIN][id].push_back(toPush);
-                set[gen.num-GEN_MIN][id].push_back(toPush);
+                legalCombinations[gen][id].push_back(toPush);
+                set[gen][id].push_back(toPush);
             }
         }
     }
@@ -82,29 +77,36 @@ void MoveSetChecker::init(const QString &dir, bool enf)
     MoveSetChecker::dir = dir;
     MoveSetChecker::enforceMinLevels = enf;
 
-    QList<Pokemon::uniqueId> ids = PokemonInfo::AllIds();
+    legalCombinations.clear();
+    breedingCombinations.clear();
+    eventCombinations.clear();
 
-    for(int i = 0; i < NUMBER_GENS; i++) {
-        legalCombinations[i].clear();
-        breedingCombinations[i].clear();
-        eventCombinations[i].clear();
-    }
+    for (int i = GEN_MIN; i <= GenInfo::GenMax(); i++) {
+        //Load only the whole gen for now, will load subgens on the fly when needed
+        Pokemon::gen gen(i,-1); // -1 for "whole gen"
 
-    for (int gen = GEN_MIN; gen <= GEN_MAX; gen++) {
         /* Egg move combinations */
         loadCombinations(path("legal_combinations.txt", gen), gen, breedingCombinations);
 
         /* Event move combinations */
         loadCombinations(path("event_combinations.txt", gen), gen, eventCombinations);
 
-        foreach(Pokemon::uniqueId id, ids) {
-            if (!PokemonInfo::IsForme(id))
+        auto &legal = legalCombinations[gen];
+
+        foreach(Pokemon::uniqueId id, legal.keys()) {
+            if (PokemonInfo::IsForme(id))
                 continue;
-            if (!legalCombinations[gen-GEN_MIN].contains(PokemonInfo::OriginalForme(id)))
+
+            if (!PokemonInfo::HasFormes(id))
                 continue;
-            if (legalCombinations[gen-GEN_MIN].contains(id))
-                continue;
-            legalCombinations[gen-GEN_MIN][id] = legalCombinations[gen-GEN_MIN][PokemonInfo::OriginalForme(id)];
+
+            foreach (Pokemon::uniqueId forme, PokemonInfo::Formes(id, gen)) {
+                if (!forme.isForme() || legal.contains(forme)) {
+                    continue;
+                }
+
+                legal[forme] = legal[id];
+            }
         }
     }
 }
@@ -130,7 +132,13 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, const QSet<int> &moves2, int ability, int gender,
-                             int level, bool maledw, QSet<int> *invalid_moves, QString *error) {
+                             int level, bool maledw, QSet<int> *invalid_moves, QString *error)
+{
+    /* Last Gen = Whole gen */
+    if (gen.subnum == GenInfo::NumberOfSubgens(gen) -1) {
+        gen.subnum = -1;
+    }
+
     QSet<int> moves = moves2;
     moves.remove(0);
 
@@ -144,7 +152,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     else
         limit = 1;
 
-    for (int g = gen.num; g >= limit; g--) {
+    for (Pokemon::gen g = gen; g >= limit; g = Pokemon::gen(g.num-1, -1)) {
         if (!PokemonInfo::Exists(pokeid, g)) {
             if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
                 return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
@@ -200,7 +208,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 }
 
                 /* First stage evolutions can't have 4th gen abilities with 3rd gen moves */
-                if (g == 3 && gen > 3) {
+                if (g.num == 3 && gen > 3) {
                     ab = PokemonInfo::Abilities(pokeid, g);
                     if (ab.ab(1) != ability) {
                         if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
@@ -229,7 +237,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
         /* In gen 2 we must allow tradebacks. For that we need movesets without gen 2
            egg moves or special moves */
-        if (g == 2) {
+        if (g.num == 2) {
             if (PokemonInfo::Exists(pokeid, 1)) {
                 bool ok = true;
                 foreach(int move, moves) {
@@ -253,7 +261,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                         }
                     }
 
-                    if (ok && isValid(preevo, 2, moves))
+                    if (ok && isValid(preevo, g, moves))
                         return true;
                 }
             }
@@ -316,7 +324,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         }
 
         foreach(int move, moves) {
-            if (g > 3 && MoveInfo::isHM(move, g-1)) {
+            if (g > 3 && MoveInfo::isHM(move, Pokemon::gen(g.num-1, GenInfo::NumberOfSubgens(g.num - 1)-1))) {
                 if (error) {
                     *error = QObject::tr("%1 can't have HM %2 inherited from past generations.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(move));
                 }
@@ -341,10 +349,14 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     return false;
 }
 
-/* Used by ChainBreeding */
 bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, QSet<int> moves)
 {
-    foreach(QSet<int> combination, legalCombinations[gen.num-GEN_MIN].value(pokeid)) {
+    if (!legalCombinations.contains(gen)) {
+        /****
+            TODO: Load on the fly if the given gen is not in memory
+            ****/
+    }
+    foreach(QSet<int> combination, legalCombinations[gen].value(pokeid)) {
         if (combination.contains(moves))
             return true;
     }
@@ -352,17 +364,18 @@ bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, Pok
     return false;
 }
 
+/* Used by ChainBreeding */
 QList<QSet<int> > MoveSetChecker::combinationsFor(Pokemon::uniqueId pokenum, Pokemon::gen gen)
 {
-    return legalCombinations[gen.num-GEN_MIN].value(pokenum);
+    return legalCombinations.value(gen).value(pokenum);
 }
 
 QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::eventCombinationsOf(Pokemon::gen gen)
 {
-    return eventCombinations[gen.num-GEN_MIN];
+    return eventCombinations.value(gen);
 }
 
 QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::breedingCombinationsOf(Pokemon::gen gen)
 {
-    return breedingCombinations[gen.num-GEN_MIN];
+    return breedingCombinations.value(gen);
 }

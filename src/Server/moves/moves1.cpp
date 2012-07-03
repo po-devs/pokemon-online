@@ -912,7 +912,7 @@ struct MMAssist : public MM
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
         }
 
-        bool contains(int move, Pokemon::gen gen=GEN_MAX) const {
+        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             if (move == Transform) {
                 return gen >= 5;
             } else {

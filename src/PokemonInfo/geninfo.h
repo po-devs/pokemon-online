@@ -79,6 +79,9 @@ public:
     inline bool operator >= (int other) const {
         return (num >= other);
     }
+
+    inline Pokemon::gen original() {return gen(num, 0);}
+
     // Will return true if everything is fine. And false otherwise.
     static bool extract(const QString &raw, gen &id, QString &info);
     // Extracts short data in a "pokenum data_text" form.

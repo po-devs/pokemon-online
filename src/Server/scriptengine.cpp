@@ -667,7 +667,7 @@ void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int mo
 {
     if (!testPlayer("changePokeLevel", id) || !testRange("changePokeLevel", pslot, 0, 5) || !testRange("changePokeLevel", mslot, 0, 3) || !testTeamCount("changePokeLevel", id, team))
         return;
-    if (!MoveInfo::Exists(move, GEN_MAX))
+    if (!MoveInfo::Exists(move, GenInfo::GenMax()))
         return;
     Player *p = myserver->player(id);
     p->team(team).poke(pslot).move(mslot).num() = move;
@@ -1204,7 +1204,7 @@ QScriptValue ScriptEngine::teamCount(int id)
 
 QScriptValue ScriptEngine::generation(int genNum, int subNum)
 {
-    if(testRange("generation(genNum, subNum)", genNum, GEN_MIN, GEN_MAX) && testRange("generation(genNum, subNum)", subNum, 0, Gen::nums[genNum] - 1)) {
+    if(testRange("generation(genNum, subNum)", genNum, GEN_MIN, GenInfo::GenMax()) && testRange("generation(genNum, subNum)", subNum, 0, GenInfo::NumberOfSubgens(genNum) - 1)) {
         return GenInfo::Version(Pokemon::gen(genNum, subNum));
     }
     return myengine.undefinedValue();
@@ -1262,7 +1262,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
 
 QScriptValue ScriptEngine::move(int num)
 {
-    if (num < 0  || num >= MoveInfo::NumberOfMoves(GEN_MAX)) {
+    if (num < 0  || num >= MoveInfo::NumberOfMoves(GenInfo::GenMax())) {
         return myengine.undefinedValue();
     } else {
         return MoveInfo::Name(num);
@@ -1326,7 +1326,7 @@ QScriptValue ScriptEngine::natureNum(const QString &name)
 
 QScriptValue ScriptEngine::ability(int num)
 {
-    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GEN_MAX)) {
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GenInfo::GenMax())) {
         return AbilityInfo::Name(num);
     } else {
         return myengine.undefinedValue();
@@ -1852,7 +1852,7 @@ QScriptValue ScriptEngine::getScript()
 int ScriptEngine::pokeType1(int id, int gen)
 {
     int result = Pokemon::Curse;
-    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
         result = PokemonInfo::Type1(Pokemon::uniqueId(id), gen);
     }else{
         warn("pokeType1", "generation is not supported.");
@@ -1863,7 +1863,7 @@ int ScriptEngine::pokeType1(int id, int gen)
 int ScriptEngine::pokeType2(int id, int gen)
 {
     int result = Pokemon::Curse;
-    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
         result = PokemonInfo::Type2(Pokemon::uniqueId(id), gen);
     }else{
         warn("pokeType2", "generation is not supported.");
@@ -2063,7 +2063,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
     Pokemon::uniqueId pokemon(poke);
     if (PokemonInfo::Exists(pokemon, gen)
             && (slot >= 0) && (slot <= 2)
-            && (gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+            && (gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
         return PokemonInfo::Abilities(pokemon, gen).ab(slot);
     }
     return myengine.undefinedValue();

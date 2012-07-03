@@ -425,7 +425,7 @@ QScriptValue ScriptEngine::getScript()
 int ScriptEngine::pokeType1(int id, int gen)
 {
     int result = Pokemon::Curse;
-    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
         result = PokemonInfo::Type1(Pokemon::uniqueId(id), gen);
     }else{
         warn("pokeType1", "generation is not supported.");
@@ -436,7 +436,7 @@ int ScriptEngine::pokeType1(int id, int gen)
 int ScriptEngine::pokeType2(int id, int gen)
 {
     int result = Pokemon::Curse;
-    if((gen >= GEN_MIN) && (gen <= GEN_MAX)) {
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
         result = PokemonInfo::Type2(Pokemon::uniqueId(id), gen);
     }else{
         warn("pokeType2", "generation is not supported.");
@@ -472,7 +472,7 @@ QScriptValue ScriptEngine::pokeNum(const QString &name)
 
 QScriptValue ScriptEngine::move(int num)
 {
-    if (num < 0  || num >= MoveInfo::NumberOfMoves(GEN_MAX)) {
+    if (num < 0  || num >= MoveInfo::NumberOfMoves(GenInfo::GenMax())) {
         return myengine.undefinedValue();
     } else {
         return MoveInfo::Name(num);
@@ -536,7 +536,7 @@ QScriptValue ScriptEngine::natureNum(const QString &name)
 
 QScriptValue ScriptEngine::ability(int num)
 {
-    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GEN_MAX)) {
+    if (num >= 0 && num < AbilityInfo::NumberOfAbilities(GenInfo::GenMax())) {
         return AbilityInfo::Name(num);
     } else {
         return myengine.undefinedValue();
