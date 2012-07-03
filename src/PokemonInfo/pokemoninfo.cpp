@@ -134,6 +134,11 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
 namespace PokemonInfoConfig {
     static QString transPath, modPath;
+    FillMode::FillModeType fillMode;
+
+    void setFillMode(FillMode::FillModeType mode) {
+        fillMode = mode;
+    }
 
     void changeTranslation(const QString &ts)
     {
@@ -144,13 +149,13 @@ namespace PokemonInfoConfig {
         }
     }
 
-    void changeMod(const QString &mod, FillMode::FillModeType mode)
+    void changeMod(const QString &mod)
     {
-        if (mod.length() == 0 || mode == FillMode::NoMod) {
+        if (mod.length() == 0 || fillMode == FillMode::NoMod) {
             modPath.clear();
         } else {
             //QString cleanMod = QString::fromUtf8(QUrl::toPercentEncoding(mod));
-            if (mode == FillMode::Client) {
+            if (fillMode == FillMode::Client) {
                 modPath = appDataPath("Mods") + "/" + mod + "/";
             } else {
                 modPath = QString("Mods/%1/").arg(mod);
@@ -193,11 +198,11 @@ namespace PokemonInfoConfig {
         return ret;
     }
 
-    QStringList availableMods(FillMode::FillModeType mode)
+    QStringList availableMods()
     {
         QStringList ret;
 
-        if (mode == FillMode::NoMod) {
+        if (fillMode == FillMode::NoMod) {
             return ret;
         }
 

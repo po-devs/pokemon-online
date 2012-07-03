@@ -19,14 +19,16 @@ namespace FillMode {
 }
 
 namespace PokemonInfoConfig {
+    void setFillMode(FillMode::FillModeType mode);
     void changeTranslation(const QString& ts = QString());
-    void changeMod(const QString &mod, FillMode::FillModeType mode);
+    void changeMod(const QString &mod);
 
     QStringList allFiles(const QString &filename, bool trans=false);
     QString currentMod();
     QString currentModPath();
+    FillMode::FillModeType getFillMode();
 
-    QStringList availableMods(FillMode::FillModeType mode);
+    QStringList availableMods();
 }
 
 /* A class that should be used as a singleton and provide every ressource needed on pokemons */
@@ -134,9 +136,9 @@ private:
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
 
-    QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
-    QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
-    QVector<QHash<Pokemon::uniqueId, int> > m_Abilities [3];
+    static QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
+    static QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
+    static QVector<QHash<Pokemon::uniqueId, int> > m_Abilities [3];
 
     // m_Names is a base.
     // It is assumed that anything that is not there do not exist at all.

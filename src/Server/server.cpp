@@ -153,6 +153,7 @@ void Server::start(){
 
     printLine(tr("Starting loading pokemon database..."));
 
+    PokemonInfoConfig::setFillMode(FillMode::Server);
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
     printLine(tr("Pokemon database loaded"));
@@ -293,7 +294,7 @@ void Server::processDailyRun()
 
 void Server::changeDbMod(const QString &mod)
 {
-    PokemonInfoConfig::changeMod(mod, FillMode::Server);
+    PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
     GenInfo::init("db/gens/");

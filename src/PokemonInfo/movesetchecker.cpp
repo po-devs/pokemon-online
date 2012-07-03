@@ -84,6 +84,13 @@ void MoveSetChecker::init(const QString &dir, bool enf)
     for (int i = GEN_MIN; i <= GenInfo::GenMax(); i++) {
         //Load only the whole gen for now, will load subgens on the fly when needed
         loadGenData( gen(i,-1) ); // -1 for "whole gen"
+
+        /* Server loads Everything */
+        if (PokemonInfoConfig::getFillMode() == FillMode::Server) {
+            for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
+                loadGenData( gen(i,j) );
+            }
+        }
     }
 }
 

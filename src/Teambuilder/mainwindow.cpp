@@ -71,7 +71,8 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
-    PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString(), FillMode::Client);
+    PokemonInfoConfig::setFillMode(FillMode::Client);
+    PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString());
 
     reloadPokemonDatabase();
 
