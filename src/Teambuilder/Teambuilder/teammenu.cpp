@@ -118,10 +118,10 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
 
-    for (int i = 0; i < NUMBER_GENS; i++) {
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
         int n = GenInfo::NumberOfSubgens(i);
 
-        gen->addSeparator()->setText(GenInfo::Gen(i+GEN_MIN));
+        gen->addSeparator()->setText(GenInfo::Gen(i));
 
         for (int j = 0; j < n; j++) {
             Pokemon::gen g(i, j);

@@ -83,12 +83,12 @@ void MoveSetChecker::init(const QString &dir, bool enf)
 
     for (int i = GEN_MIN; i <= GenInfo::GenMax(); i++) {
         //Load only the whole gen for now, will load subgens on the fly when needed
-        loadGenData( gen(i,-1) ); // -1 for "whole gen"
+        loadGenData( Pokemon::gen(i,-1) ); // -1 for "whole gen"
 
         /* Server loads Everything */
         if (PokemonInfoConfig::getFillMode() == FillMode::Server) {
             for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
-                loadGenData( gen(i,j) );
+                loadGenData( Pokemon::gen(i,j) );
             }
         }
     }
@@ -97,12 +97,12 @@ void MoveSetChecker::init(const QString &dir, bool enf)
 void MoveSetChecker::loadGenData(const Pokemon::gen &g)
 {
     /* Egg move combinations */
-    loadCombinations(path("legal_combinations.txt", gen), gen, breedingCombinations);
+    loadCombinations(path("legal_combinations.txt", g), g, breedingCombinations);
 
     /* Event move combinations */
-    loadCombinations(path("event_combinations.txt", gen), gen, eventCombinations);
+    loadCombinations(path("event_combinations.txt", g), g, eventCombinations);
 
-    auto &legal = legalCombinations[gen];
+    QHash<Pokemon::uniqueId, QList<QSet<int> > > &legal = legalCombinations[g];
 
     foreach(Pokemon::uniqueId id, legal.keys()) {
         if (PokemonInfo::IsForme(id))
@@ -111,7 +111,7 @@ void MoveSetChecker::loadGenData(const Pokemon::gen &g)
         if (!PokemonInfo::HasFormes(id))
             continue;
 
-        foreach (Pokemon::uniqueId forme, PokemonInfo::Formes(id, gen)) {
+        foreach (Pokemon::uniqueId forme, PokemonInfo::Formes(id, g)) {
             if (!forme.isForme() || legal.contains(forme)) {
                 continue;
             }
@@ -145,7 +145,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                              int level, bool maledw, QSet<int> *invalid_moves, QString *error)
 {
     /* Last Gen = Whole gen */
-    if (gen.subnum == GenInfo::NumberOfSubgens(gen) -1) {
+    if (gen.subnum == GenInfo::NumberOfSubgens(gen.num) -1) {
         gen.subnum = -1;
     }
 
@@ -327,7 +327,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);
 
             if (ability == ab.ab(2)) {
-                if (moves.size() == 1 && PokemonInfo::dreamWorldMoves(pokeid).contains(moves)) {
+                if (moves.size() == 1 && PokemonInfo::dreamWorldMoves(pokeid, g).contains(moves)) {
                     return true;
                 }
             }

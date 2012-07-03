@@ -86,7 +86,7 @@ public:
     static QSet<int> PreEvoMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QSet<int> SpecialMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QSet<int> RegularMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
-    static QSet<int> dreamWorldMoves(const Pokemon::uniqueId &pokeid);
+    static QSet<int> dreamWorldMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QList<Pokemon::uniqueId> AllIds();
     // Base form do NOT count.
     static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
@@ -145,7 +145,9 @@ private:
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
 
-    static QHash<Pokemon::gen, int> gens;
+    static QHash<Pokemon::gen, Gen> gens;
+
+    static Gen & gen(Pokemon::gen gen);
 
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
@@ -179,7 +181,6 @@ private:
     // Keep it as QHash.
     // quint16 as only pokenum matters.
     static QHash<int, quint16> m_MaxForme;
-    static QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
     // Holds 1-letter options.
     // Sample use: if(m_Options.value(pokeid).contains('H')) whatever();
     // Values for pokemons.txt:
@@ -190,6 +191,7 @@ private:
     static int m_trueNumberOfPokes;
 
     static void loadNames();
+    static void loadGen(Pokemon::gen g);
     static void loadEvos();
     static void loadBaseStats();
     static void loadClassifications();

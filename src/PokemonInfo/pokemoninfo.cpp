@@ -32,6 +32,7 @@ QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
 QSet<Pokemon::uniqueId> PokemonInfo::m_AestheticFormes;
+QHash<Pokemon::gen, PokemonInfo::Gen> PokemonInfo::gens;
 
 QHash<int, QList<int> > PokemonInfo::m_Evolutions;
 QHash<int, int> PokemonInfo::m_OriginalEvos;
@@ -62,7 +63,7 @@ QHash<int,int> ItemInfo::m_Powers;
 QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
 QList<int> ItemInfo::m_UsefulItems;
-QVector<QSet<int> > ItemInfo;
+QVector<QSet<int> > ItemInfo::m_GenItems;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -138,6 +139,10 @@ namespace PokemonInfoConfig {
 
     void setFillMode(FillMode::FillModeType mode) {
         fillMode = mode;
+    }
+
+    FillMode::FillModeType getFillMode() {
+        return fillMode;
     }
 
     void changeTranslation(const QString &ts)
@@ -566,7 +571,20 @@ void PokemonInfo::init(const QString &dir)
     // Load db/pokes data.
     loadNames();
     loadEvos();
-    loadMoves();
+
+    gens.clear();
+
+    for (int i = GenInfo::GenMin(); i < GenInfo::GenMax(); i++) {
+        /* -1 stands for whole gen */
+        loadGen(Pokemon::gen(i, -1));
+
+        /* Server loads everything, every subgens, from the get go */
+        if (fillMode == FillMode::Server) {
+            for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
+                loadGen(Pokemon::gen(i, j));
+            }
+        }
+    }
 
     fill_uid_int(m_Genders, path("gender.txt"));
 
@@ -576,21 +594,23 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[1].clear();
     m_Abilities[2].clear();
 
-    m_Type1.resize(GenInfo::NumberOfGens());
-    m_Type2.resize(GenInfo::NumberOfGens());
-    m_Abilities[0].resize(GenInfo::NumberOfGens());
-    m_Abilities[1].resize(GenInfo::NumberOfGens());
-    m_Abilities[2].resize(GenInfo::NumberOfGens());
+    const int numGens = GenInfo::NumberOfGens();
 
-    for (int i = 0; i < NUMBER_GENS; i++) {
-        Pokemon::gen gen = i+GEN_MIN;
+    m_Type1.resize(numGens);
+    m_Type2.resize(numGens);
+    m_Abilities[0].resize(numGens);
+    m_Abilities[1].resize(numGens);
+    m_Abilities[2].resize(numGens);
 
-        fill_uid_int(m_Type1[i], path(QString("type1.txt"),gen));
-        fill_uid_int(m_Type2[i], path(QString("type2.txt"),gen));
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        Pokemon::gen gen = i;
+
+        fill_uid_int(m_Type1[i-GenInfo::GenMin()], path(QString("type1.txt"),gen));
+        fill_uid_int(m_Type2[i-GenInfo::GenMin()], path(QString("type2.txt"),gen));
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
-                fill_uid_int(m_Abilities[j][i], path(QString("ability%1.txt").arg(j+1), gen));
+                fill_uid_int(m_Abilities[j][i-GenInfo::GenMin()], path(QString("ability%1.txt").arg(j+1), gen));
             }
         }
     }
@@ -604,6 +624,26 @@ void PokemonInfo::init(const QString &dir)
     loadBaseStats();
 
     makeDataConsistent();
+}
+
+void PokemonInfo::loadGen(Pokemon::gen g)
+{
+    if (gens.contains(g)) {
+        return;
+    }
+
+    if (g.subnum == g.wholeGen || g.subnum == 0) {
+        /* 3 for Advance, there's a break between advance / GSC */
+        if (g.num != 3 && g.num != GenInfo::GenMin()) {
+            loadGen(Pokemon::gen(g.num-1, g.wholeGen));
+            gens[g].load(m_Directory, g, &gens[Pokemon::gen(g.num-1, g.wholeGen)]);
+        } else {
+            gens[g].load(m_Directory, g, NULL);
+        }
+    } else {
+        loadGen(Pokemon::gen(g.num, g.subnum-1));
+        gens[g].load(m_Directory, g, &gens[Pokemon::gen(g.num, g.subnum-1)]);
+    }
 }
 
 void PokemonInfo::retranslate()
@@ -683,7 +723,7 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
         }
     }
 
-    QHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    QMutableHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
     while(it.hasNext()) {
         it.next();
         PokemonMoves &moves = it.value();
@@ -693,8 +733,8 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
         moves.genMoves = moves.regularMoves;
         moves.genMoves.unite(moves.specialMoves).unite(moves.eggMoves).unite(moves.preEvoMoves);
 
-        if (gen.num == 5) {
-            moves.genMoves[i].unite(moves.dreamWorldMoves);
+        if (gen.num >= 5) {
+            moves.genMoves.unite(moves.dreamWorldMoves);
         }
 
         if (parent) {
@@ -721,6 +761,17 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
             }
         }
     }
+
+    foreach(Pokemon::uniqueId id, m_Moves.keys()) {
+        if (id.isForme()) {
+            continue;
+        }
+        foreach(Pokemon::uniqueId id, Formes(id, gen)) {
+            if(!m_Moves.contains(id)) {
+                m_Moves[id] = m_Moves.value(id.original());
+            }
+        }
+    }
 }
 
 void PokemonInfo::Gen::loadMinLevels(Gen *parent)
@@ -739,6 +790,18 @@ void PokemonInfo::Gen::loadMinLevels(Gen *parent)
         it.next();
         m_MinLevels[it.key()] = it.value().section('/', 0, 0).toInt();
         m_MinEggLevels[it.key()] = it.value().section('/', -1, -1).toInt();
+    }
+
+    foreach(Pokemon::uniqueId id, m_MinLevels.keys()) {
+        if (id.isForme()) {
+            continue;
+        }
+        foreach(Pokemon::uniqueId id, PokemonInfo::Formes(id, gen)) {
+            if (!m_MinLevels.contains(id)) {
+                m_MinLevels[id] = m_MinLevels.value(id.original(), 100);
+                m_MinEggLevels[id] = m_MinEggLevels.value(id.original(), 100);
+            }
+        }
     }
 }
 
@@ -1094,55 +1157,67 @@ QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid, bool mod)
     return data;
 }
 
-QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::Moves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).genMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).genMoves;
 }
 
-bool PokemonInfo::HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen)
+bool PokemonInfo::HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen g)
 {
-    return m_Moves[pokeid].regularMoves[gen.num-GEN_MIN].contains(move) || m_Moves[pokeid].specialMoves[gen.num-GEN_MIN].contains(move)
-            || m_Moves[pokeid].eggMoves[gen.num-GEN_MIN].contains(move) || m_Moves[pokeid].preEvoMoves[gen.num-GEN_MIN].contains(move);
+    return gen(g).m_Moves[pokeid].regularMoves.contains(move) || gen(g).m_Moves[pokeid].specialMoves.contains(move)
+            || gen(g).m_Moves[pokeid].eggMoves.contains(move) || gen(g).m_Moves[pokeid].preEvoMoves.contains(move);
 }
 
-QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::RegularMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).regularMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).regularMoves;
 }
 
-QSet<int> PokemonInfo::EggMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::EggMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).eggMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).eggMoves;
 }
 
-QSet<int> PokemonInfo::LevelMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::LevelMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).levelMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).levelMoves;
 }
 
-QSet<int> PokemonInfo::TutorMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::TutorMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).tutorMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).tutorMoves;
 }
 
-QSet<int> PokemonInfo::TMMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::TMMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).TMMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).TMMoves;
 }
 
-QSet<int> PokemonInfo::SpecialMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::SpecialMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).specialMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).specialMoves;
 }
 
-QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+QSet<int> PokemonInfo::PreEvoMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).preEvoMoves[gen.num-GEN_MIN];
+    return gen(g).m_Moves.value(pokeid).preEvoMoves;
 }
 
-QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid)
+QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    return m_Moves.value(pokeid).dreamWorldMoves;
+    return gen(g).m_Moves.value(pokeid).dreamWorldMoves;
+}
+
+PokemonInfo::Gen &PokemonInfo::gen(Pokemon::gen gen)
+{
+    if (gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
+        gen.subnum = gen.wholeGen;
+    }
+    /* Todo: load gens if needed somewhere smarter (for example the initialization of PokePersonal / PokeTeam with setGen).
+      Instead of doing the checks every time we ask for the pokemon data... */
+    loadGen(gen);
+
+    return gens[gen];
 }
 
 AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
@@ -1269,24 +1344,14 @@ QList<Pokemon::uniqueId> PokemonInfo::VisibleFormes(const Pokemon::uniqueId &pok
     return result;
 }
 
-int PokemonInfo::MinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+int PokemonInfo::MinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    int g = gen.num-GEN_MIN;
-
-    if (!m_MinLevels[g].contains(pokeid))
-        return 100;
-
-    return m_MinLevels[g][pokeid];
+    return gen(g).m_MinLevels.value(pokeid, 100);
 }
 
-int PokemonInfo::MinEggLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+int PokemonInfo::MinEggLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen g)
 {
-    int g = gen.num-GEN_MIN;
-
-    if (!m_MinLevels[g].contains(pokeid))
-        return 100;
-
-    return m_MinLevels[g][pokeid];
+    return gen(g).m_MinEggLevels.value(pokeid, 100);
 }
 
 int PokemonInfo::AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
@@ -1294,13 +1359,16 @@ int PokemonInfo::AbsoluteMinLevel(const Pokemon::uniqueId &pokeid, Pokemon::gen 
     int limit = (gen >= 3 ? 3 : GEN_MIN);
 
     int min = 100;
-    for (int g = gen.num; g >= limit; g--) {
-        int level = MinLevel(pokeid, g);
+
+    do {
+        int level = MinLevel(pokeid, gen);
 
         if (level < min) {
             min = level;
         }
-    }
+
+        gen = Pokemon::gen(gen.num - 1, gen.wholeGen);
+    } while (gen >= limit);
 
     return min;
 }
@@ -1440,10 +1508,6 @@ void PokemonInfo::makeDataConsistent()
             if (id != OriginalForme(id))
                 m_AestheticFormes.insert(id);
         }
-        // Moves.
-        if(!m_Moves.contains(id)) {
-            m_Moves[id] = m_Moves.value(OriginalForme(id));
-        }
         // Other.
         if(!m_LevelBalance.contains(id)) {
             m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id), 1);
@@ -1469,10 +1533,6 @@ void PokemonInfo::makeDataConsistent()
             }
             if(!m_Type2[i].contains(id)) {
                 m_Type2[i][id] = m_Type2[i].value(id.original(), Pokemon::Curse);
-            }
-            if (!m_MinLevels[i].contains(id)) {
-                m_MinLevels[i][id] = m_MinLevels[i].value(id.original(), 100);
-                m_MinEggLevels[i][id] = m_MinEggLevels[i].value(id.original(), 100);
             }
         }
     }
@@ -2785,7 +2845,7 @@ void GenInfo::init(const QString &dir)
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     fill_gen_string(m_versions, path("versions.txt"), true);
-    fill_double(m_gens, path("gens.txt"), true);
+    fill_int_str(m_gens, path("gens.txt"), true);
 
     m_NumberOfSubgens.clear();
     genMax = genMin = m_gens.begin().key();
@@ -2804,7 +2864,7 @@ void GenInfo::init(const QString &dir)
 }
 
 int GenInfo::NumberOfGens() {
-    return m_gens.count();
+    return m_gens.size();
 }
 
 int GenInfo::NumberOfSubgens(int gen) {

@@ -29,7 +29,7 @@ QHash<int, QString> getMoves(const Pokemon::uniqueId &num, Pokemon::gen gen, boo
               .unite(map_container_with_value(PokemonInfo::LevelMoves(num, gen), root ? QObject::tr("Level") : QObject::tr("%1G Level").arg(gen.num)))
               .unite(map_container_with_value(PokemonInfo::PreEvoMoves(num, gen), root ? QObject::tr("Pre Evo") :QObject:: tr("%1G Pre Evo").arg(gen.num)))
               .unite(map_container_with_value(PokemonInfo::EggMoves(num, gen), root ? QObject::tr("Breeding") : QObject::tr("%1G Breeding").arg(gen.num)))
-              .unite((gen == 5 ? map_container_with_value(PokemonInfo::dreamWorldMoves(num), QObject::tr("Dream World")) : QHash<int, QString>()))
+              .unite((gen == 5 ? map_container_with_value(PokemonInfo::dreamWorldMoves(num, gen), QObject::tr("Dream World")) : QHash<int, QString>()))
               .unite(map_container_with_value(PokemonInfo::SpecialMoves(num, gen), root ? QObject::tr("Special", "Learning") : QObject::tr("%1G Special").arg(gen.num)));
 }
 
