@@ -32,10 +32,10 @@ bool MoveSetChecker::enforceMinLevels = true;
 
 QString MoveSetChecker::path(const QString &arg, const Pokemon::gen & g)
 {
-    if (g != 0) {
+    if (g.subnum == static_cast<decltype(g.subnum)>(-1)) {
         return QString("%1/%2G/%3").arg(dir).arg(g.num).arg(arg);
     } else {
-        return dir + arg;
+        return QString("%1/%2G/Subgen %3/%4").arg(dir).arg(g.num).arg(g.subnum).arg(arg);
     }
 }
 
@@ -83,30 +83,33 @@ void MoveSetChecker::init(const QString &dir, bool enf)
 
     for (int i = GEN_MIN; i <= GenInfo::GenMax(); i++) {
         //Load only the whole gen for now, will load subgens on the fly when needed
-        Pokemon::gen gen(i,-1); // -1 for "whole gen"
+        loadGenData( gen(i,-1) ); // -1 for "whole gen"
+    }
+}
 
-        /* Egg move combinations */
-        loadCombinations(path("legal_combinations.txt", gen), gen, breedingCombinations);
+void MoveSetChecker::loadGenData(const Pokemon::gen &g)
+{
+    /* Egg move combinations */
+    loadCombinations(path("legal_combinations.txt", gen), gen, breedingCombinations);
 
-        /* Event move combinations */
-        loadCombinations(path("event_combinations.txt", gen), gen, eventCombinations);
+    /* Event move combinations */
+    loadCombinations(path("event_combinations.txt", gen), gen, eventCombinations);
 
-        auto &legal = legalCombinations[gen];
+    auto &legal = legalCombinations[gen];
 
-        foreach(Pokemon::uniqueId id, legal.keys()) {
-            if (PokemonInfo::IsForme(id))
+    foreach(Pokemon::uniqueId id, legal.keys()) {
+        if (PokemonInfo::IsForme(id))
+            continue;
+
+        if (!PokemonInfo::HasFormes(id))
+            continue;
+
+        foreach (Pokemon::uniqueId forme, PokemonInfo::Formes(id, gen)) {
+            if (!forme.isForme() || legal.contains(forme)) {
                 continue;
-
-            if (!PokemonInfo::HasFormes(id))
-                continue;
-
-            foreach (Pokemon::uniqueId forme, PokemonInfo::Formes(id, gen)) {
-                if (!forme.isForme() || legal.contains(forme)) {
-                    continue;
-                }
-
-                legal[forme] = legal[id];
             }
+
+            legal[forme] = legal[id];
         }
     }
 }
@@ -352,9 +355,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, QSet<int> moves)
 {
     if (!legalCombinations.contains(gen)) {
-        /****
-            TODO: Load on the fly if the given gen is not in memory
-            ****/
+        loadGenData(gen);
     }
     foreach(QSet<int> combination, legalCombinations[gen].value(pokeid)) {
         if (combination.contains(moves))
