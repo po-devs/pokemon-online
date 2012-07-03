@@ -13,7 +13,7 @@
 #include <QNetworkReply>
 #include <QHostInfo>
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
 
@@ -247,7 +247,7 @@ public:
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
     Q_INVOKABLE QScriptValue move(int num);
     Q_INVOKABLE QScriptValue moveNum(const QString &name);
-    Q_INVOKABLE int moveType(int moveNum, int gen = GEN_MAX);
+    Q_INVOKABLE int moveType(int moveNum, int gen = GenInfo::GenMax());
     Q_INVOKABLE QScriptValue item(int num);
     Q_INVOKABLE QScriptValue itemNum(const QString &item);
     Q_INVOKABLE QScriptValue nature(int num);
@@ -295,13 +295,8 @@ public:
 
     Q_INVOKABLE QScriptValue getScript();
 
-    Q_INVOKABLE int pokeType1(int id, int gen = GEN_MAX);
-    Q_INVOKABLE int pokeType2(int id, int gen = GEN_MAX);
-
-    Q_INVOKABLE void modifyMovePower(int moveNum, unsigned char power, int gen = GEN_MAX);
-    Q_INVOKABLE void modifyMoveAccuracy(int moveNum, char accuracy, int gen = GEN_MAX);
-    Q_INVOKABLE void modifyMovePP(int moveNum, char pp, int gen = GEN_MAX);
-    Q_INVOKABLE void modifyMovePriority(int moveNum, qint8 priority, int gen = GEN_MAX);
+    Q_INVOKABLE int pokeType1(int id, int gen = GenInfo::GenMax());
+    Q_INVOKABLE int pokeType2(int id, int gen = GenInfo::GenMax());
    
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);
@@ -313,9 +308,9 @@ public:
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
-    Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GEN_MAX);
+    Q_INVOKABLE void modifyPokeAbility(int id, int slot, int ability, int gen = GenInfo::GenMax());
     Q_INVOKABLE void changePokeAbility(int id, int team, int slot, int ability);
-    Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GEN_MAX);
+    Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());
     Q_INVOKABLE void changePokeHappiness(int id, int team, int slot, int value);
     Q_INVOKABLE void changePokeShine(int id, int team, int slot, bool value);
     Q_INVOKABLE QScriptValue teamPokeShine(int id, int team, int slot);

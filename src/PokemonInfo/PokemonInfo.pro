@@ -7,7 +7,8 @@ SOURCES += pokemonstructs.cpp \
     networkstructs.cpp \
     movesetchecker.cpp \
     battlestructs.cpp \
-    teamsaver.cpp
+    teamsaver.cpp \
+    pokemon.cpp
 HEADERS += pokemonstructs.h \
     pokemoninfo.h \
     networkstructs.h \
@@ -15,7 +16,9 @@ HEADERS += pokemonstructs.h \
     battlestructs.h \
     teamsaver.h \
     enums.h \
-    ../Shared/config.h
+    ../Shared/config.h \
+    geninfo.h \
+    pokemon.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
