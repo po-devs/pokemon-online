@@ -2434,7 +2434,7 @@ void Client::requestTempBan(const QString &name, int time)
 
 void Client::ignore(int id)
 {
-    if (myIgnored.contains(id))
+    if (myIgnored.contains(id) || !hasPlayerInfo(id))
         return;
     printLine(id, tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
@@ -2453,7 +2453,7 @@ void Client::ignore(int id, bool ign)
 
 void Client::removeIgnore(int id)
 {
-    if (!myIgnored.contains(id)) {
+    if (!myIgnored.contains(id) || !hasPlayerInfo(id)) {
         return;
     }
 
