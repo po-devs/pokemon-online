@@ -206,7 +206,7 @@ namespace PokemonInfoConfig {
             return ret;
         }
 
-        QDir modDir(mode == FillMode::Client ? appDataPath("Mods") : "Mods");
+        QDir modDir(fillMode == FillMode::Client ? appDataPath("Mods") : "Mods");
 
         if (modDir.exists()) {
             QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
@@ -602,7 +602,6 @@ void PokemonInfo::init(const QString &dir)
     loadHeights();
     loadDescriptions();
     loadBaseStats();
-    loadMinLevels();
 
     makeDataConsistent();
 }
@@ -624,22 +623,122 @@ void PokemonInfo::loadGenderRates()
     fill_double(m_GenderRates, path("gender_rate.txt"));
 }
 
-void PokemonInfo::loadMinLevels()
+void PokemonInfo::Gen::load(const QString &_path, const Pokemon::gen &_gen, Gen *parent)
 {
-    for (int i = 0; i < NUMBER_GENS; i++) {
-        m_MinLevels[i].clear();
-        m_MinEggLevels[i].clear();
+    gen = _gen;
 
+    if (gen.subnum == static_cast<decltype(gen.subnum)>(-1)) {
+        dir = QString("%1%2G/").arg(_path).arg(gen.num);
+    } else {
+        dir = QString("%1%2G/Subgen %3/").arg(_path).arg(gen.num).arg(gen.subnum);
+    }
+
+    loadMoves(parent);
+    loadMinLevels(parent);
+}
+
+QString PokemonInfo::Gen::path(const QString &fileName)
+{
+    return dir + fileName;
+}
+
+void PokemonInfo::Gen::loadMoves(Gen *parent)
+{
+    QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level/moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
+
+    if (gen > 1) {
+        fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
+    }
+
+    if (gen >= 5) {
+        fileNames << path("dw_moves.txt");
+    }
+
+    for (int i = 0; i < fileNames.count(); i++) {
         QHash<Pokemon::uniqueId, QString> temp;
-        fill_uid_str(temp, path("minlevels.txt", GEN_MIN+i));
+        fill_uid_str(temp, fileNames[i]);
 
         QHashIterator<Pokemon::uniqueId, QString> it(temp);
 
-        while (it.hasNext()) {
+        while(it.hasNext()) {
             it.next();
-            m_MinLevels[i][it.key()] = it.value().section('/', 0, 0).toInt();
-            m_MinEggLevels[i][it.key()] = it.value().section('/', -1, -1).toInt();
+
+            QStringList move_list = it.value().split(' ');
+
+            QSet<int> data_set;
+            for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
+                int move = move_list[ml_counter].toInt();
+                if(move != 0)
+                    data_set.insert(move);
+            }
+            /* Should create an item with pokeid key in m_Moves if it does not exist. */
+            PokemonMoves &moves = m_Moves[it.key()];
+
+            QSet<int> *refs[] = {
+                &moves.TMMoves, &moves.levelMoves, &moves.specialMoves, &moves.preEvoMoves, &moves.eggMoves,
+                &moves.tutorMoves, &moves.dreamWorldMoves
+            };
+
+            *refs[i] = data_set;
         }
+    }
+
+    QHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    while(it.hasNext()) {
+        it.next();
+        PokemonMoves &moves = it.value();
+
+        moves.regularMoves = moves.TMMoves;
+        moves.regularMoves.unite(moves.levelMoves).unite(moves.tutorMoves);
+        moves.genMoves = moves.regularMoves;
+        moves.genMoves.unite(moves.specialMoves).unite(moves.eggMoves).unite(moves.preEvoMoves);
+
+        if (gen.num == 5) {
+            moves.genMoves[i].unite(moves.dreamWorldMoves);
+        }
+
+        if (parent) {
+            if (parent->gen.num == gen.num) {
+                if (parent->m_Moves.contains(it.key())) {
+                    const PokemonMoves &pmoves = parent->m_Moves.value(it.key());
+
+                    moves.regularMoves.unite(pmoves.regularMoves);
+                    moves.genMoves.unite(pmoves.genMoves);
+                    moves.eggMoves.unite(pmoves.eggMoves);
+                    moves.preEvoMoves.unite(pmoves.preEvoMoves);
+                    moves.specialMoves.unite(moves.specialMoves);
+                    moves.TMMoves.unite(moves.TMMoves);
+                    moves.levelMoves.unite(moves.levelMoves);
+                    moves.tutorMoves.unite(moves.tutorMoves);
+                    moves.dreamWorldMoves.unite(moves.dreamWorldMoves);
+                }
+            } else {
+                if (parent->m_Moves.contains(it.key())) {
+                    const PokemonMoves &pmoves = parent->m_Moves.value(it.key());
+
+                    moves.genMoves.unite(pmoves.genMoves);
+                }
+            }
+        }
+    }
+}
+
+void PokemonInfo::Gen::loadMinLevels(Gen *parent)
+{
+    if (parent && parent->gen.num == gen.num) {
+        m_MinLevels = parent->m_MinLevels;
+        m_MinEggLevels = parent->m_MinEggLevels;
+    }
+
+    QHash<Pokemon::uniqueId, QString> temp;
+    fill_uid_str(temp, path("minlevels.txt"));
+
+    QHashIterator<Pokemon::uniqueId, QString> it(temp);
+
+    while (it.hasNext()) {
+        it.next();
+        m_MinLevels[it.key()] = it.value().section('/', 0, 0).toInt();
+        m_MinEggLevels[it.key()] = it.value().section('/', -1, -1).toInt();
     }
 }
 
@@ -1240,77 +1339,6 @@ bool PokemonInfo::HasEvolutions(int pokenum)
 bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 {
     return Evos(pokeid.pokenum).size() > 1;
-}
-
-void PokemonInfo::loadMoves()
-{
-    m_Moves.clear();
-
-    for (int gc = 0; gc < NUMBER_GENS; gc++) {
-        int g = gc + GEN_MIN;
-
-        QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt",g) << path("level/moves.txt",g) << path("special_moves.txt",g) << path("pre_evo_moves.txt",g);
-
-        if (g > 1) {
-            fileNames << path("egg_moves.txt", g) << path("tutor_moves.txt", g);
-        }
-
-        if (g >= 5) {
-            fileNames << path("dw_moves.txt", g);
-        }
-
-        for (int i = 0; i < fileNames.count(); i++) {
-            QHash<Pokemon::uniqueId, QString> temp;
-            fill_uid_str(temp, fileNames[i]);
-
-            QHashIterator<Pokemon::uniqueId, QString> it(temp);
-
-            while(it.hasNext()) {
-                it.next();
-
-                QStringList move_list = it.value().split(' ');
-
-                QSet<int> data_set;
-                for(int ml_counter = 0; ml_counter < move_list.size(); ml_counter++) {
-                    int move = move_list[ml_counter].toInt();
-                    if(move != 0)
-                        data_set.insert(move);
-                }
-                /* Should create an item with pokeid key in m_Moves if it does not exist. */
-                PokemonMoves &moves = m_Moves[it.key()];
-
-                QSet<int> *refs[] = {
-                    &moves.TMMoves[gc], &moves.levelMoves[gc], &moves.specialMoves[gc], &moves.preEvoMoves[gc], &moves.eggMoves[gc],
-                    &moves.tutorMoves[gc], &moves.dreamWorldMoves
-                };
-
-                *refs[i] = data_set;
-            }
-        }
-    }
-
-    QHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
-    while(it.hasNext()) {
-        it.next();
-        PokemonMoves moves = it.value();
-
-        for (int i = 0; i < NUMBER_GENS; i++) {
-            moves.regularMoves[i] = moves.TMMoves[i];
-            moves.regularMoves[i].unite(moves.levelMoves[i]).unite(moves.tutorMoves[i]);
-            moves.genMoves[i] = moves.regularMoves[i];
-            moves.genMoves[i].unite(moves.specialMoves[i]).unite(moves.eggMoves[i]).unite(moves.preEvoMoves[i]);
-
-            if (i == 5 - GEN_MIN) {
-                moves.genMoves[i].unite(moves.dreamWorldMoves);
-            }
-
-            if (i > 0 && i+GEN_MIN != 3) {
-                moves.genMoves[i].unite(moves.genMoves[i-1]);
-            }
-        }
-
-        m_Moves[it.key()] = moves;
-    }
 }
 
 QString PokemonInfo::path(const QString &filename, const Pokemon::gen &g)
