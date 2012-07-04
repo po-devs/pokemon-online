@@ -136,7 +136,13 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 
 namespace PokemonInfoConfig {
 static QString transPath, modPath;
+static bool noWholeGen = false;
+
 FillMode::FillModeType fillMode;
+
+void setLastSubgenToWhole(bool yes) {
+    noWholeGen = yes;
+}
 
 void setFillMode(FillMode::FillModeType mode) {
     fillMode = mode;
@@ -1256,7 +1262,7 @@ QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid, Pokemon:
 
 PokemonInfo::Gen &PokemonInfo::gen(Pokemon::gen gen)
 {
-    if (gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
+    if (!noWholeGen && gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
         gen.subnum = gen.wholeGen;
     }
     /* Todo: load gens if needed somewhere smarter (for example the initialization of PokePersonal / PokeTeam with setGen).

@@ -19,6 +19,14 @@ namespace FillMode {
 }
 
 namespace PokemonInfoConfig {
+    /* If set to yes, when loading moves for the last subgen of the generation,
+      rather than loading prepared files it will load every subgen and calculate the
+      correct movepool for the pokemon.
+
+      Default is false.
+    */
+    void setLastSubgenToWhole(bool yes);
+
     void setFillMode(FillMode::FillModeType mode);
     void changeTranslation(const QString& ts = QString());
     void changeMod(const QString &mod);
