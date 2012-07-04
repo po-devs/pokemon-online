@@ -795,7 +795,7 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
     Gen &_2 = gens[sg];
 
     foreach(Pokemon::uniqueId id, _1.m_Moves.keys()) {
-        if (id.isForme() || !PokemonInfo::Exists(id,gen)) {
+        if (id.isForme() || !PokemonInfo::Exists(id,gen) || id.pokenum == Pokemon::Smeargle) {
             continue;
         }
 
@@ -804,9 +804,9 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
 
         QSet<int> t1, t2;
         t1 = m1.regularMoves;
-        t1.unite(m1.dreamWorldMoves).unite(m1.specialMoves);
+        //t1.unite(m1.dreamWorldMoves).unite(m1.specialMoves);
         t2 = m2.regularMoves;
-        t2.unite(m2.dreamWorldMoves).unite(m2.specialMoves);
+        //t2.unite(m2.dreamWorldMoves).unite(m2.specialMoves);
 
         QSet<int> s1(t1), s2(t2);
 
