@@ -6,7 +6,7 @@
 
 class PokeTeam;
 class TeamHolder;
-class PokemonItem;
+class PokeBoxItem;
 class PokeBox;
 
 namespace Ui {
@@ -20,97 +20,51 @@ class PokeBoxes :  public TeamBuilderWidget
 public:
     explicit PokeBoxes(QWidget *parent = 0, TeamHolder *nteam = NULL);
     ~PokeBoxes();
-    void changePoke(PokeTeam *poke);
+    void changePoke(PokeTeam *poke, int slot = -1, int box=-1);
     void updatePoke();
 
     void updateTeam();
+signals:
+    void done();
 public slots:
     void changeTeamPoke(int index);
+    void currentBoxChanged(int b);
 
+    void showPoke(PokeTeam *poke);
+    void switchBoxTeam(int,int,int);
+
+    void storePokemon();
+    void switchPokemon();
+    void deletePokemon();
+    void withdrawPokemon();
+
+    void newBox();
+    void editBoxName();
+    void deleteBox(int num=-1);
 private:
     PokeTeam *m_poke;
+    int displayedBox, displayedSlot;
     TeamHolder *m_team;
     Ui::PokeBoxes *ui;
+    QList<PokeBox*> boxes;
     const PokeTeam &poke() const {return *m_poke;}
     const TeamHolder &team() const {return *m_team;}
     PokeTeam &poke() {return *m_poke;}
     TeamHolder &team() {return *m_team;}
-};
 
-class PokemonItem : public QGraphicsPixmapItem
-{
-public:
-    PokemonItem(PokeTeam *poke, PokeBox *box);
-    ~PokemonItem();
+    void loadBoxes();
+    void addBox(const QString &name);
 
-    void changePoke(PokeTeam *poke);
-    void setBox(PokeBox *newBox);
+    bool existBox(const QString &name) const;
+    void doDeleteBox(int num);
 
-    PokeTeam *poke;
+    PokeBox *currentBox();
 
-protected:
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void startDrag();
+    void updateSpot(int i);
+    int currentPoke() const;
 
-    QPointF startPos;
-
-private:
-    PokeBox *m_Box;
-};
-
-class PokeBox : public QGraphicsView
-{
-    Q_OBJECT
-
-public:
-    PokeBox(QFrame *parent, int boxNum, const QString &file);
-
-    void deleteBox();
-    void saveBox();
-    void loadBox();
-    void addPokemonToBox(const PokeTeam &poke, int slot = -1);
-
-    PokeTeam *getCurrent();
-    void deleteCurrent();
-    void changeCurrent(const PokeTeam &poke);
-    void changeCurrentSpot(int newSpot);
-
-    QString getBoxName() const;
-    void setName(const QString &name);
-    void reName(const QString &newName);
-    bool isFull() const;
-    bool isEmpty() const;
-    int freeSpot() const;
-
-    int getNum() const;
-    void setNum(int number);
-
-    int getNumOf(const PokemonItem *item) const;
-
-    static QString getBoxPath();
-
-signals:
-    void switchWithTeam(int boxNumber, int boxSlot, int teamSlot);
-    void show(PokeTeam *team);
-
-protected:
-    void addGraphicsItem(int spot);
-    QPointF calculatePos(int spot, const QSize& itemSize = QSize(32,32));
-    int calculateSpot(const QPoint &graphicViewPos);
-    void drawBackground(QPainter *painter, const QRectF &rect);
-    PokemonItem* currentItem();
-    void mousePressEvent(QMouseEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-
-private:
-    QVector<PokemonItem*> m_Pokemons;
-    QString m_Name;
-    QPixmap m_Background;
-    int Number;
-    int currentPokemon;
+    void setCurrentTeamPoke(PokeTeam *p);
+    PokeTeam *currentPokeTeam();
 };
 
 #endif // POKEBOXES_H

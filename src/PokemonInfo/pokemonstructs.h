@@ -1,13 +1,8 @@
 #ifndef POKEMONSTRUCTS_H
 #define POKEMONSTRUCTS_H
 
-namespace Pokemon {
-class uniqueId;
-class gen;
-}
-unsigned int qHash (const Pokemon::uniqueId &key);
-unsigned int qHash (const Pokemon::gen &key);
-
+#include "pokemon.h"
+#include "geninfo.h"
 #include <QString>
 #include <QSet>
 #include <QIcon>
@@ -18,87 +13,6 @@ unsigned int qHash (const Pokemon::gen &key);
 class QDomElement;
 class QDomDocument;
 class DataStream;
-
-namespace Pokemon {
-class uniqueId
-{
-public:
-    quint16 pokenum;
-    quint8 subnum;
-    uniqueId() : pokenum(0), subnum(0) {}
-    uniqueId(int num, int subnum) : pokenum(num), subnum(subnum) {}
-    uniqueId(const uniqueId &id) { pokenum = id.pokenum; subnum = id.subnum; }
-    uniqueId(quint32 pokeRef) {
-        subnum = pokeRef >> 16;
-        pokenum = pokeRef & 0xFFFF;
-    }
-    bool operator == (const uniqueId &other) const {
-        return (pokenum == other.pokenum) && (subnum == other.subnum);
-    }
-    bool operator != (const uniqueId &other) const {
-        return (pokenum != other.pokenum) || (subnum != other.subnum);
-    }
-    bool operator < (const uniqueId &other) const {
-        return (pokenum < other.pokenum) || ((pokenum == other.pokenum) && (subnum < other.subnum));
-    }
-    bool operator > (const uniqueId &other) const {
-        return (pokenum > other.pokenum) || ((pokenum == other.pokenum) && (subnum > other.subnum));
-    }
-    QString toString() const;
-    QString toLine(const QString &data) const;
-    quint32 toPokeRef() const;
-    // Separates pokenum:subnum:1-letter-options data from
-    // the other part of a string.
-    // 'data' will be modified to hold extracted data.
-    // 'remaining' will be modified to hold remaining part.
-    // Will return true if everything is fine. And false otherwise.
-    static bool extract(const QString &raw, uniqueId &id, QString &info, QString *options = NULL);
-    // Extracts short data in a "pokenum data_text" form.
-    static bool extract_short(const QString &from, quint16 &pokenum, QString &remaining);
-};
-
-class gen
-{
-public:
-    quint8 num;
-    quint8 subnum;
-    gen() : num(GEN_MAX), subnum(0) {}
-    gen(int num, int subnum) : num(num), subnum(subnum) {}
-    gen(const gen &g) { num = g.num; subnum = g.subnum; }
-    gen(quint32 genRef) {
-        subnum = genRef >> 8;
-        num = genRef & 0xFF;
-    }
-    inline bool operator == (const gen &other) const {
-        return (num == other.num) && (subnum == other.subnum);
-    }
-    inline bool operator != (const gen &other) const {
-        return (num != other.num) || (subnum != other.subnum);
-    }
-    inline bool operator < (const gen &other) const {
-        return (num < other.num) || ((num == other.num) && (subnum < other.subnum));
-    }
-    inline bool operator > (const gen &other) const {
-        return (num > other.num) || ((num == other.num) && (subnum > other.subnum));
-    }
-    inline bool operator < (int other) const {
-        return (num < other);
-    }
-    inline bool operator > (int other) const {
-        return (num > other);
-    }
-    inline bool operator <= (int other) const {
-        return (num <= other);
-    }
-    inline bool operator >= (int other) const {
-        return (num >= other);
-    }
-    // Will return true if everything is fine. And false otherwise.
-    static bool extract(const QString &raw, gen &id, QString &info);
-    // Extracts short data in a "pokenum data_text" form.
-    static bool extract_short(const QString &from, quint8 &gen, QString &remaining);
-};
-}
 
 struct AbilityGroup {
     quint8 _ab[3];
@@ -150,6 +64,7 @@ class PokeGeneral
     PROPERTY(Pokemon::gen, gen);
 public:
     PokeGeneral();
+    virtual ~PokeGeneral(){}
 
     const AbilityGroup &abilities() const;
     int genderAvail() const;
@@ -324,24 +239,5 @@ DataStream & operator << (DataStream & out,const Team & team);
 
 DataStream & operator << (DataStream & out,const PokePersonal & Pokemon);
 DataStream & operator >> (DataStream & in,PokePersonal & Pokemon);
-
-inline uint qHash(const Pokemon::uniqueId &key)
-{
-    return qHash(key.toPokeRef());
-}
-
-inline uint qHash(const Pokemon::gen &gen)
-{
-    return qHash(gen.num + (gen.subnum << 8));
-}
-
-DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);
-DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id);
-
-DataStream & operator << (DataStream &out, const Pokemon::gen &g);
-DataStream & operator >> (DataStream &in, Pokemon::gen &g);
-
-Q_DECLARE_METATYPE(Pokemon::uniqueId);
-Q_DECLARE_METATYPE(Pokemon::gen);
 
 #endif // POKEMONSTRUCTS_H

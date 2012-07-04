@@ -1,0 +1,226 @@
+﻿0 
+1 Porção de HP recuperada aumenta quando usado ataques de roubo de HP
+2 Quando anexada, Gera Status de Beleza em Super Contests
+3 Aumenta Evasão
+4 Multiplica o ataque por x1.5, mas só permite a utilização de um ataque até o Pokémon ser chamado de volta
+5 Multiplica a velocidade por x1.5, mas só permite a utilização de um ataque até o Pokémon ser chamado de volta
+6 Multiplica SP. Ataque por x1.5, mas só permite a utilização de um ataque até o Pokémon ser chamado de volta
+7 Se o usuário se apaixonar, o inimigo também ira se apaixonar
+8 Aumenta ligeiramente o poder de um ataque Super Efetivo
+9 Talvez impeça a derrota do usuário, deixando-o com 1 HP de um ataque que iria derrotá-lo
+10 Deixa com 1 de HP se atingido por um ataque que o derrota com o HP completo
+11 O usuário sempre ataca por ultimo
+12 Quando ligado, aumenta o status de Smart em Super Contests
+13 Titular sempre últimos atentados
+14 A chance do inimigo de causar um Critical Hit é reduzido em 5%; anexar a um Wobbuffet fêmea e cruzar para conseguir Wynaut
+15 Aumenta 1/16 do HP por cada turno
+16 Dobra s quantidade de dinheiro recebido quando equipado em um dos seus 6 Pokemons
+17 Remove o status de Apaixonado; só pode ser usado uma vez
+18 Se ligado a Ditto, sua defesa e SP. Defesa são multiplicadas por x2
+19 Aumenta ligeiramente o poder dos ataques físicos
+20 Aumenta o poder de ataques psíquicos
+21 Quando ligado, levanta Cute stat em Super Contests
+22 Permite que o usuário omita o primeiro turno de ataques requerem carregamento; só pode ser usado uma vez
+23 Abaixa a taxa de encontro de Pokémon selvagens se equipado para primeiro Pokémon da equipe
+24 Se ligado a Ditto, sua defesa e SP. Defesa são multiplicadas por x2
+25 Evolui Dusclops para Dusknoir quando equipado e trocado
+26 Quando conectado, aumenta o status Cool em Super Contests
+27 Aumenta o poder de ataques de Pedra
+28 Aumenta o poder de ataques de Grama
+29 Todo ataque do tipo água sofre um aumento de 5%; atribuir a um Marill do sexo feminino e cruzar para conseguir Azurill
+30 Sempre permite que o usuário seja trocado
+31 Qualquer ataque do tipo Normal tem o poder aumentado em 10%
+32 Qualquer ataque do tipo Inseto tem o poder aumentado em 10%
+33 Prolonga o número de turnos do Sandstorm
+34 Qualquer ataque do tipo Terra tem o poder aumentado em 10%
+35 Gera felicidade fácil
+36 Aumenta o poder de ataques de Água
+37 Curas qualquer efeito de status; só pode ser usado uma vez
+38 Aumenta ligeiramente a precisão dos movimentos
+39 Aumenta ligeiramente o poder dos ataques especiais
+40 Quando ligado, aumenta o status Tough em Super Contests
+41 Precisão aumenta se o usuário é atacado por um inimigo primeiro em um turno
+42 Dobra o dinheiro ganho nas batalhas
+43 Cura um Pokémon do efeito de status Envenenado (Poison)
+44 Desperta um Pokémon com o efeito de status Dormindo (Sleep) 
+45 Recupera 20 HP
+46 Pérola rara. Vende a preço alto.
+47 Cogumelo Raro. Vende a preço alto.
+48 Qualquer ataque do tipo Lutador tem o poder aumentado em 10%
+49 Diminui a taxa de encontrar Pokémons Selvágens
+50 Aos poucos, recupera HP do usuário do tipo Venenoso; reduz HP para todos os outros tipos
+51 Qualquer ataque do tipo Noturno tem o poder aumentado em 10%
+52 Cura de sono (Sleep)
+53 Um fragmento de uma grande placa
+54 Cura um Pokémon do efeito de status Queimando (Burn)
+55 Aumenta um pouco a base de SP. Ataque do Pokémon
+56 Aumenta um pouco a base de Velocidade do Pokémon
+57 Qualquer ataque do tipo Fogo tem o poder aumentado em 10%
+58 Abaixa a chance de encontrar um Pokémon Selvagem, se o usuário for o primeiro da equipe
+59 Desacelera o crescimento da Berry. Retarda o secamento do solo
+60 Multiplica a SP. Defesa do Clamperl por x2
+61 Chance de Critical Hit é aumentada
+62 Evolui Seadra para Kingdra quando equipado e trocado
+63 Restaura 10 PP para cada ataque de um Pokémon selecionado
+64 Restaura 200 HP de um Pokémon; tem um sabor amargo
+65 Restaura 50 HP de um Pokémon; tem um sabor amargo
+66 Retorna para fora Cavernas
+67 Restaura 10 PP de um ataque selecionado do Pokémon
+68 Impede o usuário de evoluir quando equipado
+69 Este Pokémon recebe EXP de batalha, mesmo se ele não for usado, quando equipado
+70 Uma pedra que pode ser usado para evoluir Growlithe, Vulpix e Eevee
+71 Induz ao status Queimando (Burn) ao usuário
+72 Distrai Pokémons Selvágens assim você pode fugir
+73 Restaura 50 HP de um Pokémon
+74 Cura um Pokémon de qualquer efeito status
+75 Restaura todo o HP de um Pokémon e curá-lo de eventuais efeitos de status
+76 Aumenta a quantidade de planta que cresce onde as plantas falham
+77 Um pedaço de uma grande placa
+78 Aumenta a velocidades de crescimento de Berrys. Aumenta a velocidades de secamento do solo
+79 Status não podem ser reduzidos
+80 Cura um Pokémon de qualquer efeito de status; tem um sabor amargo
+81 Uma escama rara. Vende a preço Alto
+82 Esfrega em árvores para atrair Pokémons Selvágens
+83 Aumenta um pouco a base de HP do Pokémon
+84 Restaura 200 HP de um Pokémon
+85 Descongela um Pokémon com a condição de status Congelado (Frozen)
+86 Aumenta um pouco a base de Defesa do Pokémon 
+87 Talvez cause Flinch no oponente
+88 Cura um Pokémon de qualquer efeito status
+89 Uma pedra que pode ser usada para evoluir Gloom, Weepinbell, Exeggcute e Nuzleaf
+90 Restaura 80 HP de um Pokémon
+91 Aumenta dano de ataque, mas diminui o HP sempre que você causa um dano
+92 Multiplica o SP. Ataque de Pikachu por x2
+93 Prolonga o efeito do Reflect e Light Screen
+94 Pokémon a quem este item está anexado ganha mais EXP no campo de batalha
+95 Qualquer ataque do tipo Elétrico tem o poder aumentado em 10%
+96 Restaura todos os PP para cada ataque de um Pokémon selecionado
+97 Restaura todos os PP de um ataque de um Pokémon selecionado
+98 Restaura todo o HP de um Pokémon
+99 Repele Pokémon para 250 passos
+100 Revive um Pokémon desmaiado e restaura totalmente o HP
+101 Qualquer ataque do tipo Aço tem o poder aumentado em 10%
+102 Aumenta o poder do ataque se usado consecutivamente
+103 Qualquer ataque do tipo Grama tem o poder aumentado em 10%
+104 Restaura 100 HP de um Pokémon
+105 Uma pedra que pode ser usado para evoluir Nidorina, Nidorino, Clefairy, Jigglypuff e Skitty
+106 Qualquer ataque do tipo Água tem o poder aumentado em 10%
+107 Qualquer ataque do tipo Gelo tem o poder aumentado em 10%
+108 Vendea preço Alto
+109 Cura um Pokémon de qualquer efeito status
+110 Cura um Pokémon do efeito de status Paralizado (Paralyze)
+111 Pérola rara. Vende a preço elevado.
+112 Distrai Pokémons Selvágens
+113 Restaura 20 HP de um Pokémon
+114 Maximiza o PP de um ataque de um Pokémon selecionado
+115 Aumenta o PP máximo para um ataque de um Pokémon selecionado
+116 Aumenta um pouco a base de Ataque do Pokémon
+117 Aumenta level do Pokémon em 1
+118 Levanta chance de provocar Flinch no adversário
+119 Cura a Atração
+120 Um fragmento de uma grande placa
+121 Repele Pokémon para 50 Passos
+122 Revive um Pokémon desmaiado e restaura totalmente o HP; tem um sabor amargo
+123 HP Revive um Pokémon desmaiado e restaura metade do seu max
+124 Revive todos os Pokémon desmaiados e restaura totalmente seus HPs
+125 Aumenta as chances de conseguir um Critical Hit
+126 Restaura o HP  1/8 do HP máximo quando o dano é infligido sobre o adversário
+127 Quando equipado, o usuário recupera uma pequena quantidade de HP a cada turno.
+128 Não tem nenhum efeito ou propósito na região de Sinnoh; útil somente na região de Hoenn.
+129 Você sempre fugirá de um Pokémon Selvágem sem falhar
+130 Restaura 60 HP de um Pokémon
+131 Aumenta Sp. Ataque e Sp Defesa do Latios & Latias em 50%.
+132 Qualquer ataque do tipo Fantasma tem o poder aumentado em 10%
+133 Aumenta o tempo de permanência das Berries em árvores
+134 Raro Pedaço de Estrela. Vende em preço alto.
+135 Poira bonita. Vende empreço Baixo
+136 Uma pedra que pode ser usada para evoluir Gloom e Sunkern
+137 Restaura 500 HP de um Pokémon
+138 Repele Pokémon para 150 Passos
+139 Uma pedra que pode ser usada para evoluir Pikachu e Eevee
+140 Um cogumelo de pequeno porte. Venda baixa.
+141 Induz ao status de Envenenado (Poison) ao usuário
+142 Qualquer ataque do tipo Psíquico tem o poder aumentado em 10%
+143 Evolui Porygon para Porygon2 quando equipado e trocado
+144 Uma pedra que pode ser usado para evoluir Poliwhirl, Shellder, Staryu, Eevee e Lombre
+145 Aumenta chance de encontrar Pokémons Selvágens
+146 Precisão é Aumentada
+147 Ataque é Aumentada
+148 Defesa é Aumentada
+149 Ataque Especial é Aumentado
+150 Defesa Especial é Aumentada
+151 Velocidade é Aumentada
+152 Cura a Confusão
+153 Um fragmento de uma grande placa
+154 Aumenta um pouco a base de SP. Defesa do Pokémon
+155 Prolonga o número de turnos da chuva de Granizo (Hail)
+156 Se ligado a Chansey, aumenta a chance de Critical Hit
+157 Evolui para Porygon2 Porygon-Z quando equipado e trocado
+158 Qualquer ataque do tipo Voador tem o poder aumentado em 10%
+159 Aumenta o ataque do tipo Aço e Dragão de Dialga
+160 Prolonga o número de turnos do Rain Dance
+161 Prolonga o número de turnos de Sunny Day
+162 Gera o Dragão de Água e move-se tipo de Palkia
+163 Corta a Velocidade na metade, mas aumenta os valores de Effort
+164 Se ligado a Farfetch'd, aumenta o valor de Critical Hit
+165 Qualquer ataque do tipo Dragão tem o poder aumentado em 10%
+166 Qualquer ataque do tipo Venenoso tem o poder aumentado em 10%
+167 Diminui a velocidade, aumenta EV de Velocidade
+168 Diminui a velocidade, aumenta o EV para Sp.Defensa
+169 Diminui a velocidade, aumenta EV de Defesa
+170 Diminui a velocidade, aumenta o EV para o ataque
+171 Diminui a velocidade, aumenta o EV para Sp.Attack
+172 Diminui a velocidade, aumenta o EV para HP
+173 Evolui um Kirlia macho e fêmea Snowrunt para Gallade e Froslass quando equipado e passado de level
+174 Murkrow e Misdreavus evoluem em Honchkrow e Mismagius quando equipados e passados de level
+175 Evolui Electabuzz para Electivire quando equipado e trocado
+176 Evolui Magmar para Magmortar quando equipado e trocado
+177 Um item fundamental para previnir que a Stone Tower entre em colapso. Usado para chamar Spiritomb
+178 Evolui Happiny para Chansey quando equipado e passado de level de manhã ou tarde (4:00-7:59)
+179 Evolui Rhydon para Rhyperior quando equipado e trocado
+180 O usuário deste item pode atacar primeiro
+181 Evolui Sneasel para Weavile quando equipado e passado de level à noite (PM 8:00 - 4h00)
+182 Evolui Togetic e Roselia para Roserade Togekiss e quando equipado e passado de level
+183 Quando equipado, o usuário recebe dano a cada turno; o adversário receberá dano a cada turno se utilizar um ataque físico
+184 Evolui Clamperl para Huntail quando equipado etrocado
+185 Aumenta o poder dos ataques Dragão
+186 Aumenta o poder de ataques Noturnos
+187 Aumenta o poder dos ataques de Terra
+188 Aumenta o poder dos ataques Lutadores
+189 Aumenta o poder dos ataques de Fogo
+190 prolonga o número de turnos de ataques de armadilha
+191 Aumenta o poder dos ataques de Gelo
+192 Aumenta o poder dos ataques Insetos
+193 Aumenta o poder dos ataques de Aço
+194 Aumenta o poder dos ataques de Grama
+195 Aumenta o poder dos ataques Psíquicos
+196 Aumenta o poder dos ataques Voadores
+197 Aumenta o poder dos ataques de Água
+198 Aumenta o poder dos ataques Fantasmas
+199 Aumenta o poder dos ataques de Pedra
+200 Se ligado a Cubone ou Marowak, multiplica-se o seu ataque por x2
+201 Aumenta o poder dos ataques Venenosos
+202 Aumenta o poder dos ataques Elétricos
+203 Revive Shieldon
+204 Revive Anorith
+205 Revive Kabuto
+206 Qualquer ataque do tipo Pedra tem o poder aumentado em 10%
+207 Revive Omanyte
+208 Revive Aerodactyl
+209 Um osso precioso. Vender por dinheiro
+210 Revive Lileep
+211 Revive Cranidos
+212 Diminui a velocidade do usuário, também faz com que ataques Voadores e a Abilidade de Levitar tornem-se vuneráveis a ataques de Terra, quando equipado a eles
+213 Air Mail
+214 Bloom Mail
+215 Brick Mail
+216 Bubble Mail
+217 Flame Mail
+218 Grass Mail
+219 Harbor Mail
+220 Heart Mail
+221 Mosaic Mail
+222 Snow Mail
+223 Space Mail
+224 Steel Mail
+225 Tunnel Mail

@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import "../" 1.0
 import "../utilities.js" as Utilities
 import "../spawner.js" as Spawner

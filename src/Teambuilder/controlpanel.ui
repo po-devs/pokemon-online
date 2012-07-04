@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
+    <width>384</width>
     <height>335</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>2</number>
   </property>
   <widget class="QWidget" name="userInfo">
    <attribute name="title">
@@ -36,6 +36,9 @@
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Username: </string>
+        </property>
+        <property name="buddy">
+         <cstring>userName</cstring>
         </property>
        </widget>
       </item>
@@ -174,6 +177,9 @@
         </property>
         <property name="text">
          <string>Temporary Ban:</string>
+        </property>
+        <property name="buddy">
+         <cstring>time</cstring>
         </property>
        </widget>
       </item>

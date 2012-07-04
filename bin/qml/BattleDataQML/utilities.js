@@ -1,7 +1,7 @@
 var components = {};
 
 var effects = {
-    "curve": "import QtQuick 1.0; Item{property point pos1; property point pos2; property int controlY}"
+    "curve": "import QtQuick 1.1; Item{property point pos1; property point pos2; property int controlY}"
 };
 
 /* Makes a curve, given pos of origin and destination,

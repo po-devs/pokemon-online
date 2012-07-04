@@ -59,7 +59,10 @@ HEADERS +=\
     battlesceneflow.h \
     param.h \
     regularbattlescene.h \
-    ../Shared/battlecommands.h
+    ../Shared/battlecommands.h \
+    ../PokemonInfo/pokemonstructs.h \
+    ../PokemonInfo/pokemoninfo.h \
+    ../PokemonInfo/battlestructs.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -120,7 +123,9 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/Earthquake.qml \
     ../../bin/qml/BattleDataQML/Moves/Substitute.qml \
     ../../bin/qml/BattleDataQML/Moves/Bonemerang.qml \
-    ../../bin/qml/BattleDataQML/Moves/BoneRush.qml
+    ../../bin/qml/BattleDataQML/Moves/BoneRush.qml \
+    ../../bin/qml/BattleDataQML/Utilities/Tooltip.qml \
+    ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml
 
 include(../Shared/Common.pri)
 

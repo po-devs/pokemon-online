@@ -7,27 +7,27 @@ AntiDos::AntiDos() {
 void AntiDos::init() {
     QSettings settings;
     /* initializing the default init values if not there */
-    if (settings.value("max_people_per_ip").isNull()) {
-        settings.setValue("max_people_per_ip", 5);
+    if (settings.value("AntiDOS/MaxPeoplePerIp").isNull()) {
+        settings.setValue("AntiDOS/MaxPeoplePerIp", 5);
     }
-    if (settings.value("max_commands_per_user").isNull()) {
-        settings.setValue("max_commands_per_user", 200);
+    if (settings.value("AntiDOS/MaxCommandsPerUser").isNull()) {
+        settings.setValue("AntiDOS/MaxCommandsPerUser", 200);
     }
-    if (settings.value("max_kbyte_per_user").isNull()) {
-        settings.setValue("max_kbyte_per_user", 40);
+    if (settings.value("AntiDOS/MaxKBPerUser").isNull()) {
+        settings.setValue("AntiDOS/MaxKBPerUser", 40);
     }
-    if (settings.value("max_login_per_ip").isNull()) {
-        settings.setValue("max_login_per_ip", 20);
+    if (settings.value("AntiDOS/MaxConnectionRatePerIP").isNull()) {
+        settings.setValue("AntiDOS/MaxConnectionRatePerIP", 20);
     }
-    if (settings.value("ban_after_X_kicks").isNull()) {
-        settings.setValue("ban_after_X_kicks", 10);
+    if (settings.value("AntiDOS/NumberOfInfractionsBeforeBan").isNull()) {
+        settings.setValue("AntiDOS/NumberOfInfractionsBeforeBan", 10);
     }
 
-    max_people_per_ip = settings.value("max_people_per_ip").toInt();
-    max_commands_per_user = settings.value("max_commands_per_user").toInt();
-    max_kb_per_user = settings.value("max_kbyte_per_user").toInt();
-    max_login_per_ip = settings.value("max_login_per_ip").toInt();
-    ban_after_x_kicks = settings.value("ban_after_X_kicks").toInt();
+    max_people_per_ip = settings.value("AntiDOS/MaxPeoplePerIp").toInt();
+    max_commands_per_user = settings.value("AntiDOS/MaxCommandsPerUser").toInt();
+    max_kb_per_user = settings.value("AntiDOS/MaxKBPerUser").toInt();
+    max_login_per_ip = settings.value("AntiDOS/MaxConnectionRatePerIP").toInt();
+    ban_after_x_kicks = settings.value("AntiDOS/NumberOfInfractionsBeforeBan").toInt();
 }
 
 bool AntiDos::connecting(const QString &ip)

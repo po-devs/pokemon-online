@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 /* Loads an animation from a PNG.
 

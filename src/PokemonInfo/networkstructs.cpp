@@ -184,7 +184,7 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
-PersonalTeam::PersonalTeam(): m_prop_gen(GEN_MAX)
+PersonalTeam::PersonalTeam(): m_prop_gen(GenInfo::GenMax())
 {
 }
 
@@ -257,4 +257,16 @@ ChangeTeamInfo::ChangeTeamInfo()
     team = 0;
     teamNum = 0;
     info = 0;
+}
+
+ServerInfo::ServerInfo()
+{
+    num = max = port = passwordProtected = 0;
+}
+
+DataStream & operator >> (DataStream &in, ServerInfo &info)
+{
+    in >> info.name >> info.desc >> info.num >> info.ip >> info.max >> info.port >> info.passwordProtected;
+
+    return in;
 }

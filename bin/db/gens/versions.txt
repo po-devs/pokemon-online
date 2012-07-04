@@ -1,11 +1,17 @@
-1:0 Stadium
-1:1 RBY
-1:2 Stadium w/ Tradebacks
-2:0 Stadium 2
-2:1 GSC
-3:0 Advance
-3:1 RSE 200
-4:0 HGSS
-4:1 DP
-4:2 DPPt
-5:0 BW
+﻿1:0 Red/Blue
+1:1 Yellow
+1:2 Stadium
+1:3 Stadium w/ Tradebacks
+2:0 Gold/Silver
+2:1 Crystal
+2:2 Stadium 2
+3:0 Ruby/Sapphire
+3:1 Colosseum
+3:2 Fire Red/Leaf Green
+3:3 Emerald
+3:4 XD
+4:0 Diamond/Pearl
+4:1 Platinum
+4:2 Heart Gold/Soul Silver
+5:0 Black/White
+5:1 Black/White 2

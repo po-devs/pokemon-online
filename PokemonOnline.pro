@@ -20,6 +20,7 @@ CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins
 
 !CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
+CONFIG(po_clientplugins):CONFIG += po_client
 
 CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) {
     SUBDIRS += src/Utilities
@@ -57,6 +58,18 @@ CONFIG(po_serverplugins) {
 CONFIG(po_registry) {
     SUBDIRS += src/Registry
 }
+
+TRANSLATIONS = src/trans/translation_de.ts \
+    src/trans/translation_es.ts \
+    src/trans/translation_fi.ts \
+    src/trans/translation_fr.ts \
+    src/trans/translation_he.ts \
+    src/trans/translation_it.ts \
+    src/trans/translation_jp.ts \
+    src/trans/translation_ko.ts \
+    src/trans/translation_nl.ts \
+    src/trans/translation_pt-br.ts \
+    src/trans/translation_zh-cn.ts
 
 macx:QMAKE_CC=echo
 

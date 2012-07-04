@@ -592,13 +592,13 @@ void RegularBattleScene::updateToolTip(int spot)
     QString tooltip;
 
     QString stats[7] = {
-        tu(StatInfo::Stat(1)),
-        tu(StatInfo::Stat(2)),
-        tu(StatInfo::Stat(3)),
-        tu(StatInfo::Stat(4)),
-        tu(StatInfo::Stat(5)),
-        tu(StatInfo::Stat(6)),
-        tu(StatInfo::Stat(7))
+        tu(StatInfo::Stat(1, data()->gen())),
+        tu(StatInfo::Stat(2, data()->gen())),
+        tu(StatInfo::Stat(3, data()->gen())),
+        tu(StatInfo::Stat(4, data()->gen())),
+        tu(StatInfo::Stat(5, data()->gen())),
+        tu(StatInfo::Stat(6, data()->gen())),
+        tu(StatInfo::Stat(7, data()->gen()))
     };
 
     /* Putting dots after stat names so the ":" is always at the same place */
@@ -624,7 +624,6 @@ void RegularBattleScene::updateToolTip(int spot)
         // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
         if (data()->gen().num == 1) {
             switch (i) {
-            case 2: tooltip += QString("\n%1 ").arg(tr("Special")); break;
             case 3: continue;
             default: tooltip += "\n" + stats[i] + " ";
             }

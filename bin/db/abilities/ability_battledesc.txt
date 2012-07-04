@@ -1,124 +1,124 @@
-
-If this Pokemon is first on your belt, the chance of a wild encounter drops.
-Rain Dance is in effect while this Pokemon is in battle.
-This Pokemon's Speed rises one level every turn.
-No moves will critically hit this Pokemon.
-One-hit KO moves do not work on this Pokemon.
-Neither this Pokemon nor the enemy can use Explosion or Selfdestruct.
-This Pokemon cannot become Paralyzed.
-This Pokemon's Evasion rises one level during Sandstorm.
-Enemy Pokemon have a 30% chance of becoming Paralyzed every time they touch this Pokemon.
-Damage from Electric moves instead heals up to 1/4 of this Pokemon's max HP.
-Damage from Water moves instead heals up to 1/4 of this Pokemon's max HP.
-This Pokemon cannot become Attracted.
-Weather does not affect this Pokemon.
-This Pokemon's moves receive a 30% increase in Accuracy.
-This Pokemon cannot become Asleep.
-This Pokemon's type changes to that of the last move that inflicted damage.
-This Pokemon cannot become Poisoned.
-When this Pokemon takes damage from a Fire move, it becomes immune to Fire moves and all its Fire moves do 50% more damage until it leaves battle.
-This Pokemon is immune to stat/status changes from damaging moves.
-This Pokemon cannot become Confused.
-This Pokemon cannot be switched with Roar or Whirlwind.
-This Pokemon lowers the enemy's Attack one level when it enters battle.
-Enemy Pokemon cannot run or be switched out.
-Enemy Pokemon receive 1/8 their max HP in damage every time they touch this Pokemon.
-This Pokemon can only be damaged by moves of types it is weak to.
-This Pokemon does not take damage from Ground moves.
-Enemy Pokemon have a 30% chance of becoming Paralyzed, Poisoned, or Asleep every time they touch this Pokemon.
-When this Pokemon becomes Burned, Paralyzed, or Poisoned, the enemy does too.
-This Pokemon's stats cannot be lowered.
-This Pokemon's status returns to normal when it leaves battle.
-This Pokemon takes damage from Electric moves aimed at its partner.
-The chance of a move's stat/status effect occuring is double for this Pokemon.
-This Pokemon's Speed doubles during Rain Dance.
-This Pokemon's Speed doubles during Sunny Day.
-If this Pokemon is first on your belt, the chance of a wild encounter rises.
-This Pokemon copies the ability of the enemy when entering battle.
-This Pokemon's Attack is doubled.
-Enemy Pokemon have a 30% chance of becoming Poisoned every time they touch this Pokemon.
-This Pokemon will not Flinch.
-This Pokemon cannot become Frozen.
-This Pokemon cannot become Burned.
-Steel enemies cannot run or be switched out.
-This Pokemon is immune to Growl, Grasswhistle, Hyper Voice, Heal Bell, Metal Sound, Perish Song, Roar, Screech, Sing, Snore, Supersonic, and Uproar.
-This Pokemon regains 1/16 its max HP every turn during Rain Dance.
-Sandstorm is in effect while this Pokemon is in battle.
-Opposing Pokemon must use 2 PP per move.
-Fire and Ice moves only do half damage against this Pokemon.
-This Pokemon wakes up from Sleep in half as many turns, including Sleep from Rest.
-Enemy Pokemon have a 30% chance of becoming Burned every time they touch this Pokemon.
-This Pokemon can always run from wild battles.
-This Pokemon cannot have its Accuracy lowered.
-This Pokemon cannot have its Attack lowered.
-After battle, this Pokemon will sometimes be holding an item if it was not already.
-Whenever this Pokemon deals damage, it skips its next turn.
-This Pokemon's base Attack is increased by 50%, but its physical moves have 80% of their usual accuracy.
-Enemy Pokemon have a 30% chance of becoming Attracted every time they touch this Pokemon.
-When this Pokemon's partner has Minus, its Special Attack increases by 50%.
-When this Pokemon's partner has Plus, its Special Attack increases by 50%.
-This Pokemon's type changes to match the weather.
-This Pokemon's item cannot be removed by enemy moves.
-Each turn, this Pokemon has a 1/3 chance of its status becoming normal.
-When this Pokemon has a major status ailment, its Attack increases by 50%.
-When this Pokemon has a status condition, its Defense increases by 50%.
-When the enemy uses absorbtion moves on this Pokemon, it loses HP instead of gaining.
-When this Pokemon's HP is 1/3 its max or lower, its Grass moves do 50% more damage.
-When this Pokemon's HP is 1/3 its max or lower, its Fire moves do 50% more damage.
-When this Pokemon's HP is 1/3 its max or lower, its Water moves do 50% more damage.
-When this Pokemon's HP is 1/3 its max or lower, its Bug moves do 50% more damage.
-This Pokemon does not receive any recoil from moves.
-Sunny Day is in effect while this Pokemon is in battle.
-Prevents enemy Pokemon (except Flying Pokemon and Pokemon that can Levitate) from running or being switched out.
-This Pokemon cannot become Asleep.
-This Pokemon's stats cannot be lowered.
-This Pokemon's Attack is doubled.
-No moves will critically hit this Pokemon.
-Weather does not affect this Pokemon.
-This Pokemon's Evasion rises when it's Confused.
-This Pokemon's Speed rises one level when it is struck by an Electric move.
-This Pokemon's Attack rises when fighting an enemy of the same gender.
-This Pokemon's Speed rises one level when it Flinches.
-This Pokemon's Evasion rises one level during Hail.
-This Pokemon will eat held berries triggered by low HP at 1/2 its max HP rather than 1/4.
-This Pokemon's Attack rises to its maximum when it is hit with a critical hit.
-This Pokemon's Speed rises one level when it uses or loses its held item.
-This Pokemon takes half damage from Fire moves.
-Stat changes are doubled against this Pokemon, although the maximum of six is unchanged.
-This Pokemon gradually loses HP per turn during Sunny Day, and gradually heals during Rain Dance.  This Pokemon takes double damage from Fire attacks, but Water attacks heal it for 1/4 its HP.
-When this Pokemon enters battle, it raises one level in the Attack stat corresponding to its opponent's weaker Defense stat.
-This Pokemon's Punch moves do 20% more damage.
-This Pokemon regains 1/8 its max HP each turn when it is Poisoned.
-Moves with the same type as this Pokemon become more powerful.
-This Pokemon always hits five times with 2-to-5-hit moves.
-This Pokemon is cured of any major status effects during Rain Dance.
-This Pokemon's max HP lowers and Special Attack rises one level during Sunny Day.
-This Pokemon's Speed rises one level when it has a major status effect.
-All of this Pokemon's moves are Normal.
-This Pokemon inflicts double damage with critical hits.
-This Pokemon is immune to damage not caused directly by an attack.
-All damage-inflicting moves have 100% Accuracy while this Pokemon is in battle.
-This Pokemon always goes second.
-This Pokemon inflicts 50% more damage with moves that have power of 60 or less.  Hidden Power is not affected.
-This Pokemon is immune to major status effects during Sunny Day.
-This Pokemon cannot use its held item.
-Enemy Pokemon cannot prevent attacks with abilities.
-This Pokemon has a higher chance to hit critically..
-When this Pokemon is fainted by a contact move, the attacker takes 1/4 its max HP in damage.
-This Pokemon will be aware when an opposing Pokemon with a move that would do super-effective damage against it switches in.
-This Pokemon can see its opponent's move with the highest power, or one of them at random in the case of a tie.
-This Pokemon ignores any of the enemy's stat changes.  Speed calculations are unaffected.
-This Pokemon inflicts double damage with not-very-effective moves.
-This Pokemon takes half damage from super-effective moves.
-This Pokemon's Attack and Speed are halved for the first few turns it's in battle.
-This Pokemon can hit Ghost Pokemon with Normal and Fighting moves.
-All Water moves are drawn to this Pokemon.
-This Pokemon regains HP during Hail.
-This Pokemon takes less damage from super-effective moves.
-Hail is in effect while this Pokemon is in battle.
-This Pokemon picks up a Sweet Honey after battle.
-This Pokemon can see what enemy Pokemon are holding.
-Opposing Pokemon take 30% more damage from recoil.
-This Pokemon changes type and form to match the Plate it holds.
-During Sunny Day, this Pokemon changes form, and both it and its ally's Attack and Special Attack increase by 50%.
-Enemy Pokemon lose HP every turn they are Sleeping.
+﻿0 
+1 If this Pokemon is first on your belt, the chance of a wild encounter drops.
+2 Rain Dance is in effect while this Pokemon is in battle.
+3 This Pokemon's Speed rises one level every turn.
+4 No moves will critically hit this Pokemon.
+5 One-hit KO moves do not work on this Pokemon.
+6 Neither this Pokemon nor the enemy can use Explosion or Selfdestruct.
+7 This Pokemon cannot become Paralyzed.
+8 This Pokemon's Evasion rises one level during Sandstorm.
+9 Enemy Pokemon have a 30% chance of becoming Paralyzed every time they touch this Pokemon.
+10 Damage from Electric moves instead heals up to 1/4 of this Pokemon's max HP.
+11 Damage from Water moves instead heals up to 1/4 of this Pokemon's max HP.
+12 This Pokemon cannot become Attracted.
+13 Weather does not affect this Pokemon.
+14 This Pokemon's moves receive a 30% increase in Accuracy.
+15 This Pokemon cannot become Asleep.
+16 This Pokemon's type changes to that of the last move that inflicted damage.
+17 This Pokemon cannot become Poisoned.
+18 When this Pokemon takes damage from a Fire move, it becomes immune to Fire moves and all its Fire moves do 50% more damage until it leaves battle.
+19 This Pokemon is immune to stat/status changes from damaging moves.
+20 This Pokemon cannot become Confused.
+21 This Pokemon cannot be switched with Roar or Whirlwind.
+22 This Pokemon lowers the enemy's Attack one level when it enters battle.
+23 Enemy Pokemon cannot run or be switched out.
+24 Enemy Pokemon receive 1/8 their max HP in damage every time they touch this Pokemon.
+25 This Pokemon can only be damaged by moves of types it is weak to.
+26 This Pokemon does not take damage from Ground moves.
+27 Enemy Pokemon have a 30% chance of becoming Paralyzed, Poisoned, or Asleep every time they touch this Pokemon.
+28 When this Pokemon becomes Burned, Paralyzed, or Poisoned, the enemy does too.
+29 This Pokemon's stats cannot be lowered.
+30 This Pokemon's status returns to normal when it leaves battle.
+31 This Pokemon takes damage from Electric moves aimed at its partner.
+32 The chance of a move's stat/status effect occuring is double for this Pokemon.
+33 This Pokemon's Speed doubles during Rain Dance.
+34 This Pokemon's Speed doubles during Sunny Day.
+35 If this Pokemon is first on your belt, the chance of a wild encounter rises.
+36 This Pokemon copies the ability of the enemy when entering battle.
+37 This Pokemon's Attack is doubled.
+38 Enemy Pokemon have a 30% chance of becoming Poisoned every time they touch this Pokemon.
+39 This Pokemon will not Flinch.
+40 This Pokemon cannot become Frozen.
+41 This Pokemon cannot become Burned.
+42 Steel enemies cannot run or be switched out.
+43 This Pokemon is immune to Growl, Grasswhistle, Hyper Voice, Heal Bell, Metal Sound, Perish Song, Roar, Screech, Sing, Snore, Supersonic, and Uproar.
+44 This Pokemon regains 1/16 its max HP every turn during Rain Dance.
+45 Sandstorm is in effect while this Pokemon is in battle.
+46 Opposing Pokemon must use 2 PP per move.
+47 Fire and Ice moves only do half damage against this Pokemon.
+48 This Pokemon wakes up from Sleep in half as many turns, including Sleep from Rest.
+49 Enemy Pokemon have a 30% chance of becoming Burned every time they touch this Pokemon.
+50 This Pokemon can always run from wild battles.
+51 This Pokemon cannot have its Accuracy lowered.
+52 This Pokemon cannot have its Attack lowered.
+53 After battle, this Pokemon will sometimes be holding an item if it was not already.
+54 Whenever this Pokemon deals damage, it skips its next turn.
+55 This Pokemon's base Attack is increased by 50%, but its physical moves have 80% of their usual accuracy.
+56 Enemy Pokemon have a 30% chance of becoming Attracted every time they touch this Pokemon.
+57 When this Pokemon's partner has Minus, its Special Attack increases by 50%.
+58 When this Pokemon's partner has Plus, its Special Attack increases by 50%.
+59 This Pokemon's type changes to match the weather.
+60 This Pokemon's item cannot be removed by enemy moves.
+61 Each turn, this Pokemon has a 1/3 chance of its status becoming normal.
+62 When this Pokemon has a major status ailment, its Attack increases by 50%.
+63 When this Pokemon has a status condition, its Defense increases by 50%.
+64 When the enemy uses absorbtion moves on this Pokemon, it loses HP instead of gaining.
+65 When this Pokemon's HP is 1/3 its max or lower, its Grass moves do 50% more damage.
+66 When this Pokemon's HP is 1/3 its max or lower, its Fire moves do 50% more damage.
+67 When this Pokemon's HP is 1/3 its max or lower, its Water moves do 50% more damage.
+68 When this Pokemon's HP is 1/3 its max or lower, its Bug moves do 50% more damage.
+69 This Pokemon does not receive any recoil from moves.
+70 Sunny Day is in effect while this Pokemon is in battle.
+71 Prevents enemy Pokemon (except Flying Pokemon and Pokemon that can Levitate) from running or being switched out.
+72 This Pokemon cannot become Asleep.
+73 This Pokemon's stats cannot be lowered.
+74 This Pokemon's Attack is doubled.
+75 No moves will critically hit this Pokemon.
+76 Weather does not affect this Pokemon.
+77 This Pokemon's Evasion rises when it's Confused.
+78 This Pokemon's Speed rises one level when it is struck by an Electric move.
+79 This Pokemon's Attack rises when fighting an enemy of the same gender.
+80 This Pokemon's Speed rises one level when it Flinches.
+81 This Pokemon's Evasion rises one level during Hail.
+82 This Pokemon will eat held berries triggered by low HP at 1/2 its max HP rather than 1/4.
+83 This Pokemon's Attack rises to its maximum when it is hit with a critical hit.
+84 This Pokemon's Speed rises one level when it uses or loses its held item.
+85 This Pokemon takes half damage from Fire moves.
+86 Stat changes are doubled against this Pokemon, although the maximum of six is unchanged.
+87 This Pokemon gradually loses HP per turn during Sunny Day, and gradually heals during Rain Dance.  This Pokemon takes double damage from Fire attacks, but Water attacks heal it for 1/4 its HP.
+88 When this Pokemon enters battle, it raises one level in the Attack stat corresponding to its opponent's weaker Defense stat.
+89 This Pokemon's Punch moves do 20% more damage.
+90 This Pokemon regains 1/8 its max HP each turn when it is Poisoned.
+91 Moves with the same type as this Pokemon become more powerful.
+92 This Pokemon always hits five times with 2-to-5-hit moves.
+93 This Pokemon is cured of any major status effects during Rain Dance.
+94 This Pokemon's max HP lowers and Special Attack rises one level during Sunny Day.
+95 This Pokemon's Speed rises one level when it has a major status effect.
+96 All of this Pokemon's moves are Normal.
+97 This Pokemon inflicts double damage with critical hits.
+98 This Pokemon is immune to damage not caused directly by an attack.
+99 All damage-inflicting moves have 100% Accuracy while this Pokemon is in battle.
+100 This Pokemon always goes second.
+101 This Pokemon inflicts 50% more damage with moves that have power of 60 or less.  Hidden Power is not affected.
+102 This Pokemon is immune to major status effects during Sunny Day.
+103 This Pokemon cannot use its held item.
+104 Enemy Pokemon cannot prevent attacks with abilities.
+105 This Pokemon has a higher chance to hit critically..
+106 When this Pokemon is fainted by a contact move, the attacker takes 1/4 its max HP in damage.
+107 This Pokemon will be aware when an opposing Pokemon with a move that would do super-effective damage against it switches in.
+108 This Pokemon can see its opponent's move with the highest power, or one of them at random in the case of a tie.
+109 This Pokemon ignores any of the enemy's stat changes.  Speed calculations are unaffected.
+110 This Pokemon inflicts double damage with not-very-effective moves.
+111 This Pokemon takes half damage from super-effective moves.
+112 This Pokemon's Attack and Speed are halved for the first few turns it's in battle.
+113 This Pokemon can hit Ghost Pokemon with Normal and Fighting moves.
+114 All Water moves are drawn to this Pokemon.
+115 This Pokemon regains HP during Hail.
+116 This Pokemon takes less damage from super-effective moves.
+117 Hail is in effect while this Pokemon is in battle.
+118 This Pokemon picks up a Sweet Honey after battle.
+119 This Pokemon can see what enemy Pokemon are holding.
+120 Opposing Pokemon take 30% more damage from recoil.
+121 This Pokemon changes type and form to match the Plate it holds.
+122 During Sunny Day, this Pokemon changes form, and both it and its ally's Attack and Special Attack increase by 50%.
+123 Enemy Pokemon lose HP every turn they are Sleeping.

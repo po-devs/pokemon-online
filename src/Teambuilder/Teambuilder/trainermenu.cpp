@@ -21,6 +21,7 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     Theme::ToolButtonIcon(ui->importTeam, Theme::ImportTeam);
     Theme::ToolButtonIcon(ui->addTeam, Theme::AddTeam);
     ui->name->setValidator(new QNickValidator(this));
+    ui->close->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton));
 
     QPushButton *buttons[6] = {ui->team1, ui->team2, ui->team3, ui->team4, ui->team5, ui->team6};
     memcpy(teamButtons, buttons, sizeof(buttons));

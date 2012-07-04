@@ -143,22 +143,17 @@ void TierWindow::openTierEdit(Tier *t)
         helper->addConfigHelper(new ConfigCombo<QString>("Parent Tier", t->banParentS, parents, parents));
     }
 
-//    Stadium=1, RBY=1+(1<<8), StadiumWithTradebacks=(1+(2<<8)),
-//    Stadium2=2, GSC=2+(1<<8),
-//    Adv=3, RSE200=3+(1<<8),
-//    HGSS=4, DP=4+(1<<8), DPPt=4+(2<<8),
-//    BW=5
+    QStringList genS = QStringList() << "Any";
+    QList<Pokemon::gen> gens;
+    gens.push_back(0);
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
+            gens << Pokemon::gen(i, j);
+            genS << QString("%1 (%2)").arg(GenInfo::Gen(gens.back().num), GenInfo::Version(gens.back()));
+        }
+    }
 
-    helper->addConfigHelper(new ConfigCombo<Pokemon::gen>("Generation", t->m_gen, QStringList() << "Any" << "1st Gen (Stadium)" << "1st Gen (RBY)" << "1st Gen (Stadium with Tradebacks)"
-                                                    << "2nd Gen (Stadium 2)" << "2nd Gen (GSC)"
-                                                    << "3rd Gen (Adv)" << "3rd Gen (RSE 200)"
-                                                    << "4th Gen (HGSS)" << "4th Gen (DP)" << "4th Gen (DPPt)"
-                                                    << "5th Gen (BW)",
-                                                    QList<Pokemon::gen> () << 0 << Gen::Stadium << Gen::RBY << Gen::StadiumWithTradebacks
-                                                    << Gen::Stadium2 << Gen::GSC
-                                                    << Gen::Adv << Gen::RSE200
-                                                    << Gen::HGSS << Gen::DP << Gen::DPPt
-                                                    << Gen::BW));
+    helper->addConfigHelper(new ConfigCombo<Pokemon::gen>("Generation", t->m_gen, genS,  gens ));
     helper->addConfigHelper(new ConfigCheck("Ban pokemon/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
     helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
     helper->addConfigHelper(new ConfigText("Pokemon", pokemons));

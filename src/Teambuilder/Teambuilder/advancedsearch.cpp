@@ -52,7 +52,7 @@ void AdvancedSearch::setGen(const Pokemon::gen &gen)
 
     QStringList moves;
 
-    for (int i = 0; i < MoveInfo::NumberOfMoves(gen); i++) {
+    foreach (int i, MoveInfo::Moves(gen)) {
         moves.push_back(MoveInfo::Name(i));
     }
 

@@ -1,0 +1,20 @@
+﻿0 (Inget föremål)
+3 %s återställde sina stats med white herb!
+4 %s stod ut tack vare sin focus band!
+5 %s stod ut tack vare sin focus sash!
+7 %s blev fullt laddad med hjälp av sin power herb!
+11 %s använde sin power herb för att attackera omedelbart!
+12 %s återställde lite HP med Leftovers!
+16 %s återställde lite HP med Black Sludge!|%s skadades av Black Sludge!
+18 %s återställde lite HP med sin Berry Juice!
+19 %s's Flame Orb aktiverad!|%s's Toxic Orb aktiverad!
+21 %s skadas av sin Life Orb!
+24 %ss shell bell återställde dess HP lite grann!
+29 %s skadas av sin Sticky Barb!|%s skadas av %fs sticky Barb!|The Sticky Barb är nu fäst vid %s!
+34 %f is hurt by %s's Rugged Helmet!
+35 %s's Balloon popped!|%s is floating on a balloon!
+36 %s's %i raised its %st!
+37 %s's %i raised %m's power!
+38 %s used its Red Card on %f!
+39 %s used its Escape Button!
+40 %s's Berserk Gene activated!|%s's Attack went way up!

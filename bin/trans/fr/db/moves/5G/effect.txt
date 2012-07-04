@@ -1,0 +1,560 @@
+﻿0 (No Description)
+1 Ecrase l'ennemi avec les pattes avant ou la queue.
+2 Une attaque tranchante à taux de critiques élevé (+1).
+3 Gifle rapidement l'ennemi de 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+4 Frappe rapidement l'ennemi de 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+5 Un coup de poing d'une puissance incroyable.
+6 Lance des pièces. L'argent est récupéré plus tard.
+7 Un poing de feu pouvant brûler l'ennemi (10% de chance).
+8 Un poing de glace pouvant geler l'ennemi (10% de chance).
+9 10 % de chance de paralyser le Pokémon défenseur.
+10 Lacère l'ennemi avec des griffes acérées.
+11 Empoigne l'ennemi avec de puissantes pinces.
+12 Un puissant coup de pince qui peut mettre K.O.
+13 Une attaque en 2 tours qui frappe au 2e tour. Haut taux de Coups Critiques (+1).
+14 Une danse de combat qui booste l'Attaque de deux niveaux.
+15 Coupe l'ennemi avec des lames, des griffes, etc.
+16 Envoie une rafale de vent en battant des ailes.
+17 Frappe l'ennemi en déployant les ailes.
+18 Envoie une rafale de vent et met fin au combat.
+19 S'envole au premier tour et frappe au second tour.
+20 Ligote l'ennemi et l'écrase pendant 3 à 6 tours. Il perd 1/16 de ses PV chaque tour.
+21 Fouette l'ennemi avec sa queue, une liane, etc.
+22 Fouette l'ennemi avec de fines lianes.
+23 Ecrase avec un énorme pied. Peut apeurer l'ennemi.
+24 Attaque deux fois en un seul tour.
+25 Un coup de pied super puissant et intense.
+26 Un coup de pied sauté. S'il est raté, le lanceur reçoit la moitié des dommages qu'il aurait causé, avec un maximum égal à la moitié des PV maximums de l'opposant.
+27 Un coup de pied tournoyant et extrêmement rapide, pouvant apeurer l'ennemi.
+28 Lance du sable et baisse la précision de l'ennemi d'un niveau.
+29 Une charge qui peut apeurer l'ennemi.
+30 Frappe l'ennemi d'un coup de corne pointue.
+31 Frappe l'ennemi 2 à 5 fois avec des cornes, etc. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+32 Empale l'ennemi d'un coup de corne. Met K.O. en un coup.
+33 Charge l'ennemi avec un violent plaquage.
+34 30 % de chance de paralyser le Pokémon défenseur.
+35 Ligote l'ennemi et l'étouffe 3 à 6 fois avec des lianes. Il perd 1/16 de ses PV chaque tour.
+36 Une charge violente qui blesse aussi le lanceur, qui perd 1/4 des dommages causés par l'attaque.
+37 Une attaque furieuse de 2 à 3 tours. Lanceur confus.
+38 Une dangereuse charge qui blesse aussi le lanceur, qui perd 1/3 des dommages causés par l'attaque.
+39 Remue la queue pour baisser la Defense de l'ennemi d'un niveau.
+40 Une attaque de dards, etc, pouvant empoisonner (30% de chance).
+41 Les dards des pattes avant frappent deux fois. Chaque coup a 20% de chance d'empoisonner l'adversaire.
+42 Envoie des dards qui frappent 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+43 Lance un regard noir et baisse d'un niveau la Défense de l'adversaire.
+44 Mord méchamment l'ennemi et peut l'apeurer.
+45 Rugit gentiment et baisse l'Attaque de l'ennemi d'un niveau.
+46 Fait fuir l'ennemi pour mettre fin au combat.
+47 Berceuse plongeant l'ennemi dans un profond sommeil.
+48 Etranges ondes sonores pouvant rendre confus.
+49 Envoie des ondes de choc infligeant 20 PV de dégâts.
+50 Neutralise la dernière attaque lancée par la cible durant 4 à 7 tours. Une seule attaque peut-être neutralisée par Pokémon.
+51 Pulvérise un acide. Peut baisser la Défense Spéciale ennemie.
+52 Une faible attaque de feu pouvant brûler l'ennemi (10% de chance).
+53 10 % de chance de brûler le Pokémon défenseur.
+54 Crée une brume stoppant la réduction des capacités durant 5 tours.
+55 Attaque l'ennemi en projetant de l'eau.
+56 Envoie un puissant jet d'eau pour frapper l'ennemi.
+57 Crée une énorme vague qui s'écrase sur l'ennemi. Dégats doublés si l'adversaire utilise Plongée.
+58 Envoie un rayon de glace pouvant geler l'ennemi (10% de chance).
+59 Déclenche une tempête pouvant geler l'ennemi (10% de chance).
+60 Etrange rayon pouvant rendre l'ennemi confus (10% de chance).
+61 Envoie des bulles pouvant baisser la Vitesse d'un niveau.
+62 Envoie un rayon arc-en-ciel pouvant baisser l'Attaque d'un niveau.
+63 Puissant, mais immobilise le lanceur pour un tour.
+64 Attaque l'ennemi avec un bec pointu, etc.
+65 Une attaque utilisant le bec comme une perceuse.
+66 Une charge violente blessant aussi le lanceur, qui reçoit 1/4 des dommages de l'attaque.
+67 Un coup de pied faisant plus mal aux ennemis lourds. Puissance 20 pour 10 Kg ou moins, 40 si 25 Kg ou moins, 60 pour 50 Kg ou moins, 80 si 100 Kg ou moins, 100 si 200 Kg ou moins, 120 au-dessus de 200 Kg.
+68 Renvoie toute attaque physique, 2 fois plus fort. Priorité -5.
+69 Inflige des dégâts selon le niveau du lanceur.
+70 Accumule de la puissance puis frappe l'ennemi.
+71 Une attaque absorbant la moitié des dégâts infligés.
+72 Une attaque absorbant la moitié des dégâts infligés.
+73 Plante des graines pour voler 1/8 des PV de l'adversaire à chaque tour.
+74 Augmente l'Attaque et l'Attaque Spéciale du lanceur d'un niveau.
+75 Tranche avec des feuilles. Taux de critiques élevé. (+1)
+76 Absorbe la lumière et attaque le tour suivant. Les dommages sont réduits de 50% s'il pleut, ou durant une tempête de neige ou de sable. Si le temps est ensoleillé, le tour de charge n'est pas utilisé.
+77 Répand une poudre toxique pouvant empoisonner.
+78 Répand une poudre pouvant paralyser l'ennemi.
+79 Répand une poudre pouvant endormir l'ennemi.
+80 Une attaque furieuse de 2 à 3 tours. Lanceur confus.
+81 Ligote l'ennemi afin de réduire sa Vitesse d'un niveau.
+82 Envoie des ondes de choc infligeant 40 PV de dégâts.
+83 Encercle l'ennemi de flammes pendant 3 à 6 tours. Il perd 1/16 de ses PV chaque tour.
+84 Une attaque électrique pouvant paralyser l'ennemi (10% de chance).
+85 Forte attaque électrique pouvant paralyser l'ennemi (10% de chance).
+86 Un faible choc électrique qui paralyse l'ennemi.
+87 Une attaque foudroyante possédant 30% de chance de paralyser l'ennemi. Ne rate jamais en cas de pluie, mais la précision est réduite à 50 par temps ensoleillé.
+88 Envoie des cailloux pour frapper l'ennemi.
+89 Tremblement de terre sans effet sur les adversaires volants.
+90 Fait tomber l'ennemi dans une crevasse et le met K.O.
+91 Creuse sous terre au 1er tour et frappe au 2e.
+92 Empoisonne l'ennemi avec une puissante toxine.
+93 Une attaque Psy pouvant rendre l'ennemi confus (10% de chance).
+94 Une puissante attaque Psy pouvant baisser la Défense Spéciale d'un niveau.
+95 Une attaque hypnotique pouvant endormir l'ennemi.
+96 Méditation pacifique pour augmenter l'Attaque d'un niveau.
+97 Relaxation du corps pour booster la Vitesse de 2 niveaux.
+98 Attaque fulgurante qui permet de frapper d'abord (Priorité 1).
+99 Augmente l'Attaque du lanceur d'un niveau à chaque coup reçu.
+100 Attaque Psy permettant de prendre aussitôt la fuite.
+101 Inflige des dégâts selon le niveau du lanceur.
+102 Imite une des attaques utilisées par l'ennemi.
+103 Cri strident qui baisse la Défense ennemie de deux niveaux.
+104 Crée des images-miroirs pour augmenter l'Esquive d'un niveau.
+105 Regagne jusqu'à la moitié des PV max du lanceur.
+106 Contracte les muscles pour augmenter la Défense du lanceur d'un niveau.
+107 Rapetisse le lanceur pour augmenter l'Esquive d'un niveau.
+108 Baisse la Précision ennemie d'un niveau en utilisant fumée, encre, etc.
+109 Un horrible rayon qui rend l'ennemi confus.
+110 Se recroqueville dans sa carapace. Monte la Défense d'un niveau.
+111 S'enroule, cache ses points faibles. Monte la Défense d'un niveau, et double (une seule fois !) la puissance des attaques Roulade et Ball'Glace.
+112 Crée une barrière pour augmenter la Défense de deux niveaux.
+113 Crée un mur lumineux et réduit les dégâts d'Attaque Spéciale.
+114 Crée un nuage noir annulant tout changement de statistique.
+115 Crée un mur lumineux. Affaiblit les attaques physiques.
+116 Augmente le taux de coups critiques de deux niveaux. Effet transmis par Relais.
+117 Encaisse les attaques sur 2 tours et renvoie le double.
+118 Remue un doigt et lance une attaque au hasard.
+119 Contre l'attaque de l'ennemi avec la même attaque.
+120 Inflige de sérieux dégâts, mais met le lanceur K.O. La défense du Pokémon défenseur n'est prise en compte qu'à moitié.
+121 Envoie violemment un oeuf en direction de l'ennemi.
+122 Blesse avec un long coup de langue. Peut paralyser (30% de chance).
+123 Un gaz nocif pouvant empoisonner l'ennemi (40% de chance).
+124 Blesse en envoyant des détritus. Peut empoisonner (30% de chance).
+125 Cogne l'ennemi avec un os. Peut apeurer l'ennemi.
+126 Une explosion qui carbonise tout. Peut brûler l'ennemi (10% de chance).
+127 Charge rapide permettant de franchir des cascades, pouvant apeurer.
+128 Piège l'ennemi et l'écrase pendant 3 à 6 tours. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+129 Envoie des rayons en forme d'étoile. Touche toujours.
+130 Rentre la tête, augmentant la Défense d'un niveau, puis attaque au tour suivant.
+131 Lance des pointes qui frappent 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+132 Etrangle pour blesser. Peut baisser la Vitesse.
+133 Augmente la Défense Spéciale de 2 niveaux.
+134 Diminue la Précision de l'adversaire d'un niveau.
+135 Regagne jusqu'à la moitié des PV max du lanceur.
+136 Un coup de pied sauté. S'il est raté, le lanceur reçoit la moitié des dommages qu'il aurait causé, avec un maximum égal à la moitié des PV maximums de l'opposant.
+137 Intimide l'ennemi et le paralyse de terreur.
+138 Aspire la moitié des dégâts infligés à l'ennemi endormi.
+139 Enveloppe l'ennemi d'un gaz toxique. Empoisonne l'adversaire.
+140 Lance des pointes qui frappent 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+141 Une attaque qui aspire la moitié des dégâts infligés.
+142 Demande un bisou tout mignon. Endort l'adversaire.
+143 Cherche les points faibles et frappe au tour suivant. Coups critiques +1, peut apeurer.
+144 Modifie ses cellules pour copier l'ennemi.
+145 Une attaque de bulles pouvant baisser la Vitesse d'u nniveau.
+146 Un coup de poing cadencé. Peut rendre confus (20% de chance).
+147 Répand un nuage de spores qui endort toujours.
+148 Explosion lumineuse qui fait baisser la Précision d'un niveau.
+149 Envoie une onde Psy d'intensité variable.
+150 Eclabousse l'ennemi. N'a aucun effet.
+151 Augmente la Défense du lanceur de deux niveaux.
+152 Cogne avec une pince. Haut taux de coups critique (+1).
+153 Inflige de sérieux dégâts, mais met le lanceur K.O. La Défense du Pokémon défenseur n'est prise en compte qu'à moitié.
+154 Ecorche l'ennemi avec des griffes de 2 à 5 fois. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+155 Lance un boomerang en os qui frappe deux fois.
+156 Le lanceur dort 2 tours et regagne PV et statut.
+157 Envoie de gros rochers. Peut apeurer l'ennemi.
+158 Blesse d'un coup de croc. Peut apeurer l'ennemi.
+159 Réduit les polygones et augmente l'Attaque d'un niveau.
+160 Change le type du lanceur en celui d'une attaque qu'il possède.
+161 Envoie trois types de rayons en même temps. A 20% de chance de brûler, de geler, ou de paralyser.
+162 Coup de croc qui fait baisser les PV de moitié.
+163 Coups de griffe, etc. Taux de coups critiques élevé (+1).
+164 Prends 1/4 de la vie max du lanceur pour créer un leurre.
+165 Fonctionne s'il ne reste plus de PP. Blesse un peu mais fait perdre 1/4 des PV du Pokémon attaquant.
+166 Copie en permanence la dernière attaque ennemie.
+167 Trois coups de pied de plus en plus puissants, la puissance de l'attaque augmentant de 10 aprés chaque coup.
+168 Peut voler l'objet tenu par l'ennemi pendant l'attaque.
+169 Capture l'ennemi et empêche toute fuite ou changement.
+170 Devine l'action pour réussir l'attaque suivante.
+171 Inflige 1/4 de dégâts à un ennemi endormi chaque tour.
+172 Une charge enflammée qui peut brûler l'ennemi (10% de chance).
+173 Attaque sonore pouvant apeurer, qui ne peut être lancée qu'endormi.
+174 Augmente l'Attaque et la Défense d'un niveau, mais diminue la Vitesse d'un niveau. Attaque qui fonctionne autrement pour le type Spectre.
+175 Inflige plus de dégâts quand les PV sont faibles.
+176 Permet de résister au type de la dernière attaque reçue.
+177 Implosion à taux de coups critiques élevé.
+178 Envoie des spores pour baisser la Vitesse de deux niveaux.
+179 Inflige plus de dégâts quand les PV sont faibles.
+180 Réduit méchamment (de 4) les PP de la dernière attaque ennemie.
+181 Envoie une rafale de neige. Peut geler l'ennemi (10% de chance).
+182 Esquive l'attaque, mais peut échouer si réutilisé. Priorité 3.
+183 Coup de poing fulgurant. Attaque à priorité (+1).
+184 Effraye avec une grimace pour baisser la Vitesse de 2 niveaux.
+185 Attire l'ennemi et frappe sans jamais échouer.
+186 Demande un bisou grimaçant. Rend l'adversaire confus.
+187 Sacrifie la moitié de ses PV totaux pour maximiser l'Attaque (+12 niveaux).
+188 Envoie des détritus pour blesser. Peut empoisonner (30% de chance).
+189 Envoie de la boue au visage pour baisser la Précision d'un niveau.
+190 Jet d'encre qui blesse et baisse la Précision d'un niveau.
+191 Pointes blessant lors d'un changement d'adversaire. Le Pokémon arrivant en jeu perd 1/8 de ses PV pour une application, 1/6 pour deux, et 1/4 pour trois.
+192 Puissant et paralysant (100% de chance), mais pas très précis.
+193 Empêche l'ennemi d'améliorer son Esquive.
+194 Si le lanceur est mis K.O ce tour, l'ennemi le sera également.
+195 Un Pokémon qui entend ce requiem est K.O. en 3 tours.
+196 Attaque glaciale. Baisse la Vitesse de l'ennemi d'un niveau.
+197 Esquive l'attaque, mais peut échouer si réutilisé. Priorité 3.
+198 Frappe l'ennemi 2 à 5 fois avec un os. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+199 Le coup suivant sera réussi à coup sûr.
+200 Une attaque furieuse sur 2 à 3 tours. Lanceur confus à la fin de l'attaque.
+201 Une tempête de sable qui souffle pendant 5 tours.
+202 Une attaque qui absorbe la moitié des dégâts infligés.
+203 Encaisse les attaques du tour et conserve 1 PV.
+204 Charme l'ennemi et baisse brusquement son Attaque de deux niveaux.
+205 Une attaque sur 5 tours, de plus en plus puissante.
+206 Une attaque qui laisse au moins 1 PV à l'ennemi.
+207 Rend l'ennemi confus mais augmente son Attaque de deux niveaux.
+208 Regagne jusqu'à la moitié des PV max du lanceur.
+209 Une charge électrique qui peut paralyser l'ennemi (30% de chance).
+210 Une attaque qui s'intensifie après chaque coup.
+211 Frappe l'ennemi en déployant ses ailes d'Acier. Peut augmenter la Défense d'un niveau.
+212 Lance un regard méchant pour empêcher la fuite.
+213 Le sexe opposé a 50% de chance de ne pas attaquer. Persiste tant qu'un changement de Pokémon n'a pas été fait.
+214 Utilise une attaque au hasard en dormant.
+215 Carillon apaisant qui soigne tout changement de statut de l'équipe.
+216 Attaque dont la puissance dépend du Bonheur.
+217 Cadeau en forme de bombe. Peut restaurer 1/4 des PV totaux du Pokémon adverse (52/256 chance), ou lui infliger une attaque à 40 (102/256), 80 (76/256), ou 120 (26/256).
+218 Attaque plus puissante si le Dresseur est mal aimé.
+219 Force mystique empêchant tout changement de statut durant cinq tours.
+220 Ajoute les PV des deux combattants et les partage équitablement entre eux.
+221 Une attaque de feu mystique avec 50% de chance de causer une Brûlure.
+222 Un tremblement de terre d'intensité variable. Puissance 10 (5% chance), 30 (10%), 50 (20%), 70 (30%), 90 (20%), 110 (10%), ou 150 (5%).
+223 Puissant et rend confus, mais pas très précis.
+224 Une charge violente, toutes cornes en avant.
+225 Frappe l'ennemi grâce à un souffle super puissant pouvant causer la Paralysie (30% de chance).
+226 Changement de Pokémon, transfère les altérations de statut.
+227 Oblige l'ennemi à répéter sa dernière action durant 3 tours.
+228 Inflige de sérieux dégâts lorsque l'ennemi change de Pokémon.
+229 Frappe l'ennemi en tournant sur soi-même. Annule les effets de Vampigraine, de Picots, de Pics Toxics et Piège de Roc.
+230 Séduit l'ennemi pour baisser son Esquive d'un niveau.
+231 Attaque avec sa queue. Peut baisser la Défense d'un niveau.
+232 Attaque avec des griffes. Peut augmenter l'Attaque d'un niveau.
+233 L'attaque dure longtemps, mais n'échoue jamais. Priorité -1.
+234 Restaure les PV. Varie suivant le temps. 2/3 du total de PV si ensoleillé, 1/4 s'il pleut, ou en cas de tempête de neige ou de grêle, sinon 1/2.
+235 Restaure les PV. Varie suivant le temps. 2/3 du total de PV si ensoleillé, 1/4 s'il pleut, ou en cas de tempête de neige ou de grêle, sinon 1/2.
+236 Restaure les PV. Varie suivant le temps. 2/3 du total de PV si ensoleillé, 1/4 s'il pleut, ou en cas de tempête de neige ou de grêle, sinon 1/2.
+237 L'efficacité de l'attaque dépend du lanceur.
+238 2 attaques tranchantes. Taux de coups critiques élevé (+1).
+239 Déclenche un terrible ouragan blessant l'ennemi et pouvant l'apeurer.
+240 Améliore les attaques Eau pendant 5 tours. Pendant que Danse Pluie agit, la Précision de Fatal-Foudre monte à 100%. Les dommages des attaques Eau sont plus efficaces de 50%, et les dommages des attaques Feu sont diminuées de 50%.
+241 Améliore les attaques Feu pendant 5 tours. Les dommages des attaques Feu sont plus efficaces de 50%, et les dommages des attaques Eau sont diminuées de 50%.
+242 20 % de chance de baisser la Défense d'un niveau.
+243 Renvoie l'attaque spéciale ennemie 2 fois plus fort. Priorité -5.
+244 Copie les augmentations de stats de l'ennemi et les passe au lanceur.
+245 Une attaque extrêmement rapide et puissante. Priorité +1.
+246 Une attaque pouvant augmenter toutes les stats d'un niveau.
+247 Projette une grand tâche qui peut baisser la Défense Spéciale d'un niveau.
+248 Accumule de l'énergie pour frapper 2 tours plus tard.
+249 50 % de chance de baisser la Défense adverse d'un niveau.
+250 Piège l'ennemi dans un tourbillon pendant 2 à 5 tours. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+251 Appelle un Pokémon qui se joint à l'attaque.
+252 Une attaque en début de bataille pour apeurer. Priorité +1.
+253 Brouhaha de 2 à 5 tours. Empêche de dormir.
+254 Accumule de la puissance pendant 3 tours maximum.
+255 Libère la puissance précédemment accumulée.
+256 Absorbe la puissance accumulée et restaure les PV.
+257 Un souffle ardent ayant 10 % de chance de brûler l'ennemi.
+258 Tempête de grêle qui frappe durant 5 tours. Tous les Pokémons ne possédant pas le type Glace perdent 1/16 de leurs PV chaque tour.
+259 Perturbe l'ennemi. Empêche la réutilisation de sa dernière attaque. Se termine uniquement sur un changement de Pokémon.
+260 Rend l'ennemi confus, mais augmente son Attaque Spéciale d'un niveau.
+261 Inflige une douloureuse Brûlure à l'ennemi.
+262 Le lanceur est mis K.O. Baisse l'Attaque et l'Attaque Spéciale ennemie de deux niveaux.
+263 Améliore l'Attaque si brûlé, paralysé ou empoisonné.
+264 Lanceur apeuré si touché. Attaque puissante. Priorité -3.
+265 S'utilise contre les ennemis paralysés avec une puissance multipliée par deux, mais les soigne.
+266 Attire l'attention. Les adversaires n'attaquent que le lanceur. Priorité +3.
+267 Le type de l'attaque change selon le lieu du combat.
+268 Double la puissance de la prochaine attaque électrique utilisée.
+269 Provoque l'ennemi. L'oblige à utiliser des mouvements provoquant des dommages durant trois tours.
+270 Améliore la puissance d'attaque du receveur de 50%. Priorité +5.
+271 Oblige la cible à échanger les objets tenus.
+272 Imite la cible et copie sa capacité spéciale.
+273 Un voeu qui restaure la moitié des PV totaux du Pokémon actif à la fin du prochain tour.
+274 Attaque au hasard avec un coup d'un des partenaires.
+275 Plante des racines et regagne 1/16 des PV par tour, mais ne peut plus être changé.
+276 Baisse l'Attaque et la Défense du lanceur d'un niveau.
+277 Renvoie les effets spéciaux vers le lanceur. Priorité 4.
+278 Si l'utilisateur ne porte pas d'objet, il peut recycler le dernier objet consommable utilisé durant le combat.
+279 La puissance est doublée si l'utilisateur est blessé par l'ennemi ce tour. Priorité -4.
+280 Détruit les barrières comme Reflet ou Mur Lumière.
+281 Fait bâiller l'ennemi, qui s'endort au tour suivant.
+282 Frappe l'objet tenu pour le rendre inutilisable.
+283 Gagne en puissance si PV inférieurs aux PV ennemis.
+284 Inflige plus de dégâts si PV du lanceur sont élevés.
+285 Le lanceur et la cible échangent leur capacité spéciale.
+286 Empêche les ennemis d'utiliser les coups du lanceur.
+287 Soigne un empoisonnement, une Paralysie, une Brûlure.
+288 Si mis K.O, supprime les PP du coup ennemi.
+289 Vole les effets de la prochaine attaque ennemie.
+290 Les effets de l'attaque dépendent du lieu.
+291 Plonge en apnée au premier tour et frappe au second.
+292 Coups de poing qui frappent 2 à 5 fois dans le tour. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+293 Change le type du Pokémon selon le lieu.
+294 Flash lumineux qui booste l'Attaque Spéciale.
+295 Envoie une lueur intense. Peut baisser la Défense Spéciale de 3 niveaux.
+296 Envoie une rafale de duvet. Peut baisser l'Attaque Spéciale d'un niveau.
+297 Enveloppe l'ennemi de duvet et baisse l'Attaque de l'adversaire de deux niveaux.
+298 Rends tous les Pokémons ennemis confus.
+299 Haut taux de coup critique (+1). 10 % de chance de Brûlure.
+300 Couvre le lanceur de boue. Divise par deux les dommages des attaques éléctriques.
+301 Une attaque en 5 tours de plus en plus puissante.
+302 Attaque avec bras épineux. Peut apeurer.
+303 Se détend et récupère la moitié des PV maximum.
+304 Attaque bruyante blessant avec des ondes sonores.
+305 Morsure pouvant sérieusement empoisonner l'ennemi (30% de chance).
+306 Lacère avec des griffes. Peut baisser la Défense d'un niveau.
+307 Puissant, mais immobilise le lanceur le tour suivant.
+308 Puissant, mais immobilise le lanceur le tour suivant.
+309 Coup de poing météore. Peut augmenter l'Attaque d'un niveau.
+310 Une attaque qui peut choquer et apeurer l'ennemi.
+311 Type et puissance de l'attaque selon le climat.
+312 Parfum apaisant soignant les changements de statut de toute l'équipe.
+313 Fait semblant de pleurer pour baisser la Défense Spéciale de 2 niveaux.
+314 Haut taux de coup critique (+ 1).
+315 Attaque à pleine puissance, mais baisse fortement l'Attaque Spéciale (2 niveaux).
+316 Empêche l'ennemi d'augmenter son Esquive.
+317 Immobilise l'ennemi ave des rochers. Baisse la Vitesse d'un niveau.
+318 Attaque poudreuse qui peut augmenter les stats d'un niveau.
+319 Diminue la Défense Spéciale adverse de deux niveaux.
+320 Endort l'ennemi en sifflant une douce mélodie.
+321 Fait rire l'ennemi et baisse son Attaque et sa Défense d'un niveau.
+322 Pouvoir mystique qui monte la Défense et la Défense Spéciale d'un niveau.
+323 Inflige plus de dégâts si le lanceur a beaucoup de PV.
+324 Un étrange rayon qui peut rendre l'ennemi confus (10% de chances).
+325 Un coup de poing inévitable sortant de l'ombre.
+326 Pouvoir singulier qui peut apeurer l'ennemi.
+327 Un uppercut porté en direction du ciel. Touche les ennemis en Vol.
+328 Piège l'ennemi dans un cyclone de 2 à 5 tours. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+329 Attaque glacée qui met K.O quand elle est réussie.
+330 Attaque d'eau croupie. Peut baisser la Précision d'un niveau.
+331 Mitraille l'ennemi avec 2 à 5 rafales à la suite. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+332 Attaque extrêmement rapide et inévitable.
+333 Mitraille l'ennemi avec 2 à 5 glaçons à la suite. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+334 Endurcit le corps pour booster la Défense du lanceur de 2 niveaux.
+335 Bloque la route de l'ennemi pour empêcher sa fuite.
+336 Grogne pour se rassurer et booster l'Attaque d'un niveau.
+337 Tranche l'ennemi avec des griffes acérées.
+338 Puissant, mais immobilise le lanceur le tour suivant.
+339 Se gonfle pour booster l'Attaque et la Défense d'un niveau.
+340 Saute et tombe le tour suivant. 30% de chance de paralyser.
+341 Envoie de la boue à l'ennemi pour réduire sa Vitesse d'un niveau.
+342 Haut taux de coups critiques. Peut aussi empoisonner (10% de chance).
+343 Demande gentiment un objet détenu par l'ennemi.
+344 Une dangereuse charge qui blesse aussi le lanceur, qui reçoit 1/3 des dommages infligés. 10% de chance de paralyser.
+345 Envoie des feuilles ne pouvant être esquivées.
+346 Mouille le lanceur et augmente sa résistance au Feu. La puissance des attaques Feu est divisée par deux pour ce Pokémon tant qu'il reste en jeu.
+347 Méditation pour augmenter l'Attaque Spéciale et la Défense Spéciale d'un niveau.
+348 Tranche avec une feuille. Taux de coups critiques élevé (+1).
+349 Danse mystique augmentant l'Attaque et la Vitesse d'un niveau.
+350 Projette des rochers sur l'ennemi 2 à 5 fois de suite. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+351 Attaque éléctrique rapide et impossible à esquiver.
+352 Envoi d'ondes aquatiques. Peut rendre confus (20% de chance).
+353 Récupère la lumière pour frapper 2 tours plus tard.
+354 Attaque à pleine puissance, mais baisse l'Attaque Spéciale de deux niveaux.
+355 Restaure la moitié des PV.
+356 Durant les 5 prochains tours, les Pokémons de type Vol ou disposant de la capacité Lévitation deviennent vulnérables aux attaques de type Sol.
+357 Supprime l'insensibilité des Pokémons Ténèbres aux attaques Psy et remet l'Esquive à zéro.
+358 La puissance est doublée si l'adversaire est endormi, soigne le sommeil.
+359 Diminue d'un niveau la Vitesse du lanceur.
+360 La puissance dépend de la vitesse de l'adversaire et du lanceur.
+361 Le lanceur tombe KO, et restaure les PV et le statut du Pokémon remplaçant.
+362 La puissance double si les PV de l'adversaire sont inférieurs à la moitié.
+363 La puissance et le type dépend de la Baie tenue.
+364 Ne fonctionne que si l'adversaire lance Abri ou Détection, qui ne sont pas pris en compte ce tour. Priorité 2.
+365 La puissance est doublée si l'adversaire tient une Baie.
+366 Les Pokémons de l'équipe du lanceur doublent leur Vitesse pendant 3 tours.
+367 Augmente de 2 niveaux une statistique du lanceur au hasard.
+368 Inflige 150% des dégâts causés par l'adversaire.
+369 Le lanceur change de Pokémon automatiquement après l'attaque.
+370 Diminue la Défense et la Défense Spéciale du lanceur d'un niveau.
+371 La puissance double si la cible a déjà attaqué / switché pendant le tour.
+372 La puissance double si l'adversaire a déjà reçu des dégâts pendant le tour.
+373 L'adversaire ne peut plus utiliser l'objet porté durant cinq tours.
+374 La puissance dépend de l'objet tenu, qui est perdu durant l'attaque.
+375 Donne les altérations de statut (Poison, Paralysie, etc) du lanceur à l'adversaire.
+376 La puissance augmente lorsque les PP diminuent. 200 pour 0PP, 80 pour 1PP, 60 pour 2PP, 50 pour 3PP, 40 pour 4PP ou plus.
+377 L'adversaire ne peut pas restaurer ses PV pendant 5 tours, sauf s'il change de Pokémon.
+378 La puissance dépend des PV restants de l'adversaire.
+379 Echange l'Attaque et la Défense du lanceur. Se transmet avec Relais.
+380 Supprime l'effet de la Capacité Spéciale de l'adversaire. Effet transmis par Relais.
+381 L'adversaire ne peut pas faire de coup critique pendant 5 tours.
+382 Permet d'utiliser une attaque qu'un adversaire s'apprête à effectuer, en plus puissant (50% de puissance supplémentaire).
+383 Copie la dernière attaque de l'adversaire.
+384 Echange les modifications d'Attaque et d'Attaque Spéciale avec l'adversaire.
+385 Echange les modifications de Défense et de Défense Spéciale avec l'adversaire.
+386 La puissance dépend des statistiques de l'adversaire.
+387 Ne peut être utilisée que si toutes les autres attaques ont été utilisées.
+388 Change la capacité spéciale de la cible pour Insomnia.
+389 Attaque toujours en premier mais échoue si la cible n'utilise pas d'attaque offensive. Priorité 1.
+390 Inflige l'altération Poison lorsque l'adversaire change de Pokémon. Si l'attaque a été utilisée deux fois, le Poison est plus violent.
+391 Echange les statistiques modifiées avec l'adversaire.
+392 Restaure 1/16 des PV max à la fin de chaque tour tant que le Pokémon est actif.
+393 Rajoute la capacité spéciale Lévitation durant cinq tours.
+394 Le lanceur subit des dégâts égaux à 1/3 des dommages infligés. Peut infliger une Brûlure (10% de chance).
+395 Possède 30% de chance de paralyser l'adversaire.
+396 Ne peut pas échouer.
+397 Augmente beaucoup la Vitesse du lanceur (2 niveaux).
+398 Peut empoisonner l'adversaire (30% de chance).
+399 20% de chance d'apeurer le Pokémon adverse.
+400 Haut taux de coups critiques (+1).
+401 Attaque Normale.
+402 Attaque Normale.
+403 30% de chance d'apeurer l'ennemi.
+404 Attaque Normale.
+405 Peut diminuer la Défense spéciale du Pokémon défenseur d'un niveau.
+406 Attaque Normale.
+407 Peut apeurer l'adversaire.
+408 Attaque Normale.
+409 Le lanceur reçoit la moitié des dégâts provoqués sous forme de PV.
+410 Attaque toujours en premier. Priorité 1.
+411 Peut diminuer la Défense Spéciale de l'adversaire d'un niveau.
+412 Peut diminuer la Défense Spéciale de l'adversaire d'un niveau.
+413 Le lanceur subit des dégâts égaux à 1/3 des dommages infligés.
+414 Peut diminuer la Défense Spéciale de l'adversaire d'un niveau.
+415 Echange les objets tenus avec l'adversaire.
+416 Le lanceur ne peut pas agir au tour suivant.
+417 Augmente l'Attaque Spéciale de 2 niveaux.
+418 Attaque toujours en premier. Priorité 1.
+419 La puissance double si le lanceur reçoit des dégâts le premier. Priorité -4.
+420 Attaque en premier dans le tour (Priorité 1).
+421 Haut taux de coups critiques.
+422 Peut paralyser et apeurer l'adversaire (10% de chance).
+423 Peut geler et apeurer l'adversaire (10% de chance).
+424 Peut brûler et apeurer l'adversaire (10% de chance).
+425 Attaque de Priorité 1. Attaque toujours en premier si l'adversaire ne lance pas une attaque de Priorité supérieure ou égale.
+426 Peut diminuer la Précision de l'adversaire d'un niveau.
+427 Haut taux de coups critiques (+1).
+428 20% de chance d'apeurer le Pokémon défenseur.
+429 Peut diminuer la Précision de l'adversaire d'un niveau.
+430 Peut diminuer la Défense Spéciale de l'adversaire d'un niveau.
+431 Peut rendre confus (20% de chance).
+432 Diminue l'Esquive de l'adversaire d'un niveau.
+433 Le Pokémon le plus lent attaque en premier pendant 5 tours. Priorité -7.
+434 Diminue beaucoup l'Attaque Spéciale du lanceur (2 niveaux).
+435 30% de chance de paralyser.
+436 30% de chance de brûler le Pokémon défenseur.
+437 Diminue l'Attaque Spéciale du lanceur de deux niveaux.
+438 Attaque sans effet particulier.
+439 Le lanceur ne peut pas attaquer au tour suivant.
+440 Haut taux de coups critiques, peut empoisonner le Pokémon défenseur (10% de chance).
+441 Possède 30% de chance d'empoisonner l'adversaire.
+442 30% de chance d'apeurer l'adversaire.
+443 Ne peut pas échouer.
+444 Haut taux de coups critiques.
+445 Diminue l'Attaque Spéciale du Pokémon ennemi de 2 niveaux s'il est de sexe opposé.
+446 Inflige des dégâts de type Roche lorsque l'adversaire change de Pokémon.
+447 La puissance augmente si l'adversaire est lourd. Puissance 20 pour 10 Kg ou moins, 40 si 25 Kg ou moins, 60 pour 50 Kg ou moins, 80 si 100 Kg ou moins, 100 si 200 Kg ou moins, 120 au-dessus de 200 Kg.
+448 Rend confus l'adversaire (31% de chance) si le lanceur fait partie de l'espèce des Pijako.
+449 Le type de l'attaque dépend de la plaque tenue.
+450 Vole les effets de la Baie tenue par l'adversaire.
+451 Augmente souvent l'Attaque Spéciale du lanceur d'un niveau.
+452 Le lanceur subit des dégâts égaux à 1/3 des dommages infligés.
+453 Attaque toujours en premier (Priorité 1).
+454 Haut taux de coup critique (+1).
+455 Augmente la Défense et la Défense Spéciale du lanceur d'un niveau.
+456 Restaure la moitié des PV Max.
+457 Le lanceur subit des dégâts égaux à la moitié de ceux infligés.
+458 Attaque deux fois en un seul tour.
+459 Le lanceur ne peut pas agir au tour suivant.
+460 Haut taux de coups critiques.
+461 Le lanceur tombe KO et le Pokémon qui le remplace est totalement soigné (statut, PV et PP).
+462 La puissance dépend des PV restants de l'adversaire.
+463 Piège l'adversaire et le blesse durant 3 à 6 tours.
+464 Endort tous les Pokémons adverses.
+465 Diminue la Défense Spéciale de l'adversaire de deux niveaux.
+466 Peut augmenter toutes les statistiques du lanceur d'un niveau (10% de chance).
+467 Disparaît au premier tour puis attaque au second, l'adversaire ne peut pas se protéger.
+468 Augmente l'Attaque et la Précision d'un niveau.
+469 Protège toute l'équipe des attaques ciblant toute l'équipe pour un tour. Peut échouer si utilisé plusieurs fois.
+470 Additionne la Défense et la Défense Spéciale du lanceur avec celles de l'adversaire, et les divise par deux.
+471 Additionne l'Attaque et l'Attaque Spéciale du lanceur avec celles de l'adversaire, et les divise par deux.
+472 Change de place avec l'un des coéquipiers, échangeant la Défense et la Vitesse avec la sienne pour 5 tours.
+473 Inflige des dégâts basés sur la stat de Défense de la cible.
+474 La puissance de l'attaque est doublée si l'adversaire est empoisonné.
+475 La Vitesse du lanceur est augmentée de deux niveaux. Son poids est divisé par deux.
+476 Redirige les attaques ciblant un Pokémon unique vers le lanceur en combat double ou triple.
+477 La cible ne peut être ratée pendant 3 tours. Elle devient cependant immunisée aux attaques de type Sol.
+478 Les objets sont inutilisables durant 5 tours.
+479 Rend les Pokémons Vol ciblés sensibles aux attaques Sol.
+480 Frappe l'adversaire avec un coup puissant. Tous les coups sont des coups critiques.
+481 Frappe toute l'équipe adverse.
+482 A 10% de chance d'empoisonner l'adversaire. Frappe tous les Pokémons présents en combat double ou triple.
+483 Augmente l'Attaque Spéciale, la Défense Spéciale et la Vitesse d'un niveau.
+484 Plus la cible est lourde, plus la puissance de l'attaque est grande. Puissance 20 pour 10 Kg ou moins, 40 si 25 Kg ou moins, 60 pour 50 Kg ou moins, 80 si 100 Kg ou moins, 100 si 200 Kg ou moins, 120 au-dessus de 200 Kg.
+485 Blesse tous les Pokémons adjacents possédant le même Type que le lanceur.
+486 Plus le lanceur est rapide, plus la puissance est grande.
+487 La cible devient de Type Eau.
+488 Augmente la Vitesse du lanceur d'un niveau.
+489 Augmente l'Attaque, la Défense et la Précision d'un niveau.
+490 Réduit la Vitesse de la cible d'un niveau.
+491 Baisse fortement la Défense Spéciale de l'adversaire (2 niveaux).
+492 Les dégâts sont basés sur la stat d'Attaque de la cible.
+493 Change la capacité de la cible pour Simple.
+494 Transfère la capacité du lanceur à sa cible.
+495 La cible agit juste après le lanceur, sans tenir compte de la Priorité.
+496 Si plusieurs Pokémons utilisent l'attaque pendant le tour, l'attaque est plus puissante.
+497 La puissance augmente si l'attaque est utilisée plusieurs tours d'affilée.
+498 Double la puissance de l'attaque si l'adversaire est brûlé, paralysé, empoisonné, endormi ou gelé.
+499 Les changements de stats de la cible sont annulés.
+500 Plus vos stats ont été boostées, plus la puissance de cette attaque augmente.
+501 Protège toute l'équipe des attaques de Priorité. Peut échouer si utilisée plusieurs fois.
+502 Tous les Pokémons voient leur Défense et leur Défense Spéciale inversées pendant 5 tours.
+503 A 30% de chance de brûler l'adversaire.
+504 Diminue la Défense et la Défense Spéciale d'un niveau, mais l'Attaque, l'Attaque Spéciale et la Vitesse sont augmentées de deux niveaux.
+505 Redonne 50% de ses PV à la cible.
+506 Double la puissance de l'attaque si l'adversaire est brûlé, paralysé, empoisonné, endormi ou gelé.
+507 Emporte l'adversaire dans les airs au premier tour, puis le fait tomber au second.
+508 Augmente l'Attaque d'un niveau et la Vitesse de 2 niveaux.
+509 Oblige l'adversaire à changer de Pokémon, frappe en dernier (Priorité -6).
+510 Retire la Baie tenue par la cible.
+511 Force la cible à attaquer en dernier.
+512 L'attaque est plus puissante si le lanceur de tient pas d'objet. Permet d'attaquer une cible normalement inatteignable en combat triple.
+513 Transfère la capacité du lanceur à sa cible.
+514 Venge un Pokémon de l'équipe mis K.O. Si un Pokémon de l'équipe a été mis K.O au tour d'avant, la puissance est doublée.
+515 Le lanceur est mis KO et inflige à son adversaire autant de dégâts que le lanceur avait de PV.
+516 Donne votre objet à l'adversaire. Ne fonctionne pas si celui-ci tient déjà un objet.
+517 A 30% de chance de brûler le Pokémon adverse.
+518 Si l'attaque suit Aire de Feu, elles se combinent et créent un Arc-en-Ciel qui double les chances d'effets secondaires.
+519 Si l'attaque suit Aire d'Herbe, elles se combinent et créent un champ d'herbes brûlées qui inflige des dégâts aux adversaires à chaque tour.
+520 Si l'attaque suit Aire d'Eau, elles se combinent et créent un marécage qui réduit la Vitesse des adversaires.
+521 Vous devez changer de Pokémon si cette attaque atteint sa cible et que vous avez au minimum un Pokémon à envoyer sur le terrain.
+522 Peut baisser l'Attaque Spéciale du Pokémon adverse d'un niveau.
+523 Peut baisser la Vitesse du Pokémon adverse d'un niveau.
+524 Tous les coups sont des coups critiques.
+525 Force l'adversaire à changer de Pokémon, frappe en dernier (Priorité -6).
+526 Augmente l'Attaque et l'Attaque Spéciale d'un niveau.
+527 Abaisse la Vitesse de l'adversaire d'un niveau.
+528 Le lanceur reçoit 1/4 des dégâts infligés.
+529 A des taux de coup-critique élevés.
+530 Frappe deux fois en un tour.
+531 Peut apeurer l'adversaire.
+532 Soigne le lanceur avec la moitié des dégâts infligés.
+533 Inflige des dégâts en ignorant les changements de stats adverses.
+534 Peut baisser la Défense du Pokémon adverse d'un niveau.
+535 Plus l'adversaire est lourd, plus la puissance de l'attaque est grande. Puissance 20 pour 10 Kg ou moins, 40 si 25 Kg ou moins, 60 pour 50 Kg ou moins, 80 si 100 Kg ou moins, 100 si 200 Kg ou moins, 120 au-dessus de 200 Kg.
+536 Peut baisser la Précision du Pokémon adverse d'un niveau.
+537 Peut apeurer l'adversaire. La puissance est doublée si l'adversaire a utilisé Lilliput.
+538 Entoure le corps du lanceur avec de la laine moelleuse pour se protéger. Augmente la Défense de 2 niveaux.
+539 Peut baisser la Précision du Pokémon adverse d'un niveau.
+540 Inflige des dégâts basés sur la Défense adverse.
+541 Frappe 2 à 5 fois en un tour. 37.5% de chance pour 2 ou 3 fois, 12.5% pour 4 ou 5 fois.
+542 Entoure le lanceur d'un vent monstrueux. A 30% de chances de rendre la cible confuse. La Précision passe à 100% sous la pluie.
+543 Le lanceur reçoit 1/4 des dégâts infligés.
+544 Frappe 2 fois en un tour.
+545 A 100% de chances de brûler l'adversaire.
+546 Si le lanceur porte une Cassette, les dégâts infligés correspondront à celle-ci.
+547 A 10% de chances d'endormir l'adversaire.
+548 Inflige des dégâts basés sur la Défense de la cible.
+549 La Vitesse de l'adversaire diminue de 2 niveaux.
+550 A 20% de chance de paralyser l'adversaire.
+551 A 20% de chance de brûler l'adversaire.
+552 Peut augmenter l'Attaque Spéciale du lanceur d'un niveau.
+553 A 30% de chances de paralyser la cible.
+554 A 30% de chances de brûler la cible.
+555 Peut baisser l'Attaque Spéciale du Pokémon adverse d'un niveau.
+556 Peut apeurer l'adversaire.
+557 Crée une flamme d'intense chaleur depuis son front et attaque de toutes ses forces. La Défense, la Défense Spéciale et la Vitesse sont diminuées d'un niveau.
+558 Attaque avec une flamme énorme. Le pouvoir de l'attaque augmente si utilisé après Éclair Croix.
+559 Attaque avec un énorme coup de tonnerre. Le pouvoir de l'attaque augmente si utilisé après Flamme Croix.

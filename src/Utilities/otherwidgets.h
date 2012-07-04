@@ -252,4 +252,13 @@ private:
     void mousePressEvent(QMouseEvent *event);
 };
 
+class QDragReactiveTabWidget : public QTabWidget
+{
+public:
+    QDragReactiveTabWidget(QWidget *parent=NULL);
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+};
+
 #endif // OTHERWIDGETS_H

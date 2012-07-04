@@ -1,8 +1,22 @@
-
-
-
 QToolTip {
     color: black;
+}
+
+/* Because styles other than plastique suck... */
+QSplitter::handle {
+/* Find the right image and add :  image: url(images/splitter.png
+   Just look at how Plastique style's splitter is when there's no css
+   and you'll understand.
+
+   In the meantime, without the image, it's not as good. */
+	width: 5px;
+	height: 5px;
+	background-color: transparent;
+}
+
+/* Because styles other than plastique suck... */
+QSplitter::handle:hover {
+	background-color: rgba(255,255,255,140);
 }
 
 /* Main Widgets */
@@ -156,19 +170,16 @@ PokeBoxes QFrame#teamFrame, PokeBoxes QFrame#selectedFrame {
                                 stop: 0.51 #374652, stop: 1.0 #344654);
 }
 
-TrainerMenu QPushButton {
-    color: white;
-    background: #b1b1b1;
-}
-
 TrainerMenu QPushButton#close {
 /*    background: #b10305;*/
     margin-top: 10px;
     margin-right: 30px;
+    min-height: 22px;
     margin-bottom: 8px;
     border: 1px solid #7f8585;
     border-radius: 3px;
     padding: 2px;
+    color: white;
 
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fe001b, stop: 0.8 #d40000,
@@ -255,29 +266,13 @@ TrainerMenu PokeButton, PokeBoxes PokeButton {
     border-color: #0a131c;
 }
 
-PokeButton:checked {
+TrainerMenu PokeButton:checked {
     background: #491e1e;
 }
 
-
-/**** box ***/
-
-PokeBoxes QFrame#innerSelectedFrame {
-    background: #111b25;
-    margin: 10px;
-    border-radius: 10px;
+PokeBoxes PokeButton:checked {
+    background: #491e1e;
 }
-
-PokeBoxes QFrame#innerSelectedFrame QLabel {
-    color: white;
-}
-
-PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
-    width: 96px;
-    height: 96px;
-    border: 0;
-}
-
 
  /* Style the tab using the tab sub-control. Note that
      it reads QTabBar _not_ QTabWidget */
@@ -330,7 +325,11 @@ PokeEdit #done:hover {
                                                                  stop: 0 #3e8aab, stop: 0.4 #448eb5,
                                                                  stop: 0.6 #417b9f, stop: 1.0 #154477);
 }
- 
+
+PokeEdit #done:pressed {
+    background: #045283;
+}
+
 PokeEdit #levelSettings {
     margin-top: 9px;
 }
@@ -394,6 +393,80 @@ PokeSelection #pokemonFrame {
     width: 110px;
     height: 110px;
 }
+
+/**** box ****/
+
+PokeBoxes QFrame#innerSelectedFrame {
+    background: #111b25;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+PokeBoxes QFrame#innerSelectedFrame QLabel {
+    color: white;
+}
+
+PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
+    width: 96px;
+    height: 96px;
+    border: 0;
+}
+
+PokeBoxes #movesLabel, PokeBoxes #natureLabel {
+    font-weight: bold;
+}
+
+PokeBoxes #boxes {
+    border: 1px solid red;
+    border-radius: 10px;
+}
+
+PokeBoxes #boxes:pane {
+    border-radius: 10px;
+    border: 1px solid #5c707e;
+}
+
+PokeBoxes #boxes QGraphicsView {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #64aaf1;
+}
+
+PokeBoxes #boxes QGraphicsScene {
+}
+
+QTabWidget#boxes::tab-bar {
+    left: 20px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabWidget#boxes QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabWidget#boxes QTabBar::tab:selected, QTabWidget#MainChat QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabWidget#boxes QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabWidget#boxes QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
 
 /*\*=============================================*/
 

@@ -1,4 +1,4 @@
-#ifndef SERVER_H
+﻿#ifndef SERVER_H
 #define SERVER_H
 
 #include "../Utilities/contextswitch.h"
@@ -100,6 +100,7 @@ public:
     bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
 
     int playerDeleteDays() const { return amountOfInactiveDays; }
+    QString description();
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
     void processLoginDetails(Player *p);
@@ -127,7 +128,6 @@ public slots:
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);
     void logSavingChanged(bool logging);
-    void useBattleFileLogChanged(bool logging);
     void inactivePlayersDeleteDaysChanged(int newValue);
     void useChannelFileLogChanged(bool logging);
     void TCPDelayChanged(bool lowTCP);
@@ -138,6 +138,7 @@ public slots:
     void usePasswordChanged(bool usePass);
     void showTrayPopupChanged(bool show);
     void minimizeToTrayChanged(bool allow);
+    void changeDbMod(const QString &mod);
 
     void nameTaken();
     void ipRefused();
@@ -210,7 +211,6 @@ private:
     QList<quint16>  serverPorts;
     QStringList proxyServers;
     bool showLogMessages;
-    bool useBattleFileLog;
     bool useChannelFileLog;
     int amountOfInactiveDays;
     bool lowTCPDelay;

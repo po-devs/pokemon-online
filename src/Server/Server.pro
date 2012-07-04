@@ -39,7 +39,8 @@ SOURCES += main.cpp \
     battlebase.cpp \
     battlerby.cpp \
     rbymoves.cpp \
-    mechanicsbase.cpp
+    mechanicsbase.cpp \
+    modswindow.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -105,7 +106,8 @@ HEADERS += player.h \
     battlebase.h \
     battlerby.h \
     rbymoves.h \
-    mechanicsbase.h
+    mechanicsbase.h \
+    modswindow.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -149,3 +151,6 @@ macx {
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 include(../Shared/Common.pri)
+
+FORMS += \
+    modswindow.ui

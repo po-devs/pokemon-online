@@ -1,0 +1,165 @@
+﻿0 
+1 Diminue le pourcentage de rencontre avec des Pokémons sauvages.
+2 Fait tomber la pluie tant que le Pokémon est en jeu.
+3 La vitesse du Pokémon augmente à chaque tour.
+4 Annule les coups critiques du Pokémon ennemi.
+5 Immunise contre les attaques OHKO.
+6 Evite l'utilisation d'attaques auto-destructrices.
+7 Immunise contre la paralysie.
+8 Augmente l'esquive de 20% lors d'une Tempête de Sable et immunise contre ses dégâts.
+9 A une chance sur trois de paralyser le Pokémon adverse lors d'une attaque directe.
+10 Les attaques éléctriques reçues par votre Pokémon régénèrent 1/4 de ses PV.
+11 Les attaques eau reçues par votre Pokémon régénèrent 1/4 de ses PV.
+12 Immunise contre le charme.
+13 Annule les effets du climat.
+14 Double la précision du Pokémon.
+15 Empêche le Pokémon d'être endormi.
+16 Change son type en celui de la dernière attaque employée à l'encontre de ce Pokémon.
+17 Immunise contre le poison.
+18 Annule les dégâts de type Feu et augmente la puissance des attaques de type Feu lorsque le Pokémon subit une attaque de type Feu ou une brûlure.
+19 Empêche le cumul d'effets.
+20 Immunise contre la Confusion.
+21 Evite au Pokémon d'être changé de force.
+22 Diminue d'un niveau l'attaque du Pokémon adverse.
+23 Empêche la fuite et le changement du Pokémon adverse.
+24 Fait perdre 1/16 des PV du Pokémon adverse lors d'une attaque directe.
+25 Ne subit les dégats que d'attaques super efficaces.
+26 Immunise contre les attaques de type Sol.
+27 A une chance sur trois de provoquer l'empoisonnement, le sommeil ou la paralysie du Pokémon adverse lors d'une attaque directe.
+28 Transfère l'altération d'état au Pokémon adverse.
+29 Empêche la diminution de stats.
+30 Le Pokémon est soigné de ses altérations d'état lorsqu'il est changé, ou en fin de combat.
+31 Attire toutes les attaques éléctriques.
+32 Double les chances de réussite des effets secondaires des attaques.
+33 Double la vitesse par temps de pluie.
+34 Augmente la vitesse au soleil.
+35 Augmente les chances de rencontrer des Pokémons sauvages.
+36 Copie la capacité spéciale du Pokémon adverse.
+37 Double l'attaque du Pokémon.
+38 A une chance sur trois de provoquer l'empoisonnement du Pokémon adverse lors d'une attaque directe.
+39 Immunise contre la Peur.
+40 Immunise contre le Gel.
+41 Immunise contre la Brûlure.
+42 Empêche la fuite et le changement des Pokémons de type Acier.
+43 Annule les effets dûs aux attaques sonores.
+44 Régénère 1/16 de ses PV par temps de pluie.
+45 Déclenche une tempête de sable tant que le Pokémon est en jeu.
+46 Double l'utilisation de PP des attaques offensives du Pokémon adverse.
+47 Les dégâts provoqués par les attaques des types Feu ou Glace sont divisés par 2.
+48 Réduit le nombre de tours de sommeil du Pokémon.
+49 A une chance sur trois de provoquer la Brûlure du Pokémon adverse lors d'une attaque directe.
+50 Assure la fuite contre les Pokémons sauvages.
+51 Empêche la perte de précision.
+52 Empêche la diminution d'attaque du Pokémon.
+53 Permet au Pokémon de ramasser des objets après un combat.
+54 Votre Pokémon n'attaque qu'un tour sur deux.
+55 Augmente votre attaque de 50% mais baisse votre précision de 20%.
+56 A une chance sur trois d'attirer le Pokémon adverse lors d'une attaque directe.
+57 Double l'attaque spéciale en 2VS2 si le partenaire à la capacité "Minus".
+58 Double l'attaque spéciale en 2VS2 si le partenaire à la capacité "Plus".
+59 Change le type et la forme du Pokémon selon le climat.
+60 Empêche la perte de l'objet tenu.
+61 A chaque tour, le Pokémon a 1 chance sur 3 d'être soigné de ses altérations d'état.
+62 Augmente de 50% l'attaque du Pokémon s'il subit un changement de statut.
+63 Augmente la défense de 50% lorsque le Pokémon subit un changement de statut.
+64 Les attaques drainantes font perdre des PV au lanceur.
+65 Augmente les dommages des attaques Plante de 50% lorsque le Pokémon est faible.
+66 Augmente les dommages des attaques Feu de 50% lorsque le Pokémon est faible.
+67 Augmente de 50% les dommages des attaques de type Eau lorsque le Pokémon est faible.
+68 Augmente les dommages des attaques Insecte de 50% lorsque le Pokémon est faible.
+69 Le Pokémon ne subit pas de dégats du recul.
+70 Crée un temps ensoleillé tant que le Pokémon est en jeu.
+71 Empêche la fuite et le changement du Pokémon adverse, s'il est au sol.
+72 Empêche le Pokémon d'être endormi.
+73 Empêche la diminution de stats.
+74 Double l'attaque du Pokémon.
+75 Bloque les coups critiques.
+76 Annule les effets du climat.
+77 Augmente l'esquive de 20% lorsque le Pokémon est confus.
+78 Immunise contre les attaques Electrik et augmente la Vitesse si touché par une de ces attaques.
+79 Augmente l'attaque si le Pokémon adverse est de même sexe, la diminue s'il est de sexe opposé.
+80 Augmente la vitesse du Pokémon lorsqu'il est apeuré.
+81 Augmente l'esquive de 20% en temps de grêle et immunise contre les effets de la grêle.
+82 Utilise les baies lorsque les PV descendent en dessous de 50%.
+83 L'attaque de votre Pokémon est fortement augmentée lorsqu'il subit un coup critique.
+84 Augmente la vitesse lorsqu'un objet tenu est utilisé.
+85 Divise par 2 la puissance des attaques feu lancées contre ce Pokémon.
+86 Double les effets des modifications de stats.
+87 Fait perdre 1/8 des PV en temps ensoleillé, mais en fait gagner 1/8 en temps de pluie.
+88 Augmente l'attaque ou l'attaque spéciale du Pokémon selon la statistique la plus faible du Pokémon adverse.
+89 Augmente la puissance des attaques de "Poing".
+90 Récupère 1/8 des PV lors d'un empoisonnement.
+91 Si ce Pokémon utilise une attaque de son type, la puissance de l'attaque est multipliée par 2 au lieu de 1.5.
+92 Utilise toujours le nombre de coups maximum d'une attaque en comptant plusieurs.
+93 Soigne les altérations d'état par temps de pluie.
+94 Augmente l'attaque spéciale de 50% par temps ensoleillé, mais diminue les PV de 1/16.
+95 Augmente la vitesse de 50% lorsque le Pokémon subit une altération d'état.
+96 Toutes les attaques du Pokémon sont considérées comme étant de type Normal.
+97 Triple la puissance des coups critiques.
+98 Ne subit de dégats que d'attaques directes.
+99 Toutes les attaques de tous les Pokémons ont une précision de 100% tant que ce Pokémon est en combat.
+100 Le Pokémon attaque toujours en second.
+101 Double la puissance des attaques de puissance 60 ou moins.
+102 Soigne les altérations d'état par temps ensoleillé.
+103 Empêche l'utilisation des objets tenus en combat.
+104 Annule la capacité du Pokémon adverse.
+105 Double le taux de coups critiques.
+106 Enlève 1/4 des PV au Pokémon assénant le coup final.
+107 Alerte lorsque le Pokémon adverse possède des attaques "super efficaces".
+108 Alerte le Pokémon de l'attaque la plus puissante du Pokémon adverse.
+109 Ignore les améliorations de statistiques du Pokémon adverse à l'exception de sa Vitesse.
+110 Double les dégâts des attaques "peu efficaces".
+111 Divise par deux les dégâts des attaques "super efficaces" à l'encontre du Pokémon.
+112 Divise par deux l'attaque et la vitesse du Pokémon pendant 5 tours.
+113 Permet de toucher les Pokémons de type Spectre avec des attaques de type Normal ou Combat.
+114 Absorbe toutes les attaques Eau.
+115 Régénère 1/16 des PV par temps de grêle et immunise contre la grêle.
+116 Divise par deux les dégâts des attaques "super efficaces" à l'encontre du Pokémon.
+117 Quand ce pokémon arrive dans le combat, une tempête de neige se déclenche.
+118 Trouve du Miel après un combat.
+119 Permet de voir l'objet tenu du Pokémon adverse.
+120 Augmente la puissance des attaques infligeant des dégâts de recul.
+121 Le type et la couleur du Pokémon changent en fonction de la plaque qu'il porte.
+122 Augmente l'attaque et la défense spéciale de 50% par temps ensoleillé.
+123 Fait perdre 1/8 de ses PV au Pokémon adverse s'il est endormi.
+124 Dérobe l'objet tenu par l'ennemi si le Pokémon subit une attaque directe. Aucun effet si le Pokémon tient déjà un objet.
+125 Annule les effets secondaires des attaques que le Pokémon utilise, mais en multiplie la puissance par 1,3.
+126 Inverse les altérations de stats du Pokémon.
+127 Empêche l'ennemi d'utiliser des Baies.
+128 Augmente l'attaque de 2 niveaux si les stats du Pokémon sont diminuées par une capacité ou une capacité spéciale de l'ennemi.
+129 Divise l'Attaque et l'Attaque Spéciale par 2 quand le Pokémon a perdu la moitié de ses PV max ou plus.
+130 A 30% de chance d'empêcher un ennemi de réutiliser une attaque qui a touché le Pokémon.
+131 A 1 chance sur 3 de guérir les altérations de statut des Pokémon alliés à chaque tour.
+132 Réduit de 1/4 les dégâts infligés aux alliés.
+133 Perte d'un point de Défense et gain d'un point de Vitesse chaque fois que le Pokémon subit une attaque physique.
+134 Le poids du Pokémon est doublé.
+135 Divise le poids du Pokémon par 2.
+136 Divise les dégâts par 2 tant que le Pokémon possède ses PV max.
+137 Multiplie la puissance des attaques spéciales du Pokémon par 1,5 quand il est empoisonné.
+138 Multiplie la puissance des attaques spéciales du Pokémon par 1,5 quand il souffre du statut Brûlure.
+139 A la fin d'un tour, les Baies utilisées ont 1 chance sur 2 de repousser. Elles repoussent à tous les coups si le soleil brille.
+140 Ignore les dégâts des capacités alliées.
+141 A la fin de chaque tour, aléatoirement, une stat augmente de 2 niveaux et une autre diminue de 1 niveau.
+142 Ne subit aucun dégât pendant une tempête de sable ou quand il grêle.
+143 A 20% de chance d'empoisonner l'ennemi si le Pokémon utilise une attaque directe.
+144 Restaure 1/3 des PV si le pokemon est retiré.
+145 Immunise contre les baisses de défense.
+146 Lors d'une tempête de sable, ignore les dégâts causés par la météo et double la Vitesse.
+147 Augmente l'esquive contre les attaques de statut.
+148 Multiplie la puissance d'une capacité par 1,3 lorsqu'elle est lancée en dernier dans un tour.
+149 Entre au combat en prenant l'apparence du dernier Pokémon de l'équipe.
+150 Entre au combat en prenant l'apparence du Pokémon adverse en face de lui.
+151 Permet d'utiliser des capacités en ignorant les effets de Protection, Mur Lumière, Rune Protect et Brume.
+152 La capacité spéciale de l'ennemi devient Momie si le Pokémon est touché par une attaque directe.
+153 Augmente l'Attaque de 1 niveau lorsque le Pokémon met un ennemi KO.
+154 Augmente l'attaque de 1 niveau si le Pokémon subit des dégâts d'une capacité Ténèbres.
+155 Augmente la Vitesse de 1 niveau lorsque le Pokémon subit des dégâts d'une attaque de type Spectre, Ténèbres ou Insecte.
+156 Renvoie au lanceur les altérations de statut et les diminutions de stats.
+157 Augmente l'Attaque de 1 niveau et ignore les dégâts si le Pokémon est attaqué par une capacité Plante.
+158 Permet d'utiliser les attaques de statut en priorité.
+159 Lors d'une tempête de sable, ignore les dégâts causés par la météo et multiplie par 1,3 la puissance des capacités Sol, Roche et Acier.
+160 Fait perdre 1/8 des PV des adversaires réussissant une attaque directe sur le Pokémon.
+161 Lorsque le Pokémon atteint la moitié de ses PV max, il change de forme.
+162 Multiplie par 1,1 la Précision du Pokémon et de ses alliés.
+163 Permet d'utiliser des capacités sans subir l'effet des capacités spéciales de l'ennemi. Aucun effet sur les capacités spéciales ayant un effet après l'attaque.
+164 Permet d'utiliser des capacités sans subir l'effet des capacités spéciales de l'ennemi. Aucun effet sur les capacités spéciales ayant un effet après l'attaque.

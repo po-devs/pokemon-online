@@ -1,226 +1,226 @@
-
-Portion of HP recovered increases when using HP-stealing moves
-When Attached, Raises Beauty Stat in Super Contests
-Raises Evasiveness
-Boosts Attack by x1.5, but only allows the use of one attack until the Pokémon is called back
-Raises Speed by x1.5, but only allows the use of one attack until the Pokémon is called back
-Raises Sp. Attack by x1.5, but only allows the use of one attack until the Pokémon is called back
-If user becomes infatuated, foe becomes infatuated as well
-Slightly raises power of Super Effective moves
-May prevent fainting by leaving the user with 1 HP from a KOing move
-Leaves 1 HP if hit by a KOing move when HP is full
-Holder always attacks last
-When attached, raises Smart stat in Super Contests
-Holder always attacks last
-Enemy's chance of landing a Critical Hit is lowered by 5%; attach to a female Wobbuffet and breed to get Wynaut
-HP Increases by 1/16th each turn
-Doubles amount of money rewards when equipped to a Pokemon in the party
-Removes Infatuation status; can only be used once
-If attached to Ditto, its Defense and Sp. Defense are raised by x2
-Slightly raises power of Physical moves
-Raises power of Psychic attacks
-When attached, raises Cute stat in Super Contests
-Allows user to omit first turn of charge-up required moves; can only be used once
-Lowers encounter rate of wild Pokémon if equipped to first Pokémon of party
-If attached to Ditto, its Defense and Sp. Defense are raised by x2
-Evolves Dusclops into Dusknoir when equipped and traded
-When attached, raises Cool stat in Super Contests
-Raises power of Rock attacks
-Raises power of Grass attacks
-Any Water-type move's power is increased by 5%; attach to female Marill and breed to get Azurill
-Always allows holder to switch out
-Any Normal-type move's power is increased by 10%
-Any Bug-type move's power is increased by 10%
-Prolongs number of turns of Sandstorm
-Any Ground-type move's power is increased by 10%
-Raises Happiness easier
-Raises power of Water attacks
-Cures any status effect; can only be used once
-Slightly raises accuracy of moves
-Slightly raises power of special moves
-When attached, raises Tough stat in Super Contests
-Accuracy increases if user is attacked by foe first in a turn
-Double Money is Earnt from Battles
-Cures one Pokémon of the Poison status effect
-Awakens one Pokémon with the Sleep status effect
-Recovers 20 HP
-Rare Pearl. Sells high. 
-Rare Mushroom. Sells high. 
-Any Fighting-type move's power is increased by 10%
-Lowers Wild Pokémon Encounter Rate
-Gradually recovers HP of Poison type holders; lowers HP for all others
-Any Dark Type Move's Power is increased by 10%
-Heals from Sleep
-A shard of a bigger plate
-Cures one Pokémon of the Burn status effect
-Raises a single Pokémon's base Special Attack stat
-Raises a single Pokémon's base Speed stat
-Any Fire-type move's power is increased by 10%
-Wild Pokémon Encounter Rate Lowers if holder is first in the party
-Slows Berry Growth. Slows Soil Drying
-Clamperl's Special Defense increases by x2
-Critical Hit Ratio is Raised
-Evolves Seadra into Kingdra when equipped and traded
-Restores 10 PP to every move of a selected Pokémon
-Restores 200 HP to one Pokémon; it has a bitter taste
-Restores 50 HP to one Pokémon; it has a bitter taste
-Returns you to outside Caves
-Restores 10 PP to one Pokémon's selected move
-Prevents user from evolving when equipped
-This Pokémon gets EXP from battle even if it isnt used when equipped
-A stone that can be used to evolve Growlithe, Vulpix and Eevee
-Induces Burn status to holder
-Distracts Wild Pokémon so you can Flee
-Restores 50 HP to one Pokémon
-Cures one Pokémon of any status effect
-Restores all HP to one Pokémon and cures them of any status effects
-Increases amount of plant growing where plants failed
-A shard of a bigger plate
-Speeds Berry Growth. Speeds Soil Drying
-Stats cannot be lowered
-Cures one Pokémon of any status effect; it has a bitter taste
-A rare scale. Sells High
-Smear on trees to lure Wild Pokémon
-Raises a single Pokémon's base HP
-Restores 200 HP to one Pokémon
-Defrosts one Pokémon with the Frozen status condition
-Raises a single Pokémon's base Defense stat
-May cause opponent to Flinch
-Cures one Pokémon of any status effect
-A stone that can be used to evolve Gloom, Weepinbell, Exeggcute, and Nuzleaf
-Restores 80 HP to one Pokémon
-Increases attack damage but decreases HP whenever you deal damage
-Pikachu's Special Attack increases by x2
-Prolongs effect of Reflect and Light Screen
-Pokémon this item is attached to gets more EXP in battle
-Any Electric-type move's power is increased by 10%
-Restores all PP to every move of a selected Pokémon
-Restores all PP to one move of a selected Pokémon
-Restores all HP to one Pokémon
-Repels Pokémon for 250 Steps
-Revives a fainted Pokémon and fully restores it's HP
-Any Steel-type move's power is increased by 10%
-Raises power of move if used consecutively
-Any Grass-type move's power is increased by 10%
-Restores 100 HP to one Pokémon
-A stone that can be used to evolve Nidorina, Nidorino, Clefairy, Jigglypuff and Skitty
-Any Water-type move's power is increased by 10%
-Any Ice-type move's power is increased by 10%
-Sells High
-Cures one Pokémon of any status effect
-Cures one Pokémon of the Paralyze status effect
-Rare Pearl. Sells high. 
-Distracts Wild Pokémon
-Restores 20 HP to one Pokémon
-Maximizes the PP of one move of a selected Pokémon
-Raises the maximum PP for one move of a selected Pokémon
-Raises a single Pokémon's base Attack stat
-Raises a single Pokémon's Level by one
-Raises chance of causing the foe to Flinch
-Heals from Attraction
-A shard of a bigger plate
-Repels Pokémon for 50 Steps
-Revives a fainted Pokémon and fully restores it's HP; has a bitter taste
-Revives a fainted Pokémon and restores half of it's max HP
-Revives all fainted Pokémon and fully restores their HP
-Increases chances of landing a Critical Hit
-User restores 1/8th of maximum HP when damage is inflicted onto the opponent
-When equipped, the user recovers a small amount of HP every turn.
-Has no effect or purpose in the Sinnoh region; useful only in the Hoenn region.
-You will always run from Wild Pokémon without fail
-Restores 60 HP to one Pokémon
-Raises Latios & Latias' Sp. Attack and Sp. Defense by 50%.
-Any Ghost-type move's power is increased by 10%
-Increases time Berries stay on trees
-Rare Star Piece. Sells high. 
-Pretty Dust. Sells Low
-A stone that can be used to evolve Gloom and Sunkern
-Restores 500 HP to one Pokémon
-Repels Pokémon for 150 Steps
-A stone that can be used to evolve Pikachu and Eevee
-A small mushroom. Sell low. 
-Induces Poison status to holder
-Any Psychic-type move's power is increased by 10%
-Evolves Porygon into Porygon2 when equipped and traded
-A stone that can be used to evolve Poliwhirl, Shellder, Staryu, Eevee and Lombre
-Increases Wild Pokémon Rate
-Accuracy Is Raised
-Attack Is Raised
-Defense Is Raised
-Special Attack Is Raised
-Special Defense Is Raised
-Speed Is Raised
-Heals from Confusion
-A shard of a bigger plate
-Raises a single Pokémon's base Special Defense stat
-Prolongs number of turns of Hail
-If attached to Chansey, Critical Hit ratio rises
-Evolves Porygon2 into Porygon-Z when equipped and traded
-Any Flying-type move's power is increased by 10%
-Raises the Steel and Dragon-type moves of Dialga
-Prolongs number of turns of Rain Dance
-Prolongs number of turns of Sunny Day
-Raises the Water and Dragon-type moves of Palkia
-Cuts Speed in half but increases Effort Values
-If attached to Farfetch'd, Critical Hit ratio rises
-Any Dragon-type move's power is increased by 10%
-Any Poison-type move's power is increased by 10%
-Lowers Speed, increases EV for Speed
-Lowers Speed, increases EV for Sp.Defense
-Lowers Speed, increases EV for Defense
-Lowers Speed, increases EV for Attack
-Lowers Speed, increases EV for Sp.Attack
-Lowers Speed, increases EV for HP
-Evolves a male Kirlia and female Snowrunt into Gallade and Froslass when equipped and leveled up
-Evolves Murkrow and Misdreavus into Honchkrow and Mismagius when equipped and leveled up
-Evolves Electabuzz into Electivire when equipped and traded
-Evolves Magmar into Magmortar when equipped and traded
-A vital item to keep the Stone Tower from Collapsing. Used to call Spiritomb
-Evolves Happiny into Chansey when equipped and leveled at Morning or Day (4:00am - 7:59pm)
-Evolves Rhydon into Rhyperior when equipped and traded
-The Pokémon holding this may attack first
-Evolves Sneasel into Weavile when equipped and leveled up at Night (8:00pm - 4:00am)
-Evolves Togetic and Roselia into Togekiss and Roserade when equipped and leveled up
-When equipped, the user receives damage every turn; the opponent will receive damage every turn instead if they use a physical attack
-Evolves Clamperl to Huntail when equipped and traded
-Raises power of Dragon moves
-Raises power of Dark moves
-Raises power of Ground moves
-Raises power of Fighting moves
-Raises power of Fire moves
-Prolongs number of turns of trapping attacks
-Raises power of Ice moves
-Raises power of Bug moves
-Raises power of Steel moves
-Raises power of Grass moves
-Raises power of Psychic moves
-Raises power of Flying moves
-Raises power of Water moves
-Raises power of Ghost moves
-Raises power of Rock moves
-If attached to Cubone or Marowak, their Attack rises by x2
-Raises power of Poison moves
-Raises power of Electric moves
-Revives into Shieldon
-Revives into Anorith
-Revives into Kabuto
-Any Rock-type move's power is increased by 10%
-Revives into Omanyte
-Revives into Aerodactyle
-A Valuable Bone. Sell for money
-Revives into Lileep
-Revives into Cranidos
-Lowers speed of holder, also makes Flying-types and Levitate Ability using Pokémon vulnerable to Ground moves when equipped to them
-Air Mail
-Bloom Mail
-Brick Mail
-Bubble Mail
-Flame Mail
-Grass Mail
-Harbor Mail
-Heart Mail
-Mosaic Mail
-Snow Mail
-Space Mail
-Steel Mail
-Tunnel Mail
+ï»¿0 
+1 Portion of HP recovered increases when using HP-stealing moves
+2 When Attached, Raises Beauty Stat in Super Contests
+3 Raises Evasiveness
+4 Boosts Attack by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
+5 Raises Speed by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
+6 Raises Sp. Attack by x1.5, but only allows the use of one attack until the PokÃ©mon is called back
+7 If user becomes infatuated, foe becomes infatuated as well
+8 Slightly raises power of Super Effective moves
+9 May prevent fainting by leaving the user with 1 HP from a KOing move
+10 Leaves 1 HP if hit by a KOing move when HP is full
+11 Holder always attacks last
+12 When attached, raises Smart stat in Super Contests
+13 Holder always attacks last
+14 Enemy's chance of landing a Critical Hit is lowered by 5%; attach to a female Wobbuffet and breed to get Wynaut
+15 HP Increases by 1/16th each turn
+16 Doubles amount of money rewards when equipped to a Pokemon in the party
+17 Removes Infatuation status; can only be used once
+18 If attached to Ditto, its Defense and Sp. Defense are raised by x2
+19 Slightly raises power of Physical moves
+20 Raises power of Psychic attacks
+21 When attached, raises Cute stat in Super Contests
+22 Allows user to omit first turn of charge-up required moves; can only be used once
+23 Lowers encounter rate of wild PokÃ©mon if equipped to first PokÃ©mon of party
+24 If attached to Ditto, its Defense and Sp. Defense are raised by x2
+25 Evolves Dusclops into Dusknoir when equipped and traded
+26 When attached, raises Cool stat in Super Contests
+27 Raises power of Rock attacks
+28 Raises power of Grass attacks
+29 Any Water-type move's power is increased by 5%; attach to female Marill and breed to get Azurill
+30 Always allows holder to switch out
+31 Any Normal-type move's power is increased by 10%
+32 Any Bug-type move's power is increased by 10%
+33 Prolongs number of turns of Sandstorm
+34 Any Ground-type move's power is increased by 10%
+35 Raises Happiness easier
+36 Raises power of Water attacks
+37 Cures any status effect; can only be used once
+38 Slightly raises accuracy of moves
+39 Slightly raises power of special moves
+40 When attached, raises Tough stat in Super Contests
+41 Accuracy increases if user is attacked by foe first in a turn
+42 Double Money is Earnt from Battles
+43 Cures one PokÃ©mon of the Poison status effect
+44 Awakens one PokÃ©mon with the Sleep status effect
+45 Recovers 20 HP
+46 Rare Pearl. Sells high. 
+47 Rare Mushroom. Sells high. 
+48 Any Fighting-type move's power is increased by 10%
+49 Lowers Wild PokÃ©mon Encounter Rate
+50 Gradually recovers HP of Poison type holders; lowers HP for all others
+51 Any Dark Type Move's Power is increased by 10%
+52 Heals from Sleep
+53 A shard of a bigger plate
+54 Cures one PokÃ©mon of the Burn status effect
+55 Raises a single PokÃ©mon's base Special Attack stat
+56 Raises a single PokÃ©mon's base Speed stat
+57 Any Fire-type move's power is increased by 10%
+58 Wild PokÃ©mon Encounter Rate Lowers if holder is first in the party
+59 Slows Berry Growth. Slows Soil Drying
+60 Clamperl's Special Defense increases by x2
+61 Critical Hit Ratio is Raised
+62 Evolves Seadra into Kingdra when equipped and traded
+63 Restores 10 PP to every move of a selected PokÃ©mon
+64 Restores 200 HP to one PokÃ©mon; it has a bitter taste
+65 Restores 50 HP to one PokÃ©mon; it has a bitter taste
+66 Returns you to outside Caves
+67 Restores 10 PP to one PokÃ©mon's selected move
+68 Prevents user from evolving when equipped
+69 This PokÃ©mon gets EXP from battle even if it isnt used when equipped
+70 A stone that can be used to evolve Growlithe, Vulpix and Eevee
+71 Induces Burn status to holder
+72 Distracts Wild PokÃ©mon so you can Flee
+73 Restores 50 HP to one PokÃ©mon
+74 Cures one PokÃ©mon of any status effect
+75 Restores all HP to one PokÃ©mon and cures them of any status effects
+76 Increases amount of plant growing where plants failed
+77 A shard of a bigger plate
+78 Speeds Berry Growth. Speeds Soil Drying
+79 Stats cannot be lowered
+80 Cures one PokÃ©mon of any status effect; it has a bitter taste
+81 A rare scale. Sells High
+82 Smear on trees to lure Wild PokÃ©mon
+83 Raises a single PokÃ©mon's base HP
+84 Restores 200 HP to one PokÃ©mon
+85 Defrosts one PokÃ©mon with the Frozen status condition
+86 Raises a single PokÃ©mon's base Defense stat
+87 May cause opponent to Flinch
+88 Cures one PokÃ©mon of any status effect
+89 A stone that can be used to evolve Gloom, Weepinbell, Exeggcute, and Nuzleaf
+90 Restores 80 HP to one PokÃ©mon
+91 Increases attack damage but decreases HP whenever you deal damage
+92 Pikachu's Special Attack increases by x2
+93 Prolongs effect of Reflect and Light Screen
+94 PokÃ©mon this item is attached to gets more EXP in battle
+95 Any Electric-type move's power is increased by 10%
+96 Restores all PP to every move of a selected PokÃ©mon
+97 Restores all PP to one move of a selected PokÃ©mon
+98 Restores all HP to one PokÃ©mon
+99 Repels PokÃ©mon for 250 Steps
+100 Revives a fainted PokÃ©mon and fully restores it's HP
+101 Any Steel-type move's power is increased by 10%
+102 Raises power of move if used consecutively
+103 Any Grass-type move's power is increased by 10%
+104 Restores 100 HP to one PokÃ©mon
+105 A stone that can be used to evolve Nidorina, Nidorino, Clefairy, Jigglypuff and Skitty
+106 Any Water-type move's power is increased by 10%
+107 Any Ice-type move's power is increased by 10%
+108 Sells High
+109 Cures one PokÃ©mon of any status effect
+110 Cures one PokÃ©mon of the Paralyze status effect
+111 Rare Pearl. Sells high. 
+112 Distracts Wild PokÃ©mon
+113 Restores 20 HP to one PokÃ©mon
+114 Maximizes the PP of one move of a selected PokÃ©mon
+115 Raises the maximum PP for one move of a selected PokÃ©mon
+116 Raises a single PokÃ©mon's base Attack stat
+117 Raises a single PokÃ©mon's Level by one
+118 Raises chance of causing the foe to Flinch
+119 Heals from Attraction
+120 A shard of a bigger plate
+121 Repels PokÃ©mon for 50 Steps
+122 Revives a fainted PokÃ©mon and fully restores it's HP; has a bitter taste
+123 Revives a fainted PokÃ©mon and restores half of it's max HP
+124 Revives all fainted PokÃ©mon and fully restores their HP
+125 Increases chances of landing a Critical Hit
+126 User restores 1/8th of maximum HP when damage is inflicted onto the opponent
+127 When equipped, the user recovers a small amount of HP every turn.
+128 Has no effect or purpose in the Sinnoh region; useful only in the Hoenn region.
+129 You will always run from Wild PokÃ©mon without fail
+130 Restores 60 HP to one PokÃ©mon
+131 Raises Latios & Latias' Sp. Attack and Sp. Defense by 50%.
+132 Any Ghost-type move's power is increased by 10%
+133 Increases time Berries stay on trees
+134 Rare Star Piece. Sells high. 
+135 Pretty Dust. Sells Low
+136 A stone that can be used to evolve Gloom and Sunkern
+137 Restores 500 HP to one PokÃ©mon
+138 Repels PokÃ©mon for 150 Steps
+139 A stone that can be used to evolve Pikachu and Eevee
+140 A small mushroom. Sell low. 
+141 Induces Poison status to holder
+142 Any Psychic-type move's power is increased by 10%
+143 Evolves Porygon into Porygon2 when equipped and traded
+144 A stone that can be used to evolve Poliwhirl, Shellder, Staryu, Eevee and Lombre
+145 Increases Wild PokÃ©mon Rate
+146 Accuracy Is Raised
+147 Attack Is Raised
+148 Defense Is Raised
+149 Special Attack Is Raised
+150 Special Defense Is Raised
+151 Speed Is Raised
+152 Heals from Confusion
+153 A shard of a bigger plate
+154 Raises a single PokÃ©mon's base Special Defense stat
+155 Prolongs number of turns of Hail
+156 If attached to Chansey, Critical Hit ratio rises
+157 Evolves Porygon2 into Porygon-Z when equipped and traded
+158 Any Flying-type move's power is increased by 10%
+159 Raises the Steel and Dragon-type moves of Dialga
+160 Prolongs number of turns of Rain Dance
+161 Prolongs number of turns of Sunny Day
+162 Raises the Water and Dragon-type moves of Palkia
+163 Cuts Speed in half but increases Effort Values
+164 If attached to Farfetch'd, Critical Hit ratio rises
+165 Any Dragon-type move's power is increased by 10%
+166 Any Poison-type move's power is increased by 10%
+167 Lowers Speed, increases EV for Speed
+168 Lowers Speed, increases EV for Sp.Defense
+169 Lowers Speed, increases EV for Defense
+170 Lowers Speed, increases EV for Attack
+171 Lowers Speed, increases EV for Sp.Attack
+172 Lowers Speed, increases EV for HP
+173 Evolves a male Kirlia and female Snowrunt into Gallade and Froslass when equipped and leveled up
+174 Evolves Murkrow and Misdreavus into Honchkrow and Mismagius when equipped and leveled up
+175 Evolves Electabuzz into Electivire when equipped and traded
+176 Evolves Magmar into Magmortar when equipped and traded
+177 A vital item to keep the Stone Tower from Collapsing. Used to call Spiritomb
+178 Evolves Happiny into Chansey when equipped and leveled at Morning or Day (4:00am - 7:59pm)
+179 Evolves Rhydon into Rhyperior when equipped and traded
+180 The PokÃ©mon holding this may attack first
+181 Evolves Sneasel into Weavile when equipped and leveled up at Night (8:00pm - 4:00am)
+182 Evolves Togetic and Roselia into Togekiss and Roserade when equipped and leveled up
+183 When equipped, the user receives damage every turn; the opponent will receive damage every turn instead if they use a physical attack
+184 Evolves Clamperl to Huntail when equipped and traded
+185 Raises power of Dragon moves
+186 Raises power of Dark moves
+187 Raises power of Ground moves
+188 Raises power of Fighting moves
+189 Raises power of Fire moves
+190 Prolongs number of turns of trapping attacks
+191 Raises power of Ice moves
+192 Raises power of Bug moves
+193 Raises power of Steel moves
+194 Raises power of Grass moves
+195 Raises power of Psychic moves
+196 Raises power of Flying moves
+197 Raises power of Water moves
+198 Raises power of Ghost moves
+199 Raises power of Rock moves
+200 If attached to Cubone or Marowak, their Attack rises by x2
+201 Raises power of Poison moves
+202 Raises power of Electric moves
+203 Revives into Shieldon
+204 Revives into Anorith
+205 Revives into Kabuto
+206 Any Rock-type move's power is increased by 10%
+207 Revives into Omanyte
+208 Revives into Aerodactyle
+209 A Valuable Bone. Sell for money
+210 Revives into Lileep
+211 Revives into Cranidos
+212 Lowers speed of holder, also makes Flying-types and Levitate Ability using PokÃ©mon vulnerable to Ground moves when equipped to them
+213 Air Mail
+214 Bloom Mail
+215 Brick Mail
+216 Bubble Mail
+217 Flame Mail
+218 Grass Mail
+219 Harbor Mail
+220 Heart Mail
+221 Mosaic Mail
+222 Snow Mail
+223 Space Mail
+224 Steel Mail
+225 Tunnel Mail

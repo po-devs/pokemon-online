@@ -241,7 +241,11 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
         log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     }
 
-    emit messageReceived(this);
+    /* Dirty hack to not trigger events on player log off / log on, so that the pm window doesn't pop up
+     if closed in those cases */
+    if (m_challenge->isEnabled()) {
+        emit messageReceived(this);
+    }
 }
 
 void PMStruct::sendMessage()
@@ -276,10 +280,11 @@ void PMStruct::challenge()
 
 void PMStruct::disable()
 {
-    printHtml("<i>" + tr("The other party left the server, so the window was disabled.") + "</i>");
     m_challenge->setDisabled(true);
     m_send->setDisabled(true);
     m_textToSend->setDisabled(true);
+
+    printHtml("<i>" + tr("The other party left the server, so the window was disabled.") + "</i>");
 }
 
 void PMStruct::reuse(int id)

@@ -1,4 +1,4 @@
-#include "client.h"
+﻿#include "client.h"
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
@@ -72,11 +72,11 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     QVBoxLayout *layout = new QVBoxLayout(container);
     layout->setMargin(0);
 
-    layout->addWidget(announcement = new SmallPokeTextEdit());
-    announcement->setObjectName("Announcement");
-    announcement->setOpenExternalLinks(true);
-    announcement->hide();
-    announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(server_announcement = new SmallPokeTextEdit());
+    server_announcement->setObjectName("Announcement");
+    server_announcement->setOpenExternalLinks(true);
+    server_announcement->hide();
+    server_announcement->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     layout->addWidget(mainChat = new QExposedTabWidget(), 100);
     mainChat->setObjectName("MainChat");
@@ -439,8 +439,10 @@ void Client::showChannelsContextMenu(const QPoint & point)
         foreach (QString str, eventSettings()) {
             if (s.contains(str)) {
                 found = true;
+                break;
             }
         }
+
         if (found) {
             action = show_events->addAction(tr("Custom settings"));
             action->setEnabled(false);
@@ -452,6 +454,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
             action = show_events->addAction(tr("Global settings"));
             action->setEnabled(false);
         }
+
         show_events->addSeparator();
 
         action = show_events->addAction(tr("Enable all events"));
@@ -1377,17 +1380,9 @@ void Client::playerTempBanned(int dest, int src, int time)
     QString mess;
     time = int(time);
     if(src == 0) {
-        if(time == 1) {
-            mess = tr("%1 was banned by the server for %2 minute!").arg(name(dest)).arg(time);
-        } else {
-            mess = tr("%1 was banned by the server for %2 minutes!").arg(name(dest)).arg(time);
-        }
+        mess = tr("%1 was banned by the server for %n minute(s)!", "", time).arg(name(dest));
     } else {
-        if(time == 1) {
-            mess = tr("%1 banned %2 for %3 minute!").arg(name(src)).arg(name(dest)).arg(time);
-        } else {
-            mess = tr("%1 banned %2 for %3 minutes!").arg(name(src)).arg(name(dest)).arg(time);
-        }
+        mess = tr("%1 banned %2 for %n minute(s)!", "", time).arg(name(src), name(dest));
     }
     printHtml(toBoldColor(mess, Qt::red));
 }
@@ -1609,11 +1604,18 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
             return;
 
         QString message;
-        switch(level) {
-        case -3: message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems"); break;
-        case -2: message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
-        case -1: message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
-        case 0: message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
+        switch (level) {
+        case -3:
+            message = tr ("Your version is severely outdated compared to the server. There is going to be important communication problems");
+            break;
+        case -2:
+            message = tr ("Your version is outdated compared to the server. There are going to be some compatibility problems.");
+            break;
+        case -1:
+            message = tr ("Some features have been added to interact with the server since you downloaded your version. Update!");
+            break;
+        case 0:
+            message = tr ("Your version is slightly behind on the server's, though no problems should arise.");
         }
 
         QMessageBox *update = new QMessageBox(QMessageBox::Information, tr("Old Version"), message,
@@ -1645,9 +1647,9 @@ void Client::announcementReceived(const QString &ann)
     if (ann.length() == 0)
         return;
 
-    announcement->setText(ann);
-    announcement->setAlignment(Qt::AlignCenter);
-    announcement->show();
+    server_announcement->setText(ann);
+    server_announcement->setAlignment(Qt::AlignCenter);
+    server_announcement->show();
 }
 
 void Client::tierListReceived(const QByteArray &tl)
@@ -1982,22 +1984,24 @@ void Client::challengeStuff(const ChallengeInfo &c)
         }
     } else {
         if (playerExist(c.opponent())) {
-            ChallengeDialog *b;
-            if (c.desc() == ChallengeInfo::Refused) {
-                printLine(tr("%1 refused your challenge.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Busy) {
-                printLine(tr("%1 is busy.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::Cancelled) {
-                printLine(tr("%1 cancelled their challenge.").arg(name(c)));
-                while ( (b = getChallengeWindow(c)) ) {
-                    closeChallengeWindow(b);
+            if (c.opponent() != ownId()) {
+                ChallengeDialog *b;
+                if (c.desc() == ChallengeInfo::Refused) {
+                    printLine(tr("%1 refused your challenge.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Busy) {
+                    printLine(tr("%1 is busy.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::Cancelled) {
+                    printLine(tr("%1 cancelled their challenge.").arg(name(c)));
+                    while ( (b = getChallengeWindow(c)) ) {
+                        closeChallengeWindow(b);
+                    }
+                } else if (c.desc() == ChallengeInfo::InvalidTeam) {
+                    printLine(tr("%1 has an invalid team.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidGen) {
+                    printLine(tr("%1 has a different gen than yours.").arg(name(c)));
+                } else if (c.desc() == ChallengeInfo::InvalidTier) {
+                    printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
                 }
-            } else if (c.desc() == ChallengeInfo::InvalidTeam) {
-                printLine(tr("%1 has an invalid team.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidGen) {
-                printLine(tr("%1 has a different gen than yours.").arg(name(c)));
-            } else if (c.desc() == ChallengeInfo::InvalidTier) {
-                printLine(tr("%1 doesn't have a team with the tier: %2.").arg(name(c), c.desttier));
             }
         }
     }
@@ -2101,12 +2105,19 @@ Analyzer &Client::relay()
     return *myrelay;
 }
 
+QString Client::announcement()
+{
+    return server_announcement->document()->toPlainText();
+}
+
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 {
     _mid = p.id;
     mynick = p.name;
     myplayersinfo[p.id] = p;
     mynames[p.name] = p.id;
+
+    mylowernames[p.name.toLower()] = p.id;
 
     tiersReceived(tiers);
 }
@@ -2127,6 +2138,25 @@ void Client::playerLogout(int id)
     removePlayer(id);
 }
 
+bool Client::hasPlayer (int id)
+{
+    if (pmedPlayers.contains(id)) {
+        return true;
+    }
+
+    if (mypms.contains(id)) {
+        return true;
+    }
+
+    foreach (Channel *c, mychannels) {
+        if (c->hasPlayer(id)) {
+            return false;
+        }
+
+    }
+
+    return true;
+}
 
 void Client::removePlayer(int id)
 {
@@ -2152,8 +2182,13 @@ void Client::removePlayer(int id)
     }
 
     /* Name removed... Only if no one took it since the 10 minutes we never saw the guy */
-    if (mynames.value(name) == id)
+    if (mynames.value(name) == id) {
         mynames.remove(name);
+    }
+
+    if (mylowernames.value(name.toLower()) == id) {
+        mylowernames.remove(name.toLower());
+    }
 }
 
 void Client::fadeAway()
@@ -2199,17 +2234,28 @@ QString Client::authedNick(int id) const
 
 void Client::playerReceived(const PlayerInfo &p)
 {
+    bool newPlayer = false;
+
     if (name(p.id) != p.name) {
         printLine(TeamEvent, p.id, tr("%1 changed names and is now known as %2.").arg(name(p.id), p.name));
         if (p.id == ownId()) {
             mynick = p.name;
         }
     }
+
     if (myplayersinfo.contains(p.id)) {
         /* It's not sync perfectly, so someone who relogs can happen, that's why we do that test */
-        if (mynames.value(p.name) == p.id)
+        if (mynames.value(p.name) == p.id) {
             mynames.remove(player(p.id).name);
+        }
+
+        if (mylowernames.value(p.name.toLower()) == p.id) {
+            mylowernames.remove(player(p.id).name.toLower());
+        }
+
         myplayersinfo.remove(p.id);
+    } else {
+        newPlayer = true;
     }
 
     myplayersinfo.insert(p.id, p);
@@ -2230,11 +2276,16 @@ void Client::playerReceived(const PlayerInfo &p)
         mypms[p.id] = window;
         window->reuse(p.id);
     }
+
+    if (newPlayer) {
+        call("onPlayerReceived(int)", p.id);
+    }
 }
 
 void Client::changeName(int player, const QString &name)
 {
     mynames[name] = player;
+    mylowernames[name.toLower()] = player;
 
     if (mypms.contains(player)) {
         mypms[player]->changeName(name);
@@ -2258,8 +2309,10 @@ QColor Client::color(int id) const
 
 int Client::id(const QString &name) const
 {
-    if (mynames.contains(name)) {
-        return mynames[name];
+    QString nameToLower = name.toLower();
+
+    if (mylowernames.contains(nameToLower)) {
+        return mylowernames[nameToLower];
     } else {
         return -1;
     }
@@ -2311,6 +2364,9 @@ void Client::openTeamBuilder()
     connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
     connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
     connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
+    if (top) {
+        connect(t, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
+    }
     connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
 }
 
@@ -2328,9 +2384,15 @@ void Client::changeTeam()
         printLine(tr("You can't change teams while battling, so your nick was kept."));
         secondTeam.name() = mynick;
     }
+
     cancelFindBattle(false);
     waitingOnSecond = true;
     relay().sendTeam(secondTeam);
+}
+
+bool Client::hasPlayerInfo (int id)
+{
+    return myplayersinfo.contains(id);
 }
 
 PlayerInfo &Client::playerInfo(int id)
@@ -2372,7 +2434,7 @@ void Client::requestTempBan(const QString &name, int time)
 
 void Client::ignore(int id)
 {
-    if (myIgnored.contains(id))
+    if (myIgnored.contains(id) || !hasPlayerInfo(id))
         return;
     printLine(id, tr("You ignored %1.").arg(name(id)));
     myIgnored.append(id);
@@ -2381,16 +2443,20 @@ void Client::ignore(int id)
 
 void Client::ignore(int id, bool ign)
 {
-    if (ign)
+    if (ign) {
         ignore(id);
-    else
+    }
+    else {
         removeIgnore(id);
+    }
 }
 
 void Client::removeIgnore(int id)
 {
-    if (!myIgnored.contains(id))
+    if (!myIgnored.contains(id) || !hasPlayerInfo(id)) {
         return;
+    }
+
     printLine(id, tr("You stopped ignoring %1.").arg(name(id)));
     myIgnored.removeOne(id);
     updateState(id);
