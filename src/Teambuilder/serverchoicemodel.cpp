@@ -118,8 +118,8 @@ QVariant ServerChoiceModel::headerData(int section, Qt::Orientation orientation,
             return Qt::DescendingOrder;
         }
         break;
-    };
 #endif
+    };
     return QVariant();
 }
 
