@@ -50,3 +50,5 @@ ui_*.h
 *.Release
 # Macs create this file to every folder you go to with the Finder.
 .DS_Store
+bin/veekun_data_extracter
+bin/Mods/
