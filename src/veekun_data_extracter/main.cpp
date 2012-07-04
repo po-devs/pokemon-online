@@ -43,11 +43,8 @@ int maxnum = 649;
 
 using namespace Pokemon;
 
-int formes[] = {Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown, Unown,
-             Unown, Unown, Unown, Unown, Unown, Unown, Unown, Castform, Castform, Castform, Deoxys, Deoxys, Deoxys, Burmy, Burmy, Wormadam, Wormadam, Cherrim,
-             Shellos, Gastrodon, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus, Arceus,
-             Rotom_H, Rotom_W, Rotom_F, Rotom_S, Rotom_C, Giratina, Shaymin, Pichu, Basurao, Hihidaruma, Shikijika, Shikijika, Shikijika, Mebukijka, Mebukijka, Mebukijka,
-             Meloia, Genesect, Genesect, Genesect, Genesect, Torunerosu, Borutorosu, Randorosu, Kyurem_B, Kyurem_W, Keldeo};
+int formes[] = {Deoxys, Deoxys, Deoxys, Wormadam_G, Wormadam_S, Shaymin, Giratina, Rotom_H, Rotom_W, Rotom_F, Rotom_S, Rotom_C, Castform, Castform, Castform,
+               Basurao, Hihidaruma, Meloia, Torunerosu, Borutorosu, Randorosu, Kyurem_B, Kyurem_W, Keldeo};
 
 QString methods[] = {"", "level", "egg", "tutor", "tm_and_hm", "special", "special", "special", "special", "special", "level"};
 
@@ -80,31 +77,31 @@ int main(int argc, char *argv[])
 
         Pokemon::gen gen(idToGen[it.key()]);
 
-        if (gen > Pokemon::gen(4, 0)) {
-            for (int i = 1; i <= 10; i++) {
-                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_C] = it.value()[methods[i]][Rotom];
-                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_H] = it.value()[methods[i]][Rotom];
-                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_W] = it.value()[methods[i]][Rotom];
-                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_S] = it.value()[methods[i]][Rotom];
-                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_F] = it.value()[methods[i]][Rotom];
-            }
-            it.value()["level"][Rotom_C].insert(Move::LeafStorm);
-            it.value()["level"][Rotom_W].insert(Move::HydroPump);
-            it.value()["level"][Rotom_S].insert(Move::AirSlash);
-            it.value()["level"][Rotom_H].insert(Move::Overheat);
-            it.value()["level"][Rotom_F].insert(Move::Blizzard);
-        }
+//        if (gen > Pokemon::gen(4, 0)) {
+//            for (int i = 1; i <= 10; i++) {
+//                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_C] = it.value()[methods[i]][Rotom];
+//                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_H] = it.value()[methods[i]][Rotom];
+//                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_W] = it.value()[methods[i]][Rotom];
+//                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_S] = it.value()[methods[i]][Rotom];
+//                if (it.value().value(methods[i]).contains(Rotom)) it.value()[methods[i]][Rotom_F] = it.value()[methods[i]][Rotom];
+//            }
+//            it.value()["level"][Rotom_C].insert(Move::LeafStorm);
+//            it.value()["level"][Rotom_W].insert(Move::HydroPump);
+//            it.value()["level"][Rotom_S].insert(Move::AirSlash);
+//            it.value()["level"][Rotom_H].insert(Move::Overheat);
+//            it.value()["level"][Rotom_F].insert(Move::Blizzard);
+//        }
 
-        if (gen > Pokemon::gen(5, 0)) {
-            for (int i = 1; i <= 10; i++) {
-                if (it.value().value(methods[i]).contains(Kyurem)) it.value()[methods[i]][Kyurem_W] = it.value()[methods[i]][Kyurem];
-                if (it.value().value(methods[i]).contains(Kyurem)) it.value()[methods[i]][Kyurem_B] = it.value()[methods[i]][Kyurem];
-            }
-            it.value()["level"][Kyurem_W].insert(Move::CrossFlame);
-            it.value()["level"][Kyurem_W].insert(Move::IceBurn);
-            it.value()["level"][Kyurem_B].insert(Move::CrossThunder);
-            it.value()["level"][Kyurem_B].insert(Move::FreezeShock);
-        }
+//        if (gen > Pokemon::gen(5, 0)) {
+//            for (int i = 1; i <= 10; i++) {
+//                if (it.value().value(methods[i]).contains(Kyurem)) it.value()[methods[i]][Kyurem_W] = it.value()[methods[i]][Kyurem];
+//                if (it.value().value(methods[i]).contains(Kyurem)) it.value()[methods[i]][Kyurem_B] = it.value()[methods[i]][Kyurem];
+//            }
+//            it.value()["level"][Kyurem_W].insert(Move::CrossFlame);
+//            it.value()["level"][Kyurem_W].insert(Move::IceBurn);
+//            it.value()["level"][Kyurem_B].insert(Move::CrossThunder);
+//            it.value()["level"][Kyurem_B].insert(Move::FreezeShock);
+//        }
 
         QDir dir;
         dir.mkdir(QString("%1G").arg(int(gen.num)));
