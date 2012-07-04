@@ -43,7 +43,7 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)
             continue;
 
         MovesPerPoke p;
@@ -98,7 +98,7 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem))
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam))
                         continue;
 
                     QList<int> moves = pokes[id].gens[g].moves[i].toList();
@@ -173,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem)
+        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)
             continue;
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
