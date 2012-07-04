@@ -482,7 +482,7 @@ Pokemon::gen PokeGraphics::gen() const
 PokeTeam::PokeTeam()
 {
     setNum(Pokemon::uniqueId(Pokemon::NoPoke));
-    setGen(GenInfo::GenMax());
+    setGen(Pokemon::gen(GenInfo::GenMax(), GenInfo::NumberOfSubgens(GenInfo::GenMax())-1));
 }
 
 void PokeTeam::setNum(Pokemon::uniqueId num)
