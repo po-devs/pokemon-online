@@ -109,7 +109,11 @@ void TeamBuilder::loadAll()
 
 void TeamBuilder::setNoMod()
 {
-    PokemonInfoConfig::changeMod("");
+    PokemonInfoConfig::changeMod(QString());
+
+    QSettings settings;
+    settings.setValue("Mods/CurrentMod", QString());
+
     emit reloadDb();
 
     markTeamUpdated();
