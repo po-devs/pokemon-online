@@ -269,7 +269,7 @@ void TeamBuilder::newTeam()
     switchToTrainer();
     team() = TeamHolder();
     markTeamUpdated();
-    currentWidget()->updateTeam();
+    currentWidget()->updateAll();
 }
 
 void TeamBuilder::addTeam()
