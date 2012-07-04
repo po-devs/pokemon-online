@@ -20,7 +20,9 @@ public:
     ~PokeButtonsHolder();
 
     int currentSlot() const;
+    void updatePoke(int slot);
     void setTeam(Team &team);
+    void setCurrentSlot(int slot);
 signals:
     void teamChanged();
     void doubleClicked(int index);

@@ -20,6 +20,7 @@
 #include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "modswindow.h"
 
 ServerWidget::ServerWidget(Server *myserver)
 {
@@ -66,9 +67,10 @@ QMenuBar* ServerWidget::createMenuBar() {
     options->addAction("&Anti DoS", this, SLOT(openAntiDos()));
     options->addAction("&Config", this, SLOT(openConfig()));
     options->addAction("&Scripts", this, SLOT(openScriptWindow()));
+    options->addAction("&Mods", this, SLOT(openModsWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
-    options->addAction("&SQL Config", this, SLOT(openSqlConfigWindow()));
+    options->addAction("S&QL Config", this, SLOT(openSqlConfigWindow()));
     QMenu *plugins = bar->addMenu("&Plugins");
     plugins->addAction("Plugin &Manager", this, SLOT(openPluginManager()));
     plugins->addSeparator();
@@ -187,6 +189,15 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
     connect(w, SIGNAL(showTrayPopupChanged(bool)), server, SLOT(showTrayPopupChanged(bool)));
     connect(w, SIGNAL(minimizeToTrayChanged(bool)), server, SLOT(minimizeToTrayChanged(bool)));
+}
+
+void ServerWidget::openModsWindow()
+{
+    ModsWindow *w = new ModsWindow();
+
+    w->show();
+
+    connect(w, SIGNAL(modChanged(QString)), server, SLOT(changeDbMod(QString)));
 }
 
 void ServerWidget::openScriptWindow()

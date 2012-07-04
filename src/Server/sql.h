@@ -21,9 +21,9 @@ public:
     {
         QMutexLocker m(&mutex);
         QSettings s("config", QSettings::IniFormat);
-        databaseType = s.value("sql_driver").toInt();
-        databaseSchema = s.value("sql_db_schema", "").toString();
-        doVacuum = s.value("sql_do_vacuum", true).toBool();
+        databaseType = s.value("SQL/Driver").toInt();
+        databaseSchema = s.value("SQL/DatabaseSchema").toString();
+        doVacuum = s.value("SQL/VacuumOnStartup").toBool();
 
         QString driver;
         switch(databaseType)
@@ -48,13 +48,13 @@ public:
         else
             db = QSqlDatabase::addDatabase(driver, name);
 
-        db.setDatabaseName(s.value("sql_db_name").toString());
+        db.setDatabaseName(s.value("SQL/Database").toString());
 
         if (databaseType == PostGreSQL || databaseType == MySQL) {
-            db.setHostName(s.value("sql_db_host").toString());
-            db.setPort(s.value("sql_db_port").toInt());
-            db.setUserName(s.value("sql_db_user").toString());
-            db.setPassword(s.value("sql_db_pass").toString());
+            db.setHostName(s.value("SQL/Host").toString());
+            db.setPort(s.value("SQL/Port").toInt());
+            db.setUserName(s.value("SQL/User").toString());
+            db.setPassword(s.value("SQL/Pass").toString());
         }
 		
         if (databaseType == MySQL) {

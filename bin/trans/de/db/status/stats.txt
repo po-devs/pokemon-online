@@ -1,0 +1,8 @@
+﻿0 Kraftpunkte
+1 Angriff
+2 Verteidigung
+3 Sp. Angriff
+4 Sp. Verteidigung
+5 Initiative
+6 Genauigkeit
+7 Fluchtwert

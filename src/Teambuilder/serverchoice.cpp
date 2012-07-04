@@ -2,13 +2,22 @@
 #include "ui_serverchoice.h"
 #include "analyze.h"
 #include "../Utilities/functions.h"
-#include "theme.h"
+#include "../PokemonInfo/networkstructs.h"
+#include "serverchoicemodel.h"
+#include "mainwindow.h"
 
 ServerChoice::ServerChoice(const QString &nick) :
     ui(new Ui::ServerChoice), wasConnected(false)
 {
     ui->setupUi(this);
     ui->announcement->hide();
+
+    ServerChoiceModel *model = new ServerChoiceModel();
+    model->setParent(ui->serverList);
+    filter = new QSortFilterProxyModel(ui->serverList);
+    filter->setSourceModel(model);
+    filter->setSortRole(ServerChoiceModel::SortRole);
+    ui->serverList->setModel(filter);
 
     connect(ui->description, SIGNAL(anchorClicked(QUrl)), SLOT(anchorClicked(QUrl)));
 
@@ -23,11 +32,14 @@ ServerChoice::ServerChoice(const QString &nick) :
     );
     registry_connection->setParent(this);
 
+    ui->switchPort->setIcon(QApplication::style()->standardIcon(QStyle::SP_BrowserReload));
+
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
 
-    connect(registry_connection, SIGNAL(serverReceived(QString, QString, quint16,QString,quint16,quint16, bool)), SLOT(addServer(QString, QString, quint16, QString,quint16,quint16, bool)));
+    connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), model, SLOT(addServer(ServerInfo)));
+    connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), SLOT(serverAdded()));
 
     //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
 
@@ -37,10 +49,9 @@ ServerChoice::ServerChoice(const QString &nick) :
         ui->serverList->setColumnWidth(2, settings.value("ServerChoice/PlayersInfoWidth").toInt());
     }
     ui->serverList->horizontalHeader()->setStretchLastSection(true);
-    ui->serverList->horizontalHeaderItem(0)->setIcon(Theme::unlockedLockedRegistry());
 
-    connect(ui->serverList, SIGNAL(cellActivated(int,int)), SLOT(regServerChosen(int)));
-    connect(ui->serverList, SIGNAL(currentCellChanged(int,int,int,int)), SLOT(showDetails(int)));
+    connect(ui->serverList, SIGNAL(activated(QModelIndex)), SLOT(regServerChosen(QModelIndex)));
+    connect(ui->serverList, SIGNAL(currentCellChanged(QModelIndex)), SLOT(showDetails(QModelIndex)));
 
     ui->nameEdit->setText(nick);
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
@@ -70,6 +81,12 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     QTimer *t = new QTimer(this);
     t->singleShot(5000, this, SLOT(timeout()));
+
+#if QT_VERSION >= QT_VERSION_CHECK(4,8,0)
+    ui->serverList->sortByColumn(ServerChoiceModel::Players, Qt::SortOrder(filter->headerData(ServerChoiceModel::Players, Qt::Horizontal, Qt::InitialSortOrderRole).toInt()));
+#else
+    ui->serverList->sortByColumn(ServerChoiceModel::Players, Qt::DescendingOrder);
+#endif
 }
 
 ServerChoice::~ServerChoice()
@@ -79,6 +96,26 @@ ServerChoice::~ServerChoice()
     delete ui;
 }
 
+QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
+{
+    QMenuBar *ret = new QMenuBar();
+
+    //TODO : Add menu allowing to change port / registry IP / ??
+
+    QMenu *fileMenu = ret->addMenu(tr("&File"));
+    fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
+
+    w->addThemeMenu(ret);
+    w->addStyleMenu(ret);
+
+    return ret;
+}
+
+void ServerChoice::serverAdded()
+{
+    ui->serverList->sortByColumn(filter->sortColumn(), filter->sortOrder());
+}
+
 void ServerChoice::anchorClicked(const QUrl &url)
 {
     if (wasConnected) {
@@ -86,18 +123,25 @@ void ServerChoice::anchorClicked(const QUrl &url)
     }
     if (url.scheme() == "po") {
         if (url.path() == "change-port") {
-            ui->description->setText(tr("Connecting to registry...")+"\n");
-
-            QSettings settings;
-            QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
-            int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
-            int newport = port == 8080 ? 5090 : 8080;
-
-            registry_connection->connectTo(host, newport);
-
-            settings.setValue("ServerChoice/RegistryPort", newport);
+            on_switchPort_clicked();
         }
     }
+}
+
+void ServerChoice::on_switchPort_clicked()
+{
+    ui->serverList->model()->removeRows(0, ui->serverList->model()->rowCount());
+
+    ui->description->setText(tr("Connecting to registry...")+"\n");
+
+    QSettings settings;
+    QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
+    int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
+    int newport = port == 8080 ? 5090 : 8080;
+
+    registry_connection->connectTo(host, newport);
+
+    settings.setValue("ServerChoice/RegistryPort", newport);
 }
 
 void ServerChoice::connected()
@@ -106,10 +150,16 @@ void ServerChoice::connected()
     ui->description->setText(tr("Connected to the registry!"));
 }
 
-void ServerChoice::regServerChosen(int row)
+void ServerChoice::regServerChosen(const QModelIndex &i)
 {
-    QString ip = ui->serverList->item(row, 3)->text();
-    QString name = ui->serverList->item(row, 1)->text();
+    if (!i.isValid()) {
+        return;
+    }
+
+    QString ip = ui->serverList->model()->index(i.row(), ServerChoiceModel::IP).data().toString();
+    QString name = ui->serverList->model()->index(i.row(), ServerChoiceModel::Name).data().toString();
+
+    ui->advServerEdit->setItemText(ui->advServerEdit->currentIndex(), name + " - " + ip);
 
     QSettings settings;
     settings.setValue("ServerChoice/DefaultServer", name  + " - " + ip);
@@ -165,50 +215,23 @@ void ServerChoice::addSavedServer(const QString &ip, const QString &name)
     }
 }
 
-void ServerChoice::addServer(const QString &name, const QString &desc, quint16 num, const QString &ip, quint16 max, quint16 port, bool passwordProtected)
+void ServerChoice::showDetails(const QModelIndex &i)
 {
-    ui->serverList->setSortingEnabled(false);
-
-    QString playerStr;
-    if(max == 0)
-        playerStr = QString::number(num).rightJustified(5);
-    else
-        playerStr = QString::number(num).rightJustified(5) + " / " + QString::number(max);
-    int row = ui->serverList->rowCount();
-    ui->serverList->setRowCount(row+1);
-
-    ui->serverList->setItem(row, 0, passwordProtected ? new QTableWidgetItem(Theme::lockedServer(), "") : new QTableWidgetItem(Theme::unlockedServer(), ""));
-    ui->serverList->setItem(row, 1, new QTableWidgetItem(name));
-    ui->serverList->setItem(row, 2, new QTableWidgetItem(playerStr));
-    ui->serverList->setItem(row, 3, new QTableWidgetItem(ip + ":" + QString::number(port == 0 ? 5080 : port)));
-
-    descriptionsPerIp.insert(ip + ":" + QString::number(port == 0 ? 5080 : port), desc);
-    /*This needed to be changed because the showDescription function was looking for a ip and port,
-      while only the IP was in the list, and in the end, the description wouldn't be displayed. */
-
-    ui->serverList->setSortingEnabled(true);
-    ui->serverList->sortByColumn(2);
-
-    if (ui->serverList->currentRow() != -1)
-        showDetails(ui->serverList->currentRow());
-}
-
-void ServerChoice::showDetails(int row)
-{
-    if (row < 0)
+    if (!i.isValid()) {
         return;
+    }
     ui->description->clear();
-    ui->description->insertHtml(descriptionsPerIp[ui->serverList->item(row,3)->text()]);
+    ui->description->insertHtml(i.data(ServerChoiceModel::DescRole).toString());
 
-    QString ip = ui->serverList->item(row, 3)->text();
-    QString name = ui->serverList->item(row, 1)->text();
+    QString ip = ui->serverList->model()->index(i.row(), ServerChoiceModel::IP).data().toString();
+    QString name = ui->serverList->model()->index(i.row(), ServerChoiceModel::Name).data().toString();
 
     ui->advServerEdit->setItemText(ui->advServerEdit->currentIndex(), name + " - " + ip);
 }
 
 void ServerChoice::connectionError(int, const QString &mess)
 {
-    ui->serverList->setCurrentCell(-1,-1);
+    ui->serverList->setCurrentIndex(QModelIndex());
     ui->description->clear();
     ui->description->insertPlainText(tr("Disconnected from the registry: %1").arg(mess) + "\n");
 

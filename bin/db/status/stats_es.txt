@@ -1,8 +1,0 @@
-PS
-Ataque
-Defensa
-At.Esp
-Def.Esp
-Velocidad
-Precisión
-Evasión

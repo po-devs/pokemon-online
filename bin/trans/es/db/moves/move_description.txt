@@ -1,0 +1,561 @@
+﻿0 (Sin descripción)
+1 Golpea con las patas o la cola.
+2 Da un golpe cortante. Suele ser crítico.
+3 Abofetea de dos a cinco veces seguidas.
+4 Pega de dos a cinco veces seguidas.
+5 Un puñetazo de gran potencia.
+6 Arroja monedas al objetivo. Las recupera al final del combate.
+7 Puñetazo ardiente. Puede quemar.
+8 Puñetazo helado. Puede congelar.
+9 Puñetazo eléctrico. Puede paralizar.
+10 Araña con afiladas garras.
+11 Atrapa con potentes pinzas.
+12 Ataque con pinzas que debilita al oponente de un golpe si acierta.
+13 Primero se prepara y en el segundo turno ataca al oponente con ráfagas de viento cortante. Alta probabilidad de ser crítico.
+14 Baile frenético que aumenta mucho el Ataque.
+15 Corta con garras, guadañas, etc. También sirve para cortar árboles finos.
+16 Crea un tornado con las alas y lo lanza contra el objetivo.
+17 Golpea al objetivo con unas grandes alas.
+18 Se lleva al objetivo, que es cambiado por otro Pokémon. Si es un Pokémon salvaje, acaba el combate.
+19 Primer turno: vuela. Segundo turno: ataca. Fuera de combate, permite ir a sitios ya conocidos.
+20 Ata y oprime de cuatro a cinco turnos.
+21 Golpea con las extremidades.
+22 Azota al objetivo con ramas finas.
+23 Tremendo pisotón que puede hacer retroceder al objetivo.
+24 Una patada doble. Golpea dos veces.
+25 Patada de extrema fuerza.
+26 Da un salto y pega una patada. Si falla, se lesiona.
+27 Una patada rápida y circular. También puede hacer retroceder al objetivo.
+28 Arroja arena a la cara y baja la Precisión.
+29 Lanza un potente cabezazo que puede hacer retroceder al objetivo.
+30 Ataca al objetivo con una cornada.
+31 Cornea al objetivo de dos a cinco veces.
+32 Ataque con taladro que fulmina en un golpe al objetivo si le toca.
+33 Embiste con todo el cuerpo.
+34 Salta sobre el objetivo con todo su peso. Puede paralizar.
+35 Oprime al objetivo de cuatro a cinco turnos con ramas o con su cuerpo.
+36 Carga desmedida que también hiere al agresor.
+37 Ataca de dos a tres turnos y acaba confundiendo al agresor.
+38 Ataque arriesgado que también hiere al agresor.
+39 Agita la cola para bajar la Defensa del contrincante.
+40 Lanza un aguijón tóxico que puede envenenar al objetivo.
+41 Pincha dos veces con dos espinas. Puede envenenar.
+42 Lanza finas púas que hieren de dos a cinco veces.
+43 Intimida al objetivo para bajar su Defensa.
+44 Un voraz bocado que puede hacer retroceder al objetivo.
+45 Dulce gruñido que reduce el Ataque del contrincante.
+46 Se lleva al objetivo, que es cambiado por otro Pokémon. Si es un Pokémon salvaje, acaba el combate.
+47 Cancioncilla que hace dormir profundamente al objetivo.
+48 Raras ondas sónicas que pueden confundir al objetivo.
+49 Lanza ondas de choque que restan 20 PS al objetivo.
+50 Desactiva el último movimiento del objetivo durante cuatro turnos.
+51 Rocía con un ácido corrosivo. Puede bajar la Defensa Especial.
+52 Ataca con llamas pequeñas que pueden causar quemaduras.
+53 Ataca con una gran ráfaga de fuego que puede causar quemaduras.
+54 Rodea de fina niebla al usuario y protege las características de su equipo durante cinco turnos.
+55 Ataca disparando agua con gran potencia.
+56 Lanza una gran masa de agua a presión para atacar.
+57 Inunda el campo de batalla con una ola gigante. Fuera de batalla sirve para moverse sobre el agua.
+58 Rayo de hielo que puede llegar a congelar.
+59 Tormenta de hielo que puede llegar a congelar.
+60 Extraño rayo que puede causar confusión.
+61 Diluvio de burbujas que puede bajar la Velocidad.
+62 Rayo multicolor que puede reducir el Ataque.
+63 Es eficaz, pero el atacante deberá descansar en el siguiente turno.
+64 Ensarta al objetivo con un cuerno o pico punzante.
+65 Picotazo giratorio y perforador muy potente.
+66 Tira al objetivo al suelo. También hiere al agresor.
+67 Patada baja. Cuanto más pesa el objetivo, más daño causa.
+68 Devuelve un golpe físico por duplicado.
+69 La gravedad derriba al objetivo. Se restarán tantos PS como nivel tenga el agresor.
+70 Potente puñetazo. Fuera de combate sirve para mover piedras.
+71 Absorbe la mitad del daño producido en el objetivo para restaurar los PS del usuario.
+72 Absorbe la mitad del daño producido en el objetivo para restaurar los PS del usuario.
+73 Planta semillas que absorben PS para recuperar la salud del usuario en cada turno.
+74 El cuerpo del usuario crece a marchas forzadas y aumenta el Ataque y el Ataque Especial.
+75 Corta con hojas afiladas. Suele ser crítico.
+76 Primer turno: absorbe luz. Segundo turno: ataca.
+77 Polvo tóxico que envenena al objetivo.
+78 Esparce polvo que paraliza al objetivo.
+79 Esparce polvo que duerme al objetivo.
+80 Lanza pétalos de dos a tres turnos y acaba confundiendo al atacante.
+81 Lanza seda al objetivo y reduce su Velocidad.
+82 Ráfaga de furiosas ondas de choque que quitan 40 PS.
+83 Un aro de fuego que atrapa al objetivo de cuatro a cinco turnos.
+84 Ataque eléctrico que puede paralizar al objetivo.
+85 Potente ataque eléctrico que puede paralizar al objetivo.
+86 Una ligera descarga que paraliza al objetivo si lo alcanza.
+87 Un poderoso rayo que daña al objetivo y puede paralizarlo.
+88 Tira una pequeña roca al objetivo.
+89 Un terremoto que afecta a los Pokémon de alrededor en combate.
+90 Abre una grieta en el suelo y mete al objetivo en ella. Fulmina en un golpe.
+91 Primer turno: cava. Segundo turno: ataca. También sirve para salir de ciertas zonas.
+92 Envenena gravemente al objetivo y causa un daño mayor en cada turno.
+93 Débil ataque telequinético que puede causar confusión.
+94 Fuerte ataque telequinético que puede bajar la Defensa Especial del objetivo.
+95 Ataque hipnótico que hace dormir profundamente al objetivo.
+96 El usuario reposa y medita para potenciar el Ataque.
+97 Relaja el cuerpo para ganar mucha Velocidad.
+98 Ataque rápido que permite golpear en primer lugar.
+99 Al usarse, aumenta el Ataque del usuario cada vez que es golpeado.
+100 Permite huir al instante de combates contra Pokémon salvajes o viajar al último Centro Pokémon visitado.
+101 Produce un espejismo ante el objetivo, que pierde tantos PS como nivel tenga el agresor.
+102 Copia el último movimiento usado por el objetivo. Dicho movimiento se podrá usar mientras el Pokémon no sea cambiado.
+103 Alarido agudo que reduce mucho la Defensa del objetivo.
+104 Crea copias de sí mismo para mejorar la Evasión.
+105 Restaura hasta la mitad de los PS máximos.
+106 Tensa la musculatura del usuario para aumentar la Defensa.
+107 El usuario mengua para aumentar mucho la Evasión.
+108 Baja la Precisión del objetivo con una nube de humo o tinta.
+109 Rayo siniestro que confunde al objetivo.
+110 El usuario se protege en su coraza y sube la Defensa.
+111 Se enrosca para ocultar su punto débil. Sube la Defensa.
+112 Crea una barrera para aumentar mucho la Defensa.
+113 Pared de luz que reduce durante cinco turnos el daño producido por los ataques especiales.
+114 Neblina que elimina los cambios de características de todos los Pokémon en combate.
+115 Pared de luz que reduce durante cinco turnos el daño producido por los ataques físicos.
+116 Concentra energía para aumentar las posibilidades de un golpe crítico.
+117 Espera dos turnos para atacar con el doble de potencia del daño recibido.
+118 El usuario mueve un dedo y estimula su cerebro para usar al azar casi cualquier movimiento.
+119 Contraataca con el mismo movimiento empleado por el objetivo.
+120 El atacante explota y hiere a todos a su alrededor. El usuario se debilita de inmediato.
+121 Arroja un huevo al objetivo con gran fuerza.
+122 Una lengua ataca al objetivo. Puede causar parálisis.
+123 El objetivo es atacado con gases tóxicos que pueden llegar a envenenar.
+124 Arroja residuos al objetivo. Puede llegar a envenenar.
+125 Aporrea con un hueso. Puede hacer retroceder al objetivo.
+126 Llama intensa que chamusca y puede causar quemaduras.
+127 Embiste con un gran impulso que puede hacer retroceder. También sirve para remontar cascadas.
+128 Atrapa y atenaza con fuerza durante cuatro o cinco turnos.
+129 Lanza rayos en forma de estrella que no fallan nunca.
+130 Primer turno: se prepara y sube la Defensa del usuario. Segundo turno: da el cabezazo.
+131 Lanza finas púas que hieren de dos a cinco veces.
+132 Constriñe para herir y puede bajar la Velocidad.
+133 El usuario olvida sus preocupaciones y aumenta mucho la Defensa Especial.
+134 Dobla una cuchara para distraer al objetivo y bajar su nivel de Precisión.
+135 Restaura la mitad de los PS máximos del usuario. Fuera de combate se usa para transferir parte de sus PS a un aliado.
+136 Salta muy alto y lanza una patada. Si falla, dañará al usuario.
+137 Intimida y asusta al objetivo con la mirada para dejarlo paralizado.
+138 Restaura al usuario la mitad del daño causado a un objetivo dormido.
+139 Lanza una nube de gas tóxico al objetivo. Produce envenenamiento.
+140 Arroja esferas al objetivo entre dos y cinco veces seguidas.
+141 Restaura al usuario la mitad del daño causado al objetivo.
+142 Con una cara que asusta, da un beso al objetivo y lo adormece.
+143 Ataque en dos turnos que suele ser crítico. Puede hacer retroceder al objetivo.
+144 El usuario se transforma en una copia del objetivo, con los mismos movimientos.
+145 Lanza burbujas al contrincante y puede reducir su Velocidad.
+146 Rítmicos puñetazos que pueden causar confusión.
+147 Esparce esporas que inducen al sueño.
+148 Luz cegadora que baja la Precisión del objetivo. Fuera de combate sirve para iluminar.
+149 Ataque con una onda de energía de intensidad variable.
+150 No tiene ningún efecto. Solo salpica.
+151 Transforma la estructura celular para hacerse líquido y aumenta mucho la Defensa.
+152 Golpea con fuerza con unas pinzas. Suele ser crítico.
+153 El atacante explota y hiere a todos a su alrededor. El usuario se debilita de inmediato.
+154 Araña rápidamente de dos a cinco veces.
+155 Lanza un hueso a modo de bumerán que golpea dos veces.
+156 Restaura todos los PS y cura todos los problemas de estado del usuario. Duerme los dos próximos turnos.
+157 Lanza grandes pedruscos. Puede hacer retroceder al objetivo.
+158 Ataque con finos colmillos. Puede hacer retroceder al objetivo.
+159 El perfil del usuario se hace más afilado y su Ataque mejora.
+160 Cambia el tipo del usuario por el de uno de sus movimientos.
+161 Ataque triple que puede paralizar, quemar o congelar al objetivo.
+162 Finos colmillos que reducen a la mitad los PS del objetivo.
+163 Ataca con cuchillas o con pinzas. Suele dar un golpe crítico.
+164 Utiliza parte de los PS propios para crear un sustituto que actúa como señuelo.
+165 Solo se usa como último recurso al acabarse los PP. Hiere un poco al agresor.
+166 Aprende de forma permanente el último movimiento del objetivo. Es de un solo uso.
+167 Patea hasta tres veces seguidas y cada vez más fuerte.
+168 Ataca y le quita al objetivo el objeto que lleve. Si el agresor lleva un objeto, no robará el del objetivo.
+169 Enreda al objetivo para evitar que abandone la batalla.
+170 El usuario adivina los movimientos del objetivo para hacer que su siguiente ataque no falle.
+171 El objetivo dormido sufre una pesadilla que le hace perder PS en cada turno.
+172 Ataca envuelto en fuego. Puede causar quemaduras.
+173 Fuerte ronquido que debe usarse dormido. Puede hacer retroceder al objetivo.
+174 Un movimiento que tiene efectos distintos si el usuario es de tipo Fantasma o no.
+175 Ataque frenético. Cuantos menos PS tenga el usuario, más daño produce.
+176 El usuario cambia de tipo para hacerse resistente al último tipo de movimiento usado por el objetivo.
+177 Lanza un chorro de aire que suele dar un golpe crítico.
+178 Adhiere esporas al objetivo para reducir mucho su Velocidad.
+179 Ataque desesperado que causa más daño cuantos menos PS tenga el usuario.
+180 Da rienda suelta a su rencor para reducir cuatro PP del último movimiento usado por el objetivo.
+181 Lanza nieve que puede llegar a congelar.
+182 Frena todos los ataques, pero puede fallar si se usa repetidamente.
+183 Puñetazo que se da rápido para golpear primero.
+184 Asusta al objetivo para reducir mucho su Velocidad.
+185 Engaña al objetivo para acercarse y dar un puñetazo que no falla.
+186 Da un beso con tal dulzura que causa confusión.
+187 Reduce la mitad de los PS máximos para mejorar al máximo el Ataque.
+188 Arroja residuos al objetivo. Puede llegar a envenenar.
+189 Echa lodo en la cara para bajar la Precisión.
+190 Dispara tinta a la cara. Puede bajar la Precisión.
+191 Esparce púas en el equipo rival. Las púas hieren a los Pokémon rivales que entran en combate.
+192 Dispara una descarga eléctrica que causa daño y parálisis.
+193 Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.
+194 Si el usuario se debilita por un ataque rival antes de usar otro movimiento, el Pokémon rival se debilitará también.
+195 Si un Pokémon escucha este canto y no es cambiado por otro en tres turnos, acaba debilitándose.
+196 Ataque con aire helado que baja la Velocidad del objetivo.
+197 Frena todos los ataques, pero puede fallar si se usa repetidamente.
+198 Hueso en ristre, aporrea al objetivo de dos a cinco veces.
+199 Fija el blanco para que el siguiente ataque no falle.
+200 Ataca de dos a tres turnos y acaba confundiendo al agresor.
+201 Tormenta de arena que dura cinco turnos y hiere a todos, excepto a los de tipo Roca, Tierra y Acero.
+202 Un ataque que absorbe nutrientes. Quien lo usa recupera la mitad de los PS del daño que produce.
+203 Resiste cualquier ataque y deja al menos un PS. Puede fallar si se usa repetidamente.
+204 Engatusa al objetivo y reduce bastante su Ataque.
+205 El atacante rueda contra el objetivo durante cinco turnos, cada vez con mayor fuerza.
+206 Ataque moderado que no debilita al objetivo y le deja al menos un PS.
+207 Provoca confusión en el objetivo, pero también sube mucho su Ataque.
+208 Restaura la mitad de los PS máximos del usuario. Fuera de combate se usa para transferir parte de sus PS a un aliado.
+209 Ataque eléctrico que puede llegar a paralizar.
+210 Ataque con garras o guadaña que crece en intensidad si se usa repetidas veces.
+211 Alas macizas que golpean al objetivo y pueden subir la Defensa del usuario.
+212 Mal de ojo que impide al objetivo huir de la batalla.
+213 Si el objetivo es del sexo opuesto, se enamorará y bajará la posibilidad de que ataque.
+214 Mientras duerme, usa uno de sus movimientos elegido al azar.
+215 Tañido que cura los problemas de estado de todos los Pokémon del equipo.
+216 Cuanto mayor sea la amistad con el Entrenador, más poderoso será este ataque.
+217 Quien lo usa ataca al objetivo dándole un regalo con bomba trampa. Sin embargo, a veces restaura sus PS.
+218 Cuanto menor sea la amistad con el Entrenador, más poderoso será este ataque.
+219 Crea un campo protector que evita problemas de estado durante cinco turnos.
+220 Suma los PS del usuario a los del objetivo y los reparte a partes iguales.
+221 Fuego místico de gran intensidad que puede causar quemaduras.
+222 Sacudida sísmica de intensidad variable que afecta a los Pokémon adyacentes en combate.
+223 Puñetazo con toda la fuerza concentrada. Causa confusión si atina.
+224 Violenta embestida con cuernos imponentes.
+225 Poderosa ráfaga de aliento que golpea al objetivo y puede paralizarlo.
+226 Cambia el puesto con un compañero y le pasa los cambios de características.
+227 El objetivo repite su último movimiento durante tres turnos.
+228 Hace el doble de daño al objetivo que pide el relevo.
+229 Ataque giratorio que puede eliminar movimientos como Atadura, Repetición, Drenadoras y Púas.
+230 Engatusa al objetivo para reducir su Evasión. En la hierba alta sirve para atraer Pokémon salvajes.
+231 Ataca con una cola férrea y puede bajar la Defensa del objetivo.
+232 Ataque con garras de acero que puede aumentar el Ataque del usuario.
+233 El usuario ataca el último, pero no falla.
+234 Restaura PS del usuario. La cantidad varía según el tiempo que haga.
+235 Restaura PS del usuario. La cantidad varía según el tiempo que haga.
+236 Restaura PS del usuario. La cantidad varía según el tiempo que haga.
+237 Ataque único cuyo tipo y potencia varían según el agresor.
+238 Corte doble que suele propinar un golpe crítico.
+239 Crea un violento tornado para hacer trizas al enemigo. Puede hacerle retroceder.
+240 Genera una fuerte lluvia que refuerza los movimientos de tipo Agua durante cinco turnos.
+241 Quien lo usa intensifica el sol durante cinco turnos, lo que potencia los movimientos de tipo Fuego.
+242 Tritura con afilados colmillos y puede bajar la Defensa del objetivo.
+243 Responde a un ataque especial ocasionando el doble del daño recibido.
+244 Quien lo usa se hipnotiza y copia cualquier cambio que haya en las características de su objetivo.
+245 Ataque muy rápido que siempre se realiza el primero.
+246 Ataque prehistórico que puede subir todas las características.
+247 Lanza una bola oscura que puede bajar la Defensa Especial del objetivo.
+248 Concentra energía psíquica para golpear al objetivo dos turnos después.
+249 Ataca con puñetazos que pueden romper rocas. Puede bajar la Defensa del objetivo.
+250 Una tromba de agua atrapa al objetivo durante cuatro o cinco turnos.
+251 Ataque de todo el equipo Pokémon. Cuantos más haya, más veces ataca.
+252 Ataca primero y, además, hace retroceder al objetivo. Solo sirve en el primer turno.
+253 Ataca de forma alborotada durante tres turnos. Mantiene despiertos a todos.
+254 Acumula energía y sube la Defensa y la Defensa Especial. Puede utilizarse hasta tres veces.
+255 Libera de una vez la energía acumulada con Reserva.
+256 Absorbe la energía acumulada con Reserva y restaura PS.
+257 Provoca un viento abrasador que puede quemar al objetivo.
+258 Tormenta de granizo que dura cinco turnos. Hiere a todos, excepto a los de tipo Hielo.
+259 Atormenta y enfurece al objetivo, que no puede usar dos veces seguidas el mismo movimiento.
+260 Halaga al objetivo y lo confunde, pero también sube su Ataque Especial.
+261 Siniestra llama morada que produce quemaduras.
+262 El usuario se debilita, pero baja mucho tanto el Ataque como el Ataque Especial del objetivo.
+263 Ataca con el doble de potencia si el usuario está quemado, paralizado o envenenado.
+264 Se concentra para dar un puñetazo. Falla si se sufre un golpe antes de su uso.
+265 Hace el doble de daño a objetivos paralizados, pero también cura la parálisis.
+266 Llama la atención para concentrar todos los ataques de todos los del equipo rival hacia sí mismo.
+267 Usa el poder de la naturaleza. Su efecto varía según el entorno de combate.
+268 Recarga energía para potenciar el siguiente movimiento de tipo Eléctrico. También sube la Defensa Especial.
+269 Enfurece al objetivo para que solo use movimientos de ataque durante tres turnos.
+270 El usuario ayuda a un aliado reforzando la potencia de su ataque.
+271 Engaña al objetivo desprevenido e intercambia objetos.
+272 Imita al objetivo por completo y copia su habilidad.
+273 Cumple el deseo de restaurar la mitad de los PS máximos en el siguiente turno.
+274 Usa un movimiento de un miembro del equipo elegido al azar.
+275 Echa raíces para recuperar PS en cada turno, pero impide el relevo.
+276 Ataque de gran potencia, pero que reduce el Ataque y la Defensa del agresor.
+277 Barrera capaz de devolver al agresor movimientos como Drenadoras y otros que alteran el estado o las características.
+278 Recicla y así recupera el objeto equipado de un solo uso que ya ha sido empleado en el combate.
+279 Ataque que produce el doble de daño si el usuario es herido en el mismo turno.
+280 Potente ataque que también es capaz de destruir barreras como Pantalla de Luz y Reflejo.
+281 Gran bostezo que induce al sueño al objetivo en el siguiente turno.
+282 Impide al objetivo usar el objeto que lleva durante el combate.
+283 Reduce los PS del objetivo para que igualen a los del atacante.
+284 Furia explosiva. Cuanto menor sea el número de PS del usuario, menos daño hará el ataque.
+285 Usa el poder psíquico para intercambiar habilidades con el objetivo.
+286 Impide a los contrincantes usar ataques conocidos por el usuario durante el combate.
+287 Descansa para curar parálisis, envenenamiento o quemaduras.
+288 Si el usuario se debilita al recibir un ataque, todos los PP de este último ataque serán eliminados.
+289 Roba el efecto de movimientos de curación o de cambio de características que intente usar un combatiente.
+290 Ataque con poder secreto cuyos efectos secundarios varían según el entorno de combate.
+291 Primer turno: se sumerge en el mar. Segundo turno: emerge y ataca.
+292 Empujones directos que golpean de dos a cinco veces seguidas.
+293 Modifica el tipo del Pokémon según el terreno de combate donde esté.
+294 Se concentra en una ráfaga de luz que sube muchísimo el Ataque Especial.
+295 Fogonazo de luz que puede bajar la Defensa Especial del objetivo.
+296 Banco de niebla que puede bajar el Ataque Especial del objetivo.
+297 Envuelve al objetivo con un manto de plumas para reducir mucho su Ataque.
+298 Danza histérica que confunde a los Pokémon que están alrededor del usuario.
+299 Patada que suele ser un golpe crítico y puede causar quemaduras.
+300 El usuario se cubre de lodo y debilita los movimientos de tipo Eléctrico mientras está en combate.
+301 El atacante rueda contra el objetivo durante cinco turnos, cada vez con mayor fuerza.
+302 Pega con brazos de pinchos y puede hacer retroceder al objetivo.
+303 El usuario se relaja y restaura la mitad de sus PS máximos.
+304 Grito desgarrador que inflige daño al objetivo.
+305 Colmillos tóxicos que pueden envenenar gravemente al objetivo.
+306 Hace trizas al objetivo con garras afiladas y puede bajar su Defensa.
+307 Explosión de fuego. El atacante debe descansar el siguiente turno.
+308 Disparo de agua. El atacante debe descansar el siguiente turno.
+309 Puñetazo que impacta como un meteorito y puede subir el Ataque del agresor.
+310 Impresiona tanto que puede hacer retroceder al objetivo.
+311 El tipo y fuerza del ataque varían según el tiempo que haga.
+312 Cura todos los problemas de estado del equipo con un suave aroma.
+313 Lágrimas de cocodrilo que bajan mucho la Defensa Especial del objetivo.
+314 Viento cortante que azota. Suele ser un golpe crítico.
+315 Ataque en toda regla que baja mucho el Ataque Especial de quien lo usa.
+316 Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.
+317 Tira rocas que detienen al objetivo y bajan su Velocidad.
+318 Fuerte viento con polvo de escamas. Puede subir todas las características de quien lo usa.
+319 Horrible chirrido metálico que baja mucho la Defensa Especial del objetivo.
+320 Agradable melodía que adormece al objetivo.
+321 Hace reír al objetivo para bajar el Ataque y la Defensa.
+322 Sube la Defensa y la Defensa Especial propias con energía mística.
+323 Chorro de agua. Cuantos menos PS tenga el usuario, menos dañino será.
+324 Ataca con un rayo de luz siniestro. Puede confundir al objetivo.
+325 Puñetazo ineludible procedente de las sombras.
+326 Energía muy extraña que puede hacer retroceder al objetivo.
+327 Gancho ascendente de gran ímpetu.
+328 Enreda al objetivo en un remolino de arena de cuatro a cinco turnos.
+329 Ataque de frío polar que debilita al objetivo si le alcanza.
+330 Ataque con agua lodosa que puede bajar la Precisión.
+331 Dispara rápido de dos a cinco ráfagas de semillas de manera consecutiva.
+332 El usuario lanza un ataque muy rápido e ineludible.
+333 Ataca lanzando de dos a cinco ráfagas consecutivas de carámbanos.
+334 Fortalece el cuerpo como si fuera hierro y sube mucho la Defensa.
+335 Le corta el paso al objetivo para que no pueda escapar.
+336 Aullido que sube el ánimo y aumenta el Ataque.
+337 Araña al objetivo con garras afiladas.
+338 Golpea con una enorme planta. Quien lo usa no puede moverse en el siguiente turno.
+339 Robustece el cuerpo para subir el Ataque y la Defensa.
+340 Primer turno: bota. Segundo turno: golpea. Puede paralizar.
+341 El usuario lanza lodo al objetivo y reduce su Velocidad.
+342 Puede envenenar y dar un golpe crítico.
+343 Se acerca con ternura al objetivo, pero le ataca pudiendo robar el objeto que lleve.
+344 Quien lo usa electrifica su cuerpo para luego atacar. Se hiere mucho a sí mismo, pero puede paralizar al objetivo.
+345 Esparce extrañas hojas que persiguen al objetivo. No se puede esquivar.
+346 El usuario se moja y, mientras esté en combate, los movimientos de tipo Fuego se debilitan.
+347 Aumenta la concentración y calma el espíritu para subir el Ataque Especial y la Defensa Especial.
+348 Acuchilla con una hoja fina. Suele dar un golpe crítico.
+349 Danza mística que sube el Ataque y la Velocidad.
+350 Lanza pedruscos al objetivo de dos a cinco veces consecutivas.
+351 Ataque eléctrico muy rápido e ineludible.
+352 Ataca con un potente chorro de agua. Puede confundir al objetivo.
+353 Concentra un haz de luz y ataca dos turnos después.
+354 Ataque en toda regla que baja mucho el Ataque Especial de quien lo usa.
+355 Aterriza sobre la superficie para descansar. Recupera hasta la mitad del total de sus PS.
+356 La gravedad aumenta durante cinco turnos, lo que impide acciones que impliquen volar o levitar.
+357 Permite atacar con cualquier movimiento a objetivos de tipo Siniestro y golpear a Pokémon evasivos.
+358 Inflige gran daño a objetivos dormidos. Sin embargo, los bofetones también los despiertan.
+359 Gira con fuerza el puño y da un gran golpe. No obstante, baja la Velocidad.
+360 Embiste al objetivo con un potente ataque giratorio. Cuanto más lento es el usuario, más daño causa.
+361 El Pokémon cae debilitado, pero su sustituto recupera su estado y los PS.
+362 Si al objetivo le queda la mitad o menos de sus PS, el ataque será el doble de fuerte.
+363 La Baya que lleva presta su fuerza para atacar. El tipo de ataque y su fuerza dependen de la Baya.
+364 Permite golpear a objetivos que usan Protección o Detección y anula dichos movimientos.
+365 Picotea al objetivo. Si este sostiene una Baya, la picotea también y obtiene sus efectos.
+366 Crea un fuerte remolino que aumenta la Velocidad de los Pokémon de tu equipo durante cuatro turnos.
+367 La presión en puntos clave del cuerpo potencia una de sus características.
+368 Devuelve al objetivo el último ataque recibido, pero con mucha más fuerza.
+369 Tras atacar, vuelve a toda prisa para dar paso a otro Pokémon del equipo.
+370 Lucha abiertamente contra el objetivo sin protegerse. También reduce la Defensa y la Defensa Especial del usuario.
+371 El usuario contraataca con el doble de fuerza si el objetivo usa un movimiento antes.
+372 Si el objetivo ya ha sufrido daño en ese turno, la fuerza del ataque se duplica.
+373 Impide al objetivo usar el objeto que lleva. Su Entrenador tampoco puede usar objetos sobre él.
+374 Lanza contra el objetivo el objeto que lleva. La fuerza del ataque y su efecto varían según el objeto.
+375 Usa su poder mental para transferir al objetivo sus problemas de estado.
+376 Cuantos menos PP tenga el movimiento, mayor será la fuerza para atacar.
+377 Impide al objetivo usar movimientos, habilidades y objetos equipados que recuperan PS durante cinco turnos.
+378 Estruja con fuerza al objetivo. Cuantos más PS tenga el objetivo, más fuerza tendrá el ataque.
+379 Usa sus poderes mentales para intercambiar su característica de Ataque por Defensa.
+380 El usuario arroja sus jugos biliares al objetivo, lo que anula el efecto de la habilidad en uso.
+381 Lanza al cielo un conjuro que impide al objetivo asestar golpes críticos.
+382 Se adelanta al movimiento que pretende usar el objetivo y lo lanza antes con más fuerza. Si el usuario es más lento, falla.
+383 Imita el movimiento usado justo antes. El movimiento falla si no se ha usado aún ninguno.
+384 El usuario emplea su poder mental para intercambiar los cambios en Ataque y Ataque Especial con el objetivo.
+385 El usuario emplea su poder mental para intercambiar los cambios en Defensa y Defensa Especial con el objetivo.
+386 La fuerza del ataque aumenta cuanto más se ha fortalecido el objetivo con cambios de características.
+387 Este movimiento solo puede usarse tras haber agotado todos los demás conocidos por el Pokémon.
+388 Se planta una semilla en el objetivo que le causa pesar. Evita el sueño gracias a la habilidad Insomnio.
+389 Permite atacar primero. Falla si el objetivo no está preparando ningún ataque.
+390 Lanza una trampa de púas tóxicas a los pies del objetivo. El veneno afecta a los Pokémon que entran.
+391 Usa la fuerza mental para intercambiar con el objetivo los cambios en las características.
+392 Un manto de agua cubre al Pokémon que lo usa. Recupera algunos PS en cada turno.
+393 Levita gracias a un campo magnético generado por electricidad durante cinco turnos.
+394 El Pokémon se cubre de llamas y carga contra el objetivo, aunque él también recibe daños.
+395 Ataca al objetivo con una onda de choque y puede llegar a paralizarlo.
+396 Libera una descarga de la fuerza del aura desde su interior. Es infalible.
+397 Reduce la resistencia puliendo su cuerpo. Aumenta la Velocidad considerablemente.
+398 Pincha al objetivo con un tentáculo o brazo envenenado. Puede llegar a envenenar al objetivo.
+399 Libera una horrible aura llena de malos pensamientos y puede hacer retroceder al objetivo.
+400 Ataca al objetivo a la primera oportunidad. Suele ser crítico.
+401 Ataca agitando la cola como si fuera una ola rabiosa en una tormenta devastadora.
+402 Lanza al objetivo una descarga de semillas explosivas desde arriba. 
+403 Ataca con una hoja de aire que incluso corta el cielo. También puede hacer retroceder al objetivo.
+404 Cruza las guadañas o las garras para atacar al objetivo como si fueran unas tijeras.
+405 El movimiento de las alas crea una onda sónica dañina. También puede disminuir la Defensa Especial del objetivo.
+406 Abre mucho la boca y libera una onda de choque que ataca al objetivo.
+407 Ataca de forma brutal mientras intimida al objetivo. También puede hacerlo retroceder.
+408 Ataca con un rayo de luz que centellea como si lo formaran miles de joyas.
+409 Un golpe que drena energía. El Pokémon recupera la mitad de los PS arrebatados al objetivo.
+410 Gira los puños y libera una onda de vacío contra el objetivo. Este movimiento siempre va primero.
+411 Agudiza la concentración mental y libera su poder. Puede disminuir la Defensa Especial del objetivo.
+412 Aúna fuerzas de la naturaleza y libera su ataque. Puede disminuir la Defensa Especial del objetivo.
+413 Pliega sus alas y ataca con un vuelo rasante. El Pokémon que lo usa también resulta seriamente dañado.
+414 La tierra a los pies del objetivo erupciona violentamente. Puede disminuir la Defensa Especial del objetivo.
+415 Intercambia con el objetivo los objetos que llevan tan rápido que es imposible verlo a simple vista.
+416 Carga contra el objetivo usando toda la fuerza que tiene. El Pokémon descansa el turno siguiente.
+417 Estimula su cerebro pensando en cosas malas. Aumenta considerablemente el Ataque Especial.
+418 Ataca con fuertes puñetazos tan rápidos como proyectiles. Este movimiento siempre va primero.
+419 Este ataque inflige el doble de daño a un objetivo que haya golpeado al usuario en ese mismo turno.
+420 Crea bolas de hielo y las lanza a gran velocidad. Este movimiento siempre va primero.
+421 Ataca con una garra afilada hecha de sombras. Suele ser crítico.
+422 Usa colmillos electrificados para morder. Puede hacer que el objetivo retroceda o paralizarlo.
+423 Usa colmillos helados para morder. Puede hacer que el objetivo retroceda o congelarlo.
+424 Usa colmillos en llamas para morder. Puede hacer que el objetivo retroceda o reciba quemaduras.
+425 Extiende su sombra y ataca al objetivo por la espalda. Este movimiento siempre va primero.
+426 Ataca lanzando una compacta bola de fango. Puede bajar la Precisión del objetivo.
+427 Ataca al objetivo con cuchillas formadas por energía psíquica. Suele ser crítico.
+428 Concentra su energía psíquica en la cabeza para golpear. Puede hacer que el objetivo retroceda.
+429 El usuario libera un haz de energía desde su pulido cuerpo. Puede bajar la Precisión.
+430 El usuario concentra toda la luz del cuerpo y la libera. Puede bajar la Defensa Especial del objetivo.
+431 Ataca con una gran embestida. Puede confundir al objetivo.
+432 Potente viento que barre el Reflejo o Pantalla de Luz del objetivo y puede reducir su Evasión.
+433 Se crea un espacio extraño en el que los Pokémon lentos se mueven primero durante cinco turnos.
+434 Hace que grandes cometas caigan del cielo. Baja mucho el Ataque Especial de quien lo usa.
+435 Una deslumbradora onda eléctrica afecta a los Pokémon de alrededor en combate. Puede paralizar.
+436 Un infierno de llamas daña a los Pokémon adyacentes en combate. Puede quemar.
+437 Cae una lluvia de hojas afiladas. Baja mucho el Ataque Especial de quien lo usa.
+438 El usuario agita violentamente sus lianas o tentáculos para golpear al objetivo.
+439 Lanza una piedra enorme contra el objetivo, pero tiene que descansar el siguiente turno.
+440 Tajo que puede envenenar al objetivo. Suele ser crítico.
+441 Lanza contra el objetivo asquerosa basura. Puede envenenar al objetivo.
+442 Ataca con su dura cabeza de hierro. Puede hacer que el objetivo retroceda.
+443 Lanza unas bombas de hierro que se pegan al adversario. No se puede esquivar.
+444 Clava piedras muy afiladas al objetivo. Suele ser crítico.
+445 Si el objetivo es del sexo opuesto, queda embelesado y baja mucho su Ataque Especial.
+446 Una trampa de rocas que flota en el aire y daña a los objetivos que entran en combate.
+447 Enreda al objetivo con hierba y lo derriba. Cuanto más pesado es el objetivo, más daño inflige.
+448 Ataca con una onda sónica compuesta por palabras que ha aprendido. Puede confundir al objetivo.
+449 Emite incontables haces de luz. Varía según el tipo de Tabla que lleve el usuario.
+450 Pica al objetivo. Si el objetivo lleva una Baya, el usuario se la come y se beneficia de su efecto.
+451 Lanza un rayo eléctrico contra el objetivo. Puede subir el Ataque Especial de quien lo usa.
+452 Arremete contra el objetivo con su robusto cuerpo. El agresor también sufre bastante daño.
+453 Ataque rápido que permite golpear en primer lugar.
+454 El usuario llama a sus súbditos para que ataquen al objetivo. Suele ser crítico.
+455 El usuario llama a sus súbditos para que formen un escudo viviente. Sube la Defensa y la Defensa Especial.
+456 El usuario llama a sus súbditos para que lo curen. Recupera hasta la mitad de los PS máximos.
+457 El usuario arriesga su vida y lanza un cabezazo con toda su fuerza. El agresor resulta seriamente dañado.
+458 Golpea al objetivo dos veces seguidas con la cola u otras partes de su cuerpo. 
+459 Ataca al objetivo usando tal energía que el tiempo se distorsiona. El usuario descansa el siguiente turno.
+460 Desgarra al objetivo y el espacio a su alrededor. Suele ser crítico.
+461 El usuario se debilita, pero el Pokémon que lo sustituye recupera su estado, los PS y los PP.
+462 Estruja al objetivo con gran fuerza. Cuantos más PS le queden al objetivo, más fuerte será el ataque.
+463 El objetivo queda atrapado en una tormenta de fuego que dura de cuatro a cinco turnos.
+464 El objetivo es enviado a un mundo de tinieblas que lo hace dormir.
+465 Una onda de choque se libera del cuerpo. Puede bajar severamente la Defensa Especial del objetivo.
+466 Produce un viento horripilante. Puede subir de golpe todas las características del usuario.
+467 En el primer turno, desaparece. En el segundo, golpea al objetivo aunque se esté protegiendo.
+468 El usuario se afila las garras para aumentar su Ataque y Precisión.
+469 Bloquea los ataques lanzados contra todo tu equipo durante un turno. Su eficacia merma si se usa repetidas veces.
+470 El usuario emplea sus poderes para hacer la media de su Defensa y Defensa Especial con las de su objetivo y compartirlas.
+471 El usuario emplea sus poderes para hacer la media de su Ataque y Ataque Especial con los de su objetivo y compartirlos.
+472 Crea una zona misteriosa donde se intercambian la Defensa y Def. Especial en todos los Pokémon por cinco turnos.
+473 Crea una onda psíquica que golpea al objetivo y provoca un gran daño.
+474 Ataca cubriendo al objetivo con un líquido venenoso. El daño será doble si este ya está envenenado.
+475 El usuario se sacude para hacerse más ligero y aumentar mucho su Velocidad.
+476 Usa un polvo que irrita y centra en el usuario la atención y los ataques de los rivales.
+477 El usuario emplea su poder mental para hacer flotar al objetivo, haciéndolo blanco fácil de sus ataques durante tres turnos.
+478 Crea un espacio misterioso que inutiliza todos los objetos de los Pokémon durante cinco turnos.
+479 El usuario ataca lanzando una piedra o un proyectil. Puede estrellar contra el suelo al objetivo si vuela.
+480 Lanza un golpe fulminante. Siempre resulta en un golpe crítico.
+481 Golpea al objetivo con una llamarada que afecta a sus Pokémon adyacentes.
+482 Una onda tóxica que daña a los Pokémon de alrededor. Puede envenenar.
+483 Danza mística que sube el Ataque Especial, la Defensa Especial y la Velocidad.
+484 El usuario golpea con todo su cuerpo. Cuanto mayor sea su peso comparado con el del objetivo, más daño causará.
+485 Una extraña onda que daña a todos los Pokémon adyacentes del mismo tipo que el que la ejecuta.
+486 Lanza una bola eléctrica. Cuanto mayor sea la Velocidad del usuario sobre la del objetivo, mayor será el daño causado.
+487 Potente lluvia que transforma al objetivo en un Pokémon de tipo Agua.
+488 Llamas que golpean al objetivo y aumentan la Velocidad del atacante.
+489 El usuario se concentra, lo que le permite aumentar su Ataque, Defensa y Precisión.
+490 Un veloz ataque a los pies que reduce la Velocidad del objetivo.
+491 Ataca con un líquido corrosivo, reduciendo mucho la Defensa Especial del objetivo.
+492 El usuario emplea la fuerza del objetivo para atacarlo. Cuanto mayor es el Ataque del objetivo, más daño provoca.
+493 Lanza una onda psíquica que hace que la habilidad del objetivo pase a ser Simple.
+494 Una extraña danza que hace que el usuario y el objetivo tengan la misma habilidad.
+495 Si el usuario es el más rápido, permite al objetivo usar un movimiento justo tras él, adelantándose a Pokémon más rápidos.
+496 Un canto que ataca al objetivo. Cuantos más Pokémon lo usan, más aumenta de potencia.
+497 Un susurro que aumenta de potencia conforme el usuario y otros Pokémon lo van utilizando.
+498 Un ataque que busca los puntos débiles del objetivo y puede causarle daño aunque cambien sus características.
+499 Ataca al objetivo con una extraña niebla que elimina sus cambios de características.
+500 Acumula poder para golpear. Cuanto más suban las características del usuario, mayor será el daño.
+501 Protege a todo el equipo de ataques que se adelantan. Puede fallar si se utiliza repetidamente.
+502 Un extraño poder que intercambia las posiciones del usuario y un aliado sobre el terreno de combate.
+503 Ataca arrojando agua hirviendo al objetivo. Puede causar quemaduras.
+504 El usuario rompe su coraza y baja su Defensa y Def. Esp., pero aumenta mucho su Ataque, Ataque Especial y Velocidad.
+505 Una onda curativa restaura los PS del objetivo a la mitad de su máximo.
+506 Ataque que causa un gran daño a los objetivos que sufren problemas de estado.
+507 Primer turno: lanza al objetivo al aire. Segundo turno: lo hace caer. Mientras está en el aire, no lo deja moverse.
+508 Al hacer girar los engranajes, el usuario mejora su Ataque y aumenta su Velocidad espectacularmente.
+509 Lanza por los aires al objetivo y hace que salga otro Pokémon. Si es uno salvaje, acaba el combate.
+510 Llamas que golpean a los objetivos adyacentes. Si estos llevan Bayas, estas se quemarán y ya no se podrán usar.
+511 El usuario intimida a su objetivo logrando que su movimiento sea el último del turno.
+512 Golpea ágilmente. Si el usuario no porta ningún objeto, el objetivo resulta seriamente dañado.
+513 Cambia el tipo del Pokémon al mismo tipo que el del objetivo.
+514 Venga a los amigos derrotados. Si en el turno anterior han derrotado a uno, la potencia del ataque aumentará.
+515 El usuario se sacrifica causándole un daño al objetivo equivalente a sus propios PS perdidos.
+516 Entrega el objeto que lleva al objetivo en caso de que este no tenga ninguno.
+517 Ataca con una gran ráfaga de fuego que causa quemaduras.
+518 Ataca con columnas de agua. Si se combina con un ataque de fuego, crea un arcoíris y aumenta su potencia.
+519 Ataca con columnas de fuego. Combinado con un ataque tipo planta crea un mar de llamas y aumenta su potencia.
+520 Ataca con columnas de hojas. Combinado con un ataque de agua crea un pantano y aumenta su potencia.
+521 Tras atacar, vuelve a toda prisa para dar paso a otro Pokémon del equipo.
+522 El usuario contraataca. Además baja el Ataque Especial de los oponentes.
+523 Ataca con una sacudida sísmica que afecta a los Pokémon adyacentes en combate y baja su Velocidad.
+524 Ataque con aire helado. Siempre resulta en un golpe crítico.
+525 Ataca al objetivo y lo obliga a cambiarse por otro Pokémon. Si es uno salvaje, acaba el combate.
+526 Movimiento que aumenta el Ataque y el Ataque Especial de quien lo usa.
+527 Atrapa y ataca a los objetivos con una telaraña eléctrica. También reduce su Velocidad.
+528 Carga eléctrica muy potente que también hiere ligeramente a quien la usa.
+529 El usuario golpea usando su cuerpo como un taladro. Suele ser crítico.
+530 Golpea dos veces seguidas con la cola u otras partes de su cuerpo.
+531 Grácil gesto que asesta un golpe tremendo al objetivo y puede hacerlo retroceder.
+532 Un golpe que drena energía. El Pokémon recupera la mitad de los PS arrebatados al objetivo.
+533 El usuario ataca con una espada, ignorando cualquier cambio en las características del objetivo.
+534 Una afilada vieira ataca al objetivo. También puede hacer disminuir su Defensa.
+535 El usuario ataca con su cuerpo ardiente. Cuanto mayor sea su peso comparado con el del objetivo, más daño causará.
+536 Tritura con afiladas hojas y puede bajar la Precisión del objetivo.
+537 El usuario se hace una bola y arrolla al objetivo con su cuerpo. Puede hacerlo retroceder.
+538 Cubre al Pokémon con una madeja protectora. Aumenta muchísimo la Defensa.
+539 Ataca al objetivo con una onda siniestra. Puede bajar su Precisión.
+540 Crea una onda psíquica que golpea al objetivo provocándole un daño físico.
+541 Golpea con la cola u otras partes de su cuerpo de dos a cinco veces seguidas.
+542 Golpea al objetivo con un fuerte torbellino que envuelve al rival y puede confundirlo.
+543 Propina un tremendo cabezazo. También daña al usuario un poco.
+544 Rota dos engranajes de hierro sobre el objetivo. Golpea dos veces.
+545 Un infierno de llamas daña a los Pokémon de alrededor en combate. Puede quemar.
+546 Ataca al objetivo con un gran laser. El tipo del ataque lo determina el cartucho que porta el usuario.
+547 Ataca conmoviendo a los rivales de alrededor con un antiguo canto. Puede dormirlos.
+548 Ensarta al objetivo con un sable, hiriéndolo con su místico poder.
+549 Ataque con aire helado que puede bajar la Velocidad del objetivo.
+550 Ataca envolviéndose de una gran carga eléctrica y embistiendo al objetivo con ella. Puede paralizar.
+551 Ataca con una bella pero potente llama azul que rodea al objetivo. Puede quemarlo.
+552 El Pokémon golpea envuelto en llamas. Puede aumentar el Ataque Especial de quien lo usa.
+553 El usuario carga un bloque de hielo con electricidad en el primer turno y ataca con él en el segundo. Puede paralizar.
+554 Ataca al objetivo en el segundo turno rodeándolo de un aire gélido. Puede causar quemaduras.
+555 Ataca lanzando un chillido insoportable que baja el Ataque Especial de los objetivos.
+556 Lanza grandes carámbanos. Puede hacer retroceder al objetivo.
+557 Golpea con una V de llamas al objetivo. Baja la Defensa, la Defensa Especial y la Velocidad de quien lo usa.
+558 Ataca con una llamarada gigantesca. Aumenta su potencia si es influenciada por una gran energía eléctrica.
+559 Ataca con una enorme descarga eléctrica. Aumenta su potencia si es influenciada por una gigantesca llamarada.
+592 .

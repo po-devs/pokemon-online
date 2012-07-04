@@ -1,4 +1,4 @@
-#include "clientscripting.h"
+﻿#include "clientscripting.h"
 #include "../Teambuilder/engineinterface.h"
 #include "scriptwindow.h"
 #include "scriptengine.h"
@@ -26,6 +26,8 @@ QWidget *ClientScripting::getConfigurationWidget()
 {
     ScriptWindow *ret = new ScriptWindow();
     QObject::connect(ret, SIGNAL(scriptChanged(QString)), engine.data(), SLOT(changeScript(QString)));
+    QObject::connect(ret, SIGNAL(safeScriptsChanged(bool)), engine.data(), SLOT(changeSafeScripts(bool)));
+    QObject::connect(ret, SIGNAL(warningsChanged(bool)), engine.data(), SLOT(changeWarnings(bool)));
     return ret;
 }
 

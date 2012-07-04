@@ -68,7 +68,24 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, c
     //                  Idle,
     //                  IdsWithMessage
 
-    out << uchar(Login) << ProtocolVersion() << network << QString("windows") << CLIENT_VERSION_NUMBER << team.profile().name() << data;
+    out << uchar(Login) << ProtocolVersion() << network;
+
+#ifdef Q_OS_WIN
+    out << QString("windows");
+#elif defined(Q_OS_LINUX)
+    out << QString("linux");
+#elif defined(Q_OS_MAC)
+    out << QString("mac");
+#elif defined(Q_OS_FREEBSD)
+    out << QString("freebsd");
+#elif defined(Q_OS_SOLARIS)
+    out << QString("solaris");
+#else
+#warning Unkown OS version to send. Update the code to add your version
+    out << QString("unknown_OS");
+#endif
+
+    out << CLIENT_VERSION_NUMBER << team.profile().name() << data;
 
     /* Can reconnect even if the last 2 bytes of the IP are different */
     out << uchar(16);
@@ -336,11 +353,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             break;
         } else {
             // Registry socket;
-            QString servName, servDesc, ip;
-            quint16 numPlayers, max, port;
-            bool passwordProtected;
-            in >> servName >> servDesc >> numPlayers >> ip >> max >> port >> passwordProtected;
-            emit serverReceived(servName, servDesc, numPlayers, ip, max, port, passwordProtected);
+            ServerInfo s;
+            in >> s;
+
+            emit serverReceived(s);
         }
     }
     case Login: {

@@ -1,8 +1,0 @@
-Kraftpunkte
-Angriff
-Verteidigung
-Sp. Angriff
-Sp. Verteidigung
-Initiative
-Genauigkeit
-Fluchtwert

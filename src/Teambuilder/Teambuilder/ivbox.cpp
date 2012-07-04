@@ -57,7 +57,7 @@ void IvBox::updateAll()
     // Abilities.
 
     for(int i = 0; i < 3; i++) {
-        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3) {
+        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
             m_abilities[i]->setVisible(true);
             m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
             m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));

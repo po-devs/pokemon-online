@@ -20,7 +20,7 @@ class DynamicLibException : public std::exception
 private:
 	std::string msg;
 public:
-	DynamicLibException(const char* what):
+    DynamicLibException(const std::string & what):
 		std::exception(),
                 msg(what)
 	{}
@@ -37,11 +37,13 @@ cross::DynamicLibrary::DynamicLibrary(const char* libname):
 {
 #ifdef _WIN32
 	libhandle = LoadLibrary(libname);
+    if(!libhandle)
+        throw( DynamicLibException("Library could not be loaded.") );
 #else
-	libhandle = dlopen(libname, RTLD_LOCAL | RTLD_NOW);
+    libhandle = dlopen(libname, RTLD_LOCAL | RTLD_NOW);
+    if(!libhandle)
+        throw( DynamicLibException(std::string("Library could not be loaded -- ") + dlerror() + ".") );
 #endif
-	if(!libhandle)
-		throw( DynamicLibException("Library could not be loaded.") );
 }
 
 //---------------------------------------------------------------------
@@ -54,7 +56,7 @@ cross::DynamicLibrary::~DynamicLibrary()
 		FreeLibrary((HINSTANCE)libhandle);
 #else
 		if(dlclose(libhandle) != 0)
-			throw( DynamicLibException("Library could not be closed.") );
+            throw( DynamicLibException(std::string("Library could not be closed --") + dlerror() + "." ));
 #endif
 	}
 }

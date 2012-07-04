@@ -1,0 +1,19 @@
+﻿0 (No Item)
+4 %s ðéöì áæëåú äFocus Band!
+5 %s ðéöì áæëåú äFocus Sash!
+7 %s ðèòï ìçìåèéï áæëåú äPower Herb!
+11 %s äùúîù áPower Herb ùìå ëãé ìú÷åó îéã!
+12 %s äçæéø ìòöîå îòè çééí áæëåú äLeftovers!
+16 %s  äçæéø ìòöîå îòè çééí áæëåú ä Black Sludge!| %s ðéæå÷ îä Black Sludge!
+18 %s  äçæéø ìòöîå îòè çééí áæëåú äBerry Juice!
+19 äFlame Orb ùì %s äåôòì! | äToxic Orb ùì %s äåôòì!
+21 %s ðéæå÷ áâìì äLife Orb!
+24 äShell Bell ùì %s äçæéø ìå îòè çééí!
+29 %s is hurt by its Sticky Barb!
+34 %f is hurt by %s's Rugged Helmet!
+35 %s's Balloon popped!|%s is floating on a balloon!
+36 %s's %i raised its %st!
+37 %s's %i raised %m's power!
+38 %s used its Red Card on %f!
+39 %s used its Escape Button!
+40 %s's Berserk Gene activated!|%s's Attack went way up!

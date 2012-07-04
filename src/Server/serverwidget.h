@@ -39,6 +39,7 @@ public slots:
     void openBattleConfigWindow();
     void openSqlConfigWindow();
     void openPluginManager();
+    void openModsWindow();
 
     void sendServerMessage();
     void addChatline(const QString &line);

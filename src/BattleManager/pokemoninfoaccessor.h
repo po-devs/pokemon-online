@@ -14,7 +14,7 @@ public:
 
 /*    Q_INVOKABLE QString sprite(const QVariantMap &params) {
         return PokemonInfo::Picture(params.value("num", Pokemon::NoPoke).value<Pokemon::uniqueId>(),
-                                    params.value("gen", GEN_MAX).toInt(),
+                                    params.value("gen", GenInfo::GenMax()).toInt(),
                                     params.value("gender", Pokemon::Male).toInt(),
                                     params.value("shiny", false).toBool(),
                                     params.value("back", false).toBool());

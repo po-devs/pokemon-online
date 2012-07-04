@@ -1,0 +1,305 @@
+﻿0 (Sin objeto)
+1 Raíz Grande
+2 Pañuelo Azul
+3 Polvo Brillo
+4 Cinta Elegida
+5 Pañuelo Elegido
+6 Gafas Elegidas
+7 Lazo Destino
+8 Cinta Xperto
+9 Cinta Focus
+10 Banda Focus
+11 Incienso Lento
+12 Pañuelo Verde
+13 Cola Plúmbea
+14 Incienso Suave
+15 Restos
+16 Incienso Duplo
+17 Hierba Mental
+18 Polvo Metálico
+19 Cinta Fuerte
+20 Incienso Raro
+21 Pañuelo Rosa
+22 Hierba Única
+23 Incienso Puro
+24 Polvo Veloz
+25 Telaterrible
+26 Pañuelo Rojo
+27 Incienso Roca
+28 Incienso Floral
+29 Incienso Marino
+30 Muda Concha
+31 Pañuelo Seda
+32 Polvo Plata
+33 Roca Suave
+34 Arena Fina
+35 Campana Alivio
+36 Incienso Aqua
+37 Hierba Blanca
+38 Lupa 
+39 Gafas Especiaales
+40 Pañuelo Amarillo
+41 Telescopio
+42 Moneda Amuleto
+43 Antídoto
+44 Despertar
+45 Zumo de Baya
+46 Perla Grande
+47 Seta Grande
+48 Cinturón Negro
+49 Flauta Negra
+50 Lodo Negro
+51 Gafas de Sol
+52 Flauta Azul
+53 Parte Azul
+54 Antiquemar
+55 Calcio
+56 Carburante
+57 Carbón
+58 Amuleto
+59 Abono Lento
+60 Escama Marina
+61 Directo
+62 Escamadragón
+63 Elixir
+64 Raíz Energía
+65 Polvoenergía
+66 Cuerda Huida
+67 Éter
+68 Piedraeterna
+69 Repartir Exp.
+70 Piedra Fuego
+71 Llamasfera
+72 Cola Skitty
+73 Agua Fresca
+74 Cura Total
+75 Restaura Todo
+76 Abono Brote
+77 Parte Verde
+78 Abono Rápido
+79 Protección Esp.
+80 Polvo Curación
+81 Escama Corazón
+82 Miel
+83 Más PS
+84 Hiperpoción
+85 Antihielo
+86 Hierro
+87 Roca del Rey
+88 Galleta Lava
+89 Piedra Hoja
+90 Limonada
+91 Vidasfera
+92 Bolaluminosa
+93 Refleluz
+94 Huevo Suerte
+95 Imán
+96 Elixir Máximo
+97 Éter Maximo
+98 Máxima Poción
+99 Máximo Repelente
+100 Máximo Revivir
+101 Rev. Metálico
+102 Metrónomo
+103 Semilla Milagro
+104 Leche Mu-mu
+105 Piedra Lunar
+106 Agua Mística
+107 Antiderretir
+108 Pepita
+109 Barrita Plus
+110 Antiparaliz
+111 Perla
+112 Poké Muñeco
+113 Poción
+114 Máximo PP
+115 Más PP
+116 Proteína
+117 Carameloraro
+118 Colmillagudo
+119 Flauta Roja
+120 Parte Roja
+121 Repelente
+122 Hierba Revivir
+123 Revivir
+124 Ceniza Sagrada
+125 Periscopio
+126 Campana Concha
+127 Sal Cardumen
+128 Concha Cardumen
+129 Bola Humo
+130 Refresco
+131 Rocío Bondad
+132 Hechizo
+133 Abono Fijador
+134 Trozo Estrella
+135 Polvoestelar
+136 Piedra Solar
+137 Superpoción
+138 Superrepel
+139 Piedratrueno
+140 Mini Seta
+141 Toxisfera
+142 Cuchara Tor.
+143 Mejora
+144 Piedra Agua
+145 Flauta Blanca
+146 Precisión X
+147 Ataque X
+148 Defensa X
+149 Especial X
+150 Defensa Esp. X
+151 Velocidad X
+152 Flauta Amarilla
+153 Parte Amarilla
+154 Zinc
+155 Roca Helada
+156 Puño Suerte
+157 Discoxtraño
+158 Pico Afilado
+159 Diamansfera
+160 Roca Lluvia
+161 Roca Calor
+162 Lustresfera
+163 Brazal Firme
+164 Palo
+165 Colmillodragón
+166 Flecha Venenosa
+167 Franja Recia
+168 Banda Recia
+169 Cinto Recio
+170 Brazal Recio
+171 Lente Recia
+172 Pesa Recia
+173 Piedra Alba
+174 Piedra Noche
+175 Electrizador
+176 Magmatizador
+177 Piedra Espíritu
+178 Piedra Oval
+179 Protector
+180 Garra Rápida
+181 Garrafilada
+182 Piedra Día
+183 Toxiestrella
+184 Diente Marino
+185 Tabla Draco
+186 Tabla Oscura
+187 Tabla Terrax
+188 Tabla Fuerte
+189 Tabla Llama
+190 Garra Garfio
+191 Tabla Helada
+192 Tabla Bicho
+193 Tabla Acero
+194 Tabla Pradal
+195 Tabla Mental
+196 Tabla Cielo
+197 Tabla Linfa
+198 Tabla Terror
+199 Tabla Pétrea
+200 Hueso Grueso
+201 Tabla Tóxica
+202 Tabla Trueno
+203 Fósil Coraza
+204 Fósil Garra
+205 Fósil Domo
+206 Piedra Dura
+207 Fósil Hélix
+208 Ámbar Viejo
+209 Hueso Raro
+210 Fósil Raíz
+211 Fósil Cráneo
+212 Bola Hierro
+213 Griseosfera
+214 Carta Aérea
+215 Carta Flores
+216 Carta Pared
+217 Carta Pompas
+218 Carta Fuego
+219 Carta Hierba
+220 Carta Puerto
+221 Carta Corazón
+222 Carta Mosaico
+223 Carta Nieve
+224 Carta Sideral
+225 Carta Acero
+226 Carta Mina
+227 Aqua Cassette
+228 Lightning Cassette
+229 Blaze Cassette
+230 Freeze Cassette
+231 Heart Sweets
+232 Clean Scale
+233 Mineral Evol
+234 Piedra Pómez
+235 Casco Dentado
+236 Globo Helio
+237 Tarjeta Roja
+238 Blanco
+239 Banda Atadura
+240 Tubérculo
+241 Pila
+242 Botón Escape
+243 Fire Jewel
+244 Water Jewel
+245 Electric Jewel
+246 Grass Jewel
+247 Ice Jewel
+248 Fight Jewel
+249 Poison Jewel
+250 Earth Jewel
+251 Flight Jewel
+252 Gema Psíquica
+253 Gema Bicho
+254 Gema Roca
+255 Gema Fantasma
+256 Gema Dragón
+257 Gema Siniestra
+258 Gema Acero
+259 Normal Jewel
+260 Strength Wing
+261 Power Wing
+262 Resistance Wing
+263 Wisdom Wing
+264 Mind Wing
+265 Instant Wing
+266 Beautiful Wing
+267 Ensueño Ball
+268 Seta Aroma
+269 Maxipepita
+270 Sarta Perlas
+271 Fragmento Cometa
+272 Real Cobre
+273 Real Plata
+274 Real Oro
+275 Ánfora
+276 Brazal
+277 Efigie Antigua
+278 Corona Antigua
+279 Hiun Ice-cream
+280 Dire Hit 2
+281 X Speed 2
+282 X Special 2
+283 X Sp. Def 2
+284 X Defend 2
+285 X Attack 2
+286 X Accuracy 2
+287 X Speed 3
+288 X Special 3
+289 X Sp. Def 3
+290 X Defend 3
+291 X Attack 3
+292 X Accuracy 3
+293 X Speed 6
+294 X Special 6
+295 X Sp. Def 6
+296 X Defend 6
+297 X Attack 6
+298 X Accuracy 6
+299 Skill Call
+300 Item Drop
+301 Item Call
+302 Flat Call
+303 Dire Hit 3
+304 Berserk Gene

@@ -1,0 +1,92 @@
+﻿0 
+1 %f fick sin energi dränerad!|%s förtärde %fs drömmar!|%s tar skada från %fs Liquid Ooze!En ring av vatten omringar %s!|Aquaring återhämtade %ss hp lite grann.En lugnande arom spred sig i området!|En klocka ringde!
+5 %q attackerade!
+6 %s har inte tillräckligt med energi kvar!|%s offrade sin egen HP och maximerade sin styrka!
+7 %s lagrar energi!|%s släppte lös energi!
+8 %s skadades av %m!|%s är fri från %m!|%f fastnade inom svirlande magma!
+9 %s måste ladda!
+10 %f kan inte fly längre!
+11 %s språngade upp!|%s grävde ned sig under jorden!|%s gömde sig undervattens!|%s flög högt upp mot skyn!|%s försvann omedelbart!
+12 %s splittrades %tfs lag skyddade!
+14 %s åt %fs %i!
+15 %s transformerades till %t typen!
+16 %s lagrade elektricitet!
+17 %s transformerades till %t typen!
+18 %s transformerades till %t typen!
+21 %s bad %f!%f gav sin %i till %s|%s stal %fs %i!
+22 %s krossade %f!
+23 %s offrade sin egen HP och la en förbannelse på %f!|%s tar förbannelsens effekter!
+24 %s tog %f ned med den!|%s försöker ta motståndaren ned med sig!
+25 %s skyddade sig själv!
+26 %fs %m slutade fungera!|%s's %m fungerar inte!|%s fungerar igen!
+27 %s tog %m attacken!|%s förutspådde en attack!|%s valde Doom Desire som sin destination!
+29 %f är vaken!
+30 %f kan inte längre använda föremål!|%s kan använda föremål igen!
+31 %s's Encore tog slut!|%s kan inte använda %m på grund av Encore!|%f tvingas använda %m!|%f fick en encore!
+33 %s uthärdade träffen!|%s stålsätter sig!
+41 %fs Sturdy fick attacken at misslyckas!
+43 %s kastade %i mot %f!
+44 %s pumpade sig!
+45 %s förlorade sin fokus!|%s bättrar sin fokus!
+49 %fs %a är nollställd!
+51 Gravitationen ökade!|Gravitationen blev normal igen!|%s kunde inte hålla sig i luften på grund av gravitationen!
+52 %fs %m förlorade all sin PP på grund av %ss Grudge!
+53 %s växlade sina buffar med %f!Det började hagla!|Det började regna!|Det blåste upp en sandstorm!|Solljuset blev starkare!
+54 %s är förälskad i %f!|%f blev förälskad!|%s är immobiliserad av kärlek!
+55 %f kan inte hela!|%s kan inte använda %m på grund av Heal Block!|%ss heal block avtog!
+56 %s återfick hälsa!
+57 %s är helad!
+58 %s växlade sin defense med attack!
+60 %s kraschade till marken!
+63 %s förseglade motståndarens drag!|%s kan inte använda den förseglade %m!
+64 %s flyter på ett magnetfält!|Magnetfältet som %s flöt på avtog!
+66 %s knockade bort %fs %i!
+68 %f undvek fröet!|%f blev sådd!|%ss hälsa dräneras av leech seed.
+69 Reflect ökade %tss lags defense!|Light Screen ökade %tss lags special defense!|%tss reflect avtog!|%tss light screen avtog!
+70 %s siktar på %f!
+71 %tss lag är skyddad från fullträffar!|%tss lucky chant avtog!
+72 %s döljer sig själv med Magic Coat!|%ss %m studsade tillbaka med Magic Coat!
+73 %s rensade fältet runt %tfs lag!
+74 Magnitude nivå %d!
+77 %s lärde sig %m!
+78 Men inget hände!
+80 %s identifierade %f!Dimma svepte in över 
+82 %tss lag!|%tss Dimman avtog!|Dimman motverkar %f från att sänka dess stats!
+83 %s återfick hälsa!|%s återfick mycket hälsa!|%s återfick lite hälsa!Elektrisk styrka har försämrats!|Eld styrka har försämrats!
+87 %s har en mardröm!
+88 %s lugnade ned sig!|%s blev förvirrad av utmattning!Utmanarna delade på smärtan!Alla Pokémon som hör sången svimmar efter tre rundor!|%ss perish räkning föll till %d.
+89 %ss present helade %f some HP!
+90 %s kopierade %fs stats-förändringar!
+91 %s flyttade sin status till %f!
+96 %s kom loss ur %fs %m!|%s blåste bort Leech Seed!|%s blåste bort Spikes!|%s blåste bort Toxic Spikes!|%s blåste bort Stealth Rock!
+97 %s förberedde en vindpust!|%s blev osynlig i ett starkt ljus!|%s sänkte sitt huvud!
+98 %s återvann %i!
+99 %s gick till sömns och blev frisk!
+100 %f höll fast i marken med sina Suction Cups!|%f har lagt rötterna i jorden!|%f blev utdragen!
+101 %s kopierade %fs %a!
+102 %tss lag doldes i en mystisk slöja!|%tss lag är inte längre skyddade av Safeguard!|Safeguard hindrar %f från statuspåverkan!
+104 %s sketchade %m!
+105 %s växlade förmågor med sitt mål!
+107 %ss Damp hindrar den att fungera!
+111 %f högg åt sig %ss %m!|%s väntar på ett mål att göra sitt drag!
+112 %s absorberade ljuset!
+114 Spikes spriddes ut överallt kring %tfs lag!|%s skadas av spikes!
+115 %s släppte lös!Det reducerade PP från %fs %m med 4!Spetsiga stenar flyter i luften kring %tfs lag!|Spetsiga stenar skar in i %s!
+116 %s hamstrade %d!
+118 %s skadas av rekylen!
+119 %s har redan ett substitut.|%ss substitut avtog!|%fs substitut blockerade %m!|%ss substitut tog smällen!|%s skapade ett substitut!
+122 %s svalde!
+123 %s bytte föremål med %f!|%s erhöll en %i!En tailwind började blåsa bakom %tss lag!|%tss lags tailwind avtog!
+124 %s kan inte använda %m efter taunt!|%f föll för taunt!|%ss taunt slutade!
+125 %s kan inte använda %m på grund av torment!|%f är nu plågad!
+126 Poison spriddes ut överallt kring %tfs lag!|Poison spikes kring %ss lag försvann!
+127 %s transformerades till %p!
+128 %s förändrade dimensionerna!|De förändrade dimensionerna återgick till normala!
+129 Träff!
+131 %s orsakade tumult!|%s gör tumult!|%s lugnade ned sig!|%s Vaknade!|%s håller sig vaken på grund av tumultet!
+132 %qs önskan gick i uppfyllelse!
+133 %f har nu insomnia!
+134 %s gjorde %f dåsig!|%s jäspar!
+139 All stats-förändring likviderades!
+140 %s landade på marken!
+141 %s planterade sina rötter!| %s absorberade näring genom rötterna!

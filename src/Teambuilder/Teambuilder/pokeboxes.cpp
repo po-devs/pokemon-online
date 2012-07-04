@@ -1,4 +1,5 @@
 #include "pokeboxes.h"
+#include "pokebox.h"
 #include "ui_pokeboxes.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -11,11 +12,24 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
 {
     ui->setupUi(this);
 
+    ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
     ui->pokemonButtons->setTeam(team().team());
-    changePoke(&team().team().poke(0));
+    changePoke(&team().team().poke(0), 0);
     updatePoke();
 
+    loadBoxes();
+
     connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
+    connect(ui->storeButton, SIGNAL(clicked()), SLOT(storePokemon()));
+    connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deletePokemon()));
+    connect(ui->withdrawButton, SIGNAL(clicked()), SLOT(withdrawPokemon()));
+    connect(ui->switchButton, SIGNAL(clicked()), SLOT(switchPokemon()));
+    connect(ui->boxes, SIGNAL(currentChanged(int)), SLOT(currentBoxChanged(int)));
+    connect(ui->addBox, SIGNAL(clicked()), SLOT(newBox()));
+    connect(ui->editBoxName, SIGNAL(clicked()), SLOT(editBoxName()));
+    connect(ui->deleteBox, SIGNAL(clicked()), SLOT(deleteBox()));
+    connect(ui->boxes, SIGNAL(tabCloseRequested(int)), SLOT(deleteBox(int)));
+    connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
 }
 
 PokeBoxes::~PokeBoxes()
@@ -23,19 +37,49 @@ PokeBoxes::~PokeBoxes()
     delete ui;
 }
 
-void PokeBoxes::updateTeam()
+void PokeBoxes::currentBoxChanged(int b)
 {
-    ui->pokemonButtons->setTeam(team().team());
+    boxes[b]->loadIfNeeded();
+}
+
+void PokeBoxes::showPoke(PokeTeam *poke)
+{
+    PokeBox *box = qobject_cast<PokeBox*>(sender());
+
+    if (box) {
+        changePoke(poke, box->currentSlot(), box->getNum());
+    } else {
+        changePoke(poke);
+    }
     updatePoke();
 }
 
-void PokeBoxes::changePoke(PokeTeam *poke)
+void PokeBoxes::updateTeam()
 {
+    ui->pokemonButtons->setTeam(team().team());
+
+    if (displayedBox == -1) {
+        changePoke(&team().team().poke(displayedSlot));
+    }
+    updatePoke();
+}
+
+void PokeBoxes::changePoke(PokeTeam *poke, int slot, int box)
+{
+    this->displayedBox = box;
+    if (slot != -1) {
+        this->displayedSlot = slot;
+    }
     this->m_poke = poke;
 }
 
 void PokeBoxes::updatePoke()
 {
+    if (displayedBox != -1) {
+        ui->boxInfoLabel->setText(tr("Box %1 slot %2").arg(displayedBox+1).arg(displayedSlot+1));
+    } else {
+        ui->boxInfoLabel->setText(tr("Team slot %1").arg(displayedSlot+1));
+    }
     ui->nickNameLabel->setText(poke().nickname());
     ui->speciesLabel->setText(PokemonInfo::Name(poke().num()));
     ui->pokemonSprite->setPixmap(poke().picture());
@@ -47,7 +91,7 @@ void PokeBoxes::updatePoke()
     } else {
         ui->type2Label->setVisible(false);
     }
-    ui->nature->setText(QString("%1").arg(NatureInfo::Name(poke().nature())));
+    ui->nature->setText(NatureInfo::Name(poke().nature()));
     ui->itemSprite->setPixmap(ItemInfo::Icon(poke().item()));
     ui->genderLabel->setPixmap(Theme::GenderPicture(poke().gender()));
     ui->levelLabel->setText(tr("Lv. %1").arg(poke().level()));
@@ -64,251 +108,220 @@ void PokeBoxes::updatePoke()
 
 void PokeBoxes::changeTeamPoke(int index)
 {
-    changePoke(&team().team().poke(index));
+    changePoke(&team().team().poke(index), index);
     updatePoke();
 }
 
-PokemonItem::PokemonItem(PokeTeam *poke, PokeBox *box) : poke(NULL), m_Box(box)
+void PokeBoxes::loadBoxes()
 {
-    changePoke(poke);
-    setFlags(QGraphicsItem::ItemIsMovable);
-}
+    QDir directory = QDir(PokeBox::getBoxPath());
 
-void PokemonItem::changePoke(PokeTeam *poke)
-{
-    delete this->poke;
-    this->poke = poke;
-    setPixmap(PokemonInfo::Icon(poke->num()));
-}
+    QStringList files = directory.entryList(QStringList() << "*.box", QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
-void PokemonItem::setBox(PokeBox *newBox)
-{
-    m_Box = newBox;
-}
+    if (files.size() == 0) {
+        /* Tries to get old boxes */
+        QApplication::setApplicationName("Pokeymon-Online");
+        QDir dir = QDir(PokeBox::getBoxPath());
+        QApplication::setApplicationName("Pokemon-Online");
 
-PokemonItem::~PokemonItem()
-{
-    delete poke;
-    poke = NULL;
-}
+        QStringList f = dir.entryList(QStringList() << "*.box", QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Name);
 
-void PokemonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-}
-
-void PokemonItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-}
-
-void PokemonItem::startDrag()
-{
-}
-
-PokeBox::PokeBox(QFrame *parent, int boxNum, const QString &file)
-{
-    setParent(parent);
-    setScene(new QGraphicsScene(this));
-    setSceneRect(0, 0, width() - 10, 160);
-}
-
-void PokeBox::deleteBox()
-{
-    //TODO
-}
-
-void PokeBox::saveBox()
-{
-    //TODO
-}
-
-void PokeBox::loadBox()
-{
-    //TODO
-}
-
-void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
-{
-    if(isFull()) {
-        QMessageBox::critical(0, QString(tr("Box") + " #" + this->getNum() + " - " + this->getBoxName()), QObject::tr("Could not add the Pokemon to the box, the box is full."), QMessageBox::Ok);
-        return;
-    }
-    int spot = slot == -1 ? (m_Pokemons[currentPokemon] == NULL ? currentPokemon : freeSpot()) : slot;
-    m_Pokemons[spot] = new PokemonItem(new PokeTeam(poke), this);
-
-    addGraphicsItem(spot);
-    changeCurrentSpot(spot);
-}
-
-PokeTeam *PokeBox::getCurrent()
-{
-    if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box") + " #" + this->getNum() + " - " + this->getBoxName()), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return NULL;
-    }
-    return m_Pokemons[currentPokemon]->poke;
-}
-
-void PokeBox::deleteCurrent()
-{
-    if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box") + " #" + this->getNum() + " - " + this->getBoxName()), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return;
-    }
-    scene()->removeItem(m_Pokemons[currentPokemon]);
-    delete m_Pokemons[currentPokemon];
-    m_Pokemons[currentPokemon] = NULL;
-}
-
-void PokeBox::changeCurrent(const PokeTeam &poke)
-{
-    if(m_Pokemons[currentPokemon] == NULL) {
-        QMessageBox::critical(0, QString(tr("Box") + " #" + this->getNum() + " - " + this->getBoxName()), QObject::tr("There's no Pokemon there."), QMessageBox::Ok);
-        return;
-    }
-    m_Pokemons[currentPokemon]->changePoke(new PokeTeam(poke));
-}
-
-void PokeBox::changeCurrentSpot(int newSpot)
-{
-    if(newSpot == currentPokemon) {
-        return;
-    }
-    updateScene(QList<QRectF>() << QRectF(calculatePos(currentPokemon, m_Background.size()), m_Background.size())
-                                << QRectF(calculatePos(newSpot, m_Background.size()), m_Background.size()));
-    currentPokemon = newSpot;
-}
-
-QString PokeBox::getBoxName() const
-{
-    return this->m_Name;
-}
-
-void PokeBox::setName(const QString &name)
-{
-    this->m_Name = name;
-}
-
-void PokeBox::reName(const QString &newName)
-{
-    QDir m_Dir(getBoxPath());
-    m_Dir.rename(getBoxName() + ".box", newName + ".box");
-    setName(newName);
-}
-
-bool PokeBox::isFull() const
-{
-    return !m_Pokemons.contains(NULL);
-}
-
-bool PokeBox::isEmpty() const
-{
-    for(int pokeCount = 0; pokeCount < m_Pokemons.size(); pokeCount++) {
-        if(m_Pokemons[pokeCount] != NULL) {
-            return false;
+        if (f.length() != 0) {
+            foreach(QString fs, f) {
+                QFile x(fs);
+                x.copy(directory.absoluteFilePath(fs));
+            }
+            files = f;
+        } else {
+            files << tr("Box%201.box") << tr("Box%202.box");
         }
     }
-    return true;
+
+    foreach (QString file, files) {
+        addBox(file);
+    }
 }
 
-int PokeBox::freeSpot() const {
-    for(int pokeCount = 0; ; pokeCount++) {
-        if(m_Pokemons[pokeCount] == NULL) {
-            return pokeCount;
+void PokeBoxes::switchBoxTeam(int box, int boxslot, int teamslot)
+{
+    ui->boxes->setCurrentIndex(box);
+    currentBox()->changeCurrentSpot(boxslot);
+
+    ui->pokemonButtons->setCurrentSlot(teamslot);
+
+    try {
+        currentBox()->getCurrent();
+        if (team().team().poke(teamslot).num() == 0)
+            withdrawPokemon();
+        else
+            switchPokemon();
+    } catch (const QString&) {
+        try {
+            storePokemon();
+        } catch (const QString&) {
+
         }
     }
 }
 
-int PokeBox::getNum() const
+void PokeBoxes::addBox(const QString &name)
 {
-    return this->Number;
-}
+    PokeBox *box = new PokeBox(boxes.size(), name);
+    boxes.push_back(box);
+    box->setParent(this);
 
-void PokeBox::setNum(int number)
-{
-    this->Number = number;
-}
-
-int PokeBox::getNumOf(const PokemonItem *item) const
-{
-    for(int pokeCount = 0; pokeCount < m_Pokemons.size(); pokeCount++) {
-        if(item == m_Pokemons[pokeCount]) {
-            return pokeCount;
-        }
+    /* Always load the first box */
+    if (boxes.size() == 1) {
+        box->loadBox();
     }
-    return -1;
+
+    ui->boxes->addTab(box, box->getBoxName());
+
+    connect(box, SIGNAL(switchWithTeam(int,int,int)), SLOT(switchBoxTeam(int,int,int)));
+    connect(box, SIGNAL(show(PokeTeam*)), SLOT(showPoke(PokeTeam*)));
 }
 
-QString PokeBox::getBoxPath()
+void PokeBoxes::newBox()
 {
-    return appDataPath("Boxes", true);
-}
-
-void PokeBox::addGraphicsItem(int spot)
-{
-    QPointF m_Pos = calculatePos(spot);
-    m_Pokemons[spot]->setPos(m_Pos);
-    scene()->addItem(m_Pokemons[spot]);
-    m_Pokemons[spot]->setBox(this);
-}
-
-QPointF PokeBox::calculatePos(int spot, const QSize &itemSize)
-{
-    QPointF m_Pos;
-    m_Pos.setX((spot % 10) * 64 + 24 - itemSize.width() / 2);
-    m_Pos.setY((spot / 10) * 50 + 24 - itemSize.height() / 2);
-
-    return m_Pos;
-}
-
-int PokeBox::calculateSpot(const QPoint &graphicViewPos)
-{
-    QPointF m_Pos = mapToScene(graphicViewPos);
-    int x, y;
-
-    x = int((m_Pos.x() - 24) / 64 + 0.5);
-    y = int((m_Pos.y() - 24) / 50 + 0.5);
-
-    if (x < 10 && y < 3 && x >= 0 && y >= 0) {
-        return y * 10 + x;
-    } else {
-        return -1;
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("New Box"),
+                                         tr("Enter the new name for the new box:"), QLineEdit::Normal,
+                                          tr("New Box"), &ok);
+    if (ok && !text.isEmpty() && !existBox(text)) {
+        addBox(QString::fromUtf8(QUrl::toPercentEncoding(text))+".box");
     }
 }
 
-void PokeBox::drawBackground(QPainter *painter, const QRectF &rect)
+void PokeBoxes::editBoxName()
 {
-    QGraphicsView::drawBackground(painter, rect);
+    bool ok;
+    PokeBox *box = currentBox();
+    QString text = QInputDialog::getText(this, tr("Edit Box Name"),
+                                         tr("Enter the new name for the box %1:").arg(box->getBoxName()), QLineEdit::Normal,
+                                          box->getBoxName(), &ok);
+    if (ok && !text.isEmpty() && !existBox(text)) {
+         box->reName(text);
+         ui->boxes->setTabText(box->getNum(), text);
+     }
+}
 
-    if(currentPokemon != -1) {
-        QPointF self_back_pos = calculatePos(currentPokemon, m_Background.size());
-        QRectF intersection = rect.intersect(QRectF(self_back_pos, m_Background.size()));
-        QRectF srcRect = QRectF(std::max(qreal(0), intersection.x() - self_back_pos.x()), std::max(qreal(0), intersection.y() - self_back_pos.y()),
-                                m_Background.width(), m_Background.height());
-        painter->drawPixmap(intersection, m_Background, srcRect);
+void PokeBoxes::deleteBox(int num)
+{
+    if (boxes.size() <= 1)
+        return;
+
+    if (num == -1) {
+        num = currentBox()->getNum();
+    }
+
+    int res = QMessageBox::question(this, tr("Destroying a box"), tr("Do you want to delete box %1 permanently?").arg(boxes[num]->getBoxName()), QMessageBox::Yes | QMessageBox::No);
+
+    if (res == QMessageBox::Yes) {
+        doDeleteBox(num);
     }
 }
 
-PokemonItem *PokeBox::currentItem()
+void PokeBoxes::doDeleteBox(int num)
 {
-    if(currentPokemon == -1) {
-        return NULL;
-    } else {
-        return m_Pokemons[currentPokemon];
+    boxes[num]->deleteBox();
+
+    PokeBox *b = boxes[num];
+    boxes.removeAt(num);
+
+    for (int i = num; i < boxes.size(); i++) {
+        boxes[i]->setNum(i);
+    }
+
+    delete b;
+}
+
+bool PokeBoxes::existBox(const QString &name) const
+{
+    foreach(PokeBox *box, boxes) {
+        if (box->getBoxName() == name)
+            return true;
+    }
+
+    return false;
+}
+
+void PokeBoxes::storePokemon()
+{
+    try {
+        currentBox()->addPokemonToBox(team().team().poke(currentPoke()));
+        currentBox()->saveBox();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
     }
 }
 
-void PokeBox::mousePressEvent(QMouseEvent *event)
+void PokeBoxes::withdrawPokemon()
 {
+    try {
+        setCurrentTeamPoke(currentBox()->getCurrent());
+        updateSpot(currentPoke());
+        emit teamChanged();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
 }
 
-void PokeBox::dragEnterEvent(QDragEnterEvent *event)
+void PokeBoxes::switchPokemon()
 {
+    try {
+        PokeTeam *p = new PokeTeam(*currentBox()->getCurrent());
+        currentBox()->changeCurrent(*currentPokeTeam());
+        currentBox()->saveBox();
+        setCurrentTeamPoke(p);
+
+        /* Don't worry, if getCurrent doesn't throw exceptions then changeCurrent doesn't.
+           Hence no memory leaks */
+        delete p;
+
+        updateSpot(currentPoke());
+        teamChanged();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
 }
 
-void PokeBox::dropEvent(QDropEvent *event)
+void PokeBoxes::deletePokemon()
 {
+    try {
+        currentBox()->deleteCurrent();
+        currentBox()->saveBox();
+    } catch(const QString &ex) {
+        QMessageBox::information(this, tr("Box %1 - %2").arg(currentBox()->getNum()).arg(currentBox()->getBoxName()), ex);
+    }
 }
 
-void PokeBox::dragMoveEvent(QDragMoveEvent *event)
+int PokeBoxes::currentPoke() const
 {
+    return std::max(ui->pokemonButtons->currentSlot(), 0);
 }
+
+PokeBox *PokeBoxes::currentBox()
+{
+    return boxes[ui->boxes->currentIndex()];
+}
+
+void PokeBoxes::updateSpot(int i)
+{
+    ui->pokemonButtons->updatePoke(i);
+}
+
+void PokeBoxes::setCurrentTeamPoke(PokeTeam *p)
+{
+    *currentPokeTeam() = *p;
+
+    if (p->gen() != team().team().gen()) {
+        p->setGen(team().team().gen());
+        p->runCheck();
+    }
+}
+
+PokeTeam *PokeBoxes::currentPokeTeam()
+{
+    return &team().team().poke(currentPoke());
+}
+

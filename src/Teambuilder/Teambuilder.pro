@@ -55,7 +55,10 @@ SOURCES += main.cpp \
     Teambuilder/pokechoice.cpp \
     Teambuilder/pokeboxes.cpp \
     Teambuilder/basestatswidget.cpp \
-    Teambuilder/advancedsearch.cpp
+    Teambuilder/advancedsearch.cpp \
+    Teambuilder/pokebox.cpp \
+    Teambuilder/pokeboxitem.cpp \
+    serverchoicemodel.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -125,12 +128,18 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/pokeboxes.h \
     clientinterface.h \
     Teambuilder/basestatswidget.h \
-    Teambuilder/advancedsearch.h
+    Teambuilder/advancedsearch.h \
+    Teambuilder/pokebox.h \
+    Teambuilder/pokeboxitem.h \
+    serverchoicemodel.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
     -lutilities \
     -lbattlelib
+
+windows: { LIBS += -lzip-2 }
+!windows: { LIBS += -lzip }
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -152,23 +161,6 @@ FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/pokeboxes.ui \
     Teambuilder/basestatswidget.ui \
     Teambuilder/advancedsearch.ui
-
-TRANSLATIONS = translation_cz.ts \
-    translation_de.ts \
-    translation_es.ts \
-    translation_fi.ts \
-    translation_fr.ts \
-    translation_he.ts \
-    translation_it.ts \
-    translation_jp.ts \
-    translation_ko.ts \
-    translation_pl.ts \
-    translation_pt-br.ts \
-    translation_ru.ts \
-    translation_th.ts \
-    translation_sv.ts \
-    translation_zh-cn.ts \
-    translation_tr.ts
 
 RC_FILE = myapp.rc
 

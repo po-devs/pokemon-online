@@ -10,6 +10,9 @@ class QDomElement;
 struct TierNode
 {
     TierNode() : displayOrder(0) {
+    }
+
+    virtual ~TierNode() {
 
     }
 

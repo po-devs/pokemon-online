@@ -87,7 +87,11 @@ QString BattleClientLog::nick(int spot)
     if (data()->role(spot) == BattleConfiguration::Player) {
         return rnick(spot);
     } else {
-        return QString("%1's %2").arg(data()->name(spot), rnick(spot));
+        if (data()->role(data()->opponent(spot)) == BattleConfiguration::Player) {
+            return tr("the foe's %1").arg(rnick(spot));
+        } else {
+            return tr("%1's %2").arg(data()->name(spot), rnick(spot));
+        }
     }
 }
 
@@ -338,7 +342,7 @@ void BattleClientLog::onNoTarget(int)
 void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int berry, int other)
 {
     QString mess = ItemInfo::Message(item, part);
-    mess.replace("%st", StatInfo::Stat(other));
+    mess.replace("%st", StatInfo::Stat(other, data()->gen()));
     mess.replace("%s", nick(spot));
     mess.replace("%f", nick(foe));
     mess.replace("%i", ItemInfo::Name(berry));
@@ -436,7 +440,7 @@ void BattleClientLog::onDamageDone(int spot, int damage)
 void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int foe, int other)
 {
     QString mess = AbilityInfo::Message(ab,part);
-    mess.replace("%st", StatInfo::Stat(other));
+    mess.replace("%st", StatInfo::Stat(other, data()->gen()));
     mess.replace("%s", nick(spot));
     //            mess.replace("%ts", data()->name(spot));
     mess.replace("%tf", data()->name(!spot));

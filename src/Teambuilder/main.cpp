@@ -39,7 +39,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
-
+QTranslator qtTranslator, translator;
 
 int main(int argc, char *argv[])
 {
@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
         /* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokemon-Online");
         QCoreApplication::setOrganizationName("Dreambelievers");
+        QCoreApplication::setApplicationVersion("2.0.00");
 
         QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 
@@ -82,8 +83,11 @@ int main(int argc, char *argv[])
 
         QString locale = settings.value("language").toString();
 
-        QTranslator translator;
-        translator.load(QString("trans/translation_") + locale);
+        qtTranslator.load(QString("qt_") + locale,
+                QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+        a.installTranslator(&qtTranslator);
+
+        translator.load(QString("trans/%1/translation_%1").arg(locale));
         a.installTranslator(&translator);
 
         /* icon ;) */

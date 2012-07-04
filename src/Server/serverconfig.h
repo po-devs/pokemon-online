@@ -18,7 +18,6 @@ signals:
     void maxChanged(int num);
     void logSavingChanged(bool logSaving);
     void useChannelFileLogChanged(bool useChannelFileLog);
-    void useBattleFileLogChanged(bool useBattleFileLog);
     void inactivePlayersDeleteDaysChanged(int value);
     void latencyChanged(bool lowDelay);
     void safeScriptsChanged(bool safeScripts);
@@ -41,7 +40,6 @@ private:
     QSpinBox *serverPort;
     QCheckBox *saveLogs;
     QCheckBox *channelFileLog;
-    QCheckBox *battleFileLog;
     QSpinBox *deleteInactive;
     QCheckBox *lowLatency;
     QCheckBox *safeScripts;

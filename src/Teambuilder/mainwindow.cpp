@@ -34,10 +34,10 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
 #ifdef Q_OS_MACX
-    setDefaultValue(s, "Teams/Folder", QDir::homePath() + "/Documents");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "Teams/Folder", "Team");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
     setDefaultValue(s, "Battle/FlashOnMove", true);
@@ -55,6 +55,7 @@ MainEngine::MainEngine() : displayer(0)
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
 
@@ -70,41 +71,11 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
-    QSettings s_mod(PoModLocalPath + "mods.ini", QSettings::IniFormat);
-    QStringList mods = s_mod.childGroups();
-    QString modname;
+    PokemonInfoConfig::setFillMode(FillMode::Client);
+    PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString());
 
-    if (mods.size() > 0) {
-        int general_pos = mods.indexOf("General");
-        if (general_pos != -1) {
-            mods.removeAt(general_pos);
-        }
-        if (mods.size() > 0) {
-            int mod_selected = s_mod.value("active", 0).toInt();
-            bool is_mod_selected = mod_selected > 0;
+    reloadPokemonDatabase();
 
-            QStringListIterator mods_it(mods);
-            while (mods_it.hasNext()) {
-                QString current = mods_it.next();
-                if (is_mod_selected && (mod_selected == s_mod.value(current + "/id", 0).toInt())) {
-                    modname = current;
-                }
-            }
-        }
-    }
-
-    PokemonInfo::init("db/pokes/", FillMode::Client, modname);
-    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
-    ItemInfo::init("db/items/");
-    MoveInfo::init("db/moves/");
-    TypeInfo::init("db/types/");
-    NatureInfo::init("db/natures/");
-    CategoryInfo::init("db/categories/");
-    AbilityInfo::init("db/abilities/");
-    GenderInfo::init("db/genders/");
-    HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
-    GenInfo::init("db/gens/");
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
@@ -120,6 +91,24 @@ MainEngine::~MainEngine()
 {
     delete pluginManager, pluginManager = NULL;
     delete m_team, m_team = NULL;
+}
+
+void MainEngine::reloadPokemonDatabase()
+{
+    QSettings s;
+
+    GenInfo::init("db/gens/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/", s.value("TeamBuilder/EnforceMinLevels").toBool());
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    GenderInfo::init("db/genders/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
 }
 
 QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
@@ -258,6 +247,7 @@ void MainEngine::launchTeamBuilder()
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
     connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
+    connect(TB, SIGNAL(reloadDb()), SLOT(reloadPokemonDatabase()));
 }
 
 void MainEngine::launchServerChoice()
@@ -294,7 +284,6 @@ void MainEngine::changeTheme(const QString &theme)
     }
 }
 
-
 void MainEngine::changeLanguage()
 {
     QAction * a = qobject_cast<QAction *>(sender());
@@ -312,7 +301,23 @@ void MainEngine::changeLanguage()
 
     setting.setValue("language",lang);
 
-    QMessageBox::information(displayer, tr("Language Change"), tr("Restart the application to see the changes."));
+    extern QTranslator translator;
+    extern QTranslator qtTranslator;
+
+    qtTranslator.load(QString("qt_") + lang,
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    translator.load(QString("trans/%1/translation_%1").arg(lang));
+
+    PokemonInfo::retranslate();
+    MoveInfo::retranslate();
+    ItemInfo::retranslate();
+    TypeInfo::retranslate();
+    NatureInfo::retranslate();
+    CategoryInfo::retranslate();
+    AbilityInfo::retranslate();
+    GenderInfo::retranslate();
+    StatInfo::retranslate();
+    GenInfo::retranslate();
 }
 
 void MainEngine::goOnline(const QString &url, const quint16 port, const QString& nick)

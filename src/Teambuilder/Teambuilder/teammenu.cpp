@@ -118,27 +118,21 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     QMenu *gen = menuBar->addMenu(tr("&Gen."));
     QActionGroup *gens = new QActionGroup(gen);
 
-    for (int i = GEN_MIN; i <= GEN_MAX; i++) {
-        int n = Gen::nums[i-GEN_MIN];
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        int n = GenInfo::NumberOfSubgens(i);
 
         gen->addSeparator()->setText(GenInfo::Gen(i));
 
         for (int j = 0; j < n; j++) {
             Pokemon::gen g(i, j);
 
-            //Temporary until we implement subgens
-            if (j != 0 && g != Gen::RBY) {
-                continue;
-            }
-
             ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
             ui->gens[g]->setCheckable(true);
             ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
+            ui->gens[g]->setChecked(g == team().team().gen());
             gens->addAction(ui->gens[g]);
         }
     }
-
-    ui->gens[team().team().gen()]->setChecked(true);
 }
 
 void TeamMenu::genChanged()

@@ -19,6 +19,7 @@ class Battle;
 class UserInfo;
 class TeamHolder;
 class ProtocolVersion;
+class ServerInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkCli
@@ -100,7 +101,7 @@ signals:
     void playerBanned(int p, int src);
     void playerTempBanned(int p, int src, int time);
     void regAnnouncementReceived(const QString &announcement);
-    void serverReceived(const QString &name, const QString &desc, quint16 num_players, const QString &ip, quint16 max, quint16 port, bool passwordProtected);
+    void serverReceived(const ServerInfo &info);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
     void tierListReceived(const QByteArray &tl);

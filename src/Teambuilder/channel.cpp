@@ -1,4 +1,4 @@
-#include "channel.h"
+﻿#include "channel.h"
 #include "client.h"
 #include "poketextedit.h"
 #include "theme.h"
@@ -123,14 +123,44 @@ void Channel::anchorClicked(const QUrl &url)
     mymainchat->scrollToAnchor(url.toString());
     mymainchat->horizontalScrollBar()->setValue(hv);
     mymainchat->verticalScrollBar()->setValue(vv);
+
     // study the URL scheme
     if (url.scheme()=="po") {
-        if(url.path().leftRef(5) == "join/") {
-            QString cname = url.path().mid(5);
+        QString path = url.path();
+        if(path.leftRef(5) == "join/") {
+            QString cname = path.mid(5);
             client->join(cname);
             client->activateChannel(cname);
-        } else if (url.path() == "reconnect") {
+        } else if (path == "reconnect") {
             client->reconnect();
+        } else if (path.leftRef(6) == "watch/") {
+            int id = path.mid(6).toInt();
+            client->watchBattleRequ(id);
+        } else if (path.leftRef(12) == "watchplayer/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                client->watchBattleOf(client->id(player));
+            } else {
+                client->watchBattleOf(id);
+            }
+        } else if (path.leftRef(3) == "pm/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                client->startPM(client->id(player));
+            } else {
+                client->startPM(id);
+            }
+        } else if (path.leftRef(3) == "ignore/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->ignore(pid, !client->isIgnored(pid));
+            } else {
+                client->ignore(id, !client->isIgnored(id));
+            }
         }
     } else {
         QDesktopServices::openUrl(url);
@@ -431,6 +461,11 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         if (id == ownId()) {
             printHtml(tr("<i>You are not in the channel anymore</i>"));
             emit quitChannel(this->id());
+        } else {
+            if (client->hasPlayer(id) && client->hasPlayerInfo(id)) {
+                client->call("onPlayerRemoved(int)", id);
+                client->removePlayer(id);
+            }
         }
     } else if (command == NetworkCli::ChannelBattle) {
         qint32 id, id1, id2;
@@ -438,7 +473,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         emit battleReceived2(id, id1, id2);
         battleReceived(id, id1, id2);
     } else{
-        printHtml(tr("<i>Unkown command received: %1. Maybe the client should be updated?</i>").arg(command));
+        printHtml(tr("<i>Unknown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
 }
 
@@ -531,6 +566,7 @@ void Channel::cleanTier(QTreeWidgetItem *tier)
 
 void Channel::cleanData()
 {
+    ownPlayers.clear();
     myplayers->clear();
     myplayersitems.clear();
     mytiersitems.clear();

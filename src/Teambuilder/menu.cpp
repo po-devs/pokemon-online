@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 #include "theme.h"
 
+static bool menuLoaded = false;
+
 Menu::Menu(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::Menu)
@@ -18,7 +20,9 @@ Menu::Menu(QWidget *parent) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
 
-    loadSettings(this);
+    if (!menuLoaded) {
+        loadSettings(this);
+    }
 }
 
 Menu::~Menu()
@@ -28,14 +32,22 @@ Menu::~Menu()
 
       An improvement of this could be saving the size only if the user resized the window during the widget's lifetime
  */
-    static bool menuLoaded = false;
-
     if (!menuLoaded) {
         writeSettings(this);
         menuLoaded = true;
     }
 
     delete ui;
+}
+
+bool Menu::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        e->accept();
+    }
+
+    return QFrame::event(e);
 }
 
 QMenuBar * Menu::createMenuBar(MainEngine *w)
@@ -52,9 +64,15 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     QMenu *langMenu = menuBar->addMenu(tr("&Language"));
     QFile in ("languages.txt");
     in.open(QIODevice::ReadOnly);
-    QStringList langs = QString::fromUtf8(in.readAll()).split('\n');
+
+    QSettings s;
+    QStringList langs = QString::fromUtf8(in.readAll()).trimmed().split('\n');
+    QActionGroup *ag = new QActionGroup(langMenu);
     foreach(QString a, langs) {
-        langMenu->addAction(a,w, SLOT(changeLanguage()));
+        QAction *act = langMenu->addAction(a,w, SLOT(changeLanguage()));
+        act->setCheckable(true);
+        act->setChecked(s.value("language").toString() == a.section("(", 1).section(")", 0, 0));
+        ag->addAction(act);
     }
 
     return menuBar;
