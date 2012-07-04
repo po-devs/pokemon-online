@@ -775,6 +775,51 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
     }
 }
 
+void PokemonInfo::RunMovesSanityCheck(int gen)
+{
+    qDebug() << "Running sanity check for gen " << gen;
+
+    Pokemon::gen mg = Pokemon::gen(gen, -1);
+    Pokemon::gen sg = Pokemon::gen(gen, GenInfo::NumberOfSubgens(gen)-1);
+
+    loadGen(mg);
+    loadGen(sg);
+
+    Gen &_1 = gens[mg];
+    Gen &_2 = gens[sg];
+
+    foreach(Pokemon::uniqueId id, _1.m_Moves.keys()) {
+        if (id.isForme() || !PokemonInfo::Exists(id,gen)) {
+            continue;
+        }
+
+        PokemonMoves &m1 = _1.m_Moves[id];
+        PokemonMoves &m2 = _2.m_Moves[id];
+
+        QSet<int> t1, t2;
+        t1 = m1.regularMoves;
+        t1.unite(m1.dreamWorldMoves).unite(m1.specialMoves);
+        t2 = m2.regularMoves;
+        t2.unite(m2.dreamWorldMoves).unite(m2.specialMoves);
+
+        QSet<int> s1(t1), s2(t2);
+
+        s1.subtract(t2);
+        s2.subtract(t1);
+
+        if (!s1.empty()) {
+            foreach(int m, s1) {
+                qDebug() << "Whole gen contains " << MoveInfo::Name(m) << " for " << PokemonInfo::Name(id) << " while subgens don't";
+            }
+        }
+        if (!s2.empty()) {
+            foreach(int m, s2) {
+                qDebug() << "Subgens contains " << MoveInfo::Name(m) << " for " << PokemonInfo::Name(id) << " while whole gen doesn't";
+            }
+        }
+    }
+}
+
 void PokemonInfo::Gen::loadMinLevels(Gen *parent)
 {
     if (parent && parent->gen.num == gen.num) {
