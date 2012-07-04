@@ -218,6 +218,7 @@ public:
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);
     static int Number(const QString &movename);
+    static int NumberOfMoves();
     static int NumberOfMoves(Pokemon::gen gen);
     static int FlinchRate(int movenum, Pokemon::gen gen);
     static int Recoil(int movenum, Pokemon::gen gen);
@@ -254,6 +255,7 @@ public:
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
+    static QSet<int> Moves(Pokemon::gen gen);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
@@ -261,6 +263,7 @@ private:
     static QHash<int, QString> m_Details;
     static QHash<int,int> m_OldMoves;
     static QHash<int,bool> m_KingRock;
+    static QVector<QSet<int> > m_GenMoves;
 
     struct Gen {
         Gen() {
