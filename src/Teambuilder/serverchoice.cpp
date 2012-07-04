@@ -82,7 +82,11 @@ ServerChoice::ServerChoice(const QString &nick) :
     QTimer *t = new QTimer(this);
     t->singleShot(5000, this, SLOT(timeout()));
 
+#if QT_VERSION >= QT_VERSION_CHECK(4,8,0
     ui->serverList->sortByColumn(ServerChoiceModel::Players, Qt::SortOrder(filter->headerData(ServerChoiceModel::Players, Qt::Horizontal, Qt::InitialSortOrderRole).toInt()));
+#else
+    ui->serverList->sortByColumn(ServerChoiceModel::Players, Qt::DescendingOrder);
+#endif
 }
 
 ServerChoice::~ServerChoice()
