@@ -80,6 +80,10 @@ public:
         return (num >= other);
     }
 
+    inline QString toString() const {
+        return QString("%1-%2").arg(int(num)).arg(int(subnum));
+    }
+
     inline Pokemon::gen original() {return gen(num, 0);}
 
     // Will return true if everything is fine. And false otherwise.
