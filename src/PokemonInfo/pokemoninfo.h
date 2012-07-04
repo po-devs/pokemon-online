@@ -127,6 +127,8 @@ public:
     // Will NOT return Missingno.
     static Pokemon::uniqueId getRandomPokemon(Pokemon::gen gen=GenInfo::GenMax());
 
+    static void RunMovesSanityCheck(int gen);
+
     static void retranslate();
 private:
     struct Gen {

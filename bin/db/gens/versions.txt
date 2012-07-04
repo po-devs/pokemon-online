@@ -10,7 +10,6 @@
 3:2 Fire Red/Leaf Green
 3:3 Emerald
 3:4 XD
-3:5 test
 4:0 Diamon/Pearl
 4:1 Platinum
 4:2 Heart Gold/Soul Silver
