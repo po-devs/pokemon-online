@@ -110,6 +110,7 @@ QVariant ServerChoiceModel::headerData(int section, Qt::Orientation orientation,
             return Theme::unlockedLockedRegistry().size();
         }
         break;
+#if QT_VERSION >= QT_VERSION_CHECK(4,8,0)
     case Qt::InitialSortOrderRole :
         if (section == Locked || section == Name) {
             return Qt::AscendingOrder;
@@ -118,6 +119,7 @@ QVariant ServerChoiceModel::headerData(int section, Qt::Orientation orientation,
         }
         break;
     };
+#endif
     return QVariant();
 }
 
