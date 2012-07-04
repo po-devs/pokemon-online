@@ -75,9 +75,6 @@
      </property>
      <item row="0" column="0" colspan="4">
       <widget class="QTableView" name="moveChoice">
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
