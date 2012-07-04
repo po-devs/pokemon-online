@@ -59,8 +59,7 @@ CONFIG(po_registry) {
     SUBDIRS += src/Registry
 }
 
-TRANSLATIONS = src/trans/translation_cz.ts \
-    src/trans/translation_de.ts \
+TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_es.ts \
     src/trans/translation_fi.ts \
     src/trans/translation_fr.ts \
@@ -68,13 +67,9 @@ TRANSLATIONS = src/trans/translation_cz.ts \
     src/trans/translation_it.ts \
     src/trans/translation_jp.ts \
     src/trans/translation_ko.ts \
-    src/trans/translation_pl.ts \
+    src/trans/translation_nl.ts \
     src/trans/translation_pt-br.ts \
-    src/trans/translation_ru.ts \
-    src/trans/translation_th.ts \
-    src/trans/translation_sv.ts \
-    src/trans/translation_zh-cn.ts \
-    src/trans/translation_tr.ts
+    src/trans/translation_zh-cn.ts
 
 macx:QMAKE_CC=echo
 

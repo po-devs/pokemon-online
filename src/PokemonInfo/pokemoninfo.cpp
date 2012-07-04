@@ -134,101 +134,101 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
 }
 
 namespace PokemonInfoConfig {
-    static QString transPath, modPath;
-    FillMode::FillModeType fillMode;
+static QString transPath, modPath;
+FillMode::FillModeType fillMode;
 
-    void setFillMode(FillMode::FillModeType mode) {
-        fillMode = mode;
+void setFillMode(FillMode::FillModeType mode) {
+    fillMode = mode;
+}
+
+FillMode::FillModeType getFillMode() {
+    return fillMode;
+}
+
+void changeTranslation(const QString &ts)
+{
+    if (ts.length() > 0) {
+        transPath = QString("trans/%1/").arg(ts);
+    } else {
+        transPath.clear();
     }
+}
 
-    FillMode::FillModeType getFillMode() {
-        return fillMode;
-    }
-
-    void changeTranslation(const QString &ts)
-    {
-        if (ts.length() > 0) {
-            transPath = QString("trans/%1/").arg(ts);
+void changeMod(const QString &mod)
+{
+    if (mod.length() == 0 || fillMode == FillMode::NoMod) {
+        modPath.clear();
+    } else {
+        //QString cleanMod = QString::fromUtf8(QUrl::toPercentEncoding(mod));
+        if (fillMode == FillMode::Client) {
+            modPath = appDataPath("Mods") + "/" + mod + "/";
         } else {
-            transPath.clear();
+            modPath = QString("Mods/%1/").arg(mod);
         }
-    }
-
-    void changeMod(const QString &mod)
-    {
-        if (mod.length() == 0 || fillMode == FillMode::NoMod) {
+        if (!QDir(modPath).exists()) {
             modPath.clear();
-        } else {
-            //QString cleanMod = QString::fromUtf8(QUrl::toPercentEncoding(mod));
-            if (fillMode == FillMode::Client) {
-                modPath = appDataPath("Mods") + "/" + mod + "/";
-            } else {
-                modPath = QString("Mods/%1/").arg(mod);
-            }
-            if (!QDir(modPath).exists()) {
-                modPath.clear();
-            }
         }
     }
+}
 
-    QString currentModPath()
-    {
-        return modPath;
+QString currentModPath()
+{
+    return modPath;
+}
+
+QString currentMod()
+{
+    if (modPath.length() == 0) {
+        return QString();
     }
 
-    QString currentMod()
-    {
-        if (modPath.length() == 0) {
-            return QString();
-        }
+    return QDir(modPath).dirName();
+}
 
-        return QDir(modPath).dirName();
+QStringList allFiles(const QString &filename, bool trans) {
+    QStringList ret;
+
+    if (QFile::exists(filename)) {
+        ret << filename;
     }
 
-    QStringList allFiles(const QString &filename, bool trans) {
-        QStringList ret;
+    if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
+        ret << (transPath + filename);
+    }
 
-        if (QFile::exists(filename)) {
-            ret << filename;
-        }
+    if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
+        ret << (modPath + filename);
+    }
 
-        if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
-            ret << (transPath + filename);
-        }
+    return ret;
+}
 
-        if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
-            ret << (modPath + filename);
-        }
+QStringList availableMods()
+{
+    QStringList ret;
 
+    if (fillMode == FillMode::NoMod) {
         return ret;
     }
 
-    QStringList availableMods()
-    {
-        QStringList ret;
+    QDir modDir(fillMode == FillMode::Client ? appDataPath("Mods") : "Mods");
 
-        if (fillMode == FillMode::NoMod) {
-            return ret;
-        }
+    if (modDir.exists()) {
+        QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
 
-        QDir modDir(fillMode == FillMode::Client ? appDataPath("Mods") : "Mods");
+        foreach(QString dir, dirs) {
+            modDir.cd(dir);
 
-        if (modDir.exists()) {
-            QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
-
-            foreach(QString dir, dirs) {
-                modDir.cd(dir);
-
-                if (modDir.exists("mod.ini")) {
-                    ret << modDir.dirName();
-                }
-
-                modDir.cdUp();
+            if (modDir.exists("mod.ini")) {
+                ret << modDir.dirName();
             }
-        }
 
-        return ret;
+            modDir.cdUp();
+        }
     }
+
+    return ret;
+}
 }
 
 using namespace PokemonInfoConfig;
@@ -684,7 +684,7 @@ QString PokemonInfo::Gen::path(const QString &fileName)
 
 void PokemonInfo::Gen::loadMoves(Gen *parent)
 {
-    QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level/moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
+    QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level_moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
 
     if (gen > 1) {
         fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
@@ -1715,7 +1715,7 @@ QString MoveInfo::Name(int movenum)
 #define move_find(var, mv, g) do {\
     Gen *G = &gens[g]; \
     while (!G->var.contains(mv) && G->parent != 0) { \
-        G = G->parent; \
+    G = G->parent; \
     } \
     return G->var.value(mv);\
     } while(0)
@@ -1723,7 +1723,7 @@ QString MoveInfo::Name(int movenum)
 #define move_find2(type, res, var, mv, g) \
     Gen *G = &gens[g]; \
     while (!G->var.contains(mv) && G->parent != 0) { \
-        G = G->parent; \
+    G = G->parent; \
     } \
     type res = G->var.value(mv)
 
