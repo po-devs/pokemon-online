@@ -2874,7 +2874,7 @@ int GenInfo::NumberOfSubgens(int gen) {
 void GenInfo::retranslate()
 {
     fill_gen_string(m_versions, path("versions.txt"), true);
-    fill_double(m_gens, path("gens.txt"), true);
+    fill_int_str(m_gens, path("gens.txt"), true);
 }
 
 QString GenInfo::Gen(int gen)
