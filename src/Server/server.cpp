@@ -133,7 +133,7 @@ void Server::start(){
     setDefaultValue("Battles/RatedThroughChallenge", false);
     setDefaultValue("Network/ProxyServers", QString());
     setDefaultValue("Network/LowTCPDelay", false);
-    setDefaultValue("AntiDOS/ShowOveractiveMessages", false);
+    setDefaultValue("AntiDOS/ShowOveractiveMessages", true);
     setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1");
     setDefaultValue("AntiDOS/MaxPeoplePerIp", 2);
     setDefaultValue("AntiDOS/MaxCommandsPerUser", 50);
@@ -157,6 +157,12 @@ void Server::start(){
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
     printLine(tr("Pokemon database loaded"));
+
+    PokemonInfo::RunMovesSanityCheck(1);
+    PokemonInfo::RunMovesSanityCheck(2);
+    PokemonInfo::RunMovesSanityCheck(3);
+    PokemonInfo::RunMovesSanityCheck(4);
+    PokemonInfo::RunMovesSanityCheck(5);
 
     MoveEffect::init();
     RBYMoveEffect::init();
