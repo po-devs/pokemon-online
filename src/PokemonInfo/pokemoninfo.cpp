@@ -747,11 +747,11 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
                     moves.genMoves.unite(pmoves.genMoves);
                     moves.eggMoves.unite(pmoves.eggMoves);
                     moves.preEvoMoves.unite(pmoves.preEvoMoves);
-                    moves.specialMoves.unite(moves.specialMoves);
-                    moves.TMMoves.unite(moves.TMMoves);
-                    moves.levelMoves.unite(moves.levelMoves);
-                    moves.tutorMoves.unite(moves.tutorMoves);
-                    moves.dreamWorldMoves.unite(moves.dreamWorldMoves);
+                    moves.specialMoves.unite(pmoves.specialMoves);
+                    moves.TMMoves.unite(pmoves.TMMoves);
+                    moves.levelMoves.unite(pmoves.levelMoves);
+                    moves.tutorMoves.unite(pmoves.tutorMoves);
+                    moves.dreamWorldMoves.unite(pmoves.dreamWorldMoves);
                 }
             } else {
                 if (parent->m_Moves.contains(it.key())) {
