@@ -24,6 +24,6 @@ HEADERS += otherwidgets.h \
     qtableplus.h
 
 OTHER_FILES += 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+QMAKE_CXXFLAGS += "-std=c++0x"
 
 include(../Shared/Common.pri)
