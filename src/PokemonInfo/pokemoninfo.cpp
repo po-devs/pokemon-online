@@ -1567,9 +1567,9 @@ void MoveInfo::init(const QString &dir)
     fill_double(m_OldMoves, path("oldmoves.txt"));
     fill_int_bool(m_KingRock, path("king_rock.txt"));
 
-    for (int i = 0; i < GenInfo::NumberOfGens(); i++) {
-        for (int j = 0; j < GenInfo::NumberOfSubgens(i+GenInfo::GenMin()); i++) {
-            Pokemon::gen g (i+GenInfo::GenMin(), j);
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
+            Pokemon::gen g (i, j);
             gens[g].load(dir, g);
 
             if (g.subnum != 0) {
@@ -1727,9 +1727,9 @@ QString MoveInfo::Name(int movenum)
     } \
     type res = G->var.value(mv)
 
-int MoveInfo::Type(int movenum, Pokemon::gen g)
+int MoveInfo::Type(int mv, Pokemon::gen g)
 {
-    move_find(type, movenum, g);
+    move_find(type, mv, g);
 }
 
 int MoveInfo::ConvertFromOldMove(int oldmovenum)
