@@ -47,6 +47,7 @@ QHash<int, QStringList> MoveInfo::m_MoveMessages;
 QHash<int,QString> MoveInfo::m_Details;
 QHash<int,int> MoveInfo::m_OldMoves;
 QHash<int,bool> MoveInfo::m_KingRock;
+QVector<QSet<int> > MoveInfo::m_GenMoves;
 
 QString ItemInfo::m_Directory;
 QHash<int,QString> ItemInfo::m_BerryNames;
@@ -1564,10 +1565,15 @@ void MoveInfo::init(const QString &dir)
     loadMoveMessages();
     loadDetails();
 
+    m_GenMoves.clear();
+    m_GenMoves.resize(GenInfo::NumberOfGens());
+
     fill_double(m_OldMoves, path("oldmoves.txt"));
     fill_int_bool(m_KingRock, path("king_rock.txt"));
 
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        fill_container_with_file(m_GenMoves[i-GenInfo::GenMin()], path("%1G/moves.txt").arg(i));
+
         for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
             Pokemon::gen g (i, j);
             gens[g].load(dir, g);
@@ -1766,9 +1772,14 @@ int MoveInfo::Number(const QString &movename)
     return m_LowerCaseMoves.value(movename.toLower());
 }
 
+int MoveInfo::NumberOfMoves()
+{
+    return m_Names.count();
+}
+
 int MoveInfo::NumberOfMoves(Pokemon::gen g)
 {
-    return gens[Pokemon::gen(g.num, 0)].power.count();
+    return m_GenMoves[g.num-GenInfo::GenMin()].count();
 }
 
 int MoveInfo::FlinchRate(int movenum, Pokemon::gen g)
@@ -1855,7 +1866,7 @@ int MoveInfo::Flags(int movenum, Pokemon::gen g)
 
 bool MoveInfo::Exists(int movenum, Pokemon::gen g)
 {
-    return NumberOfMoves(g) > movenum;
+    return m_GenMoves[g.num-GenInfo::GenMin()].contains(movenum);
 }
 
 bool MoveInfo::isOHKO(int movenum, Pokemon::gen gen)
@@ -1929,6 +1940,11 @@ QString MoveInfo::MoveMessage(int moveeffect, int part)
 QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 {
     move_find(specialEffect, movenum, gen);
+}
+
+QSet<int> MoveInfo::Moves(Pokemon::gen gen)
+{
+    return m_GenMoves[gen.num-GenInfo::GenMin()];
 }
 
 QString MoveInfo::DetailedDescription(int movenum)
