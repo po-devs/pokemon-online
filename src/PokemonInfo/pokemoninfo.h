@@ -48,7 +48,7 @@ struct PokemonMoves
     QSet<int> regularMoves;
     QSet<int> TMMoves;
     QSet<int> preEvoMoves;
-    QSet<int>levelMoves;
+    QSet<int> levelMoves;
     QSet<int> eggMoves;
     QSet<int> specialMoves;
     QSet<int> tutorMoves;

@@ -30,6 +30,9 @@ public:
     static int GenMax() { return genMax; }
     static int NumberOfGens();
     static int NumberOfSubgens(int gen);
+
+    static QList<int> AllGens();
+    static QList<Pokemon::gen> AllSubGens();
 private:
     static QString m_Directory;
     static QHash<int, QString> m_gens;

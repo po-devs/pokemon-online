@@ -2938,6 +2938,16 @@ int GenInfo::NumberOfSubgens(int gen) {
     return m_NumberOfSubgens.value(gen);
 }
 
+QList<int> GenInfo::AllGens()
+{
+    return m_gens.keys();
+}
+
+QList<Pokemon::gen> GenInfo::AllSubGens()
+{
+    return m_versions.keys();
+}
+
 void GenInfo::retranslate()
 {
     fill_gen_string(m_versions, path("versions.txt"), true);

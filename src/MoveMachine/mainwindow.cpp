@@ -1,8 +1,4 @@
-namespace Pokemon {
-    class uniqueId;
-}
-unsigned int qHash (const Pokemon::uniqueId &key);
-
+#define private public
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"
@@ -10,19 +6,21 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include <QCompleter>
 #include <QMessageBox>
 
+QHash<Pokemon::gen, QHash<Pokemon::uniqueId, PokemonMoves> > moves;
+
 void MoveGen::init(Pokemon::gen gen, Pokemon::uniqueId pokenum)
 {
     this->gen = gen;
     this->id = pokenum;
 
-    moves[LevelMoves] = PokemonInfo::LevelMoves(pokenum,gen);
-    moves[SpecialMoves] = PokemonInfo::SpecialMoves(pokenum,gen);
-    moves[EggMoves] = PokemonInfo::EggMoves(pokenum,gen);
-    moves[TutorMoves] = PokemonInfo::TutorMoves(pokenum,gen);
-    moves[TMMoves] = PokemonInfo::TMMoves(pokenum, gen);
-    moves[PreEvoMoves] = PokemonInfo::PreEvoMoves(pokenum, gen);
+    moves[LevelMoves] = ::moves[gen][id].levelMoves;
+    moves[SpecialMoves] = ::moves[gen][id].specialMoves;
+    moves[EggMoves] = ::moves[gen][id].eggMoves;
+    moves[TutorMoves] = ::moves[gen][id].tutorMoves;
+    moves[TMMoves] = ::moves[gen][id].TMMoves;
+    moves[PreEvoMoves] = ::moves[gen][id].preEvoMoves;
     if (gen == 5)
-        moves[DreamWorldMoves] = PokemonInfo::dreamWorldMoves(pokenum, gen);
+        moves[DreamWorldMoves] = ::moves[gen][id].dreamWorldMoves;
 }
 
 void MovesPerPoke::init(Pokemon::uniqueId poke)
@@ -38,6 +36,12 @@ void MovesPerPoke::init(Pokemon::uniqueId poke)
 
 void PokeMovesDb::init()
 {
+    foreach(Pokemon::gen gen, GenInfo::AllSubGens()) {
+        PokemonInfo::Gen data;
+        data.load("db/pokes/", gen);
+        moves[gen] = data.m_Moves;
+    }
+
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
         if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem)
             continue;
@@ -90,13 +94,19 @@ void PokeMovesDb::save()
             files[PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
             files[DreamWorldMoves].setFileName(genS + "dw_moves.txt");
 
+            Pokemon::gen g(gen, sub);
+
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
-                files[i].open(QIODevice::WriteOnly);
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem) || pokes[id].gens[gen].moves[i].size() == 0)
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem))
                         continue;
 
-                    QList<int> moves = pokes[id].gens[gen-1].moves[i].toList();
+                    QList<int> moves = pokes[id].gens[g].moves[i].toList();
+
+                    if (moves.size() == 0) {
+                        continue;
+                    }
+
                     qSort(moves);
 
                     QString s;
@@ -122,23 +132,6 @@ void PokeMovesDb::save()
             }
         }
     }
-}
-
-QString getLine(const QString & filename, int linenum)
-{
-    QFile file(filename);
-
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    for (int i = 0; i < linenum; i++)
-    {
-        filestream.readLine();
-    }
-
-    return filestream.readLine();
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -180,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem)
+        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem)
             continue;
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
