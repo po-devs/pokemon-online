@@ -147,7 +147,7 @@ void TierWindow::openTierEdit(Tier *t)
     QList<Pokemon::gen> gens;
     gens.push_back(0);
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
-        for (int j = 0; j < GenInfo::NumberOfSubgens(i); i++) {
+        for (int j = 0; j < GenInfo::NumberOfSubgens(i); j++) {
             gens << Pokemon::gen(i, j);
             genS << QString("%1 (%2)").arg(GenInfo::Gen(gens.back().num), GenInfo::Version(gens.back()));
         }
