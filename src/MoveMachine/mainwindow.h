@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "../PokemonInfo/geninfo.h"
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include "../PokemonInfo/pokemonstructs.h"
@@ -21,17 +22,17 @@ enum {
 
 struct MoveGen
 {
-    int gen;
+    Pokemon::gen gen;
     Pokemon::uniqueId id;
     QSet<int> moves[7];
 
-    void init(int gen, Pokemon::uniqueId id);
+    void init(Pokemon::gen gen, Pokemon::uniqueId id);
 };
 
 struct MovesPerPoke
 {
     Pokemon::uniqueId id;
-    MoveGen gens[5];
+    QHash<Pokemon::gen, MoveGen> gens;
 
     void init(Pokemon::uniqueId id);
 };
@@ -65,9 +66,9 @@ private:
     Pokemon::uniqueId currentPoke;
 
     void switchToPokemon(Pokemon::uniqueId);
-    int gen();
+    Pokemon::gen gen();
     PokeMovesDb database;
-    void addMoves(int gen, int cat, QListWidget *container);
+    void addMoves(Pokemon::gen gen, int cat, QListWidget *container);
 };
 
 #endif // MAINWINDOW_H
