@@ -60,7 +60,8 @@ void MainWidget::closeTab(int spot)
     del->deleteLater();
 
     spots.remove(getIndex(spot), 1);
-    shortCuts.take(spot)->deleteLater();
+    shortCuts[spot]->setKey(QKeySequence());
+    shortCuts[spot]->deleteLater();
 
     updateTabNames();
 }
@@ -92,6 +93,7 @@ void MainWidget::changeSpot()
     ui->stackedWidget->setCurrentIndex(getIndex(spot));
 
     updateTabNames();
+    emit reloadMenuBar();
 }
 
 QWidget *MainWidget::currentWidget() const
