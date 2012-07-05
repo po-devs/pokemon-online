@@ -24,6 +24,8 @@ public:
     int numberOfTabs() const;
 
     void closeTab(int spot);
+signals:
+    void reloadMenuBar();
 public slots:
     void changeSpot();
     void updateTabNames();

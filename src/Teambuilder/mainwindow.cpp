@@ -228,6 +228,7 @@ void MainEngine::launchMenu(bool first)
         displayer->resize(menu->size());
         displayer->setWindowTitle(tr("Pokemon Online"));
         displayer->setCentralWidget(main = new MainWidget());
+        connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
         main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
         loadSettings(menu, menu->defaultSize());\
