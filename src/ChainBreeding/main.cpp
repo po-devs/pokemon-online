@@ -58,14 +58,14 @@ int main(int, char**)
     transform<2>(readFile("db/pokes/egg_group_2.txt"),[&](QString n, QString group){egg2[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
 
     PokemonInfoConfig::setFillMode(FillMode::Client);
-    //PokemonInfoConfig::setLastSubgenToWhole(false);
+    PokemonInfoConfig::setLastSubgenToWhole(true);
 
     GenInfo::init("db/gens/");
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(5, -1);
+    Pokemon::gen gen(3, 4);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
