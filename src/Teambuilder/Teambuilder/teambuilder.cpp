@@ -115,6 +115,7 @@ void TeamBuilder::setNoMod()
     settings.setValue("Mods/CurrentMod", QString());
 
     emit reloadDb();
+    emit reloadMenuBar();
 
     markTeamUpdated();
     currentWidget()->updateTeam();
