@@ -1,4 +1,4 @@
-TARGET = "Chain Breeding"
+TARGET = "ChainBreeding"
 DESTDIR = ../../bin
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
