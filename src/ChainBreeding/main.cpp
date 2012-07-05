@@ -64,7 +64,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(2, 0);
+    Pokemon::gen gen(2, -1);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -82,7 +82,11 @@ int main(int, char**)
 
     for (int i = 0; i < PokemonInfo::TrueCount(); i++)
     {
-        if (!PokemonInfo::Exists(i, gen) || !PokemonInfo::Released(i, gen)) {
+        Pokemon::gen tg = gen;
+        if (gen.subnum == gen.wholeGen) {
+            tg.subnum = GenInfo::NumberOfSubgens(tg.num)-1;
+        }
+        if (!PokemonInfo::Exists(i, tg) || !PokemonInfo::Released(i, tg)) {
             continue;
         }
 
@@ -293,7 +297,11 @@ int main(int, char**)
     bool space, ord, newline;
     newline = false;
     for (int i = 0; i < PokemonInfo::TrueCount(); i++) {
-        if (!PokemonInfo::Exists(i, gen) || !PokemonInfo::Released(i, gen)) {
+        Pokemon::gen tg = gen;
+        if (gen.subnum == gen.wholeGen) {
+            tg.subnum = GenInfo::NumberOfSubgens(tg.num)-1;
+        }
+        if (!PokemonInfo::Exists(i, tg) || !PokemonInfo::Released(i, tg)) {
             continue;
         }
         if (legalCombinations.value(i).size() == 0)
