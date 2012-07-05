@@ -1155,10 +1155,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("MainChat");
 
-    QMenu *menuFichier = menuBar->addMenu(tr("&File"));
+    QMenu *fileMenu = menuBar->addMenu(tr("&File"));
+    fileMenu->addAction(tr("&New tab"), w, SLOT(openNewTab()), tr("Ctrl+N", "New tab"));
     //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
-    menuFichier->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()),Qt::CTRL+Qt::Key_T);
-    menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
+    fileMenu->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
+    fileMenu->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
