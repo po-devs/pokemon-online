@@ -29,7 +29,7 @@ public slots:
     void launchTeamBuilder();
     void reloadPokemonDatabase();
     void goOnline(const QString &url, const quint16 port, const QString &name);
-    void launchServerChoice();
+    void launchServerChoice(bool newTab = false);
     void changeLanguage();
     void updateMenuBar();
     void openPluginManager();
@@ -38,6 +38,7 @@ public slots:
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
     void loadReplayDialog();
+    void openNewTab();
     void loadStyleSheet();
     void changeStyle();
     void showReplay(QString);

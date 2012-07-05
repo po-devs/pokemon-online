@@ -252,9 +252,12 @@ void MainEngine::launchTeamBuilder()
     connect(TB, SIGNAL(reloadDb()), SLOT(reloadPokemonDatabase()));
 }
 
-void MainEngine::launchServerChoice()
+void MainEngine::launchServerChoice(bool newTab)
 {
     ServerChoice *choice = new ServerChoice(trainerTeam()->name());
+    if (newTab) {
+        choice->setProperty("tab-window", ++freespot);
+    }
     routine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
@@ -355,6 +358,11 @@ void MainEngine::quit()
 void MainEngine::loadTeamDialog()
 {
     loadTTeamDialog(trainerTeam()->team());
+}
+
+void MainEngine::openNewTab()
+{
+    launchServerChoice(true);
 }
 
 void MainEngine::loadReplayDialog()
