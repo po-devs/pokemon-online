@@ -380,10 +380,16 @@ QList<QSet<int> > MoveSetChecker::combinationsFor(Pokemon::uniqueId pokenum, Pok
 
 QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::eventCombinationsOf(Pokemon::gen gen)
 {
+    if (!legalCombinations.contains(gen)) {
+        loadGenData(gen);
+    }
     return eventCombinations.value(gen);
 }
 
 QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::breedingCombinationsOf(Pokemon::gen gen)
 {
+    if (!legalCombinations.contains(gen)) {
+        loadGenData(gen);
+    }
     return breedingCombinations.value(gen);
 }
