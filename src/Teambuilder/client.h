@@ -288,6 +288,7 @@ signals:
     void PMDisabled(bool value, int starterAuth);
     void togglePMs(bool value);
     void PMDisconnected(bool disconnected);
+    void titleChanged();
 
 protected:
     void paintEvent(QPaintEvent *)

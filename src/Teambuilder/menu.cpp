@@ -53,10 +53,10 @@ bool Menu::event(QEvent *e)
 QMenuBar * Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
-    QMenu *menuFichier = menuBar->addMenu(tr("&File"));
-    menuFichier->addAction(tr("&Load Team"),w,SLOT(loadTeamDialog()),Qt::CTRL+Qt::Key_L);
-    menuFichier->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
-    menuFichier->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
+    QMenu *fileMenu = menuBar->addMenu(tr("&File"));
+    fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
+    fileMenu->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
+    fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);

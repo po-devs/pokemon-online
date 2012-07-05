@@ -1157,6 +1157,8 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(tr("&New tab"), w, SLOT(openNewTab()), tr("Ctrl+N", "New tab"));
+    fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
+    fileMenu->addSeparator();
     //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     fileMenu->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
     fileMenu->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
@@ -1630,17 +1632,10 @@ void Client::versionDiff(const ProtocolVersion &v, int level)
 
 void Client::serverNameReceived(const QString &sName)
 {
-    QMainWindow* mainwindow = qobject_cast<QMainWindow*>(topLevelWidget());
-    QString titlebase = mainwindow->windowTitle();
-    if (serverName.size() > 0) {
-        // chop the current title to make room for the new name
-        titlebase.chop(3 + serverName.size());
-    }
     serverName = sName;
-    if (serverName.size() > 0) {
-        QString newTitle = titlebase + " - " + serverName;
-        mainwindow->setWindowTitle(newTitle);
-    }
+    setWindowTitle(sName);
+
+    emit titleChanged();
 }
 
 void Client::announcementReceived(const QString &ann)

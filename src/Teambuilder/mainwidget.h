@@ -2,6 +2,10 @@
 #define MAINWIDGET_H
 
 #include <QFrame>
+#include <QHash>
+
+class QLabel;
+class QShortcut;
 
 namespace Ui {
 class MainWidget;
@@ -17,10 +21,18 @@ public:
     
     void setWidget(int spot, QWidget *w);
     QWidget *currentWidget() const;
+    int numberOfTabs() const;
+
+    void closeTab(int spot);
+public slots:
+    void changeSpot();
+    void updateTabNames();
 private:
     Ui::MainWidget *ui;
 
     QVector<int> spots;
+    QHash<int, QLabel*> tabNames;
+    QHash<int, QShortcut*> shortCuts;
     int getIndex(int spot);
 };
 

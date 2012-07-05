@@ -26,6 +26,18 @@ TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
     border-radius: 20px;
 }
 
+MainWidget #topWidget QLabel {
+    padding-left: 2px;
+    padding-right: 2px;
+    color: #DDD;
+}
+
+MainWidget #topWidget QLabel:enabled {
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+}
 
 /**************** Menu ****************************/
 
