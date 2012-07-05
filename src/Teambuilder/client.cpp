@@ -166,7 +166,8 @@ Client::~Client()
     foreach(OnlineClientPlugin *pl, plugins) {
         pl->clientShutDown();
     }
-    pluginManager->quitClient();
+
+    pluginManager->quitClient(this);
 
     relay().logout();
     writeSettings(this);
