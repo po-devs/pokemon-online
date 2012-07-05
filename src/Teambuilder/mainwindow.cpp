@@ -14,7 +14,7 @@
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
 
-MainEngine::MainEngine() : displayer(0)
+MainEngine::MainEngine() : displayer(0), freespot(0)
 {
     m_team = new TeamHolder();
 
@@ -178,7 +178,12 @@ void MainEngine::changeStyle()
 void MainEngine::routine(CentralWidgetInterface *w)
 {
     displayer->setWindowTitle(tr("Pokemon Online"));
-    main->setWidget(dynamic_cast<QWidget*>(w));
+    QWidget *wi = dynamic_cast<QWidget*>(w);
+    if (wi->property("tab-window").isNull()) {
+        wi->setProperty("tab-window", sender()->property("tab-window"));
+    }
+    main->setWidget(wi->property("tab-window").toInt(), wi);
+
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
     //loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
 }
@@ -187,11 +192,12 @@ void MainEngine::launchMenu(bool first)
 {
     Menu *menu = new Menu();
     if (first) {
+        menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();
         displayer->resize(menu->size());
         displayer->setWindowTitle(tr("Pokemon Online"));
         displayer->setCentralWidget(main = new MainWidget());
-        main->setWidget(menu);
+        main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
         loadSettings(menu, menu->defaultSize());\
         displayer->show();
