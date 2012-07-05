@@ -98,8 +98,13 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam))
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
                         continue;
+                    }
+                    if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
+                        continue;
+                    }
+                    pokes[id].gens[Pokemon::gen(gen, -1)].moves[i].unite(pokes[id].gens[g].moves[i]);
 
                     QList<int> moves = pokes[id].gens[g].moves[i].toList();
 
@@ -129,6 +134,58 @@ void PokeMovesDb::save()
                 if (files[i].isOpen()) {
                     files[i].close();
                 }
+            }
+        }
+
+        QFile files[7];
+
+        QString genS = "db/pokes/" + QString::number(gen) + "G/";
+        files[LevelMoves].setFileName(genS + "level_moves.txt");
+        files[EggMoves].setFileName(genS + "egg_moves.txt");
+        files[TutorMoves].setFileName(genS + "tutor_moves.txt");
+        files[SpecialMoves].setFileName(genS + "special_moves.txt");
+        files[TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
+        files[PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
+        files[DreamWorldMoves].setFileName(genS + "dw_moves.txt");
+
+        Pokemon::gen g(gen, -1);
+
+        for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
+            foreach (Pokemon::uniqueId id, ids) {
+                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
+                    continue;
+                }
+                if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
+                    continue;
+                }
+
+                QList<int> moves = pokes[id].gens[g].moves[i].toList();
+
+                if (moves.size() == 0) {
+                    continue;
+                }
+
+                qSort(moves);
+
+                QString s;
+                bool start = true;
+
+                foreach(int move, moves) {
+                    if (!start) {
+                        s += " ";
+                    } else {
+                        start = false;
+                    }
+                    s += QString::number(move);
+                }
+
+                if (!files[i].isOpen()) {
+                    files[i].open(QIODevice::WriteOnly);
+                }
+                files[i].write(id.toLine(s+"\n").toUtf8());
+            }
+            if (files[i].isOpen()) {
+                files[i].close();
             }
         }
     }
