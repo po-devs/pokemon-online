@@ -51,6 +51,9 @@ public:
 
     bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
     bool shouldContinuePeeking(param<BattleEnum::BlankMessage>) {return false;}
+    bool shouldContinuePeeking(param<BattleEnum::OfferChoice>) {return false;}
+    bool shouldContinuePeeking(param<BattleEnum::ClockStart>) {return false;}
+    bool shouldContinuePeeking(param<BattleEnum::ClockStop>) {return false;}
     /* When using u-turn or baton pass, it stops at the middle. Dynamic Stats is always sent to both players though, so it unhangs both */
     bool shouldContinuePeeking(param<BattleEnum::DynamicStats>, int , std::shared_ptr<BattleStats>*) { return false;}
     /* When sending a backup with intimidate, this happens before any blank message */
