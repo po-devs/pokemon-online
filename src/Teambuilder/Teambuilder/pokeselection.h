@@ -2,7 +2,8 @@
 #define POKESELECTION_H
 
 #include <QWidget>
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemon.h"
+#include "../PokemonInfo/geninfo.h"
 
 namespace Ui {
 class PokeSelection;
@@ -10,6 +11,9 @@ class PokeSelection;
 
 class AdvancedSearch;
 class QAbstractItemModel;
+class QAbstractProxyModel;
+class PokeTableModel;
+class QModelIndex;
 
 class PokeSelection : public QWidget
 {
@@ -31,6 +35,8 @@ private slots:
     void toggleSearchWindow();
 private:
     Ui::PokeSelection *ui;
+    QAbstractItemModel *sourceModel;
+    QAbstractProxyModel *proxy;
 
     Pokemon::uniqueId num() const {
         return m_num;

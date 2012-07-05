@@ -51,13 +51,16 @@ void PokeMovesDb::init()
     }
 
     /* Code to give evos the moves of their pre evos */
-    for (int i =0; i < PokemonInfo::TrueCount(GenInfo::GenMax()); i++) {
+    for (int i = 0; i < PokemonInfo::TrueCount(); i++) {
         int preEvo = PokemonInfo::PreEvo(i);
 
         if (preEvo != 0) {
             for (int j = GenInfo::GenMin(); j <= GenInfo::GenMax(); j++) {
                 for (int k = 0; k < GenInfo::NumberOfSubgens(j); k++) {
                     Pokemon::gen g(j,k);
+                    if (!PokemonInfo::Exists(i, g)) {
+                        continue;
+                    }
 
                     pokes[i].gens[g].moves[PreEvoMoves] = pokes[preEvo].gens[g].moves[LevelMoves];
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[SpecialMoves]);
