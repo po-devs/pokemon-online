@@ -1673,10 +1673,16 @@ void Client::tierListReceived(const QByteArray &tl)
 void Client::rebuildTierMenu()
 {
     mytiermenu->clear();
+    foreach(QAction *a, mytiers) {
+        a->deleteLater();
+    }
     mytiers.clear();
 
     TierActionFactoryTeams f(team());
     mytiers = tierRoot.buildMenu(mytiermenu, this, team()->officialCount() <= 1 ? NULL : &f);
+    foreach(QAction *a, mytiers) {
+        a->setParent(this);
+    }
     singleTeam = team()->officialCount() <= 1;
 }
 
