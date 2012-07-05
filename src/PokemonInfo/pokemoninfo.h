@@ -123,6 +123,7 @@ public:
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static int SpecialStat(const Pokemon::uniqueId &pokeid);
+    static bool Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen); /* Does not check for exists first, do it yourself */
     static bool Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static bool Exists(const Pokemon::uniqueId &pokeid);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
@@ -138,23 +139,28 @@ public:
     static void RunMovesSanityCheck(int gen);
 
     static void retranslate();
-private:
+
     struct Gen {
         Pokemon::gen gen;
         QString dir;
 
         void load(const QString &path, const Pokemon::gen &gen, Gen *parent=NULL);
         void loadMoves(Gen *parent);
+        void loadReleased(Gen *parent);
         void loadMinLevels(Gen *parent);
+
+        bool isReleased(const Pokemon::uniqueId &);
 
         QString path(const QString &filename);
 
         QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
+        QSet<Pokemon::uniqueId> m_Released;
 
         QHash<Pokemon::uniqueId, int> m_MinLevels;
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
 
+private:
     static QHash<Pokemon::gen, Gen> gens;
 
     static Gen & gen(Pokemon::gen gen);
