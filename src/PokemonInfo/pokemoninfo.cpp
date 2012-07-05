@@ -2324,6 +2324,11 @@ bool ItemInfo::Exists(int itemnum, Pokemon::gen gen)
     return m_GenItems[gen.num-GEN_MIN].contains(itemnum);
 }
 
+bool ItemInfo::Exists(int itemnum)
+{
+    return isBerry(itemnum) ? m_BerryNames.contains(itemnum) : m_RegItemNames.contains(itemnum);
+}
+
 bool ItemInfo::isBerry(int itemnum)
 {
     return itemnum >= 8000;
