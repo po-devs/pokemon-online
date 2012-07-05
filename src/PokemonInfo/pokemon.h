@@ -12,6 +12,7 @@ unsigned int qHash (const Pokemon::gen &key);
 #include <QHash>
 
 class DataStream;
+class QTextStream;
 
 namespace Pokemon {
 class uniqueId
@@ -68,6 +69,7 @@ inline unsigned int qHash(const Pokemon::uniqueId &key)
 
 DataStream & operator << (DataStream &out, const Pokemon::uniqueId &id);
 DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id);
+QTextStream & operator >> (QTextStream &in, Pokemon::uniqueId &id);
 
 #include <QMetaType>
 

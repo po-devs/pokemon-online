@@ -1,4 +1,3 @@
-#define private public
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../PokemonInfo/pokemoninfo.h"

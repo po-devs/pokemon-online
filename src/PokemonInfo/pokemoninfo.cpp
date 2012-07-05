@@ -682,6 +682,12 @@ void PokemonInfo::Gen::load(const QString &_path, const Pokemon::gen &_gen, Gen 
 
     loadMoves(parent);
     loadMinLevels(parent);
+    loadReleased(parent);
+}
+
+bool PokemonInfo::Gen::isReleased(const Pokemon::uniqueId &id)
+{
+    return m_Released.empty() || m_Released.contains(id);
 }
 
 QString PokemonInfo::Gen::path(const QString &fileName)
@@ -826,6 +832,14 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
     }
 }
 
+void PokemonInfo::Gen::loadReleased(Gen *parent)
+{
+    fill_container_with_file(m_Released, path("released.txt"));
+    if (parent && parent->gen.num == gen.num) {
+        m_Released.unite(parent->m_Released);
+    }
+}
+
 void PokemonInfo::Gen::loadMinLevels(Gen *parent)
 {
     if (parent && parent->gen.num == gen.num) {
@@ -903,13 +917,14 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    if (pokeid.toPokeRef() == Pokemon::SpikyPichu) {
-        return gen == 4;
-    }
     if(m_Names.contains(pokeid))
     {
-        return pokeid.pokenum < TrueCount(gen);
-    }else{
+        if (pokeid.isForme()) {
+            return Exists(pokeid.original()) && Released(pokeid, gen);
+        } else {
+            return PokemonInfo::gen(gen).m_Moves.contains(pokeid);
+        }
+    } else {
         return false;
     }
 }
@@ -917,6 +932,11 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid)
 {
     return m_Names.contains(pokeid);
+}
+
+bool PokemonInfo::Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+{
+    return PokemonInfo::gen(gen).isReleased(pokeid);
 }
 
 Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
