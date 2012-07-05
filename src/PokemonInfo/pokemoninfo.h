@@ -64,7 +64,7 @@ public:
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(Pokemon::gen gen); // pokes without counting forms
+    static int TrueCount(); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);

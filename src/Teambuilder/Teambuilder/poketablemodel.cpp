@@ -18,7 +18,7 @@ int PokeTableModel::rowCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     }
-    return PokemonInfo::TrueCount(gen);
+    return PokemonInfo::TrueCount();
 }
 
 int PokeTableModel::columnCount(const QModelIndex &parent) const {
@@ -31,6 +31,10 @@ int PokeTableModel::columnCount(const QModelIndex &parent) const {
 QVariant PokeTableModel::data(const QModelIndex &index, int role) const {
     int pokenum = index.row();
     int column = index.column();
+
+    if (!PokemonInfo::Exists(pokenum, gen) || !PokemonInfo::Released(pokenum, gen)) {
+        return QVariant();
+    }
 
     switch (role) {
     case Qt::DisplayRole:
@@ -64,6 +68,9 @@ QVariant PokeTableModel::data(const QModelIndex &index, int role) const {
 QVariant PokeTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Vertical) {
+        if (!PokemonInfo::Exists(section, gen) || !PokemonInfo::Released(section, gen)) {
+            return QVariant();
+        }
         return QAbstractTableModel::headerData(section, orientation, role);
     }
 

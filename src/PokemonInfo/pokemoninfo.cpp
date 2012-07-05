@@ -887,16 +887,8 @@ void PokemonInfo::loadDescriptions()
 }
 
 
-int PokemonInfo::TrueCount(Pokemon::gen gen)
+int PokemonInfo::TrueCount()
 {
-    if (gen.num == 1)
-        return 152;
-    if (gen.num == 2)
-        return 252;
-    if (gen.num == 3)
-        return 387;
-    if (gen.num == 4)
-        return 494;
     return m_trueNumberOfPokes;
 }
 
@@ -917,6 +909,9 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
+    if (pokeid == 0) {
+        return true;
+    }
     if(m_Names.contains(pokeid))
     {
         if (pokeid.isForme()) {
@@ -1612,16 +1607,25 @@ void PokemonInfo::makeDataConsistent()
 
 Pokemon::uniqueId PokemonInfo::getRandomPokemon(Pokemon::gen gen)
 {
-    int total = TrueCount(gen);
-    int random = true_rand() % total;
-    if((random == 0) && (total > 1)) random = 1;
-    Pokemon::uniqueId poke(random, 0);
+    int total = TrueCount();
+    Pokemon::uniqueId poke;
+
+    while (poke == 0) {
+        int random = (true_rand() % (total-1)) + 1;
+
+        poke = Pokemon::uniqueId (random, 0);
+        if (!PokemonInfo::Released(poke, gen)) {
+            poke = 0;
+        }
+    }
+
     if(HasFormes(poke)) {
         QList<Pokemon::uniqueId> formesList = VisibleFormes(poke, gen);
         /* The pokemon doesn't always have visible formes */
         if (formesList.count() > 0)
             poke = formesList.value(true_rand() %  formesList.count());
     }
+
     return Pokemon::uniqueId(poke);
 }
 

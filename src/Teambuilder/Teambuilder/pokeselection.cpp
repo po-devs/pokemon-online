@@ -7,14 +7,23 @@
 #include <QMenu>
 #include <QCompleter>
 #include "advancedsearch.h"
+#include <QSortFilterProxyModel>
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
     ui(new Ui::PokeSelection), search(NULL), newwidth(0)
 {
     ui->setupUi(this);
-    ui->pokemonList->setModel(pokemonModel);
 
-    QCompleter *completer = new QCompleter(pokemonModel, ui->pokeEdit);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setFilterRegExp(".");
+    proxy->setSourceModel(pokemonModel);
+
+    this->sourceModel = pokemonModel;
+    this->proxy = proxy;
+
+    ui->pokemonList->setModel(proxy);
+
+    QCompleter *completer = new QCompleter(proxy, ui->pokeEdit);
     completer->setCompletionColumn(1);
     completer->setCompletionRole(Qt::DisplayRole);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -113,7 +122,7 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
     m_num = num;
 
     ui->pokeEdit->setText(PokemonInfo::Name(num));
-    ui->pokemonList->setCurrentIndex(ui->pokemonList->model()->index(num.pokenum, 1));
+    ui->pokemonList->setCurrentIndex(proxy->mapFromSource(sourceModel->index(num.pokenum, 1)));
     ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
 
     ui->baseStats->setNum(num);
