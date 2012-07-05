@@ -12,11 +12,11 @@ static const int GEN_MIN_ABILITIES = 3;
 namespace Gen
 {
 enum {
-    RBY=1, Stadium=1+(1<<8), StadiumWithTradebacks=(1+(2<<8)),
-    GSC=2, Stadium2=2+(1<<8),
-    RSE200=3, Adv=3+(1<<8),
-    DP=4, DPPt=4+(1<<8), HGSS=4+(2<<8),
-    BW=5, BW2=5+(1<<8)
+    RedBlue=1, Yellow=1+(1<<8), Stadium=1+(2<<8), StadiumWithTradebacks=(1+(3<<8)),
+    GoldSilver=2, Crystal=2+(1<<8), Stadium2=2+(2<<8),
+    RubySapphiry=3, Colosseum=3+(1<<8),RFLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
+    DiamondPearl=4, Platinum=4+(1<<8), HGSS=4+(2<<8),
+    BlackWhite=5, BlackWhite2=5+(1<<8)
 };
 
 }
