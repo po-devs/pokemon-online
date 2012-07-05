@@ -4,7 +4,7 @@
 #include "clientinterface.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager(MainEngine *t) : engine(t), client(NULL)
+PluginManager::PluginManager(MainEngine *t) : engine(t), clients(NULL)
 {
     QSettings s;
 
@@ -83,12 +83,12 @@ void PluginManager::addPlugin(const QString &path)
         return;
     }
 
-    if (client) {
-        OnlineClientPlugin *ocp = s->getOnlinePlugin(client);
+    foreach (ClientInterface *ci, clients) {
+        OnlineClientPlugin *ocp = s->getOnlinePlugin(ci);
 
         if (ocp) {
-            clientPlugins.insert(s, ocp);
-            client->addPlugin(ocp);
+            clientPlugins[ci].insert(s, ocp);
+            ci->addPlugin(ocp);
         }
     }
 
@@ -102,11 +102,14 @@ void PluginManager::freePlugin(int index)
 {
     if (index < plugins.size() && index >= 0) {
         ClientPlugin *p = plugins[index];
-        if (client && clientPlugins.contains(p)) {
-            client->removePlugin(clientPlugins[p]);
-            delete clientPlugins[p];
-            clientPlugins.remove(p);
+        foreach(ClientInterface *ci, clients) {
+            if (clientPlugins.value(ci).contains(p)) {
+                ci->removePlugin(clientPlugins[ci][p]);
+                delete clientPlugins[ci][p];
+                clientPlugins[ci].remove(p);
+            }
         }
+
         delete plugins[index];
         delete libraries[index];
         plugins.erase(plugins.begin() + index, plugins.begin() + index + 1);
@@ -158,26 +161,26 @@ ClientPlugin * PluginManager::plugin(const QString &name) const
 
 void PluginManager::launchClient(ClientInterface *c)
 {
-    client = c;
+    clients.insert(c);
 
     foreach(ClientPlugin *pl, plugins) {
         OnlineClientPlugin *o = pl->getOnlinePlugin(c);
 
         if (o) {
             c->addPlugin(o);
-            clientPlugins.insert(pl, o);
+            clientPlugins[c].insert(pl, o);
         }
     }
 }
 
-void PluginManager::quitClient()
+void PluginManager::quitClient(ClientInterface *c)
 {
-    foreach(OnlineClientPlugin *o, clientPlugins) {
+    foreach(OnlineClientPlugin *o, clientPlugins.value(c)) {
         delete o;
     }
 
-    clientPlugins.clear();
-    client = NULL;
+    clientPlugins.remove(c);
+    clients.remove(c);
 }
 
 /*************************************************************/
