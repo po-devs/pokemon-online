@@ -8,7 +8,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "../PokemonInfo/movesetchecker.h"
 #include <algorithm>
 
-QList< QSet<QSet<int> > > legalCombinations;
+QHash<int, QSet<QSet<int> > > legalCombinations;
 
 QMultiHash<QString, int> pokesOfGroup;
 
@@ -64,7 +64,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(2, -1);
+    Pokemon::gen gen(3, -1);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -91,7 +91,6 @@ int main(int, char**)
         }
 
         qDebug() << "Doing poke " << PokemonInfo::Name(i);
-        legalCombinations.push_back(QSet<QSet<int> > ());
 
         QString groups[2] = {egg1.value(i),egg2.value(i)};
 
