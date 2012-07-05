@@ -18,6 +18,8 @@
 
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
+    setWindowTitle(tr("Teambuilder"));
+
     addWidget(trainer = new TrainerMenu(team));
     pokemonModel = new PokeTableModel(team->team().gen(), this);
 

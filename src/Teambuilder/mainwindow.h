@@ -20,6 +20,8 @@ public:
     MainEngine();
     ~MainEngine();
 
+    int numberOfTabs() const;
+
     void addThemeMenu(QMenuBar *m);
     void addStyleMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
@@ -42,6 +44,7 @@ public slots:
     void loadStyleSheet();
     void changeStyle();
     void showReplay(QString);
+    void closeTab();
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -58,15 +61,21 @@ private:
     QMenu* themeMenu;
     MainWidget *main;
 
-    TeamHolder *m_team;
+    QHash<int, TeamHolder *> m_teams;
 
     int freespot;
 
     void routine(CentralWidgetInterface *w);
+
+    TeamHolder *trainerTeam(int spot);
+    int currentSpot() const;
+    void addTeam(int spot);
+
+    QVector <TeamHolder*> trash;
+
+    void clearTrash();
 public:
-    TeamHolder *trainerTeam() {
-        return m_team;
-    }
+    TeamHolder *trainerTeam();
     ThemeAccessor *theme();
 };
 

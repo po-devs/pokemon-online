@@ -16,8 +16,6 @@
 
 MainEngine::MainEngine() : displayer(0), freespot(0)
 {
-    m_team = new TeamHolder();
-
     pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -83,15 +81,38 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
-    trainerTeam()->load();
-
     launchMenu(true);
 }
 
 MainEngine::~MainEngine()
 {
     delete pluginManager, pluginManager = NULL;
-    delete m_team, m_team = NULL;
+
+    clearTrash();
+
+    foreach(TeamHolder *h, m_teams) {
+        delete h;
+    }
+    m_teams.clear();
+}
+
+TeamHolder* MainEngine::trainerTeam(int spot)
+{
+    if (!m_teams.contains(spot)) {
+        m_teams[spot] = new TeamHolder();
+        m_teams[spot]->load();
+    }
+    return m_teams.value(spot);
+}
+
+TeamHolder *MainEngine::trainerTeam()
+{
+    return trainerTeam(currentSpot());
+}
+
+int MainEngine::currentSpot() const
+{
+    return main->currentWidget()->property("tab-window").toInt();
 }
 
 void MainEngine::reloadPokemonDatabase()
@@ -175,8 +196,18 @@ void MainEngine::changeStyle()
     setting.setValue("application_style",style);
 }
 
+void MainEngine::clearTrash()
+{
+    foreach(TeamHolder* t, trash) {
+        delete t;
+    }
+    trash.clear();
+}
+
 void MainEngine::routine(CentralWidgetInterface *w)
 {
+    clearTrash();
+
     displayer->setWindowTitle(tr("Pokemon Online"));
     QWidget *wi = dynamic_cast<QWidget*>(w);
     if (wi->property("tab-window").isNull()) {
@@ -206,7 +237,7 @@ void MainEngine::launchMenu(bool first)
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
-    connect(menu, SIGNAL(goToExit()), SLOT(quit()));
+    connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
 }
@@ -254,10 +285,14 @@ void MainEngine::launchTeamBuilder()
 
 void MainEngine::launchServerChoice(bool newTab)
 {
-    ServerChoice *choice = new ServerChoice(trainerTeam()->name());
+    ServerChoice *choice;
     if (newTab) {
-        choice->setProperty("tab-window", ++freespot);
+        choice = new ServerChoice(trainerTeam(++freespot)->name());
+        choice->setProperty("tab-window", freespot);
+    } else {
+        choice = new ServerChoice(trainerTeam()->name());
     }
+
     routine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
@@ -340,6 +375,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
     routine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
+    connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
 }
 
 void MainEngine::updateMenuBar()
@@ -363,6 +399,22 @@ void MainEngine::loadTeamDialog()
 void MainEngine::openNewTab()
 {
     launchServerChoice(true);
+}
+
+int MainEngine::numberOfTabs() const
+{
+    return main->numberOfTabs();
+}
+
+void MainEngine::closeTab()
+{
+    if (numberOfTabs() <= 1) {
+        quit();
+    } else {
+        int current = currentSpot();
+        main->closeTab(current);
+        trash.push_back(m_teams.take(current));
+    }
 }
 
 void MainEngine::loadReplayDialog()
