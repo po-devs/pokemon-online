@@ -160,10 +160,9 @@ public:
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
 
+    static Gen & gen(Pokemon::gen gen);
 private:
     static QHash<Pokemon::gen, Gen> gens;
-
-    static Gen & gen(Pokemon::gen gen);
 
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
