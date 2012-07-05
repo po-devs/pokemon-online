@@ -57,14 +57,15 @@ int main(int, char**)
     transform<2>(readFile("db/pokes/egg_group_1.txt"),[&](QString n, QString group){egg1[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
     transform<2>(readFile("db/pokes/egg_group_2.txt"),[&](QString n, QString group){egg2[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
 
-    PokemonInfoConfig::setLastSubgenToWhole(true);
+    PokemonInfoConfig::setFillMode(FillMode::Client);
+    //PokemonInfoConfig::setLastSubgenToWhole(false);
 
     GenInfo::init("db/gens/");
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(4, -1);
+    Pokemon::gen gen(5, -1);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -75,7 +76,7 @@ int main(int, char**)
     qDebug() << pokesOfGroup.size() << " keys: ";
 
     foreach(QString s, pokesOfGroup.keys().toSet()) {
-        qDebug() << "Group " << s;;
+        qDebug() << "Group " << s;
     }
 
     QHash<Pokemon::uniqueId, QList<QSet<int> > > oldC = MoveSetChecker::breedingCombinationsOf(gen);
