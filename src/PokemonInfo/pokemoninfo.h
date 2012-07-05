@@ -348,7 +348,8 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, Pokemon::gen gen=GenInfo::GenMax());
+    static bool Exists(int itemnum);
+    static bool Exists(int itemnum, Pokemon::gen gen);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isDrive(int itemnum);
