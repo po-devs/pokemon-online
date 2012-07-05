@@ -59,6 +59,8 @@ private:
 
     TeamHolder *m_team;
 
+    int freespot;
+
     void routine(CentralWidgetInterface *w);
 public:
     TeamHolder *trainerTeam() {

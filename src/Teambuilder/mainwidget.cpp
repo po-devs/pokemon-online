@@ -13,13 +13,25 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::setWidget(QWidget *w)
+int MainWidget::getIndex(int spot)
 {
-    ui->stackedWidget->addWidget(w);
-    if (ui->stackedWidget->count() > 1) {
-        QWidget *toDel = ui->stackedWidget->widget(0);
-        ui->stackedWidget->removeWidget(toDel);
-        toDel->deleteLater();
+    return qFind(spots, spot) - spots.begin();
+}
+
+void MainWidget::setWidget(int spot, QWidget *w)
+{
+    if (!spots.contains(spot)) {
+        spots.push_back(spot);
+
+        ui->stackedWidget->setCurrentIndex(ui->stackedWidget->addWidget(w));
+    } else {
+        int index = getIndex(spot);
+
+        QWidget *del = ui->stackedWidget->widget(index);
+        ui->stackedWidget->removeWidget(del);
+        del->deleteLater();
+        ui->stackedWidget->insertWidget(index, w);
+        ui->stackedWidget->setCurrentIndex(index);
     }
 }
 
