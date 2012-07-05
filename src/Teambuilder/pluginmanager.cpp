@@ -4,7 +4,7 @@
 #include "clientinterface.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-PluginManager::PluginManager(MainEngine *t) : engine(t), clients(NULL)
+PluginManager::PluginManager(MainEngine *t) : engine(t)
 {
     QSettings s;
 
