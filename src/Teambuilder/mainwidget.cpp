@@ -2,6 +2,7 @@
 #include "ui_mainwidget.h"
 
 #include <QShortcut>
+#include "../Utilities/qclicklabel.h"
 
 MainWidget::MainWidget(QWidget *parent) :
     QFrame(parent),
@@ -27,13 +28,15 @@ void MainWidget::setWidget(int spot, QWidget *w)
         ui->topLabel->hide();
 
         QHBoxLayout *layout = dynamic_cast<QHBoxLayout*>(ui->topWidget->layout());
-        layout->insertWidget(spots.count()-1, tabNames[spot] = new QLabel());
+        layout->insertWidget(spots.count()-1, tabNames[spot] = new QClickLabel());
 
         QShortcut *sh = new QShortcut(this);
         sh->setProperty("tab-window", spot);
         shortCuts[spot] = sh;
         connect(sh, SIGNAL(activated()), SLOT(changeSpot()));
         connect(sh, SIGNAL(activatedAmbiguously()), SLOT(changeSpot()));
+        tabNames[spot]->setProperty("tab-window", spot);
+        connect(tabNames[spot], SIGNAL(clicked()), SLOT(changeSpot()));
 
         ui->stackedWidget->setCurrentIndex(ui->stackedWidget->addWidget(w));
     } else {
