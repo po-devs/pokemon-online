@@ -24,6 +24,7 @@ QSplitter::handle:hover {
 TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
     background: #5c707e;
     border-radius: 20px;
+    margin-top: 5px;
 }
 
 
@@ -118,15 +119,20 @@ PokeEdit #pokemonFrame {
 }
 
 
-#CentralWidget {
+MainWidget {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 							stop: 0 #6fa5cf, stop: 0.55 #84b2d5,
 							stop: 0.56 #617b91, stop: 1.0 #6f8ca4);
 	
-    padding-top: 24px;
-    padding-bottom: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+#Blank space at the top of the window
+MainWidget QLabel#topLabel {
+    
 }
 
 QLabel#appLogo {

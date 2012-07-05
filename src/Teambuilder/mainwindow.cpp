@@ -12,6 +12,7 @@
 #include "../Utilities/functions.h"
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/teambuilder.h"
+#include "mainwidget.h"
 
 MainEngine::MainEngine() : displayer(0)
 {
@@ -177,13 +178,9 @@ void MainEngine::changeStyle()
 void MainEngine::routine(CentralWidgetInterface *w)
 {
     displayer->setWindowTitle(tr("Pokemon Online"));
-    central->addWidget(dynamic_cast<QWidget*>(w));
-    QWidget *toDel = central->widget(0);
-    central->removeWidget(central->widget(0));
+    main->setWidget(dynamic_cast<QWidget*>(w));
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
     //loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
-
-    toDel->deleteLater();
 }
 
 void MainEngine::launchMenu(bool first)
@@ -193,9 +190,8 @@ void MainEngine::launchMenu(bool first)
         displayer = new QMainWindow();
         displayer->resize(menu->size());
         displayer->setWindowTitle(tr("Pokemon Online"));
-        displayer->setCentralWidget(central = new QStackedWidget);
-        central->setObjectName("CentralWidget");
-        central->addWidget(menu);
+        displayer->setCentralWidget(main = new MainWidget());
+        main->setWidget(menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
         loadSettings(menu, menu->defaultSize());\
         displayer->show();
@@ -339,7 +335,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(central->currentWidget())
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(main->currentWidget())
                             ->createMenuBar(this)));
 }
 

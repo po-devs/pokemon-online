@@ -3,11 +3,11 @@
 
 #include <QMainWindow>
 #include "engineinterface.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
 #include "Teambuilder/teamholder.h"
 
 class PluginManager;
+class MainWidget;
 
 /* The main window!
 
@@ -55,7 +55,7 @@ private:
 
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
-    QStackedWidget *central;
+    MainWidget *main;
 
     TeamHolder *m_team;
 
