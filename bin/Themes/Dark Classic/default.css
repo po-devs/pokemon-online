@@ -24,7 +24,8 @@ QSplitter::handle:hover {
 TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
     background: #070a0f;
     border-radius: 20px;
-    margin-top: 5px;
+
+
 }
 
 
