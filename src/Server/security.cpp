@@ -29,7 +29,7 @@ QString SecurityManager::Member::toString() const
         auth[0] += this->authority();
     if (this->isBanned())
         auth[1] = '1';
-    return QString("%1%%2%%3%%4%%5%%6%%7\n").arg(name, date, auth, salt, hash, ip, QString::number(ban_expire_time));
+    return QString("%1%%2%%3%%4%%5%%6%%7\n").arg(name, date, auth, QString::fromUtf8(salt), QString::fromUtf8(hash), ip, QString::number(ban_expire_time));
 }
 
 void SecurityManager::loadMembers()

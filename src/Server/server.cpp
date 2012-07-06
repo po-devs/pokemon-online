@@ -101,6 +101,7 @@ void Server::start(){
             }
     };
 
+    setDefaultValue("test", QStringList() << "5060" << "6060");
     setDefaultValue("SQL/Driver", SQLCreator::SQLite);
     setDefaultValue("SQL/Database", "pokemon");
     setDefaultValue("SQL/Port", 5432);
