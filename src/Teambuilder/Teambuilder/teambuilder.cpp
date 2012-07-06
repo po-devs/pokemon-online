@@ -104,6 +104,7 @@ void TeamBuilder::saveAll()
 
 void TeamBuilder::loadAll()
 {
+    switchToTrainer();
     team().load();
     markAllUpdated();
     currentWidget()->updateAll();
