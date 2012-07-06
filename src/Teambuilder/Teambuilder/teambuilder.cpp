@@ -1,3 +1,5 @@
+#include "../PokemonInfo/pokemon.h"
+#include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "Teambuilder/teambuilder.h"
 #include "Teambuilder/trainermenu.h"
@@ -18,6 +20,8 @@
 
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
+    ui = new _ui();
+
     setWindowTitle(tr("Teambuilder"));
 
     addWidget(trainer = new TrainerMenu(team));
@@ -36,6 +40,7 @@ TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(N
 TeamBuilder::~TeamBuilder()
 {
     writeSettings(this);
+    delete ui;
 }
 
 QSize TeamBuilder::defaultSize() const {
@@ -93,11 +98,47 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
 
-    if (currentWidget()) {
-        currentWidget()->addMenus(menuBar);
+    QMenu *gen = menuBar->addMenu(tr("&Gen."));
+    QActionGroup *gens = new QActionGroup(gen);
+
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        int n = GenInfo::NumberOfSubgens(i);
+
+        gen->addSeparator()->setText(GenInfo::Gen(i));
+
+        for (int j = 0; j < n; j++) {
+            Pokemon::gen g(i, j);
+
+            ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
+            ui->gens[g]->setCheckable(true);
+            ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
+            ui->gens[g]->setChecked(g == team().team().gen());
+            gens->addAction(ui->gens[g]);
+        }
     }
 
+    lastGen = team().team().gen();
+
     return menuBar;
+}
+
+void TeamBuilder::genChanged()
+{
+    Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
+
+    if (gen == team().team().gen()) {
+        return;
+    }
+
+    team().team().setGen(gen);
+
+    for (int i = 0; i < 6; i++) {
+        team().team().poke(i).load();
+        team().team().poke(i).runCheck();
+    }
+
+    markAllUpdated();
+    currentWidget()->updateAll();
 }
 
 void TeamBuilder::saveAll()
@@ -347,6 +388,13 @@ void TeamBuilder::markTeamUpdated()
     for (int i = 0; i < count(); i++) {
         if (i != currentIndex()) {
             widget(i)->setProperty("team-to-update", true);
+        }
+    }
+
+    if (team().team().gen() != lastGen) {
+        if (ui->gens.contains(team().team().gen())) {
+            lastGen = team().team().gen();
+            ui->gens[lastGen]->setChecked(true);
         }
     }
 }
