@@ -20,6 +20,7 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include <QtScript/QScriptEngine>
+#include "loadwindow.h"
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
@@ -1104,7 +1105,11 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    loadTTeamDialog(team()->team(), this, SLOT(changeTeam()));
+    LoadWindow *w = new LoadWindow(this);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(changeTeam(TeamHolder)));
 }
 
 void Client::sendText()
@@ -1160,7 +1165,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     fileMenu->addAction(tr("&New tab"), w, SLOT(openNewTab()), tr("Ctrl+N", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
-    //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     fileMenu->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
     fileMenu->addAction(tr("Open &Replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
 
@@ -2380,6 +2385,14 @@ void Client::reloadTeamBuilderBar()
         TeamBuilder *tb = dynamic_cast<TeamBuilder*>(dynamic_cast<QStackedWidget*>(myteambuilder->centralWidget())->widget(0));
         myteambuilder->setMenuBar(tb->createMenuBar(top));
     }
+}
+
+void Client::changeTeam(const TeamHolder &t)
+{
+    secondTeam = t;
+    secondTeam.name() = mynick;
+
+    changeTeam();
 }
 
 void Client::changeTeam()
