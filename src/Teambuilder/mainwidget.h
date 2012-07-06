@@ -4,8 +4,7 @@
 #include <QFrame>
 #include <QHash>
 
-class QLabel;
-class QShortcut;
+class QRadioButton;
 
 namespace Ui {
 class MainWidget;
@@ -33,8 +32,8 @@ private:
     Ui::MainWidget *ui;
 
     QVector<int> spots;
-    QHash<int, QLabel*> tabNames;
-    QHash<int, QShortcut*> shortCuts;
+    QHash<int, QRadioButton*> tabNames;
+
     int getIndex(int spot);
 };
 
