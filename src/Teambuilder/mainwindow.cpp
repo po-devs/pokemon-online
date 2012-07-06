@@ -70,8 +70,11 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
+    QString locale = s.value("language").toString();
+
     PokemonInfoConfig::setFillMode(FillMode::Client);
     PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString());
+    PokemonInfoConfig::changeTranslation(locale);
 
     reloadPokemonDatabase();
 
@@ -348,6 +351,8 @@ void MainEngine::changeLanguage()
     qtTranslator.load(QString("qt_") + lang,
                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     translator.load(QString("trans/%1/translation_%1").arg(lang));
+
+    PokemonInfoConfig::changeTranslation(lang);
 
     PokemonInfo::retranslate();
     MoveInfo::retranslate();

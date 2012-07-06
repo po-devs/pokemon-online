@@ -1340,7 +1340,7 @@ void PokemonInfo::loadNames()
 {
     /* The need for options prevents us from using fill_uid_str */
     QStringList temp;
-    fill_container_with_file(temp, path("pokemons.txt"));
+    fill_container_with_file(temp, path("pokemons.txt"), true);
 
     m_Names.clear();
     m_Options.clear();
