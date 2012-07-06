@@ -29,7 +29,7 @@ QString SecurityManager::Member::toString() const
         auth[0] += this->authority();
     if (this->isBanned())
         auth[1] = '1';
-    return QString("%1%%2%%3%%4%%5%%6%%7\n").arg(name, date, auth, salt, hash, ip).arg(ban_expire_time);
+    return QString("%1%%2%%3%%4%%5%%6%%7\n").arg(name, date, auth, salt, hash, ip, QString::number(ban_expire_time));
 }
 
 void SecurityManager::loadMembers()
@@ -75,7 +75,7 @@ void SecurityManager::loadMembers()
         query.exec("create index tip_index on trainers (ip)");
 
         QFile memberFile("members.txt");
-        if (!memberFile.exists()) {
+        if (memberFile.exists()) {
             Server::print("importing old db");
 
             if (!memberFile.open(QFile::ReadWrite)) {
