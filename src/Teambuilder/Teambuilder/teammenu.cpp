@@ -140,6 +140,11 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     }
 }
 
+void TeamMenu::choosePokemon()
+{
+    ui->pokemons[ui->pokemonTabs->currentIndex()]->openPokemonSelection();
+}
+
 void TeamMenu::genChanged()
 {
     Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();

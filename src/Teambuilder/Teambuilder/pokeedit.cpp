@@ -88,6 +88,11 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     updateAll();
 }
 
+void PokeEdit::openPokemonSelection()
+{
+    on_pokemonFrame_clicked();
+}
+
 void PokeEdit::on_nickname_textChanged(const QString &s)
 {
     poke().nickname() = s;

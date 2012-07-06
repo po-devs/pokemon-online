@@ -205,12 +205,19 @@
        <item>
         <widget class="QLabel" name="natureLabel">
          <property name="text">
-          <string>Nature</string>
+          <string>&amp;Nature</string>
+         </property>
+         <property name="buddy">
+          <cstring>nature</cstring>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="nature"/>
+        <widget class="QComboBox" name="nature">
+         <property name="maxVisibleItems">
+          <number>25</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -219,12 +226,19 @@
        <item>
         <widget class="QLabel" name="itemLabel">
          <property name="text">
-          <string>Item</string>
+          <string>&amp;Item</string>
+         </property>
+         <property name="buddy">
+          <cstring>item</cstring>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="item"/>
+        <widget class="QComboBox" name="item">
+         <property name="maxVisibleItems">
+          <number>30</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -233,7 +247,10 @@
        <item>
         <widget class="QLabel" name="happinessLabel">
          <property name="text">
-          <string>Happiness</string>
+          <string>&amp;Happiness</string>
+         </property>
+         <property name="buddy">
+          <cstring>happiness</cstring>
          </property>
         </widget>
        </item>
