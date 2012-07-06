@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
+#include "../Shared/config.h"
 
 #include <QRadioButton>
 
@@ -8,6 +9,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
+    ui->versionLabel->setText(QString("<html>Pok&eacute;mon Online Simulator v%1</html>").arg(VERSION));
 }
 
 MainWidget::~MainWidget()
