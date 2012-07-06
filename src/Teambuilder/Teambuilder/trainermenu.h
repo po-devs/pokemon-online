@@ -28,6 +28,7 @@ public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
     void openImportDialog();
+    void openTeam();
 
 signals:
     void done();
