@@ -2520,7 +2520,7 @@ struct MMSpite : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        int slot = fpoke(b,s).lastMoveSlot;
+        int slot = fpoke(b,t).lastMoveSlot;
         if (b.PP(t,slot) == 0) {
             fturn(b,s).add(TM::Failed);
             return;
@@ -2528,7 +2528,7 @@ struct MMSpite : public MM
     }
     static void uas(int s, int t, BS &b)
     {
-        int slot = fpoke(b,s).lastMoveSlot;
+        int slot = fpoke(b,t).lastMoveSlot;
         if (b.gen() >= 4)
             b.losePP(t, slot, 4);
         else if (b.gen().num == 3)
