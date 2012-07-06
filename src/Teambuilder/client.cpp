@@ -1293,6 +1293,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     list_right->setChecked(globals.value("Client/UserListAtRight").toBool());
 
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
+    rebuildTierMenu();
 
     QMenu *battleMenu = menuBar->addMenu(tr("&Battle options", "Menu"));
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
