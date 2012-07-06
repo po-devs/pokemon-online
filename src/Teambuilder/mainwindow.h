@@ -3,11 +3,11 @@
 
 #include <QMainWindow>
 #include "engineinterface.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include "centralwidget.h"
 #include "Teambuilder/teamholder.h"
 
 class PluginManager;
+class MainWidget;
 
 /* The main window!
 
@@ -20,6 +20,8 @@ public:
     MainEngine();
     ~MainEngine();
 
+    int numberOfTabs() const;
+
     void addThemeMenu(QMenuBar *m);
     void addStyleMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
@@ -29,7 +31,7 @@ public slots:
     void launchTeamBuilder();
     void reloadPokemonDatabase();
     void goOnline(const QString &url, const quint16 port, const QString &name);
-    void launchServerChoice();
+    void launchServerChoice(bool newTab = false);
     void changeLanguage();
     void updateMenuBar();
     void openPluginManager();
@@ -38,9 +40,11 @@ public slots:
     /* slots called by subwindows when they need it */
     void loadTeamDialog();
     void loadReplayDialog();
+    void openNewTab();
     void loadStyleSheet();
     void changeStyle();
     void showReplay(QString);
+    void closeTab();
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -55,15 +59,23 @@ private:
 
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
-    QStackedWidget *central;
+    MainWidget *main;
 
-    TeamHolder *m_team;
+    QHash<int, TeamHolder *> m_teams;
+
+    int freespot;
 
     void routine(CentralWidgetInterface *w);
+
+    TeamHolder *trainerTeam(int spot);
+    int currentSpot() const;
+    void addTeam(int spot);
+
+    QVector <TeamHolder*> trash;
+
+    void clearTrash();
 public:
-    TeamHolder *trainerTeam() {
-        return m_team;
-    }
+    TeamHolder *trainerTeam();
     ThemeAccessor *theme();
 };
 

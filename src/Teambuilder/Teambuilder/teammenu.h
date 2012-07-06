@@ -26,6 +26,7 @@ signals:
     void switchToTrainer();
 public slots:
     void switchToTab(int index);
+    void choosePokemon();
 private slots:
     void tabIconChanged();
     void genChanged();

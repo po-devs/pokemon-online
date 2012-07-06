@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Menu</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -80,28 +80,28 @@
          <item>
           <widget class="QPushButton" name="teamBuilder">
            <property name="text">
-            <string>Teambuilder</string>
+            <string>&amp;Teambuilder</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="goOnline">
            <property name="text">
-            <string>Go Online</string>
+            <string>&amp;Go Online</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="credits">
            <property name="text">
-            <string>Credits</string>
+            <string>&amp;Credits</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="exit">
            <property name="text">
-            <string>Exit</string>
+            <string>&amp;Exit</string>
            </property>
           </widget>
          </item>

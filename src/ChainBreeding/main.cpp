@@ -8,7 +8,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "../PokemonInfo/movesetchecker.h"
 #include <algorithm>
 
-QList< QSet<QSet<int> > > legalCombinations;
+QHash<int, QSet<QSet<int> > > legalCombinations;
 
 QMultiHash<QString, int> pokesOfGroup;
 
@@ -26,72 +26,74 @@ uint qHash(QSet<int> s) {
     return qHash(toHash);
 }
 
-QString getLine(const QString & filename, int linenum)
-{
-    QFile file(filename);
+QStringList readFile(const char *path) {
+    QFile in(path);
+    in.open(QIODevice::ReadOnly);
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QStringList list = QString::fromUtf8(in.readAll()).split("\n");
 
-    QTextStream filestream(&file);
-
-    /* discarding all the uninteresting lines, should find a more effective way */
-    for (int i = 0; i < linenum; i++)
-    {
-        filestream.readLine();
-    }
-
-    return filestream.readLine();
+    return list;
 }
+
+template <int x, typename lambda>
+void transform(const QStringList& list, lambda f) {
+    foreach(QString s, list) {
+        if (s.length() > 0) {
+            QVector<QString> params;
+
+            params << s.section(" ", 0, 0) << s.section(" ", 1);
+            //foreach(QString s2, s.split(",")) {params.push_back(s2);}
+
+            unpack<x>(params.begin(), f);
+        }
+    }
+}
+
+
+QHash<int, QString> egg1, egg2;
 
 int main(int, char**)
 {
+    transform<2>(readFile("db/pokes/egg_group_1.txt"),[&](QString n, QString group){egg1[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
+    transform<2>(readFile("db/pokes/egg_group_2.txt"),[&](QString n, QString group){egg2[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
+
+    PokemonInfoConfig::setFillMode(FillMode::Client);
+    PokemonInfoConfig::setLastSubgenToWhole(true);
+
+    GenInfo::init("db/gens/");
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    int gen = 5;
-    int pokenum = PokemonInfo::TrueCount(gen);
+    Pokemon::gen gen(5, 1);
 
-    qDebug() << "Gen " << gen;
-    qDebug() << "Pokemons: " << pokenum;
+    qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
 
     int count = 0;
-
-    for (int i = 0; i < pokenum; i++) {
-        QString group1(getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1));
-        QString group2(getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1));
-
-        if (group1.toInt() != 0)
-            group1 = "";
-        if (group2.toInt() != 0)
-            group2 = "";
-
-        pokesOfGroup.insert(group1,i);
-        pokesOfGroup.insert(group2,i);
-    }
-    pokesOfGroup.remove("");
 
     /* Now we have the groups made, just showing to make sure there's no typo */
     qDebug() << pokesOfGroup.size() << " keys: ";
 
     foreach(QString s, pokesOfGroup.keys().toSet()) {
-        qDebug() << "Group " << s;;
+        qDebug() << "Group " << s;
     }
 
     QHash<Pokemon::uniqueId, QList<QSet<int> > > oldC = MoveSetChecker::breedingCombinationsOf(gen);
 
-    for (int i = 0; i< pokenum; i++)
+    for (int i = 0; i < PokemonInfo::TrueCount(); i++)
     {
-        qDebug() << "Doing poke " << PokemonInfo::Name(i);
-        legalCombinations.push_back(QSet<QSet<int> > ());
+        Pokemon::gen tg = gen;
+        if (gen.subnum == gen.wholeGen) {
+            tg.subnum = GenInfo::NumberOfSubgens(tg.num)-1;
+        }
+        if (!PokemonInfo::Exists(i, tg) || !PokemonInfo::Released(i, tg)) {
+            continue;
+        }
 
-        QString groups[2] = {getLine("db/pokes/poke_egg_group_1.txt",i).section(' ', 1),
-                             getLine("db/pokes/poke_egg_group_2.txt",i).section(' ', 1)};
-        if (groups[0].toInt() != 0)
-            groups[0] = "";
-        if (groups[1].toInt() != 0)
-            groups[1] = "";
+        qDebug() << "Doing poke " << PokemonInfo::Name(i);
+
+        QString groups[2] = {egg1.value(i),egg2.value(i)};
 
         //Removed because event combinations need to be preserved
 //        if (groups[0] == "" && groups[1] == "")
@@ -285,13 +287,24 @@ int main(int, char**)
 
     /* Now we proudly save the obtained combinations */
 
-    QFile out("db/pokes/legal_combinations_" +QString::number(gen) + "G.txt");
+    QString path = "db/pokes/" + QString::number(gen.num) + "G/";
+    if (gen.subnum != gen.wholeGen) {
+        path += "Subgen " + QString::number(gen.subnum) + "/";
+    }
+    QFile out(path + "legal_combinations.txt");
     out.open(QIODevice::WriteOnly);
 
     bool space, ord, newline;
     newline = false;
-    for (int i = 0; i < pokenum; i++) {
-        if (legalCombinations[i].size() == 0)
+    for (int i = 0; i < PokemonInfo::TrueCount(); i++) {
+        Pokemon::gen tg = gen;
+        if (gen.subnum == gen.wholeGen) {
+            tg.subnum = GenInfo::NumberOfSubgens(tg.num)-1;
+        }
+        if (!PokemonInfo::Exists(i, tg) || !PokemonInfo::Released(i, tg)) {
+            continue;
+        }
+        if (legalCombinations.value(i).size() == 0)
             continue;
 
         if (newline)

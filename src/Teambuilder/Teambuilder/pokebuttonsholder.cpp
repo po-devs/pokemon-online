@@ -21,16 +21,20 @@ PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
 
     group = new QButtonGroup(this);
     QSignalMapper *mapper = new QSignalMapper(this);
+    QSignalMapper *map2 = new QSignalMapper(this);
 
     for (int i = 0; i < 6; i++) {
         pokemonButtons[i]->setNumber(i);
         group->addButton(pokemonButtons[i], i);
         mapper->setMapping(pokemonButtons[i], i);
+        map2->setMapping(pokemonButtons[i], i);
 
         connect(pokemonButtons[i], SIGNAL(doubleClicked()), mapper, SLOT(map()));
+        connect(pokemonButtons[i], SIGNAL(clicked()), map2, SLOT(map()));
         connect(pokemonButtons[i], SIGNAL(pokemonOrderChanged(int,int)), SIGNAL(teamChanged()));
     }
     connect(mapper, SIGNAL(mapped(int)), SIGNAL(doubleClicked(int)));
+    connect(map2, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
 PokeButtonsHolder::~PokeButtonsHolder()

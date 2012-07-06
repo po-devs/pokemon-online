@@ -52,3 +52,4 @@ ui_*.h
 .DS_Store
 bin/veekun_data_extracter
 bin/Mods/
+bin/ChainBreeding

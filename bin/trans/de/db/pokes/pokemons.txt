@@ -486,13 +486,13 @@
 484:0 Palkia
 485:0 Heatran
 486:0 Regigigas
-487:0:H Giratina
+487:0 Giratina
 488:0 Cresselia
 489:0 Phione
 490:0 Manaphy
 491:0 Darkrai
 492:0 Shaymin
-493:0:H Arceus
+493:0 Arceus
 479:1 Rotom-C
 479:2 Rotom-H
 479:3 Rotom-F

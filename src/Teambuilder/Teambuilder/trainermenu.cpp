@@ -37,7 +37,9 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
 
     connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
     connect(ui->boxCenter, SIGNAL(clicked()), SIGNAL(openBoxes()));
-    connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
+    //connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
+    connect(ui->pokemonButtons, SIGNAL(clicked(int)), SIGNAL(editPoke(int))); //I prefer double click, but for newbies...
+    connect(ui->teambuilderLabel, SIGNAL(clicked()), SLOT(openTeam()));
 
     loadProfileList();
     setupData();
@@ -53,6 +55,11 @@ void TrainerMenu::changeCurrentTeam(int t)
     updateTeam();
 
     emit teamChanged();
+}
+
+void TrainerMenu::openTeam()
+{
+    emit editPoke(ui->pokemonButtons->currentSlot());
 }
 
 void TrainerMenu::on_teamName_textEdited()

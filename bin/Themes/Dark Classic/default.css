@@ -26,6 +26,26 @@ TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
     border-radius: 20px;
 }
 
+MainWidget #topWidget QRadioButton::indicator {
+     image: none;
+     width: 0px;
+     height: 0px;
+}
+
+MainWidget #topWidget QRadioButton {
+    padding-left: 2px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    color: #DDD;
+}
+
+MainWidget #topWidget QRadioButton:checked {
+    border: 1px solid black;
+    border-radius: 4px;
+    color: black;
+    background-color: white;
+}
 
 /**************** Menu ****************************/
 
@@ -118,15 +138,27 @@ PokeEdit #pokemonFrame {
 }
 
 
-#CentralWidget {
+MainWidget {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 							stop: 0 #192c3b, stop: 0.55 #192b39,
 							stop: 0.56 #11181e, stop: 1.0 #12202b);
 	
-    padding-top: 24px;
-    padding-bottom: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+#Blank space at the top of the window
+MainWidget QLabel#topLabel {
+}
+
+MainWidget #topWidget {
+    margin-bottom: 20px;
+}
+
+MainWidget QLabel#versionLabel {
+    color: #DDDDDD;
 }
 
 QLabel#appLogo {

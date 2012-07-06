@@ -46,6 +46,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     m_moves[2] = ui->move3;
     m_moves[3] = ui->move4;
 
+    connect(ui->speciesLabel, SIGNAL(clicked()), SLOT(on_pokemonFrame_clicked()));
+
     connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
 
     /* the four move choice items */
@@ -84,6 +86,11 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     connect(ui->ivbox, SIGNAL(statsUpdated()), ui->evbox, SLOT(updateEVs()));
 
     updateAll();
+}
+
+void PokeEdit::openPokemonSelection()
+{
+    on_pokemonFrame_clicked();
 }
 
 void PokeEdit::on_nickname_textChanged(const QString &s)
@@ -140,6 +147,11 @@ void PokeEdit::setMove(int slot, int move)
 void PokeEdit::moveEntered(const QModelIndex &index)
 {
     int num = index.data(CustomModel::MovenumRole).toInt();
+
+    if (num == Move::SecretSword && poke().num() == Pokemon::Keldeo && PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
+        setNum(Pokemon::Keldeo_R);
+        return;
+    }
 
     for (int i = 0; i < 4; i++) {
         if (poke().move(i) == Move::NoMove) {
@@ -277,12 +289,26 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
         poke().reset();
     }
 
-    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
-        try {
-            poke().addMove(Move::SecretSword);
-        } catch(const QString &) {
-            poke().setMove(Move::SecretSword, 0, false);
+    if (num.pokenum == Pokemon::Keldeo) {
+        if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
+            try {
+                poke().addMove(Move::SecretSword);
+            } catch(const QString &) {
+                poke().setMove(Move::SecretSword, 0, false);
+            }
+        } else if (PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
+            poke().removeMove(Move::SecretSword);
         }
+    } else if (num.pokenum == Pokemon::Giratina) {
+        if (num == Pokemon::Giratina_O && poke().item() != Item::GriseousOrb) {
+            poke().item() = Item::GriseousOrb;
+        } else if (num == Pokemon::Giratina && poke().item() == Item::GriseousOrb) {
+            poke().item() = Item::NoItem;
+        }
+    } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
+        poke().item() = ItemInfo::PlateForType(num.subnum);
+    } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
+        poke().item() = ItemInfo::DriveForForme(num.subnum);
     }
 
     poke().setNum(num);
@@ -315,7 +341,7 @@ void PokeEdit::changeItem(const QString &itemName)
 {
     int itemNum = ItemInfo::Number(itemName);
     poke().item() = itemNum;
-    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb) {
+    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb && PokemonInfo::Released(Pokemon::Giratina_O, poke().gen())) {
         setNum(Pokemon::Giratina_O); 
     } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
         setNum(Pokemon::Giratina); 

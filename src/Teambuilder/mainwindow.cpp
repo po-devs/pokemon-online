@@ -12,11 +12,10 @@
 #include "../Utilities/functions.h"
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/teambuilder.h"
+#include "mainwidget.h"
 
-MainEngine::MainEngine() : displayer(0)
+MainEngine::MainEngine() : displayer(0), freespot(0)
 {
-    m_team = new TeamHolder();
-
     pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -71,8 +70,11 @@ MainEngine::MainEngine() : displayer(0)
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
+    QString locale = s.value("language").toString();
+
     PokemonInfoConfig::setFillMode(FillMode::Client);
     PokemonInfoConfig::changeMod(s.value("Mods/CurrentMod").toString());
+    PokemonInfoConfig::changeTranslation(locale);
 
     reloadPokemonDatabase();
 
@@ -82,15 +84,38 @@ MainEngine::MainEngine() : displayer(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
-    trainerTeam()->load();
-
     launchMenu(true);
 }
 
 MainEngine::~MainEngine()
 {
     delete pluginManager, pluginManager = NULL;
-    delete m_team, m_team = NULL;
+
+    clearTrash();
+
+    foreach(TeamHolder *h, m_teams) {
+        delete h;
+    }
+    m_teams.clear();
+}
+
+TeamHolder* MainEngine::trainerTeam(int spot)
+{
+    if (!m_teams.contains(spot)) {
+        m_teams[spot] = new TeamHolder();
+        m_teams[spot]->load();
+    }
+    return m_teams.value(spot);
+}
+
+TeamHolder *MainEngine::trainerTeam()
+{
+    return trainerTeam(currentSpot());
+}
+
+int MainEngine::currentSpot() const
+{
+    return main->currentWidget()->property("tab-window").toInt();
 }
 
 void MainEngine::reloadPokemonDatabase()
@@ -174,28 +199,40 @@ void MainEngine::changeStyle()
     setting.setValue("application_style",style);
 }
 
+void MainEngine::clearTrash()
+{
+    foreach(TeamHolder* t, trash) {
+        delete t;
+    }
+    trash.clear();
+}
+
 void MainEngine::routine(CentralWidgetInterface *w)
 {
+    clearTrash();
+
     displayer->setWindowTitle(tr("Pokemon Online"));
-    central->addWidget(dynamic_cast<QWidget*>(w));
-    QWidget *toDel = central->widget(0);
-    central->removeWidget(central->widget(0));
+    QWidget *wi = dynamic_cast<QWidget*>(w);
+    if (wi->property("tab-window").isNull()) {
+        wi->setProperty("tab-window", sender()->property("tab-window"));
+    }
+    main->setWidget(wi->property("tab-window").toInt(), wi);
+
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
     //loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
-
-    toDel->deleteLater();
 }
 
 void MainEngine::launchMenu(bool first)
 {
     Menu *menu = new Menu();
     if (first) {
+        menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();
         displayer->resize(menu->size());
         displayer->setWindowTitle(tr("Pokemon Online"));
-        displayer->setCentralWidget(central = new QStackedWidget);
-        central->setObjectName("CentralWidget");
-        central->addWidget(menu);
+        displayer->setCentralWidget(main = new MainWidget());
+        connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
+        main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
         loadSettings(menu, menu->defaultSize());\
         displayer->show();
@@ -204,7 +241,7 @@ void MainEngine::launchMenu(bool first)
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
-    connect(menu, SIGNAL(goToExit()), SLOT(quit()));
+    connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
 }
@@ -250,9 +287,16 @@ void MainEngine::launchTeamBuilder()
     connect(TB, SIGNAL(reloadDb()), SLOT(reloadPokemonDatabase()));
 }
 
-void MainEngine::launchServerChoice()
+void MainEngine::launchServerChoice(bool newTab)
 {
-    ServerChoice *choice = new ServerChoice(trainerTeam()->name());
+    ServerChoice *choice;
+    if (newTab) {
+        choice = new ServerChoice(trainerTeam(++freespot)->name());
+        choice->setProperty("tab-window", freespot);
+    } else {
+        choice = new ServerChoice(trainerTeam()->name());
+    }
+
     routine(choice);
 
     connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
@@ -308,6 +352,8 @@ void MainEngine::changeLanguage()
                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     translator.load(QString("trans/%1/translation_%1").arg(lang));
 
+    PokemonInfoConfig::changeTranslation(lang);
+
     PokemonInfo::retranslate();
     MoveInfo::retranslate();
     ItemInfo::retranslate();
@@ -335,11 +381,12 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
     routine(client);
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
+    connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
 }
 
 void MainEngine::updateMenuBar()
 {
-    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(central->currentWidget())
+    displayer->setMenuBar(transformMenuBar(dynamic_cast<CentralWidgetInterface*>(main->currentWidget())
                             ->createMenuBar(this)));
 }
 
@@ -353,6 +400,27 @@ void MainEngine::quit()
 void MainEngine::loadTeamDialog()
 {
     loadTTeamDialog(trainerTeam()->team());
+}
+
+void MainEngine::openNewTab()
+{
+    launchServerChoice(true);
+}
+
+int MainEngine::numberOfTabs() const
+{
+    return main->numberOfTabs();
+}
+
+void MainEngine::closeTab()
+{
+    if (numberOfTabs() <= 1) {
+        quit();
+    } else {
+        int current = currentSpot();
+        main->closeTab(current);
+        trash.push_back(m_teams.take(current));
+    }
 }
 
 void MainEngine::loadReplayDialog()

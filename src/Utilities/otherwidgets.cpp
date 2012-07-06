@@ -106,7 +106,7 @@ QImageButton::QImageButton(QWidget *w)
 }
 
 QImageButton::QImageButton(const QString &normal, const QString &hovered, const QString &checked)
-    : myPic(normal), myHoveredPic(hovered), lastUnderMouse(-1), pressed(false)
+    : myPic(normal), myHoveredPic(hovered), pressed(false)
 {
     setFixedSize(myPic.size());
 #if defined(WIN32) || defined(WIN64)
@@ -205,15 +205,14 @@ void QImageButton::paintEvent(QPaintEvent *e)
         setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
 #endif
     }
-
-    lastUnderMouse = underMouse();
 }
 
-void QImageButton::mouseMoveEvent(QMouseEvent *)
+bool QImageButton::event(QEvent *e)
 {
-    if (int(underMouse()) == lastUnderMouse)
-        return;
-    update();
+    if (e->type() == QEvent::HoverLeave || e->type() == QEvent::HoverEnter) {
+        update();
+    }
+    return QAbstractButton::event(e);
 }
 
 QIdTreeWidgetItem::QIdTreeWidgetItem(int id, const QStringList &text)

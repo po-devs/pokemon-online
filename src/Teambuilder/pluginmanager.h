@@ -28,16 +28,16 @@ public:
     void freePlugin(int index);
 
     void launchClient(ClientInterface *c);
-    void quitClient();
+    void quitClient(ClientInterface *c);
 private:
     QVector<cross::DynamicLibrary *> libraries;
     QVector<ClientPlugin *> plugins;
-    QHash<ClientPlugin *, OnlineClientPlugin*> clientPlugins;
+    QHash<ClientInterface*, QHash<ClientPlugin *, OnlineClientPlugin*> > clientPlugins;
     QStringList filenames;
 
     void updateSavedList();
     MainEngine *engine;
-    ClientInterface *client;
+    QSet<ClientInterface *> clients;
 };
 
 class PluginManagerWidget : public QWidget

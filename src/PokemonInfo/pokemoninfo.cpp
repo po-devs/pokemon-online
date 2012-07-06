@@ -682,6 +682,12 @@ void PokemonInfo::Gen::load(const QString &_path, const Pokemon::gen &_gen, Gen 
 
     loadMoves(parent);
     loadMinLevels(parent);
+    loadReleased(parent);
+}
+
+bool PokemonInfo::Gen::isReleased(const Pokemon::uniqueId &id)
+{
+    return m_Released.empty() || m_Released.contains(id);
 }
 
 QString PokemonInfo::Gen::path(const QString &fileName)
@@ -795,7 +801,7 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
     Gen &_2 = gens[sg];
 
     foreach(Pokemon::uniqueId id, _1.m_Moves.keys()) {
-        if (id.isForme() || !PokemonInfo::Exists(id,gen)) {
+        if (id.isForme() || !PokemonInfo::Exists(id,gen) || id.pokenum == Pokemon::Smeargle) {
             continue;
         }
 
@@ -804,9 +810,9 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
 
         QSet<int> t1, t2;
         t1 = m1.regularMoves;
-        t1.unite(m1.dreamWorldMoves).unite(m1.specialMoves);
+        //t1.unite(m1.dreamWorldMoves).unite(m1.specialMoves);
         t2 = m2.regularMoves;
-        t2.unite(m2.dreamWorldMoves).unite(m2.specialMoves);
+        //t2.unite(m2.dreamWorldMoves).unite(m2.specialMoves);
 
         QSet<int> s1(t1), s2(t2);
 
@@ -823,6 +829,14 @@ void PokemonInfo::RunMovesSanityCheck(int gen)
                 qDebug() << "Subgens contains " << MoveInfo::Name(m) << " for " << PokemonInfo::Name(id) << " while whole gen doesn't";
             }
         }
+    }
+}
+
+void PokemonInfo::Gen::loadReleased(Gen *parent)
+{
+    fill_container_with_file(m_Released, path("released.txt"));
+    if (parent && parent->gen.num == gen.num) {
+        m_Released.unite(parent->m_Released);
     }
 }
 
@@ -873,16 +887,8 @@ void PokemonInfo::loadDescriptions()
 }
 
 
-int PokemonInfo::TrueCount(Pokemon::gen gen)
+int PokemonInfo::TrueCount()
 {
-    if (gen.num == 1)
-        return 152;
-    if (gen.num == 2)
-        return 252;
-    if (gen.num == 3)
-        return 387;
-    if (gen.num == 4)
-        return 494;
     return m_trueNumberOfPokes;
 }
 
@@ -903,13 +909,17 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    if (pokeid.toPokeRef() == Pokemon::SpikyPichu) {
-        return gen == 4;
+    if (pokeid == 0) {
+        return true;
     }
     if(m_Names.contains(pokeid))
     {
-        return pokeid.pokenum < TrueCount(gen);
-    }else{
+        if (pokeid.isForme()) {
+            return Exists(pokeid.original()) && Released(pokeid, gen);
+        } else {
+            return PokemonInfo::gen(gen).m_Moves.contains(pokeid);
+        }
+    } else {
         return false;
     }
 }
@@ -917,6 +927,11 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid)
 {
     return m_Names.contains(pokeid);
+}
+
+bool PokemonInfo::Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
+{
+    return PokemonInfo::gen(gen).isReleased(pokeid);
 }
 
 Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
@@ -1325,7 +1340,7 @@ void PokemonInfo::loadNames()
 {
     /* The need for options prevents us from using fill_uid_str */
     QStringList temp;
-    fill_container_with_file(temp, path("pokemons.txt"));
+    fill_container_with_file(temp, path("pokemons.txt"), true);
 
     m_Names.clear();
     m_Options.clear();
@@ -1592,16 +1607,25 @@ void PokemonInfo::makeDataConsistent()
 
 Pokemon::uniqueId PokemonInfo::getRandomPokemon(Pokemon::gen gen)
 {
-    int total = TrueCount(gen);
-    int random = true_rand() % total;
-    if((random == 0) && (total > 1)) random = 1;
-    Pokemon::uniqueId poke(random, 0);
+    int total = TrueCount();
+    Pokemon::uniqueId poke;
+
+    while (poke == 0) {
+        int random = (true_rand() % (total-1)) + 1;
+
+        poke = Pokemon::uniqueId (random, 0);
+        if (!PokemonInfo::Released(poke, gen)) {
+            poke = 0;
+        }
+    }
+
     if(HasFormes(poke)) {
         QList<Pokemon::uniqueId> formesList = VisibleFormes(poke, gen);
         /* The pokemon doesn't always have visible formes */
         if (formesList.count() > 0)
             poke = formesList.value(true_rand() %  formesList.count());
     }
+
     return Pokemon::uniqueId(poke);
 }
 
@@ -2300,6 +2324,11 @@ bool ItemInfo::Exists(int itemnum, Pokemon::gen gen)
     return m_GenItems[gen.num-GEN_MIN].contains(itemnum);
 }
 
+bool ItemInfo::Exists(int itemnum)
+{
+    return isBerry(itemnum) ? m_BerryNames.contains(itemnum) : m_RegItemNames.contains(itemnum);
+}
+
 bool ItemInfo::isBerry(int itemnum)
 {
     return itemnum >= 8000;
@@ -2330,6 +2359,31 @@ int ItemInfo::PlateType(int itemnum)
     return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
 }
 
+int ItemInfo::PlateForType(int type)
+{
+    static const int plates[] = {
+        Item::NoItem,
+        Item::FistPlate,
+        Item::SkyPlate,
+        Item::ToxicPlate,
+        Item::EarthPlate,
+        Item::StonePlate,
+        Item::InsectPlate,
+        Item::SpookyPlate,
+        Item::IronPlate,
+        Item::FlamePlate,
+        Item::SplashPlate,
+        Item::MeadowPlate,
+        Item::ZapPlate,
+        Item::MindPlate,
+        Item::IciclePlate,
+        Item::DracoPlate,
+        Item::DreadPlate,
+        Item::NoItem
+    };
+    return plates[type];
+}
+
 int ItemInfo::DriveType(int itemnum)
 {
     return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
@@ -2348,6 +2402,17 @@ int ItemInfo::DriveForme(int itemnum)
         return 4;
     default:
         return 0;
+    }
+}
+
+int ItemInfo::DriveForForme(int forme)
+{
+    switch(forme) {
+    case 1: return Item::DouseDrive;
+    case 2: return Item::ShockDrive;
+    case 3: return Item::BurnDrive;
+    case 4: return Item::ChillDrive;
+    case 0: default: return Item::NoItem;
     }
 }
 

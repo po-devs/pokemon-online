@@ -18,6 +18,8 @@
 
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
+    setWindowTitle(tr("Teambuilder"));
+
     addWidget(trainer = new TrainerMenu(team));
     pokemonModel = new PokeTableModel(team->team().gen(), this);
 
@@ -51,6 +53,9 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
     QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
+    if (currentWidget() && currentWidget() == this->teamMenu) {
+        teamMenu->addAction(tr("Choose pokemon"), this->teamMenu, SLOT(choosePokemon()), tr("Alt+E", "Choose Pokemon"));
+    }
     teamMenu->addAction(tr("Trainer Menu"), this, SLOT(switchToTrainer()), tr("Ctrl+B", "Trainer Menu"));
     teamMenu->addSeparator();
     teamMenu->addAction(tr("&Add team"), this, SLOT(addTeam()), tr("Ctrl+A", "Add team"));
@@ -102,6 +107,7 @@ void TeamBuilder::saveAll()
 
 void TeamBuilder::loadAll()
 {
+    switchToTrainer();
     team().load();
     markAllUpdated();
     currentWidget()->updateAll();
@@ -115,6 +121,7 @@ void TeamBuilder::setNoMod()
     settings.setValue("Mods/CurrentMod", QString());
 
     emit reloadDb();
+    emit reloadMenuBar();
 
     markTeamUpdated();
     currentWidget()->updateTeam();
@@ -269,7 +276,7 @@ void TeamBuilder::newTeam()
     switchToTrainer();
     team() = TeamHolder();
     markTeamUpdated();
-    currentWidget()->updateTeam();
+    currentWidget()->updateAll();
 }
 
 void TeamBuilder::addTeam()

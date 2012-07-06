@@ -1,6 +1,7 @@
 #include "pokemon.h"
 #include "geninfo.h"
 #include "../Utilities/coreclasses.h"
+#include <QTextStream>
 
 QString Pokemon::uniqueId::toString() const
 {
@@ -133,6 +134,20 @@ DataStream & operator >> (DataStream &in, Pokemon::uniqueId &id)
 {
     in >> id.pokenum;
     in >> id.subnum;
+    return in;
+}
+
+QTextStream & operator >> (QTextStream &in, Pokemon::uniqueId &id)
+{
+    QString s;
+    in >> s;
+
+    if (s.contains(":")) {
+        id = Pokemon::uniqueId(s.section(":", 0, 0).toInt(), s.section(":", 1, 1).toInt());
+    } else {
+        id = Pokemon::uniqueId(s.toInt());
+    }
+
     return in;
 }
 

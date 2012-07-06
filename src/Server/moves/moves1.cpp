@@ -740,7 +740,7 @@ struct MMBellyDrum : public MM
             b.fail(s, 8);
 
             /* Odd bug with gold, silver, crystal versions in gen 2 */
-            if (b.gen() == Gen::GSC && move(b,s) == Move::BellyDrum) {
+            if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal)) && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
         } else if (move(b,s) == Move::BellyDrum) {

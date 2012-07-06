@@ -11,7 +11,8 @@ SOURCES += otherwidgets.cpp \
     coreclasses.cpp \
     qimagebuttonlr.cpp \
     confighelper.cpp \
-    qtableplus.cpp
+    qtableplus.cpp \
+    qclicklabel.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -21,7 +22,8 @@ HEADERS += otherwidgets.h \
     coreclasses.h \
     qimagebuttonlr.h \
     confighelper.h \
-    qtableplus.h
+    qtableplus.h \
+    qclicklabel.h
 
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x"
