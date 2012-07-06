@@ -46,6 +46,8 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     m_moves[2] = ui->move3;
     m_moves[3] = ui->move4;
 
+    connect(ui->speciesLabel, SIGNAL(clicked()), SLOT(on_pokemonFrame_clicked()));
+
     connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
 
     /* the four move choice items */

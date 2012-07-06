@@ -296,7 +296,7 @@
     <widget class="QFrame" name="teambuilderFrame">
      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0,0,0">
       <item>
-       <widget class="QLabel" name="teambuilderLabel">
+       <widget class="QClickLabel" name="teambuilderLabel">
         <property name="text">
          <string>Team Builder</string>
         </property>
@@ -566,6 +566,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QClickLabel</class>
+   <extends>QLabel</extends>
+   <header>../Utilities/qclicklabel.h</header>
+  </customwidget>
   <customwidget>
    <class>PokeButtonsHolder</class>
    <extends>QWidget</extends>
