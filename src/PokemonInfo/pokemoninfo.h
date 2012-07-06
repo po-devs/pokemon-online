@@ -356,8 +356,10 @@ public:
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int PlateForType(int type);
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
+    static int DriveForForme(int forme);
     static QList<QString> SortedNames(Pokemon::gen gen);
     static QList<QString> SortedUsefulNames(Pokemon::gen gen);
     static QList<Effect> Effects(int item, Pokemon::gen gen);

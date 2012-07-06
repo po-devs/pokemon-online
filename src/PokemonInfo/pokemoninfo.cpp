@@ -2359,6 +2359,31 @@ int ItemInfo::PlateType(int itemnum)
     return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
 }
 
+int ItemInfo::PlateForType(int type)
+{
+    static const int plates[] = {
+        Item::NoItem,
+        Item::FistPlate,
+        Item::SkyPlate,
+        Item::ToxicPlate,
+        Item::EarthPlate,
+        Item::StonePlate,
+        Item::InsectPlate,
+        Item::SpookyPlate,
+        Item::IronPlate,
+        Item::FlamePlate,
+        Item::SplashPlate,
+        Item::MeadowPlate,
+        Item::ZapPlate,
+        Item::MindPlate,
+        Item::IciclePlate,
+        Item::DracoPlate,
+        Item::DreadPlate,
+        Item::NoItem
+    };
+    return plates[type];
+}
+
 int ItemInfo::DriveType(int itemnum)
 {
     return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
@@ -2377,6 +2402,17 @@ int ItemInfo::DriveForme(int itemnum)
         return 4;
     default:
         return 0;
+    }
+}
+
+int ItemInfo::DriveForForme(int forme)
+{
+    switch(forme) {
+    case 1: return Item::DouseDrive;
+    case 2: return Item::ShockDrive;
+    case 3: return Item::BurnDrive;
+    case 4: return Item::ChillDrive;
+    case 0: default: return Item::NoItem;
     }
 }
 

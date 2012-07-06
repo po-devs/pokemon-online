@@ -266,6 +266,15 @@ int PokePersonal::addMove(int moveNum, bool check) throw(QString)
     throw QObject::tr("No free move available!");
 }
 
+void PokePersonal::removeMove(int movenum)
+{
+    for (int i = 0; i < 4; i++) {
+        if (move(i) == movenum) {
+            setMove(0, i);
+        }
+    }
+}
+
 bool PokePersonal::hasMove(int moveNum)
 {
     for (int i = 0; i < 4; i++)

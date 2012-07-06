@@ -486,7 +486,7 @@
 484:0 Palkia
 485:0 Heatran
 486:0 Regigigas
-487:0:H Giratina
+487:0 Giratina
 488:0 Cresselia
 489:0 Phione
 490:0 Manaphy
