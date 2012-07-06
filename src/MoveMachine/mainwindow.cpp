@@ -58,9 +58,6 @@ void PokeMovesDb::init()
             for (int j = GenInfo::GenMin(); j <= GenInfo::GenMax(); j++) {
                 for (int k = 0; k < GenInfo::NumberOfSubgens(j); k++) {
                     Pokemon::gen g(j,k);
-                    if (!PokemonInfo::Exists(i, g)) {
-                        continue;
-                    }
 
                     pokes[i].gens[g].moves[PreEvoMoves] = pokes[preEvo].gens[g].moves[LevelMoves];
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[SpecialMoves]);
