@@ -521,12 +521,20 @@ QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 
 int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    return m_Type1[gen.num-GEN_MIN].value(pokeid);
+    if (m_Type1[gen.num-GEN_MIN].contains(pokeid)) {
+        return m_Type1[gen.num-GEN_MIN].value(pokeid);
+    } else {
+        return m_Type1[gen.num-GEN_MIN].value(pokeid.original());
+    }
 }
 
 int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    return m_Type2[gen.num-GEN_MIN].value(pokeid);
+    if (m_Type2[gen.num-GEN_MIN].contains(pokeid)) {
+        return m_Type2[gen.num-GEN_MIN].value(pokeid);
+    } else {
+        return m_Type2[gen.num-GEN_MIN].value(pokeid.original());
+    }
 }
 
 int PokemonInfo::calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev)
