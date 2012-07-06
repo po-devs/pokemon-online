@@ -2138,6 +2138,7 @@ void Client::tiersReceived(const QStringList &tiers)
         *team() = secondTeam;
     }
     team()->setTiers(tiers);
+    rebuildTierMenu();
     changeTiersChecked();
 }
 
