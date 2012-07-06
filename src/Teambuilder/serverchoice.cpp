@@ -39,6 +39,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
 
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), model, SLOT(addServer(ServerInfo)));
+    connect(this, SIGNAL(clearList()), model, SLOT(clear()));
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), SLOT(serverAdded()));
 
     //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
@@ -133,6 +134,8 @@ void ServerChoice::anchorClicked(const QUrl &url)
 
 void ServerChoice::on_switchPort_clicked()
 {
+    emit clearList();
+
     ui->serverList->model()->removeRows(0, ui->serverList->model()->rowCount());
 
     ui->description->setText(tr("Connecting to registry...")+"\n");
