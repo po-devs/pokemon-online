@@ -96,9 +96,14 @@ void TeamMenu::updateTeam()
 
 void TeamMenu::updateItemModel()
 {
+    /* Updating the item model causes a reset of the team, so...*/
+    Team t = team().team();
+
     QSettings s;
     QStringList itemList = s.value("TeamBuilder/ShowAllItems").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
     ui->itemsModel->setStringList(itemList);
+
+    team().team() = t;
 }
 
 void TeamMenu::updateTabs()
@@ -135,6 +140,11 @@ void TeamMenu::addMenus(QMenuBar *menuBar)
     }
 }
 
+void TeamMenu::choosePokemon()
+{
+    ui->pokemons[ui->pokemonTabs->currentIndex()]->openPokemonSelection();
+}
+
 void TeamMenu::genChanged()
 {
     Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
@@ -151,6 +161,7 @@ void TeamMenu::genChanged()
     }
 
     updateItemModel();
+
     updateAll();
     emit teamChanged();
 }

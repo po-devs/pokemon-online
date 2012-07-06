@@ -1829,7 +1829,7 @@ void BattleBase::testCritical(int player, int target)
         up *= 4;
     }
     if (tmove(player).critRaise & 2) {
-        if (gen() == Gen::RBY) {
+        if (gen() == Gen::RedBlue || gen() == Gen::Yellow) {
             down = 4;
         } else {
             up *= 4;
@@ -1857,7 +1857,8 @@ void BattleBase::healDamage(int player, int target)
 
     if (healing > 0) {
         //In RBY, if the HP difference is 255, it fails
-        if(poke(target).lifePoints() < poke(target).totalLifePoints() && (gen() != Gen::RBY || (poke(target).totalLifePoints()-poke(target).lifePoints()) % 256 != 255)) {
+        if(poke(target).lifePoints() < poke(target).totalLifePoints() && ((gen() != Gen::RedBlue && gen() != Gen::Yellow)
+                                                                          || (poke(target).totalLifePoints()-poke(target).lifePoints()) % 256 != 255)) {
             sendMoveMessage(60, 0, target, tmove(player).type);
 
             int damage = poke(target).totalLifePoints() * healing / 100;

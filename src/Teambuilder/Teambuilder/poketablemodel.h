@@ -2,7 +2,8 @@
 #define POKETABLEMODEL_H
 
 #include <QAbstractTableModel>
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemon.h"
+#include "../PokemonInfo/geninfo.h"
 
 class PokeTableModel : public QAbstractTableModel {
 public:

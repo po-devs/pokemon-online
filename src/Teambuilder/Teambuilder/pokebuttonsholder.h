@@ -25,6 +25,7 @@ public:
     void setCurrentSlot(int slot);
 signals:
     void teamChanged();
+    void clicked(int index);
     void doubleClicked(int index);
 private:
     Ui::PokeButtonsHolder *ui;

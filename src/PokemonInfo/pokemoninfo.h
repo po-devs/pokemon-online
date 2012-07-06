@@ -64,7 +64,7 @@ public:
     static void init(const QString &dir="db/pokes/");
 
     /* Self-explainable functions */
-    static int TrueCount(Pokemon::gen gen); // pokes without counting forms
+    static int TrueCount(); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);
@@ -123,6 +123,7 @@ public:
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
     static int SpecialStat(const Pokemon::uniqueId &pokeid);
+    static bool Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen); /* Does not check for exists first, do it yourself */
     static bool Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static bool Exists(const Pokemon::uniqueId &pokeid);
     static AbilityGroup Abilities(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
@@ -138,26 +139,30 @@ public:
     static void RunMovesSanityCheck(int gen);
 
     static void retranslate();
-private:
+
     struct Gen {
         Pokemon::gen gen;
         QString dir;
 
         void load(const QString &path, const Pokemon::gen &gen, Gen *parent=NULL);
         void loadMoves(Gen *parent);
+        void loadReleased(Gen *parent);
         void loadMinLevels(Gen *parent);
+
+        bool isReleased(const Pokemon::uniqueId &);
 
         QString path(const QString &filename);
 
         QHash<Pokemon::uniqueId, PokemonMoves> m_Moves;
+        QSet<Pokemon::uniqueId> m_Released;
 
         QHash<Pokemon::uniqueId, int> m_MinLevels;
         QHash<Pokemon::uniqueId, int> m_MinEggLevels;
     };
 
-    static QHash<Pokemon::gen, Gen> gens;
-
     static Gen & gen(Pokemon::gen gen);
+private:
+    static QHash<Pokemon::gen, Gen> gens;
 
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type1;
     static QVector<QHash<Pokemon::uniqueId, int> > m_Type2;
@@ -343,15 +348,18 @@ public:
     /* Self-explainable functions */
     static int NumberOfItems();
     static QString Name(int itemnum);
-    static bool Exists(int itemnum, Pokemon::gen gen=GenInfo::GenMax());
+    static bool Exists(int itemnum);
+    static bool Exists(int itemnum, Pokemon::gen gen);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isDrive(int itemnum);
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int PlateForType(int type);
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
+    static int DriveForForme(int forme);
     static QList<QString> SortedNames(Pokemon::gen gen);
     static QList<QString> SortedUsefulNames(Pokemon::gen gen);
     static QList<Effect> Effects(int item, Pokemon::gen gen);

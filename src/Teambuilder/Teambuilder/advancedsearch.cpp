@@ -116,7 +116,10 @@ void AdvancedSearch::search() {
 
     QSet<Pokemon::uniqueId> resultingList;
 
-    for (int i = 1; i < PokemonInfo::TrueCount(gen); i++) {
+    for (int i = 1; i < PokemonInfo::TrueCount(); i++) {
+        if (!PokemonInfo::Exists(i,gen)) {
+            continue;
+        }
         foreach(Pokemon::uniqueId num, PokemonInfo::Formes(i, gen)) {
             if (PokemonInfo::IsAesthetic(num)) {
                 continue;
