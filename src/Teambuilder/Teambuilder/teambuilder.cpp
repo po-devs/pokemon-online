@@ -9,6 +9,7 @@
 #include "Teambuilder/pokeboxes.h"
 #include "Teambuilder/poketablemodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "loadwindow.h"
 
 #ifdef _WIN32
 #include "../../SpecialIncludes/zip.h"
@@ -54,7 +55,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(tr("&New"),this,SLOT(newTeam()),tr("Ctrl+N", "New"));
     fileMenu->addAction(tr("&Save all"),this,SLOT(saveAll()),tr("Ctrl+S", "Save all"));
-    fileMenu->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load all"));
+    fileMenu->addAction(tr("&Load all"),this,SLOT(openLoadWindow()),tr("Ctrl+L", "Load all"));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
     QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
@@ -122,6 +123,15 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     return menuBar;
 }
 
+void TeamBuilder::openLoadWindow()
+{
+    LoadWindow *w = new LoadWindow(this);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(loadAll(TeamHolder)));
+}
+
 void TeamBuilder::genChanged()
 {
     Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
@@ -146,10 +156,10 @@ void TeamBuilder::saveAll()
     team().save();
 }
 
-void TeamBuilder::loadAll()
+void TeamBuilder::loadAll(const TeamHolder &t)
 {
     switchToTrainer();
-    team().load();
+    team() = t;
     markAllUpdated();
     currentWidget()->updateAll();
 }
