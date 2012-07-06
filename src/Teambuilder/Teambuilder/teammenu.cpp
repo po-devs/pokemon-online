@@ -96,9 +96,14 @@ void TeamMenu::updateTeam()
 
 void TeamMenu::updateItemModel()
 {
+    /* Updating the item model causes a reset of the team, so...*/
+    Team t = team().team();
+
     QSettings s;
     QStringList itemList = s.value("TeamBuilder/ShowAllItems").toBool() ? ItemInfo::SortedNames(team().team().gen()) : ItemInfo::SortedUsefulNames(team().team().gen());
     ui->itemsModel->setStringList(itemList);
+
+    team().team() = t;
 }
 
 void TeamMenu::updateTabs()
@@ -151,6 +156,7 @@ void TeamMenu::genChanged()
     }
 
     updateItemModel();
+
     updateAll();
     emit teamChanged();
 }
