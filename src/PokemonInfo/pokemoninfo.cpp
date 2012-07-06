@@ -2195,9 +2195,9 @@ void ItemInfo::loadEffects()
             std::string s = eff.toStdString();
             size_t pos = s.find('-');
             if (pos != std::string::npos) {
-                toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+                toPush.push_back(Effect(atoi(s.c_str())+8000, eff.mid(pos+1)));
             } else {
-                toPush.push_back(Effect(atoi(s.c_str())));
+                toPush.push_back(Effect(atoi(s.c_str())+8000));
             }
         }
         m_BerryEffects[it.key()] = toPush;
