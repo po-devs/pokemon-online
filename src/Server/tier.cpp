@@ -144,7 +144,7 @@ void Tier::loadFromFile()
             query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int)").arg(sql_table));
+            query.exec(QString("create table if not exists %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int)").arg(sql_table));
         } else {
             throw QString("Using a not supported database");
         }
