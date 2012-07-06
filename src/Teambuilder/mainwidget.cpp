@@ -1,8 +1,7 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
-#include <QShortcut>
-#include "../Utilities/qclicklabel.h"
+#include <QRadioButton>
 
 MainWidget::MainWidget(QWidget *parent) :
     QFrame(parent),
@@ -28,15 +27,11 @@ void MainWidget::setWidget(int spot, QWidget *w)
         ui->topLabel->hide();
 
         QHBoxLayout *layout = dynamic_cast<QHBoxLayout*>(ui->topWidget->layout());
-        layout->insertWidget(spots.count()-1, tabNames[spot] = new QClickLabel());
+        layout->insertWidget(spots.count()-1, tabNames[spot] = new QRadioButton());
+        tabNames[spot]->setFocusPolicy(Qt::NoFocus);
 
-        QShortcut *sh = new QShortcut(this);
-        sh->setProperty("tab-window", spot);
-        shortCuts[spot] = sh;
-        connect(sh, SIGNAL(activated()), SLOT(changeSpot()));
-        connect(sh, SIGNAL(activatedAmbiguously()), SLOT(changeSpot()));
         tabNames[spot]->setProperty("tab-window", spot);
-        connect(tabNames[spot], SIGNAL(clicked()), SLOT(changeSpot()));
+        connect(tabNames[spot], SIGNAL(toggled(bool)), SLOT(changeSpot()));
 
         ui->stackedWidget->setCurrentIndex(ui->stackedWidget->addWidget(w));
     } else {
@@ -63,8 +58,6 @@ void MainWidget::closeTab(int spot)
     del->deleteLater();
 
     spots.remove(getIndex(spot), 1);
-    shortCuts[spot]->setKey(QKeySequence());
-    shortCuts[spot]->deleteLater();
 
     updateTabNames();
 }
@@ -76,11 +69,11 @@ int MainWidget::numberOfTabs() const
 
 void MainWidget::updateTabNames()
 {
+    tabNames[currentWidget()->property("tab-window").toInt()]->setChecked(true);
+
     if (spots.count() > 1) {
         for (int i = 0; i < spots.size(); i++) {
-            tabNames[spots[i]]->setEnabled(i == ui->stackedWidget->currentIndex());
-            tabNames[spots[i]]->setText(QString("<u>%1</u>. %2").arg(i+1).arg(ui->stackedWidget->widget(i)->windowTitle()));
-            shortCuts[spots[i]]->setKey(Qt::ALT+Qt::Key_0+ i + 1);
+            tabNames[spots[i]]->setText(QString("&%1. %2").arg(i+1).arg(ui->stackedWidget->widget(i)->windowTitle()));
             tabNames[spots[i]]->show();
         }
     } else {
@@ -92,6 +85,11 @@ void MainWidget::updateTabNames()
 
 void MainWidget::changeSpot()
 {
+    QRadioButton *r = dynamic_cast<QRadioButton*>(sender());
+    if (r && !r->isChecked()) {
+        return;
+    }
+
     int spot = sender()->property("tab-window").toInt();
     ui->stackedWidget->setCurrentIndex(getIndex(spot));
 
