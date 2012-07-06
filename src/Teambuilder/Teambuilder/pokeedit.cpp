@@ -148,6 +148,11 @@ void PokeEdit::moveEntered(const QModelIndex &index)
 {
     int num = index.data(CustomModel::MovenumRole).toInt();
 
+    if (num == Move::SecretSword && poke().num() == Pokemon::Keldeo && PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
+        setNum(Pokemon::Keldeo_R);
+        return;
+    }
+
     for (int i = 0; i < 4; i++) {
         if (poke().move(i) == Move::NoMove) {
             setMove(i, num);
@@ -284,12 +289,26 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
         poke().reset();
     }
 
-    if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
-        try {
-            poke().addMove(Move::SecretSword);
-        } catch(const QString &) {
-            poke().setMove(Move::SecretSword, 0, false);
+    if (num.pokenum == Pokemon::Keldeo) {
+        if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
+            try {
+                poke().addMove(Move::SecretSword);
+            } catch(const QString &) {
+                poke().setMove(Move::SecretSword, 0, false);
+            }
+        } else if (PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
+            poke().removeMove(Move::SecretSword);
         }
+    } else if (num.pokenum == Pokemon::Giratina) {
+        if (num == Pokemon::Giratina_O && poke().item() != Item::GriseousOrb) {
+            poke().item() = Item::GriseousOrb;
+        } else if (num == Pokemon::Giratina && poke().item() == Item::GriseousOrb) {
+            poke().item() = Item::NoItem;
+        }
+    } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
+        poke().item() = ItemInfo::PlateForType(num.subnum);
+    } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
+        poke().item() = ItemInfo::DriveForForme(num.subnum);
     }
 
     poke().setNum(num);
@@ -322,7 +341,7 @@ void PokeEdit::changeItem(const QString &itemName)
 {
     int itemNum = ItemInfo::Number(itemName);
     poke().item() = itemNum;
-    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb) {
+    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb && PokemonInfo::Released(Pokemon::Giratina_O, poke().gen())) {
         setNum(Pokemon::Giratina_O); 
     } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
         setNum(Pokemon::Giratina); 

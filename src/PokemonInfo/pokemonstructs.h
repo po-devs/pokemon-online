@@ -121,6 +121,7 @@ public:
 
     void setMove(int moveNum, int moveSlot, bool check=false) throw (QString);
     int addMove(int moveNum, bool check = false) throw (QString);
+    void removeMove(int movenum);
 
     bool hasMove(int moveNum);
 
