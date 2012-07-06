@@ -28,6 +28,7 @@ public:
 
 public slots:
     void addServer(const ServerInfo &info);
+    void clear();
 private:
     QList<ServerInfo> infos;
 };
