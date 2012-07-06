@@ -720,7 +720,7 @@ void Server::announcementChanged(const QString &announcement)
 }
 
 void Server::mainChanChanged(const QString &name) {
-    if (name == channel(0).name) {
+    if (name == channel(0).name || name.length() == 0) {
         return;
     }
 
