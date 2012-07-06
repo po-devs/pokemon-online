@@ -39,6 +39,12 @@ void LoadLine::setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButt
     connect(ui2.browse, SIGNAL(clicked()), SLOT(browseTeam()));
 }
 
+void LoadLine::activateCheck()
+{
+    setChecked(true);
+    updateAll();
+}
+
 void LoadLine::setTeam(const Team &t)
 {
     team = t;
@@ -53,7 +59,7 @@ const Team &LoadLine::getTeam() const
 
 void LoadLine::browseTeam()
 {
-    loadTTeamDialog(team, this, SLOT(updateAll()));
+    loadTTeamDialog(team, this, SLOT(activateCheck()));
 }
 
 void LoadLine::genChanged()

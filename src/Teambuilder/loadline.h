@@ -31,6 +31,7 @@ public:
     const Team& getTeam() const;
 
 public slots:
+    void activateCheck();
     void genChanged();
     void tierEdited(const QString &);
     void browseTeam();
