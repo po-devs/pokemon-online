@@ -664,6 +664,9 @@ void Tier::loadFromXml(const QDomElement &elem)
     }
     m_gen = Pokemon::gen(elem.attribute("gen", QString::number(GenInfo::GenMax())).toInt(),
                          elem.attribute("subgen",QString::number(GenInfo::NumberOfSubgens(elem.attribute("gen", QString::number(GenInfo::GenMax())).toInt())-1)).toInt());
+    if (m_gen.num == 0) {
+        m_gen.subnum = 0;
+    }
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
