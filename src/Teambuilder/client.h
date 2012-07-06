@@ -277,6 +277,7 @@ public slots:
     void openTeamBuilder();
     void reloadTeamBuilderBar();
     void changeTeam();
+    void changeTeam(const TeamHolder &t);
     /* Automatic removal of players in memory */
     void fadeAway();
     void registerPermPlayer(int id);
