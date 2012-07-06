@@ -1161,8 +1161,8 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
     //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
-    fileMenu->addAction(tr("Open &teamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
-    fileMenu->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
+    fileMenu->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
+    fileMenu->addAction(tr("Open &Replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
