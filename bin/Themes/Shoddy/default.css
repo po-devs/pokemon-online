@@ -1,3 +1,7 @@
+QToolTip {
+    color: black;
+}
+
 PokeButton {
     min-width: 170px;
     height: 85px;

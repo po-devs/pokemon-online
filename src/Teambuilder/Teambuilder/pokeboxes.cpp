@@ -19,7 +19,8 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
 
     loadBoxes();
 
-    connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
+    //connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
+    connect(ui->pokemonButtons, SIGNAL(clicked(int)), SLOT(changeTeamPoke(int)));
     connect(ui->storeButton, SIGNAL(clicked()), SLOT(storePokemon()));
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deletePokemon()));
     connect(ui->withdrawButton, SIGNAL(clicked()), SLOT(withdrawPokemon()));
