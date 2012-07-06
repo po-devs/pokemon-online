@@ -224,7 +224,7 @@ void MainEngine::routine(CentralWidgetInterface *w)
 
 void MainEngine::launchMenu(bool first)
 {
-    Menu *menu = new Menu();
+    Menu *menu = new Menu(trainerTeam(freespot));
     if (first) {
         menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();

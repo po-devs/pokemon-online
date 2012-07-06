@@ -3,12 +3,14 @@
 #include "../Utilities/functions.h"
 #include "mainwindow.h"
 #include "theme.h"
+#include "Teambuilder/teamholder.h"
+#include "loadwindow.h"
 
 static bool menuLoaded = false;
 
-Menu::Menu(QWidget *parent) :
+Menu::Menu(TeamHolder *t, QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::Menu)
+    ui(new Ui::Menu), team(t)
 {
     ui->setupUi(this);
     ui->appLogo->setPixmap(Theme::Sprite("logo"));
@@ -50,10 +52,25 @@ bool Menu::event(QEvent *e)
     return QFrame::event(e);
 }
 
+void Menu::loadTeam()
+{
+    LoadWindow *w = new LoadWindow(this);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(loadAll(TeamHolder)));
+}
+
+void Menu::loadAll(const TeamHolder& t)
+{
+    *team = t;
+}
+
 QMenuBar * Menu::createMenuBar(MainEngine *w)
 {
     QMenuBar *menuBar = new QMenuBar();
     QMenu *fileMenu = menuBar->addMenu(tr("&File"));
+    fileMenu->addAction(tr("Load team"), this, SLOT(loadTeam()), tr("Ctrl+L", "Load team"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addAction(tr("Open &replay"),w,SLOT(loadReplayDialog()), Qt::CTRL+Qt::Key_R);
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),Qt::CTRL+Qt::Key_Q);
