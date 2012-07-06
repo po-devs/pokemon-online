@@ -53,6 +53,9 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
     QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
+    if (currentWidget() && currentWidget() == this->teamMenu) {
+        teamMenu->addAction(tr("Choose pokemon"), this->teamMenu, SLOT(choosePokemon()), tr("Alt+E", "Choose Pokemon"));
+    }
     teamMenu->addAction(tr("Trainer Menu"), this, SLOT(switchToTrainer()), tr("Ctrl+B", "Trainer Menu"));
     teamMenu->addSeparator();
     teamMenu->addAction(tr("&Add team"), this, SLOT(addTeam()), tr("Ctrl+A", "Add team"));

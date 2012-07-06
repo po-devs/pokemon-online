@@ -62,12 +62,11 @@ public:
     void changePics(const QPixmap &normal, const QPixmap &hovered, const QPixmap &checked);
 protected:
     void paintEvent(QPaintEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
+    bool event(QEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 private:
     QPixmap myPic, myHoveredPic, myCheckedPic;
-    int lastUnderMouse; // last mouse pos recorded
     bool pressed;
 
     enum State {
