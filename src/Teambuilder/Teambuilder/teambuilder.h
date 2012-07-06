@@ -26,7 +26,8 @@ public:
     TeamBuilderWidget *widget(int i);
 public slots:
     void saveAll();
-    void loadAll();
+    void openLoadWindow();
+    void loadAll(const TeamHolder &t);
     void newTeam();
     void openBoxes();
     void editPoke(int);

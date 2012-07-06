@@ -59,7 +59,9 @@ SOURCES += main.cpp \
     Teambuilder/pokebox.cpp \
     Teambuilder/pokeboxitem.cpp \
     serverchoicemodel.cpp \
-    mainwidget.cpp
+    mainwidget.cpp \
+    loadwindow.cpp \
+    loadline.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -133,7 +135,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/pokebox.h \
     Teambuilder/pokeboxitem.h \
     serverchoicemodel.h \
-    mainwidget.h
+    mainwidget.h \
+    loadwindow.h \
+    loadline.h
 
 LIBS += -L../../bin \
     -lpokemonlib \
@@ -163,7 +167,9 @@ FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/pokeboxes.ui \
     Teambuilder/basestatswidget.ui \
     Teambuilder/advancedsearch.ui \
-    mainwidget.ui
+    mainwidget.ui \
+    loadwindow.ui \
+    loadline.ui
 
 RC_FILE = myapp.rc
 
