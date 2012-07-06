@@ -21,7 +21,6 @@ public:
     ~TeamMenu();
 
     void updateTeam();
-    void addMenus(QMenuBar *);
 signals:
     void switchToTrainer();
 public slots:
@@ -29,7 +28,6 @@ public slots:
     void choosePokemon();
 private slots:
     void tabIconChanged();
-    void genChanged();
 private:
     void setupUi();
     void updateItemModel();
@@ -41,7 +39,6 @@ private:
         QHash<int, PokeEdit*> pokemons;
         QStringListModel *itemsModel, *natureModel;
         QAbstractItemModel *pokemonModel;
-        QHash<Pokemon::gen, QAction*> gens;
     };
 
     _ui *ui;
