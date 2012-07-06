@@ -22,6 +22,8 @@ public:
     void checkTabbing();
     void changePMs();
 
+    void flash(PMStruct *pm);
+
 private slots:
     void closeTab(int tabNum);
     void tabChanged(int tabNum);

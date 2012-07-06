@@ -750,19 +750,12 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing)
-        activateWindow(); // activate po window when pm recieved
-
-    if (mypms.contains(id)) {
-        if(!pmSystem->isVisible()) {
-            pmSystem->show();
-        }
-        return;
-    }
-
     PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4);
 
     pmSystem->startPM(p);
+    if (pmFlashing) {
+        pmSystem->flash(p);
+    }
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
