@@ -1,6 +1,8 @@
 #ifndef TEAMBUILDER_H
 #define TEAMBUILDER_H
 
+#include "../PokemonInfo/pokemon.h"
+#include "../PokemonInfo/geninfo.h"
 #include <QWidget>
 #include "centralwidget.h"
 #include "Teambuilder/teambuilderwidget.h"
@@ -24,7 +26,8 @@ public:
     TeamBuilderWidget *widget(int i);
 public slots:
     void saveAll();
-    void loadAll();
+    void openLoadWindow();
+    void loadAll(const TeamHolder &t);
     void newTeam();
     void openBoxes();
     void editPoke(int);
@@ -33,6 +36,7 @@ public slots:
 
     void setNoMod();
     void changeMod();
+    void genChanged();
     void installMod();
 
     void importTeam();
@@ -56,6 +60,14 @@ private:
     PokeBoxes *boxesMenu;
 
     QAbstractItemModel *pokemonModel;
+
+    struct _ui {
+        QHash<Pokemon::gen, QAction*> gens;
+    };
+
+    Pokemon::gen lastGen;
+
+    _ui * ui;
 
     void markAllUpdated();
     void switchTo(TeamBuilderWidget *w);

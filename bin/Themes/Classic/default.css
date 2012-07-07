@@ -763,11 +763,11 @@ ChallengeDialog {
 }
 
 ChallengeDialog QLabel#name, ChallengeDialog QGroupBox::title {
-	color: white;
+	color: black;
 }
 
 ChallengeDialog QCheckBox {
-	color: #939393;
+	color: #086da7;
 }
 
 ChallengeDialog QLabel#avatar {

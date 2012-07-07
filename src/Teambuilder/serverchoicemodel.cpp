@@ -129,3 +129,10 @@ void ServerChoiceModel::addServer(const ServerInfo &info)
     infos.push_back(info);
     endInsertRows();
 }
+
+void ServerChoiceModel::clear()
+{
+    beginRemoveRows(QModelIndex(), 0, rowCount()-1);
+    infos.clear();
+    endRemoveRows();
+}

@@ -101,6 +101,7 @@ void Server::start(){
             }
     };
 
+    setDefaultValue("test", QStringList() << "5060" << "6060");
     setDefaultValue("SQL/Driver", SQLCreator::SQLite);
     setDefaultValue("SQL/Database", "pokemon");
     setDefaultValue("SQL/Port", 5432);
@@ -720,7 +721,7 @@ void Server::announcementChanged(const QString &announcement)
 }
 
 void Server::mainChanChanged(const QString &name) {
-    if (name == channel(0).name) {
+    if (name == channel(0).name || name.length() == 0) {
         return;
     }
 

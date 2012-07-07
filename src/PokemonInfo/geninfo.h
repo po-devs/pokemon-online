@@ -67,8 +67,14 @@ public:
     inline bool operator < (const gen &other) const {
         return (num < other.num) || ((num == other.num) && (subnum < other.subnum));
     }
+    inline bool operator <= (const gen &other) const {
+        return (num <= other.num) || ((num == other.num) && (subnum <= other.subnum));
+    }
     inline bool operator > (const gen &other) const {
         return (num > other.num) || ((num == other.num) && (subnum > other.subnum));
+    }
+    inline bool operator >= (const gen &other) const {
+        return (num >= other.num) || ((num == other.num) && (subnum >= other.subnum));
     }
     inline bool operator < (int other) const {
         return (num < other);

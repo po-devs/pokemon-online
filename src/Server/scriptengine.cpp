@@ -1419,7 +1419,7 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int team, int pokenum)
 
 bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index)
 {
-    if(!testPlayer("hasDreamWorldAbility", id) || !testTeamCount("hasDreamWorldAbility", id, team)) {
+    if(testPlayer("hasDreamWorldAbility", id) && testTeamCount("hasDreamWorldAbility", id, team)) {
         if (index < 0 || index >= 6) {
             return false;
         } else {
@@ -1429,20 +1429,20 @@ bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index)
 
             return p.ability() != ag.ab(0) && p.ability() != ag.ab(1);
         }
-        return false;
     }
     return false;
 }
 
 bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int team, int index)
 {
-    if(!testPlayer("compatibleAsDreamWorldEvent", id) || !testTeamCount("compatibleAsDreamWorldEvent", id, team)) {
+    if(testPlayer("compatibleAsDreamWorldEvent", id) && testTeamCount("compatibleAsDreamWorldEvent", id, team)) {
         if (index < 0 || index >= 6) {
             return false;
         } else {
             PokeBattle &p = myserver->player(id)->team(team).poke(index);
 
-            return MoveSetChecker::isValid(p.num(),5,p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(), p.level(), true);
+            return MoveSetChecker::isValid(p.num(),myserver->player(id)->team(team).gen,
+                                           p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(), p.level(), true);
         }
         return false;
     }

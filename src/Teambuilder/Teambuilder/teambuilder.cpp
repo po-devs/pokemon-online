@@ -1,3 +1,5 @@
+#include "../PokemonInfo/pokemon.h"
+#include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "Teambuilder/teambuilder.h"
 #include "Teambuilder/trainermenu.h"
@@ -7,6 +9,7 @@
 #include "Teambuilder/pokeboxes.h"
 #include "Teambuilder/poketablemodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "loadwindow.h"
 
 #ifdef _WIN32
 #include "../../SpecialIncludes/zip.h"
@@ -18,6 +21,8 @@
 
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
+    ui = new _ui();
+
     setWindowTitle(tr("Teambuilder"));
 
     addWidget(trainer = new TrainerMenu(team));
@@ -36,6 +41,7 @@ TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(N
 TeamBuilder::~TeamBuilder()
 {
     writeSettings(this);
+    delete ui;
 }
 
 QSize TeamBuilder::defaultSize() const {
@@ -49,7 +55,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(tr("&New"),this,SLOT(newTeam()),tr("Ctrl+N", "New"));
     fileMenu->addAction(tr("&Save all"),this,SLOT(saveAll()),tr("Ctrl+S", "Save all"));
-    fileMenu->addAction(tr("&Load all"),this,SLOT(loadAll()),tr("Ctrl+L", "Load all"));
+    fileMenu->addAction(tr("&Load all"),this,SLOT(openLoadWindow()),tr("Ctrl+L", "Load all"));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),qApp,SLOT(quit()),tr("Ctrl+Q", "Quit"));
     QMenu *teamMenu = menuBar->addMenu(tr("&Team"));
@@ -93,11 +99,56 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
 
-    if (currentWidget()) {
-        currentWidget()->addMenus(menuBar);
+    QMenu *gen = menuBar->addMenu(tr("&Gen."));
+    QActionGroup *gens = new QActionGroup(gen);
+
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
+        int n = GenInfo::NumberOfSubgens(i);
+
+        gen->addSeparator()->setText(GenInfo::Gen(i));
+
+        for (int j = 0; j < n; j++) {
+            Pokemon::gen g(i, j);
+
+            ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
+            ui->gens[g]->setCheckable(true);
+            ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
+            ui->gens[g]->setChecked(g == team().team().gen());
+            gens->addAction(ui->gens[g]);
+        }
     }
 
+    lastGen = team().team().gen();
+
     return menuBar;
+}
+
+void TeamBuilder::openLoadWindow()
+{
+    LoadWindow *w = new LoadWindow(this);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(loadAll(TeamHolder)));
+}
+
+void TeamBuilder::genChanged()
+{
+    Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
+
+    if (gen == team().team().gen()) {
+        return;
+    }
+
+    team().team().setGen(gen);
+
+    for (int i = 0; i < 6; i++) {
+        team().team().poke(i).load();
+        team().team().poke(i).runCheck();
+    }
+
+    markAllUpdated();
+    currentWidget()->updateAll();
 }
 
 void TeamBuilder::saveAll()
@@ -105,10 +156,10 @@ void TeamBuilder::saveAll()
     team().save();
 }
 
-void TeamBuilder::loadAll()
+void TeamBuilder::loadAll(const TeamHolder &t)
 {
     switchToTrainer();
-    team().load();
+    team() = t;
     markAllUpdated();
     currentWidget()->updateAll();
 }
@@ -347,6 +398,13 @@ void TeamBuilder::markTeamUpdated()
     for (int i = 0; i < count(); i++) {
         if (i != currentIndex()) {
             widget(i)->setProperty("team-to-update", true);
+        }
+    }
+
+    if (team().team().gen() != lastGen) {
+        if (ui->gens.contains(team().team().gen())) {
+            lastGen = team().team().gen();
+            ui->gens[lastGen]->setChecked(true);
         }
     }
 }

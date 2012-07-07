@@ -446,7 +446,10 @@ static void fill_double(QHash<T, U> &container, const QString &filename, bool tr
         {
             T var1;
             U var2;
-            filestream >> var1 >> var2;
+            filestream >> var1;
+            if (!filestream.atEnd()) {
+                filestream >> var2;
+            }
             container.insert(var1, var2);
         }
     }
@@ -521,12 +524,20 @@ QString PokemonInfo::Height(const Pokemon::uniqueId &pokeid)
 
 int PokemonInfo::Type1(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    return m_Type1[gen.num-GEN_MIN].value(pokeid);
+    if (m_Type1[gen.num-GEN_MIN].contains(pokeid)) {
+        return m_Type1[gen.num-GEN_MIN].value(pokeid);
+    } else {
+        return m_Type1[gen.num-GEN_MIN].value(pokeid.original());
+    }
 }
 
 int PokemonInfo::Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    return m_Type2[gen.num-GEN_MIN].value(pokeid);
+    if (m_Type2[gen.num-GEN_MIN].contains(pokeid)) {
+        return m_Type2[gen.num-GEN_MIN].value(pokeid);
+    } else {
+        return m_Type2[gen.num-GEN_MIN].value(pokeid.original());
+    }
 }
 
 int PokemonInfo::calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev)
@@ -917,7 +928,7 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
         if (pokeid.isForme()) {
             return Exists(pokeid.original()) && Released(pokeid, gen);
         } else {
-            return PokemonInfo::gen(gen).m_Moves.contains(pokeid);
+            return PokemonInfo::gen(gen).m_Moves.value(pokeid).levelMoves.size() > 0;
         }
     } else {
         return false;
@@ -1614,7 +1625,7 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon(Pokemon::gen gen)
         int random = (true_rand() % (total-1)) + 1;
 
         poke = Pokemon::uniqueId (random, 0);
-        if (!PokemonInfo::Released(poke, gen)) {
+        if (!PokemonInfo::Exists(poke, gen) || !PokemonInfo::Released(poke, gen)) {
             poke = 0;
         }
     }
@@ -2187,9 +2198,9 @@ void ItemInfo::loadEffects()
             std::string s = eff.toStdString();
             size_t pos = s.find('-');
             if (pos != std::string::npos) {
-                toPush.push_back(Effect(atoi(s.c_str()), eff.mid(pos+1)));
+                toPush.push_back(Effect(atoi(s.c_str())+8000, eff.mid(pos+1)));
             } else {
-                toPush.push_back(Effect(atoi(s.c_str())));
+                toPush.push_back(Effect(atoi(s.c_str())+8000));
             }
         }
         m_BerryEffects[it.key()] = toPush;
