@@ -446,7 +446,10 @@ static void fill_double(QHash<T, U> &container, const QString &filename, bool tr
         {
             T var1;
             U var2;
-            filestream >> var1 >> var2;
+            filestream >> var1;
+            if (!filestream.atEnd()) {
+                filestream >> var2;
+            }
             container.insert(var1, var2);
         }
     }
