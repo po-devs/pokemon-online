@@ -34,7 +34,7 @@ void LoadLine::setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButt
         }
     }
 
-    connect(ui2.gen, SIGNAL(activated(int)), SLOT(genChanged()));
+    connect(ui2.gen, SIGNAL(currentIndexChanged(int)), SLOT(genChanged()));
     connect(ui2.tier, SIGNAL(textEdited(QString)), SLOT(tierEdited(QString)));
     connect(ui2.browse, SIGNAL(clicked()), SLOT(browseTeam()));
 }
@@ -64,7 +64,7 @@ void LoadLine::browseTeam()
 
 void LoadLine::genChanged()
 {
-    team.gen() = ui2.gen->currentIndex();
+    team.setGen(ui2.gen->itemData(ui2.gen->currentIndex()).value<Pokemon::gen>());
 }
 
 void LoadLine::tierEdited(const QString &l)
