@@ -1065,6 +1065,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
         }
+        if (pokeid.isForme()) {
+            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back, false);
+        }
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
         } else if (gen.num == 2) {
@@ -1081,13 +1084,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen.num == 4 && shiney) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+        } else if (gen.num == 4) {
+            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
         } else if (gen.num == 5) {
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
             } else if (shiney) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
-            } else if (pokeid.subnum != 0) {
-                return PokemonInfo::Picture(OriginalForme(pokeid), 5, Pokemon::Male, false, back);
             }
         }
         return ret;
@@ -2030,6 +2033,8 @@ QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 
 QSet<int> MoveInfo::Moves(Pokemon::gen gen)
 {
+    auto pointer = m_GenMoves;
+
     return m_GenMoves[gen.num-GenInfo::GenMin()];
 }
 
