@@ -2398,6 +2398,9 @@ void Client::changeTeam()
         printLine(tr("You can't change teams while battling, so your nick was kept."));
         secondTeam.name() = mynick;
     }
+    if (secondTeam.name().isEmpty()) {
+        secondTeam.name() = mynick;
+    }
 
     cancelFindBattle(false);
     waitingOnSecond = true;
