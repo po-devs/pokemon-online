@@ -1625,7 +1625,7 @@ Pokemon::uniqueId PokemonInfo::getRandomPokemon(Pokemon::gen gen)
         int random = (true_rand() % (total-1)) + 1;
 
         poke = Pokemon::uniqueId (random, 0);
-        if (!PokemonInfo::Released(poke, gen)) {
+        if (!PokemonInfo::Exists(poke, gen) || !PokemonInfo::Released(poke, gen)) {
             poke = 0;
         }
     }
