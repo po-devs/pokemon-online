@@ -1312,7 +1312,7 @@ Attaques:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1317"/>
         <source>Old battle window</source>
-        <translation type="unfinished">&amp;Anciene fenêtre de combat</translation>
+        <translation type="unfinished">&amp;Ancienne fenêtre de combat</translation>
     </message>
     <message>
         <source>%1 was banned by the server for %2 minute!</source>
@@ -4337,7 +4337,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="21"/>
         <source>Teambuilder</source>
-        <translation type="unfinished">&amp;Teambuilder</translation>
+        <translation type="unfinished">Teambuilder</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="54"/>
