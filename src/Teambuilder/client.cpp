@@ -20,6 +20,7 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include <QtScript/QScriptEngine>
+#include <QtScript/QScriptValueIterator>
 #include "loadwindow.h"
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
@@ -1153,6 +1154,8 @@ void Client::channelCommandReceived(int command, int channel, DataStream *stream
 
 QMenuBar * Client::createMenuBar(MainEngine *w)
 {
+    myevents.clear();
+
     top = w;
     QMenuBar *menuBar = new QMenuBar();
     menuBar->setObjectName("MainChat");
@@ -1354,9 +1357,39 @@ static void analyzerFrom(const QScriptValue&s, T&r) {
     r = dynamic_cast<T>(s.toQObject());
 }
 
+typedef QHash<qint32, QString> hash32string;
+Q_DECLARE_METATYPE(hash32string)
+
+static QScriptValue hash32stringTo(QScriptEngine *e, const hash32string& r) {
+    QScriptValue v = e->newObject();
+
+    QHashIterator<qint32, QString> it(r);
+
+    while (it.hasNext()) {
+        it.next();
+
+        v.setProperty(it.key(), it.value());
+    }
+
+    return v;
+}
+
+static void hash32stringFrom(const QScriptValue &v, hash32string &r) {
+    r.clear();
+
+    QScriptValueIterator it(v);
+
+    while (it.hasNext()) {
+        it.next();
+
+        r.insert(it.name().toInt(), it.value().toString());
+    }
+}
+
 void Client::registerMetaTypes(QScriptEngine *e)
 {
     qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
+    qScriptRegisterMetaType<hash32string>(e, &hash32stringTo, &hash32stringFrom);
 }
 
 void Client::playerKicked(int dest, int src) {
