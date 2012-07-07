@@ -21,7 +21,7 @@ public:
     void setId(int id);
 
     int ownId() const;
-    QString name() const {
+    Q_INVOKABLE QString name() const {
         return myname;
     }
     void setName(const QString &name);
