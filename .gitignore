@@ -53,3 +53,5 @@ ui_*.h
 bin/veekun_data_extracter
 bin/Mods/
 bin/ChainBreeding
+bin/UpdateMaker
+update-*.zip
