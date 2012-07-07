@@ -45,7 +45,7 @@ convert 423 "west east"
 #Rotom
 convert 479 "normal mow heat frost wash fan"
 #Giratina
-convert 487 "origin altered"
+convert 487 "altered origin"
 #Shaymin
 convert 492 "land sky"
 #Arceus
