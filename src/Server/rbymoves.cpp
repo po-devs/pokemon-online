@@ -156,7 +156,7 @@ struct RBYBind : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        poke(b,s)["BindCount"] = minMax(tmove(b,s).minTurns-1, tmove(b,s).maxTurns-1, b.gen().num, b.randint())-1;
+        poke(b,s)["BindCount"] = minMax(tmove(b,s).minTurns-1, tmove(b,s).maxTurns-1, b.gen().num, b.randint());
         poke(b,s)["LastBind"] = b.turn();
         poke(b,s)["BindDamage"] = poke(b,s)["DamageInflicted"];
         poke(b,t)["Bound"] = true;
