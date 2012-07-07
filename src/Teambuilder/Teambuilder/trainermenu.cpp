@@ -309,7 +309,7 @@ void TrainerMenu::on_deleteProfile_clicked()
         return;
     }
     QSettings s;
-    QString path = s.value("Profile/Path").toString() + "/" + ui->profileList->currentText() + ".xml";
+    QString path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(ui->profileList->currentText()) + ".xml";
     ui->profileList->removeItem(ui->profileList->currentIndex());
     team().profile().deleteProfile(path);
 }

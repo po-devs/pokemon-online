@@ -57,7 +57,11 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
         poke(player).statusCount() = turns;
     }
     else if (status == Pokemon::Asleep) {
-        poke(player).statusCount() = 1 + (randint(6));
+        if (gen() <= Pokemon::gen(Gen::Yellow)) {
+            poke(player).statusCount() = 2 + (randint(7));
+        } else {
+            poke(player).statusCount() = 2 + (randint(3));
+        }
     }
     else {
         poke(player).statusCount() = 0;

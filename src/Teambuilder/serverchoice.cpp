@@ -28,7 +28,7 @@ ServerChoice::ServerChoice(const QString &nick) :
 
     registry_connection->connectTo(
         settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
-        settings.value("ServerChoice/RegistryPort", 8080).toUInt()
+        settings.value("ServerChoice/RegistryPort", 5090).toUInt()
     );
     registry_connection->setParent(this);
 
@@ -39,6 +39,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
 
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), model, SLOT(addServer(ServerInfo)));
+    connect(this, SIGNAL(clearList()), model, SLOT(clear()));
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), SLOT(serverAdded()));
 
     //TO-DO: Make  the item 0 un-resizable and unselectable - Latios
@@ -133,13 +134,15 @@ void ServerChoice::anchorClicked(const QUrl &url)
 
 void ServerChoice::on_switchPort_clicked()
 {
+    emit clearList();
+
     ui->serverList->model()->removeRows(0, ui->serverList->model()->rowCount());
 
     ui->description->setText(tr("Connecting to registry...")+"\n");
 
     QSettings settings;
     QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
-    int port = settings.value("ServerChoice/RegistryPort", 8080).toUInt();
+    int port = settings.value("ServerChoice/RegistryPort", 5090).toUInt();
     int newport = port == 8080 ? 5090 : 8080;
 
     registry_connection->connectTo(host, newport);

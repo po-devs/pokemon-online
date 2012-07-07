@@ -14,159 +14,6 @@
    <string>DVs</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0" rowspan="2" colspan="2">
-    <widget class="QGroupBox" name="finalStats">
-     <property name="title">
-      <string>Final Stats</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="hpivdesc">
-        <property name="text">
-         <string>HP:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="hpivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QSpinBox" name="hpivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="attivdesc">
-        <property name="text">
-         <string>Att:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="attivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QSpinBox" name="attivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="defivdesc">
-        <property name="text">
-         <string>Def:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="defivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QSpinBox" name="defivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="spattivdesc">
-        <property name="text">
-         <string>Sp. Att:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="spattivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QSpinBox" name="spattivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="spdefivdesc">
-        <property name="text">
-         <string>Sp. Def:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="spdefivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QSpinBox" name="spdefivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="speedivdesc">
-        <property name="text">
-         <string>Speed:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="speedivlabel">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QSpinBox" name="speedivspin">
-        <property name="maximum">
-         <number>31</number>
-        </property>
-        <property name="value">
-         <number>31</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="2" column="1">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
@@ -254,6 +101,159 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0" rowspan="2" colspan="2">
+    <widget class="QGroupBox" name="finalStats">
+     <property name="title">
+      <string>&amp;IV Box</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="hpivdesc">
+        <property name="text">
+         <string>HP:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QSpinBox" name="hpivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="attivdesc">
+        <property name="text">
+         <string>Att:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QSpinBox" name="attivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="defivdesc">
+        <property name="text">
+         <string>Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QSpinBox" name="defivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="spattivdesc">
+        <property name="text">
+         <string>Sp. Att:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QSpinBox" name="spattivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="spdefivdesc">
+        <property name="text">
+         <string>Sp. Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QSpinBox" name="spdefivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="speedivdesc">
+        <property name="text">
+         <string>Speed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QSpinBox" name="speedivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="attivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="defivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLabel" name="spattivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLabel" name="spdefivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLabel" name="speedivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="hpivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

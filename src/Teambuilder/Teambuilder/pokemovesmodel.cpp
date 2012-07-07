@@ -22,7 +22,7 @@ PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen, QO
 QHash<int, QString> getMoves(const Pokemon::uniqueId &num, Pokemon::gen gen, bool root = true) {
     QHash<int, QString> ret;
     if (gen.num != 1 && gen.num != 3) {
-        ret = getMoves(num, gen.num-1, false);
+        ret = getMoves(num, Pokemon::gen(gen.num-1, GenInfo::NumberOfSubgens(gen.num-1)-1), false);
     }
     return ret.unite(map_container_with_value(PokemonInfo::TMMoves(num, gen), root ? QObject::tr("TM/HM") : QObject::tr("%1G TM/HM").arg(gen.num)))
               .unite(map_container_with_value(PokemonInfo::TutorMoves(num, gen), root ? QObject::tr("Tutor") : QObject::tr("%1G Tutor").arg(gen.num)))

@@ -8,7 +8,7 @@ QStringList Profile::getProfileList(const QString &path)
     QDir profilesPath(path);
     QStringList profilesList;
     foreach(const QString &name, profilesPath.entryList(QStringList("*.xml"))) {
-        profilesList.append(QUrl::fromPercentEncoding(name.split(".")[0].toUtf8()));
+        profilesList.append(QUrl::fromPercentEncoding(name.section(".", 0, -2).toUtf8()));
     }
     return profilesList;
 }
@@ -51,6 +51,8 @@ bool Profile::loadFromFile(const QString &path)
     info().losing = team.attribute("losingMessage");
     info().tie = team.attribute("tieMessage");
     info().info = team.attribute("information");
+
+    qDebug() << "name: " << name();
 
     return true;
 }

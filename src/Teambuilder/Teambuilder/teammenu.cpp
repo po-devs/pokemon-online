@@ -118,50 +118,7 @@ TeamMenu::~TeamMenu()
     delete ui;
 }
 
-void TeamMenu::addMenus(QMenuBar *menuBar)
-{
-    QMenu *gen = menuBar->addMenu(tr("&Gen."));
-    QActionGroup *gens = new QActionGroup(gen);
-
-    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
-        int n = GenInfo::NumberOfSubgens(i);
-
-        gen->addSeparator()->setText(GenInfo::Gen(i));
-
-        for (int j = 0; j < n; j++) {
-            Pokemon::gen g(i, j);
-
-            ui->gens[g] = gen->addAction(GenInfo::Version(g), this, SLOT(genChanged()));
-            ui->gens[g]->setCheckable(true);
-            ui->gens[g]->setProperty("gen", QVariant::fromValue(g));
-            ui->gens[g]->setChecked(g == team().team().gen());
-            gens->addAction(ui->gens[g]);
-        }
-    }
-}
-
 void TeamMenu::choosePokemon()
 {
     ui->pokemons[ui->pokemonTabs->currentIndex()]->openPokemonSelection();
-}
-
-void TeamMenu::genChanged()
-{
-    Pokemon::gen gen = sender()->property("gen").value<Pokemon::gen>();
-
-    if (gen == team().team().gen()) {
-        return;
-    }
-
-    team().team().setGen(gen);
-
-    for (int i = 0; i < 6; i++) {
-        team().team().poke(i).load();
-        team().team().poke(i).runCheck();
-    }
-
-    updateItemModel();
-
-    updateAll();
-    emit teamChanged();
 }

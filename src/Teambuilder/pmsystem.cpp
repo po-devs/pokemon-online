@@ -43,6 +43,15 @@ void PMSystem::startPM(PMStruct *newPM)
     connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
 }
 
+void PMSystem::flash(PMStruct *pm)
+{
+    if (tabbedPMs) {
+        myPMs->setCurrentWidget(pm);
+    }
+
+    pm->activateWindow();
+}
+
 void PMSystem::removePM(int pmid)
 {
     PMStruct *pm = myPMWindows.take(pmid);

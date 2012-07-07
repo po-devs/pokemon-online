@@ -20,6 +20,7 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include <QtScript/QScriptEngine>
+#include "loadwindow.h"
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
@@ -137,6 +138,9 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
 
     /* PM System */
     pmSystem = new PMSystem(globals.value("PMs/Tabbed").toBool()); // We leave it here for future use. :)
+    pmSystem->setParent(this);
+    pmSystem->setWindowFlags(Qt::Window);
+
     connect(this, SIGNAL(destroyed()), pmSystem, SLOT(deleteLater()));
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
     connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
@@ -749,19 +753,12 @@ void Client::startPM(int id)
         return;
     }
 
-    if(pmFlashing)
-        activateWindow(); // activate po window when pm recieved
-
-    if (mypms.contains(id)) {
-        if(!pmSystem->isVisible()) {
-            pmSystem->show();
-        }
-        return;
-    }
-
     PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4);
 
     pmSystem->startPM(p);
+    if (pmFlashing) {
+        pmSystem->flash(p);
+    }
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
@@ -1104,7 +1101,11 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    loadTTeamDialog(team()->team(), this, SLOT(changeTeam()));
+    LoadWindow *w = new LoadWindow(this);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(changeTeam(TeamHolder)));
 }
 
 void Client::sendText()
@@ -1160,7 +1161,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     fileMenu->addAction(tr("&New tab"), w, SLOT(openNewTab()), tr("Ctrl+N", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
-    //menuFichier->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
     fileMenu->addAction(tr("Open &TeamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
     fileMenu->addAction(tr("Open &Replay"),w,SLOT(loadReplayDialog()), tr("Ctrl+R", "Open replay"));
 
@@ -1293,6 +1294,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     list_right->setChecked(globals.value("Client/UserListAtRight").toBool());
 
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
+    rebuildTierMenu();
 
     QMenu *battleMenu = menuBar->addMenu(tr("&Battle options", "Menu"));
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
@@ -2132,6 +2134,7 @@ void Client::tiersReceived(const QStringList &tiers)
         *team() = secondTeam;
     }
     team()->setTiers(tiers);
+    rebuildTierMenu();
     changeTiersChecked();
 }
 
@@ -2381,10 +2384,21 @@ void Client::reloadTeamBuilderBar()
     }
 }
 
+void Client::changeTeam(const TeamHolder &t)
+{
+    secondTeam = t;
+    secondTeam.name() = mynick;
+
+    changeTeam();
+}
+
 void Client::changeTeam()
 {
     if (battling() && secondTeam.name() != mynick) {
         printLine(tr("You can't change teams while battling, so your nick was kept."));
+        secondTeam.name() = mynick;
+    }
+    if (secondTeam.name().isEmpty()) {
         secondTeam.name() = mynick;
     }
 
