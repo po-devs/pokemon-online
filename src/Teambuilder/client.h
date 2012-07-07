@@ -65,7 +65,10 @@ public:
     Q_INVOKABLE bool away() const;
     Q_INVOKABLE int id(const QString &name) const;
     Q_INVOKABLE int currentChannel() const;
-    Channel *channel(int channelid);
+    Q_INVOKABLE QString channelName(int id) const;
+    Q_INVOKABLE const QHash<qint32, QString>& getChannelNames() const;
+    Q_INVOKABLE int channelId(const QString &name) const;
+    Q_INVOKABLE Channel *channel(int channelid);
     Q_INVOKABLE int ownId() const;
     Q_INVOKABLE int ownAuth() const;
 
@@ -332,8 +335,8 @@ private:
     PMSystem *pmSystem;
 
     /*Channels */
-    QHash<qint32, QString> channelNames;
-    QHash<QString, qint32> channelByNames;
+    QHash<qint32, QString> m_channelNames;
+    QHash<QString, qint32> m_channelByNames;
     QHash<qint32, Channel *> mychannels;
     /* Ignore */
     QList<int> myIgnored;

@@ -15,7 +15,7 @@ public:
     Channel(const QString &name, int id, Client *parent);
     ~Channel();
 
-    int id() const {
+    Q_INVOKABLE int id() const {
         return myid;
     }
     void setId(int id);
@@ -35,14 +35,14 @@ public:
     QScrollDownTextBrowser *mainChat() {
         return mymainchat;
     }
-    bool hasPlayer(int player) const {
+    Q_INVOKABLE bool hasPlayer(int player) const {
         return ownPlayers.contains(player);
     }
-    bool hasRemoteKnowledgeOf(int player) const;
+    Q_INVOKABLE bool hasRemoteKnowledgeOf(int player) const;
     QString name(int player);
 
-    void sortAllPlayersByTier();
-    void sortAllPlayersNormally();
+    Q_INVOKABLE void sortAllPlayersByTier();
+    Q_INVOKABLE void sortAllPlayersNormally();
     void playerReceived(int playerid);
     void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
     void placeTier(const QString &tier);
@@ -54,18 +54,18 @@ public:
     void removePlayer(int id);
     void insertNewPlayer(int id);
     void receivePlayerList(const QVector<int> &ids);
-    void addEvent(int event);
-    void removeEvent(int event);
-    bool eventEnabled(int event);
-    void resetEvents();
-    void restoreEventSettings();
+    Q_INVOKABLE void addEvent(int event);
+    Q_INVOKABLE void removeEvent(int event);
+    Q_INVOKABLE bool eventEnabled(int event);
+    Q_INVOKABLE void resetEvents();
+    Q_INVOKABLE void restoreEventSettings();
 
     void cleanData();
 
-    void makeReadyToQuit() {
+    Q_INVOKABLE void makeReadyToQuit() {
         readyToQuit = true;
     }
-    bool isReadyToQuit() const {
+    Q_INVOKABLE bool isReadyToQuit() const {
         return readyToQuit;
     }
 
@@ -73,10 +73,10 @@ public:
 
     void changeName(int id, const QString &name);
 
-    QString addChannelLinks(const QString &line);
-    void checkFlash(const QString &haystack, const QString &needle);
-    void printLine(const QString &str, bool flashing = true, bool act=true);
-    void printHtml(const QString &str, bool act = true);
+    Q_INVOKABLE QString addChannelLinks(const QString &line);
+    Q_INVOKABLE void checkFlash(const QString &haystack, const QString &needle);
+    Q_INVOKABLE void printLine(const QString &str, bool flashing = true, bool act=true);
+    Q_INVOKABLE void printHtml(const QString &str, bool act = true);
 
     void dealWithCommand(int command, DataStream *stream);
     QHash<qint32, Battle> &getBattles();
