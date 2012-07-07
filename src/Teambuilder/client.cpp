@@ -830,7 +830,7 @@ void Client::enableLadder(bool b)
 {
     globals.setValue("Client/EnableLadder", b);
 
-    relay().notify(NetworkCli::OptionsChange, Flags(b && (goaway->isChecked() << 1)));
+    relay().notify(NetworkCli::OptionsChange, Flags(b | (goaway->isChecked() << 1)));
     ladder->setChecked(b);
 }
 
