@@ -1419,7 +1419,7 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int team, int pokenum)
 
 bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index)
 {
-    if(!testPlayer("hasDreamWorldAbility", id) || !testTeamCount("hasDreamWorldAbility", id, team)) {
+    if(testPlayer("hasDreamWorldAbility", id) && testTeamCount("hasDreamWorldAbility", id, team)) {
         if (index < 0 || index >= 6) {
             return false;
         } else {
@@ -1429,14 +1429,13 @@ bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index)
 
             return p.ability() != ag.ab(0) && p.ability() != ag.ab(1);
         }
-        return false;
     }
     return false;
 }
 
 bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int team, int index)
 {
-    if(!testPlayer("compatibleAsDreamWorldEvent", id) || !testTeamCount("compatibleAsDreamWorldEvent", id, team)) {
+    if(testPlayer("compatibleAsDreamWorldEvent", id) && testTeamCount("compatibleAsDreamWorldEvent", id, team)) {
         if (index < 0 || index >= 6) {
             return false;
         } else {
