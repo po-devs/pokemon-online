@@ -1085,7 +1085,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         } else if (gen.num == 4 && shiney) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
         } else if (gen.num == 4) {
-            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         } else if (gen.num == 5) {
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
@@ -1804,7 +1804,7 @@ void MoveInfo::loadDetails()
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exists(movenum, GenInfo::GenMax()) ? m_Names[movenum] : m_Names[0];
+    return m_Names.value(movenum, m_Names.value(0));
 }
 
 #define move_find(var, mv, g) do {\
@@ -2033,8 +2033,6 @@ QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 
 QSet<int> MoveInfo::Moves(Pokemon::gen gen)
 {
-    auto pointer = m_GenMoves;
-
     return m_GenMoves[gen.num-GenInfo::GenMin()];
 }
 
