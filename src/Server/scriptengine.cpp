@@ -1441,7 +1441,8 @@ bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int team, int index)
         } else {
             PokeBattle &p = myserver->player(id)->team(team).poke(index);
 
-            return MoveSetChecker::isValid(p.num(),5,p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(), p.level(), true);
+            return MoveSetChecker::isValid(p.num(),myserver->player(id)->team(team).gen,
+                                           p.move(0).num(),p.move(1).num(),p.move(2).num(),p.move(3).num(),p.ability(),p.gender(), p.level(), true);
         }
         return false;
     }
