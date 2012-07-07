@@ -267,7 +267,7 @@ int Client::currentChannel() const
         return -1;
     }
 
-    return channelByNames[mainChat->tabText(mainChat->currentIndex()).toLower()];
+    return m_channelByNames[mainChat->tabText(mainChat->currentIndex()).toLower()];
 }
 
 QIcon Client::statusIcon(int auth, Status status) const
@@ -291,7 +291,7 @@ void Client::battleListActivated(QTreeWidgetItem *it)
 
 void Client::firstChannelChanged(int tabindex)
 {
-    int chanid = channelByNames.value(mainChat->tabText(tabindex).toLower());
+    int chanid = m_channelByNames.value(mainChat->tabText(tabindex).toLower());
 
     if (!hasChannel(chanid)) {
         myline->setPlayers(0);
@@ -313,13 +313,13 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
 {
     channels->clear();
 
-    channelNames = channelsL;
-    QHashIterator<qint32, QString> it (channelNames);
+    m_channelNames = channelsL;
+    QHashIterator<qint32, QString> it (m_channelNames);
 
     while (it.hasNext()) {
         it.next();
 
-        channelByNames.insert(it.value().toLower(), it.key());
+        m_channelByNames.insert(it.value().toLower(), it.key());
 
         /* We would have a default screen open */
         if (mychannels.contains(it.key())) {
@@ -370,12 +370,12 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
         mychannels.remove(-1);
         c->setId(chanid);
 
-        channelNameChanged(chanid, channelNames.take(chanid));
+        channelNameChanged(chanid, m_channelNames.take(chanid));
 
         // set tab complete for first chan
         myline->setPlayers(c->playersWidget()->model());
     } else {
-        c = new Channel(channelNames.value(chanid), chanid, this);
+        c = new Channel(channelName(chanid), chanid, this);
         mychannels[chanid] = c;
 
         playersW->addWidget(c->playersWidget());
@@ -435,7 +435,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
     if (item) {
         QSettings s;
         s.beginGroup("channelevents");
-        s.beginGroup(channelNames.value(item->id()));
+        s.beginGroup(m_channelNames.value(item->id()));
 
         QMenu *show_events = new QMenu(this);
         mychanevents.clear();
@@ -513,7 +513,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
 
         show_events->addSeparator();
 
-        QString name = channelNames.value(item->id());
+        QString name = channelName(item->id());
         QString ip = relay().getIp();
 
         if(defaultChannel() != name)  {
@@ -544,17 +544,17 @@ QString Client::defaultChannel()
 
 void Client::addChannel(const QString &name, int id)
 {
-    channelNames.insert(id, name);
-    channelByNames.insert(name.toLower(),id);
+    m_channelNames.insert(id, name);
+    m_channelByNames.insert(name.toLower(),id);
     channels->addItem(new QIdListWidgetItem(id, greychatot, name));
 }
 
 void Client::channelNameChanged(int id, const QString &name)
 {
-    QString old = channelNames.value(id);
-    channelNames[id] = name;
-    channelByNames.remove(old.toLower());
-    channelByNames[name.toLower()] = id;
+    QString old = channelName(id);
+    m_channelNames[id] = name;
+    m_channelByNames.remove(old.toLower());
+    m_channelByNames[name.toLower()] = id;
 
     for(int i = 0; i < channels->count(); i++) {
         if (channels->item(i)->text() == old) {
@@ -583,8 +583,8 @@ void Client::removeChannel(int id)
         }
     }
 
-    QString chanName = channelNames.take(id);
-    channelByNames.remove(chanName.toLower());
+    QString chanName = m_channelNames.take(id);
+    m_channelByNames.remove(chanName.toLower());
 }
 
 void Client::leaveChannelR(int index)
@@ -592,7 +592,7 @@ void Client::leaveChannelR(int index)
     if (mychannels.size() == 1)
         return;
 
-    if (!channelByNames.contains(mainChat->tabText(index).toLower())) {
+    if (!m_channelByNames.contains(mainChat->tabText(index).toLower())) {
         foreach(Channel *c, mychannels) {
             if (c->name() == mainChat->tabText(index)) {
                 c->makeReadyToQuit();
@@ -605,7 +605,7 @@ void Client::leaveChannelR(int index)
         return;
     }
 
-    int id = channelByNames.value(mainChat->tabText(index).toLower());
+    int id = channelId(mainChat->tabText(index));
 
     if (channel(id)->isReadyToQuit()) {
         leaveChannel(id);
@@ -671,8 +671,8 @@ void Client::cleanData()
 
 void Client::join(const QString& text)
 {
-    if (channelByNames.contains(text.toLower())) {
-        int id = channelByNames.value(text.toLower());
+    if (m_channelByNames.contains(text.toLower())) {
+        int id = channelId(text.toLower());
 
         if (hasChannel(id)) {
             /* No use joining the same channel twice */
@@ -866,7 +866,7 @@ void Client::deleteCustomEvents() {
     if (selectedChannel != -1) {
         QSettings s;
         s.beginGroup("channelevents");
-        s.beginGroup(channelNames.value(selectedChannel));
+        s.beginGroup(channelName(selectedChannel));
         s.remove(""); // removes all settings
     }
     if (mychannels.contains(selectedChannel)) {
@@ -902,7 +902,7 @@ void Client::showPlayerEvents(bool b, int event, QString option)
     QSettings s;
     if (selectedChannel != -1) {
         s.beginGroup("channelevents");
-        s.beginGroup(channelNames.value(selectedChannel));
+        s.beginGroup(channelName(selectedChannel));
     }
     s.setValue(option, b);
     if (selectedChannel != -1) {
@@ -952,9 +952,9 @@ void Client::toggleAutoJoin(bool autojoin)
 {
     QStringList AutoJoinChannels = globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
     if(autojoin) {
-        AutoJoinChannels.push_back(channelNames.value(selectedChannel));
+        AutoJoinChannels.push_back(channelName(selectedChannel));
     } else {
-        AutoJoinChannels.removeOne(channelNames.value(selectedChannel));
+        AutoJoinChannels.removeOne(channelName(selectedChannel));
     }
     globals.setValue(QString("AutoJoinChannels/%1").arg(relay().getIp()), AutoJoinChannels);
 }
@@ -963,7 +963,7 @@ void Client::toggleDefaultChannel(bool d)
 {
     toggleAutoJoin(false);
     if (d) {
-        globals.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelNames.value(selectedChannel));
+        globals.setValue(QString("DefaultChannels/%1").arg(relay().getIp()), channelName(selectedChannel));
     } else {
         globals.remove(QString("DefaultChannels/%1").arg(relay().getIp()));
     }
@@ -1357,6 +1357,17 @@ static void analyzerFrom(const QScriptValue&s, T&r) {
     r = dynamic_cast<T>(s.toQObject());
 }
 
+Q_DECLARE_METATYPE(Channel*)
+typedef Channel* U;
+
+static QScriptValue channelTo(QScriptEngine *e, const U& r) {
+    return e->newQObject(r);
+}
+
+static void channelFrom(const QScriptValue&s, U&r) {
+    r = dynamic_cast<U>(s.toQObject());
+}
+
 typedef QHash<qint32, QString> hash32string;
 Q_DECLARE_METATYPE(hash32string)
 
@@ -1389,6 +1400,7 @@ static void hash32stringFrom(const QScriptValue &v, hash32string &r) {
 void Client::registerMetaTypes(QScriptEngine *e)
 {
     qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
+    qScriptRegisterMetaType<U>(e, &channelTo, &channelFrom);
     qScriptRegisterMetaType<hash32string>(e, &hash32stringTo, &hash32stringFrom);
 }
 
@@ -2260,6 +2272,21 @@ void Client::refreshPlayer(int id)
 QString Client::ownName() const
 {
     return name(ownId());
+}
+
+QString Client::channelName(int id) const
+{
+    return m_channelNames.value(id);
+}
+
+int Client::channelId(const QString &name) const
+{
+    return m_channelByNames.value(name.toLower());
+}
+
+const hash32string & Client::getChannelNames() const
+{
+    return m_channelNames;
 }
 
 QString Client::authedNick(int id) const
