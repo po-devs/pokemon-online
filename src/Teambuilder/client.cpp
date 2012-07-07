@@ -138,6 +138,9 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
 
     /* PM System */
     pmSystem = new PMSystem(globals.value("PMs/Tabbed").toBool()); // We leave it here for future use. :)
+    pmSystem->setParent(this);
+    pmSystem->setWindowFlags(Qt::Window);
+
     connect(this, SIGNAL(destroyed()), pmSystem, SLOT(deleteLater()));
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
     connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
