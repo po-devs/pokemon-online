@@ -63,7 +63,10 @@ void MainWindow::on_done_clicked()
     }
 
     zip.addMemoryFile(QString("[General]\nversion=%1\nupdateId=%2\nos=%3\n").arg(version, updateId, os).toUtf8(), "update.dat");
+    zip.addMemoryFile(QString(ui->changeLog->toPlainText()).toUtf8(), "changelog.txt");
     zip.writeArchive();
+
+    statusBar()->showMessage(QString("File %1 created!").arg(zipFile));
 }
 
 MainWindow::~MainWindow()
