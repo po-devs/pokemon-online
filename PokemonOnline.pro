@@ -30,9 +30,12 @@ CONFIG(po_client) | CONFIG(po_server) {
     SUBDIRS += src/PokemonInfo
 }
 
+CONFIG(po_client) | CONFIG(po_serverplugins) {
+    SUBDIRS += src/BattleManager
+}
+
 CONFIG(po_client) {
-    SUBDIRS += src/BattleManager \
-               src/Teambuilder \
+    SUBDIRS += src/Teambuilder \
                src/MoveMachine
 }
 
@@ -51,7 +54,6 @@ CONFIG(po_server) {
 CONFIG(po_serverplugins) {
     SUBDIRS += src/UsageStatistics \
                src/StatsExtracter \
-               src/BattleManager \
                src/BattleLogs
 }
 
@@ -70,7 +72,5 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_nl.ts \
     src/trans/translation_pt-br.ts \
     src/trans/translation_zh-cn.ts
-
-macx:QMAKE_CC=echo
 
 message(Following modules will be build: $$SUBDIRS)
