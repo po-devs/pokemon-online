@@ -106,13 +106,7 @@ void DownloadManager::readAvailableUpdatesFromFile()
         return;
     }
 
-    qDebug() << "doc.name " <<  doc.nodeName();
-    qDebug() << "doc.firstChild" << doc.firstChild().nodeName();
-
     QDomElement el = doc.firstChildElement("updates");
-
-    qDebug() << "element.name: " << el.nodeName();
-    qDebug() << "first update: " << el.firstChildElement("update").nodeName();
 
     el = el.firstChildElement("update");
 
@@ -136,8 +130,6 @@ void DownloadManager::readAvailableUpdatesFromFile()
 
 bool DownloadManager::isValidUpdateElement(const QDomElement &el)
 {
-    qDebug() << "calling valid element";
-
     if (!el.hasAttribute("updateIdFrom") || !el.hasAttribute("os")) {
         return false;
     }
@@ -158,8 +150,6 @@ bool DownloadManager::isValidUpdateElement(const QDomElement &el)
     if (os != "all" && os != OS) {
         return false;
     }
-
-    qDebug() << "valid element";
 
     return true;
 }
