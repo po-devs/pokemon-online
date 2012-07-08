@@ -775,8 +775,8 @@ Moves:
 --%8 - %12 PP</source>
         <translation type="unfinished">%1 niv %2
 
-Objet:%3
-Cap. Spé:%4
+Objet: %3
+Cap. Spé: %4
 
 Attaques:
 --%5 - %9 PP
