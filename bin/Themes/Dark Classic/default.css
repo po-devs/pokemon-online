@@ -66,6 +66,16 @@ Menu #menuButtons {
 	background: #111b25;
 }
 
+Menu #updateLabel {
+    color: white;
+    font-size: 14;
+    font-weight: bold;
+}
+
+Menu #updateContainer QGroupBox::title {
+    color: white;
+}
+
 /********** ServerChoice ***************************/
 
 ServerChoice QWidget#serverChoiceFrame {
