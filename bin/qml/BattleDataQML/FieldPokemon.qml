@@ -46,8 +46,8 @@ Item {
 
     ProgressBar {
         parent: woof.parent
-        x: woof.x
-        y: woof.y - 30;
+        anchors.horizontalCenter: woof.horizontalCenter
+        y: woof.y - 10;
     }
 
     Image {
