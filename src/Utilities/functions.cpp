@@ -145,3 +145,38 @@ QString removeTrollCharacters(const QString& s)
 
     return result;
 }
+
+void removeFolder(const QString &path)
+{
+    QDir d(path);
+
+    QStringList files = d.entryList(QDir::Files | QDir::Hidden | QDir::System);
+
+    foreach(QString file, files) {
+        d.remove(file);
+    }
+
+    QStringList dirs = d.entryList(QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot);
+
+    foreach(QString dir, dirs) {
+        removeFolder(d.absoluteFilePath(dir));
+    }
+
+    d.rmdir(d.absolutePath());
+}
+
+
+bool testWritable(const QString &f)
+{
+    QString path = f.isEmpty() ? QString("tmp%1").arg(rand()) : f;
+
+    QFile w(path);
+
+    if (!w.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+
+    w.remove();
+
+    return true;
+}

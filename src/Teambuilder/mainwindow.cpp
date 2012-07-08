@@ -277,6 +277,7 @@ void MainEngine::launchMenu(bool first)
     connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
+    connect(menu, SIGNAL(downloadUpdateRequested()), &downloader, SLOT(downloadUpdate()));
 }
 
 void MainEngine::launchCredits()
