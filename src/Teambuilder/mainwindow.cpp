@@ -87,6 +87,7 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     loadStyleSheet();
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
+    connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), SLOT(changeLogReady(QString,bool)));
     downloader.loadUpdatesAvailable();
 
     launchMenu(true);
