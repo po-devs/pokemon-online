@@ -86,10 +86,8 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
-    DownloadManager *d = new DownloadManager(this);
-
-    connect(d, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
-    d->loadUpdatesAvailable();
+    connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
+    downloader.loadUpdatesAvailable();
 
     launchMenu(true);
 }
@@ -108,10 +106,17 @@ MainEngine::~MainEngine()
 
 void MainEngine::updateDataReady(const QString &data, bool error)
 {
-    (void) error;
     updateData = data;
 
-    emit updateDataLoaded(data);
+    if (!error) {
+        downloader.loadChangelog();
+    }
+}
+
+void MainEngine::changeLogReady(const QString &data, bool error)
+{
+    (void) error;
+    changeLog = data;
 }
 
 TeamHolder* MainEngine::trainerTeam(int spot)
@@ -239,7 +244,7 @@ void MainEngine::routine(CentralWidgetInterface *w)
 
 void MainEngine::launchMenu(bool first)
 {
-    Menu *menu = new Menu(trainerTeam(freespot), this);
+    Menu *menu = new Menu(trainerTeam(freespot));
     if (first) {
         menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();
@@ -257,6 +262,14 @@ void MainEngine::launchMenu(bool first)
 
     if (updateData.length() > 0) {
         menu->setUpdateData(updateData);
+    } else {
+        connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), menu, SLOT(setUpdateData(QString)));
+    }
+
+    if (changeLog.length() > 0) {
+        menu->setChangeLogData(changeLog);
+    } else {
+        connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));

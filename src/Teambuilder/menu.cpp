@@ -8,7 +8,7 @@
 
 static bool menuLoaded = false;
 
-Menu::Menu(TeamHolder *t, MainEngine *w) :
+Menu::Menu(TeamHolder *t) :
     ui(new Ui::Menu), team(t)
 {
     ui->setupUi(this);
@@ -22,8 +22,6 @@ Menu::Menu(TeamHolder *t, MainEngine *w) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
-
-    connect(w, SIGNAL(updateDataLoaded(QString)), SLOT(setUpdateData(QString)));
 
     if (!menuLoaded) {
         loadSettings(this);
@@ -50,6 +48,11 @@ void Menu::setUpdateData(const QString &data)
     ui->updateLabel->setText(data);
     ui->changeLog->setText(tr("Loading changelog..."));
     ui->updateContainer->show();
+}
+
+void Menu::setChangeLogData(const QString &data)
+{
+    ui->changeLog->setText(data);
 }
 
 void Menu::on_updateButton_clicked()
