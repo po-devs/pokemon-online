@@ -44,6 +44,22 @@ Zip& Zip::create(const QString &path)
     return *this;
 }
 
+Zip& Zip::open(const QString &path)
+{
+    close();
+
+    int err=0;
+    archive = zip_open(path.toStdString().c_str(), 0, &err);
+
+    if (!archive) {
+        char buffer[1024];
+        zip_error_to_str(buffer, sizeof(buffer), err, errno);
+        errorStr = QString(buffer);
+    }
+
+    return *this;
+}
+
 void Zip::writeArchive()
 {
     close();
