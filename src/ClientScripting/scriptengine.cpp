@@ -15,6 +15,10 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
 
+    QScriptValue channelfun = myengine.newFunction(channelNames);
+    channelfun.setData(sys.property("client"));
+    myengine.globalObject().property("client").setProperty("channelNames", channelfun);
+
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
     changeScript(ScriptUtils::loadScripts());
 
@@ -87,6 +91,18 @@ void ScriptEngine::changeWarnings(bool warn)
 
     printLine(QString("Warnings %1 be displayed.").arg(bts));
     warnings = warn;
+}
+
+typedef QHash<qint32, QString> hash32string;
+Q_DECLARE_METATYPE(hash32string)
+
+QScriptValue ScriptEngine::channelNames(QScriptContext *context, QScriptEngine *engine)
+{
+    (void) context;
+
+    ClientInterface *c = dynamic_cast<ClientInterface*>(engine->globalObject().property("client").toQObject());
+
+    return qScriptValueFromValue(engine, c->getChannelNames());
 }
 
 QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *engine)

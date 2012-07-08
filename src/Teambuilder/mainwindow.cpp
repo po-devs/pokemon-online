@@ -13,6 +13,7 @@
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
+#include "downloadmanager.h"
 
 MainEngine::MainEngine() : displayer(0), freespot(0)
 {
@@ -41,6 +42,7 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
 #endif
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
+    setDefaultValue(s, "Battle/OldWindow", true);
     setDefaultValue(s, "Client/EnableLadder", true);
     setDefaultValue(s, "Client/SortPlayersByTier", false);
     setDefaultValue(s, "Client/SortChannelsByName", true);
@@ -84,6 +86,10 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
+    connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
+    connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), SLOT(changeLogReady(QString,bool)));
+    downloader.loadUpdatesAvailable();
+
     launchMenu(true);
 }
 
@@ -97,6 +103,21 @@ MainEngine::~MainEngine()
         delete h;
     }
     m_teams.clear();
+}
+
+void MainEngine::updateDataReady(const QString &data, bool error)
+{
+    updateData = data;
+
+    if (!error) {
+        downloader.loadChangelog();
+    }
+}
+
+void MainEngine::changeLogReady(const QString &data, bool error)
+{
+    (void) error;
+    changeLog = data;
 }
 
 TeamHolder* MainEngine::trainerTeam(int spot)
@@ -240,10 +261,23 @@ void MainEngine::launchMenu(bool first)
         routine(menu);
     }
 
+    if (updateData.length() > 0) {
+        menu->setUpdateData(updateData);
+    } else {
+        connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), menu, SLOT(setUpdateData(QString)));
+    }
+
+    if (changeLog.length() > 0) {
+        menu->setChangeLogData(changeLog);
+    } else {
+        connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
+    }
+
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
+    connect(menu, SIGNAL(downloadUpdateRequested()), &downloader, SLOT(downloadUpdate()));
 }
 
 void MainEngine::launchCredits()

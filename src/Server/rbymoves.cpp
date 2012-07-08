@@ -291,7 +291,8 @@ struct RBYDig : public MM
         fturn(b,s).add(TM::UsePP);
         fturn(b,s).add(TM::NoChoice);
         addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
-        addFunction(turn(b,s), "UponAttackSucessful", "Dig", &uas2);
+        addFunction(turn(b,s), "UponAttackSuccessful", "Dig", &uas2);
+        turn(b,s)["AutomaticMove"] = poke(b,s).value("ChargeMove");
         initMove(poke(b,s).value("ChargeMove").toInt(), b.gen(), tmove(b,s));
     }
 

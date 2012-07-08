@@ -19,6 +19,7 @@
 #include <CoreFoundation/CFBundle.h>
 #endif
 
+#include "../Shared/config.h"
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -59,6 +60,38 @@ int main(int argc, char *argv[])
     QDir::setCurrent(PO_DATA_REPO);
 #endif
 
+    bool quit = false;
+
+    for (int i = 0; i < argc; i++) {
+        /* Update parameter: move file from one place to another. Called by commandline on windows
+          when you need admin rights to update the auto updater for example */
+        if (strcmp(argv[i], "-update") == 0) {
+            quit = true;
+        }
+
+        if (i + 2 >= argc) {
+            break;
+        }
+
+        QString dest = QUrl::fromEncoded(argv[++i]).toString();
+        QString src = QUrl::fromEncoded(argv[++i]).toString();
+
+        /* Todo: check if those 3 lines are necessary ? */
+        QFile s (dest);
+        s.remove();
+        s.close();
+
+        QFile f (src);
+        if (!f.rename(dest)) {
+            //QMessageBox::critical(NULL, tr("Error during PO update"), tr("Couldn't update file %1.").arg(rel));
+            qCritical() << QString("Couldn't update file %1.").arg(dest);
+        }
+    }
+
+    if (quit) {
+        return 0;
+    }
+
     srand(time(NULL));
     try
     {
@@ -72,11 +105,19 @@ int main(int argc, char *argv[])
         /* Names to use later for QSettings */
         QCoreApplication::setApplicationName("Pokemon-Online");
         QCoreApplication::setOrganizationName("Dreambelievers");
-        QCoreApplication::setApplicationVersion("2.0.00");
+        QCoreApplication::setApplicationVersion(VERSION);
 
         QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 
         QSettings settings;
+
+        if (settings.value("Updates/Ready").toBool()) {
+            /* Check Updates/ReadyFor, match it with current updateId,
+              then if true then set Updates/Ready to false and spawn the
+              auto updater with the correct target directory and quit */
+            //Vals: Updates/Ready, Updates/ReadyFor, Updates/ReadyTarget (directory with updates)
+        }
+
         if (settings.value("language").isNull()) {
             settings.setValue("language", QLocale::system().name().section('_', 0, 0));
         }
