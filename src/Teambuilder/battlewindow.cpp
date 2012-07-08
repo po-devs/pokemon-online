@@ -775,7 +775,7 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     QSettings s;
 
     /* Old buttons look so much better on New Battle window! */
-    bool old = s.value("Battle/OldAttackButtons").toBool() || !s.value("Battle/OldWindow").toBool();
+    bool old = s.value("Battle/OldAttackButtons").toBool() || !s.value("Battle/OldWindow", true).toBool();
 
     if (!old) {
         l->setSpacing(2);

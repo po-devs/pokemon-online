@@ -45,12 +45,15 @@ public slots:
     void changeStyle();
     void showReplay(QString);
     void closeTab();
+signals:
+    void updateDataLoaded(const QString &data);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
     void changeTheme();
-
     void changeUserThemeFolder();
+
+    void updateDataReady(const QString &data, bool error);
 private:
     void rebuildThemeMenu();
 
@@ -74,6 +77,12 @@ private:
     QVector <TeamHolder*> trash;
 
     void clearTrash();
+
+    //***************//
+    //* Update Data *//
+    //***************//
+    QString updateData;
+    QString changeLog;
 public:
     TeamHolder *trainerTeam();
     ThemeAccessor *theme();

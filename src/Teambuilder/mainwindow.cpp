@@ -13,6 +13,7 @@
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
+#include "downloadmanager.h"
 
 MainEngine::MainEngine() : displayer(0), freespot(0)
 {
@@ -85,6 +86,11 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
+    DownloadManager *d = new DownloadManager(this);
+
+    connect(d, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
+    d->loadUpdatesAvailable();
+
     launchMenu(true);
 }
 
@@ -98,6 +104,14 @@ MainEngine::~MainEngine()
         delete h;
     }
     m_teams.clear();
+}
+
+void MainEngine::updateDataReady(const QString &data, bool error)
+{
+    (void) error;
+    updateData = data;
+
+    emit updateDataLoaded(data);
 }
 
 TeamHolder* MainEngine::trainerTeam(int spot)
@@ -225,7 +239,7 @@ void MainEngine::routine(CentralWidgetInterface *w)
 
 void MainEngine::launchMenu(bool first)
 {
-    Menu *menu = new Menu(trainerTeam(freespot));
+    Menu *menu = new Menu(trainerTeam(freespot), this);
     if (first) {
         menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();
@@ -239,6 +253,10 @@ void MainEngine::launchMenu(bool first)
         displayer->show();
     } else {
         routine(menu);
+    }
+
+    if (updateData.length() > 0) {
+        menu->setUpdateData(updateData);
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
