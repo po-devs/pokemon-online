@@ -1600,7 +1600,7 @@ void PokemonInfo::makeDataConsistent()
         for (int gen = GEN_MIN; gen <= GenInfo::GenMax(); gen++) {
             int i = gen-GEN_MIN;
 
-            if (!Exists(id, gen))
+            if (!Exists(id, Pokemon::gen(gen, GenInfo::NumberOfSubgens(gen))))
                 continue;
 
             for (int j = 0; j < 3; j++) {
