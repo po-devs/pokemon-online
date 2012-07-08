@@ -13,6 +13,7 @@
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
+#include "downloadmanager.h"
 
 MainEngine::MainEngine() : displayer(0), freespot(0)
 {
@@ -85,6 +86,10 @@ MainEngine::MainEngine() : displayer(0), freespot(0)
     QApplication::setStyle(s.value("application_style", "plastique").toString());
     loadStyleSheet();
 
+    connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
+    connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), SLOT(changeLogReady(QString,bool)));
+    downloader.loadUpdatesAvailable();
+
     launchMenu(true);
 }
 
@@ -98,6 +103,21 @@ MainEngine::~MainEngine()
         delete h;
     }
     m_teams.clear();
+}
+
+void MainEngine::updateDataReady(const QString &data, bool error)
+{
+    updateData = data;
+
+    if (!error) {
+        downloader.loadChangelog();
+    }
+}
+
+void MainEngine::changeLogReady(const QString &data, bool error)
+{
+    (void) error;
+    changeLog = data;
 }
 
 TeamHolder* MainEngine::trainerTeam(int spot)
@@ -239,6 +259,18 @@ void MainEngine::launchMenu(bool first)
         displayer->show();
     } else {
         routine(menu);
+    }
+
+    if (updateData.length() > 0) {
+        menu->setUpdateData(updateData);
+    } else {
+        connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), menu, SLOT(setUpdateData(QString)));
+    }
+
+    if (changeLog.length() > 0) {
+        menu->setChangeLogData(changeLog);
+    } else {
+        connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));

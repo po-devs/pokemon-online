@@ -1065,6 +1065,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
         }
+        if (pokeid.isForme()) {
+            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back, false);
+        }
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
         } else if (gen.num == 2) {
@@ -1081,13 +1084,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen.num == 4 && shiney) {
             return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+        } else if (gen.num == 4) {
+            return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         } else if (gen.num == 5) {
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
             } else if (shiney) {
                 return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
-            } else if (pokeid.subnum != 0) {
-                return PokemonInfo::Picture(OriginalForme(pokeid), 5, Pokemon::Male, false, back);
             }
         }
         return ret;
@@ -1597,7 +1600,7 @@ void PokemonInfo::makeDataConsistent()
         for (int gen = GEN_MIN; gen <= GenInfo::GenMax(); gen++) {
             int i = gen-GEN_MIN;
 
-            if (!Exists(id, gen))
+            if (!Exists(id, Pokemon::gen(gen, GenInfo::NumberOfSubgens(gen))))
                 continue;
 
             for (int j = 0; j < 3; j++) {
@@ -1801,7 +1804,7 @@ void MoveInfo::loadDetails()
 
 QString MoveInfo::Name(int movenum)
 {
-    return Exists(movenum, GenInfo::GenMax()) ? m_Names[movenum] : m_Names[0];
+    return m_Names.value(movenum, m_Names.value(0));
 }
 
 #define move_find(var, mv, g) do {\

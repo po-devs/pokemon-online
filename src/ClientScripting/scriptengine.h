@@ -91,6 +91,8 @@ public:
     Q_INVOKABLE QString gender(int genderNum);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
+    /* Qt doesn't convert registered types automatically, have to do it manually */
+    static QScriptValue channelNames(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE QString sha1(const QString &text);
     Q_INVOKABLE QString md4(const QString &text);

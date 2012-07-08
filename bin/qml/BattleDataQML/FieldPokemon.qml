@@ -46,8 +46,8 @@ Item {
 
     ProgressBar {
         parent: woof.parent
-        x: woof.x
-        y: woof.y - 30;
+        anchors.horizontalCenter: woof.horizontalCenter
+        y: woof.y - 10;
     }
 
     Image {
@@ -70,28 +70,22 @@ Item {
         shown: mouseArea.containsMouse
         onShownChanged: {
             if (shown) {
-                var s = pokemon.nick;
-                s += "<pre>";
+                var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
+                if (pokemon.gender == 1) {
+                    s += " (M)"
+                } else if (pokemon.gender == 2) {
+                    s += " (F)"
+                }
+
+                s += "<br/><table width='100%'>";
                 var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
-                var max = 0;
                 var boost,stat,i;
 
-                for (i = 0; i < stats.length; i++) {
-                    if (stats[i].length > max) {
-                        max = stats[i].length;
-                    }
-                }
-                for (i = 0; i < stats.length; i++) {
-                    while (stats[i].length < max) {
-                        stats[i] += ".";
-                    }
-                }
-
                 for (i = 0; i < 5; i++) {
-                    s += "\n" + stats[i] + " ";
+                    s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
                     stat = fieldPokemon.stat(i+1);
                     boost = fieldPokemon.statBoost(i+1);
-
+                    s += "</td><td>"
                     if (stat === 0) {
                         if (boost >= 0) {
                             s += "+" + boost
@@ -104,28 +98,31 @@ Item {
                         } else {
                             s += stat
                         }
-                        if (boost >= 0) {
+                        if (boost > 0) {
                             s += "(+" + boost + ")"
-                        } else {
+                        } else if (boost < 0) {
                             s += "(" + boost + ")"
                         }
                     }
+                    s += "</td></tr>"
                 }
 
                 for (i = 5; i < 7; i++) {
                     boost = fieldPokemon.statBoost(i+1);
                     if (boost !==0) {
-                        s += "\n" + stats[i] + " ";
+                        s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
 
                         if (boost > 0) {
                             s += "+" + boost;
                         } else if (boost < 0) {
                             s += +boost;
                         }
+
+                        s += "</td></tr>"
                     }
                 }
 
-                s += "</pre>"
+                s += "</table>"
 
                 text = s;
             }

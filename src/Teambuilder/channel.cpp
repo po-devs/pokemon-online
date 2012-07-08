@@ -601,7 +601,7 @@ QString Channel::addChannelLinks(const QString &line2)
         ++pos;
         QString longestName;
         QString longestChannelName;
-        foreach(QString name, client->channelNames)
+        foreach(QString name, client->m_channelNames)
         {
             QString channelName = line.midRef(pos, name.length()).toString();
             bool res=channelName.toLower() == name.toLower();

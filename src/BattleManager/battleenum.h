@@ -59,7 +59,7 @@ enum /* class */ BattleEnum
     MoveChange,
     RearrangeTeam,
     ChoiceSelection,
-    ChoiceCanceled,
+    ChoiceCancelled,
     Variation,
     DynamicStats,
     PrintHtml,
