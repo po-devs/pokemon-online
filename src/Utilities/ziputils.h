@@ -17,6 +17,7 @@ public:
     ~Zip();
 
     Zip &create(const QString &path);
+    Zip &open(const QString &path);
     void addFile(const QString &path, const QString &zipPath=QString());
     void addMemoryFile(const QByteArray &data, const QString &zipPath);
     void writeArchive();
@@ -30,4 +31,3 @@ private:
 };
 
 #endif // ZIPUTILS_H
-
