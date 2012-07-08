@@ -206,6 +206,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerTempBanned(int,int,int)), SLOT(playerTempBanned(int,int,int)));
     connect(relay, SIGNAL(PMReceived(int,QString)), SLOT(PMReceived(int,QString)));
     connect(relay, SIGNAL(awayChanged(int, bool)), SLOT(awayChanged(int, bool)));
+    connect(relay, SIGNAL(ladderChanged(int,bool)), SLOT(ladderChanged(int,bool)));
     connect(relay, SIGNAL(spectatedBattle(int,BattleConfiguration)), SLOT(watchBattle(int,BattleConfiguration)));
     connect(relay, SIGNAL(spectatingBattleMessage(int,QByteArray)), SLOT(spectatingBattleMessage(int , QByteArray)));
     connect(relay, SIGNAL(spectatingBattleFinished(int)), SLOT(stopWatching(int)));
@@ -2075,6 +2076,15 @@ void Client::awayChanged(int id, bool away)
 
     playerInfo(id).changeState(PlayerInfo::Away, away);
     updateState(id);
+}
+
+void Client::ladderChanged(int id, bool ladder)
+{
+    if (player(id).flags[PlayerInfo::LadderEnabled] == ladder) {
+        return;
+    }
+
+    playerInfo(id).changeState(PlayerInfo::LadderEnabled, ladder);
 }
 
 bool Client::busy() const
