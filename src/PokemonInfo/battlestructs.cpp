@@ -473,7 +473,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
 
         QList<int> moves = g.moves().toList();
         QList<int> movesTaken;
-        bool off = false;
+        int off = false;
         for (int i = 0; i < 4; i++) {
             /* If there are no other moves possible,
                sets the remaining moves to 0 and exit the loop
@@ -485,16 +485,20 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
                 }
                 break;
             }
-            while(1) {
+            int count = 0;
+            while(++count) {
                 int movenum = moves[true_rand()%moves.size()];
                 if (movesTaken.contains(movenum)) {
                     continue;
                 }
                 if (MoveInfo::Power(movenum, gen) > 0 && movenum != Move::NaturalGift && movenum != Move::Snore && movenum != Move::Fling
                         && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::SynchroNoise && movenum != Move::FalseSwipe
-                        && movenum != Move::Feint)
-                    off = true;
-                if(i == 3 && !off) {
+                        && movenum != Move::Feint) {
+                    if (count > 4 || MoveInfo::Power(movenum, gen) > 50) {
+                        off++;
+                    }
+                }
+                if (i == 3 && ((count <= 6 && off >= 2) || (count > 6 && off > 0))) {
                     continue;
                 }
                 movesTaken.push_back(movenum);

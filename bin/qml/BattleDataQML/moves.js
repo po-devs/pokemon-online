@@ -18,6 +18,9 @@ effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
 effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
 
+effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
+
+
 var params = {
 };
 
@@ -37,6 +40,9 @@ params[BattleData.Spikes] = {"image":"spikes.png",
     "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":55, "z":0}, "controlY":80},
                {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":65, "z":0}, "controlY":80},
                {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
+
+params[BattleData.Protect] = {"color": "#a8a878"}
+params[BattleData.Detect] = {"color": "#c03028"}
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);

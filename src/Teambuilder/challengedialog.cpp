@@ -63,7 +63,7 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     int cpt = 0;
     tierGroup = new QButtonGroup(this);
     foreach(QString s, info.ratings.keys()) {
-        TierRatingButton *b = new TierRatingButton(s, info.ratings[s]);
+        TierRatingButton *b = new TierRatingButton(s, info.flags[PlayerInfo::LadderEnabled] ? info.ratings[s] : -1);
         b->setProperty("tier", s);
 
         if (cpt == 0) {

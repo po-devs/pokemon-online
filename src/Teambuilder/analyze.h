@@ -47,7 +47,7 @@ public:
     void sendTeam(const TeamHolder & team);
     void sendBattleResult(int id, int result);
     bool isConnected() const;
-    void goAway(bool away);
+
     QString getIp() const;
     quint32 getCommandCount() const {return commandCount;}
     void disconnectFromHost();
@@ -104,6 +104,7 @@ signals:
     void serverReceived(const ServerInfo &info);
     void PMReceived(int id, const QString &mess);
     void awayChanged(int id, bool away);
+    void ladderChanged(int id, bool ladder);
     void tierListReceived(const QByteArray &tl);
     void announcement(const QString &announcement);
     /* From the control panel */

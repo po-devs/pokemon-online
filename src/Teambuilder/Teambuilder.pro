@@ -61,7 +61,8 @@ SOURCES += main.cpp \
     serverchoicemodel.cpp \
     mainwidget.cpp \
     loadwindow.cpp \
-    loadline.cpp
+    loadline.cpp \
+    downloadmanager.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -137,7 +138,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     serverchoicemodel.h \
     mainwidget.h \
     loadwindow.h \
-    loadline.h
+    loadline.h \
+    downloadmanager.h
 
 LIBS += -L../../bin \
     -lpokemonlib \

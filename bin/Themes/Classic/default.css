@@ -65,6 +65,12 @@ Menu #menuButtons {
 	background: #111b25;
 }
 
+Menu #updateLabel {
+    color: black;
+    font-size: 14;
+    font-weight: bold;
+}
+
 /********** ServerChoice ***************************/
 
 ServerChoice QWidget#serverChoiceFrame {

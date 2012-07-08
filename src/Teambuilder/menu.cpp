@@ -8,12 +8,12 @@
 
 static bool menuLoaded = false;
 
-Menu::Menu(TeamHolder *t, QWidget *parent) :
-    QFrame(parent),
+Menu::Menu(TeamHolder *t) :
     ui(new Ui::Menu), team(t)
 {
     ui->setupUi(this);
     ui->appLogo->setPixmap(Theme::Sprite("logo"));
+    ui->updateContainer->hide();
 
     setWindowTitle(tr("Menu"));
 
@@ -21,6 +21,7 @@ Menu::Menu(TeamHolder *t, QWidget *parent) :
     connect (ui->goOnline, SIGNAL(clicked()), SIGNAL(goToOnline()));
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
+    connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
 
     if (!menuLoaded) {
         loadSettings(this);
@@ -40,6 +41,24 @@ Menu::~Menu()
     }
 
     delete ui;
+}
+
+void Menu::setUpdateData(const QString &data)
+{
+    ui->updateLabel->setText(data);
+    ui->changeLog->setText(tr("Loading changelog..."));
+    ui->updateContainer->show();
+}
+
+void Menu::setChangeLogData(const QString &data)
+{
+    ui->changeLog->setText(data);
+}
+
+void Menu::on_updateButton_clicked()
+{
+    ui->updateButton->setText(tr("Downloading update..."));
+    ui->updateButton->setEnabled(false);
 }
 
 bool Menu::event(QEvent *e)
