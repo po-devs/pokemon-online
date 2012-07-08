@@ -177,4 +177,10 @@ void unpack(__UtilitiesParam<0>, It, Function function, Params&&...params) {
 QString appDataPath(const QString &subfolder, bool createFolder=false);
 QString removeTrollCharacters(const QString& s);
 
+/* Removes a folder an alll the files in it */
+void removeFolder(const QString &folder);
+
+/* Tests if the given file is writable */
+bool testWritable(const QString &f= QString());
+
 #endif // FUNCTIONS_H

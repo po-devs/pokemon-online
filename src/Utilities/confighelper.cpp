@@ -89,6 +89,7 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
         return internalWidget;
     } else if (!internalWidget) {
         QLabel *ret = new QLabel(description);
+        ret->setOpenExternalLinks(true);
         ret->setWordWrap(true);
         return ret;
     } else {

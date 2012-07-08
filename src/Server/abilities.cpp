@@ -1408,9 +1408,9 @@ struct AMCompetitiveSpirit : public AM
     }
 };
 
-struct AMEccentric : public AM
+struct AMImposter : public AM
 {
-    AMEccentric() {
+    AMImposter() {
         functions["UponSetup"] = &us;
     }
 
@@ -1430,13 +1430,16 @@ struct AMEccentric : public AM
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
-        if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
-            num = Pokemon::Giratina;
-        if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
-            num.subnum = ItemInfo::PlateType(b.poke(s).item());
+
+        if (b.gen() <= 4) {
+            if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+                num = Pokemon::Giratina;
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+                num.subnum = ItemInfo::PlateType(b.poke(s).item());
+            }
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
+                num.subnum = ItemInfo::DriveForme(b.poke(s).item());
         }
-        if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
-            num.subnum = ItemInfo::DriveForme(b.poke(s).item());
 
         b.sendAbMessage(81,0,s,s,0,num.pokenum);
 
@@ -1578,10 +1581,18 @@ struct AMMagicMirror : public AM
 
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
+
+        bool hadMoved = fturn(b,s).contains(TM::HasMoved);
+
         turn(b,target)["Target"] = s;
         b.battleMemory()["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
         b.battleMemory().remove("CoatingAttackNow");
+
+        /* Magic mirror shouldn't cancel the attack */
+        if (!hadMoved) {
+            fturn(b,s).remove(TM::HasMoved);
+        }
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
@@ -1990,7 +2001,7 @@ void AbilityEffect::init()
     REGISTER_AB(78, WickedThief);
     REGISTER_AB(79, Encourage);
     REGISTER_AB(80, CompetitiveSpirit);
-    REGISTER_AB(81, Eccentric);
+    REGISTER_AB(81, Imposter);
     REGISTER_AB(82, MischievousHeart);
     REGISTER_AB(83, MultiScale);
     REGISTER_AB(84, HeatRampage);

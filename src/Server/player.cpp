@@ -947,7 +947,7 @@ int Player::id() const
 
 bool Player::ladder() const
 {
-    return spec()[PlayerFlags::LadderEnabled];
+    return state()[PlayerFlags::LadderEnabled];
 }
 
 void Player::logout()
