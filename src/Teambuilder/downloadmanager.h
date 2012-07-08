@@ -20,12 +20,14 @@ signals:
     void changeLogAvailable(const QString, bool error);
 private slots:
     void onUpdateFileDownloaded();
+    void onChangeLogDownloaded();
 private:
     QNetworkAccessManager manager;
     QHash<QNetworkReply*, QPair<QObject*, const char*> > replies;
 
     void download(const QString &url, QObject *target, const char *slot);
     void readAvailableUpdatesFromFile();
+    void readChangeLogFromFile();
     void loadCurrentUpdateId();
     bool isValidUpdateElement(const QDomElement &el);
 

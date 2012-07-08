@@ -33,6 +33,17 @@ void DownloadManager::loadUpdatesAvailable()
     }
 }
 
+void DownloadManager::loadChangelog()
+{
+    QSettings settings;
+
+    if (settings.value("Updates/ChangeLogDownloaded") != changeLogUrl) {
+        download(changeLogUrl, this, SLOT(onChangeLogDownloaded()));
+    } else {
+        readChangeLogFromFile();
+    }
+}
+
 void DownloadManager::download(const QString &url, QObject *target, const char *slot)
 {
     QNetworkRequest request;
@@ -77,6 +88,44 @@ void DownloadManager::onUpdateFileDownloaded()
 
     readAvailableUpdatesFromFile();
 }
+
+
+
+void DownloadManager::onChangeLogDownloaded()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply*> (sender());
+
+    if (!reply) {
+        return;
+    }
+
+    reply->deleteLater();
+
+    if (reply->error()) {
+        emit changeLogAvailable(reply->errorString(), true);
+        return;
+    }
+
+    QFile out(appDataPath("Updates/", true) + "changelog.txt");
+    out.open(QIODevice::WriteOnly);
+
+    if (!out.isOpen()) {
+        /* Error while downloading */
+        emit updatesAvailable(tr("Impossible to load changelog: impossible to write to %1.").arg(appDataPath("Updates/")+"changelog.txt"), true);
+        return;
+    }
+
+    QByteArray response = reply->readAll();
+
+    out.write(response);
+    out.close();
+
+    QSettings settings;
+    settings.setValue("Updates/ChangeLogDownloaded", changeLogUrl);
+
+    readChangeLogFromFile();
+}
+
 
 void DownloadManager::loadCurrentUpdateId()
 {
@@ -126,6 +175,19 @@ void DownloadManager::readAvailableUpdatesFromFile()
             emit updatesAvailable(tr("An update is available!"), false);
         }
     }
+}
+
+void DownloadManager::readChangeLogFromFile()
+{
+    QFile in(appDataPath("Updates/")+"changelog.txt");
+
+    if (!in.exists()) {
+        return;
+    }
+
+    in.open(QIODevice::ReadOnly);
+
+    emit changeLogAvailable(QString::fromUtf8(in.readAll()), false);
 }
 
 bool DownloadManager::isValidUpdateElement(const QDomElement &el)

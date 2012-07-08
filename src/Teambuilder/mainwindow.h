@@ -5,6 +5,7 @@
 #include "engineinterface.h"
 #include "centralwidget.h"
 #include "Teambuilder/teamholder.h"
+#include "downloadmanager.h"
 
 class PluginManager;
 class MainWidget;
@@ -45,8 +46,6 @@ public slots:
     void changeStyle();
     void showReplay(QString);
     void closeTab();
-signals:
-    void updateDataLoaded(const QString &data);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -54,6 +53,7 @@ private slots:
     void changeUserThemeFolder();
 
     void updateDataReady(const QString &data, bool error);
+    void changeLogReady(const QString &data, bool error);
 private:
     void rebuildThemeMenu();
 
@@ -63,6 +63,8 @@ private:
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
     MainWidget *main;
+
+    DownloadManager downloader;
 
     QHash<int, TeamHolder *> m_teams;
 
