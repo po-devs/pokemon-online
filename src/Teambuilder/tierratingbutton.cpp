@@ -17,7 +17,11 @@ TierRatingButton::~TierRatingButton()
 
 void TierRatingButton::setRating(int rating)
 {
-    ui->rating->setText(QString::number(rating));
+    if (rating == -1) {
+        ui->rating->setText(tr("???"));
+    } else {
+        ui->rating->setText(QString::number(rating));
+    }
 }
 
 void TierRatingButton::setTier(const QString &tier)

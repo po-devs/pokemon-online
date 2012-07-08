@@ -236,6 +236,7 @@ public slots:
     void seeRanking(int);
     /* Away... */
     void awayChanged(int id, bool away);
+    void ladderChanged(int id, bool away);
     void goAway(int away);
     void goAwayB(bool away) {
         goAway(away);
