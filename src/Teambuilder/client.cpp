@@ -1719,6 +1719,10 @@ void Client::tierListReceived(const QByteArray &tl)
 
 void Client::rebuildTierMenu()
 {
+    if (!mytiermenu) {
+        return;
+    }
+
     mytiermenu->clear();
     foreach(QAction *a, mytiers) {
         a->deleteLater();
