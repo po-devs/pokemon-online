@@ -125,7 +125,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/Bonemerang.qml \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml \
     ../../bin/qml/BattleDataQML/Utilities/Tooltip.qml \
-    ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml
+    ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml \
+    ../../bin/qml/BattleDataQML/Moves/Protect.qml
 
 include(../Shared/Common.pri)
 
