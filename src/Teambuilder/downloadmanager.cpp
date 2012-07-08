@@ -27,7 +27,7 @@ void DownloadManager::loadUpdatesAvailable()
 
     /* If the update information is older than 3 days... */
     if (::time(NULL) - time > 24*3600*3) {
-        download(QString("https://github.com/coyotte508/pokemon-online/blob/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
+        download(QString("https://raw.github.com/coyotte508/pokemon-online/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
     } else {
         readAvailableUpdatesFromFile();
     }
@@ -67,8 +67,9 @@ void DownloadManager::onUpdateFileDownloaded()
         emit updatesAvailable(tr("Impossible to see available updates: impossible to write to %1.").arg(appDataPath("Updates/")+getXmlFileName()), true);
         return;
     }
+    QByteArray response = reply->readAll();
 
-    out.write(reply->readAll());
+    out.write(response);
     out.close();
 
     QSettings settings;
@@ -95,6 +96,8 @@ void DownloadManager::readAvailableUpdatesFromFile()
         return;
     }
 
+    in.open(QIODevice::ReadOnly);
+
     QString data = QString::fromUtf8(in.readAll());
 
     QDomDocument doc;
@@ -103,7 +106,15 @@ void DownloadManager::readAvailableUpdatesFromFile()
         return;
     }
 
-    QDomElement el = doc.firstChildElement("update");
+    qDebug() << "doc.name " <<  doc.nodeName();
+    qDebug() << "doc.firstChild" << doc.firstChild().nodeName();
+
+    QDomElement el = doc.firstChildElement("updates");
+
+    qDebug() << "element.name: " << el.nodeName();
+    qDebug() << "first update: " << el.firstChildElement("update").nodeName();
+
+    el = el.firstChildElement("update");
 
     while (!el.isNull() && !isValidUpdateElement(el)) {
         el = el.nextSiblingElement("update");
@@ -115,8 +126,8 @@ void DownloadManager::readAvailableUpdatesFromFile()
 
         QString versionTo = el.attribute("versionTo");
 
-        if (versionTo != VERSION) {
-            emit updatesAvailable(tr("An update to version %1 is available!"), false);
+        if (versionTo.length() > 0 &&  versionTo != VERSION) {
+            emit updatesAvailable(tr("An update to version %1 is available!").arg(versionTo), false);
         } else {
             emit updatesAvailable(tr("An update is available!"), false);
         }
@@ -125,7 +136,9 @@ void DownloadManager::readAvailableUpdatesFromFile()
 
 bool DownloadManager::isValidUpdateElement(const QDomElement &el)
 {
-    if (!el.hasAttribute("updateId") || !el.hasAttribute("os")) {
+    qDebug() << "calling valid element";
+
+    if (!el.hasAttribute("updateIdFrom") || !el.hasAttribute("os")) {
         return false;
     }
 
@@ -133,8 +146,8 @@ bool DownloadManager::isValidUpdateElement(const QDomElement &el)
 
     int minId, maxId;
 
-    minId = el.attribute("updateId").section(",", 0, 0).trimmed().toInt();
-    maxId = el.attribute("updateId").section(",", -1, -1).trimmed().toInt();
+    minId = el.attribute("updateIdFrom").section(",", 0, 0).trimmed().toInt();
+    maxId = el.attribute("updateIdFrom").section(",", -1, -1).trimmed().toInt();
 
     if (currentUpdateId < minId || currentUpdateId > maxId) {
         return false;
@@ -145,6 +158,8 @@ bool DownloadManager::isValidUpdateElement(const QDomElement &el)
     if (os != "all" && os != OS) {
         return false;
     }
+
+    qDebug() << "valid element";
 
     return true;
 }
