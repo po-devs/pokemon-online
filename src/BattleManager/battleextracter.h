@@ -138,7 +138,7 @@ protected:
     start(MoveChange, int spot; int slot; int move; bool definite) end (spot, slot, move, definite)
     start(RearrangeTeam, int player; std::shared_ptr<ShallowShownTeam>* team) end (player, team)
     start(ChoiceSelection, int player) end (player)
-    start(ChoiceCanceled, int player) end (player)
+    start(ChoiceCancelled, int player) end (player)
     start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
     start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
     start(PrintHtml, string_ptr data) end(data)
@@ -249,7 +249,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(MoveChange);
     addCallback(RearrangeTeam);
     addCallback(ChoiceSelection);
-    addCallback(ChoiceCanceled);
+    addCallback(ChoiceCancelled);
     addCallback(Variation);
     addCallback(DynamicStats);
     addCallback(PrintHtml);

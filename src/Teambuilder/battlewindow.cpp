@@ -630,7 +630,7 @@ void BattleWindow::onBattleEnd(int res, int winner)
     BaseBattleWindow::onBattleEnd(res, winner);
 }
 
-void BattleWindow::onChoiceCanceled(int) {
+void BattleWindow::onChoiceCancelled(int) {
     cancel();
 }
 

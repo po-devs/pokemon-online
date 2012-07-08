@@ -50,10 +50,25 @@ public:
     }
 
     bool shouldContinuePeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
-    bool shouldContinuePeeking(param<BattleEnum::BlankMessage>) {return false;}
-    bool shouldContinuePeeking(param<BattleEnum::OfferChoice>) {return false;}
-    bool shouldContinuePeeking(param<BattleEnum::ClockStart>) {return false;}
-    bool shouldContinuePeeking(param<BattleEnum::ClockStop>) {return false;}
+    bool shouldContinuePeeking(param<BattleEnum::BlankMessage>) {
+        return false;
+    }
+    bool shouldContinuePeeking(param<BattleEnum::OfferChoice>, int __attribute__((unused)) player, std::shared_ptr<BattleChoices>__attribute__((unused)) *  choice) {
+        return false;
+    }
+    bool shouldContinuePeeking(param<BattleEnum::ClockStart>, int __attribute__((unused)) player, int __attribute__((unused)) time) {
+        return false;
+    }
+    bool shouldContinuePeeking(param<BattleEnum::ClockStop>, int __attribute__((unused)) player, int __attribute__((unused)) time) {
+        return false;
+    }
+    bool shouldContinuePeeking(param<BattleEnum::ChoiceSelection>, int __attribute__((unused)) player) {
+        return false;
+    }
+    bool shouldContinuePeeking(param<BattleEnum::ChoiceCancelled>, int __attribute__((unused)) player) {
+        return false;
+    }
+
     /* When using u-turn or baton pass, it stops at the middle. Dynamic Stats is always sent to both players though, so it unhangs both */
     bool shouldContinuePeeking(param<BattleEnum::DynamicStats>, int , std::shared_ptr<BattleStats>*) { return false;}
     /* When sending a backup with intimidate, this happens before any blank message */

@@ -121,7 +121,7 @@ protected:
     start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)
     start(RearrangeTeam, onRearrangeTeam, int player, std::shared_ptr<ShallowShownTeam>* team) end (onRearrangeTeam, player, *team->get())
     start(ChoiceSelection, onChoiceSelection, int player) end (onChoiceSelection, player)
-    start(ChoiceCanceled, onChoiceCanceled, int player) end (onChoiceCanceled, player)
+    start(ChoiceCancelled, onChoiceCancelled, int player) end (onChoiceCancelled, player)
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
@@ -194,7 +194,7 @@ protected:
     void onMoveChange(int spot, int slot, int move, bool definite);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
-    void onChoiceCanceled(int player);
+    void onChoiceCancelled(int player);
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
     void onPrintHtml(const QString &html);
