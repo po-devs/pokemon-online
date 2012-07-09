@@ -661,14 +661,8 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
-        QString end = line.right(line.length()-pos-1);
+        QString end = escapeHtml(line.right(line.length()-pos-1));
         int id = client->id(beg);
-
-        /* Messages from players from auth 3 and less have their html escaped */
-        if (id == -1 || client->auth(id) <= 3)
-            end = escapeHtml(end);
-        else
-            checkFlash(end, "<ping */ *>");
 
         if (flashing)
             checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));

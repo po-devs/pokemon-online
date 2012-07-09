@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# A script to pack data files inside .app bundle in Mac
+# Run this after compiling Teambuilder and plugins
+
+function bundle_mac_app() {
+   app=$1
+   bundle_list=$2
+   toDir=$app/Contents/Resources
+   if [ "$1" == "--skip-resources" ] || [ "$1" == "-s" ]
+   then
+       SKIP=1
+   fi
+   if [ -z "$SKIP" ]
+   then
+       if [ -z "$toDir" ] || [ ! -d "$toDir" ]
+       then
+         mkdir -p $toDir
+       fi
+
+       [ -d $toDir/Music ] && echo rm -r $toDir/Music && rm -r $toDir/Music
+       [ -d $toDir/db ] && echo rm -r $toDir/db && rm -r $toDir/db
+       [ -d $toDir/Themes ] && echo rm -r $toDir/db && rm -r $toDir/Themes
+
+       for file in $2
+       do
+           echo cp -r $file $toDir
+           cp -r $file $toDir
+       done
+   fi # end of SKIP
+
+   if [ $app = "Pokemon-Online.app" ]
+   then
+      if `which brew > /dev/null`
+      then
+         mkdir -p $app/Contents/imports/Qt/labs
+         cp -r $(brew --prefix qt)/imports/Qt/labs/particles $app/Contents/imports/Qt/labs/particles
+         cp -r $(brew --prefix qt)/imports/Qt/labs/shaders $app/Contents/imports/Qt/labs/shaders
+         mkdir -p $app/Contents/PlugIns/phonon_backend
+         cp -r $(brew --prefix qt)/plugins/phonon_backend/libphonon_qt7.dylib $app/Contents/PlugIns/phonon_backend
+      else
+         echo 'Could not find QML Plugins, new battle window does not work'
+      fi
+   fi
+}
+
+if [ -d Pokemon-Online.app ]
+then
+    bundle_mac_app Pokemon-Online.app "languages.txt trans Music db Themes qml myplugins"
+fi
+if [ -d Server.app ]
+then
+    bundle_mac_app Server.app "languages.txt serverplugins"
+fi

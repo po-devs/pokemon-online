@@ -36,7 +36,8 @@ CONFIG(po_client) | CONFIG(po_serverplugins) {
 
 CONFIG(po_client) {
     SUBDIRS += src/Teambuilder \
-               src/MoveMachine
+               src/MoveMachine \
+               src/POMaintenance
 }
 
 CONFIG(po_clientplugins) {
@@ -74,3 +75,4 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_zh-cn.ts
 
 message(Following modules will be build: $$SUBDIRS)
+

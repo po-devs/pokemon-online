@@ -7,8 +7,8 @@ import shutil
 import os.path
 import commands
 
-def find_dylibs():
-    dylibs = commands.getoutput(r"find . -iname \*.dylib").split()
+def find_dylibs(dir='.'):
+    dylibs = commands.getoutput(r"find {0} -iname \*.dylib".format(dir)).split()
     return [dylib for dylib in dylibs if not os.path.islink(dylib)]
 
 def get_shared_libs(dylib):
@@ -27,9 +27,8 @@ def install_dependency(from_path, to_path, install_name):
     command = r"install_name_tool -id {install_name} {dylib}".format(install_name=install_name, dylib=to_path)
     return commands.getstatusoutput(command)[0]
 
-def fix_linking_for_dylib(dylib):
+def fix_linking_for_dylib(dylib, FRAMEWORKS):
     LINK = "@executable_path/../Frameworks/{path}"
-    FRAMEWORKS = "../Pokemon-Online.app/Contents/Frameworks/{path}"
     ALWAYS_FIX_LIBS=["libpokemonlib.1.dylib", "libbattlelib.1.dylib", "libutilities.1.dylib"]
     shared_libs = get_shared_libs(dylib)
     for shared_lib in shared_libs:
@@ -50,13 +49,24 @@ def fix_linking_for_dylib(dylib):
         if not os.path.exists(FRAMEWORKS.format(path = library.split("/")[0])):
             new_path = FRAMEWORKS.format(path=library.split("/")[0])
             install_dependency(shared_lib, FRAMEWORKS.format(path=library.split("/")[0]), install_name)
-            fix_linking_for_dylib(new_path)
+            fix_linking_for_dylib(new_path, FRAMEWORKS)
         change_linking(dylib, shared_lib, install_name)
  
 def fix_linking():
-    dylibs =  find_dylibs()
+    FRAMEWORKS = "Pokemon-Online.app/Contents/Frameworks/{path}"
+    dylibs =  find_dylibs('Pokemon-Online.app/Contents/Resources/myplugins')
     for dylib in dylibs:
-        fix_linking_for_dylib(dylib)
+        fix_linking_for_dylib(dylib, FRAMEWORKS)
+    dylibs =  find_dylibs('Pokemon-Online.app/Contents/imports')
+    for dylib in dylibs:
+        fix_linking_for_dylib(dylib, FRAMEWORKS)
+    dylibs =  find_dylibs('Pokemon-Online.app/Contents/PlugIns')
+    for dylib in dylibs:
+        fix_linking_for_dylib(dylib, FRAMEWORKS)
+
+    dylibs =  find_dylibs('Server.app/Contents/Resources/serverplugins')
+    for dylib in dylibs:
+        fix_linking_for_dylib(dylib, "Server.app/Contents/Frameworks/{path}")
 
 if __name__ == "__main__":
     fix_linking()

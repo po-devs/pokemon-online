@@ -2,6 +2,7 @@
 #include <QFileInfo>
 #include <QStringList>
 #include <QDebug>
+#include <QDir>
 
 #include "ziputils.h"
 
@@ -48,6 +49,8 @@ Zip& Zip::open(const QString &path)
 {
     close();
 
+    qDebug() << "Zip utils: opening file " << path;
+
     int err=0;
     archive = zip_open(path.toStdString().c_str(), 0, &err);
 
@@ -55,6 +58,10 @@ Zip& Zip::open(const QString &path)
         char buffer[1024];
         zip_error_to_str(buffer, sizeof(buffer), err, errno);
         errorStr = QString(buffer);
+
+        qDebug() << "Error when opening the archive: " << errorStr;
+    } else {
+        qDebug() << "Num files: " << zip_get_num_entries(archive, 0);
     }
 
     return *this;
@@ -116,4 +123,66 @@ void Zip::addMemoryFile(const QByteArray &data, const QString &zpath)
 Zip::operator bool() const
 {
     return archive != NULL && errorStr.length() == 0;
+}
+
+bool Zip::extractTo(const QString &folder)
+{
+    QDir d(QFileInfo(folder).path());
+
+    QString baseName = QFileInfo(folder).baseName();
+
+    if (!d.mkpath(baseName)) {
+        errorStr = QString("Impossible to create path %1").arg(folder);
+        return false;
+    }
+
+    if (!d.cd(baseName)) {
+        errorStr = QString("Impossible to go in folder %1 to extract the archive.").arg(folder);
+        return false;
+    }
+
+    int numFiles = zip_get_num_entries(archive, 0);
+
+    qDebug() << "Number of files in the archive: " << numFiles;
+
+    if (numFiles == 0) {
+        errorStr = QString("Empty archive.");
+        return false;
+    }
+
+    for (int i = 0; i < numFiles; i++) {
+        QString name = zip_get_name(archive, i, 0);
+
+        qDebug() << "File " << i << ": " << name;
+
+        /* Mod.ini is already open */
+        zip_file* file = zip_fopen_index(archive, i, 0);
+
+        if (!file) {
+            errorStr = QString("Error when extracting file %1 in the archive: %2.").arg(name, zip_strerror(archive));
+            //error
+            return false;
+        }
+
+        d.mkpath(QFileInfo(name).path());
+        QFile out(d.absoluteFilePath(name));
+        out.open(QIODevice::WriteOnly);
+
+        int readsize = 0;
+
+        char buffer[4096];
+
+        do
+        {
+            out.write(buffer, readsize);
+
+            readsize = zip_fread(file, buffer, 4096);
+        } while (readsize > 0) ;
+
+        out.close();
+
+        zip_fclose(file), file = NULL;
+    }
+
+    return true;
 }
