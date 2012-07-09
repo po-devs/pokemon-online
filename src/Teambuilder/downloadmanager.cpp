@@ -60,7 +60,7 @@ bool DownloadManager::updateReady() const
 
 void DownloadManager::download(const QString &url, QObject *target, const char *slot)
 {
-    qDebug() << "Downloading update zip from " << url;
+    qDebug() << "Downloading " << url;
     QNetworkRequest request;
     request.setUrl(QUrl(url));
     request.setRawHeader("User-Agent", "Pokemon-Online Updater");
