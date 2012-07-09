@@ -192,24 +192,6 @@ void TeamBuilder::changeMod()
     currentWidget()->updateTeam();
 }
 
-static void recurseRemove(const QString &path) {
-    QDir d(path);
-
-    QStringList files = d.entryList(QDir::Files | QDir::Hidden | QDir::System);
-
-    foreach(QString file, files) {
-        d.remove(file);
-    }
-
-    QStringList dirs = d.entryList(QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot);
-
-    foreach(QString dir, dirs) {
-        recurseRemove(d.absoluteFilePath(dir));
-    }
-
-    d.rmdir(d.absolutePath());
-}
-
 void TeamBuilder::installMod()
 {
     /* Todo: thread this, and print updated status ? */
@@ -252,7 +234,7 @@ void TeamBuilder::installMod()
     //First remove the mod file if existing
     if (modDir.exists(modName)) {
         qDebug() << "Removing old mod with same name.";
-        recurseRemove(modDir.absoluteFilePath(modName));
+        removeFolder(modDir.absoluteFilePath(modName));
     }
 
     modDir.mkdir(modName);

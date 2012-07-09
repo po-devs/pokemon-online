@@ -1,10 +1,18 @@
 #include <ctime>
 #include <QNetworkReply>
 #include <QDomDocument>
+#include <QMessageBox>
 
 #include "downloadmanager.h"
 #include "../Utilities/functions.h"
 #include "../Shared/config.h"
+#include "../Utilities/ziputils.h"
+
+#ifdef __WIN32
+#include <windows.h>
+#include <windef.h>
+#include <Shellapi.h>
+#endif
 
 inline QString getXmlFileName()
 {
@@ -15,7 +23,7 @@ inline QString getXmlFileName()
 }
 
 DownloadManager::DownloadManager(QObject *parent) :
-    QObject(parent), currentUpdateId(-1)
+    QObject(parent), currentUpdateId(-1), downloading(false)
 {
 }
 
@@ -44,15 +52,21 @@ void DownloadManager::loadChangelog()
     }
 }
 
+bool DownloadManager::updateReady() const
+{
+    QSettings settings;
+    return settings.value("Updates/Ready").toBool();
+}
+
 void DownloadManager::download(const QString &url, QObject *target, const char *slot)
 {
+    qDebug() << "Downloading " << url;
     QNetworkRequest request;
     request.setUrl(QUrl(url));
     request.setRawHeader("User-Agent", "Pokemon-Online Updater");
 
     QNetworkReply* reply = manager.get(request);
     connect(reply, SIGNAL(finished()), target, slot);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(onUpdateFileDownloaded()));
 }
 
 void DownloadManager::onUpdateFileDownloaded()
@@ -89,7 +103,166 @@ void DownloadManager::onUpdateFileDownloaded()
     readAvailableUpdatesFromFile();
 }
 
+void DownloadManager::downloadUpdate()
+{
+    qDebug() << "Download update requested";
+    if (targetDownload.isNull()) {
+        QMessageBox::warning(NULL, tr("No download link found"), tr("The update data doesn't contain any valid download link!"));
+        return;
+    }
 
+    if (updateReady()) {
+        return; // No downloading the same update twice
+    }
+
+    if (downloading) {
+        return;
+    }
+
+    download(targetDownload, this, SLOT(updateDownloaded()));
+}
+
+void DownloadManager::updateDownloaded()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply*> (sender());
+
+    if (!reply) {
+        return;
+    }
+
+    reply->deleteLater();
+
+    if (updateReady()) {
+        return; //sad but necessary
+    }
+
+    if (reply->error()) {
+        QMessageBox::critical(NULL, tr("Update download failed"), reply->errorString());
+        return;
+    }
+
+    QFileInfo info(QUrl(targetDownload).toString());
+
+    qDebug() << "File: " << info.fileName();
+
+    QString path = appDataPath("Updates/", true) + info.fileName();
+
+    QFile out(path);
+    out.open(QIODevice::WriteOnly);
+
+    if (!out.isOpen()) {
+        qDebug() << "Error when writing to file " << path << "for updates.";
+        return;
+    }
+
+    QByteArray data = reply->readAll();
+
+    qDebug() << "Downloaded data size: " << data.length();
+
+    out.write(data);
+
+    if (out.error() == QFile::NoError) {
+        loadCurrentUpdateId();
+
+        QSettings settings;
+        settings.setValue("Updates/ZipDownloadedFor", currentUpdateId);
+        settings.setValue("Updates/ZipPath", path);
+        settings.setValue("Updates/ZipDownloaded", true);
+
+        QtConcurrent::run(this,&DownloadManager::extractZip, path);
+    }
+}
+
+void DownloadManager::extractZip(const QString &path)
+{
+    Zip zip;
+    if (!zip.open(path)) {
+        return;
+    }
+
+    /* The zip path, without the '.zip' at the end */
+    QString targetDir = QFileInfo(path).path() + "/" + QFileInfo(path).baseName();
+
+    removeFolder(targetDir);
+
+    if (!zip.extractTo(targetDir)) {
+        /* Error while extracting, remove the file etc. */
+        zip.close();
+
+        QSettings settings;
+        settings.setValue("Updates/ZipDownloaded", false);
+        QFile f(path);
+        f.remove();
+
+        return;
+    }
+
+    qDebug() << "Download extracted, ready to restart!";
+
+    QDir target(targetDir);
+    /* updating auto updaters from PO, because it can't update itself :o */
+    QStringList autoUpdaters = target.entryList(QStringList() << "*maintenance*", QDir::Files);
+
+    if (autoUpdaters.length() > 0) {
+        qDebug() << "Found " << autoUpdaters.length() << " auto updaters";
+        /* Todo: check if an auto updater is currently running */
+        if (testWritable(target.relativeFilePath(autoUpdaters.front()))) {
+            //QMessageBox::information(NULL, "test", QString("%1 is writable!").arg(target.relativeFilePath(autoUpdaters.front())));
+
+            foreach(QString autoUpdater, autoUpdaters) {
+                QString rel = target.relativeFilePath(autoUpdater);
+                /* Todo: check if those 3 lines are necessary ? */
+                QFile s (rel);
+                s.remove();
+                s.close();
+
+                QFile f (target.absoluteFilePath(autoUpdater));
+                if (!f.rename(QDir().absoluteFilePath(rel))) {
+                    QMessageBox::critical(NULL, tr("Error during PO update"), tr("Couldn't update file %1.").arg(rel));
+                    return;
+                }
+            }
+        } else {
+            QString params;
+            foreach(QString autoUpdater, autoUpdaters) {
+                params += "-update '" + target.relativeFilePath(autoUpdater) + "' '"
+                        + target.absoluteFilePath(autoUpdater) + "' ";
+            }
+
+#ifdef __WIN32
+            QString current = qApp->arguments().front();
+
+            //QMessageBox::information(NULL, "test", QString("Going to run %1 as admin").arg(current));
+
+            /* Spawn a new process as admin to move the files */
+            bool error = int(::ShellExecute(0, // owner window
+                           L"runas",
+                           (LPCWSTR)current.utf16(), //Current exe
+                           (LPCWSTR)params.utf16(), // params
+                           0, // directory
+                           SW_SHOWNORMAL)) <= 32;
+
+            if (error) {
+                QMessageBox::information(NULL, "Error with shell execute", "Error with shell execute");
+            }
+#else
+            //Todo: what do on mac / linux? :o
+            QMessageBox::critical(NULL, tr("Error during PO update"), tr("Couldn't update file %1.").arg(target.relativeFilePath(autoUpdaters.front())));
+            return;
+#endif
+        }
+    }
+
+    QSettings settings;
+
+    settings.setValue("Updates/ReadyFor", currentUpdateId);
+    settings.setValue("Updates/ReadyTarget", targetDir);
+    settings.setValue("Updates/Ready", true);
+
+    qDebug() << "Update preinstalled, ready to restart.";
+
+    emit readyToRestart();
+}
 
 void DownloadManager::onChangeLogDownloaded()
 {
