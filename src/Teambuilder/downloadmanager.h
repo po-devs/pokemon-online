@@ -43,6 +43,8 @@ private:
     QString changeLogUrl;
     int currentUpdateId;
 
+    bool downloading;
+
     void extractZip(const QString &path);
 };
 
