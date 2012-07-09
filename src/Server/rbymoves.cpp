@@ -171,6 +171,9 @@ struct RBYBind : public MM
             addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
             /* Bind does the same damage every turn */
             addFunction(turn(b,s), "CustomAttackingDamage", "Bind", &cad);
+            if (b.gen() <= Pokemon::gen(Gen::Yellow)) {
+                turn(b,b.opponent(s)) ["ForceBind"] = true;
+            }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
         }
     }
@@ -196,7 +199,8 @@ struct RBYBind : public MM
     static void mp(int s, int t, BS &b) {
         t = b.opponent(s);
         /* Either Bind was used last turn and is ongoing, or was used this turn (and may have finished) */
-        if (( (poke(b,s).contains("Bound") || poke(b,t).contains("BindCount")) && poke(b,t).value("LastBind").toInt() >= b.turn()-1) || poke(b,t).value("LastBind").toInt() == b.turn()) {
+        if (( (poke(b,s).contains("Bound") || poke(b,t).contains("BindCount")) && poke(b,t).value("LastBind").toInt() >= b.turn()-1) ||
+                poke(b,t).value("LastBind").toInt() == b.turn() || turn(b,s).contains("ForceBind")) {
             turn(b,s)["ImpossibleToMove"] = true;
         }
     }
@@ -216,7 +220,6 @@ struct RBYBind : public MM
             poke(b,s).remove("BindCount");
             poke(b,t).remove("Bound");
             removeFunction(poke(b,s), "TurnSettings", "Bind");
-            removeFunction(poke(b,t), "MovePossible", "Bind");
             b.sendMoveMessage(10, 1, t, type(b,s), s, move(b,s));
         }
     }
