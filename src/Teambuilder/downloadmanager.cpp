@@ -198,7 +198,7 @@ void DownloadManager::extractZip(const QString &path)
 
     QDir target(targetDir);
     /* updating auto updaters from PO, because it can't update itself :o */
-    QStringList autoUpdaters = target.entryList(QStringList() << "autoupdator*");
+    QStringList autoUpdaters = target.entryList(QStringList() << "autoupdator*", QDir::Files);
 
     if (autoUpdaters.length() > 0) {
         qDebug() << "Found " << autoUpdaters.length() << " auto updaters";
