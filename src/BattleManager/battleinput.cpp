@@ -490,7 +490,7 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
     }
     case BC::CancelMove:
     {
-        output<BattleEnum::ChoiceCanceled>(spot);
+        output<BattleEnum::ChoiceCancelled>(spot);
         break;
     }
     case BC::DynamicStats:

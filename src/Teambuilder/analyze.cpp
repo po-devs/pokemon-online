@@ -199,11 +199,6 @@ void Analyzer::CPUnban(const QString &name)
     notify(NetworkCli::CPUnban, name);
 }
 
-void Analyzer::goAway(bool away)
-{
-    notify(OptionsChange, Flags(away << 1));
-}
-
 void Analyzer::disconnectFromHost()
 {
     socket().disconnectFromHost();
@@ -496,6 +491,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         Flags f;
         in >> id >> f;
         emit awayChanged(id, f[1]);
+        emit ladderChanged(id, f[0]);
         break;
     }
     case SpectateBattle: {

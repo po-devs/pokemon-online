@@ -91,7 +91,7 @@ public:
     void onMoveChange(int spot, int slot, int move, bool definite);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
-    void onChoiceCanceled(int player);
+    void onChoiceCancelled(int player);
     void onReconnect(int player);
     void onDisconnect(int player);
     void addSpectator(bool add, int id, const QString &);
