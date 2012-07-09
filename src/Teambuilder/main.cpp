@@ -14,6 +14,12 @@
 #include <iostream>
 #include <ctime>
 
+#ifdef __WIN32
+#include <windows.h>
+#include <windef.h>
+#include <Shellapi.h>
+#endif
+
 #ifdef Q_OS_MACX
 #include <CoreFoundation/CFURL.h>
 #include <CoreFoundation/CFBundle.h>
