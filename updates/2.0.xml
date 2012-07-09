@@ -1,7 +1,7 @@
 <updates version="2.0">
   <update updateIdFrom="0" updateIdTo="1" os="all" 
   	changelog="https://raw.github.com/gist/3073864/d772c98ae74a7e298a840e709d0b5f86055fa8bb/changelog-0-to-1.txt" 
-	download="https://github.com/downloads/coyotte508/pokemon-online/update-0-to-1-all.zip"
+	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-0-to-1-all.zip"
 	versionTo="2.0.03"
   />
 </updates>
