@@ -54,13 +54,15 @@ int main(int argc, char *argv[])
     qDebug() << "ended updater";
 
     if (caller.length() > 0) {
-        QProcess p;
+        QProcess *p = new QProcess();
         if (success) {
-            p.startDetached(caller, QStringList() << "--updated");
+            p->startDetached(caller, QStringList() << "--updated");
         } else {
-            p.startDetached(caller, QStringList());
+            p->startDetached(caller, QStringList());
         }
+
+        delete p;
     }
 
-    return 0;
+    exit(0);
 }

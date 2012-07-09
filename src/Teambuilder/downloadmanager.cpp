@@ -60,6 +60,7 @@ bool DownloadManager::updateReady() const
 
 void DownloadManager::download(const QString &url, QObject *target, const char *slot)
 {
+    qDebug() << "Downloading update zip from " << url;
     QNetworkRequest request;
     request.setUrl(QUrl(url));
     request.setRawHeader("User-Agent", "Pokemon-Online Updater");
@@ -175,7 +176,9 @@ void DownloadManager::updateDownloaded()
 void DownloadManager::extractZip(const QString &path)
 {
     Zip zip;
-    zip.open(path);
+    if (!zip.open(path)) {
+        return;
+    }
 
     /* The zip path, without the '.zip' at the end */
     QString targetDir = QFileInfo(path).path() + "/" + QFileInfo(path).baseName();
