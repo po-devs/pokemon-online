@@ -12,7 +12,7 @@ static const int UPDATE_ID = 0;
 
 #ifdef Q_OS_LINUX
 #define OS "linux"
-#elif defined(Q_OS_WINDOWS)
+#elif defined(Q_OS_WIN)
 #define OS "windows"
 #elif defined(Q_OS_MAC)
 #define OS "mac"

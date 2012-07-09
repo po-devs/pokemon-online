@@ -9,7 +9,9 @@
 #include "../Utilities/ziputils.h"
 
 #ifdef __WIN32
-#incdude <Shellapi.h>
+#include <windows.h>
+#include <windef.h>
+#include <Shellapi.h>
 #endif
 
 inline QString getXmlFileName()
@@ -213,25 +215,13 @@ void DownloadManager::extractZip(const QString &path)
             }
 
 #ifdef __WIN32
-            bool error = false;
-            if(sizeof(TCHAR) == 1) {
-                /* Spawn a new process as admin to move the files */
-                error = ::ShellExecute(0, // owner window
-                               L"runas",
-                               (LPCSTR)qApp->arguments().front().toLocal8Bit().constData(), //Current exe
-                               (LPCSTR)params.toLocal8Bit().constData(), // params
-                               0, // directory
-                               SW_SHOWNORMAL) < 32;
-            } else {
-                /* Spawn a new process as admin to move the files */
-                error = ::ShellExecute(0, // owner window
-                               L"runas",
-                               (LPWCSTR)qApp->arguments().front().utf16(), //Current exe
-                               (LPWCSTR)params.utf16(), // params
-                               0, // directory
-                               SW_SHOWNORMAL) < 32;
-                fooSub((LPCWSTR)text.utf16());
-            }
+            /* Spawn a new process as admin to move the files */
+            bool error = int(::ShellExecute(0, // owner window
+                           L"runas",
+                           (LPCWSTR)qApp->arguments().front().utf16(), //Current exe
+                           (LPCWSTR)params.utf16(), // params
+                           0, // directory
+                           SW_SHOWNORMAL)) <= 32;
 
             if (error) {
                 QMessageBox::information(NULL, "Error with shell execute", "Error with shell execute");

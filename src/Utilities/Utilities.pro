@@ -30,7 +30,7 @@ HEADERS += otherwidgets.h \
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x"
 
-windows: { LIBS += -lzip-2 }
+windows: { LIBS += -L../../bin -lzip-2 }
 !windows: { LIBS += -lzip }
 
 include(../Shared/Common.pri)
