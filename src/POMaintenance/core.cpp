@@ -25,6 +25,10 @@ void Core::run()
 
     try {
         recurseUpdate(source);
+
+        QDir d(source);
+        d.cdUp();
+        d.rmdir(d.relativeFilePath(source));
     } catch (const int &i) {
         //qDebug() << "thread ended prematurely, user abort?";
     }
@@ -102,4 +106,6 @@ void Core::recurseUpdate(const QString &dir)
             }
         }
     }
+
+    src.rmpath(src.relativeFilePath(dir));
 }
