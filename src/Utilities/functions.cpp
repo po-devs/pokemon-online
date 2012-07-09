@@ -172,11 +172,17 @@ bool testWritable(const QString &f)
 
     QFile w(path);
 
-    if (!w.open(QIODevice::WriteOnly)) {
+    if (!w.open(QIODevice::Append)) {
         return false;
     }
 
-    w.remove();
+    if (!w.write("", 0)) {
+        return false;
+    }
+
+    if (f.isEmpty()) {
+        w.remove();
+    }
 
     return true;
 }
