@@ -181,6 +181,15 @@ macx {
    LIBS += -framework CoreFoundation
    ICON = pokemononline.icns
    QMAKE_INFO_PLIST = Info.plist
+   
+   HEADERS += mac/SparkleAutoUpdater.h \
+              mac/AutoUpdater.h \
+              mac/CocoaInitializer.h
+   OBJECTIVE_SOURCES += mac/SparkleAutoUpdater.mm \
+                        mac/AutoUpdater.cpp \
+                        mac/CocoaInitializer.mm
+   LIBS += -framework Sparkle -framework AppKit
+
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
    LINKLIBS = libutilities.1.0.0.dylib libpokemonlib.1.0.0.dylib libbattlelib.1.0.0.dylib
    QMAKE_POST_LINK = mkdir -p $${DESTDIR}/$${TARGET}.app/Contents/Frameworks;
