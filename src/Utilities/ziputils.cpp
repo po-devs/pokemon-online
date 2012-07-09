@@ -52,7 +52,7 @@ Zip& Zip::open(const QString &path)
     qDebug() << "Zip utils: opening file " << path;
 
     int err=0;
-    archive = zip_open(path.toStdString().c_str(), ZIP_CHECKCONS, &err);
+    archive = zip_open(path.toStdString().c_str(), 0, &err);
 
     if (!archive) {
         char buffer[1024];
@@ -60,6 +60,8 @@ Zip& Zip::open(const QString &path)
         errorStr = QString(buffer);
 
         qDebug() << "Error when opening the archive: " << errorStr;
+    } else {
+        qDebug() << "Num files: " << zip_get_num_entries(archive, 0);
     }
 
     return *this;
@@ -143,6 +145,11 @@ bool Zip::extractTo(const QString &folder)
 
     qDebug() << "Number of files in the archive: " << numFiles;
 
+    if (numFiles == 0) {
+        errorStr = QString("Empty archive.");
+        return false;
+    }
+
     for (int i = 0; i < numFiles; i++) {
         QString name = zip_get_name(archive, i, 0);
 
@@ -154,7 +161,7 @@ bool Zip::extractTo(const QString &folder)
         if (!file) {
             errorStr = QString("Error when extracting file %1 in the archive: %2.").arg(name, zip_strerror(archive));
             //error
-            continue;
+            return false;
         }
 
         d.mkpath(QFileInfo(name).path());
