@@ -71,7 +71,7 @@ void Core::recurseUpdate(const QString &dir)
     /* Version.ini contains the updated info of the version.
       We *don't* want it to be updated unless the update is fully
       successful, so we put it at the end of the list */
-    if (files.contains("versoin.ini")) {
+    if (files.contains("version.ini")) {
         files.removeAll("version.ini");
         files.push_back("version.ini");
     }
