@@ -5,6 +5,7 @@
 #include "engineinterface.h"
 #include "centralwidget.h"
 #include "Teambuilder/teamholder.h"
+#include "downloadmanager.h"
 
 class PluginManager;
 class MainWidget;
@@ -17,7 +18,7 @@ class MainWidget;
 class MainEngine : public QObject, public MainEngineInterface {
     Q_OBJECT
 public:
-    MainEngine();
+    MainEngine(bool updated);
     ~MainEngine();
 
     int numberOfTabs() const;
@@ -49,8 +50,10 @@ private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
     void changeTheme();
-
     void changeUserThemeFolder();
+
+    void updateDataReady(const QString &data, bool error);
+    void changeLogReady(const QString &data, bool error);
 private:
     void rebuildThemeMenu();
 
@@ -60,6 +63,8 @@ private:
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
     MainWidget *main;
+
+    DownloadManager downloader;
 
     QHash<int, TeamHolder *> m_teams;
 
@@ -74,6 +79,12 @@ private:
     QVector <TeamHolder*> trash;
 
     void clearTrash();
+
+    //***************//
+    //* Update Data *//
+    //***************//
+    QString updateData;
+    QString changeLog;
 public:
     TeamHolder *trainerTeam();
     ThemeAccessor *theme();
