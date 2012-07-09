@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-TARGET = UpdateMaker
+TARGET = UpdatorMaker
 TEMPLATE = app
 DESTDIR = ../../bin
 LIBS += -L../../bin \

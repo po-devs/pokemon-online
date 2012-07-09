@@ -13,6 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QStringListModel *m = new QStringListModel();
+    m->setStringList(QStringList() << "version.ini");
+    files.push_back("version.ini");
+
+    ui->filesList->setModel(m);
+
     QSettings test("version.ini", QSettings::IniFormat);
 
     ui->version->setPlaceholderText(test.value("version").toString());
@@ -41,10 +47,11 @@ void MainWindow::on_addFiles_clicked()
 void MainWindow::on_clearFiles_clicked()
 {
     files.clear();
+    files.push_back("version.ini");
     if (ui->filesList->model()) {
         ui->filesList->model()->deleteLater();
     }
-    ui->filesList->setModel(new QStringListModel());
+    ui->filesList->setModel(new QStringListModel(files));
 }
 
 void MainWindow::on_done_clicked()
@@ -62,7 +69,7 @@ void MainWindow::on_done_clicked()
         zip.addFile(file);
     }
 
-    zip.addMemoryFile(QString("[General]\nversion=%1\nupdateId=%2\nos=%3\n").arg(version, updateId, os).toUtf8(), "update.dat");
+    //zip.addMemoryFile(QString("[General]\nversion=%1\nupdateId=%2\nos=%3\n").arg(version, updateId, os).toUtf8(), "update.dat");
     zip.addMemoryFile(QString(ui->changeLog->toPlainText()).toUtf8(), "changelog.txt");
     zip.writeArchive();
 
