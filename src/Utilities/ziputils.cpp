@@ -49,6 +49,8 @@ Zip& Zip::open(const QString &path)
 {
     close();
 
+    qDebug() << "Zip utils: opening file " << path;
+
     int err=0;
     archive = zip_open(path.toStdString().c_str(), ZIP_CHECKCONS, &err);
 
@@ -56,6 +58,8 @@ Zip& Zip::open(const QString &path)
         char buffer[1024];
         zip_error_to_str(buffer, sizeof(buffer), err, errno);
         errorStr = QString(buffer);
+
+        qDebug() << "Error when opening the archive: " << errorStr;
     }
 
     return *this;
@@ -121,15 +125,19 @@ Zip::operator bool() const
 
 bool Zip::extractTo(const QString &folder)
 {
-    QDir d;
-    d.mkpath(folder);
+    QDir d(QFileInfo(folder).path());
 
-    if (!d.cd(folder)) {
-        errorStr = QString("Impossible to go in folder %1 to extract the archive.").arg(folder);
+    QString baseName = QFileInfo(folder).baseName();
+
+    if (!d.mkpath(baseName)) {
+        errorStr = QString("Impossible to create path %1").arg(folder);
         return false;
     }
 
-    d.cd(folder);
+    if (!d.cd(baseName)) {
+        errorStr = QString("Impossible to go in folder %1 to extract the archive.").arg(folder);
+        return false;
+    }
 
     int numFiles = zip_get_num_entries(archive, 0);
 
@@ -146,7 +154,7 @@ bool Zip::extractTo(const QString &folder)
         if (!file) {
             errorStr = QString("Error when extracting file %1 in the archive: %2.").arg(name, zip_strerror(archive));
             //error
-            return false;
+            continue;
         }
 
         d.mkpath(QFileInfo(name).path());

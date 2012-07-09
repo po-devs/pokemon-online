@@ -23,7 +23,7 @@ inline QString getXmlFileName()
 }
 
 DownloadManager::DownloadManager(QObject *parent) :
-    QObject(parent), currentUpdateId(-1)
+    QObject(parent), currentUpdateId(-1), downloading(false)
 {
 }
 
@@ -104,6 +104,7 @@ void DownloadManager::onUpdateFileDownloaded()
 
 void DownloadManager::downloadUpdate()
 {
+    qDebug() << "Download update requested";
     if (targetDownload.isNull()) {
         QMessageBox::warning(NULL, tr("No download link found"), tr("The update data doesn't contain any valid download link!"));
         return;
@@ -111,6 +112,10 @@ void DownloadManager::downloadUpdate()
 
     if (updateReady()) {
         return; // No downloading the same update twice
+    }
+
+    if (downloading) {
+        return;
     }
 
     download(targetDownload, this, SLOT(updateDownloaded()));
@@ -135,11 +140,11 @@ void DownloadManager::updateDownloaded()
         return;
     }
 
-    QFileInfo info(QUrl(targetDownload).toLocalFile());
+    QFileInfo info(QUrl(targetDownload).toString());
 
-    qDebug() << "File: " << info.baseName();
+    qDebug() << "File: " << info.fileName();
 
-    QString path = appDataPath("Updates/", true) + info.baseName();
+    QString path = appDataPath("Updates/", true) + info.fileName();
 
     QFile out(path);
     out.open(QIODevice::WriteOnly);
@@ -149,7 +154,11 @@ void DownloadManager::updateDownloaded()
         return;
     }
 
-    out.write(reply->readAll());
+    QByteArray data = reply->readAll();
+
+    qDebug() << "Downloaded data size: " << data.length();
+
+    out.write(data);
 
     if (out.error() == QFile::NoError) {
         loadCurrentUpdateId();
@@ -169,7 +178,7 @@ void DownloadManager::extractZip(const QString &path)
     zip.open(path);
 
     /* The zip path, without the '.zip' at the end */
-    QString targetDir = QFileInfo(path).path() + QFileInfo(path).baseName().section(".", 0, -2);
+    QString targetDir = QFileInfo(path).path() + "/" + QFileInfo(path).baseName();
 
     removeFolder(targetDir);
 
@@ -189,9 +198,10 @@ void DownloadManager::extractZip(const QString &path)
 
     QDir target(targetDir);
     /* updating auto updaters from PO, because it can't update itself :o */
-    QStringList autoUpdaters = target.entryList(QStringList() << "autoupdater*");
+    QStringList autoUpdaters = target.entryList(QStringList() << "autoupdator*");
 
     if (autoUpdaters.length() > 0) {
+        qDebug() << "Found " << autoUpdaters.length() << " auto updaters";
         /* Todo: check if an auto updater is currently running */
         if (testWritable(target.relativeFilePath(autoUpdaters.front()))) {
             foreach(QString autoUpdater, autoUpdaters) {
