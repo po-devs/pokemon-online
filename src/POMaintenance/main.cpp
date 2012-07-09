@@ -61,4 +61,6 @@ int main(int argc, char *argv[])
             p.startDetached(caller, QStringList());
         }
     }
+
+    return 0;
 }
