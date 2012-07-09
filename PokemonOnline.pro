@@ -33,7 +33,8 @@ CONFIG(po_client) | CONFIG(po_server) {
 CONFIG(po_client) {
     SUBDIRS += src/BattleManager \
                src/Teambuilder \
-               src/MoveMachine
+               src/MoveMachine \
+               src/POMaintenance
 }
 
 CONFIG(po_clientplugins) {
@@ -74,3 +75,4 @@ TRANSLATIONS = src/trans/translation_de.ts \
 macx:QMAKE_CC=echo
 
 message(Following modules will be build: $$SUBDIRS)
+

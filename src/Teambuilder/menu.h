@@ -22,6 +22,7 @@ public:
     /* Creates a menu bar to give to the main window */
     QMenuBar *createMenuBar(MainEngine *w);
 
+    void showChangeLog();
 signals:
     void goToTeambuilder();
     void goToOnline();

@@ -18,7 +18,7 @@ class MainWidget;
 class MainEngine : public QObject, public MainEngineInterface {
     Q_OBJECT
 public:
-    MainEngine();
+    MainEngine(bool updated);
     ~MainEngine();
 
     int numberOfTabs() const;

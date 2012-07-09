@@ -198,7 +198,7 @@ void DownloadManager::extractZip(const QString &path)
 
     QDir target(targetDir);
     /* updating auto updaters from PO, because it can't update itself :o */
-    QStringList autoUpdaters = target.entryList(QStringList() << "autoupdator*", QDir::Files);
+    QStringList autoUpdaters = target.entryList(QStringList() << "*maintenance*", QDir::Files);
 
     if (autoUpdaters.length() > 0) {
         qDebug() << "Found " << autoUpdaters.length() << " auto updaters";
@@ -220,8 +220,8 @@ void DownloadManager::extractZip(const QString &path)
         } else {
             QString params;
             foreach(QString autoUpdater, autoUpdaters) {
-                params += "-update " + QString::fromUtf8(QUrl(target.relativeFilePath(autoUpdater)).toEncoded()) + " "
-                        + QString::fromUtf8(QUrl(target.absoluteFilePath(autoUpdater)).toEncoded()) + " ";
+                params += "-update '" + target.relativeFilePath(autoUpdater) + "' '"
+                        + target.absoluteFilePath(autoUpdater) + "' ";
             }
 
 #ifdef __WIN32
