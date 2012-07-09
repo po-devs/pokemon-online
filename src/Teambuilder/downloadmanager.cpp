@@ -207,6 +207,8 @@ void DownloadManager::extractZip(const QString &path)
         qDebug() << "Found " << autoUpdaters.length() << " auto updaters";
         /* Todo: check if an auto updater is currently running */
         if (testWritable(target.relativeFilePath(autoUpdaters.front()))) {
+            //QMessageBox::information(NULL, "test", QString("%1 is writable!").arg(target.relativeFilePath(autoUpdaters.front())));
+
             foreach(QString autoUpdater, autoUpdaters) {
                 QString rel = target.relativeFilePath(autoUpdater);
                 /* Todo: check if those 3 lines are necessary ? */
@@ -228,10 +230,14 @@ void DownloadManager::extractZip(const QString &path)
             }
 
 #ifdef __WIN32
+            QString current = qApp->arguments().front();
+
+            //QMessageBox::information(NULL, "test", QString("Going to run %1 as admin").arg(current));
+
             /* Spawn a new process as admin to move the files */
             bool error = int(::ShellExecute(0, // owner window
                            L"runas",
-                           (LPCWSTR)qApp->arguments().front().utf16(), //Current exe
+                           (LPCWSTR)current.utf16(), //Current exe
                            (LPCWSTR)params.utf16(), // params
                            0, // directory
                            SW_SHOWNORMAL)) <= 32;

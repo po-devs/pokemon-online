@@ -147,9 +147,10 @@ int main(int argc, char *argv[])
                         goto success;
                     } else {
 #ifdef __WIN32
+                        qDebug() << "running as admin";
                         ::ShellExecute(0, // owner window
                                                    L"runas",
-                                                   L"./pomaintenance.exe", //update exe
+                                                   L"pomaintenance.exe", //update exe
                                                    (LPCWSTR)(QString("-src '%1' -caller '%2'").arg(target, argv[0]).utf16()), // params
                                                    0, // directory
                                                    SW_SHOWNORMAL);
