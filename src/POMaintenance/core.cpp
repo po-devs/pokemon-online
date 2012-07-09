@@ -17,6 +17,12 @@ void Core::run()
         return;
     }
 
+    /*
+        pause a bit , to let caller quit (if we need to overwrite the PO file,
+        for example, we need PO to quit first
+    */
+    msleep(250);
+
     try {
         recurseUpdate(source);
     } catch (const int &i) {
@@ -53,6 +59,7 @@ void Core::recurseUpdate(const QString &dir)
 {
     QDir src(source);
     QDir d(dir);
+    QDir local;
 
     QStringList files = d.entryList(QDir::Files | QDir::NoSymLinks);
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -70,18 +77,21 @@ void Core::recurseUpdate(const QString &dir)
     }
 
     for (int i = 0; i < files.length(); i++) {
-        QString fs = files[i];
+        QString fs = d.absoluteFilePath(files[i]);
 
-        emit progress(tr("Updating %1...").arg(d.absoluteFilePath(fs)));
+        emit progress(tr("Updating %1...").arg(fs));
+
+        QString target = local.absoluteFilePath(src.relativeFilePath(fs));
 
         /* Todo: are those 3 lines necessary? */
-        QFile fl(src.relativeFilePath(fs));
+        QFile fl(target);
         fl.remove();
         fl.close();
 
         QFile s(src.absoluteFilePath(fs));
-        if (!s.rename(src.relativeFilePath(fs))) {
-            emit problem(fs);
+
+        if (!s.rename(target)) {
+            emit problem(target);
 
             pause();
 
