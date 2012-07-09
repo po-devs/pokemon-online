@@ -65,7 +65,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(5, 1);
+    Pokemon::gen gen(5, -1);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
