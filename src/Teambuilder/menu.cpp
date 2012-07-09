@@ -50,6 +50,17 @@ void Menu::setUpdateData(const QString &data)
     ui->updateContainer->show();
 }
 
+void Menu::showChangeLog()
+{
+    ui->updateButton->hide();
+    ui->updateContainer->show();
+    ui->updateLabel->setText(tr("Pokemon Online was just updated!"));
+
+    QFile in("changelog.txt");
+    in.open(QIODevice::ReadOnly);
+    ui->changeLog->setText(QString::fromUtf8(in.readAll()));
+}
+
 void Menu::setChangeLogData(const QString &data)
 {
     ui->changeLog->setText(data);

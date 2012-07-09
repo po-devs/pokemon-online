@@ -15,8 +15,10 @@
 #include "mainwidget.h"
 #include "downloadmanager.h"
 
-MainEngine::MainEngine() : displayer(0), freespot(0)
+MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 {
+    setProperty("updated", updated);
+
     pluginManager = new PluginManager(this);
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -261,23 +263,28 @@ void MainEngine::launchMenu(bool first)
         routine(menu);
     }
 
-    if (updateData.length() > 0) {
-        menu->setUpdateData(updateData);
-    } else {
-        connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), menu, SLOT(setUpdateData(QString)));
-    }
+    if (!property("updated").toBool()) {
+        if (updateData.length() > 0) {
+            menu->setUpdateData(updateData);
+        } else {
+            connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), menu, SLOT(setUpdateData(QString)));
+        }
 
-    if (changeLog.length() > 0) {
-        menu->setChangeLogData(changeLog);
+        if (changeLog.length() > 0) {
+            menu->setChangeLogData(changeLog);
+        } else {
+            connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
+        }
+
+        connect(menu, SIGNAL(downloadUpdateRequested()), &downloader, SLOT(downloadUpdate()));
     } else {
-        connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
+        menu->showChangeLog();
     }
 
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
-    connect(menu, SIGNAL(downloadUpdateRequested()), &downloader, SLOT(downloadUpdate()));
 }
 
 void MainEngine::launchCredits()
