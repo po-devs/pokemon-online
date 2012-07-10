@@ -27,7 +27,7 @@
 #include "mac/CocoaInitializer.h"
 #endif
 
-#include <QSharedMemory>
+//#include <QSharedMemory>
 
 #include "../Shared/config.h"
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         /* icon ;) */
         a.setWindowIcon(QIcon("db/icon.png"));
 
-        QSharedMemory memory("Pokemon Online at " + QDir().absolutePath());
+        //QSharedMemory memory("Pokemon Online at " + QDir().absolutePath());
 
         if (settings.value("Updates/Ready").toBool()) {
             /* Check Updates/ReadyFor, match it with current updateId,
@@ -153,7 +153,8 @@ int main(int argc, char *argv[])
 
             if (readyFor == std::max(UPDATE_ID, in.value("updateId").toInt())) {
                 /* Ensures that the PO process is the only one running */
-                if (memory.create(20, QSharedMemory::ReadOnly)) {
+                if (settings.value("Updates/RunningTime").toInt() + 3*60 < ::time(NULL)) {
+                //if (memory.create(20, QSharedMemory::ReadOnly)) {
 
                     QString target = settings.value("Updates/ReadyTarget").toString();
 
@@ -181,20 +182,20 @@ int main(int argc, char *argv[])
                     success:
                     settings.setValue("Updates/Ready", false); //In case any problem happens, we won't try to update again anyway
 
-                    memory.detach();
+                    //memory.detach();
                     return 0;
 
-                    failure:
+                    failure:;
                     /* The current dir is not writable, and no way to run an auto updater with the correct permission */
-                    memory.detach();
+                    //memory.detach();
                 }
             }
         }
 
         /* Share memory, so that we can make sure to know the number of other apps from the same folder running atm */
-        if (!memory.create(20, QSharedMemory::ReadOnly)) {
-            memory.attach(QSharedMemory::ReadOnly);
-        }
+        //if (!memory.create(20, QSharedMemory::ReadOnly)) {
+            //memory.attach(QSharedMemory::ReadOnly);
+        //}
 #endif
 
         if (settings.value("language").isNull()) {

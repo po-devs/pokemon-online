@@ -19,7 +19,7 @@ Move {
     Image {
         id: bone;
 
-        source: "image://pokeinfo/item/200" //200 is thick club
+        source: params.image
         parent: main.parent.parent
         z: attacker.infront(1);
         x: x0;

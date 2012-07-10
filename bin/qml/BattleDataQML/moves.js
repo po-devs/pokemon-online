@@ -16,7 +16,7 @@ effects[BattleData.U_turn] = "Moves/UTurn.qml";
 effects[BattleData.VoltSwitch] = effects[BattleData.U_turn];
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
-effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
+effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
@@ -43,6 +43,8 @@ params[BattleData.Spikes] = {"image":"spikes.png",
 
 params[BattleData.Protect] = {"color": "#a8a878"}
 params[BattleData.Detect] = {"color": "#c03028"}
+params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"}
+params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"}
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
