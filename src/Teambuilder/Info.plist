@@ -18,7 +18,7 @@
     <string>{{VERSION}}</string>
     <key>SUFeedURL</key>
     <string>{{URL}}</string>
-    <key>SUPublicDSAKeyfile</key>
-    <string>public_key.pem</string>
+    <key>SUPublicDSAKeyFile</key>
+    <string>{{PEM_FILE}}</string>
 </dict>
 </plist>
