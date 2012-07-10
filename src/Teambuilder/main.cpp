@@ -66,12 +66,6 @@ int main(int argc, char *argv[])
     QDir::setCurrent( path );
     CFRelease(pluginRef);
     CFRelease(macPath);
-
-    // Check if there are updates using Sparkle
-    CocoaInitializer initializer;
-    AutoUpdater* updater = new SparkleAutoUpdater("http://lamperi.name/pokemon-online/appcast.xml");
-    updater->checkForUpdates();
-
 #elif defined(PO_DATA_REPO)
     QDir::setCurrent(PO_DATA_REPO);
 #endif
@@ -130,7 +124,14 @@ int main(int argc, char *argv[])
 
         QSettings settings;
 
-#if not defined(Q_OS_MACX)
+#if defined(Q_OS_MACX)
+
+        // Check if there are updates using Sparkle
+        CocoaInitializer initializer;
+        AutoUpdater* updater = new SparkleAutoUpdater("http://lamperi.name/pokemon-online/appcast.xml");
+        updater->checkForUpdates();
+
+#else
         // Auto updator and Icon are not applicable on Mac OSX
         // Mac OSX has it's own updater using Sparkle
         // Additionally, setting Icon here seems to break native OSX way.

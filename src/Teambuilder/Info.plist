@@ -14,5 +14,7 @@
     <string>Pokemon-Online</string>
     <key>CFBundleIdentifier</key>
     <string>com.dreambelievers.Pokemon-Online</string>
+    <key>CFBundleVersion</key>
+    <string>{{VERSION}}</string>
 </dict>
 </plist>
