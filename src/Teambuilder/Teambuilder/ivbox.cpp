@@ -30,7 +30,7 @@ IvBox::IvBox(QWidget *parent) :
         connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
     }
 
-    for(int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++) {
+    for(int i = 1; i < Type::Curse; i++) {
         ui->hiddenPowerType->addItem(TypeInfo::Name(i));
     }
 
