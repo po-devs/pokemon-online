@@ -29,7 +29,7 @@ Player::Player(const GenericSocket &sock, int id)
     doConnections();
 
     /* Autokick after 3 minutes if still not logged in */
-    QTimer::singleShot(1000*180, this, SLOT(autoKick()));
+    QTimer::singleShot(1000*180, this, SLOT(firstAutoKick()));
 }
 
 Player::~Player()
@@ -89,6 +89,19 @@ void Player::autoKick()
         blockSignals(false); // In case we autokick an alt that was already disconnected
         disconnected();
     }
+}
+
+/* This is the auto kick that kicks you if you don't log in in time.
+  So we check if we are just not disconnected.
+
+  Because we wouldn't want to kick a disconnected player waiting for a battle */
+void Player::firstAutoKick()
+{
+    if (state()[WaitingReconnect]) {
+        return;
+    }
+
+    autoKick();
 }
 
 void Player::ladderChange(bool n)
