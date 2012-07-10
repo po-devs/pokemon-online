@@ -13,16 +13,12 @@ class SparkleAutoUpdater::Private
 		SUUpdater* updater;
 };
 
-SparkleAutoUpdater::SparkleAutoUpdater(const QString& aUrl)
+SparkleAutoUpdater::SparkleAutoUpdater()
 {
 	d = new Private;
 
 	d->updater = [SUUpdater sharedUpdater];
 	[d->updater retain];
-
-	NSURL* url = [NSURL URLWithString:
-			[NSString stringWithUTF8String: aUrl.toUtf8().data()]];
-	[d->updater setFeedURL: url];
 }
 
 SparkleAutoUpdater::~SparkleAutoUpdater()
