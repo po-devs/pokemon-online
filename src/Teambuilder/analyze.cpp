@@ -629,10 +629,14 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     /* Non-standard command, shouldn't exist */
-    case ServerName: {
-        QString s;
-        in >> s;
-        emit serverNameReceived(s);
+    case ServerInfoChanged: {
+        Flags f;
+        in >> f;
+        if (f[0]) {
+            QString s;
+            in >> s;
+            emit serverNameReceived(s);
+        }
         break;
     }
     case NetworkCli::Reconnect: {

@@ -638,7 +638,7 @@ void Server::regNameChanged(const QString &name)
     serverName = name;
     broadCast("The name of the server changed to " + name + ".");
 
-    notifyAll(NetworkServ::ServerName, name);
+    notifyAll(NetworkServ::ServerInfoChanged, Flags(1), name);
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;

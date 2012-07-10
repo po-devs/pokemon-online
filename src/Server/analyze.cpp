@@ -359,7 +359,9 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             break;
         }
     case ServNameChange:
-        emit invalidName();
+        if (socket().id() == 0) {
+            emit invalidName();
+        }
         break;
     case SendPM:
         {
