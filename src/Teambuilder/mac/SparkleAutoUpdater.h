@@ -12,7 +12,7 @@
 class SparkleAutoUpdater : public AutoUpdater
 {
 	public:
-		SparkleAutoUpdater(const QString& url);
+		SparkleAutoUpdater();
 		~SparkleAutoUpdater();
 
 		void checkForUpdates();

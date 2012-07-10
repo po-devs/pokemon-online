@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 
         // Check if there are updates using Sparkle
         CocoaInitializer initializer;
-        AutoUpdater* updater = new SparkleAutoUpdater("http://lamperi.name/pokemon-online/appcast.xml");
+        AutoUpdater* updater = new SparkleAutoUpdater;
         updater->checkForUpdates();
 
 #else
