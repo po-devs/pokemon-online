@@ -56,3 +56,4 @@ bin/ChainBreeding
 bin/UpdateMaker
 update-*.zip
 bin/pomaintenance*
+bin/scripts
