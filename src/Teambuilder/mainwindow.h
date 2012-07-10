@@ -54,6 +54,8 @@ private slots:
 
     void updateDataReady(const QString &data, bool error);
     void changeLogReady(const QString &data, bool error);
+
+    void updateRunningTime();
 private:
     void rebuildThemeMenu();
 
