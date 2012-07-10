@@ -498,7 +498,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
                         off++;
                     }
                 }
-                if (i == 3 && ((count <= 6 && off >= 2) || (count > 6 && off > 0))) {
+                if (i == 3 && ((count <= 6 && off < 2) || (count > 6 && count < 10 && off == 0))) {
                     continue;
                 }
                 movesTaken.push_back(movenum);

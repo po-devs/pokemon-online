@@ -93,6 +93,13 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     downloader.loadUpdatesAvailable();
 
     launchMenu(true);
+
+    QTimer *t = new QTimer(this);
+    connect(t, SIGNAL(timeout()), SLOT(updateRunningTime()));
+
+    /* This is to detect other PO running at the same time */
+    updateRunningTime();
+    t->start(60*1000);
 }
 
 MainEngine::~MainEngine()
@@ -285,6 +292,12 @@ void MainEngine::launchMenu(bool first)
     connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
     connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
+}
+
+void MainEngine::updateRunningTime()
+{
+    QSettings settings;
+    settings.setValue("Updates/RunningTime", QString::number(::time(NULL)));
 }
 
 void MainEngine::launchCredits()

@@ -638,7 +638,7 @@ void Server::regNameChanged(const QString &name)
     serverName = name;
     broadCast("The name of the server changed to " + name + ".");
 
-    notifyAll(NetworkServ::ServerName, name);
+    notifyAll(NetworkServ::ServerInfoChanged, Flags(1), name);
 
     if (registry_connection == NULL || !registry_connection->isConnected())
         return;
@@ -2011,7 +2011,7 @@ void Server::disconnectPlayer(int id)
         p->changeState(Player::LoggedIn, false);
         p->changeState(Player::WaitingReconnect, true);
 
-        QTimer::singleShot(5*60*1000, p, SLOT(autoKick()));
+        QTimer::singleShot(7*60*1000, p, SLOT(autoKick()));
 
         printLine(QString("Disconnected player %1 (%2)").arg(playerName).arg(id));
     }
