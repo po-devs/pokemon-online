@@ -960,7 +960,7 @@ int Player::id() const
 
 bool Player::ladder() const
 {
-    return state()[PlayerFlags::LadderEnabled];
+    return state()[LadderEnabled];
 }
 
 void Player::logout()
