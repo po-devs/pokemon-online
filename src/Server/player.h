@@ -238,6 +238,7 @@ public slots:
     void leaveRequested(int slotid);
     void ipChangeRequested(const QString &ip);
     void autoKick();
+    void firstAutoKick();
     void sendUpdatedIfNeeded();
     void logout();
 private:

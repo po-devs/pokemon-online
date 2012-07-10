@@ -628,6 +628,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         emit serverPassRequired(salt);
         break;
     }
+    /* Non-standard command, shouldn't exist */
+    case ServerInfoChanged: {
+        Flags f;
+        in >> f;
+        if (f[0]) {
+            QString s;
+            in >> s;
+            emit serverNameReceived(s);
+        }
+        break;
+    }
     case NetworkCli::Reconnect: {
         bool success;
         in >> success;
