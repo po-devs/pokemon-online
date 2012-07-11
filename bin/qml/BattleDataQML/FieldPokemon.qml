@@ -52,7 +52,7 @@ Item {
 
     Image {
         property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
-        id: image
+        id: img /* Dont use image, will cause problems if you do for the shader */
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom
@@ -62,7 +62,7 @@ Item {
         source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
-        onSourceChanged: shader.grab();
+        onSourceChanged: shader.item.grab();
     }
 
     Tooltip {
@@ -133,7 +133,7 @@ Item {
 
     MouseArea {
         id: mouseArea
-        anchors.fill: image
+        anchors.fill: img
         hoverEnabled: true
     }
 
@@ -146,14 +146,42 @@ Item {
     }
 
     /* Used to display fainted pokemon */
-    ColorShader {
-        id: shader
-        image: image
-        blendColor: Colors.statusColor(pokemon.status)
-        alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
+    Component {
+        id: shaderComponent
+        ColorShader {
+            id: shader
+            image: img
+            blendColor: Colors.statusColor(pokemon.status)
+            alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
+        }
     }
 
-    property Image pokeSprite: image
+    Component {
+        id: nonShaderComponent
+        Item {
+            function grab() {}
+        }
+    }
+
+    Loader {
+        id: shader
+        sourceComponent: shaderComponent
+        onStatusChanged: if (shader.status == Loader.Error) {sourceComponent = nonShaderComponent; }
+    }
+
+    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
+      still active when the declarative view is deleted
+
+      For some reason only the one in Pokemon.qml is needed to prevent crashes on my current build,
+      but by precaution putting one here too.
+      */
+    Connections {
+        target: battle.scene
+        onDisappearing: shader.sourceComponent = undefined;
+        onAppearing: shader.sourceComponent = shaderComponent;
+    }
+
+    property Image pokeSprite: img
 
     Connections {
         target: fieldPokemon
@@ -177,7 +205,7 @@ Item {
             when: fieldPokemon.substitute
             extend: "onTheField"
             PropertyChanges {
-                target: image
+                target: img
                 anchors.bottomMargin: back ? -40 : 40;
                 anchors.horizontalCenterOffset: back? -40: 40;
                 opacity: 0.7;
@@ -193,7 +221,7 @@ Item {
             name: "koed"
             when: isKoed()
             PropertyChanges {
-                target: image
+                target: img
                 opacity: 0;
             }
         },
@@ -202,7 +230,7 @@ Item {
             name: "onTheField"
             when: fieldPokemon.onTheField
             PropertyChanges {
-                target: image
+                target: img
                 opacity: 1;
                 scale: 1;
             }
@@ -212,7 +240,7 @@ Item {
             name: "offTheField"
             when: !fieldPokemon.onTheField
             PropertyChanges {
-                target: image
+                target: img
                 opacity: 0;
             }
         }
@@ -237,15 +265,15 @@ Item {
                 }
                 ParallelAnimation {
                     NumberAnimation {
-                        target: image; property: "opacity";
+                        target: img; property: "opacity";
                         from: 1; to: 0; duration: 800
                     }
                     NumberAnimation {
-                        target: image; property: "anchors.bottomMargin";
+                        target: img; property: "anchors.bottomMargin";
                         from: 0; to: -96; duration: 800;
                     }
                 }
-                PropertyAction { target: image; property: "anchors.bottomMargin"; value: 0 }
+                PropertyAction { target: img; property: "anchors.bottomMargin"; value: 0 }
                 /* Restores image state */
                 ScriptAction {
                     script: {
@@ -259,19 +287,19 @@ Item {
             from: "koed,offTheField"
             to: "onTheField"
             SequentialAnimation {
-                PropertyAction { targets: [image, shader]; properties: "opacity"; value: 0 }
+                PropertyAction { targets: [img, shader]; properties: "opacity"; value: 0 }
                 ScriptAction { script: {
                         //battle.scene.debug("Beginning sendout animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.pause();
                         pokeball.trigger(); } }
                 PauseAnimation { duration: 800 }
-                PropertyAction { targets: [image, shader]; properties: "opacity"; value: 1}
-                PropertyAction { target: image; property: "anchors.bottomMargin"; value: 70}
-                NumberAnimation { target:image; from: 0.5;
+                PropertyAction { targets: [img, shader]; properties: "opacity"; value: 1}
+                PropertyAction { target: img; property: "anchors.bottomMargin"; value: 70}
+                NumberAnimation { target:img; from: 0.5;
                     to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
                 ScriptAction {script: battle.scene.playCry(woof.pokemon.numRef);}
                 PauseAnimation { duration: 150 }
-                NumberAnimation { target:image; from: 70;
+                NumberAnimation { target:img; from: 70;
                     to: 0; property: "anchors.bottomMargin"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
                 NumberAnimation {duration: 300}
@@ -289,11 +317,11 @@ Item {
                 ScriptAction {script: {
                         //battle.scene.debug("Beginning sendback animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.pause();}}
-                NumberAnimation { target: image; property: "scale";
+                NumberAnimation { target: img; property: "scale";
                     duration:400; from: 1.0; to: 0.5 ; easing.type: Easing.InQuad }
                 NumberAnimation { property: "opacity";  duration: 200
-                    from: 1.0; to: 0; target: image}
-                ScriptAction {script: {image.scale = 1;
+                    from: 1.0; to: 0; target: img}
+                ScriptAction {script: {img.scale = 1;
                         //battle.scene.debug("Ending sendback animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.unpause();}}
             }
@@ -311,9 +339,9 @@ Item {
                         easing.type: Easing.InCubic;}
                     }
                     NumberAnimation { target: substitute; property: "opacity";}
-                    NumberAnimation {target: image; property: "anchors.horizontalCenterOffset"}
-                    NumberAnimation {target: image; property: "anchors.bottomMargin"}
-                    NumberAnimation {target: image; property: "opacity"}
+                    NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
+                    NumberAnimation {target: img; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: img; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}
             }
@@ -325,9 +353,9 @@ Item {
                 ScriptAction { script: battle.scene.pause();}
                 NumberAnimation { target: substitute; property: "opacity"}
                 ParallelAnimation {
-                    NumberAnimation {target: image; property: "anchors.horizontalCenterOffset"}
-                    NumberAnimation {target: image; property: "anchors.bottomMargin"}
-                    NumberAnimation {target: image; property: "opacity"}
+                    NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
+                    NumberAnimation {target: img; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: img; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}
             }

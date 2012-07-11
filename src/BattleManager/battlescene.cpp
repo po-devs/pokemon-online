@@ -8,6 +8,7 @@
 #include "pokemoninfoaccessor.h"
 #include "proxydatacontainer.h"
 #include "../Utilities/functions.h"
+#include "qglwarner.h"
 
 BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
     pauseCount(0)
@@ -43,13 +44,20 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     mWidget->setAttribute(Qt::WA_OpaquePaintEvent);
     mWidget->setAttribute(Qt::WA_NoSystemBackground);
     // Make QDeclarativeView use OpenGL backend
-    QGLWidget *glWidget = new QGLWidget(mWidget);
+    QGLWarner *glWidget = new QGLWarner(mWidget);
     mWidget->setViewport(glWidget);
     mWidget->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
     mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
     mWidget->setSource(QString("qml/initial.qml"));
+
+    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
+      still active when the declarative view is deleted, so we need to warn the qml so they
+      can unload in time
+      */
+    connect(glWidget, SIGNAL(appearing()), mOwnProxy->getScene(), SIGNAL(appearing()));
+    connect(glWidget, SIGNAL(disappearing()), mOwnProxy->getScene(), SIGNAL(disappearing()));
 }
 
 void BattleScene::launch() {
