@@ -73,6 +73,18 @@ static QScriptValue darker(QScriptContext *ctxt, QScriptEngine *engine)
     return color.name();
 }
 
+/* Returns lightness of a color */
+static QScriptValue lightness(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1)
+        return ctxt->throwError(QLatin1String("Qt.lightness(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    return color.lightnessF();
+}
+
 /*!
 \qmlmethod color Qt::tint(color baseColor, color tintColor)
     This function allows tinting one color with another.
@@ -139,6 +151,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue qtObject = myengine.newObject();
     qtObject.setProperty("lighter", myengine.newFunction(&lighter, 1));
     qtObject.setProperty("darker", myengine.newFunction(&darker, 1));
+    qtObject.setProperty("lightness", myengine.newFunction(&lightness, 1));
     qtObject.setProperty("tint", myengine.newFunction(&tint, 2));
     myengine.globalObject().setProperty("Qt", qtObject);
 
