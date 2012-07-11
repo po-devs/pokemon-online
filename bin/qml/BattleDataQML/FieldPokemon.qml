@@ -71,9 +71,9 @@ Item {
         onShownChanged: {
             if (shown) {
                 var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
-                if (pokemon.gender == 1) {
+                if (pokemon.gender === 1) {
                     s += " (M)"
-                } else if (pokemon.gender == 2) {
+                } else if (pokemon.gender === 2) {
                     s += " (F)"
                 }
 
@@ -85,8 +85,9 @@ Item {
                     s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
                     stat = fieldPokemon.stat(i+1);
                     boost = fieldPokemon.statBoost(i+1);
-                    s += "</td><td>"
+
                     if (stat === 0) {
+                        s += "</td><td>"
                         if (boost >= 0) {
                             s += "+" + boost
                         } else {
@@ -98,6 +99,7 @@ Item {
                         } else {
                             s += stat
                         }
+                        s += "</td><td>"
                         if (boost > 0) {
                             s += "(+" + boost + ")"
                         } else if (boost < 0) {
@@ -110,7 +112,7 @@ Item {
                 for (i = 5; i < 7; i++) {
                     boost = fieldPokemon.statBoost(i+1);
                     if (boost !==0) {
-                        s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
+                        s += "<tr><td colspan='2'>" + stats[i] + "</td><td>&nbsp;";
 
                         if (boost > 0) {
                             s += "+" + boost;

@@ -114,11 +114,19 @@ public:
 
     Q_PROPERTY(QString name READ name CONSTANT)
     QString name() const;
+    /* Not really sure this should be in this class */
+    Q_PROPERTY(int time READ time NOTIFY timeChanged)
+    int time() const;
+    void setTimeLeft(int time, bool ticking=false);
+    bool ticking() const;
 signals:
     void pokemonsSwapped(int slot1, int slot2);
+    void timeChanged();
 private:
     TeamData *teamData;
     bool hasOwnerShip;
+    int mTime;
+    bool mTicking;
 
     QVector<PokeProxy *> pokemons;
 };
