@@ -1650,6 +1650,7 @@ bool BattleBase::testStatus(int player)
     }
     if (poke(player).status() == Pokemon::Frozen)
     {
+        notify(All, StatusMessage, player, qint8(PrevFrozen));
         return false;
     }
 
