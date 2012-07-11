@@ -864,7 +864,7 @@ struct RBYSuperFang : public MM
     }
 
     static void cad(int s, int t, BS &b) {
-        turn(b,s)["CustomDamage"] = std::max(int(b.poke(t).lifePoints()), 1);
+        turn(b,s)["CustomDamage"] = std::max(int(b.poke(t).lifePoints()/2), 1);
     }
 };
 
