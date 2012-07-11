@@ -4,12 +4,16 @@
 #include "battledata.h"
 #include "proxydatacontainer.h"
 
-class AdvancedBattleData : public BattleDataInherit<ProxyDataContainer, AdvancedBattleData>
+class AdvancedBattleData : public QObject, public BattleDataInherit<ProxyDataContainer, AdvancedBattleData>
 {
 public:
     typedef BattleDataInherit<ProxyDataContainer, AdvancedBattleData> baseClass;
 
     AdvancedBattleData(const BattleConfiguration *conf) : baseClass(conf) {
+        timer.start(1000, this);
+    }
+
+    ~AdvancedBattleData() {
 
     }
 
@@ -91,6 +95,14 @@ public:
         field().setWeather(Weather::NormalWeather);
     }
 
+    void onClockStart(int player, int time) {
+        team(player).setTimeLeft(time,true);
+    }
+
+    void onClockStop(int player, int time) {
+        team(player).setTimeLeft(time,false);
+    }
+
     bool areAdjacent (int poke1, int poke2) const {
         return abs(slotNum(poke1)-slotNum(poke2)) <= 1;
     }
@@ -99,6 +111,18 @@ public:
     PokeProxy &tempPoke(int spot) {
         return *fieldPoke(spot).pokemon();
     }
+
+    void timerEvent(QTimerEvent *) {
+        if (team(Player1).ticking()) {
+            team(Player1).setTimeLeft(team(Player1).time()-1, true);
+        }
+        if (team(Player2).ticking()) {
+            team(Player2).setTimeLeft(team(Player2).time()-1, true);
+        }
+    }
+
+private:
+    QBasicTimer timer;
 };
 
 #endif // ADVANCEDBATTLEDATA_H
