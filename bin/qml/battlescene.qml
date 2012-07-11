@@ -71,8 +71,7 @@ Item {
         }
 
         Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.centerIn: parent
             text: battle.data.team(playerBack).name
             color: Qt.darker(parent.border.color, 3)
         }
@@ -103,8 +102,7 @@ Item {
         }
 
         Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.centerIn: parent
             text: battle.data.team(playerFront).name
             color: Qt.darker(parent.border.color, 5)
         }
