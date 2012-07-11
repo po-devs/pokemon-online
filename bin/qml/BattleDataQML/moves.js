@@ -10,13 +10,13 @@ effects[BattleData.Spikes] = effects[BattleData.LeechSeed];
 
 effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
 effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
-effects[BattleData.TakeDown] = "Moves/TakeDown.qml";
-effects[BattleData.QuickAttack] = "Moves/QuickAttack.qml";
-effects[BattleData.U_turn] = "Moves/UTurn.qml";
-effects[BattleData.VoltSwitch] = effects[BattleData.U_turn];
+effects[BattleData.TakeDown] = "Moves/ChargeMove.qml";
+effects[BattleData.QuickAttack] = effects[BattleData.TakeDown];
+effects[BattleData.U_turn] = effects[BattleData.TakeDown];
+effects[BattleData.VoltSwitch] = effects[BattleData.TakeDown];
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
-effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
+effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
@@ -41,8 +41,15 @@ params[BattleData.Spikes] = {"image":"spikes.png",
                {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":65, "z":0}, "controlY":80},
                {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
 
+params[BattleData.TakeDown] = {attack_time: 300, return_time: 500, easing_in_x: Easing.OutQuad, easing_in_y: Easing.InQuad};
+params[BattleData.QuickAttack] = {attack_time: 200, return_time: 500};
+params[BattleData.U_turn] = {attack_time: 400, return_time: 500, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint};
+params[BattleData.VoltSwitch] = params[BattleData.U_turn];
+
 params[BattleData.Protect] = {"color": "#a8a878"}
 params[BattleData.Detect] = {"color": "#c03028"}
+params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"}
+params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"}
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
