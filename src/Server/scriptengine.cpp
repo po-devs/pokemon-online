@@ -13,6 +13,125 @@
 #include "analyze.h"
 #include "../Shared/config.h"
 
+
+/*!
+\qmlmethod color Qt::lighter(color baseColor, real factor)
+Returns a color lighter than \c baseColor by the \c factor provided.
+
+If the factor is greater than 1.0, this functions returns a lighter color.
+Setting factor to 1.5 returns a color that is 50% brighter. If the factor is less than 1.0,
+the return color is darker, but we recommend using the Qt.darker() function for this purpose.
+If the factor is 0 or negative, the return value is unspecified.
+
+The function converts the current RGB color to HSV, multiplies the value (V) component
+by factor and converts the color back to RGB.
+
+If \c factor is not supplied, returns a color 50% lighter than \c baseColor (factor 1.5).
+*/
+static QScriptValue lighter(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.lighter(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    qsreal factor = 1.5;
+    if (ctxt->argumentCount() == 2)
+        factor = ctxt->argument(1).toNumber();
+    color = color.lighter(int(qRound(factor*100.)));
+    return color.name();
+}
+
+/*!
+\qmlmethod color Qt::darker(color baseColor, real factor)
+Returns a color darker than \c baseColor by the \c factor provided.
+
+If the factor is greater than 1.0, this function returns a darker color.
+Setting factor to 3.0 returns a color that has one-third the brightness.
+If the factor is less than 1.0, the return color is lighter, but we recommend using
+the Qt.lighter() function for this purpose. If the factor is 0 or negative, the return
+value is unspecified.
+
+The function converts the current RGB color to HSV, divides the value (V) component
+by factor and converts the color back to RGB.
+
+If \c factor is not supplied, returns a color 50% darker than \c baseColor (factor 2.0).
+*/
+static QScriptValue darker(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.darker(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    qsreal factor = 2.0;
+    if (ctxt->argumentCount() == 2)
+        factor = ctxt->argument(1).toNumber();
+    color = color.darker(int(qRound(factor*100.)));
+    return color.name();
+}
+
+/* Returns lightness of a color */
+static QScriptValue lightness(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1)
+        return ctxt->throwError(QLatin1String("Qt.lightness(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    return color.lightnessF();
+}
+
+/*!
+\qmlmethod color Qt::tint(color baseColor, color tintColor)
+    This function allows tinting one color with another.
+
+    The tint color should usually be mostly transparent, or you will not be able to see the underlying color. The below example provides a slight red tint by having the tint color be pure red which is only 1/16th opaque.
+
+    \qml
+    Rectangle { x: 0; width: 80; height: 80; color: "lightsteelblue" }
+    Rectangle { x: 100; width: 80; height: 80; color: Qt.tint("lightsteelblue", "#10FF0000") }
+    \endqml
+    \image declarative-rect_tint.png
+
+    Tint is most useful when a subtle change is intended to be conveyed due to some event; you can then use tinting to more effectively tune the visible color.
+*/
+static QScriptValue tint(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.tint(): Invalid arguments"));
+    //get color
+    QColor color = QColor(ctxt->argument(0).toString());
+    QColor tintColor = QColor(ctxt->argument(1).toString());
+
+    if (!color.isValid() || !tintColor.isValid()) {
+        return engine->nullValue();
+    }
+
+    //tint
+    QColor finalColor;
+    int a = tintColor.alpha();
+    if (a == 0xFF)
+        finalColor = tintColor;
+    else if (a == 0x00)
+        finalColor = color;
+    else {
+        qreal a = tintColor.alphaF();
+        qreal inv_a = 1.0 - a;
+
+        finalColor.setRgbF(tintColor.redF() * a + color.redF() * inv_a,
+                           tintColor.greenF() * a + color.greenF() * inv_a,
+                           tintColor.blueF() * a + color.blueF() * inv_a,
+                           a + inv_a * color.alphaF());
+    }
+
+    return finalColor.name();
+}
+
+
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
@@ -28,6 +147,14 @@ ScriptEngine::ScriptEngine(Server *s) {
                 myengine.newQObject(mySessionDataFactory),
                 QScriptValue::ReadOnly | QScriptValue::Undeletable
                 );
+
+    QScriptValue qtObject = myengine.newObject();
+    qtObject.setProperty("lighter", myengine.newFunction(&lighter, 1));
+    qtObject.setProperty("darker", myengine.newFunction(&darker, 1));
+    qtObject.setProperty("lightness", myengine.newFunction(&lightness, 1));
+    qtObject.setProperty("tint", myengine.newFunction(&tint, 2));
+    myengine.globalObject().setProperty("Qt", qtObject);
+
 
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));

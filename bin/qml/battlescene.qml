@@ -46,6 +46,68 @@ Item {
         team: battle.data.team(playerBack)
     }
 
+    Rectangle {
+        z: -100
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+
+        width: 130
+        height: 25
+
+        border.width: 2
+        radius: 5
+        border.color: "#b04924"
+        color: "transparent"
+
+        Rectangle {
+            z: -10
+            anchors.fill: parent
+            anchors.rightMargin: (300-battle.data.team(playerBack).time) * parent.width/300
+            color: "#ecb6a3"
+            radius: parent.radius
+            opacity: 0.7
+        }
+
+        Text {
+            anchors.centerIn: parent
+            text: battle.data.team(playerBack).name
+            color: Qt.darker(parent.border.color, 3)
+        }
+    }
+
+    Rectangle {
+        z: -100
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.top: parent.top
+        anchors.topMargin: 5
+
+        width: 130
+        height: 25
+
+        opacity: 0.7
+        border.width: 2
+        radius: 5
+        border.color: "#6890f0"
+        color: "transparent"
+
+        Rectangle {
+            z: -10
+            anchors.fill: parent
+            color: Qt.lighter(parent.border.color)
+            radius: parent.radius
+            opacity: 0.7
+        }
+
+        Text {
+            anchors.centerIn: parent
+            text: battle.data.team(playerFront).name
+            color: Qt.darker(parent.border.color, 5)
+        }
+    }
+
     Team {
         id: team2
         team: battle.data.team(playerFront)

@@ -323,7 +323,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             }
         }
 
-        if (g == 5) {
+        if (g.num == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);
 
             if (ability == ab.ab(2)) {

@@ -255,7 +255,8 @@ void TeamBuilder::installMod()
     zip_fclose(file), file = NULL;
 
     /* Now reads all other files */
-    int numFiles = zip_get_num_entries(archive, 0);
+    //int numFiles = zip_get_num_entries(archive, 0); // <-- when everyone has libzip2, use that
+    int numFiles = zip_get_num_files(archive);
 
     qDebug() << "Number of files in the archive: " << numFiles;
 

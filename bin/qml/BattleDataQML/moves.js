@@ -45,7 +45,6 @@ effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.q
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
-
 params[BattleData.LeechSeed] = {"image":"leech-seed.gif",
         "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":40, "z":0}, "controlY":80},
                {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":20, "z":0}, "controlY":80},
