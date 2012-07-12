@@ -221,6 +221,13 @@ public slots:
     void kick(int);
     void ban(int);
     void tempban(int, int);
+    void tempban60(int p) {
+         tempban(p, 60);
+	}
+    void tempban1440(int p) {
+         tempban(p, 1440);
+	}
+
     void pmcp(QString);
     /* PM */
     void startPM(int);
