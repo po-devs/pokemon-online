@@ -98,10 +98,14 @@ void Channel::showContextMenu(const QPoint &requested)
             if (otherauth < myauth) {
                 menu->addSeparator();
                 createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), client, SLOT(kick(int)), item->id());
+                menu->addSeparator();
+				QMenu* tempbanMenu = new QMenu(tr("&Ban for..."));
+                createIntMapper(tempbanMenu->addAction(tr("60 minutes")), SIGNAL(triggered()), client, SLOT(tempban60(int)), item->id());
+                createIntMapper(tempbanMenu->addAction(tr("24 hours")), SIGNAL(triggered()), client, SLOT(tempban1440(int)), item->id());
+				menu->addMenu(tempbanMenu);
 
                 /* If you're an admin, you can ban */
                 if (myauth >= 2) {
-                    menu->addSeparator();
                     createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), client, SLOT(ban(int)), item->id());
                 }
             }
