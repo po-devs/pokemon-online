@@ -28,6 +28,9 @@ DEFINES = REGISTRY_SIDE
 LIBS += -L../../bin \
     -lutilities
 
+# Build-in web server depends on pillow, you can download
+# and install it from github:
+# https://github.com/acossette/pillow
 CONFIG(webconf) {
     HEADERS += webinterface.h
     SOURCES += webinterface.cpp
