@@ -1426,7 +1426,7 @@ struct AMImposter : public AM
         if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))
             return;
 
-        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
+        fpoke(b,s).flags |= BS::BasicPokeInfo::Transformed;
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
