@@ -29,45 +29,17 @@ Item {
         width: 32
         height: 32
 
-        onSourceChanged: if (shader.item) shader.item.grab()
-        opacity: (shader.item && shader.item.old) ? (pokemon.status === PokeData.Koed ? 0.3 : (pokemon.status === PokeData.Fine? 1 : 0.7)) : 1
+        onSourceChanged: shader.grab()
+        opacity: pokemon.status === PokeData.Koed ? 0.3 : (pokemon.status === PokeData.Fine? 1 : 0.7)
     }
 
-    Component {
-        id: shaderComponent
-        /* Used to display fainted pokemon */
-        ColorShader {
-            image: img
-            blendColor: Colors.statusColor(pokemon.status)
-            alpha: pokemon.status === 0 ? 0.0 : 0.5
-            opacity: 1
-            property bool old: false
-        }
-    }
-
-    Component {
-        id: nonShaderComponent
-        Item {
-            property bool old: true
-            function grab() {}
-        }
-    }
-
-    /* Since ColorShader is not supported by all computers,
-      introducing a way to not have color shaders for older computers */
-    Loader {
+    /* Used to display fainted pokemon */
+    ColorShader {
         id: shader
-        sourceComponent: shaderComponent
-        onStatusChanged: if (shader.status == Loader.Error) {sourceComponent = nonShaderComponent; }
-    }
-
-    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
-      still active when the declarative view is deleted
-      */
-    Connections {
-        target: battle.scene
-        onDisappearing: shader.sourceComponent = undefined;
-        onAppearing: shader.sourceComponent = shaderComponent;
+        image: img
+        blendColor: Colors.statusColor(pokemon.status)
+        alpha: pokemon.status === 0 ? 0.0 : 0.5
+        opac: 1
     }
 
     Tooltip {

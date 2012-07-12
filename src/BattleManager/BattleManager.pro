@@ -28,8 +28,12 @@ SOURCES += \
     auxpokedataproxy.cpp \
     proxydatacontainer.cpp \
     datacontainer.cpp \
-    regularbattlescene.cpp \
-    qglwarner.cpp
+    regularbattlescene.cpp
+
+CONFIG(obsolete) {
+SOURCES +=
+HEADERS +=
+}
 
 HEADERS +=\
     command.h \
@@ -63,8 +67,7 @@ HEADERS +=\
     ../Shared/battlecommands.h \
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/battlestructs.h \
-    qglwarner.h
+    ../PokemonInfo/battlestructs.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
