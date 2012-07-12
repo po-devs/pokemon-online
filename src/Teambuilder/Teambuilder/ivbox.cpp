@@ -210,10 +210,16 @@ void IvBox::changeHiddenPower(int newType)
         return;
     }
 
-    QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
+    if (poke().gen() > 2) {
+        QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
 
-    for (int i = 0; i < std::max(6, possibility.size()); i++) {
-        poke().setDV(i, possibility[i].toInt());
+        for (int i = 0; i < std::max(6, possibility.size()); i++) {
+            poke().setDV(i, possibility[i].toInt());
+        }
+    } else {
+        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newType);
+        poke().setDV(Attack, dvs.first);
+        poke().setDV(Defense, dvs.second);
     }
 
     updateIVs();
