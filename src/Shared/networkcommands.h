@@ -32,7 +32,7 @@ enum Command {
     Register,
     PlayerKick,
     PlayerBan,
-    ServNumChange,
+    ServNumChange,ServerInfoChanged = ServNumChange,
     ServDescChange,
     ServNameChange,
     SendPM = 20,

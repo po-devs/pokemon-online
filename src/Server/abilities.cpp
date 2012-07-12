@@ -1426,7 +1426,7 @@ struct AMImposter : public AM
         if (b.hasWorkingAbility(t,  Ability::Illusion) && poke(b,t).contains("IllusionTarget"))
             return;
 
-        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
+        fpoke(b,s).flags |= BS::BasicPokeInfo::Transformed;
         /* Ripped off from Transform */
         /* Give new values to what needed */
         Pokemon::uniqueId num = b.pokenum(t);
@@ -1578,26 +1578,23 @@ struct AMMagicMirror : public AM
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
         BS::BasicMoveInfo info = tmove(b,target);
+        BS::TurnMemory turnMem = fturn(b, target);
+        int lastMove = fpoke(b,target).lastMoveUsed;
 
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
-
-        bool hadMoved = fturn(b,s).contains(TM::HasMoved);
 
         turn(b,target)["Target"] = s;
         b.battleMemory()["CoatingAttackNow"] = true;
         b.useAttack(target,move,true,false);
         b.battleMemory().remove("CoatingAttackNow");
 
-        /* Magic mirror shouldn't cancel the attack */
-        if (!hadMoved) {
-            fturn(b,s).remove(TM::HasMoved);
-        }
-
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
             and don't cause any such data to be stored in that memory */
         turn(b,target) = ctx;
         tmove(b,target) = info;
+        fturn(b,target) = turnMem;
+        fpoke(b,target).lastMoveUsed = lastMove;
     }
 };
 
