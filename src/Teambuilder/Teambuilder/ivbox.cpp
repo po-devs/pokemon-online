@@ -30,7 +30,7 @@ IvBox::IvBox(QWidget *parent) :
         connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
     }
 
-    for(int i = 1; i < TypeInfo::NumberOfTypes() - 1; i++) {
+    for(int i = 1; i < Type::Curse; i++) {
         ui->hiddenPowerType->addItem(TypeInfo::Name(i));
     }
 
@@ -46,7 +46,6 @@ IvBox::~IvBox()
 void IvBox::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
-    updateAll();
 }
 
 // We need to initialize in a separate function since setPoke() is obviously called after IvBox::IvBox
@@ -211,10 +210,16 @@ void IvBox::changeHiddenPower(int newType)
         return;
     }
 
-    QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
+    if (poke().gen() > 2) {
+        QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
 
-    for (int i = 0; i < std::max(6, possibility.size()); i++) {
-        poke().setDV(i, possibility[i].toInt());
+        for (int i = 0; i < std::max(6, possibility.size()); i++) {
+            poke().setDV(i, possibility[i].toInt());
+        }
+    } else {
+        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newType);
+        poke().setDV(Attack, dvs.first);
+        poke().setDV(Defense, dvs.second);
     }
 
     updateIVs();

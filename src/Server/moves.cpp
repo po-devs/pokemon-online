@@ -3216,7 +3216,7 @@ struct MMTransform : public MM {
             b.acquireAbility(s, b.ability(t));
         }
 
-        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
+        fpoke(b,s).flags |= BS::BasicPokeInfo::Transformed;
     }
 };
 
@@ -3460,13 +3460,39 @@ struct MMRefresh : public MM {
 
 struct MMMemento : public MM {
     MMMemento() {
+        functions["BeforeTargetList"] = &btl;
         functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
     }
 
+    /* In gen 3, fails if can't inflict negative boosts.
+      In gen 4, doesn't fail (so the Ko is in MMFaintUser)
+      In gen 5, fails if miss or substitute
+    From upokecenter*/
+    static void btl(int s, int, BS &b) {
+        if (b.gen() > 3) {
+            return;
+        }
+        if (b.targetList.size() > 0) {
+            int t= b.targetList.front();
+
+            if (!(b.hasMinimalStatMod(t, Attack) && b.hasMinimalStatMod(t, SpAttack))) {
+                b.koPoke(s,s);
+            }
+        }
+    }
+
     static void daf(int s, int t, BS &b) {
-        if (b.hasMinimalStatMod(t, Attack) && b.hasMinimalStatMod(t, SpAttack)) {
-            fturn(b,s).add(TM::Failed);
+        if (b.gen() >= 5) {
+            if (b.hasSubstitute(t)) {
+                fturn(b,s).add(TM::Failed);
+            } else {
+                b.koPoke(s, s);
+            }
+        } else if (b.gen() <= 3) {
+            if (b.hasMinimalStatMod(t, Attack) && b.hasMinimalStatMod(t, SpAttack)) {
+                fturn(b,s).add(TM::Failed);
+            }
         }
     }
 

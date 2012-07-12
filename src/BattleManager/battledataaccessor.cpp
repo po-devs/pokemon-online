@@ -90,6 +90,7 @@ int PokeProxy::basestat(int stat) const
 
 TeamProxy::TeamProxy()
 {
+    mTime = 300; mTicking = false;
     teamData = new TeamData();
     for (int i = 0; i < 6; i++) {
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
@@ -99,6 +100,7 @@ TeamProxy::TeamProxy()
 
 TeamProxy::TeamProxy(TeamData *teamData) : teamData(teamData), hasOwnerShip(false)
 {
+    mTime = 300; mTicking = false;
     for (int i = 0; i < 6; i++) {
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
     }
@@ -125,6 +127,26 @@ void TeamProxy::switchPokemons(int index, int prevIndex)
     teamData->switchPokemons(index, prevIndex);
 
     emit pokemonsSwapped(index, prevIndex);
+}
+
+bool TeamProxy::ticking() const
+{
+    return mTicking;
+}
+
+int TeamProxy::time() const
+{
+    return mTime;
+}
+
+void TeamProxy::setTimeLeft(int time, bool ticking)
+{
+    mTicking = ticking;
+    if (mTime == time) {
+        return;
+    }
+    mTime = time;
+    emit timeChanged();
 }
 
 void TeamProxy::setPoke(int index, ShallowBattlePoke *pokemon, bool soft)

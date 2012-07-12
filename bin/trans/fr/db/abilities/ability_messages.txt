@@ -22,7 +22,7 @@
 33 %a du %s le guérit!
 34 %s intimide %f!|Le clone du %f empêche Intimidation du %s de fonctionner!
 37 Feuille Garde du %s bloque les altérations de statut!
-38 %a du %s reçoit l'attaque!
+38 %a du %s reçoit l'attaque!|%a du %s augmente son attaque spéciale!|%a du %s rend l'attaque inutile!
 40 %s a Brise Moule!
 41 Motorisé du %s augmente sa stat Vitesse!
 44 Tempo Perso du %s l'empêche d'être confus!

@@ -542,9 +542,9 @@ void BattleBase::timerEvent(QTimerEvent *)
     } else {
         /* If a player takes too long - more than 30 secs - tell the other player the time remaining */
         if (timeStopped[Player1] && !timeStopped[Player2] && (QAtomicInt(time(NULL)) - startedAt[Player2]) > 30) {
-            notify(Player1, ClockStop, Player2, quint16(timeLeft(Player2)));
+            notify(AllButPlayer, ClockStart, Player2, quint16(timeLeft(Player2)));
         } else if (timeStopped[Player2] && !timeStopped[Player1] && (QAtomicInt(time(NULL)) - startedAt[Player1]) > 30) {
-            notify(Player2, ClockStop, Player1, quint16(timeLeft(Player1)));
+            notify(AllButPlayer, ClockStart, Player1, quint16(timeLeft(Player1)));
         }
     }
 }
@@ -1650,6 +1650,7 @@ bool BattleBase::testStatus(int player)
     }
     if (poke(player).status() == Pokemon::Frozen)
     {
+        notify(All, StatusMessage, player, qint8(PrevFrozen));
         return false;
     }
 

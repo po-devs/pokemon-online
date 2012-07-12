@@ -82,13 +82,13 @@ void TeamMenu::tabIconChanged()
 
 void TeamMenu::updateTeam()
 {
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->setPoke(&team().team().poke(p->property("slot").toInt()));
+    }
+
     if (lastGen != team().team().gen()) {
         lastGen = team().team().gen();
         updateItemModel();
-    }
-
-    foreach(PokeEdit *p, ui->pokemons) {
-        p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
 
     updateTabs();

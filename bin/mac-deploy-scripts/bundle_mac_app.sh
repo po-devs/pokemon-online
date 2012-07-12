@@ -31,15 +31,23 @@ function bundle_mac_app() {
 
    if [ $app = "Pokemon-Online.app" ]
    then
-      if `which brew > /dev/null`
+      IMPORTS=$(qmake -query QT_INSTALL_IMPORTS)
+      PLUGINS=$(qmake -query QT_INSTALL_PLUGINS)
+      if [ $IMPORTS ]
       then
          mkdir -p $app/Contents/imports/Qt/labs
-         cp -r $(brew --prefix qt)/imports/Qt/labs/particles $app/Contents/imports/Qt/labs/particles
-         cp -r $(brew --prefix qt)/imports/Qt/labs/shaders $app/Contents/imports/Qt/labs/shaders
-         mkdir -p $app/Contents/PlugIns/phonon_backend
-         cp -r $(brew --prefix qt)/plugins/phonon_backend/libphonon_qt7.dylib $app/Contents/PlugIns/phonon_backend
+         cp -r $IMPORTS/Qt/labs/particles $app/Contents/imports/Qt/labs/
+         cp -r $IMPORTS/Qt/labs/shaders $app/Contents/imports/Qt/labs/
       else
          echo 'Could not find QML Plugins, new battle window does not work'
+      fi
+      if [ $PLUGINS ]
+      then
+         mkdir -p $app/Contents/PlugIns
+         cp -r $PLUGINS/phonon_backend $app/Contents/PlugIns/
+         cp -r $PLUGINS/imageformats $app/Contents/PlugIns/
+      else
+         echo 'Could not find Qt Plugins, sounds do not work'
       fi
    fi
 }
