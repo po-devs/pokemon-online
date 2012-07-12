@@ -20,7 +20,6 @@ effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.q
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
-
 var params = {
 };
 
