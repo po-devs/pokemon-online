@@ -128,7 +128,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml \
     ../../bin/qml/BattleDataQML/Utilities/Tooltip.qml \
     ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml \
-    ../../bin/qml/BattleDataQML/Moves/Protect.qml
+    ../../bin/qml/BattleDataQML/Moves/Protect.qml \
+    ../../bin/qml/BattleDataQML/Moves/ChargeMove.qml
 
 include(../Shared/Common.pri)
 

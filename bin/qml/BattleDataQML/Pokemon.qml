@@ -29,8 +29,8 @@ Item {
         width: 32
         height: 32
 
-        onSourceChanged: shader.item.grab()
-        opacity: shader.item.old ? (pokemon.status === PokeData.Koed ? 0.3 : (pokemon.status === PokeData.Fine? 1 : 0.7)) : 1
+        onSourceChanged: if (shader.item) shader.item.grab()
+        opacity: (shader.item && shader.item.old) ? (pokemon.status === PokeData.Koed ? 0.3 : (pokemon.status === PokeData.Fine? 1 : 0.7)) : 1
     }
 
     Component {

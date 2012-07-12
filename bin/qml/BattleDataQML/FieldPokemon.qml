@@ -62,7 +62,7 @@ Item {
         source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
-        onSourceChanged: shader.item.grab();
+        onSourceChanged: if (shader.item) shader.item.grab();
     }
 
     Tooltip {
