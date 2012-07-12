@@ -123,7 +123,7 @@
 258 57-1#hail
 259 135#torment
 261 195#will-o-wisp
-262 37|165#memento
+262 165#memento
 263 39#facade
 264 47#focus punch
 265 117-1#smelling salt
