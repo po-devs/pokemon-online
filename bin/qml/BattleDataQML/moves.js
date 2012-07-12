@@ -9,7 +9,8 @@ var params = {
 /* updates the object with properties form other object */
 Object.prototype.update = function(other_object) {
     for (var param in other_object) {
-        this[param] = other_object[param];
+        if (other_object.hasOwnProperty(param))
+            this[param] = other_object[param];
     }
 }
 /* For faster setup */
@@ -33,8 +34,9 @@ effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 /* TODO idea: use shader and params to add type color effect to these */
 setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickAttack, BattleData.BodySlam,
     BattleData.Retaliate, BattleData.VoltTackle, BattleData.WildCharge, BattleData.U_turn, BattleData.VoltSwitch,
-    BattleData.V_create, BattleData.FlameWheel, BattleData.FlameCharge, BattleData], "Moves/ChargeMove.qml",
-    { attack_time: 300, return_time: 500, 
+    BattleData.V_create, BattleData.FlameWheel, BattleData.FlameCharge,
+    BattleData.Rollout, BattleData.IceBall], "Moves/ChargeMove.qml",
+    { attack_time: 300, return_time: 500, rolls: 0, effect: "",
       easing_in_x: Easing.Linear, easing_in_y: Easing.Linear,
       easing_out_x: Easing.Linear, easing_out_y: Easing.Linear}
 );
@@ -65,13 +67,17 @@ params[BattleData.Spikes] = {"image":"spikes.png",
 params[BattleData.TakeDown].update({easing_in_x: Easing.OutQuad, easing_in_y: Easing.InQuad});
 params[BattleData.BodySlam].easing_in_y = Easing.OutBack;
 params[BattleData.QuickAttack].attack_time = 200;
-params[BattleData.U_turn].update({attack_time: 400, return_time: 500, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
+params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
 params[BattleData.VoltSwitch] = params[BattleData.U_turn];
+// Placeholder image for FlameWheel
+params[BattleData.FlameWheel].effect = "image://pokeinfo/item/71";
+params[BattleData.Rollout].update({rolls: 5, attack_time: 900});
+params[BattleData.IceBall].update({rolls: 5, attack_time: 900});
 
-params[BattleData.Protect] = {"color": "#a8a878"}
-params[BattleData.Detect] = {"color": "#c03028"}
-params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"}
-params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"}
+params[BattleData.Protect] = {"color": "#a8a878"};
+params[BattleData.Detect] = {"color": "#c03028"};
+params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"};
+params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"};
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
