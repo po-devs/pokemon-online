@@ -232,7 +232,7 @@ void DownloadManager::extractZip(const QString &path)
 #ifdef __WIN32
             QString current = qApp->arguments().front();
 
-            //QMessageBox::information(NULL, "test", QString("Going to run %1 as admin").arg(current));
+            QMessageBox::information(NULL, "PO Update", QString("Pokemon Online will need administrative permissions to continue the update process.").arg(current));
 
             /* Spawn a new process as admin to move the files */
             bool error = int(::ShellExecute(0, // owner window
@@ -243,7 +243,7 @@ void DownloadManager::extractZip(const QString &path)
                            SW_SHOWNORMAL)) <= 32;
 
             if (error) {
-                QMessageBox::information(NULL, "Error with shell execute", "Error with shell execute");
+                QMessageBox::information(NULL, "Error updating the maintenance tool", "Error with shell execute");
             }
 #else
             //Todo: what do on mac / linux? :o

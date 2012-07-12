@@ -113,6 +113,10 @@ void TrainerMenu::updateButtonName()
 
 void TrainerMenu::on_addTeam_clicked()
 {
+    if (team().count() >= 6) {
+        return;
+    }
+
     team().addTeam();
 
     updateTeamButtons();
@@ -124,6 +128,8 @@ void TrainerMenu::on_removeTeam_clicked()
 
     updateTeamButtons();
     updateTeam();
+
+    emit teamChanged();
 }
 
 void TrainerMenu::on_saveTeam_clicked()

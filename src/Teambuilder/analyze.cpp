@@ -70,18 +70,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, const QColor &color, c
 
     out << uchar(Login) << ProtocolVersion() << network;
 
-#ifdef Q_OS_WIN
-    out << QString("windows");
-#elif defined(Q_OS_LINUX)
-    out << QString("linux");
-#elif defined(Q_OS_MAC)
-    out << QString("mac");
-#elif defined(Q_OS_FREEBSD)
-    out << QString("freebsd");
-#elif defined(Q_OS_SOLARIS)
-    out << QString("solaris");
+#ifdef OS
+    out << QString(OS);
 #else
-#warning Unkown OS version to send. Update the code to add your version
+#warning Unknown OS version to send. Update the code to add your version
     out << QString("unknown_OS");
 #endif
 

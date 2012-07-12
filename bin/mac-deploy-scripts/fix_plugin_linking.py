@@ -19,13 +19,16 @@ def change_linking(dylib, old_path, dyn_path):
     command = r"install_name_tool -change {old_path} {dyn_path} {dylib}" .format(old_path=old_path, dyn_path=dyn_path, dylib=dylib)
     return commands.getstatusoutput(command)[0]
 
+def change_id(dylib, install_name):
+    command = r"install_name_tool -id {install_name} {dylib}".format(install_name=install_name, dylib=dylib)
+    return commands.getstatusoutput(command)[0]
+
 def install_dependency(from_path, to_path, install_name): 
     shutil.copy(from_path, to_path) 
     perm_fix_command = "chmod -R u+w {path}".format(path=to_path)
     if commands.getstatusoutput(perm_fix_command)[0] > 0:
        print("Warning: chmod failed for {path}".format(path=to_path))
-    command = r"install_name_tool -id {install_name} {dylib}".format(install_name=install_name, dylib=to_path)
-    return commands.getstatusoutput(command)[0]
+    return change_id(to_path, install_name)
 
 def fix_linking_for_dylib(dylib, FRAMEWORKS):
     LINK = "@executable_path/../Frameworks/{path}"
@@ -35,7 +38,7 @@ def fix_linking_for_dylib(dylib, FRAMEWORKS):
         # Assume all shared libs in /usr/local to be bundable
         if shared_lib in ALWAYS_FIX_LIBS: 
             library=shared_lib
-        elif not shared_lib.startswith("/usr/local"):
+        elif not shared_lib.startswith("/usr/local") and not shared_lib.startswith("/Users"):
             continue
         elif ".framework" in shared_lib:
             # Need to bundle the whole framework
@@ -62,6 +65,8 @@ def fix_linking():
         fix_linking_for_dylib(dylib, FRAMEWORKS)
     dylibs =  find_dylibs('Pokemon-Online.app/Contents/PlugIns')
     for dylib in dylibs:
+        print dylib
+        change_id(dylib, "@executable_path/../PlugIns/{path}".format(path=dylib.split("PlugIns/")[1]))
         fix_linking_for_dylib(dylib, FRAMEWORKS)
 
     dylibs =  find_dylibs('Server.app/Contents/Resources/serverplugins')

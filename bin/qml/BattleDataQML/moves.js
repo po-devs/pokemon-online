@@ -3,26 +3,49 @@ var components = {};
 var effects = {
 };
 
+var params = {
+};
+
+/* updates the object with properties form other object */
+Object.prototype.update = function(other_object) {
+    for (var param in other_object) {
+        if (other_object.hasOwnProperty(param))
+            this[param] = other_object[param];
+    }
+}
+/* For faster setup */
+function setupWithDefaultParam(moves, move_effect, default_param) {
+    moves.forEach(function(move) {
+        effects[move] = move_effect;
+        params[move] = {};
+        params[move].update(default_param);
+    });
+}
+
 effects[BattleData.LeechSeed] = "Moves/HiddenPebbles.qml";
 effects[BattleData.StealthRock] = effects[BattleData.LeechSeed];
 effects[BattleData.ToxicSpikes] = effects[BattleData.LeechSeed];
 effects[BattleData.Spikes] = effects[BattleData.LeechSeed];
 
-effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
+effects[BattleData.Fissure] = effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
 effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
-effects[BattleData.TakeDown] = "Moves/TakeDown.qml";
-effects[BattleData.QuickAttack] = "Moves/QuickAttack.qml";
-effects[BattleData.U_turn] = "Moves/UTurn.qml";
-effects[BattleData.VoltSwitch] = effects[BattleData.U_turn];
+
+/* Charging moves */
+/* TODO idea: use shader and params to add type color effect to these */
+setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickAttack, BattleData.BodySlam,
+    BattleData.Retaliate, BattleData.VoltTackle, BattleData.WildCharge, BattleData.U_turn, BattleData.VoltSwitch,
+    BattleData.V_create, BattleData.FlameWheel, BattleData.FlameCharge,
+    BattleData.Rollout, BattleData.IceBall], "Moves/ChargeMove.qml",
+    { attack_time: 300, return_time: 500, rolls: 0, effect: "",
+      easing_in_x: Easing.Linear, easing_in_y: Easing.Linear,
+      easing_out_x: Easing.Linear, easing_out_y: Easing.Linear}
+);
+
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
 effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
-
-
-var params = {
-};
 
 params[BattleData.LeechSeed] = {"image":"leech-seed.gif",
         "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":40, "z":0}, "controlY":80},
@@ -41,10 +64,20 @@ params[BattleData.Spikes] = {"image":"spikes.png",
                {"pos1":{"x":30, "y":5, "z":0}, "pos2":{"x":30, "y":65, "z":0}, "controlY":80},
                {"pos1":{"x":40, "y":15, "z":0}, "pos2":{"x":70, "y":60, "z":0}, "controlY":70}]};
 
-params[BattleData.Protect] = {"color": "#a8a878"}
-params[BattleData.Detect] = {"color": "#c03028"}
-params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"}
-params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"}
+params[BattleData.TakeDown].update({easing_in_x: Easing.OutQuad, easing_in_y: Easing.InQuad});
+params[BattleData.BodySlam].easing_in_y = Easing.OutBack;
+params[BattleData.QuickAttack].attack_time = 200;
+params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
+params[BattleData.VoltSwitch] = params[BattleData.U_turn];
+// Placeholder image for FlameWheel
+params[BattleData.FlameWheel].effect = "image://pokeinfo/item/71";
+params[BattleData.Rollout].update({rolls: 5, attack_time: 900});
+params[BattleData.IceBall].update({rolls: 5, attack_time: 900});
+
+params[BattleData.Protect] = {"color": "#a8a878"};
+params[BattleData.Detect] = {"color": "#c03028"};
+params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"};
+params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"};
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
