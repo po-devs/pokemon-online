@@ -69,6 +69,7 @@ QList<QPixmap> Theme::m_TPics;
 QHash<int, QPixmap> Theme::m_statusIcons;
 QHash<int, QPixmap> Theme::m_battleIcons;
 QHash<QString, QColor> Theme::m_Colors;
+QHash<QString, QString> Theme::m_symbols;
 BattleDefaultTheme *Theme::m_battleTheme = new BattleTheme();
 ThemeAccessor *Theme::m_accessor = new Accessor();
 
@@ -101,6 +102,15 @@ void Theme::loadColors()
     }
 }
 
+void Theme::loadSymbols()
+{
+    QSettings ini(path("auth_symbols.ini"), QSettings::IniFormat);
+    foreach(QString key, ini.allKeys()) {
+        m_symbols[key] = ini.value(key).toString();
+    }
+
+}
+
 void Theme::init(const QString &dir)
 {
     m_Directory = dir;
@@ -118,6 +128,7 @@ void Theme::init(const QString &dir)
 
     loadColors();
     loadPixmaps();
+    loadSymbols();
 }
 
 void Theme::Reload(const QString &dir)
@@ -126,6 +137,7 @@ void Theme::Reload(const QString &dir)
     QPixmapCache::clear();
     loadColors();
     loadPixmaps();
+    loadSymbols();
 }
 
 QStringList Theme::SearchPath()
@@ -402,6 +414,17 @@ QIcon Theme::Icon(const QString &code)
     QPixmap pm = Sprite(code);
 
     return QIcon(pm);
+}
+
+QString Theme::AuthSymbol(int level)
+{
+    auto iterator = m_symbols.find(QString("symbols/auth_%1").arg(level));
+    if (iterator != m_symbols.end())
+        return *iterator;
+    iterator = m_symbols.find("symbols/auth_default");
+    if (iterator != m_symbols.end())
+        return *iterator; 
+    return "";
 }
 
 BattleDefaultTheme *Theme::getBattleTheme()

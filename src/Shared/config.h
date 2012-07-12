@@ -16,6 +16,10 @@ static const int UPDATE_ID = 0;
 #define OS "windows"
 #elif defined(Q_OS_MAC)
 #define OS "mac"
+#elif defined(Q_OS_FREEBSD)
+#define OS "freebsd"
+#elif defined(Q_OS_SOLARIS)
+#define OS "solaris"
 #endif
 
 #endif // CONFIG_H

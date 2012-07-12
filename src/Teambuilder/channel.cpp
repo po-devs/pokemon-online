@@ -98,10 +98,14 @@ void Channel::showContextMenu(const QPoint &requested)
             if (otherauth < myauth) {
                 menu->addSeparator();
                 createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), client, SLOT(kick(int)), item->id());
+                menu->addSeparator();
+				QMenu* tempbanMenu = new QMenu(tr("&Ban for..."));
+                createIntMapper(tempbanMenu->addAction(tr("60 minutes")), SIGNAL(triggered()), client, SLOT(tempban60(int)), item->id());
+                createIntMapper(tempbanMenu->addAction(tr("24 hours")), SIGNAL(triggered()), client, SLOT(tempban1440(int)), item->id());
+				menu->addMenu(tempbanMenu);
 
                 /* If you're an admin, you can ban */
                 if (myauth >= 2) {
-                    menu->addSeparator();
                     createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), client, SLOT(ban(int)), item->id());
                 }
             }
@@ -700,9 +704,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             if (id != ownId())
                 end = end.replace(nameNotInsideTag, addHilightClass);
 
-            // Todo: maybe pull auth symbol from theme for all auth levels?
-            QString authSymbol = client->auth(id) > 0 && client->auth(id) <= 3 ? "+" : ""; 
-
+            QString authSymbol = Theme::AuthSymbol(client->auth(id));
             QColor color = client->color(id);
 
             mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");

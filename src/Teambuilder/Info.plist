@@ -14,5 +14,11 @@
     <string>Pokemon-Online</string>
     <key>CFBundleIdentifier</key>
     <string>com.dreambelievers.Pokemon-Online</string>
+    <key>CFBundleVersion</key>
+    <string>{{VERSION}}</string>
+    <key>SUFeedURL</key>
+    <string>{{URL}}</string>
+    <key>SUPublicDSAKeyFile</key>
+    <string>{{PEM_FILE}}</string>
 </dict>
 </plist>
