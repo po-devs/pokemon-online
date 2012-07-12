@@ -36,16 +36,16 @@ function bundle_mac_app() {
       if [ $IMPORTS ]
       then
          mkdir -p $app/Contents/imports/Qt/labs
-         cp -r $IMPORTS/Qt/labs/particles $app/Contents/imports/Qt/labs/particles
-         cp -r $IMPORTS/Qt/labs/shaders $app/Contents/imports/Qt/labs/shaders
+         cp -r $IMPORTS/Qt/labs/particles $app/Contents/imports/Qt/labs/
+         cp -r $IMPORTS/Qt/labs/shaders $app/Contents/imports/Qt/labs/
       else
          echo 'Could not find QML Plugins, new battle window does not work'
       fi
       if [ $PLUGINS ]
       then
          mkdir -p $app/Contents/PlugIns
-         cp -r $PLUGINS/phonon_backend $app/Contents/PlugIns/phonon_backend
-         cp -r $PLUGINS/imageformats $app/Contents/PlugIns/imageformats
+         cp -r $PLUGINS/phonon_backend $app/Contents/PlugIns/
+         cp -r $PLUGINS/imageformats $app/Contents/PlugIns/
       else
          echo 'Could not find Qt Plugins, sounds do not work'
       fi

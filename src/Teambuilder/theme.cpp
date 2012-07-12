@@ -102,6 +102,16 @@ void Theme::loadColors()
     }
 }
 
+void Theme::loadSymbols()
+{
+    QSettings ini(path("auth_symbols.ini"), QSettings::IniFormat);
+    foreach(QString key, ini.allKeys()) {
+        qDebug() << key;
+        m_symbols[key] = ini.value(key).toString();
+    }
+
+}
+
 void Theme::init(const QString &dir)
 {
     m_Directory = dir;
@@ -119,11 +129,7 @@ void Theme::init(const QString &dir)
 
     loadColors();
     loadPixmaps();
-    
-    QSettings ini(path("auth_symbols.ini"), QSettings::IniFormat);
-    foreach(QString key, ini.allKeys()) {
-        m_symbols[key] = ini.value(key).toString();
-    }
+    loadSymbols();
 }
 
 void Theme::Reload(const QString &dir)
@@ -132,6 +138,7 @@ void Theme::Reload(const QString &dir)
     QPixmapCache::clear();
     loadColors();
     loadPixmaps();
+    loadSymbols();
 }
 
 QStringList Theme::SearchPath()

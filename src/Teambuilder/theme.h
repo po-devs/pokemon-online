@@ -82,6 +82,7 @@ private:
     static QHash<QString, QString> m_symbols;
     static void loadColors();
     static void loadPixmaps();
+    static void loadSymbols();
 
     static QVariant value(const QString &key, bool *def);
     static BattleDefaultTheme *m_battleTheme;
