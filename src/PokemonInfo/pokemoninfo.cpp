@@ -1014,19 +1014,20 @@ QPixmap PokemonInfo::Picture(const QString &url)
         }
     }
 
+    QPixmap ret;
     if (substitute) {
-        return Sub(gen, back);
+        ret = Sub(gen, back);
     } else {
-        QPixmap ret = Picture(num, gen, gender, shiny, back);
-
-        if (cropped) {
-            QImage img = ret.toImage();
-            cropImage(img);
-            ret = QPixmap::fromImage(img);
-        }
-
-        return ret;
+        ret = Picture(num, gen, gender, shiny, back);
     }
+
+    if (cropped) {
+        QImage img = ret.toImage();
+        cropImage(img);
+        ret = QPixmap::fromImage(img);
+    }
+
+    return ret;
 }
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
