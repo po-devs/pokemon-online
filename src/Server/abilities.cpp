@@ -1579,6 +1579,7 @@ struct AMMagicMirror : public AM
         BS::context ctx = turn(b,target);
         BS::BasicMoveInfo info = tmove(b,target);
         BS::TurnMemory turnMem = fturn(b, target);
+        int lastMove = fpoke(b,target).lastMoveUsed;
 
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
@@ -1593,6 +1594,7 @@ struct AMMagicMirror : public AM
         turn(b,target) = ctx;
         tmove(b,target) = info;
         fturn(b,target) = turnMem;
+        fpoke(b,target).lastMoveUsed = lastMove;
     }
 };
 
