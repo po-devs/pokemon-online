@@ -65,6 +65,17 @@ Item {
         onSourceChanged: shader.grab();
     }
 
+    /**
+      As we now use a shader overlapping an image, if the image
+      has a certain opacity we need to reduce it even more because
+      of the two overlapping images (image & shader) with same opacity.
+
+      This function gives the actualy opacity to use in function of the
+      final opacity we want */
+    function calc_opacity(opac) {
+        return 1 - Math.sqrt(1-opac);
+    }
+
     Tooltip {
         id: tooltip
         shown: mouseArea.containsMouse
@@ -142,7 +153,7 @@ Item {
         opacity: 0;
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
-        source: "image://pokeinfo/pokemon/substitute&back="+back
+        source: "image://pokeinfo/pokemon/substitute&back="+back+"&cropped=true"
     }
 
     /* Used to display fainted pokemon */
@@ -180,7 +191,7 @@ Item {
                 target: img
                 anchors.bottomMargin: back ? -40 : 40;
                 anchors.horizontalCenterOffset: back? -40: 40;
-                opacity: 0.7*0.7; //square because there are two images overlapping with the same opacity
+                opacity: calc_opacity(0.7);
                 z: woof.back ? 10 : -10;
             }
             PropertyChanges {
