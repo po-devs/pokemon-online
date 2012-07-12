@@ -3216,7 +3216,7 @@ struct MMTransform : public MM {
             b.acquireAbility(s, b.ability(t));
         }
 
-        fpoke(b,s).flags &= BS::BasicPokeInfo::Transformed;
+        fpoke(b,s).flags |= BS::BasicPokeInfo::Transformed;
     }
 };
 
