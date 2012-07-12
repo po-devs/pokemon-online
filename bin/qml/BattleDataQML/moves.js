@@ -71,8 +71,8 @@ params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint,
 params[BattleData.VoltSwitch] = params[BattleData.U_turn];
 // Placeholder image for FlameWheel
 params[BattleData.FlameWheel].effect = "image://pokeinfo/item/71";
-params[BattleData.Rollout].update({rolls: 5, attack_time: 900});
-params[BattleData.IceBall].update({rolls: 5, attack_time: 900});
+params[BattleData.Rollout].update({rolls: 3, attack_time: 900});
+params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
 
 params[BattleData.Protect] = {"color": "#a8a878"};
 params[BattleData.Detect] = {"color": "#c03028"};

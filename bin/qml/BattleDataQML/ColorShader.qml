@@ -33,6 +33,7 @@ ShaderEffectItem {
     height: image.height
     parent: image.parent
     scale: image.scale
+    rotation: image.rotation
     transformOrigin: image.transformOrigin
 
     property real opac: image.opacity
