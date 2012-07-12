@@ -57,7 +57,6 @@ Move {
                     }
                     if (params.rolls) {
                         origin = attacker.pokeSprite.transformOrigin
-                        /* If you want to reset transform origin, set to undefined instead of Item.Center */
                         attacker.pokeSprite.transformOrigin = Item.Center
                     }
                 }
