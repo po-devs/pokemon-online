@@ -46,7 +46,6 @@ IvBox::~IvBox()
 void IvBox::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
-    updateAll();
 }
 
 // We need to initialize in a separate function since setPoke() is obviously called after IvBox::IvBox
