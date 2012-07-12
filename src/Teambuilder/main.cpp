@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 
         // Check if there are updates using Sparkle
         CocoaInitializer initializer;
-        AutoUpdater* updater = new SparkleAutoUpdater;
+        SparkleAutoUpdater* updater = new SparkleAutoUpdater;
         updater->checkForUpdates();
 
 #else

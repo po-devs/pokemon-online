@@ -106,7 +106,6 @@ void Theme::loadSymbols()
 {
     QSettings ini(path("auth_symbols.ini"), QSettings::IniFormat);
     foreach(QString key, ini.allKeys()) {
-        qDebug() << key;
         m_symbols[key] = ini.value(key).toString();
     }
 
