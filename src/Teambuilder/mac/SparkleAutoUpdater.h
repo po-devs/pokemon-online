@@ -7,9 +7,7 @@
 
 #include <QString>
 
-#include "AutoUpdater.h"
-
-class SparkleAutoUpdater : public AutoUpdater
+class SparkleAutoUpdater
 {
 	public:
 		SparkleAutoUpdater();

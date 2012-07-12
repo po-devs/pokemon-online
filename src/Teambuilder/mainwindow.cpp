@@ -90,7 +90,12 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
     connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), SLOT(changeLogReady(QString,bool)));
+// On Mac OSX, we do not want two update checkers
+// Hence, we disable the default one, as updating Mac OSX
+// application bundles is different from Linux/Windows
+#ifndef Q_OS_MACX
     downloader.loadUpdatesAvailable();
+#endif
 
     launchMenu(true);
 
