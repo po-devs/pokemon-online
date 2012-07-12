@@ -61,7 +61,8 @@ Zip& Zip::open(const QString &path)
 
         qDebug() << "Error when opening the archive: " << errorStr;
     } else {
-        qDebug() << "Num files: " << zip_get_num_entries(archive, 0);
+        //qDebug() << "Num files: " << zip_get_num_entries(archive, 0); // <-- when everyone has libzip2, use that
+        qDebug() << "Num files: " << zip_get_num_files(archive);
     }
 
     return *this;
@@ -141,7 +142,8 @@ bool Zip::extractTo(const QString &folder)
         return false;
     }
 
-    int numFiles = zip_get_num_entries(archive, 0);
+    //int numFiles = zip_get_num_entries(archive, 0); // <-- when everyone has libzip2, use that
+    int numFiles = zip_get_num_files(archive);
 
     qDebug() << "Number of files in the archive: " << numFiles;
 
