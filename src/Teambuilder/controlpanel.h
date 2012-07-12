@@ -65,6 +65,9 @@ private slots:
     void on_pm_clicked() {
         emit pmcp(userName->text());
     }
+
+    void on_banTable_clicked(const QModelIndex& index);
+    void on_updateBantime_clicked();
 };
 
 #endif // CONTROLPANEL_H
