@@ -62,3 +62,13 @@
 61 Custap Berry
 62 Jaboca Berry
 63 Rowap Berry
+1000 PRZCureBerry
+1001 Mint Berry
+1002 PSNCureBerry
+1003 Burnt Berry
+1004 Ice Berry
+1005 MysteryBerry
+1006 Berry
+1007 Bitter Berry
+1008 MiracleBerry
+1009 Gold Berry
