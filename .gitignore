@@ -58,3 +58,4 @@ update-*.zip
 bin/pomaintenance*
 bin/scripts
 bin/start-client
+bin/EventCombinations
