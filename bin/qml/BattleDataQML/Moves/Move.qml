@@ -8,5 +8,9 @@ Item {
     property variant params;
     property variant extras;
 
+    function start() {
+        animation.running = true;
+    }
+
     signal finished();
 }
