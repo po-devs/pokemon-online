@@ -1063,11 +1063,14 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
+        if (gender == Pokemon::Female) {
+            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male,shiney,back);
+        }
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
         }
         if (pokeid.isForme()) {
-            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back, false);
+            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back);
         }
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
@@ -1081,17 +1084,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return PokemonInfo::Picture(pokeid, 3, gender, false, back);
             else
                 return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
-        } else if (gen.num == 4 && gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen.num == 4 && shiney) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, false, back);
         } else if (gen.num == 4) {
             return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         } else if (gen.num == 5) {
-            if (gender == Pokemon::Female) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
-            } else if (shiney) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
+            if (shiney) {
+                return PokemonInfo::Picture(pokeid, 5, gender, false, back);
             }
         }
         return ret;

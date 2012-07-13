@@ -4316,18 +4316,18 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="70"/>
         <source>Ctrl+I</source>
         <comment>Import team</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ctrl+I</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="71"/>
         <source>&amp;Export team</source>
-        <translation type="unfinished">&amp;Exporter l&apos;équipe</translation>
+        <translation>&amp;Exporter l&apos;équipe</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="71"/>
         <source>Ctrl+E</source>
         <comment>Export team</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ctrl+E</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="74"/>
