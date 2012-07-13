@@ -335,6 +335,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     if (!turnMem(player).contains(TM::BuildUp) && attack != 0 && attack != Move::Struggle) {
         fpoke(player).lastMoveUsed = attack;
+        slotMemory(player).lastMoveUsed = attack;
     }
 
     notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers") && !turnMem(player).contains(TM::BuildUp)));
