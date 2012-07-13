@@ -1613,7 +1613,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             /* Draining moves fail against substitute in gen 2 and earlier */
-            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).recoil > 0) {
                 turnMem(player).add(TM::Failed);
                 testFail(player);
                 continue;
