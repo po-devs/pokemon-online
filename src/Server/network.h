@@ -103,7 +103,11 @@ void Network<S>::close() {
     if (socket()) {
         //qDebug() << "valid socket " << this;
         S sock = mysocket;
+#ifndef SFML_SOCKET
+        mysocket = NULL;
+#else
         mysocket = S();
+#endif
         sock->disconnect();
         sock->disconnectFromHost();
         sock->deleteLater();
@@ -158,7 +162,11 @@ void Network<S>::onDisconnect()
     if (socket()) {
         //qDebug() << "Beginning onDisconnect " << this;
         mysocket->deleteLater();
+#ifndef SFML_SOCKETS
+        mysocket = NULL;
+#else
         mysocket = S();
+#endif
         //qDebug() << "Ending onDisconnect " << this;
     }
 }
