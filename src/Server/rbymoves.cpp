@@ -867,7 +867,6 @@ struct RBYSuperFang : public MM
         turn(b,s)["CustomDamage"] = std::max(int(b.poke(t).lifePoints()/2), 1);
     }
 };
-
 struct RBYConversion : public MM
 {
     RBYConversion() {
