@@ -1043,9 +1043,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     QString file;
 
     if (gen.num == 1)
-        file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
+        file = QString("yellow/%2%1.png").arg(pokeid.toString(), back?"back/":"");
     else if (gen.num == 2)
-        file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
+        file = QString("crystal/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num ==3)
         file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num == 4)
