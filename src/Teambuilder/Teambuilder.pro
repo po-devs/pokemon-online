@@ -15,6 +15,7 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     network.cpp \
     client.cpp \
+    clientsetupscripts.cpp \
     analyze.cpp \
     battlewindow.cpp \
     controlpanel.cpp \
