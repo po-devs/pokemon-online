@@ -137,6 +137,7 @@ void TierMachine::fromString(const QString &s)
     QList<Tier *> tiers = tree.gatherTiers();
     if (tiers.empty()) {
         Tier *t = new Tier(this, &tree.root);
+        t->setGen(0);
         t->changeName("All");
         tree.root.subNodes.push_back(t);
         tiers.push_back(t);

@@ -923,7 +923,7 @@ bool BattleBase::validChoice(const BattleChoice &b)
 
         if (tier().length() > 0) {
             team(player).setIndexes(b.choice.rearrange.pokeIndexes);
-            if (!TierMachine::obj()->isValid(team(player), tier()) && !(clauses() & ChallengeInfo::ChallengeCup)) {
+            if (!TierMachine::obj()->isValid(team(player), tier()) && !(clauses() & ChallengeInfo::ChallengeCup) && TierMachine::obj()->tier(tier()).allowGen(gen())) {
                 team(player).resetIndexes();
                 return false;
             } else {
