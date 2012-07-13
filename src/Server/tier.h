@@ -104,6 +104,7 @@ public:
     int getMode() const;
     bool allowGen(Pokemon::gen gen) const;
     Pokemon::gen gen() const {return m_gen;}
+    void setGen(Pokemon::gen gen) {m_gen = gen;}
     int getClauses() const;
     int getMaxLevel() const;
     void fixTeam(TeamBattle &t) const;
