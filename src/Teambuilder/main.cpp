@@ -123,14 +123,12 @@ int main(int argc, char *argv[])
         QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 
         QSettings settings;
-
 #if defined(Q_OS_MACX)
 
         // Check if there are updates using Sparkle
         CocoaInitializer initializer;
         SparkleAutoUpdater* updater = new SparkleAutoUpdater;
         updater->checkForUpdates();
-
 #else
         // Auto updator and Icon are not applicable on Mac OSX
         // Mac OSX has it's own updater using Sparkle
