@@ -965,7 +965,7 @@ void Tier::importRestrictedPokes(const QString &s)
 Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
     banPokes = true;
     parent = NULL;
-    m_gen = GenInfo::GenMax();
+    m_gen = Pokemon::gen(GenInfo::GenMax(), GenInfo::NumberOfSubgens(GenInfo::GenMax())-1);
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
