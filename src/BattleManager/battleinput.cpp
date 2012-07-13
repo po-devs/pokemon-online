@@ -515,6 +515,30 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         in >> *t;
 
         output<BattleEnum::RearrangeTeam>(spot, &t);
+        break;
+    }
+    case BC::ChoiceMade:
+    {
+        BattleChoice choice;
+        in >> choice;
+
+        if (choice.attackingChoice()) {
+            output<BattleEnum::ChooseAttack>(choice.slot(), choice.attackSlot(), choice.target());
+        } else if (choice.switchChoice()) {
+            output<BattleEnum::ChooseSwitch>(choice.slot(), choice.pokeSlot());
+        } else if (choice.cancelled()) {
+            output<BattleEnum::ChooseCancel>(choice.slot());
+        } else if (choice.drawChoice()) {
+            output<BattleEnum::ChooseDraw>(choice.slot());
+        } else if (choice.rearrangeChoice()) {
+            auto c = mk<RearrangeChoice>();
+
+            memcpy((*c).pokeIndexes, choice.choice.rearrange.pokeIndexes, sizeof((*c).pokeIndexes));
+            output<BattleEnum::ChooseRearrangeTeam>(choice.slot(), &c);
+        } else if (choice.moveToCenterChoice()) {
+            output<BattleEnum::ChooseShiftToCenter>(choice.slot());
+        }
+        break;
     }
     default:
         /* TODO: UNKNOWN COMMAND */
