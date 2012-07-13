@@ -72,7 +72,7 @@ params[BattleData.QuickAttack].attack_time = 200;
 params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
 params[BattleData.VoltSwitch] = params[BattleData.U_turn];
 // Placeholder image for FlameWheel
-params[BattleData.FlameWheel].update({effect: "image://pokeinfo/item/71", attack_time: 1500});
+params[BattleData.FlameWheel].update({effect: "image://pokeinfo/item/71", attack_time: 700});
 params[BattleData.Rollout].update({rolls: 3, attack_time: 900});
 params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
 
@@ -93,7 +93,7 @@ function launchMove(attacker, attack, defender, extras) {
     }
 
     var c;
-    if (true) {//! (key in components) ) {
+    if (! (key in components) ) {
         var component = Qt.createComponent(effects[key]);
 
         if (component.status != Component.Ready) {
