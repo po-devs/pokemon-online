@@ -75,6 +75,7 @@ void PokeMovesDb::init()
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[SpecialMoves]);
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[PreEvoMoves]);
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[TutorMoves]);
+                    pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[TMMoves]);
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[EggMoves]);
                     pokes[i].gens[g].moves[PreEvoMoves].unite(pokes[preEvo].gens[g].moves[DreamWorldMoves]);
                     pokes[i].gens[g].moves[PreEvoMoves].subtract(pokes[i].gens[g].moves[LevelMoves]);
