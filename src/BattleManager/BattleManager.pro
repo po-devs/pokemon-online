@@ -28,8 +28,12 @@ SOURCES += \
     auxpokedataproxy.cpp \
     proxydatacontainer.cpp \
     datacontainer.cpp \
-    regularbattlescene.cpp \
-    qglwarner.cpp
+    regularbattlescene.cpp
+
+CONFIG(obsolete) {
+SOURCES +=
+HEADERS +=
+}
 
 HEADERS +=\
     command.h \
@@ -63,8 +67,7 @@ HEADERS +=\
     ../Shared/battlecommands.h \
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/battlestructs.h \
-    qglwarner.h
+    ../PokemonInfo/battlestructs.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -117,10 +120,7 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/spawner.js \
     ../../bin/qml/BattleDataQML/Moves/Move.qml \
     ../../bin/qml/BattleDataQML/Utilities/Curve.qml \
-    ../../bin/qml/BattleDataQML/Moves/UTurn.qml \
-    ../../bin/qml/BattleDataQML/Moves/TakeDown.qml \
     ../../bin/qml/BattleDataQML/Moves/RapidSpin.qml \
-    ../../bin/qml/BattleDataQML/Moves/QuickAttack.qml \
     ../../bin/qml/BattleDataQML/Moves/HiddenPebbles.qml \
     ../../bin/qml/BattleDataQML/Moves/Earthquake.qml \
     ../../bin/qml/BattleDataQML/Moves/Substitute.qml \
@@ -128,7 +128,10 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/BoneRush.qml \
     ../../bin/qml/BattleDataQML/Utilities/Tooltip.qml \
     ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml \
-    ../../bin/qml/BattleDataQML/Moves/Protect.qml
+    ../../bin/qml/BattleDataQML/Moves/Protect.qml \
+    ../../bin/qml/BattleDataQML/Moves/ChargeMove.qml \
+    ../../bin/qml/BattleDataQML/Moves/CloseCombat.qml \
+    ../../bin/qml/BattleDataQML/Moves/Surf.qml
 
 include(../Shared/Common.pri)
 

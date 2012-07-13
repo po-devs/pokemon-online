@@ -1019,7 +1019,7 @@ void BattleSituation::sendBack(int player, bool silent)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved)) {
+            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser")) {
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);
@@ -1613,7 +1613,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             /* Draining moves fail against substitute in gen 2 and earlier */
-            if (gen() <= 2 && hasSubstitute(target) && tmove(player).healing > 0) {
+            if (gen() <= 2 && hasSubstitute(target) && tmove(player).recoil > 0) {
                 turnMem(player).add(TM::Failed);
                 testFail(player);
                 continue;
@@ -3192,10 +3192,8 @@ void BattleSituation::gainPP(int player, int move, int gain)
 {
     int PP = this->PP(player, move);
 
-    PP = std::max(std::min(PP+gain, int(poke(player).move(move).totalPP())), PP);
+    PP = std::max(std::min(PP+gain, int(this->move(player, move) != poke(player).move(move).num() ? 5 : poke(player).move(move).totalPP())), PP);
     changePP(player, move, PP);
-
-    notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 int BattleSituation::getBoostedStat(int player, int stat)

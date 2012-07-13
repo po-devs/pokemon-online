@@ -16,7 +16,7 @@
 35 %s's Air Balloon popped!|%s is floating on a balloon!
 36 %s's %i raised its %st!
 37 %s's %i raised %m's power!
-38 %s used its Red Card on %f!
+38 %s held up its Red Card against %f!
 39 %s used its Eject Button!
 40 %s's Berserk Gene activated!|%s's Attack went way up!
 41 %s's Destiny Knot activated, %f is in love!

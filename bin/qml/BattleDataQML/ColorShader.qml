@@ -18,7 +18,7 @@ ShaderEffectItem {
 
     ShaderEffectSource {
         id: sourceImage
-        hideSource: true
+        hideSource: false
         sourceItem: image
         live: false
     }
@@ -29,10 +29,12 @@ ShaderEffectItem {
 
     x: image.x
     y: image.y
+    z: image.z + 1
     width: image.width
     height: image.height
     parent: image.parent
     scale: image.scale
+    rotation: image.rotation
     transformOrigin: image.transformOrigin
 
     property real opac: image.opacity

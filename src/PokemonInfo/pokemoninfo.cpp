@@ -709,10 +709,7 @@ QString PokemonInfo::Gen::path(const QString &fileName)
 void PokemonInfo::Gen::loadMoves(Gen *parent)
 {
     QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level_moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
-
-    if (gen > 1) {
-        fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
-    }
+    fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
 
     if (gen >= 5) {
         fileNames << path("dw_moves.txt");
@@ -1014,19 +1011,20 @@ QPixmap PokemonInfo::Picture(const QString &url)
         }
     }
 
+    QPixmap ret;
     if (substitute) {
-        return Sub(gen, back);
+        ret = Sub(gen, back);
     } else {
-        QPixmap ret = Picture(num, gen, gender, shiny, back);
-
-        if (cropped) {
-            QImage img = ret.toImage();
-            cropImage(img);
-            ret = QPixmap::fromImage(img);
-        }
-
-        return ret;
+        ret = Picture(num, gen, gender, shiny, back);
     }
+
+    if (cropped) {
+        QImage img = ret.toImage();
+        cropImage(img);
+        ret = QPixmap::fromImage(img);
+    }
+
+    return ret;
 }
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
@@ -1042,9 +1040,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     QString file;
 
     if (gen.num == 1)
-        file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
+        file = QString("yellow/%2%1.png").arg(pokeid.toString(), back?"back/":"");
     else if (gen.num == 2)
-        file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
+        file = QString("crystal/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num ==3)
         file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num == 4)
@@ -1062,11 +1060,14 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
+        if (gender == Pokemon::Female) {
+            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male,shiney,back);
+        }
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
         }
         if (pokeid.isForme()) {
-            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back, false);
+            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back);
         }
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
@@ -1080,17 +1081,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return PokemonInfo::Picture(pokeid, 3, gender, false, back);
             else
                 return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
-        } else if (gen.num == 4 && gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen.num == 4 && shiney) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, false, back);
         } else if (gen.num == 4) {
             return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         } else if (gen.num == 5) {
-            if (gender == Pokemon::Female) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
-            } else if (shiney) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
+            if (shiney) {
+                return PokemonInfo::Picture(pokeid, 5, gender, false, back);
             }
         }
         return ret;
