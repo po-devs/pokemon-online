@@ -374,10 +374,15 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
         }
     }
 
-    DataStream stream(&replayData.data, QIODevice::Append);
-    stream << quint32(replayData.t.elapsed()) << inf;
+    addReplayData(inf);
 
     test->receiveData(inf);
+}
+
+void BaseBattleWindow::addReplayData(const QByteArray &inf)
+{
+    DataStream stream(&replayData.data, QIODevice::Append);
+    stream << quint32(replayData.t.elapsed()) << inf;
 }
 
 void BaseBattleWindow::ignoreSpectators()

@@ -10,6 +10,7 @@
 
 class ShallowBattlePoke;
 class BattleDynamicInfo;
+class RearrangeChoice;
 
 template <class Underling>
 class BattleCommandInvoker
@@ -121,12 +122,18 @@ protected:
     start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)
     start(RearrangeTeam, onRearrangeTeam, int player, std::shared_ptr<ShallowShownTeam>* team) end (onRearrangeTeam, player, *team->get())
     start(ChoiceSelection, onChoiceSelection, int player) end (onChoiceSelection, player)
-    start(ChoiceCancelled, onChoiceCancelled, int player) end (onChoiceCancelled, player)
+    start(ChoiceCancelled, onChoiceCancellation, int player) end (onChoiceCancellation, player)
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
     start(Reconnect, onReconnect, int player) end (onReconnect, player)
     start(Disconnect, onDisconnect, int player) end (onDisconnect, player)
+    start(ChooseAttack, onAttackChosen, int spot, int attackSlot, int target) end(onAttackChosen, spot, attackSlot)
+    start(ChooseSwitch, onSwitchChosen, int spot, int pokeSlot) end(onSwitchChosen, spot, pokeSlot)
+    start(ChooseRearrangeTeam, onTeamOrderChosen, int player, std::shared_ptr<RearrangeChoice> *choice) end(onTeamOrderChosen, player, *choice->get())
+    start(ChooseCancel, onChoiceCancelled, int player) end(onChoiceCancelled, player)
+    start(ChooseShiftToCenter, onShiftToCenterChosen, int player) end(onShiftToCenterChosen, player)
+    start(ChooseDraw, onDrawRequest, int player) end(onDrawRequest, player)
 
 #undef start
 #undef end
@@ -194,12 +201,18 @@ protected:
     void onMoveChange(int spot, int slot, int move, bool definite);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
-    void onChoiceCancelled(int player);
+    void onChoiceCancellation(int player);
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
     void onPrintHtml(const QString &html);
     void onReconnect(int player);
     void onDisconnect(int player);
+    void onAttackChosen(int spot, int attackSlot, int target);
+    void onSwitchChosen(int spot, int pokeSlot);
+    void onTeamOrderChosen(int player, const RearrangeChoice &rearrange);
+    void onChoiceCancelled(int player);
+    void onShiftToCenterChosen(int player);
+    void onDrawRequest(int player);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

@@ -16,6 +16,7 @@ class BattleDynamicInfo;
 class BattleChoices;
 class ShallowShownTeam;
 class BattleStats;
+class RearrangeChoice;
 
 template <class Current>
 class BattleExtracter
@@ -144,6 +145,12 @@ protected:
     start(PrintHtml, string_ptr data) end(data)
     start(Reconnect, int player) end (player)
     start(Disconnect, int player) end (player)
+    start(ChooseAttack, int spot; int attackSlot; int target) end(spot, attackSlot, target)
+    start(ChooseSwitch, int spot; int pokeSlot) end(spot, pokeSlot)
+    start(ChooseRearrangeTeam, int player; std::shared_ptr<RearrangeChoice> *choice) end(player, choice)
+    start(ChooseCancel, int player) end(player)
+    start(ChooseShiftToCenter, int player) end(player)
+    start(ChooseDraw, int player) end(player)
 
 #undef start
 #undef end
@@ -255,6 +262,12 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(PrintHtml);
     addCallback(Reconnect);
     addCallback(Disconnect);
+    addCallback(ChooseAttack);
+    addCallback(ChooseSwitch);
+    addCallback(ChooseShiftToCenter);
+    addCallback(ChooseRearrangeTeam);
+    addCallback(ChooseCancel);
+    addCallback(ChooseDraw);
 
 #undef addCallback
 }

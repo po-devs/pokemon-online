@@ -107,6 +107,13 @@ public:
         return abs(slotNum(poke1)-slotNum(poke2)) <= 1;
     }
 
+    void onTeamOrderChosen(int player, const RearrangeChoice &order) {
+        if (isPlayer(player)) {
+            conf->teams[player]->setIndexes(order.pokeIndexes);
+            reloadTeam(player);
+        }
+    }
+
     /* the temp poke code could be made generic */
     PokeProxy &tempPoke(int spot) {
         return *fieldPoke(spot).pokemon();
