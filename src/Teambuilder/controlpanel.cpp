@@ -68,7 +68,7 @@ QString ControlPanel::statusText(const UserInfo &ui) const
     } else if (ui.tempBanned()) {
         ret = toBoldColor(tr("Tempbanned"), QColor("orange"));
     } else if (ui.online()) {
-        ret = toBoldColor(tr("Online"), Qt::green);
+        ret = toBoldColor(tr("Online"), Qt::darkGreen);
     } else {
         ret = tr("Offline");
     }
