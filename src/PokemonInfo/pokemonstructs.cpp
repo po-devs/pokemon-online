@@ -1214,7 +1214,7 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
             v.stream << p.nature();
         }
         v.stream << p.gender();
-        if (p.gen() > 2 && p.happiness() != 0) {
+        if (p.gen() >= 2 && p.happiness() != 0) {
             v.stream << p.happiness();
         }
     }
