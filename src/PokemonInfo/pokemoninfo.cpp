@@ -709,10 +709,7 @@ QString PokemonInfo::Gen::path(const QString &fileName)
 void PokemonInfo::Gen::loadMoves(Gen *parent)
 {
     QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level_moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
-
-    if (gen > 1) {
-        fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
-    }
+    fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
 
     if (gen >= 5) {
         fileNames << path("dw_moves.txt");
