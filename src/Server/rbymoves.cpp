@@ -13,6 +13,10 @@ typedef MoveMechanics MM;
 typedef BattleRBY BS;
 typedef BS::TurnMemory TM;
 
+BS::SlotMemory & MoveMechanics::slot(BattleRBY &battle, int s) {
+    return battle.slotMemory(s);
+}
+
 void RBYMoveEffect::setup(int num, int source, int target, BattleBase &b)
 {
     /* first the basic info */
@@ -242,7 +246,14 @@ struct RBYCounter : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        int type = MoveInfo::Type(fpoke(b,t).lastMoveUsed, b.gen());
+        int mv = (b.gen() <= Pokemon::gen(Gen::Yellow) ? slot(b, t).lastMoveUsed : fpoke(b,t).lastMoveUsed);
+
+        if (mv == 0) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+
+        int type = MoveInfo::Type(mv, b.gen());
 
         if (type != Type::Normal && type != Type::Fighting) {
             fturn(b,s).add(TM::Failed);
@@ -867,7 +878,6 @@ struct RBYSuperFang : public MM
         turn(b,s)["CustomDamage"] = std::max(int(b.poke(t).lifePoints()/2), 1);
     }
 };
-
 struct RBYConversion : public MM
 {
     RBYConversion() {

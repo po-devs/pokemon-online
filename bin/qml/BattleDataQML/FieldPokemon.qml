@@ -62,7 +62,18 @@ Item {
         source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
-        onSourceChanged: shader.item.grab();
+        onSourceChanged: shader.grab();
+    }
+
+    /**
+      As we now use a shader overlapping an image, if the image
+      has a certain opacity we need to reduce it even more because
+      of the two overlapping images (image & shader) with same opacity.
+
+      This function gives the actualy opacity to use in function of the
+      final opacity we want */
+    function calc_opacity(opac) {
+        return 1 - Math.sqrt(1-opac);
     }
 
     Tooltip {
@@ -142,43 +153,15 @@ Item {
         opacity: 0;
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
-        source: "image://pokeinfo/pokemon/substitute&back="+back
+        source: "image://pokeinfo/pokemon/substitute&back="+back+"&cropped=true"
     }
 
     /* Used to display fainted pokemon */
-    Component {
-        id: shaderComponent
-        ColorShader {
-            id: shader
-            image: img
-            blendColor: Colors.statusColor(pokemon.status)
-            alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
-        }
-    }
-
-    Component {
-        id: nonShaderComponent
-        Item {
-            function grab() {}
-        }
-    }
-
-    Loader {
+    ColorShader {
         id: shader
-        sourceComponent: shaderComponent
-        onStatusChanged: if (shader.status == Loader.Error) {sourceComponent = nonShaderComponent; }
-    }
-
-    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
-      still active when the declarative view is deleted
-
-      For some reason only the one in Pokemon.qml is needed to prevent crashes on my current build,
-      but by precaution putting one here too.
-      */
-    Connections {
-        target: battle.scene
-        onDisappearing: shader.sourceComponent = undefined;
-        onAppearing: shader.sourceComponent = shaderComponent;
+        image: img
+        blendColor: Colors.statusColor(pokemon.status)
+        alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
     }
 
     property Image pokeSprite: img
@@ -208,7 +191,7 @@ Item {
                 target: img
                 anchors.bottomMargin: back ? -40 : 40;
                 anchors.horizontalCenterOffset: back? -40: 40;
-                opacity: 0.7;
+                opacity: calc_opacity(0.7);
                 z: woof.back ? 10 : -10;
             }
             PropertyChanges {
@@ -341,7 +324,7 @@ Item {
                     NumberAnimation { target: substitute; property: "opacity";}
                     NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
                     NumberAnimation {target: img; property: "anchors.bottomMargin"}
-                    NumberAnimation {target: img; property: "opacity"}
+                    NumberAnimation {targets: [img, shader]; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}
             }
@@ -355,7 +338,7 @@ Item {
                 ParallelAnimation {
                     NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
                     NumberAnimation {target: img; property: "anchors.bottomMargin"}
-                    NumberAnimation {target: img; property: "opacity"}
+                    NumberAnimation {targets: [img,shader]; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}
             }

@@ -4194,7 +4194,18 @@ struct MMCrossFlame : public MM
 struct MMWillOWisp : public MM
 {
     MMWillOWisp() {
+        functions["BeforeTargetList"] = &btl;
         functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() <= 0 || b.gen() <= 4) {
+            return;
+        }
+        /* Will o Wisp doesn't miss against flash fire in gen 5 */
+        if (b.hasWorkingAbility(b.targetList.front(), Ability::FlashFire)) {
+            tmove(b,s).accuracy = 0;
+        }
     }
 
     static void daf(int s, int t, BS &b) {

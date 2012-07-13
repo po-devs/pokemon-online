@@ -11,6 +11,8 @@
 
 struct RBYMechanics : public MechanicsBase<BattleRBY::MechanicsFunction> {
     typedef BattleRBY::MechanicsFunction function;
+
+    static BattleRBY::SlotMemory & slot(BattleRBY &battle, int s);
 };
 
 typedef RBYMechanics RBYMoveMechanics;

@@ -96,6 +96,7 @@ Item {
         Rectangle {
             z: -10
             anchors.fill: parent
+            anchors.rightMargin: (300-battle.data.team(playerFront).time) * parent.width/300
             color: Qt.lighter(parent.border.color)
             radius: parent.radius
             opacity: 0.7

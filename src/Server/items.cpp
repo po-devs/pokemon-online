@@ -721,6 +721,8 @@ struct IMRedCard : public IM
         b.sendPoke(t, switches[b.randint(switches.size())], true);
         b.sendMoveMessage(107,2,s,0,t);
         b.callEntryEffects(t);
+
+        turn(b,t).remove("RedCardUser");
     }
 };
 

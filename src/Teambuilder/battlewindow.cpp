@@ -6,6 +6,7 @@
 #include "logmanager.h"
 #include "theme.h"
 #include "spectatorwindow.h"
+#include "../Shared/battlecommands.h"
 #include <cstdlib>
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
@@ -493,8 +494,17 @@ void BattleWindow::attackButton()
 
 void BattleWindow::sendChoice(const BattleChoice &b)
 {
+    /* Stores choice made in replay data */
+    QByteArray ar;
+    DataStream out(&ar, QIODevice::WriteOnly);
+    out << quint8(BattleCommands::ChoiceMade) << quint8(info().myself) << b;
+
+    addReplayData(ar);
+
+    /* Send choice made to the server */
     emit battleCommand(battleId(), b);
 
+    /* Disable the choice selection if we didn't ask just for a draw */
     if (!b.drawChoice())
         info().possible = false;
 }
@@ -630,7 +640,7 @@ void BattleWindow::onBattleEnd(int res, int winner)
     BaseBattleWindow::onBattleEnd(res, winner);
 }
 
-void BattleWindow::onChoiceCancelled(int) {
+void BattleWindow::onChoiceCancellation(int) {
     cancel();
 }
 

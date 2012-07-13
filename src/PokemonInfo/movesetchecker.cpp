@@ -257,8 +257,18 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     }
                 }
 
-                if (ok)
-                    moves.subtract(PokemonInfo::RegularMoves(pokeid, 1));
+                if (ok) {
+                    moves.subtract(PokemonInfo::RegularMoves(pokeid, Pokemon::gen(1, Pokemon::gen::wholeGen)));
+
+                    /* Special case: Pikachu has a pre-evo in gen 2, and egg moves
+                      from it, but moves it learn from gen 1 and its pre evo can't learn
+                      from gen 1 */
+                    int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
+                    if (preevo != 0 &&  preevo != pokeid.pokenum) {
+                        if (ok && isValid(preevo, g, moves))
+                            return true;
+                    }
+                }
             } else if (!nobreeding) {
                 int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
 

@@ -39,15 +39,17 @@ private:
     BattleChoice choices[2];
 
     BasicPokeInfo pokes[2];
-
+public:
     struct SlotMemory {
         SlotMemory() {
             switchCount = 0;
+            lastMoveUsed = 0;
         }
 
         quint16 switchCount;
+        quint16 lastMoveUsed;
     };
-
+private:
     SlotMemory slotzones[2];
 
     TurnMemory turnzones[2];
@@ -57,6 +59,7 @@ private:
     context pokeMems[2];
     context turnMems[2];
 
+public:
     BasicPokeInfo &fpoke(int i) {return pokes[i];}
     const BasicPokeInfo &fpoke(int i) const {return pokes[i];}
     SlotMemory &slotMemory(int i) {return slotzones[i];}
@@ -68,7 +71,7 @@ private:
     const context & pokeMemory(int slot) const {return pokeMems[slot];}
     context &turnMemory(int slot) { return turnMems[slot];}
     const context & turnMemory(int slot) const {return turnMems[slot];}
-public:
+
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);
     /* This time the pokelong effects */

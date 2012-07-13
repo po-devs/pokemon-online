@@ -3,7 +3,7 @@
 
 enum /* class */ BattleEnum
 {
-    NewHp,
+    NewHp, //0
     Damaged,
     Ko,
     SendOut,
@@ -13,7 +13,7 @@ enum /* class */ BattleEnum
     Hits,
     Effectiveness,
     CriticalHit,
-    Miss,
+    Miss, //10
     Avoid,
     StatChange,
     ClassicStatusChange,
@@ -23,7 +23,7 @@ enum /* class */ BattleEnum
     StatusFree,
     StatusHurt,
     Fail,
-    PlayerMessage,
+    PlayerMessage, //20
     SpectatorEnter,
     SpectatorLeave,
     SpectatorMessage,
@@ -33,7 +33,7 @@ enum /* class */ BattleEnum
     Flinch,
     Recoil,
     Drained,
-    StartWeather,
+    StartWeather, //30
     WeatherMessage,
     EndWeather,
     WeatherDamage,
@@ -43,7 +43,7 @@ enum /* class */ BattleEnum
     BlankMessage,
     ClauseMessage,
     RatedInfo,
-    TierInfo,
+    TierInfo, //40
     StatBoostsAndField,
     PokemonVanish,
     PokemonReappear,
@@ -53,7 +53,7 @@ enum /* class */ BattleEnum
     ClockStart,
     ClockStop,
     ShiftSpots,
-    PPChange,
+    PPChange, //50
     OfferChoice,
     TempPPChange,
     MoveChange,
@@ -63,8 +63,15 @@ enum /* class */ BattleEnum
     Variation,
     DynamicStats,
     PrintHtml,
-    Reconnect,
-    Disconnect
+    Reconnect, //60
+    Disconnect,
+    /* Player choices, that the player actually make (as opposed to choice offered by the server) */
+    ChooseAttack,
+    ChooseSwitch,
+    ChooseRearrangeTeam,
+    ChooseCancel,
+    ChooseShiftToCenter,
+    ChooseDraw
 };
 
 inline unsigned int qHash(const BattleEnum &b) {
