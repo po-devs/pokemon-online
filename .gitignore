@@ -57,3 +57,4 @@ bin/UpdateMaker
 update-*.zip
 bin/pomaintenance*
 bin/scripts
+bin/start-client
