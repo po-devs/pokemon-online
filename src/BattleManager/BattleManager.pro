@@ -130,7 +130,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Utilities/TopLevelItem.qml \
     ../../bin/qml/BattleDataQML/Moves/Protect.qml \
     ../../bin/qml/BattleDataQML/Moves/ChargeMove.qml \
-    ../../bin/qml/BattleDataQML/Moves/CloseCombat.qml
+    ../../bin/qml/BattleDataQML/Moves/CloseCombat.qml \
+    ../../bin/qml/BattleDataQML/Moves/Surf.qml
 
 include(../Shared/Common.pri)
 
