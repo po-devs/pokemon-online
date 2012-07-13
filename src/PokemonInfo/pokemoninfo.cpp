@@ -63,7 +63,7 @@ QHash<int, QStringList> ItemInfo::m_BerryMessages;
 QHash<int,int> ItemInfo::m_Powers;
 QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
-QList<int> ItemInfo::m_UsefulItems;
+QHash<int, bool> ItemInfo::m_UsefulItems;
 QVector<QSet<int> > ItemInfo::m_GenItems;
 
 QHash<int, QString> TypeInfo::m_Names;
@@ -2072,7 +2072,7 @@ void ItemInfo::retranslate()
 
 void ItemInfo::loadGenData()
 {
-    fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
+    fill_int_bool(m_UsefulItems, path("item_useful.txt"));
 
     m_GenItems.clear();
     m_GenItems.resize(GenInfo::NumberOfGens());
@@ -2100,7 +2100,6 @@ void ItemInfo::loadNames()
     m_BerryNamesH.reserve(m_BerryNames.size());
 
     QHashIterator<int, QString> it2(m_BerryNames);
-
     while (it2.hasNext()) {
         it2.next();
         m_BerryNamesH.insert(it2.value(), it2.key()+8000);
@@ -2118,9 +2117,11 @@ void ItemInfo::loadNames()
     QList<QString> sortedUsefulNames;
     sortedUsefulNames << m_BerryNames.values();
 
-    for (int i = 0; i < m_RegItemNames.size(); i++) {
-        if (isUseful(i))
-            sortedUsefulNames.push_back(m_RegItemNames[i]);
+    QHashIterator<int, QString> it(m_RegItemNames);
+    while (it.hasNext()) {
+        it.next();
+        if (isUseful(it.key()))
+            sortedUsefulNames.push_back(it.value());
     }
     qSort(sortedUsefulNames);
 
@@ -2358,7 +2359,7 @@ bool ItemInfo::isMail(int itemnum)
 
 bool ItemInfo::isUseful(int itemnum)
 {
-    return isBerry(itemnum) || m_UsefulItems[itemnum] == true;
+    return isBerry(itemnum) || m_UsefulItems.value(itemnum) == true;
 }
 
 int ItemInfo::PlateType(int itemnum)
