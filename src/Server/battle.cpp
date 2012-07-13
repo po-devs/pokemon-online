@@ -3192,10 +3192,8 @@ void BattleSituation::gainPP(int player, int move, int gain)
 {
     int PP = this->PP(player, move);
 
-    PP = std::max(std::min(PP+gain, int(poke(player).move(move).totalPP())), PP);
+    PP = std::max(std::min(PP+gain, int(this->move(player, move) != poke(player).move(move).num() ? 5 : poke(player).move(move).totalPP())), PP);
     changePP(player, move, PP);
-
-    notify(this->player(player), ChangePP, player, quint8(move), poke(player).move(move).PP());
 }
 
 int BattleSituation::getBoostedStat(int player, int stat)
