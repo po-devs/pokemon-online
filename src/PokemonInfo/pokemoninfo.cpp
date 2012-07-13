@@ -2099,9 +2099,11 @@ void ItemInfo::loadNames()
     fill_int_str(m_BerryNames, path("berries.txt"), true);
     m_BerryNamesH.reserve(m_BerryNames.size());
 
-    QHash<int, QString>::const_iterator it2 = m_BerryNames.constBegin();
-    for (int i = 0; it2 != m_BerryNames.constEnd(); i++, ++it2) {
-        m_BerryNamesH[*it2] = i+8000;
+    QHashIterator<int, QString> it2(m_BerryNames);
+
+    while (it2.hasNext()) {
+        it2.next();
+        m_BerryNamesH.insert(it2.value(), it2.key()+8000);
     }
 
     m_SortedNames.clear();
@@ -2109,35 +2111,29 @@ void ItemInfo::loadNames()
     m_SortedNames.resize(GenInfo::NumberOfGens());
     m_SortedUsefulNames.resize(GenInfo::NumberOfGens());
 
-    int mg = GenInfo::GenMax() - GEN_MIN;
+    QList<QString> sortedNames;
+    sortedNames << m_RegItemNames.values() << m_BerryNames.values();
+    qSort(sortedNames);
 
-    m_SortedNames[mg] << m_RegItemNames.values() << m_BerryNames.values();
-    qSort(m_SortedNames[mg]);
+    QList<QString> sortedUsefulNames;
+    sortedUsefulNames << m_BerryNames.values();
 
-    m_SortedUsefulNames[mg] << m_BerryNames.values();
     for (int i = 0; i < m_RegItemNames.size(); i++) {
         if (isUseful(i))
-            m_SortedUsefulNames[mg].push_back(m_RegItemNames[i]);
+            sortedUsefulNames.push_back(m_RegItemNames[i]);
     }
-    qSort(m_SortedUsefulNames[mg]);
+    qSort(sortedUsefulNames);
 
-    for (int j = GenInfo::GenMax()-1; j >= GEN_MIN_ITEMS; j--) {
+    for (int j = GenInfo::GenMax(); j >= GEN_MIN_ITEMS; j--) {
         int g = j-GEN_MIN;
-        for (int i = 0; i < m_SortedNames[g+1].size(); i++) {
-            if (Exists(Number(m_SortedNames[g+1][i]), j))
-                m_SortedNames[g].push_back(m_SortedNames[g+1][i]);
+        for (int i = 0; i < sortedNames.size(); i++) {
+            if (Exists(Number(sortedNames[i]), j))
+                m_SortedNames[g].push_back(sortedNames[i]);
         }
 
-        for (int i = 0; i < m_SortedUsefulNames[g+1].size(); i++) {
-            if (Exists(Number(m_SortedUsefulNames[g+1][i]), j))
-                m_SortedUsefulNames[g].push_back(m_SortedUsefulNames[g+1][i]);
-        }
-
-        if (j == 2) {
-            m_SortedNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
-            m_SortedUsefulNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
-            qSort(m_SortedNames[g]);
-            qSort(m_SortedUsefulNames[g]);
+        for (int i = 0; i < sortedUsefulNames.size(); i++) {
+            if (Exists(Number(sortedUsefulNames[i]), j))
+                m_SortedUsefulNames[g].push_back(sortedUsefulNames[i]);
         }
     }
 }
