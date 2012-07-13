@@ -544,8 +544,10 @@ void PokeTeam::load()
         gender() = Pokemon::Male;
     } else
     {
-        /* Gen 2 has to do with IVs, so since we set max Att IV by default, it's male */
-        gender() = gen() <= 2 ? Pokemon::Male : (true_rand() % 2 ? Pokemon::Male : Pokemon::Female);
+        if (gender() == Pokemon::Neutral) {
+            /* Gen 2 has to do with IVs, so since we set max Att IV by default, it's male */
+            gender() = gen() <= 2 ? Pokemon::Male : (true_rand() % 2 ? Pokemon::Male : Pokemon::Female);
+        }
     }
 
     if (ability() == 0 || !abilities().contains(ability())) {
