@@ -63,7 +63,7 @@ QHash<int, QStringList> ItemInfo::m_BerryMessages;
 QHash<int,int> ItemInfo::m_Powers;
 QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
-QList<int> ItemInfo::m_UsefulItems;
+QHash<int, bool> ItemInfo::m_UsefulItems;
 QVector<QSet<int> > ItemInfo::m_GenItems;
 
 QHash<int, QString> TypeInfo::m_Names;
@@ -709,10 +709,7 @@ QString PokemonInfo::Gen::path(const QString &fileName)
 void PokemonInfo::Gen::loadMoves(Gen *parent)
 {
     QStringList fileNames = QStringList() << path("tm_and_hm_moves.txt") << path("level_moves.txt") << path("special_moves.txt") << path("pre_evo_moves.txt");
-
-    if (gen > 1) {
-        fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
-    }
+    fileNames << path("egg_moves.txt") << path("tutor_moves.txt");
 
     if (gen >= 5) {
         fileNames << path("dw_moves.txt");
@@ -1014,19 +1011,20 @@ QPixmap PokemonInfo::Picture(const QString &url)
         }
     }
 
+    QPixmap ret;
     if (substitute) {
-        return Sub(gen, back);
+        ret = Sub(gen, back);
     } else {
-        QPixmap ret = Picture(num, gen, gender, shiny, back);
-
-        if (cropped) {
-            QImage img = ret.toImage();
-            cropImage(img);
-            ret = QPixmap::fromImage(img);
-        }
-
-        return ret;
+        ret = Picture(num, gen, gender, shiny, back);
     }
+
+    if (cropped) {
+        QImage img = ret.toImage();
+        cropImage(img);
+        ret = QPixmap::fromImage(img);
+    }
+
+    return ret;
 }
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
@@ -1042,9 +1040,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     QString file;
 
     if (gen.num == 1)
-        file = QString("%1/%2").arg(pokeid.toString(), back?"GBRYback.png":"Y.gif");
+        file = QString("yellow/%2%1.png").arg(pokeid.toString(), back?"back/":"");
     else if (gen.num == 2)
-        file = QString("%1/%2.png").arg(pokeid.toString(), back?"GSCback%3":"S%3").arg(shiney?"s":"");
+        file = QString("crystal/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num ==3)
         file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num == 4)
@@ -1062,11 +1060,14 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
+        if (gender == Pokemon::Female) {
+            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male,shiney,back);
+        }
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
         }
         if (pokeid.isForme()) {
-            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back, false);
+            return PokemonInfo::Picture(pokeid.original(), gen, gender, shiney, back);
         }
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
@@ -1080,17 +1081,13 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return PokemonInfo::Picture(pokeid, 3, gender, false, back);
             else
                 return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
-        } else if (gen.num == 4 && gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, shiney, back);
         } else if (gen.num == 4 && shiney) {
-            return PokemonInfo::Picture(pokeid, 4, Pokemon::Male, false, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, false, back);
         } else if (gen.num == 4) {
             return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         } else if (gen.num == 5) {
-            if (gender == Pokemon::Female) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, shiney, back);
-            } else if (shiney) {
-                return PokemonInfo::Picture(pokeid, 5, Pokemon::Male, false, back);
+            if (shiney) {
+                return PokemonInfo::Picture(pokeid, 5, gender, false, back);
             }
         }
         return ret;
@@ -2075,7 +2072,7 @@ void ItemInfo::retranslate()
 
 void ItemInfo::loadGenData()
 {
-    fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
+    fill_int_bool(m_UsefulItems, path("item_useful.txt"));
 
     m_GenItems.clear();
     m_GenItems.resize(GenInfo::NumberOfGens());
@@ -2102,9 +2099,10 @@ void ItemInfo::loadNames()
     fill_int_str(m_BerryNames, path("berries.txt"), true);
     m_BerryNamesH.reserve(m_BerryNames.size());
 
-    QHash<int, QString>::const_iterator it2 = m_BerryNames.constBegin();
-    for (int i = 0; it2 != m_BerryNames.constEnd(); i++, ++it2) {
-        m_BerryNamesH[*it2] = i+8000;
+    QHashIterator<int, QString> it2(m_BerryNames);
+    while (it2.hasNext()) {
+        it2.next();
+        m_BerryNamesH.insert(it2.value(), it2.key()+8000);
     }
 
     m_SortedNames.clear();
@@ -2112,35 +2110,31 @@ void ItemInfo::loadNames()
     m_SortedNames.resize(GenInfo::NumberOfGens());
     m_SortedUsefulNames.resize(GenInfo::NumberOfGens());
 
-    int mg = GenInfo::GenMax() - GEN_MIN;
+    QList<QString> sortedNames;
+    sortedNames << m_RegItemNames.values() << m_BerryNames.values();
+    qSort(sortedNames);
 
-    m_SortedNames[mg] << m_RegItemNames.values() << m_BerryNames.values();
-    qSort(m_SortedNames[mg]);
+    QList<QString> sortedUsefulNames;
+    sortedUsefulNames << m_BerryNames.values();
 
-    m_SortedUsefulNames[mg] << m_BerryNames.values();
-    for (int i = 0; i < m_RegItemNames.size(); i++) {
-        if (isUseful(i))
-            m_SortedUsefulNames[mg].push_back(m_RegItemNames[i]);
+    QHashIterator<int, QString> it(m_RegItemNames);
+    while (it.hasNext()) {
+        it.next();
+        if (isUseful(it.key()))
+            sortedUsefulNames.push_back(it.value());
     }
-    qSort(m_SortedUsefulNames[mg]);
+    qSort(sortedUsefulNames);
 
-    for (int j = GenInfo::GenMax()-1; j >= GEN_MIN_ITEMS; j--) {
+    for (int j = GenInfo::GenMax(); j >= GEN_MIN_ITEMS; j--) {
         int g = j-GEN_MIN;
-        for (int i = 0; i < m_SortedNames[g+1].size(); i++) {
-            if (Exists(Number(m_SortedNames[g+1][i]), j))
-                m_SortedNames[g].push_back(m_SortedNames[g+1][i]);
+        for (int i = 0; i < sortedNames.size(); i++) {
+            if (Exists(Number(sortedNames[i]), j))
+                m_SortedNames[g].push_back(sortedNames[i]);
         }
 
-        for (int i = 0; i < m_SortedUsefulNames[g+1].size(); i++) {
-            if (Exists(Number(m_SortedUsefulNames[g+1][i]), j))
-                m_SortedUsefulNames[g].push_back(m_SortedUsefulNames[g+1][i]);
-        }
-
-        if (j == 2) {
-            m_SortedNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
-            m_SortedUsefulNames[g].push_back(ItemInfo::Name(Item::BerserkGene));
-            qSort(m_SortedNames[g]);
-            qSort(m_SortedUsefulNames[g]);
+        for (int i = 0; i < sortedUsefulNames.size(); i++) {
+            if (Exists(Number(sortedUsefulNames[i]), j))
+                m_SortedUsefulNames[g].push_back(sortedUsefulNames[i]);
         }
     }
 }
@@ -2365,7 +2359,7 @@ bool ItemInfo::isMail(int itemnum)
 
 bool ItemInfo::isUseful(int itemnum)
 {
-    return isBerry(itemnum) || m_UsefulItems[itemnum] == true;
+    return isBerry(itemnum) || m_UsefulItems.value(itemnum) == true;
 }
 
 int ItemInfo::PlateType(int itemnum)

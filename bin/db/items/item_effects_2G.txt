@@ -96,4 +96,7 @@
 225 31#Steel Mail
 226 31#Tunnel Mail
 304 40#Berserk Gene
-305 #
+## GSC ##
+1000 10-0#Pink Bow
+1001 10-0#Polkadot Bow
+

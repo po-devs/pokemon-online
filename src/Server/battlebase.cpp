@@ -1755,15 +1755,6 @@ PokeFraction BattleBase::getStatBoost(int player, int stat)
     /* Boost is 1 if boost == 0,
        (2+boost)/2 if boost > 0;
        2/(2+boost) otherwise */
-    int attacker = this->attacker();
-    int attacked = this->attacked();
-
-    if (attacker != -1 && attacked != -1) {
-        //Critical hit
-        if (turnMem(attacker).contains(TM::CriticalHit)) {
-            boost = 0;
-        }
-    }
 
     if (stat <= 5) {
         return PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));

@@ -23,6 +23,8 @@
 #ifdef Q_OS_MACX
 #include <CoreFoundation/CFURL.h>
 #include <CoreFoundation/CFBundle.h>
+#include "mac/SparkleAutoUpdater.h"
+#include "mac/CocoaInitializer.h"
 #endif
 
 //#include <QSharedMemory>
@@ -122,6 +124,21 @@ int main(int argc, char *argv[])
 
         QSettings settings;
 
+#if defined(Q_OS_MACX)
+
+        // Check if there are updates using Sparkle
+        CocoaInitializer initializer;
+        SparkleAutoUpdater* updater = new SparkleAutoUpdater;
+        updater->checkForUpdates();
+
+#else
+        // Auto updator and Icon are not applicable on Mac OSX
+        // Mac OSX has it's own updater using Sparkle
+        // Additionally, setting Icon here seems to break native OSX way.
+        //
+        /* icon ;) */
+        a.setWindowIcon(QIcon("db/icon.png"));
+
         //QSharedMemory memory("Pokemon Online at " + QDir().absolutePath());
 
         if (settings.value("Updates/Ready").toBool()) {
@@ -179,6 +196,7 @@ int main(int argc, char *argv[])
         //if (!memory.create(20, QSharedMemory::ReadOnly)) {
             //memory.attach(QSharedMemory::ReadOnly);
         //}
+#endif
 
         if (settings.value("language").isNull()) {
             settings.setValue("language", QLocale::system().name().section('_', 0, 0));
@@ -192,11 +210,6 @@ int main(int argc, char *argv[])
 
         translator.load(QString("trans/%1/translation_%1").arg(locale));
         a.installTranslator(&translator);
-
-        /* icon ;) */
-#if not defined(Q_OS_MACX)
-        a.setWindowIcon(QIcon("db/icon.png"));
-#endif
 
         MainEngine w(updated);
 

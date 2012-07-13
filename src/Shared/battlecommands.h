@@ -51,7 +51,9 @@ namespace BattleCommands {
         StartChoices,
         Avoid,
         RearrangeTeam,
-        SpotShifting
+        SpotShifting,
+        ChoiceMade /* BattleChoice in parameter. May be used by server to remind players of the choice they made. More importantly, used
+                     in replays (battle window store choice mades that way */
     };
 
     enum ChangeTempPoke {

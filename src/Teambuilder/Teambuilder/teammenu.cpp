@@ -104,6 +104,10 @@ void TeamMenu::updateItemModel()
     ui->itemsModel->setStringList(itemList);
 
     team().team() = t;
+
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->setItem(team().team().poke(p->property("slot").toInt()).item());
+    }
 }
 
 void TeamMenu::updateTabs()

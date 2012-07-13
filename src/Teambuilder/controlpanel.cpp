@@ -68,7 +68,7 @@ QString ControlPanel::statusText(const UserInfo &ui) const
     } else if (ui.tempBanned()) {
         ret = toBoldColor(tr("Tempbanned"), QColor("orange"));
     } else if (ui.online()) {
-        ret = toBoldColor(tr("Online"), Qt::green);
+        ret = toBoldColor(tr("Online"), Qt::darkGreen);
     } else {
         ret = tr("Offline");
     }
@@ -86,6 +86,10 @@ void ControlPanel::addAlias(const QString &name)
     aliasList->addItem(name);
 }
 
+namespace {
+    const QString TimeStampFormat = "yyyy-MM-dd hh:mm:ss";
+}
+
 void ControlPanel::addNameToBanList(const QString &name, const QString &ip, const QDateTime& expires)
 {
     int rowcount = banTable->rowCount();
@@ -95,7 +99,7 @@ void ControlPanel::addNameToBanList(const QString &name, const QString &ip, cons
     if (expires.toTime_t() == 0) {
         banTable->setItem(rowcount, 2, new QTableWidgetItem(tr("Never")));
 	} else {
-        banTable->setItem(rowcount, 2, new QTableWidgetItem(expires.toLocalTime().toString("yyyy.MM.dd hh:mm:ss")));
+        banTable->setItem(rowcount, 2, new QTableWidgetItem(expires.toLocalTime().toString(TimeStampFormat)));
 	}
 }
 
@@ -109,4 +113,36 @@ void ControlPanel::on_unban_clicked()
 
     emit unbanRequested(banTable->item(row, 0)->text());
     banTable->removeRow(row);
+}
+
+void ControlPanel::on_banTable_clicked(const QModelIndex& index)
+{
+	QDateTime expire_time = QDateTime::fromString(banTable->item(index.row(), 2)->text(), TimeStampFormat);
+	if (expire_time.isValid()) {
+	    expireEdit->setDateTime(expire_time);
+	} else {
+	    expireEdit->setDateTime(expireEdit->maximumDateTime());
+	}
+}
+
+void ControlPanel::on_updateBantime_clicked()
+{
+    int row = banTable->currentRow();
+	if (row == -1 || row >= banTable->rowCount()) {
+		return;
+	}
+	QDateTime expire_time = expireEdit->dateTime();
+	if (expire_time < QDateTime::currentDateTime()) {
+        QMessageBox::warning(this, tr("Requested unban time is in past"), tr("The ban expire time you requested is in the past, please use a valid future timestamp."));
+		return;
+	}
+
+	int ban_time = QDateTime::currentDateTime().secsTo(expire_time)/60 + 1;
+
+	if (ban_time > 1440 && ban->isHidden()) {
+        QMessageBox::warning(this, tr("Requested unban time is too far in the future"), tr("The ban expire time you requested is too far in the future."));
+		return;
+	}
+
+	emit tempBanRequested(banTable->item(row, 0)->text(), ban_time);
 }

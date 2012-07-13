@@ -65,7 +65,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(5, -1);
+    Pokemon::gen gen(3, 0);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -182,8 +182,10 @@ int main(int, char**)
                 continue;
             }
 
-
             foreach(int poke, pokesOfGroup.values(groups[c])) {
+                if (!PokemonInfo::Exists(poke, tg) || !PokemonInfo::Released(poke, tg)) {
+                    continue;
+                }
                 /* If the pokemon is female only we don't want her eggmoves as she can't be father */
                 if (PokemonInfo::Gender(poke) == Pokemon::Female) {
                     continue;

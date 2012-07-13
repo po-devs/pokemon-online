@@ -1484,14 +1484,16 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
-        if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
-            fturn(b,s).add(TM::Failed);
-            return;
-        }
-        if (fturn(b,t).contains(TM::NoChoice)) {
-            fturn(b,s).add(TM::Failed);
-            return;
+        if (b.gen() > 2) {
+            int tu = poke(b,t)["LastMoveUsedTurn"].toInt();
+            if (tu + 1 < b.turn() || (tu + 1 == b.turn() && fturn(b,t).contains(TM::HasMoved))) {
+                fturn(b,s).add(TM::Failed);
+                return;
+            }
+            if (fturn(b,t).contains(TM::NoChoice)) {
+                fturn(b,s).add(TM::Failed);
+                return;
+            }
         }
         int move = poke(b,t)["LastMoveUsed"].toInt();
         bool cont = forbidden_moves.contains(move);

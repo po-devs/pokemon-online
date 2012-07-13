@@ -10,6 +10,7 @@ Item {
     Particles {
         id: particles;
 
+        parent: pokemon.pokeSprite.parent
         x: pokemon.pokeSprite.x + pokemon.pokeSprite.width/2 - width/2
         y: pokemon.pokeSprite.y+pokemon.pokeSprite.height-35;
         width: 2

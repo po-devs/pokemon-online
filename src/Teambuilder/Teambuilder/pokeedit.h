@@ -40,6 +40,7 @@ public slots:
     void changeItem(const QString &newItem);
     void setNature(int index);
     void setNum(Pokemon::uniqueId num);
+    void setItem(int num);
     void openPokemonSelection();
 signals:
     void numChanged();
@@ -62,7 +63,6 @@ private:
     const PokeTeam &poke() const {return *m_poke;}
 
     void updateItemSprite(int newItem);
-    void setItem(int num);
     void setMove(int slot, int move);
 };
 

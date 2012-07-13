@@ -98,12 +98,12 @@ signals:
     void attackUsed(int spot, int attack, QVariantMap params);
     void hit(int spot, int attack, QVariantMap params);
 
-    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
-      still active when the declarative view is deleted, so we need to warn the qml that
-      the view is going to be deleted
-      */
-    void appearing();
-    void disappearing();
+//    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is
+//      still active when the declarative view is deleted, so we need to warn the qml that
+//      the view is going to be deleted
+//      */
+//    void appearing();
+//    void disappearing();
 private:
     battledata_ptr mData;
     battledata_ptr data();

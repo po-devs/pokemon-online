@@ -303,3 +303,5 @@
 302 Reset Urge
 303 Dire Hit 3
 304 Berserk Gene
+1000 Pink Bow
+1001 Polkadot Bow
