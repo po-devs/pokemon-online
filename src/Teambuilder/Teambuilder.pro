@@ -183,8 +183,10 @@ macx {
    QMAKE_INFO_PLIST = Info.plist
    
    HEADERS += mac/SparkleAutoUpdater.h \
+              mac/FullScreenSupport.h \
               mac/CocoaInitializer.h
    OBJECTIVE_SOURCES += mac/SparkleAutoUpdater.mm \
+                        mac/FullScreenSupport.mm \
                         mac/CocoaInitializer.mm
    LIBS += -framework Sparkle -framework AppKit
 

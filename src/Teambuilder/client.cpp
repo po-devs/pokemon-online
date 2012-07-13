@@ -1398,11 +1398,31 @@ static void hash32stringFrom(const QScriptValue &v, hash32string &r) {
     }
 }
 
+Q_DECLARE_METATYPE(UserInfo)
+
+static QScriptValue userInfoTo(QScriptEngine *e, const UserInfo& info) {
+    QScriptValue v = e->newObject();
+    v.setProperty("name", info.name);
+    v.setProperty("flags", info.flags);
+    v.setProperty("ip", info.ip);
+    v.setProperty("auth", info.auth);
+    v.setProperty("date", info.date);
+    return v;
+}
+static void userInfoFrom(const QScriptValue &v, UserInfo& info) {
+    info.name = v.property("name").toString();
+    info.flags = v.property("flags").toUInt32();
+    info.name = v.property("ip").toString();
+    info.auth = v.property("flags").toUInt32();
+    info.date = v.property("date").toString();
+}
+
 void Client::registerMetaTypes(QScriptEngine *e)
 {
     qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
     qScriptRegisterMetaType<U>(e, &channelTo, &channelFrom);
     qScriptRegisterMetaType<hash32string>(e, &hash32stringTo, &hash32stringFrom);
+    qScriptRegisterMetaType<UserInfo>(e, &userInfoTo, &userInfoFrom);
 }
 
 void Client::playerKicked(int dest, int src) {

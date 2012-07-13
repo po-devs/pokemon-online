@@ -14,6 +14,10 @@
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
 #include "downloadmanager.h"
+#ifdef Q_OS_MACX
+#include "mac/FullScreenSupport.h"
+#endif
+
 
 MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 {
@@ -90,10 +94,10 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
     connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), SLOT(changeLogReady(QString,bool)));
-// On Mac OSX, we do not want two update checkers
-// Hence, we disable the default one, as updating Mac OSX
-// application bundles is different from Linux/Windows
 #ifndef Q_OS_MACX
+    // On Mac OSX, we do not want two update checkers
+    // Hence, we disable the default one, as updating Mac OSX
+    // application bundles is different from Linux/Windows
     downloader.loadUpdatesAvailable();
 #endif
 
@@ -263,6 +267,9 @@ void MainEngine::launchMenu(bool first)
     if (first) {
         menu->setProperty("tab-window", freespot);
         displayer = new QMainWindow();
+#ifdef Q_OS_MACX
+        MacSupport::setupFullScreen(displayer);
+#endif
         displayer->resize(menu->size());
         displayer->setWindowTitle(tr("Pokemon Online"));
         displayer->setCentralWidget(main = new MainWidget());
@@ -571,4 +578,3 @@ void MainEngine::changeUserThemeFolder()
 }
 
 
-#undef routine
