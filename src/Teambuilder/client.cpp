@@ -1881,6 +1881,8 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
         mybattles[battleId] = mybattle;
 
         battleStarted(battleId, ownId(), id);
+
+        call("battleStarted(BattleWindow*)", mybattle);
     } else {
         //We reconnected probably, and our team changed
         mybattles[battleId]->updateTeam(team);

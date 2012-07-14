@@ -1,5 +1,6 @@
 #include "battlewindow.h"
 #include "../BattleManager/advancedbattledata.h"
+#include "../BattleManager/battleinput.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
@@ -499,7 +500,7 @@ void BattleWindow::sendChoice(const BattleChoice &b)
     DataStream out(&ar, QIODevice::WriteOnly);
     out << quint8(BattleCommands::ChoiceMade) << quint8(info().myself) << b;
 
-    addReplayData(ar);
+    test->getInput()->receiveData(ar);
 
     /* Send choice made to the server */
     emit battleCommand(battleId(), b);
