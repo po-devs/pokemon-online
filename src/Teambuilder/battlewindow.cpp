@@ -547,17 +547,14 @@ void BattleWindow::onHpChange(int spot, int)
     }
 }
 
-void BattleWindow::onPPChange(int spot, int move, int PP)
+void BattleWindow::onPPChange(int spot, int move, int)
 {
-    info().currentPoke(spot).move(move)->changePP(PP);
-    info().tempPoke(spot).move(move)->changePP(PP);
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }
 
-void BattleWindow::onTempPPChange(int spot, int move, int PP)
+void BattleWindow::onTempPPChange(int spot, int move, int)
 {
-    info().tempPoke(spot).move(move)->changePP(PP);
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
 }
 
@@ -598,12 +595,8 @@ void BattleWindow::onOfferChoice(int, const BattleChoices &c)
     }
 }
 
-void BattleWindow::onMoveChange(int spot, int slot, int move, bool definite)
+void BattleWindow::onMoveChange(int spot, int slot, int, bool definite)
 {
-    info().tempPoke(spot).move(slot)->setNum(move);
-    if (definite) {
-        info().currentPoke(spot).move(slot)->setNum(move);
-    }
     myazones[data().slotNum(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot)->exposedData(), info().tempPoke(spot), gen());
     if (definite) {
         mypzone->pokes[data().slotNum(spot)]->updateToolTip();
