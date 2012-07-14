@@ -47,11 +47,36 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
     int me = data->isPlayer(1) ? 1 : 0;
     int opp = !me;
 
-    myengine->globalObject().setProperty("battle", myengine->newQObject(dynamic_cast<QObject*>(pdata)));
-    myengine->globalObject().property("battle").setProperty("me", QScriptValue(me));
-    myengine->globalObject().property("battle").setProperty("opp", QScriptValue(opp));
+    QScriptValue battle = myengine->newQObject(interface);
+    myengine->globalObject().setProperty("battle", battle);
+    battle.setProperty("data", myengine->newQObject(dynamic_cast<QObject*>(pdata)));
+    battle.setProperty("me", QScriptValue(me));
+    battle.setProperty("opp", QScriptValue(opp));
+    battle.setProperty("id", interface->battleId());
+
+    /* Removes clientscripting' print function and add ours. Client scripting's print function
+      can still be accessed with sys.print() */
+    QScriptValue printfun = myengine->newFunction(nativePrint);
+    printfun.setData(myengine->newQObject(this));
+    myengine->globalObject().setProperty("print", printfun);
 
     interface->addOutput(this);
+}
+
+QScriptValue BattleScripting::nativePrint(QScriptContext *context, QScriptEngine *engine)
+{
+    QString result;
+    for (int i = 0; i < context->argumentCount(); ++i) {
+        if (i > 0)
+            result.append(" ");
+        result.append(context->argument(i).toString());
+    }
+
+    QScriptValue calleeData = context->callee().data();
+    BattleScripting *obj = qobject_cast<BattleScripting*>(calleeData.toQObject());
+    obj->printLine(result);
+
+    return engine->undefinedValue();
 }
 
 void BattleScripting::onSendOut(int spot, int previndex, ShallowBattlePoke *pokemon, bool silent)

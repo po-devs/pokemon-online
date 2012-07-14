@@ -105,6 +105,8 @@ public:
     int ownSlot() const;
 
     void disable();
+
+    Q_INVOKABLE void forfeit();
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
@@ -125,9 +127,7 @@ protected slots:
     void targetChosen(int i);
     void nullQuestion();
     void questionButtonClicked(QAbstractButton *);
-private:
-    void forfeit();
-
+protected:
     int idme() const {
         return info().pInfo[info().myself].id;
     }
