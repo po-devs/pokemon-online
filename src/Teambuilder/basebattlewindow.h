@@ -82,8 +82,8 @@ public:
     //void playCry(int pokenum);
 
     QString name(int spot) const;
-    int player(int spot) const;
-    int opponent(int player) const;
+    Q_INVOKABLE int player(int spot) const;
+    Q_INVOKABLE int opponent(int player) const;
 
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
@@ -95,11 +95,12 @@ public:
 
     bool musicPlayed() const;
     bool flashWhenMoved() const;
-    void close();
     virtual void disable();
 
     void receiveData(QByteArray);
 public slots:
+    void close();
+
     void sendMessage();
     void clickClose();
     void delay(qint64 msec=0);

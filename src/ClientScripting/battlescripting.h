@@ -26,6 +26,8 @@ public:
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &string);
 
+    static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
+
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
 
     void onKo(int spot) {
