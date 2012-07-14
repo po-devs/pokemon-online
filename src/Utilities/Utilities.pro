@@ -7,7 +7,6 @@ SOURCES += otherwidgets.cpp \
     functions.cpp \
     CrossDynamicLib.cpp \
     contextswitch.cpp \
-    coro.c \
     coreclasses.cpp \
     qimagebuttonlr.cpp \
     confighelper.cpp \
@@ -26,6 +25,27 @@ HEADERS += otherwidgets.h \
     qtableplus.h \
     qclicklabel.h \
     ziputils.h
+
+windows: {
+HEADERS += coro/taskimpl.h \
+    coro/power-ucontext.h \
+    coro/Coro.h \
+    coro/asm.S \
+    coro/amd64-ucontext.h \
+    coro/386-ucontext.h\
+    coro/Common.h\
+    coro/Base.h
+
+
+SOURCES += coro/Coro.c \
+    coro/context.c \
+    coro/Common.c
+DEFINES += CORO2
+}
+
+!windows: {
+SOURCES += coro.c
+}
 
 OTHER_FILES += 
 QMAKE_CXXFLAGS += "-std=c++0x"
