@@ -154,7 +154,6 @@ public:
     bool invalid() const;
 
     QString name;
-    QString info;
     QString tier;
     Pokemon::gen gen;
 private:
