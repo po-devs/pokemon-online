@@ -500,7 +500,7 @@ void BattleWindow::sendChoice(const BattleChoice &b)
     DataStream out(&ar, QIODevice::WriteOnly);
     out << quint8(BattleCommands::ChoiceMade) << quint8(info().myself) << b;
 
-    test->getInput()->receiveData(ar);
+    getInput()->receiveData(ar);
 
     /* Send choice made to the server */
     emit battleCommand(battleId(), b);
@@ -740,7 +740,7 @@ void BattleWindow::sendRearrangedTeam()
     sendChoice(c);
 
     /* If the team was rearranged... */
-    test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+    reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(poke(i));
     }
@@ -752,7 +752,7 @@ void BattleWindow::updateTeam(const TeamBattle &b)
     info()._myteam = b;
     info()._myteam.name = name;
 
-    test->reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+    reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(poke(i));
     }

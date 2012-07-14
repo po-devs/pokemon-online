@@ -36,7 +36,6 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
     stream >> conf;
 
     window = new SpectatorWindow(conf);
-    window->setParent(this);
 
     QWidget *widget = window->getSampleWidget();
     widget->setWindowTitle(tr("Pok\303\251mon Online Replay"));
@@ -81,4 +80,5 @@ void ReplayViewer::read()
 ReplayViewer::~ReplayViewer()
 {
     delete in;
+    delete window;
 }

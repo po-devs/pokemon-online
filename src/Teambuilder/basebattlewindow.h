@@ -61,10 +61,10 @@ public:
     }
 
     const advbattledata_proxy &data() const {
-        return *info().data;
+        return *getBattleData();
     }
     advbattledata_proxy &data() {
-        return *info().data;
+        return *getBattleData();
     }
 
     virtual void switchToNaught(int){}
@@ -98,8 +98,8 @@ public:
     void close();
     virtual void disable();
 
+    void receiveData(QByteArray);
 public slots:
-    void receiveInfo(QByteArray);
     void sendMessage();
     void clickClose();
     void delay(qint64 msec=0);
@@ -113,8 +113,6 @@ public slots:
     void musicPlayStop();
     void enqueueMusic();
     void criesProblem(Phonon::State newState);
-signals:
-    void battleCommand(int battleId, const BattleChoice &);
 protected:
     int ignoreSpecs;
 
