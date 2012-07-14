@@ -114,6 +114,22 @@ public:
         }
     }
 
+    void onPPChange(int spot, int move, int PP) {
+        poke(spot).move(move)->changePP(PP);
+        tempPoke(spot).move(move)->changePP(PP);
+    }
+
+    void onTempPPChange(int spot, int move, int PP) {
+        tempPoke(spot).move(move)->changePP(PP);
+    }
+
+    void onMoveChange(int spot, int slot, int move, bool definite) {
+        tempPoke(spot).move(slot)->setNum(move);
+        if (definite) {
+            poke(spot).move(slot)->setNum(move);
+        }
+    }
+
     /* the temp poke code could be made generic */
     PokeProxy &tempPoke(int spot) {
         return *fieldPoke(spot).pokemon();
