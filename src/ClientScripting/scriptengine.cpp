@@ -33,6 +33,8 @@ void ScriptEngine::armScriptEngine(QScriptEngine *engine)
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
     myengine.globalObject().setProperty("client", myengine.newQObject(dynamic_cast<QObject*>(myclient)));
+    sys.setProperty("scriptsFolder", appDataPath("Scripts/", true));
+    sys.setProperty("eval", myengine.newFunction(&eval));
 
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
@@ -421,6 +423,14 @@ bool ScriptEngine::stopTimer(int timerId)
 QScriptValue ScriptEngine::eval(const QString &script)
 {
     return myengine.evaluate(script);
+}
+
+QScriptValue ScriptEngine::eval(QScriptContext *context, QScriptEngine *engine)
+{
+    if (context->argumentCount() <= 0) {
+        return context->throwError("eval expects 1 argument");
+    }
+    return engine->evaluate(context->argument(0).toString());
 }
 
 void ScriptEngine::hostName(const QString &ip, const QScriptValue &function)
