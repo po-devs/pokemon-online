@@ -487,7 +487,7 @@ void Player::setName(const QString &newname)  {
 }
 
 void Player::setInfo(const QString &newInfo)  {
-    team().info = newInfo;
+    m_bundle.info = newInfo;
 }
 
 void Player::kick() {
