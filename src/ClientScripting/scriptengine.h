@@ -14,6 +14,8 @@
 #include "../Utilities/functions.h"
 #include "../Teambuilder/plugininterface.h"
 
+class BaseBattleWindowInterface;
+
 class ScriptEngine : public OnlineClientPlugin
 {
     Q_OBJECT
@@ -36,6 +38,7 @@ public:
     int afterPMReceived(int id, const QString &message);
     int onPlayerReceived(int id);
     int onPlayerRemoved(int id);
+    void onBattleStarted(BaseBattleWindowInterface *w);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
@@ -136,6 +139,7 @@ public:
 
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
+    void changeBattleScript(const QString &bscript);
 
 private slots:
     void timer();
@@ -178,9 +182,12 @@ private:
     bool warnings;
 
     QString datalocation;
+    QString battleScript;
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &s);
+    void armScriptEngine(QScriptEngine *engine);
+    void armScripts(QScriptEngine *engine, const QString &scripts, bool trigger=false);
 
     void warn(const QString &function, const QString &message);
 

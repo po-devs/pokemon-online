@@ -1,26 +1,17 @@
-﻿#include "scriptengine.h"
-#include "scriptutils.h"
-#include "../PokemonInfo/pokemoninfo.h"
+﻿#include "../PokemonInfo/pokemoninfo.h"
 #include "../Teambuilder/clientinterface.h"
+#include "../Teambuilder/basebattlewindowinterface.h"
+#include "scriptengine.h"
+#include "scriptutils.h"
+#include "battlescripting.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
-    c->registerMetaTypes(&myengine);
-
     myclient = c;
-    QScriptValue sys = myengine.newQObject(this);
-    myengine.globalObject().setProperty("sys", sys);
-    myengine.globalObject().setProperty("client", myengine.newQObject(dynamic_cast<QObject*>(c)));
-
-    QScriptValue printfun = myengine.newFunction(nativePrint);
-    printfun.setData(sys);
-    myengine.globalObject().setProperty("print", printfun);
-
-    QScriptValue channelfun = myengine.newFunction(channelNames);
-    channelfun.setData(sys.property("client"));
-    myengine.globalObject().property("client").setProperty("channelNames", channelfun);
+    armScriptEngine(&myengine);
 
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
     changeScript(ScriptUtils::loadScripts());
+    changeBattleScript(ScriptUtils::loadScripts(ScriptUtils::BattleScripts));
 
     QTimer *step_timer = new QTimer(this);
     step_timer->setSingleShot(false);
@@ -32,7 +23,29 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     warnings = s.value("ScriptWindow/warn", true).toBool();
 
     datalocation = appDataPath("Scripts/", true) + "/data.ini";
+}
 
+void ScriptEngine::armScriptEngine(QScriptEngine *engine)
+{
+    QScriptEngine &myengine = *engine;
+    myclient->registerMetaTypes(&myengine);
+
+    QScriptValue sys = myengine.newQObject(this);
+    myengine.globalObject().setProperty("sys", sys);
+    myengine.globalObject().setProperty("client", myengine.newQObject(dynamic_cast<QObject*>(myclient)));
+
+    QScriptValue printfun = myengine.newFunction(nativePrint);
+    printfun.setData(sys);
+    myengine.globalObject().setProperty("print", printfun);
+
+    QScriptValue channelfun = myengine.newFunction(channelNames);
+    channelfun.setData(sys.property("client"));
+    myengine.globalObject().property("client").setProperty("channelNames", channelfun);
+}
+
+void ScriptEngine::changeBattleScript(const QString &bscript)
+{
+    battleScript = bscript;
 }
 
 ScriptEngine::~ScriptEngine()
@@ -50,23 +63,49 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
     ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
     ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
+    ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
 
     return ret;
 }
 
-void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
+void ScriptEngine::onBattleStarted(BaseBattleWindowInterface *w)
 {
-    myscript = myengine.evaluate(script);
-    myengine.globalObject().setProperty("script", myscript);
+    if (battleScript.length() == 0) {
+        return;
+    }
+
+    QScriptEngine *engine = new QScriptEngine();
+
+    armScriptEngine(engine);
+
+    new BattleScripting(engine, w);
+
+    armScripts(engine, battleScript);
+}
+
+void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool triggerStartUp)
+{
+    QScriptValue myscript = engine->evaluate(script);
+    engine->globalObject().setProperty("script", myscript);
+
+    if (engine == &myengine) {
+        this->myscript = myscript;
+    }
 
     if (myscript.isError()) {
-        printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
+        QString mess = "Fatal Script Error line " + QString::number(engine->uncaughtExceptionLineNumber()) + ": " + myscript.toString();
+        engine->globalObject().property("print").call(myscript, QScriptValueList() << mess);
     } else {
         //printLine("Script Check: OK");
         if(triggerStartUp) {
             clientStartUp();
         }
     }
+}
+
+void ScriptEngine::changeScript(const QString &script, bool triggerStartUp)
+{
+    armScripts(&myengine, script, triggerStartUp);
 }
 
 void ScriptEngine::changeSafeScripts(bool safe)

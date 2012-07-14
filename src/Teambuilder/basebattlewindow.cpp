@@ -3,7 +3,6 @@
 #include "../Utilities/otherwidgets.h"
 #include "theme.h"
 #include "logmanager.h"
-#include "spectatorwindow.h"
 #include "../BattleManager/advancedbattledata.h"
 #include "../BattleManager/battleclientlog.h"
 #include "../BattleManager/battleinput.h"
@@ -83,24 +82,23 @@ void BaseBattleWindow::undelay()
 
 void BaseBattleWindow::init()
 {
-    test = new SpectatorWindow(conf());
-    test->setParent(this);
+    SpectatorWindow::init(conf());
 
     /* The dynamic cast works if called from BaseBattleWindowIns */
     FlowCommandManager<BattleEnum> *ptr = dynamic_cast<FlowCommandManager<BattleEnum> *>(this);
 
     if (ptr != NULL) {
-        test->getBattle()->addOutput(ptr);
+        addOutput(ptr);
         ptr->deletable = false;
     }
 
-    QObject *ptr2 = dynamic_cast<QObject*>(test->getBattle());
+    QObject *ptr2 = dynamic_cast<QObject*>(getBattle());
 
     if (ptr2) {
         connect(ptr2, SIGNAL(playCry(int)), SLOT(playCry(int)));
     }
 
-    info().data = test->getBattleData();
+    info().data = &data();
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     QToolTip::setFont(QFont("Verdana",10));
@@ -125,7 +123,7 @@ void BaseBattleWindow::init()
     QHBoxLayout *columns = new QHBoxLayout(this);
     columns->addLayout(mylayout = new QGridLayout());
 
-    mylayout->addWidget(test->getSceneWidget(), 0, 0, 1, 3);
+    mylayout->addWidget(getSceneWidget(), 0, 0, 1, 3);
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 2);
     mylayout->addWidget(musicOn = new QCheckBox(tr("Music")), 1, 1, 1, 2);
     mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 2);
@@ -136,7 +134,7 @@ void BaseBattleWindow::init()
 
     QVBoxLayout *chat = new QVBoxLayout();
     columns->addLayout(chat);
-    chat->addWidget(mychat = test->getLogWidget());
+    chat->addWidget(mychat = getLogWidget());
     mychat->setAutoClear(false);
     chat->addWidget(myline = new QIRCLineEdit());
     QHBoxLayout * buttons = new QHBoxLayout();
@@ -308,7 +306,7 @@ void BaseBattleWindow::checkAndSaveLog()
     if (!log) {
         return;
     }
-    log->pushList(test->getLog()->getLog());
+    log->pushList(getLog()->getLog());
     log->pushHtml("</body>");
     replay->setBinary(replayData.data);
     if (saveLogs->isChecked()) {
@@ -341,9 +339,9 @@ void BaseBattleWindow::disable()
     myline->setDisabled(true); 
     checkAndSaveLog();
 
-    test->getInput()->entryPoint(BattleEnum::BlankMessage);
+    getInput()->entryPoint(BattleEnum::BlankMessage);
     auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("The window was disabled due to one of the players closing the battle window."), Qt::blue)));
-    test->getInput()->entryPoint(BattleEnum::PrintHtml, &mess);
+    getInput()->entryPoint(BattleEnum::PrintHtml, &mess);
 }
 
 void BaseBattleWindow::clickClose()
@@ -363,7 +361,7 @@ void BaseBattleWindow::sendMessage()
     }
 }
 
-void BaseBattleWindow::receiveInfo(QByteArray inf)
+void BaseBattleWindow::receiveData(QByteArray inf)
 {
     if (inf[0] == char(SpectatorChat) && ignoreSpecs != NoIgnore) {
         return;
@@ -376,7 +374,7 @@ void BaseBattleWindow::receiveInfo(QByteArray inf)
 
     addReplayData(inf);
 
-    test->receiveData(inf);
+    SpectatorWindow::receiveData(inf);
 }
 
 void BaseBattleWindow::addReplayData(const QByteArray &inf)

@@ -128,7 +128,7 @@ protected:
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
     start(Reconnect, onReconnect, int player) end (onReconnect, player)
     start(Disconnect, onDisconnect, int player) end (onDisconnect, player)
-    start(ChooseAttack, onAttackChosen, int spot, int attackSlot, int target) end(onAttackChosen, spot, attackSlot)
+    start(ChooseAttack, onAttackChosen, int spot, int attackSlot, int target) end(onAttackChosen, spot, attackSlot, target)
     start(ChooseSwitch, onSwitchChosen, int spot, int pokeSlot) end(onSwitchChosen, spot, pokeSlot)
     start(ChooseRearrangeTeam, onTeamOrderChosen, int player, std::shared_ptr<RearrangeChoice> *choice) end(onTeamOrderChosen, player, *choice->get())
     start(ChooseCancel, onChoiceCancelled, int player) end(onChoiceCancelled, player)
@@ -184,7 +184,7 @@ protected:
     void onBlankMessage();
     void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
-    void onTierNotification(QString tier);
+    void onTierNotification(const QString &tier);
     void onDynamicInfo(int spot, const BattleDynamicInfo &info);
     void onPokemonVanish(int spot);
     void onPokemonReappear(int spot);

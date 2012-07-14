@@ -1,16 +1,15 @@
 #ifndef SPECTATORWINDOW_H
 #define SPECTATORWINDOW_H
 
-#include <QObject>
-
 #include "../BattleManager/battledatatypes.h"
 #include "../BattleManager/battleenum.h"
 
+template <class T> class FlowCommandManager;
 class BattleClientLog;
 class BattleScene;
 class BattleInput;
-class PokeTextEdit;
-template <class T> class FlowCommandManager;
+class QScrollDownTextBrowser;
+class QWidget;
 class PlayerInfo;
 class FullBattleConfiguration;
 
@@ -19,26 +18,31 @@ class FullBattleConfiguration;
 
   Those widgets can be gotten individually or as
   a whole */
-class SpectatorWindow : public QObject
+/* The virtual functions are so that plugins can access them -
+  otherwise you'd have to link against the binary (why not?) */
+class SpectatorWindow
 {
 public:
+    SpectatorWindow();
     SpectatorWindow(const FullBattleConfiguration &conf);
     ~SpectatorWindow();
 
+    void init(const FullBattleConfiguration &conf);
+
     /* Receives the binary data */
-    void receiveData(const QByteArray &data);
+    virtual void receiveData(const QByteArray &data);
 
     /* Gets the battle log widget */
-    PokeTextEdit * getLogWidget();
+    virtual QScrollDownTextBrowser * getLogWidget();
     /* gets the scene widget */
     QWidget *getSceneWidget();
 
     BattleClientLog *getLog();
     FlowCommandManager<BattleEnum> * getBattle();
-    BattleInput *getInput();
-    void addOutput(FlowCommandManager<BattleEnum>*);
+    virtual BattleInput *getInput();
+    virtual void addOutput(FlowCommandManager<BattleEnum>*);
 
-    advbattledata_proxy *getBattleData();
+    virtual advbattledata_proxy *getBattleData() const;
 
     /* Gets a premade widget. The caller
       is responsible for managing the widget's lifetime
@@ -53,9 +57,9 @@ private:
     QWidget *battleView;
     BattleScene *scene;
 
-    PokeTextEdit* logWidget;
+    QScrollDownTextBrowser* logWidget;
 
-    battledata_basic *data;
+    battledata_basic *mData;
     advbattledata_proxy *data2;
 
     FlowCommandManager<BattleEnum> *lastOutput;

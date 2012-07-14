@@ -1575,7 +1575,7 @@ void Client::animateHpBar(bool save)
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
 {
     if (mySpectatingBattles.contains(battleId)) {
-        mySpectatingBattles[battleId]->receiveInfo(command);
+        mySpectatingBattles[battleId]->receiveData(command);
     }
 }
 
@@ -1822,7 +1822,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
 
         battleStarted(battleId, ownId(), id);
 
-        call("battleStarted(BattleWindow*)", mybattle);
+        call("onBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
     } else {
         //We reconnected probably, and our team changed
         mybattles[battleId]->updateTeam(team);
@@ -1928,7 +1928,7 @@ void Client::battleCommand(int battleid, const QByteArray &command)
     if (!mybattles.contains(battleid))
         return;
 
-    mybattles[battleid]->receiveInfo(command);
+    mybattles[battleid]->receiveData(command);
 }
 
 void Client::disableBattleWindow(int battleid)

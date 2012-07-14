@@ -10,6 +10,7 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->scripts->insertPlainText(ScriptUtils::loadScripts());
+    ui->battlescripts->insertPlainText(ScriptUtils::loadScripts(ScriptUtils::BattleScripts));
     loadSettings(this, QSize(583, 446));
 
     QSettings s;
@@ -27,12 +28,16 @@ void ScriptWindow::accept()
     QDir d(appDataPath("Scripts/", true));
     QFile f(d.absoluteFilePath("scripts.js"));
     f.open(QIODevice::WriteOnly);
-
     QString text = ui->scripts->toPlainText();
-
     f.write(text.toUtf8());
 
+    QFile f2(d.absoluteFilePath("battlescripts.js"));
+    f2.open(QIODevice::WriteOnly);
+    QString text2 = ui->battlescripts->toPlainText();
+    f2.write(text2.toUtf8());
+
     emit scriptChanged(text);
+    emit battleScriptChanged(text2);
 
     QDialog::accept();
 }

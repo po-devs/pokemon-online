@@ -14,25 +14,34 @@
 
 int SpectatorWindow::qmlcount = 0;
 
+SpectatorWindow::SpectatorWindow() {
+
+}
+
 SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
 {
+    init(conf);
+}
+
+void SpectatorWindow::init(const FullBattleConfiguration &conf)
+{
     qmlwindow = false;
-    data = new battledata_basic(&conf);
+    mData = new battledata_basic(&conf);
     data2 = new advbattledata_proxy(&conf);
 
-    data->team(0).name() = conf.getName(0);
-    data->team(1).name() = conf.getName(1);
+    mData->team(0).name() = conf.getName(0);
+    mData->team(1).name() = conf.getName(1);
     data2->team(0).setName(conf.getName(0));
     data2->team(1).setName(conf.getName(1));
 
     QSettings s;
     bool usePokemonNames = s.value("Battle/NoNicknames").toBool();
 
-    log = new BattleClientLog(data, Theme::getBattleTheme(), !usePokemonNames);
+    log = new BattleClientLog(mData, Theme::getBattleTheme(), !usePokemonNames);
     input = new BattleInput(&conf);
 
     logWidget = new PokeTextEdit();
-    connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
+    QObject::connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));
 
     /* All the previous message which didn't get a chance to be emitted */
     log->emitAll();
@@ -43,11 +52,11 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
         BattleScene *scene = new BattleScene(data2);
 
         input->addOutput(scene);
-        scene->addOutput(data);
+        scene->addOutput(mData);
         scene->addOutput(log);
         scene->addOutput(data2);
 
-        connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
+        QObject::connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
         scene->launch();
 
@@ -64,13 +73,13 @@ SpectatorWindow::SpectatorWindow(const FullBattleConfiguration &conf)
     } else {
         RegularBattleScene *battle = new RegularBattleScene(data2, Theme::getBattleTheme(), !usePokemonNames);
 
-        input->addOutput(data);
+        input->addOutput(mData);
         input->addOutput(log);
         input->addOutput(data2);
         input->addOutput(battle);
         battle->deletable = false;
 
-        connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
+        QObject::connect(battle, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
 
         battleView = battle;
         lastOutput = battle;
@@ -82,9 +91,14 @@ FlowCommandManager<BattleEnum> * SpectatorWindow::getBattle()
     return lastOutput;
 }
 
+void SpectatorWindow::addOutput(FlowCommandManager<BattleEnum> *o)
+{
+    getBattle()->addOutput(o);
+}
+
 void SpectatorWindow::reloadTeam(int player)
 {
-    data->reloadTeam(player);
+    mData->reloadTeam(player);
     data2->reloadTeam(player);
 }
 
@@ -98,7 +112,7 @@ BattleInput *SpectatorWindow::getInput()
     return input;
 }
 
-PokeTextEdit *SpectatorWindow::getLogWidget()
+QScrollDownTextBrowser *SpectatorWindow::getLogWidget()
 {
     return logWidget;
 }
@@ -134,7 +148,7 @@ void SpectatorWindow::receiveData(const QByteArray &data)
     input->receiveData(data);
 }
 
-advbattledata_proxy *SpectatorWindow::getBattleData()
+advbattledata_proxy *SpectatorWindow::getBattleData() const
 {
     return data2;
 }

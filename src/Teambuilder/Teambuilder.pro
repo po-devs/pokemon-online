@@ -140,6 +140,7 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     mainwidget.h \
     loadwindow.h \
     loadline.h \
+    spectatorwindow.h \
     downloadmanager.h
 
 LIBS += -L../../bin \

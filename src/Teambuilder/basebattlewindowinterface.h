@@ -3,18 +3,20 @@
 
 #include <QLabel>
 #include "../Utilities/functions.h"
+#include "spectatorwindow.h"
 
-class BaseBattleWindowInterface : public QWidget
+class BattleChoice;
+
+class BaseBattleWindowInterface : public QWidget, public SpectatorWindow
 {
     Q_OBJECT
     PROPERTY(quint32, battleId)
 public:
     virtual void disable() {}
-public slots:
-    virtual void receiveInfo(QByteArray){}
 signals:
     void closedBW(int);
     void battleMessage(int, QString);
+    void battleCommand(int battleId, const BattleChoice &);
 };
 
 #endif // BASEBATTLEWINDOWINTERFACE_H

@@ -4,7 +4,12 @@
 #include <QString>
 
 struct ScriptUtils {
-    static QString loadScripts();
+    enum ScriptType {
+        ClientScripts,
+        BattleScripts
+    };
+
+    static QString loadScripts(ScriptType type=ClientScripts);
 };
 
 #endif // SCRIPTUTILS_H

@@ -8,7 +8,7 @@ TARGET = battlelogs
 TEMPLATE = lib
 DESTDIR = ../../bin/serverplugins
 DEFINES += BATTLELOGS_LIBRARY
-QT += gui core
+QT += gui core declarative
 
 SOURCES += battlelogs.cpp \
     battleserverlog.cpp
