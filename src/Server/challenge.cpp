@@ -145,11 +145,12 @@ void Challenge::manageStuff(Player *p, const ChallengeInfo &c)
 
 void Challenge::cancel(Player *p, bool refused) {
     ChallengeInfo ret = desc;
+    ret.opp = p->id();
     if (p == src) {
         ret.dsc = ChallengeInfo::Cancelled;
         dest->sendChallengeStuff(ret);
     } else {
-        ret.dsc = refused ? ChallengeInfo::Refused : ChallengeInfo::Busy, dest->id();
+        ret.dsc = refused ? ChallengeInfo::Refused : ChallengeInfo::Busy;
         src->sendChallengeStuff(ret);
     }
     src->removeChallenge(this);
