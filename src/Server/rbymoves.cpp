@@ -852,11 +852,21 @@ struct RBYSubstitute : public MM
         if (fpoke(b,s).substitute()) {
             b.failSilently(s);
             b.sendMoveMessage(128, 0, s,0,s);
+            return;
+        }
+        if (b.poke(s).lifePoints() < b.poke(s).totalLifePoints()/4) {
+            b.failSilently(s);
+            b.sendMoveMessage(8,0,s);
+            return;
         }
     }
 
     static void uas(int s, int, BS &b) {
-        b.changeHp(s, b.poke(s).lifePoints() - std::min(std::max(b.poke(s).totalLifePoints()*25/100,1), int(b.poke(s).lifePoints())));
+        int newHp = b.poke(s).lifePoints() - std::min(b.poke(s).totalLifePoints()/4, 1);
+        if (newHp < 0) {
+            newHp = 0;
+        }
+        b.changeHp(s, newHp);
         if (b.koed(s)) {
             b.koPoke(s, s);
         } else {
