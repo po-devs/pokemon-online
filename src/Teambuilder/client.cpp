@@ -19,8 +19,6 @@
 #include "tieractionfactory.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
-#include <QtScript/QScriptEngine>
-#include <QtScript/QScriptValueIterator>
 #include "loadwindow.h"
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
@@ -1347,64 +1345,6 @@ void Client::removePlugin(OnlineClientPlugin *o)
     hooks.remove(o);
 }
 
-Q_DECLARE_METATYPE(Analyzer*)
-typedef Analyzer* T;
-
-static QScriptValue analyzerTo(QScriptEngine *e, const T& r) {
-    return e->newQObject(r);
-}
-
-static void analyzerFrom(const QScriptValue&s, T&r) {
-    r = dynamic_cast<T>(s.toQObject());
-}
-
-Q_DECLARE_METATYPE(Channel*)
-typedef Channel* U;
-
-static QScriptValue channelTo(QScriptEngine *e, const U& r) {
-    return e->newQObject(r);
-}
-
-static void channelFrom(const QScriptValue&s, U&r) {
-    r = dynamic_cast<U>(s.toQObject());
-}
-
-typedef QHash<qint32, QString> hash32string;
-Q_DECLARE_METATYPE(hash32string)
-
-static QScriptValue hash32stringTo(QScriptEngine *e, const hash32string& r) {
-    QScriptValue v = e->newObject();
-
-    QHashIterator<qint32, QString> it(r);
-
-    while (it.hasNext()) {
-        it.next();
-
-        v.setProperty(it.key(), it.value());
-    }
-
-    return v;
-}
-
-static void hash32stringFrom(const QScriptValue &v, hash32string &r) {
-    r.clear();
-
-    QScriptValueIterator it(v);
-
-    while (it.hasNext()) {
-        it.next();
-
-        r.insert(it.name().toInt(), it.value().toString());
-    }
-}
-
-void Client::registerMetaTypes(QScriptEngine *e)
-{
-    qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
-    qScriptRegisterMetaType<U>(e, &channelTo, &channelFrom);
-    qScriptRegisterMetaType<hash32string>(e, &hash32stringTo, &hash32stringFrom);
-}
-
 void Client::playerKicked(int dest, int src) {
     QString mess;
 
@@ -2300,7 +2240,7 @@ int Client::channelId(const QString &name) const
     return m_channelByNames.value(name.toLower());
 }
 
-const hash32string & Client::getChannelNames() const
+const QHash<qint32, QString>& Client::getChannelNames() const
 {
     return m_channelNames;
 }

@@ -5,10 +5,11 @@ import "../" 1.0
 /* ChargeMove contains logic for many changelike attacks.
  * Params:
  *  attack_time: milliseconds for offensive part
+ *  return_time: milliseconds for return part
  *  rolls: number of rolls sprite does when attacking
  *  easing_in_x, easing_in_y: QML easier for charge animation on x and y
  *  easing_out_x, easing_out_y: QML easier for return animation on x and y
- *  image: any particles that are emitted while charging
+ *  effect: any image source for particles that are emitted while charging
  */
 
 Move {
@@ -64,7 +65,6 @@ Move {
             ParallelAnimation {
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.horizontalCenterOffset"; to: xt; duration: params.attack_time; easing.type: params.easing_in_x; }
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.bottomMargin"; to: yt; duration: params.attack_time; easing.type: params.easing_in_y; }
-                /* For some reason Rotation is not triggering */
                 NumberAnimation { target: attacker.pokeSprite; property: "rotation"; from: 0.0; to: params.rolls * 360.0 * (attacker.back?1:-1) ; duration: params.attack_time}
             }
             ScriptAction { script: {
