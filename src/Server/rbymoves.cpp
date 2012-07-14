@@ -379,6 +379,8 @@ struct RBYDisable : public MM
 
         if (poke(b,s).value("DisableCount").toInt() <= 0) {
             poke(b,s).remove("DisableCount");
+            removeFunction(poke(b,s), "MovePossible", "Disable");
+            removeFunction(poke(b,s), "MovesPossible", "Disable");
             b.sendMoveMessage(28, 2, s, 0, s, b.move(s, slot));
             return;
         }
