@@ -21,6 +21,10 @@ PokeEdit #pokemonFrame {
 	/*border-radius: 4px;*/
 }
 
+PokeEdit #done {
+  margin-right: 60px;
+}
+
 PokeSelection #pokemonSprite {
     min-width: 96px;
     min-height: 96px;

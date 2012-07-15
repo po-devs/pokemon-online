@@ -12,7 +12,7 @@ class TrainerMenu;
 class TeamMenu;
 class PokeBoxes;
 
-class TeamBuilder : public QStackedWidget, public CentralWidgetInterface
+class TeamBuilder : public QMainWindow, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
@@ -63,6 +63,7 @@ private:
 
     struct _ui {
         QHash<Pokemon::gen, QAction*> gens;
+        QStackedWidget *stack;
     };
 
     Pokemon::gen lastGen;

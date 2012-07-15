@@ -22,10 +22,16 @@
 TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
 {
     ui = new _ui();
+    ui->stack = new QStackedWidget();
+    setCentralWidget(ui->stack);
+
+    setDockNestingEnabled(true);
+    setWindowFlags(Qt::Widget);
 
     setWindowTitle(tr("Teambuilder"));
 
-    addWidget(trainer = new TrainerMenu(team));
+    ui->stack->addWidget(trainer = new TrainerMenu(team));
+    trainer->setMainWindow(this);
     pokemonModel = new PokeTableModel(team->team().gen(), this);
 
     if (load) {
@@ -369,8 +375,8 @@ void TeamBuilder::exportTeam()
 
 void TeamBuilder::markAllUpdated()
 {
-    for (int i = 0; i < count(); i++) {
-        if (i != currentIndex()) {
+    for (int i = 0; i < ui->stack->count(); i++) {
+        if (i != ui->stack->currentIndex()) {
             widget(i)->setProperty("all-to-update", true);
         }
     }
@@ -378,8 +384,8 @@ void TeamBuilder::markAllUpdated()
 
 void TeamBuilder::markTeamUpdated()
 {
-    for (int i = 0; i < count(); i++) {
-        if (i != currentIndex()) {
+    for (int i = 0; i < ui->stack->count(); i++) {
+        if (i != ui->stack->currentIndex()) {
             widget(i)->setProperty("team-to-update", true);
         }
     }
@@ -395,7 +401,8 @@ void TeamBuilder::markTeamUpdated()
 void TeamBuilder::openBoxes()
 {
     if(!boxesMenu) {
-        addWidget(boxesMenu = new PokeBoxes(this, &team()));
+        ui->stack->addWidget(boxesMenu = new PokeBoxes(this, &team()));
+        boxesMenu->setMainWindow(this);
         connect(boxesMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
         connect(boxesMenu, SIGNAL(done()), SLOT(switchToTrainer()));
     }
@@ -405,7 +412,7 @@ void TeamBuilder::openBoxes()
 void TeamBuilder::editPoke(int index)
 {
     if (!teamMenu) {
-        addWidget(teamMenu = new TeamMenu(pokemonModel, &team(), index));
+        ui->stack->addWidget(teamMenu = new TeamMenu(this, pokemonModel, &team(), index));
         connect(teamMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
         connect(teamMenu, SIGNAL(switchToTrainer()), SLOT(switchToTrainer()));
     }
@@ -422,12 +429,12 @@ void TeamBuilder::switchToTrainer()
 
 TeamBuilderWidget *TeamBuilder::currentWidget()
 {
-    return (TeamBuilderWidget*)(QStackedWidget::currentWidget());
+    return (TeamBuilderWidget*)(ui->stack->currentWidget());
 }
 
 TeamBuilderWidget *TeamBuilder::widget(int i)
 {
-    return (TeamBuilderWidget*)(QStackedWidget::widget(i));
+    return (TeamBuilderWidget*)(ui->stack->widget(i));
 }
 
 void TeamBuilder::switchTo(TeamBuilderWidget *w)
@@ -440,8 +447,11 @@ void TeamBuilder::switchTo(TeamBuilderWidget *w)
         w->updateTeam();
         w->setProperty("team-to-update", false);
     }
-    setCurrentWidget(w);
+    currentWidget()->hideAll(); // hide docks used by previous current widget
+    ui->stack->setCurrentWidget(w);
+    w->showAll(); // show docks used by new current widget
 
+    /* Reloads menu bar, in case the new widget has menus to add */
     emit reloadMenuBar();
 }
 

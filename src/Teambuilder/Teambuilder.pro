@@ -63,7 +63,8 @@ SOURCES += main.cpp \
     mainwidget.cpp \
     loadwindow.cpp \
     loadline.cpp \
-    downloadmanager.cpp
+    downloadmanager.cpp \
+    Teambuilder/teambuilderwidget.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
