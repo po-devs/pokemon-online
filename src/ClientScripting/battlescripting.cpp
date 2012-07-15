@@ -8,6 +8,56 @@
 #include "../Teambuilder/basebattlewindowinterface.h"
 #include "battlescripting.h"
 
+Q_DECLARE_METATYPE(BattleChoice)
+
+static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie";
+
+static QScriptValue toBattleChoice(QScriptEngine *e, const BattleChoice& info) {
+    QScriptValue v = e->newObject();
+    v.setProperty("type", bchoices.count() > info.type ? bchoices[info.type] : "unknown");
+    v.setProperty("slot", int(info.slot()));
+    if (info.attackingChoice()) {
+        v.setProperty("attackSlot", int(info.attackSlot()));
+        v.setProperty("target", int(info.target()));
+    } else if (info.switchChoice()) {
+        v.setProperty("pokeSlot", int(info.pokeSlot()));
+    } else if (info.rearrangeChoice()) {
+        QScriptValue v2 = e->newArray();
+        for (int i = 0; i < 6; i++) {
+            v2.setProperty(i, int(info.choice.rearrange.pokeIndexes[i]));
+        }
+        v.setProperty("neworder", v2);
+    }
+    return v;
+}
+static void fromBattleChoice(const QScriptValue &v, BattleChoice& info) {
+
+    info.type = std::max(bchoices.indexOf(v.property("type").toString()), 0);
+    info.playerSlot = v.property("slot").toInt32();
+
+    if (info.type == AttackType) {
+        info.choice.attack.attackSlot = v.property("attackSlot").toInt32();
+        if (v.property("target").isValid()) {
+            info.choice.attack.attackTarget = v.property("target").toInt32();
+        } else {
+            info.choice.attack.attackTarget = !info.playerSlot;
+        }
+    } else if (info.type == SwitchType) {
+        info.choice.switching.pokeSlot = v.property("pokeSlot").toInt32();
+    } else if (info.type == RearrangeType) {
+        if (v.property("neworder").isArray() && v.property("neworder").property("length").toInt32() >= 6) {
+            for (int i = 0; i < 6; i++) {
+                info.choice.rearrange.pokeIndexes[i] = v.property("neworder").property(i).toInt32();
+            }
+        } else {
+            for (int i = 0; i < 6; i++) {
+                info.choice.rearrange.pokeIndexes[i] = i;
+            }
+        }
+    }
+
+}
+
 #define objectConverter(className) \
     Q_DECLARE_METATYPE(className*) \
     typedef className* T##className; \
@@ -41,6 +91,7 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
     registerObject(PokeProxy);
     registerObject(AuxPokeDataProxy);
     registerObject(FieldProxy);
+    qScriptRegisterMetaType<BattleChoice>(engine, &toBattleChoice, &fromBattleChoice);
 
     advbattledata_proxy *data = interface->getBattleData();
     ProxyDataContainer *pdata = data->exposedData();
@@ -58,6 +109,7 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
       can still be accessed with sys.print() */
     QScriptValue printfun = myengine->newFunction(nativePrint);
     printfun.setData(myengine->newQObject(this));
+    myengine->globalObject().setProperty("print", myengine->nullValue());
     myengine->globalObject().setProperty("print", printfun);
 
     interface->addOutput(this);

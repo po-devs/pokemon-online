@@ -8,6 +8,43 @@
 
 class TeamData;
 class ShallowBattlePoke;
+class PokeProxy;
+class TeamProxy;
+
+class MoveProxy : public QObject
+{
+    Q_OBJECT
+public:
+    MoveProxy();
+    MoveProxy(BattleMove *move);
+    ~MoveProxy();
+
+    Q_PROPERTY(int PP READ PP NOTIFY PPChanged)
+    Q_PROPERTY(int totalPP READ totalPP NOTIFY numChanged)
+    Q_PROPERTY(int num READ num NOTIFY numChanged)
+
+    int PP() const {return d()->PP();}
+    int totalPP() const { return d()->totalPP();}
+    int num() const { return d()->num();}
+
+    void setNum(int newnum);
+    void changePP(int newPP);
+    Pokemon::gen gen() const;
+
+    void adaptTo(const BattleMove *move);
+    BattleMove &exposedData();
+    const BattleMove &exposedData() const;
+signals:
+    void numChanged();
+    void PPChanged();
+private:
+    bool hasOwnerShip;
+    BattleMove *moveData;
+
+    inline BattleMove *d() {return moveData;}
+    inline const BattleMove *d() const {return moveData;}
+    PokeProxy *master() const;
+};
 
 class PokeProxy : public QObject
 {
@@ -28,6 +65,9 @@ public:
     Q_PROPERTY(int numRef READ numRef STORED false NOTIFY numChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
     Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
+    Q_PROPERTY(int happiness READ happiness NOTIFY pokemonReset)
+    Q_PROPERTY(int item READ item NOTIFY itemChanged)
+    Q_PROPERTY(int nature READ nature NOTIFY pokemonReset)
 
     enum Status {
         Koed = Pokemon::Koed,
@@ -55,18 +95,23 @@ public:
     int item() const {return dd()->item();}
     int happiness() const {return dd()->happiness();}
     int nature() const {return dd()->nature();}
-    int basestat(int stat) const;
+    Q_INVOKABLE int basestat(int stat) const;
+    Q_INVOKABLE int iv(int stat) const;
+    Q_INVOKABLE int ev(int stat) const;
     const QList<int> &dvs() const { return dd()->dvs();}
     const QList<int> &evs() const { return dd()->evs();}
-    BattleMove &move(int slot) {return dd()->move(slot);}
-    const BattleMove &move(int slot) const {return dd()->move(slot);}
+    Q_INVOKABLE MoveProxy *move(int slot) {return moves[slot];}
+    const MoveProxy *move(int slot) const {return moves[slot];}
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
+    Pokemon::gen gen() const;
 
+    void emitReset();
     void adaptTo(const ShallowBattlePoke *pokemon, bool soft=false);
     void adaptTo(const PokeBattle *pokemon);
     void changeStatus(int fullStatus);
     void setNum(Pokemon::uniqueId num);
     void setLife(int newLife);
+    void setItem(int newItem);
 
     bool hasExposedData() const {
         return dynamic_cast<PokeBattle*>(pokeData) != NULL;
@@ -80,6 +125,7 @@ signals:
     void statusChanged();
     void pokemonReset();
     void lifeChanged();
+    void itemChanged();
     void ko();
 private:
     bool hasOwnerShip;
@@ -88,6 +134,9 @@ private:
     inline const ShallowBattlePoke *d() const {return pokeData;}
     inline PokeBattle* dd() {return (PokeBattle*)pokeData;}
     inline const PokeBattle* dd() const {return (PokeBattle*)pokeData;}
+    TeamProxy *master() const;
+
+    QVector<MoveProxy*> moves;
 };
 
 class TeamProxy : public QObject
@@ -119,6 +168,8 @@ public:
     int time() const;
     void setTimeLeft(int time, bool ticking=false);
     bool ticking() const;
+    Q_PROPERTY(Pokemon::gen gen READ gen CONSTANT)
+    Pokemon::gen gen() const;
 signals:
     void pokemonsSwapped(int slot1, int slot2);
     void timeChanged();

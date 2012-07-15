@@ -16,6 +16,7 @@ ProxyDataContainer::ProxyDataContainer(const BattleConfiguration *conf) : auxdat
 
             for (int j = 0; j < numberInTeam; j++) {
                 auxdata.poke(i+j*2)->setPlayerPoke(true);
+                auxdata.poke(i+j*2)->pokemon()->setParent(teams[i]);
             }
         } else {
             teams[i] = new TeamProxy();

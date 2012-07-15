@@ -11,6 +11,7 @@ TeamData::TeamData(const TeamBattle *team)
             pokemons.push_back(new PokeBattle(team->poke(i)));
         }
         mName = team->name;
+        mGen = team->gen;
     }
 }
 
@@ -57,6 +58,12 @@ void TeamData::setTeam(const TeamBattle *team)
         setPoke(i, &team->poke(i));
     }
     mName = team->name;
+    mGen = team->gen;
+}
+
+void TeamData::setGen(Pokemon::gen gen)
+{
+    mGen = gen;
 }
 
 void TeamData::switchPokemons(int slot1, int slot2)
