@@ -8,6 +8,7 @@
 #include <QToolButton>
 #include <QLineEdit>
 #include <QCheckBox>
+#include <QCompleter>
 
 LoadLine::LoadLine(QWidget *parent) :
     QWidget(parent),
@@ -16,7 +17,7 @@ LoadLine::LoadLine(QWidget *parent) :
     ui->setupUi(this);
 }
 
-void LoadLine::setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButton *browser)
+void LoadLine::setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButton *browser, const QStringList &tierList)
 {
     ui2.gen =gen;
     ui2.name = name;
@@ -34,8 +35,15 @@ void LoadLine::setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButt
         }
     }
 
+    QCompleter *m_completer = new QCompleter(tierList);
+    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    m_completer->setCompletionMode(QCompleter::PopupCompletion);
+
+    ui2.tier->setCompleter(m_completer);
+
     connect(ui2.gen, SIGNAL(currentIndexChanged(int)), SLOT(genChanged()));
     connect(ui2.tier, SIGNAL(textEdited(QString)), SLOT(tierEdited(QString)));
+    connect(m_completer, SIGNAL(activated(QString)), SLOT(tierEdited(QString)));
     connect(ui2.browse, SIGNAL(clicked()), SLOT(browseTeam()));
 }
 

@@ -21,7 +21,7 @@ class LoadLine : public QWidget
     
 public:
     explicit LoadLine(QWidget *parent = 0);
-    void setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButton *browser);
+    void setUi(QCheckBox *name, QComboBox *gen, QLineEdit *tier, QToolButton *browser, const QStringList &tierList);
     ~LoadLine();
 
     bool isChecked() const;
