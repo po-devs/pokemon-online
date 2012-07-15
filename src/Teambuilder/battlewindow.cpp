@@ -199,7 +199,7 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
 
     const auto &poke = info().tempPoke(spot);
     for (int i = 0; i< 4; i++) {
-        myazones[snum]->tattacks[i]->updateAttack(poke.move(i), poke, gen());
+        myazones[snum]->tattacks[i]->updateAttack(poke.move(i)->exposedData(), poke, gen());
     }
 }
 
@@ -289,7 +289,7 @@ void BattleWindow::attackClicked(int zone)
             info().done[data().slotNum(slot)] = true;
             goToNextChoice();
         } else {
-            int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone);
+            int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone)->num();
             int target = MoveInfo::Target(move, gen());
             /* Triples still require to choose the target */
             if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
@@ -415,9 +415,9 @@ void BattleWindow::disable()
 {
     onBattleEnd(0,0); // TODO: add meaninfull numbers
     mysend->setEnabled(false);
-    myattack->setEnabled(false); 
-    myswitch->setEnabled(false); 
-    mycancel->setEnabled(false); 
+    myattack->setEnabled(false);
+    myswitch->setEnabled(false);
+    mycancel->setEnabled(false);
     disableAll();
     disconnect(myclose);
     connect(myclose, SIGNAL(clicked()), this, SLOT(deleteLater()));
@@ -547,18 +547,15 @@ void BattleWindow::onHpChange(int spot, int)
     }
 }
 
-void BattleWindow::onPPChange(int spot, int move, int PP)
+void BattleWindow::onPPChange(int spot, int move, int)
 {
-    info().currentPoke(spot).move(move).PP() = PP;
-    info().tempPoke(spot).move(move).PP() = PP;
-    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
+    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }
 
-void BattleWindow::onTempPPChange(int spot, int move, int PP)
+void BattleWindow::onTempPPChange(int spot, int move, int)
 {
-    info().tempPoke(spot).move(move).PP() = PP;
-    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move), info().tempPoke(spot), gen());
+    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
 }
 
 void BattleWindow::onDisconnect(int)
@@ -598,15 +595,9 @@ void BattleWindow::onOfferChoice(int, const BattleChoices &c)
     }
 }
 
-void BattleWindow::onMoveChange(int spot, int slot, int move, bool definite)
+void BattleWindow::onMoveChange(int spot, int slot, int, bool definite)
 {
-    info().tempPoke(spot).move(slot).num() = move;
-    info().tempPoke(spot).move(slot).totalPP() = MoveInfo::PP(move, info().gen);
-    if (definite) {
-        info().currentPoke(spot).move(slot).num() = move;
-        info().currentPoke(spot).move(slot).totalPP() = MoveInfo::PP(move, info().gen);
-    }
-    myazones[data().slotNum(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot), info().tempPoke(spot), gen());
+    myazones[data().slotNum(spot)]->tattacks[slot]->updateAttack(info().tempPoke(spot).move(slot)->exposedData(), info().tempPoke(spot), gen());
     if (definite) {
         mypzone->pokes[data().slotNum(spot)]->updateToolTip();
     }
@@ -796,9 +787,9 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     for (int i = 0; i < 4; i++)
     {
         if (old)
-            attacks[i] = new OldAttackButton(poke.move(i), poke, gen);
+            attacks[i] = new OldAttackButton(poke.move(i)->exposedData(), poke, gen);
         else
-            attacks[i] = new ImageAttackButton(poke.move(i), poke, gen);
+            attacks[i] = new ImageAttackButton(poke.move(i)->exposedData(), poke, gen);
 
         tattacks[i] = dynamic_cast<AbstractAttackButton*>(attacks[i]);
 
@@ -958,22 +949,22 @@ void BattlePokeButton::updateToolTip()
     if (p.ability() != 0) {
         tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
                 .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                     AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                     MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                .arg(p.move(2).PP()).arg(p.move(3).PP());
+                     AbilityInfo::Name(p.ability()), MoveInfo::Name(p.move(0)->num()), MoveInfo::Name(p.move(1)->num()),
+                     MoveInfo::Name(p.move(2)->num()), MoveInfo::Name(p.move(3)->num())).arg(p.move(0)->PP()).arg(p.move(1)->PP())
+                .arg(p.move(2)->PP()).arg(p.move(3)->PP());
     } else if (p.ability() == 0) {
         if (p.item() != 0) {
             tooltip = tr("%1 lv %2\nItem:%3\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
                     .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
-                         MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                         MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                    .arg(p.move(2).PP()).arg(p.move(3).PP());
+                         MoveInfo::Name(p.move(0)->num()), MoveInfo::Name(p.move(1)->num()),
+                         MoveInfo::Name(p.move(2)->num()), MoveInfo::Name(p.move(3)->num())).arg(p.move(0)->PP()).arg(p.move(1)->PP())
+                    .arg(p.move(2)->PP()).arg(p.move(3)->PP());
         } else {
             tooltip = tr("%1 lv %2\n\nMoves:\n--%5 - %9 PP\n--%6 - %10 PP\n--%7 - %11 PP\n--%8 - %12 PP")
                     .arg(PokemonInfo::Name(p.num()), QString::number(p.level()),
-                         MoveInfo::Name(p.move(0).num()), MoveInfo::Name(p.move(1).num()),
-                         MoveInfo::Name(p.move(2).num()), MoveInfo::Name(p.move(3).num())).arg(p.move(0).PP()).arg(p.move(1).PP())
-                    .arg(p.move(2).PP()).arg(p.move(3).PP());
+                         MoveInfo::Name(p.move(0)->num()), MoveInfo::Name(p.move(1)->num()),
+                         MoveInfo::Name(p.move(2)->num()), MoveInfo::Name(p.move(3)->num())).arg(p.move(0)->PP()).arg(p.move(1)->PP())
+                    .arg(p.move(2)->PP()).arg(p.move(3)->PP());
         }
     }
     setToolTip(tooltip);

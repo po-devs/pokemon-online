@@ -13,6 +13,9 @@ ContextSwitcher::~ContextSwitcher()
     /* Normally, all contexts should have disappeared before though */
     finish();
 
+    //to suppress "no effect" warning
+    (void) coro_destroy(&main_context);
+
     qDebug() << "End Deleting a context switcher ";
 }
 
@@ -28,8 +31,12 @@ void ContextSwitcher::finish()
 
 void ContextSwitcher::run()
 {
+#ifdef CORO2
+    coro_create(&main_context);
+    coro_main(&main_context);
+#else
     create_context(&main_context);
-
+#endif
     forever {
         if (context_to_delete) {
             /* That literally finishes the deleting operation by allowing wait()
@@ -70,9 +77,14 @@ void ContextSwitcher::run()
         case Start: {
             contexts.insert(p.first);
             startpair sp(this, p.first);
+#ifdef CORO2
+            coro_create(&p.first->context);
+            current_context = p.first;
+            coro_start(&main_context, &(p.first->context), &ContextSwitcher::runNewCalleeS, &sp);
+#else
             create_context(&p.first->context, &ContextSwitcher::runNewCalleeS, &sp, p.first->stack, p.first->stacksize);
-
             switch_context(p.first);
+#endif
             break;
         }
         case Continue:
@@ -80,9 +92,7 @@ void ContextSwitcher::run()
             break;
         }
     }
-    end:
-    //to suppress "no effect" warning
-    (void) coro_destroy(&main_context);
+    end:;
 }
 
 void ContextSwitcher::switch_context(ContextCallee *new_context)
@@ -141,9 +151,11 @@ void ContextSwitcher::terminate(ContextCallee *callee)
 
 void ContextSwitcher::yield()
 {
-    if (!current_context)
+    if (!current_context) {
+        qCritical() << "Context Switcher: No current context while yielding!";
         /* asdf! Crash the fool who called that! But no, just return :( */
         return;
+    }
 
     ContextCallee *tmp = current_context;
     current_context = NULL;
@@ -152,9 +164,11 @@ void ContextSwitcher::yield()
 
 void ContextSwitcher::create_context(coro_context *c, coro_func function, void *param, void *stack, long stacksize)
 {
+#ifndef CORO2
     guardian.lock();
     coro_create(c, function, param, stack, stacksize);
     guardian.unlock();
+#endif
 }
 
 ContextCallee::ContextCallee(long stacksize) : ctx(NULL), stacksize(stacksize), needsToExit(false), _finished(false)

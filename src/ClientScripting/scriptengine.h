@@ -69,7 +69,8 @@ public:
     Q_INVOKABLE bool stopTimer(int timerId);
 
     /* Evaluates the script given in parameter */
-    Q_INVOKABLE QScriptValue eval(const QString &script);
+    QScriptValue eval(const QString &script);
+    static QScriptValue eval(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE int rand(int min, int max);
     Q_INVOKABLE long time();

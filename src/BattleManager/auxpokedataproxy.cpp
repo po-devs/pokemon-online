@@ -17,7 +17,7 @@ AuxPokeDataProxy::AuxPokeDataProxy()
 AuxPokeDataProxy::~AuxPokeDataProxy()
 {
     if (playerPoke) {
-        delete poke;
+        //delete poke; /* Memory leak if you don't give the pokemon a parent (a team parent) */
     }
 }
 
@@ -165,6 +165,7 @@ void FieldProxy::setWeather(int weather)
 FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
     for (int i = 0; i < numOfSlots; i++) {
         AuxPokeDataProxy *ptr = new AuxPokeDataProxy();
+        ptr->setParent(this);
         auxdata.push_back(ptr);
     }
     for (int i = 0; i < 2; i++) {
@@ -173,9 +174,6 @@ FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
 }
 
 FieldProxy::~FieldProxy() {
-    for (unsigned i = 0; i < auxdata.size(); i++) {
-        delete auxdata[i];
-    }
     for (int i = 0; i < 2; i++) {
         delete zonedata[i];
     }

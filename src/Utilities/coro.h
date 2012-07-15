@@ -80,6 +80,10 @@
 #ifndef CORO_H
 #define CORO_H
 
+#ifdef CORO2
+#include "coro/Coro.h"
+#else
+
 #if __cplusplus
 extern "C" {
 #endif
@@ -306,6 +310,8 @@ void coro_destroy (coro_context *ctx);
 #if __cplusplus
 }
 #endif
+
+#endif //CORO2
 
 #endif
 

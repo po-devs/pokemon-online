@@ -4,12 +4,94 @@
 #include "teamdata.h"
 #include "battledata.h"
 
+MoveProxy::MoveProxy(BattleMove *move) :hasOwnerShip(false), moveData(move)
+{
+
+}
+
+MoveProxy::MoveProxy() : hasOwnerShip(true), moveData(new BattleMove())
+{
+
+}
+
+MoveProxy::~MoveProxy()
+{
+    if (hasOwnerShip) {
+        delete moveData;
+    }
+}
+
+void MoveProxy::adaptTo(const BattleMove *move)
+{
+    setNum(move->num());
+    changePP(move->PP());
+}
+
+Pokemon::gen MoveProxy::gen() const
+{
+    return master()->gen();
+}
+
+BattleMove &MoveProxy::exposedData()
+{
+    return *moveData;
+}
+
+const BattleMove &MoveProxy::exposedData() const
+{
+    return *moveData;
+}
+
+PokeProxy * MoveProxy::master() const
+{
+    return dynamic_cast<PokeProxy*>(parent());
+}
+
+void MoveProxy::setNum(int newnum) {
+    if (newnum == num()) {
+        return;
+    }
+    d()->num() = newnum;
+    d()->totalPP() = MoveInfo::PP(newnum, gen());
+    emit numChanged();
+}
+
+void MoveProxy::changePP(int newPP) {
+    if (newPP == d()->PP()) {
+        return;
+    }
+    d()->PP() = newPP;
+    emit PPChanged();
+}
+
 PokeProxy::PokeProxy() : hasOwnerShip(true), pokeData(new ShallowBattlePoke())
 {
+    if (hasExposedData()) {
+        for (int i = 0; i < 4; i++) {
+            moves.push_back(new MoveProxy(&dd()->move(i)));
+            moves.last()->setParent(this);
+        }
+    } else {
+        for (int i = 0; i < 4; i++) {
+            moves.push_back(new MoveProxy());
+            moves.last()->setParent(this);
+        }
+    }
 }
 
 PokeProxy::PokeProxy(ShallowBattlePoke *pokemon) : hasOwnerShip(false), pokeData(pokemon)
 {
+    if (hasExposedData()) {
+        for (int i = 0; i < 4; i++) {
+            moves.push_back(new MoveProxy(&dd()->move(i)));
+            moves.last()->setParent(this);
+        }
+    } else {
+        for (int i = 0; i < 4; i++) {
+            moves.push_back(new MoveProxy());
+            moves.last()->setParent(this);
+        }
+    }
 }
 
 PokeProxy::~PokeProxy()
@@ -33,12 +115,15 @@ void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon, bool soft) {
     }
     /* Could be more granular, change if it matters */
     *pokeData = *pokemon;
-    emit numChanged(); emit statusChanged(); emit lifeChanged();
-    emit pokemonReset();
+    emitReset();
 }
 
 void PokeProxy::adaptTo(const PokeBattle *pokemon) {
     PokeBattle *trans = dynamic_cast<PokeBattle*>(pokeData);
+
+    for (int i = 0; i < 4; i++) {
+        move(i)->adaptTo(&pokemon->move(i));
+    }
 
     if (trans) {
         *trans = *pokemon;
@@ -50,8 +135,23 @@ void PokeProxy::adaptTo(const PokeBattle *pokemon) {
     }
 
     /* Could be more granular, change if it matters */
+    emitReset();
+}
+
+void PokeProxy::emitReset()
+{
     emit numChanged(); emit statusChanged(); emit lifeChanged();
     emit pokemonReset();
+}
+
+TeamProxy *PokeProxy::master() const
+{
+    return dynamic_cast<TeamProxy*>(parent());
+}
+
+Pokemon::gen PokeProxy::gen() const
+{
+    return master()->gen();
 }
 
 void PokeProxy::changeStatus(int fullStatus)
@@ -80,6 +180,15 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     emit numChanged();
 }
 
+void PokeProxy::setItem(int newItem)
+{
+    if (!hasExposedData() || dd()->item() == newItem) {
+        return;
+    }
+    dd()->item() = newItem;
+    emit itemChanged();
+}
+
 int PokeProxy::basestat(int stat) const
 {
     if (hasExposedData())
@@ -88,12 +197,31 @@ int PokeProxy::basestat(int stat) const
         return 0;
 }
 
+int PokeProxy::iv(int stat) const
+{
+    if (stat >= 0 && stat < dvs().length()) {
+        return dvs()[stat];
+    } else {
+        return 0;
+    }
+}
+
+int PokeProxy::ev(int stat) const
+{
+    if (stat >= 0 && stat < evs().length()) {
+        return evs()[stat];
+    } else {
+        return 0;
+    }
+}
+
 TeamProxy::TeamProxy()
 {
     mTime = 300; mTicking = false;
     teamData = new TeamData();
     for (int i = 0; i < 6; i++) {
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
+        pokemons.last()->setParent(this);
     }
     hasOwnerShip = true;
 }
@@ -103,15 +231,13 @@ TeamProxy::TeamProxy(TeamData *teamData) : teamData(teamData), hasOwnerShip(fals
     mTime = 300; mTicking = false;
     for (int i = 0; i < 6; i++) {
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
+        pokemons.last()->setParent(this);
     }
     hasOwnerShip = false;
 }
 
 TeamProxy::~TeamProxy()
 {
-    foreach(PokeProxy *item, pokemons) {
-        delete item;
-    }
     if (hasOwnerShip) {
         delete teamData;
     }
@@ -159,9 +285,16 @@ void TeamProxy::setName(const QString &name)
     teamData->name() = name;
 }
 
+
 void TeamProxy::setTeam(const TeamBattle *team)
 {
     for (int i = 0; i < 6; i++) {
         poke(i)->adaptTo(&team->poke(i));
     }
+    teamData->setGen(team->gen);
+}
+
+Pokemon::gen TeamProxy::gen() const
+{
+    return teamData->gen();
 }
