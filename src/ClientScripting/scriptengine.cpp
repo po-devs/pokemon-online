@@ -229,7 +229,7 @@ int ScriptEngine::onPlayerRemoved(int id)
 
 void ScriptEngine::stepEvent()
 {
-    evaluate(myscript.property("step").call(myscript, QScriptValueList()));
+    evaluate(myscript.property("stepEvent").call(myscript, QScriptValueList()));
 }
 
 void ScriptEngine::clientShutDown()
