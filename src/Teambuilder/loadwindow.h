@@ -16,7 +16,7 @@ class LoadWindow : public QDialog
     Q_OBJECT
     
 public:
-    explicit LoadWindow(QWidget *parent = 0);
+    explicit LoadWindow(QWidget *parent = 0, const QStringList &tierList = (QStringList() << " "));
     ~LoadWindow();
     
 signals:

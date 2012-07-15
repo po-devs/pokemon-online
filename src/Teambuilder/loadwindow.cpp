@@ -1,7 +1,7 @@
 #include "loadwindow.h"
 #include "ui_loadwindow.h"
 
-LoadWindow::LoadWindow(QWidget *parent) :
+LoadWindow::LoadWindow(QWidget *parent, const QStringList &tierList) :
     QDialog(parent),
     ui(new Ui::LoadWindow)
 {
@@ -12,12 +12,12 @@ LoadWindow::LoadWindow(QWidget *parent) :
     LoadLine *array[] = {ui->line1, ui->line2, ui->line3, ui->line4, ui->line5, ui->line6};
     memcpy(lines, array, sizeof(array));
 
-    lines[0]->setUi(ui->name1, ui->gen1, ui->tier1, ui->browser1);
-    lines[1]->setUi(ui->name2, ui->gen2, ui->tier2, ui->browser2);
-    lines[2]->setUi(ui->name3, ui->gen3, ui->tier3, ui->browser3);
-    lines[3]->setUi(ui->name4, ui->gen4, ui->tier4, ui->browser4);
-    lines[4]->setUi(ui->name5, ui->gen5, ui->tier5, ui->browser5);
-    lines[5]->setUi(ui->name6, ui->gen6, ui->tier6, ui->browser6);
+    lines[0]->setUi(ui->name1, ui->gen1, ui->tier1, ui->browser1, tierList);
+    lines[1]->setUi(ui->name2, ui->gen2, ui->tier2, ui->browser2, tierList);
+    lines[2]->setUi(ui->name3, ui->gen3, ui->tier3, ui->browser3, tierList);
+    lines[3]->setUi(ui->name4, ui->gen4, ui->tier4, ui->browser4, tierList);
+    lines[4]->setUi(ui->name5, ui->gen5, ui->tier5, ui->browser5, tierList);
+    lines[5]->setUi(ui->name6, ui->gen6, ui->tier6, ui->browser6, tierList);
 
     for (int i = 0; i < 6; i++) {
         if (i >= holder.count()) {
