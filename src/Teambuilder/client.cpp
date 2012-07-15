@@ -1101,7 +1101,7 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    LoadWindow *w = new LoadWindow(this);
+    LoadWindow *w = new LoadWindow(this, tierList);
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->show();
 
