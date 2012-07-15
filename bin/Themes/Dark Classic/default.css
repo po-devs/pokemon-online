@@ -14,8 +14,6 @@ QDockWidget {
 
  QDockWidget::close-button{
      background: rgba(200,200,200,60);
-     color: white;
-     icon-size: 14px; /* maximum icon size */
  }
 
  QDockWidget::close-button:hover{

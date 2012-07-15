@@ -2364,39 +2364,32 @@ void Client::openTeamBuilder()
         return;
     }
 
-    myteambuilder = new QMainWindow();
-
     secondTeam = *team();
 
-    QStackedWidget *central = new QStackedWidget;
-    central->setObjectName("CentralWidget");
-
-    TeamBuilder *t = new TeamBuilder(&secondTeam);
-    myteambuilder->resize(t->size());
-    myteambuilder->setCentralWidget(central);
-    central->addWidget(t);
+    myteambuilder = new TeamBuilder(&secondTeam);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
+
     if (top) {
-        myteambuilder->setMenuBar(t->createMenuBar(top));
+        QMenuBar *bar = myteambuilder->createMenuBar(top);
+        myteambuilder->setMenuBar(bar);
     }
-    t->setTierList(tierList);
+    myteambuilder->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
-    connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
+    connect(myteambuilder, SIGNAL(done()), this, SLOT(changeTeam()));
+    connect(myteambuilder, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(myteambuilder, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
     if (top) {
-        connect(t, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
+        connect(myteambuilder, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
     }
-    connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
+    connect(this, SIGNAL(tierListFormed(const QStringList &)), myteambuilder, SLOT(setTierList(const QStringList&)));
 }
 
 void Client::reloadTeamBuilderBar()
 {
     if (top) {
-        TeamBuilder *tb = dynamic_cast<TeamBuilder*>(dynamic_cast<QStackedWidget*>(myteambuilder->centralWidget())->widget(0));
-        myteambuilder->setMenuBar(tb->createMenuBar(top));
+        myteambuilder->setMenuBar(myteambuilder->createMenuBar(top));
     }
 }
 

@@ -13,6 +13,7 @@
 #include "clientinterface.h"
 #include "plugininterface.h"
 
+class TeamBuilder;
 class MainEngine;
 class ChallengeDialog;
 class QIdTreeWidgetItem;
@@ -373,7 +374,7 @@ private:
     QList<QAction*> myevents;
     QList<QAction*> mychanevents;
     /* You can call the teambuilder from here too */
-    QPointer<QMainWindow> myteambuilder;
+    QPointer<TeamBuilder> myteambuilder;
     QStringList eventlist;
 
     QPointer<ControlPanel> myCP;
