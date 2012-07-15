@@ -40,6 +40,7 @@ public slots:
     void changeItem(const QString &newItem);
     void setNature(int index);
     void setNum(Pokemon::uniqueId num);
+    void setNum(const QString &num);
     void setItem(int num);
     void openPokemonSelection();
 signals:

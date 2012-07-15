@@ -26,6 +26,18 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     ui->evbox->setPoke(poke);
     ui->ivbox->setPoke(poke);
 
+    QSortFilterProxyModel *pokeFilter = new QSortFilterProxyModel(this);
+    pokeFilter->setFilterRegExp(".");
+    pokeFilter->setSourceModel(pokemonModel);
+
+    QCompleter *completer = new QCompleter(pokeFilter, ui->nickname);
+    completer->setCompletionColumn(1);
+    completer->setCompletionRole(Qt::DisplayRole);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    ui->nickname->setCompleter(completer);
+    connect(completer, SIGNAL(activated(QString)), SLOT(setNum(QString)));
+
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
     filter->setSourceModel(movesModel);
@@ -273,6 +285,11 @@ void PokeEdit::setItem(int itemnum)
 void PokeEdit::changeHappiness(int newHappiness)
 {
     poke().happiness() = newHappiness;
+}
+
+void PokeEdit::setNum(const QString &num)
+{
+    setNum(PokemonInfo::Number(num));
 }
 
 void PokeEdit::setNum(Pokemon::uniqueId num)
