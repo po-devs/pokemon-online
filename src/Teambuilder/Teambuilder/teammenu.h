@@ -17,10 +17,11 @@ class TeamMenu : public TeamBuilderWidget
     Q_OBJECT
 
 public:
-    explicit TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
+    explicit TeamMenu(QMainWindow *window, QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
     ~TeamMenu();
 
     void updateTeam();
+
 signals:
     void switchToTrainer();
 public slots:

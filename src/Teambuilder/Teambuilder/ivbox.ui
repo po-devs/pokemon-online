@@ -10,6 +10,12 @@
     <height>364</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>DVs</string>
   </property>
@@ -105,7 +111,7 @@
    <item row="0" column="0" rowspan="2" colspan="2">
     <widget class="QGroupBox" name="finalStats">
      <property name="title">
-      <string>&amp;IV Box</string>
+      <string>&amp;DVs</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">

@@ -2,8 +2,32 @@ QToolTip {
     color: black;
 }
 
+QDockWidget {
+    color: #cccccc;
+    font-weight: bold;
+}
+
+ QDockWidget::title {
+    background-color: transparent;
+    text-align:center;
+ }
+
+ QDockWidget::close-button{
+     background: rgba(200,200,200,60);
+     color: white;
+     icon-size: 14px; /* maximum icon size */
+ }
+
+ QDockWidget::close-button:hover{
+     background: gray;
+ }
+
+ QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+     padding: 1px -1px -1px 1px;
+ }
+
 /* Because styles other than plastique suck... */
-QSplitter::handle {
+QMainWindow::handle, QSplitter::handle {
 /* Find the right image and add :  image: url(images/splitter.png
    Just look at how Plastique style's splitter is when there's no css
    and you'll understand.
@@ -21,7 +45,7 @@ QSplitter::handle:hover {
 
 /* Main Widgets */
 
-TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
+PokeSelection, Menu, ServerChoice, Client, TeamBuilder {
     background: #070a0f;
     border-radius: 20px;
 }
@@ -126,6 +150,10 @@ PokeButton {
 
 TrainerMenu QLabel#avatar {
     background: #ffffff;
+}
+
+PokeEdit #done {
+  margin-right: 60px;
 }
 
 PokeEdit #pokemonSprite {

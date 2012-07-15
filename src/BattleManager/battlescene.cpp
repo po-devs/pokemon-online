@@ -182,11 +182,17 @@ void BattleScene::onStatBoost(int, int, int, bool)
     info.statChanges.pop_front();
 }
 
-bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int, bool)
+bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int attack, bool)
 {
-    info.reset();
-    inmove = true;
-    return true;
+    /* Those three attacks require a choice from the player and so would hang the battle window
+      until the player made the choice - and it's annoying. */
+    if (attack == Move::U_turn || attack == Move::BatonPass || attack == Move::VoltChange) {
+        return false;
+    } else {
+        info.reset();
+        inmove = true;
+        return true;
+    }
 }
 
 void BattleScene::onUseAttack(int spot, int attack, bool)

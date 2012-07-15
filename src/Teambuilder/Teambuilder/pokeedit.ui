@@ -13,11 +13,20 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,100,0,0,0,0">
-   <property name="margin">
+  <layout class="QVBoxLayout" name="vertical" stretch="0,0,0">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <item row="0" column="3" colspan="3">
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
     <widget class="QPushButton" name="done">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -30,244 +39,265 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QToolButton" name="pokemonFrame">
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="pokemonSprite">
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="itemSprite">
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <layout class="QGridLayout" name="gridLayout_3">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item row="0" column="0" colspan="4">
-      <widget class="QTableView" name="moveChoice">
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
-       </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
-       </property>
-       <property name="showGrid">
-        <bool>false</bool>
-       </property>
-       <property name="sortingEnabled">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalPoke">
+     <item>
+      <widget class="QToolButton" name="pokemonFrame">
+       <property name="autoRaise">
         <bool>true</bool>
        </property>
-       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="horizontalHeaderStretchLastSection">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>22</number>
-       </attribute>
+       <layout class="QGridLayout">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="pokemonSprite">
+          <property name="focusPolicy">
+           <enum>Qt::TabFocus</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="itemSprite">
+          <property name="focusPolicy">
+           <enum>Qt::TabFocus</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="move1">
-       <property name="placeholderText">
-        <string>Move 1</string>
-       </property>
+     <item>
+      <widget class="QWidget" name="SpeciesContainer" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QClickLabel" name="speciesLabel">
+            <property name="text">
+             <string>Species</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="genderSprite">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="type1">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="type2">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="nickname">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Pokemon nickname</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="natureLabel">
+            <property name="text">
+             <string>&amp;Nature</string>
+            </property>
+            <property name="buddy">
+             <cstring>nature</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="nature">
+            <property name="maxVisibleItems">
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="itemLabel">
+            <property name="text">
+             <string>&amp;Item</string>
+            </property>
+            <property name="buddy">
+             <cstring>item</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="item">
+            <property name="minimumSize">
+             <size>
+              <width>130</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="happinessLabel">
+            <property name="text">
+             <string>&amp;Happiness</string>
+            </property>
+            <property name="buddy">
+             <cstring>happiness</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="happiness">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="move2">
-       <property name="placeholderText">
-        <string>Move 2</string>
-       </property>
-      </widget>
+     <item>
+      <widget class="EvBox" name="evbox" native="true"/>
      </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="move3">
-       <property name="placeholderText">
-        <string>Move 3</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="move4">
-       <property name="placeholderText">
-        <string>Move 4</string>
-       </property>
-      </widget>
+     <item>
+      <widget class="PokeLevelSettings" name="levelSettings"/>
      </item>
     </layout>
    </item>
-   <item row="3" column="3" colspan="4">
-    <widget class="IvBox" name="ivbox" native="true"/>
-   </item>
-   <item row="0" column="6" rowspan="2">
-    <widget class="PokeLevelSettings" name="levelSettings"/>
-   </item>
-   <item row="1" column="2" colspan="4">
-    <widget class="EvBox" name="evbox" native="true"/>
-   </item>
-   <item row="1" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>2</number>
-     </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalMove">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QClickLabel" name="speciesLabel">
-         <property name="text">
-          <string>Species</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="genderSprite">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="type1">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="type2">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="nickname">
-       <property name="text">
-        <string/>
+      <widget class="QWidget" name="moveContainer" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>255</horstretch>
+         <verstretch>255</verstretch>
+        </sizepolicy>
        </property>
-       <property name="placeholderText">
-        <string>Pokemon nickname</string>
-       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="1" column="0">
+         <widget class="QLineEdit" name="move1">
+          <property name="placeholderText">
+           <string>Move 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="move2">
+          <property name="placeholderText">
+           <string>Move 2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="move3">
+          <property name="placeholderText">
+           <string>Move 3</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="move4">
+          <property name="placeholderText">
+           <string>Move 4</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QTableView" name="moveChoice">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>22</number>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="natureLabel">
-         <property name="text">
-          <string>&amp;Nature</string>
-         </property>
-         <property name="buddy">
-          <cstring>nature</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="nature">
-         <property name="maxVisibleItems">
-          <number>25</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="itemLabel">
-         <property name="text">
-          <string>&amp;Item</string>
-         </property>
-         <property name="buddy">
-          <cstring>item</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="item">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maxVisibleItems">
-          <number>30</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <widget class="QLabel" name="happinessLabel">
-         <property name="text">
-          <string>&amp;Happiness</string>
-         </property>
-         <property name="buddy">
-          <cstring>happiness</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="happiness">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="IvBox" name="ivbox" native="true"/>
      </item>
     </layout>
    </item>
@@ -300,7 +330,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>done</tabstop>
-  <tabstop>pokemonFrame</tabstop>
   <tabstop>pokemonSprite</tabstop>
   <tabstop>itemSprite</tabstop>
   <tabstop>nickname</tabstop>
@@ -313,70 +342,5 @@
   <tabstop>move4</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>move1</sender>
-   <signal>customContextMenuRequested(QPoint)</signal>
-   <receiver>move1</receiver>
-   <slot>selectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>121</x>
-     <y>447</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>149</x>
-     <y>442</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>move2</sender>
-   <signal>customContextMenuRequested(QPoint)</signal>
-   <receiver>move2</receiver>
-   <slot>selectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>265</x>
-     <y>440</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>move3</sender>
-   <signal>customContextMenuRequested(QPoint)</signal>
-   <receiver>move3</receiver>
-   <slot>selectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>463</x>
-     <y>443</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>526</x>
-     <y>447</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>move4</sender>
-   <signal>customContextMenuRequested(QPoint)</signal>
-   <receiver>move4</receiver>
-   <slot>selectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>648</x>
-     <y>447</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>744</x>
-     <y>446</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
