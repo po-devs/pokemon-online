@@ -13,15 +13,22 @@ class QAbstractItemModel;
 class PokeMovesModel;
 class QLineEdit;
 class QModelIndex;
+class TeamBuilderWidget;
 
 class PokeEdit : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemModel, QAbstractItemModel *natureModel);
+    explicit PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemModel, QAbstractItemModel *natureModel);
     ~PokeEdit();
 
+    enum Docks {
+        EVDock = 2000,
+        IVDock,
+        LevelDock,
+        MoveDock
+    };
 signals:
     void switchToTrainer();
 
@@ -40,6 +47,7 @@ public slots:
     void changeItem(const QString &newItem);
     void setNature(int index);
     void setNum(Pokemon::uniqueId num);
+    void setNum(const QString &num);
     void setItem(int num);
     void openPokemonSelection();
 signals:
@@ -58,6 +66,8 @@ private:
     PokeMovesModel *movesModel;
     QAbstractItemModel *pokemonModel;
     PokeTeam *m_poke;
+
+    TeamBuilderWidget *master;
 
     PokeTeam &poke() {return *m_poke;}
     const PokeTeam &poke() const {return *m_poke;}

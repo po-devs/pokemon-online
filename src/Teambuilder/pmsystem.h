@@ -45,7 +45,7 @@ struct PMStruct : public QWidget
     PROPERTY(int, id)
 
 public:
-    PMStruct(int id, const QString &ownName, const QString &name, const QString &content = "", bool html = false);
+    PMStruct(int id, const QString &ownName, const QString &name, const QString &content = "", int ownAuth=0);
     ~PMStruct() {
         emit destroyed(id(), m_name);
     }
@@ -75,11 +75,13 @@ signals:
     void destroyed(int id, QString name);
     void ignore(int id, bool);
     void idChanged(int oldid, int newid);
+    void controlPanel(int id);
 
 public slots:
     void sendMessage();
     void ignore(bool);
     void challenge();
+    void emitCp();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -87,7 +89,6 @@ protected:
 private:
     QString m_name;
     QString m_ownName;
-    bool escape_html;
     bool SaveLog;
 
     Log *log;
