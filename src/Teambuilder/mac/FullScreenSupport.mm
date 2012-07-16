@@ -3,18 +3,22 @@
 #include <Appkit/NSView.h>
 #include <Appkit/NSWindow.h>
 
-bool MacSupport::isLion()
-{
-    NSString *string = [NSString string];
+// Allow the code to be compiled on older macs and still allow
+// Fullscreen on Lion
+// TODO: will this work on Mountain Lion too?
+#if !defined(MAC_OS_X_VERSION_10_7) || \
+    MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7
+enum {
+    NSWindowCollectionBehaviorFullScreenPrimary = (1 << 7),
+    NSWindowCollectionBehaviorFullScreenAuxiliary = (1 << 8)
+};
+#endif
 
-    return [string respondsToSelector:@selector(linguisticTagsInRange:scheme:options:orthography:tokenRanges:)];
-}
-
-void MacSupport::setupFullScreen(QWidget *window)
+void MacSupport::setupFullScreen(QWidget *widget)
 {
-    if (isLion()) {
-        NSView *view = (NSView*) window->winId();
-        NSWindow *window = [view window];
-        [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-    }
+    NSView *view = (NSView*) widget->winId();
+    NSWindow *window = [view window];
+    NSUInteger collectionBehavior = [window collectionBehavior];
+    collectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    [window setCollectionBehavior:collectionBehavior];
 }
