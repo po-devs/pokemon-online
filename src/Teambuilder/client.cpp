@@ -753,7 +753,7 @@ void Client::startPM(int id)
         return;
     }
 
-    PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4);
+    PMStruct *p = new PMStruct(id, ownName(), name(id), "", ownAuth());
 
     pmSystem->startPM(p);
     if (pmFlashing) {
@@ -764,6 +764,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
+    connect(p, SIGNAL(controlPanel(int)), this, SLOT(controlPanel(int)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
     connect(this, SIGNAL(destroyed()), p, SLOT(deleteLater()));
 
@@ -1383,7 +1384,7 @@ void Client::askForPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
-    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
+    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, (secondTeam.name().isEmpty() ? myteam->name() : secondTeam.name()), salt, pass, warns);
     if (!warns.empty()) warns.prepend(""); // for join()
 
     /* Create a dialog for password input */

@@ -41,6 +41,7 @@ void PMSystem::startPM(PMStruct *newPM)
     connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
     connect(newPM, SIGNAL(idChanged(int,int)), SLOT(changeId(int,int)));
     connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
+    connect(this, SIGNAL(destroyed()), newPM, SLOT(deleteLater())); //Since for now non-tabbed pms aren't closed otherwise
 }
 
 void PMSystem::flash(PMStruct *pm)
@@ -163,8 +164,8 @@ void PMSystem::PMDisconnected(bool value)
     }
 }
 
-PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, bool html)
-    : m_ownName(ownName), escape_html(!html)
+PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QString &content, int auth)
+    : m_ownName(ownName)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -178,8 +179,8 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_mainwindow = new QScrollDownTextBrowser();
     m_textToSend = new QIRCLineEdit();
 
-    l->addWidget(m_mainwindow, 0,0,1,2);
-    l->addWidget(m_textToSend, 1,0,1,2);
+    l->addWidget(m_mainwindow, 0,0,1, 2 + (auth>0));
+    l->addWidget(m_textToSend, 1,0,1, 2 + (auth>0));
 
     m_challenge = new QPushButton(tr("&Challenge"));
     m_send = new QPushButton(tr("&Ignore"));
@@ -195,11 +196,22 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     l->addWidget(m_challenge,2,0);
     l->addWidget(m_send,2,1);
 
+    if (auth > 0) {
+        QPushButton *cp = new QPushButton(tr("Control &Panel"));
+        l->addWidget(cp, 2, 2);
+        connect(cp, SIGNAL(clicked()), SLOT(emitCp()));
+    }
+
     printLine(content, false);
 
     connect(m_textToSend, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(m_send, SIGNAL(toggled(bool)), this, SLOT(ignore(bool)));
     connect(m_challenge, SIGNAL(clicked()), this, SLOT(challenge()));
+}
+
+void PMStruct::emitCp()
+{
+    emit controlPanel(id());
 }
 
 void PMStruct::changeName(const QString &newname)
@@ -225,9 +237,7 @@ void PMStruct::printLine(QString line, bool self)
     if (tt)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
-    if (escape_html) {
-        line = escapeHtml(line);
-    }
+    line = escapeHtml(line);
 
     if (self) {
         printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
