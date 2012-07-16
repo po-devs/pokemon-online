@@ -753,7 +753,7 @@ void Client::startPM(int id)
         return;
     }
 
-    PMStruct *p = new PMStruct(id, ownName(), name(id), "", auth(id) >= 4);
+    PMStruct *p = new PMStruct(id, ownName(), name(id), "", ownAuth());
 
     pmSystem->startPM(p);
     if (pmFlashing) {
@@ -764,6 +764,7 @@ void Client::startPM(int id)
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
+    connect(p, SIGNAL(controlPanel(int)), this, SLOT(controlPanel(int)));
     connect(p, SIGNAL(ignore(int,bool)), this, SLOT(ignore(int, bool)));
     connect(this, SIGNAL(destroyed()), p, SLOT(deleteLater()));
 
@@ -1101,7 +1102,7 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    LoadWindow *w = new LoadWindow(this, tierList);
+    LoadWindow *w = new LoadWindow(this, getTierList());
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->show();
 
@@ -1383,7 +1384,7 @@ void Client::askForPass(const QByteArray &salt) {
 
     QString pass;
     QStringList warns;
-    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass, warns);
+    bool ok = wallet.retrieveUserPassword(relay().getIp(), serverName, (secondTeam.name().isEmpty() ? myteam->name() : secondTeam.name()), salt, pass, warns);
     if (!warns.empty()) warns.prepend(""); // for join()
 
     /* Create a dialog for password input */
@@ -2364,39 +2365,32 @@ void Client::openTeamBuilder()
         return;
     }
 
-    myteambuilder = new QMainWindow();
-
     secondTeam = *team();
 
-    QStackedWidget *central = new QStackedWidget;
-    central->setObjectName("CentralWidget");
-
-    TeamBuilder *t = new TeamBuilder(&secondTeam);
-    myteambuilder->resize(t->size());
-    myteambuilder->setCentralWidget(central);
-    central->addWidget(t);
+    myteambuilder = new TeamBuilder(&secondTeam);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
+
     if (top) {
-        myteambuilder->setMenuBar(t->createMenuBar(top));
+        QMenuBar *bar = myteambuilder->createMenuBar(top);
+        myteambuilder->setMenuBar(bar);
     }
-    t->setTierList(tierList);
+    myteambuilder->setTierList(tierList);
 
     connect(this, SIGNAL(destroyed()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(done()), this, SLOT(changeTeam()));
-    connect(t, SIGNAL(done()), myteambuilder, SLOT(close()));
-    connect(t, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
+    connect(myteambuilder, SIGNAL(done()), this, SLOT(changeTeam()));
+    connect(myteambuilder, SIGNAL(done()), myteambuilder, SLOT(close()));
+    connect(myteambuilder, SIGNAL(reloadMenuBar()), SLOT(reloadTeamBuilderBar()));
     if (top) {
-        connect(t, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
+        connect(myteambuilder, SIGNAL(reloadDb()), top, SLOT(reloadPokemonDatabase()));
     }
-    connect(this, SIGNAL(tierListFormed(const QStringList &)), t, SLOT(setTierList(const QStringList&)));
+    connect(this, SIGNAL(tierListFormed(const QStringList &)), myteambuilder, SLOT(setTierList(const QStringList&)));
 }
 
 void Client::reloadTeamBuilderBar()
 {
     if (top) {
-        TeamBuilder *tb = dynamic_cast<TeamBuilder*>(dynamic_cast<QStackedWidget*>(myteambuilder->centralWidget())->widget(0));
-        myteambuilder->setMenuBar(tb->createMenuBar(top));
+        myteambuilder->setMenuBar(myteambuilder->createMenuBar(top));
     }
 }
 

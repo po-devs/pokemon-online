@@ -2,6 +2,30 @@ QToolTip {
     color: black;
 }
 
+ QDockWidget::title {
+/*    background-color: rgba(200,200,200,90);*/
+    background-color: transparent;
+    text-align:center;
+ }
+
+ QDockWidget {
+    color: #ffffff;
+    font-weight: bold;
+ }
+
+ QDockWidget::close-button{
+     background: rgba(200,200,200,60);
+ }
+
+ QDockWidget::close-button:hover{
+     background: gray;
+ }
+
+ QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+     padding: 1px -1px -1px 1px;
+ }
+
+
 /* Because styles other than plastique suck... */
 QSplitter::handle {
 /* Find the right image and add :  image: url(images/splitter.png
@@ -21,7 +45,7 @@ QSplitter::handle:hover {
 
 /* Main Widgets */
 
-TrainerMenu, TeamMenu, PokeSelection, Menu, ServerChoice, Client, PokeBoxes {
+TeamBuilder, PokeSelection, Menu, ServerChoice, Client{
     background: #5c707e;
     border-radius: 20px;
 }
@@ -121,6 +145,10 @@ PokeButton {
 
 TrainerMenu QLabel#avatar {
     background: #ffffff;
+}
+
+PokeEdit #done {
+  margin-right: 60px;
 }
 
 PokeEdit #pokemonSprite {

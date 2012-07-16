@@ -6,18 +6,35 @@
 #include <QStringListModel>
 #include <QMenuBar>
 #include <QShortcut>
+#include <QDockWidget>
+#include <QMainWindow>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeedit.h"
 #include "Teambuilder/teamholder.h"
 
-TeamMenu::TeamMenu(QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
+TeamMenu::TeamMenu(QMainWindow *window, QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
     ui(new _ui()), m_team(team), lastGen(team->team().gen())
 {
+    setMainWindow(window);
+
     ui->pokemonModel = pokeModel;
     setupUi();
     updateTabs();
+
+    if (0) {
+        addDock(PokeEdit::EVDock, Qt::RightDockWidgetArea, new QDockWidget(tr("EVs"), this));
+        addDock(PokeEdit::LevelDock, Qt::RightDockWidgetArea, new QDockWidget(tr("Level && Gender"), this));
+        addDock(PokeEdit::MoveDock, Qt::BottomDockWidgetArea, new QDockWidget(tr("Moves"), this));
+        addDock(PokeEdit::IVDock, Qt::BottomDockWidgetArea, new QDockWidget(tr("IVs, Ability && Hidden Power"), this));
+
+        window->splitDockWidget(getDock(PokeEdit::EVDock), getDock(PokeEdit::LevelDock), Qt::Horizontal);
+
+//        getDock(PokeEdit::MoveDock)->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+//        getDock(PokeEdit::EVDock)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);
+//        getDock(PokeEdit::IVDock)->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    }
 
     switchToTab(index);
 }
@@ -62,7 +79,7 @@ void TeamMenu::switchToTab(int index)
         return;
     }
     if (!ui->pokemons.contains(index)) {
-        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit(&team().team().poke(index), ui->pokemonModel, ui->itemsModel, ui->natureModel));
+        ui->stack->addWidget(ui->pokemons[index]= new PokeEdit(this, &team().team().poke(index), ui->pokemonModel, ui->itemsModel, ui->natureModel));
         ui->pokemons[index]->setProperty("slot", index);
         connect(ui->pokemons[index], SIGNAL(switchToTrainer()), SIGNAL(switchToTrainer()));
         connect(ui->pokemons[index], SIGNAL(numChanged()), SLOT(tabIconChanged()));

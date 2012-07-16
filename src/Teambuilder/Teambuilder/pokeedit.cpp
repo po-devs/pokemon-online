@@ -2,20 +2,23 @@
 #include <QCompleter>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QDockWidget>
 
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "Teambuilder/pokeedit.h"
+
 #include "ui_pokeedit.h"
 #include "theme.h"
-#include "Teambuilder/pokemovesmodel.h"
-#include "Teambuilder/pokeselection.h"
-#include "Teambuilder/poketablemodel.h"
+#include "pokeedit.h"
+#include "pokemovesmodel.h"
+#include "pokeselection.h"
+#include "poketablemodel.h"
+#include "teambuilderwidget.h"
 
-PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
+PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
     pokemonModel(pokeModel),
-    m_poke(poke)
+    m_poke(poke), master(master)
 {
     ui->setupUi(this);
     ui->itemSprite->raise();
@@ -25,6 +28,36 @@ PokeEdit::PokeEdit(PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemM
     ui->levelSettings->setPoke(poke);
     ui->evbox->setPoke(poke);
     ui->ivbox->setPoke(poke);
+
+    ui->vertical->setAlignment(ui->done, Qt::AlignRight);
+
+    if (0) {
+        master->getDock(EVDock)->setWidget(ui->evbox);
+        master->getDock(IVDock)->setWidget(ui->ivbox);
+        master->getDock(LevelDock)->setWidget(ui->levelSettings);
+        master->getDock(MoveDock)->setWidget(ui->moveContainer);
+    } else {
+        QDockWidget *hi = new QDockWidget(tr("Advanced"), this);
+        hi->setWidget(ui->ivbox);
+        hi->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
+        ui->horizontalMove->addWidget(hi);
+        QDockWidget *hi2 = new QDockWidget(tr("Level"), this);
+        hi2->setWidget(ui->levelSettings);
+        hi2->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
+        ui->horizontalPoke->addWidget(hi2);
+    }
+
+    QSortFilterProxyModel *pokeFilter = new QSortFilterProxyModel(this);
+    pokeFilter->setFilterRegExp(".");
+    pokeFilter->setSourceModel(pokemonModel);
+
+    QCompleter *completer = new QCompleter(pokeFilter, ui->nickname);
+    completer->setCompletionColumn(1);
+    completer->setCompletionRole(Qt::DisplayRole);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    ui->nickname->setCompleter(completer);
+    connect(completer, SIGNAL(activated(QString)), SLOT(setNum(QString)));
 
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
@@ -273,6 +306,11 @@ void PokeEdit::setItem(int itemnum)
 void PokeEdit::changeHappiness(int newHappiness)
 {
     poke().happiness() = newHappiness;
+}
+
+void PokeEdit::setNum(const QString &num)
+{
+    setNum(PokemonInfo::Number(num));
 }
 
 void PokeEdit::setNum(Pokemon::uniqueId num)
