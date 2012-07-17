@@ -23,8 +23,8 @@ Menu::Menu(TeamHolder *t) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
-    connect (ui->pushButton, SIGNAL(clicked()), SLOT(motdchange()));
-    connect (ui->pushButton_2, SIGNAL(clicked()), SLOT(motdchange2()));
+    connect (ui->prevTip, SIGNAL(clicked()), SLOT(motdchange()));
+    connect (ui->nextTip, SIGNAL(clicked()), SLOT(motdchange2()));
 
     srand(time(NULL));
 
@@ -64,7 +64,7 @@ void Menu::setUpdateData(const QString &data)
     ui->updateLabel->setText(data);
     ui->changeLog->setText(tr("Loading changelog..."));
     ui->updateContainer->show();
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void Menu::showChangeLog()
