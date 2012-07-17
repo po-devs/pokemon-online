@@ -23,8 +23,8 @@ Menu::Menu(TeamHolder *t) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
-    connect (ui->prevTip, SIGNAL(clicked()), SLOT(motdchange()));
-    connect (ui->nextTip, SIGNAL(clicked()), SLOT(motdchange2()));
+    connect (ui->prevTip, SIGNAL(clicked()), SLOT(prevTip()));
+    connect (ui->nextTip, SIGNAL(clicked()), SLOT(nextTip()));
 
     srand(time(NULL));
 
@@ -35,8 +35,8 @@ Menu::Menu(TeamHolder *t) :
     while (randi == 0) {
         randi = rand()%(msgs.size()-2);
     }
-    ui->textEdit_2->setText(msgs.at(randi).toLocal8Bit().constData());
-    ui->lineEdit->setText(QString::number(randi) + "/" + QString("%1").arg(msgs.size()-2));
+    ui->motdText->setText(msgs.at(randi).toLocal8Bit().constData());
+    ui->tipEdit->setText(QString::number(randi) + "/" + QString("%1").arg(msgs.size()-2));
 
 
     if (!menuLoaded) {
@@ -141,19 +141,19 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
 
     return menuBar;
 }
-void Menu::motdchange()
+void Menu::prevTip()
 {
-    int newi = ui->lineEdit->text().left(ui->lineEdit->text().indexOf("/")).toInt() - 1;
+    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() - 1;
     if (newi > 0) {
-        ui->lineEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
-        ui->textEdit_2->setText(msgs.at(newi).toLocal8Bit().constData());
+        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
     }
 }
-void Menu::motdchange2()
+void Menu::nextTip()
 {
-    int newi = ui->lineEdit->text().left(ui->lineEdit->text().indexOf("/")).toInt() + 1;
+    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() + 1;
     if (newi <= msgs.size()-2) {
-        ui->lineEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
-        ui->textEdit_2->setText(msgs.at(newi).toLocal8Bit().constData());
+        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
     }
 }
