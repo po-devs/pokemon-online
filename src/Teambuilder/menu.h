@@ -36,6 +36,9 @@ public slots:
 
     void setUpdateData(const QString &data);
     void setChangeLogData(const QString &data);
+
+    void prevTip();
+    void nextTip();
 private slots:
     void on_updateButton_clicked();
 protected:
@@ -44,6 +47,7 @@ private:
     Ui::Menu *ui;
 
     TeamHolder *team;
+    QStringList msgs;
 };
 
 #endif // MENU_H
