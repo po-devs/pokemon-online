@@ -1,3 +1,5 @@
-You can have multiple teams since V2!
-When an update is available, a box appears on left of me!
+You can have multiple teams loaded at once in V2!
+When an update is available, a box appears instead of me!
 You can use the Find Battle Button to find battles!
+You can open new server tabs by pressing Ctrl+N!
+You can add plugins by selecting <strong>Plugins->Plugin Manager</strong> form the menu!
