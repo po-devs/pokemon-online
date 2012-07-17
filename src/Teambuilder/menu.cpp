@@ -15,6 +15,8 @@ Menu::Menu(TeamHolder *t) :
     ui->appLogo->setPixmap(Theme::Sprite("logo"));
     ui->updateContainer->hide();
 
+    connect(ui->spinBox_2, SIGNAL(valueChanged(int)), SLOT(motdchange(int)));
+
     setWindowTitle(tr("Menu"));
 
     connect (ui->teamBuilder, SIGNAL(clicked()), SIGNAL(goToTeambuilder()));
@@ -22,6 +24,26 @@ Menu::Menu(TeamHolder *t) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
+
+    msgs += "trick";
+    srand(time(NULL));
+    QFile file("db/tips.txt");
+    int counter = 0;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            msgs += in.readLine();
+            counter++;
+        }
+    }
+    file.close();
+    int randi = rand()%counter;
+    ui->textEdit_2->setText(msgs.at(randi).toLocal8Bit().constData());
+    ui->spinBox_2->setValue(randi);
+    qDebug() << "ui->spinBox_2->setRange(1, " << counter << ");";
+    ui->spinBox_2->setRange(1, counter);
+
 
     if (!menuLoaded) {
         loadSettings(this);
@@ -123,4 +145,9 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     }
 
     return menuBar;
+}
+void Menu::motdchange(int value)
+{
+    //ui->textEdit_2->setText(msgs.at(value).toLocal8Bit().constData());
+    ui->textEdit_2->setText(msgs.at(value).toLocal8Bit().constData());
 }
