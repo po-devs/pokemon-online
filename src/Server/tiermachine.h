@@ -102,7 +102,7 @@ private:
         So that if tiers are reloaded while a threaded query was already thrown,
         if the version stored in the query and this version are different,
         the query is discarded. */
-    quint16 version;
+    volatile quint16 version;
 };
 
 /* For rankings */
