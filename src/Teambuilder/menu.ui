@@ -245,7 +245,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="tipEdit">
               <property name="text">
                <string>0/0</string>
               </property>
@@ -262,7 +262,7 @@
              </widget>
             </item>
             <item row="0" column="0" colspan="4">
-             <widget class="QTextEdit" name="textEdit_2">
+             <widget class="QTextEdit" name="motdText">
               <property name="readOnly">
                <bool>true</bool>
               </property>
