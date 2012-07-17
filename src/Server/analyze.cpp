@@ -15,7 +15,7 @@ Analyzer::~Analyzer()
     blockSignals(true);
     /* Very important feature. If you don't do this it might crash.
         this makes the stillValid of Network redundant, but still.*/
-    socket().close();
+    close();
 }
 
 void Analyzer::keepAlive()
@@ -49,15 +49,18 @@ void Analyzer::connectTo(const QString &host, quint16 port)
 }
 
 void Analyzer::close() {
+    if (dummy) {return;}
     socket().close();
 }
 
 QString Analyzer::ip() const {
+    if (dummy) {return QString();}
     return socket().ip();
 }
 
 void Analyzer::setLowDelay(bool lowDelay)
 {
+    if (dummy) {return;}
     socket().setLowDelay(lowDelay);
 }
 
@@ -155,16 +158,19 @@ void Analyzer::sendUserInfo(const UserInfo &ui)
 
 void Analyzer::error()
 {
+    if (dummy) {return;}
     emit connectionError(socket().error(), socket().errorString());
 }
 
 bool Analyzer::isConnected() const
 {
+    if (dummy) {return false;}
     return socket().isConnected();
 }
 
 void Analyzer::stopReceiving()
 {
+    if (dummy) {return;}
     blockSignals(true);
     socket().close();
 }
@@ -528,6 +534,11 @@ void Analyzer::swapIds(Analyzer *other)
 {
     int id = other->socket().id();
     other->socket().changeId(socket().id());
+    socket().changeId(id);
+}
+
+void Analyzer::setId(int id)
+{
     socket().changeId(id);
 }
 

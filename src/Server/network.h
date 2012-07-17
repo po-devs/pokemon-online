@@ -108,9 +108,8 @@ void Network<S>::close() {
 #else
         mysocket = S();
 #endif
-        sock->disconnect();
+        sock->disconnect(this);
         sock->disconnectFromHost();
-        sock->deleteLater();
 
         emit disconnected();
     } else {
@@ -161,7 +160,6 @@ void Network<S>::onDisconnect()
     stillValid = false;
     if (socket()) {
         //qDebug() << "Beginning onDisconnect " << this;
-        mysocket->deleteLater();
 #ifndef SFML_SOCKETS
         mysocket = NULL;
 #else

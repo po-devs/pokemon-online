@@ -10,6 +10,7 @@ Network<GenericSocket>::Network(GenericSocket sock, int id) : mysocket(sock), co
 #endif
     connect(&*socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     connect(&*socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+    connect(&*socket(), SIGNAL(disconnected()), &*socket(), SLOT(deleteLater()));
 #ifndef SFML_SOCKETS
     connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
 #endif

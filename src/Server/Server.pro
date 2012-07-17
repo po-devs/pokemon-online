@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     battlerby.cpp \
     rbymoves.cpp \
     mechanicsbase.cpp \
-    modswindow.cpp
+    modswindow.cpp \
+    relaymanager.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -107,7 +108,8 @@ HEADERS += player.h \
     battlerby.h \
     rbymoves.h \
     mechanicsbase.h \
-    modswindow.h
+    modswindow.h \
+    relaymanager.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
