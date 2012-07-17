@@ -37,7 +37,8 @@ public slots:
     void setUpdateData(const QString &data);
     void setChangeLogData(const QString &data);
 
-    void motdchange(int value);
+    void motdchange();
+    void motdchange2();
 private slots:
     void on_updateButton_clicked();
 protected:

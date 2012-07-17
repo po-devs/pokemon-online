@@ -14,8 +14,7 @@ Menu::Menu(TeamHolder *t) :
     ui->setupUi(this);
     ui->appLogo->setPixmap(Theme::Sprite("logo"));
     ui->updateContainer->hide();
-
-    connect(ui->spinBox_2, SIGNAL(valueChanged(int)), SLOT(motdchange(int)));
+    ui->stackedWidget->setCurrentIndex(1);
 
     setWindowTitle(tr("Menu"));
 
@@ -24,25 +23,20 @@ Menu::Menu(TeamHolder *t) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
+    connect (ui->pushButton, SIGNAL(clicked()), SLOT(motdchange()));
+    connect (ui->pushButton_2, SIGNAL(clicked()), SLOT(motdchange2()));
+
+    srand(time(NULL));
 
     msgs += "trick";
-    srand(time(NULL));
-    QFile file("db/tips.txt");
-    int counter = 0;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            msgs += in.readLine();
-            counter++;
-        }
+    msgs += QString::fromUtf8(getFileContent("db/tips.txt")).split("\n");
+
+    int randi = 0;
+    while (randi == 0) {
+        randi = rand()%(msgs.size()-2);
     }
-    file.close();
-    int randi = rand()%counter;
     ui->textEdit_2->setText(msgs.at(randi).toLocal8Bit().constData());
-    ui->spinBox_2->setValue(randi);
-    qDebug() << "ui->spinBox_2->setRange(1, " << counter << ");";
-    ui->spinBox_2->setRange(1, counter);
+    ui->lineEdit->setText(QString::number(randi) + "/" + QString("%1").arg(msgs.size()-2));
 
 
     if (!menuLoaded) {
@@ -70,6 +64,7 @@ void Menu::setUpdateData(const QString &data)
     ui->updateLabel->setText(data);
     ui->changeLog->setText(tr("Loading changelog..."));
     ui->updateContainer->show();
+    ui->stackedWidget->setCurrentIndex(2);
 }
 
 void Menu::showChangeLog()
@@ -146,8 +141,19 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
 
     return menuBar;
 }
-void Menu::motdchange(int value)
+void Menu::motdchange()
 {
-    //ui->textEdit_2->setText(msgs.at(value).toLocal8Bit().constData());
-    ui->textEdit_2->setText(msgs.at(value).toLocal8Bit().constData());
+    int newi = ui->lineEdit->text().left(ui->lineEdit->text().indexOf("/")).toInt() - 1;
+    if (newi > 0) {
+        ui->lineEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->textEdit_2->setText(msgs.at(newi).toLocal8Bit().constData());
+    }
+}
+void Menu::motdchange2()
+{
+    int newi = ui->lineEdit->text().left(ui->lineEdit->text().indexOf("/")).toInt() + 1;
+    if (newi <= msgs.size()-2) {
+        ui->lineEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->textEdit_2->setText(msgs.at(newi).toLocal8Bit().constData());
+    }
 }
