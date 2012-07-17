@@ -35,10 +35,12 @@ namespace NetworkServ
 ***/
 class Analyzer : public QObject
 {
+    friend class RelayManager;
+
     Q_OBJECT
 public:
     template<class SocketClass>
-    Analyzer(const SocketClass &sock, int id);
+    Analyzer(const SocketClass &sock, int id, bool dummy=false);
     ~Analyzer();
 
     /* functions called by the server */
@@ -78,6 +80,7 @@ public:
     void delay();
 
     void swapIds(Analyzer *other);
+    void setId(int id);
 
     /* Convenience functions to avoid writing a new one every time */
     inline void emitCommand(const QByteArray &command) {
@@ -169,18 +172,26 @@ private:
     quint16 pingedBack;
     quint16 pingSent;
     bool mIsInCommand;
+    /* Is it a dummy analyzer ?*/
+    bool dummy;
 };
 
 template<class SocketClass>
-Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(0), pingSent(0), mIsInCommand(false)
+Analyzer::Analyzer(const SocketClass &sock, int id, bool dummy) : mysocket(new Network<SocketClass>(sock, id)), pingedBack(0), pingSent(0), mIsInCommand(false), dummy(dummy)
 {
+    socket().setParent(this);
+    delayCount = 0;
+
+    if (dummy) {
+        return;
+    }
+
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(&socket(), SIGNAL(isFull(QByteArray)), this, SLOT(commandReceived(QByteArray)));
     connect(&socket(), SIGNAL(_error()), this, SLOT(error()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
     connect(this, SIGNAL(packetToSend(QByteArray)), &socket(), SLOT(sendPacket(QByteArray)));
 
-    socket().setParent(this);
 
     QTimer *t = new QTimer(this);
     t->setInterval(30*1000);
@@ -192,8 +203,6 @@ Analyzer::Analyzer(const SocketClass &sock, int id) : mysocket(new Network<Socke
         sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 #endif
     }
-
-    delayCount = 0;
 }
 
 

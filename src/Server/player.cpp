@@ -1,3 +1,4 @@
+#include "relaymanager.h"
 #include "../Shared/config.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
@@ -34,7 +35,7 @@ Player::Player(const GenericSocket &sock, int id)
 
 Player::~Player()
 {
-    delete myrelay;
+    removeRelay();
 
     if (loginInfo()) {
         delete loginInfo();
@@ -238,9 +239,18 @@ void Player::executeTierChange(int num, const QString &newtier)
     }
 }
 
+void Player::removeRelay()
+{
+    if (myrelay) {
+        RelayManager::obj()->addTrash(myrelay, this);
+        myrelay = NULL;
+    }
+}
+
 void Player::doWhenDC()
 {
-    relay().stopReceiving();
+    removeRelay();
+
     cancelChallenges();
     cancelBattleSearch();
 
@@ -304,7 +314,8 @@ void Player::doWhenRC(bool wasLoggedIn)
 
 void Player::doWhenDQ()
 {
-    relay().stopReceiving();
+    removeRelay();
+
     cancelChallenges();
     cancelBattleSearch();
 
@@ -496,6 +507,7 @@ void Player::kick() {
 
 void Player::disconnected()
 {
+    removeRelay();
     emit disconnected(id());
 }
 
@@ -871,11 +883,17 @@ QHash<QString, quint16> &Player::ratings()
 
 Analyzer & Player::relay()
 {
+    if (!myrelay) {
+        return *RelayManager::obj()->dummyRelay();
+    }
     return *myrelay;
 }
 
 const Analyzer & Player::relay() const
 {
+    if (!myrelay) {
+        return *RelayManager::obj()->dummyRelay();
+    }
     return *myrelay;
 }
 
@@ -997,14 +1015,13 @@ bool Player::testReconnectData(Player *other, const QByteArray &hash)
 
 void Player::associateWith(Player *other)
 {
-    other->relay().disconnect(other);
-    myrelay->disconnect(this);
-
-    myrelay->swapIds(other->myrelay);
+    removeRelay();
     std::swap(myrelay, other->myrelay);
+    relay().setId(id());
+    relay().disconnect(other);
+    other->disconnect(&relay());
 
-    other->myip = other->myrelay->ip();
-    myip = myrelay->ip();
+    std::swap(myip, other->myip);
     std::swap(proxyip, other->proxyip);
 
     lockCount = 0;
@@ -1012,7 +1029,6 @@ void Player::associateWith(Player *other)
     doConnections();
 
     blockSignals(false);
-    relay().blockSignals(false);
 
     /* Updates IP in case it changed */
     SecurityManager::Member m = SecurityManager::member(name());

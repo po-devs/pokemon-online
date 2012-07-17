@@ -320,6 +320,7 @@ private:
     void doConnections();
 
     void testAuthentification(const QString &name);
+    void removeRelay();
 };
 
 #endif // PLAYER_H

@@ -102,7 +102,7 @@ void ServerWidget::showContextMenu(const QPoint &p) {
         QSignalMapper *mymapper2 = new QSignalMapper(menu);
         QAction *viewinfo2 = menu->addAction("&Ban", mymapper2, SLOT(map()));
         mymapper2->setMapping(viewinfo2, item->id());
-        connect(mymapper2, SIGNAL(mapped(int)), SLOT(tempBanDialog(int)));
+        connect(mymapper2, SIGNAL(mapped(int)), server, SLOT(ban(int)));
 
         QSignalMapper *mymapper4 = new QSignalMapper(menu);
         QAction *viewinfo3 = menu->addAction("&Temp Ban", mymapper4, SLOT(map()));

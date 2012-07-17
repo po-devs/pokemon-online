@@ -26,6 +26,7 @@
 #include "analyze.h"
 #include "networkutilities.h"
 #include "battlerby.h"
+#include "relaymanager.h"
 
 Server *Server::serverIns = NULL;
 
@@ -182,6 +183,7 @@ void Server::start(){
     connect(TierMachine::obj(), SIGNAL(tiersChanged()), SLOT(tiersChanged()));
 
     AntiDos::obj()->init();
+    RelayManager::init();
 
     printLine(tr("Members loaded"));
 
@@ -2160,6 +2162,7 @@ void Server::atServerShutDown() {
     // On linux, threads need to be cleared or the server may be left hanging...
 //    TierMachine::destroy();
 //    SecurityManager::destroy();
+//    RelayManager::destroy();
 
 //    connect(&battleThread, SIGNAL(finished()), this, SLOT(deleteLater()));
 //    battleThread.finish();
