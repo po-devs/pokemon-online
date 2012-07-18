@@ -14,6 +14,7 @@ Menu::Menu(TeamHolder *t) :
     ui->setupUi(this);
     ui->appLogo->setPixmap(Theme::Sprite("logo"));
     ui->updateContainer->hide();
+    ui->stackedWidget->setCurrentIndex(1);
 
     setWindowTitle(tr("Menu"));
 
@@ -22,6 +23,21 @@ Menu::Menu(TeamHolder *t) :
     connect (ui->credits, SIGNAL(clicked()), SIGNAL(goToCredits()));
     connect (ui->exit, SIGNAL(clicked()), SIGNAL(goToExit()));
     connect (ui->updateButton, SIGNAL(clicked()), SIGNAL(downloadUpdateRequested()));
+    connect (ui->prevTip, SIGNAL(clicked()), SLOT(prevTip()));
+    connect (ui->nextTip, SIGNAL(clicked()), SLOT(nextTip()));
+
+    srand(time(NULL));
+
+    msgs += "trick";
+    msgs += QString::fromUtf8(getFileContent("db/tips.txt")).split("\n");
+
+    int randi = 0;
+    while (randi == 0) {
+        randi = rand()%(msgs.size()-2);
+    }
+    ui->motdText->setText(msgs.at(randi).toLocal8Bit().constData());
+    ui->tipEdit->setText(QString::number(randi) + "/" + QString("%1").arg(msgs.size()-2));
+
 
     if (!menuLoaded) {
         loadSettings(this);
@@ -48,6 +64,7 @@ void Menu::setUpdateData(const QString &data)
     ui->updateLabel->setText(data);
     ui->changeLog->setText(tr("Loading changelog..."));
     ui->updateContainer->show();
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void Menu::showChangeLog()
@@ -123,4 +140,20 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
     }
 
     return menuBar;
+}
+void Menu::prevTip()
+{
+    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() - 1;
+    if (newi > 0) {
+        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
+    }
+}
+void Menu::nextTip()
+{
+    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() + 1;
+    if (newi <= msgs.size()-2) {
+        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
+        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
+    }
 }
