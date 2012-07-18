@@ -294,6 +294,7 @@ public slots:
     void fadeAway();
     void registerPermPlayer(int id);
     QStringList const& eventSettings() const;
+    void newConnection();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -347,6 +348,7 @@ private:
     QHash<qint32, QString> m_channelNames;
     QHash<QString, qint32> m_channelByNames;
     QHash<qint32, Channel *> mychannels;
+    QStringList channelsIWasOn;
     /* Ignore */
     QList<int> myIgnored;
 
@@ -394,6 +396,7 @@ private:
     /* Network Relay */
     Analyzer *myrelay;
     Analyzer &relay();
+    bool failedBefore = false;
 public:
     Q_INVOKABLE Analyzer *network() {return myrelay;}
 private:
