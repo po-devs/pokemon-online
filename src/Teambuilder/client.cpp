@@ -1465,7 +1465,6 @@ void Client::newConnection() {
     foreach(Channel *chan, mychannels) {
         channelsIWasOn += chan->name();
     }
-    cleanData();
     relay().connectTo(url, port);
 }
 
@@ -2090,18 +2089,17 @@ void Client::connected()
 
     if (reconnectPass.isEmpty()) {
         if (channelsIWasOn.isEmpty()) {
-            qDebug() << "isempty";
+            //qDebug() << "isempty";
             QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
             QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
             relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
         } else {
-            qDebug() << "notempty";
+            cleanData();
+            //qDebug() << "notempty";
             QStringList AutoJoinChannels = channelsIWasOn;
             channelsIWasOn.clear();
             //QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-            QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
-
+            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), "~~~Invalid Channel~~~", AutoJoinChannels);
         }
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
