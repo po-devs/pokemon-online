@@ -28,16 +28,10 @@ Menu::Menu(TeamHolder *t) :
 
     srand(time(NULL));
 
-    msgs += "trick";
-    msgs += QString::fromUtf8(getFileContent("db/tips.txt")).split("\n");
+    msgs = QString::fromUtf8(getFileContent("db/tips.txt")).trimmed().split("\n");
 
-    int randi = 0;
-    while (randi == 0) {
-        randi = rand()%(msgs.size()-2);
-    }
-    ui->motdText->setText(msgs.at(randi).toLocal8Bit().constData());
-    ui->tipEdit->setText(QString::number(randi) + "/" + QString("%1").arg(msgs.size()-2));
-
+    currentTip = rand()%(msgs.size());
+    updateTip();
 
     if (!menuLoaded) {
         loadSettings(this);
@@ -57,6 +51,12 @@ Menu::~Menu()
     }
 
     delete ui;
+}
+
+void Menu::updateTip()
+{
+    ui->motdText->setText(msgs.at(currentTip));
+    ui->tipEdit->setText(tr("%1 / %2").arg(currentTip+1).arg(msgs.size()));
 }
 
 void Menu::setUpdateData(const QString &data)
@@ -143,17 +143,12 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
 }
 void Menu::prevTip()
 {
-    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() - 1;
-    if (newi > 0) {
-        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
-        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
-    }
+    currentTip = (currentTip - 1 + msgs.size()) % msgs.size();
+    updateTip();
 }
+
 void Menu::nextTip()
 {
-    int newi = ui->tipEdit->text().left(ui->tipEdit->text().indexOf("/")).toInt() + 1;
-    if (newi <= msgs.size()-2) {
-        ui->tipEdit->setText(QString::number(newi) + "/" + QString::number(msgs.size()-2));
-        ui->motdText->setText(msgs.at(newi).toLocal8Bit().constData());
-    }
+    currentTip = (currentTip + 1) % msgs.size();
+    updateTip();
 }
