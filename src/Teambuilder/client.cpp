@@ -1444,6 +1444,7 @@ void Client::setReconnectPass(const QByteArray &pass)
 
 void Client::onReconnectFailure(int reason)
 {
+    reconnectPass = "";
     QString reasons[] = {
         tr("Server doesn't have data stored for the reconnection."),
         tr("There's an error when trying to reconnect."),
@@ -1456,6 +1457,12 @@ void Client::onReconnectFailure(int reason)
     } else {
         printLine(tr("The server refused the reconnect attempt."));
     }
+    failedBefore = true;
+}
+void Client::newConnection() {
+    printLine(tr("Attempting a new connection."));
+    cleanData();
+    relay().connectTo(url, port);
 }
 
 void Client::serverPass(const QByteArray &salt) {
@@ -1519,6 +1526,7 @@ void Client::sendRegister() {
 void Client::reconnect()
 {
     relay().connectTo(url, port);
+    failedBefore = false;
 }
 
 void Client::changeBattleLogFolder()
@@ -2100,6 +2108,9 @@ void Client::disconnected()
     myregister->setEnabled(true);
 
     emit PMDisconnected(true);
+    if (failedBefore)
+        newConnection();
+    failedBefore = false;
 }
 
 TeamHolder* Client::team()
