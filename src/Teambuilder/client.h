@@ -348,6 +348,7 @@ private:
     QHash<qint32, QString> m_channelNames;
     QHash<QString, qint32> m_channelByNames;
     QHash<qint32, Channel *> mychannels;
+    QStringList channelsIWasOn;
     /* Ignore */
     QList<int> myIgnored;
 
