@@ -608,17 +608,33 @@ QTextEdit#MainChat {
 	background-color: white;
 }
 
-#Announcement, ServerChoice #announcement {
+#Announcement, ServerChoice #announcement, Menu #tip {
 	border-radius: 2px;
 	border: 1px solid grey;
-	font-size: 11px;
 	background: #ffffcd;
 	padding: 2px;
 	text-align: center;
 }
 
-ServerChoice #announcement {
-    font-size: 14px;
+#Announcement {
+	font-size: 11px;
+}
+
+Menu #tipNumber {
+    background: rgba(255,255,255, 60);
+}
+
+Menu QGroupBox {
+    font-weight: bold;
+    color: #EEEEEE;
+}
+
+Menu #nextTip, Menu #prevTip {
+    background: rgba(255,255,255, 160);
+}
+
+Menu QLineEdit {
+    color: white;
 }
 
 ServerChoice #serverChoiceFrame QLabel {

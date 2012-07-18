@@ -132,7 +132,6 @@ void TierMachine::fromString(const QString &s)
     version += 1;
 
     tree.loadFromXml(s, this);
-    semaphore.release(semaphoreMaxLoad);
 
     QList<Tier *> tiers = tree.gatherTiers();
     if (tiers.empty()) {
@@ -186,6 +185,8 @@ void TierMachine::fromString(const QString &s)
 
     /* Do tierList . */
     m_tierList = tree.buildTierList();
+
+    semaphore.release(semaphoreMaxLoad);
 
     emit tiersChanged();
 }
