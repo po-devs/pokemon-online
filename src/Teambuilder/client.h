@@ -294,6 +294,7 @@ public slots:
     void fadeAway();
     void registerPermPlayer(int id);
     QStringList const& eventSettings() const;
+    void newConnection();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -394,6 +395,7 @@ private:
     /* Network Relay */
     Analyzer *myrelay;
     Analyzer &relay();
+    bool failedBefore = false;
 public:
     Q_INVOKABLE Analyzer *network() {return myrelay;}
 private:
