@@ -1444,7 +1444,7 @@ void Client::setReconnectPass(const QByteArray &pass)
 
 void Client::onReconnectFailure(int reason)
 {
-    reconnectPass = "";
+    reconnectPass.clear();
     QString reasons[] = {
         tr("Server doesn't have data stored for the reconnection."),
         tr("There's an error when trying to reconnect."),
@@ -1461,6 +1461,9 @@ void Client::onReconnectFailure(int reason)
 }
 void Client::newConnection() {
     printLine(tr("Attempting a new connection."));
+    foreach(Channel *chan, mychannels) {
+        channelsIWasOn += chan->name();
+    }
     cleanData();
     relay().connectTo(url, port);
 }
@@ -2085,9 +2088,20 @@ void Client::connected()
     s.endGroup();
 
     if (reconnectPass.isEmpty()) {
-        QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-        QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-        relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
+        if (channelsIWasOn.isEmpty()) {
+            qDebug() << "isempty";
+            QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+            QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
+            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
+        } else {
+            qDebug() << "notempty";
+            QStringList AutoJoinChannels = channelsIWasOn;
+            channelsIWasOn.clear();
+            //QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+            QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
+            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
+
+        }
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
     }
