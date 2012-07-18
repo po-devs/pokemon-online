@@ -48,6 +48,9 @@ private:
 
     TeamHolder *team;
     QStringList msgs;
+    int currentTip;
+
+    void updateTip();
 };
 
 #endif // MENU_H
