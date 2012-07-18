@@ -23,6 +23,7 @@
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
+    failedBefore = false;
     waitingOnSecond = false;
     top = NULL;
     isConnected = true;

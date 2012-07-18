@@ -396,7 +396,7 @@ private:
     /* Network Relay */
     Analyzer *myrelay;
     Analyzer &relay();
-    bool failedBefore = false;
+    bool failedBefore;
 public:
     Q_INVOKABLE Analyzer *network() {return myrelay;}
 private:
