@@ -55,8 +55,8 @@ Menu::~Menu()
 
 void Menu::updateTip()
 {
-    ui->motdText->setText(msgs.at(currentTip));
-    ui->tipEdit->setText(tr("%1 / %2").arg(currentTip+1).arg(msgs.size()));
+    ui->tip->setHtml(msgs.at(currentTip));
+    ui->tipNumber->setText(tr("%1 / %2").arg(currentTip+1).arg(msgs.size()));
 }
 
 void Menu::setUpdateData(const QString &data)
