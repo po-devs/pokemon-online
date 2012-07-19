@@ -1818,7 +1818,7 @@ void BattleBase::testCritical(int player, int target)
     /* In RBY, Focus Energy reduces crit by 75%; in statium, it's * 4 */
     int up (1), down(1);
     if (tmove(player).critRaise & 1) {
-        up *= 4;
+        up *= 8;
     }
     if (tmove(player).critRaise & 2) {
         if (gen() == Gen::RedBlue || gen() == Gen::Yellow) {
@@ -1830,7 +1830,7 @@ void BattleBase::testCritical(int player, int target)
     PokeFraction critChance(up, down);
     int randnum = randint(512);
     int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
-    bool critical = randnum < baseSpeed * critChance;
+    bool critical = randnum < std::min(510, baseSpeed * critChance);
 
     if (critical) {
         turnMem(player).add(TM::CriticalHit);
