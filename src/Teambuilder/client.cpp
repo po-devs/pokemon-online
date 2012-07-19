@@ -781,6 +781,7 @@ void Client::goAway(int away)
 {
     relay().notify(NetworkCli::OptionsChange, Flags(ladder->isChecked()  + (away << 1)));
     goaway->setChecked(away);
+    globals.setValue("Client/Idle", away);
 }
 
 void Client::showTimeStamps(bool b)
@@ -2092,7 +2093,7 @@ void Client::connected()
             //qDebug() << "isempty";
             QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
             QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
-            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
+            relay().login(*team(), s.value("Client/EnableLadder").toBool(), globals.value("Client/Idle").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
         } else {
             cleanData();
             //qDebug() << "notempty";
@@ -2100,7 +2101,7 @@ void Client::connected()
             QString defaultChannel = autoJoinChannels.takeFirst();
             channelsIWasOn.clear();
             //QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), defaultChannel, autoJoinChannels);
+            relay().login(*team(), ladder->isChecked(), goaway->isChecked(), team()->color(), defaultChannel, autoJoinChannels);
         }
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
