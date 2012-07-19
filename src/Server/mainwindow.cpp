@@ -5,7 +5,9 @@
 MainWindow::MainWindow(Server *myserver, QWidget *parent)
     : QMainWindow(parent)
 {
-    QApplication::setQuitOnLastWindowClosed(true);
+    qApp->setQuitOnLastWindowClosed(false);
+
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
     setWindowTitle(tr("Pokemon Online Server"));
     setWindowIcon(QIcon("db/icon-server.png"));
@@ -84,6 +86,8 @@ MainWindow::~MainWindow()
     delete myserverwidget;
     delete trayIcon;
     delete trayMenu;
+
+    qApp->quit();
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
