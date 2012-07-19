@@ -415,6 +415,7 @@ private:
     void rebuildTierMenu();
 
     bool eventEnabled(int event);
+    void ownPlayerReceived();
 
     TeamHolder secondTeam;
     bool waitingOnSecond;

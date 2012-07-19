@@ -2152,6 +2152,7 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 
     mylowernames[p.name.toLower()] = p.id;
 
+    playerReceived(p);
     tiersReceived(tiers);
 }
 
@@ -2281,6 +2282,16 @@ QString Client::authedNick(int id) const
     return nick;
 }
 
+void Client::ownPlayerReceived()
+{
+    if (ladder) {
+        ladder->setChecked(player(ownId()).flags[PlayerInfo::LadderEnabled]);
+    }
+    if (goaway) {
+        goaway->setChecked(player(ownId()).flags[PlayerInfo::Away]);
+    }
+}
+
 void Client::playerReceived(const PlayerInfo &p)
 {
     bool newPlayer = false;
@@ -2324,6 +2335,10 @@ void Client::playerReceived(const PlayerInfo &p)
         disabledpms.erase(pm);
         mypms[p.id] = window;
         window->reuse(p.id);
+    }
+
+    if (p.id == ownId()) {
+        ownPlayerReceived();
     }
 
     if (newPlayer) {
