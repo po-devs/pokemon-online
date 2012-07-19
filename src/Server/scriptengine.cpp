@@ -668,8 +668,7 @@ void ScriptEngine::disconnect(int id)
 
 void ScriptEngine::updatePlayer(int playerid)
 {
-    /* Updates all the info of the player to the other players
-       (mainly if you changed their team and want it to show in the challenge window) */
+    /* Updates all the info of the player to the other players */
     if (testPlayer("updatePlayer(playerid)", playerid)) {
         myserver->sendPlayer(playerid);
     }
@@ -1496,10 +1495,23 @@ QScriptValue ScriptEngine::teamPoke(int id, int team, int index)
 {
     if(!testPlayer("teamPoke", id) || !testTeamCount("teamPoke", id, team)) {
         return myengine.undefinedValue();
-    }    if (index < 0 || index >= 6) {
+    }
+    if (!testRange("teamPoke", index, 0, 5)) {
         return myengine.undefinedValue();
     } else {
         return myserver->player(id)->team(team).poke(index).num().toPokeRef();
+    }
+}
+
+QScriptValue ScriptEngine::teamPokeName(int id, int team, int index)
+{
+    if (!testPlayer("teamPokeName", id) || !testTeamCount("teamPokeName", id, team)) {
+        return myengine.undefinedValue();
+    }
+    if (!testRange("teamPokeName", index, 0, 5)) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team(team).poke(index).nick();
     }
 }
 

@@ -109,7 +109,7 @@ public:
     Q_INVOKABLE void kick(int playerid, int chanid);
 
     Q_INVOKABLE void disconnect(int id); //Disconnects a player. (He can reconnect with all his data)
-    /* If you edited his team, updates it for the rest of the world */
+    /* If you edited his info, updates it for the rest of the world */
     Q_INVOKABLE void updatePlayer(int playerid);
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
@@ -259,6 +259,7 @@ public:
 
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int team, int index);
+    Q_INVOKABLE QScriptValue teamPokeName(int id, int team, int pokemonnum);
     Q_INVOKABLE bool hasTeamPoke(int id, int team, int pokemonnum);
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int team, int pokenum);
     Q_INVOKABLE bool hasDreamWorldAbility(int id, int team, int slot);

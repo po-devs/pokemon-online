@@ -2096,10 +2096,11 @@ void Client::connected()
         } else {
             cleanData();
             //qDebug() << "notempty";
-            QStringList AutoJoinChannels = channelsIWasOn;
+            QStringList autoJoinChannels = channelsIWasOn;
+            QString defaultChannel = autoJoinChannels.takeFirst();
             channelsIWasOn.clear();
             //QStringList AutoJoinChannels = s.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
-            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), "~~~Invalid Channel~~~", AutoJoinChannels);
+            relay().login(*team(), s.value("Client/EnableLadder").toBool(), team()->color(), defaultChannel, autoJoinChannels);
         }
     } else {
         relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
