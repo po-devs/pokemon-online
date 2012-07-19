@@ -281,9 +281,10 @@ void Player::doWhenRC(bool wasLoggedIn)
             }
         }
 
-        foreach(int channelId, channels) {
-            channels.remove(channelId);
+        QSet<int> channelsCopy = channels;
+        channels.clear();
 
+        foreach(int channelId, channelsCopy) {
             emit joinRequested(id(), channelId);
             /* In case a script kicked us */
             if (!isLoggedIn()) {
