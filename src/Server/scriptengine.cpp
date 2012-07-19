@@ -1788,6 +1788,18 @@ QScriptValue ScriptEngine::playersOfChannel(int channelid)
     }
 }
 
+QScriptValue ScriptEngine::teamPokeHappiness(int id, int team, int index)
+{
+    if(!testPlayer("teamPokeHappiness", id) || !testTeamCount("teamPokeHappiness", id, team)) {
+        return myengine.undefinedValue();
+    }
+    if (index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team(team).poke(id).happiness();
+    }
+}
+
 QScriptValue ScriptEngine::teamPokeNature(int id, int team, int index)
 {
     if(!testPlayer("teamPokeNature", id) || !testTeamCount("teamPokeNature", id, team)) {
@@ -2667,7 +2679,7 @@ int ScriptEngine::system(const QString &command)
 
 QScriptValue ScriptEngine::teamPokeShine(int id, int team, int slot)
 {
-    if (!testPlayer("teamPokeShine", id) || !testRange("teamPokeShine", slot, 0, 5) || !testTeamCount("teamPokeShine", slot, team)) {
+    if (!testPlayer("teamPokeShine", id) || !testRange("teamPokeShine", slot, 0, 5) || !testTeamCount("teamPokeShine", id, team)) {
         return myengine.undefinedValue();
     }
     return myserver->player(id)->team(team).poke(slot).shiny();

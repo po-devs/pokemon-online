@@ -273,6 +273,7 @@ public:
     Q_INVOKABLE QScriptValue teamPokeItem(int id, int team, int pokeindex);
     Q_INVOKABLE bool hasTeamItem(int id, int team, int itemNum);
 
+    Q_INVOKABLE QScriptValue teamPokeHappiness(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int team, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int team, int slot, int stat);
