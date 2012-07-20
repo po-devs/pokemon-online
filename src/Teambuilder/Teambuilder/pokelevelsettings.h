@@ -3,6 +3,8 @@
 
 #include <QFrame>
 
+class QRadioButton;
+
 namespace Ui {
     class PokeLevelSettings;
 }
@@ -22,16 +24,15 @@ public:
 
 signals:
     void levelUpdated();
-    void shinyUpdated();
     void genderUpdated();
 
 public slots:
     void changeLevel(int newLevel);
-    void changeShinyness(bool isShiny);
     void changeGender();
+    void changeAbility();
 
     void updateGender();
-    void updateShiny();
+    void updateAbility();
 private:
     Ui::PokeLevelSettings *ui;
 
@@ -40,6 +41,9 @@ private:
     const PokeTeam &poke() const {return *m_poke;}
 
     void setGender();
+    void setAbilities();
+
+    QRadioButton *m_abilities[3];
 };
 
 #endif // POKELEVELSETTINGS_H
