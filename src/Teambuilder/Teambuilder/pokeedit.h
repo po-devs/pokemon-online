@@ -45,6 +45,7 @@ public slots:
     void changeHappiness(int newHappiness);
     void changeNature(int newNature);
     void changeItem(const QString &newItem);
+    void changeShiny(bool shiny);
     void setNature(int index);
     void setNum(Pokemon::uniqueId num);
     void setNum(const QString &num);
