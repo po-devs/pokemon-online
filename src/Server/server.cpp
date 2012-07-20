@@ -2056,7 +2056,7 @@ void Server::removePlayer(int id)
 
         p->deleteLater(); myplayers.remove(id);
 
-        if (loggedIn || p->state()[Player::WaitingReconnect])
+        if ((loggedIn || p->state()[Player::WaitingReconnect]) && mynames.value(playerName.toLower()) == p->id())
             mynames.remove(playerName.toLower());
 
         printLine(QString("Removed player %1 (%2)").arg(playerName).arg(id));
