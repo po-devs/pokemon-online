@@ -319,7 +319,12 @@ void Client::channelsListReceived(const QHash<qint32, QString> &channelsL)
     while (it.hasNext()) {
         it.next();
 
-        m_channelByNames.insert(it.value().toLower(), it.key());
+        QString lower = it.value().toLower();
+
+        if (m_channelByNames.contains(lower) && it.key() != m_channelByNames.value(lower)) {
+            changeChannelId(m_channelByNames.value(lower), it.key());
+        }
+        m_channelByNames.insert(lower, it.key());
 
         /* We would have a default screen open */
         if (mychannels.contains(it.key())) {
@@ -545,6 +550,9 @@ QString Client::defaultChannel()
 void Client::addChannel(const QString &name, int id)
 {
     m_channelNames.insert(id, name);
+    if (m_channelByNames.contains(name.toLower()) && id != m_channelByNames.value(name.toLower())) {
+        changeChannelId(m_channelByNames.value(name.toLower()), id);
+    }
     m_channelByNames.insert(name.toLower(),id);
     channels->addItem(new QIdListWidgetItem(id, greychatot, name));
 }
@@ -2343,6 +2351,15 @@ void Client::playerReceived(const PlayerInfo &p)
 
     if (newPlayer) {
         call("onPlayerReceived(int)", p.id);
+    }
+}
+
+void Client::changeChannelId(int orId, int destId)
+{
+    if (hasChannel(orId)) {
+        Channel *c = mychannels.take(orId);
+        mychannels.insert(destId, c);
+        c->setId(destId);
     }
 }
 

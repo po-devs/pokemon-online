@@ -83,6 +83,7 @@ public:
     Q_INVOKABLE QStringList tiers(int player) const;
 
     void changeName(int player, const QString &name);
+    void changeChannelId(int orId, int destId);
     /* Resets fade away counter */
     void refreshPlayer(int id);
 
