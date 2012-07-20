@@ -69,8 +69,9 @@ void Channel::showContextMenu(const QPoint &requested)
     {
         QMenu *menu = new QMenu(client);
 
-        createIntMapper(menu->addAction(tr("&Challenge")), SIGNAL(triggered()), client, SLOT(seeInfo(int)), item->id());
-
+        if (item->id() != ownId()) {
+            createIntMapper(menu->addAction(tr("&Challenge")), SIGNAL(triggered()), client, SLOT(seeInfo(int)), item->id());
+        }
         createIntMapper(menu->addAction(tr("&View Ranking")), SIGNAL(triggered()), client, SLOT(seeRanking(int)), item->id());
         if (item->id() == ownId()) {
             if (client->away()) {
@@ -296,7 +297,6 @@ void Channel::battleEnded(int battleid, int res, int winner, int loser)
     } else {
         return;
     }
-
     if (eventEnabled(Client::BattleEvent) || winner == ownId() || loser == ownId() || client->mySpectatingBattles.contains(battleid)) {
         if (res == Forfeit) {
             printLine(tr("%1 forfeited against %2.").arg(name(loser), name(winner)), false, false);
