@@ -21,7 +21,7 @@ class ChallengeDialog : public QDialog
 
 public:
     explicit ChallengeDialog(QWidget *parent = 0);
-    ChallengeDialog(const PlayerInfo &info, TeamHolder *t);
+    ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid);
     ~ChallengeDialog();
 
     void setPlayerInfo(const PlayerInfo &info);
@@ -47,6 +47,8 @@ protected:
     QCheckBox* clauses[ChallengeInfo::numberOfClauses];
     QLabel *pokes[6];
     QButtonGroup *tierGroup;
+
+    int myid;
 
     PlayerInfo info;
     ChallengeInfo cinfo;
