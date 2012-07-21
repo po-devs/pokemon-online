@@ -358,7 +358,7 @@ private:
     QPointer<FindBattleDialog> myBattleFinder;
     QHash<int, BaseBattleWindowInterface* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
-    QPointer<QAction> goawa;
+    QPointer<QAction> goaway;
     QPointer<QAction> ladder;
 
     bool findingBattle;
