@@ -836,20 +836,20 @@ namespace Move
 
     enum Flags
     {
-        ContactFlag = 1,
-        ChargeFlag = 2,
-        RechargeFlag = 4,
-        ProtectableFlag = 8,
-        MagicCoatableFlag = 16,
-        SnatchableFlag = 32,
-        MemorableFlag = 64,
-        PunchFlag = 128,
-        SoundFlag = 256,
-        FlyingFlag = 512,
-        UnthawingFlag = 1024,
-        PulsingFlag = 2048,
-        HealingFlag = 4096,
-        MischievousFlag = 8192
+        ContactFlag = 1, // Is the move a contact move
+        ChargeFlag = 2, // Is the move a charging move? not used by PO yet
+        RechargeFlag = 4, // Is the move a recharging move? not used by PO yet
+        ProtectableFlag = 8, //Can the move be protected against
+        MagicCoatableFlag = 16, //Can the move be magic coated
+        SnatchableFlag = 32, //Can the move be snatched
+        MemorableFlag = 64, //Can the move be mirror moves
+        PunchFlag = 128, //Is the move boosted with Iron Fist
+        SoundFlag = 256, //Is the move blocked with SoundProof
+        FlyingFlag = 512, //Is the move an invulnerable move (shadow force/...)? not used by PO yet
+        UnthawingFlag = 1024, // Does the user of this move unthaw when frozen?
+        PulsingFlag = 2048, // Can this move reach targets far across in triples?
+        HealingFlag = 4096, //Can this move be blocked with Heal Block
+        MischievousFlag = 8192// Can this move bypass substitute?
     };
 
     enum Target
