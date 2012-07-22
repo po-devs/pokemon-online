@@ -17,11 +17,13 @@ ChallengeDialog::ChallengeDialog(QWidget *parent) :
     show();
 }
 
-ChallengeDialog::ChallengeDialog(const PlayerInfo &info, TeamHolder *t) :
+ChallengeDialog::ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid) :
     ui(new Ui::ChallengeDialog),
     emitOnClose(true), challenging(false)
 {
     init();
+
+    myid = mid;
 
     setPlayerInfo(info);
     setTeam(t);
@@ -232,6 +234,10 @@ void ChallengeDialog::setChallenging(const QString &tier)
     }
 
     setTierChecked(tier.length() == 0 ? s.value("Challenge/Tier").toString() : tier);
+
+    if (challenging && info.id == myid) {
+        ui->challenge->setEnabled(false);
+    }
 }
 
 void ChallengeDialog::setTierChecked(const QString &tier)
