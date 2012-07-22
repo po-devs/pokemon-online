@@ -1280,7 +1280,7 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
             v.stream >> p.nature();
         }
         v.stream >> p.gender();
-        if (p.gen() > 2 && network[pp::hasHappiness]) {
+        if (p.gen() >= 2 && network[pp::hasHappiness]) {
             v.stream >> p.happiness();
         }
     }

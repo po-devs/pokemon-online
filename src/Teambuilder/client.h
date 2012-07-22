@@ -83,6 +83,7 @@ public:
     Q_INVOKABLE QStringList tiers(int player) const;
 
     void changeName(int player, const QString &name);
+    void changeChannelId(int orId, int destId);
     /* Resets fade away counter */
     void refreshPlayer(int id);
 
@@ -357,7 +358,8 @@ private:
     QPointer<FindBattleDialog> myBattleFinder;
     QHash<int, BaseBattleWindowInterface* > mySpectatingBattles;
     QHash<int, BattleWindow* > mybattles;
-    QAction *goaway, *ladder;
+    QPointer<QAction> goaway;
+    QPointer<QAction> ladder;
 
     bool findingBattle;
     bool isConnected;

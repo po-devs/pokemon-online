@@ -2207,7 +2207,7 @@ Effet: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="73"/>
         <source>&amp;Hidden Power</source>
-        <translation type="unfinished">&amp;Puissance Cachée</translation>
+        <translation type="unfinished">&amp;Puiss. Cachée</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="86"/>

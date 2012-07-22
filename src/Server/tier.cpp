@@ -136,7 +136,7 @@ void Tier::loadFromFile()
         query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
         QSqlDatabase::database().commit();
-    } else if (!query.next()) {
+    } else if (!query.next() && count != 7) {
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
             query.exec(QString("create table %1 (id serial, name varchar(20), rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
@@ -973,6 +973,11 @@ Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_coun
     displayOrder = 0;
 
     clauses = 0;
+}
+
+Tier::~Tier()
+{
+    qDebug() << "Deleting tier " << name();
 }
 
 void Tier::kill() {

@@ -12,11 +12,9 @@ IvBox::IvBox(QWidget *parent) :
 
     QLabel *statsLabels[6] = {ui->hpivlabel, ui->attivlabel, ui->defivlabel, ui->spattivlabel, ui->spdefivlabel, ui->speedivlabel};
     QSpinBox *ivChangers[6] = {ui->hpivspin, ui->attivspin, ui->defivspin, ui->spattivspin, ui->spdefivspin, ui->speedivspin};
-    QRadioButton *abilitiesButtons[3] = {ui->ability1, ui->ability2, ui->ability3};
 
     memcpy(m_statslabel, statsLabels, sizeof(statsLabels));
     memcpy(m_ivchangers, ivChangers, sizeof(ivChangers));
-    memcpy(m_abilities, abilitiesButtons, sizeof(abilitiesButtons));
 
 #define setNums(var) for(int i = 0; i < 6; i++) { var[i]->setProperty("ivstat", i); }
     setNums(m_ivchangers);
@@ -24,10 +22,6 @@ IvBox::IvBox(QWidget *parent) :
 
     for(int i = 0; i < 6; i++) {
         connect(m_ivchangers[i], SIGNAL(valueChanged(int)), this, SLOT(changeIV(int)));
-    }
-
-    for (int i = 0; i < 3; i++) {
-        connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
     }
 
     for(int i = 1; i < Type::Curse; i++) {
@@ -53,28 +47,11 @@ void IvBox::setPoke(PokeTeam *poke)
 
 void IvBox::updateAll()
 {
-    // Abilities.
-
-    for(int i = 0; i < 3; i++) {
-        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
-            m_abilities[i]->setVisible(true);
-            m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
-            m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
-
-            if (poke().abilities().ab(i) == poke().ability()) {
-                m_abilities[i]->setChecked(true);
-            }
-        } else {
-             m_abilities[i]->setVisible(false);
-        }
-    }
     updateIVs();
     updateStats();
     updateHiddenPower();
 
     if (poke().gen() <= 2) {
-        ui->abilityTitle->setVisible(false);
-
         ui->hpivspin->setDisabled(true);
         ui->spdefivspin->setDisabled(true);
 
@@ -82,8 +59,6 @@ void IvBox::updateAll()
             m_ivchangers[i]->setRange(0, 15);
         }
     } else {
-        ui->abilityTitle->setVisible(true);
-
         ui->hpivspin->setDisabled(false);
         ui->spdefivspin->setDisabled(false);
 
@@ -149,25 +124,6 @@ void IvBox::changeIV(int newValue)
     }
 }
 
-void IvBox::updateAbility()
-{
-    for(int i = 0; i < 3; i++) {
-        if(poke().ability() == poke().abilities().ab(i)) {
-            m_abilities[i]->setChecked(true);
-        }
-    }
-}
-
-void IvBox::changeAbility()
-{
-    for(int i = 0; i < 3; i++) {
-        if(m_abilities[i]->isChecked()) {
-            poke().ability() = poke().abilities().ab(i);
-            break;
-        }
-    }
-}
-
 void IvBox::updateIVs()
 {
     for(int i = 0; i < 6; i++) {
@@ -188,7 +144,7 @@ void IvBox::updateIV(int stat)
 
 void IvBox::updateHiddenPower()
 {
-    ui->hiddenPowerPower->setText("Power: " + QString::number(calculateHiddenPowerPower()));
+    ui->hiddenPowerPower->setText(tr("(%1 pow)").arg(QString::number(calculateHiddenPowerPower())));
     int type = calculateHiddenPowerType();
     ui->hiddenPowerType->setCurrentIndex(type - 1);
 }

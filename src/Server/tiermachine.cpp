@@ -68,7 +68,7 @@ void TierMachine::load()
     in.open(QIODevice::ReadOnly);
     fromString(QString::fromUtf8(in.readAll()));
 
-    emit tiersChanged();
+    //emit tiersChanged();
 }
 
 void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
