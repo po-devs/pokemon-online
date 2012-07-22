@@ -85,7 +85,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     BaseBattleWindow::init();
 
     QSettings s;
-    saveLogs->setChecked(s.value("save_battle_logs").toBool());
+    saveLogs->setChecked(s.value("Battle/SaveLogs").toBool());
     log->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
     replay->override = saveLogs->isChecked() ? Log::OverrideYes : Log::OverrideNo;
 
