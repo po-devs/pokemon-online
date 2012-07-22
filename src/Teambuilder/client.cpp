@@ -2103,7 +2103,6 @@ void Client::connected()
             QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
             relay().login(*team(), s.value("Client/EnableLadder").toBool(), globals.value("Client/Idle").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
         } else {
-            cleanData();
             //qDebug() << "notempty";
             QStringList autoJoinChannels = channelsIWasOn;
             QString defaultChannel = autoJoinChannels.takeFirst();
@@ -2153,6 +2152,7 @@ QString Client::announcement()
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 {
+    cleanData();
     _mid = p.id;
     mynick = p.name;
     myplayersinfo[p.id] = p;
