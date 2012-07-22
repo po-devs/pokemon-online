@@ -25,6 +25,7 @@ public:
     void show();
 signals:
     void pokemonChosen(Pokemon::uniqueId);
+    void shinySelected(bool shiny);
 private slots:
     void updateTypes();
     void updateSprite();

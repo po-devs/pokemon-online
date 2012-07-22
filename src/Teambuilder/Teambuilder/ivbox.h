@@ -26,7 +26,6 @@ public slots:
 
     void updateStats();
     void updateStat(int stat);
-    void changeAbility();
     void changeIV(int newValue);
     void changeHiddenPower(int newType);
 
@@ -42,7 +41,6 @@ private:
     PokeTeam &poke() {return *m_poke;}
     const PokeTeam &poke() const {return *m_poke;}
 
-    void updateAbility();
     void updateIVs();
     void updateIV(int stat);
     void updateHiddenPower();
@@ -51,7 +49,6 @@ private:
 
     QLabel *m_statslabel[6];
     QSpinBox *m_ivchangers[6];
-    QRadioButton *m_abilities[3];
 };
 
 #endif // IVBOX_H

@@ -1,4 +1,5 @@
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/pokelevelsettings.h"
 #include "ui_pokelevelsettings.h"
 
@@ -7,14 +8,29 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     ui(new Ui::PokeLevelSettings)
 {
     ui->setupUi(this);
+    m_abilities[0] = ui->ability1;
+    m_abilities[1] = ui->ability2;
+    m_abilities[2] = ui->ability3;
+
+    QButtonGroup *abilityGroup = new QButtonGroup(this);
+    for (int i =0; i < 3; i++) {
+        abilityGroup->addButton(m_abilities[i]);
+    }
+    QButtonGroup *genderGroup = new QButtonGroup(this);
+    genderGroup->addButton(ui->maleButton);
+    genderGroup->addButton(ui->femaleButton);
+    genderGroup->addButton(ui->neutralButton);
 
     connect(ui->level, SIGNAL(valueChanged(int)), this, SLOT(changeLevel(int)));
-    connect(ui->shiny, SIGNAL(toggled(bool)), this, SLOT(changeShinyness(bool)));
     connect(ui->maleButton, SIGNAL(toggled(bool)), this, SLOT(changeGender()));
     // I'll leave it commented, but we don't need this since with checking if maleButton is checked
     // the gender is set to Male and if it's not checks if femaleButton is checked and set gender to
     // female if it is.
     //connect(ui->femaleButton, SIGNAL(toggled(bool)), this, SLOT(changeGender()));
+
+    for (int i = 0; i < 3; i++) {
+        connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
+    }
 }
 
 PokeLevelSettings::~PokeLevelSettings()
@@ -35,24 +51,62 @@ void PokeLevelSettings::updateAll()
 
     setGender();
     updateGender();
-    updateShiny();
+    setAbilities();
+    updateAbility();
 
     if (poke().gen() <= 1) {
-        ui->shiny->hide();
-        ui->genderLabel->hide();
-        ui->line->hide();
-        ui->line_2->hide();
+        for(int i = 0; i < ui->genderLine->count(); i++) {
+            ui->genderLine->itemAt(i)->widget()->hide();
+        }
+        //ui->line_2->hide();
     } else {
-        ui->shiny->show();
-        ui->genderLabel->show();
+        for(int i = 0; i < ui->genderLine->count(); i++) {
+            ui->genderLine->itemAt(i)->widget()->show();
+        }
         ui->line->show();
-        ui->line_2->show();
+        //ui->line_2->show();
     }
 
-    if (poke().gen() <= 2) {
-        ui->shiny->setDisabled(true);
+    if (poke().gen() >= 3) {
+        for(int i = 0; i < ui->abilityLine->count(); i++) {
+            ui->abilityLine->itemAt(i)->widget()->show();
+        }
     } else {
-        ui->shiny->setDisabled(false);
+        for(int i = 0; i < ui->abilityLine->count(); i++) {
+            ui->abilityLine->itemAt(i)->widget()->hide();
+        }
+    }
+}
+
+void PokeLevelSettings::changeAbility()
+{
+    if (poke().gen() < 3) {
+        return;
+    }
+
+    if (m_abilities[1]->isChecked()) {
+        poke().ability() = poke().abilities().ab(1);
+    } else if (m_abilities[2]->isChecked()) {
+        poke().ability() = poke().abilities().ab(2);
+    } else {
+        poke().ability() = poke().abilities().ab(0);
+    }
+}
+
+void PokeLevelSettings::setAbilities()
+{
+    for(int i = 0; i < 3; i++) {
+        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
+            m_abilities[i]->setVisible(true);
+            m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
+            m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
+
+            if (poke().abilities().ab(i) == poke().ability()) {
+                m_abilities[i]->setChecked(true);
+            }
+        } else {
+             m_abilities[i]->setVisible(false);
+        }
     }
 }
 
@@ -104,21 +158,24 @@ void PokeLevelSettings::updateGender()
     }
 }
 
-void PokeLevelSettings::updateShiny()
+void PokeLevelSettings::updateAbility()
 {
-    ui->shiny->setChecked(poke().shiny());
+    if (poke().gen() < 3) {
+        return;
+    }
+    if (poke().ability() == poke().abilities().ab(0)) {
+        m_abilities[0]->setChecked(true);
+    } else if (poke().ability() == poke().abilities().ab(1)) {
+        m_abilities[1]->setChecked(true);
+    } else if (poke().ability() == poke().abilities().ab(2)) {
+        m_abilities[2]->setChecked(true);
+    }
 }
 
 void PokeLevelSettings::changeLevel(int newLevel)
 {
     poke().level() = newLevel;
     emit levelUpdated();
-}
-
-void PokeLevelSettings::changeShinyness(bool isShiny)
-{
-    poke().shiny() = isShiny;
-    emit shinyUpdated();
 }
 
 void PokeLevelSettings::changeGender()

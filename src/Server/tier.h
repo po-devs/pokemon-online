@@ -75,6 +75,7 @@ public:
     void changeId(int newid);
 
     Tier(TierMachine *boss = NULL, TierCategory *cat = NULL);
+    ~Tier();
 
     QDomElement & toXml(QDomElement &dest) const;
 

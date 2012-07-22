@@ -162,6 +162,8 @@ void PokeSelection::changeForme(int pokeref)
 void PokeSelection::finish()
 {
     emit pokemonChosen(num());
+    emit shinySelected(ui->shiny->isChecked());
+
     close();
 }
 

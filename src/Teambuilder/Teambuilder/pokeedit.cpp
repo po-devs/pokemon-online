@@ -41,10 +41,10 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
         hi->setWidget(ui->ivbox);
         hi->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
         ui->horizontalMove->addWidget(hi);
-        QDockWidget *hi2 = new QDockWidget(tr("Level"), this);
-        hi2->setWidget(ui->levelSettings);
-        hi2->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
-        ui->horizontalPoke->addWidget(hi2);
+//        QDockWidget *hi2 = new QDockWidget(tr("Level"), this);
+//        hi2->setWidget(ui->levelSettings);
+//        hi2->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
+//        ui->horizontalPoke->addWidget(hi2);
     }
 
     QSortFilterProxyModel *pokeFilter = new QSortFilterProxyModel(this);
@@ -104,13 +104,11 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
 
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(levelUpdated()), ui->ivbox, SLOT(updateStats()));
-    connect(ui->levelSettings, SIGNAL(shinyUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updateGender()));
     connect(ui->ivbox, SIGNAL(genderUpdated()), SLOT(updateGender()));
     connect(ui->ivbox, SIGNAL(genderUpdated()), ui->levelSettings, SLOT(updateGender()));
     connect(ui->ivbox, SIGNAL(shinyUpdated()), SLOT(updatePicture()));
-    connect(ui->ivbox, SIGNAL(shinyUpdated()), ui->levelSettings, SLOT(updateShiny()));
     connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(changeHappiness(int)));
     connect(ui->nature, SIGNAL(currentIndexChanged(int)), this, SLOT(changeNature(int)));
     connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
@@ -145,6 +143,31 @@ void PokeEdit::on_pokemonFrame_clicked()
     p->show();
 
     connect(p, SIGNAL(pokemonChosen(Pokemon::uniqueId)), SLOT(setNum(Pokemon::uniqueId)));
+    connect(p, SIGNAL(shinySelected(bool)), SLOT(changeShiny(bool)));
+}
+
+void PokeEdit::changeShiny(bool shiny)
+{
+    if (shiny == poke().shiny()) {
+        return;
+    }
+    if (poke().gen().num == 2) {
+        if (shiny) {
+            poke().setDV(Speed, 10);
+            poke().setDV(Attack, 15);
+            poke().setDV(Defense, 10);
+            poke().setDV(SpAttack, 10);
+        } else {
+            poke().setDV(Speed, 15);
+            poke().setDV(Attack, 15);
+            poke().setDV(SpAttack, 15);
+        }
+        updateStats();
+        ui->ivbox->updateAll();
+    } else {
+        poke().shiny() = shiny;
+    }
+    updatePicture();
 }
 
 void PokeEdit::changeMove()
