@@ -1787,7 +1787,7 @@ void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
-        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team());
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId());
         mychallenge->setChallenging(tier);
 
         connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
@@ -1808,7 +1808,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team());
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId());
             mychallenge->setChallengeInfo(c);
 
             connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
@@ -2103,7 +2103,6 @@ void Client::connected()
             QString DefaultChannel = s.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
             relay().login(*team(), s.value("Client/EnableLadder").toBool(), globals.value("Client/Idle").toBool(), team()->color(), DefaultChannel, AutoJoinChannels);
         } else {
-            cleanData();
             //qDebug() << "notempty";
             QStringList autoJoinChannels = channelsIWasOn;
             QString defaultChannel = autoJoinChannels.takeFirst();
@@ -2153,6 +2152,7 @@ QString Client::announcement()
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 {
+    cleanData();
     _mid = p.id;
     mynick = p.name;
     myplayersinfo[p.id] = p;
