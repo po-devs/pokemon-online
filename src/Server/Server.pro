@@ -147,6 +147,9 @@ macx {
    QMAKE_POST_LINK += macdeployqt $${DESTDIR}/$${TARGET}.app -verbose=3
 
 }
+unix:!mac {
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
+}
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
