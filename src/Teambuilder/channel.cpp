@@ -163,7 +163,7 @@ void Channel::anchorClicked(const QUrl &url)
                 int pid = client->id(player);
                 client->ignore(pid, !client->isIgnored(pid));
             } else {
-                client->ignore(id, !client->isIgnored(pid));
+                client->ignore(id, !client->isIgnored(id));
             }
         } else if (path.leftRef(3) == "cp/") {
             QString player = path.mid(3);
