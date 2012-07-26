@@ -66,6 +66,7 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
     ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
     ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
+    ret.insert("onControlPanel(int)", (Hook)(&ScriptEngine::onControlPanel));
 
     return ret;
 }
@@ -98,7 +99,6 @@ void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool
         QString mess = "Fatal Script Error line " + QString::number(engine->uncaughtExceptionLineNumber()) + ": " + myscript.toString();
         engine->globalObject().property("print").call(myscript, QScriptValueList() << mess);
     } else {
-        //printLine("Script Check: OK");
         if(triggerStartUp) {
             clientStartUp();
         }
@@ -224,6 +224,12 @@ int ScriptEngine::onPlayerReceived(int id)
 int ScriptEngine::onPlayerRemoved(int id)
 {
     makeEvent("onPlayerRemoved", id);
+    return true;
+}
+
+int ScriptEngine::onControlPanel(int id)
+{
+    makeEvent("onControlPanel", id);
     return true;
 }
 
