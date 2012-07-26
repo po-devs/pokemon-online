@@ -1123,7 +1123,7 @@ void Client::loadTeam()
 
 void Client::changeOwnName(const QString &newname)
 {
-    team()->name = newname;
+    team()->name() = newname;
     changeTeam();
 }
 
