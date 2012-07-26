@@ -39,6 +39,7 @@ public:
     int onPlayerReceived(int id);
     int onPlayerRemoved(int id);
     void onBattleStarted(BaseBattleWindowInterface *w);
+    int onControlPanel(int id);
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.

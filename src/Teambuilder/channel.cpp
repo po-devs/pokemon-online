@@ -156,14 +156,41 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->startPM(id);
             }
-        } else if (path.leftRef(3) == "ignore/") {
-            QString player = path.mid(3);
+        } else if (path.leftRef(7) == "ignore/") {
+            QString player = path.mid(7);
             int id = player.toInt();
             if (id == 0) {
                 int pid = client->id(player);
                 client->ignore(pid, !client->isIgnored(pid));
             } else {
                 client->ignore(id, !client->isIgnored(id));
+            }
+        } else if (path.leftRef(3) == "cp/") {
+            QString player = path.mid(3);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->controlPanel(pid);
+            } else {
+                client->controlPanel(id);
+            }
+        } else if (path.leftRef(5) == "kick/" && client->ownAuth() >= 1) {
+            QString player = path.mid(5);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->kick(pid);
+            } else {
+                client->kick(id);
+            }
+        } else if (path.leftRef(4) == "ban/" && client->ownAuth() >= 2) {
+            QString player = path.mid(4);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->ban(pid);
+            } else {
+                client->ban(id);
             }
         }
     } else {

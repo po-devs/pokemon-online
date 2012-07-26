@@ -1032,6 +1032,8 @@ void Client::controlPanel(int id)
     connect(myCP, SIGNAL(unbanRequested(QString)), &relay(), SLOT(CPUnban(QString)));
     connect(myCP, SIGNAL(tempBanRequested(QString, int)),this, SLOT(requestTempBan(QString,int)));
     connect(myCP, SIGNAL(pmcp(QString)), SLOT(pmcp(QString)));
+
+    call("onControlPanel(int)", id);
 }
 
 void Client::openBattleFinder()
@@ -1117,6 +1119,12 @@ void Client::loadTeam()
     w->show();
 
     connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(changeTeam(TeamHolder)));
+}
+
+void Client::changeOwnName(const QString &newname)
+{
+    team()->name() = newname;
+    changeTeam();
 }
 
 void Client::sendText()
