@@ -1,0 +1,3 @@
+﻿0 Altro
+1 Fisico
+2 Speciale

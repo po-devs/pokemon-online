@@ -462,7 +462,7 @@
 461 Lunardanza
 462 Sbriciolmano
 463 Magmaclisma
-464 Vuotetro
+464 Vuototetro
 465 Infuriaseme
 466 Funestovento
 467 Oscurotuffo
