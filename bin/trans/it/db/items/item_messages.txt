@@ -1,0 +1,43 @@
+﻿0 (Nessun Oggetto)
+
+3 %s restored its stats using White Herb!
+
+4 %s hung on thanks to its Focus Band!
+
+5 %s hung on using its Focus Sash!
+
+7 %s usa la sua Mentalerba e recupera i sensi!
+
+11 %s used its Power Herb to attack immediately!
+
+12 %s rigenera un pò di PV usando i suoi Avanzi!
+
+16 %s recupera un pò di PV grazie alla sua Neropece!|%s è ferito da Neropece!
+
+17 %s's Quick Claw activated!
+
+18 %s restored a little HP using its Berry Juice!
+
+19 SI attiva Fiammosfera di %s!|Si attiva Tossicsfera di %s!
+
+21 %s è ferito dalla sua Assorbisfera!
+
+24 Conchinella di %s rigenera parte dei suoi PV!
+
+29 %s is hurt by its Sticky Barb!
+
+34 %f is hurt by %s's Rocky Helmet!
+
+35 %s's Air Balloon popped!|%s sta galleggiando su un palloncino!
+
+36 %i di %s aumenta la stat %st!
+
+37 %i di %s aumenta la potenza di %m!
+
+38 %s used its Red Card on %f!
+
+39 %s used its Eject Button!
+
+40 %s's Berserk Gene activated!|%s's Attack went way up!
+
+41 %s's Destiny Knot activated, %f is in love!
