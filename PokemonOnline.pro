@@ -45,7 +45,8 @@ CONFIG(po_clientplugins) {
                src/CSSChanger \
                src/QRCodePlugin \
                src/ClientScripting \
-               src/SettingsPlugin
+               src/SettingsPlugin \
+               src/ChessPlugin
 }
 
 CONFIG(po_server) {
