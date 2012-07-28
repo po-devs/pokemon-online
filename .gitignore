@@ -59,3 +59,4 @@ bin/pomaintenance*
 bin/scripts
 bin/start-client
 bin/EventCombinations
+qrc_*

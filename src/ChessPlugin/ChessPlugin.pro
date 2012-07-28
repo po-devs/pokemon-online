@@ -7,6 +7,7 @@
 TARGET = ChessPlugin
 TEMPLATE = lib
 QT += svg
+DESTDIR =  ../../bin
 
 DEFINES += CHESSPLUGIN_LIBRARY
 
