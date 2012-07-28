@@ -35,9 +35,7 @@ CONFIG(po_client) | CONFIG(po_serverplugins) {
 }
 
 CONFIG(po_client) {
-    SUBDIRS += src/Teambuilder \
-               src/MoveMachine \
-               src/POMaintenance
+    SUBDIRS += src/Teambuilder
 }
 
 CONFIG(po_clientplugins) {
