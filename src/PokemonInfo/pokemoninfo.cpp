@@ -1505,12 +1505,12 @@ void PokemonInfo::loadEvos()
 {
     QHash<int, QList<int> > &evos = m_Evolutions;
 
-    foreach(QByteArray s, getFileContent(path("evos.txt")).split('\n')) {
-        QList<QByteArray> evs = s.split(' ');
+    foreach(QString s, QString::fromUtf8(getFileContent(path("evos.txt"))).trimmed().split('\n')) {
+        QStringList evs = s.split(' ');
         int num = evs[0].toInt();
 
         /* It's normal to start from 0 */
-        foreach(QByteArray ev, evs) {
+        foreach(QString ev, evs) {
             int n = ev.toInt();
 
             if (n != num)
