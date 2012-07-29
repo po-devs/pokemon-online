@@ -102,7 +102,7 @@
 101 Metal Coat
 102 Metronome
 103 Miracle Seed
-104 MooMoo Milk
+104 Moomoo Milk
 105 Moon Stone
 106 Mystic Water
 107 NeverMeltIce
@@ -246,9 +246,9 @@
 245 Electric Gem
 246 Grass Gem
 247 Ice Gem
-248 Fight Gem
+248 Fighting Gem
 249 Poison Gem
-250 Earth Gem
+250 Ground Gem
 251 Flying Gem
 252 Psychic Gem
 253 Bug Gem
