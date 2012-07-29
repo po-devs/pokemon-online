@@ -97,7 +97,7 @@ public:
     bool flashWhenMoved() const;
     virtual void disable();
 
-    void receiveData(QByteArray);
+    void receiveData(const QByteArray&);
 public slots:
     void close();
 

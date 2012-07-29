@@ -361,7 +361,7 @@ void BaseBattleWindow::sendMessage()
     }
 }
 
-void BaseBattleWindow::receiveData(QByteArray inf)
+void BaseBattleWindow::receiveData(const QByteArray &inf)
 {
     if (inf[0] == char(SpectatorChat) && ignoreSpecs != NoIgnore) {
         return;
