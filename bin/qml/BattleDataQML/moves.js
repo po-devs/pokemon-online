@@ -48,7 +48,7 @@ effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.q
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
 effects[BattleData.CloseCombat] = "Moves/CloseCombat.qml";
-effects[BattleData.Surf] = "Moves/Surf.qml";
+effects[BattleData.Scald] = effects[BattleData.Surf] = "Moves/Surf.qml";
 
 params[BattleData.LeechSeed] = {"image":"leech-seed.gif",
         "curves": [{"pos1":{"x":40, "y":10, "z":0}, "pos2":{"x":0, "y":40, "z":0}, "controlY":80},
@@ -81,6 +81,7 @@ params[BattleData.Protect] = {"color": "#a8a878"};
 params[BattleData.Detect] = {"color": "#c03028"};
 params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"};
 params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"};
+params[BattleData.Scald] = {"flames": true};
 
 function useAttack(attacker, attack, defender, params) {
     launchMove(attacker, attack, defender, params);
