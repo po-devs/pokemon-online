@@ -476,9 +476,10 @@ struct BattleConfiguration
     quint16 avatar[2];
 
     Flags flags;
+    bool oldconf; /* Will become obsolete. Used to store internally if the conf was read with oldDeserialize */
 
     enum FlagEnum {
-        Rated
+        Rated = 0
     };
 
     TeamBattle *teams[2];
@@ -520,6 +521,7 @@ struct BattleConfiguration
     }
 
     BattleConfiguration() {
+        oldconf = false;
         teamOwnership = false;
         receivingMode[0] = receivingMode[1] = Spectator;
     }
@@ -530,6 +532,7 @@ struct BattleConfiguration
 
     inline DataStream & oldDeserialize (DataStream &in) {
         in >> this->gen >> this->mode >> this->ids[0] >> this->ids[1] >> this->clauses;
+        oldconf = true;
 
         return in;
     }
@@ -544,6 +547,8 @@ struct BattleConfiguration
 
 inline DataStream & operator >> (DataStream &in, BattleConfiguration &c)
 {
+    c.oldconf = false;
+
     VersionControl v;
     in >> v;
 
