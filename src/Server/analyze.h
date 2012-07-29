@@ -9,6 +9,7 @@
 #include <QColor>
 #include "network.h"
 #include "../Utilities/coreclasses.h"
+#include "../PokemonInfo/networkstructs.h"
 
 class TeamBattle;
 class Battle;
@@ -57,6 +58,7 @@ public:
     bool isConnected() const;
     QString ip() const;
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
+    void spectateBattle(int battleid, const BattleConfiguration &conf);
     void sendBattleResult(qint32 battleid, quint8 res, quint8 mode, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
@@ -174,6 +176,8 @@ private:
     bool mIsInCommand;
     /* Is it a dummy analyzer ?*/
     bool dummy;
+
+    ProtocolVersion version;
 };
 
 template<class SocketClass>

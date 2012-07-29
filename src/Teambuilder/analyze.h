@@ -8,6 +8,7 @@
 #include <QtCore>
 #include "network.h"
 #include "../Utilities/coreclasses.h"
+#include "../PokemonInfo/networkstructs.h"
 
 class Client;
 class PlayerInfo;
@@ -18,7 +19,6 @@ class ChallengeInfo;
 class Battle;
 class UserInfo;
 class TeamHolder;
-class ProtocolVersion;
 class ServerInfo;
 
 /* Commands to dialog with the server */
@@ -165,6 +165,8 @@ private:
     QSet<int> channelCommands;
 
     Network mysocket;
+
+    ProtocolVersion version;
 };
 
 #endif // ANALYZE_H

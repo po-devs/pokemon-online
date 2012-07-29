@@ -385,7 +385,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             /* This is a battle we take part in */
             TeamBattle team;
             BattleConfiguration conf;
-            in >> conf >> team;
+            if (version < ProtocolVersion(1,0)) {
+                conf.oldDeserialize(in);
+            } else {
+                in >> conf;
+            }
+            in >> team;
             emit battleStarted(battleid, id1, id2, team, conf);
         } else {
             /* this is a battle of strangers */
@@ -488,13 +493,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case SpectateBattle: {
-        BattleConfiguration conf;
         Flags f;
         qint32 battleId;
         in >> f >> battleId;
 
         if (f[0]) {
-            in >> conf;
+            BattleConfiguration conf;
+            if (version < ProtocolVersion(1,0)) {
+                conf.oldDeserialize(in);
+            } else {
+                in >> conf;
+            }
             emit spectatedBattle(battleId, conf);
         } else {
             emit spectatingBattleFinished(battleId);
@@ -533,6 +542,8 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         } else if (version < server) {
             emit versionDiff(server, 0);
         }
+
+        this->version = server;
 
         break;
     }

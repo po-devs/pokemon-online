@@ -5,18 +5,11 @@
 #include "network.h"
 #include "../Utilities/coreclasses.h"
 
-class BasicInfo;
-class TeamBattle;
-class BattleChoice;
-class BattleConfiguration;
-
 /* Commands to dialog with the server */
 namespace NetworkReg
 {
 #include "../Shared/networkcommands.h"
 }
-
-class TeamInfo;
 
 class Analyzer : public QObject
 {
