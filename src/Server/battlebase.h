@@ -20,7 +20,6 @@ class BattleBase : public ContextCallee, public BattleInterface
 
     PROPERTY(int, turn);
     PROPERTY(int , publicId);
-    PROPERTY(bool, rated);
     PROPERTY(QString, tier);
     PROPERTY(int, attacker);
     PROPERTY(int, attacked);
@@ -69,6 +68,7 @@ public:
     const BattleConfiguration &configuration() const;
     /* Returns the rating of the beginning of a battle, of a player */
     int rating(int spot) const;
+    bool rated() const;
 
     Pokemon::gen gen() const {return conf.gen;}
     int mode() const {return conf.mode;}

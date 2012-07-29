@@ -52,7 +52,7 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     timeStopped[0] = true;
     timeStopped[1] = true;
 
-    rated() = c.rated;
+    conf.flags.setFlag(BattleConfiguration::Rated, c.rated);
 
     if (mode() == ChallengeInfo::Doubles) {
         numberOfSlots() = 4;
@@ -397,6 +397,11 @@ int BattleBase::id(int spot) const
 int BattleBase::rating(int spot) const
 {
     return ratings[spot];
+}
+
+bool BattleBase::rated() const
+{
+    return configuration().rated();
 }
 
 int BattleBase::player(int slot) const

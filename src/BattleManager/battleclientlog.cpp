@@ -486,11 +486,14 @@ void BattleClientLog::onClauseActivated(int clause)
 
 void BattleClientLog::onRatedNotification(bool rated)
 {
-    printHtml("Rated", toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
+    /* For now, this message can still be sent even with new conf (for backward compatibility), we ignore it then */
+    if (data()->oldConf()) {
+        printHtml("Rated", toBoldColor(tr("Rule: "), Qt::blue) + (rated? tr("Rated") : tr("Unrated")));
 
-    for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
-        if (data()->clauses() & (1 << i)) {
-            printHtml("Clause", toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+            if (data()->clauses() & (1 << i)) {
+                printHtml("Clause", toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+            }
         }
     }
 }
@@ -504,6 +507,16 @@ void BattleClientLog::onTierNotification(const QString &tier)
 {
     printHtml("Tier", toBoldColor(tr("Tier: "), Qt::blue) + tier);
     printHtml("Mode", toBoldColor(tr("Mode: "), Qt::blue) + ChallengeInfo::modeName(data()->mode()));
+
+    if (!data()->oldConf()) {
+        printHtml("Rated", toBoldColor(tr("Rule: "), Qt::blue) + (data()->rated()? tr("Rated") : tr("Unrated")));
+
+        for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
+            if (data()->clauses() & (1 << i)) {
+                printHtml("Clause", toBoldColor(tr("Rule: "), Qt::blue) + ChallengeInfo::clause(i));
+            }
+        }
+    }
 }
 
 void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent)

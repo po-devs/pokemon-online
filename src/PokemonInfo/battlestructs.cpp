@@ -655,6 +655,8 @@ BattleConfiguration &BattleConfiguration::operator =(const BattleConfiguration &
    receivingMode[0] = other.receivingMode[0];
    receivingMode[1] = other.receivingMode[1];
    teamOwnership = false;
+   oldconf = other.oldconf;
+   flags = other.flags;
 
    return* this;
 }
