@@ -669,25 +669,34 @@ BattleConfiguration::~BattleConfiguration()
     }
 }
 
+
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
-    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+    VersionControl v;
+    in >> v;
 
-    in >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
+    if (v.versionNumber != 0) {
+        return in;
+    }
+
+    Flags network;
+
+    v.stream >> network >> c.flags >> c.gen >> c.mode >> c.clauses >> c.ids[0] >> c.ids[1];
+    v.stream >> c.receivingMode[0] >> c.name[0] >> c.avatar[0];
 
     if (c.receivingMode[0] == BattleConfiguration::Player) {
         c.teams[0] = new TeamBattle();
-        in >> *c.teams[0];
+        v.stream >> *c.teams[0];
         c.teams[0]->name = c.name[0];
     } else {
         c.teams[0] = NULL;
     }
 
-    in >> c.receivingMode[1] >> c.name[1] >> c.avatar[1];
+    v.stream >> c.receivingMode[1] >> c.name[1] >> c.avatar[1];
 
     if (c.receivingMode[1] == BattleConfiguration::Player) {
         c.teams[1] = new TeamBattle();
-        in >> *c.teams[1];
+        v.stream >> *c.teams[1];
         c.teams[1]->name = c.name[1];
     } else {
         c.teams[1] = NULL;
@@ -700,20 +709,22 @@ DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 
 DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 {
-    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+    VersionControl v;
+    v.stream << Flags() << c.flags << c.gen << c.mode << c.clauses << c.ids[0] << c.ids[1];
 
-    out << c.receivingMode[0] << c.getName(0) << c.avatar[0];
+    v.stream << c.receivingMode[0] << c.getName(0) << c.avatar[0];
 
     if (c.receivingMode[0] == BattleConfiguration::Player) {
-        out << *c.teams[0];
+        v.stream << *c.teams[0];
     }
 
-    out << c.receivingMode[1] << c.getName(1) << c.avatar[1];
+    v.stream << c.receivingMode[1] << c.getName(1) << c.avatar[1];
 
     if (c.receivingMode[1] == BattleConfiguration::Player) {
-        out << *c.teams[1];
+        v.stream << *c.teams[1];
     }
 
+    out << v;
     return out;
 }
 
