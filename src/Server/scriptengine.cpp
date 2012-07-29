@@ -2178,11 +2178,13 @@ int ScriptEngine::teamPokeAbility(int id, int team, int slot)
 
 void ScriptEngine::changeName(int playerId, QString newName)
 {
-    if (!loggedIn(playerId)) {
+    if (!loggedIn(playerId) || !id(newName).isUndefined()) {
         return;
     }
 
+    myserver->mynames.take(myserver->name(playerId).toLower());
     myserver->player(playerId)->setName(newName);
+    myserver->mynames[newName.toLower()] = playerId;
     myserver->sendPlayer(playerId);
 }
 
