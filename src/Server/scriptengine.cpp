@@ -2012,12 +2012,7 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
-int ScriptEngine::pokeAbility(int poke, int slot, int gen = GenInfo::GenMax())
-{
-    return PokemonInfo::Ability(poke, slot, gen);
-}
-
-int ScriptEngine::pokeGenders(int poke)
+QScriptValue ScriptEngine::pokeGenders(int poke)
 {
     QScriptValue ret;
     int gender = PokemonInfo::Gender(poke);
