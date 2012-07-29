@@ -3,6 +3,7 @@
 
 #include "pokemonstructs.h"
 #include "../Utilities/coreclasses.h"
+#include "../Shared/config.h"
 
 struct UserInfo
 {
@@ -115,7 +116,7 @@ struct ProtocolVersion
     bool operator < (const ProtocolVersion &other) const
     {return version < other.version || (version == other.version && subversion < other.subversion);}
 
-    ProtocolVersion();
+    ProtocolVersion(int version=PROTOCOL_VERSION, int subversion=PROTOCOL_SUBVERSION);
 };
 
 DataStream & operator >> (DataStream &in, ProtocolVersion &p);

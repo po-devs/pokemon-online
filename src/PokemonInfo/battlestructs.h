@@ -475,6 +475,12 @@ struct BattleConfiguration
     quint8 receivingMode[2];
     quint16 avatar[2];
 
+    Flags flags;
+
+    enum FlagEnum {
+        Rated
+    };
+
     TeamBattle *teams[2];
     bool teamOwnership;
 
@@ -484,6 +490,10 @@ struct BattleConfiguration
 
     int spot(int id) const {
         return ids[0] == id ? 0 : 1;
+    }
+
+    bool rated() const {
+        return flags[Rated];
     }
 
     bool isPlayer(int slot) const {
@@ -517,18 +527,42 @@ struct BattleConfiguration
     explicit BattleConfiguration(const BattleConfiguration &other);
     BattleConfiguration& operator = (const BattleConfiguration& conf);
     ~BattleConfiguration();
+
+    inline DataStream & oldDeserialize (DataStream &in) {
+        in >> this->gen >> this->mode >> this->ids[0] >> this->ids[1] >> this->clauses;
+
+        return in;
+    }
+
+    inline DataStream & oldSerialize (DataStream &out) const
+    {
+        out << this->gen << this->mode << this->ids[0] << this->ids[1] << this->clauses;
+
+        return out;
+    }
 };
 
 inline DataStream & operator >> (DataStream &in, BattleConfiguration &c)
 {
-    in >> c.gen >> c.mode >> c.ids[0] >> c.ids[1] >> c.clauses;
+    VersionControl v;
+    in >> v;
+
+    if (v.versionNumber != 0) {
+        return in;
+    }
+
+    Flags network;
+    v.stream >> network >> c.flags >> c.gen >> c.mode >> c.clauses >> c.ids[0] >> c.ids[1];
 
     return in;
 }
 
 inline DataStream & operator << (DataStream &out, const BattleConfiguration &c)
 {
-    out << c.gen << c.mode << c.ids[0] << c.ids[1] << c.clauses;
+    VersionControl v;
+    v.stream << Flags() << c.flags << c.gen << c.mode << c.clauses << c.ids[0] << c.ids[1];
+
+    out << v;
 
     return out;
 }

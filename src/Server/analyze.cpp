@@ -39,7 +39,33 @@ void Analyzer::sendMessage(const QString &message, bool html)
 
 void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
-    notify(EngageBattle, qint32(battleid), Flags(1), conf.mode, qint32(myid), qint32(id), conf, team);
+    if (version < ProtocolVersion(1,0)) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out << uchar(EngageBattle) << qint32(battleid) << Flags(1) << conf.mode << qint32(myid) << qint32(id);
+        conf.oldSerialize(out);
+        out << team;
+
+        emit sendCommand(tosend);
+    } else {
+        notify(EngageBattle, qint32(battleid), Flags(1), conf.mode, qint32(myid), qint32(id), conf, team);
+    }
+}
+
+void Analyzer::spectateBattle(int battleid, const BattleConfiguration &conf)
+{
+    if (version < ProtocolVersion(1,0)) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out << uchar(SpectateBattle) << Flags(1) << qint32(battleid);
+        conf.oldSerialize(out);
+
+        emit sendCommand(tosend);
+    } else {
+        notify(SpectateBattle, Flags(1), qint32(battleid), conf);
+    }
 }
 
 void Analyzer::connectTo(const QString &host, quint16 port)
@@ -216,6 +242,8 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             if (socket().id() != 0) {
                 LoginInfo *info = new LoginInfo();
                 in >> *info;
+
+                version = info->version;
 
                 emit loggedIn(info);
             } else

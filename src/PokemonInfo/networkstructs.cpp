@@ -70,10 +70,8 @@ DataStream & operator << (DataStream &out, const Battle &p)
     return out;
 }
 
-ProtocolVersion::ProtocolVersion()
+ProtocolVersion::ProtocolVersion(int v, int s) : version(v), subversion(s)
 {
-    version = PROTOCOL_VERSION;
-    subversion = PROTOCOL_SUBVERSION;
 }
 
 DataStream &operator >> (DataStream &in, ProtocolVersion &p)
