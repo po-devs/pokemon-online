@@ -2012,6 +2012,32 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+int ScriptEngine::pokeAbility(int poke, int slot, int gen = GenInfo::GenMax())
+{
+    return PokemonInfo::Ability(poke, slot, gen);
+}
+
+int ScriptEngine::pokeGenders(int poke)
+{
+    QScriptValue ret;
+    int gender = PokemonInfo::Gender(poke);
+
+    if (gender == Pokemon::MaleAvail) {
+        ret.setProperty("male", 100);
+    } else if (gender == Pokemon::FemaleAvail) {
+        ret.setProperty("female", 100);
+    } else if (gender == Pokemon::NeutralAvail) {
+        ret.setProperty("neutral", 100);
+    } else {
+        int rate = PokemonInfo::GenderRate(poke);
+
+        ret.setProperty("female", 100.0*(8-rate)/8);
+        ret.setProperty("male", 100.0*rate/8);
+    }
+
+    return ret;
+}
+
 QScriptValue ScriptEngine::banList()
 {
     QList<QString> keys = SecurityManager::banList().keys();

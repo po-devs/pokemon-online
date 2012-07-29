@@ -298,6 +298,9 @@ public:
 
     Q_INVOKABLE int pokeType1(int id, int gen = GenInfo::GenMax());
     Q_INVOKABLE int pokeType2(int id, int gen = GenInfo::GenMax());
+    Q_INVOKABLE int pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());
+    /* Returns an array of "male", "female", "neutral" with percentages associated */
+    Q_INVOKABLE QScriptValue pokeGenders(int poke);
    
     Q_INVOKABLE QScriptValue banList();
     Q_INVOKABLE void ban(QString name);

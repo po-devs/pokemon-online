@@ -28,7 +28,7 @@ public slots:
     void updateStat(int stat);
     void changeIV(int newValue);
     void changeHiddenPower(int newType);
-
+    void changeHPSelection(int row);
 signals:
     void statsUpdated();
     /* in gen 2, IVs determine shiny & gender */
@@ -44,6 +44,7 @@ private:
     void updateIVs();
     void updateIV(int stat);
     void updateHiddenPower();
+    void updateHiddenPowerSelection();
     int calculateHiddenPowerPower();
     int calculateHiddenPowerType();
 

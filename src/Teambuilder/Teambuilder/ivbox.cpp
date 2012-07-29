@@ -29,7 +29,7 @@ IvBox::IvBox(QWidget *parent) :
     }
 
     connect(ui->hiddenPowerType, SIGNAL(activated(int)), this, SLOT(changeHiddenPower(int)));
-
+    connect(ui->hpchoice, SIGNAL(cellActivated(int,int)), SLOT(changeHPSelection(int)));
 }
 
 IvBox::~IvBox()
@@ -54,6 +54,7 @@ void IvBox::updateAll()
     if (poke().gen() <= 2) {
         ui->hpivspin->setDisabled(true);
         ui->spdefivspin->setDisabled(true);
+        ui->hpchoice->hide();
 
         for (int i = 0; i < 6; i++) {
             m_ivchangers[i]->setRange(0, 15);
@@ -61,6 +62,7 @@ void IvBox::updateAll()
     } else {
         ui->hpivspin->setDisabled(false);
         ui->spdefivspin->setDisabled(false);
+        ui->hpchoice->show();
 
         for (int i = 0; i < 6; i++) {
             m_ivchangers[i]->setRange(0, 31);
@@ -147,6 +149,25 @@ void IvBox::updateHiddenPower()
     ui->hiddenPowerPower->setText(tr("(%1 pow)").arg(QString::number(calculateHiddenPowerPower())));
     int type = calculateHiddenPowerType();
     ui->hiddenPowerType->setCurrentIndex(type - 1);
+    updateHiddenPowerSelection();
+}
+
+void IvBox::updateHiddenPowerSelection()
+{
+    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType());
+
+    while (ui->hpchoice->rowCount() > 0) {
+        ui->hpchoice->removeRow(0);
+    }
+
+    foreach(QStringList s, possibilities) {
+        int c = ui->hpchoice->rowCount();
+        ui->hpchoice->insertRow(c);
+
+        for (int i = 0; i < 6; i++) {
+            ui->hpchoice->setItem(c, i, new QTableWidgetItem(s[i]));
+        }
+    }
 }
 
 int IvBox::calculateHiddenPowerPower()
@@ -176,6 +197,16 @@ void IvBox::changeHiddenPower(int newType)
         QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newType);
         poke().setDV(Attack, dvs.first);
         poke().setDV(Defense, dvs.second);
+    }
+
+    updateIVs();
+    updateHiddenPowerSelection();
+}
+
+void IvBox::changeHPSelection(int row)
+{
+    for (int i = 0; i < 6; i++) {
+        poke().setDV(i, ui->hpchoice->item(row, i)->text().toInt());
     }
 
     updateIVs();

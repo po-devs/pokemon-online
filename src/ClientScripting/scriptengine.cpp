@@ -508,6 +508,7 @@ int ScriptEngine::pokeType2(int id, int gen)
     }
     return result;
 }
+
 QScriptValue ScriptEngine::pokemon(int num)
 {
     return PokemonInfo::Name(num);

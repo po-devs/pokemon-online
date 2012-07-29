@@ -71,6 +71,7 @@ public:
     static int LevelBalance(const Pokemon::uniqueId &pokeid);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
     static QString Classification(const Pokemon::uniqueId &pokeid);
+    /* 4 = 50% male, 7 = 87.5% male, 6 = 75% male. Range is 0-8 */
     static int GenderRate(const Pokemon::uniqueId &pokeid);
     static int Weight(const Pokemon::uniqueId &pokeid);
     static int Gender(const Pokemon::uniqueId &pokeid);
