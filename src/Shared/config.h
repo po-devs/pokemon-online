@@ -3,7 +3,7 @@
 
 #include <qglobal.h>
 
-#define VERSION QString("2.0.05")
+#define VERSION QString("2.0.06")
 
 static const quint16 PROTOCOL_VERSION = 1;
 static const quint16 PROTOCOL_SUBVERSION = 0;

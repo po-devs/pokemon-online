@@ -39,18 +39,22 @@ void Analyzer::sendMessage(const QString &message, bool html)
 
 void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf)
 {
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(EngageBattle) << qint32(battleid) << Flags(1 + (team.items.empty() ? 0 : 2) ) << conf.mode << qint32(myid) << qint32(id);
     if (version < ProtocolVersion(1,0)) {
-        QByteArray tosend;
-        DataStream out(&tosend, QIODevice::WriteOnly);
-
-        out << uchar(EngageBattle) << qint32(battleid) << Flags(1) << conf.mode << qint32(myid) << qint32(id);
         conf.oldSerialize(out);
-        out << team;
-
-        emit sendCommand(tosend);
     } else {
-        notify(EngageBattle, qint32(battleid), Flags(1), conf.mode, qint32(myid), qint32(id), conf, team);
+        out << conf;
     }
+    out << team;
+
+    if (!team.items.empty()) {
+        out << team.items;
+    }
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::spectateBattle(int battleid, const BattleConfiguration &conf)

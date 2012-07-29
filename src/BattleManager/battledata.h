@@ -103,6 +103,8 @@ public:
 
     const teamType &team(int player) const { return *d()->team(this->player(player));}
     teamType &team(int player) { return *d()->team(this->player(player));}
+    const QHash<quint16,quint16> &items(int player) const { return team(player).items();}
+    QHash<quint16,quint16> &items(int player) { return team(player).items();}
     const fieldType &field() const { return *d()->field();}
     fieldType &field() { return *d()->field();}
     pokeType &poke(int player) { return *team(this->player(player)).poke(slotNum(player));}

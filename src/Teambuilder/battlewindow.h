@@ -35,6 +35,7 @@ public:
     int currentSlot;
     TeamBattle _myteam;
     TeamProxy &myteam();
+    QHash<quint16, quint16>& myitems();
     const TeamProxy &myteam() const;
 
     bool sent;
@@ -143,10 +144,11 @@ protected:
     void enableAll();
 
     void openRearrangeWindow(const ShallowShownTeam &t);
+    void listItems();
 
     QStackedWidget *mystack;
     QTabWidget *mytab;
-    QListWidget *myspecs;
+    QListWidget *myspecs, *myitems;
     AttackZone *myazones[3];
     StruggleZone *szone;
     TargetSelection *tarZone;

@@ -11,7 +11,8 @@ TeamData::TeamData(const TeamBattle *team)
             pokemons.push_back(new PokeBattle(team->poke(i)));
         }
         mName = team->name;
-        mGen = team->gen;
+        setGen(team->gen);
+        setItems(team->items);
     }
 }
 
@@ -58,7 +59,13 @@ void TeamData::setTeam(const TeamBattle *team)
         setPoke(i, &team->poke(i));
     }
     mName = team->name;
-    mGen = team->gen;
+    setGen(team->gen);
+    setItems(team->items);
+}
+
+void TeamData::setItems(const QHash<quint16, quint16> &items)
+{
+    mItems = items;
 }
 
 void TeamData::setGen(Pokemon::gen gen)

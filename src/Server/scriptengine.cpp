@@ -2114,6 +2114,33 @@ QScriptValue ScriptEngine::weather(int weatherId)
     }
 }
 
+void ScriptEngine::prepareItems(int battleId, int playerSlot, QScriptValue items)
+{
+    if(testRange("prepareItems", playerSlot, 0, 1)) {
+        BattleBase * battle = myserver->getBattle(battleId);
+        if (battle) {
+            QHash<quint16,quint16> itemh;
+
+            QScriptValueIterator it(items);
+            while (it.hasNext()) {
+                it.next();
+
+                quint16 val = it.value().toInt32();
+                if (val > 0) {
+                    itemh[it.name().toInt()] = val;
+                } else {
+                    warn("prepareItems", "value for item " + it.name() + " is invalid: " + it.value().toString());
+                }
+            }
+            itemh.remove(0);
+
+            battle->setupItems(playerSlot, itemh);
+        } else{
+            warn("prepareItems", "can't find a battle with specified id.");
+        }
+    }
+}
+
 void ScriptEngine::setAnnouncement(const QString &html, int id)
 {
     if (testPlayer("setAnnouncment(html, id)", id)) {

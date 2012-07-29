@@ -384,6 +384,16 @@ PokeBattle &BattleBase::poke(int slot)
     return team(player(slot)).poke(slot/2);
 }
 
+QHash<quint16, quint16>& BattleBase::items(int player)
+{
+    return team(player).items;
+}
+
+const QHash<quint16, quint16>& BattleBase::items(int player) const
+{
+    return team(player).items;
+}
+
 
 int BattleBase::id(int spot) const
 {
@@ -1209,6 +1219,11 @@ void BattleBase::setupLongWeather(int weather)
 {
     weatherCount = -1;
     this->weather = weather;
+}
+
+void BattleBase::setupItems(int player, const QHash<quint16, quint16> &items)
+{
+    this->items(player) = items;
 }
 
 void BattleBase::notifySituation(int key)
