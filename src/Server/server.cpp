@@ -1641,7 +1641,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     battleList.insert(id, Battle(id1, id2));
     myengine->battleSetup(id1, id2, id); // dispatch script event
 
-    Player *p1 (player(id1)), *p2 (player(id2));
+    Player *p1 (player(id1));
+    Player *p2 (player(id2));
 
     if (!p1->isInSameChannel(p2)) {
         p1->relay().sendPlayer(p2->bundle());

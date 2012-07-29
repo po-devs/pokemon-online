@@ -285,13 +285,17 @@ void TeamProxy::setName(const QString &name)
     teamData->name() = name;
 }
 
-
 void TeamProxy::setTeam(const TeamBattle *team)
 {
     for (int i = 0; i < 6; i++) {
         poke(i)->adaptTo(&team->poke(i));
     }
     teamData->setGen(team->gen);
+    teamData->setItems(team->items);
+}
+
+QHash<quint16,quint16> &TeamProxy::items() {
+    return teamData->items();
 }
 
 Pokemon::gen TeamProxy::gen() const

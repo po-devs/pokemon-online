@@ -391,6 +391,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 in >> conf;
             }
             in >> team;
+            if (network[1]) {
+                in >> team.items;
+            }
             emit battleStarted(battleid, id1, id2, team, conf);
         } else {
             /* this is a battle of strangers */

@@ -310,6 +310,8 @@ public:
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
 
+    Q_INVOKABLE void prepareItems(int battleId, int playerSlot, QScriptValue items);
+
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
     Q_INVOKABLE void changePokeAbility(int id, int team, int slot, int ability);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());

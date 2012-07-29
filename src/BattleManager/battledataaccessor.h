@@ -163,6 +163,7 @@ public:
 
     Q_PROPERTY(QString name READ name CONSTANT)
     QString name() const;
+    QHash<quint16, quint16> &items();
     /* Not really sure this should be in this class */
     Q_PROPERTY(int time READ time NOTIFY timeChanged)
     int time() const;

@@ -29,6 +29,11 @@ BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const Playe
     memset(lastMove, 0, sizeof(lastMove));
 }
 
+QHash<quint16, quint16>& BattleInfo::myitems()
+{
+    return data->items(myself);
+}
+
 TeamProxy &BattleInfo::myteam()
 {
     return data->team(myself);
@@ -64,6 +69,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     ownid() = me.id;
 
     conf() = _conf;
+
     myInfo = new BattleInfo(team, me, opponent, conf().mode, conf().spot(me.id), conf().spot(opponent.id));
     info()._myteam.name = me.name;
 
@@ -102,6 +108,13 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mytab->addTab(mystack = new QStackedWidget(), tr("&Moves"));
     mytab->addTab(mypzone = new PokeZone(data().team(info().myself)), tr("&Pokemon"));
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
+    if (!info().myitems().empty()) {
+        mytab->addTab(myitems = new QListWidget(), tr("Items"));
+        listItems();
+    } else {
+        myitems = NULL;
+    }
+
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     for (int i = 0; i < 3; i++) {
@@ -141,6 +154,24 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     show();
 
     disableAll();
+}
+
+void BattleWindow::listItems()
+{
+    if (!myitems) {
+        return;
+    }
+
+    myitems->clear();
+
+    auto items = info().myitems();
+    QVector<quint16> keys = items.keys().toVector();
+    qSort(keys);
+
+    for (int i = 0; i < keys.size(); i++) {
+        QListWidgetItem *it = new QListWidgetItem(ItemInfo::Icon(keys[i]), tr("%1 (x%2)").arg(ItemInfo::Name(keys[i])).arg(items[keys[i]]));
+        myitems->addItem(it);
+    }
 }
 
 void BattleWindow::changeAttackText(int i)

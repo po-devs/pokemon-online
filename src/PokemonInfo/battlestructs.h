@@ -149,10 +149,15 @@ public:
         }
     }
 
+    void setItems(const QHash<quint16,quint16> &items) {
+        this->items = items;
+    }
+
     void resetIndexes();
 
     bool invalid() const;
 
+    QHash<quint16,quint16> items;
     QString name;
     QString tier;
     Pokemon::gen gen;
@@ -478,11 +483,17 @@ struct BattleConfiguration
     Flags flags;
     bool oldconf; /* Will become obsolete. Used to store internally if the conf was read with oldDeserialize */
 
+    enum Network {
+        HasNumIds,
+        HasItems
+    };
+
     enum FlagEnum {
         Rated = 0
     };
 
     TeamBattle *teams[2];
+
     bool teamOwnership;
 
     int slot(int spot, int poke = 0) const  {

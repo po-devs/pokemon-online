@@ -83,6 +83,8 @@ public:
     const PokeBattle &poke(int player) const;
     PokeBattle &poke(int player, int poke);
     const PokeBattle &poke(int player, int poke) const;
+    QHash<quint16, quint16> &items(int player);
+    const QHash<quint16, quint16> &items(int player) const;
     bool koed(int player) const;
     bool isOut(int player, int poke);
     bool hasSubstitute(int player);
@@ -304,6 +306,7 @@ public:
     int weatherCount;
 
     void setupLongWeather(int weather);
+    void setupItems(int player, const QHash<quint16,quint16> &items);
 
     void sendMoveMessage(int move, int part=0, int src=0, int type=0, int foe=-1, int other=-1, const QString &q="");
     void sendAbMessage(int move, int part=0, int src=0, int foe=-1, int type=0, int other=-1);
