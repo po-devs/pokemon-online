@@ -35,6 +35,18 @@ Move {
 
         width: implicitWidth*(2-progress);
         height: implicitHeight*(0.7+progress)
+
+        Particles {
+            anchors.fill: parent
+            source: "../../images/flame0.png"
+            lifeSpan: 750
+            count: params.flames ? 6 : 0
+            angle: woof.back ? -45 : (45+90)
+            angleDeviation: 30
+            velocity: 4
+            velocityDeviation: 2
+            fadeInDuration: 300;
+        }
     }
 
     SequentialAnimation {
