@@ -775,7 +775,7 @@ DataStream & operator << (DataStream &out, const BattleChoices &po)
 /* Tests if the attack chosen is allowed */
 bool BattleChoice::match(const BattleChoices &avail) const
 {
-    if (!avail.attacksAllowed && (attackingChoice() || moveToCenterChoice())) {
+    if (!avail.attacksAllowed && (attackingChoice() || moveToCenterChoice() || itemChoice())) {
         return false;
     }
     if (!avail.switchAllowed && switchChoice()) {
@@ -834,6 +834,9 @@ DataStream & operator >> (DataStream &in, BattleChoice &po)
             in >> po.choice.rearrange.pokeIndexes[i];
         }
         break;
+    case ItemType:
+        in >> po.choice.item.item >> po.choice.item.target;
+        break;
     }
 
     return in;
@@ -858,6 +861,9 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
         for (int i = 0; i < 6; i++) {
             out << po.choice.rearrange.pokeIndexes[i];
         }
+        break;
+    case ItemType:
+        out << po.choice.item.item << po.choice.item.target;
         break;
     }
 

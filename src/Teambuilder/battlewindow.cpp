@@ -169,8 +169,10 @@ void BattleWindow::listItems()
     qSort(keys);
 
     for (int i = 0; i < keys.size(); i++) {
-        QListWidgetItem *it = new QListWidgetItem(ItemInfo::Icon(keys[i]), tr("%1 (x%2)").arg(ItemInfo::Name(keys[i])).arg(items[keys[i]]));
-        myitems->addItem(it);
+        if (ItemInfo::IsBattleItem(keys[i]), gen()) {
+            QListWidgetItem *it = new QListWidgetItem(ItemInfo::Icon(keys[i]), tr("%1 (x%2)").arg(ItemInfo::Name(keys[i])).arg(items[keys[i]]));
+            myitems->addItem(it);
+        }
     }
 }
 

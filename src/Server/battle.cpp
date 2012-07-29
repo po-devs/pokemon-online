@@ -673,6 +673,7 @@ void BattleSituation::analyzeChoice(int slot)
 
             shiftSpots(slot, target);
         }
+    } else if (choice(slot).itemChoice()) {
     } else {
         /* FATAL FATAL */
     }
