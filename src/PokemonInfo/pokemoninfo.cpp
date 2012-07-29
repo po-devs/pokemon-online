@@ -2424,6 +2424,50 @@ int ItemInfo::DriveForForme(int forme)
     }
 }
 
+bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)
+{
+    if (isBerry(itemnum))  {
+        return true;
+    }
+    if (!Exists(itemnum, gen)) {
+        return false;
+    }
+    QList<Effect> l = m_RegEffects[gen.num].value(itemnum);
+
+    if (l.length() == 0) {
+        return false;
+    }
+
+    int num = l.front().num;
+
+    return num >= 1000 && num <= 3999;
+}
+
+int ItemInfo::Target(int itemnum, Pokemon::gen gen)
+{
+    if (isBerry(itemnum)) {
+        return Move::TeamParty;
+    }
+    if (!IsBattleItem(itemnum, gen)) {
+        return Move::IndeterminateTarget;
+    }
+    QList<Effect> l = m_RegEffects[gen.num].value(itemnum);
+
+    int num = l.front().num;
+
+    if (num >= 2000 && num < 3000) {
+        return Move::PartnerOrUser;
+    } else if (num >= 3000) {
+        return Move::OpposingTeam;
+    } else {
+        if (num == 1999) {
+            return Move::TeamSide;
+        } else {
+            return Move::TeamParty;
+        }
+    }
+}
+
 int ItemInfo::Number(const QString &itemname)
 {
     if (m_BerryNamesH.contains(itemname)) {

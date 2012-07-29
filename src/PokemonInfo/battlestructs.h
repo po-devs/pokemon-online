@@ -230,7 +230,13 @@ enum ChoiceType {
     SwitchType,
     RearrangeType,
     CenterMoveType,
-    DrawType
+    DrawType,
+    ItemType
+};
+
+struct ItemChoice {
+    quint16 item;
+    qint8 target;
 };
 
 struct CancelChoice {
@@ -266,6 +272,7 @@ union ChoiceUnion
     RearrangeChoice rearrange;
     MoveToCenterChoice move;
     DrawChoice draw;
+    ItemChoice item;
 };
 
 struct BattleChoice {
@@ -304,6 +311,11 @@ struct BattleChoice {
         type = DrawType;
         playerSlot = slot;
     }
+    BattleChoice(int slot, const ItemChoice &c) {
+        choice.item = c;
+        type = ItemType;
+        playerSlot = slot;
+    }
 
     bool attackingChoice() const {
         return type == AttackType;
@@ -329,6 +341,10 @@ struct BattleChoice {
         return type == DrawType;
     }
 
+    bool itemChoice() const {
+        return type == ItemType;
+    }
+
     int target() const {
         return choice.attack.attackTarget;
     }
@@ -339,6 +355,14 @@ struct BattleChoice {
 
     int pokeSlot() const {
         return choice.switching.pokeSlot;
+    }
+
+    int item() const {
+        return choice.item.item;
+    }
+
+    int itemTarget() const {
+        return choice.item.target;
     }
 
     /* The person who's making the choice */

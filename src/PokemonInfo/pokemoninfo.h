@@ -361,6 +361,8 @@ public:
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
     static int DriveForForme(int forme);
+    static bool IsBattleItem(int itemnum, Pokemon::gen gen);
+    static int Target(int itemnum, Pokemon::gen gen);
     static QList<QString> SortedNames(Pokemon::gen gen);
     static QList<QString> SortedUsefulNames(Pokemon::gen gen);
     static QList<Effect> Effects(int item, Pokemon::gen gen);

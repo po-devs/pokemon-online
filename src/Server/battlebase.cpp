@@ -953,6 +953,10 @@ bool BattleBase::validChoice(const BattleChoice &b)
         return true;
     }
 
+    if (b.itemChoice()) {
+        return items(player).contains(b.item());
+    }
+
     return false;
 }
 
@@ -1642,6 +1646,7 @@ void BattleBase::analyzeChoice(int slot)
             sendBack(slot);
 
         sendPoke(slot, choice(slot).pokeSlot());
+    } else if (choice(slot).itemChoice()) {
     } else {
         /* FATAL FATAL */
     }
