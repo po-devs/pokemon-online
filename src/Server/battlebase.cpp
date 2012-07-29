@@ -174,9 +174,10 @@ void BattleBase::start(ContextSwitcher &ctx)
 {
     notify(All, BlankMessage,0);
 
-    if (tier().length()>0)
-    {
+    if (tier().length()>0) {
         notify(All, TierSection, Player1, tier());
+    } else {
+        notify(All, TierSection, Player1, QString("Mixed %1").arg(GenInfo::Version(gen())));
     }
 
     if (rated()) {
@@ -762,6 +763,8 @@ void BattleBase::addSpectator(Player *p)
 
         if (tier().length() > 0)
             notify(key, TierSection, Player1, tier());
+        else
+            notify(key, TierSection, Player1, QString("Mixed %1").arg(GenInfo::Version(gen())));
 
         notify(key, Rated, Player1, rated());
 
