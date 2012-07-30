@@ -302,3 +302,13 @@ Pokemon::gen TeamProxy::gen() const
 {
     return teamData->gen();
 }
+
+void TeamProxy::removeItem(int item)
+{
+    teamData->removeItem(item);
+}
+
+void TeamProxy::changeItemCount(int item, int count)
+{
+    teamData->changeItemCount(item, count);
+}

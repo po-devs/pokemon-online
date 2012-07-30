@@ -77,3 +77,13 @@ void TeamData::switchPokemons(int slot1, int slot2)
 {
     std::swap(pokemons[slot1],pokemons[slot2]);
 }
+
+void TeamData::removeItem(int item)
+{
+    mItems.remove(item);
+}
+
+void TeamData::changeItemCount(int item, int count)
+{
+    mItems[item] = count;
+}

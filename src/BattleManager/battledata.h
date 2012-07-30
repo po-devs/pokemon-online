@@ -101,6 +101,15 @@ public:
         team(player).switchPokemons(spot1, spot2);
     }
 
+    void onItemChangeCount(int player, int item, int count)
+    {
+        if (count <= 0) {
+            team(player).removeItem(item);
+        } else {
+            team(player).changeItemCount(item, count);
+        }
+    }
+
     const teamType &team(int player) const { return *d()->team(this->player(player));}
     teamType &team(int player) { return *d()->team(this->player(player));}
     const QHash<quint16,quint16> &items(int player) const { return team(player).items();}
