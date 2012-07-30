@@ -2432,7 +2432,8 @@ bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)
     if (!Exists(itemnum, gen)) {
         return false;
     }
-    QList<Effect> l = m_RegEffects[gen.num].value(itemnum);
+
+    QList<Effect> l = m_RegEffects[gen.num-GenInfo::GenMin()].value(itemnum);
 
     if (l.length() == 0) {
         return false;
@@ -2451,7 +2452,7 @@ int ItemInfo::Target(int itemnum, Pokemon::gen gen)
     if (!IsBattleItem(itemnum, gen)) {
         return Item::NoTarget;
     }
-    QList<Effect> l = m_RegEffects[gen.num].value(itemnum);
+    QList<Effect> l = m_RegEffects[gen.num-GenInfo::GenMin()].value(itemnum);
 
     int num = l.front().num;
 

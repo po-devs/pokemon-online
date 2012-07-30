@@ -1,5 +1,4 @@
-#items with 1000+ effects are in-battle items like burn heal
-﻿0 
+﻿0 #items with 1000+ effects are in-battle items like burn heal
 3 1-7_2#bright powder
 4 2|1-1_10#choice band
 5 2|1-5_10#choice scarf
@@ -135,7 +134,7 @@
 257 37-16#Dark Jewel
 258 37-8#Steel Jewel
 259 37-0#Normal Jewel
-#1002, 1005 not used
+0 #1002, 1005 not used
 43 1000-5#Antidote
 44 1000-2#Awakening
 45 1001-20#Berry Juice
