@@ -43,8 +43,11 @@ CONFIG(po_clientplugins) {
                src/CSSChanger \
                src/QRCodePlugin \
                src/ClientScripting \
-               src/SettingsPlugin \
-               src/ChessPlugin
+               src/SettingsPlugin
+}
+
+CONFIG(chess) {
+    SUBDIRS += src/ChessPlugin
 }
 
 CONFIG(po_server) {
