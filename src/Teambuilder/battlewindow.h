@@ -64,7 +64,8 @@ public:
 
     enum {
         MoveTab= 0,
-        PokeTab= 1
+        PokeTab= 1,
+        ItemTab = 2
     };
 
     enum {
