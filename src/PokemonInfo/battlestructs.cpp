@@ -835,7 +835,7 @@ DataStream & operator >> (DataStream &in, BattleChoice &po)
         }
         break;
     case ItemType:
-        in >> po.choice.item.item >> po.choice.item.target;
+        in >> po.choice.item.item >> po.choice.item.target >> po.choice.item.attack;
         break;
     }
 
@@ -863,7 +863,7 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
         }
         break;
     case ItemType:
-        out << po.choice.item.item << po.choice.item.target;
+        out << po.choice.item.item << po.choice.item.target << po.choice.item.attack;
         break;
     }
 

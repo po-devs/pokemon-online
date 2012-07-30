@@ -30,6 +30,7 @@ static QScriptValue toBattleChoice(QScriptEngine *e, const BattleChoice& info) {
     } else if (info.itemChoice()) {
         v.setProperty("item", info.item());
         v.setProperty("target", info.itemTarget());
+        v.setProperty("attack", info.itemAttack());
     }
     return v;
 }
@@ -60,6 +61,7 @@ static void fromBattleChoice(const QScriptValue &v, BattleChoice& info) {
     } else if (info.type == ItemType) {
         info.choice.item.item = v.property("item").toInt32();
         info.choice.item.target = v.property("target").toInt32();
+        info.choice.item.attack = v.property("attack").toInt32();
     }
 }
 

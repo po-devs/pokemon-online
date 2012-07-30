@@ -2446,24 +2446,32 @@ bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)
 int ItemInfo::Target(int itemnum, Pokemon::gen gen)
 {
     if (isBerry(itemnum)) {
-        return Move::TeamParty;
+        return Item::TeamPokemon;
     }
     if (!IsBattleItem(itemnum, gen)) {
-        return Move::IndeterminateTarget;
+        return Item::NoTarget;
     }
     QList<Effect> l = m_RegEffects[gen.num].value(itemnum);
 
     int num = l.front().num;
 
+    /* Dire Hit, X Attack, ... */
     if (num >= 2000 && num < 3000) {
-        return Move::PartnerOrUser;
+        return Item::FieldPokemon;
     } else if (num >= 3000) {
-        return Move::OpposingTeam;
+        /* Poke Ball */
+        return Item::Opponent;
     } else {
+        /* Sacred Ash */
         if (num == 1999) {
-            return Move::TeamSide;
+            return Item::Team;
         } else {
-            return Move::TeamParty;
+            /* Ether */
+            if (num == 1004) {
+                return Item::Attack;
+            } else {
+                return Item::TeamPokemon;
+            }
         }
     }
 }

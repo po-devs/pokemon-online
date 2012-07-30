@@ -178,10 +178,13 @@ void BattleWindow::listItems()
 
 void BattleWindow::changeAttackText(int i)
 {
-    if (i == MoveTab)
+    if (i == MoveTab) {
         myattack->setText(tr("&Attack"));
-    else
+    } else if (i == ItemTab)  {
+        myattack->setText(tr("&Use Item"));
+    } else {
         myattack->setText(tr("&Go Back"));
+    }
 }
 
 void BattleWindow::closeEvent(QCloseEvent *)

@@ -1968,6 +1968,16 @@ namespace Item
         DireHit3,
         BerserkGene
     };
+
+    enum Target
+    {
+        Attack = 0,
+        FieldPokemon = 1,
+        TeamPokemon = 2,
+        Team = 3,
+        Opponent = 4,
+        NoTarget = 13
+    };
 }
 
 enum Stat

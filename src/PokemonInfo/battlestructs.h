@@ -237,6 +237,7 @@ enum ChoiceType {
 struct ItemChoice {
     quint16 item;
     qint8 target;
+    qint8 attack;
 };
 
 struct CancelChoice {
@@ -363,6 +364,10 @@ struct BattleChoice {
 
     int itemTarget() const {
         return choice.item.target;
+    }
+
+    int itemAttack() const {
+        return choice.item.attack;
     }
 
     /* The person who's making the choice */
