@@ -151,6 +151,8 @@ protected:
     start(ChooseCancel, int player) end(player)
     start(ChooseShiftToCenter, int player) end(player)
     start(ChooseDraw, int player) end(player)
+    start(UseItem, int player; int item) end(player, item)
+    start(ItemCountChange, int player; int item; int count) end(player, item, count)
 
 #undef start
 #undef end
@@ -268,6 +270,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChooseRearrangeTeam);
     addCallback(ChooseCancel);
     addCallback(ChooseDraw);
+    addCallback(UseItem);
 
 #undef addCallback
 }

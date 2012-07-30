@@ -71,7 +71,9 @@ enum /* class */ BattleEnum
     ChooseRearrangeTeam,
     ChooseCancel,
     ChooseShiftToCenter,
-    ChooseDraw
+    ChooseDraw,
+    UseItem,
+    ItemCountChange
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

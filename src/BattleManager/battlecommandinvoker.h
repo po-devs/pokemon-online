@@ -134,6 +134,8 @@ protected:
     start(ChooseCancel, onChoiceCancelled, int player) end(onChoiceCancelled, player)
     start(ChooseShiftToCenter, onShiftToCenterChosen, int player) end(onShiftToCenterChosen, player)
     start(ChooseDraw, onDrawRequest, int player) end(onDrawRequest, player)
+    start(UseItem, onUseItem, int player, int item) end(onUseItem, player, item)
+    start(ItemCountChange, onItemChangeCount, int player, int item, int count) end (onItemChangeCount, player, item, count)
 
 #undef start
 #undef end
@@ -213,6 +215,8 @@ protected:
     void onChoiceCancelled(int player);
     void onShiftToCenterChosen(int player);
     void onDrawRequest(int player);
+    void onUseItem(int player, int item);
+    void onItemChangeCount(int player, int item, int count);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

@@ -159,6 +159,9 @@ public:
     void setPoke(int index, ShallowBattlePoke *pokemon, bool soft = false);
     void setName(const QString &name);
 
+    void removeItem(int item);
+    void changeItemCount(int item, int count);
+
     void switchPokemons(int index, int prevIndex);
 
     Q_PROPERTY(QString name READ name CONSTANT)

@@ -107,6 +107,7 @@ public:
     void onChoiceCancellation(int player);
     void onReconnect(int player);
     void onDisconnect(int player);
+    void onItemChangeCount(int player, int item, int count);
     void addSpectator(bool add, int id, const QString &);
     void updateTeam(const TeamBattle &b);
 

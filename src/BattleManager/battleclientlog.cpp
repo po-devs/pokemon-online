@@ -586,3 +586,8 @@ void BattleClientLog::onDisconnect(int player)
         printHtml("Disconnect", toBoldColor(tr("%1 got disconnected!").arg(data()->name(spot)), Qt::blue));
     }
 }
+
+void BattleClientLog::onUseItem(int spot, int item)
+{
+    printHtml("UseItem", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), QString("<b>%1</b>").arg(ItemInfo::Name(item))));
+}

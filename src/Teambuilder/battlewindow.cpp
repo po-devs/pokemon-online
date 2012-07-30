@@ -769,6 +769,11 @@ void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
     }
 }
 
+void BattleWindow::onItemChangeCount(int, int, int)
+{
+    listItems();
+}
+
 void BattleWindow::addSpectator(bool add, int id, const QString &name)
 {
     BaseBattleWindow::addSpectator(add,id, name);

@@ -540,6 +540,20 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         }
         break;
     }
+    case BC::UseItem:
+    {
+        quint16 item;
+        in >> item;
+        output<BattleEnum::UseItem>(spot, item);
+        break;
+    }
+    case BC::ItemCountChange:
+    {
+        quint16 item, count;
+        in >> item >> count;
+        output<BattleEnum::ItemCountChange>(spot, item, count);
+        break;
+    }
     default:
         /* TODO: UNKNOWN COMMAND */
         break;

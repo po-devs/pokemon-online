@@ -22,6 +22,8 @@ public:
     void switchPokemons(int slot1, int slot2);
     void setTeam(const TeamBattle *team);
     void setItems(const QHash<quint16, quint16>&items);
+    void removeItem(int item);
+    void changeItemCount(int item, int count);
     void setGen(Pokemon::gen gen);
 protected:
     std::vector< ShallowBattlePoke* > pokemons;

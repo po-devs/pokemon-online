@@ -69,6 +69,7 @@ public:
     void onPrintHtml(const QString &data);
     void onReconnect(int player);
     void onDisconnect(int player);
+    void onUseItem(int spot, int item);
 
     QString nick(int spot);
     QString rnick(int spot);
