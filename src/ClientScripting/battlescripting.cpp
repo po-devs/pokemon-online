@@ -10,7 +10,7 @@
 
 Q_DECLARE_METATYPE(BattleChoice)
 
-static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie";
+static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie" << "item";
 
 static QScriptValue toBattleChoice(QScriptEngine *e, const BattleChoice& info) {
     QScriptValue v = e->newObject();
@@ -27,6 +27,9 @@ static QScriptValue toBattleChoice(QScriptEngine *e, const BattleChoice& info) {
             v2.setProperty(i, int(info.choice.rearrange.pokeIndexes[i]));
         }
         v.setProperty("neworder", v2);
+    } else if (info.itemChoice()) {
+        v.setProperty("item", info.item());
+        v.setProperty("target", info.itemTarget());
     }
     return v;
 }
@@ -54,8 +57,10 @@ static void fromBattleChoice(const QScriptValue &v, BattleChoice& info) {
                 info.choice.rearrange.pokeIndexes[i] = i;
             }
         }
+    } else if (info.type == ItemType) {
+        info.choice.item.item = v.property("item").toInt32();
+        info.choice.item.target = v.property("target").toInt32();
     }
-
 }
 
 #define objectConverter(className) \
