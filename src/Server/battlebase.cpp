@@ -954,7 +954,45 @@ bool BattleBase::validChoice(const BattleChoice &b)
     }
 
     if (b.itemChoice()) {
-        return items(player).contains(b.item());
+        int count = items(player).value(b.item());
+        /* In doubles & triples, check if the user doesn't exhaust the item. For example if you are in triples and you have
+          two potions, you can only use it on two pokemon! */
+        for (int i = 0; i < numberPerSide(); i++) {
+            int s = slot(player,i);
+            if (couldMove[s] && !hasChoice[s] && choice(s).itemChoice() && choice(s).item() == b.item()) {
+                count --;
+            }
+        }
+        if (count < 0) {
+            return false;
+        }
+        if (items(player).contains(b.item())) {
+            int tar = ItemInfo::Target(b.item(), gen());
+            if (tar == Item::TeamPokemon) {
+                if (b.itemTarget() < 0 || b.itemTarget() >= 6 || poke(player, b.itemTarget()).num() == Pokemon::NoPoke) {
+                    return false;
+                }
+            } else if (tar == Item::FieldPokemon) {
+                if (b.itemTarget() >= numberOfSlots() || this->player(b.itemTarget()) != player || koed(b.itemTarget())) {
+                    return false;
+                }
+            } else if (tar == Item::Attack) {
+                if (b.itemTarget() < 0 || b.itemTarget() >= 6 || poke(player, b.itemTarget()).ko()) {
+                    return false;
+                }
+                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(player,b.itemTarget()).move(b.attackSlot()).num() == Move::NoMove) {
+                    return false;
+                }
+            } else if (tar == Item::Opponent) {
+                /* A pokeball can't be thrown if there are two wild pokemon in front of you */
+                if (countAlive(opponent(player)) > 1) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     return false;

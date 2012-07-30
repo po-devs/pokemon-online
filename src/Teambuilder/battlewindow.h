@@ -40,6 +40,16 @@ public:
 
     bool sent;
 
+    int phase;
+
+    enum Phase {
+        Regular,
+        ItemPokeSelection,
+        ItemAttackSelection,
+        ItemFieldPokeSelection
+    };
+
+
     QList<BattleStats> mystats;
 
     int lastMove[6];
@@ -65,7 +75,8 @@ public:
     enum {
         MoveTab= 0,
         PokeTab= 1,
-        ItemTab = 2
+        SpectatorTab=2,
+        ItemTab = 3
     };
 
     enum {
@@ -112,6 +123,7 @@ public:
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
+    void itemActivated(QListWidgetItem*);
     void sendMessage();
     void offerTie();
     void attackButton();
@@ -147,10 +159,13 @@ protected:
     void openRearrangeWindow(const ShallowShownTeam &t);
     void listItems();
 
+    void updateAttacks(AttackZone *zone, PokeProxy *p);
+
     QStackedWidget *mystack;
     QTabWidget *mytab;
     QListWidget *myspecs, *myitems;
-    AttackZone *myazones[3];
+    AttackZone *myazones[4]; /* Zones 0 to 2 are for the pokemon on the field, zone 4 is for special use when you want to put
+                               anything in the zone */
     StruggleZone *szone;
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;

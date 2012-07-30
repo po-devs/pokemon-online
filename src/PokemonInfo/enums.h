@@ -1971,11 +1971,11 @@ namespace Item
 
     enum Target
     {
-        Attack = 0,
-        FieldPokemon = 1,
-        TeamPokemon = 2,
-        Team = 3,
-        Opponent = 4,
+        Attack = 0, /* Targets an attack (Ether, Max Ether) */
+        FieldPokemon = 1, /* Targets a pokemon on the field (X Attack, ...) */
+        TeamPokemon = 2, /* Targets a pokemon in your team (potion, berries, ...) */
+        Team = 3, /* Sacred Ash! */
+        Opponent = 4, /* Pokeballs */
         NoTarget = 13
     };
 }
