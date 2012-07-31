@@ -1,6 +1,6 @@
 ﻿0 
-1 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
-2 %s surrounded itself with a veil of water!|Aquaring restored %s's HP.
+1 %f had its energy drained!|%s devoured %f's dreams!|%s sucked up the Liquid Ooze!
+2 %s surrounded itself with a veil of water!|Aqua ring restored %s's HP.
 3 A soothing aroma wafted through the area!|A bell chimed!
 7 %q attacked!
 8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
@@ -17,7 +17,7 @@
 20 %s transformed into the %t type!
 23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
 25 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
-26 %s took %f down with it!|%s is trying to take its foe with it!
+26 %s took the attacker down with it!|%s is trying to take the foe down with it!
 27 %s protected itself!
 28 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
 29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
@@ -31,7 +31,7 @@
 47 %s lost its focus!|%s is tightening its focus!
 48 %s became the center of attention!
 51 %f's %a was suppressed!
-53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
+53 Gravity intensified!|Gravity returned to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
 54 %f's %m lost all its PP because of %s' Grudge!
 55 %s swapped its boosts with %f!
 57 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned harsh!
@@ -65,7 +65,7 @@
 96 %s's present healed %f some HP!
 97 %s copied %f's stat changes!
 98 %s moved its status onto %f!
-102 %s's rage builds up!
+102 %s's rage is building!
 103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
 104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!
 105 %s recycled %i!
@@ -110,11 +110,11 @@
 169 %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
 170 %ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
 171 %s is being sent back!
-172 %s copied %f's types!
-174 %s made %f float in the air!|%s is no longer under the effect of telekinesis!
-175 %s knocked %f on the ground!
+172 %s type changed to match %f's types!
+174 %f was hurled into the air!|%s was freed from the telekinesis!
+175 %s Fell straight down!
 178 %s prepares its %m!|%s and %f attack together!|%ts's team is standing on a burning field!|%s takes damage from the fire
 179 %s prepares its %m!|%s and %f attack together!|%ts's team is floundering in a swamp!
 180 %s prepares its %m!|%s and %f attack together!|%ts's team is under an amplifying rainbow!
-190 %s exchanged its spot with %f!
+190 %f took the kind offer!
 191 #
