@@ -146,11 +146,14 @@ void BattleRBY::analyzeChoices()
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
     std::vector<int> switches;
+    std::vector<int> items;
 
     std::vector<int> playersByOrder = sortedBySpeed();
 
     foreach(int i, playersByOrder) {
-        if (choice(i).switchChoice())
+        if (choice(i).itemChoice()) {
+            items.push_back(i);
+        } else if (choice(i).switchChoice())
             switches.push_back(i);
         else if (choice(i).attackingChoice()){
             priorities[tmove(i).priority].push_back(i);
@@ -158,6 +161,13 @@ void BattleRBY::analyzeChoices()
             /* Shifting choice */
             priorities[0].push_back(i);
         }
+    }
+
+    foreach(int player, items) {
+        analyzeChoice(player);
+
+        personalEndTurn(player);
+        notify(All, BlankMessage, Player1);
     }
 
     foreach(int player, switches) {
