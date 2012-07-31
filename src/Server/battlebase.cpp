@@ -981,7 +981,7 @@ bool BattleBase::validChoice(const BattleChoice &b)
                 if (this->player(itar) != player || slotNum(itar) < 0 || slotNum(itar) >= 6 || poke(itar).ko()) {
                     return false;
                 }
-                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(itar).move(b.attackSlot()).num() == Move::NoMove) {
+                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(itar).move(b.itemAttack()).num() == Move::NoMove) {
                     return false;
                 }
             } else if (tar == Item::Opponent) {
