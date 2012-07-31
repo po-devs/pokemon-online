@@ -781,6 +781,81 @@ struct IMBerserkGene : public IM {
     }
 };
 
+struct IMStatusHeal : public IM {
+    IMStatusHeal() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int p, int s, BS &b) {
+        QString sarg = poke(b,p).value("ItemArg").toString();
+        int arg = sarg.section("_", 0, 0).toInt();
+        bool permanent = sarg.section("_", 1) == "1";
+
+        if (permanent) {
+            turn(b,p)["PermanentItem"] = true;
+        }
+
+        if (b.koed(s))
+            return;
+
+        int status = b.poke(s).status();
+        bool conf = b.isConfused(s);
+
+        /* Confusion berry */
+        if (arg == -1) {
+            if (conf) {
+                b.healConfused(s);
+                b.sendBerryMessage(1, s, 0);
+            }
+            return;
+        }
+
+        /* Lum berry */
+        if (conf && arg == 0) {
+            b.healConfused(s);
+            goto end;
+        }
+
+        if (status == Pokemon::Fine) {
+            return;
+        }
+
+        /* LumBerry */
+        if (arg == 0) {
+            if (status == Pokemon::Fine)
+                return;
+            goto end;
+        } else { /* Other Status Berry */
+            if (status == arg) {
+                goto end;
+            }
+        }
+
+        return;
+
+        end:
+        b.healStatus(s, status);
+        b.sendBerryMessage(1, s, arg + 1);
+    }
+};
+
+struct IMPotion : public IM {
+    IMPotion() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int p, int s, BS &b) {
+        b.sendBerryMessage(3,s,0);
+        int arg = poke(b,p).value("ItemArg").toInt();
+
+        if (arg == 0) {
+            arg = b.poke(s).totalLifePoints();
+        }
+
+        b.healLife(s, arg);
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -817,6 +892,9 @@ void ItemEffect::init()
     REGISTER_ITEM(38, RedCard);
     REGISTER_ITEM(39, EscapeButton);
     REGISTER_ITEM(40, BerserkGene);
+    /* Trainer items */
+    REGISTER_ITEM(1000, StatusHeal);
+    REGISTER_ITEM(1001, Potion);
 
     initBerries();
 }

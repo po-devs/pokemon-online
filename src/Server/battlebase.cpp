@@ -968,19 +968,20 @@ bool BattleBase::validChoice(const BattleChoice &b)
         }
         if (items(player).contains(b.item())) {
             int tar = ItemInfo::Target(b.item(), gen());
+            int itar = b.itemTarget();
             if (tar == Item::TeamPokemon) {
-                if (b.itemTarget() < 0 || b.itemTarget() >= 6 || poke(player, b.itemTarget()).num() == Pokemon::NoPoke) {
+                if (this->player(itar) != player || slotNum(itar) < 0 || slotNum(itar) >= 6 || poke(itar).num() == Pokemon::NoPoke) {
                     return false;
                 }
             } else if (tar == Item::FieldPokemon) {
-                if (b.itemTarget() >= numberOfSlots() || this->player(b.itemTarget()) != player || koed(b.itemTarget())) {
+                if (itar < 0 || itar >= numberOfSlots() || this->player(itar) != player || koed(itar)) {
                     return false;
                 }
             } else if (tar == Item::Attack) {
-                if (b.itemTarget() < 0 || b.itemTarget() >= 6 || poke(player, b.itemTarget()).ko()) {
+                if (this->player(itar) != player || slotNum(itar) < 0 || slotNum(itar) >= 6 || poke(itar).ko()) {
                     return false;
                 }
-                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(player,b.itemTarget()).move(b.attackSlot()).num() == Move::NoMove) {
+                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(itar).move(b.attackSlot()).num() == Move::NoMove) {
                     return false;
                 }
             } else if (tar == Item::Opponent) {
@@ -998,9 +999,14 @@ bool BattleBase::validChoice(const BattleChoice &b)
     return false;
 }
 
-bool BattleBase::isOut(int, int poke)
+bool BattleBase::isOut(int, int poke) const
 {
-    return poke < numberOfSlots()/2;
+    return poke < numberPerSide();
+}
+
+bool BattleBase::isOut(int poke) const
+{
+    return slotNum(poke) < numberPerSide();
 }
 
 void BattleBase::storeChoice(const BattleChoice &b)
@@ -1463,7 +1469,11 @@ bool BattleBase::isMovePossible(int player, int slot)
 
 int BattleBase::PP(int player, int slot) const
 {
-    return fpoke(player).pps[slot];
+    if (isOut(player)) {
+        return fpoke(player).pps[slot];
+    } else {
+        return poke(player).move(slot).PP();
+    }
 }
 
 
@@ -1478,7 +1488,11 @@ bool BattleBase::hasMove(int player, int move) {
 
 int BattleBase::move(int player, int slot)
 {
-    return fpoke(player).moves[slot];
+    if (isOut(player)) {
+        return fpoke(player).moves[slot];
+    } else {
+        return poke(player).move(slot).num();
+    }
 }
 
 
@@ -1530,7 +1544,7 @@ void BattleBase::changeHp(int player, int newHp)
     poke(player).lifePoints() = newHp;
 
     notify(this->player(player), ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent())); /* percentage calculus */
+    notify(AllButPlayer, ChangeHp, this->player(player), quint16(poke(player).lifePercent())); /* percentage calculus */
 }
 
 void BattleBase::inflictSubDamage(int player, int damage, int source)
@@ -1756,7 +1770,7 @@ bool BattleBase::testStatus(int player)
 void BattleBase::healStatus(int player, int status)
 {
     if (poke(player).status() == status || status == 0) {
-        changeStatus(player, Pokemon::Fine);
+        changeStatus(this->player(player), slotNum(player), Pokemon::Fine);
     }
 }
 
@@ -1799,9 +1813,11 @@ void BattleBase::losePP(int player, int move, int loss)
 
 void BattleBase::changePP(int player, int move, int PP)
 {
-    fpoke(player).pps[move] = PP;
+    if (isOut(player)) {
+        fpoke(player).pps[move] = PP;
+    }
     poke(player).move(move).PP() = PP;
-    notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
+    notify(this->player(player), ChangePP, player, quint8(move), this->PP(player, move));
 }
 
 bool BattleBase::testFail(int player)

@@ -394,7 +394,7 @@ void BattleWindow::switchClicked(int zone)
         switchToPokeZone();
     } else {
         if (info().phase == BattleInfo::ItemPokeSelection) {
-            info().choice[snum].choice.item.target = zone;
+            info().choice[snum].choice.item.target = data().spot(info().myself,zone);
             int tar = ItemInfo::Target(info().choice[snum].item(), gen());
             if (tar == Item::TeamPokemon) {
                 info().done[snum] = true;

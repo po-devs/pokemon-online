@@ -86,7 +86,8 @@ public:
     QHash<quint16, quint16> &items(int player);
     const QHash<quint16, quint16> &items(int player) const;
     bool koed(int player) const;
-    bool isOut(int player, int poke);
+    bool isOut(int player, int poke) const;
+    bool isOut(int poke) const;
     bool hasSubstitute(int player);
     int PP(int player, int slot) const;
     bool hasMove(int player, int move);

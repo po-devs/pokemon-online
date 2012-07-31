@@ -186,7 +186,7 @@ struct MMBugBite : public MM
             return;
 
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
-        b.devourBerry(s, item, t);
+        b.devourBerry(s, item, s);
         b.disposeItem(t);
     }
 };
@@ -1830,7 +1830,7 @@ struct MMFling : public MM
             }
         } else {
             b.sendMoveMessage(16,0,t,type(b,s),t,item);
-            b.devourBerry(t, item, s);
+            b.devourBerry(s, item, s);
         }
     }
 };

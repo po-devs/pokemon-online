@@ -12,18 +12,18 @@ struct BMStatusBerry : public BM
         functions["AfterStatusChange"] = &asc;
     }
 
-    static void asc(int s, int, BS &b) {
+    static void asc(int p, int s, BS &b) {
         if (b.koed(s))
             return;
 
         int status = b.poke(s).status();
         bool conf = b.isConfused(s);
-        int arg = poke(b,s)["ItemArg"].toInt();
+        int arg = poke(b,p)["ItemArg"].toInt();
 
         /* Confusion berry */
         if (arg == -1) {
             if (conf) {
-                b.eatBerry(s);
+                b.eatBerry(s, p==s);
                 b.healConfused(s);
                 b.sendBerryMessage(1, s, 0);
             }
@@ -40,7 +40,7 @@ struct BMStatusBerry : public BM
             return;
         }
 
-        /* LumBerry */
+        /* Lum berry */
         if (arg == 0) {
             if (status == Pokemon::Fine)
                 return;
@@ -54,7 +54,7 @@ struct BMStatusBerry : public BM
         return;
 
         end:
-        b.eatBerry(s);
+        b.eatBerry(s, p==s);
         b.healStatus(s, status);
         b.sendBerryMessage(1, s, arg + 1);
     }
@@ -67,7 +67,7 @@ struct BMLeppa : public BM
         functions["AfterTargetList"] = &appl;
     }
 
-    static void appl(int s, int, BS &b) {
+    static void appl(int p, int s, BS &b) {
         if (b.koed(s))
             return;
         int minmove = 0;
@@ -94,8 +94,8 @@ struct BMLeppa : public BM
         }
             
         
-        if (init && (zeroPP || turn(b,s).value("BugBiter").toBool())) {
-            b.eatBerry(s);
+        if (init && (zeroPP || turn(b,p).value("BugBiter").toBool())) {
+            b.eatBerry(s==p);
             b.sendBerryMessage(2,s,0,0,0,b.move(s,minmove));
 
             b.gainPP(s,minmove,b.gen() <= 2 ? 5 : 10);
@@ -105,9 +105,9 @@ struct BMLeppa : public BM
 
 struct BMPinch : public BM
 {
-    static bool testpinch(int s, int , BS &b, int ratio) {
-        if (turn(b,s).value("BugBiter").toBool()) {
-            b.eatBerry(s);
+    static bool testpinch(int p, int s, BS &b, int ratio) {
+        if (turn(b,p).value("BugBiter").toBool()) {
+            b.eatBerry(s,s==p);
             return true;
         }
         //Gluttony
@@ -117,7 +117,7 @@ struct BMPinch : public BM
         bool ret = b.poke(s).lifePoints()*ratio <= b.poke(s).totalLifePoints() && !b.koed(s);
 
         if (ret)
-            b.eatBerry(s);
+            b.eatBerry(s,s==p);
 
         return ret;
     }
@@ -131,22 +131,22 @@ struct BMPinchHP : public BMPinch
         functions["TestPinch"] = &tp;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void ahpc(int p, int s, BS &b) {
         /* Those berries don't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
         if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, s, b);
+        tp(p, s, b);
     }
 
-    static void tp(int s, int, BS &b) {
-        if (!testpinch(s, s, b,2))
+    static void tp(int p, int s, BS &b) {
+        if (!testpinch(p, s, b,2))
             return;
 
         b.sendBerryMessage(3,s,0);
-        int arg = poke(b,s)["ItemArg"].toInt();
+        int arg = poke(b,p)["ItemArg"].toInt();
         if (arg == 10) /* oran berry */
             b.healLife(s, 10);
         else /* Sitrus Berry */
@@ -166,6 +166,9 @@ struct BMAntiSuperEffective : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
+        if (!b.attacking()) {
+            return;
+        }
         if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 4 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
@@ -182,6 +185,9 @@ struct BMAntiNormal : public BM
     }
 
     static void m3b(int s, int t, BS &b) {
+        if (!b.attacking()) {
+            return;
+        }
         /* We never want to activate this berry if this is consumed by Bug Bite */
         if (b.gen() >= 4 && !turn(b,s).value("BugBiter").toBool()) {
             /* Normal moves */
@@ -202,6 +208,9 @@ struct BMSuperHP : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (!b.attacking()) {
+            return;
+        }
         if (b.koed(s))
             return;
         if (fturn(b,t).typeMod <= 4)
@@ -222,27 +231,30 @@ struct BMPinchStat : public BMPinch
         functions["TestPinch"] = &tp;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void ahpc(int p, int s, BS &b) {
         /* Those berries don't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+        if (b.attacked() == p && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, s, b);
+        tp(p, s, b);
     }
 
-    static void tp(int s, int, BS &b) {
+    static void tp(int p, int s, BS &b) {
         /* The berry may change after the call to test pinch (eaten),
            so saved before. */
         int berry = b.poke(s).item();
 
-        if (!testpinch(s, s, b,4))
+        if (!testpinch(p, s, b, 4))
             return;
 
-        int arg = poke(b,s)["ItemArg"].toInt();
-        b.sendBerryMessage(7,s,0,s,berry, arg);
-        b.inflictStatMod(s, arg, 1, s, false);
+        int arg = poke(b,p)["ItemArg"].toInt();
+
+        if (b.isOut(s)) {
+            b.sendBerryMessage(7,s,0,s, berry, arg);
+            b.inflictStatMod(s, arg, 1, s, false);
+        }
     }
 };
 
@@ -254,27 +266,29 @@ struct BMCriticalPinch : public BMPinch
         functions["TestPinch"] = &tp;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void ahpc(int p, int s, BS &b) {
         /* Those berries don't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+        if (b.attacked() == p && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, s, b);
+        tp(p, s, b);
     }
 
-    static void tp(int s, int, BS &b) {
-        if (!testpinch(s, s, b,4))
+    static void tp(int p, int s, BS &b) {
+        if (!testpinch(p, s, b,4))
             return;
 
-        uas(s,s,b);
+        uas(p,s,b);
     }
 
     /* ripped off from focus energy */
-    static void uas(int s, int, BS &b) {
-        addFunction(poke(b,s), "TurnSettings", "FocusEnergy", &ts);
-        b.sendMoveMessage(46,0,s);
+    static void uas(int, int s, BS &b) {
+        if (b.isOut(s)) {
+            addFunction(poke(b,s), "TurnSettings", "FocusEnergy", &ts);
+            b.sendMoveMessage(46,0,s);
+        }
     }
     static void ts(int s, int, BS &b) {
         addFunction(turn(b,s), "BeforeTargetList", "FocusEnergy", &btl);
@@ -294,17 +308,21 @@ struct BMStarf : public BMPinch
         functions["TestPinch"] = &tp;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void ahpc(int p, int s, BS &b) {
         /* Those berries don't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+        if (b.attacked() == p && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, s, b);
+        tp(p, s, b);
     }
 
-    static void tp(int s, int, BS &b) {
+    static void tp(int p, int s, BS &b) {
+        if (!b.isOut(s)) {
+            return;
+        }
+
         int berry = b.poke(s).item();
 
         QVector<int> stats;
@@ -316,7 +334,7 @@ struct BMStarf : public BMPinch
         if (stats.empty())
             return;
 
-        if (!testpinch(s, s, b, 4))
+        if (!testpinch(p, s, b, 4))
             return;
 
         int stat = stats[b.randint(stats.size())];
@@ -332,19 +350,24 @@ struct BMBerryLock : public BMPinch
         functions["TestPinch"] = &tp;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void ahpc(int p, int s, BS &b) {
         /* Those berries don't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
-        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+        if (b.attacked() == p && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, s, b);
+        tp(p, s, b);
     }
 
-    static void tp(int s, int, BS &b) {
-        if (!testpinch(s, s, b,4))
+    static void tp(int p, int s, BS &b) {
+        if (!b.isOut(s)) {
             return;
+        }
+
+        if (!testpinch(p, s, b,4)) {
+            return;
+        }
 
         poke(b,s)["BerryLock"] = true;
         b.sendBerryMessage(10,s,0);
@@ -357,9 +380,13 @@ struct BMCustap : public BMPinch
         functions["TurnOrder"] = &to;
     }
 
-    static void to (int s, int, BS &b) {
-        if (!testpinch(s, s, b,4))
+    static void to (int p, int s, BS &b) {
+        if (!b.isOut(p)) {
             return;
+        }
+        if (!testpinch(p, s, b, 4)) {
+            return;
+        }
 
         b.sendBerryMessage(11,s,0);
         turn(b,s)["TurnOrder"] = 3;
@@ -373,6 +400,9 @@ struct BMBerryRecoil : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (!b.attacking()) {
+            return;
+        }
         //Magic Guard
         if (tmove(b,t).category != poke(b,s)["ItemArg"].toInt() || b.koed(t) || b.hasWorkingAbility(t, Ability::MagicGuard)) {
             return;

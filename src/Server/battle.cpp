@@ -674,6 +674,7 @@ void BattleSituation::analyzeChoice(int slot)
             shiftSpots(slot, target);
         }
     } else if (choice(slot).itemChoice()) {
+        useItem(slot, choice(slot).item(), choice(slot).itemTarget(), choice(slot).itemAttack());
     } else {
         /* FATAL FATAL */
     }
@@ -732,14 +733,17 @@ void BattleSituation::analyzeChoices()
     setupChoices();
 
     std::map<int, std::vector<int>, std::greater<int> > priorities;
+    std::vector<int> items;
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
 
     foreach(int i, playersByOrder) {
-        if (choice(i).switchChoice())
+        if (choice(i).itemChoice()) {
+            items.push_back(i);
+        } else if (choice(i).switchChoice()) {
             switches.push_back(i);
-        else if (choice(i).attackingChoice()){
+        } else if (choice(i).attackingChoice()){
             if (gen() >= 5) {
                 callaeffects(i, i, "PriorityChoice");
             }
@@ -748,6 +752,10 @@ void BattleSituation::analyzeChoices()
             /* Shifting choice */
             priorities[0].push_back(i);
         }
+    }
+
+    foreach(int player, items) {
+        analyzeChoice(player);
     }
 
     foreach(int player, switches) {
@@ -1800,6 +1808,41 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+}
+
+void BattleSituation::useItem(int player, int item, int target, int attack)
+{
+    targetList.clear();
+
+    int tar = ItemInfo::Target(target, gen());
+    int p = this->player(player);
+
+    switch (tar) {
+    case Item::Team: case Item::NoTarget: target = p; break;
+    case Item::Opponent: target = randomValidOpponent(player);
+    default: break;
+    }
+
+    notify(All, UseItem, player, quint16(item));
+
+    if (ItemInfo::isBerry(item)) {
+        devourBerry(player, item, target);
+    } else {
+        turnMemory(player)["ItemAttackSlot"] = attack;
+
+        QVariant tempItemStorage = pokeMemory(player).take("ItemArg");
+
+        ItemEffect::setup(item, player, *this);
+        ItemEffect::activate("TrainerItem", item, player, target, *this);
+
+        /* Restoring initial conditions */
+        pokeMemory(player)["ItemArg"] = tempItemStorage;
+    }
+
+    if (!turnMemory(player).value("PermanentItem").toBool()) {
+        items(p)[item] -= 1;
+        notify(p, ItemCountChange, p, quint16(item), items(p)[item]);
+    }
 }
 
 void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
@@ -2916,15 +2959,14 @@ void BattleSituation::eatBerry(int player, bool show) {
     }
 }
 
-void BattleSituation::devourBerry(int s, int berry, int t)
+void BattleSituation::devourBerry(int p, int berry, int s)
 {
     int sitem = poke(s).item();
     poke(s).item() =0;
 
     /* Setting up the conditions so berries work properly */
-    turnMemory(s)["BugBiter"] = true; // for testPinch of pinch berries to return true
-    QVariant tempItemStorage = pokeMemory(s)["ItemArg"];
-    pokeMemory(s).remove("ItemArg");
+    turnMemory(p)["BugBiter"] = true; // for testPinch of pinch berries to return true
+    QVariant tempItemStorage = pokeMemory(p).take("ItemArg");
     acqItem(s, berry);
 
     /* Finding the function to call :P */
@@ -2940,13 +2982,13 @@ void BattleSituation::devourBerry(int s, int berry, int t)
                 break;
             }
 
-            f(s, t, *this);
+            f(p, s, *this);
         }
     }
 
     /* Restoring initial conditions */
-    pokeMemory(s)["ItemArg"] = tempItemStorage;
-    turnMemory(s).remove("BugBiter");
+    pokeMemory(p)["ItemArg"] = tempItemStorage;
+    turnMemory(p).remove("BugBiter");
     poke(s).item() = sitem;
 }
 
@@ -2954,14 +2996,17 @@ void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
         loseItem(player, false);
     poke(player).item() = item;
-    ItemEffect::setup(poke(player).item(),player,*this);
-    callieffects(player, player, "UponSetup");
+
+    if (slotNum(player) < numberPerSide()) {
+        ItemEffect::setup(poke(player).item(),player,*this);
+        callieffects(player, player, "UponSetup");
+    }
 }
 
 void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
-    if (real && hasWorkingAbility(player, Ability::Unburden)) {
+    if (real && slotNum(player) < numberPerSide() && hasWorkingAbility(player, Ability::Unburden)) {
         pokeMemory(player)["Unburdened"] = true;
     }
 }

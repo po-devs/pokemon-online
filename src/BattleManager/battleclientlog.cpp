@@ -589,5 +589,5 @@ void BattleClientLog::onDisconnect(int player)
 
 void BattleClientLog::onUseItem(int spot, int item)
 {
-    printHtml("UseItem", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), QString("<b>%1</b>").arg(ItemInfo::Name(item))));
+    printHtml("UseItem", tr("%1 used %2!").arg(escapeHtml(tu(data()->name(spot))), QString("<b>%1</b>").arg(ItemInfo::Name(item))));
 }

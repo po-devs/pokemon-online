@@ -46,6 +46,7 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true);
+    void useItem(int player, int item, int target, int attack);
     void makeTargetList(const QVector<int> &base);
     /* Does not do extra operations,just a setter */
     void changeHp(int player, int newHp);
