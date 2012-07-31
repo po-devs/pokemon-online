@@ -30,7 +30,7 @@
 46 %s is getting pumped!
 47 %s lost its focus!|%s is tightening its focus!
 48 %s became the center of attention!
-51 %f's %a is nullified!
+51 %f's %a was suppressed!
 53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
 54 %f's %m lost all its PP because of %s' Grudge!
 55 %s swapped its boosts with %f!
@@ -48,7 +48,7 @@
 72 It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
 73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 74 %s took aim at %f!
-75 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
+75 %ts's team is protected from critical hits!|%ts's Lucky Chant wore off!
 76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
 77 %s cleared the field around %tf's team!|%s cleared the field!
 78 Magnitude %d!
