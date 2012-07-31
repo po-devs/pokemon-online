@@ -859,6 +859,47 @@ struct IMPotion : public IM {
     }
 };
 
+struct IMEther : public IM {
+    IMEther() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int p, int s, BS &b) {
+        int attack = turn(b,p).value("ItemAttackSlot").toInt();
+        int pp = poke(b,p).value("ItemArg").toInt();
+
+        if (pp == 0) {
+            pp = 99;
+        }
+
+        b.sendBerryMessage(2,s,0,0,0,b.move(s,attack));
+
+        b.gainPP(s, attack, pp);
+    }
+};
+
+struct IMElixir : public IM {
+    IMElixir() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int p, int s, BS &b) {
+        int pp = poke(b,p).value("ItemArg").toInt();
+
+        if (pp == 0) {
+            pp = 99;
+        }
+
+        b.sendBerryMessage(2,s,1);
+
+        for (int i = 0; i < 4; i++) {
+            if (b.move(s,i) != Move::NoMove) {
+                b.gainPP(s, i, pp);
+            }
+        }
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -898,6 +939,7 @@ void ItemEffect::init()
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);
-
+    REGISTER_ITEM(1003, Elixir);
+    REGISTER_ITEM(1004, Ether);
     initBerries();
 }

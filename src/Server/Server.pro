@@ -109,7 +109,8 @@ HEADERS += player.h \
     rbymoves.h \
     mechanicsbase.h \
     modswindow.h \
-    relaymanager.h
+    relaymanager.h \
+    ../PokemonInfo/enums.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
