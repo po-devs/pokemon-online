@@ -2070,7 +2070,7 @@ struct MMNightMare : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && b.poke(s).status() == Pokemon::Asleep && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
-            b.sendMoveMessage(92,0,s,Pokemon::Ghost);
+            b.sendMoveMessage(92,1,s,Pokemon::Ghost);
             b.inflictPercentDamage(s, 25, s, false);
         }
     }
