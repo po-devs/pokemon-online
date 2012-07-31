@@ -341,6 +341,10 @@ void BattleClientLog::onNoTarget(int)
 
 void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int berry, int other)
 {
+    /* Item like Potion used on a pokemon we haven't seen */
+    if (data()->poke(foe).num() == Pokemon::NoPoke || data()->poke(spot).num() == Pokemon::NoPoke) {
+        return;
+    }
     QString mess = ItemInfo::Message(item, part);
     mess.replace("%st", StatInfo::Stat(other, data()->gen()));
     mess.replace("%s", nick(spot));

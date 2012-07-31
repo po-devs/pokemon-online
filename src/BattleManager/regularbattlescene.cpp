@@ -310,6 +310,9 @@ void RegularBattleScene::onPokeballStatusChanged(int player, int poke, int)
 
 void RegularBattleScene::onHpChange(int spot, int)
 {
+    if (!data()->isOut(spot)) {
+        return;
+    }
     info.animatedSpot = spot;
     if (isPlayer(spot) && info.percentage[spot]) {
         info.animatedValue = gui.bars[spot]->value() * data()->poke(spot).totalLife() / 100;

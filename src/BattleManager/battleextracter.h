@@ -271,6 +271,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChooseCancel);
     addCallback(ChooseDraw);
     addCallback(UseItem);
+    addCallback(ItemCountChange);
 
 #undef addCallback
 }

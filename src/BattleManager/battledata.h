@@ -121,6 +121,8 @@ public:
     int opponent(int player) const { return (player+1)%2;}
     QString name(int player) const { return team(this->player(player)).name();}
     int slotNum(int player) const { return player/2;}
+    bool isOut(int spot) const { return spot < numberOfSlots();}
+    bool areAdjacent (int poke1, int poke2) const { return abs(slotNum(poke1)-slotNum(poke2)) <= 1;}
     int spot(int player, int slot=0) {return player+2*slot;}
     int spotFromId(int id) const { return conf->spot(id);}
     int clauses() const {return conf->clauses;}

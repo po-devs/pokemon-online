@@ -37,7 +37,9 @@ public:
 
     void onKo(int spot)
     {
-        tempPoke(spot).changeStatus(Pokemon::Koed);
+        if (isOut(spot)) {
+            tempPoke(spot).changeStatus(Pokemon::Koed);
+        }
         if (isPlayer(spot)) {
             poke(spot).changeStatus(Pokemon::Koed);
         }
@@ -45,7 +47,9 @@ public:
 
     void onHpChange(int spot, int newHp)
     {
-        tempPoke(spot).setLife(newHp);
+        if (isOut(spot)) {
+            tempPoke(spot).setLife(newHp);
+        }
         if (isPlayer(spot)) {
             poke(spot).setLife(newHp);
         }
@@ -103,10 +107,6 @@ public:
         team(player).setTimeLeft(time,false);
     }
 
-    bool areAdjacent (int poke1, int poke2) const {
-        return abs(slotNum(poke1)-slotNum(poke2)) <= 1;
-    }
-
     void onTeamOrderChosen(int player, const RearrangeChoice &order) {
         if (isPlayer(player)) {
             conf->teams[player]->setIndexes(order.pokeIndexes);
@@ -116,7 +116,9 @@ public:
 
     void onPPChange(int spot, int move, int PP) {
         poke(spot).move(move)->changePP(PP);
-        tempPoke(spot).move(move)->changePP(PP);
+        if (isOut(spot)) {
+            tempPoke(spot).move(move)->changePP(PP);
+        }
     }
 
     void onTempPPChange(int spot, int move, int PP) {
