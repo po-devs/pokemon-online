@@ -160,14 +160,14 @@ void BattleClientLog::onHpChange(int spot, int newHp)
 
 void BattleClientLog::onHitCount(int, int count)
 {
-    printLine("Hit", tr("Hit %1 times!").arg(count));
+    printLine("Hit", tr("Hit %1 time(s)!").arg(count));
 }
 
-void BattleClientLog::onEffectiveness(int, int effectiveness)
+void BattleClientLog::onEffectiveness(int spot, int effectiveness)
 {
     switch (effectiveness) {
     case 0:
-        printLine("Effective", tr("It had no effect!"));
+        printLine("Effective", tr("It had no effect on %1!").arg(nick(spot)));
         break;
     case 1:
     case 2:
@@ -245,7 +245,7 @@ void BattleClientLog::onStatusNotification(int spot, int status)
         printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Paralysed)));
         break;
     case Pokemon::Asleep:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is fast asleep!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Asleep)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is fast asleep.").arg(nick(spot)))), theme()->StatusColor(Pokemon::Asleep)));
         break;
     case Pokemon::Frozen:
         printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Frozen)));
@@ -261,10 +261,10 @@ void BattleClientLog::onStatusDamage(int spot, int status)
         printHtml("StatusMessage", toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), theme()->TypeColor(Type::Ghost)));
         break;
     case Pokemon::Burnt:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is hurt by its burn!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Burnt)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by its burn!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Burnt)));
         break;
     case Pokemon::Poisoned:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is hurt by poison!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Poisoned)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by poison!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Poisoned)));
     default:
         break;
     }
@@ -274,7 +274,7 @@ void BattleClientLog::onStatusOver(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 snapped out its confusion!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 snapped out its confusion.").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
         break;
     case Pokemon::Asleep:
         printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
@@ -360,12 +360,12 @@ void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int b
 
 void BattleClientLog::onFlinch(int spot)
 {
-    printLine("Flinch", tu(tr("%1 flinched!").arg(nick(spot))));
+    printLine("Flinch", tu(tr("%1 flinched and couldn't move!").arg(nick(spot))));
 }
 
 void BattleClientLog::onRecoil(int spot)
 {
-    printLine("Recoil", tu(tr("%1 is hit with recoil!").arg(nick(spot))));
+    printLine("Recoil", tu(tr("%1 is damaged by recoil!").arg(nick(spot))));
 }
 
 void BattleClientLog::onDrained(int spot)
@@ -385,9 +385,9 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
     };
 
     static const QString weatherRegularMessage[4] = {
-        tr("A hailstorm brewed!"),
+        tr("It started to hail!"),
         tr("It started to rain!"),
-        tr("A sandstorm brewed!"),
+        tr("A sandstorm kicked up!"),
         tr("The sunlight turned harsh!")
     };
 
@@ -403,10 +403,10 @@ void BattleClientLog::onContinueWeather(int weather)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
-    case Weather::Hail: printHtml("Weather", toColor(tr("Hail continues to fall!"),c)); break;
-    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm rages!"),c)); break;
-    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight is strong!"),c)); break;
-    case Weather::Rain: printHtml("Weather", toColor(tr("Rain continues to fall!"),c)); break;
+    case Weather::Hail: printHtml("Weather", toColor(tr("The hail crashes down."),c)); break;
+    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm rages."),c)); break;
+    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight is strong."),c)); break;
+    case Weather::Rain: printHtml("Weather", toColor(tr("Rain continues to fall."),c)); break;
     }
 }
 
@@ -415,10 +415,10 @@ void BattleClientLog::onEndWeather(int weather)
     QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
-    case Weather::Hail: printHtml("Weather", toColor(tr("The hail subsided!"),c)); break;
-    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm subsided!"),c)); break;
-    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight faded!"),c)); break;
-    case Weather::Rain: printHtml("Weather", toColor(tr("The rain stopped!"),c)); break;
+    case Weather::Hail: printHtml("Weather", toColor(tr("The hail stopped."),c)); break;
+    case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm subsided."),c)); break;
+    case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight faded."),c)); break;
+    case Weather::Rain: printHtml("Weather", toColor(tr("The rain stopped."),c)); break;
     }
 }
 
@@ -526,7 +526,7 @@ void BattleClientLog::onTierNotification(const QString &tier)
 void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent)
 {
     if (data()->poke(data()->spot(player, spot1)).status() == Pokemon::Koed) {
-        printLine("ShiftSpots", tr("%1 shifted spots to the middle!").arg(tu(nick(data()->spot(player, spot2)))), silent);
+        printLine("ShiftSpots", tr("%1 moved to the center!").arg(tu(nick(data()->spot(player, spot2)))), silent);
     } else {
         printLine("ShiftSpots", tr("%1 shifted spots with %2!").arg(tu(nick(data()->spot(player, spot2))), nick(data()->spot(player, spot1))), silent);
     }
