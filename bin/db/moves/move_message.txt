@@ -15,7 +15,7 @@
 18 %s began charging power!
 19 %s transformed into the %t type!
 20 %s transformed into the %t type!
-23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
+23 %s stole %f's %i!|%s stole %f's %i!
 25 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 26 %s took the attacker down with it!|%s is trying to take the foe down with it!
 27 %s protected itself!
