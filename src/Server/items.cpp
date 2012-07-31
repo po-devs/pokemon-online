@@ -845,6 +845,9 @@ struct IMPotion : public IM {
     }
 
     static void ti(int p, int s, BS &b) {
+        if (b.poke(s).isFull()) {
+            return;
+        }
         b.sendBerryMessage(3,s,0);
         int arg = poke(b,p).value("ItemArg").toInt();
 

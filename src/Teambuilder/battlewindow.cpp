@@ -111,6 +111,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     mytab->addTab(myspecs = new QListWidget(), tr("Spectators"));
     if (!info().myitems().empty()) {
         mytab->addTab(myitems = new QListWidget(), tr("Items"));
+        myitems->setIconSize(QSize(24,24));
         listItems();
         connect(myitems, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(itemActivated(QListWidgetItem*)));
     } else {
@@ -663,13 +664,15 @@ void BattleWindow::onSendOut(int spot, int prevIndex, ShallowBattlePoke *p, bool
 void BattleWindow::onHpChange(int spot, int)
 {
     if (data().player(spot) == info().myself) {
-        mypzone->pokes[spot]->update();
+        mypzone->pokes[data().slotNum(spot)]->update();
     }
 }
 
 void BattleWindow::onPPChange(int spot, int move, int)
 {
-    myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
+    if (data().isOut(spot)) {
+        myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());
+    }
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }
 

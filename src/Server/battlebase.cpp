@@ -963,7 +963,7 @@ bool BattleBase::validChoice(const BattleChoice &b)
                 count --;
             }
         }
-        if (count < 0) {
+        if (count <= 0) {
             return false;
         }
         if (items(player).contains(b.item())) {
@@ -1544,7 +1544,10 @@ void BattleBase::changeHp(int player, int newHp)
     poke(player).lifePoints() = newHp;
 
     notify(this->player(player), ChangeHp, player, quint16(newHp));
-    notify(AllButPlayer, ChangeHp, this->player(player), quint16(poke(player).lifePercent())); /* percentage calculus */
+    if (isOut(player)) {
+        /* percentage calculus */
+        notify(AllButPlayer, ChangeHp, this->player(player), quint16(poke(player).lifePercent()));
+    }
 }
 
 void BattleBase::inflictSubDamage(int player, int damage, int source)

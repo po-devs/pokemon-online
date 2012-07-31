@@ -926,6 +926,9 @@ void BattleSituation::callEntryEffects(int player)
 
 void BattleSituation::calleffects(int source, int target, const QString &name)
 {
+    if (!isOut(source)) {
+        return;
+    }
     context &turn = turnMemory(source);
     if (turn.contains("Effect_" + name)) {
         turn["TurnEffectCall"] = true;
@@ -1005,7 +1008,7 @@ void BattleSituation::callseffects(int source, int target, const QString &name)
 
 void BattleSituation::callieffects(int source, int target, const QString &name)
 {
-    if (gen() <= 1)
+    if (gen() <= 1 || !isOut(source))
         return;
     //Klutz
     if (hasWorkingItem(source, poke(source).item())) {
@@ -1015,7 +1018,7 @@ void BattleSituation::callieffects(int source, int target, const QString &name)
 
 void BattleSituation::callaeffects(int source, int target, const QString &name)
 {
-    if (gen() <= 2)
+    if (gen() <= 2 || !isOut(source))
         return;
     if (hasWorkingAbility(source, ability(source)))
         AbilityEffect::activate(name, ability(source), source, target, *this);
@@ -1814,7 +1817,7 @@ void BattleSituation::useItem(int player, int item, int target, int attack)
 {
     targetList.clear();
 
-    int tar = ItemInfo::Target(target, gen());
+    int tar = ItemInfo::Target(item, gen());
     int p = this->player(player);
 
     switch (tar) {
@@ -1842,6 +1845,10 @@ void BattleSituation::useItem(int player, int item, int target, int attack)
     if (!turnMemory(player).value("PermanentItem").toBool()) {
         items(p)[item] -= 1;
         notify(p, ItemCountChange, p, quint16(item), items(p)[item]);
+
+        if (items(p)[item] <= 0) {
+            items(p).remove(item);
+        }
     }
 }
 
