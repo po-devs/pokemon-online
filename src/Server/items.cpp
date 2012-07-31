@@ -900,6 +900,63 @@ struct IMElixir : public IM {
     }
 };
 
+struct IMRevive : public IM {
+    IMRevive() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int p, int s, BS &b) {
+        if (!b.koed(s)) {
+            return;
+        }
+
+        int percent = poke(b,p).value("ItemArg").toInt();
+
+        if (percent == 0) {
+            percent = 100;
+        }
+
+        b.changeHp(s, b.poke(s).totalLifePoints()*percent/100);
+        b.changeStatus(b.player(s), b.slotNum(s), Pokemon::Fine);
+
+        b.sendItemMessage(1007, s);
+    }
+};
+
+struct IMSacredAsh : public IM {
+    IMSacredAsh() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int, int p, BS &b) {
+        for (int i = 0; i < 6; i++) {
+            int s = b.slot(p, i);
+
+            b.changeHp(s, b.poke(s).totalLifePoints());
+            if (b.koed(s)) {
+                b.sendItemMessage(1999, s);
+            }
+            b.changeStatus(p, i, Pokemon::Fine);
+            for (int j = 0; j < 4; j++) {
+                if (b.move(s, j) != Move::NoMove) {
+                    b.gainPP(s, j, 99);
+                }
+            }
+        }
+    }
+};
+
+/* Herbs reduce happiness */
+struct IMHerb : public IM {
+    IMHerb() {
+        functions["TrainerItem"] = &ti;
+    }
+
+    static void ti(int, int s, BS &b) {
+        b.poke(s).happiness() = std::max(0, int(b.poke(s).happiness())-2);
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -941,5 +998,8 @@ void ItemEffect::init()
     REGISTER_ITEM(1001, Potion);
     REGISTER_ITEM(1003, Elixir);
     REGISTER_ITEM(1004, Ether);
+    REGISTER_ITEM(1006, Herb);
+    REGISTER_ITEM(1007, Revive);
+    REGISTER_ITEM(1999, SacredAsh);
     initBerries();
 }
