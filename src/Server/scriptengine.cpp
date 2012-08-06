@@ -2048,7 +2048,7 @@ void ScriptEngine::ban(QString name)
 {
     SecurityManager::ban(name);
     if(loggedIn(myserver->id(name))) {
-        myserver->kick(myserver->id(name));
+        myserver->silentKick(myserver->id(name));
     }
 }
 
