@@ -219,7 +219,7 @@ QScriptValue ScriptEngine::import(const QString &fileName) {
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("sys.import", "The file scripts/" + fileName + " is not readable.");
+        warn("import", "The file scripts/" + fileName + " is not readable.");
         return QScriptValue();
     }
 
@@ -318,6 +318,7 @@ bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
     printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
+    MakeEvent("warning", function, message);
 }
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
@@ -704,7 +705,7 @@ bool ScriptEngine::existChannel(const QString &channame)
 void ScriptEngine::clearPass(const QString &name)
 {
     if (!SecurityManager::exist(name)) {
-        printLine("Script Warning in sys.clearPass(name): no such player name as " + name);
+        warn("clearPass(name)", "no such player name as " + name);
     }
     SecurityManager::clearPass(name);
 }
@@ -713,7 +714,7 @@ void ScriptEngine::changeAuth(int id, int auth)
 {
     if (testPlayer("changeAuth(id, auth)", id)) {
         if (myserver->isSafeScripts() && ((myserver->auth(id) > 2) || (auth > 2))) {
-            warn("changeAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            warn("changeAuth(id, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
         } else {
             myserver->changeAuth(myserver->name(id), auth);
         }
@@ -725,7 +726,7 @@ void ScriptEngine::changeDbAuth(const QString &name, int auth)
     if (myserver->isSafeScripts()) {
         if (!SecurityManager::exist(name)) return;
         if ((SecurityManager::member(name).auth > 2) || (auth > 2)) {
-            warn("changeDbAuth", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            warn("changeDbAuth(name, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
             return;
         }
     }
@@ -742,7 +743,7 @@ void ScriptEngine::changeAway(int id, bool away)
 void ScriptEngine::changeRating(const QString& name, const QString& tier, int newRating)
 {
     if (!TierMachine::obj()->exists(tier))
-        printLine("Script Warning in sys.changeRating(name, tier, rating): no such tier as " + tier);
+        warn("changeRating(name, tier, rating)", "no such tier as " + tier);
     else
         TierMachine::obj()->changeRating(name, tier, newRating);
 }
@@ -752,7 +753,7 @@ void ScriptEngine::changeTier(int id, int team, const QString &tier)
     if (!testPlayer("changeTier", id) || !testTeamCount("changeTier", id, team))
         return;
     if (!TierMachine::obj()->exists(tier)) {
-        printLine("Script Warning in sys.changeTier(id, tier): no such tier as " + tier);
+        warn("changeTier(id, tier)", " no such tier as " + tier);
     } else {
         myserver->player(id)->executeTierChange(team, tier);
     }
@@ -2500,7 +2501,7 @@ void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::Append)) {
-        printLine("Script Warning in sys.appendToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        warn("appendToFile(filename, content)", " error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2512,7 +2513,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.writeToFile(filename, content): error when opening " + fileName + ": " + out.errorString());
+        warn("writeToFile(filename, content)", " error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2524,7 +2525,7 @@ void ScriptEngine::deleteFile(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        printLine("Script Warning in sys.deleteFile(filename): error when opening " + fileName + ": " + out.errorString());
+        warn("deleteFile(filename)", " error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2604,7 +2605,7 @@ QScriptValue ScriptEngine::getCurrentDir()
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
 {
     if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback): callback is not a string or a function.");
+        warn("webCall(urlstring, callback)", " callback is not a string or a function.");
         return;
     }
 
@@ -2626,7 +2627,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
 {
     if (!callback.isString() && !callback.isFunction()) {
-        printLine("Script Warning in sys.webCall(urlstring, callback, params_array): callback is not a string or a function.");
+        warn("webCall(urlstring, callback, params_array)", " callback is not a string or a function.");
         return;
     }
     
@@ -2773,7 +2774,7 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::ReadOnly)) {
-        printLine("Script Warning in sys.getFileContent(filename): error when opening " + fileName + ": " + out.errorString());
+        warn("getFileContent(filename)", " error when opening " + fileName + ": " + out.errorString());
         return myengine.undefinedValue();
     }
 
