@@ -171,7 +171,7 @@ public:
 
     Q_INVOKABLE void clearChat();
 
-    /* 2 timer functions to replace the other 7 */
+    /* 2 timer functions to replace the other 7, plus one new one */
     Q_INVOKABLE int setTimer(const QScriptValue &v, int delay, bool repeats);
     Q_INVOKABLE bool unsetTimer(int timerId);
     Q_INVOKABLE int unsetAllTimers();
