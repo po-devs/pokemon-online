@@ -193,6 +193,14 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
         myengine.globalObject().setProperty("script", myscript);
 
+        makeEvent("initScript");
+
+        printLine("Script Check: OK");
+
+        if(triggerStartUp) {
+            serverStartUp();
+        }
+
         mySessionDataFactory->handleInitialState();
         if (mySessionDataFactory->isRefillNeeded()) {
             // Refill player session info if session data is no longer valid.
@@ -211,14 +219,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
             }
 
             mySessionDataFactory->refillDone();
-        }
-
-        makeEvent("initScript");
-
-        printLine("Script Check: OK");
-
-        if(triggerStartUp) {
-            serverStartUp();
         }
 
     }
