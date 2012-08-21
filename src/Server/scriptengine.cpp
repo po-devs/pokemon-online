@@ -142,7 +142,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
-    myengine.globalObject().c("sys").setProperty("print", printfun);
+    myengine.globalObject().property("sys").setProperty("print", printfun);
     myengine.globalObject().setProperty(
         "SESSION",
         session,
@@ -150,7 +150,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     );
     myengine.globalObject().property("sys").setProperty("session", session);
 
-    QScriptValue qtObject = myengine.newObject();
+    //QScriptValue qtObject = myengine.newObject();
     sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
     sys.setProperty("darker", myengine.newFunction(&darker, 1));
     sys.setProperty("lightness", myengine.newFunction(&lightness, 1));
