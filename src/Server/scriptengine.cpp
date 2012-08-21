@@ -148,7 +148,7 @@ ScriptEngine::ScriptEngine(Server *s) {
         session,
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
-    myengine.globalObject().property("sys").setProperty("session", sesion);
+    myengine.globalObject().property("sys").setProperty("session", session);
 
     QScriptValue qtObject = myengine.newObject();
     sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
