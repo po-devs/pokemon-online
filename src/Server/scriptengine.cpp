@@ -142,13 +142,13 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
-    myengine.globalObject().property("sys").setProperty("print", printfun);
+    myengine.globalObject().c("sys").setProperty("print", printfun);
     myengine.globalObject().setProperty(
         "SESSION",
         session,
         QScriptValue::ReadOnly | QScriptValue::Undeletable
     );
-    myengine.globalObject().property("sys").setPrototype(session);
+    myengine.globalObject().property("sys").setProperty("session", sesion);
 
     QScriptValue qtObject = myengine.newObject();
     sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
