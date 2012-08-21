@@ -180,6 +180,8 @@ ScriptEngine::~ScriptEngine()
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
     QScriptValue newscript;
+    QScriptValue oldscript;
+    oldscript = myscript;
     mySessionDataFactory->disableAll();
     newscript = myengine.evaluate(script);
 
@@ -193,7 +195,13 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
         myengine.globalObject().setProperty("script", myscript);
 
-        makeEvent("initScript");
+        if (!makeSEvent("initScript")) {
+            myscript = oldscript;
+            myengine.globalObject().setProperty("script", myscript);
+            makeEvent("switchError", newscript);
+            printLine("Script Check: Script rejected server. Maybe it requires a newer version?");
+            return;
+        }
 
         printLine("Script Check: OK");
 
