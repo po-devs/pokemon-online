@@ -136,24 +136,26 @@ ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
     mySessionDataFactory = new SessionDataFactory(&myengine);
-
     QScriptValue sys = myengine.newQObject(this);
-    myengine.globalObject().setProperty("sys", sys);
+    QScriptValue session = myengine.newQObject(mySessionDataFactory);
+    myengine.globalObject().setProperty("sys", sys, QScriptValue::ReadOnly | QScriptValue::Undeletable);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
     myengine.globalObject().setProperty("print", printfun);
+    myengine.globalObject().property("sys").setProperty("print", printfun);
     myengine.globalObject().setProperty(
-                "SESSION",
-                myengine.newQObject(mySessionDataFactory),
-                QScriptValue::ReadOnly | QScriptValue::Undeletable
-                );
+        "SESSION",
+        session,
+        QScriptValue::ReadOnly | QScriptValue::Undeletable
+    );
+    myengine.globalObject().property("sys").setPrototype(session);
 
     QScriptValue qtObject = myengine.newObject();
-    qtObject.setProperty("lighter", myengine.newFunction(&lighter, 1));
-    qtObject.setProperty("darker", myengine.newFunction(&darker, 1));
-    qtObject.setProperty("lightness", myengine.newFunction(&lightness, 1));
-    qtObject.setProperty("tint", myengine.newFunction(&tint, 2));
-    myengine.globalObject().setProperty("Qt", qtObject);
+    sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
+    sys.setProperty("darker", myengine.newFunction(&darker, 1));
+    sys.setProperty("lightness", myengine.newFunction(&lightness, 1));
+    sys.setProperty("tint", myengine.newFunction(&tint, 2));
+    myengine.globalObject().setProperty("Qt", sys);
 
 
 #ifndef PO_SCRIPT_SAFE_ONLY
