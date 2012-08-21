@@ -210,6 +210,7 @@ public slots:
     void spectatingBattleMessage(int battleId, const QByteArray &command);
     void stopWatching(int battleId);
     void battleListActivated(QTreeWidgetItem* it);
+    void changeName(const QString &name);
     void loadTeam();
     /* A popup that asks for the pass */
     void askForPass(const QByteArray &salt);

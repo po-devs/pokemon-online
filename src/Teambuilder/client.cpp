@@ -1110,6 +1110,12 @@ void Client::removePM(int id, const QString name)
     disabledpms.remove(name);
 }
 
+void Client::changeName(const QString &name)
+{
+    secondTeam.name() = name;
+    changeTeam();
+}
+
 void Client::loadTeam()
 {
     LoadWindow *w = new LoadWindow(this, getTierList());
