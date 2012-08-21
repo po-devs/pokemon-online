@@ -136,27 +136,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
     mySessionDataFactory = new SessionDataFactory(&myengine);
-    QScriptValue sys = myengine.newQObject(this);
-    QScriptValue session = myengine.newQObject(mySessionDataFactory);
-    myengine.globalObject().setProperty("sys", sys, QScriptValue::ReadOnly | QScriptValue::Undeletable);
-    QScriptValue printfun = myengine.newFunction(nativePrint);
-    printfun.setData(sys);
-    myengine.globalObject().setProperty("print", printfun);
-    myengine.globalObject().property("sys").setProperty("print", printfun);
-    myengine.globalObject().setProperty(
-        "SESSION",
-        session,
-        QScriptValue::ReadOnly | QScriptValue::Undeletable
-    );
-    myengine.globalObject().property("sys").setProperty("session", session);
 
-    //QScriptValue qtObject = myengine.newObject();
-    sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
-    sys.setProperty("darker", myengine.newFunction(&darker, 1));
-    sys.setProperty("lightness", myengine.newFunction(&lightness, 1));
-    sys.setProperty("tint", myengine.newFunction(&tint, 2));
-    myengine.globalObject().setProperty("Qt", sys);
-
+    initGlobal();
 
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
@@ -255,6 +236,34 @@ QScriptValue ScriptEngine::nativePrint(QScriptContext *context, QScriptEngine *e
     obj->printLine(result);
 
     return engine->undefinedValue();
+}
+
+QScriptValue ScriptEngine::global()
+{
+    return myengine.globalObject();
+}
+
+void ScriptEngine::initGlobal () {
+    QScriptValue sys = myengine.newQObject(this);
+    QScriptValue session = myengine.newQObject(mySessionDataFactory);
+    myengine.globalObject().setProperty("sys", sys, QScriptValue::ReadOnly | QScriptValue::Undeletable);
+    QScriptValue printfun = myengine.newFunction(nativePrint);
+    printfun.setData(sys);
+    myengine.globalObject().setProperty("print", printfun);
+    myengine.globalObject().property("sys").setProperty("print", printfun);
+    myengine.globalObject().setProperty(
+        "SESSION",
+        session,
+        QScriptValue::ReadOnly | QScriptValue::Undeletable
+    );
+    myengine.globalObject().property("sys").setProperty("session", session);
+
+    //QScriptValue qtObject = myengine.newObject();
+    sys.setProperty("lighter", myengine.newFunction(&lighter, 1));
+    sys.setProperty("darker", myengine.newFunction(&darker, 1));
+    sys.setProperty("lightness", myengine.newFunction(&lightness, 1));
+    sys.setProperty("tint", myengine.newFunction(&tint, 2));
+    myengine.globalObject().setProperty("Qt", sys);
 }
 
 void ScriptEngine::print(QScriptContext *context, QScriptEngine *)
@@ -1856,7 +1865,7 @@ void ScriptEngine::printLine(const QString &s)
 void ScriptEngine::stopEvent()
 {
     if (stopevents.size() == 0) {
-        printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
+        warn("stopEvent", "called in an unstoppable event.");
     } else {
         stopevents.back() = true;
     }

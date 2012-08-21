@@ -96,6 +96,10 @@ public:
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
 
+    /* Functions */
+    Q_INVOKABLE QScriptValue global ();
+    void initGlobal();
+
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
@@ -125,7 +129,6 @@ public:
 
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 
-    // Q_INVOKABLE void setTimer(int ms); // Causes crash
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
