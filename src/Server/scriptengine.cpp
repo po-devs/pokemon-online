@@ -215,6 +215,10 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     // Error check?
 }
+bool ScriptEngine::isSafeScripts() {
+
+    return engine->isSafeScripts();
+}
 
 QScriptValue ScriptEngine::import(const QString &fileName) {
     QString url = "scripts/"+fileName;

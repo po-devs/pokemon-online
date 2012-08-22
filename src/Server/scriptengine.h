@@ -1,4 +1,4 @@
-﻿#ifndef SCRIPTENGINE_H
+#ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
 #include <QtCore>
@@ -26,6 +26,8 @@ class ScriptEngine : public QObject
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
+
+    void initGlobal();
 
     /* Events */
 
@@ -97,8 +99,8 @@ public:
     void afterFindBattle(int src);
 
     /* Functions */
+    Q_INVOKABLE QScriptValue isSafeScripts ();
     Q_INVOKABLE QScriptValue global ();
-    void initGlobal();
 
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
