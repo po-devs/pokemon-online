@@ -54,7 +54,7 @@
 53 Ganlon Berry
 54 Salac Berry
 55 Petaya Berry
-56 Apricot Berry
+56 Apicot Berry
 57 Lansat Berry
 58 Starf Berry
 59 Enigma Berry
