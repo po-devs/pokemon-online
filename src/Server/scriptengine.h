@@ -99,7 +99,7 @@ public:
     void afterFindBattle(int src);
 
     /* Functions */
-    Q_INVOKABLE QScriptValue isSafeScripts ();
+    Q_INVOKABLE bool isSafeScripts ();
     Q_INVOKABLE QScriptValue global ();
 
     /* Imports a module with a given name */
