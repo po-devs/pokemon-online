@@ -222,7 +222,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 }
 bool ScriptEngine::isSafeScripts() {
 
-    return engine->isSafeScripts();
+    return myserver->isSafeScripts();
 }
 
 QScriptValue ScriptEngine::import(const QString &fileName) {
