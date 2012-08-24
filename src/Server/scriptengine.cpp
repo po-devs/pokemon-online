@@ -182,6 +182,11 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     QScriptValue newscript;
     QScriptValue oldscript;
     oldscript = myscript;
+
+    makeEvent("unloadScript");
+    // allow the script to write to file and etc.
+    // clean up after itself.
+
     mySessionDataFactory->disableAll();
     newscript = myengine.evaluate(script);
 
@@ -195,7 +200,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
         myengine.globalObject().setProperty("script", myscript);
 
-        if (!makeSEvent("initScript")) {
+        if (!makeSEvent("loadScript")) {
             myscript = oldscript;
             myengine.globalObject().setProperty("script", myscript);
             makeEvent("switchError", newscript);
