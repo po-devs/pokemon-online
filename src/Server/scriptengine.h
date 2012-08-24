@@ -371,10 +371,13 @@ public:
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
 
-    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
-    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+
 
     // Direct file access.
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+    Q_INVOKABLE bool canReadFile(const QString &fileName);
+    Q_INVOKABLE bool canWriteFile(const QString &fileName);
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);

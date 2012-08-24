@@ -2706,6 +2706,18 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     return result_array;
 }
 
+bool ScriptEngine::canReadFile (const QString &name){
+    QFile out(name);
+
+    return !!out.open(QIODevice::ReadOnly);
+}
+
+bool ScriptEngine::canWriteFile (const QString &name){
+    QFile out(name);
+
+    return !!out.open(QIODevice::WriteOnly);
+}
+
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
     QFile out(fileName);
