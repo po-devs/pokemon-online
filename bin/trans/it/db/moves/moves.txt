@@ -419,7 +419,7 @@
 418 Pugnoscarica
 419 Slavina
 420 Geloscheggia
-421 Obrartigli
+421 Ombrartigli
 422 Tuonodenti
 423 Gelodenti
 424 Rogodenti
@@ -536,7 +536,7 @@
 535 Marchiafuoco
 536 Vorticerba
 537 Rolloduro
-538 Cotonscudo
+538 Cottonscudo
 539 Urtoscuro
 540 Psicobotta
 541 Spazzasberla

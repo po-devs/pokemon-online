@@ -1,43 +1,43 @@
 ﻿0 (Nessun Oggetto)
 
-3 %s restored its stats using White Herb!
+3 %s ripristina le sue stat usando Erbachiara!
 
-4 %s hung on thanks to its Focus Band!
+4 %s resiste grazie alla sua Bandana!
 
-5 %s hung on using its Focus Sash!
+5 %s resiste grazie al suo Focalnastro!
 
 7 %s usa la sua Mentalerba e recupera i sensi!
 
-11 %s used its Power Herb to attack immediately!
+11 %s usa la sua Vigorerba per attaccare subito!
 
 12 %s rigenera un pò di PV usando i suoi Avanzi!
 
 16 %s recupera un pò di PV grazie alla sua Neropece!|%s è ferito da Neropece!
 
-17 %s's Quick Claw activated!
+17 Si attivano i Rapidartigli di %s!
 
-18 %s restored a little HP using its Berry Juice!
+18 %s recupera un pò di PV usando il suo Succodibacca!
 
-19 SI attiva Fiammosfera di %s!|Si attiva Tossicsfera di %s!
+19 Si attiva Fiammosfera di %s!|Si attiva Tossicsfera di %s!
 
 21 %s è ferito dalla sua Assorbisfera!
 
 24 Conchinella di %s rigenera parte dei suoi PV!
 
-29 %s is hurt by its Sticky Barb!
+29 %s è ferito dalla sua Vischiopunta!
 
-34 %f is hurt by %s's Rocky Helmet!
+34 %f è ferito dal Bitorzolelmo di %s!
 
-35 %s's Air Balloon popped!|%s sta galleggiando su un palloncino!
+35 Il Palloncino di %s è scoppiato!|%s sta galleggiando su un palloncino!
 
 36 %i di %s aumenta la stat %st!
 
 37 %i di %s aumenta la potenza di %m!
 
-38 %s used its Red Card on %f!
+38 %s usa il suo Cartelrosso su %f!
 
-39 %s used its Eject Button!
+39 %s usa il suo Pulsantefuga!
 
-40 %s's Berserk Gene activated!|%s's Attack went way up!
+40 Si attiva il Gene Furioso di %s!|L'Attacco di %s sale davvero in alto!
 
-41 %s's Destiny Knot activated, %f is in love!
+41 Si attiva Destincomune di %s, %f è innamorato!
