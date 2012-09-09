@@ -1,580 +1,360 @@
 ﻿0 (Nessun oggetto)
 
-1 Big Root
-
-2 Blue Scarf
-
-3 BrightPowder
-
+1 Granradice
+2 Fascia Blu
+3 Luminpolvere
 4 Bendascelta
 5 Stolascelta
 6 Lentiscelta
-7 Destiny Knot
+7 Destincomune
+8 Abilcintura
+9 Bandana
+10 Focalnastro
+11 Gonfioaroma
 
-8 Expert Belt
-
-9 Focus Band
-
-10 Focus Sash
-
-11 Full Incense
-
-12 Green Scarf
-
-13 Lagging Tail
-
-14 Lax Incense
-
+12 Fascia Verde
+13 Rallentocoda
+14 Distraroma
 15 Avanzi
 
-16 Luck Incense
-
+16 Fortunaroma
 17 Mentalerba
-18 Metal Powder
-
-19 Muscle Band
-
-20 Odd Incense
-
-21 Pink Scarf
-
+18 Metalpolvere
+19 Muscolbanda
+20 Bizzoaroma
+21 Fascia Rosa
 22 Vigorerba
 
-23 Pure Incense
-
-24 Quick Powder
-
-25 Reaper Cloth
-
-26 Red Scarf
-
-27 Rock Incense
-
-28 Rose Incense
-
-29 Sea Incense
-
-30 Shed Shell
-
-31 Silk Scarf
-
-32 Silver Powder
-
-33 Smooth Rock
-
-34 Soft Sand
-
-35 Soothe Bell
-
-36 Wave Incense
-
+23 Puroaroma
+24 Velopolvere
+25 Terrorpanno
+26 Fascia Rossa
+27 Roccioaroma
+28 Rosaroma
+29 Marearoma
+30 Disfoguscio
+31 Sciarpaseta
+32 Argenpolvere
+33 Roccialiscia
+34 Sabbia Soffice
+35 Calmanella
+36 Ondaroma
 37 Erbachiara
-38 Wide Lens
+38 Grandelente
+39 Saviocchiali
+40 Fascia Gialla
+41 Zoomlente
 
-39 Wise Glasses
-
-40 Yellow Scarf
-
-41 Zoom Lens
-
-42 Amulet Coin
-
+42 Monetamuleto
 43 Antidoto
 
-44 Awakening
+44 Sveglia
+45 Succo di Bacca
 
-45 Berry Juice
-
-46 Big Pearl
-
-47 Big Mushroom
-
-48 Black Belt
-
-49 Black Flute
-
+46 Grande Perla
+47 Grande Fungo
+48 Cinturanera
+49 Flauto Nero
 50 Fangopece
-51 BlackGlasses
+51 Occhialineri
+52 Flauto Blu
 
-52 Blue Flute
-
-53 Blue Shard
-
-54 Burn Heal
-
-55 Calcium
-
-56 Carbos
-
-57 Charcoal
-
-58 Cleanse Tag
-
-59 Damp Mulch
-
-60 DeepSeaScale
-
-61 Dire Hit
-
-62 Dragon Scale
-
+53 Coccio Blu
+54 Antiscottatura
+55 Calcio
+56 Carburante
+57 Carbonella
+58 Velopuro
+59 Fertilidro
+60 Squamabissi
+61 Supercolpo
+62 Squama Drago
 63 Elisir
 
-64 Energy Root
-
-65 EnergyPowder
-
-66 Escape Rope
-
+64 Radicenergia
+65 Polvenergia
+66 Fune di Fuga
 67 Etere
 
-68 Everstone
+68 Pietrastante
+69 Condiv.Esp.
 
-69 Exp. Share
+70 Pietrafocaia
+71 Fiammosfera
+72 Coda Skitty
+73 Acqua Fresca
+74 Cura Totale
+75 Ricarica Totale
+76 Fertilcolla
+77 Coccio Verde
+78 Fertilrapido
+79 Superguardia
 
-70 Fire Stone
+80 Polvocura
 
-71 Flame Orb
+81 Squama Cuore
 
-72 Fluffy Tail
-
-73 Fresh Water
-
-74 Full Heal
-
-75 Full Restore
-
-76 Gooey Mulch
-
-77 Green Shard
-
-78 Growth Mulch
-
-79 Guard Spec.
-
-80 Heal Powder
-
-81 Heart Scale
-
-82 Honey
-
-83 HP Up
-
-84 Hyper Potion
-
-85 Ice Heal
-
+82 Miele
+83 PS-Su
+84 Iperpozione
+85 Antigelo
 86 Ferro
 87 Roccia di Re
-88 Lava Cookie
-
-89 Leaf Stone
-
-90 Limonata
-91 Life Orb
-
-92 Light Ball
-
+88 Lavottino
+89 Pietrafoglia
+90 Lemonsucco
+91 Assorbisfera
+92 Elettropalla
 93 Cretaluce
 
-94 Lucky Egg
-
-95 Magnet
-
-96 Max Elixir
-
-97 Max Ether
-
-98 Max Potion
-
-99 Max Repel
-
+94 Fortunuovo
+95 Calamita
+96 Elisir Max
+97 Etere Max
+98 Pozione Max
+99 Repellente Max
 100 Revitalizzante Max
 
 101 Metalcoperta
 
 102 Metronomo
 
-103 Miracle Seed
-
-104 MooMoo Milk
-
-105 Moon Stone
-
-106 Mystic Water
-
-107 NeverMeltIce
-
-108 Nugget
-
-109 Old Gateau
-
-110 Parlyz Heal
-
-111 Pearl
-
-112 Poké Doll
-
-113 Potion
+103 Miracolseme
+104 Latte MooMoo
+105 Pietralunare
+106 Acqua Magica
+107 Gelomai
+108 Pepita
+109 Dolce Gateau
+110 Antiparalisi
+111 Perla
+112 Poké Bambola
+113 Pozione
 
 114 PP Max
 
-115 PP Up
-
+115 PP-Su
 116 Proteina
 
 117 Caramella Rara
 
 118 Affilodente
 
-119 Red Flute
+119 Flauto Rosso
+120 Coccio Rosso
 
-120 Red Shard
-
-121 Repel
-
-122 Revival Herb
-
+121 Repellente
+122 Vitalerba
 123 Revitalizzante
-124 Sacred Ash
+124 Ceneremagica
+125 Mirino
+126 Conchinella
+127 Sale Ondoso
+128 Gusciondoso
+129 Palla Fumo
+130 Gassosa
 
-125 Scope Lens
+131 Cuorugiada
+132 Spettrotarga
+133 Fertilsaldo
+134 Pezzo Stella
+135 Polvostella
+136 Pietrasolare
+137 Super Pozione
 
-126 Shell Bell
-
-127 Shoal Salt
-
-128 Shoal Shell
-
-129 Smoke Ball
-
-130 Soda Pop
-
-131 Soul Dew
-
-132 Spell Tag
-
-133 Stable Mulch
-
-134 Star Piece
-
-135 Stardust
-
-136 Sun Stone
-
-137 Super Potion
-
-138 Super Repel
-
+138 Super Repellente
 139 Pietratuono
-140 TinyMushroom
-
-141 Toxic Orb
-
-142 TwistedSpoon
-
+140 Minifungo
+141 Tossicsfera
+142 Cucchiaio Torto
 143 Upgrade
 
-144 Water Stone
+144 Pietraidrica
+145 Flauto Bianco
+146 Precisione X
+147 Attacco X
+148 Difesa X
+149 Special X
 
-145 White Flute
+150 Dif.Sp.X
+151 Velocità X
+152 Flauto Giallo
+153 Coccio Giallo
+154 Zinco
 
-146 X Accuracy
-
-147 X Attack
-
-148 X Defend
-
-149 X Special
-
-150 X Sp. Def
-
-151 X Speed
-
-152 Yellow Flute
-
-153 Yellow Shard
-
-154 Zinc
-
-155 Icy Rock
-
-156 Lucky Punch
-
+155 Rocciafredda
+156 Fortunpugno
 157 Dubbiodisco
-158 Sharp Beak
+158 Beccaffilato
+159 Adamasfera
+160 Rocciaumida
+161 Rocciacalda
 
-159 Adamant Orb
-
-160 Damp Rock
-
-161 Heat Rock
-
-162 Lustrous Orb
-
+162 Splendisfera
 163 Crescicappa
-164 Stick
-
-165 Dragon Fang
-
-166 Poison Barb
-
+164 Gambo
+165 Dentedidrago
+166 Velenaculeo
 167 Vigorgliera
 168 Vigorbanda
 169 Vigorfascia
 170 Vigorcerchio
 171 Vigorlente
 172 Vigorpeso
-173 Dawn Stone
-
-174 Dusk Stone
-
+173 Pietralbore
+174 Neropietra
 175 Elettritore
 
 176 Magmatore
 
-177 Odd Keystone
-
-178 Oval Stone
-
-179 Protector
-
-180 Quick Claw
-
+177 Roccianima
+178 Pietraovale
+179 Copertura
+180 Rapidartigli
 181 Affilartigli
 
-182 Shiny Stone
+182 Pietrabrillo
+183 Vischiopunta
+184 Denteabissi
+185 Lastradrakon
+186 Lastratimore
+187 Lastrageo
+188 Lastrapugno
+189 Lastrarogo
+190 Presartigli
+191 Lastragelo
+192 Lastrabaco
+193 Lastraferro
+194 Lastraprato
+195 Lastramente
+196 Lastracielo
+197 Lastraidro
+198 Lastratetra
+199 Lastrapietra
+200 Ossospesso
+201 Lastrafiele
+202 Lastrasaetta
+203 Fossilscudo
+204 Fossilunghia
+205 Domofossile
+206 Pietradura
+207 Helixfossile
+208 Ambra Antica
+209 Ossospesso
+210 Radifossile
+211 Fossilcranio
+212 Ferropalla
+213 Grigiosfera
+214 Messaggio Aereo
+215 Messaggio Petalo
+216 Messaggio Muro
+217 Messaggio Bolla
+218 Messaggio Fiamma
+219 Messaggio Erba
+220 Messaggio Porto
+221 Messaggio Cuore
 
-183 Sticky Barb
-
-184 DeepSeaTooth
-
-185 Draco Plate
-
-186 Dread Plate
-
-187 Earth Plate
-
-188 Fist Plate
-
-189 Flame Plate
-
-190 Grip Claw
-
-191 Icicle Plate
-
-192 Insect Plate
-
-193 Iron Plate
-
-194 Meadow Plate
-
-195 Mind Plate
-
-196 Sky Plate
-
-197 Splash Plate
-
-198 Spooky Plate
-
-199 Stone Plate
-
-200 Thick Club
-
-201 Toxic Plate
-
-202 Zap Plate
-
-203 Armor Fossil
-
-204 Claw Fossil
-
-205 Dome Fossil
-
-206 Hard Stone
-
-207 Helix Fossil
-
-208 Old Amber
-
-209 Rare Bone
-
-210 Root Fossil
-
-211 Skull Fossil
-
-212 Iron Ball
-
-213 Griseous Orb
-
-214 Air Mail
-
-215 Bloom Mail
-
-216 Brick Mail
-
-217 Bubble Mail
-
-218 Flame Mail
-
-219 Grass Mail
-
-220 Harbor Mail
-
-221 Heart Mail
-
-222 Mosaic Mail
-
-223 Snow Mail
-
-224 Space Mail
-
-225 Steel Mail
-
-226 Tunnel Mail
-
-227 Douse Drive
-
-228 Shock Drive
-
-229 Burn Drive
-
-230 Chill Drive
-
+222 Messaggio Iride
+223 Messaggio Neve
+224 Messaggio Spazio
+225 Messaggio Lega
+226 Messaggio Tunnel
+227 Idromodulo
+228 Voltmodulo
+229 Piromodulo
+230 Gelomodulo
 231 Sweet Heart
 
 232 Squama Bella
-233 Eviolite
+233 Evolcondensa
+234 Pietralieve
+235 Bitorzolelmo
+236 Palloncino
+237 Cartelrosso
+238 Facilsaglio
+239 Legafascia
+240 Bulbo
+241 Ricaripila
+242 Pulsantefuga
+243 Bijoufuoco
 
-234 Float Stone
+244 Bijouacqua
+245 Bijouelettro
+246 Bijouerba
+247 Bijoughiaccio
+248 Bijoulotta
+249 Bijouveleno
+250 Bijouterra
 
-235 Rocky Helmet
-
-236 Air Balloon
-
-237 Red Card
-
-238 Ring Target
-
-239 Binding Band
-
-240 Absorb Bulb
-
-241 Cell Battery
-
-242 Eject Button
-
-243 Fire Gem
-
-244 Water Gem
-
-245 Electric Gem
-
-246 Grass Gem
-
-247 Ice Gem
-
-248 Fight Gem
-
-249 Poison Gem
-
-250 Earth Gem
-
-251 Flying Gem
-
-252 Psychic Gem
-
-253 Bug Gem
-
-254 Rock Gem
-
-255 Ghost Gem
-
-256 Dragon Gem
-
-257 Dark Gem
-
-258 Steel Gem
-
-259 Normal Gem
-
-260 Health Wing
-
-261 Muscle Wing
-
-262 Resist Wing
-
-263 Genius Wing
-
-264 Clever Wing
-
-265 Swift Wing
-
-266 Pretty Wing
+251 Bijouvolante
+252 Bijoupsico
+253 Bijoucoleottero
+254 Bijouroccia
+255 Bijouspettro
+256 Bijoudrago
+257 Bijoubuio
+258 Bijouacciaio
+259 Bijounormale
+260 Piumsalute
+261 Piumpotenza
+262 Piumtutela
+263 Piumingegno
+264 Piumintuito
+265 Piumreazione
+266 Piumabella
 
 267 Dream Ball
 
-268 BalmMushroom
+268 Profumfungo
+269 Granpepita
+270 Trittiperla
+271 Pezzo Cometa
+272 Soldantico
+273 Ducatantico
+274 Doblonantico
+275 Vasantico
+276 Bracciantico
+277 Statuantica
+278 Coronantica
+279 Conostropoli
 
-269 Big Nugget
+280 Supercolpo 2
 
-270 Pearl String
+281 Velocità X-2
 
-271 Comet Shard
+282 Special X-2
 
-272 Relic Copper
+283 Dif.Sp. X-2
 
-273 Relic Silver
+284 Difesa X-2
 
-274 Relic Gold
+285 Attacco X-2
 
-275 Relic Vase
+286 Precisione X-2
 
-276 Relic Band
+287 Velocità X-3
 
-277 Relic Statue
+288 Special X-3
 
-278 Relic Crown
+289 Dif.Sp.X-3
 
-279 Casteliacone
+290 Difesa X-3
 
-280 Dire Hit 2
+291 Attacco X-3
 
-281 Velocità X 2
+292 Precisione X-3
 
-282 Speciale X 2
+293 Velocità X-6
 
-283 Difesa Sp. X 2
+294 Special X-6
 
-284 Difesa X 2
+295 Dif.Sp.X-6
 
-285 Attacco X 2
+296 Difesa X-6
 
-286 Precisione X 2
+297 Attacco X-6
 
-287 X Speed 3
-
-288 X Special 3
-
-289 X Sp. Def 3
-
-290 X Defend 3
-
-291 X Attack 3
-
-292 X Accuracy 3
-
-293 X Speed 6
-
-294 X Special 6
-
-295 X Sp. Def 6
-
-296 X Defend 6
-
-297 X Attack 6
-
-298 X Accuracy 6
+298 Precisione X-6
 
 299 Ability Urge
 
@@ -584,6 +364,6 @@
 
 302 Reset Urge
 
-303 Dire Hit 3
+303 Supercolpo 3
 
-304 Berserk Gene
+304 Genefurioso

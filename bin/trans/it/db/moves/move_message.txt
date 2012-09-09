@@ -78,7 +78,7 @@
 
 60 %s recupera vita!
 
-61 %s ha recuperato vita!|The healing wish came true!|Viene ricoperto da mistica luce lunare!
+61 %s ha recuperato vita!|Il Desiderio si è avverato!|Viene ricoperto da mistica luce lunare!
 62 %s ha scambiato il suo Attacco e la sua Difesa!
 
 63 %s è pronto ad aiutare %f!
@@ -93,7 +93,7 @@
 
 72 Non ha effetto su %s...|%f è pieno di semi!|La vita di %s è succhiata da Parassiseme.
 
-73 Riflesso aumenta la difesa del team di %t!|Schermoluce aumenta la Difesa Speciale del team di %t!|Riflesso aumenta di molto la difesa del team di %t!|Schermoluce aumenta di molto la Difesa Speciale del team di %ts!|Riflesso di %t si è esaurito!|Schermoluce di %t si è esaurito!
+73 Riflesso aumenta la difesa del team di %ts!|Schermoluce aumenta la Difesa Speciale del team di %ts!|Riflesso aumenta di molto la difesa del team di %ts!|Schermoluce aumenta di molto la Difesa Speciale del team di %ts!|Il Riflesso di %ts si è esaurito!|Lo Schermoluce di %ts si è esaurito!
 
 74 %s prende la mira su %f!
 

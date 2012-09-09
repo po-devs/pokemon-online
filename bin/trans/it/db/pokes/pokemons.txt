@@ -532,22 +532,27 @@
 201:25 Unown-Z
 201:26 Unown-!
 201:27 Unown-?
-493:1 Arceus-Fighting
-493:2 Arceus-Flying
-493:3 Arceus-Poison
-493:4 Arceus-Ground
-493:5 Arceus-Rock
-493:6 Arceus-Bug
-493:7 Arceus-Ghost
-493:8 Arceus-Steel
-493:9 Arceus-Fire
-493:10 Arceus-Water
-493:11 Arceus-Grass
-493:12 Arceus-Electric
-493:13 Arceus-Psychic
-493:14 Arceus-Ice
-493:15 Arceus-Dragon
-493:16 Arceus-Dark
+493:1 Arceus-Lotta
+493:2 Arceus-Volante 
+493:3 Arceus-Veleno 
+493:4 Arceus-Terra
+ 493:5 Arceus-Roccia 
+493:6 Arceus-Coleottero 
+493:7 Arceus-Spettro 
+493:8 Arceus-Acciaio 
+
+493:9 Arceus-Fuoco 
+
+493:10 Arceus-Acqua 
+493:11 Arceus-Erba
+ 
+493:12 Arceus-Elettro 
+493:13 Arceus-Psico 
+493:14 Arceus-Ghiaccio 
+
+493:15 Arceus-Drago 
+493:16 Arceus-Buio 
+
 493:17 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
@@ -655,9 +660,9 @@
 585:2 Deerling-Autumn
 585:3 Deerling-Winter
 586:0 Sawsbuck
-586:1 Sawsbuck-Summer
-586:2 Sawsbuck-Autumn
-586:3 Sawsbuck-Winter
+586:1 Sawsbuck-Estate
+586:2 Sawsbuck-Autunno
+586:3 Sawsbuck-Inverno
 587:0 Emolga
 588:0 Karrablast
 589:0 Escavalier
@@ -721,14 +726,14 @@
 645:0 Landorus
 645:1 Landorus-T
 646:0 Kyurem
-646:1 Kyurem-W
-646:2 Kyurem-B
+646:1 Kyurem-B
+646:2 Kyurem-N
 647:0 Keldeo
 647:1 Keldeo-R
 648:0:H Meloetta
 648:1 Meloetta-S
 649:0 Genesect
-649:1 Genesect-D
-649:2 Genesect-S
-649:3 Genesect-B
-649:4 Genesect-C
+649:1 Genesect-A
+649:2 Genesect-E
+649:3 Genesect-F
+649:4 Genesect-G
