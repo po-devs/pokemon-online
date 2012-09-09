@@ -304,8 +304,10 @@ struct RBYDig : public MM
         //Dig uses its PP on the second turn
         fturn(b,s).add(TM::UsePP);
         fturn(b,s).add(TM::NoChoice);
-        addFunction(turn(b,s), "AttackSomehowFailed", "Dig", &asf);
-        addFunction(turn(b,s), "UponAttackSuccessful", "Dig", &uas2);
+        /* To restore the RBY paralysis glitch with fly, change TrueEnd to AttackSomehowFailed
+          and uncomment the line after next*/
+        addFunction(turn(b,s), "TrueEnd", "Dig", &asf);
+        //addFunction(turn(b,s), "UponAttackSuccessful", "Dig", &asf);
         turn(b,s)["AutomaticMove"] = poke(b,s).value("ChargeMove");
         initMove(poke(b,s).value("ChargeMove").toInt(), b.gen(), tmove(b,s));
     }
@@ -313,10 +315,6 @@ struct RBYDig : public MM
     static void asf(int s, int, BS &b) {
         poke(b,s).remove("Invulnerable");
         b.changeSprite(s, 0);
-    }
-
-    static void uas2(int s, int t, BS &b) {
-        asf(s, t, b);
     }
 };
 

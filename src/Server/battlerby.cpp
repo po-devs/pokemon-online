@@ -516,6 +516,8 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
     trueend:
 
+    calleffects(player,player,"TrueEnd");
+
     if (koed(player) && tmove(player).power > 0) {
         notifyKO(player);
     }
