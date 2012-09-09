@@ -1,4 +1,7 @@
-Piplup: Sing+Featherdance
+Bulbasaur: False swipe + Block + Frenzy Plant + Weather Ball
+Charmander: False swipe + Block + Blast Burn + Acrobatics
+Blastoise: False swipe + Block + Hydro Cannon + Follow Me
+Piplup: Sing + Featherdance
 Victini: Fusion Flare + Fusion Bolt + V-Create 
 Pikachu: Fly + Iron Tail
 Pikachu: Encore + Teeter Dance + Sing
