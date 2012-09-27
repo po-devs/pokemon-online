@@ -724,7 +724,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 
 void Channel::printHtml(const QString &str, bool act)
 {
-    if(client->call("beforeChannelMessage(QString,int,bool)", _line, myid, true)){
+    if(client->call("beforeChannelMessage(QString,int,bool)", str, myid, true)){
         QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
         if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
             return;
@@ -740,7 +740,7 @@ void Channel::printHtml(const QString &str, bool act)
             emit activated(this);
         }
     }
-    client->call("afterChannelMessage(QString,int,bool)", _line, myid, true);
+    client->call("afterChannelMessage(QString,int,bool)", str, myid, true);
 }
 
 void Channel::addEvent(int event)
