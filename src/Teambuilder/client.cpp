@@ -2549,46 +2549,34 @@ void Client::removeIgnore(int id)
 
 void Client::printHtml(const QString &html)
 {
-    if(call("beforeNewHtmlMessage(QString)", html)){
-        foreach(Channel *c, mychannels)
-            c->printHtml(html, false);
-    }
-    call("afterNewHtmlMessage(QString)", html);
+    foreach(Channel *c, mychannels)
+        c->printHtml(html, false);
 }
 
 void Client::printLine(const QString &line)
 {
-    if(call("beforeNewMessage(QString)", line)){
-        if (mychannels.size() == 0)
-            return;
+    if (mychannels.size() == 0)
+        return;
 
-        foreach(Channel *c, mychannels)
-            c->printLine(line,false, false);
-    }
-    call("afterNewMessage(QString)", line);
+    foreach(Channel *c, mychannels)
+        c->printLine(line,false, false);
 }
 
 /* Prints a line regarding a particular player */
 void Client::printLine(int playerid, const QString &line)
 {
-    if(call("beforeNewMessage(QString)", line)){
-        foreach(Channel *c, mychannels) {
-            if (c->hasPlayer(playerid))
-                c->printLine(line, false);
-        }
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(playerid))
+            c->printLine(line, false);
     }
-    call("afterNewMessage(QString)", line);
 }
 
 void Client::printLine(int event, int playerid, const QString &line)
 {
-    if(call("beforeNewMessage(QString)", line)){
-        foreach(Channel *c, mychannels) {
-            if (c->hasPlayer(playerid) && c->eventEnabled(event))
-                c->printLine(line, false, false);
-        }
+    foreach(Channel *c, mychannels) {
+        if (c->hasPlayer(playerid) && c->eventEnabled(event))
+            c->printLine(line, false, false);
     }
-    call("afterNewMessage(QString)", line);
 }
 
 void Client::printChannelMessage(const QString &mess, int channel, bool html)

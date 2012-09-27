@@ -32,10 +32,6 @@ public:
     void clientShutDown();
 
     int beforeSendMessage(const QString &message, int channel);
-    int beforeNewMessage(const QString &message);
-    int afterNewMessage(const QString &message);
-    int beforeNewHtmlMessage(const QString &message);
-    int afterNewHtmlMessage(const QString &message);
     int beforeChannelMessage(const QString &message, int channel, bool html);
     int afterChannelMessage(const QString &message, int channel, bool html);
     int beforePMReceived(int id, const QString &message);
