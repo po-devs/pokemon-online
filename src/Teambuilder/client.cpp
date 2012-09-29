@@ -1119,6 +1119,17 @@ void Client::loadTeam()
     connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(changeTeam(TeamHolder)));
 }
 
+void Client::changeName(const QString &name)
+{
+    secondTeam.name() = name;
+    /* just in case... */
+    secondTeam.color() = myteam->color();
+    secondTeam.info() = myteam->info();
+    secondTeam.team() = myteam->team();
+    /* notify server of our change */
+    changeTeam();
+}
+
 void Client::sendText()
 {
     if (currentChannel() == -1)

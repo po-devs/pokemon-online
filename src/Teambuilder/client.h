@@ -157,6 +157,7 @@ public slots:
     void printChannelMessage(const QString &mess, int channel, bool html);
 
     /* sends what's in the line edit */
+    void changeName(const QString &name);
     void sendText();
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
