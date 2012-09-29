@@ -297,6 +297,9 @@ public slots:
     void registerPermPlayer(int id);
     QStringList const& eventSettings() const;
     void newConnection();
+    /* exit warning */
+    void changeExitWarning(bool show);
+    void showExitWarning();
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -427,6 +430,7 @@ private:
     bool singleTeam;
 
     QSettings globals;
+    bool exitWarning;
 
     QSet<OnlineClientPlugin*> plugins;
     PluginManager *pluginManager;
