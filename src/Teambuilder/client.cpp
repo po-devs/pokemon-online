@@ -23,6 +23,7 @@
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
+    exitWarning = globals.value("Client/ShowExitWarning").toBool(); // initiate, to show exit warning or not
     failedBefore = false;
     waitingOnSecond = false;
     top = NULL;
@@ -108,7 +109,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
 
     connect(mainChat, SIGNAL(tabCloseRequested(int)), SLOT(leaveChannelR(int)));
     connect(mainChat, SIGNAL(currentChanged(int)), SLOT(firstChannelChanged(int)));
-    connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
+    connect(myexit, SIGNAL(clicked()), SLOT(showExitWarning()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
@@ -1294,6 +1295,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
     sortByAuth->setChecked(globals.value("Client/SortPlayersByAuth").toBool());
     sortBA = sortByAuth->isChecked();
+
+    QAction *useExitWarning = menuActions->addAction(tr("Show exit warning"));
+    useExitWarning->setCheckable(true);
+    connect(useExitWarning, SIGNAL(triggered(bool)), SLOT(changeExitWarning(bool)));
+    useExitWarning->setChecked(exitWarning);
 
     QAction *sortChannelsName = menuActions->addAction(tr("Sort channels by name"));
     sortChannelsName->setCheckable(true);
@@ -2593,5 +2599,48 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
             this->channel(channel)->printLine(mess);
         }
         call("afterChannelMessage(QString,int,bool)", mess, channel, html);
+    }
+}
+
+void Client::changeExitWarning(bool show)
+{
+    exitWarning = show;
+    globals.setValue("Client/ShowExitWarning", show);
+}
+
+void Client::showExitWarning()
+{
+    if (exitWarning) {
+        QDialog dialog(this);
+        dialog.setObjectName("exitWarning");
+        dialog.setWindowTitle(tr("Are you sure?"));
+        QVBoxLayout* layout = new QVBoxLayout;
+
+        layout->addWidget(new QLabel(tr("You are about to exit the server.")));
+
+        QCheckBox *showNextTime = new QCheckBox;
+        showNextTime->setText(tr("Show this warning next time"));
+        showNextTime->setChecked(true);
+        layout->addWidget(showNextTime);
+
+        layout->addWidget(new QLabel(tr("(This can be changed by going to Options -> Show exit warning.)")));
+
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
+        connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        layout->addWidget(buttonBox);
+
+        dialog.setLayout(layout);
+
+        int ret = dialog.exec();
+        if (!ret) {
+            return;
+        }
+        if (ret != QMessageBox::Cancel) {
+            changeExitWarning(showNextTime->isChecked());
+            emit done();
+        }
+    } else {
+        emit done();
     }
 }
