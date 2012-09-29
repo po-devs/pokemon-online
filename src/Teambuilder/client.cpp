@@ -24,6 +24,7 @@
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
     exitWarning = globals.value("Client/ShowExitWarning").toBool(); // initiate, to show exit warning or not
+    flashingToggled = !globals.contains("Client/Flashing") ? true : globals.value("Client/Flashing").toBool();
     failedBefore = false;
     waitingOnSecond = false;
     top = NULL;
@@ -1295,6 +1296,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(sortByAuth, SIGNAL(triggered(bool)), SLOT(sortPlayersByAuth(bool)));
     sortByAuth->setChecked(globals.value("Client/SortPlayersByAuth").toBool());
     sortBA = sortByAuth->isChecked();
+
+    QAction *flashing = menuActions->addAction(tr("Toggle flashing"));
+    flashing->setCheckable(true);
+    connect(flashing, SIGNAL(triggered(bool)), SLOT(changeFlashing(bool)));
+    flashing->setChecked(flashingToggled);
 
     QAction *useExitWarning = menuActions->addAction(tr("Show exit warning"));
     useExitWarning->setCheckable(true);
@@ -2600,6 +2606,12 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
         }
         call("afterChannelMessage(QString,int,bool)", mess, channel, html);
     }
+}
+
+void Client::changeFlashing(bool flash)
+{
+    flashingToggled = flash;
+    globals.setValue("Client/Flashing", flash);
 }
 
 void Client::changeExitWarning(bool show)
