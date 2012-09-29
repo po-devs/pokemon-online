@@ -764,6 +764,10 @@ void Client::startPM(int id)
         return;
     }
 
+    if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
+        return;
+    }
+
     PMStruct *p = new PMStruct(id, ownName(), name(id), "", ownAuth());
 
     pmSystem->startPM(p);
@@ -1087,16 +1091,19 @@ void Client::PMReceived(int id, QString pm)
         return;
     }
 
-    if(!mypms.contains(id)) {
-        startPM(id);
-    }
+    startPM(id);
 
     if(mypms.contains(id) && !mypms[id]->isVisible()) {
-        mypms[id]->show();
+        //mypms[id]->show();
     }
 
     registerPermPlayer(id);
-    mypms[id]->printLine(pm);
+    /* sometimes the line won't be printed, so we do this check */
+    if (!mypms.contains(id)) {
+        mypms[id]->printLine(pm);
+    } else {
+        pmSystem->myPMWindows[id]->printLine(pm);
+    }
     call("afterPMReceived(int,QString)",id,pm);
 }
 
@@ -2211,6 +2218,30 @@ bool Client::hasPlayer (int id)
     }
 
     return true;
+}
+
+bool Client::hasKnowledgeOf(int id) {
+
+    /* This function helps detect log outs... it's a fix somewhat,
+       but it'll say a user logged out if they leave a channel and
+       they are then no longer in any of your channels
+
+       TODO: More in-depth fix for later releases
+    */
+
+    if (mypms.contains(id)) {
+        int nc = 0;
+
+        foreach (Channel *c, mychannels) {
+            if (c->hasPlayer(id)) {
+                nc++;
+            }
+        }
+        if (nc == 0) {
+            return false;
+        }
+        return true;
+    }
 }
 
 void Client::removePlayer(int id)
