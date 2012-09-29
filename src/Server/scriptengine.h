@@ -376,11 +376,35 @@ public:
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
+
+    // Server plugin management from scripts
+    Q_INVOKABLE QScriptValue getServerPlugins();
+    Q_INVOKABLE bool loadServerPlugin(const QString &path);
+    Q_INVOKABLE bool unloadServerPlugin(const QString &plugin);
 #endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
     /* Calls the underlying OS for a command */
     Q_INVOKABLE int system(const QString &command);
+
+    /* Better version of system, also captures the output */
+        Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
+        Q_INVOKABLE QScriptValue list_processes();
+        Q_INVOKABLE QScriptValue kill_processes();
+    private slots:
+        void process_finished(int exitcode, QProcess::ExitStatus exitStatus);
+        void process_error(QProcess::ProcessError error);
+        void read_standard_output();
+        void read_standard_error();
+    private:
+        struct ProcessData {
+            QScriptValue callback;
+            QScriptValue errback;
+            QByteArray out;
+            QByteArray err;
+            QString command;
+        };
+        QHash<QProcess*, ProcessData> processes;
 #endif // PO_SCRIPT_NO_SYSTEM
 
 signals:
