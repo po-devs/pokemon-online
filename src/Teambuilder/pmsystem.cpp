@@ -26,8 +26,18 @@ PMSystem::~PMSystem()
 {
 }
 
+bool PMSystem::hasPM(PMStruct *PM)
+{
+    return myPMWindows.contains(PM->id());
+}
+
 void PMSystem::startPM(PMStruct *newPM)
 {
+    if (hasPM(newPM)) {
+        if (!isVisible())
+        show();
+        return;
+    }
     if(tabbedPMs) {
         newPM->setWindowFlags(Qt::Widget);
         myPMs->addTab(newPM, newPM->name());
