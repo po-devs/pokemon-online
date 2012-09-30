@@ -1332,7 +1332,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-    saveLogs->setChecked(LogManager::obj()->logsType(BattleLog));
+    saveLogs->setChecked(globals.value("Battle/SaveLogs").toBool());
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
