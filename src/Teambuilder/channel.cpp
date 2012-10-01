@@ -705,26 +705,6 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
                 mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
             } else {
 
-                /* Add HTML to timeStr */
-                timeStr = "<span class='timestamp'>" + timeStr + "</span>";
-
-                QString nameClass = "name";
-                if (id != -1)
-                    nameClass = "name name-auth-" + QString::number(client->auth(id));
-
-
-                // If it is not our message, hilight our name if mentioned
-                // If we have flashing toggled off, we don't want to hilight
-                if (id != ownId() && flashingToggled)
-
-                    end = end.replace(nameNotInsideTag, addHilightClass);
-                mainChat()->insertHtml("<span class='line server-message'><span class='server-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
-            } else if (beg == "Welcome Message") {
-                mainChat()->insertHtml("<span class='line welcome-message'><span class='welcome-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
-            } else if (id == -1) {
-                mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
-            } else {
-
                 if (client->isIgnored(id))
                     return;
 
