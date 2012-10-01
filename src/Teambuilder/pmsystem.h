@@ -18,12 +18,13 @@ public:
     PMSystem(bool withTabs);
     ~PMSystem();
 
+    bool hasPM(PMStruct *PM);
     void startPM(PMStruct *newPM);
     void checkTabbing();
     void changePMs();
 
     void flash(PMStruct *pm);
-
+    QHash<int, PMStruct*> myPMWindows;
 private slots:
     void closeTab(int tabNum);
     void tabChanged(int tabNum);
@@ -36,7 +37,6 @@ private slots:
 private:
     QExposedTabWidget *myPMs;
     bool tabbedPMs;
-    QHash<int, PMStruct*> myPMWindows;
 };
 
 struct PMStruct : public QWidget

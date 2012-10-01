@@ -89,6 +89,7 @@ public:
 
     bool hasPlayer(int id);
     bool hasPlayerInfo(int id);
+    bool hasKnowledgeOf(int id);
 
     QSize defaultSize() const {
         return QSize(800,600);
@@ -143,6 +144,8 @@ public:
     bool pmsTabbed;
     bool pmReject;
 
+    bool flashingToggled;
+
     TierNode tierRoot;
     QStringList tierList;
 public slots:
@@ -157,6 +160,7 @@ public slots:
     void printChannelMessage(const QString &mess, int channel, bool html);
 
     /* sends what's in the line edit */
+    void changeName(const QString &name);
     void sendText();
     void playerLogin(const PlayerInfo &p, const QStringList &tiers);
     void playerReceived(const PlayerInfo &p);
@@ -296,6 +300,11 @@ public slots:
     void registerPermPlayer(int id);
     QStringList const& eventSettings() const;
     void newConnection();
+    /* exit warning */
+    void changeExitWarning(bool show);
+    void showExitWarning();
+    /* flashing */
+    void changeFlashing(bool flash);
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
@@ -426,6 +435,7 @@ private:
     bool singleTeam;
 
     QSettings globals;
+    bool exitWarning;
 
     QSet<OnlineClientPlugin*> plugins;
     PluginManager *pluginManager;

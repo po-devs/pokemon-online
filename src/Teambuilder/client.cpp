@@ -23,6 +23,8 @@
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
+    exitWarning = globals.value("Client/ShowExitWarning").toBool(); // initiate, to show exit warning or not
+    flashingToggled = !globals.contains("Client/Flashing") ? true : globals.value("Client/Flashing").toBool();
     failedBefore = false;
     waitingOnSecond = false;
     top = NULL;
@@ -108,7 +110,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
 
     connect(mainChat, SIGNAL(tabCloseRequested(int)), SLOT(leaveChannelR(int)));
     connect(mainChat, SIGNAL(currentChanged(int)), SLOT(firstChannelChanged(int)));
-    connect(myexit, SIGNAL(clicked()), SIGNAL(done()));
+    connect(myexit, SIGNAL(clicked()), SLOT(showExitWarning()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
     connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
@@ -762,6 +764,10 @@ void Client::startPM(int id)
         return;
     }
 
+    if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
+        return;
+    }
+
     PMStruct *p = new PMStruct(id, ownName(), name(id), "", ownAuth());
 
     pmSystem->startPM(p);
@@ -1085,16 +1091,19 @@ void Client::PMReceived(int id, QString pm)
         return;
     }
 
-    if(!mypms.contains(id)) {
-        startPM(id);
-    }
+    startPM(id);
 
     if(mypms.contains(id) && !mypms[id]->isVisible()) {
-        mypms[id]->show();
+        //mypms[id]->show();
     }
 
     registerPermPlayer(id);
-    mypms[id]->printLine(pm);
+    /* sometimes the line won't be printed, so we do this check */
+    if (!mypms.contains(id)) {
+        mypms[id]->printLine(pm);
+    } else {
+        pmSystem->myPMWindows[id]->printLine(pm);
+    }
     call("afterPMReceived(int,QString)",id,pm);
 }
 
@@ -1117,6 +1126,17 @@ void Client::loadTeam()
     w->show();
 
     connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(changeTeam(TeamHolder)));
+}
+
+void Client::changeName(const QString &name)
+{
+    secondTeam.name() = name;
+    /* just in case... */
+    secondTeam.color() = myteam->color();
+    secondTeam.info() = myteam->info();
+    secondTeam.team() = myteam->team();
+    /* notify server of our change */
+    changeTeam();
 }
 
 void Client::sendText()
@@ -1295,6 +1315,16 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     sortByAuth->setChecked(globals.value("Client/SortPlayersByAuth").toBool());
     sortBA = sortByAuth->isChecked();
 
+    QAction *flashing = menuActions->addAction(tr("Toggle flashing"));
+    flashing->setCheckable(true);
+    connect(flashing, SIGNAL(triggered(bool)), SLOT(changeFlashing(bool)));
+    flashing->setChecked(flashingToggled);
+
+    QAction *useExitWarning = menuActions->addAction(tr("Show exit warning"));
+    useExitWarning->setCheckable(true);
+    connect(useExitWarning, SIGNAL(triggered(bool)), SLOT(changeExitWarning(bool)));
+    useExitWarning->setChecked(exitWarning);
+
     QAction *sortChannelsName = menuActions->addAction(tr("Sort channels by name"));
     sortChannelsName->setCheckable(true);
     sortChannelsName->setChecked(globals.value("Client/SortChannelsByName").toBool());
@@ -1313,7 +1343,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-    saveLogs->setChecked(LogManager::obj()->logsType(BattleLog));
+    saveLogs->setChecked(globals.value("Battle/SaveLogs").toBool());
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
@@ -2201,6 +2231,30 @@ bool Client::hasPlayer (int id)
     return true;
 }
 
+bool Client::hasKnowledgeOf(int id) {
+
+    /* This function helps detect log outs... it's a fix somewhat,
+       but it'll say a user logged out if they leave a channel and
+       they are then no longer in any of your channels
+
+       TODO: More in-depth fix for later releases
+    */
+
+    if (mypms.contains(id)) {
+        int nc = 0;
+
+        foreach (Channel *c, mychannels) {
+            if (c->hasPlayer(id)) {
+                nc++;
+            }
+        }
+        if (nc == 0) {
+            return false;
+        }
+        return true;
+    }
+}
+
 void Client::removePlayer(int id)
 {
     QString name = player(id).name;
@@ -2588,5 +2642,54 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
             this->channel(channel)->printLine(mess);
         }
         call("afterChannelMessage(QString,int,bool)", mess, channel, html);
+    }
+}
+
+void Client::changeFlashing(bool flash)
+{
+    flashingToggled = flash;
+    globals.setValue("Client/Flashing", flash);
+}
+
+void Client::changeExitWarning(bool show)
+{
+    exitWarning = show;
+    globals.setValue("Client/ShowExitWarning", show);
+}
+
+void Client::showExitWarning()
+{
+    if (exitWarning) {
+        QDialog dialog(this);
+        dialog.setObjectName("exitWarning");
+        dialog.setWindowTitle(tr("Are you sure?"));
+        QVBoxLayout* layout = new QVBoxLayout;
+
+        layout->addWidget(new QLabel(tr("You are about to exit the server.")));
+
+        QCheckBox *showNextTime = new QCheckBox;
+        showNextTime->setText(tr("Show this warning next time"));
+        showNextTime->setChecked(true);
+        layout->addWidget(showNextTime);
+
+        layout->addWidget(new QLabel(tr("(This can be changed by going to Options -> Show exit warning.)")));
+
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
+        connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        layout->addWidget(buttonBox);
+
+        dialog.setLayout(layout);
+
+        int ret = dialog.exec();
+        if (!ret) {
+            return;
+        }
+        if (ret != QMessageBox::Cancel) {
+            changeExitWarning(showNextTime->isChecked());
+            emit done();
+        }
+    } else {
+        emit done();
     }
 }
