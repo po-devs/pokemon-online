@@ -425,7 +425,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
 
         if (hasPlayer(id))
             return;
-
+        client->call("onPlayerJoinChan(int,int)", id, myid);
         playerReceived(id);
 
         if (eventEnabled(Client::ChannelEvent)) {
@@ -460,6 +460,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
             printLine(tr("%1 left the channel.").arg(name(id)), false, false);
         }
         /* Remove everything... */
+        client->call("onPlayerLeaveChan(int,int)", id, myid);
         removePlayer(id);
 
         if (id == ownId()) {

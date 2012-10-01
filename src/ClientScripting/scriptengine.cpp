@@ -4,6 +4,7 @@
 #include "scriptengine.h"
 #include "scriptutils.h"
 #include "battlescripting.h"
+#include "../Utilities/ziputils.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
@@ -65,6 +66,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
     ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
     ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
+    ret.insert("onPlayerJoinChan(int,int)", (Hook)(&ScriptEngine::onPlayerJoinChan));
+    ret.insert("onPlayerLeaveChan(int,int)", (Hook)(&ScriptEngine::onPlayerLeaveChan));
     ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
 
     return ret;
@@ -224,6 +227,18 @@ int ScriptEngine::onPlayerReceived(int id)
 int ScriptEngine::onPlayerRemoved(int id)
 {
     makeEvent("onPlayerRemoved", id);
+    return true;
+}
+
+int ScriptEngine::onPlayerJoinChan(int id, int chan)
+{
+    makeEvent("onPlayerJoinChan", id, chan);
+    return true;
+}
+
+int ScriptEngine::onPlayerLeaveChan(int id, int chan)
+{
+    makeEvent("onPlayerLeaveChan", id, chan);
     return true;
 }
 
@@ -844,7 +859,6 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     }
 
     QFile out(fileName);
-
     if (!out.open(QIODevice::WriteOnly)) {
         warn("writeToFile(filename, content)", "Error when opening " + fileName + ": " + out.errorString());
         return;
@@ -868,6 +882,96 @@ void ScriptEngine::deleteFile(const QString &fileName)
     }
 
     out.remove();
+}
+
+void ScriptEngine::makeDir(const QString &dir)
+{
+    if (safeScripts) {
+        warn("makeDir(directory)", "Safe scripts is on.");
+        return;
+    }
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    if(directory.exists(dir)){
+        return;
+    }
+    directory.mkpath(current+"/"+dir);
+}
+
+void ScriptEngine::removeDir(const QString &dir)
+{
+    if (safeScripts) {
+        warn("rmDir(directory)", "Safe scripts is on.");
+        return;
+    }
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    directory.rmpath(current+"/"+dir); //rmpath only deletes if empty, so no need to check
+}
+QScriptValue ScriptEngine::extractZip(const QString &zipName, const QString &targetDir)
+{
+    if (safeScripts) {
+        warn("extract(zipName, targetDir)", "Safe scripts is on.");
+        return "";
+    }
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    zip.extractTo(targetDir);
+    return targetDir;
+}
+
+QScriptValue ScriptEngine:: extractZip(const QString &zipName)
+{
+    if (safeScripts) {
+        warn("extractZip(zipName)", "Safe scripts is on.");
+        return "";
+    }
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    QDir directory;
+    QString current=directory.currentPath();
+    zip.extractTo(current);
+    return zipName;
+}
+
+QScriptValue ScriptEngine::zip(const QString &path, const QString &dir)
+{
+    if (safeScripts) {
+        warn("zip(path, dir)", "Safe scripts is on.");
+        return "";
+    }
+    Zip zip;
+    QDir directory(dir);
+    if(!zip.open(path)){
+        zip.create(path);
+    }
+    if(!directory.exists()) {
+        zip.addFile(dir); //adds the file normally if it's not a directory
+        zip.writeArchive();
+        return path;
+    }
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    foreach(QString file, files){ //goes through the folder and adds each file to the zip file
+        zip.addFile(dir+"/"+file);
+    }
+    zip.writeArchive();
+    zip.close();
+    return path;
+}
+
+QScriptValue ScriptEngine::getCurrentDir()
+{
+    if (safeScripts) {
+        warn("getCurrentDir()", "Safe scripts is on.");
+        return "";
+    }
+    QDir directory;
+    QString current=directory.currentPath();
+    return current;
 }
 
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
