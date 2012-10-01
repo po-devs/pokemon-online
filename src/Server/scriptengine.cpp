@@ -13,7 +13,7 @@
 #include <QRegExp>
 #include "analyze.h"
 #include "../Shared/config.h"
-
+#include "../Utilities/ziputils.h"
 
 /*!
 \qmlmethod color Qt::lighter(color baseColor, real factor)
@@ -2529,6 +2529,71 @@ void ScriptEngine::deleteFile(const QString &fileName)
     }
 
     out.remove();
+}
+void ScriptEngine::makeDir(const QString &dir)
+{
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    if(directory.exists(dir)){
+        return;
+    }
+    directory.mkpath(current+"/"+dir);
+}
+
+void ScriptEngine::removeDir(const QString &dir)
+{
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    directory.rmpath(current+"/"+dir); //rmpath only deletes if empty, so no need to check
+}
+QScriptValue ScriptEngine::extractZip(const QString &zipName, const QString &targetDir)
+{
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    zip.extractTo(targetDir);
+    return targetDir;
+}
+
+QScriptValue ScriptEngine:: extractZip(const QString &zipName)
+{
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    QDir directory;
+    QString current=directory.currentPath();
+    zip.extractTo(current);
+    return zipName;
+}
+
+QScriptValue ScriptEngine::zip(const QString &path, const QString &dir)
+{
+    Zip zip;
+    QDir directory(dir);
+    if(!zip.open(path)){
+        zip.create(path);
+    }
+    if(!directory.exists()) {
+        zip.addFile(dir); //adds the file normally if it's not a directory
+        zip.writeArchive();
+        return path;
+    }
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    foreach(QString file, files){ //goes through the folder and adds each file to the zip file
+        zip.addFile(dir+"/"+file);
+    }
+    zip.writeArchive();
+    zip.close();
+    return path;
+}
+
+QScriptValue ScriptEngine::getCurrentDir()
+{
+    QDir directory;
+    QString current=directory.currentPath();
+    return current;
 }
 
 /**
