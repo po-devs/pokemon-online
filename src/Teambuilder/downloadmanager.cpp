@@ -169,7 +169,7 @@ void DownloadManager::updateDownloaded()
         settings.setValue("Updates/ZipPath", path);
         settings.setValue("Updates/ZipDownloaded", true);
 
-        //QtConcurrent::run(this,&DownloadManager::extractZip, path);
+        QtConcurrent::run(this,&DownloadManager::extractZip, path);
     }
 }
 

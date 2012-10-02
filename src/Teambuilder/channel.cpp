@@ -15,7 +15,7 @@ Channel::Channel(const QString &name, int id, Client *parent)
 
     mymainchat->setObjectName("MainChat");
     mymainchat->setOpenExternalLinks(false);
-    
+
     QFile stylesheet(Theme::path("mainchat.css"));
     stylesheet.open(QIODevice::ReadOnly);
     mymainchat->document()->setDefaultStyleSheet(stylesheet.readAll());
@@ -99,10 +99,10 @@ void Channel::showContextMenu(const QPoint &requested)
                 menu->addSeparator();
                 createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), client, SLOT(kick(int)), item->id());
                 menu->addSeparator();
-				QMenu* tempbanMenu = new QMenu(tr("&Ban for..."));
+                QMenu* tempbanMenu = new QMenu(tr("&Ban for..."));
                 createIntMapper(tempbanMenu->addAction(tr("60 minutes")), SIGNAL(triggered()), client, SLOT(tempban60(int)), item->id());
                 createIntMapper(tempbanMenu->addAction(tr("24 hours")), SIGNAL(triggered()), client, SLOT(tempban1440(int)), item->id());
-				menu->addMenu(tempbanMenu);
+                menu->addMenu(tempbanMenu);
 
                 /* If you're an admin, you can ban */
                 if (myauth >= 2) {
@@ -642,7 +642,6 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
 
 void Channel::printLine(const QString &_line, bool flashing, bool act)
 {
-
     if(client->call("beforeChannelMessage(QString,int,bool)", _line, myid, false)){
         QString line = removeTrollCharacters(_line);
         QString timeStr = "";
@@ -684,7 +683,6 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             const QString addHilightClass("<span class='name-hilight'>\\1</span>");
             QString lineClass = "line";
 
-
             if (id != ownId() && end.contains(nameNotInsideTag) && flashingToggled) { // Add stuff if we are to be flashed
                 lineClass = "line line-hilight";
             }
@@ -709,7 +707,8 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
                     return;
 
                 // If it is not our message, hilight our name if mentioned
-                if (id != ownId())
+                // If we have flashing toggled off, we don't want to hilight
+                if (id != ownId() && flashingToggled)
                     end = end.replace(nameNotInsideTag, addHilightClass);
 
                 QString authSymbol = Theme::AuthSymbol(client->auth(id));
@@ -724,10 +723,9 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             }
             mainChat()->insertPlainText( timeStr + line + "\n");
         }
+        client->call("afterChannelMessage(QString,int,bool)", _line, myid, false);
     }
-    client->call("afterChannelMessage(QString,int,bool)", _line, myid, false);
 }
-
 
 void Channel::printHtml(const QString &str, bool act)
 {
