@@ -365,7 +365,13 @@ public:
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
+    Q_INVOKABLE void makeDir(const QString &dir);
+    Q_INVOKABLE void removeDir(const QString &dir);
+    Q_INVOKABLE QScriptValue getCurrentDir();
     Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+    Q_INVOKABLE QScriptValue zip(const QString &path, const QString &directory);
+    Q_INVOKABLE QScriptValue extractZip(const QString &zipName, const QString &targetDir);
+    Q_INVOKABLE QScriptValue extractZip(const QString &zipName);
 
     /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
