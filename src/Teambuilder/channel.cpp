@@ -723,8 +723,8 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             }
             mainChat()->insertPlainText( timeStr + line + "\n");
         }
-        client->call("afterChannelMessage(QString,int,bool)", _line, myid, false);
     }
+    client->call("afterChannelMessage(QString,int,bool)", _line, myid, false);
 }
 
 void Channel::printHtml(const QString &str, bool act)
