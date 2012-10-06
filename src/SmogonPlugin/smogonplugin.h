@@ -1,22 +1,15 @@
 #ifndef SMOGONPLUGIN_H
 #define SMOGONPLUGIN_H
 
-#include <QMainWindow>
+#include <QWidget>
 
-namespace Ui {
-class SmogonPlugin;
-}
-
-class SmogonPlugin : public QMainWindow
+class SmogonPlugin : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit SmogonPlugin(QWidget *parent = 0);
+    SmogonPlugin(QWidget *parent = 0);
     ~SmogonPlugin();
-    
-private:
-    Ui::SmogonPlugin *ui;
 };
 
 #endif // SMOGONPLUGIN_H

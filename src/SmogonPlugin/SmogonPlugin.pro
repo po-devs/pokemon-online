@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2012-10-06T18:37:08
+# Project created by QtCreator 2012-10-06T19:15:45
 #
 #-------------------------------------------------
 
@@ -12,9 +12,7 @@ TARGET = SmogonPlugin
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES +=\
         smogonplugin.cpp
 
 HEADERS  += smogonplugin.h
-
-FORMS    += smogonplugin.ui

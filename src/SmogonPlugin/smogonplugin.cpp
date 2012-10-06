@@ -1,14 +1,11 @@
 #include "smogonplugin.h"
-#include "ui_smogonplugin.h"
 
-SmogonPlugin::SmogonPlugin(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::SmogonPlugin)
+SmogonPlugin::SmogonPlugin(QWidget *parent)
+    : QWidget(parent)
 {
-    ui->setupUi(this);
 }
 
 SmogonPlugin::~SmogonPlugin()
 {
-    delete ui;
+    
 }
