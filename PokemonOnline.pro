@@ -78,3 +78,6 @@ TRANSLATIONS = src/trans/translation_de.ts \
 
 message(Following modules will be build: $$SUBDIRS)
 
+SUBDIRS += \
+    src/SmogonPlugin/SmogonPlugin
+
