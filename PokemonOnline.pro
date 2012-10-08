@@ -43,7 +43,8 @@ CONFIG(po_clientplugins) {
                src/CSSChanger \
                src/QRCodePlugin \
                src/ClientScripting \
-               src/SettingsPlugin
+               src/SettingsPlugin \
+               src/SmogonPlugin \
 }
 
 CONFIG(chess) {
@@ -77,7 +78,4 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_zh-cn.ts
 
 message(Following modules will be build: $$SUBDIRS)
-
-SUBDIRS += \
-    src/SmogonPlugin/SmogonPlugin
 
