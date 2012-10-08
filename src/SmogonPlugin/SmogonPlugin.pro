@@ -1,18 +1,51 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2012-10-06T19:15:45
+# Project created by QtCreator 2011-08-06T15:08:40
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = SmogonPlugin
-TEMPLATE = app
+TEMPLATE = lib 
+DESTDIR = ../../bin/myplugins
+
+QT += xml 
+
+DEFINES += SMOGONPLUGIN_LIBRARY
+
+SOURCES += smogonplugin.cpp
+
+QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+HEADERS += smogonplugin.h\
+        SmogonPlugin_global.h \
+    ../Teambuilder/plugininterface.h \
+    ../Teambuilder/engineinterface.h
+
+windows: {
+    LIBS += -L../../bin/myplugins
+}
+
+LIBS += -L../../bin \
+    -lpokemonlib \
+    -lutilities
+
+symbian {
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xEA9E7289
+    TARGET.CAPABILITY =
+    TARGET.EPOCALLOWDLLDATA = 1 
+    addFiles.sources = SmogonPlugin.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
+
+unix:!symbian {
+    maemo5 {
+        target.path = /opt/usr/lib
+    } else {
+        target.path = /usr/local/lib
+    }
+    INSTALLS += target
 
 
-SOURCES +=\
-        smogonplugin.cpp
-
-HEADERS  += smogonplugin.h
