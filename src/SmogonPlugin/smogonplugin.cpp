@@ -2,18 +2,11 @@
 #include "../Teambuilder/engineinterface.h"
 #include "../Teambuilder/Teambuilder/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
+#include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
-#ifdef _WIN32
-#include "../../SpecialIncludes/zlib.h"
-#include "../../SpecialIncludes/qrencode.h"
-#else
-#include <zlib.h>
-#include <qrencode.h>
-#endif
 #include <QLabel>
-#include <QBitmap>
 #include <QPalette>
-
+#include <QTabWidget>
 
 ClientPlugin* createPluginClass(MainEngineInterface *interface)
 {
@@ -32,11 +25,24 @@ bool SmogonPlugin::hasConfigurationWidget() const
 
 QString SmogonPlugin::pluginName() const
 {
-    return "Get builds from Smogon";
+    return "Get Builds from Smogon";
 }
 
-QWidget *SmogonPlugin:getConfigurationWidget()
+QWidget *SmogonPlugin::getConfigurationWidget()
 {
 
+    QTabWidget* ret = new QTabWidget;
+    
+    /* Given the interface, get the pokemon team */
+    Team team = interface->trainerTeam()->team();
+    Pokemon::gen m_gen = team.gen();
+    
+    /* Insert multiple tabs */
+    for(int i = 0; i<6; i++){
+        PokeTeam current_poke = team.poke(i);
+        ret->addTab(new QWidget(ret), PokemonInfo::Name(current_poke.num()));
+    }
+
+    return ret;
 }
 
