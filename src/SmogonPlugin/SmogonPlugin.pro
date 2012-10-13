@@ -12,14 +12,16 @@ QT += xml
 
 DEFINES += SMOGONPLUGIN_LIBRARY
 
-SOURCES += smogonplugin.cpp
+SOURCES += smogonplugin.cpp \
+    smogonscraper.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 HEADERS += smogonplugin.h\
         SmogonPlugin_global.h \
     ../Teambuilder/plugininterface.h \
-    ../Teambuilder/engineinterface.h
+    ../Teambuilder/engineinterface.h \
+    smogonscraper.h
 
 windows: {
     LIBS += -L../../bin/myplugins
