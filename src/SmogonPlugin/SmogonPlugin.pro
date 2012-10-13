@@ -49,5 +49,5 @@ unix:!symbian {
         target.path = /usr/local/lib
     }
     INSTALLS += target
-
+}
 
