@@ -1,15 +1,28 @@
 #ifndef SMOGONPLUGIN_H
 #define SMOGONPLUGIN_H
 
-#include <QWidget>
+#include "SmogonPlugin_global.h"
+#include "../Teambuilder/plugininterface.h"
 
-class SmogonPlugin : public QWidget
-{
-    Q_OBJECT
-    
+extern "C" {
+SMOGONPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+}
+
+class SMOGONPLUGINSHARED_EXPORT SmogonPlugin : public ClientPlugin {
 public:
-    SmogonPlugin(QWidget *parent = 0);
-    ~SmogonPlugin();
+    SmogonPlugin(MainEngineInterface *interface);
+
+    /* The name of the option the plugin would take in the menu bar.
+       Also appears as the name of the plugin */
+    QString pluginName() const;
+
+    /* A widget that would be used to configure the plugin in the menu bar.
+       Return NULL if you don't want one (default behavior) */
+    QWidget * getConfigurationWidget();
+
+    bool hasConfigurationWidget() const;
+private:
+    MainEngineInterface *interface;
 };
 
 #endif // SMOGONPLUGIN_H
