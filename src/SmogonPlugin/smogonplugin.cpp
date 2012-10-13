@@ -33,14 +33,20 @@ QWidget *SmogonPlugin::getConfigurationWidget()
 
     QTabWidget* ret = new QTabWidget;
     
+    /* Set the min dimensions of the plugin's window */
+    QSize* min_size = new QSize;
+    ret -> setMinimumSize(500, 600);
+    
     /* Given the interface, get the pokemon team */
     Team team = interface->trainerTeam()->team();
     Pokemon::gen m_gen = team.gen();
     
-    /* Insert multiple tabs */
+    /* Insert a tab for each pokemon in the party */
     for(int i = 0; i<6; i++){
         PokeTeam current_poke = team.poke(i);
-        ret->addTab(new QWidget(ret), PokemonInfo::Name(current_poke.num()));
+        /* Don't display Missingno */
+        if(current_poke.num() > 0)
+            ret->addTab(new QWidget(ret), PokemonInfo::Name(current_poke.num()));
     }
 
     return ret;
