@@ -1,4 +1,5 @@
 #include "smogonplugin.h"
+#include "pokemontab.h"
 #include "../Teambuilder/engineinterface.h"
 #include "../Teambuilder/Teambuilder/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
@@ -34,7 +35,6 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     QTabWidget* ret = new QTabWidget;
     
     /* Set the min dimensions of the plugin's window */
-    QSize* min_size = new QSize;
     ret -> setMinimumSize(500, 600);
     
     /* Given the interface, get the pokemon team */
@@ -46,7 +46,8 @@ QWidget *SmogonPlugin::getConfigurationWidget()
         PokeTeam current_poke = team.poke(i);
         /* Don't display Missingno */
         if(current_poke.num() > 0)
-            ret->addTab(new QWidget(ret), PokemonInfo::Name(current_poke.num()));
+            ret->addTab(new PokemonTab(current_poke, m_gen, ret), 
+                        PokemonInfo::Name(current_poke.num()));
     }
 
     return ret;
