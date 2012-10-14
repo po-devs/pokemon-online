@@ -8,7 +8,7 @@ TARGET = SmogonPlugin
 TEMPLATE = lib 
 DESTDIR = ../../bin/myplugins
 
-QT += xml 
+QT += xml network 
 
 DEFINES += SMOGONPLUGIN_LIBRARY
 
@@ -31,7 +31,8 @@ windows: {
 
 LIBS += -L../../bin \
     -lpokemonlib \
-    -lutilities
+    -lutilities \
+    -lbattlelib
 
 symbian {
     #Symbian specific definitions
