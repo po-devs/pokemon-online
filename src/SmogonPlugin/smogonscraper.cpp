@@ -5,13 +5,13 @@
  *  need to instantiate anything for new instances. In fact we probably don't
  *  need a constructor.
  */
-SmogonScraper::SmogonScraper() :
+SmogonScraper::SmogonScraper()
 {
 }
 
-BuildObject* SmogonScraper::get(Pokemon::gen gen, PokeTeam pokeName) :
+static BuildObject* SmogonScraper::get(Pokemon::gen gen, PokeTeam pokeName)
 {
-    string webPage = scrapePage(gen, pokeName);
+    QString webPage = QString(scrapePage(gen, pokeName));
     int numberOfBuilds = 0;
     BuildObject currBuild;
     BuildObject* fullList = new BuildObject[10];//Definatly less then 10 builds
@@ -30,7 +30,7 @@ BuildObject* SmogonScraper::get(Pokemon::gen gen, PokeTeam pokeName) :
 }
 
 /*I believe this will get the target data*/
-string SmogonScraper::scrapePage(Pokemon::gen gen, PokeTeam pokeName) :
+static string SmogonScraper::scrapePage(Pokemon::gen gen, PokeTeam pokeName)
 {
     /*TODO: actually parse the inputs so we can get real data*/
     string url = "http://www.smogon.com/bw/pokemon/chansey";
@@ -38,14 +38,14 @@ string SmogonScraper::scrapePage(Pokemon::gen gen, PokeTeam pokeName) :
     QNetworkAccessManager * manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
 
-    request.setUrl(QUrl(url));
+    request.setUrl(QUrl(QString(url)));
     request.setRawHeader("User-Agent", "Smogon Plugin data request");
 
     QNetworkReply *reply = manager.get(request);
     return reply->readAll();
 }
 
-BuildObject SmogonScraper::parsePage(string page) :
+static BuildObject SmogonScraper::parsePage(QString page)
 {
     /*QDomDocument myDoc;
     myDoc.setContent(QString(page));
@@ -57,10 +57,9 @@ BuildObject SmogonScraper::parsePage(string page) :
 
 
     //Dumb Algorithm that gets the data on the 241st line
-    string oneLine = strtok(page, "\n");
-    for(int i=0;i<240;i++){
-        oneLine = strtok(NULL, "\n");
-    }
+    QStringList ls = page.split("\n");
+    QString oneLine = ls.at(420);
+
     BuildObject retObj;
     retObj.description = oneLine;
     return retObj;
