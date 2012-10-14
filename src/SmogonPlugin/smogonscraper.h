@@ -4,6 +4,8 @@
 #include <string>
 #include <QtNetwork>
 #include <QDomDocument>
+#include "../PokemonInfo/pokemoninfo.h"
+
 
 using namespace std;
 
@@ -33,12 +35,12 @@ class SmogonScraper
 {
 
 private:
-    string scrapePage(int gen, string pokeName);
+    string scrapePage(Pokemon::gen gen, PokeTeam pokeName);
     BuildObject parsePage(string page);
     /*Note, it might be better to have this function just return all the builds*/
 public:
     SmogonScraper::SmogonScraper();
-    static BuildObject* get(int gen, string pokeName);
+    static BuildObject* get(Pokemon::gen gen, PokeTeam pokeName);
 };
 
 

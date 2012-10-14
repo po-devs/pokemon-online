@@ -9,7 +9,7 @@ SmogonScraper::SmogonScraper() :
 {
 }
 
-BuildObject* SmogonScraper::get(int gen, string pokeName) :
+BuildObject* SmogonScraper::get(Pokemon::gen gen, PokeTeam pokeName) :
 {
     string webPage = scrapePage(gen, pokeName);
     int numberOfBuilds = 0;
@@ -30,7 +30,7 @@ BuildObject* SmogonScraper::get(int gen, string pokeName) :
 }
 
 /*I believe this will get the target data*/
-string SmogonScraper::scrapePage(int gen, string pokeName) :
+string SmogonScraper::scrapePage(Pokemon::gen gen, PokeTeam pokeName) :
 {
     /*TODO: actually parse the inputs so we can get real data*/
     string url = "http://www.smogon.com/bw/pokemon/chansey";
