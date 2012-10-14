@@ -17,12 +17,12 @@ using namespace std;
  */
 struct BuildObject
 {
-    string buildName;
-    vector<string> item;
-    vector<string> nature;
+    QString buildName;
+    vector<QString> item;
+    vector<QString> nature;
     int EVList[6];
-    vector<string> moves[4];
-    string description;
+    vector<QString> moves[4];
+    QString description;
 };
 
 
@@ -36,8 +36,8 @@ class SmogonScraper
 {
 
 private:
-    static string scrapePage(Pokemon::gen gen, PokeTeam pokeName);
-    static BuildObject parsePage(string page);
+    static QString scrapePage(Pokemon::gen gen, PokeTeam pokeName);
+    static BuildObject parsePage(QString page);
     /*Note, it might be better to have this function just return all the builds*/
 public:
     SmogonScraper();
