@@ -2,7 +2,11 @@
 #define SMOGONSCRAPER_H
 
 #include <string>
+
+#include <QtCore>
+
 #include <QtNetwork>
+
 #include <QDomDocument>
 #include <vector>
 #include "../PokemonInfo/pokemoninfo.h"
