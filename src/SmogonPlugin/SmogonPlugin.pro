@@ -23,7 +23,8 @@ HEADERS += smogonplugin.h\
     ../Teambuilder/plugininterface.h \
     ../Teambuilder/engineinterface.h \
     smogonscraper.h \
-    pokemontab.h
+    pokemontab.h \
+    SmogonBuild.h
 
 windows: {
     LIBS += -L../../bin/myplugins

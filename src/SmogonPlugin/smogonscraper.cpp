@@ -5,62 +5,40 @@
  *  need to instantiate anything for new instances. In fact we probably don't
  *  need a constructor.
  */
-SmogonScraper::SmogonScraper()
+
+
+SmogonScraper::SmogonScraper(PokemonTab* srcTab)
 {
+    manager = new QNetworkAccessManager(this);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(reciever(QNetworkReply*)));
+
+    uiTab = srcTab;
 }
 
-static BuildObject* SmogonScraper::get(Pokemon::gen gen, PokeTeam pokeName)
+void SmogonScraper::lookup(Pokemon::gen gen, PokeTeam pokeName)
 {
-    QString webPage = QString(scrapePage(gen, pokeName));
-    int numberOfBuilds = 0;
-    BuildObject currBuild;
-    BuildObject* fullList = new BuildObject[10];//Definatly less then 10 builds
-    while((currBuild = parsePage(webPage)) != NULL)
-    {
-        fullList[numberOfBuilds] = currBuild;
-        numberOfBuilds++;
-    }
+    //There will have to be some parsing of the data to create a "good" url
+    QString webPage = QString("http://www.smogon.com/bw/pokemon/chansey");
 
-    BuildObject* retList = new BuildObject[numberOfBuilds];
-    for(int i=0;i<numberOfBuilds;i++)
-    {
-        retList[i] = fullList[i];
-    }
-    return retList;
+    manager->get(QNetworkRequest(QUrl(webPage)));
 }
 
-/*I believe this will get the target data*/
-static string SmogonScraper::scrapePage(Pokemon::gen gen, PokeTeam pokeName)
+SmogonBuild* SmogonScraper::parsePage(QString webPage)
 {
-    /*TODO: actually parse the inputs so we can get real data*/
-    string url = "http://www.smogon.com/bw/pokemon/chansey";
-
-    QNetworkAccessManager * manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-
-    request.setUrl(QUrl(QString(url)));
-    request.setRawHeader("User-Agent", "Smogon Plugin data request");
-
-    QNetworkReply *reply = manager.get(request);
-    return reply->readAll();
-}
-
-static BuildObject SmogonScraper::parsePage(QString page)
-{
-    /*QDomDocument myDoc;
-    myDoc.setContent(QString(page));
-    QDomNodeList tdList = myDoc.elementsByTagName("td");
-    for(int i = 0;i<tdList.length;i++)
-    {
-        QDomNode temp = tdList.at(i);
-    }*/
-
-
     //Dumb Algorithm that gets the data on the 241st line
-    QStringList ls = page.split("\n");
-    QString oneLine = ls.at(420);
+    QStringList ls = webPage.split("\n");
+    QString oneLine = ls.at(419);
 
-    BuildObject retObj;
-    retObj.description = oneLine;
-    return retObj;
+    SmogonBuild* builds = new SmogonBuild[1];
+    builds[0].description = oneLine;
+    return builds;
+}
+
+void SmogonScraper::reciever(QNetworkReply* reply)
+{
+    QString webPage = QString(reply->readAll());
+    SmogonBuild *builds = parsePage(webPage);
+    uiTab->update_ui(builds);
 }
