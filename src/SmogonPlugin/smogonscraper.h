@@ -9,6 +9,7 @@
 
 #include <QDomDocument>
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/enums.h"
 #include "pokemontab.h"
 #include "SmogonBuild.h"
 
