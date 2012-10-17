@@ -45,7 +45,7 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     /* Insert a tab for each pokemon in the party */
     for(int i = 0; i<6; i++){
         PokeTeam current_poke = team.poke(i);
-        current_poke.reset();
+
         /* Don't display Missingno */
         if(current_poke.num() > 0)
             ret->addTab(new PokemonTab(current_poke, m_gen, ret), 
