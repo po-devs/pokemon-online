@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPalette>
 #include <QTabWidget>
+#include <QtGui>
 
 ClientPlugin* createPluginClass(MainEngineInterface *interface)
 {
@@ -45,11 +46,13 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     /* Insert a tab for each pokemon in the party */
     for(int i = 0; i<6; i++){
         PokeTeam current_poke = team.poke(i);
-        current_poke.reset();
         /* Don't display Missingno */
-        if(current_poke.num() > 0)
-            ret->addTab(new PokemonTab(current_poke, m_gen, ret), 
-                        PokemonInfo::Name(current_poke.num()));
+        if(current_poke.num() > 0){
+            PokemonTab* currentTab = new PokemonTab(current_poke, m_gen, ret);
+            QScrollArea *scrollArea = new QScrollArea;
+            scrollArea -> setWidget(currentTab);
+            ret->addTab(scrollArea, PokemonInfo::Name(current_poke.num()));
+        }
     }
 
     return ret;
