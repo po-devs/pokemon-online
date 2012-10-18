@@ -462,15 +462,9 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         /* Remove everything... */
         client->call("onPlayerLeaveChan(int,int)", id, myid);
         removePlayer(id);
-
         if (id == ownId()) {
             printHtml(tr("<i>You are not in the channel anymore</i>"));
             emit quitChannel(this->id());
-        } else {
-            if (!client->hasKnowledgeOf(id)) {
-                client->call("onPlayerRemoved(int)", id);
-                client->removePlayer(id);
-            }
         }
     } else if (command == NetworkCli::ChannelBattle) {
         qint32 id, id1, id2;

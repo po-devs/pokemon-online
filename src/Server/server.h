@@ -61,6 +61,7 @@ public:
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
     void sendLogout(int id);
+    void sendPlayerLogout(int id);
     void sendTierList(int id);
     bool playerExist(int id) const;
     bool playerLoggedIn(int id) const;
@@ -104,6 +105,7 @@ public:
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
     void processLoginDetails(Player *p);
+    bool shouldSendBattleMessage(int id, const QString &str);
 signals:
     void chatmessage(const QString &name);
     void servermessage(const QString &name);
@@ -341,5 +343,7 @@ private:
 
     QSet<Player*> groups[LastGroup];
     QSet<Player*> oppGroups[LastGroup];
+
+    QHash<int, QString> battlePasses;
 };
 #endif // SERVER_H

@@ -40,6 +40,9 @@ public:
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
 
+    bool beforeBattleMessage(int src, const QString &message);
+    void afterBattleMessage(int src, const QString &message);
+
     bool beforeNewMessage(const QString &message);
     void afterNewMessage(const QString &message);
 

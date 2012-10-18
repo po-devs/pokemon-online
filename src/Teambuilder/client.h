@@ -89,7 +89,6 @@ public:
 
     bool hasPlayer(int id);
     bool hasPlayerInfo(int id);
-    bool hasKnowledgeOf(int id);
 
     QSize defaultSize() const {
         return QSize(800,600);

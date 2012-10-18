@@ -124,8 +124,7 @@ void BaseBattleWindow::init()
     columns->addLayout(mylayout = new QGridLayout());
 
     mylayout->addWidget(getSceneWidget(), 0, 0, 1, 3);
-    QSettings settings;
-    bool saveLog = settings.value("Battle/SaveLogs").toBool();
+    bool saveLog = LogManager::obj()->isLogSaving(BattleLog);
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 2);
     saveLogs->setChecked(saveLog);
     mylayout->addWidget(musicOn = new QCheckBox(tr("Music")), 1, 1, 1, 2);

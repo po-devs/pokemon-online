@@ -710,6 +710,7 @@ void Client::lineJoin()
         return;
     }
 
+    //printLine(QString("Attempting to join %1").arg(text));
     join(text);
 }
 
@@ -765,6 +766,9 @@ void Client::startPM(int id)
     }
 
     if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
+        if (!pmSystem->isVisible()) {
+            pmSystem->show();
+        }
         return;
     }
 
@@ -1343,7 +1347,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     QAction * saveLogs = battleMenu->addAction(tr("Save &Battle Logs"));
     saveLogs->setCheckable(true);
     connect(saveLogs, SIGNAL(triggered(bool)), SLOT(saveBattleLogs(bool)));
-    saveLogs->setChecked(globals.value("Battle/SaveLogs").toBool());
+    saveLogs->setChecked(LogManager::obj()->isLogSaving(BattleLog));
 
     battleMenu->addAction(tr("Change &log folder ..."), this, SLOT(changeBattleLogFolder()));
 
@@ -2231,30 +2235,6 @@ bool Client::hasPlayer (int id)
     return true;
 }
 
-bool Client::hasKnowledgeOf(int id) {
-
-    /* This function helps detect log outs... it's a fix somewhat,
-       but it'll say a user logged out if they leave a channel and
-       they are then no longer in any of your channels
-
-       TODO: More in-depth fix for later releases
-    */
-
-    if (mypms.contains(id)) {
-        int nc = 0;
-
-        foreach (Channel *c, mychannels) {
-            if (c->hasPlayer(id)) {
-                nc++;
-            }
-        }
-        if (nc == 0) {
-            return false;
-        }
-        return true;
-    }
-}
-
 void Client::removePlayer(int id)
 {
     QString name = player(id).name;
@@ -2672,7 +2652,7 @@ void Client::showExitWarning()
         showNextTime->setChecked(true);
         layout->addWidget(showNextTime);
 
-        layout->addWidget(new QLabel(tr("(This can be changed by going to Options -> Show exit warning.)")));
+        layout->addWidget(new QLabel(tr("(You can change this by going to Options -> Show exit warning.)")));
 
         QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
         connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));

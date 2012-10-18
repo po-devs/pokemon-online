@@ -537,7 +537,6 @@ void Player::battleMessage(int bid, const BattleChoice &b)
 {
     if (!hasBattle(bid))
         return; //INVALID BEHAVIOR
-
     emit battleMessage(id(), bid, b);
 }
 

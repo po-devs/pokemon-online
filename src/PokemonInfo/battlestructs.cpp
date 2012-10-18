@@ -810,10 +810,6 @@ bool BattleChoice::match(const BattleChoices &avail) const
         return true;
     }
 
-    if (itemChoice()) {
-        return true;
-    }
-
     //Reached if the type is not known
     return false;
 }

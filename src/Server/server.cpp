@@ -1100,7 +1100,6 @@ void Server::battleMessage(int player, int battle, const BattleChoice &choice)
     if (!mybattles.contains(battle)) {
         return;
     }
-
     mybattles[battle]->battleChoiceReceived(player, choice);
 }
 
@@ -1119,7 +1118,10 @@ void Server::battleChat(int player, int battle, const QString &chat)
         return;
     }
 
-    mybattles[battle]->battleChat(player, chat);
+    if (myengine->beforeBattleMessage(player, chat)) {
+        mybattles[battle]->battleChat(player, chat);
+        myengine->afterBattleMessage(player, chat);
+    }
 }
 
 void Server::spectatingChat(int player, int battle, const QString &chat)
@@ -1127,7 +1129,10 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     if (!mybattles.contains(battle)) {
         return;
     }
-    mybattles[battle]->spectatingChat(player, chat);
+    if (myengine->beforeBattleMessage(player, chat)) {
+        mybattles[battle]->spectatingChat(player, chat);
+        myengine->afterBattleMessage(player, chat);
+    }
 }
 
 bool Server::joinRequest(int player, const QString &channel)
@@ -1973,6 +1978,19 @@ void Server::spectatingStopped(int id, int idOfBattle)
     mybattles[idOfBattle]->removeSpectator(id);
 }
 
+void Server::sendPlayerLogout(int id)
+{
+    if (!playerExist(id)) {
+        return;//INVALID BEHAVIOR
+    }
+    foreach(Player *p, myplayers) {
+        if (!p->isLoggedIn()) {
+            return;//INVALID BEHAVIOR
+        }
+        p->relay().notify(NetworkServ::Logout, qint32(id));
+    }
+}
+
 void Server::disconnectPlayer(int id)
 {
     if (playerExist(id))
@@ -1999,6 +2017,8 @@ void Server::disconnectPlayer(int id)
 
         AntiDos::obj()->disconnect(p->ip(), id);
 
+        sendPlayerLogout(id);
+
         foreach(int chanid, p->getChannels()) {
             leaveRequest(id, chanid, true);
         }
@@ -2007,7 +2027,6 @@ void Server::disconnectPlayer(int id)
 
         /* Sending the notice of logout to others only if the player is already logged in */
         if (loggedIn) {
-            sendLogout(id);
             myengine->afterLogOut(id);
         }
 
@@ -2043,15 +2062,15 @@ void Server::removePlayer(int id)
             AntiDos::obj()->disconnect(p->ip(), id);
         }
 
+        sendPlayerLogout(id);
+
         foreach(int chanid, p->getChannels()) {
             leaveRequest(id, chanid);
         }
 
         emit player_logout(id);
 
-        /* Sending the notice of logout to others only if the player is already logged in */
         if (loggedIn) {
-            sendLogout(id);
             myengine->afterLogOut(id);
         }
 

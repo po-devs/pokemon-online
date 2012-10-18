@@ -16,7 +16,6 @@ BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const Playe
     possible = false;
     sent = true;
     _myteam = team;
-    phase = Regular;
 
     currentSlot = data->spot(myself);
 
@@ -113,14 +112,13 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
         mytab->addTab(myitems = new QListWidget(), tr("Items"));
         myitems->setIconSize(QSize(24,24));
         listItems();
-        connect(myitems, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(itemActivated(QListWidgetItem*)));
     } else {
         myitems = NULL;
     }
 
     myspecs->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         myazones[i] = new AttackZone(poke(i), gen());
         mystack->addWidget(myazones[i]);
         mybgroups.append(new QButtonGroup());
@@ -159,28 +157,6 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     disableAll();
 }
 
-void BattleWindow::itemActivated(QListWidgetItem *it)
-{
-    int item = it->data(Qt::UserRole).toInt();
-    int target = ItemInfo::Target(item, gen());
-
-    int n = data().slotNum(info().currentSlot);
-    ItemChoice ic;
-    ic.item = item;
-    info().choice[n] = BattleChoice(info().currentSlot, ic);
-
-    if (target == Item::Team || target == Item::Opponent) {
-        info().done[n] = true;
-        goToNextChoice();
-        return;
-    }
-
-    if (target == Item::TeamPokemon || target == Item::Attack) {
-        info().phase = BattleInfo::ItemPokeSelection;
-        switchToPokeZone();
-    }
-}
-
 void BattleWindow::listItems()
 {
     if (!myitems) {
@@ -196,7 +172,6 @@ void BattleWindow::listItems()
     for (int i = 0; i < keys.size(); i++) {
         if (ItemInfo::IsBattleItem(keys[i], gen())) {
             QListWidgetItem *it = new QListWidgetItem(ItemInfo::Icon(keys[i]), tr("%1 (x%2)").arg(ItemInfo::Name(keys[i])).arg(items[keys[i]]));
-            it->setData(Qt::UserRole, keys[i]);
             myitems->addItem(it);
         }
     }
@@ -259,13 +234,9 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     mystack->setCurrentIndex(snum);
     mytab->setCurrentIndex(MoveTab);
 
-    updateAttacks(myazones[snum], &info().tempPoke(spot));
-}
-
-void BattleWindow::updateAttacks(AttackZone *zone, PokeProxy *p)
-{
+    const auto &poke = info().tempPoke(spot);
     for (int i = 0; i< 4; i++) {
-        zone->tattacks[i]->updateAttack(p->move(i)->exposedData(), *p, gen());
+        myazones[snum]->tattacks[i]->updateAttack(poke.move(i)->exposedData(), poke, gen());
     }
 }
 
@@ -319,7 +290,7 @@ void BattleWindow::questionButtonClicked(QAbstractButton * b)
 void BattleWindow::switchToPokeZone()
 {
     int n = data().slotNum(info().currentSlot);
-    if (sender() == myswitch && info().mode == ChallengeInfo::Triples && n != 1) {
+    if (sender() && info().mode == ChallengeInfo::Triples && n != 1) {
         BattleChoice &b = info().choice[n];
         b = BattleChoice(info().currentSlot, MoveToCenterChoice());
         info().done[n] = true;
@@ -332,14 +303,6 @@ void BattleWindow::switchToPokeZone()
         mytab->setCurrentIndex(MoveTab);
     } else {
         mytab->setCurrentIndex(PokeTab);
-
-        /* We are selecting a pokemon in our team in order to use an item on them.
-          Since we can use items on Koed pokemon (cf. Max Revive), we set the disabled button differently */
-        if (info().phase == BattleInfo::ItemPokeSelection) {
-            for (int i = 0; i < 6; i++) {
-                mypzone->pokes[i]->setDisabled(poke(i).num() == Pokemon::NoPoke);
-            }
-        }
     }
 }
 
@@ -350,36 +313,29 @@ int BattleWindow::ownSlot() const {
 void BattleWindow::attackClicked(int zone)
 {
     int slot = info().currentSlot;
-    int n = data().slotNum(slot);
 
-    if (info().phase == BattleInfo::ItemAttackSelection) {
-        info().choice[n].choice.item.attack = zone;
-        info().done[n] = true;
-        goToNextChoice();
-    } else {
-        if (zone != -1) //struggle
-            info().lastMove[n] = zone;
-        if (info().possible) {
-            BattleChoice &b = info().choice[n];
-            b = BattleChoice(slot, AttackChoice());
-            b.setAttackSlot(zone);
-            b.setTarget(data().spot(info().opponent));
+    if (zone != -1) //struggle
+        info().lastMove[data().slotNum(slot)] = zone;
+    if (info().possible) {
+        BattleChoice &b = info().choice[data().slotNum(slot)];
+        b = BattleChoice(slot, AttackChoice());
+        b.setAttackSlot(zone);
+        b.setTarget(data().spot(info().opponent));
 
-            if (!data().multiples()) {
-                info().done[n] = true;
-                goToNextChoice();
+        if (!data().multiples()) {
+            info().done[data().slotNum(slot)] = true;
+            goToNextChoice();
+        } else {
+            int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone)->num();
+            int target = MoveInfo::Target(move, gen());
+            /* Triples still require to choose the target */
+            if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
+                    || data().numberOfSlots() > 4) {
+                tarZone->updateData(info(), move);
+                mystack->setCurrentIndex(TargetTab);
             } else {
-                int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(slot).move(zone)->num();
-                int target = MoveInfo::Target(move, gen());
-                /* Triples still require to choose the target */
-                if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
-                        || data().numberOfSlots() > 4) {
-                    tarZone->updateData(info(), move);
-                    mystack->setCurrentIndex(TargetTab);
-                } else {
-                    info().done[n] = true;
-                    goToNextChoice();
-                }
+                info().done[data().slotNum(slot)] = true;
+                goToNextChoice();
             }
         }
     }
@@ -394,34 +350,16 @@ void BattleWindow::switchClicked(int zone)
     {
         switchToPokeZone();
     } else {
-        if (info().phase == BattleInfo::ItemPokeSelection) {
-            info().choice[snum].choice.item.target = data().spot(info().myself,zone);
-            int tar = ItemInfo::Target(info().choice[snum].item(), gen());
-            if (tar == Item::TeamPokemon) {
-                info().done[snum] = true;
-                goToNextChoice();
-            } else {
-                info().phase = BattleInfo::ItemAttackSelection;
-                mystack->setCurrentWidget(myazones[3]);
-                PokeProxy &p = zone < info().numberOfSlots/2 ? info().tempPoke(data().spot(info().myself, zone)) : poke(zone);
-                updateAttacks(myazones[3], &p);
-                for (int i = 0; i < 4; i++) {
-                    myazones[3]->attacks[i]->setDisabled(poke(zone).move(i)->num() == Move::NoMove);
-                }
-                switchToPokeZone(); // go to attack zone :)
-            }
+        if (!info().choices[snum].switchAllowed)
+            return;
+        if (zone == snum) {
+            switchTo(snum, slot, false);
         } else {
-            if (!info().choices[snum].switchAllowed)
-                return;
-            if (zone == snum) {
-                switchTo(snum, slot, false);
-            } else {
-                BattleChoice &b = info().choice[snum];
-                b = BattleChoice(slot, SwitchChoice());
-                b.setPokeSlot(zone);
-                info().done[snum] = true;
-                goToNextChoice();
-            }
+            BattleChoice &b = info().choice[snum];
+            b = BattleChoice(slot, SwitchChoice());
+            b.setPokeSlot(zone);
+            info().done[snum] = true;
+            goToNextChoice();
         }
     }
 }
@@ -436,7 +374,6 @@ void BattleWindow::goToNextChoice()
             enableAll();
 
             info().currentSlot = slot;
-            info().phase = BattleInfo::Regular;
 
             myswitch->setText(tr("&Switch Pokemon"));
             if (info().choices[n].attacksAllowed == false && info().choices[n].switchAllowed == true)
@@ -455,9 +392,6 @@ void BattleWindow::goToNextChoice()
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
                         myazones[data().slotNum(slot)]->attacks[i]->setEnabled(false);
-                    }
-                    if (myitems) {
-                        myitems->setEnabled(false);
                     }
                 } else {
                     myattack->setEnabled(true);
@@ -543,9 +477,6 @@ void BattleWindow::enableAll()
         myazones[i]->setEnabled(true);
     if (data().multiples())
         tarZone->setEnabled(true);
-    if (myitems) {
-        myitems->setEnabled(true);
-    }
 }
 
 void BattleWindow::attackButton()
@@ -559,56 +490,41 @@ void BattleWindow::attackButton()
     int n = data().slotNum(slot);
 
     if (info().possible) {
-        if (mytab->currentIndex() == ItemTab) {
-            if (myitems && myitems->currentItem()) {
-                itemActivated(myitems->currentItem());
-            } else {
-                return;
+        if (mystack->currentIndex() == TargetTab) {
+            /* Doubles, move selection */
+            int mv = info().lastMove[data().slotNum(slot)];
+            int tar = MoveInfo::Target(mv,gen());
+            if (info().choices[n].struggle() || tar == Move::ChosenTarget || tar == Move::MeFirstTarget
+                    || mv == Move::Curse || tar == Move::PartnerOrUser) {
+                return; //We have to wait for the guy to choose a target
             }
+            info().done[n] = true;
+            goToNextChoice();
         } else {
-            if (mystack->currentIndex() == TargetTab) {
-                /* Doubles, move selection */
-                int mv = info().lastMove[data().slotNum(slot)];
-                int tar = MoveInfo::Target(mv,gen());
-                if (info().choices[n].struggle() || tar == Move::ChosenTarget || tar == Move::MeFirstTarget
-                        || mv == Move::Curse || tar == Move::PartnerOrUser) {
-                    return; //We have to wait for the guy to choose a target
-                }
-                info().done[n] = true;
-                goToNextChoice();
-            } else {
-                if (info().phase == BattleInfo::ItemAttackSelection) {
-                    if (!myazones[3]->attacks[info().lastMove[info().choice[n].itemTarget()]]->isEnabled()) {
-                        return;
-                    }
-                    attackClicked(info().lastMove[info().choice[n].itemTarget()]);
+            //We go with the last move, struggle, or the first possible move
+            if (info().choices[n].struggle()) {
+                /* Struggle! */
+                if (data().multiples()) {
+                    attackClicked(-1);
                 } else {
-                    //We go with the last move, struggle, or the first possible move
-                    if (info().choices[n].struggle()) {
-                        /* Struggle! */
-                        if (data().multiples()) {
-                            attackClicked(-1);
-                        } else {
-                            BattleChoice &b = info().choice[n];
-                            b = BattleChoice(slot, AttackChoice());
-                            b.setAttackSlot(-1);
-                            b.setTarget(data().spot(info().opponent));
-                            info().done[n] = true;
-                            goToNextChoice();
-                        }
-                    } else {
-                        if (info().choices[n].attackAllowed[info().lastMove[data().slotNum(slot)]]) {
-                            attackClicked(info().lastMove[data().slotNum(slot)]);
-                        }
-                        else
-                            for (int i = 0; i < 4; i++) {
-                                if (info().choices[n].attackAllowed[i]) {
-                                    attackClicked(i);
-                                    break;
-                                }
-                            }
-                    }
+                    BattleChoice &b = info().choice[n];
+                    b = BattleChoice(slot, AttackChoice());
+                    b.setAttackSlot(-1);
+                    b.setTarget(data().spot(info().opponent));
+                    info().done[n] = true;
+                    goToNextChoice();
                 }
+            } else {
+                if (info().choices[n].attackAllowed[info().lastMove[data().slotNum(slot)]]) {
+                    attackClicked(info().lastMove[data().slotNum(slot)]);
+                }
+                else
+                    for (int i = 0; i < 4; i++) {
+                        if (info().choices[n].attackAllowed[i]) {
+                            attackClicked(i);
+                            break;
+                        }
+                    }
             }
         }
     }

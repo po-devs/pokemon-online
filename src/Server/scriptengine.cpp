@@ -330,6 +330,22 @@ void ScriptEngine::afterChatMessage(int src, const QString &message, int channel
     makeEvent("afterChatMessage", src, message, channel);
 }
 
+bool ScriptEngine::beforeBattleMessage(int src, const QString &message)
+{
+    if (!myscript.property("beforeBattleMessage", QScriptValue::ResolveLocal).isValid()) {
+        return true;
+    }
+    return makeSEvent("beforeBattleMessage", src, message);
+}
+
+void ScriptEngine::afterBattleMessage(int src, const QString &message)
+{
+    if (!myscript.property("afterBattleMessage", QScriptValue::ResolveLocal).isValid()) {
+        return;
+    }
+    makeEvent("afterBattleMessage", src, message);
+}
+
 bool ScriptEngine::beforeNewPM(int src)
 {
     return makeSEvent("beforeNewPM", src);
