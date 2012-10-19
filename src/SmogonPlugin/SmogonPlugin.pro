@@ -14,7 +14,8 @@ DEFINES += SMOGONPLUGIN_LIBRARY
 
 SOURCES += smogonplugin.cpp \
            smogonscraper.cpp\
-           pokemontab.cpp
+           pokemontab.cpp \
+    SmogonBuild.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

@@ -12,9 +12,10 @@
 class PokemonTab : public QWidget{
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
-    void update_ui(SmogonBuild *builds);
+    void createInitialUi(QList<SmogonBuild>* builds);
 private:
     QVBoxLayout *mainLayout;
+    QList<SmogonBuild>* allBuilds;
 };
 
 #endif // POKEMONTAB_H
