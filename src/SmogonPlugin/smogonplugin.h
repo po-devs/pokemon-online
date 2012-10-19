@@ -8,7 +8,7 @@ extern "C" {
 SMOGONPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
 }
 
-class SMOGONPLUGINSHARED_EXPORT SmogonPlugin : public ClientPlugin {
+class SMOGONPLUGINSHARED_EXPORT SmogonPlugin : public QObject, public ClientPlugin {
 public:
     SmogonPlugin(MainEngineInterface *interface);
 
