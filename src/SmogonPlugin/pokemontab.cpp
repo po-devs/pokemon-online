@@ -26,15 +26,15 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
         labelTxt = "Nothing found";
     else
     {
-        labelTxt += builds->at(0).move1->at(0).toAscii().data();
-        labelTxt += "~";
-        labelTxt += builds->at(0).move2->at(0).toAscii().data();
-        labelTxt += "~";
-        labelTxt += builds->at(0).move3->at(0).toAscii().data();
-        labelTxt += "~";
-        labelTxt += builds->at(0).move4->at(0).toAscii().data();
+        foreach(SmogonBuild build, *builds)
+        {
+            printf("\n\n\n\n");
+            build.printBuild();
+        }
     }
     QLabel *simpleText = new QLabel(labelTxt);
     mainLayout->addWidget(simpleText);
     setLayout(mainLayout);
 }
+
+
