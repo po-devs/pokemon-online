@@ -23,6 +23,7 @@ private:
     QLabel* description;
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
+    ~PokemonTab();
     PokeTeam *getPokeTeam();
     void updateUI();
     void createInitialUi(QList<SmogonBuild>* builds);

@@ -24,6 +24,7 @@ class SmogonScraper : public QObject {
 
 public:
     SmogonScraper(PokemonTab* srcTab);
+    ~SmogonScraper();
     void lookup(Pokemon::gen gen, PokeTeam pokeName);
 
 public slots:
