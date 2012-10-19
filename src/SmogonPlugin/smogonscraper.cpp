@@ -20,38 +20,249 @@ SmogonScraper::SmogonScraper(PokemonTab* srcTab)
 void SmogonScraper::lookup(Pokemon::gen gen, PokeTeam p)
 {
     //TODO: add approximation for edge cases such as yellow version
-    QString genString = "";
+    currGen = "";
     switch(gen.num)
     {
-    case 1:genString = "rb";
-    case 2:genString = "gs";
-    case 3:genString = "rs";
-    case 4:genString = "dp";
-    case 5:genString = "bw";
+    case 1:currGen = "rb";break;
+    case 2:currGen = "gs";break;
+    case 3:currGen = "rs";break;
+    case 4:currGen = "dp";break;
+    case 5:currGen = "bw";break;
+    default:currGen = "bw";/*TODO: modify this*/
     }
 
     QString name = PokemonInfo::Name(p.num());
 
 
-    QString webPage = QString("http://www.smogon.com/"+genString+"/pokemon/"+name);
+    QString webPage = QString("http://www.smogon.com/"+currGen+"/pokemon/"+name);
 
     manager->get(QNetworkRequest(QUrl(webPage)));
 }
 
-SmogonBuild* SmogonScraper::parsePage(QString webPage)
+/*
+ *  Takes the full Html page from the web and parses it to find the information relating to
+ *      the SmogonBuild Object, creating all SmogonBuild objects that it finds on the page.
+ */
+QList<SmogonBuild>* SmogonScraper::parsePage(QString webPage)
 {
-    //Dumb Algorithm that gets the data on the 241st line
-    QStringList ls = webPage.split("\n");
-    QString oneLine= ls.at(9);
+    int numBuilds = webPage.count("class=\"name\"");
+    QList<SmogonBuild> *buildsList = new QList<SmogonBuild>();
 
-    SmogonBuild* builds = new SmogonBuild[1];
-    builds[0].description = oneLine;
-    return builds;
+    QList<QString> *htmlBuilds = getHtmlBuilds(webPage, numBuilds);
+    for(int i = 0; i<numBuilds; i++)
+    {
+        QString htmlBuild = htmlBuilds->at(i);
+        SmogonBuild *tempBuild = new SmogonBuild();
+        tempBuild->buildName = getBuildName(htmlBuild);
+        tempBuild->item = getItem(htmlBuild);
+        tempBuild->ability = getAbility(htmlBuild);
+        tempBuild->nature = getNature(htmlBuild);
+
+        int movesParsed = 0;
+        tempBuild->move1 = getMove(htmlBuild, movesParsed);
+        movesParsed += tempBuild->move1->size();
+        tempBuild->move2 = getMove(htmlBuild,movesParsed);
+        movesParsed += tempBuild->move2->length();
+        tempBuild->move3 = getMove(htmlBuild,movesParsed);
+        movesParsed += tempBuild->move3->length();
+        tempBuild->move4 = getMove(htmlBuild,movesParsed);
+
+        tempBuild->EVList = getEVs(htmlBuild);
+        tempBuild->description = getDescription(htmlBuild);
+        buildsList->push_back(*tempBuild);
+    }
+
+    return buildsList;
+}
+
+QString SmogonScraper::getBuildName(QString htmlBuild)
+{
+    QString buildName;
+    buildName = htmlBuild.left(htmlBuild.indexOf("<"));
+    return buildName;
+}
+
+QList<QString> *SmogonScraper::getNature(QString htmlBuild)
+{
+    QList<QString> *lsString = new QList<QString>();
+    QString natureString = this->currGen+"/natures/";
+    int numNatures = htmlBuild.count(natureString);
+    for(int i=0; i<numNatures; i++)
+    {
+        int start = htmlBuild.indexOf(natureString);
+        QString nature = this->getContents(htmlBuild, start);
+        lsString->push_back(nature);
+        htmlBuild = htmlBuild.right(htmlBuild.length()-start-5);
+    }
+    return lsString;
+}
+
+QList<QString> *SmogonScraper::getItem(QString htmlBuild)
+{
+    QList<QString> *lsString = new QList<QString>();
+    QString itemString = this->currGen+"/items/";
+    int numItems = htmlBuild.count(itemString);
+    for(int i=0; i<numItems; i++)
+    {
+        int start = htmlBuild.indexOf(itemString);
+        QString item = this->getContents(htmlBuild, start);
+        lsString->push_back(item);
+        htmlBuild = htmlBuild.right(htmlBuild.length()-start-5);
+    }
+    return lsString;
+}
+
+/*
+ * The EVs are ordered as follows (HP, Att, Def, SpA, SpD, Spe)
+ */
+QList<int> *SmogonScraper::getEVs(QString htmlBuild)
+{
+    QList<int> *lsInt = new QList<int>();
+    /*Initiate all of the values to zero*/
+    lsInt->push_back(0);lsInt->push_back(0);lsInt->push_back(0);
+    lsInt->push_back(0);lsInt->push_back(0);lsInt->push_back(0);
+
+    QString evString = getEVString(htmlBuild);
+    evString = evString.remove(QChar('\n'));
+    QStringList stringList = evString.split(" ");
+    QString contString = "/";
+    for(int i=0; contString == "/"; i++)
+    {
+        QString stat = stringList.at(stringList.length()-1-3*i);
+        QString value = stringList.at(stringList.length()-2-3*i);
+
+        if(stat =="HP"){
+            lsInt->replace(0,value.toInt());
+        }
+        else if(stat == "Att"){
+            lsInt->replace(1,value.toInt());
+        }
+        else if(stat == "Def"){
+            lsInt->replace(2,value.toInt());
+        }
+        else if(stat == "SpA"){
+            lsInt->replace(3,value.toInt());
+        }
+        else if(stat == "SpD"){
+            lsInt->replace(4,value.toInt());
+        }
+        else if(stat == "Spe"){
+            lsInt->replace(5,value.toInt());
+        }
+
+        contString = stringList.at(stringList.length()-3-3*i);
+    }
+
+    /*Parse the EV String*/
+    return lsInt;
+}
+
+QList<QString> *SmogonScraper::getAbility(QString htmlBuild)
+{
+    QList<QString> *lsString = new QList<QString>();
+    QString abilityString = this->currGen+"/abilities/";
+    int numAbilities = htmlBuild.count(abilityString);
+    for(int i=0; i<numAbilities; i++)
+    {
+        int start = htmlBuild.indexOf(abilityString);
+        QString ability = this->getContents(htmlBuild, start);
+        lsString->push_back(ability);
+        htmlBuild = htmlBuild.right(htmlBuild.length()-start-5);
+    }
+    return lsString;
+}
+
+QList<QString> *SmogonScraper::getMove(QString htmlBuild, int movesParsed)
+{
+    QList<QString> *lsString = new QList<QString>();
+    QString moveString = this->currGen+"/moves/";
+    int start = htmlBuild.indexOf(moveString);
+    //Pass over the moves that have already been added to the list
+    for(int i=0;i<movesParsed;i++)
+    {
+        printf("Skipping");
+        QString tempStr = htmlBuild.right(htmlBuild.length() - start-1);
+        start += tempStr.indexOf(moveString)+1;
+    }
+    printf("\n");
+    bool movesLeft = true;
+    bool noBreak = true;
+    while(movesLeft && noBreak)
+    {
+        QString move = getContents(htmlBuild, start);
+        lsString->push_back(move);
+        int nextMove = htmlBuild.right(htmlBuild.length()-start-2).indexOf(moveString);
+        movesLeft = (nextMove!=-1);
+        if(movesLeft)
+            noBreak = htmlBuild.mid(start, nextMove-start).indexOf("<br />") == -1;
+        start = nextMove;
+    }
+    return lsString;
+}
+
+QString SmogonScraper::getDescription(QString htmlBuild)
+{
+    int start = htmlBuild.indexOf("<p>");
+    QString retString = getContents(htmlBuild, start);
+    return retString;
+}
+
+/*
+ *  Given the html representation of a SmogonBuild and a position in the tag
+ *      before the information that you want, this function returns the contents of
+ *      said tag.
+ */
+QString SmogonScraper::getContents(QString htmlBuild, int start)
+{
+    while(htmlBuild.at(start) != QChar('>'))
+    {
+        start++;
+        if(htmlBuild.length() == start)
+            return NULL;
+    }
+    start++;
+    QString retString = htmlBuild.right(htmlBuild.length()-start);
+    retString = retString.left(retString.indexOf("<"));
+    return retString;
+}
+
+/*This function, given the htmlBuild finds the Smogon style EV string and returns it*/
+QString SmogonScraper::getEVString(QString htmlBuild)
+{
+    int start = htmlBuild.lastIndexOf(this->currGen + "/moves/");
+
+    QString tempLoc = htmlBuild.right(htmlBuild.length() - start);
+
+    start = tempLoc.lastIndexOf("<td>");
+
+    QString EVString = getContents(tempLoc, start);
+    return EVString;
+}
+
+/*
+ *  takes the html webpage and returns a list of strings that encapsulate all the data for a
+ *      specific build.
+ */
+QList<QString> *SmogonScraper::getHtmlBuilds(QString webPage, int numBuilds)
+{
+    QList<QString> *retList = new QList<QString>();
+
+    for(int i=0;i<numBuilds;i++)
+    {
+        int begin = webPage.indexOf("class=\"name\"><h2>");
+        //17, the length of the above string
+        webPage = webPage.right(webPage.length()-begin-17);
+        int end = webPage.indexOf("/div");
+        QString subsection = webPage.left(end);
+        retList->push_back(subsection);
+    }
+    return retList;
 }
 
 void SmogonScraper::reciever(QNetworkReply* reply)
 {
+
     QString webPage = QString(reply->readAll());
-    SmogonBuild *builds = parsePage(webPage);
-    uiTab->update_ui(builds);
+
+    uiTab->createInitialUi(parsePage(webPage));
 }

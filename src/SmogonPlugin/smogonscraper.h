@@ -32,7 +32,22 @@ public slots:
 private:
     QNetworkAccessManager* manager;
     PokemonTab* uiTab;
-    SmogonBuild* parsePage(QString webPage);
+    QString currGen;
+    QList<SmogonBuild>* parsePage(QString webPage);
+    QList<QString> *getHtmlBuilds(QString webPage, int numBuilds);
+
+    /*Helper functions for parsing the page*/
+    QString getBuildName(QString htmlBuild);
+    QList<QString> *getNature(QString htmlBuild);
+    QList<QString> *getItem(QString htmlBuild);
+    QList<int> *getEVs(QString htmlBuild);
+    QList<QString> *getAbility(QString htmlBuild);
+    QList<QString> *getMove(QString htmlBuild, int moevNum);
+    QString getDescription(QString htmlBuild);
+
+    /*Helper functions for the helper functions*/
+    QString getContents(QString htmlBuild, int start);
+    QString getEVString(QString htmlBuild);
 
 };
 
