@@ -87,6 +87,7 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     description_title -> setFont(title_font);
 
     description = new QLabel("(Some long description here)");
+    description -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
     int space = 10;
 
@@ -127,18 +128,12 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),20,0);
     
     mainLayout->addWidget(description_title,21,0);
-    mainLayout->addWidget(description,22,0);
+    mainLayout->addWidget(description,22,0, 25,3);
 
-    #if 0
-    mainLayout = new QVBoxLayout;
-
+    /* Create a new scraper */
     SmogonScraper *scraper = new SmogonScraper(this);
     scraper->lookup(m_gen, p);
-
-    QLabel *simpleText = new QLabel("No Builds");
-    mainLayout->addWidget(simpleText);
     setLayout(mainLayout);
-    #endif
 }
 
 void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
@@ -163,6 +158,8 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
     mainLayout->addWidget(simpleText);
     setLayout(mainLayout);
     #endif
+    description -> setText((builds -> at(0)).description);
+    updateUI();
 }
 
 /* Given the selected options in the current UI, return a PokeTeam
@@ -204,6 +201,9 @@ void PokemonTab::updateUI(){
     /* Update EVs */
     /* Update Moves */
     /* Update Description */
+    description -> adjustSize();
+
+    QCoreApplication::processEvents();
 }
 
 
