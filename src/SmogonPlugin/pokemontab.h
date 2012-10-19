@@ -1,10 +1,12 @@
 #ifndef POKEMONTAB_H
 #define POKEMONTAB_H
 
-#include "../PokemonInfo/pokemoninfo.h"
 #include <QLabel>
 #include <QDialog>
 #include <QtGui>
+#include "SmogonBuild.h"
+#include "../PokemonInfo/pokemoninfo.h"
+
 
 class PokemonTab : public QWidget{
 private:
@@ -23,6 +25,10 @@ public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
     PokeTeam *getPokeTeam();
     void updateUI();
+    void createInitialUi(QList<SmogonBuild>* builds);
+private:
+    QVBoxLayout *mainLayout;
+    QList<SmogonBuild>* allBuilds;
 };
 
 #endif // POKEMONTAB_H

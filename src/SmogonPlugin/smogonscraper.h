@@ -4,31 +4,14 @@
 #include <string>
 
 #include <QtCore>
-
 #include <QtNetwork>
+#include <QObject>
 
 #include <QDomDocument>
-#include <vector>
 #include "../PokemonInfo/pokemoninfo.h"
-
-
-using namespace std;
-
-/*
- * This build object is used to represent a pokemon build from Smogon
- * The use of arrays are in many cases due to the fact that Smogon gives you
- *   multiple choices of what Item or move you want to use.
- */
-struct BuildObject
-{
-    string buildName;
-    vector<string> item;
-    vector<string> nature;
-    int EVList[6];
-    vector<string> moves[4];
-    string description;
-};
-
+#include "../PokemonInfo/enums.h"
+#include "pokemontab.h"
+#include "SmogonBuild.h"
 
 /*
  * The SmogonScraper class is simply a class that wraps up the functionality:
@@ -36,16 +19,36 @@ struct BuildObject
  *   parsing that data into BuildObjects
  *   returning those builds to the user
  */
-class SmogonScraper
-{
+class SmogonScraper : public QObject {
+    Q_OBJECT
+
+public:
+    SmogonScraper(PokemonTab* srcTab);
+    void lookup(Pokemon::gen gen, PokeTeam pokeName);
+
+public slots:
+    void reciever(QNetworkReply* reply);
 
 private:
-    static string scrapePage(Pokemon::gen gen, PokeTeam pokeName);
-    static BuildObject parsePage(string page);
-    /*Note, it might be better to have this function just return all the builds*/
-public:
-    SmogonScraper();
-    static BuildObject* get(Pokemon::gen gen, PokeTeam pokeName);
+    QNetworkAccessManager* manager;
+    PokemonTab* uiTab;
+    QString currGen;
+    QList<SmogonBuild>* parsePage(QString webPage);
+    QList<QString> *getHtmlBuilds(QString webPage, int numBuilds);
+
+    /*Helper functions for parsing the page*/
+    QString getBuildName(QString htmlBuild);
+    QList<QString> *getNature(QString htmlBuild);
+    QList<QString> *getItem(QString htmlBuild);
+    QList<int> *getEVs(QString htmlBuild);
+    QList<QString> *getAbility(QString htmlBuild);
+    QList<QString> *getMove(QString htmlBuild, int moevNum);
+    QString getDescription(QString htmlBuild);
+
+    /*Helper functions for the helper functions*/
+    QString getContents(QString htmlBuild, int start);
+    QString getEVString(QString htmlBuild);
+
 };
 
 
