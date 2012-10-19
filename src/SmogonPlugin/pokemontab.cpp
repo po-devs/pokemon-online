@@ -129,16 +129,14 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     mainLayout->addWidget(description_title,21,0);
     mainLayout->addWidget(description,22,0);
 
-    #if 0
-    mainLayout = new QVBoxLayout;
-
     SmogonScraper *scraper = new SmogonScraper(this);
+    #if 0
     scraper->lookup(m_gen, p);
-
     QLabel *simpleText = new QLabel("No Builds");
     mainLayout->addWidget(simpleText);
-    setLayout(mainLayout);
     #endif
+
+    setLayout(mainLayout);
 }
 
 void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
