@@ -2,6 +2,18 @@
 
 SmogonBuild::SmogonBuild(){}
 
+SmogonBuild::~SmogonBuild()
+{
+    delete item;
+    delete ability;
+    delete nature;
+    delete EVList;
+    delete move1;
+    delete move2;
+    delete move3;
+    delete move4;
+}
+
 void SmogonBuild::printBuild()
 {
     SmogonBuild build = *this;

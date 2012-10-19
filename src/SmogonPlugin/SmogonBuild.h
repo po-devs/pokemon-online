@@ -26,6 +26,7 @@ struct SmogonBuild
 class SmogonBuild{
 public:
     SmogonBuild();
+    ~SmogonBuild();
     void printBuild();
 
     QString buildName;
