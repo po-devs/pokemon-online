@@ -13,9 +13,10 @@ QT += xml network
 DEFINES += SMOGONPLUGIN_LIBRARY
 
 SOURCES += smogonplugin.cpp \
-           smogonscraper.cpp\
-           pokemontab.cpp \
-    SmogonBuild.cpp
+           smogonscraper.cpp \
+            pokemontab.cpp \
+            pokemonteamtabs.cpp \
+            SmogonBuild.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -25,6 +26,7 @@ HEADERS += smogonplugin.h\
     ../Teambuilder/engineinterface.h \
     smogonscraper.h \
     pokemontab.h \
+    pokemonteamtabs.h \
     SmogonBuild.h
 
 windows: {
