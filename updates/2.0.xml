@@ -8,7 +8,7 @@
       to see before the update, what they will see after is in the changelog in the zip
       that is automatically created by the updatemaker.
   -->
-  <update updateIdFrom="0" updateIdTo="1" os="all" 
+  <update updateIdFrom="0,2" updateIdTo="1" os="all" 
   	changelog="https://raw.github.com/gist/3073864/d772c98ae74a7e298a840e709d0b5f86055fa8bb/changelog-0-to-1.txt" 
 	download="https://github.com/downloads/EthanPO/pokemon-online/Test-Update.zip"
 	versionTo="2.0.07"/>
