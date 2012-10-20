@@ -154,6 +154,8 @@ signals:
     void reconnect(int, const QByteArray&);
     /* Used to tell the command is finished - and that any pending updated() is good to go */
     void endCommand();
+    void battlePassSentA(int bid, const QString &pass);
+    void battlePassSuggestedA(int bid, const QString &pass);
 public slots:
     /* slots called by the network */
     void error();

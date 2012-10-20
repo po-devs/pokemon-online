@@ -781,7 +781,8 @@ struct MMAromaTherapy : public MM
         b.sendMoveMessage(3, (move == Aromatherapy) ? 0 : 1, s, type(b,s));
         for (int i = 0; i < 6; i++) {
             //SoundProof blocks healbell but not aromatherapy
-            if (!b.poke(player,i).ko() && (move == Aromatherapy || b.poke(player,i).ability() != Ability::Soundproof)) {
+            //In gen 5 heal bell cures Pokemon with SoundProof
+            if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen() == 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
                 b.changeStatus(player,i,Pokemon::Fine);
             }
         }

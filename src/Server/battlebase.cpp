@@ -954,46 +954,7 @@ bool BattleBase::validChoice(const BattleChoice &b)
     }
 
     if (b.itemChoice()) {
-        int count = items(player).value(b.item());
-        /* In doubles & triples, check if the user doesn't exhaust the item. For example if you are in triples and you have
-          two potions, you can only use it on two pokemon! */
-        for (int i = 0; i < numberPerSide(); i++) {
-            int s = slot(player,i);
-            if (couldMove[s] && !hasChoice[s] && choice(s).itemChoice() && choice(s).item() == b.item()) {
-                count --;
-            }
-        }
-        if (count <= 0) {
-            return false;
-        }
-        if (items(player).contains(b.item())) {
-            int tar = ItemInfo::Target(b.item(), gen());
-            int itar = b.itemTarget();
-            if (tar == Item::TeamPokemon) {
-                if (this->player(itar) != player || slotNum(itar) < 0 || slotNum(itar) >= 6 || poke(itar).num() == Pokemon::NoPoke) {
-                    return false;
-                }
-            } else if (tar == Item::FieldPokemon) {
-                if (itar < 0 || itar >= numberOfSlots() || this->player(itar) != player || koed(itar)) {
-                    return false;
-                }
-            } else if (tar == Item::Attack) {
-                if (this->player(itar) != player || slotNum(itar) < 0 || slotNum(itar) >= 6 || poke(itar).ko()) {
-                    return false;
-                }
-                if (b.itemAttack() < 0 || b.itemAttack() >= 4 || poke(itar).move(b.itemAttack()).num() == Move::NoMove) {
-                    return false;
-                }
-            } else if (tar == Item::Opponent) {
-                /* A pokeball can't be thrown if there are two wild pokemon in front of you */
-                if (countAlive(opponent(player)) > 1) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
+        return items(player).contains(b.item());
     }
 
     return false;
@@ -1129,8 +1090,6 @@ void BattleBase::spectatingChat(int id, const QString &str)
 {
     notify(All, SpectatorChat, id, qint32(id), str);
 }
-
-
 
 void BattleBase::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)
 {

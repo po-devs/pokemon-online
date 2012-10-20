@@ -88,6 +88,7 @@ public:
     QString getDirectory() const;
     void changeBaseDirectory(const QString &directory);
     //void changeDirectoryForType(LogType type, const QString &directory);
+    bool isLogSaving(LogType type);
     void changeLogSaving(LogType type, bool save);
 
 private:

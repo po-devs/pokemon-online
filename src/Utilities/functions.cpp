@@ -122,27 +122,14 @@ QString appDataPath(const QString &subfolder, bool createFolder)
 
 QString removeTrollCharacters(const QString& s)
 {
+    // All Non-Spacing Mark characters are banned and will trigger this filter.
     QString result = s;
-    int y = -1;
-    QChar const rtloverride(0x202e);
-
-    for (int x = 0; x < s.size(); x++) {
-        if (s[x].category() != QChar::Mark_NonSpacing && s[x] != rtloverride) {
-          if (y==-1) {
-            continue;
-          } else {
-            result[y] = x;
-            y++;
-          }
-        } else {
-          y = x;
+    for (int x = 0;x<result.size();x++) {
+        if ((result.at(x)).category() == QChar::Mark_NonSpacing || (result.at(x)) == QChar(0x202e)) {
+            result.replace(result.at(x), "");
+            x--;
         }
     }
-
-    if (y != -1) {
-      result.resize(y);
-    }
-
     return result;
 }
 

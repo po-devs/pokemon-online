@@ -9,10 +9,11 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include "battlebase.h"
+#include "pluginmanager.h"
 #include <QRegExp>
 #include "analyze.h"
 #include "../Shared/config.h"
-
+#include "../Utilities/ziputils.h"
 
 /*!
 \qmlmethod color Qt::lighter(color baseColor, real factor)
@@ -327,6 +328,22 @@ bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channe
 void ScriptEngine::afterChatMessage(int src, const QString &message, int channel)
 {
     makeEvent("afterChatMessage", src, message, channel);
+}
+
+bool ScriptEngine::beforeBattleMessage(int src, const QString &message)
+{
+    if (!myscript.property("beforeBattleMessage", QScriptValue::ResolveLocal).isValid()) {
+        return true;
+    }
+    return makeSEvent("beforeBattleMessage", src, message);
+}
+
+void ScriptEngine::afterBattleMessage(int src, const QString &message)
+{
+    if (!myscript.property("afterBattleMessage", QScriptValue::ResolveLocal).isValid()) {
+        return;
+    }
+    makeEvent("afterBattleMessage", src, message);
 }
 
 bool ScriptEngine::beforeNewPM(int src)
@@ -2046,9 +2063,10 @@ QScriptValue ScriptEngine::banList()
 
 void ScriptEngine::ban(QString name)
 {
+    SecurityManager::setBanExpireTime(name, 0);
     SecurityManager::ban(name);
     if(loggedIn(myserver->id(name))) {
-        myserver->kick(myserver->id(name));
+        myserver->silentKick(myserver->id(name));
     }
 }
 
@@ -2528,6 +2546,71 @@ void ScriptEngine::deleteFile(const QString &fileName)
 
     out.remove();
 }
+void ScriptEngine::makeDir(const QString &dir)
+{
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    if(directory.exists(dir)){
+        return;
+    }
+    directory.mkpath(current+"/"+dir);
+}
+
+void ScriptEngine::removeDir(const QString &dir)
+{
+    QDir directory(dir);
+    QString current=directory.currentPath();
+    directory.rmpath(current+"/"+dir); //rmpath only deletes if empty, so no need to check
+}
+QScriptValue ScriptEngine::extractZip(const QString &zipName, const QString &targetDir)
+{
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    zip.extractTo(targetDir);
+    return targetDir;
+}
+
+QScriptValue ScriptEngine:: extractZip(const QString &zipName)
+{
+    Zip zip;
+    if (!zip.open(zipName)) {
+        return myengine.undefinedValue();
+    }
+    QDir directory;
+    QString current=directory.currentPath();
+    zip.extractTo(current);
+    return zipName;
+}
+
+QScriptValue ScriptEngine::zip(const QString &path, const QString &dir)
+{
+    Zip zip;
+    QDir directory(dir);
+    if(!zip.open(path)){
+        zip.create(path);
+    }
+    if(!directory.exists()) {
+        zip.addFile(dir); //adds the file normally if it's not a directory
+        zip.writeArchive();
+        return path;
+    }
+    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    foreach(QString file, files){ //goes through the folder and adds each file to the zip file
+        zip.addFile(dir+"/"+file);
+    }
+    zip.writeArchive();
+    zip.close();
+    return path;
+}
+
+QScriptValue ScriptEngine::getCurrentDir()
+{
+    QDir directory;
+    QString current=directory.currentPath();
+    return current;
+}
 
 /**
  * Function will perform a GET-Request server side
@@ -2713,6 +2796,28 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     return QString::fromUtf8(out.readAll());
 }
 
+QScriptValue ScriptEngine::getServerPlugins() {
+    QScriptValue ret = qScriptValueFromSequence(&myengine, myserver->pluginManager->getPlugins());
+    return ret;
+}
+
+bool ScriptEngine::loadServerPlugin(const QString &path) {
+    int const count = myserver->pluginManager->getPlugins().size();
+    myserver->pluginManager->addPlugin(path);
+    int const count2 = myserver->pluginManager->getPlugins().size();
+    return count2 == 1 + count;
+}
+
+bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
+    QStringList plugin_names = myserver->pluginManager->getPlugins();
+    int index = plugin_names.indexOf(plugin);
+    if (index != -1) {
+        myserver->pluginManager->freePlugin(index);
+        return true;
+    }
+    return false;
+}
+
 #endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
@@ -2724,6 +2829,66 @@ int ScriptEngine::system(const QString &command)
     } else {
         return ::system(command.toUtf8());
     }
+}
+
+QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback) {
+    QProcess *process = new QProcess(this);;
+    connect(process, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(process_finished(int,QProcess::ExitStatus)));
+    connect(process, SIGNAL(error(QProcess::ProcessError)), SLOT(process_error(QProcess::ProcessError)));
+    connect(process, SIGNAL(readyReadStandardOutput()), SLOT(read_standard_output()));
+    connect(process, SIGNAL(readyReadStandardError()), SLOT(read_standard_error()));
+    process->start(command);
+    processes[process] = {callback, errback, QByteArray(), QByteArray(), command};
+    return myengine.undefinedValue();
+}
+
+void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus exitStatus) {
+    QProcess *p = (QProcess*) sender();
+    processes[p].callback.call(QScriptValue(), QScriptValueList() << exitcode << QString::fromAscii(processes[p].out) << QString::fromAscii(processes[p].err));
+    processes.remove(p);
+    p->deleteLater();
+}
+
+void ScriptEngine::process_error(QProcess::ProcessError error) {
+    QProcess *p = (QProcess*) sender();
+    processes[p].errback.call(QScriptValue(), QScriptValueList() << error << QString::fromAscii(processes[p].out) << QString::fromAscii(processes[p].err));
+    processes.remove(p);
+    p->deleteLater();
+}
+
+QScriptValue ScriptEngine::list_processes() {
+    const QString States[] = {"Not running", "Starting", "Running"};
+    QScriptValue ret = myengine.newArray(processes.size());
+    QHashIterator<QProcess*, ProcessData> iter(processes);
+    int index = 0;
+    while (iter.hasNext()) {
+        iter.next();
+        QScriptValue entry = myengine.newObject();
+        entry.setProperty("state", States[iter.key()->state()]);
+        entry.setProperty("command", iter.value().command);
+        ret.setProperty(index++, entry);
+    }
+    return ret;
+}
+
+QScriptValue ScriptEngine::kill_processes() {
+    QHashIterator<QProcess*, ProcessData> iter(processes);
+    while (iter.hasNext()) {
+        iter.next();
+        iter.key()->kill();
+    }
+    processes.clear();
+    return true;
+}
+
+void ScriptEngine::read_standard_output() {
+    QProcess *p = (QProcess*) sender();
+    processes[p].out.append(p->readAllStandardOutput());
+}
+
+void ScriptEngine::read_standard_error() {
+    QProcess *p = (QProcess*) sender();
+    processes[p].err.append(p->readAllStandardError());
 }
 #endif // PO_SCRIPT_NO_SYSTEM
 

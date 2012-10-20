@@ -145,6 +145,15 @@ void LogManager::changeLogSaving(LogType type, bool save)
     flags &= (0XFFFF ^ (1 << type));
 }
 
+bool LogManager::isLogSaving(LogType type)
+{
+    if (type == BattleLog) {
+        QSettings s;
+        return s.value("Battle/SaveLogs").toBool();
+    }
+    return false;
+}
+
 void LogManager::changeBaseDirectory(const QString &directory)
 {
     this->directory = directory;

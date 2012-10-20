@@ -6,6 +6,7 @@
 #include "playerinterface.h"
 #include "sfmlsocket.h"
 #include "playerstructs.h"
+#include "server.h"
 
 class Challenge;
 class BattleSituation;

@@ -61,6 +61,7 @@ public:
     /* Sends the login of the player to everybody but the player */
     void sendLogin(int id);
     void sendLogout(int id);
+    void sendPlayerLogout(int id);
     void sendTierList(int id);
     bool playerExist(int id) const;
     bool playerLoggedIn(int id) const;
