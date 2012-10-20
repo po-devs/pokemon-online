@@ -14,6 +14,31 @@ SmogonBuild::~SmogonBuild()
     delete move4;
 }
 
+QString SmogonBuild::EVListToString()
+{
+    QString retString = "";
+    for(int i=0;i<6;i++)
+    {
+        if(EVList->at(i) != 0)
+        {
+            char buf[10];
+            switch(i)
+            {
+            case 0:sprintf(buf, "%d HP /", EVList->at(i));
+            case 1:sprintf(buf, "%d Atk /", EVList->at(i));
+            case 2:sprintf(buf, "%d Def /", EVList->at(i));
+            case 3:sprintf(buf, "%d SpA /", EVList->at(i));
+            case 4:sprintf(buf, "%d SpD /", EVList->at(i));
+            case 5:sprintf(buf, "%d Spe /", EVList->at(i));
+            }
+            retString += buf;
+        }
+    }
+    //Get rid of the rightmost extra " /"
+    retString = retString.left(retString.length()-2);
+    return retString;
+}
+
 void SmogonBuild::printBuild()
 {
     SmogonBuild build = *this;
