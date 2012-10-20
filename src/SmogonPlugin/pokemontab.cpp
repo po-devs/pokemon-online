@@ -170,7 +170,7 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
     {
         foreach(SmogonBuild build, *builds)
         {
-//            build.printBuild();
+            build.printBuild();
             build_chooser -> addItem(build.buildName);
         }
     }
@@ -256,12 +256,12 @@ void PokemonTab::updateUI(){
     move2_chooser -> clear();
     foreach(QString move2 , *currentBuild.move2){
         move2_chooser -> addItem(move2);
-    }   
+    }
     
-    move3_chooser -> clear();    
+    move3_chooser -> clear();
     foreach(QString move3 , *currentBuild.move3){
         move3_chooser -> addItem(move3);
-    }   
+    }
     
     move4_chooser -> clear();
     foreach(QString move4 , *currentBuild.move4){

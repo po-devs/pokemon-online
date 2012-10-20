@@ -15,7 +15,7 @@ using namespace std;
 class SmogonBuild{
 public:
     SmogonBuild();
-    ~SmogonBuild();
+//    ~SmogonBuild();
     void printBuild();
     QString EVListToString();
 
