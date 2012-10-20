@@ -17,6 +17,11 @@ SmogonScraper::SmogonScraper(PokemonTab* srcTab)
     uiTab = srcTab;
 }
 
+SmogonScraper::~SmogonScraper()
+{
+    delete manager;
+}
+
 void SmogonScraper::lookup(Pokemon::gen gen, PokeTeam p)
 {
     //TODO: add approximation for edge cases such as yellow version
@@ -134,7 +139,7 @@ QList<int> *SmogonScraper::getEVs(QString htmlBuild)
         if(stat =="HP"){
             lsInt->replace(0,value.toInt());
         }
-        else if(stat == "Att"){
+        else if(stat == "Atk"){
             lsInt->replace(1,value.toInt());
         }
         else if(stat == "Def"){
@@ -190,12 +195,13 @@ QList<QString> *SmogonScraper::getMove(QString htmlBuild, int movesParsed)
     while(movesLeft && noBreak)
     {
         QString move = getContents(htmlBuild, start);
+        printf("Current Move: %s", move.toAscii().data());
         lsString->push_back(move);
-        int nextMove = htmlBuild.right(htmlBuild.length()-start-2).indexOf(moveString);
+        int nextMove = htmlBuild.right(htmlBuild.length()-start-1).indexOf(moveString);
         movesLeft = (nextMove!=-1);
         if(movesLeft)
-            noBreak = htmlBuild.mid(start, nextMove-start).indexOf("<br />") == -1;
-        start = nextMove;
+            noBreak = htmlBuild.mid(start, nextMove+1).indexOf("<br />") == -1;
+        start += nextMove+1;
     }
     return lsString;
 }
@@ -264,5 +270,10 @@ void SmogonScraper::reciever(QNetworkReply* reply)
 
     QString webPage = QString(reply->readAll());
 
-    uiTab->createInitialUi(parsePage(webPage));
+    QList<SmogonBuild> *builds = parsePage(webPage);
+
+    if(builds->size() == 0)
+        builds = NULL;
+
+    uiTab->createInitialUi(builds);
 }

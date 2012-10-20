@@ -145,6 +145,22 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     setLayout(mainLayout);
 }
 
+PokemonTab::~PokemonTab()
+{
+    delete build_chooser;
+    delete item_chooser;
+    delete ability_chooser;
+    delete nature_chooser;
+    delete ev_chooser;
+    delete move1_chooser;
+    delete move2_chooser;
+    delete move3_chooser;
+    delete move4_chooser;
+    delete description;
+    delete mainLayout;
+    delete allBuilds;
+}
+
 void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
 {
     PokemonTab::allBuilds = builds;
