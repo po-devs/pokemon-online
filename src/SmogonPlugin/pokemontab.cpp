@@ -25,8 +25,9 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
 
     build_chooser = new QComboBox();
     build_chooser -> addItem("");
-    build_chooser -> addItem("Solar Power");
+    /*build_chooser -> addItem("Solar Power");
     build_chooser -> addItem("Choice");
+    */
 
     /* Item */ 
     QLabel *item_title = new QLabel("Item:");
@@ -88,78 +89,78 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
 
     description = new QLabel("(Some long description here)");
     description -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    description -> setMinimumSize(300, 400);
 
     int space = 10;
 
     /* Add the widgets to the main layout */
     mainLayout->addWidget(pokePic,0,0);
     mainLayout->addWidget(build_title,1,0);
-    mainLayout->addWidget(build_chooser,1,1);
-    mainLayout->addItem(new QSpacerItem(0, 50, QSizePolicy::Minimum, QSizePolicy::Expanding),2,0);
+    mainLayout->addWidget(build_chooser,2,0);
+    mainLayout->addItem(new QSpacerItem(0, 50, QSizePolicy::Minimum, QSizePolicy::Expanding),3,0);
 
-    mainLayout->addWidget(item_title,3,0); 
-    mainLayout->addWidget(item_chooser,4,0);
+    mainLayout->addWidget(item_title,4,0); 
+    mainLayout->addWidget(item_chooser,5,0);
     
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),5,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),6,0);
 
-    mainLayout->addWidget(ability_title,6,0);
-    mainLayout->addWidget(ability_chooser,7,0);
+    mainLayout->addWidget(ability_title,7,0);
+    mainLayout->addWidget(ability_chooser,8,0);
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),8,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),9,0);
 
-    mainLayout->addWidget(nature_title,9,0);
-    mainLayout->addWidget(nature_chooser,10,0);
+    mainLayout->addWidget(nature_title,10,0);
+    mainLayout->addWidget(nature_chooser,11,0);
     
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),11,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),12,0);
 
-    mainLayout->addWidget(ev_title,12,0);
-    mainLayout->addWidget(ev_chooser,13,0); 
+    mainLayout->addWidget(ev_title,13,0);
+    mainLayout->addWidget(ev_chooser,14,0); 
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),14,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),15,0);
 
-    mainLayout->addWidget(moves_title,15,0);
-    mainLayout->addWidget(move1_chooser,16,0);
-    mainLayout->addWidget(move2_chooser,17,0);
-    mainLayout->addWidget(move3_chooser,18,0);
-    mainLayout->addWidget(move4_chooser,19,0);
+    mainLayout->addWidget(moves_title,16,0);
+    mainLayout->addWidget(move1_chooser,17,0);
+    mainLayout->addWidget(move2_chooser,18,0);
+    mainLayout->addWidget(move3_chooser,19,0);
+    mainLayout->addWidget(move4_chooser,20,0);
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),20,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),21,0);
     
-    mainLayout->addWidget(description_title,21,0);
-    mainLayout->addWidget(description,22,0, 25,3);
+    mainLayout->addWidget(description_title,22,0);
+    mainLayout->addWidget(description,23,0);
+
+    /* Make the column stretchable */
+    mainLayout -> setColumnStretch( 0, 1 ) ;
 
     /* Create a new scraper */
     SmogonScraper *scraper = new SmogonScraper(this);
     scraper->lookup(m_gen, p);
+
+    /* Make the UI update when a differnt build is chosen */
+    connect(build_chooser, SIGNAL(currentIndexChanged(int)), this, SLOT(updateUI()));
+ 
     setLayout(mainLayout);
 }
 
 void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
 {
     PokemonTab::allBuilds = builds;
-    //TODO: add call to initial ui setup
-
-    /*For debugging purposes*/
-    QString labelTxt="";
+    
     if(builds == NULL)
-        labelTxt = "Nothing found";
+        return;
     else
     {
         foreach(SmogonBuild build, *builds)
         {
-            printf("\n\n\n\n");
             build.printBuild();
+            build_chooser -> addItem(build.buildName);
         }
     }
-    #if 0
-    QLabel *simpleText = new QLabel(labelTxt);
-    mainLayout->addWidget(simpleText);
-    setLayout(mainLayout);
-    #endif
-    description -> setText((builds -> at(0)).description);
-    updateUI();
+   
+   updateUI();
 }
 
 /* Given the selected options in the current UI, return a PokeTeam
@@ -195,12 +196,65 @@ PokeTeam *PokemonTab::getPokeTeam(){
 /* Given the selected options in the current UI */
 void PokemonTab::updateUI(){
 
-    /* Update Item */
+    /* Get the current build */
+    int buildNum = build_chooser -> currentIndex() - 1;
+    
+    /* Default build, clear everything */
+    if(buildNum <0){
+        item_chooser -> clear();
+        ability_chooser -> clear();
+        nature_chooser -> clear();
+        move1_chooser -> clear();
+        move2_chooser -> clear();
+        move3_chooser -> clear();
+        move4_chooser -> clear();
+        description -> clear();
+        return;
+    }
+
+    SmogonBuild currentBuild = allBuilds -> at(buildNum);
+
+    /* Update item chooser based on current build */
+    item_chooser -> clear();
+    foreach(QString item , *currentBuild.item){
+        item_chooser -> addItem(item);
+    }
+
     /* Update Ability */
+    ability_chooser -> clear();
+    foreach(QString ability , *currentBuild.ability){
+        ability_chooser -> addItem(ability);
+    }
+
     /* Update Nature */
-    /* Update EVs */
+    nature_chooser -> clear();
+    foreach(QString nature , *currentBuild.nature){
+        nature_chooser -> addItem(nature);
+    }
+
     /* Update Moves */
+    move1_chooser -> clear();
+    foreach(QString move1 , *currentBuild.move1){
+        move1_chooser -> addItem(move1);
+    }
+
+    move2_chooser -> clear();
+    foreach(QString move2 , *currentBuild.move2){
+        move2_chooser -> addItem(move2);
+    }   
+    
+    move3_chooser -> clear();    
+    foreach(QString move3 , *currentBuild.move3){
+        move3_chooser -> addItem(move3);
+    }   
+    
+    move4_chooser -> clear();
+    foreach(QString move4 , *currentBuild.move4){
+        move4_chooser -> addItem(move4);
+    }
+    
     /* Update Description */
+    description -> setText((allBuilds -> at(buildNum)).description);
     description -> adjustSize();
 
     QCoreApplication::processEvents();

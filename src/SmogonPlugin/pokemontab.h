@@ -9,6 +9,7 @@
 
 
 class PokemonTab : public QWidget{
+    Q_OBJECT
 private:
     PokeTeam originalPokemon;
     QComboBox* build_chooser;
@@ -21,14 +22,13 @@ private:
     QComboBox* move3_chooser;
     QComboBox* move4_chooser;
     QLabel* description;
+    QList<SmogonBuild>* allBuilds;
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
     PokeTeam *getPokeTeam();
-    void updateUI();
     void createInitialUi(QList<SmogonBuild>* builds);
-private:
-    QVBoxLayout *mainLayout;
-    QList<SmogonBuild>* allBuilds;
+public slots:    
+    void updateUI();
 };
 
 #endif // POKEMONTAB_H
