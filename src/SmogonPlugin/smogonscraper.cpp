@@ -75,6 +75,8 @@ QList<SmogonBuild>* SmogonScraper::parsePage(QString webPage)
         tempBuild->EVList = getEVs(htmlBuild);
         tempBuild->description = getDescription(htmlBuild);
         buildsList->push_back(*tempBuild);
+
+        //tempBuild->printBuild();
     }
 
     return buildsList;
@@ -185,17 +187,14 @@ QList<QString> *SmogonScraper::getMove(QString htmlBuild, int movesParsed)
     //Pass over the moves that have already been added to the list
     for(int i=0;i<movesParsed;i++)
     {
-        printf("Skipping");
         QString tempStr = htmlBuild.right(htmlBuild.length() - start-1);
         start += tempStr.indexOf(moveString)+1;
     }
-    printf("\n");
     bool movesLeft = true;
     bool noBreak = true;
     while(movesLeft && noBreak)
     {
         QString move = getContents(htmlBuild, start);
-        printf("Current Move: %s", move.toAscii().data());
         lsString->push_back(move);
         int nextMove = htmlBuild.right(htmlBuild.length()-start-1).indexOf(moveString);
         movesLeft = (nextMove!=-1);
