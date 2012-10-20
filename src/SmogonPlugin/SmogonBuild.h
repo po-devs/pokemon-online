@@ -8,25 +8,16 @@ using namespace std;
 
 /*
  * This build object is used to represent a pokemon build from Smogon
- * The use of arrays are in many cases due to the fact that Smogon gives you
- *   multiple choices of what Item or move you want to use.
+ * The use of QLists are in many cases due to the fact that Smogon gives you
+ *   multiple choices of what item or move you want to use.
  */
-
-/*
-struct SmogonBuild
-{
-    QString buildName;
-    vector<QString> item;
-    vector<QString> nature;
-    int EVList[6];
-    vector<QString> moves[4];
-    QString description;
-};*/
 
 class SmogonBuild{
 public:
     SmogonBuild();
+    ~SmogonBuild();
     void printBuild();
+    QString EVListToString();
 
     QString buildName;
     QList<QString> *item;

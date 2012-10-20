@@ -25,6 +25,7 @@ private:
     QList<SmogonBuild>* allBuilds;
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
+    ~PokemonTab();
     PokeTeam *getPokeTeam();
     void createInitialUi(QList<SmogonBuild>* builds);
 public slots:    
