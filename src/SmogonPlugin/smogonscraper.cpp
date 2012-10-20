@@ -270,5 +270,10 @@ void SmogonScraper::reciever(QNetworkReply* reply)
 
     QString webPage = QString(reply->readAll());
 
-    uiTab->createInitialUi(parsePage(webPage));
+    QList<SmogonBuild> *builds = parsePage(webPage);
+
+    if(builds->size() == 0)
+        builds = NULL;
+
+    uiTab->createInitialUi(builds);
 }
