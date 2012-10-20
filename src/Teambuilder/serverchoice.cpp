@@ -27,7 +27,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(registry_connection, SIGNAL(connected()), SLOT(connected()));
 
     registry_connection->connectTo(
-        settings.value("ServerChoice/RegistryServer", "registry.pkmn.co").toString(),
+        settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString(),
         settings.value("ServerChoice/RegistryPort", 5090).toUInt()
     );
     registry_connection->setParent(this);
@@ -141,7 +141,7 @@ void ServerChoice::on_switchPort_clicked()
     ui->description->setText(tr("Connecting to registry...")+"\n");
 
     QSettings settings;
-    QString host =settings.value("ServerChoice/RegistryServer", "registry.pkmn.co").toString();
+    QString host =settings.value("ServerChoice/RegistryServer", "pokemon-online-registry.dynalias.net").toString();
     int port = settings.value("ServerChoice/RegistryPort", 5090).toUInt();
     int newport = port == 8080 ? 5090 : 8080;
 

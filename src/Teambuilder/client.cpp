@@ -710,7 +710,6 @@ void Client::lineJoin()
         return;
     }
 
-    //printLine(QString("Attempting to join %1").arg(text));
     join(text);
 }
 

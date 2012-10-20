@@ -98,7 +98,6 @@ public:
     virtual void disable();
 
     void receiveData(const QByteArray&);
-    Client *client;
 public slots:
     void close();
 

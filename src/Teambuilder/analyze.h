@@ -125,8 +125,6 @@ signals:
     void reconnectPassGiven(const QByteArray&);
     void reconnectSuccess();
     void reconnectFailure(int reason);
-    void battlePassRequired(int bid);
-    void battlePassSuggested(int id, int bid, QString &text);
 public slots:
     /* slots called by the network */
     void error();

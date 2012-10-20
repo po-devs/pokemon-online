@@ -5,7 +5,6 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
-#include "client.h"
 
 
 class AttackZone;
