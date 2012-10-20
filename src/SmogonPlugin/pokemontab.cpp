@@ -157,7 +157,6 @@ PokemonTab::~PokemonTab()
     delete move3_chooser;
     delete move4_chooser;
     delete description;
-    delete mainLayout;
     delete allBuilds;
 }
 
@@ -171,7 +170,7 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
     {
         foreach(SmogonBuild build, *builds)
         {
-            build.printBuild();
+//            build.printBuild();
             build_chooser -> addItem(build.buildName);
         }
     }
