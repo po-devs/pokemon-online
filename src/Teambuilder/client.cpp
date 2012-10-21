@@ -2475,6 +2475,11 @@ void Client::changeTeam()
     relay().sendTeam(secondTeam);
 }
 
+void Client::changeName(const QString &name)
+{
+    relay().notify(NetworkCli::SendTeam, Flags(1), name);
+}
+
 bool Client::hasPlayerInfo (int id)
 {
     return myplayersinfo.contains(id);
