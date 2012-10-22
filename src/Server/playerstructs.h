@@ -9,7 +9,7 @@ struct TeamsHolder
     void init(QList<PersonalTeam> &teams) {
         this->teams.clear();
         for (int i = 0; i < teams.size(); i++) {
-            this->teams.push_back(teams[i]);
+            this->teams.push_back(TeamBattle(teams[i]));
         }
     }
 
