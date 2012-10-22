@@ -153,29 +153,35 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
 /* Given the selected options in the current UI, return a PokeTeam
  * representation of the build */
 PokeTeam *PokemonTab::getPokeTeam(){
+    
+    /* If no build selected, return null */
+    int buildNum = build_chooser -> currentIndex() - 1;
+    if(buildNum<0)
+        return NULL;
+ 
+    /* Build that we are generating */
     PokeTeam *createdBuild = new PokeTeam;
 
     createdBuild -> setNum(originalPokemon.num());
     createdBuild -> setGen(originalPokemon.gen());
 
-    #if 0
     /* Set held Item */
-    PokeTeam.item() = createBuild.Item::number();
+    createdBuild -> item() = ItemInfo::Number(item_chooser -> currentText());
 
     /* Set Ability */
-    PokeTeam.ability() = createBuild.Ability::number();
+    createdBuild -> ability() = AbilityInfo::Number(ability_chooser -> currentText());
     
     /* Set Nature */
-    PokeTeam.nature() = createBuild.Nature::number();
+    createdBuild -> nature() = NatureInfo::Number(nature_chooser -> currentText());
     
     /* Set EVs */
-    PokemonTeam.setEV();
+    //createdBuild -> setEV();
  
     /* Set Moves */
-    for(int i=0; i<4; i++)
-        createBuild.addMove(MoveInfo::number(), false);
-
-    #endif
+    createdBuild -> addMove(MoveInfo::Number(move1_chooser -> currentText()), false);
+    createdBuild -> addMove(MoveInfo::Number(move2_chooser -> currentText()), false);
+    createdBuild -> addMove(MoveInfo::Number(move3_chooser -> currentText()), false);
+    createdBuild -> addMove(MoveInfo::Number(move4_chooser -> currentText()), false);
 
     return createdBuild;
 }
@@ -186,7 +192,7 @@ void PokemonTab::updateUI(){
     /* Get the current build */
     int buildNum = build_chooser -> currentIndex() - 1;
     
-    /* Default build, clear everything */
+    /* No selected build, clear everything */
     if(buildNum <0){
         item_chooser    -> clear();
         ability_chooser -> clear();
