@@ -65,7 +65,7 @@ int main(int, char**)
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
 
-    Pokemon::gen gen(3, 0);
+    Pokemon::gen gen(5, 0);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -216,6 +216,12 @@ int main(int, char**)
                             copy.remove(move);
                         }
                     }
+
+                    /* Pichu can learn volt tackle with anything */
+                    if (poke == Pokemon::Pichu) {
+                        copy.remove(Move::VoltTackle);
+                    }
+
                     /* Now then, if copy.size() is 0 then all moves in the combination are
                        part from the regular moves of the father. Otherwise, all regular moves
                         are removed and the remaining moves are in copy and tested to see if the
