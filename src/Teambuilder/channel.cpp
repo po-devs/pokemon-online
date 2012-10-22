@@ -699,12 +699,16 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             } else if (id == -1) {
                 mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
             } else {
+                if (client->isIgnored(id))
+                    return;
+
                 QString nameClass = "name";
                 if (id != -1)
                     nameClass = "name name-auth-" + QString::number(client->auth(id));
 
-                if (client->isIgnored(id))
-                    return;
+                // If it is not our message, hilight our name if mentioned
+                if (id != ownId())
+                    end = end.replace(nameNotInsideTag, addHilightClass);
 
                 QString authSymbol = Theme::AuthSymbol(client->auth(id));
                 QColor color = client->color(id);
