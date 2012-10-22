@@ -9,8 +9,9 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     originalPokemon = p;
 
     /* Create a text box with scraped information */
-    QGridLayout *mainLayout = new QGridLayout;
-
+    //QGridLayout *mainLayout = new QGridLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    
     /* Fonts */
     QFont title_font("Arial", 12, QFont::Bold);
     
@@ -59,53 +60,52 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     QLabel *description_title = new QLabel("Description:");
     description_title -> setFont(title_font);
 
-    description = new QLabel("(Some long description here)");
+    description = new QLabel();
     description -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-    description -> setMinimumSize(300, 400);
-
+    description -> setMinimumSize(400, 400);
+    description -> setWordWrap(true);
+    description -> setAlignment(Qt::AlignTop);   
+    description -> setAlignment(Qt::AlignLeft);   
+ 
+    /* Spacer between sections */
     int space = 10;
 
-    /* Add the widgets to the main layout */
-    mainLayout->addWidget(pokePic,0,0);
-    mainLayout->addWidget(build_title,1,0);
-    mainLayout->addWidget(build_chooser,2,0);
-    mainLayout->addItem(new QSpacerItem(0, 50, QSizePolicy::Minimum, QSizePolicy::Expanding),3,0);
+    mainLayout->addWidget(pokePic);
+    mainLayout->addWidget(build_title);
+    mainLayout->addWidget(build_chooser);
+    mainLayout->addItem(new QSpacerItem(0, 50, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    mainLayout->addWidget(item_title,4,0); 
-    mainLayout->addWidget(item_chooser,5,0);
+    mainLayout->addWidget(item_title); 
+    mainLayout->addWidget(item_chooser);
     
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),6,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    mainLayout->addWidget(ability_title,7,0);
-    mainLayout->addWidget(ability_chooser,8,0);
+    mainLayout->addWidget(ability_title);
+    mainLayout->addWidget(ability_chooser);
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),9,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    mainLayout->addWidget(nature_title,10,0);
-    mainLayout->addWidget(nature_chooser,11,0);
+    mainLayout->addWidget(nature_title);
+    mainLayout->addWidget(nature_chooser);
     
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),12,0);
+    mainLayout->addWidget(ev_title);
+    mainLayout->addWidget(ev_chooser); 
 
-    mainLayout->addWidget(ev_title,13,0);
-    mainLayout->addWidget(ev_chooser,14,0); 
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),15,0);
+    mainLayout->addWidget(moves_title);
+    mainLayout->addWidget(move1_chooser);
+    mainLayout->addWidget(move2_chooser);
+    mainLayout->addWidget(move3_chooser);
+    mainLayout->addWidget(move4_chooser);
 
-    mainLayout->addWidget(moves_title,16,0);
-    mainLayout->addWidget(move1_chooser,17,0);
-    mainLayout->addWidget(move2_chooser,18,0);
-    mainLayout->addWidget(move3_chooser,19,0);
-    mainLayout->addWidget(move4_chooser,20,0);
-
-    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding),21,0);
+    mainLayout->addItem(new QSpacerItem(0, space, QSizePolicy::Minimum, QSizePolicy::Expanding));
     
-    mainLayout->addWidget(description_title,22,0);
-    mainLayout->addWidget(description,23,0);
-
-    /* Make the column stretchable */
-    mainLayout -> setColumnStretch( 0, 1 ) ;
+    mainLayout->addWidget(description_title);
+    mainLayout->addWidget(description);
 
     /* Create a new scraper */
     SmogonScraper *scraper = new SmogonScraper(this);
@@ -196,7 +196,8 @@ void PokemonTab::updateUI(){
         move2_chooser   -> clear();
         move3_chooser   -> clear();
         move4_chooser   -> clear();
-        description     -> clear();
+        description -> setText("No build selected...");
+        description -> adjustSize();
         return;
     }
 
