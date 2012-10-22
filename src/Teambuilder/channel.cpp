@@ -646,11 +646,6 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
         QString line = removeTrollCharacters(_line);
         QString timeStr = "";
 
-        bool flashingToggled = client->flashingToggled;
-        if (!flashingToggled) {
-            flashing = false;
-        }
-
         if(client->showTS)
             timeStr = "(" + QTime::currentTime().toString() + ") ";
         if (line.length() == 0) {
@@ -685,7 +680,7 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
             const QString addHilightClass("<span class='name-hilight'>\\1</span>");
             QString lineClass = "line";
 
-            if (id != ownId() && end.contains(nameNotInsideTag) && flashingToggled) { // Add stuff if we are to be flashed
+            if (id != ownId() && end.contains(nameNotInsideTag)) { // Add stuff if we are to be flashed
                 lineClass = "line line-hilight";
             }
 
@@ -710,13 +705,6 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 
                 if (client->isIgnored(id))
                     return;
-
-                // If it is not our message, hilight our name if mentioned
-                // If we have flashing toggled off, we don't want to hilight
-                if (id != ownId() && flashingToggled) {
-                    end = end.replace(nameNotInsideTag, addHilightClass);
-                    mainChat()->insertHtml("<span class='line server-message'><span class='server-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
-                }
 
                 QString authSymbol = Theme::AuthSymbol(client->auth(id));
                 QColor color = client->color(id);

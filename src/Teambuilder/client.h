@@ -303,8 +303,6 @@ public slots:
     /* exit warning */
     void changeExitWarning(bool show);
     void showExitWarning();
-    /* flashing */
-    void changeFlashing(bool flash);
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
