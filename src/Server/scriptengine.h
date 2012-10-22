@@ -1,4 +1,4 @@
-﻿#ifndef SCRIPTENGINE_H
+#ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
 #include <QtCore>
@@ -26,6 +26,8 @@ class ScriptEngine : public QObject
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
+
+    void initGlobal();
 
     /* Events */
 
@@ -96,6 +98,10 @@ public:
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
 
+    /* Functions */
+    Q_INVOKABLE bool isSafeScripts ();
+    Q_INVOKABLE QScriptValue global ();
+
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
@@ -125,7 +131,6 @@ public:
 
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 
-    // Q_INVOKABLE void setTimer(int ms); // Causes crash
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
@@ -171,20 +176,27 @@ public:
 
     Q_INVOKABLE void clearChat();
 
+    /* 2 timer functions to replace the other 7, plus one new one */
+    Q_INVOKABLE int setTimer(const QScriptValue &v, int delay, bool repeats);
+    Q_INVOKABLE bool unsetTimer(int timerId);
+    Q_INVOKABLE int unsetAllTimers();
+
     /* Accepts string as 1st parameter. */
-    Q_INVOKABLE int callLater(const QString &s, int delay);
-    Q_INVOKABLE int callQuickly(const QString &s, int delay);
+    Q_INVOKABLE int callLater(const QString &s, int delay); // DEPRECATED
+    Q_INVOKABLE int callQuickly(const QString &s, int delay); // DEPRECATED
+
 
     /* Accepts function as 1st parameter. */
-    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay);
-    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay); // DEPRECATED
+    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay); // DEPRECATED
 
     /* Interval timers. */
-    Q_INVOKABLE int intervalTimer(const QString &expr, int delay);
-    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay);
+
+    Q_INVOKABLE int intervalTimer(const QString &expr, int delay); // DEPRECATED
+    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay); // DEPRECATED
 
     /* Stops a timer. */
-    Q_INVOKABLE bool stopTimer(int timerId);
+    Q_INVOKABLE bool stopTimer(int timerId); // RENAMED/DEPRECATED
 
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
@@ -203,6 +215,7 @@ public:
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue battling(int id);
+    Q_INVOKABLE QScriptValue battlingIds();
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue proxyIp(int id);
@@ -358,10 +371,13 @@ public:
     Q_INVOKABLE QScriptValue getValKeys();
     Q_INVOKABLE QScriptValue getValKeys(const QString &file);
 
-    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
-    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+
 
     // Direct file access.
+    Q_INVOKABLE QScriptValue filesForDirectory (const QString &dir);
+    Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
+    Q_INVOKABLE bool canReadFile(const QString &fileName);
+    Q_INVOKABLE bool canWriteFile(const QString &fileName);
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);
@@ -421,7 +437,6 @@ public slots:
 private slots:
     void timer();
     void timer_step();
-    void timerFunc();
 #ifndef PO_SCRIPT_SAFE_ONLY
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
@@ -437,8 +452,7 @@ private:
     SessionDataFactory *mySessionDataFactory;
 
     QNetworkAccessManager manager;
-    QHash<QTimer*,QString> timerEvents;
-    QHash<QTimer*,QScriptValue> timerEventsFunc;
+    QHash<QTimer*,QScriptValue> timerEvents;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
     QHash<int,QScriptValue> myHostLookups;
 
