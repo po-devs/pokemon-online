@@ -2826,7 +2826,7 @@ QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue
     return myengine.undefinedValue();
 }
 
-void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus exitStatus) {
+void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus) {
     QProcess *p = (QProcess*) sender();
     processes[p].callback.call(QScriptValue(), QScriptValueList() << exitcode << QString::fromAscii(processes[p].out) << QString::fromAscii(processes[p].err));
     processes.remove(p);
