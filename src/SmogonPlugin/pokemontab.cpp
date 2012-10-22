@@ -25,62 +25,34 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
 
     build_chooser = new QComboBox();
     build_chooser -> addItem("");
-    /*build_chooser -> addItem("Solar Power");
-    build_chooser -> addItem("Choice");
-    */
 
     /* Item */ 
     QLabel *item_title = new QLabel("Item:");
     item_title -> setFont(title_font);
-
     item_chooser = new QComboBox();
-    item_chooser -> addItem("");
-    item_chooser -> addItem("Choice Scarf");
-    item_chooser -> addItem("Choice Specs");
 
     /* Abilty */
     QLabel *ability_title = new QLabel("Ability:");
     ability_title -> setFont(title_font);
-
     ability_chooser = new QComboBox();
-    ability_chooser -> addItem("");
-    ability_chooser -> addItem("Overgrow");
     
     /* Nature */
     QLabel *nature_title = new QLabel("Nature:");
     nature_title -> setFont(title_font);
-
     nature_chooser = new QComboBox();
-    nature_chooser -> addItem("");
-    nature_chooser -> addItem("Adamant"); 
 
     /* EV */
     QLabel *ev_title = new QLabel("EV:");
     ev_title -> setFont(title_font);
-
     ev_chooser = new QComboBox();
-    ev_chooser -> addItem("");
-    ev_chooser -> addItem("252 HP / 4 SpA / 252 Spe"); 
 
     /* Moves */
     QLabel *moves_title = new QLabel("Moves:");
     moves_title -> setFont(title_font);
-
     move1_chooser = new QComboBox();
-    move1_chooser -> addItem("");
-    move1_chooser -> addItem("Flamethrower"); 
-
     move2_chooser = new QComboBox();
-    move2_chooser -> addItem("");
-    move2_chooser -> addItem("Iron Defense"); 
-
     move3_chooser = new QComboBox();
-    move3_chooser -> addItem("");
-    move3_chooser -> addItem("Bide"); 
-
     move4_chooser = new QComboBox();
-    move4_chooser -> addItem("");
-    move4_chooser -> addItem("Wrap"); 
 
 
     /* Description */
@@ -216,14 +188,15 @@ void PokemonTab::updateUI(){
     
     /* Default build, clear everything */
     if(buildNum <0){
-        item_chooser -> clear();
+        item_chooser    -> clear();
         ability_chooser -> clear();
-        nature_chooser -> clear();
-        move1_chooser -> clear();
-        move2_chooser -> clear();
-        move3_chooser -> clear();
-        move4_chooser -> clear();
-        description -> clear();
+        nature_chooser  -> clear();
+        ev_chooser      -> clear();
+        move1_chooser   -> clear();
+        move2_chooser   -> clear();
+        move3_chooser   -> clear();
+        move4_chooser   -> clear();
+        description     -> clear();
         return;
     }
 
@@ -246,6 +219,10 @@ void PokemonTab::updateUI(){
     foreach(QString nature , *currentBuild.nature){
         nature_chooser -> addItem(nature);
     }
+
+    /* Update EV */
+    ev_chooser -> clear();
+    ev_chooser -> addItem(currentBuild.EVListToString());
 
     /* Update Moves */
     move1_chooser -> clear();
