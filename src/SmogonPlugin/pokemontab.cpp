@@ -172,10 +172,12 @@ PokeTeam *PokemonTab::getPokeTeam(){
     createdBuild -> ability() = AbilityInfo::Number(ability_chooser -> currentText());
     
     /* Set Nature */
-    createdBuild -> nature() = NatureInfo::Number(nature_chooser -> currentText());
-    
+    createdBuild -> nature() = NatureInfo::Number(nature_chooser -> currentText()); 
     /* Set EVs */
-    //createdBuild -> setEV();
+    SmogonBuild currentBuild = allBuilds -> at(buildNum);
+    QList<int> *EVList = currentBuild.EVList;
+    for(int i = 0; i<6; i++)
+        createdBuild -> setEV(i, EVList -> at(i));
  
     /* Set Moves */
     createdBuild -> addMove(MoveInfo::Number(move1_chooser -> currentText()), false);
