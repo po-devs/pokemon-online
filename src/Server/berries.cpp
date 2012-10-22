@@ -107,19 +107,24 @@ struct BMPinch : public BM
 {
     static bool testpinch(int p, int s, BS &b, int ratio) {
         if (turn(b,p).value("BugBiter").toBool()) {
-            b.eatBerry(s,s==p);
+            b.eatBerry(s);
             return true;
         }
         //Gluttony
         if (b.hasWorkingAbility(s, Ability::Gluttony))
             ratio = 2;
 
-        bool ret = b.poke(s).lifePoints()*ratio <= b.poke(s).totalLifePoints() && !b.koed(s);
+        if (!b.koed(s)) {
+            int lp = b.poke(s).lifePoints();
+            int tp = b.poke(s).totalLifePoints();
 
-        if (ret)
-            b.eatBerry(s,s==p);
+            if (lp*ratio <= tp) {
+                b.eatBerry(s,s==p);
+                return true;
+            }
+        }
 
-        return ret;
+        return false;
     }
 };
 

@@ -1711,7 +1711,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 applyMoveStatMods(player, target);
 
                 /* For berries that activate after taking damage */
-                callieffects(target, player, "TestPinch");
+                callieffects(target, target, "TestPinch");
 
                 if (!sub && !koed(target)) testFlinch(player, target);
 
