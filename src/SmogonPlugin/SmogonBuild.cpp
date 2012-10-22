@@ -2,6 +2,7 @@
 
 SmogonBuild::SmogonBuild(){}
 
+//This function causes the plugin to crash horribly for reasons beyond us.
 //SmogonBuild::~SmogonBuild()
 //{
 //    delete item;
@@ -14,6 +15,10 @@ SmogonBuild::SmogonBuild(){}
 //    delete move4;
 //}
 
+/*
+ *  Converts the EV int array into a string so that it can be easily
+ *      displayed to the user.
+ */
 QString SmogonBuild::EVListToString()
 {
     QString retString = "";
@@ -24,12 +29,12 @@ QString SmogonBuild::EVListToString()
             char buf[10];
             switch(i)
             {
-            case 0:sprintf(buf, "%d HP /", EVList->at(i));
-            case 1:sprintf(buf, "%d Atk /", EVList->at(i));
-            case 2:sprintf(buf, "%d Def /", EVList->at(i));
-            case 3:sprintf(buf, "%d SpA /", EVList->at(i));
-            case 4:sprintf(buf, "%d SpD /", EVList->at(i));
-            case 5:sprintf(buf, "%d Spe /", EVList->at(i));
+            case 0:sprintf(buf, "%d HP /", EVList->at(i));break;
+            case 1:sprintf(buf, "%d Atk /", EVList->at(i));break;
+            case 2:sprintf(buf, "%d Def /", EVList->at(i));break;
+            case 3:sprintf(buf, "%d SpA /", EVList->at(i));break;
+            case 4:sprintf(buf, "%d SpD /", EVList->at(i));break;
+            case 5:sprintf(buf, "%d Spe /", EVList->at(i));break;
             }
             retString += buf;
         }
