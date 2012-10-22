@@ -2225,18 +2225,18 @@ bool Client::hasKnowledgeOf(int id) {
     */
 
     if (mypms.contains(id)) {
-        int nc = 0;
-
-        foreach (Channel *c, mychannels) {
-            if (c->hasPlayer(id)) {
-                nc++;
-            }
-        }
-        if (nc == 0) {
-            return false;
-        }
         return true;
     }
+
+    int nc = 0;
+
+    foreach (Channel *c, mychannels) {
+        if (c->hasPlayer(id)) {
+            nc++;
+        }
+    }
+
+    return nc != 0;
 }
 
 void Client::removePlayer(int id)
