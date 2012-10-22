@@ -38,9 +38,12 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     QWidget* actionButtons = new QWidget;
     QHBoxLayout* buttonsLayout = new QHBoxLayout;
    
+    /* Given the interface, get the pokemon team */
+    Team team = interface->trainerTeam()->team();
+    Pokemon::gen m_gen = team.gen();
 
     /* Widget that holds the tabs */
-    PokemonTeamTabs* tabs = new PokemonTeamTabs; 
+    PokemonTeamTabs* tabs = new PokemonTeamTabs(team.path()); 
 
     /* Cancel button saves nothing */ 
     QPushButton* cancel = new QPushButton("Cancel", actionButtons);
@@ -51,7 +54,7 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     /* Save button saves all of the builds that were set */
     QPushButton* save = new QPushButton("Save", actionButtons);
     buttonsLayout -> addWidget(save);
-    //connect(save, SIGNAL(clicked()), ret, );
+    connect(save, SIGNAL(clicked()), tabs, SLOT(getTeam()));
 
     actionButtons -> setLayout(buttonsLayout);
 
@@ -63,10 +66,6 @@ QWidget *SmogonPlugin::getConfigurationWidget()
  
     /* Set the min dimensions of the plugin's window */
     ret -> setMinimumSize(500, 600);
-    
-    /* Given the interface, get the pokemon team */
-    Team team = interface->trainerTeam()->team();
-    Pokemon::gen m_gen = team.gen();
 
     /* Create a scraper that will be shared by all of the tabs */
     
@@ -76,9 +75,7 @@ QWidget *SmogonPlugin::getConfigurationWidget()
         /* Don't display Missingno */
         if(current_poke.num() > 0){
             PokemonTab* currentTab = new PokemonTab(current_poke, m_gen, ret);
-            QScrollArea *scrollArea = new QScrollArea;
-            scrollArea -> setWidget(currentTab);
-            tabs->addTab(scrollArea, PokemonInfo::Name(current_poke.num()));
+            tabs->addPokeTab(currentTab, PokemonInfo::Name(current_poke.num()));
         }
     }
 
