@@ -11,7 +11,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/enums.h"
 #include "pokemontab.h"
-#include "SmogonBuild.h"
+#include "smogonbuild.h"
 
 /*
  * The SmogonScraper class is simply a class that wraps up the functionality:
@@ -34,7 +34,7 @@ private:
     QNetworkAccessManager* manager;
     PokemonTab* uiTab;
     QString currGen;
-    QList<SmogonBuild>* parsePage(QString webPage);
+    QList<smogonbuild>* parsePage(QString webPage);
     QList<QString> *getHtmlBuilds(QString webPage, int numBuilds);
 
     /*Helper functions for parsing the page*/

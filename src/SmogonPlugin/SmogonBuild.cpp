@@ -1,6 +1,6 @@
-#include "SmogonBuild.h"
+#include "smogonbuild.h"
 
-SmogonBuild::SmogonBuild(){}
+smogonbuild::smogonbuild(){}
 
 //This function causes the plugin to crash horribly for reasons beyond us.
 //SmogonBuild::~SmogonBuild()
@@ -19,7 +19,7 @@ SmogonBuild::SmogonBuild(){}
  *  Converts the EV int array into a string so that it can be easily
  *      displayed to the user.
  */
-QString SmogonBuild::EVListToString()
+QString smogonbuild::EVListToString()
 {
     QString retString = "";
     for(int i=0;i<6;i++)
@@ -44,9 +44,9 @@ QString SmogonBuild::EVListToString()
     return retString;
 }
 
-void SmogonBuild::printBuild()
+void smogonbuild::printBuild()
 {
-    SmogonBuild build = *this;
+    smogonbuild build = *this;
     //Print the build name
     printf("buildName : %s\n",build.buildName.toAscii().data());
     //print the items

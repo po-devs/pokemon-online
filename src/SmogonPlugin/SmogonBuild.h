@@ -12,9 +12,9 @@ using namespace std;
  *   multiple choices of what item or move you want to use.
  */
 
-class SmogonBuild{
+class smogonbuild{
 public:
-    SmogonBuild();
+    smogonbuild();
 //    ~SmogonBuild();
     void printBuild();
     QString EVListToString();

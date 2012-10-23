@@ -4,7 +4,7 @@
 #include <QLabel>
 #include <QDialog>
 #include <QtGui>
-#include "SmogonBuild.h"
+#include "smogonbuild.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 
@@ -22,12 +22,12 @@ private:
     QComboBox* move3_chooser;
     QComboBox* move4_chooser;
     QLabel* description;
-    QList<SmogonBuild>* allBuilds;
+    QList<smogonbuild>* allBuilds;
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
     ~PokemonTab();
     PokeTeam *getPokeTeam();
-    void createInitialUi(QList<SmogonBuild>* builds);
+    void createInitialUi(QList<smogonbuild>* builds);
 public slots:    
     void updateUI();
 };
