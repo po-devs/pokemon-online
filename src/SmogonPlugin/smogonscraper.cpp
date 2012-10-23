@@ -48,16 +48,16 @@ void SmogonScraper::lookup(Pokemon::gen gen, PokeTeam p)
  *  Takes the full Html page from the web and parses it to find the information relating to
  *      the SmogonBuild Object, creating all SmogonBuild objects that it finds on the page.
  */
-QList<SmogonBuild>* SmogonScraper::parsePage(QString webPage)
+QList<smogonbuild>* SmogonScraper::parsePage(QString webPage)
 {
     int numBuilds = webPage.count("class=\"name\"");
-    QList<SmogonBuild> *buildsList = new QList<SmogonBuild>();
+    QList<smogonbuild> *buildsList = new QList<smogonbuild>();
 
     QList<QString> *htmlBuilds = getHtmlBuilds(webPage, numBuilds);
     for(int i = 0; i<numBuilds; i++)
     {
         QString htmlBuild = htmlBuilds->at(i);
-        SmogonBuild *tempBuild = new SmogonBuild();
+        smogonbuild *tempBuild = new smogonbuild();
         tempBuild->buildName = getBuildName(htmlBuild);
         tempBuild->item = getItem(htmlBuild);
         tempBuild->ability = getAbility(htmlBuild);
@@ -269,7 +269,7 @@ void SmogonScraper::reciever(QNetworkReply* reply)
 
     QString webPage = QString(reply->readAll());
 
-    QList<SmogonBuild> *builds = parsePage(webPage);
+    QList<smogonbuild> *builds = parsePage(webPage);
 
     if(builds->size() == 0)
         builds = NULL;

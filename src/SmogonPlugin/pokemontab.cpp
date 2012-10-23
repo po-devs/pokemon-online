@@ -132,7 +132,7 @@ PokemonTab::~PokemonTab()
     delete allBuilds;
 }
 
-void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
+void PokemonTab::createInitialUi(QList<smogonbuild> *builds)
 {
     PokemonTab::allBuilds = builds;
     
@@ -140,7 +140,7 @@ void PokemonTab::createInitialUi(QList<SmogonBuild> *builds)
         return;
     else
     {
-        foreach(SmogonBuild build, *builds)
+        foreach(smogonbuild build, *builds)
         {
             build.printBuild();
             build_chooser -> addItem(build.buildName);
@@ -174,7 +174,7 @@ PokeTeam *PokemonTab::getPokeTeam(){
     /* Set Nature */
     createdBuild -> nature() = NatureInfo::Number(nature_chooser -> currentText()); 
     /* Set EVs */
-    SmogonBuild currentBuild = allBuilds -> at(buildNum);
+    smogonbuild currentBuild = allBuilds -> at(buildNum);
     QList<int> *EVList = currentBuild.EVList;
     for(int i = 0; i<6; i++)
         createdBuild -> setEV(i, EVList -> at(i));
@@ -209,7 +209,7 @@ void PokemonTab::updateUI(){
         return;
     }
 
-    SmogonBuild currentBuild = allBuilds -> at(buildNum);
+    smogonbuild currentBuild = allBuilds -> at(buildNum);
 
     /* Update item chooser based on current build */
     item_chooser -> clear();
