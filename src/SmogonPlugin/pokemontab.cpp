@@ -208,7 +208,7 @@ PokeTeam *PokemonTab::getPokeTeam(){
     createdBuild -> addMove(MoveInfo::Number(moveName), false);
 
     /* Set Move 4 */
-    moveName = move2_chooser->currentText();
+    moveName = move4_chooser->currentText();
     if(moveName.split(" ").at(0) == "Hidden" && moveName.split(" ").at(1) == "Power")
     {
         hiddenPowerType = moveName.split(" ").at(2);
