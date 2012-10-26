@@ -179,16 +179,50 @@ PokeTeam *PokemonTab::getPokeTeam(){
     for(int i = 0; i<6; i++)
         createdBuild -> setEV(i, EVList -> at(i));
  
-    /* Set Moves */
-    createdBuild -> addMove(MoveInfo::Number(move1_chooser -> currentText()), false);
-    createdBuild -> addMove(MoveInfo::Number(move2_chooser -> currentText()), false);
-    createdBuild -> addMove(MoveInfo::Number(move3_chooser -> currentText()), false);
-    createdBuild -> addMove(MoveInfo::Number(move4_chooser -> currentText()), false);
+    /* Set Move 1 */
+    QString moveName = move1_chooser->currentText();
+    QString hiddenPowerType = "None";
+    if(moveName.split(" ").at(0) == "Hidden" && moveName.split(" ").at(1) == "Power")
+    {
+        hiddenPowerType = moveName.split(" ").at(2);
+        moveName = "Hidden Power";
+    }
+    createdBuild -> addMove(MoveInfo::Number(moveName), false);
+
+    /* Set Move 2 */
+    moveName = move2_chooser->currentText();
+    if(moveName.split(" ").at(0) == "Hidden" && moveName.split(" ").at(1) == "Power")
+    {
+        hiddenPowerType = moveName.split(" ").at(2);
+        moveName = "Hidden Power";
+    }
+    createdBuild -> addMove(MoveInfo::Number(moveName), false);
+
+    /* Set Move 3 */
+    moveName = move3_chooser->currentText();
+    if(moveName.split(" ").at(0) == "Hidden" && moveName.split(" ").at(1) == "Power")
+    {
+        hiddenPowerType = moveName.split(" ").at(2);
+        moveName = "Hidden Power";
+    }
+    createdBuild -> addMove(MoveInfo::Number(moveName), false);
+
+    /* Set Move 4 */
+    moveName = move2_chooser->currentText();
+    if(moveName.split(" ").at(0) == "Hidden" && moveName.split(" ").at(1) == "Power")
+    {
+        hiddenPowerType = moveName.split(" ").at(2);
+        moveName = "Hidden Power";
+    }
+    createdBuild -> addMove(MoveInfo::Number(moveName), false);
 
     /* Set DVs if we need to */
-    QStringList dvs = /* GET DVs HERE */;
-    for(int i = 0; i< dvs.size(); i++){
-        createdBuild -> setDV(stat, dvs[i].toInt());
+    if(hiddenPowerType != "None")
+    {
+        QStringList dvs = getDVList(hiddenPowerType);
+        for(int i = 0; i< dvs.size(); i++){
+            createdBuild -> setDV(i, dvs[i].toInt());
+        }
     }
 
     return createdBuild;
@@ -268,3 +302,50 @@ void PokemonTab::updateUI(){
 }
 
 
+
+
+QStringList PokemonTab::getDVList(QString typeString)
+{
+    QStringList retList;
+
+    int type = 0;
+    if(typeString == "Fighting")
+        type = 1;
+    else if(typeString == "Flying")
+        type = 2;
+    else if(typeString == "Poison")
+        type = 3;
+    else if(typeString == "Ground")
+        type = 4;
+    else if(typeString == "Rock")
+        type = 5;
+    else if(typeString == "Bug")
+        type = 6;
+    else if(typeString == "Ghost")
+        type = 7;
+    else if(typeString == "Steel")
+        type = 8;
+    else if(typeString == "Fire")
+        type = 9;
+    else if(typeString == "Water")
+        type = 10;
+    else if(typeString == "Grass")
+        type = 11;
+    else if(typeString == "Electric")
+        type = 12;
+    else if(typeString == "Psychic")
+        type = 13;
+    else if(typeString == "Ice")
+        type = 14;
+    else if(typeString == "Dragon")
+        type = 15;
+    else if(typeString == "Dark")
+        type = 16;
+    else if(typeString == "Curse")
+        type = 17;
+
+    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(type);
+    retList = possibilities.at(0);
+
+    return retList;
+}
