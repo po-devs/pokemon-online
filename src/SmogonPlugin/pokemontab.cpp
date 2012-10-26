@@ -185,6 +185,12 @@ PokeTeam *PokemonTab::getPokeTeam(){
     createdBuild -> addMove(MoveInfo::Number(move3_chooser -> currentText()), false);
     createdBuild -> addMove(MoveInfo::Number(move4_chooser -> currentText()), false);
 
+    /* Set DVs if we need to */
+    QStringList dvs = /* GET DVs HERE */;
+    for(int i = 0; i< dvs.size(); i++){
+        createdBuild -> setDV(stat, dvs[i].toInt());
+    }
+
     return createdBuild;
 }
 
