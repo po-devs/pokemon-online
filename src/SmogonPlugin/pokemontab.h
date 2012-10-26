@@ -23,6 +23,8 @@ private:
     QComboBox* move4_chooser;
     QLabel* description;
     QList<smogonbuild>* allBuilds;
+
+    QStringList getDVList(QString typeString);
 public:
     PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
     ~PokemonTab();
