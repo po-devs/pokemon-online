@@ -80,8 +80,8 @@ public:
     };
 
     enum {
-        TargetTab = 3,
-        StruggleTab = 4
+        TargetTab = 4,
+        StruggleTab = 5
     };
 
     TeamProxy &team();
