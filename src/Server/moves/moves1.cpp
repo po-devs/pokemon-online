@@ -879,7 +879,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat) {
+        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::OverheadThrow) {
             fturn(b,s).add(TM::Failed);
         }
     }
