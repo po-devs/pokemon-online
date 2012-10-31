@@ -62,6 +62,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("beforeSendMessage(QString,int)", (Hook)(&ScriptEngine::beforeSendMessage));
     ret.insert("beforeChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::beforeChannelMessage));
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
+    ret.insert("beforeNewMessage(QString,bool)", (Hook)(&ScriptEngine::beforeNewMessage));
+    ret.insert("afterNewMessage(QString,bool)", (Hook)(&ScriptEngine::afterNewMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
     ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
@@ -204,6 +206,17 @@ int ScriptEngine::beforeChannelMessage(const QString &message, int channel, bool
 int ScriptEngine::afterChannelMessage(const QString &message, int channel, bool html)
 {
     makeEvent("afterChannelMessage", message, channel, html);
+    return true;
+}
+
+int ScriptEngine::beforeNewMessage(const QString &message, bool html)
+{
+    return makeSEvent("beforeNewMessage", message, html);
+}
+
+int ScriptEngine::afterNewMessage(const QString &message, bool html)
+{
+    makeEvent("afterNewMessage", message, html);
     return true;
 }
 
