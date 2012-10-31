@@ -49,6 +49,8 @@ public:
     void beforeLogOut(int src);
     void afterLogOut(int src);
 
+    bool beforeIPConnected(const QString &ip);
+
     bool beforeLogIn(int src);
     void afterLogIn(int src);
 
