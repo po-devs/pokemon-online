@@ -5,6 +5,7 @@
 #include "scriptutils.h"
 #include "battlescripting.h"
 #include "../Utilities/ziputils.h"
+#include "../Shared/config.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
@@ -446,6 +447,11 @@ bool ScriptEngine::stopTimer(int timerId)
     }
 
     return false; // No timer found.
+}
+
+QScriptValue ScriptEngine:: version()
+{
+    return VERSION;
 }
 
 QScriptValue ScriptEngine::eval(const QString &script)

@@ -72,6 +72,9 @@ public:
     /* Stops a timer. */
     Q_INVOKABLE bool stopTimer(int timerId);
 
+    /* Gets the client version. */
+    Q_INVOKABLE QScriptValue version();
+
     /* Evaluates the script given in parameter */
     QScriptValue eval(const QString &script);
     static QScriptValue eval(QScriptContext *context, QScriptEngine *engine);
