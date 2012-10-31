@@ -34,6 +34,8 @@ public:
     int beforeSendMessage(const QString &message, int channel);
     int beforeChannelMessage(const QString &message, int channel, bool html);
     int afterChannelMessage(const QString &message, int channel, bool html);
+    int beforeNewMessage(const QString &message, bool html);
+    int afterNewMessage(const QString &message, bool html);
     int beforePMReceived(int id, const QString &message);
     int afterPMReceived(int id, const QString &message);
     int onPlayerReceived(int id);

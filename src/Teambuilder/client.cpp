@@ -2592,8 +2592,11 @@ void Client::removeIgnore(int id)
 
 void Client::printHtml(const QString &html)
 {
-    foreach(Channel *c, mychannels)
-        c->printHtml(html, false);
+    if(call("beforeNewMessage(QString,bool)", html, true)){
+        foreach(Channel *c, mychannels)
+            c->printHtml(html, false);
+    }
+    call("afterNewMessage(QString,bool)", html, true);
 }
 
 void Client::printLine(const QString &line)
@@ -2601,8 +2604,11 @@ void Client::printLine(const QString &line)
     if (mychannels.size() == 0)
         return;
 
-    foreach(Channel *c, mychannels)
-        c->printLine(line,false, false);
+    if(call("beforeNewMessage(QString,bool)", line, false)){
+        foreach(Channel *c, mychannels)
+            c->printLine(line,false, false);
+    }
+    call("afterNewMessage(QString,bool)", line, false);
 }
 
 /* Prints a line regarding a particular player */
