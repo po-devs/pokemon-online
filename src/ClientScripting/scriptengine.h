@@ -55,7 +55,7 @@ public:
     Q_INVOKABLE void clearChat();
 
     /* escapes html also turns http(s):// into links */
-    Q_INVOKABLE QScriptValue escapeHtml(const QString &string);
+    Q_INVOKABLE QScriptValue htmlEscape(const QString &string);
 
     /* Sound functions */
     Q_INVOKABLE void beep();
