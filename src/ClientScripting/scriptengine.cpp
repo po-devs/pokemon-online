@@ -4,6 +4,7 @@
 #include "scriptengine.h"
 #include "scriptutils.h"
 #include "battlescripting.h"
+#include "../Utilities/functions.h"
 #include "../Utilities/ziputils.h"
 #include "../Shared/config.h"
 
@@ -276,6 +277,21 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
 void ScriptEngine::clearChat()
 {
     //emit clearTheChat();
+}
+
+QScriptValue ScriptEngine::escapeHtml(const QString &string)
+{
+    return escapeHtml(string);
+}
+
+void ScriptEngine::beep() //lets you use a beep alert in scripts.
+{
+    QApplication::beep();
+}
+
+void ScriptEngine::playSound(const QString &file) //plays a sound
+{
+    sound->play(file);
 }
 
 int ScriptEngine::callLater(const QString &expr, int delay)
@@ -992,6 +1008,7 @@ QScriptValue ScriptEngine::getCurrentDir()
     QString current=directory.currentPath();
     return current;
 }
+
 
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
