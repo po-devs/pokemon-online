@@ -279,7 +279,7 @@ void ScriptEngine::clearChat()
     //emit clearTheChat();
 }
 
-QScriptValue ScriptEngine::escapeHtml(const QString &string)
+QScriptValue ScriptEngine::htmlEscape(const QString &string)
 {
     return escapeHtml(string);
 }
