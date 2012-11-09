@@ -3,11 +3,11 @@
 
 #include <QtCore>
 #include <QtScript>
-
+#include <QApplication>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
+#include <QSound>
 #include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
@@ -53,6 +53,13 @@ public:
     /* Print on the client. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
+
+    /* escapes html also turns http(s):// into links */
+    Q_INVOKABLE QScriptValue escapeHtml(const QString &string);
+
+    /* Sound functions */
+    Q_INVOKABLE void beep();
+    Q_INVOKABLE void playSound(const QString &file);
 
     Q_INVOKABLE bool validColor(const QString &color);
     Q_INVOKABLE QString hexColor(const QString &colorname);
@@ -173,7 +180,7 @@ private:
     QScriptValue myscript;
     QTimer * step_timer;
     QVector<bool> stopevents;
-
+    QSound * sound;
     QNetworkAccessManager manager;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
 
