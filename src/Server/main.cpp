@@ -1,4 +1,4 @@
-#ifndef WIN32
+#ifndef _WIN32
 #include "main.h"
 #endif
 
@@ -42,7 +42,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
+    srand(time(NULL));
+#ifdef _WIN32
     freopen("logs.txt", "a", stderr);
     qInstallMsgHandler(myMessageOutput);
 #else

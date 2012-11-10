@@ -24,7 +24,7 @@
 	#define CORO_STACK_SIZE_MIN 8192
 #endif
 
-#if !defined(__MINGW32__) && defined(WIN32)
+#if !defined(__MINGW32__) && defined(_WIN32)
 #if defined(BUILDING_CORO_DLL) || defined(BUILDING_IOVMALL_DLL)
 #define CORO_API __declspec(dllexport)
 #else
@@ -45,7 +45,7 @@
 // The make file can set -DUSE_FIBERS, -DUSE_UCONTEXT or -DUSE_SETJMP to force this choice.
 #if !defined(USE_FIBERS) && !defined(USE_UCONTEXT) && !defined(USE_SETJMP)
 
-#if defined(WIN32) && defined(HAS_FIBERS)
+#if defined(_WIN32) && defined(HAS_FIBERS)
 #	define USE_FIBERS
 #elif defined(HAS_UCONTEXT)
 //#elif defined(HAS_UCONTEXT) && !defined(__x86_64__)
