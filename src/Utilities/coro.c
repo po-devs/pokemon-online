@@ -127,7 +127,7 @@ trampoline (int sig)
        /* windows, of course, gives a shit on the amd64 ABI and uses different registers */
        /* http://blogs.msdn.com/freik/archive/2005/03/17/398200.aspx */
        #if __amd64
-         #ifdef WIN32
+         #ifdef _WIN32
            /* TODO: xmm6..15 also would need to be saved. sigh. */
            #define NUM_SAVED 8
            "\tpushq %rsi\n"

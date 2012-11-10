@@ -207,20 +207,13 @@ void BattleBase::start(ContextSwitcher &ctx)
 /* The battle loop !! */
 void BattleBase::run()
 {
-#ifdef WIN32
+#ifdef Q_OS_WIN
     /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing and
         interfere with other battles */
     srand(time(NULL));
     /* Get rid of the first predictable values for a better rand*/
     for (int i = 0; i < 10; i++)
         rand();
-#else
-# ifdef WIN64
-    /* Under windows you need to do that, as rand is per-thread. But on linux it'd screw up the random thing */
-    srand(time(NULL));
-    for (int i = 0; i < 10; i++)
-        rand();
-# endif
 #endif
     unsigned long array[10];
     for (int i = 0; i < 10; i++) {

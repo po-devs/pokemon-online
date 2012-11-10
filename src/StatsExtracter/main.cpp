@@ -713,7 +713,7 @@ int main(int argc, char *argv[])
         data.append(QByteArray::number(rand()));
 
     /* For the commands we're using, the '\\' for windows is necessary */
-#ifdef WIN32
+#ifdef _WIN32
     QString dirname = "usage_stats\\.tmp" + QCryptographicHash::hash(data, QCryptographicHash::Sha1).toHex().left(10);
 #else
     QString dirname = "usage_stats/.tmp" + QCryptographicHash::hash(data, QCryptographicHash::Sha1).toHex().left(10);
@@ -726,7 +726,7 @@ int main(int argc, char *argv[])
 
     fprintf(stdout, "Moving raw files to a safe directory... (may take time)");
 
-#ifdef WIN32
+#ifdef _WIN32
     system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toAscii().data() );
 #else
     system( ("cp -R usage_stats/raw/* " + dirname).toAscii().data() );

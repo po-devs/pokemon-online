@@ -1,6 +1,6 @@
 /* Copyright (c) 2005-2006 Russ Cox, MIT; see COPYRIGHT */
 
-#ifndef WIN32
+#ifndef _WIN32
 #include "taskimpl.h"
 #endif
 

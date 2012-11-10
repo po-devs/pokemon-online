@@ -64,12 +64,12 @@ void QEntitled::setTitle(const QString &title)
     m_title->setText(title);
 }
 
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
 /* On linux the function p.mask() screws up,
    so a new one is made. On windows the standard one is fine */
 static QBitmap mask(const QPixmap &p)
 {
-#if !defined(WIN32) && !defined(WIN64)
+#ifndef Q_OS_WIN
     /*
      *  This code is for when borders aren't alpha'd properly (all the move types battle buttons needs to have their border alpha'd)
      *  Of course the problem only occurs on linux
@@ -109,7 +109,7 @@ QImageButton::QImageButton(const QString &normal, const QString &hovered, const 
     : myPic(normal), myHoveredPic(hovered), pressed(false)
 {
     setFixedSize(myPic.size());
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
     setMask(::mask(myPic));
 #endif
     lastState = Normal;
@@ -131,7 +131,7 @@ void QImageButton::changePics(const QString &normal, const QString &hovered, con
     if (checked != "")
         myCheckedPic = QPixmap(checked);
 
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
     setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
 #endif
 
@@ -146,7 +146,7 @@ void QImageButton::changePics(const QPixmap &normal, const QPixmap &hovered, con
     myHoveredPic = hovered;
     myCheckedPic = checked;
 
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
     setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
 #endif
 
@@ -201,7 +201,7 @@ void QImageButton::paintEvent(QPaintEvent *e)
 
     if (newState != lastState) {
         lastState = newState;
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
         setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : ::mask(myHoveredPic)));
 #endif
     }
@@ -485,7 +485,7 @@ QImageButtonP::QImageButtonP(const QString &normal, const QString &hovered, cons
     : myPic(normal), myHoveredPic(hovered), myPressedPic(pressed), lastUnderMouse(-1), bpressed(false)
 {
     setFixedSize(myPic.size());
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
     setMask(::mask(myPic));
 #endif
     lastState = Normal;
@@ -506,7 +506,7 @@ void QImageButtonP::changePics(const QString &normal, const QString &hovered,con
     if (checked != "")
         myCheckedPic = QPixmap(checked);
 
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
     setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : (lastState == Pressed ? ::mask(myPressedPic) : ::mask(myHoveredPic))));
 #endif
 
@@ -564,7 +564,7 @@ void QImageButtonP::paintEvent(QPaintEvent *e)
 
     if (newState != lastState) {
         lastState = newState;
-#if defined(WIN32) || defined(WIN64)
+#ifdef Q_OS_WIN
         setMask(lastState == Checked ? ::mask(myCheckedPic) : (lastState == Normal ? ::mask(myPic) : (lastState == Pressed ? ::mask(myPressedPic) : ::mask(myHoveredPic))));
 #endif
     }

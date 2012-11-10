@@ -54,7 +54,7 @@ QTranslator qtTranslator, translator;
 
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
+#ifdef _WIN32
     qInstallMsgHandler(myMessageOutput);
 #endif
 #if defined(Q_OS_MACX)
