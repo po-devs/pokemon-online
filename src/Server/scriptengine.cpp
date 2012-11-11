@@ -1706,6 +1706,21 @@ QScriptValue ScriptEngine::playerIds()
     return ret;
 }
 
+QScriptValue ScriptEngine::battlingIds()
+{
+    QList<int> keys = myserver->myplayers.keys();
+
+    QScriptValue ret = myengine.newArray();
+    int x = 0;
+    for (int i = 0; i < keys.size(); i++) {
+        if (myserver->player(keys[i])->battling()) {
+            ret.setProperty(x++, keys[i]);
+        }
+    }
+
+    return ret;
+}
+
 QScriptValue ScriptEngine::channelIds()
 {
     QList<int> keys = myserver->channels.keys();
