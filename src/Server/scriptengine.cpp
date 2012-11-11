@@ -1,4 +1,4 @@
-﻿#include "server.h"
+#include "server.h"
 #include "player.h"
 #include "security.h"
 #include "antidos.h"
@@ -14,6 +14,16 @@
 #include "analyze.h"
 #include "../Shared/config.h"
 #include "../Utilities/ziputils.h"
+
+#ifndef _EXCLUDE_DEPCRECATED
+static bool callLater_w = false;
+static bool callQuickly_w = false;
+static bool quickCall_w = false;
+static bool delayedCall_w = false;
+static bool intervalCall_w = false;
+static bool intervalTimer_w = false;
+static bool stopTimer_w = false;
+#endif
 
 /*!
 \qmlmethod color Qt::lighter(color baseColor, real factor)
@@ -186,6 +196,14 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     makeEvent("unloadScript");
     // allow the script to write to file and etc.
     // clean up after itself.
+
+    callLater_w = false;
+    callQuickly_w = false;
+    quickCall_w = false;
+    delayedCall_w = false;
+    intervalCall_w = false;
+    intervalTimer_w = false;
+    stopTimer_w = false;
 
     mySessionDataFactory->disableAll();
     newscript = myengine.evaluate(script);
@@ -779,7 +797,7 @@ void ScriptEngine::changeTier(int id, int team, const QString &tier)
     if (!testPlayer("changeTier", id) || !testTeamCount("changeTier", id, team))
         return;
     if (!TierMachine::obj()->exists(tier)) {
-        warn("changeTier(id, tier)", " no such tier as " + tier);
+        warn("changeTier(id, tier)", "no such tier as " + tier);
     } else {
         myserver->player(id)->executeTierChange(team, tier);
     }
@@ -917,48 +935,82 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
-int ScriptEngine::callLater(const QString &expr, int delay)
+#ifndef _EXCLUDE_DEPCRECATED
+
+int ScriptEngine::callLater(const QString &s, int delay) {
+    if (!callLater_w) {
+        warn ("callLater(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        callLater_w = true;
+    }
+    return setTimer(s, delay*1000, false);
+}
+
+int ScriptEngine::callQuickly(const QString &s, int delay) {
+    if (!callQuickly_w) {
+        warn ("callQuickly(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        callQuickly_w = true;
+    }
+    return setTimer(s, delay, false);
+}
+
+int ScriptEngine::quickCall(const QScriptValue &func, int delay) {
+    if (!quickCall_w) {
+        warn("quickCall(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        quickCall_w = true;
+    }
+    return setTimer(func, delay, false);
+}
+
+int ScriptEngine::delayedCall(const QScriptValue &func, int delay)
+{
+    if (!delayedCall_w) {
+        warn ("quickCall(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        delayedCall_w = true;
+    }
+    return setTimer(func, delay*1000, false);
+}
+
+int ScriptEngine::intervalCall(const QScriptValue &func, int delay)
+{
+    if (!intervalCall_w) {
+        warn ("intervalCall(func, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        intervalCall_w = true;
+    }
+    return setTimer(func, delay*1000, true);
+}
+
+int ScriptEngine::intervalTimer(const QString &expr, int delay) {
+    if (!intervalTimer_w) {
+        warn ("intervalTimer(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        intervalTimer_w = true;
+    }
+    return setTimer(expr, delay*1000, true);
+}
+
+bool ScriptEngine::stopTimer(int timerId) {
+    if (!stopTimer_w) {
+        warn ("stopTimer(timerId)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        stopTimer_w = true;
+    }
+    return unsetTimer(timerId);
+}
+
+#endif // #ifndef _EXCLUDE_DEPCRECATED
+
+int ScriptEngine::setTimer(const QScriptValue &code, int delay, bool repeats)
 {
     if (delay <= 0) {
+        return -1;
+    }
+    if ((!code.isFunction()) && (!code.isString())) {
+        warn("setTimer(code, delay, repeats)", "code must be string or function.");
         return -1;
     }
 
     QTimer *t = new QTimer();
 
-    timerEvents[t] = expr;
-    t->setSingleShot(true);
-    t->start(delay*1000);
-    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
-
-    return t->timerId();
-}
-
-int ScriptEngine::callQuickly(const QString &expr, int delay)
-{
-    if (delay <= 0) {
-        return -1;
-    }
-
-    QTimer *t = new QTimer(this);
-
-    timerEvents[t] = expr;
-    t->setSingleShot(true);
-    t->start(delay);
-    connect(t, SIGNAL(timeout()), SLOT(timer()));
-
-    return t->timerId();
-}
-
-int ScriptEngine::intervalTimer(const QString &expr, int delay)
-{
-    if (delay <= 0) {
-        return -1;
-    }
-
-    QTimer *t = new QTimer();
-
-    timerEvents[t] = expr;
-    t->setSingleShot(false);
+    timerEvents[t] = code;
+    t->setSingleShot(!repeats);
     t->start(delay);
     connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
 
@@ -968,7 +1020,14 @@ int ScriptEngine::intervalTimer(const QString &expr, int delay)
 void ScriptEngine::timer()
 {
     QTimer *t = (QTimer*) sender();
-    eval(timerEvents[t]);
+    if (timerEvents[t].isFunction()) {
+        timerEvents[t].call();
+    } else if (timerEvents[t].isString()) {
+        eval(timerEvents[t].toString());
+    } else {
+        warn("ScriptEngine::timer", "this is a bug, report it. code is not string or function");
+        return;
+    }
 
     if (t->isSingleShot()) {
         timerEvents.remove(t);
@@ -976,85 +1035,9 @@ void ScriptEngine::timer()
     }
 }
 
-void ScriptEngine::timer_step()
+bool ScriptEngine::unsetTimer(int timerId)
 {
-    this->stepEvent();
-}
-
-int ScriptEngine::quickCall(const QScriptValue &func, int delay)
-{
-    if (delay <= 0) {
-        return -1;
-    }
-
-    if (!func.isFunction()) {
-        warn("quickCall(func, delay)", "No function passed to first parameter.");
-        return -1;
-    }
-
-    QTimer *t = new QTimer(this);
-    timerEventsFunc[t] = func;
-    t->setSingleShot(true);
-    t->start(delay);
-    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
-
-    return t->timerId();
-}
-
-int ScriptEngine::delayedCall(const QScriptValue &func, int delay)
-{
-    if (delay <= 0) {
-        return -1;
-    }
-
-    if (!func.isFunction()) {
-        warn("delayedCall(func, delay)", "No function passed to first parameter.");
-        return -1;
-    }
-
-    QTimer *t = new QTimer(this);
-    timerEventsFunc[t] = func;
-    t->setSingleShot(true);
-    t->start(delay*1000);
-    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
-
-    return t->timerId();
-}
-
-int ScriptEngine::intervalCall(const QScriptValue &func, int delay)
-{
-    if (delay <= 0) {
-        return -1;
-    }
-
-    if (!func.isFunction()) {
-        warn("intervalCall(func, delay)", "No function passed to first parameter.");
-        return -1;
-    }
-
-    QTimer *t = new QTimer(this);
-    timerEventsFunc[t] = func;
-    t->setSingleShot(false);
-    t->start(delay);
-    connect(t, SIGNAL(timeout()), SLOT(timerFunc()));
-
-    return t->timerId();
-}
-
-void ScriptEngine::timerFunc()
-{
-    QTimer *t = (QTimer*) sender();
-    timerEventsFunc[t].call();
-
-    if (t->isSingleShot()) {
-        timerEventsFunc.remove(t);
-        t->deleteLater();
-    }
-}
-
-bool ScriptEngine::stopTimer(int timerId)
-{
-    QHashIterator <QTimer*, QString> it (timerEvents);
+    QHashIterator <QTimer*, QScriptValue> it (timerEvents);
     while (it.hasNext()) {
         it.next();
         QTimer *timer = it.key();
@@ -1068,24 +1051,32 @@ bool ScriptEngine::stopTimer(int timerId)
             return true; // Timer found.
         }
     }
+    warn ("unsetTimer(timerId)", "no timer with that id");
+    return false; // No timer found.
+}
 
-    // Checking the function timers.
-    QHashIterator <QTimer*, QScriptValue> itfunc (timerEventsFunc);
-    while (itfunc.hasNext()) {
-        itfunc.next();
-        QTimer *timer = itfunc.key();
+int ScriptEngine::unsetAllTimers()
+{
+    int i = 0;
+    QHashIterator <QTimer*, QScriptValue> it (timerEvents);
+    while (it.hasNext()) {
+        it.next();
+        QTimer *timer = it.key();
 
-        if (timer->timerId() == timerId) {
-            timer->stop();
-            timer->blockSignals(true);
+        timer->stop();
+        timer->blockSignals(true);
 
-            timerEventsFunc.remove(timer);
-            timer->deleteLater();
-            return true; // Timer found.
-        }
+        timerEvents.remove(timer);
+        timer->deleteLater();
+        i++;
     }
 
-    return false; // No timer found.
+    return i;
+}
+
+void ScriptEngine::timer_step()
+{
+    this->stepEvent();
 }
 
 QScriptValue ScriptEngine::eval(const QString &script)
@@ -2542,7 +2533,7 @@ void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::Append)) {
-        warn("appendToFile(filename, content)", " error when opening " + fileName + ": " + out.errorString());
+        warn("appendToFile(filename, content)", "error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2554,7 +2545,7 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        warn("writeToFile(filename, content)", " error when opening " + fileName + ": " + out.errorString());
+        warn("writeToFile(filename, content)", "error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2566,7 +2557,7 @@ void ScriptEngine::deleteFile(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::WriteOnly)) {
-        warn("deleteFile(filename)", " error when opening " + fileName + ": " + out.errorString());
+        warn("deleteFile(filename)", "error when opening " + fileName + ": " + out.errorString());
         return;
     }
 
@@ -2646,7 +2637,7 @@ QScriptValue ScriptEngine::getCurrentDir()
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback)
 {
     if (!callback.isString() && !callback.isFunction()) {
-        warn("webCall(urlstring, callback)", " callback is not a string or a function.");
+        warn("webCall(urlstring, callback)", "callback is not a string or a function.");
         return;
     }
 
@@ -2668,7 +2659,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
 void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callback, const QScriptValue &params_array)
 {
     if (!callback.isString() && !callback.isFunction()) {
-        warn("webCall(urlstring, callback, params_array)", " callback is not a string or a function.");
+        warn("webCall(urlstring, callback, params_array)", "callback is not a string or a function.");
         return;
     }
     
@@ -2815,7 +2806,7 @@ QScriptValue ScriptEngine::getFileContent(const QString &fileName)
     QFile out(fileName);
 
     if (!out.open(QIODevice::ReadOnly)) {
-        warn("getFileContent(filename)", " error when opening " + fileName + ": " + out.errorString());
+        warn("getFileContent(filename)", "error when opening " + fileName + ": " + out.errorString());
         return myengine.undefinedValue();
     }
 
