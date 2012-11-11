@@ -318,7 +318,7 @@ bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
 void ScriptEngine::warn(const QString &function, const QString &message)
 {
     printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
-    MakeEvent("warning", function, message);
+    makeEvent("warning", function, message);
 }
 
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
