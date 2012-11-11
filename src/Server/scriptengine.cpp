@@ -196,6 +196,10 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
         printLine("Script Check: Fatal script error on line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + newscript.toString());
 
     } else {
+        QFile f("scripts.js");
+        f.open(QIODevice::WriteOnly);
+        f.write(script.toUtf8());
+
         myscript = newscript;
 
         myengine.globalObject().setProperty("script", myscript);
@@ -2007,11 +2011,7 @@ ScriptWindow::ScriptWindow()
 
 void ScriptWindow::okPressed()
 {
-    QFile f("scripts.js");
-    f.open(QIODevice::WriteOnly);
-
     QString plainText = myedit->toPlainText();
-    f.write(plainText.toUtf8());
 
     emit scriptChanged(plainText);
 
