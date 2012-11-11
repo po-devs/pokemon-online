@@ -203,6 +203,7 @@ public:
     Q_INVOKABLE QScriptValue id(const QString& name);
     Q_INVOKABLE QScriptValue auth(int id);
     Q_INVOKABLE QScriptValue battling(int id);
+    Q_INVOKABLE QScriptValue battlingIds();
     Q_INVOKABLE QScriptValue away(int id);
     Q_INVOKABLE QScriptValue ip(int id); 
     Q_INVOKABLE QScriptValue proxyIp(int id);
