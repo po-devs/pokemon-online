@@ -179,38 +179,63 @@ ScriptEngine::~ScriptEngine()
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
 {
-    mySessionDataFactory->disableAll();
-    myscript = myengine.evaluate(script);
-    myengine.globalObject().setProperty("script", myscript);
+    QScriptValue newscript;
+    QScriptValue oldscript;
+    oldscript = myscript;
 
-    if (myscript.isError()) {
-        printLine("Fatal Script Error line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + myscript.toString());
+    makeEvent("unloadScript");
+    // allow the script to write to file and etc.
+    // clean up after itself.
+
+    mySessionDataFactory->disableAll();
+    newscript = myengine.evaluate(script);
+
+    if (newscript.isError()) {
+
+        makeEvent("switchError", newscript);
+        printLine("Script Check: Fatal script error on line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + newscript.toString());
+
     } else {
+        myscript = newscript;
+
+        myengine.globalObject().setProperty("script", myscript);
+
+        if (!makeSEvent("loadScript")) {
+            myscript = oldscript;
+            myengine.globalObject().setProperty("script", myscript);
+            makeEvent("switchError", newscript);
+            printLine("Script Check: Script rejected server. Maybe it requires a newer version?");
+            return;
+        }
+
         printLine("Script Check: OK");
+
         if(triggerStartUp) {
             serverStartUp();
         }
-    }
 
-    mySessionDataFactory->handleInitialState();
-    if (mySessionDataFactory->isRefillNeeded()) {
-        // Refill player session info if session data is no longer valid.
-        QList<int> keys = myserver->myplayers.keys();
-        for (int i = 0; i < keys.size(); i++) {
-            mySessionDataFactory->handleUserLogIn(keys[i]);
-        }
-        // Refill channels as well.
-        keys = myserver->channels.keys();
-        for (int i = 0; i < keys.size(); i++) {
-            int current_channel = keys[i];
-            // Default channel is already there.
-            if (current_channel != 0) {
-                mySessionDataFactory->handleChannelCreate(current_channel);
+        mySessionDataFactory->handleInitialState();
+        if (mySessionDataFactory->isRefillNeeded()) {
+            // Refill player session info if session data is no longer valid.
+            QList<int> keys = myserver->myplayers.keys();
+            for (int i = 0; i < keys.size(); i++) {
+                mySessionDataFactory->handleUserLogIn(keys[i]);
             }
+            // Refill channels as well.
+            keys = myserver->channels.keys();
+            for (int i = 0; i < keys.size(); i++) {
+                int current_channel = keys[i];
+                // Default channel is already there.
+                if (current_channel != 0) {
+                    mySessionDataFactory->handleChannelCreate(current_channel);
+                }
+            }
+
+            mySessionDataFactory->refillDone();
         }
 
-        mySessionDataFactory->refillDone();
     }
+
     // Error check?
 }
 
