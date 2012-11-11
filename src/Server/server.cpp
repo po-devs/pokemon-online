@@ -1,4 +1,4 @@
-﻿#include <QtNetwork>
+#include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
 #include "../PokemonInfo/pokemoninfo.h"
@@ -37,6 +37,11 @@ static void updateChannelCache(QByteArray &val) {
 
 static void updateZippedChannelCache(QByteArray&val) {
     val = makeZipPacket(NetworkServ::ChannelsList, Server::serverIns->channelNames);
+}
+
+static inline QString stripHtml (QString &str) {
+    QRegExp regex = QRegExp("\\<[^\\>]*\\>");
+    return str.replace(regex, QString(""));
 }
 
 //channelCache([&](QByteArray &val) {val = makePacket(NetworkServ::ChannelsList, channelNames);}),
@@ -2106,7 +2111,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             if(useChannelFileLog) {
                 this->channel(channel).log(fullMessage);
             }
-            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), true, true);
+            printLine(QString("[#%1] %2").arg(this->channel(channel).name, (html ? stripHtml(fullMessage) : fullMessage)), true, true);
             if (sender == NoSender) {
                 notifyChannel(channel, All, NetworkServ::SendMessage, Flags(1), Flags(html), channel, message);
             } else {
@@ -2114,7 +2119,9 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
                 notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
             }
         } else {
-            printLine(fullMessage);
+            if (!html) printLine(fullMessage);
+            else printLine(stripHtml(fullMessage));
+
             if (sender == NoSender) {
                 notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
             } else {
