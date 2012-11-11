@@ -171,20 +171,27 @@ public:
 
     Q_INVOKABLE void clearChat();
 
+    /* 2 timer functions to replace the other 7 */
+    Q_INVOKABLE int setTimer(const QScriptValue &v, int delay, bool repeats);
+    Q_INVOKABLE bool unsetTimer(int timerId);
+    Q_INVOKABLE int unsetAllTimers();
+
     /* Accepts string as 1st parameter. */
-    Q_INVOKABLE int callLater(const QString &s, int delay);
-    Q_INVOKABLE int callQuickly(const QString &s, int delay);
+    Q_INVOKABLE int callLater(const QString &s, int delay); // DEPRECATED
+    Q_INVOKABLE int callQuickly(const QString &s, int delay); // DEPRECATED
+
 
     /* Accepts function as 1st parameter. */
-    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay);
-    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay);
+    Q_INVOKABLE int quickCall(const QScriptValue &func, int delay); // DEPRECATED
+    Q_INVOKABLE int delayedCall(const QScriptValue &func, int delay); // DEPRECATED
 
     /* Interval timers. */
-    Q_INVOKABLE int intervalTimer(const QString &expr, int delay);
-    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay);
+
+    Q_INVOKABLE int intervalTimer(const QString &expr, int delay); // DEPRECATED
+    Q_INVOKABLE int intervalCall(const QScriptValue &func, int delay); // DEPRECATED
 
     /* Stops a timer. */
-    Q_INVOKABLE bool stopTimer(int timerId);
+    Q_INVOKABLE bool stopTimer(int timerId); // RENAMED/DEPRECATED
 
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
@@ -422,7 +429,6 @@ public slots:
 private slots:
     void timer();
     void timer_step();
-    void timerFunc();
 #ifndef PO_SCRIPT_SAFE_ONLY
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
@@ -438,8 +444,7 @@ private:
     SessionDataFactory *mySessionDataFactory;
 
     QNetworkAccessManager manager;
-    QHash<QTimer*,QString> timerEvents;
-    QHash<QTimer*,QScriptValue> timerEventsFunc;
+    QHash<QTimer*,QScriptValue> timerEvents;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
     QHash<int,QScriptValue> myHostLookups;
 
