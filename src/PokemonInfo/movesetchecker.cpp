@@ -336,7 +336,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (g.num == 5) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);
 
-            if (ability == ab.ab(2)) {
+            if (ability == ab.ab(2) || (ability == ab.ab(0) && ab.ab(2) == 0)) {
                 if (moves.size() == 1 && PokemonInfo::dreamWorldMoves(pokeid, g).contains(moves)) {
                     return true;
                 }
