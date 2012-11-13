@@ -32,12 +32,6 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
 
     setNum(pokemon);
 
-    ui->pokemonList->setCurrentIndex(pokemonModel->index(pokemon.pokenum, 1));
-    ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
-
-    updateSprite();
-    updateTypes();
-
     if (getGen() <= 1) {
         ui->shiny->hide();
     } else {
@@ -119,11 +113,11 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
     if (m_num == num) {
         return;
     }
-    m_num = num;
 
     ui->pokeEdit->setText(PokemonInfo::Name(num));
     ui->pokemonList->setCurrentIndex(proxy->mapFromSource(sourceModel->index(num.pokenum, 1)));
     ui->pokemonList->scrollTo(ui->pokemonList->currentIndex());
+    m_num = num;
 
     ui->baseStats->setNum(num);
 
@@ -149,14 +143,14 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
         ui->altForme->setMenu(0);
         ui->altForme->setDisabled(true);
     }
+
+    updateTypes();
+    updateSprite();
 }
 
 void PokeSelection::changeForme(int pokeref)
 {
     setNum(Pokemon::uniqueId(pokeref));
-
-    updateTypes();
-    updateSprite();
 }
 
 void PokeSelection::finish()
