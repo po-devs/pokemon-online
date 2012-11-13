@@ -1388,7 +1388,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         pokeMemory(player)["LastMoveUsedTurn"] = turn();
         pokeMemory(player)["AnyLastMoveUsed"] = attack;
         battleMemory()["AnyLastMoveUsed"] = attack;
-    } else if (attack != 0 && attack != Move::Struggle) {
+    } else if (attack != 0) {
         /* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
             So that's why attack is tested against 0. */
         pokeMemory(player)["AnyLastMoveUsed"] = attack;
