@@ -39,6 +39,16 @@ TeamMenu::TeamMenu(QMainWindow *window, QAbstractItemModel *pokeModel, TeamHolde
     switchToTab(index);
 }
 
+void TeamMenu::addMenus(QMenuBar *b)
+{
+    QMenu *options = b->addMenu(tr("&Options"));
+    QAction *adv = options->addAction(tr("&Advanced menu"), this, SLOT(toggleAdvanced()));
+    adv->setCheckable(true);
+    adv->setChecked(!PokeEdit::advancedWindowClosed);
+
+    advancedMenu = adv;
+}
+
 void TeamMenu::setupUi()
 {
     QGridLayout *grid = new QGridLayout(this);
@@ -95,6 +105,22 @@ void TeamMenu::closeAdvanced()
     PokeEdit::advancedWindowClosed = true;
     foreach(PokeEdit *p, ui->pokemons) {
         p->closeAdvancedTab();
+    }
+
+    if (advancedMenu) {
+        advancedMenu->setChecked(!PokeEdit::advancedWindowClosed);
+    }
+}
+
+void TeamMenu::toggleAdvanced()
+{
+    if (!PokeEdit::advancedWindowClosed) {
+        closeAdvanced();
+    } else {
+        PokeEdit::advancedWindowClosed = false;
+        foreach(PokeEdit *p, ui->pokemons) {
+            p->showAdvancedTab();
+        }
     }
 }
 

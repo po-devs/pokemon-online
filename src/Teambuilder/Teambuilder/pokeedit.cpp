@@ -134,6 +134,11 @@ void PokeEdit::closeAdvancedTab()
     findChild<QWidget*>("AdvancedTab")->close();
 }
 
+void PokeEdit::showAdvancedTab()
+{
+    findChild<QWidget*>("AdvancedTab")->show();
+}
+
 void PokeEdit::openPokemonSelection()
 {
     on_pokemonFrame_clicked();

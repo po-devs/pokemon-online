@@ -21,13 +21,14 @@ public:
     ~TeamMenu();
 
     void updateTeam();
-
+    void addMenus(QMenuBar *);
 signals:
     void switchToTrainer();
 public slots:
     void switchToTab(int index);
     void choosePokemon();
     /* Close the advanced tab */
+    void toggleAdvanced();
     void closeAdvanced();
 private slots:
     void tabIconChanged();
@@ -47,6 +48,7 @@ private:
     _ui *ui;
 
     TeamHolder *m_team;
+    QPointer<QAction> advancedMenu;
     Pokemon::gen lastGen;
     TeamHolder &team() { return *m_team;}
     const TeamHolder &team() const { return *m_team;}
