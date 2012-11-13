@@ -296,6 +296,10 @@ void MainEngine::launchMenu(bool first)
             connect(&downloader, SIGNAL(changeLogAvailable(QString,bool)), menu, SLOT(setChangeLogData(QString)));
         }
 
+        if (downloader.updateReady() || downloader.isDownloading()) {
+            menu->disableUpdateButton();
+        }
+
         connect(menu, SIGNAL(downloadUpdateRequested()), &downloader, SLOT(downloadUpdate()));
     } else {
         menu->showChangeLog();

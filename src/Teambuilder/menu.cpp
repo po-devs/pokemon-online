@@ -67,6 +67,11 @@ void Menu::setUpdateData(const QString &data)
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+void Menu::disableUpdateButton()
+{
+    ui->updateButton->setDisabled(true);
+}
+
 void Menu::showChangeLog()
 {
     ui->updateButton->hide();
