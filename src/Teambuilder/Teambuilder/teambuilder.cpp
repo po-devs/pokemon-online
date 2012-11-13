@@ -76,6 +76,8 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     teamMenu->addAction(tr("&Import team"), this, SLOT(importTeam()), tr("Ctrl+I", "Import team"));
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
 
+    currentWidget()->addMenus(menuBar);
+
     /* Loading mod menu */
     QMenu *menuMods = menuBar->addMenu(tr("&Mods"));
     QActionGroup *group = new QActionGroup(menuMods);

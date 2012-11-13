@@ -24,6 +24,7 @@ public:
     ~PokeEdit();
 
     void closeAdvancedTab();
+    void showAdvancedTab();
 
     enum Docks {
         EVDock = 2000,
