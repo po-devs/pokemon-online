@@ -11,6 +11,11 @@
   <!--<update updateIdFrom="0" updateIdTo="1" os="all" 
   	changelog="https://raw.github.com/gist/3073864/d772c98ae74a7e298a840e709d0b5f86055fa8bb/changelog-0-to-1.txt" 
 	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-0-to-1-all.zip"
-	versionTo="2.0.03"-->
+	versionTo="2.0.03"
+  />-->
+  <update updateIdFrom="1" updateIdTo="2" os="windows" 
+  	changelog="https://raw.github.com/gist/3095069/fec0d6c5861d2deeaeec199b152970e614e86d2f/gistfile1.txt" 
+	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-2.0.07-windows-2.zip"
+	versionTo="2.0.07"
   />
 </updates>
