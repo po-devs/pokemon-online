@@ -20,6 +20,7 @@ public:
     virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell=false, int turns=0);
     virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
+    int getBoostedStat(int p, int stat);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
@@ -30,7 +31,6 @@ protected:
     void analyzeChoices();
     bool testAccuracy(int player, int target, bool silent=false);
     void inflictRecoil(int x, int target);
-    int getBoostedStat(int p, int stat);
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell);
 
     void personalEndTurn(int player);
