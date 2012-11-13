@@ -835,7 +835,8 @@ struct MMCovet : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
+        /* Thief & Covet steal item even if target koed, at least in gen 5 */
+        if (b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
                 && (!b.hasWorkingAbility(t, Ability::Multitype) || (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
                 && !b.hasWorkingAbility(s, Ability::Multitype)
                 && b.poke(s).item() == 0
