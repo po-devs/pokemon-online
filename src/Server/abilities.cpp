@@ -1552,7 +1552,7 @@ struct AMMagicMirror : public AM
 
         int target = -1;
 
-        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
+        if (t != s && b.hasWorkingAbility(t, Ability::MagicMirror) ) {
             target = t;
         } else {
             /* Entry hazards */
@@ -1561,7 +1561,7 @@ struct AMMagicMirror : public AM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
+                    if (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)) {
                         target = t;
                         break;
                     }
@@ -1574,7 +1574,7 @@ struct AMMagicMirror : public AM
 
         int move = AM::move(b,s);
 
-        b.fail(s,76,b.hasWorkingAbility(target, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
+        b.fail(s,76, 2, Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
         BS::BasicMoveInfo info = tmove(b,target);

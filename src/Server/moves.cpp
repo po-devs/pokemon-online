@@ -1693,7 +1693,7 @@ struct MMMagicCoat : public MM
         }
         int target = -1;
 
-        if (t != s && (turn(b,t).value("MagicCoated").toBool() || b.hasWorkingAbility(t, Ability::MagicMirror)) ) {
+        if (t != s && turn(b,t).value("MagicCoated").toBool() ) {
             target = t;
         } else {
             /* Entry hazards */
@@ -1702,7 +1702,7 @@ struct MMMagicCoat : public MM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if ((turn(b,t).value("MagicCoated").toBool() || (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)))) {
+                    if (turn(b,t).value("MagicCoated").toBool()) {
                         target = t;
                         break;
                     }
@@ -1715,7 +1715,7 @@ struct MMMagicCoat : public MM
 
         int move = MM::move(b,s);
 
-        b.fail(s,76,b.hasWorkingAbility(t, Ability::MagicMirror) ? 2 : 1,Pokemon::Psychic);
+        b.fail(s, 76, 1, Pokemon::Psychic);
         /* Now Bouncing back ... */
         BS::context ctx = turn(b,target);
         BS::BasicMoveInfo info = tmove(b,target);
