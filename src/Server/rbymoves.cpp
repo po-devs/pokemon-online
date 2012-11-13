@@ -485,7 +485,10 @@ struct RBYHaze : public MM
         for (int i = Attack; i < AllStats; i++) {
             b.changeStatMod(s, i, 0);
             b.changeStatMod(t, i, 0);
+            fpoke(b,s).stats[i] = b.getBoostedStat(s, i);
+            fpoke(b,t).stats[i] = b.getBoostedStat(t, i);
         }
+
         b.healConfused(s);
         b.healConfused(t);
 
