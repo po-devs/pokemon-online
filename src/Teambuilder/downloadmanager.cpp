@@ -112,10 +112,12 @@ void DownloadManager::downloadUpdate()
     }
 
     if (updateReady()) {
+        qDebug() << "Update already ready";
         return; // No downloading the same update twice
     }
 
     if (downloading) {
+        qDebug() << "Update already downloading";
         return;
     }
 
@@ -124,6 +126,7 @@ void DownloadManager::downloadUpdate()
 
 void DownloadManager::updateDownloaded()
 {
+    qDebug() << "Update finished downloading";
     QNetworkReply *reply = qobject_cast<QNetworkReply*> (sender());
 
     if (!reply) {
