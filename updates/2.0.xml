@@ -14,7 +14,7 @@
 	versionTo="2.0.03"
   />-->
   <update updateIdFrom="1" updateIdTo="2" os="windows" 
-  	changelog="https://gist.github.com/3095069" 
+  	changelog="https://raw.github.com/gist/3095069/fec0d6c5861d2deeaeec199b152970e614e86d2f/gistfile1.txt" 
 	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-2.0.07-windows-2.zip"
 	versionTo="2.0.07"
   />
