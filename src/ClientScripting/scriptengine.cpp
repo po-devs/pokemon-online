@@ -4,7 +4,9 @@
 #include "scriptengine.h"
 #include "scriptutils.h"
 #include "battlescripting.h"
+#include "../Utilities/functions.h"
 #include "../Utilities/ziputils.h"
+#include "../Shared/config.h"
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
@@ -62,6 +64,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("beforeSendMessage(QString,int)", (Hook)(&ScriptEngine::beforeSendMessage));
     ret.insert("beforeChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::beforeChannelMessage));
     ret.insert("afterChannelMessage(QString,int,bool)", (Hook)(&ScriptEngine::afterChannelMessage));
+    ret.insert("beforeNewMessage(QString,bool)", (Hook)(&ScriptEngine::beforeNewMessage));
+    ret.insert("afterNewMessage(QString,bool)", (Hook)(&ScriptEngine::afterNewMessage));
     ret.insert("beforePMReceived(int,QString)", (Hook)(&ScriptEngine::beforePMReceived));
     ret.insert("afterPMReceived(int,QString)", (Hook)(&ScriptEngine::afterPMReceived));
     ret.insert("onPlayerReceived(int)", (Hook)(&ScriptEngine::onPlayerReceived));
@@ -207,6 +211,17 @@ int ScriptEngine::afterChannelMessage(const QString &message, int channel, bool 
     return true;
 }
 
+int ScriptEngine::beforeNewMessage(const QString &message, bool html)
+{
+    return makeSEvent("beforeNewMessage", message, html);
+}
+
+int ScriptEngine::afterNewMessage(const QString &message, bool html)
+{
+    makeEvent("afterNewMessage", message, html);
+    return true;
+}
+
 int ScriptEngine::beforePMReceived(int id, const QString &message)
 {
     return makeSEvent("beforePMReceived", id, message);
@@ -262,6 +277,21 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
 void ScriptEngine::clearChat()
 {
     //emit clearTheChat();
+}
+
+QScriptValue ScriptEngine::htmlEscape(const QString &string)
+{
+    return escapeHtml(string);
+}
+
+void ScriptEngine::beep() //lets you use a beep alert in scripts.
+{
+    QApplication::beep();
+}
+
+void ScriptEngine::playSound(const QString &file) //plays a sound
+{
+    sound->play(file);
 }
 
 int ScriptEngine::callLater(const QString &expr, int delay)
@@ -433,6 +463,11 @@ bool ScriptEngine::stopTimer(int timerId)
     }
 
     return false; // No timer found.
+}
+
+QScriptValue ScriptEngine:: version()
+{
+    return VERSION;
 }
 
 QScriptValue ScriptEngine::eval(const QString &script)
@@ -973,6 +1008,7 @@ QScriptValue ScriptEngine::getCurrentDir()
     QString current=directory.currentPath();
     return current;
 }
+
 
 QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {

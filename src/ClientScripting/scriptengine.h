@@ -3,11 +3,11 @@
 
 #include <QtCore>
 #include <QtScript>
-
+#include <QApplication>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
+#include <QSound>
 #include <QHostInfo>
 
 #include "../PokemonInfo/pokemonstructs.h"
@@ -34,6 +34,8 @@ public:
     int beforeSendMessage(const QString &message, int channel);
     int beforeChannelMessage(const QString &message, int channel, bool html);
     int afterChannelMessage(const QString &message, int channel, bool html);
+    int beforeNewMessage(const QString &message, bool html);
+    int afterNewMessage(const QString &message, bool html);
     int beforePMReceived(int id, const QString &message);
     int afterPMReceived(int id, const QString &message);
     int onPlayerReceived(int id);
@@ -52,6 +54,13 @@ public:
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearChat();
 
+    /* escapes html also turns http(s):// into links */
+    Q_INVOKABLE QScriptValue htmlEscape(const QString &string);
+
+    /* Sound functions */
+    Q_INVOKABLE void beep();
+    Q_INVOKABLE void playSound(const QString &file);
+
     Q_INVOKABLE bool validColor(const QString &color);
     Q_INVOKABLE QString hexColor(const QString &colorname);
 
@@ -69,6 +78,9 @@ public:
 
     /* Stops a timer. */
     Q_INVOKABLE bool stopTimer(int timerId);
+
+    /* Gets the client version. */
+    Q_INVOKABLE QScriptValue version();
 
     /* Evaluates the script given in parameter */
     QScriptValue eval(const QString &script);
@@ -168,7 +180,7 @@ private:
     QScriptValue myscript;
     QTimer * step_timer;
     QVector<bool> stopevents;
-
+    QSound * sound;
     QNetworkAccessManager manager;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
 

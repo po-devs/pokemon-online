@@ -642,109 +642,103 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
 
 void Channel::printLine(const QString &_line, bool flashing, bool act)
 {
-    if(client->call("beforeChannelMessage(QString,int,bool)", _line, myid, false)){
-        QString line = removeTrollCharacters(_line);
-        QString timeStr = "";
+    QString line = removeTrollCharacters(_line);
+    QString timeStr = "";
 
-        if(client->showTS)
-            timeStr = "(" + QTime::currentTime().toString() + ") ";
-        if (line.length() == 0) {
-            mainChat()->insertPlainText("\n");
-            return;
+    if(client->showTS)
+        timeStr = "(" + QTime::currentTime().toString() + ") ";
+    if (line.length() == 0) {
+        mainChat()->insertPlainText("\n");
+        return;
+    }
+
+    if (act) {
+        emit activated(this);
+    }
+
+    if (line.leftRef(3) == "***") {
+        if (flashing)
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        mainChat()->insertHtml("<span class='line action'>" + timeStr + removeTrollCharacters(addChannelLinks(escapeHtml(line))) + "</span><br />");
+        return;
+    }
+
+    /* Let's add colors */
+    int pos = line.indexOf(':');
+    if ( pos != -1 ) {
+        QString beg = line.left(pos);
+        QString end = escapeHtml(line.right(line.length()-pos-1));
+        int id = client->id(beg);
+
+        if (flashing)
+            checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+
+        end = addChannelLinks(end);
+
+        const QRegExp nameNotInsideTag(QString("\\b(%1)\\b(?![^\\s<]*>)").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive);
+        const QString addHilightClass("<span class='name-hilight'>\\1</span>");
+        QString lineClass = "line";
+
+        if (id != ownId() && end.contains(nameNotInsideTag)) { // Add stuff if we are to be flashed
+            lineClass = "line line-hilight";
         }
 
-        if (act) {
-            emit activated(this);
-        }
+        /* Add HTML to timeStr */
+        timeStr = "<span class='timestamp'>" + timeStr + "</span>";
 
-        if (line.leftRef(3) == "***") {
-            if (flashing)
-                checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-            mainChat()->insertHtml("<span class='line action'>" + timeStr + removeTrollCharacters(addChannelLinks(escapeHtml(line))) + "</span><br />");
-            return;
-        }
+        QString nameClass = "name";
+        if (id != -1)
+            nameClass = "name name-auth-" + QString::number(client->auth(id));
 
-        /* Let's add colors */
-        int pos = line.indexOf(':');
-        if ( pos != -1 ) {
-            QString beg = line.left(pos);
-            QString end = escapeHtml(line.right(line.length()-pos-1));
-            int id = client->id(beg);
-
-            if (flashing)
-                checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-
-            end = addChannelLinks(end);
-
-            const QRegExp nameNotInsideTag(QString("\\b(%1)\\b(?![^\\s<]*>)").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive);
-            const QString addHilightClass("<span class='name-hilight'>\\1</span>");
-            QString lineClass = "line";
-
-            if (id != ownId() && end.contains(nameNotInsideTag)) { // Add stuff if we are to be flashed
-                lineClass = "line line-hilight";
-            }
-
-            /* Add HTML to timeStr */
-            timeStr = "<span class='timestamp'>" + timeStr + "</span>";
+        if (beg == "~~Server~~") {
+            end = end.replace(nameNotInsideTag, addHilightClass);
+            mainChat()->insertHtml("<span class='line server-message'><span class='server-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
+        } else if (beg == "Welcome Message") {
+            mainChat()->insertHtml("<span class='line welcome-message'><span class='welcome-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
+        } else if (id == -1) {
+            mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
+        } else {
+            if (client->isIgnored(id))
+                return;
 
             QString nameClass = "name";
             if (id != -1)
                 nameClass = "name name-auth-" + QString::number(client->auth(id));
 
-            if (beg == "~~Server~~") {
+            // If it is not our message, hilight our name if mentioned
+            if (id != ownId())
                 end = end.replace(nameNotInsideTag, addHilightClass);
-                mainChat()->insertHtml("<span class='line server-message'><span class='server-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
-            } else if (beg == "Welcome Message") {
-                mainChat()->insertHtml("<span class='line welcome-message'><span class='welcome-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + ":</b></span>" + end + "</span><br />");
-            } else if (id == -1) {
-                mainChat()->insertHtml("<span class='line script-message'><span class='script-message-begin'>" + timeStr + "<b>" + escapeHtml(beg)  + "</b>:</span>" + end + "</span><br />");
-            } else {
-                if (client->isIgnored(id))
-                    return;
 
-                QString nameClass = "name";
-                if (id != -1)
-                    nameClass = "name name-auth-" + QString::number(client->auth(id));
+            QString authSymbol = Theme::AuthSymbol(client->auth(id));
+            QColor color = client->color(id);
 
-                // If it is not our message, hilight our name if mentioned
-                if (id != ownId())
-                    end = end.replace(nameNotInsideTag, addHilightClass);
-
-                QString authSymbol = Theme::AuthSymbol(client->auth(id));
-                QColor color = client->color(id);
-
-                mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");
-            }
-        } else {
-            if (flashing) {
-                checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
-            }
-            mainChat()->insertPlainText( timeStr + line + "\n");
+            mainChat()->insertHtml("<span class='" + lineClass + "'><span style='color:" + color.name() + "'>" + timeStr + authSymbol + "<span class='" + nameClass + "'>" + escapeHtml(beg) + ":</span></span>" + end + "</span><br />");
         }
+    } else {
+        if (flashing) {
+            checkFlash(line, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
+        }
+        mainChat()->insertPlainText( timeStr + line + "\n");
     }
-    client->call("afterChannelMessage(QString,int,bool)", _line, myid, false);
 }
 
 
 void Channel::printHtml(const QString &str, bool act)
 {
-    if(client->call("beforeChannelMessage(QString,int,bool)", str, myid, true)){
-        QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
-        if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
-            return;
-        }
-        checkFlash(str, "<ping */ *>");
-
-        QString timeStr = "";
-        if(client->showTS)
-            timeStr = "(" + QTime::currentTime().toString() + ") ";
-        QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
-        mainChat()->insertHtml(QString(str).replace(rx, timeStr) + "<br />");
-        if (act) {
-            emit activated(this);
-        }
+    QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
+    if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
+        return;
     }
-    client->call("afterChannelMessage(QString,int,bool)", str, myid, true);
+    checkFlash(str, "<ping */ *>");
+
+    QString timeStr = "";
+    if(client->showTS)
+        timeStr = "(" + QTime::currentTime().toString() + ") ";
+    QRegExp rx("<timestamp */ *>",Qt::CaseInsensitive);
+    mainChat()->insertHtml(QString(str).replace(rx, timeStr) + "<br />");
+    if (act) {
+        emit activated(this);
+    }
 }
 
 void Channel::addEvent(int event)
