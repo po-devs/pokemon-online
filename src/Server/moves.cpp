@@ -2632,7 +2632,7 @@ struct MMTorment : public MM {
     }
 
     static void msp(int s, int, BS &b) {
-        if (!poke(b,s).contains("Tormented"))
+        if (!poke(b,s).contains("Tormented") || poke(b,s).value("AnyLastMoveUsed") == Move::Struggle)
             return;
         for (int i = 0; i < 4; i++) {
             if (b.move(s,i) == poke(b,s)["LastMoveUsed"].toInt()) {
