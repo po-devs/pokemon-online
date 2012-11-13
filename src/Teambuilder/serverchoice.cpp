@@ -104,7 +104,7 @@ QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
     //TODO : Add menu allowing to change port / registry IP / ??
 
     QMenu *fileMenu = ret->addMenu(tr("&File"));
-    fileMenu->addAction(tr("&New tab"), w, SLOT(openNewTab()), tr("Ctrl+N", "New tab"));
+    fileMenu->addAction(tr("New &tab"), w, SLOT(openNewTab()), tr("Ctrl+T", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),w,SLOT(quit()),tr("Ctrl+Q", "Quit"));

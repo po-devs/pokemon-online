@@ -726,7 +726,7 @@ struct RBYPetalDance : public MM
         inc(poke(b,s)["PetalDanceCount"], -1);
         if (poke(b,s).value("PetalDanceCount").toInt() <= 0) {
             poke(b,s).remove("PetalDanceCount");
-            b.inflictConfused(s, s, false);
+            b.inflictConfused(s, s, true);
         }
     }
 
@@ -734,8 +734,9 @@ struct RBYPetalDance : public MM
         if (!poke(b,s).contains("PetalDanceCount")) {
             return;
         }
-        addFunction(poke(b,s), "UponAttackSuccessful", "PetalDance", &uas);
-        addFunction(poke(b,s), "AttackSomehowFailed", "PetalDance", &uas);
+        RBYMoveMechanics::initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
+        addFunction(turn(b,s), "UponAttackSuccessful", "PetalDance", &uas);
+        addFunction(turn(b,s), "AttackSomehowFailed", "PetalDance", &uas);
         fturn(b,s).add(TM::NoChoice);
     }
 };
