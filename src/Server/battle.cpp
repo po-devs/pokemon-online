@@ -1556,13 +1556,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         losePP(player, move, ppsum);
     }
 
+    /* Choice items act before target selection if no target in gen 5 */
+    callieffects(player, player, "BeforeTargetList");
+
     if (targetList.size() == 0) {
         notify(All, NoOpponent, player);
         goto end;
     }
 
     callaeffects(player,player, "BeforeTargetList");
-    callieffects(player, player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
     /* Here because of jewels :( */
