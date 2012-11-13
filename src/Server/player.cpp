@@ -1055,7 +1055,7 @@ void Player::loggedIn(LoginInfo *info)
     state().setFlag(LoginAttempt, true);
 
     /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(1,0), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
+    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(1,1), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
 
     if (!testNameValidity(info->trainerName)) {
         return;
