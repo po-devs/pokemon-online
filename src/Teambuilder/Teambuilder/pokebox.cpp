@@ -125,7 +125,7 @@ void PokeBox::addPokemonToBox(const PokeTeam &poke, int slot)
         throw tr("Could not add the Pokemon to the box, the box is full.");
     }
     if (poke.num() == Pokemon::NoPoke) {
-        throw tr("Can't store a Missigno");
+        throw tr("Can't store a Missingno");
     }
 
     int spot = slot == -1 ? (m_Pokemons[currentPokemon] == NULL ? currentPokemon : freeSpot()) : slot;
