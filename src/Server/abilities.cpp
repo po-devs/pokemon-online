@@ -755,7 +755,7 @@ struct AMPoisonTouch : public AM {
     }
 
     static void opa(int s, int t, BS &b) {
-        if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0)
+        if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0 || b.hasSubstitute(t))
             return;
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(2, 10)) {
             if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
