@@ -1162,6 +1162,11 @@ void BattleSituation::testCritical(int player, int target)
         int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
         critical = randnum < baseSpeed * critChance;
     } else {
+        /* Flail/Reversal don't inflict crits in gen 2 */
+        if (gen().num == 2 && (tmove(player).attack == Move::Flail || tmove(player).attack == Move::Reversal)) {
+            return;
+        }
+
         int minch;
         int craise = tmove(player).critRaise;
 
@@ -2638,6 +2643,8 @@ int BattleSituation::calculateDamage(int p, int t)
     }
     //Spit Up
     if (attackused == Move::SpitUp) randnum = 100;
+    else if (gen().num == 2 && (attackused == Move::Flail || attackused == Move::Reversal)) randnum = 100;
+
     int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
 
     /*** WARNING ***/
