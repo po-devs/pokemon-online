@@ -20,6 +20,7 @@ public:
       to deleteLater it! */
     void download(const QString &url, QObject *target, const char *slot);
     bool updateReady() const;
+    bool isDownloading() const { return downloading;}
 public slots:
     void downloadUpdate();
 signals:

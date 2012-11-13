@@ -23,6 +23,7 @@ public:
     QMenuBar *createMenuBar(MainEngine *w);
 
     void showChangeLog();
+    void disableUpdateButton();
 signals:
     void goToTeambuilder();
     void goToOnline();
