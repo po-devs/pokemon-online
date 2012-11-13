@@ -12,7 +12,8 @@ SOURCES += otherwidgets.cpp \
     confighelper.cpp \
     qtableplus.cpp \
     qclicklabel.cpp \
-    ziputils.cpp
+    ziputils.cpp \
+    qclosedockwidget.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -24,7 +25,8 @@ HEADERS += otherwidgets.h \
     confighelper.h \
     qtableplus.h \
     qclicklabel.h \
-    ziputils.h
+    ziputils.h \
+    qclosedockwidget.h
 
 windows: {
 HEADERS += coro/taskimpl.h \

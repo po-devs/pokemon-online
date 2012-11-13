@@ -85,8 +85,17 @@ void TeamMenu::switchToTab(int index)
         connect(ui->pokemons[index], SIGNAL(numChanged()), SLOT(tabIconChanged()));
         connect(ui->pokemons[index], SIGNAL(nameChanged()), SIGNAL(teamChanged()));
         connect(ui->pokemons[index], SIGNAL(itemChanged()), SIGNAL(teamChanged()));
+        connect(ui->pokemons[index], SIGNAL(closeAdvanced()), SLOT(closeAdvanced()));
     }
     ui->stack->setCurrentWidget(ui->pokemons[index]);
+}
+
+void TeamMenu::closeAdvanced()
+{
+    PokeEdit::advancedWindowClosed = true;
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->closeAdvancedTab();
+    }
 }
 
 void TeamMenu::tabIconChanged()

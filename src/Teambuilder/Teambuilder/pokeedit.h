@@ -23,12 +23,16 @@ public:
     explicit PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemModel, QAbstractItemModel *natureModel);
     ~PokeEdit();
 
+    void closeAdvancedTab();
+
     enum Docks {
         EVDock = 2000,
         IVDock,
         LevelDock,
         MoveDock
     };
+
+    static bool advancedWindowClosed;
 signals:
     void switchToTrainer();
 
@@ -55,6 +59,7 @@ signals:
     void numChanged();
     void nameChanged();
     void itemChanged();
+    void closeAdvanced();
 private slots:
     void changeMove();
     void moveEntered(const QModelIndex&);

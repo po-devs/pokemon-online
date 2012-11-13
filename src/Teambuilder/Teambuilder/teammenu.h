@@ -27,6 +27,8 @@ signals:
 public slots:
     void switchToTab(int index);
     void choosePokemon();
+    /* Close the advanced tab */
+    void closeAdvanced();
 private slots:
     void tabIconChanged();
 private:
