@@ -416,6 +416,11 @@ void ScriptEngine::serverShutDown()
     evaluate(myscript.property("serverShutDown").call(myscript, QScriptValueList()));
 }
 
+bool ScriptEngine::beforeIPConnected(const QString &ip)
+{
+    return makeSEvent("beforeIPConnected", ip);
+}
+
 bool ScriptEngine::beforeLogIn(int src)
 {
     bool login = makeSEvent("beforeLogIn", src);

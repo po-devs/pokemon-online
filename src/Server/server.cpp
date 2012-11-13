@@ -1220,6 +1220,11 @@ void Server::incomingConnection(int i)
         return;
     }
 
+    if(!myengine->beforeIPConnected(ip)){
+        newconnection->deleteLater();
+        return;
+    }
+
     if (!AntiDos::obj()->connecting(ip)) {
         /* Useless to waste lines on that especially if it is DoS'd */
         //printLine(tr("Anti DoS manager prevented IP %1 from logging in").arg(ip));
