@@ -915,7 +915,7 @@ struct MMAssist : public MM
         }
 
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
-            if (move == Transform) {
+            if (move == Transform || move == NaturePower) {
                 return gen >= 5;
             } else {
                 return QSet<int>::contains(move);
