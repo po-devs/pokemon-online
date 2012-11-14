@@ -95,7 +95,7 @@ struct IMChoiceItem : public IM
     }
 
     static void mp(int s, int, BS &b) {
-        if (!poke(b,s).contains("ChoiceMemory")) {
+        if (!poke(b,s).contains("ChoiceMemory") || poke(b,s).value("ChoiceMemory").toInt() == 0) {
             return;
         }
         int mem = poke(b,s)["ChoiceMemory"].toInt();
