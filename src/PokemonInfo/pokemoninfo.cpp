@@ -1144,7 +1144,7 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
     QString file;
 
     if (gen <= 3) {
-        file = QString("advance/%1substitute.png").arg(back?"back/":"");
+        file = QString("firered-leafgreen/%1substitute.png").arg(back?"back/":"");
     } else if (gen <= 4) {
         file = QString("heartgold-soulsilver/%1substitute.png").arg(back?"back/":"");
     } else {
