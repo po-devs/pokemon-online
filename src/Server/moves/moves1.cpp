@@ -1983,7 +1983,7 @@ struct MMSmackDown : public MM
 
     static void ofoa(int s, int t, BS &b) {
         if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, s, type(b,s), t);
+            b.sendMoveMessage(175, 0, t, type(b,s), s);
             poke(b,t)["SmackedDown"] = true;
         }
 
