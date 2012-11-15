@@ -39,11 +39,6 @@ static void updateZippedChannelCache(QByteArray&val) {
     val = makeZipPacket(NetworkServ::ChannelsList, Server::serverIns->channelNames);
 }
 
-static inline QString stripHtml (QString &str) {
-    QRegExp regex = QRegExp("\\<[^\\>]*\\>");
-    return str.replace(regex, QString(""));
-}
-
 //channelCache([&](QByteArray &val) {val = makePacket(NetworkServ::ChannelsList, channelNames);}),
 //zchannelCache([&](QByteArray &val) {val = makeZipPacket(NetworkServ::ChannelsList, channelNames);}),
 
@@ -2116,7 +2111,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             if(useChannelFileLog) {
                 this->channel(channel).log(fullMessage);
             }
-            printLine(QString("[#%1] %2").arg(this->channel(channel).name, (html ? stripHtml(fullMessage) : fullMessage)), true, true);
+            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), true, true);
             if (sender == NoSender) {
                 notifyChannel(channel, All, NetworkServ::SendMessage, Flags(1), Flags(html), channel, message);
             } else {
@@ -2124,8 +2119,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
                 notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
             }
         } else {
-            if (!html) printLine(fullMessage);
-            else printLine(stripHtml(fullMessage));
+            printLine(fullMessage);
 
             if (sender == NoSender) {
                 notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
@@ -2180,7 +2174,6 @@ void Server::atServerShutDown() {
 //    connect(&battleThread, SIGNAL(finished()), this, SLOT(deleteLater()));
 //    battleThread.finish();
 //    exit(0);
-
     //The above always hangs now for some reason on linux, so here we go
     int *x = NULL;
     *x += 1;
