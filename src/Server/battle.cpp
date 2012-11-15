@@ -665,7 +665,8 @@ void BattleSituation::analyzeChoice(int slot)
         if (gen() <= 4 || !koed(slot) || wasKoed) {
             sendPoke(slot, choice(slot).pokeSlot());
         } else {
-            requestSwitch(slot);
+            /* Entry effects are already called by analyzeChoices */
+            requestSwitch(slot, false);
         }
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
@@ -3195,7 +3196,7 @@ void BattleSituation::requestSwitchIns()
     }
 }
 
-void BattleSituation::requestSwitch(int slot)
+void BattleSituation::requestSwitch(int slot, bool eeffects)
 {
     testWin();
 
@@ -3212,7 +3213,9 @@ void BattleSituation::requestSwitch(int slot)
 
     requestChoice(slot,true,true);
     analyzeChoice(slot);
-    callEntryEffects(slot);
+    if (eeffects) {
+        callEntryEffects(slot);
+    }
 }
 
 bool BattleSituation::linked(int linked, QString relationShip)

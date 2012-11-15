@@ -118,7 +118,7 @@ public:
     bool isFlying(int player);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
-    void requestSwitch(int player);
+    void requestSwitch(int player, bool entryEffects=true);
     bool linked(int linked, QString relationShip);
     void link(int linker, int linked, QString relationShip);
     int linker(int linked, QString relationShip);
