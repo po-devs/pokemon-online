@@ -765,6 +765,9 @@ void Client::startPM(int id)
     }
 
     if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
+        if (!pmSystem->isVisible()) {
+            pmSystem->show();
+        }
         return;
     }
 
