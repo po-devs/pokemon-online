@@ -428,7 +428,7 @@
 427 high critical hit ratio
 428 May cause foe to flinch.
 429 May lower opponent's accuracy one stage
-430 May lower foe's SP.ATT one stage
+430 May lower foe's SP.DEF one stage
 431 May induce confusion
 432 Lowers foe's evasiveness
 433 Slower Pok�mon attacks first in 5 turns
