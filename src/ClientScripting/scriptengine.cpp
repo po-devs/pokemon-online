@@ -1076,6 +1076,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
 
     request.setUrl(QUrl(urlstring));
     request.setRawHeader("User-Agent", "Pokemon-Online clientscript");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     //parse the POST fields
     QScriptValueIterator it(params_array);
