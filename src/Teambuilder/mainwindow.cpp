@@ -568,7 +568,7 @@ void MainEngine::rebuildThemeMenu()
     }
 
     themeMenu->addSeparator();
-    themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()));
+    themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()), tr("Ctrl+D", "Reload Stylesheet"));
 }
 
 void MainEngine::changeUserThemeFolder()
