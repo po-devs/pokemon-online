@@ -1180,8 +1180,8 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     top = w;
     QMenuBar *menuBar = new QMenuBar();
-
     menuBar->setObjectName("MainChat");
+
     QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     bool oldShort = globals.value("Client/UsingOldShortcuts").toBool();
     if (oldShort){
