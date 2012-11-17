@@ -1082,7 +1082,8 @@ void Client::PMReceived(int id, QString pm)
     if (!call("beforePMReceived(int,QString)",id,pm)) {
         return;
     }
-    if(pmReject) {
+
+    if(pmReject && !mypms.contains(id) && auth(id) == 0) {
         relay().sendPM(id, "This player is rejecting incoming PMs.");
         return;
     }
