@@ -229,10 +229,10 @@ public slots:
     void tempban(int, int);
     void tempban60(int p) {
          tempban(p, 60);
-	}
+    }
     void tempban1440(int p) {
          tempban(p, 1440);
-	}
+    }
 
     void pmcp(QString);
     /* PM */
@@ -279,6 +279,7 @@ public slots:
     void togglePMTabs(bool);
     void togglePMLogs(bool);
     void movePlayerList(bool);
+    void useOldShortcuts(bool);
     void ignoreServerVersion(bool);
     void versionDiff(const ProtocolVersion &v, int level);
     void serverNameReceived(const QString &sName);
