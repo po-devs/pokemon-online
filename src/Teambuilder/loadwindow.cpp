@@ -1,7 +1,7 @@
 #include "loadwindow.h"
 #include "ui_loadwindow.h"
 
-LoadWindow::LoadWindow(QWidget *parent, const QStringList &tierList) :
+LoadWindow::LoadWindow(QWidget *parent, const QStringList &tierList, const QString &name) :
     QDialog(parent),
     ui(new Ui::LoadWindow)
 {
@@ -28,6 +28,27 @@ LoadWindow::LoadWindow(QWidget *parent, const QStringList &tierList) :
         }
     }
 
+    /* Hide profile & color from TeamBuilder, since there's a few bugs and you can edit it all in TeamBuilder anyway... */
+    if (name == "") {
+        ui->profileList->hide();
+        ui->colorButton->hide();
+    }
+
+    /* To reduce excessive code, this will make the color the same color as your current profile by default */
+    on_profileList_currentIndexChanged(name);
+
+    QSettings s;
+
+    QStringList profiles = holder.profile().getProfileList(s.value("Profile/Path").toString());
+    QComboBox *profileList = ui->profileList;
+    profileList->blockSignals(true);
+    profileList->addItems(profiles);
+    profileList->blockSignals(false);
+    for (int i = 0; i < profileList->count(); ++i) {
+        if (profileList->itemText(i) == name)
+            profileList->setCurrentIndex(i);
+    }
+
     connect(this, SIGNAL(accepted()), SLOT(onAccept()));
 }
 
@@ -46,6 +67,11 @@ void LoadWindow::onAccept()
         }
     }
 
+    QSettings s;
+
+    QString profileSelected = ui->profileList->currentText();
+    QString path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(profileSelected) + ".xml";
+    s.setValue("Profile/Current", path);
     holder.save();
 
     emit teamLoaded(holder);
@@ -54,4 +80,35 @@ void LoadWindow::onAccept()
 LoadWindow::~LoadWindow()
 {
     delete ui;
+}
+
+void LoadWindow::on_colorButton_clicked()
+{
+    QColor c = QColorDialog::getColor(holder.profile().color());
+
+    if (c.isValid() && (c.lightness() > 140 || c.green() > 180)) {
+        return;
+    }
+
+    holder.profile().color() = c;
+    setColor(c);
+}
+
+void LoadWindow::setColor(QColor c) {
+    if (c.isValid()) {
+        ui->colorButton->setStyleSheet(QString("background: %1; color: white").arg(c.name()));
+    } else {
+        ui->colorButton->setStyleSheet("");
+    }
+}
+
+void LoadWindow::on_profileList_currentIndexChanged(const QString &arg1)
+{
+    QSettings s;
+    /* When we change profiles, we'll change color too */
+    QString path = s.value("Profile/Path").toString() + "/" + QUrl::toPercentEncoding(arg1) + ".xml";
+    holder.profile().loadFromFile(path);
+    QColor newColor = holder.profile().color();
+    if (newColor.isValid())
+    setColor(newColor);
 }
