@@ -5,6 +5,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include "../Utilities/otherwidgets.h"
+#include "../Utilities/backtrace.h"
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
@@ -2187,8 +2188,10 @@ void Server::setAnnouncement(int &id, const QString &html) {
 
 Player * Server::player(int id) const
 {
-    if (!myplayers.contains(id))
+    if (!myplayers.contains(id)) {
         qDebug() << "Fatal! player called for non existing ID " << id;
+        dump_backtrace();
+    }
     return myplayers.value(id);
 }
 
