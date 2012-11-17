@@ -933,6 +933,11 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
+    if (!playerExist(id)) {
+        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(id) = false"));
+        return;
+    }
+
     if (nameExist(name)) {
         int ids = this->id(name);
         if ((!playerExist(ids) || (!playerLoggedIn(ids) && !player(ids)->waitingForReconnect())) || player(ids)->name().toLower() != name.toLower()) {
@@ -962,6 +967,11 @@ void Server::loggedIn(int id, const QString &name)
                     silentKick(id);
                     return;
                 }
+            }
+            /* Should not happen but we can't be too safe */
+            if (id == ids) {
+                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids"));
+                return;
             }
         }
     }
