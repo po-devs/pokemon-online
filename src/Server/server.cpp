@@ -934,7 +934,7 @@ void Server::loggedIn(int id, const QString &name)
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
     if (!playerExist(id)) {
-        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(id) = false"));
+        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
         return;
     }
 
@@ -970,7 +970,7 @@ void Server::loggedIn(int id, const QString &name)
             }
             /* Should not happen but we can't be too safe */
             if (id == ids) {
-                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids"));
+                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
                 return;
             }
         }
