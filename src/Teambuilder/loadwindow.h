@@ -2,7 +2,10 @@
 #define LOADWINDOW_H
 
 #include <QDialog>
+#include <QColorDialog>
+#include <QSettings>
 
+#include "../Utilities/functions.h"
 #include "Teambuilder/teamholder.h"
 
 class LoadLine;
@@ -16,7 +19,7 @@ class LoadWindow : public QDialog
     Q_OBJECT
     
 public:
-    explicit LoadWindow(QWidget *parent = 0, const QStringList &tierList = QStringList());
+    explicit LoadWindow(QWidget *parent = 0, const QStringList &tierList = QStringList(), const QString &name = "");
     ~LoadWindow();
     
 signals:
@@ -24,6 +27,12 @@ signals:
 
 public slots:
     void onAccept();
+
+private slots:
+    void on_colorButton_clicked();
+    void setColor(QColor c);
+
+    void on_profileList_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::LoadWindow *ui;
