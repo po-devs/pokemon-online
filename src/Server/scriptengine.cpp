@@ -2100,7 +2100,7 @@ void ScriptEngine::tempBan(QString name, int time)
     SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
     SecurityManager::ban(name);
     if(loggedIn(myserver->id(name))) {
-        myserver->kick(myserver->id(name));
+        myserver->silentKick(myserver->id(name));
     }
 }
 
