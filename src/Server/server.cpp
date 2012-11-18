@@ -68,6 +68,8 @@ Server::~Server()
     delete pluginManager;
 }
 
+extern bool skipChecksOnStartUp;
+
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
@@ -255,11 +257,11 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool()) {
+    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool() && !skipChecksOnStartUp) {
         TierMachine::obj()->processDailyRun();
     }
 
-    if (s.value("Players/ClearInactivesOnStartup").toBool()) {
+    if (s.value("Players/ClearInactivesOnStartup").toBool() && !skipChecksOnStartUp) {
         SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
