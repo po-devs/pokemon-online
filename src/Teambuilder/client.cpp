@@ -1125,7 +1125,7 @@ void Client::removePM(int id, const QString name)
 
 void Client::loadTeam()
 {
-    LoadWindow *w = new LoadWindow(this, getTierList());
+    LoadWindow *w = new LoadWindow(this, getTierList(), mynick);
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->show();
 
@@ -2516,7 +2516,6 @@ void Client::reloadTeamBuilderBar()
 void Client::changeTeam(const TeamHolder &t)
 {
     secondTeam = t;
-    secondTeam.name() = mynick;
 
     changeTeam();
 }
