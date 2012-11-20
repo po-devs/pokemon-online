@@ -6,3 +6,4 @@ Victini: Fusion Flare + Fusion Bolt + V-Create
 Pikachu: Fly + Iron Tail
 Pikachu: Encore + Teeter Dance + Sing
 Snivy: Synthesis + Aromatherapy
+Victini: V-Create + Blue Flare + Bolt Strike + Glaciate
