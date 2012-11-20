@@ -2866,7 +2866,7 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
         } else if (g <= 3) {
             hc = 77; //Air lock
         } else if (g <= 4 || 1) {
-            hc = 125; //Bad dreams
+            hc = 124; //Bad dreams
         }
         return std::min(hc, total); //safety check, in case db was edited
     }
