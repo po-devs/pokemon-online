@@ -44,7 +44,7 @@ void AdvancedSearch::setGen(const Pokemon::gen &gen)
 
     QStringList abilities;
 
-    for (int i = 0; i < AbilityInfo::NumberOfAbilities(gen); i++) {
+    for (int i = 0; i < AbilityInfo::NumberOfAbilities(gen.num); i++) {
         abilities.push_back(AbilityInfo::Name(i));
     }
 
