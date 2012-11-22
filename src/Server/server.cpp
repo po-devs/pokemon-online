@@ -1976,7 +1976,11 @@ void Server::spectatingRequested(int id, int idOfBattle)
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    mybattles[idOfBattle]->removeSpectator(id);
+    if (!mybattles.contains(idOfBattle)) {
+        printLine(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
+    } else {
+        mybattles[idOfBattle]->removeSpectator(id);
+    }
 }
 
 void Server::disconnectPlayer(int id)
