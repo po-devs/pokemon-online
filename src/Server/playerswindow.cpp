@@ -50,6 +50,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         QString bannedString = "Banned";
         int expiration = q.value(6).toInt() - QDateTime::currentDateTimeUtc().toTime_t();
         if(expiration < 0) {
+            if (q.value(6).toInt() != 0)
             bannedString = "Expires on Login";
         } else {
             if(expiration < 60) {
@@ -127,6 +128,8 @@ QString PlayersWindow::currentName()
 void PlayersWindow::ban()
 {
     SecurityManager::ban(currentName());
+    /* Otherwise we may have time from a temp ban before */
+    SecurityManager::setBanExpireTime(currentName(), 0);
     mytable->item(mytable->currentRow(), 2)->setText("Banned");
     emit banned(currentName());
 }

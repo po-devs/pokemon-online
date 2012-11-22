@@ -40,6 +40,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
+bool skipChecksOnStartUp = false;
+
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
@@ -93,12 +95,15 @@ int main(int argc, char *argv[])
             PRINTOPT("-H, --headless", "Runs server without GUI (no X server required)");
             PRINTOPT("-L, --low-latency", "Runs the server in low-latency mode.");
             PRINTOPT("-n, --name [NAME]", "Sets the server name.");
+            PRINTOPT("-N, --no-checks", "Runs no server daily runs at the start");
             PRINTOPT("-p, --port [PORT]", "Sets the server port.");
             PRINTOPT("-P, --private", "Makes the server private.");
             fprintf(stdout, "\n");
             return 0;   //exit app
         } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
             showWindow = false;
+        } else if(strcmp(argv[i], "-N") == 0 || strcmp(argv[i], "--no-checks") == 0){
+            skipChecksOnStartUp = true;
         } else if(strcmp(argv[i], "-L") == 0 || strcmp(argv[i], "--low-latency") ==0){
             s.setValue("Network/LowTCPDelay", true);
         } else if(strcmp( argv[i], "-n") == 0 || strcmp(argv[i], "--name") == 0){

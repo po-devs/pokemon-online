@@ -544,7 +544,7 @@
 543 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 544 Strikes twice.
 545 May burn opponent. (30%)
-546 If user is holding a Plate, this attack's type depends on the Cassette held.
+546 This attack's type depends on the Drive held.
 547 May put Target to sleep (10%)
 548 Causes physical damage.
 549 Sharply lower target's speed.
