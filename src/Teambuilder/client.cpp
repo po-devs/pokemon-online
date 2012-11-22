@@ -544,6 +544,20 @@ void Client::showChannelsContextMenu(const QPoint & point)
     }
 }
 
+QStringList Client::autojoinChannels()
+{
+    return globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+}
+
+QStringList Client::myChannels()
+{
+    QStringList channels;
+    foreach(Channel *c, mychannels){
+        channels.push_back(c->name());
+    }
+    return channels;
+}
+
 QString Client::defaultChannel()
 {
     return globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
@@ -2625,7 +2639,6 @@ void Client::printLine(const QString &line)
 {
     if (mychannels.size() == 0)
         return;
-
     if(call("beforeNewMessage(QString,bool)", line, false)){
         foreach(Channel *c, mychannels)
             c->printLine(line,false, false);
