@@ -2639,6 +2639,7 @@ void Client::printLine(const QString &line)
 {
     if (mychannels.size() == 0)
         return;
+
     if(call("beforeNewMessage(QString,bool)", line, false)){
         foreach(Channel *c, mychannels)
             c->printLine(line,false, false);
