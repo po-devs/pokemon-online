@@ -68,6 +68,8 @@ Server::~Server()
     delete pluginManager;
 }
 
+extern bool skipChecksOnStartUp;
+
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
@@ -255,11 +257,11 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool()) {
+    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool() && !skipChecksOnStartUp) {
         TierMachine::obj()->processDailyRun();
     }
 
-    if (s.value("Players/ClearInactivesOnStartup").toBool()) {
+    if (s.value("Players/ClearInactivesOnStartup").toBool() && !skipChecksOnStartUp) {
         SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
@@ -933,6 +935,11 @@ void Server::loggedIn(int id, const QString &name)
 {
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
+    if (!playerExist(id)) {
+        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
+        return;
+    }
+
     if (nameExist(name)) {
         int ids = this->id(name);
         if ((!playerExist(ids) || (!playerLoggedIn(ids) && !player(ids)->waitingForReconnect())) || player(ids)->name().toLower() != name.toLower()) {
@@ -962,6 +969,11 @@ void Server::loggedIn(int id, const QString &name)
                     silentKick(id);
                     return;
                 }
+            }
+            /* Should not happen but we can't be too safe */
+            if (id == ids) {
+                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
+                return;
             }
         }
     }
