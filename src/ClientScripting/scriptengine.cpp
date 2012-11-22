@@ -82,6 +82,7 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
     ret.insert("onPlayerJoinChan(int,int)", (Hook)(&ScriptEngine::onPlayerJoinChan));
     ret.insert("onPlayerLeaveChan(int,int)", (Hook)(&ScriptEngine::onPlayerLeaveChan));
+    ret.insert("beforeChallengeReceived(int)", (Hook)(&ScriptEngine::beforeChallengeReceived));
     ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
 
     return ret;
@@ -265,6 +266,11 @@ int ScriptEngine::onPlayerLeaveChan(int id, int chan)
 {
     makeEvent("onPlayerLeaveChan", id, chan);
     return true;
+}
+
+int ScriptEngine::beforeChallengeReceived(int id)
+{
+    return makeSEvent("beforeChallengeReceived", id);
 }
 
 void ScriptEngine::stepEvent()

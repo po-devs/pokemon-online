@@ -42,6 +42,7 @@ public:
     int onPlayerRemoved(int id);
     int onPlayerJoinChan(int id, int chan);
     int onPlayerLeaveChan(int id, int chan);
+    int beforeChallengeReceived(int id);
     void onBattleStarted(BaseBattleWindowInterface *w);
 
     /* Prevents the event from happening.
