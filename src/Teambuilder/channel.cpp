@@ -415,6 +415,15 @@ void Channel::receivePlayerList(const QVector<int> &ids)
     }
 }
 
+QStringList Channel::players()
+{
+    QStringList players;
+    foreach(int player, ownPlayers) {
+        players.push_back(QString::number(player));
+    }
+    return players;
+}
+
 void Channel::dealWithCommand(int command, DataStream *stream)
 {
     DataStream &in = *stream;
