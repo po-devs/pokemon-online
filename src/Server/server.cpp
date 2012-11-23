@@ -115,6 +115,7 @@ void Server::start(){
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("GUI/ShowTrayPopup", true);
     setDefaultValue("GUI/MinimizeToTray", true);
+    setDefaultValue("GUI/DoubleClickIcon", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -249,6 +250,7 @@ void Server::start(){
     serverPassword = s.value("Server/Password").toByteArray();
     showTrayPopup = s.value("GUI/ShowTrayPopup").toBool();
     minimizeToTray = s.value("GUI/MinimizeToTray").toBool();
+    doubleClick = s.value("GUI/DoubleClickIcon").toBool();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
@@ -2240,6 +2242,11 @@ void Server::showTrayPopupChanged(bool show)
 void Server::minimizeToTrayChanged(bool allow)
 {
     minimizeToTray = allow;
+}
+
+void Server::clickConditionChanged(bool click)
+{
+    doubleClick = click;
 }
 
 template <typename ...Params>
