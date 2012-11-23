@@ -100,6 +100,8 @@ public:
 
     Q_INVOKABLE QString announcement();
 
+    Q_INVOKABLE QStringList autojoinChannels();
+    Q_INVOKABLE QStringList myChannels();
     enum Status {
         Available = 0,
         Away,

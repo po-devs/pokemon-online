@@ -27,6 +27,7 @@ signals:
     void usePasswordChanged(bool usePassword);
     void showTrayPopupChanged(bool show);
     void minimizeToTrayChanged(bool allow);
+    void clickConditionChanged(bool click);
 
 private slots:
     void apply();
@@ -45,6 +46,7 @@ private:
     QCheckBox *safeScripts;
     QCheckBox *trayPopup;
     QCheckBox *minimizeToTray;
+    QCheckBox *doubleClick;
     QCheckBox *showOveractive;
     QLineEdit *proxyServers;
     QLineEdit *serverPassword;
