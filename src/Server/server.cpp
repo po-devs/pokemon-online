@@ -68,6 +68,8 @@ Server::~Server()
     delete pluginManager;
 }
 
+extern bool skipChecksOnStartUp;
+
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
@@ -257,11 +259,11 @@ void Server::start(){
     addChannel();
 
     /* Processes the daily run */
-    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool()) {
+    if (s.value("Ladder/ProcessRatingsOnStartUp").toBool() && !skipChecksOnStartUp) {
         TierMachine::obj()->processDailyRun();
     }
 
-    if (s.value("Players/ClearInactivesOnStartup").toBool()) {
+    if (s.value("Players/ClearInactivesOnStartup").toBool() && !skipChecksOnStartUp) {
         SecurityManager::processDailyRun(amountOfInactiveDays, false);
     }
 
@@ -1988,7 +1990,11 @@ void Server::spectatingRequested(int id, int idOfBattle)
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    mybattles[idOfBattle]->removeSpectator(id);
+    if (!mybattles.contains(idOfBattle)) {
+        printLine(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
+    } else {
+        mybattles[idOfBattle]->removeSpectator(id);
+    }
 }
 
 void Server::disconnectPlayer(int id)

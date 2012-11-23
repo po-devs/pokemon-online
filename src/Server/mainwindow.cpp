@@ -9,7 +9,7 @@ MainWindow::MainWindow(Server *myserver, QWidget *parent)
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
-    setWindowTitle(tr("Pokemon Online Server"));
+    setWindowTitle(QString(tr("Pokemon Online Server v%1")).arg(VERSION));
     setWindowIcon(QIcon("db/icon-server.png"));
 
     setCentralWidget(myserverwidget = new ServerWidget(myserver));
