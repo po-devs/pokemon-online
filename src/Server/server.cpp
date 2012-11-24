@@ -1915,13 +1915,13 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    //printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
+    printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
     disconnectPlayer(id);
 }
 
 void Server::logout(int id)
 {
-    //printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
+    printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
     removePlayer(id);
 }
 
