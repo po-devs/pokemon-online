@@ -621,7 +621,7 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[2].resize(numGens);
 
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
-        Pokemon::gen gen = i;
+        Pokemon::gen gen(i, -1);
 
         fill_uid_int(m_Type1[i-GenInfo::GenMin()], path(QString("type1.txt"),gen));
         fill_uid_int(m_Type2[i-GenInfo::GenMin()], path(QString("type2.txt"),gen));
@@ -1597,7 +1597,7 @@ void PokemonInfo::makeDataConsistent()
         for (int gen = GEN_MIN; gen <= GenInfo::GenMax(); gen++) {
             int i = gen-GEN_MIN;
 
-            if (!Exists(id, Pokemon::gen(gen, GenInfo::NumberOfSubgens(gen))))
+            if (!Exists(id, Pokemon::gen(gen, -1)))
                 continue;
 
             for (int j = 0; j < 3; j++) {

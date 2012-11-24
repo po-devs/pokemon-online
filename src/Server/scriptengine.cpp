@@ -2285,7 +2285,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int _gen)
 
     if (PokemonInfo::Exists(pokemon, gen) && GenInfo::AllSubGens().contains(gen)
             && (slot >= 0) && (slot <= 2)) {
-        return PokemonInfo::Abilities(pokemon, gen).ab(slot);
+        return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();
 }
