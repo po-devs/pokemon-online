@@ -44,7 +44,11 @@ Player::~Player()
 
 void Player::doConnections()
 {
-    connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()));
+    /* The reason for Queued Connection is that for example a disconnect signal could be received when
+      a script sends a message to the client.
+
+      If that happens we want the disconnect signal to happen after the script function*/
+    connect(&relay(), SIGNAL(disconnected()), SLOT(disconnected()), Qt::QueuedConnection);
     connect(&relay(), SIGNAL(loggedIn(LoginInfo*)), SLOT(loggedIn(LoginInfo*)));
     connect(&relay(), SIGNAL(logout()), SLOT(logout()));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
