@@ -189,6 +189,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
     connect(w, SIGNAL(showTrayPopupChanged(bool)), server, SLOT(showTrayPopupChanged(bool)));
     connect(w, SIGNAL(minimizeToTrayChanged(bool)), server, SLOT(minimizeToTrayChanged(bool)));
+    connect(w, SIGNAL(clickConditionChanged(bool)), server, SLOT(clickConditionChanged(bool)));
 }
 
 void ServerWidget::openModsWindow()

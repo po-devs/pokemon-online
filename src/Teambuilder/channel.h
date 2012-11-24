@@ -54,6 +54,7 @@ public:
     void removePlayer(int id);
     void insertNewPlayer(int id);
     void receivePlayerList(const QVector<int> &ids);
+    Q_INVOKABLE QStringList players();
     Q_INVOKABLE void addEvent(int event);
     Q_INVOKABLE void removeEvent(int event);
     Q_INVOKABLE bool eventEnabled(int event);

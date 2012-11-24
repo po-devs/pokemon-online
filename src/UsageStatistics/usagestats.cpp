@@ -150,7 +150,7 @@ QHash<QString, BattlePlugin::Hook> PokemonOnlineStatsBattlePlugin::getHooks()
 
 int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 {
-    qDebug() << "Battle Starting Stats " << this;
+    //qDebug() << "Battle Starting Stats " << this;
     /* We only keep track of battles between players of the same tier
        and not CC battles */
     if (b.clauses() & ChallengeInfo::ChallengeCup) {
@@ -189,7 +189,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
         }
     }
 
-    qDebug() << "End Battle Starting Stats " << this;
+    //qDebug() << "End Battle Starting Stats " << this;
 
     return -1; /* Means the plugin is done */
 }
