@@ -42,6 +42,7 @@ public:
     int onPlayerRemoved(int id);
     int onPlayerJoinChan(int id, int chan);
     int onPlayerLeaveChan(int id, int chan);
+    int beforeChallengeReceived(int id);
     void onBattleStarted(BaseBattleWindowInterface *w);
 
     /* Prevents the event from happening.
@@ -63,6 +64,11 @@ public:
 
     Q_INVOKABLE bool validColor(const QString &color);
     Q_INVOKABLE QString hexColor(const QString &colorname);
+
+    /* 2 timer functions to replace the other 7 */
+    Q_INVOKABLE int setTimer(const QScriptValue &v, int delay, bool repeats);
+    Q_INVOKABLE bool unsetTimer(int timerId);
+    Q_INVOKABLE int unsetAllTimers();
 
     /* Accepts string as 1st parameter. */
     Q_INVOKABLE int callLater(const QString &s, int delay);
@@ -164,7 +170,6 @@ public slots:
 private slots:
     void timer();
     void timer_step();
-    void timerFunc();
 
     void webCall_replyFinished(QNetworkReply* reply);
     void synchronousWebCall_replyFinished(QNetworkReply* reply);
@@ -184,8 +189,7 @@ private:
     QNetworkAccessManager manager;
     QHash<QNetworkReply*,QScriptValue> webCallEvents;
 
-    QHash<QTimer*,QString> timerEvents;
-    QHash<QTimer*,QScriptValue> timerEventsFunc;
+    QHash<QTimer*,QScriptValue> timerEvents;
     QHash<int,QScriptValue> myHostLookups;
 
     void startStopEvent() {stopevents.push_back(false);}

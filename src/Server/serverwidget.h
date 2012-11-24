@@ -25,6 +25,7 @@ public:
     QMenuBar *createMenuBar();
     bool isServerTrayPopupAllowed() const { return server->isTrayPopupAllowed(); }
     bool isMinimizeToTrayAllowed() const { return server->isMinimizeToTrayAllowed(); }
+    bool isDoubleClickIcon() const { return server->isDoubleClickIcon(); }
 
     void atShutDown();
     

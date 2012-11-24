@@ -117,6 +117,7 @@ void Server::start(){
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("GUI/ShowTrayPopup", true);
     setDefaultValue("GUI/MinimizeToTray", true);
+    setDefaultValue("GUI/DoubleClickIcon", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -251,6 +252,7 @@ void Server::start(){
     serverPassword = s.value("Server/Password").toByteArray();
     showTrayPopup = s.value("GUI/ShowTrayPopup").toBool();
     minimizeToTray = s.value("GUI/MinimizeToTray").toBool();
+    doubleClick = s.value("GUI/DoubleClickIcon").toBool();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
@@ -1988,7 +1990,11 @@ void Server::spectatingRequested(int id, int idOfBattle)
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    mybattles[idOfBattle]->removeSpectator(id);
+    if (!mybattles.contains(idOfBattle)) {
+        printLine(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
+    } else {
+        mybattles[idOfBattle]->removeSpectator(id);
+    }
 }
 
 void Server::disconnectPlayer(int id)
@@ -2242,6 +2248,11 @@ void Server::showTrayPopupChanged(bool show)
 void Server::minimizeToTrayChanged(bool allow)
 {
     minimizeToTray = allow;
+}
+
+void Server::clickConditionChanged(bool click)
+{
+    doubleClick = click;
 }
 
 template <typename ...Params>

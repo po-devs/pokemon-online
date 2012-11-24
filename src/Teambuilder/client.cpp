@@ -544,6 +544,20 @@ void Client::showChannelsContextMenu(const QPoint & point)
     }
 }
 
+QStringList Client::autojoinChannels()
+{
+    return globals.value(QString("AutoJoinChannels/%1").arg(relay().getIp())).toStringList();
+}
+
+QStringList Client::myChannels()
+{
+    QStringList channels;
+    foreach(Channel *c, mychannels){
+        channels.push_back(c->name());
+    }
+    return channels;
+}
+
 QString Client::defaultChannel()
 {
     return globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
@@ -1839,7 +1853,11 @@ void Client::seeChallenge(const ChallengeInfo &c)
 {
     if (playerExist(c))
     {
-        if (busy()) {
+        if (!call("beforeChallengeReceived(int)", c.opponent())) {
+            ChallengeInfo d = c;
+            d.dsc = ChallengeInfo::Busy;
+            relay().sendChallengeStuff(d);
+        } else if (busy()) {
             /* Warns the server that we are too busy to accept the challenge */
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;

@@ -24,10 +24,12 @@ Team* PokemonTeamTabs::getTeam(){
 
     for(int i = 0; i<6; i++){
         PokemonTab* tab = pokemonTabs->value(i);
-        if(NULL == tab)
-            break;
-        PokeTeam* currentPoke = tab->getPokeTeam();
-        ret -> poke(i) = *currentPoke;    
+        if(tab) {
+            PokeTeam* currentPoke = tab->getPokeTeam();
+            if (currentPoke) {
+                ret -> poke(i) = *currentPoke;
+            }
+        }
     }
     printf("Saving to file...");
     
