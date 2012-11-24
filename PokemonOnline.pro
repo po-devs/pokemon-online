@@ -13,6 +13,8 @@
 # If you need to edit global qmake constants use
 # src/Shared/Common.pri for that.
 
+# Websocket library cloned from git://gitorious.org/qtwebsocket/qtwebsocket.git
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
