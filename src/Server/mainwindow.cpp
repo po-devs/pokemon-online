@@ -42,7 +42,11 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::systemTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    if(reason == QSystemTrayIcon::Trigger) {
+    QSystemTrayIcon::ActivationReason check = QSystemTrayIcon::Trigger;
+    if (myserverwidget->isDoubleClickIcon()) {
+         check = QSystemTrayIcon::DoubleClick;
+    }
+    if(reason == check) {
         setParent(NULL, Qt::Window);
         showNormal();
         trayIcon->hide();

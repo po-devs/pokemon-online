@@ -77,6 +77,9 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow("Show tray popup: ", trayPopup = new QCheckBox("Show tooltip when PO is minimized to tray."));
     trayPopup->setChecked(settings.value("GUI/ShowTrayPopup").toBool());
 
+    l->addRow("Double Click tray icon", doubleClick = new QCheckBox("Double click to reopen when PO is minimized to tray."));
+    doubleClick->setChecked(settings.value("GUI/DoubleClickIcon").toBool());
+
     l->addRow("Show Overactive Messages: ", showOveractive = new QCheckBox("Show Overactive Message when someone goes overactive"));
     showOveractive->setChecked(settings.value("AntiDOS/ShowOveractiveMessages").toBool());
 
@@ -118,6 +121,7 @@ void ServerWindow::apply()
     settings.setValue("Scripts/SafeMode", safeScripts->isChecked());
     settings.setValue("GUI/MinimizeToTray", minimizeToTray->isChecked());
     settings.setValue("GUI/ShowTrayPopup", trayPopup->isChecked());
+    settings.setValue("GUI/DoubleClickIcon", doubleClick->isChecked());
     settings.setValue("AntiDOS/ShowOveractiveMessages", showOveractive->isChecked());
     settings.setValue("Network/ProxyServers", proxyServers->text());
     settings.setValue("Server/Password", serverPassword->text());
@@ -140,6 +144,7 @@ void ServerWindow::apply()
     emit usePasswordChanged(usePassword->isChecked());
     emit minimizeToTrayChanged(minimizeToTray->isChecked());
     emit showTrayPopupChanged(trayPopup->isChecked());
+    emit clickConditionChanged(doubleClick->isChecked());
 
     close();
 }
