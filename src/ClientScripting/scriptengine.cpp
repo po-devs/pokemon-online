@@ -680,6 +680,51 @@ QString ScriptEngine::gender(int genderNum)
     return "";
 }
 
+QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int _gen)
+{
+    Pokemon::uniqueId pokemon(poke);
+    Pokemon::gen gen(_gen);
+
+    if (PokemonInfo::Exists(pokemon, gen) && gen.num >= GEN_MIN && gen.num <= GenInfo::GenMax()
+            && (gen.subnum == gen.wholeGen || gen.subnum <= GenInfo::NumberOfSubgens(gen.num))
+            && (slot >= 0) && (slot <= 2)) {
+        return PokemonInfo::Ability(pokemon, slot, gen);
+    }
+    return myengine.undefinedValue();
+}
+
+QScriptValue ScriptEngine::typeNum(const QString &typeName)
+{
+    int num = TypeInfo::Number(convertToSerebiiName(typeName));
+    if (num >= 0  && num < TypeInfo::NumberOfTypes()) {
+        return num;
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::type(int id)
+{
+    if (id >= 0  && id < TypeInfo::NumberOfTypes()) {
+        return TypeInfo::Name(id);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
+{
+    //gen is largely irrelevent outside of specifying for gen 1
+    int result = 0;
+    Pokemon::uniqueId pokemon(poke);
+    if (gen == 1 && stat == SpAttack) {
+        result = PokemonInfo::SpecialStat(pokemon);
+    } else {
+        result = PokemonInfo::BaseStats(pokemon).baseStat(stat);
+    }
+    return result;
+}
+
 int ScriptEngine::moveType(int moveNum, int gen)
 {
     return MoveInfo::Type(moveNum, gen);
