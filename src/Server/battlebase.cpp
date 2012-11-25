@@ -1539,7 +1539,7 @@ void BattleBase::changeHp(int player, int newHp)
     notify(this->player(player), ChangeHp, player, quint16(newHp));
     if (isOut(player)) {
         /* percentage calculus */
-        notify(AllButPlayer, ChangeHp, this->player(player), quint16(poke(player).lifePercent()));
+        notify(AllButPlayer, ChangeHp, player, quint16(poke(player).lifePercent()));
     }
 }
 
