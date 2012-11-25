@@ -82,8 +82,6 @@ public:
     /* Force Rated 1 and Force Rated 2 is to ignore the ladder on / off factor for those two */
     bool canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const TeamBattle &t2, bool forceRated1 = false, bool forceRated2 = false);
 
-    void sendServerMessage(const QString &message);
-
     static Server *serverIns;
 
     BattleBase * getBattle(int battleId) const;
@@ -151,6 +149,7 @@ public slots:
     void incomingConnection(int i);
     /* Signals received by players */
     void loggedIn(int id, const QString &name);
+    void sendServerMessage(const QString &message);
     void recvMessage(int id, int chanid, const QString &mess);
     void recvPM(int src, int dest, const QString &mess);
     void recvTeam(int id, const QString &name);
