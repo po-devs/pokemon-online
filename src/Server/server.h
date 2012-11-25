@@ -106,8 +106,8 @@ public:
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
     void processLoginDetails(Player *p);
 signals:
-    void chatmessage(const QString &name);
-    void servermessage(const QString &name);
+    void chatMessage(const QString &name);
+    void serverMessage(const QString &name);
 
     void player_incomingconnection(int id);
     void player_logout(int id);

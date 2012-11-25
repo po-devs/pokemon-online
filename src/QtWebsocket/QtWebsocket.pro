@@ -8,7 +8,8 @@ QT       += network
 
 QT       -= gui
 
-TARGET = QtWebsocket
+DESTDIR = ../../bin/
+TARGET = qtwebsocket
 TEMPLATE = lib
 CONFIG += staticlib
 
