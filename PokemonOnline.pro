@@ -60,7 +60,9 @@ CONFIG(po_server) {
 CONFIG(po_serverplugins) {
     SUBDIRS += src/UsageStatistics \
                src/StatsExtracter \
-               src/BattleLogs
+               src/BattleLogs \
+               src/QtWebsocket \ #git://gitorious.org/qtwebsocket/qtwebsocket.git
+               src/WebServerPlugin
 }
 
 CONFIG(po_registry) {
@@ -80,4 +82,5 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_zh-cn.ts
 
 message(Following modules will be build: $$SUBDIRS)
+
 

@@ -45,8 +45,8 @@ ServerWidget::ServerWidget(Server *myserver)
     connect(myline, SIGNAL(returnPressed()), SLOT(sendServerMessage()));
 
     //the server emits a signal when there is a (chat)message to be shown
-    connect(server, SIGNAL(chatmessage(QString)), SLOT(addChatline(QString)));
-    connect(server, SIGNAL(servermessage(QString)), SLOT(addChatline(QString)));
+    connect(server, SIGNAL(chatMessage(QString)), SLOT(addChatline(QString)));
+    connect(server, SIGNAL(serverMessage(QString)), SLOT(addChatline(QString)));
 
     connect(server, SIGNAL(player_incomingconnection(int)), SLOT(playerConnects(int)));
     connect(server, SIGNAL(player_logout(int)), SLOT(playerDisconnects(int)));

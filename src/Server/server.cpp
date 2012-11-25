@@ -782,17 +782,17 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
 
     if (myengine == NULL) {
         qDebug() << line;
-        emit servermessage(line);
+        emit serverMessage(line);
         return true;
     }
     if (chatMessage || myengine->beforeNewMessage(line)) {
         //notify possible views (if any)
         if(chatMessage){
             qDebug() << line;
-            emit chatmessage(line);
+            emit this->chatMessage(line);
         } else {
             qDebug() << line;
-            emit servermessage(line);
+            emit serverMessage(line);
         }
         if (!chatMessage)
             myengine->afterNewMessage(line);

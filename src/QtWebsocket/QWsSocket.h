@@ -158,7 +158,7 @@ public:
 	// Static functions
 	static QByteArray generateMaskingKey();
 	static QByteArray generateMaskingKeyV4( QString key, QString nonce );
-	static QByteArray mask( QByteArray & data, QByteArray & maskingKey );
+    static QByteArray mask(const QByteArray & data, const QByteArray & maskingKey );
 	static QList<QByteArray> composeFrames( QByteArray byteArray, bool asBinary = false, int maxFrameBytes = 0 );
 	static QByteArray composeHeader( bool end, EOpcode opcode, quint64 payloadLength, QByteArray maskingKey = QByteArray() );
 	static QString composeOpeningHandShake( QString resourceName, QString host, QString origin, QString extensions, QString key );
