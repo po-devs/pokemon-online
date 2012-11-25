@@ -51,6 +51,14 @@ void WebServerPlugin::dealWithNewConnection()
         return;
     }
 
+    /* Only one websocket per IP */
+    foreach(QWsSocket *socket, clients) {
+        if (socket->hostAddress() == s->hostAddress()) {
+            s->deleteLater();
+            return;
+        }
+    }
+
     s->setParent(this);
     connect(s, SIGNAL(disconnected()), s, SLOT(deleteLater()));
     connect(s, SIGNAL(disconnected()), SLOT(removeSocket()));
