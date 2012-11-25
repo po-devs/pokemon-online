@@ -5,6 +5,7 @@
 
 #include "WebServerPlugin_global.h"
 #include "../Server/plugininterface.h"
+#include "../QtWebsocket/QWsServer.h"
 
 class ServerInterface;
 
@@ -24,8 +25,21 @@ public:
 
 public slots:
     void onChatMessage(const QString& message);
+    void onServerMessage(const QString& message);
+    void dealWithNewConnection();
+    void dealWithFrame(const QString& );
+    void removeSocket();
+
+signals:
+    void sendMessage(const QString &msg);
+
 private:
     ServerInterface *server;
+    QWsServer *webserver;
+
+    QSet<QWsSocket*> clients;
+
+    void broadcast(const QString &);
 };
 
 #endif // WEBSERVERPLUGIN_H

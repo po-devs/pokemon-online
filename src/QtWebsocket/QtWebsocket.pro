@@ -3,6 +3,7 @@
 # Project created by QtCreator 2012-03-05T10:38:43
 #
 #-------------------------------------------------
+#git://gitorious.org/qtwebsocket/qtwebsocket.git
 
 QT       += network
 
