@@ -99,6 +99,8 @@ public:
 
     Q_INVOKABLE int pokeType1(int id, int gen = GenInfo::GenMax());
     Q_INVOKABLE int pokeType2(int id, int gen = GenInfo::GenMax());
+    Q_INVOKABLE QScriptValue typeNum(const QString &typeName);
+    Q_INVOKABLE QScriptValue type(int id);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
     Q_INVOKABLE QScriptValue pokeNum(const QString &name);
@@ -113,6 +115,8 @@ public:
     Q_INVOKABLE QScriptValue abilityNum(const QString &nature);
     Q_INVOKABLE QScriptValue genderNum(QString genderName);
     Q_INVOKABLE QString gender(int genderNum);
+    Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int _gen = GenInfo::GenMax());
+    Q_INVOKABLE QScriptValue baseStats(int poke, int stat, int gen = GenInfo::GenMax());
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
     /* Qt doesn't convert registered types automatically, have to do it manually */
