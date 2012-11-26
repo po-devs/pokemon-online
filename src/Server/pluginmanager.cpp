@@ -60,7 +60,7 @@ void PluginManager::addPlugin(const QString &path)
     try {
          l = new cross::DynamicLibrary(path.toAscii().constData());
     } catch (const std::exception &e) {
-        qDebug() << "Error when loading plugin " << path <<  ": " << e.what();
+        Server::print("Error when loading plugin " + path +  ": " + e.what());
         return;
     }
 
@@ -68,6 +68,7 @@ void PluginManager::addPlugin(const QString &path)
     PluginInstanceFunction f = (PluginInstanceFunction) l->GetFunction("createPluginClass");
 
     if (!f) {
+        Server::print("Error when loading plugin " + path +  ": Not a Pokemon Online Server plugin.");
         delete l;
         libraries.pop_back();
         return;

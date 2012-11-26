@@ -2101,11 +2101,13 @@ int Server::id(const QString &name) const
 void Server::broadCast(const QString &message, int channel, int sender, bool html, int target)
 {
     QString fullMessage = message;
+    bool chatMessage = false;
 
     if (sender != NoSender) {
         if (sender == 0) {
             fullMessage = QString("~~Server~~: %1").arg(message);
         } else {
+            chatMessage = true;
             fullMessage = QString("%1: %2").arg(name(sender), message);
         }
     }
@@ -2130,7 +2132,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             if(useChannelFileLog) {
                 this->channel(channel).log(fullMessage);
             }
-            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), true, true);
+            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), chatMessage, true);
             if (sender == NoSender) {
                 notifyChannel(channel, All, NetworkServ::SendMessage, Flags(1), Flags(html), channel, message);
             } else {
@@ -2138,7 +2140,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
                 notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
             }
         } else {
-            printLine(fullMessage);
+            printLine(fullMessage, chatMessage, true);
 
             if (sender == NoSender) {
                 notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);

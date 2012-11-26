@@ -2278,14 +2278,11 @@ void ScriptEngine::changePokeAbility(int id, int team, int slot, int ability)
     myserver->player(id)->team(team).poke(slot).ability() = ability;
 }
 
-QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int _gen)
+QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
 {
     Pokemon::uniqueId pokemon(poke);
-    Pokemon::gen gen(_gen);
 
-    if (PokemonInfo::Exists(pokemon, gen) && gen.num >= GEN_MIN && gen.num <= GenInfo::GenMax()
-            && (gen.subnum == gen.wholeGen || gen.subnum <= GenInfo::NumberOfSubgens(gen.num))
-            && (slot >= 0) && (slot <= 2)) {
+    if ((slot >= 0) && (slot <= 2)) {
         return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();
@@ -2916,6 +2913,22 @@ void ScriptEngine::read_standard_error() {
     QProcess *p = (QProcess*) sender();
     processes[p].err.append(p->readAllStandardError());
 }
+
+void ScriptEngine::addPlugin(const QString &path)
+{
+    myserver->pluginManager->addPlugin(path);
+}
+
+void ScriptEngine::removePlugin(int index)
+{
+    myserver->pluginManager->freePlugin(index);
+}
+
+QStringList ScriptEngine::listPlugins()
+{
+    return myserver->pluginManager->getPlugins();
+}
+
 #endif // PO_SCRIPT_NO_SYSTEM
 
 QScriptValue ScriptEngine::teamPokeShine(int id, int team, int slot)
