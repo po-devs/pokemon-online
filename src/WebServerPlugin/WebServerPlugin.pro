@@ -13,13 +13,19 @@ DESTDIR = ../../bin/serverplugins
 DEFINES += WEBSERVERPLUGIN_LIBRARY
 
 LIBS += -L../../bin \
-    -lqtwebsocket
+    -lqtwebsocket \
+    -lutilities
 
-SOURCES += webserverplugin.cpp
+SOURCES += webserverplugin.cpp \
+    webserverconfig.cpp
 
 HEADERS += webserverplugin.h\
-        WebServerPlugin_global.h
+        WebServerPlugin_global.h \
+    webserverconfig.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 include(../Shared/Common.pri)
+
+FORMS += \
+    webserverconfig.ui
