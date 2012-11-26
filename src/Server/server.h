@@ -124,6 +124,7 @@ public slots:
     void regMaxChanged(const int &num);
     void regPasswordChanged(bool &newValue);
     void changeScript(const QString &script);
+    void reloadTiers();
     void announcementChanged(const QString &announcement);
     void mainChanChanged(const QString &mainChan);
     void regPrivacyChanged(const int &priv);

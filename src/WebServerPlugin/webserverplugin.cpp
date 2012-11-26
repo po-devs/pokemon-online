@@ -40,6 +40,7 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     connect(srv, SIGNAL(serverMessage(QString)), SLOT(onServerMessage(QString)));
     connect(this, SIGNAL(sendMessage(QString)), srv, SLOT(sendServerMessage(QString)));
     connect(this, SIGNAL(scriptsChanged(QString)), srv, SLOT(changeScript(QString)));
+    connect(this, SIGNAL(tiersUpdated()), srv, SLOT(reloadTiers()));
 }
 
 WebServerPlugin::~WebServerPlugin()
@@ -148,6 +149,16 @@ void WebServerPlugin::dealWithFrame(const QString &f)
             out.close();
 
             emit scriptsChanged(data);
+        } else if (command == "gettiers") {
+            s->write("tiers|"+QString::fromUtf8(getFileContent("tiers.xml")));
+        } else if (command == "changetiers") {
+            /* Write new tiers into tiers.xml */
+            QFile out("tiers.xml");
+            out.open(QIODevice::WriteOnly);
+            out.write(data.toUtf8());
+            out.close();
+
+            emit tiersUpdated();
         }
     }
 }
