@@ -141,6 +141,12 @@ void WebServerPlugin::dealWithFrame(const QString &f)
         } else if (command == "getscripts") {
             s->write("scripts|"+QString::fromUtf8(getFileContent("scripts.js")));
         } else if (command == "changescripts") {
+            /* Write new scripts into scripts.js */
+            QFile out("scripts.js");
+            out.open(QIODevice::WriteOnly);
+            out.write(data.toUtf8());
+            out.close();
+
             emit scriptsChanged(data);
         }
     }
