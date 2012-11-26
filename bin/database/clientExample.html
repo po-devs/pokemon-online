@@ -46,15 +46,25 @@
 		
 		<script type="text/javascript">
             var logTextArea = document.getElementById("logTextArea");
+            var logCount = 0;
 			function displayMessage(message)
 			{
                 logTextArea.value += message + "\n";
+                /* Limit number of lines */
+                if (logCount++ % 500 == 0) {
+                    logTextArea.value = logTextArea.value.split("\n").slice(-500).join("\n");
+                }
                 logTextArea.scrollTop = logTextArea.scrollHeight;
 			}
             var chatTextArea = document.getElementById("chatTextArea");
+            var chatCount = 0;
             function displayChatMessage(message)
             {
                 chatTextArea.value += message + "\n";
+                /* Limit number of lines */
+                if (chatCount++ % 500 == 0) {
+                    chatTextArea.value = chatTextArea.value.split("\n").slice(-500).join("\n");
+                }
                 chatTextArea.scrollTop = chatTextArea.scrollHeight;
             }
 			

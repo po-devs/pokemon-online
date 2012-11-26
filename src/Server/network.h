@@ -265,7 +265,9 @@ const S Network<S>::socket() const
 template <class S>
 void Network<S>::sendPacket(const QByteArray &p)
 {
-    socket()->write(p);
+    if (socket()) {
+        socket()->write(p);
+    }
 }
 
 #endif // NETWORK_H
