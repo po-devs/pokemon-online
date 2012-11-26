@@ -17,11 +17,16 @@ class WEBSERVERPLUGINSHARED_EXPORT WebServerPlugin
     : public QObject, public ServerPlugin
 {
     Q_OBJECT
+
+    friend class WebServerConfig;
 public:
     WebServerPlugin(ServerInterface *server);
     ~WebServerPlugin();
 
     QString pluginName() const;
+    bool hasConfigurationWidget() const {return true;}
+
+    QWidget *getConfigurationWidget();
 
 public slots:
     void onChatMessage(const QString& message);
@@ -39,6 +44,10 @@ private:
     QWsServer *webserver;
 
     QSet<QWsSocket*> clients;
+    QHash<QString, QVector<int> > attemptsPerIp;
+
+    int port;
+    QString pass;
 
     void broadcast(const QString &);
 };

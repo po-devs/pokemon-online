@@ -93,9 +93,9 @@ void Server::start(){
         myservers.append(manager.createServerSocket());
     }
 #endif
-    pluginManager = new PluginManager(this);
-
     srand(time(NULL));
+
+    pluginManager = new PluginManager(this);
 
     QSettings s("config", QSettings::IniFormat);
 

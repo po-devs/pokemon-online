@@ -747,6 +747,11 @@ QString QWsSocket::host()
 	return _host;
 }
 
+QString QWsSocket::ip()
+{
+    return tcpSocket->peerAddress().toString();
+}
+
 QString QWsSocket::hostAddress()
 {
 	return _hostAddress;

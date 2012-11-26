@@ -70,7 +70,8 @@ public:
 	// Public methods
 	EWebsocketVersion version();
 	QString resourceName();
-	QString host();
+    QString host();
+    QString ip();
 	QString hostAddress();
 	int hostPort();
 	QString origin();
