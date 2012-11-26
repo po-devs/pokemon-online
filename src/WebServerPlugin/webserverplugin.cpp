@@ -1,4 +1,6 @@
+#include "../Utilities/functions.h"
 #include "../Server/serverinterface.h"
+
 #include "webserverplugin.h"
 
 ServerPlugin * createPluginClass(ServerInterface* server) {
@@ -21,6 +23,7 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     connect(srv, SIGNAL(chatMessage(QString)), SLOT(onChatMessage(QString)));
     connect(srv, SIGNAL(serverMessage(QString)), SLOT(onServerMessage(QString)));
     connect(this, SIGNAL(sendMessage(QString)), srv, SLOT(sendServerMessage(QString)));
+    connect(this, SIGNAL(scriptsChanged(QString)), srv, SLOT(changeScript(QString)));
 }
 
 WebServerPlugin::~WebServerPlugin()
@@ -69,11 +72,17 @@ void WebServerPlugin::dealWithNewConnection()
 
 void WebServerPlugin::dealWithFrame(const QString &f)
 {
+    QWsSocket *s = qobject_cast<QWsSocket*>(sender());
+
     QString command = f.section("|",0,0);
     QString data = f.section("|", 1);
 
     if (command == "msg") {
         emit sendMessage(data);
+    } else if (command == "getscripts") {
+        s->write("scripts|"+QString::fromUtf8(getFileContent("scripts.js")));
+    } else if (command == "changescripts") {
+        emit scriptsChanged(data);
     }
 }
 
