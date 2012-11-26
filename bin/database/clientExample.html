@@ -12,7 +12,8 @@
 			<button onClick="checkSocket();">State</button>
 		</p>
 		<p>
-			<textarea id="chatTextArea" style="width:400px;height:200px;"></textarea>
+            <textarea id="chatTextArea" style="width:400px;height:200px;"></textarea>
+            <textarea id="logTextArea" style="width:400px;height:200px;"></textarea>
 		</p>
         <p>
 			<input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
@@ -20,12 +21,18 @@
 		</p>
 		
 		<script type="text/javascript">
-			var chatTextArea = document.getElementById("chatTextArea");
+            var logTextArea = document.getElementById("logTextArea");
 			function displayMessage(message)
 			{
-				chatTextArea.value += message + "\n";
-				chatTextArea.scrollTop = chatTextArea.scrollHeight;
+                logTextArea.value += message + "\n";
+                logTextArea.scrollTop = logTextArea.scrollHeight;
 			}
+            var chatTextArea = document.getElementById("chatTextArea");
+            function displayChatMessage(message)
+            {
+                chatTextArea.value += message + "\n";
+                chatTextArea.scrollTop = chatTextArea.scrollHeight;
+            }
 			
 			function sendMessage()
             {
@@ -39,6 +46,7 @@
 			}
 			
 			var websocket = null;
+            var parseCommand;
 
 			function initWebsocket()
 			{
@@ -58,7 +66,8 @@
 					};
 					websocket.onmessage = function( evt ) {
 						console.log( "Message received :", evt.data );
-						displayMessage( evt.data );
+
+                        if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
 					};
 					websocket.onerror = function( evt ) {
 						displayMessage( 'ERROR: ' + evt.data );
@@ -106,6 +115,18 @@
 					displayMessage( "Websocket is null" );
 				}
 			}
+
+            parseCommand = function(message) {
+                var cmd = message.substr(0, message.indexOf("|"));
+                var data = message.slice(message.indexOf("|")+1);
+
+                if (cmd == "msg") {
+                    if (data[0] == "~") displayChatMessage(data);
+                    else displayMessage(data);
+                } else if (cmd == "chat") {
+                    displayChatMessage(data);
+                }
+            };
 			
 		</script>
 	</body>

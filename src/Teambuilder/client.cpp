@@ -1454,7 +1454,7 @@ void Client::askForPass(const QByteArray &salt) {
                                     " Choose different name.\n"
                                     "\nIt is advised to use a slightly different password for each server."
                                     " (The server only sees the encrypted form of the pass, but still...)")
-                                 + warns.join("\n")));
+                                 + "<span style='color:orange;'>" + warns.join("\n") + "</span>"));
     // Password input
     QLineEdit *passEdit = new QLineEdit;
     passEdit->setEchoMode(QLineEdit::Password);
