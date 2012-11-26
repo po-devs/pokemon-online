@@ -17,7 +17,7 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
         {
             QString res = url.section(':', 0, 0);
 
-            if (res != "pokemon" && res != "item") {
+            if (res != "pokemon" && res != "item" && res != "pokeicon") {
                 goto end;
             }
 
@@ -30,6 +30,9 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
                 } else if (res == "item") {
                     int item = info.toInt();
                     ret = ItemInfo::Icon(item);
+                } else if (res == "pokeicon") {
+                    Pokemon::uniqueId num = info.toInt();
+                    ret = PokemonInfo::Icon(num);
                 }
 
                 return ret;
