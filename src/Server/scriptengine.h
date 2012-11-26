@@ -404,23 +404,27 @@ public:
     Q_INVOKABLE int system(const QString &command);
 
     /* Better version of system, also captures the output */
-        Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
-        Q_INVOKABLE QScriptValue list_processes();
-        Q_INVOKABLE QScriptValue kill_processes();
-    private slots:
-        void process_finished(int exitcode, QProcess::ExitStatus exitStatus);
-        void process_error(QProcess::ProcessError error);
-        void read_standard_output();
-        void read_standard_error();
-    private:
-        struct ProcessData {
-            QScriptValue callback;
-            QScriptValue errback;
-            QByteArray out;
-            QByteArray err;
-            QString command;
-        };
-        QHash<QProcess*, ProcessData> processes;
+    Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
+    Q_INVOKABLE QScriptValue list_processes();
+    Q_INVOKABLE QScriptValue kill_processes();
+private slots:
+    void process_finished(int exitcode, QProcess::ExitStatus exitStatus);
+    void process_error(QProcess::ProcessError error);
+    void read_standard_output();
+    void read_standard_error();
+private:
+    struct ProcessData {
+        QScriptValue callback;
+        QScriptValue errback;
+        QByteArray out;
+        QByteArray err;
+        QString command;
+    };
+    QHash<QProcess*, ProcessData> processes;
+public:
+    Q_INVOKABLE void addPlugin(const QString &path);
+    Q_INVOKABLE void removePlugin(int index);
+    Q_INVOKABLE QStringList listPlugins();
 #endif // PO_SCRIPT_NO_SYSTEM
 
 signals:

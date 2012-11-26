@@ -1311,6 +1311,9 @@ AbilityGroup PokemonInfo::Abilities(const Pokemon::uniqueId &pokeid, Pokemon::ge
 
 int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen gen)
 {
+    if (gen.num < GEN_MIN || gen.num-GEN_MIN >= m_Abilities[slot].size()) {
+        return 0;
+    }
     return m_Abilities[slot][gen.num-GEN_MIN].value(pokeid);
 }
 

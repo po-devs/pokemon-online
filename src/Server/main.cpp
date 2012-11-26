@@ -151,7 +151,12 @@ int main(int argc, char *argv[])
             qDebug() << "Server is running in headless mode";
             qDebug() << "Notice that it is not possible (yet) to configure the server in headless mode!";
             qDebug() << "Please change the configuration manually or in windowed mode.";
-            qDebug() << "A web-tool for configuring and maintaining will be implemented later.\n";
+            qDebug() << "A web-tool for configuring and maintaining is in development in form of the webserver plugin.\n";
+            qDebug() << "Console commands:";
+            qDebug() << "\taddp <plugin-path>: Add the plugin to the server";
+            qDebug() << "\tremovep <plugin-index>: Remove the plugin at said index";
+            qDebug() << "\tlistp: List the plugins in their order";
+            qDebug() << "\t<other message>: Prints the message as coming from ~~Server~~\n";
 
             //in headless mode let's use QCoreApplication instead of QApplication
             QCoreApplication b(argc, argv);

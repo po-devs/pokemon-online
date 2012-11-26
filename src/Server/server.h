@@ -30,6 +30,7 @@ class Server: public QObject, public ServerInterface
 
     friend class ScriptEngine;
     friend class ServerWidget;
+    friend class ConsoleReader;
 public:
     enum PlayerGroupFlags {
         All = 0,
