@@ -38,6 +38,13 @@ int AuxPokeDataProxy::statBoost(int stat)
 
 int AuxPokeDataProxy::stat(int stat)
 {
+    if (pokemon() && pokemon()->gen().num <= 2 && basestats[stat] == 0) {
+        int boost = statBoost(stat);
+
+        return PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 15, 255)
+                * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    }
+
     if (!playerPoke) {
         return 0;
     }
@@ -47,6 +54,34 @@ int AuxPokeDataProxy::stat(int stat)
     }
 
     return boostedstats[stat];
+}
+
+int AuxPokeDataProxy::minStat(int stat)
+{
+    int st = this->stat(stat);
+
+    if (st) return st;
+
+    if (!pokemon()) return 0;
+
+    int boost = statBoost(stat);
+
+    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 0) * 9 / 10)
+            * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+}
+
+int AuxPokeDataProxy::maxStat(int stat)
+{
+    int st = this->stat(stat);
+
+    if (st) return st;
+
+    if (!pokemon()) return 0;
+
+    int boost = statBoost(stat);
+
+    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 255) * 11 / 10)
+            * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
 }
 
 int AuxPokeDataProxy::type1()
