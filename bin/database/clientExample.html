@@ -1,9 +1,15 @@
 <html>
 	<head>
 		<title>Websocket client test</title>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+        <script>
+            $(function() {
+                $("#tabs").tabs();
+            });
+        </script>
 	</head>
-    <script src="http://code.jquery.com/jquery-latest.min.js"
-            type="text/javascript"></script>
 	<body>
 		<p>
             <input type="text" id="url" value="ws://localhost:8508" onkeydown="if(event.keyCode==13) initWebsocket();"/>
@@ -11,14 +17,31 @@
 			<button onClick="stopWebsocket();">Disconnect</button>
 			<button onClick="checkSocket();">State</button>
 		</p>
-		<p>
-            <textarea id="chatTextArea" style="width:400px;height:200px;"></textarea>
-            <textarea id="logTextArea" style="width:400px;height:200px;"></textarea>
-		</p>
-        <p>
-			<input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
-			<button onClick="sendMessage();">Envoyer</button>
-		</p>
+        <div id="tabs">
+            <ul>
+                <li><a href="#tabs-1">logs & chat</a></li>
+                <li><a href="#tabs-2">scripts</a></li>
+            </ul>
+            <div id="tabs-1">
+                <p>
+                    <textarea id="chatTextArea" style="width:400px;height:280px;"></textarea>
+                    <textarea id="logTextArea" style="width:400px;height:280px;"></textarea>
+                </p>
+                <p>
+                    <input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
+                    <button onClick="sendMessage();">Send</button>
+                </p>
+            </div>
+            <div id="tabs-2">
+                <p>
+                    <textarea id="scriptArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshScripts();">Refresh</button>
+                    <button onClick="sendScripts();" id="sendScripts" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+        </div>
 		
 		<script type="text/javascript">
             var logTextArea = document.getElementById("logTextArea");
@@ -44,6 +67,16 @@
 					console.log( "Message sent :", '"'+strToSend+'"' );
 				}
 			}
+
+            function refreshScripts()
+            {
+                websocket.send("getscripts|");
+            }
+
+            function sendScripts()
+            {
+                websocket.send("changescripts|"+$('#scriptArea').val());
+            }
 			
 			var websocket = null;
             var parseCommand;
@@ -125,6 +158,10 @@
                     else displayMessage(data);
                 } else if (cmd == "chat") {
                     displayChatMessage(data);
+                } else if (cmd == "scripts") {
+                    $("#scriptArea").val(data);
+                    $("#sendScripts").removeAttr("disabled");
+                    $("#scriptArea").removeAttr("disabled");
                 }
             };
 			
