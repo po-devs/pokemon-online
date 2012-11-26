@@ -22,6 +22,7 @@
             <ul>
                 <li><a href="#tabs-1">logs & chat</a></li>
                 <li><a href="#tabs-2">scripts</a></li>
+                <li><a href="#tabs-3">tiers</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -40,6 +41,15 @@
                 <p>
                     <button onClick="refreshScripts();">Refresh</button>
                     <button onClick="sendScripts();" id="sendScripts" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-3">
+                <p>
+                    <textarea id="tiersArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshTiers();">Refresh</button>
+                    <button onClick="sendTiers();" id="sendTiers" disabled="true">Apply Changes</button>
                 </p>
             </div>
         </div>
@@ -87,6 +97,16 @@
             function sendScripts()
             {
                 websocket.send("changescripts|"+$('#scriptArea').val());
+            }
+
+            function refreshTiers()
+            {
+                websocket.send("gettiers|");
+            }
+
+            function sendTiers()
+            {
+                websocket.send("changetiers|"+$('#tiersArea').val());
             }
 			
 			var websocket = null;
@@ -177,6 +197,10 @@
                     var pass = prompt("Please enter the webserver password");
                     var hash = MD5(data+"@@"+pass);
                     websocket.send("auth|"+hash);
+                } else if (cmd == "tiers") {
+                    $("#tiersArea").val(data);
+                    $("#sendTiers").removeAttr("disabled");
+                    $("#tiersArea").removeAttr("disabled");
                 }
             };
 			

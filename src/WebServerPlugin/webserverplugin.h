@@ -38,6 +38,7 @@ public slots:
 signals:
     void sendMessage(const QString &msg);
     void scriptsChanged(const QString&);
+    void tiersUpdated();
 
 private:
     ServerInterface *server;

@@ -691,6 +691,11 @@ void Server::changeScript(const QString &script)
     myengine->changeScript(script);
 }
 
+void Server::reloadTiers()
+{
+    TierMachine::obj()->load();
+}
+
 QString Server::description()
 {
     return this->serverDesc;
