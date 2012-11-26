@@ -101,12 +101,7 @@ Item {
                     boost = fieldPokemon.statBoost(i+1);
 
                     if (stat === 0) {
-                        s += "</td><td>"
-                        if (boost >= 0) {
-                            s += "+" + boost
-                        } else {
-                            s += "" + boost
-                        }
+                        s += fieldPokemon.minStat(i+1) + "-" + fieldPokemon.maxStat(i+1) + "</td><td>"
                     } else {
                         if (stat === -1) {
                             s += "???"
@@ -114,11 +109,11 @@ Item {
                             s += stat
                         }
                         s += "</td><td>"
-                        if (boost > 0) {
-                            s += "(+" + boost + ")"
-                        } else if (boost < 0) {
-                            s += "(" + boost + ")"
-                        }
+                    }
+                    if (boost > 0) {
+                        s += "(+" + boost + ")"
+                    } else if (boost < 0) {
+                        s += "(" + boost + ")"
                     }
                     s += "</td></tr>"
                 }

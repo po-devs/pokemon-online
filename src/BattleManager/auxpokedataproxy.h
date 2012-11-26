@@ -21,6 +21,8 @@ public:
 
     Q_INVOKABLE int statBoost(int stat);
     Q_INVOKABLE int stat(int stat);
+    Q_INVOKABLE int minStat(int stat);
+    Q_INVOKABLE int maxStat(int stat);
     Q_INVOKABLE int type1();
     Q_INVOKABLE int type2();
 
