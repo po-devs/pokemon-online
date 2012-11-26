@@ -49,6 +49,24 @@ int AuxPokeDataProxy::stat(int stat)
     return boostedstats[stat];
 }
 
+int AuxPokeDataProxy::type1()
+{
+    if (pokemon()) {
+        return PokemonInfo::Type1(pokemon()->num(), pokemon()->gen());
+    } else {
+        return Type::Curse;
+    }
+}
+
+int AuxPokeDataProxy::type2()
+{
+    if (pokemon()) {
+        return PokemonInfo::Type2(pokemon()->num(), pokemon()->gen());
+    } else {
+        return Type::Curse;
+    }
+}
+
 void AuxPokeDataProxy::resetStatBoosts()
 {
     for (int i = 0; i < 8; i++) {

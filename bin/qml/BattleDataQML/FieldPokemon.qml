@@ -4,6 +4,7 @@ import "Utilities" 1.0
 import "colors.js" as Colors
 import "effects.js" as Effects
 import "moves.js" as Moves
+import "utilities.js" as Utils
 
 Item {
     id: woof
@@ -88,7 +89,9 @@ Item {
                     s += " (F)"
                 }
 
-                s += "<br/><table width='100%'>";
+                s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
+                if (fieldPokemon.type2() !== 17) s += Utils.typeImg(fieldPokemon.type2());
+                s += "<table width='100%'>";
                 var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
 
