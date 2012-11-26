@@ -1449,12 +1449,12 @@ void Client::askForPass(const QByteArray &salt) {
     dialog.setWindowTitle(tr("Enter your password"));
     QVBoxLayout* layout = new QVBoxLayout;
     // Label
-    layout->addWidget(new QLabel(tr("Enter the password for your current name.<br/>"
+    layout->addWidget(new QLabel(tr("<html>Enter the password for your current name.<br/>"
                                     "If you don't have it, the name you have chosen might be already taken."
                                     " Choose different name.<br/>"
-                                    "\nIt is advised to use a slightly different password for each server."
+                                    "<br/>It is advised to use a slightly different password for each server."
                                     " (The server only sees the encrypted form of the pass, but still...)")
-                                 + "<span style='color:orange;'>" + warns.join("<br/>") + "</span>"));
+                                 + "<span style='color:orange;'>" + warns.join("<br/>") + "</span></html>"));
     // Password input
     QLineEdit *passEdit = new QLineEdit;
     passEdit->setEchoMode(QLineEdit::Password);
