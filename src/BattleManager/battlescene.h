@@ -8,6 +8,7 @@
 class QDeclarativeView;
 class BattleSceneProxy;
 class ProxyDataContainer;
+class BattleDefaultTheme;
 
 class BattleScene: public QObject, public BattleCommandManager<BattleScene, BattleSceneFlow<BattleEnum, BattleScene> >
 {
@@ -16,7 +17,7 @@ public:
     typedef AdvancedBattleData* battledata_ptr;
     typedef BattleCommandManager<BattleScene, BattleSceneFlow<BattleEnum, BattleScene> > baseClass;
 
-    BattleScene(battledata_ptr data=0);
+    BattleScene(battledata_ptr data=0, BattleDefaultTheme *theme=0);
     ~BattleScene();
 
     QDeclarativeView *getWidget();
@@ -29,6 +30,7 @@ public:
     Q_INVOKABLE void debug(const QString&m);
 
     Q_INVOKABLE int statboostlevel();
+    Q_INVOKABLE bool isPlayer(int spot);
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
 

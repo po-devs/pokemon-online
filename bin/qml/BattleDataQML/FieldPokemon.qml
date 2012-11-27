@@ -91,7 +91,7 @@ Item {
 
                 s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
                 if (fieldPokemon.type2() !== 17) s += Utils.typeImg(fieldPokemon.type2());
-                s += "<table width='100%'>";
+                s += "<table><tr><td><table>";
                 var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
 
@@ -101,12 +101,7 @@ Item {
                     boost = fieldPokemon.statBoost(i+1);
 
                     if (stat === 0) {
-                        s += "</td><td>"
-                        if (boost >= 0) {
-                            s += "+" + boost
-                        } else {
-                            s += "" + boost
-                        }
+                        s += fieldPokemon.minStat(i+1) + "-" + fieldPokemon.maxStat(i+1) + "</td><td>"
                     } else {
                         if (stat === -1) {
                             s += "???"
@@ -114,11 +109,11 @@ Item {
                             s += stat
                         }
                         s += "</td><td>"
-                        if (boost > 0) {
-                            s += "(+" + boost + ")"
-                        } else if (boost < 0) {
-                            s += "(" + boost + ")"
-                        }
+                    }
+                    if (boost > 0) {
+                        s += "(+" + boost + ")"
+                    } else if (boost < 0) {
+                        s += "(" + boost + ")"
                     }
                     s += "</td></tr>"
                 }
@@ -138,9 +133,27 @@ Item {
                     }
                 }
 
-                s += "</table>"
+                s += "</table></td>"
+
+                if (!battle.scene.isPlayer(spot) && pokemon.move(0).num !== 0) {
+                    s += "<td><br/>"
+                    for (i = 0; i < 4; i++) {
+                        var move = pokemon.move(i).num;
+                        if (move !== 0) {
+                            var type = moveInfo.type(move);
+                            var bold = true || ((type === fieldPokemon.type1() || type === fieldPokemon.type2()) && moveInfo.power(move) > 0);
+                            s += (bold ? "<b>" : "") + "<span style='color: " + theme.typeColor(type) + ";'>" +
+                                    "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span>" + (bold ? "</b>" : "") + "<br/>";
+                        }
+                    }
+                    s += "</td>"
+                }
+
+                s += "</tr></table>"
 
                 text = s;
+
+                //resetSize();
             }
         }
     }

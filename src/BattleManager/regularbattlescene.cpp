@@ -31,7 +31,7 @@ QHBoxLayout* RegularBattleScene::createTeamLayout(QLabel **labels)
     foeteam->addStretch(100);
     for (int i = 0; i < 6; i++) {
         labels[i] = new QLabel();
-        labels[i]->setPixmap(gui.theme->StatusIcon(Pokemon::Fine));
+        labels[i]->setPixmap(gui.theme->statusIcon(Pokemon::Fine));
         foeteam->addWidget(labels[i],0,Qt::AlignTop);
     }
     foeteam->setSpacing(1);
@@ -65,7 +65,7 @@ QGridLayout* RegularBattleScene::createHPBarLayout(int slot)
     barL->setMargin(0);
     barL->setSpacing(0);
     QLabel *HPIcon = new QLabel();
-    HPIcon->setPixmap(gui.theme->Sprite("hpsquare"));
+    HPIcon->setPixmap(gui.theme->sprite("hpsquare"));
     HPIcon->setFixedSize(HPIcon->pixmap()->size());
     barL->addWidget(HPIcon);
     gui.bars[slot] = new QClickPBar();
@@ -88,7 +88,7 @@ QGridLayout* RegularBattleScene::createHPBarLayout(int slot)
 QWidget *RegularBattleScene::createFullBarLayout(int nslots, int player)
 {
     QLabel* oppPoke = new QLabel();
-    oppPoke->setPixmap(gui.theme->Sprite("hpbar"));
+    oppPoke->setPixmap(gui.theme->sprite("hpbar"));
     oppPoke->setFixedSize(oppPoke->pixmap()->size());
 
     QVBoxLayout *oppl = new QVBoxLayout(oppPoke);
@@ -158,7 +158,7 @@ void RegularBattleScene::setupGui()
     QLabel *mybox = new QLabel();
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
-    mybox->setPixmap(gui.theme->TrainerSprite(data()->avatar(myself())));
+    mybox->setPixmap(gui.theme->trainerSprite(data()->avatar(myself())));
     midme->addWidget(gui.timers[myself()]);
     midme->addWidget(mybox);
 
@@ -171,7 +171,7 @@ void RegularBattleScene::setupGui()
     gui.timers[opponent()]->setObjectName("TimeOut"); //for style sheets
     gui.timers[opponent()]->setRange(0,300);
     QLabel *oppbox = new QLabel();
-    oppbox->setPixmap(gui.theme->TrainerSprite(data()->avatar(opponent())));
+    oppbox->setPixmap(gui.theme->trainerSprite(data()->avatar(opponent())));
     oppbox->setObjectName("OppTrainerBox");
     oppbox->setFixedSize(82,82);
     midopp->addWidget(oppbox);
@@ -360,13 +360,13 @@ void RegularBattleScene::updatePoke(int spot)
         gui.nick[spot]->setText(nick(spot));
         gui.level[spot]->setText(tr("Lv. %1").arg(poke.level()));
         updateHp(spot);
-        gui.gender[spot]->setPixmap(gui.theme->BattleGenderPicture(poke.gender()));
+        gui.gender[spot]->setPixmap(gui.theme->battleGenderPicture(poke.gender()));
         int status = poke.status();
-        gui.status[spot]->setPixmap(gui.theme->BattleStatusIcon(status));
+        gui.status[spot]->setPixmap(gui.theme->battleStatusIcon(status));
     }  else {
         //zone->switchToNaught(spot);
         gui.nick[spot]->setText("");
-        gui.status[spot]->setPixmap(gui.theme->BattleStatusIcon(Pokemon::Fine));
+        gui.status[spot]->setPixmap(gui.theme->battleStatusIcon(Pokemon::Fine));
         gui.gender[spot]->setPixmap(QPixmap());
         gui.bars[spot]->setValue(0);
         gui.level[spot]->setText("");
@@ -394,7 +394,7 @@ void RegularBattleScene::updateHp(int spot, int val)
 
 void RegularBattleScene::updateBallStatus(int player, int index)
 {
-    gui.pokeballs[player][index]->setPixmap(gui.theme->StatusIcon(data()->team(player).poke(index)->status()));
+    gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
 }
 
 QString RegularBattleScene::health(int lifePercent)
@@ -471,7 +471,7 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
     items.resize(nslots);
 
     scene.setSceneRect(0,0,257,145);
-    scene.addItem(new QGraphicsPixmapItem(theme->Pic(QString("battle_fields/%1.png").arg((rand()%11)+1))));
+    scene.addItem(new QGraphicsPixmapItem(theme->pic(QString("battle_fields/%1.png").arg((rand()%11)+1))));
 
     for (int i = 0; i < nslots; i++) {
         items[i] = new QGraphicsPixmapItem();

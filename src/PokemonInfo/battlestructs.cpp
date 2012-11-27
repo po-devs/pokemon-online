@@ -352,7 +352,12 @@ void ShallowBattlePoke::removeStatus(int status)
 
 DataStream & operator >> (DataStream &in, ShallowBattlePoke &po)
 {
-    in >> po.num() >> po.nick() >> po.lifePercent() >> po.fullStatus() >> po.gender() >> po.shiny() >> po.level();
+    in >> po.num() >> po.nick();
+    quint8 percent;
+    in >> percent;
+    in >> po.fullStatus() >> po.gender() >> po.shiny() >> po.level();
+
+    po.setLifePercent(percent);
 
     return in;
 }

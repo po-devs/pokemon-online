@@ -47,7 +47,9 @@ public:
 
     void onHpChange(int spot, int newHp)
     {
-        poke(spot).setLife(newHp);
+        if (isPlayer(spot)) {
+            poke(spot).setLife(newHp);
+        }
     }
 
     void onMajorStatusChange(int spot, int status, bool, bool)

@@ -6,10 +6,12 @@
 #include "battledataaccessor.h"
 #include "battlesceneproxy.h"
 #include "pokemoninfoaccessor.h"
+#include "moveinfoaccessor.h"
 #include "proxydatacontainer.h"
+#include "defaulttheme.h"
 #include "../Utilities/functions.h"
 
-BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
+BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
     pauseCount(0)
 {
     activelyReplaying = false;
@@ -17,8 +19,11 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
     qmlRegisterType<PokeProxy>("pokemononline.battlemanager.proxies", 1, 0, "PokeData");
+    qmlRegisterType<MoveProxy>("pokemononline.battlemanager.proxies", 1, 0, "MoveData");
     qmlRegisterType<PokemonInfoAccessor>();
     qmlRegisterType<BattleSceneProxy>();
+    qmlRegisterType<MoveInfoAccessor>("pokemononline.battlemanager.proxies", 1, 0, "MoveInfo");
+    qmlRegisterType<BattleDefaultTheme>("pokemononline.battlemanager.proxies", 1, 0, "Theme");
     qmlRegisterType<AuxPokeDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldPokeData");
     qmlRegisterType<FieldProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldData");
     qmlRegisterType<BattleScene>("pokemononline.battlemanager.proxies", 1, 0, "BattleScene");
@@ -49,6 +54,8 @@ BattleScene::BattleScene(battledata_ptr dat) : mData(dat), mOwnProxy(new BattleS
 
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
     mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
+    mWidget->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
+    mWidget->engine()->rootContext()->setContextProperty("theme", theme);
     mWidget->setSource(QString("qml/initial.qml"));
 }
 
@@ -175,6 +182,11 @@ bool BattleScene::shouldContinuePeeking(param<BattleEnum::StatChange>, int, int,
 int BattleScene::statboostlevel()
 {
     return abs(info.statChanges.front());
+}
+
+bool BattleScene::isPlayer(int spot)
+{
+    return data()->isPlayer(spot);
 }
 
 void BattleScene::onStatBoost(int, int, int, bool)
