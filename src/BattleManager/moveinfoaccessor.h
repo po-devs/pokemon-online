@@ -14,6 +14,7 @@ public:
     
     Q_INVOKABLE QString name(int move);
     Q_INVOKABLE int type(int move);
+    Q_INVOKABLE int power(int move);
 signals:
     
 public slots:

@@ -16,3 +16,8 @@ int MoveInfoAccessor::type(int move)
 {
     return MoveInfo::Type(move, mGen);
 }
+
+int MoveInfoAccessor::power(int move)
+{
+    return MoveInfo::Power(move, mGen);
+}
