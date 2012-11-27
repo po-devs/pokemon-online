@@ -139,8 +139,10 @@ Item {
                     for (i = 0; i < 4; i++) {
                         var move = pokemon.move(i).num;
                         if (move !== 0) {
-                            s += "<span style='color: " + theme.typeColor(moveInfo.type(move)) + ";'>" +
-                                    "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span><br/>";
+                            var type = moveInfo.type(move);
+                            var bold = (type === fieldPokemon.type1() || type === fieldPokemon.type2()) && moveInfo.power(move) > 0;
+                            s += (bold ? "<b>" : "") + "<span style='color: " + theme.typeColor(type) + ";'>" +
+                                    "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span>" + (bold ? "</b>" : "") + "<br/>";
                         }
                     }
                 }
