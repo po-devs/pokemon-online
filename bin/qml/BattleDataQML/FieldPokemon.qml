@@ -135,6 +135,16 @@ Item {
 
                 s += "</table>"
 
+                if (!battle.scene.isPlayer(spot)) {
+                    for (i = 0; i < 4; i++) {
+                        var move = pokemon.move(i).num;
+                        if (move !== 0) {
+                            s += "<span style='color: " + theme.typeColor(moveInfo.type(move)) + ";'>" +
+                                    "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span><br/>";
+                        }
+                    }
+                }
+
                 text = s;
             }
         }

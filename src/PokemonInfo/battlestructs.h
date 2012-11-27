@@ -56,11 +56,10 @@ public:
 
     void init(const PokeBattle &poke);
     virtual quint8 lifePercent() const { return mLifePercent; }
-    quint8 &lifePercent() { return mLifePercent; }
     virtual int life() const { return mLifePercent; }
     virtual int totalLife() const { return 100; }
     virtual void setLife(int newLife) { mLifePercent = newLife;}
-    void setLifePercent(quint8 percent) {mLifePercent = percent;}
+    virtual void setLifePercent(quint8 percent) {mLifePercent = percent;}
     void setNum(Pokemon::uniqueId num) {this->num() = num;}
 
     bool operator == (const ShallowBattlePoke &other) const {
@@ -108,6 +107,7 @@ public:
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
     virtual void setLife(int newLife) {mLifePoints = newLife;}
+    virtual void setLifePercent(quint8 percent) {mLifePoints = percent == 1 ? 1 :percent * totalLifePoints() / 100;}
     virtual int life() const { return mLifePoints; }
     virtual int totalLife() const { return m_prop_totalLifePoints;}
     quint16 lifePoints() const { return mLifePoints;}

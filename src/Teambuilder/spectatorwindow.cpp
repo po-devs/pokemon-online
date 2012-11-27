@@ -49,7 +49,7 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
     bool qml = !(s.value("Battle/OldWindow", true).toBool() || conf.mode != ChallengeInfo::Singles || qmlcount > 0);
 
     if (qml) {
-        BattleScene *scene = new BattleScene(data2);
+        BattleScene *scene = new BattleScene(data2, Theme::getBattleTheme());
 
         input->addOutput(scene);
         scene->addOutput(mData);

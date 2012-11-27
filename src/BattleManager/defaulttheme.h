@@ -3,19 +3,23 @@
 
 #include <QColor>
 #include <QPixmap>
+#include <QObject>
 
-class BattleDefaultTheme {
+class BattleDefaultTheme : public QObject {
+    Q_OBJECT
 public:
-    virtual QColor TypeColor(int){return QColor();}
-    virtual QColor CategoryColor(int){return QColor();}
-    virtual QColor StatusColor(int){return QColor();}
+    BattleDefaultTheme(QObject *parent=0) : QObject(parent){}
 
-    virtual QPixmap TrainerSprite(int){return QPixmap();}
-    virtual QPixmap Sprite(const QString&){return QPixmap();}
-    virtual QPixmap StatusIcon(int){return QPixmap();}
-    virtual QPixmap Pic(const QString&){return QPixmap();}
-    virtual QPixmap BattleStatusIcon(int){return QPixmap();}
-    virtual QPixmap BattleGenderPicture(int){return QPixmap();}
+    Q_INVOKABLE virtual QColor typeColor(int){return QColor();}
+    virtual QColor categoryColor(int){return QColor();}
+    virtual QColor statusColor(int){return QColor();}
+
+    virtual QPixmap trainerSprite(int){return QPixmap();}
+    virtual QPixmap sprite(const QString&){return QPixmap();}
+    virtual QPixmap statusIcon(int){return QPixmap();}
+    virtual QPixmap pic(const QString&){return QPixmap();}
+    virtual QPixmap battleStatusIcon(int){return QPixmap();}
+    virtual QPixmap battleGenderPicture(int){return QPixmap();}
 };
 
 #endif // DEFAULTTHEME_H
