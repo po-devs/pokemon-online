@@ -41,6 +41,8 @@ setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickA
       easing_out_x: Easing.Linear, easing_out_y: Easing.Linear}
 );
 
+effects[BattleData.MachPunch] = "Moves/MachPunch.qml";
+
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
 effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
