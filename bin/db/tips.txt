@@ -2,7 +2,7 @@
 You can have multiple teams loaded at once in V2. Try Ctrl+L!
 When an update is available, a box with the update information appears on the menu.
 Online, you can use the Find Battle button to start a battle with an opponent in the same tier as you.
-<p>You can open new server tabs by pressing Ctrl+N! That way you can be connected to multiple servers at once, or twice on the same server.</p>Use Ctrl+W to close them.
+<p>You can open new server tabs by pressing Ctrl+T! That way you can be connected to multiple servers at once, or twice on the same server.</p>Use Ctrl+W to close them.
 <p>You can add plugins by selecting <strong>Plugins->Plugin Manager</strong> from the menu.</p>With the scripting plugin, you can even get a bot to battle in your place...
 In the trainer menu, you can rearrange the Pokemon of your current team by dragging them from one button to another!
 You can easily change the nature of your Pokemon by hovering your mouse near the stats in the EV box, and clicking (left click or right click) to choose a boosting / hindering nature for the stat you want.

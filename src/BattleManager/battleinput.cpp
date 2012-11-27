@@ -18,7 +18,7 @@ BattleInput::BattleInput(const BattleConfiguration *conf) {
 void BattleInput::receiveData(QByteArray inf)
 {
     if (inf.isEmpty()) {
-        if (delayed()) {
+        if (paused()) {
             delayedCommands.push_back(inf);
             return;
         }
@@ -33,7 +33,7 @@ void BattleInput::receiveData(QByteArray inf)
         }
     }
 
-    if (delayed() && inf[0] != char(BC::BattleChat) && inf[0] != char(BC::SpectatorChat) && inf[0] != char(BC::ClockStart)
+    if (paused() && inf[0] != char(BC::BattleChat) && inf[0] != char(BC::SpectatorChat) && inf[0] != char(BC::ClockStart)
             && inf[0] != char(BC::ClockStop)
             && inf[0] != char(BC::Spectating)) {
         delayedCommands.push_back(inf);
@@ -50,7 +50,7 @@ void BattleInput::receiveData(QByteArray inf)
     dealWithCommandInfo(in, command, player);
 }
 
-bool BattleInput::delayed()
+bool BattleInput::paused()
 {
     return delayCount > 0;
 }
@@ -71,7 +71,7 @@ void BattleInput::unpause(int ticks)
 
     /* As unpaused / paused can be in nested calls, class variable mCount is
       necessary */
-    for ( ; mCount < delayedCommands.size() && !delayed(); ) {
+    for ( ; mCount < delayedCommands.size() && !paused(); ) {
         receiveData(delayedCommands[mCount++]); //The ++ inside is necessary, not oustide
     }
 

@@ -17,8 +17,7 @@ public:
 
     void pause(int ticks=1);
     void unpause(int ticks=1);
-
-    bool delayed();
+    bool paused();
 
     enum StatusFeeling
     {

@@ -1,4 +1,5 @@
 #include <QFile>
+#include <QApplication>
 #include <QMessageBox>
 #include "replayviewer.h"
 #include "spectatorwindow.h"
@@ -13,7 +14,7 @@
  <timestamp (32 bits)><command (byteArray)> * infinite
 */
 
-ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
+ReplayViewer::ReplayViewer(const QString &file) : finished(false), paused(false), speeding(false), timerDiff(0), nextRead(quint32(-1))
 {
     in = new QFile(file);
 
@@ -37,7 +38,18 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
 
     window = new SpectatorWindow(conf);
 
-    QWidget *widget = window->getSampleWidget();
+    QWidget *widget = new QWidget();
+    QGridLayout *gl = new QGridLayout(widget);
+    gl->addWidget(window->getSceneWidget(), 0, 0);
+    gl->addWidget(window->getLogWidget(), 0, 1);
+
+    bar.init();
+    gl->addLayout(bar.getLayout(), 1, 0, 1, 2);
+    connect(&bar, SIGNAL(paused()), SLOT(pause()));
+    connect(&bar, SIGNAL(speedChange(bool)), SLOT(changeSpeed(bool)));
+    connect(&bar, SIGNAL(play()), SLOT(play()));
+    connect(&bar, SIGNAL(seekNext()), SLOT(seekNext()));
+
     widget->setWindowTitle(tr("Pok\303\251mon Online Replay"));
 
     widget->show();
@@ -50,8 +62,23 @@ ReplayViewer::ReplayViewer(const QString &file) : nextRead(quint32(-1))
     read();
 }
 
-void ReplayViewer::read()
+void ReplayViewer::read(bool forced)
 {
+    if (finished) {
+        return;
+    }
+    if (paused && !forced) {
+        return;
+    }
+
+    /* If the battle animation is animating, we're not going to pile up
+      data & data to read. Because we need to retain fine control on
+      when to pause/play, and when we pile up data we can't take it back */
+    if (window->getInput()->paused()) {
+        QTimer::singleShot(20, this, SLOT(read()));
+        return;
+    }
+
     DataStream stream(in);
 
     if (nextRead == quint32(-1)) {
@@ -59,9 +86,10 @@ void ReplayViewer::read()
         stream >> lastData;
     }
 
-    while(nextRead <= t.elapsed()) {
+    while(nextRead <= t.elapsed() + timerDiff) {
         if (lastData.size() == 0) {
             //finished
+            finished = true;
             window->getInput()->entryPoint(BattleEnum::BlankMessage);
             auto mess = std::shared_ptr<QString>(new QString(toBoldColor(tr("This is the end of the replay"), Qt::blue)));
             window->getInput()->entryPoint(BattleEnum::PrintHtml, &mess);
@@ -74,11 +102,85 @@ void ReplayViewer::read()
         stream >> lastData;
     }
 
-    QTimer::singleShot(nextRead-t.elapsed()+1, this, SLOT(read()));
+    int delay = nextRead-(t.elapsed()+timerDiff+1);
+    if (speeding && delay > 100) {
+        QTimer::singleShot(100, this, SLOT(seekNext()));
+    } else {
+        QTimer::singleShot(delay, this, SLOT(read()));
+    }
 }
 
 ReplayViewer::~ReplayViewer()
 {
     delete in;
     delete window;
+}
+
+void ReplayViewer::pause()
+{
+    paused = true;
+    timerDiff += t.elapsed();
+}
+
+void ReplayViewer::play()
+{
+    paused = false;
+    t.restart();
+    read();
+}
+
+void ReplayViewer::changeSpeed(bool fast)
+{
+    speeding = fast;
+
+    if (fast) {
+        QTimer::singleShot(100, this, SLOT(seekNext()));
+    }
+}
+
+void ReplayViewer::seekNext()
+{
+    timerDiff = nextRead +1;
+    t.restart();
+    read(true);
+}
+
+void ReplayBar::init()
+{
+    pause = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_MediaPause),"");
+    fastforward = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_MediaSeekForward), "");
+    next = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_MediaSkipForward), "");
+
+    fastforward->setCheckable(true);
+
+    pause->setProperty("paused", false);
+
+    connect(pause, SIGNAL(clicked()), SLOT(changePause()));
+    connect(next, SIGNAL(clicked()), SIGNAL(seekNext()));
+    connect(fastforward, SIGNAL(clicked(bool)), SIGNAL(speedChange(bool)));
+}
+
+void ReplayBar::changePause()
+{
+    if (pause->property("paused").toBool()) {
+        pause->setProperty("paused", false);
+        pause->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaPause));
+
+        emit play();
+    } else {
+        pause->setProperty("paused", true);
+        pause->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaPlay));
+
+        emit paused();
+    }
+}
+
+QHBoxLayout *ReplayBar::getLayout()
+{
+    QHBoxLayout *l = new QHBoxLayout();
+    l->addWidget(pause);
+    l->addWidget(next);
+    l->addWidget(fastforward);
+
+    return l;
 }
