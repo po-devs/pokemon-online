@@ -81,6 +81,14 @@ public:
         }
     }
 
+    virtual bool paused() {
+        if (m_input) {
+            return m_input->paused();
+        } else {
+            return false;
+        }
+    }
+
     bool deletable;
 protected:
     baseClass *m_input;
