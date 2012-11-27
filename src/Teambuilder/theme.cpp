@@ -46,15 +46,15 @@ static void fill_container_with_file(T &container, const QString & filename)
 }
 
 class BattleTheme : public BattleDefaultTheme {
-    QColor TypeColor(int t){return Theme::TypeColor(t);}
-    QColor CategoryColor(int c){return Theme::CategoryColor(c);}
-    QColor StatusColor(int s){return Theme::StatusColor(s);}
-    QPixmap TrainerSprite(int t){return Theme::TrainerSprite(t);}
-    QPixmap Sprite(const QString &s){return Theme::Sprite(s);}
-    QPixmap StatusIcon(int st){return Theme::StatusIcon(st);}
-    QPixmap Pic(const QString &s){return Theme::Pic(s);}
-    QPixmap BattleStatusIcon(int s){return Theme::BattleStatusIcon(s);}
-    QPixmap BattleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
+    QColor typeColor(int t){return Theme::TypeColor(t);}
+    QColor categoryColor(int c){return Theme::CategoryColor(c);}
+    QColor statusColor(int s){return Theme::StatusColor(s);}
+    QPixmap trainerSprite(int t){return Theme::TrainerSprite(t);}
+    QPixmap sprite(const QString &s){return Theme::Sprite(s);}
+    QPixmap statusIcon(int st){return Theme::StatusIcon(st);}
+    QPixmap pic(const QString &s){return Theme::Pic(s);}
+    QPixmap battleStatusIcon(int s){return Theme::BattleStatusIcon(s);}
+    QPixmap battleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
 };
 
 class Accessor : public ThemeAccessor {

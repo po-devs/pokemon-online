@@ -139,7 +139,7 @@ void BattleClientLog::onSendBack(int spot, bool silent)
 void BattleClientLog::onUseAttack(int spot, int attack, bool silent)
 {
     if (!silent) {
-        printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->TypeColor(MoveInfo::Type(attack, data()->gen())))));
+        printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->typeColor(MoveInfo::Type(attack, data()->gen())))));
     }
 }
 
@@ -217,9 +217,9 @@ void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTur
     if (!silent) {
         if (status > Pokemon::Fine && status <= Pokemon::Poisoned) {
             printHtml("StatusChange", toColor(tu(statusChangeMessages[status-1 + (status == Pokemon::Poisoned && multipleTurns)].arg(nick(spot))),
-                                              theme()->StatusColor(status)));
+                                              theme()->statusColor(status)));
         } else if (status == Pokemon::Confused) {
-            printHtml("StatusChange", toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+            printHtml("StatusChange", toColor(escapeHtml(tu(tr("%1 became confused!").arg(nick(spot)))), theme()->typeColor(Type::Ghost)));
         }
     }
     printSilent(tr("%1 had its status changed to: %2.").arg(nick(spot), StatInfo::Status(status)));
@@ -232,23 +232,23 @@ void BattleClientLog::onPokeballStatusChanged(int player, int poke, int status)
 
 void BattleClientLog::onStatusAlreadyThere(int spot, int status)
 {
-    printHtml("AlreadyStatusMessage", toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)), theme()->StatusColor(status)));
+    printHtml("AlreadyStatusMessage", toColor(tr("%1 is already %2.").arg(tu(nick(spot)), StatInfo::Status(status)), theme()->statusColor(status)));
 }
 
 void BattleClientLog::onStatusNotification(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), theme()->TypeColor(Type::Ghost)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is confused!").arg(nick(spot)))), theme()->typeColor(Type::Ghost)));
         break;
     case Pokemon::Paralysed:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Paralysed)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is paralyzed! It can't move!").arg(nick(spot)))), theme()->statusColor(Pokemon::Paralysed)));
         break;
     case Pokemon::Asleep:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is fast asleep.").arg(nick(spot)))), theme()->StatusColor(Pokemon::Asleep)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is fast asleep.").arg(nick(spot)))), theme()->statusColor(Pokemon::Asleep)));
         break;
     case Pokemon::Frozen:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Frozen)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 is frozen solid!").arg(nick(spot)))), theme()->statusColor(Pokemon::Frozen)));
     default:
         break;
     }
@@ -258,13 +258,13 @@ void BattleClientLog::onStatusDamage(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), theme()->TypeColor(Type::Ghost)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("It hurt itself in its confusion!"))), theme()->typeColor(Type::Ghost)));
         break;
     case Pokemon::Burnt:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by its burn!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Burnt)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by its burn!").arg(nick(spot)))), theme()->statusColor(Pokemon::Burnt)));
         break;
     case Pokemon::Poisoned:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by poison!").arg(nick(spot)))), theme()->StatusColor(Pokemon::Poisoned)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 was hurt by poison!").arg(nick(spot)))), theme()->statusColor(Pokemon::Poisoned)));
     default:
         break;
     }
@@ -274,13 +274,13 @@ void BattleClientLog::onStatusOver(int spot, int status)
 {
     switch (status) {
     case Pokemon::Confused:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 snapped out its confusion.").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 snapped out its confusion.").arg(nick(spot)))), theme()->typeColor(Type::Dark)));
         break;
     case Pokemon::Asleep:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 woke up!").arg(nick(spot)))), theme()->typeColor(Type::Dark)));
         break;
     case Pokemon::Frozen:
-        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), theme()->TypeColor(Type::Dark)));
+        printHtml("StatusMessage", toColor(escapeHtml(tu(tr("%1 thawed out!").arg(nick(spot)))), theme()->typeColor(Type::Dark)));
     default:
         break;
     }
@@ -331,7 +331,7 @@ void BattleClientLog::onMoveMessage(int spot, int move, int part, int type, int 
     mess.replace("%i", ItemInfo::Name(other));
     mess.replace("%a", AbilityInfo::Name(other));
     mess.replace("%p", PokemonInfo::Name(other));
-    printHtml("MoveMessage", toColor(escapeHtml(tu(mess)), theme()->TypeColor(type)));
+    printHtml("MoveMessage", toColor(escapeHtml(tu(mess)), theme()->typeColor(type)));
 }
 
 void BattleClientLog::onNoTarget(int)
@@ -375,7 +375,7 @@ void BattleClientLog::onDrained(int spot)
 
 void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
 {
-    QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
+    QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
     static const QString weatherAbilityMessage[4] = {
         tr("%1's Snow Warning whipped up a hailstorm!"),
@@ -400,7 +400,7 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
 
 void BattleClientLog::onContinueWeather(int weather)
 {
-    QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
+    QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
     case Weather::Hail: printHtml("Weather", toColor(tr("The hail crashes down."),c)); break;
@@ -412,7 +412,7 @@ void BattleClientLog::onContinueWeather(int weather)
 
 void BattleClientLog::onEndWeather(int weather)
 {
-    QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
+    QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
     case Weather::Hail: printHtml("Weather", toColor(tr("The hail stopped."),c)); break;
@@ -424,7 +424,7 @@ void BattleClientLog::onEndWeather(int weather)
 
 void BattleClientLog::onHurtWeather(int spot, int weather)
 {
-    QColor c = theme()->TypeColor(TypeInfo::TypeForWeather(weather));
+    QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
     switch(weather) {
     case Weather::Hail: printHtml("Weather", toColor(tr("%1 is buffeted by the hail!").arg(tu(nick(spot))),c)); break;
@@ -458,7 +458,7 @@ void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int
     if (type == Pokemon::Normal) {
         printLine("AbilityMessage", escapeHtml(tu(mess)));
     } else {
-        printHtml("AbilityMessage", toColor(escapeHtml(tu(mess)),theme()->TypeColor(type)));
+        printHtml("AbilityMessage", toColor(escapeHtml(tu(mess)),theme()->typeColor(type)));
     }
 }
 

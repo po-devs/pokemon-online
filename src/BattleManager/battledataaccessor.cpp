@@ -52,7 +52,7 @@ void MoveProxy::setNum(int newnum) {
         return;
     }
     d()->num() = newnum;
-    d()->totalPP() = MoveInfo::PP(newnum, gen());
+    d()->totalPP() = MoveInfo::PP(newnum, gen()) * (newnum == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */;
     emit numChanged();
 }
 
@@ -115,6 +115,9 @@ void PokeProxy::adaptTo(const ShallowBattlePoke *pokemon, bool soft) {
     }
     /* Could be more granular, change if it matters */
     *pokeData = *pokemon;
+    if (pokeData->lifePercent() != pokemon->lifePercent()) {
+        pokeData->setLifePercent(pokemon->lifePercent());
+    }
     emitReset();
 }
 
@@ -218,8 +221,10 @@ int PokeProxy::ev(int stat) const
 TeamProxy::TeamProxy()
 {
     mTime = 300; mTicking = false;
-    teamData = new TeamData();
+    /* We still require full pokemon, which we will build up */
+    teamData = new TeamData(NULL, true);
     for (int i = 0; i < 6; i++) {
+        dynamic_cast<PokeBattle*>(teamData->poke(i))->totalLifePoints() = 100;
         pokemons.push_back(new PokeProxy(teamData->poke(i)));
         pokemons.last()->setParent(this);
     }

@@ -28,7 +28,8 @@ SOURCES += \
     auxpokedataproxy.cpp \
     proxydatacontainer.cpp \
     datacontainer.cpp \
-    regularbattlescene.cpp
+    regularbattlescene.cpp \
+    moveinfoaccessor.cpp
 
 CONFIG(obsolete) {
 SOURCES +=
@@ -67,7 +68,8 @@ HEADERS +=\
     ../Shared/battlecommands.h \
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/battlestructs.h
+    ../PokemonInfo/battlestructs.h \
+    moveinfoaccessor.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
