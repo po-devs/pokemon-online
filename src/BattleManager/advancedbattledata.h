@@ -17,6 +17,27 @@ public:
 
     }
 
+    void onUseAttack(int spot, int attack, bool silent)
+    {
+        (void) silent;
+        if (isPlayer(spot)) {
+            return;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (poke(spot).move(i)->num() == Move::NoMove) {
+                poke(spot).move(i)->setNum(attack);
+                poke(spot).move(i)->changePP(poke(spot).move(i)->totalPP() - 1);
+
+                break;
+            } else if (poke(spot).move(i)->num() == attack) {
+                poke(spot).move(i)->changePP(poke(spot).move(i)->PP() - 1);
+
+                break;
+            }
+        }
+    }
+
     /* The code could be refactored to be included in battledata directly,
       with the regular battledata container having also the extras functions */
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool)

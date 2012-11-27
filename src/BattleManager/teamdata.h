@@ -8,7 +8,7 @@
 class TeamData
 {
 public:
-    TeamData(const TeamBattle* team=NULL);
+    TeamData(const TeamBattle* team=NULL, bool fullPokemon=false);
     ~TeamData();
 
     ShallowBattlePoke* poke(int slot);

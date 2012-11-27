@@ -1,10 +1,10 @@
 #include "teamdata.h"
 
-TeamData::TeamData(const TeamBattle *team)
+TeamData::TeamData(const TeamBattle *team, bool fullPokemon)
 {
     if (!team) {
         for (int i = 0; i < 6; i++) {
-            pokemons.push_back(new ShallowBattlePoke());
+            pokemons.push_back(fullPokemon ? new PokeBattle() : new ShallowBattlePoke());
         }
     } else {
         for (int i = 0; i < 6; i++) {
