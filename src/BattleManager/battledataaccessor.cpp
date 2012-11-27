@@ -52,7 +52,7 @@ void MoveProxy::setNum(int newnum) {
         return;
     }
     d()->num() = newnum;
-    d()->totalPP() = MoveInfo::PP(newnum, gen());
+    d()->totalPP() = MoveInfo::PP(newnum, gen()) * (newnum == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */;
     emit numChanged();
 }
 
