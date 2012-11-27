@@ -40,8 +40,4 @@ Move {
                 // Delete the Move object
                 ScriptAction { script: finished(); }
         }
-
-        function start() {
-                animation.running = true;
-        }
 }
