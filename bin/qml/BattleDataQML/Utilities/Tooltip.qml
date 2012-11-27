@@ -43,6 +43,15 @@ TopLevelItem {
     // resized toplevel item.
     keepInside: true;
 
+    function resetSize() {
+        var obj = Qt.createQmlObject("import QtQuick 1.0; Text { visible: false; }", tooltip);
+        obj.text = text;
+
+        model.width = obj.width;
+        model.height = obj.height;
+        obj.destroy();
+    }
+
     BorderImage {
         id: background;
         anchors.fill: parent;
