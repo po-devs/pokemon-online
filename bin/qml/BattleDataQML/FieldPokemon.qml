@@ -91,7 +91,7 @@ Item {
 
                 s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
                 if (fieldPokemon.type2() !== 17) s += Utils.typeImg(fieldPokemon.type2());
-                s += "<table width='100%'>";
+                s += "<table><tr><td><table>";
                 var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
 
@@ -133,9 +133,10 @@ Item {
                     }
                 }
 
-                s += "</table>"
+                s += "</table></td>"
 
-                if (!battle.scene.isPlayer(spot)) {
+                if (!battle.scene.isPlayer(spot) && pokemon.move(0).num !== 0) {
+                    s += "<td><br/>"
                     for (i = 0; i < 4; i++) {
                         var move = pokemon.move(i).num;
                         if (move !== 0) {
@@ -145,9 +146,14 @@ Item {
                                     "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span>" + (bold ? "</b>" : "") + "<br/>";
                         }
                     }
+                    s += "</td>"
                 }
 
+                s += "</tr></table>"
+
                 text = s;
+
+                //resetSize();
             }
         }
     }
