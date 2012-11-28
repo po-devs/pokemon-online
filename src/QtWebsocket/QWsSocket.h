@@ -95,6 +95,7 @@ public slots:
     void disconnectFromHost();
     void abort( QString reason = QString() );
 	void ping();
+    virtual void close( ECloseStatusCode closeStatusCode = NoCloseStatusCode, QString reason = QString() );
 
 signals:
 	void frameReceived(QString frame);
@@ -106,7 +107,6 @@ protected:
 	qint64 writeFrame ( const QByteArray & byteArray );
 
 protected slots:
-	virtual void close( ECloseStatusCode closeStatusCode = NoCloseStatusCode, QString reason = QString() );
 	void processDataV0();
 	void processDataV4();
     void processHandshake();
