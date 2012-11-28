@@ -706,7 +706,7 @@ QProgressBar#LifePoints::chunk{
 	width: 1px;
 }
 
-BaseBattleWindow {
+BaseBattleWindow, #ReplayViewer {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
 }
 
