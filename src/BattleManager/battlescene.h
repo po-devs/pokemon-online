@@ -33,9 +33,13 @@ public:
     Q_INVOKABLE bool isPlayer(int spot);
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
+    Q_PROPERTY(int width READ width() CONSTANT)
+    Q_PROPERTY(int height READ height() CONSTANT)
 
     /* Should the players be reversed positions in the visual scene? */
     bool reversed();
+    int width() const;
+    int height() const;
     void launch();
 
     template <enumClass val, typename... Params>

@@ -93,6 +93,16 @@ bool BattleScene::reversed()
     return data()->role(1) == BattleConfiguration::Player;
 }
 
+int BattleScene::width() const
+{
+    return mWidget->width();
+}
+
+int BattleScene::height() const
+{
+    return mWidget->height();
+}
+
 BattleScene::battledata_ptr BattleScene::data()
 {
     return mData;
