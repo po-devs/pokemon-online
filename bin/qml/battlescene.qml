@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
+import "BattleDataQML/Utilities/" 1.0
 import "BattleDataQML/weather.js" as Weather
 
 Item {
@@ -44,6 +45,14 @@ Item {
         width: 96
         height: 64
         team: battle.data.team(playerBack)
+    }
+
+    Logger {
+        id: logger;
+        width: scene.width;
+        anchors.bottom: scene.bottom;
+        anchors.bottomMargin: -15;
+        shown: true;
     }
 
     Rectangle {
@@ -177,6 +186,9 @@ Item {
         }
         onHit: {
             fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot], params);
+        }
+        onBattleLog: {
+            logger.log(logMessage);
         }
     }
 }
