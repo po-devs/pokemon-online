@@ -188,7 +188,7 @@ Item {
             fieldPokemons[spot].useAttack(attack, fieldPokemons[1-spot], params);
         }
         onBattleLog: {
-            logger.log(logMessage);
+            if (battle.scene.option("logger")) logger.log(logMessage);
         }
     }
 }
