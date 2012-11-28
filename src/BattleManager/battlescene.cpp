@@ -59,6 +59,26 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(
     mWidget->setSource(QString("qml/initial.qml"));
 }
 
+void BattleScene::log(const QString &mess)
+{
+    /* Bolded messages are clause / turn announcements, ... */
+    if (mess.contains(QRegExp("<span class=\"[A-Za-z]+\"><b><span")) || mess.contains("class=\"PlayerChat\"") || mess.contains("class=\"SpectatorChat\"")
+             || mess.contains("class=\"Spectating\"")) {
+        return;
+    }
+    /* The battle window log text is white, no exceptions */
+    QRegExp r("color:#[0-9a-f]{6}");
+
+    QString rep = mess;
+    rep.remove(r);
+
+    if (mess.contains("class=\"Space\"")) {
+        emit battleLog("");
+    } else {
+        emit battleLog(rep);
+    }
+}
+
 void BattleScene::launch() {
     emit launched();
 }

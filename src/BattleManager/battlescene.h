@@ -92,8 +92,11 @@ public:
     bool playingCommands() const { return activelyReplaying;}
 
     /* Replays the commands stored and delete them. */
-    void replayCommands() ;
+    void replayCommands();
+public slots:
+    void log(const QString&);
 signals:
+    void battleLog(const QString &logMessage);
     void printMessage(const QString&);
     void launched();
     void playCry(int);

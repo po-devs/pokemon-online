@@ -57,6 +57,7 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
         scene->addOutput(data2);
 
         QObject::connect(scene, SIGNAL(printMessage(QString)), logWidget, SLOT(insertPlainText(QString)));
+        QObject::connect(log, SIGNAL(lineToBePrinted(QString)), scene, SLOT(log(QString)));
 
         scene->launch();
 

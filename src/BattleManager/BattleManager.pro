@@ -134,7 +134,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/ChargeMove.qml \
     ../../bin/qml/BattleDataQML/Moves/CloseCombat.qml \
     ../../bin/qml/BattleDataQML/Moves/Surf.qml \
-    ../../bin/qml/BattleDataQML/Moves/MachPunch.qml
+    ../../bin/qml/BattleDataQML/Moves/MachPunch.qml \
+    ../../bin/qml/BattleDataQML/Utilities/Logger.qml
 
 include(../Shared/Common.pri)
 
