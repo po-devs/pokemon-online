@@ -31,7 +31,7 @@ TopLevelItem {
     property string text;
     property bool shown: false;
 
-    width: model.width + 22;
+    width: parent.width;
     height: model.height + background.border.top + background.border.bottom;
 
     opacity: logger.text !== "";
@@ -68,6 +68,8 @@ TopLevelItem {
     Text {
         id: model;
         text: logger.text;
+        width: parent.width - 22;
+        wrapMode: Text.Wrap
         visible: false;
     }
 
@@ -79,7 +81,7 @@ TopLevelItem {
 
         text: logger.text;
         color: "#ffffff";
-        elide: Text.ElideRight
+        wrapMode: Text.Wrap
     }
 
     Timer {
@@ -111,7 +113,9 @@ TopLevelItem {
                 battle.scene.pause();
             }
             clearer.unpause = true;
-            clearer.restart();
+            if (!clearer.running) {
+                clearer.restart();
+            }
             return;
         }
 

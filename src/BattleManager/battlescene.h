@@ -17,7 +17,7 @@ public:
     typedef AdvancedBattleData* battledata_ptr;
     typedef BattleCommandManager<BattleScene, BattleSceneFlow<BattleEnum, BattleScene> > baseClass;
 
-    BattleScene(battledata_ptr data=0, BattleDefaultTheme *theme=0);
+    BattleScene(battledata_ptr data=0, BattleDefaultTheme *theme=0, QVariantMap options = QVariantMap());
     ~BattleScene();
 
     QDeclarativeView *getWidget();
@@ -31,6 +31,8 @@ public:
 
     Q_INVOKABLE int statboostlevel();
     Q_INVOKABLE bool isPlayer(int spot);
+
+    Q_INVOKABLE QVariant option(const QString &opt) const;
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
     Q_PROPERTY(int width READ width() CONSTANT)
@@ -143,6 +145,8 @@ private:
     int pauseCount;
     int replayCount;
     bool activelyReplaying;
+
+    QVariantMap mOptions;
 };
 
 

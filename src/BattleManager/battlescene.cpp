@@ -11,8 +11,8 @@
 #include "defaulttheme.h"
 #include "../Utilities/functions.h"
 
-BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false),
-    pauseCount(0)
+BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariantMap options)
+    : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false), pauseCount(0), mOptions(options)
 {
     activelyReplaying = false;
 
@@ -57,6 +57,11 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme) : mData(
     mWidget->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
     mWidget->engine()->rootContext()->setContextProperty("theme", theme);
     mWidget->setSource(QString("qml/initial.qml"));
+}
+
+QVariant BattleScene::option(const QString &opt) const
+{
+    return mOptions.value(opt);
 }
 
 void BattleScene::log(const QString &mess)

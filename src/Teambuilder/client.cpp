@@ -1380,6 +1380,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
     oldBattleWindow->setChecked(globals.value("Battle/OldWindow", true).toBool());
 
+    QAction *animatedLogger = battleMenu->addAction(tr("Animated logger (New battle window)"));
+    animatedLogger->setCheckable(true);
+    connect(animatedLogger, SIGNAL(triggered(bool)), SLOT(changeBattleLogger(bool)));
+    oldBattleWindow->setChecked(globals.value("Battle/AnimatedLogger", false).toBool());
+
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
@@ -1616,17 +1621,22 @@ void Client::openSoundConfig()
 
 void Client::changeButtonStyle(bool old)
 {
-    globals.setValue("Battle/OldAttackButtons",old);
+    globals.setValue("Battle/OldAttackButtons", old);
 }
 
 void Client::changeBattleWindow(bool old)
 {
-    globals.setValue("Battle/OldWindow",old);
+    globals.setValue("Battle/OldWindow", old);
+}
+
+void Client::changeBattleLogger(bool logger)
+{
+    globals.setValue("Battle/AnimatedLogger", logger);
 }
 
 void Client::changeNicknames(bool old)
 {
-    globals.setValue("Battle/NoNicknames",old);
+    globals.setValue("Battle/NoNicknames", old);
 }
 
 void Client::saveBattleLogs(bool save)
