@@ -159,6 +159,31 @@ void WebServerPlugin::dealWithFrame(const QString &f)
             out.close();
 
             emit tiersUpdated();
+        } else if (command == "getfile") {
+            QFileInfo fi(data);
+            QDir d;
+            /* Make sure we edit only a file in bin/ */
+            if (!fi.absolutePath().contains(d.absolutePath())) {
+                return;
+            }
+
+            s->write("file|"+data+"|"+QString::fromUtf8(getFileContent(data)));
+        } else if (command == "editfile") {
+            QString path = data.section("|", 0, 0);
+
+            QFileInfo fi(path);
+            QDir d;
+            /* Make sure we edit only a file in bin/ */
+            if (!fi.absolutePath().contains(d.absolutePath())) {
+                return;
+            }
+            d.mkpath(fi.absolutePath());
+
+            QString content = data.section("|", 1);
+            QFile out(path);
+            out.open(QIODevice::WriteOnly);
+            out.write(content.toUtf8());
+            out.close();
         }
     }
 }

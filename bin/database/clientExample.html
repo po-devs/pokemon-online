@@ -23,6 +23,7 @@
                 <li><a href="#tabs-1">logs & chat</a></li>
                 <li><a href="#tabs-2">scripts</a></li>
                 <li><a href="#tabs-3">tiers</a></li>
+                <li><a href="#tabs-4">edit file</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -50,6 +51,18 @@
                 <p>
                     <button onClick="refreshTiers();">Refresh</button>
                     <button onClick="sendTiers();" id="sendTiers" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-4">
+                <p>
+                    File <input type="text" id="fileurl" />
+                </p>
+                <p>
+                    <textarea id="fileArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshFile();">Refresh</button>
+                    <button onClick="sendFile();" id="sendFile" disabled="true">Apply Changes</button>
                 </p>
             </div>
         </div>
@@ -107,6 +120,16 @@
             function sendTiers()
             {
                 websocket.send("changetiers|"+$('#tiersArea').val());
+            }
+
+            function refreshFile()
+            {
+                websocket.send("getfile|"+$('#fileurl').val());
+            }
+
+            function sendFile()
+            {
+                websocket.send("editfile|"+$('#fileurl').val()+"|"+$('#fileArea').val());
             }
 			
 			var websocket = null;
@@ -201,6 +224,11 @@
                     $("#tiersArea").val(data);
                     $("#sendTiers").removeAttr("disabled");
                     $("#tiersArea").removeAttr("disabled");
+                } else if (cmd == "file") {
+                    $("#fileurl").val(data.substr(0, data.indexOf("|")));
+                    $("#fileArea").val(data.slice(data.indexOf("|")+1));
+                    $("#sendFile").removeAttr("disabled");
+                    $("#fileArea").removeAttr("disabled");
                 }
             };
 			
