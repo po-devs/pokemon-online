@@ -52,6 +52,7 @@ ReplayViewer::ReplayViewer(const QString &file) : finished(false), paused(false)
 
     widget->setWindowTitle(tr("Pok\303\251mon Online Replay"));
 
+    widget->setObjectName("ReplayViewer");
     widget->show();
     //widget->setWindowFlags(Qt::Window);
     widget->setAttribute(Qt::WA_DeleteOnClose);
