@@ -50,13 +50,20 @@ TopLevelItem {
         NumberAnimation {duration: 300;}
     }
 
+    function pause() {
+        battle.scene.pause();
+    }
+    function unpause() {
+        battle.scene.unpause();
+    }
+
     BorderImage {
         id: background;
         anchors.fill: parent;
         source: "../../images/tooltip-background.png";
         border.top: 5;
         border.left: 11;
-        border.bottom: 2;
+        border.bottom: 5;
         border.right: 11;
     }
 
@@ -84,44 +91,64 @@ TopLevelItem {
         wrapMode: Text.Wrap
     }
 
+    /* Use that instead when moving to qt 5.0 */
+//    Timer {
+//        id: clearer;
+//        interval: 750;
+//        repeat: false;
+//        onTriggered: {logger.text = ""; if (unpause) {unpause=false; battle.scene.unpause();}}
+
+//        property bool unpause: false;
+//    }
+
+
+    /* We have to do a workaround by setting repeat true because of https://bugreports.qt.nokia.com/browse/QTBUG-22004 */
     Timer {
         id: clearer;
         interval: 750;
-        repeat: false;
-        onTriggered: {logger.text = ""; if (unpause) {unpause=false; battle.scene.unpause();}}
+        repeat: true;
+        onTriggered: {if (!active) return; active=false; logger.text = ""; if (unpause) {unpause=false; logger.unpause();}}
 
         property bool unpause: false;
+        property bool active: false;
     }
 
     SequentialAnimation {
         id: delayer;
 
         ScriptAction {
-            script: {battle.scene.pause();}
+            script: {logger.pause();}
         }
 
         PauseAnimation { duration: 280 }
 
         ScriptAction {
-            script: {battle.scene.unpause();}
+            script: {logger.unpause();}
         }
     }
 
     function log(text) {
         if (text === "") {
-            if (!clearer.unpause) {
-                battle.scene.pause();
+            if (logger.text === "") {
+                return;
             }
-            clearer.unpause = true;
-            if (!clearer.running) {
+
+            if (!clearer.unpause) {
+                logger.pause();
+                clearer.unpause = true;
+            }
+            if (!clearer.active) { //replace by clearer.running when moving to qt 5.0
+                clearer.active = true; //delete when moving to qt 5.0
                 clearer.restart();
             }
+
             return;
         }
 
         logger.text += text;
 
         /* Gives more time before the text is deleted */
+        clearer.active = true; //delete when moving to qt 5.0
         clearer.restart();
 
         if (!delayer.running) {
