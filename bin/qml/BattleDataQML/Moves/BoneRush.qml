@@ -24,6 +24,7 @@ Move {
         z: attacker.infront(1);
         x: x0;
         y: y0;
+        scale: calculateScale(z);
     }
 
     SequentialAnimation  {

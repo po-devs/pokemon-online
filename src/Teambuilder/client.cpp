@@ -1380,10 +1380,19 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
     oldBattleWindow->setChecked(globals.value("Battle/OldWindow", true).toBool());
 
-    QAction *animatedLogger = battleMenu->addAction(tr("Animated logger (New battle window)"));
-    animatedLogger->setCheckable(true);
-    connect(animatedLogger, SIGNAL(triggered(bool)), SLOT(changeBattleLogger(bool)));
-    oldBattleWindow->setChecked(globals.value("Battle/AnimatedLogger", false).toBool());
+    QMenu *newBattleWindow = battleMenu->addMenu(tr("New battle window"));
+    {
+        QAction *animatedLogger = newBattleWindow->addAction(tr("Animated logger (New battle window)"));
+        animatedLogger->setCheckable(true);
+        connect(animatedLogger, SIGNAL(triggered(bool)), SLOT(changeBattleLogger(bool)));
+        animatedLogger->setChecked(globals.value("Battle/AnimatedLogger", false).toBool());
+
+        QAction *screenSize = newBattleWindow->addAction(tr("16:9 animated screen"));
+        screenSize->setCheckable(true);
+        connect(screenSize, SIGNAL(triggered(bool)), SLOT(changeBattleScreenSize(bool)));
+        screenSize->setChecked(globals.value("Battle/AnimatedScreenSize", "500x400").toString() == "712x400");
+    }
+
 
     QAction *dontUseNicknames = battleMenu->addAction(tr("Don't show Pokemon Nicknames"));
     dontUseNicknames->setCheckable(true);
@@ -1632,6 +1641,11 @@ void Client::changeBattleWindow(bool old)
 void Client::changeBattleLogger(bool logger)
 {
     globals.setValue("Battle/AnimatedLogger", logger);
+}
+
+void Client::changeBattleScreenSize(bool big)
+{
+    globals.setValue("Battle/AnimatedScreenSize", big ? "712x400" : "500x400");
 }
 
 void Client::changeNicknames(bool old)

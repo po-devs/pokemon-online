@@ -59,9 +59,9 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
     mWidget->setSource(QString("qml/initial.qml"));
 }
 
-QVariant BattleScene::option(const QString &opt) const
+QVariant BattleScene::option(const QString &opt, const QVariant &def) const
 {
-    return mOptions.value(opt);
+    return mOptions.value(opt,def);
 }
 
 void BattleScene::log(const QString &mess)

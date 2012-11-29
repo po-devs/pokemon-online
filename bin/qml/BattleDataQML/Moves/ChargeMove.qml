@@ -17,9 +17,11 @@ Move {
 
     property int xt: defender.x-attacker.x;
     property int yt: attacker.y-defender.y;
+    property int zt: defender.pokeSprite.z + defender.z;
 
     property int x0: attacker.pokeSprite.anchors.horizontalCenterOffset;
     property int y0: attacker.pokeSprite.anchors.bottomMargin;
+    property int z0: attacker.pokeSprite.z;
 
     Particles {
         id: particles;
@@ -65,6 +67,7 @@ Move {
             ParallelAnimation {
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.horizontalCenterOffset"; to: xt; duration: params.attack_time; easing.type: params.easing_in_x; }
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.bottomMargin"; to: yt; duration: params.attack_time; easing.type: params.easing_in_y; }
+                NumberAnimation { target: attacker.pokeSprite; property: "z"; to: zt; duration: params.attack_time; easing.type: params.easing_in_y; }
                 NumberAnimation { target: attacker.pokeSprite; property: "rotation"; from: 0.0; to: params.rolls * 360.0 * (attacker.back?1:-1) ; duration: params.attack_time}
             }
             ScriptAction { script: {
@@ -77,6 +80,7 @@ Move {
             ParallelAnimation {
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.horizontalCenterOffset"; to: x0; duration: params.return_time; easing.type: params.easing_out_x; }
                 NumberAnimation { target: attacker.pokeSprite; property: "anchors.bottomMargin"; to: y0; duration: params.return_time; easing.type: params.easing_out_y; }
+                NumberAnimation { target: attacker.pokeSprite; property: "z"; to: z0; duration: params.return_time; easing.type: params.easing_out_y; }
             }
 
             ScriptAction { script: finished(); }

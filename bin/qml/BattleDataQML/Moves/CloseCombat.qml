@@ -26,6 +26,9 @@ Move {
             angleDeviation: 180
             velocity: 0
             velocityDeviation: 5
+            scale: calculateScale(defender.z)
+
+            transformOrigin: Item.Bottom
         }        
 
         SequentialAnimation  {

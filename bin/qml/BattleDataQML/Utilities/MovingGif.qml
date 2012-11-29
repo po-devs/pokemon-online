@@ -26,6 +26,7 @@ AnimatedImage {
     x: _curve.x(percent);
     y: _curve.y(percent);
     z: _curve.z(percent);
+    scale: calculateScale(_curve.z(percent));
 
     SequentialAnimation {
         id: anim

@@ -32,7 +32,7 @@ public:
     Q_INVOKABLE int statboostlevel();
     Q_INVOKABLE bool isPlayer(int spot);
 
-    Q_INVOKABLE QVariant option(const QString &opt) const;
+    Q_INVOKABLE QVariant option(const QString &opt, const QVariant &def=QVariant()) const;
 
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
     Q_PROPERTY(int width READ width() CONSTANT)
