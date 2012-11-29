@@ -85,6 +85,9 @@ public:
 
     void onUseAttack(int spot, int attack, bool silent);
     void onStatBoost(int spot, int stat, int boost, bool silent);
+    void onContinueWeather(int weather) {
+        emit weatherContinue();
+    }
 
     bool isPeeking() const { return peeking; }
     bool isPaused() const {return pauseCount > 0;}
@@ -107,6 +110,7 @@ signals:
     void launched();
     void playCry(int);
     void attackUsed(int spot, int attack, QVariantMap params);
+    void weatherContinue();
     void hit(int spot, int attack, QVariantMap params);
 
 //    /** Necessary because Qt crashes if a loader element containing a ShaderEffectItem is

@@ -1382,10 +1382,15 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu *newBattleWindow = battleMenu->addMenu(tr("New battle window"));
     {
-        QAction *animatedLogger = newBattleWindow->addAction(tr("Animated logger (New battle window)"));
+        QAction *animatedLogger = newBattleWindow->addAction(tr("Animated logger"));
         animatedLogger->setCheckable(true);
         connect(animatedLogger, SIGNAL(triggered(bool)), SLOT(changeBattleLogger(bool)));
         animatedLogger->setChecked(globals.value("Battle/AnimatedLogger", false).toBool());
+
+        QAction *animatedWeather = newBattleWindow->addAction(tr("Show weather animation everytime"));
+        animatedWeather->setCheckable(true);
+        connect(animatedWeather, SIGNAL(triggered(bool)), SLOT(changeBattleWeather(bool)));
+        animatedWeather->setChecked(globals.value("Battle/AnimatedWeather", "always").toString()=="always");
 
         QAction *screenSize = newBattleWindow->addAction(tr("16:9 animated screen"));
         screenSize->setCheckable(true);
@@ -1646,6 +1651,11 @@ void Client::changeBattleLogger(bool logger)
 void Client::changeBattleScreenSize(bool big)
 {
     globals.setValue("Battle/AnimatedScreenSize", big ? "712x400" : "500x400");
+}
+
+void Client::changeBattleWeather(bool everyTurn)
+{
+    globals.setValue("Battle/AnimatedWeather", everyTurn ? "always" : "firstTurn");
 }
 
 void Client::changeNicknames(bool old)

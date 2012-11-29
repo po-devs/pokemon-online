@@ -199,5 +199,8 @@ Item {
         onBattleLog: {
             if (battle.scene.option("logger")) logger.log(logMessage);
         }
+        onWeatherContinue: {
+            if (battle.scene.option("weather") == "always") Weather.trigger(weather, battle.data.field.weather);
+        }
     }
 }

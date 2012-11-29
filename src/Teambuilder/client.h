@@ -260,6 +260,7 @@ public slots:
     void changeBattleWindow(bool old);
     void changeBattleLogger(bool logger);
     void changeBattleScreenSize(bool big);
+    void changeBattleWeather(bool everyTurn);
     void changeNicknames(bool old);
     void enableLadder(bool);
     void sortPlayersByTiers(bool);
