@@ -34,7 +34,7 @@ effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 /* TODO idea: use shader and params to add type color effect to these */
 setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickAttack, BattleData.BodySlam,
     BattleData.Retaliate, BattleData.VoltTackle, BattleData.WildCharge, BattleData.U_turn, BattleData.VoltSwitch,
-    BattleData.V_create, BattleData.FlameWheel, BattleData.FlameCharge,
+    BattleData.V_create, BattleData.FlameWheel, BattleData.FlareBlitz, BattleData.FlameCharge,
     BattleData.Rollout, BattleData.IceBall], "Moves/ChargeMove.qml",
     { attack_time: 300, return_time: 500, rolls: 0, effect: "",
       easing_in_x: Easing.Linear, easing_in_y: Easing.Linear,
@@ -76,6 +76,8 @@ params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint,
 params[BattleData.VoltSwitch] = params[BattleData.U_turn];
 // Placeholder image for FlameWheel
 params[BattleData.FlameWheel].update({effect: "../../images/flame0.png", attack_time: 700});
+params[BattleData.FlareBlitz].update({effect: "../../images/flame0.png", attack_time: 700, easing_in_x: Easing.InBack,
+                                     easing_in_y: Easing.InBack});
 params[BattleData.Rollout].update({rolls: 3, attack_time: 900});
 params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
 
@@ -100,7 +102,7 @@ function launchMove(attacker, attack, defender, extras) {
     if (! (key in components) ) {
         var component = Qt.createComponent(effects[key]);
 
-        if (component.status != Component.Ready) {
+        if (component.status !== Component.Ready) {
             console.log("Failed loading components " + key + " (" + effects[key] + ")");
             console.log(component.errorString());
             return;
