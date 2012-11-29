@@ -17,7 +17,7 @@ Move {
 
     property int xt: defender.x-attacker.x;
     property int yt: attacker.y-defender.y;
-    property int zt: defender.pokeSprite.z + defender.z;
+    property int zt: defender.z-attacker.z;
 
     property int x0: attacker.pokeSprite.anchors.horizontalCenterOffset;
     property int y0: attacker.pokeSprite.anchors.bottomMargin;
