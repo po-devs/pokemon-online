@@ -22,6 +22,7 @@ Move {
         source: "image://pokeinfo/item/200" //200 is thick club
         parent: main.parent.parent
         z: attacker.infront(1);
+        scale: calculateScale(z);
         x: x0;
         y: y0;
     }

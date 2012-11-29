@@ -27,10 +27,10 @@ Move {
     function adjustCurve(curve) {
         curve.pos1.x += attacker.x;
         curve.pos1.y += attacker.y;
-        curve.pos1.z = attacker.infront(z);
+        curve.pos1.z += attacker.z;
         curve.pos2.x += defender.x;
         curve.pos2.y += defender.y;
-        curve.pos2.z += defender.infront(z);
+        curve.pos2.z += defender.z;
 
         return curve;
     }

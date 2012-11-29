@@ -259,6 +259,7 @@ public slots:
     void changeButtonStyle(bool old);
     void changeBattleWindow(bool old);
     void changeBattleLogger(bool logger);
+    void changeBattleScreenSize(bool big);
     void changeNicknames(bool old);
     void enableLadder(bool);
     void sortPlayersByTiers(bool);

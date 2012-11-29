@@ -23,6 +23,15 @@ Item {
 
     property variant fieldPokemons: battle.scene.reversed ? [poke2, poke1] : [poke1, poke2];
 
+    property real closeScale: bg.width === 500 ? 1 : 1.5
+    property real farScale: 1
+    property real closePos: poke1.z
+    property real farPos: poke2.z;
+
+    function calculateScale(z) {
+        return closeScale + (z-closePos) / (farPos-closePos) * (farScale-closeScale);
+    }
+
     /* Rectangle used by the weather */
     Rectangle{
         id: weatherOverlay;
@@ -34,17 +43,6 @@ Item {
                 duration: 250;
             }
         }
-    }
-
-    Team {
-        id: team1
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
-        width: 96
-        height: 64
-        team: battle.data.team(playerBack)
     }
 
     Logger {
@@ -119,12 +117,23 @@ Item {
     }
 
     Team {
+        id: team1
+        anchors.right: parent.right
+        anchors.rightMargin: bg.width === 500 ? 20 : 50
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        width: 96
+        height: 64
+        team: battle.data.team(playerBack)
+    }
+
+    Team {
         id: team2
         team: battle.data.team(playerFront)
         width: 96
         height: 64
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: bg.width === 500 ? 20 : 50
         anchors.top: parent.top
         anchors.topMargin: 20
     }
@@ -136,7 +145,7 @@ Item {
         fieldPokemon: battle.data.field.poke(playerBack)
         pokemon: team1.team.poke(0)
         anchors.left: parent.left
-        anchors.leftMargin: 55
+        anchors.leftMargin: bg.width === 500 ? 55 : 90
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 55
     }
@@ -148,7 +157,7 @@ Item {
         fieldPokemon: battle.data.field.poke(playerFront)
         pokemon: team2.team.poke(0)
         anchors.right: parent.right
-        anchors.rightMargin: 65
+        anchors.rightMargin: bg.width === 500 ? 65 : 115
         anchors.top: parent.top
         anchors.topMargin: 55
     }

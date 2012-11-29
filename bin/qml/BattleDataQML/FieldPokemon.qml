@@ -46,23 +46,35 @@ Item {
     height: 96
 
     ProgressBar {
+        id: hp
         parent: woof.parent
         anchors.horizontalCenter: woof.horizontalCenter
-        y: woof.y - 10;
+        y: woof.y - 10 - ((calculateScale(woof.z)-1)*woof.height*0.8);
+    }
+
+    Text {
+        id: nick
+        parent: hp
+        anchors.horizontalCenter: hp.horizontalCenter
+        anchors.bottom: hp.top;
+        text: pokemon.nick
     }
 
     Image {
         property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
+        property real baseScale: 1;
         id: img /* Dont use image, will cause problems if you do for the shader */
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
-        transformOrigin: Item.Bottom
+        transformOrigin: Item.Bottom;
 //        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
 //                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
 //                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
         source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
+        scale: baseScale * calculateScale(woof.z+z)
+        smooth: false
         onSourceChanged: shader.grab();
     }
 
@@ -231,7 +243,7 @@ Item {
             PropertyChanges {
                 target: img
                 opacity: 1;
-                scale: 1;
+                baseScale: 1;
             }
         },
 
@@ -295,7 +307,7 @@ Item {
                 PropertyAction { targets: [img, shader]; properties: "opacity"; value: 1}
                 PropertyAction { target: img; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:img; from: 0.5;
-                    to: 1.0; property: "scale"; duration: 350; easing.type: Easing.InQuad }
+                    to: 1.0; property: "baseScale"; duration: 350; easing.type: Easing.InQuad }
                 ScriptAction {script: battle.scene.playCry(woof.pokemon.numRef);}
                 PauseAnimation { duration: 150 }
                 NumberAnimation { target:img; from: 70;
@@ -316,11 +328,11 @@ Item {
                 ScriptAction {script: {
                         //battle.scene.debug("Beginning sendback animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.pause();}}
-                NumberAnimation { target: img; property: "scale";
+                NumberAnimation { target: img; property: "baseScale";
                     duration:400; from: 1.0; to: 0.5 ; easing.type: Easing.InQuad }
                 NumberAnimation { property: "opacity";  duration: 200
                     from: 1.0; to: 0; target: img}
-                ScriptAction {script: {img.scale = 1;
+                ScriptAction {script: {img.baseScale = 1;
                         //battle.scene.debug("Ending sendback animation for " + woof.pokemon.numRef + "\n");
                         battle.scene.unpause();}}
             }
@@ -340,6 +352,7 @@ Item {
                     NumberAnimation { target: substitute; property: "opacity";}
                     NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
                     NumberAnimation {target: img; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: img; property: "z"}
                     NumberAnimation {targets: [img, shader]; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}
@@ -354,6 +367,7 @@ Item {
                 ParallelAnimation {
                     NumberAnimation {target: img; property: "anchors.horizontalCenterOffset"}
                     NumberAnimation {target: img; property: "anchors.bottomMargin"}
+                    NumberAnimation {target: img; property: "z"}
                     NumberAnimation {targets: [img,shader]; property: "opacity"}
                 }
                 ScriptAction { script: battle.scene.unpause();}

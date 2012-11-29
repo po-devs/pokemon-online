@@ -32,6 +32,7 @@ Move {
         x: (x0 + (xt-x0)*progress);
         y: (y0 + (yt-y0)*progress);
         z: (z0 + (zt-z0)*progress);
+        scale: calculateScale(z);
 
         width: implicitWidth*(2-progress);
         height: implicitHeight*(0.7+progress)
