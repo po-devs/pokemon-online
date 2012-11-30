@@ -6,6 +6,7 @@
 #include "WebServerPlugin_global.h"
 #include "../Server/plugininterface.h"
 #include "../QtWebsocket/QWsServer.h"
+#include "../QJson/qjson.h"
 
 class ServerInterface;
 
@@ -40,6 +41,12 @@ signals:
     void scriptsChanged(const QString&);
     void tiersUpdated();
 
+    void nameChanged(QString);
+    void mainChannelChanged(QString);
+    void privateChanged(int);
+    void proxyServersChanged(QString);
+    void announcementChanged(QString);
+
 private:
     ServerInterface *server;
     QWsServer *webserver;
@@ -49,6 +56,9 @@ private:
 
     int port;
     QString pass;
+
+    QJson::Parser jparser;
+    QJson::Serializer jserial;
 
     void broadcast(const QString &);
 };

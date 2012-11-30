@@ -15,6 +15,7 @@ DEFINES += WEBSERVERPLUGIN_LIBRARY
 LIBS += -L../../bin \
     -lqtwebsocket \
     -lutilities \
+    -lqjson
 
 
 SOURCES += webserverplugin.cpp \
