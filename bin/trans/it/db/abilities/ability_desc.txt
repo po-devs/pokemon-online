@@ -28,7 +28,7 @@
 
 14 Aumenta la precisione del Pokemon.
 
-15 Il Pokemon no può essere Addormentato.
+15 Il Pokemon non può essere Addormentato.
 
 16 Cambia il tipo del Pokemon a seconda della mossa nemica.
 

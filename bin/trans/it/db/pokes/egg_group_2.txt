@@ -1,0 +1,310 @@
+﻿0 
+1 Pianta
+2 Pianta
+3 Pianta
+4 Drago
+5 Drago
+6 Drago
+7 Acqua 1
+8 Acqua 1
+9 Acqua 1
+23 Drago
+24 Drago
+25 Fata
+26 Fata
+29 Terra
+32 Terra
+33 Terra
+34 Terra
+46 Pianta
+47 Pianta
+54 Terra
+55 Terra
+79 Acqua 1
+80 Acqua 1
+83 Terra
+86 Terra
+87 Terra
+111 Terra
+112 Terra
+116 Drago
+117 Drago
+129 Drago
+130 Drago
+131 Acqua 1
+138 Acqua 3
+139 Acqua 3
+140 Acqua 3
+141 Acqua 3
+147 Drago
+148 Drago
+149 Drago
+152 Pianta
+153 Pianta
+154 Pianta
+158 Acqua 1
+159 Acqua 1
+160 Acqua 1
+172 Fata
+175 Fata
+176 Fata
+179 Terra
+180 Terra
+181 Terra
+183 Fata
+184 Fata
+187 Pianta
+188 Pianta
+189 Pianta
+194 Terra
+195 Terra
+199 Acqua 1
+209 Fata
+210 Fata
+222 Acqua 3
+223 Acqua 2
+224 Acqua 2
+225 Terra
+230 Drago
+252 Drago
+253 Drago
+254 Drago
+258 Acqua 1
+259 Acqua 1
+260 Acqua 1
+270 Pianta
+271 Pianta
+272 Pianta
+273 Pianta
+274 Pianta
+275 Pianta
+278 Volante
+279 Volante
+283 Bug
+284 Bug
+285 Pianta
+286 Pianta
+293 Terra
+294 Terra
+295 Terra
+298 Fata
+300 Fata
+301 Fata
+303 Fata
+313 Umanoide
+314 Umanoide
+315 Pianta
+320 Acqua 2
+321 Acqua 2
+327 Umanoide
+331 Umanoide
+332 Umanoide
+333 Drago
+334 Drago
+336 Drago
+341 Acqua 3
+342 Acqua 3
+349 Drago
+350 Drago
+351 Indeterminato
+357 Pianta
+361 Minerale
+362 Minerale
+363 Terra
+364 Terra
+365 Terra
+369 Acqua 2
+387 Pianta
+388 Pianta
+389 Pianta
+390 Umanoide
+391 Umanoide
+392 Umanoide
+393 Terra
+394 Terra
+395 Terra
+399 Terra
+400 Terra
+406 Pianta
+407 Pianta
+417 Fata
+418 Terra
+419 Terra
+420 Pianta
+421 Pianta
+422 Indeterminato
+423 Indeterminato
+427 Umanoide
+428 Umanoide
+443 Drago
+444 Drago
+445 Drago
+447 Umanoide
+448 Umanoide
+451 Acqua 3
+452 Acqua 3
+459 Pianta
+460 Pianta
+464 Terra
+468 Fata
+478 Minerale
+489 Fata
+490 Fata
+492
+493
+494
+495 Pianta
+496 Pianta
+497 Pianta
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527 Volante
+528 Volante
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546 Fata
+547 Fata
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557 Minerale
+558 Minerale
+559 Drago
+560 Drago
+561
+562 Indeterminato
+563 Indeterminato
+564 Acqua 3
+565 Acqua 3
+566 Acqua 3
+567 Acqua 3
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580 Volante
+581 Volante
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594 Acqua 2
+595
+596
+597 Minerale
+598 Minerale
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610 Drago
+611 Drago
+612 Drago
+613
+614
+615
+616
+617
+618 Indeterminato
+619 Umanoide
+620 Umanoide
+621 Mostro
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
