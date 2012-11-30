@@ -29,6 +29,9 @@ Player::Player(const GenericSocket &sock, int id)
 
     doConnections();
 
+    /* Version control, whatever happens, because the problem could be because of an old version */
+    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(1,1), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
+
     /* Autokick after 3 minutes if still not logged in */
     QTimer::singleShot(1000*180, this, SLOT(firstAutoKick()));
 }
@@ -1057,9 +1060,6 @@ void Player::loggedIn(LoginInfo *info)
         return;
 
     state().setFlag(LoginAttempt, true);
-
-    /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(1,1), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
 
     if (!testNameValidity(info->trainerName)) {
         return;

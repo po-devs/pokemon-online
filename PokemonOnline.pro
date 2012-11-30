@@ -55,6 +55,7 @@ CONFIG(chess) {
 
 CONFIG(po_server) {
     SUBDIRS += src/Server \
+            src/QJson \
             src/RelayStation
 }
 
