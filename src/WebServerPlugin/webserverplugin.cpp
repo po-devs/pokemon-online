@@ -216,29 +216,29 @@ void WebServerPlugin::dealWithFrame(const QString &f)
             QSettings settings("config", QSettings::IniFormat);
             QString name = settings.value("Server/Name").toString();
             QString announcement = settings.value("Server/Announcement").toString();
-            bool priv = settings.value("Server/Private").toBool();
+            bool priv = settings.value("Server/Private").toInt();
             QString proxies = settings.value("Network/ProxyServers").toString();
             QString mainChannel = settings.value("Channels/MainChannel").toString();
 
             if (map.contains("name") && map.value("name").toString() != name) {
-                settings.setValue("Server/Name", name);
+                settings.setValue("Server/Name", map.value("name").toString());
                 emit nameChanged(map.value("name").toString());
             }
             if (map.contains("mainChannel") && map.value("mainChannel").toString() != mainChannel) {
-                settings.setValue("Channels/MainChannel", mainChannel);
+                settings.setValue("Channels/MainChannel", map.value("mainChannel").toString());
                 emit mainChannelChanged(map.value("mainChannel").toString());
             }
             if (map.contains("announcement") && map.value("announcement").toString() != announcement) {
-                settings.setValue("Server/Announcement", name);
+                settings.setValue("Server/Announcement", map.value("announcement").toString());
                 emit announcementChanged(map.value("announcement").toString());
             }
             if (map.contains("private") && map.value("private").toBool() != priv) {
-                settings.setValue("Server/Private", priv);
-                emit privateChanged(map.value("Server/Private").toBool());
+                settings.setValue("Server/Private", int(map.value("private").toBool()));
+                emit privateChanged(map.value("private").toBool());
             }
             if (map.contains("proxies") && map.value("proxies").toString() != proxies) {
-                settings.setValue("Network/ProxyServers", proxies);
-                emit proxyServersChanged(proxies);
+                settings.setValue("Network/ProxyServers", map.value("proxies").toString());
+                emit proxyServersChanged(map.value("proxies").toString());
             }
         }
     }

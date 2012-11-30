@@ -8,6 +8,8 @@
         <script>
             $(function() {
                 $("#tabs").tabs();
+
+                $("#config *").attr("disabled",true);
             });
         </script>
 	</head>
@@ -21,9 +23,10 @@
         <div id="tabs">
             <ul>
                 <li><a href="#tabs-1">logs & chat</a></li>
-                <li><a href="#tabs-2">scripts</a></li>
-                <li><a href="#tabs-3">tiers</a></li>
-                <li><a href="#tabs-4">edit file</a></li>
+                <li><a href="#tabs-2">config</a></li>
+                <li><a href="#tabs-3">scripts</a></li>
+                <li><a href="#tabs-4">tiers</a></li>
+                <li><a href="#tabs-5">edit file</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -36,6 +39,19 @@
                 </p>
             </div>
             <div id="tabs-2">
+                <table id="config">
+                    <tr><td>Private</td><td><input type="checkbox" id="cfPrivate"/></tr></td>
+                    <tr><td>Server name</td><td><input type="text" id="cfName"/></tr></td>
+                    <tr><td>Main channel</td><td><input type="text" id="cfChannel"/></tr></td>
+                    <tr><td>Announcement</td><td><textarea id="cfAnnouncement"></textarea></tr></td>
+                    <tr><td>Proxy servers</td><td><input type="text" id="cfProxies"/></tr></td>
+                </table>
+                <p>
+                    <button onClick="refreshConfig();">Refresh</button>
+                    <button onClick="sendConfig();" id="sendConfig" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-3">
                 <p>
                     <textarea id="scriptArea" style="width:600px;height:400px;" disabled="true"></textarea>
                 </p>
@@ -44,7 +60,7 @@
                     <button onClick="sendScripts();" id="sendScripts" disabled="true">Apply Changes</button>
                 </p>
             </div>
-            <div id="tabs-3">
+            <div id="tabs-4">
                 <p>
                     <textarea id="tiersArea" style="width:600px;height:400px;" disabled="true"></textarea>
                 </p>
@@ -53,7 +69,7 @@
                     <button onClick="sendTiers();" id="sendTiers" disabled="true">Apply Changes</button>
                 </p>
             </div>
-            <div id="tabs-4">
+            <div id="tabs-5">
                 <p>
                     File <input type="text" id="fileurl" />
                 </p>
@@ -101,6 +117,26 @@
 					console.log( "Message sent :", '"'+strToSend+'"' );
 				}
 			}
+
+            function refreshConfig()
+            {
+                websocket.send("getconfig|");
+            }
+
+            function sendConfig()
+            {
+                var cf = {
+                    name: $('#cfName').val(),
+                    proxies: $('#cfProxies').val(),
+                    announcement: $('#cfAnnouncement').val(),
+                    mainChannel: $('#cfChannel').val(),
+                    private: $('#cfPrivate').attr('checked') || 0
+                };
+
+                var strToSend = "editconfig|"+JSON.stringify(cf);
+                websocket.send( strToSend );
+                console.log( "Message sent :", '"'+strToSend+'"' );
+            }
 
             function refreshScripts()
             {
@@ -229,6 +265,18 @@
                     $("#fileArea").val(data.slice(data.indexOf("|")+1));
                     $("#sendFile").removeAttr("disabled");
                     $("#fileArea").removeAttr("disabled");
+                } else if (cmd == "config") {
+                    var cf = JSON.parse(data);
+                    $("#cfPrivate").attr("checked", cf.private);
+                    $("#cfName").val(cf.name);
+                    $("#cfChannel").val(cf.mainChannel);
+                    $("#cfAnnouncement").val(cf.announcement);
+                    $("#cfProxies").val(cf.proxies);
+
+                    $("#config *").removeAttr("disabled");
+                    $("#sendConfig").removeAttr("disabled");
+
+                    configReceived = cf;
                 }
             };
 			
