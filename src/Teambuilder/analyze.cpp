@@ -5,7 +5,6 @@
 #include "analyze.h"
 #include "network.h"
 #include "client.h"
-#include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
 #include "Teambuilder/teamholder.h"

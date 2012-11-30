@@ -1,5 +1,6 @@
 #include <QtCore/QCoreApplication>
 #include <cstdio>
+#include <ctime>
 #include "relaystation.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -36,6 +37,8 @@ int main(int argc, char *argv[])
             host = argv[i];
         }
     }
+
+    srand(time(NULL));
 
     QCoreApplication a(argc, argv);
 

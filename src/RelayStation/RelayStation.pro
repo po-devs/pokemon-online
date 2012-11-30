@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network xml
-
-QT       -= gui
+QT       += core network xml gui
 
 TARGET = RelayStation
 DESTDIR = ../../bin
@@ -19,7 +17,8 @@ LIBS += -L../../bin \
     -lutilities \
     -lpokemonlib \
     -lbattlelib \
-    -lqtwebsocket
+    -lqtwebsocket \
+    -lqjson
 
 SOURCES += main.cpp \
     relaystation.cpp \
