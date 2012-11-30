@@ -445,7 +445,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        break;
 //    }
     default: {
-        web->write(QString("msg|" "Protocol error: unknown command received -- maybe an update for the program is available"));
+        //web->write(QString("msg|" "Protocol error: unknown command received -- maybe an update for the program is available"));
     }
     }
 }
