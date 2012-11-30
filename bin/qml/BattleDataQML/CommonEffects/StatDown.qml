@@ -26,7 +26,10 @@ Item {
         emissionRate: 40*level;
 
         velocityDeviation: 10
-        z: pokemon.pokeSprite.z + 10;
+        z: pokemon.pokeSprite.z + 1;
+
+        scale: calculateScale(z+pokemon.z)
+        transformOrigin: Item.Bottom
     }
 
     SequentialAnimation {

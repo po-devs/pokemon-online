@@ -26,12 +26,15 @@ Item {
         emissionRate: 100*level;
 
         velocityDeviation: 20
-        z: pokemon.pokeSprite.z + 10;
+        z: pokemon.pokeSprite.z + 1;
 
         ParticleMotionGravity {
             yattractor: 1000
             acceleration: 100
         }
+
+        scale: calculateScale(z+pokemon.z)
+        transformOrigin: Item.Bottom
     }
 
     SequentialAnimation {
