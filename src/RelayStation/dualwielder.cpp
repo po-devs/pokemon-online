@@ -209,15 +209,16 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit battleMessage(battleid, command);
 //        break;
 //    }
-//    case AskForPass: {
-//        QByteArray salt;
-//        in >> salt;
+    case AskForPass: {
+        QByteArray salt;
+        in >> salt;
 
-//        if (salt.length() < 6 || strlen((" " + salt).data()) < 7)
-//            emit protocolError(5080, tr("The server requires insecure authentication."));
-//        emit passRequired(salt);
-//        break;
-//    }
+        if (salt.length() < 6 || strlen((" " + salt).data()) < 7)
+            web->write(QString("msg|" "Protocol error: The server requires insecure authentication."));
+        else
+            web->write("challenge|"+QString::fromUtf8(salt));
+        break;
+    }
 //    case Register: {
 //        emit notRegistered(true);
 //        break;
@@ -417,7 +418,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //    case ServerPass: {
 //        QByteArray salt;
 //        in >> salt;
-//        emit serverPassRequired(salt);
+//        web->write("challenge|"+QString::fromUtf8(salt));
 //        break;
 //    }
 //    /* Non-standard command, shouldn't exist */
@@ -544,6 +545,8 @@ void DualWielder::readWebSocket(const QString &frame)
             } else {
                 notify(SendMessage, Flags(1), Flags(0), qint32(params.value("channel").toInt()), params.value("message").toString());
             }
+        } else if (command == "auth") {
+            notify(AskForPass, QByteArray::fromHex(data.toUtf8()));
         }
     }
 }
@@ -551,6 +554,7 @@ void DualWielder::readWebSocket(const QString &frame)
 void DualWielder::socketConnected()
 {
     if (web) {
+        notify(SetIP, web->ip());
         web->write(QString("connected|"));
     }
 }
