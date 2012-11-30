@@ -469,6 +469,7 @@ void DualWielder::readWebSocket(const QString &frame)
             connect(network, SIGNAL(connected()), SLOT(socketConnected()));
             connect(network, SIGNAL(disconnected()), SLOT(socketDisconnected()));
             connect(network, SIGNAL(disconnected()), network, SLOT(deleteLater()));
+            connect(network, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketDisconnected()));
             connect(network, SIGNAL(error(QAbstractSocket::SocketError)), network, SLOT(deleteLater()));
             connect(network, SIGNAL(isFull(QByteArray)), SLOT(readSocket(QByteArray)));
             connect(this, SIGNAL(sendCommand(QByteArray)), network, SLOT(send(QByteArray)));
@@ -575,9 +576,13 @@ void DualWielder::webSocketDisconnected()
 {
     web = NULL;
     if (network) {
-        /* Gives the server the curtesy to know that there will be no reconnection */
-        notify(Logout);
-        network->close();
+        if (network->state() == QAbstractSocket::ConnectedState) {
+            /* Gives the server the curtesy to know that there will be no reconnection */
+            notify(Logout);
+            network->close();
+        } else {
+            network->deleteLater();
+        }
         network = NULL;
     }
 
