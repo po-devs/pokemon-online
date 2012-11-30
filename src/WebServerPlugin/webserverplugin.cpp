@@ -10,6 +10,8 @@ ServerPlugin * createPluginClass(ServerInterface* server) {
 
 WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
 {
+    jserial.setIndentMode(QJson::IndentCompact);
+
     QSettings settings("config", QSettings::IniFormat);
 
     setDefaultValue(settings, "WebServer/Port", 8508);
@@ -35,12 +37,20 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     }
 
     QObject *srv = dynamic_cast<QObject*>(server);
+
     connect(webserver, SIGNAL(newConnection()), SLOT(dealWithNewConnection()));
     connect(srv, SIGNAL(chatMessage(QString)), SLOT(onChatMessage(QString)));
     connect(srv, SIGNAL(serverMessage(QString)), SLOT(onServerMessage(QString)));
+
     connect(this, SIGNAL(sendMessage(QString)), srv, SLOT(sendServerMessage(QString)));
     connect(this, SIGNAL(scriptsChanged(QString)), srv, SLOT(changeScript(QString)));
     connect(this, SIGNAL(tiersUpdated()), srv, SLOT(reloadTiers()));
+
+    connect(this, SIGNAL(nameChanged(QString)), srv, SLOT(regNameChanged(QString)));
+    connect(this, SIGNAL(announcementChanged(QString)), srv, SLOT(announcementChanged(QString)));
+    connect(this, SIGNAL(mainChannelChanged(QString)), srv, SLOT(mainChanChanged(QString)));
+    connect(this, SIGNAL(privateChanged(int)), srv, SLOT(regPrivacyChanged(int)));
+    connect(this, SIGNAL(proxyServersChanged(QString)), srv, SLOT(proxyServersChanged(QString)));
 }
 
 WebServerPlugin::~WebServerPlugin()
@@ -184,6 +194,52 @@ void WebServerPlugin::dealWithFrame(const QString &f)
             out.open(QIODevice::WriteOnly);
             out.write(content.toUtf8());
             out.close();
+        } else if (command == "getconfig") {
+            QSettings settings("config", QSettings::IniFormat);
+            QString name = settings.value("Server/Name").toString();
+            QString announcement = settings.value("Server/Announcement").toString();
+            bool priv = settings.value("Server/Private").toBool();
+            QString proxies = settings.value("Network/ProxyServers").toString();
+            QString mainChan = settings.value("Channels/MainChannel").toString();
+
+            QVariantMap map;
+            map.insert("name", name);
+            map.insert("announcement", announcement);
+            map.insert("private", priv);
+            map.insert("proxies", proxies);
+            map.insert("mainChannel", mainChan);
+
+            s->write("config|"+QString::fromUtf8(jserial.serialize(map)));
+        } else if (command == "editconfig") {
+            QVariantMap map = jparser.parse(data.toUtf8()).toMap();
+
+            QSettings settings("config", QSettings::IniFormat);
+            QString name = settings.value("Server/Name").toString();
+            QString announcement = settings.value("Server/Announcement").toString();
+            bool priv = settings.value("Server/Private").toBool();
+            QString proxies = settings.value("Network/ProxyServers").toString();
+            QString mainChannel = settings.value("Channels/MainChannel").toString();
+
+            if (map.contains("name") && map.value("name").toString() != name) {
+                settings.setValue("Server/Name", name);
+                emit nameChanged(map.value("name").toString());
+            }
+            if (map.contains("mainChannel") && map.value("mainChannel").toString() != mainChannel) {
+                settings.setValue("Channels/MainChannel", mainChannel);
+                emit mainChannelChanged(map.value("mainChannel").toString());
+            }
+            if (map.contains("announcement") && map.value("announcement").toString() != announcement) {
+                settings.setValue("Server/Announcement", name);
+                emit announcementChanged(map.value("announcement").toString());
+            }
+            if (map.contains("private") && map.value("private").toBool() != priv) {
+                settings.setValue("Server/Private", priv);
+                emit privateChanged(map.value("Server/Private").toBool());
+            }
+            if (map.contains("proxies") && map.value("proxies").toString() != proxies) {
+                settings.setValue("Network/ProxyServers", proxies);
+                emit proxyServersChanged(proxies);
+            }
         }
     }
 }
