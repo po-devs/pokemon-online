@@ -2053,7 +2053,7 @@ int ScriptEngine::pokeType2(int id, int gen)
 
 QScriptValue ScriptEngine::pokeGenders(int poke)
 {
-    QScriptValue ret;
+    QScriptValue ret = myengine.newObject();
     int gender = PokemonInfo::Gender(poke);
 
     if (gender == Pokemon::MaleAvail) {
