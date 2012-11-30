@@ -77,7 +77,7 @@
 
 61 Sincronismo di %s cambia lo status di %f!
 
-66 %s traccia %f di %a!
+66 %s traccia %a di %f!
 
 67 %s si sta rilassando!
 

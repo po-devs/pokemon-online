@@ -929,7 +929,7 @@
 
 517 Può bruciare. (100%)
 
-518 Se usato con Fiammapatto, crea un arcobaleno che può causare confusione
+518 Se usato con Fuocopatto, crea un arcobaleno che può causare confusione
 519 Se usato con Erbapatto, crea una zona bruciante che causa danni ogni turno
 520 Se usato con Acquapatto, crea una palude che riduce la VELOCITA' di tutti i bersagli
 521 Scambia con un altro Pokemon.
