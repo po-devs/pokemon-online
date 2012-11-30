@@ -63,7 +63,7 @@ TopLevelItem {
         source: "../../images/tooltip-background.png";
         border.top: 5;
         border.left: 11;
-        border.bottom: 5;
+        border.bottom: 4;
         border.right: 11;
     }
 
@@ -95,7 +95,6 @@ TopLevelItem {
 //    Timer {
 //        id: clearer;
 //        interval: 750;
-//        repeat: false;
 //        onTriggered: {logger.text = ""; if (unpause) {unpause=false; battle.scene.unpause();}}
 
 //        property bool unpause: false;
