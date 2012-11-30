@@ -1395,7 +1395,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
         QAction *screenSize = newBattleWindow->addAction(tr("16:9 animated screen"));
         screenSize->setCheckable(true);
         connect(screenSize, SIGNAL(triggered(bool)), SLOT(changeBattleScreenSize(bool)));
-        screenSize->setChecked(globals.value("Battle/AnimatedScreenSize", "500x400").toString() == "712x400");
+        screenSize->setChecked(globals.value("Battle/AnimatedScreenSize", "712x400").toString() == "712x400");
     }
 
 
