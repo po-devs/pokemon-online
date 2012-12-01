@@ -124,12 +124,11 @@ void DualWielder::readSocket(const QByteArray &commandline)
         break;
     }
     case PlayersList: {
-        QVariantList list;
+        QVariantMap _map;
         PlayerInfo p;
         while (!in.atEnd()) {
             in >> p;
             QVariantMap map;
-            map.insert("id", p.id);
             map.insert("name", p.name);
             //map.insert("info", p.info);
             //map.insert("avatar", p.avatar);
@@ -143,9 +142,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //                ratings.insert(p.ratings[tier]);
 //            }
 //            map.insert("ratings", ratings);
-            list.append(map);
+            _map.insert("id", map);
         }
-        web->write("playerslist|"+QString::fromUtf8(jserial.serialize(list)));
+        web->write("playerslist|"+QString::fromUtf8(jserial.serialize(_map)));
         break;
     }
 //    case Login: {
