@@ -157,7 +157,7 @@ QString Network<S>::ip() const {
 }
 
 template <class S>
-QString Network<S>::changeIp(const QString &ip) {
+void Network<S>::changeIP(const QString &ip) {
     _ip = ip;
 }
 
