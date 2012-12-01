@@ -419,6 +419,9 @@ void Player::ipChangeRequested(const QString& ip)
     proxyip = myip;
     myip = ip;
 
+    /* So the anti-dos can now work correctly on the player */
+    relay().changeIP(ip);
+
     emit ipChangeRequested(id(), ip);
 }
 
