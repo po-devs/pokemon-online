@@ -14,6 +14,7 @@ public:
            abort: abruptly closes the socket */
     virtual int error() const = 0;
     virtual QString errorString() const = 0;
+    virtual void changeIP(const QString &newIp) = 0;
     virtual QString ip() const = 0;
     virtual bool isConnected() const = 0;
     /* Trades bandwith for latency */
@@ -49,6 +50,7 @@ public:
            abort: abruptly closes the socket */
     int error() const;
     QString errorString() const;
+    void changeIP(const QString &newIp);
     QString ip() const;
     bool isConnected() const;
     /* Trades bandwith for latency */
@@ -152,6 +154,11 @@ void Network<S>::connectToHost(const QString &ip, quint16 port)
 template <class S>
 QString Network<S>::ip() const {
     return _ip;
+}
+
+template <class S>
+QString Network<S>::changeIp(const QString &ip) {
+    _ip = ip;
 }
 
 template <class S>

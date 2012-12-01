@@ -56,6 +56,7 @@ public:
     void sendLogin(const PlayerInfo &p, const QStringList&, const QByteArray &reconnectPass);
     void sendLogout(int num);
     bool isConnected() const;
+    void changeIP(const QString &ip);
     QString ip() const;
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf);
     void spectateBattle(int battleid, const BattleConfiguration &conf);

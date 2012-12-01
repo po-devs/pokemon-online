@@ -88,6 +88,11 @@ QString Analyzer::ip() const {
     return socket().ip();
 }
 
+void Analyzer::changeIP(const QString &ip) {
+    if (dummy) return;
+    socket().changeIP(ip);
+}
+
 void Analyzer::setLowDelay(bool lowDelay)
 {
     if (dummy) {return;}
