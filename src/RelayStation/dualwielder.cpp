@@ -123,22 +123,31 @@ void DualWielder::readSocket(const QByteArray &commandline)
         notify(KeepAlive, ping);
         break;
     }
-//    case PlayersList: {
-//        if (!registry_socket) {
-//            PlayerInfo p;
-//            while (!in.atEnd()) {
-//                in >> p;
-//                emit playerReceived(p);
-//            }
-//            break;
-//        } else {
-//            // Registry socket;
-//            ServerInfo s;
-//            in >> s;
+    case PlayersList: {
+        QVariantList list;
+        PlayerInfo p;
+        while (!in.atEnd()) {
+            in >> p;
+            QVariantMap map;
+            map.insert("id", p.id);
+            map.insert("name", p.name);
+            //map.insert("info", p.info);
+            //map.insert("avatar", p.avatar);
+            map.insert("auth", p.auth);
+            //map.insert("battling", p.battling());
+            //map.insert("away", p.away());
+            map.insert("color", p.color);
 
-//            emit serverReceived(s);
-//        }
-//    }
+//            QVariantMap ratings;
+//            foreach(QString tier, p.ratings.keys()) {
+//                ratings.insert(p.ratings[tier]);
+//            }
+//            map.insert("ratings", ratings);
+            list.append(map);
+        }
+        web->write("playerslist|"+QString::fromUtf8(jserial.serialize(list)));
+        break;
+    }
 //    case Login: {
 //        Flags network;
 //        in >> network;
@@ -155,12 +164,26 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit playerLogin(p, tiers);
 //        break;
 //    }
-//    case Logout: {
-//        qint32 id;
-//        in >> id;
-//        emit playerLogout(id);
-//        break;
-//    }
+    case Logout: {
+        qint32 id;
+        in >> id;
+        web->write("playerlogout|"+QString::number(id));
+        break;
+    }
+    case JoinChannel: {
+        qint32 chan,id;
+        in >> chan >> id;
+
+        web->write("join|"+QString::number(chan)+"|"+QString::number(id));
+        break;
+    }
+    case LeaveChannel: {
+        qint32 chan,id;
+        in >> chan >> id;
+
+        web->write("leave|"+QString::number(chan)+"|"+QString::number(id));
+        break;
+    }
 //    case ChallengeStuff: {
 //        ChallengeInfo c;
 //        in >> c;
@@ -219,27 +242,41 @@ void DualWielder::readSocket(const QByteArray &commandline)
             web->write("challenge|"+QString::fromUtf8(salt));
         break;
     }
-//    case Register: {
-//        emit notRegistered(true);
-//        break;
-//    }
-//    case PlayerKick: {
-//        qint32 p,src;
-//        in >> p >> src;
-//        emit playerKicked(p,src);
-//        break;
-//    }
-//    case PlayerBan: {
-//        qint32 p,src;
-//        in >> p >> src;
-//        emit playerBanned(p,src);
-//        break;
-//    }
-//    case PlayerTBan: {
-//        qint32 p, src, time;
-//        in >> p >> src >> time;
-//        emit playerTempBanned(p, src, time);
-//    }
+    case Register: {
+        web->write(QString("unregistered|"));
+        break;
+    }
+    case PlayerKick: {
+        qint32 p,src;
+        in >> p >> src;
+
+        QVariantMap map;
+        map.insert("source", src);
+        map.insert("target", p);
+        web->write("playerkick|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case PlayerBan: {
+        qint32 p,src;
+        in >> p >> src;
+
+        QVariantMap map;
+        map.insert("source", src);
+        map.insert("target", p);
+        web->write("playerban|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case PlayerTBan: {
+        qint32 p,src,time;
+        in >> p >> src >> time;
+
+        QVariantMap map;
+        map.insert("source", src);
+        map.insert("target", p);
+        map.insert("time", time);
+        web->write("playerban|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
 //    case SendTeam: {
 //        Flags network;
 //        in >> network;
@@ -254,13 +291,17 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-//    case SendPM: {
-//        qint32 idsrc;
-//        QString mess;
-//        in >> idsrc >> mess;
-//        emit PMReceived(idsrc, mess);
-//        break;
-//    }
+    case SendPM: {
+        qint32 idsrc;
+        QString mess;
+        in >> idsrc >> mess;
+
+        QVariantMap map;
+        map.insert("src", idsrc);
+        map.insert("message", mess);
+        web->write("pm|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
 //    case GetUserInfo: {
 //        UserInfo ui;
 //        in >> ui;
@@ -371,43 +412,63 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("announcement|"+announcement);
         break;
     }
-//    case ChannelsList: {
-//        QHash<qint32, QString> channels;
-//        in >> channels;
-//        emit channelsListReceived(channels);
-//        break;
-//    }
-//    case ChannelPlayers: {
-//        QVector<qint32> ids;
-//        qint32 chanid;
-//        in >> chanid >> ids;
+    case ChannelsList: {
+        QHash<qint32, QString> channels;
+        in >> channels;
 
-//        emit channelPlayers(chanid, ids);
-//        break;
-//    }
-//    case AddChannel: {
-//        QString name;
-//        qint32 id;
-//        in >> name >> id;
+        QVariantMap map;
+        QHashIterator<qint32,QString> it(channels);
+        while (it.hasNext()) {
+            it.next();
+            map.insert(QString::number(it.key()), it.value());
+        }
+        web->write("channels|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case ChannelPlayers: {
+        QVector<qint32> ids;
+        qint32 chanid;
+        in >> chanid >> ids;
 
-//        emit addChannel(name, id);
-//        break;
-//    }
-//    case RemoveChannel: {
-//        qint32 id;
-//        in >> id;
+        QVariantMap map;
+        map.insert("channel", chanid);
+        QVariantList list;
+        foreach(int id, ids) {
+            list.push_back(id);
+        }
+        map.insert("players", list);
+        web->write("channelplayers|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case AddChannel: {
+        QString name;
+        qint32 id;
+        in >> name >> id;
 
-//        emit removeChannel(id);
-//        break;
-//    }
-//    case ChanNameChange: {
-//        qint32 id;
-//        QString name;
-//        in >> id >> name;
+        QVariantMap map;
+        map.insert("name", name);
+        map.insert("id", id);
+        web->write("newchannel|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case RemoveChannel: {
+        qint32 id;
+        in >> id;
 
-//        emit channelNameChanged(id, name);
-//        break;
-//    }
+        web->write("removechannel|"+QString::number(id));
+        break;
+    }
+    case ChanNameChange: {
+        qint32 id;
+        QString name;
+        in >> id >> name;
+
+        QVariantMap map;
+        map.insert("name", name);
+        map.insert("id", id);
+        web->write("channelnamechange|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
 //    case SpecialPass: {
 //        QSettings s;
 //        s.beginGroup("password");
@@ -415,12 +476,12 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        s.endGroup();
 //        break;
 //    }
-//    case ServerPass: {
-//        QByteArray salt;
-//        in >> salt;
-//        web->write("challenge|"+QString::fromUtf8(salt));
-//        break;
-//    }
+    case ServerPass: {
+        QByteArray salt;
+        in >> salt;
+        web->write("serverpass|"+QString::fromUtf8(salt));
+        break;
+    }
 //    /* Non-standard command, shouldn't exist */
 //    case ServerInfoChanged: {
 //        Flags f;
