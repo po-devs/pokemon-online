@@ -51,8 +51,8 @@ public:
 
     bool beforeIPConnected(const QString &ip);
 
-    bool beforeLogIn(int src);
-    void afterLogIn(int src);
+    bool beforeLogIn(int src, const QString &defaultChan);
+    void afterLogIn(int src, const QString &defaultChan);
 
     bool beforeChannelCreated(int channelid, const QString &channelname, int playerid);
     void afterChannelCreated(int channelid, const QString &channelname, int playerid);
