@@ -1059,8 +1059,8 @@ void Server::processLoginDetails(Player *p)
             }
         }
 #ifndef PO_NO_WELCOME
-        broadCast(tr("<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum."),
-              NoChannel, NoSender, true, id);
+        broadCast(tr("Welcome Message: The updates are available at http://pokemon-online.eu/ -- report any bugs on the forum."),
+              NoChannel, NoSender, false, id);
 #endif
     } else {
         p->doWhenRC(wasLoggedIn);
