@@ -644,15 +644,15 @@ struct MMSpikes : public MM
         int n = 0;
         switch (spikeslevel) {
         case 1:
-            n = 6; break;
+            n = 3; break;
         case 2:
-            n = (b.gen() <= 4) ? 9 : 8; break;
+            n = 4; break;
         case 3:
-            n = 12; break;
+            n = 6; break;
         }
 
         b.sendMoveMessage(121,1,slot);
-        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/(16*3), slot);
+        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/(8*3), slot);
     }
 };
 
