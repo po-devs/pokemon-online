@@ -1003,7 +1003,7 @@ void Server::processLoginDetails(Player *p)
 
     int id = p->id();
     QString channel;
-    if (!p->state()[Player::WaitingReconnect] && !wasLoggedIn) {
+    if (p->loginInfo()) {
         channel = p->loginInfo()->channel->toUtf8();
     }
 
