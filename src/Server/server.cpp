@@ -1002,6 +1002,10 @@ void Server::processLoginDetails(Player *p)
     bool wasLoggedIn = p->isLoggedIn();
 
     int id = p->id();
+    QString channel;
+    if (p->loginInfo()) {
+        channel = p->loginInfo()->channel->toUtf8();
+    }
 
     if (!wasLoggedIn) {
         groups[All].insert(p);
@@ -1015,8 +1019,7 @@ void Server::processLoginDetails(Player *p)
         } else {
             oppGroups[IdsWithMessage].insert(p);
         }
-
-        if(!myengine->beforeLogIn(id) && playerExist(id)) {
+        if(!myengine->beforeLogIn(id, channel) && playerExist(id)) {
             mynames.remove(p->name().toLower());
             silentKick(id);
             return;
@@ -1067,7 +1070,7 @@ void Server::processLoginDetails(Player *p)
     }
 
     if (!wasLoggedIn) {
-        myengine->afterLogIn(id);
+        myengine->afterLogIn(id, channel);
     }
 
     if (p->loginInfo()) {
