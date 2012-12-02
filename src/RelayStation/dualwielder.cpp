@@ -23,10 +23,11 @@ DualWielder::~DualWielder()
     qDebug() << "Closing connection with IP " << ip();
 }
 
-void DualWielder::init(QWsSocket *sock, QString host)
+void DualWielder::init(QWsSocket *sock, QString host, QHash<QString,QString> aliases)
 {
     web = sock;
     mIp = web->ip();
+    this->aliases = aliases;
 
     qDebug() << "Connection accepted, IP " + ip();
 
@@ -526,7 +527,10 @@ void DualWielder::readWebSocket(const QString &frame)
     if (!network) {
         if (command == "connect") {
             qDebug() << "Connecting websocket to server at " << data;
-            network = new Network(data.section(":", 0, -2), data.section(":", -1).toInt());
+            QString host = data.section(":", 0, -2);
+            int port = data.section(":", -1).toInt();
+
+            network = new Network(aliases.value(host, host), port);
 
             connect(network, SIGNAL(connected()), SLOT(socketConnected()));
             connect(network, SIGNAL(disconnected()), SLOT(socketDisconnected()));

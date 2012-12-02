@@ -3,8 +3,8 @@
 #include "dualwielder.h"
 #include "relaystation.h"
 
-RelayStation::RelayStation(int port, QString host, QObject *parent) :
-    QObject(parent), port(port), host(host)
+RelayStation::RelayStation(int port, QString host, QHash<QString, QString> aliases, QObject *parent) :
+    QObject(parent), port(port), host(host), _aliases(aliases)
 {
     webserver = new QWsServer(this);
 }
@@ -30,5 +30,5 @@ void RelayStation::onNewConnection()
     }
 
     DualWielder *d = new DualWielder(this);
-    d->init(socket, host);
+    d->init(socket, host, _aliases);
 }
