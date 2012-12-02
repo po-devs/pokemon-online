@@ -142,7 +142,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //                ratings.insert(p.ratings[tier]);
 //            }
 //            map.insert("ratings", ratings);
-            _map.insert("id", map);
+            _map.insert(QString::number(p.id), map);
         }
         web->write("playerslist|"+QString::fromUtf8(jserial.serialize(_map)));
         break;
