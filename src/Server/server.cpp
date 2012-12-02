@@ -1002,9 +1002,10 @@ void Server::processLoginDetails(Player *p)
     bool wasLoggedIn = p->isLoggedIn();
 
     int id = p->id();
+
     QString channel;
-    if (p->loginInfo()) {
-        channel = p->loginInfo()->channel->toUtf8();
+    if (p->loginInfo() && p->loginInfo()->channel) {
+        channel = *p->loginInfo()->channel;
     }
 
     if (!wasLoggedIn) {
