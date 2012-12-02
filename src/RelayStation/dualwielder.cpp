@@ -610,6 +610,10 @@ void DualWielder::readWebSocket(const QString &frame)
             }
         } else if (command == "auth") {
             notify(AskForPass, QByteArray::fromHex(data.toUtf8()));
+        } else if (command == "join") {
+            notify(JoinChannel, data);
+        } else if (command == "leave") {
+            notify(LeaveChannel, qint32(data.toInt()));
         }
     }
 }

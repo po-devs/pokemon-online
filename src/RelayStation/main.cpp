@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     for(int i = 0; i < argc; i++) {
         if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
-            fprintf(stdout, "Relay Station for Pokeymon-Online Help\n");
+            fprintf(stdout, "Relay Station for Pokemon Online Help\n");
             fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
             fprintf(stdout, "Don't forget to add the IP of the relay station to the proxy servers and the trusted IPs of your server.\n");
             fprintf(stdout, "\n");
@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     QCoreApplication a(argc, argv);
+
+    fprintf(stdout, "Relay Station for Pokemon Online, use --help to get the help.\n\n");
 
     RelayStation station(port, host);
     station.start();
