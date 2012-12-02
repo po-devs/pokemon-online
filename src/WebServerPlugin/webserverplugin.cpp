@@ -102,7 +102,7 @@ void WebServerPlugin::dealWithNewConnection()
 
     if (attemptsPerIp.value(ip).size() >= 4) {
         while (attemptsPerIp[ip].size() > 0 && attemptsPerIp[ip][0] + 15*60 < time(NULL)) {
-            attemptsPerIp[ip].remove(attemptsPerIp[ip][0]);
+            attemptsPerIp[ip].remove(0);
         }
 
         if (attemptsPerIp[ip].size() >= 4) {
