@@ -16,7 +16,7 @@ public:
     DualWielder(QObject *parent = NULL);
     ~DualWielder();
 
-    void init(QWsSocket *web, QString host="localhost:5080");
+    void init(QWsSocket *web, QString host, QHash<QString,QString> aliases);
 
     QString ip() const;
 public slots:
@@ -32,6 +32,7 @@ private:
     QWsSocket *web;
     Network *network;
     QString mIp;
+    QHash<QString,QString> aliases;
 
     QJson::Parser jparser;
     QJson::Serializer jserial;
