@@ -421,9 +421,9 @@ bool ScriptEngine::beforeIPConnected(const QString &ip)
     return makeSEvent("beforeIPConnected", ip);
 }
 
-bool ScriptEngine::beforeLogIn(int src)
+bool ScriptEngine::beforeLogIn(int src, const QString &defaultChan)
 {
-    bool login = makeSEvent("beforeLogIn", src);
+    bool login = makeSEvent("beforeLogIn", src, defaultChan);
 
     if (login && exists(src)) {
         mySessionDataFactory->handleUserLogIn(src);
@@ -432,9 +432,9 @@ bool ScriptEngine::beforeLogIn(int src)
     return login;
 }
 
-void ScriptEngine::afterLogIn(int src)
+void ScriptEngine::afterLogIn(int src, const QString &defaultChan)
 {
-    makeEvent("afterLogIn", src);
+    makeEvent("afterLogIn", src, defaultChan);
 }
 
 bool ScriptEngine::beforeChannelCreated(int channelid, const QString &channelname, int playerid)
