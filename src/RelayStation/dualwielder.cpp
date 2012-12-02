@@ -135,7 +135,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
             map.insert("auth", p.auth);
             //map.insert("battling", p.battling());
             //map.insert("away", p.away());
-            map.insert("color", p.color);
+            if (p.color.isValid()) {
+                map.insert("color", p.color);
+            }
 
 //            QVariantMap ratings;
 //            foreach(QString tier, p.ratings.keys()) {
