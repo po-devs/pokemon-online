@@ -37,6 +37,7 @@ private:
     QJson::Parser jparser;
     QJson::Serializer jserial;
 
+    int myid;
     ProtocolVersion version;
 
     /* Convenience functions to avoid writing a new one every time */

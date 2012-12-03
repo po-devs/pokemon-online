@@ -5,7 +5,7 @@
 
 #include "dualwielder.h"
 
-DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL)
+DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), myid(-1)
 {
     /* No need to waste network bandwith */
     jserial.setIndentMode(QJson::IndentCompact);
@@ -131,8 +131,10 @@ void DualWielder::readSocket(const QByteArray &commandline)
             in >> p;
             QVariantMap map;
             map.insert("name", p.name);
-            //map.insert("info", p.info);
-            //map.insert("avatar", p.avatar);
+            if (p.id == myid) {
+                map.insert("info", p.info);
+                map.insert("avatar", p.avatar);
+            }
             map.insert("auth", p.auth);
             //map.insert("battling", p.battling());
             //map.insert("away", p.away());
@@ -140,32 +142,65 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 map.insert("color", p.color);
             }
 
-//            QVariantMap ratings;
-//            foreach(QString tier, p.ratings.keys()) {
-//                ratings.insert(p.ratings[tier]);
-//            }
-//            map.insert("ratings", ratings);
+            if (p.id == myid) {
+                QVariantMap ratings;
+                foreach(QString tier, p.ratings.keys()) {
+                    ratings.insert(p.ratings[tier]);
+                }
+                map.insert("ratings", ratings);
+            }
             _map.insert(QString::number(p.id), map);
         }
         web->write("players|"+QString::fromUtf8(jserial.serialize(_map)));
         break;
     }
-//    case Login: {
-//        Flags network;
-//        in >> network;
+    case Login: {
+        Flags network;
+        in >> network;
 
-//        if (network[0]) {
-//            QByteArray reconnectPass;
-//            in >> reconnectPass;
-//            emit reconnectPassGiven(reconnectPass);
-//        }
-//        PlayerInfo p;
-//        in >> p;
-//        QStringList tiers;
-//        in >> tiers;
-//        emit playerLogin(p, tiers);
-//        break;
-//    }
+        QVariantMap _map;
+
+        if (network[0]) {
+            QByteArray reconnectPass;
+            in >> reconnectPass;
+            _map.insert("reconnectPass", reconnectPass.toBase64());
+        }
+        PlayerInfo p;
+        in >> p;
+        myid = p.id;
+        _map.insert("id",p.id);
+
+        QVariantMap map;
+        map.insert("name", p.name);
+        if (p.id == myid) {
+            map.insert("info", p.info);
+            map.insert("avatar", p.avatar);
+        }
+        map.insert("auth", p.auth);
+        //map.insert("battling", p.battling());
+        //map.insert("away", p.away());
+        if (p.color.isValid()) {
+            map.insert("color", p.color);
+        }
+        if (p.id == myid) {
+            QVariantMap ratings;
+            foreach(QString tier, p.ratings.keys()) {
+                ratings.insert(p.ratings[tier]);
+            }
+            map.insert("ratings", ratings);
+        }
+        _map.insert("info", map);
+        QStringList tiers;
+        in >> tiers;
+        QVariantList list;
+        foreach(QString t, tiers) {
+            list.push_back(t);
+        }
+        _map.insert("tiers", tiers);
+
+        web->write("login|"+QString::fromUtf8(jserial.serialize(_map)));
+        break;
+    }
     case Logout: {
         qint32 id;
         in >> id;
