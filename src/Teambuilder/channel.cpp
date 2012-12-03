@@ -609,7 +609,7 @@ QString Channel::addChannelLinks(const QString &line2)
     /* scan for channel links */
     int pos = 0;
     pos = line.indexOf('#', pos);
-    QString longest_match;
+
     while(pos != -1)
     {
         ++pos;
