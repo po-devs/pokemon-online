@@ -11,6 +11,8 @@ DESTDIR = ../../bin
 TARGET = qjson
 TEMPLATE = lib
 
+DEFINES += QJSON_MAKEDLL
+
 SOURCES += \
     serializerrunnable.cpp \
     serializer.cpp \
