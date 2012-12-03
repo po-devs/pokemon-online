@@ -656,6 +656,8 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "pm") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             notify(SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
+        } else if (command == "register") {
+            notify(Register);
         }
     }
 }
