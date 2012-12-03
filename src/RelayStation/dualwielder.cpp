@@ -145,7 +145,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
             if (p.id == myid) {
                 QVariantMap ratings;
                 foreach(QString tier, p.ratings.keys()) {
-                    ratings.insert(p.ratings[tier]);
+                    ratings.insert(tier, p.ratings[tier]);
                 }
                 map.insert("ratings", ratings);
             }
@@ -185,7 +185,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         if (p.id == myid) {
             QVariantMap ratings;
             foreach(QString tier, p.ratings.keys()) {
-                ratings.insert(p.ratings[tier]);
+                ratings.insert(tier, p.ratings[tier]);
             }
             map.insert("ratings", ratings);
         }
