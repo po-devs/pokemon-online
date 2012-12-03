@@ -1,5 +1,6 @@
 #include <QtCore/QCoreApplication>
 #include <QHash>
+#include <cstdlib>
 #include <cstdio>
 #include <ctime>
 #include "relaystation.h"
