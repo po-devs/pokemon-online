@@ -653,6 +653,9 @@ void DualWielder::readWebSocket(const QString &frame)
             notify(JoinChannel, data);
         } else if (command == "leave") {
             notify(LeaveChannel, qint32(data.toInt()));
+        } else if (command == "pm") {
+            QVariantMap params = jparser.parse(data.toUtf8()).toMap();
+            notify(SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
         }
     }
 }
