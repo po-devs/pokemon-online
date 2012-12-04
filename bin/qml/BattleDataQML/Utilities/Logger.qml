@@ -138,8 +138,8 @@ TopLevelItem {
             }
             if (!clearer.active) { //replace by clearer.running when moving to qt 5.0
                 clearer.active = true; //delete when moving to qt 5.0
-                clearer.restart();
             }
+            clearer.restart();
 
             return;
         }
