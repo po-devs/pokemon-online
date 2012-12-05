@@ -677,6 +677,8 @@ void DualWielder::readWebSocket(const QString &frame)
             qDebug() << "color: " << params.value("color").toString() << ", "  << params.value("color").value<QColor>().name();
 
             emit sendCommand(tosend);
+        } else if (command == "register") {
+            notify(Register);
         }
     }
 }
