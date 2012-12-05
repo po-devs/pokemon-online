@@ -656,6 +656,27 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "pm") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             notify(SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
+        } else if (command == "teamChange") {
+            qDebug() << "teamChange event";
+            QVariantMap params = jparser.parse(data.toUtf8()).toMap();
+            Flags network(params.contains("name") | (params.contains("color") << 1));
+
+            QByteArray tosend;
+            DataStream out(&tosend, QIODevice::WriteOnly);
+
+            out << uchar(SendTeam) << network;
+
+            if (params.contains("name")) {
+                out << params.value("name").toString();
+            }
+            if (params.contains("color")) {
+                out << params.value("color").value<QColor>();
+            }
+
+            qDebug() << "network: " << network.data;
+            qDebug() << "color: " << params.value("color").toString() << ", "  << params.value("color").value<QColor>().name();
+
+            emit sendCommand(tosend);
         }
     }
 }
