@@ -1017,7 +1017,7 @@ int ScriptEngine::setTimer(const QScriptValue &code, int delay, bool repeats)
     timerEvents[t] = code;
     t->setSingleShot(!repeats);
     t->start(delay);
-    connect(t, SIGNAL(timeout()), SLOT(timer()), Qt::DirectConnection);
+    connect(t, SIGNAL(timeout()), SLOT(timer()));
 
     return t->timerId();
 }
