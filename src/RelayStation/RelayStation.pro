@@ -23,12 +23,14 @@ LIBS += -L../../bin \
 SOURCES += main.cpp \
     relaystation.cpp \
     ../Teambuilder/network.cpp \
-    dualwielder.cpp
+    dualwielder.cpp \
+    pokemontojson.cpp
 
 HEADERS += \
     relaystation.h \
     ../Teambuilder/network.h \
-    dualwielder.h
+    dualwielder.h \
+    pokemontojson.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

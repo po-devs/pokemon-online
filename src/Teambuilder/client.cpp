@@ -749,7 +749,7 @@ void Client::watchBattleOf(int player)
 
 void Client::watchBattleRequ(int id)
 {
-    relay().notify(NetworkCli::SpectateBattle, qint32(id), Flags(1));
+    relay().notify(NetworkCli::SpectateBattle, qint32(id), Flags(true));
 }
 
 void Client::kick(int p) {
