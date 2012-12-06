@@ -16,8 +16,6 @@ QPixmap PokemonInfoAccessor::requestPixmap(const QString &id, QSize *size, const
         ret = ItemInfo::Icon(id.section("/", 1).toInt());
     }
 
-    qDebug() << QMovie::supportedFormats();
-
     *size = ret.size();
 
     return ret;
