@@ -369,7 +369,7 @@ DataStream & operator << (DataStream &out, const ShallowBattlePoke &po)
     return out;
 }
 
-TeamBattle::TeamBattle() : gen(GenInfo::GenMax())
+TeamBattle::TeamBattle()
 {
     for (int i = 0; i < 6; i++) {
         m_indexes[i] = i;
