@@ -2,7 +2,8 @@
 #include "../QtWebsocket/QWsSocket.h"
 #include "../Shared/networkcommands.h"
 #include "../Teambuilder/network.h"
-
+#include "../PokemonInfo/battlestructs.h"
+#include "pokemontojson.h"
 #include "dualwielder.h"
 
 DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), myid(-1)
@@ -253,14 +254,20 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-//    case BattleFinished: {
-//        qint8 desc, mode;
-//        qint32 battleid;
-//        qint32 id1, id2;
-//        in >> battleid >> desc >> mode >> id1 >> id2;
-//        emit battleFinished(battleid, desc, id1, id2);
-//        break;
-//    }
+    case BattleFinished: {
+        qint8 desc, mode;
+        qint32 battleid;
+        qint32 id1, id2;
+        in >> battleid >> desc >> mode >> id1 >> id2;
+
+        QVariantMap params;
+        params.insert("result", desc);
+        params.insert("mode", mode);
+        params.insert("winner", id1);
+        params.insert("loser", id2);
+        web->write("battlefinished|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(params)));
+        break;
+    }
 //    case BattleMessage: {
 //        qint32 battleid;
 //        QByteArray command;
@@ -366,24 +373,25 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit ladderChanged(id, f[0]);
 //        break;
 //    }
-//    case SpectateBattle: {
-//        Flags f;
-//        qint32 battleId;
-//        in >> f >> battleId;
+    case SpectateBattle: {
+        Flags f;
+        qint32 battleId;
+        in >> f >> battleId;
 
-//        if (f[0]) {
-//            BattleConfiguration conf;
-//            if (version < ProtocolVersion(1,0)) {
-//                conf.oldDeserialize(in);
-//            } else {
-//                in >> conf;
-//            }
-//            emit spectatedBattle(battleId, conf);
-//        } else {
-//            emit spectatingBattleFinished(battleId);
-//        }
-//        break;
-//    }
+        if (f[0]) {
+            BattleConfiguration conf;
+            if (version < ProtocolVersion(1,0)) {
+                conf.oldDeserialize(in);
+            } else {
+                in >> conf;
+            }
+
+            web->write("watchbattle|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(toJson(conf))));
+        } else {
+            web->write("stopwatching|"+QString::number(battleId));
+        }
+        break;
+    }
 //    case SpectatingBattleMessage: {
 //        qint32 battleId;
 //        in >> battleId;
@@ -679,6 +687,10 @@ void DualWielder::readWebSocket(const QString &frame)
             emit sendCommand(tosend);
         } else if (command == "register") {
             notify(Register);
+        } else if (command == "watch") {
+            notify(SpectateBattle, qint32(data.toInt()), Flags(true));
+        } else if (command == "stopwatching") {
+            notify(SpectateBattle, qint32(data.toInt()), Flags(false));
         }
     }
 }
