@@ -1,16 +1,20 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
+class Player;
+template<class T> class QPointer;
+
+unsigned int qHash (const QPointer<Player>&);
+
 #include <QtCore>
 #include "../PokemonInfo/networkstructs.h"
 
 class QNickValidator;
-class Player;
 
 struct Channel {
     QString name;
     QSet<Player *> players;
-    QSet<Player *> disconnectedPlayers;
+    QSet<QPointer<Player> > disconnectedPlayers;
     QHash<int, Battle> battleList;
     QFile logfile;
     int logDay;

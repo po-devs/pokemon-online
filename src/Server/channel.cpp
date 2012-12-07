@@ -4,6 +4,11 @@
 
 QNickValidator *Channel::checker = NULL;
 
+unsigned int qHash(const QPointer<Player> &pl)
+{
+    return qHash(pl.data());
+}
+
 Channel::Channel(const QString &name, int id) : name(name), logDay(0), id(id) {
     QDir d;
     if(!d.exists("logs/chat/" + name)) {
@@ -36,7 +41,9 @@ Channel::~Channel()
         p->removeChannel(id);
     }
     foreach(Player *p, disconnectedPlayers) {
-        p->removeChannel(id);
+        if (p) {
+            p->removeChannel(id);
+        }
     }
 
     if(logfile.isOpen()) {
