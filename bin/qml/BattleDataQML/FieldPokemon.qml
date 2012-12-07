@@ -60,6 +60,37 @@ Item {
         text: pokemon.nick
     }
 
+    AnimatedImage {
+        id: aimg /* Dont use image, will cause problems if you do for the shader */
+        anchors.horizontalCenter: parent.horizontalCenter;
+        anchors.bottom: parent.bottom;
+        transformOrigin: Item.Bottom;
+//        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
+//                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
+//                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
+        source: fieldPokemon.showing ? "http://sprites.pokecheck.org/" + (back?"b/":"i/") + padd(img.spriteRef&0xFFFF) + ".gif" : ""
+//        source:
+//        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
+
+        scale: img.scale
+        anchors.bottomMargin: img.anchors.bottomMargin
+        anchors.horizontalCenterOffset: img.anchors.horizontalCenterOffset
+        z: img.z
+        opacity: img.opacity
+        smooth: false
+        onSourceChanged: shader.grab();
+        onCurrentFrameChanged: shader.grab();
+        onStatusChanged: if (status === Image.Ready) {shader.image = aimg;} else {shader.image = img;}
+        visible: status === Image.Ready
+    }
+
+    function padd(i) {
+        return ("00"+i).slice(-3);
+    }
+
+    function updateImg() {
+    }
+
     Image {
         property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
         property real baseScale: 1;
@@ -70,12 +101,14 @@ Item {
 //        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
 //                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
 //                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
-        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
+        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ img.spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
+//        source:
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         scale: baseScale * calculateScale(woof.z+z)
         smooth: false
         onSourceChanged: shader.grab();
+        visible: !aimg.visible
     }
 
     /**
