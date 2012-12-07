@@ -61,3 +61,7 @@ bin/start-client
 bin/EventCombinations
 qrc_*
 bin/RelayStation
+bin/data
+bin/scripts
+bin/README
+bin/clientscripts
