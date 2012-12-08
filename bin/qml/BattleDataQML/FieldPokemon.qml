@@ -65,12 +65,9 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom;
-//        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
-//                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
-//                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
-        source: fieldPokemon.showing ? "http://sprites.pokecheck.org/" + (back?"b/":"i/") + padd(img.spriteRef&0xFFFF) + ".gif" : ""
-//        source:
-//        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
+        //source: fieldPokemon.showing ? "http://sprites.pokecheck.org/" + (back?"b/":"i/") + padd(img.spriteRef&0xFFFF) + ".gif" : ""
+        source: fieldPokemon.showing ? ("http://pokemon-online.eu/images/pokemon/black-white/animated/" + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
+                                        + padd(img.spriteRef&0xFFFF) + ".gif") : ""
 
         scale: img.scale
         anchors.bottomMargin: img.anchors.bottomMargin
@@ -101,8 +98,7 @@ Item {
 //        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
 //                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
 //                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
-        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ img.spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
-//        source:
+        source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
 //        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
         scale: baseScale * calculateScale(woof.z+z)
