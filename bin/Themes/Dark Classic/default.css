@@ -556,7 +556,7 @@ Client QListWidget::item {
 }
 
 Client QTreeWidget::item {
-	min-height: 20px;
+	min-height: 25px;
 }
 
 QTabWidget#MainChat::tab-bar {
