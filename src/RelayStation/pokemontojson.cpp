@@ -4,8 +4,8 @@
 QVariantMap toJson(const Pokemon::gen &gen)
 {
     QVariantMap ret;
-    ret.insert("num", gen.num);
-    ret.insert("subnum", gen.subnum);
+    ret.insert("num", int(char(gen.num)));
+    ret.insert("subnum", int(char(gen.subnum)));
 
     return ret;
 }
@@ -17,7 +17,7 @@ QVariantMap toJson(const BattleConfiguration &c)
     ret.insert("mode", c.mode);
     ret.insert("players", QVariantList() << c.ids[0] << c.ids[1]);
     ret.insert("clauses", c.clauses);
-    ret.insert("avatars", QVariantList() << c.avatar[0] << c.avatar[1]);
+    //ret.insert("avatars", QVariantList() << c.avatar[0] << c.avatar[1]);
     ret.insert("rated", bool(c.flags[0]));
 
     return ret;
