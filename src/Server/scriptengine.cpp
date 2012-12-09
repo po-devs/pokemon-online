@@ -2051,6 +2051,22 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+QScriptValue ScriptEngine::pokeBaseStats(int id)
+{
+    QScriptValue ret;
+    if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
+        ret = myengine.newArray(6);
+        PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id));
+
+        for (int i = 0; i < 6; i++) {
+            ret.setProperty(i, bs.baseStat(i));
+        }
+    }else{
+        warn("pokeBaseStats", "Pokemon doesn't exist.");
+    }
+    return ret;
+}
+
 QScriptValue ScriptEngine::pokeGenders(int poke)
 {
     QScriptValue ret = myengine.newObject();
