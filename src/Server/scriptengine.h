@@ -323,6 +323,10 @@ public:
 
     Q_INVOKABLE void prepareItems(int battleId, int playerSlot, QScriptValue items);
 
+    /* Only do that in beforeBattleEnded. Will set your team to what it was at the end of the battle */
+    Q_INVOKABLE void setTeamToBattleTeam(int pid, int teamSlot, int battleId);
+    Q_INVOKABLE void swapPokemons(int pid, int teamSlot, int slot1, int slot2);
+
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
     Q_INVOKABLE void changePokeAbility(int id, int team, int slot, int ability);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());

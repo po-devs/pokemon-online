@@ -2197,6 +2197,36 @@ void ScriptEngine::prepareItems(int battleId, int playerSlot, QScriptValue items
     }
 }
 
+void ScriptEngine::setTeamToBattleTeam(int pid, int teamSlot, int battleId)
+{
+    if (!testTeamCount("setTeamToBattleTeam", pid, teamSlot)) {
+        return;
+    }
+    BattleBase * battle = myserver->getBattle(battleId);
+    if (battle) {
+        if (battle->spot(pid) == -1) {
+            warn("setTeamToBattleTeam", QString("Player %1 doesn't take part in battle %2").arg(pid, battleId));
+            return;
+        }
+        myserver->player(pid)->team(teamSlot) = battle->team(battle->spot(pid));
+    } else{
+        warn("setTeamToBattleTeam", "can't find a battle with specified id.");
+    }
+}
+
+void ScriptEngine::swapPokemons(int pid, int teamSlot, int slot1, int slot2)
+{
+    if (!testTeamCount("swapPokemons", pid, teamSlot)) {
+        return;
+    }
+
+    if (!testRange("swapPokemons", slot1, 0, 5) || !testRange("swapPokemons", slot2, 0, 5)) {
+        return;
+    }
+
+    myserver->player(pid)->team(teamSlot).switchPokemon(slot1,slot2);
+}
+
 void ScriptEngine::setAnnouncement(const QString &html, int id)
 {
     if (testPlayer("setAnnouncment(html, id)", id)) {
