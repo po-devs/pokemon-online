@@ -238,6 +238,8 @@ void AntiDos::addKick(const QString &ip)
 
     l.erase(l.begin(), l.begin()+i);
 
+    l.push_back(time(NULL));
+
     if (l.size() >= ban_after_x_kicks && on) {
         emit ban(ip);
     }
