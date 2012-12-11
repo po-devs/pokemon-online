@@ -38,7 +38,10 @@ QVariantMap toJson(const ShallowBattlePoke &poke)
     if (poke.shiny()) {
         ret.insert("shiny", poke.shiny());
     }
-    ret.insert("life", poke.lifePercent());
+    ret.insert("percent", poke.lifePercent());
+    if (poke.status() != Pokemon::Fine) {
+        ret.insert("status", poke.status());
+    }
 
     return ret;
 }
