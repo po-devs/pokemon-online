@@ -39,4 +39,6 @@ QVariantMap toJson(const ShallowBattlePoke &poke)
         ret.insert("shiny", poke.shiny());
     }
     ret.insert("life", poke.lifePercent());
+
+    return ret;
 }
