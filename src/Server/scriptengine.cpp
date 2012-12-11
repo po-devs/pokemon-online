@@ -1877,22 +1877,22 @@ QScriptValue ScriptEngine::teamPokeDV(int id, int team, int index, int stat)
 
 void ScriptEngine::changeTeamPokeDV(int id, int team, int slot, int stat, int newValue)
 {
-    if(!testPlayer("changeTeamPokeDV", id) || !testTeamCount("changeTeamPokeDV", id, team) || (slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31)) {
+    if(testPlayer("changeTeamPokeDV", id) && testTeamCount("changeTeamPokeDV", id, team) && (slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31)) {
         myserver->player(id)->team(team).poke(slot).dvs()[stat] = newValue;
     }
 }
 
 void ScriptEngine::changeTeamPokeEV(int id, int team, int slot, int stat, int newValue)
 {
-    if(!testPlayer("changeTeamPokeEV", id) || !testTeamCount("changeTeamPokeEV", id, team) || (slot >=0 && slot <6 && stat >=0 && stat <6 && newValue >= 0 && newValue <= 255)) {
-        int total = 0;
+    if(testPlayer("changeTeamPokeEV", id) && testTeamCount("changeTeamPokeEV", id, team) && (slot >=0 && slot <6 && stat >=0 && stat <6 && newValue >= 0 && newValue <= 255)) {
+        /* int total = 0;
         for (int i=0; i<6; i++) {
             if (i == stat)
                 total += newValue;
             else
                 total += myserver->player(id)->team(team).poke(slot).evs()[i];
         }
-        if (total <= 510)
+        if (total <= 510) */
             myserver->player(id)->team(team).poke(slot).evs()[stat] = newValue;
     }
 }
