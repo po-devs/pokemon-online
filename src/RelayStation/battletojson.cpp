@@ -34,3 +34,58 @@ void BattleToJson::onBeginTurn(int turn)
     map.insert("command", "turn");
     map.insert("turn", turn);
 }
+
+void BattleToJson::onHpChange(int spot, int newHp)
+{
+    makeCommand("hpchange");
+    map.insert("newHP", newHp);
+}
+
+void BattleToJson::onHitCount(int spot, int count)
+{
+    makeCommand("hitcount");
+    map.insert("count", count);
+}
+
+void BattleToJson::onEffectiveness(int spot, int effectiveness)
+{
+    makeCommand("effectiveness");
+    map.insert("effectiveness", effectiveness);
+}
+
+void BattleToJson::onCriticalHit(int spot)
+{
+    makeCommand("critical");
+}
+
+void BattleToJson::onMiss(int spot)
+{
+    makeCommand("miss");
+}
+
+void BattleToJson::onAvoid(int spot)
+{
+    makeCommand("miss");
+}
+
+void BattleToJson::onStatBoost(int spot, int stat, int boost, bool silent)
+{
+    makeCommand("boost");
+    map.insert("stat", stat);
+    map.insert("boost", boost);
+    map.insert("silent", silent);
+}
+
+void BattleToJson::onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent)
+{
+    makeCommand("status");
+    map.insert("status", status);
+    map.insert("multiple", multipleTurns);
+    map.insert("silent", silent);
+}
+
+void BattleToJson::onDamageDone(int spot, int damage)
+{
+    makeCommand("damage");
+    map.insert("damage", damage);
+}
