@@ -66,7 +66,7 @@ int AuxPokeDataProxy::minStat(int stat)
 
     int boost = statBoost(stat);
 
-    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 0) * 9 / 10)
+    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 0))
             * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
 }
 
