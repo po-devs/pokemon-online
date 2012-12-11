@@ -1,6 +1,8 @@
 #include <QColor>
 #include "../QtWebsocket/QWsSocket.h"
+namespace Nw {
 #include "../Shared/networkcommands.h"
+}
 #include "../Teambuilder/network.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "pokemontojson.h"
@@ -10,6 +12,10 @@ DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(
 {
     /* No need to waste network bandwith */
     jserial.setIndentMode(QJson::IndentCompact);
+
+    /* Connects BattleInput / BattleConverter */
+    input.addOutput(&battleConverter);
+    connect(&battleConverter, SIGNAL(message(QVariant)), SLOT(setBattleCommand(QVariant)));
 }
 
 DualWielder::~DualWielder()
@@ -57,7 +63,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
     in >> command;
 
     switch (command) {
-    case ZipCommand: {
+    case Nw::ZipCommand: {
         quint8 contentType;
 
         in >> contentType;
@@ -96,7 +102,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         }
         break;
     }
-    case SendMessage: {
+    case Nw::SendMessage: {
         Flags network,data;
 
         in >> network >> data;
@@ -119,13 +125,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
 
         break;
     }
-    case KeepAlive: {
+    case Nw::KeepAlive: {
         quint16 ping;
         in >> ping;
-        notify(KeepAlive, ping);
+        notify(Nw::KeepAlive, ping);
         break;
     }
-    case PlayersList: {
+    case Nw::PlayersList: {
         QVariantMap _map;
         PlayerInfo p;
         while (!in.atEnd()) {
@@ -155,7 +161,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("players|"+QString::fromUtf8(jserial.serialize(_map)));
         break;
     }
-    case Login: {
+    case Nw::Login: {
         Flags network;
         in >> network;
 
@@ -202,20 +208,20 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("login|"+QString::fromUtf8(jserial.serialize(_map)));
         break;
     }
-    case Logout: {
+    case Nw::Logout: {
         qint32 id;
         in >> id;
         web->write("playerlogout|"+QString::number(id));
         break;
     }
-    case JoinChannel: {
+    case Nw::JoinChannel: {
         qint32 chan,id;
         in >> chan >> id;
 
         web->write("join|"+QString::number(chan)+"|"+QString::number(id));
         break;
     }
-    case LeaveChannel: {
+    case Nw::LeaveChannel: {
         qint32 chan,id;
         in >> chan >> id;
 
@@ -254,7 +260,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-    case BattleFinished: {
+    case Nw::BattleFinished: {
         qint8 desc, mode;
         qint32 battleid;
         qint32 id1, id2;
@@ -276,7 +282,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit battleMessage(battleid, command);
 //        break;
 //    }
-    case AskForPass: {
+    case Nw::AskForPass: {
         QByteArray salt;
         in >> salt;
 
@@ -286,11 +292,11 @@ void DualWielder::readSocket(const QByteArray &commandline)
             web->write("challenge|"+QString::fromUtf8(salt));
         break;
     }
-    case Register: {
+    case Nw::Register: {
         web->write(QString("unregistered|"));
         break;
     }
-    case PlayerKick: {
+    case Nw::PlayerKick: {
         qint32 p,src;
         in >> p >> src;
 
@@ -300,7 +306,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("playerkick|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-    case PlayerBan: {
+    case Nw::PlayerBan: {
         qint32 p,src;
         in >> p >> src;
 
@@ -310,7 +316,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("playerban|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-    case PlayerTBan: {
+    case Nw::PlayerTBan: {
         qint32 p,src,time;
         in >> p >> src >> time;
 
@@ -335,7 +341,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-    case SendPM: {
+    case Nw::SendPM: {
         qint32 idsrc;
         QString mess;
         in >> idsrc >> mess;
@@ -373,7 +379,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit ladderChanged(id, f[0]);
 //        break;
 //    }
-    case SpectateBattle: {
+    case Nw::SpectateBattle: {
         Flags f;
         qint32 battleId;
         in >> f >> battleId;
@@ -393,19 +399,24 @@ void DualWielder::readSocket(const QByteArray &commandline)
         }
         break;
     }
-//    case SpectatingBattleMessage: {
-//        qint32 battleId;
-//        in >> battleId;
-//        /* Such a headache, it really looks like wasting ressources */
-//        char *buf;
-//        uint len;
-//        in.readBytes(buf, len);
-//        QByteArray command(buf, len);
-//        delete [] buf;
-//        emit spectatingBattleMessage(battleId, command);
-//        break;
-//    }
-    case VersionControl_: {
+    case Nw::SpectatingBattleMessage: {
+        qint32 battleId;
+        in >> battleId;
+        /* Such a headache, it really looks like wasting ressources */
+        char *buf;
+        uint len;
+        in.readBytes(buf, len);
+        QByteArray command(buf, len);
+        delete [] buf;
+        input.receiveData(command);
+
+        QVariantMap jcommand = battleConverter.getCommand(true);
+        if (jcommand.count() > 0) {
+            web->write("battlecommand|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(jcommand)));
+        }
+        break;
+    }
+    case Nw::VersionControl_: {
         ProtocolVersion server, feature, minor, major;
         Flags f;
         QString serverName;
@@ -452,13 +463,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-    case Announcement: {
+    case Nw::Announcement: {
         QString announcement;
         in >> announcement;
         web->write("announcement|"+announcement);
         break;
     }
-    case ChannelsList: {
+    case Nw::ChannelsList: {
         QHash<qint32, QString> channels;
         in >> channels;
 
@@ -471,7 +482,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("channels|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-    case ChannelPlayers: {
+    case Nw::ChannelPlayers: {
         QVector<qint32> ids;
         qint32 chanid;
         in >> chanid >> ids;
@@ -486,7 +497,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("channelplayers|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-    case AddChannel: {
+    case Nw::AddChannel: {
         QString name;
         qint32 id;
         in >> name >> id;
@@ -497,14 +508,14 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("newchannel|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-    case RemoveChannel: {
+    case Nw::RemoveChannel: {
         qint32 id;
         in >> id;
 
         web->write("removechannel|"+QString::number(id));
         break;
     }
-    case ChanNameChange: {
+    case Nw::ChanNameChange: {
         qint32 id;
         QString name;
         in >> id >> name;
@@ -522,7 +533,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        s.endGroup();
 //        break;
 //    }
-    case ServerPass: {
+    case Nw::ServerPass: {
         QByteArray salt;
         in >> salt;
         web->write("serverpass|"+QString::fromUtf8(salt));
@@ -594,18 +605,18 @@ void DualWielder::readWebSocket(const QString &frame)
             DataStream out(&tosend, QIODevice::WriteOnly);
 
             Flags network;
-            network.setFlags((1 << LoginCommand::HasClientType) | (params.contains("version") << LoginCommand::HasVersionNumber));
+            network.setFlags((1 << Nw::LoginCommand::HasClientType) | (params.contains("version") << Nw::LoginCommand::HasVersionNumber));
 
             if (!params.value("default").isNull()) {
-                network.setFlag(LoginCommand::HasDefaultChannel, true);
+                network.setFlag(Nw::LoginCommand::HasDefaultChannel, true);
             }
 
             if (params.value("autojoin").toList().size() > 0) {
-                network.setFlag(LoginCommand::HasAdditionalChannels, true);
+                network.setFlag(Nw::LoginCommand::HasAdditionalChannels, true);
             }
 
             if (params.value("color").value<QColor>().isValid()) {
-                network.setFlag(LoginCommand::HasColor, true);
+                network.setFlag(Nw::LoginCommand::HasColor, true);
             }
             //    HasClientType,
             //    HasVersionNumber,
@@ -628,7 +639,7 @@ void DualWielder::readWebSocket(const QString &frame)
             //                  Idle,
             //                  IdsWithMessage
 
-            out << uchar(Login) << ProtocolVersion() << network << "webclient";
+            out << uchar(Nw::Login) << ProtocolVersion() << network << "webclient";
 
             if (params.contains("version")) {
                 out << quint16(params.value("version").toInt());
@@ -652,19 +663,19 @@ void DualWielder::readWebSocket(const QString &frame)
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
 
             if (params.count() == 0) {
-                notify(SendMessage, Flags(1), Flags(0), qint32(0), data);
+                notify(Nw::SendMessage, Flags(1), Flags(0), qint32(0), data);
             } else {
-                notify(SendMessage, Flags(1), Flags(0), qint32(params.value("channel").toInt()), params.value("message").toString());
+                notify(Nw::SendMessage, Flags(1), Flags(0), qint32(params.value("channel").toInt()), params.value("message").toString());
             }
         } else if (command == "auth") {
-            notify(AskForPass, QByteArray::fromHex(data.toUtf8()));
+            notify(Nw::AskForPass, QByteArray::fromHex(data.toUtf8()));
         } else if (command == "join") {
-            notify(JoinChannel, data);
+            notify(Nw::JoinChannel, data);
         } else if (command == "leave") {
-            notify(LeaveChannel, qint32(data.toInt()));
+            notify(Nw::LeaveChannel, qint32(data.toInt()));
         } else if (command == "pm") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
-            notify(SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
+            notify(Nw::SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
         } else if (command == "teamChange") {
             qDebug() << "teamChange event";
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
@@ -673,7 +684,7 @@ void DualWielder::readWebSocket(const QString &frame)
             QByteArray tosend;
             DataStream out(&tosend, QIODevice::WriteOnly);
 
-            out << uchar(SendTeam) << network;
+            out << uchar(Nw::SendTeam) << network;
 
             if (params.contains("name")) {
                 out << params.value("name").toString();
@@ -687,11 +698,11 @@ void DualWielder::readWebSocket(const QString &frame)
 
             emit sendCommand(tosend);
         } else if (command == "register") {
-            notify(Register);
+            notify(Nw::Register);
         } else if (command == "watch") {
-            notify(SpectateBattle, qint32(data.toInt()), Flags(true));
+            notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(true));
         } else if (command == "stopwatching") {
-            notify(SpectateBattle, qint32(data.toInt()), Flags(false));
+            notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(false));
         }
     }
 }
@@ -699,7 +710,7 @@ void DualWielder::readWebSocket(const QString &frame)
 void DualWielder::socketConnected()
 {
     if (web) {
-        notify(SetIP, web->ip());
+        notify(Nw::SetIP, web->ip());
         web->write(QString("connected|"));
     }
 }
@@ -722,7 +733,7 @@ void DualWielder::webSocketDisconnected()
     if (network) {
         if (network->state() == QAbstractSocket::ConnectedState) {
             /* Gives the server the curtesy to know that there will be no reconnection */
-            notify(Logout);
+            notify(Nw::Logout);
             network->close();
         } else {
             network->deleteLater();
