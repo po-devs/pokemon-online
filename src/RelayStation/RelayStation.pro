@@ -24,13 +24,16 @@ SOURCES += main.cpp \
     relaystation.cpp \
     ../Teambuilder/network.cpp \
     dualwielder.cpp \
-    pokemontojson.cpp
+    pokemontojson.cpp \
+    battletojson.cpp
 
 HEADERS += \
     relaystation.h \
     ../Teambuilder/network.h \
     dualwielder.h \
-    pokemontojson.h
+    pokemontojson.h \
+    battletojson.h \
+    battletojsonflow.h
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 

@@ -2,6 +2,8 @@
 #define DUALWIELDER_H
 
 #include <QObject>
+#include "../BattleManager/battleinput.h"
+#include "battletojson.h"
 #include "../QJson/qjson.h"
 #include "../Utilities/coreclasses.h"
 #include "../PokemonInfo/networkstructs.h"
@@ -32,10 +34,17 @@ private:
     QWsSocket *web;
     Network *network;
     QString mIp;
+    /* IP aliases: when connecting to an IP in key, will connect to the value of the IP in values.
+      Mainly used to do a public IP/localhost switch when the IP to connect to is the public IP of the own machine */
     QHash<QString,QString> aliases;
 
+    /* Json parsers / serializers used */
     QJson::Parser jparser;
     QJson::Serializer jserial;
+
+    /* Used to convert battle commands into JSON */
+    BattleInput input;
+    BattleToJson battleConverter;
 
     int myid;
     ProtocolVersion version;

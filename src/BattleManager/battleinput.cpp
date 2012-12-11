@@ -245,7 +245,7 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         qint32 id;
         in >> come >> id;
 
-        if (conf->isInBattle(id)) {
+        if (conf && conf->isInBattle(id)) {
             if (come) {
                 output<BattleEnum::Reconnect>(id);
             } else {

@@ -10,7 +10,7 @@ class DataStream;
 class BattleInput : public BattleCommandManager<BattleInput>
 {
 public:
-    BattleInput(const BattleConfiguration *conf);
+    BattleInput(const BattleConfiguration *conf=0);
 
     void receiveData(QByteArray data);
     void dealWithCommandInfo(DataStream&, uchar command,int spot);

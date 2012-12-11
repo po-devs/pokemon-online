@@ -22,3 +22,21 @@ QVariantMap toJson(const BattleConfiguration &c)
 
     return ret;
 }
+
+QVariantMap toJson(const ShallowBattlePoke &poke)
+{
+    QVariantMap ret;
+    ret.insert("num", poke.num().pokenum);
+    if (poke.num().subnum) {
+        ret.insert("forme", poke.num().subnum);
+    }
+    ret.insert("name", poke.nick());
+    ret.insert("level", poke.level());
+    if (poke.gender()) {
+        ret.insert("gender", poke.gender());
+    }
+    if (poke.shiny()) {
+        ret.insert("shiny", poke.shiny());
+    }
+    ret.insert("life", poke.lifePercent());
+}
