@@ -71,14 +71,14 @@ public:
 //    void onDisconnect(int player);
 //    void onUseItem(int spot, int item);
 
-    /* Returns the last converted binary to json command, and if clear is true, delete it from memory */
-    QVariantMap getCommand(bool clear=false) {if (!clear) return map; QVariantMap ret = map; map.clear(); return ret;}
+    QVariantMap getCommand() const {if (updated) {updated = false; return map;} return QVariantMap();}
     void sendCommand() {emit message(map); }
 signals:
     /* JSon conversion of the message */
     void message(const QVariant&);
 protected:
     QVariantMap map;
+    mutable bool updated;
 };
 
 #endif // BATTLETOJSON_H

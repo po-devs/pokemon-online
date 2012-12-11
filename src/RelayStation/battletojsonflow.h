@@ -14,6 +14,7 @@ public:
     template <enumClass val, typename ...Params>
     void receiveCommand(Params... params) {
         wc()->map.clear();
+        wc()->updated = true;
         wc()->template invoke<val, Params...>(params...);
         wc()->template output<val, Params...>(params...);
         if (wc()->map.count() > 0) {

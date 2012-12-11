@@ -15,7 +15,6 @@ DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(
 
     /* Connects BattleInput / BattleConverter */
     input.addOutput(&battleConverter);
-    connect(&battleConverter, SIGNAL(message(QVariant)), SLOT(setBattleCommand(QVariant)));
 }
 
 DualWielder::~DualWielder()
@@ -410,7 +409,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         delete [] buf;
         input.receiveData(command);
 
-        QVariantMap jcommand = battleConverter.getCommand(true);
+        QVariantMap jcommand = battleConverter.getCommand();
         if (jcommand.count() > 0) {
             web->write("battlecommand|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(jcommand)));
         }

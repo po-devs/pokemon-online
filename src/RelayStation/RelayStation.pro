@@ -9,7 +9,6 @@ QT       += core network xml gui
 TARGET = RelayStation
 DESTDIR = ../../bin
 CONFIG   += console
-CONFIG   -= app_bundle
 
 TEMPLATE = app
 
