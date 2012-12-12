@@ -46,6 +46,9 @@ private:
     BattleInput input;
     BattleToJson battleConverter;
 
+    /* Ids to ignore (i.e. not relay) when info is received */
+    QSet<int> toIgnore;
+
     int myid;
     ProtocolVersion version;
 
