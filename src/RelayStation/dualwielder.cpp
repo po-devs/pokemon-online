@@ -135,6 +135,12 @@ void DualWielder::readSocket(const QByteArray &commandline)
         PlayerInfo p;
         while (!in.atEnd()) {
             in >> p;
+            if (toIgnore.contains(p.id)) {
+                toIgnore.remove(p.id);
+                continue;
+            } else {
+                toIgnore.clear();
+            }
             QVariantMap map;
             map.insert("name", p.name);
             if (p.id == myid) {
@@ -157,7 +163,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
             }
             _map.insert(QString::number(p.id), map);
         }
-        web->write("players|"+QString::fromUtf8(jserial.serialize(_map)));
+        if (_map.count() > 0) {
+            web->write("players|"+QString::fromUtf8(jserial.serialize(_map)));
+        }
         break;
     }
     case Nw::Login: {
@@ -233,32 +241,35 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit challengeStuff(c);
 //        break;
 //    }
-//    case EngageBattle: {
-//        Flags network;
-//        quint8 mode;
-//        qint32 battleid, id1, id2;
-//        in >> battleid >> network >> mode >> id1 >> id2;
+    case Nw::EngageBattle: {
+        Flags network;
+        quint8 mode;
+        qint32 battleid, id1, id2;
+        in >> battleid >> network >> mode >> id1 >> id2;
 
-//        if (network[0]) {
-//            /* This is a battle we take part in */
-//            TeamBattle team;
-//            BattleConfiguration conf;
-//            if (version < ProtocolVersion(1,0)) {
-//                conf.oldDeserialize(in);
-//            } else {
-//                in >> conf;
-//            }
-//            in >> team;
-//            if (network[1]) {
-//                in >> team.items;
-//            }
-//            emit battleStarted(battleid, id1, id2, team, conf);
-//        } else {
-//            /* this is a battle of strangers */
-//            emit battleStarted(battleid, id1, id2);
-//        }
-//        break;
-//    }
+        QVariantMap params;
+        params.insert("mode", mode);
+        params.insert("ids", QVariantList() << id1 << id2);
+
+        if (network[0]) {
+            /* This is a battle we take part in */
+            TeamBattle team;
+            BattleConfiguration conf;
+            if (version < ProtocolVersion(1,0)) {
+                conf.oldDeserialize(in);
+            } else {
+                in >> conf;
+            }
+            in >> team;
+            if (network[1]) {
+                in >> team.items;
+            }
+            params.insert("conf", toJson(conf));
+            params.insert("team", toJson(team));
+        }
+        web->write("battlestarted|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(params)));
+        break;
+    }
     case Nw::BattleFinished: {
         qint8 desc, mode;
         qint32 battleid;
@@ -271,16 +282,25 @@ void DualWielder::readSocket(const QByteArray &commandline)
         params.insert("winner", id1);
         params.insert("loser", id2);
         web->write("battlefinished|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(params)));
+
+        /* We don't want rating updates on the webclient */
+        toIgnore.clear();
+        toIgnore.insert(id1);
+        toIgnore.insert(id2);
         break;
     }
-//    case BattleMessage: {
-//        qint32 battleid;
-//        QByteArray command;
-//        in >> battleid >> command;
+    case Nw::BattleMessage: {
+        qint32 battleid;
+        QByteArray command;
+        in >> battleid >> command;
 
-//        emit battleMessage(battleid, command);
-//        break;
-//    }
+        input.receiveData(command);
+        QVariantMap jcommand = battleConverter.getCommand();
+        if (jcommand.count() > 0) {
+            web->write("battlecommand|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(jcommand)));
+        }
+        break;
+    }
     case Nw::AskForPass: {
         QByteArray salt;
         in >> salt;
@@ -400,13 +420,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
     }
     case Nw::SpectatingBattleMessage: {
         qint32 battleId;
-        in >> battleId;
-        /* Such a headache, it really looks like wasting ressources */
-        char *buf;
-        uint len;
-        in.readBytes(buf, len);
-        QByteArray command(buf, len);
-        delete [] buf;
+        QByteArray command;
+
+        in >> battleId >> command;
         input.receiveData(command);
 
         QVariantMap jcommand = battleConverter.getCommand();
@@ -523,6 +539,37 @@ void DualWielder::readSocket(const QByteArray &commandline)
         map.insert("name", name);
         map.insert("id", id);
         web->write("channelnamechange|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
+    case Nw::BattleList: {
+        quint32 channel;
+        in >> channel;
+
+        QHash<qint32, Battle> battles;
+        in >> battles;
+
+        QVariantMap res;
+        QHashIterator<qint32, Battle> it(battles);
+        while (it.hasNext()) {
+            it.next();
+
+            QVariantMap data;
+            data.insert("ids", QVariantList() << it.value().id1 << it.value().id2);
+            //data.insert("mode", it.value().mode);
+            res.insert(QString::number(it.key()), data);
+        }
+        web->write("channelbattlelist|"+QString::number(channel)+"|"+QString::fromUtf8(jserial.serialize(res)));
+        break;
+    }
+    case Nw::ChannelBattle: {
+        qint32 chanid, id, id1, id2;
+        in >> chanid >> id >> id1 >> id2;
+        QVariantMap map;
+        map.insert("battleid", id);
+        QVariantMap data;
+        data.insert("ids", QVariantList() << id1 << id2);
+        map.insert("battle", data);
+        web->write("channelbattle|"+QString::number(chanid)+"|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
 //    case SpecialPass: {
