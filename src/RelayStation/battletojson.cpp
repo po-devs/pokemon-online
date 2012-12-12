@@ -89,3 +89,67 @@ void BattleToJson::onDamageDone(int spot, int damage)
     makeCommand("damage");
     map.insert("damage", damage);
 }
+
+void BattleToJson::onStatusDamage(int spot, int status)
+{
+    makeCommand("statusdamage");
+    map.insert("status", status);
+}
+
+//    void onStatusOver(int spot, int status);
+
+void BattleToJson::onAttackFailing(int spot, bool silent)
+{
+    makeCommand("fail");
+    map.insert("silent", silent);
+}
+
+void BattleToJson::onPlayerMessage(int spot, const QString &message)
+{
+    makeCommand("playerchat");
+    map.insert("message", message);
+}
+
+void BattleToJson::onSpectatorJoin(int id, const QString &name)
+{
+    map.insert("command", "spectatorjoin");
+    map.insert("id", id);
+    map.insert("name", name);
+}
+
+void BattleToJson::onSpectatorLeave(int id)
+{
+    map.insert("command", "spectatorleave");
+    map.insert("id", id);
+}
+
+void BattleToJson::onSpectatorChat(int id, const QString &message)
+{
+    map.insert("command", "spectatorchat");
+    map.insert("id", id);
+    map.insert("message", message);
+}
+
+//    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
+
+void BattleToJson::onNoTarget(int spot)
+{
+    makeCommand("notarget");
+}
+
+//    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
+
+void BattleToJson::onFlinch(int spot)
+{
+    makeCommand("flinch");
+}
+
+void BattleToJson::onRecoil(int spot)
+{
+    makeCommand("recoil");
+}
+
+void BattleToJson::onDrained(int spot)
+{
+    makeCommand("drain");
+}
