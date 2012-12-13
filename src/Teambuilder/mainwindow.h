@@ -49,6 +49,7 @@ public slots:
 
     /* Shows a notification with the tray icon */
     void showMessage(const QString &title, const QString &msg);
+    void raiseLastNotificationSender();
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -70,6 +71,7 @@ private:
     MainWidget *main;
 
     QSystemTrayIcon *trayIcon;
+    QPointer<QWidget> lastNotificationSender;
 
     DownloadManager downloader;
 

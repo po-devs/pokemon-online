@@ -121,6 +121,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     trayIcon->show();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), displayer, SLOT(raise()));
+    connect(trayIcon, SIGNAL(messageClicked()), SLOT(raiseLastNotificationSender()));
 }
 
 MainEngine::~MainEngine()
@@ -507,7 +508,17 @@ void MainEngine::closeTab()
 
 void MainEngine::showMessage(const QString &title, const QString &msg)
 {
+    lastNotificationSender = dynamic_cast<QWidget*>(sender());
     trayIcon->showMessage(title, msg,QSystemTrayIcon::Information, 5000);
+}
+
+void MainEngine::raiseLastNotificationSender()
+{
+    /* Second check: for non-tabbed pms, the hidden tabbed pm window sends the signal, so
+        instead we don't do anything */
+    if (lastNotificationSender && lastNotificationSender->isVisible()) {
+        lastNotificationSender->raise();
+    }
 }
 
 void MainEngine::loadReplayDialog()
