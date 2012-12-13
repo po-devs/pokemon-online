@@ -25,11 +25,15 @@ public:
 
     void flash(PMStruct *pm);
     QHash<int, PMStruct*> myPMWindows;
+
+signals:
+    void notification(const QString &title, const QString &message);
+
 private slots:
     void closeTab(int tabNum);
     void tabChanged(int tabNum);
     void togglePMs(bool toggled);
-    void messageReceived(PMStruct *pm);
+    void messageReceived(PMStruct *pm, const QString &mess);
     void PMDisconnected(bool value);
     void removePM(int pm);
     void changeId(int old, int newid);
@@ -69,7 +73,7 @@ public:
     int state;
 
 signals:
-    void messageReceived(PMStruct *pm);
+    void messageReceived(PMStruct *pm, const QString &mess);
     void messageEntered(int id, const QString &mess);
     void challengeSent(int id);
     void destroyed(int id, QString name);

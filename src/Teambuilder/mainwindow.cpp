@@ -18,9 +18,12 @@
 #include "mac/FullScreenSupport.h"
 #endif
 
+MainEngine *MainEngine::inst = NULL;
 
 MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 {
+    inst = this;
+
     setProperty("updated", updated);
 
     pluginManager = new PluginManager(this);
@@ -59,7 +62,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
     setDefaultValue(s, "PlayerEvents/ShowTeam", false);
     setDefaultValue(s, "PMs/ShowTimestamps", true);
-    setDefaultValue(s, "PMs/Flash", true);
+    //setDefaultValue(s, "PMs/Flash", true); //deleted that feature
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
@@ -110,6 +113,12 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     /* This is to detect other PO running at the same time */
     updateRunningTime();
     t->start(60*1000);
+
+    /* Tray icon */
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setToolTip("Pok\303\251mon Online Server");
+    trayIcon->setIcon(QIcon("db/icon.png"));
+    trayIcon->show();
 }
 
 MainEngine::~MainEngine()
@@ -492,6 +501,11 @@ void MainEngine::closeTab()
         main->closeTab(current);
         trash.push_back(m_teams.take(current));
     }
+}
+
+void MainEngine::showMessage(const QString &title, const QString &msg)
+{
+    trayIcon->showMessage(title, msg,QSystemTrayIcon::Information, 5000);
 }
 
 void MainEngine::loadReplayDialog()

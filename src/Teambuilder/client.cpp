@@ -147,6 +147,8 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     connect(this, SIGNAL(togglePMs(bool)), pmSystem, SLOT(togglePMs(bool)));
     connect(this, SIGNAL(PMDisconnected(bool)), pmSystem, SLOT(PMDisconnected(bool)));
 
+    connect(pmSystem, SIGNAL(notification(QString,QString)), MainEngine::inst, SLOT(showMessage(QString,QString)));
+
     /* move player tab to right if user has selected it
      * this needs to be done at the end of this function to work properly
      */
@@ -157,7 +159,6 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     if(sortCBN) {
         sortChannels();
     }
-    pmFlashing = globals.value("PMs/Flash").toBool();
     pmsTabbed = globals.value("PMs/Tabbed").toBool();
     pmReject = globals.value("PMs/RejectIncoming").toBool();
 
@@ -788,9 +789,7 @@ void Client::startPM(int id)
     PMStruct *p = new PMStruct(id, ownName(), name(id), "", ownAuth());
 
     pmSystem->startPM(p);
-    if (pmFlashing) {
-        pmSystem->flash(p);
-    }
+    pmSystem->flash(p);
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
     connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
@@ -824,12 +823,6 @@ void Client::showTimeStamps(bool b)
 void Client::showTimeStamps2(bool b)
 {
     globals.setValue("PMs/ShowTimestamps", b);
-}
-
-void Client::pmFlash(bool b)
-{
-    globals.setValue("PMs/Flash", b);
-    pmFlashing = b;
 }
 
 void Client::toggleIncomingPM(bool b)
@@ -1306,11 +1299,6 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
     show_ts2->setChecked(globals.value("PMs/ShowTimestamps").toBool());
-
-    QAction * pm_flash = pmMenu->addAction(tr("Make new PMs &flash"));
-    pm_flash->setCheckable(true);
-    connect(pm_flash, SIGNAL(triggered(bool)), SLOT(pmFlash(bool)));
-    pm_flash->setChecked(globals.value("PMs/Flash").toBool());
 
     QAction * pm_reject = pmMenu->addAction(tr("Reject incoming PMs"));
     pm_reject->setCheckable(true);
