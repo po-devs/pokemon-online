@@ -1189,7 +1189,7 @@ void BattleSituation::testCritical(int player, int target)
 
     if (critical) {
         turnMem(player).add(TM::CriticalHit);
-        notify(All, CriticalHit, player);
+        notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits
     } else {
         turnMem(player).remove(TM::CriticalHit);
     }
