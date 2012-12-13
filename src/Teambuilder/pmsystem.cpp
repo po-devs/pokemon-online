@@ -48,7 +48,7 @@ void PMSystem::startPM(PMStruct *newPM)
     }
     myPMWindows.insert(newPM->id(), newPM);
 
-    connect(newPM, SIGNAL(messageReceived(PMStruct*)), this, SLOT(messageReceived(PMStruct*)));
+    connect(newPM, SIGNAL(messageReceived(PMStruct*, QString)), this, SLOT(messageReceived(PMStruct*,QString)));
     connect(newPM, SIGNAL(idChanged(int,int)), SLOT(changeId(int,int)));
     connect(newPM, SIGNAL(destroyed(int,QString)), SLOT(removePM(int)));
     connect(this, SIGNAL(destroyed()), newPM, SLOT(deleteLater())); //Since for now non-tabbed pms aren't closed otherwise
@@ -59,8 +59,6 @@ void PMSystem::flash(PMStruct *pm)
     if (tabbedPMs) {
         myPMs->setCurrentWidget(pm);
     }
-
-    pm->activateWindow();
 }
 
 void PMSystem::removePM(int pmid)
@@ -141,14 +139,14 @@ void PMSystem::changeId(int old, int newid)
     myPMWindows[newid] = myPMWindows.take(old);
 }
 
-void PMSystem::messageReceived(PMStruct *pm) {
-    if (tabbedPMs) {
+void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
+    while (tabbedPMs) {
         if(isVisible()) {
             if(pm->state == PMStruct::NewMessage) {
-                return;
+                break;
             }
             if(pm == myPMs->currentWidget()) {
-                return;
+                break;
             }
             pm->state = PMStruct::NewMessage;
             for(int i = 0; i < myPMs->count(); i++) {
@@ -164,6 +162,11 @@ void PMSystem::messageReceived(PMStruct *pm) {
                 }
             }
         }
+        break;
+    }
+
+    if (qApp->activeWindow() != (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm))) {
+        emit notification(tr("Pok\303\251mon Online PM"), mess);
     }
 }
 
@@ -253,6 +256,7 @@ void PMStruct::printLine(QString line, bool self)
         printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
     } else {
         printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line, false);
+        emit messageReceived(this, name()+ ": " + line);
     }
 }
 
@@ -268,12 +272,6 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     if(SaveLog) {
         log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
-    }
-
-    /* Dirty hack to not trigger events on player log off / log on, so that the pm window doesn't pop up
-     if closed in those cases */
-    if (m_challenge->isEnabled()) {
-        emit messageReceived(this);
     }
 }
 

@@ -279,7 +279,6 @@ public slots:
     void toggleDefaultChannel(bool def);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
-    void pmFlash(bool);
     void toggleIncomingPM(bool);
     void togglePMTabs(bool);
     void togglePMLogs(bool);

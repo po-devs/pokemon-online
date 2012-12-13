@@ -46,6 +46,9 @@ public slots:
     void changeStyle();
     void showReplay(QString);
     void closeTab();
+
+    /* Shows a notification with the tray icon */
+    void showMessage(const QString &title, const QString &msg);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -65,6 +68,8 @@ private:
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;
     MainWidget *main;
+
+    QSystemTrayIcon *trayIcon;
 
     DownloadManager downloader;
 
@@ -90,6 +95,8 @@ private:
 public:
     TeamHolder *trainerTeam();
     ThemeAccessor *theme();
+
+    static MainEngine *inst;
 };
 
 #endif // MAINWINDOW_H
