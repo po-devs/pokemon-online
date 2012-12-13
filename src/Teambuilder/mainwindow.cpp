@@ -119,6 +119,8 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     trayIcon->setToolTip("Pok\303\251mon Online Server");
     trayIcon->setIcon(QIcon("db/icon.png"));
     trayIcon->show();
+
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), displayer, SLOT(raise()));
 }
 
 MainEngine::~MainEngine()
