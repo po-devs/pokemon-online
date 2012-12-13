@@ -509,7 +509,7 @@ void MainEngine::closeTab()
 void MainEngine::showMessage(const QString &title, const QString &msg)
 {
     lastNotificationSender = dynamic_cast<QWidget*>(sender());
-    trayIcon->showMessage(title, msg,QSystemTrayIcon::Information, 5000);
+    trayIcon->showMessage(title, msg,QSystemTrayIcon::Information);
 }
 
 void MainEngine::raiseLastNotificationSender()
