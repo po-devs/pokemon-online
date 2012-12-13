@@ -626,8 +626,12 @@ void BattleBase::endBattle(int result, int winner, int loser)
     }
     if (result == Win || result == Forfeit) {
         notify(All, BattleEnd, winner, qint8(result));
-        notify(All, EndMessage, winner, winMessage[winner]);
-        notify(All, EndMessage, loser, loseMessage[loser]);
+        if (!winMessage[winner].isEmpty()) {
+            notify(All, EndMessage, winner, winMessage[winner]);
+        }
+        if (!loseMessage[loser].isEmpty()) {
+            notify(All, EndMessage, loser, loseMessage[loser]);
+        }
 
         emit battleFinished(publicId(), result, id(winner), id(loser));
         exit();
