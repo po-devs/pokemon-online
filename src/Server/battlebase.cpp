@@ -616,8 +616,8 @@ void BattleBase::endBattle(int result, int winner, int loser)
 {
     int time1 = std::max(0, timeLeft(Player1));
     int time2 = std::max(0, timeLeft(Player2));
-    notify(All,ClockStop,Player1,time1);
-    notify(All,ClockStop,Player2,time2);
+    notify(All,ClockStop,Player1,quint16(time1));
+    notify(All,ClockStop,Player2,quint16(time2));
     if (result == Tie) {
         notify(All, BattleEnd, Player1, qint8(Tie));
 
