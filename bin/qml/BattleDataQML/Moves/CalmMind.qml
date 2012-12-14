@@ -56,8 +56,10 @@ Move {
 
             SequentialAnimation {
                 loops: 3
-                NumberAnimation { target: cm; property: "completion"; duration: 1000;
-                    from: 0; to: 1; easing.type: Easing.Linear }
+                NumberAnimation { target: cm; property: "completion"; duration: 900;
+                    from: 0; to: 1; easing.type: Easing.InQuad }
+                ScriptAction{script: cm.completion = 1;}
+                PauseAnimation{duration: 100;}
             }
         }
 
