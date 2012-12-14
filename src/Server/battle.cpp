@@ -1092,6 +1092,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+    /* Miracle skin can make some attacks miss */
+    callaeffects(target, player, "TestEvasion");
+
     if (turnMemory(target).contains("EvadeAttack")) {
         if (!silent) {
             notifyMiss(multiTar, player, target);

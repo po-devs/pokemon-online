@@ -1629,16 +1629,19 @@ struct AMCloudNine : public AM {
     }
 };
 
+/**
+  Miracle skin evades all "status" moves (including taunt, encore, ...) half the time
+  */
 struct AMMiracleSkin : public AM {
     AMMiracleSkin() {
-        functions["PreventStatChange"] = &psc;
+        functions["TestEvasion"] = &psc;
     }
 
     static void psc(int s, int t, BS &b) {
-        if (turn(b,s)["StatModType"].toString() == "Status" && b.coinflip(1, 2)) {
-            if (b.canSendPreventSMessage(s,t))
-                b.sendAbMessage(90,0,s);
-            b.preventStatMod(s,t);
+        if (tmove(b,t).power == 0 && tmove(b,t).accuracy != 0) {
+            if (b.coinflip(1,2)) {
+                turn(b,s)["EvadeAttack"] = true;
+            }
         }
     }
 };

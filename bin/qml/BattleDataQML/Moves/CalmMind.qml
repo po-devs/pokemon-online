@@ -50,13 +50,13 @@ Move {
             SequentialAnimation {
                 PauseAnimation { duration: 300 }
                 ScriptAction {script: particles.count=120;}
-                PauseAnimation {duration: 2000}
+                PauseAnimation {duration: 1600}
                 ScriptAction {script: particles.count = 0;}
             }
 
             SequentialAnimation {
-                loops: 3
-                NumberAnimation { target: cm; property: "completion"; duration: 900;
+                loops: 2
+                NumberAnimation { target: cm; property: "completion"; duration: 1200;
                     from: 0; to: 1; easing.type: Easing.InQuad }
                 ScriptAction{script: cm.completion = 1;}
                 PauseAnimation{duration: 100;}

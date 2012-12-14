@@ -85,7 +85,7 @@ public:
 
     void onUseAttack(int spot, int attack, bool silent);
     void onStatBoost(int spot, int stat, int boost, bool silent);
-    void onContinueWeather(int weather) {
+    void onContinueWeather(int __attribute__((unused)) weather) {
         emit weatherContinue();
     }
 
