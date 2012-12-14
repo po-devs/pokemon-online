@@ -12,7 +12,7 @@ Item {
 
         parent: pokemon.pokeSprite.parent
         x: pokemon.pokeSprite.x + pokemon.pokeSprite.width/2 - width/2
-        y: pokemon.pokeSprite.y+pokemon.pokeSprite.height-35;
+        y: pokemon.pokeSprite.y+pokemon.pokeSprite.height-pokemon.pokeSprite.height*pokemon.pokeSprite.scale/2;
         width: 2
         height: 2;
         source: "../../images/orangecircle.png"
@@ -40,7 +40,7 @@ Item {
     SequentialAnimation {
         id: anim
         ScriptAction {
-            script: {battle.scene.pause(); particles.count=100*level; }
+            script: {battle.scene.pause(); particles.count=50*level; }
         }
         PauseAnimation { duration: 500 }
         ScriptAction {

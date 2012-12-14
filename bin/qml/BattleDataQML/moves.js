@@ -13,6 +13,7 @@ Object.prototype.update = function(other_object) {
             this[param] = other_object[param];
     }
 }
+
 /* For faster setup */
 function setupWithDefaultParam(moves, move_effect, default_param) {
     moves.forEach(function(move) {
@@ -42,7 +43,7 @@ setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickA
 );
 
 effects[BattleData.MachPunch] = "Moves/MachPunch.qml";
-
+effects[BattleData.CalmMind] = "Moves/CalmMind.qml";
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
 effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
