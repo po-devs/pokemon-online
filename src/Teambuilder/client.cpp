@@ -1373,7 +1373,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
         QAction *animatedLogger = newBattleWindow->addAction(tr("Animated logger"));
         animatedLogger->setCheckable(true);
         connect(animatedLogger, SIGNAL(triggered(bool)), SLOT(changeBattleLogger(bool)));
-        animatedLogger->setChecked(globals.value("Battle/AnimatedLogger", false).toBool());
+        animatedLogger->setChecked(globals.value("Battle/AnimatedLogger", true).toBool());
 
         QAction *animatedWeather = newBattleWindow->addAction(tr("Show weather animation everytime"));
         animatedWeather->setCheckable(true);
