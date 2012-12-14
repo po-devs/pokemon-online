@@ -104,7 +104,7 @@ TopLevelItem {
     /* We have to do a workaround by setting repeat true because of https://bugreports.qt.nokia.com/browse/QTBUG-22004 */
     Timer {
         id: clearer;
-        interval: 750;
+        interval: 900;
         repeat: true;
         onTriggered: {if (!active) return; active=false; logger.text = ""; if (unpause) {unpause=false; logger.unpause();}}
 
@@ -119,7 +119,7 @@ TopLevelItem {
             script: {logger.pause();}
         }
 
-        PauseAnimation { duration: 280 }
+        PauseAnimation { duration: 300 }
 
         ScriptAction {
             script: {logger.unpause();}
