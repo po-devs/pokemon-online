@@ -56,6 +56,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(logout()), SLOT(logout()));
     connect(&relay(), SIGNAL(serverPasswordSent(const QByteArray&)), SLOT(serverPasswordSent(const QByteArray&)));
     connect(&relay(), SIGNAL(messageReceived(int, QString)), SLOT(recvMessage(int, QString)));
+    connect(&relay(), SIGNAL(playerDataRequested(int)), SLOT(recvPlayerDataRequest(int)));
     connect(&relay(), SIGNAL(teamChanged(const ChangeTeamInfo&)), SLOT(recvTeam(const ChangeTeamInfo&)));
     connect(&relay(), SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
     connect(&relay(), SIGNAL(forfeitBattle(int)), SLOT(battleForfeited(int)));
@@ -559,6 +560,19 @@ void Player::recvMessage(int chan, const QString &mess)
         return;
     /* for now we just emit the signal, but later we'll do more, such as flood count */
     emit recvMessage(id(), chan, mess);
+}
+
+/**
+  Sends the player info of the requested id to the player
+  */
+void Player::recvPlayerDataRequest(int pid)
+{
+    if (!isLoggedIn()) {
+        return;
+    }
+    if (Server::serverIns->playerLoggedIn(pid)) {
+        relay().sendPlayer(Server::serverIns->player(pid)->bundle());
+    }
 }
 
 void Player::battleForfeited(int bid)

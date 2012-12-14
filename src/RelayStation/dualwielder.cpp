@@ -141,20 +141,24 @@ void DualWielder::readSocket(const QByteArray &commandline)
             } else {
                 toIgnore.clear();
             }
+            bool fullInfo = p.id == myid;
+            if (importantPlayers.contains(p.id)) {
+                importantPlayers.remove(importantPlayers.indexOf(p.id),1);
+                fullInfo = true;
+            }
             QVariantMap map;
             map.insert("name", p.name);
-            if (p.id == myid) {
+            if (fullInfo) {
                 map.insert("info", p.info);
                 map.insert("avatar", p.avatar);
             }
             map.insert("auth", p.auth);
-            //map.insert("battling", p.battling());
             //map.insert("away", p.away());
             if (p.color.isValid()) {
                 map.insert("color", p.color);
             }
 
-            if (p.id == myid) {
+            if (fullInfo) {
                 QVariantMap ratings;
                 foreach(QString tier, p.ratings.keys()) {
                     ratings.insert(tier, p.ratings[tier]);
@@ -749,6 +753,14 @@ void DualWielder::readWebSocket(const QString &frame)
             notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(true));
         } else if (command == "stopwatching") {
             notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(false));
+        } else if (command == "player") {
+            int p = data.toInt();
+            /* Spam control */
+            if (importantPlayers.size() > 10) {
+                importantPlayers.clear();
+            }
+            importantPlayers.push_back(p);
+            notify(Nw::PlayersList, qint32(p));
         }
     }
 }

@@ -273,8 +273,10 @@ private:
 #else
     GenericSocket server(int i);
 #endif
+public:
     Player * player(int i) const;
     PlayerInterface * playeri(int i) const;
+private:
     /* gets an id that's not used */
     int freeid() const;
     int freebattleid() const;

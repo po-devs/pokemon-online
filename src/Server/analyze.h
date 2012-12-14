@@ -115,6 +115,7 @@ signals:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void messageReceived(int chanid, const QString &mess);
+    void playerDataRequested(int playerid);
     void teamChanged(const ChangeTeamInfo&);
     void connected();
     void disconnected();
