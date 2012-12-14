@@ -907,7 +907,7 @@ struct RBYConversion : public MM
 struct RBYTransform : public MM
 {
     RBYTransform() {
-        functions["UponAttackSucessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
