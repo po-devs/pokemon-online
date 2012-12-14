@@ -48,6 +48,8 @@ private:
 
     /* Ids to ignore (i.e. not relay) when info is received */
     QSet<int> toIgnore;
+    /* Ids for which to get full information when they are relayed */
+    QVector<int> importantPlayers;
 
     int myid;
     ProtocolVersion version;

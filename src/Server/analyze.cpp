@@ -288,6 +288,13 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             emit messageReceived(chanid, mess);
             break;
         }
+    case PlayersList:
+    {
+        qint32 pid;
+        in >> pid;
+        emit playerDataRequested(pid);
+        break;
+    }
     case SendTeam:
         {
             Flags network;

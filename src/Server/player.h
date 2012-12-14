@@ -204,6 +204,7 @@ public slots:
     void loggedIn(LoginInfo *info);
     void serverPasswordSent(const QByteArray &hash);
     void recvMessage(int chan, const QString &mess);
+    void recvPlayerDataRequest(int pid);
     void recvTeam(const ChangeTeamInfo &info);
     void disconnected();
     void challengeStuff(const ChallengeInfo &c);
