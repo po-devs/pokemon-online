@@ -132,7 +132,7 @@ void BattleScene::debug(const QString &m)
 
 void BattleScene::pause(int ticks)
 {
-    pauseCount =+ ticks;
+    pauseCount += ticks;
     baseClass::pause(ticks);
 }
 
