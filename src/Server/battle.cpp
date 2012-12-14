@@ -3152,11 +3152,11 @@ void BattleSituation::requestSwitchIns()
         }
 
         if (!allChoicesOkForPlayer(Player1)) {
-            notify(Player1, StartChoices, Player1);
+            notify(All, StartChoices, Player1);
         }
 
         if (!allChoicesOkForPlayer(Player2)) {
-            notify(Player2, StartChoices, Player2);
+            notify(All, StartChoices, Player2);
         }
 
         yield();

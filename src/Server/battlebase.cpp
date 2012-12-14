@@ -722,7 +722,7 @@ void BattleBase::notifyChoices(int p)
     }
 
     if (canMove) {
-        notify(p, StartChoices, p);
+        notify(All, StartChoices, p);
     }
 }
 
@@ -1405,11 +1405,11 @@ void BattleBase::requestChoices()
     }
 
     if (!allChoicesOkForPlayer(Player1)) {
-        notify(Player1, StartChoices, Player1);
+        notify(All, StartChoices, Player1);
     }
 
     if (!allChoicesOkForPlayer(Player2)) {
-        notify(Player2, StartChoices, Player2);
+        notify(All, StartChoices, Player2);
     }
 
     if (count > 0) {
@@ -1451,7 +1451,7 @@ bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
     startClock(player);
 
     if (acquire) {
-        notify(player, StartChoices, player);
+        notify(All, StartChoices, player);
         yield();
     }
 
@@ -1619,11 +1619,11 @@ void BattleBase::requestSwitchIns()
         }
 
         if (!allChoicesOkForPlayer(Player1)) {
-            notify(Player1, StartChoices, Player1);
+            notify(All, StartChoices, Player1);
         }
 
         if (!allChoicesOkForPlayer(Player2)) {
-            notify(Player2, StartChoices, Player2);
+            notify(All, StartChoices, Player2);
         }
 
         yield();

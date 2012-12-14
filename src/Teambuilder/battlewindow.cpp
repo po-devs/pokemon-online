@@ -726,8 +726,11 @@ void BattleWindow::onMoveChange(int spot, int slot, int, bool definite)
     }
 }
 
-void BattleWindow::onChoiceSelection(int)
+void BattleWindow::onChoiceSelection(int player)
 {
+    if (player != info().myself) {
+        return;
+    }
     info().possible = true;
     info().sent = true;
 
