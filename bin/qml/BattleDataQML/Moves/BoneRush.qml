@@ -41,15 +41,12 @@ Move {
                     }
 
                     ParallelAnimation {
-                        NumberAnimation { target: bone; property: "x"; to: xt; duration: 500; }
-                        NumberAnimation { target: bone; property: "y"; to: yt; duration: 500; }
-                        NumberAnimation { target: bone; property: "z"; to: defender.infront(1); duration: 500; }
+                        NumberAnimation { target: bone; property: "x"; to: xt; duration: params.duration; easing: params.easing }
+                        NumberAnimation { target: bone; property: "y"; to: yt; duration: params.duration; easing: params.easing }
+                        NumberAnimation { target: bone; property: "z"; to: defender.infront(1); duration: params.duration; easing: params.easing }
                     }
                 }
-                SequentialAnimation {
-                    loops: 2
-                    NumberAnimation { target: bone; property: "rotation"; from: 0; to: 360; duration: 250 }
-                }
+                NumberAnimation { target: bone; property: "rotation"; from: 0; to: 360*params.rotations; duration: params.duration }
             }
 
             ScriptAction { script: finished(); }
