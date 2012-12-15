@@ -896,7 +896,7 @@ void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
 void ScriptEngine::changePokePP(int id, int team, int slot, int moveslot, int PP)
 {
     if (!testPlayer("changePokePP", id)|| !testTeamCount("changePokePP", id, team) || !testRange("changePokePP", slot, 0, 5)
-            && !testRange("changePokePP", moveslot, 0, 4))
+            || !testRange("changePokePP", moveslot, 0, 4))
         return;
 
     PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
