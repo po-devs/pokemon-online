@@ -867,6 +867,46 @@ void ScriptEngine::changePokeName(int id, int team, int pokeslot, const QString 
     p->team(team).poke(pokeslot).nick() = name;
 }
 
+void ScriptEngine::changePokeHp(int id, int team, int slot, int hp)
+{
+    if (!testPlayer("changePokeHp", id)|| !testTeamCount("changePokeHp", id, team) || !testRange("changePokeHp", slot, 0, 5))
+        return;
+
+    PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
+
+    if (!testRange("changePokeHp", hp, 0, poke.totalLifePoints()))
+        return;
+
+    poke.lifePoints() = hp;
+}
+
+void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
+{
+    if (!testPlayer("changePokeStatus", id)|| !testTeamCount("changePokeStatus", id, team) || !testRange("changePokeStatus", slot, 0, 5))
+        return;
+
+    if (status != Pokemon::Koed && !testRange("changePokeStatus", status, Pokemon::Fine, Pokemon::Poisoned))
+        return;
+
+    PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
+    poke.changeStatus(status);
+    poke.oriStatusCount() = poke.statusCount() = 0; //Clearing toxic & sleep turns, to use them introduce new script functions
+}
+
+void ScriptEngine::changePokePP(int id, int team, int slot, int moveslot, int PP)
+{
+    if (!testPlayer("changePokePP", id)|| !testTeamCount("changePokePP", id, team) || !testRange("changePokePP", slot, 0, 5)
+            && !testRange("changePokePP", moveslot, 0, 4))
+        return;
+
+    PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
+
+    if (!testRange("changePokePP", PP, 0, poke.move(moveslot).totalPP()))
+        return;
+
+    poke.move(moveslot).PP() = PP;
+}
+
 bool ScriptEngine::hasLegalTeamForTier(int id, int team, const QString &tier)
 {
     if(!testPlayer("hasLegalTeamForTier", id) || !testTeamCount("hasLegalTeamForTier", id, team)) {
@@ -1541,16 +1581,54 @@ QScriptValue ScriptEngine::teamPokeName(int id, int team, int index)
 
 QScriptValue ScriptEngine::teamPokeLevel(int id, int team, int index)
 {
-    if(!testPlayer("teamPokeLevel", id) || !testTeamCount("teamPokeLevel", id, team)) {
+    if(!testPlayer("teamPokeLevel", id) || !testTeamCount("teamPokeLevel", id, team) || !testRange("teamPokeLevel", index, 0, 5)) {
         return myengine.undefinedValue();
     }
-    if (index < 0 || index >= 6) {
+
+    return myserver->player(id)->team(team).poke(index).level();
+}
+
+QScriptValue ScriptEngine::teamPokeStat(int id, int team, int slot, int stat)
+{
+    if(!testPlayer("teamPokeStat", id) || !testTeamCount("teamPokeStat", id, team) || !testRange("teamPokeStat", slot, 0, 5)
+            || !testRange("teamPokeStat", stat, 0, 5)) {
         return myengine.undefinedValue();
+    }
+
+    if (stat == Hp) {
+        return myserver->player(id)->team(team).poke(slot).totalLifePoints();
     } else {
-        return myserver->player(id)->team(team).poke(index).level();
+        return myserver->player(id)->team(team).poke(slot).normalStat(stat);
     }
 }
 
+QScriptValue ScriptEngine::teamPokeHp(int id, int team, int slot)
+{
+    if(!testPlayer("teamPokeHp", id) || !testTeamCount("teamPokeHp", id, team) || !testRange("teamPokeHp", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+
+    return myserver->player(id)->team(team).poke(slot).lifePoints();
+}
+
+QScriptValue ScriptEngine::teamPokeStatus(int id, int team, int slot)
+{
+    if(!testPlayer("teamPokeStatus", id) || !testTeamCount("teamPokeStatus", id, team) || !testRange("teamPokeStatus", slot, 0, 5)) {
+        return myengine.undefinedValue();
+    }
+
+    return myserver->player(id)->team(team).poke(slot).status();
+}
+
+QScriptValue ScriptEngine::teamPokePP(int id, int team, int slot, int moveslot)
+{
+    if(!testPlayer("teamPokePP", id) || !testTeamCount("teamPokePP", id, team) || !testRange("teamPokePP", slot, 0, 5)
+            || !testRange("teamPokePP", moveslot, 0, 3)) {
+        return myengine.undefinedValue();
+    }
+
+    return myserver->player(id)->team(team).poke(slot).move(moveslot).PP();
+}
 
 bool ScriptEngine::hasTeamPoke(int id, int team, int pokemonnum)
 {
