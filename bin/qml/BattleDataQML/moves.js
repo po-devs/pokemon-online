@@ -46,7 +46,13 @@ effects[BattleData.MachPunch] = "Moves/MachPunch.qml";
 effects[BattleData.CalmMind] = "Moves/CalmMind.qml";
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
-effects[BattleData.RockBlast] = effects[BattleData.BoneRush] = "Moves/BoneRush.qml";
+
+setupWithDefaultParam([BattleData.BoneRush, BattleData.BulletSeed, BattleData.RockBlast], "Moves/BoneRush.qml",
+                      { rotations: 2, duration: 500, easing: Easing.Linear
+                      });
+params[BattleData.BulletSeed].update({rotations: 0, duration: 300, easing: Easing.InQuart, "image": "../../images/seedx.png"});
+params[BattleData.BoneRush].image = "image://pokeinfo/item/200";
+params[BattleData.RockBlast].image = "../../images/stealth-rock.png";
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
 
@@ -84,8 +90,6 @@ params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
 
 params[BattleData.Protect] = {"color": "#a8a878"};
 params[BattleData.Detect] = {"color": "#c03028"};
-params[BattleData.BoneRush] = {"image": "image://pokeinfo/item/200"};
-params[BattleData.RockBlast] = {"image": "../../images/stealth-rock.png"};
 params[BattleData.Scald] = {"flames": true};
 
 function useAttack(attacker, attack, defender, params) {
