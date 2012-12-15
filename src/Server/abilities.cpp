@@ -941,7 +941,8 @@ struct AMSpeedBoost : public AM {
     }
 
     static void et(int s, int, BS &b) {
-        if (b.koed(s) || b.turn() == poke(b,s).value("SpeedBoostSetupTurn").toInt())
+        if (b.koed(s) || b.turn() == poke(b,s).value("SpeedBoostSetupTurn").toInt() ||
+                b.hasMaximalStatMod(s, poke(b,s).value("AbilityArg").toInt()))
             return;
         b.sendAbMessage(58,b.ability(s) == Ability::SpeedBoost ? 0 : 1,s);
         b.inflictStatMod(s, poke(b,s)["AbilityArg"].toInt(), 1, s);
