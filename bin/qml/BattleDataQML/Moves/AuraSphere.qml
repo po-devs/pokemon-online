@@ -57,6 +57,9 @@ Move {
         x: x0;
         y: y0;
         scale: calculateScale(z)*0.8;
+        //scale: calculateScale(z)*0.4;
+        //width: implicitWidth*1.3
+        //rotation: -30
     }
 
     SequentialAnimation  {
