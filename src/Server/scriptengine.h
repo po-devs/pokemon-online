@@ -157,6 +157,9 @@ public:
     Q_INVOKABLE void changePokeMove(int id, int team, int pokeslot, int moveslot, int move);
     Q_INVOKABLE void changePokeGender(int id, int team, int pokeslot, int gender);
     Q_INVOKABLE void changePokeName(int id, int team, int pokeslot, const QString &name);
+    Q_INVOKABLE void changePokeHp(int id, int team, int slot, int hp);
+    Q_INVOKABLE void changePokeStatus(int id, int team, int slot, int status);
+    Q_INVOKABLE void changePokePP(int id, int team, int slot, int moveslot, int PP);
 
     Q_INVOKABLE void changeTier(int id, int team, const QString &tier);
     Q_INVOKABLE void reloadTiers();
@@ -268,6 +271,10 @@ public:
     Q_INVOKABLE QString gender(int genderNum);
 
     Q_INVOKABLE QScriptValue teamPokeLevel(int id, int team, int slot);
+    Q_INVOKABLE QScriptValue teamPokeStat(int id, int team, int slot, int stat);
+    Q_INVOKABLE QScriptValue teamPokeHp(int id, int team, int slot); //Stat would return total hp
+    Q_INVOKABLE QScriptValue teamPokeStatus(int id, int team, int slot);
+    Q_INVOKABLE QScriptValue teamPokePP(int id, int team, int slot, int moveslot);
     Q_INVOKABLE QScriptValue teamPoke(int id, int team, int index);
     Q_INVOKABLE QScriptValue teamPokeName(int id, int team, int pokemonnum);
     Q_INVOKABLE bool hasTeamPoke(int id, int team, int pokemonnum);
