@@ -56,7 +56,7 @@ public:
 
     void changeName(const QString &newname);
     void changeSelf(const QString &newname);
-    void printLine(QString line, bool self = false);
+    void printLine(const QString &line, bool self = false);
     void disable();
     void reuse(int id);
     void disconnected(bool value);

@@ -238,7 +238,7 @@ void PMStruct::changeSelf(const QString &newname)
     this->m_ownName = newname;
 }
 
-void PMStruct::printLine(QString line, bool self)
+void PMStruct::printLine(const QString &line, bool self)
 {
     if (line.trimmed().length() == 0)
         return;
@@ -250,12 +250,12 @@ void PMStruct::printLine(QString line, bool self)
     if (tt)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
-    line = escapeHtml(line);
+    QString eline = escapeHtml(line);
 
     if (self) {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + line, false);
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(m_ownName) + ": </b>", Qt::darkBlue) + eline, false);
     } else {
-        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + line, false);
+        printHtml(toColor(timeStr + "<b>" + escapeHtml(name()) + ": </b>", Qt::darkGray) + eline, false);
         emit messageReceived(this, name()+ ": " + line);
     }
 }
