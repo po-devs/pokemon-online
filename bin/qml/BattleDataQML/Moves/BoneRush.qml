@@ -13,9 +13,6 @@ Move {
     property int dirx: woof.back? 1 : -1;
     property int diry: -dirx;
 
-    property int xt2: xt + 120*dirx;
-    property int yt2: yt + 120*diry;
-
     Image {
         id: bone;
 

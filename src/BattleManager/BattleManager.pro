@@ -136,7 +136,8 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/Surf.qml \
     ../../bin/qml/BattleDataQML/Moves/MachPunch.qml \
     ../../bin/qml/BattleDataQML/Utilities/Logger.qml \
-    ../../bin/qml/BattleDataQML/Moves/CalmMind.qml
+    ../../bin/qml/BattleDataQML/Moves/CalmMind.qml \
+    ../../bin/qml/BattleDataQML/Moves/AuraSphere.qml
 
 include(../Shared/Common.pri)
 

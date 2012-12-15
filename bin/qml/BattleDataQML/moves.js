@@ -46,11 +46,12 @@ effects[BattleData.MachPunch] = "Moves/MachPunch.qml";
 effects[BattleData.CalmMind] = "Moves/CalmMind.qml";
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
+effects[BattleData.AuraSphere] = "Moves/AuraSphere.qml";
 
 setupWithDefaultParam([BattleData.BoneRush, BattleData.BulletSeed, BattleData.RockBlast], "Moves/BoneRush.qml",
                       { rotations: 2, duration: 500, easing: Easing.Linear
                       });
-params[BattleData.BulletSeed].update({rotations: 0, duration: 300, easing: Easing.InQuart, "image": "../../images/seedx.png"});
+params[BattleData.BulletSeed].update({rotations: 0, duration: 300, easing: Easing.OutQuad, "image": "../../images/seedx.png"});
 params[BattleData.BoneRush].image = "image://pokeinfo/item/200";
 params[BattleData.RockBlast].image = "../../images/stealth-rock.png";
 
