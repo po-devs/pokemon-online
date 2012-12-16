@@ -63,7 +63,7 @@ public:
 //    void onClockStart(int player, int time);
 //    void onClockStop(int player, int time);
 //    void onShiftSpots(int player, int spot1, int spot2, bool silent);
-//    void onBattleEnd(int res, int winner);
+    void onBattleEnd(int res, int winner);
 //    void onPPChange(int spot, int move, int PP);
 //    void onOfferChoice(int player, const BattleChoices &choice);
 //    void onTempPPChange(int spot, int move, int PP);
