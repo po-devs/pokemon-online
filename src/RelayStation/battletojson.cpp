@@ -142,14 +142,31 @@ void BattleToJson::onSpectatorChat(int id, const QString &message)
     map.insert("message", message);
 }
 
-//    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
+void BattleToJson::onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data)
+{
+    makeCommand("movemessage");
+    map.insert("move", move);
+    map.insert("part", part);
+    map.insert("type", type);
+    map.insert("foe", foe);
+    map.insert("other", other);
+    map.insert("data", data);
+}
 
 void BattleToJson::onNoTarget(int spot)
 {
     makeCommand("notarget");
 }
 
-//    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
+void BattleToJson::onItemMessage(int spot, int item, int part, int foe, int berry, int other)
+{
+    makeCommand("itemmessage");
+    map.insert("item", item);
+    map.insert("part", part);
+    map.insert("foe", foe);
+    map.insert("berry", berry);
+    map.insert("other", other);
+}
 
 void BattleToJson::onFlinch(int spot)
 {
@@ -197,7 +214,15 @@ void BattleToJson::onDamageDone(int spot, int damage)
     map.insert("damage", damage);
 }
 
-//    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
+void BattleToJson::onAbilityMessage(int spot, int ab, int part, int type, int foe, int other)
+{
+    makeCommand("abilitymessage");
+    map.insert("ability", ab);
+    map.insert("part", part);
+    map.insert("type", type);
+    map.insert("foe", foe);
+    map.insert("other", other);
+}
 
 void BattleToJson::onSubstituteStatus(int spot, bool substitute)
 {
