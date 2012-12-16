@@ -69,7 +69,7 @@ public:
 //    void onTempPPChange(int spot, int move, int PP);
 //    void onMoveChange(int spot, int slot, int move, bool definite);
 //    void onRearrangeTeam(int player, const ShallowShownTeam& team);
-//    void onChoiceSelection(int player);
+    void onChoiceSelection(int player);
 //    void onChoiceCancellation(int player);
 //    void onVariation(int player, int bonus, int malus);
 //    void onDynamicStats(int spot, const BattleStats& stats);

@@ -235,7 +235,11 @@ void BattleToJson::onTierNotification(const QString &tier)
 //    void onTempPPChange(int spot, int move, int PP);
 //    void onMoveChange(int spot, int slot, int move, bool definite);
 //    void onRearrangeTeam(int player, const ShallowShownTeam& team);
-//    void onChoiceSelection(int player);
+void BattleToJson::onChoiceSelection(int spot)
+{
+    makeCommand("choiceselection");
+}
+
 //    void onChoiceCancellation(int player);
 //    void onVariation(int player, int bonus, int malus);
 //    void onDynamicStats(int spot, const BattleStats& stats);
