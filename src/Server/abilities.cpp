@@ -1642,6 +1642,8 @@ struct AMMiracleSkin : public AM {
         if (tmove(b,t).power == 0 && tmove(b,t).accuracy != 0) {
             if (b.coinflip(1,2)) {
                 turn(b,s)["EvadeAttack"] = true;
+            } else {
+                tmove(b, s).accuracy = 0;
             }
         }
     }
