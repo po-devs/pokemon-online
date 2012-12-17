@@ -2286,7 +2286,9 @@ void ScriptEngine::setTeamToBattleTeam(int pid, int teamSlot, int battleId)
             warn("setTeamToBattleTeam", QString("Player %1 doesn't take part in battle %2").arg(pid, battleId));
             return;
         }
-        myserver->player(pid)->team(teamSlot) = battle->team(battle->spot(pid));
+        TeamBattle team = battle->team(battle->spot(pid));
+        team.resetIndexes();
+        myserver->player(pid)->team(teamSlot) = team;
     } else{
         warn("setTeamToBattleTeam", "can't find a battle with specified id.");
     }
