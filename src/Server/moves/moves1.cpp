@@ -1110,7 +1110,7 @@ struct MMBounce : public MM
     static void ms(int s, int, BS &b) {
         if (b.hasWorkingItem(s, Item::PowerHerb)) {
             QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
-            b.sendMoveMessage(13,args[0].toInt(),s,type(b,s));
+            b.sendMoveMessage(13,args[0].toInt(),s,type(b,s),s,move(b,s));
             b.sendItemMessage(11,s);
             b.disposeItem(s);
 
@@ -1200,7 +1200,7 @@ struct MMBounce : public MM
     static void uas(int s, int t, BS &b) {
         QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
 
-        b.sendMoveMessage(13,args[0].toInt(),s,type(b,s), t);
+        b.sendMoveMessage(13,args[0].toInt(),s,type(b,s), t, move(b,s));
 
         QList<int> vuln_moves, vuln_mult;
         for (int i = 1; i < args.size(); i++)

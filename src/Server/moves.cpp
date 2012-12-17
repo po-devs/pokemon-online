@@ -2158,7 +2158,7 @@ struct MMRazorWind : public MM
             if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny))
                 return;
 
-            b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
+            b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s), s, move(b,s));
             /* Skull bash */
             if (b.gen() > 1 && mv == SkullBash) {
                 b.inflictStatMod(s,Defense,1, s);
