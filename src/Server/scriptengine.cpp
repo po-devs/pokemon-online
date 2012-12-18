@@ -1913,7 +1913,7 @@ QScriptValue ScriptEngine::teamPokeHappiness(int id, int team, int index)
     if (index < 0 || index >= 6) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->team(team).poke(id).happiness();
+        return myserver->player(id)->team(team).poke(index).happiness();
     }
 }
 
