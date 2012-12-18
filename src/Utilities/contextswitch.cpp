@@ -164,6 +164,11 @@ void ContextSwitcher::yield()
 
 void ContextSwitcher::create_context(coro_context *c, coro_func function, void *param, void *stack, long stacksize)
 {
+    (void) c;
+    (void) function;
+    (void) param;
+    (void) stack;
+    (void) stacksize;
 #ifndef CORO2
     guardian.lock();
     coro_create(c, function, param, stack, stacksize);
