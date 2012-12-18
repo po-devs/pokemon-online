@@ -49,6 +49,12 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
+    /* Creates the team folder by default so users don't get an error when saving a team for the
+     *first time */
+    QString teamPath = s.value("Teams/Folder").toString();
+    QDir d;
+    d.mkpath(teamPath);
+
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "Battle/OldWindow", true);
