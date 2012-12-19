@@ -113,10 +113,6 @@ void Server::start(){
     setDefaultValue("SQL/Host", "localhost");
     setDefaultValue("SQL/DatabaseSchema", "");
     setDefaultValue("SQL/VacuumOnStartup", true);
-    setDefaultValue("GUI/ShowLogMessages", false);
-    setDefaultValue("GUI/ShowTrayPopup", true);
-    setDefaultValue("GUI/MinimizeToTray", true);
-    setDefaultValue("GUI/DoubleClickIcon", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -148,6 +144,7 @@ void Server::start(){
     setDefaultValue("AntiDOS/Disabled", false);
     setDefaultValue("Players/InactiveThresholdInDays", 182);
     setDefaultValue("Players/ClearInactivesOnStartup", true);
+    setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
 
     try {
@@ -249,9 +246,6 @@ void Server::start(){
     proxyServers = s.value("Network/ProxyServers").toString().split(",");
     passwordProtected = s.value("Server/RequirePassword").toBool();
     serverPassword = s.value("Server/Password").toByteArray();
-    showTrayPopup = s.value("GUI/ShowTrayPopup").toBool();
-    minimizeToTray = s.value("GUI/MinimizeToTray").toBool();
-    doubleClick = s.value("GUI/DoubleClickIcon").toBool();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
@@ -2248,21 +2242,6 @@ bool Server::isLegalProxyServer(const QString &ip) const
             return true;
     }
     return false;
-}
-
-void Server::showTrayPopupChanged(bool show)
-{
-    showTrayPopup = show;
-}
-
-void Server::minimizeToTrayChanged(bool allow)
-{
-    minimizeToTray = allow;
-}
-
-void Server::clickConditionChanged(bool click)
-{
-    doubleClick = click;
 }
 
 template <typename ...Params>
