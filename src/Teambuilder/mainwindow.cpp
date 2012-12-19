@@ -295,7 +295,7 @@ void MainEngine::launchMenu(bool first)
         connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
         main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
-        loadSettings(menu, menu->defaultSize());\
+        loadSettings(menu, menu->defaultSize());
         displayer->show();
     } else {
         routine(menu);
