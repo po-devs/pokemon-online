@@ -4,10 +4,11 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverchoicemodel.h"
+#include "loadwindow.h"
 #include "mainwindow.h"
 
-ServerChoice::ServerChoice(const QString &nick) :
-    ui(new Ui::ServerChoice), wasConnected(false)
+ServerChoice::ServerChoice(TeamHolder* team) :
+    ui(new Ui::ServerChoice), wasConnected(false), team(team)
 {
     ui->setupUi(this);
     ui->announcement->hide();
@@ -54,7 +55,7 @@ ServerChoice::ServerChoice(const QString &nick) :
     connect(ui->serverList, SIGNAL(activated(QModelIndex)), SLOT(regServerChosen(QModelIndex)));
     connect(ui->serverList, SIGNAL(currentCellChanged(QModelIndex)), SLOT(showDetails(QModelIndex)));
 
-    ui->nameEdit->setText(nick);
+    ui->nameEdit->setText(team->name());
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
     connect(ui->nameEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
@@ -104,6 +105,7 @@ QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
     //TODO : Add menu allowing to change port / registry IP / ??
 
     QMenu *fileMenu = ret->addMenu(tr("&File"));
+    fileMenu->addAction(tr("&Load team"), this, SLOT(loadTeam()), tr("Ctrl+L", "Load team"));
     fileMenu->addAction(tr("New &tab"), w, SLOT(openNewTab()), tr("Ctrl+T", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
@@ -113,6 +115,21 @@ QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
     w->addStyleMenu(ret);
 
     return ret;
+}
+
+void ServerChoice::loadTeam()
+{
+    LoadWindow *w = new LoadWindow(this, QStringList(), team->name());
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->show();
+
+    connect(w, SIGNAL(teamLoaded(TeamHolder)), SLOT(loadAll(TeamHolder)));
+}
+
+void ServerChoice::loadAll(const TeamHolder &t)
+{
+    *team = t;
+    ui->nameEdit->setText(t.name());
 }
 
 void ServerChoice::serverAdded()

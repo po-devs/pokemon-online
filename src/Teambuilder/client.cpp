@@ -1199,7 +1199,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     }
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
-    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),tr("Ctrl+L", "Load team"));
     if (oldShort) {
         fileMenu->addAction(tr("&Open TeamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
     } else {

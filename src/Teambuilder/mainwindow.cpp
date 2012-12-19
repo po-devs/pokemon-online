@@ -380,10 +380,10 @@ void MainEngine::launchServerChoice(bool newTab)
 {
     ServerChoice *choice;
     if (newTab) {
-        choice = new ServerChoice(trainerTeam(++freespot)->name());
+        choice = new ServerChoice(trainerTeam(++freespot));
         choice->setProperty("tab-window", freespot);
     } else {
-        choice = new ServerChoice(trainerTeam()->name());
+        choice = new ServerChoice(trainerTeam());
     }
 
     routine(choice);
