@@ -2,6 +2,7 @@
 #define LOGMANAGER_H
 
 #include <QHash>
+#include <QObject>
 
 enum LogType {
     BattleLog,
@@ -29,7 +30,9 @@ class LogManager;
 
 struct Log
 {
-    bool started;
+    /* Can we just append to an existing file? */
+    bool appendOk;
+    /* Do we push to file periodically without needing to be told to? */
     bool autolog;
     LogManager *master;
 
@@ -68,8 +71,9 @@ struct Log
     void pushedData();
 };
 
-class LogManager
+class LogManager : public QObject
 {
+    Q_OBJECT
 public:
     static LogManager* obj();
 
@@ -89,7 +93,9 @@ public:
     void changeBaseDirectory(const QString &directory);
     //void changeDirectoryForType(LogType type, const QString &directory);
     void changeLogSaving(LogType type, bool save);
-
+public slots:
+    /* Logs all pending data */
+    void autolog();
 private:
     LogManager();
     Log* getOrCreateLog(LogType type, const QString &title);

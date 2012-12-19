@@ -839,7 +839,7 @@ void Client::togglePMTabs(bool b)
 }
 
 void Client::togglePMLogs(bool b) {
-    globals.setValue("PMs/Logged", b);
+    LogManager::obj()->changeLogSaving(PMLog, b);
 }
 
 void Client::ignoreServerVersion(bool b)
