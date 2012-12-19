@@ -51,6 +51,12 @@ void ContextSwitcher::run()
             goto end;
         }
 
+        /* If an exterior program wants to lock the thread,
+         * they will acquire() the pause controller and lock the loop
+         * right here */
+        pauseController.release(1000);
+        pauseController.acquire(1000);
+
         ownGuardian.lock();
 
         if (scheduled.size() == 0) {
@@ -93,6 +99,17 @@ void ContextSwitcher::run()
         }
     }
     end:;
+    pauseController.release(1000);
+}
+
+void ContextSwitcher::pause()
+{
+    pauseController.acquire();
+}
+
+void ContextSwitcher::unpause()
+{
+    pauseController.release();
 }
 
 void ContextSwitcher::switch_context(ContextCallee *new_context)

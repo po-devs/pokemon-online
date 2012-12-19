@@ -109,6 +109,11 @@ public:
     /* Starts the main loop. */
     void run();
 
+    /* pause/unpause the whole thing thread. pausing may lock while the current context
+     * finishes its task */
+    void pause();
+    void unpause();
+
     /* Thread safe. Ends the run() by throwing an exception, that is caught. It will be executed in the ContextSwitcher thread
         so it might not execute directly, but will do as soon as the current ContextCallee yields. */
     void terminate(ContextCallee *c);
@@ -117,7 +122,7 @@ private:
        it's fine */
     static QMutex guardian;
     QMutex ownGuardian;
-    QSemaphore streamController;
+    QSemaphore streamController, pauseController;
 
     coro_context main_context;
     QSet<ContextCallee *> contexts;
