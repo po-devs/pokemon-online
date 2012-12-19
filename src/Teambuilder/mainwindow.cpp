@@ -46,7 +46,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Pokemon Online/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
     /* Creates the team folder by default so users don't get an error when saving a team for the
