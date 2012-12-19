@@ -23,9 +23,9 @@ class ServerWidget: public QWidget
 public:
     ServerWidget(Server *myserver);
     QMenuBar *createMenuBar();
-    bool isServerTrayPopupAllowed() const { return server->isTrayPopupAllowed(); }
-    bool isMinimizeToTrayAllowed() const { return server->isMinimizeToTrayAllowed(); }
-    bool isDoubleClickIcon() const { return server->isDoubleClickIcon(); }
+    bool isServerTrayPopupAllowed() const { return showTrayPopup; }
+    bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
+    bool isDoubleClickIcon() const { return doubleClick; }
 
     void atShutDown();
     
@@ -54,6 +54,7 @@ signals:
 private slots:
     /* Relies on sender() */
     void openPluginConfig();
+    void loadGuiSettings();
 private:
     QListWidget *mylist;
     QScrollDownTextBrowser *mymainchat;
@@ -67,6 +68,7 @@ private:
     QPointer<ScriptWindow> myscriptswindow;
 
     Server *server;
+    bool minimizeToTray, showTrayPopup, doubleClick;
 };
 
 #endif	/* SERVERWIDGET_H */

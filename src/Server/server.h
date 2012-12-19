@@ -95,9 +95,6 @@ public:
     bool isLegalProxyServer(const QString &ip) const;
 
     bool isPasswordProtected() const { return passwordProtected; }
-    bool isTrayPopupAllowed() const { return showTrayPopup; }
-    bool isMinimizeToTrayAllowed() const { return minimizeToTray; }
-    bool isDoubleClickIcon() const { return doubleClick; }
 
     int playerDeleteDays() const { return amountOfInactiveDays; }
     QString description();
@@ -137,9 +134,6 @@ public slots:
     void proxyServersChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
-    void showTrayPopupChanged(bool show);
-    void minimizeToTrayChanged(bool allow);
-    void clickConditionChanged(bool click);
     void changeDbMod(const QString &mod);
 
     void nameTaken();
@@ -220,9 +214,6 @@ private:
     bool safeScripts;
     bool overactiveShow;
     bool passwordProtected;
-    bool showTrayPopup;
-    bool minimizeToTray;
-    bool doubleClick;
     QByteArray serverPassword;
 
     quint16 numPlayers() {
