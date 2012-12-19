@@ -4,6 +4,7 @@
 #include "centralwidget.h"
 
 class ServerInfo;
+class TeamHolder;
 class Analyzer;
 
 namespace Ui {
@@ -15,7 +16,7 @@ class ServerChoice : public QFrame, public CentralWidgetInterface
     Q_OBJECT
 
 public:
-    ServerChoice(const QString &nick);
+    ServerChoice(TeamHolder *team);
     ~ServerChoice();
 
     void saveSettings();
@@ -25,6 +26,9 @@ signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
     void rejected();
     void clearList();
+public slots:
+    void loadTeam();
+    void loadAll(const TeamHolder&);
 private slots:
     void serverAdded();
     void showDetails(const QModelIndex&);
@@ -45,6 +49,7 @@ private:
     QList<QStringList> savedServers;
 
     bool wasConnected;
+    TeamHolder *team;
 
     void addSavedServer(const QString &ip, const QString &name="");
 };
