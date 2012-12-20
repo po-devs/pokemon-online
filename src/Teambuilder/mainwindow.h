@@ -43,6 +43,7 @@ public slots:
     void loadReplayDialog();
     void openNewTab();
     void loadStyleSheet();
+    void openThemesForum();
     void changeStyle();
     void showReplay(QString);
     void closeTab();
