@@ -600,6 +600,8 @@ void Team::setGen(Pokemon::gen gen)
 
 QDomElement & PokeTeam::toXml(QDomElement &el) const
 {
+    const_cast<PokeTeam*>(this)->sanityCheck();
+
     QDomDocument doc;
 
     el.setAttribute("Nickname", nickname());
@@ -643,8 +645,17 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     return el;
 }
 
+void PokeTeam::sanityCheck()
+{
+    if (nickname().length() > 20) {
+        nickname().resize(20);
+    }
+}
+
 void Team::toXml(QDomDocument &document) const
 {
+    const_cast<Team*>(this)->sanityCheck();
+
     QDomElement Team = document.createElement("Team");
     Team.setAttribute("gen", gen().num);
     Team.setAttribute("subgen", gen().subnum);
@@ -1147,6 +1158,13 @@ void Team::setName(const QString &name)
 void Team::setFolder(const QString &folder)
 {
     m_path = folder + "/" + QUrl::toPercentEncoding(name()) + ".tp";
+}
+
+void Team::sanityCheck()
+{
+    if (defaultTier().length() > 100) {
+        defaultTier().resize(100);
+    }
 }
 
 QString Team::folder() const
