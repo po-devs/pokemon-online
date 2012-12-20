@@ -62,7 +62,7 @@ void Log::flush()
 
     QDir dir = QDir::home();
     dir.cd(directory);
-    dir.mkpath(QFileInfo(title()).path());
+    dir.mkpath(dir.absoluteFilePath(QFileInfo(title()).path()));
     QFile out (dir.absoluteFilePath(title()));
     out.open(appendOk ? QIODevice::Append : QIODevice::WriteOnly);
     out.write(isBinary() ? bdata : data.toUtf8());

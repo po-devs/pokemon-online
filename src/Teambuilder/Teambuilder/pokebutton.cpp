@@ -115,10 +115,10 @@ void PokeButton::startDrag()
     QMimeData * data = new QMimeData();
     data->setText(ui->species->text());
     data->setImageData(poke().picture());
+    data->setData("TeamSlot", QByteArray::number(num));
     QDrag * drag = new QDrag(this);
     drag->setMimeData(data);
     drag->setPixmap(*ui->sprite->pixmap());
     drag->exec(Qt::MoveAction);
-
     setChecked(true);
 }
