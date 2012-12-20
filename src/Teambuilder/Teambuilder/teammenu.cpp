@@ -119,7 +119,6 @@ void TeamMenu::createIndexIfNeeded(int index)
             ui->stack->addWidget(ui->boxes = new PokeBoxes(this, &team()));
             connect(ui->boxes, SIGNAL(teamChanged()), SLOT(updatePokemons()));
             connect(ui->boxes, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
-            connect(ui->boxes, SIGNAL(done()), SIGNAL(switchToTrainer()));
         }
     }
 }
