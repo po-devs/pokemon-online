@@ -14,6 +14,7 @@
 #include "Teambuilder/teambuilder.h"
 #include "mainwidget.h"
 #include "downloadmanager.h"
+#include <QDesktopServices>
 #ifdef Q_OS_MACX
 #include "mac/FullScreenSupport.h"
 #endif
@@ -243,6 +244,11 @@ void MainEngine::loadStyleSheet()
     QFile stylesheet(Theme::path("default.css"));
     stylesheet.open(QIODevice::ReadOnly);
     qApp->setStyleSheet(stylesheet.readAll());
+}
+
+void MainEngine::openThemesForum()
+{
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?92-Themes"));
 }
 
 void MainEngine::changeStyle()
@@ -602,6 +608,8 @@ void MainEngine::rebuildThemeMenu()
 
     themeMenu->addSeparator();
     themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()), tr("Ctrl+D", "Reload Stylesheet"));
+    themeMenu->addSeparator();
+    themeMenu->addAction(tr("&Get more themes..."), this, SLOT(openThemesForum()));
 }
 
 void MainEngine::changeUserThemeFolder()
