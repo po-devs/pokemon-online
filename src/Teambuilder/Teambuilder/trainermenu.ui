@@ -86,7 +86,7 @@
         <string/>
        </property>
        <property name="maxLength">
-        <number>500</number>
+        <number>200</number>
        </property>
       </widget>
      </item>
@@ -106,7 +106,7 @@
         <string/>
        </property>
        <property name="maxLength">
-        <number>500</number>
+        <number>200</number>
        </property>
       </widget>
      </item>
@@ -123,7 +123,7 @@
      <item>
       <widget class="QLineEdit" name="tieMessage">
        <property name="maxLength">
-        <number>500</number>
+        <number>200</number>
        </property>
       </widget>
      </item>
