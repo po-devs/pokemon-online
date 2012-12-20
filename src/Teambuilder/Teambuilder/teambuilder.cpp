@@ -19,7 +19,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
+TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
 {
     ui = new _ui();
     ui->stack = new QStackedWidget();
@@ -450,13 +450,7 @@ void TeamBuilder::markTeamUpdated()
 
 void TeamBuilder::openBoxes()
 {
-    if(!boxesMenu) {
-        ui->stack->addWidget(boxesMenu = new PokeBoxes(this, &team()));
-        boxesMenu->setMainWindow(this);
-        connect(boxesMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
-        connect(boxesMenu, SIGNAL(done()), SLOT(switchToTrainer()));
-    }
-    switchTo(boxesMenu);
+    editPoke(6);
 }
 
 void TeamBuilder::editPoke(int index)

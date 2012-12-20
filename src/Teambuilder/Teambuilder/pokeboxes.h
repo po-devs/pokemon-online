@@ -24,8 +24,8 @@ public:
     void updatePoke();
 
     void updateTeam();
-signals:
-    void done();
+//signals:
+//    void done();
 public slots:
     void changeTeamPoke(int index);
     void currentBoxChanged(int b);

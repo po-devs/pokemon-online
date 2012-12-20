@@ -12,7 +12,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
 {
     ui->setupUi(this);
 
-    ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
+    //ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
     ui->pokemonButtons->setTeam(team().team());
     changePoke(&team().team().poke(0), 0);
     updatePoke();
@@ -30,7 +30,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     connect(ui->editBoxName, SIGNAL(clicked()), SLOT(editBoxName()));
     connect(ui->deleteBox, SIGNAL(clicked()), SLOT(deleteBox()));
     connect(ui->boxes, SIGNAL(tabCloseRequested(int)), SLOT(deleteBox(int)));
-    connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
+    //connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
 }
 
 PokeBoxes::~PokeBoxes()

@@ -60,7 +60,6 @@ private:
     TeamHolder *m_team;
     TrainerMenu *trainer;
     TeamMenu *teamMenu;
-    PokeBoxes *boxesMenu;
 
     QAbstractItemModel *pokemonModel;
 
