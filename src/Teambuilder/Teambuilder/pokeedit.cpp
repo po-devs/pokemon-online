@@ -32,8 +32,6 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     ui->evbox->setPoke(poke);
     ui->ivbox->setPoke(poke);
 
-    ui->vertical->setAlignment(ui->done, Qt::AlignRight);
-
     if (0) {
         master->getDock(EVDock)->setWidget(ui->evbox);
         master->getDock(IVDock)->setWidget(ui->ivbox);
