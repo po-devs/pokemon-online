@@ -878,6 +878,12 @@ void ScriptEngine::changePokeHp(int id, int team, int slot, int hp)
         return;
 
     poke.lifePoints() = hp;
+
+    if (hp > 0 && poke.status() == Pokemon::Koed) {
+        poke.changeStatus(Pokemon::Fine);
+    } else if (hp == 0) {
+        poke.changeStatus(Pokemon::Koed);
+    }
 }
 
 void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
@@ -891,6 +897,12 @@ void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
     PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
     poke.changeStatus(status);
     poke.oriStatusCount() = poke.statusCount() = 0; //Clearing toxic & sleep turns, to use them introduce new script functions
+
+    if (status == Pokemon::Koed) {
+        poke.lifePoints() = 0;
+    } else {
+        poke.lifePoints() = std::max(int(poke.lifePoints()), 1);
+    }
 }
 
 void ScriptEngine::changePokePP(int id, int team, int slot, int moveslot, int PP)
