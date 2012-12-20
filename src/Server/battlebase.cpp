@@ -80,6 +80,20 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
         team(0).generateRandom(gen());
         team(1).generateRandom(gen());
     } else {
+        /* Make sure teams are valid and don't start with a koed pokemon */
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < numberPerSide(); k++) {
+                if (team(i).poke(k).ko()) {
+                    for (int j=k+1;j<6;j++){
+                        if (!team(i).poke(j).ko()) {
+                            team(i).switchPokemon(k,j);
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+
         if (clauses() & ChallengeInfo::ItemClause) {
             QSet<int> alreadyItems[2];
             for (int i = 0; i < 6; i++) {
