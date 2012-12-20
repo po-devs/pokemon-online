@@ -31,7 +31,7 @@ public slots:
     void currentBoxChanged(int b);
 
     void showPoke(PokeTeam *poke);
-    void switchBoxTeam(int,int,int);
+    void switchBoxTeam(int box, int boxslot, int poke);
 
     void storePokemon();
     void switchPokemon();
@@ -41,6 +41,8 @@ public slots:
     void newBox();
     void editBoxName();
     void deleteBox(int num=-1);
+    /* deals with dropping something on a pokemon box button */
+    void dealWithButtonDrop(int index, QDropEvent *event);
 private:
     PokeTeam *m_poke;
     int displayedBox, displayedSlot;
