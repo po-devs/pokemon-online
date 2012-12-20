@@ -201,7 +201,7 @@
 200 A rampage of 2 to 3 turns that confuses the user.
 201 Causes a sandstorm that rages for several turns.
 202 An attack that steals half the damage inflicted.
-203 Endures any attack for 1 turn, leaving at least 1HP.
+203 Endures any attack for 1 turn, leaving at least 1 HP.
 204 Charms the foe and sharply reduces its ATTACK.
 205 An attack lasting 5 turns with rising intensity.
 206 An attack that leaves the foe with at least 1 HP.
@@ -240,7 +240,7 @@
 239 Whips up a vicious twister to tear at the foe.
 240 Boosts the power of WATER- type moves for 5 turns.
 241 Boosts the power of FIRE- type moves for 5 turns.
-242 Crunches with sharp fangs. May lower DEF.
+242 Crunches with sharp fangs. May lower DEFENSE.
 243 Counters the foe's special attack at double the power.
 244 Copies the foe's effect(s) and gives to the user.
 245 An extremely fast and powerful attack.
@@ -382,7 +382,7 @@
 381 Foe cannot have critical hits for 5 turns
 382 Strikes first with foe's attack at 1.5 power
 383 Copies foe's last move
-384 Swaps ATTACK and SP.ATT with target
+384 Swaps ATTACK and SP.ATK with target
 385 Swarps DEFENSE and SP.DEF with target
 386 Power depends on foe's stat
 387 Only usable when all other attacks have been used
@@ -415,7 +415,7 @@
 414 May lower foe's SP.DEF one stage
 415 Exchanges held item with foe
 416 User cannot attack next turn
-417 Raises SP.ATT two stages
+417 Raises SP.ATK two stages
 418 Always strikes first
 419 Power doubles if user receives damage first
 420 Always strikes first
@@ -432,10 +432,10 @@
 431 May induce confusion
 432 Lowers foe's evasiveness
 433 Slower Pok�mon attacks first in 5 turns
-434 Lowers users SP.ATT two stages
+434 Lowers users SP.ATK two stages
 435 May induce paralysis
 436 May induce burn
-437 Lowers users SP.ATT two stages
+437 Lowers users SP.ATK two stages
 438 No Added Effect
 439 User cannot attack next turn
 440 High chance of critical hit, may poison foe
@@ -443,13 +443,13 @@
 442 May cause opponent to flinch
 443 Cannot miss
 444 High critical hit ratio
-445 Lowers opposite gender foe's SP.ATT two stages
+445 Lowers opposite gender foe's SP.ATK two stages
 446 Causes damage when foe switches Pok�mon
 447 Power increases if foe is heavy
 448 Confuses foe
 449 Type changes depending on plate held
 450 Receives effect from foe's held berry
-451 High chance of raising user's SP.ATT one stage
+451 High chance of raising user's SP.ATK one stage
 452 User takes recoil damage.
 453 Always strikes first
 454 High critical hit ratio
@@ -466,14 +466,14 @@
 465 Lowers foe's SP.DEF
 466 May raise all user's stats one stage
 467 Disappears the first turn and attacks the second, foe cannot protect
-468 Raises Atk and Acc 1 stage.
+468 Raises ATTACK and ACCURACY 1 stage.
 469 Protects your team from an attack that would hit all of your Pokemon. Willfail if used in succession.
-470 Averages the user's and target's Def and SpDef.
-471 Averages the user's and target's Atk and SpAtk.
-472 All Def and SpD swapped for 5 turns.
-473 Calculate's damage with the target's Def stat.
+470 Averages the user's and target's DEFENSE and SP.DEF.
+471 Averages the user's and target's ATTACK and SP.ATK.
+472 All DEFENSE and SPEED swapped for 5 turns.
+473 Calculate's damage with the target's DEFENSE stat.
 474 Doubles power if Target is poisoned.
-475 Sharply raises Speed.
+475 Sharply raises SPEED.
 476 Draws the opponent's attacks at yourself.
 477 Makes Target easier to hit for 3 turns.
 478 Negates all held items for 5 turns.
@@ -481,14 +481,14 @@
 480 Forces the target to switch.
 481 Hits all targets.
 482 May poison opponent. (10%)
-483 Raises SpA, SpD, and Speed by 1 stage.
+483 Raises SP.ATK, SP.DEF, and SPEED by 1 stage.
 484 The heavier the user is, the more damage it deals.
 485 Deals more damage if Target is the same type as User.
 486 Has a higher Base Power the higher your speed is compared to the target.
 487 Turns the target into the Water type.
 488 May raise the user's Spe.
-489 Raises the user's Atk, Def, and Acc.
-490 Decreases opponent's Speed by 1 stage.
+489 Raises the user's ATTACK, DEFENSE, and ACCURACY.
+490 Decreases opponent's SPEED by 1 stage.
 491 Sharply lowers Special Defense.
 492 The higher the Target's attack stat, the more damage it deals.
 493 Makes the target's Ability become Simple.
@@ -502,11 +502,11 @@
 501 Protects your team from priority moves. Will fail if used in succession.
 502 Switch position with an Ally.
 503 May burn opponent. (30%)
-504 Raises Atk, SpAtk, and Spe but lowers Def and SpDef.
+504 Raises ATTACK, SP.ATK, and SPEED but lowers DEFENSE and SP.DEF.
 505 Recovers 50% of an ally's HP.
 506 Doubles in power if the target has a status ailment.
 507 Picks up the target on the first turn and drops them on the second.
-508 Increases the user's Atk 1 stage and Spe 2 stages.
+508 Increases the user's ATTACK 1 stage and SPEED 2 stages.
 509 Forces the target to switch.
 510 Removes the target's Berry.
 511 Forces Target to move last
@@ -524,8 +524,8 @@
 523 May decrease opponent's Speed by 1 stage.
 524 Critical Hit (100%)
 525 Forces the target to switch.
-526 Raises the user's Atk and SpAtk.
-527 Decreases opponent's Speed by 1 stage.
+526 Raises the user's ATTACK and SP.ATK.
+527 Decreases opponent's SPEED by 1 stage.
 528 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
 529 Good chance for a critical hit.
 530 Strikes twice.
