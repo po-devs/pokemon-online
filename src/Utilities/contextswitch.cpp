@@ -5,6 +5,8 @@ QMutex ContextSwitcher::guardian;
 ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NULL), finished(false)
 {
     connect(this, SIGNAL(finished()), SLOT(deleteLater()));
+
+    pauseController.release(1000);
 }
 
 ContextSwitcher::~ContextSwitcher()
@@ -37,6 +39,7 @@ void ContextSwitcher::run()
 #else
     create_context(&main_context);
 #endif
+    pauseController.acquire(1000);
     forever {
         if (context_to_delete) {
             /* That literally finishes the deleting operation by allowing wait()
@@ -45,17 +48,17 @@ void ContextSwitcher::run()
             context_to_delete = NULL;
         }
 
-        streamController.acquire(1);
-
-        if (finished) {
-            goto end;
-        }
-
         /* If an exterior program wants to lock the thread,
          * they will acquire() the pause controller and lock the loop
          * right here */
         pauseController.release(1000);
+        /* Pauses the thread until a new task is scheduled */
+        streamController.acquire(1);
         pauseController.acquire(1000);
+
+        if (finished) {
+            goto end;
+        }
 
         ownGuardian.lock();
 
