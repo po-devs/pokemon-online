@@ -878,6 +878,12 @@ void ScriptEngine::changePokeHp(int id, int team, int slot, int hp)
         return;
 
     poke.lifePoints() = hp;
+
+    if (hp > 0 && poke.status() == Pokemon::Koed) {
+        poke.changeStatus(Pokemon::Fine);
+    } else if (hp == 0) {
+        poke.changeStatus(Pokemon::Koed);
+    }
 }
 
 void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
@@ -891,6 +897,12 @@ void ScriptEngine::changePokeStatus(int id, int team, int slot, int status)
     PokeBattle &poke = myserver->player(id)->team(team).poke(slot);
     poke.changeStatus(status);
     poke.oriStatusCount() = poke.statusCount() = 0; //Clearing toxic & sleep turns, to use them introduce new script functions
+
+    if (status == Pokemon::Koed) {
+        poke.lifePoints() = 0;
+    } else {
+        poke.lifePoints() = std::max(int(poke.lifePoints()), 1);
+    }
 }
 
 void ScriptEngine::changePokePP(int id, int team, int slot, int moveslot, int PP)
@@ -1913,7 +1925,7 @@ QScriptValue ScriptEngine::teamPokeHappiness(int id, int team, int index)
     if (index < 0 || index >= 6) {
         return myengine.undefinedValue();
     } else {
-        return myserver->player(id)->team(team).poke(id).happiness();
+        return myserver->player(id)->team(team).poke(index).happiness();
     }
 }
 
@@ -2286,7 +2298,9 @@ void ScriptEngine::setTeamToBattleTeam(int pid, int teamSlot, int battleId)
             warn("setTeamToBattleTeam", QString("Player %1 doesn't take part in battle %2").arg(pid, battleId));
             return;
         }
-        myserver->player(pid)->team(teamSlot) = battle->team(battle->spot(pid));
+        TeamBattle team = battle->team(battle->spot(pid));
+        team.resetIndexes();
+        myserver->player(pid)->team(teamSlot) = team;
     } else{
         warn("setTeamToBattleTeam", "can't find a battle with specified id.");
     }

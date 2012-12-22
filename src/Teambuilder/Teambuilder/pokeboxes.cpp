@@ -12,7 +12,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
 {
     ui->setupUi(this);
 
-    ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
+    //ui->trainerHome->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowBack));
     ui->pokemonButtons->setTeam(team().team());
     changePoke(&team().team().poke(0), 0);
     updatePoke();
@@ -20,6 +20,8 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     loadBoxes();
 
     //connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SLOT(changeTeamPoke(int)));
+    connect(ui->pokemonButtons, SIGNAL(teamChanged()), SIGNAL(teamChanged()));
+    connect(ui->pokemonButtons, SIGNAL(dropEvent(int,QDropEvent*)), SLOT(dealWithButtonDrop(int, QDropEvent*)));
     connect(ui->pokemonButtons, SIGNAL(clicked(int)), SLOT(changeTeamPoke(int)));
     connect(ui->storeButton, SIGNAL(clicked()), SLOT(storePokemon()));
     connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deletePokemon()));
@@ -30,7 +32,7 @@ PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     connect(ui->editBoxName, SIGNAL(clicked()), SLOT(editBoxName()));
     connect(ui->deleteBox, SIGNAL(clicked()), SLOT(deleteBox()));
     connect(ui->boxes, SIGNAL(tabCloseRequested(int)), SLOT(deleteBox(int)));
-    connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
+    //connect(ui->trainerHome, SIGNAL(clicked()), SIGNAL(done()));
 }
 
 PokeBoxes::~PokeBoxes()
@@ -219,6 +221,22 @@ void PokeBoxes::deleteBox(int num)
 
     if (res == QMessageBox::Yes) {
         doDeleteBox(num);
+    }
+}
+
+void PokeBoxes::dealWithButtonDrop(int index, QDropEvent *event)
+{
+    const QMimeData *data = event->mimeData();
+    bool b1 = data->data("Box").isNull();
+    bool b2 = data->data("Item").isNull();
+
+    if(!b1 && !b2) {
+        event->accept();
+
+        PokeBox *box = (PokeBox*)(intptr_t)data->data("Box").toLongLong();
+        int item = data->data("Item").toInt();
+
+        switchBoxTeam(box->getNum(), item, index);
     }
 }
 

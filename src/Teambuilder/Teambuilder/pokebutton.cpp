@@ -78,11 +78,8 @@ void PokeButton::mousePressEvent(QMouseEvent * event)
 
 void PokeButton::dragEnterEvent(QDragEnterEvent * event)
 {
-    if(event->source()->metaObject()->className() == metaObject()->className())
-    {
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
-    }
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
 }
 
 void PokeButton::dropEvent(QDropEvent * event)
@@ -97,7 +94,11 @@ void PokeButton::dropEvent(QDropEvent * event)
         setPokemon(poke());
         other->setPokemon(other->poke());
 
+        event->accept();
+
         emit pokemonOrderChanged(other->num, num);
+    } else {
+        emit dropEventReceived(num, event);
     }
 }
 
@@ -115,10 +116,10 @@ void PokeButton::startDrag()
     QMimeData * data = new QMimeData();
     data->setText(ui->species->text());
     data->setImageData(poke().picture());
+    data->setData("TeamSlot", QByteArray::number(num));
     QDrag * drag = new QDrag(this);
     drag->setMimeData(data);
     drag->setPixmap(*ui->sprite->pixmap());
     drag->exec(Qt::MoveAction);
-
     setChecked(true);
 }

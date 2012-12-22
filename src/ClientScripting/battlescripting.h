@@ -148,6 +148,7 @@ public:
         makeEvent("onTierNotification", tier);
     }
     void onDynamicInfo(int spot, const BattleDynamicInfo &info) {
+        (void) info;
         makeEvent("onDynamicInfo", spot/*, const BattleDynamicInfo &info*/);
     }
     void onPokemonVanish(int spot) {
@@ -181,6 +182,7 @@ public:
         makeEvent("onPPChange", spot, move, PP);
     }
     void onOfferChoice(int player, const BattleChoices &choice) {
+        (void) choice;
         makeEvent("onOfferChoice", player/*, const BattleChoices &choice*/);
     }
     void onTempPPChange(int spot, int move, int PP) {
@@ -190,6 +192,7 @@ public:
         makeEvent("onMoveChange", spot, slot, move, definite);
     }
     void onRearrangeTeam(int player, const ShallowShownTeam& team) {
+        (void) team;
         makeEvent("onRearrangeTeam", player/*, const ShallowShownTeam& team*/);
     }
     void onChoiceSelection(int player) {
@@ -202,6 +205,7 @@ public:
         makeEvent("onVariation", player, bonus, malus);
     }
     void onDynamicStats(int spot, const BattleStats& stats) {
+        (void) stats;
         makeEvent("onDynamicStats", spot/*, const BattleStats& stats*/);
     }
     void onPrintHtml(const QString &html) {
@@ -220,6 +224,7 @@ public:
         makeEvent("onSwitchChosen", spot, pokeSlot);
     }
     void onTeamOrderChosen(int player, const RearrangeChoice &rearrange) {
+        (void) rearrange;
         makeEvent("onTeamOrderChosen", player/*, const RearrangeChoice &rearrange*/);
     }
     void onChoiceCancelled(int player) {

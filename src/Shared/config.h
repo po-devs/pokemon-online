@@ -6,6 +6,7 @@
 #define VERSION QString("2.0.07")
 
 static const quint16 PROTOCOL_VERSION = 1;
+/* Update subversion by one when releasing */
 static const quint16 PROTOCOL_SUBVERSION = 1;
 static const quint16 CLIENT_VERSION_NUMBER = 2007;
 static const int UPDATE_ID = 2;
