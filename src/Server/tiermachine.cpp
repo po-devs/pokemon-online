@@ -2,6 +2,7 @@
 #include "tier.h"
 #include "loadinsertthread.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "waitingobject.h"
 
 TierMachine* TierMachine::inst;
 
@@ -80,12 +81,14 @@ void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, 
 
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
-        if (m_tiers.length() > tierno) {
+        if (m_tiers.length() > tierno && tierno >= 0) {
             m_tiers[tierno]->processQuery(q, data, trueQueryNo, w);
         } else {
             qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
-            return;
         }
+    } else {
+        // Even if the query couldn't be processed, the player needs to be unlocked
+        w->emitSignal();
     }
 
     semaphore.release();
@@ -100,7 +103,7 @@ void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
 
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
-        if (m_tiers.length() > tierno) {
+        if (m_tiers.length() > tierno && tierno >= 0) {
             m_tiers[tierno]->insertMember(q, m, trueQueryNo);
         } else {
             qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;

@@ -81,6 +81,7 @@ static void fromBattleChoice(const QScriptValue &v, BattleChoice& info) {
 objectConverter(ProxyDataContainer)
 objectConverter(TeamProxy)
 objectConverter(PokeProxy)
+objectConverter(MoveProxy)
 objectConverter(AuxPokeDataProxy)
 objectConverter(FieldProxy)
 
@@ -96,6 +97,7 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
     registerObject(ProxyDataContainer);
     registerObject(TeamProxy);
     registerObject(PokeProxy);
+    registerObject(MoveProxy);
     registerObject(AuxPokeDataProxy);
     registerObject(FieldProxy);
     qScriptRegisterMetaType<BattleChoice>(engine, &toBattleChoice, &fromBattleChoice);

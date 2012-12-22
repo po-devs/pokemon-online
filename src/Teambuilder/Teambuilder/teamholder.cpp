@@ -76,6 +76,7 @@ void Profile::toXml(QDomDocument &document) const
 
 QString Profile::toXml() const
 {
+    const_cast<Profile*>(this)->sanitize();
     QDomDocument document;
 
     toXml(document);
@@ -109,6 +110,12 @@ void Profile::deleteProfile(const QString &path)
         return;
     }
     file.remove();
+}
+
+void Profile::sanitize()
+{
+    name().resize(std::min(name().length(), 20));
+    info().sanitize();
 }
 
 TeamHolder::TeamHolder()

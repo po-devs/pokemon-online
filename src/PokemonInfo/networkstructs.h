@@ -133,6 +133,8 @@ struct TrainerInfo
     quint16 avatar;
     QString info;
     QString winning, losing, tie;
+
+    void sanitize();
 };
 
 DataStream & operator >> (DataStream &in, TrainerInfo &i);

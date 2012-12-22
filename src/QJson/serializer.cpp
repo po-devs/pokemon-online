@@ -64,8 +64,8 @@ QByteArray Serializer::SerializerPrivate::join( const QList<QByteArray>& list, c
 QByteArray Serializer::SerializerPrivate::serialize( const QVariant &v, bool *ok, int indentLevel)
 {
   QByteArray str;
-  bool error = false;
-  QByteArray indent;
+  //bool error = false;
+  //QByteArray indent;
 
   if ( ! v.isValid() ) { // invalid or null?
     str = "null";

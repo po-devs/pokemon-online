@@ -761,6 +761,10 @@ void DualWielder::readWebSocket(const QString &frame)
             }
             importantPlayers.push_back(p);
             notify(Nw::PlayersList, qint32(p));
+        } else if (command == "spectatingchat") {
+            int battle = data.section("|", 0, 0).toInt();
+            QString chat = data.section("|", 1);
+            notify(Nw::SpectatingBattleChat, qint32(battle), chat);
         }
     }
 }

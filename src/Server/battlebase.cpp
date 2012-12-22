@@ -16,6 +16,8 @@ BattleBase::BattleBase()
     timer = NULL;
 }
 
+bool oldBattleNotifications = true;
+
 void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
 {
     publicId() = id;
@@ -80,6 +82,20 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
         team(0).generateRandom(gen());
         team(1).generateRandom(gen());
     } else {
+        /* Make sure teams are valid and don't start with a koed pokemon */
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < numberPerSide(); k++) {
+                if (team(i).poke(k).ko()) {
+                    for (int j=k+1;j<6;j++){
+                        if (!team(i).poke(j).ko()) {
+                            team(i).switchPokemon(k,j);
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+
         if (clauses() & ChallengeInfo::ItemClause) {
             QSet<int> alreadyItems[2];
             for (int i = 0; i < 6; i++) {
@@ -722,7 +738,7 @@ void BattleBase::notifyChoices(int p)
     }
 
     if (canMove) {
-        notify(All, StartChoices, p);
+        notify(oldBattleNotifications ? p : All, StartChoices, p);
     }
 }
 
@@ -1405,11 +1421,11 @@ void BattleBase::requestChoices()
     }
 
     if (!allChoicesOkForPlayer(Player1)) {
-        notify(All, StartChoices, Player1);
+        notify(oldBattleNotifications ? Player1 : All, StartChoices, Player1);
     }
 
     if (!allChoicesOkForPlayer(Player2)) {
-        notify(All, StartChoices, Player2);
+        notify(oldBattleNotifications ? Player2: All, StartChoices, Player2);
     }
 
     if (count > 0) {
@@ -1451,7 +1467,7 @@ bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
     startClock(player);
 
     if (acquire) {
-        notify(All, StartChoices, player);
+        notify(oldBattleNotifications ? player : All, StartChoices, player);
         yield();
     }
 
@@ -1619,11 +1635,11 @@ void BattleBase::requestSwitchIns()
         }
 
         if (!allChoicesOkForPlayer(Player1)) {
-            notify(All, StartChoices, Player1);
+            notify(oldBattleNotifications ? Player1: All, StartChoices, Player1);
         }
 
         if (!allChoicesOkForPlayer(Player2)) {
-            notify(All, StartChoices, Player2);
+            notify(oldBattleNotifications ? Player2 :All, StartChoices, Player2);
         }
 
         yield();

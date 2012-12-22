@@ -413,9 +413,9 @@ void PokeBox::dropEvent(QDropEvent *event)
             box->saveBox();
 
     } else if (!data->data("TeamSlot").isNull()) {
+        int slot = data->data("TeamSlot").toInt();
         event->accept();
 
-        int slot = data->data("TeamSlot").toInt();
         emit switchWithTeam(getNum(), currentPokemon, slot);
     }
 }

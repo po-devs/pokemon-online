@@ -37,9 +37,9 @@ public:
     void onSpectatorJoin(int id, const QString &name);
     void onSpectatorLeave(int id);
     void onSpectatorChat(int id, const QString &message);
-//    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
+    void onMoveMessage(int spot, int move, int part, int type, int foe, int other, const QString &data);
     void onNoTarget(int spot);
-//    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
+    void onItemMessage(int spot, int item, int part, int foe, int berry, int other);
     void onFlinch(int spot);
     void onRecoil(int spot);
     void onDrained(int spot);
@@ -48,7 +48,7 @@ public:
     void onEndWeather(int weather);
     void onHurtWeather(int spot, int weather);
     void onDamageDone(int spot, int damage);
-//    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
+    void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
     void onSubstituteStatus(int spot, bool substitute);
 //    void onBlankMessage();
 //    void onClauseActivated(int clause);

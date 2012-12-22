@@ -34,11 +34,6 @@ public:
     };
 
     static bool advancedWindowClosed;
-signals:
-    void switchToTrainer();
-
-private slots:
-    void on_done_clicked() {emit switchToTrainer();}
 
 public slots:
     void updateStats();

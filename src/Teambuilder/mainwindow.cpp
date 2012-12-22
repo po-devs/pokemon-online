@@ -46,9 +46,15 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Pokemon Online/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
+    /* Creates the team folder by default so users don't get an error when saving a team for the
+     *first time */
+    QString teamPath = s.value("Teams/Folder").toString();
+    QDir d;
+    d.mkpath(teamPath);
+
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "Battle/OldWindow", true);
@@ -239,6 +245,11 @@ void MainEngine::loadStyleSheet()
     qApp->setStyleSheet(stylesheet.readAll());
 }
 
+void MainEngine::openThemesForum()
+{
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?92-Themes"));
+}
+
 void MainEngine::changeStyle()
 {
     QAction * a = qobject_cast<QAction *>(sender());
@@ -289,7 +300,7 @@ void MainEngine::launchMenu(bool first)
         connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
         main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
-        loadSettings(menu, menu->defaultSize());\
+        loadSettings(menu, menu->defaultSize());
         displayer->show();
     } else {
         routine(menu);
@@ -374,10 +385,10 @@ void MainEngine::launchServerChoice(bool newTab)
 {
     ServerChoice *choice;
     if (newTab) {
-        choice = new ServerChoice(trainerTeam(++freespot)->name());
+        choice = new ServerChoice(trainerTeam(++freespot));
         choice->setProperty("tab-window", freespot);
     } else {
-        choice = new ServerChoice(trainerTeam()->name());
+        choice = new ServerChoice(trainerTeam());
     }
 
     routine(choice);
@@ -596,6 +607,8 @@ void MainEngine::rebuildThemeMenu()
 
     themeMenu->addSeparator();
     themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()), tr("Ctrl+D", "Reload Stylesheet"));
+    themeMenu->addSeparator();
+    themeMenu->addAction(tr("&Get more themes..."), this, SLOT(openThemesForum()));
 }
 
 void MainEngine::changeUserThemeFolder()

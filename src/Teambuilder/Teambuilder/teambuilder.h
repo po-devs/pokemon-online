@@ -38,6 +38,8 @@ public slots:
     void changeMod();
     void genChanged();
     void installMod();
+    void removeMods();
+    void removeMod();
 
     void importTeam();
     void exportTeam();
@@ -53,11 +55,11 @@ signals:
     void reloadMenuBar();
     void reloadDb();
 private:
+    QListWidget *modsList;
     TeamHolder &team() {return *m_team;}
     TeamHolder *m_team;
     TrainerMenu *trainer;
     TeamMenu *teamMenu;
-    PokeBoxes *boxesMenu;
 
     QAbstractItemModel *pokemonModel;
 

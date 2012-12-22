@@ -19,7 +19,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
+TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
 {
     ui = new _ui();
     ui->stack = new QStackedWidget();
@@ -103,6 +103,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
 
     menuMods->addSeparator();
     menuMods->addAction(tr("&Install new mod..."), this, SLOT(installMod()));
+    menuMods->addAction(tr("&Remove mod..."), this, SLOT(removeMods()));
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
@@ -313,6 +314,53 @@ void TeamBuilder::installMod()
     }
 }
 
+void TeamBuilder::removeMods()
+{
+    QWidget *widget = new QWidget();
+    widget->setWindowTitle(tr("Available mods"));
+
+    QVBoxLayout *v = new QVBoxLayout(widget);
+
+    v->addWidget(modsList = new QListWidget());
+
+    QStringList mods = PokemonInfoConfig::availableMods();
+
+    modsList->addItems(mods);
+
+    QHBoxLayout *buttons = new QHBoxLayout();
+
+    v->addLayout(buttons);
+
+    QPushButton *remove;
+
+    buttons->addWidget(remove = new QPushButton(tr("Remove mod")));
+
+    connect(remove, SIGNAL(clicked()), SLOT(removeMod()));
+
+    widget->show();
+}
+
+void TeamBuilder::removeMod()
+{
+    if (modsList->count() < 1) {
+        return;
+    }
+
+    QString selected = modsList->currentItem()->text();
+
+    if (!selected.isEmpty()) {
+        QDir modsDir(appDataPath("Mods", true));
+
+        if (modsDir.exists()) {
+            if (modsDir.exists(selected)) {
+                removeFolder(modsDir.absoluteFilePath(selected));
+                modsList->takeItem(modsList->currentIndex().row());
+                reloadMenuBar();
+            }
+        }
+    }
+}
+
 void TeamBuilder::newTeam()
 {
     switchToTrainer();
@@ -402,13 +450,7 @@ void TeamBuilder::markTeamUpdated()
 
 void TeamBuilder::openBoxes()
 {
-    if(!boxesMenu) {
-        ui->stack->addWidget(boxesMenu = new PokeBoxes(this, &team()));
-        boxesMenu->setMainWindow(this);
-        connect(boxesMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
-        connect(boxesMenu, SIGNAL(done()), SLOT(switchToTrainer()));
-    }
-    switchTo(boxesMenu);
+    editPoke(6);
 }
 
 void TeamBuilder::editPoke(int index)
