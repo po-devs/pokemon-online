@@ -116,7 +116,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     /* Tray icon */
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setToolTip("Pok\303\251mon Online Server");
+    trayIcon->setToolTip("Pok\303\251mon Online Client");
     trayIcon->setIcon(QIcon("db/icon.png"));
     trayIcon->show();
 
