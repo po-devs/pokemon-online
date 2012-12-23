@@ -342,7 +342,7 @@ void TeamBuilder::removeMods()
 
 void TeamBuilder::removeMod()
 {
-    if (modsList->count() < 1) {
+    if (modsList->count() < 1 || modsList->selectedItems().count() < 1) {
         return;
     }
 
