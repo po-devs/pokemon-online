@@ -170,9 +170,9 @@ void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
 #ifdef Q_OS_WIN
     active = qApp->activeWindow();
 #else
-    active = qApp->activeWindow() != (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm));
+    active = qApp->activeWindow() == (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm));
 #endif
-    if (active) {
+    if (!active) {
         emit notification(tr("Pok\303\251mon Online PM"), mess);
     }
 }
