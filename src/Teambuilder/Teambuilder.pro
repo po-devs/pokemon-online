@@ -204,7 +204,7 @@ macx {
 }
 
 CONFIG(debian) {
-    DEFINES += -DPO_DATA_REPO="/usr/shared/games/pokemon-online/"
+    DEFINES += -DPO_DATA_REPO="/usr/share/games/pokemon-online/"
 }
 
 
