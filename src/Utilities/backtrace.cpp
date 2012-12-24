@@ -3,6 +3,7 @@
 
 #ifdef Q_OS_LINUX
 
+#include <unistd.h>
 #include <execinfo.h>
 #include <cstdio>
 
