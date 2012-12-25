@@ -1477,7 +1477,6 @@ void Client::askForPass(const QByteArray &salt) {
     connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
     layout->addWidget(buttonBox);
 
-
     dialog.setLayout(layout);
 
     if (ok) {
@@ -1494,7 +1493,6 @@ void Client::askForPass(const QByteArray &salt) {
         // TODO: ipv6 support in the future
         wallet.saveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass);
     }
-
 
     QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toAscii())+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::AskForPass, hash);
