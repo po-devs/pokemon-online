@@ -17,13 +17,14 @@ ChallengeDialog::ChallengeDialog(QWidget *parent) :
     show();
 }
 
-ChallengeDialog::ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid) :
+ChallengeDialog::ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid, int challengeId) :
     ui(new Ui::ChallengeDialog),
     emitOnClose(true), challenging(false)
 {
     init();
 
     myid = mid;
+    challId = challengeId;
 
     setPlayerInfo(info);
     setTeam(t);
@@ -136,6 +137,11 @@ void ChallengeDialog::changeCurrentTeam()
 int ChallengeDialog::id()
 {
     return info.id;
+}
+
+int ChallengeDialog::cid()
+{
+    return challId;
 }
 
 

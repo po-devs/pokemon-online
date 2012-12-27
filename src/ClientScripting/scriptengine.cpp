@@ -82,7 +82,8 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("onPlayerRemoved(int)", (Hook)(&ScriptEngine::onPlayerRemoved));
     ret.insert("onPlayerJoinChan(int,int)", (Hook)(&ScriptEngine::onPlayerJoinChan));
     ret.insert("onPlayerLeaveChan(int,int)", (Hook)(&ScriptEngine::onPlayerLeaveChan));
-    ret.insert("beforeChallengeReceived(int)", (Hook)(&ScriptEngine::beforeChallengeReceived));
+    ret.insert("beforeChallengeReceived(int,int,QString,int)", (Hook)(&ScriptEngine::beforeChallengeReceived));
+    ret.insert("afterChallengeReceived(int,int,QString,int)", (Hook)(&ScriptEngine::afterChallengeReceived));
     ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
 
     return ret;
@@ -268,9 +269,14 @@ int ScriptEngine::onPlayerLeaveChan(int id, int chan)
     return true;
 }
 
-int ScriptEngine::beforeChallengeReceived(int id)
+int ScriptEngine::beforeChallengeReceived(int challengeId, int oppId, QString tier, int clauses)
 {
-    return makeSEvent("beforeChallengeReceived", id);
+    return makeSEvent("beforeChallengeReceived", challengeId, oppId, tier, clauses);
+}
+
+int ScriptEngine::afterChallengeReceived(int challengeId, int oppId, QString tier, int clauses)
+{
+    return makeSEvent("afterChallengeReceived", challengeId, oppId, tier, clauses);
 }
 
 void ScriptEngine::stepEvent()
