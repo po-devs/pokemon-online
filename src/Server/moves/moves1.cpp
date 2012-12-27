@@ -155,6 +155,12 @@ struct MMBatonPass : public MM
         turn(b,s)["BatonPassed"] = false;
         merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
+        /* If the poke before is confused, carry on that status */
+        if (poke(b,s)["ConfusedCount"].toInt() > 0) {
+            if (!b.poke(s).hasStatus(Pokemon::Confused))
+            b.poke(s).addStatus(Pokemon::Confused);
+        }
+
         QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
         for (int i = 0; i < 8; i++) {
             fpoke(b,s).boosts[i] += boosts[i];
