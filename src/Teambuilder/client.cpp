@@ -29,6 +29,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     waitingOnSecond = false;
     top = NULL;
     isConnected = true;
+    loggedIn = false;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -1486,6 +1487,8 @@ void Client::askForPass(const QByteArray &salt) {
 
     int ret = dialog.exec();
     if (!ret) {
+        if (loggedIn)
+            myregister->setEnabled(true);
         return;
     }
     pass = passEdit->text();
@@ -2208,6 +2211,7 @@ void Client::disconnected()
     }
 
     isConnected = false;
+    loggedIn = false;
     myregister->setText(tr("&Reconnect"));
     myregister->setEnabled(true);
 
@@ -2244,6 +2248,10 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 
     playerReceived(p);
     tiersReceived(tiers);
+
+    /* If it's us, we know we've logged in */
+    if (p.id == ownId())
+        loggedIn = true;
 }
 
 void Client::tiersReceived(const QStringList &tiers)
