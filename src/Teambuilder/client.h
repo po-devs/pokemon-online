@@ -378,7 +378,7 @@ private:
     QPointer<QAction> ladder;
 
     bool findingBattle;
-    bool isConnected;
+    bool isConnected, loggedIn;
     QString url;
     quint16 port;
     int _mid;
