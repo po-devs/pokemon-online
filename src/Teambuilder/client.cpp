@@ -1898,11 +1898,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             mychallengeids.insert(challengeId, mychallenge);
             mychallenges.insert(mychallenge);
 
-            if (!call("afterChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses))) {
-                ChallengeInfo d = c;
-                d.dsc = ChallengeInfo::Busy;
-                relay().sendChallengeStuff(d);
-            }
+            call("afterChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses));
         }
     }
 }
