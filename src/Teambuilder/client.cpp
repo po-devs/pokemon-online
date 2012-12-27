@@ -1858,22 +1858,25 @@ void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
-        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId());
+        int challengeId = freeChallengeId();
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId(), challengeId);
         mychallenge->setChallenging(tier);
 
         connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
+        mychallengeids.insert(challengeId, mychallenge);
         mychallenges.insert(mychallenge);
     }
 }
 
 void Client::seeChallenge(const ChallengeInfo &c)
 {
+    int challengeId = freeChallengeId();
     if (playerExist(c))
     {
-        if (!call("beforeChallengeReceived(int)", c.opponent())) {
+        if (!call("beforeChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses))) {
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
@@ -1883,7 +1886,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId());
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId(), challengeId);
             mychallenge->setChallengeInfo(c);
 
             connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
@@ -1891,7 +1894,15 @@ void Client::seeChallenge(const ChallengeInfo &c)
             connect(mychallenge, SIGNAL(cancel(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
+
+            mychallengeids.insert(challengeId, mychallenge);
             mychallenges.insert(mychallenge);
+
+            if (!call("afterChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses))) {
+                ChallengeInfo d = c;
+                d.dsc = ChallengeInfo::Busy;
+                relay().sendChallengeStuff(d);
+            }
         }
     }
 }
@@ -2512,6 +2523,43 @@ ChallengeDialog * Client::getChallengeWindow(int player)
     }
 
     return NULL;
+}
+
+
+void Client::sendChallenge(int id, int clauses, int mode)
+{
+    ChallengeInfo c;
+    c.clauses = clauses;
+    c.opp = id;
+    c.rated = false;
+    c.team = myteam->currentTeam();
+    c.desttier = myteam->tier();
+    c.mode = mode;
+    c.dsc = ChallengeInfo::Sent;
+    relay().sendChallengeStuff(c);
+}
+
+void Client::acceptChallenge(int cId)
+{
+    foreach(ChallengeDialog *d, mychallengeids) {
+        if (d->cid() == cId) {
+            ChallengeInfo c = d->challengeInfo();
+            c.dsc = ChallengeInfo::Accepted;
+            relay().sendChallengeStuff(c);
+            closeChallengeWindow(d);
+            break;
+        }
+    }
+}
+
+int Client::freeChallengeId()
+{
+    int ret = 0;
+    do {
+        ++ret;
+    } while (mychallengeids.contains(ret));
+
+    return ret;
 }
 
 void Client::openTeamBuilder()

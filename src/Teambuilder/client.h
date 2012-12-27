@@ -113,6 +113,9 @@ public:
 
     void seeChallenge(const ChallengeInfo &c);
 
+    Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
+    Q_INVOKABLE void acceptChallenge(int cId);
+
     PlayerInfo player(int id) const;
     void removePlayer(int id);
 
@@ -316,7 +319,6 @@ signals:
     void togglePMs(bool value);
     void PMDisconnected(bool disconnected);
     void titleChanged();
-
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -365,6 +367,8 @@ private:
     /* Ignore */
     QList<int> myIgnored;
 
+    /* Challenge ids, needed for accepting challenges with client scripts */
+    QHash<int, ChallengeDialog *> mychallengeids;
     /* Challenge windows , to emit or to receive*/
     QSet<ChallengeDialog *> mychallenges;
     QPointer<FindBattleDialog> myBattleFinder;
@@ -424,6 +428,8 @@ private:
     ChallengeDialog * getChallengeWindow(int player);
     void closeChallengeWindow(ChallengeDialog *c);
 
+    int freeChallengeId();
+
     void initRelay();
     void changeTiersChecked();
     void rebuildTierMenu();
@@ -477,6 +483,19 @@ private:
         foreach(OnlineClientPlugin *p, plugins) {
             if (hooks[p].contains(f)) {
                 ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3)>(hooks[p][f])))(arg1, arg2, arg3);
+            }
+        }
+
+        return ret;
+    }
+
+    template<class T1, class T2, class T3, class T4>
+    bool call(const QString &f, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3, T4)>(hooks[p][f])))(arg1, arg2, arg3, arg4);
             }
         }
 
