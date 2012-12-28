@@ -582,7 +582,7 @@ void BattleClientLog::onReconnect(int player)
 
 void BattleClientLog::selfDisconnection()
 {
-    pushHtml(QString("<i>Disconnected from Server!</i>"));
+    pushHtml(QString("<br><i>Disconnected from Server!</i>"));
     emit lineToBePrinted(log.back());
 }
 
