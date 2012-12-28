@@ -108,6 +108,11 @@ void SpectatorWindow::reloadTeam(int player)
     data2->reloadTeam(player);
 }
 
+void SpectatorWindow::disconnected()
+{
+    log->selfDisconnection();
+}
+
 BattleClientLog* SpectatorWindow::getLog()
 {
     return log;
