@@ -2179,7 +2179,7 @@ void ItemInfo::loadEffects()
                     toPush.push_back(Effect(atoi(s.c_str())));
                 }
             }
-            m_RegEffects[i-GEN_MIN][it.key()] = toPush;
+            m_RegEffects[i-GEN_MIN][it.key()].append(toPush);
         }
     }
 
