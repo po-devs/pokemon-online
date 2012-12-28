@@ -247,12 +247,11 @@ void ContextCallee::terminate()
     /* Fixme: find out why that can happen */
     if (!ctx) {
         qDebug() << "Critical terminate w/o starting";
-        deleteLater();
-        return;
+        abort();
     }
 
     ctx->terminate(this);
-    ctx = NULL;
+    //ctx = NULL; //removed in case our own context is running in parallel and calls yield();
 }
 
 void ContextCallee::wait()
