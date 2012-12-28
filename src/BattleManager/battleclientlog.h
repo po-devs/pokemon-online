@@ -68,6 +68,7 @@ public:
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onPrintHtml(const QString &data);
     void onReconnect(int player);
+    void selfDisconnection();
     void onDisconnect(int player);
     void onUseItem(int spot, int item);
 

@@ -29,6 +29,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     waitingOnSecond = false;
     top = NULL;
     isConnected = true;
+    loggedIn = false;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -1486,6 +1487,8 @@ void Client::askForPass(const QByteArray &salt) {
 
     int ret = dialog.exec();
     if (!ret) {
+        if (loggedIn)
+            myregister->setEnabled(true);
         return;
     }
     pass = passEdit->text();
@@ -1858,22 +1861,25 @@ void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
-        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId());
+        int challengeId = freeChallengeId();
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId(), challengeId);
         mychallenge->setChallenging(tier);
 
         connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
+        mychallengeids.insert(challengeId, mychallenge);
         mychallenges.insert(mychallenge);
     }
 }
 
 void Client::seeChallenge(const ChallengeInfo &c)
 {
+    int challengeId = freeChallengeId();
     if (playerExist(c))
     {
-        if (!call("beforeChallengeReceived(int)", c.opponent())) {
+        if (!call("beforeChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses))) {
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
@@ -1883,7 +1889,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId());
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId(), challengeId);
             mychallenge->setChallengeInfo(c);
 
             connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
@@ -1891,7 +1897,11 @@ void Client::seeChallenge(const ChallengeInfo &c)
             connect(mychallenge, SIGNAL(cancel(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
+
+            mychallengeids.insert(challengeId, mychallenge);
             mychallenges.insert(mychallenge);
+
+            call("afterChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses));
         }
     }
 }
@@ -1912,6 +1922,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
         connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
         connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
         connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+        connect(&relay(), SIGNAL(disconnected()), mybattle, SLOT(disconnected()));
         //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
         mybattles[battleId] = mybattle;
@@ -2200,7 +2211,10 @@ void Client::disconnected()
         printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
     }
 
+    onDisconnect();
+
     isConnected = false;
+    loggedIn = false;
     myregister->setText(tr("&Reconnect"));
     myregister->setEnabled(true);
 
@@ -2208,6 +2222,16 @@ void Client::disconnected()
     if (failedBefore)
         newConnection();
     failedBefore = false;
+}
+
+void Client::onDisconnect()
+{
+    /* Handle things on disconnection */
+
+    /* Let our existing spectating battles know we have disconnected */
+    foreach(BaseBattleWindowInterface *interface, mySpectatingBattles) {
+        interface->disconnected();
+    }
 }
 
 TeamHolder* Client::team()
@@ -2237,6 +2261,10 @@ void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
 
     playerReceived(p);
     tiersReceived(tiers);
+
+    /* If it's us, we know we've logged in */
+    if (p.id == ownId())
+        loggedIn = true;
 }
 
 void Client::tiersReceived(const QStringList &tiers)
@@ -2512,6 +2540,43 @@ ChallengeDialog * Client::getChallengeWindow(int player)
     }
 
     return NULL;
+}
+
+
+void Client::sendChallenge(int id, int clauses, int mode)
+{
+    ChallengeInfo c;
+    c.clauses = clauses;
+    c.opp = id;
+    c.rated = false;
+    c.team = myteam->currentTeam();
+    c.desttier = myteam->tier();
+    c.mode = mode;
+    c.dsc = ChallengeInfo::Sent;
+    relay().sendChallengeStuff(c);
+}
+
+void Client::acceptChallenge(int cId)
+{
+    foreach(ChallengeDialog *d, mychallengeids) {
+        if (d->cid() == cId) {
+            ChallengeInfo c = d->challengeInfo();
+            c.dsc = ChallengeInfo::Accepted;
+            relay().sendChallengeStuff(c);
+            closeChallengeWindow(d);
+            break;
+        }
+    }
+}
+
+int Client::freeChallengeId()
+{
+    int ret = 0;
+    do {
+        ++ret;
+    } while (mychallengeids.contains(ret));
+
+    return ret;
 }
 
 void Client::openTeamBuilder()

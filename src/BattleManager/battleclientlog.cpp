@@ -580,6 +580,12 @@ void BattleClientLog::onReconnect(int player)
     printHtml("Reconnect", toBoldColor(tr("%1 logged back in and is ready to resume the battle!").arg(data()->name(spot)), Qt::blue));
 }
 
+void BattleClientLog::selfDisconnection()
+{
+    pushHtml(QString("<br><i>Disconnected from Server!</i>"));
+    emit lineToBePrinted(log.back());
+}
+
 void BattleClientLog::onDisconnect(int player)
 {
     int spot = data()->spotFromId(player);

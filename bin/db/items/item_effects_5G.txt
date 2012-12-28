@@ -137,7 +137,6 @@
 0 #1002, 1005 not used
 43 1000-5#Antidote
 44 1000-2#Awakening
-45 1001-20#Berry Juice
 52 1000-2_1#Blue flute
 54 1000-4#Burn heal
 61 2002#Dire hit

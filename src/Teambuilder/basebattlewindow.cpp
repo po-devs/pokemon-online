@@ -427,6 +427,11 @@ void BaseBattleWindow::onUseAttack(int, int, bool)
     }
 }
 
+void BaseBattleWindow::selfDisconnection()
+{
+    mychat->insertHtml("<br><i>Disconnected from Server!</i>");
+}
+
 void BaseBattleWindow::onKo(int spot)
 {
     switchToNaught(spot);
