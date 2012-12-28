@@ -1922,6 +1922,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
         connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
         connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
         connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+        connect(&relay(), SIGNAL(disconnected()), mybattle, SLOT(disconnected()));
         //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
         mybattles[battleId] = mybattle;
@@ -2210,6 +2211,8 @@ void Client::disconnected()
         printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
     }
 
+    onDisconnect();
+
     isConnected = false;
     loggedIn = false;
     myregister->setText(tr("&Reconnect"));
@@ -2219,6 +2222,16 @@ void Client::disconnected()
     if (failedBefore)
         newConnection();
     failedBefore = false;
+}
+
+void Client::onDisconnect()
+{
+    /* Handle things on disconnection */
+
+    /* Let our existing spectating battles know we have disconnected */
+    foreach(BaseBattleWindowInterface *interface, mySpectatingBattles) {
+        interface->disconnected();
+    }
 }
 
 TeamHolder* Client::team()
