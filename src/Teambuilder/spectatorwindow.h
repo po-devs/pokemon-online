@@ -51,7 +51,7 @@ public:
 
     void reloadTeam(int player);
 
-    void disconnected();
+    void onDisconnection();
 private:
     BattleClientLog *log;
     BattleInput *input;

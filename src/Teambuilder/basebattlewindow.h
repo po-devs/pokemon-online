@@ -85,7 +85,7 @@ public:
     Q_INVOKABLE int player(int spot) const;
     Q_INVOKABLE int opponent(int player) const;
 
-    void selfDisconnection();
+    void onDisconnection();
     void onKo(int spot);
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
