@@ -204,7 +204,12 @@ void TeamBuilder::changeMod()
 void TeamBuilder::installMod()
 {
     /* Todo: thread this, and print updated status ? */
-    QString archivePath = QFileDialog::getOpenFileName(this, tr("Install mod file"), QDesktopServices::storageLocation(QDesktopServices::HomeLocation), tr("archive (*.zip)"));
+#ifdef QT5
+    const QString homeLocation = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+#else
+    const QString homeLocation = QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
+#endif
+    QString archivePath = QFileDialog::getOpenFileName(this, tr("Install mod file"), homeLocation, tr("archive (*.zip)"));
 
     if (archivePath.isNull()) {
         return;

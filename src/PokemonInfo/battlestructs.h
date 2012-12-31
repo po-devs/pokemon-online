@@ -45,6 +45,7 @@ class ShallowBattlePoke
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
+    virtual ~ShallowBattlePoke();
 
     int status() const;
     void changeStatus(int status);

@@ -13,6 +13,7 @@
 #include <QBuffer>
 #include <QDir>
 #include <QTemporaryFile>
+#include <QDrag>
 
 QCompactTable::QCompactTable(int row, int column)
     : QTableWidget(row, column)

@@ -3,6 +3,9 @@
 
 #include <QtCore>
 #include <QtGui>
+#ifdef QT5
+#include <QtWidgets>
+#endif
 
 /* This file allows to avoid writing bothersome code in order to make GUI config windows.
 

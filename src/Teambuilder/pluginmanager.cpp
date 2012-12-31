@@ -14,7 +14,11 @@ PluginManager::PluginManager(MainEngine *t) : engine(t)
     foreach(QString plugin, plugins) {
         cross::DynamicLibrary *l;
         try {
+#ifdef QT5
+             l = new cross::DynamicLibrary(plugin.toLatin1().constData());
+#else
              l = new cross::DynamicLibrary(plugin.toAscii().constData());
+#endif
         } catch (const std::exception &e) {
             qDebug() << "Error when loading plugin " << plugin << ": " << e.what();
             continue;
@@ -59,7 +63,11 @@ void PluginManager::addPlugin(const QString &path)
 {
     cross::DynamicLibrary *l;
     try {
+#ifdef QT5
+         l = new cross::DynamicLibrary(path.toLatin1().constData());
+#else
          l = new cross::DynamicLibrary(path.toAscii().constData());
+#endif
     } catch (const std::exception &e) {
         QMessageBox::warning(NULL, QObject::tr("Pokemon Online"), QObject::tr("Error when loading plugin at %1: %2").arg(path).arg(e.what()));
         return;

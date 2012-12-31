@@ -16,7 +16,9 @@ class smogonbuild{
 public:
     smogonbuild();
 //    ~SmogonBuild();
+#ifndef QT5
     void printBuild();
+#endif
     QString EVListToString();
 
     QString buildName;

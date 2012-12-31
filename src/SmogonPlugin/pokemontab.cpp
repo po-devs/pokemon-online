@@ -142,7 +142,9 @@ void PokemonTab::createInitialUi(QList<smogonbuild> *builds)
     {
         foreach(smogonbuild build, *builds)
         {
+#ifndef QT5
             build.printBuild();
+#endif
             build_chooser -> addItem(build.buildName);
         }
     }
