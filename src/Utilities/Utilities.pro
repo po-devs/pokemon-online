@@ -52,7 +52,16 @@ SOURCES += coro.c
 }
 
 OTHER_FILES += 
-QMAKE_CXXFLAGS += "-std=c++0x"
+
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+  macx: {
+    QMAKE_CXXFLAGS += "-std=c++11"
+  }
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x"
+}
 
 windows: { LIBS += -L../../bin -lzip-2 }
 !windows: { LIBS += -lzip }

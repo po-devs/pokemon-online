@@ -9,7 +9,7 @@ class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
 class BattleDefaultTheme;
-class ThemeAccessor;
+struct ThemeAccessor;
 class QToolButton;
 
 #define DEFAULT_PO_THEME "Classic"

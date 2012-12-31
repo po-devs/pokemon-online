@@ -9,6 +9,9 @@
 #include "spectatorwindow.h"
 #include "../Shared/battlecommands.h"
 #include <cstdlib>
+#ifdef QT5
+#include <QButtonGroup>
+#endif
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
     : BaseBattleInfo(me, opp, mode, my, op)

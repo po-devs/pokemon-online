@@ -5,6 +5,8 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "Teambuilder/teamholder.h"
 #include "theme.h"
+#include <QMessageBox>
+#include <QInputDialog>
 
 PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     TeamBuilderWidget(parent), m_team(nteam),

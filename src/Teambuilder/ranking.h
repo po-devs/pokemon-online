@@ -2,6 +2,11 @@
 #define RANKING_H
 
 #include <QtGui>
+#ifdef QT5
+#include <QLineEdit>
+#include <QLabel>
+#include <QComboBox>
+#endif
 
 class QCompactTable;
 

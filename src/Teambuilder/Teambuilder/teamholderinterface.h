@@ -1,7 +1,7 @@
 #ifndef TEAMHOLDERINTERFACE_H
 #define TEAMHOLDERINTERFACE_H
 
-class TrainerInfo;
+struct TrainerInfo;
 class Team;
 class QString;
 class QColor;

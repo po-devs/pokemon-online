@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 #include "engineinterface.h"
 #include "centralwidget.h"
 #include "Teambuilder/teamholder.h"

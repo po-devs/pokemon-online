@@ -1,7 +1,9 @@
-#include "advancedsearch.h"
-#include "ui_advancedsearch.h"
+// For clang compactability
+#include "../PokemonInfo/geninfo.h"
 
 #include "../PokemonInfo/pokemoninfo.h"
+#include "advancedsearch.h"
+#include "ui_advancedsearch.h"
 #include <QStringListModel>
 #include <QCompleter>
 

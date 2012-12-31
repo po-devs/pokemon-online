@@ -125,8 +125,12 @@ LogManager::LogManager()
     flags = 0;
     QSettings s;
 
-    setDefaultValue(s, "logs_directory", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation)
-                    +"/Pokemon Online/Logs/");
+#ifdef QT5
+    const QString docLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+#else
+    const QString docLocation = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+#endif
+    setDefaultValue(s, "logs_directory", docLocation + "/Pokemon Online/Logs/");
     setDefaultValue(s, "Battle/SaveLogs", false);
 
     directory = s.value("logs_directory").toString();

@@ -4,7 +4,7 @@
 #include <QtGui>
 #include "ui_controlpanel.h"
 
-class UserInfo;
+struct UserInfo;
 
 class ControlPanel : public QTabWidget, Ui_ControlPanel
 {

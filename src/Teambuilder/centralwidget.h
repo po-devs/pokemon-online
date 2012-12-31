@@ -2,6 +2,9 @@
 #define CENTRALWIDGET_H
 
 #include <QtGui>
+#ifdef QT5
+#include <QtWidgets>
+#endif
 
 class MainEngine;
 

@@ -1,6 +1,7 @@
 #ifndef PLUGININTERFACE_H
 #define PLUGININTERFACE_H
 
+#include <QObject>
 #include <QString>
 #include <QHash>
 
