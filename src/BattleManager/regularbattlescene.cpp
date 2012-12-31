@@ -273,7 +273,7 @@ bool RegularBattleScene::isPlayer(int spot) const
 
 void RegularBattleScene::pause()
 {
-    pauseCount =+ 1;
+    pauseCount += 1;
     baseClass::pause();
 }
 
