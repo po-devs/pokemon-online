@@ -1769,13 +1769,10 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         if (_desc == Forfeit) {
             battle->playerForfeit(loser);
         }
-        if (_desc != Tie && rated) {
-            QString winn = pw->name();
-            QString lose = pl->name();
-            TierMachine::obj()->changeRating(winn, lose, tier);
-            pw->findRating(tier);
-            pl->findRating(tier);
-        }
+
+        QString winn = pw->name();
+        QString lose = pl->name();
+
         myengine->beforeBattleEnded(winner, loser, _desc, battleid);
 
         ++lastDataId;
@@ -1806,6 +1803,15 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         } else if (_desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
+
+        if (_desc != Tie && rated) {
+            TierMachine::obj()->changeRating(winn, lose, tier);
+            if (playerExist(pw->id()))
+                pw->findRating(tier);
+            if (playerExist(pl->id()))
+                pl->findRating(tier);
+        }
+
         myengine->afterBattleEnded(winner, loser, _desc, battleid);
     }
 
