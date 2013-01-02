@@ -859,7 +859,7 @@
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="390"/>
         <source>A sandstorm kicked up!</source>
-        <translation>沙暴开始了！</translation>
+        <translation type="unfinished">沙尘暴开始了！</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="406"/>
@@ -1107,13 +1107,13 @@
         <location filename="../BattleManager/battleclientlog.cpp" line="495"/>
         <location filename="../BattleManager/battleclientlog.cpp" line="516"/>
         <source>Rated</source>
-        <translation>已分级</translation>
+        <translation>按照分级（计分）</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="495"/>
         <location filename="../BattleManager/battleclientlog.cpp" line="516"/>
         <source>Unrated</source>
-        <translation>未分级</translation>
+        <translation>未分级（不计分）</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="512"/>
@@ -1286,7 +1286,7 @@ Moves:
     <message>
         <location filename="../BattleLogs/battleserverlog.cpp" line="21"/>
         <source>%1&apos;s variation: </source>
-        <translation type="unfinished"></translation>
+        <translation>%1的分数变化：</translation>
     </message>
 </context>
 <context>
@@ -1803,37 +1803,37 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="473"/>
         <location filename="../Teambuilder/client.cpp" line="1208"/>
         <source>Enable all events</source>
-        <translation type="unfinished"></translation>
+        <translation>显示全部消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="478"/>
         <location filename="../Teambuilder/client.cpp" line="1211"/>
         <source>Disable all events</source>
-        <translation type="unfinished"></translation>
+        <translation>隐藏全部消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="485"/>
         <location filename="../Teambuilder/client.cpp" line="1216"/>
         <source>Enable idle events</source>
-        <translation type="unfinished"></translation>
+        <translation>提示空闲消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="494"/>
         <location filename="../Teambuilder/client.cpp" line="1227"/>
         <source>Enable battle events</source>
-        <translation type="unfinished"></translation>
+        <translation>提示战斗情况消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="503"/>
         <location filename="../Teambuilder/client.cpp" line="1238"/>
         <source>Enable channel events</source>
-        <translation type="unfinished"></translation>
+        <translation>提示频道消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="512"/>
         <location filename="../Teambuilder/client.cpp" line="1249"/>
         <source>Enable team change events</source>
-        <translation type="unfinished"></translation>
+        <translation>提示玩家更换队伍消息</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="527"/>
@@ -1882,7 +1882,7 @@ Moves:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1188"/>
         <source>Open &amp;Replay</source>
-        <translation>打开回放</translation>
+        <translation>查看录像</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1188"/>
@@ -2109,7 +2109,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1204"/>
         <source>Player events</source>
-        <translation type="unfinished"></translation>
+        <translation>玩家消息提示</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1301"/>
@@ -2776,7 +2776,7 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
     <message>
         <location filename="../Teambuilder/findbattledialog.ui" line="20"/>
         <source>Force rated battles</source>
-        <translation>只允许已分级战斗（计分战斗）</translation>
+        <translation>只允许符合分级战斗（计分战斗）</translation>
     </message>
     <message>
         <location filename="../Teambuilder/findbattledialog.ui" line="27"/>
@@ -3401,13 +3401,13 @@ Effect: %5</source>
         <location filename="../Teambuilder/password_wallet.cpp" line="67"/>
         <location filename="../Teambuilder/password_wallet.cpp" line="88"/>
         <source>Warning: the Server IP Address has changed since password was saved.</source>
-        <translation type="unfinished"></translation>
+        <translation>警告：保存密码之后服务器IP地址发生了改变。</translation>
     </message>
     <message>
         <location filename="../Teambuilder/password_wallet.cpp" line="69"/>
         <location filename="../Teambuilder/password_wallet.cpp" line="90"/>
         <source>Warning: the Server Name has changed since password was saved.</source>
-        <translation type="unfinished"></translation>
+        <translation>警告：保存密码之后服务器名字发生了改变。</translation>
     </message>
 </context>
 <context>
@@ -4232,7 +4232,7 @@ Moves:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="12"/>
         <source>Freeze Clause</source>
-        <translation>冻结条款</translation>
+        <translation>冰冻条款</translation>
     </message>
     <message>
         <source>Evasion Clause</source>
@@ -5214,12 +5214,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="46"/>
         <source>The server is password protected</source>
-        <translation type="unfinished"></translation>
+        <translation>该服务器需要密码</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="46"/>
         <source>The server is not password protected</source>
-        <translation type="unfinished"></translation>
+        <translation>该服务器不需要密码</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="85"/>
@@ -5229,33 +5229,33 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="87"/>
         <source>Players / Max</source>
-        <translation type="unfinished">玩家/最大</translation>
+        <translation>玩家/最大</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="89"/>
         <source>Advanced Connection</source>
         <comment>Server List Header</comment>
-        <translation type="unfinished"></translation>
+        <translation>高级连接地址</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="94"/>
         <source>Whether or not the server requires a password to log in</source>
-        <translation type="unfinished"></translation>
+        <translation>表示此服务器是否需要密码登陆</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="96"/>
         <source>The name of the server</source>
-        <translation type="unfinished"></translation>
+        <translation>服务器的名字</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="98"/>
         <source>The number of players / maximum number of players in the server</source>
-        <translation type="unfinished"></translation>
+        <translation>服务器当前玩家数量/允许的最大玩家数量</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoicemodel.cpp" line="100"/>
         <source>The advanced connection required to access the server when the registry is down</source>
-        <translation type="unfinished"></translation>
+        <translation>无法显示列表时可以用高级连接直接连接此地址</translation>
     </message>
 </context>
 <context>
