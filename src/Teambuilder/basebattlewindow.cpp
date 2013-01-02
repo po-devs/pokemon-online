@@ -427,9 +427,9 @@ void BaseBattleWindow::onUseAttack(int, int, bool)
     }
 }
 
-void BaseBattleWindow::selfDisconnection()
+void BaseBattleWindow::onDisconnection()
 {
-    mychat->insertHtml("<br><i>Disconnected from Server!</i>");
+    mychat->insertHtml("<br><i><b>Disconnected from Server!</b></i>");
 }
 
 void BaseBattleWindow::onKo(int spot)

@@ -1094,6 +1094,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     }
 
     ret.loadFromData(data, file.section(".", -1).toAscii().data());
+    QPixmapCache::insert(archive+file, ret);
 
     return ret;
 }
@@ -1168,6 +1169,7 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
     }
 
     ret.loadFromData(data, "png");
+    QPixmapCache::insert(archive+file, ret);
 
     return ret;
 }
@@ -1206,6 +1208,7 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
     }
 
     p.loadFromData(data,"png");
+    QPixmapCache::insert(archive+file, p);
     return p;
 }
 
@@ -2295,6 +2298,7 @@ QPixmap ItemInfo::Icon(int itemnum)
     }
 
     ret.loadFromData(data,"png");
+    QPixmapCache::insert(archive+file, ret);
     return ret;
 }
 
@@ -2318,6 +2322,7 @@ QPixmap ItemInfo::HeldItem()
     }
 
     ret.loadFromData(data,"png");
+    QPixmapCache::insert(archive+file, ret);
     return ret;
 }
 
