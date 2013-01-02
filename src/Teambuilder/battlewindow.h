@@ -125,7 +125,7 @@ public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
     void itemActivated(QListWidgetItem*);
-    void disconnected();
+    void onDisconnection();
     void sendMessage();
     void offerTie();
     void attackButton();

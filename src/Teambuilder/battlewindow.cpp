@@ -631,9 +631,9 @@ void BattleWindow::sendChoice(const BattleChoice &b)
         info().possible = false;
 }
 
-void BattleWindow::disconnected()
+void BattleWindow::onDisconnection()
 {
-    BaseBattleWindow::selfDisconnection();
+    BaseBattleWindow::onDisconnection();
 }
 
 void BattleWindow::sendMessage()

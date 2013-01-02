@@ -122,7 +122,7 @@ public:
     void removeBattleWindow(int id);
     void disableBattleWindow(int id);
 
-    void onDisconnect();
+    void onDisconnection();
 
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
