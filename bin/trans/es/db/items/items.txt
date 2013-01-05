@@ -67,7 +67,7 @@
 66 Cuerda Huida
 67 Éter
 68 Piedraeterna
-69 Repartir Exp.
+69 Repartir Exp
 70 Piedra Fuego
 71 Llamasfera
 72 Cola Skitty
@@ -225,12 +225,12 @@
 224 Carta Sideral
 225 Carta Acero
 226 Carta Mina
-227 Aqua Cassette
-228 Lightning Cassette
-229 Blaze Cassette
-230 Freeze Cassette
-231 Heart Sweets
-232 Clean Scale
+227 HidroROM
+228 FulgoROM
+229 PiroROM
+230 CrioROM
+231 Cor. Dulce
+232 Escama Bella
 233 Mineral Evol
 234 Piedra Pómez
 235 Casco Dentado
@@ -241,15 +241,15 @@
 240 Tubérculo
 241 Pila
 242 Botón Escape
-243 Fire Jewel
-244 Water Jewel
-245 Electric Jewel
-246 Grass Jewel
-247 Ice Jewel
-248 Fight Jewel
-249 Poison Jewel
-250 Earth Jewel
-251 Flight Jewel
+243 Gema Fuego
+244 Gema Agua
+245 Gema Eléctrica
+246 Gema Planta
+247 Gema Hielo
+248 Gema Lucha
+249 Gema Veneno
+250 Gema Tierra
+251 Gema Voladora
 252 Gema Psíquica
 253 Gema Bicho
 254 Gema Roca
@@ -257,14 +257,14 @@
 256 Gema Dragón
 257 Gema Siniestra
 258 Gema Acero
-259 Normal Jewel
-260 Strength Wing
-261 Power Wing
-262 Resistance Wing
-263 Wisdom Wing
-264 Mind Wing
-265 Instant Wing
-266 Beautiful Wing
+259 Gema Normal
+260 Pluma Vigor
+261 Pluma Músculo
+262 Pluma Aguante
+263 Pluma Intelecto
+264 Pluma Mente
+265 Pluma Ímpetu
+266 Pluma Bella
 267 Ensueño Ball
 268 Seta Aroma
 269 Maxipepita
@@ -277,29 +277,29 @@
 276 Brazal
 277 Efigie Antigua
 278 Corona Antigua
-279 Hiun Ice-cream
-280 Dire Hit 2
-281 X Speed 2
-282 X Special 2
-283 X Sp. Def 2
-284 X Defend 2
-285 X Attack 2
-286 X Accuracy 2
-287 X Speed 3
-288 X Special 3
-289 X Sp. Def 3
-290 X Defend 3
-291 X Attack 3
-292 X Accuracy 3
-293 X Speed 6
-294 X Special 6
-295 X Sp. Def 6
-296 X Defend 6
-297 X Attack 6
-298 X Accuracy 6
-299 Skill Call
-300 Item Drop
-301 Item Call
-302 Flat Call
-303 Dire Hit 3
-304 Berserk Gene
+279 Porcehelado
+280 Directo 2
+281 Velocidad X 2
+282 Especial X 2
+283 Def. Esp. X 2
+284 Defensa X 2
+285 Ataque X 2
+286 Precisión X 2
+287 Velocidad X 3
+288 Especial X 3
+289 Def. Esp. X 3
+290 Defensa X 3
+291 Ataque X 3
+292 Precisión X 3
+293 Velocidad X 6
+294 Especial X 6
+295 Def. Esp. X 6
+296 Defensa X 6
+297 Ataque X 6
+298 Precisión X 6
+299 Habilitador
+300 Tiraobjeto
+301 Activaobjeto
+302 Quitaestado
+303 Directo 3
+304 Gen loco
