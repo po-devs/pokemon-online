@@ -23,7 +23,7 @@
 22 Látigo Cepa
 23 Pisotón
 24 Doble Patada
-25 Mega Patada
+25 Megapatada
 26 Patada Salto
 27 Patada Giro
 28 Ataque Arena
@@ -36,10 +36,10 @@
 35 Repetición
 36 Derribo
 37 Golpe
-38 Doble-Filo
+38 Doble Filo
 39 Látigo
 40 Picotazo Ven
-41 Doble Ataque
+41 Dobleataque
 42 Pin Misil
 43 Malicioso
 44 Mordisco
@@ -70,7 +70,7 @@
 69 Movimiento Sísmico
 70 Fuerza
 71 Absorber
-72 Mega Drenado
+72 Megaagotar
 73 Drenadoras
 74 Desarrollo
 75 Hoja Afilada
@@ -86,7 +86,7 @@
 85 Rayo
 86 Onda Trueno
 87 Trueno
-88 Lanza Rocas
+88 Lanzarrocas
 89 Terremoto
 90 Fisura
 91 Excavar
@@ -97,7 +97,7 @@
 96 Meditación
 97 Agilidad
 98 Ataque Rápido
-99 Rabia
+99 Furia
 100 Teletransporte
 101 Tinieblas
 102 Mimético
@@ -106,7 +106,7 @@
 105 Recuperación
 106 Fortaleza
 107 Reducción
-108 Pantalla Humo
+108 Pantallahumo
 109 Rayo Confuso
 110 Refugio
 111 Rizo Defensa
@@ -139,10 +139,10 @@
 138 Come Sueños
 139 Gas Venenoso
 140 Presa
-141 Chupa Vidas
+141 Chupavidas
 142 Beso Amoroso
 143 Ataque Aéreo
-144 Transform.
+144 Transform
 145 Burbujas
 146 Puño Mareo
 147 Espora
@@ -174,7 +174,7 @@
 173 Ronquido
 174 Maldición
 175 Azote
-176 Conversión 2
+176 Conversión2
 177 Aerochorro
 178 Esporagodón
 179 Inversión
@@ -191,8 +191,8 @@
 190 Pulpocañón
 191 Púas
 192 Electrocañón
-193 Profecia
-194 Mismo Destino
+193 Profecía
+194 Mismodestino
 195 Canto Mortal
 196 Viento Hielo
 197 Detección
@@ -219,10 +219,10 @@
 218 Frustración
 219 Velo Sagrado
 220 Divide Dolor
-221 Fuego Sagrado
+221 Fuegosagrado
 222 Magnitud
-223 Puño Dinámico
-224 Mega Cuerno
+223 Puñodinámico
+224 Megacuerno
 225 Dragoaliento
 226 Relevo
 227 Otra Vez
@@ -239,10 +239,10 @@
 238 Tajo Cruzado
 239 Ciclón
 240 Danza Lluvia
-241 Dia Soleado
+241 Día Soleado
 242 Triturar
 243 Manto Espejo
-244 Mas Psique
+244 Más Psique
 245 Velocidad Extrema
 246 Poder Pasado
 247 Bola Sombra
@@ -282,7 +282,7 @@
 281 Bostezo
 282 Desarme
 283 Esfuerzo
-284 Erupción
+284 Estallido
 285 Intercambio
 286 Cerca
 287 Alivio
@@ -294,7 +294,7 @@
 293 Camuflaje
 294 Ráfaga
 295 Resplandor
-296 Bola Niebla
+296 Bola Neblina
 297 Danza Pluma
 298 Danza Caos
 299 Patada Ígnea
@@ -327,12 +327,12 @@
 326 Paranormal
 327 Gancho Alto
 328 Bucle Arena
-329 Frio Polar
+329 Frío Polar
 330 Agua Lodosa
 331 Recurrente
 332 Golpe Aéreo
 333 Carámbano
-334 Defensa Hierro
+334 Defensa Férrea
 335 Bloqueo
 336 Aullido
 337 Garra Dragón
@@ -373,9 +373,9 @@
 372 Buena Baza
 373 Embargo
 374 Lanzamiento
-375 Psicocambio
+375 Psico-cambio
 376 As Oculto
-377 Anti Cura
+377 Anticura
 378 Estrujón
 379 Truco Fuerza
 380 Bilis
@@ -390,16 +390,16 @@
 389 Golpe Bajo
 390 Púas Tóxicas
 391 Cambia Almas
-392 Aqua Aro
+392 Acua Aro
 393 Levitón
 394 Envite Ígneo
 395 Palmeo
 396 Esfera Aural
 397 Pulimento
 398 Puya Nociva
-399 Pulso Umbrio
+399 Pulso Umbrío
 400 Tajo Umbrío
-401 Aqua Cola
+401 Acua Cola
 402 Bomba Germen
 403 Tajo Aéreo
 404 Tijera X
@@ -408,7 +408,7 @@
 407 Carga Dragón
 408 Joya de Luz
 409 Puño Drenaje
-410 Onda Vacio
+410 Onda Vacío
 411 Onda Certera
 412 Energibola
 413 Pájaro Osado
@@ -422,10 +422,10 @@
 421 Garra Umbría
 422 Colmillo Rayo
 423 Colmillo Hielo
-424 Colmillo Fuego
+424 Colmillo Ígneo
 425 Sombra Vil
 426 Bomba Fango
-427 Psicocorte
+427 Psico-corte
 428 Cabezazo Zen
 429 Disp. Espejo
 430 Foco Respl.
@@ -458,7 +458,7 @@
 457 Testarazo
 458 Doble Golpe
 459 Distorsión
-460 Corte Vacio
+460 Corte Vacío
 461 Danza Lunar
 462 Agarrón
 463 Lluvia Ígnea
@@ -548,7 +548,7 @@
 547 Cantoarcaico
 548 Sablemístico
 549 Mundo Gélido
-550 At. Fulgor
+550 Ataque Fulgor
 551 Llama Azul
 552 Danza Llama
 553 Rayo Gélido
