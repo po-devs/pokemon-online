@@ -10,7 +10,7 @@
 9 Fuego
 10 Agua
 11 Planta
-12 Electrico
+12 Eléctrico
 13 Psíquico
 14 Hielo
 15 Dragón
