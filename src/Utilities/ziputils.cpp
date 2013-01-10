@@ -79,7 +79,7 @@ void Zip::addFile(const QString &path, const QString &zipPath)
         return;
     }
 
-    QString zpath = zipPath.isEmpty() ? path : zpath;
+    QString zpath = zipPath.isEmpty() ? path : zipPath;
 
     zip_source *source = zip_source_file(archive, path.toStdString().c_str(), 0, 0);
 
