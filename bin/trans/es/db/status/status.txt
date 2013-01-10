@@ -4,4 +4,4 @@
 3 congelado
 4 quemado
 5 envenenado
-6 confused
+6 confuso
