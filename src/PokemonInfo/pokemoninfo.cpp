@@ -455,7 +455,8 @@ static void fill_double(QHash<T, U> &container, const QString &filename, bool tr
     }
 }
 
-static void fill_int_str(QHash<int, QString> &container, const QString &filename, bool trans = false)
+template <class T>
+static void fill_int_str(T &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -2164,7 +2165,7 @@ void ItemInfo::loadEffects()
     m_RegEffects.resize(GenInfo::NumberOfGens());
 
     for (int i = GEN_MIN_ITEMS; i <= GenInfo::GenMax(); i++) {
-        QHash<int,QString> temp;
+        QMultiHash<int,QString> temp;
         fill_int_str(temp, path("item_effects_%1G.txt").arg(i));
 
         /* Removing comments, aka anything starting from '#' */
@@ -2182,7 +2183,7 @@ void ItemInfo::loadEffects()
                     toPush.push_back(Effect(atoi(s.c_str())));
                 }
             }
-            m_RegEffects[i-GEN_MIN][it.key()].append(toPush);
+            m_RegEffects[i-GEN_MIN][it.key()] += toPush;
         }
     }
 
