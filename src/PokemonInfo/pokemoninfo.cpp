@@ -2448,9 +2448,15 @@ bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)
         return false;
     }
 
-    int num = l.front().num;
+    foreach(const Effect &e, l) {
+        int num = e.num;
 
-    return num >= 1000 && num <= 3999;
+        if (num >= 1000 && num <= 3999) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 int ItemInfo::Target(int itemnum, Pokemon::gen gen)
@@ -2463,27 +2469,35 @@ int ItemInfo::Target(int itemnum, Pokemon::gen gen)
     }
     QList<Effect> l = m_RegEffects[gen.num-GenInfo::GenMin()].value(itemnum);
 
-    int num = l.front().num;
+    foreach(const Effect &e, l) {
+        int num = e.num;
 
-    /* Dire Hit, X Attack, ... */
-    if (num >= 2000 && num < 3000) {
-        return Item::FieldPokemon;
-    } else if (num >= 3000) {
-        /* Poke Ball */
-        return Item::Opponent;
-    } else {
-        /* Sacred Ash */
-        if (num == 1999) {
-            return Item::Team;
+        if (!(num >= 1000 && num <= 3999)) {
+            continue;
+        }
+
+        /* Dire Hit, X Attack, ... */
+        if (num >= 2000 && num < 3000) {
+            return Item::FieldPokemon;
+        } else if (num >= 3000) {
+            /* Poke Ball */
+            return Item::Opponent;
         } else {
-            /* Ether */
-            if (num == 1004) {
-                return Item::Attack;
+            /* Sacred Ash */
+            if (num == 1999) {
+                return Item::Team;
             } else {
-                return Item::TeamPokemon;
+                /* Ether */
+                if (num == 1004) {
+                    return Item::Attack;
+                } else {
+                    return Item::TeamPokemon;
+                }
             }
         }
     }
+
+    return Item::NoTarget;
 }
 
 int ItemInfo::Number(const QString &itemname)
