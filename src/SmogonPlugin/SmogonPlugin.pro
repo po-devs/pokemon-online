@@ -17,7 +17,8 @@ SOURCES += smogonplugin.cpp \
             pokemontab.cpp \
             pokemonteamtabs.cpp \
     smogonbuild.cpp \
-    teambuildersmogonplugin.cpp
+    teambuildersmogonplugin.cpp \
+    smogonsinglepokedialog.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -29,7 +30,8 @@ HEADERS += smogonplugin.h\
     pokemontab.h \
     pokemonteamtabs.h \
     smogonbuild.h \
-    teambuildersmogonplugin.h
+    teambuildersmogonplugin.h \
+    smogonsinglepokedialog.h
 
 windows: {
     LIBS += -L../../bin/myplugins
@@ -59,4 +61,7 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+FORMS += \
+    smogonsinglepokedialog.ui
 
