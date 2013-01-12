@@ -455,7 +455,8 @@ static void fill_double(QHash<T, U> &container, const QString &filename, bool tr
     }
 }
 
-static void fill_int_str(QHash<int, QString> &container, const QString &filename, bool trans = false)
+template <class T>
+static void fill_int_str(T &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -2164,7 +2165,7 @@ void ItemInfo::loadEffects()
     m_RegEffects.resize(GenInfo::NumberOfGens());
 
     for (int i = GEN_MIN_ITEMS; i <= GenInfo::GenMax(); i++) {
-        QHash<int,QString> temp;
+        QMultiHash<int,QString> temp;
         fill_int_str(temp, path("item_effects_%1G.txt").arg(i));
 
         /* Removing comments, aka anything starting from '#' */
@@ -2182,7 +2183,7 @@ void ItemInfo::loadEffects()
                     toPush.push_back(Effect(atoi(s.c_str())));
                 }
             }
-            m_RegEffects[i-GEN_MIN][it.key()].append(toPush);
+            m_RegEffects[i-GEN_MIN][it.key()] += toPush;
         }
     }
 
@@ -2447,9 +2448,15 @@ bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)
         return false;
     }
 
-    int num = l.front().num;
+    foreach(const Effect &e, l) {
+        int num = e.num;
 
-    return num >= 1000 && num <= 3999;
+        if (num >= 1000 && num <= 3999) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 int ItemInfo::Target(int itemnum, Pokemon::gen gen)
@@ -2462,27 +2469,35 @@ int ItemInfo::Target(int itemnum, Pokemon::gen gen)
     }
     QList<Effect> l = m_RegEffects[gen.num-GenInfo::GenMin()].value(itemnum);
 
-    int num = l.front().num;
+    foreach(const Effect &e, l) {
+        int num = e.num;
 
-    /* Dire Hit, X Attack, ... */
-    if (num >= 2000 && num < 3000) {
-        return Item::FieldPokemon;
-    } else if (num >= 3000) {
-        /* Poke Ball */
-        return Item::Opponent;
-    } else {
-        /* Sacred Ash */
-        if (num == 1999) {
-            return Item::Team;
+        if (!(num >= 1000 && num <= 3999)) {
+            continue;
+        }
+
+        /* Dire Hit, X Attack, ... */
+        if (num >= 2000 && num < 3000) {
+            return Item::FieldPokemon;
+        } else if (num >= 3000) {
+            /* Poke Ball */
+            return Item::Opponent;
         } else {
-            /* Ether */
-            if (num == 1004) {
-                return Item::Attack;
+            /* Sacred Ash */
+            if (num == 1999) {
+                return Item::Team;
             } else {
-                return Item::TeamPokemon;
+                /* Ether */
+                if (num == 1004) {
+                    return Item::Attack;
+                } else {
+                    return Item::TeamPokemon;
+                }
             }
         }
     }
+
+    return Item::NoTarget;
 }
 
 int ItemInfo::Number(const QString &itemname)
