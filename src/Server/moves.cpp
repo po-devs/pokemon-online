@@ -3497,8 +3497,12 @@ struct MMMemento : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
+        /* In case of White Herb, apply the stat changes and then call the item effects afterwards */
+        b.applyingMoveStatMods = true;
         b.inflictStatMod(t, Attack, -2, s);
         b.inflictStatMod(t, SpAttack, -2, s);
+        b.applyingMoveStatMods = false;
+        b.callieffects(t, t, "AfterStatChange");
     }
 };
 
