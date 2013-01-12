@@ -37,7 +37,7 @@ void TeambuilderSmogonPlugin::addPokeEditButton(QLayout *l, PokeTeam *p)
     button->setIcon(PokemonInfo::Icon(Pokemon::Koffing));
     button->setToolTip(tr("Choose Smogon build..."));
     l->addWidget(button);
-    button->setProperty("pokemon", intptr_t(p));
+    button->setProperty("pokemon", qVariantFromValue(static_cast<void *>(p)));
     button->setIconSize(QSize(32,32));
     button->setObjectName("smogon"); //for cssers...
 
@@ -46,7 +46,7 @@ void TeambuilderSmogonPlugin::addPokeEditButton(QLayout *l, PokeTeam *p)
 
 void TeambuilderSmogonPlugin::openSmogonWindow()
 {
-    PokeTeam *p = pokeTeam = (PokeTeam*)sender()->property("pokemon").value<intptr_t>();
+    PokeTeam *p = pokeTeam = (PokeTeam*)sender()->property("pokemon").value<void *>();
 
     SmogonSinglePokeDialog *d = new SmogonSinglePokeDialog();
     d->setPokemon(p);
