@@ -6,6 +6,7 @@
 
 class QLayout;
 class PokeTeam;
+class PokemonTab;
 
 class TeambuilderSmogonPlugin : public TeambuilderPlugin
 {
@@ -20,10 +21,12 @@ public:
     void addPokeEditButton(QLayout*,PokeTeam*);
 private slots:
     void openSmogonWindow();
+    void updatePokemon();
 private:
-    QPointer<QWidget> poke;
+    QPointer<PokemonTab> poke;
 
     TeambuilderInterface *teambuilder;
+    PokeTeam *pokeTeam;
 };
 
 #endif // TEAMBUILDERSMOGONPLUGIN_H

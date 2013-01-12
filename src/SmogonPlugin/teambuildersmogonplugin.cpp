@@ -3,13 +3,15 @@
 #include "../Utilities/qverticalscrollarea.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../Teambuilder/teambuilderinterface.h"
 #include "pokemontab.h"
 #include "teambuildersmogonplugin.h"
-
+#include "smogonsinglepokedialog.h"
 
 TeambuilderSmogonPlugin::TeambuilderSmogonPlugin(TeambuilderInterface *tb)
 {
     teambuilder = tb;
+    pokeTeam = NULL;
 }
 
 TeambuilderSmogonPlugin::~TeambuilderSmogonPlugin()
@@ -33,25 +35,31 @@ void TeambuilderSmogonPlugin::addPokeEditButton(QLayout *l, PokeTeam *p)
 {
     QToolButton *button = new QToolButton();
     button->setIcon(PokemonInfo::Icon(Pokemon::Koffing));
-    button->setToolTip(tr("Choose smogon build..."));
+    button->setToolTip(tr("Choose Smogon build..."));
     l->addWidget(button);
     button->setProperty("pokemon", intptr_t(p));
     button->setIconSize(QSize(32,32));
+    button->setObjectName("smogon"); //for cssers...
 
     connect(button, SIGNAL(clicked()), SLOT(openSmogonWindow()));
 }
 
 void TeambuilderSmogonPlugin::openSmogonWindow()
 {
-    PokeTeam *p = (PokeTeam*)sender()->property("pokemon").value<intptr_t>();
+    PokeTeam *p = pokeTeam = (PokeTeam*)sender()->property("pokemon").value<intptr_t>();
 
-    QVerticalScrollArea *scrollArea = new QVerticalScrollArea();
+    SmogonSinglePokeDialog *d = new SmogonSinglePokeDialog();
+    d->setPokemon(p);
+    d->show();
+    d->setAttribute(Qt::WA_DeleteOnClose);
 
-    poke = new PokemonTab(*p);
-    scrollArea -> setWidget(poke);
-    scrollArea->show();
-    scrollArea->setAttribute(Qt::WA_DeleteOnClose);
+    poke = d->getPokemonTab();
 
-//    /* Update teambuilder when poke is changed */
-//    connect(poke.data(), SIGNAL(destroyed()), teambuilder, SLOT(updateCurrentTeamAndNotify()));
+    connect(d, SIGNAL(accepted()), SLOT(updatePokemon()));
+}
+
+void TeambuilderSmogonPlugin::updatePokemon()
+{
+    *pokeTeam = *poke.data()->getPokeTeam();
+    teambuilder->updateCurrentTeamAndNotify();
 }

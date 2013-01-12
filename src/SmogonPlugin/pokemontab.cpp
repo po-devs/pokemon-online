@@ -165,6 +165,8 @@ PokeTeam *PokemonTab::getPokeTeam(){
     createdBuild -> setNum(originalPokemon.num());
     createdBuild -> setGen(originalPokemon.gen());
 
+    createdBuild->load(); //load type nickname etc
+
     /* Set held Item */
     createdBuild -> item() = ItemInfo::Number(item_chooser -> currentText());
 
