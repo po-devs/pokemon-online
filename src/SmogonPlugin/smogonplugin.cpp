@@ -1,15 +1,16 @@
-#include "smogonplugin.h"
-#include "pokemontab.h"
-#include "pokemonteamtabs.h"
+#include <QLabel>
+#include <QPalette>
+#include <QTabWidget>
+#include <QtGui>
 #include "../Teambuilder/engineinterface.h"
 #include "../Teambuilder/Teambuilder/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"
-#include <QLabel>
-#include <QPalette>
-#include <QTabWidget>
-#include <QtGui>
+#include "smogonplugin.h"
+#include "pokemontab.h"
+#include "pokemonteamtabs.h"
+#include "teambuildersmogonplugin.h"
 
 ClientPlugin* createPluginClass(MainEngineInterface *interface)
 {
@@ -23,6 +24,11 @@ SmogonPlugin::SmogonPlugin(MainEngineInterface *interface) : interface(interface
 bool SmogonPlugin::hasConfigurationWidget() const
 {
     return true;
+}
+
+TeambuilderPlugin* SmogonPlugin::getTeambuilderPlugin(TeambuilderInterface *tb)
+{
+    return new TeambuilderSmogonPlugin(tb);
 }
 
 QString SmogonPlugin::pluginName() const
@@ -40,7 +46,6 @@ QWidget *SmogonPlugin::getConfigurationWidget()
    
     /* Given the interface, get the pokemon team */
     Team team = interface->trainerTeam()->team();
-    Pokemon::gen m_gen = team.gen();
 
     /* Widget that holds the tabs */
     PokemonTeamTabs* tabs = new PokemonTeamTabs(team.path()); 
@@ -74,7 +79,7 @@ QWidget *SmogonPlugin::getConfigurationWidget()
         PokeTeam current_poke = team.poke(i);
         /* Don't display Missingno */
         if(current_poke.num() > 0){
-            PokemonTab* currentTab = new PokemonTab(current_poke, m_gen, ret);
+            PokemonTab* currentTab = new PokemonTab(current_poke, ret);
             tabs->addPokeTab(currentTab, PokemonInfo::Name(current_poke.num()));
         }
     }
