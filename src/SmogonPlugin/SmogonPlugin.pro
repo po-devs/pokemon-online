@@ -34,9 +34,9 @@ windows: {
 }
 
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities \
-    -lbattlelib
+    -lpo-pokemoninfo \
+    -lpo-utilities \
+    -lpo-battlemanager
 
 symbian {
     #Symbian specific definitions

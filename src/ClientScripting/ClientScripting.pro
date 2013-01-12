@@ -10,9 +10,9 @@ TARGET = ClientScripting
 TEMPLATE = lib
 DESTDIR = ../../bin/myplugins
 LIBS += -L../../bin \
-    -lutilities \
-    -lpokemonlib \
-    -lbattlelib
+    -lpo-utilities \
+    -lpo-pokemoninfo \
+    -lpo-battlemanager
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 

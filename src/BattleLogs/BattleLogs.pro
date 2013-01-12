@@ -21,9 +21,9 @@ HEADERS += battlelogs.h\
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities \
-    -lbattlelib
+    -lpo-pokemoninfo \
+    -lpo-utilities \
+    -lpo-battlemanager
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 include(../Shared/Common.pri)

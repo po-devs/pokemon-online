@@ -3,7 +3,7 @@
 # -------------------------------------------------
 TARGET = MoveMachine
 DESTDIR = ../../bin
-LIBS += -L../../bin -lutilities -lpokemonlib
+LIBS += -L../../bin -lpo-utilities -lpo-pokemoninfo
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp

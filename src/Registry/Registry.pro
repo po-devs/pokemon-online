@@ -26,7 +26,7 @@ HEADERS += mainwindow.h \
 DEFINES = REGISTRY_SIDE
 
 LIBS += -L../../bin \
-    -lutilities
+    -lpo-utilities
 
 # Build-in web server depends on pillow, you can download
 # and install it from github:

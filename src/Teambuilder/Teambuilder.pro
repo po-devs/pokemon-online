@@ -145,9 +145,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     downloadmanager.h
 
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities \
-    -lbattlelib
+    -lpo-pokemoninfo \
+    -lpo-utilities \
+    -lpo-battlemanager
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }
@@ -194,7 +194,7 @@ macx {
    LIBS += -framework Sparkle -framework AppKit
 
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-   LINKLIBS = libutilities.1.0.0.dylib libpokemonlib.1.0.0.dylib libbattlelib.1.0.0.dylib
+   LINKLIBS = libpo-utilities.1.0.0.dylib libpo-pokemoninfo.1.0.0.dylib libpo-battlemanager.1.0.0.dylib
    QMAKE_POST_LINK = mkdir -p $${DESTDIR}/$${TARGET}.app/Contents/Frameworks;
    for(L, LINKLIBS) {
        QMAKE_POST_LINK += cp -f $${DESTDIR}/$${L} $${DESTDIR}/$${TARGET}.app/Contents/Frameworks/;

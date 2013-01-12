@@ -5,12 +5,12 @@
 #-------------------------------------------------
 
 QT += declarative opengl
-TARGET = battlelib
+TARGET = po-battlemanager
 TEMPLATE = lib
 DESTDIR = ../../bin
 LIBS += -L../../bin \
-    -lutilities \
-    -lpokemonlib
+    -lpo-utilities \
+    -lpo-pokemoninfo
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
@@ -117,7 +117,7 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/CommonEffects/StatDown.qml \
     ../../bin/qml/BattleDataQML/effects.js \
     ../../bin/qml/BattleDataQML/moves.js \
-    ../../bin/qml/BattleDataQML/utilities.js \
+    ../../bin/qml/BattleDataQML/po-utilities.js \
     ../../bin/qml/BattleDataQML/Utilities/MovingGif.qml \
     ../../bin/qml/BattleDataQML/spawner.js \
     ../../bin/qml/BattleDataQML/Moves/Move.qml \

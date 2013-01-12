@@ -7,8 +7,8 @@ TEMPLATE = lib
 DEFINES += POKEMONONLINESTATSPLUGIN_LIBRARY
 DEFINES += SERVER_SIDE
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities
+    -lpo-pokemoninfo \
+    -lpo-utilities
 SOURCES += usagestats.cpp
 HEADERS += usagestats.h \
     usagestats_global.h \

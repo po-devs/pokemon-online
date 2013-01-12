@@ -10,7 +10,7 @@ TARGET = UpdatorMaker
 TEMPLATE = app
 DESTDIR = ../../bin
 LIBS += -L../../bin \
-    -lutilities
+    -lpo-utilities
 
 SOURCES += main.cpp\
         mainwindow.cpp
