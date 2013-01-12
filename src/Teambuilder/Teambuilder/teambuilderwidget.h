@@ -7,6 +7,7 @@
 class QMainWindow;
 class QDockWidget;
 class QMenuBar;
+class TeamBuilder;
 
 class TeamBuilderWidget  : public QFrame
 {
@@ -21,11 +22,14 @@ public:
     void hideAll();
     void showAll();
     void setMainWindow(QMainWindow *main) {window = main;}
+    void setTeambuilder(TeamBuilder *main) {teambuilder = main;}
 signals:
     void teamChanged();
 protected:
     QMainWindow *window;
     QHash<int, QDockWidget*> widgets;
+public:
+    TeamBuilder* teambuilder;
 };
 
 #endif // TEAMBUILDERWIDGET_H

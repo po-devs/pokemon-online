@@ -15,6 +15,7 @@
 #include "pokeselection.h"
 #include "poketablemodel.h"
 #include "teambuilderwidget.h"
+#include "teambuilder.h"
 
 bool PokeEdit::advancedWindowClosed = false;
 
@@ -242,6 +243,18 @@ PokeEdit::~PokeEdit()
     delete ui;
 }
 
+void PokeEdit::updatePluginLayout()
+{
+    QLayoutItem* item;
+    while ( ( item = ui->pluginButtons->takeAt( 0 ) ) != NULL )
+    {
+        delete item->widget();
+        delete item;
+    }
+
+    master->teambuilder->call("addPokeEditButton(QLayout*,PokeTeam*)", ui->pluginButtons, m_poke);
+}
+
 void PokeEdit::updateAll()
 {
     ui->pokemonSprite->setPixmap(poke().picture());
@@ -280,6 +293,8 @@ void PokeEdit::updateAll()
     bool g2 = poke().gen().num <= 2;
     ui->natureLabel->setVisible(!g2);
     ui->nature->setVisible(!g2);
+
+    updatePluginLayout();
 }
 
 void PokeEdit::setPoke(PokeTeam *poke)
