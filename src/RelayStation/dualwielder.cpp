@@ -765,6 +765,15 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.section("|", 0, 0).toInt();
             QString chat = data.section("|", 1);
             notify(Nw::SpectatingBattleChat, qint32(battle), chat);
+        } else if (command == "findbattle") {
+            QVariantMap params = jparser.parse(data.toUtf8()).toMap();
+            FindBattleData fdata;
+            fdata.rated = params.value("rated", false).toBool();
+            fdata.sameTier = params.value("sameTier", true).toBool();
+            fdata.rated = params.contains("range");
+            fdata.range = params.value("range", 300).toInt();
+            fdata.teams = 0;
+            notify(Nw::FindBattle, fdata);
         }
     }
 }
