@@ -2,7 +2,7 @@
 #include <QtGui>
 #include "smogonscraper.h"
 
-PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent) 
+PokemonTab::PokemonTab(PokeTeam p, QWidget *parent)
     : QWidget(parent)
 {
     /* Save off the original team */
@@ -73,7 +73,7 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
     mainLayout->addWidget(pokePic);
     mainLayout->addWidget(build_title);
     mainLayout->addWidget(build_chooser);
-    mainLayout->addItem(new QSpacerItem(0, 50, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    mainLayout->addItem(new QSpacerItem(0, 2*space, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     mainLayout->addWidget(item_title); 
     mainLayout->addWidget(item_chooser);
@@ -109,7 +109,7 @@ PokemonTab::PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent)
 
     /* Create a new scraper */
     SmogonScraper *scraper = new SmogonScraper(this);
-    scraper->lookup(m_gen, p);
+    scraper->lookup(p);
 
     /* Make the UI update when a differnt build is chosen */
     connect(build_chooser, SIGNAL(currentIndexChanged(int)), this, SLOT(updateUI()));

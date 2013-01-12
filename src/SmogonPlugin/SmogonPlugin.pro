@@ -16,7 +16,8 @@ SOURCES += smogonplugin.cpp \
            smogonscraper.cpp \
             pokemontab.cpp \
             pokemonteamtabs.cpp \
-    smogonbuild.cpp
+    smogonbuild.cpp \
+    teambuildersmogonplugin.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -27,7 +28,8 @@ HEADERS += smogonplugin.h\
     smogonscraper.h \
     pokemontab.h \
     pokemonteamtabs.h \
-    smogonbuild.h
+    smogonbuild.h \
+    teambuildersmogonplugin.h
 
 windows: {
     LIBS += -L../../bin/myplugins
