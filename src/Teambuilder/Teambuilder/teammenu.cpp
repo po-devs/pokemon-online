@@ -14,11 +14,13 @@
 #include "Teambuilder/pokeedit.h"
 #include "Teambuilder/teamholder.h"
 #include "Teambuilder/pokeboxes.h"
+#include "teambuilder.h"
 
-TeamMenu::TeamMenu(QMainWindow *window, QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
+TeamMenu::TeamMenu(TeamBuilder *tb, QAbstractItemModel *pokeModel, TeamHolder *team, int index) :
     ui(new _ui()), m_team(team), lastGen(team->team().gen())
 {
-    setMainWindow(window);
+    setMainWindow(tb);
+    setTeambuilder(tb);
 
     ui->pokemonModel = pokeModel;
     setupUi();

@@ -9,6 +9,8 @@ public:
 
     virtual void addPlugin(TeambuilderPlugin *o) = 0;
     virtual void removePlugin(TeambuilderPlugin *o) = 0;
+
+    virtual void updateCurrentTeamAndNotify() = 0;
 };
 
 #endif // TEAMBUILDERINTERFACE_H

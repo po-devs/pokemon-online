@@ -19,7 +19,7 @@ class TeamMenu : public TeamBuilderWidget
     Q_OBJECT
 
 public:
-    explicit TeamMenu(QMainWindow *window, QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
+    explicit TeamMenu(TeamBuilder *tb, QAbstractItemModel *pokeModel, TeamHolder *team, int index=0);
     ~TeamMenu();
 
     void updateTeam();

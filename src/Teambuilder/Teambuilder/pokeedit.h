@@ -39,6 +39,7 @@ public slots:
     void updateStats();
     void updatePicture();
     void updateGender();
+    void updatePluginLayout();
     void updateAll();
     void setPoke(PokeTeam *poke);
 
