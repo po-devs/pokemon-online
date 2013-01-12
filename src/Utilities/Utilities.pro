@@ -1,4 +1,4 @@
-TARGET = utilities
+TARGET = po-utilities
 TEMPLATE = lib
 DESTDIR = ../../bin
 DEFINES -= UNICODE

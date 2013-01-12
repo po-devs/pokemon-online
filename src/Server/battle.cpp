@@ -16,8 +16,6 @@ using namespace BattleCommands;
 typedef BattlePStorage BP;
 typedef BattleSituation::TurnMemory TM;
 
-extern bool oldBattleNotifications;
-
 Q_DECLARE_METATYPE(QList<int>)
 
 BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
@@ -3157,11 +3155,11 @@ void BattleSituation::requestSwitchIns()
         }
 
         if (!allChoicesOkForPlayer(Player1)) {
-            notify(oldBattleNotifications ? Player1 : All, StartChoices, Player1);
+            notify(All, StartChoices, Player1);
         }
 
         if (!allChoicesOkForPlayer(Player2)) {
-            notify(oldBattleNotifications ? Player2 : All, StartChoices, Player2);
+            notify(All, StartChoices, Player2);
         }
 
         yield();

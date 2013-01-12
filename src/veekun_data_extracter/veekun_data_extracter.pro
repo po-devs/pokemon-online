@@ -15,8 +15,8 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities
+    -lpo-pokemoninfo \
+    -lpo-utilities
 SOURCES += main.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x"

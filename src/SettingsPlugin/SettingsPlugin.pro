@@ -8,7 +8,7 @@ TARGET = SettingsPlugin
 TEMPLATE = lib
 DESTDIR = ../../bin/myplugins
 LIBS += -L../../bin \
-    -lutilities
+    -lpo-utilities
 
 DEFINES += SETTINGSPLUGIN_LIBRARY
 

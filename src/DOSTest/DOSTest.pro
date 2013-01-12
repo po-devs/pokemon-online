@@ -27,6 +27,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     analyze.h
 DEFINES = CLIENT_SIDE
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities \
+    -lpo-pokemoninfo \
+    -lpo-utilities \
     -lzip

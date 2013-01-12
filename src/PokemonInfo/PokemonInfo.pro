@@ -1,4 +1,4 @@
-TARGET = pokemonlib
+TARGET = po-pokemoninfo
 TEMPLATE = lib
 DESTDIR = ../../bin
 QT += xml
@@ -23,7 +23,7 @@ HEADERS += pokemonstructs.h \
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 LIBS += -L../../bin \
-    -lutilities
+    -lpo-utilities
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }

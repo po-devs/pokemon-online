@@ -27,8 +27,8 @@ windows: {
 }
 
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities
+    -lpo-pokemoninfo \
+    -lpo-utilities
 
 windows: {
     LIBS += -lzlib1 -lqrcodelib

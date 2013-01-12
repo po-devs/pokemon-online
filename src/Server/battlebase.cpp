@@ -16,8 +16,6 @@ BattleBase::BattleBase()
     timer = NULL;
 }
 
-bool oldBattleNotifications = true;
-
 void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
 {
     publicId() = id;
@@ -738,7 +736,7 @@ void BattleBase::notifyChoices(int p)
     }
 
     if (canMove) {
-        notify(oldBattleNotifications ? p : All, StartChoices, p);
+        notify(All, StartChoices, p);
     }
 }
 
@@ -1421,11 +1419,11 @@ void BattleBase::requestChoices()
     }
 
     if (!allChoicesOkForPlayer(Player1)) {
-        notify(oldBattleNotifications ? Player1 : All, StartChoices, Player1);
+        notify(All, StartChoices, Player1);
     }
 
     if (!allChoicesOkForPlayer(Player2)) {
-        notify(oldBattleNotifications ? Player2: All, StartChoices, Player2);
+        notify(All, StartChoices, Player2);
     }
 
     if (count > 0) {
@@ -1467,7 +1465,7 @@ bool BattleBase::requestChoice(int slot, bool acquire, bool custom)
     startClock(player);
 
     if (acquire) {
-        notify(oldBattleNotifications ? player : All, StartChoices, player);
+        notify(All, StartChoices, player);
         yield();
     }
 
@@ -1635,11 +1633,11 @@ void BattleBase::requestSwitchIns()
         }
 
         if (!allChoicesOkForPlayer(Player1)) {
-            notify(oldBattleNotifications ? Player1: All, StartChoices, Player1);
+            notify(All, StartChoices, Player1);
         }
 
         if (!allChoicesOkForPlayer(Player2)) {
-            notify(oldBattleNotifications ? Player2 :All, StartChoices, Player2);
+            notify(All, StartChoices, Player2);
         }
 
         yield();
