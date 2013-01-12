@@ -142,7 +142,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     loadwindow.h \
     loadline.h \
     spectatorwindow.h \
-    downloadmanager.h
+    downloadmanager.h \
+    teambuilderinterface.h
 
 LIBS += -L../../bin \
     -lpo-pokemoninfo \

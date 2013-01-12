@@ -10,6 +10,7 @@
 #include "Teambuilder/poketablemodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "loadwindow.h"
+#include "pluginmanager.h"
 
 #ifdef _WIN32
 #include "../../SpecialIncludes/zip.h"
@@ -19,7 +20,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
+TeamBuilder::TeamBuilder(PluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
 {
     ui = new _ui();
     ui->stack = new QStackedWidget();
@@ -42,10 +43,14 @@ TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(N
     connect(trainer, SIGNAL(done()), SIGNAL(done()));
     connect(trainer, SIGNAL(openBoxes()), SLOT(openBoxes()));
     connect(trainer, SIGNAL(editPoke(int)), SLOT(editPoke(int)));
+
+    p->launchTeambuilder(this);
+    pluginManager = p;
 }
 
 TeamBuilder::~TeamBuilder()
 {
+    pluginManager->quitTeambuilder(this);
     writeSettings(this);
     delete ui;
 }
@@ -130,6 +135,18 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     lastGen = team().team().gen();
 
     return menuBar;
+}
+
+void TeamBuilder::addPlugin(TeambuilderPlugin *o)
+{
+    plugins.insert(o);
+    hooks.insert(o, o->getHooks());
+}
+
+void TeamBuilder::removePlugin(TeambuilderPlugin *o)
+{
+    plugins.remove(o);
+    hooks.remove(o);
 }
 
 void TeamBuilder::openLoadWindow()

@@ -2589,7 +2589,7 @@ void Client::openTeamBuilder()
 
     secondTeam = *team();
 
-    myteambuilder = new TeamBuilder(&secondTeam);
+    myteambuilder = new TeamBuilder(pluginManager, &secondTeam);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
 
