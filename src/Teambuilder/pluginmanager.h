@@ -8,6 +8,8 @@ class ClientPlugin;
 class MainEngine;
 class ClientInterface;
 class OnlineClientPlugin;
+class TeambuilderInterface;
+class TeambuilderPlugin;
 
 namespace cross {
     class DynamicLibrary;
@@ -29,15 +31,20 @@ public:
 
     void launchClient(ClientInterface *c);
     void quitClient(ClientInterface *c);
+
+    void launchTeambuilder(TeambuilderInterface *c);
+    void quitTeambuilder(TeambuilderInterface *c);
 private:
     QVector<cross::DynamicLibrary *> libraries;
     QVector<ClientPlugin *> plugins;
     QHash<ClientInterface*, QHash<ClientPlugin *, OnlineClientPlugin*> > clientPlugins;
+    QHash<TeambuilderInterface*, QHash<ClientPlugin *, TeambuilderPlugin*> > teambuilderPlugins;
     QStringList filenames;
 
     void updateSavedList();
     MainEngine *engine;
     QSet<ClientInterface *> clients;
+    QSet<TeambuilderInterface *> teambuilders;
 };
 
 class PluginManagerWidget : public QWidget

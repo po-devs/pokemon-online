@@ -373,7 +373,7 @@ void MainEngine::launchCredits()
 
 void MainEngine::launchTeamBuilder()
 {
-    TeamBuilder *TB = new TeamBuilder(trainerTeam(), false);
+    TeamBuilder *TB = new TeamBuilder(pluginManager, trainerTeam(), false);
     routine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));

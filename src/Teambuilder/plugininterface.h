@@ -11,6 +11,7 @@
 class QWidget;
 class MainEngineInterface;
 class ClientInterface;
+class TeambuilderInterface;
 
 class OnlineClientPlugin : public QObject
 {
@@ -21,6 +22,21 @@ public:
     virtual void clientShutDown() {}
 
     typedef int (OnlineClientPlugin::*Hook) ();
+
+    virtual QHash<QString, Hook> getHooks(){
+        return QHash<QString, Hook>();
+    }
+};
+
+class TeambuilderPlugin : public QObject
+{
+public:
+    virtual ~TeambuilderPlugin(){}
+
+    virtual void teambuilderStartUp() {}
+    virtual void teambuilderShutDown() {}
+
+    typedef int (TeambuilderPlugin::*Hook) ();
 
     virtual QHash<QString, Hook> getHooks(){
         return QHash<QString, Hook>();
@@ -47,6 +63,10 @@ public:
     }
 
     virtual OnlineClientPlugin *getOnlinePlugin(ClientInterface*) {
+        return NULL;
+    }
+
+    virtual TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface*) {
         return NULL;
     }
 };
