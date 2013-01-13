@@ -70,6 +70,8 @@ Server::~Server()
 
 extern bool skipChecksOnStartUp;
 
+static QString dbRepo = "./db";
+
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
@@ -306,18 +308,18 @@ void Server::changeDbMod(const QString &mod)
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
-    GenInfo::init("db/gens/");
-    PokemonInfo::init("db/pokes/");
-    MoveSetChecker::init("db/pokes/");
-    ItemInfo::init("db/items/");
-    MoveInfo::init("db/moves/");
-    TypeInfo::init("db/types/");
-    NatureInfo::init("db/natures/");
-    CategoryInfo::init("db/categories/");
-    AbilityInfo::init("db/abilities/");
-    HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
-    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
+    GenInfo::init(dbRepo+"/gens/");
+    PokemonInfo::init(dbRepo+"/pokes/");
+    MoveSetChecker::init(dbRepo+"/pokes/");
+    ItemInfo::init(dbRepo+"/items/");
+    MoveInfo::init(dbRepo+"/moves/");
+    TypeInfo::init(dbRepo+"/types/");
+    NatureInfo::init(dbRepo+"/natures/");
+    CategoryInfo::init(dbRepo+"/categories/");
+    AbilityInfo::init(dbRepo+"/abilities/");
+    HiddenPowerInfo::init(dbRepo+"/types/");
+    StatInfo::init(dbRepo+"/status/");
+    GenderInfo::init(dbRepo+"/genders/"); //needed by battlelogs plugin
 
     battleThread.unpause();
 }
