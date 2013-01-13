@@ -18,7 +18,7 @@ SQLConfigWindow::SQLConfigWindow()
     v->addWidget(desc);
 
     QLabel *desc2 = new QLabel(tr("If you have a player database from before BW 2, you may want to export it, delete the database file, and rerun the server. That way it's converted and players "
-                                  "from that time will have their last login properly stored, which enables the functionnality to delete old alts to work fine."));
+                                  "from that time will have their last login properly stored, which enables the functionality to delete old alts to work fine."));
     desc2->setWordWrap(true);
     v->addWidget(desc2);
 
