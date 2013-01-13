@@ -509,6 +509,7 @@ struct BattleConfiguration
     quint8 receivingMode[2];
     quint16 avatar[2];
 
+    /* Rated or not */
     Flags flags;
     bool oldconf; /* Will become obsolete. Used to store internally if the conf was read with oldDeserialize */
 
