@@ -56,6 +56,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Server for Pokemon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
 
+#ifdef PO_HOME_DIR
+    QDir d;
+    d.mkpath(PO_HOME_DIR);
+    QDir::setCurrent(PO_HOME_DIR);
+#endif
+
     //default: show a window
     bool showWindow = true;
 

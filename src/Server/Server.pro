@@ -157,3 +157,9 @@ include(../Shared/Common.pri)
 
 FORMS += \
     modswindow.ui
+
+CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
+    DEFINES += PO_HOME_DIR=\\\"~/.po-server/\\\"
+}
+!CONFIG(debian_package): DEFINES += PO_DATA_REPO=\\\"./\\\"
