@@ -84,6 +84,7 @@ public:
     bool canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const TeamBattle &t2, bool forceRated1 = false, bool forceRated2 = false);
 
     static Server *serverIns;
+    static QString dataRepo;
 
     BattleBase * getBattle(int battleId) const;
 

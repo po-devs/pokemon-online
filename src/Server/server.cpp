@@ -70,7 +70,7 @@ Server::~Server()
 
 extern bool skipChecksOnStartUp;
 
-static QString dbRepo = PO_DATA_REPO;
+extern QString dataRepo;
 
 /**
  * The following code is not placed in the constructor,
@@ -308,18 +308,18 @@ void Server::changeDbMod(const QString &mod)
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
-    GenInfo::init(dbRepo+"/gens/");
-    PokemonInfo::init(dbRepo+"/pokes/");
-    MoveSetChecker::init(dbRepo+"/pokes/");
-    ItemInfo::init(dbRepo+"/items/");
-    MoveInfo::init(dbRepo+"/moves/");
-    TypeInfo::init(dbRepo+"/types/");
-    NatureInfo::init(dbRepo+"/natures/");
-    CategoryInfo::init(dbRepo+"/categories/");
-    AbilityInfo::init(dbRepo+"/abilities/");
-    HiddenPowerInfo::init(dbRepo+"/types/");
-    StatInfo::init(dbRepo+"/status/");
-    GenderInfo::init(dbRepo+"/genders/"); //needed by battlelogs plugin
+    GenInfo::init(dataRepo+"/db/gens/");
+    PokemonInfo::init(dataRepo+"/db/pokes/");
+    MoveSetChecker::init(dataRepo+"/db/pokes/");
+    ItemInfo::init(dataRepo+"/db/items/");
+    MoveInfo::init(dataRepo+"/db/moves/");
+    TypeInfo::init(dataRepo+"/db/types/");
+    NatureInfo::init(dataRepo+"/db/natures/");
+    CategoryInfo::init(dataRepo+"/db/categories/");
+    AbilityInfo::init(dataRepo+"/db/abilities/");
+    HiddenPowerInfo::init(dataRepo+"/db/types/");
+    StatInfo::init(dataRepo+"/db/status/");
+    GenderInfo::init(dataRepo+"/db/genders/"); //needed by battlelogs plugin
 
     battleThread.unpause();
 }
