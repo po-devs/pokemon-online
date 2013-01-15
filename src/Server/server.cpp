@@ -70,13 +70,13 @@ Server::~Server()
 
 extern bool skipChecksOnStartUp;
 
-static QString dbRepo = "./db";
+static QString dbRepo = PO_DATA_REPO;
 
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
  *
- * This can be only acheived (in a clean way) by first letting a view listen
+ * This can be only achieved (in a clean way) by first letting a view listen
  * to the signal "servermessage". Therefore, the serverobject must be passed
  * to that view (by construction of the view), and then the server should start.
  */
