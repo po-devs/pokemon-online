@@ -56,6 +56,7 @@ CONFIG(chess) {
 CONFIG(po_server) {
     SUBDIRS += src/Server \
             src/QJson \
+            src/QtWebsocket \#git://gitorious.org/qtwebsocket/qtwebsocket.git
             src/RelayStation
 }
 
@@ -63,7 +64,6 @@ CONFIG(po_serverplugins) {
     SUBDIRS += src/UsageStatistics \
                src/StatsExtracter \
                src/BattleLogs \
-               src/QtWebsocket \ #git://gitorious.org/qtwebsocket/qtwebsocket.git
                src/WebServerPlugin
 }
 
