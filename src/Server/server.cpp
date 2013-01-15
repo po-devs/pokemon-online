@@ -70,8 +70,6 @@ Server::~Server()
 
 extern bool skipChecksOnStartUp;
 
-extern QString dataRepo;
-
 /**
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
