@@ -21,6 +21,8 @@
 
 using namespace std;
 
+QString Server::dataRepo = QDir().absoluteFilePath(PO_DATA_REPO);
+
 void myMessageOutput(QtMsgType type, const char *msg)
 {
     switch (type) {
@@ -55,6 +57,10 @@ int main(int argc, char *argv[])
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Server for Pokemon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
+
+    QDir d;
+    d.mkpath(PO_HOME_DIR);
+    QDir::setCurrent(PO_HOME_DIR);
 
     //default: show a window
     bool showWindow = true;

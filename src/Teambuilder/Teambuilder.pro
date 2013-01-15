@@ -204,8 +204,8 @@ macx {
    QMAKE_POST_LINK += macdeployqt $${DESTDIR}/$${TARGET}.app
 }
 
-CONFIG(debian) {
-    DEFINES += PO_DATA_REPO=\"/usr/share/games/pokemon-online/\"
+CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
 }
 
 

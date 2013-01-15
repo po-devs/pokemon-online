@@ -103,7 +103,7 @@ HEADERS += player.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
     playerstructs.h \
-    networkpo-utilities.h \
+    networkutilities.h \
     battlebase.h \
     battlerby.h \
     rbymoves.h \
@@ -157,3 +157,12 @@ include(../Shared/Common.pri)
 
 FORMS += \
     modswindow.ui
+
+CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
+    DEFINES += PO_HOME_DIR=\\\"~/.po-server/\\\"
+}
+!CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"./\\\"
+    DEFINES += PO_HOME_DIR=\\\"./\\\"
+}
