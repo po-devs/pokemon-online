@@ -103,7 +103,7 @@ HEADERS += player.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
     playerstructs.h \
-    networkpo-utilities.h \
+    networkutilities.h \
     battlebase.h \
     battlerby.h \
     rbymoves.h \
