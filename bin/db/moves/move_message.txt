@@ -49,7 +49,7 @@
 73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 74 %s took aim at %f!
 75 %ts's team is protected from critical hits!|%ts's Lucky Chant wore off!
-76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
+76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Bounce!
 77 %s cleared the field around %tf's team!|%s cleared the field!
 78 Magnitude %d!
 81 %s learned %m!
