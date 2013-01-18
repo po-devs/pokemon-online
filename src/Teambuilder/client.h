@@ -286,6 +286,7 @@ public slots:
     void showTimeStamps2(bool);
     void toggleIncomingPM(bool);
     void togglePMTabs(bool);
+    void togglePMNotifications(bool);
     void togglePMLogs(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
@@ -320,6 +321,7 @@ signals:
     void PMDisabled(bool value, int starterAuth);
     void togglePMs(bool value);
     void PMDisconnected(bool disconnected);
+    void pmNotificationsChanged(bool notify);
     void titleChanged();
 protected:
     void paintEvent(QPaintEvent *)
