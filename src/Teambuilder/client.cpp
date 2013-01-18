@@ -782,7 +782,11 @@ void Client::startPM(int id)
 
     if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
         if (!pmSystem->isVisible()) {
-            pmSystem->show();
+            // When using non-tabbed PMs, a blank PM window will sometimes come up when a message is received
+            // This is why we check if PMs are tabbed...
+            if (pmsTabbed) {
+                pmSystem->show();
+            }
         }
         return;
     }
