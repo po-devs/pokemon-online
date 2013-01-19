@@ -49,7 +49,7 @@ void Log::flush()
         return;
     }
 
-    if (data.isEmpty()) {
+    if (data.isEmpty() && bdata.isEmpty()) {
         return;
     }
 
