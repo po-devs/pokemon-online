@@ -112,7 +112,7 @@
 171 %s is being sent back!
 172 %s type changed to match %f's types!
 174 %f was hurled into the air!|%s was freed from the telekinesis!
-175 %s fell straight down!
+175 %f fell straight down!
 178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
 179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
