@@ -2785,7 +2785,7 @@ void Client::trayMessage(const QString &title, const QString &message)
     MainEngine::inst->showMessage(title, message);
 }
 
-bool Client::windowActive () {
+bool Client::windowActive() {
     return qApp->activeWindow();
 }
 
