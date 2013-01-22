@@ -167,7 +167,7 @@ public slots:
     void printChannelMessage(const QString &mess, int channel, bool html);
 
     void trayMessage(const QString &title, const QString &message);
-    bool windowActive ();
+    bool windowActive();
 
     /* sends what's in the line edit */
     void sendText();
