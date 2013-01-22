@@ -72,9 +72,12 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "PMs/Notifications", true);
     setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
+
+    pmNotify = s.value("PMs/Notifications").isNull() ? true : s.value("PMs/Notifications").toBool();
 
     if (s.value("use_socks5_proxy", false).toBool() == true) {
         s.beginGroup("socks5_proxy");
@@ -476,6 +479,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
     connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
+    connect(client, SIGNAL(pmNotificationsChanged(bool)), SLOT(pmNotificationsChanged(bool)));
 }
 
 void MainEngine::updateMenuBar()
@@ -517,8 +521,16 @@ void MainEngine::closeTab()
     }
 }
 
+void MainEngine::pmNotificationsChanged(bool notify)
+{
+    pmNotify = notify;
+}
+
 void MainEngine::showMessage(const QString &title, const QString &msg)
 {
+    if (!pmNotify) {
+        return;
+    }
     lastNotificationSender = dynamic_cast<QWidget*>(sender());
     trayIcon->showMessage(title, msg,QSystemTrayIcon::Information);
 }

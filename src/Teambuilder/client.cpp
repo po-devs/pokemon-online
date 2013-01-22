@@ -782,7 +782,11 @@ void Client::startPM(int id)
 
     if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
         if (!pmSystem->isVisible()) {
-            pmSystem->show();
+            // When using non-tabbed PMs, a blank PM window will sometimes come up when a message is received
+            // This is why we check if PMs are tabbed...
+            if (pmsTabbed) {
+                pmSystem->show();
+            }
         }
         return;
     }
@@ -837,6 +841,12 @@ void Client::togglePMTabs(bool b)
     globals.setValue("PMs/Tabbed", b);
     pmsTabbed = b;
     emit togglePMs(b);
+}
+
+void Client::togglePMNotifications(bool notify)
+{
+    globals.setValue("PMs/Notifications", notify);
+    emit pmNotificationsChanged(notify);
 }
 
 void Client::togglePMLogs(bool b) {
@@ -1286,10 +1296,15 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
 
-    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
+    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PMs in tabs"));
     pmsTabbedToggle->setCheckable(true);
     connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
     pmsTabbedToggle->setChecked(globals.value("PMs/Tabbed").toBool());
+
+    QAction * pmNotifications = pmMenu->addAction(tr("Show PM &notifications"));
+    pmNotifications->setCheckable(true);
+    connect(pmNotifications, SIGNAL(triggered(bool)), SLOT(togglePMNotifications(bool)));
+    pmNotifications->setChecked(globals.value("PMs/Notifications").toBool());
 
     QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
     save_logs->setCheckable(true);
