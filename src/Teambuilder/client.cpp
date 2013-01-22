@@ -2765,6 +2765,15 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
     }
 }
 
+void Client::trayMessage(const QString &title, const QString &message)
+{
+    MainEngine::inst->showMessage(title, message);
+}
+
+bool Client::windowActive () {
+    return qApp->activeWindow();
+}
+
 void Client::changeExitWarning(bool show)
 {
     exitWarning = show;
