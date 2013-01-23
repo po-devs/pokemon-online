@@ -759,15 +759,6 @@ void BattleSituation::analyzeChoices()
         analyzeChoice(player);
     }
 
-    foreach(int player, switches) {
-        analyzeChoice(player);
-        callEntryEffects(player);
-        if (gen() <= 2) {
-            personalEndTurn(player);
-            notify(All, BlankMessage, Player1);
-        }
-    }
-
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
     std::vector<int> &players = speedsVector;
     players.clear();
@@ -786,6 +777,17 @@ void BattleSituation::analyzeChoices()
             foreach(int p, it->second) {
                 players.push_back(p);
             }
+        }
+    }
+
+    /* In case of pursuit + analyze, the speeds vector need to be set first, which is why
+     * this code is below */
+    foreach(int player, switches) {
+        analyzeChoice(player);
+        callEntryEffects(player);
+        if (gen() <= 2) {
+            personalEndTurn(player);
+            notify(All, BlankMessage, Player1);
         }
     }
 
