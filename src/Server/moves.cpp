@@ -2529,14 +2529,15 @@ struct MMSpite : public MM
     static void uas(int s, int t, BS &b)
     {
         int slot = fpoke(b,t).lastMoveSlot;
+        int pploss;
         if (b.gen() >= 4)
-            b.losePP(t, slot, 4);
+            pploss = 4;
         else if (b.gen().num == 3)
-            b.losePP(t, slot, 2 + b.randint(4) );
+            pploss = 2 + b.randint(4);
         else if (b.gen().num == 2)
-            b.losePP(t, slot, 1 + b.randint(5) );
-
-        b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot));
+            pploss = 1 + b.randint(5);
+        b.losePP(t, slot, pploss);
+        b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot),QString::number(pploss));
     }
 };
 
