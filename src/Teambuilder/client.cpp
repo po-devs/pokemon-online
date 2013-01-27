@@ -2264,22 +2264,25 @@ QString Client::announcement()
     return server_announcement->document()->toPlainText();
 }
 
-void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
+void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore=false)
 {
-    cleanData();
-    _mid = p.id;
-    mynick = p.name;
-    myplayersinfo[p.id] = p;
-    mynames[p.name] = p.id;
+    if (!ignore) { 
+        cleanData();
+        _mid = p.id;
+        mynick = p.name;
+        myplayersinfo[p.id] = p;
+        mynames[p.name] = p.id;
 
-    mylowernames[p.name.toLower()] = p.id;
+        mylowernames[p.name.toLower()] = p.id;
 
-    playerReceived(p);
-    tiersReceived(tiers);
+        playerReceived(p);
+        tiersReceived(tiers);
 
-    /* If it's us, we know we've logged in */
-    if (p.id == ownId())
-        loggedIn = true;
+        /* If it's us, we know we've logged in */
+        if (p.id == ownId()) {
+            loggedIn = true;
+        }
+    }
 }
 
 void Client::tiersReceived(const QStringList &tiers)
