@@ -172,7 +172,7 @@ public slots:
     /* sends what's in the line edit */
     void sendText();
     void changeName(const QString&);
-    void playerLogin(const PlayerInfo &p, const QStringList &tiers);
+    void playerLogin(const PlayerInfo &p, const QStringList &tiers, bool ignore=false);
     void playerReceived(const PlayerInfo &p);
     void announcementReceived(const QString &);
     void tiersReceived(const QStringList &tiers);
