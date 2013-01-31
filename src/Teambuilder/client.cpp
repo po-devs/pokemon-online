@@ -2264,7 +2264,7 @@ QString Client::announcement()
     return server_announcement->document()->toPlainText();
 }
 
-void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore=false)
+void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore)
 {
     if (!ignore) { 
         cleanData();
