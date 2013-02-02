@@ -141,7 +141,7 @@ void Channel::anchorClicked(const QUrl &url)
             int id = path.mid(6).toInt();
             client->watchBattleRequ(id);
         } else if (path.leftRef(12) == "watchplayer/") {
-            QString player = path.mid(3);
+            QString player = path.mid(12);
             int id = player.toInt();
             if (id == 0) {
                 client->watchBattleOf(client->id(player));
@@ -156,14 +156,23 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->startPM(id);
             }
-        } else if (path.leftRef(3) == "ignore/") {
-            QString player = path.mid(3);
+        } else if (path.leftRef(7) == "ignore/") {
+            QString player = path.mid(7);
             int id = player.toInt();
             if (id == 0) {
                 int pid = client->id(player);
                 client->ignore(pid, !client->isIgnored(pid));
             } else {
                 client->ignore(id, !client->isIgnored(id));
+            }
+        } else if (path.leftRef(5) == "info/") {
+            QString player = path.mid(5);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->seeInfo(pid);
+            } else {
+                client->seeInfo(id);
             }
         }
     } else {
