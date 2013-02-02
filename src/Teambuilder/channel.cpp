@@ -172,7 +172,7 @@ void Channel::anchorClicked(const QUrl &url)
                 int pid = client->id(player);
                 client->seeInfo(pid);
             } else {
-                client->ignore(id);
+                client->seeInfo(id);
             }
         }
     } else {
