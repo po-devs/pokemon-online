@@ -658,10 +658,14 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &_line, bool flashing, bool act)
+void Channel::printLine(const QString &_line, bool flashing, bool act, bool global)
 {
     QString line = removeTrollCharacters(_line);
     QString timeStr = "";
+
+    if (global && client->ignoringGlobalMessage(name())) {
+        return;
+    }
 
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
@@ -741,12 +745,16 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 }
 
 
-void Channel::printHtml(const QString &str, bool act)
+void Channel::printHtml(const QString &str, bool act, bool global)
 {
     QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
         return;
     }
+    if (global && client->ignoringGlobalMessage(name())) {
+        return;
+    }
+
     checkFlash(str, "<ping */ *>");
 
     QString timeStr = "";
