@@ -285,6 +285,8 @@ public slots:
     void showTeamEvents(bool);
     void toggleAutoJoin(bool autojoin);
     void toggleDefaultChannel(bool def);
+    void toggleGlobalMessage(bool gmessage);
+    bool ignoringGlobalMessage(const QString &channelName);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void toggleIncomingPM(bool);
