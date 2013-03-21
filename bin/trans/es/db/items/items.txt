@@ -37,7 +37,7 @@
 36 Incienso Aqua
 37 Hierba Blanca
 38 Lupa 
-39 Gafas Especiaales
+39 Gafas Especiales
 40 Pañuelo Amarillo
 41 Telescopio
 42 Moneda Amuleto
