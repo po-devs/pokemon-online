@@ -542,6 +542,14 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
+        action = show_events->addAction(tr("Ignore Global Messages"));
+        action->setCheckable(true);
+        action->setChecked(globals.value(QString("GlobalMessageChannels/%1").arg(ip)).toStringList().contains(name));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleGlobalMessage(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        mychanevents.push_back(action);
+
         show_events->exec(channels->mapToGlobal(point));
     }
 }
@@ -1004,6 +1012,24 @@ void Client::toggleDefaultChannel(bool d)
     } else {
         globals.remove(QString("DefaultChannels/%1").arg(relay().getIp()));
     }
+}
+
+void Client::toggleGlobalMessage(bool gmessage)
+{
+    QStringList globalMessageIgnore = globals.value(QString("GlobalMessageChannels/%1").arg(relay().getIp())).toStringList();
+    if(gmessage) {
+        globalMessageIgnore.push_back(channelName(selectedChannel));
+    } else {
+        globalMessageIgnore.removeOne(channelName(selectedChannel));
+    }
+    globals.setValue(QString("GlobalMessageChannels/%1").arg(relay().getIp()), globalMessageIgnore);
+}
+
+bool Client::ignoringGlobalMessage(const QString &channelName) { /* so client scripts can detect and stop the message */
+    if (globals.value(QString("GlobalMessageChannels/%1").arg(relay().getIp())).toStringList().contains(channelName)) {
+        return true;
+    }
+    return false;
 }
 
 void Client::seeRanking(int id)
@@ -2264,22 +2290,25 @@ QString Client::announcement()
     return server_announcement->document()->toPlainText();
 }
 
-void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
+void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore)
 {
-    cleanData();
-    _mid = p.id;
-    mynick = p.name;
-    myplayersinfo[p.id] = p;
-    mynames[p.name] = p.id;
+    if (!ignore) { 
+        cleanData();
+        _mid = p.id;
+        mynick = p.name;
+        myplayersinfo[p.id] = p;
+        mynames[p.name] = p.id;
 
-    mylowernames[p.name.toLower()] = p.id;
+        mylowernames[p.name.toLower()] = p.id;
 
-    playerReceived(p);
-    tiersReceived(tiers);
+        playerReceived(p);
+        tiersReceived(tiers);
 
-    /* If it's us, we know we've logged in */
-    if (p.id == ownId())
-        loggedIn = true;
+        /* If it's us, we know we've logged in */
+        if (p.id == ownId()) {
+            loggedIn = true;
+        }
+    }
 }
 
 void Client::tiersReceived(const QStringList &tiers)
@@ -2734,7 +2763,7 @@ void Client::printHtml(const QString &html)
 {
     if(call("beforeNewMessage(QString,bool)", html, true)){
         foreach(Channel *c, mychannels)
-            c->printHtml(html, false);
+            c->printHtml(html, false, true);
     }
     call("afterNewMessage(QString,bool)", html, true);
 }
@@ -2746,7 +2775,7 @@ void Client::printLine(const QString &line)
 
     if(call("beforeNewMessage(QString,bool)", line, false)){
         foreach(Channel *c, mychannels)
-            c->printLine(line,false, false);
+            c->printLine(line, false, false, true);
     }
     call("afterNewMessage(QString,bool)", line, false);
 }

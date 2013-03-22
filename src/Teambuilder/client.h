@@ -172,7 +172,7 @@ public slots:
     /* sends what's in the line edit */
     void sendText();
     void changeName(const QString&);
-    void playerLogin(const PlayerInfo &p, const QStringList &tiers);
+    void playerLogin(const PlayerInfo &p, const QStringList &tiers, bool ignore=false);
     void playerReceived(const PlayerInfo &p);
     void announcementReceived(const QString &);
     void tiersReceived(const QStringList &tiers);
@@ -285,6 +285,8 @@ public slots:
     void showTeamEvents(bool);
     void toggleAutoJoin(bool autojoin);
     void toggleDefaultChannel(bool def);
+    void toggleGlobalMessage(bool gmessage);
+    bool ignoringGlobalMessage(const QString &channelName);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void toggleIncomingPM(bool);
