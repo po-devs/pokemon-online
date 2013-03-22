@@ -141,7 +141,7 @@ void Channel::anchorClicked(const QUrl &url)
             int id = path.mid(6).toInt();
             client->watchBattleRequ(id);
         } else if (path.leftRef(12) == "watchplayer/") {
-            QString player = path.mid(3);
+            QString player = path.mid(12);
             int id = player.toInt();
             if (id == 0) {
                 client->watchBattleOf(client->id(player));
@@ -156,14 +156,23 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->startPM(id);
             }
-        } else if (path.leftRef(3) == "ignore/") {
-            QString player = path.mid(3);
+        } else if (path.leftRef(7) == "ignore/") {
+            QString player = path.mid(7);
             int id = player.toInt();
             if (id == 0) {
                 int pid = client->id(player);
                 client->ignore(pid, !client->isIgnored(pid));
             } else {
                 client->ignore(id, !client->isIgnored(id));
+            }
+        } else if (path.leftRef(5) == "info/") {
+            QString player = path.mid(5);
+            int id = player.toInt();
+            if (id == 0) {
+                int pid = client->id(player);
+                client->seeInfo(pid);
+            } else {
+                client->seeInfo(id);
             }
         }
     } else {
@@ -649,10 +658,14 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     }
 }
 
-void Channel::printLine(const QString &_line, bool flashing, bool act)
+void Channel::printLine(const QString &_line, bool flashing, bool act, bool global)
 {
     QString line = removeTrollCharacters(_line);
     QString timeStr = "";
+
+    if (global && client->ignoringGlobalMessage(name())) {
+        return;
+    }
 
     if(client->showTS)
         timeStr = "(" + QTime::currentTime().toString() + ") ";
@@ -732,12 +745,16 @@ void Channel::printLine(const QString &_line, bool flashing, bool act)
 }
 
 
-void Channel::printHtml(const QString &str, bool act)
+void Channel::printHtml(const QString &str, bool act, bool global)
 {
     QRegExp id(QString("<\\s*([0-9]+)\\s*>"));
     if (str.contains(id) && client->isIgnored(id.cap(1).toInt())){
         return;
     }
+    if (global && client->ignoringGlobalMessage(name())) {
+        return;
+    }
+
     checkFlash(str, "<ping */ *>");
 
     QString timeStr = "";
