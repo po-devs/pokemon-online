@@ -82,7 +82,7 @@ void MainWidget::updateTabNames()
         tabNames[spots[0]]->hide();
     }
 
-    topLevelWidget()->setWindowTitle(QString("Pokemon Online - %1").arg(currentWidget()->windowTitle()));
+    topLevelWidget()->setWindowTitle(QString("%1 - Pokemon Online").arg(currentWidget()->windowTitle()));
 }
 
 void MainWidget::changeSpot()

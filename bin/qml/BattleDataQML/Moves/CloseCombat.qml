@@ -19,7 +19,7 @@ Move {
             z: defender.infront(5)
             width: defender.width;
             height: defender.height;
-            source: "image://pokeinfo/item/156"
+            source: "../../images/fist.png"
             lifeSpan: 200
             count: 10
             angle: 0
