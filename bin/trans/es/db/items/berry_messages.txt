@@ -1,0 +1,12 @@
+﻿0 ¡%s se comió su %i!
+1 ¡%s ya no está confuso!|¡%s se ha curado!|¡%s ya no está paralizado!|¡%s se despertó!|¡%s ya no está congelado!|¡%s ya no está quemado!|¡%s ya no está envenenado!
+2 ¡Los PP de %m han sido restaurados!|¡Los PP de %m han sido restaurados!
+3 ¡%s restauró su salud con %i!
+4 ¡El daño a %s ha sido atenuado por %i!
+5 ¡El daño a %s ha sido atenuado por %i!
+6 ¡%s restauró su salud con %i!
+7 ¡%i de %s subió su %st!
+9 ¡%i de %s subió mucho su %st!
+10 ¡%s está centrándose en su objetivo!
+11 ¡%s ya está listo para atacar!
+12 ¡%f ha recibido daño de retroceso!
