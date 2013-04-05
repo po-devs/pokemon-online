@@ -1,8 +1,8 @@
 ﻿0 PS
 1 Ataque
 2 Defensa
-3 At.Esp
-4 Def.Esp
+3 At. Esp.
+4 Def. Esp.
 5 Velocidad
 6 Precisión
 7 Evasión

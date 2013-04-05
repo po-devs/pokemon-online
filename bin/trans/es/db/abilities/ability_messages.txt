@@ -1,0 +1,61 @@
+﻿0 
+2 ¡Resquicio de %s dañó a %f!
+3 ¡%s activó su Punto Ira!
+4 ¡Anticipación de %s le hizo estremecerse!
+6 ¡Mal sueño de %s daña a %f!
+9 ¡Cambio Color de %s lo convirte al tipo %t!
+11 ¡Gran Encanto de %s enamoró a %f!
+12 ¡%s no retrocedió gracias a Foco Interno!
+13 ¡Descarga de %s se activó!
+14 ¡Nevada de %s provocó granizo!|¡Llovizna de %s hizo llover!|¡Chorro Arena de %s provocó tormenta de arena!|¡Sequía de %s intensificó los rayos de sol!
+15 ¡%s restauró un poco sus PS gracias a Piel Seca!|¡%s perdió PS por su Piel Seca!
+16 ¡Efecto Espora de %s se activó!
+18 ¡%a de %s se activó!
+19 ¡Absor. Fuego de %s aumentó la potencia de sus ataques Fuego!|¡Absor. Fuego de %s inutilizó %m!
+21 ¡%s cambió su tipo a %t!
+22 ¡Alerta de %s predice %m!
+23 ¡Cacheo de %s encontró %i!
+24 ¡Polvo Escudo de %s evitó efectos secundarios!
+29 ¡%s se liberó del cambio de estado gracias a Hidratación!
+30 ¡%a de %s impide que bajen sus estadísticas!
+31 ¡%a de %s impidió que bajasen sus estadísticas!
+32 ¡%s se cura gracias a %a!
+33 ¡%s se cura gracias a %a!|¡%a de %s impidió la paráisis!|¡%a de %s impidió que se durmiese!|¡%a de %s evitó que se congelase!|¡%a impidió que %s se quemara!|¡%a de %s evita el envenenamiento!
+34 ¡Intimidación de %s bajó el ataque a %f!|¡El Sustituto de %f evitó la Intimidación de %s!
+37 ¡Defensa Hoja de %s impide recibir cambios de estado!
+38 ¡%a de %s atrajo el ataque!|¡%a de %s subió su Ataque Especial!|¡%a de %s inutilizó el ataque!
+40 ¡%s tiene %a!
+41 ¡Electromotor de %s aumentó su velocidad!
+44 ¡Ritmo Propio de %s eliminó la confusión!|¡Ritmo Propio de %s evitó la confusión!
+45 ¡%s restauró un poco sus PS gracias a Antídoto!
+46 ¡%s ejerce Presión!
+47 ¡La habilidad de %s es ahora Momia!
+50 ¡%a de %s hirió a %f!
+54 ¡%s se liberó de su cambio de estado con Mudar!
+55 ¡%s no está al máximo por Inicio Lento!|¡%s ya está al máximo!
+56 ¡%s perdió PS por su Poder Solar!
+57 ¡Insonorizar de %s bloqueó el ataque!
+58 ¡Impulso de %s subió su Velocidad!|¡Justiciero de %s subió su Ataque!
+60 ¡Impasible de %s subió su Velocidad!
+61 ¡Sincronía de %s cambió el estado de %f!
+66 ¡%s ha copiado la habilidad %a de %f!
+67 ¡%s está holgazaneando!
+68 ¡%a de %s subió su Ataque!|¡%a de %s inutilizó el ataque!
+70 ¡%a de %s absorbió el ataque!|¡%a de %s inutilizó el ataque!
+71 ¡%s se protegió con Superguarda!
+74 ¡%s perdió parte de su armadura!
+78 ¡%s robó el objeto %i de %f!
+80 ¡Competitivo de %s subió mucho su Ataque!
+81 ¡%s se transformó en %p!
+85 ¡%s evitó el ataque de %f gracias a Telepatía!
+86 ¡%s recuperó salud gracias a Regeneración!
+88 ¡%s obtuvo %i gracias a Cosecha!
+90 ¡Piel Milagro de %s evitó el cambio de estado!
+91 ¡%s ha aguantado el golpe gracias a Robustez!
+93 ¡%s recogió %i!
+94 ¡Justiciero de %s subió su Ataque!
+95 ¡Veleta de %s subió mucho su %st!|¡Veleta de %s bajó su %st!
+96 ¡Cuerpo Maldito de %s se activó!
+97 ¡Cobardía de %s subió su Velocidad!
+99 ¡Alma Cura de %s restauró el estado de %f!
+102 ¡Nerviosismo de %s ha puesto nervioso al equipo de %tf!

@@ -1,0 +1,120 @@
+﻿0 
+1 ¡%f ha perdido energía!|¡%s se comió el sueño de %f!|¡%s absorbió el Lodo Líquido de %f!
+2 ¡%s se rodeó de un manto de agua!|¡Acua Aro restauró los PS de %s!
+3 ¡Un balsámico aroma impregnó la zona!|¡Ha repicado una campana!
+7 ¡Ataque de %q!
+8 ¡%s no tiene suficiente PS!|¡%s redujo sus PS y mejoró su Ataque!
+9 ¡%s está almacenando energía!|¡%s liberó energía!
+10 ¡%m hiere a %s!|¡%s se ha liberado de %m!|¡%f fue atrapado en el torbellino!
+11 ¡%s necesita recargarse!
+12 ¡%f no puede escapar!
+13 ¡%s dio un salto tremendo!|¡%s se ocultó en un agujero!|¡%s se ocultó bajo el agua!|¡%s voló muy alto!|¡%s desapareció instantáneamente!|¡%s se ha llevado a %f por los aires!|¡%s no puede atacar mientras está en el aire!
+14 ¡%s destruyó las barreras del equipo de %tf!
+16 ¡%s robó y se comió una %i!
+17 ¡%s ha cambiado al tipo %t!
+18 ¡%s comenzó a cargar energía!
+19 ¡%s ha cambiado al tipo %t!
+20 ¡%s ha cambiado al tipo %t!
+23 ¡%s robó %i a %f!|¡%s robó %i a %f!
+25 ¡%s reduce sus PS y maldice a %f!|¡%s es víctima de una Maldición!
+26 ¡%s se llevó a %f!|¡%s intenta llevarse a su rival!
+27 ¡%s se ha protegido!
+28 ¡%m de %f fue desactivado con Anulación!|%s's %m is disabled!|%s is no longer disabled!
+29 ¡%s sufrió el ataque %m!|¡%s previó un ataque!|¡Deseo oculto de %s se cumplirá más adelante!
+31 No afecta a %s...
+32 ¡%f no puede usar objetos!|%s can use items again!
+33 ¡%s ya no está afectado por Otra Vez!|¡%f sufrió los efectos de Otra Vez!
+35 ¡%s aguantó el golpe!|¡%s se ha fortalecido!
+43 ¡Robustez de %f le protegió de %m!|¡K.O. en 1 golpe!
+45 ¡%s tiró su %i!
+46 ¡%s se está preparando para luchar!
+47 ¡%s perdió su concentración!|¡%s está reforzando su concentración!
+48 ¡%s se convirtió en el centro de atención!
+51 ¡Se suprimió la habilidad %a de %f!
+53 ¡Se ha incrementado la gravedad!|Gravity returned to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
+54 ¡%f perdió todos los PP de %m por la Rabia de %s!
+55 ¡%s intercambió los cambios de características con %f!
+57 ¡Ha empezado a granizar!|¡Ha empezado a llover!|¡Se ha desatado una tormenta de arena!|¡El sol está brillando!
+58 ¡%s se ha enamorado de %f!|¡%f se ha enamorado!|¡El amor impide que %s ataque!
+59 ¡%f no puede curarse!|¡%s no puede usar %m debido a Anticura!|¡La Anticura de %s desapareció!
+60 ¡%s recuperó salud!
+61 ¡%s recuperó salud!|¡El deseo de cura se hizo realidad!|¡Quedó envuelto en una mística luz de luna!
+62 ¡%s cambió su Ataque y Defensa!
+63 ¡%s está listo para ayudar a %f!
+64 ¡%s ha fallado y se ha caído!
+67 ¡%s selló movimientos del oponente!|¡%s no puede usar %m porque está sellado!
+68 ¡%s levita por electromagnetismo!|¡%s dejó de levitar!
+70 ¡%s echó abajo el objeto %i de %f!
+72 No afecta a %s...|¡%f fue infectado!|¡El movimiento Drenadoras ha restado salud a %s!
+73 ¡Reflejo subió la defensa del equipo de %ts!|¡Pantalla Luz subió la defensa del equipo de %ts!|¡Reflejo subió la defensa del equipo de %ts!|¡Pantalla Luz subió la defensa del equipo de %ts!|¡El efecto de Reflejo en el equipo de %ts se ha disipado!|¡El efecto de Pantalla Luz en el equipo de %ts se ha disipado!
+74 ¡%s apuntó a %f!
+75 ¡El Conjuro protege al equipo de %ts de los golpes críticos!|¡El Conjuro del equipo de %ts desapareció!
+76 ¡%s se cubrió con Capa Mágica!|¡Capa Mágica hizo rebotar %m de %s!|¡%s ha devuelto %m por su Espejomágico!
+77 ¡%s limpió el campo en torno al equipo de %tf!|¡%s limpió el campo!
+78 ¡Magnitud %d!
+81 ¡%s aprendió %m!
+82 ¡Pero no tuvo ningún efecto!
+84 ¡%s identificó a %f!
+86 ¡Neblina ha cubierto al equipo de %ts!|¡La Neblina del equipo de %ts desapareció!|¡La neblina impidió que bajasen las estadísticas de %f!
+87 ¡%s recuperó salud!|¡%s recuperó mucha salud!|¡%s recuperó poca salud!
+88 ¡Se han debilitado los ataques de tipo Eléctrico!|¡Se han debilitado los ataques de tipo Fuego!
+92 ¡%s ha caído en una pesadilla!|¡%s está inmerso en una Pesadilla!
+93 ¡%s se tranquilizó!|¡El cansancio terminó confundiendo a %s!
+94 ¡Los combatientes comparten el daño sufrido!
+95 ¡Los Pokémon que oigan la canción se debilitarán dentro de 3 turnos!|¡El contador de salud de %s bajó a %d!
+96 ¡El Presente de %s recuperó salud a %f!
+97 ¡%s copió las nuevas características de %f!
+98 ¡%s pasó su estado a %f!
+102 ¡La furia de %s está aumentando!
+103 ¡%s se liberó de %m!|¡%s eliminó las Drenadoras!|¡%s eliminó las Púas!|¡%s eliminó las Púas Tóxicas!|¡%s eliminó Trampa Rocas!
+104 ¡%s provocó un remolino!|¡%s está rodeado de una luz brillante!|¡%s agachó la cabeza!|¡%s absorbió luz solar!|¡%s ha quedado envuelto en una luz fría!|¡%s ha quedado envuelto en aire gélido!
+105 ¡%s encontró %i!
+106 ¡%s se fue a dormir y recuperó salud!
+107 ¡%s permaneció fijo al suelo gracias a sus Ventosas!|¡%s está fuertemente arraigado!|¡%f fue arrastrado al combate!
+108 ¡%s copió %a a %f!
+109 ¡El equipo de %ts se protegió con Velo Sagrado!|¡El equipo de %ts ya no está protegido por Velo Sagrado!|¡Velo Sagrado impidió el cambio de estado en %f!
+111 ¡%s usó Esquema en %m!
+112 ¡%s intercambió su habilidad especial!
+114 ¡Humedad de %s impidió que %m funcionase!
+118 ¡%s robó el movimiento de %f!|¡%s espera a que su rival haga algún movimiento!
+121 ¡Se ha llenado de púas el campo de %tf!|¡Las púas han herido a %s!
+122 ¡%s recuperó salud!
+123 ¡El Rencor restó %q PP al movimiento %m de %f!
+124 ¡El equipo de %tf está rodeado de piedras puntiagudas!|¡Se han clavado piedras en %s!
+125 ¡%s reservó %d!
+127 ¡%s también se ha hecho daño!
+128 ¡%s ya tenía un Sustituto!|¡El sustituto de %s se ha debilitado!|¡El sustituto de %f bloqueó %m!|¡El sustituto recibe el daño en lugar de %s!|¡%s ha creado un sustituto!
+131 ¡%s tragó!
+132 ¡%s provocó un cambio de objeto con %f!|¡%s obtuvo %i!
+133 ¡Viento Afín sopla a favor del equipo de %ts!|¡El Viento Afín del equipo de %ts se agotó!
+134 ¡%s no puede usar %m debido a la mofa!|¡%f se ha dejado engañar por una mofa!|¡La mofa de %s desapareció!
+135 ¡%f es víctima de Tormento!
+136 ¡Se ha llenado de púas tóxicas el campo de %tf!|¡Las púas tóxicas desaparecieron bajo los pies de %s!
+137 ¡%s se transformó en %p!
+138 ¡%s alteró las dimensiones!|¡Se han restaurado las dimensiones alteradas!
+141 ¡%s montó un Alboroto!|¡%s está montando un Alboroto!|¡%s se tranquilizó!|¡%s se despertó!|¡%s permanece despierto por el alboroto!
+142 ¡El deseo de %q se hizo realidad!
+143 ¡%f ahora tiene %a!
+144 ¡%s adormeció a %f!|¡%s bosteza!|¡%a de %s inutilizó el bostezo!
+149 ¡Se han eliminado todos los cambios en las características!|¡Las características de %f se han restablecido!|¡La niebla flotaba en el campo!
+150 ¡%s se posó en el suelo!
+151 ¡%s echó raíces!|¡%s absorbió nutrientes por las raíces!
+155 ¡%s comparte su fuerza con %f!|¡%s comparte su guardia con %f!
+156 ¡Se ha creado un espacio en el que los efectos de los objetos desaparecen!|¡Los objetos vuelven a funcionar!
+157 ¡%s ha cambiado a tipo Agua!
+158 ¡%f obtuvo %a!
+160 ¡La %i de %f fue calcinada!
+162 ¡%s dio a %f su %i!
+164 ¡El estado de %s regresó a la normalidad!
+168 ¡Se ha creado un espacio en el que Defensa y Defensa Especial se invierten!|¡La Defensa y Defensa Especial de los Pokémon han vuelto a la normalidad!
+169 ¡Vastaguardia protege al equipo de %ts!|¡Vastaguardia del equipo de %ts se rompió!
+170 ¡Anticipo protege al equipo de %ts!|¡Anticipo del equipo de %ts se rompió!
+171 ¡%s está siendo relevado!
+172 ¡%s ahora es del mismo tipo que %f!
+174 ¡%f ha sido lanzado por los aires!|¡%s se ha liberado de la telequinesis!
+175 ¡%s ha sido derribado y se ha hecho daño!
+178 ¡%s está preparando su %m!|¡Los dos movimientos se han unido! ¡Es un movimiento combinado!|¡El equipo de %ts se ve rodeado por un mar de llamas!|¡%s ha sido herido por el mar de llamas!
+179 ¡%s está preparando su %m!|¡Los dos movimientos se han unido! ¡Es un movimiento combinado!|¡Ha aparecido un pantano alrededor del equipo de %ts!
+180 ¡%s está preparando su %m!|¡Los dos movimientos se han unido! ¡Es un movimiento combinado!|¡Ha aparecido un arcoíris sobre el equipo de %ts!
+190 ¡%s y %f han intercambiado sus posiciones!
+191 #
