@@ -74,7 +74,7 @@ extern bool skipChecksOnStartUp;
  * The following code is not placed in the constructor,
  * because view-components may want to show startup messages (printLine).
  *
- * This can be only acheived (in a clean way) by first letting a view listen
+ * This can be only achieved (in a clean way) by first letting a view listen
  * to the signal "servermessage". Therefore, the serverobject must be passed
  * to that view (by construction of the view), and then the server should start.
  */
@@ -113,10 +113,6 @@ void Server::start(){
     setDefaultValue("SQL/Host", "localhost");
     setDefaultValue("SQL/DatabaseSchema", "");
     setDefaultValue("SQL/VacuumOnStartup", true);
-    setDefaultValue("GUI/ShowLogMessages", false);
-    setDefaultValue("GUI/ShowTrayPopup", true);
-    setDefaultValue("GUI/MinimizeToTray", true);
-    setDefaultValue("GUI/DoubleClickIcon", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -148,6 +144,7 @@ void Server::start(){
     setDefaultValue("AntiDOS/Disabled", false);
     setDefaultValue("Players/InactiveThresholdInDays", 182);
     setDefaultValue("Players/ClearInactivesOnStartup", true);
+    setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
 
     try {
@@ -249,9 +246,6 @@ void Server::start(){
     proxyServers = s.value("Network/ProxyServers").toString().split(",");
     passwordProtected = s.value("Server/RequirePassword").toBool();
     serverPassword = s.value("Server/Password").toByteArray();
-    showTrayPopup = s.value("GUI/ShowTrayPopup").toBool();
-    minimizeToTray = s.value("GUI/MinimizeToTray").toBool();
-    doubleClick = s.value("GUI/DoubleClickIcon").toBool();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
 
     /* Adds the main channel */
@@ -307,21 +301,25 @@ void Server::processDailyRun()
 
 void Server::changeDbMod(const QString &mod)
 {
+    battleThread.pause();
+
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
-    GenInfo::init("db/gens/");
-    PokemonInfo::init("db/pokes/");
-    MoveSetChecker::init("db/pokes/");
-    ItemInfo::init("db/items/");
-    MoveInfo::init("db/moves/");
-    TypeInfo::init("db/types/");
-    NatureInfo::init("db/natures/");
-    CategoryInfo::init("db/categories/");
-    AbilityInfo::init("db/abilities/");
-    HiddenPowerInfo::init("db/types/");
-    StatInfo::init("db/status/");
-    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
+    GenInfo::init(dataRepo+"/db/gens/");
+    PokemonInfo::init(dataRepo+"/db/pokes/");
+    MoveSetChecker::init(dataRepo+"/db/pokes/");
+    ItemInfo::init(dataRepo+"/db/items/");
+    MoveInfo::init(dataRepo+"/db/moves/");
+    TypeInfo::init(dataRepo+"/db/types/");
+    NatureInfo::init(dataRepo+"/db/natures/");
+    CategoryInfo::init(dataRepo+"/db/categories/");
+    AbilityInfo::init(dataRepo+"/db/abilities/");
+    HiddenPowerInfo::init(dataRepo+"/db/types/");
+    StatInfo::init(dataRepo+"/db/status/");
+    GenderInfo::init(dataRepo+"/db/genders/"); //needed by battlelogs plugin
+
+    battleThread.unpause();
 }
 
 void Server::updateDatabase()
@@ -574,7 +572,7 @@ void Server::connectToRegistry()
     printLine("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("pokemon-online-registry.dynalias.net", 8081);
+    s->connectToHost("registry.pokemon-online.eu", 8081);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
@@ -1771,13 +1769,10 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         if (_desc == Forfeit) {
             battle->playerForfeit(loser);
         }
-        if (_desc != Tie && rated) {
-            QString winn = pw->name();
-            QString lose = pl->name();
-            TierMachine::obj()->changeRating(winn, lose, tier);
-            pw->findRating(tier);
-            pl->findRating(tier);
-        }
+
+        QString winn = pw->name();
+        QString lose = pl->name();
+
         myengine->beforeBattleEnded(winner, loser, _desc, battleid);
 
         ++lastDataId;
@@ -1808,6 +1803,15 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         } else if (_desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
+
+        if (_desc != Tie && rated) {
+            TierMachine::obj()->changeRating(winn, lose, tier);
+            if (playerExist(pw->id()))
+                pw->findRating(tier);
+            if (playerExist(pl->id()))
+                pl->findRating(tier);
+        }
+
         myengine->afterBattleEnded(winner, loser, _desc, battleid);
     }
 
@@ -2248,21 +2252,6 @@ bool Server::isLegalProxyServer(const QString &ip) const
             return true;
     }
     return false;
-}
-
-void Server::showTrayPopupChanged(bool show)
-{
-    showTrayPopup = show;
-}
-
-void Server::minimizeToTrayChanged(bool allow)
-{
-    minimizeToTray = allow;
-}
-
-void Server::clickConditionChanged(bool click)
-{
-    doubleClick = click;
 }
 
 template <typename ...Params>

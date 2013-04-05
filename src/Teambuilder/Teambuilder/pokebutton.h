@@ -24,6 +24,7 @@ public:
 signals:
     void pokemonOrderChanged(int start, int end);
     void doubleClicked();
+    void dropEventReceived(int index, QDropEvent *e);
 protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);

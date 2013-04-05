@@ -50,6 +50,8 @@ public:
     QWidget *getSampleWidget();
 
     void reloadTeam(int player);
+
+    void onDisconnection();
 private:
     BattleClientLog *log;
     BattleInput *input;

@@ -27,6 +27,7 @@ signals:
     void teamChanged();
     void clicked(int index);
     void doubleClicked(int index);
+    void dropEvent(int index, QDropEvent *event);
 private:
     Ui::PokeButtonsHolder *ui;
     PokeButton *pokemonButtons[6];

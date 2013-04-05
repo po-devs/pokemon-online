@@ -5,6 +5,8 @@ QMutex ContextSwitcher::guardian;
 ContextSwitcher::ContextSwitcher() : current_context(NULL), context_to_delete(NULL), finished(false)
 {
     connect(this, SIGNAL(finished()), SLOT(deleteLater()));
+
+    pauseController.release(1000);
 }
 
 ContextSwitcher::~ContextSwitcher()
@@ -37,6 +39,7 @@ void ContextSwitcher::run()
 #else
     create_context(&main_context);
 #endif
+    pauseController.acquire(1000);
     forever {
         if (context_to_delete) {
             /* That literally finishes the deleting operation by allowing wait()
@@ -45,7 +48,13 @@ void ContextSwitcher::run()
             context_to_delete = NULL;
         }
 
+        /* If an exterior program wants to lock the thread,
+         * they will acquire() the pause controller and lock the loop
+         * right here */
+        pauseController.release(1000);
+        /* Pauses the thread until a new task is scheduled */
         streamController.acquire(1);
+        pauseController.acquire(1000);
 
         if (finished) {
             goto end;
@@ -93,6 +102,17 @@ void ContextSwitcher::run()
         }
     }
     end:;
+    pauseController.release(1000);
+}
+
+void ContextSwitcher::pause()
+{
+    pauseController.acquire();
+}
+
+void ContextSwitcher::unpause()
+{
+    pauseController.release();
 }
 
 void ContextSwitcher::switch_context(ContextCallee *new_context)
@@ -164,6 +184,11 @@ void ContextSwitcher::yield()
 
 void ContextSwitcher::create_context(coro_context *c, coro_func function, void *param, void *stack, long stacksize)
 {
+    (void) c;
+    (void) function;
+    (void) param;
+    (void) stack;
+    (void) stacksize;
 #ifndef CORO2
     guardian.lock();
     coro_create(c, function, param, stack, stacksize);
@@ -222,12 +247,11 @@ void ContextCallee::terminate()
     /* Fixme: find out why that can happen */
     if (!ctx) {
         qDebug() << "Critical terminate w/o starting";
-        deleteLater();
-        return;
+        abort();
     }
 
     ctx->terminate(this);
-    ctx = NULL;
+    //ctx = NULL; //removed in case our own context is running in parallel and calls yield();
 }
 
 void ContextCallee::wait()

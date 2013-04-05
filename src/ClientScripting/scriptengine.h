@@ -42,7 +42,8 @@ public:
     int onPlayerRemoved(int id);
     int onPlayerJoinChan(int id, int chan);
     int onPlayerLeaveChan(int id, int chan);
-    int beforeChallengeReceived(int id);
+    int beforeChallengeReceived(int challengeId, int oppId, QString tier, int clauses);
+    int afterChallengeReceived(int challengeId, int oppId, QString tier, int clauses);
     void onBattleStarted(BaseBattleWindowInterface *w);
 
     /* Prevents the event from happening.

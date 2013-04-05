@@ -105,20 +105,25 @@ DataStream & operator >> (DataStream &in, TrainerInfo &i)
         v.stream >> i.winning >> i.losing >> i.tie;
     }
 
-    if (i.info.length() > 300) {
-        i.info.resize(300);
-    }
-    if (i.winning.length() > 200) {
-        i.winning.resize(200);
-    }
-    if (i.losing.length() > 200) {
-        i.losing.resize(200);
-    }
-    if (i.tie.length() > 200) {
-        i.tie.resize(200);
-    }
+    i.sanitize();
 
     return in;
+}
+
+void TrainerInfo::sanitize()
+{
+    if (info.length() > 300) {
+        info.resize(300);
+    }
+    if (winning.length() > 200) {
+        winning.resize(200);
+    }
+    if (losing.length() > 200) {
+        losing.resize(200);
+    }
+    if (tie.length() > 200) {
+        tie.resize(200);
+    }
 }
 
 DataStream & operator << (DataStream &out, const TrainerInfo &i)

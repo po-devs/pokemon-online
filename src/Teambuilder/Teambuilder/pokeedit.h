@@ -34,16 +34,12 @@ public:
     };
 
     static bool advancedWindowClosed;
-signals:
-    void switchToTrainer();
-
-private slots:
-    void on_done_clicked() {emit switchToTrainer();}
 
 public slots:
     void updateStats();
     void updatePicture();
     void updateGender();
+    void updatePluginLayout();
     void updateAll();
     void setPoke(PokeTeam *poke);
 

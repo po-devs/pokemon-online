@@ -76,8 +76,8 @@ public:
 
     Q_INVOKABLE QString addChannelLinks(const QString &line);
     Q_INVOKABLE void checkFlash(const QString &haystack, const QString &needle);
-    Q_INVOKABLE void printLine(const QString &str, bool flashing = true, bool act=true);
-    Q_INVOKABLE void printHtml(const QString &str, bool act = true);
+    Q_INVOKABLE void printLine(const QString &str, bool flashing = true, bool act=true, bool global = false);
+    Q_INVOKABLE void printHtml(const QString &str, bool act = true, bool global = false);
 
     void dealWithCommand(int command, DataStream *stream);
     QHash<qint32, Battle> &getBattles();

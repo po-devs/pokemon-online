@@ -21,8 +21,11 @@ class ChallengeDialog : public QDialog
 
 public:
     explicit ChallengeDialog(QWidget *parent = 0);
-    ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid);
+    ChallengeDialog(const PlayerInfo &info, TeamHolder *t, int mid, int challengeId);
     ~ChallengeDialog();
+
+    /* Get the challenge info */
+    ChallengeInfo challengeInfo() { return cinfo; }
 
     void setPlayerInfo(const PlayerInfo &info);
     void setTeam(TeamHolder *t);
@@ -30,6 +33,7 @@ public:
     void setChallenging(const QString &tier = "");
 
     int id();
+    int cid();
     /* defined once again so we can make a distinction between user closure and programmed closure */
     void closeEvent(QCloseEvent *event);
     /* Won't emit refused signals when closed */
@@ -49,6 +53,7 @@ protected:
     QButtonGroup *tierGroup;
 
     int myid;
+    int challId;
 
     PlayerInfo info;
     ChallengeInfo cinfo;

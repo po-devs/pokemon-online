@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 
                         goto success;
                     } else {
-#ifdef __WIN32
+#ifdef Q_OS_WIN
                         qDebug() << "running as admin";
                         ::ShellExecute(0, // owner window
                                                    L"runas",
@@ -183,9 +183,11 @@ int main(int argc, char *argv[])
                     //memory.detach();
                     return 0;
 
+#ifndef Q_OS_WIN
                     failure:;
                     /* The current dir is not writable, and no way to run an auto updater with the correct permission */
                     //memory.detach();
+#endif
                 }
             }
         }

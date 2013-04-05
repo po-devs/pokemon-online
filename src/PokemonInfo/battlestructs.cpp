@@ -410,7 +410,7 @@ void TeamBattle::switchPokemon(int pok1, int pok2)
 
 bool TeamBattle::invalid() const
 {
-    return poke(0).num() == Pokemon::NoPoke;
+    return poke(0).ko() && poke(1).ko() && poke(2).ko() && poke(3).ko() && poke(4).ko() && poke(5).ko();
 }
 
 void TeamBattle::generateRandom(Pokemon::gen gen)

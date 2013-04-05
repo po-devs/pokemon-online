@@ -262,6 +262,7 @@ void Coro_UnsupportedPlatformError(void)
 
 void Coro_switchTo_(Coro *self, Coro *next)
 {
+    (void) self;
 #if defined(__SYMBIAN32__)
 	ProcessUIEvent();
 #elif defined(USE_FIBERS)

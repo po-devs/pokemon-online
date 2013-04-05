@@ -186,7 +186,7 @@
 185 Finte
 186 Bitterkuss
 187 Bauchtrommel
-188 Schlammbombe
+188 Matschbombe
 189 Lehmschelle
 190 Octazooka
 191 Stachler

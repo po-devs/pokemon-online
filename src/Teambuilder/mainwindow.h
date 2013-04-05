@@ -43,6 +43,7 @@ public slots:
     void loadReplayDialog();
     void openNewTab();
     void loadStyleSheet();
+    void openThemesForum();
     void changeStyle();
     void showReplay(QString);
     void closeTab();
@@ -60,6 +61,8 @@ private slots:
     void changeLogReady(const QString &data, bool error);
 
     void updateRunningTime();
+
+    void pmNotificationsChanged(bool notify);
 private:
     void rebuildThemeMenu();
 
@@ -70,6 +73,7 @@ private:
     QMenu* themeMenu;
     MainWidget *main;
 
+    bool pmNotify;
     QSystemTrayIcon *trayIcon;
     QPointer<QWidget> lastNotificationSender;
 

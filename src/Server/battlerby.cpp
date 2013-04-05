@@ -70,7 +70,7 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     if (status == Pokemon::Paralysed) {
         fpoke(player).stats[Speed] = getBoostedStat(player, Speed)/4;
     } else if (status == Pokemon::Burnt) {
-        fpoke(player).stats[Attack] = getBoostedStat(player, Attack)/2;
+        //fpoke(player).stats[Attack] = getBoostedStat(player, Attack)/2;
     }
 }
 

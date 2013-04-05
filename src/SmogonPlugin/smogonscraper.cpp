@@ -22,11 +22,11 @@ SmogonScraper::~SmogonScraper()
     delete manager;
 }
 
-void SmogonScraper::lookup(Pokemon::gen gen, PokeTeam p)
+void SmogonScraper::lookup(PokeTeam p)
 {
     //TODO: add approximation for edge cases such as yellow version
     currGen = "";
-    switch(gen.num)
+    switch(p.gen().num)
     {
     case 1:currGen = "rb";break;
     case 2:currGen = "gs";break;

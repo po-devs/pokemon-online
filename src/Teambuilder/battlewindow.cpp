@@ -631,6 +631,11 @@ void BattleWindow::sendChoice(const BattleChoice &b)
         info().possible = false;
 }
 
+void BattleWindow::onDisconnection()
+{
+    BaseBattleWindow::onDisconnection();
+}
+
 void BattleWindow::sendMessage()
 {
     QString message = myline->text();

@@ -183,6 +183,9 @@ QColor Theme::CategoryColor(int typenum)
 
 QColor Theme::ChatColor(int num)
 {
+    if (num == -1) {
+        return "#000000";
+    }
     return m_ChatColors[num % m_ChatColors.size()];
 }
 

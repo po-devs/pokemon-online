@@ -13,9 +13,9 @@ CONFIG   += console
 TEMPLATE = app
 
 LIBS += -L../../bin \
-    -lutilities \
-    -lpokemonlib \
-    -lbattlelib \
+    -lpo-utilities \
+    -lpo-pokemoninfo \
+    -lpo-battlemanager \
     -lqtwebsocket \
     -lqjson
 

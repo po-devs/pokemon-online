@@ -49,7 +49,7 @@
 73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 74 %s took aim at %f!
 75 %ts's team is protected from critical hits!|%ts's Lucky Chant wore off!
-76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
+76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Bounce!
 77 %s cleared the field around %tf's team!|%s cleared the field!
 78 Magnitude %d!
 81 %s learned %m!
@@ -79,7 +79,7 @@
 118 %s snatched %f's move!|%s waits for a target to make a move!
 121 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
 122 %s released!
-123 It reduced the PP of %f's %m by 4!
+123 It reduced the PP of %f's %m by %q!
 124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 125 %s stockpiled %d!
 127 %s is hit with recoil!
@@ -112,7 +112,7 @@
 171 %s is being sent back!
 172 %s type changed to match %f's types!
 174 %f was hurled into the air!|%s was freed from the telekinesis!
-175 %s fell straight down!
+175 %f fell straight down!
 178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
 179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!

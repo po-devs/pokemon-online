@@ -147,8 +147,8 @@ TrainerMenu QLabel#avatar {
     background: #ffffff;
 }
 
-PokeEdit #done {
-  margin-right: 60px;
+TeamMenu #done {
+  margin-right: 40px;
 }
 
 PokeEdit #pokemonSprite {
@@ -366,7 +366,7 @@ QTabBar#pokemonTabs::tab:!selected {
      margin-bottom: 4px; /* make non-selected tabs look smaller */
 }
 
-PokeEdit #done {
+TeamMenu #done {
     background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
         stop: 0 #016d9c, stop: 0.4 #005e90,
         stop: 0.6 #045283, stop: 1.0 #0f3258);
@@ -378,13 +378,13 @@ PokeEdit #done {
     border-top-color: #025780;
 }
 
-PokeEdit #done:hover {
+TeamMenu #done:hover {
          background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
                                                                  stop: 0 #3e8aab, stop: 0.4 #448eb5,
                                                                  stop: 0.6 #417b9f, stop: 1.0 #154477);
 }
 
-PokeEdit #done:pressed {
+TeamMenu #done:pressed {
     background: #045283;
 }
 
@@ -396,7 +396,7 @@ PokeEdit #speciesLabel {
     font-size: 15px;
 }
 
-TeamMenu QLabel {
+PokeEdit QLabel {
     color: white;
 }
 

@@ -26,7 +26,7 @@ private:
 
     QStringList getDVList(QString typeString);
 public:
-    PokemonTab(PokeTeam p, Pokemon::gen m_gen, QWidget *parent);
+    PokemonTab(PokeTeam p, QWidget *parent=NULL);
     ~PokemonTab();
     PokeTeam *getPokeTeam();
     void createInitialUi(QList<smogonbuild>* builds);

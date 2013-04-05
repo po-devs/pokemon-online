@@ -16,7 +16,9 @@ SOURCES += smogonplugin.cpp \
            smogonscraper.cpp \
             pokemontab.cpp \
             pokemonteamtabs.cpp \
-    smogonbuild.cpp
+    smogonbuild.cpp \
+    teambuildersmogonplugin.cpp \
+    smogonsinglepokedialog.cpp
 
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
@@ -27,16 +29,18 @@ HEADERS += smogonplugin.h\
     smogonscraper.h \
     pokemontab.h \
     pokemonteamtabs.h \
-    smogonbuild.h
+    smogonbuild.h \
+    teambuildersmogonplugin.h \
+    smogonsinglepokedialog.h
 
 windows: {
     LIBS += -L../../bin/myplugins
 }
 
 LIBS += -L../../bin \
-    -lpokemonlib \
-    -lutilities \
-    -lbattlelib
+    -lpo-pokemoninfo \
+    -lpo-utilities \
+    -lpo-battlemanager
 
 symbian {
     #Symbian specific definitions
@@ -57,4 +61,7 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+FORMS += \
+    smogonsinglepokedialog.ui
 

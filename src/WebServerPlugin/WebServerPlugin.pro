@@ -14,7 +14,7 @@ DEFINES += WEBSERVERPLUGIN_LIBRARY
 
 LIBS += -L../../bin \
     -lqtwebsocket \
-    -lutilities \
+    -lpo-utilities \
     -lqjson
 
 

@@ -50,8 +50,8 @@ SOURCES += main.cpp \
     tierwindow.cpp \
     serverconfig.cpp
 LIBS += -L../../bin \
-    -lutilities \
-    -lpokemonlib
+    -lpo-utilities \
+    -lpo-pokemoninfo
 HEADERS += player.h \
     network.h \
     moves.h \
@@ -141,7 +141,7 @@ macx {
    #ICON = pokemononline.icns
    QMAKE_INFO_PLIST = Info.plist
    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-   LINKLIBS = libutilities.1.0.0.dylib libpokemonlib.1.0.0.dylib libbattlelib.1.0.0.dylib
+   LINKLIBS = libpo-utilities.1.0.0.dylib libpo-pokemoninfo.1.0.0.dylib libpo-battlemanager.1.0.0.dylib
    QMAKE_POST_LINK = mkdir -p $${DESTDIR}/$${TARGET}.app/Contents/Frameworks;
    for(L, LINKLIBS) {
        QMAKE_POST_LINK += cp -f $${DESTDIR}/$${L} $${DESTDIR}/$${TARGET}.app/Contents/Frameworks/;
@@ -157,3 +157,12 @@ include(../Shared/Common.pri)
 
 FORMS += \
     modswindow.ui
+
+CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
+    DEFINES += PO_HOME_DIR=\\\"~/.po-server/\\\"
+}
+!CONFIG(debian_package) {
+    DEFINES += PO_DATA_REPO=\\\"./\\\"
+    DEFINES += PO_HOME_DIR=\\\"./\\\"
+}

@@ -65,9 +65,11 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom;
-        //source: fieldPokemon.showing ? "http://sprites.pokecheck.org/" + (back?"b/":"i/") + padd(img.spriteRef&0xFFFF) + ".gif" : ""
+        property int forme: img.spriteRef >> 16;
+        property bool femaleTry: true;
+
         source: fieldPokemon.showing ? ("http://pokemon-online.eu/images/pokemon/black-white/animated/" + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
-                                        + padd(img.spriteRef&0xFFFF) + ".gif") : ""
+                                        + ((femaleTry && pokemon.gender==2)?"female/":"") + padd(img.spriteRef&0xFFFF) + (forme ? "-"+forme:"") + ".gif") : ""
 
         scale: img.scale
         anchors.bottomMargin: img.anchors.bottomMargin
@@ -77,7 +79,21 @@ Item {
         smooth: false
         onSourceChanged: shader.grab();
         onCurrentFrameChanged: shader.grab();
-        onStatusChanged: if (status === Image.Ready) {shader.image = aimg;} else {shader.image = img;}
+        onStatusChanged: if (status === Image.Ready) {
+                             shader.image = aimg;
+                         } else {
+                             shader.image = img;
+                             if (status!=Image.Loading &&pokemon.gender==2&&femaleTry) {
+                                femaleTry=false;
+                             }
+                         }
+        Connections {
+            target: img
+            onSpriteRefChanged: function() {
+                femaleTry = true;
+            }
+        }
+
         visible: status === Image.Ready
     }
 

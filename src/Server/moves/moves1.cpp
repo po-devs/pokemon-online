@@ -155,6 +155,12 @@ struct MMBatonPass : public MM
         turn(b,s)["BatonPassed"] = false;
         merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
+        /* If the poke before is confused, carry on that status */
+        if (poke(b,s)["ConfusedCount"].toInt() > 0) {
+            if (!b.poke(s).hasStatus(Pokemon::Confused))
+            b.poke(s).addStatus(Pokemon::Confused);
+        }
+
         QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
         for (int i = 0; i < 8; i++) {
             fpoke(b,s).boosts[i] += boosts[i];
@@ -782,7 +788,7 @@ struct MMAromaTherapy : public MM
         for (int i = 0; i < 6; i++) {
             //SoundProof blocks healbell but not aromatherapy
             //In gen 5 heal bell cures Pokemon with SoundProof
-            if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen() == 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
+            if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen().num == 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
                 b.changeStatus(player,i,Pokemon::Fine);
             }
         }
@@ -1674,7 +1680,7 @@ struct MMFuryCutter : public MM
         if (b.gen() >= 5 && poke(b,s)["LastMoveUsed"].toInt() != FuryCutter) {
             poke(b,s)["FuryCutterCount"] = 0;
         }
-        poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,15);
+        poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,b.gen().num == 4 ? 15 : 7);
     }
 
     static void bcd(int s, int, BS &b) {
