@@ -36,7 +36,7 @@ AntiDosWindow::AntiDosWindow()
 
     trusted_ips = new QLineEdit();
     trusted_ips->setText(settings.value("AntiDOS/TrustedIps").toString());
-    mylayout->addRow(tr("Trusted IPs (seperated by comma)"),trusted_ips);
+    mylayout->addRow(tr("Trusted IPs (separated by comma)"),trusted_ips);
 
     QCheckBox *aDosOn = new QCheckBox(tr("Turn AntiDos ON"));
     aDosOn->setChecked(!settings.value("AntiDOS/Disabled").toBool());

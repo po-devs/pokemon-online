@@ -51,6 +51,7 @@ struct PMStruct : public QWidget
 public:
     PMStruct(int id, const QString &ownName, const QString &name, const QString &content = "", int ownAuth=0);
     ~PMStruct() {
+        log->close();
         emit destroyed(id(), m_name);
     }
 
@@ -86,9 +87,6 @@ public slots:
     void ignore(bool);
     void challenge();
     void emitCp();
-
-protected:
-    void closeEvent(QCloseEvent *event);
 
 private:
     QString m_name;

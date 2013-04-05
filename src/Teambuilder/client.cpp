@@ -29,6 +29,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     waitingOnSecond = false;
     top = NULL;
     isConnected = true;
+    loggedIn = false;
     _mid = -1;
     selectedChannel = -1;
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -541,6 +542,14 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
+        action = show_events->addAction(tr("Ignore Global Messages"));
+        action->setCheckable(true);
+        action->setChecked(globals.value(QString("GlobalMessageChannels/%1").arg(ip)).toStringList().contains(name));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(toggleGlobalMessage(bool)));
+        createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+        mychanevents.push_back(action);
+
         show_events->exec(channels->mapToGlobal(point));
     }
 }
@@ -781,7 +790,11 @@ void Client::startPM(int id)
 
     if (mypms.contains(id) || pmSystem->myPMWindows.contains(id)) {
         if (!pmSystem->isVisible()) {
-            pmSystem->show();
+            // When using non-tabbed PMs, a blank PM window will sometimes come up when a message is received
+            // This is why we check if PMs are tabbed...
+            if (pmsTabbed) {
+                pmSystem->show();
+            }
         }
         return;
     }
@@ -838,8 +851,14 @@ void Client::togglePMTabs(bool b)
     emit togglePMs(b);
 }
 
+void Client::togglePMNotifications(bool notify)
+{
+    globals.setValue("PMs/Notifications", notify);
+    emit pmNotificationsChanged(notify);
+}
+
 void Client::togglePMLogs(bool b) {
-    globals.setValue("PMs/Logged", b);
+    LogManager::obj()->changeLogSaving(PMLog, b);
 }
 
 void Client::ignoreServerVersion(bool b)
@@ -993,6 +1012,24 @@ void Client::toggleDefaultChannel(bool d)
     } else {
         globals.remove(QString("DefaultChannels/%1").arg(relay().getIp()));
     }
+}
+
+void Client::toggleGlobalMessage(bool gmessage)
+{
+    QStringList globalMessageIgnore = globals.value(QString("GlobalMessageChannels/%1").arg(relay().getIp())).toStringList();
+    if(gmessage) {
+        globalMessageIgnore.push_back(channelName(selectedChannel));
+    } else {
+        globalMessageIgnore.removeOne(channelName(selectedChannel));
+    }
+    globals.setValue(QString("GlobalMessageChannels/%1").arg(relay().getIp()), globalMessageIgnore);
+}
+
+bool Client::ignoringGlobalMessage(const QString &channelName) { /* so client scripts can detect and stop the message */
+    if (globals.value(QString("GlobalMessageChannels/%1").arg(relay().getIp())).toStringList().contains(channelName)) {
+        return true;
+    }
+    return false;
 }
 
 void Client::seeRanking(int id)
@@ -1199,7 +1236,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     }
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
-    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),Qt::CTRL+Qt::Key_L);
+    fileMenu->addAction(tr("&Load team"),this,SLOT(loadTeam()),tr("Ctrl+L", "Load team"));
     if (oldShort) {
         fileMenu->addAction(tr("&Open TeamBuilder"),this,SLOT(openTeamBuilder()), tr("Ctrl+T", "Open teambuilder"));
     } else {
@@ -1285,10 +1322,15 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     QMenu * pmMenu = menuActions->addMenu(tr("&PM options"));
 
-    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PM in tabs"));
+    QAction * pmsTabbedToggle = pmMenu->addAction(tr("Show PMs in tabs"));
     pmsTabbedToggle->setCheckable(true);
     connect(pmsTabbedToggle, SIGNAL(triggered(bool)), SLOT(togglePMTabs(bool)));
     pmsTabbedToggle->setChecked(globals.value("PMs/Tabbed").toBool());
+
+    QAction * pmNotifications = pmMenu->addAction(tr("Show PM &notifications"));
+    pmNotifications->setCheckable(true);
+    connect(pmNotifications, SIGNAL(triggered(bool)), SLOT(togglePMNotifications(bool)));
+    pmNotifications->setChecked(globals.value("PMs/Notifications").toBool());
 
     QAction * save_logs = pmMenu->addAction(tr("Enable logs in &PM"));
     save_logs->setCheckable(true);
@@ -1477,7 +1519,6 @@ void Client::askForPass(const QByteArray &salt) {
     connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
     layout->addWidget(buttonBox);
 
-
     dialog.setLayout(layout);
 
     if (ok) {
@@ -1487,6 +1528,8 @@ void Client::askForPass(const QByteArray &salt) {
 
     int ret = dialog.exec();
     if (!ret) {
+        if (loggedIn)
+            myregister->setEnabled(true);
         return;
     }
     pass = passEdit->text();
@@ -1494,7 +1537,6 @@ void Client::askForPass(const QByteArray &salt) {
         // TODO: ipv6 support in the future
         wallet.saveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass);
     }
-
 
     QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toAscii())+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::AskForPass, hash);
@@ -1860,22 +1902,25 @@ void Client::seeInfo(int id, QString tier)
 {
     if (playerExist(id))
     {
-        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId());
+        int challengeId = freeChallengeId();
+        ChallengeDialog *mychallenge = new ChallengeDialog(player(id), team(), ownId(), challengeId);
         mychallenge->setChallenging(tier);
 
         connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
         connect(mychallenge, SIGNAL(destroyed()), SLOT(clearChallenge()));
         connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
 
+        mychallengeids.insert(challengeId, mychallenge);
         mychallenges.insert(mychallenge);
     }
 }
 
 void Client::seeChallenge(const ChallengeInfo &c)
 {
+    int challengeId = freeChallengeId();
     if (playerExist(c))
     {
-        if (!call("beforeChallengeReceived(int)", c.opponent())) {
+        if (!call("beforeChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses))) {
             ChallengeInfo d = c;
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
@@ -1885,7 +1930,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
             d.dsc = ChallengeInfo::Busy;
             relay().sendChallengeStuff(d);
         } else {
-            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId());
+            ChallengeDialog *mychallenge = new ChallengeDialog(player(c), team(), ownId(), challengeId);
             mychallenge->setChallengeInfo(c);
 
             connect(mychallenge, SIGNAL(challenge(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
@@ -1893,7 +1938,11 @@ void Client::seeChallenge(const ChallengeInfo &c)
             connect(mychallenge, SIGNAL(cancel(ChallengeInfo)), &relay(), SLOT(sendChallengeStuff(ChallengeInfo)));
             connect(this, SIGNAL(destroyed()),mychallenge, SLOT(close()));
             mychallenge->activateWindow();
+
+            mychallengeids.insert(challengeId, mychallenge);
             mychallenges.insert(mychallenge);
+
+            call("afterChallengeReceived(int,int,QString,int)", challengeId, c.opponent(), c.desttier, static_cast<int>(c.clauses));
         }
     }
 }
@@ -1914,6 +1963,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
         connect(mybattle, SIGNAL(battleCommand(int, BattleChoice)), &relay(), SLOT(battleCommand(int, BattleChoice)));
         connect(mybattle, SIGNAL(battleMessage(int, QString)), &relay(), SLOT(battleMessage(int, QString)));
         connect(this, SIGNAL(destroyed()), mybattle, SLOT(close()));
+        connect(&relay(), SIGNAL(disconnected()), mybattle, SLOT(onDisconnection()));
         //connect(this, SIGNAL(musicPlayingChanged(bool)), mybattle, SLOT(playMusic(bool)));
 
         mybattles[battleId] = mybattle;
@@ -2202,7 +2252,10 @@ void Client::disconnected()
         printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
     }
 
+    onDisconnection();
+
     isConnected = false;
+    loggedIn = false;
     myregister->setText(tr("&Reconnect"));
     myregister->setEnabled(true);
 
@@ -2210,6 +2263,16 @@ void Client::disconnected()
     if (failedBefore)
         newConnection();
     failedBefore = false;
+}
+
+void Client::onDisconnection()
+{
+    /* Handle things on disconnection */
+
+    /* Let our existing spectating battles know we have disconnected */
+    foreach(BaseBattleWindowInterface *interface, mySpectatingBattles) {
+        interface->onDisconnection();
+    }
 }
 
 TeamHolder* Client::team()
@@ -2227,18 +2290,25 @@ QString Client::announcement()
     return server_announcement->document()->toPlainText();
 }
 
-void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers)
+void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore)
 {
-    cleanData();
-    _mid = p.id;
-    mynick = p.name;
-    myplayersinfo[p.id] = p;
-    mynames[p.name] = p.id;
+    if (!ignore) { 
+        cleanData();
+        _mid = p.id;
+        mynick = p.name;
+        myplayersinfo[p.id] = p;
+        mynames[p.name] = p.id;
 
-    mylowernames[p.name.toLower()] = p.id;
+        mylowernames[p.name.toLower()] = p.id;
 
-    playerReceived(p);
-    tiersReceived(tiers);
+        playerReceived(p);
+        tiersReceived(tiers);
+
+        /* If it's us, we know we've logged in */
+        if (p.id == ownId()) {
+            loggedIn = true;
+        }
+    }
 }
 
 void Client::tiersReceived(const QStringList &tiers)
@@ -2516,6 +2586,43 @@ ChallengeDialog * Client::getChallengeWindow(int player)
     return NULL;
 }
 
+
+void Client::sendChallenge(int id, int clauses, int mode)
+{
+    ChallengeInfo c;
+    c.clauses = clauses;
+    c.opp = id;
+    c.rated = false;
+    c.team = myteam->currentTeam();
+    c.desttier = myteam->tier();
+    c.mode = mode;
+    c.dsc = ChallengeInfo::Sent;
+    relay().sendChallengeStuff(c);
+}
+
+void Client::acceptChallenge(int cId)
+{
+    foreach(ChallengeDialog *d, mychallengeids) {
+        if (d->cid() == cId) {
+            ChallengeInfo c = d->challengeInfo();
+            c.dsc = ChallengeInfo::Accepted;
+            relay().sendChallengeStuff(c);
+            closeChallengeWindow(d);
+            break;
+        }
+    }
+}
+
+int Client::freeChallengeId()
+{
+    int ret = 0;
+    do {
+        ++ret;
+    } while (mychallengeids.contains(ret));
+
+    return ret;
+}
+
 void Client::openTeamBuilder()
 {
     if (myteambuilder) {
@@ -2526,7 +2633,7 @@ void Client::openTeamBuilder()
 
     secondTeam = *team();
 
-    myteambuilder = new TeamBuilder(&secondTeam);
+    myteambuilder = new TeamBuilder(pluginManager, &secondTeam);
     myteambuilder->show();
     myteambuilder->setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -2656,7 +2763,7 @@ void Client::printHtml(const QString &html)
 {
     if(call("beforeNewMessage(QString,bool)", html, true)){
         foreach(Channel *c, mychannels)
-            c->printHtml(html, false);
+            c->printHtml(html, false, true);
     }
     call("afterNewMessage(QString,bool)", html, true);
 }
@@ -2668,7 +2775,7 @@ void Client::printLine(const QString &line)
 
     if(call("beforeNewMessage(QString,bool)", line, false)){
         foreach(Channel *c, mychannels)
-            c->printLine(line,false, false);
+            c->printLine(line, false, false, true);
     }
     call("afterNewMessage(QString,bool)", line, false);
 }
@@ -2700,6 +2807,15 @@ void Client::printChannelMessage(const QString &mess, int channel, bool html)
         }
         call("afterChannelMessage(QString,int,bool)", mess, channel, html);
     }
+}
+
+void Client::trayMessage(const QString &title, const QString &message)
+{
+    MainEngine::inst->showMessage(title, message);
+}
+
+bool Client::windowActive() {
+    return qApp->activeWindow();
 }
 
 void Client::changeExitWarning(bool show)

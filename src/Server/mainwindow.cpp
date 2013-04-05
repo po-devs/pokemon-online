@@ -82,7 +82,7 @@ void MainWindow::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayMenu);
     trayIcon->setToolTip("Pok\303\251mon Online Server");
-    trayIcon->setIcon(QIcon("db/icon.png"));
+    trayIcon->setIcon(QIcon("db/icon-server.png"));
 }
 
 MainWindow::~MainWindow()

@@ -5,7 +5,7 @@
 #-------------------------------------------------
 TARGET = EventCombinations
 DESTDIR = ../../bin
-LIBS += -L../../bin -lutilities -lpokemonlib
+LIBS += -L../../bin -lpo-utilities -lpo-pokemoninfo
 CONFIG   += console
 CONFIG   -= app_bundle
 TEMPLATE = app

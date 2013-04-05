@@ -12,7 +12,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-LIBS += -L../../bin -lpokemonlib -lutilities
+LIBS += -L../../bin -lpo-pokemoninfo -lpo-utilities
 
 SOURCES += main.cpp
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

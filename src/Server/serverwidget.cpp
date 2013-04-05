@@ -26,6 +26,8 @@ ServerWidget::ServerWidget(Server *myserver)
 {
     server = myserver;
 
+    loadGuiSettings();
+
     QGridLayout *mylayout = new QGridLayout (this);
 
     mylist = new QListWidget();
@@ -59,6 +61,14 @@ ServerWidget::ServerWidget(Server *myserver)
     connect(server->myengine, SIGNAL(clearTheChat()), this, SLOT(clearChat()));
 }
 
+void ServerWidget::loadGuiSettings()
+{
+    QSettings s("config", QSettings::IniFormat);
+
+    showTrayPopup = s.value("GUI/ShowTrayPopup", true).toBool();
+    minimizeToTray = s.value("GUI/MinimizeToTray", true).toBool();
+    doubleClick = s.value("GUI/DoubleClickIcon", true).toBool();
+}
 
 QMenuBar* ServerWidget::createMenuBar() {
     QMenuBar *bar = new QMenuBar(this);
@@ -187,9 +197,8 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(proxyServersChanged(QString)), server, SLOT(proxyServersChanged(QString)));
     connect(w, SIGNAL(serverPasswordChanged(QString)), server, SLOT(serverPasswordChanged(QString)));
     connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
-    connect(w, SIGNAL(showTrayPopupChanged(bool)), server, SLOT(showTrayPopupChanged(bool)));
-    connect(w, SIGNAL(minimizeToTrayChanged(bool)), server, SLOT(minimizeToTrayChanged(bool)));
-    connect(w, SIGNAL(clickConditionChanged(bool)), server, SLOT(clickConditionChanged(bool)));
+
+    connect(w, SIGNAL(destroyed()), SLOT(loadGuiSettings()));
 }
 
 void ServerWidget::openModsWindow()

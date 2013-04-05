@@ -1,4 +1,5 @@
 #include "poketextedit.h"
+#include "theme.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
 QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
@@ -17,7 +18,7 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
         {
             QString res = url.section(':', 0, 0);
 
-            if (res != "pokemon" && res != "item" && res != "icon") {
+            if (res != "pokemon" && res != "item" && res != "icon" && res != "trainer") {
                 goto end;
             }
 
@@ -33,6 +34,9 @@ QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
                 } else if (res == "icon") {
                     Pokemon::uniqueId num = info.toInt();
                     ret = PokemonInfo::Icon(num);
+                } else if (res == "trainer") {
+                    int trainer = info.toInt();
+                    ret = Theme::TrainerSprite(trainer);
                 }
 
                 return ret;

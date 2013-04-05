@@ -10,6 +10,7 @@
 #include "Teambuilder/poketablemodel.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "loadwindow.h"
+#include "pluginmanager.h"
 
 #ifdef _WIN32
 #include "../../SpecialIncludes/zip.h"
@@ -19,7 +20,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(NULL), boxesMenu(NULL)
+TeamBuilder::TeamBuilder(PluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
 {
     ui = new _ui();
     ui->stack = new QStackedWidget();
@@ -42,10 +43,14 @@ TeamBuilder::TeamBuilder(TeamHolder *team, bool load) : m_team(team), teamMenu(N
     connect(trainer, SIGNAL(done()), SIGNAL(done()));
     connect(trainer, SIGNAL(openBoxes()), SLOT(openBoxes()));
     connect(trainer, SIGNAL(editPoke(int)), SLOT(editPoke(int)));
+
+    p->launchTeambuilder(this);
+    pluginManager = p;
 }
 
 TeamBuilder::~TeamBuilder()
 {
+    pluginManager->quitTeambuilder(this);
     writeSettings(this);
     delete ui;
 }
@@ -103,6 +108,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
 
     menuMods->addSeparator();
     menuMods->addAction(tr("&Install new mod..."), this, SLOT(installMod()));
+    menuMods->addAction(tr("&Remove mod..."), this, SLOT(removeMods()));
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
@@ -129,6 +135,18 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     lastGen = team().team().gen();
 
     return menuBar;
+}
+
+void TeamBuilder::addPlugin(TeambuilderPlugin *o)
+{
+    plugins.insert(o);
+    hooks.insert(o, o->getHooks());
+}
+
+void TeamBuilder::removePlugin(TeambuilderPlugin *o)
+{
+    plugins.remove(o);
+    hooks.remove(o);
 }
 
 void TeamBuilder::openLoadWindow()
@@ -313,6 +331,53 @@ void TeamBuilder::installMod()
     }
 }
 
+void TeamBuilder::removeMods()
+{
+    QWidget *widget = new QWidget();
+    widget->setWindowTitle(tr("Available mods"));
+
+    QVBoxLayout *v = new QVBoxLayout(widget);
+
+    v->addWidget(modsList = new QListWidget());
+
+    QStringList mods = PokemonInfoConfig::availableMods();
+
+    modsList->addItems(mods);
+
+    QHBoxLayout *buttons = new QHBoxLayout();
+
+    v->addLayout(buttons);
+
+    QPushButton *remove;
+
+    buttons->addWidget(remove = new QPushButton(tr("Remove mod")));
+
+    connect(remove, SIGNAL(clicked()), SLOT(removeMod()));
+
+    widget->show();
+}
+
+void TeamBuilder::removeMod()
+{
+    if (modsList->count() < 1 || modsList->selectedItems().count() < 1) {
+        return;
+    }
+
+    QString selected = modsList->currentItem()->text();
+
+    if (!selected.isEmpty()) {
+        QDir modsDir(appDataPath("Mods", true));
+
+        if (modsDir.exists()) {
+            if (modsDir.exists(selected)) {
+                removeFolder(modsDir.absoluteFilePath(selected));
+                modsList->takeItem(modsList->currentIndex().row());
+                reloadMenuBar();
+            }
+        }
+    }
+}
+
 void TeamBuilder::newTeam()
 {
     switchToTrainer();
@@ -402,13 +467,7 @@ void TeamBuilder::markTeamUpdated()
 
 void TeamBuilder::openBoxes()
 {
-    if(!boxesMenu) {
-        ui->stack->addWidget(boxesMenu = new PokeBoxes(this, &team()));
-        boxesMenu->setMainWindow(this);
-        connect(boxesMenu, SIGNAL(teamChanged()), SLOT(markTeamUpdated()));
-        connect(boxesMenu, SIGNAL(done()), SLOT(switchToTrainer()));
-    }
-    switchTo(boxesMenu);
+    editPoke(6);
 }
 
 void TeamBuilder::editPoke(int index)

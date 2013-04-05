@@ -106,7 +106,7 @@ bool Menu::event(QEvent *e)
 
 void Menu::loadTeam()
 {
-    LoadWindow *w = new LoadWindow(this);
+    LoadWindow *w = new LoadWindow(this, QStringList(), team->name());
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->show();
 

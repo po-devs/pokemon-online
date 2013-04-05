@@ -17,6 +17,8 @@ class Profile : public ProfileInterace
     QString toXml() const;
     bool saveToFile(const QString &path) const;
     void deleteProfile(const QString &path);
+
+    void sanitize();
 };
 
 class TeamHolder : public TeamHolderInterface

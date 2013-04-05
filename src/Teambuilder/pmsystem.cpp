@@ -35,9 +35,10 @@ void PMSystem::startPM(PMStruct *newPM)
 {
     if (hasPM(newPM)) {
         if (!isVisible())
-        show();
+            show();
         return;
     }
+
     if(tabbedPMs) {
         newPM->setWindowFlags(Qt::Widget);
         myPMs->addTab(newPM, newPM->name());
@@ -165,7 +166,13 @@ void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
         break;
     }
 
-    if (qApp->activeWindow() != (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm))) {
+    bool active;
+#ifdef Q_OS_WIN
+    active = qApp->activeWindow();
+#else
+    active = qApp->activeWindow() == (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm));
+#endif
+    if (!active) {
         emit notification(tr("Pok\303\251mon Online PM"), mess);
     }
 }
@@ -184,7 +191,6 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
 
     this->id() = id;
     changeName(name);
-    SaveLog = false;
 
     QGridLayout *l = new QGridLayout(this);
     this->setLayout(l);
@@ -199,12 +205,7 @@ PMStruct::PMStruct(int id, const QString &ownName, const QString &name, const QS
     m_send = new QPushButton(tr("&Ignore"));
     m_send->setCheckable(true);
 
-    QSettings s;
-    if(s.value("PMs/Logged").toBool()) {
-        log = LogManager::obj()->createLog(PMLog, name + " -- " + ownName + " ");
-        log->override = Log::OverrideYes;
-        SaveLog = true;
-    }
+    log = LogManager::obj()->createLog(PMLog, name, true);
 
     l->addWidget(m_challenge,2,0);
     l->addWidget(m_send,2,1);
@@ -270,9 +271,7 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
         timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
-    if(SaveLog) {
-        log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
-    }
+    log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
 }
 
 void PMStruct::sendMessage()
@@ -342,9 +341,4 @@ void PMStruct::disconnected(bool value)
         m_send->setEnabled(true);
         m_textToSend->setEnabled(true);
     }
-}
-
-void PMStruct::closeEvent(QCloseEvent *event) {
-    log->close();
-    event->accept();
 }

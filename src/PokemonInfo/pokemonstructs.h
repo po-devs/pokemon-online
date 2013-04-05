@@ -199,6 +199,8 @@ public:
 
     void loadFromXml(const QDomElement &el, int version);
     QDomElement & toXml(QDomElement &dest) const;
+
+    void sanityCheck();
 };
 
 class Team
@@ -228,6 +230,9 @@ public:
     QString path() const {return m_path;}
     void setName(const QString &name);
     void setFolder(const QString &folder);
+
+    /* Runs some check to validate a team better, and edits invalid values */
+    void sanityCheck();
 private:
     mutable QString m_path;
 };

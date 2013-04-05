@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>739</width>
-    <height>243</height>
+    <height>259</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,6 +32,9 @@
    </item>
    <item row="1" column="3">
     <widget class="QLineEdit" name="tier1">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>
@@ -62,6 +65,9 @@
    </item>
    <item row="2" column="3">
     <widget class="QLineEdit" name="tier2">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>
@@ -92,6 +98,9 @@
    </item>
    <item row="3" column="3">
     <widget class="QLineEdit" name="tier3">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>
@@ -122,6 +131,9 @@
    </item>
    <item row="4" column="3">
     <widget class="QLineEdit" name="tier4">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>
@@ -152,6 +164,9 @@
    </item>
    <item row="5" column="3">
     <widget class="QLineEdit" name="tier5">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>
@@ -182,6 +197,9 @@
    </item>
    <item row="6" column="3">
     <widget class="QLineEdit" name="tier6">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
      <property name="placeholderText">
       <string>Team tier</string>
      </property>

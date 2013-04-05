@@ -113,11 +113,16 @@ public:
 
     void seeChallenge(const ChallengeInfo &c);
 
+    Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
+    Q_INVOKABLE void acceptChallenge(int cId);
+
     PlayerInfo player(int id) const;
     void removePlayer(int id);
 
     void removeBattleWindow(int id);
     void disableBattleWindow(int id);
+
+    void onDisconnection();
 
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
@@ -161,10 +166,13 @@ public slots:
     void printHtml(const QString &html);
     void printChannelMessage(const QString &mess, int channel, bool html);
 
+    void trayMessage(const QString &title, const QString &message);
+    bool windowActive();
+
     /* sends what's in the line edit */
     void sendText();
     void changeName(const QString&);
-    void playerLogin(const PlayerInfo &p, const QStringList &tiers);
+    void playerLogin(const PlayerInfo &p, const QStringList &tiers, bool ignore=false);
     void playerReceived(const PlayerInfo &p);
     void announcementReceived(const QString &);
     void tiersReceived(const QStringList &tiers);
@@ -277,10 +285,13 @@ public slots:
     void showTeamEvents(bool);
     void toggleAutoJoin(bool autojoin);
     void toggleDefaultChannel(bool def);
+    void toggleGlobalMessage(bool gmessage);
+    bool ignoringGlobalMessage(const QString &channelName);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
     void toggleIncomingPM(bool);
     void togglePMTabs(bool);
+    void togglePMNotifications(bool);
     void togglePMLogs(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
@@ -315,8 +326,8 @@ signals:
     void PMDisabled(bool value, int starterAuth);
     void togglePMs(bool value);
     void PMDisconnected(bool disconnected);
+    void pmNotificationsChanged(bool notify);
     void titleChanged();
-
 protected:
     void paintEvent(QPaintEvent *)
     {
@@ -365,6 +376,8 @@ private:
     /* Ignore */
     QList<int> myIgnored;
 
+    /* Challenge ids, needed for accepting challenges with client scripts */
+    QHash<int, ChallengeDialog *> mychallengeids;
     /* Challenge windows , to emit or to receive*/
     QSet<ChallengeDialog *> mychallenges;
     QPointer<FindBattleDialog> myBattleFinder;
@@ -374,7 +387,7 @@ private:
     QPointer<QAction> ladder;
 
     bool findingBattle;
-    bool isConnected;
+    bool isConnected, loggedIn;
     QString url;
     quint16 port;
     int _mid;
@@ -423,6 +436,8 @@ private:
     /* Returns the challenge window displaying that player or NULL otherwise */
     ChallengeDialog * getChallengeWindow(int player);
     void closeChallengeWindow(ChallengeDialog *c);
+
+    int freeChallengeId();
 
     void initRelay();
     void changeTiersChecked();
@@ -477,6 +492,19 @@ private:
         foreach(OnlineClientPlugin *p, plugins) {
             if (hooks[p].contains(f)) {
                 ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3)>(hooks[p][f])))(arg1, arg2, arg3);
+            }
+        }
+
+        return ret;
+    }
+
+    template<class T1, class T2, class T3, class T4>
+    bool call(const QString &f, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3, T4)>(hooks[p][f])))(arg1, arg2, arg3, arg4);
             }
         }
 

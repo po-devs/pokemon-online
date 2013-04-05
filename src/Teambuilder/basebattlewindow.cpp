@@ -107,7 +107,7 @@ void BaseBattleWindow::init()
     battleEnded = false;
     started() = false;
 
-    QString title = tr("%1 vs %2").arg(data().name(0), data().name(1)) + "--";
+    QString title = tr("%1 vs %2").arg(data().name(0), data().name(1));
     log = LogManager::obj()->createLog(BattleLog, title);
     log->override = Log::OverrideNo; /* By default, no logging enabled */
     replay = LogManager::obj()->createLog(ReplayLog, title);
@@ -425,6 +425,11 @@ void BaseBattleWindow::onUseAttack(int, int, bool)
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
         qApp->alert(this, 0);
     }
+}
+
+void BaseBattleWindow::onDisconnection()
+{
+    mychat->insertHtml("<br><i><b>Disconnected from Server!</b></i>");
 }
 
 void BaseBattleWindow::onKo(int spot)

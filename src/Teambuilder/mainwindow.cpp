@@ -46,9 +46,15 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
     setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
 #else
-    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
+    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Pokemon Online/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
+    /* Creates the team folder by default so users don't get an error when saving a team for the
+     *first time */
+    QString teamPath = s.value("Teams/Folder").toString();
+    QDir d;
+    d.mkpath(teamPath);
+
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "Battle/OldWindow", true);
@@ -66,9 +72,12 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
     setDefaultValue(s, "PMs/Logged", true);
+    setDefaultValue(s, "PMs/Notifications", true);
     setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
+
+    pmNotify = s.value("PMs/Notifications").isNull() ? true : s.value("PMs/Notifications").toBool();
 
     if (s.value("use_socks5_proxy", false).toBool() == true) {
         s.beginGroup("socks5_proxy");
@@ -116,7 +125,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     /* Tray icon */
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setToolTip("Pok\303\251mon Online Server");
+    trayIcon->setToolTip("Pok\303\251mon Online Client");
     trayIcon->setIcon(QIcon("db/icon.png"));
     trayIcon->show();
 
@@ -239,6 +248,11 @@ void MainEngine::loadStyleSheet()
     qApp->setStyleSheet(stylesheet.readAll());
 }
 
+void MainEngine::openThemesForum()
+{
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?92-Themes"));
+}
+
 void MainEngine::changeStyle()
 {
     QAction * a = qobject_cast<QAction *>(sender());
@@ -289,7 +303,7 @@ void MainEngine::launchMenu(bool first)
         connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
         main->setWidget(freespot, menu);
         displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
-        loadSettings(menu, menu->defaultSize());\
+        loadSettings(menu, menu->defaultSize());
         displayer->show();
     } else {
         routine(menu);
@@ -362,7 +376,7 @@ void MainEngine::launchCredits()
 
 void MainEngine::launchTeamBuilder()
 {
-    TeamBuilder *TB = new TeamBuilder(trainerTeam(), false);
+    TeamBuilder *TB = new TeamBuilder(pluginManager, trainerTeam(), false);
     routine(TB);
 
     connect(TB, SIGNAL(done()), SLOT(launchMenu()));
@@ -374,10 +388,10 @@ void MainEngine::launchServerChoice(bool newTab)
 {
     ServerChoice *choice;
     if (newTab) {
-        choice = new ServerChoice(trainerTeam(++freespot)->name());
+        choice = new ServerChoice(trainerTeam(++freespot));
         choice->setProperty("tab-window", freespot);
     } else {
-        choice = new ServerChoice(trainerTeam()->name());
+        choice = new ServerChoice(trainerTeam());
     }
 
     routine(choice);
@@ -465,6 +479,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
 
     connect(client, SIGNAL(done()), SLOT(launchMenu()));
     connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
+    connect(client, SIGNAL(pmNotificationsChanged(bool)), SLOT(pmNotificationsChanged(bool)));
 }
 
 void MainEngine::updateMenuBar()
@@ -506,8 +521,16 @@ void MainEngine::closeTab()
     }
 }
 
+void MainEngine::pmNotificationsChanged(bool notify)
+{
+    pmNotify = notify;
+}
+
 void MainEngine::showMessage(const QString &title, const QString &msg)
 {
+    if (!pmNotify) {
+        return;
+    }
     lastNotificationSender = dynamic_cast<QWidget*>(sender());
     trayIcon->showMessage(title, msg,QSystemTrayIcon::Information);
 }
@@ -596,6 +619,8 @@ void MainEngine::rebuildThemeMenu()
 
     themeMenu->addSeparator();
     themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()), tr("Ctrl+D", "Reload Stylesheet"));
+    themeMenu->addSeparator();
+    themeMenu->addAction(tr("&Get more themes..."), this, SLOT(openThemesForum()));
 }
 
 void MainEngine::changeUserThemeFolder()

@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>835</width>
-    <height>460</height>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="vertical" stretch="0,0,0">
+  <layout class="QVBoxLayout" name="vertical" stretch="0,1">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -27,57 +27,51 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QPushButton" name="done">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>&amp;Trainer Home</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalPoke">
      <item>
-      <widget class="QToolButton" name="pokemonFrame">
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-       <layout class="QGridLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="pokemonSprite">
-          <property name="focusPolicy">
-           <enum>Qt::TabFocus</enum>
+      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0">
+       <item>
+        <widget class="QToolButton" name="pokemonFrame">
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout">
+          <property name="margin">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="itemSprite">
-          <property name="focusPolicy">
-           <enum>Qt::TabFocus</enum>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+          <item row="0" column="0">
+           <widget class="QLabel" name="pokemonSprite">
+            <property name="focusPolicy">
+             <enum>Qt::TabFocus</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="itemSprite">
+            <property name="focusPolicy">
+             <enum>Qt::TabFocus</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="pluginButtons"/>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QWidget" name="SpeciesContainer" native="true">
@@ -305,6 +299,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QClickLabel</class>
+   <extends>QLabel</extends>
+   <header>../Utilities/qclicklabel.h</header>
+  </customwidget>
+  <customwidget>
    <class>EvBox</class>
    <extends>QWidget</extends>
    <header>Teambuilder/evbox.h</header>
@@ -322,14 +321,8 @@
    <header>Teambuilder/ivbox.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>QClickLabel</class>
-   <extends>QLabel</extends>
-   <header>../Utilities/qclicklabel.h</header>
-  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>done</tabstop>
   <tabstop>pokemonSprite</tabstop>
   <tabstop>itemSprite</tabstop>
   <tabstop>nickname</tabstop>

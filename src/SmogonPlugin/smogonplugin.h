@@ -21,6 +21,8 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
+
+    TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface *);
 private:
     MainEngineInterface *interface;
 };

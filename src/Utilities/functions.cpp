@@ -83,7 +83,7 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
         w->topLevelWidget()->showMaximized();
     else
         w->topLevelWidget()->showNormal();
-    w->topLevelWidget()->showNormal();
+
     settings.endGroup();
 }
 

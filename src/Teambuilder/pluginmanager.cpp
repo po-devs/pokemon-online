@@ -2,6 +2,7 @@
 #include "plugininterface.h"
 #include "mainwindow.h"
 #include "clientinterface.h"
+#include "teambuilderinterface.h"
 #include "../Utilities/CrossDynamicLib.h"
 
 PluginManager::PluginManager(MainEngine *t) : engine(t)
@@ -91,6 +92,14 @@ void PluginManager::addPlugin(const QString &path)
             ci->addPlugin(ocp);
         }
     }
+    foreach (TeambuilderInterface *ci, teambuilders) {
+        TeambuilderPlugin *ocp = s->getTeambuilderPlugin(ci);
+
+        if (ocp) {
+            teambuilderPlugins[ci].insert(s, ocp);
+            ci->addPlugin(ocp);
+        }
+    }
 
     this->plugins.push_back(s);
     filenames.push_back(path);
@@ -107,6 +116,13 @@ void PluginManager::freePlugin(int index)
                 ci->removePlugin(clientPlugins[ci][p]);
                 delete clientPlugins[ci][p];
                 clientPlugins[ci].remove(p);
+            }
+        }
+        foreach(TeambuilderInterface *ci, teambuilders) {
+            if (teambuilderPlugins.value(ci).contains(p)) {
+                ci->removePlugin(teambuilderPlugins[ci][p]);
+                delete teambuilderPlugins[ci][p];
+                teambuilderPlugins[ci].remove(p);
             }
         }
 
@@ -182,6 +198,31 @@ void PluginManager::quitClient(ClientInterface *c)
     clientPlugins.remove(c);
     clients.remove(c);
 }
+
+void PluginManager::launchTeambuilder(TeambuilderInterface *c)
+{
+    teambuilders.insert(c);
+
+    foreach(ClientPlugin *pl, plugins) {
+        TeambuilderPlugin *o = pl->getTeambuilderPlugin(c);
+
+        if (o) {
+            c->addPlugin(o);
+            teambuilderPlugins[c].insert(pl, o);
+        }
+    }
+}
+
+void PluginManager::quitTeambuilder(TeambuilderInterface *c)
+{
+    foreach(TeambuilderPlugin *o, teambuilderPlugins.value(c)) {
+        delete o;
+    }
+
+    teambuilderPlugins.remove(c);
+    teambuilders.remove(c);
+}
+
 
 /*************************************************************/
 /*************************************************************/

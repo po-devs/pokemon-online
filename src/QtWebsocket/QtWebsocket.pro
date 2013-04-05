@@ -9,10 +9,9 @@ QT       += network
 
 QT       -= gui
 
-DESTDIR = ../../bin/
+DESTDIR = ../../bin
 TARGET = qtwebsocket
 TEMPLATE = lib
-CONFIG += staticlib
 
 #DEFINES += QTWEBSOCKET_LIBRARY
 

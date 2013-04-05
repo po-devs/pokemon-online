@@ -107,4 +107,6 @@ QVariantMap toJson(const BattleMove &move)
     ret.insert("move", move.num());
     ret.insert("pp", move.PP());
     ret.insert("totalpp", move.totalPP());
+
+    return ret;
 }

@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QTime>
 #include <QFile>
+#include <QDesktopServices>
 #include "../Utilities/functions.h"
 
 LogManager* LogManager::instance = NULL;
@@ -9,11 +10,16 @@ LogManager* LogManager::instance = NULL;
 Log::Log(LogType type, const QString &title)
 {
     key.type = type;
-    key.title = title + QDate::currentDate().toString("dd MMMM yyyy")
-                 + " at " + QTime::currentTime().toString("hh'h'mm");
+    key.title = title;
 
-    QRegExp removeIllegal(QString("[\\/:\"/*?<>|]"));
+    QRegExp removeIllegal(QString("[\\~:\"/*?<>|]"));
     key.title.remove(removeIllegal);
+
+    if (type == BattleLog || type == ReplayLog) {
+        key.title = QDate::currentDate().toString("dd MMMM yyyy") + "/" + key.title + " at " + QTime::currentTime().toString("hh'h'mm");
+    } else {
+        key.title = key.title + "/" + QDate::currentDate().toString("dd MMMM yyyy") + " at " + QTime::currentTime().toString("hh'h'mm");
+    }
 
     if (type == ReplayLog) {
         key.title += ".poreplay";
@@ -21,7 +27,8 @@ Log::Log(LogType type, const QString &title)
         key.title += ".html";
     }
 
-    started = autolog = false;
+    appendOk = type == PMLog || type == ChannelLog;
+    autolog = false;
     master = NULL;
     override = NoOverride;
     linecount = 0;
@@ -35,6 +42,14 @@ void Log::flush()
     }
 
     if (override == OverrideNo || (override == NoOverride && !master->logsType(type()))) {
+        if (autolog && linecount > 500) {
+            data.clear();
+            linecount = 0;
+        }
+        return;
+    }
+
+    if (data.isEmpty() && bdata.isEmpty()) {
         return;
     }
 
@@ -47,11 +62,11 @@ void Log::flush()
 
     QDir dir = QDir::home();
     dir.cd(directory);
+    dir.mkpath(dir.absoluteFilePath(QFileInfo(title()).path()));
     QFile out (dir.absoluteFilePath(title()));
-    out.open(started ? QIODevice::Append : QIODevice::WriteOnly);
+    out.open(appendOk ? QIODevice::Append : QIODevice::WriteOnly);
     out.write(isBinary() ? bdata : data.toUtf8());
 
-    started = true;
     linecount = 0;
     data.clear();
 }
@@ -94,15 +109,6 @@ void Log::close()
 void Log::pushedData()
 {
     linecount += 1;
-
-    /* The reason for not checking if linecount > 100,
-      is that sometimes we want to prepare a log while
-      the user didn't select logging on yet, and in that
-      case we don't want to call flush() every line after
-      the 100 first lines */
-    if (autolog && linecount % 100 == 0) {
-        flush();
-    }
 }
 
 LogManager * LogManager::obj()
@@ -119,16 +125,26 @@ LogManager::LogManager()
     flags = 0;
     QSettings s;
 
-    setDefaultValue(s, "logs_directory", QDir::homePath() + "/Documents/Pokemon-Online Logs/");
+    setDefaultValue(s, "logs_directory", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation)
+                    +"/Pokemon Online/Logs/");
     setDefaultValue(s, "Battle/SaveLogs", false);
 
     directory = s.value("logs_directory").toString();
     flags |= (s.value("Battle/SaveLogs").toBool() << (BattleLog|ReplayLog));
+    flags |= (s.value("PMs/Logged").toBool() << PMLog);
 
     QDir d;
     d.mkpath(getDirectory());
     d.mkpath(getDirectoryForType(ReplayLog));
     d.mkpath(getDirectoryForType(BattleLog));
+    d.mkpath(getDirectoryForType(PMLog));
+
+    QTimer *t = new QTimer(this);
+
+    connect(t, SIGNAL(timeout()), SLOT(autolog()));
+
+    /* Autologs triggers every minute */
+    t->start(1000*60);
 }
 
 bool LogManager::logsType(LogType type)
@@ -138,11 +154,22 @@ bool LogManager::logsType(LogType type)
 
 void LogManager::changeLogSaving(LogType type, bool save)
 {
+    QSettings s;
     if (type == BattleLog) {
-        QSettings s;
         s.setValue("Battle/SaveLogs", save);
+    } else if (type == PMLog) {
+        s.setValue("PMs/Logged", save);
     }
     flags &= (0XFFFF ^ (1 << type));
+}
+
+void LogManager::autolog()
+{
+    foreach(Log *l, logs) {
+        if (l->autolog) {
+            l->flush();
+        }
+    }
 }
 
 void LogManager::changeBaseDirectory(const QString &directory)

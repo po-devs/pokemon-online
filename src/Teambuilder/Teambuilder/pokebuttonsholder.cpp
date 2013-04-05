@@ -32,6 +32,7 @@ PokeButtonsHolder::PokeButtonsHolder(QWidget *parent) :
         connect(pokemonButtons[i], SIGNAL(doubleClicked()), mapper, SLOT(map()));
         connect(pokemonButtons[i], SIGNAL(clicked()), map2, SLOT(map()));
         connect(pokemonButtons[i], SIGNAL(pokemonOrderChanged(int,int)), SIGNAL(teamChanged()));
+        connect(pokemonButtons[i], SIGNAL(dropEventReceived(int,QDropEvent*)), SIGNAL(dropEvent(int,QDropEvent*)));
     }
     connect(mapper, SIGNAL(mapped(int)), SIGNAL(doubleClicked(int)));
     connect(map2, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
