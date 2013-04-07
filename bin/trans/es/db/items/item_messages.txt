@@ -1,0 +1,24 @@
+﻿0 (No Item)
+3 ¡%s restauró sus características con Hierba Blanca!
+4 ¡%s ha resistido gracias a Cinta Focus!
+5 ¡%s ha resistido usando Banda Focus!
+7 ¡%s se liberó del enamoramiento con Hierba Mental!
+11 ¡%s usó su Hierba Única para poder atacar inmediatamente!
+12 ¡%s restauró un poco sus PS con Restos!
+16 ¡%s restauró un poco sus PS con Lodo Negro!|¡%s ha sido dañado por su Lodo Negro!
+17 ¡%s se mueve primero gracias a Garra Rápida!
+18 ¡%s restauró un poco sus PS con Zumo de Baya!
+19 ¡%s se ha quemado con Llamasfera!|¡%s se ha intoxicado con Toxisfera!
+21 ¡Los PS de %s han disminuido un poco por su Vidasfera!
+24 ¡%s restauró un poco sus PS con Camp. Concha!
+29 ¡%s ha sido dañado por su Toxiestrella!
+34 ¡Casco Dentado de %s ha dañado a %f!
+35 ¡Ha explotado el Globo Helio de %s!|¡%s está flotando con un Globo Helio!
+36 ¡%i de %s subió su %st!
+37 ¡%i refuerza el poder de %m!
+38 ¡%s sacó su Tarjeta Roja!
+39 ¡%s usó su Botón Escape!
+40 ¡%s activó su Gen Loco!|¡El ataque de %s subió mucho!
+41 ¡%s activó su Lazo Destino! ¡%f se ha enamorado de %s!
+1007 ¡%s ya no está debilitado!
+1999 ¡%s ya no está debilitado!
