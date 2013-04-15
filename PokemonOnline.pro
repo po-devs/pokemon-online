@@ -43,7 +43,7 @@ CONFIG(po_client) {
 CONFIG(po_clientplugins) {
     SUBDIRS += src/ThemeManager \
                src/CSSChanger \
-#               src/QRCodePlugin \
+               src/QRCodePlugin \
                src/ClientScripting \
                src/SettingsPlugin \
                src/SmogonPlugin 
