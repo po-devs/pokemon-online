@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += gui
+QT +=
 TARGET = StatsExtracter
 DESTDIR = ../../bin
 
@@ -15,4 +15,11 @@ TEMPLATE = app
 LIBS += -L../../bin -lpo-pokemoninfo -lpo-utilities
 
 SOURCES += main.cpp
+HEADERS = ../PokemonInfo/pokemoninfo.h \
+          ../Utilities/coreclasses.h
+
 QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+include(../Shared/Common.pri)
+
+
