@@ -567,6 +567,9 @@ int main(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
+    PokemonInfoConfig::setFillMode(FillMode::Client);
+    PokemonInfoConfig::setLastSubgenToWhole(true);
+    GenInfo::init("db/gens/");
     PokemonInfo::init("db/pokes/");
     MoveInfo::init("db/moves/");
     AbilityInfo::init("db/abilities/");
@@ -586,6 +589,10 @@ int main(int argc, char *argv[])
     QList<QPair<QString, QString> > merges;
     QStringList tiers;
 
+    QString input("usage_stats/raw");
+    QString output("usage_stats/formatted");
+    QString templates("usage_stats/templates");
+
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
         if(strcmp( argv[i], "-m") == 0 || strcmp(argv[i], "--merge") == 0){
@@ -604,6 +611,9 @@ int main(int argc, char *argv[])
             PRINTOPT("-m, --merge [TIER1] [TIER2]", "Merge the files of Tier1 into Tier2. It's advised to have the stats off during that time.");
             PRINTOPT("-t, --tier [TIER]", "Process the given tier, instead of processing all tiers.");
             PRINTOPT("-h, --help", "Displays this help.");
+            PRINTOPT("-i, --input", "Path to the dir that contains binary stats. (default usage_stats/raw)");
+            PRINTOPT("-o, --output", "Path to the dir to output stats. (default usage_stats/formatted)");
+            PRINTOPT("-p, --templates", "Path to the template files. (default usage_stats/templates)");
             fprintf(stdout, "\n");
             return 0;   //exit app
         } else if(strcmp( argv[i], "-t") == 0 || strcmp( argv[i], "--tier") == 0){
@@ -612,6 +622,24 @@ int main(int argc, char *argv[])
                 return 1;
             }
             tiers.push_back(argv[i]);
+        } else if(strcmp( argv[i], "-i") == 0 || strcmp (argv[i], "--input") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No input dir provided.\n");
+                return 1;
+            }
+            input = argv[i];
+        } else if(strcmp( argv[i], "-p") == 0 || strcmp (argv[i], "--templates") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No output dir provided.\n");
+                return 1;
+            }
+            templates = argv[i];
+        } else if(strcmp( argv[i], "-o") == 0 || strcmp (argv[i], "--output") == 0){
+            if (++i == argc){
+                fprintf(stderr, "No output dir provided.\n");
+                return 1;
+            }
+            output = argv[i];
         }
     }
 
@@ -623,7 +651,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nMerging Tier %s into %s\n", t1.toUtf8().data(), t2.toUtf8().data());
 
         QDir d;
-        d.cd("usage_stats/raw");
+        d.cd(input);
 
         if (!d.exists(t1)) {
             fprintf(stderr, "Tier %s doesn't have a usage stats folder.\n", t1.toUtf8().data());
@@ -729,7 +757,7 @@ int main(int argc, char *argv[])
 #ifdef _WIN32
     system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toAscii().data() );
 #else
-    system( ("cp -R usage_stats/raw/* " + dirname).toAscii().data() );
+    system( ("cp -R " + input + "/* " + dirname).toAscii().data() );
 #endif
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -794,12 +822,12 @@ int main(int argc, char *argv[])
         }
 
         QDir outDir;
-        outDir.mkpath("usage_stats/formatted/" + dir);
-        outDir.cd("usage_stats/formatted/" + dir);
+        outDir.mkpath(output + "/" + dir);
+        outDir.cd(output + "/" + dir);
 
         int totalBattles = totalusage/6;
 
-        Skeleton tierSk("usage_stats/formatted/tier_page.template");
+        Skeleton tierSk(templates + "/tier_page.template");
         tierSk.addDefaultValue("tier", dir);
         tierSk.addDefaultValue("battles", totalBattles/2);
 
@@ -872,7 +900,7 @@ int main(int argc, char *argv[])
                 addMoveset(leadsets, buffer, b.leadUsage, defAb, globals);
             }
 
-            Skeleton s("usage_stats/formatted/pokemon_page.template");
+            Skeleton s(templates + "/pokemon_page.template");
             s.addDefaultValue("pokemon", PokemonInfo::Name(pokemon));
             s.addDefaultValue("tier", dir);
             s.addDefaultValue("imagelink", getImageLink(pokemon));
@@ -912,7 +940,7 @@ int main(int argc, char *argv[])
 
     typedef QPair<QString, int> pair;
 
-    Skeleton indexSk("usage_stats/formatted/index.template");
+    Skeleton indexSk(templates + "/index.template");
     foreach(pair p, mostUsedPokemon) {
         if (p.second == 0)
             continue;
@@ -924,7 +952,7 @@ int main(int argc, char *argv[])
         pok.addDefaultValue("iconlink", getIconLink(p.second));
     }
 
-    QFile f("usage_stats/formatted/index.html");
+    QFile f(output + "/index.html");
     f.open(QIODevice::WriteOnly);
     f.write(indexSk.generate().toUtf8());
 
