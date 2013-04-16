@@ -124,10 +124,22 @@ QString removeTrollCharacters(const QString& s)
 {
     // All Non-Spacing Mark characters are banned and will trigger this filter.
     QString result = s;
+
+    /* Number of consecutive non-spacing marks per character, limited to 3 */
+    int trollCount = 0;
+
     for (int x = 0;x<result.size();x++) {
-        if ((result.at(x)).category() == QChar::Mark_NonSpacing || (result.at(x)) == QChar(0x202e)) {
+        if ((result.at(x)) == QChar(0x202e)) {
             result.replace(result.at(x), "");
             x--;
+        } else if ((result.at(x)).category() == QChar::Mark_NonSpacing) {
+            trollCount++;
+            if (trollCount > 3) {
+                result.replace(result.at(x), "");
+                x--;
+            }
+        } else if (result.at(x).isLetterOrNumber()){
+            trollCount = 0;
         }
     }
     return result;
