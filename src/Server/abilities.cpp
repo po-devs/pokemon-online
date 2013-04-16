@@ -1532,14 +1532,14 @@ struct AMTelepathy : public AM {
     }
 };
 
-struct AMMagicMirror : public AM
+struct AMMagicBounce : public AM
 {
-    AMMagicMirror() {
+    AMMagicBounce() {
         functions["UponSetup"] = &uas;
     }
 
     static void uas (int, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure2", "MagicCoat", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure2", "MagicBounce", &dgaf);
     }
 
     static void dgaf(int s, int t, BS &b) {
@@ -1553,7 +1553,7 @@ struct AMMagicMirror : public AM
 
         int target = -1;
 
-        if (t != s && b.hasWorkingAbility(t, Ability::MagicMirror) ) {
+        if (t != s && b.hasWorkingAbility(t, Ability::MagicBounce) ) {
             target = t;
         } else {
             /* Entry hazards */
@@ -1562,7 +1562,7 @@ struct AMMagicMirror : public AM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if (b.hasWorkingAbility(t, Ability::MagicMirror) && !b.hasWorkingAbility(s, Ability::MoldBreaker)) {
+                    if (b.hasWorkingAbility(t, Ability::MagicBounce) && !b.hasWorkingAbility(s, Ability::MoldBreaker)) {
                         target = t;
                         break;
                     }
@@ -2010,7 +2010,7 @@ void AbilityEffect::init()
     REGISTER_AB(84, HeatRampage);
     REGISTER_AB(85, Telepathy);
     REGISTER_AB(86, Regeneration);
-    REGISTER_AB(87, MagicMirror);
+    REGISTER_AB(87, MagicBounce);
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);
     REGISTER_AB(90, MiracleSkin);

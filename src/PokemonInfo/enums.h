@@ -1646,7 +1646,7 @@ namespace Ability
         EarthquakeSpiral,
         JusticeHeart,
         Wariness,
-        MagicMirror,
+        MagicBounce,
         Herbivore,
         MischievousHeart,
         SandPower,
