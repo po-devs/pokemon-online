@@ -63,10 +63,9 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     data.setFlag(PlayerFlags::LadderEnabled, ladder);
     data.setFlag(PlayerFlags::Idle, away);
     //                  SupportsZipCompression,
-    //                  ShowTeam,
     //                  LadderEnabled,
-    //                  Idle,
-    //                  IdsWithMessage
+    //                  IdsWithMessage,
+    //                  Idle
 
     out << uchar(Login) << ProtocolVersion() << network;
 

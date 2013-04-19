@@ -2590,9 +2590,22 @@ void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
 QScriptValue ScriptEngine::avatar(int playerId)
 {
     if (!loggedIn(playerId)) {
-        return myengine.nullValue();
+        return myengine.undefinedValue();
     }
     return myserver->player(playerId)->avatar();
+}
+
+QScriptValue ScriptEngine::os(int playerId)
+{
+    if (!loggedIn(playerId)) {
+        return myengine.undefinedValue();
+    }
+    LoginInfo *info = myserver->player(playerId)->info();
+    if (info == null) {
+        return myengine.nullValue();
+    }
+
+    return info->clientType;
 }
 
 // Potentially unsafe functions.
