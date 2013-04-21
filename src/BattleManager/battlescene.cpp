@@ -26,6 +26,7 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
     qmlRegisterType<BattleDefaultTheme>("pokemononline.battlemanager.proxies", 1, 0, "Theme");
     qmlRegisterType<AuxPokeDataProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldPokeData");
     qmlRegisterType<FieldProxy>("pokemononline.battlemanager.proxies", 1, 0, "FieldData");
+    qmlRegisterType<ZoneProxy>("pokemononline.battlemanager.proxies", 1, 0, "ZoneData");
     qmlRegisterType<BattleScene>("pokemononline.battlemanager.proxies", 1, 0, "BattleScene");
 
     /* Tells QML not to delete our pokeproxy and teamproxy objects...

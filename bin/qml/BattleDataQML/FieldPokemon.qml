@@ -206,7 +206,25 @@ Item {
                     s += "</td>"
                 }
 
-                s += "</tr></table>"
+                s += "</tr>"
+
+                var zone = battle.data.field.zone(spot%2);
+                var hazards = [];
+                if (zone.stealthRocks) {
+                    hazards.push("Stealth Rocks");
+                }
+                if (zone.spikesLevel > 0) {
+                    hazards.push("Spikes level " + zone.spikesLevel);
+                }
+                if (zone.tspikesLevel > 0) {
+                    hazards.push("Toxic Spikes level " + zone.tspikesLevel);
+                }
+
+                if (hazards.length > 0) {
+                    s += "<tr><td>" + hazards.join(", ") + "</td></tr>";
+                }
+
+                s += "</table>"
 
                 text = s;
 
