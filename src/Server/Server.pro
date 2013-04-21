@@ -35,7 +35,6 @@ SOURCES += main.cpp \
     sessiondatafactory.cpp \
     battlepluginstruct.cpp \
     battlecounters.cpp \
-    moves/moves1.cpp \
     battlebase.cpp \
     battlerby.cpp \
     rbymoves.cpp \

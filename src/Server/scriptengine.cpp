@@ -2600,8 +2600,8 @@ QScriptValue ScriptEngine::os(int playerId)
     if (!loggedIn(playerId)) {
         return myengine.undefinedValue();
     }
-    LoginInfo *info = myserver->player(playerId)->info();
-    if (info == null) {
+    LoginInfo *info = myserver->player(playerId)->loginInfo();
+    if (!info) {
         return myengine.nullValue();
     }
 
