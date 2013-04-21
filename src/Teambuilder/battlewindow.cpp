@@ -157,6 +157,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     show();
 
     disableAll();
+    flashIfNeeded(); //So people notice when there's a new battle
 }
 
 void BattleWindow::itemActivated(QListWidgetItem *it)

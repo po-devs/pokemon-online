@@ -166,6 +166,7 @@ protected:
     BaseBattleWindow();
     void init();
     void checkAndSaveLog();
+    void flashIfNeeded();
     void addReplayData(const QByteArray &inf);
 
     void closeEvent(QCloseEvent *);
