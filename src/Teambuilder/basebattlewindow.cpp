@@ -405,22 +405,22 @@ void BaseBattleWindow::ignoreSpectators()
 
 void BaseBattleWindow::onSendOut(int, int, ShallowBattlePoke *, bool)
 {
-    //Plays the battle cry when a pokemon is switched in
-    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-        qApp->alert(this, 0);
-    }
+    flashIfNeeded();
 }
 
 void BaseBattleWindow::onSendBack(int spot, bool)
 {
-    if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-        qApp->alert(this, 0);
-    }
+    flashIfNeeded();
 
     switchToNaught(spot);
 }
 
 void BaseBattleWindow::onUseAttack(int, int, bool)
+{
+    flashIfNeeded();
+}
+
+void BaseBattleWindow::flashIfNeeded()
 {
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
         qApp->alert(this, 0);
