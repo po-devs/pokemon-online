@@ -169,6 +169,10 @@ struct RBYBind : public MM
     }
 
     static void ts(int s, int, BS &b) {
+        /* If the opponent was koed, reset everything */
+        if(!poke(b, b.opponent(s)).contains("Bound")) {
+            poke(b,s).remove("BindCount");
+        }
         if (poke(b,s).value("LastBind").toInt() == b.turn()-1 && poke(b,s).value("BindCount").toInt() > 0) {
             fturn(b,s).add(TM::KeepAttack);
             addFunction(turn(b,s), "UponAttackSuccessful", "Bind", &uas2);
