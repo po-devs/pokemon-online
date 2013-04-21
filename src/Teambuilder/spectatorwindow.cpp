@@ -50,7 +50,7 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
 
     if (qml) {
         QVariantMap options;
-        options.insert("logger", s.value("Battle/AnimatedLogger", true).toBool());
+        options.insert("logger", s.value("Battle/AnimatedLogger", false).toBool());
         options.insert("weather", s.value("Battle/AnimatedWeather", "always"));
         options.insert("screensize", s.value("Battle/AnimatedScreenSize", "712x400"));
 
