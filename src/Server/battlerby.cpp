@@ -393,7 +393,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         calculateTypeModStab();
 
         int typemod = turnMem(player).typeMod;
-        if (tmove(player).power > 1 && typemod == 0) {
+        if (tmove(player).power > 1 && typemod == 0 && attack != Move::Bind && attack != Move::Wrap) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(typemod));
             calleffects(player,target,"AttackSomehowFailed");
@@ -438,7 +438,10 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
                 notify(All, Effective, target, quint8(typemod));
             }
 
-            inflictDamage(target, damage, player, true);
+            /* Even though bind/wrap work when no effect, it doesn't inflict damage */
+            if ( (attack != Move::Bind && attack != Move::Wrap) || typemod != 0) {
+                inflictDamage(target, damage, player, true);
+            }
             hitcount += 1;
 
             /* A broken sub stops a multi-hit attack */
