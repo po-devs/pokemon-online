@@ -156,7 +156,13 @@ struct MMAquaRing : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull()) {
-            b.healLife(s, b.poke(s).totalLifePoints()/16);
+            int healing = b.poke(s).totalLifePoints()/16;
+
+            if (b.hasWorkingItem(s, Item::BigRoot)) {
+                healing = healing * 13 / 10;
+            }
+
+            b.healLife(s, healing);
             b.sendMoveMessage(2, 1, s, Pokemon::Water);
         }
     }
@@ -2641,7 +2647,12 @@ struct MMIngrain : public MM
             if (poke(b, s).value("HealBlockCount").toInt() > 0) {
                 b.sendMoveMessage(60, 0, s);
             } else {
-                b.healLife(s, b.poke(s).totalLifePoints()/16);
+                int healing = b.poke(s).totalLifePoints()/16;
+
+                if (b.hasWorkingItem(s, Item::BigRoot)) {
+                    healing = healing * 13 / 10;
+                }
+                b.healLife(s, healing);
                 b.sendMoveMessage(151,1,s,Pokemon::Grass);
             }
         }
