@@ -58,9 +58,16 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Server for Pokemon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
 
-    QDir d;
-    d.mkpath(PO_HOME_DIR);
-    QDir::setCurrent(PO_HOME_DIR);
+    QString homeDir = PO_HOME_DIR;
+
+    if (homeDir.leftRef(1) == "~") {
+        homeDir = QDir::homePath() + homeDir.mid(1);
+    }
+
+    (QDir()).mkpath(homeDir);
+    QDir::setCurrent(homeDir);
+
+    qDebug() << "Setting home dir to : " << (QDir()).absoluteFilePath(homeDir);
 
     //default: show a window
     bool showWindow = true;
