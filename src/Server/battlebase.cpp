@@ -516,7 +516,11 @@ void BattleBase::startClock(int player, bool broadCoast)
         timeStopped[player] = false;
 
         (void) broadCoast; // should be used to tell if we tell everyone or not, but meh.
+#ifdef QT5
         notify(player,ClockStart, player, quint16(timeleft[player].load()));
+#else
+        notify(player,ClockStart, player, quint16(timeleft[player]));
+#endif
     }
 }
 
@@ -529,15 +533,28 @@ void BattleBase::stopClock(int player, bool broadCoast)
     if (!(clauses() & ChallengeInfo::NoTimeOut)) {
         if (!timeStopped[player]) {
             timeStopped[player] = true;
+#ifdef QT5
             timeleft[player] = std::max(long(0),timeleft[player].load() - (time(NULL) - startedAt[player].load()));
+#else
+            timeleft[player] = std::max(long(0),timeleft[player] - (time(NULL) - startedAt[player]));
+#endif
         }
 
+#ifdef QT5
         if (broadCoast) {
             timeleft[player] = std::min(int(timeleft[player].load()+20), 5*60);
             notify(All,ClockStop,player,quint16(timeleft[player].load()));
         } else {
             notify(player, ClockStop, player, quint16(timeleft[player].load()));
         }
+#else
+        if (broadCoast) {
+            timeleft[player] = std::min(int(timeleft[player]+20), 5*60);
+            notify(All,ClockStop,player,quint16(timeleft[player]));
+        } else {
+            notify(player, ClockStop, player, quint16(timeleft[player]));
+        }
+#endif
     }
 }
 
@@ -547,11 +564,19 @@ void BattleBase::stopClock(int player, bool broadCoast)
   ****************************************/
 int BattleBase::timeLeft(int player)
 {
+#ifdef QT5
     if (timeStopped[player]) {
         return timeleft[player].load();
     } else {
         return timeleft[player].load() - (time(NULL) - startedAt[player].load());
     }
+#else
+    if (timeStopped[player]) {
+        return timeleft[player];
+    } else {
+        return timeleft[player] - (time(NULL) - startedAt[player]);
+    }
+#endif
 }
 
 /*****************************************
@@ -563,12 +588,21 @@ void BattleBase::timerEvent(QTimerEvent *)
     if (timeLeft(Player1) <= 0 || timeLeft(Player2) <= 0) {
         schedule(); // the battle is finished, isn't it?
     } else {
+#ifdef QT5
         /* If a player takes too long - more than 30 secs - tell the other player the time remaining */
         if (timeStopped[Player1] && !timeStopped[Player2] && (time(NULL) - startedAt[Player2].load()) > 30) {
             notify(AllButPlayer, ClockStart, Player2, quint16(timeLeft(Player2)));
         } else if (timeStopped[Player2] && !timeStopped[Player1] && (time(NULL) - startedAt[Player1].load()) > 30) {
             notify(AllButPlayer, ClockStart, Player1, quint16(timeLeft(Player1)));
         }
+#else
+        /* If a player takes too long - more than 30 secs - tell the other player the time remaining */
+        if (timeStopped[Player1] && !timeStopped[Player2] && (time(NULL) - startedAt[Player2]) > 30) {
+            notify(AllButPlayer, ClockStart, Player2, quint16(timeLeft(Player2)));
+        } else if (timeStopped[Player2] && !timeStopped[Player1] && (time(NULL) - startedAt[Player1]) > 30) {
+            notify(AllButPlayer, ClockStart, Player1, quint16(timeLeft(Player1)));
+        }
+#endif
     }
 }
 
