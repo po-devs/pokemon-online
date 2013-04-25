@@ -1090,6 +1090,7 @@ void Player::loggedIn(LoginInfo *info)
     reconnectBits() = info->reconnectBits;
 
     assignNewColor(info->trainerColor);
+    os() = info->clientType;
 
     if (info->trainerInfo) {
         assignTrainerInfo(*info->trainerInfo);

@@ -29,6 +29,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(Flags, spec);
     PROPERTY(Flags, state);
     PROPERTY(quint8, reconnectBits);
+    PROPERTY(QString, os);
     PROPERTY(LoginInfo*, loginInfo);
 public:
     enum State
