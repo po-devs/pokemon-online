@@ -1,3 +1,5 @@
+#include <QInputDialog>
+
 #include "server.h"
 #include "player.h"
 #include "security.h"
@@ -1220,7 +1222,7 @@ QScriptValue ScriptEngine::dbExpire(const QString &name)
     } else {
         QDate tempDate;
         tempDate = QDate::fromString(SecurityManager::member(name).date, "yyyy-MM-dd");
-        return myserver->playerDeleteDays() - tempDate.daysTo(QDate::currentDate());
+        return int(myserver->playerDeleteDays() - tempDate.daysTo(QDate::currentDate()));
     }
 }
 
@@ -2106,7 +2108,11 @@ void ScriptWindow::okPressed()
 
 void ScriptWindow::gotoLine()
 {
+#ifdef QT5
+    int line = QInputDialog::getInt(myedit, tr("Line Number"), tr("To what line do you want to go?"), 1, 1, myedit->document()->lineCount());
+#else
     int line = QInputDialog::getInteger(myedit, tr("Line Number"), tr("To what line do you want to go?"), 1, 1, myedit->document()->lineCount());
+#endif
     QTextCursor myCursor = myedit->textCursor();
     myCursor.setPosition(0);
     myCursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, line - 1);
@@ -3005,14 +3011,14 @@ QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue
 
 void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus) {
     QProcess *p = (QProcess*) sender();
-    processes[p].callback.call(QScriptValue(), QScriptValueList() << exitcode << QString::fromAscii(processes[p].out) << QString::fromAscii(processes[p].err));
+    processes[p].callback.call(QScriptValue(), QScriptValueList() << exitcode << QString::fromLocal8Bit(processes[p].out) << QString::fromLocal8Bit(processes[p].err));
     processes.remove(p);
     p->deleteLater();
 }
 
 void ScriptEngine::process_error(QProcess::ProcessError error) {
     QProcess *p = (QProcess*) sender();
-    processes[p].errback.call(QScriptValue(), QScriptValueList() << error << QString::fromAscii(processes[p].out) << QString::fromAscii(processes[p].err));
+    processes[p].errback.call(QScriptValue(), QScriptValueList() << error << QString::fromLocal8Bit(processes[p].out) << QString::fromLocal8Bit(processes[p].err));
     processes.remove(p);
     p->deleteLater();
 }

@@ -15,4 +15,10 @@ TEMPLATE = app
 LIBS += -L../../bin -lpo-pokemoninfo -lpo-utilities
 
 SOURCES += main.cpp
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}

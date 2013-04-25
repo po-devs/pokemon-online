@@ -727,9 +727,9 @@ int main(int argc, char *argv[])
     fprintf(stdout, "Moving raw files to a safe directory... (may take time)");
 
 #ifdef _WIN32
-    system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toAscii().data() );
+    system( ("xcopy usage_stats\\raw\\* " + dirname + " /s > copy.txt").toLatin1().data() );
 #else
-    system( ("cp -R usage_stats/raw/* " + dirname).toAscii().data() );
+    system( ("cp -R usage_stats/raw/* " + dirname).toLatin1().data() );
 #endif
 
     QStringList dirs = d.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -765,7 +765,7 @@ int main(int argc, char *argv[])
             }
 
 
-            FILE *f = fopen(d.absoluteFilePath(file).toAscii().data(), "rb");
+            FILE *f = fopen(d.absoluteFilePath(file).toLocal8Bit().data(), "rb");
 
             char buffer[32];
 

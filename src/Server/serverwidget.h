@@ -8,13 +8,16 @@
 #ifndef SERVERWIDGET_H
 #define	SERVERWIDGET_H
 
-#include <QtGui>
+#include <QWidget>
+
 #include "server.h"
 
 class QScrollDownTextBrowser;
 class ScriptWindow;
 class QIdListWidgetItem;
-
+class QMenuBar;
+class QListWidget;
+class QLineEdit;
 
 class ServerWidget: public QWidget
 {

@@ -1,3 +1,10 @@
+#include <QFormLayout>
+#include <QComboBox>
+#include <QPlainTextEdit>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QMessageBox>
+
 #include "serverconfig.h"
 #include "server.h"
 #include "../Utilities/otherwidgets.h"

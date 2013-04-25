@@ -58,9 +58,7 @@ OTHER_FILES +=
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets
-  macx: {
-    QMAKE_CXXFLAGS += "-std=c++11"
-  }
+  QMAKE_CXXFLAGS += "-std=c++11"
 } else {
   QMAKE_CXXFLAGS += "-std=c++0x"
 }

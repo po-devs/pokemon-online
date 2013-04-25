@@ -1,3 +1,10 @@
+#include <QCheckBox>
+#include <QWidget>
+#include <QSpinBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QHBoxLayout>
+
 #include "battlingoptions.h"
 #include "../Utilities/otherwidgets.h"
 #include "tiermachine.h"

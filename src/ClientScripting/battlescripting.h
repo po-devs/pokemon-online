@@ -21,7 +21,7 @@ class BattleScripting : public QObject, public BattleCommandManager<BattleScript
 {
     Q_OBJECT
 public:
-    BattleScripting(QScriptEngine* engine, BaseBattleWindowInterface *interface);
+    BattleScripting(QScriptEngine* engine, BaseBattleWindowInterface *interf);
 
     void evaluate(const QScriptValue &expr);
     void printLine(const QString &string);

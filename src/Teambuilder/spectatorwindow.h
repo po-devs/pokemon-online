@@ -25,7 +25,7 @@ class SpectatorWindow
 public:
     SpectatorWindow();
     SpectatorWindow(const FullBattleConfiguration &conf);
-    ~SpectatorWindow();
+    virtual ~SpectatorWindow();
 
     void init(const FullBattleConfiguration &conf);
 

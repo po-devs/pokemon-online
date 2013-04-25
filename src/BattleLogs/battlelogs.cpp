@@ -1,6 +1,11 @@
+#include <QFormLayout>
+#include <QTextEdit>
+#include <QCheckBox>
+#include <QPushButton>
+
 #include "battleserverlog.h"
 #include "battlelogs.h"
-#include <QtGui>
+
 #include "../BattleManager/battleinput.h"
 #include "../BattleManager/battleclientlog.h"
 #include "../BattleManager/battledatatypes.h"

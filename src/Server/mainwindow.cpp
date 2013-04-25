@@ -1,3 +1,6 @@
+#include <QGuiApplication>
+#include <QMenu>
+
 #include "mainwindow.h"
 #include "server.h"
 #include "serverwidget.h"

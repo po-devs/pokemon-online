@@ -1,7 +1,8 @@
 #ifndef TIERWINDOW_H
 #define TIERWINDOW_H
 
-#include <QtGui>
+class QRadioButton;
+
 #include "tiertree.h"
 #include "../PokemonInfo/battlestructs.h"
 

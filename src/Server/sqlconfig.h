@@ -1,7 +1,12 @@
 #ifndef SQLCONFIG_H
 #define SQLCONFIG_H
 
-#include <QtGui>
+#include <QWidget>
+
+class QComboBox;
+class QLineEdit;
+class QSpinBox;
+class QCheckBox;
 
 class SQLConfigWindow : public QWidget
 {
