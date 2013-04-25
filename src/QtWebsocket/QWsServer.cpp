@@ -216,7 +216,7 @@ void QWsServer::dataReceived()
 
 	// Send opening handshake response
 	if ( version == WS_V0 )
-		tcpSocket->write( response.toAscii() );
+        tcpSocket->write( response.toLatin1() );
 	else
 		tcpSocket->write( response.toUtf8() );
 	tcpSocket->flush();
@@ -348,7 +348,7 @@ QString QWsServer::computeAcceptV0( QString key1, QString key2, QString key3 )
 
 	QString concat = serializeInt( num1 ) + serializeInt( num2 ) + key3;
 
-	QByteArray md5 = QCryptographicHash::hash( concat.toAscii(), QCryptographicHash::Md5 );
+    QByteArray md5 = QCryptographicHash::hash( concat.toLatin1(), QCryptographicHash::Md5 );
   
 	return QString( md5 );
 }

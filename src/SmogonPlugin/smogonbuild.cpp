@@ -44,6 +44,7 @@ QString smogonbuild::EVListToString()
     return retString;
 }
 
+#ifndef QT5
 void smogonbuild::printBuild()
 {
     smogonbuild build = *this;
@@ -94,3 +95,4 @@ void smogonbuild::printBuild()
 
     printf("Description: %s", build.description.toAscii().data());
 }
+#endif

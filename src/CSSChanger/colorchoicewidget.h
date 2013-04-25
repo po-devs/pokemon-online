@@ -11,7 +11,11 @@ public:
 
     void setNumber(int num) {
         this->num = num;
+#ifdef QT5
+        label->setText(QCoreApplication::translate("Form", "Color n\302\260%1:", 0).arg(num+1));
+#else
         label->setText(QApplication::translate("Form", "Color n\302\260%1:", 0, QApplication::UnicodeUTF8).arg(num+1));
+#endif
     }
     void setColor(const QColor &color) {
         this->color = color;

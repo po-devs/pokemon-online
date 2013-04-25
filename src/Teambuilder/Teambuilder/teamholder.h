@@ -26,6 +26,7 @@ class TeamHolder : public TeamHolderInterface
     PROPERTY(Profile, profile);
 
     TeamHolder();
+    virtual ~TeamHolder();
 
     TrainerInfo &info() {return profile().info();}
     const TrainerInfo &info() const {return profile().info();}

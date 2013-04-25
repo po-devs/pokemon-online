@@ -4,7 +4,7 @@
 #include "ui_dialog.h"
 #include "data.h"
 
-class ThemeAccessor;
+struct ThemeAccessor;
 
 class CssWidget : public QDialog, public Ui::Dialog {
 Q_OBJECT

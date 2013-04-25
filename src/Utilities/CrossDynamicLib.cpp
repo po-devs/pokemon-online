@@ -36,7 +36,7 @@ cross::DynamicLibrary::DynamicLibrary(const char* libname):
         libhandle(NULL)
 {
 #ifdef _WIN32
-	libhandle = LoadLibrary(libname);
+    libhandle = LoadLibrary(libname);
     if(!libhandle)
         throw( DynamicLibException("Library could not be loaded.") );
 #else
@@ -53,7 +53,7 @@ cross::DynamicLibrary::~DynamicLibrary()
 	if(libhandle)
 	{
 #ifdef _WIN32
-		FreeLibrary((HINSTANCE)libhandle);
+        FreeLibrary((HINSTANCE)libhandle);
 #else
 		if(dlclose(libhandle) != 0)
             throw( DynamicLibException(std::string("Library could not be closed --") + dlerror() + "." ));

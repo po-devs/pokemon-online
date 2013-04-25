@@ -3,6 +3,9 @@
 
 #include <QtCore>
 #include <QtGui>
+#ifdef QT5
+#include <QtWidgets>
+#endif
 
 class TierActionFactory;
 

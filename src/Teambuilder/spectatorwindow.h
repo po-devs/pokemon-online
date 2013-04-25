@@ -11,7 +11,7 @@ class BattleInput;
 class QScrollDownTextBrowser;
 class QWidget;
 class PlayerInfo;
-class FullBattleConfiguration;
+struct FullBattleConfiguration;
 
 /* A window which takes binary as input, and manages
   a battle scene as well as a battle log.
@@ -25,7 +25,7 @@ class SpectatorWindow
 public:
     SpectatorWindow();
     SpectatorWindow(const FullBattleConfiguration &conf);
-    ~SpectatorWindow();
+    virtual ~SpectatorWindow();
 
     void init(const FullBattleConfiguration &conf);
 

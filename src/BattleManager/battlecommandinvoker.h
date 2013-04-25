@@ -7,10 +7,13 @@
 #include <QString>
 #include "test.h"
 #include "battleenum.h"
+#include "../PokemonInfo/battlestructs.h"
 
+/*
 class ShallowBattlePoke;
 class BattleDynamicInfo;
 class RearrangeChoice;
+*/
 
 template <class Underling>
 class BattleCommandInvoker

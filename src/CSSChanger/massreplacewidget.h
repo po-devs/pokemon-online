@@ -3,7 +3,7 @@
 
 #include "ui_massreplace.h"
 
-class Data;
+struct Data;
 class QCheckBox;
 
 class MassReplaceWidget : public QDialog, public Ui::MassReplaceDialog

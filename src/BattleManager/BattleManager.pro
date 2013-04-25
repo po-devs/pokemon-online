@@ -71,7 +71,14 @@ HEADERS +=\
     ../PokemonInfo/battlestructs.h \
     moveinfoaccessor.h
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5 
+  QT += widgets
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -140,7 +147,5 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/AuraSphere.qml
 
 include(../Shared/Common.pri)
-
-
 
 

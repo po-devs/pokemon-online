@@ -115,8 +115,10 @@ void Theme::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     if (QFile::exists(dir+"Fonts")) {
         QDir d(dir + "Fonts");
@@ -140,7 +142,7 @@ void Theme::Reload(const QString &dir)
     loadSymbols();
 }
 
-QStringList Theme::SearchPath()
+QStringList Theme::SearchPaths()
 {
     QSettings settings;
     QString userPath = settings.value("Themes/Directory").toString();
@@ -157,7 +159,7 @@ QStringList Theme::SearchPath()
 
 QString Theme::FindTheme(const QString& theme)
 {
-    foreach(QString dir, Theme::SearchPath()) {
+    foreach(QString dir, Theme::SearchPaths()) {
         if (QDir(dir).exists(theme)) {
             QString fullTheme = dir + theme + "/";
             return fullTheme;

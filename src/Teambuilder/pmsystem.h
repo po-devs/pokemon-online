@@ -9,7 +9,7 @@
 
 class QScrollDownTextBrowser;
 class QIRCLineEdit;
-class PMStruct;
+struct PMStruct;
 
 class PMSystem : public QWidget {
     Q_OBJECT

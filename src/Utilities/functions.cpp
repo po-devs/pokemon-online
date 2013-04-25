@@ -1,6 +1,10 @@
 #include "functions.h"
 
 #include <QtGui>
+#ifdef QT5
+#include <QWidget>
+#include <QStandardPaths>
+#endif
 
 QString escapeHtml(const QString & toConvert)
 {
@@ -110,7 +114,11 @@ void cropImage(QImage &p)
 
 QString appDataPath(const QString &subfolder, bool createFolder)
 {
-    QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/" + subfolder;
+#ifdef QT5
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/" + subfolder;
+#else
+    const QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/" + subfolder;
+#endif
 
     if (createFolder) {
         QDir d;

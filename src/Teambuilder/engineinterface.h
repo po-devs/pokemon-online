@@ -2,7 +2,7 @@
 #define PLUGINDELEGATE_H
 
 class TeamHolderInterface;
-class ThemeAccessor;
+struct ThemeAccessor;
 
 class MainEngineInterface {
 public:

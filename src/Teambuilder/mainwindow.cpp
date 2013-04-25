@@ -17,6 +17,16 @@
 #ifdef Q_OS_MACX
 #include "mac/FullScreenSupport.h"
 #endif
+#ifdef QT5
+#include <QApplication>
+#include <QDialog>
+#include <QFileDialog>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QScrollArea>
+#include <QStandardPaths>
+#include <QStyleFactory>
+#endif
 
 MainEngine *MainEngine::inst = NULL;
 
@@ -28,8 +38,10 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     pluginManager = new PluginManager(this);
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     QSettings s;
     /* initializing the default init values if not there */
@@ -42,11 +54,16 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
-#ifdef Q_OS_MACX
-    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Teams/");
-    setDefaultValue(s, "Themes/Directory", QDir::homePath() + "/Documents/Pokemon Online Themes/");
+#ifdef QT5
+    const QString docLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 #else
-    setDefaultValue(s, "Teams/Folder", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + "/Pokemon Online/Teams/");
+    const QString docLocation = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+#endif
+#ifdef Q_OS_MACX
+    setDefaultValue(s, "Teams/Folder", docLocation + "/Teams/");
+    setDefaultValue(s, "Themes/Directory", docLocation + "/Pokemon Online Themes/");
+#else
+    setDefaultValue(s, "Teams/Folder", docLocation + "/Pokemon Online/Teams/");
     setDefaultValue(s, "Themes/Directory", "Themes/");
 #endif
     /* Creates the team folder by default so users don't get an error when saving a team for the
@@ -102,7 +119,14 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
+#ifdef QT5
+    if (s.value("application_style").toString().toLower() == "plastique") {
+        s.remove("application_style");
+    }
+    QApplication::setStyle(s.value("application_style", "Fusion").toString());
+#else
     QApplication::setStyle(s.value("application_style", "plastique").toString());
+#endif
     loadStyleSheet();
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
@@ -574,7 +598,11 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
     QActionGroup *ag = new QActionGroup(menuBar);
 
     QSettings settings;
+#ifdef QT5
+    QString curStyle = settings.value("application_style", "Fusion").toString();
+#else
     QString curStyle = settings.value("application_style", "plastique").toString();
+#endif
 
     foreach(QString s , style) {
         QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
@@ -596,7 +624,7 @@ void MainEngine::rebuildThemeMenu()
 
     QSettings s;
 
-    QStringList searchPath = Theme::SearchPath();
+    QStringList searchPath = Theme::SearchPaths();
 
     QSet<QString> themes;
     foreach(QString dir, searchPath) {

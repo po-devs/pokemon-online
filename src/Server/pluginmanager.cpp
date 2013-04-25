@@ -1,3 +1,8 @@
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QFileDialog>
+
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "server.h"
@@ -13,7 +18,7 @@ PluginManager::PluginManager(Server *ser) : server(ser)
     foreach(QString plugin, plugins) {
         cross::DynamicLibrary *l;
         try {
-             l = new cross::DynamicLibrary(plugin.toAscii().constData());
+             l = new cross::DynamicLibrary(plugin.toLocal8Bit().constData());
         } catch (const std::exception &e) {
             qDebug() << "Error when loading plugin " << plugin <<  ": " << e.what();
             continue;
@@ -58,7 +63,7 @@ void PluginManager::addPlugin(const QString &path)
 {
     cross::DynamicLibrary *l;
     try {
-         l = new cross::DynamicLibrary(path.toAscii().constData());
+         l = new cross::DynamicLibrary(path.toLocal8Bit().constData());
     } catch (const std::exception &e) {
         Server::print("Error when loading plugin " + path +  ": " + e.what());
         return;

@@ -4,7 +4,7 @@
 #include "battledataaccessor.h"
 #include "auxpokedataproxy.h"
 
-class BattleConfiguration;
+struct BattleConfiguration;
 
 class ProxyDataContainer : public QObject {
     Q_OBJECT

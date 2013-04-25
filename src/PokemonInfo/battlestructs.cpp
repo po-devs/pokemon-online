@@ -299,6 +299,7 @@ ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)
 {
     init(p);
 }
+ShallowBattlePoke::~ShallowBattlePoke() {}
 
 void ShallowBattlePoke::init(const PokeBattle &poke)
 {

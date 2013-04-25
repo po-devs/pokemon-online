@@ -1,6 +1,9 @@
 #include "pmsystem.h"
 #include "../Utilities/otherwidgets.h"
 #include "../Utilities/functions.h"
+#ifdef QT5
+#include <QApplication>
+#endif
 
 // TO-DO: Begin able to drag a tab outside of it's tab widget to separate the PM. I didn't do it because i
 // think it would break part of the new system.
@@ -168,9 +171,9 @@ void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
 
     bool active;
 #ifdef Q_OS_WIN
-    active = qApp->activeWindow();
+    active = qobject_cast<QApplication*>(qApp)->activeWindow();
 #else
-    active = qApp->activeWindow() == (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm));
+    active = qobject_cast<QApplication*>(qApp)->activeWindow() == (tabbedPMs ? static_cast<QWidget*>(this) : static_cast<QWidget*>(pm));
 #endif
     if (!active) {
         emit notification(tr("Pok\303\251mon Online PM"), mess);

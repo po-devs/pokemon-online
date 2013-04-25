@@ -9,6 +9,10 @@
 #include "poketextedit.h"
 #include "../Shared/battlecommands.h"
 #include "../Utilities/coreclasses.h"
+#ifdef QT5
+#include <QApplication>
+#include <QToolTip>
+#endif
 
 using namespace BattleCommands;
 
@@ -155,6 +159,8 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
+#ifdef QT5
+#else
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
 
@@ -167,6 +173,7 @@ void BaseBattleWindow::init()
 
     connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(enqueueMusic()));
     connect(cryObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), this, SLOT(criesProblem(Phonon::State)));
+#endif
 
     undelayOnSounds = true;
 
@@ -185,12 +192,20 @@ bool BaseBattleWindow::flashWhenMoved() const
 
 void BaseBattleWindow::changeCryVolume(int v)
 {
+#ifdef QT5
+    Q_UNUSED(v);
+#else
     cryOutput->setVolume(float(v)/100);
+#endif
 }
 
 void BaseBattleWindow::changeMusicVolume(int v)
 {
+#ifdef QT5
+    Q_UNUSED(v);
+#else
     audioOutput->setVolume(float(v)/100);
+#endif
 }
 
 void BaseBattleWindow::musicPlayStop()
@@ -198,13 +213,19 @@ void BaseBattleWindow::musicPlayStop()
     if (!musicPlayed()) {
         playBattleCries() = false;
         playBattleMusic() = false;
+#ifdef QT5
+#else
         mediaObject->pause();
+#endif
         return;
     }
 
     QSettings s;
+#ifdef QT5
+#else
     audioOutput->setVolume(float(s.value("BattleAudio/MusicVolume").toInt())/100);
     cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
+#endif
 
     if (musicPlayed()) {
         playBattleCries() = s.value("BattleAudio/PlaySounds").toBool();
@@ -229,7 +250,10 @@ void BaseBattleWindow::musicPlayStop()
     /* If it's the same musics as before with only 1 file, we start playing again the paused file (would not be nice to restart from the
         start). Otherwise, a random file will be played from the start */
     if (tmpSources == sources && sources.size() == 1) {
+#ifdef QT5
+#else
         mediaObject->play();
+#endif
         return;
     }
 
@@ -238,18 +262,26 @@ void BaseBattleWindow::musicPlayStop()
     if (sources.size() == 0)
         return;
 
+#ifdef QT5
+#else
     mediaObject->setCurrentSource(sources[true_rand()%sources.size()]);
-
     mediaObject->play();
+#endif
+
 }
 
 void BaseBattleWindow::enqueueMusic()
 {
     if (sources.size() == 0)
         return;
+#ifdef QT5
+#else
     mediaObject->enqueue(sources[true_rand()%sources.size()]);
+#endif
 }
 
+#ifdef QT5
+#else
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
     /* Phonon is really unundertandable, we can't use the code commented out */
@@ -260,6 +292,7 @@ void BaseBattleWindow::criesProblem(Phonon::State newState)
         undelay();
     }
 }
+#endif
 
 void BaseBattleWindow::playCry(int pokemon)
 {
@@ -275,15 +308,21 @@ void BaseBattleWindow::playCry(int pokemon)
     }
 
     undelayOnSounds = false;
+#ifdef QT5
+#else
     cryObject->stop();
+#endif
     undelayOnSounds = true;
 
+#ifdef QT5
+#else
     cryBuffer.close();
     cryBuffer.setBuffer(&cries[pokemon]);
     cryBuffer.open(QIODevice::ReadOnly);
 
     cryObject->setCurrentSource(&cryBuffer);
     cryObject->play();
+#endif
 
     /* undelay() will automatically be called when the cryObject stops --
         signal/slot connection in BaseBattleWindow::init() */
@@ -423,7 +462,7 @@ void BaseBattleWindow::onUseAttack(int, int, bool)
 void BaseBattleWindow::flashIfNeeded()
 {
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-        qApp->alert(this, 0);
+        qobject_cast<QApplication*>(qApp)->alert(this, 0);
     }
 }
 

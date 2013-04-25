@@ -97,13 +97,13 @@ void SecurityManager::loadMembers()
                 if (ls.size() >= 6 && isValid(ls[0])) {
                     query.bindValue(":name", ls[0]);
                     query.bindValue(":laston",ls[1]);
-                    query.bindValue(":auth", ls[2][0].toAscii()-'0');
+                    query.bindValue(":auth", ls[2][0].toLatin1()-'0');
                     query.bindValue(":banned", ls[2][1] == '1');
                     /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
                        so i remove them. */
                     if (!ls[3].contains('\\')) {
-                        query.bindValue(":salt", ls[3].trimmed().toAscii());
-                        query.bindValue(":hash", ls[4].trimmed().toAscii());
+                        query.bindValue(":salt", ls[3].trimmed().toLatin1());
+                        query.bindValue(":hash", ls[4].trimmed().toLatin1());
                     } else {
                         query.bindValue(":salt", "");
                         query.bindValue(":hash", "");

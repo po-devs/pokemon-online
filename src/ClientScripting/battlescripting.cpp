@@ -87,12 +87,12 @@ objectConverter(FieldProxy)
 
 #define registerObject(className) qScriptRegisterMetaType<className*>(engine, &to##className, &from##className)
 
-BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterface *interface)
+BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterface *_interface)
 {
-    myinterface = interface;
+    myinterface = _interface;
     myengine = engine;
     myengine->setParent(this);
-    setParent(interface);
+    setParent(_interface);
 
     registerObject(ProxyDataContainer);
     registerObject(TeamProxy);
@@ -102,17 +102,17 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
     registerObject(FieldProxy);
     qScriptRegisterMetaType<BattleChoice>(engine, &toBattleChoice, &fromBattleChoice);
 
-    advbattledata_proxy *data = interface->getBattleData();
+    advbattledata_proxy *data = _interface->getBattleData();
     ProxyDataContainer *pdata = data->exposedData();
     int me = data->isPlayer(1) ? 1 : 0;
     int opp = !me;
 
-    QScriptValue battle = myengine->newQObject(interface);
+    QScriptValue battle = myengine->newQObject(_interface);
     myengine->globalObject().setProperty("battle", battle);
     battle.setProperty("data", myengine->newQObject(dynamic_cast<QObject*>(pdata)));
     battle.setProperty("me", QScriptValue(me));
     battle.setProperty("opp", QScriptValue(opp));
-    battle.setProperty("id", interface->battleId());
+    battle.setProperty("id", _interface->battleId());
 
     /* Removes clientscripting' print function and add ours. Client scripting's print function
       can still be accessed with sys.print() */
@@ -121,7 +121,7 @@ BattleScripting::BattleScripting(QScriptEngine *engine, BaseBattleWindowInterfac
     myengine->globalObject().setProperty("print", myengine->nullValue());
     myengine->globalObject().setProperty("print", printfun);
 
-    interface->addOutput(this);
+    _interface->addOutput(this);
 }
 
 QScriptValue BattleScripting::nativePrint(QScriptContext *context, QScriptEngine *engine)

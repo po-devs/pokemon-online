@@ -1,3 +1,8 @@
+#include <QComboBox>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QMessageBox>
+
 #include "sql.h"
 #include "sqlconfig.h"
 #include "../Utilities/otherwidgets.h"
