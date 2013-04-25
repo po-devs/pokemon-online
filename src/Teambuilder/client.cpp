@@ -20,6 +20,14 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "loadwindow.h"
+#ifdef QT5
+#include <QCompleter>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QSlider>
+#include <QSplitter>
+#endif
 
 Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
@@ -1512,7 +1520,7 @@ void Client::askForPass(const QByteArray &salt) {
         wallet.saveUserPassword(relay().getIp(), serverName, myteam->name(), salt, pass);
     }
 
-    QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toAscii())+salt, QCryptographicHash::Md5);
+    QByteArray hash = QCryptographicHash::hash(md5_hash(pass.toLatin1())+salt, QCryptographicHash::Md5);
     relay().notify(NetworkCli::AskForPass, hash);
 }
 

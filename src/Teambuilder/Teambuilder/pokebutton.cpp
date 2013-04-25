@@ -2,6 +2,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 
 #include <QDragEnterEvent>
+#include <QDrag>
 
 #include "Teambuilder/pokebutton.h"
 #include "ui_pokebutton.h"

@@ -5,6 +5,10 @@
 #include "../PokemonInfo/battlestructs.h"
 #include "../Utilities/otherwidgets.h"
 #include "basebattlewindow.h"
+#ifdef QT5
+#include <QMessageBox>
+#include <QToolButton>
+#endif
 
 
 class AttackZone;

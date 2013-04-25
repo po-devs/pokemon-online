@@ -5,7 +5,7 @@
 #include "../Utilities/functions.h"
 #include "spectatorwindow.h"
 
-class BattleChoice;
+struct BattleChoice;
 
 class BaseBattleWindowInterface : public QWidget, public SpectatorWindow
 {

@@ -4,7 +4,7 @@
 #include "battlecommandmanager.h"
 #include "datacontainer.h"
 
-class BattleConfiguration;
+struct BattleConfiguration;
 
 template <class T, class Derived>
 class BattleDataInherit : public BattleCommandManager<Derived>

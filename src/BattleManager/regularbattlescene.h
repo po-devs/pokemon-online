@@ -81,11 +81,11 @@ public:
     typedef BattleCommandManager<RegularBattleScene> baseClass;
 
     RegularBattleScene(battledata_ptr data=0, BattleDefaultTheme*theme=0, bool logNames=true);
-    ~RegularBattleScene();
+    virtual ~RegularBattleScene();
 
     ProxyDataContainer *getDataProxy();
 
-    void pause();
+    virtual void pause();
 
     /* Should the players be reversed positions in the visual scene? */
     bool reversed() const;
@@ -152,7 +152,7 @@ public slots:
     void updateTimers();
     void changeBarMode();
 
-    void unpause();
+    virtual void unpause();
 protected slots:
     void animateHpBar();
 private:

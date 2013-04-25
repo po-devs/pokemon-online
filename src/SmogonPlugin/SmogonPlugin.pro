@@ -20,7 +20,6 @@ SOURCES += smogonplugin.cpp \
     teambuildersmogonplugin.cpp \
     smogonsinglepokedialog.cpp
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 
 HEADERS += smogonplugin.h\
         SmogonPlugin_global.h \
@@ -41,6 +40,17 @@ LIBS += -L../../bin \
     -lpo-pokemoninfo \
     -lpo-utilities \
     -lpo-battlemanager
+
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+  macx: {
+    QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+  }
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
 
 symbian {
     #Symbian specific definitions

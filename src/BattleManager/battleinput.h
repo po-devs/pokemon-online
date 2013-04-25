@@ -4,7 +4,7 @@
 #include "battlecommandmanager.h"
 #include <vector>
 
-class BattleConfiguration;
+struct BattleConfiguration;
 class DataStream;
 
 class BattleInput : public BattleCommandManager<BattleInput>

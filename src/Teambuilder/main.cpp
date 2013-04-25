@@ -13,6 +13,7 @@
 #include <QMainWindow>
 #include <iostream>
 #include <ctime>
+#include <QApplication>
 
 #ifdef __WIN32
 #include <windows.h>

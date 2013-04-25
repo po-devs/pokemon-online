@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include <QtGui>
+#include <QStackedWidget>
 #include "analyze.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
@@ -21,11 +22,11 @@ class BattleWindow;
 class BaseBattleWindowInterface;
 class QScrollDownTextBrowser;
 class PMSystem;
-class PMStruct;
+struct PMStruct;
 class ControlPanel;
 class RankingDialog;
 class FindBattleDialog;
-class FindBattleData;
+struct FindBattleData;
 class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;

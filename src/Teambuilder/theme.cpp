@@ -115,8 +115,10 @@ void Theme::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     if (QFile::exists(dir+"Fonts")) {
         QDir d(dir + "Fonts");

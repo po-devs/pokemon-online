@@ -12,14 +12,14 @@
 
 class Client;
 class PlayerInfo;
-class BattleChoice;
+struct BattleChoice;
 class TeamBattle;
-class BattleConfiguration;
-class ChallengeInfo;
-class Battle;
-class UserInfo;
+struct BattleConfiguration;
+struct ChallengeInfo;
+struct Battle;
+struct UserInfo;
 class TeamHolder;
-class ServerInfo;
+struct ServerInfo;
 
 /* Commands to dialog with the server */
 namespace NetworkCli

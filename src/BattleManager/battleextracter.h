@@ -5,8 +5,10 @@
 #include <cstdarg>
 #include <stdint.h>
 #include <unordered_map>
+#include <memory>
 #include "battleenum.h"
-
+#include "../PokemonInfo/battlestructs.h"
+/*
 namespace std {
     template<class T> class shared_ptr;
 }
@@ -17,6 +19,7 @@ class BattleChoices;
 class ShallowShownTeam;
 class BattleStats;
 class RearrangeChoice;
+*/
 
 template <class Current>
 class BattleExtracter
@@ -54,7 +57,7 @@ protected:
     }
 
     void extractArguments(va_list &args) {
-
+        Q_UNUSED(args);
     }
 
     template<class T>
