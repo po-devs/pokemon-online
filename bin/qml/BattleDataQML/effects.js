@@ -23,7 +23,7 @@ function launchEffect(key, parent, vars) {
     if (! (key in components) ) {
         var component = Qt.createComponent(effects[key]);
 
-        if (component.status != Component.Ready) {
+        if (component.status !== Component.Ready) {
             console.log("Failed loading components " + key + " (" + effects[key] + ")");
             return;
         }
