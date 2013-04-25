@@ -2,6 +2,7 @@
 #define ANTIDOS_H
 
 #include <QWidget>
+#include <QHash>
 #include <ctime>
 #include <QTimer>
 

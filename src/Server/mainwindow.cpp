@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QMenu>
 
 #include "mainwindow.h"
