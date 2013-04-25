@@ -5,7 +5,7 @@
 
 #include "../Teambuilder/plugininterface.h"
 
-class ThemeAccessor;
+struct ThemeAccessor;
 
 extern "C" {
 CSSCHANGERSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);

@@ -4,7 +4,7 @@
 #include "battlecommandmanager.h"
 #include "battledata.h"
 
-class BattleDynamicInfo;
+struct BattleDynamicInfo;
 class BattleDefaultTheme;
 class DataContainer;
 

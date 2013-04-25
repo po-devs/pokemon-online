@@ -20,7 +20,17 @@ HEADERS += pokemonstructs.h \
     geninfo.h \
     pokemon.h
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+  macx: {
+    QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+  }
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
 
 LIBS += -L../../bin \
     -lpo-utilities

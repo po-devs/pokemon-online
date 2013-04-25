@@ -30,6 +30,7 @@ protected:
     void keyPressEvent(QKeyEvent * event);
 
 private:
+    using QAbstractItemView::startDrag;
     void startDrag();
     void init();
 

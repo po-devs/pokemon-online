@@ -1,6 +1,6 @@
 #include "csswidget.h"
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QtCore>
 #include "../Teambuilder/themeaccessor.h"
 #include "colorchoicewidget.h"

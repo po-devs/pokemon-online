@@ -4,6 +4,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include <QMouseEvent>
 #include <QApplication>
+#include <QDrag>
 
 QSize TB_PokeChoice::sizeHint() const {
     //Overrides QTableView's size hint which is too big

@@ -1,5 +1,6 @@
 #include "ranking.h"
 #include "../Utilities/otherwidgets.h"
+#include <QHeaderView>
 
 RankingDialog::RankingDialog(const QStringList &tiers)
 {

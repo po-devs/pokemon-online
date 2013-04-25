@@ -1,5 +1,7 @@
 #include "fullscreensupport.h"
-#include <QDebug>
+#include <Foundation/NSString.h>
+#include <Appkit/NSView.h>
+#include <Appkit/NSWindow.h>
 
 bool MacSupport::isLion()
 {

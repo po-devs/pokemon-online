@@ -4,11 +4,17 @@
 namespace {
     static quint32 MAGIC = 0xB0C3B455;
     static quint16 VERSION = 0x0002;
+    inline QString dataLocation() {
+#ifdef QT5
+        return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#else
+        return QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+#endif
+    }
 }
 
-PasswordWallet::PasswordWallet() : 
-    dataPath(QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/wallet.dat"), 
-    serverPass(), userPass()
+PasswordWallet::PasswordWallet() :
+    dataPath(dataLocation() + "/wallet.dat"), serverPass(), userPass()
 {
     load();
 }
@@ -37,9 +43,9 @@ void PasswordWallet::load()
 void PasswordWallet::save()
 {
     QDir d;
-    if (!d.mkpath(QDesktopServices::storageLocation(QDesktopServices::DataLocation)))
+    if (!d.mkpath(dataLocation()))
         return; // XXX: error message?
-    
+
     QFile f(dataPath);
     if (!f.open(QIODevice::WriteOnly))
         return;

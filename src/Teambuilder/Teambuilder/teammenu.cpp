@@ -8,6 +8,9 @@
 #include <QShortcut>
 #include <QDockWidget>
 #include <QMainWindow>
+#include <QApplication>
+#include <QStyle>
+#include <QPushButton>
 
 #include "../PokemonInfo/pokemoninfo.h"
 #include "Teambuilder/teammenu.h"
