@@ -1162,11 +1162,22 @@ void BattleSituation::testCritical(int player, int target)
 
     bool critical;
     if (gen().num == 1) {
+        int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed() / 2;
+
+        if (tmove(player).critRaise & 1) {
+            baseSpeed *= 8;
+        }
         /* In RBY, Focus Energy reduces crit by 75% */
-        int critChance = 1 * (tmove(player).critRaise & 1 ? 4 : 1) * (tmove(player).critRaise & 2 ? 4 : 1);
-        int randnum = randint(512);
-        int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
-        critical = randnum < baseSpeed * critChance;
+        if (tmove(player).critRaise & 2) {
+            if (gen() <= Pokemon::gen(Gen::Yellow)) {
+                baseSpeed /=4;
+            } else {
+                baseSpeed *= 4;
+            }
+        }
+        int randnum = randint(256);
+
+        critical = randnum < std::min(255, baseSpeed);
     } else {
         /* Flail/Reversal don't inflict crits in gen 2 */
         if (gen().num == 2 && (tmove(player).attack == Move::Flail || tmove(player).attack == Move::Reversal)) {

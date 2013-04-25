@@ -3427,7 +3427,7 @@ hits ignore Reflect, Light Screen, all stat modifiers (including the attack redu
 burn), and stat changes due to Transform.
 
 A damaging attack will be a critical hit if a randomly chosen number from 0 to 255 is less than
-max(255, int(N*int(S/2))), where S is the base speed of the user's current species and N
+min(255, int(N*int(S/2))), where S is the base speed of the user's current species and N
 depends on what moves are being used. Under most cases N is 1, but is multiplied by 8 if using
 an attack with a high critical hit ratio, is divided by 4 if under the effect of Focus Energy
 in a gameboy battle, and is multiplied by 4 if under the effect of Focus Energy in Stadium.
