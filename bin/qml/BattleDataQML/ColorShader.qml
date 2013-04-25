@@ -44,8 +44,8 @@ ShaderEffectItem {
     property color blendColor: "black"
 
 
-    vertexShader: "
-            uniform highp mat4 qt_ModelViewProjectionMatrix;
+    vertexShader:
+            "uniform highp mat4 qt_ModelViewProjectionMatrix;
             attribute highp vec4 qt_Vertex;
             attribute highp vec2 qt_MultiTexCoord0;
 
@@ -55,11 +55,10 @@ ShaderEffectItem {
             {
                 qt_TexCoord = qt_MultiTexCoord0;
                 gl_Position =  qt_ModelViewProjectionMatrix * qt_Vertex;
-            }
-        "
+            }"
 
-    fragmentShader: "
-            uniform highp sampler2D sourceTexture;
+    fragmentShader:
+            "uniform highp sampler2D sourceTexture;
             uniform lowp vec4 blendColor;
             uniform lowp float alpha;
             uniform lowp float opac;
@@ -67,9 +66,8 @@ ShaderEffectItem {
 
             void main (void)
             {
-                vec4 c = texture2D(sourceTexture, qt_TexCoord);
+                highp vec4 c = texture2D(sourceTexture, qt_TexCoord);
 
                 gl_FragColor = vec4((c.rgb*(1.0-alpha)+blendColor.rgb*alpha)*c.a*opac, c.a*opac);
-            }
-        "
+            }"
 }

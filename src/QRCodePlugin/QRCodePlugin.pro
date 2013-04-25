@@ -14,7 +14,13 @@ DEFINES += QRCODEPLUGIN_LIBRARY
 
 SOURCES += qrcodeplugin.cpp
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x"
+}
 
 HEADERS += qrcodeplugin.h\
         QRCodePlugin_global.h \
@@ -31,22 +37,11 @@ LIBS += -L../../bin \
     -lpo-utilities
 
 windows: {
-    LIBS += -lzlib1 -lqrcodelib
+    LIBS += -lzlib1 -l../lib/windows/qrcodelib
 }
 
 !windows: {
     LIBS += -lz -lqrencode
-}
-
-symbian {
-    #Symbian specific definitions
-    MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xEA9E7289
-    TARGET.CAPABILITY =
-    TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = QRCodePlugin.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
 }
 
 unix:!symbian {
