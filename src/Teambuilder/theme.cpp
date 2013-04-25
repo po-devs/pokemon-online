@@ -142,7 +142,7 @@ void Theme::Reload(const QString &dir)
     loadSymbols();
 }
 
-QStringList Theme::SearchPath()
+QStringList Theme::SearchPaths()
 {
     QSettings settings;
     QString userPath = settings.value("Themes/Directory").toString();
@@ -159,7 +159,7 @@ QStringList Theme::SearchPath()
 
 QString Theme::FindTheme(const QString& theme)
 {
-    foreach(QString dir, Theme::SearchPath()) {
+    foreach(QString dir, Theme::SearchPaths()) {
         if (QDir(dir).exists(theme)) {
             QString fullTheme = dir + theme + "/";
             return fullTheme;

@@ -119,7 +119,14 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
+#ifdef QT5
+    if (s.value("application_style").toString().toLower() == "plastique") {
+        s.remove("application_style");
+    }
+    QApplication::setStyle(s.value("application_style", "Fusion").toString());
+#else
     QApplication::setStyle(s.value("application_style", "plastique").toString());
+#endif
     loadStyleSheet();
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
@@ -591,7 +598,11 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
     QActionGroup *ag = new QActionGroup(menuBar);
 
     QSettings settings;
+#ifdef QT5
+    QString curStyle = settings.value("application_style", "Fusion").toString();
+#else
     QString curStyle = settings.value("application_style", "plastique").toString();
+#endif
 
     foreach(QString s , style) {
         QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));
@@ -613,7 +624,7 @@ void MainEngine::rebuildThemeMenu()
 
     QSettings s;
 
-    QStringList searchPath = Theme::SearchPath();
+    QStringList searchPath = Theme::SearchPaths();
 
     QSet<QString> themes;
     foreach(QString dir, searchPath) {

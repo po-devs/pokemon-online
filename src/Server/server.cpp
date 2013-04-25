@@ -81,8 +81,10 @@ extern bool skipChecksOnStartUp;
 void Server::start(){
     serverIns = this;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
 #ifndef SFML_SOCKETS
     for (int i = 0; i < serverPorts.size(); ++i) {
@@ -2128,15 +2130,15 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
         Player *p = player(target);
         if (p->spec()[Player::IdsWithMessage] && sender != NoSender) {
             if (channel != NoChannel) {
-                p->relay().notify(NetworkServ::SendMessage, Flags(3), Flags(html), channel, sender, message);
+                p->relay().notify(NetworkServ::SendChatMessage, Flags(3), Flags(html), channel, sender, message);
             } else {
-                p->relay().notify(NetworkServ::SendMessage, Flags(2), Flags(html), sender, message);
+                p->relay().notify(NetworkServ::SendChatMessage, Flags(2), Flags(html), sender, message);
             }
         } else {
             if (channel != NoChannel) {
-                p->relay().notify(NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
+                p->relay().notify(NetworkServ::SendChatMessage, Flags(1), Flags(html), channel, fullMessage);
             } else {
-                p->relay().notify(NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+                p->relay().notify(NetworkServ::SendChatMessage, Flags(0), Flags(html), fullMessage);
             }
         }
     } else {
@@ -2146,19 +2148,19 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             }
             printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), chatMessage, true);
             if (sender == NoSender) {
-                notifyChannel(channel, All, NetworkServ::SendMessage, Flags(1), Flags(html), channel, message);
+                notifyChannel(channel, All, NetworkServ::SendChatMessage, Flags(1), Flags(html), channel, message);
             } else {
-                notifyChannel(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(3), Flags(html), channel, sender, message);
-                notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendMessage, Flags(1), Flags(html), channel, fullMessage);
+                notifyChannel(channel, IdsWithMessage, NetworkServ::SendChatMessage, Flags(3), Flags(html), channel, sender, message);
+                notifyChannelOpp(channel, IdsWithMessage, NetworkServ::SendChatMessage, Flags(1), Flags(html), channel, fullMessage);
             }
         } else {
             printLine(fullMessage, chatMessage, true);
 
             if (sender == NoSender) {
-                notifyGroup(All, NetworkServ::SendMessage, Flags(0), Flags(html), message);
+                notifyGroup(All, NetworkServ::SendChatMessage, Flags(0), Flags(html), message);
             } else {
-                notifyGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(2), Flags(html), sender, message);
-                notifyOppGroup(IdsWithMessage, NetworkServ::SendMessage, Flags(0), Flags(html), fullMessage);
+                notifyGroup(IdsWithMessage, NetworkServ::SendChatMessage, Flags(2), Flags(html), sender, message);
+                notifyOppGroup(IdsWithMessage, NetworkServ::SendChatMessage, Flags(0), Flags(html), fullMessage);
             }
         }
     }

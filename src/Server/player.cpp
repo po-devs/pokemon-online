@@ -1057,7 +1057,7 @@ void Player::associateWith(Player *other)
 
     /* Updates IP in case it changed */
     SecurityManager::Member m = SecurityManager::member(name());
-    m.ip = ip().toAscii();
+    m.ip = ip().toLatin1();
     SecurityManager::updateMember(m);
 
     if (!isLoggedIn()) {
@@ -1443,8 +1443,8 @@ void Player::hashReceived(const QByteArray &_hash) {
         if (hash == SecurityManager::member(waiting_name).hash) {
             SecurityManager::Member m = SecurityManager::member(waiting_name);
 
-            m.modifyIP(ip().toAscii());
-            m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toAscii());
+            m.modifyIP(ip().toLatin1());
+            m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toLatin1());
             m.hash = hash;
             setAuth(m.authority());
             SecurityManager::updateMember(m);

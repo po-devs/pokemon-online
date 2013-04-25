@@ -155,9 +155,7 @@ windows: { LIBS += -lzip-2 }
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets multimedia concurrent
-  macx: {
-    QMAKE_CXXFLAGS += "-std=c++11"
-  }
+  QMAKE_CXXFLAGS += "-std=c++11"
 } else {
   QT += phonon
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

@@ -12,12 +12,12 @@
 #include "pokemonteamtabs.h"
 #include "teambuildersmogonplugin.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface *interface)
+ClientPlugin* createPluginClass(MainEngineInterface *_interface)
 {
-    return new SmogonPlugin(interface);
+    return new SmogonPlugin(_interface);
 }
 
-SmogonPlugin::SmogonPlugin(MainEngineInterface *interface) : interface(interface)
+SmogonPlugin::SmogonPlugin(MainEngineInterface *_interface) : _interface(_interface)
 {
 }
 
@@ -45,7 +45,7 @@ QWidget *SmogonPlugin::getConfigurationWidget()
     QHBoxLayout* buttonsLayout = new QHBoxLayout;
    
     /* Given the interface, get the pokemon team */
-    Team team = interface->trainerTeam()->team();
+    Team team = _interface->trainerTeam()->team();
 
     /* Widget that holds the tabs */
     PokemonTeamTabs* tabs = new PokemonTeamTabs(team.path()); 

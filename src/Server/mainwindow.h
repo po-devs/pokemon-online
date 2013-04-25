@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
+#include <QMainWindow>
+#include <QSystemTrayIcon>
+
 #include "server.h"
 #include "serverwidget.h"
 

@@ -2,7 +2,9 @@
 #define PLUGINMANAGER_H
 
 #include <QtCore>
-#include <QtGui>
+#include <QWidget>
+#include <QListWidget>
+
 class PlayerInterface;
 class ServerPlugin;
 class ChallengeInfo;

@@ -101,7 +101,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         }
         break;
     }
-    case Nw::SendMessage: {
+    case Nw::SendChatMessage: {
         Flags network,data;
 
         in >> network >> data;
@@ -713,9 +713,9 @@ void DualWielder::readWebSocket(const QString &frame)
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
 
             if (params.count() == 0) {
-                notify(Nw::SendMessage, Flags(1), Flags(0), qint32(0), data);
+                notify(Nw::SendChatMessage, Flags(1), Flags(0), qint32(0), data);
             } else {
-                notify(Nw::SendMessage, Flags(1), Flags(0), qint32(params.value("channel").toInt()), params.value("message").toString());
+                notify(Nw::SendChatMessage, Flags(1), Flags(0), qint32(params.value("channel").toInt()), params.value("message").toString());
             }
         } else if (command == "auth") {
             notify(Nw::AskForPass, QByteArray::fromHex(data.toUtf8()));

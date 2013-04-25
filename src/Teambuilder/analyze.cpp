@@ -134,7 +134,7 @@ void Analyzer::sendPM(int id, const QString &mess)
 
 void Analyzer::sendChanMessage(int channelid, const QString &message)
 {
-    notify(SendMessage, Flags(1), Flags(0), qint32(channelid), message);
+    notify(SendChatMessage, Flags(1), Flags(0), qint32(channelid), message);
 }
 
 void Analyzer::sendTeam(const TeamHolder &team)
@@ -300,7 +300,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         }
         break;
     }
-    case SendMessage: {
+    case SendChatMessage: {
         Flags network,data;
 
         in >> network >> data;
