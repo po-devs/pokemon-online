@@ -10,7 +10,7 @@ QRCODEPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
 
 class QRCODEPLUGINSHARED_EXPORT QRCodePlugin : public ClientPlugin {
 public:
-    QRCodePlugin(MainEngineInterface *interface);
+    QRCodePlugin(MainEngineInterface *_interface);
 
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
@@ -22,7 +22,7 @@ public:
 
     bool hasConfigurationWidget() const;
 private:
-    MainEngineInterface *interface;
+    MainEngineInterface *_interface;
 };
 
 #endif // QRCODEPLUGIN_H

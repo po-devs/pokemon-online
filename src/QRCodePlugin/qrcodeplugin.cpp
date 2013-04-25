@@ -14,12 +14,12 @@
 #include <QBitmap>
 #include <QPalette>
 
-ClientPlugin* createPluginClass(MainEngineInterface *interface)
+ClientPlugin* createPluginClass(MainEngineInterface *_interface)
 {
-    return new QRCodePlugin(interface);
+    return new QRCodePlugin(_interface);
 }
 
-QRCodePlugin::QRCodePlugin(MainEngineInterface *interface) : interface(interface)
+QRCodePlugin::QRCodePlugin(MainEngineInterface *_interface) : _interface(_interface)
 {
 }
 
@@ -35,7 +35,7 @@ QString QRCodePlugin::pluginName() const
 
 QWidget *QRCodePlugin::getConfigurationWidget()
 {
-    TeamHolderInterface *team = interface->trainerTeam();
+    TeamHolderInterface *team = _interface->trainerTeam();
     QByteArray xml = team->team().toXml().toUtf8();
 
     /* Creates zipped data */
