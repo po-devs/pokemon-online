@@ -584,8 +584,10 @@ void PokemonInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     // Load db/pokes data.
     loadNames();
@@ -1094,7 +1096,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         return ret;
     }
 
-    ret.loadFromData(data, file.section(".", -1).toAscii().data());
+    ret.loadFromData(data, file.section(".", -1).toLatin1().data());
     QPixmapCache::insert(archive+file, ret);
 
     return ret;
@@ -1651,8 +1653,10 @@ void MoveInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
     loadMoveMessages();
@@ -2061,8 +2065,10 @@ void ItemInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadGenData();
     loadNames();
@@ -2542,8 +2548,10 @@ void TypeInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
     loadCategories();
@@ -2660,8 +2668,10 @@ void NatureInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
 }
@@ -2744,8 +2754,10 @@ void CategoryInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
 }
@@ -2779,8 +2791,10 @@ void AbilityInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
     loadMessages();
@@ -2899,8 +2913,10 @@ void GenderInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     loadNames();
 }
@@ -3000,8 +3016,10 @@ void StatInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     fill_int_str(m_stats, path("stats.txt"), true);
     fill_int_str(m_status, path("status.txt"), true);
@@ -3057,8 +3075,10 @@ void GenInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
+#ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
     fill_gen_string(m_versions, path("versions.txt"), true);
     fill_int_str(m_gens, path("gens.txt"), true);

@@ -1,8 +1,13 @@
 #ifndef SERVERCONFIG_H
 #define SERVERCONFIG_H
 
-#include <QtGui>
+#include <QWidget>
 #include "security.h"
+
+class QComboBox;
+class QPlainTextEdit;
+class QSpinBox;
+class QCheckBox;
 
 class ServerWindow : public QWidget
 {

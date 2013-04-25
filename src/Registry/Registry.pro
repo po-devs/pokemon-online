@@ -6,7 +6,14 @@ QT -= gui
 TARGET = Registry
 DESTDIR = ../../bin
 TEMPLATE = app
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
 SOURCES += main.cpp \
     mainwindow.cpp \
     registry.cpp \

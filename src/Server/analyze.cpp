@@ -34,7 +34,7 @@ void Analyzer::keepAlive()
 
 void Analyzer::sendMessage(const QString &message, bool html)
 {
-    notify(SendMessage, Flags(0), Flags(html==true), message);
+    notify(SendChatMessage, Flags(0), Flags(html==true), message);
 }
 
 void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf)
@@ -279,7 +279,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit reconnect(id, hash);
         break;
     }
-    case SendMessage:
+    case SendChatMessage:
         {
             Flags network, data;
             qint32 chanid;

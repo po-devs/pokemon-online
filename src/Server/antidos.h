@@ -1,8 +1,14 @@
 #ifndef ANTIDOS_H
 #define ANTIDOS_H
 
-#include <QtGui>
+#include <QWidget>
+#include <QHash>
 #include <ctime>
+#include <QTimer>
+
+class QSpinBox;
+class QLineEdit;
+class QCheckBox;
 
 class AntiDosWindow : public QWidget
 {

@@ -19,7 +19,14 @@ HEADERS += settingsplugin.h\
         SettingsPlugin_global.h \
     settingsdialog.h
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets multimedia
+  QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

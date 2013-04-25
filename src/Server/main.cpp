@@ -3,7 +3,7 @@
 #endif
 
 #ifndef PO_NO_GUI
-# include <QtGui/QApplication>
+# include <QApplication>
 # include "mainwindow.h"
 #else
 # include <QtCore/QCoreApplication>
@@ -23,24 +23,47 @@ using namespace std;
 
 QString Server::dataRepo = QDir().absoluteFilePath(PO_DATA_REPO);
 
+#ifdef _WIN32
+# ifdef QT5
+void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &msg)
+{
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "%s\n", msg.toLocal8Bit().data());
+        fflush(stderr);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s\n", msg.toLocal8Bit().data());
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s\n", msg.toLocal8Bit().data());
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s\n", msg.toLocal8Bit().data());
+        abort();
+    }
+}
+# else
 void myMessageOutput(QtMsgType type, const char *msg)
 {
     switch (type) {
     case QtDebugMsg:
-	fprintf(stderr, "%s\n", msg);
-	fflush(stderr);
-	break;
+        fprintf(stderr, "%s\n", msg);
+        fflush(stderr);
+        break;
     case QtWarningMsg:
-	fprintf(stderr, "Warning: %s\n", msg);
+        fprintf(stderr, "Warning: %s\n", msg);
         break;
     case QtCriticalMsg:
-	fprintf(stderr, "Critical: %s\n", msg);
-	break;
+        fprintf(stderr, "Critical: %s\n", msg);
+        break;
     case QtFatalMsg:
-	fprintf(stderr, "Fatal: %s\n", msg);
-    //abort();
+        fprintf(stderr, "Fatal: %s\n", msg);
+        abort();
     }
 }
+# endif
+#endif
 
 bool skipChecksOnStartUp = false;
 
@@ -49,7 +72,12 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 #ifdef _WIN32
     freopen("logs.txt", "a", stderr);
+
+# ifdef QT5
+    qInstallMessageHandler(myMessageOutput);
+# else
     qInstallMsgHandler(myMessageOutput);
+# endif
 #else
     //set_terminate( stacktrace );
 #endif

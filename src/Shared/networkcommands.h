@@ -19,7 +19,7 @@ enum Command {
     Login,
     Reconnect,
     Logout,
-    SendMessage,
+    SendChatMessage,
     PlayersList,
     SendTeam,
     ChallengeStuff,

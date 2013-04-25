@@ -18,6 +18,11 @@ HEADERS += usagestats.h \
     ../Server/serverinterface.h \
     ../Server/battleinterface.h
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x"
+}
 
 include(../Shared/Common.pri)

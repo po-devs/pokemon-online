@@ -33,9 +33,12 @@
   * and convert them back to shared_ptr*.
   */
 
+#include <memory>
+/*
 namespace std {
     template<class T> class shared_ptr;
 }
+*/
 
 template <class T>
 struct remove_ptr {

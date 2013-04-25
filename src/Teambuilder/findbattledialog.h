@@ -9,7 +9,7 @@ namespace Ui {
 
 class TeamHolder;
 class TeamLine;
-class FindBattleData;
+struct FindBattleData;
 
 class FindBattleDialog : public QWidget
 {

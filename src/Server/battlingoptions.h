@@ -1,7 +1,11 @@
 #ifndef BATTLINGOPTIONS_H
 #define BATTLINGOPTIONS_H
 
-#include <QtGui>
+#include <QWidget>
+
+class QCheckBox;
+class QSpinBox;
+class QLabel;
 
 class BattlingOptionsWindow : public QWidget
 {

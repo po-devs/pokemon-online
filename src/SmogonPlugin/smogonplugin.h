@@ -10,7 +10,7 @@ SMOGONPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
 
 class SMOGONPLUGINSHARED_EXPORT SmogonPlugin : public QObject, public ClientPlugin {
 public:
-    SmogonPlugin(MainEngineInterface *interface);
+    SmogonPlugin(MainEngineInterface *_interface);
 
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
@@ -24,7 +24,7 @@ public:
 
     TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface *);
 private:
-    MainEngineInterface *interface;
+    MainEngineInterface *_interface;
 };
 
 #endif // SMOGONPLUGIN_H

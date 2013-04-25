@@ -25,6 +25,12 @@ HEADERS += csschanger.h\
     ui_massreplace.h \
     data.h
 
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+}
+
+
 symbian {
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE9A936F8

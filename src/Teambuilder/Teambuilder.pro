@@ -1,6 +1,5 @@
 QT += network \
     xml \
-    phonon \
     declarative \
     opengl \
     script
@@ -153,7 +152,16 @@ LIBS += -L../../bin \
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets multimedia concurrent
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QT += phonon
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
+
 
 FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/pokebuttonsholder.ui \

@@ -9,7 +9,7 @@ class QImageButton;
 class QImageButtonP;
 class QImageButtonLR;
 class BattleDefaultTheme;
-class ThemeAccessor;
+struct ThemeAccessor;
 class QToolButton;
 
 #define DEFAULT_PO_THEME "Classic"
@@ -35,7 +35,7 @@ public:
     static void init(const QString &dir="Themes/" DEFAULT_PO_THEME "/");
     static void Reload(const QString &dir="Themes/" DEFAULT_PO_THEME);
 
-    static QStringList SearchPath();
+    static QStringList SearchPaths();
     static QString FindTheme(const QString& theme);
 
     static QColor Color(const QString &code);

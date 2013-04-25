@@ -1,5 +1,14 @@
 #include "antidos.h"
 
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QLabel>
+#include <QFormLayout>
+#include <QSettings>
+#include <QPushButton>
+#include <QDebug>
+
 AntiDosWindow::AntiDosWindow()
 {
     setAttribute(Qt::WA_DeleteOnClose, true);

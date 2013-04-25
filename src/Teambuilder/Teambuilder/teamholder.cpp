@@ -124,6 +124,10 @@ TeamHolder::TeamHolder()
     m_currentTeam = 0;
 }
 
+TeamHolder::~TeamHolder()
+{
+}
+
 const Team &TeamHolder::team() const
 {
     return m_teams[currentTeam()];

@@ -3,7 +3,7 @@
 
 #include "centralwidget.h"
 
-class ServerInfo;
+struct ServerInfo;
 class TeamHolder;
 class Analyzer;
 
