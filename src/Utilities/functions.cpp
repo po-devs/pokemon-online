@@ -74,7 +74,7 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
     QSettings settings;
 
     settings.beginGroup(w->metaObject()->className());
-    if (settings.contains("size") || !defaultSize.isNull())
+    if (settings.contains("size") || !defaultSize.isEmpty())
         w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
 //    if (settings.contains("pos")) {
 //        QPoint pos = settings.value("pos").toPoint();
@@ -85,8 +85,13 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
 //    }
     if (settings.contains("maximized") && settings.value("maximized").toBool())
         w->topLevelWidget()->showMaximized();
-    else
+    else {
+//        QWidget *topLevel = w->topLevelWidget();
+//        if (topLevel->x() < 0 || topLevel->y() < 0) {
+//            topLevel->move(std::max(0, topLevel->x()), std::max(0, topLevel->y()));
+//        }
         w->topLevelWidget()->showNormal();
+    }
 
     settings.endGroup();
 }
