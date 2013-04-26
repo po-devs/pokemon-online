@@ -444,7 +444,7 @@ void PokeEdit::changeItem(const QString &itemName)
         setNum(Pokemon::Giratina_O); 
     } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
         setNum(Pokemon::Giratina); 
-    } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4) {
+    } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4 && poke().num().pokenum != Pokemon::Giratina) {
         poke().item() = 0;
     }
     if (poke().num().pokenum == Pokemon::Arceus) {
