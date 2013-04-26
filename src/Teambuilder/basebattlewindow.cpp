@@ -160,7 +160,6 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
-    return;
 #ifdef QT5
     audio = new QMediaPlayer(this);
 
@@ -202,7 +201,6 @@ bool BaseBattleWindow::flashWhenMoved() const
 
 void BaseBattleWindow::changeCryVolume(int v)
 {
-    return;
 #ifdef QT5
     cry->setVolume(float(v)/100);
 #else
@@ -212,7 +210,6 @@ void BaseBattleWindow::changeCryVolume(int v)
 
 void BaseBattleWindow::changeMusicVolume(int v)
 {
-    return;
 #ifdef QT5
     audio->setVolume(v);
 #else
@@ -222,7 +219,6 @@ void BaseBattleWindow::changeMusicVolume(int v)
 
 void BaseBattleWindow::musicPlayStop()
 {
-    return;
     if (!musicPlayed()) {
         playBattleCries() = false;
         playBattleMusic() = false;
@@ -291,12 +287,11 @@ void BaseBattleWindow::musicPlayStop()
 
 void BaseBattleWindow::enqueueMusic()
 {
-    return;
     if (sources.size() == 0)
         return;
     QString url = sources[true_rand()%sources.size()];
 #ifdef QT5
-    if (audio->state() != QMediaPlayer::PlayingState) {
+    if (audio->state() != QMediaPlayer::PlayingState && musicPlayed()) {
         audio->setMedia(QUrl::fromLocalFile(url));
         audio->play();
     }
@@ -327,7 +322,6 @@ void BaseBattleWindow::criesProblem(Phonon::State newState)
 
 void BaseBattleWindow::playCry(int pokemon)
 {
-    return;
     if (!playBattleCries())
         return;
 
