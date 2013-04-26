@@ -79,6 +79,7 @@ QTranslator qtTranslator, translator;
 int main(int argc, char *argv[])
 {
 #ifdef _WIN32
+    freopen("stdout.txt", "w", stderr);
 # ifdef QT5
     qInstallMessageHandler(myMessageOutput);
 # else
