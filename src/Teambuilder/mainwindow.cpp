@@ -571,7 +571,7 @@ void MainEngine::raiseLastNotificationSender()
 void MainEngine::loadReplayDialog()
 {
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Replay a battle"), LogManager::obj()->getDirectoryForType(ReplayLog), "*.poreplay");
-    f->setWindowFlags(Qt::Window);
+    //f->setWindowFlags(Qt::Window);
     f->setAttribute(Qt::WA_DeleteOnClose);
     f->setAcceptMode(QFileDialog::AcceptOpen);
     f->setFileMode(QFileDialog::ExistingFile);

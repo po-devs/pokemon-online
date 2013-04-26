@@ -704,7 +704,7 @@ void saveTTeamDialog(const Team &team, QObject *receiver, const char *slot)
     QSettings s;
     QString defaultPath = s.value("Teams/Folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Saving the Team"),defaultPath, QObject::tr("Team(*.tp)"));
-    f->setWindowFlags(Qt::Window);
+    //f->setWindowFlags(Qt::Window); //maybe the reason for crashes for some people
     f->setAttribute(Qt::WA_DeleteOnClose);
     f->setAcceptMode(QFileDialog::AcceptSave);
 #if defined(Q_OS_MAC)
@@ -725,7 +725,7 @@ void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
     QSettings s;
     QString defaultPath = s.value("Teams/Folder").toString();
     QFileDialog *f = new QFileDialog(NULL, QObject::tr("Loading the Team"),defaultPath);
-    f->setWindowFlags(Qt::Window);
+    //f->setWindowFlags(Qt::Window); //maybe the reason for crashes
     f->setAttribute(Qt::WA_DeleteOnClose);
     f->setAcceptMode(QFileDialog::AcceptOpen);
     f->setFileMode(QFileDialog::ExistingFile);

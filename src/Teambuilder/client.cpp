@@ -1963,8 +1963,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
         cancelFindBattle(false);
         BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
         connect(this, SIGNAL(destroyed()), mybattle, SLOT(deleteLater()));
-        mybattle->setWindowFlags(Qt::Window);
-        mybattle->show();
+
         mybattle->activateWindow();
 
         connect(mybattle, SIGNAL(forfeit(int)), SLOT(forfeitBattle(int)));
@@ -2015,9 +2014,6 @@ void Client::battleReceived(int battleid, int id1, int id2)
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
 {
     BaseBattleWindowInterface *battle = new BaseBattleWindowIns(player(conf.ids[0]), player(conf.ids[1]), conf, ownId());
-
-    battle->setWindowFlags(Qt::Window);
-    battle->show();
 
     connect(this, SIGNAL(destroyed()), battle, SLOT(close()));
     connect(this, SIGNAL(destroyed()), battle, SLOT(deleteLater()));
