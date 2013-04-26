@@ -9,11 +9,12 @@
 #include "poketextedit.h"
 #include "../Shared/battlecommands.h"
 #include "../Utilities/coreclasses.h"
-#include "../Utilities/wavreader.h"
+
 #ifdef QT5
 #include <QApplication>
 #include <QToolTip>
 #include <QMediaPlayer>
+#include "../Utilities/wavreader.h"
 #endif
 
 using namespace BattleCommands;
@@ -164,9 +165,7 @@ void BaseBattleWindow::init()
 #ifdef QT5
     audio = new QMediaPlayer(this);
 
-    QAudioFormat format;
-    format.setCodec("audio/wav");
-    cry = new QAudioOutput(format, this);
+    cry = new QAudioOutput(QAudioFormat(), this);
 
     connect(audio, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(enqueueMusic()));
     connect(cry, SIGNAL(stateChanged(QAudio::State)), SLOT(criesProblem(QAudio::State)));

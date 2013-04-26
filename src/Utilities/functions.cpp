@@ -2,6 +2,8 @@
 #include <QIODevice>
 #ifdef QT5
 #include <QStandardPaths>
+#else
+#include <QDesktopServices>
 #endif
 
 #include "functions.h"
