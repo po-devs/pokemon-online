@@ -142,7 +142,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     loadline.h \
     spectatorwindow.h \
     downloadmanager.h \
-    teambuilderinterface.h
+    teambuilderinterface.h \
+    Battle/wavfile.h \
+    Battle/audioutils.h
 
 LIBS += -L../../bin \
     -lpo-pokemoninfo \
@@ -160,7 +162,6 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QT += phonon
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
-
 
 
 FORMS += Teambuilder/trainermenu.ui \
