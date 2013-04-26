@@ -608,8 +608,8 @@ void BattleRBY::inflictRecoil(int source, int target)
         return;
     }
 
-    // If move KOs opponent's pokemon, no recoil damage is applied in Gen 1.
-    if (koed(target) && recoil < 0) {
+    // If move KOs opponent's pokemon, no recoil damage is applied in stadium.
+    if (koed(target) && recoil < 0 && gen() > Pokemon::gen(Gen::Yellow)) {
         return;
     }
 
