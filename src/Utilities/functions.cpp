@@ -1,10 +1,10 @@
-#include "functions.h"
-
-#include <QtGui>
-#ifdef QT5
 #include <QWidget>
+#include <QIODevice>
+#ifdef QT5
 #include <QStandardPaths>
 #endif
+
+#include "functions.h"
 
 QString escapeHtml(const QString & toConvert)
 {

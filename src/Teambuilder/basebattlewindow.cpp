@@ -9,6 +9,7 @@
 #include "poketextedit.h"
 #include "../Shared/battlecommands.h"
 #include "../Utilities/coreclasses.h"
+#include "../Utilities/wavreader.h"
 #ifdef QT5
 #include <QApplication>
 #include <QToolTip>
@@ -345,6 +346,9 @@ void BaseBattleWindow::playCry(int pokemon)
     cryBuffer.setBuffer(&cries[pokemon]);
     cryBuffer.open(QIODevice::ReadOnly);
 #ifdef QT5
+    cry->deleteLater();
+    cry = new QAudioOutput(readWavHeader(&cryBuffer), this);
+    connect(cry, SIGNAL(stateChanged(QAudio::State)), SLOT(criesProblem(QAudio::State)));
     cry->setBufferSize(cries[pokemon].size());
     cry->start(&cryBuffer);
 #else

@@ -15,7 +15,8 @@ SOURCES += otherwidgets.cpp \
     ziputils.cpp \
     qclosedockwidget.cpp \
     backtrace.cpp \
-    qverticalscrollarea.cpp
+    qverticalscrollarea.cpp \
+    wavreader.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -30,7 +31,8 @@ HEADERS += otherwidgets.h \
     ziputils.h \
     qclosedockwidget.h \
     backtrace.h \
-    qverticalscrollarea.h
+    qverticalscrollarea.h \
+    wavreader.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
@@ -55,6 +57,7 @@ SOURCES += coro.c
 
 OTHER_FILES += 
 
+QT += multimedia
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets
