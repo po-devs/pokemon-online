@@ -1,7 +1,6 @@
 #ifndef BASEBATTLEWINDOW_H
 #define BASEBATTLEWINDOW_H
 
-#include <QtGui>
 #include "../PokemonInfo/battlestructs.h"
 #include "client.h"
 
@@ -10,8 +9,8 @@
 #include "../BattleManager/battlecommandmanager.h"
 
 #ifdef QT5
+#include <QMediaPlayer>
 #include <QAudioOutput>
-#include <QCheckBox>
 #else
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
@@ -22,6 +21,7 @@ class QScrollDownTextBrowser;
 class QClickPBar;
 struct Log;
 class SpectatorWindow;
+class QCheckBox;
 
 struct BaseBattleInfo
 {
@@ -84,8 +84,6 @@ public:
 
     virtual void addSpectator(bool add, int id, const QString &name="");
 
-    //void playCry(int pokenum);
-
     QString name(int spot) const;
     Q_INVOKABLE int player(int spot) const;
     Q_INVOKABLE int opponent(int player) const;
@@ -120,7 +118,7 @@ public slots:
     void musicPlayStop();
     void enqueueMusic();
 #ifdef QT5
-
+    void criesProblem(QAudio::State newState);
 #else
     void criesProblem(Phonon::State newState);
 #endif
@@ -143,6 +141,8 @@ protected:
     QCheckBox *flashWhenMoveDone;
 
 #ifdef QT5
+    QMediaPlayer *audio;
+    QAudioOutput *cry;
 #else
     /* The device which outputs the sound */
     Phonon::AudioOutput *audioOutput;

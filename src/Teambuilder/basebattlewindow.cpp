@@ -12,6 +12,7 @@
 #ifdef QT5
 #include <QApplication>
 #include <QToolTip>
+#include <QMediaPlayer>
 #endif
 
 using namespace BattleCommands;
@@ -159,7 +160,16 @@ void BaseBattleWindow::init()
 
     loadSettings(this);
 
+    return;
 #ifdef QT5
+    audio = new QMediaPlayer(this);
+
+    QAudioFormat format;
+    format.setCodec("audio/wav");
+    cry = new QAudioOutput(format, this);
+
+    connect(audio, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(enqueueMusic()));
+    connect(cry, SIGNAL(stateChanged(QAudio::State)), SLOT(criesProblem(QAudio::State)));
 #else
     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
     mediaObject = new Phonon::MediaObject(this);
@@ -192,8 +202,9 @@ bool BaseBattleWindow::flashWhenMoved() const
 
 void BaseBattleWindow::changeCryVolume(int v)
 {
+    return;
 #ifdef QT5
-    Q_UNUSED(v);
+    cry->setVolume(float(v)/100);
 #else
     cryOutput->setVolume(float(v)/100);
 #endif
@@ -201,8 +212,9 @@ void BaseBattleWindow::changeCryVolume(int v)
 
 void BaseBattleWindow::changeMusicVolume(int v)
 {
+    return;
 #ifdef QT5
-    Q_UNUSED(v);
+    audio->setVolume(v);
 #else
     audioOutput->setVolume(float(v)/100);
 #endif
@@ -210,10 +222,12 @@ void BaseBattleWindow::changeMusicVolume(int v)
 
 void BaseBattleWindow::musicPlayStop()
 {
+    return;
     if (!musicPlayed()) {
         playBattleCries() = false;
         playBattleMusic() = false;
 #ifdef QT5
+        audio->pause();
 #else
         mediaObject->pause();
 #endif
@@ -222,6 +236,8 @@ void BaseBattleWindow::musicPlayStop()
 
     QSettings s;
 #ifdef QT5
+    audio->setVolume(s.value("BattleAudio/MusicVolume").toInt());
+    cry->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 #else
     audioOutput->setVolume(float(s.value("BattleAudio/MusicVolume").toInt())/100);
     cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
@@ -251,6 +267,7 @@ void BaseBattleWindow::musicPlayStop()
         start). Otherwise, a random file will be played from the start */
     if (tmpSources == sources && sources.size() == 1) {
 #ifdef QT5
+        audio->play();
 #else
         mediaObject->play();
 #endif
@@ -263,6 +280,8 @@ void BaseBattleWindow::musicPlayStop()
         return;
 
 #ifdef QT5
+    audio->setMedia(QUrl::fromLocalFile(sources[true_rand()%sources.size()]));
+    audio->play();
 #else
     mediaObject->setCurrentSource(sources[true_rand()%sources.size()]);
     mediaObject->play();
@@ -272,15 +291,27 @@ void BaseBattleWindow::musicPlayStop()
 
 void BaseBattleWindow::enqueueMusic()
 {
+    return;
     if (sources.size() == 0)
         return;
+    QString url = sources[true_rand()%sources.size()];
 #ifdef QT5
+    if (audio->state() != QMediaPlayer::PlayingState) {
+        audio->setMedia(QUrl::fromLocalFile(url));
+        audio->play();
+    }
 #else
-    mediaObject->enqueue(sources[true_rand()%sources.size()]);
+    mediaObject->enqueue(url);
 #endif
 }
 
 #ifdef QT5
+void BaseBattleWindow::criesProblem(QAudio::State newState) {
+    if (newState != QAudio::ActiveState && undelayOnSounds) {
+        undelay();
+    }
+}
+
 #else
 void BaseBattleWindow::criesProblem(Phonon::State newState)
 {
@@ -296,6 +327,7 @@ void BaseBattleWindow::criesProblem(Phonon::State newState)
 
 void BaseBattleWindow::playCry(int pokemon)
 {
+    return;
     if (!playBattleCries())
         return;
 
@@ -309,17 +341,19 @@ void BaseBattleWindow::playCry(int pokemon)
 
     undelayOnSounds = false;
 #ifdef QT5
+    cry->stop();
 #else
     cryObject->stop();
 #endif
     undelayOnSounds = true;
 
-#ifdef QT5
-#else
     cryBuffer.close();
     cryBuffer.setBuffer(&cries[pokemon]);
     cryBuffer.open(QIODevice::ReadOnly);
-
+#ifdef QT5
+    cry->setBufferSize(cries[pokemon].size());
+    cry->start(&cryBuffer);
+#else
     cryObject->setCurrentSource(&cryBuffer);
     cryObject->play();
 #endif
