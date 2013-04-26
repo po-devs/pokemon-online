@@ -152,11 +152,11 @@ protected:
     Phonon::AudioOutput *cryOutput;
     /* The media the device listens from for pokemon cries */
     Phonon::MediaObject * cryObject;
-    /* The pokemon cries stored in memory */
 #endif
     /* The media sources for the music */
     QList<QString> sources;
 
+    /* The pokemon cries stored in memory */
     QHash<int, QByteArray> cries;
     QBuffer cryBuffer;
     bool undelayOnSounds;
