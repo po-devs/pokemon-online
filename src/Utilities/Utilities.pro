@@ -55,12 +55,11 @@ SOURCES += coro.c
 
 OTHER_FILES += 
 
-QT += multimedia
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   SOURCES += wavreader.cpp
   HEADERS += wavreader.h
   DEFINES += QT5
-  QT += widgets
+  QT += widgets multimedia
   QMAKE_CXXFLAGS += "-std=c++11"
 } else {
   QMAKE_CXXFLAGS += "-std=c++0x"
