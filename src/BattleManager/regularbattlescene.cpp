@@ -143,7 +143,7 @@ void RegularBattleScene::setupGui()
         gui.trainers[i]->setObjectName("TrainerNick");
     }
 
-    firstLine->addWidget(createFullBarLayout(nslots, opponent()));
+    firstLine->addWidget(gui.fullBars[opponent()] = createFullBarLayout(nslots, opponent()));
     firstLine->addLayout(teamAndName[opponent()]);
 
     gui.zone = new GraphicsZone(data(), gui.theme);
@@ -178,7 +178,7 @@ void RegularBattleScene::setupGui()
     midopp->addWidget(gui.timers[opponent()]);
 
     lastLine->addLayout(teamAndName[myself()]);
-    lastLine->addWidget(createFullBarLayout(nslots, myself()));
+    lastLine->addWidget(gui.fullBars[myself()] = createFullBarLayout(nslots, myself()));
 
     QTimer *t = new QTimer (this);
     t->start(200);
@@ -371,6 +371,7 @@ void RegularBattleScene::updatePoke(int spot)
         gui.bars[spot]->setValue(0);
         gui.level[spot]->setText("");
     }
+    gui.fullBars[player]->update(); //needed because qt5 doesn't do its job properly
 
     updateBall(player, slot);
 }

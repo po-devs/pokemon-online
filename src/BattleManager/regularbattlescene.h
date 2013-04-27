@@ -171,6 +171,8 @@ private:
         QVector<QLabel *> gender;
         QVector<QClickPBar *> bars;
 
+        QWidget* fullBars[2];
+
         QProgressBar *timers[2];
         QLabel * trainers[2];
 
