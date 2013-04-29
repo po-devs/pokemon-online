@@ -95,6 +95,8 @@ void PokeSelection::toggleSearchWindow()
             move(std::max(top->x(), top->x()+(top->width()-width())/2), y());
         }
     }
+    /* Because qt5 doesn't know how to do it itself :( */
+    update();
 }
 
 void PokeSelection::show()
