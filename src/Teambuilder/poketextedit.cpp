@@ -59,7 +59,7 @@ void SmallPokeTextEdit::adaptSize()
     int height = document()->size().toSize().height();
 
     if (height > 0) {
-        height = height + 4;
+        height = height + 0;
     }
     setFixedHeight(height);
 }
