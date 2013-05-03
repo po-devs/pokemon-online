@@ -56,17 +56,18 @@ SmallPokeTextEdit::SmallPokeTextEdit()
 
 void SmallPokeTextEdit::adaptSize()
 {
-    int height = document()->size().toSize().height();
-
-    if (height > 0) {
-        height = height + 4;
-    }
-    setFixedHeight(height);
+    setFixedHeight(sizeHint().height());
 }
 
 QSize SmallPokeTextEdit::sizeHint() const
 {
-    return document()->size().toSize();
+    /* padding */
+    int top, bottom;
+    getContentsMargins(0, &top, 0, &bottom);
+
+    QSize s = document()->size().toSize();
+    s.setHeight(s.height() + top + bottom);
+    return s;
 }
 
 void SmallPokeTextEdit::setText(const QString &text)
