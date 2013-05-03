@@ -603,12 +603,15 @@ QTextEdit#MainChat {
 	border-radius: 2px;
 	border: 1px solid grey;
 	background: #ffffcd;
-	padding: 2px;
 	text-align: center;
 }
 
 #Announcement {
 	font-size: 11px;
+}
+
+ServerChoice #announcement {
+	padding: 2px;
 }
 
 Menu #tipNumber {

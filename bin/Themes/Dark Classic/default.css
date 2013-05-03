@@ -612,8 +612,11 @@ QTextEdit#MainChat {
 	border-radius: 2px;
 	border: 1px solid grey;
 	background: #ffffcd;
-	padding: 2px;
 	text-align: center;
+}
+
+ServerChoice #announcement {
+	padding:2px;
 }
 
 #Announcement {
