@@ -1,4 +1,7 @@
 #include <QFile>
+#include <QGridLayout>
+#include <QStyle>
+#include <QPushButton>
 #include <QApplication>
 #include <QMessageBox>
 #include "replayviewer.h"

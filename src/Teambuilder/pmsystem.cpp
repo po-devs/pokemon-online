@@ -1,5 +1,5 @@
 #include "pmsystem.h"
-#include "../Utilities/otherwidgets.h"
+#include "../Utilities/qscrolldowntextbrowser.h"
 #include "../Utilities/functions.h"
 #ifdef QT5
 #include <QApplication>
