@@ -3,12 +3,12 @@
 
 #include <qglobal.h>
 
-#define VERSION QString("2.0.20")
+#define VERSION QString("2.0.22")
 
 static const quint16 PROTOCOL_VERSION = 1;
 static const quint16 PROTOCOL_SUBVERSION = 2;
-static const quint16 CLIENT_VERSION_NUMBER = 2020;
-static const int UPDATE_ID = 3;
+static const quint16 CLIENT_VERSION_NUMBER = 2022;
+static const int UPDATE_ID = 4;
 
 #ifdef Q_OS_LINUX
 #define OS "linux"
