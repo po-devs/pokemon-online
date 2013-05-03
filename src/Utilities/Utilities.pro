@@ -15,7 +15,8 @@ SOURCES += otherwidgets.cpp \
     ziputils.cpp \
     qclosedockwidget.cpp \
     backtrace.cpp \
-    qverticalscrollarea.cpp
+    qverticalscrollarea.cpp \
+    qscrolldowntextbrowser.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -30,7 +31,8 @@ HEADERS += otherwidgets.h \
     ziputils.h \
     qclosedockwidget.h \
     backtrace.h \
-    qverticalscrollarea.h
+    qverticalscrollarea.h \
+    qscrolldowntextbrowser.h
 
 windows: {
 HEADERS += coro/taskimpl.h \

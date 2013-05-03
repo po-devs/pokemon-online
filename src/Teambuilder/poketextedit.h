@@ -1,7 +1,7 @@
 #ifndef POKETEXTEDIT_H
 #define POKETEXTEDIT_H
 
-#include "../Utilities/otherwidgets.h"
+#include "../Utilities/qscrolldowntextbrowser.h"
 
 class PokeTextEdit : public QScrollDownTextBrowser
 {

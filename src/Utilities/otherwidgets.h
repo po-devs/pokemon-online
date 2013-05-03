@@ -7,7 +7,6 @@
 #include <QListWidgetItem>
 #include <QHBoxLayout>
 #include <QPushButton>
-#include <QTextBrowser>
 #include <QProgressBar>
 #include <QMenu>
 #include <QLineEdit>
@@ -110,33 +109,6 @@ private:
 };
 /* A textbrowser that scrolls down automatically, unless not down, and that
    always insert the text at the end */
-class QScrollDownTextBrowser : public QTextBrowser
-{
-    Q_OBJECT
-public:
-    QScrollDownTextBrowser(QWidget *parent=0);
-    ~QScrollDownTextBrowser() { delete menu; }
-
-    void setAutoClear(bool a) {
-        autoClear = a;
-    }
-
-    void keepLines(int numberOfLines);
-
-public slots:
-    void insertPlainText(const QString &text);
-    void insertHtml(const QString &text);
-    void clear(); // Overriden to make linecount zero.
-
-private:
-    int linecount;
-    bool autoClear;
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *event);
-    QMenu *menu;
-};
-
 /* validator for the nicks */
 class QNickValidator : public QValidator
 {

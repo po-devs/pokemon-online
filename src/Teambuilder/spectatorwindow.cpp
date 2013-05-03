@@ -1,5 +1,6 @@
-#include <QtDeclarative/QDeclarativeView>
+#include <QDeclarativeView>
 #include <QDeclarativeError>
+#include <QHBoxLayout>
 
 #include "spectatorwindow.h"
 #include "../BattleManager/battleclientlog.h"

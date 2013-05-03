@@ -1,5 +1,5 @@
 #include <QScriptEngine>
-#include "../Utilities/otherwidgets.h"
+#include "../Utilities/qscrolldowntextbrowser.h"
 #include "../BattleManager/advancedbattledata.h"
 #include "../BattleManager/battledataaccessor.h"
 #include "../BattleManager/pokemoninfoaccessor.h"

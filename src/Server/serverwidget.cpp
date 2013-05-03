@@ -1,7 +1,7 @@
 #include <QMenuBar>
 #include <QInputDialog>
 
-#include "../Utilities/otherwidgets.h"
+#include "../Utilities/qscrolldowntextbrowser.h"
 #include "serverwidget.h"
 #include "server.h"
 #include "player.h"
