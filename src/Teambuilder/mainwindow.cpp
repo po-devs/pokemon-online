@@ -75,7 +75,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Battle/FlashOnMove", true);
     setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "Battle/OldWindow", true);
-    setDefaultValue(s, "Battle/OldAttackButtons", false);
+    setDefaultValue(s, "Battle/OldAttackButtons", true);
     setDefaultValue(s, "Client/EnableLadder", true);
     setDefaultValue(s, "Client/SortPlayersByTier", false);
     setDefaultValue(s, "Client/SortChannelsByName", true);
