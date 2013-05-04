@@ -1,0 +1,3 @@
+[submodule "src/qtstyleplugins"]
+	path = src/qtstyleplugins
+	url = git://gitorious.org/qt/qtstyleplugins.git
