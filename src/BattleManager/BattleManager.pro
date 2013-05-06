@@ -8,9 +8,6 @@ QT += declarative opengl
 TARGET = po-battlemanager
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities \
-    -lpo-pokemoninfo
 
 DEFINES += BATTLEMANAGER_LIBRARY
 
@@ -30,11 +27,6 @@ SOURCES += \
     datacontainer.cpp \
     regularbattlescene.cpp \
     moveinfoaccessor.cpp
-
-CONFIG(obsolete) {
-SOURCES +=
-HEADERS +=
-}
 
 HEADERS +=\
     command.h \
@@ -77,26 +69,6 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++11"
 } else {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
-
-
-symbian {
-    MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xEEF4D708
-    TARGET.CAPABILITY = 
-    TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = BattleManager.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
-}
-
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
 }
 
 OTHER_FILES += \
@@ -148,4 +120,4 @@ OTHER_FILES += \
 
 include(../Shared/Common.pri)
 
-
+LIBS += $$pokemoninfo

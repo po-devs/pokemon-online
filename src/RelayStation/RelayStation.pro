@@ -12,13 +12,6 @@ CONFIG   += console
 
 TEMPLATE = app
 
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities \
-    -lpo-pokemoninfo \
-    -lpo-battlemanager \
-    -lqtwebsocket \
-    -lqjson
-
 SOURCES += main.cpp \
     relaystation.cpp \
     ../Teambuilder/network.cpp \
@@ -42,3 +35,5 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 include(../Shared/Common.pri)
+
+LIBS += $$battlemanager $$websocket $$json

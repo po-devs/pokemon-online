@@ -32,9 +32,9 @@ windows: {
     LIBS += -L$$PWD/../../bin/myplugins
 }
 
-LIBS += -L$$PWD/../../bin \
-    -lpo-pokemoninfo \
-    -lpo-utilities
+include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo
 
 windows: {
     LIBS += -lzlib1 -l../lib/windows/qrcodelib
@@ -42,13 +42,4 @@ windows: {
 
 !windows: {
     LIBS += -lz -lqrencode
-}
-
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/local/lib
-    }
-    INSTALLS += target
 }

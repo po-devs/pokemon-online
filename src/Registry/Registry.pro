@@ -32,9 +32,6 @@ HEADERS += mainwindow.h \
     macro.h
 DEFINES = REGISTRY_SIDE
 
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities
-
 # Build-in web server depends on pillow, you can download
 # and install it from github:
 # https://github.com/acossette/pillow
@@ -45,3 +42,7 @@ CONFIG(webconf) {
     LIBS += /home/lamperi/pillow/lib/libpillowcore.a
     DEFINES += USE_WEBCONF
 }
+
+include(../Shared/Common.pri)
+
+LIBS += $$utilities

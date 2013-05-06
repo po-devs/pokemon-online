@@ -6,9 +6,6 @@ DESTDIR = $$PWD/../../bin/serverplugins
 TEMPLATE = lib
 DEFINES += POKEMONONLINESTATSPLUGIN_LIBRARY
 DEFINES += SERVER_SIDE
-LIBS += -L$$PWD/../../bin \
-    -lpo-pokemoninfo \
-    -lpo-utilities
 SOURCES += usagestats.cpp
 HEADERS += usagestats.h \
     usagestats_global.h \
@@ -26,3 +23,5 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo

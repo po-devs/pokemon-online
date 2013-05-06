@@ -142,17 +142,7 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     loadline.h \
     spectatorwindow.h \
     downloadmanager.h \
-    teambuilderinterface.h \
-    Battle/wavfile.h \
-    Battle/audioutils.h
-
-LIBS += -L$$PWD/../../bin \
-    -lpo-pokemoninfo \
-    -lpo-utilities \
-    -lpo-battlemanager
-
-windows: { LIBS += -lzip-2 }
-!windows: { LIBS += -lzip }
+    teambuilderinterface.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
@@ -221,3 +211,9 @@ CONFIG(debian_package) {
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
+
+
+LIBS += $$battlemanager
+
+windows: { LIBS += -lzip-2 }
+!windows: { LIBS += -lzip }

@@ -1,4 +1,5 @@
 TARGET = po-utilities
+
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin
 DEFINES -= UNICODE

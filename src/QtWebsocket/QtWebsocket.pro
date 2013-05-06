@@ -9,7 +9,7 @@ QT       += network
 
 QT       -= gui
 
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 TARGET = qtwebsocket
 TEMPLATE = lib
 
@@ -21,3 +21,4 @@ SOURCES += QWsServer.cpp \
 HEADERS += QWsServer.h \
     QWsSocket.h
 
+include(../Shared/Common.pri)
