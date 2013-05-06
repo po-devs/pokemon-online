@@ -1,6 +1,6 @@
 TARGET = po-utilities
 TEMPLATE = lib
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 DEFINES -= UNICODE
 SOURCES += otherwidgets.cpp \
     mtrand.cpp \
@@ -67,7 +67,7 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x"
 }
 
-windows: { LIBS += -L../../bin -lzip-2 }
+windows: { LIBS += -L$$PWD/../../bin -lzip-2 }
 !windows: { LIBS += -lzip }
 
 include(../Shared/Common.pri)

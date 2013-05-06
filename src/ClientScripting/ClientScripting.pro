@@ -8,8 +8,8 @@ QT += script network declarative
 
 TARGET = ClientScripting
 TEMPLATE = lib
-DESTDIR = ../../bin/myplugins
-LIBS += -L../../bin \
+DESTDIR = $$PWD/../../bin/myplugins
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities \
     -lpo-pokemoninfo \
     -lpo-battlemanager

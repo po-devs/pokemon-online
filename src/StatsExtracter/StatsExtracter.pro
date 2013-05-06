@@ -6,13 +6,13 @@
 
 QT +=
 TARGET = StatsExtracter
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-LIBS += -L../../bin -lpo-pokemoninfo -lpo-utilities
+LIBS += -L$$PWD/../../bin -lpo-pokemoninfo -lpo-utilities
 
 SOURCES += main.cpp
 HEADERS = ../PokemonInfo/pokemoninfo.h \

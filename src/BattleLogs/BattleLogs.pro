@@ -6,7 +6,7 @@
 
 TARGET = battlelogs
 TEMPLATE = lib
-DESTDIR = ../../bin/serverplugins
+DESTDIR = $$PWD/../../bin/serverplugins
 DEFINES += BATTLELOGS_LIBRARY
 QT += gui core declarative
 
@@ -20,7 +20,7 @@ HEADERS += battlelogs.h\
     battleserverlog.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-pokemoninfo \
     -lpo-utilities \
     -lpo-battlemanager

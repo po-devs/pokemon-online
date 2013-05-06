@@ -7,8 +7,8 @@
 QT += declarative opengl
 TARGET = po-battlemanager
 TEMPLATE = lib
-DESTDIR = ../../bin
-LIBS += -L../../bin \
+DESTDIR = $$PWD/../../bin
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities \
     -lpo-pokemoninfo
 
