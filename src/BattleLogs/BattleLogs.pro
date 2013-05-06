@@ -20,10 +20,6 @@ HEADERS += battlelogs.h\
     battleserverlog.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h
-LIBS += -L$$PWD/../../bin \
-    -lpo-pokemoninfo \
-    -lpo-utilities \
-    -lpo-battlemanager
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
@@ -34,3 +30,5 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 include(../Shared/Common.pri)
+
+LIBS += $$battlemanager

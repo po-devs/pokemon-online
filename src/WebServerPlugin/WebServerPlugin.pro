@@ -12,12 +12,6 @@ DESTDIR = $$PWD/../../bin/serverplugins
 
 DEFINES += WEBSERVERPLUGIN_LIBRARY
 
-LIBS += -L$$PWD/../../bin \
-    -lqtwebsocket \
-    -lpo-utilities \
-    -lqjson
-
-
 SOURCES += webserverplugin.cpp \
     webserverconfig.cpp
 
@@ -35,5 +29,6 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 
 include(../Shared/Common.pri)
 
-FORMS += \
-    webserverconfig.ui
+LIBS += $$utilities $$websocket $$json
+
+FORMS += webserverconfig.ui

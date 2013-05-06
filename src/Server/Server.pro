@@ -48,9 +48,7 @@ SOURCES += main.cpp \
     battlingoptions.cpp \
     tierwindow.cpp \
     serverconfig.cpp
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities \
-    -lpo-pokemoninfo
+
 HEADERS += player.h \
     network.h \
     moves.h \
@@ -171,3 +169,5 @@ CONFIG(debian_package) {
     DEFINES += PO_DATA_REPO=\\\"./\\\"
     DEFINES += PO_HOME_DIR=\\\"./\\\"
 }
+
+LIBS += $$pokemoninfo

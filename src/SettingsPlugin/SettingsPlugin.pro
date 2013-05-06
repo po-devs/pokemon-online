@@ -7,8 +7,6 @@
 TARGET = SettingsPlugin
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin/myplugins
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities
 
 DEFINES += SETTINGSPLUGIN_LIBRARY
 
@@ -27,25 +25,8 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
 
+FORMS += settingsdialog.ui
 
-symbian {
-    MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xED0FD9B2
-    TARGET.CAPABILITY = 
-    TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = SettingsPlugin.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
-}
+include(../Shared/Common.pri)
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
-
-FORMS += \
-    settingsdialog.ui
+LIBS += $$utilities

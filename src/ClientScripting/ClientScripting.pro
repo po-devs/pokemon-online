@@ -9,10 +9,6 @@ QT += script network declarative
 TARGET = ClientScripting
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin/myplugins
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities \
-    -lpo-pokemoninfo \
-    -lpo-battlemanager
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 
@@ -37,27 +33,9 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
 
-
-symbian {
-    MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xEF055325
-    TARGET.CAPABILITY = 
-    TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = ClientScripting.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
-}
-
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
-
 include(../Shared/Common.pri)
+
+LIBS += $$battlemanager
 
 FORMS += \
     scriptwindow.ui

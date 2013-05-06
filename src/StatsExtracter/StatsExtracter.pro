@@ -12,7 +12,6 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-LIBS += -L$$PWD/../../bin -lpo-pokemoninfo -lpo-utilities
 
 SOURCES += main.cpp
 HEADERS = ../PokemonInfo/pokemoninfo.h \
@@ -26,3 +25,5 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo

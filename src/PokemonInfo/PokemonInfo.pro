@@ -30,12 +30,11 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
 
-LIBS += -L$$PWD/../../bin \
-    -lpo-utilities
+include(../Shared/Common.pri)
+
+LIBS += $$utilities
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }
 
 OTHER_FILES += 
-
-include(../Shared/Common.pri)

@@ -32,15 +32,6 @@ HEADERS += smogonplugin.h\
     teambuildersmogonplugin.h \
     smogonsinglepokedialog.h
 
-windows: {
-    LIBS += -L$$PWD/../../bin/myplugins
-}
-
-LIBS += -L$$PWD/../../bin \
-    -lpo-pokemoninfo \
-    -lpo-utilities \
-    -lpo-battlemanager
-
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets
@@ -50,26 +41,8 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 
-symbian {
-    #Symbian specific definitions
-    MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xEA9E7289
-    TARGET.CAPABILITY =
-    TARGET.EPOCALLOWDLLDATA = 1 
-    addFiles.sources = SmogonPlugin.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
-}
+FORMS += smogonsinglepokedialog.ui
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/local/lib
-    }
-    INSTALLS += target
-}
+include(../Shared/Common.pri)
 
-FORMS += \
-    smogonsinglepokedialog.ui
-
+LIBS += $$battlemanager
