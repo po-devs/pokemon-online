@@ -6,7 +6,7 @@ QT += network \
     xml \
     sql
 TARGET = Server
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     consolereader.cpp \
@@ -48,7 +48,7 @@ SOURCES += main.cpp \
     battlingoptions.cpp \
     tierwindow.cpp \
     serverconfig.cpp
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities \
     -lpo-pokemoninfo
 HEADERS += player.h \

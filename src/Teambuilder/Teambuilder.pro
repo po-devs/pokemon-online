@@ -6,7 +6,7 @@ QT += network \
 
 TARGET = Pokemon-Online
 
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 
 TEMPLATE = app
 
@@ -146,7 +146,7 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Battle/wavfile.h \
     Battle/audioutils.h
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-pokemoninfo \
     -lpo-utilities \
     -lpo-battlemanager

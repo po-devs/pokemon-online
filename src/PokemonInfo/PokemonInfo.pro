@@ -1,6 +1,6 @@
 TARGET = po-pokemoninfo
 TEMPLATE = lib
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 QT += xml
 SOURCES += pokemonstructs.cpp \
     pokemoninfo.cpp \
@@ -30,7 +30,7 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities
 
 windows: { LIBS += -lzip-2 }

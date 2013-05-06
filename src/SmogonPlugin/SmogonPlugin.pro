@@ -6,7 +6,7 @@
 
 TARGET = SmogonPlugin
 TEMPLATE = lib 
-DESTDIR = ../../bin/myplugins
+DESTDIR = $$PWD/../../bin/myplugins
 
 QT += xml network 
 
@@ -33,10 +33,10 @@ HEADERS += smogonplugin.h\
     smogonsinglepokedialog.h
 
 windows: {
-    LIBS += -L../../bin/myplugins
+    LIBS += -L$$PWD/../../bin/myplugins
 }
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-pokemoninfo \
     -lpo-utilities \
     -lpo-battlemanager

@@ -6,7 +6,7 @@
 
 TARGET = QRCodePlugin
 TEMPLATE = lib
-DESTDIR = ../../bin/myplugins
+DESTDIR = $$PWD/../../bin/myplugins
 
 QT += xml
 
@@ -29,10 +29,10 @@ HEADERS += qrcodeplugin.h\
 
 windows: {
     #on windows, qrencode is probably in that folder
-    LIBS += -L../../bin/myplugins
+    LIBS += -L$$PWD/../../bin/myplugins
 }
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-pokemoninfo \
     -lpo-utilities
 

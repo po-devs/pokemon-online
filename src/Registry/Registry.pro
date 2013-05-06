@@ -4,7 +4,7 @@
 QT += network
 QT -= gui
 TARGET = Registry
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
@@ -32,7 +32,7 @@ HEADERS += mainwindow.h \
     macro.h
 DEFINES = REGISTRY_SIDE
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities
 
 # Build-in web server depends on pillow, you can download

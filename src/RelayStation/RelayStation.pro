@@ -7,12 +7,12 @@
 QT       += core network xml gui
 
 TARGET = RelayStation
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
 CONFIG   += console
 
 TEMPLATE = app
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lpo-utilities \
     -lpo-pokemoninfo \
     -lpo-battlemanager \

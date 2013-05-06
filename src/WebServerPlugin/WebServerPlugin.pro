@@ -8,11 +8,11 @@ QT       += network
 
 TARGET = WebServerPlugin
 TEMPLATE = lib
-DESTDIR = ../../bin/serverplugins
+DESTDIR = $$PWD/../../bin/serverplugins
 
 DEFINES += WEBSERVERPLUGIN_LIBRARY
 
-LIBS += -L../../bin \
+LIBS += -L$$PWD/../../bin \
     -lqtwebsocket \
     -lpo-utilities \
     -lqjson
