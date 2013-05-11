@@ -1451,6 +1451,11 @@ void Server::findBattle(int id, const FindBattleData &_f)
     p1->battleSearch() = true;
 }
 
+bool Server::beforePlayerRegister(int src)
+{
+    return myengine->beforePlayerRegister(src);
+}
+
 void Server::beforeChallengeIssued(int src, int dest, Challenge *c)
 {
     if (!myengine->beforeChallengeIssued(src, dest, c->description())) {

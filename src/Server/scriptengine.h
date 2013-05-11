@@ -37,6 +37,8 @@ public:
     void serverStartUp();
     void serverShutDown();
 
+    bool beforePlayerRegister(int src);
+
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
 
@@ -242,6 +244,7 @@ public:
     Q_INVOKABLE QScriptValue ratedBattles(const QString &name, const QString &tier);
     Q_INVOKABLE int maxAuth(const QString &ip);
     Q_INVOKABLE QScriptValue aliases(const QString &ip);
+    Q_INVOKABLE int numRegistered(const QString &ip);
     Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
     Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());

@@ -1462,6 +1462,10 @@ void Player::hashReceived(const QByteArray &_hash) {
         if (m.isProtected()) {
             return; //Invalid behavior
         }
+        if (!Server::serverIns->beforePlayerRegister(id())) {
+            // scripts disallowed the player to register
+            return;
+        }
 
         m.hash = hash;
         SecurityManager::updateMember(m);

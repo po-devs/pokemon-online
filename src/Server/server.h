@@ -69,6 +69,7 @@ public:
     int id(const QString &name) const;
     int auth(int id) const;
     void removeBattle(int battleid);
+    bool beforePlayerRegister(int src);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
     bool beforeFindBattle(int src);
