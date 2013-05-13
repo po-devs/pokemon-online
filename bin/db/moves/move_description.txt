@@ -1,561 +1,561 @@
-﻿0 (No Description)
-1 Pounds the foe with forelegs or tail.
-2 A chopping attack with a high critical-hit ratio.
-3 Repeatedly slaps the foe 2 to 5 times.
-4 Repeatedly punches the foe 2 to 5 times.
-5 A strong punch thrown with incredible power.
-6 Throws coins at the foe. Money is recovered after.
-7 A fiery punch that may burn the foe.
-8 An icy punch that may freeze the foe.
-9 An electrified punch that may paralyze the foe.
-10 Scratches the foe with sharp claws.
-11 Grips the foe with large and powerful pincers.
-12 A powerful pincer attack that may cause fainting.
-13 A 2-turn move that strikes the foe on the 2nd turn.
-14 A fighting dance that sharply raises ATTACK.
-15 Cuts the foe with sharp scythes, claws, etc.
-16 Strikes the foe with a gust of wind whipped up by wings.
-17 Strikes the foe with wings spread wide.
-18 Blows away the foe with wind and ends the battle.
-19 Flies up on the first turn, then strikes the next turn.
-20 Binds and squeezes the foe for 2 to 5 turns.
-21 Slams the foe with a long tail, vine, etc.
-22 Strikes the foe with slender, whiplike vines.
-23 Stomps the enemy with a big foot. May cause flinching.
-24 A double-kicking attack that strikes the foe twice.
-25 An extremely powerful kick with intense force.
-26 A strong jumping kick. May miss and hurt the kicker.
-27 A fast kick delivered from a rapid spin.
-28 Reduces the foe's accuracy by hurling sand in its face.
-29 A ramming attack that may cause flinching.
-30 Jabs the foe with sharp horns.
-31 Jabs the foe 2 to 5 times with sharp horns, etc.
-32 A one-hit KO attack that uses a horn like a drill.
-33 Charges the foe with a full- body tackle.
-34 A full-body slam that may cause paralysis.
-35 Wraps and squeezes the foe 2 to 5 times with vines, etc.
-36 A reckless charge attack that also hurts the user.
-37 A rampage of 2 to 3 turns that confuses the user.
-38 A life-risking tackle that also hurts the user.
-39 Wags the tail to lower the foe's DEFENSE.
-40 A toxic attack with barbs, etc., that may poison.
-41 Stingers on the forelegs jab the foe twice.
-42 Sharp pins are fired to strike 2 to 5 times.
-43 Frightens the foe with a leer to lower DEFENSE.
-44 Bites with vicious fangs. May cause flinching.
-45 Growls cutely to reduce the foe's ATTACK.
-46 Makes the foe flee to end the battle.
-47 A soothing song lulls the foe into a deep slumber.
-48 Emits bizarre sound waves that may confuse the foe.
-49 Launches shock waves that always inflict 20 HP damage.
-50 Psychically disables one of the foe's moves.
-51 Sprays a hide-melting acid. May lower DEFENSE.
-52 A weak fire attack that may inflict a burn.
-53 A powerful fire attack that may inflict a burn.
-54 Creates a mist that stops reduction of abilities.
-55 Squirts water to attack the foe.
-56 Blasts water at high power to strike the foe.
-57 Creates a huge wave, then crashes it down on the foe.
-58 Blasts the foe with an icy beam that may freeze it.
-59 Hits the foe with an icy storm that may freeze it.
-60 Fires a peculiar ray that may confuse the foe.
-61 Forcefully sprays bubbles that may lower SPEED.
-62 Fires a rainbow-colored beam that may lower ATTACK.
-63 Powerful, but leaves the user immobile the next turn.
-64 Attacks the foe with a jabbing beak, etc.
-65 A corkscrewing attack with the beak acting as a drill.
-66 A reckless body slam that also hurts the user.
-67 A kick that inflicts more damage on heavier foes.
-68 Retaliates any physical hit with double the power.
-69 Inflicts damage identical to the user's level.
-70 Builds enormous power, then slams the foe.
-71 An attack that absorbs half the damage inflicted.
-72 An attack that absorbs half the damage inflicted.
-73 Plants a seed on the foe to steal HP on every turn.
-74 Forces the body to grow and heightens SP. ATK.
-75 Cuts the enemy with leaves. High critical-hit ratio.
-76 Absorbs light in one turn, then attacks next turn.
-77 Scatters a toxic powder that may poison the foe.
-78 Scatters a powder that may paralyze the foe.
-79 Scatters a powder that may cause the foe to sleep.
-80 A rampage of 2 to 3 turns that confuses the user.
-81 Binds the foe with string to reduce its SPEED.
-82 Launches shock waves that always inflict 40 HP damage.
-83 Traps the foe in a ring of fire for 2 to 5 turns.
-84 An electrical attack that may paralyze the foe.
-85 A strong electrical attack that may paralyze the foe.
-86 A weak jolt of electricity that paralyzes the foe.
-87 A lightning attack that may cause paralysis.
-88 Throws small rocks to strike the foe.
-89 A powerful quake, but has no effect on flying foes.
-90 A one-hit KO move that drops the foe in a fissure.
-91 Digs underground the first turn and strikes next turn.
-92 Poisons the foe with an intensifying toxin.
-93 A psychic attack that may cause confusion.
-94 A powerful psychic attack that may lower SP. DEF.
-95 A hypnotizing move that may induce sleep.
-96 Meditates in a peaceful fashion to raise ATTACK.
-97 Relaxes the body to sharply boost SPEED.
-98 An extremely fast attack that always strikes first.
-99 Raises the user's ATTACK every time it is hit.
-100 A psychic move for fleeing from battle instantly.
-101 Inflicts damage identical to the user's level.
-102 Copies a move used by the foe during one battle.
-103 Emits a screech to sharply reduce the foe's DEFENSE.
-104 Creates illusory copies to raise evasiveness.
-105 Recovers up to half the user's maximum HP.
-106 Stiffens the body's muscles to raise DEFENSE.
-107 Minimizes the user's size to raise evasiveness.
-108 Lowers the foe's accuracy using smoke, ink, etc.
-109 A sinister ray that confuses the foe.
-110 Withdraws the body into its hard shell to raise DEFENSE.
-111 Curls up to conceal weak spots and raise DEFENSE.
-112 Creates a barrier that sharply raises DEFENSE.
-113 Creates a wall of light that lowers SP. ATK damage.
-114 Creates a black haze that eliminates all stat changes.
-115 Creates a wall of light that weakens physical attacks.
-116 Focuses power to raise the critical-hit ratio.
-117 Endures attack for 2 turns to retaliate double.
-118 Waggles a finger to use any POKEMON move at random.
-119 Counters the foe's attack with the same move.
-120 Inflicts severe damage but makes the user faint.
-121 An egg is forcibly hurled at the foe.
-122 Licks with a long tongue to injure. May also paralyze.
-123 An exhaust-gas attack that may also poison.
-124 Sludge is hurled to inflict damage. May also poison.
-125 Clubs the foe with a bone. May cause flinching.
-126 A fiery blast that scorches all. May cause a burn.
-127 Charges the foe with speed to climb waterfalls.
-128 Traps and squeezes the foe for 2 to 5 turns.
-129 Sprays star-shaped rays that never miss.
-130 Tucks in the head, then attacks on the next turn.
-131 Launches sharp spikes that strike 2 to 5 times.
-132 Constricts to inflict pain. May lower SPEED.
-133 Forgets about something and sharply raises SP. DEF.
-134 Distracts the foe. May lower accuracy.
-135 Recovers up to half the user's maximum HP.
-136 A jumping knee kick. If it misses, the user is hurt.
-137 Intimidates and frightens the foe into paralysis.
-138 Takes one half the damage inflicted on a sleeping foe.
-139 Envelops the foe in a toxic gas that may poison.
-140 Hurls round objects at the foe 2 to 5 times.
-141 An attack that steals half the damage inflicted.
-142 Demands a kiss with a scary face that induces sleep.
-143 Searches out weak spots, then strikes the next turn.
-144 Alters the user's cells to become a copy of the foe.
-145 An attack using bubbles. May lower the foe's SPEED.
-146 A rhythmic punch that may confuse the foe.
-147 Scatters a cloud of spores that always induce sleep.
-148 Looses a powerful blast of light that cuts accuracy.
-149 Attacks with a psychic wave of varying intensity.
-150 It's just a splash... Has no effect whatsoever.
-151 Liquifies the user's body to sharply raise DEFENSE.
-152 Hammers with a pincer. Has a high critical-hit ratio.
-153 Inflicts severe damage but makes the user faint.
-154 Rakes the foe with sharp claws, etc., 2 to 5 times.
-155 Throws a bone boomerang that strikes twice.
-156 The user sleeps for 2 turns, restoring HP and status.
-157 Large boulders are hurled. May cause flinching.
-158 Attacks with sharp fangs. May cause flinching.
-159 Reduces the polygon count and raises ATTACK.
-160 Changes the user's type into an own move's type.
-161 Fires three types of beams at the same time.
-162 Attacks with sharp fangs and cuts half the foe's HP.
-163 Slashes with claws, etc. Has a high critical-hit ratio.
-164 Creates a decoy using 1/4 of the user's maximum HP.
-165 Used only if all PP are gone. Also hurts the user a little.
-166 Copies the foe's last move permanently.
-167 Kicks the foe 3 times in a row with rising intensity.
-168 While attacking, it may steal the foe's held item.
-169 Ensnares the foe to stop it from fleeing or switching.
-170 Senses the foe's action to ensure the next move's hit.
-171 Inflicts 1/4 damage on a sleeping foe every turn.
-172 A fiery charge attack that may inflict a burn.
-173 A loud attack that can be used only while asleep.
-174 A move that functions differently for GHOSTS.
-175 Inflicts more damage when the user's HP is down.
-176 Makes the user resistant to the last attack's type.
-177 Launches a vacuumed blast. High critical-hit ratio.
-178 Spores cling to the foe, sharply reducing SPEED.
-179 Inflicts more damage when the user's HP is down.
-180 Spitefully cuts the PP of the foe's last move.
-181 Blasts the foe with a snowy gust. May cause freezing.
-182 Evades attack, but may fail if used in succession.
-183 A punch is thrown at wicked speed to strike first.
-184 Frightens with a scary face to sharply reduce SPEED.
-185 Draws the foe close, then strikes without fail.
-186 Demands a kiss with a cute look. May cause confusion.
-187 Maximizes ATTACK while sacrificing HP.
-188 Sludge is hurled to inflict damage. May also poison.
-189 Hurls mud in the foe's face to reduce its accuracy.
-190 Fires a lump of ink to damage and cut accuracy.
-191 Sets spikes that hurt a foe switching out.
-192 Powerful and sure to cause paralysis, but inaccurate.
-193 Negates the foe's efforts to heighten evasiveness.
-194 If the user faints, the foe is also made to faint.
-195 Any POKEMON hearing this song faints in 3 turns.
-196 A chilling attack that lowers the foe's SPEED.
-197 Evades attack, but may fail if used in succession.
-198 Strikes the foe with a bone in hand 2 to 5 times.
-199 Locks on to the foe to ensure the next move hits.
-200 A rampage of 2 to 3 turns that confuses the user.
-201 Causes a sandstorm that rages for several turns.
-202 An attack that steals half the damage inflicted.
-203 Endures any attack for 1 turn, leaving at least 1HP.
-204 Charms the foe and sharply reduces its ATTACK.
-205 An attack lasting 5 turns with rising intensity.
-206 An attack that leaves the foe with at least 1 HP.
-207 Confuses the foe, but also sharply raises ATTACK.
-208 Recovers up to half the user's maximum HP.
-209 An electrified tackle that may paralyze the foe.
-210 An attack that intensifies on each successive hit.
-211 Strikes the foe with hard wings spread wide.
-212 Fixes the foe with a mean look that prevents escape.
-213 Makes the opposite gender less likely to attack.
-214 Uses an own move randomly while asleep.
-215 Chimes soothingly to heal all status abnormalities.
-216 An attack that increases in power with friendship.
-217 A gift in the form of a bomb. May restore HP.
-218 An attack that is stronger if the TRAINER is disliked.
-219 A mystical force prevents all status problems.
-220 Adds the user and foe's HP, then shares them equally.
-221 A mystical fire attack that may inflict a burn.
-222 A ground-shaking attack of random intensity.
-223 Powerful and sure to cause confusion, but inaccurate.
-224 A brutal ramming attack using out-thrust horns.
-225 Strikes the foe with an incredible blast of breath.
-226 Switches out the user while keeping effects in play.
-227 Makes the foe repeat its last move over 2 to 6 turns.
-228 Inflicts bad damage if used on a foe switching out.
-229 Spins the body at high speed to strike the foe.
-230 Allures the foe to reduce evasiveness.
-231 Attacks with a rock-hard tail. May lower DEFENSE.
-232 A claw attack that may raise the user's ATTACK.
-233 Makes the user's move last, but it never misses.
-234 Restores HP. The amount varies with the weather.
-235 Restores HP. The amount varies with the weather.
-236 Restores HP. The amount varies with the weather.
-237 The effectiveness varies with the user.
-238 A double-chopping attack. High critical-hit ratio.
-239 Whips up a vicious twister to tear at the foe.
-240 Boosts the power of WATER- type moves for 5 turns.
-241 Boosts the power of FIRE- type moves for 5 turns.
-242 Crunches with sharp fangs. May lower DEF.
-243 Counters the foe's special attack at double the power.
-244 Copies the foe's effect(s) and gives to the user.
-245 An extremely fast and powerful attack.
-246 An attack that may raise all stats.
-247 Hurls a black blob that may lower the foe's SP. DEF.
-248 Heightens inner power to strike 2 turns later.
-249 A rock-crushing attack that may lower DEFENSE.
-250 Traps and hurts the foe in a whirlpool for 2 to 5 turns.
-251 Summons party POK�MON to join in the attack.
-252 A 1st-turn, 1st-strike move that causes flinching.
-253 Causes an uproar for 2 to 5 turns and prevents sleep.
-254 Charges up power for up to 3 turns.
-255 Releases stockpiled power (the more the better).
-256 Absorbs stockpiled power and restores HP.
-257 Exhales a hot breath on the foe. May inflict a burn.
-258 Summons a hailstorm that strikes every turn.
-259 Torments the foe and stops successive use of a move.
-260 Confuses the foe, but raises its SP. ATK.
-261 Inflicts a burn on the foe with intense fire.
-262 The user faints and lowers the foe's abilities.
-263 Boosts ATTACK when burned, paralyzed, or poisoned.
-264 A powerful loyalty attack. The user flinches if hit.
-265 Powerful against paralyzed foes, but also heals them.
-266 Draws attention to make foes attack only the user.
-267 The type of attack varies depending on the location.
-268 Charges power to boost the electric move used next.
-269 Taunts the foe into only using attack moves.
-270 Boosts the power of the recipient's moves.
-271 Tricks the foe into trading held items.
-272 Mimics the target and copies its special ability.
-273 A wish that restores HP. It takes time to work.
-274 Attacks randomly with one of the partner's moves.
-275 Lays roots that restore HP. The user can't switch out.
-276 Boosts strength sharply, but lowers abilities.
-277 Reflects special effects back to the attacker.
-278 Recycles a used item for one more use.
-279 An attack that gains power if injured by the foe.
-280 Destroys barriers such as REFLECT and causes damage.
-281 Lulls the foe into yawning, then sleeping next turn.
-282 Knocks down the foe's held item to prevent its use.
-283 Gains power if the user's HP is lower than the foe's HP.
-284 The higher the user's HP, the more damage caused.
-285 The user swaps special abilities with the target.
-286 Prevents foes from using moves known by the user.
-287 Heals poisoning, paralysis, or a burn.
-288 If the user faints, deletes the PP of the final move.
-289 Steals the effects of the move the foe uses next.
-290 An attack with effects that vary by location.
-291 Dives underwater the first turn and strikes next turn.
-292 Straight-arm punches that strike the foe 2 to 5 times.
-293 Alters the POK�MON's type depending on the location.
-294 Flashes a light that sharply raises SP. ATK.
-295 Attacks with a burst of light. May lower SP. DEF.
-296 Attacks with a flurry of down. May lower SP. ATK.
-297 Envelops the foe with down to sharply reduce ATTACK.
-298 Confuses all POKEMON on the scene.
-299 A kick with a high critical- hit ratio. May cause a burn.
-300 Covers the user in mud to raise electrical resistance.
-301 A 5-turn attack that gains power on successive hits.
-302 Attacks with thorny arms. May cause flinching.
-303 Slacks off and restores half the maximum HP.
-304 A loud attack that uses sound waves to injure.
-305 A sharp-fanged attack. May badly poison the foe.
-306 Tears at the foe with sharp claws. May lower DEFENSE.
-307 Powerful, but leaves the user immobile the next turn.
-308 Powerful, but leaves the user immobile the next turn.
-309 Fires a meteor-like punch. May raise ATTACK.
-310 An attack that may shock the foe into flinching.
-311 The move's type and power change with the weather.
-312 Heals all status problems with a soothing scent.
-313 Feigns crying to sharply lower the foe's SP. DEF.
-314 Hacks with razorlike wind. High critical-hit ratio.
-315 Allows a full-power attack, but sharply lowers SP. ATK.
-316 Negates the foe's efforts to heighten evasiveness.
-317 Stops the foe from moving with rocks and cuts SPEED.
-318 A powdery attack that may raise abilities.
-319 Emits a horrible screech that sharply lowers SP. DEF.
-320 Lulls the foe into sleep with a pleasant melody.
-321 Makes the foe laugh to lower ATTACK and DEFENSE.
-322 Raises DEFENSE and SP. DEF with a mystic power.
-323 Inflicts more damage if the user's HP is high.
-324 A strange beam attack that may confuse the foe.
-325 An unavoidable punch that is thrown from shadows.
-326 Attacks with a peculiar power. May cause flinching.
-327 An uppercut thrown as if leaping into the sky.
-328 Traps and hurts the foe in quicksand for 2 to 5 turns.
-329 A chilling attack that causes fainting if it hits.
-330 Attacks with muddy water. May lower accuracy.
-331 Shoots 2 to 5 seeds in a row to strike the foe.
-332 An extremely speedy and unavoidable attack.
-333 Attacks the foe by firing 2 to 5 icicles in a row.
-334 Hardens the body's surface to sharply raise DEFENSE.
-335 Blocks the foe's way to prevent escape.
-336 Howls to raise the spirit and boosts ATTACK.
-337 Slashes the foe with sharp claws.
-338 Powerful, but leaves the user immobile the next turn.
-339 Bulks up the body to boost both ATTACK and DEFENSE.
-340 Bounces up, then down the next turn. May paralyze.
-341 Hurls mud at the foe and reduces SPEED.
-342 Has a high critical-hit ratio. May also poison.
-343 Cutely begs to obtain an item held by the foe.
-344 A life-risking tackle that slightly hurts the user.
-345 Attacks with a strange leaf that cannot be evaded.
-346 The user becomes soaked to raise resistance to fire.
-347 Raises SP. ATK and SP. DEF by focusing the mind.
-348 Slashes with a sharp leaf. High critical-hit ratio.
-349 A mystical dance that ups ATTACK and SPEED.
-350 Hurls boulders at the foe 2 to 5 times in a row.
-351 A fast and unavoidable electric attack.
-352 Attacks with ultrasonic waves. May confuse the foe
-353 Summons strong sunlight to attack 2 turns later.
-354 Allows a full-power attack, but sharply lowers SP. ATK.
-355 Restores half of max HP
-356 Disables moves that fly or levitate in 5 turns
-357 Removes dark type's psychic immunity and resets foe's evasiveness
-358 Power doubles if foe is asleep, cures sleep status
-359 Lowers users SPEED one stage
-360 Power depends on foe's SPEED
-361 If user faints, recovers HP and removes status effects of next Pok�mon
-362 Power doubles if foe's HP is less than half
-363 Power and type of move depends on the held berry
-364 Only works when foe uses Protect or Detect
-365 Power doubles if foe is holding a berry
-366 User's team raises SPEED for 5 turns
-367 Randomly raises user's one stat two stages
-368 Returns double damage done by foe
-369 User switches out automatically after attack
-370 Lowers user's DEFENSE and SP.DEF
-371 Power doubles if user receives damage first
-372 Power doubles if foe already receives damage that turn
-373 Foe is unable to use held items
-374 Hurls out held item, power depends on held item
-375 Shifts status effect to target
-376 Power increases when PP drops
-377 Foe is unable to restore HP in 5 turns
-378 Power depends on foe's remaining HP
-379 Swaps user's own ATTACK and DEFENSE
-380 Cancels effect of foe's ability
-381 Foe cannot have critical hits for 5 turns
-382 Strikes first with foe's attack at 1.5 power
-383 Copies foe's last move
-384 Swaps ATTACK and SP.ATT with target
-385 Swarps DEFENSE and SP.DEF with target
-386 Power depends on foe's stat
-387 Only usable when all other attacks have been used
-388 Changes the ability of foe to insomnia.
-389 Always strikes first, but fails if foe is not using attacking move
-390 Causes damage when opponent switches Pok�mon
-391 Swaps altered stats with foe
-392 Restores HP every turn
-393 Changes own ability to levitate
-394 User takes recoil damage
-395 May induce paralysis
-396 Cannot miss
-397 Raises users SPEED two stages
-398 May poison foe
-399 May cause foe to flinch
-400 High critical hit ratio
-401 No Added Effect
-402 No Added Effect
-403 May cause opponent to flinch
-404 No Added Effect.
-405 May lower opponent's SP.DEF one stage
-406 No Added Effect
-407 May cause foe to flinch
-408 No Added Effect
-409 User recovers half the damage inflicted
-410 Always strikes first
-411 May lower foe's SP.DEF one stage
-412 May lower foe's SP.DEF one stage
-413 User takes recoil damage
-414 May lower foe's SP.DEF one stage
-415 Exchanges held item with foe
-416 User cannot attack next turn
-417 Raises SP.ATT two stages
-418 Always strikes first
-419 Power doubles if user receives damage first
-420 Always strikes first
-421 High critical hit ratio
-422 Has a chance of paralyzing and flinching the foe
-423 Has a chance of freezing and flinching the foe
-424 Has a chance of burning and flinching the foe
-425 Always strikes first
-426 May lower foe's accuracy one stage
-427 high critical hit ratio
-428 May cause foe to flinch.
-429 May lower opponent's accuracy one stage
-430 May lower foe's SP.DEF one stage
-431 May induce confusion
-432 Lowers foe's evasiveness
-433 Slower Pok�mon attacks first in 5 turns
-434 Lowers users SP.ATT two stages
-435 May induce paralysis
-436 May induce burn
-437 Lowers users SP.ATT two stages
-438 No Added Effect
-439 User cannot attack next turn
-440 High chance of critical hit, may poison foe
-441 May poison foe
-442 May cause opponent to flinch
-443 Cannot miss
-444 High critical hit ratio
-445 Lowers opposite gender foe's SP.ATT two stages
-446 Causes damage when foe switches Pok�mon
-447 Power increases if foe is heavy
-448 Confuses foe
-449 Type changes depending on plate held
-450 Receives effect from foe's held berry
-451 High chance of raising user's SP.ATT one stage
-452 User takes recoil damage.
-453 Always strikes first
-454 High critical hit ratio
-455 Raises user's DEFENSE and SP.DEF one stage
-456 Recovers half of max HP
-457 User takes recoil damage
-458 Strikes twice
-459 User is unable to attack the next turn
-460 High critical hit ratio
-461 User Faints. Completely Heals Next Released Pok�mon
-462 Power depends on foe's remaining HP
-463 Traps foe
-464 Induces sleep to both opponents
-465 Lowers foe's SP.DEF
-466 May raise all user's stats one stage
-467 Disappears the first turn and attacks the second, foe cannot protect
-468 Raises Atk and Acc 1 stage.
-469 Protects your team from an attack that would hit all of your Pokemon. Willfail if used in succession.
-470 Averages the user's and target's Def and SpDef.
-471 Averages the user's and target's Atk and SpAtk.
-472 All Def and SpD swapped for 5 turns.
-473 Calculate's damage with the target's Def stat.
-474 Doubles power if Target is poisoned.
-475 Sharply raises Speed.
-476 Draws the opponent's attacks at yourself.
-477 Makes Target easier to hit for 3 turns.
-478 Negates all held items for 5 turns.
-479 Makes Flying opponents succeptible to Ground moves. (100%)
-480 Forces the target to switch.
-481 Hits all targets.
-482 May poison opponent. (10%)
-483 Raises SpA, SpD, and Speed by 1 stage.
-484 The heavier the user is, the more damage it deals.
-485 Deals more damage if Target is the same type as User.
-486 Has a higher Base Power the higher your speed is compared to the target.
-487 Turns the target into the Water type.
-488 May raise the user's Spe.
-489 Raises the user's Atk, Def, and Acc.
-490 Decreases opponent's Speed by 1 stage.
-491 Sharply lowers Special Defense.
-492 The higher the Target's attack stat, the more damage it deals.
-493 Makes the target's Ability become Simple.
-494 Makes Target's ability the same as User's.
-495 Makes the target move immediately after the user.
-496 Raises Base Power the more Pokemon you have with the attack.
-497 Deals more damage if used every turn.
-498 Target's stat changes doesn't affect this move.
-499 Resets all stat changes.
-500 The more the User's stats are raised, the more damage this attack deals.
-501 Protects your team from priority moves. Will fail if used in succession.
-502 Switch position with an Ally.
-503 May burn opponent. (30%)
-504 Raises Atk, SpAtk, and Spe but lowers Def and SpDef.
-505 Recovers 50% of an ally's HP.
-506 Doubles in power if the target has a status ailment.
-507 Picks up the target on the first turn and drops them on the second.
-508 Increases the user's Atk 1 stage and Spe 2 stages.
-509 Forces the target to switch.
-510 Removes the target's Berry.
-511 Forces Target to move last
-512 Allows the user to hit the opposite opponent in a Triple Battle.
-513 Changes target's ability the same as the user's ability.
-514 Deals more damage if teammate was KO'd last turn.
-515 KOs the user and deals damage to the opponent equal to the HP it lost.
-516 Gives user's item to Target if it has to item.
-517 May burn opponent. (100%)
-518 If used with Fire Pledge, creates rainbow that may cause Confusion
-519 If used with Grass Pledge, creates burning field that causes damage every turn
-520 If used with Water Pledge, creates swamp that lowers Speed of all targets.
-521 Switch to another Pokémon
-522 May decrease opponent's Special Attack by 1 stage.
-523 May decrease opponent's Speed by 1 stage.
-524 Critical Hit (100%)
-525 Forces the target to switch.
-526 Raises the user's Atk and SpAtk.
-527 Decreases opponent's Speed by 1 stage.
-528 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
-529 Good chance for a critical hit.
-530 Strikes twice.
-531 May cause opponent to flinch.
-532 If this attack is successful, user gains half of HP lost by opponent due to this attack.
-533 Target's stat changes doesn't affect this move.
-534 May decrease opponent's Defense by 1 stage.
-535 The heavier the User is, the more damage it deals.
-536 May decrease opponent's Accuracy by 1 stage.
-537 May cause opponent to flinch. Power is doubled if Minimize is in effect for opponent.
-538 Sharply raises Defense.
-539 May decrease opponent's Accuracy by 1 stage.
-540 Deals damage based on the target's Def.
-541 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
-542 Increases Accuracy during Weather. (30%)
-543 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
-544 Strikes twice.
-545 May burn opponent. (30%)
-546 This attack's type depends on the Drive held.
-547 May put Target to sleep (10%)
-548 Causes physical damage.
-549 Sharply lower target's speed.
-550 May paralyze opponent. (20%)
-551 May burn opponent. (20%)
-552 May increase user's Special Attack by 1 stage.
-553 May Paralyze the opponent. (30%)
-554 May Burn the opponent. (30%)
-555 May decrease opponent's Special Attack by 1 stage.
-556 May cause opponent to flinch.
-557 Deals damage to allies on either side of the user.
-558 Increases if used after Cross Thunder.
-559 Increases if used after Cross Fire.
-560 .
+0  (No Description)
+1  Inflicts regular damage with no additional effect.
+2	Has a high critical hit rate.
+3	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+4	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+5	Inflicts regular damage with no additional effect.
+6	Inflicts regular damage with no additional effect. In-game winner receives money after battle.
+7	Has a 10% chance to burn the target.
+8	Has a 10% chance to freeze the target.
+9	Has a 10% chance to paralyze the target.
+10	Inflicts regular damage with no additional effect.
+11	Inflicts regular damage with no additional effect.
+12	Knocks out the target.
+13	Requires a charging turn. Has a high critical hit rate.
+14	Raises the user's Attack by two stages.
+15	Inflicts regular damage with no additional effect.
+16	Can hit and has double power against Bounceing, Flying, and Sky Dropped targets.
+17	Inflicts regular damage with no additional effect.
+18	Forces target to switch with a random teammate.
+19	Dodges attacks on first turn, strikes on second.
+20	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
+21	Inflicts regular damage with no additional effect.
+22	Inflicts regular damage with no additional effect.
+23	Has a 30% chance to flinch. Double damage if target has used Minimize.
+24	Hits twice in one turn.
+25	Inflicts regular damage with no additional effect.
+26	User takes half the damage it would have inflicted as crash damage if the attack does not hit.
+27	Has a 30% chance to flinch.
+28	Lowers the target's accuracy by one stage.
+29	Has a 30% chance to flinch.
+30	Inflicts regular damage with no additional effect.
+31	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+32	Knocks out the target.
+33	Inflicts regular damage with no additional effect.
+34	Has a 30% chance to paralyze the target.
+35	Wraps and squeezes the foe 2 to 5 times with vines, etc.
+36	User receives 1/4 the damage inflicted as recoil.
+37	User cannot select another attack or switch for 2-3 turns, then the user becomes confused.
+38	User receives 1/3 the damage inflicted as recoil.
+39	Lowers the target's Defense by one stage.
+40	Has a 30% chance to poison the target.
+41	Has a 20% chance to poison the target. Hits twice in one turn.
+42	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+43	Lowers the target's Defense by one stage.
+44	Has a 30% chance to flinch.
+45	Lowers the target's Attack by one stage.
+46	Forces target to switch with a random teammate.
+47	Puts the target to sleep.
+48	Confuses the target.
+49	Does 20 damage to target.
+50	Disables the target's last used move for 1-8 turns.
+51	Has a 10% chance to lower the target's Special Defense by one stage.
+52	Has a 10% chance to burn the target.
+53	Has a 10% chance to burn the target.
+54	Pokémon on the user's team may not have their stats lowered by opponents for five turns.
+55	Inflicts regular damage with no additional effect.
+56	Inflicts regular damage with no additional effect.
+57	Can hit and has double power against Diving targets.
+58	Has a 10% chance to freeze the target.
+59	Has a 10% chance to freeze the target. Has perfect acc in hail.
+60	Has a 10% chance to confuse the target.
+61	Has a 10% chance to lower the target's Speed by one stage.
+62	Has a 10% chance to lower the target's Attack by one stage.
+63	User cannot attack or switch the turn after using this attack.
+64	Inflicts regular damage with no additional effect.
+65	Inflicts regular damage with no additional effect.
+66	User receives 1/4 the damage inflicted as recoil.
+67	More power against to heavier targets, with a maximum of 120.
+68	Inflicts twice the damage the user received from the last physical hit it took.
+69	Inflicts damage equal to the user's level.
+70	Inflicts regular damage with no additional effect.
+71	Heals the user by half the damage inflicted.
+72	Heals the user by half the damage inflicted.
+73	Steals 1/8 of target's HP every turn. Remains if user switches out.
+74	Raises the user's Attack and Special Attack by one stage, or two stages in sun.
+75	Has a high critical hit rate.
+76	Requires a charging turn. No charge turn in sun, half power in rain or sandstorm.
+77	Poisons the target.
+78	Paralyzes the target.
+79	Puts the target to sleep.
+80	User cannot select another attack or switch for 2-3 turns, then the user becomes confused.
+81	Lowers the target's Speed by one stage.
+82	Does 40 damage to target.
+83	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
+84	Has a 10% chance to paralyze the target.
+85	Has a 10% chance to paralyze the target.
+86	Paralyzes the target.
+87	Has a 30% chance to paralyze the target. Has perfect acc in Rain, 50% in Sun.
+88	Inflicts regular damage with no additional effect.
+89	Can hit and has double power against Digging targets.
+90	Knocks out the target.
+91	Dodges attacks on first turn, strikes on second.
+92	Badly poisons the target.
+93	Has a 10% chance to confuse the target.
+94	Has a 10% chance to lower the target's Special Defense by one stage.
+95	Puts the target to sleep.
+96	Raises the user's Attack by one stage.
+97	Raises the user's Speed by two stages.
+98	An extremely fast attack that always strikes first.
+99	Each time the user is hit before its next action its Attack rises by one stage.
+100	Ends wild battles in-game. No other effect.
+101	Inflicts damage equal to the user's level.
+102	Copies the target's last used move into Mimic's moveslot until user leaves the field.
+103	Lowers the target's Defense by two stages.
+104	Raises the user's evasion by one stage.
+105	Heals the user by half its max HP.
+106	Raises the user's Defense by one stage.
+107	Raises the user's evasion by two stages.
+108	Lowers the target's accuracy by one stage.
+109	Confuses the target.
+110	Raises the user's Defense by one stage.
+111	Raises user's Defense by one stage. Doubles the power of user's Rollout and Ice Ball.
+112	Raises the user's Defense by two stages.
+113	Halves damage from opponent's special attacks for five turns.
+114	Resets all Pokémon's stat stages to zero.
+115	Halves damage from opponent's physical attacks for five turns.
+116	Raises user's critical hit rate two stages.
+117	User does nothing for two turns, then deals damage equal to double damage taken.
+118	Randomly selects and uses almost any move in the game.
+119	Uses the last move targeted at the user by a Pokémon still on the field.
+120	The user faints.
+121	Inflicts regular damage with no additional effect.
+122	Has a 30% chance to paralyze the target.
+123	Has a 40% chance to poison the target.
+124	Has a 30% chance to poison the target.
+125	Has a 10% chance to flinch.
+126	Has a 10% chance to burn the target.
+127	Has a 20% chance to flinch.
+128	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
+129	Has perfect accuracy.
+130	Requires a charging turn. Raises user's Defense one stage on the charge turn.
+131	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+132	Has a 10% chance to lower the target's Speed by one stage.
+133	Raises the user's Special Defense by two stages.
+134	Lowers the target's accuracy by one stage.
+135	Heals the user by half its max HP.
+136	User takes half the damage it would have inflicted as crash damage if the attack does not hit.
+137	Paralyzes the target.
+138	Fails unless the target is asleep. Heals the user by half the damage inflicted.
+139	Poisons the target.
+140	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+141	Heals the user by half the damage inflicted.
+142	Puts the target to sleep.
+143	Requires a charging turn. Has a 30% chance to flinch.
+144	User becomes a copy of the target until it leaves battle.
+145	Has a 10% chance to lower the target's Speed by one stage.
+146	Has a 20% chance to confuse the target.
+147	Puts the target to sleep.
+148	Lowers the target's accuracy by one stage.
+149	Inflicts damage between 50% and 150% of the user's level.
+150	It's just a splash... Has no effect whatsoever.
+151	Raises the user's Defense by two stages.
+152	Has a high critical hit rate.
+153	The user faints.
+154	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+155	Hits twice in one turn.
+156	User falls asleep for two turns, healing major status and all HP.
+157	Has a 30% chance to flinch.
+158	Has a 10% chance to flinch.
+159	Raises the user's Attack by one stage.
+160	User's type changes to the type of one of its moves at random.
+161	Has a 20% chance to burn, freeze, or paralyze the target.
+162	Inflicts damage equal to half the target's HP.
+163	Has a high critical hit rate.
+164	Creates a Substitute using 1/4 of the user's max HP, protecting the user from damage and effects until it breaks.
+165	Used only if no move can be selected. User takes 1/4 of its max HP as recoil.
+166	Copies the target's last used move into Sketch's moveslot permanently.
+167	Hits three times in one turn. Second hit has 20 base power, third has 30.
+168	Takes the target's item if user has no item.
+169	Prevents the target from switching while the user is on the field.
+170	User cannot miss the target next turn.
+171	Fails unless the target is asleep. Target 1/4 damage every turn.
+172	Has a 10% chance to burn the target. Defrosts user.
+173	Has a 30% chance to flinch. Fails unless user is asleep.
+174	If user is a Ghost, it losses 1/2 its HP and target takes 1/4 each turn. Otherwise, raises the user's Atk and Def by one stage, but lowers Speed.
+175	Has more power when the user has less HP remaining, with a maximum of 200 power.
+176	Changes the user's type to a random type which resists or is immune to the last move used against it.
+177	Has a high critical hit rate.
+178	Lowers the target's Speed by two stages.
+179	Has more power when the user has less HP remaining, with a maximum of 200 power.
+180	Lowers the PP of the target's last used move by four.
+181	Has a 10% chance to freeze the target.
+182	Prevents attacks from hitting the user this turn. 50% chance to fail if used last turn.
+183	A punch is thrown at wicked speed to strike first.
+184	Lowers the target's Speed by two stages.
+185	Has perfect accuracy.
+186	Confuses the target.
+187	User loses 1/2 its max HP to raise its Attack stage to +6. Fails if user is below 1/2 HP.
+188	Has a 30% chance to poison the target.
+189	Lowers the target's accuracy by one stage.
+190	Has a 50% chance to lower the target's accuracy by one stage.
+191	Stackable entry hazard which hurts Pokémon affected by Ground. Deals 12.5% for one layer, 16.67% for two, 25% for three.
+192	Paralyzes the target.
+193	Removes target's immunities to Normal and Fighting and sets its evasion stage to 0.
+194	If the user is KOed this turn, the Pokémon which KOed it faints.
+195	All Pokémon on the field faint after three turns.
+196	Lowers the target's Speed by one stage.
+197	Prevents attacks from hitting the user this turn. 50% chance to fail if used last turn.
+198	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+199	User cannot miss the target next turn.
+200	User cannot select another attack or switch for 2-3 turns, then the user becomes confused.
+201	Changes the weather to a sandstorm for five turns.
+202	Heals the user by half the damage inflicted.
+203	Leaves the user with 1 HP if it would be KOed this turn. 50% chance to fail if used last turn.
+204	Lowers the target's Attack by two stages.
+205	Locks user into this move. Power doubles with every successive hit, maxing out after 5 turns.
+206	Target is left at 1 HP if this attack would KO.
+207	Confuses the target and raises its Attack by two stages.
+208	Heals the user by half its max HP.
+209	Has a 30% chance to paralyze the target.
+210	Power doubles with every successive hit, maxing out after 5 turns.
+211	Has a 10% chance to raise the user's Defense by one stage.
+212	Prevents the target from switching while the user is on the field.
+213	If target is opposite gender to user, infatuates target.
+214	Randomly uses one of the user's other moves. Fails unless user is asleep.
+215	Removes all major status effects from user's team.
+216	Higher power if user has high happiness, up to a maximum of 102.
+217	Either has 40, 80, or 120 base power or heals the target by 1/4.
+218	Higher power if user has low happiness, up to a maximum of 102.
+219	Protects the user's team from major status ailments and confusion for five turns.
+220	Adds the user and target's HP, then shares it equally.
+221	Has a 50% chance to burn the target. Defrosts user.
+222	Power varies randomly from 10 to 150. Can hit and has double power against Digging targets.
+223	Confuses the target.
+224	Inflicts regular damage with no additional effect.
+225	Has a 30% chance to paralyze the target.
+226	Switches out the user giving stat changes and most volatile effects to the replacement.
+227	Makes the target repeat its last move for three turns.
+228	If the target switches, hits instantly with double power.
+229	Removes foe's entry hazards, binding moves affecting the user, and Leech Seed.
+230	Lowers the target's evasion by one stage.
+231	Has a 30% chance to lower the target's Defense by one stage.
+232	Has a 10% chance to raise the user's Attack by one stage.
+233	Has perfect accuracy. Priority: -1.
+234	Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
+235	Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
+236	Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
+237	Power and type depend upon user's IVs. Power can range from 30 to 70.
+238	Has a high critical hit rate.
+239	Has a 20% chance to flinch.
+240	Changes the weather to rain for five turns.
+241	Changes the weather to strong sunlight for five turns.
+242	Has a 20% chance to lower the target's Defense by one stage.
+243	Inflicts twice the damage the user received from the last special hit it took.
+244	User copies the foe's stat stages.
+245	An extremely fast and powerful attack.
+246	Has a 10% chance to raise all of the user's stats bar evasion and accuracy by one stage.
+247	Has a 20% chance to lower the target's Special Defense by one stage.
+248	Target takes damage two turns after the attack is used.
+249	Has a 50% chance to lower the target's Defense by one stage.
+250	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
+251	Hits once for every non-fainted teammate. Uses a modified damage formula.
+252	Fails if user has used a move since entering the field. Flinches target.
+253	Attacks for 2-5 turns. All Pokémon wake and none can fall asleep during the attack.
+254	Raises the user's Defense and Special Defense by one stage. Adds one to the Stockpile count for Spit Up and Swallow.
+255	Power is 100 times the amount of Stockpile count. Sets stockpile count to 0.
+256	Recovers more HP with more Stockpiles. One gives 1/4, two gives 1/2 HP, three gives full HP.
+257	Has a 10% chance to burn the target.
+258	Changes the weather to a hailstorm for five turns.
+259	Prevents the target from using the same move twice in a row.
+260	Confuses the target and raises its Special Attack by one stage.
+261	Burns the target.
+262	The user faints and lowers target's Special Attack and Attack two stages.
+263	Doubles power if user is burned, paralyzed, or poisoned.
+264	User flinches if it takes damage before attacking.
+265	If the target is paralyzed, inflicts double damage and cures the paralysis.
+266	Redirects the opponent's single-target attacks to the user where possible this turn.
+267	Becomes a different move depending upon the terrain (Tri Attack in multiplayer battles).
+268	Raises the user's Special Defense by one stage. User's Electric moves have double power next turn.
+269	Target cannot use non-offensive moves for three turns.
+270	Target ally deals x1.5 damage this turn.
+271	User swaps items with the target.
+272	Changes the user's ability to the target's.
+273	Pokémon in user's place recovers half user's max HP at the end of the next turn.
+274	Randomly selects and uses a move known by another Pokémon on the user's team.
+275	Prevents the user from leaving the field. User regains 1/16 of its max HP every turn.
+276	Lowers the user's Attack and Defense by one stage after inflicting damage.
+277	Reflects back the first effect move used on the user this turn.
+278	User recovers the item it last used up.
+279	Has double power if the user has taken damage this turn.
+280	Removes the effects of foe's Reflect and Light Screen.
+281	Puts the target to sleep at the end of the next turn.
+282	Removes target's held item.
+283	If user has less HP than target, sets target's HP to equal user's.
+284	Power decreases if user has less HP remaining.
+285	User swaps abilities with the target.
+286	Prevents opponents from using any moves that the user knows.
+287	Removes major status conditions from user (poison, paralysis, and burn).
+288	If the user faints before it next moves, the move that fainted it will have its PP set to 0.
+289	Steals the target's move, if it's self-targeted.
+290	Has a 30% chance to paralyze the target.
+291	Dodges attacks on first turn, strikes on second.
+292	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+293	User's type changes to match the terrain (Normal in multiplayer battles).
+294	Raises the user's Special Attack by three stages.
+295	Has a 50% chance to lower the target's Special Defense by one stage.
+296	Has a 50% chance to lower the target's Special Attack by one stage.
+297	Lowers the target's Attack by two stages.
+298	Confuses all targets.
+299	Has a high critical hit rate. Has a 10% chance to burn the target..
+300	Halves damage from all Electric attacks until user leaves the field.
+301	Locks user into this move. Power doubles with every successive hit, maxing out after 5 turns.
+302	Has a 30% chance to flinch.
+303	Heals the user by half its max HP.
+304	Inflicts regular damage with no additional effect.
+305	Has a 30% chance to badly poison the target.
+306	Has a 50% chance to lower the target's Defense by one stage.
+307	User cannot attack or switch the turn after using this attack.
+308	User cannot attack or switch the turn after using this attack.
+309	Has a 20% chance to raise the user's Attack by one stage.
+310	Has a 30% chance to flinch.
+311	Power doubles in a weather condition, and type changes to match the weather.
+312	Removes all major status effects from user's team.
+313	Lowers the target's Special Defense by two stages.
+314	Has a high critical hit rate.
+315	Lowers the user's Special Attack by two stages after inflicting damage.
+316	Removes target's immunities to Normal and Fighting and sets its evasion stage to 0.
+317	Lowers the target's Speed by one stage.
+318	Has a 10% chance to raise all of the user's stats bar evasion and accuracy by one stage.
+319	Lowers the target's Special Defense by two stages.
+320	Puts the target to sleep.
+321	Lowers the target's Attack and Defense by one stage.
+322	Raises the user's Defense and Special Defense by one stage.
+323	Power decreases if user has less HP remaining.
+324	Has a 10% chance to confuse the target.
+325	Has perfect accuracy.
+326	Has a 10% chance to flinch.
+327	Can hit Bounceing, Flying, and Sky Dropped targets.
+328	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
+329	Knocks out the target.
+330	Has a 30% chance to lower the target's accuracy by one stage.
+331	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+332	Has perfect accuracy.
+333	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+334	Raises the user's Defense by two stages.
+335	Prevents the target from switching while the user is on the field.
+336	Raises the user's Attack by one stage.
+337	Inflicts regular damage with no additional effect.
+338	User cannot attack or switch the turn after using this attack.
+339	Raises the user's Attack and Defense by one stage.
+340	Dodges attacks on first turn, strikes on second. Has a 30% chance to paralyze the target.
+341	Lowers the target's Speed by one stage.
+342	Has a high critical hit rate. Has a 10% chance to poison the target.
+343	Takes the target's item if user has no item.
+344	User receives 1/3 the damage inflicted as recoil. Has a 10% chance to paralyze the target.
+345	Has perfect accuracy.
+346	Halves damage from all Electric attacks until user leaves the field.
+347	Raises the user's Special Attack and Special Defense by one stage.
+348	Has a high critical hit rate.
+349	Raises the user's Attack and Speed by one stage.
+350	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+351	Has perfect accuracy.
+352	Has a 20% chance to confuse the target.
+353	Target takes damage two turns after the attack is used.
+354	Lowers the user's Special Attack by two stages after inflicting damage.
+355	Heals the user by half its max HP and loses its flying type until the end of the turn.
+356	Disables moves and immunities that involve flying or levitating for five turns.
+357	Removes target's immunity to Psychic and sets its evasion stage to 0.
+358	Power doubles if foe is asleep, cures sleep status
+359	Lowers user's Speed by one stage.
+360	Power raises when the user has lower Speed than the target, up to a maximum of 150.
+361	The user faints and fully heals the Pokémon replacing it.
+362	Has double power if target has less than half HP.
+363	Power and type depend on the held berry.
+364	Not blocked by Protect or Detect.
+365	If target has a berry, inflicts double damage and activates berry for user.
+366	Doubles the Speed of all Pokémon on the user's team for three turns.
+367	Raises one stat chosen at random by two stages for the user or teammate.
+368	Inflicts 1.5x the damage the user received from the last hit it took.
+369	User must switch out after attacking.
+370	Lowers the user's Defense and Special Defense by one stage.
+371	Power is doubled if the target has already moved this turn.
+372	Power is doubled if the target has already received damage this turn.
+373	Target's held items will not activate for five turns.
+374	Throws user's held item at the target. Power and effect depends on the item.
+375	If user has a major status condition and target does not, transfers status to the target.
+376	Power increases when this move has less PP, up to a maximum of 200.
+377	Prevents target from restoring its HP for five turns.
+378	Higher power against targets with more HP remaining. 110 max base power.
+379	User swaps its Attack and Defense stats.
+380	Nullifies target's ability until it leaves battle.
+381	User's team cannot be critically hit for five turns.
+382	Uses the target's selected move against it with 1.5x power. Fails if target moves first.
+383	Uses the last move used by any Pokémon.
+384	User swaps Attack and Special Attack stages with the target.
+385	User swaps Defense and Special Defense stages with the target.
+386	Power increases against targets with more raised stats, up to a maximum of 200.
+387	Can only be selected after user has used all its other moves.
+388	Changes the target's ability to Insomnia.
+389	Fails unless the target selects a damaging move. Priority: +1
+390	Stackable entry hazard which poisons Pokémon affected by Ground. Normal poison for one layer, bad poison for two.
+391	User swaps stat stages with the target.
+392	Restores 1/16 of the user's max HP each turn.
+393	User becomes immune to Ground moves for five turns.
+394	User receives 1/3 the damage inflicted as recoil. Has a 10% chance to burn the target.
+395	Has a 30% chance to paralyze the target.
+396	Has perfect accuracy.
+397	Raises the user's Speed by two stages.
+398	Has a 30% chance to poison the target.
+399	Has a 20% chance to flinch.
+400	Has a high critical hit rate.
+401	Inflicts regular damage with no additional effect.
+402	Inflicts regular damage with no additional effect.
+403	Has a 30% chance to flinch.
+404	Inflicts regular damage with no additional effect.
+405	Has a 10% chance to lower the target's Special Defense by one stage.
+406	Inflicts regular damage with no additional effect.
+407	Has a 20% chance to flinch.
+408	Inflicts regular damage with no additional effect.
+409	Heals the user by half the damage inflicted.
+410	Always strikes first
+411	Has a 10% chance to lower the target's Special Defense by one stage.
+412	Has a 10% chance to lower the target's Special Defense by one stage.
+413	User receives 1/3 the damage inflicted as recoil.
+414	Has a 10% chance to lower the target's Special Defense by one stage.
+415	User swaps items with the target.
+416	User cannot attack or switch the turn after using this attack.
+417	Raises the user's Special Attack by two stages.
+418	Always strikes first
+419	Has double power if the user has taken damage this turn.
+420	Always strikes first
+421	Has a high critical hit rate.
+422	Has a 10% chance to paralyze the target and a 10% chance to make the target flinch.
+423	Has a 10% chance to freeze the target and a 10% chance to make the target flinch.
+424	Has a 10% chance to burn the target and a 10% chance to make the target flinch.
+425	Always strikes first
+426	Has a 30% chance to lower the target's accuracy by one stage.
+427	Has a high critical hit rate.
+428	Has a 20% chance to flinch.
+429	Has a 30% chance to lower the target's accuracy by one stage.
+430	Has a 10% chance to lower the target's Special Defense by one stage.
+431	Has a 20% chance to confuse the target.
+432	Lowers the target's evasion by one stage. Removes field effects from the foe's side.
+433	For five turns, slower Pokémon will act before faster Pokémon.
+434	Lowers the user's Special Attack by two stages after inflicting damage.
+435	Has a 30% chance to paralyze the target.
+436	Has a 30% chance to burn the target.
+437	Lowers the user's Special Attack by two stages after inflicting damage.
+438	Inflicts regular damage with no additional effect.
+439	User cannot attack or switch the turn after using this attack.
+440	Has a high critical hit rate. Has a 10% chance to poison the target.
+441	Has a 30% chance to poison the target.
+442	Has a 30% chance to flinch.
+443	Has perfect accuracy.
+444	Has a high critical hit rate.
+445	If target is opposite gender to user, lowers the target's Special Attack by two stages.
+446	Entry hazard which hurts Pokémon depending on the effectiveness of Rock moves. Deals 12.5% when neutral.
+447	More power against to heavier targets, with a maximum of 120.
+448	Confuses foe
+449	Attack type changes to match held Plate.
+450	If target has a berry, inflicts double damage and activates berry for user.
+451	Has a 70% chance to raise the user's Special Attack by one stage.
+452	User receives 1/3 the damage inflicted as recoil.
+453	Always strikes first
+454	Has a high critical hit rate.
+455	Raises the user's Defense and Special Defense by one stage.
+456	Heals the user by half its max HP.
+457	User receives 1/2 the damage inflicted as recoil.
+458	Hits twice in one turn.
+459	User cannot attack or switch the turn after using this attack.
+460	Has a high critical hit rate.
+461	The user faints and fully heals the Pokémon replacing it.
+462	Higher power against targets with more HP remaining. 110 max base power.
+463	Traps foe
+464	Puts all targets to sleep.
+465	Has a 40% chance to lower the target's Special Defense by two stages.
+466	Has a 10% chance to raise all of the user's stats bar evasion and accuracy by one stage.
+467	Dodges attacks on first turn, strikes on second. Not blocked by Protect or Detect.
+468	Raises the user's Attack and accuracy by one stage.
+469	Prevents multi-target moves from hitting user's team this turn. 50% chance to fail if used last turn.
+470	Averages user's and target's Defense and Special Defense stats separately.
+471	Averages user's and target's Attack and Special Attack stats separately.
+472	All Pokémon's Defense and Special Defense stats are swapped for 5 turns.
+473	Damage is calculated using target's Defense stat.
+474	Has double power if the target is poisoned.
+475	Raises the user's Speed by two stages and halves the user's weight.
+476	Redirects the opponent's single-target attacks to the user where possible this turn.
+477	Target is immune to Ground and all attacks against it have perfect acc for 3 turns.
+478	Held items will not activate and have no effect for five turns.
+479	Removes target's immunity to Ground.
+480	Always hits critically unless the foe is protected from critical hits.
+481	Does 1/16 damage to adjacent teammates.
+482	Has a 10% chance to poison the target.
+483	Raises the user's Special Attack, Special Defense, and Speed by one stage.
+484	Power is higher when the user weighs more than the target, up to a maximum of 120.
+485	Hits all Pokémon that share a type with the user.
+486	Power is higher when the user has greater Speed than the target, up to a maximum of 150.
+487	Changes the target's type to pure Water.
+488	Raises the user's Speed by one stage.
+489	Raises the user's Attack, Defense, and accuracy by one stage.
+490	Lowers the target's Speed by one stage.
+491	Lowers the target's Special Defense by two stages.
+492	Damage is calculated using the target's attacking stat.
+493	Changes the target's ability to Simple.
+494	Changes the target's ability to the user's.
+495	Makes the target act next this turn.
+496	Has double power if a teammate used Round this turn. All allies using Round attack at once.
+497	Power increases by 100% for each consecutive use by user and teammates, to a maximum of 200.
+498	Ignores the target's Defense and evasion modifiers.
+499	Resets the target's stat stages to zero.
+500	Has 20 extra base power for each stat boost the user has, to a maximum of 620.
+501	Prevents priority moves from hitting user's team this turn. 50% chance to fail if used last turn.
+502	User switches places with teammate. Fails if in the center.
+503	Has a 30% chance to burn the target.
+504	Raises user's Attack, Special Attack, and Speed by two stages but lowers Defense and Special Defense by one stage.
+505	Heals the target by half its max HP.
+506	Has double power if the target has a major status ailment.
+507	Two turn attack, almost all moves miss both target and user on turn 1, deals damage on turn 2.
+508	Raises the user's Attack by one stage and its Speed by two stages.
+509	Forces the target to switch.
+510	Removes the target's Berry.
+511	Makes the target act last this turn.
+512	Has double power if the user has no held item.
+513	User becomes the target's type(s).
+514	Has double power if a teammate fainted last turn.
+515	The user faints and deals damage to target equal to remaining HP.
+516	Gives user's item to target. Fails if target has an item.
+517	Burns the target.
+518	If an ally used Grass Pledge this turn, halves foe team's Speed for four turns.
+519	If an ally used Water Pledge this turn, doubles the effect chance of user's team's moves for four turns.
+520	If an ally used Fire Pledge this turn, foe team takes 1/8 damage every turn for four turns.
+521	User must switch out after attacking.
+522	Lowers the target's Special Attack by one stage.
+523	Lowers the target's Speed by one stage.
+524	Always hits critically unless the foe is protected from critical hits.
+525	Forces the target to switch.
+526	Raises the user's Attack and Special Attack by one stage.
+527	Lowers the target's Speed by one stage.
+528	User receives 1/4 the damage inflicted as recoil.
+529	Has a high critical hit rate.
+530	Hits twice in one turn.
+531	Has a 30% chance to flinch.
+532	Heals the user by half the damage inflicted.
+533	Ignores the target's Defense and evasion modifiers.
+534	Has a 50% chance to lower the target's Defense by one stage.
+535	Power is higher when the user weighs more than the target, up to a maximum of 120.
+536	Has a 50% chance to lower the target's accuracy by one stage.
+537	Has a 30% chance to flinch. Double damage if target has used Minimize.
+538	Raises the user's Defense by three stages.
+539	Has a 40% chance to lower the target's accuracy by one stage.
+540	Damage is calculated using target's Defense stat.
+541	Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5.
+542	Has a 30% chance to confuse the target. Has perfect acc in Rain, 50% in Sun.
+543	User receives 1/4 the damage inflicted as recoil.
+544	Hits twice in one turn.
+545	Has a 30% chance to burn the target.
+546	Attack type changes to match held Drive.
+547	Has a 10% chance to sleep the target. Changes Meloetta's form.
+548	Damage is calculated using target's Defense stat.
+549	Lowers the target's Speed by two stages.
+550	Has a 20% chance to paralyze the target.
+551	Has a 20% chance to burn the target.
+552	Has a 50% chance to raise the user's Special Attack by one stage.
+553	Requires a charging turn. Has a 30% chance to paralyze the target.
+554	Requires a charging turn.Has a 30% chance to burn the target.
+555	Lowers the target's Special Attack by one stage.
+556	Has a 30% chance to flinch.
+557	Lowers the user's Defense, Special Defense, and Speed by one stage.
+558	Doubles in power if used on the same turn after Fusion Bolt.
+559	Doubles in power if used on the same turn after Fusion Flare.
+560	.
