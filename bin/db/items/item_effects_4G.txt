@@ -3,6 +3,7 @@
 4 2|1-1_10#choice band
 5 2|1-5_10#choice scarf
 6 2|1-3_10#choice specs
+7 41#Destiny Knot
 9 4#focus band
 10 5#focus sash
 11 6#full incense
