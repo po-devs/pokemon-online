@@ -19,7 +19,7 @@ public slots:
     void apply();
 private:
     QSpinBox *max_people_per_ip, *max_commands_per_user, *max_kb_per_user, *max_login_per_ip, *ban_after_x_kicks;
-    QLineEdit *trusted_ips;
+    QLineEdit *trusted_ips, *notificationsChannel;
     QCheckBox *aDosOn;
 };
 
@@ -48,6 +48,8 @@ public:
     bool changeIP(const QString &newIp, const QString &oldIp);
 
     int numberOfDiffIps();
+
+    QString notificationsChannel;
 signals:
     /* If rules are infriged, kick / ban the corresponding id/ip in functions
        of the number of times rules are infriged */

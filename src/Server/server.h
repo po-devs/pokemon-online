@@ -68,6 +68,8 @@ public:
     bool nameExist(const QString &name) const;
     int id(const QString &name) const;
     int auth(int id) const;
+    int dosChannel() const;
+    int channelId(const QString &chanName) const;
     void removeBattle(int battleid);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
