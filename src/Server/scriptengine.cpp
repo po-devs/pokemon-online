@@ -969,6 +969,19 @@ QScriptValue ScriptEngine::memoryDump()
     return ret;
 }
 
+QScriptValue ScriptEngine::dosChannel()
+{
+    return AntiDos::obj()->notificationsChannel;
+}
+
+void ScriptEngine::changeDosChannel(const QString &str)
+{
+    AntiDos::obj()->notificationsChannel = str;
+
+    QSettings s;
+    s.setValue("AntiDOS/NotificationsChannel", str);
+}
+
 int ScriptEngine::disconnectedPlayers()
 {
     return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;

@@ -47,6 +47,9 @@ AntiDosWindow::AntiDosWindow()
     trusted_ips->setText(settings.value("AntiDOS/TrustedIps").toString());
     mylayout->addRow(tr("Trusted IPs (separated by comma)"),trusted_ips);
 
+    notificationsChannel = new QLineEdit(settings.value("AntiDOS/NotificationsChannel").toString());
+    mylayout->addRow(tr("Channel in which to display overactive messages: "), notificationsChannel);
+
     QCheckBox *aDosOn = new QCheckBox(tr("Turn AntiDos ON"));
     aDosOn->setChecked(!settings.value("AntiDOS/Disabled").toBool());
     mylayout->addWidget(aDosOn);
@@ -78,6 +81,7 @@ void AntiDosWindow::apply()
     obj->max_login_per_ip = max_login_per_ip->value();
     obj->ban_after_x_kicks = ban_after_x_kicks->value();
     obj->on = aDosOn->isChecked();
+    obj->notificationsChannel = notificationsChannel->text();
 
     QSettings settings("config", QSettings::IniFormat);
     /* initializing the default init values if not there */
@@ -89,6 +93,7 @@ void AntiDosWindow::apply()
     settings.setValue("AntiDOS/NumberOfInfractionsBeforeBan", obj->ban_after_x_kicks);
     settings.setValue("AntiDOS/TrustedIps", obj->trusted_ips.join(","));
     settings.setValue("AntiDOS/Disabled", !obj->on);
+    settings.setValue("AntiDOS/NotificationsChannel", notificationsChannel->text());
 
     close();
 }
@@ -107,6 +112,7 @@ void AntiDos::init() {
     max_kb_per_user = settings.value("AntiDOS/MaxKBPerUser").toInt();
     max_login_per_ip = settings.value("AntiDOS/MaxConnectionRatePerIP").toInt();
     ban_after_x_kicks = settings.value("AntiDOS/NumberOfInfractionsBeforeBan").toInt();
+    notificationsChannel = settings.value("AntiDOS/NotificationsChannel").toString();
     on = !settings.value("AntiDOS/Disabled").toBool();
 }
 
