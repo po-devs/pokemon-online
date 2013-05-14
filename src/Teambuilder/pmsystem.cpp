@@ -339,7 +339,7 @@ void PMStruct::disconnected(bool value)
         m_send->setEnabled(false);
         m_textToSend->setEnabled(false);
     } else {
-        printHtml("<i>" + tr("You've been reconnected to the server."), + "</i>");
+        printHtml("<i>" + tr("You've been reconnected to the server.") + "</i>");
         m_challenge->setEnabled(true);
         m_send->setEnabled(true);
         m_textToSend->setEnabled(true);
