@@ -85,13 +85,14 @@ public:
 
     static bool isValid(const QString &name);
     static bool exist(const QString &name);
-    static void create (const QString &name, const QString &date, const QString &ip);
+    static void create (const QString &name, const QString &date, const QString &ip, bool banned = false);
     static Member member(const QString &name);
 
     static void updateMember(const Member &m);
 
     static bool bannedIP(const QString &ip);
     static void ban(const QString &name);
+    static void banIP(const QString &ip);
     static void unban(const QString &name);
     static void IPunban(const QString &ip);
     static void setAuth(const QString &name, int auth);
