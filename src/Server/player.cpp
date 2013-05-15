@@ -1170,7 +1170,7 @@ void Player::testAuthentificationLoaded()
         setAuth(m.authority());
 
         m.modifyIP(ip());
-        m.modifyDate(QDate::currentDate().toString(Qt::ISODate));
+        m.modifyDate(QDateTime::currentDateTime().toString(Qt::ISODate));
         SecurityManager::updateMember(m);
 
         /* To tell the player he's not registered */
@@ -1179,7 +1179,7 @@ void Player::testAuthentificationLoaded()
     } else {
         setAuth(0);
 
-        SecurityManager::create(name, QDate::currentDate().toString(Qt::ISODate), ip());
+        SecurityManager::create(name, QDateTime::currentDateTime().toString(Qt::ISODate), ip());
         /* To tell the player he's not registered */
         relay().notify(NetworkServ::Register);
         loginSuccess();
@@ -1445,7 +1445,7 @@ void Player::hashReceived(const QByteArray &_hash) {
             SecurityManager::Member m = SecurityManager::member(waiting_name);
 
             m.modifyIP(ip().toLatin1());
-            m.modifyDate(QDate::currentDate().toString(Qt::ISODate).toLatin1());
+            m.modifyDate(QDateTime::currentDateTime().toString(Qt::ISODate).toLatin1());
             m.hash = hash;
             setAuth(m.authority());
             SecurityManager::updateMember(m);

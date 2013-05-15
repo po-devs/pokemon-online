@@ -277,8 +277,8 @@ void SecurityManager::deleteUser(const QString &name)
     q.exec();
 }
 
-void SecurityManager::create(const QString &name, const QString &date, const QString &ip) {
-    Member m(name.toLower(), date, 0, false, "", "", ip, 0);
+void SecurityManager::create(const QString &name, const QString &date, const QString &ip, bool banned) {
+    Member m(name.toLower(), date, 0, banned, "", "", ip, 0);
     holder.addMemberInMemory(m);
     updateMemberInDatabase(m, true);
 }
@@ -314,6 +314,12 @@ void SecurityManager::ban(const QString &name) {
 
         updateMember(m);
     }
+}
+
+void SecurityManager::banIP(const QString &ip)
+{
+    bannedIPs.insert(ip, 0);
+    create(ip,QDateTime::currentDateTime().toString(Qt::ISODate),ip,true);
 }
 
 void SecurityManager::unban(const QString &name) {
@@ -507,7 +513,7 @@ void SecurityManager::processDailyRun(int maxdays, bool async)
 
 void SecurityManager::dailyRunEx(QSqlQuery *q)
 {
-    QString limit = QDate::currentDate().addDays(-dailyRunDays).toString("yyyy-MM-dd");
+    QString limit = QDateTime::currentDateTime().addDays(-dailyRunDays).toString(Qt::ISODate);
 
     qDebug() << "Processing daily run for members with limit " << limit;
     if (SQLCreator::databaseType == SQLCreator::MySQL) {

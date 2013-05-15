@@ -82,7 +82,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         witem = new QTableWidgetItem(q.value(5).toString());
         mytable->setItem(i, 5, witem);
 
-        witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(q.value(5).toString(), "yyyy-MM-dd").daysTo(QDate::currentDate())) + " Days");
+        witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(q.value(5).toString(), Qt::ISODate).daysTo(QDate::currentDate())) + " Days");
         mytable->setItem(i, 6, witem);
 
         i++;
