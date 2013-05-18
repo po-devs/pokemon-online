@@ -329,6 +329,18 @@ void SecurityManager::unban(const QString &name) {
     }
 }
 
+int SecurityManager::numRegistered(const QString &ip)
+{
+    int ret = 0;
+    QList<QString> aliases = membersForIp(ip);
+    foreach(QString name, aliases) {
+        Member m = member(name);
+        if (m.isProtected())
+            ret++;
+    }
+    return ret;
+}
+
 void SecurityManager::IPunban(const QString &ip)
 {
     QList<QString> _members = membersForIp(ip);
