@@ -10,6 +10,7 @@
                 $("#tabs").tabs();
 
                 $("#config *").attr("disabled",true);
+                $("#dosConfig *").attr("disabled",true);
             });
         </script>
 	</head>
@@ -27,6 +28,7 @@
                 <li><a href="#tabs-3">scripts</a></li>
                 <li><a href="#tabs-4">tiers</a></li>
                 <li><a href="#tabs-5">edit file</a></li>
+                <li><a href="#tabs-6">Anti DOS</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -79,6 +81,22 @@
                 <p>
                     <button onClick="refreshFile();">Refresh</button>
                     <button onClick="sendFile();" id="sendFile" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-6">
+                <table id="dosConfig">
+                    <tr><td>Anti DOS on</td><td><input type="checkbox" id="dosOn"/></tr></td>
+                    <tr><td>Max number of people connected with the same IP</td><td><input type="text" id="dosConnections"/></tr></td>
+                    <tr><td>Max number of times someone is active inside a minute</td><td><input type="text" id="dosActivity"/></tr></td>
+                    <tr><td>Maximum upload from user per minute (kilo Bytes)</td><td><input type="text" id="dosUpload"/></tr></td>
+                    <tr><td>Max number of times the same ip attempts to log in per minute</td><td><input type="text" id="dosLogins"/></tr></td>
+                    <tr><td>Bans after X antidos kicks per 15 minutes</td><td><input type="text" id="dosBan"/></tr></td>
+                    <tr><td>Trusted IPs</td><td><input type="text" id="dosTrusted"/></tr></td>
+                    <tr><td>Notifications channel</td><td><input type="text" id="dosChannel"/></tr></td>
+                </table>
+                <p>
+                    <button onClick="refreshDos();">Refresh</button>
+                    <button onClick="sendDos();" id="sendDos" disabled="true">Apply Changes</button>
                 </p>
             </div>
         </div>
@@ -167,7 +185,30 @@
             {
                 websocket.send("editfile|"+$('#fileurl').val()+"|"+$('#fileArea').val());
             }
-			
+
+            function refreshDos()
+            {
+                websocket.send("getdos|");
+            }
+
+            function sendDos()
+            {
+                var dos = {
+                    connections: $('#dosConnections').val(),
+                    activity: $('#dosActivity').val(),
+                    upload: $('#dosUpload').val(),
+                    logins: $('#dosLogins').val(),
+                    ban: $('#dosBan').val(),
+                    trustedIPs: $('#dosTrusted').val(),
+                    channel: $('#dosChannel').val(),
+                    on: $('#dosOn').attr('checked') || 0
+                };
+
+                var strToSend = "editdos|"+JSON.stringify(dos);
+                websocket.send( strToSend );
+                console.log( "Message sent :", '"'+strToSend+'"' );
+            }
+
 			var websocket = null;
             var parseCommand;
 
@@ -275,8 +316,20 @@
 
                     $("#config *").removeAttr("disabled");
                     $("#sendConfig").removeAttr("disabled");
+                } else if (cmd == "dos") {
+                    var dos = JSON.parse(data);
 
-                    configReceived = cf;
+                    $('#dosConnections').val(dos.connections);
+                    $('#dosActivity').val(dos.activity);
+                    $('#dosUpload').val(dos.upload);
+                    $('#dosLogins').val(dos.logins);
+                    $('#dosBan').val(dos.ban);
+                    $('#dosTrusted').val(dos.trustedIPs);
+                    $('#dosChannel').val(dos.channel);
+                    $('#dosOn').attr('checked', dos.on);
+
+                    $("#dosConfig *").removeAttr("disabled");
+                    $("#sendDos").removeAttr("disabled");
                 }
             };
 			

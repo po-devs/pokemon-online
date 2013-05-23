@@ -949,6 +949,11 @@ QScriptValue ScriptEngine::aliases(const QString &ip)
     return ret;
 }
 
+int ScriptEngine::connections(const QString &ip)
+{
+    return AntiDos::obj()->connectionsPerIp.value(ip);
+}
+
 QScriptValue ScriptEngine::memoryDump()
 {
     QString ret;
@@ -980,6 +985,16 @@ void ScriptEngine::changeDosChannel(const QString &str)
 
     QSettings s;
     s.setValue("AntiDOS/NotificationsChannel", str);
+}
+
+void ScriptEngine::clearDosData()
+{
+    AntiDos::obj()->clearData();
+}
+
+void ScriptEngine::reloadDosSettings()
+{
+    AntiDos::obj()->init();
 }
 
 QScriptValue ScriptEngine::currentMod()

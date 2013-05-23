@@ -36,7 +36,6 @@ public:
         return instance;
     }
 
-    void init();
     /* Returns true if an ip is allowed a new connection */
     bool connecting(const QString &ip);
     /* Warned that a new command is issued, with what length */
@@ -55,6 +54,9 @@ signals:
        of the number of times rules are infriged */
     void kick(int id);
     void ban(const QString &ip);
+public slots:
+    /* Reloads all DOS data */
+    void init();
 protected slots:
     void clearData();
 private:
@@ -64,11 +66,10 @@ private:
     QHash<int, size_t> sizeOfTransfers;
     QHash<QString, QList<time_t> > kicksPerIp;
     QTimer timer;
-    QStringList trusted_ips;
-
 
     static AntiDos *instance;
 
+    QStringList trusted_ips;
     int max_people_per_ip, max_commands_per_user, max_kb_per_user, max_login_per_ip, ban_after_x_kicks;
     bool on;
 
