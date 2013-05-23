@@ -158,6 +158,7 @@ void Server::start(){
     printLine(tr("Starting loading pokemon database..."));
 
     PokemonInfoConfig::setFillMode(FillMode::Server);
+    PokemonInfoConfig::setDataRepo(dataRepo);
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
     printLine(tr("Pokemon database loaded"));
@@ -308,18 +309,18 @@ void Server::changeDbMod(const QString &mod)
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
-    GenInfo::init(dataRepo+"/db/gens/");
-    PokemonInfo::init(dataRepo+"/db/pokes/");
-    MoveSetChecker::init(dataRepo+"/db/pokes/");
-    ItemInfo::init(dataRepo+"/db/items/");
-    MoveInfo::init(dataRepo+"/db/moves/");
-    TypeInfo::init(dataRepo+"/db/types/");
-    NatureInfo::init(dataRepo+"/db/natures/");
-    CategoryInfo::init(dataRepo+"/db/categories/");
-    AbilityInfo::init(dataRepo+"/db/abilities/");
-    HiddenPowerInfo::init(dataRepo+"/db/types/");
-    StatInfo::init(dataRepo+"/db/status/");
-    GenderInfo::init(dataRepo+"/db/genders/"); //needed by battlelogs plugin
+    GenInfo::init("/db/gens/");
+    PokemonInfo::init("/db/pokes/");
+    MoveSetChecker::init("/db/pokes/");
+    ItemInfo::init("/db/items/");
+    MoveInfo::init("/db/moves/");
+    TypeInfo::init("/db/types/");
+    NatureInfo::init("/db/natures/");
+    CategoryInfo::init("/db/categories/");
+    AbilityInfo::init("/db/abilities/");
+    HiddenPowerInfo::init("/db/types/");
+    StatInfo::init("/db/status/");
+    GenderInfo::init("/db/genders/"); //needed by battlelogs plugin
 
     battleThread.unpause();
 }

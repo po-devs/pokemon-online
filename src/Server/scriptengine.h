@@ -249,6 +249,9 @@ public:
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE QScriptValue dosChannel();
     Q_INVOKABLE void changeDosChannel(const QString &newChannel);
+    Q_INVOKABLE QScriptValue currentMod();
+    Q_INVOKABLE QScriptValue currentModPath();
+    Q_INVOKABLE QScriptValue dataRepo();
     /* Counts the number of players in a disconnected state - not wholly removed yet in hope they might reconnect */
     Q_INVOKABLE int disconnectedPlayers();
     Q_INVOKABLE bool hasLegalTeamForTier(int id, int team, const QString &tier);
