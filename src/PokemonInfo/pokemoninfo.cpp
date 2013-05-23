@@ -170,12 +170,23 @@ void changeMod(const QString &mod)
         if (fillMode == FillMode::Client) {
             modPath = appDataPath("Mods") + "/" + mod + "/";
         } else {
-            modPath = QString("Mods/%1/").arg(mod);
+            modPath = QString(dataRepo()+"Mods/%1/").arg(mod);
         }
         if (!QDir(modPath).exists()) {
             modPath.clear();
         }
     }
+}
+
+QString m_dataRepo = "./";
+
+const QString& dataRepo() {
+    return m_dataRepo;
+}
+
+void setDataRepo(const QString &s)
+{
+    m_dataRepo = s;
 }
 
 QString currentModPath()
@@ -195,16 +206,16 @@ QString currentMod()
 QStringList allFiles(const QString &filename, bool trans) {
     QStringList ret;
 
-    if (QFile::exists(filename)) {
-        ret << filename;
+    if (QFile::exists(dataRepo()+filename)) {
+        ret << (dataRepo()+filename);
     }
 
-    if (trans && transPath.length() > 0 && QFile::exists(transPath+filename)) {
-        ret << (transPath + filename);
+    if (trans && transPath.length() > 0 && QFile::exists(dataRepo()+transPath+filename)) {
+        ret << (dataRepo() + transPath + filename);
     }
 
-    if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
-        ret << (modPath + filename);
+    if (modPath.length() > 0 && QFile::exists(dataRepo()+modPath+filename)) {
+        ret << (dataRepo() + modPath + filename);
     }
 
     return ret;

@@ -31,6 +31,9 @@ namespace PokemonInfoConfig {
     void changeTranslation(const QString& ts = QString());
     void changeMod(const QString &mod);
 
+    const QString& dataRepo();
+    void setDataRepo(const QString &s);
+
     QStringList allFiles(const QString &filename, bool trans=false);
     QString currentMod();
     QString currentModPath();

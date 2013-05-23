@@ -790,6 +790,8 @@ void DualWielder::socketDisconnected()
 {
     network = NULL;
     if (web) {
+        qDebug() << "Closed connection to server " << web->ip();
+
         web->write(QString("disconnected|"));
         web->close(QWsSocket::CloseNormal, "The Pokemon Online server closed the connection");
         web = NULL;

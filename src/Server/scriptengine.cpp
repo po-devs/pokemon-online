@@ -982,6 +982,21 @@ void ScriptEngine::changeDosChannel(const QString &str)
     s.setValue("AntiDOS/NotificationsChannel", str);
 }
 
+QScriptValue ScriptEngine::currentMod()
+{
+    return PokemonInfoConfig::currentMod();
+}
+
+QScriptValue ScriptEngine::currentModPath()
+{
+    return PokemonInfoConfig::currentModPath();
+}
+
+QScriptValue ScriptEngine::dataRepo()
+{
+    return PokemonInfoConfig::dataRepo();
+}
+
 int ScriptEngine::disconnectedPlayers()
 {
     return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;

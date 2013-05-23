@@ -15,7 +15,7 @@ ModsWindow::ModsWindow(QWidget *parent) :
 
     ui->comboBox->addItem("No Mods");
 
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
     QString currentMod = s.value("Mods/CurrentMod").toString();
 
     foreach(QString mod, PokemonInfoConfig::availableMods()) {
@@ -31,7 +31,7 @@ ModsWindow::ModsWindow(QWidget *parent) :
 
 void ModsWindow::accepted()
 {
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
 
     QString mod = ui->comboBox->currentIndex() == 0 ? QString() : ui->comboBox->currentText();
 
