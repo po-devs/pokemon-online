@@ -214,8 +214,8 @@ QStringList allFiles(const QString &filename, bool trans) {
         ret << (dataRepo() + transPath + filename);
     }
 
-    if (modPath.length() > 0 && QFile::exists(dataRepo()+modPath+filename)) {
-        ret << (dataRepo() + modPath + filename);
+    if (modPath.length() > 0 && QFile::exists(modPath+filename)) {
+        ret << (modPath + filename);
     }
 
     return ret;
