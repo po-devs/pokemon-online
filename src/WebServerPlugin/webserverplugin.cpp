@@ -51,6 +51,7 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     connect(this, SIGNAL(mainChannelChanged(QString)), srv, SLOT(mainChanChanged(QString)));
     connect(this, SIGNAL(privateChanged(int)), srv, SLOT(regPrivacyChanged(int)));
     connect(this, SIGNAL(proxyServersChanged(QString)), srv, SLOT(proxyServersChanged(QString)));
+    connect(this, SIGNAL(antiDosChanged()), server->getAntiDos(), SLOT(init()));
 }
 
 WebServerPlugin::~WebServerPlugin()
@@ -240,6 +241,34 @@ void WebServerPlugin::dealWithFrame(const QString &f)
                 settings.setValue("Network/ProxyServers", map.value("proxies").toString());
                 emit proxyServersChanged(map.value("proxies").toString());
             }
+        } else if (command == "getdos") {
+            QSettings settings("config", QSettings::IniFormat);
+
+            QVariantMap map;
+            map.insert("trustedIPs", settings.value("AntiDOS/TrustedIps").toString());
+            map.insert("connections", settings.value("AntiDOS/MaxPeoplePerIp").toInt());
+            map.insert("activity", settings.value("AntiDOS/MaxCommandsPerUser").toInt());
+            map.insert("upload", settings.value("AntiDOS/MaxKBPerUser").toInt());
+            map.insert("channel", settings.value("AntiDOS/NotificationsChannel").toString());
+            map.insert("logins", settings.value("AntiDOS/MaxConnectionRatePerIP").toInt());
+            map.insert("ban", settings.value("AntiDOS/NumberOfInfractionsBeforeBan").toInt());
+            map.insert("on", !settings.value("AntiDOS/Disabled").toBool());
+
+            s->write("dos|"+QString::fromUtf8(jserial.serialize(map)));
+        } else if (command == "editdos") {
+            QSettings settings("config", QSettings::IniFormat);
+            QVariantMap map = jparser.parse(data.toUtf8()).toMap();
+
+            settings.setValue("AntiDOS/TrustedIps", map.value("trustedIPs").toString());
+            settings.setValue("AntiDOS/MaxPeoplePerIp", map.value("connections").toInt());
+            settings.setValue("AntiDOS/MaxCommandsPerUser", map.value("activity").toInt());
+            settings.setValue("AntiDOS/MaxKBPerUser", map.value("upload").toInt());
+            settings.setValue("AntiDOS/NotificationsChannel", map.value("channel").toString());
+            settings.setValue("AntiDOS/MaxConnectionRatePerIP", map.value("logins").toInt());
+            settings.setValue("AntiDOS/NumberOfInfractionsBeforeBan", map.value("ban").toInt());
+            settings.setValue("AntiDOS/Disabled", !map.value("on").toBool());
+
+            emit antiDosChanged();
         }
     }
 }

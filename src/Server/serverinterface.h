@@ -9,6 +9,7 @@ public:
     virtual ~ServerInterface(){}
 
     virtual PlayerInterface *playeri(int id) const = 0;
+    virtual QObject *getAntiDos() const = 0;
 };
 
 #endif // SERVERINTERFACE_H
