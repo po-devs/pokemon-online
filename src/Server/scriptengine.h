@@ -242,6 +242,8 @@ public:
     Q_INVOKABLE QScriptValue ratedBattles(const QString &name, const QString &tier);
     Q_INVOKABLE int maxAuth(const QString &ip);
     Q_INVOKABLE QScriptValue aliases(const QString &ip);
+    /* Returns the number of connections currently online for the IP asked */
+    Q_INVOKABLE int connections(const QString &ip);
     Q_INVOKABLE QScriptValue totalPlayersByTier(const QString &tier);
     Q_INVOKABLE QScriptValue ladderEnabled(int id);
     Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());
@@ -249,6 +251,9 @@ public:
     Q_INVOKABLE QScriptValue memoryDump();
     Q_INVOKABLE QScriptValue dosChannel();
     Q_INVOKABLE void changeDosChannel(const QString &newChannel);
+    /* Removes the history of kicks and logins for all the IPs */
+    Q_INVOKABLE void clearDosData();
+    Q_INVOKABLE void reloadDosSettings();
     Q_INVOKABLE QScriptValue currentMod();
     Q_INVOKABLE QScriptValue currentModPath();
     Q_INVOKABLE QScriptValue dataRepo();
