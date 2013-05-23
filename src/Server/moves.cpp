@@ -1765,9 +1765,16 @@ struct MMFocusEnergy : public MM
 struct MMFuryCutter : public MM
 {
     MMFuryCutter() {
+        functions["OnSetup"] = &os;
         functions["AttackSomehowFailed"] = &ma;
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void os(int s, int, BS &b) {
+        if (b.gen() >= 5 && poke(b,s)["AnyLastMoveUsed"].toInt() != FuryCutter) {
+            poke(b,s)["FuryCutterCount"] = 0;
+        }
     }
 
     static void ma(int s, int, BS &b) {
@@ -1775,13 +1782,12 @@ struct MMFuryCutter : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen() >= 5 && poke(b,s)["LastMoveUsed"].toInt() != FuryCutter) {
-            poke(b,s)["FuryCutterCount"] = 0;
-        }
+
         poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,b.gen().num == 4 ? 15 : 7);
     }
 
     static void bcd(int s, int, BS &b) {
+
         tmove(b, s).power = tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1);
     }
 };
