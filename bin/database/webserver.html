@@ -148,7 +148,7 @@
                     proxies: $('#cfProxies').val(),
                     announcement: $('#cfAnnouncement').val(),
                     mainChannel: $('#cfChannel').val(),
-                    private: $('#cfPrivate').attr('checked') || 0
+                    private: $('#cfPrivate').is(':checked')
                 };
 
                 var strToSend = "editconfig|"+JSON.stringify(cf);
@@ -201,7 +201,7 @@
                     ban: $('#dosBan').val(),
                     trustedIPs: $('#dosTrusted').val(),
                     channel: $('#dosChannel').val(),
-                    on: $('#dosOn').attr('checked') || 0
+                    on: $('#dosOn').is(':checked')
                 };
 
                 var strToSend = "editdos|"+JSON.stringify(dos);
@@ -308,7 +308,7 @@
                     $("#fileArea").removeAttr("disabled");
                 } else if (cmd == "config") {
                     var cf = JSON.parse(data);
-                    $("#cfPrivate").attr("checked", cf.private);
+                    $("#cfPrivate").prop("checked", cf.private);
                     $("#cfName").val(cf.name);
                     $("#cfChannel").val(cf.mainChannel);
                     $("#cfAnnouncement").val(cf.announcement);
@@ -326,7 +326,7 @@
                     $('#dosBan').val(dos.ban);
                     $('#dosTrusted').val(dos.trustedIPs);
                     $('#dosChannel').val(dos.channel);
-                    $('#dosOn').attr('checked', dos.on);
+                    $('#dosOn').prop('checked', dos.on);
 
                     $("#dosConfig *").removeAttr("disabled");
                     $("#sendDos").removeAttr("disabled");

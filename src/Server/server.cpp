@@ -926,6 +926,11 @@ int Server::dosChannel() const
     return channelId(AntiDos::obj()->notificationsChannel);
 }
 
+QObject* Server::getAntiDos() const
+{
+    return AntiDos::obj();
+}
+
 int Server::channelId(const QString &chanName) const
 {
     return channelids.value(chanName.toLower(), NoChannel);

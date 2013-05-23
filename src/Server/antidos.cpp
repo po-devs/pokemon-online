@@ -173,7 +173,7 @@ bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
     connectionsPerIp[oldIp]--;
     //Server::serverIns->printLine(tr("Connections for ip(-change) %1 are %2").arg(oldIp).arg(connectionsPerIp[oldIp]));
     loginsPerIp[oldIp].pop_back(); // remove a login
-    if (connectionsPerIp[oldIp]==0) {
+    if (connectionsPerIp[oldIp] <= 0) {
         connectionsPerIp.remove(oldIp);
     }
     return connecting(newIp);
