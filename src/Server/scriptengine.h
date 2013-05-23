@@ -257,6 +257,11 @@ public:
     Q_INVOKABLE QScriptValue info(int playerId);
     Q_INVOKABLE void changeAvatar(int playerId, quint16 avatarId);
     Q_INVOKABLE QScriptValue avatar(int playerId);
+
+    // Overloaded function os.
+    // First (no parameters) returns the server's os.
+    // Second (with a param) returns a player's os.
+    Q_INVOKABLE QScriptValue os();
     Q_INVOKABLE QScriptValue os(int playerId);
 
     Q_INVOKABLE QScriptValue pokemon(int num);
