@@ -2614,6 +2614,10 @@ QScriptValue ScriptEngine::avatar(int playerId)
     return myserver->player(playerId)->avatar();
 }
 
+QScriptValue ScriptEngine::os() {
+    return OS;
+}
+
 QScriptValue ScriptEngine::os(int playerId)
 {
     if (!loggedIn(playerId)) {
