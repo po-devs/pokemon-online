@@ -1772,17 +1772,25 @@ struct MMFuryCutter : public MM
 
     static void ma(int s, int, BS &b) {
         poke(b,s)["FuryCutterCount"] = 0;
+
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen() >= 5 && poke(b,s)["LastMoveUsed"].toInt() != FuryCutter) {
-            poke(b,s)["FuryCutterCount"] = 0;
-        }
+
+
         poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,b.gen().num == 4 ? 15 : 7);
     }
 
     static void bcd(int s, int, BS &b) {
+        if (b.gen() >= 5)
+        {
+            if (!poke(b,s).contains("FuryCutterTurn") || poke(b,s)["FuryCutterTurn"].toInt() != b.turn() - 1)
+                poke(b,s)["FuryCutterCount"] = 0;
+        }
+
+        poke(b,s)["FuryCutterTurn"] = b.turn();
         tmove(b, s).power = tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1);
+
     }
 };
 
