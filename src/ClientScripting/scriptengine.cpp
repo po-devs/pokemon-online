@@ -1256,3 +1256,7 @@ bool ScriptEngine::validColor(const QString &color)
 
     return colorName.isValid();
 }
+
+QScriptValue ScriptEngine::os() {
+    return OS;
+}

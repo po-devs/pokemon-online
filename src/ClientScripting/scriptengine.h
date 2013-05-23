@@ -130,6 +130,9 @@ public:
     Q_INVOKABLE bool isSafeScripts();
     Q_INVOKABLE bool showingWarnings();
 
+    // Returns the player's operating system (windows, mac, linux)
+    Q_INVOKABLE QScriptValue os();
+
     Q_INVOKABLE void hostName(const QString &ip, const QScriptValue &function);
 
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
