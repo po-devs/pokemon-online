@@ -1825,6 +1825,7 @@ void BattleBase::healStatus(int player, int status)
 void BattleBase::healConfused(int player)
 {
     poke(player).removeStatus(Pokemon::Confused);
+    pokeMemory(player).remove("ConfusedCount");
 }
 
 bool BattleBase::isConfused(int player)
