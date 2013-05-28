@@ -433,8 +433,9 @@ struct AMForeWarn : public AM {
 
     struct special_moves : public QHash<int,int> {
         special_moves() {
-            (*this)[133] = (*this)[166] = (*this)[186] = (*this)[353] = 160;
-            (*this)[70] = (*this)[241] = (*this)[251] = 120;
+            (*this)[32] = (*this)[90] = (*this)[12] = (*this)[329] = 160;
+            (*this)[323] = (*this)[284] = 150;
+            (*this)[68] = (*this)[243] = (*this)[368] = 120;
         }
     };
 
