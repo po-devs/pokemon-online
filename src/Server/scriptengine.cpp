@@ -2788,7 +2788,7 @@ void ScriptEngine::writeCompressed(const QString &zipName, const QString &data) 
     qCompress(byteArray, 9);
     QFile file(zipName);
     if (!file.open(QIODevice::WriteOnly)) {
-        warn("writeToFile(zipname, data)", "Error when opening " + zipName + ": " + file.errorString());
+        warn("writeCompressed(zipname, data)", "Error when opening " + zipName + ": " + file.errorString());
         return;
     }
     file.write(qCompress(byteArray));
