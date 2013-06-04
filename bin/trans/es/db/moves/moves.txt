@@ -143,7 +143,7 @@
 142 Beso Amoroso
 143 Ataque Aéreo
 144 Transform
-145 Burbujas
+145 Burbuja
 146 Puño Mareo
 147 Espora
 148 Destello
