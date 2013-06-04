@@ -18,13 +18,13 @@
 17 Cru-aile
 18 Cyclone
 19 Vol
-20 Etreinte
+20 Étreinte
 21 Souplesse
 22 Fouet Lianes
-23 Ecrasement
+23 Écrasement
 24 Double Pied
 25 Ultimawashi
-26 Pied Saute
+26 Pied Sauté
 27 Mawashi Geri
 28 Jet De Sable
 29 Coup D'boule
@@ -34,13 +34,13 @@
 33 Charge
 34 Plaquage
 35 Ligotage
-36 Belier
+36 Bélier
 37 Mania
 38 Damocles
 39 Mimi-queue
 40 Dard-venin
 41 Double-dard
-42 Dard-nuee
+42 Dard-nuée
 43 Groz'yeux
 44 Morsure
 45 Rugissement
@@ -53,13 +53,13 @@
 52 Flammeche
 53 Lance-flamme
 54 Brume
-55 Pistolet A O
+55 Pistolet à O
 56 Hydrocanon
 57 Surf
 58 Laser Glace
 59 Blizzard
 60 Rafale Psy
-61 Bulles D'o
+61 Bulles d'O
 62 Onde Boreale
 63 Ultralaser
 64 Picpic
@@ -79,15 +79,15 @@
 78 Para-spore
 79 Poudre Dodo
 80 Danse-fleur
-81 Secretion
+81 Sécrétion
 82 Draco-rage
 83 Danseflamme
-84 Eclair
+84 Éclair
 85 Tonnerre
-86 Cage-eclair
+86 Cage-éclair
 87 Fatal-foudre
 88 Jet-pierres
-89 Seisme
+89 Séisme
 90 Abime
 91 Tunnel
 92 Toxik
@@ -95,7 +95,7 @@
 94 Psyko
 95 Hypnose
 96 Yoga
-97 Hate
+97 Hâte
 98 Vive-attaque
 99 Frenesie
 100 Teleport
@@ -111,12 +111,12 @@
 110 Repli
 111 Boul'armure
 112 Bouclier
-113 Mur Lumiere
-114 Buee Noire
+113 Mur Lumière
+114 Buée Noire
 115 Protection
 116 Puissance
 117 Patience
-118 Metronome
+118 Métronome
 119 Mimique
 120 Destruction
 121 Bomb'oeuf
@@ -124,24 +124,24 @@
 123 Puredpois
 124 Detritus
 125 Massd'os
-126 Deflagration
+126 Déflagration
 127 Cascade
 128 Claquoir
 129 Meteores
 130 Coud'krane
 131 Picanon
 132 Constriction
-133 Amnesie
-134 Telekinesie
+133 Amnésie
+134 Télékinésie
 135 E-coque
 136 Pied Voltige
 137 Intimidation
-138 Devoreve
+138 Dévorêve
 139 Gaz Toxik
 140 Pilonnage
 141 Vampirisme
 142 Grobisou
-143 Pique
+143 Piqué
 144 Morphing
 145 Ecume
 146 Uppercut
