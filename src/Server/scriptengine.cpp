@@ -2785,13 +2785,12 @@ void ScriptEngine::removeDir(const QString &dir)
 
 void ScriptEngine::writeCompressed(const QString &zipName, const QString &data) {
     QByteArray byteArray(data.toStdString().c_str());
-    qCompress(byteArray, 9);
     QFile file(zipName);
     if (!file.open(QIODevice::WriteOnly)) {
         warn("writeCompressed(zipname, data)", "Error when opening " + zipName + ": " + file.errorString());
         return;
     }
-    file.write(qCompress(byteArray));
+    file.write(qCompress(byteArray, 9));
     file.close();
 }
 
