@@ -983,6 +983,30 @@ void ScriptEngine::removeDir(const QString &dir)
     QString current=directory.currentPath();
     directory.rmpath(current+"/"+dir); //rmpath only deletes if empty, so no need to check
 }
+
+void ScriptEngine::writeCompressed(const QString &zipName, const QString &data) {
+    QByteArray byteArray(data.toStdString().c_str());
+    qCompress(byteArray, 9);
+    QFile file(zipName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        warn("writeToFile(zipname, data)", "Error when opening " + zipName + ": " + file.errorString());
+        return;
+    }
+    file.write(qCompress(byteArray));
+    file.close();
+}
+
+QScriptValue ScriptEngine::readCompressed(const QString &zipName) {
+    QFile file(zipName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        warn("readCompressed(zipname)", "Error when opening " + zipName + ": " + file.errorString());
+        return myengine.undefinedValue();
+    }
+    QByteArray byteArray = qUncompress(file.readAll());
+    file.close();
+    return QString(byteArray);
+}
+
 QScriptValue ScriptEngine::extractZip(const QString &zipName, const QString &targetDir)
 {
     if (safeScripts) {
