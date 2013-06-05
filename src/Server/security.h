@@ -94,6 +94,7 @@ public:
     static void ban(const QString &name);
     static void banIP(const QString &ip);
     static void unban(const QString &name);
+    static int numRegistered(const QString &ip);
     static void IPunban(const QString &ip);
     static void setAuth(const QString &name, int auth);
     static void clearPass(const QString &name);

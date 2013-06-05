@@ -329,6 +329,26 @@ void SecurityManager::unban(const QString &name) {
     }
 }
 
+int SecurityManager::numRegistered(const QString &ip)
+{
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    if (SQLCreator::databaseType == SQLCreator::SQLite) {
+        /* On SQLite, there's some bug with the qt driver probably,
+           but here it oftens return nothing if i use '=' instead of 'like', so... */
+        q.prepare("select count(*) from trainers where length(hash) > 0 and ip like ?");
+    } else {
+        q.prepare("select count(*) from trainers where length(hash) > 0 and ip=?");
+    }
+
+    q.addBindValue(ip);
+    q.exec();
+
+    q.next();
+    return q.value(0).toInt();
+}
+
 void SecurityManager::IPunban(const QString &ip)
 {
     QList<QString> _members = membersForIp(ip);

@@ -418,6 +418,11 @@ void ScriptEngine::serverShutDown()
     evaluate(myscript.property("serverShutDown").call(myscript, QScriptValueList()));
 }
 
+bool ScriptEngine::beforePlayerRegister(int src)
+{
+    return makeSEvent("beforePlayerRegister", src);
+}
+
 bool ScriptEngine::beforeIPConnected(const QString &ip)
 {
     return makeSEvent("beforeIPConnected", ip);
@@ -952,6 +957,11 @@ QScriptValue ScriptEngine::aliases(const QString &ip)
 int ScriptEngine::connections(const QString &ip)
 {
     return AntiDos::obj()->connectionsPerIp.value(ip);
+}
+
+int ScriptEngine::numRegistered(const QString &ip)
+{
+    return SecurityManager::numRegistered(ip);
 }
 
 QScriptValue ScriptEngine::memoryDump()
