@@ -309,18 +309,18 @@ void Server::changeDbMod(const QString &mod)
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
-    GenInfo::init("/db/gens/");
-    PokemonInfo::init("/db/pokes/");
-    MoveSetChecker::init("/db/pokes/");
-    ItemInfo::init("/db/items/");
-    MoveInfo::init("/db/moves/");
-    TypeInfo::init("/db/types/");
-    NatureInfo::init("/db/natures/");
-    CategoryInfo::init("/db/categories/");
-    AbilityInfo::init("/db/abilities/");
-    HiddenPowerInfo::init("/db/types/");
-    StatInfo::init("/db/status/");
-    GenderInfo::init("/db/genders/"); //needed by battlelogs plugin
+    GenInfo::init("db/gens/");
+    PokemonInfo::init("db/pokes/");
+    MoveSetChecker::init("db/pokes/");
+    ItemInfo::init("db/items/");
+    MoveInfo::init("db/moves/");
+    TypeInfo::init("db/types/");
+    NatureInfo::init("db/natures/");
+    CategoryInfo::init("db/categories/");
+    AbilityInfo::init("db/abilities/");
+    HiddenPowerInfo::init("db/types/");
+    StatInfo::init("db/status/");
+    GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 
     battleThread.unpause();
 }
