@@ -72,6 +72,7 @@ public:
     QObject *getAntiDos() const;
     int channelId(const QString &chanName) const;
     void removeBattle(int battleid);
+    bool beforePlayerRegister(int src);
     void beforeChallengeIssued(int src, int dest, Challenge *c);
     void afterChallengeIssued(int src, int dest, Challenge *c);
     bool beforeFindBattle(int src);
