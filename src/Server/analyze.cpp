@@ -84,7 +84,7 @@ void Analyzer::close() {
 }
 
 QString Analyzer::ip() const {
-    if (dummy) {return QString();}
+    if (dummy) {return QString("dummyip");}
     return socket().ip();
 }
 
