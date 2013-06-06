@@ -65,6 +65,7 @@ struct BMLeppa : public BM
     BMLeppa() {
         functions["UponSetup"] = &appl;
         functions["AfterTargetList"] = &appl;
+        functions["AfterPPLoss"] = &appl;
     }
 
     static void appl(int p, int s, BS &b) {

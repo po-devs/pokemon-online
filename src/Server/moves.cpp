@@ -4666,6 +4666,7 @@ struct MMSpite : public MM
         else if (b.gen().num == 2)
             pploss = 1 + b.randint(5);
         b.losePP(t, slot, pploss);
+        b.callieffects(t,t,"AfterPPLoss");
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot),QString::number(pploss));
     }
 };
