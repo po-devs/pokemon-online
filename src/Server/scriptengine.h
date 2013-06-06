@@ -414,6 +414,8 @@ public:
     Q_INVOKABLE void removeDir(const QString &dir);
     Q_INVOKABLE QScriptValue getCurrentDir();
     Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+    Q_INVOKABLE void writeCompressed(const QString &zipName, const QString &data);
+    Q_INVOKABLE QScriptValue readCompressed(const QString &zipName);
     Q_INVOKABLE QScriptValue zip(const QString &path, const QString &directory);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName, const QString &targetDir);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName);
