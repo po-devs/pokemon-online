@@ -3145,7 +3145,7 @@ struct MMTaunt : public MM
             return;
         }
         int move = turn(b,s)["MoveChosen"].toInt();
-        if (MoveInfo::Power(move, b.gen()) == 0) {
+        if (move != NoMove && MoveInfo::Power(move, b.gen()) == 0) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
         }
