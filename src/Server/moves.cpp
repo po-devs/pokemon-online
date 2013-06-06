@@ -3163,8 +3163,9 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype)
+        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool()) {
             fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int t, BS &b) {
@@ -3623,7 +3624,7 @@ struct MMMagnetRise : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.hasWorkingAbility(s,Ability::Levitate) || poke(b,s).value("Rooted").toBool()) {
+        if (b.hasWorkingAbility(s,Ability::Levitate) || poke(b,s).value("Rooted").toBool() || poke(b,s).value("MagnetRise").toInt() > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
