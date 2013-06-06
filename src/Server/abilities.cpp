@@ -203,6 +203,10 @@ struct AMColorChange : public AM {
             if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
                 return;
             }
+            /* Sheer Force seems to negate Color Change */
+            if (turn(b,t).value("EncourageBug").toBool()) {
+                return;
+            }
             b.sendAbMessage(9,0,s,t,tp,tp);
             fpoke(b, s).type1 = tp;
             fpoke(b, s).type2 = Pokemon::Curse;
