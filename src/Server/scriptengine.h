@@ -5,7 +5,6 @@
 #include <QTextEdit>
 
 #include <QtScript>
-
 #include <QScriptValueIterator>
 
 #include <QNetworkAccessManager>
@@ -13,9 +12,12 @@
 #include <QNetworkReply>
 #include <QHostInfo>
 
+
+
 #include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
+
 
 class Server;
 class ChallengeInfo;
@@ -415,6 +417,14 @@ public:
     Q_INVOKABLE QScriptValue zip(const QString &path, const QString &directory);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName, const QString &targetDir);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName);
+
+    //Q_INVOKABLE void writeCompressed(const QString &fileName, const QString &content, int ziplvl);
+    //Q_INVOKABLE QScriptValue readCompressed(const QString &path);
+    // Implement in the future
+
+    Q_INVOKABLE void writeObject(const QString &fileName, const QScriptValue &content, int ziplvl);
+    Q_INVOKABLE QScriptValue readObject(const QString &path);
+
 
     /* GET call */
     Q_INVOKABLE void webCall(const QString &urlstring, const QScriptValue &callback);
