@@ -1159,7 +1159,7 @@ struct AMPlus : public AM {
             if (!b.arePartners(i, s) || i==s || b.koed(i)) {
                 continue;
             }
-            if (b.hasWorkingAbility(i, Ability::Minus)) {
+            if (b.hasWorkingAbility(i, Ability::Minus) || (b.gen() >= 5 && b.hasWorkingAbility(i, Ability::Plus))) {
                 turn(b,s)["Stat3AbilityModifier"] = 10;
                 return;
             }
@@ -1181,7 +1181,7 @@ struct AMMinus : public AM {
             if (!b.arePartners(i, s) || i==s || b.koed(i)) {
                 continue;
             }
-            if (b.hasWorkingAbility(i, Ability::Plus)) {
+            if (b.hasWorkingAbility(i, Ability::Plus) || (b.gen() >= 5 && b.hasWorkingAbility(i, Ability::Minus))) {
                 turn(b,s)["Stat3AbilityModifier"] = 10;
                 return;
             }
