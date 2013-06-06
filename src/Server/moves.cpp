@@ -1672,8 +1672,11 @@ struct MMEncore : public MM
         if (b.counters(s).count(BC::Encore) < 0) {
             removeFunction(poke(b,s), "MovesPossible", "Encore");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Encore");
-            b.sendMoveMessage(33,0,s);
-            b.counters(s).removeCounter(BC::Encore);
+
+            if (b.counters(s).hasCounter(BC::Encore)) {
+                b.sendMoveMessage(33,0,s);
+                b.counters(s).removeCounter(BC::Encore);
+            }
         }
     }
 
