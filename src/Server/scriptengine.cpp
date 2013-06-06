@@ -2765,6 +2765,48 @@ void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
     out.write(content.toUtf8());
 }
 
+
+void ScriptEngine::writeObject(const QString &fileName, const QScriptValue &object, int compression = -1)
+{
+    QFile out(fileName);
+
+    if (compression < -1 || compression > 9)
+    {
+        warn("writeObject(filename, object, level)", "invalid level");
+        return;
+    }
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        warn("writeObject(filename, object, level)", "error when opening " + fileName + ": " + out.errorString());
+        return;
+    }
+
+    QScriptValue serialized = myengine.globalObject().property("JSON").property("stringify").call(QScriptValue(), QScriptValueList() << object);
+
+    if (!serialized.isString())
+    {
+        warn("writeObject(filename, object, level)", "error when serializing object: " + serialized.toString());
+        return;
+    }
+
+    out.write(qCompress(serialized.toString().toUtf8(), compression));
+}
+
+QScriptValue ScriptEngine::readObject(const QString &fileName)
+{
+    QFile out(fileName);
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        warn("readObject(filename)", "error when opening " + fileName + ": " + out.errorString());
+        return myengine.undefinedValue();
+    }
+
+    QScriptValue val = myengine.globalObject().property("JSON").property("parse").call(QScriptValue(),
+        QScriptValueList() << QString::fromUtf8(qUncompress(out.readAll())));
+
+    return val;
+}
+
 void ScriptEngine::deleteFile(const QString &fileName)
 {
     QFile out(fileName);
