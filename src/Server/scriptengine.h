@@ -27,17 +27,19 @@ class ScriptEngine : public QObject
     Q_OBJECT
 
 public:
+    static QScriptValue enableStrict(QScriptContext *, QScriptEngine *e);
+
 #ifndef PO_SCRIPT_SAFE_ONLY
-    static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *);
-    static QScriptValue write(QScriptContext *c, QScriptEngine *);
-    static QScriptValue rm(QScriptContext *c, QScriptEngine *);
-    static QScriptValue mkdir(QScriptContext *c, QScriptEngine *);
-    static QScriptValue rmdir(QScriptContext *c, QScriptEngine *);
-    static QScriptValue read(QScriptContext *c, QScriptEngine *);
+    static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue write(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue mkdir(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue rmdir(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue read(QScriptContext *c, QScriptEngine *e);
     static QScriptValue writeObject(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue readObject(QScriptContext *c, QScriptEngine *);
-    static QScriptValue cwd(QScriptContext *c, QScriptEngine *);
-    static QScriptValue exists(QScriptContext *c, QScriptEngine *);
+    static QScriptValue readObject(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue cwd(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue exists(QScriptContext *c, QScriptEngine *e);
 #endif
 
     static QScriptValue sendAll(QScriptContext *c, QScriptEngine *);
@@ -52,6 +54,9 @@ public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
     /* Events */
+
+
+
 
     bool beforeSpectateBattle(int src, int p1, int p2);
     void afterSpectateBattle(int src, int p1, int p2);
@@ -501,7 +506,7 @@ private slots:
     void hostInfo_Ready(const QHostInfo &myInfo);
     
 private:
-
+    bool strict = false;
     QTimer * step_timer;
     QVector<bool> stopevents;
     SessionDataFactory *mySessionDataFactory;
