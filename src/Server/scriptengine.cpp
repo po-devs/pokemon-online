@@ -2911,14 +2911,12 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
     {
         if (po->strict) return c->throwError(QScriptContext::TypeError, "filename must be a string");
         po->warn("write(filename, content)", "typeof filename != 'string'");
-        return QScriptValue();
     }
 
     if (!data.isString())
     {
         if (po->strict) return c->throwError(QScriptContext::TypeError, "content must be a string");
         po->warn("write(filename, content)", "typeof content != 'string'");
-        return QScriptValue();
     }
 
     QFile out(fileName.toString());
@@ -2940,6 +2938,12 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
 {
     ScriptEngine *poscriptengine = dynamic_cast<ScriptEngine*>(e->parent());
+
+    if (!po->strict)
+    {
+        po->warn("writeObject(filename, object)", "function always operates in strict mode, but strict sys mode is disabled");
+    }
+
     //Server *myserver = poscriptengine->myserver;
 
     if (!c->argument(0).isString())
@@ -2948,7 +2952,7 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
     }
 
     int compression = -1;
-
+    , 
     if (c->argument(2).isNumber())
     {
         compression = c->argument(2).toInteger();
@@ -3011,7 +3015,6 @@ QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
     {
         if (po->strict) return c->throwError(QScriptContext::TypeError, "Invalid argument");
         po->warn("rm(filename)", "typeof filename != 'string'");
-        return QScriptValue();
     }
 
     QFile out(c->argument(0).toString());
