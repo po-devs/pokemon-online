@@ -37,6 +37,7 @@ public:
     static QScriptValue writeObject(QScriptContext *c, QScriptEngine *e);
     static QScriptValue readObject(QScriptContext *c, QScriptEngine *);
     static QScriptValue cwd(QScriptContext *c, QScriptEngine *);
+    static QScriptValue exists(QScriptContext *c, QScriptEngine *);
 #endif
 
     static QScriptValue sendAll(QScriptContext *c, QScriptEngine *);
