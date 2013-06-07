@@ -211,6 +211,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "append" , apf);
     sys.setProperty( "appendToFile" , apf);
 
+    sys.setProperty( "exists" , myengine.newFunction(exists));
+
 #endif
     sys.setProperty( "sendAll" , myengine.newFunction(sendAll));
     sys.setProperty( "sendMessage" , myengine.newFunction(sendMessage));
@@ -3244,6 +3246,14 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
         result_array.setProperty(i, result_data.at(i));
     }
     return result_array;
+}
+QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
+{
+    if (!c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "filename must be a string");
+
+    QFile f(c->argument(0).toString());
+
+    return QScriptValue(f.exists());
 }
 
 QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *)
