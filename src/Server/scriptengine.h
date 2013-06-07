@@ -25,10 +25,31 @@ class ChallengeInfo;
 class ScriptEngine : public QObject
 {
     Q_OBJECT
+
+public:
+#ifndef PO_SCRIPT_SAFE_ONLY
+    static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *);
+    static QScriptValue write(QScriptContext *c, QScriptEngine *);
+    static QScriptValue rm(QScriptContext *c, QScriptEngine *);
+    static QScriptValue mkdir(QScriptContext *c, QScriptEngine *);
+    static QScriptValue rmdir(QScriptContext *c, QScriptEngine *);
+    static QScriptValue read(QScriptContext *c, QScriptEngine *);
+    static QScriptValue writeObject(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue readObject(QScriptContext *c, QScriptEngine *);
+    static QScriptValue cwd(QScriptContext *c, QScriptEngine *);
+#endif
+
+    static QScriptValue sendAll(QScriptContext *c, QScriptEngine *);
+    static QScriptValue sendMessage(QScriptContext *c, QScriptEngine *);
+    static QScriptValue broadcast(QScriptContext *c, QScriptEngine *);
+
+    static QScriptValue lighter(QScriptContext *c, QScriptEngine *);
+    static QScriptValue darker(QScriptContext *c, QScriptEngine *);
+    static QScriptValue lightness(QScriptContext *c, QScriptEngine *);
+    static QScriptValue tint(QScriptContext *c, QScriptEngine *);
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
-
     /* Events */
 
     bool beforeSpectateBattle(int src, int p1, int p2);
@@ -105,11 +126,12 @@ public:
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
-    Q_INVOKABLE void sendAll(const QString &mess);
-    Q_INVOKABLE void sendHtmlAll(const QString &mess);
 
-    Q_INVOKABLE void sendAll(const QString &mess, int channel);
+    // TODO: convert these crappy functions:
+    Q_INVOKABLE void sendHtmlAll(const QString &mess);
     Q_INVOKABLE void sendHtmlAll(const QString &mess, int channel);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess);
+    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess, int channel);
 
     Q_INVOKABLE void kick(int id);
     Q_INVOKABLE void kick(int playerid, int chanid);
@@ -131,8 +153,6 @@ public:
 
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 
-    // Q_INVOKABLE void setTimer(int ms); // Causes crash
-
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.
        If called in 'beforeChallengeIssued', the challenge won't be issued.
@@ -141,11 +161,7 @@ public:
 
     Q_INVOKABLE void shutDown();
 
-    Q_INVOKABLE void sendMessage(int id, const QString &mess);
-    Q_INVOKABLE void sendMessage(int id, const QString &mess, int channel);
 
-    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess);
-    Q_INVOKABLE void sendHtmlMessage(int id, const QString &mess, int channel);
 
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
@@ -390,6 +406,8 @@ public:
 // Potentially unsafe functions.
 #ifndef PO_SCRIPT_SAFE_ONLY
     /* Save vals using the QSettings (persistent vals, that stay after the shutdown of the server */
+
+
     Q_INVOKABLE void saveVal(const QString &key, const QVariant &val);
     Q_INVOKABLE void saveVal(const QString &file, const QString &key, const QVariant &val);
 
@@ -407,13 +425,8 @@ public:
     Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir);
 
     // Direct file access.
-    Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
-    Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
-    Q_INVOKABLE void deleteFile(const QString &fileName);
-    Q_INVOKABLE void makeDir(const QString &dir);
-    Q_INVOKABLE void removeDir(const QString &dir);
-    Q_INVOKABLE QScriptValue getCurrentDir();
-    Q_INVOKABLE QScriptValue getFileContent(const QString &path);
+
+
     Q_INVOKABLE QScriptValue zip(const QString &path, const QString &directory);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName, const QString &targetDir);
     Q_INVOKABLE QScriptValue extractZip(const QString &zipName);
@@ -421,9 +434,6 @@ public:
     //Q_INVOKABLE void writeCompressed(const QString &fileName, const QString &content, int ziplvl);
     //Q_INVOKABLE QScriptValue readCompressed(const QString &path);
     // Implement in the future
-
-    Q_INVOKABLE void writeObject(const QString &fileName, const QScriptValue &content, int ziplvl);
-    Q_INVOKABLE QScriptValue readObject(const QString &path);
 
 
     /* GET call */
@@ -456,6 +466,11 @@ private slots:
     void read_standard_output();
     void read_standard_error();
 private:
+    QScriptValue parse;
+    QScriptValue stringify;
+    Server *myserver;
+    QScriptEngine myengine;
+    QScriptValue myscript;
     struct ProcessData {
         QScriptValue callback;
         QScriptValue errback;
@@ -485,9 +500,7 @@ private slots:
     void hostInfo_Ready(const QHostInfo &myInfo);
     
 private:
-    Server *myserver;
-    QScriptEngine myengine;
-    QScriptValue myscript;
+
     QTimer * step_timer;
     QVector<bool> stopevents;
     SessionDataFactory *mySessionDataFactory;
