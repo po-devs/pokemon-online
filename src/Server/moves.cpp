@@ -6355,6 +6355,17 @@ struct MMWillOWisp : public MM
     }
 };
 
+struct MMAutotomize : public MM
+{
+    MMAutotomize() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        fpoke(b, s).weight = std::max(1, fpoke(b,s).weight-1000);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6586,4 +6597,5 @@ void MoveEffect::init()
     REGISTER_MOVE(194, CrossThunder);
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
+    REGISTER_MOVE(197, Autotomize);
 }

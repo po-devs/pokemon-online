@@ -233,6 +233,7 @@
 471 155-1_3#Power Share
 472 168#Wonder Room
 474 117-5#Venom Shock
+475 197#Autotomize
 476 48#Rage power
 477 174#Telekinesis
 478 156#Magic Room

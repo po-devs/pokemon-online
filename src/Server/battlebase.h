@@ -326,7 +326,7 @@ public:
 
     struct BasicPokeInfo {
         Pokemon::uniqueId id;
-        float weight;
+        int weight;
         int type1;
         int type2;
         int ability;
