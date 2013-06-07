@@ -183,6 +183,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     myengine.globalObject().setProperty("Qt", qtObject);
 
 
+    sys.setProperty( "enableStrict" , myengine.newFunction(enableStrict));
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
     QScriptValue writeFunc = myengine.newFunction(write);
@@ -253,10 +255,11 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     stopTimer_w = false;
 
     mySessionDataFactory->disableAll();
+    strict = false;
     newscript = myengine.evaluate(script);
 
     if (newscript.isError()) {
-
+        strict = false;
         makeEvent("switchError", newscript);
         printLine("Script Check: Fatal script error on line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + newscript.toString());
 
@@ -268,6 +271,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
         if (!makeSEvent("loadScript")) {
             myscript = oldscript;
             myengine.globalObject().setProperty("script", myscript);
+            strict = false;
             makeEvent("switchError", newscript);
             printLine("Script Check: Script rejected server. Maybe it requires a newer version?");
             return;
@@ -301,7 +305,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     }
 
-    // Error check?
 }
 
 QScriptValue ScriptEngine::import(const QString &fileName) {
@@ -691,16 +694,19 @@ void ScriptEngine::evaluate(const QScriptValue &expr)
 
 QScriptValue ScriptEngine::sendAll(QScriptContext *c, QScriptEngine *e)
 {
-    Server * s = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
+    ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());
+    Server * s = po->myserver;
 
-    if (!c->argument(1).isNumber())
+    if (po->strict ? c->argument(1).isUndefined() || c->argument(1).isNull() : c->argumentCount() <= 1 || c->argument(1).isNull())
     {
         s->broadCast(c->argument(0).toString());
         return QScriptValue();
     }
     else if (!s->channelExist(c->argument(1).toInteger()))
     {
-        return c->throwError("Channel does not exist");
+        if (po->strict) return c->throwError("Channel does not exist");
+        po->warn("sendAll(mess, channel)","invalid channel");
+        return QScriptValue();
     }
 
     s->broadCast(c->argument(0).toString(), c->argument(1).toInteger());
@@ -709,7 +715,9 @@ QScriptValue ScriptEngine::sendAll(QScriptContext *c, QScriptEngine *e)
 }
 
 QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
+// WIP
 {
+
     Server * s = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
 
     if (!c->argument(0).isString())
@@ -725,6 +733,7 @@ QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
     {
         return c->throwError("Invalid channel");
     }
+
     int sender = (c->argument(2).isNumber() ? c->argument(2).toInteger(): Server::NoSender);
 
     if (sender != Server::NoSender && sender != 0 && !s->playerExist(c->argument(2).toInteger()))
@@ -839,7 +848,7 @@ void ScriptEngine::putInChannel(int id, int chanid)
         return;
     }
     if (myserver->player(id)->getChannels().contains(chanid)){
-        printLine(QString("Script Warning in sys.putInChannel(id, chan): player %1 is already in channel %2").arg(id).arg(chanid));
+        warn("putInChannel(id, chan)", QString("player %1 is already in channel %2").arg(id).arg(chanid));
     } else {
         myserver->joinChannel(id, chanid);
     }
@@ -2842,25 +2851,33 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
     return ret;
 }
 
-
-QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *)
-//void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+// done
+QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
 {
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    //Server *myserver = poscriptengine->myserver;
+
     if (!c->argument(0).isString())
     {
-        c->throwError(QScriptContext::TypeError,"filename is not a string");
+        if (po->strict) return c->throwError(QScriptContext::TypeError, "filename must be a string");
+        po->warn("write(filename, content)", "typeof filename != 'string'");
+        return QScriptValue();
     }
 
     if (!c->argument(1).isString())
     {
-        c->throwError(QScriptContext::TypeError,"content is not a string");
+        if (po->strict) return c->throwError(QScriptContext::TypeError, "content must be a string");
+        po->warn("write(filename, content)", "typeof content != 'string'");
+        return QScriptValue();
     }
-
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::Append))
     {
-        c->throwError(out.errorString());
+        if (po->strict) c->throwError(out.errorString());
+
+        po->warn("append(filename, content)", "append file " + c->argument(0).toString() + ": " + out.errorString());
+        return QScriptValue();
     }
 
     out.write(c->argument(1).toString().toUtf8());
@@ -2868,14 +2885,10 @@ QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *)
     return QScriptValue();
 }
 
-QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *)
+QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 {
-    if (c->argumentCount() != 2)
-    {
-        c->throwError(QScriptContext::TypeError, "Invalid Arguments");
-        return QScriptValue();
-    }
-
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    //Server *myserver = poscriptengine->myserver;
     QScriptValue fileName, data;
 
     fileName = c->argument(0);
@@ -2883,13 +2896,15 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *)
 
     if (!fileName.isString())
     {
-        c->throwError(QScriptContext::TypeError, "fileName is not a string");
+        if (po->strict) return c->throwError(QScriptContext::TypeError, "filename must be a string");
+        po->warn("write(filename, content)", "typeof filename != 'string'");
         return QScriptValue();
     }
 
     if (!data.isString())
     {
-        c->throwError(QScriptContext::TypeError, "data is not a string");
+        if (po->strict) return c->throwError(QScriptContext::TypeError, "content must be a string");
+        po->warn("write(filename, content)", "typeof content != 'string'");
         return QScriptValue();
     }
 
@@ -2897,15 +2912,15 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *)
 
     if (!out.open(QIODevice::WriteOnly))
     {
-        c->throwError(out.errorString());
+        if (po->strict) return c->throwError(out.errorString());
+
+        po->warn("write(filename, content)", "error when opening " + fileName.toString() + ": " +out.errorString());
         return QScriptValue();
     }
 
     out.write(data.toString().toUtf8());
+
     return QScriptValue();
-
-
-
 }
 
 
@@ -2914,22 +2929,20 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
     ScriptEngine *poscriptengine = dynamic_cast<ScriptEngine*>(e->parent());
     //Server *myserver = poscriptengine->myserver;
 
-    if ((c->argumentCount() != 3 && c->argumentCount() != 2) || !c->argument(0).isString())
+    if (!c->argument(0).isString())
     {
-        c->throwError(QScriptContext::TypeError, "Invalid arguments");
+        return c->throwError(QScriptContext::TypeError, "filename must be a string");
     }
 
     int compression = -1;
 
-    if (c->argumentCount() == 3)
+    if (c->argument(2).isNumber())
     {
-        if (!(c->argument(2).isNumber())) c->throwError(QScriptContext::TypeError, "Invalid arguments");
-
         compression = c->argument(2).toInteger();
 
         if (compression > 9 || compression < -1)
         {
-            c->throwError(QScriptContext::RangeError, "Invalid compression level");
+            return c->throwError(QScriptContext::RangeError, "Invalid compression level");
         }
     }
 
@@ -2937,7 +2950,7 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
 
     if (!out.open(QIODevice::WriteOnly))
     {
-        c->throwError(out.errorString());
+        return c->throwError(out.errorString());
     }
 
     QScriptValue serialized = poscriptengine->stringify.call(QScriptValue(), QScriptValueList() << c->argument(1));
@@ -2950,12 +2963,18 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
 QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 //QScriptValue ScriptEngine::readObject(const QString &fileName)
 {
-    ScriptEngine *poscriptengine = dynamic_cast<ScriptEngine*>(e->parent());
-   // Server *myserver = poscriptengine->myserver;
+
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    // Server *myserver = poscriptengine->myserver;
+
+    if (!po->strict)
+    {
+        po->warn("readObject(filename, object)", "function always operates in strict mode, but strict sys mode is disabled");
+    }
+
     if (!c->argument(0).isString())
     {
         c->throwError(QScriptContext::TypeError, "filename must be a string");
-
     }
     QFile out(c->argument(0).toString());
 
@@ -2964,40 +2983,48 @@ QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
         c->throwError(out.errorString());
     }
 
-    QScriptValue val = poscriptengine->parse.call(QScriptValue(),
+    QScriptValue val = po->parse.call(QScriptValue(),
         QScriptValueList() << QString::fromUtf8(qUncompress(out.readAll())));
 
     return val;
 }
 
-QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *)
+QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::deleteFile(const QString &fileName)
 {
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
     if (!c->argument(0).isString())
     {
-        c->throwError(QScriptContext::TypeError, "Invalid argument");
+        if (po->strict) return c->throwError(QScriptContext::TypeError, "Invalid argument");
+        po->warn("rm(filename)", "typeof filename != 'string'");
+        return QScriptValue();
     }
+
     QFile out(c->argument(0).toString());
 
     if (!out.remove())
     {
-        c->throwError(out.errorString());
+        if (po->strict) return c->throwError(out.errorString());
+        po->warn("rm(filename)", "error when opening " + c->argument(0).toString() + ": " + out.errorString());
     }
 
     return QScriptValue();
 }
 
-QScriptValue ScriptEngine::mkdir(QScriptContext *c, QScriptEngine *)
+QScriptValue ScriptEngine::mkdir(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::makeDir(const QString &dir)
 {
-    if (!c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "Invalid argument");
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    if (po->strict && !c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "Invalid argument");
 
     QString dir = c->argument(0).toString();
     QDir directory(dir);
 
     QString current = directory.currentPath();
 
-    if(directory.exists(dir))
+    if (directory.exists(dir))
     {
         return QScriptValue();
     }
@@ -3007,10 +3034,12 @@ QScriptValue ScriptEngine::mkdir(QScriptContext *c, QScriptEngine *)
     return QScriptValue();
 }
 
-QScriptValue ScriptEngine::rmdir(QScriptContext *c, QScriptEngine *)
+QScriptValue ScriptEngine::rmdir(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::removeDir(const QString &dir)
 {
-    if (!c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "Invalid argument");
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    if (po->strict && !c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "Invalid argument");
     QString dir = c->argument(0).toString();
 
     QDir directory(dir);
@@ -3256,17 +3285,20 @@ QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
     return QScriptValue(f.exists());
 }
 
-QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *)
+QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
 //QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
-    if (!c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "filename is not a string");
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    if (po->strict && !c->argument(0).isString()) c->throwError(QScriptContext::TypeError, "filename must be a string");
 
 
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly))
     {
-        c->throwError(out.errorString());
+        if (po->strict) return c->throwError(out.errorString());
+        po->warn("read(filename)", "error when opening " + c->argument(0).toString() + ": " + out.errorString());
+        return QScriptValue();
     }
 
     return QScriptValue(QString::fromUtf8(out.readAll()));
@@ -3300,7 +3332,7 @@ bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
 int ScriptEngine::system(const QString &command)
 {
     if (myserver->isSafeScripts()) {
-        warn("system", "Safe scripts option is on. Unable to invoke system command.");
+        warn("system(command)", "Safe scripts option is on. Unable to invoke system command.");
         return -1;
     } else {
         return ::system(command.toUtf8());
@@ -3441,4 +3473,12 @@ bool ScriptEngine::validColor(const QString &color)
     QColor colorName = QColor(color);
 
     return colorName.isValid();
+}
+
+QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
+{
+    ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());
+    po->strict = true;
+
+    return QScriptValue(1);
 }
