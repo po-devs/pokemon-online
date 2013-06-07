@@ -758,20 +758,33 @@ QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
 QScriptValue ScriptEngine::sendMessage(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::sendMessage(int id, const QString &mess)
 {
-    Server *myserver = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
-    if (!c->argument(0).isNumber() || !myserver->playerExist(c->argument(0).toInteger()))
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    Server *myserver = po->myserver;
+
+    if (po->strict && !c->argument(0).isNumber())
     {
-        return c->throwError("Invalid player");
+        return c->throwError("src must be an integer");
     }
 
-    if (!c->argument(2).isNumber())
+    if (!myserver->playerExist(c->argument(0).toInteger()))
+    {
+        if (po->strict) return c->throwError("Invalid player");
+        po->warn("sendMessage(id, message, chan)", "can't find player");
+        return QScriptValue();
+    }
+
+
+
+    if ((po->strict && !c->argument(2).isNumber()) || (!po->strict && c->argumentCount() <= 2))
     {
         myserver->broadCast(c->argument(1).toString(), Server::NoChannel, Server::NoSender, false, 0);
         return QScriptValue();
     }
     else if ( !myserver->channelExist(c->argument(2).toInteger()) )
     {
-        return c->throwError("Invalid channel");
+        if (po->strict) return c->throwError("Invalid channel");
+        po->warn("sendMessage(id, message, chan)", "can't find channel");
+        return QScriptValue();
     }
     else
     {
