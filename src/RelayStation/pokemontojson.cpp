@@ -81,6 +81,9 @@ QVariantMap toJson(const PokeBattle &poke)
     ret.insert("totalLife", poke.totalLifePoints());
     ret.insert("happiness", poke.happiness());
 
+    ret.insert("item", poke.item());
+    ret.insert("ability", poke.ability());
+
     QVariantList moves;
     for (int i = 0; i < 4; i++) {
         moves.push_back(toJson(poke.move(i)));
