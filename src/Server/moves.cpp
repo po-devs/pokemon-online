@@ -4955,7 +4955,7 @@ struct MMRolePlay : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
-        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion) {
+         if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::DarumaMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Eccentric ) {
             fturn(b,s).add(TM::Failed);
         }
     }
