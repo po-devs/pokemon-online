@@ -724,6 +724,16 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
     if (battleMemory().value("TrickRoomCount").toInt() > 0) {
         std::reverse(ret.begin(),ret.end());
+        if (gen().num == 5) { // gen 5 ignores trick room for pokemon with speed>=1809
+            std::vector<int> temp;
+            for (int it = ret.size()-1; it >= 0; it--) {
+                if (getStat(ret[it], Speed) >= 1809) {
+                    temp.push_back(ret[it]);
+                    ret.erase(ret.begin()+it);
+                }
+            }
+            ret.insert(ret.begin(), temp.begin(), temp.end());
+        }
     }
 
     return std::move(ret);
