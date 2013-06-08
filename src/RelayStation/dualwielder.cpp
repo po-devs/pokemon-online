@@ -753,6 +753,10 @@ void DualWielder::readWebSocket(const QString &frame)
             notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(true));
         } else if (command == "stopwatching") {
             notify(Nw::SpectateBattle, qint32(data.toInt()), Flags(false));
+        } else if (command =="forfeit") {
+            /* Do both just in case. */
+            notify(Nw::BattleFinished, qint32(data.toInt()), Forfeit);
+            notify(Nw::BattleFinished, qint32(data.toInt()), Close);
         } else if (command == "player") {
             int p = data.toInt();
             /* Spam control */
