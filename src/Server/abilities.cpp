@@ -1335,10 +1335,10 @@ struct AMWeakKneed : public AM {
 
 struct AMDarumaMode : public AM {
     AMDarumaMode() {
-        functions["AfterHPChange"] = &ahpc;
+        functions["EndTurn27.0"] = &et;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void et (int s, int, BS &b) {
         Pokemon::uniqueId num = fpoke(b,s).id;
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
