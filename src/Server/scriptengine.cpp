@@ -2437,7 +2437,7 @@ int ScriptEngine::teamPokeAbility(int id, int team, int slot)
 
 void ScriptEngine::changeName(int playerId, QString newName)
 {
-    if (!loggedIn(playerId) || !id(newName).isUndefined()) {
+    if (!testPlayer("changeName", playerId) || !id(newName).isUndefined()) {
         return;
     }
 
@@ -2449,7 +2449,7 @@ void ScriptEngine::changeName(int playerId, QString newName)
 
 void ScriptEngine::changeInfo(int playerId, QString newInfo)
 {
-    if (!loggedIn(playerId)) {
+    if (!testPlayer("changeInfo", playerId)) {
         return;
     }
 
@@ -2460,7 +2460,7 @@ void ScriptEngine::changeInfo(int playerId, QString newInfo)
 // TODO: Player info will be separate from teams. Update it. -- Mystra
 QScriptValue ScriptEngine::info(int playerId)
 {
-    if (loggedIn(playerId)) {
+    if (testPlayer("info", playerId)) {
         return myserver->player(playerId)->info();
     }else{
         return myengine.undefinedValue();
@@ -2479,7 +2479,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
 {
     Pokemon::uniqueId pokemon(poke);
 
-    if ((slot >= 0) && (slot <= 2)) {
+    if (testRange("pokeAbilitiy", slot, 0, 2)) {
         return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();
