@@ -157,13 +157,15 @@ struct MMAquaRing : public MM
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull()) {
             int healing = b.poke(s).totalLifePoints()/16;
-
-            if (b.hasWorkingItem(s, Item::BigRoot)) {
-                healing = healing * 13 / 10;
+            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
+                            return;
+            } else {
+                if (b.hasWorkingItem(s, Item::BigRoot)) {
+                    healing = healing * 13 / 10;
+                }
+                b.healLife(s, healing);
+                b.sendMoveMessage(2, 1, s, Pokemon::Water);
             }
-
-            b.healLife(s, healing);
-            b.sendMoveMessage(2, 1, s, Pokemon::Water);
         }
     }
 };
@@ -2512,7 +2514,7 @@ struct MMLeechSeed : public MM
         }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
             if (poke(b, s2).value("HealBlockCount").toInt() > 0) {
-                b.sendMoveMessage(60, 0, s2);
+                return;
             } else {
                 b.healLife(s2, damage);
             }
@@ -2654,7 +2656,7 @@ struct MMIngrain : public MM
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
             if (poke(b, s).value("HealBlockCount").toInt() > 0) {
-                b.sendMoveMessage(60, 0, s);
+                return;
             } else {
                 int healing = b.poke(s).totalLifePoints()/16;
 
@@ -2932,7 +2934,7 @@ struct MMSubstitute : public MM
         fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
-        //	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
+        //  addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 };
 
