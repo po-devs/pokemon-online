@@ -357,6 +357,7 @@ public:
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isDrive(int itemnum);
+    static bool isJewel(int itemnum);
     static bool isMail(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
