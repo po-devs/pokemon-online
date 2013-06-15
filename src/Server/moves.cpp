@@ -157,13 +157,15 @@ struct MMAquaRing : public MM
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull()) {
             int healing = b.poke(s).totalLifePoints()/16;
+            if (poke(b, s).value("HealBlockCount").toInt() > 0)
+                return;
 
             if (b.hasWorkingItem(s, Item::BigRoot)) {
                 healing = healing * 13 / 10;
             }
 
-            b.healLife(s, healing);
             b.sendMoveMessage(2, 1, s, Pokemon::Water);
+            b.healLife(s, healing);
         }
     }
 };
@@ -2504,18 +2506,15 @@ struct MMLeechSeed : public MM
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
         b.inflictDamage(s, damage, s, false);
 
-        if (b.koed(s2))
+        if (b.koed(s2) || poke(b, s2).value("HealBlockCount").toInt() > 0)
             return;
 
         if (b.hasWorkingItem(s2, Item::BigRoot)) {
             damage = damage * 13 / 10;
         }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
-            if (poke(b, s2).value("HealBlockCount").toInt() > 0) {
-                b.sendMoveMessage(60, 0, s2);
-            } else {
                 b.healLife(s2, damage);
-            }
+                b.sendMoveMessage(60, 0, s2);
         }
         else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
@@ -2653,17 +2652,15 @@ struct MMIngrain : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
-                b.sendMoveMessage(60, 0, s);
-            } else {
-                int healing = b.poke(s).totalLifePoints()/16;
+            if (poke(b, s).value("HealBlockCount").toInt() > 0)
+                return;
 
+                int healing = b.poke(s).totalLifePoints()/16;
                 if (b.hasWorkingItem(s, Item::BigRoot)) {
                     healing = healing * 13 / 10;
                 }
-                b.healLife(s, healing);
                 b.sendMoveMessage(151,1,s,Pokemon::Grass);
-            }
+                b.healLife(s, healing);
         }
     }
 };
@@ -2932,7 +2929,7 @@ struct MMSubstitute : public MM
         fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
-        //	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
+        //  addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 };
 
