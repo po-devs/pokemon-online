@@ -11,6 +11,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QHostInfo>
+#include <QScriptEngineAgent>
 
 
 
@@ -18,6 +19,13 @@
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
 
+class ScriptEngineBacktaceGenerator: public QScriptEngineAgent
+{
+   // Q_OBJECT
+public:
+    ScriptEngineBacktaceGenerator(QScriptEngine *e);
+    void exceptionThrow (qint64, const QScriptValue & exception, bool);
+};
 
 class Server;
 class ChallengeInfo;
@@ -25,22 +33,33 @@ class ChallengeInfo;
 class ScriptEngine : public QObject
 {
     Q_OBJECT
+    friend class ScriptEngineBacktaceGenerator;
 
 public:
     static QScriptValue enableStrict(QScriptContext *, QScriptEngine *e);
 
 #ifndef PO_SCRIPT_SAFE_ONLY
-    static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue write(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue mkdir(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue rmdir(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue read(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue writeObject(QScriptContext *c, QScriptEngine *e);
-    static QScriptValue readObject(QScriptContext *c, QScriptEngine *e);
     static QScriptValue cwd(QScriptContext *c, QScriptEngine *e);
     static QScriptValue exists(QScriptContext *c, QScriptEngine *e);
+
+    static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue write(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue read(QScriptContext *c, QScriptEngine *e);
+
+    static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
+
+    static QScriptValue mkdir(QScriptContext *c, QScriptEngine *);
+    static QScriptValue rmdir(QScriptContext *c, QScriptEngine *);
+
+    static QScriptValue writeObject(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue readObject(QScriptContext *c, QScriptEngine *e);
+
+    static QScriptValue writeFlat(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue readFlat(QScriptContext *c, QScriptEngine *e);
+
+    static QScriptValue exec(QScriptContext *c, QScriptEngine *e);
 #endif
+    static QScriptValue backtrace(QScriptContext *c, QScriptEngine *);
 
     static QScriptValue sendAll(QScriptContext *c, QScriptEngine *);
     static QScriptValue sendMessage(QScriptContext *c, QScriptEngine *);
