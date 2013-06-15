@@ -101,7 +101,7 @@
 151 %s planted its roots!|%s absorbed nutrients with its roots!
 155 %s and %f had their power shared!|%s and %f had their defenses shared!
 156 %s cancelled the items' effects!|The items are now working again!
-157 %s became of the Water type!
+157 %s transformed into the Water type!
 158 %f gained %a!
 160 %f's %i burned!
 162 %s gave %f its %i!
