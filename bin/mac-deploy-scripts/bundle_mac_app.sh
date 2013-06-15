@@ -31,6 +31,7 @@ function bundle_mac_app() {
 
    if [ $app = "Pokemon-Online.app" ]
    then
+      # XXX: how to configure which qmake to use?
       IMPORTS=$(qmake -query QT_INSTALL_IMPORTS)
       PLUGINS=$(qmake -query QT_INSTALL_PLUGINS)
       if [ $IMPORTS ]
@@ -44,8 +45,9 @@ function bundle_mac_app() {
       if [ $PLUGINS ]
       then
          mkdir -p $app/Contents/PlugIns
-         cp -r $PLUGINS/phonon_backend $app/Contents/PlugIns/
          cp -r $PLUGINS/imageformats $app/Contents/PlugIns/
+         [ -d $PLUGINS/mediaservice ] && cp -r $PLUGINS/mediaservice $app/Contents/PlugIns/
+         [ -d $PLUGINS/phonon_backend ] && cp -r $PLUGINS/phonon_backend $app/Contents/PlugIns/
       else
          echo 'Could not find Qt Plugins, sounds do not work'
       fi
