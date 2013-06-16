@@ -525,7 +525,8 @@ private slots:
     void hostInfo_Ready(const QHostInfo &myInfo);
     
 private:
-    bool strict = false;
+    bool strict;
+    bool wfatal;
     QTimer * step_timer;
     QVector<bool> stopevents;
     SessionDataFactory *mySessionDataFactory;
@@ -556,7 +557,7 @@ private:
     bool testChannel(const QString &function, int id);
     bool testPlayerInChannel(const QString &function, int id, int chan);
     bool testRange(const QString &function, int val, int min, int max);
-    void warn(const QString &function, const QString &message);
+    void warn(const QString &function, const QString &message, bool errinstrict);
 
     template <typename ...Params>
     void makeEvent(const QString &event, Params&&... params);
