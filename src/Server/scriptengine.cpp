@@ -730,7 +730,7 @@ void ScriptEngine::afterPlayerAway(int src, bool away)
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {
-        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()));
+        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()) + "\n" +myengine.uncaughtException().property("backtracetext").toString() );
     }
 }
 
