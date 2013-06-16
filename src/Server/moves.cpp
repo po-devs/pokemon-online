@@ -1944,8 +1944,8 @@ struct MMFling : public MM
                 }
             }
         } else {
-            b.sendMoveMessage(16,0,t,type(b,s),t,item);
-            b.devourBerry(s, item, s);
+            b.sendMoveMessage(16,0,t,type(b,s),s,item);
+            b.devourBerry(s, item, t);
         }
     }
 };
