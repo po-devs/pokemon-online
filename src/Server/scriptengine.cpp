@@ -174,6 +174,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     mySessionDataFactory = new SessionDataFactory(&myengine);
 
     QScriptValue sys = myengine.newQObject(this);
+    myengine.globalObject().setProperty("global", myengine.globalObject());
     myengine.globalObject().setProperty("sys", sys);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
