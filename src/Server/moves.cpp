@@ -1915,7 +1915,7 @@ struct MMFling : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && ItemInfo::Power(b.poke(s).item()) > 0) {
+        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && !(ItemInfo::isJewel(b.poke(s).item())) && ItemInfo::Power(b.poke(s).item()) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
                 return;
             turn(b,s)["FlingItem"] = b.poke(s).item();
