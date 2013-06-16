@@ -2015,7 +2015,7 @@ int BattleSituation::weight(int player) {
 }
 
 bool BattleSituation::hasWorkingItem(int player, int it)
-
+{
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
             && battleMemory().value("MagicRoomCount").toInt() == 0
