@@ -2382,6 +2382,11 @@ bool ItemInfo::isDrive(int itemnum)
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
 }
 
+bool ItemInfo::isJewel(int itemnum)
+{
+    return itemnum == Item::NormalJewel || itemnum == Item::FightJewel || itemnum == Item::SteelJewel || itemnum == Item::PsychicJewel || itemnum == Item::DarkJewel || itemnum == Item::FireJewel || itemnum == Item::WaterJewel || itemnum == Item::ElectricJewel || itemnum == Item::IceJewel || itemnum == Item::FlightJewel || itemnum == Item::PoisonJewel || itemnum == Item::GhostJewel || itemnum == Item::Bugjewel || itemnum == Item::GrassJewel || itemnum == Item::RockJewel || itemnum == Item::EarthJewel || itemnum == Item::DragonJewel;
+}
+
 bool ItemInfo::isMail(int itemnum)
 {
     return (itemnum >= 214 && itemnum <= 226);
