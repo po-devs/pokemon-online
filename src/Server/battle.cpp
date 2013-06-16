@@ -2016,10 +2016,14 @@ int BattleSituation::weight(int player) {
 
 bool BattleSituation::hasWorkingItem(int player, int it)
 {
+    int attackused = tmove(player).attack;
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
             && battleMemory().value("MagicRoomCount").toInt() == 0
-            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
+            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety))
+            && !(ItemInfo::isJewel(poke(player).item()) && attackused == Move::Fling)
+            && !(ItemInfo::isPlate(poke(player).item()) && attackused == Move::Fling && hasWorkingAbility(player, Ability::Multitype))
+            && !((Item::GriseousOrb) && attackused == Move::Fling && Pokemon::Giratina_O);
 }
 
 bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
