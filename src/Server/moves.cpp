@@ -5057,7 +5057,7 @@ struct MMOutrage : public MM
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
             b.sendMoveMessage(93,0,s,type(b,s));
-            b.inflictConfused(s, s, b.gen() >= 3);
+            b.inflictConfused(s, s, b.gen() >= 2);
         }
     }
 
