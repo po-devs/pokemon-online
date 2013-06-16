@@ -815,7 +815,7 @@ QScriptValue ScriptEngine::sendMessage(QScriptContext *c, QScriptEngine *e)
 
 
     if ((po->strict && !c->argument(2).isNumber()) || (!po->strict && c->argumentCount() <= 2)) {
-        myserver->broadCast(c->argument(1).toString(), Server::NoChannel, Server::NoSender, false, 0);
+        myserver->broadCast(c->argument(1).toString(), Server::NoChannel, Server::NoSender, false, c->argument(0).toInteger());
         return QScriptValue();
     }
     else if ( !myserver->channelExist(c->argument(2).toInteger()) ) {
@@ -823,7 +823,7 @@ QScriptValue ScriptEngine::sendMessage(QScriptContext *c, QScriptEngine *e)
         po->warn("sendMessage(id, message, chan)", "can't find channel");
         return QScriptValue();
     } else {
-        myserver->broadCast(c->argument(1).toString(), c->argument(2).toInteger(), Server::NoSender, false, 0);
+        myserver->broadCast(c->argument(1).toString(), c->argument(2).toInteger(), Server::NoSender, false, c->argument(0).toInteger());
     }
 
     return QScriptValue();
