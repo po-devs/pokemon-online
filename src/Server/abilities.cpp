@@ -1481,7 +1481,7 @@ struct AMMischievousHeart : public AM
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).power == 0 && tmove(b,s).priority == 0)
+        if (tmove(b,s).power == 0)
             tmove(b,s).priority += 1;
     }
 };
