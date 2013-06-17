@@ -10,7 +10,7 @@
 18 %s restored a little HP using its Berry Juice!
 19 %s's Flame Orb activated!|%s's Toxic Orb activated!
 21 %s is hurt by its Life Orb!
-24 %s's shell bell restored its HP a little!
+24 %s's Shell Bell restored its HP a little!
 29 %s is hurt by its Sticky Barb!
 34 %f is hurt by %s's Rocky Helmet!
 35 %s's Air Balloon popped!|%s is floating on a balloon!
