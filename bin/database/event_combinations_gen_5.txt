@@ -1,6 +1,6 @@
 Bulbasaur: False swipe + Block + Frenzy Plant + Weather Ball
 Charmander: False swipe + Block + Blast Burn + Acrobatics
-Blastoise: False swipe + Block + Hydro Cannon + Follow Me
+Squirtle: False swipe + Block + Hydro Cannon + Follow Me
 Piplup: Sing + Featherdance
 Victini: Fusion Flare + Fusion Bolt + V-Create 
 Pikachu: Fly + Iron Tail
@@ -8,3 +8,5 @@ Pikachu: Encore + Teeter Dance + Sing
 Snivy: Synthesis + Aromatherapy
 Victini: V-Create + Blue Flare + Bolt Strike + Glaciate
 Deoxys: Dark Pulse + Nasty Plot
+Genesect: Extremespeed + Shift Gear + Blaze Kick
+Mewtwo: Heal Pulse + Hurricane
