@@ -306,7 +306,20 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 } else {
                     ab2 = 0;
                 }
-                if (isValid(pokemon, g, moves,ab2,gender,level,maledw))
+
+                /* Shedinja can get one of ninjask's move, as an event move, for free */
+                if (pokeid == Pokemon::Shedinja) {
+                    foreach(int move, moves) {
+                        if (PokemonInfo::SpecialMoves(pokeid, g).contains(move)) {
+                            QSet<int> moves4 = moves;
+                            moves4.remove(move);
+
+                            if (isValid(pokemon, g, moves4, ab2, gender, level, maledw))
+                                return true;
+                        }
+                    }
+                }
+                if (isValid(pokemon, g, moves, ab2, gender, level, maledw))
                     return true;
             }
         }
