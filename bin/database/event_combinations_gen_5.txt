@@ -9,4 +9,3 @@ Snivy: Synthesis + Aromatherapy
 Victini: V-Create + Blue Flare + Bolt Strike + Glaciate
 Deoxys: Dark Pulse + Nasty Plot
 Genesect: Extremespeed + Shift Gear + Blaze Kick
-Mewtwo: Heal Pulse + Hurricane
