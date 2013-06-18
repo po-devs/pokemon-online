@@ -662,7 +662,7 @@ struct IMJewel : public IM
         if (tmove(b,s).power <= 1) {
             return;
         }
-        if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt())
+        if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt() || tmove(b,s).attack == Move::FireOath  || tmove(b,s).attack == Move::GrassOath  || tmove(b,s).attack == Move::WaterOath )
             return;
         b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
         turn(b,s)["BasePowerItemModifier"] = 5;
