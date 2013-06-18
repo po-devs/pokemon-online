@@ -212,7 +212,6 @@ CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
 
-
 LIBS += $$battlemanager
 
 windows: { LIBS += -lzip-2 }
