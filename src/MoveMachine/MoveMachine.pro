@@ -2,8 +2,7 @@
 # Project created by QtCreator 2010-03-01T12:52:17
 # -------------------------------------------------
 TARGET = MoveMachine
-DESTDIR = ../../bin
-LIBS += -L../../bin -lpo-utilities -lpo-pokemoninfo
+DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp
@@ -12,4 +11,14 @@ HEADERS += mainwindow.h \
     ../PokemonInfo/movesetchecker.h
 FORMS += mainwindow.ui
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QT += widgets
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
+include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo
