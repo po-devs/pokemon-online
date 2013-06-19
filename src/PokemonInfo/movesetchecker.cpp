@@ -141,6 +141,40 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
     return s;
 }
 
+/**
+ * How a validity check is performed.
+ *
+ * Params: a list of moves, an ability, a gender, a level, and a gen and a pokemon
+ * level is irrelevant if minimum levels not enforced
+ * maledw means "male dreamworld"
+ *
+ * So if the pokemon is gen 1~2, we do a check on both gens. If a pokemon
+ * is in gen 3+, we do a check on each gen from gen X to gen 3 (removing
+ * level moves & tutor moves of the current gen everytime).
+ *
+ * Of course if the pokemon already has a valid moveset at gen X, no need
+ * to go further, the function returns immediately.
+ *
+ * If a pokemon doesn't exist at say gen X-1 but has a pre evo that exists
+ * for that gen, then that preevo's moveset is tested for those gens.
+ *
+ * Legal event move combinations are already determined (check the EventCombinations
+ * project), and breeding combinations are generated automatically beforehand as well
+ * (check the ChainBreeding project)
+ *
+ *
+ * Basically, every "run" (aka everytime it's called, recursively or not), the program
+ * first removes the standard moves (level, tutor, TM/HM) as they are compatible with anything
+ *
+ * Then it checks the remaining moves. If there's only one, then it's good. If there's more than
+ * one, then it checks if it's a legal combination (event or breeding). If it is, it's good.
+ *
+ * Then there are the complications. If there are preevo moves in the mix, it tries calling itself
+ * recursively on the preevo. If we don't have any success this gen, we try going a gen back.
+ *
+ * There are many special cases in there. For example dealing with HMs, or
+ * 4th gen evos with 3rd gen moves. But there should be a comment everytime for
+ * those exceptions in the code below. */
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, const QSet<int> &moves2, int ability, int gender,
                              int level, bool maledw, QSet<int> *invalid_moves, QString *error)
 {
@@ -306,7 +340,20 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 } else {
                     ab2 = 0;
                 }
-                if (isValid(pokemon, g, moves,ab2,gender,level,maledw))
+
+                /* Shedinja can get one of ninjask's move, as an event move, for free */
+                if (pokeid == Pokemon::Shedinja) {
+                    foreach(int move, moves) {
+                        if (PokemonInfo::SpecialMoves(pokeid, g).contains(move)) {
+                            QSet<int> moves4 = moves;
+                            moves4.remove(move);
+
+                            if (isValid(pokemon, g, moves4, ab2, gender, level, maledw))
+                                return true;
+                        }
+                    }
+                }
+                if (isValid(pokemon, g, moves, ab2, gender, level, maledw))
                     return true;
             }
         }

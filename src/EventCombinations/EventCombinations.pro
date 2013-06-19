@@ -4,11 +4,19 @@
 #
 #-------------------------------------------------
 TARGET = EventCombinations
-DESTDIR = ../../bin
-LIBS += -L../../bin -lpo-utilities -lpo-pokemoninfo
+DESTDIR = $$PWD/../../bin
 CONFIG   += console
 CONFIG   -= app_bundle
 TEMPLATE = app
 SOURCES += main.cpp
 
-QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  DEFINES += QT5
+  QMAKE_CXXFLAGS += "-std=c++11"
+} else {
+  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
+}
+
+include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo
