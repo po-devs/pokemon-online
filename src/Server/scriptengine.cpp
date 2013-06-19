@@ -18,7 +18,7 @@
 #include "../Utilities/ziputils.h"
 #include <QScriptEngineAgent>
 
-#ifndef _EXCLUDE_DEPCRECATED
+#ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
 #else
 #define DEPRECATED(x)
@@ -1219,7 +1219,7 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
-#ifndef _EXCLUDE_DEPCRECATED
+#ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::callLater(const QString &s, int delay) {
     if (!callLater_w) {
@@ -1279,7 +1279,7 @@ bool ScriptEngine::stopTimer(int timerId) {
     return unsetTimer(timerId);
 }
 
-#endif // #ifndef _EXCLUDE_DEPCRECATED
+#endif // #ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::setTimer(const QScriptValue &code, int delay, bool repeats)
 {
