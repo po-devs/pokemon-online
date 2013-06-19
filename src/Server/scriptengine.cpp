@@ -802,7 +802,7 @@ QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
     }
     bool html = c->argument(3).toBool();
 
-    int target = c->argument(3).toInteger();
+    int target = c->argument(4).toInteger();
 
     if (target != Server::NoTarget && !s->playerExist(target)) {
         se->warn("broadcast(message, channel, sender, html, target)", "Invalid player ID (target).", true);
