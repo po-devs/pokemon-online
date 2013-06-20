@@ -291,11 +291,11 @@ static void fill_int_char(QHash<int, char> &container, const QString & filename,
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
