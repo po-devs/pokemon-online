@@ -2138,7 +2138,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        char increase = char (fm.boostOfStat >> (i*8));
+        signed char increase = char (fm.boostOfStat >> (i*8));
 
         int rate = char (fm.rateOfStat >> (i*8));
 
