@@ -74,14 +74,11 @@ struct IMLeftOvers : public IM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.poke(s).isFull()) {
-            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
-                return;
-            } else {
-                b.sendItemMessage(12,s);
-                b.healLife(s, b.poke(s).totalLifePoints()/16);
-            }
-        }
+        if (!b.canHeal(s, s))
+        return;
+
+        b.sendItemMessage(12,s);
+        b.healLife(s, b.poke(s).totalLifePoints()/16);
     }
 };
 
