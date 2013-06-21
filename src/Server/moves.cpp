@@ -1922,7 +1922,6 @@ struct MMFling : public MM
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
-            b.disposeItem(s);
         }
     }
 
@@ -1947,6 +1946,7 @@ struct MMFling : public MM
             b.sendMoveMessage(16,0,t,type(b,s),s,item);
             b.devourBerry(s, item, t);
         }
+        b.disposeItem(s);
     }
 };
 
