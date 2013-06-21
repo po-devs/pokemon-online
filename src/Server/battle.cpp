@@ -3542,7 +3542,7 @@ void BattleSituation::setupMove(int i, int move)
     MoveEffect::setup(move,i,0,*this);
 }
 
-bool BattleSituation::canHeal(int s, int)
+bool BattleSituation::canHeal(int s)
 {
     if (!koed(s) && !poke(s).isFull() && !(pokeMemory(s).value("HealBlockCount").toInt() > 0))
         return true;

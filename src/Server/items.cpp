@@ -74,7 +74,7 @@ struct IMLeftOvers : public IM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s, s))
+        if (!b.canHeal(s))
         return;
 
         b.sendItemMessage(12,s);
