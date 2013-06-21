@@ -155,7 +155,7 @@ struct MMAquaRing : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s, s))
+        if (!b.canHeal(s))
              return;
 
         int healing = b.poke(s).totalLifePoints()/16;
@@ -2650,7 +2650,7 @@ struct MMIngrain : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (b.canHeal(s, s)&& poke(b,s)["Rooted"].toBool() == true) {
+        if (b.canHeal(s) && poke(b,s)["Rooted"].toBool() == true) {
             int healing = b.poke(s).totalLifePoints()/16;
 
             if (b.hasWorkingItem(s, Item::BigRoot)) {
