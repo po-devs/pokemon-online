@@ -314,7 +314,9 @@ struct IMLifeOrb : public IM
             turn(b,s)["ActivateLifeOrb"] = true;
         } else if (b.gen() >= 5 && turn(b,s).contains("DamageInflicted")) {
             turn(b,s)["ActivateLifeOrb"] = true;
-            turn(b,s)["LOTarget"] = t;
+            if (tmove(b,s).attack == Move::Fling) {
+                turn(b,s)["LOTarget"] = t;
+            }
         }
     }
 
