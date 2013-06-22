@@ -155,16 +155,16 @@ struct MMAquaRing : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.koed(s) && !b.poke(s).isFull()) {
-            int healing = b.poke(s).totalLifePoints()/16;
+        if (!b.canHeal(s))
+             return;
 
-            if (b.hasWorkingItem(s, Item::BigRoot)) {
-                healing = healing * 13 / 10;
-            }
-
-            b.healLife(s, healing);
-            b.sendMoveMessage(2, 1, s, Pokemon::Water);
+        int healing = b.poke(s).totalLifePoints()/16;
+        if (b.hasWorkingItem(s, Item::BigRoot)) {
+            healing = healing * 13 / 10;
         }
+
+        b.sendMoveMessage(2, 1, s, Pokemon::Water);
+        b.healLife(s, healing);
     }
 };
 
@@ -2511,13 +2511,11 @@ struct MMLeechSeed : public MM
             damage = damage * 13 / 10;
         }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
-            if (poke(b, s2).value("HealBlockCount").toInt() > 0) {
+            if (!(poke(b, s2).value("HealBlockCount").toInt() > 0)) {
                 b.sendMoveMessage(60, 0, s2);
-            } else {
                 b.healLife(s2, damage);
             }
-        }
-        else {
+        } else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
             b.inflictDamage(s2, damage,s2,false);
 
@@ -2652,18 +2650,16 @@ struct MMIngrain : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.koed(s) && !b.poke(s).isFull() && poke(b,s)["Rooted"].toBool() == true) {
-            if (poke(b, s).value("HealBlockCount").toInt() > 0) {
-                b.sendMoveMessage(60, 0, s);
-            } else {
-                int healing = b.poke(s).totalLifePoints()/16;
+        if (b.canHeal(s) && poke(b,s)["Rooted"].toBool() == true) {
+            int healing = b.poke(s).totalLifePoints()/16;
 
-                if (b.hasWorkingItem(s, Item::BigRoot)) {
-                    healing = healing * 13 / 10;
-                }
-                b.healLife(s, healing);
-                b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            if (b.hasWorkingItem(s, Item::BigRoot)) {
+                healing = healing * 13 / 10;
             }
+
+            b.sendMoveMessage(151,1,s,Pokemon::Grass);
+            b.healLife(s, healing);
+
         }
     }
 };
