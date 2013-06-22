@@ -75,7 +75,7 @@ struct IMLeftOvers : public IM
 
     static void et(int s, int, BS &b) {
         if (!b.canHeal(s))
-        return;
+            return;
 
         b.sendItemMessage(12,s);
         b.healLife(s, b.poke(s).totalLifePoints()/16);
@@ -834,7 +834,7 @@ struct IMStatusHeal : public IM {
 
         return;
 
-        end:
+end:
         b.healStatus(s, status);
         b.sendBerryMessage(1, s, arg + 1);
     }
