@@ -494,7 +494,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         qint32 id, id1, id2;
         in >> id >> id1 >> id2;
         emit battleReceived2(id, id1, id2);
-        battleReceived(id, id1, id2, "Who Knows");
+        battleReceived(id, id1, id2, "");
     } else{
         printHtml(tr("<i>Unknown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
