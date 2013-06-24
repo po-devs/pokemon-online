@@ -181,9 +181,9 @@ void Analyzer::sendChannelPlayers(int channelid, const QVector<qint32> &ids)
     notify(ChannelPlayers, qint32(channelid), ids);
 }
 
-void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode)
+void Analyzer::notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode, QString tier)
 {
-    notify(EngageBattle, battleid, Flags(0), mode, id1, id2);
+    notify(EngageBattle, battleid, Flags(0), mode, id1, id2, tier);
 }
 
 void Analyzer::sendUserInfo(const UserInfo &ui)

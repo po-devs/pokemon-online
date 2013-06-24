@@ -65,7 +65,7 @@ public:
     void sendWatchingCommand(qint32 id, const QByteArray &command);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
-    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode);
+    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode, QString tier);
     void finishSpectating(qint32 battleId);
     void notifyOptionsChange(qint32 id, bool away, bool ladder);
     void startRankings(int page, int startingRank, int total);
