@@ -393,11 +393,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            in >> tier;
-            emit battleStarted(battleid, id1, id2, team, conf, tier); //This is where Test2 was
+            in >> tier; //Get the tier
+            emit battleStarted(battleid, id1, id2, team, conf, tier);
         } else {
             /* this is a battle of strangers */
-            emit battleStarted(battleid, id1, id2, tier); //Also here
+             in >> tier;
+            emit battleStarted(battleid, id1, id2, tier);
         }
         break;
     }
