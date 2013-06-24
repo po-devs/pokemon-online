@@ -37,7 +37,7 @@ void Analyzer::sendMessage(const QString &message, bool html)
     notify(SendChatMessage, Flags(0), Flags(html==true), message);
 }
 
-void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, QString tier)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
@@ -53,7 +53,7 @@ void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &te
     if (!team.items.empty()) {
         out << team.items;
     }
-
+    out << tier;
     emit sendCommand(tosend);
 }
 

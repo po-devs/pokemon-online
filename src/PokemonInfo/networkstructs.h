@@ -101,8 +101,8 @@ DataStream & operator << (DataStream &out, const PlayerInfo &p);
 struct Battle
 {
     qint32 id1, id2;
-
-    Battle(int id1=0, int id2=0);
+    QString btier;
+    Battle(int id1=0, int id2=0, QString btier="");
 };
 
 DataStream & operator >> (DataStream &in, Battle &p);

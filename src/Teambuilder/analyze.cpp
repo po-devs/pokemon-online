@@ -377,6 +377,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         Flags network;
         quint8 mode;
         qint32 battleid, id1, id2;
+        QString tier;
         in >> battleid >> network >> mode >> id1 >> id2;
 
         if (network[0]) {
@@ -392,10 +393,11 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            emit battleStarted(battleid, id1, id2, team, conf);
+            in >> tier;
+            emit battleStarted(battleid, id1, id2, team, conf, tier); //This is where Test2 was
         } else {
             /* this is a battle of strangers */
-            emit battleStarted(battleid, id1, id2);
+            emit battleStarted(battleid, id1, id2, tier); //Also here
         }
         break;
     }
