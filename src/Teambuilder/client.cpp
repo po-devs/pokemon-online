@@ -203,10 +203,10 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration)),
-            SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration)));
+    connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration, QString)),
+            SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration, QString)));
     connect(relay, SIGNAL(teamApproved(QStringList)), SLOT(tiersReceived(QStringList)));
-    connect(relay, SIGNAL(battleStarted(int,int, int)), SLOT(battleStarted(int, int, int)));
+    connect(relay, SIGNAL(battleStarted(int,int, int, QString)), SLOT(battleStarted(int, int, int, QString)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QByteArray)), SLOT(askForPass(QByteArray)));
@@ -1955,7 +1955,7 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf)
+void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf, QString tier)
 {
     if (!mybattles.contains(battleId)) {
         int id = id1== ownId() ? id2: id1;
@@ -1975,7 +1975,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
 
         mybattles[battleId] = mybattle;
 
-        battleStarted(battleId, ownId(), id);
+        battleStarted(battleId, ownId(), id, tier);
 
         call("onBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
     } else {
@@ -1984,14 +1984,14 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
     }
 }
 
-void Client::battleStarted(int bid, int id1, int id2)
+void Client::battleStarted(int bid, int id1, int id2, QString tier)
 {
     myplayersinfo[id1].flags.setFlag(PlayerInfo::Battling, true);
     myplayersinfo[id2].flags.setFlag(PlayerInfo::Battling, true);
 
     battles.insert(bid, Battle(id1, id2));
     foreach(Channel *c, mychannels) {
-        c->battleStarted(bid, id1, id2);
+        c->battleStarted(bid, id1, id2, tier);
     }
 }
 
