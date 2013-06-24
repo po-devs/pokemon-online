@@ -850,9 +850,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, QString tier)
 {
-    relay().engageBattle(battleid, this->id(), id, team, conf);
+    relay().engageBattle(battleid, this->id(), id, team, conf, tier);
 
     cancelChallenges();
     cancelBattleSearch();

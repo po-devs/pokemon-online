@@ -86,9 +86,9 @@ signals:
     /* challengerelated */
     void challengeStuff(const ChallengeInfo &c);
     /* battle including self */
-    void battleStarted(int battleid, int id1, int id2, const TeamBattle &myteam, const BattleConfiguration &conf);
+    void battleStarted(int battleid, int id1, int id2, const TeamBattle &myteam, const BattleConfiguration &conf, QString tier);
     /* battle of strangers */
-    void battleStarted(int battleid, int id1, int id2);
+    void battleStarted(int battleid, int id1, int id2, QString tier);
     void battleFinished(int battleid, int res, int srcid, int destid);
     void battleMessage(int battleid, const QByteArray &mess);
     void spectatedBattle(int battleId, const BattleConfiguration &conf);

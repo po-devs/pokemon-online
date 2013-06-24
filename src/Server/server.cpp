@@ -1443,6 +1443,9 @@ void Server::findBattle(int id, const FindBattleData &_f)
                 c.clauses = TierMachine::obj()->tier(t1.tier).getClauses();
                 c.mode = TierMachine::obj()->tier(t1.tier).getMode();
                 c.gen = t1.gen;
+                c.srctier = TierMachine::obj()->tier(t1.tier).name();
+
+
 
                 if ((!c.clauses & ChallengeInfo::ChallengeCup) && (t1.invalid() || t2.invalid())) {
                     continue;
@@ -1652,7 +1655,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     if (!playerExist(id1) || !playerExist(id2))
         return;
 
-    printLine(QString("Battle between %1 and %2 started").arg(name(id1)).arg(name(id2)));
+    printLine(QString("1% battle between %2 and %3 started").arg(c.srctier).arg(name(id1)).arg(name(id2)));
 
     /* Storing the battle in the last ips to battle */
     if (c.rated && diffIpsForRatedBattles > 0) {
@@ -1679,7 +1682,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     }
 
     mybattles.insert(id, battle);
-    battleList.insert(id, Battle(id1, id2));
+    battleList.insert(id, Battle(id1, id2, c.tier));
     myengine->battleSetup(id1, id2, id); // dispatch script event
 
     Player *p1 (player(id1));
@@ -1690,14 +1693,14 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration());
+    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), c.srctier);
+    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), c.srctier);
 
     ++lastDataId;
     foreach(int chanid, p1->getChannels()) {
         Channel &chan = channel(chanid);
         if (!chan.battleList.contains(id)) {
-            chan.battleList.insert(id,Battle(id1, id2));
+            chan.battleList.insert(id,Battle(id1, id2, c.srctier)); //Channel Battle List //QString::number(c.rated)
         }
         foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
@@ -1709,8 +1712,9 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     foreach(int chanid, p2->getChannels()) {
         Channel &chan = channel(chanid);
         if (!chan.battleList.contains(id)) {
-            chan.battleList.insert(id,Battle(id1, id2));
+            chan.battleList.insert(id,Battle(id1, id2,c.srctier));
         }
+
         foreach(Player *p, chan.players) {
             /* That test avoids to send twice the same data to the client */
             if (p->id() != id1 && p->id() != id2 && !p->hasSentCommand(lastDataId)) {

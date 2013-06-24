@@ -209,8 +209,8 @@ public slots:
     void pingActivated(Channel *c);
     void showChannelsContextMenu(const QPoint & point);
     /* battle... */
-    void battleStarted(int battleid, int id, int id2, const TeamBattle &team, const BattleConfiguration &conf);
-    void battleStarted(int battleid, int id1, int id2);
+    void battleStarted(int battleid, int id, int id2, const TeamBattle &team, const BattleConfiguration &conf, QString tier);
+    void battleStarted(int battleid, int id1, int id2, QString tier);
     void battleReceived(int battleid, int id1, int id2);
     void battleFinished(int battleid, int res, int winner, int loser);
     void battleCommand(int battleid, const QByteArray&command);

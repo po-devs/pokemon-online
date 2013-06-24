@@ -131,7 +131,7 @@ void Challenge::manageStuff(Player *p, const ChallengeInfo &c)
         dest->removeChallenge(this);
 
         desc.rated = server->allowThroughChallenge && server->canHaveRatedBattle(src->id(), dest->id(), src->team(desc.team), dest->team(c.team), false, false);
-
+        desc.srctier = p->team(c.team).tier;
         emit battleStarted(src->id(), dest->id(), desc, desc.team, c.team);
 
         delete this;
