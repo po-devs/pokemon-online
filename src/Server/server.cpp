@@ -1682,7 +1682,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     }
 
     mybattles.insert(id, battle);
-    battleList.insert(id, Battle(id1, id2, c.tier));
+    battleList.insert(id, Battle(id1, id2, c.srctier));
     myengine->battleSetup(id1, id2, id); // dispatch script event
 
     Player *p1 (player(id1));
