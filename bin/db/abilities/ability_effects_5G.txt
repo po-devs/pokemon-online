@@ -92,40 +92,40 @@
 120 48#Reckless
 122 20#Flower Gift
 123 6#Bad Dreams
-124 78#Wicked Thief
-125 79#Encourage
+124 78#Pickpocket
+125 79#SheerForce
 127 102#Unnerve
-128 80#Competitive Spirit
-129 76#Weak-Kneed
+128 80#Defiant
+129 76#Defeatist
 130 96#Cursed Body
-131 99#Healing Heart
-132 100#Friend Card
-133 74#Broken Armour
-136 83#Multi Scale
-137 84-5#Poison Rampage
-138 84-4#Heat Rampage
+131 99#Healer
+132 100#Friend Guard
+133 74#Weak Armor
+136 83#Multiscale
+137 84-5#Toxic Boost
+138 84-4#Flare Boost
 139 88#Harvest
 140 85#Telepathy
-141 95#Inconsistent
-142 17#Dustproof
+141 95#Moody
+142 17#Overcoat
 143 101-5#Poison Touch
-144 86#Regeneration
-145 30-2#Pigeon Heart
-146 8-3#Sand Throw
+144 86#Regenerator
+145 30-2#Big Pecks
+146 8-3#Sand Rush
 147 90#Miracle Skin
-148 98#Analyze
+148 98#Analytic
 149 92#Illusion
-150 81#Eccentric
+150 81#Imposter
 152 47#Mummy
-153 52#Earthquake Spiral
-154 94#Justice Heart
-155 97#Frightened
-156 87#Magic Mirror
+153 52#Moxie
+154 94#Justified
+155 97#Rattled
+156 87#Magic Bounce
 157 68-11#Herbivore
-158 82#Mischievous Heart
-159 72#Sand Power
+158 82#Prankster
+159 72#Sand Force
 160 50#Iron Barb
-161 77#Daruma Mode
+161 77#Zen Mode
 162 75#Victory Star
 163 40#Turbo Blaze
-164 40#TeraVoltage
+164 40#TeraVolt

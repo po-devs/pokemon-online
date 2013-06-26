@@ -356,7 +356,7 @@ struct IMShellBell : public IM
     static void udi(int s, int t, BS &b) {
         if (s==t)
             return;
-        if (b.koed(s) || b.hasWorkingAbility(s, Ability::Encourage))
+        if (b.koed(s) || b.hasWorkingAbility(s, Ability::SheerForce))
             return;
 
         if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
@@ -674,7 +674,7 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::Encourage) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s))
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::SheerForce) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s))
             return;
 
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
@@ -734,7 +734,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasSubstitute(s) || b.hasWorkingAbility(s, Ability::Encourage))
+        if (b.koed(s) || b.hasSubstitute(s) || b.hasWorkingAbility(s, Ability::SheerForce))
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
