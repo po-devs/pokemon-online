@@ -3373,6 +3373,8 @@ QScriptValue ScriptEngine::sql(const QString &command)
 
 QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &params)
 {
+    static const QString placeholder = ":";
+
     QSqlQuery query;
 
     query.setForwardOnly(true);
@@ -3383,7 +3385,7 @@ QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &param
         QScriptValueIterator it(params);
         while (it.hasNext()) {
             it.next();
-            query.bindValue(it.name(), it.value().toVariant());
+            query.bindValue(placeholder+it.name(), it.value().toVariant());
         }
     } else if (params.isArray()) {
         QScriptValueIterator it(params);
