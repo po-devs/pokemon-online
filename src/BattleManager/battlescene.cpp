@@ -234,7 +234,7 @@ bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int atta
 {
     /* Those three attacks require a choice from the player and so would hang the battle window
       until the player made the choice - and it's annoying. */
-    if (attack == Move::U_turn || attack == Move::BatonPass || attack == Move::VoltChange) {
+    if (attack == Move::U_turn || attack == Move::BatonPass || attack == Move::VoltSwitch) {
         return false;
     } else {
         info.reset();

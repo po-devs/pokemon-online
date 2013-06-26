@@ -498,7 +498,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
                     continue;
                 }
                 if (MoveInfo::Power(movenum, gen) > 0 && movenum != Move::NaturalGift && movenum != Move::Snore && movenum != Move::Fling
-                        && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::SynchroNoise && movenum != Move::FalseSwipe
+                        && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::Synchronoise && movenum != Move::FalseSwipe
                         && movenum != Move::Feint) {
                     if (count > 4 || MoveInfo::Power(movenum, gen) > 50) {
                         off++;
