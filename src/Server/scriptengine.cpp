@@ -3339,6 +3339,70 @@ int ScriptEngine::system(const QString &command)
         return ::system(command.toUtf8());
     }
 }
+#include <QSqlRecord>
+
+static QScriptValue sqlResult(QScriptEngine &myengine, QSqlQuery &query)
+{
+    QScriptValue ret = myengine.newArray();
+    do {
+        QScriptValue rec = myengine.newObject();
+        QSqlRecord record = query.record();
+
+        for (int i = 0; i < record.count(); i++) {
+            rec.setProperty(record.fieldName(i), myengine.newVariant(record.value(i)));
+        }
+
+        ret.setProperty(query.at(), rec);
+    } while (query.next() && query.isValid());
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::sql(const QString &command)
+{
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    if (query.exec(command)) {
+        return sqlResult(myengine, query);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &params)
+{
+    static const QString placeholder = ":";
+
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    query.prepare(command);
+
+    if (params.isObject()) {
+        QScriptValueIterator it(params);
+        while (it.hasNext()) {
+            it.next();
+            query.bindValue(placeholder+it.name(), it.value().toVariant());
+        }
+    } else if (params.isArray()) {
+        QScriptValueIterator it(params);
+        while (it.hasNext()) {
+            it.next();
+            query.addBindValue(it.value().toVariant());
+        }
+    } else {
+        query.addBindValue(params.toVariant());
+    }
+
+    if (query.exec()) {
+        return sqlResult(myengine, query);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
 
 QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback) {
     QProcess *process = new QProcess(this);;
