@@ -1987,10 +1987,7 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
 
 void BattleSituation::loseAbility(int slot)
 {
-    if (!pokeMemory(slot).value("AbilityNullified").toBool())
-        /* Evil Hack to make illusion pokemons go back to normal */
-        if (pokeMemory(slot).contains("IllusionTarget"))
-            callaeffects(slot, slot, "UponBeingHit");
+    callaeffects(slot, slot, "OnLoss");
 }
 
 int BattleSituation::ability(int player) {
