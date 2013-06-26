@@ -1626,7 +1626,7 @@ namespace Ability
         WeakArmor,
         HeavyMetal,
         LightMetal,
-        MultiSclae,
+        MultiScale,
         ToxicBoost,
         FlareBoost,
         Harvest,
