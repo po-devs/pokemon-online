@@ -355,8 +355,7 @@ QScriptValue ScriptEngine::exec(QScriptContext *c, QScriptEngine *e)
     }
 
     QScriptValue import = e->evaluate(QString::fromUtf8(in.readAll()), c->argument(0).toString());
-    if (e->hasUncaughtException())
-    {
+    if (e->hasUncaughtException()) {
         import.setProperty("backtracetext", c->backtrace().join("\n"));
         c->throwValue(import);
     }
@@ -373,7 +372,12 @@ QScriptValue ScriptEngine::import(const QString &fileName) {
     }
 
     QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()), url );
-    evaluate(import);
+
+    if (myengine.hasUncaughtException()) {
+        import.setProperty("backtracetext", myengine.currentContext()->backtrace().join("\n"));
+        myengine.currentContext()->throwValue(import);
+    }
+
     return import;
 }
 
