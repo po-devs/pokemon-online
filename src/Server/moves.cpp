@@ -1918,7 +1918,6 @@ struct MMFling : public MM
         if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && !(ItemInfo::isJewel(b.poke(s).item())) && ItemInfo::Power(b.poke(s).item()) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
                 return;
-            turn(b,s)["FlingItem"] = b.poke(s).item();
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
@@ -1926,7 +1925,7 @@ struct MMFling : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        int item = turn(b,s)["FlingItem"].toInt();
+        int item = b.poke(s).item();
         if (!ItemInfo::isBerry(item)) {
             if (item == Item::WhiteHerb || item == Item::MentalHerb) {
                 int oppitem = b.poke(t).item();
@@ -1946,6 +1945,7 @@ struct MMFling : public MM
             b.sendMoveMessage(16,0,t,type(b,s),s,item);
             b.devourBerry(s, item, t);
         }
+        /* Can't be in btl, because LO needs to boost Fling's power */
         b.disposeItem(s);
     }
 };
@@ -2928,7 +2928,7 @@ struct MMSubstitute : public MM
         fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
-        //	addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
+        //addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
     }
 };
 
