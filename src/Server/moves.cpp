@@ -65,7 +65,6 @@ void MoveEffect::setup(int num, int source, int target, BattleBase &b)
     }
 }
 
-
 /* Used by moves like Metronome that may use moves like U-Turn. Then AfterAttackSuccessful would be called twice, and that would
     not be nice because U-Turning twice :s*/
 void MoveEffect::unsetup(int num, int source, BattleBase &b)
@@ -130,7 +129,6 @@ void MoveEffect::unsetup(int num, int source, BattleBase &b)
     *AfterKoedByStraightAttack -- poke: when koed by an attack
     *BlockTurnEffects -- poke: Called before calling effects for a turn event, to see if it's blocked. Used by Substitute
 */
-
 
 struct MMAquaRing : public MM
 {
@@ -984,7 +982,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::OverheadThrow || move == Move::Struggle) {
+        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1012,10 +1010,10 @@ struct MMAssist : public MM
     struct FM : public QSet<int>
     {
         FM() {
-            (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << DestinyBond << Detect
-                              << DragonTail << Endure << FastGuard << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
-                              << Metronome << Mimic << MirrorCoat << MirrorMove << OverheadThrow << Protect  << RagePower
-                              << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << WideGuard;
+            (*this) << NoMove << Assist << Bestow << Chatter << CircleThrow << Copycat << Counter << Covet << DestinyBond << Detect
+                              << DragonTail << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
+                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << RagePowder
+                              << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
@@ -1063,6 +1061,7 @@ struct MMAssist : public MM
     }
 };
 
+//Declaring static class variable
 MMAssist::FM MMAssist::forbidden_moves;
 
 struct MMBide : public MM
@@ -1205,8 +1204,8 @@ struct MMBounce : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasSubstitute(t) && move(b,s) == Move::FreeFall) {
-            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::FreeFall));
+        if (b.hasSubstitute(t) && move(b,s) == Move::SkyDrop) {
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1225,7 +1224,7 @@ struct MMBounce : public MM
         } else {
             tmove(b, s).power = 0;
             tmove(b, s).accuracy = 0;
-            if (move(b,s) != Move::FreeFall) {
+            if (move(b,s) != Move::SkyDrop) {
                 tmove(b, s).targets = Move::User;
                 tmove(b, s).status = 0;
                 tmove(b, s).statAffected = 0;
@@ -1247,7 +1246,7 @@ struct MMBounce : public MM
 
             if (move == ShadowForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
-            } else if (move == FreeFall) {
+            } else if (move == SkyDrop) {
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
@@ -1324,7 +1323,7 @@ struct MMBounce : public MM
         /* Those moves protect from weather when in the invulnerable state */
         if (att == Move::Dig || att == Move::Dive)
             turn(b,s)["WeatherSpecialed"] = true;
-        if (att == Move::FreeFall) {
+        if (att == Move::SkyDrop) {
             b.link(s, t, "FreeFalled");
             b.link(t, s, "FreeFalledPokemon");
             b.changeSprite(t, -1);
@@ -1689,6 +1688,7 @@ struct MMEncore : public MM
     }
 };
 
+//Declaring static class variable
 MMEncore::FM MMEncore::forbidden_moves;
 
 struct MMEndeavor : public MM
@@ -1855,7 +1855,6 @@ struct MMBeatUp : public MM {
     }
 };
 
-
 struct MMBlizzard : public MM
 {
     MMBlizzard() {
@@ -1868,7 +1867,6 @@ struct MMBlizzard : public MM
         }
     }
 };
-
 
 struct MMBrickBreak : public MM
 {
@@ -1950,7 +1948,6 @@ struct MMFling : public MM
     }
 };
 
-
 struct MMFollowMe : public MM
 {
     MMFollowMe() {
@@ -2028,7 +2025,7 @@ struct MMGravity : public MM
             }
             if(poke(b,p).value("Invulnerable").toBool()) {
                 int move = poke(b,p)["2TurnMove"].toInt();
-                if (move == Fly || move == Bounce || move == FreeFall) {
+                if (move == Fly || move == Bounce || move == SkyDrop) {
                     MMBounce::groundStruck(p, b);
                     b.sendMoveMessage(53,3, p, Type::Psychic, s, poke(b,p)["2TurnMove"].toInt());
                 }
@@ -2056,7 +2053,7 @@ struct MMGravity : public MM
 
     struct FM : public QSet<int> {
         FM() {
-            (*this) << Bounce << Fly << FreeFall << JumpKick << HiJumpKick << Splash << MagnetRise;
+            (*this) << Bounce << Fly << SkyDrop << JumpKick << HiJumpKick << Splash << MagnetRise;
         }
     };
     static FM forbidden_moves;
@@ -2086,6 +2083,7 @@ struct MMGravity : public MM
     }
 };
 
+//Declaring static class variable
 MMGravity::FM MMGravity::forbidden_moves;
 
 struct MMSmackDown : public MM
@@ -2106,7 +2104,7 @@ struct MMSmackDown : public MM
 
         if(poke(b,t).value("Invulnerable").toBool()) {
             int move = poke(b,t)["2TurnMove"].toInt();
-            if (move == Fly || move == Bounce || move == FreeFall) {
+            if (move == Fly || move == Bounce || move == SkyDrop) {
                 MMBounce::groundStruck(t, b);
             }
         }
@@ -2148,18 +2146,18 @@ struct MMMetronome : public MM
         MMMetroSet() {
             (*this).unite(MMAssist::forbidden_moves );
 
-            (*this) << Move::GiftPass << Move::YouFirst << Move::IceBurn << Move::FreezeShock
-                                                 << Move::NaturePower << Move::Stall << Move::FastGuard << Move::RagePower
-                                                 << Move::AncientSong << Move::SacredSword << Move::TechnoBuster << Move::Transform
-                                                 << Move::V_Generate << Move::WideGuard << Move::BackOut;
+            (*this) << Move::Bestow << Move::AfterYou << Move::IceBurn << Move::FreezeShock
+                                      << Move::NaturePower << Move::Quash << Move::QuickGuard << Move::RagePowder
+                                      << Move::RelicSong << Move::SacredSword << Move::TechnoBlast << Move::Transform
+                                      << Move::VCreate << Move::WideGuard << Move::Snarl;
         }
     };
 
     static MMMetroSet forbidden;
 };
 
+//Declaring static class variable
 MMMetronome::MMMetroSet MMMetronome::forbidden;
-
 
 struct MMWideGuard : public MM
 {
@@ -2208,9 +2206,9 @@ struct MMWideGuard : public MM
     }
 };
 
-struct MMFastGuard : public MM
+struct MMQuickGuard : public MM
 {
-    MMFastGuard() {
+    MMQuickGuard() {
         functions["DetermineAttackFailure"] = &MMDetect::daf;
         functions["UponAttackSuccessful"] = &uas;
     }
@@ -2269,8 +2267,6 @@ struct MMAvalanche : public MM
         }
     }
 };
-
-
 
 struct MMUTurn : public MM
 {
@@ -2338,7 +2334,6 @@ struct MMTrumpCard : public MM
         tmove(b, s).power = tmove(b, s).power * mult;
     }
 };
-
 
 struct MMSuperFang : public MM
 {
@@ -2584,7 +2579,6 @@ struct MMRest : public MM
     }
 };
 
-
 struct MMWish : public MM
 {
     MMWish() {
@@ -2624,7 +2618,6 @@ struct MMWish : public MM
         b.removeEndTurnEffect(BS::SlotEffect, s, "Wish");
     }
 };
-
 
 struct MMIngrain : public MM
 {
@@ -2909,7 +2902,6 @@ struct MMRapidSpin : public MM
     }
 };
 
-
 struct MMSubstitute : public MM
 {
     MMSubstitute() {
@@ -2932,7 +2924,6 @@ struct MMSubstitute : public MM
     }
 };
 
-
 struct MMNightShade : public MM
 {
     MMNightShade() {
@@ -2943,7 +2934,6 @@ struct MMNightShade : public MM
         turn(b,s)["CustomDamage"] = fpoke(b,s).level;
     }
 };
-
 
 struct MMAttract : public MM
 {
@@ -3010,7 +3000,6 @@ struct MMKnockOff : public MM
     }
 };
 
-
 struct MMSwitcheroo : public MM
 {
     MMSwitcheroo() {
@@ -3047,7 +3036,6 @@ struct MMSwitcheroo : public MM
         b.acqItem(t, i1);
     }
 };
-
 
 struct MMMetalBurst : public MM
 {
@@ -3291,8 +3279,8 @@ struct MMWeather : public MM
     }
 };
 
+//Declaring static class variable
 MMWeather::WI MMWeather::weather_items;
-
 
 struct MMThunder : public MM
 {
@@ -3446,7 +3434,6 @@ struct MMHealBlock: public MM
         }
     }
 };
-
 
 struct MMJumpKick : public MM
 {
@@ -3754,7 +3741,6 @@ struct MMTeamBarrier : public MM
     }
 };
 
-
 struct MMLockOn : public MM
 {
     MMLockOn() {
@@ -4046,6 +4032,7 @@ struct MMMimic : public MM
     }
 };
 
+//Declaring static class variable
 MMMimic::FailedMoves MMMimic::FM;
 
 struct MMMinimize : public MM
@@ -4520,8 +4507,16 @@ struct MMSleepTalk : public MM
     * That and any move the user cannot choose for use, including moves with zero PP
 */
             (*this) << NoMove << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
-                              << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce <<
+                              << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce << Sketch <<
                                  SkullBash << SkyAttack << SleepTalk << SolarBeam << RazorWind << Uproar;
+        }
+
+        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+            if (move == Mimic) {
+                return gen >= 5;
+            } else {
+                return QSet<int>::contains(move);
+            }
         }
     };
 
@@ -4563,6 +4558,7 @@ struct MMSleepTalk : public MM
     }
 };
 
+//Declaring static class variable
 MMSleepTalk::FM MMSleepTalk::forbidden_moves;
 
 struct MMSmellingSalt : public MM
@@ -4573,7 +4569,7 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (b.hasSubstitute(t) && tmove(b,s).attack != Move::EvilEye)
+        if (b.hasSubstitute(t) && tmove(b,s).attack != Move::Hex)
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
@@ -4918,7 +4914,6 @@ struct MMCaptivate : public MM {
     }
 };
 
-
 struct MMNaturePower : public MM
 {
     MMNaturePower() {
@@ -5013,7 +5008,6 @@ struct MMSecretPower : public MM {
         }
     }
 };
-
 
 struct MMOutrage : public MM
 {
@@ -5166,12 +5160,11 @@ struct MMStockPile : public MM
     }
 };
 
-/* Swagger fails against max attack foes in statium 2 */
 struct MMSwagger : public MM {
     MMSwagger() {
         functions["DetermineAttackFailure"] = &daf;
     }
-
+    /* Swagger fails against max attack foes in statium 2 */
     static void daf(int s, int t, BS &b) {
         if (b.gen() <= 2 && (b.getStat(t, Attack) == 999 || b.hasMaximalStatMod(t, Attack))) {
             fturn(b,s).add(TM::Failed);
@@ -5238,7 +5231,6 @@ struct MMSpitUp : public MM
         b.sendMoveMessage(122,0,s);
     }
 };
-
 
 struct MMNaturalGift :  public MM
 {
@@ -5411,17 +5403,16 @@ struct MMHelpingHand : public MM
     }
 };
 
-
-struct MMGuardShare : public MM
+struct MMGuardSplit : public MM
 {
-    MMGuardShare() {
+    MMGuardSplit() {
         functions["OnFoeOnAttack"] = &uas;
     }
 
     static void uas(int s, int t, BS &b) {
-        QStringList stats = turn(b,s)["GuardShare_Arg"].toString().split('_');
+        QStringList stats = turn(b,s)["GuardSplit_Arg"].toString().split('_');
 
-        b.sendMoveMessage(155, move(b,s) == Move::PowerShare ? 0 : 1, s, type(b,s), t);
+        b.sendMoveMessage(155, move(b,s) == Move::PowerSplit ? 0 : 1, s, type(b,s), t);
         foreach(QString statS, stats) {
             int stat = statS.toInt();
             int avstat = (fpoke(b, s).stats[stat] + fpoke(b, t).stats[stat]) / 2;
@@ -5481,8 +5472,8 @@ struct MMSoak : public MM {
     }
 };
 
-struct MMAssembleCrew : public MM {
-    MMAssembleCrew() {
+struct MMEntrainment : public MM {
+    MMEntrainment() {
         functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
     }
@@ -5500,8 +5491,8 @@ struct MMAssembleCrew : public MM {
     }
 };
 
-struct MMShellCrack : public MM {
-    MMShellCrack() {
+struct MMShellSmash : public MM {
+    MMShellSmash() {
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5532,8 +5523,8 @@ struct MMIncinerate : public MM {
     }
 };
 
-struct MMDesperation : public MM {
-    MMDesperation() {
+struct MMFinalGambit : public MM {
+    MMFinalGambit() {
         functions["CustomAttackingDamage"] = &uas;
     }
 
@@ -5545,8 +5536,8 @@ struct MMDesperation : public MM {
     }
 };
 
-struct MMGiftPass : public MM {
-    MMGiftPass() {
+struct MMBestow : public MM {
+    MMBestow() {
         functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
     }
@@ -5636,9 +5627,9 @@ struct MMMemento : public MM {
     }
 };
 
-struct MMAncientSong : public MM
+struct MMRelicSong : public MM
 {
-    MMAncientSong() {
+    MMRelicSong() {
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5650,9 +5641,9 @@ struct MMAncientSong : public MM
     }
 };
 
-struct MMHeavyBomber : public MM
+struct MMHeavySlam : public MM
 {
-    MMHeavyBomber() {
+    MMHeavySlam() {
         functions["BeforeCalculatingDamage"] = &bcd;
     }
 
@@ -5675,8 +5666,6 @@ struct MMHeavyBomber : public MM
         tmove(b,s).power *= bp;
     }
 };
-
-
 
 struct MMWonderRoom : public MM {
     MMWonderRoom() {
@@ -5710,9 +5699,9 @@ struct MMWonderRoom : public MM {
     }
 };
 
-struct MMMirrorType : public MM
+struct MMReflectType : public MM
 {
-    MMMirrorType() {
+    MMReflectType() {
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5723,18 +5712,18 @@ struct MMMirrorType : public MM
     }
 };
 
-//struct MMAcrobat : public MM
-//{
-//    MMAcrobat() {
-//        functions["BeforeCalculatingDamage"] = &bcd;
-//    }
-//
-//    static void bcd(int s, int, BS &b) {
-//        if (b.poke(s).item() == 0) {
-//            tmove(b,s).power *= 2;
-//        }
-//    }
-//};
+/** struct MMAcrobatics : public MM
+{
+    MMAcrobatics() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void bcd(int s, int, BS &b) {
+        if (b.poke(s).item() == 0) {
+            tmove(b,s).power *= 2;
+        }
+    }
+}; */
 
 struct MMTelekinesis : public MM
 {
@@ -5774,9 +5763,9 @@ struct MMTelekinesis : public MM
     }
 };
 
-struct MMYouFirst : public MM
+struct MMAfterYou : public MM
 {
-    MMYouFirst() {
+    MMAfterYou() {
         functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
@@ -5792,10 +5781,10 @@ struct MMYouFirst : public MM
     }
 };
 
-struct MMStall : public MM
+struct MMQuash : public MM
 {
-    MMStall() {
-        functions["DetermineAttackFailure"] = &MMYouFirst::daf;
+    MMQuash() {
+        functions["DetermineAttackFailure"] = &MMAfterYou::daf;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5805,9 +5794,9 @@ struct MMStall : public MM
     }
 };
 
-struct MMFireOath : public MM
+struct MMFirePledge : public MM
 {
-    MMFireOath() {
+    MMFirePledge() {
         functions["MoveSettings"] = &ms;
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
@@ -5827,7 +5816,7 @@ struct MMFireOath : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::WaterOath || tmove(b,i).attack == Move::GrassOath) ){
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::WaterPledge || tmove(b,i).attack == Move::GrassPledge) ){
                 /* Here we pledge our oath */
                 turn(b,s)["MadeAnOath"] = Pokemon::Fire;
                 b.sendMoveMessage(178, 0, s, Pokemon::Fire, 0, move(b,s));
@@ -5888,11 +5877,11 @@ struct MMFireOath : public MM
     }
 };
 
-struct MMGrassOath : public MM
+struct MMGrassPledge : public MM
 {
-    MMGrassOath() {
+    MMGrassPledge() {
         functions["MoveSettings"] = &ms;
-        functions["BeforeCalculatingDamage"] = &MMFireOath::bcd;
+        functions["BeforeCalculatingDamage"] = &MMFirePledge::bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5910,7 +5899,7 @@ struct MMGrassOath : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FireOath || tmove(b,i).attack == Move::WaterOath) ){
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FirePledge || tmove(b,i).attack == Move::WaterPledge) ){
                 /* Here we pledge our oath */
                 turn(b,s)["MadeAnOath"] = Pokemon::Grass;
                 b.sendMoveMessage(179, 0, s, Pokemon::Grass, 0, move(b,s));
@@ -5936,7 +5925,7 @@ struct MMGrassOath : public MM
 
         b.sendMoveMessage(179, 2, t, Pokemon::Grass);
         team(b,t)["SwampCount"] = 5;
-        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "GrassOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "GrassPledge", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -5950,11 +5939,11 @@ struct MMGrassOath : public MM
     }
 };
 
-struct MMWaterOath : public MM
+struct MMWaterPledge : public MM
 {
-    MMWaterOath() {
+    MMWaterPledge() {
         functions["MoveSettings"] = &ms;
-        functions["BeforeCalculatingDamage"] = &MMFireOath::bcd;
+        functions["BeforeCalculatingDamage"] = &MMFirePledge::bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -5972,7 +5961,7 @@ struct MMWaterOath : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FireOath || tmove(b,i).attack == Move::GrassOath) ){
+            if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FirePledge || tmove(b,i).attack == Move::GrassPledge) ){
                 /* Here we pledge our oath */
                 turn(b,s)["MadeAnOath"] = Pokemon::Water;
                 b.sendMoveMessage(180, 0, s, Pokemon::Water, 0, move(b,s));
@@ -5996,7 +5985,7 @@ struct MMWaterOath : public MM
 
         b.sendMoveMessage(180, 2, t, Pokemon::Water);
         team(b,t)["RainbowCount"] = 5;
-        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "WaterOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "WaterPledge", &et);
     }
 
     static void uas(int s, int t, BS &b) {
@@ -6009,7 +5998,7 @@ struct MMWaterOath : public MM
         if (turn(b,i)["MadeAnOath"] == Pokemon::Fire) {
             makeARainbow(b.player(t), b);
         } else {
-            MMGrassOath::makeASwamp(b.player(t), b);
+            MMGrassPledge::makeASwamp(b.player(t), b);
         }
 
         turn(b,i).remove("MadeAnOath");
@@ -6026,7 +6015,7 @@ struct MMWaterOath : public MM
     }
 };
 
-void MMFireOath::uas(int s, int t, BS &b)
+void MMFirePledge::uas(int s, int t, BS &b)
 {
     if (!turn(b,s).contains("OathEffectActivater"))
         return;
@@ -6035,7 +6024,7 @@ void MMFireOath::uas(int s, int t, BS &b)
     int i = turn(b,s)["OathEffectActivater"].toInt();
 
     if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
-        MMWaterOath::makeARainbow(b.player(t), b);
+        MMWaterPledge::makeARainbow(b.player(t), b);
     } else {
         makeABurningField(b.player(t), b);
     }
@@ -6043,7 +6032,7 @@ void MMFireOath::uas(int s, int t, BS &b)
     turn(b,i).remove("MadeAnOath");
 }
 
-void MMGrassOath::uas(int s, int t, BS &b)
+void MMGrassPledge::uas(int s, int t, BS &b)
 {
     if (!turn(b,s).contains("OathEffectActivater"))
         return;
@@ -6054,15 +6043,15 @@ void MMGrassOath::uas(int s, int t, BS &b)
     if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
         makeASwamp(b.player(t), b);
     } else {
-        MMFireOath::makeABurningField(b.player(t), b);
+        MMFirePledge::makeABurningField(b.player(t), b);
     }
 
     turn(b,i).remove("MadeAnOath");
 }
 
-struct MMEchoVoice : public MM
+struct MMEchoedVoice : public MM
 {
-    MMEchoVoice() {
+    MMEchoedVoice() {
         functions["BeforeCalculatingDamage"] = &bcd;
     }
 
@@ -6087,9 +6076,9 @@ struct MMEchoVoice : public MM
     }
 };
 
-struct MMEleciBall : public MM
+struct MMElectroBall : public MM
 {
-    MMEleciBall() {
+    MMElectroBall() {
         functions["BeforeCalculatingDamage"] = &bcd;
     }
 
@@ -6113,9 +6102,9 @@ struct MMEleciBall : public MM
     }
 };
 
-struct MMTechnoBuster : public MM
+struct MMTechnoBlast : public MM
 {
-    MMTechnoBuster() {
+    MMTechnoBlast() {
         functions["MoveSettings"] = &ms;
     }
 
@@ -6129,9 +6118,9 @@ struct MMTechnoBuster : public MM
     }
 };
 
-struct MMACapella : public MM
+struct MMRound : public MM
 {
-    MMACapella() {
+    MMRound() {
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
@@ -6153,7 +6142,7 @@ struct MMACapella : public MM
 
         for (int i = b.currentSlot + 1; i < signed(b.speedsVector.size()); i++) {
             int p = b.speedsVector[i];
-            if (b.player(p) == b.player(s) && tmove(b,p).attack == Move::Troll) {
+            if (b.player(p) == b.player(s) && tmove(b,p).attack == Move::Round) {
                 b.makePokemonNext(p);
                 return;
             }
@@ -6161,9 +6150,9 @@ struct MMACapella : public MM
     }
 };
 
-struct MMAssistPower : public  MM
+struct MMStoredPower : public  MM
 {
-    MMAssistPower() {
+    MMStoredPower() {
         functions["BeforeCalculatingDamage"] = &bcd;
     }
 
@@ -6181,9 +6170,9 @@ struct MMAssistPower : public  MM
     }
 };
 
-struct MMSynchroNoise : public MM
+struct MMSynchronoise : public MM
 {
-    MMSynchroNoise() {
+    MMSynchronoise() {
         functions["BeforeCalculatingDamage"] = &btl;
     }
 
@@ -6196,9 +6185,9 @@ struct MMSynchroNoise : public MM
     }
 };
 
-struct MMTrickery : public MM
+struct MMFoulPlay : public MM
 {
-    MMTrickery() {
+    MMFoulPlay() {
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["AfterAttackFinished"] = &aad;
     }
@@ -6212,9 +6201,9 @@ struct MMTrickery : public MM
     }
 };
 
-struct MMRetribution : public MM
+struct MMRetaliate : public MM
 {
-    MMRetribution() {
+    MMRetaliate() {
         functions["BeforeCalculatingDamage"] = &bcd;
     }
 
@@ -6225,9 +6214,9 @@ struct MMRetribution : public MM
     }
 };
 
-struct MMFireBurst : public MM
+struct MMFlameBurst : public MM
 {
-    MMFireBurst() {
+    MMFlameBurst() {
         functions["UponAttackSuccessful"] = &uas;
     }
     static void uas(int s, int t, BS &b) {
@@ -6239,9 +6228,9 @@ struct MMFireBurst : public MM
     }
 };
 
-struct MMSideChange : public MM
+struct MMAllySwitch : public MM
 {
-    MMSideChange() {
+    MMAllySwitch() {
         functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
     }
@@ -6291,37 +6280,37 @@ struct MMGrowth : public MM
     }
 };
 
-struct MMCrossThunder : public MM
+struct MMFusionBolt : public MM
 {
-    MMCrossThunder() {
+    MMFusionBolt() {
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
     static void bcd(int s, int, BS &b) {
-        if (b.battleMemory().value("CrossFlame", -1) == b.turn())
+        if (b.battleMemory().value("FusionFlare", -1) == b.turn())
             tmove(b,s).power *= 2;
     }
 
     static void uas(int, int, BS &b) {
-        b.battleMemory()["CrossThunder"] = b.turn();
+        b.battleMemory()["FusionBolt"] = b.turn();
     }
 };
 
-struct MMCrossFlame : public MM
+struct MMFusionFlare : public MM
 {
-    MMCrossFlame() {
+    MMFusionFlare() {
         functions["BeforeCalculatingDamage"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
     static void bcd(int s, int, BS &b) {
-        if (b.battleMemory().value("CrossThunder", -1) == b.turn())
+        if (b.battleMemory().value("FusionBolt", -1) == b.turn())
             tmove(b,s).power *= 2;
     }
 
     static void uas(int, int, BS &b) {
-        b.battleMemory()["CrossFlame"] = b.turn();
+        b.battleMemory()["FusionFlare"] = b.turn();
     }
 };
 
@@ -6541,7 +6530,7 @@ void MoveEffect::init()
     REGISTER_MOVE(143, WorrySeed);
     REGISTER_MOVE(144, Yawn);
     REGISTER_MOVE(145, Payback);
-    REGISTER_MOVE(146, Avalanche); /* avalanche, revenge */
+    REGISTER_MOVE(146, Avalanche); /* Avalanche, Revenge */
     //Chatter
     REGISTER_MOVE(148, TrumpCard);
     REGISTER_MOVE(149, Haze);
@@ -6550,46 +6539,46 @@ void MoveEffect::init()
     REGISTER_MOVE(152, Thunder);
     //REGISTER_MOVE(153, UnThawing);
     REGISTER_MOVE(154, DefenseCurl);
-    REGISTER_MOVE(155, GuardShare);
+    REGISTER_MOVE(155, GuardSplit); /* Power Split */
     REGISTER_MOVE(156, MagicRoom);
     REGISTER_MOVE(157, Soak);
-    REGISTER_MOVE(158, AssembleCrew);
-    REGISTER_MOVE(159, ShellCrack);
+    REGISTER_MOVE(158, Entrainment);
+    REGISTER_MOVE(159, ShellSmash);
     REGISTER_MOVE(160, Incinerate);
-    REGISTER_MOVE(161, Desperation);
-    REGISTER_MOVE(162, GiftPass);
-    //REGISTER_MOVE(163, WindStorm);
+    REGISTER_MOVE(161, FinalGambit);
+    REGISTER_MOVE(162, Bestow);
+    //REGISTER_MOVE(163, Hurricane);
     REGISTER_MOVE(164, Refresh);
     REGISTER_MOVE(165, Memento);
-    REGISTER_MOVE(166, AncientSong);
-    REGISTER_MOVE(167, HeavyBomber);
+    REGISTER_MOVE(166, RelicSong);
+    REGISTER_MOVE(167, HeavySlam);
     REGISTER_MOVE(168, WonderRoom);
     REGISTER_MOVE(169, WideGuard);
-    REGISTER_MOVE(170, FastGuard);
+    REGISTER_MOVE(170, QuickGuard);
     //Pursuit
-    REGISTER_MOVE(172, MirrorType);
-    //REGISTER_MOVE(173, Acrobat);
+    REGISTER_MOVE(172, ReflectType);
+    //REGISTER_MOVE(173, Acrobatics);
     REGISTER_MOVE(174, Telekinesis);
     REGISTER_MOVE(175, SmackDown);
-    REGISTER_MOVE(176, YouFirst);
-    REGISTER_MOVE(177, Stall);
-    REGISTER_MOVE(178, FireOath);
-    REGISTER_MOVE(179, GrassOath);
-    REGISTER_MOVE(180, WaterOath);
-    REGISTER_MOVE(181, EchoVoice);
-    REGISTER_MOVE(182, EleciBall);
-    REGISTER_MOVE(183, TechnoBuster);
-    REGISTER_MOVE(184, ACapella);
-    REGISTER_MOVE(185, AssistPower);
-    REGISTER_MOVE(186, SynchroNoise);
-    REGISTER_MOVE(187, Trickery);
-    REGISTER_MOVE(188, Retribution);
-    REGISTER_MOVE(189, FireBurst);
-    REGISTER_MOVE(190, SideChange);
+    REGISTER_MOVE(176, AfterYou);
+    REGISTER_MOVE(177, Quash);
+    REGISTER_MOVE(178, FirePledge);
+    REGISTER_MOVE(179, GrassPledge);
+    REGISTER_MOVE(180, WaterPledge);
+    REGISTER_MOVE(181, EchoedVoice);
+    REGISTER_MOVE(182, ElectroBall);
+    REGISTER_MOVE(183, TechnoBlast);
+    REGISTER_MOVE(184, Round);
+    REGISTER_MOVE(185, StoredPower);
+    REGISTER_MOVE(186, Synchronoise);
+    REGISTER_MOVE(187, FoulPlay);
+    REGISTER_MOVE(188, Retaliate);
+    REGISTER_MOVE(189, FlameBurst);
+    REGISTER_MOVE(190, AllySwitch);
     REGISTER_MOVE(191, Growth);
     //REGISTER_MOVE(192, TriAttack);
-    REGISTER_MOVE(193, CrossFlame);
-    REGISTER_MOVE(194, CrossThunder);
+    REGISTER_MOVE(193, FusionFlare);
+    REGISTER_MOVE(194, FusionBolt);
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
