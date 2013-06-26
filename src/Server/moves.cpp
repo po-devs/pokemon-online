@@ -5557,12 +5557,11 @@ struct MMGiftPass : public MM {
 
     static void daf(int s, int t, BS &b)
     {
-        if (!b.koed(t) && b.poke(s).item() != 0
-                && b.ability(s) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
-                && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(t).item() == 0 && b.pokenum(t).pokenum != Pokemon::Giratina
-                && !ItemInfo::isMail(b.poke(s).item())) {
-            //ok
-        } else {
+        if (b.koed(t) || b.poke(s).item() == 0 || b.poke(t).item() != 0 || ItemInfo::isMail(b.poke(s).item())
+                || (b.ability(t) == Ability::Multitype && ItemInfo::isPlate(b.poke(s).item()))
+                || (b.pokenum(t).pokenum == Pokemon::Giratina && b.poke(s).item() == Item::GriseousOrb)
+                || (b.pokenum(t).pokenum == Pokemon::Genesect && ItemInfo::isDrive(b.poke(s).item())))
+        {
             fturn(b,s).add(TM::Failed);
         }
     }
