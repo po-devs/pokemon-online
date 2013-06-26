@@ -5470,7 +5470,7 @@ struct MMSoak : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype)
+        if (b.pokenum(t).pokenum == Pokemon::Arceus)
             fturn(b,s).add(TM::Failed);
     }
 

@@ -379,6 +379,7 @@ struct AMFlowerGift : public AM {
         functions["PartnerStatModifier"] = &sm2;
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
+        functions["OnLoss"] = &ol;
     }
 
     static void us(int s, int, BS &b) {
@@ -405,12 +406,21 @@ struct AMFlowerGift : public AM {
             turn(b,t)["Stat4PartnerAbilityModifier"] = 10;
         }
     }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Cherrim)
+            return;
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
+    }
 };
 
 struct AMForeCast : public AM {
     AMForeCast() {
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
+        functions["OnLoss"] = &ol;
     }
 
     static void us(int s, int, BS &b) {
@@ -426,6 +436,14 @@ struct AMForeCast : public AM {
             return;
 
         b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
+    }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Castform)
+            return;
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
     }
 };
 
@@ -1209,7 +1227,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -1335,14 +1353,14 @@ struct AMDefeatist : public AM {
 struct AMZenMode : public AM {
     AMZenMode() {
         functions["EndTurn27.0"] = &et;
+        functions["OnLoss"] = &ol;
     }
 
     static void et (int s, int, BS &b) {
         Pokemon::uniqueId num = fpoke(b,s).id;
 
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma)
             return;
-        }
 
         bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
@@ -1350,6 +1368,15 @@ struct AMZenMode : public AM {
             return;
 
         b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
+    }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Hihidaruma)
+            return;
+
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
     }
 };
 
@@ -1681,6 +1708,7 @@ struct AMSturdy : public AM {
 struct AMIllusion : public AM {
     AMIllusion() {
         functions["UponBeingHit"] = &ubh;
+        functions["OnLoss"] = &ubh;
         functions["BeforeBeingKoed"] = &ubh;
     }
 
@@ -1924,6 +1952,7 @@ struct AMUnnerve : public AM {
     PartnerStatModifier
     AfterKoing
     UponSwitchOut
+    OnLoss
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
