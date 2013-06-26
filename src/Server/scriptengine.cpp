@@ -257,8 +257,7 @@ ScriptEngineBacktaceGenerator::ScriptEngineBacktaceGenerator(QScriptEngine *e) :
 void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue & err, bool )
 {
     //ScriptEngine* po = dynamic_cast<ScriptEngine *>(err.engine()->parent());
-    if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid())
-    {
+    if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
         const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
     }
 }
