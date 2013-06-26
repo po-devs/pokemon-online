@@ -5474,7 +5474,7 @@ struct MMSoak : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (fpoke(b, t).type1 == Pokemon::Water && fpoke(b, t).type2 == Pokemon::Curse)
+        if (b.ability(t) == Ability::Multitype)
             fturn(b,s).add(TM::Failed);
     }
 
