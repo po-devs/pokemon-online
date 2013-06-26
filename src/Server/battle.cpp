@@ -1968,7 +1968,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
                 (hasWorkingAbility(attacker(), ability(attacker()))
-                 &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
+                 &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }
@@ -2019,7 +2019,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
             && battleMemory().value("MagicRoomCount").toInt() == 0
-            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
+            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Unnerve));
 }
 
 bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
@@ -2253,7 +2253,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
 
 bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative)
 {
-    bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Perversity);
+    bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Contrary);
     if (negative)
         *negative = !pos;
 
@@ -2277,7 +2277,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             return false;
         }
 
-        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker))) {
+        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::Infiltrator) || this->player(player) == this->player(attacker))) {
             if (canSendPreventMessage(player, attacker)) {
                 sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             }
@@ -2334,7 +2334,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
 
         if(teamMemory(this->player(player)).value("SafeGuardCount").toInt() > 0) {
-            if (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker)) {
+            if (!hasWorkingAbility(attacker, Ability::Infiltrator) || this->player(player) == this->player(attacker)) {
                 sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(player).attack);
                 return;
             }
@@ -2744,7 +2744,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     /* Light screen / Reflect */
-    if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
+    if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
             (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
