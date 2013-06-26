@@ -2636,7 +2636,7 @@ int BattleSituation::calculateDamage(int p, int t)
         if(gen().num == 1) {
             def = getStat(t, SpAttack);
         } else {
-            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SecretSword) ? Defense : SpDefense);
+            def = getStat(t, (attackused == Move::Psyshock || attackused == Move::Psystrike || attackused == Move::SecretSword) ? Defense : SpDefense);
         }
     }
 
@@ -2678,7 +2678,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callieffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
+    if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
     }
 
@@ -3427,7 +3427,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (attacker != -1 && attacked != -1) {
         //Unaware / Sacred sword
         if (attacker != player && attacked == player) {
-            if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::PaymentPlan || tmove(attacker).attack == Move::SacredSword)
+            if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
                     && (stat == SpDefense || stat == Defense || stat == Evasion)) {
                 boost = 0;
             }
