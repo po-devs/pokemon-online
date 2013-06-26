@@ -3020,7 +3020,7 @@ struct MMSwitcheroo : public MM
 
     static void daf(int s, int t, BS &b) {
         if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-                || (b.ability(t) == Ability::Multitype && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item())))
+                || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item()) || ItemInfo::isPlate(b.poke(s).item())))
                 || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
                 || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
                 || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
