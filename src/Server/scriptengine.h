@@ -480,6 +480,8 @@ public:
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
     /* Calls the underlying OS for a command */
     Q_INVOKABLE int system(const QString &command);
+    Q_INVOKABLE QScriptValue sql(const QString &command);
+    Q_INVOKABLE QScriptValue sql(const QString &command, const QScriptValue &params);
 
     /* Better version of system, also captures the output */
     Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
