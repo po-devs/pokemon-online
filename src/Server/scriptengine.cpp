@@ -257,7 +257,9 @@ ScriptEngineBacktaceGenerator::ScriptEngineBacktaceGenerator(QScriptEngine *e) :
 void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue & err, bool )
 {
     //ScriptEngine* po = dynamic_cast<ScriptEngine *>(err.engine()->parent());
-    const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
+    if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
+        const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
+    }
 }
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
@@ -352,6 +354,10 @@ QScriptValue ScriptEngine::exec(QScriptContext *c, QScriptEngine *e)
     }
 
     QScriptValue import = e->evaluate(QString::fromUtf8(in.readAll()), c->argument(0).toString());
+    if (e->hasUncaughtException()) {
+        import.setProperty("backtracetext", c->backtrace().join("\n"));
+        c->throwValue(import);
+    }
     return import;
 }
 
@@ -365,7 +371,12 @@ QScriptValue ScriptEngine::import(const QString &fileName) {
     }
 
     QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()), url );
-    evaluate(import);
+
+    if (myengine.hasUncaughtException()) {
+        import.setProperty("backtracetext", myengine.currentContext()->backtrace().join("\n"));
+        myengine.currentContext()->throwValue(import);
+    }
+
     return import;
 }
 
