@@ -4526,7 +4526,7 @@ struct MMSleepTalk : public MM
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
-                              << Uproar << IceBurn <<FreezeShock;
+                              << Uproar << IceBurn << FreezeShock;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
