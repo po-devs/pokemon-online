@@ -1010,14 +1010,16 @@ struct MMAssist : public MM
     struct FM : public QSet<int>
     {
         FM() {
-            (*this) << NoMove << Assist << Bestow << Chatter << CircleThrow << Copycat << Counter << Covet << DestinyBond << Detect
-                              << DragonTail << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
+            (*this) << NoMove << Assist << Bestow << Chatter << Copycat << Counter << Covet << DestinyBond << Detect
+                              << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
                               << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << RagePowder
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
-            if (move == Transform || move == NaturePower) {
+            //Assist's Forbidden Moves will be inherited later for Metronome so we break out the moves that are only blocked with Assist
+            //Metronome will inherit a block on Assist in Gen III despite it being a valid move
+            if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
                 return gen >= 5;
             } else {
                 return QSet<int>::contains(move);
@@ -2145,11 +2147,17 @@ struct MMMetronome : public MM
     struct MMMetroSet : public QSet<int> {
         MMMetroSet() {
             (*this).unite(MMAssist::forbidden_moves );
-
-            (*this) << Move::Bestow << Move::AfterYou << Move::IceBurn << Move::FreezeShock
-                                      << Move::NaturePower << Move::Quash << Move::QuickGuard << Move::RagePowder
-                                      << Move::RelicSong << Move::SacredSword << Move::TechnoBlast << Move::Transform
-                                      << Move::VCreate << Move::WideGuard << Move::Snarl;
+            //The inheritance is missing a few moves
+            (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SacredSword
+                                     << Move::TechnoBlast << Move::VCreate << Move::WideGuard << Move::Snarl;
+        }
+        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+            //Nature Power still ruining life since Gen 5
+            if (move == NaturePower) {
+                return gen >= 5;
+            } else {
+                return QSet<int>::contains(move);
+            }
         }
     };
 
@@ -3990,7 +3998,18 @@ struct MMMimic : public MM
 
     struct FailedMoves : public QSet<int> {
         FailedMoves() {
-            (*this) << Metronome << Struggle << Sketch << Mimic << Chatter;
+            //Technically, Mimic and Sketch are capable of being copied in Gen II, but we ignore it because it is cyclical.
+            //Metronome might be able to be copied in Generations 1, 2 and 5. However, it is unclear if it copies Metronome or the move used.
+            //For now, we will just block it
+            (*this) << NoMove << Struggle << Sketch << Mimic << Chatter << Metronome;
+        }
+        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+            //Transform blocked in Gen 5, possibly as a result of Transform+Mimic glitch, but this won't affect anything in a simulator
+            if (move == Transform) {
+                return gen >= 5;
+            } else {
+                return QSet<int>::contains(move);
+            }
         }
     };
 
@@ -4503,16 +4522,15 @@ struct MMSleepTalk : public MM
 
     struct FM : public QSet<int> {
         FM() {
-            /*
-    * That and any move the user cannot choose for use, including moves with zero PP
-*/
-            (*this) << NoMove << Assist << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
-                              << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce << Sketch <<
-                                 SkullBash << SkyAttack << SleepTalk << SolarBeam << RazorWind << Uproar;
+            //Sleep Talk prevents all 2-Turn moves
+            (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
+                              << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
+                              << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
+                              << Uproar << IceBurn << FreezeShock;
         }
-
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
-            if (move == Mimic) {
+            //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
+            if (move == NaturePower || move == Sketch || move == Mimic) {
                 return gen >= 5;
             } else {
                 return QSet<int>::contains(move);
@@ -4528,7 +4546,7 @@ struct MMSleepTalk : public MM
 
         for (int i = 0; i < 4; i++) {
             /* Sleep talk can work on 0 PP moves but not on disabled moves*/
-            /* On gen 5 it can work several times behind a choice band, so i allowed disabled moves, as
+            /* On gen 5 it can work several times behind a choice band, so I allowed disabled moves, as
                choice band blocks moves the same way, but it needs to be cross checked. */
             if ( (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false)
                  && !forbidden_moves.contains(b.move(s,i))) {
