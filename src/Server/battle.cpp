@@ -1599,7 +1599,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player,player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
-    /* Here because of jewels :( */
+    /* Here because of gems :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
     /* Choice item memory, copycat in gen 4 and less */
@@ -1904,7 +1904,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                 typemod *= 2;
                 continue;
             }
-            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::BullsEye)) {
+            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
                 typemod *= 2;
                 continue;
             }
@@ -2001,7 +2001,7 @@ int BattleSituation::weight(int player) {
     } else if (hasWorkingAbility(player, Ability::LightMetal)) {
         ret /= 2;
     }
-    if (hasWorkingItem(player, Item::PumiceStone)) {
+    if (hasWorkingItem(player, Item::FloatStone)) {
         ret /= 2;
     }
 
@@ -2512,8 +2512,8 @@ bool BattleSituation::isFlying(int player)
             (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
             !pokeMemory(player).value("SmackedDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
-             || hasWorkingItem(player, Item::Balloon)
-             || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
+             || hasWorkingItem(player, Item::AirBalloon)
+             || ((!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying))
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
 }
@@ -2641,7 +2641,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
 
-    /* Used by Oaths to use a special attack, the sum of both */
+    /* Used by Pledges to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
         move.remove("AttackStat");
@@ -2677,7 +2677,7 @@ int BattleSituation::calculateDamage(int p, int t)
       move power (not just power variable) because of technician which relies on it */
 
     callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
     }
