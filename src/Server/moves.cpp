@@ -1190,7 +1190,7 @@ struct MMBind : public MM
 
                     int trapper = b.linker(s, "Trapped");
 
-                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::PressureBand) ? 8 : 16),s,false);
+                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 8 : 16),s,false);
                 }
             }
         }
@@ -1915,7 +1915,7 @@ struct MMFling : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && !(ItemInfo::isJewel(b.poke(s).item())) && ItemInfo::Power(b.poke(s).item()) > 0) {
+        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && !(ItemInfo::isGem(b.poke(s).item())) && ItemInfo::Power(b.poke(s).item()) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
                 return;
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
@@ -5652,10 +5652,10 @@ struct MMRelicSong : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (fpoke(b,s).id == Pokemon::Meloia)
-            b.changePokeForme(s, Pokemon::Meloia_S);
-        else if (fpoke(b,s).id == Pokemon::Meloia_S)
-            b.changePokeForme(s, Pokemon::Meloia);
+        if (fpoke(b,s).id == Pokemon::Meloetta)
+            b.changePokeForme(s, Pokemon::Meloetta_P);
+        else if (fpoke(b,s).id == Pokemon::Meloetta_P)
+            b.changePokeForme(s, Pokemon::Meloetta);
     }
 };
 
@@ -5824,9 +5824,9 @@ struct MMFirePledge : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Fire) {
+            if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Fire) {
                 /* Here you go with the special effect */
-                turn(b,s)["OathEffectActivater"] = i;//ref here
+                turn(b,s)["PledgeEffectActivater"] = i;//ref here
                 return;
             }
         }
@@ -5835,8 +5835,8 @@ struct MMFirePledge : public MM
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
             if (!b.hasMoved(i) && (tmove(b,i).attack == Move::WaterPledge || tmove(b,i).attack == Move::GrassPledge) ){
-                /* Here we pledge our oath */
-                turn(b,s)["MadeAnOath"] = Pokemon::Fire;
+                /* Here we make our pledge */
+                turn(b,s)["MadeAPledge"] = Pokemon::Fire;
                 b.sendMoveMessage(178, 0, s, Pokemon::Fire, 0, move(b,s));
                 tmove(b,s).power = 0;
                 tmove(b,s).targets = Move::User;
@@ -5845,15 +5845,15 @@ struct MMFirePledge : public MM
             }
         }
 
-        /* Otherwise it's just the standard oath... */
+        /* Otherwise it's just the standard pledge... */
     }
 
     static void bcd(int s, int, BS &b) {
-        if (!turn(b,s).contains("OathEffectActivater"))
+        if (!turn(b,s).contains("PledgeEffectActivater"))
             return;
 
         //ref here
-        int i = turn(b,s)["OathEffectActivater"].toInt();
+        int i = turn(b,s)["PledgeEffectActivater"].toInt();
 
         b.sendMoveMessage(178, 1, s, 0, i);
         turn(b,s)["AttackStat"] = b.getStat(s, SpAttack) + b.getStat(i, SpAttack, 1);
@@ -5872,7 +5872,7 @@ struct MMFirePledge : public MM
 
         b.sendMoveMessage(178, 2, t, Pokemon::Fire);
         team(b,t)["BurningFieldCount"] = 5;
-        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "FireOath", &et);
+        b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), t, "FirePledge", &et);
     }
 
     static void et(int s, int, BS &b) {
@@ -5880,7 +5880,7 @@ struct MMFirePledge : public MM
 
         if (team(b,s).value("BurningFieldCount").toInt() <= 0) {
             team(b,s).remove("BurningFieldCount");
-            b.removeEndTurnEffect(BS::ZoneEffect, s, "FireOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "FirePledge");
             return;
         }
 
@@ -5907,9 +5907,9 @@ struct MMGrassPledge : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Grass) {
+            if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Grass) {
                 /* Here you go with the special effect */
-                turn(b,s)["OathEffectActivater"] = i;//ref here
+                turn(b,s)["PledgeEffectActivater"] = i;//ref here
                 return;
             }
         }
@@ -5918,8 +5918,8 @@ struct MMGrassPledge : public MM
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
             if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FirePledge || tmove(b,i).attack == Move::WaterPledge) ){
-                /* Here we pledge our oath */
-                turn(b,s)["MadeAnOath"] = Pokemon::Grass;
+                /* Here we make our pledge */
+                turn(b,s)["MadeAPledge"] = Pokemon::Grass;
                 b.sendMoveMessage(179, 0, s, Pokemon::Grass, 0, move(b,s));
                 tmove(b,s).power = 0;
                 tmove(b,s).targets = Move::User;
@@ -5928,7 +5928,7 @@ struct MMGrassPledge : public MM
             }
         }
 
-        /* Otherwise it's just the standard oath... */
+        /* Otherwise it's just the standard pledge... */
     }
 
     static void uas(int s, int t, BS &b);
@@ -5951,7 +5951,7 @@ struct MMGrassPledge : public MM
 
         if (team(b,s).value("SwampCount").toInt() <= 0) {
             team(b,s).remove("SwampCount");
-            b.removeEndTurnEffect(BS::ZoneEffect, s, "GrassOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "GrassPledge");
             return;
         }
     }
@@ -5969,9 +5969,9 @@ struct MMWaterPledge : public MM
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
-            if (turn(b,i).contains("MadeAnOath") && turn(b,i)["MadeAnOath"] != Pokemon::Water) {
+            if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Water) {
                 /* Here you go with the special effect */
-                turn(b,s)["OathEffectActivater"] = i;//ref here
+                turn(b,s)["PledgeEffectActivater"] = i;//ref here
                 return;
             }
         }
@@ -5980,8 +5980,8 @@ struct MMWaterPledge : public MM
             if (b.player(i) != b.player(s) || b.koed(i))
                 continue;
             if (!b.hasMoved(i) && (tmove(b,i).attack == Move::FirePledge || tmove(b,i).attack == Move::GrassPledge) ){
-                /* Here we pledge our oath */
-                turn(b,s)["MadeAnOath"] = Pokemon::Water;
+                /* Here we make our pledge */
+                turn(b,s)["MadeAPledge"] = Pokemon::Water;
                 b.sendMoveMessage(180, 0, s, Pokemon::Water, 0, move(b,s));
                 tmove(b,s).power = 0;
                 tmove(b,s).targets = Move::User;
@@ -5990,7 +5990,7 @@ struct MMWaterPledge : public MM
             }
         }
 
-        /* Otherwise it's just the standard oath... */
+        /* Otherwise it's just the standard pledge... */
     }
 
     static ::bracket bracket(Pokemon::gen) {
@@ -6007,19 +6007,19 @@ struct MMWaterPledge : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        if (!turn(b,s).contains("OathEffectActivater"))
+        if (!turn(b,s).contains("PledgeEffectActivater"))
             return;
 
         //ref here
-        int i = turn(b,s)["OathEffectActivater"].toInt();
+        int i = turn(b,s)["PledgeEffectActivater"].toInt();
 
-        if (turn(b,i)["MadeAnOath"] == Pokemon::Fire) {
+        if (turn(b,i)["MadeAPledge"] == Pokemon::Fire) {
             makeARainbow(b.player(t), b);
         } else {
             MMGrassPledge::makeASwamp(b.player(t), b);
         }
 
-        turn(b,i).remove("MadeAnOath");
+        turn(b,i).remove("MadeAPledge");
     }
 
     static void et(int s, int, BS &b) {
@@ -6027,7 +6027,7 @@ struct MMWaterPledge : public MM
 
         if (team(b,s).value("RainbowCount").toInt() <= 0) {
             team(b,s).remove("RainbowCount");
-            b.removeEndTurnEffect(BS::ZoneEffect, s, "WaterOath");
+            b.removeEndTurnEffect(BS::ZoneEffect, s, "WaterPledge");
             return;
         }
     }
@@ -6035,36 +6035,36 @@ struct MMWaterPledge : public MM
 
 void MMFirePledge::uas(int s, int t, BS &b)
 {
-    if (!turn(b,s).contains("OathEffectActivater"))
+    if (!turn(b,s).contains("PledgeEffectActivater"))
         return;
 
     //ref here
-    int i = turn(b,s)["OathEffectActivater"].toInt();
+    int i = turn(b,s)["PledgeEffectActivater"].toInt();
 
-    if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
+    if (turn(b,i)["MadeAPledge"] == Pokemon::Water) {
         MMWaterPledge::makeARainbow(b.player(t), b);
     } else {
         makeABurningField(b.player(t), b);
     }
 
-    turn(b,i).remove("MadeAnOath");
+    turn(b,i).remove("MadeAPledge");
 }
 
 void MMGrassPledge::uas(int s, int t, BS &b)
 {
-    if (!turn(b,s).contains("OathEffectActivater"))
+    if (!turn(b,s).contains("PledgeEffectActivater"))
         return;
 
     //ref here
-    int i = turn(b,s)["OathEffectActivater"].toInt();
+    int i = turn(b,s)["PledgeEffectActivater"].toInt();
 
-    if (turn(b,i)["MadeAnOath"] == Pokemon::Water) {
+    if (turn(b,i)["MadeAPledge"] == Pokemon::Water) {
         makeASwamp(b.player(t), b);
     } else {
         MMFirePledge::makeABurningField(b.player(t), b);
     }
 
-    turn(b,i).remove("MadeAnOath");
+    turn(b,i).remove("MadeAPledge");
 }
 
 struct MMEchoedVoice : public MM

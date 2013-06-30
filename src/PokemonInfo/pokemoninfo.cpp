@@ -2382,9 +2382,9 @@ bool ItemInfo::isDrive(int itemnum)
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
 }
 
-bool ItemInfo::isJewel(int itemnum)
+bool ItemInfo::isGem(int itemnum)
 {
-    return itemnum == Item::NormalJewel || itemnum == Item::FightJewel || itemnum == Item::SteelJewel || itemnum == Item::PsychicJewel || itemnum == Item::DarkJewel || itemnum == Item::FireJewel || itemnum == Item::WaterJewel || itemnum == Item::ElectricJewel || itemnum == Item::IceJewel || itemnum == Item::FlightJewel || itemnum == Item::PoisonJewel || itemnum == Item::GhostJewel || itemnum == Item::Bugjewel || itemnum == Item::GrassJewel || itemnum == Item::RockJewel || itemnum == Item::EarthJewel || itemnum == Item::DragonJewel;
+    return itemnum == Item::NormalGem || itemnum == Item::FightGem || itemnum == Item::SteelGem || itemnum == Item::PsychicGem || itemnum == Item::DarkGem || itemnum == Item::FireGem || itemnum == Item::WaterGem || itemnum == Item::ElectricGem || itemnum == Item::IceGem || itemnum == Item::FlightGem || itemnum == Item::PoisonGem || itemnum == Item::GhostGem || itemnum == Item::BugGem || itemnum == Item::GrassGem || itemnum == Item::RockGem || itemnum == Item::EarthGem || itemnum == Item::DragonGem;
 }
 
 bool ItemInfo::isMail(int itemnum)
