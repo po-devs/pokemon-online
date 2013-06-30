@@ -1359,7 +1359,7 @@ struct AMZenMode : public AM {
     static void et (int s, int, BS &b) {
         Pokemon::uniqueId num = fpoke(b,s).id;
 
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma)
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan)
             return;
 
         bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
@@ -1371,7 +1371,7 @@ struct AMZenMode : public AM {
     }
 
     static void ol(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Hihidaruma)
+        if (b.pokenum(s).pokenum != Pokemon::Darmanitan)
             return;
 
         if (b.pokenum(s).subnum != 0) {
