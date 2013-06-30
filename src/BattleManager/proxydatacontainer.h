@@ -841,7 +841,7 @@ public:
         SweetHeart,
         PrismScale,
         Eviolite,
-        PumiceStone,
+        FloatStone,
         RockyHelmet,
         AirBalloon,
         RedCard,
