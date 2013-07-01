@@ -1237,11 +1237,9 @@ void Player::findRatings(bool force)
         ratings().clear();
     }
 
-    QString name = waiting_name.length()>0 ? waiting_name : this->name();
-
     bool one = false;
     foreach(QString tier, tiers) {
-        if (!ratings().contains(name)) {
+        if (!ratings().contains(tier)) {
             one = true;
             findRating(tier);
         }

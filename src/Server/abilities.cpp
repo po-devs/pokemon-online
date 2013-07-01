@@ -224,7 +224,6 @@ struct AMCompoundEyes : public AM {
     }
 };
 
-
 struct AMCuteCharm : public AM {
     AMCuteCharm() {
         functions["UponPhysicalAssault"] = &upa;
@@ -380,6 +379,7 @@ struct AMFlowerGift : public AM {
         functions["PartnerStatModifier"] = &sm2;
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
+        functions["OnLoss"] = &ol;
     }
 
     static void us(int s, int, BS &b) {
@@ -406,12 +406,21 @@ struct AMFlowerGift : public AM {
             turn(b,t)["Stat4PartnerAbilityModifier"] = 10;
         }
     }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Cherrim)
+            return;
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
+    }
 };
 
 struct AMForeCast : public AM {
     AMForeCast() {
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
+        functions["OnLoss"] = &ol;
     }
 
     static void us(int s, int, BS &b) {
@@ -427,6 +436,14 @@ struct AMForeCast : public AM {
             return;
 
         b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
+    }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Castform)
+            return;
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
     }
 };
 
@@ -1072,8 +1089,7 @@ struct AMVoltAbsorb : public AM {
     static void op(int s, int t, BS &b) {
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-
-            if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
+            if (!b.canHeal(s)){
                 b.sendAbMessage(70,1,s,s,type(b,t), b.ability(s));
             } else {
                 b.sendAbMessage(70,0,s,s,type(b,t), b.ability(s));
@@ -1195,8 +1211,8 @@ struct AMMinus : public AM {
 };
 
 /* 5th gen abilities */
-struct AMDustProof : public AM {
-    AMDustProof() {
+struct AMOvercoat : public AM {
+    AMOvercoat() {
         functions["WeatherSpecial"] = &ws;
     }
 
@@ -1211,7 +1227,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -1219,8 +1235,8 @@ struct AMMummy : public AM {
     }
 };
 
-struct AMEarthquakeSpiral : public AM {
-    AMEarthquakeSpiral() {
+struct AMMoxie : public AM {
+    AMMoxie() {
         functions["AfterKoing"] = &ak;
     }
 
@@ -1229,8 +1245,8 @@ struct AMEarthquakeSpiral : public AM {
     }
 };
 
-struct AMHerbivore : public AM {
-    AMHerbivore() {
+struct AMSapSipper : public AM {
+    AMSapSipper() {
         functions["OpponentBlock"] = &uodr;
     }
 
@@ -1249,8 +1265,8 @@ struct AMHerbivore : public AM {
     }
 };
 
-struct AMSandPower : public AM {
-    AMSandPower() {
+struct AMSandForce : public AM {
+    AMSandForce() {
         functions["BasePowerModifier"] = &bpam;
         functions["WeatherSpecial"] = &ws;
     }
@@ -1272,18 +1288,19 @@ struct AMSandPower : public AM {
     }
 };
 
-//struct AMJackOfAllTrades : public AM {
-//    AMJackOfAllTrades() {
-//        functions["DamageFormulaStart"] = &dfs;
-//    }
+/**
+struct AMJackOfAllTrades : public AM {
+    AMJackOfAllTrades() {
+        functions["DamageFormulaStart"] = &dfs;
+    }
 
-//    static void dfs(int s, int, BS &b) {
-//        turn(b,s)["Stab"] = 3;
-//    }
-//};
+    static void dfs(int s, int, BS &b) {
+        turn(b,s)["Stab"] = 3;
+    }
+}; */
 
-struct AMBrokenArmour : public AM {
-    AMBrokenArmour() {
+struct AMWeakArmor : public AM {
+    AMWeakArmor() {
         functions["UponBeingHit"] = &upa;
     }
 
@@ -1319,8 +1336,8 @@ struct AMVictoryStar : public AM {
     }
 };
 
-struct AMWeakKneed : public AM {
-    AMWeakKneed() {
+struct AMDefeatist : public AM {
+    AMDefeatist() {
         functions["StatModifier"] = &sm;
     }
 
@@ -1333,17 +1350,17 @@ struct AMWeakKneed : public AM {
     }
 };
 
-struct AMDarumaMode : public AM {
-    AMDarumaMode() {
-        functions["AfterHPChange"] = &ahpc;
+struct AMZenMode : public AM {
+    AMZenMode() {
+        functions["EndTurn27.0"] = &et;
+        functions["OnLoss"] = &ol;
     }
 
-    static void ahpc(int s, int, BS &b) {
+    static void et (int s, int, BS &b) {
         Pokemon::uniqueId num = fpoke(b,s).id;
 
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Hihidaruma) {
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan)
             return;
-        }
 
         bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
@@ -1352,11 +1369,20 @@ struct AMDarumaMode : public AM {
 
         b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
     }
+
+    static void ol(int s, int, BS &b) {
+        if (b.pokenum(s).pokenum != Pokemon::Darmanitan)
+            return;
+
+        if (b.pokenum(s).subnum != 0) {
+            b.changeAForme(s, 0);
+        }
+    }
 };
 
-struct AMWickedThief : public AM
+struct AMPickPocket : public AM
 {
-    AMWickedThief() {
+    AMPickPocket() {
         functions["UponPhysicalAssault"] = &upa;
     }
 
@@ -1374,9 +1400,9 @@ struct AMWickedThief : public AM
     }
 };
 
-struct AMEncourage : public AM
+struct AMSheerForce : public AM
 {
-    AMEncourage() {
+    AMSheerForce() {
         functions["BasePowerModifier"] = &bpm;
     }
 
@@ -1397,9 +1423,9 @@ struct AMEncourage : public AM
     }
 };
 
-struct AMCompetitiveSpirit : public AM
+struct AMDefiant : public AM
 {
-    AMCompetitiveSpirit() {
+    AMDefiant() {
         functions["AfterNegativeStatChange"] = &ansc;
     }
 
@@ -1479,14 +1505,14 @@ struct AMImposter : public AM
     }
 };
 
-struct AMMischievousHeart : public AM
+struct AMPrankster : public AM
 {
-    AMMischievousHeart() {
+    AMPrankster() {
         functions["PriorityChoice"] = &pc;
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).power == 0 && tmove(b,s).priority == 0)
+        if (tmove(b,s).power == 0)
             tmove(b,s).priority += 1;
     }
 };
@@ -1504,9 +1530,9 @@ struct AMMultiScale : public AM
     }
 };
 
-struct AMHeatRampage : public AM
+struct AMFlareBoost : public AM
 {
-    AMHeatRampage() {
+    AMFlareBoost() {
         functions["StatModifier"] = &sm;
     }
 
@@ -1682,6 +1708,7 @@ struct AMSturdy : public AM {
 struct AMIllusion : public AM {
     AMIllusion() {
         functions["UponBeingHit"] = &ubh;
+        functions["OnLoss"] = &ubh;
         functions["BeforeBeingKoed"] = &ubh;
     }
 
@@ -1694,8 +1721,8 @@ struct AMIllusion : public AM {
     }
 };
 
-struct AMJusticeHeart : public AM {
-    AMJusticeHeart() {
+struct AMJustified : public AM {
+    AMJustified() {
         functions["UponBeingHit"] = &ubh;
     }
 
@@ -1714,8 +1741,8 @@ struct AMJusticeHeart : public AM {
     }
 };
 
-struct AMInconsistent : public AM {
-    AMInconsistent() {
+struct AMMoody : public AM {
+    AMMoody() {
         functions["EndTurn26.1"] = &et;
     }
 
@@ -1762,8 +1789,8 @@ struct AMCursedBody : public AM {
     }
 };
 
-struct AMSelfConscious : public AM {
-    AMSelfConscious() {
+struct AMRattled : public AM {
+    AMRattled() {
         functions["UponBeingHit"] = &ubh;
     }
 
@@ -1780,8 +1807,8 @@ struct AMSelfConscious : public AM {
     }
 };
 
-struct AMAnalyze : public AM {
-    AMAnalyze() {
+struct AMAnalytic : public AM {
+    AMAnalytic() {
         functions["BasePowerModifier"] = &bpm;
     }
 
@@ -1792,8 +1819,8 @@ struct AMAnalyze : public AM {
     }
 };
 
-struct AMHealingHeart : public AM {
-    AMHealingHeart() {
+struct AMHealer : public AM {
+    AMHealer() {
         functions["EndTurn5.1"] = &et;
     }
 
@@ -1848,8 +1875,8 @@ struct AMNaturalCure : public AM {
     }
 };
 
-struct AMRegeneration : public AM {
-    AMRegeneration() {
+struct AMRegenerator : public AM {
+    AMRegenerator() {
         functions["UponSwitchOut"] = &us;
     }
 
@@ -1925,6 +1952,7 @@ struct AMUnnerve : public AM {
     PartnerStatModifier
     AfterKoing
     UponSwitchOut
+    OnLoss
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -1947,7 +1975,7 @@ void AbilityEffect::init()
     REGISTER_AB(14, Drizzle);
     REGISTER_AB(15, DrySkin);
     REGISTER_AB(16, EffectSpore);
-    REGISTER_AB(17, DustProof);
+    REGISTER_AB(17, Overcoat);
     REGISTER_AB(18, FlameBody);
     REGISTER_AB(19, FlashFire);
     REGISTER_AB(20, FlowerGift);
@@ -1982,7 +2010,7 @@ void AbilityEffect::init()
     REGISTER_AB(49, Rivalry);
     REGISTER_AB(50, RoughSkin);
     REGISTER_AB(51, SandVeil);
-    REGISTER_AB(52, EarthquakeSpiral);
+    REGISTER_AB(52, Moxie);
     REGISTER_AB(53, ShadowTag);
     REGISTER_AB(54, ShedSkin);
     REGISTER_AB(55, SlowStart);
@@ -1996,25 +2024,25 @@ void AbilityEffect::init()
     REGISTER_AB(65, TintedLens);
     REGISTER_AB(66, Trace);
     REGISTER_AB(67, Truant);
-    REGISTER_AB(68, Herbivore);
+    REGISTER_AB(68, SapSipper);
     REGISTER_AB(69, Unburden);
     REGISTER_AB(70, VoltAbsorb);
     REGISTER_AB(71, WonderGuard);
-    REGISTER_AB(72, SandPower);
+    REGISTER_AB(72, SandForce);
 //    REGISTER_AB(73, JackOfAllTrades);
-    REGISTER_AB(74, BrokenArmour);
+    REGISTER_AB(74, WeakArmor);
     REGISTER_AB(75, VictoryStar);
-    REGISTER_AB(76, WeakKneed);
-    REGISTER_AB(77, DarumaMode);
-    REGISTER_AB(78, WickedThief);
-    REGISTER_AB(79, Encourage);
-    REGISTER_AB(80, CompetitiveSpirit);
+    REGISTER_AB(76, Defeatist);
+    REGISTER_AB(77, ZenMode);
+    REGISTER_AB(78, PickPocket);
+    REGISTER_AB(79, SheerForce);
+    REGISTER_AB(80, Defiant);
     REGISTER_AB(81, Imposter);
-    REGISTER_AB(82, MischievousHeart);
+    REGISTER_AB(82, Prankster);
     REGISTER_AB(83, MultiScale);
-    REGISTER_AB(84, HeatRampage);
+    REGISTER_AB(84, FlareBoost);
     REGISTER_AB(85, Telepathy);
-    REGISTER_AB(86, Regeneration);
+    REGISTER_AB(86, Regenerator);
     REGISTER_AB(87, MagicBounce);
     REGISTER_AB(88, Harvest);
     REGISTER_AB(89, CloudNine);
@@ -2022,12 +2050,12 @@ void AbilityEffect::init()
     REGISTER_AB(91, Sturdy);
     REGISTER_AB(92, Illusion);
     REGISTER_AB(93, PickUp);
-    REGISTER_AB(94, JusticeHeart);
-    REGISTER_AB(95, Inconsistent);
+    REGISTER_AB(94, Justified);
+    REGISTER_AB(95, Moody);
     REGISTER_AB(96, CursedBody);
-    REGISTER_AB(97, SelfConscious);
-    REGISTER_AB(98, Analyze);
-    REGISTER_AB(99, HealingHeart);
+    REGISTER_AB(97, Rattled);
+    REGISTER_AB(98, Analytic);
+    REGISTER_AB(99, Healer);
     REGISTER_AB(100, FriendGuard);
     REGISTER_AB(101, PoisonTouch);
     REGISTER_AB(102, Unnerve);

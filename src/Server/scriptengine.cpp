@@ -16,16 +16,23 @@
 #include "analyze.h"
 #include "../Shared/config.h"
 #include "../Utilities/ziputils.h"
+#include <QScriptEngineAgent>
 
-#ifndef _EXCLUDE_DEPCRECATED
-static bool callLater_w = false;
-static bool callQuickly_w = false;
-static bool quickCall_w = false;
-static bool delayedCall_w = false;
-static bool intervalCall_w = false;
-static bool intervalTimer_w = false;
-static bool stopTimer_w = false;
+#ifndef _EXCLUDE_DEPRECATED
+#define DEPRECATED(x) x
+#else
+#define DEPRECATED(x)
 #endif
+
+DEPRECATED(
+    static bool callLater_w = false;
+    static bool callQuickly_w = false;
+    static bool quickCall_w = false;
+    static bool delayedCall_w = false;
+    static bool intervalCall_w = false;
+    static bool intervalTimer_w = false;
+    static bool stopTimer_w = false;
+)
 
 /*!
 \qmlmethod color Qt::lighter(color baseColor, real factor)
@@ -41,7 +48,9 @@ by factor and converts the color back to RGB.
 
 If \c factor is not supplied, returns a color 50% lighter than \c baseColor (factor 1.5).
 */
-static QScriptValue lighter(QScriptContext *ctxt, QScriptEngine *engine)
+
+
+QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
         return ctxt->throwError(QLatin1String("Qt.lighter(): Invalid arguments"));
@@ -71,7 +80,7 @@ by factor and converts the color back to RGB.
 
 If \c factor is not supplied, returns a color 50% darker than \c baseColor (factor 2.0).
 */
-static QScriptValue darker(QScriptContext *ctxt, QScriptEngine *engine)
+QScriptValue ScriptEngine::darker(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
         return ctxt->throwError(QLatin1String("Qt.darker(): Invalid arguments"));
@@ -87,7 +96,7 @@ static QScriptValue darker(QScriptContext *ctxt, QScriptEngine *engine)
 }
 
 /* Returns lightness of a color */
-static QScriptValue lightness(QScriptContext *ctxt, QScriptEngine *engine)
+QScriptValue ScriptEngine::lightness(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1)
         return ctxt->throwError(QLatin1String("Qt.lightness(): Invalid arguments"));
@@ -112,7 +121,7 @@ static QScriptValue lightness(QScriptContext *ctxt, QScriptEngine *engine)
 
     Tint is most useful when a subtle change is intended to be conveyed due to some event; you can then use tinting to more effectively tune the visible color.
 */
-static QScriptValue tint(QScriptContext *ctxt, QScriptEngine *engine)
+QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 2)
         return ctxt->throwError(QLatin1String("Qt.tint(): Invalid arguments"));
@@ -148,9 +157,24 @@ static QScriptValue tint(QScriptContext *ctxt, QScriptEngine *engine)
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
+
+
+
+    myengine.setParent(this);
+
+    parse = myengine.globalObject().property("JSON").property("parse");
+    stringify = myengine.globalObject().property("JSON").property("stringify");
+
+    ScriptEngineBacktaceGenerator *b = new ScriptEngineBacktaceGenerator(&myengine);
+
+    QScriptEngineAgent *bt = b;
+
+    myengine.setAgent(bt);
+
     mySessionDataFactory = new SessionDataFactory(&myengine);
 
     QScriptValue sys = myengine.newQObject(this);
+    myengine.globalObject().setProperty("global", myengine.globalObject());
     myengine.globalObject().setProperty("sys", sys);
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
@@ -169,9 +193,46 @@ ScriptEngine::ScriptEngine(Server *s) {
     myengine.globalObject().setProperty("Qt", qtObject);
 
 
+    sys.setProperty( "enableStrict" , myengine.newFunction(enableStrict));
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
+    QScriptValue writeFunc = myengine.newFunction(write);
+    sys.setProperty( "write" , writeFunc);
+    sys.setProperty( "writeToFile" , writeFunc);
+    QScriptValue readFunc = myengine.newFunction(read);
+    sys.setProperty( "read" , readFunc);
+    sys.setProperty( "getFileContent" , readFunc);
+    QScriptValue mkdirf = myengine.newFunction(mkdir);
+    sys.setProperty( "mkdir" , mkdirf);
+    sys.setProperty( "makeDir" , mkdirf);
+    QScriptValue rmF = myengine.newFunction(rm);
+    sys.setProperty( "deleteFile" , rmF);
+    sys.setProperty( "rm" , rmF);
+    QScriptValue wroF = myengine.newFunction(writeObject);
+    sys.setProperty( "writeObject" , wroF);
+    QScriptValue rdoF = myengine.newFunction(readObject);
+    sys.setProperty( "readObject" , rdoF);
+    QScriptValue cwdf = myengine.newFunction(cwd);
+    sys.setProperty( "cwd" , cwdf);
+    sys.setProperty( "getCurrentDir" , cwdf);
+    QScriptValue rmdF = myengine.newFunction(rmdir);
+    sys.setProperty( "removeDir" , rmdF);
+    sys.setProperty( "rmdir" , rmdF);
+    QScriptValue apf = myengine.newFunction(writeConcat);
+    sys.setProperty( "append" , apf);
+    sys.setProperty( "appendToFile" , apf);
+
+    sys.setProperty( "exists" , myengine.newFunction(exists));
+
+    sys.setProperty( "exec" , myengine.newFunction(exec));
+
 #endif
+    sys.setProperty( "sendAll" , myengine.newFunction(sendAll));
+    sys.setProperty( "sendMessage" , myengine.newFunction(sendMessage));
+    sys.setProperty( "broadcast" , myengine.newFunction(broadcast));
+
+    sys.setProperty( "backtrace" , myengine.newFunction(backtrace));
 
     QFile f("scripts.js");
     f.open(QIODevice::ReadOnly);
@@ -187,6 +248,18 @@ ScriptEngine::ScriptEngine(Server *s) {
 ScriptEngine::~ScriptEngine()
 {
     delete mySessionDataFactory;
+}
+
+ScriptEngineBacktaceGenerator::ScriptEngineBacktaceGenerator(QScriptEngine *e) : QScriptEngineAgent(e)
+{
+}
+
+void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue & err, bool )
+{
+    //ScriptEngine* po = dynamic_cast<ScriptEngine *>(err.engine()->parent());
+    if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
+        const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
+    }
 }
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
@@ -208,12 +281,16 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     stopTimer_w = false;
 
     mySessionDataFactory->disableAll();
-    newscript = myengine.evaluate(script);
+    strict = false;
+    wfatal = false;
+
+    newscript = myengine.evaluate(script, "scripts.js");
 
     if (newscript.isError()) {
-
+        strict = false;
+        wfatal = false;
         makeEvent("switchError", newscript);
-        printLine("Script Check: Fatal script error on line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + newscript.toString());
+        printLine("Script Check: Fatal script error on line " + QString::number(myengine.uncaughtExceptionLineNumber()) + ": " + newscript.toString() + "\n" +myengine.uncaughtException().property("backtracetext").toString());
 
     } else {
         myscript = newscript;
@@ -223,6 +300,8 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
         if (!makeSEvent("loadScript")) {
             myscript = oldscript;
             myengine.globalObject().setProperty("script", myscript);
+            strict = false;
+            wfatal = false;
             makeEvent("switchError", newscript);
             printLine("Script Check: Script rejected server. Maybe it requires a newer version?");
             return;
@@ -256,7 +335,30 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     }
 
-    // Error check?
+}
+
+QScriptValue ScriptEngine::backtrace(QScriptContext *c, QScriptEngine *)
+{
+    return c->backtrace().join("\n");
+}
+
+QScriptValue ScriptEngine::exec(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    QString url = c->argument(0).toString();
+    QFile in(url);
+
+    if (!in.open(QIODevice::ReadOnly)) {
+        po->warn("exec(filename)", in.errorString(), true);
+        return QScriptValue();
+    }
+
+    QScriptValue import = e->evaluate(QString::fromUtf8(in.readAll()), c->argument(0).toString());
+    if (e->hasUncaughtException()) {
+        import.setProperty("backtracetext", c->backtrace().join("\n"));
+        c->throwValue(import);
+    }
+    return import;
 }
 
 QScriptValue ScriptEngine::import(const QString &fileName) {
@@ -264,12 +366,17 @@ QScriptValue ScriptEngine::import(const QString &fileName) {
     QFile in(url);
 
     if (!in.open(QIODevice::ReadOnly)) {
-        warn("import", "The file scripts/" + fileName + " is not readable.");
+        warn("import", in.errorString(), true);
         return QScriptValue();
     }
 
-    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()));
-    evaluate(import);
+    QScriptValue import = myengine.evaluate(QString::fromUtf8(in.readAll()), url );
+
+    if (myengine.hasUncaughtException()) {
+        import.setProperty("backtracetext", myengine.currentContext()->backtrace().join("\n"));
+        myengine.currentContext()->throwValue(import);
+    }
+
     return import;
 }
 
@@ -305,7 +412,7 @@ bool ScriptEngine::testChannel(const QString &function, int id)
 {
     if (!myserver->channelExist(id)) {
         if (function.length() > 0)
-            warn(function, QString("No channel numbered %1 existing").arg(id));
+            warn(function, QString("Invalid channel ID."), true);
         return false;
     }
 
@@ -320,7 +427,7 @@ bool ScriptEngine::testTeamCount(const QString &function, int id, int team)
 
     if (myserver->player(id)->teamCount() <= team) {
         if (function.length() > 0)
-            warn(function, QString("Player numbered %1 only has %2 teams, so you can't access team #%3.").arg(id).arg(myserver->player(id)->teamCount()).arg(team));
+            warn(function, QString("Player numbered %1 only has %2 teams, so you can't access team #%3.").arg(id).arg(myserver->player(id)->teamCount()).arg(team), true);
         return false;
     }
 
@@ -331,7 +438,7 @@ bool ScriptEngine::testPlayer(const QString &function, int id)
 {
     if (!myserver->playerExist(id)) {
         if (function.length() > 0)
-            warn(function, QString("No player numbered %1 existing").arg(id));
+            warn(function, QString("Invalid player ID."), true);
         return false;
     }
 
@@ -342,7 +449,7 @@ bool ScriptEngine::testPlayerInChannel(const QString &function, int id, int chan
 {
     if (!myserver->player(id)->getChannels().contains(chan)) {
         if (function.length() > 0)
-            warn(function, QString("Player number %1 is not in channel number %2").arg(id).arg(chan));
+            warn(function, QString("Player number %1 is not in channel number %2").arg(id).arg(chan), true);
         return false;
     }
 
@@ -353,17 +460,24 @@ bool ScriptEngine::testRange(const QString &function, int val, int min, int max)
 {
     if (val < min || val > max) {
         if (function.length() > 0)
-            warn(function, QString("%1 is out of the range [%2, %3]").arg(val).arg(min).arg(max));
+            warn(function, QString("%1 is out of the range [%2, %3]").arg(val).arg(min).arg(max), true);
         return false;
     }
 
     return true;
 }
 
-void ScriptEngine::warn(const QString &function, const QString &message)
+void ScriptEngine::warn(const QString &function, const QString &message, bool errinstrict = false)
 {
-    if ( makeSEvent("warning", function, message) ) {
-        printLine(QString("Script Warning in sys.%1: %2").arg(function, message));
+    if (strict && errinstrict) {
+        myengine.currentContext()->throwError(message);
+        return;
+    }
+
+    QString backtrace = myengine.currentContext()->backtrace().join("\n");
+
+    if ( makeSEvent("warning", function, message, backtrace) ) {
+        printLine(QString("Script Warning in sys.%1: %2\n%3").arg(function, message, backtrace));
     }
 }
 
@@ -640,37 +754,106 @@ void ScriptEngine::afterPlayerAway(int src, bool away)
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {
-        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()));
+        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()) + "\n" +myengine.uncaughtException().property("backtracetext").toString() );
     }
 }
 
-void ScriptEngine::sendAll(const QString &message)
+QScriptValue ScriptEngine::sendAll(QScriptContext *c, QScriptEngine *e)
 {
-    myserver->broadCast(message);
+    ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());
+    Server * s = po->myserver;
+
+    if (po->strict ? c->argument(1).isUndefined() || c->argument(1).isNull() : c->argumentCount() <= 1 || c->argument(1).isNull()) {
+        s->broadCast(c->argument(0).toString());
+        return QScriptValue();
+    }
+    else if (!s->channelExist(c->argument(1).toInteger())) {
+        po->warn("sendAll(mess, channel)","invalid channel", true);
+        return QScriptValue();
+    }
+
+    s->broadCast(c->argument(0).toString(), c->argument(1).toInteger());
+
+    return QScriptValue();
+}
+/*
+QScriptValue ScriptEngine::broadcast2(QScriptContext *c, QScriptEngine *e)
+{
+    Server * s = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
+
+
+
+    QString msg = c->argument(0).toString();
+    int channel = Server::NoChannel;
+
+    if ()
+
+}*/
+
+QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *se = dynamic_cast<ScriptEngine*>(e->parent());
+
+    Server * s = se->myserver;
+
+    QString m = c->argument(0).toString();
+
+    int channel = c->argument(1).toInteger();
+
+    if (channel != Server::NoChannel && !s->channelExist(channel)) {
+        se->warn("broadcast(message, channel, sender, html, target)", "Invalid channel ID.", true);
+        return QScriptValue();
+    }
+
+    int sender = c->argument(2).toInteger();
+
+    if (sender != Server::NoSender && sender != 0 && !s->playerExist(c->argument(2).toInteger())) {
+        se->warn("broadcast(message, channel, sender, html, target)", "Invalid player ID (sender).", true);
+        return QScriptValue();
+    }
+    bool html = c->argument(3).toBool();
+
+    int target = c->argument(4).toInteger();
+
+    if (target != Server::NoTarget && !s->playerExist(target)) {
+        se->warn("broadcast(message, channel, sender, html, target)", "Invalid player ID (target).", true);
+        return QScriptValue();
+    }
+
+    s->broadCast(m, channel, sender, html, target);
+
+    return QScriptValue();
+
+
 }
 
-void ScriptEngine::sendAll(const QString &message, int channel)
+QScriptValue ScriptEngine::sendMessage(QScriptContext *c, QScriptEngine *e)
+//void ScriptEngine::sendMessage(int id, const QString &mess)
 {
-    if (testChannel("sendAll(mess, channel)", channel)) {
-        myserver->broadCast(message, channel);
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    Server *myserver = po->myserver;
+
+    if (!myserver->playerExist(c->argument(0).toInteger())) {
+        po->warn("sendMessage(id, message, chan)", "Invalid player ID.", true);
+        return QScriptValue();
     }
+
+
+
+    if ((po->strict && !c->argument(2).isNumber()) || (!po->strict && c->argumentCount() <= 2)) {
+        myserver->broadCast(c->argument(1).toString(), Server::NoChannel, Server::NoSender, false, c->argument(0).toInteger());
+        return QScriptValue();
+    }
+    else if ( !myserver->channelExist(c->argument(2).toInteger()) ) {
+        po->warn("sendMessage(id, message, chan)", "Invalid channel ID.", true);
+        return QScriptValue();
+    } else {
+        myserver->broadCast(c->argument(1).toString(), c->argument(2).toInteger(), Server::NoSender, false, c->argument(0).toInteger());
+    }
+
+    return QScriptValue();
 }
 
-void ScriptEngine::sendMessage(int id, const QString &mess)
-{
-    if (testPlayer("sendMessage(id, mess)", id)) {
-        myserver->broadCast(mess, Server::NoChannel, Server::NoSender, false, id);
-    }
-}
-
-void ScriptEngine::sendMessage(int id, const QString &mess, int channel)
-{
-    if (testChannel("sendMessage(id, mess, channel)", channel) && testPlayer("sendMessage(id, mess, channel)", id) &&
-            testPlayerInChannel("sendMessage(id, mess, channel)", id, channel))
-    {
-        myserver->broadCast(mess, channel, Server::NoSender, false, id);
-    }
-}
 
 void ScriptEngine::sendHtmlAll(const QString &mess)
 {
@@ -738,7 +921,7 @@ void ScriptEngine::putInChannel(int id, int chanid)
         return;
     }
     if (myserver->player(id)->getChannels().contains(chanid)){
-        printLine(QString("Script Warning in sys.putInChannel(id, chan): player %1 is already in channel %2").arg(id).arg(chanid));
+        warn("putInChannel(id, chan)", QString("player %1 is already in channel %2").arg(id).arg(chanid), true);
     } else {
         myserver->joinChannel(id, chanid);
     }
@@ -761,7 +944,7 @@ bool ScriptEngine::existChannel(const QString &channame)
 void ScriptEngine::clearPass(const QString &name)
 {
     if (!SecurityManager::exist(name)) {
-        warn("clearPass(name)", "no such player name as " + name);
+        warn("clearPass(name)", "no such player name as " + name, true);
     }
     SecurityManager::clearPass(name);
 }
@@ -770,7 +953,7 @@ void ScriptEngine::changeAuth(int id, int auth)
 {
     if (testPlayer("changeAuth(id, auth)", id)) {
         if (myserver->isSafeScripts() && ((myserver->auth(id) > 2) || (auth > 2))) {
-            warn("changeAuth(id, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            warn("changeAuth(id, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.", false);
         } else {
             myserver->changeAuth(myserver->name(id), auth);
         }
@@ -782,7 +965,7 @@ void ScriptEngine::changeDbAuth(const QString &name, int auth)
     if (myserver->isSafeScripts()) {
         if (!SecurityManager::exist(name)) return;
         if ((SecurityManager::member(name).auth > 2) || (auth > 2)) {
-            warn("changeDbAuth(name, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.");
+            warn("changeDbAuth(name, auth)", "Safe scripts option is on. Unable to change auth to/from 3 and above.", false);
             return;
         }
     }
@@ -799,7 +982,7 @@ void ScriptEngine::changeAway(int id, bool away)
 void ScriptEngine::changeRating(const QString& name, const QString& tier, int newRating)
 {
     if (!TierMachine::obj()->exists(tier))
-        warn("changeRating(name, tier, rating)", "no such tier as " + tier);
+        warn("changeRating(name, tier, rating)", "no such tier as " + tier, true);
     else
         TierMachine::obj()->changeRating(name, tier, newRating);
 }
@@ -809,7 +992,7 @@ void ScriptEngine::changeTier(int id, int team, const QString &tier)
     if (!testPlayer("changeTier", id) || !testTeamCount("changeTier", id, team))
         return;
     if (!TierMachine::obj()->exists(tier)) {
-        warn("changeTier(id, tier)", "no such tier as " + tier);
+        warn("changeTier(id, tier)", "no such tier as " + tier, true);
     } else {
         myserver->player(id)->executeTierChange(team, tier);
     }
@@ -1047,11 +1230,11 @@ bool ScriptEngine::dbRegistered(const QString &name)
     return SecurityManager::member(name).isProtected();
 }
 
-#ifndef _EXCLUDE_DEPCRECATED
+#ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::callLater(const QString &s, int delay) {
     if (!callLater_w) {
-        warn ("callLater(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        warn ("callLater(code, delay)", "Deprecated, use setTimer(code, milisecondsDelay, repeats) instead", true);
         callLater_w = true;
     }
     return setTimer(s, delay*1000, false);
@@ -1059,7 +1242,7 @@ int ScriptEngine::callLater(const QString &s, int delay) {
 
 int ScriptEngine::callQuickly(const QString &s, int delay) {
     if (!callQuickly_w) {
-        warn ("callQuickly(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        warn ("callQuickly(code, delay)", "Deprecated, use setTimer(code, milisecondsDelay, repeats) instead", true);
         callQuickly_w = true;
     }
     return setTimer(s, delay, false);
@@ -1067,7 +1250,7 @@ int ScriptEngine::callQuickly(const QString &s, int delay) {
 
 int ScriptEngine::quickCall(const QScriptValue &func, int delay) {
     if (!quickCall_w) {
-        warn("quickCall(code, delay)", "deprecated, use setTimer(code, milisecondsDelay, repeats) instead");
+        warn("quickCall(code, delay)", "Deprecated, use setTimer(code, milisecondsDelay, repeats) instead.", true);
         quickCall_w = true;
     }
     return setTimer(func, delay, false);
@@ -1107,7 +1290,7 @@ bool ScriptEngine::stopTimer(int timerId) {
     return unsetTimer(timerId);
 }
 
-#endif // #ifndef _EXCLUDE_DEPCRECATED
+#endif // #ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::setTimer(const QScriptValue &code, int delay, bool repeats)
 {
@@ -1475,9 +1658,9 @@ QScriptValue ScriptEngine::name(int id)
         return myserver->name(id);
     }
 }
-
 QScriptValue ScriptEngine::id(const QString &name)
 {
+
     if (!myserver->nameExist(name)) {
         return myengine.undefinedValue();
     } else {
@@ -2077,7 +2260,7 @@ void ScriptEngine::printLine(const QString &s)
 void ScriptEngine::stopEvent()
 {
     if (stopevents.size() == 0) {
-        printLine("Script Warning: calling sys.stopEvent() in an unstoppable event.");
+        warn("sys.stopEvent()",  "Unstoppable event.", true);
     } else {
         stopevents.back() = true;
     }
@@ -2437,7 +2620,7 @@ int ScriptEngine::teamPokeAbility(int id, int team, int slot)
 
 void ScriptEngine::changeName(int playerId, QString newName)
 {
-    if (!loggedIn(playerId) || !id(newName).isUndefined()) {
+    if (!testPlayer("changeName", playerId) || !id(newName).isUndefined()) {
         return;
     }
 
@@ -2449,7 +2632,7 @@ void ScriptEngine::changeName(int playerId, QString newName)
 
 void ScriptEngine::changeInfo(int playerId, QString newInfo)
 {
-    if (!loggedIn(playerId)) {
+    if (!testPlayer("changeInfo", playerId)) {
         return;
     }
 
@@ -2460,7 +2643,7 @@ void ScriptEngine::changeInfo(int playerId, QString newInfo)
 // TODO: Player info will be separate from teams. Update it. -- Mystra
 QScriptValue ScriptEngine::info(int playerId)
 {
-    if (loggedIn(playerId)) {
+    if (testPlayer("info", playerId)) {
         return myserver->player(playerId)->info();
     }else{
         return myengine.undefinedValue();
@@ -2479,7 +2662,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
 {
     Pokemon::uniqueId pokemon(poke);
 
-    if ((slot >= 0) && (slot <= 2)) {
+    if (testRange("pokeAbilitiy", slot, 0, 2)) {
         return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();
@@ -2741,99 +2924,158 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
     return ret;
 }
 
-void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
+// done
+QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
 {
-    QFile out(fileName);
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    //Server *myserver = poscriptengine->myserver;
+
+    if (!c->argument(0).isString()) {
+        po->warn("write(filename, content)", "Passed non-string to filename.", true);
+        return QScriptValue();
+    }
+
+    if (!c->argument(1).isString()) {
+        po->warn("write(filename, content)", "Passed non-string to content", false);
+    }
+
+    QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::Append)) {
-        warn("appendToFile(filename, content)", "error when opening " + fileName + ": " + out.errorString());
-        return;
+        po->warn("append(filename, content)", out.errorString());
+        return QScriptValue();
     }
 
-    out.write(content.toUtf8());
+    out.write(c->argument(1).toString().toUtf8());
+
+    return QScriptValue();
 }
 
-void ScriptEngine::writeToFile(const QString &fileName, const QString &content)
+QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 {
-    QFile out(fileName);
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    //Server *myserver = poscriptengine->myserver;
+    QScriptValue fileName, data;
+
+    fileName = c->argument(0);
+    data = c->argument(1);
+
+    QFile out(fileName.toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
-        warn("writeToFile(filename, content)", "error when opening " + fileName + ": " + out.errorString());
-        return;
+        po->warn("write(filename, content)", out.errorString());
+        return QScriptValue();
     }
 
-    out.write(content.toUtf8());
+    out.write(data.toString().toUtf8());
+
+    return QScriptValue();
 }
 
 
-void ScriptEngine::writeObject(const QString &fileName, const QScriptValue &object, int compression = -1)
+QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
 {
-    QFile out(fileName);
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
-    if (compression < -1 || compression > 9)
-    {
-        warn("writeObject(filename, object, level)", "invalid level");
-        return;
+    int compression = -1;
+
+    if (c->argument(2).isNumber()) {
+        compression = c->argument(2).toInteger();
+
+        if (compression > 9 || compression < -1) {
+            po->warn("writeObject(filename, object[, compression])", "Invalid compresion level", true);
+            return QScriptValue();
+        }
     }
+
+    QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
-        warn("writeObject(filename, object, level)", "error when opening " + fileName + ": " + out.errorString());
-        return;
+        po->warn("writeObject(filename, object[, compression])", out.errorString(), true);
+        return QScriptValue();
     }
 
-    QScriptValue serialized = myengine.globalObject().property("JSON").property("stringify").call(QScriptValue(), QScriptValueList() << object);
-
-    if (!serialized.isString())
-    {
-        warn("writeObject(filename, object, level)", "error when serializing object: " + serialized.toString());
-        return;
-    }
+    QScriptValue serialized = po->stringify.call(QScriptValue(), QScriptValueList() << c->argument(1));
 
     out.write(qCompress(serialized.toString().toUtf8(), compression));
+
+    return QScriptValue();
 }
 
-QScriptValue ScriptEngine::readObject(const QString &fileName)
+QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 {
-    QFile out(fileName);
+
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
-        warn("readObject(filename)", "error when opening " + fileName + ": " + out.errorString());
-        return myengine.undefinedValue();
+        po->warn("readObject(filename)", out.errorString(), true);
+        return QScriptValue();
     }
 
-    QScriptValue val = myengine.globalObject().property("JSON").property("parse").call(QScriptValue(),
+    QScriptValue val = po->parse.call(QScriptValue(),
         QScriptValueList() << QString::fromUtf8(qUncompress(out.readAll())));
 
     return val;
 }
 
-void ScriptEngine::deleteFile(const QString &fileName)
+QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
+//void ScriptEngine::deleteFile(const QString &fileName)
 {
-    QFile out(fileName);
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
-    if (!out.open(QIODevice::WriteOnly)) {
-        warn("deleteFile(filename)", "error when opening " + fileName + ": " + out.errorString());
-        return;
+    QFile out(c->argument(0).toString());
+
+    if (!out.remove()) {
+        po->warn("rm(filename)", out.errorString(), true);
     }
 
-    out.remove();
+    return QScriptValue();
 }
-void ScriptEngine::makeDir(const QString &dir)
+
+QScriptValue ScriptEngine::mkdir(QScriptContext *c, QScriptEngine *)
+//void ScriptEngine::makeDir(const QString &dir)
 {
+    //ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+
+    QString dir = c->argument(0).toString();
     QDir directory(dir);
-    QString current=directory.currentPath();
-    if(directory.exists(dir)){
-        return;
+
+    QString current = directory.currentPath();
+
+    if (directory.exists(dir)) {
+        return QScriptValue();
     }
+
     directory.mkpath(current+"/"+dir);
+
+    return QScriptValue();
 }
 
-void ScriptEngine::removeDir(const QString &dir)
+QScriptValue ScriptEngine::rmdir(QScriptContext *c, QScriptEngine *)
 {
+    //ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QString dir = c->argument(0).toString();
+
     QDir directory(dir);
+
     QString current=directory.currentPath();
     directory.rmpath(current+"/"+dir); //rmpath only deletes if empty, so no need to check
+
+    return QScriptValue();
 }
+
+QScriptValue ScriptEngine::cwd(QScriptContext *, QScriptEngine *)
+//QScriptValue ScriptEngine::getCurrentDir()
+{
+    QDir directory;
+    QString current=directory.currentPath();
+    return QScriptValue(current);
+}
+
 QScriptValue ScriptEngine::extractZip(const QString &zipName, const QString &targetDir)
 {
     Zip zip;
@@ -2877,12 +3119,7 @@ QScriptValue ScriptEngine::zip(const QString &path, const QString &dir)
     return path;
 }
 
-QScriptValue ScriptEngine::getCurrentDir()
-{
-    QDir directory;
-    QString current=directory.currentPath();
-    return current;
-}
+
 
 /**
  * Function will perform a GET-Request server side
@@ -3057,17 +3294,26 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     }
     return result_array;
 }
-
-QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
 {
-    QFile out(fileName);
+    QFile f(c->argument(0).toString());
+
+    return QScriptValue(f.exists());
+}
+
+QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
+//QScriptValue ScriptEngine::getFileContent(const QString &fileName)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
-        warn("getFileContent(filename)", "error when opening " + fileName + ": " + out.errorString());
-        return myengine.undefinedValue();
+        po->warn("read(filename)", out.errorString(),true);
+        return QScriptValue();
     }
 
-    return QString::fromUtf8(out.readAll());
+    return QScriptValue(QString::fromUtf8(out.readAll()));
 }
 
 QScriptValue ScriptEngine::getServerPlugins() {
@@ -3098,10 +3344,74 @@ bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
 int ScriptEngine::system(const QString &command)
 {
     if (myserver->isSafeScripts()) {
-        warn("system", "Safe scripts option is on. Unable to invoke system command.");
+        warn("system(command)", "Safe scripts option is on. Unable to invoke system command.");
         return -1;
     } else {
         return ::system(command.toUtf8());
+    }
+}
+#include <QSqlRecord>
+
+static QScriptValue sqlResult(QScriptEngine &myengine, QSqlQuery &query)
+{
+    QScriptValue ret = myengine.newArray();
+    do {
+        QScriptValue rec = myengine.newObject();
+        QSqlRecord record = query.record();
+
+        for (int i = 0; i < record.count(); i++) {
+            rec.setProperty(record.fieldName(i), myengine.newVariant(record.value(i)));
+        }
+
+        ret.setProperty(query.at(), rec);
+    } while (query.next() && query.isValid());
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::sql(const QString &command)
+{
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    if (query.exec(command)) {
+        return sqlResult(myengine, query);
+    } else {
+        return myengine.undefinedValue();
+    }
+}
+
+QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &params)
+{
+    static const QString placeholder = ":";
+
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    query.prepare(command);
+
+    if (params.isObject()) {
+        QScriptValueIterator it(params);
+        while (it.hasNext()) {
+            it.next();
+            query.bindValue(placeholder+it.name(), it.value().toVariant());
+        }
+    } else if (params.isArray()) {
+        QScriptValueIterator it(params);
+        while (it.hasNext()) {
+            it.next();
+            query.addBindValue(it.value().toVariant());
+        }
+    } else {
+        query.addBindValue(params.toVariant());
+    }
+
+    if (query.exec()) {
+        return sqlResult(myengine, query);
+    } else {
+        return myengine.undefinedValue();
     }
 }
 
@@ -3239,4 +3549,13 @@ bool ScriptEngine::validColor(const QString &color)
     QColor colorName = QColor(color);
 
     return colorName.isValid();
+}
+
+QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
+{
+    ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());
+    po->strict = true;
+    po->wfatal = true;
+
+    return QScriptValue(1);
 }

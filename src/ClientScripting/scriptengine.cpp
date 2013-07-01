@@ -8,7 +8,7 @@
 #include "../Utilities/ziputils.h"
 #include "../Shared/config.h"
 
-#ifndef _EXCLUDE_DEPCRECATED
+#ifndef _EXCLUDE_DEPRECATED
 static bool callLater_w = false;
 static bool callQuickly_w = false;
 static bool quickCall_w = false;
@@ -316,7 +316,7 @@ void ScriptEngine::playSound(const QString &file) //plays a sound
     sound->play(file);
 }
 
-#ifndef _EXCLUDE_DEPCRECATED
+#ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::callLater(const QString &s, int delay) {
     if (!callLater_w) {
@@ -376,7 +376,7 @@ bool ScriptEngine::stopTimer(int timerId) {
     return unsetTimer(timerId);
 }
 
-#endif // #ifndef _EXCLUDE_DEPCRECATED
+#endif // #ifndef _EXCLUDE_DEPRECATED
 
 int ScriptEngine::setTimer(const QScriptValue &code, int delay, bool repeats)
 {

@@ -1,5 +1,7 @@
 ---- How to build ----
 
+Most up-to-date guide: https://github.com/po-devs/pokemon-online/wiki/How-to-build
+
 Prerequisites:
 - Qt SDK, version 4.5 or newer. Currently, version 4.8.2 recommended.
   Get it from http://qt.nokia.com
@@ -77,6 +79,3 @@ Relevant forums sections:
 http://pokemon-online.eu/forums/forumdisplay.php?6-General
 http://pokemon-online.eu/forums/forumdisplay.php?7-Developer-s-Den
 http://pokemon-online.eu/forums/forumdisplay.php?16-Help
-
-Somewhat outdated help thread for Windows users:
-http://pokemon-online.eu/forums/showthread.php?2666-How-to-run-from-the-source-on-Windows

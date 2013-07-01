@@ -291,11 +291,11 @@ static void fill_int_char(QHash<int, char> &container, const QString & filename,
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -2380,6 +2380,11 @@ bool ItemInfo::isPlate(int itemnum)
 bool ItemInfo::isDrive(int itemnum)
 {
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
+}
+
+bool ItemInfo::isGem(int itemnum)
+{
+    return itemnum == Item::NormalGem || itemnum == Item::FightGem || itemnum == Item::SteelGem || itemnum == Item::PsychicGem || itemnum == Item::DarkGem || itemnum == Item::FireGem || itemnum == Item::WaterGem || itemnum == Item::ElectricGem || itemnum == Item::IceGem || itemnum == Item::FlightGem || itemnum == Item::PoisonGem || itemnum == Item::GhostGem || itemnum == Item::BugGem || itemnum == Item::GrassGem || itemnum == Item::RockGem || itemnum == Item::EarthGem || itemnum == Item::DragonGem;
 }
 
 bool ItemInfo::isMail(int itemnum)

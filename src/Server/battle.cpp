@@ -724,6 +724,16 @@ std::vector<int> BattleSituation::sortedBySpeed() {
 
     if (battleMemory().value("TrickRoomCount").toInt() > 0) {
         std::reverse(ret.begin(),ret.end());
+        if (gen().num == 5) { // gen 5 ignores trick room for pokemon with speed>=1809
+            std::vector<int> temp;
+            for (int it = ret.size()-1; it >= 0; it--) {
+                if (getStat(ret[it], Speed) >= 1809) {
+                    temp.push_back(ret[it]);
+                    ret.erase(ret.begin()+it);
+                }
+            }
+            ret.insert(ret.begin(), temp.begin(), temp.end());
+        }
     }
 
     return std::move(ret);
@@ -1589,7 +1599,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player,player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
-    /* Here because of jewels :( */
+    /* Here because of gems :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
     /* Choice item memory, copycat in gen 4 and less */
@@ -1894,7 +1904,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                 typemod *= 2;
                 continue;
             }
-            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::BullsEye)) {
+            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
                 typemod *= 2;
                 continue;
             }
@@ -1958,7 +1968,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
                 (hasWorkingAbility(attacker(), ability(attacker()))
-                 &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVoltage ||  ability(attacker()) == Ability::TurboBlaze))) {
+                 &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }
@@ -1977,10 +1987,7 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
 
 void BattleSituation::loseAbility(int slot)
 {
-    if (!pokeMemory(slot).value("AbilityNullified").toBool())
-        /* Evil Hack to make illusion pokemons go back to normal */
-        if (pokeMemory(slot).contains("IllusionTarget"))
-            callaeffects(slot, slot, "UponBeingHit");
+    callaeffects(slot, slot, "OnLoss");
 }
 
 int BattleSituation::ability(int player) {
@@ -1994,7 +2001,7 @@ int BattleSituation::weight(int player) {
     } else if (hasWorkingAbility(player, Ability::LightMetal)) {
         ret /= 2;
     }
-    if (hasWorkingItem(player, Item::PumiceStone)) {
+    if (hasWorkingItem(player, Item::FloatStone)) {
         ret /= 2;
     }
 
@@ -2009,7 +2016,7 @@ bool BattleSituation::hasWorkingItem(int player, int it)
     //Klutz
     return poke(player).item() == it && !pokeMemory(player).value("Embargoed").toBool() && !hasWorkingAbility(player, Ability::Klutz)
             && battleMemory().value("MagicRoomCount").toInt() == 0
-            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Anxiety));
+            && !(ItemInfo::isBerry(poke(player).item()) && opponentsHaveWorkingAbility(player, Ability::Unnerve));
 }
 
 bool BattleSituation::opponentsHaveWorkingAbility(int play, int ability)
@@ -2128,7 +2135,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         if (!stat)
             break;
 
-        char increase = char (fm.boostOfStat >> (i*8));
+        signed char increase = char (fm.boostOfStat >> (i*8));
 
         int rate = char (fm.rateOfStat >> (i*8));
 
@@ -2243,7 +2250,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
 
 bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative)
 {
-    bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Perversity);
+    bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Contrary);
     if (negative)
         *negative = !pos;
 
@@ -2267,7 +2274,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             return false;
         }
 
-        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker))) {
+        if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::Infiltrator) || this->player(player) == this->player(attacker))) {
             if (canSendPreventMessage(player, attacker)) {
                 sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             }
@@ -2324,7 +2331,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
 
         if(teamMemory(this->player(player)).value("SafeGuardCount").toInt() > 0) {
-            if (!hasWorkingAbility(attacker, Ability::SlipThrough) || this->player(player) == this->player(attacker)) {
+            if (!hasWorkingAbility(attacker, Ability::Infiltrator) || this->player(player) == this->player(attacker)) {
                 sendMoveMessage(109, 2, player,Pokemon::Psychic, player, tmove(player).attack);
                 return;
             }
@@ -2505,8 +2512,8 @@ bool BattleSituation::isFlying(int player)
             (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
             !pokeMemory(player).value("SmackedDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
-             || hasWorkingItem(player, Item::Balloon)
-             || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
+             || hasWorkingItem(player, Item::AirBalloon)
+             || ((!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying))
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
 }
@@ -2629,12 +2636,12 @@ int BattleSituation::calculateDamage(int p, int t)
         if(gen().num == 1) {
             def = getStat(t, SpAttack);
         } else {
-            def = getStat(t, (attackused == Move::PsychoShock || attackused == Move::PsychoBreak || attackused == Move::SecretSword) ? Defense : SpDefense);
+            def = getStat(t, (attackused == Move::Psyshock || attackused == Move::Psystrike || attackused == Move::SecretSword) ? Defense : SpDefense);
         }
     }
 
 
-    /* Used by Oaths to use a special attack, the sum of both */
+    /* Used by Pledges to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
         move.remove("AttackStat");
@@ -2670,8 +2677,8 @@ int BattleSituation::calculateDamage(int p, int t)
       move power (not just power variable) because of technician which relies on it */
 
     callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
-    if (attackused == Move::Acrobat && poke.item() == Item::NoItem) {
+    /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
+    if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
     }
 
@@ -2734,7 +2741,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     /* Light screen / Reflect */
-    if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::SlipThrough) &&
+    if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
             (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
@@ -3420,7 +3427,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (attacker != -1 && attacked != -1) {
         //Unaware / Sacred sword
         if (attacker != player && attacked == player) {
-            if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::PaymentPlan || tmove(attacker).attack == Move::SacredSword)
+            if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
                     && (stat == SpDefense || stat == Defense || stat == Evasion)) {
                 boost = 0;
             }
@@ -3530,4 +3537,12 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 void BattleSituation::setupMove(int i, int move)
 {
     MoveEffect::setup(move,i,0,*this);
+}
+
+bool BattleSituation::canHeal(int s)
+{
+    if (!koed(s) && !poke(s).isFull() && !(pokeMemory(s).value("HealBlockCount").toInt() > 0))
+        return true;
+
+    return false;
 }

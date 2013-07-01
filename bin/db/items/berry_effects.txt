@@ -8,11 +8,11 @@
 7 1--1#Persim
 8 1-0#Lum
 9 3-30#pinch Sitrus
-10 #confusing stupid berry
-11 #confusing stupid berry
-12 #confusing stupid berry
-13 #confusing stupid berry
-14 #confusing stupid berry
+10 6#ConfuseBerry
+11 6#ConfuseBerry
+12 6#ConfuseBerry
+13 6#ConfuseBerry
+14 6#ConfuseBerry
 35 4-9
 36 4-10
 37 4-12 
