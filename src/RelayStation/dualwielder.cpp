@@ -778,6 +778,13 @@ void DualWielder::readWebSocket(const QString &frame)
             fdata.range = params.value("range", 300).toInt();
             fdata.teams = 0;
             notify(Nw::FindBattle, fdata);
+        } else if (command == "battlechoice") {
+            qDebug() << "battle choice";
+            int battle = data.section("|", 0, 0).toInt();
+            QVariantMap params = jparser.parse(data.section("|", 1).toUtf8()).toMap();
+
+            BattleChoice choice = fromJson(params);
+            notify(Nw::BattleMessage, qint32(battle), choice);
         }
     }
 }
