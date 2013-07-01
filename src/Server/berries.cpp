@@ -148,8 +148,13 @@ struct BMPinchHP : public BMPinch
     }
 
     static void tp(int p, int s, BS &b) {
-        if (!testpinch(p, s, b,2))
+        if (!b.canHeal(s))
             return;
+
+
+        if (!testpinch(p, s, b, 2))
+            return;
+
 
         b.sendBerryMessage(3,s,0);
         int arg = poke(b,p)["ItemArg"].toInt();
@@ -217,11 +222,9 @@ struct BMSuperHP : public BM
         if (!b.attacking()) {
             return;
         }
-        if (b.koed(s))
+        if (!b.canHeal(s))
             return;
         if (fturn(b,t).typeMod <= 4)
-            return;
-        if (b.poke(s).isFull())
             return;
         b.eatBerry(s);
         b.sendBerryMessage(6,s,0);
@@ -258,7 +261,11 @@ struct BMPinchStat : public BMPinch
         int arg = poke(b,p)["ItemArg"].toInt();
 
         if (b.isOut(s)) {
-            b.sendBerryMessage(7,s,0,s, berry, arg);
+            if (b.hasWorkingAbility(s, Ability::Contrary)) {
+                b.sendBerryMessage(7,s,1,s, berry, arg);
+            } else {
+                b.sendBerryMessage(7,s,0,s, berry, arg);
+            }
             b.inflictStatMod(s, arg, 1, s, false);
         }
     }
@@ -344,8 +351,12 @@ struct BMStarf : public BMPinch
             return;
 
         int stat = stats[b.randint(stats.size())];
+        if (b.hasWorkingAbility(s, Ability::Contrary)) {
+            b.sendBerryMessage(9,s,1,s, berry, stat);
+        } else {
+            b.sendBerryMessage(9,s,0,s, berry, stat);
+        }
         b.inflictStatMod(s, stat, 2, s, false);
-        b.sendBerryMessage(9,s,0,s,berry,stat);
     }
 };
 
@@ -415,7 +426,42 @@ struct BMBerryRecoil : public BM
         }
         b.eatBerry(s);
         b.sendBerryMessage(12,s,0,t);
-        b.inflictDamage(t, b.poke(t).lifePoints()/8,s,false);
+        b.inflictDamage(t, b.poke(t).totalLife()/8,s,false);
+    }
+};
+
+struct BMConfuseBerry : public BMPinch
+{
+    BMConfuseBerry() {
+        functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
+    }
+
+    static void ahpc(int p, int s, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+            return;
+        tp(p, s, b);
+    }
+
+    static void tp (int p, int s, BS &b) {
+        if (!b.isOut(s))
+            return;
+
+        if (!testpinch(p, s, b, 4))
+            return;
+
+        if (!b.canHeal(s))
+            return;
+
+        b.eatBerry(s);
+        b.sendBerryMessage(6,s,0);
+        b.healLife(s, b.poke(s).totalLifePoints()/8);
+        //Fixme: Nature checking for Trick, Switcheroo, Covet, Thief, Bug Bite, Fling, etc.
+        b.inflictConfused(s,s);
     }
 };
 
@@ -435,4 +481,5 @@ void ItemEffect::initBerries()
     REGISTER_BERRY(10, BerryLock);
     REGISTER_BERRY(11, Custap);
     REGISTER_BERRY(12, BerryRecoil);
+    REGISTER_BERRY(13, ConfuseBerry);
 }

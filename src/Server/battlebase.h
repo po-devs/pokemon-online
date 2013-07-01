@@ -361,7 +361,7 @@ public:
         char critRaise;
         char repeatMin;
         char repeatMax;
-        char priority;
+        signed char priority;
         int flags;
         int power; /* unsigned char in the game, but can be raised by effects */
         int accuracy; /* Same */
@@ -369,10 +369,10 @@ public:
         char category; /* Physical/Special/Other */
         int rate; /* Same */
         char flinchRate;
-        char recoil;
+        signed char recoil;
         int attack;
         char targets;
-        char healing;
+        signed char healing;
         char classification;
         char status;
         char statusKind;

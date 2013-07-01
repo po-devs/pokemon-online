@@ -32,7 +32,7 @@ def install_dependency(from_path, to_path, install_name):
 
 def fix_linking_for_dylib(dylib, FRAMEWORKS):
     LINK = "@executable_path/../Frameworks/{path}"
-    ALWAYS_FIX_LIBS=["libpokemonlib.1.dylib", "libbattlelib.1.dylib", "libutilities.1.dylib"]
+    ALWAYS_FIX_LIBS=["libpo-pokemoninfo.1.dylib", "libpo-battlemanager.1.dylib", "libpo-utilities.1.dylib"]
     shared_libs = get_shared_libs(dylib)
     for shared_lib in shared_libs:
         # Assume all shared libs in /usr/local to be bundable
