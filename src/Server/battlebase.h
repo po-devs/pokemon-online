@@ -182,6 +182,7 @@ protected:
     int myid[2];
     QString winMessage[2];
     QString loseMessage[2];
+    QString tieMessage[2];
 
     /* timers */
     QAtomicInt timeleft[2];

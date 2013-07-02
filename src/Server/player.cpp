@@ -1368,6 +1368,7 @@ void Player::assignTrainerInfo(const TrainerInfo &info)
     avatar() = info.avatar;
     winningMessage() = info.winning;
     losingMessage() = info.losing;
+    tieMessage() = info.tie;
     description() = info.info;
 }
 
