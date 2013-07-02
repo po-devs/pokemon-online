@@ -1921,6 +1921,7 @@ struct MMFling : public MM
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
+            turn(b,s)["FlingItem"] = b.poke(s).item();//needed for failure check
         }
     }
 
