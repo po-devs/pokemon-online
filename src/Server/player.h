@@ -24,6 +24,7 @@ class Player : public QObject, public PlayerInterface
 
     PROPERTY(QString, winningMessage);
     PROPERTY(QString, losingMessage);
+    PROPERTY(QString, tieMessage);
     PROPERTY(bool, battleSearch);
     PROPERTY(QString, lastFindBattleIp);
     PROPERTY(Flags, spec);
