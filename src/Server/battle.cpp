@@ -1328,13 +1328,24 @@ void BattleSituation::testFlinch(int player, int target)
         turnMem(target).add(TM::Flinched);
     }
 
-    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))
-            /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
-            && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
-        /* King's rock */
-        if (coinflip(10, 100)) {
-            turnMem(target).add(TM::Flinched);
+    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)|| hasWorkingItem(player, Item::RazorFang))) {
+        if (!(gen().num == 4) && !(gen().num == 2) && tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0) {
+            if (coinflip(10, 100)) {
+                turnMem(target).add(TM::Flinched);
+            }
+        } else {
+            if (gen().num == 4) {
+                //Gen 4 adds Item bonus to moves that have a Flinch chance. Serene Grace does not boost chance from item however. Only occurs in 4th gen.
+                int rate2 = (rate + ((100 - rate)* 10 / 100));
+                if (rate2 && coinflip(rate2, 100)) {
+                    turnMem(target).add(TM::Flinched);
+                }
+            } else if (gen().num == 2) {
+                //Gen 2 has a different Flinch rate for King's Rock. Can apply flinch to moves with Flinch and secondary effects, as long as it does damage
+                if (coinflip(30, 256)) {
+                    turnMem(target).add(TM::Flinched);
+                }
+            }
         }
     }
 }
