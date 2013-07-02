@@ -38,6 +38,8 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     winMessage[1] = p2.winningMessage();
     loseMessage[0] = p1.losingMessage();
     loseMessage[1] = p2.losingMessage();
+    tieMessage[0] = p1.tieMessage();
+    tieMessage[1] = p2.tieMessage();
     attacked() = -1;
     attacker() = -1;
     selfKoer() = -1;
@@ -670,6 +672,12 @@ void BattleBase::endBattle(int result, int winner, int loser)
         notify(All, BattleEnd, Player1, qint8(Tie));
 
         emit battleFinished(publicId(), Tie, id(Player1), id(Player2));
+        if (!tieMessage[Player1].isEmpty()) {
+            notify(All, EndMessage, Player1, tieMessage[Player1]);
+        }
+        if (!tieMessage[Player2].isEmpty()) {
+            notify(All, EndMessage, Player2, tieMessage[Player2]);
+        }
         exit();
     }
     if (result == Win || result == Forfeit) {
