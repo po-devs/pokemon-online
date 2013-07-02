@@ -924,7 +924,9 @@ struct MMFocusPunch : public MM
     }
 
     static void os(int s, int, BS &b) {
-        if (b.poke(s).status() != Pokemon::Frozen && b.poke(s).status() != Pokemon::Paralysed)
+        //Pokemon who are Frozen, Asleep and Paralyzed will display the message showing it "is tightening its focus"
+        //DAF and Status effects will handle the second message correctly. Commenting out code just in case it changes for Gen 6
+        //if (b.poke(s).status() != Pokemon::Frozen && b.poke(s).status() != Pokemon::Paralysed && b.poke(s).status() != Pokemon::Asleep)
             b.sendMoveMessage(47,1,s,Pokemon::Fighting);
     }
 };
@@ -4523,6 +4525,7 @@ struct MMSleepTalk : public MM
     struct FM : public QSet<int> {
         FM() {
             //Sleep Talk prevents all 2-Turn moves
+            //Fixme: Gen 4 and below Mimic should have the move replaced, not Sleep Talk
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
