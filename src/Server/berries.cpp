@@ -151,10 +151,8 @@ struct BMPinchHP : public BMPinch
         if (!b.canHeal(s))
             return;
 
-
         if (!testpinch(p, s, b, 2))
             return;
-
 
         b.sendBerryMessage(3,s,0);
         int arg = poke(b,p)["ItemArg"].toInt();
