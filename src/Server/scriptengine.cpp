@@ -223,7 +223,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "append" , apf);
     sys.setProperty( "appendToFile" , apf);
 
-    sys.setProperty( "exists" , myengine.newFunction(exists));
+    sys.setProperty( "fileExists" , myengine.newFunction(exists));
+    sys.setProperty( "fexists" , myengine.newFunction(exists));
 
     sys.setProperty( "exec" , myengine.newFunction(exec));
 
