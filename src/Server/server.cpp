@@ -1134,7 +1134,11 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
 
 void Server::sendServerMessage(const QString &message)
 {
-    broadCast(message, NoChannel, 0);
+    if (myengine->beforeServerMessage(message))
+    {
+        broadCast(message, NoChannel, 0);
+        myengine->afterServerMessage(message);
+    }
 }
 
 void Server::battleMessage(int player, int battle, const BattleChoice &choice)
