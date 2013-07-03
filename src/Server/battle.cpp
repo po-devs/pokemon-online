@@ -2160,7 +2160,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         }
 
         /* Serene Grace, Rainbow */
-        if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
+        //Serene Grace does not affect Secret Power
+        if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
             rate *= 2;
         }
 
@@ -2226,7 +2227,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
     /* Serene Grace, Rainbow */
-    if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
+    //Serene Grace does not affect Secret Power
+    if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
         rate *= 2;
     }
 
