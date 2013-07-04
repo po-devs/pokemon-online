@@ -134,6 +134,9 @@ public:
     void beforeBattleEnded(int winner, int loser, int desc, int battleid);
     void afterBattleEnded(int winner, int loser, int desc, int battleid);
 
+    bool beforeBattleMessage(int src, const QString &message, int battleId, bool spectator);
+    void afterBattleMessage(int src, const QString &message, int battleId, bool spectator);
+
     bool beforePlayerAway(int src, bool away);
     void afterPlayerAway(int src, bool away);
 

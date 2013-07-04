@@ -1161,7 +1161,12 @@ void Server::battleChat(int player, int battle, const QString &chat)
         return;
     }
 
+    if (!myengine->beforeBattleMessage(player, chat, battle, false)) {
+        return;
+    }
+
     mybattles[battle]->battleChat(player, chat);
+    myengine->afterBattleMessage(player, chat, battle, false);
 }
 
 void Server::spectatingChat(int player, int battle, const QString &chat)
@@ -1169,7 +1174,13 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
     if (!mybattles.contains(battle)) {
         return;
     }
+
+    if (!myengine->beforeBattleMessage(player, chat, battle, true)) {
+        return;
+    }
+
     mybattles[battle]->spectatingChat(player, chat);
+    myengine->afterBattleMessage(player, chat, battle, true);
 }
 
 bool Server::joinRequest(int player, const QString &channel)
