@@ -734,7 +734,10 @@ int BattleRBY::calculateDamage(int p, int t)
     int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
 
     //Guts, burn
-    damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+    if (!crit){
+        //Burn does not halve the damage of Critical hits in RBY
+        damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+    }
 
     damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
 
