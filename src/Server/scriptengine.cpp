@@ -702,6 +702,16 @@ void ScriptEngine::afterBattleEnded(int src, int dest, int desc, int battleid)
     evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
 }
 
+bool ScriptEngine::beforeBattleMessage(int src, const QString &message, int battleId, bool spectator)
+{
+    return makeSEvent("beforeBattleMessage", src, message, battleId, spectator);
+}
+
+void ScriptEngine::afterBattleMessage(int src, const QString &message, int battleId, bool spectator)
+{
+    makeEvent("afterBattleMessage", src, message, battleId, spectator);
+}
+
 bool ScriptEngine::beforeFindBattle(int src) {
     return makeSEvent("beforeFindBattle", src);
 }
