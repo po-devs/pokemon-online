@@ -87,6 +87,9 @@ public:
 
     bool beforePlayerRegister(int src);
 
+    bool beforeServerMessage(const QString &message);
+    void afterServerMessage(const QString &message);
+
     bool beforeChatMessage(int src, const QString &message, int channel);
     void afterChatMessage(int src, const QString &message, int channel);
 

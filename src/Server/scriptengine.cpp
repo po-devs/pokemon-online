@@ -482,6 +482,16 @@ void ScriptEngine::warn(const QString &function, const QString &message, bool er
     }
 }
 
+bool ScriptEngine::beforeServerMessage(const QString &message)
+{
+    return makeSEvent("beforeServerMessage", message);
+}
+
+void ScriptEngine::afterServerMessage(const QString &message)
+{
+    makeEvent("afterServerMessage", message);
+}
+
 bool ScriptEngine::beforeChatMessage(int src, const QString &message, int channel)
 {
     return makeSEvent("beforeChatMessage", src, message, channel);
