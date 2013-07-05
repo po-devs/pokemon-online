@@ -1227,7 +1227,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype && !b.koed(t)) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
