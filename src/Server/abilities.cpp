@@ -1241,6 +1241,9 @@ struct AMMoxie : public AM {
     }
 
     static void ak(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
         b.inflictStatMod(s, Attack, 1, s);
     }
 };
@@ -1657,7 +1660,7 @@ struct AMCloudNine : public AM {
 
     static void us (int s, int, BS &b) {
         if (b.gen() >= 5)
-            b.sendAbMessage(40,0,s,s,0,b.ability(s));
+            b.sendAbMessage(89,0,s,s,0,b.ability(s));
     }
 };
 
