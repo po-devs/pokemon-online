@@ -45,11 +45,12 @@
 71 %s's Wonder Guard evades the attack!
 74 %s lost part of its armor!
 78 %s stole %f's %i!
-80 %s's Defiant sharply raised its Attack!
+80 Defiant sharply raised %s's Attack!
 81 %s transformed into %p!
 85 %s avoided %f's attack thanks to its Telepathy!
 86 %s regains health with its Regenerator!
 88 %s's gained a %i thanks to its Harvest!
+89 The effects of weather disappeared due to %s's %a!
 90 %s's Miracle Skin protected it from status!
 91 %s held on thanks to Sturdy!
 93 %s picked up the %i!
