@@ -579,7 +579,8 @@ struct MMDestinyBond : public MM
 
         int trn = poke(b,s)["DestinyBondTurn"].toInt();
 
-        if (trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) {
+        //Destiny Bond does not take out your own pokemon.
+        if ((trn == b.turn() || (trn+1 == b.turn() && !fturn(b,s).contains(TM::HasMoved))) && !b.arePartners(t, s)) {
             b.sendMoveMessage(26, 0, s, Pokemon::Ghost, t);
             b.koPoke(t, s, false);
 
@@ -2099,7 +2100,7 @@ struct MMSmackDown : public MM
 
     static void ofoa(int s, int t, BS &b) {
         if (b.isFlying(t)) {
-            b.sendMoveMessage(175, 0, t, type(b,s), s);
+            b.sendMoveMessage(175, 0, s, type(b,s), t);
             poke(b,t)["SmackedDown"] = true;
         }
 

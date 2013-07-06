@@ -1227,7 +1227,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype && !b.koed(t)) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -1241,6 +1241,9 @@ struct AMMoxie : public AM {
     }
 
     static void ak(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
         b.inflictStatMod(s, Attack, 1, s);
     }
 };
@@ -1657,7 +1660,7 @@ struct AMCloudNine : public AM {
 
     static void us (int s, int, BS &b) {
         if (b.gen() >= 5)
-            b.sendAbMessage(40,0,s,s,0,b.ability(s));
+            b.sendAbMessage(89,0,s,s,0,b.ability(s));
     }
 };
 
