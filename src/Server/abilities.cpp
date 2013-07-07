@@ -681,18 +681,24 @@ struct AMIntimidate : public AM {
         functions["UponSetup"] = &us;
     }
 
-    static void us(int s, int , BS &b) {
+    static void us(int s, int, BS &b) {
         QList<int> tars = b.revs(s);
 
         foreach(int t, tars) {
             if (!b.areAdjacent(s, t)) {
                 continue;
             }
+
             if (b.hasSubstitute(t)) {
                 b.sendAbMessage(34,1,s,t);
             } else {
                 b.sendAbMessage(34,0,s,t);
-                b.inflictStatMod(t,Attack,-1,s);
+                //Landorus-T's Intimidate should be blocked by Hypercutter, but isn't if both Pokemon go out on the same turn
+                if (!b.hasWorkingAbility(t,Ability::HyperCutter)) {
+                    b.inflictStatMod(t,Attack,-1,s);
+                } else {
+                    b.sendAbMessage(30,0,t,t,0,b.ability(t));
+                }
             }
         }
     }
