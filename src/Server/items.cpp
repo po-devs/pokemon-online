@@ -53,7 +53,7 @@ struct IMBlackSludge : public IM
             return;
         }
         if(b.hasType(s, Pokemon::Poison)) {
-            if (!b.poke(s).isFull()) {
+            if (b.canHeal(s)) {
                 b.sendItemMessage(16,s,0);
                 b.healLife(s, b.poke(s).totalLifePoints()/16);
             }
@@ -356,13 +356,9 @@ struct IMShellBell : public IM
     static void udi(int s, int t, BS &b) {
         if (s==t)
             return;
-        if (b.koed(s) || b.hasWorkingAbility(s, Ability::SheerForce))
-            return;
 
-        if (b.poke(s).lifePoints() == b.poke(s).totalLifePoints()) {
-            // Don't heal if at full health already
+        if (!b.canHeal(s) || b.hasWorkingAbility(s, Ability::SheerForce))
             return;
-        }
 
         int damage = turn(b,s)["DamageInflicted"].toInt();
 
@@ -554,7 +550,10 @@ struct IMBerryJuice : public IM
     }
 
     static void ahpc(int s, int, BS &b) {
-        if (!b.koed(s) && b.poke(s).lifePercent() <= 50) {
+        if (!b.canHeal(s))
+            return;
+
+        if (b.poke(s).lifePercent() <= 50) {
             b.disposeItem(s);
             b.sendItemMessage(18,s,0);
             b.healLife(s, 20);
@@ -562,9 +561,9 @@ struct IMBerryJuice : public IM
     }
 };
 
-struct IMEvolutionStone : public IM
+struct IMEviolite : public IM
 {
-    IMEvolutionStone() {
+    IMEviolite() {
         functions["StatModifier"] = &sm;
     }
 
@@ -576,9 +575,9 @@ struct IMEvolutionStone : public IM
     }
 };
 
-struct IMRuggedHelmet : public IM
+struct IMRockyHelmet : public IM
 {
-    IMRuggedHelmet() {
+    IMRockyHelmet() {
         functions["UponPhysicalAssault"] = &upa;
     }
 
@@ -595,9 +594,9 @@ struct IMRuggedHelmet : public IM
     }
 };
 
-struct IMBalloon : public IM
+struct IMAirBalloon : public IM
 {
-    IMBalloon() {
+    IMAirBalloon() {
         functions["UponSetup"] = &us;
         functions["UponBeingHit"] = &upbi;
     }
@@ -614,16 +613,16 @@ struct IMBalloon : public IM
     }
 };
 
-struct IMBulb : public IM
+struct IMAbsorbBulb : public IM
 {
-    IMBulb() {
+    IMAbsorbBulb() {
         functions["UponBeingHit"] = &ubh;
     }
 
     static void ubh(int s, int t, BS &b) {
         if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt()) {
             int stat;
-            if (b.poke(s).item() == Item::RechargeableBattery) {
+            if (b.poke(s).item() == Item::CellBattery) {
                 if (b.hasMaximalStatMod(s, Attack))
                     return;
                 stat = Attack;
@@ -639,9 +638,9 @@ struct IMBulb : public IM
     }
 };
 
-struct IMJewel : public IM
+struct IMGem : public IM
 {
-    IMJewel() {
+    IMGem() {
         functions["BasePowerModifier"] = &bpm;
     }
 
@@ -649,7 +648,7 @@ struct IMJewel : public IM
         if (s == t)
             return;
 
-        /* Doom Desire & Future sight don't have their jewel attacking right away,
+        /* Doom Desire & Future sight don't have their gem attacking right away,
            only when it hits, and then b.attacking() is false */
         if (tmove(b,s).attack == Move::FutureSight || tmove(b,s).attack == Move::DoomDesire) {
             if (b.attacking())
@@ -840,6 +839,7 @@ end:
     }
 };
 
+//*******Trainer Items*******/
 struct IMPotion : public IM {
     IMPotion() {
         functions["TrainerItem"] = &ti;
@@ -971,7 +971,7 @@ void ItemEffect::init()
     REGISTER_ITEM(7, MentalHerb);
     REGISTER_ITEM(8, BoostPokeStat);
     REGISTER_ITEM(9, BoostCategory);
-    REGISTER_ITEM(10,BoostType);
+    REGISTER_ITEM(10, BoostType);
     REGISTER_ITEM(12, LeftOvers);
     REGISTER_ITEM(15, ZoomLens);
     REGISTER_ITEM(16, BlackSludge);
@@ -986,11 +986,11 @@ void ItemEffect::init()
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
     REGISTER_ITEM(32, Drive);
-    REGISTER_ITEM(33, EvolutionStone);
-    REGISTER_ITEM(34, RuggedHelmet);
-    REGISTER_ITEM(35, Balloon);
-    REGISTER_ITEM(36, Bulb);
-    REGISTER_ITEM(37, Jewel);
+    REGISTER_ITEM(33, Eviolite);
+    REGISTER_ITEM(34, RockyHelmet);
+    REGISTER_ITEM(35, AirBalloon);
+    REGISTER_ITEM(36, AbsorbBulb); /* Cell Battery */
+    REGISTER_ITEM(37, Gem);
     REGISTER_ITEM(38, RedCard);
     REGISTER_ITEM(39, EscapeButton);
     REGISTER_ITEM(40, BerserkGene);

@@ -1044,7 +1044,8 @@ void BattleSituation::sendBack(int player, bool silent)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser")) {
+            //Pursuit does not deal additional effects to a teammate switching
+            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser") && !arePartners(opp, player)) {
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);
@@ -1318,8 +1319,9 @@ void BattleSituation::testFlinch(int player, int target)
         return;
     }
 
-    /* Serene Grace */
-    if (hasWorkingAbility(player, Ability::SereneGrace)) {
+    /* Serene Grace, Rainbow */
+    //Currently, Secret Power cannot flinch in the simulator, if anything changes in the future, the check will already be in place
+    if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
         rate *= 2;
     }
 
@@ -1327,13 +1329,17 @@ void BattleSituation::testFlinch(int player, int target)
         turnMem(target).add(TM::Flinched);
     }
 
-    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)
-                                   || hasWorkingItem(player, Item::RazorFang))
-            /* In 3rd gen, only moves without secondary effects are able to cause King's Rock flinch */
-            && (gen() > 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
-        /* King's rock */
-        if (coinflip(10, 100)) {
-            turnMem(target).add(TM::Flinched);
+    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)|| hasWorkingItem(player, Item::RazorFang))) {
+        if (gen().num != 2 && (gen().num == 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
+            //Gen 4 can add King's Rock effect to moves that already Flinch
+            if (coinflip(10, 100)) {
+                turnMem(target).add(TM::Flinched);
+            }
+        } else if (gen().num == 2) {
+            //Gen 2 has a different Flinch rate for King's Rock. Can apply flinch to moves with Flinch and secondary effects, as long as it does damage
+            if (coinflip(30, 256)) {
+                turnMem(target).add(TM::Flinched);
+            }
         }
     }
 }
@@ -1599,7 +1605,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player,player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
-    /* Here because of jewels :( */
+    /* Here because of gems :( */
     turnMemory(player).remove("BasePowerItemModifier");
 
     /* Choice item memory, copycat in gen 4 and less */
@@ -1904,7 +1910,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                 typemod *= 2;
                 continue;
             }
-            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::BullsEye)) {
+            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
                 typemod *= 2;
                 continue;
             }
@@ -2001,7 +2007,7 @@ int BattleSituation::weight(int player) {
     } else if (hasWorkingAbility(player, Ability::LightMetal)) {
         ret /= 2;
     }
-    if (hasWorkingItem(player, Item::PumiceStone)) {
+    if (hasWorkingItem(player, Item::FloatStone)) {
         ret /= 2;
     }
 
@@ -2148,7 +2154,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
         }
 
         /* Serene Grace, Rainbow */
-        if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
+        //Serene Grace does not affect Secret Power
+        if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
             rate *= 2;
         }
 
@@ -2214,7 +2221,8 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
     /* Serene Grace, Rainbow */
-    if (hasWorkingAbility(player,Ability::SereneGrace) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
+    //Serene Grace does not affect Secret Power
+    if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(player)).value("RainbowCount").toInt() > 0) {
         rate *= 2;
     }
 
@@ -2512,8 +2520,8 @@ bool BattleSituation::isFlying(int player)
             (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
             !pokeMemory(player).value("SmackedDown").toBool() &&
             (hasWorkingAbility(player, Ability::Levitate)
-             || hasWorkingItem(player, Item::Balloon)
-             || ((!attacking() || !hasWorkingItem(player, Item::BullsEye)) && hasType(player, Pokemon::Flying))
+             || hasWorkingItem(player, Item::AirBalloon)
+             || ((!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying))
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
 }
@@ -2641,7 +2649,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
 
-    /* Used by Oaths to use a special attack, the sum of both */
+    /* Used by Pledges to use a special attack, the sum of both */
     if (move.contains("AttackStat")) {
         attack = move.value("AttackStat").toInt();
         move.remove("AttackStat");
@@ -2677,7 +2685,7 @@ int BattleSituation::calculateDamage(int p, int t)
       move power (not just power variable) because of technician which relies on it */
 
     callieffects(p,t,"BasePowerModifier");
-    /* The Acrobat thing is here because it's supposed to activate after Jewel Consumption */
+    /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
     }

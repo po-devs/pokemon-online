@@ -1454,7 +1454,8 @@ void Server::findBattle(int id, const FindBattleData &_f)
                 c.mode = TierMachine::obj()->tier(t1.tier).getMode();
                 c.gen = t1.gen;
 
-                if ((!c.clauses & ChallengeInfo::ChallengeCup) && (t1.invalid() || t2.invalid())) {
+                /* If someone has an invalid team, and it's not CC, cancel the match */
+                if (!(c.clauses & ChallengeInfo::ChallengeCup) && (t1.invalid() || t2.invalid())) {
                     continue;
                 }
 
