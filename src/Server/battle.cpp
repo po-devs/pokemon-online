@@ -2243,7 +2243,8 @@ bool BattleSituation::canGetStatus(int player, int status) {
     if (!BattleBase::canGetStatus(player, status)) {
         return false;
     }
-    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny))
+    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
+        //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
     switch (status) {
     case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
