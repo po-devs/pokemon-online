@@ -65,7 +65,7 @@ public:
 //    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
 //    void onPPChange(int spot, int move, int PP);
-//    void onOfferChoice(int player, const BattleChoices &choice);
+    void onOfferChoice(int player, const BattleChoices &choice);
 //    void onTempPPChange(int spot, int move, int PP);
 //    void onMoveChange(int spot, int slot, int move, bool definite);
 //    void onRearrangeTeam(int player, const ShallowShownTeam& team);
