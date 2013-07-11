@@ -24,6 +24,23 @@ QVariantMap toJson(const BattleConfiguration &c)
     return ret;
 }
 
+QVariantMap toJson(const BattleChoices &choices)
+{
+    QVariantMap ret;
+
+    ret.insert("slot", choices.numSlot);
+    ret.insert("switch", choices.switchAllowed);
+    ret.insert("attack", choices.attacksAllowed);
+
+    QVariantList list;
+    for (int i = 0; i < 4; i++) {
+        list.push_back(choices.attackAllowed[i]);
+    }
+    ret.insert("attacks", list);
+
+    return ret;
+}
+
 QVariantMap toJson(const ShallowBattlePoke &poke)
 {
     QVariantMap ret;
