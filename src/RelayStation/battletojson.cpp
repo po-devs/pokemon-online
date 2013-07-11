@@ -11,7 +11,7 @@ void BattleToJson::onKo(int spot)
 void BattleToJson::onSendOut(int spot, int player, ShallowBattlePoke *pokemon, bool silent)
 {
     makeCommand("send");
-    map.insert("player", player);
+    map.insert("slot", player);
     map.insert("silent", silent);
     map.insert("pokemon", toJson(*pokemon));
 }

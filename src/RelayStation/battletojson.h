@@ -15,7 +15,7 @@ class BattleToJson : public QObject, public BattleCommandManager<BattleToJson, B
     Q_OBJECT
 public:
     void onKo(int spot);
-    void onSendOut(int spot, int player, ShallowBattlePoke* pokemon, bool silent);
+    void onSendOut(int spot, int slot, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
     void onUseAttack(int spot, int attack, bool silent);
     void onBeginTurn(int turn);
