@@ -442,7 +442,7 @@ void TeamBuilder::exportTeam()
     exporting->setReadOnly(true);
 
     exporting->show();
-    exporting->resize(500,700);
+    exporting->resize(500,500);
 }
 
 void TeamBuilder::markAllUpdated()
