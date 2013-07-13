@@ -70,12 +70,12 @@ public:
 //    void onMoveChange(int spot, int slot, int move, bool definite);
 //    void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
-//    void onChoiceCancellation(int player);
-//    void onVariation(int player, int bonus, int malus);
+    void onChoiceCancellation(int player);
+    void onVariation(int player, int bonus, int malus);
 //    void onDynamicStats(int spot, const BattleStats& stats);
 //    void onPrintHtml(const QString &html);
-//    void onReconnect(int player);
-//    void onDisconnect(int player);
+    void onReconnect(int player);
+    void onDisconnect(int player);
 //    void onAttackChosen(int spot, int attackSlot, int target);
 //    void onSwitchChosen(int spot, int pokeSlot);
 //    void onTeamOrderChosen(int player, const RearrangeChoice &rearrange);

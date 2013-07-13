@@ -280,12 +280,35 @@ void BattleToJson::onChoiceSelection(int spot)
     makeCommand("choiceselection");
 }
 
-//    void onChoiceCancellation(int player);
-//    void onVariation(int player, int bonus, int malus);
+void BattleToJson::onChoiceCancellation(int player)
+{
+    map.insert("command", "choicecancellation");
+    map.insert("player", player);
+}
+
+void BattleToJson::onVariation(int player, int bonus, int malus)
+{
+    map.insert("command", "variation");
+    map.insert("player", player);
+    map.insert("bonus", bonus);
+    map.insert("malus", malus);
+}
+
 //    void onDynamicStats(int spot, const BattleStats& stats);
 //    void onPrintHtml(const QString &html);
-//    void onReconnect(int player);
-//    void onDisconnect(int player);
+
+void BattleToJson::onReconnect(int player)
+{
+    map.insert("command", "reconnect");
+    map.insert("player", player);
+}
+
+void BattleToJson::onDisconnect(int player)
+{
+    map.insert("command", "disconnect");
+    map.insert("player", player);
+}
+
 //    void onAttackChosen(int spot, int attackSlot, int target);
 //    void onSwitchChosen(int spot, int pokeSlot);
 //    void onTeamOrderChosen(int player, const RearrangeChoice &rearrange);
