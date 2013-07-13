@@ -1590,7 +1590,7 @@ void Server::usePasswordChanged(bool usePass)
 {
     if (passwordProtected == usePass)
         return;
-    passwordProtected = usePass; 
+    passwordProtected = usePass;
     printLine("Require Server Password changed", false, true);
     regPasswordChanged(usePass);
 }
@@ -1938,7 +1938,7 @@ void Server::recvTeam(int id, const QString &_name)
        So here all i have to do is delete the old name */
     QString oldname = source->name();
 
-    //Todo: not send the tier list when unnecessary (no team change)
+    //Todo: not send the tier list when unnecessary (no name change)
     if (oldname == _name) {
         /* Haha, same name so no need to do anything! */
         source->relay().sendTeam(0, source->getTierList());
@@ -1950,7 +1950,7 @@ void Server::recvTeam(int id, const QString &_name)
         source->relay().sendTeam(&_name, source->getTierList());
     }
 
-    /* Sending the team change! */
+    /* Sending the name change! */
     sendPlayer(id);
 
     emit player_authchange(id, authedName(id));
