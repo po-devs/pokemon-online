@@ -370,8 +370,8 @@ void Player::joinRequested(const QString &name)
         return;
     }
     /* Too many channels */
-    if (auth() == 0 && channels.size() >= 12) {
-        sendMessage("You can't join more than 12 channels");
+    if (auth() == 0 && channels.size() >= 20) {
+        sendMessage("You can't join more than 20 channels");
         return;
     }
 
