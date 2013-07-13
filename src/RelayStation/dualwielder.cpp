@@ -785,6 +785,10 @@ void DualWielder::readWebSocket(const QString &frame)
 
             BattleChoice choice = fromJson(params);
             notify(Nw::BattleMessage, qint32(battle), choice);
+        } else if (command == "battlechat") {
+            int battle = data.section("|", 0, 0).toInt();
+            QString chat = data.section("|", 1);
+            notify(Nw::BattleChat, qint32(battle), chat);
         }
     }
 }
