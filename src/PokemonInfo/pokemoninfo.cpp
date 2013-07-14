@@ -606,7 +606,7 @@ void PokemonInfo::init(const QString &dir)
 
     gens.clear();
 
-    for (int i = GenInfo::GenMin(); i < GenInfo::GenMax(); i++) {
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
         /* -1 stands for whole gen */
         loadGen(Pokemon::gen(i, -1));
 
