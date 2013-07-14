@@ -58,14 +58,14 @@ public:
     bool isConnected() const;
     void changeIP(const QString &ip);
     QString ip() const;
-    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, QString tier);
+    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString& tier);
     void spectateBattle(int battleid, const BattleConfiguration &conf);
     void sendBattleResult(qint32 battleid, quint8 res, quint8 mode, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);
     void sendPM(int dest, const QString &mess);
     void sendUserInfo(const UserInfo &ui);
-    void notifyBattle(qint32 battleid, qint32 id1, qint32 id2, quint8 mode, QString tier);
+    void notifyBattle(qint32 battleid, const Battle &battle);
     void finishSpectating(qint32 battleId);
     void notifyOptionsChange(qint32 id, bool away, bool ladder);
     void startRankings(int page, int startingRank, int total);

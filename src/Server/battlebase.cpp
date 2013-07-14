@@ -797,7 +797,7 @@ void BattleBase::addSpectator(Player *p)
     int key;
 
     if (configuration().isInBattle(id)) {
-        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(),"");
+        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(), tier());
         key = spot(id);
 
         notifyChoices(key);

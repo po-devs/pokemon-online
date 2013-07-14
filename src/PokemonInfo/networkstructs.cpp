@@ -49,7 +49,7 @@ DataStream & operator << (DataStream &out, const PlayerInfo &p)
     return out;
 }
 
-Battle::Battle(int id1, int id2, QString btier) : id1(id1), id2(id2), btier(btier)
+Battle::Battle(int id1, int id2, int mode, const QString &tier) : id1(id1), id2(id2), mode(mode), tier(tier)
 {
 
 }
@@ -57,7 +57,7 @@ Battle::Battle(int id1, int id2, QString btier) : id1(id1), id2(id2), btier(btie
 DataStream & operator >> (DataStream &in, Battle &p)
 {
     //in >> p.battleid >> p.id1 >> p.id2;
-    in >> p.id1 >> p.id2 >> p.btier;
+    in >> p.mode >> p.id1 >> p.id2 >> p.tier;
 
     return in;
 }
@@ -65,7 +65,7 @@ DataStream & operator >> (DataStream &in, Battle &p)
 DataStream & operator << (DataStream &out, const Battle &p)
 {
     //out << p.battleid << p.id1 << p.id2;
-    out << p.id1 << p.id2 << p.btier;
+    out << p.mode << p.id1 << p.id2 << p.tier;
 
     return out;
 }

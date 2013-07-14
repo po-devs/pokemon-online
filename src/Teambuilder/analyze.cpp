@@ -374,11 +374,10 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case EngageBattle: {
+        qint32 battleid;
         Flags network;
-        quint8 mode;
-        qint32 battleid, id1, id2;
-        QString tier;
-        in >> battleid >> network >> mode >> id1 >> id2;
+        Battle battle;
+        in >> battleid >> network >> battle;
 
         if (network[0]) {
             /* This is a battle we take part in */
@@ -393,12 +392,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            in >> tier; //Get the tier
-            emit battleStarted(battleid, id1, id2, team, conf, tier);
+            emit battleStarted(battleid, battle, team, conf);
         } else {
-            /* this is a battle of strangers */
-             in >> tier;
-            emit battleStarted(battleid, id1, id2, tier);
+            emit battleStarted(battleid, battle);
         }
         break;
     }
