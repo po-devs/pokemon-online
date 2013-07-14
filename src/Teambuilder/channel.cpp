@@ -29,8 +29,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     myplayers->setObjectName("PlayerList");
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    battleList->setColumnCount(2);
-    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
+    battleList->setColumnCount(3);
+    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2") << tr("Tier"));
     battleList->setSortingEnabled(true);
     battleList->resizeColumnToContents(0);
     battleList->setIndentation(0);
@@ -244,39 +244,39 @@ QHash<qint32, Battle> & Channel::getBattles()
     return battles;
 }
 
-void Channel::battleStarted(int bid, int id1, int id2)
+void Channel::battleStarted(int bid, int id1, int id2, QString tier)
 {
     if (!hasPlayer(id1) && !hasPlayer(id2))
         return;
 
     if (eventEnabled(Client::BattleEvent) || id1 == ownId() || id2 == ownId())
-        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)), false, false);
+        printLine(tr("%1 battle between %2 and %3 started.").arg(tier,name(id1), name(id2)), false, false);
 
-    battleReceived(bid, id1, id2);
+    battleReceived(bid, id1, id2, tier);
 
     if (id1 != 0 && item(id1) != NULL) {
         foreach(QIdTreeWidgetItem *it, items(id1)) {
-            it->setToolTip(0,tr("Battling against %1").arg(name(id2)));
-        }
+          it->setToolTip(0,tr("Battling against %1 in %2").arg(name(id2),tier));
+       }
 
         updateState(id1);
     }
     if (id2 != 0 && item(id2) != NULL) {
         foreach(QIdTreeWidgetItem *it, items(id2)) {
-            it->setToolTip(0,tr("Battling against %1").arg(name(id1)));
+            it->setToolTip(0,tr("Battling against %1 in %2").arg(name(id1),tier));
         }
 
         updateState(id2);
     }
 }
 
-void Channel::battleReceived(int bid, int id1, int id2)
+void Channel::battleReceived(int bid, int id1, int id2, QString tier)
 {
     if (battles.contains(bid))
         return;
 
-    battles.insert(bid, Battle(id1, id2));
-    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
+    battles.insert(bid, Battle(id1, id2, "Client Battle List"));
+    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2) << tier);
     battleItems.insert(bid, it);
     battleList->addTopLevelItem(it);
 }
@@ -458,7 +458,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
 
         while (h.hasNext()) {
             h.next();
-            QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
+            QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2) << h.value().btier);
             battleItems.insert(h.key(), it);
             battleList->addTopLevelItem(it);
             emit battleReceived2(h.key(), h.value().id1, h.value().id2);
@@ -494,7 +494,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
         qint32 id, id1, id2;
         in >> id >> id1 >> id2;
         emit battleReceived2(id, id1, id2);
-        battleReceived(id, id1, id2);
+        battleReceived(id, id1, id2, "");
     } else{
         printHtml(tr("<i>Unknown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
