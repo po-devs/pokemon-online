@@ -377,7 +377,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         qint32 battleid;
         Flags network;
         Battle battle;
-        in >> battleid >> network;
+        in >> network >> battleid;
 
         if (version < ProtocolVersion(2, 0)) {
             in >> battle.mode;
