@@ -30,7 +30,7 @@ Player::Player(const GenericSocket &sock, int id)
     doConnections();
 
     /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(1,1), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
+    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(2,0), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
 
     /* Autokick after 3 minutes if still not logged in */
     QTimer::singleShot(1000*180, this, SLOT(firstAutoKick()));
@@ -850,9 +850,9 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
     relay().sendChallengeStuff(c);
 }
 
-void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf)
+void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString &tier)
 {
-    relay().engageBattle(battleid, this->id(), id, team, conf);
+    relay().engageBattle(battleid, this->id(), id, team, conf, tier);
 
     cancelChallenges();
     cancelBattleSearch();

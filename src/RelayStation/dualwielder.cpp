@@ -56,7 +56,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         return;
     }
 
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
@@ -247,13 +247,18 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //    }
     case Nw::EngageBattle: {
         Flags network;
-        quint8 mode;
-        qint32 battleid, id1, id2;
-        in >> battleid >> network >> mode >> id1 >> id2;
+        Battle battle;
+        qint32 battleid;
+        in >> battleid >> network;
+
+        if (version < ProtocolVersion(2,0)) {
+            in >> battle.mode;
+        }
+
+        in >> battle;
 
         QVariantMap params;
-        params.insert("mode", mode);
-        params.insert("ids", QVariantList() << id1 << id2);
+        params.insert("ids", QVariantList() << battle.id1 << battle.id2);
 
         if (network[0]) {
             /* This is a battle we take part in */
@@ -566,12 +571,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
         break;
     }
     case Nw::ChannelBattle: {
-        qint32 chanid, id, id1, id2;
-        in >> chanid >> id >> id1 >> id2;
+        qint32 chanid, id;
+        Battle battle;
+        in >> chanid >> id >> battle;
         QVariantMap map;
         map.insert("battleid", id);
         QVariantMap data;
-        data.insert("ids", QVariantList() << id1 << id2);
+        data.insert("ids", QVariantList() << battle.id1 << battle.id2);
         map.insert("battle", data);
         web->write("channelbattle|"+QString::number(chanid)+"|"+QString::fromUtf8(jserial.serialize(map)));
         break;
