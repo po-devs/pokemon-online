@@ -229,7 +229,7 @@ QStringList availableMods()
         return ret;
     }
 
-    QDir modDir(fillMode == FillMode::Client ? appDataPath("Mods") : "Mods");
+    QDir modDir(fillMode == FillMode::Client ? appDataPath("Mods") : (dataRepo() + "Mods"));
 
     if (modDir.exists()) {
         QStringList dirs = modDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot,QDir::Name);
