@@ -1590,7 +1590,7 @@ void Server::usePasswordChanged(bool usePass)
 {
     if (passwordProtected == usePass)
         return;
-    passwordProtected = usePass; 
+    passwordProtected = usePass;
     printLine("Require Server Password changed", false, true);
     regPasswordChanged(usePass);
 }
@@ -1950,7 +1950,7 @@ void Server::recvTeam(int id, const QString &_name)
         source->relay().sendTeam(&_name, source->getTierList());
     }
 
-    /* Sending the team change! */
+    /* Sending the name change! */
     sendPlayer(id);
 
     emit player_authchange(id, authedName(id));

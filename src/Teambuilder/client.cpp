@@ -519,7 +519,7 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
-        action = show_events->addAction(tr("Enable team change events"));
+        action = show_events->addAction(tr("Enable name change events"));
         action->setCheckable(true);
         action->setChecked(s.value("PlayerEvents/ShowTeam",
                                    globals.value("PlayerEvents/ShowTeam").toBool()).toBool());
@@ -1311,7 +1311,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     }
     myevents.push_back(action);
 
-    action = show_events->addAction(tr("Enable team change events"));
+    action = show_events->addAction(tr("Enable name change events"));
     action->setCheckable(true);
     action->setChecked(globals.value("PlayerEvents/ShowTeam").toBool());
     connect(action, SIGNAL(triggered(bool)), SLOT(showTeamEvents(bool)));
@@ -2296,7 +2296,7 @@ QString Client::announcement()
 
 void Client::playerLogin(const PlayerInfo& p, const QStringList &tiers, bool ignore)
 {
-    if (!ignore) { 
+    if (!ignore) {
         cleanData();
         _mid = p.id;
         mynick = p.name;
