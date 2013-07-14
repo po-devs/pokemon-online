@@ -203,10 +203,10 @@ void Client::initRelay()
     connect(relay, SIGNAL(playerLogin(PlayerInfo, QStringList)), SLOT(playerLogin(PlayerInfo, QStringList)));
     connect(relay, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(relay, SIGNAL(challengeStuff(ChallengeInfo)), SLOT(challengeStuff(ChallengeInfo)));
-    connect(relay, SIGNAL(battleStarted(int, int, int, TeamBattle, BattleConfiguration, QString)),
-            SLOT(battleStarted(int, int, int, TeamBattle, BattleConfiguration, QString)));
+    connect(relay, SIGNAL(battleStarted(int, Battle, TeamBattle, BattleConfiguration)),
+            SLOT(battleStarted(int, Battle, TeamBattle, BattleConfiguration)));
     connect(relay, SIGNAL(teamApproved(QStringList)), SLOT(tiersReceived(QStringList)));
-    connect(relay, SIGNAL(battleStarted(int,int, int, QString)), SLOT(battleStarted(int, int, int, QString)));
+    connect(relay, SIGNAL(battleStarted(int, Battle)), SLOT(battleStarted(int, Battle)));
     connect(relay, SIGNAL(battleFinished(int, int,int,int)), SLOT(battleFinished(int, int,int,int)));
     connect(relay, SIGNAL(battleMessage(int, QByteArray)), this, SLOT(battleCommand(int, QByteArray)));
     connect(relay, SIGNAL(passRequired(QByteArray)), SLOT(askForPass(QByteArray)));
@@ -400,7 +400,7 @@ void Client::channelPlayers(int chanid, const QVector<qint32> &ids)
         battlesW->addWidget(c->battlesWidget());
 
         connect(c, SIGNAL(quitChannel(int)), SLOT(leaveChannel(int)));
-        connect(c, SIGNAL(battleReceived2(int,int,int)), this, SLOT(battleReceived(int,int,int)));
+        connect(c, SIGNAL(battleReceived2(int,Battle)), this, SLOT(battleReceived(int,Battle)));
         connect(c, SIGNAL(activated(Channel*)), this, SLOT(channelActivated(Channel*)));
         connect(c, SIGNAL(pactivated(Channel*)), this, SLOT(pingActivated(Channel*)));
     }
@@ -1955,10 +1955,10 @@ void Client::seeChallenge(const ChallengeInfo &c)
     }
 }
 
-void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &team, const BattleConfiguration &conf, QString tier)
+void Client::battleStarted(int battleId, const Battle &battle, const TeamBattle &team, const BattleConfiguration &conf)
 {
     if (!mybattles.contains(battleId)) {
-        int id = id1== ownId() ? id2: id1;
+        int id = battle.id1 == ownId() ? battle.id2: battle.id1;
 
         cancelFindBattle(false);
         BattleWindow * mybattle = new BattleWindow(battleId, player(ownId()), player(id), team, conf);
@@ -1975,7 +1975,7 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
 
         mybattles[battleId] = mybattle;
 
-        battleStarted(battleId, ownId(), id, tier);
+        battleStarted(battleId, battle);
 
         call("onBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
     } else {
@@ -1984,31 +1984,31 @@ void Client::battleStarted(int battleId, int id1, int id2, const TeamBattle &tea
     }
 }
 
-void Client::battleStarted(int bid, int id1, int id2, QString tier)
+void Client::battleStarted(int bid, const Battle &battle)
 {
-    myplayersinfo[id1].flags.setFlag(PlayerInfo::Battling, true);
-    myplayersinfo[id2].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[battle.id1].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[battle.id2].flags.setFlag(PlayerInfo::Battling, true);
 
-    battles.insert(bid, Battle(id1, id2));
+    battles.insert(bid, battle);
     foreach(Channel *c, mychannels) {
-        c->battleStarted(bid, id1, id2, tier);
+        c->battleStarted(bid, battle);
     }
 }
 
 
-void Client::battleReceived(int battleid, int id1, int id2)
+void Client::battleReceived(int battleid, const Battle &battle)
 {
     if (battles.contains(battleid)) {
         return;
     }
 
-    myplayersinfo[id1].flags.setFlag(PlayerInfo::Battling, true);
-    myplayersinfo[id2].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[battle.id1].flags.setFlag(PlayerInfo::Battling, true);
+    myplayersinfo[battle.id2].flags.setFlag(PlayerInfo::Battling, true);
 
-    battles.insert(battleid, Battle(id1, id2));
+    battles.insert(battleid, battle);
 
-    updateState(id1);
-    updateState(id2);
+    updateState(battle.id1);
+    updateState(battle.id2);
 }
 
 void Client::watchBattle(int battleId, const BattleConfiguration &conf)
