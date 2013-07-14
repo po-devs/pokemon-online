@@ -51,8 +51,8 @@ public:
     void playerReceived(int playerid);
     void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
     void placeTier(const QString &tier);
-    void battleStarted(int battleid, int id1, int id2);
-    void battleReceived(int battleid, int id1, int id2);
+    void battleStarted(int battleid, int id1, int id2, QString tier);
+    void battleReceived(int battleid, int id1, int id2, QString tier);
     void battleEnded(int battleid, int res, int winner, int loser);
     void playerLogOut(int id);
     void updateState(int id);
