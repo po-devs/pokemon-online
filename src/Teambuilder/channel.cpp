@@ -29,8 +29,8 @@ Channel::Channel(const QString &name, int id, Client *parent)
     myplayers->setObjectName("PlayerList");
     myplayers->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    battleList->setColumnCount(2);
-    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2"));
+    battleList->setColumnCount(3);
+    battleList->setHeaderLabels(QStringList() << tr("Player 1") << tr("Player 2") << tr("Tier"));
     battleList->setSortingEnabled(true);
     battleList->resizeColumnToContents(0);
     battleList->setIndentation(0);
@@ -244,39 +244,39 @@ QHash<qint32, Battle> & Channel::getBattles()
     return battles;
 }
 
-void Channel::battleStarted(int bid, int id1, int id2)
+void Channel::battleStarted(int bid, const Battle &battle)
 {
-    if (!hasPlayer(id1) && !hasPlayer(id2))
+    if (!hasPlayer(battle.id1) && !hasPlayer(battle.id2))
         return;
 
-    if (eventEnabled(Client::BattleEvent) || id1 == ownId() || id2 == ownId())
-        printLine(tr("Battle between %1 and %2 started.").arg(name(id1), name(id2)), false, false);
+    if (eventEnabled(Client::BattleEvent) || battle.id1 == ownId() || battle.id2 == ownId())
+        printLine(tr("%1 battle between %2 and %3 started.").arg(battle.tier,name(battle.id1), name(battle.id2)), false, false);
 
-    battleReceived(bid, id1, id2);
+    battleReceived(bid, battle);
 
-    if (id1 != 0 && item(id1) != NULL) {
-        foreach(QIdTreeWidgetItem *it, items(id1)) {
-            it->setToolTip(0,tr("Battling against %1").arg(name(id2)));
-        }
+    if (battle.id1 != 0 && item(battle.id1) != NULL) {
+        foreach(QIdTreeWidgetItem *it, items(battle.id1)) {
+          it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id2),battle.tier));
+       }
 
-        updateState(id1);
+        updateState(battle.id1);
     }
-    if (id2 != 0 && item(id2) != NULL) {
-        foreach(QIdTreeWidgetItem *it, items(id2)) {
-            it->setToolTip(0,tr("Battling against %1").arg(name(id1)));
+    if (battle.id2 != 0 && item(battle.id2) != NULL) {
+        foreach(QIdTreeWidgetItem *it, items(battle.id2)) {
+            it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id1),battle.tier));
         }
 
-        updateState(id2);
+        updateState(battle.id2);
     }
 }
 
-void Channel::battleReceived(int bid, int id1, int id2)
+void Channel::battleReceived(int bid, const Battle &battle)
 {
     if (battles.contains(bid))
         return;
 
-    battles.insert(bid, Battle(id1, id2));
-    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(id1) << name(id2));
+    battles.insert(bid, battle);
+    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(battle.id1) << name(battle.id2) << battle.tier);
     battleItems.insert(bid, it);
     battleList->addTopLevelItem(it);
 }
@@ -458,10 +458,10 @@ void Channel::dealWithCommand(int command, DataStream *stream)
 
         while (h.hasNext()) {
             h.next();
-            QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2));
+            QIdTreeWidgetItem *it = new QIdTreeWidgetItem(h.key(), QStringList() << name(h.value().id1) << name(h.value().id2) << h.value().tier);
             battleItems.insert(h.key(), it);
             battleList->addTopLevelItem(it);
-            emit battleReceived2(h.key(), h.value().id1, h.value().id2);
+            emit battleReceived2(h.key(), h.value());
         }
 
         // Battle list finished the channel loading, now it's a good time to sort the players
@@ -491,10 +491,11 @@ void Channel::dealWithCommand(int command, DataStream *stream)
             }
         }
     } else if (command == NetworkCli::ChannelBattle) {
-        qint32 id, id1, id2;
-        in >> id >> id1 >> id2;
-        emit battleReceived2(id, id1, id2);
-        battleReceived(id, id1, id2);
+        qint32 id;
+        Battle battle;
+        in >> id >> battle;
+        emit battleReceived2(id, battle);
+        battleReceived(id, battle);
     } else{
         printHtml(tr("<i>Unknown command received: %1. Maybe the client should be updated?</i>").arg(command));
     }
