@@ -51,8 +51,8 @@ public:
     void playerReceived(int playerid);
     void placeItem(QIdTreeWidgetItem *item, QTreeWidgetItem *parent=NULL);
     void placeTier(const QString &tier);
-    void battleStarted(int battleid, int id1, int id2);
-    void battleReceived(int battleid, int id1, int id2);
+    void battleStarted(int battleid, const Battle &battle);
+    void battleReceived(int battleid, const Battle &battle);
     void battleEnded(int battleid, int res, int winner, int loser);
     void playerLogOut(int id);
     void updateState(int id);
@@ -98,7 +98,7 @@ public:
     int state;
 signals:
     void quitChannel(int chanid);
-    void battleReceived2(int battleid, int id1, int id2);
+    void battleReceived2(int battleid, const Battle &battle);
     void activated(Channel *c);
     void pactivated(Channel *c);
 public slots:
