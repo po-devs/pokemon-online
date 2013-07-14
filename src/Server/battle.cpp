@@ -2745,7 +2745,7 @@ int BattleSituation::calculateDamage(int p, int t)
     //Guts, burn
     if (gen() != 2 || !crit || !turnMemory(p).value("CritIgnoresAll").toBool()) {
         damage = damage / (
-                    (poke.status() == Pokemon::Burnt && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
+                    ((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned")) && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts))
                     ? 2 : 1);
     }
 
