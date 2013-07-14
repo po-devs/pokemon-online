@@ -744,6 +744,11 @@ struct MMFaintUser : public MM
             }
         }
 
+        //Burn handling for Self-KO moves
+        if (b.poke(s).status() == Pokemon::Burnt) {
+            turn(b,s)["WasBurned"] = true;
+        }
+
         b.selfKoer() = s;
         b.koPoke(s, s);
     }
