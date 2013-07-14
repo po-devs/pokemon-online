@@ -241,6 +241,7 @@ void Analyzer::wasConnected()
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
     DataStream in (commandline);
+    in.version = version.version;
     uchar command;
 
     in >> command;
@@ -377,7 +378,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         qint32 battleid;
         Flags network;
         Battle battle;
-        in >> battleid >> network >> battle;
+        in >> battleid >> network;
+
+        if (version < ProtocolVersion(2, 0)) {
+            in >> battle.mode;
+        }
+        in >> battle;
 
         if (network[0]) {
             /* This is a battle we take part in */

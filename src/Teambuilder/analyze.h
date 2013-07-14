@@ -166,6 +166,7 @@ private:
 
     Network mysocket;
 
+    /* Server version */
     ProtocolVersion version;
 };
 

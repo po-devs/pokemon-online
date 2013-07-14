@@ -57,7 +57,15 @@ Battle::Battle(int id1, int id2, int mode, const QString &tier) : id1(id1), id2(
 DataStream & operator >> (DataStream &in, Battle &p)
 {
     //in >> p.battleid >> p.id1 >> p.id2;
-    in >> p.mode >> p.id1 >> p.id2 >> p.tier;
+    if (in.version <= 1) {
+        in >> p.id1 >> p.id2;
+    } else {
+        Flags flags;
+        in >> flags >> p.mode >> p.id1 >> p.id2;
+        if (flags[0]) {
+            in >> p.tier;
+        }
+    }
 
     return in;
 }
@@ -65,7 +73,14 @@ DataStream & operator >> (DataStream &in, Battle &p)
 DataStream & operator << (DataStream &out, const Battle &p)
 {
     //out << p.battleid << p.id1 << p.id2;
-    out << p.mode << p.id1 << p.id2 << p.tier;
+    if (out.version <= 1) {
+        out << p.id1 << p.id2;
+    } else {
+        out << Flags(p.tier.length() > 0) << p.mode << p.id1 << p.id2;
+        if (p.tier.length() > 0) {
+            out << p.tier;
+        }
+    }
 
     return out;
 }
