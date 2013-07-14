@@ -97,7 +97,7 @@ public:
     template <typename ...Params>
     void notify(int command, Params&&... params) {
         QByteArray tosend;
-        DataStream out(&tosend, QIODevice::WriteOnly);
+        DataStream out(&tosend, QIODevice::WriteOnly, version.version);
 
         out.pack(uchar(command), std::forward<Params>(params)...);
 
@@ -216,7 +216,7 @@ template<class T>
 void Analyzer::notify_expand(int command, const T& paramList)
 {
     QByteArray tosend;
-    DataStream out(&tosend, QIODevice::WriteOnly);
+    DataStream out(&tosend, QIODevice::WriteOnly, version.version);
 
     out << uchar(command);
 

@@ -56,7 +56,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         return;
     }
 
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
@@ -249,7 +249,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
         Flags network;
         Battle battle;
         qint32 battleid;
-        in >> battleid >> network >> battle;
+        in >> battleid >> network;
+
+        if (version < ProtocolVersion(2,0)) {
+            in >> battle.mode;
+        }
+
+        in >> battle;
 
         QVariantMap params;
         params.insert("ids", QVariantList() << battle.id1 << battle.id2);

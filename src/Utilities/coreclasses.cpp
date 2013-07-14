@@ -2,24 +2,24 @@
 
 #include <QColor>
 
-DataStream::DataStream()
+DataStream::DataStream() : version(0)
 {
-    setVersion(QDataStream::Qt_4_7);
+    setVersion(QDataStream::Qt_4_8);
 }
 
-DataStream::DataStream(const QByteArray &array) : QDataStream(array)
+DataStream::DataStream(const QByteArray &array, quint16 version) : QDataStream(array), version(version)
 {
-    setVersion(QDataStream::Qt_4_7);
+    setVersion(QDataStream::Qt_4_8);
 }
 
-DataStream::DataStream(QByteArray *array, QIODevice::OpenMode mode) : QDataStream(array, mode)
+DataStream::DataStream(QByteArray *array, QIODevice::OpenMode mode, quint16 version) : QDataStream(array, mode), version(version)
 {
-    setVersion(QDataStream::Qt_4_7);
+    setVersion(QDataStream::Qt_4_8);
 }
 
-DataStream::DataStream(QIODevice *device) : QDataStream(device)
+DataStream::DataStream(QIODevice *device) : QDataStream(device), version(0)
 {
-    setVersion(QDataStream::Qt_4_7);
+    setVersion(QDataStream::Qt_4_8);
 }
 
 DataStream &operator >> (DataStream& in, QString &s)
