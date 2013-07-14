@@ -18,6 +18,9 @@ signals:
     void modChanged(const QString&);
 public slots:
     void accepted();
+    void exportMod();
+private slots:
+    void fileNameReceived(const QString &path);
 private:
     Ui::ModsWindow *ui;
 };
