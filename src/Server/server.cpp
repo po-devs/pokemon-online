@@ -1938,7 +1938,7 @@ void Server::recvTeam(int id, const QString &_name)
        So here all i have to do is delete the old name */
     QString oldname = source->name();
 
-    //Todo: not send the tier list when unnecessary (no name change)
+    //Todo: not send the tier list when unnecessary (no team change)
     if (oldname == _name) {
         /* Haha, same name so no need to do anything! */
         source->relay().sendTeam(0, source->getTierList());
