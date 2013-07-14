@@ -240,8 +240,7 @@ void Analyzer::wasConnected()
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    DataStream in (commandline);
-    in.version = version.version;
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
