@@ -10,8 +10,8 @@ class DataStream : public QDataStream
 {
 public:
     DataStream();
-    DataStream(const QByteArray &array);
-    DataStream(QByteArray *array, QIODevice::OpenMode mode);
+    DataStream(const QByteArray &array, quint16 version=0);
+    DataStream(QByteArray *array, QIODevice::OpenMode mode, quint16 version=0);
     DataStream(QIODevice *device);
 
     /* multiple serialization */
@@ -52,6 +52,9 @@ public:
     inline DataStream &operator<<(float f) {return (DataStream&)QDataStream::operator <<(f);}
     inline DataStream &operator<<(double f) {return (DataStream&)QDataStream::operator <<(f);}
     inline DataStream &operator<<(const char *str) {return (DataStream&)QDataStream::operator <<(str);}
+
+    /* Can be set to reflect Protocol's major version and change how things are serialized/deserialized */
+    quint16 version;
 };
 
 /* Serialize in UTF-8 */

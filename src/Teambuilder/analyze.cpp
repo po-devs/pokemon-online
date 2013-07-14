@@ -240,7 +240,7 @@ void Analyzer::wasConnected()
 
 void Analyzer::commandReceived(const QByteArray &commandline)
 {
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
@@ -374,10 +374,15 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         break;
     }
     case EngageBattle: {
+        qint32 battleid;
         Flags network;
-        quint8 mode;
-        qint32 battleid, id1, id2;
-        in >> battleid >> network >> mode >> id1 >> id2;
+        Battle battle;
+        in >> battleid >> network;
+
+        if (version < ProtocolVersion(2, 0)) {
+            in >> battle.mode;
+        }
+        in >> battle;
 
         if (network[0]) {
             /* This is a battle we take part in */
@@ -392,10 +397,9 @@ void Analyzer::commandReceived(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            emit battleStarted(battleid, id1, id2, team, conf);
+            emit battleStarted(battleid, battle, team, conf);
         } else {
-            /* this is a battle of strangers */
-            emit battleStarted(battleid, id1, id2);
+            emit battleStarted(battleid, battle);
         }
         break;
     }
