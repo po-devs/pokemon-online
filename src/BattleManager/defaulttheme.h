@@ -20,6 +20,7 @@ public:
     virtual QPixmap pic(const QString&){return QPixmap();}
     virtual QPixmap battleStatusIcon(int){return QPixmap();}
     virtual QPixmap battleGenderPicture(int){return QPixmap();}
+    Q_INVOKABLE virtual QString trainerSpritePath(int) {return QString();}
 };
 
 #endif // DEFAULTTHEME_H
