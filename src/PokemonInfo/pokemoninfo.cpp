@@ -1331,7 +1331,8 @@ int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen
     if (gen.num < GEN_MIN || gen.num-GEN_MIN >= m_Abilities[slot].size()) {
         return 0;
     }
-    return m_Abilities[slot][gen.num-GEN_MIN].value(pokeid);
+    int ab = m_Abilities[slot][gen.num-GEN_MIN].value(pokeid, 0);
+    return ab != 0 ? ab : m_Abilities[slot][gen.num-GEN_MIN].value(pokeid.original());
 }
 
 void PokemonInfo::loadBaseStats()
