@@ -23,6 +23,10 @@ public:
         return teams[player];
     }
 
+    Q_INVOKABLE quint16 avatar(int player) {
+        return conf->avatar[player];
+    }
+
     Q_PROPERTY (FieldProxy *field READ field CONSTANT);
 
     AuxPokeDataProxy &fieldPoke(int spot) {
