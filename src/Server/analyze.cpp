@@ -42,9 +42,11 @@ void Analyzer::engageBattle(int battleid, int myid, int id, const TeamBattle &te
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly, version.version);
 
-    out << uchar(EngageBattle) << Flags(1 + (team.items.empty() ? 0 : 2)) << qint32(battleid);
+    out << uchar(EngageBattle); ;
     if (version < ProtocolVersion(2,0)) {
-        out << conf.mode;
+        out << qint32(battleid) << Flags(1 + (team.items.empty() ? 0 : 2)) << conf.mode;
+    } else {
+        out << Flags(1 + (team.items.empty() ? 0 : 2)) << qint32(battleid);
     }
     out << Battle(myid, id, conf.mode, tier);
     if (version < ProtocolVersion(1,0)) {
@@ -187,7 +189,7 @@ void Analyzer::sendChannelPlayers(int channelid, const QVector<qint32> &ids)
 void Analyzer::notifyBattle(qint32 battleid, const Battle &battle)
 {
     if (version < ProtocolVersion(2,0)) {
-        notify(EngageBattle, Flags(0), battleid, battle.mode, battle);
+        notify(EngageBattle, battleid, Flags(0), battle.mode, battle);
     } else {
         notify(EngageBattle, Flags(0), battleid, battle);
     }

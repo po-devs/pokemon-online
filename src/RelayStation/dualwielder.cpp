@@ -249,10 +249,12 @@ void DualWielder::readSocket(const QByteArray &commandline)
         Flags network;
         Battle battle;
         qint32 battleid;
-        in >> network >> battleid;
+
 
         if (version < ProtocolVersion(2,0)) {
-            in >> battle.mode;
+            in >> battleid >> network >> battle.mode;
+        } else {
+            in >> network >> battleid;
         }
 
         in >> battle;
