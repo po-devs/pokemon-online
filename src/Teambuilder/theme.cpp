@@ -55,6 +55,7 @@ class BattleTheme : public BattleDefaultTheme {
     QPixmap pic(const QString &s){return Theme::Pic(s);}
     QPixmap battleStatusIcon(int s){return Theme::BattleStatusIcon(s);}
     QPixmap battleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
+    QString trainerSpritePath(int t) {return Theme::TrainerSpritePath(t);}
 };
 
 class Accessor : public ThemeAccessor {
@@ -412,6 +413,11 @@ QPixmap Theme::Sprite(const QString &code)
 QPixmap Theme::TrainerSprite(int num)
 {
     return Pic(QString("Trainer Sprites/%1.png").arg(num));
+}
+
+QString Theme::TrainerSpritePath(int num)
+{
+    return path(QString("Trainer Sprites/%1.png").arg(num));
 }
 
 QIcon Theme::Icon(const QString &code)

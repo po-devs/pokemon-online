@@ -67,6 +67,7 @@ public:
     static QPixmap lockedServer();
     static QPixmap unlockedServer();
     static QPixmap TrainerSprite(int num);
+    static QString TrainerSpritePath(int num);
     static QString AuthSymbol(int level);
     static BattleDefaultTheme* getBattleTheme();
     static ThemeAccessor* getAccessor();
