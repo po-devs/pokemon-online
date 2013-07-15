@@ -64,6 +64,34 @@ QVariantMap toJson(const ShallowBattlePoke &poke)
     return ret;
 }
 
+QVariant toJson(const ShallowShownTeam &team)
+{
+    QVariantList ret;
+    for (int i = 0; i < 6; i++) {
+        if (team.poke(i).num != Pokemon::NoPoke) {
+            ret.push_back(toJson(team.poke(i)));
+        }
+    }
+
+    return ret;
+}
+
+QVariantMap toJson(const ShallowShownPoke &poke)
+{
+    QVariantMap ret;
+
+    ret.insert("num", poke.num.pokenum);
+    if (poke.num.subnum) {
+        ret.insert("forme", poke.num.subnum);
+    }
+
+    ret.insert("level", poke.level);
+    if (poke.gender) {
+        ret.insert("gender", poke.gender);
+    }
+    return ret;
+}
+
 QVariant toJson(const TeamBattle &team)
 {
     QVariantList ret;
