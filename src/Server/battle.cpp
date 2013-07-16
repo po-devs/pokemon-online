@@ -1330,7 +1330,7 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)|| hasWorkingItem(player, Item::RazorFang))) {
-        if (gen().num != 2 && (gen().num == 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
+        if (gen().num != 2 && (gen().num == 4 || (tmove(player).classification == Move::StandardMove && tmove(player).flinchRate == 0))) {
             //Gen 4 can add King's Rock effect to moves that already Flinch
             if (coinflip(10, 100)) {
                 turnMem(target).add(TM::Flinched);
