@@ -1428,7 +1428,8 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
         if (p.status() == Pokemon::Paralysed) {
             stats[Speed] /= 4;
         } else if (p.status() == Pokemon::Burnt) {
-            stats[Attack] /= 2;
+            /* Burn reduction is at attack time */
+            //stats[Attack] /= 2;
         }
     }
 }

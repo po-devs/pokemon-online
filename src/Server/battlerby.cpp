@@ -776,9 +776,9 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
     }
 
     if (poke(player).status() == Pokemon::Burnt && stat == Attack) {
-        fpoke(player).stats[stat] = getBoostedStat(player, Attack) / 2;
+        //fpoke(player).stats[stat] = getBoostedStat(player, Attack) / 2;
     } else if (poke(player).status() == Pokemon::Paralysed && stat == Speed) {
-        fpoke(player).stats[stat] = getBoostedStat(player, Speed) / 2;
+        fpoke(player).stats[stat] = getBoostedStat(player, Speed) / 4;
     } else {
         fpoke(player).stats[stat] = getBoostedStat(player, stat);
     }
