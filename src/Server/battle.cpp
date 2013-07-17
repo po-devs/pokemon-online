@@ -1319,10 +1319,14 @@ void BattleSituation::testFlinch(int player, int target)
         return;
     }
 
-    /* Serene Grace, Rainbow */
+    /* Serene Grace, Rainbow (Pledges) */
     //Currently, Secret Power cannot flinch in the simulator, if anything changes in the future, the check will already be in place
-    if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
+    if (hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) {
         rate *= 2;
+    }
+    //We split them up because Serene Grace does stack with Rainbow (Pledges)
+    if (teamMemory(this->player(target)).value("RainbowCount").toInt() > 0 && tmove(player).attack != Move::SecretPower) {
+        rate *=2;
     }
 
     if (rate && coinflip(rate, 100)) {
@@ -1330,16 +1334,27 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)|| hasWorkingItem(player, Item::RazorFang))) {
+        //Gen 4 can add King's Rock effect to moves that already Flinch
         if (gen().num != 2 && (gen().num == 4 || (tmove(player).classification == Move::StandardMove && tmove(player).flinchRate == 0))) {
-            //Gen 4 can add King's Rock effect to moves that already Flinch
-            if (coinflip(10, 100)) {
+            int rate2 = 10;
+            //Gen 5 treats flinch as an additional effect boostable by Serene Grace and Rainbow Pledges, which again, are cumulative
+            if (gen().num == 5) {
+                if (hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) {
+                    rate2 *= 2;
+                }
+                if (teamMemory(this->player(target)).value("RainbowCount").toInt() > 0 && tmove(player).attack != Move::SecretPower) {
+                    rate2 *=2;
+                }
+            }
+
+            if (rate2 && coinflip(rate2, 100)) {
                 turnMem(target).add(TM::Flinched);
             }
-        } else if (gen().num == 2) {
-            //Gen 2 has a different Flinch rate for King's Rock. Can apply flinch to moves with Flinch and secondary effects, as long as it does damage
-            if (coinflip(30, 256)) {
-                turnMem(target).add(TM::Flinched);
-            }
+        }
+    } else if (gen().num == 2) {
+        //Gen 2 has a different Flinch rate for King's Rock. Can apply flinch to moves with Flinch and secondary effects, as long as it does damage
+        if (coinflip(30, 256)) {
+            turnMem(target).add(TM::Flinched);
         }
     }
 }
