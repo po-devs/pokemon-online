@@ -1668,8 +1668,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     if (!playerExist(id1) || !playerExist(id2))
         return;
 
-    printLine(QString("1% battle between %2 and %3 started").arg(c.srctier).arg(name(id1)).arg(name(id2)));
-
     /* Storing the battle in the last ips to battle */
     if (c.rated && diffIpsForRatedBattles > 0) {
         QList<QString> &lastIps1 = lastRatedIps[player(id1)->ip()];
@@ -1693,6 +1691,8 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     } else {
         battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
     }
+
+    printLine(QString("%1 battle between %2 and %3 started").arg(battle->tier()).arg(name(id1)).arg(name(id2)));
 
     mybattles.insert(id, battle);
     battleList.insert(id, Battle(id1, id2, battle->mode(), battle->tier()));
