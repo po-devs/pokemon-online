@@ -636,7 +636,7 @@
 568:0 Unratütox
 569:0 Deponitox
 570:0 Zorua
-571:0 Toroark
+571:0 Zoroark
 572:0 Picochilla
 573:0 Chillabell
 574:0 Mollimorba
