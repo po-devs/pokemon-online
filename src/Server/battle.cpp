@@ -1335,7 +1335,7 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     //Important to note: Stench does not stack with items
-    if (hasWorkingAbility(player, Ability::Stench) || hasWorkingItem(player, Item::KingsRock) || hasWorkingItem(player, Item::RazorFang)){
+    if ((hasWorkingAbility(player, Ability::Stench) && gen().num == 5) || hasWorkingItem(player, Item::KingsRock) || hasWorkingItem(player, Item::RazorFang)){
         if (gen().num == 5){
             //As long as the move does damage and does not already have a chance to flinch, it will gain the effect
             if (tmove(player).flinchRate == 0 && tmove(player).category != Move::Other) {
@@ -1351,10 +1351,6 @@ void BattleSituation::testFlinch(int player, int target)
                 }
             }
         } else if (gen().num == 4 || gen().num == 3){
-            //Stench's effect is not present in Gen 3 and 4
-            if (hasWorkingAbility(player, Ability::Stench))
-                return;
-
             if (tmove(player).kingRock) {
                 if (coinflip(10, 100)) {
                     turnMem(target).add(TM::Flinched);
