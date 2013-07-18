@@ -281,7 +281,6 @@ private:
     static QHash<int, QStringList> m_MoveMessages;
     static QHash<int, QString> m_Details;
     static QHash<int,int> m_OldMoves;
-    static QHash<int,bool> m_KingRock;
     static QVector<QSet<int> > m_GenMoves;
 
     struct Gen {
@@ -323,6 +322,7 @@ private:
         QHash<int, signed char> recoil;
         QHash<int, char> status;
         QHash<int, char> type;
+        QHash<int, bool> kingRock;
         QSet<int> HMs;
     };
 
