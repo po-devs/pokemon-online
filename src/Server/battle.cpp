@@ -1335,8 +1335,8 @@ void BattleSituation::testFlinch(int player, int target)
     }
 
     //Important to note: Stench does not stack with items
-    if ((hasWorkingAbility(player, Ability::Stench) && gen().num == 5) || hasWorkingItem(player, Item::KingsRock) || hasWorkingItem(player, Item::RazorFang)){
-        if (gen().num == 5){
+    if ((hasWorkingAbility(player, Ability::Stench) && gen().num >= 5) || hasWorkingItem(player, Item::KingsRock) || hasWorkingItem(player, Item::RazorFang)){
+        if (gen().num >= 5){
             //As long as the move does damage and does not already have a chance to flinch, it will gain the effect
             if (tmove(player).flinchRate == 0 && tmove(player).category != Move::Other) {
                 int rate2 = 10;
