@@ -547,8 +547,13 @@
 493:14 Arceus-Ice
 493:15 Arceus-Dragon
 493:16 Arceus-Dark
+493:17 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
+351:1 Castform-Snowy
+351:2 Castform-Rainy
+351:4 Castform-Sunny
+421:1 Cherrim-Sunshine
 422:1 Shellos-East
 423:1 Gastrodon-East
 494:0 Victini
@@ -614,6 +619,7 @@
 553:0 Krookodile
 554:0 Darumaka
 555:0 Darmanitan
+555:1 Darmanitan-D
 556:0 Maractus
 557:0 Dwebble
 558:0 Crustle
@@ -719,6 +725,7 @@
 647:0 Keldeo
 647:1 Keldeo-R
 648:0 Meloetta
+648:1 Meloetta-S
 649:0 Genesect
 649:1 Genesect-D
 649:2 Genesect-S
