@@ -593,7 +593,7 @@
 527:0 Fleknoil
 528:0 Fletiamo
 529:0 Rotomurf
-530:0 Stalbor
+530:0 Stalobor
 531:0 Ohrdoch
 532:0 Praktibalk
 533:0 Strepoli
