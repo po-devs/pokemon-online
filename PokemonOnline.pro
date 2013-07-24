@@ -58,6 +58,7 @@ CONFIG(po_server) {
             src/QJson \
             src/QtWebsocket \#git://gitorious.org/qtwebsocket/qtwebsocket.git
             src/RelayStation
+            src/DiffMatchPatch
 }
 
 CONFIG(po_serverplugins) {

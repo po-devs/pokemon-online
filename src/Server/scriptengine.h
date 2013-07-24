@@ -18,6 +18,7 @@
 #include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
+#include "../DiffMatchPatch/diff_match_patch.h"
 
 class ScriptEngineBacktaceGenerator: public QScriptEngineAgent
 {
@@ -70,6 +71,9 @@ public:
     static QScriptValue darker(QScriptContext *c, QScriptEngine *);
     static QScriptValue lightness(QScriptContext *c, QScriptEngine *);
     static QScriptValue tint(QScriptContext *c, QScriptEngine *);
+
+    static QScriptValue patchMake(QScriptContext *c, QScriptEngine *);
+    static QScriptValue patchApply(QScriptContext *c, QScriptEngine *);
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
