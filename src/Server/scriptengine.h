@@ -18,6 +18,7 @@
 #include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
+#include "../DiffMatchPatch/diff_match_patch.h"
 
 class ScriptEngineBacktaceGenerator: public QScriptEngineAgent
 {
@@ -45,6 +46,7 @@ public:
     static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
     static QScriptValue write(QScriptContext *c, QScriptEngine *e);
     static QScriptValue read(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue changeTiers(QScriptContext *c, QScriptEngine *e);
 
     static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
 
@@ -69,6 +71,9 @@ public:
     static QScriptValue darker(QScriptContext *c, QScriptEngine *);
     static QScriptValue lightness(QScriptContext *c, QScriptEngine *);
     static QScriptValue tint(QScriptContext *c, QScriptEngine *);
+
+    static QScriptValue patchMake(QScriptContext *c, QScriptEngine *);
+    static QScriptValue patchApply(QScriptContext *c, QScriptEngine *);
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
@@ -175,6 +180,7 @@ public:
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+    Q_INVOKABLE void changeServerName(const QString &html);
 
     Q_INVOKABLE QString getDescription();
     Q_INVOKABLE void changeDescription(const QString &html);

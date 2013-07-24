@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     rbymoves.cpp \
     mechanicsbase.cpp \
     modswindow.cpp \
-    relaymanager.cpp
+    relaymanager.cpp \
+    ../DiffMatchPatch/diff_match_patch.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -107,7 +108,8 @@ HEADERS += player.h \
     mechanicsbase.h \
     modswindow.h \
     relaymanager.h \
-    ../PokemonInfo/enums.h
+    ../PokemonInfo/enums.h \
+    ../DiffMatchPatch/diff_match_patch.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

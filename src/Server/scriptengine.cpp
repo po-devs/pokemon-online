@@ -17,6 +17,8 @@
 #include "../Shared/config.h"
 #include "../Utilities/ziputils.h"
 #include <QScriptEngineAgent>
+#include "../DiffMatchPatch/diff_match_patch.h"
+
 
 #ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
@@ -223,6 +225,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "append" , apf);
     sys.setProperty( "appendToFile" , apf);
 
+    sys.setProperty("changeTiers", myengine.newFunction(changeTiers));
+
     sys.setProperty( "fileExists" , myengine.newFunction(exists));
     sys.setProperty( "fexists" , myengine.newFunction(exists));
 
@@ -232,6 +236,9 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "sendAll" , myengine.newFunction(sendAll));
     sys.setProperty( "sendMessage" , myengine.newFunction(sendMessage));
     sys.setProperty( "broadcast" , myengine.newFunction(broadcast));
+
+    sys.setProperty( "patchApply" , myengine.newFunction(patchApply));
+    sys.setProperty( "patchMake" , myengine.newFunction(patchMake));
 
     sys.setProperty( "backtrace" , myengine.newFunction(backtrace));
 
@@ -261,6 +268,43 @@ void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue 
     if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
         const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
     }
+}
+
+
+QScriptValue ScriptEngine::patchMake(QScriptContext *c, QScriptEngine *e)
+{
+    diff_match_patch dmp;
+
+
+    QString text1, text2;
+
+    text1 = c->argument(0).toString();
+    text2 = c->argument(1).toString();
+
+    return QScriptValue(dmp.patch_toText(dmp.patch_make(text1, dmp.diff_lineMode(text1, text2, 0))));
+
+}
+
+QScriptValue ScriptEngine::patchApply(QScriptContext *c, QScriptEngine *e)
+{
+    diff_match_patch dmp;
+
+    QString text, patch_text;
+
+    text       = c->argument(0).toString();
+    patch_text = c->argument(1).toString();
+
+    QList<Patch> patch = dmp.patch_fromText(patch_text);
+
+    return QScriptValue(dmp.patch_apply(patch,text).first);
+
+}
+
+QScriptValue ScriptEngine::changeTiers(QScriptContext *c, QScriptEngine *e)
+{
+    TierMachine::obj()->fromString(c->argument(0).toString());
+
+    return QScriptValue();
 }
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
@@ -2588,6 +2632,13 @@ void ScriptEngine::changeAnnouncement(const QString &html)
     QSettings settings("config", QSettings::IniFormat);
     settings.setValue("Server/Announcement", html);
     myserver->announcementChanged(html);
+}
+
+void ScriptEngine::changeServerName(const QString &name)
+{
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("Server/Name", name);
+    myserver->regNameChanged(name);
 }
 
 void ScriptEngine::makeServerPublic(bool isPublic)
