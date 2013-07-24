@@ -223,6 +223,8 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "append" , apf);
     sys.setProperty( "appendToFile" , apf);
 
+    sys.setProperty("changeTiers", myengine.newFunction(changeTiers));
+
     sys.setProperty( "fileExists" , myengine.newFunction(exists));
     sys.setProperty( "fexists" , myengine.newFunction(exists));
 
@@ -261,6 +263,13 @@ void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue 
     if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
         const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
     }
+}
+
+QScriptValue ScriptEngine::changeTiers(QScriptContext *c, QScriptEngine *e)
+{
+    TierMachine::obj()->fromString(c->argument(0).toString());
+
+    return QScriptValue();
 }
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
@@ -2588,6 +2597,13 @@ void ScriptEngine::changeAnnouncement(const QString &html)
     QSettings settings("config", QSettings::IniFormat);
     settings.setValue("Server/Announcement", html);
     myserver->announcementChanged(html);
+}
+
+void ScriptEngine::changeServerName(const QString &name)
+{
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("Server/Name", name);
+    myserver->regNameChanged(name);
 }
 
 void ScriptEngine::makeServerPublic(bool isPublic)

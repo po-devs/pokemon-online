@@ -45,6 +45,7 @@ public:
     static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
     static QScriptValue write(QScriptContext *c, QScriptEngine *e);
     static QScriptValue read(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue changeTiers(QScriptContext *c, QScriptEngine *e);
 
     static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
 
@@ -175,6 +176,7 @@ public:
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
+    Q_INVOKABLE void changeServerName(const QString &html);
 
     Q_INVOKABLE QString getDescription();
     Q_INVOKABLE void changeDescription(const QString &html);
