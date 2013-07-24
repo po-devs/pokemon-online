@@ -290,6 +290,7 @@ public slots:
     bool ignoringGlobalMessage(const QString &channelName);
     void showTimeStamps(bool);
     void showTimeStamps2(bool);
+    void showSeconds(bool);
     void toggleIncomingPM(bool);
     void togglePMTabs(bool);
     void togglePMNotifications(bool);

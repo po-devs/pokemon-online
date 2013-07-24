@@ -85,6 +85,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
     setDefaultValue(s, "PlayerEvents/ShowTeam", false);
     setDefaultValue(s, "PMs/ShowTimestamps", true);
+    setDefaultValue(s, "PMs/ShowSeconds", false);
     //setDefaultValue(s, "PMs/Flash", true); //deleted that feature
     setDefaultValue(s, "PMs/RejectIncoming", false);
     setDefaultValue(s, "PMs/Tabbed", true);
