@@ -249,10 +249,16 @@ void PMStruct::printLine(const QString &line, bool self)
 
     QSettings s;
     bool tt = s.value("PMs/ShowTimestamps").toBool();
+    bool ss = s.value("PMs/ShowSeconds").toBool();
     QString timeStr = "";
 
-    if (tt)
-        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+    if (tt) {
+        if (ss) {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+        } else {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+        }
+    }
 
     QString eline = escapeHtml(line);
 
@@ -268,10 +274,16 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
 {
     QSettings s;
     bool tt = s.value("PMs/ShowTimestamps").toBool();
+    bool ss = s.value("PMs/ShowSeconds").toBool();
     QString timeStr = "";
 
-    if (tt && timestamps)
-        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+    if (tt && timestamps) {
+        if (ss) {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+        } else {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+        }
+    }
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
