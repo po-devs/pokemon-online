@@ -2840,7 +2840,7 @@ void Client::changeExitWarning(bool show)
 
 void Client::showExitWarning()
 {
-    if (exitWarning) {
+    if (exitWarning && loggedIn) {
         QDialog dialog(this);
         dialog.setObjectName("exitWarning");
         dialog.setWindowTitle(tr("Are you sure?"));
