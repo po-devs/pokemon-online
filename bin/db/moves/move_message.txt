@@ -25,7 +25,7 @@
 32 %f can't use items anymore!|%s can use items again!
 33 %s's Encore ended!|%f received an encore!
 35 %s endured the hit!|%s braced itself!
-43 %f's Sturdy made the attack fail!|It's a one hit KO!
+43 %s's Sturdy made the attack fail!|It's a one hit KO!
 45 %s flung its %i!
 46 %s is getting pumped!
 47 %s lost its focus!|%s is tightening its focus!
