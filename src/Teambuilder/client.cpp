@@ -56,6 +56,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
+    mytab->setObjectName("playersWidget");
     QWidget *channelContainer = new QWidget();
     mytab->addTab(channelContainer, tr("Channels"));
     QGridLayout *containerLayout = new QGridLayout(channelContainer);

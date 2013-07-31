@@ -33,6 +33,7 @@ SoundConfigWindow::SoundConfigWindow()
     w->setAttribute(Qt::WA_DeleteOnClose);
     w->layout()->setMargin(15);
     w->setWindowTitle(tr("Sound config window"));
+    w->setObjectName("soundConfig");
     w->resize(500, 400);
     w->show();
 
