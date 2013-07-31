@@ -91,7 +91,7 @@
 90:0 Muschas
 91:0 Austos
 92:0 Nebulak
-93:0 Apollo
+93:0 Alpollo
 94:0 Gengar
 95:0 Onix
 96:0 Traumato
@@ -187,7 +187,7 @@
 185:0 Mogelbaum
 186:0 Quaxo
 187:0 Hoppspross
-188:0 Hubelhupf
+188:0 Hubelupf
 189:0 Papungha
 190:0 Griffel
 191:0 Sonnkern
@@ -221,7 +221,7 @@
 219:0 Magcargo
 220:0 Quiekel
 221:0 Keifel
-222:0 Corason
+222:0 Corasonn
 223:0 Remoraid
 224:0 Octillery
 225:0 Botogel
@@ -306,7 +306,7 @@
 304:0 Stollunior
 305:0 Stollrak
 306:0 Stolloss
-307:0 Medite
+307:0 Meditie
 308:0 Meditalis
 309:0 Frizelblitz
 310:0 Voltenso
@@ -425,7 +425,7 @@
 423:0 Gastrodon
 424:0 Ambidiffel
 425:0 Driftlon
-426:0 Drifzepli
+426:0 Drifzepeli
 427:0 Haspiror
 428:0 Schlapor
 429:0 Traunmagil
@@ -665,7 +665,7 @@
 591:0 Hutsassa
 592:0 Quabbel
 593:0 Appoquallyp
-594:0 Marmolida
+594:0 Mamolida
 595:0 Wattzapf
 596:0 Voltula
 597:0 Kastadur

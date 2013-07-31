@@ -793,7 +793,7 @@ struct MMOHKO : public MM
             return;
         }
         if (b.hasWorkingAbility(t, Ability::Sturdy)) {
-            b.fail(s,43,0,type(b,s),t);
+            b.fail(s,91,1,type(b,s),t);
         }
     }
 };
