@@ -1,6 +1,7 @@
 #include "pmsystem.h"
 #include "../Utilities/qscrolldowntextbrowser.h"
 #include "../Utilities/functions.h"
+#include "theme.h"
 #ifdef QT5
 #include <QApplication>
 #endif
@@ -155,7 +156,7 @@ void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
             pm->state = PMStruct::NewMessage;
             for(int i = 0; i < myPMs->count(); i++) {
                 if(myPMs->widget(i) == pm) {
-                    myPMs->tabBar()->setTabTextColor(i, QColor(Qt::red));
+                    myPMs->tabBar()->setTabTextColor(i, Theme::Color("Client/pmTabFlash"));
                 }
             }
         } else {
