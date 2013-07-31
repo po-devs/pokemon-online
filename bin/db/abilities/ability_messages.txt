@@ -52,7 +52,7 @@
 88 %s's gained a %i thanks to its Harvest!
 89 The effects of weather disappeared due to %s's %a!
 90 %s's Miracle Skin protected it from status!
-91 %s held on thanks to Sturdy!
+91 %s held on thanks to Sturdy!|%s is unaffected due to Sturdy!
 93 %s picked up the %i!
 94 %s's Justice Heart raises its attack!
 95 %s's Moody sharply raises its %st!|%s's Moody lowers its %st!

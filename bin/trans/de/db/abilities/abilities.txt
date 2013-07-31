@@ -58,7 +58,7 @@
 57 Plus
 58 Minus
 59 Prognose
-60 Werehalter
+60 Wertehalter
 61 Expidermis
 62 Adrenalin
 63 Notschutz
@@ -137,12 +137,12 @@
 136 Multischuppe
 137 Giftwahn
 138 Hitzewahn
-139 Reicher Ernte
+139 Reiche Ernte
 140 Telepathie
 141 Gefühlswippe
 142 Wetterfest
 143 Giftgriff
-144 Beleberkraft
+144 Belebekraft
 145 Brustbieter
 146 Sandscharrer
 147 Wunderhaut
