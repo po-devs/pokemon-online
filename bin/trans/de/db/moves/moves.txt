@@ -59,7 +59,7 @@
 58 Eisstrahl
 59 Blizzard
 60 Psytrahl
-61 Blubstrahl
+61 Blubbstrahl
 62 Aurorastrahl
 63 Hyperstrahl
 64 Schnabel
@@ -251,7 +251,7 @@
 250 Whirlpool
 251 Prügler
 252 Mogelhieb
-253 Aufruhe
+253 Aufruhr
 254 Horter
 255 Entfessler
 256 Verzehrer
@@ -522,7 +522,7 @@
 521 Voltwechsel
 522 Käfertrutz
 523 Dampfwalze
-524 Eisodem
+524 Eisesodem
 525 Drachenrute
 526 Kraftschub
 527 Elektronetz
