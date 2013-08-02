@@ -484,7 +484,7 @@
 510 Removes the target's Berry.
 511 Forces Target to move last
 512 Allows the user to hit the opposite opponent in a Triple Battle.
-513 Changes target's ability the same as the user's ability.
+513 User becomes the target's type(s).
 514 Deals more damage if teammate was KO'd last turn.
 515 KOs the user and deals damage to the opponent equal to the HP it lost.
 516 Gives user's item to Target if it has to item.
