@@ -18,7 +18,7 @@
 23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
 25 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
 26 %s took %f down with it!|%s is trying to take its foe with it!
-27 %s protected itself!
+27 %s schützt sich selbst!
 28 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
 29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
 31 It doesn't affect %s!
@@ -34,14 +34,14 @@
 53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
 54 %f's %m lost all its PP because of %s' Grudge!
 55 %s swapped its boosts with %f!
-57 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|Das Sonnenlicht wird stärker !,
-58 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
+57 Es fängt an zu hageln!|Es fängt an zu regnen!|Ein Sandsturm zieht auf!|Das Sonnenlicht wird stärker!,
+58 %s is in love with %f!|%f fell in love!|%s ist starr vor Liebe!
 59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
 60 %s erholt sich !
 61 %s erholt sich !|Der Wunschtraum erfüllt sich !|Es wurde von mystischem Mondlicht umhüllt !
 62 %s swapped its defense and attack!
 63 %s is ready to help %f!
-64 %s kept going and crashed!
+64 %s macht weiter und bricht zusammen!
 67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
 68 %s levitated on electromagnetism!|%s electromagnetism wore off!
 70 %s knocked off %f's %i!
@@ -53,7 +53,7 @@
 77 %s cleared the field around %tf's team!
 78 Magnitude %d!
 81 %s learned %m!
-82 But nothing happened!
+82 Nichts geschieht...!
 84 %s identified %f!
 86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
 87 %s erholt sich !|%s erholt sich komplett !|%s erholt sich ein wenig !
@@ -92,7 +92,7 @@
 136 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
 137 %s transformed into %p!
 138 %s twisted the dimensions!|The twisted dimensions returned to normal!
-141 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
+141 %s verursacht einen Aufruhr!|%s macht einen Aufruhr!|%s calmed down!|%s wacht auf!|%s stays awake because of the uproar!
 142 %q's wish came true!
 143 %f now has insomnia!
 144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
