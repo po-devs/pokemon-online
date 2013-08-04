@@ -6172,7 +6172,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="110"/>
         <source>&amp;Install new mod...</source>
-        <translation>&amp;Installiere neuen Mod</translation>
+        <translation>&amp;Installiere neue Mod</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="111"/>
