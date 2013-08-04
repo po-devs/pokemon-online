@@ -2100,7 +2100,7 @@ It is advised to use a slightly different password for each server. (The server 
     <message>
         <location filename="../Teambuilder/client.cpp" line="1201"/>
         <source>Close tab</source>
-        <translation>Schliesse Registerkarte</translation>
+        <translation>Schließe Registerkarte</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1201"/>
@@ -2301,7 +2301,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1215"/>
         <source>&amp;Idle</source>
-        <translation>&amp;afk</translation>
+        <translation>&amp;inaktiv</translation>
     </message>
     <message>
         <source>&amp;Show team</source>
@@ -2320,7 +2320,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1355"/>
         <source>&amp;Sound configuration</source>
-        <translation>%Sound-Einstellungen</translation>
+        <translation>Sound-Einstellungen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1367"/>
@@ -2389,7 +2389,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1309"/>
         <source>&amp;Sort players</source>
-        <translation>%Sortiere Spieler</translation>
+        <translation>Sortiere Spieler</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1311"/>
@@ -2399,7 +2399,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1317"/>
         <source>Sort players by auth &amp;level</source>
-        <translation>Sortiere Spieler nach %Rängen</translation>
+        <translation>Sortiere Spieler nach Rängen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1323"/>
@@ -2414,7 +2414,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1334"/>
         <source>Move player list to &amp;right</source>
-        <translation>Ändere Spielerliste nach &amp;rechts</translation>
+        <translation>Verschiebe Spielerliste nach &amp;rechts</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1339"/>
@@ -2435,7 +2435,7 @@ This server requires a password to log in.</source>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1353"/>
         <source>Change &amp;log folder ...</source>
-        <translation>Ändere den %Log-Ordner ...</translation>
+        <translation>Ändere das Log-Verzeichnis ...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1362"/>
@@ -2550,7 +2550,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2121"/>
         <source>%1 is idling.</source>
-        <translation>%1 ist afk.</translation>
+        <translation>%1 ist inaktiv.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2123"/>
@@ -2559,7 +2559,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     </message>
     <message>
         <source>%1 is away.</source>
-        <translation type="obsolete">%1 ist away.</translation>
+        <translation type="obsolete">%1 ist inaktiv.</translation>
     </message>
     <message>
         <source>%1 has returned.</source>
@@ -2705,7 +2705,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="284"/>
         <source>Bans</source>
-        <translation>Bans</translation>
+        <translation>Banns</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="376"/>
@@ -3242,7 +3242,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="582"/>
         <source>Change &amp;user theme folder ...</source>
-        <translation>Ändere %Benutzer Theme-Ordner</translation>
+        <translation>Ändere Theme-Verzeichnis</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="609"/>
@@ -3440,7 +3440,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/menu.cpp" line="126"/>
         <source>Close tab</source>
-        <translation>Schliesse Registerkarte</translation>
+        <translation>Schließe Registerkarte</translation>
     </message>
     <message>
         <location filename="../Teambuilder/menu.cpp" line="126"/>
@@ -4986,7 +4986,7 @@ Attacken:
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1260"/>
         <source>You can rearrange your team by clicking on your pokemon before the battle.</source>
-        <translation>Du kannst die Reihenfolge deines Teams ändern, während du auf die einzelnen Pokemon klickst.</translation>
+        <translation>Du kannst die Reihenfolge deines Teams ändern, indem du auf die einzelnen Pokemon klickst.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1279"/>
@@ -4996,12 +4996,12 @@ Attacken:
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1294"/>
         <source>Done</source>
-        <translation>Erledigt</translation>
+        <translation>Annehmen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1295"/>
         <source>Forfeit</source>
-        <translation>Aufgabe</translation>
+        <translation>Ablehnen</translation>
     </message>
 </context>
 <context>
@@ -5080,7 +5080,7 @@ Attacken:
     <message>
         <location filename="../Server/sqlconfig.cpp" line="20"/>
         <source>If you have a player database from before BW 2, you may want to export it, delete the database file, and rerun the server. That way it&apos;s converted and players from that time will have their last login properly stored, which enables the functionnality to delete old alts to work fine.</source>
-        <translation>Wenn du eine Spieler-Datenbank aus der Zeit vor BW2 hast, ist es ratsam, die Datenbank-Datei zu exportieren, anschliessed zu löschen und den Server neu zu starten. Auf diese Weise wird es konvertiert und Spieler aus der Vor-BW2-Zeit haben alle nötigen Informationen und Benutzer-Accounts. Somit geht keine Funktionalität verloren.</translation>
+        <translation>Wenn du eine Spieler-Datenbank aus der Zeit vor BW2 hast, ist es ratsam, die Datenbank-Datei zu exportieren, anschließed zu löschen und den Server neu zu starten. Auf diese Weise wird es konvertiert und Spieler aus der Vor-BW2-Zeit haben alle nötigen Informationen und Benutzer-Accounts. Somit geht keine Funktionalität verloren.</translation>
     </message>
     <message>
         <location filename="../Server/sqlconfig.cpp" line="31"/>
@@ -5257,7 +5257,7 @@ Attacken:
     <message>
         <location filename="../Server/server.cpp" line="1347"/>
         <source>Your player session was still active on the server, so the data was kept. If you want to update your team/player info, just open the teambuilder and close it.</source>
-        <translation>Deine Sitzung auf dem Server war noch immer aktiv, deshalb wurden die Daten gespeichert. Wenn du deine Team-/Spielerinfo updaten willst, so öffne und schliesse lediglich den Teambuilder.</translation>
+        <translation>Deine Sitzung auf dem Server war noch immer aktiv, deshalb wurden die Daten gespeichert. Wenn du deine Team-/Spielerinfo aktualisieren willst, so öffne und schließe lediglich den Teambuilder.</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="1366"/>
@@ -5372,7 +5372,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="110"/>
         <source>Close tab</source>
-        <translation>Schliesse Registerkarte</translation>
+        <translation>Schließe Registerkarte</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="110"/>
@@ -6062,7 +6062,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="68"/>
         <source>&amp;Save all</source>
-        <translation>&amp;Alle Speichern</translation>
+        <translation>&amp;Alle speichern</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="68"/>
@@ -6073,7 +6073,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="69"/>
         <source>&amp;Load all</source>
-        <translation>&amp;Alle Laden</translation>
+        <translation>&amp;Alle laden</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="69"/>
@@ -6117,7 +6117,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
         <source>&amp;Add team</source>
-        <translation>&amp;Team Hinzufügen</translation>
+        <translation>&amp;Team hinzufügen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
@@ -6140,7 +6140,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="81"/>
         <source>&amp;Import team</source>
-        <translation>&amp;Team Importieren</translation>
+        <translation>&amp;Team importieren</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="81"/>
@@ -6151,7 +6151,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="82"/>
         <source>&amp;Export team</source>
-        <translation>&amp;Team Exportieren</translation>
+        <translation>&amp;Team exportieren</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="82"/>
@@ -6297,7 +6297,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="20"/>
         <source>&amp;Done</source>
-        <translation>&amp;Erledigt</translation>
+        <translation>&amp;Übernehmen</translation>
     </message>
 </context>
 <context>
@@ -6493,7 +6493,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="26"/>
         <source>&amp;Close</source>
-        <translation>&amp;Schliessen</translation>
+        <translation>&amp;Schließen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="116"/>
@@ -6613,7 +6613,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="529"/>
         <source>Add team</source>
-        <translation>Team Hinzufügen</translation>
+        <translation>Team hinzufügen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="551"/>
