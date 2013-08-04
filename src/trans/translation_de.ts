@@ -472,7 +472,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="129"/>
         <source>Save log</source>
-        <translation>Speichere PKampfprotokoll</translation>
+        <translation>Speichere Kampfprotokoll</translation>
     </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="131"/>
@@ -836,7 +836,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>sharply </source>
-        <translation>sehr stark</translation>
+        <translation>stark</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
