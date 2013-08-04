@@ -155,12 +155,12 @@
 154 Zink
 155 Eisbrocken
 156 Lucky Punch
-157 Dubios Disc
+157 Dubiosdisc
 158 Hackattack
-159 Adamant Orb
+159 Adamant-Orb
 160 Nassbrocken
 161 Heißbrocken
-162 Weißorb
+162 Weiß-Orb
 163 Machoand
 164 Lauchstange
 165 Drachenzahn
@@ -211,95 +211,95 @@
 210 Wurzelfossil
 211 Kopffossil
 212 Eisenkugel
-213 Griseous Orb
-214 Air Mail
-215 Bloom Mail
-216 Brick Mail
-217 Bubble Mail
-218 Flame Mail
-219 Grass Mail
-220 Harbor Mail
-221 Heart Mail
-222 Mosaic Mail
-223 Snow Mail
-224 Space Mail
-225 Steel Mail
-226 Tunnel Mail
-227 Aqua Cassette
-228 Lightning Cassette
-229 Blaze Cassette
-230 Freeze Cassette
-231 Heart Sweets
-232 Clean Scale
-233 Evolution Stone
-234 Pumice Stone
-235 Rugged Helmet
-236 Balloon
-237 Red Card
-238 Bull's Eye
-239 Pressure Band
-240 Bulb
-241 Rechargeable Battery
-242 Escape Button
-243 Fire Jewel
-244 Water Jewel
-245 Electric Jewel
-246 Grass Jewel
-247 Ice Jewel
-248 Fight Jewel
-249 Poison Jewel
-250 Earth Jewel
-251 Flight Jewel
-252 Psychic Jewel
-253 Bug jewel
-254 Rock Jewel
-255 Ghost Jewel
-256 Dragon Jewel
-257 Dark Jewel
-258 Steel Jewel
-259 Normal Jewel
-260 Strength Wing
-261 Power Wing
-262 Resistance Wing
-263 Wisdom Wing
-264 Mind Wing
-265 Instant Wing
-266 Beautiful Wing
-267 Dream Ball
-268 Fragrant Mushroom
-269 Huge Gold Orb
-270 Round Pearl
-271 Comet Piece
-272 Ancient Bronze Coin
-273 Ancient Silver Coin
-274 Ancient Gold Coin
-275 Ancient Vase
-276 Ancient Bracelet
-277 Ancient Statue
-278 Ancient Crown
-279 Hiun Ice-cream
-280 Dire Hit 2
-281 X Speed 2
-282 X Special 2
-283 X Sp. Def 2
-284 X Defend 2
-285 X Attack 2
-286 X Accuracy 2
-287 X Speed 3
-288 X Special 3
-289 X Sp. Def 3
-290 X Defend 3
-291 X Attack 3
-292 X Accuracy 3
-293 X Speed 6
-294 X Special 6
-295 X Sp. Def 6
-296 X Defend 6
-297 X Attack 6
-298 X Accuracy 6
+213 Platinum-Orb
+214 Luftbrief
+215 Blumenbrief
+216 Ziegelbrief
+217 Wasserbrief
+218 Feuerbrief
+219 Wiesenbrief
+220 Hafenbrief
+221 Herzbrief
+222 Mosaikbrief
+223 Schneebrief
+224 Sternbrief
+225 Stahlbrief
+226 Minenbrief
+227 Aquamodul
+228 Blitzmodul
+229 Flammenmodul
+230 Gefriermodul
+231 Herzkonfekt
+232 Schönschuppe
+233 Evolith
+234 Leichtstein
+235 Beulenhelm
+236 Luftballon
+237 Rote Karte
+238 Zielscheibe
+239 Klammerband
+240 Knolle
+241 Akku
+242 Fluchtknopf
+243 Feuerjuwel
+244 Wasserjuwel
+245 Elektrojuwel
+246 Planzjuwel
+247 Eisjuwel
+248 Kampfjuwel
+249 Giftjuwel
+250 Bodenjuwel
+251 Flugjuwel
+252 Psychojuwel
+253 Käferjuwel
+254 Gesteinjuwel
+255 Geistjuwel
+256 Drakojuwel
+257 Unlichtjuwel
+258 Stahljuwel
+259 Normaljuwel
+260 Heilfeder
+261 Kraftfeder
+262 Abwehrfeder
+263 Geniefeder
+264 Espritfeder
+265 Flinkfeder
+266 Prachtfeder
+267 Traumball
+268 Duftpilz
+269 Riesennugget
+270 Triperle
+271 Kometstück
+272 Alter Heller
+273 Alter Taler
+274 Alter Dukat
+275 Alte Vase
+276 Alter Reif
+277 Alte Statue
+278 Alte Krone
+279 Stratos-Eis
+280 Angriffplus 2
+281 X-Tempo 2
+282 X-Spezial 2
+283 X-Spezial Ver 2
+284 X-Abwehr 2
+285 X-Angriff 2
+286 X-Treffer 2
+287 X-Tempo 3
+288 X-Spezial 3
+289 X-Spezial Ver 3
+290 X-Abwehr 3
+291 X-Angriff 3
+292 X-Treffer 3
+293 X-Tempo 6
+294 X-Spezial 6
+295 X-Spezial Ver 6
+296 X-Abwehr 6
+297 X-Angriff 6
+298 X-Treffer 6
 299 Skill Call
 300 Item Drop
 301 Item Call
 302 Flat Call
 303 Dire Hit 3
-304 Berserk Gene
+304 Berserk-Gen
