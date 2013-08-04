@@ -1,19 +1,19 @@
 ﻿0 (No Item)
 3 Schlohkraut neutralisiert Statuswerte von %s !
-4 %s klammert sich an sein Fokus-Band !
+4 %s klammert sich an seinen Fokus-Band !
 5 %s klammert sich an seinen Fokus-Gurt !
 7 %s used its white herb to come back to his senses!
 11 %s used its power herb to attack immediately!
 12 Überreste von %s füllte einige KP auf !
-16 %s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
-17 %s's Quick Claw activated!
+16 Giftschleim von %s füllt einige KP auf!|%s was hurt by Black Sludge!
+17 Dank Flinkklaue kann %s den ersten Zug machen!
 18 %s restored a little HP using its Berry Juice!
-19 Hitze-Orb von %s wurde aktiviert !|Toxik-Orb von %s wurde aktiviert !
-21 %s is hurt by its Life Orb!
+19 Heiß-Orb von %s wurde aktiviert !|Toxik-Orb von %s wurde aktiviert !
+21 %s verliert einige KP!
 24 %s's shell bell restored its HP a little!
 29 %s is hurt by its Sticky Barb!
 34 %f is hurt by %s's Rugged Helmet!
-35 %s's Balloon popped!|%s is floating on a balloon!
+35 Der Luftballon von %s ist geplatzt!|%s gerät durch den Luftballon in die Schwebe!
 36 %s's %i raised its %st!
 37 %s's %i raised %m's power!
 38 %s used its Red Card on %f!
