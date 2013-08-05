@@ -3103,7 +3103,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="215"/>
         <source>(70 pow)</source>
-        <translation>(70 stärke)</translation>
+        <translation>(70 Stärke)</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="252"/>
@@ -3939,7 +3939,7 @@ Attacke4</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="191"/>
         <source>Enter the new name for the new box:</source>
-        <translation>Füge neuen Namen für die neue Box hinzu:</translation>
+        <translation>Erstelle einen Namen für die neue Box:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="202"/>
@@ -3949,12 +3949,12 @@ Attacke4</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="203"/>
         <source>Enter the new name for the box %1:</source>
-        <translation>Füge neuen Namen für die Box %1 hinzu:</translation>
+        <translation>Erstelle einen neuen Namen für die Box %1:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="220"/>
         <source>Destroying a box</source>
-        <translation>Box zerstören</translation>
+        <translation>Box löschen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="220"/>
@@ -4630,7 +4630,7 @@ Attacken:
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="727"/>
         <source>Loading the Team</source>
-        <translation>Lade das Team</translation>
+        <translation>Lade ein Team</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/pokemonstructs.cpp" line="836"/>
@@ -6640,7 +6640,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="292"/>
         <source>You don&apos;t have any nickname for the profile.</source>
-        <translation>Du hast keine Benutznernamen für das Profil.</translation>
+        <translation>Du hast keine Benutzernamen für das Profil.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="314"/>
