@@ -297,9 +297,9 @@
 296 X-Abwehr 6
 297 X-Angriff 6
 298 X-Treffer 6
-299 Skill Call
-300 Item Drop
-301 Item Call
-302 Flat Call
-303 Dire Hit 3
+299 Fäh.-Appell
+300 Itemabwurf
+301 Itemappell
+302 Umkehrappell
+303 Angriffplus 3
 304 Berserk-Gen
