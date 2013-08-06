@@ -7,7 +7,7 @@
 11 %s's Cute Charm infatuated %f!
 12 %s won't flinch because of its Inner Focus!
 13 %s's Download activates!
-14 Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
+14 Hagelalarm von %s lässt einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
 15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 16 %s's Effect Spore activates!
 18 %s's %a activates!
@@ -21,7 +21,7 @@
 31 %s's %a prevented its stats from being lowered!
 32 %s's %a heals it!
 33 %s's %a cures it!
-34 Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedroher von %s !
+34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s !
 37 %s's Leaf Guard prevents it from being affected by any status from the opponent!
 38 %s's %a took the attack!
 40 %s has Mold Breaker!
@@ -31,10 +31,10 @@
 46 %s übt seine Fähigkeit Erzwinger aus !
 50 %s's Rough Skin hurts %f
 54 %s's Shed Skin heals its status!
-55 %s can't get it going because of it's Slow Start!|%s finally got its act together!
+55 %s kommt nicht in Fahrt!|%s finally got its act together!
 56 %s lost some HP because of Solar Power!
 57 %s's Sound Proof blocks the attack!
-58 %s's Speed Boost increases its speed!
+58 Temposchub von %s erhöht seine Initiative!
 60 %s's SteadFast increases its speed!
 61 %s's Synchronize changes the status of %f!
 66 %s traced %f's %a!
