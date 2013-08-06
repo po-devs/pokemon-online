@@ -58,7 +58,7 @@
 57 Surfer
 58 Eisstrahl
 59 Blizzard
-60 Psytrahl
+60 Psystrahl
 61 Blubbstrahl
 62 Aurorastrahl
 63 Hyperstrahl
@@ -290,7 +290,7 @@
 289 Übernahme
 290 Geheimpower
 291 Taucher
-292 Armstoss
+292 Armstoß
 293 Tarnung
 294 Schweifglanz
 295 Scheinwerfer
@@ -314,7 +314,7 @@
 313 Trugträne
 314 Windschnitt
 315 Hitzekoller
-316 SchnÜffler
+316 Schnüffler
 317 Felsgrab
 318 Silberhauch
 319 Metallsound
@@ -426,7 +426,7 @@
 425 Schattenstoß
 426 Schlammbombe
 427 Psychoklinge
-428 Zen-Kopfstoss
+428 Zen-Kopfstoß
 429 Spiegelsalve
 430 Blitzkanone
 431 Kraxler
@@ -436,7 +436,7 @@
 435 Ladungsstoß
 436 Flammensturm
 437 Blättersturm
-438 Blattgeissel
+438 Blattgeißel
 439 Felswerfer
 440 Giftstreich
 441 Mülltreffer
@@ -455,7 +455,7 @@
 454 Schlagbefehl
 455 Blockbefehl
 456 Heilbefehl
-457 Kopfstoss
+457 Kopfstoß
 458 Doppelschlag
 459 Zeitenlärm
 460 Raumschlag
@@ -490,7 +490,7 @@
 489 Einrollen
 490 Fußtritt
 491 Säurespeier
-492 Schmarutzer
+492 Schmarotzer
 493 Wankelstrahl
 494 Zwango
 495 Galanterie
@@ -554,7 +554,7 @@
 553 Frostvolt
 554 Frosthauch
 555 Standpauke
-556 Eiszapfenhagel
+556 Eiszapfhagel
 557 V-Generator
 558 Kreuzflamme
 559 Kreuzdonner
