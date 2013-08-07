@@ -459,7 +459,7 @@
 485 Deals more damage if Target is the same type as User.
 486 Has a higher Base Power the higher your speed is compared to the target.
 487 Turns the target into the Water type.
-488 May raise the user's Spe.
+488 Raises the user's Speed.
 489 Raises the user's Atk, Def, and Acc.
 490 Decreases opponent's Speed by 1 stage.
 491 Sharply lowers Special Defense.
