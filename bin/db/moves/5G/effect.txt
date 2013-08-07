@@ -446,7 +446,7 @@
 472 All Def and SpD swapped for 5 turns.
 473 Calculate's damage with the target's Def stat.
 474 Doubles power if Target is poisoned.
-475 Sharply raises Speed.
+475 Sharply raises Speed and halves the user's weight.
 476 Draws the opponent's attacks at yourself.
 477 Makes Target easier to hit for 3 turns.
 478 Negates all held items for 5 turns.
@@ -483,7 +483,7 @@
 509 Forces the target to switch.
 510 Removes the target's Berry.
 511 Forces Target to move last
-512 Allows the user to hit the opposite opponent in a Triple Battle.
+512 Has double power if the user has no held item.
 513 User becomes the target's type(s).
 514 Deals more damage if teammate was KO'd last turn.
 515 KOs the user and deals damage to the opponent equal to the HP it lost.
