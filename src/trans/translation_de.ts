@@ -568,7 +568,7 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>The sunlight became harsh!</source>
-        <translation type="obsolete">Die Sonne beginnt zu shinen!</translation>
+        <translation type="obsolete">Das Sonnenlicht wird stärker!</translation>
     </message>
     <message>
         <source>It&apos;s started to rain!</source>
@@ -791,7 +791,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="163"/>
         <source>Hit %1 time(s)!</source>
-        <translation>%1 Mal getroffen!</translation>
+        <translation>%1 mal getroffen!</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="170"/>
@@ -851,7 +851,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="209"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation>%1 wurde paralysiert. Es greift eventuell nicht an.</translation>
+        <translation>%1 ist paralysiert. Es greift eventuell nicht an.</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="210"/>
@@ -886,7 +886,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="225"/>
         <source>%1 had its status changed to: %2.</source>
-        <translation>%1 Status hat seinen Status zu %2 geändert.</translation>
+        <translation>%1 hat seinen Status zu %2 geändert.</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="230"/>
@@ -936,7 +936,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="368"/>
         <source>%1 is damaged by recoil!</source>
-        <translation>%1 wurde vom Rückstoss verletzt.</translation>
+        <translation>%1 wurde vom Rückstoß verletzt.</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="388"/>
@@ -961,7 +961,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="408"/>
         <source>The sunlight is strong.</source>
-        <translation>Die Sonnenstrahlen sind stark.</translation>
+        <translation>Das Sonnenlicht ist stark.</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="409"/>
@@ -981,7 +981,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="420"/>
         <source>The sunlight faded.</source>
-        <translation>Die Sonnenstrahlen schwinden.</translation>
+        <translation>Das Sonnenlicht wird schwächer.</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="421"/>
