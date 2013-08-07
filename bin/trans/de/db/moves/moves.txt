@@ -428,7 +428,7 @@
 427 Psychoklinge
 428 Zen-Kopfstoß
 429 Spiegelsalve
-430 Blitzkanone
+430 Lichtkanone
 431 Kraxler
 432 Auflockern
 433 Bizarroraum
