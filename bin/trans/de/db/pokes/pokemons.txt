@@ -249,7 +249,7 @@
 247:0 Pupitar
 248:0 Despotar
 249:0 Lugia
-250:0 Ho-oh
+250:0 Ho-Oh
 251:0 Celebi
 252:0 Geckarbor
 253:0 Reptain
