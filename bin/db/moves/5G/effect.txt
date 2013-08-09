@@ -487,7 +487,7 @@
 513 User becomes the target's type(s).
 514 Deals more damage if teammate was KO'd last turn.
 515 KOs the user and deals damage to the opponent equal to the HP it lost.
-516 Gives user's item to Target if it has to item.
+516 Gives user's item to target. Fails if target has an item.
 517 May burn opponent. (100%)
 518 If used with Fire Pledge, creates rainbow that may cause Confusion
 519 If used with Grass Pledge, creates burning field that causes damage every turn
