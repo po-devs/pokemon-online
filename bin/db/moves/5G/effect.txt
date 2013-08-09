@@ -493,8 +493,8 @@
 519 If used with Grass Pledge, creates burning field that causes damage every turn
 520 If used with Water Pledge, creates swamp that lowers Speed of all targets.
 521 Switch to another Pokémon
-522 May decrease opponent's Special Attack by 1 stage.
-523 May decrease opponent's Speed by 1 stage.
+522 Decrease opponent's Special Attack by 1 stage.
+523 Decrease opponent's Speed by 1 stage.
 524 Critical Hit (100%)
 525 Forces the target to switch.
 526 Raises the user's Atk and SpAtk.
