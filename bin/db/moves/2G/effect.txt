@@ -1,6 +1,6 @@
 ﻿0 No effect
 1 Inflicts regular damage with no additional effect.
-2 Has an increased chance for a critical hit.
+2 Has an increased chance for a critical hit. (12.5%)
 3 Hits 2-5 times in one turn.
 4 Hits 2-5 times in one turn.
 5 Inflicts regular damage with no additional effect.
@@ -73,7 +73,7 @@
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
 74 (((something new 316)))
-75 Has an increased chance for a critical hit.
+75 Has an increased chance for a critical hit. (12.5%)
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
 78 Paralyzes the target.
@@ -150,7 +150,7 @@
 149 Inflicts damage between 50% and 150% of the user's level.
 150 Does nothing.
 151 Raises the user's Defense by two levels.
-152 Has an increased chance for a critical hit.
+152 Has an increased chance for a critical hit. (12.5%)
 153 Inflicts double damage.  User faints.
 154 Hits 2-5 times in one turn.
 155 Hits twice in one turn.
@@ -161,7 +161,7 @@
 160 User's type changes to the type of one of its moves at random.
 161 Has a $effect_chance% chance to burn, freeze, or paralyze the target.
 162 Inflicts damage equal to half the target's HP.
-163 Has an increased chance for a critical hit.
+163 Has an increased chance for a critical hit.(12.5%)
 164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage or status changes until it breaks.
 165 User takes 1/4 its max HP in recoil.
 166 Permanently becomes the target's last used move.
@@ -175,7 +175,7 @@
 174 Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.
 175 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
 176 Changes the user's type to a random type either resistant or immune to the last move used against it.
-177 Has an increased chance for a critical hit.
+177 Has an increased chance for a critical hit. (12.5%)
 178 Lowers the target's Speed by two levels.
 179 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
 180 Lowers the PP of the target's last used move by 4.
@@ -236,7 +236,7 @@
 235 Heals the user by half its max HP.  Affected by weather.
 236 Heals the user by half its max HP.  Affected by weather.
 237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
-238 Has an increased chance for a critical hit.
+238 Has an increased chance for a critical hit. (12.5%)
 239 Has chance to make the target flinch.
 240 Changes the weather to rain for five turns.
 241 Changes the weather to sunny for five turns.
