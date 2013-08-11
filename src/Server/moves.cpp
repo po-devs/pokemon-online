@@ -1672,8 +1672,10 @@ struct MMEncore : public MM
                 b.counters(s).removeCounter(BC::Encore);
             } else {
                 if (b.move(s, i) == poke(b,s)["EncoresMove"].toInt()) {
-                    if (b.PP(s, i) <= 0)
+                    if (b.PP(s, i) <= 0) {
+                        b.sendMoveMessage(33,0,s);
                         b.counters(s).removeCounter(BC::Encore);
+                    }
                     break;
                 }
             }
