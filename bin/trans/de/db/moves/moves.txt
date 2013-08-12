@@ -129,7 +129,7 @@
 128 Schnapper
 129 Sternschauer
 130 Schädelwumme
-131 Dornenkanone
+131 Dornkanone
 132 Umklammerung
 133 Amnesie
 134 Psykraft
@@ -174,7 +174,7 @@
 173 Schnarcher
 174 Fluch
 175 Dreschflegel
-176 Umwandlung 2
+176 Umwandlung2
 177 Luftstoß
 178 Baumwollsaat
 179 Gegenschlag
