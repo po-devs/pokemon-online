@@ -300,7 +300,7 @@
 298:0 Azurill
 299:0 Nasgnet
 300:0 Eneco
-301:0 Enecoro
+301:0 Enekoro
 302:0 Zobiris
 303:0 Flunkifer
 304:0 Stollunior
@@ -316,8 +316,8 @@
 314:0 Illumise
 315:0 Roselia
 316:0 Schluppuck
-317:0 Schluckwech
-318:0 Karnivanha
+317:0 Schlukwech
+318:0 Kanivanha
 319:0 Tohaido
 320:0 Wailmer
 321:0 Wailord
@@ -327,7 +327,7 @@
 325:0 Spoink
 326:0 Groink
 327:0 Pandir
-328:0 Knaklion
+328:0 Knacklion
 329:0 Vibrava
 330:0 Libelldra
 331:0 Tuska
@@ -431,7 +431,7 @@
 429:0 Traunmagil
 430:0 Kramshef
 431:0 Charmian
-432:0 Shnurgast
+432:0 Shnurgarst
 433:0 Klingplim
 434:0 Skunkapuh
 435:0 Skuntank
@@ -659,12 +659,12 @@
 586:2 Kronjuwild-Herbst
 586:3 Kronjuwild-Winter
 587:0 Emolga
-588:0 Laukabs
+588:0 Laukaps
 589:0 Cavalanzas
 590:0 Tarnpignon
 591:0 Hutsassa
 592:0 Quabbel
-593:0 Appoquallyp
+593:0 Apoquallyp
 594:0 Mamolida
 595:0 Wattzapf
 596:0 Voltula
