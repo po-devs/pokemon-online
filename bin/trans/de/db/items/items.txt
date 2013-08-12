@@ -11,7 +11,7 @@
 10 Fokus-Gurt
 11 Lahmrauch
 12 Grüner Schal
-13 Schwerschwf.
+13 Schwerschweif
 14 Laxrauch
 15 Überreste
 16 Glücksrauch
@@ -35,7 +35,7 @@
 34 Pudersand
 35 Sanftglocke
 36 Wellenrauch
-37 Schlohktaut
+37 Schlohkraut
 38 Großlinse
 39 Schlauglas
 40 Gelber Schal
@@ -47,7 +47,7 @@
 46 Riesenperle
 47 Riesenpilz
 48 Schwarzgurt
-49 Schw. Flöte
+49 Schwarze Flöte
 50 Giftschleim
 51 Schattenglas
 52 Blaue Flöte
@@ -59,7 +59,7 @@
 58 Schutzband
 59 Feuchtmulch
 60 Abyssplatte
-61 Angriffsplus
+61 Angriffplus
 62 Drachenhaut
 63 Elixier
 64 Kraftwurzel
@@ -85,7 +85,7 @@
 84 Hypertrank
 85 Eisheiler
 86 Eisen
-87 Kingstein
+87 King-Stein
 88 Lavakeks
 89 Blattstein
 90 Limonade
@@ -99,7 +99,7 @@
 98 Top-Trank
 99 Top-Schutz
 100 Top-Beleber
-101 Metalmantel
+101 Metallmantel
 102 Metronom
 103 Wundersaat
 104 Kuhmuh-Milch
@@ -131,7 +131,7 @@
 130 Sprudel
 131 Seelentau
 132 Bannsticker
-133 Stabil-Mulch
+133 Stabilmulch
 134 Sternenstück
 135 Sternenstaub
 136 Sonnenstein
@@ -161,7 +161,7 @@
 160 Nassbrocken
 161 Heißbrocken
 162 Weiß-Orb
-163 Machoand
+163 Machoband
 164 Lauchstange
 165 Drachenzahn
 166 Giftstich
@@ -174,7 +174,7 @@
 173 Funkelstein
 174 Finsterstein
 175 Stromisierer
-176 Magmarisierer
+176 Magmaisierer
 177 Spiritkern
 178 Ovaler Stein
 179 Schützer
