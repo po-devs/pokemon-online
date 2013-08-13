@@ -2674,8 +2674,8 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="179"/>
-        <source>Temporary Ban:</source>
-        <translation>Vorübergehender Ban:</translation>
+        <source>Temporary Bann:</source>
+        <translation>Vorübergehender Bann:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="189"/>
@@ -2723,7 +2723,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     </message>
     <message>
         <source>Ban List</source>
-        <translation type="obsolete">Bann Liste</translation>
+        <translation type="obsolete">Bann-Liste</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="366"/>
@@ -2813,7 +2813,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/controlpanel.cpp" line="136"/>
         <source>The ban expire time you requested is in the past, please use a valid future timestamp.</source>
-        <translation>Die angefragte Ban-Ablaufzeit ist in der Vergangenheit, bitte benutze ein gültiges Datum in der Zukunft.</translation>
+        <translation>Die angefragte Bann-Ablaufzeit ist in der Vergangenheit, bitte benutze ein gültiges Datum in der Zukunft.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.cpp" line="143"/>
@@ -2823,7 +2823,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/controlpanel.cpp" line="143"/>
         <source>The ban expire time you requested is too far in the future.</source>
-        <translation>Die angefragte Ban-Ablaufzeit ist zu weit in der Zukunft.</translation>
+        <translation>Die angefragte Bann-Ablaufzeit ist zu weit in der Zukunft.</translation>
     </message>
 </context>
 <context>
@@ -2874,7 +2874,7 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/downloadmanager.cpp" line="143"/>
         <source>Update download failed</source>
-        <translation>Das Laden des Uploads schlug fehl</translation>
+        <translation>Das Downloaden des Updates schlug fehl</translation>
     </message>
     <message>
         <location filename="../Teambuilder/downloadmanager.cpp" line="224"/>
@@ -2978,12 +2978,12 @@ Es wird empfohlen, ein Update durchzuführen.</translation>
     <message>
         <location filename="../Teambuilder/findbattledialog.ui" line="27"/>
         <source>Force same tier</source>
-        <translation>Gleiches Tier erzwingen</translation>
+        <translation>Gleichen Tier erzwingen</translation>
     </message>
     <message>
         <location filename="../Teambuilder/findbattledialog.ui" line="36"/>
         <source>Only battle players with a max rating difference of</source>
-        <translation>Maximaler Rating-Unterschied zum Gegner ist max.</translation>
+        <translation>Nur Gegner mit einem maximalen Rating-Unterschied von</translation>
     </message>
     <message>
         <location filename="../Teambuilder/findbattledialog.ui" line="68"/>
@@ -3157,7 +3157,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.cpp" line="149"/>
         <source>(%1 pow)</source>
-        <translation>(%1 stärke)</translation>
+        <translation>(%1 Stärke)</translation>
     </message>
 </context>
 <context>
@@ -3474,7 +3474,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Server/modswindow.ui" line="20"/>
         <source>How to create a mod</source>
-        <translation>Wie erstellt man einen Mod</translation>
+        <translation>Wie erstellt man eine Mod</translation>
     </message>
     <message utf8="true">
         <location filename="../Server/modswindow.ui" line="26"/>
@@ -3777,7 +3777,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="125"/>
         <source>Could not add the Pokemon to the box, the box is full.</source>
-        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, die Box ist voll.</translation>
+        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, da die Box ist voll ist.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="128"/>
@@ -4120,7 +4120,7 @@ Attacken:
     </message>
     <message>
         <source>Happiness</source>
-        <translation type="obsolete">Freundschaft</translation>
+        <translation type="obsolete">Zuneigung</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="42"/>
@@ -4135,7 +4135,7 @@ Attacken:
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="238"/>
         <source>Impossible to add move</source>
-        <translation>Hinzufügen einer Attacke nicht möglich.</translation>
+        <translation>Hinzufügen der Attacke nicht möglich.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="238"/>
@@ -4432,8 +4432,7 @@ Attacken:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="13"/>
         <source>Disallow Spects</source>
-        <translatorcomment>Keine ahnung wie ich es übersetzen soll/sollte</translatorcomment>
-        <translation>Zuschauer Verbieten</translation>
+        <translation>Zuschauer verbieten</translation>
     </message>
     <message>
         <source>Level Balance</source>
@@ -4531,7 +4530,7 @@ Attacken:
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="44"/>
         <source>At the beginning of the battle, you can see the opponent&apos;s team and rearrange yours accordingly.</source>
-        <translation>Beim Beginn des Kampfes siehst du das Team das Gegners und kannst dein eigenes Team umpositionieren.</translation>
+        <translation>Beim Beginn des Kampfes siehst du das Team das Gegners und du kannst dein eigenes Team umpositionieren.</translation>
     </message>
     <message>
         <location filename="../PokemonInfo/battlestructs.cpp" line="45"/>
@@ -5047,7 +5046,7 @@ Attacken:
     <message>
         <location filename="../Teambuilder/replayviewer.cpp" line="22"/>
         <source>The replay file couldn&apos;t be opened: %1</source>
-        <translation>Die Wiederholung-Date konnte nicht geöffnet werden: %1</translation>
+        <translation>Die Wiederholung-Datei konnte nicht geöffnet werden: %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/replayviewer.cpp" line="30"/>
@@ -5057,7 +5056,7 @@ Attacken:
     <message>
         <location filename="../Teambuilder/replayviewer.cpp" line="30"/>
         <source>The replay version of the file isn&apos;t supported by this client.</source>
-        <translation>Die Wiederholungs-Version dieser Datei wird vom Clienten nicht unterstützt.</translation>
+        <translation>Die Wiederholungs-Version dieser Datei wird von diesem Client nicht unterstützt.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/replayviewer.cpp" line="53"/>
@@ -5075,7 +5074,7 @@ Attacken:
     <message>
         <location filename="../Server/sqlconfig.cpp" line="13"/>
         <source>&lt;b&gt;&lt;span style=&apos;color:red&apos;&gt;Don&apos;t touch anything if you&apos;ve no clue what SQL is!&lt;/span&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;For any change to have effect, you need to restart the server.&lt;br /&gt;If you change the settings without knowledge of what you are doing, you&apos;ll probably end up without any users stored anymore.&lt;br/&gt;&lt;br/&gt;SQLite is the only system fully supported by default. PostGreSQL needs an external installation, and you then just have to put the .dlls in that are located in PostGreSQL&apos;s bin folder in the server folder. MySQL needs the user to get the right DLLs, the MySQL driver and to install a MySQL database too (it is advised to be on linux to do this as this is far less complicated).</source>
-        <translation>&lt;b&gt;&lt;span style=&apos;color:red&apos;&gt;Berühre bloss nichts, wenn du keine Ahnung hast, was SQL ist!&lt;/span&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;Damit jegliche Änderung eintrifft, muss der Server neu gestartet werden.&lt;br /&gt;Wenn du Änderungen ohne Vorkenntnisse vornimmst, kann es sein, dass alle Benutzer gelöscht werden.&lt;br/&gt;&lt;br/&gt;SQLite ist das einzige unterstützte System von Beginn an. PostGreSQL braucht eine externe Installation, und dann musst du nur die .dlls in den PostGreSQL&apos;s bin Ordner im Server Ordner legen.. MySQL braucht die richtigen DLLs, den richtigen MySQL-Treiber und die Installation einer MySQL-Datenbank (Es ist ratsam, die Installation auf Linux durchzuführen, da es weniger kompliziert ist.)</translation>
+        <translation>&lt;b&gt;&lt;span style=&apos;color:red&apos;&gt;Berühre bloß nichts, wenn du keine Ahnung hast, was SQL ist!&lt;/span&gt;&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;Damit jegliche Änderung eintrifft, muss der Server neu gestartet werden.&lt;br /&gt;Wenn du Änderungen ohne Vorkenntnisse vornimmst, kann es sein, dass alle Benutzer gelöscht werden.&lt;br/&gt;&lt;br/&gt;SQLite ist das einzige unterstützte System von Beginn an. PostGreSQL braucht eine externe Installation, und dann musst du nur die .dlls in den PostGreSQL&apos;s bin Ordner im Server Ordner legen.. MySQL braucht die richtigen DLLs, den richtigen MySQL-Treiber und die Installation einer MySQL-Datenbank (Es ist ratsam, die Installation auf Linux durchzuführen, da es weniger kompliziert ist.)</translation>
     </message>
     <message>
         <location filename="../Server/sqlconfig.cpp" line="20"/>
@@ -5616,8 +5615,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Power:</source>
-        <translatorcomment>Keine ahnung was damit gemeint ist </translatorcomment>
-        <translation type="obsolete">Kraft:</translation>
+        <translation type="obsolete">Stärke:</translation>
     </message>
     <message>
         <source>&amp;DVs</source>
@@ -5649,7 +5647,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Happiness</source>
-        <translation type="obsolete">Freundschaft</translation>
+        <translation type="obsolete">Zuneigung</translation>
     </message>
     <message>
         <source>&amp;Level</source>
@@ -5697,7 +5695,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Speed</source>
-        <translation type="obsolete">Int</translation>
+        <translation type="obsolete">Init</translation>
     </message>
     <message>
         <source>Sp Att</source>
@@ -6167,7 +6165,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="92"/>
         <source>&amp;No mod</source>
-        <translation>&amp;Kein Mod</translation>
+        <translation>&amp;Keine Mod</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="110"/>
@@ -6271,7 +6269,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&amp;Import from .txt</source>
-        <translation type="obsolete">Importieren von.txt</translation>
+        <translation type="obsolete">Importieren von .txt</translation>
     </message>
 </context>
 <context>
@@ -6324,7 +6322,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="30"/>
         <source>EVs</source>
-        <translation>EV</translation>
+        <translation>EVs</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="31"/>
@@ -6339,7 +6337,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="33"/>
         <source>IVs, Ability &amp;&amp; Hidden Power</source>
-        <translation>DV, Fähigkeit &amp;&amp; Kraftreserve</translation>
+        <translation>DVs, Fähigkeit &amp;&amp; Kraftreserve</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="47"/>
@@ -6630,7 +6628,7 @@ Du kannst nur gleichsprachige Teams in ein deutsches Pokemon Online importieren.
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="196"/>
         <source>Folder in which to save the team</source>
-        <translation>Ordner, wo das Team gespeichert wird</translation>
+        <translation>Ordner, in dem das Team gespeichert wird</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="292"/>
