@@ -547,7 +547,7 @@
 546	Attack type changes to match held Drive.
 547	Has a 10% chance to sleep the target. Changes Meloetta's form.
 548	Damage is calculated using target's Defense stat.
-549	Lowers the target's Speed by two stages.
+549	Lowers the target's Speed by one stage.
 550	Has a 20% chance to paralyze the target.
 551	Has a 20% chance to burn the target.
 552	Has a 50% chance to raise the user's Special Attack by one stage.
