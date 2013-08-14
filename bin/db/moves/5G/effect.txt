@@ -520,7 +520,7 @@
 546 If user is holding a Plate, this attack's type depends on the Cassette held.
 547 May put Target to sleep (10%)
 548 Causes physical damage.
-549 Sharply lower target's speed.
+549 Decrease opponent's Speed by 1 stage.
 550 May paralyze opponent. (20%)
 551 May burn opponent. (20%)
 552 May increase user's Special Attack by 1 stage.
