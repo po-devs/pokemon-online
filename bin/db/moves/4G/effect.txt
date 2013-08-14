@@ -237,7 +237,7 @@
 236 Heals the user by half its max HP.  Affected by weather.
 237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
 238 Has an increased chance for a critical hit. (12.5%)
-239 Has chance to make the target flinch.
+239 Has a $effect_chance% chance to make the target flinch.
 240 Changes the weather to rain for five turns.
 241 Changes the weather to sunny for five turns.
 242 Has a $effect_chance% chance to lower the target's Defense by one level.
