@@ -456,7 +456,7 @@
 482 May poison opponent. (10%)
 483 Raises SpA, SpD, and Speed by 1 stage.
 484 The heavier the user is, the more damage it deals.
-485 Deals more damage if Target is the same type as User.
+485 Deals damage if Target has the same type as User.
 486 Has a higher Base Power the higher your speed is compared to the target.
 487 Turns the target into the Water type.
 488 Raises the user's Speed.
