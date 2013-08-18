@@ -1,6 +1,7 @@
 #include "pmsystem.h"
 #include "../Utilities/qscrolldowntextbrowser.h"
 #include "../Utilities/functions.h"
+#include "theme.h"
 #ifdef QT5
 #include <QApplication>
 #endif
@@ -155,7 +156,7 @@ void PMSystem::messageReceived(PMStruct *pm, const QString &mess) {
             pm->state = PMStruct::NewMessage;
             for(int i = 0; i < myPMs->count(); i++) {
                 if(myPMs->widget(i) == pm) {
-                    myPMs->tabBar()->setTabTextColor(i, QColor(Qt::red));
+                    myPMs->tabBar()->setTabTextColor(i, Theme::Color("Client/pmTabFlash"));
                 }
             }
         } else {
@@ -249,10 +250,16 @@ void PMStruct::printLine(const QString &line, bool self)
 
     QSettings s;
     bool tt = s.value("PMs/ShowTimestamps").toBool();
+    bool ss = s.value("PMs/ShowSeconds").toBool();
     QString timeStr = "";
 
-    if (tt)
-        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+    if (tt) {
+        if (ss) {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+        } else {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+        }
+    }
 
     QString eline = escapeHtml(line);
 
@@ -268,10 +275,16 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
 {
     QSettings s;
     bool tt = s.value("PMs/ShowTimestamps").toBool();
+    bool ss = s.value("PMs/ShowSeconds").toBool();
     QString timeStr = "";
 
-    if (tt && timestamps)
-        timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+    if (tt && timestamps) {
+        if (ss) {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+        } else {
+            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+        }
+    }
 
     m_mainwindow->insertHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");
     log->pushHtml(timeStr + removeTrollCharacters(htmlCode) + "<br />");

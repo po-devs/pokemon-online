@@ -46,7 +46,6 @@ QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QHash<int, QStringList> MoveInfo::m_MoveMessages;
 QHash<int,QString> MoveInfo::m_Details;
 QHash<int,int> MoveInfo::m_OldMoves;
-QHash<int,bool> MoveInfo::m_KingRock;
 QVector<QSet<int> > MoveInfo::m_GenMoves;
 
 QString ItemInfo::m_Directory;
@@ -1331,7 +1330,8 @@ int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen
     if (gen.num < GEN_MIN || gen.num-GEN_MIN >= m_Abilities[slot].size()) {
         return 0;
     }
-    return m_Abilities[slot][gen.num-GEN_MIN].value(pokeid);
+    int ab = m_Abilities[slot][gen.num-GEN_MIN].value(pokeid, 0);
+    return ab != 0 ? ab : m_Abilities[slot][gen.num-GEN_MIN].value(pokeid.original());
 }
 
 void PokemonInfo::loadBaseStats()
@@ -1681,7 +1681,6 @@ void MoveInfo::init(const QString &dir)
     m_GenMoves.resize(GenInfo::NumberOfGens());
 
     fill_double(m_OldMoves, path("oldmoves.txt"));
-    fill_int_bool(m_KingRock, path("king_rock.txt"));
 
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
         fill_container_with_file(m_GenMoves[i-GenInfo::GenMin()], path("%1G/moves.txt").arg(i));
@@ -1731,6 +1730,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(recoil, path("recoil.txt"));
     fill_int_char(status, path("status.txt"));
     fill_int_char(type, path("type.txt"));
+    fill_int_bool(kingRock, path("king_rock.txt"));
 
     /* Removing comments, aka anything starting from '#' */
     QMutableHashIterator<int,QString> it(specialEffect);
@@ -1873,10 +1873,7 @@ int MoveInfo::Classification(int movenum, Pokemon::gen g)
 
 bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
 {
-    if (gen >= 5 && movenum == Move::BeatUp) {
-        return true;
-    }
-    return m_KingRock[movenum];
+    move_find(kingRock, movenum, gen);
 }
 
 int MoveInfo::Number(const QString &movename)

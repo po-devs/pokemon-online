@@ -56,6 +56,7 @@ Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint
     mytab->setMovable(true);
     mytab->addTab(playersW = new QStackedWidget(), tr("Players"));
     mytab->addTab(battlesW = new QStackedWidget(), tr("Battles"));
+    mytab->setObjectName("playersWidget");
     QWidget *channelContainer = new QWidget();
     mytab->addTab(channelContainer, tr("Channels"));
     QGridLayout *containerLayout = new QGridLayout(channelContainer);
@@ -846,6 +847,11 @@ void Client::showTimeStamps2(bool b)
     globals.setValue("PMs/ShowTimestamps", b);
 }
 
+void Client::showSeconds(bool b)
+{
+    globals.setValue("PMs/ShowSeconds", b);
+}
+
 void Client::toggleIncomingPM(bool b)
 {
     globals.setValue("PMs/RejectIncoming", b);
@@ -1345,10 +1351,15 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(save_logs, SIGNAL(triggered(bool)), SLOT(togglePMLogs(bool)));
     save_logs->setChecked(globals.value("PMs/Logged").toBool());
 
-    QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in &PMs"));
+    QAction * show_ts2 = pmMenu->addAction(tr("Enable timestamps in PMs"));
     show_ts2->setCheckable(true);
     connect(show_ts2, SIGNAL(triggered(bool)), SLOT(showTimeStamps2(bool)));
     show_ts2->setChecked(globals.value("PMs/ShowTimestamps").toBool());
+
+    QAction * show_sec = pmMenu->addAction(tr("Enable seconds in PMs"));
+    show_sec->setCheckable(true);
+    connect(show_sec, SIGNAL(triggered(bool)), SLOT(showSeconds(bool)));
+    show_sec->setChecked(globals.value("PMs/ShowSeconds").toBool());
 
     QAction * pm_reject = pmMenu->addAction(tr("Reject incoming PMs"));
     pm_reject->setCheckable(true);
@@ -2830,7 +2841,7 @@ void Client::changeExitWarning(bool show)
 
 void Client::showExitWarning()
 {
-    if (exitWarning) {
+    if (exitWarning && loggedIn) {
         QDialog dialog(this);
         dialog.setObjectName("exitWarning");
         dialog.setWindowTitle(tr("Are you sure?"));

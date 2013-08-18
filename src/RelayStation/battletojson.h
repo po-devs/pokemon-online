@@ -64,11 +64,11 @@ public:
 //    void onClockStop(int player, int time);
 //    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
-//    void onPPChange(int spot, int move, int PP);
+    void onPPChange(int spot, int move, int PP);
     void onOfferChoice(int player, const BattleChoices &choice);
 //    void onTempPPChange(int spot, int move, int PP);
 //    void onMoveChange(int spot, int slot, int move, bool definite);
-//    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
     void onChoiceCancellation(int player);
     void onVariation(int player, int bonus, int malus);

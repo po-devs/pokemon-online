@@ -269,11 +269,22 @@ void BattleToJson::onOfferChoice(int player, const BattleChoices &choice)
     map.insert("choice", toJson(choice));
 }
 
-//    void onPPChange(int spot, int move, int PP);
+void BattleToJson::onPPChange(int spot, int move, int PP)
+{
+    makeCommand("ppchange");
+    map.insert("move", move);
+    map.insert("pp", PP);
+}
+
 //    void onOfferChoice(int player, const BattleChoices &choice);
 //    void onTempPPChange(int spot, int move, int PP);
 //    void onMoveChange(int spot, int slot, int move, bool definite);
-//    void onRearrangeTeam(int player, const ShallowShownTeam& team);
+void BattleToJson::onRearrangeTeam(int player, const ShallowShownTeam& team)
+{
+    map.insert("command", "teampreview");
+    map.insert("player", player);
+    map.insert("team", toJson(team));
+}
 
 void BattleToJson::onChoiceSelection(int spot)
 {

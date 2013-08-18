@@ -112,6 +112,7 @@ QWidget *QRCodePlugin::getConfigurationWidget()
     palette.setColor(QPalette::Background, Qt::white);
     ret->setPalette(palette);
     ret->setPixmap(bitmap);
+    ret->setObjectName("qrCode");
 
     ret->setMargin(20);
     return ret;

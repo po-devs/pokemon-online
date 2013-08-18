@@ -1319,26 +1319,48 @@ void BattleSituation::testFlinch(int player, int target)
         return;
     }
 
-    /* Serene Grace, Rainbow */
-    //Currently, Secret Power cannot flinch in the simulator, if anything changes in the future, the check will already be in place
-    if ((hasWorkingAbility(player,Ability::SereneGrace) && tmove(player).attack != Move::SecretPower) || teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
-        rate *= 2;
+    /* Serene Grace, Rainbow (Pledges) */
+    //We split them up because Serene Grace is cumulative with Rainbow (Pledges)
+    if (tmove(player).attack != Move::SecretPower) {
+        if (hasWorkingAbility(player,Ability::SereneGrace)) {
+            rate *= 2;
+        }
+        if (teamMemory(this->player(target)).value("RainbowCount").toInt() > 0) {
+            rate *=2;
+        }
     }
 
     if (rate && coinflip(rate, 100)) {
         turnMem(target).add(TM::Flinched);
     }
 
-    if (tmove(player).kingRock && (hasWorkingItem(player, Item::KingsRock) || hasWorkingAbility(player, Ability::Stench)|| hasWorkingItem(player, Item::RazorFang))) {
-        if (gen().num != 2 && (gen().num == 4 || (tmove(player).category == Move::StandardMove && tmove(player).flinchRate == 0))) {
-            //Gen 4 can add King's Rock effect to moves that already Flinch
-            if (coinflip(10, 100)) {
-                turnMem(target).add(TM::Flinched);
+    //Important to note: Stench does not stack with items
+    if ((hasWorkingAbility(player, Ability::Stench) && gen().num >= 5) || hasWorkingItem(player, Item::KingsRock) || hasWorkingItem(player, Item::RazorFang)){
+        if (gen().num >= 5){
+            //As long as the move does damage and does not already have a chance to flinch, it will gain the effect
+            if (tmove(player).flinchRate == 0 && tmove(player).category != Move::Other) {
+                int rate2 = 10;
+                if (hasWorkingAbility(player,Ability::SereneGrace)){
+                    rate2 *=2;
+                }
+                if (teamMemory(this->player(target)).value("RainbowCount").toInt() > 0){
+                    rate2 *=2;
+                }
+                if (rate2 && coinflip(rate2, 100)) {
+                    turnMem(target).add(TM::Flinched);
+                }
             }
-        } else if (gen().num == 2) {
-            //Gen 2 has a different Flinch rate for King's Rock. Can apply flinch to moves with Flinch and secondary effects, as long as it does damage
-            if (coinflip(30, 256)) {
-                turnMem(target).add(TM::Flinched);
+        } else if (gen().num == 4 || gen().num == 3){
+            if (tmove(player).kingRock) {
+                if (coinflip(10, 100)) {
+                    turnMem(target).add(TM::Flinched);
+                }
+            }
+        } else if (gen().num == 2){
+            if (tmove(player).kingRock) {
+                if (coinflip(30, 256)) {
+                    turnMem(target).add(TM::Flinched);
+                }
             }
         }
     }
@@ -2073,13 +2095,17 @@ void BattleSituation::inflictRecoil(int source, int target)
         }
 
         if (hasWorkingAbility(target, Ability::LiquidOoze)) {
-            sendMoveMessage(1,2,source,Pokemon::Poison,target);
-            inflictDamage(source,damage,source,false);
+            if (gen().num < 5 && tmove(source).attack == Move::DreamEater) {
+                healLife(source, damage);
+            } else {
+                sendMoveMessage(1,2,source,Pokemon::Poison,target);
+                inflictDamage(source,damage,source,false);
 
-            /* Self KO Clause! */
-            if (koed(source)) {
-                if (gen() >= 5)
-                    selfKoer() = target;
+                /* Self KO Clause! */
+                if (koed(source)) {
+                    if (gen() >= 5)
+                        selfKoer() = target;
+                }
             }
         } else {
             if (pokeMemory(source).value("HealBlockCount").toInt() > 0) {
@@ -2872,7 +2898,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         callieffects(player, source, "BeforeTakingDamage");
     }
 
-    if (damage == 0) {
+    if (damage == 0 && gen() <= 4) {
         damage = 1;
     }
 

@@ -7,37 +7,37 @@
 11 %s's Cute Charm infatuated %f!
 12 %s won't flinch because of its Inner Focus!
 13 %s's Download activates!
-14 Hagelalarm von %s lääst einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
+14 Hagelalarm von %s lässt einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
 15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 16 %s's Effect Spore activates!
 18 %s's %a activates!
 19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
 21 %s changed its type to %t!
 22 %s's Forewarn makes it wary of %m!
-23 %s knows its foe holds %i because of Frisk!
+23 %s hat %i erschnüffelt!
 24 %s's Shield Dust blocked the secondary effects!
 29 %s's Hydration heals its status!
 30 %s's %a prevents its stat from being lowered!
 31 %s's %a prevented its stats from being lowered!
 32 %s's %a heals it!
 33 %s's %a cures it!
-34 Bedroher von %s verringert Angriff von %f!|Delegator von %f unterdrückte Bedroher von %s !
+34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s !
 37 %s's Leaf Guard prevents it from being affected by any status from the opponent!
 38 %s's %a took the attack!
-40 %s has Mold Breaker!
+40 %s gelingt es, gegnerische Fähigkeiten zu überbrücken!
 41 %s's Motor Drive raises its speed!
 44 %s's Own Tempo cures its confusion!
 45 Aufheber von %s regeneriert einige KP !
 46 %s übt seine Fähigkeit Erzwinger aus !
 50 %s's Rough Skin hurts %f
 54 %s's Shed Skin heals its status!
-55 %s can't get it going because of it's Slow Start!|%s finally got its act together!
+55 %s kommt nicht in Fahrt!|%s finally got its act together!
 56 %s lost some HP because of Solar Power!
 57 %s's Sound Proof blocks the attack!
-58 %s's Speed Boost increases its speed!
+58 Temposchub von %s erhöht seine Initiative!
 60 %s's SteadFast increases its speed!
 61 %s's Synchronize changes the status of %f!
 66 %s traced %f's %a!
 67 %s is carelessly slacking off!
 70 %s's %a absorbs the attack!|%s's %a made the attack useless!
-71 %s's Wonder Guard evades the attack!
+71 %s vermeidet Schaden mit Wunderwache!

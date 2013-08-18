@@ -1,6 +1,6 @@
 ﻿0 No effect
 1 Inflicts regular damage with no additional effect.
-2 Has an increased chance for a critical hit.
+2 Has an increased chance for a critical hit. (12.5%)
 3 Hits 2-5 times in one turn.
 4 Hits 2-5 times in one turn.
 5 Inflicts regular damage with no additional effect.
@@ -73,7 +73,7 @@
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
 74 (((something new 316)))
-75 Has an increased chance for a critical hit.
+75 Has an increased chance for a critical hit. (12.5%)
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
 78 Paralyzes the target.
@@ -114,7 +114,7 @@
 113 Reduces damage from special attacks by 50% for five turns..
 114 Resets all Pok�mon's stats, Accuracy, and Evasion.
 115 Reduces damage from physical attacks by half.
-116 Increases the user's chance to score a critical hit.
+116 Increases the user's chance to score a critical hit. (25%)
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
 118 Randomly selects and uses any move in the game.
 119 Uses the target's last used move.
@@ -150,7 +150,7 @@
 149 Inflicts damage between 50% and 150% of the user's level.
 150 Does nothing.
 151 Raises the user's Defense by two levels.
-152 Has an increased chance for a critical hit.
+152 Has an increased chance for a critical hit. (12.5%)
 153 Inflicts double damage.  User faints.
 154 Hits 2-5 times in one turn.
 155 Hits twice in one turn.
@@ -161,7 +161,7 @@
 160 User's type changes to the type of one of its moves at random.
 161 Has a $effect_chance% chance to burn, freeze, or paralyze the target.
 162 Inflicts damage equal to half the target's HP.
-163 Has an increased chance for a critical hit.
+163 Has an increased chance for a critical hit. (12.5%)
 164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage or status changes until it breaks.
 165 User takes 1/4 its max HP in recoil.
 166 Permanently becomes the target's last used move.
@@ -175,7 +175,7 @@
 174 Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.
 175 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
 176 Changes the user's type to a random type either resistant or immune to the last move used against it.
-177 Has an increased chance for a critical hit.
+177 Has an increased chance for a critical hit. (12.5%)
 178 Lowers the target's Speed by two levels.
 179 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
 180 Lowers the PP of the target's last used move by 4.
@@ -236,8 +236,8 @@
 235 Heals the user by half its max HP.  Affected by weather.
 236 Heals the user by half its max HP.  Affected by weather.
 237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
-238 Has an increased chance for a critical hit.
-239 Has chance to make the target flinch.
+238 Has an increased chance for a critical hit. (12.5%)
+239 Has a $effect_chance% chance to make the target flinch.
 240 Changes the weather to rain for five turns.
 241 Changes the weather to sunny for five turns.
 242 Has a $effect_chance% chance to lower the target's Defense by one level.
@@ -297,7 +297,7 @@
 296 Has a $effect_chance% chance to lower the target's Special Attack by one level.
 297 Lowers the target's Attack by two levels.
 298 Confuses the target.
-299 Has an increased chance for a critical hit and a $effect_chance% chance to burn the target.
+299 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to burn the target.
 300 All damage from Electric moves is halved until the end of the battle.
 301 Power doubles every turn this move is used in succession after the first, resetting after five turns.
 302 Has a $effect_chance% chance to make the target flinch.
@@ -312,7 +312,7 @@
 311 If there be weather, this move has doubled power and the weather's type.
 312 Cures the user and the user's ally of major status effects.
 313 Lowers the target's Special Defense by two levels.
-314 Has an increased chance for a critical hit.
+314 Has an increased chance for a critical hit. (12.5%)
 315 Lowers the user's Special Attack by two levels after inflicting damage.
 316 Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it's a Ghost.
 317 Has a $effect_chance% chance to lower the target's Speed by one level.
@@ -340,13 +340,13 @@
 339 Raises the user's Attack and Defense by one level.
 340 User bounces high into the air, dodging all attacks, and hits next turn.
 341 Has a $effect_chance% chance to lower the target's Speed by one level.
-342 Has an increased chance for a critical hit and a $effect_chance% chance to poison the target.
+342 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to poison the target.
 343 Takes the target's item.
 344 User takes 1/3 the damage inflicted in recoil.  Has a $effect_chance% chance to paralyze the target.
 345 Never misses.
 346 All damage from Fire moves is halved until the end of the battle.
 347 Raises the user's Special Attack and Special Defense by one level.
-348 Has an increased chance for a critical hit.
+348 Has an increased chance for a critical hit. (12.5%)
 349 Raises the user's Attack and Speed by one level.
 350 Hits 2-5 times in one turn.
 351 Never misses.
@@ -398,7 +398,7 @@
 397 Raises the user's Speed by two levels.
 398 Has a $effect_chance% chance to poison the target.
 399 Has a $effect_chance% chance to make the target flinch.
-400 Has an increased chance for a critical hit.
+400 Has an increased chance for a critical hit. (12.5%)
 401 Inflicts regular damage with no additional effect.
 402 Inflicts regular damage with no additional effect.
 403 Has a $effect_chance% chance to make the target flinch.
@@ -419,13 +419,13 @@
 418 Inflicts regular damage with no additional effect.
 419 Inflicts double damage if the user takes damage before attacking this turn.
 420 Inflicts regular damage with no additional effect.
-421 Has an increased chance for a critical hit.
+421 Has an increased chance for a critical hit. (12.5%)
 422 Has a $effect_chance% chance to paralyze the target and a $effect_chance% chance to make the target flinch.
 423 Has a $effect_chance% chance to freeze the target and a $effect_chance% chance to make the target flinch.
 424 Has a $effect_chance% chance to burn the target and a $effect_chance% chance to make the target flinch.
 425 Inflicts regular damage with no additional effect.
 426 Has a $effect_chance% chance to lower the target's Accuracy by one level.
-427 Has an increased chance for a critical hit.
+427 Has an increased chance for a critical hit. (12.5%)
 428 Has a $effect_chance% chance to make the target flinch.
 429 Has a $effect_chance% chance to lower the target's Accuracy by one level.
 430 Has a $effect_chance% chance to lower the target's Special Defense by one level.
@@ -438,11 +438,11 @@
 437 Lowers the user's Special Attack by two levels after inflicting damage.
 438 Inflicts regular damage with no additional effect.
 439 User foregoes its next turn to recharge.
-440 Has an increased chance for a critical hit and a $effect_chance% chance to poison the target.
+440 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to poison the target.
 441 Has a $effect_chance% chance to poison the target.
 442 Has a $effect_chance% chance to make the target flinch.
 443 Never misses.
-444 Has an increased chance for a critical hit.
+444 Has an increased chance for a critical hit. (12.5%)
 445 Lowers the target's Special Attack by two levels if it's the opposite gender.
 446 Causes damage when opposing Pok�mon switch in.
 447 Inflicts more damage to heavier targets, with a maximum of 120 power.
@@ -452,13 +452,13 @@
 451 Has a $effect_chance% chance to raise the user's Special Attack by one level.
 452 User receives 1/3 the damage inflicted in recoil.
 453 Inflicts regular damage with no additional effect.
-454 Has an increased chance for a critical hit.
+454 Has an increased chance for a critical hit. (12.5%)
 455 Raises the user's Defense and Special Defense by one level.
 456 Heals the user by half its max HP.
 457 User receives 1/2 the damage inflicted in recoil.
 458 Hits twice in one turn.
 459 User foregoes its next turn to recharge.
-460 Has an increased chance for a critical hit.
+460 Has an increased chance for a critical hit. (12.5%)
 461 User faints, and its replacement is fully healed.
 462 Power increases against targets with more HP remaining, up to a maximum of 110 power.
 463 Prevents the target from fleeing and inflicts damage for 2-5 turns.

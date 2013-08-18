@@ -22,7 +22,9 @@ inline QString getXmlFileName()
     int major = CLIENT_VERSION_NUMBER/1000;
     int minor = (CLIENT_VERSION_NUMBER%1000)/100;
 
-    return QString("%1.%2.xml").arg(major).arg(minor);
+    //return QString("%1.%2.xml").arg(major).arg(minor);
+    (void) minor;
+    return QString("%1.xml").arg(major);
 }
 
 DownloadManager::DownloadManager(QObject *parent) :
@@ -38,7 +40,7 @@ void DownloadManager::loadUpdatesAvailable()
 
     /* If the update information is older than 3 days... */
     if (::time(NULL) - time > 24*3600*3) {
-        download(QString("https://raw.github.com/coyotte508/pokemon-online/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
+        download(QString("https://raw.github.com/po-devs/pokemon-online/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
     } else {
         readAvailableUpdatesFromFile();
     }
