@@ -1434,6 +1434,12 @@ QScriptValue ScriptEngine::eval(const QString &script)
     return myengine.evaluate(script);
 }
 
+QScriptValue ScriptEngine::eval(const QString &script, const QString &fname )
+{
+    return myengine.evaluate(script, fname);
+}
+
+
 QScriptValue ScriptEngine::auth(int id)
 {
     if (!exists(id)) {
