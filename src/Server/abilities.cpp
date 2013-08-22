@@ -57,7 +57,7 @@ struct AMAftermath : public AM {
 
     static void upa(int s, int t, BS &b) {
         if (b.koed(s) && !b.koed(t)) {
-            if (!b.hasWorkingAbility(t,Ability::Damp)){
+            if (!b.hasWorkingAbility(t,Ability::Damp) && !b.hasWorkingAbility(t,Ability::MagicGuard)){
                 b.sendAbMessage(2,0,s,t);
                 b.inflictPercentDamage(t,25,s,false);
                 if (b.koed(t) && b.gen() >= 5)
