@@ -254,6 +254,7 @@ public:
 
     /* Evaluates the script given in parameter */
     Q_INVOKABLE QScriptValue eval(const QString &script);
+    Q_INVOKABLE QScriptValue eval(const QString &script, const QString &fname);
 
     Q_INVOKABLE QScriptValue channelIds();
     Q_INVOKABLE QScriptValue channel(int id);
