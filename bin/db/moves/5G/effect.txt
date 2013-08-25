@@ -529,5 +529,5 @@
 555 May decrease opponent's Special Attack by 1 stage.
 556 May cause opponent to flinch.
 557 Deals damage to allies on either side of the user.
-558 Increases if used after Cross Thunder.
-559 Increases if used after Cross Fire.
+558 Increases if used after Fusion Bolt.
+559 Increases if used after Fusion Flare.
