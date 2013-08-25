@@ -393,6 +393,10 @@ void TeamBuilder::newTeam()
 
 void TeamBuilder::addTeam()
 {
+    if (team().count() >= 6) {
+        return;
+    }
+
     team().addTeam();
 
     if (trainer) {
