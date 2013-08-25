@@ -2095,9 +2095,6 @@ void BattleSituation::inflictRecoil(int source, int target)
         }
 
         if (hasWorkingAbility(target, Ability::LiquidOoze)) {
-            if (hasWorkingAbility(source,Ability::MagicGuard))
-                return;
-
             if (gen().num < 5 && tmove(source).attack == Move::DreamEater) {
                 healLife(source, damage);
             } else {
