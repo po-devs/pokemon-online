@@ -673,7 +673,8 @@ struct IMRedCard : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::SheerForce) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s))
+        //Red Card does not trigger if the Pokemon is phazed with Dragon Tail/Circle Throw
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::SheerForce) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s) || tmove(b,t).attack == Move::DragonTail || tmove(b,t).attack == Move::CircleThrow)
             return;
 
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
