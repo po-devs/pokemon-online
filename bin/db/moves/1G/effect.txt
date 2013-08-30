@@ -100,7 +100,7 @@
 99 If the user is hit after using this move, its Attack rises by one level.
 100 Immediately ends wild battles.  No effect otherwise.
 101 Inflicts damage equal to the user's level.
-102 Copies the target's last used move.
+102 Copies a random move of the target.
 103 Lowers the target's Defense by two levels.
 104 Raises the user's Evasion by one level.
 105 Heals the user by half its max HP.
