@@ -273,7 +273,11 @@ public slots:
     void changeNicknames(bool old);
     void enableLadder(bool);
     void sortPlayersByTiers(bool);
+    bool isSortByTiersChannel(int id);
     void sortPlayersByAuth(bool);
+    void sortPlayersNormally(bool);
+    bool isSortNormallyChannel(int id);
+    void sortPlayersChannel(bool, bool);
     void setChannelSelected(int);
     void enablePlayerEvents();
     void disablePlayerEvents();

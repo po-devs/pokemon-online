@@ -385,8 +385,14 @@ void Channel::insertPlayerItems(int playerid)
     item->setText(1,QString::number(client->auth(playerid))); \
     item->setColor(client->color(playerid)); \
     myplayersitems.insertMulti(playerid, item)
-
-    if (client->sortBT) {
+    bool byTier = client->sortBT;
+    if (client->isSortByTiersChannel(id())) {
+        byTier = true;
+    }
+    if (client->isSortNormallyChannel(id())) {
+        byTier = false;
+    }
+    if (byTier) {
         bool oneDone = false;
         QStringList tiers = client->tiers(playerid);
 
@@ -466,7 +472,14 @@ void Channel::dealWithCommand(int command, DataStream *stream)
 
         // Battle list finished the channel loading, now it's a good time to sort the players
         stillLoading = false;
-        if(client->sortBT) {
+        bool byTier = client->sortBT;
+        if (client->isSortByTiersChannel(id())) {
+            byTier = true;
+        }
+        if (client->isSortNormallyChannel(id())) {
+            byTier = false;
+        }
+        if(byTier) {
             sortAllPlayersByTier();
         } else {
             sortAllPlayersNormally();

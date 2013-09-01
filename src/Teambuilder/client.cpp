@@ -559,6 +559,24 @@ void Client::showChannelsContextMenu(const QPoint & point)
         createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
         mychanevents.push_back(action);
 
+        if (!sortBT) {
+            action = show_events->addAction(tr("Sort players by tiers"));
+            action->setCheckable(true);
+            action->setChecked(globals.value(QString("SortByTierChannels/%1").arg(ip)).toStringList().contains(name));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+            connect(action, SIGNAL(triggered(bool)), this, SLOT(sortPlayersByTiers(bool)));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+            mychanevents.push_back(action);
+        }
+        if (sortBT) {
+            action = show_events->addAction(tr("Sort players normally"));
+            action->setCheckable(true);
+            action->setChecked(globals.value(QString("SortNormallyChannels/%1").arg(ip)).toStringList().contains(name));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), item->id());
+            connect(action, SIGNAL(triggered(bool)), this, SLOT(sortPlayersNormally(bool)));
+            createIntMapper(action, SIGNAL(triggered()), this, SLOT(setChannelSelected(int)), -1);
+            mychanevents.push_back(action);
+        }
         show_events->exec(channels->mapToGlobal(point));
     }
 }
@@ -1830,16 +1848,24 @@ void Client::rebuildTierMenu()
 
 void Client::sortPlayersByTiers(bool byTier)
 {
-    sortBT = byTier;
-    globals.setValue("Client/SortPlayersByTier", sortBT);
+    if (selectedChannel == -1) {
+        sortBT = byTier;
+        globals.setValue("Client/SortPlayersByTier", sortBT);
 
-    if (sortBT) {
-        foreach(Channel *c, mychannels)
-            c->sortAllPlayersByTier();
+        if (sortBT) {
+            foreach(Channel *c, mychannels)
+                c->sortAllPlayersByTier();
+        } else {
+            foreach(Channel *c, mychannels)
+                c->sortAllPlayersNormally();
+        }
     } else {
-        foreach(Channel *c, mychannels)
-            c->sortAllPlayersNormally();
+        sortPlayersChannel(byTier, true);
     }
+}
+
+bool Client::isSortByTiersChannel(int id) {
+    return globals.value(QString("SortByTierChannels/%1").arg(relay().getIp())).toStringList().contains(channelName(id));
 }
 
 void Client::sortPlayersByAuth(bool byAuth)
@@ -1854,6 +1880,55 @@ void Client::sortPlayersByAuth(bool byAuth)
         foreach(Channel *c, mychannels)
             c->sortAllPlayersNormally();
     }
+}
+
+void Client::sortPlayersNormally(bool normally) {
+    sortPlayersChannel(normally, false);
+}
+
+void Client::sortPlayersChannel(bool active, bool byTier) { //really messy ;_;
+    Channel *c = channel(selectedChannel);
+    QStringList sortNormallyChannels = globals.value(QString("SortNormallyChannels/%1").arg(relay().getIp())).toStringList();
+    QStringList sortByTierChannels = globals.value(QString("SortByTierChannels/%1").arg(relay().getIp())).toStringList();
+    if (byTier) {
+        if (active) {
+            sortByTierChannels.push_back(channelName(selectedChannel));
+            sortNormallyChannels.removeOne(channelName(selectedChannel));
+        } else {
+            sortByTierChannels.removeOne(channelName(selectedChannel));
+            if (!isSortNormallyChannel(selectedChannel)) {
+                sortNormallyChannels.push_back(channelName(selectedChannel));
+            }
+        }
+        globals.setValue(QString("SortByTierChannels/%1").arg(relay().getIp()), sortByTierChannels);
+        globals.setValue(QString("SortNormallyChannels/%1").arg(relay().getIp()), sortNormallyChannels);
+        if (active) {
+            c->sortAllPlayersByTier();
+        } else {
+            c->sortAllPlayersNormally();
+        }
+    } else {
+        if (active) {
+            sortNormallyChannels.push_back(channelName(selectedChannel));
+            sortByTierChannels.removeOne(channelName(selectedChannel));
+        } else {
+            sortNormallyChannels.removeOne(channelName(selectedChannel));
+            if (!isSortByTiersChannel(selectedChannel)) {
+                sortByTierChannels.push_back(channelName(selectedChannel));
+            }
+        }
+        globals.setValue(QString("SortByTierChannels/%1").arg(relay().getIp()), sortByTierChannels);
+        globals.setValue(QString("SortNormallyChannels/%1").arg(relay().getIp()), sortNormallyChannels);
+        if (active) {
+            c->sortAllPlayersNormally();
+        } else {
+            c->sortAllPlayersByTier();
+        }
+    }
+}
+
+bool Client::isSortNormallyChannel(int id) {
+    return globals.value(QString("SortNormallyChannels/%1").arg(relay().getIp())).toStringList().contains(channelName(id));
 }
 
 void Client::movePlayerList(bool right)
