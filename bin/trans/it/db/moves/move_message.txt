@@ -1,236 +1,120 @@
 ﻿0 
-
 1 %f ha la sua energia succhiata via!|%s divora i sogni di %f!|%s è ferito da Melma di %f!
-
 2 %s si circonda con un velo d'acqua!|Acquanello rigenera i PS di %s.
-
 3 Un'aroma invitante si sparge nell'area!|Una campana risuona!
-
 7 %q attacca!
-
 8 %s non ha abbastanza energia rimanente!|%s taglia i suoi PS e massimizza il suo Attacco!
-
 9 %s sta raccogliendo energia!|%s rilascia energia!
-
 10 %s è ferito da %m!|%s è libero da %m!|%f viene intrappolato da Magma rotante!
-
 11 %s deve ricaricarsi!
-
 12 %f non può più scappare!
-
 13 %s balza in alto!|%s scava una via sottoterra!|%s si nasconde sott'acqua!|%s vola in alto!|%s sparisce all'istante!|%s porta %f in aria!|%s non può attaccare mentre è in aria!
-
 14 %s distrugge le protezioni del team di %tf!
-
 16 %s ha rubato e mangiato la %i di %f !
-
 17 %s si è trasformato nel tipo %t !
-
 18 %s comincia a caricare potenza!
-
 19 %s si è trasformato nel tipo %t !
-
 20 %s si è trasformato nel tipo %t !
-
 23 %s prega %f!%f da il suo %i a %s|%s ha rubato %i di %f!
-
 25 %s taglia i suoi PS e lancia una Maledizione su %f!|%s è colpito dalla Maledizione!
-
 26 %s tira giù %f insieme a sè!|%s prova a portarsi dietro l'avversario!
-
 27 %s si protegge!
-
 28 %m di %f è stata inibita!|%m di %s è inibita!|%s non è più inibita!
-
 29 %s subisce %m!|%s prevede un attacco!|%s ha scelto Obbliderio come suo destino!
-
 31 Non ha effetto su %s!
-
 32 %f non può più usare oggetti!|%s può usare di nuovo gli oggetti!
-
 33 Ripeti di %s termina!|%f subisce Ripeti!
-
 35 %s sopporta il colpo!|%s si prepara!
-
 43 Vigore di %f ha fatto fallire l'attacco!|KO istantaneo!
-
 45 %s ha lanciato il suo %i!
-
 46 %s si sta eccitando!
-
 47 %s ha perso il suo focus!|%s si sta focalizzando!
-
 48 %s diventa il centro dell'attenzione!
-
 51 %a di %f è annullato!
-
 53 La gravità aumenta!|La gravità torna normale!|%s non riesce a stare in aria per via della gravità!|%m di %s è stata cancellata a causa della gravità!|%s non può usare %m a causa della gravità!
-
 54 %m di %f ha perso tutti i suoi PP a causa del Rancore di %s!
-
 55 %s scambia i suoi potenziamenti con %f!
-
 57 Arriva una grandinata!|Comincia a piovere!|Si solleva una tempesta di sabbia!|La luce solare diventa intensa!
-
 58 %s è innamorato di %f!|%f si è innamorato!|%s è immobilizzato dall'amore!
-
 59 A %f è stato impedito di curarsi!|%s non può usare %m per via di Anticura!|Anticura di %s si è esaurita!
-
 60 %s recupera vita!
-
 61 %s ha recuperato vita!|Il Desiderio si è avverato!|Viene ricoperto da mistica luce lunare!
 62 %s ha scambiato il suo Attacco e la sua Difesa!
-
 63 %s è pronto ad aiutare %f!
-
 64 %s continua ad andare e si schianta!
-
 67 %s blocca le mosse avversarie!|%s non può usare la mossa %m!
-
 68 %s levita grazie all'elettromagnetismo!|L'elettromagnetismo di %s si è esaurito!
-
 70 %s tira via %i di  %f!
-
 72 Non ha effetto su %s...|%f è pieno di semi!|La vita di %s è succhiata da Parassiseme.
-
 73 Riflesso aumenta la difesa del team di %ts!|Schermoluce aumenta la Difesa Speciale del team di %ts!|Riflesso aumenta di molto la difesa del team di %ts!|Schermoluce aumenta di molto la Difesa Speciale del team di %ts!|Il Riflesso di %ts si è esaurito!|Lo Schermoluce di %ts si è esaurito!
-
 74 %s prende la mira su %f!
-
 75 Il team di %t è protetto dai Brutti Colpi!|Fortuncanto di %ts si è esaurito!
-
 76 %s si è ricoperto con Magivelo!|%m di %s rimbalza al mittente per via di Magivelo!|%m di %s rimbalza al mittente per via di Magispecchio!
-
 77 %s ha liberato il campo attorno al team di %tf!|%s ha liberato il campo!
-
 78 Magnitudo %d!
-
 81 %s ha imparato %m!
-
 82 Ma non succede nulla!
-
 84 %s ha identificato %f!
-
 86 Il team di %ts viene ricoperto dalla nebbia!|La Nebbia di %ts svanisce!|La nebbia impedisce che le statistiche di %f si abbassino!
-
 87 %s recupera salute!|%s ha recuperato un sacco di salute!|%s ha recuperato poca salute!
-
 88 La potenza dell'elettricità è stata indebolita!|La potenza del fuoco è stata indebolita!
-
 92 %s ha un incubo!
-
 93 %s si è calmato!|%s è diventato confuso per la fatica!
-
 94 I lottatori condividono il dolore!
-
 95 Tutti i Pokemon che ascoltano la canzone finiranno KO in 3 turni!|Il conteggio di %s scende a %d.
-
 96 Regalino di %s ha curato alcuni PS di %f!
-
 97 %s ha copiato i cambi di statistiche di %f!
-
 98 %s sposta il suo status su %f!
-
 102 La rabbia di %s sale!
-
 103 %s si libera del %m di %f!|%s spazza via Parassiseme!|%s spazza via Punte!|%s spazza via Fielepunte!|%s spazza via Levitoroccia!
-
 104 %s prepara una folata di vento!|%s viene ricoperto da una forte luce!|%s ritira la sua testa!|%s assorbe luce!|%s è ricoperto da una luce gelida!|%s è ricoperto da aria gelida!
-
 105 %s ha riciclato %i!
-
 106 %s va a dormire e recupera vita!
-
 107 %s rimane sul terreno grazie alle sue Ventose!|%s è solidamente radicato al terreno!|%f è stato tirato fuori!
-
 108 %s ha copiato %a di %f!
-
 109 Il team di %ts viene coperto da un velo mistico!|Il team di %ts non è più ricoperto da Salvaguardia!|Salvaguardia impedisce a %f di essere colpito da uno status!
-
 111 %s ha schizzato %m!
-
 112 %s scambia abilità con il suo bersaglio!
-
 114 Umidità di %s impedisce che la mossa funzioni!
-
 118 %s sgraffigna la mossa di %f!|%s aspetta che il bersaglio si muova!
-
 121 Punte sono sparpagliate attorno ai piedi del team di %tf!|%s è ferito dalle punte!
-
 122 %s è rilasciato!
-
 123 Ha ridotto i PP di %m (%f) di 4!
-
 124 Pietre appuntite galleggiano nell'aria attorno al team di %tf!|Pietre appuntite scavano dentro %s!
-
 125 %s accumula %d!
-
 127 %s subisce il contraccolpo!
-
 128 %s ha già un sostituto.|Il sostituto di %s svanisce!|Il sostituto di %f blocca %m!|Il sostituto di %s subisce i danni!|%s ha creato un sostituto!
-
 131 %s ha inghiottito!
-
 132 %s ha scambiato oggetti con %f!|%s ha ottenuto un %i!
-
 133 Un ventodicoda comincia a soffiare dietro al team di %ts!|Il ventoincoda del team %ts si è esaurito!
-
 134 %s non può usare %m dopo la Provocazione!|%f è vittima di Provocazione!|La Provocazione di %s finisce!
-
 135 %f è stato tormentato!
-
 136 Sono state sparse Fielepunte sotto i piedi del team di %tf!|Le Fielepunte spariscono sotto i piedi di %s!
-
 137 %s si è trasformato in %p!
 138 %s ha scambiato le dimensioni!|Le dimensioni scambiate sono tornate alla normalità!
-
 141 %s causa una baraonda!|%s sta causando una baraonda!|%s si è calmato!|%s si è svegliato!|%s sta sveglio per via della baraonda!
-
 142 Il Desiderio di %q si è avverato!
-
 143 %f ora ha %a!
-
 144 %s rende %f un pò assonnato!|%s sbadiglia!|%a di %s l'ha reso inefficace!
-
 149 Tutti i cambi di statistiche sono annullati!|I cambi stat di %f sono stati eliminati!|Haze wafted through the field!
-
 150 %s attera sul terreno!
-
 151 %s pianta radici!|%s assorbe nutrienti con le sue radici!
-
 155 %s e %f hanno condivisa la loro potenza!|%s e %f hanno condivise le loro difese!
-
 156 %s annulla gli effetti degli oggetti!|Gli oggetti funzionano di nuovo!
-
 157 %s diventa del tipo Acqua!
-
 158 %f ha ottenuto %a!
-
 160 %f di %i si è bruciata!
-
 162 %s ha dato a %f il suo %i!
-
 164 Lo status di %s è stato curato!
-
 168 %s ha scambiato la Difesa e la Difesa Speciale di tutti i Pokemon!|La Difesa e la Difesa Speciale dei Pokemon tornano alla normalità!
-
 169 Il team di %ts è protetto da Bodyguard!|Il Bodyguard del team di %ts è stato spezzato!
-
 170 Il team di %ts è protetto da Anticipo!|L'Anticipo del team di %ts è stato spezzato!
-
 171 %s è stato spedito indietro!
-
 172 %s ha copiato i tipi di %f!
-
 174 %s manda %f a galleggiare nell'aria!|%s non è più sotto l'effetto di Telecinesi!
-
 175 %s sbatte %f sul terreno!
-
 178 %s prepara il suo %m!|%s e %f attaccano insieme!|Il team di %ts si trova su un campo bruciante!|%s subisce danni dal fuoco!
 179 %s prepara il suo %m!|%s e %f attaccano insieme!|Il team di %ts affonda in una palude!
-
 180 %s prepara il suo %m!|%s e %f attaccano insieme!|Il team di %ts è sotto un arcobaleno amplificante!
-
 190 %s scambia posto con %f!
-
 191 #
