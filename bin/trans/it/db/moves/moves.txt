@@ -407,7 +407,7 @@
 406 Dragopulsar
 407 Dragofuria
 408 Gemmoforza
-409 Assorbipungo
+409 Assorbipugno
 410 Vuotonda
 411 Focalcolpo
 412 Energipalla
@@ -420,7 +420,7 @@
 419 Slavina
 420 Geloscheggia
 421 Ombrartigli
-422 Tuonodenti
+422 Fulmindenti
 423 Gelodenti
 424 Rogodenti
 425 Furtivombra
