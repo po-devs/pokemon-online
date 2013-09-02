@@ -424,7 +424,7 @@ struct BMBerryRecoil : public BM
         }
         b.eatBerry(s);
         b.sendBerryMessage(12,s,0,t);
-        b.inflictDamage(t, b.poke(t).totalLife()/8,s,false);
+        b.inflictDamage(t, std::max(1, b.poke(t).totalLife()/8),s,false);
     }
 };
 

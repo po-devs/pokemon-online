@@ -550,7 +550,7 @@ void BattleSituation::endTurnStatus(int player)
 
         notify(All, StatusMessage, player, qint8(HurtBurn));
         //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
-        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
+        inflictDamage(player, std::max(1, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1)))), player);
         break;
     case Pokemon::Poisoned:
         //PoisonHeal
@@ -567,9 +567,9 @@ void BattleSituation::endTurnStatus(int player)
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (poke(player).statusCount() == 0)
-                inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
+                inflictDamage(player, std::max(1, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8)), player); // 1/16 in gen 1
             else {
-                inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
+                inflictDamage(player, std::max(1, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16), player);
                 poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
             }
         }
@@ -2493,7 +2493,7 @@ void BattleSituation::endTurnWeather()
                     notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 
                     //In GSC, the damage is 1/8, otherwise 1/16
-                    inflictDamage(i, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16, i, false);
+                    inflictDamage(i, std::max(1, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16), i, false);
                     if (gen() >= 5) {
                         testWin();
                     }
@@ -2883,7 +2883,7 @@ int BattleSituation::repeatNum(int player)
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {
-    inflictDamage(player,poke(player).totalLifePoints()*percent/100,source, straightattack);
+    inflictDamage(player,std::max(1,poke(player).totalLifePoints()*percent/100),source, straightattack);
 }
 
 void BattleSituation::inflictDamage(int player, int damage, int source, bool straightattack, bool goForSub)
