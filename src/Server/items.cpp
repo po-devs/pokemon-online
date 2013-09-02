@@ -60,7 +60,7 @@ struct IMBlackSludge : public IM
         } else
         {
             b.sendItemMessage(16,s,1);
-            b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
+            b.inflictDamage(s, std::max(1, b.poke(s).totalLifePoints()/8),s);
         }
     }
 };
@@ -321,7 +321,7 @@ struct IMLifeOrb : public IM
             if (b.gen() >= 5)
                 b.sendItemMessage(21,s);
 
-            b.inflictDamage(s,b.poke(s).totalLifePoints()/10,s);
+            b.inflictDamage(s,std::max(1,b.poke(s).totalLifePoints()/10),s);
             turn(b,s)["NoLifeOrbActivation"] = true;
 
             /* Self KO Clause */
@@ -414,7 +414,7 @@ struct IMStickyBarb : public IM
             return;
 
         b.sendItemMessage(29,s,0);
-        b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
+        b.inflictDamage(s, std::max(1,b.poke(s).totalLifePoints()/8),s);
     }
 
     static void upa(int s, int t, BS &b) {
@@ -584,7 +584,7 @@ struct IMRockyHelmet : public IM
     static void upa( int s, int t, BS &b) {
         if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendItemMessage(34,s,0,t);
-            b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
+            b.inflictDamage(t,std::max(1, b.poke(t).totalLifePoints()/6),s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
             if (b.koed(t)) {

@@ -136,7 +136,7 @@ struct AMBadDreams : public AM {
         foreach(int t, tars) {
             if (b.poke(t).status() == Pokemon::Asleep && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
                 b.sendAbMessage(6,0,s,t,Pokemon::Ghost);
-                b.inflictDamage(t, b.poke(t).totalLifePoints()/8,s,false);
+                b.inflictDamage(t, std::max(1,b.poke(t).totalLifePoints()/8),s,false);
             }
         }
     }
@@ -325,7 +325,7 @@ struct AMDrySkin : public AM {
             b.healLife(s, b.poke(s).totalLifePoints()/8);
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
             b.sendAbMessage(15,1,s,s,Pokemon::Fire);
-            b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
+            b.inflictDamage(s, std::max(1, b.poke(s).totalLifePoints()/8), s, false);
         }
     }
 };
@@ -835,7 +835,7 @@ struct AMRoughSkin : public AM {
     static void upa( int s, int t, BS &b) {
         if (!b.koed(t) && !b.hasWorkingAbility(t, Ability::MagicGuard)) {
             b.sendAbMessage(50,0,s,t,0,b.ability(s));
-            b.inflictDamage(t,b.poke(t).totalLifePoints()/8,s,false);
+            b.inflictDamage(t,std::max(1,b.poke(t).totalLifePoints()/8),s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
             if (b.koed(t)) {
@@ -933,7 +933,7 @@ struct AMSolarPower : public AM {
     static void ws(int s, int, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny)) {
             b.sendAbMessage(56,0,s,s,Pokemon::Fire);
-            b.inflictDamage(s,b.poke(s).totalLifePoints()/8,s,false);
+            b.inflictDamage(s,std::max(1,b.poke(s).totalLifePoints()/8),s,false);
         }
     }
 };

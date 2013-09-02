@@ -1198,7 +1198,7 @@ struct MMBind : public MM
 
                     int trapper = b.linker(s, "Trapped");
 
-                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 8 : 16),s,false);
+                    b.inflictDamage(s, std::max(1, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 8 : 16)),s,false);
                 }
             }
         }
@@ -2792,7 +2792,7 @@ struct MMSpikes : public MM
         }
 
         b.sendMoveMessage(121,1,slot);
-        b.inflictDamage(slot, b.poke(slot).totalLifePoints()*n/(8*3), slot);
+        b.inflictDamage(slot, std::max(1, b.poke(slot).totalLifePoints()*n/(8*3)), slot);
     }
 };
 
@@ -2822,7 +2822,7 @@ struct MMStealthRock : public MM
         {
             b.sendMoveMessage(124,1,s,Pokemon::Rock);
             int n = TypeInfo::Eff(Pokemon::Rock, b.getType(s, 1)) * TypeInfo::Eff(Pokemon::Rock, b.getType(s, 2));
-            b.inflictDamage(s, b.poke(s).totalLifePoints()*n/32, s);
+            b.inflictDamage(s, std::max(1, b.poke(s).totalLifePoints()*n/32), s);
         }
     }
 };
@@ -5902,7 +5902,7 @@ struct MMFirePledge : public MM
             if (b.player(t) != s && !b.koed(t))
                 continue;
             b.sendMoveMessage(178, 3, t, Pokemon::Fire);
-            b.inflictDamage(t, b.poke(t).totalLifePoints()/8, t);
+            b.inflictDamage(t, std::max(1, b.poke(t).totalLifePoints()/8), t);
         }
     }
 };
@@ -6252,7 +6252,7 @@ struct MMFlameBurst : public MM
     static void uas(int s, int t, BS &b) {
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (b.arePartners(i, t) && i!=t && b.areAdjacent(i, t) && !b.hasWorkingAbility(i, Ability::MagicGuard)) {
-                b.inflictDamage(i, b.poke(i).totalLifePoints()/16, s, false);
+                b.inflictDamage(i, std::max(1, b.poke(i).totalLifePoints()/16), s, false);
             }
         }
     }
