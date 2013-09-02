@@ -2,13 +2,13 @@
 
 1 %f ha la sua energia succhiata via!|%s divora i sogni di %f!|%s è ferito da Melma di %f!
 
-2 %s si circonda con un velo d'acqua!|Acquanello rigenera i PV di %s.
+2 %s si circonda con un velo d'acqua!|Acquanello rigenera i PS di %s.
 
 3 Un'aroma invitante si sparge nell'area!|Una campana risuona!
 
 7 %q attacca!
 
-8 %s non ha abbastanza energia rimanente!|%s taglia i suoi PV e massimizza il suo Attacco!
+8 %s non ha abbastanza energia rimanente!|%s taglia i suoi PS e massimizza il suo Attacco!
 
 9 %s sta raccogliendo energia!|%s rilascia energia!
 
@@ -34,7 +34,7 @@
 
 23 %s prega %f!%f da il suo %i a %s|%s ha rubato %i di %f!
 
-25 %s taglia i suoi PV e lancia una Maledizione su %f!|%s è colpito dalla Maledizione!
+25 %s taglia i suoi PS e lancia una Maledizione su %f!|%s è colpito dalla Maledizione!
 
 26 %s tira giù %f insieme a sè!|%s prova a portarsi dietro l'avversario!
 
@@ -125,7 +125,7 @@
 
 95 Tutti i Pokemon che ascoltano la canzone finiranno KO in 3 turni!|Il conteggio di %s scende a %d.
 
-96 Regalino di %s ha curato alcuni PV di %f!
+96 Regalino di %s ha curato alcuni PS di %f!
 
 97 %s ha copiato i cambi di statistiche di %f!
 

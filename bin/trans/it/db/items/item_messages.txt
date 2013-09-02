@@ -10,19 +10,19 @@
 
 11 %s usa la sua Vigorerba per attaccare subito!
 
-12 %s rigenera un pò di PV usando i suoi Avanzi!
+12 %s rigenera un pò di PS usando i suoi Avanzi!
 
-16 %s recupera un pò di PV grazie alla sua Neropece!|%s è ferito da Neropece!
+16 %s recupera un pò di PS grazie alla sua Neropece!|%s è ferito da Neropece!
 
 17 Si attivano i Rapidartigli di %s!
 
-18 %s recupera un pò di PV usando il suo Succodibacca!
+18 %s recupera un pò di PS usando il suo Succodibacca!
 
 19 Si attiva Fiammosfera di %s!|Si attiva Tossicsfera di %s!
 
 21 %s è ferito dalla sua Assorbisfera!
 
-24 Conchinella di %s rigenera parte dei suoi PV!
+24 Conchinella di %s rigenera parte dei suoi PS!
 
 29 %s è ferito dalla sua Vischiopunta!
 
