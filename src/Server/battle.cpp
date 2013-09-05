@@ -2898,7 +2898,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         callieffects(player, source, "BeforeTakingDamage");
     }
 
-    if (damage == 0 && (gen() <= 4 || !straightattack)) {
+    //The exception happens in gen 5+ when reflect, reducing berry, multiscale, friend guard, etc.
+    if (damage == 0/* && (gen() <= 4 || !straightattack)*/) {
         damage = 1;
     }
 
