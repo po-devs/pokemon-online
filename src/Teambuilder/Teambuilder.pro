@@ -206,6 +206,9 @@ macx {
 CONFIG(debian_package) {
     DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
 }
+unix:!mac {
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
+}
 
 
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY

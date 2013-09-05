@@ -1,9 +1,14 @@
 #!/bin/bash
-
 # Verify correct dir
 myScript="$(pwd)/$0"
 myDir=$(dirname $myScript)
 cd $myDir/..
+
+# Check if package not requested
+[ "$1" == "-no-archives" ] && NOPACKAGE=true
+
+# Abort on error
+set -e trap
 
 # Almost constants
 VERSION=$(grep VERSION ../src/Shared/config.h | sed -n "s/.*\"\(.*\)\".*/\1/p")
@@ -21,8 +26,17 @@ mac-deploy-scripts/bundle_mac_app.sh
 mac-deploy-scripts/fix_plugin_linking.py
 
 # Deploy .dmg
-echo Deploying $DMGARCHIVE
-mac-deploy-scripts/create-DMG.sh $DMGARCHIVE &> /dev/null
+if [ -z "$NOPACKAGE" ]
+then
+    if [ ! -d Pokemon-Online.app/Contents/Frameworks/Sparkle.framework ]
+    then
+        echo "Error Sparrow.framework not deployed, cannot package!"
+        echo "Provide -no-archives switch to this script if you want to just test and not deploy"
+        false
+    fi
+    echo Deploying $DMGARCHIVE
+    mac-deploy-scripts/create-DMG.sh $DMGARCHIVE &> /dev/null
+fi
 
 # Sign the app
 KEYCHAIN_PRIVKEY_NAME="Sign private key"
@@ -44,22 +58,24 @@ then
     /usr/libexec/PlistBuddy -c "Set :SUPublicDSAKeyFile public_key.pem" Pokemon-Online.app/Contents/Info.plist
     /usr/libexec/PlistBuddy -c "Set :SUFeedURL ${APPCAST_URL}" Pokemon-Online.app/Contents/Info.plist
 
+    if [ -z "$NOPACKAGE" ]
+    then
     echo "Compressing"
-    ditto -ck --keepParent "Pokemon-Online.app" "${ARCHIVE}"
-
-    get_keychain_note "$KEYCHAIN_PRIVKEY_NAME" > /tmp/priv.pem
-    SIZE=$(stat -f %z "$ARCHIVE")
-    PUBDATE=$(LC_TIME=en_GB date +"%a, %d %b %G %T %z")
-    SIGNATURE=$(
-	/usr/bin/openssl dgst -sha1 -binary < "${ARCHIVE}" \
-	| /usr/bin/openssl dgst -dss1 -sign /tmp/priv.pem \
-	| /usr/bin/openssl enc -base64
-    )
-
-    [ $SIGNATURE ] || { echo Couldn\'t load private keys; false; }
-    echo Done signing, add this to appcast.xml file:
-    echo
-    cat <<EOF
+        ditto -ck --keepParent "Pokemon-Online.app" "${ARCHIVE}"
+    
+        get_keychain_note "$KEYCHAIN_PRIVKEY_NAME" > /tmp/priv.pem
+        SIZE=$(stat -f %z "$ARCHIVE")
+        PUBDATE=$(LC_TIME=en_GB date +"%a, %d %b %G %T %z")
+        SIGNATURE=$(
+    	/usr/bin/openssl dgst -sha1 -binary < "${ARCHIVE}" \
+    	| /usr/bin/openssl dgst -dss1 -sign /tmp/priv.pem \
+    	| /usr/bin/openssl enc -base64
+        )
+    
+        [ $SIGNATURE ] || { echo Couldn\'t load private keys; false; }
+        echo Done signing, add this to appcast.xml file:
+        echo
+        cat <<EOF
 		<item>
 			<title>Version $VERSION</title>
 			<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>
@@ -73,9 +89,10 @@ then
 			/>
 		</item>
 EOF
-
-    echo
-    echo Remember to copy the file to $DOWNLOAD_URL
-    echo scp $ARCHIVE valssi.fixme.fi:/var/www/lamperi.name/pokemon-online
+    
+        echo
+        echo Remember to copy the file to $DOWNLOAD_URL
+        echo scp $ARCHIVE valssi.fixme.fi:/var/www/lamperi.name/pokemon-online
+    fi
 
 fi
