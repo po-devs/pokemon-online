@@ -454,11 +454,13 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
             break;
         }
+    case CPTBan: // For compatability, v.2.0.05 uses this, now obsolated
     case CPBan:
         {
             QString name;
-            in >> name;
-            emit banRequested(name);
+            qint32 time;
+            in  >> name >> time;
+            emit banRequested(name, time);
             break;
         }
     case CPUnban:
@@ -519,14 +521,6 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                 in >> name;
                 emit showRankings(tier, name);
             }
-            break;
-        }
-    case CPTBan:
-        {
-            QString name;
-            qint32 time;
-            in  >> name >> time;
-            emit tempBanRequested(name, time);
             break;
         }
     case PlayerTBan:

@@ -67,8 +67,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(tempBan(int,int)), SLOT(playerTempBan(int,int)));
-    connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString)));
-    connect(&relay(), SIGNAL(tempBanRequested(QString,int)), SLOT(CPTBan(QString,int)));
+    connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
@@ -678,9 +677,9 @@ void Player::playerTempBan(int player, int time)
     emit playerTempBan(id(), player, time);
 }
 
-void Player::CPBan(const QString &name)
+void Player::CPBan(const QString &name, int time)
 {
-    if (auth() < 2) {
+    if (auth() < 1) {
         return; //INVALID BEHAVIOR
     }
     int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
@@ -688,9 +687,18 @@ void Player::CPBan(const QString &name)
         sendMessage(name + " has authority equal or superior to yours under another nick.");
         return;
     }
-    SecurityManager::setBanExpireTime(name, 0);
+    /* Checking the time boundaries */
+    if (auth() < 2) {
+        time = std::max(1, std::min(time, 1440));
+    }
+
+    SecurityManager::setBanExpireTime(name, time);
     SecurityManager::ban(name);
-    emit info(id(), "Banned player " + name + " with CP.");
+
+    if (time)
+        emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
+    else
+        emit info(id(), "Banned player " + name + " with CP.");
 
     QFile out("bans.txt");
     out.open(QIODevice::Append);
@@ -717,25 +725,6 @@ void Player::CPUnban(const QString &name)
     QFile out("bans.txt");
     out.open(QIODevice::Append);
     out.write((this->name() + " unbanned " + name + ".\n").toUtf8());
-}
-
-void Player::CPTBan(const QString &name, int time)
-{
-    if (auth() < 1) {
-        return; //INVALID BEHAVIOR
-    }
-    int maxAuth = SecurityManager::maxAuth(SecurityManager::ip(name));
-    if (maxAuth >= auth()) {
-        sendMessage(name + " has authority " + maxAuth + " under another nick.");
-        return;
-    }
-    /* Checking the time boundaries */
-    if (auth() < 2) {
-        time = std::max(1, std::min(time, 1440));
-    }
-    SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time*60);
-    SecurityManager::ban(name);
-    emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
 }
 
 void Player::playerKick(int p) {
