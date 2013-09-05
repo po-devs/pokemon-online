@@ -560,7 +560,7 @@ int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int sta
 {
     quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
 
-    if (stat == SpAttack && gen == 1) {
+    if (stat == SpAttack && gen.num == 1) {
         basestat = SpecialStat(pokeid);
     }
 
