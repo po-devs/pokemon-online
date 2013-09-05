@@ -555,8 +555,10 @@ void BattleSituation::endTurnStatus(int player)
     case Pokemon::Poisoned:
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            sendAbMessage(45,0,player,0,Pokemon::Poison);
-            healLife(player, poke(player).totalLifePoints()/8);
+            if (!poke(player).isFull()) {
+                sendAbMessage(45,0,player,0,Pokemon::Poison);
+                healLife(player, poke(player).totalLifePoints()/8);
+            }
         } else {
             if (hasWorkingAbility(player, Ability::MagicGuard)) {
                 /* Toxic still increases under magic guard */
