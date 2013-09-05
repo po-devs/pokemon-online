@@ -18,7 +18,7 @@
 17 Inflicts regular damage with no additional effect.
 18 Immediately ends wild battles.  Forces trainers to switch Pok�mon.
 19 User flies high into the air, dodging all attacks, and hits next turn.
-20 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+20 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 21 Inflicts regular damage with no additional effect.
 22 Inflicts regular damage with no additional effect.
 23 Has a $effect_chance% chance to make the target flinch.
@@ -33,10 +33,10 @@
 32 Causes a one-hit KO.
 33 Inflicts regular damage with no additional effect.
 34 Has a $effect_chance% chance to paralyze the target.
-35 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+35 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 36 User receives 1/4 the damage it inflicts in recoil.
 37 Hits every turn for 2-3 turns, then confuses the user.
-38 User receives 1/3 the damage inflicted in recoil.
+38 User receives 1/4 the damage inflicted in recoil.
 39 Lowers the target's Defense by one level.
 40 Has a $effect_chance% chance to poison the target.
 41 Hits twice in the same turn.  Has a $effect_chance% chance to poison the target.
@@ -48,8 +48,8 @@
 47 Puts the target to sleep.
 48 Confuses the target.
 49 Inflicts 20 points of damage.
-50 Disables the target's last used move for 1-8 turns.
-51 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+50 Prevents a random move of the target from being used again for 0-6 turns.
+51 Has a $effect_chance% chance to lower the target's Defense by one level.
 52 Has a $effect_chance% chance to burn the target.
 53 Has a $effect_chance% chance to burn the target.
 54 Protects the user's stats from being changed by enemy moves.
@@ -72,7 +72,7 @@
 71 Heals the user by half the damage inflicted.
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
-74 (((something new 316)))
+74 Boosts user's Special by one stage.
 75 Has an increased chance for a critical hit.
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
@@ -81,7 +81,7 @@
 80 Hits every turn for 2-3 turns, then confuses the user.
 81 Lowers the target's Speed by one level.
 82 Inflicts 40 points of damage.
-83 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+83 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 84 Has a $effect_chance% chance to paralyze the target.
 85 Has a $effect_chance% chance to paralyze the target.
 86 Paralyzes the target.
@@ -92,7 +92,7 @@
 91 User digs underground, dodging all attacks, and hits next turn.
 92 Badly poisons the target, inflicting more damage every turn.
 93 Has a $effect_chance% chance to confuse the target.
-94 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+94 Has a $effect_chance% chance to lower the target's Special by one level.
 95 Puts the target to sleep.
 96 Raises the user's Attack by one level.
 97 Raises the user's Speed by two levels.
@@ -111,7 +111,7 @@
 110 Raises the user's Defense by one level.
 111 Raises user's Defense by one level.
 112 Raises the user's Defense by two levels.
-113 Reduces damage from special attacks by 50% for five turns..
+113 Halves Special damage done to user.
 114 Resets all Pok�mon's stats, Accuracy, and Evasion.
 115 Reduces damage from physical attacks by half.
 116 Increases the user's chance to score a critical hit.
@@ -126,12 +126,12 @@
 125 Has a $effect_chance% chance to make the target flinch.
 126 Has a $effect_chance% chance to burn the target.
 127 Has a $effect_chance% chance to make the target flinch.
-128 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+128 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 129 Never misses.
 130 Raises the user's Defense by one level.  User charges for one turn before attacking.
 131 Hits 2-5 times in one turn.
 132 Has a $effect_chance% chance to lower the target's Speed by one level.
-133 Raises the user's Special Defense by two levels.
+133 Raises the user's Special by two levels.
 134 Lowers the target's Accuracy by one level.
 135 Heals the user by half its max HP.
 136 If the user misses, it takes half the damage it would have inflicted in recoil.
@@ -162,5 +162,5 @@
 161 Has a $effect_chance% chance to burn, freeze, or paralyze the target.
 162 Inflicts damage equal to half the target's HP.
 163 Has an increased chance for a critical hit.
-164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage or status changes until it breaks.
+164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage until it breaks.
 165 User takes 1/4 its max HP in recoil.
