@@ -5,8 +5,7 @@
 class MacSupport
 {
 public:
-	static bool isLion();
-	static void setupFullScreen(QWidget *window);
+	static void setupFullScreen(QWidget *widget);
 };
 
 #endif // MAC_FULLSCREENSUPPORT_H
