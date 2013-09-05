@@ -1,7 +1,7 @@
 ﻿0 
 2 %s's Aftermath damages %f!
 3 %s is extremely pissed off!
-4 %s's Anticipation makes it shiver!
+4 %s erschaudert!
 6 %f has bad dreams!
 9 %s's Color Change changes its type to %t!
 11 %s's Cute Charm infatuated %f!
