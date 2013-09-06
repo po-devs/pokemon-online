@@ -728,3 +728,7 @@
 642:1 Voltolos-T
 646:1 Kyurem-W
 646:2 Kyurem-S
+649:1 Genesect-A
+649:2 Genesect-S
+649:3 Genesect-F
+649:4 Genesect-E
