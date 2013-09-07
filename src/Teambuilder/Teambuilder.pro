@@ -147,7 +147,7 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets multimedia concurrent
-  QMAKE_CXXFLAGS += "-std=c++11"
+  CONFIG += c++11
 } else {
   QT += phonon
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
