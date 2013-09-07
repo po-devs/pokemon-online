@@ -83,7 +83,6 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_pt-br.ts \
     src/trans/translation_zh-cn.ts
 
+contains(QT_VERSION, ^5\\.[1]\\..*):cache()
+
 message(Following modules will be build: $$SUBDIRS)
-
-
-
