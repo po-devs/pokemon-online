@@ -96,7 +96,7 @@
 95 Puts the target to sleep.
 96 Raises the user's Attack by one level.
 97 Raises the user's Speed by two levels.
-98 Inflicts regular damage with no additional effect.
+98 Priority level 1.
 99 If the user is hit after using this move, its Attack rises by one level.
 100 Immediately ends wild battles.  No effect otherwise.
 101 Inflicts damage equal to the user's level.
@@ -125,7 +125,7 @@
 124 Has a $effect_chance% chance to poison the target.
 125 Has a $effect_chance% chance to make the target flinch.
 126 Has a $effect_chance% chance to burn the target.
-127 Has a $effect_chance% chance to make the target flinch.
+127 Inflicts regular damage with no additional effect.
 128 Prevents the target from fleeing and inflicts damage for 2-5 turns.
 129 Never misses.
 130 Raises the user's Defense by one level.  User charges for one turn before attacking.
@@ -243,7 +243,7 @@
 242 Has a $effect_chance% chance to lower the target's Defense by one level.
 243 Inflicts twice the damage the user received from the last special hit it took.
 244 Discards the user's stat changes and copies the target's.
-245 Inflicts regular damage with no additional effect.
+245 Priority level 1.
 246 Has a $effect_chance% chance to raise all of the user's stats by one level.
 247 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 248 Hits the target two turns later.
