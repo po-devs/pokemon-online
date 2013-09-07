@@ -6,6 +6,7 @@
 #include "serverchoicemodel.h"
 #include "loadwindow.h"
 #include "mainwindow.h"
+#include "../Utilities/otherwidgets.h"
 
 ServerChoice::ServerChoice(TeamHolder* team) :
     ui(new Ui::ServerChoice), wasConnected(false), team(team)
@@ -57,6 +58,7 @@ ServerChoice::ServerChoice(TeamHolder* team) :
 
     ui->nameEdit->setText(team->name());
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
+
     connect(ui->nameEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
@@ -288,4 +290,18 @@ void ServerChoice::saveSettings() {
         }
     }
     settings.setValue("ServerChoice/SavedServers", res);
+
+    // Create default profile if none exist
+    bool isNewProfile = settings.value("Profile/Current") == settings.value("Profile/Path");
+    if (isNewProfile) {
+        QNickValidator validator(0);
+        if (validator.validate(ui->nameEdit->text()) == QValidator::Acceptable) {
+            team->profile().name() = ui->nameEdit->text();
+            QString path = settings.value("Profile/Path").toString()
+                    + "/" + QUrl::toPercentEncoding(team->profile().name()) + ".xml";
+            team->profile().saveToFile(path);
+            settings.setValue("Profile/Current", team->profile().name());
+        }
+    }
+
 }
