@@ -72,7 +72,7 @@
 71 Heals the user by half the damage inflicted.
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
-74 (((something new 316)))
+74 Raises the user's Attack and Special Attack by one level.
 75 Has an increased chance for a critical hit. (12.5%)
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
@@ -98,7 +98,7 @@
 97 Raises the user's Speed by two levels.
 98 Inflicts regular damage with no additional effect.
 99 If the user is hit after using this move, its Attack rises by one level.
-100 Immediately ends wild battles.  No effect otherwise.
+100 Immediately ends wild battles. No effect otherwise.
 101 Inflicts damage equal to the user's level.
 102 Copies the target's last used move.
 103 Lowers the target's Defense by two levels.
@@ -125,7 +125,7 @@
 124 Has a $effect_chance% chance to poison the target.
 125 Has a $effect_chance% chance to make the target flinch.
 126 Has a $effect_chance% chance to burn the target.
-127 Has a $effect_chance% chance to make the target flinch.
+127 Inflicts regular damage with no additional effect.
 128 Prevents the target from fleeing and inflicts damage for 2-5 turns.
 129 Never misses.
 130 Raises the user's Defense by one level.  User charges for one turn before attacking.
@@ -243,7 +243,7 @@
 242 Has a $effect_chance% chance to lower the target's Defense by one level.
 243 Inflicts twice the damage the user received from the last special hit it took.
 244 Discards the user's stat changes and copies the target's.
-245 Inflicts regular damage with no additional effect.
+245 Priority level 1.
 246 Has a $effect_chance% chance to raise all of the user's stats by one level.
 247 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 248 Hits the target two turns later.
@@ -292,7 +292,7 @@
 291 User dives underwater, dodging all attacks, and hits next turn.
 292 Hits 2-5 times in one turn.
 293 User's type changes to match the terrain.
-294 (((something new 321)))
+294 Raises the user's Special Attack by two levels.
 295 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 296 Has a $effect_chance% chance to lower the target's Special Attack by one level.
 297 Lowers the target's Attack by two levels.
