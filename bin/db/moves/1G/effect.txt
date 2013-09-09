@@ -4,7 +4,7 @@
 3 Hits 2-5 times in one turn.
 4 Hits 2-5 times in one turn.
 5 Inflicts regular damage with no additional effect.
-6 Scatters money on the ground worth five times the user's level.
+6 Scatters money on the ground worth two times the user's level.
 7 Has a $effect_chance% chance to burn the target.
 8 Has a $effect_chance% chance to freeze the target.
 9 Has a $effect_chance% chance to paralyze the target.
@@ -16,7 +16,7 @@
 15 Inflicts regular damage with no additional effect.
 16 Inflicts regular damage and can hit Bounce and Fly users.
 17 Inflicts regular damage with no additional effect.
-18 Immediately ends wild battles.  Forces trainers to switch Pok�mon.
+18 Immediately ends wild battles.
 19 User flies high into the air, dodging all attacks, and hits next turn.
 20 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 21 Inflicts regular damage with no additional effect.
@@ -24,7 +24,7 @@
 23 Has a $effect_chance% chance to make the target flinch.
 24 Hits twice in one turn.
 25 Inflicts regular damage with no additional effect.
-26 If the user misses, it takes half the damage it would have inflicted in recoil.
+26 If the user misses, it loses 1 HP.
 27 Has a $effect_chance% chance to make the target flinch.
 28 Lowers the target's Accuracy by one level.
 29 Has a $effect_chance% chance to make the target flinch.
@@ -44,7 +44,7 @@
 43 Lowers the target's Defense by one level.
 44 Has a $effect_chance% chance to make the target flinch.
 45 Lowers the target's Attack by one level.
-46 Immediately ends wild battles.  Forces trainers to switch Pok�mon.
+46 Immediately ends wild battles.
 47 Puts the target to sleep.
 48 Confuses the target.
 49 Inflicts 20 points of damage.
@@ -74,7 +74,7 @@
 73 Seeds the target, stealing HP from it every turn.
 74 Boosts user's Special by one stage.
 75 Has an increased chance for a critical hit.
-76 Requires a turn to charge before attacking.
+76 Requires a turn to charge before attacking. During Sunny Day, this attack takes one turn.
 77 Poisons the target.
 78 Paralyzes the target.
 79 Puts the target to sleep.
@@ -97,15 +97,15 @@
 96 Raises the user's Attack by one level.
 97 Raises the user's Speed by two levels.
 98 Inflicts regular damage with no additional effect.
-99 If the user is hit after using this move, its Attack rises by one level.
-100 Immediately ends wild battles.  No effect otherwise.
+99 If the user is hit after using this move, its Attack rises by one level and you can't do anything until the user faints.
+100 Immediately ends wild battles. No effect otherwise.
 101 Inflicts damage equal to the user's level.
 102 Copies a random move of the target.
 103 Lowers the target's Defense by two levels.
 104 Raises the user's Evasion by one level.
 105 Heals the user by half its max HP.
 106 Raises the user's Defense by one level.
-107 Raises the user's evasion.
+107 Raises the user's Evasion.
 108 Lowers the target's Accuracy by one level.
 109 Confuses the target.
 110 Raises the user's Defense by one level.
@@ -118,23 +118,23 @@
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
 118 Randomly selects and uses any move in the game.
 119 Uses the target's last used move.
-120 Inflicts double damage.  User faints.
+120 Inflicts double damage and halves the target's Defense. User faints.
 121 Inflicts regular damage with no additional effect.
 122 Has a $effect_chance% chance to paralyze the target.
 123 Has a $effect_chance% chance to poison the target.
 124 Has a $effect_chance% chance to poison the target.
 125 Has a $effect_chance% chance to make the target flinch.
 126 Has a $effect_chance% chance to burn the target.
-127 Has a $effect_chance% chance to make the target flinch.
+127 Inflicts regular damage with no additional effect.
 128 Prevents the opponent from attacking and inflicts damage for 2-5 turns.
 129 Never misses.
-130 Raises the user's Defense by one level.  User charges for one turn before attacking.
+130 Raises the user's Defense by one level. User charges for one turn before attacking.
 131 Hits 2-5 times in one turn.
 132 Has a $effect_chance% chance to lower the target's Speed by one level.
 133 Raises the user's Special by two levels.
 134 Lowers the target's Accuracy by one level.
 135 Heals the user by half its max HP.
-136 If the user misses, it takes half the damage it would have inflicted in recoil.
+136 If the user misses, it loses 1 HP.
 137 Paralyzes the target.
 138 Only works on sleeping Pok�mon.  Heals the user by half the damage inflicted.
 139 Poisons the target.
@@ -144,23 +144,23 @@
 143 User charges for one turn before attacking.  Has a $effect_chance% chance to make the target flinch.
 144 User becomes a copy of the target until it leaves battle.
 145 Has a $effect_chance% chance to lower the target's Speed by one level.
-146 Has a $effect_chance% chance to confuse the target.
+146 Inflicts regular damage with no additional effect.
 147 Puts the target to sleep.
 148 Lowers the target's Accuracy by one level.
 149 Inflicts damage between 50% and 150% of the user's level.
 150 Does nothing.
 151 Raises the user's Defense by two levels.
 152 Has an increased chance for a critical hit.
-153 Inflicts double damage.  User faints.
+153 Inflicts double damage and halves the target's Defense. User faints.
 154 Hits 2-5 times in one turn.
 155 Hits twice in one turn.
-156 User sleeps for two turns, completely healing itself.
+156 User sleeps for one turn, completely healing itself.
 157 Has a $effect_chance% chance to make the target flinch.
 158 Has a $effect_chance% chance to make the target flinch.
 159 Raises the user's Attack by one level.
 160 User's type changes to the type of one of its moves at random.
-161 Has a $effect_chance% chance to burn, freeze, or paralyze the target.
+161 Inflicts regular damage with no additional effect.
 162 Inflicts damage equal to half the target's HP.
 163 Has an increased chance for a critical hit.
 164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage until it breaks.
-165 User takes 1/4 its max HP in recoil.
+165 User takes 1/2 its max HP in recoil.
