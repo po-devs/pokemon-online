@@ -303,3 +303,28 @@
 302 Quitaestado
 303 Directo 3
 304 Gen loco
+305 Poké Ball
+306 Superball
+307 Ultraball
+308 Master Ball
+309 Safari Ball
+310 Nivel Ball
+311 Cebo Ball
+312 Luna Ball
+313 Amigo Ball
+314 Amor Ball
+315 Peso Ball
+316 Rapid Ball
+317 Competi Ball
+318 Honor Ball
+319 Acopio Ball
+320 Turno Ball
+321 Nido Ball
+322 Malla Ball
+323 Buceo Ball
+324 Lujo Ball
+325 Sana Ball
+326 Veloz Ball
+327 Ocaso Ball
+328 Gloria Ball
+329 Parque Ball
