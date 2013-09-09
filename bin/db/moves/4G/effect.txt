@@ -72,7 +72,7 @@
 71 Heals the user by half the damage inflicted.
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
-74 (((something new 316)))
+74 Raises the user's Attack and Special Attack by one level.
 75 Has an increased chance for a critical hit. (12.5%)
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
@@ -96,7 +96,7 @@
 95 Puts the target to sleep.
 96 Raises the user's Attack by one level.
 97 Raises the user's Speed by two levels.
-98 Inflicts regular damage with no additional effect.
+98 Priority level 1.
 99 If the user is hit after using this move, its Attack rises by one level.
 100 Immediately ends wild battles.  No effect otherwise.
 101 Inflicts damage equal to the user's level.
@@ -118,7 +118,7 @@
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
 118 Randomly selects and uses any move in the game.
 119 Uses the target's last used move.
-120 Inflicts double damage.  User faints.
+120 Inflicts double damage. User faints.
 121 Inflicts regular damage with no additional effect.
 122 Has a $effect_chance% chance to paralyze the target.
 123 Has a $effect_chance% chance to poison the target.
@@ -151,7 +151,7 @@
 150 Does nothing.
 151 Raises the user's Defense by two levels.
 152 Has an increased chance for a critical hit. (12.5%)
-153 Inflicts double damage.  User faints.
+153 Inflicts double damage. User faints.
 154 Hits 2-5 times in one turn.
 155 Hits twice in one turn.
 156 User sleeps for two turns, completely healing itself.
@@ -181,7 +181,7 @@
 180 Lowers the PP of the target's last used move by 4.
 181 Has a $effect_chance% chance to freeze the target.
 182 Prevents any moves from hitting the user this turn.
-183 Inflicts regular damage with no additional effect.
+183 Priority level 1.
 184 Lowers the target's Speed by two levels.
 185 Never misses.
 186 Confuses the target.
@@ -232,9 +232,9 @@
 231 Has a $effect_chance% chance to lower the target's Defense by one level.
 232 Has a $effect_chance% chance to raise the user's Attack by one level.
 233 Never misses.
-234 Heals the user by half its max HP.  Affected by weather.
-235 Heals the user by half its max HP.  Affected by weather.
-236 Heals the user by half its max HP.  Affected by weather.
+234 Heals the user by half its max HP. Affected by weather.
+235 Heals the user by half its max HP. Affected by weather.
+236 Heals the user by half its max HP. Affected by weather.
 237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
 238 Has an increased chance for a critical hit. (12.5%)
 239 Has a $effect_chance% chance to make the target flinch.
@@ -243,7 +243,7 @@
 242 Has a $effect_chance% chance to lower the target's Defense by one level.
 243 Inflicts twice the damage the user received from the last special hit it took.
 244 Discards the user's stat changes and copies the target's.
-245 Inflicts regular damage with no additional effect.
+245 Priority level 1.
 246 Has a $effect_chance% chance to raise all of the user's stats by one level.
 247 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 248 Hits the target two turns later.
@@ -260,7 +260,7 @@
 259 Prevents the target from using the same move twice in a row.
 260 Raises the target's Special Attack by two levels and confuses the target.
 261 Burns the target.
-262 Lowers the target's Attack and Special Attack by two levels.  User faints.
+262 Lowers the target's Attack and Special Attack by two levels. User faints.
 263 Power doubles if user is burned, paralyzed, or poisoned.
 264 If the user takes damage before attacking, the attack is canceled.
 265 If the target is paralyzed, inflicts double damage and cures the paralysis.
@@ -292,7 +292,7 @@
 291 User dives underwater, dodging all attacks, and hits next turn.
 292 Hits 2-5 times in one turn.
 293 User's type changes to match the terrain.
-294 (((something new 321)))
+294 Raises the user's Special Attack by two levels.
 295 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 296 Has a $effect_chance% chance to lower the target's Special Attack by one level.
 297 Lowers the target's Attack by two levels.
@@ -359,7 +359,7 @@
 358 If the target is asleep, has double power and wakes it up.
 359 Lowers user's Speed by one level.
 360 Power raises when the user has lower Speed, up to a maximum of 150.
-361 User faints.  Its replacement has its HP fully restored and any major status effect removed.
+361 User faints. Its replacement has its HP fully restored and any major status effect removed.
 362 Has double power against Pok�mon that have less than half their max HP remaining.
 363 Power and type depend on the held berry.
 364 Only works if the target uses Protect or Detect on this turn.
@@ -387,7 +387,7 @@
 386 Power increases against targets with more raised stats, up to a maximum of 200.
 387 Can only be used after all of the user's other moves have been used.
 388 Changes the target's ability to Insomnia.
-389 Only works if the target is about to use a damaging move.
+389 Only works if the target is about to use a damaging move. Priority level 1.
 390 Scatters poisoned spikes, poisoning opposing Pok�mon that switch in.
 391 User and target swap stat changes.
 392 Restores 1/16 of the user's max HP each turn.
@@ -408,7 +408,7 @@
 407 Has a $effect_chance% chance to make the target flinch.
 408 Inflicts regular damage with no additional effect.
 409 Heals the user by half the damage inflicted.
-410 Inflicts regular damage with no additional effect.
+410 Priority level 1.
 411 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 412 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 413 User receives 1/3 the damage inflicted in recoil.
@@ -416,14 +416,14 @@
 415 User and target swap items.
 416 User foregoes its next turn to recharge.
 417 Raises the user's Special Attack by two levels.
-418 Inflicts regular damage with no additional effect.
+418 Priority level 1.
 419 Inflicts double damage if the user takes damage before attacking this turn.
 420 Inflicts regular damage with no additional effect.
 421 Has an increased chance for a critical hit. (12.5%)
 422 Has a $effect_chance% chance to paralyze the target and a $effect_chance% chance to make the target flinch.
 423 Has a $effect_chance% chance to freeze the target and a $effect_chance% chance to make the target flinch.
 424 Has a $effect_chance% chance to burn the target and a $effect_chance% chance to make the target flinch.
-425 Inflicts regular damage with no additional effect.
+425 Priority level 1.
 426 Has a $effect_chance% chance to lower the target's Accuracy by one level.
 427 Has an increased chance for a critical hit. (12.5%)
 428 Has a $effect_chance% chance to make the target flinch.
@@ -451,7 +451,7 @@
 450 If target has a berry, inflicts double damage and uses the berry.
 451 Has a $effect_chance% chance to raise the user's Special Attack by one level.
 452 User receives 1/3 the damage inflicted in recoil.
-453 Inflicts regular damage with no additional effect.
+453 Priority level 1.
 454 Has an increased chance for a critical hit. (12.5%)
 455 Raises the user's Defense and Special Defense by one level.
 456 Heals the user by half its max HP.
@@ -465,4 +465,4 @@
 464 Puts the target to sleep.
 465 Has a $effect_chance% chance to lower the target's Special Defense by two levels.
 466 Has a $effect_chance% chance to raise all of the user's stats by one level.
-467 User vanishes, dodging all attacks, and hits next turn.  Works against Protect and Detect.
+467 User vanishes, dodging all attacks, and hits next turn. Works against Protect and Detect.
