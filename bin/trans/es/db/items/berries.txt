@@ -62,3 +62,13 @@
 61 Baya Chiri
 62 Baya Jaboca
 63 Baya Magua
+1000 Antiparabaya
+1001 Baya Menta
+1002 Bayantídoto
+1003 Antiquemabaya
+1004 Baya Hielo
+1005 Baya Misterio
+1006 Baya
+1007 Bayamarga
+1008 Baya Milagro
+1009 Baya Dorada
