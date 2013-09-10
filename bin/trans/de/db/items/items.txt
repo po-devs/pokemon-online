@@ -303,3 +303,30 @@
 302 Umkehrappell
 303 Angriffplus 3
 304 Berserk-Gen
+305 Pokéball
+306 Superball
+307 Hyperball
+308 Meisterball
+309 Safariball
+310 Levelball
+311 Köderball
+312 Mondball
+313 Freundesball
+314 Sympaball
+315 Schwerball
+316 Turboball
+317 Turnierball
+318 Premierball
+319 Wiederball
+320 Timerball
+321 Nestball
+322 Netzball
+323 Tauchball
+324 Luxusball
+325 Heilball
+326 Flottball
+327 Finsterball
+328 Jubelball
+329 Parkball
+1000 Rosa Band
+1001 Punkt-Band
