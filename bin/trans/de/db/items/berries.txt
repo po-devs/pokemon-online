@@ -62,3 +62,13 @@
 61 Eipfelbeere
 62 Jabocabeere
 63 Roselbeere
+1000 Antiparbeere
+1001 Minzbeere
+1002 Gegengiftbeere
+1003 Brandbeere
+1004 Eisbeere
+1005 Rätselbeere
+1006 Beere
+1007 Bitterbeere
+1008 Wunderbeere
+1009 Goldbeere
