@@ -4168,7 +4168,11 @@ struct MMMoonlight : public MM
         if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
             tmove(b,s).healing = 50;
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
-            tmove(b,s).healing = 66;
+            if (b.gen().num == 2) {
+                tmove(b,s).healing = 100;
+            } else {
+                tmove(b,s).healing = 66;
+            }
         } else {
             tmove(b,s).healing = 25;
         }
