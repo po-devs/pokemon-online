@@ -112,7 +112,7 @@
 111 Raises user's Defense by one level.
 112 Raises the user's Defense by two levels.
 113 Halves Special damage done to user.
-114 Resets all Pokémon's stats, Accuracy, and Evasion.
+114 Resets all Pokémon's stats, Accuracy and Evasion.
 115 Reduces damage from physical attacks by half.
 116 Increases the user's chance to score a critical hit.
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
