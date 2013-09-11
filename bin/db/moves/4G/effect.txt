@@ -16,7 +16,7 @@
 15 Inflicts regular damage with no additional effect.
 16 Inflicts regular damage and can hit Bounce and Fly users.
 17 Inflicts regular damage with no additional effect.
-18 Immediately ends wild battles.  Forces trainers to switch Pok�mon.
+18 Immediately ends wild battles. Forces trainers to switch Pokémon.
 19 User flies high into the air, dodging all attacks, and hits next turn.
 20 Prevents the target from fleeing and inflicts damage for 2-5 turns.
 21 Inflicts regular damage with no additional effect.
@@ -44,7 +44,7 @@
 43 Lowers the target's Defense by one level.
 44 Has a $effect_chance% chance to make the target flinch.
 45 Lowers the target's Attack by one level.
-46 Immediately ends wild battles.  Forces trainers to switch Pok�mon.
+46 Immediately ends wild battles. Forces trainers to switch Pokémon.
 47 Puts the target to sleep.
 48 Confuses the target.
 49 Inflicts 20 points of damage.
@@ -112,7 +112,7 @@
 111 Raises user's Defense by one level.
 112 Raises the user's Defense by two levels.
 113 Reduces damage from special attacks by 50% for five turns..
-114 Resets all Pok�mon's stats, Accuracy, and Evasion.
+114 Resets all Pokémon's stats, Accuracy and Evasion.
 115 Reduces damage from physical attacks by half.
 116 Increases the user's chance to score a critical hit. (25%)
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
@@ -136,7 +136,7 @@
 135 Heals the user by half its max HP.
 136 If the user misses, it takes half the damage it would have inflicted in recoil.
 137 Paralyzes the target.
-138 Only works on sleeping Pok�mon.  Heals the user by half the damage inflicted.
+138 Only works on sleeping Pokémon. Heals the user by half the damage inflicted.
 139 Poisons the target.
 140 Hits 2-5 times in one turn.
 141 Heals the user by half the damage inflicted.
@@ -170,7 +170,7 @@
 169 Prevents the target from leaving battle.
 170 Ensures that the user's next move will hit the target.
 171 Target loses 1/4 its max HP every turn as long as it's asleep.
-172 Has a $effect_chance% chance to burn the target.  Lets frozen Pok�mon thaw themselves.
+172 Has a $effect_chance% chance to burn the target. Lets frozen Pokémon thaw themselves.
 173 Has a $effect_chance% chance to make the target flinch.  Only works if the user is sleeping.
 174 Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.
 175 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
@@ -189,7 +189,7 @@
 188 Has a $effect_chance% chance to poison the target.
 189 Has a $effect_chance% chance to lower the target's Accuracy by one level.
 190 Has a $effect_chance% chance to lower the target's Accuracy by one level.
-191 Scatters Spikes, hurting opposing Pok�mon that switch in.
+191 Scatters Spikes, hurting opposing Pokémon that switch in.
 192 Has a $effect_chance% chance to paralyze the target.
 193 Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it's a Ghost.
 194 If the user faints this turn, the target automatically will, too.
@@ -219,7 +219,7 @@
 218 Power increases as happiness decreases, up to a maximum of 102.
 219 Protects the user's field from major status ailments and confusion for five turns.
 220 Sets the user's and targets's HP to the average of their current HP.
-221 Has a $effect_chance% chance to burn the target.  Lets frozen Pok�mon thaw themselves.
+221 Has a $effect_chance% chance to burn the target. Lets frozen Pokémon thaw themselves.
 222 Power varies randomly from 10 to 150.
 223 Has a $effect_chance% chance to confuse the target.
 224 Inflicts regular damage with no additional effect.
@@ -249,9 +249,9 @@
 248 Hits the target two turns later.
 249 Has a $effect_chance% chance to lower the target's Defense by one level.
 250 Prevents the target from leaving battle and inflicts 1/16 its max HP in damage for 2-5 turns.
-251 Hits once for every conscious Pok�mon the trainer has.
+251 Hits once for every conscious Pokémon the trainer has.
 252 Can only be used as the first move after the user enters battle.  Causes the target to flinch.
-253 Forced to use this move for several turns.  Pok�mon cannot fall asleep in that time.
+253 Forced to use this move for several turns. Pokémon cannot fall asleep in that time.
 254 Stores energy up to three times for use with Spit Up and Swallow.
 255 Power is 100 times the amount of energy Stockpiled.
 256 Recovers 1/4 HP after one Stockpile, 1/2 HP after two Stockpiles, or full HP after three Stockpiles.
@@ -272,7 +272,7 @@
 271 User and target swap items.
 272 Copies the target's ability.
 273 User will recover half its max HP at the end of the next turn.
-274 Randomly selects and uses one of the trainer's other Pok�mon's moves.
+274 Randomly selects and uses one of the trainer's other Pokémon's moves.
 275 Prevents the user from leaving battle.  User regains 1/16 of its max HP every turn.
 276 Lowers the user's Attack and Defense by one level after inflicting damage.
 277 Reflects back the first effect move used on the user this turn.
@@ -360,13 +360,13 @@
 359 Lowers user's Speed by one level.
 360 Power raises when the user has lower Speed, up to a maximum of 150.
 361 User faints. Its replacement has its HP fully restored and any major status effect removed.
-362 Has double power against Pok�mon that have less than half their max HP remaining.
+362 Has double power against Pokémon that have less than half their max HP remaining.
 363 Power and type depend on the held berry.
 364 Only works if the target uses Protect or Detect on this turn.
 365 If target has a berry, inflicts double damage and uses the berry.
-366 For three turns, friendly Pok�mon have doubled Speed.
-367 Raises one of a friendly Pok�mon's stats at random by two levels.
-368 Strikes back at the last Pok�mon to hit the user this turn with double the damage.
+366 For three turns, friendly Pokémon have doubled Speed.
+367 Raises one of a friendly Pokémon's stats at random by two levels.
+368 Strikes back at the last Pokémon to hit the user this turn with double the damage.
 369 User must switch out after attacking.
 370 Lowers the user's Defense and Special Defense by one level after inflicting damage.
 371 Power is doubled if the target has already moved this turn.
@@ -388,7 +388,7 @@
 387 Can only be used after all of the user's other moves have been used.
 388 Changes the target's ability to Insomnia.
 389 Only works if the target is about to use a damaging move. Priority level 1.
-390 Scatters poisoned spikes, poisoning opposing Pok�mon that switch in.
+390 Scatters poisoned spikes, poisoning opposing Pokémon that switch in.
 391 User and target swap stat changes.
 392 Restores 1/16 of the user's max HP each turn.
 393 User is immune to Ground moves and effects for five turns.
@@ -431,7 +431,7 @@
 430 Has a $effect_chance% chance to lower the target's Special Defense by one level.
 431 Has a $effect_chance% chance to confuse the target.
 432 Lowers the target's evasion by one level.  Removes field effects from the enemy field.
-433 For five turns, slower Pok�mon will act before faster Pok�mon.
+433 For five turns, slower Pokémon will act before faster Pokémon.
 434 Lowers the user's Special Attack by two levels after inflicting damage.
 435 Has a $effect_chance% chance to paralyze the target.
 436 Has a $effect_chance% chance to burn the target.
@@ -444,7 +444,7 @@
 443 Never misses.
 444 Has an increased chance for a critical hit. (12.5%)
 445 Lowers the target's Special Attack by two levels if it's the opposite gender.
-446 Causes damage when opposing Pok�mon switch in.
+446 Causes damage when opposing Pokémon switch in.
 447 Inflicts more damage to heavier targets, with a maximum of 120 power.
 448 Has a higher chance to confuse the target when the recorded sound is louder.
 449 If the user is holding a plate, the damage inflicted will match it.
