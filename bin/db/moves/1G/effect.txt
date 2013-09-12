@@ -112,7 +112,7 @@
 111 Raises user's Defense by one level.
 112 Raises the user's Defense by two levels.
 113 Halves Special damage done to user.
-114 Resets all Pok�mon's stats, Accuracy, and Evasion.
+114 Resets all Pokémon's stats, Accuracy and Evasion.
 115 Reduces damage from physical attacks by half.
 116 Increases the user's chance to score a critical hit.
 117 User waits for 2-3 turns, then hits back for twice the damage it took.
@@ -136,7 +136,7 @@
 135 Heals the user by half its max HP.
 136 If the user misses, it loses 1 HP.
 137 Paralyzes the target.
-138 Only works on sleeping Pok�mon.  Heals the user by half the damage inflicted.
+138 Only works on sleeping Pokémon.  Heals the user by half the damage inflicted.
 139 Poisons the target.
 140 Hits 2-5 times in one turn.
 141 Heals the user by half the damage inflicted.
