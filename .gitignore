@@ -1,5 +1,6 @@
 *.o
 moc_*
+all_moves.txt
 bin/Server
 bin/lib*.so
 bin/lib*.so.*

@@ -65,6 +65,7 @@ class PokemonInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/pokes/");
+    static void loadStadiumTradebacks();
 
     /* Self-explainable functions */
     static int TrueCount(); // pokes without counting forms
@@ -153,6 +154,8 @@ public:
         void loadReleased(Gen *parent);
         void loadMinLevels(Gen *parent);
 
+        void addTradebacks(Gen *parent);
+
         bool isReleased(const Pokemon::uniqueId &);
 
         QString path(const QString &filename);
@@ -219,7 +222,6 @@ private:
     static void loadDescriptions();
     // Call this after loading all data.
     static void makeDataConsistent();
-    static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename, const Pokemon::gen &g = 0);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
 };
@@ -230,6 +232,8 @@ public:
     /* directory where all the data is */
     static void init(const QString &dir="db/moves/");
     static void retranslate();
+
+    static bool isInit();
 
     /* Self-explainable functions */
     static QString Name(int movenum);
