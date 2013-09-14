@@ -322,6 +322,8 @@ void Server::changeDbMod(const QString &mod)
     StatInfo::init("db/status/");
     GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 
+    PokemonInfo::loadStadiumTradebacks();
+
     battleThread.unpause();
 }
 

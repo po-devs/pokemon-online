@@ -657,6 +657,14 @@ void PokemonInfo::init(const QString &dir)
     makeDataConsistent();
 }
 
+void PokemonInfo::loadStadiumTradebacks()
+{
+    loadGen(::Gen::StadiumWithTradebacks);
+    loadGen(Pokemon::gen(2, Pokemon::gen::wholeGen));
+
+    gens[::Gen::StadiumWithTradebacks].addTradebacks(&gens[Pokemon::gen(2, Pokemon::gen::wholeGen)]);
+}
+
 void PokemonInfo::loadGen(Pokemon::gen g)
 {
     if (gens.contains(g)) {
@@ -674,6 +682,12 @@ void PokemonInfo::loadGen(Pokemon::gen g)
     } else {
         loadGen(Pokemon::gen(g.num, g.subnum-1));
         gens[g].load(m_Directory, g, &gens[Pokemon::gen(g.num, g.subnum-1)]);
+    }
+
+    if (g == ::Gen::StadiumWithTradebacks && MoveInfo::isInit()) {
+        loadGen(Pokemon::gen(2, g.wholeGen));
+
+        gens[g].addTradebacks(&gens[Pokemon::gen(2, g.wholeGen)]);
     }
 }
 
@@ -803,6 +817,34 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
         foreach(Pokemon::uniqueId id, Formes(id, gen)) {
             if(!m_Moves.contains(id)) {
                 m_Moves[id] = m_Moves.value(id.original());
+            }
+        }
+    }
+}
+
+void PokemonInfo::Gen::addTradebacks(Gen *parent)
+{
+    QMutableHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    while(it.hasNext()) {
+        it.next();
+        PokemonMoves &moves = it.value();
+        PokemonMoves &moves2 = parent->m_Moves[it.key()];
+
+        QSet<int> *refs[] = {
+            &moves.TMMoves, &moves.levelMoves, &moves.specialMoves, &moves.preEvoMoves, &moves.eggMoves,
+            &moves.tutorMoves, &moves.dreamWorldMoves
+        };
+
+        QSet<int> *refs2[] = {
+            &moves2.TMMoves, &moves2.levelMoves, &moves2.specialMoves, &moves2.preEvoMoves, &moves2.eggMoves,
+            &moves2.tutorMoves, &moves2.dreamWorldMoves
+        };
+
+        for (int i = 0; i < 7; i++) {
+            foreach(int move, *refs2[i]) {
+                if (MoveInfo::Exists(move, gen)) {
+                    refs[i]->insert(move);
+                }
             }
         }
     }
@@ -1304,7 +1346,8 @@ QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid, Pokemon:
 
 PokemonInfo::Gen &PokemonInfo::gen(Pokemon::gen gen)
 {
-    if (!noWholeGen && gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
+    /* Last gen of gen 1 (tradebacks) is special */
+    if (!noWholeGen && gen.num != 1 && gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
         gen.subnum = gen.wholeGen;
     }
     /* Todo: load gens if needed somewhere smarter (for example the initialization of PokePersonal / PokeTeam with setGen).
@@ -1806,6 +1849,10 @@ void MoveInfo::retranslate()
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].retranslate();
     }
+}
+
+bool MoveInfo::isInit() {
+    return !m_Names.empty();
 }
 
 void MoveInfo::loadNames()

@@ -178,6 +178,22 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, const QSet<int> &moves2, int ability, int gender,
                              int level, bool maledw, QSet<int> *invalid_moves, QString *error)
 {
+    if (gen == Gen::StadiumWithTradebacks) {
+        foreach(int move, moves2) {
+            if (!MoveInfo::Exists(move, gen)) {
+                if (invalid_moves) {
+                    invalid_moves->insert(move);
+                }
+                if (error) {
+                    *error = (QObject::tr("%1 can't learn %2.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(move)));
+                }
+                return false;
+            }
+        }
+
+        return isValid(pokeid, Pokemon::gen(2,-1), moves2, ability, gender, level, maledw, invalid_moves, error);
+    }
+
     /* Last Gen = Whole gen */
     if (gen.subnum == GenInfo::NumberOfSubgens(gen.num) -1) {
         gen.subnum = -1;
