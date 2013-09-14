@@ -170,7 +170,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
         if (hasMove(moveNum))
             throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
-        else if (!PokemonInfo::Moves(num(), gen()).contains(moveNum))
+        else if (gen() > 1 && !PokemonInfo::Moves(num(), gen()).contains(moveNum))
             throw QObject::tr("%1 can't learn %2.").arg(nickname(), MoveInfo::Name(moveNum));
     }
 
