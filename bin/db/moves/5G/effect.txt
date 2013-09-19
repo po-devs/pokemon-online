@@ -144,7 +144,7 @@
 161 May either burn, freeze, or paralyze opponent. (20% total)
 162 Deals damage to opponent equal to half of opponent's current HP, but not less than 1. Affected by type immunities.
 163 Has a higher chance of a critical hit. (12.5%)
-164 Creates a decoy using 1/4 of user's total HP. The decoy takes damage for the user, and vanishes once it has lost the expended HP. The decoy will nullify almost status and stat altering moves and abilities aimed at the user, except for Attract, Encore, Imprison, Taunt, Torment, and Synchronize. Can be Baton Passed, but the decoy won't stop damage from Spikes and Stealth Rock, or status from Toxic Spikes. Effect ends when user is switched.
+164 Creates a decoy using 1/4 of user's total HP. The decoy takes damage for the user, and vanishes once it has lost the expended HP. The decoy will nullify almost all status and stat altering moves and abilities aimed at the user, except for Attract, Encore, Imprison, Taunt, Torment, and Synchronize. Can be Baton Passed, but the decoy won't stop damage from Spikes and Stealth Rock, or status from Toxic Spikes. Effect ends when user is switched.
 165 This attack's effectiveness is not affected by user's or opponent's types. If this attack is successful, user loses 1/4 of total HP (not considered recoil damage).
 166 {Permanently copies move opponent last used (different variable). That move replaces this move even after the battle ends. Does not copy Sketch, Struggle, Chatter, or any move user knows. Fails if Transform is in effect for user. Moves copied this way have all PP.}
 167 Hits three times. Stops if a miss is caused. When used, power starts at its original value, and increases by 10 after each hit.
