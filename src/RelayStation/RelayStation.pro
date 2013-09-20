@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     ../Teambuilder/network.cpp \
     dualwielder.cpp \
     pokemontojson.cpp \
-    battletojson.cpp
+    battletojson.cpp \
+    registrystation.cpp
 
 HEADERS += \
     relaystation.h \
@@ -25,7 +26,8 @@ HEADERS += \
     dualwielder.h \
     pokemontojson.h \
     battletojson.h \
-    battletojsonflow.h
+    battletojsonflow.h \
+    registrystation.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
