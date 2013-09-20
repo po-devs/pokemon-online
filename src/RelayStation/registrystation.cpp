@@ -20,7 +20,7 @@ void RegistryStation::resetRegistryConnection()
 
     servers.clear();
 
-    network.connectToHost("registry.pokemon-onlnine.eu", 8080);
+    network.connectToHost("registry.pokemon-online.eu", 8080);
 }
 
 void RegistryStation::readCommand(const QByteArray &commandline)
@@ -32,7 +32,6 @@ void RegistryStation::readCommand(const QByteArray &commandline)
 
     switch (command) {
     case Nw::PlayersList: {
-        // Registry socket;
         ServerInfo s;
         in >> s;
 
@@ -40,6 +39,7 @@ void RegistryStation::readCommand(const QByteArray &commandline)
         break;
     }
     case Nw::ServerListEnd: {
+        qDebug() << "registry list updated";
         saveServers();
         network.close();
         break;
