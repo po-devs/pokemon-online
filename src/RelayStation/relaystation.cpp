@@ -33,5 +33,5 @@ void RelayStation::onNewConnection()
     }
 
     DualWielder *d = new DualWielder(this);
-    d->init(socket, host, _aliases);
+    d->init(socket, host, _aliases, registry->getServers());
 }

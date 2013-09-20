@@ -18,7 +18,7 @@ public:
     DualWielder(QObject *parent = NULL);
     ~DualWielder();
 
-    void init(QWsSocket *web, QString host, QHash<QString,QString> aliases);
+    void init(QWsSocket *web, const QString &host, QHash<QString,QString> aliases, const QString& servers);
 
     QString ip() const;
 public slots:
@@ -34,6 +34,8 @@ private:
     QWsSocket *web;
     Network *network;
     QString mIp;
+    QString servers;
+    bool registryRead;
     /* IP aliases: when connecting to an IP in key, will connect to the value of the IP in values.
       Mainly used to do a public IP/localhost switch when the IP to connect to is the public IP of the own machine */
     QHash<QString,QString> aliases;
