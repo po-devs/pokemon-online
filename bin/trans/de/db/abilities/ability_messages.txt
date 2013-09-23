@@ -1,43 +1,59 @@
-﻿0 
-2 %s's Aftermath damages %f!
-3 %s is extremely pissed off!
+0 
+2 %s's Finalschlage verletzt %f!
+3 %s's Angriff wurde maximiert!
 4 %s erschaudert!
-6 %f has bad dreams!
-9 %s's Color Change changes its type to %t!
+6 %f leidet unter Alptraum von %s!
+9 Farbwechsel von %s macht es zu einem %t-Typ!
 11 %s's Cute Charm infatuated %f!
-12 %s won't flinch because of its Inner Focus!
-13 %s's Download activates!
+12 %s kann wegen Konzentrator nicht zurückschrecken!
+13 %s's Download wurde aktiviert!
 14 Hagelalarm von %s lässt einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
-15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
-16 %s's Effect Spore activates!
+15 %s#'s Aufheber heilt einige KP!|%s veliert einige KP wegen Trockenheit!
+16 %s's Sporenwirt wurde aktiviert!
 18 %s's %a activates!
-19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
-21 %s changed its type to %t!
-22 %s's Forewarn makes it wary of %m!
+19 %s's Feuerfänger verstärkt die Stärke seiner Feuerattacken!|%s's Feuerfänger macht %m wirkungslos!
+21 %s verändert seinen Typ in %t!
+22 %s's Vorwarnung warnt es vor %m!
 23 %s hat %i erschnüffelt!
-24 %s's Shield Dust blocked the secondary effects!
-29 %s's Hydration heals its status!
+24 %s's Puderabwehr blockiert alle Zusatzeffekte von Attacken!
+29 %s's Hydration heilt seinen Status!
 30 %s's %a prevents its stat from being lowered!
 31 %s's %a prevented its stats from being lowered!
 32 %s's %a heals it!
 33 %s's %a cures it!
 34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s !
-37 %s's Leaf Guard prevents it from being affected by any status from the opponent!
+37 %s's Floraschild verhindert Statusveränderungen!
 38 %s's %a took the attack!
 40 %s gelingt es, gegnerische Fähigkeiten zu überbrücken!
-41 %s's Motor Drive raises its speed!
-44 %s's Own Tempo cures its confusion!
+41 %s's Starthilfe erhöht seine Initiative!
+44 %s's Tempomacher heilt seine Verwirrung!
 45 Aufheber von %s regeneriert einige KP !
 46 %s übt seine Fähigkeit Erzwinger aus !
-50 %s's Rough Skin hurts %f
-54 %s's Shed Skin heals its status!
+50 %s's Rauhaut schadet %f
+54 %s's Expidermis heilt seine Statusprobleme!
 55 %s kommt nicht in Fahrt!|%s finally got its act together!
-56 %s lost some HP because of Solar Power!
-57 %s's Sound Proof blocks the attack!
+56 %s verliert einige KP wegen Solarkraft!
+57 %s's Lärmschutz wehrt die Attacke ab!
 58 Temposchub von %s erhöht seine Initiative!
-60 %s's SteadFast increases its speed!
-61 %s's Synchronize changes the status of %f!
+60 %s's Fähigkeit Felsenfest erhöht seine Initiative!
+61 %s's Synchro verändert den Status von %f!
 66 %s traced %f's %a!
 67 %s is carelessly slacking off!
-70 %s's %a absorbs the attack!|%s's %a made the attack useless!
+70 %s's %a absorbiert die Attacke!|%s's %a macht die Attacke nutzlos!
 71 %s vermeidet Schaden mit Wunderwache!
+74 verliert einen Teil seiner Rüstung!
+78 %s stiehlt %f's %i!
+80 Siegeswille erhöht den Angriff vonn %s stark!
+81 %s verwandelt sich in %p!
+85 %s wehrt %f's Angriff dank Telepathie ab!
+86 %s stellt dank Belebekraft KP wieder her!
+88 %s erhält dank Reiche Ernte eine %i!
+89 Wolke Sieben von %s verhindert Wettereffekte!
+90 %s's Wunderhaut schützte es vor Status-Attacken!
+91 %s überlebt den Angriff dank Robustheit!
+93 %s nimmmt %i!
+94 %s's Redlichkeit erhöht seinen Angriff!
+95 %s's Gefühlswippe erhöht seinen %st stark!|%s's Gefühlswippe verringert seinen %st!
+96 %s's Tastfluch wurde aktiviert!
+99 %s's Heilherz heilt %f's Status!
+102 %s macht %tf's Team zu nervös um Beeren zu essen!
