@@ -3006,7 +3006,7 @@ QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type, Pokemon::gen 
 {
     QList<QStringList> ret;
 
-    for (int i = 0; i < 64; i++) {
+    for (int i = 63; i >= 0; i--) {
         int gt = Type(gen, i & 1, (i & 2)!=0, (i & 4)!=0, (i & 8)!=0, (i & 16)!=0, (i & 32)!=0);
         if (gt == type) {
             ret.push_back(QString("%1 %2 %3 %4 %5 %6")
