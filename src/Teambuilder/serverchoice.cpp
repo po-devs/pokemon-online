@@ -99,23 +99,34 @@ ServerChoice::~ServerChoice()
     delete ui;
 }
 
+bool ServerChoice::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        e->accept();
+    }
+
+    return QFrame::event(e);
+}
+
 QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
 {
-    QMenuBar *ret = new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar();
 
     //TODO : Add menu allowing to change port / registry IP / ??
 
-    QMenu *fileMenu = ret->addMenu(tr("&File"));
+    QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(tr("&Load team"), this, SLOT(loadTeam()), tr("Ctrl+L", "Load team"));
     fileMenu->addAction(tr("New &tab"), w, SLOT(openNewTab()), tr("Ctrl+T", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),w,SLOT(quit()),tr("Ctrl+Q", "Quit"));
 
-    w->addThemeMenu(ret);
-    w->addStyleMenu(ret);
+    w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
+    w->addLanguageMenu(menuBar);
 
-    return ret;
+    return menuBar;
 }
 
 void ServerChoice::loadTeam()

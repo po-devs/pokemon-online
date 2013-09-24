@@ -614,6 +614,23 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
     }
 }
 
+void MainEngine::addLanguageMenu(QMenuBar *menuBar)
+{
+    QMenu *langMenu = menuBar->addMenu(tr("&Language"));
+    QFile in ("languages.txt");
+    in.open(QIODevice::ReadOnly);
+
+    QSettings s;
+    QStringList langs = QString::fromUtf8(in.readAll()).trimmed().split('\n');
+    QActionGroup *ag = new QActionGroup(langMenu);
+    foreach(QString a, langs) {
+        QAction *act = langMenu->addAction(a, this, SLOT(changeLanguage()));
+        act->setCheckable(true);
+        act->setChecked(s.value("language").toString() == a.section("(", 1).section(")", 0, 0));
+        ag->addAction(act);
+    }
+}
+
 void MainEngine::rebuildThemeMenu()
 {
     themeMenu->clear();
