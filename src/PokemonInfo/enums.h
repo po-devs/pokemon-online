@@ -1486,7 +1486,8 @@ namespace Type
         Ice,
         Dragon,
         Dark,
-        Curse = 17
+        Fairy,
+        Curse = 18
     };
 }
 

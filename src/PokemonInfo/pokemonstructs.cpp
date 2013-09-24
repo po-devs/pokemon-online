@@ -1002,7 +1002,7 @@ bool Team::importFromTxt(const QString &file1)
                     move = move.section('[',0,0).trimmed();
 
                     if (p.gen() >= 3) {
-                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
+                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type, p.gen())[0];
                         for(int i =0;i < dvs.size(); i++) {
                             p.setDV(i, dvs[i].toInt());
                         }
