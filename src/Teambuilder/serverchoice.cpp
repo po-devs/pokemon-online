@@ -80,7 +80,7 @@ ServerChoice::ServerChoice(TeamHolder* team) :
     ui->advServerEdit->setCompleter(completer);
     ui->advServerEdit->setModel(m);
 
-    connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
+    connect(ui->teambuilder, SIGNAL(clicked()), SIGNAL(teambuilder()));
     connect(ui->advancedConnection, SIGNAL(clicked()), SLOT(advServerChosen()));
 
     QTimer *t = new QTimer(this);
@@ -96,7 +96,6 @@ ServerChoice::ServerChoice(TeamHolder* team) :
 ServerChoice::~ServerChoice()
 {
     saveSettings();
-    writeSettings(this);
     delete ui;
 }
 
@@ -304,4 +303,5 @@ void ServerChoice::saveSettings() {
         }
     }
 
+    writeSettings(this);
 }
