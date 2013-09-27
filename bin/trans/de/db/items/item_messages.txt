@@ -19,3 +19,4 @@
 38 %s benutzt Rote Karte auf %f!
 39 %s benutzt seinen Fluchtknopf!
 40 %s's Berserk-Gen aktiviert sich!|%s's Angriff steigt stark!
+41 %s's Fatumknoten aktiviert sich, %f hat sich in %s verliebt!
