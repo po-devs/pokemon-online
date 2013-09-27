@@ -1,10 +1,8 @@
 ﻿0 Baccaliegia
-
 1 Baccastagna
 2 Baccapesca
 3 Baccafrago
 4 Baccaperina
-
 5 Baccamela
 6 Baccarancia
 7 Baccaki
@@ -31,7 +29,6 @@
 28 Baccambutan
 29 Baccalemon
 30 Baccamelos
-
 31 Baccapalma
 32 Baccacomero
 33 Baccadurian
@@ -53,7 +50,6 @@
 49 Baccaxan
 50 Baccababiri
 51 Baccacinlan
-
 52 Baccalici
 53 Baccalongan
 54 Baccasalak
