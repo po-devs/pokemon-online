@@ -536,23 +536,18 @@
 493:2 Arceus-Volante 
 493:3 Arceus-Veleno 
 493:4 Arceus-Terra
- 493:5 Arceus-Roccia 
+493:5 Arceus-Roccia 
 493:6 Arceus-Coleottero 
 493:7 Arceus-Spettro 
 493:8 Arceus-Acciaio 
-
 493:9 Arceus-Fuoco 
-
 493:10 Arceus-Acqua 
 493:11 Arceus-Erba
- 
 493:12 Arceus-Elettro 
 493:13 Arceus-Psico 
 493:14 Arceus-Ghiaccio 
-
 493:15 Arceus-Drago 
-493:16 Arceus-Buio 
-
+493:16 Arceus-Buio
 493:17 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
