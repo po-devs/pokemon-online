@@ -1,120 +1,61 @@
 ﻿0 
-
 2 Scoppio di %s danneggia %f!
-
 3 %s è davvero arrabbiato!
-
 4 %s rabbrividisce per via di Presagio!
-
 6 %f ha degli incubi!
-
 9 Cambiacolore di %s cambia il suo tipo in %t!
-
 11 Incantevole di %s ha infatuato %f!
-
 12 %s non tentenna per via di Fuocodentro!
-
 13 Il Download di %s si attiva!
-
 14 Scendineve di %s causa una grandinata!|Piovischio di %s fa piovere!|Sabbiafiume di %s solleva una tempesta di sabbia!|Siccità di %s intensifica i raggi del sole!
-
 15 %s recupera PV per via di Pellearsa!|%s è ferito per via di Pellearsa!
-
 16 Si attiva Spargispora di %s!
-
 18 Si attiva %a di %s!
-
 19 Fuocardore di %s aumenta la potenza delle sue mosse Fuoco!|Fuocardore di %s rende %m inefficace!
-
 21 %s ha cambiato il suo tipo in %t!
-
 22 Premonizione di %s lo rende consapevole di %m!
 23 %s sa che il nemico tiene %i per via di Indagine!
-
 24 Polvoscudo di %s ha bloccato gli effetti secondari!
-
 29 Idratazione di %s cura il suo status!
-
 30 %a di %s impedisce che le sue statistiche si abbassino!
-
 31 %a di %s impedisce che le sue statistiche si abbassino!
-
 32 %s è curato da %a!
-
 33 %a di %s l'ha curato!|%s non è stato paralizzato grazie a %a!|%s è rimasto sveglio grazie a %a!|%s non è stato congelato grazie a %a!|%s non si è bruciato grazie a %a!|%s non è stato avvelenato grazie a %a!
-
 34 %s intimidisce %f!|Il sostituto di %f annulla Prepotenza di %s!
-
 37 Fogliamanto di %s gli impedisce di essere colpito dagli status!
-
 38 %a di %s subisce l'attacco!|%a di %s aumenta il suo Attacco Speciale!|%a di %s rende l'attacco inutile!
-
 40 %s ha %a!
-
 41 Elettrorapid di %s aumenta la sua Velocità!
-
 44 Mente Locale di %s cura la sua confusione!|Mente Locale di %s gli impedisce di essere confuso!
-
 45 %s recupera PV usando la sua Velencura!
-
 46 %s esercita la sua Pressione!
-
 47 L'abilità di %s diventa Mummia!
-
-50 %a di %s ferisce %f
-
+50 %a di %s ferisce %f!
 54 Muta di %s cura il suo status!
-
 55 %s non ingrana a causa di Lentoinizio!|%s comincia finalmente a ingranare!
-
 56 %s ha perso alcuni PV a causa di Solarpotere!
-
 57 Antisuono di %s blocca l'attacco!
-
 58 Accelleratore di %s aumenta la sua Velocità!|Giustizia di %s aumenta il suo Attacco!
-
 60 Cuordeciso di %s aumenta la sua Velocità!
-
 61 Sincronismo di %s cambia lo status di %f!
-
 66 %s traccia %a di %f!
-
 67 %s si sta rilassando!
-
 68 %a di %s aumenta il suo Attacco!|%a di %s rende l'attacco inutile!
-
 70 %a di %s assorbe l'attacco!|%a di %s rende l'attacco inutile!
-
 71 %s schiva il colpo grazie a Magidifesa!
-
 74 %s ha perso parte della sua armatura!
-
 78 %s ha rubato %i di %f!
-
 80 Agonismo di %s aumenta di molto il suo Attacco!
-
 81 %s si trasforma in %p!
-
 85 %s evita l'attacco di %f grazie alla sua Telepatia!
-
 86 %s recupera vita grazie a Rigenergia!
-
 88 %s ha ottenuto una %i grazie al suo CogliBacche!
-
 90 %s è protetto dallo status grazie a Splendicute!
-
 91 %s sopporta il colpo grazie a Vigore!
-
 93 %s raccoglie %i!
-
 94 Giustizia di %s aumenta il suo Attacco!
-
 95 Altalena di %s aumenta di molto la stat %st!|Altalena di %s riduce la stat %st!
-
 96 Si attiva Corpofunesto di %s!
-
 97 %s aumenta la sua Velocità per la paura!
-
 99 Curacuore di %s ha curato lo status di %f!
-
 102 %s rende il team di %tf troppo nervoso per mangiare Bacche!

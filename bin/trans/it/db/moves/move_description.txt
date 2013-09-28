@@ -1,714 +1,360 @@
-﻿0 (Nessuna Descrizione)
-
+0 (Nessuna Descrizione)
 1 Colpisce il nemico con gli arti anteriori o la coda.
-
 2 Un colpo tagliente con probabile Brutto Colpo.
-
 3 Schiaffeggia ripetutamente l'avversario da 2 a 5 volte.
-
 4 Prende a pugni ripetutamente l'avversario da 2 a 5 volte.
-
 5 Un forte pugno tirato con incredibile potenza.
-
 6 Lancia monete al nemico. Il denaro è recuperato successivamente.
-
 7 Un pugno fiammante che può bruciare l'avversario.
-
 8 Un pugno gelido che può congelare l'avversario.
-
 9 Un pugno elettrificato che può paralizzare il nemico.
-
 10 Graffia l'avversario con artigli affilati.
-
 11 Afferra l'avversario con grandi e potenti chele.
-
 12 un potente attacco a presa che può causare KO.
-
 13 Una mossa a 2 turni che colpisce l'avversario il 2° turno.
-
 14 Una danza di lotta che aumenta di molto l'ATTACCO.
-
 15 Taglia il nemico con falci affilate, artigli, ecc.
-
 16 Colpisce il nemico con una raffica di vento scatenata dalle ali.
-
 17 Colpisce il nemico con ali spalancate.
-
 18 Spazza via il nemico col vento e termina la battaglia.
-
 19 Vola su il primo turno, poi colpisce il turno successivo.
-
 20 Lega e stringe l'avversario da 2 a 5 turni.
-
 21 Sbatte il nemico con una lunga coda, liana, ecc.
-
 22 Colpisce il nemico snelle liane simil-frusta.
-
 23 Calpesta il nemico con un grande piede. Può far tentennare.
-
 24 Un attacco doppio calcio che colpisce il nemico due volte.
-
 25 Un calcio estremamente potente con un'intensa forza.
-
 26 Un forte calcio volante. Può fallire e danneggiare l'utilizzatore.
-
 27 Un calcio veloce dato da un rapido giro.
-
 28 Riduce la precisione avversaria lanciando sabbia sulla sua faccia.
-
 29 Un attacco contundente che può far tentennare.
-
 30 Infilza l'avversario con corna appuntite.
-
 31 Infilza l'avversario da 2 a 5 volte con corna affilate, ecc.
-
 32 Un attacco da KO istantaneo che usa un corno come una trivella.
-
 33 Carica il nemico con un'azione a tutto corpo.
-
 34 Uno schianto con tutto il corpo che può causare paralisi.
-
 35 Arrotola e stringe il nemico da 2 a 5 turni con liane, ecc.
-
 36 Uno spericolato attacco carica che danneggia anche l'utilizzatore.
-
 37 Una furia di 2 o 3 turni che confonde l'utilizzatore.
-
 38 Un'azione pericolosa che danneggia anche l'utilizzatore.
-
 39 Agita la coda per ridurre la DIFESA del nemico.
-
 40 Un attacco tossico con rovi, ecc., che può avvelenare.
-
 41 Pungiglioni sugli arti anteriori infilzano il nemico 2 volte.
-
 42 Vengono sparati aculei appuntiti per colpire da 2 a 5 volte.
-
 43 Spaventa l'avversario con un'occhiataccia per ridurre la DIFESA.
-
 44 Morde con fauci voraci. Può far tentennare.
-
 45 Ruggisce dolcemente per ridurre l'ATTACCO del nemico.
-
 46 Fa scappare l'avversario per terminare la lotta.
-
 47 Una canzone calmante culla il nemico in un sonno profondo.
-
 48 Emette strane onde sonore che possono confondere il nemico.
-
 49 Lancia onde d'urto che tolgono sempre 20 PS.
-
 50 Disabilita fisicamente una delle mosse nemiche.
-
 51 Spruzza un acido scioglitore. può ridurre la DIFESA.
-
 52 Un debole attacco di fuoco che può scottare.
-
 53 Un potente attacco di fuoco che può scottare il nemico.
-
 54 Crea una nebbia che ferma la riduzione di stat.
-
 55 Spruzza acqua per colpire il nemico.
-
 56 Spara acqua ad alta forza per colpire il nemico.
-
 57 Crea un'enorme onda, poi la schianta sul nemico.
-
 58 Spara un raggio gelido al nemico, che può congelarlo.
-
 59 Colpisce il nemico con una tempesta gelida che può congelarlo.
-
 60 Spara un particolare raggio che può confondere il nemico.
-
 61 Spara forzatamente bolle che possono ridurre la VELOCITA'.
-
 62 Spara un raggio color arcobaleno che può ridurre l'ATTACCO.
-
 63 Potente, ma lascia l'utilizzatore immobile fino al turno successivo.
-
 64 Attacca il nemico con un becco perforante, ecc.
-
 65 Un attacco a trapano con il becco a mo' di trivella.
-
 66 Uno spericolato schianto che danneggia anche l'utilizzatore.
-
 67 Un calcio che infligge più danni sui nemici più pesanti.
-
 68 Restituisce ogni colpo fisico con il doppio della potenza.
-
 69 Infligge danno pari al livello dell'utilizzatore.
-
 70 Carica enorme potenza, poi colpisce il nemico.
-
 71 Un attacco che assorbe la metà del danno inflitto.
-
 72 Un attacco che assorbe la metà del danno inflitto.
-
-
 73 Pianta semi sul nemico per rubargli PS a ogni turno.
-
 74 Forza il corpo a crescere e aumenta l'ATT.SP.
-
 75 Taglia il nemico con delle foglie. Facile Brutto Colpo.
-
 76 Assorbe luce in un turno, poi attacca il turno successivo.
-
 77 Sparge una polvere tossica che può avvelenare il nemico.
-
 78 Sparge una polvere che può paralizzare il nemico.
-
 79 Sparge una polvere che può addormentare il nemico.
-
 80 Una furia di 2 o 3 turni che confonde l'utilizzatore.
-
 81 Lega il nemico con stringhe per ridurre la sua VELOCITA'.
-
 82 Lancia onde shock che infliggono sempre 40 danni.
 83 Intrappola il nemico in un anello di fuoco da 2 a 5 turni.
-
 84 Un attacco elettrico che può paralizzare il nemico.
-
 85 Un forte attacco elettrico che può paralizzare il nemico.
-
 86 Una piccola scarica di elettricità che paralizza l'avversario.
-
 87 Un attacco fulminante che può paralizzare l'avversario.
-
 88 Lancia piccole rocce per colpire l'avversario.
-
 89 Un terremoto potente, ma non ha effetto sui nemici volanti.
-
 90 Una mossa da KO istantaneo che spedisce il nemico in un abisso.
-
 91 Scava sottoterra il primo turno e colpisce il turno successivo.
-
 92 Avvelena il nemico con una tossina intensificata.
-
 93 Un attacco psichico che può causare confusione.
-
 94 Un potente attacco psichico che può ridurre la DIF.SP.
-
 95 Una mossa ipnotizzante che può addormentare l'avversario.
-
 96 Medita in una posizione comoda per aumentare l'ATTACCO.
-
 97 Rilassa il corpo per aumentare di molto la VELOCITA'.
-
 98 Un attacco estremamente veloce che colpisce sempre per primo.
-
 99 Aumenta l'ATTACCO dell'utilizzatore ogni volta che è colpito.
-
 100 Una mossa psichica che permette di abbandonare all'istante la battaglia.
-
 101 Infligge danno pari al livello dell'utilizzatore.
-
 102 Copia una mossa usata dal nemico durante una battaglia.
-
 103 Emette uno stridio per ridurre di molto la DIFESA del nemico.
-
 104 Crea copie illusorie per aumentare l'EVASIONE.
-
 105 Recupera fino alla metà dei PS massimi dell'utilizzatore.
-
 106 Contrae i muscoli del corpo per aumentare la DIFESA.
-
 107 Minimizza la grandezza dell'utilizzatore per aumentare l'elusività.
-
 108 Riduce la PRECISIONE nemica usando fumo, inchiostro, ecc.
-
 109 Un raggio sinistro che confonde il nemico.
-
 110 Ritira il corpo dentro il guscio duro per aumentare la DIFESA.
-
 111 Ci si raggomitola per coprire i punti deboli e aumentare la DIFESA.
-
 112 Crea una barriera che aumenta di molto la DIFESA.
-
 113 Crea un muro di luce che riduce i danni da ATT.SP.
-
 114 Crea una nebbia nera che elimina tutti i cambi di stat.
-
 115 Crea un muro di luce che indebolisce gli attacchi fisici.
-
 116 Concentra forza per aumentare le probabilità di Brutto Colpo.
-
 117 Sopporta gli attacchi per 2 turni per restituirne il doppio.
-
 118 agita un dito per usare qualunque mossa POKEMON casualmente.
-
 119 Contrattacca il nemico con la stessa mossa.
-
 120 Infligge severi danni ma manda l'utilizzatore KO.
-
 121 Viene lanciato forzatamente un uovo al nemico.
-
 122 Lecca usando una lunga lingua. Può anche paralizzare.
-
 123 Un attacco gas-esaustivo che può anche avvelenare.
-
 124 Della melma viene compattata per infliggere danni. Può avvelenare.
-
 125 Colpisce il nemico con un osso a mo' di mazza. Può far tentennare.
-
 126 Una furiosa esplosione che brucia tutto. Può bruciare.
-
 127 Carica il nemico con velocità per salire cascate.
-
 128 Intrappola e stringe il nemico da 2 a 5 turni.
-
 129 Sparge raggi a forma di stella che non mancano mai.
-
 130 Ritira la testa dentro, poi attacca il turno successivo.
-
 131 Lancia spine appuntite che colpiscono da 2 a 5 volte.
-
 132 Stringe per infliggere dolore. Può ridurre la VELOCITA'.
-
 133 Dimentica qualcosa e aumenta di molto la DIF.SP.
-
 134 Distrae il nemico. può ridurre la PRECISIONE.
-
 135 Recupera fino alla metà dei PS massimi dell'utilizzatore.
-
 136 Un calcio-ginocchiata in salto. Se fallisce, l'utilizzatore si fa male.
-
 137 Intimidisce e spaventa il nemico nella paralisi.
-
 138 Assorbe la metà del danno inflitto su un nemico adddormentato.
-
 139 Avvolge il nemico in un gas tossico che può avvelenare.
-
 140 Lancia oggetti rotondi al nemico da 2 a 5 volte.
-
 141 Un attacco che ruba la metà dei danni inflitti.
-
 142 Richiede un bacio con una faccia spaventosa che induce sonno.
-
 143 Cerca punti deboli, poi colpisce il turno successivo.
-
 144 Altera le cellule dell'utilizzatore per diventare una copia del nemico.
-
 145 Un attacco usando bolle. Può ridurre la VELOCITA' del nemico.
-
 146 Un pugno ritmico che può confondere il nemico.
-
 147 Sparge una nuvole di spore che addormenta sempre.
-
 148 Rilascia un potente attacco di luce che riduce la PRECISIONE.
-
 149 Attacca con un'onda psichica di intensità variabile.
-
 150 E'solo uno splash... Non ha alcun tipo di effetto.
-
 151 Liquiidifica il corpo dell'utilizzatore per aumentare di molto la DIFESA.
-
 152 Martella con una chela. Probabile Brutto Colpo.
-
 153 Infligge severi danni ma manda l'utilizzatore KO.
-
 154 Gratta il nemico con artigli affilati, ecc., da 2 a 5 volte.
-
 155 Lancia un osso boomerang che colpisce 2 volte.
-
 156 L'utilizzatore dorme per 2 turni, recuperando PS e status.
-
 157 Vengono lanciati grossi massi. Può far tentennare.
-
 158 Attacca con fauci affilate. Può far tentennare.
-
 159 Riduce il numero di poligoni e alza l'ATTACCO.
-
 160 Cambia il tipo dell'utilizzatore nel tipo di una delle sue mosse.
-
 161 Spara 3 tipi di raggio contemporaneamente.
-
 162 Attacca con zanne affilate e taglia metà dei PS avversari.
-
 163 Lacera con artigli, ecc. Probabile Brutto Colpo.
-
 164 Crea un sostituto usando 1/4 dei PS massimi dell'utilizzatore.
-
 165 Usata solo se tutti i PP sono finiti. inoltre danneggia un pò l'utilizzatore.
-
 166 Copia permanentemente l'ultima mossa usata dal nemico.
-
 167 Calcia il nemico 3 volte di fila con intensità crescente.
-
 168 Mentre attacca, Può rubare l'oggetto tenuto dal nemico.
-
 169 Irretisce il nemico per impedirgli di scappare o ritirarsi.
-
 170 Sente l'azione del nemico per assicurare il successo della mossa successiva.
-
 171 Infligge 1/4 dei PS di danno su un nemico addormentato ogni turno.
-
 172 Un feroce attacco in carica che brucia tutto e può scottare.
-
 173 Un attacco rumoroso che può essere usato solo se si è addormentati.
-
 174 Una mossa che funziona differentemente per gli SPETTRO.
-
 175 Infligge più danni quando i PS dell'utilizzatore sono bassi.
-
 176 Rende l'utilizzatore resistente al tipo dell'ultimo attacco subito.
-
 177 Lancia un colpo fatto di vuoto. Probabile Brutto Colpo.
-
 178 Spore si attaccano al nemico, riducendo di molto la VELOCITA'.
-
 179 Infligge più danni se i PS dell'utilizzatore sono a terra.
-
 180 Taglia dispettosamente i PP dell'ultima mossa usata dal nemico.
-
 181 Colpisce il nemico con una polvere nevosa. Può congelare.
-
 182 Evita l'attacco, ma può fallire se usata in successione.
-
 183 Viene tirato un pugno a folle velocità per colpire per primi.
-
 184 Terrorizza con una faccia spaventosa per ridurre di molto la VELOCITA'.
-
 185 Avvicina l'avversario, poi colpisce senza fallire.
-
 186 Richiede un bacio con sguardo carino. Può confondere.
-
 187 Massimizza l'ATTACCO sacrificando i PS.
-
 188 Viene lanciata melma per infliggere danno. Può anche avvelenare.
-
 189 Lancia fango sulla faccia del nemicoper ridurre la sua PRECISIONE.
-
 190 Spara una chiazza di inchiostro per danneggiare e ridurre la PRECISIONE.
-
 191 Piazza delle spine che danneggiano il nemico che viene scambiato.
-
 192 Potente e causa sempre paralisi, ma non è preciso.
-
 193 Annulla gli sforzi nemici di aumentare l'evasione.
-
 194 Se l'utilizzatore finisce KO, anche il nemico finisce KO.
-
 195 Ogni POKEMON che sente questa canzone verrà messo KO in 3 turni.
-
 196 Un attacco gelido che riduce la VELOCITA' del nemico.
-
 197 Evita l'attacco, ma può fallire se usata in successione.
-
 198 Colpisce il nemico con un osso in mano da 2 a 5 volte.
-
 199 Inquadra il nemico per assicurarsi che la mossa successiva colpisca.
-
 200 Una furia di 2 o 3 turni che confonde l'utilizzatore.
-
 201 Causa una tempesta di sabbia che imperversa per vari turni.
-
 202 Un attacco che ruba la metà dei danni che infligge.
-
 203 Sopporta ogni attacco per 1 turno, lasciando minimo 1 PS.
-
 204 Infatua il nemico e riduce di molto il suo ATTACCO.
-
 205 Un attacco che dura 5 turni con intensità crescente.
-
 206 Un attacco che lascia il nemico con almeno 1 PS.
-
 207 Confonde il nemico, ma aumenta di molto il suo ATTACCO.
-
 208 Recupera fino alla metà dei PS massimi.
-
 209 Un'azione elettrificata che può paralizzare il nemico.
-
 210 Un attacco che si intensifica a ogni colpo riuscito.
-
 211 Colpisce il nemico con ali dure completamente aperte.
-
 212 Fissa il nemico con un'occhiataccia che impedisce la fuga.
-
 213 Rende meno probabile che il sesso opposto attacchi.
-
 214 Usa casualmente una propria mossa mentre si è addormentati.
-
 215 Suona calmamente per curare tutte le anormalità di status.
-
 216 Un attacco che aumenta di potenza con l'amicizia.
-
 217 Un regalo sotto forma di bomba. Può ripristinare PS.
-
 218 un attacco che è più forte se l'ALLENATORE è disprezzato.
-
 219 Una forza mistica previene tutti i problemi di status.
-
 220 Somma i PS dell'utilizzatore e del nemico, poi li distribuisce equamente.
-
 221 Un mistico attacco di fuoco che può bruciare.
-
 222 Un attacco scuotiterra di intensità variabile.
-
 223 Potente e causa sempre confusione, ma non è preciso.
-
 224 Un brutale attacco speronante usando uns forte spinta di corna.
-
 225 Colpisce il nemico con un'incredibile esplosione di fiato.
-
 226 scambia l'utilizzatore mantenendo in gioco gli effetti.
-
 227 Costringe il nemico a ripetere l'ultima mossa usata da 2 a 6 turni.
-
 228 Infligge gran danno se usata su un nemico che sta venendo richiamato.
-
 229 Gira il corpo ad alta velocità per colpire il nemico.
-
 230 Seduce il nemico per ridurre l'EVASIONE.
-
 231 Attacca con una coda dura come la pietra. Può ridurre la DIFESA.
-
 232 Un attacco d'artiglio che può aumentare l'ATTACCO.
-
 233 Fa muovere per ultimo l'utilizzatore, ma non fallisce mai.
-
 234 Ripristina PS. La quantità varia a seconda del meteo.
-
 235 Ripristina PS. La quantità varia a seconda del meteo.
-
 236 Ripristina PS. La quantità varia a seconda del meteo.
-
 237 L'efficacia cambia con l'utilizzatore.
-
 238 Un attacco di 2 colpi taglienti. Probabile Brutto Colpo.
-
 239 Scatena un feroce tornado per tagliare l'avversario.
-
 240 Aumenta la potenza delle mosse ACQUA per 5 turni.
-
 241 Aumenta la potenza delle mosse FUOCO per 5 turni.
-
 242 Morde con zanne affilate. Può ridurre la DIFESA.
-
 243 Contrattacca l'attacco speciale del nemico con la potenza raddoppiata.
-
 244 Copia l'effetto(i) del nemico dandoli all'utilizzatore.
-
 245 Un attacco potente ed estremamente veloce.
-
 246 Un attacco che può aumentare tutte le stat.
 247 Lancia un blob nero che può ridurre la DIF.SP. del nemico.
-
 248 Innalza la forza interiore per colpire 2 turni più tardi.
-
 249 Un attacco spaccapietre che può ridurre la DIFESA.
-
 250 Intrappola e danneggia il nemico in un mulinello da 2 a 5 turni.
-
 251 Evoca i POKEMON del team per unirsi nell'attacco.
-
 252 Una mossa da 1° turno e 1° attacco che fa tentennare.
-
 253 Causa una baraonda da 2 a 5 turni e impedisce di addormentarsi.
-
 254 Carica Potenza fino a 3 turni.
-
 255 Rilascia la forza accumulata (più Accumulo c'è, meglio è).
-
 256 Assorbe la forza accumulata e recupera PS.
-
 257 Esemtte un alito caldo sul nemico. Può bruciare.
-
 258 Evoca una grandinata che colpisce ogni turno.
-
 259 Tormenta il nemico e ferma l'uso in successione di una mossa.
-
 260 Confonde il nemico, ma aumenta il suo ATT.SP.
-
 261 Infligge una scottatura sul nemico con fuoco intenso.
-
 262 L'utilizzatore finisce KO e riduce le stat del nemico.
-
 263 Aumenta l'attacco se bruciato, paralizzato, o avvelenato.
-
 264 Un potente attacco di lealtà. L'utilizzatore tentenna se colpito.
-
 265 Potente contro nemici paralizzati, ma ciò li cura.
-
 266 Attira l'attenzione per fare in modo che i nemici attacchino l'utilizzatore.
-
 267 Il tipo d'attacco varia a seconda della locazione.
-
 268 Carica potenza per potenziare la successiva mossa ELETTRo.
-
 269 Provoca il nemico per fargli usare solo mosse d'attacco.
-
 270 Aumenta la potenza delle mosse del ricevente.
-
 271 Imbroglia il nemico facendogli fare uno scambio di oggetti.
-
 272 Imita il bersaglio e copia la sua abilità speciale.
-
 273 Un desiderio che cura PS. Richiede tempo per funzionare.
-
 274 Attacca casualmente con una delle mosse del partner.
-
 275 Rilascia radici che curano PS. L'utilizzatore non può essere scambiato.
-
 276 Aumenta di molto la potenza, ma abbassa le abilità.
-
 277 Riflette gli effetti speciali sull'attaccante.
-
 278 Ricicla un oggetto usato per un altro uso.
-
 279 Un attacco che ottiene potenza se si viene danneggiati dal nemico.
-
 280 Distrugge barriere come RIFLESSO e causa danno.
-
 281 Culla il nemico nello sbadigliare, poi nel dormire il turno successivo.
-
 282 Tira via l'oggetto tenuto dal nemico per impedirne l'utilizzo.
-
 283 Ottiene potenza se i PS dell'utilizzatore sono più bassi dei PS del nemico.
-
 284 Più alti sono i PS dell'utilizzatore, più danni infligge.
-
 285 L'utilizzatore scambia le abilità speciali con il bersaglio.
-
 286 Impedisce al nemico di usare mosse conosciute da questo Pokemon.
-
 287 Cura avvelenamento, paralisi, o bruciatura.
-
 288 Se questo Pokemon viene messo KO, elimina tutti i PP della mossa usata dall'avversario.
-
 289 Ruba l'effetto della mossa che il nemico userà.
-
 290 Un attacco con effetti che variano con la locazione.
-
 291 Si tuffa sott'acqua il primo turno e colpisce il successivo.
-
 292 Pugni a braccio dritto che colpiscono il nemico da 2 a 5 volte.
-
 293 Cambia il tipo del POKEMON a seconda del luogo.
-
 294 accende una luce che aumenta di molto l'ATT.SP.
-
 295 Attacca con un esplosione di luce. può ridurre la DIF.SP.
-
 296 Attacca con una raffica di discesa. Può ridurre l'ATT.SP.
-
 297 Avvolge il nemico con piume per ridurre di molto l'ATTACCO.
-
 298 Confonde tutti i POKEMON sul campo.
-
 299 Un calcio con facile Brutto Colpo. Può causare scottature.
-
 300 Copre il Pokemon di fango per aumentare la resistenza elettrica.
-
 301 Un attacco a 5 turni che guadagna potenza con ogni colpo riuscito.
-
 302 Attacca con braccia spinose. Può far tentennare l'avversario.
-
 303 Si rilassa e si recupera la metà dei PS massimi.
-
 304 Un attacco rumoroso che usa onde sonore per danneggiare.
-
 305 Un attacco a base di zanne affilate. Può iperavvelenare l'avversario.
-
 306 Lacera il nemico con artigli affilati. Può ridurre la DIFESA.
-
 307 Potente, ma lascia l'utilizzatore immobile il turno successivo.
-
 308 Potente, ma lascia l'utilizzatore immobile il turno successivo.
 309 Lancia un pugno simile a una meteora. Può aumentare l'ATTACCO.
-
 310 Un attacco che può shockare il nemico nel tentennamento.
-
 311 La potenza e il tipo della mossa cambiano con il meteo.
-
 312 Cura tutti i problemi di status con un aroma calmante.
-
 313 Simula il pianto per ridurre di molto la DIF.SP. dell'avversario.
-
 314 Fende con vento a rasoio. Probabile Brutto Colpo.
-
 315 Permette un attacco a piena potenza, ma riduce di molto l'ATT.SP.
 316 Annulla gli sforzi nemici si aumentare l'evasione.
-
 317 Usa rocce per impedire al nemico di muoversi e taglia la VELOCITA'.
-
 318 Un attacco di polvere che può aumentare le abilità.
-
 319 Emette un orribile stridio che riduce molto la DIF.SP.
-
 320 Culla il nemico nel sonno con una piacevole melodia.
-
 321 Fa ridere il nemico per ridurre ATTACCO e DIFESA.
-
 322 Aumenta la DIFESA e la DIF.SP. usando un potere mistico.
-
 323 Infligge più danni se i PS dell'utilizzatore sono alti.
-
 324 Uno strano attacco a raggio che può confondere il nemico.
-
 325 Un pugno inevitabile che viene tirato dalle ombre.
-
 326 Attacca con un potere particolare. Può far tentennare.
-
 327 Un montante tirato come se dovesse raggiungere il cielo.
-
 328 Intrappola e ferisce il nemico nelle sabbie mobili da 2 a 5 turni.
-
 329 Un gelido attacco che causa KO istantaneo se colpisce.
-
 330 Attacca con acqua fangosa. Può ridurre la precisione.
-
 331 Spara da 2 a 5 semi di fila per colpire l'avversario.
-
 332 Un attacco incredibilmente veloce e inevitabile.
-
 333 Attacca il nemico sparando da 2 a 5 ghiaccioli di fila.
-
 334 Rinforza la superficie del corpo per aumentare di molto la DIFESA.
-
 335 Blocca la via del nemico per impedire la sua fuga.
-
 336 Ruggisce per infiammare lo spirito e aumentare ATTACCO.
-
 337 Lacera il nemico con artigli affilati.
-
 338 Potente, ma lascia l'utilizzatore immobile il turno successivo.
-
 339 Potenzia il corpo per aumentare sia ATTACCO che DIFESA.
-
 340 Rimbalza su, poi giù il turno successivo. Può paralizzare.
-
 341 Lancia fango al nemico e riduce la VELOCITA'.
-
 342 Probabile Brutto Colpo. Può anche avvelenare.
-
 343 Supplica carinemente per ottenere l'oggetto tenuto dal nemico.
-
 344 Un'azione rischia-vita che infligge vari danni all'utilizzatore.
-
 345 Attacca con una foglia strana che non può essere evitata.
-
 346 L'utilizzatore diventa inzuppato per aumentare la resistenza al fuoco.
-
 347 Aumenta l'ATT.SP. e la DIF.SP. focalizzando la mente.
-
 348 Taglia con una foglia tagliente. Probabile Brutto Colpo.
-
 349 Una danza mistica che aumenta ATTACCO e VELOCITA'.
-
 350 Lancia massi sul nemico da 2 a 5 volte di seguito.
-
 351 Un veloce e inevitabile attacco elettrico.
-
 352 Attacco con onde ultrasoniche. Può confondere il nemico.
-
 353 Evoca una forte luce solare per attaccare 2 turni più tardi.
-
 354 Permette un attacco a piena potenza, ma riduce di molto l'ATT.SP.
-
 355 Ripristina metà dei PS massimi.
-
 356 Inibisce mosse che volano o levitano per 5 turni.
-
 357 Rimuove l'immunità psico dei Pokemon OSCURITA'e resetta l'EVASIONE nemica.
 358 La potenza raddoppia se il nemico è addormentato, cura tale status.
 359 Riduce la VELOCITA' di un Livello.
@@ -723,13 +369,10 @@
 368 Restituisce il doppio del dano inflitto dal nemico.
 369 L'utilizzatore viene ritirato subito dopo l'attacco
 370 Riduce la DIFESA e la DIF.SP. dell'utilizzatore.
-
 371 La potenza raddoppia se l'utilizzatore ha subito danni prima.
 372 La potenza raddoppia se l'utilizzatore ha subito danni in questo turno.
 373 Il nemico non può usare gli oggetti tenuti.
-
 374 Lancia via il proprio oggetto, la potenza dipende dal tipo di oggetto.
-
 375 Da il proprio effetto di status all'avversario
 376 La potenza aumenta quando i PP scendono.
 377 Il nemico non può ripristinare PS per 5 turni.
@@ -740,16 +383,12 @@
 382 Colpisce per primo con la mossa del nemico con potenza x1,5
 383 Copia l'ultima mossa usata dal nemico.
 384 Scambia ATTACCO e ATT.SP. col bersaglio.
-
 385 Scambia DIFESA e DIF.SP. col bersaglio.
 386 La potenza dipende dalle stat nemiche.
 387 Only usable when all other attacks have been used
-
 388 Cambia l'abilità del nemico in Insonnia.
-
 389 Colpisce sempre per prima, ma fallisce se l'utilizzatore non usa una mossa d'attacco
-390 Causes damage when opponent switches Pok�mon
-
+390 Causes damage when opponent switches Pokémon
 391 Scambia i cambi di stat con l'avversario
 392 Rigenera PS ogni turno.
 393 Cambia la propria abilità in Levitazione.
@@ -769,7 +408,6 @@
 407 Può far tentennare il nemico.
 408 Nessun effetto aggiunto.
 409 User recovers half the damage inflicted
-
 410 Colpisce sempre per prima.
 411 Può ridurre la DIF.SP. del nemico di un Livello
 412 Può ridurre la DIF.SP. del nemico di un Livello
@@ -797,7 +435,6 @@
 434 Riduce l'ATT.SP. dell'utilizzatore di 2 Livelli.
 435 Può causare paralisi.
 436 Può bruciare.
-
 437 Riduce l'ATT.SP. dell'utilizzatore di 2 Livelli.
 438 Nessun effetto aggiunto
 439 L'utilizzatore non può attaccare il prossimo turno
@@ -807,21 +444,17 @@
 443 Non può fallire
 444 Probabile Brutto Colpo.
 445 Riduce l'ATT.SP del nemico di sesso opposto di 2 Livelli.
-
 446 Causa danno quando il nemico scambia Pokemon.
-
 447 La potenza aumenta se il nemico è pesante.
 448 Confonde il nemico.
 449 Il tipo cambia a seconda della Lastra tenuta.
 450 L'effetto dipende dalla bacca tenuta dal nemico
 451 Alte probabilità di aumentare l'ATT.SP. di un Livello.
 452 L'utilizzatore riceve contraccolpo.
-
 453 Colpisce sempre per prima.
 454 Probabile Brutto Colpo.
 455 Aumenta la DIFESA e la DIF.SP. di un Livello.
 456 Recupera metà dei PS massimi.
-
 457 L'utilizzatore subisce contraccolpo.
 458 Colpisce 2 volte.
 459 L'utilizzatore non può attaccare il prossimo turno.
@@ -829,178 +462,100 @@
 461 L'utilizzatore va KO. Cura completamente il successivo Pokemon chiamato in campo.
 462 La potenza dipende dai PS dell'avversario
 463 Intrappola il nemico.
-
 464 Causa sonno in entrambi i nemici.
 465 Riduce la DIF.SP. dell'avversario.
 466 Può alzare tutte le stat di un Livello.
 467 Sparisce il primo turno e attacca il secondo, il nemico non può proteggersi.
 468 Aumenta ATTACCO e PRECISIONE di un Livello.
-
 469 Protegge il tuo team da un attacco che colpirebbe tutti i tuoi Pokemon. Fallisce se usata in successione.
-
 470 Equilibra la DIFESA e DIF.SP. dell'utilizzatore e del bersaglio.
-
 471 Equilibra l'ATTACCO e ATT.SP. dell'utilizzatore e del bersaglio.
 472 Tutte le DIF. e DIF.SP. vengono scambiate per 5 turni.
-
 473 Calcola il danno con la stat DIFESA del bersaglio.
-
 474 Raddoppia la potenza se l'avversario è avvelenato.
-
 475 Aumenta di molto la VELOCITA'.
-
 476 Tira su di se gli attacchi dell'avversario.
-
 477 Rende più facile colpire il brrsaglio per 3 turni.
-
 478 Annulla tutti gli oggetti tenuti per 5 turni.
-
 479 Rende i nemici VOLANTE suscettibili alle mosse TERRA. (100%)
-
 480 Costringe l'avversario a scambiarsi.
-
 481 Colpisce tutti i bersagli.
-
 482 Può avvelenare l'avversario. (10%)
-
 483 Raises SpA, SpD, and Speed by 1 stage.
-
 484 Più l'utilizzatore è pesante, più danni infligge.
-
 485 Infligge più danni se il bersaglio è dello stesso tipo dell'utilizzatore.
-
 486 Ha una potenza base più alta più e maggiore la VELOCITA' dell'utilizzatore rispetto al bersaglio.
 487 Trasforma il bersaglio in tipo ACQUA.
-
 488 Può aumentare la VELOCITA' dell'avversario.
-
 489 Aumenta l'ATTACCO, la DIFESA, la PRECISIONE.
 490 Riduce la VELOCITA' nemica di un Livello di un Livello.
-
 491 Riduce di molto la DIF.SP.
-
 492 Più l'ATTACCO del nemico è alto, più danni infligge.
-
 493 Rende l'abilità del bersaglio 'Semplice'.
-
 494 Renda l'abilità del bersaglio uguale a quella dell'utilizzatore.
-
 495 Fa muovere il bersaglio immediatamente dopo l'utilizzatore.
-
 496 Aumenta la potenza base a seconda dei Pokemon disponibili per l'attacco.
-
 497 Infligge più danni se usata in successione.
-
 498 I cambi di stat del bersaglio non influenzano questa mossa.
-
 499 Resetta tutti i cambi di stat.
-
 500 Più le stat dell'utilizzatore sono state alzate, più danni sono inflitti da questo attacco.
-
 501 Protegge il tuo team dalle mosse priorità. Fallisce se usata in successione.
 502 Scambia posizione con un alleato.
-
 503 Può bruciare l'avversario. (30%)
-
 504 Aumenta ATTACCO, ATT.SP. e VELOCITA' ma riduce DIFESA e DIF.SP.
-
 505 Ripristina il 50% dei PS di un alleato.
-
 506 Raddoppia in potenza se l'avversario ha una condizione di status.
-
 507 Prende il nemico il primo turno e lo lancia giù nel secondo.
-
 508 Aumenta l'ATTACCO di un Livello e la VELOCITA' di 2 Livelli.
-
 509 Costringe l'avversario a essere scambiato.
-
 510 Rimuove la bacca del bersaglio.
-
 511 Costringe il bersaglio a muoversi per ultimo.
-
 512 Permette all'utilizzatore di colpire l'avversario opposto in una Battaglia Tripla.
-
 513 Cambia l'abilità del bersaglio in quella dell'utilizzatore.
 514 Infligge più danni se un Pokemon è stato messo KO nell'ultimo turno.
-
 515 Manda KO l'utilizzatore e infligge danni al nemico pari ai PS persi.
-
 516 Da l'oggetto dell'utilizzatore al nemico, se esso non ha oggetti.
-
 517 Può bruciare. (100%)
-
 518 Se usato con Fuocopatto, crea un arcobaleno che può causare confusione
 519 Se usato con Erbapatto, crea una zona bruciante che causa danni ogni turno
 520 Se usato con Acquapatto, crea una palude che riduce la VELOCITA' di tutti i bersagli
 521 Scambia con un altro Pokemon.
-
 522 Può ridurre l'ATT.SP. avversario di un Livello.
-
 523 Può ridurre la VELOCITA' avversaria di un Livello.
-
 524 Brutto Colpo (100%)
-
 525 Costringe il bersaglio a essere ritirato.
-
 526 Aumenta l'ATTACCO e l'ATT.SP.
-
 527 Riduce la VELOCITA'nemica di un Livello.
-
 528 Ritorna al mittente 1/4 dei PS inflitti al nemico (contraccolpo).
 529 Probabile Brutto Colpo.
-
 530 Colpisce 2 volte.
-
 531 Può far tentennare l'avversario.
-
 532 Se questo attacco ha successo, l'utilizzatore recupera la metà dei PS persi dal nemico da questo attacco.
-
 533 Questa mossa non è influenzata dai cambi di stat avversari.
-
 534 Può ridurre la DIFESA nemica di un Livello.
-
 535 Più è pesante l'utilizzatore, più danni infligge.
-
 536 Può ridurre la PRECISIONE avversaria di un Livello.
 537 Può far tentennare. La potenza è raddoppiata se Minimizza è in effetto per l'avversario.
-
 538 Aumenta di molto la DIFESA.
-
 539 Riduce la PRECISIONE nemica di un Livello
 540 Infligge danno basandosi sulla DIFESA avversaria.
-
 541 Attacco multicolpo. attacca da 2 a 5 volte di fila. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 542 Aumenta la PRECISIONE se c'è una condizione meteo. (30%)
-
 543 Ritorna al mittente 1/4 dei PS inflitti al nemico (contraccolpo).
-
 544 Colpisce due volte.
-
 545 Può bruciare l'avversario. (30%)
-
 546 Se l'utilizzatore sta tenendo una Cassetta, il tipo di questo attacco dipende dalla Cassetta tenuta.
-
 547 Può addormentare il bersaglio (10%)
-
 548 Infligge danno fisico.
-
 549 Riduce di molto la VELOCITA' avversaria.
 550 Può paralizzare l'avversario. (20%)
-
 551 Può bruciare l'avversario. (20%)
-
 552 Può aumentare l'ATT.SP. di un livello.
 553 Può paralizzare l'avversario. (30%)
-
 554 Può bruciare l'avversario. (30%)
-
 555 Può ridurre l'ATT.SP. dell'avversario di un Livello.
-
 556 Può far tentennare l'avversario.
-
 557 Infligge danno agli alleati su ogni lato dell'utilizzatore.
-
 558 Si potenzia se usata dopo Incrotuono.
-
 559 Si potenzia se usata dopo Incrofiamma.
+
