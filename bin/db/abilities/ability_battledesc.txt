@@ -27,7 +27,7 @@
 26 Makes a Pokemon with this ability immune to Ground moves, Spikes and Toxic Spikes, as well as the effect of Arena Trap.
 27 Has a 30% chance to make a Pokemon either Paralyzed, Poisoned, or Asleep every time they touch a Pokemon with this ability.
 28 When a Pokemon with this ability becomes Burned, Paralyzed, or Poisoned, inflicts the same to the enemy Pokemon.
-29 Prevents the stats of a Pokemon with this ability from being lowered.
+29 Prevents the stats of a Pokemon with this ability from being reduced by the opponent.
 30 Restores to normal the status of a Pokemon with this ability when it leaves battle.
 31 Makes a Pokemon with this ability draw in and be immune to all Electric moves, and boosts its Special Attack by one stage every time it is hit by one.
 32 Doubles the chance of an attacking move's added effect occurring when used by a Pokemon with this ability.
@@ -49,8 +49,8 @@
 48 Halves the turns that a Pokemon with this ability spends Asleep, rounded down, including from Rest.
 49 Has a 30% chance of Burning a Pokemon every time they touch a Pokemon with this ability.
 50 Allows a Pokemon with this ability to always run from wild battles.
-51 Prevents a Pokemon with this ability from having its Accuracy reduced.
-52 Prevents a Pokemon with this ability from having its Attack reduced.
+51 Prevents a Pokemon with this ability from having its Accuracy reduced by the opponent.
+52 Prevents a Pokemon with this ability from having its Attack reduced by the opponent.
 53 If a Pokemon other than the one with this Ability consumes a held item, lets this Pokemon obtain that item. After battle, a Pokemon with this ability will sometimes be holding an item if it was not already.
 54 Forces a Pokemon with this ability to skip every other turn.
 55 Increases Attack of a Pokemon with this ability by 50%, but makes its physical moves have 80% of their usual accuracy. If a Pokemon with this ability is first on your belt, the chance of a wild encounter with higher level Pokemon increases.
@@ -71,7 +71,7 @@
 70 Summons a permanent Sunny Day when a Pokemon with this ability enters the field.
 71 Prevents enemy Pokemon (except Flying Pokemon and Pokemon that can Levitate) from running or being switched out as long as a Pokemon with this ability is on the field.
 72 Prevents a Pokemon with this ability from becoming Asleep.
-73 Prevents the stats of a Pokemon with this ability from being lowered by the enemy.
+73 Prevents the stats of a Pokemon with this ability from being reduced by the opponent.
 74 Doubles the Attack of a Pokemon with this ability.
 75 Prevents moves from critically hitting a Pokemon with this ability.
 76 Prevents weather from having any effect as long as a Pokemon with this ability is on the field.
@@ -143,7 +143,7 @@
 142 Prevents a Pokemon with this ability from taking damage from weather effects.
 143 Has a 30% chance to Poison the target of a contact move used by a Pokemon with this ability.
 144 Recovers up to 1/3 max HP of a Pokemon with this ability when it leaves the field.
-145 Prevents a Pokemon with this ability from having its Defense reduced.
+145 Prevents a Pokemon with this ability from having its Defense reduced by the opponent.
 146 Doubles the Speed of a Pokemon with this ability during Sandstorm.
 147 Lowers to accuracy of any non-attacking move aimed at a Pokemon with this ability to 50 if it is higher.
 148 Boosts the power of all moves used by a Pokemon with this ability by 30% if it attacks after the enemy.
