@@ -1,324 +1,165 @@
 ﻿0 
-
 1 Il fetore aiuta a tenere lontani i Pokemon Selvatici.
-
 2 Il Pokemon fa piovere quando entra in campo.
-
 3 La Velocità del Pokemon è gradualmente aumentata.
-
 4 Il Pokemon è protetto contro i Brutti Colpi.
-
 5 Il Pokemon è protetto da attacchi da KO istantaneo.
-
 6 Impedisce ai combattenti di autodistruggersi.
-
 7 Il Pokemon è protetto dalla Paralisi.
-
 8 Aumenta l'Evasione del Pokemon durante una tempesta di sabbia.
-
 9 Il contatto col Pokemon può causare Paralisi.
-
 10 Recupera PV se colpito da una mossa Elettro.
-
 11 Recupera PV se colpito da una mossa Acqua.
-
 12 Impedisce al Pokemon di innamorarsi.
-
 13 Elimina l'effetto del meteo.
-
 14 Aumenta la precisione del Pokemon.
-
 15 Il Pokemon non può essere Addormentato.
-
 16 Cambia il tipo del Pokemon a seconda della mossa nemica.
-
 17 Il Pokemon non può essere Avvelenato.
-
 18 Potenzia le mosse Fuoco se colpito da una mossa Fuoco.
-
 19 Annulla gli effetti aggiuntivi degli attacchi subiti.
-
 20 Impedisce al Pokemon di essere confuso.
-
 21 Annulla le mosse che costringono a cambiare Pokemon.
-
 22 Riduce l'Attacco del nemico.
-
 23 Impedisce al nemico di scappare.
-
 24 A contatto infligge danni al nemico.
-
 25 Solo le mosse superefficaci colpiranno.
-
 26 Dà immunità totale alle mosse Terra.
-
 27 Il contatto può paralizzare, avvelenare o addormentare.
-
 28 Trasferisce bruciatura, veleno o paralisi al nemico.
-
 29 Impedisce alle statistiche del Pokemon di essere abbassate.
-
 30 Tutti i problemi di stato sono curati quando il Pokemon viene ritirato.
 31 Il Pokemon attira tutte le mosse Elettro.
-
 32 Aumenta la frequenza che appaiano effetti aggiuntivi.
-
 33 Aumenta la Velocità del Pokemon sotto la pioggia.
-
 34 Aumenta la Velocità del Pokemon sotto il sole.
-
 35 Aumenta la possibilità di trovare Pokemon Selvatici.
-
 36 Il Pokemon copia l'abilità del nemico.
-
 37 Aumenta l'Attacco del Pokemon.
-
 38 Contatto con il Pokemon può avvelenare il nemico.
-
 39 Il Pokemon non può tentennare.
-
 40 Impedisce al Pokemon di congelarsi.
-
 41 Impedisce al Pokemon di essere scottato.
-
 42 Impedisce ai Pokemon Acciaio di scappare.
-
 43 Dà immunità totale alle mosse a base sonora.
-
 44 Il Pokemon recupera gradualmente PV sotto la pioggia.
-
 45 Il Pokemon evoca una tempesta di sabbia nella battaglia.
-
 46 Il Pokemon aumenta il numero di PP usati dall'avversario.
-
 47 Aumenta la resistenza alle mosse Fuoco e Ghiaccio.
-
 48 Il Pokemon si sveglia prima dal sonno.
-
 49 il contatto con il pokemon può scottare l'avversario.
-
 50 Permette fuga sicura con i Pokemon Selvatici.
-
 51 Impedisce al Pokemon di perdere Precisione.
-
 52 L'Attacco del Pokemon non può diminuire.
-
 53 Il Pokemon può raccogliere oggetti.
-
 54 Il Pokemon non può attaccare 2 turni di seguito.
-
 55 Aumenta l'Attacco, ma riduce la Precisione.
-
 56 Contatto con il Pokemon può causare infatuazione.
-
 57 Aumenta l'Att. Sp. se un altro Pokemon ha Meno.
-
 58 Aumenta l'Att. Sp. se un altro Pokemon ha Più.
-
 59 CASTFORM si trasforma con il meteo.
-
 60 Protegge il Pokemon da furti d'oggetto.
-
 61 il Pokemon può curare il suo status alterato.
-
 62 Aumenta l'Attacco se c'è un'alterazione di stato.
-
 63 Aumenta la Difesa se c'è un'alterazione di stato.
-
 64 Infligge danno a chi usa una mossa drenavita.
-
 65 Potenzia le mosse Erba in difficoltà.
-
 66 Potenzia le mosse Fuoco in difficoltà.
 67 Potenzia le mosse Acqua in difficoltà.
-
 68 Potenzia le mosse Coleottero in difficoltà.
 69 Protegge il Pokemon dal contraccolpo.
-
 70 Il Pokemon fa apparire il sole se entra in campo.
-
 71 Impedisce al Pokemon di scappare.
-
 72 Impedisce al Pokemon di addormentarsi.
-
 73 Impedisce alle statistiche del Pokemon di essere abbassate.
-
 74 Potenzia gli attacchi fisici.
-
 75 Il Pokemon è protetto dai Brutti Colpi.
-
 76 Annulla gli effetti del meteo.
-
 77 Aumenta l'Elusione se il Pokemon è confuso.
-
 78 Aumenta la Velocità se colpito da una mossa Elettro.
-
 79 Aumenta l'Attacco se l'avversario è dello stesso sesso.
-
 80 Aumenta la Velocità ogni volta che il Pokemon tentenna.
-
 81 Aumenta l'Elusione durante la grandine.
-
 82 Fa utilizzare prima una Bacca tenuta.
-
 83 Aumenta l'Attacco dopo avere subito un Brutto Colpo.
-
 84 Aumenta la Velocità se viene utilizzato uno strumento tenuto.
-
 85 Riduce la potenza delle mosse Fuoco.
-
 86 Il Pokemon tende a cambi selvatici di statistiche.
-
 87 Riduce i PV se c'è il sole. L'acqua rigenera PV.
-
 88 Aggiusta la potenza a seconda dell'avversario.
-
 89 Aumenta la potenza delle mosse pugno.
-
 90 Rigenera PV se il Pokemon è Avvelenato.
-
 91 Potenzia mosse dello stesso tipo.
-
 92 Aumenta la frequenza delle mosse multicolpo.
-
 93 Cura problemi di stato se piove.
-
 94 Durante il sole, aumenta l'Attacco Speciale, ma riduce i PV.
 95 Aumenta la Velocità se c'è uno status alterato.
-
 96 Tutte le mosse del Pokemon diventano di tipo Normale.
-
 97 Potenzia le mosse se fanno Brutti Colpi.
-
 98 Il Pokemon è danneggiato solo dagli attacchi.
-
 99 Assicura che i colpi tuoi e degli avversari vadano sempre a segno.
-
 100 Il Pokemon si muove dopo avversari più lenti.
-
 101 Potenzia le mosse più deboli del Pokemon.
-
 102 Annulla i problemi di stato durante il sole.
-
 103 Il Pokemon non può usare gli oggetti tenuti.
-
 104 Le mosse possono essere usate indipendentemente dalle abilità.
-
 105 Aumenta la possibilità di infliggere Brutti Colpi.
-
 106 Dammeggia il nemico che ha inflitto il colpo finale.
-
 107 Percepisce la pericolosità delle mosse nemiche.
-
 108 Determina quale mossa ha il nemico.
-
 109 Ignora i cambi di abilità del nemico.
-
 110 Potenzia le mosse non molto efficaci.
-
 111 Riduce la potenza delle mosse superefficaci.
-
 112 Dimezza temporaneamente Attacco e Velocità.
-
 113 Permette a ogni mossa di colpire i Pokemon Spettro.
-
 114 Il Pokemon assorbe tutte le mosse Acqua.
-
 115 Il Pokemon recupera PV durante una tempesta di sabbia.
-
 116 Riduce la potenza delle mosse superefficaci.
-
 117 Il Pokemon causa una grandinata entrando in campo.
-
 118 Il Pokemon può ottenere Miele da qualche parte.
-
 119 Il Pokemon può controllare lo strumento del nemico.
-
 120 Potenzia le mosse che infliggono contraccolpi.
-
 121 Cambia il proprio tipo a seconda della Lastra tenuta.
-
 122 Potenzia i Pokemon del team sotto il sole.
-
 123 Riduce i PV di un Pokemon addormentato.
-
 124 A contatto ruba l'oggetto tenuto dal nemico.
-
 125 Potenzia le mosse con effetti extra x1.3, ma annulla i loro effetti.
-
 126 Inverte le modifiche di statistiche.
-
 127 Impedisce ai Pokemon avversari di mangiare Bacche.
-
 128 Aumenta l'Attacco di 2 Livelli quando una statistica viene abbassata.
-
 129 Dimezza Attacco e Attacco Speciale sotto il 50% dei PV.
-
 130 Ha il 30% di probabilità di inibire ogni mossa che colpisce il Pokemon.
-
 131 Ha il 30% di probabilità di curare ogni alleato adiacente da ogni principale problema di stato dopo ogni turno.
-
 132 Riduce il danno inflitto contro i Pokemon compagni.
-
 133 Aumenta la Velocità e riduce la Difesa di un livello ciascuna ogni volta che viene colpito da una mossa.
-
 134 Raddoppia il peso del Pokemon.
-
 135 Dimezza il peso del Pokemon.
-
 136 Dimezza il danno subito a piena vita.
-
 137 Aumenta l'Attacco x1,5 se il Pokemon è Avvelenato.
-
 138 Aumenta l'Attacco Speciale x1.5 se il Pokemon è Bruciato.
-
 139 Ripristina ogni bacca tenuta il turno dopo il suo utilizzo.
-
 140 Protegge contro mosse dannose dai Pokemon compagni.
-
 141 Ogni turno aumenta una stat casuale di 2 Livelli e ne riduce un'altra di un Livello.
-
 142 Protegge contro i danni del meteo.
-
 143 A contatto ha il 20% di possibilità di Avvelenare l'avversario.
-
 144 Cura 1/3 dei PV massimi quando lascia il campo.
-
 145 Protegge contro i cali di Difesa.
-
 146 Raddoppia la Velocità durante le tempeste di sabbia.
-
 147 Ha il 50% di possibilità di proteggersi contro mosse non offensive che infliggono principali problemi di stato.
-
 148 Potenzia le mosse se agisce per ultimo.
-
 149 Prende l'aspetto dell'ultimo Pokemon non esausto del team quando mandato in campo fino a quando subisce danno diretto
 150 Si trasforma entrando in battaglia.
-
 151 Ignora Schermoluce, Riflesso, Salvaguardia.
-
 152 A contatto cambia l'abilità del Pokemon nemico in Mummia.
-
 153 Aumenta l'Attacco dopo aver messo KO un Pokemon nemico.
-
 154 Aumenta l'Attacco quando colpito da mosse Buio.
-
 155 Aumenta la Velocità di un Livello se colpito da mosse Buio, Spettro o Coleottero.
-
 156 Rispedisce al mittente molte mosse non danneggianti.
-
 157 Assorbe le mosse Erba, aumentando l'Attacco di un Livello{mechanic:stat modifier}.
-
 158 Aumenta di un Livello la priorità di tutte le mosse non danneggianti.
-
 159 Durante una tempesta di sabbia potenzia mosse Roccia,Terra e Acciaio x1,3.
-
 160 A contatto danneggia i Pokemon attaccanti per 1/8 dei loro PV massimi.
-
 161 Cambia Darmanitan nella modalità Daruma se i PV massimi sono sotto il 50%.
-
 162 Aumenta la Precisione x1,1 di tutti i Pokemon compagni.
-
 163 Le mosse ignorano le abilità avversarie se possono ostacolarle o prevenirle.
-
 164 Le mosse ignorano le abilità avversarie se possono ostacolarle o prevenirle.
