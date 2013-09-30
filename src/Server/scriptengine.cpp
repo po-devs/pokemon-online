@@ -17,12 +17,23 @@
 #include "../Shared/config.h"
 #include "../Utilities/ziputils.h"
 #include <QScriptEngineAgent>
+#include <QMetaType>
 
 #ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
 #else
 #define DEPRECATED(x)
 #endif
+
+
+
+
+Q_DECLARE_METATYPE(ByteArrayClass*)
+
+Q_DECLARE_METATYPE(QByteArray*)
+
+
+
 
 DEPRECATED(
     static bool callLater_w = false;
@@ -195,6 +206,10 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     sys.setProperty( "enableStrict" , myengine.newFunction(enableStrict));
 
+    ByteArrayClass *baClass = new ByteArrayClass(&myengine);
+
+    sys.setProperty("ByteArray", baClass->constructor());
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
     QScriptValue writeFunc = myengine.newFunction(write);
@@ -203,6 +218,14 @@ ScriptEngine::ScriptEngine(Server *s) {
     QScriptValue readFunc = myengine.newFunction(read);
     sys.setProperty( "read" , readFunc);
     sys.setProperty( "getFileContent" , readFunc);
+
+    sys.setProperty("readBinary", myengine.newFunction(readBinary));
+    sys.setProperty("writeBinary", myengine.newFunction(writeBinary));
+
+    sys.setProperty("qCompress", myengine.newFunction(compress));
+    sys.setProperty("qUncompress", myengine.newFunction(uncompress));
+
+
     QScriptValue mkdirf = myengine.newFunction(mkdir);
     sys.setProperty( "mkdir" , mkdirf);
     sys.setProperty( "makeDir" , mkdirf);
@@ -227,6 +250,7 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty( "fexists" , myengine.newFunction(exists));
 
     sys.setProperty( "exec" , myengine.newFunction(exec));
+
 
 #endif
     sys.setProperty( "sendAll" , myengine.newFunction(sendAll));
@@ -2968,6 +2992,7 @@ QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
     return QScriptValue();
 }
 
+
 QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
@@ -2988,6 +3013,28 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 
     return QScriptValue();
 }
+
+QScriptValue ScriptEngine::writeBinary(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    //Server *myserver = poscriptengine->myserver;
+    QScriptValue fileName, data;
+
+    fileName = c->argument(0);
+    data = c->argument(1);
+
+    QFile out(fileName.toString());
+
+    if (!out.open(QIODevice::WriteOnly)) {
+        po->warn("writeBinary(filename, content)", out.errorString());
+        return QScriptValue();
+    }
+
+    out.write(e->fromScriptValue<QByteArray>(data));
+
+    return QScriptValue();
+}
+
 
 
 QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
@@ -3018,6 +3065,58 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
 
     return QScriptValue();
 }
+
+QScriptValue ScriptEngine::compress(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    int compression = -1;
+
+
+
+    if (c->argument(1).isNumber()) {
+        compression = c->argument(1).toInteger();
+
+        if (compression > 9 || compression < -1) {
+            po->warn("qCompress(binary [, compression])", "Invalid compresion level", true);
+            return QScriptValue();
+        }
+    }
+
+    QByteArray b;
+
+    if (c->argument(0).instanceOf(e->globalObject().property("sys").property("ByteArray")))
+    {
+        b = e->fromScriptValue<QByteArray>(c->argument(0));
+    }
+    else
+    {
+        po->warn("qCompress(binary [, compression])", "Need binary buffer to qCompress", true);
+        return QScriptValue();
+    }
+
+    return e->toScriptValue(qCompress(b, compression));
+}
+
+QScriptValue ScriptEngine::uncompress(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QByteArray b;
+
+    if (c->argument(0).instanceOf(e->globalObject().property("sys").property("ByteArray")))
+    {
+        b = e->fromScriptValue<QByteArray>(c->argument(0));
+    }
+    else
+    {
+        po->warn("qUncompress(binary)", "Need binary buffer to qUncompress", true);
+        return QScriptValue();
+    }
+
+    return e->toScriptValue(qUncompress(b));
+}
+
 
 QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 {
@@ -3311,6 +3410,8 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     }
     return result_array;
 }
+
+
 QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
 {
     QFile f(c->argument(0).toString());
@@ -3319,7 +3420,6 @@ QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
 }
 
 QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
-//QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
@@ -3331,6 +3431,20 @@ QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
     }
 
     return QScriptValue(QString::fromUtf8(out.readAll()));
+}
+
+QScriptValue ScriptEngine::readBinary(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QFile out(c->argument(0).toString());
+
+    if (!out.open(QIODevice::ReadOnly)) {
+        po->warn("read(filename)", out.errorString(),true);
+        return QScriptValue();
+    }
+
+    return QScriptValue(e->toScriptValue(out.readAll()));
 }
 
 QScriptValue ScriptEngine::getServerPlugins() {
@@ -3575,4 +3689,419 @@ QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
     po->wfatal = true;
 
     return QScriptValue(1);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/****************************************************************************
+**
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
+**
+** This file is part of the examples of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:BSD$
+** You may use this file under the terms of the BSD license as follows:
+**
+** "Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions are
+** met:
+**   * Redistributions of source code must retain the above copyright
+**     notice, this list of conditions and the following disclaimer.
+**   * Redistributions in binary form must reproduce the above copyright
+**     notice, this list of conditions and the following disclaimer in
+**     the documentation and/or other materials provided with the
+**     distribution.
+**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+**     of its contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+//#include <QtScript/QScriptEngine>
+
+
+
+ByteArrayPrototype::ByteArrayPrototype(QObject *parent)
+    : QObject(parent)
+{
+}
+
+ByteArrayPrototype::~ByteArrayPrototype()
+{
+}
+
+QByteArray *ByteArrayPrototype::thisByteArray() const
+{
+    return qscriptvalue_cast<QByteArray*>(thisObject().data());
+}
+
+void ByteArrayPrototype::chop(int n)
+{
+    thisByteArray()->chop(n);
+}
+
+bool ByteArrayPrototype::equals(const QByteArray &other)
+{
+    return *thisByteArray() == other;
+}
+
+QByteArray ByteArrayPrototype::left(int len) const
+{
+    return thisByteArray()->left(len);
+}
+
+QByteArray ByteArrayPrototype::mid(int pos, int len) const
+{
+    return thisByteArray()->mid(pos, len);
+}
+
+QScriptValue ByteArrayPrototype::remove(int pos, int len)
+{
+    thisByteArray()->remove(pos, len);
+    return thisObject();
+}
+
+QByteArray ByteArrayPrototype::right(int len) const
+{
+    return thisByteArray()->right(len);
+}
+
+QByteArray ByteArrayPrototype::simplified() const
+{
+    return thisByteArray()->simplified();
+}
+
+QByteArray ByteArrayPrototype::toBase64() const
+{
+    return thisByteArray()->toBase64();
+}
+
+QByteArray ByteArrayPrototype::toLower() const
+{
+    return thisByteArray()->toLower();
+}
+
+QByteArray ByteArrayPrototype::toUpper() const
+{
+    return thisByteArray()->toUpper();
+}
+
+QByteArray ByteArrayPrototype::trimmed() const
+{
+    return thisByteArray()->trimmed();
+}
+
+void ByteArrayPrototype::truncate(int pos)
+{
+    thisByteArray()->truncate(pos);
+}
+
+QString ByteArrayPrototype::toLatin1String() const
+{
+    return QString::fromLatin1(*thisByteArray());
+}
+
+QScriptValue ByteArrayPrototype::valueOf() const
+{
+    return thisObject().data();
+}
+
+/****************************************************************************
+ **
+ ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+ ** Contact: http://www.qt-project.org/legal
+ **
+ ** This file is part of the examples of the Qt Toolkit.
+ **
+ ** $QT_BEGIN_LICENSE:BSD$
+ ** You may use this file under the terms of the BSD license as follows:
+ **
+ ** "Redistribution and use in source and binary forms, with or without
+ ** modification, are permitted provided that the following conditions are
+ ** met:
+ **   * Redistributions of source code must retain the above copyright
+ **     notice, this list of conditions and the following disclaimer.
+ **   * Redistributions in binary form must reproduce the above copyright
+ **     notice, this list of conditions and the following disclaimer in
+ **     the documentation and/or other materials provided with the
+ **     distribution.
+ **   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+ **     of its contributors may be used to endorse or promote products derived
+ **     from this software without specific prior written permission.
+ **
+ **
+ ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ ** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ ** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ ** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ ** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ ** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+ **
+ ** $QT_END_LICENSE$
+ **
+ ****************************************************************************/
+
+ #include <QtScript/QScriptClassPropertyIterator>
+ #include <QtScript/QScriptEngine>
+
+ #include <stdlib.h>
+
+
+class ByteArrayClassPropertyIterator : public QScriptClassPropertyIterator
+{
+public:
+    ByteArrayClassPropertyIterator(const QScriptValue &object);
+    ~ByteArrayClassPropertyIterator();
+
+    bool hasNext() const;
+    void next();
+
+    bool hasPrevious() const;
+    void previous();
+
+    void toFront();
+    void toBack();
+
+    QScriptString name() const;
+    uint id() const;
+
+private:
+    int m_index;
+    int m_last;
+};
+
+ByteArrayClass::ByteArrayClass(QScriptEngine *engine)
+    : QObject(engine), QScriptClass(engine)
+{
+    qScriptRegisterMetaType<QByteArray>(engine, toScriptValue, fromScriptValue);
+
+    length = engine->toStringHandle(QLatin1String("length"));
+
+    proto = engine->newQObject(new ByteArrayPrototype(this),
+                               QScriptEngine::QtOwnership,
+                               QScriptEngine::SkipMethodsInEnumeration
+                               | QScriptEngine::ExcludeSuperClassMethods
+                               | QScriptEngine::ExcludeSuperClassProperties);
+    QScriptValue global = engine->globalObject();
+    proto.setPrototype(global.property("Object").property("prototype"));
+
+    ctor = engine->newFunction(construct, proto);
+    ctor.setData(engine->toScriptValue(this));
+}
+
+ByteArrayClass::~ByteArrayClass()
+{
+}
+
+QScriptClass::QueryFlags ByteArrayClass::queryProperty(const QScriptValue &object,
+                                                       const QScriptString &name,
+                                                       QueryFlags flags, uint *id)
+{
+    QByteArray *ba = qscriptvalue_cast<QByteArray*>(object.data());
+    if (!ba)
+        return 0;
+    if (name == length) {
+        return flags;
+    } else {
+        bool isArrayIndex;
+        qint32 pos = name.toArrayIndex(&isArrayIndex);
+        if (!isArrayIndex)
+            return 0;
+        *id = pos;
+        if ((flags & HandlesReadAccess) && (pos >= ba->size()))
+            flags &= ~HandlesReadAccess;
+        return flags;
+    }
+}
+
+QScriptValue ByteArrayClass::property(const QScriptValue &object,
+                                      const QScriptString &name, uint id)
+{
+    QByteArray *ba = qscriptvalue_cast<QByteArray*>(object.data());
+    if (!ba)
+        return QScriptValue();
+    if (name == length) {
+        return ba->length();
+    } else {
+        qint32 pos = id;
+        if ((pos < 0) || (pos >= ba->size()))
+            return QScriptValue();
+        return uint(ba->at(pos)) & 255;
+    }
+    return QScriptValue();
+}
+
+void ByteArrayClass::setProperty(QScriptValue &object,
+                                 const QScriptString &name,
+                                 uint id, const QScriptValue &value)
+{
+    QByteArray *ba = qscriptvalue_cast<QByteArray*>(object.data());
+    if (!ba)
+        return;
+    if (name == length) {
+        resize(*ba, value.toInt32());
+    } else {
+        qint32 pos = id;
+        if (pos < 0)
+            return;
+        if (ba->size() <= pos)
+            resize(*ba, pos + 1);
+        (*ba)[pos] = char(value.toInt32());
+    }
+}
+
+QScriptValue::PropertyFlags ByteArrayClass::propertyFlags(
+    const QScriptValue &/*object*/, const QScriptString &name, uint /*id*/)
+{
+    if (name == length) {
+        return QScriptValue::Undeletable
+            | QScriptValue::SkipInEnumeration;
+    }
+    return QScriptValue::Undeletable;
+}
+
+QScriptClassPropertyIterator *ByteArrayClass::newIterator(const QScriptValue &object)
+{
+    return new ByteArrayClassPropertyIterator(object);
+}
+
+QString ByteArrayClass::name() const
+{
+    return QLatin1String("ByteArray");
+}
+
+QScriptValue ByteArrayClass::prototype() const
+{
+    return proto;
+}
+
+QScriptValue ByteArrayClass::constructor()
+{
+    return ctor;
+}
+
+QScriptValue ByteArrayClass::newInstance(int size)
+{
+    engine()->reportAdditionalMemoryCost(size);
+    return newInstance(QByteArray(size, /*ch=*/0));
+}
+
+QScriptValue ByteArrayClass::newInstance(const QByteArray &ba)
+{
+    QScriptValue data = engine()->newVariant(QVariant::fromValue(ba));
+    return engine()->newObject(this, data);
+}
+
+QScriptValue ByteArrayClass::construct(QScriptContext *ctx, QScriptEngine *)
+{
+    QScriptValue qs = ctx->callee().data();
+    ByteArrayClass *cls = qscriptvalue_cast<ByteArrayClass*>(qs);
+    if (!cls)
+        return QScriptValue();
+    QScriptValue arg = ctx->argument(0);
+    if (arg.instanceOf(ctx->callee()))
+        return cls->newInstance(qscriptvalue_cast<QByteArray>(arg));
+    else if (arg.isString())
+        return cls->newInstance(arg.toString().toUtf8());
+    int size = arg.toInt32();
+    return cls->newInstance(size);
+}
+
+QScriptValue ByteArrayClass::toScriptValue(QScriptEngine *eng, const QByteArray &ba)
+{
+    QScriptValue ctor = eng->globalObject().property("sys").property("ByteArray");
+    ByteArrayClass *cls = qscriptvalue_cast<ByteArrayClass*>(ctor.data());
+    if (!cls)
+        return eng->newVariant(QVariant::fromValue(ba));
+    return cls->newInstance(ba);
+}
+
+void ByteArrayClass::fromScriptValue(const QScriptValue &obj, QByteArray &ba)
+{
+    ba = qvariant_cast<QByteArray>(obj.data().toVariant());
+}
+
+void ByteArrayClass::resize(QByteArray &ba, int newSize)
+{
+    int oldSize = ba.size();
+    ba.resize(newSize);
+    if (newSize > oldSize)
+        engine()->reportAdditionalMemoryCost(newSize - oldSize);
+}
+
+ByteArrayClassPropertyIterator::ByteArrayClassPropertyIterator(const QScriptValue &object)
+    : QScriptClassPropertyIterator(object)
+{
+    toFront();
+}
+
+ByteArrayClassPropertyIterator::~ByteArrayClassPropertyIterator()
+{
+}
+
+bool ByteArrayClassPropertyIterator::hasNext() const
+{
+    QByteArray *ba = qscriptvalue_cast<QByteArray*>(object().data());
+    return m_index < ba->size();
+}
+
+void ByteArrayClassPropertyIterator::next()
+{
+    m_last = m_index;
+    ++m_index;
+}
+
+bool ByteArrayClassPropertyIterator::hasPrevious() const
+{
+    return (m_index > 0);
+}
+
+void ByteArrayClassPropertyIterator::previous()
+{
+    --m_index;
+    m_last = m_index;
+}
+
+void ByteArrayClassPropertyIterator::toFront()
+{
+    m_index = 0;
+    m_last = -1;
+}
+
+void ByteArrayClassPropertyIterator::toBack()
+{
+    QByteArray *ba = qscriptvalue_cast<QByteArray*>(object().data());
+    m_index = ba->size();
+    m_last = -1;
+}
+
+QScriptString ByteArrayClassPropertyIterator::name() const
+{
+    return object().engine()->toStringHandle(QString::number(m_last));
+}
+
+uint ByteArrayClassPropertyIterator::id() const
+{
+    return m_last;
 }
