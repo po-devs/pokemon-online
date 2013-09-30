@@ -15,4 +15,5 @@
 14 Glace
 15 Dragon
 16 Ténèbres
-17 ???
+17 Fée
+18 ???

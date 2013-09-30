@@ -139,7 +139,17 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     downloader.loadUpdatesAvailable();
 #endif
 
-    launchMenu(true);
+    //launchMenu(true);
+    displayer = new QMainWindow();
+#ifdef Q_OS_MACX
+    MacSupport::setupFullScreen(displayer);
+#endif
+
+    displayer->setCentralWidget(main = new MainWidget());
+    connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
+    displayer->show();
+
+    launchServerChoice();
 
     QTimer *t = new QTimer(this);
     connect(t, SIGNAL(timeout()), SLOT(updateRunningTime()));
@@ -201,7 +211,7 @@ TeamHolder *MainEngine::trainerTeam()
 
 int MainEngine::currentSpot() const
 {
-    return main->currentWidget()->property("tab-window").toInt();
+    return main->currentWidget() ? main->currentWidget()->property("tab-window").toInt() : freespot;
 }
 
 void MainEngine::reloadPokemonDatabase()
@@ -305,34 +315,22 @@ void MainEngine::routine(CentralWidgetInterface *w)
     displayer->setWindowTitle(tr("Pokemon Online"));
     QWidget *wi = dynamic_cast<QWidget*>(w);
     if (wi->property("tab-window").isNull()) {
-        wi->setProperty("tab-window", sender()->property("tab-window"));
+        wi->setProperty("tab-window", sender() ? sender()->property("tab-window") : freespot);
+    }
+    if (main->currentWidget() == NULL) {
+        //displayer->resize(wi->size());
     }
     main->setWidget(wi->property("tab-window").toInt(), wi);
 
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
-    //loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
+    loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
 }
 
-void MainEngine::launchMenu(bool first)
+void MainEngine::launchMenu()
 {
-    Menu *menu = new Menu(trainerTeam(freespot));
-    if (first) {
-        menu->setProperty("tab-window", freespot);
-        displayer = new QMainWindow();
-#ifdef Q_OS_MACX
-        MacSupport::setupFullScreen(displayer);
-#endif
-        displayer->resize(menu->size());
-        displayer->setWindowTitle(tr("Pokemon Online"));
-        displayer->setCentralWidget(main = new MainWidget());
-        connect(main, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
-        main->setWidget(freespot, menu);
-        displayer->setMenuBar(transformMenuBar(menu->createMenuBar(this)));
-        loadSettings(menu, menu->defaultSize());
-        displayer->show();
-    } else {
-        routine(menu);
-    }
+    Menu *menu = new Menu(trainerTeam());
+
+    routine(menu);
 
     if (!property("updated").toBool()) {
         if (updateData.length() > 0) {
@@ -404,7 +402,7 @@ void MainEngine::launchTeamBuilder()
     TeamBuilder *TB = new TeamBuilder(pluginManager, trainerTeam(), false);
     routine(TB);
 
-    connect(TB, SIGNAL(done()), SLOT(launchMenu()));
+    connect(TB, SIGNAL(done()), SLOT(launchServerChoice()));
     connect(TB, SIGNAL(reloadMenuBar()), SLOT(updateMenuBar()));
     connect(TB, SIGNAL(reloadDb()), SLOT(reloadPokemonDatabase()));
 }
@@ -421,7 +419,7 @@ void MainEngine::launchServerChoice(bool newTab)
 
     routine(choice);
 
-    connect(choice, SIGNAL(rejected()), SLOT(launchMenu()));
+    connect(choice, SIGNAL(teambuilder()), SLOT(launchTeamBuilder()));
     connect(choice, SIGNAL(serverChosen(QString,quint16,QString)), this, SLOT(goOnline(QString,quint16,QString)));
 }
 
@@ -502,7 +500,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
     Client * client = new Client(pluginManager, trainerTeam(), url, port);
     routine(client);
 
-    connect(client, SIGNAL(done()), SLOT(launchMenu()));
+    connect(client, SIGNAL(done()), SLOT(launchServerChoice()));
     connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
     connect(client, SIGNAL(pmNotificationsChanged(bool)), SLOT(pmNotificationsChanged(bool)));
 }
@@ -613,6 +611,23 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
             ac->setChecked(true);
         }
         ag->addAction(ac);
+    }
+}
+
+void MainEngine::addLanguageMenu(QMenuBar *menuBar)
+{
+    QMenu *langMenu = menuBar->addMenu(tr("&Language"));
+    QFile in ("languages.txt");
+    in.open(QIODevice::ReadOnly);
+
+    QSettings s;
+    QStringList langs = QString::fromUtf8(in.readAll()).trimmed().split('\n');
+    QActionGroup *ag = new QActionGroup(langMenu);
+    foreach(QString a, langs) {
+        QAction *act = langMenu->addAction(a, this, SLOT(changeLanguage()));
+        act->setCheckable(true);
+        act->setChecked(s.value("language").toString() == a.section("(", 1).section(")", 0, 0));
+        ag->addAction(act);
     }
 }
 

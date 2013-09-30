@@ -130,7 +130,7 @@ signals:
     void sentHash(QByteArray);
     void kick(int id);
     void ban(int id);
-    void banRequested(const QString &name);
+    void banRequested(const QString &name, int time);
     void unbanRequested(const QString &name);
     void tempBan(int id, int time);
     void tempBanRequested(const QString &name, int time);

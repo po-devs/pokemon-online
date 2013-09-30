@@ -6,6 +6,7 @@
 
 class QWsServer;
 class QWsSocket;
+class RegistryStation;
 
 class RelayStation : public QObject
 {
@@ -24,6 +25,7 @@ private:
     QHash<QString, QString> _aliases;
 
     QWsServer *webserver;
+    RegistryStation *registry;
 };
 
 #endif // RELAYSTATION_H

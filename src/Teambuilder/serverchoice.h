@@ -24,8 +24,10 @@ public:
     QMenuBar *createMenuBar(MainEngine *);
 signals:
     void serverChosen(const QString &ip, const quint16 port, const QString &nick);
-    void rejected();
+    void teambuilder();
     void clearList();
+protected:
+    bool event(QEvent *e);
 public slots:
     void loadTeam();
     void loadAll(const TeamHolder&);

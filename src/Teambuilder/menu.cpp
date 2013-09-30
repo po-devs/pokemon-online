@@ -129,23 +129,11 @@ QMenuBar * Menu::createMenuBar(MainEngine *w)
 
     w->addThemeMenu(menuBar);
     w->addStyleMenu(menuBar);
-
-    QMenu *langMenu = menuBar->addMenu(tr("&Language"));
-    QFile in ("languages.txt");
-    in.open(QIODevice::ReadOnly);
-
-    QSettings s;
-    QStringList langs = QString::fromUtf8(in.readAll()).trimmed().split('\n');
-    QActionGroup *ag = new QActionGroup(langMenu);
-    foreach(QString a, langs) {
-        QAction *act = langMenu->addAction(a,w, SLOT(changeLanguage()));
-        act->setCheckable(true);
-        act->setChecked(s.value("language").toString() == a.section("(", 1).section(")", 0, 0));
-        ag->addAction(act);
-    }
+    w->addLanguageMenu(menuBar);
 
     return menuBar;
 }
+
 void Menu::prevTip()
 {
     currentTip = (currentTip - 1 + msgs.size()) % msgs.size();

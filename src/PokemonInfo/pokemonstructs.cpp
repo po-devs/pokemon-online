@@ -170,7 +170,7 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
 
         if (hasMove(moveNum))
             throw QObject::tr("%1 already has move %2.").arg(nickname(), MoveInfo::Name(moveNum));
-        else if (!PokemonInfo::Moves(num(), gen()).contains(moveNum))
+        else if (gen() > 1 && !PokemonInfo::Moves(num(), gen()).contains(moveNum))
             throw QObject::tr("%1 can't learn %2.").arg(nickname(), MoveInfo::Name(moveNum));
     }
 
@@ -1002,7 +1002,7 @@ bool Team::importFromTxt(const QString &file1)
                     move = move.section('[',0,0).trimmed();
 
                     if (p.gen() >= 3) {
-                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type)[0];
+                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type, p.gen())[0];
                         for(int i =0;i < dvs.size(); i++) {
                             p.setDV(i, dvs[i].toInt());
                         }

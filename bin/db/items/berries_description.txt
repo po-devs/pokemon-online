@@ -1,29 +1,29 @@
-﻿0 It may be used or held by a Pokémon to recover from paralysis. 
-1 It may be used or held by a Pokémon to recover from sleep. 
-2 It may be used or held by a Pokémon to recover from poison. 
-3 It may be used or held by a Pokémon to recover from a burn. 
-4 It may be used or held by a Pokémon to defrost it.  
-5 It may be used or held by a Pokémon to restore a move's PP by 10. 
-6 It may be used or held by a Pokémon to heal the user by just 10 HP. 
-7 It may be used or held by a Pokémon to recover from confusion. 
-8 It may be used or held by a Pokémon to recover from any status problem. 
-9 It may be used or held by a Pokémon to heal the user's HP a little. 
-10 If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
-11 If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
-12 If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
-13 If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
-14 If held by a Pokémon, it restores the user's HP in a pinch, but may also cause confusion. 
+﻿0 Automatically cures the holder of being Paralyzed. Consumed after use.
+1 Automatically cures the holder of being Asleep. Consumed after use.
+2 Automatically cures the holder of being Poisoned. Consumed after use.
+3 Automatically cures the holder of being Burned. Consumed after use.
+4 Automatically cures the holder of being Frozen. Consumed after use.
+5 Restores 10 PP to the holder's first move to run out of PP. Consumed after use.
+6 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+7 Automatically cures the holder of being Confused. Consumed after use.
+8 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, Frozen or Confused. Consumed after use.
+9 Restores 25% of holder's max HP when its HP falls below 50%. Consumed after use.
+10 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Bold, Calm, Modest or Timid nature. Consumed after use.
+11 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has an Adamant, Careful, Impish or Jolly nature. Consumed after use.
+12 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Brave, Quiet, Relaxed or Sassy nature. Consumed after use.
+13 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Lax, Naive, Naughty or Rash nature. Consumed after use.
+14 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Gentle, Hasty, Lonely or Mild nature. Consumed after use.
 15 Bury it in soft soil to grow a Razz Plant. 
 16 Bury it in soft soil to grow a Bluk Plant. 
 17 Bury it in soft soil to grow a Nanab Plant. 
 18 Bury it in soft soil to grow a Wepear Plant. 
 19 Bury it in soft soil to grow a Pinap Plant. 
-20 Using it on a Pokémon makes it more friendly, but it also lowers its base HP. 
-21 Using it on a Pokémon makes it more friendly, but it also lowers its base Attack stat. 
-22 Using it on a Pokémon makes it more friendly, but it also lowers its base Defense stat. 
-23 Using it on a Pokémon makes it more friendly, but it also lowers its base Sp. Atk stat. 
-24 Using it on a Pokémon makes it more friendly, but it also lowers its base Sp. Def stat. 
-25 Using it on a Pokémon makes it more friendly, but it also lowers its base Speed stat. 
+20 Raises a Pokemon's friendship, but lowers its HP EVs to 100 if above that, or by 10 if equal or below 100.
+21 Raises a Pokemon's friendship, but lowers its Attack EVs to 100 if above that, or by 10 if equal or below 100.
+22 Raises a Pokemon's friendship, but lowers its Defense EVs to 100 if above that, or by 10 if equal or below 100.
+23 Raises a Pokemon's friendship, but lowers its Special Attack EVs to 100 if above that, or by 10 if equal or below 100.
+24 Raises a Pokemon's friendship, but lowers its Special Defense EVs to 100 if above that, or by 10 if equal or below 100.
+25 Raises a Pokemon's friendship, but lowers its Speed EVs to 100 if above that, or by 10 if equal or below 100.
 26 Bury it in soft soil to grow a Cornn Plant. 
 27 Bury it in soft soil to grow a Magost Plant. 
 28 Bury it in soft soil to grow a Rabuta Plant. 
@@ -33,32 +33,42 @@
 32 Bury it in soft soil to grow a Watmel Plant. 
 33 Bury it in soft soil to grow a Durin Plant. 
 34 Bury it in soft soil to grow a Belue Plant. 
-35 If held by a Pokémon, it weakens a foe's supereffective Fire-type attack. 
-36 If held by a Pokémon, it weakens a foe's supereffective Water-type attack. 
-37 If held by a Pokémon, it weakens a foe's supereffective Electric-type attack. 
-38 If held by a Pokémon, it weakens a foe's supereffective Grass-type attack. 
-39 If held by a Pokémon, it weakens a foe's supereffective Ice-type attack. 
-40 If held by a Pokémon, it weakens a foe's supereffective Fighting-type attack. 
-41 If held by a Pokémon, it weakens a foe's supereffective Poison-type attack. 
-42 If held by a Pokémon, it weakens a foe's supereffective Ground-type attack. 
-43 If held by a Pokémon, it weakens a foe's supereffective Flying-type attack. 
-44 If held by a Pokémon, it weakens a foe's supereffective Psychic-type attack. 
-45 If held by a Pokémon, it weakens a foe's supereffective Bug-type attack. 
-46 If held by a Pokémon, it weakens a foe's supereffective Rock-type attack. 
-47 If held by a Pokémon, it weakens a foe's supereffective Ghost-type attack. 
-48 If held by a Pokémon, it weakens a foe's supereffective Dragon-type attack. 
-49 If held by a Pokémon, it weakens a foe's supereffective Dark-type attack. 
-50 If held by a Pokémon, it weakens a foe's supereffective Steel-type attack. 
-51 If held by a Pokémon, it weakens a foe's Normal-type attack. 
-52 If held by a Pokémon, it raises its Attack stat in a pinch. 
-53 If held by a Pokémon, it raises its Defense stat in a pinch. 
-54 If held by a Pokémon, it raises its Speed stat in a pinch. 
-55 If held by a Pokémon, it raises its Sp. Atk stat in a pinch. 
-56 If held by a Pokémon, it raises its Sp. Def stat in a pinch. 
-57 If held by a Pokémon, it raises its critical-hit ratio in a pinch. 
-58 If held by a Pokémon, it sharply raises one of its stats in a pinch. 
-59 If held by a Pokémon, it restores its HP if it is hit by a foe's supereffective attack. 
-60 If held by a Pokémon, it raises the accuracy of a move just once in a pinch. 
-61 If held by a Pokémon, it gets to move first just once in a pinch. 
-62 If held by a Pokémon, and if a foe's physical attack lands, the foe also takes damage. 
-63 If held by a Pokémon, and if a foe's special attack lands, the foe also takes damage. 
+35 Halves the damage of the opponent's super-effective Fire attack. Consumed after use.
+36 Halves the damage of the opponent's super-effective Water attack. Consumed after use.
+37 Halves the damage of the opponent's super-effective Electric attack. Consumed after use.
+38 Halves the damage of the opponent's super-effective Grass attack. Consumed after use.
+39 Halves the damage of the opponent's super-effective Ice attack. Consumed after use.
+40 Halves the damage of the opponent's super-effective Fighting attack. Consumed after use.
+41 Halves the damage of the opponent's super-effective Poison attack. Consumed after use.
+42 Halves the damage of the opponent's super-effective Ground attack. Consumed after use.
+43 Halves the damage of the opponent's super-effective Flying attack. Consumed after use.
+44 Halves the damage of the opponent's super-effective Psychic attack. Consumed after use.
+45 Halves the damage of the opponent's super-effective Bug attack. Consumed after use.
+46 Halves the damage of the opponent's super-effective Rock attack. Consumed after use.
+47 Halves the damage of the opponent's super-effective Ghost attack. Consumed after use.
+48 Halves the damage of the opponent's super-effective Dragon attack. Consumed after use.
+49 Halves the damage of the opponent's super-effective Dark attack. Consumed after use.
+50 Halves the damage of the opponent's super-effective Steel attack. Consumed after use.
+51 Halves the damage of the opponent's Normal attack. Consumed after use.
+52 Raises the holder's Attack by one stage when its HP falls below 25%. Consumed after use.
+53 Raises the holder's Defense by one stage when its HP falls below 25%. Consumed after use.
+54 Raises the holder's Speed by one stage when its HP falls below 25%. Consumed after use.
+55 Raises the holder's Special Attack by one stage when its HP falls below 25%. Consumed after use.
+56 Raises the holder's Special Defense by one stage when its HP falls below 25%. Consumed after use.
+57 Raises the holder's critical hit rate by one stage when its HP falls below 25%. Consumed after use.
+58 Raises a random stat of the holder by two stages when its HP falls below 25%. Consumed after use.
+59 Restores 25% of the holder's max HP if hit by a super-effective attack. Consumed after use.
+60 Ensures that the holder will hit in the turn after its HP falls below 25%. Consumed after use.
+61 Ensures that the holder will move first within its priority bracket in the turn after its HP falls below 25%. Consumed after use.
+62 Damages the enemy for 12.5% its max HP if it hits the holder with a physical attack. Consumed after use.
+63 Damages the enemy for 12.5% its max HP if it hits the holder with a special attack. Consumed after use.
+1000 Automatically cures the holder of being Paralyzed. Consumed after use.
+1001 Automatically cures the holder of being Asleep. Consumed after use.
+1002 Automatically cures the holder of being Poisoned. Consumed after use.
+1003 Automatically cures the holder of being Frozen. Consumed after use.
+1004 Automatically cures the holder of being Burned. Consumed after use.
+1005 Restores 5 PP to the holder's first move to run out of PP. Consumed after use.
+1006 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+1007 Automatically cures the holder of being Confused. Consumed after use.
+1008 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, or Frozen. Consumed after use.
+1009 Restores 30 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.

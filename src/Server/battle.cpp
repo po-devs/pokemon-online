@@ -555,8 +555,10 @@ void BattleSituation::endTurnStatus(int player)
     case Pokemon::Poisoned:
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            sendAbMessage(45,0,player,0,Pokemon::Poison);
-            healLife(player, poke(player).totalLifePoints()/8);
+            if (!poke(player).isFull()) {
+                sendAbMessage(45,0,player,0,Pokemon::Poison);
+                healLife(player, poke(player).totalLifePoints()/8);
+            }
         } else {
             if (hasWorkingAbility(player, Ability::MagicGuard)) {
                 /* Toxic still increases under magic guard */
@@ -2273,7 +2275,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
     switch (status) {
-    case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
+    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
@@ -2898,7 +2900,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         callieffects(player, source, "BeforeTakingDamage");
     }
 
-    if (damage == 0 && gen() <= 4) {
+    //The exception happens in gen 5+ when reflect, reducing berry, multiscale, friend guard, etc.
+    if (damage == 0/* && (gen() <= 4 || !straightattack)*/) {
         damage = 1;
     }
 

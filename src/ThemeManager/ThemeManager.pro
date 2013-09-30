@@ -33,7 +33,8 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets
   macx: {
-    QMAKE_CXXFLAGS += "-std=c++11 -U__STRICT_ANSI__"
+    QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
+    CONFIG += c++11
   }
 } else {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"

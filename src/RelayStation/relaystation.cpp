@@ -2,11 +2,14 @@
 
 #include "dualwielder.h"
 #include "relaystation.h"
+#include "registrystation.h"
 
 RelayStation::RelayStation(int port, QString host, QHash<QString, QString> aliases, QObject *parent) :
     QObject(parent), port(port), host(host), _aliases(aliases)
 {
     webserver = new QWsServer(this);
+    registry = new RegistryStation();
+    registry->setParent(this);
 }
 
 void RelayStation::start()
@@ -30,5 +33,5 @@ void RelayStation::onNewConnection()
     }
 
     DualWielder *d = new DualWielder(this);
-    d->init(socket, host, _aliases);
+    d->init(socket, host, _aliases, registry->getServers());
 }

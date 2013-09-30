@@ -8,7 +8,7 @@ namespace Nw {
 #include "pokemontojson.h"
 #include "dualwielder.h"
 
-DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), myid(-1)
+DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), registryRead(false), myid(-1)
 {
     /* No need to waste network bandwith */
     jserial.setIndentMode(QJson::IndentCompact);
@@ -29,8 +29,9 @@ DualWielder::~DualWielder()
     qDebug() << "Closing connection with IP " << ip();
 }
 
-void DualWielder::init(QWsSocket *sock, QString host, QHash<QString,QString> aliases)
+void DualWielder::init(QWsSocket *sock, const QString &host, QHash<QString,QString> aliases, const QString &servers)
 {
+    this->servers = servers;
     web = sock;
     mIp = web->ip();
     this->aliases = aliases;
@@ -652,6 +653,9 @@ void DualWielder::readWebSocket(const QString &frame)
             connect(network, SIGNAL(error(QAbstractSocket::SocketError)), network, SLOT(deleteLater()));
             connect(network, SIGNAL(isFull(QByteArray)), SLOT(readSocket(QByteArray)));
             connect(this, SIGNAL(sendCommand(QByteArray)), network, SLOT(send(QByteArray)));
+        } else if (command == "registry" && !registryRead) {
+            web->write(servers);
+            registryRead = true;
         } else {
             web->write(QString("error|You need to choose a server to connect to."));
         }

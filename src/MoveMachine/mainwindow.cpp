@@ -149,7 +149,7 @@ void PokeMovesDb::save()
             }
         }
 
-        QFile files[7];
+        QFile files[8];
 
         QString genS = "db/pokes/" + QString::number(gen) + "G/";
         files[LevelMoves].setFileName(genS + "level_moves.txt");
@@ -159,10 +159,11 @@ void PokeMovesDb::save()
         files[TMMoves].setFileName(genS + "tm_and_hm_moves.txt");
         files[PreEvoMoves].setFileName(genS + "pre_evo_moves.txt");
         files[DreamWorldMoves].setFileName(genS + "dw_moves.txt");
+        files[AllMoves].setFileName(genS + "all_moves.txt");
 
         Pokemon::gen g(gen, -1);
 
-        for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
+        for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
                 if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
                     continue;
@@ -170,6 +171,8 @@ void PokeMovesDb::save()
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
                     continue;
                 }
+
+                pokes[id].gens[g].moves[AllMoves].unite(pokes[id].gens[g].moves[i]);
 
                 QList<int> moves = pokes[id].gens[g].moves[i].toList();
 
@@ -195,6 +198,10 @@ void PokeMovesDb::save()
                     files[i].open(QIODevice::WriteOnly);
                 }
                 files[i].write(id.toLine(s+"\n").toUtf8());
+
+                if (i == AllMoves && gen != 2 && gen < GenInfo::GenMax()) {
+                    pokes[id].gens[Pokemon::gen(gen+1,-1)].moves[AllMoves].unite(pokes[id].gens[g].moves[AllMoves]);
+                }
             }
             if (files[i].isOpen()) {
                 files[i].close();
