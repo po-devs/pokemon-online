@@ -2274,12 +2274,16 @@ bool BattleSituation::canGetStatus(int player, int status) {
     if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
+    if (gen () >=6 && MoveInfo::isSporePowder(tmove(this->attacker()).attack) && hasType(player, Type::Grass)) {
+        fail(this->attacker(), 72,0,Pokemon::Grass,player);
+        return false;
+    }
     switch (status) {
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
-    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
+    case Pokemon::Frozen: return (gen() < 6 || !hasType(player, Type::Ice)) && !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
     default:
         return false;
     }
@@ -2315,6 +2319,10 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             if (canSendPreventMessage(player, attacker)) {
                 sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
             }
+            return false;
+        }
+        if (gen () >=6 && MoveInfo::isSporePowder(tmove(this->attacker()).attack) && hasType(player, Type::Grass)) {
+            fail(this->attacker(), 72,0,Pokemon::Grass,player);
             return false;
         }
     }

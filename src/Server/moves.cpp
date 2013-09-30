@@ -907,6 +907,9 @@ struct MMBlock : public MM
     static void daf (int s, int t, BS &b) {
         if (b.linked(t, "Blocked"))
             fturn(b,s).add(TM::Failed);
+        if (b.gen() >= 6 && b.hasType(t, Pokemon::Ghost)) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas (int s, int t, BS &b) {

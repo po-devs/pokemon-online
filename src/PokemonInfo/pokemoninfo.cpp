@@ -1997,6 +1997,11 @@ bool MoveInfo::isHM(int movenum, Pokemon::gen g)
     return gens[g].HMs.contains(movenum);
 }
 
+bool MoveInfo::isSporePowder(int movenum)
+{
+    return movenum == Move::Spore || movenum == Move::SleepPowder || movenum == Move::PoisonPowder || movenum == Move::StunSpore || movenum == Move::CottonSpore;
+}
+
 int MoveInfo::EffectRate(int movenum, Pokemon::gen g)
 {
     move_find(effectChance, movenum, g);
