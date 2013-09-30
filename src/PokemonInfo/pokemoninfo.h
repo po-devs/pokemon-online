@@ -260,6 +260,7 @@ public:
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
     static bool isHM(int movenum, Pokemon::gen gen);
+    static bool isSporePowder(int movenum);
     static bool FlinchByKingRock(int movenum, Pokemon::gen gen);
     static int EffectRate(int movenum, Pokemon::gen gen);
     static quint32 StatAffected(int movenum, Pokemon::gen gen);
