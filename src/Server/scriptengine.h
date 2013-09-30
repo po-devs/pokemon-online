@@ -38,13 +38,19 @@ class ScriptEngine : public QObject
 public:
     static QScriptValue enableStrict(QScriptContext *, QScriptEngine *e);
 
+    static QScriptValue sha1Binary(QScriptContext *c, QScriptEngine *e);
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     static QScriptValue cwd(QScriptContext *c, QScriptEngine *e);
     static QScriptValue exists(QScriptContext *c, QScriptEngine *e);
 
     static QScriptValue writeConcat(QScriptContext *c, QScriptEngine *e);
+
     static QScriptValue write(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue writeBinary(QScriptContext *c, QScriptEngine *e);
+
     static QScriptValue read(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue readBinary(QScriptContext *c, QScriptEngine *e);
 
     static QScriptValue rm(QScriptContext *c, QScriptEngine *e);
 
@@ -424,6 +430,7 @@ public:
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
+
     
     Q_INVOKABLE QString sha1(const QString &text);
     Q_INVOKABLE QString md4(const QString &text);
@@ -610,3 +617,177 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
 }
 
 #endif // SCRIPTENGINE_H
+
+
+/****************************************************************************
+**
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
+**
+** This file is part of the examples of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:BSD$
+** You may use this file under the terms of the BSD license as follows:
+**
+** "Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions are
+** met:
+**   * Redistributions of source code must retain the above copyright
+**     notice, this list of conditions and the following disclaimer.
+**   * Redistributions in binary form must reproduce the above copyright
+**     notice, this list of conditions and the following disclaimer in
+**     the documentation and/or other materials provided with the
+**     distribution.
+**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+**     of its contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+#ifndef BYTEARRAYPROTOTYPE_H
+#define BYTEARRAYPROTOTYPE_H
+
+#include <QtCore/QByteArray>
+#include <QtCore/QObject>
+#include <QtScript/QScriptable>
+#include <QtScript/QScriptValue>
+
+class ByteArrayPrototype : public QObject, public QScriptable
+{
+Q_OBJECT
+public:
+    ByteArrayPrototype(QObject *parent = 0);
+    ~ByteArrayPrototype();
+
+public slots:
+    void chop(int n);
+    bool equals(const QByteArray &other);
+    QByteArray left(int len) const;
+    QByteArray mid(int pos, int len = -1) const;
+    QScriptValue remove(int pos, int len);
+    QByteArray right(int len) const;
+    QByteArray simplified() const;
+    QByteArray toBase64() const;
+    QByteArray toLower() const;
+    QByteArray toUpper() const;
+    QByteArray trimmed() const;
+    void truncate(int pos);
+    QString toLatin1String() const;
+    QString toString() const;
+    QString toHex() const;
+    QScriptValue valueOf() const;
+
+private:
+    QByteArray *thisByteArray() const;
+};
+
+#endif // BYTEARRAYPROTOTYPE_H
+
+
+/****************************************************************************
+ **
+ ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+ ** Contact: http://www.qt-project.org/legal
+ **
+ ** This file is part of the examples of the Qt Toolkit.
+ **
+ ** $QT_BEGIN_LICENSE:BSD$
+ ** You may use this file under the terms of the BSD license as follows:
+ **
+ ** "Redistribution and use in source and binary forms, with or without
+ ** modification, are permitted provided that the following conditions are
+ ** met:
+ **   * Redistributions of source code must retain the above copyright
+ **     notice, this list of conditions and the following disclaimer.
+ **   * Redistributions in binary form must reproduce the above copyright
+ **     notice, this list of conditions and the following disclaimer in
+ **     the documentation and/or other materials provided with the
+ **     distribution.
+ **   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+ **     of its contributors may be used to endorse or promote products derived
+ **     from this software without specific prior written permission.
+ **
+ **
+ ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ ** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ ** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ ** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ ** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ ** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+ **
+ ** $QT_END_LICENSE$
+ **
+ ****************************************************************************/
+
+#ifndef BYTEARRAYCLASS_H
+#define BYTEARRAYCLASS_H
+
+#include <QtCore/QObject>
+#include <QtScript/QScriptClass>
+#include <QtScript/QScriptString>
+
+class ByteArrayClass : public QObject, public QScriptClass
+{
+    Q_OBJECT
+public:
+    ByteArrayClass(QScriptEngine *engine);
+    ~ByteArrayClass();
+
+    QScriptValue constructor();
+
+    QScriptValue newInstance(int size = 0);
+    QScriptValue newInstance(const QByteArray &ba);
+
+    QueryFlags queryProperty(const QScriptValue &object,
+                             const QScriptString &name,
+                             QueryFlags flags, uint *id);
+
+    QScriptValue property(const QScriptValue &object,
+                          const QScriptString &name, uint id);
+
+    void setProperty(QScriptValue &object, const QScriptString &name,
+                     uint id, const QScriptValue &value);
+
+    QScriptValue::PropertyFlags propertyFlags(
+        const QScriptValue &object, const QScriptString &name, uint id);
+
+    QScriptClassPropertyIterator *newIterator(const QScriptValue &object);
+
+    QString name() const;
+
+    QScriptValue prototype() const;
+
+private:
+    static QScriptValue construct(QScriptContext *ctx, QScriptEngine *);
+
+    static QScriptValue toScriptValue(QScriptEngine *eng, const QByteArray &ba);
+    static void fromScriptValue(const QScriptValue &obj, QByteArray &ba);
+
+    void resize(QByteArray &ba, int newSize);
+
+    QScriptString length;
+    QScriptValue proto;
+    QScriptValue ctor;
+};
+
+#endif // BYTEARRAYCLASS_H
