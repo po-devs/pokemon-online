@@ -428,6 +428,8 @@ public:
 
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
+
+    Q_INVOKABLE QScriptValue sha1Binary(const QByteArray &bin);
     
     Q_INVOKABLE QString sha1(const QString &text);
     Q_INVOKABLE QString md4(const QString &text);

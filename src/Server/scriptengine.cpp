@@ -3597,6 +3597,13 @@ QString ScriptEngine::sha1(const QString &text) {
     return hash.result().toHex();
 }
 
+QScriptValue ScriptEngine::sha1Binary(const QByteArray &bin) {
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(bin);
+    return myengine.toScriptValue(hash.result());
+}
+
+
 QString ScriptEngine::md4(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Md4);
     hash.addData(text.toUtf8());
@@ -3761,6 +3768,7 @@ QString ByteArrayPrototype::toLatin1String() const
 {
     return QString::fromLatin1(*thisByteArray());
 }
+
 
 QScriptValue ByteArrayPrototype::valueOf() const
 {
