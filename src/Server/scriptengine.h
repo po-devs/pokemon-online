@@ -38,6 +38,8 @@ class ScriptEngine : public QObject
 public:
     static QScriptValue enableStrict(QScriptContext *, QScriptEngine *e);
 
+    static QScriptValue sha1Binary(QScriptContext *c, QScriptEngine *e);
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     static QScriptValue cwd(QScriptContext *c, QScriptEngine *e);
     static QScriptValue exists(QScriptContext *c, QScriptEngine *e);
@@ -429,7 +431,6 @@ public:
     /* Internal use only */
     Q_INVOKABLE void sendNetworkCommand(int id, int command);
 
-    Q_INVOKABLE QScriptValue sha1Binary(const QByteArray &bin);
     
     Q_INVOKABLE QString sha1(const QString &text);
     Q_INVOKABLE QString md4(const QString &text);
@@ -687,6 +688,8 @@ public slots:
     QByteArray trimmed() const;
     void truncate(int pos);
     QString toLatin1String() const;
+    QString toString() const;
+    QString toHex() const;
     QScriptValue valueOf() const;
 
 private:

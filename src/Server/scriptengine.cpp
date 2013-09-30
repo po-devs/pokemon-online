@@ -210,6 +210,8 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     sys.setProperty("ByteArray", baClass->constructor());
 
+    sys.setProperty("sha1Binary", myengine.newFunction(sha1Binary));
+
 #ifndef PO_SCRIPT_SAFE_ONLY
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
     QScriptValue writeFunc = myengine.newFunction(write);
@@ -3392,6 +3394,13 @@ QScriptValue ScriptEngine::readBinary(QScriptContext *c, QScriptEngine *e)
     return QScriptValue(e->toScriptValue(out.readAll()));
 }
 
+QScriptValue ScriptEngine::sha1Binary(QScriptContext *c, QScriptEngine *e) {
+//QScriptValue ScriptEngine::sha1Binary(const QByteArray &bin) {
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(e->fromScriptValue<QByteArray>(c->argument(0)));
+    return e->toScriptValue(hash.result());
+}
+
 QScriptValue ScriptEngine::getServerPlugins() {
     QScriptValue ret = qScriptValueFromSequence(&myengine, myserver->pluginManager->getPlugins());
     return ret;
@@ -3597,12 +3606,6 @@ QString ScriptEngine::sha1(const QString &text) {
     return hash.result().toHex();
 }
 
-QScriptValue ScriptEngine::sha1Binary(const QByteArray &bin) {
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData(bin);
-    return myengine.toScriptValue(hash.result());
-}
-
 
 QString ScriptEngine::md4(const QString &text) {
     QCryptographicHash hash(QCryptographicHash::Md4);
@@ -3769,6 +3772,15 @@ QString ByteArrayPrototype::toLatin1String() const
     return QString::fromLatin1(*thisByteArray());
 }
 
+QString ByteArrayPrototype::toHex() const
+{
+    return (*thisByteArray()).toHex();
+}
+
+QString ByteArrayPrototype::toString() const
+{
+    return QString::fromUtf8(*thisByteArray());
+}
 
 QScriptValue ByteArrayPrototype::valueOf() const
 {
