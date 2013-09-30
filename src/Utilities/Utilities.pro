@@ -63,7 +63,7 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   HEADERS += wavreader.h
   DEFINES += QT5
   QT += widgets multimedia
-  QMAKE_CXXFLAGS += "-std=c++11"
+  CONFIG += c++11
 } else {
   QMAKE_CXXFLAGS += "-std=c++0x"
 }

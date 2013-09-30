@@ -6,6 +6,7 @@
 #include "serverchoicemodel.h"
 #include "loadwindow.h"
 #include "mainwindow.h"
+#include "../Utilities/otherwidgets.h"
 
 ServerChoice::ServerChoice(TeamHolder* team) :
     ui(new Ui::ServerChoice), wasConnected(false), team(team)
@@ -57,6 +58,7 @@ ServerChoice::ServerChoice(TeamHolder* team) :
 
     ui->nameEdit->setText(team->name());
     ui->advServerEdit->addItem(settings.value("ServerChoice/DefaultServer").toString());
+
     connect(ui->nameEdit, SIGNAL(returnPressed()), SLOT(advServerChosen()));
     connect(ui->advServerEdit->lineEdit(), SIGNAL(returnPressed()), SLOT(advServerChosen()));
 
@@ -78,7 +80,7 @@ ServerChoice::ServerChoice(TeamHolder* team) :
     ui->advServerEdit->setCompleter(completer);
     ui->advServerEdit->setModel(m);
 
-    connect(ui->goBack, SIGNAL(clicked()), SIGNAL(rejected()));
+    connect(ui->teambuilder, SIGNAL(clicked()), SIGNAL(teambuilder()));
     connect(ui->advancedConnection, SIGNAL(clicked()), SLOT(advServerChosen()));
 
     QTimer *t = new QTimer(this);
@@ -94,27 +96,37 @@ ServerChoice::ServerChoice(TeamHolder* team) :
 ServerChoice::~ServerChoice()
 {
     saveSettings();
-    writeSettings(this);
     delete ui;
+}
+
+bool ServerChoice::event(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        e->accept();
+    }
+
+    return QFrame::event(e);
 }
 
 QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
 {
-    QMenuBar *ret = new QMenuBar();
+    QMenuBar *menuBar = new QMenuBar();
 
     //TODO : Add menu allowing to change port / registry IP / ??
 
-    QMenu *fileMenu = ret->addMenu(tr("&File"));
+    QMenu *fileMenu = menuBar->addMenu(tr("&File"));
     fileMenu->addAction(tr("&Load team"), this, SLOT(loadTeam()), tr("Ctrl+L", "Load team"));
     fileMenu->addAction(tr("New &tab"), w, SLOT(openNewTab()), tr("Ctrl+T", "New tab"));
     fileMenu->addAction(tr("Close tab"), w, SLOT(closeTab()), tr("Ctrl+W", "Close tab"));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("&Quit"),w,SLOT(quit()),tr("Ctrl+Q", "Quit"));
 
-    w->addThemeMenu(ret);
-    w->addStyleMenu(ret);
+    w->addThemeMenu(menuBar);
+    w->addStyleMenu(menuBar);
+    w->addLanguageMenu(menuBar);
 
-    return ret;
+    return menuBar;
 }
 
 void ServerChoice::loadTeam()
@@ -288,4 +300,19 @@ void ServerChoice::saveSettings() {
         }
     }
     settings.setValue("ServerChoice/SavedServers", res);
+
+    // Create default profile if none exist
+    bool isNewProfile = settings.value("Profile/Current") == settings.value("Profile/Path");
+    if (isNewProfile) {
+        QNickValidator validator(0);
+        if (validator.validate(ui->nameEdit->text()) == QValidator::Acceptable) {
+            team->profile().name() = ui->nameEdit->text();
+            QString path = settings.value("Profile/Path").toString()
+                    + "/" + QUrl::toPercentEncoding(team->profile().name()) + ".xml";
+            team->profile().saveToFile(path);
+            settings.setValue("Profile/Current", team->profile().name());
+        }
+    }
+
+    writeSettings(this);
 }

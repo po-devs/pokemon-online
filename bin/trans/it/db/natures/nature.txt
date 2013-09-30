@@ -5,7 +5,6 @@
 4 Birbona
 5 Sicura
 6 Docile
-
 7 Placida
 8 Scaltra
 9 Fiacca
@@ -17,14 +16,10 @@
 15 Modesta
 16 Mite
 17 Quieta
-
 18 Ritrosa
 19 Ardente
-20 Calm
-a
+20 Calma
 21 Gentile
-
 22 Vivace
-
 23 Cauta
 24 Furba

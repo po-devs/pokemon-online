@@ -312,43 +312,9 @@ QStringList PokemonTab::getDVList(QString typeString)
 {
     QStringList retList;
 
-    int type = 0;
-    if(typeString == "Fighting")
-        type = 1;
-    else if(typeString == "Flying")
-        type = 2;
-    else if(typeString == "Poison")
-        type = 3;
-    else if(typeString == "Ground")
-        type = 4;
-    else if(typeString == "Rock")
-        type = 5;
-    else if(typeString == "Bug")
-        type = 6;
-    else if(typeString == "Ghost")
-        type = 7;
-    else if(typeString == "Steel")
-        type = 8;
-    else if(typeString == "Fire")
-        type = 9;
-    else if(typeString == "Water")
-        type = 10;
-    else if(typeString == "Grass")
-        type = 11;
-    else if(typeString == "Electric")
-        type = 12;
-    else if(typeString == "Psychic")
-        type = 13;
-    else if(typeString == "Ice")
-        type = 14;
-    else if(typeString == "Dragon")
-        type = 15;
-    else if(typeString == "Dark")
-        type = 16;
-    else if(typeString == "Curse")
-        type = 17;
+    int type = TypeInfo::Number(typeString);
 
-    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(type);
+    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(type, originalPokemon.gen());
     retList = possibilities.at(0);
 
     return retList;

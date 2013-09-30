@@ -1,5 +1,3 @@
 ﻿0 Neutro
-1 
-Maschio
-
+1 Maschio
 2 Femmina

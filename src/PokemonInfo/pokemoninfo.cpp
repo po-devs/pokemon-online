@@ -67,8 +67,7 @@ QVector<QSet<int> > ItemInfo::m_GenItems;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
-QHash<int, QVector<int> > TypeInfo::m_TypeVsType;
-QHash<int, QVector<int> > TypeInfo::m_TypeVsTypeGen1;
+QVector<QHash<int, QVector<int> > > TypeInfo::m_TypeVsType;
 QHash<int, int> TypeInfo::m_Categories;
 
 QHash<int, QString> NatureInfo::m_Names;
@@ -560,7 +559,7 @@ int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int sta
 {
     quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
 
-    if (stat == SpAttack && gen == 1) {
+    if (stat == SpAttack && gen.num == 1) {
         basestat = SpecialStat(pokeid);
     }
 
@@ -657,6 +656,14 @@ void PokemonInfo::init(const QString &dir)
     makeDataConsistent();
 }
 
+void PokemonInfo::loadStadiumTradebacks()
+{
+    loadGen(::Gen::StadiumWithTradebacks);
+    loadGen(Pokemon::gen(2, Pokemon::gen::wholeGen));
+
+    gens[::Gen::StadiumWithTradebacks].addTradebacks(&gens[Pokemon::gen(2, Pokemon::gen::wholeGen)]);
+}
+
 void PokemonInfo::loadGen(Pokemon::gen g)
 {
     if (gens.contains(g)) {
@@ -674,6 +681,12 @@ void PokemonInfo::loadGen(Pokemon::gen g)
     } else {
         loadGen(Pokemon::gen(g.num, g.subnum-1));
         gens[g].load(m_Directory, g, &gens[Pokemon::gen(g.num, g.subnum-1)]);
+    }
+
+    if (g == ::Gen::StadiumWithTradebacks && MoveInfo::isInit()) {
+        loadGen(Pokemon::gen(2, g.wholeGen));
+
+        gens[g].addTradebacks(&gens[Pokemon::gen(2, g.wholeGen)]);
     }
 }
 
@@ -803,6 +816,34 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
         foreach(Pokemon::uniqueId id, Formes(id, gen)) {
             if(!m_Moves.contains(id)) {
                 m_Moves[id] = m_Moves.value(id.original());
+            }
+        }
+    }
+}
+
+void PokemonInfo::Gen::addTradebacks(Gen *parent)
+{
+    QMutableHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    while(it.hasNext()) {
+        it.next();
+        PokemonMoves &moves = it.value();
+        PokemonMoves &moves2 = parent->m_Moves[it.key()];
+
+        QSet<int> *refs[] = {
+            &moves.TMMoves, &moves.levelMoves, &moves.specialMoves, &moves.preEvoMoves, &moves.eggMoves,
+            &moves.tutorMoves, &moves.dreamWorldMoves
+        };
+
+        QSet<int> *refs2[] = {
+            &moves2.TMMoves, &moves2.levelMoves, &moves2.specialMoves, &moves2.preEvoMoves, &moves2.eggMoves,
+            &moves2.tutorMoves, &moves2.dreamWorldMoves
+        };
+
+        for (int i = 0; i < 7; i++) {
+            foreach(int move, *refs2[i]) {
+                if (MoveInfo::Exists(move, gen)) {
+                    refs[i]->insert(move);
+                }
             }
         }
     }
@@ -1060,8 +1101,10 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
     else if (gen.num == 4)
         file = QString("heartgold-soulsilver/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
-    else
+    else if (gen.num == 5)
         file = QString("black-white/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
+    else
+        file = QString("x-y/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
 
     QPixmap ret;
 
@@ -1110,45 +1153,6 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     QPixmapCache::insert(archive+file, ret);
 
     return ret;
-}
-
-QMovie *PokemonInfo::AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back)
-{
-    QString archive = path("black_white_animated.zip");
-    QString file = QString("%1/%2%3%4.gif").arg(pokeId.toString(), back?"b":"f", (gender == Pokemon::Female)?"f":"", shiny?"s":"");
-    QByteArray *data = new QByteArray(readZipFile(archive.toUtf8(), file.toUtf8()));
-    QBuffer *animatedSpriteData = new QBuffer(data);
-    QMovie *AnimatedSprite = new QMovie(animatedSpriteData);
-    if(data->length() == 0) {
-        if(gender == Pokemon::Female) {
-            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, shiny, back);
-        }
-        if(shiny) {
-            return PokemonInfo::AnimatedSprite(pokeId, Pokemon::Male, false, back);
-        }
-        if(pokeId.subnum != 0) {
-            return PokemonInfo::AnimatedSprite(OriginalForme(pokeId), Pokemon::Male, false, back);
-        }
-        AnimatedSprite->start();
-        return AnimatedSprite;
-    }
-    AnimatedSprite->start();
-    return AnimatedSprite;
-}
-
-bool PokemonInfo::HasAnimatedSprites()
-{
-    QFile file(path("black_white_animated.zip"));
-    if(file.exists()) {
-        return true;
-    }
-    return false;
-}
-
-bool PokemonInfo::HasAnimatedSpritesEnabled()
-{
-    QSettings MySettings;
-    return MySettings.value("animated_sprites").toBool();
 }
 
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
@@ -1304,7 +1308,8 @@ QSet<int> PokemonInfo::dreamWorldMoves(const Pokemon::uniqueId &pokeid, Pokemon:
 
 PokemonInfo::Gen &PokemonInfo::gen(Pokemon::gen gen)
 {
-    if (!noWholeGen && gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
+    /* Last gen of gen 1 (tradebacks) is special */
+    if (!noWholeGen && gen.num != 1 && gen.subnum == GenInfo::NumberOfSubgens(gen.num)-1) {
         gen.subnum = gen.wholeGen;
     }
     /* Todo: load gens if needed somewhere smarter (for example the initialization of PokePersonal / PokeTeam with setGen).
@@ -1806,6 +1811,10 @@ void MoveInfo::retranslate()
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].retranslate();
     }
+}
+
+bool MoveInfo::isInit() {
+    return !m_Names.empty();
 }
 
 void MoveInfo::loadNames()
@@ -2597,32 +2606,19 @@ QString TypeInfo::path(const QString& file)
 
 void TypeInfo::loadEff()
 {
+    for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++)
     {
         QHash<int, QString> temp;
 
-        fill_int_str(temp, path("typestable.txt"));
+        fill_int_str(temp, path("%1G/typestable.txt").arg(i));
 
         QHashIterator<int, QString> it(temp);
+        m_TypeVsType.push_back(QHash<int, QVector<int> >());
         while (it.hasNext()) {
             it.next();
             QStringList l2 = it.value().split(' ');
             foreach (QString l3, l2) {
-                m_TypeVsType[it.key()].push_back(l3.toInt());
-            }
-        }
-    }
-
-    {
-        QHash<int, QString> temp;
-
-        fill_int_str(temp, path("typestable_gen1.txt"));
-
-        QHashIterator<int, QString> it(temp);
-        while (it.hasNext()) {
-            it.next();
-            QStringList l2 = it.value().split(' ');
-            foreach (QString l3, l2) {
-                m_TypeVsTypeGen1[it.key()].push_back(l3.toInt());
+                m_TypeVsType.back()[it.key()].push_back(l3.toInt());
             }
         }
     }
@@ -2652,11 +2648,7 @@ QString TypeInfo::weatherName(int weather)
 
 int TypeInfo::Eff(int type_attack, int type_defend, Pokemon::gen gen)
 {
-    if (gen.num == 1) {
-        return m_TypeVsTypeGen1[type_attack][type_defend];
-    } else {
-        return m_TypeVsType[type_attack][type_defend];
-    }
+    return m_TypeVsType[gen.num-GenInfo::GenMin()][type_attack][type_defend];
 }
 
 
@@ -2997,7 +2989,7 @@ QString HiddenPowerInfo::path(const QString &filename)
 int HiddenPowerInfo::Type(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     if (gen >= 3)
-        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
+        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*(15+ (gen.num >= 6)))/63 + 1;
     else
         return (att_dv%4)*4+(def_dv%4)+1;
 }
@@ -3010,16 +3002,18 @@ int HiddenPowerInfo::Power(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8
         return (((satt_dv>>3) + (speed_dv>>3)*2 + (def_dv>>3)*4 + (att_dv>>3)*8)*5+ std::min(int(satt_dv),3))/2 + 31;
 }
 
-QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type)
+QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type, Pokemon::gen gen)
 {
-    QStringList fileLines;
-
-    fill_container_with_file(fileLines, path(QString("type%1_hp.txt").arg(type)));
-
     QList<QStringList> ret;
 
-    foreach (QString line, fileLines)
-        ret.push_back(line.split(' '));
+    for (int i = 63; i >= 0; i--) {
+        int gt = Type(gen, i & 1, (i & 2)!=0, (i & 4)!=0, (i & 8)!=0, (i & 16)!=0, (i & 32)!=0);
+        if (gt == type) {
+            ret.push_back(QString("%1 %2 %3 %4 %5 %6")
+                          .arg(((i&1)!=0)+30).arg(((i&2)!=0)+30).arg(((i&4)!=0)+30)
+                          .arg(((i&8)!=0)+30).arg(((i&16)!=0)+30).arg(((i&32)!=0)+30).split(' '));
+        }
+    }
 
     return ret;
 }

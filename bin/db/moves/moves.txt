@@ -1,4 +1,4 @@
-﻿0 
+﻿0 (No Move)
 1 Pound
 2 Karate Chop
 3 DoubleSlap

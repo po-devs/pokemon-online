@@ -1,14 +1,10 @@
 ﻿0 
-
 1 Pokemon Seme
 2 Pokemon Seme
 3 Pokemon Seme
 4 Pokemon Lucertola
-
-5 Pokémon
- Fiamma
+5 PokémonFiamma
 6 Pokémon Fiamma
-
 7 Pokemon Tartarughina
 8 Pokemon Tartaruga
 9 Pokemon Tartaruga
@@ -57,9 +53,7 @@
 52 Pokemon Graffiogatto
 53 Pokemon Classegatto
 54 Pokemon Anatra
-
 55 Pokemon Anatra
-
 56 Pokemon Scimmiaiale
 57 Pokemon Scimmiaiale
 58 Pokemon Cucciolo
@@ -81,22 +75,17 @@
 74 Pokemon Roccia
 75 Pokemon Roccia
 76 Pokemon Tonnellata
-
 77 Pokemon Fuocavallo
 78 Pokemon Fuocavallo
 79 Pokemon Stupido
 80 Pokemon Eremita
 81 Pokemon Magnete
-
 82 Pokemon Magnete
-
 83 Pokemon Selvanatra
 84 Pokemon Doppiuccello
 85 Pokemon Tripluccello
-
 86 Pokemon Marinleone
 87 Pokemon Marinleone
-
 88 Pokemon Melma
 89 Pokemon Melma
 90 Pokemon Bivalve
@@ -136,7 +125,6 @@
 124 Pokemon Umanoide
 125 Pokemon Elettrico
 126 Pokemon Sparafuoco
-
 127 Pokemon Coleottero
 128 Pokemon Selvatoro
 129 Pokemon Pesce
@@ -148,7 +136,6 @@
 135 Pokemon Fulmine
 136 Pokemon Fiamma
 137 Pokemon Virtuale
-
 138 Pokemon Spirale
 139 Pokemon Spirale
 140 Pokemon Mollusco
@@ -173,7 +160,6 @@
 159 Pokemon Mascellone
 160 Pokemon Mascellone
 161 Pokemon Esploratore
-
 162 Pokemon Corpolungo
 163 Pokemon Gufo
 164 Pokemon Gufo
@@ -193,7 +179,6 @@
 178 Pokemon Mistico
 179 Pokemon Lana
 180 Pokemon Lana
-
 181 Pokemon Luce
 182 Pokemon Fiore
 183 Pokemon Acquatopo
@@ -206,7 +191,6 @@
 190 Pokemon Codalunga
 191 Pokemon Seme
 192 Pokemon Sole
-
 193 Pokemon Alalibera
 194 Pokemon Acquapesce
 195 Pokemon Acquapesce
@@ -220,7 +204,6 @@
 203 Pokemon Collolungo
 204 Pokemon Vermesacca
 205 Pokemon Vermesacca
-
 206 Pokemon Terraserpente
 207 Pokemon Voloscorpione
 208 Pokemon Ferroserpente
@@ -230,7 +213,6 @@
 212 Pokemon Chela
 213 Pokemon Forma
 214 Pokemon Monocorno
-
 215 Pokemon Affilartiglio
 216 Pokemon Orsacchiotto
 217 Pokemon Ibernatore
@@ -269,9 +251,7 @@
 250 Pokemon Arcobaleno
 251 Pokemon Tempoviaggio
 252 Pokemon Legnogeco
-
 253 Pokemon Legnogeco
-
 254 Pokemon Foresta
 255 Pokemon Pulcino
 256 Pokemon Giovanpollo
@@ -296,7 +276,6 @@
 275 Pokemon Malvagio
 276 Pokemon Minirondine
 277 Pokemon Rondine
-
 278 Pokemon Gabbiano
 279 Pokemon Acquauccello
 280 Pokemon Sentimento
@@ -344,7 +323,6 @@
 322 Pokemon Ingenuo
 323 Pokemon Eruzione
 324 Pokemon Carbone
-
 325 Pokemon Rimbalzo
 326 Pokemon Manipolazione
 327 Pokemon Puntinpanda
@@ -352,7 +330,6 @@
 329 Pokemon Vibrazione
 330 Pokemon Mistico
 331 Pokemon Cactus
-
 332 Pokemon Spaventapasseri
 333 Pokemon Cottonuccello
 334 Pokemon Canticchiante
@@ -368,7 +345,6 @@
 344 Pokemon Argilbambola
 345 Pokemon Margiglio
 346 Pokemon Cirripede
-
 347 Pokemon Gambero
 348 Pokemon Piatto
 349 Pokemon Pesce
@@ -382,14 +358,12 @@
 357 Pokemon Frutta
 358 Pokemon Ventocampana
 359 Pokemon Disastro
-
 360 Pokemon Luminoso
 361 Pokemon Cappelneve
 362 Pokemon Faccia
 363 Pokemon Applauso
 364 Pokemon Rotolopalla
 365 Pokemon Spezzaghiaccio
-
 366 Pokemon Bivalve
 367 Pokemon marprofondo
 368 Pokemon Maresud
@@ -429,7 +403,6 @@
 402 Pokemon Grillo
 403 Pokemon Flash
 404 Pokemon Scintilla
-
 405 Pokemon Brillocchi
 406 Pokemon Germoglio
 407 Pokemon Bouquet
@@ -444,9 +417,7 @@
 416 Pokemon Alveare
 417 Pokemon Elettroiattolo
 418 Pokemon Marlontra
-
 419 Pokemon Marlontra
-
 420 Pokemon Ciliegia
 421 Pokemon BOcciolo
 422 Pokemon Marlumaca
@@ -457,7 +428,6 @@
 427 Pokemon Coniglio
 428 Pokemon Coniglio
 429 Pokemon Magico
-
 430 Pokemon Granboss
 431 Pokemon Gattino
 432 Pokemon Gattotigre
@@ -467,7 +437,6 @@
 436 Pokemon Bronzo
 437 Pokemon Bronzampana
 438 Pokemon Bonsai
-
 439 Pokemon Mimo
 440 Pokemon Teatro
 441 Pokemon Musicnota
@@ -498,23 +467,18 @@
 466 Pokemon Fulmine
 467 Pokemon Esplosione
 468 Pokemon Giubileo
-
 469 Pokemon Libellorco
 470 Pokemon Rigoglioso
 471 Pokemon Frescaneve
-
 472 Pokemon Zannarpione
-
 473 Pokemon Duezanne
 474 Pokemon Virtuale
 475 Pokemon Lama
 476 Pokemon Bussola
 477 Pokemon Pinza
 478 Pokemon Terraneve
-
 479 Pokemon Plasma
 480 Pokemon Conoscenza
-
 481 Pokemon Emozione
 482 Pokemon Volontà
 483 Pokemon Temporale

@@ -26,9 +26,10 @@ public:
 
     void addThemeMenu(QMenuBar *m);
     void addStyleMenu(QMenuBar *m);
+    void addLanguageMenu(QMenuBar *m);
     void changeTheme(const QString &theme);
 public slots:
-    void launchMenu(bool first = false);
+    void launchMenu();
     void launchCredits();
     void launchTeamBuilder();
     void reloadPokemonDatabase();

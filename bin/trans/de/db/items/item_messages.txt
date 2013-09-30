@@ -1,21 +1,22 @@
-﻿0 (No Item)
-3 Schlohkraut neutralisiert Statuswerte von %s !
-4 %s klammert sich an seinen Fokus-Band !
-5 %s klammert sich an seinen Fokus-Gurt !
-7 %s used its white herb to come back to his senses!
-11 %s used its power herb to attack immediately!
-12 Überreste von %s füllte einige KP auf !
+0 (Kein Item)
+3 Schlohkraut neutralisiert Statuswerte von %s!
+4 %s klammert sich an seinen Fokus-Band!
+5 %s klammert sich an seinen Fokusgurt!
+7 Mentalkraut heilt %s von seiner Vernarrtheit!
+11 Dank Energiekraut kann %s sofort angreifen!
+12 Überreste von %s füllt einige KP auf!
 16 Giftschleim von %s füllt einige KP auf!|%s wurde durch das Item Giftschleim verletzt!
 17 Dank Flinkklaue kann %s den ersten Zug machen!
-18 %s restored a little HP using its Berry Juice!
-19 Heiß-Orb von %s wurde aktiviert !|Toxik-Orb von %s wurde aktiviert !
+18 %s stellt dank Beerensaft einige KP wieder her!
+19 Heiß-Orb von %s wurde aktiviert!|Toxik-Orb von %s wurde aktiviert!
 21 %s verliert einige KP!
-24 Seegesang von %s füllt einige KP auf!
-29 %s is hurt by its Sticky Barb!
+24 Seegesang von %s füllt einige KP wieder auf!
+29 %s wurde durch Klettdorn verletzt!
 34 %f erleidet durch den Beulenhelm Schaden!
-35 Der Luftballon von %s ist geplatzt!|%s gerät durch den Luftballon in die Schwebe!
-36 %s's %i raised its %st!
-37 %s's %i raised %m's power!
-38 %s used its Red Card on %f!
-39 %s used its Escape Button!
-40 %s's Berserk Gene activated!|%s's Attack went way up!
+35 Der Luftballon von %s ist geplatzt!|%s gerät durch den Luftballon in Schwebe!
+36 %s's %i erhöht seine %st!
+37 %s's %i erhöht %m's Stärke!
+38 %s benutzt Rote Karte auf %f!
+39 %s benutzt seinen Fluchtknopf!
+40 %s's Berserk-Gen aktiviert sich!|%s's Angriff steigt stark!
+41 %s's Fatumknoten aktiviert sich, %f hat sich in %s verliebt!

@@ -65,6 +65,7 @@ class PokemonInfo
 public:
     /* directory where all the data is */
     static void init(const QString &dir="db/pokes/");
+    static void loadStadiumTradebacks();
 
     /* Self-explainable functions */
     static int TrueCount(); // pokes without counting forms
@@ -84,9 +85,7 @@ public:
     static int Type2(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QPixmap Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen = GenInfo::GenMax(), int gender = Pokemon::Male, bool shiney = false, bool backimage = false, bool mod=true);
     static QPixmap Picture(const QString &url);
-    static QMovie  *AnimatedSprite(const Pokemon::uniqueId &pokeId, int gender, bool shiny, bool back);
-    static bool HasAnimatedSprites();
-    static bool HasAnimatedSpritesEnabled();
+
     static QPixmap Sub(Pokemon::gen gen=5, bool back = false);
     static QPixmap Icon(const Pokemon::uniqueId &pokeid, bool mod = true);
     static bool HasMoveInGen(const Pokemon::uniqueId &pokeid, int move, Pokemon::gen gen);
@@ -152,6 +151,8 @@ public:
         void loadMoves(Gen *parent);
         void loadReleased(Gen *parent);
         void loadMinLevels(Gen *parent);
+
+        void addTradebacks(Gen *parent);
 
         bool isReleased(const Pokemon::uniqueId &);
 
@@ -219,7 +220,6 @@ private:
     static void loadDescriptions();
     // Call this after loading all data.
     static void makeDataConsistent();
-    static QSet<int> getMoves(const QString &filename, int Pokenum);
     static QString path(const QString &filename, const Pokemon::gen &g = 0);
     static int calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint8 ev);
 };
@@ -230,6 +230,8 @@ public:
     /* directory where all the data is */
     static void init(const QString &dir="db/moves/");
     static void retranslate();
+
+    static bool isInit();
 
     /* Self-explainable functions */
     static QString Name(int movenum);
@@ -431,8 +433,7 @@ private:
 
     static QHash<int, QString> m_Names;
     static QString m_Directory;
-    static QHash<int, QVector<int> > m_TypeVsType;
-    static QHash<int, QVector<int> > m_TypeVsTypeGen1;
+    static QVector<QHash<int, QVector<int> > > m_TypeVsType;
     static QHash<int, int> m_Categories;
 
     static void loadNames();
@@ -554,13 +555,14 @@ public:
     /* The power of the hidden power depending on the dvs */
     static int Power(Pokemon::gen gen, quint8 hpdv, quint8 attdv, quint8 defdv, quint8 sattdv, quint8 sdefdv, quint8 spddv);
     /* the different set of dvs (which are chosen within 30-31) that give an hidden power of that type */
-    static QList<QStringList> PossibilitiesForType(int type);
+    static QList<QStringList> PossibilitiesForType(int type, Pokemon::gen gen);
 
     static QPair<quint8,quint8> AttDefDVsForGen2(int type);
 private:
     static QString m_Directory;
 
     static QString path(const QString &filename);
+    static void loadPossibilities();
 };
 
 class StatInfo

@@ -15,4 +15,5 @@
 14 Eis
 15 Drache
 16 Unlicht
-17 ???
+17 Fee
+18 ???

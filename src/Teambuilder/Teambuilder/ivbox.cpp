@@ -49,6 +49,13 @@ void IvBox::updateAll()
 {
     updateIVs();
     updateStats();
+
+    if (poke().gen() > 5 && ui->hiddenPowerType->count() < Type::Curse - 1) {
+        ui->hiddenPowerType->addItem(TypeInfo::Name(Type::Curse-1));
+    } else if (poke().gen() <= 5 && ui->hiddenPowerType->count() >= Type::Curse - 1){
+        ui->hiddenPowerType->removeItem(ui->hiddenPowerType->count()-1);
+    }
+
     updateHiddenPower();
 
     if (poke().gen() <= 2) {
@@ -154,7 +161,7 @@ void IvBox::updateHiddenPower()
 
 void IvBox::updateHiddenPowerSelection()
 {
-    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType());
+    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType(), poke().gen());
 
     while (ui->hpchoice->rowCount() > 0) {
         ui->hpchoice->removeRow(0);
@@ -188,7 +195,7 @@ void IvBox::changeHiddenPower(int newType)
     }
 
     if (poke().gen() > 2) {
-        QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType).front();
+        QStringList possibility = HiddenPowerInfo::PossibilitiesForType(newType, poke().gen()).front();
 
         for (int i = 0; i < std::max(6, possibility.size()); i++) {
             poke().setDV(i, possibility[i].toInt());
