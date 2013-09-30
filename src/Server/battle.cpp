@@ -2283,7 +2283,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
     case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
-    case Pokemon::Frozen: return (gen() < 6 || !hasType(player, Type::Ice)) && !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
+    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
     default:
         return false;
     }
