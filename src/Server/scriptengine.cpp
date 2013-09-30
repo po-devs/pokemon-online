@@ -222,6 +222,9 @@ ScriptEngine::ScriptEngine(Server *s) {
     sys.setProperty("readBinary", myengine.newFunction(readBinary));
     sys.setProperty("writeBinary", myengine.newFunction(writeBinary));
 
+    sys.setProperty("qCompress", myengine.newFunction(compress));
+    sys.setProperty("qUncompress", myengine.newFunction(uncompress));
+
 
     QScriptValue mkdirf = myengine.newFunction(mkdir);
     sys.setProperty( "mkdir" , mkdirf);
@@ -3063,6 +3066,58 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
     return QScriptValue();
 }
 
+QScriptValue ScriptEngine::compress(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    int compression = -1;
+
+
+
+    if (c->argument(1).isNumber()) {
+        compression = c->argument(1).toInteger();
+
+        if (compression > 9 || compression < -1) {
+            po->warn("qCompress(binary [, compression])", "Invalid compresion level", true);
+            return QScriptValue();
+        }
+    }
+
+    QByteArray b;
+
+    if (c->argument(0).instanceOf(e->globalObject().property("sys").property("ByteArray")))
+    {
+        b = e->fromScriptValue<QByteArray>(c->argument(0));
+    }
+    else
+    {
+        po->warn("qCompress(binary [, compression])", "Need binary buffer to qCompress", true);
+        return QScriptValue();
+    }
+
+    return e->toScriptValue(qCompress(b, compression));
+}
+
+QScriptValue ScriptEngine::uncompress(QScriptContext *c, QScriptEngine *e)
+{
+    ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+
+    QByteArray b;
+
+    if (c->argument(0).instanceOf(e->globalObject().property("sys").property("ByteArray")))
+    {
+        b = e->fromScriptValue<QByteArray>(c->argument(0));
+    }
+    else
+    {
+        po->warn("qUncompress(binary)", "Need binary buffer to qUncompress", true);
+        return QScriptValue();
+    }
+
+    return e->toScriptValue(qUncompress(b));
+}
+
+
 QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 {
 
@@ -3967,6 +4022,8 @@ QScriptValue ByteArrayClass::construct(QScriptContext *ctx, QScriptEngine *)
     QScriptValue arg = ctx->argument(0);
     if (arg.instanceOf(ctx->callee()))
         return cls->newInstance(qscriptvalue_cast<QByteArray>(arg));
+    else if (arg.isString())
+        return cls->newInstance(arg.toString().toUtf8());
     int size = arg.toInt32();
     return cls->newInstance(size);
 }

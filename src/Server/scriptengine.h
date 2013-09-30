@@ -61,6 +61,10 @@ public:
     static QScriptValue writeFlat(QScriptContext *c, QScriptEngine *e);
     static QScriptValue readFlat(QScriptContext *c, QScriptEngine *e);
 
+
+    static QScriptValue compress(QScriptContext *c, QScriptEngine *e);
+    static QScriptValue uncompress(QScriptContext *c, QScriptEngine *e);
+
     static QScriptValue exec(QScriptContext *c, QScriptEngine *e);
 #endif
     static QScriptValue backtrace(QScriptContext *c, QScriptEngine *);
