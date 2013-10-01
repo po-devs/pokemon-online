@@ -67,7 +67,7 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(kick(int)), SLOT(playerKick(int)));
     connect(&relay(), SIGNAL(ban(int)), SLOT(playerBan(int)));
     connect(&relay(), SIGNAL(tempBan(int,int)), SLOT(playerTempBan(int,int)));
-    connect(&relay(), SIGNAL(banRequested(QString)), SLOT(CPBan(QString,int)));
+    connect(&relay(), SIGNAL(banRequested(QString,int)), SLOT(CPBan(QString,int)));
     connect(&relay(), SIGNAL(unbanRequested(QString)), SLOT(CPUnban(QString)));
     connect(&relay(), SIGNAL(PMsent(int,QString)), SLOT(receivePM(int,QString)));
     connect(&relay(), SIGNAL(getUserInfo(QString)), SLOT(userInfoAsked(QString)));
