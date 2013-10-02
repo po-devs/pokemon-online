@@ -1,5 +1,4 @@
 ﻿0 (Nessun oggetto)
-
 1 Granradice
 2 Fascia Blu
 3 Luminpolvere
@@ -11,12 +10,10 @@
 9 Bandana
 10 Focalnastro
 11 Gonfioaroma
-
 12 Fascia Verde
 13 Rallentocoda
 14 Distraroma
 15 Avanzi
-
 16 Fortunaroma
 17 Mentalerba
 18 Metalpolvere
@@ -24,7 +21,6 @@
 20 Bizzoaroma
 21 Fascia Rosa
 22 Vigorerba
-
 23 Puroaroma
 24 Velopolvere
 25 Terrorpanno
@@ -44,13 +40,10 @@
 39 Saviocchiali
 40 Fascia Gialla
 41 Zoomlente
-
 42 Monetamuleto
 43 Antidoto
-
 44 Sveglia
 45 Succo di Bacca
-
 46 Grande Perla
 47 Grande Fungo
 48 Cinturanera
@@ -58,7 +51,6 @@
 50 Fangopece
 51 Occhialineri
 52 Flauto Blu
-
 53 Coccio Blu
 54 Antiscottatura
 55 Calcio
@@ -70,15 +62,12 @@
 61 Supercolpo
 62 Squama Drago
 63 Elisir
-
 64 Radicenergia
 65 Polvenergia
 66 Fune di Fuga
 67 Etere
-
 68 Pietrastante
 69 Condiv.Esp.
-
 70 Pietrafocaia
 71 Fiammosfera
 72 Coda Skitty
@@ -89,11 +78,8 @@
 77 Coccio Verde
 78 Fertilrapido
 79 Superguardia
-
 80 Polvocura
-
 81 Squama Cuore
-
 82 Miele
 83 PS-Su
 84 Iperpozione
@@ -106,7 +92,6 @@
 91 Assorbisfera
 92 Elettropalla
 93 Cretaluce
-
 94 Fortunuovo
 95 Calamita
 96 Elisir Max
@@ -114,11 +99,8 @@
 98 Pozione Max
 99 Repellente Max
 100 Revitalizzante Max
-
 101 Metalcoperta
-
 102 Metronomo
-
 103 Miracolseme
 104 Latte MooMoo
 105 Pietralunare
@@ -130,19 +112,13 @@
 111 Perla
 112 Poké Bambola
 113 Pozione
-
 114 PP Max
-
 115 PP-Su
 116 Proteina
-
 117 Caramella Rara
-
 118 Affilodente
-
 119 Flauto Rosso
 120 Coccio Rosso
-
 121 Repellente
 122 Vitalerba
 123 Revitalizzante
@@ -153,7 +129,6 @@
 128 Gusciondoso
 129 Palla Fumo
 130 Gassosa
-
 131 Cuorugiada
 132 Spettrotarga
 133 Fertilsaldo
@@ -161,27 +136,23 @@
 135 Polvostella
 136 Pietrasolare
 137 Super Pozione
-
 138 Super Repellente
 139 Pietratuono
 140 Minifungo
 141 Tossicsfera
 142 Cucchiaio Torto
 143 Upgrade
-
 144 Pietraidrica
 145 Flauto Bianco
 146 Precisione X
 147 Attacco X
 148 Difesa X
 149 Special X
-
 150 Dif.Sp.X
 151 Velocità X
 152 Flauto Giallo
 153 Coccio Giallo
 154 Zinco
-
 155 Rocciafredda
 156 Fortunpugno
 157 Dubbiodisco
@@ -189,7 +160,6 @@
 159 Adamasfera
 160 Rocciaumida
 161 Rocciacalda
-
 162 Splendisfera
 163 Crescicappa
 164 Gambo
@@ -204,15 +174,12 @@
 173 Pietralbore
 174 Neropietra
 175 Elettritore
-
 176 Magmatore
-
 177 Roccianima
 178 Pietraovale
 179 Copertura
 180 Rapidartigli
 181 Affilartigli
-
 182 Pietrabrillo
 183 Vischiopunta
 184 Denteabissi
@@ -253,7 +220,6 @@
 219 Messaggio Erba
 220 Messaggio Porto
 221 Messaggio Cuore
-
 222 Messaggio Iride
 223 Messaggio Neve
 224 Messaggio Spazio
@@ -264,7 +230,6 @@
 229 Piromodulo
 230 Gelomodulo
 231 Sweet Heart
-
 232 Squama Bella
 233 Evolcondensa
 234 Pietralieve
@@ -277,7 +242,6 @@
 241 Ricaripila
 242 Pulsantefuga
 243 Bijoufuoco
-
 244 Bijouacqua
 245 Bijouelettro
 246 Bijouerba
@@ -285,7 +249,6 @@
 248 Bijoulotta
 249 Bijouveleno
 250 Bijouterra
-
 251 Bijouvolante
 252 Bijoupsico
 253 Bijoucoleottero
@@ -302,9 +265,7 @@
 264 Piumintuito
 265 Piumreazione
 266 Piumabella
-
 267 Dream Ball
-
 268 Profumfungo
 269 Granpepita
 270 Trittiperla
@@ -317,53 +278,28 @@
 277 Statuantica
 278 Coronantica
 279 Conostropoli
-
 280 Supercolpo 2
-
 281 Velocità X-2
-
 282 Special X-2
-
 283 Dif.Sp. X-2
-
 284 Difesa X-2
-
 285 Attacco X-2
-
 286 Precisione X-2
-
 287 Velocità X-3
-
 288 Special X-3
-
 289 Dif.Sp.X-3
-
 290 Difesa X-3
-
 291 Attacco X-3
-
 292 Precisione X-3
-
 293 Velocità X-6
-
 294 Special X-6
-
 295 Dif.Sp.X-6
-
 296 Difesa X-6
-
 297 Attacco X-6
-
 298 Precisione X-6
-
 299 Ability Urge
-
 300 Item Drop
-
 301 Item Urge
-
 302 Reset Urge
-
 303 Supercolpo 3
-
 304 Genefurioso

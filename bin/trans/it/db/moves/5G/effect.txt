@@ -1,1041 +1,530 @@
-﻿0 Nessun Effetto
+0 Nessun Effetto
 2 Probabile Brutto Colpo.
-
 3 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 4 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 6 Nelle battaglie interne, se usata il giocatore ottiene soldi dopo la battaglia, nel caso vinca. Se questo attacco colpisce, viene aggiunto un ammontare pari a 5 volte il livello dell'utilizzatore (durante l'uso dell'attacco) ai soldi ottenuti. Non si ottiene nulla se si scappa dalla battaglia.}
-
 7 Può bruciare l'avversario. (10%)
-
 8 Può congelare l'avversario. (10%)
-
 9 Può paralizzare l'avversario. (10%)
-
 12 KO istantaneo. infligge danno all'avversario pari ai suoi PS. Inefficace se il livello dell'avversario è più alto dell'utilizzatore. Quando usato, la Precisione di questo attacco aumenta con la differenza dei livelli. Influenzato da tipologie. Per questo attacco gli altri effetti di Precisione sono annullati.
-
 13 Attacco a 2 turni. Probabile Brutto Colpo.
-
 14 Aumenta l'Attacco dell'utilizzatore di 2 Livelli.
-
 16 E'raddoppiato se l'avversario sta usando Volo o Rimbalzo.
-
 18 Termina le battaglie selvatiche. Nelle battaglie con Allentatore, sostituisce casualmente il Pokemon attivo con un altro Pokemon non attivo del team avversario; fallisce se il team avversario non ha Pokemon attivi. Fallisce anche se l'avversario ha usato Radicamento. Priorità -6.}
-
 19 Attacco a 2 turni. Mentre viene usato questo attacco, l'utilizzatore non viene colpito dagli attacchi tranne che Raffica, Tuono, Tornado e Stramontante.
-
 20 Attacco multiturno. Se questo attacco colpisce, comincia l'effetto. L'effetto dura da [tre a sei] turni, contando il turno attuale. Durante l'effetto, l'avversario non può ritirarsi o scappare, e alla fine di ogni turno a parte l'ultimo, l'avversario perde 1/16 dei propri PS. L'effetto finisce quando l'utilizzatore viene scambiato o l'avversario viene scambiato o se esso usa Rapigiro. L'effetto non viene resettato quando questo o un altro attacco multiturno viene usato contro l'avversario mentre è attivo l'effetto.} (100%)
-
 23 può far tentennare l'avversario. La potenza raddoppia se l'avversario ha usato Minimizza.
-
 24 Colpisce 2 volte.
-
 26 Se questo attacco fallisce o è reso inefficace, l'utilizzatore subisce la metà del danno che l'attacco avrebbe causato (ignorando immunità di tipo, non considerato come contraccolpo), ma non [meno di 1 PS o] più PS della metà dei PS totali avversari.
-
 27 Può far tentennare l'avversario.
-
 28 Riduce la Precisione dell'avversario di un Livello.
-
 29 Può far tentennare l'avversario.
-
 31 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 32 KO istantaneo. infligge danno all'avversario pari ai suoi PS. Inefficace se il livello dell'avversario è più alto dell'utilizzatore. Quando usato, la Precisione di questo attacco aumenta con la differenza dei livelli. Influenzato da tipologie. Per questo attacco gli altri effetti di Precisione sono annullati.
-
 34 Può paralizzare l'avversario. (30%)
-
 35 Attacco multiturno. Se questo attacco colpisce, comincia l'effetto. L'effetto dura da [tre a sei] turni, contando il turno attuale. Durante l'effetto, l'avversario non può ritirarsi o scappare, e alla fine di ogni turno a parte l'ultimo, l'avversario perde 1/16 dei propri PS. L'effetto finisce quando l'utilizzatore viene scambiato o l'avversario viene scambiato o se esso usa Rapigiro. L'effetto non viene resettato quando questo o un altro attacco multiturno viene usato contro l'avversario mentre è attivo l'effetto.} (100%)
-
 36 Ritorna al mittente 1/4 dei danni inflitti da esso (contraccolpo).
 37 Se questo attacco colpisce, comincia l'effetto. l'effetto dura per 2 o 3 turni, includendo il turno attuale. Durante l'effetto, l'utilizzatore usa questo attacco durante ogni suo turno e non può fare altre azioni. [Quando l'utilizzatore usa l'attacco in questo modo durante l'ultimo turno dell'effetto, diventa confuso alla fine di quel round], a meno che non sia già confuso. L'effetto finisce senza causare confusione se il tipo di questo attacco è inefficace contro l'avversario [prima dell'ultimo turno dell'effetto], se l'utilizzatore è impedito a usare l'attacco, o se cade addormentato, viene congelato, o se scambiato [prima dell'ultimo turno dell'effetto]. Se l'utilizzatore è addormentato, questo attacco causa danni e regge un turno (non causa confusione).
-
 38 Ritorna al mittente 1/3 dei danni inflitti da esso (contraccolpo).
-
 39 Riduce la Difesa dell'avversario di un Livello.
-
 40 Può avvelenare l'avversario. (30%)
-
 41 Colpisce 2 volte. Può avvelenare l'avversario. (20%)
-
 42 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 43 Riduce la Difesa avversaria di un Livello.
-
 44 Può far tentennare l'avversario.
-
 45 Riduce l'Attacco avversario di un Livello.
-
 46 { Termina battaglie selvatiche. In battaglie allenatore, scambia l'avversario con un Pokemon non-attivo casuale dell'avversario; fallisce se l'avversario non ha più Pokemon disponibili. Fallisce anche se l'avversario ha usato Radicamento. Livello Priorità -6.}
-
 47 Addormenta l'avversario.
-
 48 Confonde l'avversario.
-
 49 Infligge 20 danni al nemico. Influenzato da immunità di tipo.
-
 50 Per 4 o 7 turni, contando il turno corrente, l'ultima mossa usata dall'avversario quando quest'attacco è stato usato viene bloccata. Fallisce se l'avversario non ha quella mossa o se ha 0 PP. Durante l'effetto, questa mossa fallisce sempre. L'effetto finisce se il Pokemon viene scambiato.
-
 51 Può ridurre la Difesa Speciale dell'avversario di un Livello.
-
 52 Può bruciare l'avversario. (10%)
-
 53 Può bruciare l'avversario. (10%)
-
 54 Per 5 turni, includendo l'attuale, attacchi e abilità non possono ridurre i cambi di stat di ogni Pokemon attivo dalla parte dell'utilizzatore, se tali sono usati da altri Pokemon. Durante l'effetto, questo attacco fallisce per il team dell'utilizzatore.
-
 57 Se l'avversario sta usando Sub, la potenza di questo attacco è raddoppiata.
-
 58 Può congelare l'avversario. (10%)
-
 59 Può congelare l'avversario. DUrante la grandine, questo attacco colpisce sempre. (10%)
-
 60 Può confondere l'avversario. (10%)
-
 61 Può ridurre la Velocità dell'avversario di un Livello.
-
 62 Può ridurre l'Attacco avversario di un Livello.
-
 63 Se questo attacco colpisce, nel prossimo turno, l'utilizzatore non può eseguire alcuna azione e non fa nulla il turno successivo. (quella mossa non può essere usata durante quel turno.)
-
 66 Ritorna al mittente 1/4 dei danni inflitti da esso (contraccolpo).
 67 La potenza di questo attacco è 20 se il peso della specie originale dell'avversario è 10 Kilogrammi (kg) o meno [o meno di 10 kg], 40 se 25 kg o meno, 60 se 50 kg o meno, 80 se 100 kg o meno, 100 se 200 kg o meno, altrimenti 120.
-
 68 Se l'ultimo non-utilizzatore che ha colpito l'utilizzatore con una mossa fisica in questo turno è un Pokemon dell'avversario, e se nella posizione del non-utilizzatore c'è un Pokemon, infligge danni al Pokemon in tale posizione pari a 2 volte i PS persi dall'utilizzatore per via di quell'attacco. Fallisce se il danno subito è 0. Influenzato da immunità di tipo. Per attacchi multicolpo, ritorna PS basandosi sull'ultimo colpo di quell'attacco. Priorità -5.
-
 69 Infligge danno all'avversario in base al livello dell'utilizzatore. Influenzato da immunità di tipo.
-
 71 Se questo attacco ha successo, l'utilizzatore riceve la metà dei PS persi dall'avversario per via di questo attacco.
-
 72 Se questo attacco ha successo, l'utilizzatore riceve la metà dei PS persi dall'avversario per via di questo attacco.
 73 Durante l'effetto, alla fine di ogni turno, se c'è un Pokemon sul campo dell'utilizzatore, l'avversario perde 1/8 dei propri PS, e il Pokemon sulla zona dell'utilizzatore recupera tanti PS quanti persi dall'avversario. L'effetto finisce quando l'avversario è sostituito o se viene usato Rapigiro. Fallisce se il tipo dell'avversario è Erba.}
-
 74 Aumenta l'Attacco Speciale dell'utilizzatore di un Livello.
-
 75 Probabile Brutto Colpo.
-
 76 Attacco a 2 turni. La potenza è dimezzata durante Pioggiadanza, Terrempesta, nebbia, e Grandine. Durante Giornodisole, questo attacco richiede un solo turno.
-
 77 Avvelena l'avversario.
-
 78 Paralizza l'avversario. (Non influenzato da immunità di tipo.)
-
 79 Addormenta l'avversario.
-
 80 Se questo attacco colpisce, comincia l'effetto. L'effetto dura da 2 a 3 turni, contando il turno attuale. Durante l'effetto, l'utilizzatore usa questo attacco per ognuno di tali turni e non può eseguire altre azioni. [Quando l'utilizzatore usa questo attacco in tale modo, durante l'ultimo turno d'effetto, diventa confuso alla fine di tale turno], a meno che non sia già confuso. l'effetto finisce senza causare confusione se il tipo di questo attacco è inefficace contro i tipi avversari [prima dell'ultimo turno d'effetto], se all'utilizzatore è impedito l'uso di questo attacco, o se finisce addormentat, congelato, o sostituito [prima dell'ultimo turno d'effetto]. Se l'utilizzatore è addormentato, questo attacco infligge danni e dura un turno (non causa confusione).
-
 81 Riduce la Velocità avversaria di un Livello.
-
 82 Infligge 40 danni all'avversario. Influenzato da immunità di tipo.
-
 83 {Attacco multiturno. Se questo attacco colpisce, comincia l'effetto. L'effetto dura da [tre a sei] turni, contando il turno attuale. Durante l'effetto, l'avversario non può ritirarsi o scappare, e alla fine di ogni turno a parte l'ultimo, l'avversario perde 1/16 dei propri PS. L'effetto finisce quando l'utilizzatore viene scambiato o l'avversario viene scambiato o se esso usa Rapigiro. L'effetto non viene resettato quando questo o un altro attacco multiturno viene usato contro l'avversario mentre è attivo l'effetto.} (100%)
-
 84 Può paralizzare l'avversario. (10%)
-
 85 Può paralizzare l'avversario. (10%)
-
 86 Paralizza l'avversario. (Non influenzato da immunità di tipo.)
-
 87 Può paralizzare l'avversario. Durante Pioggiadanza, questo attacco colpisce sempre. Altrimenti, durante Giornodisole, la precisione di questo attacco è 50. Colpisce l'avversario anche se sta usando Volo e Rimbalzo. (30%)
-
 89 La potenza raddoppia se l'avversario sta usando Fossa.
-
 90 KO istantaneo. infligge danno all'avversario pari ai suoi PS. Inefficace se il livello dell'avversario è più alto dell'utilizzatore. Quando usato, la Precisione di questo attacco aumenta con la differenza dei livelli. Influenzato da tipologie. Per questo attacco gli altri effetti di Precisione sono annullati.
-
-
 91 Attacco a 2 turni. Mentre l'utilizzatore usa questo attacco, non è danneggiato dagli attacchi tranne che Terremoto e Magnitudo, e l'utilizzatore non perde PS a causa di Terrempesta e Grandine.
-
 92 Iperavvelena l'avversario.
-
 93 Può confondere l'avversario. (10%)
-
 94 Può ridurre la Difesa Speciale dell'avversario di un Livello.
-
 95 Addormenta l'avversario.
-
 96 Aumenta l'Attacco di un Livello.
-
 97 Aumenta la Velocità di 2 Livelli.
-
 98 Priorità +1.
-
 99 Se questo attacco colpisce, comincia l'effetto. Durante l'effetto, quando il Pokemon perde PS per via dell'attacco di un altro Pokemon (Come Obbliderio e Divinazione), il suo Attacco sale di un Livello. L'effetto finisce e il Pokemon non è più infatuato quando non sceglie più questa mossa o se viene ritirato.
-
 100 L'utilizzatore scappa dall'avversario selvatico. Fallisce se la battaglia è contro un Allenatore.
-
 101 Infligge danno all'avversario in base al livello dell'utilizzatore. Influenzato da immunità di tipo.
-
 102 Copia l'ultima mossa usata dall'avversario. Quella mossa rimpiazza questa. La mossa copiata ha 5 PP. Fallisce se quella mossa è Metronomo, Scontro, Schizzo, Mimica, Schiamazzo, o una mossa che l'utilizzatore sa già. Fallisce se il Pokemon è sotto l'effetto di Trasformazione.
-
 103 Riduce la Difesa Avversaria di 2 Livelli.
-
 104 Aumenta l'Evasione di un Livello.
-
 105 L'utilizzatore recupera la metà dei propri PS. Fallisce se l'utilizzatore ha la vita piena.
-
 106 Aumenta la Difesa di un Livello.
-
 107 Aumenta l'Evasione di un Livello. Anche se l'Evasione non può più salire, finchè il Pokemon non viene ritirato, la mossa Pestone, se usata da altri, imfligge danni doppi a questo Pokemon.
-
 108 Riduce la Precisione avversaria di un Livello.
-
 109 Confonde l'avversario.
-
 110 Aumenta la Difesa di 1 Livello.
-
 111 Aumenta la Difesa di un Livello. Anche se la Difesa non può salire di più, finchè il Pokemon non è ritirato, la potenza di Palla Gelo e Rotolamento, se usati da questo Pokemon, è raddoppiata. (Effetto non cumulabile.)}
-
 112 Aumenta la Difesa di 2 Livelli.
-
 113 L'effetto dura per 5 turni contando quello attuale. Durante l'effetto, l'efficacia degli attacchi speciali senza Brutto Colpo contro ogni Pokemon attivo dalla parte dell'utilizzatore è dimezzata finchè c'è solo un Pokemon attivo da tale parte, altrimenti è moltiplicata per 2/3. Durante l'effetto, questo attacco fallisce per il team dell'utilizzatore.}
-
 114 Resetta tutte le stat dei Pokemon attivi allo stato iniziale.
-
 115 L'effetto dura per 5 turni contando quello attuale. Durante l'effetto, l'efficacia degli attacchi fisici senza Brutto Colpo contro ogni Pokemon attivo dalla parte dell'utilizzatore è dimezzata finchè c'è solo un Pokemon attivo da tale parte, altrimenti è moltiplicata per 2/3. Durante l'effetto, questo attacco fallisce per il team dell'utilizzatore.}
-
 116 Aumenta le probabilità di Brutto Colpo per gli attacchi dell'utilizzatore. L'effetto finisce quando l'utilizzatore viene scambiato.
-
 117 quando viene usato questo attacco, comincia l'effetto e X è messo a 0. Durante l'effetto, l'utilizzatore usa questo attacco per ognuno dei suoi turni e non può eseguire altre azioni, e quando un non-utilizzatore colpisce l'utilizzatore con un attacco danneggiante, i PS persi da tale attacco sono aggiunti a X. Dopo il secondo turno dell'utilizzatore dopo quest'ultimo, infligge 2 volte l'ammontare di X all'ultimo non-utilizzatore che ha colpito l'utilizzatore con una mossa danneggiante durante l'effetto dell'attacco, o, se non ci sono Pokemon in tale posizione, casualmente a un altro Pokemon avversario, e questo effetto finisce. Non influenzato da immunità di tipo. Il danno restuito conta come un attacco dell'utilizzatore. Se, durante l'effetto, viene impedito l'uso di questo attacco o se l'utilizzatore viene sostituito, si addormenta o viene congelato, l'effetto finisce senza restituire danno. Priorità +1.
-
 118 Usa casualmente una mossa a parte le seguenti:  Metronomo, Scontro, Schizzo, Mimica, Schiamazzo, Sonnolalia, Assistente, Speculmossa, Contatore, Specchiovelo, Protezione, Individua, Resistenza, Destinobbligato, Furto, Sonoqui, Scippo, Altruismo, Supplica, Raggiro, Centripugno, Finta, Copione, Precedenza, Rapidscambio, o ogni mossa conosciuta dall'utilizzatore.
-
 119 Usa senza bersaglio l'ultima mossa che ha bersagliato l'utilizzatore, se non impedita nell'utilizzo, o usata per via di un'altra mossa, can be used with this Attacco, and has a target of "singolo non-utilizzatore", "tutti i Pokemon avversari", "Pokemon avversario casuale", "all non-users", or "no target". Fails if the affected move is Encore. The affected move is reset for a Pokémon when it is replaced or one of its opposing Pokémon is replaced. (A Attacco a 2 turni targets a Pokémon on both turns of use.)
-
 120 L'utilizzatore finisce KO come parte dell'attacco. La Difesa avversaria è temporaneamente dimezzata nel calcolo danni. Fallisce se non ci sono bersagli (non causa KO).
-
 122 Può paralizzare l'avversario. (30%)
-
 123 Può avvelenare l'avversario. (40%)
-
 124 Può avvelenare l'avversario. (30%)
-
 125 Può far tentennare l'avversario.
-
 126 Può bruciare l'avversario. (10%)
-
 127 Può far tentennare l'avversario.
 128 Attacco multiturno. Se questo attacco colpisce, comincia l'effetto. L'effetto dura da [tre a sei] turni, contando il turno attuale. Durante l'effetto, l'avversario non può ritirarsi o scappare, e alla fine di ogni turno a parte l'ultimo, l'avversario perde 1/16 dei propri PS. L'effetto finisce quando l'utilizzatore viene scambiato o l'avversario viene scambiato o se esso usa Rapigiro. L'effetto non viene resettato quando questo o un altro attacco multiturno viene usato contro l'avversario mentre è attivo l'effetto.} (100%)
-
 129 Non può essere evitato.
-
 130 Attacco a 2 turni. Nel primo turno, aumenta la Difesa di un Livello. (100%)
-
 131 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 132 Può ridurre la Velocità avversaria di un Livello.
-
 133 Aumenta la Difesa Speciale di 2 Livelli.
-
 134 Riduce la Precisione avversaria di un Livello.
-
 135 L'utilizzatore recupera la metà dei suoi PS massimi. Fallisce se i PS sono al massimo.
-
 136 se questo attacco fallisce o diventa inefficace, l'utilizzatore perde metà del danno che l'attacco avrebbe inflitto (ignorando immunità di tipo, non considerato contraccolpo), but not [less than 1 PS or] more PS than half of opponent's total PS.
-
 137 Paralizza l'avversario. (Non influenzato dalle immunità di tipo.)
-
 138 Fallisce se l'avversario non è addormentato. Se l'attacco colpisce, l'utilizzatore recupera la metà dei PS persi dall'avversario.
-
 139 Avvelena l'avversario.
-
 140 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 141 Se l'attacco colpisce, l'utilizzatore recupera la metà dei PS persi dall'avversario.
-
 142 Addormenta l'avversario.
-
 143 Attacco a 2 turni. Probabile Brutto Colpo. Può far tentennare l'avversario.
-
 144 L'Attacco, Difesa, Velocità, Attacco Speciale, e Difesa Speciale; tipi; mosse; specie; IV; abilità; e livelli di stat dell'utilizzatore diventano quelli del nemico. Annulla l'effetto di Inibitore su se stessi. Le mosse copiate hanno 5 PP. Fallisce se il nemico sta usando Volo, Fossa, Sub, o Rimbalzo. Tali attributi diventano quelli originale quando l'utilizzatore viene scambiato. Durante l'effetto, l'utilizzatore può usare questo attacco, e questo attacco fallisce sull'utilizzatore.
-
 145 Può ridurre la Velocità avversaria di un Livello.
-
 146 Può confondere l'avversario. (20%)
-
 147 Addormenta l'avversario.
-
 148 Riduce la Precisione dell'avversario di un Livello.
-
 149 Infligge danni all'avversario pari al (livello dell'utilizzatore) * (N * 10 + 50) / 100, arrotondati, dove N è un numero casuale da 0 a 10. Influenzato dalle immunità di tipo.
-
 150 Non ha alcun effetto.
-
 151 Aumenta la Difesa dell'utilizzatore di 2 Livelli.
-
 152 Probabile Brutto Colpo.
-
 153 L'utilizzatore finisce KO come parte dell'attacco. La Difesa avversaria è temporaneamente dimezzata nel calcolo danni. Fallisce se non ci sono bersagli (non causa KO).
-
-
 154 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 155 Colpisce 2 volte.
-
 156 L'utilizzatore recupera tutti i PS; esso si addormenta per 3 turni, anche se ha un problema di stato. Fallisce se i PS sono già al massimo o se l'utilizzatore è già addormentato. Non fa nulla se il Pokemon non può addormentarsi.
-
 157 Può far tentennare l'avversario.
 158 Può far tentennare l'avversario.
 159 Aumenta l'Attacco di un Livello.
-
 160 I tipi dell'utilizzatore diventano il tipo originale di una delle mosse dello stesso, a parte Maledizione, scelta casualmente. Fallisce se l'utilizzatore ha Multitipo o se ogni mossa dello stesso (a parte Maledizione) è del suo stesso tipo , visto che sceglie un tipo diverso da quello dell'utilizzatore.
-
 161 Può bruciare, congelare, o paralizzare l'avversario. (20%)
-
 162 Infligge danno all'avversario pari alla metà degli attuali PS dell'utilizzatore, ma non meno di 1. Influenzato da immunità di tipo.
-
 163 Probabile Brutto Colpo.
-
 164 Crea un sostituto usando 1/4 dei PS massimi dell'utilizzatore. L'effetto finisce quando l'utilizzatore è scambiato. 
-
 165 L'efficacia di questo attacco non è influenzato dai tipi dell'utilizzatore e dell'avversario. Se questo attacco colpisce, l'utilizzatore perde 1/4 dei PS totali (Non considerato contraccolpo).
-
 166 {Copia permanentemente l'ultima mossa usata dall'avversario(variabile differente). Quella mossa rimpiazza questa mossa anche dopo che la battaglia è terminata. Non copia Schizzo, Scontro, Schiamazzo, o ogni mossa già conosciuta. Fallisce se l'utilizzatore è sotto l'effetto di Trasformazione. Le mosse copiate in questo modo hanno tutti i PP.}
-
 167 Colpisce 3 volte. Si ferma nel caso un colpo fallisca. quando usato, la potenza è quella standard, e aumenta di 10 a ogni colpo.
-
 168 Se questo attacco colpisce, l'utilizzatore ottiene l'oggetto tenuto dal nemico (anche se l'avversario ha 0 PS) se l'utilizzatore non ha oggetti, se tale oggetto non è una Lettera, se l'utilizzatore non ha gettato il suo oggetto nella battaglia, e a meno che l'avversario non abbia Multitipo o se è uno dei Pokemon del giocatore in una battaglia interna.
-
 169 {Durante l'effetto, l'avversario non può scambiarsi o fuggire. L'effetto termina quando l'utilizzatore o l'avversario sono scambiati. Durante l'effetto, questo attacco fallisce contro l'avversario.}
-
 170 [Fino alla fine del prossimo turno, gli attacchi dell'utilizzatore contro l'avversario colpiscono senza fallire5. L'effetto finisce quando l'utilizzatore o l'avversario vengono sostituiti o quando un attacco colpisce senza fallire in questo modo. Questo attacco può essere usato mentre il suo effetto è attivo. quando viene usato questo attacco, il suo effetto termina per gli altri Pokemon.]
-
 171 Fallisce se l'avversario non è addormentato. Finchè l'avversario è addormentato, l'avversario perde 1/4 dei suoi PS alla fine di ogni turno (Includendo il turno corrente). L'effetto termina se l'avversario è sostituito o si sveglia.
-
 172 Può bruciare l'avversario. Se l'utilizzatore è congelato e usa questa mossa, si scongela prima di usarla. (10%)
-
 173 Può far tentennare l'avversario. Fallisce se l'utilizzatore non è addormentato.
-
 174 Se il tipo dell'utilizzatore non comprende Spettro o se esso ha Magiscudo, riduci la sua velocità di un livello e aumneta il suo Attacco e Difesa di un Livello. Altrimenti, l'utilizzatore perde la metà dei suoi PS massimi (anche se ciò manda KO il pokemon) e, alla fine di ogni turno, l'avversario perde 1/4 dei suoi PS massimi. L'effetto termina se l'avversario scambia pokemon. Durante l'effetto, questo attacco fallisce. Fallisce anche se non c'è alcun bersaglio. (Quando viene scelto l'attacco, se il tipo dell'utilizzatore non comprende Spettro o se possiede Magiscudo, non puoi scegliere un avversario. Se non viene scelto un avversario, viene scelto casualmente un pokemon avversario quando viene usato questo attacco.)
-
 175 La potenza di questo attacco è 200 se N è meno di 2, 150 se N va da 2 a 5, 100 se N va da 6 a 12, 80 se N va da 13 a 21, 40 se N va da 22 a 42, o 20 se N è 43 o più, dove N è uguale a (PS attuali * 64 / PS totali), arrotondati.
-
 176 {I tipi dell'utilizzatore cambiano in un tipo casuale che è resistente o immune al tipo dell'ultimo attacco che ha bersagliato l'utilizzatore con successo. Fallisce se non c'è tale attacco o se l'utilizzatore ha Multitipo. Non sceglie entrambi i tipi dell'utilizzatore. Più informazioni4.}
-
 177 Probabile Brutto Colpo.
-
 178 Riduce la Velocità dell'avversario di 2 Livelli.
-
 179 La potenza di questo attacco è 200 se N è meno di 2, 150 se N va da 2 a 5, 100 se N va da 6 a 12, 80 se N va da 13 a 21, 40 se N va da 22 a 42, o 20 se N è 43 o più, dove N è uguale a (PS attuali * 64 / PS totali), arrotondati.
-
 180 Riduce i PP dell'ultima mossa usata dall'avversario di 4. Fallisce se tale mossa ha 0 PP o se non c'è una tale mossa.
-
 181 Può congelare l'avversario. (10%)
-
 182 L'utilizzatore evita certi attacchi usati in questo turno da altri Pokemon. Questo attacco fallisce se viene usato per ultimo. Una variabile, X, parte a 0, e ritorna a 0 se l'ultima mossa usata dall'utilizzatore non è Protezione, Individua, o Resistenza, o se questo fallisce. Quando viene usato questo attacco, X aumenta di 1 (fino a 3) ogni volta che colpisce. Questo attacco ha il 50% di probabilità di fallire se X è 1, il 75% se X è 2, e il 87,5% se X è 3. Priorità +3.
-
 183 Priorità +1.
-
 184 Riduce la Velocità avversaria di 2 Livelli.
-
 185 Non può fallire.
-
 186 Confonde l'avversario.
-
 187 L'utilizzatore perde metà dei PS massimi, e aumenta il suo attacco di 12 Livelli. Fallirà se i PS ridotti manderebbero KO il Pokemon o se il suo Attacco non può salire ulteriormente.
-
 188 Può avvelenare l'avversario. (30%)
-
 189 Può ridurre la Precisione avversaria di un Livello.
-
 190 Può ridurre la Precisione avversaria di un Livello.
-
 191 Può essere usato fino a 3 volte. Durante l'effetto, quando un Pokemon avversario diventa quello attivo, tale Pokémon, a meno che non sia di tipo Volante o abbia Levitazione, perde PS: 1/8 dei PS totali se usata 1 volta; 1/6 se usata 2 volte; e 1/4 se usata 3 volte.
-
 192 Può paralizzare l'avversario. (100%)
-
 193 Durante l'effetto, se il livello d'Evasione avversaria è maggiore di 0, ritorna temporaneamente a 0 nel calcolo di precisione per attacchi contro l'avversario. Durante l'effetto, attacchi di tipo Normale e Lotta contro l'avversario hanno effetto normale contro i tipi Spettro. L'effetto finisce se il Pokemon avversario è sostituito. Durante l'effetto, questo attacco può essere comunque usato.
-
 194 Fino al prossimo turno, se un attacco di un Pokemon avversario manda KO l'utilizzatore, se il Pokemon avversario è ancora vivo viene mandato KO anche lui.
-
 195 Ogni Pokemon attivo senza un conteggio riceve un conteggio di morte di 4 turni. alla fine di ogni turno (contando l'attuale), il conteggio di morte di ogni Pokemon attivo è ridotto di 1 e tutti i Pokemon con un conteggio di morte a 0 finiscono KO contemporaneamente. Il conteggio di morte di un Pokemon è annullato se esso viene sostituito.
-
 196 Può ridurre la Velocità avversaria di un Livello.
-
 197 L'utilizzatore evita certi attacchi usati in questo turno da altri Pokemon. Questo attacco fallisce se viene usato per ultimo. Una variabile, X, parte a 0, e ritorna a 0 se l'ultima mossa usata dall'utilizzatore non è Protezione, Individua, o Resistenza, o se questo fallisce. Quando viene usato questo attacco, X aumenta di 1 (fino a 3) ogni volta che colpisce. Questo attacco ha il 50% di probabilità di fallire se X è 1, il 75% se X è 2, e il 87,5% se X è 3. Priorità +3.
-
 198 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 199 [Fino alla fine del prossimo turno, gli attacchi dell'utilizzatore contro l'avversario colpiscono senza fallire5. L'effetto finisce quando l'utilizzatore o l'avversario vengono sostituiti o quando un attacco colpisce senza fallire in questo modo. Questo attacco può essere usato mentre il suo effetto è attivo. quando viene usato questo attacco, il suo effetto termina per gli altri Pokemon.]
-
 200 Se questo attacco colpisce, comincia l'effetto. l'effetto dura per 2 o 3 turni, includendo il turno attuale. Durante l'effetto, l'utilizzatore usa questo attacco durante ogni suo turno e non può fare altre azioni. [Quando l'utilizzatore usa l'attacco in questo modo durante l'ultimo turno dell'effetto, diventa confuso alla fine di quel round], a meno che non sia già confuso. L'effetto finisce senza causare confusione se il tipo di questo attacco è inefficace contro l'avversario [prima dell'ultimo turno dell'effetto], se l'utilizzatore è impedito a usare l'attacco, o se cade addormentato, viene congelato, o se scambiato [prima dell'ultimo turno dell'effetto]. Se l'utilizzatore è addormentato, questo attacco causa danni e regge un turno (non causa confusione).
-
 201 Meteo. Dura per 5 turni contando l'attuale. Alla fine di ogni turno eccetto l'ultimo, ogni Pokemon attivo, tranne i tipi Terra, Roccia e Acciaio, perdono contemporaneamente 1/16 dei PS totali. Durante l'effetto, La Difesa Speciale dei Pokemon il cui tipo comprende Roccia è moltiplicata per 1,5.
-
 202 Se questo attacco colpisce, il Pokemon recupera la metà dei PS persi dall'avversario per via di questo attacco.
-
 203 Fino alla fine del turno, se un attacco non di questo Pokemon ridurrebbe i PS dello stesso a meno di 1, quel danno viene cambiato così che invece riduca a 1 i suoi PS. Questo attacco fallisce se viene usato per ultimo nel turno. Una variabile, X, parte a 0, e ritorna a 0 se l'ultima mossa usata da questo Pokemon non è Protezione, Individua, o Resistenza se il Pokemon usa questo attacco o se questo attacco fallisce, e sale di 1 (fino a 3) ogni volta che questo attacco ha successo. Questo attacco ha il 50% di probabilità di fallire se X è 1, 75% se X è 2, e 87.5% se X è 3. Priorità +3.
 204 Riduce l'Attacco avversario di 2 Livelli.
-
 205 Il Pokemon usa questo attacco per 5 turni, Durante i quali non può eseguire altre azioni. Un moltiplicatore, X (che parte a 0), aumenta di 1 ogni volta che questo attacco ha successo. L'effetto finisce e X ritorna a 0 quando il Pokemon viene sostituito; quando viene impedito l'uso di questo attacco, manca, o diventa inefficace; quando l'attacco viene usato per 5 turni; o se si addormenta o viene congelato. La potenza di questo attacco è moltiplicata per 2 volte il valore di X. Se il Pokemon è addormentato, l'effetto di questo attacco dura solo un turno.
-
 206 Se il danno di questo attacco sarebbe uguale o maggiore dei PS attuali dell'avversario, il suo danno è uguale invece ai PS avversari meno 1. (questo attacco non fallisce se in questo modo vengono inflitti 0 danni.)
-
 207 Se l'Attacco nemico può essere aumentato, aumenta l'Attacco avversario di 2 Livelli. Se l'avversario non è confuso, viene confuso.
-
 208 Recupera metà dei PS massimi. Fallisce se i PS dell'utilizzatore sono al massimo.
-
 209 Può paralizzare l'avversario. (30%)
-
 210 Un moltiplicatore, X (che parte a 0), aumenta di 1 se questo attacco ha successo, fino a massimo 4. X ritorna a 0 quando il Pokemon viene sostituito; quando finisce addormentato o viene congelato; o quando viene impedito l'uso di questo attacco, manca, o diventa inefficace. La potenza di questo attacco è moltiplicata per 2 volte il valore di X.
-
 211 Può aumentare la Difesa di un Livello.
-
 212 {Durante l'effetto, l'avversario non può sostituirsi o scappare. L'effetto finisce quando l'avversario viene sostituito. Durante l'effetto, questo attacco fallisce contro l'avversario.}
-
 213 Infatua l'avversario. (c'è un 50% di possibilità che l'attacco di un Pokemon infatuato venga cancellato.) Fallisce se questo Pokemon o l'avversario sono senza sesso, o se sono dello stesso sesso. L'effetto termina quando il Pokemon o l'avversario sono sostituiti. Durante l'effetto, questo attacco fallisce contro l'avversario.
-
 214 Usa casualmente una delle mosse dell'utilizzatore. Fallisce se l'utilizzatore non è addormentato. Non vengono scelte le mosse seguenti:  Sonnolalia, Copione, Assistente, Precedenza, Metronomo, Speculmossa, Centripugno, Baraonda, Chatter, Bide, qualsiasi mossa a 2 turni, mosse che l'utilizzatore non può usare, o una mossa con 0 PP. Non vengono usati gli PP della mossa usata.
-
 215 Ogni Pokemon nel team è curato dal proprio problema di status.
-
 216 La potenza di questo attacco è uguale a int((Felicità del Pokemon)*2/5). Minimo 1.
-
 217 Casualmente, ripristina 1/4 dei PS massimi dell'avversario (probabilità di 52/256), oppure ha potenza 40 (102/256), 80 (76/256), o 120 (26/256).
-
 218 La potenza di questo attacco è uguale a int((255-Felicità del Pokemon)*2/5). Minimo 1.
 219 {Per 5 turni, includendo il turno attuale, per ogni Pokemon attivo dalla parte dell'utilizzatore, gli attacchi di altri Pokemon e oggetti non possono infliggere status o confusione contro quel Pokemon. Durante l'effetto, Yawn will fail against any active Pokémon on the user's side. Durante l'effetto, questo attacco fallisce per il tuo team.}
 220 I PS di questo Pokemon e dell'avversario diventa uguale alla media della somma dei due PS attuali dei Pokemon, arrotondati, e sono sistemati così da non superare i PS massimi dei Pokemon. Non influenzato da immunità di tipo.
-
 221 Può bruciare l'avversario. Se il Pokemon è congelato e usa questa mossa, viene scongelato prima che l'attacco venga usato. (50%)
-
 222 La potenza di questo attacco è 10 (probabilità del 5%), 30 (10%), 50 (20%), 70 (30%), 90 (20%), 110 (10%), or 150 (5%) (Magnitudo da 4 a 10, rispettivamente). Se un avversario sta usando Fossa, la potenza di questo attacco è raddoppiata per tale avversario.
-
 223 Può confondere l'avversario. (100%)
-
 225 Può paralizzare l'avversario. (30%)
-
 226 Rimpiazza il Pokemon attivo con un Pokemon diverso del tuo team a tua scelta e trasferisce i Livelli di stat, confusione, ed effetti di certe mosse dal Pokemon precedente al nuovo Pokémon.
-
 227 L'effetto dura da 4 a 8 turni, includendo quello attuale. Durante l'effetto, l'avversario, durante ogni suo turno, usa l'ultima mossa usata prima che questo attacco fosse usato, senza bersaglio, e l'avversario sceglie automaticamente tale mossa da usare e non può sceglierne altre. (L'avversario può sostituirsi o scappare normalmente.) Questo attacco fallisce se non c'è una mossa che possa essere colpita; le mosse in questione sono Trasformazione, Mimica, Schizzo, Speculmossa, Ripeti, o Scontro; se l'avversario non ha mosse colpite; o se la mossa colpita ha 0 PP. Durante l'effetto, questo attacco fallisce contro l'avversario. L'effetto finisce se l'avversario viene sostituito. All'inizio del turno avversario e alla fine del turno, se la mossa colpita cambia, l'effetto finisce. Alla fine del turno, se la mossa ha 0 PP, l'effetto finisce.
-
 228 Quando l'avversario viene scambiato, se il Pokemon sceglie questa mossa e l'avversario è uno dei Pokemon Nemici, e se questo Pokemon è addormentato, congelato, o se deve saltare l'attacco in questo turno per via di Pigrone, e se questo Pokemon non si è ancora mosso in questo turno, utilizza questo attacco con efficaccia doppia e salta il suo attacco in questo turno. (Può essere usata in questo modo anche se disabilitata. Se usata in tal modo, questo Pokemon è considerato mosso dopo il Pokemon nemico. Se questo attacco manda KO il Pokemon avversario, il nuovo Pokemon dalla parte avversaria diventa subito attivo.)
-
 229 Se questo attacco ha successo, termina l'effetto di attacchi multiturno e Parassiseme sul Pokemon, e l'effetto di Punte, Levitoroccia, e Fielepunte termina per il tuo campo.
-
 230 Riduce l'Evasione avversaria di un Livello.
-
 231 Può ridurre la Difesa avversaria di un Livello.
-
 232 Può aumentare l'Attacco di un Livello.
-
 233 Non può fallire. Priorità -1.
-
 234 Il Pokemon recupera 2/3 dei PS totali durante Giornodisole; altrimenti, il Pokemon ottiene 1/4 dei PS totali durante Pioggiadanza, Grandine, nebbia, o Terrempesta; altrimenti, il Pokemon recupera metà dei PS massimi. (Non influenzato da Distortozona.)
-
 235 Il Pokemon recupera 2/3 dei PS totali durante Giornodisole; altrimenti, il Pokemon ottiene 1/4 dei PS totali durante Pioggiadanza, Grandine, nebbia, o Terrempesta; altrimenti, il Pokemon recupera metà dei PS massimi. (Non influenzato da Distortozona.)
-
 236 Il Pokemon recupera 2/3 dei PS totali durante Giornodisole; altrimenti, il Pokemon ottiene 1/4 dei PS totali durante Pioggiadanza, Grandine, nebbia, o Terrempesta; altrimenti, il Pokemon recupera metà dei PS massimi. (Non influenzato da Distortozona.)
-
 237 La potenza di questo attacco è uguale a (X*40/63)+30, arrotondata, dove X è 0, più 1 se la metà dei valori individuali (IV) dei PS di questo Pokemon è dispari, più 2 se la metà degli IV d'Attacco è dispari, più 4 se metà dei suoi IV di Difesa è dispari, più 8 se metà degli IV della Velocità è dispari, più 16 se metà degli IV dell'Attacco Speciale è dispari, più 32 se metà degli IV della Difesa Speciale è dispari. Il tipo di questo attacco è uguale a (X * 15 / 63), arrotondato, dove X è 0, più 1 se la metà degli IV dei PS di questo Pokemon è dispari, più 2 se la metà degli IV d'Attacco è dispari, più 4 se metà dei suoi IV di Difesa è dispari, più 8 se metà degli IV della Velocità è dispari, più 16 se metà degli IV dell'Attacco Speciale è dispari, più 32 se metà degli IV della Difesa Speciale è dispari, e il tipo è selezionato dalla lista:  0 = Lotta; 1 = Volante; 2 = Veleno; 3 = Terra; 4 = Roccia; 5 = Coleottero; 6 = Spettro; 7 = Acciaio; 8 = Fuoco; 9 = Acqua; 10 = Normale; 11 = Elettro; 12 = Psico; 13 = Ghiaccio;14 = Drago; 15 = Buio.
-
 238 Probabile Brutto Colpo.
-
 239 Può far tentennare l'avversario. La potenza è raddoppiata se l'avversario sta usando Volo o Rimbalzo.
-
 240 Meteo. Dura per 5 turni includendo l'attuale turno. Durante l'effetto, l'efficacia degli attacchi Acqua è moltiplicata per 1,5, e l'efficacia degli attacchi Fuoco è dimezzata.
-
 241 Meteo. Dura per 5 turni includendo l'attuale turno. Durante l'effetto, l'efficacia degli attacchi Fuoco è moltiplicata per 1,5, e l'efficacia degli attacchi Acqua è dimezzata. Durante l'effetto, altri effetti non possono congelare i Pokemon.
-
 242 Può ridurre la Difesa avversaria di un Livello.
-
 243 Se l'ultimo non-utilizzatore che ha colpito questo Pokemon con un Attacco Speciale in questo turno è uno dei Pokemon avversari, e c'è un Pokemon in una postazione avversaria, infligge danno al Pokemon in tale postazione pari a 2 volte i PS persi dal Pokemon per via di quell'attacco. Fallisce se tale ammontare è 0. Influenzato da immunità di tipo. Per attacchi multicolpo, rispedisce PS basandosi sull'ultimo colpo di tale attacco. Priorità -5.
-
 244 Il Pokemon assume tutti i livelli di stat dell'avversario.
-
 245 Priorità +1.
-
 246 Può aumentare l'Attacco, Difesa, Velocità, Attacco Speciale, e Difesa Speciale del Pokemon di un Livello.
-
 247 Può ridurre la Difesa Speciale dell'avversario di un Livello.
-
 248 {Esegue un [calcolo dei danni], che non è un Brutto Colpo e la cui efficacia non è influenzata dai tipi del Pokemon e dell'avversario, contro il Pokemon o l'avversario (non fallirà); alla fine del turno che segue questo turno, se c'è un Pokemon sul campo avversario, il danno calcolato è inflitto a quel Pokemon. Il calcolo di precisione e di bilanciamento sono fatti quando l'attacco ritorna. Rimane in effetto anche se il Pokemon o l'avversario sono sostituiti. Il danno ritornato non è influenzato da immunità di tipo. Durante l'effetto, questo attacco fallisce sul Pokemon avversario. L'attacco ritornato non è considerato un attacco dell'utilizzatore. [Non influenzato da Assorbisfera]}
-
 249 Può ridurre la Difesa avversaria di un Livello.
-
 250 Attacco multi-turno. La potenza è raddoppiata se l'avversario sta usando Sub. (100%)
-
 251 {Esegue un colpo per ogni Pokemon non esausto nel team, escludendo uova e quelli con problemi di status, in ordine di team. Per ognuno di questi Pokemon, l'attacco usato nella formula dei danni è l'attacco base [per la specie originale di quel Pokemon]; il livello usato nella formula dei danni è il livello di quel Pokemon; e la Difesa usata nella formula dei danni è la Difesa base[per la specie originale dell'avversario]. L'efficacia di questo attacco non è influenzata dai tipi di questo Pokemon o dell'avversario. Influenze che alterano il danno non sono calcolati, apparte Brutti Colpi, appesantimento dei danni, e l'effetto di Altruismo. Il controllo di Precisione è fatto solo una volta. Considerato un attacco multicolpo. Tutti i colpi sono considerati attacchi del Pokemon.}
-
 252 Fa tentennare l'avversario. Fallisce a meno che sia il primo turno in cui il Pokemon è diventato attivo. Priorità +1.
-
 253 {Se questo attacco ha successo, comincia l'effetto. L'effetto dura da 2 a 5 turni, includendo il turno attuale. Durante l'effetto, il Pokemon usa questo attacco durante ognuno dei suoi turni e non può fare altre azioni. Durante l'effetto, nessun Pokemon può addormentarsi e ogni Pokemon attivo addormentato si sveglia alll'inizio del suo turno e alla fine di ogni turno incluso quello finale. L'effetto finisce [alla fine del turno] se il Pokemon è impedito ad usare quell'attacco. L'effetto finisce se il Pokemon finisce addormentato, congelato, o viene sostituito. L'effetto finisce alla fine del turno se questo attacco è inefficace sui tipi dell'avversario.}
-
 254 Aumenta il conteggio di Accumulo di 1, e aumenta la Difesa e Difesa Speciale di un Livello. Fallisce se il conteggio di Accumulo è 3 o più. Il conteggio di Accumulo è resettato quando il Pokemon è sostituito.
-
 255 La potenza di questo attacco è uguale a 100 volte il conteggio di Accumulo.Per questo attacco non viene fatto bilanciamento di danni. Anche se questo attacco manca o è inefficace, riporta il conteggio di Accumulo a 0 e riduce la Difesa e Difesa Speciale della stessa quantità ottenuta dall'Accumulo. (Tale quantità è riportata anch'essa a 0.)
 256 Il Pokemon recupera PS a seconda del suo conteggio di Accumulo:  1/4 dei PS totali se è 1; metà dei PS totali se è 2; e tutti i PS se è 3. Anche se i PS del Pokemon sono al massimo, riporta il conteggio di Accumulo a 0 e riduce la Difesa e Difesa Speciale della stessa quantità ottenuta dall'Accumulo. (Tale quantità è riportata anch'essa a 0.)
-
 257 Può bruciare l'avversario. (10%)
-
 258 Meteo. Dura per 5 turni includendo l'attuale. Durante l'effetto, alla fine di ogni turno apparte l'ultimo, ogni Pokemon attivo, apparte i tipi Ghiaccio, perde contemporaneamente 1/16 dei PS totali.
-
 259 Durante l'effetto, l'avversario non può usare l'ultima mossa che ha scelto. L'effetto finisce quando l'avversario viene sostituito.
-
 260 Se l'Attacco Speciale avversario può essere aumentato, aumenta l'Attacco Speciale avversario di 2 Livelli. Se l'avversario non è confuso, diventa confuso.
 262 Il Pokemon finisce KO come parte di questo attacco. Riduce l'Attacco e l'Attacco Speciale di 2 Livelli. Fallisce se non c'è un bersaglio (non causa KO).
-
 263 Raddoppia se il Pokemon è avvelenato, bruciato, o paralizzato.
-
 264 Fallisce se il Pokemon ha perso PS in questo turno per via di un attacco danneggiante di un altro Pokemon. Priorità -3.
-
 265 Se questo attacco ha successo e l'avversario è paralizzato, la potenza è raddoppiata e l'avversario è curato dalla paralisi.
-
 266 Quando un Pokemon avversario usa un attacco con bersaglio un "singolo Pokemon" o "singolo Pokemon avversario" in questo turno e c'è un Pokemon nella posizione di chi usa questo attacco, è diretto sul Pokemon in tale posizione invece che su altri Pokemon. Rimane efficace anche se l'utilizzatore viene sostituito. Priorità +3.
-
 267 Nell'erba alta, erba molto alta, o pozzanghere, usa Semebomba. In caverne o terreni rocciosi, usa Frana. Sulla neve, usa Bora. Sulla sabbia o altri terreni, usa Terremoto. Sull'acqua, usa Idropompa. Sul ghiaccio, usa Geloraggio. In altri luoghi, usa Tripletta.
-
 268 Fino alla fine del prossimo turno e finchè questo Pokemon viene sostituito, l'efficacia delle mosse Elettro di questo Pokemon è raddoppiata. Questo Pokemon può usare questo attacco se il suo effetto è ancora attivo. Quando viene usato questo attacco, aumenta la Difesa Speciale di un Livello.
-
 269 Per 3 o 5 turni, includendo l'attuale, le mosse non danneggianti dell'avversario sono inibite. L'effetto termina se l'avversario viene sostituito.
-
 270 Durante questo turno, la potenza degli attacchi del bersaglio è moltiplicata per 1.5. L'effetto finisce se il bersaglio viene sostituito. Fallisce se non c'è un bersaglio o se si agisce dopo l'avversario. Priorità +5.
-
 271 Contemporaneamente, il Pokemon riceve l'oggetto dell'avversario, e l'avversario riceve quello del Pokemon. Fallisce se uno o entrambi tengono un Messaggio, se il Pokemon o l'avversario hanno gettato il loro strumento, se nessuno dei due ha un oggetto, o se l'avversario ha Multitipo o è uno dei propri Pokemon in una battaglia interna.
-
 272 Il Pokemon assume l'abilità avversaria. Fallisce se l'abilità avversaria è Magidifesa o Multitipo o se l'avversario non ha un'abilità. (L'abilità di un Pokemon torna quella originale quando viene sostituito.)
-
 273 {Alla fine del prossimo turno, se c'è un Pokemon dalla tua parte, quel Pokemon recupera metà dei PS. Rimane efficace anche se il Pokemon viene sostituito. Durante l'effetto, questo attacco fallisce per i Pokemon dalla tua parte.}
-
 274 Usa una mossa casuale da un Pokemon casuale nel tuo team, apparte questo Pokemon e le uova. Non usa le seguenti mosse:  Metronomo, Scontro, Schizzo, Mimica, Schiamazzo, Sonnolalia, Assistente, Speculmossa, Contatore, Specchiovelo, Protezione, Individua, Resistenza, Destinobbligato, Furto, Sonoqui, Scippo, Altruismo, Supplica, Raggiro, Centripugno, Finta, Copione, Precedenza, o Rapidscambio.
-
 275 Durante l'effetto, l'avversario non si può sostituire, scappare, o venire sostituito, e alla fine di ogni turno, il Pokemon recupera 1/16  dei PS totali. Durante l'effetto, gli attacchi Terra sono efficaci contro il Pokemon e tale Pokemon può ricevere l'effetto di Punte e Fielepunte come se il Pokemon non avesse Levitazione e come se il suo tipo non comprendesse Volante. L'effetto finisce se questo Pokemon viene sostituito.
-
 276 Se questo attacco ha successo, riduce l' Attacco e la Difesa di un Livello.
 277 La prossima volta in questo turno, se questo Pokemon è il bersaglio di certi attacchi da altri Pokemon, questo Pokemon usa tale attacco contro quel Pokemon. L'effetto finisce se questo Pokemon viene sostituito. Priorità +4. (Si applica separatamente a ogni bersaglio. Ha la precedenza su Antisuono. Anche attacchi con bersagli multipli colpiscono in tal modo un singolo bersaglio.)
-
 278 Se il Pokemon non sta tenendo un oggetto, il Pokemon riceve l'ultimo oggetto che era stato tenuto da un altro Pokemon dalla tua parte in questa battaglia. Quell'oggetto è resettato se il Pokemon usa quell'oggetto.
-
 279 {L'efficacia è raddoppiata se il Pokemon ha perso PS per via di un attacco danneggiante dell'avversario in questo turno e l'avversario è stato l'ultimo a colpire il Pokemon in questo turno con un attacco raddoppiato. Priorità -4.}
-
 280 A meno che questo attacco fallisca, anche se questo attacco diventa inefficace per via di immunità di tipo, termina gli effetti di Riflesso e Schermoluce dalla parte avversaria prima di infliggere i danni.
-
 281 {alla fine del prossimo turno, se l'avversario non ha un problema di status e rimane attivo da quando questo attacco è stato usato, l'avversario viene addormentato. Fallisce se [quando viene usato questo attacco l'avversario non può dormire, o se] l'avversario ha un problema di status.}
-
 282 Se questo attacco ha successo, l'avversario lascia il suo oggetto tenuto per il resto della battaglia anche se ha 0 PS. Rimane efficace anche se l'avversario viene scambiato. (Quell'oggetto non viene consumato.)
-
 283 Infligge danno all'avversario uguale agli attuali PS avversari meno i PS attuali del Pokemon. Influenzato da immunità di tipo. Fallisce se i PS attuali del Pokemon sono uguali o maggiori ai PS attuali dell'avversario.
-
 284 La potenza di questo attacco è uguale a min(1,int(PS attuali dell'avversario* 150 / PS totali avversari)). Minimo 1, massimo 150.
-
 285 Contemporaneamente, il Pokemon assume l'abilità avversaria, e l'avversario assume l'abilità del Pokemon. Fallisce se una o entrambe le abilità sono Magidifesa e/o Multitipo o se nessuno ha un'abilità.
-
 286 Durante l'effetto, le mosse che questo Pokemon conosce sono disabilitate per ogni Pokemon avversario. L'effetto termina quando questo Pokemone viene sostituito. Fallisce se nessuno dei Pokemon avversari conosce una mossa che l'utilizzatore conosce.
-
 287 Il Pokemon è curato da bruciatura, veleno e paralisi.
-
 288 Fino al tuo prossimo turno, se un attacco di un Pokemon avversario manda KO il Pokemon, i PP di quella mossa sono ridotti a 0.
-
 289 La prossima volta in questo turno, questo Pokemon, in questo turno, usa certi attacchi se vengono usati da un altro Pokemon. Priorità +4. Più informazioni6.
-
 290 Nell'erba alta, erba molto alta, o pozzanghere, può addormentare l'avversario. Nelle caverne o terreni rocciosi, può far tentennare l'avversario. Su neve e ghiaccio, può congelare l'avversario. Su sabbia o altri terreni esterni, può ridurre la Precisione avversaria di un Livello. Nel fango, può ridurre la Velocità avversaria di un Livello. In acqua, può ridurre l'Attacco avversario di un Livello. In altri luoghi, può paralizzare l'avversario. (30%)
-
 291 Attacco a 2 turni. Mentre il Pokemon usa quest'attacco, il Pokemon non è colpito da mosse apparte Surf e Mulinello, e il Pokemon non perde PS per via di Terrempesta o Grandine.
-
 292 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 293 Su e sott'acqua, il tipo di questo Pokemon diventa Acqua. Nelle caverne e terreni rocciosi, diventa Roccia. Nell'erba alta, erba molto alta e pozzanghere, diventa Erba. Su sabbia, fango, e altri terreni, diventa Terra. Su neve e ghiaccio, diventa Ghiaccio. Altrimenti, diventa Normale. Fallisce se il Pokemon ha Multitipo o se il tipo determinato è lo stesso di uno dei tipi del Pokemon.
-
 294 Aumenta l'Attacco Speciale di 2 Livelli.
-
 295 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 296 Può ridurre l'Attacco Speciale avversario di un Livello.
-
 297 Riduce l'Attacco avversario di 2 Livelli.
-
 298 Confonde il nemico.
-
 299 Probabile Brutto Colpo. Può bruciare l'avversario. (10%)
-
 300 Durante l'effetto, la potenza degli attacchi Elettro è dimezzata. (Effetto non cumulabile.) l'effetto termina quando questo Pokemon viene scambiato. Durante l'effetto, quest'attacco fallisce per il Pokemon, e altri Pokemon possono usare questa mossa.
-
 301 Il Pokemon usa questo attacco per 5 turni, Durante i quali non può eseguire altre azioni. Un moltiplicatore, X (che parte a 0), aumenta di 1 ogni volta che questo attacco ha successo. L'effetto finisce e X ritorna a 0 quando il Pokemon viene sostituito; quando viene impedito l'uso di questo attacco, manca, o diventa inefficace; quando l'attacco viene usato per 5 turni; o se si addormenta o viene congelato. La potenza di questo attacco è moltiplicata per 2 volte il valore di X. Se il Pokemon è addormentato, l'effetto di questo attacco dura solo un turno.
-
 302 Può far tentennare l'avversario.
-
 303 Il Pokemon recupera metà dei PS massimi. Fallisce se i PS sono al massimo.
-
 305 Può iperavvelenare l'avversario. (30%)
-
 306 Può ridurre la Difesa avversaria di un Livello.
-
 307 Se questo attacco ha successo, nel prossimo turno, questo Pokemon non può eseguire azione e non fa nulla nel suo turno. (quella mossa non può essere usata durante quel turno.)
-
 309 Può ridurre l'Attacco avversario di un Livello.
-
 310 Può far tentennare l'avversario.
-
 311 La potenza di questo attacco è raddoppiata durante condizioni meteo (contando la nebbia). Durante la Grandine, il tipo di questo attacco è Ghiaccio. Altrimenti, durante Giornodisole, il tipo diventa Fuoco. Altrimenti, durante Terrempesta, il tipo diventa Roccia. Altrimenti, durante Pioggiadanza, il tipo diventa Acqua.
-
 312 Ogni Pokemon nel tuo team è curato dai suoi problemi di status.
-
 313 Riduce la Difesa Speciale avversaria di 2 Livelli.
-
 314 Probabile Brutto Colpo.
-
 315 Se questo attacco ha successo, riduci l'Attacco Speciale di 2 Livelli.
-
 316 Durante l'effetto, se il Livello d'Evasione avversario è maggiore di 0, diventa temporaneamente 0 nel controllo di Precisione di attacchi contro l'avversario. Durante l'effetto, attacchi di tipo Normale e Lotta contro l'avversario hanno effetto normale contro il tipo Spettro. L'effetto finisce quando questo Pokemon viene sostituito. Questo attacco può essere usato durante l'effetto.
-
 317 Può ridurre la Velocità avversaria di un Livello.
-
 318 Può aumentare l'Attacco, Difesa, Velocità, Attacco Speciale e Difesa Speciale di un Livello.
-
 319 Riduce la Difesa Speciale avversaria di 2 Livelli.
-
 320 Addormenta l'avversario.
-
 321 Riduce l'Attacco e la Difesa di un Livello.
-
 322 Aumenta la Difesa e la Difesa Speciale di un Livello.
-
 323 La potenza di quest'attacco è uguale a min(1,int(PS attuali del Pokemon * 150 / PS totali del Pokemon)). Minimo 1, massimo 150.
-
 324 Può confondere l'avversario. (10%)
-
 325 Non può fallire.
-
 326 Può far tentennare l'avversario.
-
 327 Può colpire l'avversario anche se sta usando Volo o Rimbalzo.
-
 328 Attacco multiturno. Se questo attacco ha successo, comincia l'effetto. L'effetto dura da [3 a 6] turni, includendo il turno attuale. Durante l'effetto, l'avversario non può sostituirsi o scappare, e alla fine di ogni turno apparte l'ultimo, l'avversario perde 1/16 dei PS totali. L'effetto finisce se questo Pokemon o l'avversario vengono sostituiti o se esso usa Rapigiro. L'effetto non è resettato quando questo o un altro attacco multiturno viene usato sull'avversario.} (100%)
-
 329 KO istantaneo. infligge danno all'avversario pari ai suoi PS. Inefficace se il livello dell'avversario è più alto dell'utilizzatore. Quando usato, la Precisione di questo attacco aumenta con la differenza dei livelli. Influenzato da tipologie. Per questo attacco gli altri effetti di Precisione sono annullati.
-
 330 Può ridurre la Precisione avversaria di un Livello.
-
 331 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 332 Non può fallire.
-
 333 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 334 Aumenta la Difesa di 2 Livelli.
-
 335 Durante l'effetto, l'avversario non può sostituirsi o scappare. L'effetto finisce quando il Pokemon o l'avversario vengono scambiati. Durante l'effetto, questo attacco fallisce contro l'avversario.}
-
 336 Aumenta l'Attacco di un Livello.
-
 338 Se questo attacco ha successo, nel prossimo turno, il Pokemon non può fare alcuna azione e non fa niente durante il suo turno. (Durante quel turno, questa mossa non può essere utilizzata.)
-
 339 Aumenta l'Attacco e la Difesa di un Livello.
-
 340 Attacco a 2 turni. metre il Pokemon sta usando questo attacco, non può essere colpito dagli attacchi a parte Raffica, Tuono, Tornado, e Stramontate. Può paralizzare l'avversario. (30%)
-
 341 Può ridurre la Velocità avversaria di un Livello.
-
 342 Probabile Brutto Colpo. Può avvelenare l'avversario. (10%)
-
 343 Se questo attacco ha successo, questo Pokemon riceve l'oggetto del nemico (anche se l'avversario ha 0 PS) se quessto Pokemon non ha oggetti, se tale oggetto non è un Messaggio, se questo Pokemon non ha gettato via il suo oggetto, e a meno che l'avversario non abbia Multitipo o se è uno dei Pokemon del giocatore in una battaglia interna.
-
 344 Infligge al mittente 1/3 dei PS persi dal nemico per via di questo attacco (contraccolpo). Può paralizzare l'avversario. (10%)
-
 345 Non può fallire.
-
 346 Durante l'effetto, la potenza degli attacchi Fuoco è dimezzata. (Effetto non cumulabile.) L'effetto termina quando questo Pokemon viene sostituito. Durante l'effetto, quest'attacco fallisce per questo Pokemon, e altri Pokemon possono usare questo attacco.
-
 347 Aumenta l'Attacco Speciale e la Difesa Speciale di un Livello.
-
 348 Probabile Brutto Colpo.
-
 349 Aumenta l'Attacco e la Velocità di un Livello.
-
 350 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 351 Non può fallire.
-
 352 Può confondere l'avversario. (20%)
-
 353 Esegue un [calcolo dei danni], che non è un Brutto Colpo e la cui efficacia non è influenzata dai tipi di questo Pokemon e dell'avversario, contro questo Pokemon e l'avversario (non fallirà); alla fine del turno che segue il prossimo turno, se c'è un Pokemon dalla parte avversaria, tale calcolo dei danni viene inflitto a quel Pokemon. Controllo di Precisione e bilanciamento danni sono fatti quando l'attacco ritorna. Rimane in effetto anche se questo Pokemon o l'avversario vengono sostituiti. Il danno ritornato non è influenzato da immunità di tipo. Durante l'effetto, questo attacco fallisce contro gli avversari. L'attacco ritornato non è considerato come un attacco dell'utilizzatore. [Non influenzato da Assorbisfera]}
-
 354 Se questo attacco ha successo, riduce l'Attacco Speciale di 2 Livelli.
-
 355 Il Pokemon recupera metà dei suoi PS massimi. Se il Pokemon recupera PS in questo modo, fino alla fine del turno, gli attacchi contro questo Pokemon hanno efficacia normale contro il tipo Volante.
-
 356 L'effetto dura per 5 turni, includendo l'attuale. quando viene usato questo attacco, gli effetti di Volo, Rimbalzo, e Magnetascesa termina per tutti i Pokemon attivi. Durante l'effetto, Volo, Rimbalzo, Magnetascesa, Calcinvolo, Splash, e Calcinsalto sono inibiti per tutti i Pokemon attivi. Durante l'effetto, gli attacchi Terra sono efficaci contro ogni Pokemon attivo, e ogni Pokemon attivo può ricevere l'effetto di Punte e Fielepunte, e ogni Pokemon attivo è bloccato dal sostituirsi e scappare per via di Trappoarena, come se non avessero Levitazione e come se il loro tipo corrente non includesse Volante. Durante l'effetto, la Precisione di ogni Pokemon attivo è moltiplicata per 10/6. Durante l'effetto, questo attacco fallisce per ogni Pokemon attivo.
-
 357 Durante l'effetto, se il Livello d'Evasione avversario è maggiore di 0, diventa temporaneamente 0 nel calcolo di Precisione degli attacchi contro l'avversario. Durante l'effetto, Attacchi Psico contro l'avversario hanno effetti normali sui tipi Buio. L'effetto finisce quando il Pokemon viene sostituito.
-
 358 Se questo attacco ha successo e l'avversario è addormentato, la potenza è raddoppiata e l'avversario si sveglia.
-
 359 Se questo attacco ha successo, riduce la Velocità di un Livello.
-
 360 La potenza di questo attacco è uguale a int((Velocità dell'avversario*25)/max(Velocità del Pokemon,1))+1. Massimo 150.
-
 361 Il Pokemon finisce kO come parte di questo attacco. Quando un Pokemon diventa attivo dalla tua parte diventa attivo in questo turno, recupera tutti i PS ed è curato da ogni problema di status. (Il nuovo Pokemon diventa attivo immediatamente.) Fallisce se il tuo team non ha Pokemon vivi (non causa KO).
-
 362 E'raddoppiata se i PS avversari sono uguali o inferiori alla metà dei suoi PS massimi.
-
 363 Il tipo e potenza di questo attacco dipendono dalla Bacca tenuta dal Pokemon. a meno che l'attacco fallisca, anche se diventa inefficace a causa di immunità di tipo, l'oggetto viene utilizzato. Fallisce se il Pokemon ha Impaccio, se non può usare oggetti, o se non tiene una Bacca (in questi casi l'oggetto non viene usato). Più informazioni7.
-
 364 Fallisce a meno che in questo turno l'avversario abbia usato Protezione o Individua . Se questo attacco ha successo, gli effetti di Protezione e Individua non sono applicati all'avversario in questo turno. Priorità +2.
-
 365 Se questo attacco ha successo e l'avversario sta tenendo una Bacca, il Pokemon usa quello strumento se può farlo e se l'oggetto ha una condizione d'innesco "quando", e poi quell'oggetto viene consumato. (Questo effetto avviene anche se l'avversario ha Multitipo e anche se l'effetto dell'oggetto avversario non sono applicati.)
-
 366 Per 3 turni, includendo l'attuale, la Velocità di ogni Pokemon attivo del tuo team è raddoppiata. Durante l'effetto, questo attacco fallisce per il tuo team.
-
 367 Se una delle stat può essere aumentata, aumenta casualmente una di esse di 2 Livelli.
-
 368 Se l'ultimo Pokemon che ha colpito questo Pokemon con un attacco danneggiante in questo turno è uno degli avversari, e c'è un Pokemon in tale postazione, infligge danni al Pokemon in tale postazione pari a 1,5 volte la quantità di PS persi da questo Pokemon per via di questo attacco. Influenzato da immunità di tipo. (Per attacchi multicolpo, ritorna PS basandosi sull'ultimo colpo di quell'attacco.)
-
 369 Dopo che questo attacco è stato usato, se questo attacco ha successo, se questo Pokemon ha almeno 1 PS, e se il tuo team ha almeno un'altro Pokemon non-KO e se il team avversario ha almeno un Pokemon non-KO che non sia un uovo, questo attacco fa sostituire questo Pokemon anche se non potrebbe. (Il nuovo Pokemon diventa attivo immediatamente. Gli effetti di Destinobbligato e Rancore hanno la precedenza su questo attacco.)
-
 370 Se questo attacco ha successo, riduci la Difesa e la Difesa Speciale di un Livello.
-
 371 E'raddoppiato se questo Pokemon attacco dopo l'avversario, o se l'avversario viene sostituito prima del turno di questo Pokemon.
-
 372 E'raddoppiato se l'avversario ha perso PS in questo turno (anche da Malcomune).
-
 373 L'effetto dura per 5 turni, includendo l'attuale. Durante l'effetto, gli effetti degli oggetti avversari non viene applicato, l'avversario non può usare o lanciare oggetti, e non possono essere usati oggetti sull'avversario. L'effetto finisce se l'avversario viene sostituito. Fallisce se l'avversario ha Multitipo.
-
 374 Come parte di questo attacco, il Pokemon lancia il suo oggetto all'avversario e tale oggetto è consumato alla fine del turno. La potenza di questo attacco dipende dall'oggetto lanciato in questo modo. Se questo attacco ha successo, si attiva l'effetto dell'oggetto lanciato. Fallisce se l'avversario non può lanciare oggetti (in questo caso l'oggetto non è usato). (Il Pokemon può lanciare oggetti in questo modo anche se gli effetti dell'oggetto tenuto non si applicano.) Più informazioni2.
-
 375 L'avversario ottiene il problema di status del Pokemon. Se l'avversario ottiene tale status in questo modo, il Pokemon è curato da esso. (Fallisce se l'avversario ha già un problema di status. Se il Pokemon era iperavvelenato, l'avversario diventa iperavvelenato.)
-
 376 Se questo attacco ha 0 PP, la sua potenza è 200. Se questo attacco ha 1 PP,la sua potenza è 80. Se ha 2 PP, la sua potenza è 60. Se ha 3 PP, la sua potenza è 50. Se ha 4 o più PP, la sua potenza è 40.
-
 377 L'effetto dura per 5 turni, includendo l'attuale. Durante l'effetto, le mosse Comandocura, Buonlatte, Lucelunare, Mattindoro, Ripresa, Riposo, Trespolo, Pigro, Covauova, Introenergia, Sintesi, e Desiderio sono disabilitate per l'avversario. Durante l'effetto, se una mossa o un effetto di una mossa (oltre che Malcomune) farebbero recuperare PS all'avversario, invece non ottengono PS. (Melma continua a funzionare.) L'effetto termina quando l'avversario viene scambiato.
-
 378 La potenza di questo attacco è uguale a int((PS attuali dell'avversario)*120/max(1,PS totali dell'avversario))+1.
-
 379 Scambia l'Attacco con la Difesa. Se il Pokemon è sostituito con Staffetta e il Pokemon ha usato quest'attacco un numero dispari di volte quando è diventato attivo, l'Attacco e la Difesa del nuovo Pokemon sono scambiate.
-
 380 Durante l'effetto, gli effetti delle abilità avversarie non sono applicati. L'effetto termina quando l'avversario viene sostituito. Fallisce se l'abilità dell'avversario è Multitipo.
-
 381 Per 5 turni, includendo l'attuale, nessun attacco contro i Pokemon attivi dalla tua parte può essere un Brutto Colpo. Durante l'effetto, questo attacco fallisce per il tuo team.
-
 382 Se il Pokemon agisce prima dell'avversario in questo turno e la mossa scelta dall'avversario in questo turno è una mossa danneggiante oltre che Contatore, Specchiovelo, Furto, Supplica, Centripugno, o Schiamazzo, il Pokemon usa quella mossa al posto dell'avversario con efficacia moltiplicata per 1.5.
-
 383 Usa l'ultima mossa usata dal Pokemon avversario. Fallisce se quella mossa è Sonnolalia, Copione, Assistente, Precedenza, Speculmossa, Metronomo, Scontro, Schizzo, Mimica, Schiamazzo, Contatore, Specchiovelo, Protezione, Individua, Resistenza, Destinobbligato, Furto, Sonoqui, Scippo, Altruismo, Supplica, Raggiro, Centripugno, Finta, o Rapidscambio, o se non c'è tale mossa [o se viene impedito l'usa di questa mossa].
-
 384 Contemporaneamente, il Pokemon assume i Livelli di stat di Attacco e Attacco Speciale dell'avversario, e l'avversario adotta i Livelli stat di Attacco e Attacco Speciale del Pokemon.
-
 385 Contemporaneamente, il Pokemon assume i Livelli di stat di Difesa e Difesa Speciale dell'avversario, e l'avversario adotta i Livelli stat di Difesa e Difesa Speciale del Pokemon.
-
 386 La potenza di questo attacco è uguale a 60+(20*X), se X è la somma di tutti i Livelli di stat avversari maggiori di 0. Massimo 200.
-
 387 Fallisce finchè l'avversario ha almeno un'altra mossa e ha già usato almeno una volta tutte le altre mosse dopo che il Pokemon è diventato attivo.
-
 388 Cambia l'abilità dell'avversario in Insonnia. Fallisce se l'abilità dell'avversario è Multitipo o Pigrone. (Non fallisce se l'abilità avversaria è Insonnia.)
-
 389 Fallisce se l'avversario non ha scelto una mossa danneggiante in questo turno, o se l'avversario ha colpito prima del Pokemon in questo turno. Priorità +1.
-
 390 Può essere usata fino a 2 volte. Durante l'effetto, quando un Pokemon avversario diventa attivo, se questo attacco è stato usato 1 volta, il Pokemon avversario viene avvelenato; se usato 2 volte, viene iperavvelenato, a meno che non abbia Levitazione o che il suo tipo includa Volante, Veleno, o Acciaio. (Annullato da Salvaguardia e Sostituto.) L'effetto finisce quando un Pokemon Veleno avversario senza Levitazione o il tipo Volante diventa attivo, a meno che non sia attivo l'effetto di Magnetascesa.
-
 391 Contemporaneamente, il Pokemon ottiene i Livelli di stat avversari, e l'avversario ottiene i Livelli di stat del Pokemon.
-
 392 Durante l'effetto, il Pokemon ottiene alla fine di ogni turno 1/16 dei PS totali. L'effetto termina se il Pokemon viene sostituito.
-
 393 Per 5 turni, contando il turno attuale, il Pokemon diventa immune agli attacchi Terra (superato dagli effetti di Radicamento), e non viene più influenzato da Punte e Fielepunte (non superato dagli effetti di Radicamento), e questo Pokemon può sostituirsi e scappare ignorando Trappoarena, come se avesse Levitazione (anche se gli effetti dell'abilità di questo Pokemon non sono applicati). L'effetto finisce se questo pokemon viene scambiato. Fallisce se è sotto l'effetto di Radicamento. Fallisce se questo Pokemon ha levitazione.
-
 394 Ritorna al mittente 1/3 dei danni inflitti da esso (contraccolpo). Può bruciare l'avversario.Se questo Pokemon è congelato e usa questa mossa, si scongela prima di usare questo attacco. (10%)
-
 395 Può paralizzare l'avversario. (30%)
-
 396 Non può fallire.
-
 397 Aumenta la Velocità di 2 Livelli.
-
 398 Può avvelenare l'avversario. (30%)
-
 399 Può far tentennare l'avversario.
-
 400 Probabile Brutto Colpo.
-
 403 Può far tentennare l'avversario.
-
 405 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 407 Può far tentennare l'avversario.
-
 409 Se questo Attacco ha successo, il Pokemon recupera metà dei PS persi dall'avversario a causa di questo attacco.
-
 410 Priorità +1.
-
 411 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 412 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 413 Ritorna al mittente 1/3 dei danni inflitti da esso (contraccolpo).
 414 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 415 Simultaneamente, il Pokemon riceve l'oggetto avversario, e l'avversario riceve l'oggetto del Pokemon. Fallisce se entrambi tengono un Messaggio, se il Pokemon o l'avversario hanno mollato il loro oggetto durante la battaglia, se nessuno dei due ha un oggetto, o se l'avversario ha Multitipo o è uno dei Pokemon del giocatore in una battaglia interna.
-
 416 Se questo attacco ha successo, nel prossimo turno, questo Pokemon non può eseguire azione e non fa nulla nel suo turno. (quella mossa non può essere usata durante quel turno.)
-
 417 Aumenta l'Attacco Speciale di 2 Livelli.
-
 418 Priorità +1.
-
 419 {L'efficacia è raddoppiata se il Pokemon ha perso PS per via di un attacco danneggiante dell'avversario in questo turno e l'avversario era l'ultimo ad aver colpito il Pokemon con un attacco danneggiante in questo turno. Priorità -4.}
-
 420 Priorità +1.
-
 421 Probabile Brutto Colpo.
-
-422 Può paralizzare l'avversario. Può far tentennare l'avversario.
- (10%)
-
-423 Può congelare l'avversario.Può far tentennare l'avversario.
- (10%)
-
+422 Può paralizzare l'avversario. Può far tentennare l'avversario. (10%)
+423 Può congelare l'avversario.Può far tentennare l'avversario. (10%)
 424 Può bruciare l'avversario. Può far tentennare l'avversario. Ignora gli effetti di Magidifesa. (10%)
-
 425 Priorità +1.
-
 426 Può ridurre la Precisione avversaria di un Livello.
-
 427 Probabile Brutto Colpo.
-
 428 Può far tentennare l'avversario.
-
 429 Può ridurre la Precisione avversaria di un Livello.
 430 Può ridurre la Difesa Speciale avversaria di un Livello.
-
 431 Può confondere l'avversario. (20%)
-
 432 Riduce l'Evasione avversaria di un Livello. Anche se l'Evasione avversaria non può essere ridotta, annulla gli effetti di Riflesso, Schermoluce, Salvaguardia, Nebbia, Punte, Fielepunte, e Levitoroccia dalla parte avversaria, e fa terminare la nebbia.
-
 433 L'effetto dura per 5 turni, includendo l'attuale. Durante l'effetto, come parte di priorità determinante, Pokemon attivi con Velocità più basse colpiscono prima di quelli con Velocità più alte, piuttosto che dopo. L'effetto finisce quando qualsiasi Pokemon attivo usa questa mossa. Priorità -7.
-
 434 Se questo attacco ha successo, riduci l'Attacco Speciale di 2 Livelli.
-
 435 Può paralizzare l'avversario. (30%)
-
 436 Può bruciare l'avversario. (30%)
-
 437 Se questo Attacco ha successo, riduce l'Attacco Speciale di 2 Livelli.
-
 439 Se questo attacco ha successo, nel prossimo turno, questo Pokemon non può eseguire azione e non fa nulla nel suo turno. (quella mossa non può essere usata durante quel turno.)
-
 440 Probabile Brutto Colpo. Può avvelenare l'avversario. (10%)
-
 441 Può avvelenare l'avversario. (30%)
-
 442 Può far tentennare l'avversario.
-
-
 443 Non può essere evitata.
-
 444 Probabile Brutto Colpo.
 445 Riduce l'Attacco Speciale di 2 Livelli se l'avversario non ha Indifferenza, il sesso dell'avversario è differente da quello del Pokemon, e se nessuno dei due è senza sesso.
-
 446 Durante l'effetto, quando un Pokemon avversario diventa attivo, quel Pokemon perde X/8 dei PS totali, dove X è l'efficacia del tipo Roccia contro i tipi di tale Pokemon.
-
 447 La potenza di questo attacco è 20 se il peso della specie originale dell'avversario è 10 chilogrammi (kg) o meno[o meno di 10 kg], 40 se 25 kg o meno, 60 se 50 kg o meno,80 se 100 kg o meno,100 se 200 kg o meno, altrimenti 120.
-
 448 Se questo attacco ha successo la specie originale di questo Pokemon è Chatot, questo Attacco ha fino al 31% di possibilità di confondere l'avversario a seconda del verso del giocatore. Più informazioni8.
-
 449 Se il Pokemon sta tenendo una Lastra, il tipo di questo attacco dipende dalla Lastra tenuta.
-
 450 Se questo attacco ha successo e l'avversario sta tenendo una Bacca, questo Pokemon usa tale Bacca se può farlo e se l'oggetto ha un condizione d'innesco "quando", poi tale oggetto viene usato. (Questo effetto avviene anche se l'avversario ha Multitipo e anche se gli effetti dell'oggetto avversario non sono applicati.)
-
 451 Può aumentare l'Attacco Speciale di un Livello.
-
 452 Ritorna al mittente 1/3 dei danni inflitti da esso (contraccolpo).
 453 Priorità +1.
-
 454 Probabile Brutto Colpo.
-
 455 Aumenta la Difesa e la Difesa Speciale di un Livello.
-
 456 Il Pokemon recupera metà dei suoi PS massimi. Fallisce se i PS sono al massimo.
-
 457 Infligge al Pokemon metà dei PS persi dall'avversario per via di questo attacco (contraccolpo).
-
 458 Colpisce 2 volte.
-
 459 Se questo attacco ha successo, nel prossimo turno, questo Pokemon non può eseguire azione e non fa nulla nel suo turno. (quella mossa non può essere usata durante quel turno.)
-
 460 Probabile Brutto Colpo
 461 Il Pokemon finisce KO come parte di questo attacco. Se un tuo Pokemon diventa attivo durante questo turno, Recupera tutti i PS e i PP e viene curato da ogni problema di status. (Durante questo turno il nuovo Pokemon diventa subito attivo.) Fallisce se il tuo team non ha Pokemon disponibili (non causa KO).
-
 462 La potenza di questo attacco è uguale a int((PS attuali dell'avversario)*120/max(1,PS totali avversario))+1.
-
 463 Attacco multiturno. Se questo attacco ha successo, comincia l'effetto. l'effetto dura da [3 a 6] turni, includendo quello attuale. Durante l'effetto, l'avversario non può essere sostituito o scappare, e alla fine di ogni turno apparte l'ultimo, l'avversario perde 1/16 dei PS totali. L'effetto finisce quando il Pokemon che ha usato la mossa è sostituito o se l'avversario viene sostituito o usa Rapigiro. L'effetto non viene resettato quando questo o un altro attacco multiturno è usato, durante tale effetto, contro l'avversario.} (100%)
-
 464 Addormenta l'avversario.
-
 465 Può ridurre la Difesa Speciale avversaria di 2 Livelli.
-
 466 Può aumentare l'Attacco, Difesa, Velocità, Attacco Speciale e Difesa Speciale di un Livello. (10%)
-
 467 Attacco a 2 turni. [Mentre il Pokemon usa questo attacco, attacchi con un controllo di Precisione mancheranno il bersaglio [insicuro qui]]. Ignora gli effetti di Protezione o Individua.
-
 468 Aumenta Attacco e Precisione di un Livello.
-
 469 Protegge il tuo team da un Attacco che colpirebbe tutti i tuoi Pokemon. Fallirà se usata in successione.
-
 470 Equilibra le Difese and Dif.Sp del Pokemon e dell'avversario.
-
 471 Equilibra gli Attacchi e Att.Sp. del Pokemon e dell'avversario.
-
 472 Tutte le Difese e Difese Speciali sono scambiate per 5 turni.
-
 473 Calcola il danno con la Difesa dell'avversario.
-
 474 Raddoppia la potenza se il bersaglio è avvelenato.
-
 475 Aumenta di molto la Velocità.
-
 476 Ogni volta che un Pokemon avversario usa un attacco che ha come bersaglio un "singolo altro Pokemon" o "singolo Pokemon avversario" in questo turno e c'è un Pokemon nella posizione di chi usa questo attacco, quell'attacco viene diretto sul Pokemon che ha usato questo attacco invece che su altri Pokemon. Rimane efficace anche se chi l'ha usata viene sostituito. Priorità +3.
-
 477 Rende i bersagli più facili da colpire per 3 turni.
-
 478 Annulla gli oggetti tenuti per 5 turni.
-
 479 Rende gli avversari di tipo Volante colpibili dalle mosse Terra. (100%)
-
 480 Costringe il bersaglio a scambiarsi.
-
 481 Colpisce tutti gli avversari.
-
 482 Può avvelenare l'avversario (10%)
-
 483 Aumenta Att.Sp., Dif.Sp. e Velocità di un Livello.
-
 484 Più il Pokemon è pesante, più danni infligge.
-
 485 Infligge più danni se il bersaglio è dello stesso tipo del Pokemon.
-
 486 Ha una potenza base maggiore in base a quanto la Velocità di questo Pokemon è alta rispetto al bersaglio.
-
 487 Trasforma il bersaglio nel tipo Acqua.
-
 488 Può aumentare la Velocità.
-
 489 Aumenta Attacco, Difesa e Precisione.
-
 490 Riduce la Velocità avversaria di un Livello.
-
 491 Riduce di molto la Difesa Speciale.
-
 492 Maggiore è l'Attacco del bersaglio, maggiori sono i danni inflitti.
-
 493 Trasforma l'abilità del bersaglio in Semplice.
-
 494 Rende l'abilità del bersaglio uguale a quella di questo Pokemon.
-
 495 Fa muovere il bersaglio subito dopo il Pokemon.
-
 496 La potenza base aumenta se hai più Pokemon con questo attacco.
-
 497 Infligge più danni se usata ogni turno.
-
 498 Questa mossa non è influenzata dai cambi di stat del bersaglio.
-
 499 Annulla tutti i cambi di stat.
-
 500 Più le stat di questo Pokemon sono state alzate, più danni farà questo attacco.
-
 501 Protegge il tuo team dalle mosse con priorità. Fallirà se usata in successione.
-
 502 Scambia posizione con un alleato.
-
 503 Può bruciare l'avversario. (30%)
-
 504 Aumenta Attacco, Attacco Speciale e Velocità ma riduce Difesa e Difesa Speciale.
-
 505 Ripristina il 50% dei PS di un alleato.
-
 506 Raddoppia di potenza se l'avversario ha un problema di status.
-
 507 Raccoglie i bersagli il primo turno e li rilascia a terra nel secondo.
-
 508 Aumenta l'Attacco di un Livello e la Velocità di 2 Livelli.
 509 Costringe il bersaglio a scambiarsi.
-
 510 Rimuove la bacca del bersaglio.
-
 511 Costringe il bersaglio a muoversi per ultimo.
 512 Permette all'utilizzatore di colpire l'avversario opposto in una battaglia Tripla.
-
 513 Cambia l'abilità del bersaglio in quella dell'utilizzatore.
-
 514 Fa più danni se un compagno è stato messo KO il turno prima.
-
 515 Manda KO l'utilizzatore e infligge danni all'avversario pari ai PS persi in questo modo.
-
 516 Da l'oggetto dell'utilizzatore al nemico, se lui non ha oggetti.
-
 517 Può bruciare l'avversario. (100%)
 518 Se usata con Fiammapatto, crea arcobaleni che possono confondere.
-
 519 Se usata con Erbapatto, crea una zona bruciante che causa danno a ogni turno
 520 Se usata con Acquapatto, crea una palude che riduce la Velocità di tutti gli avversari.
-
 521 Dopo che questo attacco è stato usato, se questo attacco ha successo, se questo Pokemon ha almeno 1 PS, e se il tuo team ha almeno un Pokemon inattivo e il team avversario ha almeno un Pokemon non KO che non sia un Uovo, questo attacco fa sostituire questo Pokemon anche se non potrebbe. (Il nuovo Pokemon diventa subito attivo. Gli effetti di Destinobbligato e Rancore hanno la precedenza sull'effetto di questo Attacco.)
-
 522 Può ridurre l'Attacco Speciale avversario di un Livello.
-
 523 Può ridurre la Velocità di un Livello.
-
 524 Brutto Colpo (100%)
-
 525 Costringe il bersaglio ad essere sostituito.
-
 526 Aumenta l'Attacco e l'Attacco Speciale dell'utilizzatore.
-
 527 Riduce la Velocità avversaria di un Livello.
-
 528 Ritorna al mittente 1/4 dei danni inflitti da esso (contraccolpo).
 529 Probabile Brutto Colpo.
-
 530 Colpisce 2 volte.
-
 531 Può far tentennare l'avversario.
-
-
 532 Se questo attacco ha successo, il Pokemon recupera la metà dei PS persi dal nemico a causa di questo attacco.
-
 533 Questa mossa non è influenzata dai cambi di stat del bersaglio.
-
 534 Può ridurre la Difesa avversaria di un Livello.
-
 535 Più l'utilizzatore è pesante, più danni infligge.
-
 536 Può ridurre la Precisione nemica di un Livello.
-
 537 Può far tentennare l'avversario. La potenza è raddoppiata se l'avversario ha usato Minimizza.
-
 538 Aumenta di molto la Difesa Speciale.
-
 539 Può ridurre la Precisione dell'avversario di un Livello.
-
 540 Infligge danni basandosi sulla Difesa avversaria.
-
 541 Attacco multicolpo. Attacca da 2 a 5 volte di seguito. 37.5% per 2 o 3 volte; 12.5% per 4 o 5 volte.
-
 542 Aumenta la Precisione durante una condizione meteo. (30%)
-
 543 Ritorna al mittente 1/4 dei danni inflitti da esso (contraccolpo).
 545 Può bruciare l'avversario. (30%)
-
 546 Se l'utilizzatore sta tenendo una Cassetta, il tipo di questo attacco dipende dalla Cassetta tenuta.
-
 547 Può addormentare il bersaglio (10%)
-
 548 Causa danno fisico.
-
 549 Riduce di molto la Velocità dell'avversario.
-
 550 Può paralizzare l'avversario. (20%)
-
 551 Può bruciare l'avversario. (20%)
-
 552 Può aumentare l'Attacco Speciale dell'utilizzatore di un Livello.
-
 553 Può paralizzare l'avversario. (30%)
-
 554 Può bruciare l'avversario. (30%)
-
 555 Può ridurre l'Attacco Speciale dell'avversario di un Livello.
-
 556 Può far tentennare l'avversario.
-
 557 Infligge danno agli alleati su entrambi i lati dell'utilizzatore.
-
 558 Si potenzia se usata dopo Incrotuono.
-
 559 Si potenzia se usata dopo Incrofiamma.

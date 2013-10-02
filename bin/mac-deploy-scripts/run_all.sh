@@ -20,6 +20,8 @@ RELEASENOTES_URL=http://lamperi.name/pokemon-online/${VERSION}.html
 
 # Update the version of the App
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${VERSION}" Pokemon-Online.app/Contents/Info.plist
+# Add high-resolution support to the app
+/usr/libexec/PlistBuddy -c "Add :NSHighResolutionCapable bool true" Pokemon-Online.app/Contents/Info.plist
 # Bundle required stuff into .app
 mac-deploy-scripts/bundle_mac_app.sh
 # Fix all dylib linkings
