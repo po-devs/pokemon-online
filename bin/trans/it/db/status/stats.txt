@@ -2,9 +2,7 @@
 1 Attacco
 2 Difesa
 3 Att.Sp.
-
 4 Dif.Sp.
 5 Velocità
 6 Precisione
-
 7 Evasione

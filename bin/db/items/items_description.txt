@@ -310,7 +310,7 @@
 309 Has a capture rate of 1.5. Only for use in the Safari Zone.
 310 If the Trainer's Pokemon's level is the same or lower as the target, has a capture rate of 1. If the Trainer's Pokemon's level is greater than the target's, but lower than 2x the target's, has a capture rate of 2. If the Trainer's Pokemon's level is greater than 2x the target's, but lower than 4x the target's, has a capture rate of 4. If the Trainer's Pokemon's level is greater than 4x the target's, has a capture rate of 8.
 311 If the target was hooked with a fishing rod, has a capture rate of 3. Otherwise, has a capture rate of 1.
-312 If the target can evolve via Moon stone, has a capture rate of 4. Otherwise, has a capture rate of 1.
+312 If the target belongs to the evolutionary line of a Pokemon that can evolve via Moon stone, has a capture rate of 4. Otherwise, has a capture rate of 1.
 313 Has a capture rate of 1. Pokemon captured with this Poke Ball have their happiness immediately set to 200.
 314 If the target is the same species as the Trainer's Pokemon but opposite gender, has a capture rate of 8. Otherwise, has a capture rate of 1.
 315 Has a 1 capture rate. Adds -20 to the capture chance if target weighs less than, or exactly 204.8 kg. Adds 20 to the capture chance if target weighs more than 204.8 kg but less than, or exactly 307.2 kg. Adds 30 to the capture chance if target weighs more than 307.2 kg but less than, or exactly 409.6 kg. Adds 40 to the capture rate if target weighs more than 409.6 kg.
@@ -318,13 +318,13 @@
 317 Has a 1.5 capture rate. Only for use during the Bug-Catching Contest.
 318 Has a 1 capture rate.
 319 If the target was captured before, has a 3 capture rate. Otherwise, has a 1 capture rate.
-320 Has a capture rate of ceil(turns/10), with a maximum of 4.
-321 If the target's level is lower than 20, has a capture rate of 3. If the target's level is higher than, or exactly 20, but lower than 30, has a capture rate of 2. Otherwise, has a capture rate of 1.
+320 Has a capture rate of 1 + (turns passed in battle x 3 / 10), with a maximum of 4.
+321 Has a capture rate of (41 - target's level) / 10, with a minimum of 1.
 322 If the target is a Water-type or Bug-type Pokemon, has a capture rate of 3. Otherwise, has a capture rate of 1.
 323 If the target was encountered while using Surf or was hooked on a fishing rod, has a capture rate of 3.5. Otherwise, has a capture rate of 1.
 324 Has a capture rate of 1. Doubles the effectiveness of any action that raises the captured Pokemon's happiness.
 325 Has a capture rate of 1. When the target is captured, instantly restores all of its HP, PP and cures its status.
-326 If used on the first turn of a battle, has a capture rate of 4. Otherwise, has a capture rate of 1.
+326 If used on the first turn of a battle, has a capture rate of 5 in the 5th Gen and a capture rate of 4 in the 4th Gen. Otherwise, has a capture rate of 1.
 327 If used in a cave or at night, has a capture rate of 3.5. Otherwise, has a capture rate of 1.
 328 Has a capture rate of 1. Used to hold Pokemon distributed at events.
 329 Has a 100% capture rate. Only for use in the Pal Park.
