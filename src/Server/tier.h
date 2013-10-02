@@ -100,6 +100,7 @@ public:
     void updateMemberInDatabase(const MemberRating &m, bool add=false);
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
+    void fetchRanking(const QString &name, QObject *o, const char *slot);
     void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     void insertMember(QSqlQuery *q, void *data, int type);
     int getMode() const;
@@ -139,6 +140,7 @@ protected:
     enum GetQueryType {
         GetInfoOnUser,
         GetRankings,
+        GetRanking,
         MaxGetQueryNumber = (1 << 6)-1 /* 6 bits */
     };
     enum InsertQueryType {

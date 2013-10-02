@@ -171,6 +171,7 @@ public:
     bool testReconnectData(Player *other, const QByteArray &hash);
     //other used reconnect on us and it worked, it seems
     void associateWith(Player *other);
+    void sendRankings(Player *other);
 signals:
     void loggedIn(int id, const QString &name);
     void recvMessage(int id, int chanid, const QString &mess);
@@ -233,9 +234,11 @@ public slots:
     void findBattle(const FindBattleData&);
     void getRankingsByPage(const QString &tier, int page);
     void getRankingsByName(const QString &tier, const QString &name);
+    void getRankingsForPlayer(int id);
     void displayRankings();
     void testAuthentificationLoaded();
     void ratingLoaded();
+    void rankingLoaded();
     void joinRequested(const QString &channel);
     void leaveRequested(int slotid);
     void ipChangeRequested(const QString &ip);
@@ -307,6 +310,7 @@ private:
     /* Autojoin Channels */
     QStringList additionalChannels;
 
+
     void assignNewColor(const QColor &c);
     void assignTrainerInfo(const TrainerInfo &info);
     bool testNameValidity(const QString &name);
@@ -318,6 +322,11 @@ private:
     void syncTiers(QString oldTier);
     /* Are we currently executing code directly in response to a network command received from this player ? */
     bool isInCommand() const;
+    void gatherRankings(Player *p);
+
+    QSet<QPointer<Player> > toSendRankings;
+    QHash<QString, quint32> rankings;
+    quint8 rankingsLeft;
 
     void doConnections();
 

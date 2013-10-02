@@ -490,6 +490,33 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
+    case Nw::ShowRankings2: {
+        quint8 mode;
+        quint32 id;
+        quint8 count;
+
+        in >> mode >> id >> count;
+
+        QVariantMap rankings;
+
+        for (int i = 0; i < count; i++) {
+            QString tier;
+            quint16 rating;
+            qint32 ranking, total;
+
+            in >> tier >> rating >> ranking >> total;
+
+            QVariantMap obj;
+            obj.insert("rating", rating);
+            obj.insert("ranking", ranking);
+            obj.insert("total", total);
+
+            rankings.insert(tier, obj);
+        }
+
+        web->write("rankings|" + QString::number(id) + "|" + jserial.serialize(rankings));
+        break;
+    }
     case Nw::Announcement: {
         QString announcement;
         in >> announcement;
@@ -801,6 +828,11 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.section("|", 0, 0).toInt();
             QString chat = data.section("|", 1);
             notify(Nw::BattleChat, qint32(battle), chat);
+        } else if (command == "getrankings") {
+            int battle = data.toInt();
+            notify(Nw::ShowRankings2, qint8(0), qint32(battle));
+
+            qDebug() << "rankings ask";
         }
     }
 }
