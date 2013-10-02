@@ -6,7 +6,7 @@
 #define VERSION QString("2.1.0")
 
 static const quint16 PROTOCOL_VERSION = 2;
-static const quint16 PROTOCOL_SUBVERSION = 0;
+static const quint16 PROTOCOL_SUBVERSION = 1;
 static const quint16 CLIENT_VERSION_NUMBER = 2100;
 static const int UPDATE_ID = 4;
 
