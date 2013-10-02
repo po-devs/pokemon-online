@@ -521,7 +521,6 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
     /* It is important that this connect is done before the connect to freeObject(),
        because then the user at the signal's reception can use the object at will knowing it's not already
        used by another Player or w/e */
-    w->setProperty("tier", this->name());
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
@@ -550,6 +549,21 @@ void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
     t->pushQuery(data, w, make_query_number(GetRankings));
 }
 
+void Tier::fetchRanking(const QString &name, QObject *o, const char *slot)
+{
+    WaitingObject *w = WaitingObjects::getObject();
+
+    /* It is important that this connect is done before the connect to freeObject(),
+       because then the user at the signal's reception can use the object at will knowing it's not already
+       used by another Player or w/e */
+    QObject::connect(w, SIGNAL(waitFinished()), o, slot);
+    QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
+
+    LoadThread *t = getThread();
+
+    t->pushQuery(name.toLower(), w, make_query_number(GetRanking));
+}
+
 void Tier::exportDatabase() const
 {
     QFile out(QString("tier_%1.txt").arg(name()));
@@ -572,6 +586,7 @@ void Tier::exportDatabase() const
 /* Precondition: name is in lowercase */
 void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w)
 {
+    w->setProperty("tier", this->name());
     if (type == GetInfoOnUser) {
         q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time from %1 where name=? limit 1").arg(sql_table));
         q->addBindValue(name);
@@ -613,6 +628,8 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
         w->data["rankingpage"] = p;
         w->data["tier"] = this->name();
         w->data["rankingdata"] = QVariant::fromValue(results);
+    } else if (type == GetRanking) {
+        w->setProperty("ranking", ranking(name.toString()));
     }
 }
 

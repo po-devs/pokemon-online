@@ -5,6 +5,8 @@
 #include "analyze.h"
 #include "network.h"
 #include "player.h"
+#include "tiermachine.h"
+#include "tier.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 
@@ -133,7 +135,20 @@ void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers, const QB
     out << p << tiers;
 
     emit sendCommand(tosend);
+}
 
+void Analyzer::sendRankings(quint32 id, const QHash<QString, quint32> &rankings, const QHash<QString, quint16> &ratings)
+{
+    QByteArray tosend;
+    DataStream out(&tosend, QIODevice::WriteOnly);
+
+    out << uchar(ShowRankings2) << quint8(0) << quint32(id) << quint8(rankings.count());
+
+    foreach(QString tier, rankings.keys()) {
+        out << tier << ratings.value(tier) << rankings.value(tier) << quint32(TierMachine::obj()->tier(tier).count());
+    }
+
+    emit sendCommand(tosend);
 }
 
 void Analyzer::notifyOptionsChange(qint32 id, bool away, bool ladder)
@@ -521,6 +536,14 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
                 in >> name;
                 emit showRankings(tier, name);
             }
+            break;
+        }
+    case ShowRankings2:
+        {
+            quint8 mode;
+            quint32 id;
+            in >> mode >> id;
+            emit showRankings(id);
             break;
         }
     case PlayerTBan:

@@ -81,11 +81,13 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(findBattle(FindBattleData)), SLOT(findBattle(FindBattleData)));
     connect(&relay(), SIGNAL(showRankings(QString,int)), SLOT(getRankingsByPage(QString, int)));
     connect(&relay(), SIGNAL(showRankings(QString,QString)), SLOT(getRankingsByName(QString, QString)));
+    connect(&relay(), SIGNAL(showRankings(int)), SLOT(getRankingsForPlayer(int)));
     connect(&relay(), SIGNAL(joinRequested(QString)), SLOT(joinRequested(QString)));
     connect(&relay(), SIGNAL(leaveChannel(int)), SLOT(leaveRequested(int)));
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
     connect(&relay(), SIGNAL(reconnect(int,QByteArray)), SLOT(onReconnect(int,QByteArray)));
+    connect(&relay(), SIGNAL(showRankings(int)), SLOT(getRankingsForPlayer(int)));
 
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);
@@ -157,6 +159,22 @@ void Player::setNeedToBeUpdated(bool onlyIfInCommand)
 bool Player::isInCommand() const
 {
     return relay().isInCommand();
+}
+
+void Player::gatherRankings(Player *p)
+{
+    toSendRankings.insert(p);
+
+    if (toSendRankings.count() > 1) {
+        return;
+    }
+
+    rankings.clear();
+    rankingsLeft = tiers.count();
+
+    foreach(const QString &tier, tiers) {
+        TierMachine::obj()->tier(tier).fetchRanking(name(), this, SLOT(rankingLoaded()));
+    }
 }
 
 void Player::sendUpdatedIfNeeded()
@@ -599,9 +617,19 @@ void Player::removeBattle(int battleid)
 
 void Player::getRankingsByName(const QString &tier, const QString &name)
 {
-    if (!TierMachine::obj()->exists(tier))
+    if (!TierMachine::obj()->exists(tier)) {
         return;
+    }
     TierMachine::obj()->fetchRankings(tier, name, this, SLOT(displayRankings()));
+}
+
+void Player::getRankingsForPlayer(int id)
+{
+    if (!isLoggedIn() || !Server::serverIns->playerLoggedIn(id)) {
+        return;
+    }
+
+    Server::serverIns->player(id)->gatherRankings(this);
 }
 
 void Player::getRankingsByPage(const QString &tier, int page)
@@ -1294,6 +1322,31 @@ void Player::ratingLoaded()
     if (tiers.count() <= ratings().count() && ratings().keys().toSet().contains(tiers)) {
         ratingsFound();
     }
+}
+
+void Player::rankingLoaded()
+{
+    QString tier = sender()->property("tier").toString();
+    rankings.insert(tier, sender()->property("ranking").toInt());
+
+    if (rankingsLeft > 0) {
+        rankingsLeft -= 1;
+
+        if (!rankingsLeft) {
+            foreach(QPointer<Player> player, toSendRankings) {
+                if (!player.isNull()) {
+                    player->sendRankings(this);
+                }
+            }
+
+            toSendRankings.clear();
+        }
+    }
+}
+
+void Player::sendRankings(Player *other)
+{
+    relay().sendRankings(other->id(), other->rankings, other->ratings());
 }
 
 void Player::ratingsFound()

@@ -57,7 +57,7 @@ enum Command {
     CPTBan,
     CPTUnban = 40,
     PlayerTBan,
-    Unused42,
+    ShowRankings2,
     BattleList,
     ChannelsList,
     ChannelPlayers,

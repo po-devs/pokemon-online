@@ -76,6 +76,7 @@ public:
     void sendPacket(const QByteArray &packet);
     void sendChallengeStuff(const ChallengeInfo &c);
     void sendTeam(const QString *name, const QStringList &tierList);
+    void sendRankings(quint32 id, const QHash<QString, quint32> &rankings, const QHash<QString, quint16> &ratings);
 
     /* Closes the connection */
     void close();
@@ -149,6 +150,7 @@ signals:
     void findBattle(const FindBattleData &f);
     void showRankings(const QString &tier, const QString &name);
     void showRankings(const QString &tier, int page);
+    void showRankings(int id);
     void joinRequested(const QString &channel);
     void leaveChannel(int id);
     void ipChangeRequested(const QString &ip);
