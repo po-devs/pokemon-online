@@ -2,17 +2,17 @@
 1:1 Gelb
 1:2 Stadium
 1:3 Stadium mit Tradebacks
-2:0 Gold/silber
+2:0 Gold/Silber
 2:1 Kristall
 2:2 Stadium 2
 3:0 Rubin/Saphir
 3:1 Colosseum
-3:2 Feuerrot/Blattgr¸n
+3:2 Feuerrot/Blattgr√ºn
 3:3 Smaragd
 3:4 XD
 4:0 Diamant/Perl
 4:1 Platin
 4:2 Heart Gold/Soul Silver
-5:0 Schwarz/Weiﬂ
-5:1 Schwarz/Weiﬂ 2
+5:0 Schwarz/Wei√ü
+5:1 Schwarz/Wei√ü 2
 6:0 X/Y
