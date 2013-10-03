@@ -492,3 +492,159 @@
 491 Pitch-Black Pokémon
 492 Gratitude Pokémon
 493 Alpha Pokémon
+494 Victory Pokémon
+495 Grass Snake Pokémon
+496 Grass Snake Pokémon
+497 Regal Pokémon
+498 Fire Pig Pokémon
+499 Fire Pig Pokémon
+500 Mega Fire Pig Pokémon
+501 Sea Otter Pokémon
+502 Discipline Pokémon
+503 Formidable Pokémon
+504 Scout Pokémon
+505 Lookout Pokémon
+506 Puppy Pokémon
+507 Loyal Dog Pokémon
+508 Big-Hearted Pokémon
+509 Devious Pokémon
+510 Cruel Pokémon
+511 Grass Monkey Pokémon
+512 Thorn Monkey Pokémon
+513 High Temp Pokémon
+514 Ember Pokémon
+515 Spray Pokémon
+516 Geyser Pokémon
+517 Dream Eater Pokémon
+518 Drowsing Pokémon
+519 Tiny Pigeon Pokémon
+520 Wild Pigeon Pokémon
+521 Proud Pokémon
+522 Electrified Pokémon
+523 Thunderbolt Pokémon
+524 Mantle Pokémon
+525 Ore Pokémon
+526 Compressed Pokémon
+527 Bat Pokémon
+528 Courting Pokémon
+529 Mole Pokémon
+530 Subterrene Pokémon
+531 Hearing Pokémon
+532 Muscular Pokémon
+533 Muscular Pokémon
+534 Muscular Pokémon
+535 Tadpole Pokémon
+536 Vibration Pokémon
+537 Vibration Pokémon
+538 Vibration Pokémon
+539 Karate Pokémon
+540 Sewing Pokémon
+541 Leaf-Wrapped Pokémon
+542 Nurturing Pokémon
+543 Centipede Pokémon
+544 Curlipede Pokémon
+545 Megapede Pokémon
+546 Cotton Puff Pokémon
+547 Windveiled Pokémon
+548 Bulb Pokémon
+549 Flowering Pokémon
+550 Hostile Pokémon
+551 Desert Croc Pokémon
+552 Desert Croc Pokémon
+553 Intimidation Pokémon
+554 Zen Charm Pokémon
+555 Blazing Pokémon
+556 Cactus Pokémon
+557 Rock Inn Pokémon
+558 Stone Home Pokémon
+559 Shedding Pokémon
+560 Hoodlum Pokémon
+561 Avianoid Pokémon
+562 Spirit Pokémon
+563 Coffin Pokémon
+564 Prototurtle Pokémon
+565 Prototurtle Pokémon
+566 First Bird Pokémon
+567 First Bird Pokémon
+568 Trash Bag Pokémon
+569 Trash Heap Pokémon
+570 Tricky Fox Pokémon
+571 Illusion Fox Pokémon
+572 Chinchilla Pokémon
+573 Scarf Pokémon
+574 Fixation Pokémon
+575 Manipulate Pokémon
+576 Astral Body Pokémon
+577 Cell Pokémon
+578 Mitosis Pokémon
+579 Multiplying Pokémon
+580 Water Bird Pokémon
+581 White Bird Pokémon
+582 Fresh Snow Pokémon
+583 Icy Snow Pokémon
+584 Snowstorm Pokémon
+585 Season Pokémon
+586 Season Pokémon
+587 Sky Squirrel Pokémon
+588 Clamping Pokémon
+589 Cavalry Pokémon
+590 Mushroom Pokémon
+591 Mushroom Pokémon
+592 Floating Pokémon
+593 Floating Pokémon
+594 Caring Pokémon
+595 Attaching Pokémon
+596 EleSpider Pokémon
+597 Thorn Seed Pokémon
+598 Thorn Pod Pokémon
+599 Gear Pokémon
+600 Gear Pokémon
+601 Gear Pokémon
+602 EleFish Pokémon
+603 EleFish Pokémon
+604 EleFish Pokémon
+605 Cerebral Pokémon
+606 Cerebral Pokémon
+607 Candle Pokémon
+608 Lamp Pokémon
+609 Luring Pokémon
+610 Tusk Pokémon
+611 Axe Jaw Pokémon
+612 Axe Jaw Pokémon
+613 Chill Pokémon
+614 Freezing Pokémon
+615 Crystallizing Pokémon
+616 Snail Pokémon
+617 Shell Out Pokémon
+618 Trap Pokémon
+619 Martial Arts Pokémon
+620 Martial Arts Pokémon
+621 Cave Pokémon
+622 Automaton Pokémon
+623 Automaton Pokémon
+624 Sharp Blade Pokémon
+625 Sword Blade Pokémon
+626 Bash Buffalo Pokémon
+627 Eaglet Pokémon
+628 Valiant Pokémon
+629 Diapered Pokémon
+630 Bone Vulture Pokémon
+631 Anteater Pokémon
+632 Iron Ant Pokémon
+633 Irate Pokémon
+634 Hostile Pokémon
+635 Brutal Pokémon
+636 Torch Pokémon
+637 Sun Pokémon
+638 Iron Will Pokémon
+639 Cavern Pokémon
+640 Grassland Pokémon
+641 Cyclone Pokémon
+642 Bolt Strike Pokémon
+643 Vast White Pokémon
+644 Deep Black Pokémon
+645 Abundance Pokémon
+646 Boundary Pokémon
+647 Colt Pokémon
+648 Melody Pokémon
+649 Paleozoic Pokémon
