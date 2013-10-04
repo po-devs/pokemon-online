@@ -42,7 +42,7 @@
 41 Aquahülle
 42 Magnetfalle
 43 Lärmschutz
-44 Regenguss
+44 Regengenuss
 45 Sandsturm
 46 Erzwinger
 47 Speckschicht
