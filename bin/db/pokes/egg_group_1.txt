@@ -455,7 +455,6 @@
 479 Indeterminate
 489 Water 1
 490 Water 1
-494
 495 Ground
 496 Ground
 497 Ground
@@ -599,15 +598,3 @@
 635 Dragon
 636 Bug
 637 Bug
-638
-639
-640
-641
-642
-643
-644
-645
-646
-647
-648
-649
