@@ -2113,10 +2113,10 @@ void ItemInfo::loadGenData()
 
     for (int g = GEN_MIN_ITEMS; g <= GenInfo::GenMax(); g++) {
         int i = g-GEN_MIN;
-        fill_container_with_file(m_GenItems[i], path(QString("items_gen%1.txt").arg(g)));
+        fill_container_with_file(m_GenItems[i], path(QString("%1G/released_items.txt").arg(g)));
 
         QList<int> tempb;
-        fill_container_with_file(tempb, path(QString("berries_gen%1.txt").arg(g)));
+        fill_container_with_file(tempb, path(QString("%1G/released_berries.txt").arg(g)));
         foreach(int b, tempb) {
             m_GenItems[i].insert(b+8000);
         }
@@ -2193,7 +2193,7 @@ void ItemInfo::loadEffects()
 
     for (int i = GEN_MIN_ITEMS; i <= GenInfo::GenMax(); i++) {
         QMultiHash<int,QString> temp;
-        fill_int_str(temp, path("item_effects_%1G.txt").arg(i));
+        fill_int_str(temp, path("%1G/item_effects.txt").arg(i));
 
         /* Removing comments, aka anything starting from '#' */
         QHashIterator<int,QString> it(temp);
