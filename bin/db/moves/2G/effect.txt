@@ -72,7 +72,7 @@
 71 Heals the user by half the damage inflicted.
 72 Heals the user by half the damage inflicted.
 73 Seeds the target, stealing HP from it every turn.
-74 (((something new 316)))
+74 Raises the user's Attack and Special Attack by one level.
 75 Has an increased chance for a critical hit. (12.5%)
 76 Requires a turn to charge before attacking.
 77 Poisons the target.
