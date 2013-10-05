@@ -50,7 +50,7 @@ public:
     void onDamageDone(int spot, int damage);
     void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);
     void onSubstituteStatus(int spot, bool substitute);
-//    void onBlankMessage();
+    void onBlankMessage();
 //    void onClauseActivated(int clause);
     void onRatedNotification(bool rated);
     void onTierNotification(const QString &tier);

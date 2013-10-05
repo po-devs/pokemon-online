@@ -230,7 +230,11 @@ void BattleToJson::onSubstituteStatus(int spot, bool substitute)
     map.insert("substitute", substitute);
 }
 
-//    void onBlankMessage();
+void BattleToJson::onBlankMessage()
+{
+    map.insert("command", "blank");
+}
+
 //    void onClauseActivated(int clause);
 
 void BattleToJson::onRatedNotification(bool rated)

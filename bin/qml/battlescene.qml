@@ -11,7 +11,7 @@ Item {
     /* Separate element so that it can have a negative Z and be separate from the rest */
     Image {
         id: bg;
-        source: "images/grass.png"
+        source: "images/bg-forest.png"
         width: battle.scene.width
         height: battle.scene.height
         z: -500;
