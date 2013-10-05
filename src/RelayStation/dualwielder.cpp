@@ -418,7 +418,6 @@ void DualWielder::readSocket(const QByteArray &commandline)
         if (f[0]) {
             BattleConfiguration conf;
             if (version < ProtocolVersion(1,0)) {
-                qDebug() << "old deserializing";
                 conf.oldDeserialize(in);
             } else {
                 in >> conf;

@@ -163,14 +163,16 @@ DataStream & operator >> (DataStream &in, Pokemon::gen &id)
     in >> id.num;
     in >> id.subnum;
 
-    if (id.num < GenInfo::GenMin()) {
-        id.num = GenInfo::GenMin();
-    } else if (id.num > GenInfo::GenMax()) {
-        id.num = GenInfo::GenMax();
-    }
+    if (GenInfo::GenMax() > 0) {
+        if (id.num < GenInfo::GenMin()) {
+            id.num = GenInfo::GenMin();
+        } else if (id.num > GenInfo::GenMax()) {
+            id.num = GenInfo::GenMax();
+        }
 
-    if (id.subnum >= GenInfo::NumberOfSubgens(id.num)) {
-        id.subnum = GenInfo::NumberOfSubgens(id.num) - 1;
+        if (id.subnum >= GenInfo::NumberOfSubgens(id.num)) {
+            id.subnum = GenInfo::NumberOfSubgens(id.num) - 1;
+        }
     }
 
     return in;
