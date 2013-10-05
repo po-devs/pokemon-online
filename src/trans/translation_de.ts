@@ -333,7 +333,6 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>sharply </source>
-        <translatorcomment>Ging nicht andersrum.</translatorcomment>
         <translation type="obsolete">stark</translation>
     </message>
     <message>
