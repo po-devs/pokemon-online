@@ -1782,10 +1782,11 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         return;
     }
 
-    bool rated = mybattles.value(battleid)->rated();
-
-    QString tier = mybattles.value(battleid)->tier();
     BattleBase *battle = mybattles[battleid];
+    QString tier = battle->tier();
+    bool rated = battle->rated();
+
+    qDebug() << "battleResult " << battleid << desc << winner << loser << battle;
 
     if (winner == 0) {
         winner = battle->id(battle->opponent(battle->spot(loser)));
@@ -1854,11 +1855,14 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     if (desc == Forfeit) {
         removeBattle(battleid);
     }
+
+    qDebug() << "battleResult " << battleid << desc << winner << loser << battle << "end";
 }
 
 void Server::removeBattle(int battleid)
 {
     BattleBase *battle = mybattles.value(battleid);
+    qDebug() << "removing battle " << battleid << battle;
 
     mybattles.remove(battleid);
     battleList.remove(battleid);
