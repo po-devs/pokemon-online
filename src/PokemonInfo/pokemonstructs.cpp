@@ -978,7 +978,7 @@ bool Team::importFromTxt(const QString &file1)
                             stat = SpDefense;
                         else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk" || ev2[1] == "SpA")
                             stat = SpAttack;
-                        else if (ev2[1] == "Spd")
+                        else if (ev2[1] == "Spd" || ev2[1] == "Spe")
                             stat = Speed;
                         else if (ev2[1] == "Def")
                             stat = Defense;
