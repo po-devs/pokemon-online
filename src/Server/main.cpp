@@ -242,8 +242,10 @@ int main(int argc, char *argv[])
 #ifndef _WIN32
 void stacktrace() 
 { 
+    cout << "stacktrace available in stacktrace.txt" << endl;
+    freopen("stacktrace.txt", "w", stdout);
     cout << "----------------------------------------------" << endl;
-    void *trace_elems[100]; 
+    void *trace_elems11[100];
     int trace_elem_count(backtrace( trace_elems, 100 )); 
     char **stack_syms(backtrace_symbols( trace_elems, trace_elem_count )); 
     for ( int i = 0 ; i < trace_elem_count ; ++i ) 
