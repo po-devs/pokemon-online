@@ -868,6 +868,7 @@ namespace Pokemon
         Noivern,
         Xerneas,
         Yveltal,
+        Zygarde,
         // Base forms end here.
         Rotom_C = Rotom + (1 << 16),
         Rotom_H = Rotom + (2 << 16),
