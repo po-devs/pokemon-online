@@ -116,7 +116,8 @@ namespace Pokemon
         Ice,
         Dragon,
         Dark,
-        Curse = 17
+        Fairy,
+        Curse
     };
 
     enum Nature
