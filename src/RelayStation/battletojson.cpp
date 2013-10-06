@@ -84,7 +84,13 @@ void BattleToJson::onMajorStatusChange(int spot, int status, bool multipleTurns,
     map.insert("silent", silent);
 }
 
-//    void onPokeballStatusChanged(int player, int poke, int status);
+void BattleToJson::onPokeballStatusChanged(int player, int poke, int status)
+{
+    map.insert("command", "teamstatus");
+    map.insert("player", player);
+    map.insert("slot", poke);
+    map.insert("status", status);
+}
 
 void BattleToJson::onStatusAlreadyThere(int spot, int status)
 {
