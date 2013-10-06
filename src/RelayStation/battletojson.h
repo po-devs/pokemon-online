@@ -27,7 +27,7 @@ public:
     void onAvoid(int spot);
     void onStatBoost(int spot, int stat, int boost, bool silent);
     void onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent);
-//    void onPokeballStatusChanged(int player, int poke, int status);
+    void onPokeballStatusChanged(int player, int poke, int status);
     void onStatusAlreadyThere(int spot, int status);
     void onStatusNotification(int spot, int status);
     void onStatusDamage(int spot, int status);

@@ -819,7 +819,7 @@ namespace Pokemon
         Vivillon,
         Litleo,
         Pyroar,
-        Flabébé,
+        Flabebe,
         Floette,
         Florges,
         Skiddo,
