@@ -33,7 +33,7 @@
 32	Knocks out the target.
 33	Inflicts regular damage with no additional effect.
 34	Has a 30% chance to paralyze the target.
-35	Wraps and squeezes the foe 2 to 5 times with vines, etc.
+35	Wraps and squeezes the foe 4 to 5 times. 
 36	User receives 1/4 the damage inflicted as recoil.
 37	User cannot select another attack or switch for 2-3 turns, then the user becomes confused.
 38	User receives 1/3 the damage inflicted as recoil.
