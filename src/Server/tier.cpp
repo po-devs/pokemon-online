@@ -586,7 +586,9 @@ void Tier::exportDatabase() const
 /* Precondition: name is in lowercase */
 void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w)
 {
-    w->setProperty("tier", this->name());
+    if (w) {
+        w->setProperty("tier", this->name());
+    }
     if (type == GetInfoOnUser) {
         q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time from %1 where name=? limit 1").arg(sql_table));
         q->addBindValue(name);
