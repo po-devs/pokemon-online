@@ -525,6 +525,7 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
     if (holder.isInMemory(n2)) {
+        w->setProperty("tier", this->name());
         w->emitSignal();
     }
     else {
