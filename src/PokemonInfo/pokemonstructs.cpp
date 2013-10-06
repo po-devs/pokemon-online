@@ -951,74 +951,78 @@ bool Team::importFromTxt(const QString &file1)
         p.nickname() = nickname;
         p.item() = item;
 
+        int movecount = 0;
 
-        if (p.gen() >= 3) {
-            QStringList ability = pokeDetail[1].split(':');
+        for (int i = 0; i < pokeDetail.count(); i++) {
+            QString s = pokeDetail[i].trimmed();
+            if (s.contains(":")) {
+                QString key = s.section(':', 0, 0).trimmed();
+                QString val = s.section(':', 1).trimmed();
 
-            if (ability.size() < 2)
-                continue;
+                if (key == "Trait" || key == "Ability") {
+                    int abnum = AbilityInfo::Number(val);
+                    if (abnum != 0) {
+                        p.ability() = abnum;
+                    }
+                } else if (key == "EVs" || key == "IVs") {
+                    QStringList evList = pokeDetail[2].split(": ")[1].split("/");
 
-            int abnum = AbilityInfo::Number(ability[1].trimmed());
-            if (abnum != 0) {
-                p.ability() = abnum;
-            }
+                    foreach(QString ev, evList) {
+                        QStringList ev2 = ev.trimmed().split(' ');
+                        if (ev2.length() < 2)
+                            break;
+                        int evnum = ev2[0].toInt();
+                        int stat = 0;
 
-            if (!pokeDetail[2].contains(": "))
-                continue;
+                        if (ev2[1] == "SDef" || ev2[1] == "SpDef"|| ev2[1] == "SpD")
+                            stat = SpDefense;
+                        else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk" || ev2[1] == "SpA")
+                            stat = SpAttack;
+                        else if (ev2[1] == "Spd")
+                            stat = Speed;
+                        else if (ev2[1] == "Def")
+                            stat = Defense;
+                        else if (ev2[1] == "Atk")
+                            stat = Attack;
+                        else
+                            stat = Hp;
 
-            QStringList evList = pokeDetail[2].split(": ")[1].split("/");
-
-            foreach(QString ev, evList) {
-                QStringList ev2 = ev.trimmed().split(' ');
-                if (ev2.length() < 2)
-                    break;
-                int evnum = ev2[0].toInt();
-                int stat = 0;
-
-                if (ev2[1] == "SDef" || ev2[1] == "SpDef")
-                    stat = SpDefense;
-                else if (ev2[1] == "SAtk" || ev2[1] == "SpAtk")
-                    stat = SpAttack;
-                else if (ev2[1] == "Spd")
-                    stat = Speed;
-                else if (ev2[1] == "Def")
-                    stat = Defense;
-                else if (ev2[1] == "Atk")
-                    stat = Attack;
-                else
-                    stat = Hp;
-
-                p.setEV(stat, unsigned(evnum)%255);
-            }
-
-            p.nature() = NatureInfo::Number(pokeDetail[3].section(' ', 0, 0));
-        }
-        for (int i = 4-3*(p.gen() <= 2); i < pokeDetail.size() && i < 8-3*(p.gen() <= 2); i++) {
-            QString move = pokeDetail[i].section('-',1).trimmed();
-
-            if (move.contains('[')) {
-                int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));
-                if (type != 0) {
-                    move = move.section('[',0,0).trimmed();
-
-                    if (p.gen() >= 3) {
-                        QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type, p.gen())[0];
-                        for(int i =0;i < dvs.size(); i++) {
-                            p.setDV(i, dvs[i].toInt());
+                        if (key == "EVs") {
+                            p.setEV(stat, unsigned(evnum)%255);
+                        } else {
+                            p.setDV(stat, unsigned(evnum)%32);
                         }
-                    } else {
-                        QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(type);
-
-                        p.setDV(Attack, dvs.first);
-                        p.setDV(Defense, dvs.second);
                     }
                 }
-            }
-            int moveNum = MoveInfo::Number(move);
-            p.setMove(moveNum,i-4+3*(p.gen() <= 2),false);
+            } else if (s.contains(" Nature ")) {
+                p.nature() = NatureInfo::Number(s.section(' ', 0, 0));
+            } else if (s.startsWith("-")) {
+                QString move = s.section('-',1).trimmed();
 
-            if (moveNum == Move::Return) {
-                p.happiness() = 255;
+                if (move.contains('[')) {
+                    int type = TypeInfo::Number(move.section('[',1,1).section(']',0,0));
+                    if (type != 0) {
+                        move = move.section('[',0,0).trimmed();
+
+                        if (p.gen() >= 3) {
+                            QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type, p.gen())[0];
+                            for(int i =0;i < dvs.size(); i++) {
+                                p.setDV(i, dvs[i].toInt());
+                            }
+                        } else {
+                            QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(type);
+
+                            p.setDV(Attack, dvs.first);
+                            p.setDV(Defense, dvs.second);
+                        }
+                    }
+                }
+                int moveNum = MoveInfo::Number(move);
+                p.setMove(moveNum,movecount++,false);
+
+                if (moveNum == Move::Return) {
+                    p.happiness() = 255;
+                }
             }
         }
 
