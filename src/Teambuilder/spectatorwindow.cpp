@@ -1,5 +1,5 @@
-#include <QDeclarativeView>
-#include <QDeclarativeError>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeError>
 #include <QHBoxLayout>
 
 #include "spectatorwindow.h"

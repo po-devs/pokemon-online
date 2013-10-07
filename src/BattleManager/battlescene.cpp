@@ -1,4 +1,7 @@
-#include <QtDeclarative>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeItem>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeContext>
 #include <QtOpenGL/QGLWidget>
 
 #include "battlescene.h"
