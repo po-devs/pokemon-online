@@ -15,5 +15,5 @@
 14 Hielo
 15 Dragón
 16 Siniestro
-17 Fairy
+17 Hada
 18 ???
