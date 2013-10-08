@@ -27,6 +27,7 @@
 #include <QStandardPaths>
 #include <QStyleFactory>
 #endif
+#include <QtCore/QVariant>
 
 MainEngine *MainEngine::inst = NULL;
 
@@ -323,7 +324,6 @@ void MainEngine::routine(CentralWidgetInterface *w)
     main->setWidget(wi->property("tab-window").toInt(), wi);
 
     displayer->setMenuBar(transformMenuBar(w->createMenuBar(this)));
-    loadSettings(dynamic_cast<QWidget*>(w), w->defaultSize());
 }
 
 void MainEngine::launchMenu()
@@ -418,6 +418,11 @@ void MainEngine::launchServerChoice(bool newTab)
     }
 
     routine(choice);
+
+    if (!this->property("first launch").toBool()) {
+        this->setProperty("first launch", true);
+        loadSettings(dynamic_cast<QWidget*>(choice), choice->defaultSize());
+    }
 
     connect(choice, SIGNAL(teambuilder()), SLOT(launchTeamBuilder()));
     connect(choice, SIGNAL(serverChosen(QString,quint16,QString)), this, SLOT(goOnline(QString,quint16,QString)));
