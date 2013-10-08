@@ -1792,7 +1792,7 @@ QScriptValue ScriptEngine::ability(int num)
 
 QScriptValue ScriptEngine::abilityNum(const QString &ability)
 {
-    return AbilityInfo::Number(ability);
+    return AbilityInfo::Number(convertToSerebiiName(ability));
 }
 
 QScriptValue ScriptEngine::genderNum(QString genderName)
