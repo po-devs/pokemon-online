@@ -19,6 +19,7 @@ static QScriptValue toBattleChoice(QScriptEngine *e, const BattleChoice& info) {
     if (info.attackingChoice()) {
         v.setProperty("attackSlot", int(info.attackSlot()));
         v.setProperty("target", int(info.target()));
+        v.setProperty("mega", info.mega());
     } else if (info.switchChoice()) {
         v.setProperty("pokeSlot", int(info.pokeSlot()));
     } else if (info.rearrangeChoice()) {
@@ -46,6 +47,7 @@ static void fromBattleChoice(const QScriptValue &v, BattleChoice& info) {
         } else {
             info.choice.attack.attackTarget = !info.playerSlot;
         }
+        info.choice.attack.mega = v.property("mega").toBool();
     } else if (info.type == SwitchType) {
         info.choice.switching.pokeSlot = v.property("pokeSlot").toInt32();
     } else if (info.type == RearrangeType) {

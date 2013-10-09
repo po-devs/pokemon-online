@@ -216,6 +216,7 @@ struct BattleChoices
     bool attacksAllowed;
     bool attackAllowed[4];
     quint8 numSlot;
+    bool mega;
 
     bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
 
@@ -248,6 +249,7 @@ struct CancelChoice {
 struct AttackChoice {
     qint8 attackSlot;
     qint8 attackTarget;
+    bool mega;
 };
 
 struct SwitchChoice {
@@ -353,6 +355,10 @@ struct BattleChoice {
 
     int attackSlot() const {
         return choice.attack.attackSlot;
+    }
+
+    bool mega() const {
+        return choice.attack.mega;
     }
 
     int pokeSlot() const {

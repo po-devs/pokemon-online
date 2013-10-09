@@ -736,6 +736,7 @@ DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 
 BattleChoices::BattleChoices()
 {
+    mega = false;
     switchAllowed = true;
     attacksAllowed = true;
     std::fill(attackAllowed, attackAllowed+4, true);
@@ -768,13 +769,13 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 
 DataStream & operator >> (DataStream &in, BattleChoices &po)
 {
-    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3];
+    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const BattleChoices &po)
 {
-    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3];
+    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega;
     return out;
 }
 
@@ -793,6 +794,8 @@ bool BattleChoice::match(const BattleChoices &avail) const
 
     if (attackingChoice()) {
         if (avail.struggle() != (attackSlot() == -1))
+            return false;
+        if (mega() && !avail.mega)
             return false;
         if (!avail.struggle()) {
             if (attackSlot() < 0 || attackSlot() > 3) {
@@ -837,7 +840,7 @@ DataStream & operator >> (DataStream &in, BattleChoice &po)
         in >> po.choice.switching.pokeSlot;
         break;
     case AttackType:
-        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget;
+        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget >> po.choice.attack.mega;
         break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {
@@ -865,7 +868,7 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
         out << po.choice.switching.pokeSlot;
         break;
     case AttackType:
-        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget;
+        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget << po.choice.attack.mega;
         break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {
