@@ -1849,7 +1849,7 @@ void BattleBase::inflictConfusedDamage(int player)
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
     tmove(player).attack = Move::NoMove;
-    turnMem(player).typeMod = 4;
+    turnMem(player).typeMod = 16;
     turnMem(player).stab = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
@@ -1916,7 +1916,7 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
     int typeadv[] = {getType(target,1),getType(target,2)};
     int typepok[] = {getType(player,1),getType(player,2)};
     int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
-    int typemod = 1;
+    int typemod = 4;
 
     for (int i = 0; i < 2; i++) {
         typemod *= typeffs[i];
@@ -1924,7 +1924,7 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
 
     // Counter hits regardless of type matchups in Gen 1.
     if (tmove(player).attack == Move::Counter) {
-        typemod = 2;
+        typemod = 16;
     }
 
     int stab;

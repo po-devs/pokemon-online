@@ -245,7 +245,7 @@
 484 167#HeavyBomber
 485 186#Synchro Noise
 486 182#Eleci Ball
-487 157#Soak
+487 157-10#Soak
 492 187#Trickery
 493 143-86#Simple Beam
 494 158#Assemble Crew

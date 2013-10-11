@@ -101,7 +101,7 @@
 151 %s planted its roots!|%s absorbed nutrients with its roots!
 155 %s and %f had their power shared!|%s and %f had their defenses shared!
 156 %s cancelled the items' effects!|The items are now working again!
-157 %s transformed into the Water type!
+157 %s transformed into the %t type!
 158 %f gained %a!
 160 %f's %i burned!
 162 %s gave %f its %i!
@@ -117,4 +117,4 @@
 179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
 190 %f took the kind offer!
-191 #
+199 %ts's team is protected by Crafty Shield!|%ts's team Crafty Shield was broken!

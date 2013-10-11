@@ -1524,7 +1524,31 @@ namespace Move
         IcicleCrash,
         VCreate,
         FusionFlare,
-        FusionBolt
+        FusionBolt,
+        //gen 6
+        BabyDollEyes,
+        Boomburst,
+        CraftyShield,
+        DazzlingGleam,
+        DrainingKiss,
+        FairyWind,
+        FlyingPress,
+        ForestsCurse,
+        FreezeDry,
+        Geomancy,
+        GlowPunch,
+        Infestation,
+        MoonBlast,
+        MysticalFire,
+        NobleRoar,
+        Nuzzle,
+        OblivionWing,
+        ParabolicCharge,
+        PhantomForce,
+        PlayAround,
+        PlayNice,
+        TrickorTreat,
+        WaterShuriken
     };
 }
 

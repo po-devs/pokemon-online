@@ -1724,7 +1724,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1 && repeatCount() == 0) {
-                    notify(All, Effective, target, quint8(typemod));
+                    notify(All, Effective, target, quint8(std::max(typemod/4, 1)));
                 }
 
                 if (tmove(player).power > 1) {
@@ -1933,31 +1933,50 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     int typeadv[] = {getType(target, 1), getType(target, 2)};
     int typepok[] = {getType(player, 1), getType(player, 2)};
     int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
-    int typemod = 1;
+    int typemod = 16;
 
     for (int i = 0; i < 2; i++) {
+        if (tmove(player).attack == Move::FreezeDry && getType(player, i+1) == Type::Water) {
+            typeffs[i] = 4;
+        }
         if (typeffs[i] == 0) {
             /* Check for grounded flying types */
             if (type == Type::Ground && !isFlying(target)) {
-                typemod *= 2;
                 continue;
             }
             if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
-                typemod *= 2;
                 continue;
             }
             /* Scrappy */
             if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
-                typemod *= 2;
                 continue;
             }
         }
         typemod *= typeffs[i];
     }
+    typemod /= 4;
+
+    if (tmove(player).attack == Move::FlyingPress) {
+        int typeadv[] = {getType(target, 1), getType(target, 2)};
+        int typeffs[] = {TypeInfo::Eff(Type::Flying, typeadv[0], gen()),TypeInfo::Eff(Type::Flying, typeadv[1], gen())};
+        for (int i = 0; i < 2; i++) {
+            if (typeffs[i] == 0) {
+                if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
+                    continue;
+                }
+                /* Scrappy */
+                if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
+                    continue;
+                }
+            }
+            typemod *= typeffs[i];
+        }
+        typemod /= 4;
+    }
 
     // Counter hits regardless of type matchups in Gen 1.
     if (gen().num == 1 && tmove(player).attack == Move::Counter) {
-        typemod = 2;
+        typemod = 16;
     }
     if (type == Type::Ground && isFlying(target)) {
         typemod = 0;
@@ -1970,6 +1989,10 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
         stab = 2;
     }else{
         stab = 2 + (type==typepok[0] || type==typepok[1]);
+
+        if (tmove(player).attack == Move::FlyingPress) {
+            stab += (Type::Flying==typepok[0] || Type::Flying==typepok[1]);
+        }
     }
 
     turnMem(player).stab = stab;
@@ -2857,13 +2880,13 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     if (gen().num == 1) { // Gen 1 has no items and crits are already factored in.
-        damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+        damage = (((damage * stab/2) * typemod/16) * randnum) / 255;
     } else {
         damage = (damage+2)*ch/2;
         move.remove("ItemMod2Modifier");
         callieffects(p,t,"Mod2Modifier");
         damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
-        damage = damage *randnum/100*stab/2*typemod/4;
+        damage = damage *randnum/100*stab/2*typemod/16;
 
         /* Mod 3 */
         // FILTER / SOLID ROCK
