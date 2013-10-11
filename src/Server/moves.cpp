@@ -6384,6 +6384,19 @@ struct MMAutotomize : public MM
     }
 };
 
+struct MMSpore : public MM {
+    MMSpore() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasType(t, Type::Grass)) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6616,4 +6629,5 @@ void MoveEffect::init()
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
+    REGISTER_MOVE(198, Spore);
 }
