@@ -1027,7 +1027,7 @@ struct AMTintedLens : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (fturn(b,s).typeMod < 4) {
+        if (fturn(b,s).typeMod < 16) {
             b.chainBp(s, 20);
         }
     }

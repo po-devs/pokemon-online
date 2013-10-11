@@ -435,7 +435,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
 
             if (tmove(player).power > 1 && repeatCount() == 0) {
-                notify(All, Effective, target, quint8(typemod));
+                notify(All, Effective, target, quint8(std::max(typemod/4,1)));
             }
 
             /* Even though bind/wrap work when no effect, it doesn't inflict damage */

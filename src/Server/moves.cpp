@@ -1228,7 +1228,7 @@ struct MMBounce : public MM
             b.disposeItem(s);
 
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
-            if (move(b,s) == ShadowForce) {
+            if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             }
         } else {
@@ -1526,7 +1526,7 @@ struct MMDoomDesire : public MM
                     tmove(b, doomuser).recoil = 0;
 
                     int damage = b.calculateDamage(s, s);
-                    b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
+                    b.notify(BS::All, BattleCommands::Effective, s, quint8(std::max(1,typemod/4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
                 }
             }
@@ -3473,15 +3473,15 @@ struct MMJumpKick : public MM
             if (typeadv[0] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[1]);
+                typemod = TypeInfo::Eff(type, typeadv[1]) * 2;
             } else if (typeadv[1] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[0]);
+                typemod = TypeInfo::Eff(type, typeadv[0]) * 2;
             } else {
                 typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
             }
-            fturn(b,s).typeMod = typemod;
+            fturn(b,s).typeMod = typemod*4;
             fturn(b,s).stab = b.hasType(s, Type::Fighting) ? 3 : 2;
             if (b.gen().num == 4)
                 damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
@@ -4329,6 +4329,7 @@ struct MMRazorWind : public MM
                 poke(b,s)["ReleaseTurn"] = b.turn() + 1;
                 turn(b,s)["TellPlayers"] = false;
                 tmove(b, s).power = 0;
+                tmove(b, s).statAffected = 0;
                 tmove(b, s).status = Pokemon::Fine;
                 tmove(b, s).targets = Move::User;
                 addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
@@ -4544,7 +4545,7 @@ struct MMSleepTalk : public MM
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
-                              << Uproar << IceBurn << FreezeShock;
+                              << Uproar << IceBurn << FreezeShock << Geomancy << Phantomforce;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
@@ -5502,9 +5503,10 @@ struct MMSoak : public MM {
     }
 
     static void uas(int, int t, BS &b) {
-        fpoke(b, t).type1 = Pokemon::Water;
+        int type = turn(b,s)["Soak_Arg"].toInt();
+        fpoke(b, t).type1 = type;
         fpoke(b, t).type2 = Pokemon::Curse;
-        b.sendMoveMessage(157, 0, t, Pokemon::Water, t);
+        b.sendMoveMessage(157, 0, t, type, t);
     }
 };
 
@@ -6398,6 +6400,53 @@ struct MMSpore : public MM {
     }
 };
 
+struct MMCraftyShield: public MM
+{
+    MMCraftyShield() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "CraftyShield", &dgaf);
+        team(b,b.player(s))["CraftyShieldUsed"] = b.turn();
+        b.sendMoveMessage(199, 0, s, Pokemon::Fairy);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        int target = b.player(t);
+        if (!team(b,target).contains("CraftyShieldUsed") || team(b,target)["CraftyShieldUsed"].toInt() != b.turn()) {
+            return;
+        }
+
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("CraftyShieldUsed")) {
+                team(b,target).remove("CraftyShieldUsed");
+                b.sendMoveMessage(199, 1, t, Pokemon::Dark);
+                return;
+            }
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
+            return;
+        }
+
+        /* Blocks status moves */
+        if (tmove(b,s).category != Move::Other || b.player(t) == b.player(s)) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        b.fail(s, 199, 0, Pokemon::Fairy, t);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6631,4 +6680,5 @@ void MoveEffect::init()
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
     REGISTER_MOVE(198, Spore);
+    REGISTER_MOVE(199, CraftyShield);
 }
