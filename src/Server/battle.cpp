@@ -2718,7 +2718,12 @@ int BattleSituation::calculateDamage(int p, int t)
     if (attackused == Move::SpitUp) randnum = 100;
     else if (gen().num == 2 && (attackused == Move::Flail || attackused == Move::Reversal)) randnum = 100;
 
-    int ch = 1 + (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
+    int ch = (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
+    if (gen() <= 5) {
+        ch = 2+ch*2;
+    } else {
+        ch = 2+ch;
+    }
 
     /*** WARNING ***/
     /* The peculiar order here is caused by the fact that helping hand applies before item boosts,
@@ -2842,7 +2847,7 @@ int BattleSituation::calculateDamage(int p, int t)
     if (gen().num == 1) { // Gen 1 has no items and crits are already factored in.
         damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
     } else {
-        damage = (damage+2)*ch;
+        damage = (damage+2)*ch/2;
         move.remove("ItemMod2Modifier");
         callieffects(p,t,"Mod2Modifier");
         damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
