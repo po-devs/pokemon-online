@@ -282,3 +282,8 @@
 558 193#Cross Flame
 559 194#Cross Thunder
 560 #
+562 199#Crafty shield
+569 104-6#Geomancy
+578 13-4#phantom force
+581 157-7#Ghost
+582 #

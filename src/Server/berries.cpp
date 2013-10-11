@@ -178,7 +178,7 @@ struct BMAntiSuperEffective : public BM
         if (!b.attacking()) {
             return;
         }
-        if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 4 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
+        if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 16 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
 
@@ -222,7 +222,7 @@ struct BMSuperHP : public BM
         }
         if (!b.canHeal(s))
             return;
-        if (fturn(b,t).typeMod <= 4)
+        if (fturn(b,t).typeMod <= 16)
             return;
         b.eatBerry(s);
         b.sendBerryMessage(6,s,0);
