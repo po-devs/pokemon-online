@@ -1730,7 +1730,24 @@ namespace Ability
         ZenMode,
         VictoryStar,
         TurboBlaze,
-        TeraVolt
+        TeraVolt,
+
+        Aerilate,
+        AuraBreak,
+        CheekPouch,
+        DarkAura,
+        FairyAura,
+        FlowerVeil,
+        FurCoat,
+        MegaLauncher,
+        ParentalBond,
+        Pixilate,
+        Protean,
+        Refrigerate,
+        StrongJaw,
+        StanceChange,
+        SweetVeil,
+        ToughClaws
     };
 }
 

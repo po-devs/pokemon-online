@@ -330,6 +330,11 @@ void BattleSituation::removeEndTurnEffect(EffectType type, int slot, const QStri
     }
 }
 
+void BattleSituation::chainBp(int , int pow)
+{
+    bpmodifiers.append(pow);
+}
+
 void BattleSituation::endTurn()
 {
     testWin();
@@ -600,7 +605,7 @@ BattleChoices BattleSituation::createChoice(int slot)
         }
     }
 
-    if (!hasWorkingItem(slot, Item::ShedShell)) {
+    if (!hasWorkingItem(slot, Item::ShedShell) && !hasType(slot, Type::Ghost)) {
         /* Shed Shell */
         if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
             ret.switchAllowed = false;
@@ -1629,15 +1634,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player,player, "BeforeTargetList");
     calleffects(player, player, "BeforeTargetList");
 
-    /* Here because of gems :( */
-    turnMemory(player).remove("BasePowerItemModifier");
-
     /* Choice item memory, copycat in gen 4 and less */
     if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveUsed"] = attack;
     }
 
     foreach(int target, targetList) {
+        bpmodifiers.clear();
+
         heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
@@ -1860,6 +1864,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     heatOfAttack() = false;
+
+    if (!specialOccurence) {
+        callaeffects(player, player, "AfterAttackFinished");
+    }
 
     end:
         /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
@@ -2310,6 +2318,10 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
         if (turnMemory(player).contains(q)) {
             return false;
         }
+        callbeffects(player, attacker, "PreventStatChange");
+        if (turnMemory(player).contains(q)) {
+            return false;
+        }
 
         if(teamMemory(this->player(player)).value("MistCount").toInt() > 0 && (!hasWorkingAbility(attacker, Ability::Infiltrator) || this->player(player) == this->player(attacker))) {
             if (canSendPreventMessage(player, attacker)) {
@@ -2714,6 +2726,9 @@ int BattleSituation::calculateDamage(int p, int t)
       move power (not just power variable) because of technician which relies on it */
 
     callieffects(p,t,"BasePowerModifier");
+    if (turnMemory(p).value("GemActivated").toBool()) {
+        chainBp(p, 10);
+    }
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
@@ -2738,18 +2753,14 @@ int BattleSituation::calculateDamage(int p, int t)
         power = power * 3 / 2;
     }
 
-    power = power * (10+move["BasePowerItemModifier"].toInt())/10;
-
     QString sport = "Sported" + QString::number(type);
     if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
         power /= 2;
     }
 
-    move.remove("BasePowerAbilityModifier");
-    move.remove("BasePowerFoeAbilityModifier");
-    callaeffects(p,t,"BasePowerModifier");
-    callaeffects(t,p,"BasePowerFoeModifier");
-    power = power * (20+move.value("BasePowerAbilityModifier").toInt())/20 * (20+move.value("BasePowerFoeAbilityModifier").toInt())/20;
+    for (int i = 0; i < bpmodifiers.size(); i++) {
+        power = power * (20+bpmodifiers[i])/20;
+    }
 
     int oppPlayer = this->player(t);
 
@@ -3062,6 +3073,10 @@ void BattleSituation::devourBerry(int p, int berry, int s)
 
             f(p, s, *this);
         }
+    }
+
+    if (hasWorkingAbility(s, Ability::CheekPouch)) {
+        healLife(s, 10);
     }
 
     /* Restoring initial conditions */
