@@ -284,6 +284,7 @@
 560 #
 562 199#Crafty shield
 569 104-6#Geomancy
+571 10#Infestation
 578 13-4#phantom force
 581 157-7#Ghost
 582 #
