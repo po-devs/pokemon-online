@@ -894,7 +894,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         else if (p.status() != Pokemon::Asleep)
             p.statusCount() = 0;
     }
-    if (p.status() == Pokemon::Asleep && gen() >= 5) {
+    if (p.status() == Pokemon::Asleep && gen().num == 5) {
         p.statusCount() = p.oriStatusCount();
     }
 
