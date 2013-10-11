@@ -67,7 +67,7 @@
 98 %s moved its status onto %f!
 102 %s's rage is building!
 103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
-104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!
+104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!|%s is becoming one with the earth!
 105 %s recycled %i!
 106 %s went to sleep and became healthy!
 107 %s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
