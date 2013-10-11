@@ -232,7 +232,7 @@ struct IMBoostCategory : public IM
     }
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
-            turn(b,s)["BasePowerItemModifier"] = 1;
+            b.chainBp(s, 2);
         }
     }
 };
@@ -245,9 +245,9 @@ struct IMBoostType : public IM
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
             if (b.gen() >= 4)
-                turn(b,s)["BasePowerItemModifier"] = 2;
+                b.chainBp(s, 4);
             else
-                turn(b,s)["BasePowerItemModifier"] = 1;
+                b.chainBp(s, 2);
         }
     }
 };
@@ -396,7 +396,7 @@ struct IMPokeTypeBoost : public IM
         int type = tmove(b,s).type;
         for (int i = 1; i < args.size(); i++) {
             if (type == args[i].toInt())
-                turn(b,s)["BasePowerItemModifier"] = 2;
+                b.chainBp(s, 4);
         }
     }
 };
@@ -661,7 +661,7 @@ struct IMGem : public IM
         if (tmove(b,s).type != poke(b,s)["ItemArg"].toInt() || tmove(b,s).attack == Move::FirePledge  || tmove(b,s).attack == Move::GrassPledge  || tmove(b,s).attack == Move::WaterPledge )
             return;
         b.sendItemMessage(37, s, 0, 0, b.poke(s).item(), move(b,s));
-        turn(b,s)["BasePowerItemModifier"] = 5;
+        turn(b,s)["GemActivated"] = true;
         b.disposeItem(s);
     }
 };

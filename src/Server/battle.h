@@ -259,6 +259,7 @@ private:
     QHash<priorityBracket, int> bracketCount;
     QHash<priorityBracket, int> bracketType;
     QHash<priorityBracket, QString> bracketToEffect;
+    QVector<int> bpmodifiers;
 
     void getVectorRef(priorityBracket b);
 
@@ -276,6 +277,8 @@ public:
     void addEndTurnEffect(EffectType type, priorityBracket bracket, int slot = 0, const QString &effect = QString(),
                             MechanicsFunction f=NULL,IntFunction f2 = NULL);
     void removeEndTurnEffect(EffectType type, int slot, const QString &effect);
+
+    void chainBp(int p, int pow);
 
     context &battleMemory() {
         return battlelong;
