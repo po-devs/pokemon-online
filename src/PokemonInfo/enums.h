@@ -923,7 +923,8 @@ namespace Move
         UnthawingFlag = 1024, // Does the user of this move unthaw when frozen?
         PulsingFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
-        MischievousFlag = 8192// Can this move bypass substitute?
+        MischievousFlag = 8192, // Can this move bypass substitute?
+        BiteFlag = 8192*2//Strong jaw moves
     };
 
     enum Target
