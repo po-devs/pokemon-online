@@ -86,7 +86,7 @@ void IvBox::updateAll()
         ui->spdefivspin->hide();
         ui->spattivdesc->setText(tr("Special: "));
     } else {
-        ui->hiddenPowerPower->setVisible(true);
+        ui->hiddenPowerPower->setVisible(poke().gen() <= 5);
         ui->hiddenPowerTitle->setVisible(true);
         ui->hiddenPowerType->setVisible(true);
 
