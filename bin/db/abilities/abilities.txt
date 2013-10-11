@@ -163,3 +163,19 @@
 162 Victory Star
 163 Turboblaze
 164 Teravolt
+165 Aerilate
+166 Aura Break
+167 Cheek Pouch
+168 Dark Aura
+169 Fairy Aura
+170 Flower Veil
+171 Fur Coat
+172 Mega Launcher
+173 Parental Bond
+174 Pixilite
+175 Protean
+176 Refrigerate
+177 Stance Change
+178 Strong Jaw
+179 Sweet Veil
+180 Tough Claws
