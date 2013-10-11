@@ -309,7 +309,7 @@ struct AMDrySkin : public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
-            b.chainBp(s, 5);
+            b.chainBp(t, 5);
         }
     }
 
@@ -1016,7 +1016,7 @@ struct AMThickFat : public AM {
         int tp = tmove(b,t).type;
 
         if (tp == Type::Ice || tp == Type::Fire) {
-            b.chainBp(s, -10);
+            b.chainBp(t, -10);
         }
     }
 };
@@ -1530,7 +1530,7 @@ struct AMMultiScale : public AM
 
     static void bpfm(int s, int t, BS &b) {
         if (b.poke(s).isFull()) {
-            b.chainBp(s, -10);
+            b.chainBp(t, -10);
         }
     }
 };
@@ -1936,9 +1936,9 @@ struct AMAerilate : public AM {
         functions["BeforeTargetList"] = &baf;
     }
 
-    static void baf(int s, int t, BS &b) {
+    static void baf(int s, int, BS &b) {
         if (type(b,s) == Type::Normal) {
-            tmove(b, source).type = poke(b,s)["AbilityArg"].toInt();
+            tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
     }
 };
@@ -2034,7 +2034,7 @@ struct AMProtean : public AM {
         functions["AfterAttackFinished"] = &aaf;
     }
 
-    static void aaf (int s, int t, BS &b) {
+    static void aaf (int s, int, BS &b) {
         if (type(b,s) != Pokemon::Curse) {
             fpoke(b, s).type1 = type(b,s);
             fpoke(b, s).type2 = Pokemon::Curse;
@@ -2228,4 +2228,5 @@ void AbilityEffect::init()
     REGISTER_AB(108, StrongJaws);
     REGISTER_AB(109, ToughClaws);
     REGISTER_AB(110, StanceChange);
+    //111 parental bond
 }

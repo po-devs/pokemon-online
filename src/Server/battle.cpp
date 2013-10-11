@@ -2013,6 +2013,18 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     return !pokeMemory(player).value("AbilityNullified").toBool();
 }
 
+bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
+{
+    int p = player(play);
+    for (int i = 0; i < numberPerSide(); i++) {
+        int s = slot(p, i);
+        if (!koed(s) && hasWorkingAbility(s, ability)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
     if (gen() <= 2)
         return;
@@ -2284,7 +2296,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
         return false;
     switch (status) {
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !isThereUproar();
+    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !hasWorkingTeamAbility(player, Ability::SweetVeil) && !isThereUproar();
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);

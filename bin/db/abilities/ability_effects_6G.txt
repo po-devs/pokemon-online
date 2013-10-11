@@ -129,3 +129,17 @@
 162 75#Victory Star
 163 40#Turbo Blaze
 164 40#TeraVolt
+165 102-2#Aerilate
+168 103-Aura_16#Dark Aura
+169 103-Aura_17#Fairy Aura
+170 104-Veil_11#Flower Veil
+171 105#Fur Coat
+172 106#Mega Launcher
+173 111#Parental Bond
+174 102-17#Pixilite
+175 107#Protean
+176 102-14#Refrigerate
+177 110#Stance Change
+178 108#Strong Jaw
+179 112#Sweet Veil
+180 109#Tough Claws

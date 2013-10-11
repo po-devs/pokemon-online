@@ -108,6 +108,7 @@ public:
     bool testStatus(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
     bool hasWorkingAbility(int play, int ability);
+    bool hasWorkingTeamAbility(int play, int ability);
     bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
     int ability(int player);
