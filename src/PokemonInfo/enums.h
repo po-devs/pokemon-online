@@ -1550,7 +1550,31 @@ namespace Move
         PlayAround,
         PlayNice,
         TrickorTreat,
-        WaterShuriken
+        WaterShuriken,
+        Belch,
+        Confide,
+        DisarmingVoice,
+        EerieImpulse,
+        ElectricTerrain,
+        Electrify,
+        FairyLock,
+        FellStinger,
+        FlowerShield,
+        GrassyTerrain,
+        IonDeluge,
+        KingsShield,
+        LandsWrath,
+        MagneticsFlux,
+        MatBlock,
+        MistyTerrain,
+        PartingShot,
+        Powder,
+        PowerUppunch,
+        Rototiller,
+        SpikyShield,
+        StickyWeb,
+        TopsyTurvy,
+        VenomDrench
     };
 }
 
