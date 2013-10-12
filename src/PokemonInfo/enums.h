@@ -16,7 +16,8 @@ enum {
     GoldSilver=2, Crystal=2+(1<<8), Stadium2=2+(2<<8),
     RubySapphiry=3, Colosseum=3+(1<<8),RFLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
     DiamondPearl=4, Platinum=4+(1<<8), HGSS=4+(2<<8),
-    BlackWhite=5, BlackWhite2=5+(1<<8)
+    BlackWhite=5, BlackWhite2=5+(1<<8),
+    XY = 6
 };
 
 }
@@ -31,7 +32,7 @@ namespace Version
     };
 
     enum {
-        NumberOfGens = 5
+        NumberOfGens = 6
     };
 
     static const int avatarSize[] = {
@@ -39,7 +40,8 @@ namespace Version
         60,
         64,
         80,
-        96
+        96,
+        120
     };
 }
 

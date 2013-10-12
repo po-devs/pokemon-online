@@ -1988,7 +1988,7 @@ struct AMVeil: public AM {
 
     static void dgaf(int s, int t, BS &b) {
         for (int i_ = 0; i_ < b.numberPerSide(); i_++) {
-            int i = b.slot(b.player(s), i);
+            int i = b.slot(b.player(s), i_);
 
             if (!b.koed(i) && b.hasWorkingAbility(i, b.poke(i).ability())) {
                 if (poke(b,i)["AbilityArg"].toString().startsWith("Veil_")) {

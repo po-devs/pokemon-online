@@ -763,6 +763,7 @@
 679:0 Honedge
 680:0 Doublade
 681:0 Aegislash
+681:1 Aegislash-b
 682:0 Spritzee
 683:0 Aromatisse
 684:0 Swirlix

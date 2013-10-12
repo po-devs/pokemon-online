@@ -483,7 +483,7 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
 
     if (!info()->multiples()) {
         items[info()->spot(myself())]->setPos(50 - size/2, 146 - size);
-        items[info()->spot(myself())]->setPos(184- size/2, 96 - size);
+        items[info()->spot(opponent())]->setPos(184- size/2, 96 - size);
     } else {
         for (int i = 0; i < nslots/2; i++) {
             items[info()->spot(myself(), i)]->setPos(i*60, 146-size);
