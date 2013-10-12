@@ -2503,6 +2503,9 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
 
 void BattleSituation::callForth(int weather, int turns)
 {
+    if (turns == -1 && gen() >= 6) {
+        turns = 5;
+    }
     weatherCount = turns;
     if (weather != this->weather) {
         this->weather = weather;
