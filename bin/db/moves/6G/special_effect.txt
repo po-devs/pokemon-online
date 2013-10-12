@@ -291,3 +291,4 @@
 584 200#Belch
 588 201#Electriy Terrain
 589 202#Electrify
+590 203#Fairy Lock

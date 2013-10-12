@@ -6521,6 +6521,38 @@ struct MMElectrify : public MM {
     }
 };
 
+struct MMFairyLock : public MM {
+    MMFairyLock() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 2) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("FairyLockCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(203,0,s,Pokemon::Fairy);
+        b.battleMemory()["FairyLockCount"] = 2;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "FairyLock", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["FairyLockCount"], -1);
+        if (b.battleMemory()["FairyLockCount"].toInt() <= 0) {
+            b.sendMoveMessage(203,1,s,Pokemon::Fairy);
+            b.battleMemory().remove("FairyLockCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "FairyLock");
+        }
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -6758,4 +6790,6 @@ void MoveEffect::init()
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
     REGISTER_MOVE(201, ElectricTerrain);
+    REGISTER_MOVE(202, Electrify);
+    REGISTER_MOVE(203, FairyLock);
 }
