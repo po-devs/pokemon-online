@@ -2319,7 +2319,16 @@ bool BattleSituation::canGetStatus(int player, int status) {
         return false;
     switch (status) {
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !hasWorkingTeamAbility(player, Ability::SweetVeil) && !isThereUproar();
+    case Pokemon::Asleep: {
+            if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
+                hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
+                return false;
+            }
+            if (!isFlying(player) && battleMemory().contains("ElectricTerrainCount")) {
+                return false;
+            }
+            return true;
+    }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
