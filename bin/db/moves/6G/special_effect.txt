@@ -283,8 +283,10 @@
 559 194#Cross Thunder
 560 #
 562 199#Crafty shield
+567 157-11#Forest's Curse
 569 104-6#Geomancy
 571 10#Infestation
 578 13-4#phantom force
-581 157-7#Ghost
+581 157-7#Trick or Treat
 584 200#Belch
+588 201#Electriy Terrain
