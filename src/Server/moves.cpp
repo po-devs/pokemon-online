@@ -2915,6 +2915,10 @@ struct MMRapidSpin : public MM
             b.sendMoveMessage(103,4,source);
             team(b,source).remove("StealthRock");
         }
+        if (team(b,source).contains("StickyWeb")) {
+            b.sendMoveMessage(103,5,source);
+            team(b,source).remove("StickyWeb");
+        }
         if (poke(b,s).contains("TrappedBy")) {
             b.sendMoveMessage(103,0,s,0,poke(b,s)["TrappedBy"].toInt(),poke(b,s)["TrappedMove"].toInt());
             poke(b,s).remove("TrappedBy");
@@ -6776,6 +6780,37 @@ struct MMSpikyShield : public MM
     }
 };
 
+
+struct MMStickyWeb : public MM
+{
+    MMStickyWeb() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int t = b.opponent(b.player(s));
+        if (team(b,t).value("StickyWeb").toBool() == true) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        int t = b.opponent(b.player(s));
+        team(b,t)["StickyWeb"] = true;
+        addFunction(team(b,t), "UponSwitchIn", "StickyWeb", &usi);
+        b.sendMoveMessage(210,0,s,Pokemon::Bug,t);
+    }
+
+    static void usi(int source, int s, BS &b) {
+        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody))
+        {
+            b.sendMoveMessage(210,1,s,Pokemon::Bug);
+            b.inflictStatMod(s, Speed, -1, s);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7021,4 +7056,5 @@ void MoveEffect::init()
     REGISTER_MOVE(207, MatBlock);
     REGISTER_MOVE(208, MistyTerrain);
     REGISTER_MOVE(209, SpikyShield);
+    REGISTER_MOVE(210, StickyWeb);
 }
