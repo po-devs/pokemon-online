@@ -643,7 +643,8 @@ struct BattleDynamicInfo
         SpikesLV3=4,
         StealthRock=8,
         ToxicSpikes=16,
-        ToxicSpikesLV2=32
+        ToxicSpikesLV2=32,
+        StickyWeb=64
     };
     quint8 flags;
 };

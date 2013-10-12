@@ -3609,6 +3609,9 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     if (teamMemory(player).contains("StealthRock") && teamMemory(player).value("StealthRock").toBool()) {
         ret.flags |= BattleDynamicInfo::StealthRock;
     }
+    if (teamMemory(player).contains("StickyWeb") && teamMemory(player).value("StickyWeb").toBool()) {
+        ret.flags |= BattleDynamicInfo::StickyWeb;
+    }
 
     return ret;
 }
