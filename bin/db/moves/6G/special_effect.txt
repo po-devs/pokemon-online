@@ -292,3 +292,5 @@
 588 201#Electriy Terrain
 589 202#Electrify
 590 203#Fairy Lock
+591 204#Fell Stinger
+593 205#Grassy Terrain
