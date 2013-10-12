@@ -615,6 +615,10 @@ BattleChoices BattleSituation::createChoice(int slot)
             ret.switchAllowed = false;
         }
 
+        if (battleMemory().contains("FairyLockCount")) {
+            ret.switchAllowed = false;
+        }
+
         QList<int> opps = revs(slot);
         foreach(int opp, opps){
             callaeffects(opp, slot, "IsItTrapped");
