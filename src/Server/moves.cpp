@@ -6473,6 +6473,39 @@ struct MMBelch :  public MM
     }
 };
 
+struct MMElectricTerrain : public MM {
+    MMElectricTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 1) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("ElectricTerrainCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(201,0,s,Pokemon::Electric);
+        b.battleMemory()["WonderRoomCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["ElectricTerrainCount"], -1);
+        if (b.battleMemory()["ElectricTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(201,1,s,Pokemon::Electric);
+            b.battleMemory().remove("ElectricTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "ElectricTerrain");
+        }
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -6709,4 +6742,5 @@ void MoveEffect::init()
     REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
+    REGISTER_MOVE(201, ElectricTerrain);
 }
