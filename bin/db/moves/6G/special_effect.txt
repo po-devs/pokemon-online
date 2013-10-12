@@ -296,3 +296,5 @@
 593 205#Grassy Terrain
 595 206#King's Shield
 598 207#Mat Block
+599 208#Misty Terrain
+600 140#Parting Shot

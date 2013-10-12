@@ -6700,6 +6700,40 @@ struct MMMatBlock : public MM
     }
 };
 
+
+struct MMMistyTerrain : public MM {
+    MMMistyTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 3) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("MistyCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(208,0,s,Pokemon::Fairy);
+        b.battleMemory()["MistyTerrainCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["MistyTerrainCount"], -1);
+        if (b.battleMemory()["MistyTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(208,1,s,Pokemon::Fairy);
+            b.battleMemory().remove("MistyTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "MistyTerrain");
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6943,4 +6977,5 @@ void MoveEffect::init()
     REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
+    REGISTER_MOVE(208, MistyTerrain);
 }
