@@ -6447,6 +6447,33 @@ struct MMCraftyShield: public MM
     }
 };
 
+struct MMBelch :  public MM
+{
+    MMBelch() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (!turn(b,s).value("BelchOk").toBool()) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void btl(int s, int, BS &b) {
+        int berry = b.poke(s).item();
+
+        if (!b.hasWorkingItem(s, berry) || !ItemInfo::isBerry(berry)) {
+            return;
+        }
+
+        b.eatBerry(s);
+
+        turn(b,s)["BelchOk"] = true;
+    }
+};
+
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6681,4 +6708,5 @@ void MoveEffect::init()
     REGISTER_MOVE(197, Autotomize);
     REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
+    REGISTER_MOVE(200, Belch);
 }
