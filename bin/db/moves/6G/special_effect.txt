@@ -294,3 +294,4 @@
 590 203#Fairy Lock
 591 204#Fell Stinger
 593 205#Grassy Terrain
+595 206#King's Shield

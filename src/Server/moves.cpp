@@ -6606,6 +6606,51 @@ struct MMGrassyTerrain : public MM {
     }
 };
 
+struct MMKingsShield: public MM
+{
+    MMKingsShield() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        turn(b,s)["KingsShieldUsed"] = true;
+        b.sendMoveMessage(206, 0, s, type(b,s));
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        turn(b, t).remove("DamageShielded");
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,t)["KingsShieldUsed"].toBool()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+
+        turn(b,t)["DamageShielded"] = true;
+        addFunction(turn(b,t), "UponPhysicalAssault", "KingsShield", &upa);
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,s)["KingsShieldUsed"].toBool() || !turn(b,s)["DamageShielded"].toBool()) {
+            return;
+        }
+        b.inflictStatMod(t, Attack, -2, s);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6847,4 +6892,5 @@ void MoveEffect::init()
     REGISTER_MOVE(204, FellStinger);
     //todo flower shield
     REGISTER_MOVE(205, GrassyTerrain);
+    REGISTER_MOVE(206, KingsShield);
 }

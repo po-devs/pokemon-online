@@ -1765,6 +1765,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (!sub) {
                             callieffects(target, player, "UponPhysicalAssault");
                             callaeffects(target,player,"UponPhysicalAssault");
+                            calleffects(target,player,"UponPhysicalAssault");
                         }
                         callaeffects(player,target,"OnPhysicalAssault");
                     }
@@ -2981,6 +2982,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         inflictSubDamage(player, damage, source);
     } else {
         damage = std::min(int(poke(player).lifePoints()), damage);
+
+        //King's shield
+        if (turnMemory(s).contains("DamageShielded")) {
+            damage = 0;
+        }
 
         int hp  = poke(player).lifePoints() - damage;
 
