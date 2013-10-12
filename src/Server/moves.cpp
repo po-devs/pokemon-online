@@ -6492,7 +6492,7 @@ struct MMElectricTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
-        b.battleMemory()["WonderRoomCount"] = 5;
+        b.battleMemory()["ElectricTerrainCount"] = 5;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
     }
 
@@ -6563,6 +6563,45 @@ struct MMFellStinger : public MM {
         if (b.koed(t)) {
             tmove(b,s).statAffected = Attack << 16;
             tmove(b,s).boostOfStat = 2 << 16;
+        }
+    }
+};
+
+struct MMGrassyTerrain : public MM {
+    MMGrassyTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 2) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("GrassyTerrainCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(205,0,s,Pokemon::Grass);
+        b.battleMemory()["GrassyTerrainCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrainTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["GrassyTerrainCount"], -1);
+        if (b.battleMemory()["GrassyTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(205,1,s,Pokemon::Grass);
+            b.battleMemory().remove("GrassyTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "GrassyTerrain");
+        } else {
+            b.sendMoveMessage(205,2,s,Pokemon::Grass);
+            foreach (int p, b.sortedBySpeed())
+            {
+                b.healLife(p, b.poke(p).totalLifePoints()/16);
+            }
         }
     }
 };
@@ -6806,4 +6845,6 @@ void MoveEffect::init()
     REGISTER_MOVE(202, Electrify);
     REGISTER_MOVE(203, FairyLock);
     REGISTER_MOVE(204, FellStinger);
+    //todo flower shield
+    REGISTER_MOVE(205, GrassyTerrain);
 }
