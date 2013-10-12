@@ -124,3 +124,4 @@
 205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field
 206 %s shielded itself against damage!
 207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
+208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!

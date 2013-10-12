@@ -2434,6 +2434,10 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
                 return;
             }
         }
+        if(battleMemory().value("MistyTerrainCount").toInt() > 0 && !isFlying(player)) {
+            sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
+            return;
+        }
     }
 
     if (!canGetStatus(player, status))
