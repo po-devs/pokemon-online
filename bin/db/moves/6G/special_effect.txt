@@ -298,3 +298,4 @@
 598 207#Mat Block
 599 208#Misty Terrain
 600 140#Parting Shot
+604 209#Spiky Shield

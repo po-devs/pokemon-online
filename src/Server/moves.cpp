@@ -6734,6 +6734,48 @@ struct MMMistyTerrain : public MM {
     }
 };
 
+
+struct MMSpikyShield : public MM
+{
+    MMSpikyShield() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        turn(b,s)["SpikyShieldUsed"] = true;
+        b.sendMoveMessage(27, 0, s, Pokemon::Grass);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,t)["SpikyShieldUsed"].toBool()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+        }
+        b.fail(s, 27, 0, Pokemon::Grass, t);
+
+        if ((tmove(b, s).flags & Move::ContactFlag) ) {
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/6,s,false);
+            return;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6978,4 +7020,5 @@ void MoveEffect::init()
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
     REGISTER_MOVE(208, MistyTerrain);
+    REGISTER_MOVE(209, SpikyShield);
 }
