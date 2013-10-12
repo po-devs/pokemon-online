@@ -6506,6 +6506,21 @@ struct MMElectricTerrain : public MM {
     }
 };
 
+struct MMElectrify : public MM {
+    MMElectrify() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        tmove(b,s).type = Pokemon::Electric;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        addFunction(turn(b,t), "MoveSettings", "Electrify", &ms);
+        b.sendMoveMessage(202,0,s,Pokemon::Electric,t);
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage

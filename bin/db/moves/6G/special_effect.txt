@@ -290,3 +290,4 @@
 581 157-7#Trick or Treat
 584 200#Belch
 588 201#Electriy Terrain
+589 202#Electrify

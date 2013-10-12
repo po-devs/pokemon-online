@@ -119,3 +119,4 @@
 190 %f took the kind offer!
 199 %ts's team is protected by Crafty Shield!|%ts's team Crafty Shield was broken!
 201 The terrain became electrified!|Electricity on the terrain faded away.
+202 %f became electrified!
