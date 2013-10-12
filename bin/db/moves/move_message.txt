@@ -123,3 +123,4 @@
 203 Pokemon can no longer flee!|Fairy Lock's effect disappeared.
 205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field
 206 %s shielded itself against damage!
+207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!

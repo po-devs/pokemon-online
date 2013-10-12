@@ -6651,6 +6651,55 @@ struct MMKingsShield: public MM
     }
 };
 
+
+
+struct MMMatBlock : public MM
+{
+    MMMatBlock() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "MatBlock", &dgaf);
+        team(b,b.player(s))["MatBlockUsed"] = b.turn();
+        b.sendMoveMessage(207, 0, s, type(b,s));
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        int target = b.player(t);
+        if (!team(b,target).contains("MatBlockUsed") || team(b,target)["MatBlockUsed"].toInt() != b.turn()) {
+            return;
+        }
+
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("MatBlockUsed")) {
+                team(b,target).remove("MatBlockUsed");
+                b.sendMoveMessage(207, 1, t, Type::Fighting);
+                return;
+            }
+        }
+
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        if (tmove(b,s).category != Move::Other) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        b.fail(s, 207, 0, Pokemon::Fighting, t);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6893,4 +6942,5 @@ void MoveEffect::init()
     //todo flower shield
     REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
+    REGISTER_MOVE(207, MatBlock);
 }
