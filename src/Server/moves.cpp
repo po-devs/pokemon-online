@@ -4545,7 +4545,7 @@ struct MMSleepTalk : public MM
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
-                              << Uproar << IceBurn << FreezeShock << Geomancy << Phantomforce;
+                              << Uproar << IceBurn << FreezeShock << Geomancy << PhantomForce;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
@@ -5502,7 +5502,7 @@ struct MMSoak : public MM {
             fturn(b,s).add(TM::Failed);
     }
 
-    static void uas(int, int t, BS &b) {
+    static void uas(int s, int t, BS &b) {
         int type = turn(b,s)["Soak_Arg"].toInt();
         fpoke(b, t).type1 = type;
         fpoke(b, t).type2 = Pokemon::Curse;

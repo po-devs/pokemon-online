@@ -3116,7 +3116,7 @@ void BattleSituation::devourBerry(int p, int berry, int s)
     }
 
     if (hasWorkingAbility(s, Ability::CheekPouch)) {
-        healLife(s, 10);
+        healLife(s, poke(s).totalLife()/3);
     }
 
     /* Restoring initial conditions */

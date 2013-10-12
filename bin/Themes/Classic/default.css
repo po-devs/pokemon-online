@@ -165,8 +165,8 @@ PokeEdit #pokemonFrame {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #528bb8, stop: 0.495 #528bb8,
                                 stop: 0.505 #305174, stop: 1.0 #305174);
-	height: 110px;
-	width: 110px;
+	height: 140px;
+	width: 140px;
 	/*border-radius: 4px;*/
 }
 
@@ -448,8 +448,8 @@ PokeSelection #pokemonSprite {
 }
 
 PokeSelection #pokemonFrame {
-    width: 110px;
-    height: 110px;
+    width: 140px;
+    height: 140px;
 }
 
 /**** box ****/

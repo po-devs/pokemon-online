@@ -979,7 +979,8 @@ bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
         if (pokeid.isForme()) {
             return Exists(pokeid.original()) && Released(pokeid, gen);
         } else {
-            return PokemonInfo::gen(gen).m_Moves.value(pokeid).levelMoves.size() > 0;
+            return PokemonInfo::gen(gen).m_Moves.value(pokeid).levelMoves.size() > 0
+                    || PokemonInfo::gen(gen).m_Moves.value(pokeid).TMMoves.size() > 0;
         }
     } else {
         return false;
