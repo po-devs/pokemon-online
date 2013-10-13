@@ -920,6 +920,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, forme);
         }
     }
+    if (p.num() == Pokemon::Xerneas) {
+        changeAForme(slot, 1);
+    }
 
     turnMem(slot).add(TurnMemory::Incapacitated);
 
