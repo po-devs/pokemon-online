@@ -4,13 +4,13 @@
 4 %s erschaudert!
 6 %f leidet unter Alptraum von %s!
 9 Farbwechsel von %s macht es zu einem %t-Typ!
-11 %s's Cute Charm infatuated %f!
+11 %s hat sich wegen Charmebolzen in %f verliebt!
 12 %s kann wegen Konzentrator nicht zurückschrecken!
 13 %s's Download wurde aktiviert!
 14 Hagelalarm von %s lässt einen Hagelsturm aufkommen !|Niesel von %s lässt Regen aufkommen !|Sandsturm von %s lässt einen Sandsturm aufkommen !|Dürre von %s intensiviert die Sonnenstrahlen !
-15 %s#'s Aufheber heilt einige KP!|%s veliert einige KP wegen Trockenheit!
+15 %s's Aufheber heilt einige KP!|%s veliert einige KP wegen Trockenheit!
 16 %s's Sporenwirt wurde aktiviert!
-18 %s's %a activates!
+18 %s's %a wurde aktiviert!
 19 %s's Feuerfänger verstärkt die Stärke seiner Feuerattacken!|%s's Feuerfänger macht %m wirkungslos!
 21 %s verändert seinen Typ in %t!
 22 %s's Vorwarnung warnt es vor %m!
@@ -18,17 +18,17 @@
 24 %s's Puderabwehr blockiert alle Zusatzeffekte von Attacken!
 29 %s's Hydration heilt seinen Status!
 30 %s's %a prevents its stat from being lowered!
-31 %s's %a prevented its stats from being lowered!
-32 %s's %a heals it!
+31 %s's %a sorgt dafür, dass seiner Werte nicht sinken können!
+32 %s's %a heilt einige KP!
 33 %s's %a cures it!
 34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s !
 37 %s's Floraschild verhindert Statusveränderungen!
-38 %s's %a took the attack!
+38 %s's %a zog die Attacke an!|%s's %a erhöhte seinen Sp. Angriff!|%s's %a macht die Attacke nutzlos!
 40 %s gelingt es, gegnerische Fähigkeiten zu überbrücken!
 41 %s's Starthilfe erhöht seine Initiative!
 44 %s's Tempomacher heilt seine Verwirrung!
-45 Aufheber von %s regeneriert einige KP !
-46 %s übt seine Fähigkeit Erzwinger aus !
+45 Aufheber von %s regeneriert einige KP!
+46 %s übt seine Fähigkeit Erzwinger aus!
 50 %s's Rauhaut schadet %f
 54 %s's Expidermis heilt seine Statusprobleme!
 55 %s kommt nicht in Fahrt!|%s finally got its act together!
@@ -37,11 +37,12 @@
 58 Temposchub von %s erhöht seine Initiative!
 60 %s's Fähigkeit Felsenfest erhöht seine Initiative!
 61 %s's Synchro verändert den Status von %f!
-66 %s traced %f's %a!
-67 %s is carelessly slacking off!
+66 %s kopiert %f's %a!
+67 %s faulenzt!
+68 %s's %a erhöht seinen Angriff!|%s's %a macht die Attacke nutzlos!
 70 %s's %a absorbiert die Attacke!|%s's %a macht die Attacke nutzlos!
 71 %s vermeidet Schaden mit Wunderwache!
-74 verliert einen Teil seiner Rüstung!
+74 %s verliert einen Teil seiner Rüstung!
 78 %s stiehlt %f's %i!
 80 Siegeswille erhöht den Angriff vonn %s stark!
 81 %s verwandelt sich in %p!
@@ -50,7 +51,7 @@
 88 %s erhält dank Reiche Ernte eine %i!
 89 Wolke Sieben von %s verhindert Wettereffekte!
 90 %s's Wunderhaut schützte es vor Status-Attacken!
-91 %s überlebt den Angriff dank Robustheit!
+91 %s übersteht den Angriff dank Robustheit!
 93 %s nimmmt %i!
 94 %s's Redlichkeit erhöht seinen Angriff!
 95 %s's Gefühlswippe erhöht seinen %st stark!|%s's Gefühlswippe verringert seinen %st!
