@@ -43,7 +43,7 @@
 42 Stahl-Pokémon können vor dem Pokémon nicht flüchten.
 43 Ein Schutz vor allen Attacken, die mit der Akustik und dem Schall zutun haben.
 44 Wenn es im Kampf regnet, erhält das Pokémon jede Runde KP zurück.
-45 Das Pokémon verursacht Kampf einen Sandsturm.
+45 Das Pokémon verursacht im Kampf einen Sandsturm.
 46 Der Verbrauch von AP gegnerischer Attacken, die dieses Pokémon anvisieren, wird um 1 erhöht.
 47 Halbiert den Schaden von Eis- und Feuer-Attacken auf das Pokémon.
 48 Das Pokémon wacht schneller auf als normal.
@@ -144,7 +144,7 @@
 143 Wenn das Pokémon des gegnerische Pokémon berührt, wird es mit einer Wahrscheinlichkeit von 20% vergiftet.
 144 KP werden um 1/3 des Maximalwertes geheilt, wenn das Pokémon ausgetauscht wird.
 145 Die Verteidigungs-Werte des Pokémons können nicht sinken.
-146 Verdoppelt in einem Sandsturm die Initiative.
+146 Verdoppelt im Sandsturm die Initiative.
 147 Es besteht eine Chance von 50%, dass gegnerische Status-Attacken das Pokémon verfehlen.
 148 Wenn das Pokémon nach dem Gegner agiert, wird die Kraft seiner Attacke um 30% verstärkt.
 149 Das Pokémon hat von Beginn an das Aussehen des Pokémon, welches sich an letzter Stelle im eigenen Team befindet, bis es Schaden durch den Gegner erleidet.
@@ -157,7 +157,7 @@
 156 Die Effekte von Status-Attacken werden zurückgeworfen.
 157 Wird des Pokémon von einer Pflanzen-Attacke getroffen, wird sein Angriff um eine Stufe erhöht.
 158 Erhöht die Priorität von Attacken, die keinen Schaden anrichten, um 1.
-159 vErhöht die Stärke von Gesteins-, Stahl- und Boden-Attacken im Sandsturm um 30%.
+159 Erhöht die Stärke von Gesteins-, Stahl- und Boden-Attacken im Sandsturm um 30%.
 160 Der Gegner verliert bei Kontakt mit dem Pokémon 1/8 seiner maximalen KP.
 161 Wenn das Pokémon KP noch weniger als 50% hat, ändert es seine Form in die Trance-Form.
 162 Erhöht die Genauigkeit vonn allen Team-Pokémon um 10%.
