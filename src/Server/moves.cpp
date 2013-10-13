@@ -6825,6 +6825,18 @@ struct MMTopsyTurvy : public MM {
     }
 };
 
+struct MMVenomDrench : public MM {
+    MMVenomDrench() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (!(b.poke(t).status() == Pokemon::Poisoned)) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7072,4 +7084,5 @@ void MoveEffect::init()
     REGISTER_MOVE(209, SpikyShield);
     REGISTER_MOVE(210, StickyWeb);
     REGISTER_MOVE(211, TopsyTurvy);
+    REGISTER_MOVE(212, VenomDrench);
 }
