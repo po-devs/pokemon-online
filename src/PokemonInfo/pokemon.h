@@ -23,6 +23,7 @@ public:
     uniqueId() : pokenum(0), subnum(0) {}
     uniqueId(int num, int subnum) : pokenum(num), subnum(subnum) {}
     uniqueId(const uniqueId &id) { pokenum = id.pokenum; subnum = id.subnum; }
+    uniqueId(const QString &s) { pokenum = s.section(':', 0, 0).toInt(); subnum = s.section(':', 1, 1).toInt(); }
     uniqueId(quint32 pokeRef) {
         subnum = pokeRef >> 16;
         pokenum = pokeRef & 0xFFFF;

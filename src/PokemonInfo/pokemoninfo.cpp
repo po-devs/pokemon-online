@@ -2378,6 +2378,11 @@ bool ItemInfo::isPlate(int itemnum)
     return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
 }
 
+bool ItemInfo::isMegaStone(int itemnum)
+{
+    return itemnum >= 2000 && itemnum < 3000;
+}
+
 bool ItemInfo::isDrive(int itemnum)
 {
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
@@ -2400,7 +2405,20 @@ bool ItemInfo::isUseful(int itemnum)
 
 int ItemInfo::PlateType(int itemnum)
 {
-    return Effects(itemnum, GenInfo::GenMax()).front().args.toInt();
+    auto &effects = Effects(itemnum, GenInfo::GenMax());
+    if (effects.size() == 0) {
+        return 0;
+    }
+    return effects.front().args.toInt();
+}
+
+Pokemon::uniqueId ItemInfo::MegaStoneForme(int itemnum)
+{
+    auto &effects = Effects(itemnum, GenInfo::GenMax());
+    if (effects.size() == 0) {
+        return 0;
+    }
+    return Pokemon::uniqueId(effects.front().args());
 }
 
 int ItemInfo::PlateForType(int type)
