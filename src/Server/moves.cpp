@@ -4195,8 +4195,12 @@ struct MMMudSport : public MM
         int move = MM::move(b,s);
         b.sendMoveMessage(88, move == MudSport ? 0 : 1, s, type(b,s));
         int type = turn(b,s)["MudSport_Arg"].toInt();
-        poke(b,s)["Sported" + QString::number(type)] = true;
-        b.battleMemory()["Sported"+ QString::number(type)] = s;
+        if (b.gen() <= 5) {
+            poke(b,s)["Sported" + QString::number(type)] = true;
+            b.battleMemory()["Sported"+ QString::number(type)] = s;
+        } else {
+            b.battleMemory()["SportedEnd"+ QString::number(type)] = b.turn() + 5;
+        }
     }
 };
 
