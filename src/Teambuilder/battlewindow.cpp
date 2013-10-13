@@ -368,6 +368,9 @@ void BattleWindow::attackClicked(int zone)
             b = BattleChoice(slot, AttackChoice());
             b.setAttackSlot(zone);
             b.setTarget(data().spot(info().opponent));
+            if (myazones[n]->megaevo->isChecked()) {
+                b.setMegaEvo(true);
+            }
 
             if (!data().multiples()) {
                 info().done[n] = true;
@@ -455,10 +458,13 @@ void BattleWindow::goToNextChoice()
             /* moves first */
             if (!data().isKoed(slot))
             {
+                int snum = data().slotNum(slot);
+                myazones[snum]->megaevo->setVisible(info().choices[n].mega);
+                myazones[snum]->megaevo->setChecked(false);
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[data().slotNum(slot)]->attacks[i]->setEnabled(false);
+                        myazones[snum]->attacks[i]->setEnabled(false);
                     }
                     if (myitems) {
                         myitems->setEnabled(false);
@@ -466,13 +472,13 @@ void BattleWindow::goToNextChoice()
                 } else {
                     myattack->setEnabled(true);
                     for (int i = 0; i < 4; i ++) {
-                        myazones[data().slotNum(slot)]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
+                        myazones[snum]->attacks[i]->setEnabled(info().choices[n].attackAllowed[i]);
                     }
 
                     if (info().choices[n].struggle()) {
                         mystack->setCurrentWidget(szone);
                     } else {
-                        mystack->setCurrentWidget(myazones[data().slotNum(slot)]);
+                        mystack->setCurrentWidget(snum);
                     }
                 }
             }
@@ -938,6 +944,12 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
         mymapper->setMapping(attacks[i], i);
         connect(dynamic_cast<QAbstractButton*>(attacks[i]), SIGNAL(clicked()), mymapper, SLOT(map()));
     }
+    megaevo = new QPushButton(this);
+    megaevo->setText(tr("Mega evolution"));
+    megaevo->setCheckable(true);
+    megaevo->setObjectName("MegaEvo");
+    l->addWidget(megaevo, 2, 0, 1, 2);
+    megaevo->setVisible(false);
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }

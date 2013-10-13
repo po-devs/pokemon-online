@@ -390,6 +390,10 @@ struct BattleChoice {
         choice.attack.attackSlot = slot;
     }
 
+    void setMegaEvo(bool megaevo) {
+        choice.attack.mega = megaevo;
+    }
+
     void setPokeSlot(int slot) {
         choice.switching.pokeSlot = slot;
     }
