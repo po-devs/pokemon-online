@@ -144,3 +144,4 @@
 179 112#Sweet Veil
 180 109#Tough Claws
 181 113#Competitive
+182 114#Gale Wings
