@@ -224,6 +224,10 @@
 327 3016#Dusk Ball
 328 3017#Cherish Ball
 329 3000#Park Ball
+330 29-13|10-13#Pixie Plate(not correct)
+331 1#Assault Vest(not correct)
+332 1#Safety Goggles(not correct)
+333 1#Weakness Policy(not correct)
 2001 66-3:1
 2002 66-6:1
 2003 66-6:2
