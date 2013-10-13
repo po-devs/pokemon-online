@@ -568,7 +568,7 @@
 567 Forest's Curse
 568 Freeze Dry
 569 Geomancy
-570 Glow Punch
+570 Petal Blizzard
 571 Infestation
 572 Moon Blast
 573 Mystical Fire
@@ -576,7 +576,7 @@
 575 Nuzzle
 576 Oblivion Wing
 577 Parabolic Charge
-578 Phantom force
+578 Phantom Force
 579 Play Around
 580 Play Nice
 581 Trick-or-Treat
@@ -595,14 +595,14 @@
 594 Ion Deluge
 595 King's Shield
 596 Land's Wrath
-597 Magnetic's Flux
+597 Magnetic Flux
 598 Mat Block
 599 Misty Terrain
 600 Parting Shot
 601 Powder
-602 Power-Up punch
+602 Power-Up Punch
 603 Rototiller
 604 Spiky Shield
 605 Sticky Web
-606 Topsy Turvy
+606 Topsy-Turvy
 607 Venom Drench
