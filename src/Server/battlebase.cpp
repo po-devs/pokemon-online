@@ -970,6 +970,16 @@ bool BattleBase::validChoice(const BattleChoice &b)
         /* It's an attack, we check the target is valid */
         if (b.target() < 0 || b.target() >= numberOfSlots())
             return false;
+        /* If there's a mega evo, we verify another hasn't been already chosen */
+        if (b.mega()) {
+            for (int i = 0; i < numberOfSlots(); i++) {
+                int p2 = this->player(i);
+                if (i != b.slot() && p2 == player && couldMove[i] && hasChoice[i] == false && choice(i).attackingChoice()
+                        && choice(i).mega()) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
