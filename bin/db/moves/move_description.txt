@@ -552,10 +552,57 @@
 551	Has a 20% chance to burn the target.
 552	Has a 50% chance to raise the user's Special Attack by one stage.
 553	Requires a charging turn. Has a 30% chance to paralyze the target.
-554	Requires a charging turn.Has a 30% chance to burn the target.
+554	Requires a charging turn. Has a 30% chance to burn the target.
 555	Lowers the target's Special Attack by one stage.
-556	Has a 30% chance to flinch.
+556	Has a 30% chance to flinch.
 557	Lowers the user's Defense, Special Defense, and Speed by one stage.
 558	Doubles in power if used on the same turn after Fusion Bolt.
 559	Doubles in power if used on the same turn after Fusion Flare.
-560	.
+560 Lowers the target's accuracy by one stage. Priority level 1.
+561 Inflicts regular damage with no additional effect.
+562 The user protects itself and its allies from status moves.
+563 Inflicts regular damage with no additional effect.
+564 Heals the user by half the damage inflicted.
+565 Inflicts regular damage with no additional effect.
+566 
+567 Changes the target's type to pure Grass.
+568 Has a 0% chance to freeze the target. Super-effective on water-types.
+569 Requires a charging turn. Raises the user's Special Attack, Special Defence and Speed by one stage.
+570 Inflicts regular damage with no additional effect.
+571 Attacks for 4-5 rounds. Target can't switch during the attack.
+572 Has a 0% chance to lower the target's Special Attack by one stage.
+573 Inflicts damage and lowers the target's Special Attack
+574 Lowers the target's Attack and Special Attack by one stage.
+575 Inflicts damage and paralyses the target.
+576 Heals the user by half the damage inflicted.
+577 Heals the user by half the damage inflicted.
+578 Dodges attacks on first turn, strikes on second. Not blocked by Protect or Detect.
+579 Has a 0% chance to lower the target's Attack.
+580 Lowers the target's Attack by one stage.
+581 Changes the target's type to pure Ghost.
+582 Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5. Priority level 1.
+583 Raises the Special Defense of user's teammates.
+584 The user must eat a Berry to use this move.
+585 Lowers the target's Special Attack by one stage.
+586 Has perfect accuracy.
+587 Lowers the target's Special Attack by two stages.
+588 Pokémon on the ground no longer fall asleep for five turns.
+589 The next move the target uses becomes Electric type.
+590 Target can't switch during the next turn.
+591 When the user knocks out the target with this move, the user's Attack raises by two stages.
+592 Raises Defense of all Grass Pokémon in battle.
+593 Restores 1/16 of the user's max HP for five turns.
+594 Changes Normal-type moves of the user to Electric-type moves.
+595 Prevents attacks from hitting the user this turn. Lowers the Attack of any Pokémon which makes direct contact.
+596 Inflicts regular damage with no additional effect.
+597 Raises the Defense and Special Defense of the user's teammates with the Plus or Minus ability.
+598 Prevents attacks from hitting the user this turn. Does not stop status moves.
+599 Protects Pokémon on the ground from status changes for five turns.
+600 Lowers the target's Attack and Special Attack by one stage and then user switches with another Pokémon.
+601 Damages the target if it uses a Fire-type move.
+602 Inflicts damage and raises the user's Attack by one stage.
+603 Raises the Attack and Special Attack of Grass Pokémon.
+604 Prevents attacks from hitting the user this turn. Damages any attacker who makes direct contact.
+605 
+606 
+607 Inflicts damage. Lowers Attack, Special Attack and Speed of a poisoned target.
