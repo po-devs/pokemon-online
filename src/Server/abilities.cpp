@@ -2116,6 +2116,21 @@ struct AMGaleWings : public AM
     }
 };
 
+struct AMGooey : public AM
+{
+    AMGooey() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.hasMinimalStatMod(t, Speed))
+            return;
+
+        b.sendAbMessage(115, 0, s, t);
+        b.inflictStatMod(t, Speed, -1, s, false);
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -2261,4 +2276,5 @@ void AbilityEffect::init()
     //112 sweet veil
     REGISTER_AB(113, Competitive);
     REGISTER_AB(114, GaleWings);
+    REGISTER_AB(115, Gooey);
 }
