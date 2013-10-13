@@ -193,6 +193,7 @@ public:
 
     AbstractAttackButton *tattacks[4];
     QAbstractButton *attacks[4];
+    QPushButton *megaevo;
 signals:
     void clicked(int attack);
 
