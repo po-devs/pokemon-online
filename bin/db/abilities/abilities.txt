@@ -180,3 +180,5 @@
 179 Sweet Veil
 180 Tough Claws
 181 Competitive
+182 Gale Wings
+183 Gooey

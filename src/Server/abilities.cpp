@@ -2104,6 +2104,17 @@ struct AMCompetitive : public AM
     }
 };
 
+struct AMGaleWings : public AM
+{
+    AMGaleWings() {
+        functions["PriorityChoice"] = &pc;
+    }
+
+    static void pc(int s, int, BS &b) {
+        if (tmove(b,s).type == Type::Flying)
+            tmove(b,s).priority += 1;
+    }
+};
 
 /* Events:
     PriorityChoice
@@ -2249,4 +2260,5 @@ void AbilityEffect::init()
     //111 parental bond
     //112 sweet veil
     REGISTER_AB(113, Competitive);
+    REGISTER_AB(114, GaleWings);
 }
