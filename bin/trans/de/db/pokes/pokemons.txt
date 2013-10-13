@@ -1,13 +1,17 @@
 ﻿0:0 (Kein Pokémon)
 1:0 Bisasam
 2:0 Bisaknosp
-3:0 Bisaflor
+3:0:H Bisaflor
+3:1 Mega-Bisaflor
 4:0 Glumanda
 5:0 Glutexo
-6:0 Glurak
+6:0:H Glurak
+6:1 Mega-Glurak X
+6:2 Mega-Glurak Y
 7:0 Schiggy
 8:0 Schillok
-9:0 Turtok
+9:0:H Turtok
+9:1 Mega-Turtok
 10:0 Raupy
 11:0 Safcon
 12:0 Smettbo
@@ -63,7 +67,8 @@
 62:0 Quappo
 63:0 Abra
 64:0 Kadabra
-65:0 Simsala
+65:0:H Simsala
+65:1 Mega-Simsala
 66:0 Machollo
 67:0 Maschok
 68:0 Machomei
@@ -92,7 +97,8 @@
 91:0 Austos
 92:0 Nebulak
 93:0 Alpollo
-94:0 Gengar
+94:0:H Gengar
+94:1 Mega-Gengar
 95:0 Onix
 96:0 Traumato
 97:0 Hypno
@@ -113,7 +119,8 @@
 112:0 Rizeros
 113:0 Chaneira
 114:0 Tangela
-115:0 Kangama
+115:0:H Kangama
+115:1 Mega-Kangama
 116:0 Seeper
 117:0 Seemon
 118:0 Goldini
@@ -125,10 +132,12 @@
 124:0 Rossana
 125:0 Elektek
 126:0 Magmar
-127:0 Pinsir
+127:0:H Pinsir
+127:1 Mega-Pinsir
 128:0 Tauros
 129:0 Karpador
-130:0 Garados
+130:0:H Garados
+130:1 Mega-Garados
 131:0 Lapras
 132:0 Ditto
 133:0 Evoli
@@ -140,7 +149,8 @@
 139:0 Amoroso
 140:0 Kabuto
 141:0 Kabutops
-142:0 Aerodactyl
+142:0:H Aerodactyl
+142:1 Mega-Aerodactyl
 143:0 Relaxo
 144:0 Arktos
 145:0 Zapdos
@@ -148,7 +158,9 @@
 147:0 Dratini
 148:0 Dragonir
 149:0 Dragoran
-150:0 Mewtu
+150:0:H Mewtu
+150:1 Mega-Mewtu X
+150:2 Mega-Mewtu Y
 151:0 Mew
 152:0 Endivie
 153:0 Lorblatt
@@ -180,7 +192,8 @@
 178:0 Xatu
 179:0 Voltilamm
 180:0 Waaty
-181:0 Ampharos
+181:0:H Ampharos
+181:1 Mega-Ampharos
 182:0 Blubella
 183:0 Marill
 184:0 Azumarill
@@ -211,9 +224,11 @@
 209:0 Snubbull
 210:0 Granbull
 211:0 Baldorfish
-212:0 Scherox
+212:0:H Scherox
+212:1 Mega-Scherox
 213:0 Pottrott
-214:0 Skaraborn
+214:0:H Skaraborn
+214:1 Mega-Skaraborn
 215:0 Sniebel
 216:0 Teddiursa
 217:0 Ursaring
@@ -228,7 +243,8 @@
 226:0 Mantax
 227:0 Panzaeron
 228:0 Hunduster
-229:0 Hundemon
+229:0:H Hundemon
+229:1 Mega-Hundemon
 230:0 Seedraking
 231:0 Phanpy
 232:0 Donphan
@@ -247,7 +263,8 @@
 245:0 Suicune
 246:0 Larvitar
 247:0 Pupitar
-248:0 Despotar
+248:0:H Despotar
+248:1 Mega-Despotar
 249:0 Lugia
 250:0 Ho-Oh
 251:0 Celebi
@@ -256,7 +273,8 @@
 254:0 Gewaldro
 255:0 Flemmli
 256:0 Junglut
-257:0 Lohgock
+257:0:H Lohgock
+257:1 Mega-Lohgock
 258:0 Hydropi
 259:0 Moorabbel
 260:0 Sumpex
@@ -281,7 +299,8 @@
 279:0 Pelipper
 280:0 Trasla
 281:0 Kirlia
-282:0 Guardevoir
+282:0:H Guardevoir
+282:1 Mega-Guardevoir
 283:0 Geweiher
 284:0 Maskeregen
 285:0 Knilz
@@ -302,14 +321,16 @@
 300:0 Eneco
 301:0 Enekoro
 302:0 Zobiris
-303:0 Flunkifer
+303:0:H Flunkifer
+303:1 Mega-Flunkifer
 304:0 Stollunior
 305:0 Stollrak
 306:0 Stolloss
 307:0 Meditie
 308:0 Meditalis
 309:0 Frizelblitz
-310:0 Voltenso
+310:0:H Voltenso
+310:1 Mega-Voltenso
 311:0 Plusle
 312:0 Minun
 313:0 Volbeat
@@ -353,12 +374,14 @@
 351:0:H Formeo
 352:0 Kecleon
 353:0 Shuppet
-354:0 Banette
+354:0:H Banette
+354:1 Mega-Banette
 355:0 Zwirrlicht
 356:0 Zwirrklop
 357:0 Tropius
 358:0 Palimpalim
-359:0 Absol
+359:0:H Absol
+359:1 Mega-Absol
 360:0 Isso
 361:0 Schneppke
 362:0 Firnontor
@@ -444,10 +467,12 @@
 442:0 Kryppuk
 443:0 Kaumalat
 444:0 Knarksel
-445:0 Knakrack
+445:0:H Knakrack
+445:1 Mega-Knakrack
 446:0 Mampfaxo
 447:0 Riolu
-448:0 Lucario
+448:0:H Lucario
+448:1 Mega-Lucario
 449:0 Hippopotas
 450:0 Hippoterus
 451:0 Pionskora
@@ -459,7 +484,8 @@
 457:0 Lumineon
 458:0 Mantirps
 459:0 Shnebedeck
-460:0 Rexblisar
+460:0:H Rexblisar
+460:1 Mega-Rexblisar
 461:0 Snibunna
 462:0 Magnezone
 463:0 Schlurplek
