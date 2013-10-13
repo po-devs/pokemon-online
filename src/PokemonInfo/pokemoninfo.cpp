@@ -2405,7 +2405,7 @@ bool ItemInfo::isUseful(int itemnum)
 
 int ItemInfo::PlateType(int itemnum)
 {
-    auto &effects = Effects(itemnum, GenInfo::GenMax());
+    const auto &effects = Effects(itemnum, GenInfo::GenMax());
     if (effects.size() == 0) {
         return 0;
     }
@@ -2414,11 +2414,11 @@ int ItemInfo::PlateType(int itemnum)
 
 Pokemon::uniqueId ItemInfo::MegaStoneForme(int itemnum)
 {
-    auto &effects = Effects(itemnum, GenInfo::GenMax());
+    const auto &effects = Effects(itemnum, GenInfo::GenMax());
     if (effects.size() == 0) {
         return 0;
     }
-    return Pokemon::uniqueId(effects.front().args());
+    return Pokemon::uniqueId(effects.front().args);
 }
 
 int ItemInfo::PlateForType(int type)

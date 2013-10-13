@@ -478,7 +478,7 @@ void BattleWindow::goToNextChoice()
                     if (info().choices[n].struggle()) {
                         mystack->setCurrentWidget(szone);
                     } else {
-                        mystack->setCurrentWidget(snum);
+                        mystack->setCurrentWidget(myazones[snum]);
                     }
                 }
             }
