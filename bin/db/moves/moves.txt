@@ -581,4 +581,28 @@
 580 Play Nice
 581 Trick-or-Treat
 582 Water Shuriken
-
+583 Aromatic Mist
+584 Belch
+585 Confide
+586 Disarming Voice
+587 Eerie Impulse
+588 Electric Terrain
+589 Electrify
+590 Fairy Lock
+591 Fell Stinger
+592 Flower Shield
+593 Grassy Terrain
+594 Ion Deluge
+595 King's Shield
+596 Land's Wrath
+597 Magnetic's Flux
+598 Mat Block
+599 Misty Terrain
+600 Parting Shot
+601 Powder
+602 Power-Up punch
+603 Rototiller
+604 Spiky Shield
+605 Sticky Web
+606 Topsy Turvy
+607 Venom Drench

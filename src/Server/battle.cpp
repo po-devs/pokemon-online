@@ -615,6 +615,10 @@ BattleChoices BattleSituation::createChoice(int slot)
             ret.switchAllowed = false;
         }
 
+        if (battleMemory().contains("FairyLockCount")) {
+            ret.switchAllowed = false;
+        }
+
         QList<int> opps = revs(slot);
         foreach(int opp, opps){
             callaeffects(opp, slot, "IsItTrapped");
@@ -1761,6 +1765,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (!sub) {
                             callieffects(target, player, "UponPhysicalAssault");
                             callaeffects(target,player,"UponPhysicalAssault");
+                            calleffects(target,player,"UponPhysicalAssault");
                         }
                         callaeffects(player,target,"OnPhysicalAssault");
                     }
@@ -2319,7 +2324,16 @@ bool BattleSituation::canGetStatus(int player, int status) {
         return false;
     switch (status) {
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Asleep: return !hasWorkingAbility(player, Ability::Insomnia) && !hasWorkingAbility(player, Ability::VitalSpirit) && !hasWorkingTeamAbility(player, Ability::SweetVeil) && !isThereUproar();
+    case Pokemon::Asleep: {
+            if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
+                hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
+                return false;
+            }
+            if (!isFlying(player) && battleMemory().contains("ElectricTerrainCount")) {
+                return false;
+            }
+            return true;
+    }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
     case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
@@ -2420,6 +2434,10 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
                 return;
             }
         }
+        if(battleMemory().value("MistyTerrainCount").toInt() > 0 && !isFlying(player)) {
+            sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
+            return;
+        }
     }
 
     if (!canGetStatus(player, status))
@@ -2503,6 +2521,9 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
 
 void BattleSituation::callForth(int weather, int turns)
 {
+    if (turns == -1 && gen() >= 6) {
+        turns = 5;
+    }
     weatherCount = turns;
     if (weather != this->weather) {
         this->weather = weather;
@@ -2956,7 +2977,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         damage = 1;
     }
 
-    bool sub = hasSubstitute(player);
+    bool sub = hasSubstitute(player) && (gen() <= 5 || !hasWorkingAbility(source, Ability::Infiltrator));
 
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
@@ -2965,6 +2986,11 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         inflictSubDamage(player, damage, source);
     } else {
         damage = std::min(int(poke(player).lifePoints()), damage);
+
+        //King's shield
+        if (turnMemory(s).contains("DamageShielded")) {
+            damage = 0;
+        }
 
         int hp  = poke(player).lifePoints() - damage;
 
@@ -3116,7 +3142,7 @@ void BattleSituation::devourBerry(int p, int berry, int s)
     }
 
     if (hasWorkingAbility(s, Ability::CheekPouch)) {
-        healLife(s, poke(s).totalLife()/3);
+        healLife(s, poke(s).totalLifePoints()/3);
     }
 
     /* Restoring initial conditions */
@@ -3582,6 +3608,9 @@ BattleDynamicInfo BattleSituation::constructInfo(int slot)
     }
     if (teamMemory(player).contains("StealthRock") && teamMemory(player).value("StealthRock").toBool()) {
         ret.flags |= BattleDynamicInfo::StealthRock;
+    }
+    if (teamMemory(player).contains("StickyWeb") && teamMemory(player).value("StickyWeb").toBool()) {
+        ret.flags |= BattleDynamicInfo::StickyWeb;
     }
 
     return ret;

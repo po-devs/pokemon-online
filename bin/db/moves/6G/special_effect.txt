@@ -283,8 +283,22 @@
 559 194#Cross Thunder
 560 #
 562 199#Crafty shield
+567 157-11#Forest's Curse
 569 104-6#Geomancy
 571 10#Infestation
 578 13-4#phantom force
-581 157-7#Ghost
-582 #
+581 157-7#Trick or Treat
+584 200#Belch
+588 201#Electriy Terrain
+589 202#Electrify
+590 203#Fairy Lock
+591 204#Fell Stinger
+593 205#Grassy Terrain
+595 206#King's Shield
+598 207#Mat Block
+599 208#Misty Terrain
+600 140#Parting Shot
+604 209#Spiky Shield
+605 210#Sticky Web
+606 211#Topsy Turvy
+607 212#Venom Drench
