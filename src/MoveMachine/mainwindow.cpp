@@ -234,6 +234,7 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->gen->addItem(GenInfo::Version(Pokemon::gen(i, j)), QVariant::fromValue(Pokemon::gen(i,j)));
         }
     }
+    ui->gen->setCurrentIndex(ui->gen->count()-1);
 
     connect(ui->gen, SIGNAL(currentIndexChanged(int)), SLOT(setPokeByNick()));
 
