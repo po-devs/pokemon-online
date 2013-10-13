@@ -2828,9 +2828,16 @@ int BattleSituation::calculateDamage(int p, int t)
         power = power * 3 / 2;
     }
 
-    QString sport = "Sported" + QString::number(type);
-    if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
-        power /= 2;
+    if (gen() <= 5) {
+        QString sport = "Sported" + QString::number(type);
+        if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
+            power /= 2;
+        }
+    } else {
+        QString sport = "SportedEnd" + QString::number(type);
+        if (battleMemory().contains(sport) && battleMemory().value(sport).toInt() > turn()) {
+            power /= 2;
+        }
     }
 
     for (int i = 0; i < bpmodifiers.size(); i++) {
