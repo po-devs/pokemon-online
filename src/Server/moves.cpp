@@ -2915,6 +2915,10 @@ struct MMRapidSpin : public MM
             b.sendMoveMessage(103,4,source);
             team(b,source).remove("StealthRock");
         }
+        if (team(b,source).contains("StickyWeb")) {
+            b.sendMoveMessage(103,5,source);
+            team(b,source).remove("StickyWeb");
+        }
         if (poke(b,s).contains("TrappedBy")) {
             b.sendMoveMessage(103,0,s,0,poke(b,s)["TrappedBy"].toInt(),poke(b,s)["TrappedMove"].toInt());
             poke(b,s).remove("TrappedBy");
@@ -3293,7 +3297,7 @@ struct MMWeather : public MM
 
         b.sendMoveMessage(57,weather-1,s,type(b,s));
         if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
-            b.callForth(weather,8);
+            b.callForth(weather,8+ 2*(b.gen() >= 6));
         } else {
             b.callForth(weather,5);
         }
@@ -6447,6 +6451,392 @@ struct MMCraftyShield: public MM
     }
 };
 
+struct MMBelch :  public MM
+{
+    MMBelch() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (!turn(b,s).value("BelchOk").toBool()) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void btl(int s, int, BS &b) {
+        int berry = b.poke(s).item();
+
+        if (!b.hasWorkingItem(s, berry) || !ItemInfo::isBerry(berry)) {
+            return;
+        }
+
+        b.eatBerry(s);
+
+        turn(b,s)["BelchOk"] = true;
+    }
+};
+
+struct MMElectricTerrain : public MM {
+    MMElectricTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 1) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("ElectricTerrainCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(201,0,s,Pokemon::Electric);
+        b.battleMemory()["ElectricTerrainCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["ElectricTerrainCount"], -1);
+        if (b.battleMemory()["ElectricTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(201,1,s,Pokemon::Electric);
+            b.battleMemory().remove("ElectricTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "ElectricTerrain");
+        }
+    }
+};
+
+struct MMElectrify : public MM {
+    MMElectrify() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void ms(int s, int, BS &b) {
+        tmove(b,s).type = Pokemon::Electric;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        addFunction(turn(b,t), "MoveSettings", "Electrify", &ms);
+        b.sendMoveMessage(202,0,s,Pokemon::Electric,t);
+    }
+};
+
+struct MMFairyLock : public MM {
+    MMFairyLock() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 2) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("FairyLockCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(203,0,s,Pokemon::Fairy);
+        b.battleMemory()["FairyLockCount"] = 2;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "FairyLock", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["FairyLockCount"], -1);
+        if (b.battleMemory()["FairyLockCount"].toInt() <= 0) {
+            b.sendMoveMessage(203,1,s,Pokemon::Fairy);
+            b.battleMemory().remove("FairyLockCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "FairyLock");
+        }
+    }
+};
+
+struct MMFellStinger : public MM {
+    MMFellStinger() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (b.koed(t)) {
+            tmove(b,s).statAffected = Attack << 16;
+            tmove(b,s).boostOfStat = 2 << 16;
+        }
+    }
+};
+
+struct MMGrassyTerrain : public MM {
+    MMGrassyTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 2) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("GrassyTerrainCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(205,0,s,Pokemon::Grass);
+        b.battleMemory()["GrassyTerrainCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrainTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["GrassyTerrainCount"], -1);
+        if (b.battleMemory()["GrassyTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(205,1,s,Pokemon::Grass);
+            b.battleMemory().remove("GrassyTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "GrassyTerrain");
+        } else {
+            b.sendMoveMessage(205,2,s,Pokemon::Grass);
+            foreach (int p, b.sortedBySpeed())
+            {
+                b.healLife(p, b.poke(p).totalLifePoints()/16);
+            }
+        }
+    }
+};
+
+struct MMKingsShield: public MM
+{
+    MMKingsShield() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        turn(b,s)["KingsShieldUsed"] = true;
+        b.sendMoveMessage(206, 0, s, type(b,s));
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        turn(b, t).remove("DamageShielded");
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,t)["KingsShieldUsed"].toBool()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+
+        turn(b,t)["DamageShielded"] = true;
+        addFunction(turn(b,t), "UponPhysicalAssault", "KingsShield", &upa);
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,s)["KingsShieldUsed"].toBool() || !turn(b,s)["DamageShielded"].toBool()) {
+            return;
+        }
+        b.inflictStatMod(t, Attack, -2, s);
+    }
+};
+
+
+
+struct MMMatBlock : public MM
+{
+    MMMatBlock() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "MatBlock", &dgaf);
+        team(b,b.player(s))["MatBlockUsed"] = b.turn();
+        b.sendMoveMessage(207, 0, s, type(b,s));
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        int target = b.player(t);
+        if (!team(b,target).contains("MatBlockUsed") || team(b,target)["MatBlockUsed"].toInt() != b.turn()) {
+            return;
+        }
+
+        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
+            if (team(b,target).contains("MatBlockUsed")) {
+                team(b,target).remove("MatBlockUsed");
+                b.sendMoveMessage(207, 1, t, Type::Fighting);
+                return;
+            }
+        }
+
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        if (tmove(b,s).category != Move::Other) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        b.fail(s, 207, 0, Pokemon::Fighting, t);
+    }
+};
+
+
+struct MMMistyTerrain : public MM {
+    MMMistyTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 3) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.battleMemory().value("MistyCount").toInt() > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(208,0,s,Pokemon::Fairy);
+        b.battleMemory()["MistyTerrainCount"] = 5;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["MistyTerrainCount"], -1);
+        if (b.battleMemory()["MistyTerrainCount"].toInt() <= 0) {
+            b.sendMoveMessage(208,1,s,Pokemon::Fairy);
+            b.battleMemory().remove("MistyTerrainCount");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "MistyTerrain");
+        }
+    }
+};
+
+
+struct MMSpikyShield : public MM
+{
+    MMSpikyShield() {
+        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        turn(b,s)["SpikyShieldUsed"] = true;
+        b.sendMoveMessage(27, 0, s, Pokemon::Grass);
+    }
+
+    static void dgaf(int s, int t, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
+        if (!turn(b,t)["SpikyShieldUsed"].toBool()) {
+            return;
+        }
+
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            return;
+        }
+
+        /* Mind Reader */
+        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+            return;
+        /* All other moves fail */
+        if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+        }
+        b.fail(s, 27, 0, Pokemon::Grass, t);
+
+        if ((tmove(b, s).flags & Move::ContactFlag) ) {
+            b.inflictDamage(s,b.poke(s).totalLifePoints()/6,s,false);
+            return;
+        }
+    }
+};
+
+
+struct MMStickyWeb : public MM
+{
+    MMStickyWeb() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int t = b.opponent(b.player(s));
+        if (team(b,t).value("StickyWeb").toBool() == true) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        int t = b.opponent(b.player(s));
+        team(b,t)["StickyWeb"] = true;
+        addFunction(team(b,t), "UponSwitchIn", "StickyWeb", &usi);
+        b.sendMoveMessage(210,0,s,Pokemon::Bug,t);
+    }
+
+    static void usi(int source, int s, BS &b) {
+        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody))
+        {
+            b.sendMoveMessage(210,1,s,Pokemon::Bug);
+            b.inflictStatMod(s, Speed, -1, s);
+        }
+    }
+};
+
+struct MMTopsyTurvy : public MM {
+    MMTopsyTurvy() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.sendMoveMessage(211, 0, s, type(b,s), t);
+
+        for (int i = 0; i < 8; i++) {
+            fpoke(b, t).boosts[i] *= -1;
+        }
+    }
+};
+
+struct MMVenomDrench : public MM {
+    MMVenomDrench() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (!(b.poke(t).status() == Pokemon::Poisoned)) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -6681,4 +7071,18 @@ void MoveEffect::init()
     REGISTER_MOVE(197, Autotomize);
     REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
+    REGISTER_MOVE(200, Belch);
+    REGISTER_MOVE(201, ElectricTerrain);
+    REGISTER_MOVE(202, Electrify);
+    REGISTER_MOVE(203, FairyLock);
+    REGISTER_MOVE(204, FellStinger);
+    //todo flower shield
+    REGISTER_MOVE(205, GrassyTerrain);
+    REGISTER_MOVE(206, KingsShield);
+    REGISTER_MOVE(207, MatBlock);
+    REGISTER_MOVE(208, MistyTerrain);
+    REGISTER_MOVE(209, SpikyShield);
+    REGISTER_MOVE(210, StickyWeb);
+    REGISTER_MOVE(211, TopsyTurvy);
+    REGISTER_MOVE(212, VenomDrench);
 }

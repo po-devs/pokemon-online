@@ -1,13 +1,17 @@
 ﻿0:0 Missingno
 1:0 Bulbasaur
 2:0 Ivysaur
-3:0 Venusaur
+3:0:H Venusaur
+3:1 Mega Venusaur
 4:0 Charmander
 5:0 Charmeleon
-6:0 Charizard
+6:0:H Charizard
+6:1 Mega Charizard X
+6:2 Mega Charizard Y
 7:0 Squirtle
 8:0 Wartortle
-9:0 Blastoise
+9:0:H Blastoise
+9:1 Mega Blastoise
 10:0 Caterpie
 11:0 Metapod
 12:0 Butterfree
@@ -63,7 +67,8 @@
 62:0 Poliwrath
 63:0 Abra
 64:0 Kadabra
-65:0 Alakazam
+65:0:H Alakazam
+65:1 Mega Alakazam
 66:0 Machop
 67:0 Machoke
 68:0 Machamp
@@ -92,7 +97,8 @@
 91:0 Cloyster
 92:0 Gastly
 93:0 Haunter
-94:0 Gengar
+94:0:H Gengar
+94:1 Mega Gengar 
 95:0 Onix
 96:0 Drowzee
 97:0 Hypno
@@ -113,7 +119,8 @@
 112:0 Rhydon
 113:0 Chansey
 114:0 Tangela
-115:0 Kangaskhan
+115:0:H Kangaskhan
+115:1 Mega Kangaskhan
 116:0 Horsea
 117:0 Seadra
 118:0 Goldeen
@@ -125,10 +132,12 @@
 124:0 Jynx
 125:0 Electabuzz
 126:0 Magmar
-127:0 Pinsir
+127:0:H Pinsir
+127:1 Mega Pinsir
 128:0 Tauros
 129:0 Magikarp
-130:0 Gyarados
+130:0:H Gyarados
+130:1 Mega Gyarados
 131:0 Lapras
 132:0 Ditto
 133:0 Eevee
@@ -140,7 +149,8 @@
 139:0 Omastar
 140:0 Kabuto
 141:0 Kabutops
-142:0 Aerodactyl
+142:0:H Aerodactyl
+142:1 Mega Aerodactyl
 143:0 Snorlax
 144:0 Articuno
 145:0 Zapdos
@@ -148,7 +158,9 @@
 147:0 Dratini
 148:0 Dragonair
 149:0 Dragonite
-150:0 Mewtwo
+150:0:H Mewtwo
+150:1 Mega Mewtwo X
+150:2 Mega Mewtwo Y
 151:0 Mew
 152:0 Chikorita
 153:0 Bayleef
@@ -180,7 +192,8 @@
 178:0 Xatu
 179:0 Mareep
 180:0 Flaaffy
-181:0 Ampharos
+181:0:H Ampharos
+181:1 Mega Ampharos
 182:0 Bellossom
 183:0 Marill
 184:0 Azumarill
@@ -211,9 +224,11 @@
 209:0 Snubbull
 210:0 Granbull
 211:0 Qwilfish
-212:0 Scizor
+212:0:H Scizor
+212:1 Mega Scizor
 213:0 Shuckle
-214:0 Heracross
+214:0:H Heracross
+214:1 Mega Heracross
 215:0 Sneasel
 216:0 Teddiursa
 217:0 Ursaring
@@ -228,7 +243,8 @@
 226:0 Mantine
 227:0 Skarmory
 228:0 Houndour
-229:0 Houndoom
+229:0:H Houndoom
+229:1 Mega Houndoom
 230:0 Kingdra
 231:0 Phanpy
 232:0 Donphan
@@ -247,7 +263,8 @@
 245:0 Suicune
 246:0 Larvitar
 247:0 Pupitar
-248:0 Tyranitar
+248:0:H Tyranitar
+248:1 Mega Tyranitar
 249:0 Lugia
 250:0 Ho-Oh
 251:0 Celebi
@@ -256,7 +273,8 @@
 254:0 Sceptile
 255:0 Torchic
 256:0 Combusken
-257:0 Blaziken
+257:0:H Blaziken
+257:1 Mega Blaziken
 258:0 Mudkip
 259:0 Marshtomp
 260:0 Swampert
@@ -281,7 +299,8 @@
 279:0 Pelipper
 280:0 Ralts
 281:0 Kirlia
-282:0 Gardevoir
+282:0:H Gardevoir
+282:1 Mega Gardevoir
 283:0 Surskit
 284:0 Masquerain
 285:0 Shroomish
@@ -302,14 +321,17 @@
 300:0 Skitty
 301:0 Delcatty
 302:0 Sableye
-303:0 Mawile
+303:0:H Mawile
+303:1 Mega Mawile
 304:0 Aron
 305:0 Lairon
-306:0 Aggron
+306:0:H Aggron
+306:1 Mega Aggron
 307:0 Meditite
 308:0 Medicham
 309:0 Electrike
-310:0 Manectric
+310:0:H Manectric
+310:1:H Mega Manectric
 311:0 Plusle
 312:0 Minun
 313:0 Volbeat
@@ -353,12 +375,14 @@
 351:0:H Castform
 352:0 Kecleon
 353:0 Shuppet
-354:0 Banette
+354:0:H Banette
+354:1 Mega Banette
 355:0 Duskull
 356:0 Dusclops
 357:0 Tropius
 358:0 Chimecho
-359:0 Absol
+359:0:H Absol
+359:1 Mega Absol
 360:0 Wynaut
 361:0 Snorunt
 362:0 Glalie
@@ -444,10 +468,12 @@
 442:0 Spiritomb
 443:0 Gible
 444:0 Gabite
-445:0 Garchomp
+445:0:H Garchomp
+445:1 Mega Garchomp
 446:0 Munchlax
 447:0 Riolu
-448:0 Lucario
+448:0:H Lucario
+448:1 Mega LUcario
 449:0 Hippopotas
 450:0 Hippowdon
 451:0 Skorupi
@@ -459,7 +485,8 @@
 457:0 Lumineon
 458:0 Mantyke
 459:0 Snover
-460:0 Abomasnow
+460:0:H Abomasnow
+461:1 Mega Abomasnow
 461:0 Weavile
 462:0 Magnezone
 463:0 Lickilicky
@@ -793,11 +820,18 @@
 708:0 Phantump
 709:0 Trevenant
 710:0 Pumpkaboo
+710:1 Pumpkaboo-A
+710:2 Pumpkaboo-L
+710:3 Pumpkaboo-S
 711:0 Gourgeist
+711:1 Gourgeist-A
+711:2 Gourgeist-L
+711:3 Gourgeist-S
 712:0 Bergmite
 713:0 Avalugg
 714:0 Noibat
 715:0 Noivern
-716:0 Xerneas
+716:0:H Xerneas
+716:1 Xerneas-A
 717:0 Yveltal
 718:0 Zygarde

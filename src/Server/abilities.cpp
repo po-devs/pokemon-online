@@ -2087,6 +2087,50 @@ struct AMStanceChange : public AM {
     }
 };
 
+struct AMCompetitive : public AM
+{
+    AMCompetitive() {
+        functions["AfterNegativeStatChange"] = &ansc;
+    }
+
+    static void ansc(int s, int ts, BS &b) {
+        if (b.hasMaximalStatMod(s, SpAttack))
+            return;
+        if (ts != -1 && b.player(ts) == b.player(s))
+            return;
+        /* Fix me : ability message */
+        b.sendAbMessage(113, 0, s);
+        b.inflictStatMod(s, SpAttack, 1, s, false);
+    }
+};
+
+struct AMGaleWings : public AM
+{
+    AMGaleWings() {
+        functions["PriorityChoice"] = &pc;
+    }
+
+    static void pc(int s, int, BS &b) {
+        if (tmove(b,s).type == Type::Flying)
+            tmove(b,s).priority += 1;
+    }
+};
+
+struct AMGooey : public AM
+{
+    AMGooey() {
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void upa(int s, int t, BS &b) {
+        if (b.hasMinimalStatMod(t, Speed))
+            return;
+
+        b.sendAbMessage(115, 0, s, t);
+        b.inflictStatMod(t, Speed, -1, s, false);
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -2229,4 +2273,8 @@ void AbilityEffect::init()
     REGISTER_AB(109, ToughClaws);
     REGISTER_AB(110, StanceChange);
     //111 parental bond
+    //112 sweet veil
+    REGISTER_AB(113, Competitive);
+    REGISTER_AB(114, GaleWings);
+    REGISTER_AB(115, Gooey);
 }

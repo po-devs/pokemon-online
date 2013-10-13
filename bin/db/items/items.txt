@@ -330,3 +330,31 @@
 329 Park Ball
 1000 Pink Bow
 1001 Polkadot Bow
+2001 Venusaurite
+2002 Charizardite X
+2003 Charizardite Y
+2004 Blastoisinite
+2005 Alakazite
+2006 Gengarite
+2007 Kangaskhanite
+2008 Pinsirite
+2009 Gyaradosite
+2010 Aerodactylite
+2011 Mewtwonite X
+2012 Mewtwonite Y
+2013 Ampharosite
+2014 Scizorite
+2015 Heracronite
+2016 Houndoominite
+2017 Tyranitire
+2018 Blazikenite
+2019 Gardevoirite 
+2020 Mawilite
+2021 Aggronite
+2022 Medichamite
+2023 Manectite M
+2024 Banettite
+2025 Absolite
+2026 Garchompite
+2027 Lucarionite
+2028 Abomasite
