@@ -1216,10 +1216,20 @@ struct AMMinus : public AM {
 struct AMOvercoat : public AM {
     AMOvercoat() {
         functions["WeatherSpecial"] = &ws;
+        functions["OpponentBlock"] = &uodr;
     }
 
     static void ws(int s, int, BS &b) {
         turn(b,s)["WeatherSpecialed"] = true;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        int mv = move(b,t);
+
+        if (mv == Move::PoisonPowder || mv == Move::SleepPowder || mv == Move::Powder) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+            b.sendAbMessage(17, 0, s, t);
+        }
     }
 };
 

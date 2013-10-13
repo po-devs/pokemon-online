@@ -10,6 +10,7 @@
 14 %s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sand Stream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
 15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
 16 %s's Effect Spore activates!
+17 %s's Overcoat protects it!
 18 %s's %a activates!
 19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
 21 %s changed its type to %t!
