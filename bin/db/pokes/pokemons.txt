@@ -328,7 +328,8 @@
 306:0:H Aggron
 306:1 Mega Aggron
 307:0 Meditite
-308:0 Medicham
+308:0:H Medicham
+308:1 Mega Medicham
 309:0 Electrike
 310:0:H Manectric
 310:1:H Mega Manectric
