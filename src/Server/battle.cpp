@@ -2977,7 +2977,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         damage = 1;
     }
 
-    bool sub = hasSubstitute(player);
+    bool sub = hasSubstitute(player) && !hasWorkingAbility(source, Ability::Infiltrator);
 
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
