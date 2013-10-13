@@ -325,9 +325,11 @@
 303:1 Mega-Flunkifer
 304:0 Stollunior
 305:0 Stollrak
-306:0 Stolloss
+306:0:H Stolloss
+306:1 Mega-Stolloss
 307:0 Meditie
-308:0 Meditalis
+308:0:H Meditalis
+308:1 Mega-Meditalis
 309:0 Frizelblitz
 310:0:H Voltenso
 310:1 Mega-Voltenso
