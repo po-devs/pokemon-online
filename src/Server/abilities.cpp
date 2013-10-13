@@ -2087,6 +2087,24 @@ struct AMStanceChange : public AM {
     }
 };
 
+struct AMCompetitive : public AM
+{
+    AMCompetitive() {
+        functions["AfterNegativeStatChange"] = &ansc;
+    }
+
+    static void ansc(int s, int ts, BS &b) {
+        if (b.hasMaximalStatMod(s, SpAttack))
+            return;
+        if (ts != -1 && b.player(ts) == b.player(s))
+            return;
+        /* Fix me : ability message */
+        b.sendAbMessage(113, 0, s);
+        b.inflictStatMod(s, SpAttack, 1, s, false);
+    }
+};
+
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
@@ -2229,4 +2247,6 @@ void AbilityEffect::init()
     REGISTER_AB(109, ToughClaws);
     REGISTER_AB(110, StanceChange);
     //111 parental bond
+    //112 sweet veil
+    REGISTER_AB(113, Competitive);
 }

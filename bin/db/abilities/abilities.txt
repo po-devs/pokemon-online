@@ -179,3 +179,4 @@
 178 Strong Jaw
 179 Sweet Veil
 180 Tough Claws
+181 Competitive
