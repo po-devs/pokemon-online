@@ -486,7 +486,7 @@
 458:0 Mantyke
 459:0 Snover
 460:0:H Abomasnow
-461:1 Mega Abomasnow
+460:1 Mega Abomasnow
 461:0 Weavile
 462:0 Magnezone
 463:0 Lickilicky
