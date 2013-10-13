@@ -566,7 +566,7 @@
 565 Fairy Wind
 566 Flying Press
 567 Forest's Curse
-568 Freeze Dry
+568 Freeze-Dry
 569 Geomancy
 570 Petal Blizzard
 571 Infestation
