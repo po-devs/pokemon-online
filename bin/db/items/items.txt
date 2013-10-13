@@ -328,6 +328,10 @@
 327 Dusk Ball
 328 Cherish Ball
 329 Park Ball
+330 Pixie Plate
+331 Assault Vest
+332 Safety Goggles
+333 Weakness Policy
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
