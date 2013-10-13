@@ -6811,6 +6811,20 @@ struct MMStickyWeb : public MM
     }
 };
 
+struct MMTopsyTurvy : public MM {
+    MMTopsyTurvy() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        b.sendMoveMessage(211, 0, s, type(b,s), t);
+
+        for (int i = 0; i < 8; i++) {
+            fpoke(b, t).boosts[i] *= -1;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7057,4 +7071,5 @@ void MoveEffect::init()
     REGISTER_MOVE(208, MistyTerrain);
     REGISTER_MOVE(209, SpikyShield);
     REGISTER_MOVE(210, StickyWeb);
+    REGISTER_MOVE(211, TopsyTurvy);
 }
