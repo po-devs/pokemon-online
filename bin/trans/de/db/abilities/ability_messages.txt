@@ -1,4 +1,4 @@
-0 
+﻿0 
 2 %s's Finalschlage verletzt %f!
 3 %s's Angriff wurde maximiert!
 4 %s erschaudert!
