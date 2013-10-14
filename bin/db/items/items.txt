@@ -350,13 +350,13 @@
 2014 Scizorite
 2015 Heracronite
 2016 Houndoominite
-2017 Tyranitire
+2017 Tyranitarite
 2018 Blazikenite
 2019 Gardevoirite 
 2020 Mawilite
 2021 Aggronite
 2022 Medichamite
-2023 Manectite M
+2023 Manectite
 2024 Banettite
 2025 Absolite
 2026 Garchompite
