@@ -1,4 +1,4 @@
-0 (Kein Item)
+﻿0 (Kein Item)
 3 Schlohkraut neutralisiert Statuswerte von %s!
 4 %s klammert sich an seinen Fokus-Band!
 5 %s klammert sich an seinen Fokusgurt!
