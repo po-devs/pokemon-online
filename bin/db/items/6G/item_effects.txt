@@ -225,9 +225,9 @@
 328 3017#Cherish Ball
 329 3000#Park Ball
 330 29-17|10-17#Pixie Plate
-331 33|1-4_10#Assault Vest(check values)
-332 34#Safety Goggles
-333 35#Weakness Policy
+331 41|1-4_10#Assault Vest(check values)
+332 42#Safety Goggles
+333 43#Weakness Policy
 2001 66-3:1
 2002 66-6:1
 2003 66-6:2
