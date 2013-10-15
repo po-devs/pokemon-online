@@ -62,6 +62,7 @@
 61 Custap Berry
 62 Jaboca Berry
 63 Rowap Berry
+64 Roseli Berry
 1000 PRZCureBerry
 1001 Mint Berry
 1002 PSNCureBerry
