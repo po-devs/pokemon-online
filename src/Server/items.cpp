@@ -1040,7 +1040,7 @@ void ItemEffect::init()
     REGISTER_ITEM(38, RedCard);
     REGISTER_ITEM(39, EscapeButton);
     REGISTER_ITEM(40, BerserkGene);
-    //REGISTER_ITEM(41, AssaultVest);
+    REGISTER_ITEM(41, AssaultVest);
     REGISTER_ITEM(42, SafetyGoggles);
     REGISTER_ITEM(43, WeaknessPolicy)
     /* Trainer items */
