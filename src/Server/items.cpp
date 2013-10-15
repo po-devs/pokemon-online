@@ -959,6 +959,51 @@ struct IMHerb : public IM {
     }
 };
 
+struct IMSafetyGoggles  : public IM {
+    IMSafetyGoggles() {
+        functions["WeatherSpecial"] = &ws;
+        functions["OpponentBlock"] = &uodr;
+    }
+
+    static void ws(int s, int, BS &b) {
+        turn(b,s)["WeatherSpecialed"] = true;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        int mv = move(b,t);
+
+        if (mv == Move::PoisonPowder || mv == Move::SleepPowder || mv == Move::Powder) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+            //b.sendAbMessage(17, 0, s, t); //add message for Safety Goggles
+        }
+    }
+};
+
+struct IMWeaknessPolicy  : public IM {
+
+
+};
+
+struct IMAssaultVest : public IM
+{
+    IMAssaultVest() {
+        functions["MovesPossible"] = &mp;
+    }
+
+
+
+    static void mp(int s, int, BS &b) {
+
+
+        for (int i = 0; i < 4; i++) {
+             if (MoveInfo::Power(b.move(s,i), b.gen()) == 0) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
+
+}
+ };
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -995,6 +1040,9 @@ void ItemEffect::init()
     REGISTER_ITEM(38, RedCard);
     REGISTER_ITEM(39, EscapeButton);
     REGISTER_ITEM(40, BerserkGene);
+    //REGISTER_ITEM(41, AssaultVest);
+    REGISTER_ITEM(42, SafetyGoggles);
+    REGISTER_ITEM(43, WeaknessPolicy)
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);
