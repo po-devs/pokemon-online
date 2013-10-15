@@ -1411,6 +1411,7 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     weight = PokemonInfo::Weight(p.num());
     type1 = PokemonInfo::Type1(p.num(), gen);
     type2 = PokemonInfo::Type2(p.num(), gen);
+    types = QVector<int>() << type1 << type2;
     ability = p.ability();
     flags = 0;
 
@@ -1859,7 +1860,7 @@ void BattleBase::inflictConfusedDamage(int player)
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
     tmove(player).attack = Move::NoMove;
-    turnMem(player).typeMod = 16;
+    turnMem(player).typeMod = 0;
     turnMem(player).stab = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
@@ -1926,15 +1927,20 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
     int typeadv[] = {getType(target,1),getType(target,2)};
     int typepok[] = {getType(player,1),getType(player,2)};
     int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
-    int typemod = 4;
+    int typemod = 0;
 
     for (int i = 0; i < 2; i++) {
+        if (typeffs[i] == 0) {
+            typemod = -100;
+            break;
+        }
         typemod *= typeffs[i];
+        typemod /= 2;
     }
 
     // Counter hits regardless of type matchups in Gen 1.
     if (tmove(player).attack == Move::Counter) {
-        typemod = 16;
+        typemod = 0;
     }
 
     int stab;
@@ -2233,12 +2239,12 @@ bool BattleBase::canGetStatus(int player, int status)
 
 bool BattleBase::hasType(int player, int type)
 {
-    return getType(player,1) == type  || getType(player,2) == type;
+    return fpoke(player).types.indexOf(type) != -1;
 }
 
 int BattleBase::getType(int player, int slot)
 {
-    return slot == 1 ? fpoke(player).type1 : fpoke(player).type2;
+    return fpoke(player).types.count() >= slot ? fpoke(player).types[slot-1] : Type::Curse;
 }
 
 bool BattleBase::inflictStatMod(int player, int stat, int mod, int attacker, bool tell)

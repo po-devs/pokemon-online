@@ -330,6 +330,7 @@ public:
         int weight;
         int type1;
         int type2;
+        QVector<int> types;
         int ability;
         int level;
         quint32 flags;
@@ -401,7 +402,7 @@ public:
 
         quint32 flags;
         quint16 damageTaken;
-        quint8 typeMod;
+        int typeMod;
         quint8 stab;
 
         enum Flag {

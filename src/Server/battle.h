@@ -116,7 +116,14 @@ public:
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
-    int getType(int player, int slot);
+    int getType(int player, int slot) const;
+    QVector<int> getTypes(int player) const;
+    void addType(int player, int type);
+    void setType(int player, int type);
+    int rawTypeEff(int type, int player);
+    int convertTypeEff(int typeeff);
+    PokeFraction effFraction(int typeeff);
+    bool ineffective(int typeeff) {return typeeff < -50;}
     bool isFlying(int player);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
