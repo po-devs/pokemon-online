@@ -1457,7 +1457,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     callpeffects(player, player, "MovePossible");
-    if (turnMemory(player)["ImpossibleToMove"].toBool()) {
+    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
         goto trueend;
     }
 
@@ -1490,6 +1490,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
 
     calleffects(player, player, "AfterTellingPlayers");
+
+    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+        goto trueend;
+    }
 
     /* Lightning Rod & Storm Drain */
     foreach(int poke, sortedBySpeed()) {
