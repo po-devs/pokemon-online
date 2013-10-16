@@ -548,7 +548,8 @@
 493:14 Arceus-Ice
 493:15 Arceus-Dragon
 493:16 Arceus-Dark
-493:17 Arceus-???
+493:17 Arceus-Fairy
+493:18 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
 351:1 Castform-Snowy
