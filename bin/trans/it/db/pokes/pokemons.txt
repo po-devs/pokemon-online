@@ -548,7 +548,8 @@
 493:14 Arceus-Ghiaccio 
 493:15 Arceus-Drago 
 493:16 Arceus-Buio
-493:17 Arceus-???
+493:17 Arceus-Folletto
+493:18 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
 351:1 Castform-Snowy
