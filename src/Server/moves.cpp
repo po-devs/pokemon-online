@@ -6799,7 +6799,7 @@ struct MMStickyWeb : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody))
+        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody) && !b.isFlying(s))
         {
             b.sendMoveMessage(210,1,s,Pokemon::Bug);
             b.inflictStatMod(s, Speed, -1, s);

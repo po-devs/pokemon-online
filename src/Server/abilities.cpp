@@ -2057,7 +2057,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 6);
         }
     }
 };

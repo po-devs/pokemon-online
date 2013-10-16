@@ -1861,7 +1861,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && !(tmove(player).flags & Move::SoundFlag) && attack != Move::NaturePower
+                    && !hasWorkingAbility(player, Ability::Infiltrator)) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
@@ -3072,7 +3073,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         damage = 1;
     }
 
-    bool sub = hasSubstitute(player) && (gen() <= 5 || !hasWorkingAbility(source, Ability::Infiltrator));
+    bool sub = hasSubstitute(player) && (gen() <= 5 || (!hasWorkingAbility(source, Ability::Infiltrator) && !(tmove(source).flags & Move::SoundFlag)));
 
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
