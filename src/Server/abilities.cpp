@@ -2090,7 +2090,7 @@ struct AMStanceChange : public AM {
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, tmove(b,s).category == Move::Other));
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, tmove(b,s).category == Move::Physical));
     }
 };
 
