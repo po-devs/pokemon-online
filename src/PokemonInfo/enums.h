@@ -927,7 +927,8 @@ namespace Move
         PulsingFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
         MischievousFlag = 8192, // Can this move bypass substitute?
-        BiteFlag = 8192*2//Strong jaw moves
+        BiteFlag = 8192*2,//Strong jaw moves
+        PowderFlag = 16384*2 //Powder moves
     };
 
     enum Target
@@ -2110,7 +2111,11 @@ namespace Item
         ItemCall,
         FlatCall,
         DireHit3,
-        BerserkGene
+        BerserkGene,
+        PixiePlate=330,
+        AssaultVest=331,
+        SafetyGoggles=332,
+        WeaknessPolicy=333
     };
 
     enum Target
