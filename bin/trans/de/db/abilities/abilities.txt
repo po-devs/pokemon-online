@@ -163,3 +163,27 @@
 162 Triumphstern
 163 Turbobrand
 164 Teravolt
+165 
+166 Aura-Umkehr
+167 Backentaschen
+168 Dunkelaura
+169 Feenaura
+170 Blütenhülle
+171 Fellkleid
+172 Megawumme
+173 Familienbande
+174 
+175 
+176 Frostschicht
+177 Taktikwechsel
+178 Titankiefer
+179 Zuckerhülle
+180 Krallenwucht
+181 
+182 
+183 
+184 
+185 
+186 
+187 
+188 
