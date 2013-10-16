@@ -570,7 +570,7 @@
 569 Geomancy
 570 Petal Blizzard
 571 Infestation
-572 Moon Blast
+572 Moonblast
 573 Mystical Fire
 574 Noble Roar
 575 Nuzzle
