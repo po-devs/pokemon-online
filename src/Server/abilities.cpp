@@ -2141,12 +2141,12 @@ struct AMGooey : public AM
 struct AMParentalBond : public AM
 {
     AMParentalBond() {
-        functions["BeforeTargetList"] = &btl;
+        functions["BasePowerModifier"] = &btl;
     }
 
-    static void btl(int s, int t, BS &b) {
-        if (tmove(b, s).power == 0) {
-
+    static void btl(int s, int, BS &b) {
+        if (b.repeatCount() == 1 && tmove(b, s).repeatMin == 0) {
+            b.chainBp(s, -14);
         }
     }
 };
@@ -2312,7 +2312,7 @@ void AbilityEffect::init()
     REGISTER_AB(108, StrongJaws);
     REGISTER_AB(109, ToughClaws);
     REGISTER_AB(110, StanceChange);
-    //111 parental bond
+    REGISTER_AB(111, ParentalBond);
     //112 sweet veil
     REGISTER_AB(113, Competitive);
     REGISTER_AB(114, GaleWings);
