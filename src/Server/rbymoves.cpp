@@ -905,6 +905,7 @@ struct RBYConversion : public MM
     static void uas(int s, int t, BS &b) {
         fpoke(b,s).type1 = fpoke(b,t).type1;
         fpoke(b,s).type2 = fpoke(b,t).type2;
+        fpoke(b,s).types = fpoke(b,t).types;
     }
 };
 

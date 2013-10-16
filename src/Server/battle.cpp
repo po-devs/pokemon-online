@@ -1457,7 +1457,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     callpeffects(player, player, "MovePossible");
-    if (turnMemory(player)["ImpossibleToMove"].toBool()) {
+    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
         goto trueend;
     }
 
@@ -1490,6 +1490,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
 
     calleffects(player, player, "AfterTellingPlayers");
+
+    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+        goto trueend;
+    }
 
     /* Lightning Rod & Storm Drain */
     foreach(int poke, sortedBySpeed()) {
@@ -1658,8 +1662,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     foreach(int target, targetList) {
-        bpmodifiers.clear();
-
         heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
@@ -1696,14 +1698,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             callpeffects(player, target, "BeforeCalculatingDamage");
 
             int typemod = turnMem(player).typeMod;
-            if (typemod == 0) {
+            if (typemod < -50) {
                 /* If it's ineffective we just say it */
-                notify(All, Effective, target, quint8(typemod));
+                notify(All, Effective, target, quint8(0));
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
+                callieffects(target,player,"OpponentBlock"); //Safety Goggles
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -1734,6 +1737,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int hitcount = 0;
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
+                bpmodifiers.clear();
                 heatOfAttack() = true;
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
@@ -1742,10 +1746,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1 && repeatCount() == 0) {
-                    notify(All, Effective, target, quint8(std::max(typemod/4, 1)));
+                    notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                 }
 
                 if (tmove(player).power > 1) {
+                    if (hasWorkingAbility(player, Ability::ParentalBond) && repeatCount() >= num/2 && attack != Move::TripleKick) {
+                        chainBp(player, -14);
+                    }
                     testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
@@ -1836,8 +1843,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             if ( target != player &&
                     ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
                      ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
-                      && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0
-                      && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
+                      && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
                 continue;
             }
@@ -1851,13 +1857,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
+            if ( target != player && (tmove(player).flags & Move::PowderFlag) && hasType(target, Type::Grass) && !pokeMemory(target).value(QString("%1Sleuthed").arg(Type::Grass)).toBool()) {
+                notify(All, Failed, player);
+                continue;
+            }
 
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower) {
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && !(tmove(player).flags & Move::SoundFlag) && attack != Move::NaturePower
+                    && !hasWorkingAbility(player, Ability::Infiltrator)) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
@@ -1949,68 +1960,57 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     int target = orTarget == - 1 ? attacked() : orTarget;
 
     int type = tmove(player).type; /* move type */
-    int typeadv[] = {getType(target, 1), getType(target, 2)};
-    int typepok[] = {getType(player, 1), getType(player, 2)};
-    int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
-    int typemod = 16;
-
-    for (int i = 0; i < 2; i++) {
-        if (tmove(player).attack == Move::FreezeDry && getType(player, i+1) == Type::Water) {
-            typeffs[i] = 4;
-        }
-        if (typeffs[i] == 0) {
-            /* Check for grounded flying types */
-            if (type == Type::Ground && !isFlying(target)) {
-                continue;
-            }
-            if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
-                continue;
-            }
-            /* Scrappy */
-            if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
-                continue;
-            }
-        }
-        typemod *= typeffs[i];
-    }
-    typemod /= 4;
-
+    QVector<int> attackTypes = QVector<int>() << type;
     if (tmove(player).attack == Move::FlyingPress) {
-        int typeadv[] = {getType(target, 1), getType(target, 2)};
-        int typeffs[] = {TypeInfo::Eff(Type::Flying, typeadv[0], gen()),TypeInfo::Eff(Type::Flying, typeadv[1], gen())};
-        for (int i = 0; i < 2; i++) {
-            if (typeffs[i] == 0) {
-                if (pokeMemory(target).value(QString::number(typeadv[i])+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
+        attackTypes.push_back(Type::Flying);
+    }
+    QVector<int> typeAdv = getTypes(target);
+    QVector<int> typePok = getTypes(player);
+
+    int typemod = 0;
+
+    foreach(int type, attackTypes) {
+        foreach(int def, typeAdv) {
+            if (tmove(player).attack == Move::FreezeDry && def == Type::Water) {
+                typemod += 1;
+                continue;
+            }
+            int typeeff = TypeInfo::Eff(type, def, gen());
+            if (typeeff == 0) {
+                /* Check for grounded flying types */
+                if (type == Type::Ground && !isFlying(target)) {
+                    continue;
+                }
+                if (pokeMemory(target).value(QString::number(def)+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
                     continue;
                 }
                 /* Scrappy */
                 if (hasType(target, Pokemon::Ghost) && hasWorkingAbility(player,Ability::Scrappy)) {
                     continue;
                 }
+                typemod = -100;
+                goto end;
             }
-            typemod *= typeffs[i];
+            typemod += convertTypeEff(typeeff);
         }
-        typemod /= 4;
     }
+    end:
 
     // Counter hits regardless of type matchups in Gen 1.
     if (gen().num == 1 && tmove(player).attack == Move::Counter) {
-        typemod = 16;
-    }
-    if (type == Type::Ground && isFlying(target)) {
         typemod = 0;
     }
+    if (type == Type::Ground && isFlying(target)) {
+        typemod = -100;
+    }
 
-    int stab;
-    if(type == Type::Curse) {
-        // Not only Curse -- PO also has Struggle and second type
-        // of single-typed pkmn as the ???-type
-        stab = 2;
-    }else{
-        stab = 2 + (type==typepok[0] || type==typepok[1]);
+    int stab = 2;
 
-        if (tmove(player).attack == Move::FlyingPress) {
-            stab += (Type::Flying==typepok[0] || Type::Flying==typepok[1]);
+    foreach(int type, attackTypes) {
+        foreach(int pok, typePok) {
+            if (type == pok) {
+                stab++;
+            }
         }
     }
 
@@ -2572,8 +2572,9 @@ void BattleSituation::endTurnWeather()
             }
             foreach (int i, speedsVector) {
                 callaeffects(i,i,"WeatherSpecial");
-                if (!turnMemory(i).contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) &&!immuneTypes.contains(getType(i,1))
-                        && !immuneTypes.contains(getType(i,2)) && !hasWorkingAbility(i, Ability::MagicGuard)) {
+                callieffects(i,i,"WeatherSpecial");
+                if (!turnMemory(i).contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) && getTypes(i).toList().toSet().intersect(immuneTypes).isEmpty()
+                        && !hasWorkingAbility(i, Ability::MagicGuard)) {
                     notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));
 
                     //In GSC, the damage is 1/8, otherwise 1/16
@@ -2610,7 +2611,7 @@ bool BattleSituation::isSeductionPossible(int seductor, int naiveone) {
             && poke(naiveone).gender() != Pokemon::Neutral && poke(seductor).gender() != poke(naiveone).gender();
 }
 
-int BattleSituation::getType(int player, int slot)
+int BattleSituation::getType(int player, int slot) const
 {
     int types[] = {fpoke(player).type1,fpoke(player).type2};
 
@@ -2623,6 +2624,68 @@ int BattleSituation::getType(int player, int slot)
     }
 
     return types[slot-1];
+}
+
+QVector<int> BattleSituation::getTypes(int player) const
+{
+    QVector<int> ret;
+
+    foreach(int type, fpoke(player).types) {
+        if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool()) {
+            continue;
+        }
+        ret.push_back(type);
+    }
+
+    if (ret.isEmpty()) {
+        ret.push_back(Type::Normal);
+    }
+
+    return ret;
+}
+
+void BattleSituation::setType(int player, int type)
+{
+    fpoke(player).types.clear();
+    fpoke(player).types.push_back(type);
+}
+
+void BattleSituation::addType(int player, int type)
+{
+    foreach (int t, fpoke(player).types) {
+        if (t == type) {
+            return;
+        }
+    }
+    fpoke(player).types.push_back(type);
+}
+
+int BattleSituation::rawTypeEff(int atttype, int player)
+{
+    int typemod = 0;
+
+    foreach(int deftype, fpoke(player).types) {
+        int eff = TypeInfo::Eff(atttype, deftype);
+        if (eff == 0) {
+            return -100;
+        }
+        typemod += convertTypeEff(eff);
+    }
+
+    return typemod;
+}
+
+int BattleSituation::convertTypeEff(int typeeff)
+{
+    return std::min(typeeff-2, 1);
+}
+
+PokeFraction BattleSituation::effFraction(int typeeff)
+{
+    if (typeeff < 0) {
+        return PokeFraction(1,intpow2(-typeeff));
+    }
+    return PokeFraction(intpow2(typeeff), 1);
 }
 
 bool BattleSituation::isFlying(int player)
@@ -2922,22 +2985,40 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     if (gen().num == 1) { // Gen 1 has no items and crits are already factored in.
-        damage = (((damage * stab/2) * typemod/16) * randnum) / 255;
+        damage = (damage * stab/2);
+        while (typemod > 0) {
+            damage *= 2;
+            typemod--;
+        }
+        while (typemod < 0) {
+            damage /= 2;
+            typemod++;
+        }
+        damage = (damage * randnum) / 255;
     } else {
         damage = (damage+2)*ch/2;
         move.remove("ItemMod2Modifier");
         callieffects(p,t,"Mod2Modifier");
         damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
-        damage = damage *randnum/100*stab/2*typemod/16;
+        damage = damage *randnum/100*stab/2;
+
+        while (typemod > 0) {
+            damage *= 2;
+            typemod--;
+        }
+        while (typemod < 0) {
+            damage /= 2;
+            typemod++;
+        }
 
         /* Mod 3 */
         // FILTER / SOLID ROCK
-        if (typemod > 4 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+        if (typemod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
             damage = damage * 3 / 4;
         }
 
         /* Expert belt */
-        damage = damage * ((typemod > 4 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
+        damage = damage * ((typemod > 0 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
 
         move.remove("Mod3Berry");
 
@@ -2959,22 +3040,24 @@ int BattleSituation::repeatNum(int player)
         return turnMemory(player)["RepeatCount"].toInt();
     }
 
+    int mul = 1+hasWorkingAbility(player, Ability::ParentalBond);
+
     if (tmove(player).repeatMin == 0)
-        return 1;
+        return 1* mul;
 
     int min = tmove(player).repeatMin;
     int max = tmove(player).repeatMax;
 
     if (max == 3) {
         //Triple kick, done differently...
-        return 1;
+        return 1* mul;
     }
     //Skill link
     if (hasWorkingAbility(player, Ability::SkillLink)) {
         return max;
     }
 
-    return minMax(min, max, gen().num, randint());
+    return minMax(min, max, gen().num, randint())*mul;
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {
@@ -2998,7 +3081,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         damage = 1;
     }
 
-    bool sub = hasSubstitute(player) && (gen() <= 5 || !hasWorkingAbility(source, Ability::Infiltrator));
+    bool sub = hasSubstitute(player) && (gen() <= 5 || (!hasWorkingAbility(source, Ability::Infiltrator) && !(tmove(source).flags & Move::SoundFlag)));
 
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
@@ -3214,6 +3297,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 
         fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
         fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
+        fpoke(slot).types = QVector<int>() << fpoke(slot).type1 << fpoke(slot).type2;
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
@@ -3226,6 +3310,7 @@ void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newform
     fpoke(slot).id = newforme;
     fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
     fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
+    fpoke(slot).types = QVector<int>() << fpoke(slot).type1 << fpoke(slot).type2;
 
     for (int i = 1; i < 6; i++)
         fpoke(slot).stats[i] = PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]);

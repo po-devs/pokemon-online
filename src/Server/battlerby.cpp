@@ -393,9 +393,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         calculateTypeModStab();
 
         int typemod = turnMem(player).typeMod;
-        if (tmove(player).power > 1 && typemod == 0 && attack != Move::Bind && attack != Move::Wrap) {
+        if (tmove(player).power > 1 && typemod < -50 && attack != Move::Bind && attack != Move::Wrap) {
             /* If it's ineffective we just say it */
-            notify(All, Effective, target, quint8(typemod));
+            notify(All, Effective, target, quint8(0));
             calleffects(player,target,"AttackSomehowFailed");
             goto endloop;
         }
@@ -435,11 +435,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
 
             if (tmove(player).power > 1 && repeatCount() == 0) {
-                notify(All, Effective, target, quint8(std::max(typemod/4,1)));
+                notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
             }
 
             /* Even though bind/wrap work when no effect, it doesn't inflict damage */
-            if ( (attack != Move::Bind && attack != Move::Wrap) || typemod != 0) {
+            if ( (attack != Move::Bind && attack != Move::Wrap) || typemod > -50) {
                 inflictDamage(target, damage, player, true);
             }
             hitcount += 1;
@@ -739,7 +739,16 @@ int BattleRBY::calculateDamage(int p, int t)
         damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
     }
 
-    damage = (((damage * stab/2) * typemod/4) * randnum) / 255;
+    damage = (damage * stab/2) ;
+    while (typemod > 0) {
+        damage *= 2;
+        typemod--;
+    }
+    while (typemod < 0) {
+        damage /= 2;
+        typemod++;
+    }
+    damage = (damage * randnum) / 255;
 
     return damage;
 }

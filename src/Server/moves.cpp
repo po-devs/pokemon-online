@@ -300,13 +300,12 @@ struct MMCamouflage : public MM {
 
     static void uas (int s, int, BS &b) {
         if (b.gen() >= 5) {
-            fpoke(b,s).type1 = Pokemon::Ground;
-            b.sendMoveMessage(17,0,s,4);
+            b.setType(s, Pokemon::Ground);
+            b.sendMoveMessage(17,0,s,Type::Ground);
         } else {
-            fpoke(b,s).type1 = Pokemon::Normal;
-            b.sendMoveMessage(17,0,s,0);
+            b.setType(s, Pokemon::Normal);
+            b.sendMoveMessage(17,0,s,Type::Normal);
         }
-        fpoke(b,s).type2 = Pokemon::Curse;
     }
 };
 
@@ -443,8 +442,7 @@ struct MMConversion : public MM
         }
         else {
             int type = turn(b,s)["ConversionType"].toInt();
-            fpoke(b,s).type1 = type;
-            fpoke(b,s).type2 = Pokemon::Curse;
+            b.setType(s, type);
             b.sendMoveMessage(19, 0, s, type, s);
         }
     }
@@ -484,7 +482,8 @@ struct MMConversion2 : public MM
         /* Gets types available */
         QList<int> poss;
         for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
-            if (!(fpoke(b,s).type1 == i && fpoke(b,s).type2 == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < Type::Effective) {
+            QVector<int> types = b.getTypes(s);
+            if (!(types[0] == i && types.count() == 1) && TypeInfo::Eff(attackType, i) < Type::Effective) {
                 poss.push_back(i);
             }
         }
@@ -497,8 +496,7 @@ struct MMConversion2 : public MM
 
     static void uas(int s, int, BS &b) {
         int type = turn(b,s)["Conversion2Type"].toInt();
-        fpoke(b,s).type1 = type;
-        fpoke(b,s).type2 = Pokemon::Curse;
+        b.setType(s, type);
         b.sendMoveMessage(20, 0, s, type, s);
     }
 };
@@ -1504,9 +1502,9 @@ struct MMDoomDesire : public MM
                     b.calculateTypeModStab(s, s);
 
                     int typemod = fturn(b,s).typeMod;
-                    if (typemod == 0) {
+                    if (typemod < -50) {
                         /* If it's ineffective we just say it */
-                        b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
+                        b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
                         return;
                     }
                     fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
@@ -1526,7 +1524,7 @@ struct MMDoomDesire : public MM
                     tmove(b, doomuser).recoil = 0;
 
                     int damage = b.calculateDamage(s, s);
-                    b.notify(BS::All, BattleCommands::Effective, s, quint8(std::max(1,typemod/4)));
+                    b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
                 }
             }
@@ -2823,8 +2821,8 @@ struct MMStealthRock : public MM
         if (!b.koed(s) && team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
         {
             b.sendMoveMessage(124,1,s,Pokemon::Rock);
-            int n = TypeInfo::Eff(Pokemon::Rock, b.getType(s, 1)) * TypeInfo::Eff(Pokemon::Rock, b.getType(s, 2));
-            b.inflictDamage(s, b.poke(s).totalLifePoints()*n/32, s);
+            int n = b.rawTypeEff(Pokemon::Rock, s);
+            b.inflictDamage(s, b.poke(s).totalLifePoints()*b.effFraction(n)/8, s);
         }
     }
 };
@@ -3477,15 +3475,16 @@ struct MMJumpKick : public MM
             if (typeadv[0] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[1]) * 2;
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[1]));
             } else if (typeadv[1] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[0]) * 2;
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[0]));
             } else {
-                typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[0])) + b.convertTypeEff(TypeInfo::Eff(type, typeadv[1]));
             }
-            fturn(b,s).typeMod = typemod*4;
+
+            fturn(b,s).typeMod = typemod;
             fturn(b,s).stab = b.hasType(s, Type::Fighting) ? 3 : 2;
             if (b.gen().num == 4)
                 damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
@@ -5361,6 +5360,7 @@ struct MMTransform : public MM {
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num, b.gen());
         po.type2 = PokemonInfo::Type2(num, b.gen());
+        po.types = QVector<int>() << po.type1 << po.type2;
 
         b.changeSprite(s, num);
 
@@ -5512,8 +5512,11 @@ struct MMSoak : public MM {
 
     static void uas(int s, int t, BS &b) {
         int type = turn(b,s)["Soak_Arg"].toInt();
-        fpoke(b, t).type1 = type;
-        fpoke(b, t).type2 = Pokemon::Curse;
+        if (move(b,s) == Move::Soak) {
+            b.setType(s, type);
+        } else {
+            b.addType(s, type);
+        }
         b.sendMoveMessage(157, 0, t, type, t);
     }
 };
@@ -5755,6 +5758,7 @@ struct MMReflectType : public MM
         b.sendMoveMessage(172,0,s,type(b,s),t);
         fpoke(b,s).type1 = fpoke(b,t).type1;
         fpoke(b,s).type2 = fpoke(b,t).type2;
+        fpoke(b,s).types = fpoke(b,t).types;
     }
 };
 
@@ -6223,10 +6227,10 @@ struct MMSynchronoise : public MM
     }
 
     static void btl(int s, int t, BS &b) {
-        if (b.hasType(t, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(t, b.getType(s, 2)))) {
+        if (b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
 
         } else {
-            fturn(b,s).typeMod = 0;
+            fturn(b,s).typeMod = -100;
         }
     }
 };
@@ -6393,18 +6397,6 @@ struct MMAutotomize : public MM
 
     static void uas(int s, int, BS &b) {
         fpoke(b, s).weight = std::max(1, fpoke(b,s).weight-1000);
-    }
-};
-
-struct MMSpore : public MM {
-    MMSpore() {
-        functions["DetermineAttackFailure"] = &daf;
-    }
-
-    static void daf(int s, int t, BS &b) {
-        if (b.hasType(t, Type::Grass)) {
-            fturn(b,s).add(TM::Failed);
-        }
     }
 };
 
@@ -6807,7 +6799,7 @@ struct MMStickyWeb : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody))
+        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody) && !b.isFlying(s))
         {
             b.sendMoveMessage(210,1,s,Pokemon::Bug);
             b.inflictStatMod(s, Speed, -1, s);
@@ -6837,6 +6829,70 @@ struct MMVenomDrench : public MM {
     static void daf(int s, int t, BS &b) {
         if (!(b.poke(t).status() == Pokemon::Poisoned)) {
             fturn(b,s).add(TM::Failed);
+        }
+    }
+};
+
+struct MMFlowerShield : public MM {
+    MMFlowerShield() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Defense, 1, s);
+            }
+        }
+    }
+};
+
+struct MMRototiller : public MM {
+    MMRototiller() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Attack, 1, s);
+                b.inflictStatMod(p, SpAttack, 1, s);
+            }
+        }
+    }
+};
+
+
+struct MMPowder : public MM
+{
+    MMPowder() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        b.sendMoveMessage(215,0,s,Pokemon::Grass,t);
+
+        addFunction(poke(b,t), "MovePossible", "Powder", &mp);
+        poke(b,t)["Powdered"] = true;
+    }
+
+    static void mp(int s, int, BS &b)
+    {
+        addFunction(turn(b,s), "AfterTellingPlayers", "Powder", &atp);
+    }
+
+    static void atp(int s, int, BS &b)
+    {
+        if (turn(b,s).value("Powdered").toBool()) {
+            if (type(b,s) == Type::Fire) {
+                b.sendMoveMessage(215, 1, s, Pokemon::Fire);
+                turn(b,s).remove("Powdered");\
+                removeFunction(poke(b,s), "MovePossible", "Powder");
+                b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
+                turn(b,s)["ImpossibleToMove"] = true;
+            }
         }
     }
 };
@@ -7073,14 +7129,13 @@ void MoveEffect::init()
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
-    REGISTER_MOVE(198, Spore);
+    //REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
     REGISTER_MOVE(201, ElectricTerrain);
     REGISTER_MOVE(202, Electrify);
     REGISTER_MOVE(203, FairyLock);
     REGISTER_MOVE(204, FellStinger);
-    //todo flower shield
     REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
@@ -7089,4 +7144,7 @@ void MoveEffect::init()
     REGISTER_MOVE(210, StickyWeb);
     REGISTER_MOVE(211, TopsyTurvy);
     REGISTER_MOVE(212, VenomDrench);
+    REGISTER_MOVE(213, FlowerShield);
+    REGISTER_MOVE(214, Rototiller);
+    REGISTER_MOVE(215, Powder);
 }

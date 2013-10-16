@@ -145,3 +145,5 @@
 180 109#Tough Claws
 181 113#Competitive
 182 114#Gale Wings
+183 115#Gooey
+187 116#Magician
