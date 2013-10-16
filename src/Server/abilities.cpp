@@ -2138,6 +2138,19 @@ struct AMGooey : public AM
     }
 };
 
+struct AMParentalBond : public AM
+{
+    AMParentalBond() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int t, BS &b) {
+        if (tmove(b, s).power == 0) {
+
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     AfterNegativeStatChange
