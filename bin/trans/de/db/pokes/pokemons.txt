@@ -576,7 +576,8 @@
 493:14 Arceus-Eis
 493:15 Arceus-Drache
 493:16 Arceus-Unlicht
-493:17 Arceus-???
+493:17 Arceus-Fee
+493:18 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
 351:1 Formeo-Schneeform
