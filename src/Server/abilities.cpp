@@ -102,8 +102,7 @@ struct AMAnticipation : public AM {
                     continue;
 
                 if (move == Move::Explosion || move == Move::Selfdestruct || MoveInfo::isOHKO(move, b.gen()) ||
-                    TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,1))
-                    * TypeInfo::Eff(MoveInfo::Type(b.move(t, i), b.gen()), b.getType(s,2)) > 4) {
+                    b.rawTypeEff(MoveInfo::Type(b.move(t, i), b.gen()), s) > 0) {
                     frightening_truth = true;
                     break;
                 }
@@ -189,12 +188,12 @@ struct AMColorChange : public AM {
             return;
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
-            if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
+            if (fpoke(b,s).types.count() == 1&& tp == fpoke(b,s).types[0]) {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).type1 = tp;
-            fpoke(b, s).type2 = Pokemon::Curse;
+            fpoke(b, s).types.clear();
+            fpoke(b, s).types.push_back(tp);
         }
     }
 
@@ -202,7 +201,7 @@ struct AMColorChange : public AM {
     static void abp(int s, int t, BS &b) {
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
-            if (fpoke(b,s).type2 == Pokemon::Curse && tp == fpoke(b,s).type1) {
+            if (fpoke(b,s).types.count() == 1&& tp == fpoke(b,s).types[0]) {
                 return;
             }
             /* Sheer Force seems to negate Color Change */
@@ -210,8 +209,8 @@ struct AMColorChange : public AM {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).type1 = tp;
-            fpoke(b, s).type2 = Pokemon::Curse;
+            fpoke(b, s).types.clear();
+            fpoke(b, s).types.push_back(tp);
         }
     }
 };
@@ -1027,7 +1026,7 @@ struct AMTintedLens : public AM {
     }
 
     static void bpm(int s, int , BS &b) {
-        if (fturn(b,s).typeMod < 16) {
+        if (fturn(b,s).typeMod < 0) {
             b.chainBp(s, 20);
         }
     }
@@ -1110,9 +1109,9 @@ struct AMWonderGuard : public AM {
         int tp = type(b,t);
         /* Fire fang always hits through Wonder Guard, at least in 4th gen... */
         if (tmove(b,t).power > 0 && tp != Pokemon::Curse && (b.gen() >= 5 || move(b, t) != Move::FireFang)) {
-            int mod = TypeInfo::Eff(tp, b.getType(s,1)) * TypeInfo::Eff(tp, b.getType(s,2));
+            int mod = b.rawTypeEff(tp, s);
 
-            if (mod <= 4) {
+            if (mod <= 0) {
                 b.sendAbMessage(71,0,s);
                 turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             }
@@ -1224,9 +1223,7 @@ struct AMOvercoat : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        int mv = move(b,t);
-
-        if (mv == Move::PoisonPowder || mv == Move::SleepPowder || mv == Move::Powder) {
+        if (tmove(b,t).flags & Move::PowderFlag) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(17, 0, s, t);
         }
@@ -1497,6 +1494,7 @@ struct AMImposter : public AM
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num, b.gen());
         po.type2 = PokemonInfo::Type2(num, b.gen());
+        po.types = QVector<int>() << po.type1 << po.type2;
 
         b.changeSprite(s, num);
 
@@ -2046,8 +2044,7 @@ struct AMProtean : public AM {
 
     static void aaf (int s, int, BS &b) {
         if (type(b,s) != Pokemon::Curse) {
-            fpoke(b, s).type1 = type(b,s);
-            fpoke(b, s).type2 = Pokemon::Curse;
+            b.setType(s, type(b,s));
             b.sendAbMessage(107,0,s,0,type(b,s));
         }
     }
@@ -2060,7 +2057,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 6);
         }
     }
 };
@@ -2138,6 +2135,39 @@ struct AMGooey : public AM
 
         b.sendAbMessage(115, 0, s, t);
         b.inflictStatMod(t, Speed, -1, s, false);
+    }
+};
+
+struct AMParentalBond : public AM
+{
+    AMParentalBond() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int t, BS &b) {
+        if (tmove(b, s).power == 0) {
+
+        }
+    }
+};
+
+struct AMMagician : public AM
+{
+    AMMagician() {
+        functions["OnPhysicalAssault"] = &upa;
+    }
+
+    /* Ripped off from Covet */
+    static void upa(int s, int t, BS &b) {
+        if (!b.koed(t) && b.poke(t).item() != 0 && !b.koed(s) && !b.hasWorkingAbility(t, Ability::StickyHold)
+                    && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
+                    && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
+                            && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item()))
+            {
+            b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
+            b.acqItem(s, b.poke(t).item());
+            b.loseItem(t);
+        }
     }
 };
 
@@ -2287,4 +2317,7 @@ void AbilityEffect::init()
     REGISTER_AB(113, Competitive);
     REGISTER_AB(114, GaleWings);
     REGISTER_AB(115, Gooey);
+    REGISTER_AB(116, Magician);
 }
+
+/* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */

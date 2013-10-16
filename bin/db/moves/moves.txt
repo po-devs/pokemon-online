@@ -570,14 +570,14 @@
 569 Geomancy
 570 Petal Blizzard
 571 Infestation
-572 Moon Blast
+572 Moonblast
 573 Mystical Fire
 574 Noble Roar
 575 Nuzzle
 576 Oblivion Wing
 577 Parabolic Charge
 578 Phantom Force
-579 Play Around
+579 Play Rough
 580 Play Nice
 581 Trick-or-Treat
 582 Water Shuriken

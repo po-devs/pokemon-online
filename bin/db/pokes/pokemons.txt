@@ -789,6 +789,7 @@
 676:0 Furfrou
 677:0 Espurr
 678:0 Meowstic
+678:1 Meowstic-F
 679:0 Honedge
 680:0 Doublade
 681:0 Aegislash
