@@ -1851,6 +1851,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
+            if ( target != player && (tmove(player).flags & Move::PowderFlag) && hasType(target, Type::Grass) && !pokeMemory(target).value(QString("%1Sleuthed").arg(Type::Grass)).toBool()) {
+                notify(All, Failed, player);
+                continue;
+            }
 
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
