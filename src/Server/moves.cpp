@@ -6897,6 +6897,25 @@ struct MMPowder : public MM
     }
 };
 
+
+struct MMMagneticFlux : public MM {
+    MMMagneticFlux() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.player(p) == b.player(s)) {
+                if (b.hasWorkingAbility(s, Ability::Minus) || b.hasWorkingAbility(s, Ability::Plus)) {
+                    b.inflictStatMod(p, Defense, 1, s);
+                    b.inflictStatMod(p, SpDefense, 1, s);
+                }
+            }
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7147,4 +7166,7 @@ void MoveEffect::init()
     REGISTER_MOVE(213, FlowerShield);
     REGISTER_MOVE(214, Rototiller);
     REGISTER_MOVE(215, Powder);
+    REGISTER_MOVE(216, MagneticFlux);
 }
+
+/* Not done: Ion deluge */
