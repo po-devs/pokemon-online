@@ -1117,11 +1117,16 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
+        /* temporary fix until we have all gen 6 sprites */
+        if (gen.num == 6 && PokemonInfo::Exists(pokeid, Pokemon::gen(5,1))) {
+            return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
+        }
+
         if (gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male,shiney,back);
+            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiney, back);
         }
         if (mod) {
-            return PokemonInfo::Picture(pokeid, gen, gender,shiney,back,false);
+            return PokemonInfo::Picture(pokeid, gen, gender, shiney, back, false);
         }
         if (shiney) {
             return PokemonInfo::Picture(pokeid, gen, gender, false, back);
@@ -1129,15 +1134,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (gen.num == 1) {
             return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
         } else if (gen.num == 2) {
-            if (shiney)
-                return PokemonInfo::Picture(pokeid, 2, gender, false, back);
-            else
-                return PokemonInfo::Picture(pokeid, 3, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 3, gender, shiney, back);
         } else if (gen.num == 3) {
-            if (shiney)
-                return PokemonInfo::Picture(pokeid, 3, gender, false, back);
-            else
-                return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
         } else if (gen.num == 4 || gen.num == 6) {
             return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
         }

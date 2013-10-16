@@ -1750,9 +1750,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1) {
-                    if (hasWorkingAbility(player, Ability::ParentalBond) && repeatCount() >= num/2 && attack != Move::TripleKick) {
-                        chainBp(player, -14);
-                    }
                     testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
@@ -3040,24 +3037,27 @@ int BattleSituation::repeatNum(int player)
         return turnMemory(player)["RepeatCount"].toInt();
     }
 
-    int mul = 1+hasWorkingAbility(player, Ability::ParentalBond);
-
-    if (tmove(player).repeatMin == 0)
-        return 1* mul;
+    if (tmove(player).repeatMin == 0) {
+        if (targetList.size() == 1 && hasWorkingAbility(player, Ability::ParentalBond)) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 
     int min = tmove(player).repeatMin;
     int max = tmove(player).repeatMax;
 
     if (max == 3) {
         //Triple kick, done differently...
-        return 1* mul;
+        return 1;
     }
     //Skill link
     if (hasWorkingAbility(player, Ability::SkillLink)) {
         return max;
     }
 
-    return minMax(min, max, gen().num, randint())*mul;
+    return minMax(min, max, gen().num, randint());
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {
