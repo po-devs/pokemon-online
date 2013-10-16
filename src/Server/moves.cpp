@@ -6864,6 +6864,39 @@ struct MMRototiller : public MM {
     }
 };
 
+
+struct MMPowder : public MM
+{
+    MMPowder() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        b.sendMoveMessage(215,0,s,Pokemon::Grass,t);
+
+        addFunction(poke(b,t), "MovePossible", "Powder", &mp);
+        poke(b,t)["Powdered"] = true;
+    }
+
+    static void mp(int s, int, BS &b)
+    {
+        addFunction(turn(b,s), "AfterTellingPlayers", "Powder", &atp);
+    }
+
+    static void atp(int s, int, BS &b)
+    {
+        if (turn(b,s).value("Powdered").toBool()) {
+            if (type(b,s) == Type::Fire) {
+                b.sendMoveMessage(215, 1, s, Pokemon::Fire);
+                turn(b,s).remove("Powdered");\
+                removeFunction(poke(b,s), "MovePossible", "Powder");
+                b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
+                turn(b,s)["ImpossibleToMove"] = true;
+            }
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7103,7 +7136,6 @@ void MoveEffect::init()
     REGISTER_MOVE(202, Electrify);
     REGISTER_MOVE(203, FairyLock);
     REGISTER_MOVE(204, FellStinger);
-    //todo flower shield
     REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
@@ -7114,4 +7146,5 @@ void MoveEffect::init()
     REGISTER_MOVE(212, VenomDrench);
     REGISTER_MOVE(213, FlowerShield);
     REGISTER_MOVE(214, Rototiller);
+    REGISTER_MOVE(215, Powder);
 }

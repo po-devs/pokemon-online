@@ -2320,4 +2320,4 @@ void AbilityEffect::init()
     REGISTER_AB(116, Magician);
 }
 
-/* Not done: Aroma Veil, BulletProof, Grass Pelt */
+/* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
