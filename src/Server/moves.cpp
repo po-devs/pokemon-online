@@ -4970,7 +4970,7 @@ struct MMNaturePower : public MM
         int move;
         if (b.gen().num == 3) {
             move = Swift;
-        } else if (b.gen().num == 4) {
+        } else if (b.gen().num == 4 || b.gen() >= 6) {
             move = TriAttack;
         } else {
             move = Earthquake;
