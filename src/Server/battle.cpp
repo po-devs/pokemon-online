@@ -1658,8 +1658,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     foreach(int target, targetList) {
-        bpmodifiers.clear();
-
         heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
@@ -1735,6 +1733,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int hitcount = 0;
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
+                bpmodifiers.clear();
                 heatOfAttack() = true;
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
@@ -1747,6 +1746,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1) {
+                    if (hasWorkingAbility(player, Ability::ParentalBond) && repeatCount() >= num/2 && attack != Move::TripleKick) {
+                        chainBp(player, -14);
+                    }
                     testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
@@ -3034,22 +3036,24 @@ int BattleSituation::repeatNum(int player)
         return turnMemory(player)["RepeatCount"].toInt();
     }
 
+    int mul = 1+hasWorkingAbility(player, Ability::ParentalBond);
+
     if (tmove(player).repeatMin == 0)
-        return 1;
+        return 1* mul;
 
     int min = tmove(player).repeatMin;
     int max = tmove(player).repeatMax;
 
     if (max == 3) {
         //Triple kick, done differently...
-        return 1;
+        return 1* mul;
     }
     //Skill link
     if (hasWorkingAbility(player, Ability::SkillLink)) {
         return max;
     }
 
-    return minMax(min, max, gen().num, randint());
+    return minMax(min, max, gen().num, randint())*mul;
 }
 
 void BattleSituation::inflictPercentDamage(int player, int percent, int source, bool straightattack) {
