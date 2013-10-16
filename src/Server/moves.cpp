@@ -6400,18 +6400,6 @@ struct MMAutotomize : public MM
     }
 };
 
-struct MMSpore : public MM {
-    MMSpore() {
-        functions["DetermineAttackFailure"] = &daf;
-    }
-
-    static void daf(int s, int t, BS &b) {
-        if (b.hasType(t, Type::Grass)) {
-            fturn(b,s).add(TM::Failed);
-        }
-    }
-};
-
 struct MMCraftyShield: public MM
 {
     MMCraftyShield() {
@@ -6845,6 +6833,37 @@ struct MMVenomDrench : public MM {
     }
 };
 
+struct MMFlowerShield : public MM {
+    MMFlowerShield() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Defense, 1, s);
+            }
+        }
+    }
+};
+
+struct MMRototiller : public MM {
+    MMRototiller() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Attack, 1, s);
+                b.inflictStatMod(p, SpAttack, 1, s);
+            }
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7077,7 +7096,7 @@ void MoveEffect::init()
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
-    REGISTER_MOVE(198, Spore);
+    //REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
     REGISTER_MOVE(201, ElectricTerrain);
@@ -7093,4 +7112,6 @@ void MoveEffect::init()
     REGISTER_MOVE(210, StickyWeb);
     REGISTER_MOVE(211, TopsyTurvy);
     REGISTER_MOVE(212, VenomDrench);
+    REGISTER_MOVE(213, FlowerShield);
+    REGISTER_MOVE(214, Rototiller);
 }
