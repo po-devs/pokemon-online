@@ -3010,8 +3010,10 @@ int HiddenPowerInfo::Power(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8
 {
     if (gen >= 3)
         return (((hp_dv%4>1) + (att_dv%4>1)*2 + (def_dv%4>1)*4 + (speed_dv%4>1)*8 + (satt_dv%4>1)*16 + (sdef_dv%4>1)*32)*40)/63 + 30;
-    else
+    else if (gen <= 5)
         return (((satt_dv>>3) + (speed_dv>>3)*2 + (def_dv>>3)*4 + (att_dv>>3)*8)*5+ std::min(int(satt_dv),3))/2 + 31;
+    else
+        return 60;
 }
 
 QList<QStringList> HiddenPowerInfo::PossibilitiesForType(int type, Pokemon::gen gen)
