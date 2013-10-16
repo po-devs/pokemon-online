@@ -382,6 +382,7 @@ public:
 private:
     /* Used when pokemon shift slots */
     QVector<int> indexes;
+    bool megas[2];
 };
 
 Q_DECLARE_METATYPE(BattleSituation::MechanicsFunction)
