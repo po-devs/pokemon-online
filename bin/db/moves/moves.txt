@@ -183,7 +183,7 @@
 182 Protect
 183 Mach Punch
 184 Scary Face
-185 Faint Attack
+185 Feint Attack
 186 Sweet Kiss
 187 Belly Drum
 188 Sludge Bomb
