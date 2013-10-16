@@ -1704,6 +1704,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
+                callieffects(target,player,"OpponentBlock"); //Safety Goggles
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -2560,6 +2561,7 @@ void BattleSituation::endTurnWeather()
             }
             foreach (int i, speedsVector) {
                 callaeffects(i,i,"WeatherSpecial");
+                callieffects(i,i,"WeatherSpecial");
                 if (!turnMemory(i).contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) && getTypes(i).toList().toSet().intersect(immuneTypes).isEmpty()
                         && !hasWorkingAbility(i, Ability::MagicGuard)) {
                     notify(All, WeatherMessage, i, qint8(HurtWeather),qint8(weather));

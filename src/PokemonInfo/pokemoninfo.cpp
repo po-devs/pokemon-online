@@ -2375,7 +2375,7 @@ bool ItemInfo::isBerry(int itemnum)
 
 bool ItemInfo::isPlate(int itemnum)
 {
-    return (itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200);
+    return ((itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200) || itemnum==330);
 }
 
 bool ItemInfo::isMegaStone(int itemnum)
@@ -2441,6 +2441,7 @@ int ItemInfo::PlateForType(int type)
         Item::IciclePlate,
         Item::DracoPlate,
         Item::DreadPlate,
+        Item::PixiePlate,
         Item::NoItem
     };
     return plates[type];
