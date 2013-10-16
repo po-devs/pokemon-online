@@ -558,3 +558,51 @@
 557 V-Generator
 558 Kreuzflamme
 559 Kreuzdonner
+560 Kulleraugen
+561 Überschallknall
+562 
+563 Zauberschein
+564 Diebeskuss
+565 Feenbrise
+566 
+567 Waldesfluch
+568 Gefriertrockner
+569 Geokontrolle
+570 
+571 Plage
+572 Mondgewalt
+573 Magieflamme
+574 Kampfgebrüll
+575 Wagenrubbler
+576 Unheilsschwingen
+577 Parabolladung
+578 Phantomkraft
+579 
+580 Kameradschaft
+581 
+582 Wasser-Shuriken
+583 
+584 Rülpser
+585 Vertrauenssache
+586 Säuselstimme
+587 
+588 Elektrofeld
+589 
+590 
+591 
+592 
+593 Grasfeld
+594 
+595 
+596 Bodengewalt
+597 
+598 Tatami-Schild
+599 Nebelfeld
+600 Abgangstirade
+601 
+602 
+603 
+604 Schutzstacheln
+605 
+606 Invertigo
+607 
