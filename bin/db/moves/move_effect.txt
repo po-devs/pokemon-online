@@ -50,7 +50,7 @@
 62 Has a 10% chance to lower the target's Attack by one stage.
 63 User cannot attack or switch the turn after using this attack.
 66 User receives 1/4 the damage inflicted as recoil.
-67 More power against to heavier targets, with a maximum of 120.
+67 More power against to heavier targets, with a maximum of 120. Has a 30% chance to flinch.
 68 Inflicts twice the damage the user received from the last physical hit it took.
 69 Inflicts damage equal to the user's level.
 71 Heals the user by half the damage inflicted.
