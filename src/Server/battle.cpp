@@ -27,6 +27,8 @@ BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c,
         contexts.push_back(PokeContext());
         indexes.push_back(i);
     }
+
+    megas[0] = megas[1] = false;
 }
 
 BattleSituation::~BattleSituation()
@@ -606,7 +608,7 @@ BattleChoices BattleSituation::createChoice(int slot)
     }
 
     if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
-            && hasWorkingItem(slot, poke(slot).item())) {
+            && hasWorkingItem(slot, poke(slot).item()) && !megas[player(slot)]) {
         ret.mega = true;
     }
 
