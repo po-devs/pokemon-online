@@ -104,7 +104,7 @@ inline int intlog2(unsigned x) {
 }
 
 inline int intpow2(unsigned x) {
-    int i = 0;
+    int i = 1;
     while (x-- > 0) {
         i *= 2;
     }
