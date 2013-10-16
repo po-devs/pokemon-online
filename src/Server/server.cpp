@@ -163,11 +163,9 @@ void Server::start(){
 
     printLine(tr("Pokemon database loaded"));
 
-    PokemonInfo::RunMovesSanityCheck(1);
-    PokemonInfo::RunMovesSanityCheck(2);
-    PokemonInfo::RunMovesSanityCheck(3);
-    PokemonInfo::RunMovesSanityCheck(4);
-    PokemonInfo::RunMovesSanityCheck(5);
+    for (int i = 0; i < GenInfo::GenMax(); i++) {
+        PokemonInfo::RunMovesSanityCheck(i);
+    }
 
     MoveEffect::init();
     RBYMoveEffect::init();
