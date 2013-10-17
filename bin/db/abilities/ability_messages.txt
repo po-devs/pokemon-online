@@ -63,5 +63,5 @@
 102 %s makes %tf's team too nervous to eat Berries!
 104 %f's %a prevents stats changes to affect %s!
 107 %s had its type changed to %t!
-112 Competitive raised %s's Sp. Attack!
+113 Competitive sharply raised %s's Sp. Attack!
 115 %s's Gooey slows down %f!
