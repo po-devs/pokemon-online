@@ -1894,10 +1894,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     heatOfAttack() = false;
 
-    if (!specialOccurence) {
-        callaeffects(player, player, "AfterAttackFinished");
-    }
-
     end:
         /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
         callieffects(player, player, "AfterTargetList");
