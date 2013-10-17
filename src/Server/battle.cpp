@@ -827,7 +827,7 @@ void BattleSituation::analyzeChoices()
             if (choice(slot).mega()) {
                 if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
                         && hasWorkingItem(slot, poke(slot).item())) {
-                    changeForme(player, slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
+                    changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
                 }
             }
         }
