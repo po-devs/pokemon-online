@@ -2060,7 +2060,7 @@ struct AMMegaLauncher : public AM {
 
 struct AMProtean : public AM {
     AMProtean() {
-        functions["AfterAttackFinished"] = &aaf;
+        functions["BeforeTargetList"] = &aaf;
     }
 
     static void aaf (int s, int, BS &b) {
