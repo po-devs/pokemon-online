@@ -289,15 +289,36 @@ struct AMDrizzle : public AM {
         functions["UponSetup"] = &us;
     }
 
+    struct WI : public QMap<int,int> {
+        WI() {
+            insert(BS::SandStorm, Item::SmoothRock); /* Soft Rock */
+            insert(BS::Hail, Item::IcyRock); /* Icy Rock */
+            insert(BS::Rain, Item::DampRock); /* Damp Rock */
+            insert(BS::Sunny, Item::HeatRock); /* Heat Rock */
+        }
+    };
+    static WI weather_items;
+
     static void us (int s, int , BS &b) {
         int w = poke(b,s)["AbilityArg"].toInt();
         if (w != b.weather) {
             int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
             b.sendAbMessage(14,w-1,s,s,type);
         }
-        b.callForth(poke(b,s)["AbilityArg"].toInt(), -1);
+
+        if (b.gen() >= 6) {
+            if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
+                b.callForth(weather, 10);
+            } else {
+                b.callForth(weather, 5);
+            }
+        }
+        b.callForth(w, -1);
     }
 };
+
+//Declaring static class variable
+AMDrizzle::WI AMDrizzle::weather_items;
 
 struct AMDrySkin : public AM {
     AMDrySkin() {
