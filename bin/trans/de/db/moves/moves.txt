@@ -560,15 +560,15 @@
 559 Kreuzdonner
 560 Kulleraugen
 561 Überschallknall
-562 
+562 Trickschutz
 563 Zauberschein
 564 Diebeskuss
 565 Feenbrise
-566 
+566 Flying Press
 567 Waldesfluch
 568 Gefriertrockner
 569 Geokontrolle
-570 
+570 Blütenwirbel
 571 Plage
 572 Mondgewalt
 573 Magieflamme
@@ -577,30 +577,30 @@
 576 Unheilsschwingen
 577 Parabolladung
 578 Phantomkraft
-579 
+579 Knuddler
 580 Kameradschaft
-581 
+581 Halloween
 582 Wasser-Shuriken
 583 
 584 Rülpser
 585 Vertrauenssache
 586 Säuselstimme
-587 
+587 Mystowellen
 588 Elektrofeld
-589 
+589 Elektrifizierung
 590 
 591 
 592 
 593 Grasfeld
 594 
-595 
+595 Königsschild
 596 Bodengewalt
 597 
 598 Tatami-Schild
 599 Nebelfeld
 600 Abgangstirade
-601 
-602 
+601 Pulverschleuder
+602 Steigerungshieb
 603 
 604 Schutzstacheln
 605 
