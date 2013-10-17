@@ -308,9 +308,9 @@ struct AMDrizzle : public AM {
 
         if (b.gen() >= 6) {
             if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
-                b.callForth(weather, 10);
+                b.callForth(w, 10);
             } else {
-                b.callForth(weather, 5);
+                b.callForth(w, 5);
             }
         }
         b.callForth(w, -1);
