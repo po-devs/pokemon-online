@@ -2128,7 +2128,7 @@ struct AMCompetitive : public AM
             return;
         /* Fix me : ability message */
         b.sendAbMessage(113, 0, s);
-        b.inflictStatMod(s, SpAttack, 1, s, false);
+        b.inflictStatMod(s, SpAttack, 2, s, false);
     }
 };
 
