@@ -154,7 +154,7 @@ struct MMAquaRing : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.canHeal(s))
-             return;
+            return;
 
         int healing = b.poke(s).totalLifePoints()/16;
         if (b.hasWorkingItem(s, Item::BigRoot)) {
@@ -254,7 +254,7 @@ struct MMBatonPass : public MM
         /* If the poke before is confused, carry on that status */
         if (poke(b,s)["ConfusedCount"].toInt() > 0) {
             if (!b.poke(s).hasStatus(Pokemon::Confused))
-            b.poke(s).addStatus(Pokemon::Confused);
+                b.poke(s).addStatus(Pokemon::Confused);
         }
 
         QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
@@ -931,7 +931,7 @@ struct MMFocusPunch : public MM
         //Pokemon who are Frozen, Asleep and Paralyzed will display the message showing it "is tightening its focus"
         //DAF and Status effects will handle the second message correctly. Commenting out code just in case it changes for Gen 6
         //if (b.poke(s).status() != Pokemon::Frozen && b.poke(s).status() != Pokemon::Paralysed && b.poke(s).status() != Pokemon::Asleep)
-            b.sendMoveMessage(47,1,s,Pokemon::Fighting);
+        b.sendMoveMessage(47,1,s,Pokemon::Fighting);
     }
 };
 
@@ -951,7 +951,7 @@ struct MMCovet : public MM
                 && !(b.poke(t).item() == Item::GriseousOrb && (b.gen() <= 4 || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina))
                 && !ItemInfo::isMail(b.poke(t).item())
                 && !(ItemInfo::isDrive(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
-                /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
+            /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
         {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
@@ -3014,7 +3014,7 @@ struct MMKnockOff : public MM
         if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
                                                                                                     (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
                 && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
-                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
+                                                                                                                                     PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -3042,7 +3042,7 @@ struct MMSwitcheroo : public MM
         }
         /* Knock off */
         if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
-                || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool())) {
+                             || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool())) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -4450,9 +4450,9 @@ struct MMRage : public MM
     }
 
     static void asf(int s, int, BS &b) {
-       if (b.gen().num == 1) {
-           poke(b,s)["RageMissed"] = true;
-       }
+        if (b.gen().num == 1) {
+            poke(b,s)["RageMissed"] = true;
+        }
     }
 
 };
@@ -4990,7 +4990,7 @@ struct MMRolePlay : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
-         if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter ) {
+        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter ) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6614,13 +6614,12 @@ struct MMKingsShield: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "KingsShield", &dgaf);
         turn(b,s)["KingsShieldUsed"] = true;
         b.sendMoveMessage(206, 0, s, type(b,s));
     }
 
     static void dgaf(int s, int t, BS &b) {
-        turn(b, t).remove("DamageShielded");
         if (s == t || t == -1) {
             return;
         }
@@ -6632,22 +6631,23 @@ struct MMKingsShield: public MM
             return;
         }
 
+        if (tmove(b,s).category == Move::Other) {
+            return;
+        }
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
 
-        turn(b,t)["DamageShielded"] = true;
-        addFunction(turn(b,t), "UponPhysicalAssault", "KingsShield", &upa);
-    }
+        /* All other moves fail */
+        if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+        }
+        b.fail(s, 27, 0, Pokemon::Normal, t);
 
-    static void upa(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
+        if (tmove(b,s).flags & Move::ContactFlag) {
+            b.inflictStatMod(s, Attack, -2, t);
         }
-        if (!turn(b,s)["KingsShieldUsed"].toBool() || !turn(b,s)["DamageShielded"].toBool()) {
-            return;
-        }
-        b.inflictStatMod(t, Attack, -2, s);
     }
 };
 
