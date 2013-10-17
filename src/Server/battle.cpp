@@ -2862,6 +2862,7 @@ int BattleSituation::calculateDamage(int p, int t)
     if (turnMemory(p).value("GemActivated").toBool()) {
         chainBp(p, 10);
     }
+    callaeffects(p,t,"BasePowerModifier");
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
