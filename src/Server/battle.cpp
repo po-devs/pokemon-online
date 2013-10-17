@@ -665,12 +665,6 @@ void BattleSituation::analyzeChoice(int slot)
                     useAttack(slot, fpoke(slot).lastMoveUsed, true);
                 }
             else {
-                if (choice(slot).mega()) {
-                    if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
-                            && hasWorkingItem(slot, poke(slot).item())) {
-                        changeForme(player, slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
-                    }
-                }
                 if (options[slot].struggle()) {
                     MoveEffect::setup(Move::Struggle,slot,0,*this);
                     useAttack(slot, Move::Struggle, true);
@@ -828,6 +822,15 @@ void BattleSituation::analyzeChoices()
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
        cf custap berry */
     if (gen() >= 4) {
+        for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
+            int slot = players[currentSlot];
+            if (choice(slot).mega()) {
+                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
+                        && hasWorkingItem(slot, poke(slot).item())) {
+                    changeForme(player, slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
+                }
+            }
+        }
         for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
             int p = players[currentSlot];
             if (!hasMoved(p))
