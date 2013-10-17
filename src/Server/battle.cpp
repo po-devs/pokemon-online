@@ -3093,11 +3093,6 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
     } else {
         damage = std::min(int(poke(player).lifePoints()), damage);
 
-        //King's shield
-        if (turnMemory(player).contains("DamageShielded")) {
-            damage = 0;
-        }
-
         int hp  = poke(player).lifePoints() - damage;
 
         if (hp <= 0 && straightattack) {
