@@ -604,5 +604,5 @@
 603 Raises the Attack and Special Attack of Grass Pokémon.
 604 Prevents attacks from hitting the user this turn. Damages any attacker who makes direct contact.
 605 
-606 
+606 Reverses all stat changes on the target Pokémon
 607 Inflicts damage. Lowers Attack, Special Attack and Speed of a poisoned target.

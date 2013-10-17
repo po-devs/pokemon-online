@@ -772,7 +772,7 @@
 658:0 Quajutsu
 659:0 Scoppel
 660:0 Grebbit
-661:0 Dartiti
+661:0 Dartiri
 662:0 Dartignis
 663:0 Fiaro
 664:0 Purmel
@@ -817,7 +817,7 @@
 703:0 Rocara
 704:0 Viscora
 705:0 Viscargot
-706:0 Viscorgon
+706:0 Viscogon
 707:0 Clavion
 708:0 Paragoni
 709:0 Trombork
