@@ -2123,7 +2123,6 @@ struct AMCompetitive : public AM
             return;
         if (ts != -1 && b.player(ts) == b.player(s))
             return;
-        /* Fix me : ability message */
         b.sendAbMessage(113, 0, s);
         b.inflictStatMod(s, SpAttack, 2, s, false);
     }
