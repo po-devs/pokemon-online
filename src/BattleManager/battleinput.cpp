@@ -293,7 +293,7 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         quint16 item=0;
         uchar part=0;
         qint8 foe = 0;
-        qint16 other=0;
+        qint32 other=0;
         qint16 berry = 0;
         in >> item >> part >> foe >> berry >> other;
         output<BattleEnum::ItemMessage>(spot, item, part, foe, berry, other);

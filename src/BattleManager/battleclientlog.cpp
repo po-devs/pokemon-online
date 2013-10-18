@@ -351,6 +351,7 @@ void BattleClientLog::onItemMessage(int spot, int item, int part, int foe, int b
     mess.replace("%f", nick(foe));
     mess.replace("%i", ItemInfo::Name(berry));
     mess.replace("%m", MoveInfo::Name(other));
+    mess.replace("%p", PokemonInfo::Name(other));
     /* Balloon gets a really special treatment */
     if (item == 35)
         printHtml("ItemMessage", QString("<b>%1</b>").arg(escapeHtml(tu(mess))));
