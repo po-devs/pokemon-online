@@ -1228,7 +1228,7 @@ void BattleBase::sendItemMessage(int move, int src, int part, int foe, int berry
     else if (stat == -1)
         notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
     else
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint16(stat));
+        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint32(stat));
 }
 
 void BattleBase::sendBerryMessage(int move, int src, int part, int foe, int berry, int stat)
