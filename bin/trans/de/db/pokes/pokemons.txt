@@ -791,7 +791,7 @@
 677:0 Psiau
 678:0 Psiaugon
 679:0 Gramokles
-680:0 Doukles
+680:0 Duokles
 681:0 Durengard
 682:0 Parfi
 683:0 Parfinesse
