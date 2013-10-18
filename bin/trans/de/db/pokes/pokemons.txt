@@ -793,6 +793,7 @@
 679:0 Gramokles
 680:0 Duokles
 681:0 Durengard
+681:1 Durengard-B
 682:0 Parfi
 683:0 Parfinesse
 684:0 Flauschling
