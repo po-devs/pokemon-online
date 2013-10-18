@@ -772,19 +772,50 @@ void BattleSituation::analyzeChoices()
             items.push_back(i);
         } else if (choice(i).switchChoice()) {
             switches.push_back(i);
-        } else if (choice(i).attackingChoice()){
-            if (gen() >= 5) {
-                callaeffects(i, i, "PriorityChoice");
-            }
-            priorities[tmove(i).priority].push_back(i);
-        } else {
-            /* Shifting choice */
-            priorities[0].push_back(i);
         }
     }
 
     foreach(int player, items) {
         analyzeChoice(player);
+    }
+
+    /* In case of pursuit + analyze, the speeds vector need to be set first, which is why
+     * this code is below */
+    foreach(int player, switches) {
+        analyzeChoice(player);
+        callEntryEffects(player);
+        if (gen() <= 2) {
+            personalEndTurn(player);
+            notify(All, BlankMessage, Player1);
+        }
+    }
+
+    foreach(int i, playersByOrder) {
+        if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
+            int slot = i;
+            if (choice(slot).mega()) {
+                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
+                        && hasWorkingItem(slot, poke(slot).item())) {
+                    sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
+                    changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
+                    megas[player(slot)] = true;
+                }
+            }
+        }
+    }
+
+    playersByOrder = sortedBySpeed();
+
+    foreach(int i, playersByOrder) {
+        if (choice(i).attackingChoice()){
+            if (gen() >= 5) {
+                callaeffects(i, i, "PriorityChoice");
+            }
+            priorities[tmove(i).priority].push_back(i);
+        } else if (choice(i).moveToCenterChoice()){
+            /* Shifting choice */
+            priorities[0].push_back(i);
+        }
     }
 
     std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
@@ -808,31 +839,9 @@ void BattleSituation::analyzeChoices()
         }
     }
 
-    /* In case of pursuit + analyze, the speeds vector need to be set first, which is why
-     * this code is below */
-    foreach(int player, switches) {
-        analyzeChoice(player);
-        callEntryEffects(player);
-        if (gen() <= 2) {
-            personalEndTurn(player);
-            notify(All, BlankMessage, Player1);
-        }
-    }
-
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
        cf custap berry */
     if (gen() >= 4) {
-        for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
-            int slot = players[currentSlot];
-            if (choice(slot).mega()) {
-                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
-                        && hasWorkingItem(slot, poke(slot).item())) {
-                    sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
-                    changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
-                    megas[player(slot)] = true;
-                }
-            }
-        }
         for(currentSlot = 0; currentSlot < players.size(); currentSlot += 1) {
             int p = players[currentSlot];
             if (!hasMoved(p))
@@ -1133,7 +1142,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 
     //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
     if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen().num == 1 && (move == Move::Swift || move == Move::Mimic
-                                                                                                                        || move == Move::Transform))) {
+                                                                                                                            || move == Move::Transform))) {
         return true;
     }
 
@@ -1845,9 +1854,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             int type = tmove(player).type; /* move type */
 
             if ( target != player &&
-                    ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
-                     ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
-                      && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
+                 ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
+                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
+                   && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
                 notify(All, Failed, player);
                 continue;
             }
@@ -1899,12 +1908,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     heatOfAttack() = false;
 
-    end:
-        /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
-        callieffects(player, player, "AfterTargetList");
-    trueend:
+end:
+    /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
+    callieffects(player, player, "AfterTargetList");
+trueend:
 
-        if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
+    if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
     }
 
@@ -1994,7 +2003,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
             typemod += convertTypeEff(typeeff);
         }
     }
-    end:
+end:
 
     // Counter hits regardless of type matchups in Gen 1.
     if (gen().num == 1 && tmove(player).attack == Move::Counter) {
@@ -2339,14 +2348,14 @@ bool BattleSituation::canGetStatus(int player, int status) {
     switch (status) {
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: {
-            if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
+        if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
                 hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
-                return false;
-            }
-            if (!isFlying(player) && battleMemory().contains("ElectricTerrainCount")) {
-                return false;
-            }
-            return true;
+            return false;
+        }
+        if (!isFlying(player) && battleMemory().contains("ElectricTerrainCount")) {
+            return false;
+        }
+        return true;
     }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
@@ -2874,7 +2883,7 @@ int BattleSituation::calculateDamage(int p, int t)
     int power = tmove(p).power;
     int type = tmove(p).type;
 
-    /* Calculate the multiplier for two turn attacks */ 
+    /* Calculate the multiplier for two turn attacks */
     if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
         QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
         QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
@@ -2934,7 +2943,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     /* Light screen / Reflect */
     if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
-            (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
+         (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
         if (!multiples())
             damage /= 2;
         else {
@@ -3128,8 +3137,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
                 //Or, ultimately, it's an item
                 callieffects(player, source, "UponSelfSurvival");
 
-                end:
-                    turnMemory(player).remove("SurviveReason");
+end:
+                turnMemory(player).remove("SurviveReason");
             }
 
             if (straightattack) {
