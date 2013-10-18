@@ -6458,7 +6458,7 @@ struct MMElectricTerrain : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 1) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
@@ -6506,7 +6506,7 @@ struct MMFairyLock : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 2) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
@@ -6552,7 +6552,7 @@ struct MMGrassyTerrain : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 2) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
@@ -6686,7 +6686,7 @@ struct MMMistyTerrain : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 3) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
