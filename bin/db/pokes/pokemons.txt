@@ -474,7 +474,7 @@
 446:0 Munchlax
 447:0 Riolu
 448:0:H Lucario
-448:1 Mega LUcario
+448:1 Mega Lucario
 449:0 Hippopotas
 450:0 Hippowdon
 451:0 Skorupi
