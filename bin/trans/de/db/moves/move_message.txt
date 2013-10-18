@@ -1,14 +1,14 @@
 ﻿0 
 1 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
-2 %s surrounded itself with a veil of water!|Aquaring restored %s's HP.
+2 %s umgibt sich mit eimem Ring aus Wasser!|Aquaring heilt %s's KP.
 3 A soothing aroma wafted through the area!|Eine Glocke läutet!
 7 %q attacked!
-8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
-9 %s is storing energy!|%s unleashed energy!
-10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
+8 %s hat nicht genug KP mehr übrig!|%s verliert die Hälfte seiner KP und maximiert seinen Angriff!
+9 %s speichert Energie!|%s gibt Energie frei!
+10 %s wurde durch %m verletzt!|%s befreit sich von %m!|%f became trapped by swirling magma!
 11 %s muss sich wieder aufladen!
 12 %f kann nicht mehr flüchten!
-13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
+13 %s springt hoch!|%s gräbt sich ein!|%s taucht unter!|%s fliegt nach oben!|%s verschwindet plötzlich!
 14 %s shattered %tf's team protections!
 16 %s stahl %i von %f und aß sie!
 17 %s transformed into the %t type!
@@ -28,45 +28,45 @@
 43 %f's Sturdy made the attack fail!|It's a one hit KO!
 45 %s flung its %i!
 46 %s is getting pumped!
-47 %s hat seinen Fokus verloren !|%s verstärkt seinen Fokus!
+47 %s hat seinen Fokus verloren!|%s verstärkt seinen Fokus!
 48 %s became the center of attention!
 51 %f's %a is nullified!
-53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
-54 %f's %m lost all its PP because of %s' Grudge!
+53 Die Erdanziehung wurde verstärkt!|Die Erdanziehung ist wieder normal!|%s couldn't stay airbourne because of gravity!|%s's %m wurde wegen Erdanziehung blockiert!|%s %m wegen Erdanziehung nicht einsetzen!
+54 %f's %m verliert alle seine  AP wegen Nachspiel von %s!
 55 %s swapped its boosts with %f!
-57 Es fängt an zu hageln!|Es fängt an zu regnen!|Ein Sandsturm zieht auf!|Das Sonnenlicht wird stärker!,
+57 Es fängt an zu hageln!|Es fängt an zu regnen!|Ein Sandsturm zieht auf!|Das Sonnenlicht wird stärker!
 58 %s hat sich in %f verliebt!|%s hat sich verliebt!|%s ist starr vor Liebe!
-59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+59 %f kann keine KP mehr wiederherstellen!|%s kann %m wegen Heilblockade nicht benutzen!|%s's Heilblockade lässt nach!
 60 %s erholt sich!
 61 %s erholt sich!|Der Wunschtraum erfüllt sich!|Es wurde von mystischem Mondlicht umhüllt!
 62 %s tauscht seine Verteidigung und seinen Angriff!
 63 %s is ready to help %f!
 64 %s macht weiter und bricht zusammen!
 67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
-68 %s levitated on electromagnetism!|%s electromagnetism wore off!
+68 %s schwebt durch Elektromagnetismus!|Magnetflug von %s lässt nach!
 70 %s knocked off %f's %i!
-72 Es hat keine Wirkung auf %s...|%f wurde bepflanzt !|Egelsamen schadet %s !
-73 Reflektor erhöht %ts's Verteidigung des Teams!|Lichtschild erhöht %ts's Spezial Verteidigung des Teams!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
+72 Es hat keine Wirkung auf %s...|%f wurde bepflanzt!|Egelsamen schadet %s!
+73 Reflektor erhöht %ts's Verteidigung des Teams!|Lichtschild erhöht %ts's Spezial Verteidigung des Teams!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's Reflektor lässt nach!|%ts's Lichtschild lässt nach!
 74 %s took aim at %f!
-75 %ts's ist nun vor Volltreffern geschützt!|%ts's lucky chant wore off!
-76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
-77 %s cleared the field around %tf's team!
+75 %ts's ist nun vor Volltreffern geschützt!|%ts's Glück lässt nach!
+76 %s umgibt ich mit einem Magiemantel!|%s's %m wurde durch den Magiemantel zurückgeworfen!
+77 %s säubert das Feld von %tf's Team!
 78 Intensität %d!
 81 %s lernt %m!
 82 Nichts geschieht...!
-84 %s identified %f!
-86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
-87 %s erholt sich !|%s erholt sich komplett !|%s erholt sich ein wenig !
+84 %s identifiziert %f!
+86 %ts's team ist durch Nebel umgeben!|%ts's Nebel lässt nach!|Der Nebel hindert %f vor de Absinken seiner Statuswerte!
+87 %s erholt sich!|%s erholt sich komplett!|%s erholt sich ein wenig!
 88 Die Stärke von Elektroattacken wurde geschwächt!|Die Stärke von Feuerattacken wurde geschwächt!
 92 %s leidet unter dem Alptraum!
-93 %s calmed down!|%s became confused due to fatigue!
-94 The battlers shared their pain!
+93 %s beruhigt sich!|%s became confused due to fatigue!
+94 Die Pokémon teilen sich ihr Leid!
 95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
-96 %s's present healed %f some HP!
+96 %s's Geschenk heilt einige KP von %f!
 97 %s kopiert %f's Statusveränderungen!
 98 %s moved its status onto %f!
 102 %s's rage builds up!
-103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
+103 %s kam von %f's %m frei!|%s zerstört die Egelsamen!|%s fegt die Stachler vom Feld!|%s fegt die Giftspitzen vom Felt!|%s fegt die Tarnsteine vom Feld!
 104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbiert Sonnenlicht!
 105 %s recycled %i!
 106 %s went to sleep and became healthy!
@@ -79,23 +79,52 @@
 118 %s snatched %f's %m!|%s waits for a target to make a move!
 121 Die Pokemon auf gegnerischer Seite sind von Stacheln umgeben!|%s wurde durch Stachler verletzt!
 122 %s released!
-123 It reduced the PP of %f's %m by 4!
-124 Um das Team von %tf schweben spitze Steine !|%s wurde von spitzen Steinen getroffen !
+123 Es verringert die AP von %f's %m um 4!
+124 Um das Team von %tf schweben spitze Steine!|%s wurde von spitzen Steinen getroffen!
 125 %s stockpiled %d!
-127 %s is hit with recoil!
-128 %s hat bereits einen Delegator.|Delegator von %s verschwindet !|Delegator von %f fängt %m ab !|Delegator von %s fängt den Angriff ab !|%s erschafft einen Delegator !
+127 %s erleidet Rückstoßschaden!
+128 %s hat bereits einen Delegator!|Delegator von %s verschwindet!|Delegator von %f fängt %m ab!|Delegator von %s fängt den Angriff ab!|%s erschafft einen Delegator!
 131 %s swallowed!
-132 %s switched items with %f!|%s obtained one %i!
+132 %s tauscht Items mit %f!|%s erhält %i!
 133 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
-134 %s kann %m nach Verhöhner nicht einsetzen!|%f fällt auf Verhöhner herein!|%s's Verhöhner hat aufgehört!
+134 %s kann %m nach Verhöhner nicht einsetzen!|%f fällt auf Verhöhner herein!|%s's Verhöhner lässt nach!
 135 %f is now tormented!
-136 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
+136 Giftspitzen wurden auf das Feld von %tf ausgelegt!|Die Giftspitzen verschwinden von %s's Feld!
 137 %s transformed into %p!
 138 %s verdreht die Dimensionen!|Die Dimensionen sind wieder normal!
-141 %s verursacht einen Aufruhr!|%s macht einen Aufruhr!|%s calmed down!|%s wacht auf!|%s stays awake because of the uproar!
+141 %s verursacht einen Aufruhr!|%s macht einen Aufruhr!|%s beruhigt sich!|%s wacht auf!|%s stays awake because of the uproar!
 142 %q's Wunschtraum erfüllt sich!
 143 %f hat nun die Fähigkeit Insomnia!
 144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
 149 All stat changes were elimnated!
-150 %s landed on the ground!
-151 %s planted its roots!|%s absorbed nutrients with its roots!
+150 %s landet auf dem Boden!
+151 %s pflanzt seine Wurzeln!|%s nimmt mit seinen Wurzeln Nährstoffe auf!
+155 %s und %f haben ihre Kraft aufgeteilt!|%s und %f haben ihre Verteidigung aufgeteilt!
+156 %s negiert die Itemeffekte!|Die Items funktionieren wieder!
+157 %s transformed into the %t type!
+158 %f gained %a!
+160 %f's %i burned!
+162 %s gave %f its %i!
+164 %s's status cleared!
+168 %s tauscht die Verteidigung und die Spezial Vertidigung von allen Pokémon!|Die Verteidigung und die Spezial Verteidigung der Pokémon ist wieder normal!
+169 %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
+170 %ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
+171 %s is being sent back!
+172 %s type changed to match %f's types!
+174 %f was hurled into the air!|%s was freed from the telekinesis!
+175 %f fell straight down!
+178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
+179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
+180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
+190 %f took the kind offer!
+199 %ts's Team ist durch Trickschutz geschützt!Trickschutz von %ts's Team wurde zerstört!
+201 The terrain became electrified!|Electricity on the terrain faded away.
+202 %f became electrified!
+203 Die Pokémon können nicht mehr fliehen!|Fairy Lock's effect disappeared.
+205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field!
+206 %s schützt sich selbst!
+207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
+208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!
+210 Sticky Web was put around %tf's team!|%s became entangled in Sticky Web!
+211 %f had its stat boosts reversed!
+215 %f was covered in powder!|%s exploded!
