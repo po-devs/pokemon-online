@@ -2237,14 +2237,19 @@ bool BattleBase::canGetStatus(int player, int status)
     }
 }
 
-bool BattleBase::hasType(int player, int type)
+bool BattleBase::hasType(int player, int type) const
 {
-    return fpoke(player).types.indexOf(type) != -1;
+    return getTypes(player).indexOf(type) != -1;
 }
 
-int BattleBase::getType(int player, int slot)
+int BattleBase::getType(int player, int slot) const
 {
     return fpoke(player).types.count() >= slot ? fpoke(player).types[slot-1] : Type::Curse;
+}
+
+QVector<int> BattleBase::getTypes(int player) const
+{
+    return fpoke(player).types;
 }
 
 bool BattleBase::inflictStatMod(int player, int stat, int mod, int attacker, bool tell)
