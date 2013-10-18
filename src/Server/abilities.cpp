@@ -312,8 +312,9 @@ struct AMDrizzle : public AM {
             } else {
                 b.callForth(w, 5);
             }
+        } else {
+            b.callForth(w, -1);
         }
-        b.callForth(w, -1);
     }
 };
 
