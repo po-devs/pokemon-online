@@ -1422,11 +1422,7 @@ struct AMPickPocket : public AM
 
     /* Ripped off from Covet */
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.koed(s) && !b.hasWorkingAbility(t, Ability::StickyHold)
-                    && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
-                    && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
-                            && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item()))
-            {
+        if (!b.koed(t) && !b.koed(s) && b.poke(s).item() == 0 && b.canLoseItem(t,s)) {
             b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -2181,11 +2177,7 @@ struct AMMagician : public AM
 
     /* Ripped off from Covet */
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.koed(s) && !b.hasWorkingAbility(t, Ability::StickyHold)
-                    && b.ability(t) != Ability::Multitype && !b.hasWorkingAbility(s, Ability::Multitype)
-                    && b.pokenum(s).pokenum != Pokemon::Giratina && b.poke(s).item() == 0
-                            && b.pokenum(t).pokenum != Pokemon::Giratina && !ItemInfo::isMail(b.poke(t).item()))
-            {
+        if (!b.koed(t) && !b.koed(s) && b.poke(s).item() == 0 && b.canLoseItem(t,s)) {
             b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);

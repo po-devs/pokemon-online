@@ -944,15 +944,7 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
-        if (b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-                && (!b.hasWorkingAbility(t, Ability::Multitype) || (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && !b.hasWorkingAbility(s, Ability::Multitype)
-                && b.poke(s).item() == 0
-                && !(b.poke(t).item() == Item::GriseousOrb && (b.gen() <= 4 || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina))
-                && !ItemInfo::isMail(b.poke(t).item())
-                && !(ItemInfo::isDrive(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
-            /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
-        {
+        if (b.poke(s).item() == 0 && b.canLoseItem(t, s)) {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -3011,10 +3003,7 @@ struct MMKnockOff : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
-                                                                                                    (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
-                                                                                                                                     PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
+        if (!b.koed(t) && b.canLoseItem(t,s))
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -3031,18 +3020,7 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-                || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item()) || ItemInfo::isPlate(b.poke(s).item())))
-                || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
-                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
-                || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
-            /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
-        {
-            fturn(b,s).add(TM::Failed);
-        }
-        /* Knock off */
-        if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
-                             || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool())) {
+        if (!b.koed(t) && !b.koed(s) && b.canLoseItem(t, s) && b.canLoseItem(s, s)) {
             fturn(b,s).add(TM::Failed);
         }
     }

@@ -3262,6 +3262,49 @@ void BattleSituation::acqItem(int player, int item) {
     }
 }
 
+bool BattleSituation::canLoseItem(int player, int attacker)
+{
+    const auto& poke = this->poke(player);
+    int item = poke.item();
+    if (item == 0) {
+        return false;
+    }
+    if (attacker != player && hasWorkingAbility(player, Ability::StickyHold)) {
+        return false;
+    }
+    if (ability(player) == Ability::Multitype) {
+        if (gen() <= 4) {
+            return false;
+        }
+        if (ItemInfo::isPlate(item)) {
+            return false;
+        }
+    }
+    if (item == Item::GriseousOrb) {
+        if (gen() <= 4) {
+            return false;
+        }
+        if (poke.num().original() == Pokemon::Giratina) {
+            return false;
+        }
+    }
+    if (ItemInfo::isMail(item)) {
+        return false;
+    }
+
+    if (ItemInfo::isDrive(item) && poke.num().original() == Pokemon::Genesect) {
+        return false;
+    }
+    if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
+        return false;
+    }
+    /* Knock off */
+    if (gen() <= 4 && (battleMemory().value(QString("KnockedOff%1%2").arg(this->player(player)).arg(currentInternalId(player))).toBool())) {
+        return false;
+    }
+    return true;
+}
+
 void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
