@@ -2103,12 +2103,12 @@ struct AMStanceChange : public AM {
         if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
             return;
 
-        bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
+        bool daruma = tmove(b,s).category == Move::Physical;
 
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, tmove(b,s).category == Move::Physical));
+        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
     }
 };
 
