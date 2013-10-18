@@ -488,8 +488,9 @@ public:
     virtual void inflictStatus(int target, int status, int player, int minTurns, int maxTurns);
     virtual bool canGetStatus(int player, int status);
     virtual bool canSendPreventSMessage(int player, int attacker);
-    bool hasType(int player, int type);
-    virtual int getType(int player, int slot);
+    bool hasType(int player, int type) const;
+    virtual int getType(int player, int slot) const;
+    virtual QVector<int> getTypes(int player) const;
     virtual bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell=true);
 
     virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
