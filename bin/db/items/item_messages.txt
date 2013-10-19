@@ -20,6 +20,7 @@
 39 %s used its Eject Button!
 40 %s's Berserk Gene activated!|%s's Attack went way up!
 41 %s's Destiny Knot activated, %f is in love!
+43 %s used its Weakness Policy!
 66 %s megavolved into %p!
 1007 %s recovered from fainting!
 1999 %s recovered from fainting!
