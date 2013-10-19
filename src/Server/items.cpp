@@ -620,17 +620,12 @@ struct IMAbsorbBulb : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt()) {
-            int stat;
-            if (b.poke(s).item() == Item::CellBattery) {
-                if (b.hasMaximalStatMod(s, Attack))
-                    return;
-                stat = Attack;
-            } else {
-                if (b.hasMaximalStatMod(s, SpAttack))
-                    return;
-                stat = SpAttack;
-            }
+        int tp = poke(b,s)["ItemArg"].toString().section('_', 0, 0).toInt();
+        if (!b.koed(s) && type(b,t) == tp) {
+            int stat = poke(b,s)["ItemArg"].toString().section('_', 1).toInt();
+            if (b.hasMaximalStatMod(s, stat))
+                return;
+            stat = Attack;
             b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
             b.inflictStatMod(s, stat, 1, s, false);
