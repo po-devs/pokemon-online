@@ -3020,7 +3020,7 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (!b.koed(t) && !b.koed(s) && b.canLoseItem(t, s) && b.canLoseItem(s, s)) {
+        if (b.koed(t) || b.koed(s) || !b.canLoseItem(t, s) || !b.canLoseItem(s, s)) {
             fturn(b,s).add(TM::Failed);
         }
     }
