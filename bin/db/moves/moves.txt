@@ -118,7 +118,7 @@
 117 Bide
 118 Metronome
 119 Mirror Move
-120 Selfdestruct
+120 Self-Destruct
 121 Egg Bomb
 122 Lick
 123 Smog
@@ -133,7 +133,7 @@
 132 Constrict
 133 Amnesia
 134 Kinesis
-135 Softboiled
+135 Soft-Boiled
 136 High Jump Kick
 137 Glare
 138 Dream Eater
