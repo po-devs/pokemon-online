@@ -1447,6 +1447,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     calleffects(player,player,"EvenWhenCantMove");
+    callaeffects(player,player,"EvenWhenCantMove");
 
     if (!testStatus(player)) {
         goto trueend;
