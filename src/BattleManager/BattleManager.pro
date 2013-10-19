@@ -26,7 +26,8 @@ SOURCES += \
     proxydatacontainer.cpp \
     datacontainer.cpp \
     regularbattlescene.cpp \
-    moveinfoaccessor.cpp
+    moveinfoaccessor.cpp \
+    zoneproxy.cpp
 
 HEADERS +=\
     command.h \
@@ -61,7 +62,8 @@ HEADERS +=\
     ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/pokemoninfo.h \
     ../PokemonInfo/battlestructs.h \
-    moveinfoaccessor.h
+    moveinfoaccessor.h \
+    zoneproxy.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5 

@@ -213,6 +213,9 @@ Item {
                 if (zone.stealthRocks) {
                     hazards.push("Stealth Rocks");
                 }
+                if (zone.stickyWeb) {
+                    hazards.push("Sticky Web");
+                }
                 if (zone.spikesLevel > 0) {
                     hazards.push("Spikes level " + zone.spikesLevel);
                 }
