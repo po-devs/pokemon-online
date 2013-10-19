@@ -1,5 +1,5 @@
 ﻿0 
-1 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
+1 %f wurde KP abgesaugt!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 2 %s umgibt sich mit eimem Ring aus Wasser!|Aquaring heilt %s's KP.
 3 A soothing aroma wafted through the area!|Eine Glocke läutet!
 7 %q attacked!
@@ -15,7 +15,7 @@
 18 %s began charging power!
 19 %s transformed into the %t type!
 20 %s transformed into the %t type!
-23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
+23 %s begged %f!%f gave its %i to %s|%s stiehlt %f's %i!
 25 %s verliert einige KP und legt einen Fluch auf %f!|%s nimmt durch den Fluch Schaden!
 26 %s nahm %f mit sich!|%s versucht das Ziel mit sich zu nehmen!
 27 %s schützt sich selbst!
@@ -35,7 +35,7 @@
 54 %f's %m verliert alle seine  AP wegen Nachspiel von %s!
 55 %s swapped its boosts with %f!
 57 Es fängt an zu hageln!|Es fängt an zu regnen!|Ein Sandsturm zieht auf!|Das Sonnenlicht wird stärker!
-58 %s hat sich in %f verliebt!|%s hat sich verliebt!|%s ist starr vor Liebe!
+58 %s hat sich in %f verliebt!|%f hat sich verliebt!|%s ist starr vor Liebe!
 59 %f kann keine KP mehr wiederherstellen!|%s kann %m wegen Heilblockade nicht benutzen!|%s's Heilblockade lässt nach!
 60 %s erholt sich!
 61 %s erholt sich!|Der Wunschtraum erfüllt sich!|Es wurde von mystischem Mondlicht umhüllt!
@@ -48,14 +48,14 @@
 72 Es hat keine Wirkung auf %s...|%f wurde bepflanzt!|Egelsamen schadet %s!
 73 Reflektor erhöht %ts's Verteidigung des Teams!|Lichtschild erhöht %ts's Spezial Verteidigung des Teams!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's Reflektor lässt nach!|%ts's Lichtschild lässt nach!
 74 %s took aim at %f!
-75 %ts's ist nun vor Volltreffern geschützt!|%ts's Glück lässt nach!
+75 %ts's Team ist nun vor Volltreffern geschützt!|%ts's Glück lässt nach!
 76 %s umgibt ich mit einem Magiemantel!|%s's %m wurde durch den Magiemantel zurückgeworfen!
 77 %s säubert das Feld von %tf's Team!
 78 Intensität %d!
 81 %s lernt %m!
 82 Nichts geschieht...!
 84 %s identifiziert %f!
-86 %ts's team ist durch Nebel umgeben!|%ts's Nebel lässt nach!|Der Nebel hindert %f vor de Absinken seiner Statuswerte!
+86 %ts's Team ist durch Nebel umgeben!|Nebel lässt nach!|Der Nebel hindert %f vor de Absinken seiner Statuswerte!
 87 %s erholt sich!|%s erholt sich komplett!|%s erholt sich ein wenig!
 88 Die Stärke von Elektroattacken wurde geschwächt!|Die Stärke von Feuerattacken wurde geschwächt!
 92 %s leidet unter dem Alptraum!
@@ -94,7 +94,7 @@
 138 %s verdreht die Dimensionen!|Die Dimensionen sind wieder normal!
 141 %s verursacht einen Aufruhr!|%s macht einen Aufruhr!|%s beruhigt sich!|%s wacht auf!|%s stays awake because of the uproar!
 142 %q's Wunschtraum erfüllt sich!
-143 %f hat nun die Fähigkeit Insomnia!
+143 %f hat nun die Fähigkeit %a!
 144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
 149 All stat changes were elimnated!
 150 %s landet auf dem Boden!
