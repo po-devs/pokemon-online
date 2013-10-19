@@ -790,6 +790,7 @@
 676:0 Coiffwaff
 677:0 Psiau
 678:0 Psiaugon
+678:1 Psiaugon-F
 679:0 Gramokles
 680:0 Duokles
 681:0 Durengard
@@ -823,7 +824,13 @@
 708:0 Paragoni
 709:0 Trombork
 710:0 Irrbis
+710:1 Irrbis-S
+710:2 Irrbis-L
+710:3 Irrbis-XL
 711:0 Pumpdjinn
+711:1 Pumpdjinn-S
+711:2 Pumpdjinn-L
+711:3 Pumpdjinn-XL
 712:0 Arktip
 713:0 Arktilas
 714:0 eF-eM

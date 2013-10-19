@@ -581,28 +581,28 @@
 580 Kameradschaft
 581 Halloween
 582 Wasser-Shuriken
-583 
+583 Duftwolke
 584 Rülpser
 585 Vertrauenssache
 586 Säuselstimme
 587 Mystowellen
 588 Elektrofeld
 589 Elektrifizierung
-590 
-591 
-592 
+590 Feenschloss
+591 Stachelfinale
+592 Floraschutz
 593 Grasfeld
-594 
+594 Plasmaschauer
 595 Königsschild
 596 Bodengewalt
-597 
+597 Magnetregler
 598 Tatami-Schild
 599 Nebelfeld
 600 Abgangstirade
 601 Pulverschleuder
 602 Steigerungshieb
-603 
+603 Pflüger
 604 Schutzstacheln
-605 
+605 Klebenetz
 606 Invertigo
-607 
+607 Giftfalle
