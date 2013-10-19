@@ -979,8 +979,20 @@ struct IMSafetyGoggles  : public IM {
     }
 };
 
-struct IMWeaknessPolicy  : public IM {
+struct IMWeaknessPolicy  : public IM
+{
+    IMWeaknessPolicy() {
+        functions["UponOffensiveDamageReceived"] = &uodr;
+    }
 
+    static void uodr(int s, int t, BS &b) {
+        if (fturn(b,t).typeMod >= 0) {
+            b.sendItemMessage(43, s);
+            b.disposeItem(s);
+            b.inflictStatMod(s, Attack, 2, s);
+            b.inflictStatMod(s, SpAttack, 2, s);
+        }
+    }
 
 };
 
