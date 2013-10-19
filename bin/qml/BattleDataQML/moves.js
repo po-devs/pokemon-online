@@ -56,6 +56,7 @@ params[BattleData.BoneRush].image = "image://pokeinfo/item/200";
 params[BattleData.RockBlast].image = "../../images/stealth-rock.png";
 
 effects[BattleData.Detect] = effects[BattleData.Protect] = "Moves/Protect.qml"
+effects[BattleData.SpikyShield] = effects[BattleData.KingsShield] = effects[BattleData.Detect]
 
 effects[BattleData.CloseCombat] = "Moves/CloseCombat.qml";
 effects[BattleData.Scald] = effects[BattleData.Surf] = "Moves/Surf.qml";
@@ -81,7 +82,7 @@ params[BattleData.TakeDown].update({easing_in_x: Easing.OutQuad, easing_in_y: Ea
 params[BattleData.BodySlam].easing_in_y = Easing.OutBack;
 params[BattleData.QuickAttack].attack_time = 200;
 params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
-params[BattleData.VoltSwitch] = params[BattleData.U_turn];
+params[BattleData.PartingShot] = params[BattleData.VoltSwitch] = params[BattleData.U_turn];
 // Placeholder image for FlameWheel
 params[BattleData.FlameWheel].update({effect: "../../images/flame0.png", attack_time: 700});
 params[BattleData.FlareBlitz].update({effect: "../../images/flame0.png", attack_time: 700, easing_in_x: Easing.InBack,
@@ -91,6 +92,8 @@ params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
 
 params[BattleData.Protect] = {"color": "#a8a878"};
 params[BattleData.Detect] = {"color": "#c03028"};
+params[BattleData.SpikyShield] = {"color": "#78c850"};
+params[BattleData.KingsShield] = {"color": "#b8b8d0"};
 params[BattleData.Scald] = {"flames": true};
 
 function useAttack(attacker, attack, defender, params) {
