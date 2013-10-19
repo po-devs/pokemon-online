@@ -2115,7 +2115,9 @@ namespace Item
         PixiePlate=330,
         AssaultVest=331,
         SafetyGoggles=332,
-        WeaknessPolicy=333
+        WeaknessPolicy=333,
+        Snowball,
+        LuminousMoss
     };
 
     enum Target

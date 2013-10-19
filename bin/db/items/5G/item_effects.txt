@@ -115,8 +115,8 @@
 235 34#Rugged Helmet
 236 35#Balloon
 237 38#Red Card
-240 36-10#Bulb
-241 36-12#Rechargeable battery
+240 36-10_3#Absorb Bulb
+241 36-12_1#Rechargeable battery
 242 39#Escape Button
 243 37-9#Fire Jewel
 244 37-10#Water Jewel
