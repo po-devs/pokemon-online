@@ -173,17 +173,17 @@
 172 Megawumme
 173 Familienbande
 174 
-175 
+175 Wandlungskunst
 176 Frostschicht
 177 Taktikwechsel
 178 Titankiefer
 179 Zuckerhülle
 180 Krallenwucht
-181 
+181 Unbeugsamkeit
 182 Orkanschwingen
 183 
 184 
-185 
+185 Kugelsicher
 186 
-187 
+187 Zauberer
 188 
