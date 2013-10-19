@@ -685,6 +685,10 @@ void RegularBattleScene::updateToolTip(int spot)
         tooltip += "\n" + tr("Stealth Rock");
     }
 
+    if (zone.stickyWeb()) {
+        tooltip += "\n" + tr("Sticky Web");
+    }
+
     if (data()->field().weather() != Weather::NormalWeather) {
         tooltip += "\n" + tr("Weather: %1").arg(TypeInfo::weatherName(data()->field().weather()));
     }
