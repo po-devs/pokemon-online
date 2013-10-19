@@ -61,7 +61,9 @@
 97 %s raised its Speed in fear!
 99 %s's Healing Heart cured %f's status!
 102 %s makes %tf's team too nervous to eat Berries!
+103 %s is radiating a %t aura!
 104 %f's %a prevents stats changes to affect %s!
 107 %s had its type changed to %t!
 113 Competitive sharply raised %s's Sp. Attack!
 115 %s's Gooey slows down %f!
+117 %s reversed all other Pokémon's auras!
