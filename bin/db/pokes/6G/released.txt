@@ -760,6 +760,7 @@
 676:0 Furfrou
 677:0 Espurr
 678:0 Meowstic
+678:1 Meowstic-F
 679:0 Honedge
 680:0 Doublade
 681:0 Aegislash
@@ -793,7 +794,13 @@
 708:0 Phantump
 709:0 Trevenant
 710:0 Pumpkaboo
+710:1 Pumpkaboo-S
+710:2 Pumpkaboo-L
+710:3 Pumpkaboo-XL
 711:0 Gourgeist
+711:1 Gourgeist-S
+711:2 Gourgeist-L
+711:3 Gourgeist-XL
 712:0 Bergmite
 713:0 Avalugg
 714:0 Noibat
