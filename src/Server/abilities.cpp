@@ -2094,7 +2094,7 @@ struct AMToughClaws : public AM {
 
 struct AMStanceChange : public AM {
     AMStanceChange() {
-        functions["BeforeTargetList"] = &btl;
+        functions["EvenWhenCantMove"] = &btl;
     }
 
     static void btl (int s, int, BS &b) {
@@ -2186,6 +2186,7 @@ struct AMMagician : public AM
 
 /* Events:
     PriorityChoice
+    EvenWhenCantMove
     AfterNegativeStatChange
     UponPhysicalAssault
     OnPhysicalAssault
