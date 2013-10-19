@@ -1974,8 +1974,10 @@ struct AMAura : public AM {
         functions["UponSetup"] = &us;
     }
 
-    static void us(int, int, BS &b) {
+    static void us(int s, int, BS &b) {
         addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Aura", &dgaf);
+        int type = poke(b,s)["AbilityArg"].toString().mid(5).toInt();
+        b.sendAbMessage(103,0,s,0,type);
     }
 
     static void dgaf(int s, int, BS &b) {
@@ -2000,6 +2002,16 @@ struct AMAura : public AM {
         }
 
         b.chainBp(s, boost);
+    }
+};
+
+struct AMAuraBreak : public AM {
+    AMAuraBreak() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us(int s, int, BS &b) {
+        b.sendAbMessage(117,0,s,0,Type::Curse);
     }
 };
 
@@ -2332,6 +2344,7 @@ void AbilityEffect::init()
     REGISTER_AB(114, GaleWings);
     REGISTER_AB(115, Gooey);
     REGISTER_AB(116, Magician);
+    REGISTER_AB(117, AuraBreak);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */

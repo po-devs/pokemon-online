@@ -130,6 +130,7 @@
 163 40#Turbo Blaze
 164 40#TeraVolt
 165 102-2#Aerilate
+166 117#Aurabreak
 168 103-Aura_16#Dark Aura
 169 103-Aura_17#Fairy Aura
 170 104-Veil_11#Flower Veil
