@@ -5491,9 +5491,9 @@ struct MMSoak : public MM {
     static void uas(int s, int t, BS &b) {
         int type = turn(b,s)["Soak_Arg"].toInt();
         if (move(b,s) == Move::Soak) {
-            b.setType(s, type);
+            b.setType(t, type);
         } else {
-            b.addType(s, type);
+            b.addType(t, type);
         }
         b.sendMoveMessage(157, 0, t, type, t);
     }
