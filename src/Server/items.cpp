@@ -965,9 +965,7 @@ struct IMSafetyGoggles  : public IM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        int mv = move(b,t);
-
-        if (mv == Move::PoisonPowder || mv == Move::SleepPowder || mv == Move::Powder) {
+        if (tmove(b,t).flags & Move::PowderFlag) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             //b.sendAbMessage(17, 0, s, t); //add message for Safety Goggles
         }
