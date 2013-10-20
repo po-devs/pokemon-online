@@ -2620,6 +2620,7 @@ QString TypeInfo::path(const QString& file)
 
 void TypeInfo::loadEff()
 {
+    m_TypeVsType.clear();
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++)
     {
         QHash<int, QString> temp;
