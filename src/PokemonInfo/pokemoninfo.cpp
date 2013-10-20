@@ -25,8 +25,7 @@ QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type1;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type2;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Abilities[3];
-QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_BaseStats;
-QHash<Pokemon::uniqueId,int> PokemonInfo::m_SpecialStats;
+QVector<QHash<Pokemon::uniqueId, PokeBaseStats> > PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
@@ -557,11 +556,7 @@ int PokemonInfo::calc_stat(int gen, quint8 basestat, int level, quint8 dv, quint
 
 int PokemonInfo::Stat(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int stat, int level, quint8 dv, quint8 ev)
 {
-    quint8 basestat = PokemonInfo::BaseStats(pokeid).baseStat(stat);
-
-    if (stat == SpAttack && gen.num == 1) {
-        basestat = SpecialStat(pokeid);
-    }
+    quint8 basestat = PokemonInfo::BaseStats(pokeid, gen).baseStat(stat);
 
     if (stat == Hp) {
         /* Formerly direct check for Shedinja */
@@ -647,7 +642,7 @@ void PokemonInfo::init(const QString &dir)
         }
 
         QHash<Pokemon::uniqueId, QString> temp;
-        fill_uid_str(temp, path("stats.txt"), gen);
+        fill_uid_str(temp, path("stats.txt", gen));
 
         QHashIterator<Pokemon::uniqueId, QString> it(temp);
 
@@ -663,7 +658,6 @@ void PokemonInfo::init(const QString &dir)
     }
     
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
-    fill_uid_int(m_SpecialStats, path("specialstat.txt"));
     loadClassifications();
     loadGenderRates();
     loadHeights();
@@ -1356,19 +1350,6 @@ PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid, Pokemon::g
     return m_BaseStats[gen.num-GEN_MIN].value(pokeid);
 }
 
-PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid, int gen)
-{
-    return m_BaseStats[gen].value(pokeid);
-}
-
-int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
-{
-    if (!Exists(pokeid, 1)) {
-        return 0;
-    }
-    return m_SpecialStats[pokeid.pokenum];
-}
-
 void PokemonInfo::loadNames()
 {
     /* The need for options prevents us from using fill_uid_str */
@@ -1628,7 +1609,7 @@ void PokemonInfo::makeDataConsistent()
 
             // Base stats.
             if(!m_BaseStats[i].contains(id)) {
-                m_BaseStats[i][id] = m_BaseStats[i].value(OriginalForme(id), PokeBaseStats());
+                m_BaseStats[i][id] = m_BaseStats[i].value(OriginalForme(id));
                 if (id != OriginalForme(id))
                     m_AestheticFormes.insert(id);
             }

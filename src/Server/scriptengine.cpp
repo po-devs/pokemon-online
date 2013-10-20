@@ -2400,18 +2400,22 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
-QScriptValue ScriptEngine::pokeBaseStats(int id, Pokemon::gen gen)
+QScriptValue ScriptEngine::pokeBaseStats(int id, int gen)
 {
     QScriptValue ret;
-    if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
-        ret = myengine.newArray(6);
-        PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id), gen);
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
+            ret = myengine.newArray(6);
+            PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id), gen);
 
-        for (int i = 0; i < 6; i++) {
-            ret.setProperty(i, bs.baseStat(i));
+            for (int i = 0; i < 6; i++) {
+                ret.setProperty(i, bs.baseStat(i));
+            }
+        }else{
+            warn("pokeBaseStats", "Pokemon doesn't exist.");
         }
-    }else{
-        warn("pokeBaseStats", "Pokemon doesn't exist.");
+    } else {
+        warn("pokeBaseStats", "generation is not supported.");
     }
     return ret;
 }

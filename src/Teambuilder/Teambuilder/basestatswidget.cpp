@@ -33,7 +33,7 @@ void BaseStatsWidget::setGen(const Pokemon::gen &gen)
 
 void BaseStatsWidget::setNum(const Pokemon::uniqueId &num)
 {
-    PokeBaseStats b = PokemonInfo::BaseStats(num, *curgen);
+    PokeBaseStats b = PokemonInfo::BaseStats(num, curgen);
 
     for (int i = 0; i < 6; i++) {
         stats[i]->setValue(std::min(int(b.baseStat(i)), stats[i]->maximum()));
