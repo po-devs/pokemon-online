@@ -2,6 +2,7 @@
 #define BASESTATSWIDGET_H
 
 #include <QWidget>
+#include "../PokemonInfo/geninfo.h"
 
 namespace Pokemon {
     class uniqueId;
@@ -23,13 +24,13 @@ public:
     ~BaseStatsWidget();
 public slots:
     void setGen(const Pokemon::gen &gen);
-    void setNum(const Pokemon::uniqueId &num, const Pokemon::gen &gen);
+    void setNum(const Pokemon::uniqueId &num);
 private:
     Ui::BaseStatsWidget *ui;
 
     QProgressBar *stats[6];
 
-    Pokemon::gen *curgen;
+    Pokemon::gen curgen;
 };
 
 #endif // BASESTATSWIDGET_H
