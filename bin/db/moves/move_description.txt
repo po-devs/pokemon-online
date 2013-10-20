@@ -566,18 +566,18 @@
 565 Inflicts regular damage with no additional effect.
 566 This move is Fighting and Flying type simultaneously.
 567 Changes the target's type to pure Grass.
-568 Has a 0% chance to freeze the target. Super-effective on water-types.
+568 Has a 10% chance to freeze the target. Super-effective on water-types.
 569 Requires a charging turn. Raises the user's Special Attack, Special Defence and Speed by one stage.
 570 Inflicts regular damage with no additional effect.
 571 Attacks for 4-5 rounds. Target can't switch during the attack.
-572 Has a 0% chance to lower the target's Special Attack by one stage.
+572 Has a 30% chance to lower the target's Special Attack by one stage.
 573 Inflicts damage and lowers the target's Special Attack
 574 Lowers the target's Attack and Special Attack by one stage.
 575 Inflicts damage and paralyses the target.
 576 Heals the user by half the damage inflicted.
 577 Heals the user by half the damage inflicted.
 578 Dodges attacks on first turn, strikes on second. Not blocked by Protect or Detect.
-579 Has a 0% chance to lower the target's Attack.
+579 Has a 10% chance to lower the target's Attack.
 580 Lowers the target's Attack by one stage.
 581 Changes the target's type to pure Ghost.
 582 Hits 2-5 times. 3/8 chance for 2 and 3 hits, 1/8 for 4 and 5. Priority level 1.
