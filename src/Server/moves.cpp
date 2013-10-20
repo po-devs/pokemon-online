@@ -3866,13 +3866,13 @@ struct MMDefog : public MM
 
         bool clear = false;
 
-        QVector<int> players = b.player(t);
+        QVector<int> players = QVector<int>() << b.player(t);
         if (b.gen() >= 6) {
             players.push_back(b.opponent(b.player(t)));
         }
 
         foreach (int p, players) {
-            BS::context &c = team(b,b.player(t));
+            BS::context &c = team(b,p);
 
             if (c.remove("Barrier1Count") || c.remove("Barrier2Count") || c.remove("Spikes") || c.remove("ToxicSpikes")
                     || c.remove("StealthRock") || c.remove("MistCount") || c.remove("SafeGuardCount") || c.remove("StickyWeb")) {
