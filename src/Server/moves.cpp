@@ -3421,7 +3421,8 @@ struct MMHealBlock: public MM
 
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag) {
+            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
+                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3429,7 +3430,8 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if(tmove(b,s).flags & Move::HealingFlag) {
+        if(tmove(b,s).flags & Move::HealingFlag
+                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.sendMoveMessage(59,1,s,Type::Psychic,s,mv);
         }
