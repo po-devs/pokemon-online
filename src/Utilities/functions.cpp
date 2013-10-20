@@ -6,6 +6,9 @@
 #include <QDesktopServices>
 #endif
 
+#include <QApplication>
+#include <QDesktopWidget>
+
 #include "functions.h"
 
 QString escapeHtml(const QString & toConvert)
@@ -78,13 +81,19 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
     settings.beginGroup(w->metaObject()->className());
     if (settings.contains("size") || !defaultSize.isEmpty())
         w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
-//    if (settings.contains("pos")) {
-//        QPoint pos = settings.value("pos").toPoint();
-//        /* Checks if the position stored is not off the screen */
-//        if (QApplication::desktop()->screenGeometry(pos).contains(pos)) {
-//            w->topLevelWidget()->move(settings.value("pos").toPoint());
-//        }
-//    }
+    if (settings.contains("pos")) {
+        QPoint pos = settings.value("pos").toPoint();
+        if (pos.x() < 0) {
+            pos.setX(0);
+        }
+        if (pos.y() < 0) {
+            pos.setY(0);
+        }
+        /* Checks if the position stored is not off the screen */
+        if (QApplication::desktop()->screenGeometry(pos).contains(pos)) {
+            w->topLevelWidget()->move(settings.value("pos").toPoint());
+        }
+    }
     if (settings.contains("maximized") && settings.value("maximized").toBool())
         w->topLevelWidget()->showMaximized();
     else {
