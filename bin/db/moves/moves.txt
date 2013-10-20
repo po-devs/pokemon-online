@@ -26,7 +26,7 @@
 25 Mega Kick
 26 Jump Kick
 27 Rolling Kick
-28 Sand-Attack
+28 Sand Attack
 29 Headbutt
 30 Horn Attack
 31 Fury Attack
