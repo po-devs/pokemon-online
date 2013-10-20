@@ -3860,29 +3860,28 @@ struct MMDefog : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        bool clear = false;
-
-        BS::context &c = team(b,b.player(t));
-
         if (!b.hasMinimalStatMod(t, Evasion)) {
             b.inflictStatMod(t, Evasion, -1, s);
         }
 
-        if (c.contains("Barrier1Count") || c.contains("Barrier2Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
-                || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
-            clear = true;
+        bool clear = false;
 
-            c.remove("Barrier1Count");
-            c.remove("Barrier2Count");
-            c.remove("Spikes");
-            c.remove("ToxicSpikes");
-            c.remove("StealthRock");
-            c.remove("MistCount");
-            c.remove("SafeGuardCount");
+        QVector<int> players = b.player(t);
+        if (b.gen() >= 6) {
+            players.push_back(b.opponent(b.player(t)));
+        }
+
+        foreach (int p, players) {
+            BS::context &c = team(b,b.player(t));
+
+            if (c.remove("Barrier1Count") || c.remove("Barrier2Count") || c.remove("Spikes") || c.remove("ToxicSpikes")
+                    || c.remove("StealthRock") || c.remove("MistCount") || c.remove("SafeGuardCount") || c.remove("StickyWeb")) {
+                clear = true;
+            }
         }
 
         if (clear) {
-            b.sendMoveMessage(77,0, s, type(b,s), t);
+            b.sendMoveMessage(77,b.gen() >= 6, s, type(b,s), t);
         }
     }
 };
