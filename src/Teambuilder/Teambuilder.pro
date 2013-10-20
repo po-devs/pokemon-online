@@ -142,7 +142,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     loadline.h \
     spectatorwindow.h \
     downloadmanager.h \
-    teambuilderinterface.h
+    teambuilderinterface.h \
+    ../PokemonInfo/geninfo.h \
+    ../PokemonInfo/pokemon.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5

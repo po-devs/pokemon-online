@@ -3,11 +3,7 @@
 
 #include <QWidget>
 #include "../PokemonInfo/geninfo.h"
-
-namespace Pokemon {
-    class uniqueId;
-    class gen;
-}
+#include "../PokemonInfo/pokemon.h"
 
 class QProgressBar;
 
@@ -31,6 +27,7 @@ private:
     QProgressBar *stats[6];
 
     Pokemon::gen curgen;
+    Pokemon::uniqueId curnum;
 };
 
 #endif // BASESTATSWIDGET_H
