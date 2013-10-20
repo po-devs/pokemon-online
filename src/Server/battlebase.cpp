@@ -1985,7 +1985,7 @@ void BattleBase::testCritical(int player, int target)
     }
     PokeFraction critChance(up, down);
     int randnum = randint(512);
-    int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
+    int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id, gen()).baseSpeed();
     bool critical = randnum < std::min(510, baseSpeed * critChance);
 
     if (critical) {
