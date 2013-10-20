@@ -625,7 +625,6 @@ struct IMAbsorbBulb : public IM
             int stat = poke(b,s)["ItemArg"].toString().section('_', 1).toInt();
             if (b.hasMaximalStatMod(s, stat))
                 return;
-            stat = Attack;
             b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
             b.inflictStatMod(s, stat, 1, s, false);
