@@ -1214,7 +1214,7 @@ void BattleSituation::testCritical(int player, int target)
 
     bool critical;
     if (gen().num == 1) {
-        int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed() / 2;
+        int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id, gen()).baseSpeed() / 2;
 
         if (tmove(player).critRaise & 1) {
             baseSpeed *= 8;

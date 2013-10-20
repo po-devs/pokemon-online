@@ -141,7 +141,7 @@ void AdvancedSearch::search() {
             }
 
             {
-                PokeBaseStats b = PokemonInfo::BaseStats(num);
+                PokeBaseStats b = PokemonInfo::BaseStats(num, gen);
                 for (int j = 0; j < equalStats.size(); j++) {
                     if (b.baseStat(equalStats[j].first) != equalStats[j].second)
                         goto loopend;
