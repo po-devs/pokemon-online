@@ -90,8 +90,11 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
             pos.setY(0);
         }
         /* Checks if the position stored is not off the screen */
-        if (QApplication::desktop()->screenGeometry(pos).contains(pos)) {
-            w->topLevelWidget()->move(settings.value("pos").toPoint());
+        for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+            if (QApplication::desktop()->screenGeometry(i).contains(pos)) {
+                w->topLevelWidget()->move(pos);
+                break;
+            }
         }
     }
     if (settings.contains("maximized") && settings.value("maximized").toBool())
