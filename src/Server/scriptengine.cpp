@@ -2400,12 +2400,12 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
-QScriptValue ScriptEngine::pokeBaseStats(int id)
+QScriptValue ScriptEngine::pokeBaseStats(int id, Pokemon::gen gen)
 {
     QScriptValue ret;
     if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
         ret = myengine.newArray(6);
-        PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id));
+        PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id), gen);
 
         for (int i = 0; i < 6; i++) {
             ret.setProperty(i, bs.baseStat(i));

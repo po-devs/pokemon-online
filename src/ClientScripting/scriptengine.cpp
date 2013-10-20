@@ -726,7 +726,7 @@ QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
     if (gen == 1 && stat == SpAttack) {
         result = PokemonInfo::SpecialStat(pokemon);
     } else {
-        result = PokemonInfo::BaseStats(pokemon).baseStat(stat);
+        result = PokemonInfo::BaseStats(pokemon,gen).baseStat(stat);
     }
     return result;
 }

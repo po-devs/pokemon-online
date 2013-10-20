@@ -25,7 +25,7 @@ QHash<Pokemon::uniqueId, int> PokemonInfo::m_Genders;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type1;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type2;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Abilities[3];
-QHash<Pokemon::uniqueId, PokeBaseStats> PokemonInfo::m_BaseStats;
+QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_BaseStats;
 QHash<Pokemon::uniqueId,int> PokemonInfo::m_SpecialStats;
 QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
@@ -623,6 +623,7 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[0].clear();
     m_Abilities[1].clear();
     m_Abilities[2].clear();
+    m_BaseStats.clear();
 
     const int numGens = GenInfo::NumberOfGens();
 
@@ -631,6 +632,7 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[0].resize(numGens);
     m_Abilities[1].resize(numGens);
     m_Abilities[2].resize(numGens);
+    m_BaseStats.resize(numGens);
 
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
         Pokemon::gen gen(i, -1);
@@ -643,15 +645,29 @@ void PokemonInfo::init(const QString &dir)
                 fill_uid_int(m_Abilities[j][i-GenInfo::GenMin()], path(QString("ability%1.txt").arg(j+1), gen));
             }
         }
-    }
 
+        QHash<Pokemon::uniqueId, QString> temp;
+        fill_uid_str(temp, path("stats.txt"), gen);
+
+        QHashIterator<Pokemon::uniqueId, QString> it(temp);
+
+        while (it.hasNext()) {
+            it.next();
+            QString text_stats = it.value();
+            QTextStream statsstream(&text_stats, QIODevice::ReadOnly);
+
+            int hp, att, def, spd, satt, sdef;
+            statsstream >> hp >> att >> def >> spd >> satt >> sdef;
+            m_BaseStats[i-GenInfo::GenMin()][it.key()] = PokeBaseStats(hp, att, def, spd, satt, sdef);
+        }
+    }
+    
     fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     fill_uid_int(m_SpecialStats, path("specialstat.txt"));
     loadClassifications();
     loadGenderRates();
     loadHeights();
     loadDescriptions();
-    loadBaseStats();
 
     makeDataConsistent();
 }
@@ -1334,29 +1350,15 @@ int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen
     return ab != 0 ? ab : m_Abilities[slot][gen.num-GEN_MIN].value(pokeid.original());
 }
 
-void PokemonInfo::loadBaseStats()
+
+PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    m_BaseStats.clear();
-
-    QHash<Pokemon::uniqueId, QString> temp;
-    fill_uid_str(temp, path("stats.txt"));
-
-    QHashIterator<Pokemon::uniqueId, QString> it(temp);
-
-    while (it.hasNext()) {
-        it.next();
-        QString text_stats = it.value();
-        QTextStream statsstream(&text_stats, QIODevice::ReadOnly);
-
-        int hp, att, def, spd, satt, sdef;
-        statsstream >> hp >> att >> def >> spd >> satt >> sdef;
-        m_BaseStats[it.key()] = PokeBaseStats(hp, att, def, spd, satt, sdef);
-    }
+    return m_BaseStats[gen.num-GEN_MIN].value(pokeid);
 }
 
-PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid)
+PokeBaseStats PokemonInfo::BaseStats(const Pokemon::uniqueId &pokeid, int gen)
 {
-    return m_BaseStats.value(pokeid);
+    return m_BaseStats[gen].value(pokeid);
 }
 
 int PokemonInfo::SpecialStat(const Pokemon::uniqueId &pokeid)
@@ -1604,12 +1606,6 @@ void PokemonInfo::makeDataConsistent()
         if(!m_Weights.contains(id)) {
             m_Weights[id] = m_Weights.value(OriginalForme(id), "0.0");
         }
-        // Base stats.
-        if(!m_BaseStats.contains(id)) {
-            m_BaseStats[id] = m_BaseStats.value(OriginalForme(id), PokeBaseStats());
-            if (id != OriginalForme(id))
-                m_AestheticFormes.insert(id);
-        }
         // Other.
         if(!m_LevelBalance.contains(id)) {
             m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id), 1);
@@ -1628,6 +1624,13 @@ void PokemonInfo::makeDataConsistent()
                 if(!m_Abilities[j][i].contains(id)) {
                     m_Abilities[j][i][id] = m_Abilities[j][i].value(id.original(), Ability::NoAbility);
                 }
+            }
+
+            // Base stats.
+            if(!m_BaseStats[i].contains(id)) {
+                m_BaseStats[i][id] = m_BaseStats[i].value(OriginalForme(id), PokeBaseStats());
+                if (id != OriginalForme(id))
+                    m_AestheticFormes.insert(id);
             }
 
             if(!m_Type1[i].contains(id)) {
