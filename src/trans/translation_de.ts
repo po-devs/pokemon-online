@@ -3382,11 +3382,6 @@ Effekt: %5</translation>
         <translation>&amp;Verlassen</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/menu.ui" line="234"/>
-        <source>Tip of the day</source>
-        <translation>Tipp des Tages</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.ui" line="240"/>
         <source>&lt;&lt;</source>
         <translation>&lt;&lt;</translation>
