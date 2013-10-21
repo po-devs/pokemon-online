@@ -307,6 +307,9 @@ public:
     int weather;
     int weatherCount;
 
+    int terrain;
+    int terrainCount;
+
     void setupLongWeather(int weather);
     void setupItems(int player, const QHash<quint16,quint16> &items);
 

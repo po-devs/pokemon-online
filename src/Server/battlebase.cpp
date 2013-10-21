@@ -47,6 +47,8 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     forfeiter() = -1;
     weather = 0;
     weatherCount = -1;
+    terrain = 0;
+    terrainCount = -1;
 
     /* timers for battle timeout */
     timeleft[0] = 5*60;

@@ -6464,7 +6464,7 @@ struct MMElectricTerrain : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("ElectricTerrainCount").toInt() > 0) {
+        if (b.terrain == Type::Electric && b.terrainCount > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6472,15 +6472,19 @@ struct MMElectricTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
-        b.battleMemory()["ElectricTerrainCount"] = 5;
+        b.terrainCount = 5;
+        b.terrain = Type::Electric;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["ElectricTerrainCount"], -1);
-        if (b.battleMemory()["ElectricTerrainCount"].toInt() <= 0) {
+        if (b.terrain != Type::Electric) {
+            return;
+        }
+        b.terrainCount -= 1;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(201,1,s,Pokemon::Electric);
-            b.battleMemory().remove("ElectricTerrainCount");
+            b.terrain = 0;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "ElectricTerrain");
         }
     }
@@ -6558,7 +6562,7 @@ struct MMGrassyTerrain : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("GrassyTerrainCount").toInt() > 0) {
+        if (b.terrainCount > 0 && b.terrain == Type::Grass) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6566,20 +6570,23 @@ struct MMGrassyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(205,0,s,Pokemon::Grass);
-        b.battleMemory()["GrassyTerrainCount"] = 5;
-        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrainTerrain", &et);
+        b.terrainCount = 5;
+        b.terrain = Type::Grass;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["GrassyTerrainCount"], -1);
-        if (b.battleMemory()["GrassyTerrainCount"].toInt() <= 0) {
+        if (b.terrain != Type::Grass) {
+            return;
+        }
+        b.terrainCount -= 1;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(205,1,s,Pokemon::Grass);
-            b.battleMemory().remove("GrassyTerrainCount");
+            b.terrain = Type::Curse;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "GrassyTerrain");
         } else {
             b.sendMoveMessage(205,2,s,Pokemon::Grass);
-            foreach (int p, b.sortedBySpeed())
-            {
+            foreach (int p, b.sortedBySpeed()) {
                 b.healLife(p, b.poke(p).totalLifePoints()/16);
             }
         }
@@ -6682,6 +6689,8 @@ struct MMMatBlock : public MM
 
 
 struct MMMistyTerrain : public MM {
+    static int type = -Type::Water;
+
     MMMistyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
@@ -6692,7 +6701,7 @@ struct MMMistyTerrain : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("MistyCount").toInt() > 0) {
+        if (b.terrain == type && b.terrainCount > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6700,15 +6709,19 @@ struct MMMistyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(208,0,s,Pokemon::Fairy);
-        b.battleMemory()["MistyTerrainCount"] = 5;
+        b.terrainCount = 5;
+        b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["MistyTerrainCount"], -1);
-        if (b.battleMemory()["MistyTerrainCount"].toInt() <= 0) {
+        if (b.terrain != type) {
+            return;
+        }
+        b.terrainCount --;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(208,1,s,Pokemon::Fairy);
-            b.battleMemory().remove("MistyTerrainCount");
+            b.terrain = 0;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MistyTerrain");
         }
     }

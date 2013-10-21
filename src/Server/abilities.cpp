@@ -2115,12 +2115,11 @@ struct AMStanceChange : public AM {
         if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
             return;
 
-        bool daruma = tmove(b,s).category == Move::Physical;
-
-        if (daruma == num.subnum)
-            return;
-
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
+        if (num.subnum == 0 && tmove(b,s).category != Move::Other) {
+            b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, 1));
+        } else if (num.subnum == 1 && move(b,s) == Move::KingsShield) {
+            b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, 0));
+        }
     }
 };
 
@@ -2192,6 +2191,21 @@ struct AMMagician : public AM
             b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
+        }
+    }
+};
+
+struct AMBulletProof : public AM
+{
+    AMBulletProof() {
+        functions["OpponentBlock"] = &uodr;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        if (tmove(b,t).flags & Move::BallFlag) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+
+            b.sendAbMessage(118, 0, s, 0, Type::Curse, b.ability(s));
         }
     }
 };
@@ -2345,6 +2359,7 @@ void AbilityEffect::init()
     REGISTER_AB(115, Gooey);
     REGISTER_AB(116, Magician);
     REGISTER_AB(117, AuraBreak);
+    REGISTER_AB(118, BulletProof);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
