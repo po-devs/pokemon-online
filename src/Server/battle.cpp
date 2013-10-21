@@ -2858,11 +2858,12 @@ int BattleSituation::calculateDamage(int p, int t)
     if (attackused == Move::SpitUp) randnum = 100;
     else if (gen().num == 2 && (attackused == Move::Flail || attackused == Move::Reversal)) randnum = 100;
 
-    int ch = (crit * (1+hasWorkingAbility(p,Ability::Sniper))); //Sniper
+    int ch;
     if (gen() <= 5) {
-        ch = 2+ch*2;
+        ch = 4+(crit * (1+hasWorkingAbility(p,Ability::Sniper)))*4;
     } else {
-        ch = 2+ch;
+        //1.5, 2.25 with sniper
+        ch = 4+crit*(2+3*(hasWorkingAbility(p,Ability::Sniper)));
     }
 
     /*** WARNING ***/
@@ -2929,7 +2930,7 @@ int BattleSituation::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage;
     if (gen().num == 1) {
-        damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) *
+        damage = ((std::min(((level * ch/4 * 2 / 5) + 2) * power, 65535) *
                    attack / def) / 50) + 2;
     } else {
         damage = ((std::min(((level * 2 / 5) + 2) * power, 65535) *
@@ -3005,7 +3006,7 @@ int BattleSituation::calculateDamage(int p, int t)
         }
         damage = (damage * randnum) / 255;
     } else {
-        damage = (damage+2)*ch/2;
+        damage = (damage+2)*ch/4;
         move.remove("ItemMod2Modifier");
         callieffects(p,t,"Mod2Modifier");
         damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
