@@ -2989,6 +2989,9 @@ int BattleSituation::calculateDamage(int p, int t)
             damage /= 2;
         }
     }
+    if (terrainCount > 0 && terrain > 0 && terrain < Type::Curse && terrain == type) {
+        damage = damage * 3/2;
+    }
     //FlashFire
     if (type == Type::Fire && pokeMemory(p).contains("FlashFired") && hasWorkingAbility(p, Ability::FlashFire)) {
         damage = damage * 3 / 2;
