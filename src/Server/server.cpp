@@ -914,7 +914,9 @@ void Server::dosKick(int id) {
 }
 
 void Server::dosBan(const QString &ip) {
-    broadCast(tr("IP %1 is being overactive, banned.").arg(ip), dosChannel());
+    if (overactiveShow) {
+        broadCast(tr("IP %1 is being overactive, banned.").arg(ip), dosChannel());
+    }
     SecurityManager::ban(ip);
 }
 
