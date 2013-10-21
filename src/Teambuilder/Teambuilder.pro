@@ -63,7 +63,9 @@ SOURCES += main.cpp \
     loadwindow.cpp \
     loadline.cpp \
     downloadmanager.cpp \
-    Teambuilder/teambuilderwidget.cpp
+    Teambuilder/teambuilderwidget.cpp \
+    Teambuilder/pokedex.cpp \
+    Teambuilder/pokedexpokeselection.cpp
 
 HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../PokemonInfo/battlestructs.h \
@@ -144,7 +146,9 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     downloadmanager.h \
     teambuilderinterface.h \
     ../PokemonInfo/geninfo.h \
-    ../PokemonInfo/pokemon.h
+    ../PokemonInfo/pokemon.h \
+    Teambuilder/pokedex.h \
+    Teambuilder/pokedexpokeselection.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
@@ -176,7 +180,9 @@ FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/advancedsearch.ui \
     mainwidget.ui \
     loadwindow.ui \
-    loadline.ui
+    loadline.ui \
+    Teambuilder/pokedex.ui \
+    Teambuilder/pokedexpokeselection.ui
 
 RC_FILE = myapp.rc
 
