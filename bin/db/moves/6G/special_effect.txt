@@ -295,6 +295,7 @@
 591 204#Fell Stinger
 592 213#Flower Shield
 593 205#Grassy Terrain
+594 217#Ion Deluge
 595 206#King's Shield
 597 216#Magnetic Flux
 598 207#Mat Block

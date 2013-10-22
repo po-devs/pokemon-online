@@ -6909,6 +6909,29 @@ struct MMMagneticFlux : public MM {
     }
 };
 
+struct MMIonDeluge : public MM {
+    MMIonDeluge() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(217, 0, s, Type::Electric);
+        addFunction(b.battleMemory(), "MovePossible", "IonDeluge", &mp);
+        b.battleMemory()["IonDelugeTurn"] = b.turn();
+    }
+
+    static void mp(int s, int, BS &b) {
+        if (b.battleMemory().value("IonDelugeTurn").toInt() != b.turn()) {
+            b.battleMemory().remove("IonDelugeTurn");
+            removeFunction(b.battleMemory(), "MovePossible", "IonDeluge");
+            return;
+        }
+        if (tmove(b,s).type == Type::Normal) {
+            tmove(b,s).type = Type::Electric;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7160,6 +7183,7 @@ void MoveEffect::init()
     REGISTER_MOVE(214, Rototiller);
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
+    REGISTER_MOVE(217, IonDeluge);
 }
 
 /* Not done: Ion deluge */
