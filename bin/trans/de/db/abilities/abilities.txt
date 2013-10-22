@@ -181,9 +181,9 @@
 180 Krallenwucht
 181 Unbeugsamkeit
 182 Orkanschwingen
-183 
+183 Viskosität
 184 Dufthülle
 185 Kugelsicher
-186 
+186 Pflanzenpelz
 187 Zauberer
-188 
+188 Nutznießer
