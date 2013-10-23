@@ -437,6 +437,10 @@ bool MoveSetChecker::isAnEggMoveCombination(const Pokemon::uniqueId &pokeid, Pok
     if (!legalCombinations.contains(gen)) {
         loadGenData(gen);
     }
+    /* In gen 6, everything is an egg move combinations (except for event moves */
+    if (gen >= 6 && PokemonInfo::EggMoves(pokeid, gen).contains(moves)) {
+        return true;
+    }
     foreach(QSet<int> combination, legalCombinations[gen].value(pokeid)) {
         if (combination.contains(moves))
             return true;
