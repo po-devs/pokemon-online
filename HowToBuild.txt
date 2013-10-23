@@ -4,7 +4,7 @@ Most up-to-date guide: https://github.com/po-devs/pokemon-online/wiki/How-to-bui
 
 Prerequisites:
 - Qt SDK, version 4.5 or newer. Currently, version 4.8.2 recommended.
-  Get it from http://qt.nokia.com
+  Get it from http://qt-project.org/downloads
 - C++ compiler which manages new C++0x stuff. GCC 4.5+ required.
 - libzip installation. Windows .dll is included, others can download
   from http://www.nih.at/libzip/
