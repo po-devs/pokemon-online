@@ -179,3 +179,21 @@
 619 HumanShape
 620 HumanShape
 621 Monster
+674:0 HumanShape
+675:0 HumanShape
+686:0 Water 2
+687:0 Water 2
+688:0 Water 1
+689:0 Water 1
+690:0 Dragon
+691:0 Dragon
+692:0 Water 3
+693:0 Water 3
+694:0 Dragon
+695:0 Dragon
+696:0 Dragon
+697:0 Dragon
+702:0 Fairy
+703:0 Mineral
+708:0 Amorphous
+709:0 Amorphous
