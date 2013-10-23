@@ -85,26 +85,26 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
         w->topLevelWidget()->move(std::max(w->topLevelWidget()->x(), 0),
                                   std::max(w->topLevelWidget()->y(), 0));
     }
+    if (settings.contains("pos")) {
+        QPoint pos = settings.value("pos").toPoint();
+        if (pos.x() < 0) {
+            pos.setX(0);
+        }
+        if (pos.y() < 0) {
+            pos.setY(0);
+        }
+        /* Checks if the position stored is not off the screen */
+        for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+            if (QApplication::desktop()->screenGeometry(i).contains(pos)) {
+                w->topLevelWidget()->move(pos);
+                break;
+            }
+        }
+    }
     if (settings.contains("maximized") && settings.value("maximized").toBool())
         w->topLevelWidget()->showMaximized();
     else {
         w->topLevelWidget()->showNormal();
-        if (settings.contains("pos")) {
-            QPoint pos = settings.value("pos").toPoint();
-            if (pos.x() < 0) {
-                pos.setX(0);
-            }
-            if (pos.y() < 0) {
-                pos.setY(0);
-            }
-            /* Checks if the position stored is not off the screen */
-            for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
-                if (QApplication::desktop()->screenGeometry(i).contains(pos)) {
-                    w->topLevelWidget()->move(pos);
-                    break;
-                }
-            }
-        }
     }
 
     settings.endGroup();
