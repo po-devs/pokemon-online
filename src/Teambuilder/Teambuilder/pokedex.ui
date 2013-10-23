@@ -17,10 +17,10 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QWidget" name="widget_2" native="true"/>
+      <widget class="QWidget" name="pokeInfos" native="true"/>
      </item>
      <item>
-      <widget class="PokedexPokeSelection" name="widget_3" native="true"/>
+      <widget class="PokedexPokeSelection" name="pokeSelection" native="true"/>
      </item>
     </layout>
    </item>
@@ -84,7 +84,7 @@
   <customwidget>
    <class>PokedexPokeSelection</class>
    <extends>QWidget</extends>
-   <header location="global">teambuilder/pokedexpokeselection.h</header>
+   <header>Teambuilder/pokedexpokeselection.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

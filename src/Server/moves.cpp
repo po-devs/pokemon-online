@@ -4950,7 +4950,7 @@ struct MMNaturePower : public MM
         if (b.gen().num == 5) {
             type = Type::Ground;
         }
-        if (b.terrain\!= 0) {
+        if (b.terrain != 0) {
             type = std::abs(b.terrain);
         }
 
@@ -6706,7 +6706,7 @@ struct MMMatBlock : public MM
 
 
 struct MMMistyTerrain : public MM {
-    static int type = -Type::Fairy;
+    static const int type = -Type::Fairy;
 
     MMMistyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
