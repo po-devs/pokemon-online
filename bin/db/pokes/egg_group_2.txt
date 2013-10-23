@@ -179,3 +179,19 @@
 619 HumanShape
 620 HumanShape
 621 Monster
+674 HumanShape
+675 HumanShape
+686 Water 2
+687 Water 2
+690 Dragon
+691 Dragon
+692 Water 3
+693 Water 3
+694 Dragon
+695 Dragon
+696 Dragon
+697 Dragon
+702 Fairy
+703 Mineral
+708 Indeterminate
+709 Indeterminate
