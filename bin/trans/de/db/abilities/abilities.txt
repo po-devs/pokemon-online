@@ -163,7 +163,7 @@
 162 Triumphstern
 163 Turbobrand
 164 Teravolt
-165 Luftschicht
+165 Zenithaut
 166 Aura-Umkehr
 167 Backentaschen
 168 Dunkelaura
