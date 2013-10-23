@@ -4946,14 +4946,31 @@ struct MMNaturePower : public MM
     static void uas(int s, int, BS &b) {
         removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
 
-        int move;
-        if (b.gen().num == 3) {
-            move = Swift;
-        } else if (b.gen().num == 4 || b.gen() >= 6) {
-            move = TriAttack;
-        } else {
-            move = Earthquake;
+        int type = Type::Normal;
+        if (b.gen().num == 5) {
+            type = Type::Ground;
         }
+        if (b.terrain\!= 0) {
+            type = std::abs(b.terrain);
+        }
+
+        int move;
+        if (type == Type::Ground) {
+            move = Earthquake;
+        } else if (type == Type::Water) {
+            move = HydroPump;
+        } else if (type == Type::Grass) {
+            move = EnergyBall;
+        } else if (type == Type::Fairy) {
+            move = MoonBlast;
+        } else {
+            if (b.gen().num == 3) {
+                move = Swift;
+            } else {
+                move = TriAttack;
+            }
+        }
+
         MoveEffect::setup(move,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s,move,true,true);
@@ -6689,7 +6706,7 @@ struct MMMatBlock : public MM
 
 
 struct MMMistyTerrain : public MM {
-    static int type = -Type::Water;
+    static int type = -Type::Fairy;
 
     MMMistyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
