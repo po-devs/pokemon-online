@@ -2210,6 +2210,19 @@ struct AMBulletProof : public AM
     }
 };
 
+struct AMGrassPelt : public AM
+{
+    AMGrassPelt() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm (int s, int, BS &b) {
+        if (b.terrain == Type::Grass && b.terrainCount >= 0) {
+            turn(b,s)[QString("Stat%1AbilityModifier").arg(Defense)] = 10;
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -2360,6 +2373,7 @@ void AbilityEffect::init()
     REGISTER_AB(116, Magician);
     REGISTER_AB(117, AuraBreak);
     REGISTER_AB(118, BulletProof);
+    REGISTER_AB(119, GrassPelt);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
