@@ -378,6 +378,7 @@ void MainEngine::launchCredits()
     QVBoxLayout * l = new QVBoxLayout();
     QScrollArea *scroll = new QScrollArea();
     QLabel * credit = new QLabel();
+    credit->setOpenExternalLinks(true);
     credit->setMargin(5);
     QTextStream out(&fichier);
     credit->setText(out.readAll());
@@ -390,7 +391,6 @@ void MainEngine::launchCredits()
     scroll->adjustSize();
     //routine(d_credit);
     d_credit.setLayout(l);
-    d_credit.move(this->displayer->geometry().x(),this->displayer->geometry().y());
     d_credit.setStyleSheet(
                 "QLabel {background:transparent}"
                            );
