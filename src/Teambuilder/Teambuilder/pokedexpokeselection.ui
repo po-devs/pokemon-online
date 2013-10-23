@@ -35,21 +35,21 @@
         <string>&amp;Sort list</string>
        </property>
        <property name="buddy">
-        <cstring>pushButton</cstring>
+        <cstring>alphabetSort</cstring>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="alphabetSort">
          <property name="text">
           <string>A-Z</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="numSort">
          <property name="text">
           <string>1-718</string>
          </property>
@@ -110,7 +110,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="advSearch">
        <property name="text">
         <string>&amp;Advanced search</string>
        </property>
@@ -132,15 +132,15 @@
     </layout>
    </item>
    <item>
-    <widget class="TB_PokeChoice" name="widget" native="true"/>
+    <widget class="TB_PokeChoice" name="widget"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>TB_PokeChoice</class>
-   <extends>QWidget</extends>
-   <header location="global">teambuilder/pokechoice.h</header>
+   <extends>QTableView</extends>
+   <header>Teambuilder/pokechoice.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
