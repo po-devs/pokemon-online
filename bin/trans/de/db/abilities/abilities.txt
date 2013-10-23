@@ -163,7 +163,7 @@
 162 Triumphstern
 163 Turbobrand
 164 Teravolt
-165 
+165 Zenithaut
 166 Aura-Umkehr
 167 Backentaschen
 168 Dunkelaura
@@ -172,7 +172,7 @@
 171 Fellkleid
 172 Megawumme
 173 Familienbande
-174 
+174 Feenschicht
 175 Wandlungskunst
 176 Frostschicht
 177 Taktikwechsel
@@ -181,9 +181,9 @@
 180 Krallenwucht
 181 Unbeugsamkeit
 182 Orkanschwingen
-183 
+183 Viskosität
 184 Dufthülle
 185 Kugelsicher
-186 
+186 Pflanzenpelz
 187 Zauberer
-188 
+188 Nutznießer

@@ -81,6 +81,10 @@ void loadSettings(QWidget *w, const QSize &defaultSize)
     settings.beginGroup(w->metaObject()->className());
     if (settings.contains("size") || !defaultSize.isEmpty())
         w->topLevelWidget()->resize(settings.value("size", defaultSize).toSize());
+    if (w->topLevelWidget()->x() < 0 || w->topLevelWidget()->y() < 0) {
+        w->topLevelWidget()->move(std::max(w->topLevelWidget()->x(), 0),
+                                  std::max(w->topLevelWidget()->y(), 0));
+    }
     if (settings.contains("pos")) {
         QPoint pos = settings.value("pos").toPoint();
         if (pos.x() < 0) {
