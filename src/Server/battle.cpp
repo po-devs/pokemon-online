@@ -772,6 +772,14 @@ void BattleSituation::analyzeChoices()
             items.push_back(i);
         } else if (choice(i).switchChoice()) {
             switches.push_back(i);
+        } else if (choice(i).attackingChoice()){
+            if (gen() >= 5) {
+                callaeffects(i, i, "PriorityChoice");
+            }
+            priorities[tmove(i).priority].push_back(i);
+        } else if (choice(i).moveToCenterChoice()){
+            /* Shifting choice */
+            priorities[0].push_back(i);
         }
     }
 
@@ -801,20 +809,6 @@ void BattleSituation::analyzeChoices()
                     megas[player(slot)] = true;
                 }
             }
-        }
-    }
-
-    playersByOrder = sortedBySpeed();
-
-    foreach(int i, playersByOrder) {
-        if (choice(i).attackingChoice()){
-            if (gen() >= 5) {
-                callaeffects(i, i, "PriorityChoice");
-            }
-            priorities[tmove(i).priority].push_back(i);
-        } else if (choice(i).moveToCenterChoice()){
-            /* Shifting choice */
-            priorities[0].push_back(i);
         }
     }
 
