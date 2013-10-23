@@ -598,3 +598,69 @@
 635 Dragon
 636 Bug
 637 Bug
+650 Field
+651 Field
+652 Field
+653 Field
+654 Field
+655 Field
+656 Water 1
+657 Water 1
+658 Water 1
+659 Field
+660 Field
+661 Flying
+662 Flying
+663 Flying
+664 Bug
+665 Bug
+666 Bug
+667 Field
+668 Field
+669 Fairy
+670 Fairy
+671 Fairy
+672 Field
+673 Field
+674 Field
+675 Field
+676 Field
+677 Field
+678 Field
+679 Mineral
+680 Mineral
+681 Mineral
+682 Fairy
+683 Fairy
+684 Fairy
+685 Fairy
+686 Water 1
+687 Water 1
+688 Water 3
+689 Water 3
+690 Water 1
+691 Water 1
+692 Water 1
+693 Water 1
+694 Monster
+695 Monster
+696 Monster
+697 Monster
+698 Monster
+699 Monster
+700 Field
+701 HumanShape
+702 Field
+703 Fairy
+704 Dragon
+705 Dragon
+706 Dragon
+707 Mineral
+708 Grass
+709 Grass
+710 Indeterminate
+711 Indeterminate
+712 Monster
+713 Monster
+714 Flying
+715 Flying
