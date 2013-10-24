@@ -17,7 +17,6 @@
 24 Ecran Poudre du %s empêche le cumul d'effets!
 29 Hydratation du %s le guéri de son altération de statut!
 30 %a du %s empêche la diminution de stats!
-31 %a du %s a empêché ses stats d'être diminués!
 32 %a du %s lui restaure des PV!
 33 %a du %s le guérit!
 34 %s intimide %f!|Le clone du %f empêche Intimidation du %s de fonctionner!
