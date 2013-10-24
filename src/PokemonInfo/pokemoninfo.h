@@ -124,8 +124,7 @@ public:
     static int PreEvo(int pokenum);
     static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
-    static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid);
-    static int SpecialStat(const Pokemon::uniqueId &pokeid);
+    static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static bool Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen); /* Does not check for exists first, do it yourself */
     static bool Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static bool Exists(const Pokemon::uniqueId &pokeid);
@@ -185,8 +184,7 @@ private:
     static QString m_Directory;
 
     static QHash<Pokemon::uniqueId, int> m_Genders;
-    static QHash<Pokemon::uniqueId, PokeBaseStats> m_BaseStats;
-    static QHash<Pokemon::uniqueId, int> m_SpecialStats;
+    static QVector<QHash<Pokemon::uniqueId, PokeBaseStats> > m_BaseStats;
     static QHash<Pokemon::uniqueId, int> m_LevelBalance;
 
     static QHash<int, QList<int> > m_Evolutions;
@@ -213,7 +211,6 @@ private:
     static void loadNames();
     static void loadGen(Pokemon::gen g);
     static void loadEvos();
-    static void loadBaseStats();
     static void loadClassifications();
     static void loadGenderRates();
     static void loadHeights();

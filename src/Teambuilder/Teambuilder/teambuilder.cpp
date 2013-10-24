@@ -22,6 +22,11 @@
 
 TeamBuilder::TeamBuilder(PluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
 {
+//    QStringList undone;
+//    for (int i = 1;i <= 718; i++) {
+//        if (!PokemonInfo::Exists(i, 6))
+//            undone.push_back(PokemonInfo::Name(i));
+//    }
     ui = new _ui();
     ui->stack = new QStackedWidget();
     setCentralWidget(ui->stack);

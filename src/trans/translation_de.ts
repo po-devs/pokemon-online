@@ -835,12 +835,12 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>sharply </source>
-        <translation>stark</translation>
+        <translation>steigt</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
         <source>rose</source>
-        <translation>steigt</translation>
+        <translation>stark</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
@@ -3382,11 +3382,6 @@ Effekt: %5</translation>
         <translation>&amp;Verlassen</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/menu.ui" line="234"/>
-        <source>Tip of the day</source>
-        <translation>Tipp des Tages</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.ui" line="240"/>
         <source>&lt;&lt;</source>
         <translation>&lt;&lt;</translation>
@@ -3776,7 +3771,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="125"/>
         <source>Could not add the Pokemon to the box, the box is full.</source>
-        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, da die Box ist voll ist.</translation>
+        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, da die Box voll ist.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="128"/>

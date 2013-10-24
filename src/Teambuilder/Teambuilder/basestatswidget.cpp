@@ -28,14 +28,19 @@ void BaseStatsWidget::setGen(const Pokemon::gen &gen)
         ui->spdef->show();
         ui->spdefbar->show();
     }
+    curgen=gen;
+
+    setNum(curnum);
 }
 
 void BaseStatsWidget::setNum(const Pokemon::uniqueId &num)
 {
-    PokeBaseStats b = PokemonInfo::BaseStats(num);
+    PokeBaseStats b = PokemonInfo::BaseStats(num, curgen);
 
     for (int i = 0; i < 6; i++) {
         stats[i]->setValue(std::min(int(b.baseStat(i)), stats[i]->maximum()));
         stats[i]->setFormat(QString("%1").arg(int(b.baseStat(i))));
     }
+
+    curnum = num;
 }

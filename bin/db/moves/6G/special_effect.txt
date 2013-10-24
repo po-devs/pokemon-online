@@ -293,11 +293,16 @@
 589 202#Electrify
 590 203#Fairy Lock
 591 204#Fell Stinger
+592 213#Flower Shield
 593 205#Grassy Terrain
+594 217#Ion Deluge
 595 206#King's Shield
+597 216#Magnetic Flux
 598 207#Mat Block
 599 208#Misty Terrain
 600 140#Parting Shot
+601 215#Powder
+603 214#Rototiller
 604 209#Spiky Shield
 605 210#Sticky Web
 606 211#Topsy Turvy

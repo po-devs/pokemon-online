@@ -7,6 +7,9 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
 #include <algorithm>
+#include <iostream>
+
+using namespace std;
 
 QHash<int, QSet<QSet<int> > > legalCombinations;
 
@@ -52,8 +55,24 @@ void transform(const QStringList& list, lambda f) {
 
 QHash<int, QString> egg1, egg2;
 
-int main(int, char**)
+int main(int argc, char**argv)
 {
+    int gn, sgn;
+    if (argc >= 3) {
+        gn = atoi(argv[1]);
+        sgn = atoi(argv[2]);
+    } else{
+        qDebug() << "Need the gen and subgen, i.e. 5 1";
+        cin >> gn >> sgn;
+    }
+
+    Pokemon::gen gen(gn, sgn);
+
+    if (gen.num == 0) {
+        qDebug() << "Invalid gen: " << gen.toString();
+        return 0;
+    }
+
     transform<2>(readFile("db/pokes/egg_group_1.txt"),[&](QString n, QString group){egg1[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
     transform<2>(readFile("db/pokes/egg_group_2.txt"),[&](QString n, QString group){egg2[n.toInt()] = group; pokesOfGroup.insert(group, n.toInt());});
 
@@ -64,8 +83,6 @@ int main(int, char**)
     PokemonInfo::init("db/pokes/");
     MoveSetChecker::init("db/pokes/");
     MoveInfo::init("db/moves/");
-
-    Pokemon::gen gen(5, 0);
 
     qDebug() << "Gen " << GenInfo::Version(gen);
     qDebug() << "";
@@ -177,7 +194,7 @@ int main(int, char**)
         /* Adding all the combinations of special moves */
         legalCombinations[i].unite(combinations.toSet());
 
-        for(int c = 0;c < 2; c++) {
+        for(int c = 0; c < 2; c++) {
             if (groups[c].trimmed().length() == 0) {
                 continue;
             }

@@ -149,7 +149,6 @@ protected:
     PokePersonal m_pokes[6];
 
 public:
-    PersonalTeam();
 
     const PokePersonal & poke(int index) const {return m_pokes[index];}
     PokePersonal & poke(int index) {return m_pokes[index];}

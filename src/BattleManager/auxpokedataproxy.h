@@ -5,6 +5,7 @@
 
 class PokeProxy;
 class ShallowBattlePoke;
+class ZoneProxy;
 
 class AuxPokeDataProxy : public QObject
 {
@@ -99,44 +100,6 @@ public:
     int boostedstats[8];
 
     void updateBoostedStat(int stat);
-};
-
-class ZoneProxy : public QObject {
-    Q_OBJECT
-public:
-    ZoneProxy();
-    ~ZoneProxy();
-
-    enum Hazards {
-        Spikes=1,
-        SpikesLV2=2,
-        SpikesLV3=4,
-        StealthRock=8,
-        ToxicSpikes=16,
-        ToxicSpikesLV2=32
-    };
-
-
-    Q_PROPERTY(int spikes READ spikesLevel NOTIFY spikesChanged)
-    Q_PROPERTY(int toxicSpikes READ tspikesLevel NOTIFY tspikesChanged)
-    Q_PROPERTY(bool stealthRocks READ stealthRocks NOTIFY rocksChanged)
-
-    int spikesLevel() const {return mSpikes;}
-    int tspikesLevel() const {return mTSpikes;}
-    bool stealthRocks() const {return mRocks;}
-    void setSpikesLevel(int level);
-    void setToxicSpikesLevel(int level);
-    void setStealthRocks(bool stealthRocks);
-
-    void setHazards(quint8 hazards);
-signals:
-    void spikesChanged();
-    void tspikesChanged();
-    void rocksChanged();
-private:
-    int mSpikes;
-    int mTSpikes;
-    bool mRocks;
 };
 
 class FieldProxy : public QObject {

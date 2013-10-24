@@ -30,7 +30,8 @@ Player::Player(const GenericSocket &sock, int id)
     doConnections();
 
     /* Version control, whatever happens, because the problem could be because of an old version */
-    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(2,1), ProtocolVersion(0,0), ProtocolVersion(0,0), Server::serverIns->servName());
+    /* Cur version, last version with features, last version with compat breaks, last version with major compat breaks */
+    relay().notify(NetworkServ::VersionControl_, ProtocolVersion(), Flags(), ProtocolVersion(2,2), ProtocolVersion(2,2), ProtocolVersion(0,0), Server::serverIns->servName());
 
     /* Autokick after 3 minutes if still not logged in */
     QTimer::singleShot(1000*180, this, SLOT(firstAutoKick()));
