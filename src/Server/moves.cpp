@@ -3874,8 +3874,8 @@ struct MMDefog : public MM
         foreach (int p, players) {
             BS::context &c = team(b,p);
 
-            if (c.remove("Barrier1Count") || c.remove("Barrier2Count") || c.remove("Spikes") || c.remove("ToxicSpikes")
-                    || c.remove("StealthRock") || c.remove("MistCount") || c.remove("SafeGuardCount") || c.remove("StickyWeb")) {
+            if (c.remove("Barrier1Count") + c.remove("Barrier2Count") + c.remove("Spikes") + c.remove("ToxicSpikes")
+                    + c.remove("StealthRock") + c.remove("MistCount") + c.remove("SafeGuardCount") + c.remove("StickyWeb")) {
                 clear = true;
             }
         }
