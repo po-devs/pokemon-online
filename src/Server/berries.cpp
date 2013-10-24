@@ -476,8 +476,8 @@ struct BMPhysicalStat : public BM
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
         if (tmove(b,t).category != Move::Special) {
-             return;
-         }
+            return;
+        }
         b.eatBerry(s);
         b.inflictStatMod(s,arg,1,s,false);
         if (b.isOut(s)) {
@@ -487,8 +487,8 @@ struct BMPhysicalStat : public BM
                 b.sendBerryMessage(7,s,0,s, berry, arg);
             }
 
+        }
     }
-}
 };
 struct BMSpecialStat : public BM
 {
@@ -503,8 +503,8 @@ struct BMSpecialStat : public BM
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
         if (tmove(b,t).category != Move::Special) {
-             return;
-         }
+            return;
+        }
         b.eatBerry(s);
         b.inflictStatMod(s,arg,1,s,false);
 
@@ -515,8 +515,8 @@ struct BMSpecialStat : public BM
                 b.sendBerryMessage(7,s,0,s, berry, arg);
             }
 
+        }
     }
-}
 };
 #define REGISTER_BERRY(num, name) mechanics[num+8000] = BM##name(); names[num+8000] = #name; nums[#name] = num+8000;
 
