@@ -63,11 +63,8 @@
 62 Jaboca Berry
 63 Rowap Berry
 64 Roseli Berry
-<<<<<<< HEAD
 65 Kee Berry	
 66 Maranga Berry
-=======
->>>>>>> main/master
 1000 PRZCureBerry
 1001 Mint Berry
 1002 PSNCureBerry
