@@ -475,9 +475,9 @@ struct BMPhysicalStat : public BM
         }
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
-        if (tmove(b,t).category != Move::Physical)  {
-        return;
-        }
+        if (tmove(b,t).category != Move::Special) {
+             return;
+         }
         b.eatBerry(s);
         b.inflictStatMod(s,arg,1,s,false);
         if (b.isOut(s)) {
@@ -503,8 +503,8 @@ struct BMSpecialStat : public BM
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
         if (tmove(b,t).category != Move::Special) {
-        return;
-        }
+             return;
+         }
         b.eatBerry(s);
         b.inflictStatMod(s,arg,1,s,false);
 
