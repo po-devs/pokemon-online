@@ -18,7 +18,6 @@
 24 Polvoscudo di %s ha bloccato gli effetti secondari!
 29 Idratazione di %s cura il suo status!
 30 %a di %s impedisce che le sue statistiche si abbassino!
-31 %a di %s impedisce che le sue statistiche si abbassino!
 32 %s è curato da %a!
 33 %a di %s l'ha curato!|%s non è stato paralizzato grazie a %a!|%s è rimasto sveglio grazie a %a!|%s non è stato congelato grazie a %a!|%s non si è bruciato grazie a %a!|%s non è stato avvelenato grazie a %a!
 34 %s intimidisce %f!|Il sostituto di %f annulla Prepotenza di %s!
