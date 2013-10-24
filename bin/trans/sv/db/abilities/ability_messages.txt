@@ -17,7 +17,6 @@
 24 %ss Shield Dust blockerade de sekundära effekterna!
 29 %ss Hydration återställer dess status!
 30 %ss %a hindrar sina stats från att bli dämpade!
-31 %ss %a hindrar sina stats från att bli dämpade!
 32 %ss %a helar det!
 33 %ss %a botar det!
 34 %s skrämmer %f!|%fs Substitut blockerar intimidate!

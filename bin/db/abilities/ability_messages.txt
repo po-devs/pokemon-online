@@ -19,7 +19,6 @@
 24 %s's Shield Dust blocked the secondary effects!
 29 %s's Hydration heals its status!
 30 %s's %a prevents its stat from being lowered!
-31 %s's %a prevented its stats from being lowered!
 32 %s's %a heals it!
 33 %s's %a cures it!|%s didn't get paralyzed because of its %a!|%s stayed awake because of its %a!|%s didn't get frozen because of its %a!|%s didn't get burnt because of its %a!|%s didn't get poisoned because of its %a!
 34 %s intimidates %f!|%f's substitute suppressed %s's Intimidate!

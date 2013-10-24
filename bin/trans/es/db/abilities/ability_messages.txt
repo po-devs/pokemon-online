@@ -18,7 +18,6 @@
 24 ¡Polvo Escudo de %s evitó efectos secundarios!
 29 ¡%s se liberó del cambio de estado gracias a Hidratación!
 30 ¡%a de %s impide que bajen sus estadísticas!
-31 ¡%a de %s impidió que bajasen sus estadísticas!
 32 ¡%s se cura gracias a %a!
 33 ¡%s se cura gracias a %a!|¡%a de %s impidió la paráisis!|¡%a de %s impidió que se durmiese!|¡%a de %s evitó que se congelase!|¡%a impidió que %s se quemara!|¡%a de %s evita el envenenamiento!
 34 ¡Intimidación de %s bajó el ataque a %f!|¡El Sustituto de %f evitó la Intimidación de %s!

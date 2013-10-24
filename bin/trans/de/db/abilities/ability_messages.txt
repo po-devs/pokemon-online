@@ -18,7 +18,6 @@
 24 %s's Puderabwehr blockiert alle Zusatzeffekte von Attacken!
 29 %s's Hydration heilt seinen Status!
 30 %s's %a verhindert, dass seine Werte gesenkt werden!
-31 %s's %a verhindert, dass seine Werte gesenkt werden!
 32 %s's %a heilt einige KP!
 33 %s's %a cures it!
 34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s!
