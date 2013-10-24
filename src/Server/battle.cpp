@@ -2681,7 +2681,7 @@ int BattleSituation::rawTypeEff(int atttype, int player)
                     eff=2;
                     break;
                 case 1:
-                    eff=2;
+                    eff=4;
                     break;
                 case 4:
                     eff=1;
