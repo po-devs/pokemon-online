@@ -172,7 +172,7 @@
 171 Fur Coat
 172 Mega Launcher
 173 Parental Bond
-174 Pixilite
+174 Pixilate
 175 Protean
 176 Refrigerate
 177 Stance Change
@@ -182,3 +182,8 @@
 181 Competitive
 182 Gale Wings
 183 Gooey
+184 Aroma Veil
+185 Bulletproof
+186 Grass Pelt
+187 Magician
+188 Symbiosis

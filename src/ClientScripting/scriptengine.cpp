@@ -691,9 +691,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int _gen)
     Pokemon::uniqueId pokemon(poke);
     Pokemon::gen gen(_gen);
 
-    if (PokemonInfo::Exists(pokemon, gen) && gen.num >= GEN_MIN && gen.num <= GenInfo::GenMax()
-            && (gen.subnum == gen.wholeGen || gen.subnum <= GenInfo::NumberOfSubgens(gen.num))
-            && (slot >= 0) && (slot <= 2)) {
+    if (slot >= 0 && slot <= 2) {
         return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();
@@ -720,15 +718,7 @@ QScriptValue ScriptEngine::type(int id)
 
 QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
 {
-    //gen is largely irrelevent outside of specifying for gen 1
-    int result = 0;
-    Pokemon::uniqueId pokemon(poke);
-    if (gen == 1 && stat == SpAttack) {
-        result = PokemonInfo::SpecialStat(pokemon);
-    } else {
-        result = PokemonInfo::BaseStats(pokemon).baseStat(stat);
-    }
-    return result;
+    return PokemonInfo::BaseStats(poke,gen).baseStat(stat);
 }
 
 int ScriptEngine::moveType(int moveNum, int gen)

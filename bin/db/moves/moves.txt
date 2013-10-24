@@ -1,15 +1,15 @@
 ﻿0 (No Move)
 1 Pound
 2 Karate Chop
-3 DoubleSlap
+3 Double Slap
 4 Comet Punch
 5 Mega Punch
 6 Pay Day
 7 Fire Punch
 8 Ice Punch
-9 ThunderPunch
+9 Thunder Punch
 10 Scratch
-11 ViceGrip
+11 Vice Grip
 12 Guillotine
 13 Razor Wind
 14 Swords Dance
@@ -26,7 +26,7 @@
 25 Mega Kick
 26 Jump Kick
 27 Rolling Kick
-28 Sand-Attack
+28 Sand Attack
 29 Headbutt
 30 Horn Attack
 31 Fury Attack
@@ -47,7 +47,7 @@
 46 Roar
 47 Sing
 48 Supersonic
-49 SonicBoom
+49 Sonic Boom
 50 Disable
 51 Acid
 52 Ember
@@ -59,7 +59,7 @@
 58 Ice Beam
 59 Blizzard
 60 Psybeam
-61 BubbleBeam
+61 Bubble Beam
 62 Aurora Beam
 63 Hyper Beam
 64 Peck
@@ -74,15 +74,15 @@
 73 Leech Seed
 74 Growth
 75 Razor Leaf
-76 SolarBeam
-77 PoisonPowder
+76 Solar Beam
+77 Poison Powder
 78 Stun Spore
 79 Sleep Powder
 80 Petal Dance
 81 String Shot
 82 Dragon Rage
 83 Fire Spin
-84 ThunderShock
+84 Thunder Shock
 85 Thunderbolt
 86 Thunder Wave
 87 Thunder
@@ -106,7 +106,7 @@
 105 Recover
 106 Harden
 107 Minimize
-108 SmokeScreen
+108 Smoke Screen
 109 Confuse Ray
 110 Withdraw
 111 Defense Curl
@@ -118,7 +118,7 @@
 117 Bide
 118 Metronome
 119 Mirror Move
-120 Selfdestruct
+120 Self-Destruct
 121 Egg Bomb
 122 Lick
 123 Smog
@@ -133,8 +133,8 @@
 132 Constrict
 133 Amnesia
 134 Kinesis
-135 Softboiled
-136 Hi Jump Kick
+135 Soft-Boiled
+136 High Jump Kick
 137 Glare
 138 Dream Eater
 139 Poison Gas
@@ -183,7 +183,7 @@
 182 Protect
 183 Mach Punch
 184 Scary Face
-185 Faint Attack
+185 Feint Attack
 186 Sweet Kiss
 187 Belly Drum
 188 Sludge Bomb
@@ -221,9 +221,9 @@
 220 Pain Split
 221 Sacred Fire
 222 Magnitude
-223 DynamicPunch
+223 Dynamic Punch
 224 Megahorn
-225 DragonBreath
+225 Dragon Breath
 226 Baton Pass
 227 Encore
 228 Pursuit
@@ -243,8 +243,8 @@
 242 Crunch
 243 Mirror Coat
 244 Psych Up
-245 ExtremeSpeed
-246 AncientPower
+245 Extreme Speed
+246 Ancient Power
 247 Shadow Ball
 248 Future Sight
 249 Rock Smash
@@ -263,7 +263,7 @@
 262 Memento
 263 Facade
 264 Focus Punch
-265 SmellingSalt
+265 Smelling Salts
 266 Follow Me
 267 Nature Power
 268 Charge
@@ -295,7 +295,7 @@
 294 Tail Glow
 295 Luster Purge
 296 Mist Ball
-297 FeatherDance
+297 Feather Dance
 298 Teeter Dance
 299 Blaze Kick
 300 Mud Sport
@@ -318,7 +318,7 @@
 317 Rock Tomb
 318 Silver Wind
 319 Metal Sound
-320 GrassWhistle
+320 Grass Whistle
 321 Tickle
 322 Cosmic Power
 323 Water Spout
@@ -570,14 +570,14 @@
 569 Geomancy
 570 Petal Blizzard
 571 Infestation
-572 Moon Blast
+572 Moonblast
 573 Mystical Fire
 574 Noble Roar
 575 Nuzzle
 576 Oblivion Wing
 577 Parabolic Charge
 578 Phantom Force
-579 Play Around
+579 Play Rough
 580 Play Nice
 581 Trick-or-Treat
 582 Water Shuriken

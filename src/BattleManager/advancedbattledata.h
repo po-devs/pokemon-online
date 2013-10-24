@@ -3,6 +3,7 @@
 
 #include "battledata.h"
 #include "proxydatacontainer.h"
+#include "zoneproxy.h"
 
 class AdvancedBattleData : public QObject, public BattleDataInherit<ProxyDataContainer, AdvancedBattleData>
 {

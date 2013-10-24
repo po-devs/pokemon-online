@@ -1,4 +1,4 @@
-0 (Kein Item)
+﻿0 (Kein Item)
 3 Schlohkraut neutralisiert Statuswerte von %s!
 4 %s klammert sich an seinen Fokus-Band!
 5 %s klammert sich an seinen Fokusgurt!
@@ -9,7 +9,7 @@
 17 Dank Flinkklaue kann %s den ersten Zug machen!
 18 %s stellt dank Beerensaft einige KP wieder her!
 19 Heiß-Orb von %s wurde aktiviert!|Toxik-Orb von %s wurde aktiviert!
-21 %s verliert einige KP durch seinen Leben-Orb!
+21 %s verliert einige KP durch Leben-Orb!
 24 Seegesang von %s füllt einige KP wieder auf!
 29 %s wurde durch Klettdorn verletzt!
 34 %f erleidet durch den Beulenhelm Schaden!
@@ -20,3 +20,6 @@
 39 %s benutzt seinen Fluchtknopf!
 40 %s's Berserk-Gen aktiviert sich!|%s's Angriff steigt stark!
 41 %s's Fatumknoten aktiviert sich, %f hat sich in %s verliebt!
+66 %s entwickelt sich in das Mega-Pokémon %p!
+1007 %s erholt sich!
+1999 %s erholt sich!

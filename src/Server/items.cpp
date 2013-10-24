@@ -620,17 +620,11 @@ struct IMAbsorbBulb : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (!b.koed(s) && type(b,t) == poke(b,s)["ItemArg"].toInt()) {
-            int stat;
-            if (b.poke(s).item() == Item::CellBattery) {
-                if (b.hasMaximalStatMod(s, Attack))
-                    return;
-                stat = Attack;
-            } else {
-                if (b.hasMaximalStatMod(s, SpAttack))
-                    return;
-                stat = SpAttack;
-            }
+        int tp = poke(b,s)["ItemArg"].toString().section('_', 0, 0).toInt();
+        if (!b.koed(s) && type(b,t) == tp) {
+            int stat = poke(b,s)["ItemArg"].toString().section('_', 1).toInt();
+            if (b.hasMaximalStatMod(s, stat))
+                return;
             b.sendItemMessage(36, s, 0, t, b.poke(s).item(), stat);
             b.disposeItem(s);
             b.inflictStatMod(s, stat, 1, s, false);
@@ -970,17 +964,27 @@ struct IMSafetyGoggles  : public IM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        int mv = move(b,t);
-
-        if (mv == Move::PoisonPowder || mv == Move::SleepPowder || mv == Move::Powder) {
+        if (tmove(b,t).flags & Move::PowderFlag) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             //b.sendAbMessage(17, 0, s, t); //add message for Safety Goggles
         }
     }
 };
 
-struct IMWeaknessPolicy  : public IM {
+struct IMWeaknessPolicy  : public IM
+{
+    IMWeaknessPolicy() {
+        functions["UponOffensiveDamageReceived"] = &uodr;
+    }
 
+    static void uodr(int s, int t, BS &b) {
+        if (fturn(b,t).typeMod > 0) {
+            b.sendItemMessage(43, s);
+            b.disposeItem(s);
+            b.inflictStatMod(s, Attack, 2, s);
+            b.inflictStatMod(s, SpAttack, 2, s);
+        }
+    }
 
 };
 

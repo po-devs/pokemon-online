@@ -126,6 +126,9 @@ QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
     w->addStyleMenu(menuBar);
     w->addLanguageMenu(menuBar);
 
+    QMenu *helpMenu = menuBar->addMenu(tr("&About"));
+    helpMenu->addAction(tr("&Credits"), w, SLOT(launchCredits()));
+
     return menuBar;
 }
 

@@ -130,6 +130,7 @@
 163 40#Turbo Blaze
 164 40#TeraVolt
 165 102-2#Aerilate
+166 117#Aurabreak
 168 103-Aura_16#Dark Aura
 169 103-Aura_17#Fairy Aura
 170 104-Veil_11#Flower Veil
@@ -145,3 +146,7 @@
 180 109#Tough Claws
 181 113#Competitive
 182 114#Gale Wings
+183 115#Gooey
+185 118#BulletProof
+186 119#Grass Pelt
+187 116#Magician

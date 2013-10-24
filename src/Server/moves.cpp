@@ -154,7 +154,7 @@ struct MMAquaRing : public MM
 
     static void et(int s, int, BS &b) {
         if (!b.canHeal(s))
-             return;
+            return;
 
         int healing = b.poke(s).totalLifePoints()/16;
         if (b.hasWorkingItem(s, Item::BigRoot)) {
@@ -254,7 +254,7 @@ struct MMBatonPass : public MM
         /* If the poke before is confused, carry on that status */
         if (poke(b,s)["ConfusedCount"].toInt() > 0) {
             if (!b.poke(s).hasStatus(Pokemon::Confused))
-            b.poke(s).addStatus(Pokemon::Confused);
+                b.poke(s).addStatus(Pokemon::Confused);
         }
 
         QList<int> boosts = turn(b,s)["BatonPassBoosts"].value<QList<int> >();
@@ -300,13 +300,12 @@ struct MMCamouflage : public MM {
 
     static void uas (int s, int, BS &b) {
         if (b.gen() >= 5) {
-            fpoke(b,s).type1 = Pokemon::Ground;
-            b.sendMoveMessage(17,0,s,4);
+            b.setType(s, Pokemon::Ground);
+            b.sendMoveMessage(17,0,s,Type::Ground);
         } else {
-            fpoke(b,s).type1 = Pokemon::Normal;
-            b.sendMoveMessage(17,0,s,0);
+            b.setType(s, Pokemon::Normal);
+            b.sendMoveMessage(17,0,s,Type::Normal);
         }
-        fpoke(b,s).type2 = Pokemon::Curse;
     }
 };
 
@@ -443,8 +442,7 @@ struct MMConversion : public MM
         }
         else {
             int type = turn(b,s)["ConversionType"].toInt();
-            fpoke(b,s).type1 = type;
-            fpoke(b,s).type2 = Pokemon::Curse;
+            b.setType(s, type);
             b.sendMoveMessage(19, 0, s, type, s);
         }
     }
@@ -484,7 +482,8 @@ struct MMConversion2 : public MM
         /* Gets types available */
         QList<int> poss;
         for (int i = 0; i < TypeInfo::NumberOfTypes() - 1; i++) {
-            if (!(fpoke(b,s).type1 == i && fpoke(b,s).type2 == Pokemon::Curse) && TypeInfo::Eff(attackType, i) < Type::Effective) {
+            QVector<int> types = b.getTypes(s);
+            if (!(types[0] == i && types.count() == 1) && TypeInfo::Eff(attackType, i) < Type::Effective) {
                 poss.push_back(i);
             }
         }
@@ -497,8 +496,7 @@ struct MMConversion2 : public MM
 
     static void uas(int s, int, BS &b) {
         int type = turn(b,s)["Conversion2Type"].toInt();
-        fpoke(b,s).type1 = type;
-        fpoke(b,s).type2 = Pokemon::Curse;
+        b.setType(s, type);
         b.sendMoveMessage(20, 0, s, type, s);
     }
 };
@@ -933,7 +931,7 @@ struct MMFocusPunch : public MM
         //Pokemon who are Frozen, Asleep and Paralyzed will display the message showing it "is tightening its focus"
         //DAF and Status effects will handle the second message correctly. Commenting out code just in case it changes for Gen 6
         //if (b.poke(s).status() != Pokemon::Frozen && b.poke(s).status() != Pokemon::Paralysed && b.poke(s).status() != Pokemon::Asleep)
-            b.sendMoveMessage(47,1,s,Pokemon::Fighting);
+        b.sendMoveMessage(47,1,s,Pokemon::Fighting);
     }
 };
 
@@ -946,15 +944,7 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
-        if (b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold)
-                && (!b.hasWorkingAbility(t, Ability::Multitype) || (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && !b.hasWorkingAbility(s, Ability::Multitype)
-                && b.poke(s).item() == 0
-                && !(b.poke(t).item() == Item::GriseousOrb && (b.gen() <= 4 || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina))
-                && !ItemInfo::isMail(b.poke(t).item())
-                && !(ItemInfo::isDrive(b.poke(t).item()) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
-                /* Sticky Hold, MultiType, Giratina_O, Mail, Genesect Drives*/
-        {
+        if (b.poke(s).item() == 0 && b.canLoseItem(t, s)) {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -1504,9 +1494,9 @@ struct MMDoomDesire : public MM
                     b.calculateTypeModStab(s, s);
 
                     int typemod = fturn(b,s).typeMod;
-                    if (typemod == 0) {
+                    if (typemod < -50) {
                         /* If it's ineffective we just say it */
-                        b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod));
+                        b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
                         return;
                     }
                     fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
@@ -1526,7 +1516,7 @@ struct MMDoomDesire : public MM
                     tmove(b, doomuser).recoil = 0;
 
                     int damage = b.calculateDamage(s, s);
-                    b.notify(BS::All, BattleCommands::Effective, s, quint8(std::max(1,typemod/4)));
+                    b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
                 }
             }
@@ -1861,7 +1851,7 @@ struct MMBeatUp : public MM {
         if (b.poke(b.player(s), b.repeatCount()).status() != Pokemon::Fine) {
             turn(b,s)["HitCancelled"] = true;
         } else {
-            tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id).baseAttack()/10);
+            tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id, b.gen()).baseAttack()/10);
             //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
         }
     }
@@ -2823,8 +2813,8 @@ struct MMStealthRock : public MM
         if (!b.koed(s) && team(b,source).value("StealthRock").toBool() == true && !b.hasWorkingAbility(s, Ability::MagicGuard))
         {
             b.sendMoveMessage(124,1,s,Pokemon::Rock);
-            int n = TypeInfo::Eff(Pokemon::Rock, b.getType(s, 1)) * TypeInfo::Eff(Pokemon::Rock, b.getType(s, 2));
-            b.inflictDamage(s, b.poke(s).totalLifePoints()*n/32, s);
+            int n = b.rawTypeEff(Pokemon::Rock, s);
+            b.inflictDamage(s, b.poke(s).totalLifePoints()*b.effFraction(n)/8, s);
         }
     }
 };
@@ -3013,10 +3003,7 @@ struct MMKnockOff : public MM
 
     static void uas(int s,int t,BS &b)
     {
-        if (!b.koed(t) && b.poke(t).item() != 0 && !b.hasWorkingAbility(t, Ability::StickyHold) && (!b.hasWorkingAbility(t, Ability::Multitype) ||
-                                                                                                    (b.gen() >= 5 && !ItemInfo::isPlate(b.poke(t).item())))
-                && !(b.poke(t).item() == Item::GriseousOrb && PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina) && !(ItemInfo::isDrive(b.poke(t).item()) &&
-                                                             PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)) /* Sticky Hold, MultiType, Giratina-O, Genesect Drives */
+        if (!b.koed(t) && b.canLoseItem(t,s))
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             b.loseItem(t);
@@ -3033,18 +3020,7 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.koed(t) || (b.poke(t).item() == 0 && b.poke(s).item() == 0) || b.hasWorkingAbility(t, Ability::StickyHold)
-                || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && (b.gen() <= 4 || ItemInfo::isPlate(b.poke(t).item()) || ItemInfo::isPlate(b.poke(s).item())))
-                || ((b.poke(s).item() == Item::GriseousOrb || b.poke(t).item() == Item::GriseousOrb) && (b.gen() <= 4 || (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Giratina || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Giratina)))
-                || ItemInfo::isMail(b.poke(s).item()) || ItemInfo::isMail(b.poke(t).item())
-                || ((ItemInfo::isDrive(b.poke(s).item()) || ItemInfo::isDrive(b.poke(t).item())) && (PokemonInfo::OriginalForme(b.poke(s).num()) == Pokemon::Genesect || PokemonInfo::OriginalForme(b.poke(t).num()) == Pokemon::Genesect)))
-            /* Sticky Hold, MultiType, Giratina-O, Mail, Genesect Drives */
-        {
-            fturn(b,s).add(TM::Failed);
-        }
-        /* Knock off */
-        if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()
-                || b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool())) {
+        if (b.koed(t) || b.koed(s) || !b.canLoseItem(t, s) || !b.canLoseItem(s, s)) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -3445,7 +3421,8 @@ struct MMHealBlock: public MM
 
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag) {
+            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
+                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3453,7 +3430,8 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if(tmove(b,s).flags & Move::HealingFlag) {
+        if(tmove(b,s).flags & Move::HealingFlag
+                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.sendMoveMessage(59,1,s,Type::Psychic,s,mv);
         }
@@ -3477,15 +3455,16 @@ struct MMJumpKick : public MM
             if (typeadv[0] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[1]) * 2;
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[1]));
             } else if (typeadv[1] == Type::Ghost) {
                 if (b.gen() <= 3)
                     return;
-                typemod = TypeInfo::Eff(type, typeadv[0]) * 2;
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[0]));
             } else {
-                typemod = TypeInfo::Eff(type, typeadv[0]) * TypeInfo::Eff(type, typeadv[1]);
+                typemod = b.convertTypeEff(TypeInfo::Eff(type, typeadv[0])) + b.convertTypeEff(TypeInfo::Eff(type, typeadv[1]));
             }
-            fturn(b,s).typeMod = typemod*4;
+
+            fturn(b,s).typeMod = typemod;
             fturn(b,s).stab = b.hasType(s, Type::Fighting) ? 3 : 2;
             if (b.gen().num == 4)
                 damage = std::min(b.calculateDamage(s,t)/2, b.poke(t).totalLifePoints()/2);
@@ -3881,29 +3860,28 @@ struct MMDefog : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        bool clear = false;
-
-        BS::context &c = team(b,b.player(t));
-
         if (!b.hasMinimalStatMod(t, Evasion)) {
             b.inflictStatMod(t, Evasion, -1, s);
         }
 
-        if (c.contains("Barrier1Count") || c.contains("Barrier2Count") || c.contains("Spikes") || c.contains("ToxicSpikes")
-                || c.contains("StealthRock") || c.contains("MistCount") || c.contains("SafeGuardCount")) {
-            clear = true;
+        bool clear = false;
 
-            c.remove("Barrier1Count");
-            c.remove("Barrier2Count");
-            c.remove("Spikes");
-            c.remove("ToxicSpikes");
-            c.remove("StealthRock");
-            c.remove("MistCount");
-            c.remove("SafeGuardCount");
+        QVector<int> players = QVector<int>() << b.player(t);
+        if (b.gen() >= 6) {
+            players.push_back(b.opponent(b.player(t)));
+        }
+
+        foreach (int p, players) {
+            BS::context &c = team(b,p);
+
+            if (c.remove("Barrier1Count") + c.remove("Barrier2Count") + c.remove("Spikes") + c.remove("ToxicSpikes")
+                    + c.remove("StealthRock") + c.remove("MistCount") + c.remove("SafeGuardCount") + c.remove("StickyWeb")) {
+                clear = true;
+            }
         }
 
         if (clear) {
-            b.sendMoveMessage(77,0, s, type(b,s), t);
+            b.sendMoveMessage(77,b.gen() >= 6, s, type(b,s), t);
         }
     }
 };
@@ -4451,9 +4429,9 @@ struct MMRage : public MM
     }
 
     static void asf(int s, int, BS &b) {
-       if (b.gen().num == 1) {
-           poke(b,s)["RageMissed"] = true;
-       }
+        if (b.gen().num == 1) {
+            poke(b,s)["RageMissed"] = true;
+        }
     }
 
 };
@@ -4968,14 +4946,31 @@ struct MMNaturePower : public MM
     static void uas(int s, int, BS &b) {
         removeFunction(turn(b,s), "UponAttackSuccessful", "NaturePower");
 
-        int move;
-        if (b.gen().num == 3) {
-            move = Swift;
-        } else if (b.gen().num == 4) {
-            move = TriAttack;
-        } else {
-            move = Earthquake;
+        int type = Type::Normal;
+        if (b.gen().num == 5) {
+            type = Type::Ground;
         }
+        if (b.terrain != 0) {
+            type = std::abs(b.terrain);
+        }
+
+        int move;
+        if (type == Type::Ground) {
+            move = Earthquake;
+        } else if (type == Type::Water) {
+            move = HydroPump;
+        } else if (type == Type::Grass) {
+            move = EnergyBall;
+        } else if (type == Type::Fairy) {
+            move = MoonBlast;
+        } else {
+            if (b.gen().num == 3) {
+                move = Swift;
+            } else {
+                move = TriAttack;
+            }
+        }
+
         MoveEffect::setup(move,s,s,b);
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s,move,true,true);
@@ -4991,7 +4986,7 @@ struct MMRolePlay : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
-         if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter ) {
+        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange ) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5012,7 +5007,8 @@ struct MMSkillSwap : public MM {
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
         if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::WonderGuard || b.ability(s) == Ability::Multitype
-                || b.ability(s) == Ability::WonderGuard || b.ability(s) == Ability::Illusion || b.ability(t) == Ability::Illusion) {
+                || b.ability(s) == Ability::WonderGuard || b.ability(s) == Ability::Illusion || b.ability(t) == Ability::Illusion
+                || b.ability(s) == Ability::StanceChange || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5361,6 +5357,7 @@ struct MMTransform : public MM {
         po.weight = PokemonInfo::Weight(num);
         po.type1 = PokemonInfo::Type1(num, b.gen());
         po.type2 = PokemonInfo::Type2(num, b.gen());
+        po.types = QVector<int>() << po.type1 << po.type2;
 
         b.changeSprite(s, num);
 
@@ -5512,8 +5509,11 @@ struct MMSoak : public MM {
 
     static void uas(int s, int t, BS &b) {
         int type = turn(b,s)["Soak_Arg"].toInt();
-        fpoke(b, t).type1 = type;
-        fpoke(b, t).type2 = Pokemon::Curse;
+        if (move(b,s) == Move::Soak) {
+            b.setType(t, type);
+        } else {
+            b.addType(t, type);
+        }
         b.sendMoveMessage(157, 0, t, type, t);
     }
 };
@@ -5755,6 +5755,7 @@ struct MMReflectType : public MM
         b.sendMoveMessage(172,0,s,type(b,s),t);
         fpoke(b,s).type1 = fpoke(b,t).type1;
         fpoke(b,s).type2 = fpoke(b,t).type2;
+        fpoke(b,s).types = fpoke(b,t).types;
     }
 };
 
@@ -6223,10 +6224,10 @@ struct MMSynchronoise : public MM
     }
 
     static void btl(int s, int t, BS &b) {
-        if (b.hasType(t, b.getType(s, 1)) || (b.getType(s, 2) != Pokemon::Curse && b.hasType(t, b.getType(s, 2)))) {
+        if (b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
 
         } else {
-            fturn(b,s).typeMod = 0;
+            fturn(b,s).typeMod = -100;
         }
     }
 };
@@ -6396,18 +6397,6 @@ struct MMAutotomize : public MM
     }
 };
 
-struct MMSpore : public MM {
-    MMSpore() {
-        functions["DetermineAttackFailure"] = &daf;
-    }
-
-    static void daf(int s, int t, BS &b) {
-        if (b.hasType(t, Type::Grass)) {
-            fturn(b,s).add(TM::Failed);
-        }
-    }
-};
-
 struct MMCraftyShield: public MM
 {
     MMCraftyShield() {
@@ -6488,11 +6477,11 @@ struct MMElectricTerrain : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 1) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("ElectricTerrainCount").toInt() > 0) {
+        if (b.terrain == Type::Electric && b.terrainCount > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6500,15 +6489,19 @@ struct MMElectricTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
-        b.battleMemory()["ElectricTerrainCount"] = 5;
+        b.terrainCount = 5;
+        b.terrain = Type::Electric;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["ElectricTerrainCount"], -1);
-        if (b.battleMemory()["ElectricTerrainCount"].toInt() <= 0) {
+        if (b.terrain != Type::Electric) {
+            return;
+        }
+        b.terrainCount -= 1;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(201,1,s,Pokemon::Electric);
-            b.battleMemory().remove("ElectricTerrainCount");
+            b.terrain = 0;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "ElectricTerrain");
         }
     }
@@ -6536,7 +6529,7 @@ struct MMFairyLock : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 2) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
@@ -6582,11 +6575,11 @@ struct MMGrassyTerrain : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 2) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("GrassyTerrainCount").toInt() > 0) {
+        if (b.terrainCount > 0 && b.terrain == Type::Grass) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6594,20 +6587,23 @@ struct MMGrassyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(205,0,s,Pokemon::Grass);
-        b.battleMemory()["GrassyTerrainCount"] = 5;
-        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrainTerrain", &et);
+        b.terrainCount = 5;
+        b.terrain = Type::Grass;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["GrassyTerrainCount"], -1);
-        if (b.battleMemory()["GrassyTerrainCount"].toInt() <= 0) {
+        if (b.terrain != Type::Grass) {
+            return;
+        }
+        b.terrainCount -= 1;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(205,1,s,Pokemon::Grass);
-            b.battleMemory().remove("GrassyTerrainCount");
+            b.terrain = Type::Curse;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "GrassyTerrain");
         } else {
             b.sendMoveMessage(205,2,s,Pokemon::Grass);
-            foreach (int p, b.sortedBySpeed())
-            {
+            foreach (int p, b.sortedBySpeed()) {
                 b.healLife(p, b.poke(p).totalLifePoints()/16);
             }
         }
@@ -6622,13 +6618,12 @@ struct MMKingsShield: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "KingsShield", &dgaf);
         turn(b,s)["KingsShieldUsed"] = true;
         b.sendMoveMessage(206, 0, s, type(b,s));
     }
 
     static void dgaf(int s, int t, BS &b) {
-        turn(b, t).remove("DamageShielded");
         if (s == t || t == -1) {
             return;
         }
@@ -6640,22 +6635,23 @@ struct MMKingsShield: public MM
             return;
         }
 
+        if (tmove(b,s).category == Move::Other) {
+            return;
+        }
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
 
-        turn(b,t)["DamageShielded"] = true;
-        addFunction(turn(b,t), "UponPhysicalAssault", "KingsShield", &upa);
-    }
+        /* All other moves fail */
+        if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+        }
+        b.fail(s, 27, 0, Pokemon::Normal, t);
 
-    static void upa(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
+        if (tmove(b,s).flags & Move::ContactFlag) {
+            b.inflictStatMod(s, Attack, -2, t);
         }
-        if (!turn(b,s)["KingsShieldUsed"].toBool() || !turn(b,s)["DamageShielded"].toBool()) {
-            return;
-        }
-        b.inflictStatMod(t, Attack, -2, s);
     }
 };
 
@@ -6710,17 +6706,19 @@ struct MMMatBlock : public MM
 
 
 struct MMMistyTerrain : public MM {
+    static const int type = -Type::Fairy;
+
     MMMistyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 3) ;
+        return makeBracket(24, 0) ;
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.battleMemory().value("MistyCount").toInt() > 0) {
+        if (b.terrain == type && b.terrainCount > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6728,15 +6726,19 @@ struct MMMistyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(208,0,s,Pokemon::Fairy);
-        b.battleMemory()["MistyTerrainCount"] = 5;
+        b.terrainCount = 5;
+        b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
     }
 
     static void et(int s, int, BS &b) {
-        inc(b.battleMemory()["MistyTerrainCount"], -1);
-        if (b.battleMemory()["MistyTerrainCount"].toInt() <= 0) {
+        if (b.terrain != type) {
+            return;
+        }
+        b.terrainCount --;
+        if (b.terrainCount <= 0) {
             b.sendMoveMessage(208,1,s,Pokemon::Fairy);
-            b.battleMemory().remove("MistyTerrainCount");
+            b.terrain = 0;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MistyTerrain");
         }
     }
@@ -6807,7 +6809,7 @@ struct MMStickyWeb : public MM
     }
 
     static void usi(int source, int s, BS &b) {
-        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody))
+        if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody) && !b.isFlying(s))
         {
             b.sendMoveMessage(210,1,s,Pokemon::Bug);
             b.inflictStatMod(s, Speed, -1, s);
@@ -6837,6 +6839,112 @@ struct MMVenomDrench : public MM {
     static void daf(int s, int t, BS &b) {
         if (!(b.poke(t).status() == Pokemon::Poisoned)) {
             fturn(b,s).add(TM::Failed);
+        }
+    }
+};
+
+struct MMFlowerShield : public MM {
+    MMFlowerShield() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Defense, 1, s);
+            }
+        }
+    }
+};
+
+struct MMRototiller : public MM {
+    MMRototiller() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.hasType(p, Type::Grass)) {
+                b.inflictStatMod(p, Attack, 1, s);
+                b.inflictStatMod(p, SpAttack, 1, s);
+            }
+        }
+    }
+};
+
+
+struct MMPowder : public MM
+{
+    MMPowder() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        b.sendMoveMessage(215,0,s,Pokemon::Grass,t);
+
+        addFunction(poke(b,t), "MovePossible", "Powder", &mp);
+        poke(b,t)["Powdered"] = true;
+    }
+
+    static void mp(int s, int, BS &b)
+    {
+        addFunction(turn(b,s), "AfterTellingPlayers", "Powder", &atp);
+    }
+
+    static void atp(int s, int, BS &b)
+    {
+        if (turn(b,s).value("Powdered").toBool()) {
+            if (type(b,s) == Type::Fire) {
+                b.sendMoveMessage(215, 1, s, Pokemon::Fire);
+                turn(b,s).remove("Powdered");\
+                removeFunction(poke(b,s), "MovePossible", "Powder");
+                b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
+                turn(b,s)["ImpossibleToMove"] = true;
+            }
+        }
+    }
+};
+
+
+struct MMMagneticFlux : public MM {
+    MMMagneticFlux() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        foreach (int p, b.sortedBySpeed())
+        {
+            if (b.player(p) == b.player(s)) {
+                if (b.hasWorkingAbility(s, Ability::Minus) || b.hasWorkingAbility(s, Ability::Plus)) {
+                    b.inflictStatMod(p, Defense, 1, s);
+                    b.inflictStatMod(p, SpDefense, 1, s);
+                }
+            }
+        }
+    }
+};
+
+struct MMIonDeluge : public MM {
+    MMIonDeluge() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(217, 0, s, Type::Electric);
+        addFunction(b.battleMemory(), "MovePossible", "IonDeluge", &mp);
+        b.battleMemory()["IonDelugeTurn"] = b.turn();
+    }
+
+    static void mp(int s, int, BS &b) {
+        if (b.battleMemory().value("IonDelugeTurn").toInt() != b.turn()) {
+            b.battleMemory().remove("IonDelugeTurn");
+            removeFunction(b.battleMemory(), "MovePossible", "IonDeluge");
+            return;
+        }
+        if (tmove(b,s).type == Type::Normal) {
+            tmove(b,s).type = Type::Electric;
         }
     }
 };
@@ -7073,14 +7181,13 @@ void MoveEffect::init()
     REGISTER_MOVE(195, WillOWisp);
     REGISTER_MOVE(196, Swagger);
     REGISTER_MOVE(197, Autotomize);
-    REGISTER_MOVE(198, Spore);
+    //REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
     REGISTER_MOVE(201, ElectricTerrain);
     REGISTER_MOVE(202, Electrify);
     REGISTER_MOVE(203, FairyLock);
     REGISTER_MOVE(204, FellStinger);
-    //todo flower shield
     REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
@@ -7089,4 +7196,11 @@ void MoveEffect::init()
     REGISTER_MOVE(210, StickyWeb);
     REGISTER_MOVE(211, TopsyTurvy);
     REGISTER_MOVE(212, VenomDrench);
+    REGISTER_MOVE(213, FlowerShield);
+    REGISTER_MOVE(214, Rototiller);
+    REGISTER_MOVE(215, Powder);
+    REGISTER_MOVE(216, MagneticFlux);
+    REGISTER_MOVE(217, IonDeluge);
 }
+
+/* Not done: Ion deluge */

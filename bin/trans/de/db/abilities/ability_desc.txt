@@ -1,4 +1,4 @@
-0
+﻿0
 1 Bei jedem Angriff, der Schaden verursacht, besteht eine Chance von 10%, dass der Gegner zurückschreckt.
 2 Das Pokémon verursacht im Kampf Regen.
 3 Der Initiative-Wert steigt am Ende jeder Runde um 1 Stufe.

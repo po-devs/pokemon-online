@@ -16,7 +16,7 @@ int baseStatSum(const QList<int> l, int level)
 
 int main(int argc, char *argv[])
 {
-    QFile in("db/pokes/poke_stats.txt");
+    QFile in("db/pokes/stats.txt");
 
     in.open(QIODevice::ReadOnly);
 

@@ -87,6 +87,7 @@ public:
     /* Eats a berry, not caring about the item the pokemon has, etc. */
     void devourBerry(int player, int berry, int target);
     void acqItem(int player, int item);
+    bool canLoseItem(int player, int attacker);
     void loseItem(int player, bool real = true);
     void loseAbility(int player);
     /* Removes PP.. */
@@ -116,7 +117,14 @@ public:
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
-    int getType(int player, int slot);
+    int getType(int player, int slot) const;
+    QVector<int> getTypes(int player) const;
+    void addType(int player, int type);
+    void setType(int player, int type);
+    int rawTypeEff(int type, int player);
+    int convertTypeEff(int typeeff);
+    PokeFraction effFraction(int typeeff);
+    bool ineffective(int typeeff) {return typeeff < -50;}
     bool isFlying(int player);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
@@ -375,6 +383,7 @@ public:
 private:
     /* Used when pokemon shift slots */
     QVector<int> indexes;
+    bool megas[2];
 };
 
 Q_DECLARE_METATYPE(BattleSituation::MechanicsFunction)

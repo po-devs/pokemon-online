@@ -202,10 +202,6 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
-PersonalTeam::PersonalTeam(): m_prop_gen(GenInfo::GenMax())
-{
-}
-
 LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0)
 {
 }

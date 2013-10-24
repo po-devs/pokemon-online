@@ -928,7 +928,8 @@ namespace Move
         HealingFlag = 4096, //Can this move be blocked with Heal Block
         MischievousFlag = 8192, // Can this move bypass substitute?
         BiteFlag = 8192*2,//Strong jaw moves
-        PowderFlag = 16384*2 //Powder moves
+        PowderFlag = 16384*2, //Powder moves
+        BallFlag = 65536
     };
 
     enum Target
@@ -1540,7 +1541,7 @@ namespace Move
         ForestsCurse,
         FreezeDry,
         Geomancy,
-        GlowPunch,
+        PetalBlizzard,
         Infestation,
         MoonBlast,
         MysticalFire,
@@ -1553,6 +1554,7 @@ namespace Move
         PlayNice,
         TrickorTreat,
         WaterShuriken,
+        AromaticMist,
         Belch,
         Confide,
         DisarmingVoice,
@@ -2115,7 +2117,9 @@ namespace Item
         PixiePlate=330,
         AssaultVest=331,
         SafetyGoggles=332,
-        WeaknessPolicy=333
+        WeaknessPolicy=333,
+        Snowball,
+        LuminousMoss
     };
 
     enum Target

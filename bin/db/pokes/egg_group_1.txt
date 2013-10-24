@@ -598,3 +598,69 @@
 635 Dragon
 636 Bug
 637 Bug
+650 Ground
+651 Ground
+652 Ground
+653 Ground
+654 Ground
+655 Ground
+656 Water 1
+657 Water 1
+658 Water 1
+659 Ground
+660 Ground
+661 Flying
+662 Flying
+663 Flying
+664 Bug
+665 Bug
+666 Bug
+667 Ground
+668 Ground
+669 Fairy
+670 Fairy
+671 Fairy
+672 Ground
+673 Ground
+674 Ground
+675 Ground
+676 Ground
+677 Ground
+678 Ground
+679 Mineral
+680 Mineral
+681 Mineral
+682 Fairy
+683 Fairy
+684 Fairy
+685 Fairy
+686 Water 1
+687 Water 1
+688 Water 3
+689 Water 3
+690 Water 1
+691 Water 1
+692 Water 1
+693 Water 1
+694 Monster
+695 Monster
+696 Monster
+697 Monster
+698 Monster
+699 Monster
+700 Ground
+701 HumanShape
+702 Ground
+703 Fairy
+704 Dragon
+705 Dragon
+706 Dragon
+707 Mineral
+708 Plant
+709 Plant
+710 Indeterminate
+711 Indeterminate
+712 Monster
+713 Monster
+714 Flying
+715 Flying

@@ -47,6 +47,8 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     forfeiter() = -1;
     weather = 0;
     weatherCount = -1;
+    terrain = 0;
+    terrainCount = -1;
 
     /* timers for battle timeout */
     timeleft[0] = 5*60;
@@ -1228,7 +1230,7 @@ void BattleBase::sendItemMessage(int move, int src, int part, int foe, int berry
     else if (stat == -1)
         notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry));
     else
-        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint16(stat));
+        notify(All, ItemMessage, src, quint16(move), uchar(part), qint8(foe), qint16(berry), qint32(stat));
 }
 
 void BattleBase::sendBerryMessage(int move, int src, int part, int foe, int berry, int stat)
@@ -1411,6 +1413,7 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     weight = PokemonInfo::Weight(p.num());
     type1 = PokemonInfo::Type1(p.num(), gen);
     type2 = PokemonInfo::Type2(p.num(), gen);
+    types = QVector<int>() << type1 << type2;
     ability = p.ability();
     flags = 0;
 
@@ -1859,7 +1862,7 @@ void BattleBase::inflictConfusedDamage(int player)
     tmove(player).type = Pokemon::Curse;
     tmove(player).power = 40;
     tmove(player).attack = Move::NoMove;
-    turnMem(player).typeMod = 16;
+    turnMem(player).typeMod = 0;
     turnMem(player).stab = 2;
     tmove(player).category = Move::Physical;
     int damage = calculateDamage(player, player);
@@ -1926,15 +1929,20 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
     int typeadv[] = {getType(target,1),getType(target,2)};
     int typepok[] = {getType(player,1),getType(player,2)};
     int typeffs[] = {TypeInfo::Eff(type, typeadv[0], gen()),TypeInfo::Eff(type, typeadv[1], gen())};
-    int typemod = 4;
+    int typemod = 0;
 
     for (int i = 0; i < 2; i++) {
+        if (typeffs[i] == 0) {
+            typemod = -100;
+            break;
+        }
         typemod *= typeffs[i];
+        typemod /= 2;
     }
 
     // Counter hits regardless of type matchups in Gen 1.
     if (tmove(player).attack == Move::Counter) {
-        typemod = 16;
+        typemod = 0;
     }
 
     int stab;
@@ -1979,7 +1987,7 @@ void BattleBase::testCritical(int player, int target)
     }
     PokeFraction critChance(up, down);
     int randnum = randint(512);
-    int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id).baseSpeed();
+    int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id, gen()).baseSpeed();
     bool critical = randnum < std::min(510, baseSpeed * critChance);
 
     if (critical) {
@@ -2231,14 +2239,19 @@ bool BattleBase::canGetStatus(int player, int status)
     }
 }
 
-bool BattleBase::hasType(int player, int type)
+bool BattleBase::hasType(int player, int type) const
 {
-    return getType(player,1) == type  || getType(player,2) == type;
+    return getTypes(player).indexOf(type) != -1;
 }
 
-int BattleBase::getType(int player, int slot)
+int BattleBase::getType(int player, int slot) const
 {
-    return slot == 1 ? fpoke(player).type1 : fpoke(player).type2;
+    return fpoke(player).types.count() >= slot ? fpoke(player).types[slot-1] : Type::Curse;
+}
+
+QVector<int> BattleBase::getTypes(int player) const
+{
+    return fpoke(player).types;
 }
 
 bool BattleBase::inflictStatMod(int player, int stat, int mod, int attacker, bool tell)

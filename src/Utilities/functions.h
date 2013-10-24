@@ -103,6 +103,15 @@ inline int intlog2(unsigned x) {
     return i;
 }
 
+inline int intpow2(unsigned x) {
+    int i = 1;
+    while (x-- > 0) {
+        i *= 2;
+    }
+    return i;
+}
+
+
 inline QByteArray getFileContent(const QString &path) {
     QFile f(path);
     f.open(QIODevice::ReadOnly);

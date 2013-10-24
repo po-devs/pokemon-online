@@ -474,7 +474,7 @@
 446:0 Munchlax
 447:0 Riolu
 448:0:H Lucario
-448:1 Mega LUcario
+448:1 Mega Lucario
 449:0 Hippopotas
 450:0 Hippowdon
 451:0 Skorupi
@@ -576,7 +576,8 @@
 493:14 Arceus-Ice
 493:15 Arceus-Dragon
 493:16 Arceus-Dark
-493:17 Arceus-???
+493:17 Arceus-Fairy
+493:18 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
 351:1 Castform-Snowy
@@ -789,9 +790,11 @@
 676:0 Furfrou
 677:0 Espurr
 678:0 Meowstic
+678:1 Meowstic-F
 679:0 Honedge
 680:0 Doublade
 681:0 Aegislash
+681:1 Aegislash-B
 682:0 Spritzee
 683:0 Aromatisse
 684:0 Swirlix
