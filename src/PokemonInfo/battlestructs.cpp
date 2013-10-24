@@ -45,7 +45,7 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("One player cannot have more than one of the same pokemon per team."),
     QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly."),
     QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle."),
-    QObject::tr("All Type Effectivenesses are inverted (fire is weak to water and etc)")
+    QObject::tr("All Type Effectivenesses are inverted (Ex: Water is weak to Fire)")
 };
 
 QString ChallengeInfo::modeText[] =
