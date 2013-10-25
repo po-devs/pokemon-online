@@ -2677,17 +2677,17 @@ int BattleSituation::rawTypeEff(int atttype, int player)
         int eff = TypeInfo::Eff(atttype, deftype);
         if(clauses() && ChallengeInfo::Inverted){
             switch(eff){
-                case 0:
-                    eff=2;
+                case Type::Ineffective:
+                    eff=Type::Effective;
                     break;
-                case 1:
-                    eff=4;
+                case Type::NotEffective:
+                    eff=Type::SuperEffective;
                     break;
-                case 4:
-                    eff=1;
+                case Type::SuperEffective:
+                    eff=Type::NotEffective;
                     break;
                 default:
-                    eff=2;
+                    eff=Type::Effective;
                     break;
             }
         }
