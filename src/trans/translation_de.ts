@@ -3771,7 +3771,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="125"/>
         <source>Could not add the Pokemon to the box, the box is full.</source>
-        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, da die Box ist voll ist.</translation>
+        <translation>Das Pokémon konnte nicht in die Box abgelegt werden, da die Box voll ist.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebox.cpp" line="128"/>
