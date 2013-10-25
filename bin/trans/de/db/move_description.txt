@@ -1,0 +1,218 @@
+0 (Keine Beschreibung)
+1 Verursacht Schaden ohne zusätzliche Effekte.
+2 Hat eine erhöhte Volltrefferquote.
+3 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+4 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+5 Verursacht Schaden ohne zusätzliche Effekte.
+6 Verursacht Schaden ohne zusätzliche Effekte.
+7 Hat eine 10%-Chance das Ziel zu verbrennen.
+8 Hat eine 10%-Chance das Ziel einzufrieren.
+9 Hat eine 10%-Chance das Ziel zu paralysieren.
+10 Verursacht Schaden ohne zusätzliche Effekte.
+11 Verursacht Schaden ohne zusätzliche Effekte.
+12 Das Ziel wird besiegt.
+13 Benötigt eine Runde zum Aufladen. Hat eine erhöhte Volltrefferquote.
+14 Erhöht den Angriff des Anwenders um zwei Stufen.
+15 Verursacht Schaden ohne zusätzliche Effekte.
+16 Befindet sich das Ziel durch Einsatz von z.B. Fliegen oder Sprungfeder in der Luft, richtet diese Attacke doppelten Schaden an.
+17 Verursacht Schaden ohne zusätzliche Effekte.
+18 Zwinget das Ziel mit einem zufälligen Pokémon aus seinem Team zu tauschen.
+19 Anwender fliegt in der ersten Runde in die Luft und greift in der zweiten an.
+20 Das Ziel kann nicht ausgetauscht werden und verliert jede Runde 1/16 seiner maximalen KP.
+21 Verursacht Schaden ohne zusätzliche Effekte.
+22 Verursacht Schaden ohne zusätzliche Effekte.
+23 Hat eine 30%-Chance das das Ziel zurückschreckt. Die Stärke verdoppelt sich, wenn das Ziel Komprimator eingesetzt hat.
+24 Trifft zweimal in einer Runde.
+25 Verursacht Schaden ohne zusätzliche Effekte.
+26 Geht die Attacke daneben, erhält der Anwender die Hälfte seiner maximalen KP als Rückstoßschaden.
+27 Hat eine 30%-Chance das das Ziel zurückschreckt.
+28 Senkt die Genauigkeit des Ziels um eine Stufe.
+29 Hat eine 30%-Chance das das Ziel zurückschreckt.
+30 Verursacht Schaden ohne zusätzliche Effekte.
+31 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+32 Das Ziel wird besiegt.
+33 Verursacht Schaden ohne zusätzliche Effekte.
+34 Hat eine 30%-Chance das Ziel zu paralysieren.
+35 Dem Ziel werden 1/16 seiner maximalen KP für 4-5 Runden abgezogen und es kann in der Zeit nicht ausgetauscht werden.
+36 Anwender verliert 1/4 des Schadens an KP durch Rückstoß.
+37 Anwender kann für 2-3 Runden keine andere Attacke auswählen oder ausgetauscht werden, danach wird er verwirrt.
+38 Anwender verliert 1/3 des Schadens an KP durch Rückstoß.
+39 Senkt die Verteidigung des Ziels um eine Stufe.
+40 Hat eine 30%-Chance das Ziel zu vergiften.
+41 Hat eine 20%-Chance das Ziel zu vergiften. Trifft zweimal in einer Runde.
+42 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+43 Senkt die Verteidigung des Ziels um eine Stufe.
+44 Hat eine 30%-Chance, das das Ziel zurückschreckt.
+45 Senkt den Angriff des Ziels um eine Stufe.
+46 Zwinget das Ziel mit einem zufälligen Pokémon aus seinem Team zu tauschen.
+47 Das Ziel schläft ein.
+48 Das Ziel wird verwirrt.
+49 Verursacht einen festen Schaden von 20 KP.
+50 Blockiert die zuletzt eingesetzte Attacke des Ziels für 1-8 Runden.
+51 Hat eine 10%-Chance die Sp. Verteidigung des Zielst um eine Stufe zu senken.
+52 Hat eine 10%-Chance das Ziel zu verbrennen.
+53 Hat eine 10%-Chance das Ziel zu verbrennen.
+54 Verhindert fünf Runden lang Statuswertveränderungen am Team des Anwenders durch den Gegner.
+55 Verursacht Schaden ohne zusätzliche Effekte.
+56 Verursacht Schaden ohne zusätzliche Effekte.
+57 Wenn das angegriffene Pokémon Taucher eingesetzt hat, verdoppelt sich der Schaden.
+58 Hat eine 10%-Chance das Ziel einzufrieren.
+59 Hat eine 10%-Chance das Ziel einzufrieren. Trifft im Hagel immer.
+60 Hat eine 10%-Chance das Ziel zu verwirren.
+61 Hat eine 10%-Chance die Initiative des Ziels um eine Stufe zu senken.
+62 Hat eine 10%-Chance den Angriff des Ziels um eine Stufe zu senken.
+63 Anwender kann die Runde nach dem Angriff nicht angreifen oder ausgewechselt werden.
+64 Verursacht Schaden ohne zusätzliche Effekte.
+65 Verursacht Schaden ohne zusätzliche Effekte.
+66 Anwender verliert 1/4 des Schadens an KP durch Rückstoß.
+67 Je schwerer der Gegner, desto stärker ist die Attacke (maximal 120).
+68 Wenn der zuletzt vor Einsatz von Konter dem Anwender zugefügte Schaden durch eine physische Attacke zugefügt wurde, fügt Konter dem Verursacher doppelt so viel Schaden zu.
+69 Richtet Schaden in Höhe des Levels des Angreifers an.
+70 Verursacht Schaden ohne zusätzliche Effekte.
+71 Heilt den Anwender um die Hälfte des errichteten Schadens.
+72 Heilt den Anwender um die Hälfte des errichteten Schadens.
+73 Stiehlt dem Ziel jede Runde 1/8 seiner KP. Effekt hört auf wenn das Ziel ausgewechselt wird.
+74 Erhöht den Angriff und Sp. Angriff des Anwenders um eine Stufe, bzw. zwei Stufen in der Sonne.
+75 Hat eine erhöhte Volltrefferquote.
+76 Benötigt eine Runde zum Aufladen (außer in der Sonne). Halbe Stärke im Regen oder im Sandsturm.
+77 Das Ziel wird vergiftet
+78 Das Ziel wird paralysiert.
+79 Das Ziel schläft ein.
+80 Anwender kann für 2-3 Runden keine andere Attacke auswählen oder ausgewechselt werden und wird danach verwirrt.
+81 Senkt die Initiative des Ziels um eine Stufe.
+82 Verursacht einen festen Schaden von 40 KP.
+83 Ziel kann nicht ausgewechselt werden und verliert für 4-5 Runden 1/16 seiner maximalen KP.
+84 Hat eine 10%-Chance das Ziel zu paralysieren.
+85 Hat eine 10%-Chance das Ziel zu paralysieren.
+86 Das Ziel wird paralysiert.
+87 Hat eine 30%-Chance das Ziel zu paralysieren. Trifft im Regen immer und in der Sonnne zu 50%.
+88 Das Ziel wird paralysiert.
+89 Hat das Ziel eingesetzt, trifft die Attacke mit doppelter Kraft.
+90 Das Ziel wird besiegt.
+91 Anwender vergräbt sich in der ersten Runde und greift in der zweiten an.
+92 Das Ziel wird schwer vergiftet.
+93 Hat eine 10%-Chance das Ziel zu verwirren.
+94 Hat eine 10%-Chance die Sp. Verteidigung des Ziels um eine Stufe zu senken.
+95 Das Ziel schläft ein.
+96 Erhöht den Angriff des Anwenders um eine Stufe.
+97 Erhöht die Initiative des Anwenders um zwei Stufen.
+98 Sehr schneller Angriff mit Priorität +1.
+99 Immer wenn der Anwender durch diese Attacke Schaden erleidet, erhöht sich sein Angriff um eine Stufe.
+100 Beendet im Spiel wilde Kämpfe. Keine anderen Effekte.
+101 Richtet Schaden in Höhe des Levels des Angreifers an.
+102 Kopiert den letzten Angriff des Ziels bis der Anwender ausgewechselt wird.
+103 Senkt die Verteidigung des Ziels um zwei Stufen.
+104 Erhöht den Fluchtwert des Anwenders um eine Stufe.
+105 Heilt den Anwender um die Hälfte seiner maximalen KP.
+106 Erhöht die Verteidigung des Anwenders um eine Stufe.
+107 Erhöht den Fluchtwert des Anwenders um zwei Stufen.
+108 Senkt die Genauigkeit des Ziels um eine Stufe.
+109 Das Ziel wird verwirrt.
+110 Erhöht die Verteidigung des Anwenders um eine Stufe.
+111 Erhöht die Verteidigung des Anwenders um eine Stufe. Verdoppelt die Stärke von Walzer und Frostbeule.
+112 Erhöht die Verteidigung des Anwenders um zwei Stufen.
+113 Halbiert für fünf Runden den Schaden durch spezielle Attacken des Gegners.
+114 Setzt alle Werteveränderungen wieder auf null zurück.
+115 Halbiert für fünf Runden den Schaden durch physische Attacken des Gegners.
+116 Erhöht die Volltrefferquote des Anwenders um zwei Stufen.
+117 Anwenders tut für zwei Runden nichts und verursacht dann den Schaden, den es in den zwei Runden bekommen hat.
+118 Anwender greift mit einer zufälligen Attacke aus dem Spiel an.
+119 Anwender benutzt die Attacke, die der Gegner zuletzt eingesetzt hat.
+120 Der Anwender wird besiegt und verursacht Schaden.
+121 Verursacht Schaden ohne zusätzliche Effekte.
+122 Hat eine 30%-Chance das Ziel zu paralysieren.
+123 Hat eine 40%-Chance das Ziel zu vergiften.
+124 Hat eine 30%-Chance das Ziel zu vergiften.
+125 Hat eine 10%-Chance das das Ziel zurückschreckt.
+126 Hat eine 10%-Chance das Ziel zu verbrennen.
+127 Hat eine 20%-Chance das das Ziel zurückschreckt.
+128 Ziel kann nicht ausgewechselt werden und verliert für 4-5 Runden 1/16 seiner maximalen KP.
+129 Diese Attacke trifft immer.
+130 Benötigt eine Runde zum Aufladen. Erhöht während dieser Runde die Verteidigung des Anwenders um eine Stufe.
+131 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+132 Hat eine 10%-Chance die Initiative des Ziels um eine Stufe zu senken.
+133 Erhöht die Sp. Verteidigung des Anwenders um zwei Stufen.
+134 Senkt die Genauigkeit des Ziels um eine Stufe.
+135 Heilt den Anwender um die Hälfte seiner maximalen KP.
+136 Geht die Attacke daneben, erhält der Anwender die Hälfte seiner maximalen KP als Rückstoßschaden.
+137 Das Ziel wird paralysiert.
+138 Schlägt fehl, wenn das Ziel nicht schläft. Heilt den Anwender um die Hälfte des errichteten Schadens.
+139 Das Ziel wird vergiftet.
+140 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+141 Heilt den Anwender um die Hälfte des errichteten Schadens.
+142 Das Ziel schläft ein.
+143 Benötigt eine Runde zum Aufladen. Hat eine 30%-Chance das das Ziel zurückschreckt.
+144 Anwender wird zu einer Kopie des Ziels bis es ausgewechselt wird.
+145 Hat eine 10%-Chance die Initiative des Ziels um eine Stufe zu senken.
+146 Hat eine 10%-Chance das Ziel zu verwirren.
+147 Das Ziel schläft ein.
+148 Senkt die Genauigkeit des Ziels um eine Stufe.
+149 Verursacht Schaden zwischen 50% und 150% des Levels des Anwenders.
+150 Dieser Angriff hat gar keinen Effekt.
+151 Erhöht die Verteidigung des Anwenders um zwei Stufen.
+152 Hat eine erhöhte Volltrefferquote.
+153 Der Anwender wird besiegt und verursacht Schaden.
+154 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+155 Trifft zweimal in einer Runde.
+156 Anwender schläft für zwei Runden ein, heilt aber dafür seinen Status und alle KP.
+157 Hat eine 30%-Chance das das Ziel zurückschreckt.
+158 Hat eine 10%-Chance das das Ziel zurückschreckt.
+159 Erhöht den Angriff des Anwenders um eine Stufe.
+160 Ändert den Typ des Anwenders in den Typ einer seiner Attacken.
+161 Hat eine 20%-Chance das Ziel zu verbrennen, einzufrieren oder zu paralysieren.
+162 Halbiert die momentanen KP des gegnerischen Pokémon.
+163 Hat eine erhöhte Volltrefferquote.
+164 Anwender verbraucht 25% seiner maximalen KP und erzeugt einen Delegator, der ihn vor Schaden und Effekten schützt bis er zerstört wird.
+165 Kann nur benutzt werden, wenn keine andere Attacke verwendet werden kann. Anwender verliert 1/4 des Schadens an KP durch Rückstoß.
+166 Kopiert die letzte Attacke des Ziels und Nachahmer wird durch diese Attacke ersetzt.
+167 Trifft 3 mal. Der zweite Angriff hat eine Stärke von 20 und der dritte eine Stärke von 30.
+168 Anwender stiehlt das Item des Ziels, wenn es selbst kein Item trägt.
+169 Das Zielt kann nicht ausgewechselt werden, solage der Anwender auf dem Feld ist.
+170 Anwender kann in der nächsten Runde nicht verfehlen.
+171 Schlägt fehl, wenn das Ziel wach ist. Ziel verliert jede Runde 1/4 seiner KP.
+172 Hat eine 10%-Chance das Ziel zu verbrennen.
+173 Hat eine 30%-Chance das das Ziel zurückschreckt. Schlägt fehl, wenn der Anwender wach ist.
+174 Wenn der Anwender von Typ Geist ist, verliert er 50% seiner KP und das Ziel jede Runde 25% seiner KP. Wenn nicht steigt der Angriff und die Verteidigung des Anwenders um eine Stufe, aber senkt die Initiative um eine Stufe.
+175 Je weniger KP das ausführende Pokémon hat, desto höher die Stärke dieser Attacke (maximal 200).
+176 Ändert den Typ des Anwendes so, dass er gegen den Typ der vom Gegner zuletzt eingesetzten Attacke entweder immun oder resistent ist.
+177 Hat eine erhöhte Volltrefferquote.
+178 Senkt die Initiative des Ziels um zwei Stufen.
+179 Je weniger KP das ausführende Pokémon hat, desto höher die Stärke dieser Attacke (maximal 200).
+180 Dem Ziel werden vier AP von der zuletzt ausgeführten Attacke abgezogen.
+181 Hat eine 10%-Chance das Ziel einzufrieren.
+182 Schützt den Anwender vor Attacken, die in derselben Runde gegen es eingesetzt werden. 50%-Chance in der nächsten Runde fehlzuschlagen.
+183 Priorität +1.
+184 Senkt die Initiative des Ziels um zwei Stufen.
+185 Trifft immer.
+186 Das Ziel wird verwirrt.
+187 Anwender verliert 50% seiner KP und maximiert seinen Angriff. Schlägt fehl, wenn die KP des Anwenders unter 50% sind.
+188 Hat eine 30%-Chance das Ziel zu vergiften.
+189 Senkt die Genauigkeit des Ziels um eine Stufe.
+190 Hat eine 50%-Chance die Genauigkeit des Gegners um eine Stufe zu senken.
+191 Verletzt neu eingewechselte Pokémon (außer bei Pokémon vo Typ Flug oder mit der Fähigkeit Schwebe). Bei 1 Mal Auslegen nimmt das Pokémon 12,5%, bei 2 Mal 18,75% und bei 3 Mal 25% seiner maximalen KP Schaden.
+192 Verursacht Schaden und das Ziel wird paralysiert.
+193 Entfernt Immunitäten des Typs Geist und normalisiert den Fluchtwert des Ziels.
+194 Wird der Anwender in derselben Runde besiegt, nachdem er Abgangsbund eingesetzt hat, geht auch das gegnerische Pokémon K.O.
+195 Alle Pokémon auf dem Feld werden nach drei Runden besiegt.
+196 Senkt die Initiative des Ziels um eine Stufe.
+197 Schützt den Anwender vor Attacken, die in derselben Runde gegen es eingesetzt werden. 50%-Chance in der nächsten Runde fehlzuschlagen.
+198 Trifft 2-5 mal. 38,5%-Chance für 2 und 3 Treffer, 12,5% für 4 und 5 Treffer.
+199 Anwender kann in der nächsten Runde nicht verfehlen.
+200 Anwender kann für 2-3 Runden keine andere Attacke auswählen oder wechseln und wird danach verwirrt.
+201 Verursacht für fünf Runden einen Sandsturm.
+202 Heilt den Anwender um die Hälfte des errichteten Schadens.
+203 Anwender überlebt den nächsten Angriff mit 1 KP. 50%-Chance in der nächsten Runde fehlzuschlagen.
+204 Senkt den Angriff des Gegners um zwei Stufen.
+205 Anwender kann in den nächsten fünf Runden keine andere Attacke einsetztn. Die Stärke eines Treffers verdoppelt sich bei jedem Treffer in Folge.
+206 Wenn das Ziel nach diesem Angriff besiegt werden würde, überlebt es mit 1 KP.
+207 Das Ziel wird verwirrt und dessen Angriff um zwei Stufen gesteigert.
+208 Heilt den Anwender um die Hälfte seiner maximalen KP.
+209 Hat eine 30%-Chance das Ziel zu paralysieren.
+210 Die Stärke dieser Attacke verdoppelt sich nach jeder erfolgreichen Anwendung.
+211 Hat eine 10%-Chance die Verteidigung des Anwenders um eine Stufe zu erhöhen.
+212 Das Zielt kann nicht ausgewechselt werden, solage der Anwender auf dem Feld ist.
+213 Wenn das Ziel vom anderen Geschlecht wie das des Anwenders ist, verliebt sich das Ziel in den Anwender.
+214 Anwender benutzt zufällig eine seiner anderen Attacken. Schlägt fehl, wenn der Anwender wach ist.
+215 Heilt alle im Kampf und im Team befindlichen Pokémon auf der Seite des Anwenders von allen primären Statusveränderungen.
+216 Stärke hängt von der Zufriedenheit des Anwenders ab (maximal 102).
+217 Schädigt das Ziel (Stärke variiert zwischen 40, 80 und 120) oder heilt es um 80 KP.

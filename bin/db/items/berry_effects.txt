@@ -43,6 +43,8 @@
 62 12-1#Physical recoil
 63 12-2#Special recoil
 64 4-17
+65 14-2#Physical +Defense
+66 15-4#Special +Sp.Defense
 1000 1-1#Cheri #### GSC BERRIES ####
 1001 1-2#Chesto
 1002 1-5#Pecha

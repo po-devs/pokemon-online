@@ -17,8 +17,8 @@
 23 %s hat %i erschnüffelt!
 24 %s's Puderabwehr blockiert alle Zusatzeffekte von Attacken!
 29 %s's Hydration heilt seinen Status!
-30 %s's %a prevents its stat from being lowered!
-31 %s's %a sorgt dafür, dass seiner Werte nicht sinken können!
+30 %s's %a verhindert, dass seine Werte gesenkt werden!
+31 %s's %a verhindert, dass seine Werte gesenkt werden!
 32 %s's %a heilt einige KP!
 33 %s's %a cures it!
 34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s!
@@ -29,7 +29,7 @@
 44 %s's Tempomacher heilt seine Verwirrung!
 45 Aufheber von %s regeneriert einige KP!
 46 %s übt seine Fähigkeit Erzwinger aus!
-50 %s's Rauhaut schadet %f
+50 %f verliert einige KP!
 54 %s's Expidermis heilt seine Statusprobleme!
 55 %s kommt nicht in Fahrt!|%s finally got its act together!
 56 %s verliert einige KP wegen Solarkraft!
@@ -61,6 +61,6 @@
 103 %s is radiating a %t aura!
 104 %f's %a prevents stats changes to affect %s!
 107 %s hat seinen Typ in %t geändert!
-113 Competitive sharply raised %s's Sp. Attack!
-115 %s's Gooey slows down %f!
+113 Unbeugsamkeit von %s erhöht seinen Sp. Angriff stark!
+115 %s's Viskosität verlangsamt %f!
 117 %s reversed all other Pokémon's auras!
