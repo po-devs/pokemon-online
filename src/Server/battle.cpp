@@ -2019,6 +2019,14 @@ end:
     }
 
     turnMem(player).stab = stab;
+    if(clauses() && ChallengeInfo::Inverted){
+        if(typemod<-50){
+            typemod=1;
+        }
+        else{
+            typemod*=-1;
+        }
+    }
     turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
 }
 
@@ -2667,6 +2675,22 @@ int BattleSituation::rawTypeEff(int atttype, int player)
 
     foreach(int deftype, fpoke(player).types) {
         int eff = TypeInfo::Eff(atttype, deftype);
+        if(clauses() && ChallengeInfo::Inverted){
+            switch(eff){
+                case Type::Ineffective:
+                    eff=Type::SuperEffective;
+                    break;
+                case Type::NotEffective:
+                    eff=Type::SuperEffective;
+                    break;
+                case Type::SuperEffective:
+                    eff=Type::NotEffective;
+                    break;
+                default:
+                    eff=Type::Effective;
+                    break;
+            }
+        }
         if (eff == 0) {
             return -100;
         }
