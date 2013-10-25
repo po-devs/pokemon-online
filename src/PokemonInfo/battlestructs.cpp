@@ -16,7 +16,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause"),
     QObject::tr("Wifi Battle"),
-    QObject::tr("Self-KO Clause")
+    QObject::tr("Self-KO Clause"),
+    QObject::tr("Inverted Battle")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -29,7 +30,8 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr("The battle ended by timeout."),
     QObject::tr(""),
     QObject::tr(""),
-    QObject::tr("The Self-KO Clause acted as a tiebreaker.")
+    QObject::tr("The Self-KO Clause acted as a tiebreaker."),
+    QObject::tr("")
 };
 
 QString ChallengeInfo::clauseDescription[] =
@@ -42,7 +44,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("No time limit for playing."),
     QObject::tr("One player cannot have more than one of the same pokemon per team."),
     QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly."),
-    QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle.")
+    QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle."),
+    QObject::tr("All Type Effectivenesses are inverted (Ex: Water is weak to Fire)")
 };
 
 QString ChallengeInfo::modeText[] =
