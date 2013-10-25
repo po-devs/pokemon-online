@@ -2021,7 +2021,7 @@ end:
     turnMem(player).stab = stab;
     if(clauses() && ChallengeInfo::Inverted){
         if(typemod<-50){
-            typemod=0;
+            typemod=1;
         }
         else{
             typemod*=-1;
@@ -2678,7 +2678,7 @@ int BattleSituation::rawTypeEff(int atttype, int player)
         if(clauses() && ChallengeInfo::Inverted){
             switch(eff){
                 case Type::Ineffective:
-                    eff=Type::Effective;
+                    eff=Type::SuperEffective;
                     break;
                 case Type::NotEffective:
                     eff=Type::SuperEffective;
