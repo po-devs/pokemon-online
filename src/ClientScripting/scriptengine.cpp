@@ -691,9 +691,7 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int _gen)
     Pokemon::uniqueId pokemon(poke);
     Pokemon::gen gen(_gen);
 
-    if (PokemonInfo::Exists(pokemon, gen) && gen.num >= GEN_MIN && gen.num <= GenInfo::GenMax()
-            && (gen.subnum == gen.wholeGen || gen.subnum <= GenInfo::NumberOfSubgens(gen.num))
-            && (slot >= 0) && (slot <= 2)) {
+    if (slot >= 0 && slot <= 2) {
         return PokemonInfo::Ability(pokemon, slot, gen);
     }
     return myengine.undefinedValue();

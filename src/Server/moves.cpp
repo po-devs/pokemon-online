@@ -6895,10 +6895,10 @@ struct MMPowder : public MM
 
     static void atp(int s, int, BS &b)
     {
-        if (turn(b,s).value("Powdered").toBool()) {
+        if (poke(b,s).value("Powdered").toBool()) {
             if (type(b,s) == Type::Fire) {
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
-                turn(b,s).remove("Powdered");\
+                poke(b,s).remove("Powdered");\
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
                 turn(b,s)["ImpossibleToMove"] = true;
