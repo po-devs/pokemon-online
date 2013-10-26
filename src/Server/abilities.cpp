@@ -2088,7 +2088,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 10);
         }
     }
 };
@@ -2100,7 +2100,7 @@ struct AMToughClaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).category == Move::Physical) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 6);
         }
     }
 };
