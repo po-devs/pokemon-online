@@ -2063,7 +2063,7 @@ struct AMMegaLauncher : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::PulsingFlag) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 10);
         }
     }
 };
