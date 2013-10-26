@@ -216,3 +216,11 @@
 215 Heilt alle im Kampf und im Team befindlichen Pokémon auf der Seite des Anwenders von allen primären Statusveränderungen.
 216 Stärke hängt von der Zufriedenheit des Anwenders ab (maximal 102).
 217 Schädigt das Ziel (Stärke variiert zwischen 40, 80 und 120) oder heilt es um 80 KP.
+218 Attacke ist stärker, wenn das Pokémon unzufrieden ist (maximal 102).
+219 Schützt das Team des Anwenders vor primären Statusveränderungen.
+220 Die KP des Anwenders und des Ziels werden addiert und dann gerecht aufgeteilt.
+221 Hat eine 50%-Chance das Ziel zu verbrennen. Der Anwender wird aufgetaut.
+222 Stärke variiert zwischen 10 und 150. Doppelter Schaden, wenn das Ziel im Boden ist.
+223 Das Ziel wird verwirrt.
+224 Verursacht Schaden ohne zusätzliche Effekte.
+225 Hat eine 30%-Chance das Ziel zu paralysieren.
