@@ -1964,6 +1964,7 @@ struct AMAerilate : public AM {
 
     static void baf(int s, int, BS &b) {
         if (type(b,s) == Type::Normal) {
+            b.chainBp(s, 6);
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
     }
@@ -2061,7 +2062,7 @@ struct AMMegaLauncher : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::PulsingFlag) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 10);
         }
     }
 };
@@ -2087,7 +2088,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 10);
         }
     }
 };
@@ -2099,7 +2100,7 @@ struct AMToughClaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).category == Move::Physical) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 6);
         }
     }
 };
