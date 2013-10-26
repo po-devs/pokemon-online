@@ -1964,6 +1964,7 @@ struct AMAerilate : public AM {
 
     static void baf(int s, int, BS &b) {
         if (type(b,s) == Type::Normal) {
+            b.chainBp(s, 6);
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
     }
