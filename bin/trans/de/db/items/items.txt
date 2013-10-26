@@ -330,6 +330,10 @@
 329 Parkball
 330 Feentafel
 331 Offensivweste
+332 Schutzbrille
+333 Schwächenschutz
+334 Schneeball
+335 Leuchtmoos
 1000 Rosa Band
 1001 Punkt-Band
 2001 Bisaflornit
