@@ -2175,7 +2175,7 @@ struct AMParentalBond : public AM
 
     static void btl(int s, int, BS &b) {
         if (b.repeatCount() == 1 && tmove(b, s).repeatMin == 0) {
-            b.chainBp(s, -14);
+            b.chainBp(s, -10);
         }
     }
 };
