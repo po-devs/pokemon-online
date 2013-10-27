@@ -334,6 +334,12 @@
 333 Weakness Policy
 344 Snowball
 345 Luminous Moss
+346 Ability Capsule
+347 Jaw Fossil
+348 Lumiose Galette
+349 Sail Fossil
+350 Sachet
+351 Whipped Dream
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
