@@ -2998,7 +2998,13 @@ struct MMAttract : public MM
 struct MMKnockOff : public MM
 {
     MMKnockOff() {
+        functions["BeforeHitting"] = &bh;
         functions["OnFoeOnAttack"] = &uas;
+    }
+    static void bh(int s, int t, BS &b) {
+        if (b.canLoseItem(t,s) && b.gen() > 5) {
+            b.chainBp(10);
+        }
     }
 
     static void uas(int s,int t,BS &b)
@@ -3006,9 +3012,6 @@ struct MMKnockOff : public MM
         if (!b.koed(t) && b.canLoseItem(t,s))
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-            if (b.gen() > 5) {
-                tmove(b, s).power = tmove(b, s).power * 3/2;
-            }
             b.loseItem(t);
             b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
         }
