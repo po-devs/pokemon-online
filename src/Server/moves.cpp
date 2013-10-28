@@ -3003,7 +3003,7 @@ struct MMKnockOff : public MM
     }
     static void bh(int s, int t, BS &b) {
         if (b.canLoseItem(t,s) && b.gen() > 5) {
-            b.chainBp(10);
+            b.chainBp(s, 10);
         }
     }
 
