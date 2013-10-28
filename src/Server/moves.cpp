@@ -3006,6 +3006,9 @@ struct MMKnockOff : public MM
         if (!b.koed(t) && b.canLoseItem(t,s))
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+            if (b.gen() > 5) {
+                tmove(b, s).power = tmove(b, s).power * 3/2;
+            }
             b.loseItem(t);
             b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
         }
@@ -4704,7 +4707,16 @@ struct MMSplash : public MM
 struct MMStomp : public MM
 {
     MMStomp(){
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BeforeTargetList"] = &btl;
+        functions["BeforeCalculatingDamage"] = &bcd;        
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() > 0) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5 && move(b,s) != Move::DragonRush) {
+                tmove(b, s).accuracy = 0;
+            }
+        }
     }
 
     static void bcd(int s, int t, BS &b) {
