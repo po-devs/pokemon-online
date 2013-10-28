@@ -3006,6 +3006,9 @@ struct MMKnockOff : public MM
         if (!b.koed(t) && b.canLoseItem(t,s))
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+            if (b.gen() > 5) {
+                tmove(b, s).power = tmove(b, s).power * 1/2;
+            }
             b.loseItem(t);
             b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
         }
@@ -4704,7 +4707,14 @@ struct MMSplash : public MM
 struct MMStomp : public MM
 {
     MMStomp(){
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["MoveSettings"] = &ms;
+        functions["BeforeCalculatingDamage"] = &bcd;        
+    }
+
+    static void ms (int s, int t, BS &b) {
+        if (poke(b,t).value("Minimize").toBool() && b.gen() > 5 && move(b,s) != Move::DragonRush) {
+            tmove(b, s).accuracy = 0;
+        }
     }
 
     static void bcd(int s, int t, BS &b) {
@@ -6949,6 +6959,17 @@ struct MMIonDeluge : public MM {
     }
 };
 
+struct MMToxic : public MM {
+    MMToxic() {
+        functions["MoveSettings"] = &ms;
+    }
+    static void ms(int s, int, BS &b) {
+        if (b.gen() > 5 && b.hasType(s, Type::Poison)) {
+            tmove(b,s).accuracy = 0;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7201,6 +7222,7 @@ void MoveEffect::init()
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
+    REGISTER_MOVE(218, Toxic);
 }
 
 /* Not done: Ion deluge */
