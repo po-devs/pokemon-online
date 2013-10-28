@@ -5562,7 +5562,7 @@ struct MMIncinerate : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        if (ItemInfo::isBerry(b.poke(t).item())) {
+        if (ItemInfo::isBerry(b.poke(t).item()) || (ItemInfo::isGem(b.poke(t).item()) && b.gen() >= 6)) {
             b.sendMoveMessage(160, 0, s, Type::Fire, t, b.poke(t).item());
             b.disposeItem(t);
         }
