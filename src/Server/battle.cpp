@@ -1139,7 +1139,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
                                                                                                                             || move == Move::Transform))) {
         return true;
     }
-
+    if (move == Move::Toxic && gen() > 5 && hasType(player, Type::Poison)) {
+        return true;
+    }
     /* Miracle skin can make some attacks miss */
     callaeffects(target, player, "TestEvasion");
 
