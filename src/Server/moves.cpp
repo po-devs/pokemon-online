@@ -4707,13 +4707,15 @@ struct MMSplash : public MM
 struct MMStomp : public MM
 {
     MMStomp(){
-        functions["MoveSettings"] = &ms;
+        functions["BeforeTargetList"] = &btl;
         functions["BeforeCalculatingDamage"] = &bcd;        
     }
 
-    static void ms (int s, int t, BS &b) {
-        if (poke(b,t).value("Minimize").toBool() && b.gen() > 5 && move(b,s) != Move::DragonRush) {
-            tmove(b, s).accuracy = 0;
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() > 0) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5 && move(b,s) != Move::DragonRush) {
+                tmove(b, s).accuracy = 0;
+            }
         }
     }
 
