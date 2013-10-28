@@ -3007,7 +3007,7 @@ struct MMKnockOff : public MM
         {
             b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
             if (b.gen() > 5) {
-                tmove(b, s).power = tmove(b, s).power * 1/2;
+                tmove(b, s).power = tmove(b, s).power * 3/2;
             }
             b.loseItem(t);
             b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
