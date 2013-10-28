@@ -30,6 +30,7 @@
 87 152#Thunder
 90 43#Fissure
 91 13-1_89*2_222*2#Dig
+92 218#Toxic
 99 102#rage
 101 91#night shade
 102 81#mimic
@@ -211,6 +212,7 @@
 392 2#restore hp every turn
 393 68#magnet rise
 394 153#flareBlitz
+407 126#Dragon Rush
 409 #1#Drain punch
 415 132#switcheroo
 416 11#Giga impact
