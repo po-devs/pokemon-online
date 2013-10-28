@@ -6959,17 +6959,6 @@ struct MMIonDeluge : public MM {
     }
 };
 
-struct MMToxic : public MM {
-    MMToxic() {
-        functions["MoveSettings"] = &ms;
-    }
-    static void ms(int s, int, BS &b) {
-        if (b.gen() > 5 && b.hasType(s, Type::Poison)) {
-            tmove(b,s).accuracy = 0;
-        }
-    }
-};
-
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7222,7 +7211,6 @@ void MoveEffect::init()
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
-    REGISTER_MOVE(218, Toxic);
 }
 
 /* Not done: Ion deluge */
