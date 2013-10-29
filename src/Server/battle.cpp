@@ -1139,6 +1139,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
                                                                                                                             || move == Move::Transform))) {
         return true;
     }
+
+    //Toxic always hits if used by poison type in gen 6
     if (move == Move::Toxic && gen() > 5 && hasType(player, Type::Poison)) {
         return true;
     }
@@ -3724,10 +3726,10 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     int attacked = this->attacked();
 
     if (attacker != -1 && attacked != -1) {
-        //Unaware / Sacred sword
+        //Unaware / Sacred sword / Keeneye ignores evasion in gen 6
         if (attacker != player && attacked == player) {
             if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
-                    && (stat == SpDefense || stat == Defense || stat == Evasion)) {
+                    && (stat == SpDefense || stat == Defense || stat == Evasion) || gen() > 5 && stat == Evasion && hasWorkingAbility(attacker, Ability::KeenEye)) {
                 boost = 0;
             }
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&

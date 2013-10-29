@@ -285,6 +285,7 @@
 559 194#Cross Thunder
 560 #
 562 199#Crafty shield
+566 126#Flying Press
 567 157-11#Forest's Curse
 569 104-6#Geomancy
 571 10#Infestation

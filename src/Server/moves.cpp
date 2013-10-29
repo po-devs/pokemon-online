@@ -1221,6 +1221,10 @@ struct MMBounce : public MM
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             }
+            if (move(b,s) == PhantomForce && poke(b, b.targetList.front()).value("Minimize").toBool()) {
+                tmove(b, s).accuracy = 0;
+                tmove(b, s).power = tmove(b, s).power * 2;
+            }
         } else {
             tmove(b, s).power = 0;
             tmove(b, s).accuracy = 0;
@@ -3079,7 +3083,7 @@ struct MMTaunt : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.counters(t).hasCounter(BC::Taunt))
+        if (b.counters(t).hasCounter(BC::Taunt) || b.gen() > 5 && b.hasWorkingAbility(t, Ability::Oblivious))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -4716,7 +4720,7 @@ struct MMStomp : public MM
 
     static void btl(int s, int, BS &b) {
         if (b.targetList.size() > 0) {
-            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5 && move(b,s) != Move::DragonRush) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
                 tmove(b, s).accuracy = 0;
             }
         }
@@ -4978,6 +4982,8 @@ struct MMNaturePower : public MM
             move = EnergyBall;
         } else if (type == Type::Fairy) {
             move = MoonBlast;
+        } else if (type == Type::Electric) {
+            move = Thunderbolt;
         } else {
             if (b.gen().num == 3) {
                 move = Swift;
@@ -5053,10 +5059,28 @@ struct MMSecretPower : public MM {
 
     static void ms(int s, int, BS &b) {
         if (b.gen() >= 5) {
-            tmove(b,s).classification = Move::OffensiveStatChangingMove;
-            tmove(b,s).rateOfStat = 30 << 16;
-            tmove(b,s).statAffected = Accuracy << 16;
-            tmove(b,s).boostOfStat = uchar(-1) << 16;
+            if (b.terrain != 0) {
+                int type = std::abs(b.terrain);
+                if (type == Type::Grass) {
+                    tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                    tmove(b,s).status = Pokemon::Asleep;
+                    tmove(b,s).rate = 30;
+                } else if (type == Type::Electric) {
+                    tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                    tmove(b,s).status = Pokemon::Paralysed;
+                    tmove(b,s).rate = 30;
+                } else if (type == Type::Fairy) {
+                    tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                    tmove(b,s).rateOfStat = 30 << 16;
+                    tmove(b,s).statAffected = SpAttack << 16;
+                    tmove(b,s).boostOfStat = uchar(-1) << 16;
+                }
+            } else {
+                tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                tmove(b,s).rateOfStat = 30 << 16;
+                tmove(b,s).statAffected = Accuracy << 16;
+                tmove(b,s).boostOfStat = uchar(-1) << 16;
+            }
         } else {
             tmove(b,s).classification = Move::OffensiveStatusInducingMove;
             tmove(b,s).status = Pokemon::Paralysed;
