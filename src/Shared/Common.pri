@@ -31,11 +31,12 @@ CONFIG(debug, debug|release) {
         json = -lqjsond
     }
     !mac:!win32 {
-        utilities = -L$$bin -lpo-utilities
-        pokemoninfo = $$utilities -lpo-pokemoninfo
-        battlemanager = $$pokemoninfo -lpo-battlemanager
-        websocket = -lqtwebsocket
-        json = -lqjson
+        TARGET = $$join(TARGET,,,_debug)
+        utilities = -L$$bin -lpo-utilities_debug
+        pokemoninfo = $$utilities -lpo-pokemoninfo_debug
+        battlemanager = $$pokemoninfo -lpo-battlemanager_debug
+        websocket = -lqtwebsocket_debug
+        json = -lqjson_debug
     }
 } else {
     utilities = -L$$bin -lpo-utilities
