@@ -534,15 +534,28 @@ struct AMFrisk : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        if (b.gen() < 6) {
+            int t = b.randomOpponent(s);
 
-        if (t == -1)
-            return;
+            if (t == -1)
+                return;
 
-        int it = b.poke(t).item();
+            int it = b.poke(t).item();
 
-        if (it != 0) {
-            b.sendAbMessage(23,0,s,t,0,it);
+            if (it != 0) {
+                b.sendAbMessage(23,0,s,t,0,it);
+            }
+        } else {
+            foreach(int t, b.revs(s)) {
+                if (!b.areAdjacent(s, t)) {
+                    continue;
+                }
+                int it = b.poke(t).item();
+
+                if (it != 0) {
+                    b.sendAbMessage(23,0,s,t,0,it);
+                }
+            }
         }
     }
 };
