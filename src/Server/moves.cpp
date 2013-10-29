@@ -1195,6 +1195,28 @@ struct MMBind : public MM
     }
 };
 
+struct MMStomp : public MM
+{
+    MMStomp(){
+        functions["BeforeTargetList"] = &btl;
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() > 0) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
+                tmove(b, s).accuracy = 0;
+            }
+        }
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        if (poke(b,t).value("Minimize").toBool()) {
+            tmove(b, s).power = tmove(b, s).power * 2;
+        }
+    }
+};
+
 struct MMBounce : public MM
 {
     MMBounce() {
@@ -1254,6 +1276,9 @@ struct MMBounce : public MM
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
+            } else if (move == PhantomForce) {
+                addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
             }
         }
         //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
@@ -4708,28 +4733,6 @@ struct MMSplash : public MM
 
     static void uas(int s, int , BS & b) {
         b.sendMoveMessage(82,0,s);
-    }
-};
-
-struct MMStomp : public MM
-{
-    MMStomp(){
-        functions["BeforeTargetList"] = &btl;
-        functions["BeforeCalculatingDamage"] = &bcd;        
-    }
-
-    static void btl(int s, int, BS &b) {
-        if (b.targetList.size() > 0) {
-            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
-                tmove(b, s).accuracy = 0;
-            }
-        }
-    }
-
-    static void bcd(int s, int t, BS &b) {
-        if (poke(b,t).value("Minimize").toBool()) {
-            tmove(b, s).power = tmove(b, s).power * 2;
-        }
     }
 };
 
