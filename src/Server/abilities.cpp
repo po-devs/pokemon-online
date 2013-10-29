@@ -846,7 +846,7 @@ struct AMRivalry : public AM {
         if (b.poke(s).gender() == b.poke(t).gender())
             b.chainBp(s, 5);
         else
-            b.chainBp(s, 5);
+            b.chainBp(s, -5);
     }
 };
 
