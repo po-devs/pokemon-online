@@ -333,11 +333,11 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>sharply </source>
-        <translation type="obsolete">stark</translation>
+        <translation type="obsolete">steigt </translation>
     </message>
     <message>
         <source>rose</source>
-        <translation type="obsolete">steigt</translation>
+        <translation type="obsolete">stark</translation>
     </message>
     <message>
         <source>fell</source>
@@ -345,7 +345,7 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="obsolete">%1 wurde paralysiert. Es kann sich möglicherweise nicht bewegen!</translation>
+        <translation type="obsolete">%1 wurde paralysiert! Es kann sich möglicherweise nicht bewegen!</translation>
     </message>
     <message>
         <source>%1 was burned!</source>
