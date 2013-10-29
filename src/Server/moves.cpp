@@ -3183,7 +3183,7 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool()) {
+        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -4880,7 +4880,7 @@ struct MMWorrySeed : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Truant & multi-type */
-        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype) {
+        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5567,7 +5567,7 @@ struct MMEntrainment : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
