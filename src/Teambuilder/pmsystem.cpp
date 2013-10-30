@@ -255,9 +255,9 @@ void PMStruct::printLine(const QString &line, bool self)
 
     if (tt) {
         if (ss) {
-            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+            timeStr += "[" + QTime::currentTime().toString("hh:mm:ss") + "] ";
         } else {
-            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+            timeStr += "[" + QTime::currentTime().toString("hh:mm") + "] ";
         }
     }
 
@@ -280,9 +280,9 @@ void PMStruct::printHtml(const QString &htmlCode, bool timestamps)
 
     if (tt && timestamps) {
         if (ss) {
-            timeStr += "(" + QTime::currentTime().toString("hh:mm:ss") + ") ";
+            timeStr += "[" + QTime::currentTime().toString("hh:mm:ss") + "] ";
         } else {
-            timeStr += "(" + QTime::currentTime().toString("hh:mm") + ") ";
+            timeStr += "[" + QTime::currentTime().toString("hh:mm") + "] ";
         }
     }
 
