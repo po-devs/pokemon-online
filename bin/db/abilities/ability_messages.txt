@@ -52,7 +52,7 @@
 86 %s regains health with its Regenerator!
 88 %s's gained a %i thanks to its Harvest!
 89 The effects of weather disappeared due to %s's %a!
-90 %s's Miracle Skin protected it from status!
+90 %s's Wonder Skin protected it from status!
 91 %s held on thanks to Sturdy!
 93 %s picked up the %i!
 94 %s's Justified raises its attack!
