@@ -2112,7 +2112,7 @@ struct AMToughClaws : public AM {
     }
 
     static void bpm (int s, int t, BS &b) {
-        if (s != t && tmove(b,s).category == Move::Physical) {
+        if (s != t && (tmove(b,s).flags & Move::ContactFlag)) {
             b.chainBp(s, 6);
         }
     }
