@@ -5061,7 +5061,7 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() == 5) {
+        if (b.gen().num == 5) {
                 tmove(b,s).classification = Move::OffensiveStatChangingMove;
                 tmove(b,s).rateOfStat = 30 << 16;
                 tmove(b,s).statAffected = Accuracy << 16;
