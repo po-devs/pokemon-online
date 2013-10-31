@@ -8,7 +8,7 @@
 7 Fatumknoten
 8 Expertengurt
 9 Fokus-Band
-10 Fokus-Gurt
+10 Fokusgurt
 11 Lahmrauch
 12 Grüner Schal
 13 Schwerschweif
@@ -146,7 +146,7 @@
 145 Weiße Flöte
 146 X-Treffer
 147 X-Angriff
-148 X-Verteidigung
+148 X-Abwehr
 149 X-Spezial
 150 X-Spezial Ver
 151 X-Tempo
