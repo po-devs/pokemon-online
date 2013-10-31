@@ -33,11 +33,11 @@
 47 %s's ability became Mummy!
 50 %s's %a hurts %f
 54 %s's Shed Skin heals its status!
-55 %s can't get it going because of it's Slow Start!|%s finally got its act together!
+55 %s can't get it going because of its Slow Start!|%s finally got its act together!
 56 %s lost some HP because of Solar Power!
-57 %s's Sound Proof blocks the attack!
-58 %s's Speed Boost increases its speed!|%s's Justice Heart increases its attack!
-60 %s's SteadFast increases its speed!
+57 %s's Soundproof blocks the attack!
+58 %s's Speed Boost increases its speed!|%s's Justified increases its attack!
+60 %s's Steadfast increases its speed!
 61 %s's Synchronize changes the status of %f!
 66 %s traced %f's %a!
 67 %s is carelessly slacking off!
@@ -52,14 +52,14 @@
 86 %s regains health with its Regenerator!
 88 %s's gained a %i thanks to its Harvest!
 89 The effects of weather disappeared due to %s's %a!
-90 %s's Miracle Skin protected it from status!
+90 %s's Wonder Skin protected it from status!
 91 %s held on thanks to Sturdy!
 93 %s picked up the %i!
-94 %s's Justice Heart raises its attack!
+94 %s's Justified raises its attack!
 95 %s's Moody sharply raises its %st!|%s's Moody lowers its %st!
 96 %s's Cursed Body activates!
 97 %s raised its Speed in fear!
-99 %s's Healing Heart cured %f's status!
+99 %s's Healer cured %f's status!
 102 %s makes %tf's team too nervous to eat Berries!
 103 %s is radiating a %t aura!
 104 %f's %a prevents stats changes to affect %s!
