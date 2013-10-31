@@ -5061,7 +5061,12 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() >= 5) {
+        if (b.gen().num == 5) {
+                tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                tmove(b,s).rateOfStat = 30 << 16;
+                tmove(b,s).statAffected = Accuracy << 16;
+                tmove(b,s).boostOfStat = uchar(-1) << 16;
+        } else {
             if (b.terrain != 0) {
                 int type = std::abs(b.terrain);
                 if (type == Type::Grass) {
@@ -5079,15 +5084,10 @@ struct MMSecretPower : public MM {
                     tmove(b,s).boostOfStat = uchar(-1) << 16;
                 }
             } else {
-                tmove(b,s).classification = Move::OffensiveStatChangingMove;
-                tmove(b,s).rateOfStat = 30 << 16;
-                tmove(b,s).statAffected = Accuracy << 16;
-                tmove(b,s).boostOfStat = uchar(-1) << 16;
+                tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                tmove(b,s).status = Pokemon::Paralysed;
+                tmove(b,s).rate = 30;
             }
-        } else {
-            tmove(b,s).classification = Move::OffensiveStatusInducingMove;
-            tmove(b,s).status = Pokemon::Paralysed;
-            tmove(b,s).rate = 30;
         }
     }
 };
