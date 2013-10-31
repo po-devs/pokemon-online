@@ -1195,6 +1195,28 @@ struct MMBind : public MM
     }
 };
 
+struct MMStomp : public MM
+{
+    MMStomp(){
+        functions["BeforeTargetList"] = &btl;
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() > 0) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
+                tmove(b, s).accuracy = 0;
+            }
+        }
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        if (poke(b,t).value("Minimize").toBool()) {
+            tmove(b, s).power = tmove(b, s).power * 2;
+        }
+    }
+};
+
 struct MMBounce : public MM
 {
     MMBounce() {
@@ -1254,6 +1276,9 @@ struct MMBounce : public MM
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
+            } else if (move == PhantomForce) {
+                addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
             }
         }
         //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
@@ -3158,7 +3183,7 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool()) {
+        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -4711,28 +4736,6 @@ struct MMSplash : public MM
     }
 };
 
-struct MMStomp : public MM
-{
-    MMStomp(){
-        functions["BeforeTargetList"] = &btl;
-        functions["BeforeCalculatingDamage"] = &bcd;        
-    }
-
-    static void btl(int s, int, BS &b) {
-        if (b.targetList.size() > 0) {
-            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
-                tmove(b, s).accuracy = 0;
-            }
-        }
-    }
-
-    static void bcd(int s, int t, BS &b) {
-        if (poke(b,t).value("Minimize").toBool()) {
-            tmove(b, s).power = tmove(b, s).power * 2;
-        }
-    }
-};
-
 struct MMSuckerPunch : public MM
 {
     MMSuckerPunch(){
@@ -4877,7 +4880,7 @@ struct MMWorrySeed : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Truant & multi-type */
-        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype) {
+        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5058,7 +5061,12 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() >= 5) {
+        if (b.gen().num == 5) {
+                tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                tmove(b,s).rateOfStat = 30 << 16;
+                tmove(b,s).statAffected = Accuracy << 16;
+                tmove(b,s).boostOfStat = uchar(-1) << 16;
+        } else {
             if (b.terrain != 0) {
                 int type = std::abs(b.terrain);
                 if (type == Type::Grass) {
@@ -5076,15 +5084,10 @@ struct MMSecretPower : public MM {
                     tmove(b,s).boostOfStat = uchar(-1) << 16;
                 }
             } else {
-                tmove(b,s).classification = Move::OffensiveStatChangingMove;
-                tmove(b,s).rateOfStat = 30 << 16;
-                tmove(b,s).statAffected = Accuracy << 16;
-                tmove(b,s).boostOfStat = uchar(-1) << 16;
+                tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                tmove(b,s).status = Pokemon::Paralysed;
+                tmove(b,s).rate = 30;
             }
-        } else {
-            tmove(b,s).classification = Move::OffensiveStatusInducingMove;
-            tmove(b,s).status = Pokemon::Paralysed;
-            tmove(b,s).rate = 30;
         }
     }
 };
@@ -5564,7 +5567,7 @@ struct MMEntrainment : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
