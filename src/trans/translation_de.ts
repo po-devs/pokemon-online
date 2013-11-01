@@ -835,7 +835,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>sharply </source>
-        <translation>steigt</translation>
+        <translation>steigt </translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
