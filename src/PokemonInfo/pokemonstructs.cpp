@@ -193,7 +193,7 @@ void PokePersonal::runCheck()
         return;
     }
 
-    if (PokemonInfo::IsMegaEvo(num())) {
+    if (!PokemonInfo::AFormesShown(num())) {
         num() = num().original();
     }
 

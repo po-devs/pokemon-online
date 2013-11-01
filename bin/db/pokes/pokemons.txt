@@ -332,7 +332,7 @@
 308:1:M Mega Medicham
 309:0 Electrike
 310:0:H Manectric
-310:1:H:M Mega Manectric
+310:1:M Mega Manectric
 311:0 Plusle
 312:0 Minun
 313:0 Volbeat
@@ -755,7 +755,7 @@
 647:0 Keldeo
 647:1 Keldeo-R
 648:0:H Meloetta
-648:1 Meloetta-S
+648:1:B Meloetta-S
 649:0 Genesect
 649:1 Genesect-D
 649:2 Genesect-S
@@ -793,7 +793,7 @@
 678:1 Meowstic-F
 679:0 Honedge
 680:0 Doublade
-681:0 Aegislash
+681:0:H Aegislash
 681:1 Aegislash-B
 682:0 Spritzee
 683:0 Aromatisse
