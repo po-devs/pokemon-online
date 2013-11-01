@@ -3308,7 +3308,7 @@ struct MMWeather : public MM
 
         b.sendMoveMessage(57,weather-1,s,type(b,s));
         if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
-            b.callForth(weather,8+ 2*(b.gen() >= 6));
+            b.callForth(weather,8);
         } else {
             b.callForth(weather,5);
         }
