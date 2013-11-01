@@ -989,7 +989,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle) {
+        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle || (b.gen() > 5 && (move == Roar || move == Whirlwind))) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1028,6 +1028,8 @@ struct MMAssist : public MM
             //Metronome will inherit a block on Assist in Gen III despite it being a valid move
             if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
                 return gen >= 5;
+            } else if (move == Roar || move == Whirlwind || move == Fly || move == Dig || move == PhantomForce){ //could be all two turn moves
+                return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
             }
@@ -3317,7 +3319,7 @@ struct MMWeather : public MM
 
         b.sendMoveMessage(57,weather-1,s,type(b,s));
         if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
-            b.callForth(weather,8+ 2*(b.gen() >= 6));
+            b.callForth(weather,8);
         } else {
             b.callForth(weather,5);
         }
