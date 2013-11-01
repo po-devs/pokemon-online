@@ -192,8 +192,7 @@ struct AMColorChange : public AM {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).types.clear();
-            fpoke(b, s).types.push_back(tp);
+            b.setType(s, tp);
         }
     }
 
@@ -209,8 +208,7 @@ struct AMColorChange : public AM {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).types.clear();
-            fpoke(b, s).types.push_back(tp);
+            b.setType(s, tp);
         }
     }
 };
