@@ -328,5 +328,17 @@
 327 If used in a cave or at night, has a capture rate of 3.5. Otherwise, has a capture rate of 1.
 328 Has a capture rate of 1. Used to hold Pokemon distributed at events.
 329 Has a 100% capture rate. Only for use in the Pal Park.
+330 Increases power of Fairy-type moves used by the holder by 20%. Changes Judgment to the Fairy type.
+331 When held by a Pokémon, it increases the Sp. Defense stat by 50% but requires the Pokémon to only use damaging attacks.
+332 When held by a Pokémon, this item will stop the Pokémon from receiving damage from weather effects and protects it from moves such as Sleep Powder.
+333 When held by a Pokémon, it raises the Pokémon's Attack and Sp. Attack stats by two stages whenever it is hit by a move that is Super Effective.
+344 If the holder is hit by an Ice-type attack, the holder's Attack stat is increased one stage.
+345 If the holder is hit by an Water-type attack, the holder's Special Defense stat is increased one stage.
+346 Changes the ability of a Pokémon to the other standard ability it can have.
+347 A fossil of an ancient Pokémon. It appears to be part of a jaw.
+348 Cures a Pokemon of any major status condition.
+349 A fossil of an ancient Pokémon. It appears to be part of a sail.
+350 If held by Spritzee during a trade, makes it evolve into Aromatisse.
+351 If held by Swirlix during a trade, makes it evolve into Slurpuff.
 1000 Increases power of Normal-type moves used by the holder by 10%.
 1001 Increases power of Normal-type moves used by the holder by 10%.
