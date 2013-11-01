@@ -595,7 +595,7 @@ struct MMDetect : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int, BS &b) {
+    static bool othersHaveMoved(int s, int, BS &b) {
         /* Detect / Protects fail if all others already moved */
         bool fail = true;
         for (int t = 0;  t < b.numberOfSlots() ; t++) {
@@ -607,6 +607,15 @@ struct MMDetect : public MM
 
         if (fail) {
             fturn(b,s).add(TM::Failed);
+            return true;
+        }
+
+        return false;
+    }
+
+    static void daf(int s, int, BS &b) {
+        /* Detect / Protects fail if all others already moved */
+        if (othersHaveMoved(s, s, b)) {
             return;
         }
 
@@ -3108,7 +3117,7 @@ struct MMTaunt : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.counters(t).hasCounter(BC::Taunt) || b.gen() > 5 && b.hasWorkingAbility(t, Ability::Oblivious))
+        if (b.counters(t).hasCounter(BC::Taunt) || (b.gen() > 5 && b.hasWorkingAbility(t, Ability::Oblivious)))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -4712,13 +4721,13 @@ struct MMSpite : public MM
     static void uas(int s, int t, BS &b)
     {
         int slot = fpoke(b,t).lastMoveSlot;
-        int pploss;
-        if (b.gen() >= 4)
-            pploss = 4;
-        else if (b.gen().num == 3)
+        int pploss = 4;
+
+        if (b.gen().num == 3)
             pploss = 2 + b.randint(4);
         else if (b.gen().num == 2)
             pploss = 1 + b.randint(5);
+
         b.losePP(t, slot, pploss);
         b.callieffects(t,t,"AfterPPLoss");
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot),QString::number(pploss));
@@ -6442,8 +6451,12 @@ struct MMAutotomize : public MM
 struct MMCraftyShield: public MM
 {
     MMCraftyShield() {
-        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        MMDetect::othersHaveMoved(s,s,b);
     }
 
     static void uas(int s, int, BS &b) {
@@ -6702,8 +6715,15 @@ struct MMKingsShield: public MM
 struct MMMatBlock : public MM
 {
     MMMatBlock() {
-        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (MMDetect::othersHaveMoved(s,s,b)) {
+            return;
+        }
+        MMFakeOut::daf(s,s,b);
     }
 
     static void uas(int s, int, BS &b) {
