@@ -332,8 +332,14 @@
 331 Increases the holder's Special Defense by 50%, but prevents it from using non offensive moves.
 332 Makes the holder immune to damage from weather conditions, as well as to Cotton Spore, Poison Powder, Powder, Rage Powder, Sleep Powder, Spore, and Stun Spore.
 333 Increases the holder's Attack and Special Attack by 2 stages when it is hit by a super effective move. Consumed after use.
-344 Increases the holder's Attack by 1 stage when it is hit by an Ice-type move. Consumed after use.
-345 Increases the holder's Special Defense by 1 stage when it is hit by a Water-type move. Consumed after use.
+334 Increases the holder's Attack by 1 stage when it is hit by an Ice-type move. Consumed after use.
+335 Increases the holder's Special Defense by 1 stage when it is hit by a Water-type move. Consumed after use.
+336 Changes the ability of a Pokémon to the other standard ability it can have.
+337 A fossil of an ancient Pokémon. It appears to be part of a jaw.
+338 A fossil of an ancient Pokémon. It appears to be part of a sail.
+339 Cures a Pokemon of any major status condition.
+340 If held by Spritzee during a trade, makes it evolve into Aromatisse.
+341 If held by Swirlix during a trade, makes it evolve into Slurpuff.
 1000 Increases power of Normal-type moves used by the holder by 10%.
 1001 Increases power of Normal-type moves used by the holder by 10%.
 2001 Enables Venusaur to Mega Evolve during battle.
