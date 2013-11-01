@@ -345,7 +345,7 @@
 2007 Kangamanit
 2008 Pinsirnit
 2009 Garadosnit
-2010 Aerodactylnit
+2010 Aerodactylonit
 2011 Mewtunit-X
 2012 Mewtunit-Y
 2013 Ampharosnit
@@ -359,7 +359,7 @@
 2021 Stollossnit
 2022 Meditalisnit
 2023 Voltensonit
-2024 Banettenit
+2024 Banetteonit
 2025 Absolnit
 2026 Knakracknit
 2027 Lucarionit
