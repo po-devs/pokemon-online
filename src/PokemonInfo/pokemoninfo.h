@@ -102,6 +102,7 @@ public:
     // Base form do NOT count.
     static quint16 NumberOfAFormes(const Pokemon::uniqueId &pokeid);
     static bool AFormesShown(const Pokemon::uniqueId &pokeid);
+    static bool IsMegaEvo(const Pokemon::uniqueId &pokeid);
     /* Standard formes: Rotom, Giratina, Deoxys, .. */
     static bool IsForme(const Pokemon::uniqueId &pokeid);
     static bool IsAesthetic(Pokemon::uniqueId id);
