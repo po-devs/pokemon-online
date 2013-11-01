@@ -1019,6 +1019,8 @@ struct MMAssist : public MM
             //Metronome will inherit a block on Assist in Gen III despite it being a valid move
             if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
                 return gen >= 5;
+            } else if (move == Roar || move == Whirlwind || move == Fly || move == Dig || move == PhantomForce){ //could be all two turn moves
+                return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
             }
