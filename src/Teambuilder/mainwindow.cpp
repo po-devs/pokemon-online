@@ -475,7 +475,7 @@ void MainEngine::changeLanguage()
 
     qtTranslator.load(QString("qt_") + lang,
                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    translator.load(QString("trans/%1/translation_%1").arg(lang));
+    translator.load(QString("trans/translation_%1").arg(lang));
 
     PokemonInfoConfig::changeTranslation(lang);
 
