@@ -332,8 +332,14 @@
 331 Assault Vest
 332 Safety Goggles
 333 Weakness Policy
-344 Snowball
-345 Luminous Moss
+334 Snowball
+335 Luminous Moss
+336 Ability Capsule
+337 Jaw Fossil
+338 Sail Fossil
+339 Luminose Galette
+340 Sachet
+341 Whipped Dream
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
