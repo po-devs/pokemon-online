@@ -6277,7 +6277,7 @@ struct MMSynchronoise : public MM
     }
 
     static void btl(int s, int t, BS &b) {
-        if (b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
+        if (!b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
 
         } else {
             fturn(b,s).typeMod = -100;
