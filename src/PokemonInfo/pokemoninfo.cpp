@@ -1390,6 +1390,11 @@ bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
     return !m_Options.value(pokeid.pokenum).contains('H');
 }
 
+bool PokemonInfo::IsMegaEvo(const Pokemon::uniqueId &pokeid)
+{
+    return m_Options.value(pokeid).contains('M');
+}
+
 quint16 PokemonInfo::NumberOfAFormes(const Pokemon::uniqueId &pokeid)
 {
     return m_MaxForme.value(pokeid.pokenum, 0);

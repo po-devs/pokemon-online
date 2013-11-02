@@ -24,7 +24,7 @@ IvBox::IvBox(QWidget *parent) :
         connect(m_ivchangers[i], SIGNAL(valueChanged(int)), this, SLOT(changeIV(int)));
     }
 
-    for(int i = 1; i < Type::Curse; i++) {
+    for(int i = 1; i < Type::Curse-1; i++) {
         ui->hiddenPowerType->addItem(TypeInfo::Name(i));
     }
 
@@ -49,12 +49,6 @@ void IvBox::updateAll()
 {
     updateIVs();
     updateStats();
-
-    if (poke().gen() > 5 && ui->hiddenPowerType->count() < Type::Curse - 1 && 0) {
-        ui->hiddenPowerType->addItem(TypeInfo::Name(Type::Curse-1));
-    } else if (poke().gen() <= 5 && ui->hiddenPowerType->count() >= Type::Curse - 1){
-        ui->hiddenPowerType->removeItem(ui->hiddenPowerType->count()-1);
-    }
 
     updateHiddenPower();
 

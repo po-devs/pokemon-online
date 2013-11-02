@@ -193,6 +193,10 @@ void PokePersonal::runCheck()
         return;
     }
 
+    if (!PokemonInfo::AFormesShown(num())) {
+        num() = num().original();
+    }
+
     if (gen() <= 2) {
         ability() = 0;
         nature() = 0;

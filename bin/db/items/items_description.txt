@@ -1,4 +1,4 @@
-﻿0 
+﻿0
 1 Increases the healing effect of Absorb, Aqua Ring, Drain Punch, Dream Eater, Giga Drain, Horn Leech, Ingrain, Leech Life, Leech Seed, and Mega Drain used by the holder by 30%.
 2 Increases the holder's Beauty stat in contests.
 3 Increases the holder's evasion by 10%.
@@ -169,7 +169,7 @@
 168 Halves the holder's Speed, but makes the holder gain 4 Special Attack EVs from any battle in addition to the normal amount.
 169 Halves the holder's Speed, but makes the holder gain 4 Defense EVs from any battle in addition to the normal amount.
 170 Halves the holder's Speed, but makes the holder gain 4 Attack EVs from any battle in addition to the normal amount.
-171 Halves the holder's Speed, but makes the holder gain 4 Special Attack EVs from any battle in addition to the normal amount.
+171 Halves the holder's Speed, but makes the holder gain 4 Special Defense EVs from any battle in addition to the normal amount.
 172 Halves the holder's Speed, but makes the holder gain 4 HP EVs from any battle in addition to the normal amount.
 173 Evolves male Kirlia into Gallade and female Snorunt into Froslass.
 174 Evolves Murkrow into Honchkrow, Misdreavus into Mismagius and Lampent into Chandelure.
@@ -328,5 +328,45 @@
 327 If used in a cave or at night, has a capture rate of 3.5. Otherwise, has a capture rate of 1.
 328 Has a capture rate of 1. Used to hold Pokemon distributed at events.
 329 Has a 100% capture rate. Only for use in the Pal Park.
+330 Increases power of Fairy-type moves used by the holder by 20%. Changes Judgment to the Fairy type.
+331 Increases the holder's Special Defense by 50%, but prevents it from using non offensive moves.
+332 Makes the holder immune to damage from weather conditions, as well as to Cotton Spore, Poison Powder, Powder, Rage Powder, Sleep Powder, Spore, and Stun Spore.
+333 Increases the holder's Attack and Special Attack by 2 stages when it is hit by a super effective move. Consumed after use.
+334 Increases the holder's Attack by 1 stage when it is hit by an Ice-type move. Consumed after use.
+335 Increases the holder's Special Defense by 1 stage when it is hit by a Water-type move. Consumed after use.
+336 Changes the ability of a Pokémon to the other standard ability it can have.
+337 A fossil of an ancient Pokémon. It appears to be part of a jaw.
+338 A fossil of an ancient Pokémon. It appears to be part of a sail.
+339 Cures a Pokemon of any major status condition.
+340 If held by Spritzee during a trade, makes it evolve into Aromatisse.
+341 If held by Swirlix during a trade, makes it evolve into Slurpuff.
 1000 Increases power of Normal-type moves used by the holder by 10%.
 1001 Increases power of Normal-type moves used by the holder by 10%.
+2001 Enables Venusaur to Mega Evolve during battle.
+2002 Enables Charizard to Mega Evolve during battle.
+2003 Enables Charizard to Mega Evolve during battle.
+2004 Enables Blastoise to Mega Evolve during battle.
+2005 Enables Alakazam to Mega Evolve during battle.
+2006 Enables Gengar to Mega Evolve during battle.
+2007 Enables Kangaskhan to Mega Evolve during battle.
+2008 Enables Pinsir to Mega Evolve during battle.
+2009 Enables Gyarados to Mega Evolve during battle.
+2010 Enables Aerodactyl to Mega Evolve during battle.
+2011 Enables Mewtwo to Mega Evolve during battle.
+2012 Enables Mewtwo to Mega Evolve during battle.
+2013 Enables Ampharos to Mega Evolve during battle.
+2014 Enables Scizor to Mega Evolve during battle.
+2015 Enables Heracross to Mega Evolve during battle.
+2016 Enables Houndoom to Mega Evolve during battle.
+2017 Enables Tyranitar to Mega Evolve during battle.
+2018 Enables Blaziken to Mega Evolve during battle.
+2019 Enables Gardevoir to Mega Evolve during battle.
+2020 Enables Mawile to Mega Evolve during battle.
+2021 Enables Aggron to Mega Evolve during battle.
+2022 Enables Medicham to Mega Evolve during battle.
+2023 Enables Manectric to Mega Evolve during battle.
+2024 Enables Banette to Mega Evolve during battle.
+2025 Enables Absol to Mega Evolve during battle.
+2026 Enables Garchomp to Mega Evolve during battle.
+2027 Enables Lucario to Mega Evolve during battle.
+2028 Enables Abomasnow to Mega Evolve during battle.
