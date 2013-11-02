@@ -208,7 +208,7 @@
 226 Replaces user's Pokémon with a different non-active Pokémon in user's party of user's choice and transfers user's stat stages, confusion, and effects of certain moves to the new Pokémon.
 227 Effect lasts for three rounds, including the current round. During effect, opponent, during each of its turns, uses the last move it used before this attack was used, with no target, and opponent chooses that move for use automatically and can't choose any other move for use. (Opponent can switch or flee as normal.) This attack fails if there is no affected move; the affected move is Transform, Mimic, Sketch, Mirror Move, Encore, or Struggle; if opponent doesn't have affected move; or if affected move has zero PP. During effect, this attack fails against opponent. Effect ends when opponent is replaced. At the beginning of opponent's turn and at the end of the round, if affected move has changed, effect ends. At the end of the round, if affected move has zero PP, effect ends.
 228 When opponent switches, if user chose this move for use and opponent is one of user's opposing Pokémon, and if user is not asleep, frozen, or about to skip its attack this round because it has Truant, and if user did not take its turn yet this round, user uses this attack with effectiveness doubled and skips its attack this round. (Can be used this way even if disabled. If this attack is used this way, user is considered to strike before other Pokémon. If this attack causes the opponent to faint this way, the new Pokémon at opponent's position becomes active immediately.)
-229 If this attack is successful, effects of multi-turn attacks and Leech Seed end for user, and effect of Spikes, Stealth Rock, and Toxic Spikes ends for user's side.
+229 If this attack is successful, effects of multi-turn attacks and Leech Seed end for user, and effect of Spikes, Stealth Rock, Sticky Web, and Toxic Spikes ends for user's side.
 230 Decreases opponent's evasiveness by 2 stages.
 231 May decrease opponent's Defense by 1 stage. (30%)
 232 May increase user's Attack by 1 stage. (10%)
@@ -404,7 +404,7 @@
 429 May decrease opponent's Accuracy by 1 stage. (30%)
 430 May decrease opponent's Special Defense by 1 stage. (10%)
 431 May confuse opponent. (20%)
-432 Decreases opponent's evasiveness by 1 stage. Even if opponent's evasiveness cannot be decreased, ends the effects of Reflect, Light Screen, Safeguard, Mist, Spikes, Toxic Spikes, and Stealth Rock on the opponent's side, and ends fog.
+432 Decreases opponent's evasiveness by 1 stage. Even if opponent's evasiveness cannot be decreased, ends the effects of Reflect, Light Screen, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web on the opponent's side, and of Spikes, Toxic Spikes, Stealth Rock, and Sticky Web on the user's side, and ends fog.
 433 Effect lasts for five rounds, including the current round. During effect, as part of determining priority, active Pokémon with lower Speeds strike before those with higher Speeds, rather than after. Effect ends when any active Pokémon uses this move. Priority level -7.
 434 If this attack is successful, decreases user's Special Attack by 2 stages.
 435 May paralyze opponent. (30%)
@@ -534,7 +534,7 @@
 560 Decreases opponent's Attack by 1 stage. Priority level 1.
 562 Protects the user's party from all Other category moves for one turn. Fails if user strikes last this round. Priority level 3.
 564 If this attack is successful, user gains 3/4 of HP lost by opponent due to this attack.
-566 The type effectiveness for this attack is the result of the multiplication of Fighting type effectiveness and Flying type effectiveness
+566 The type effectiveness for this attack is the result of the multiplication of Fighting type effectiveness and Flying type effectiveness. Power is doubled, and this move will not miss if Minimize is in effect for opponent.
 567 If the opponent isn't part Grass type, adds Grass typing to the opponent.
 568 Deals super effective damage against Water type. May freeze opponent. (10%)
 569 Two-turn move. Increases user's Special Attack, Special Defense and Speed by 2 stages.
