@@ -192,8 +192,7 @@ struct AMColorChange : public AM {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).types.clear();
-            fpoke(b, s).types.push_back(tp);
+            b.setType(s, tp);
         }
     }
 
@@ -209,8 +208,7 @@ struct AMColorChange : public AM {
                 return;
             }
             b.sendAbMessage(9,0,s,t,tp,tp);
-            fpoke(b, s).types.clear();
-            fpoke(b, s).types.push_back(tp);
+            b.setType(s, tp);
         }
     }
 };
@@ -305,6 +303,7 @@ struct AMDrizzle : public AM {
             int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
             b.sendAbMessage(14,w-1,s,s,type);
 
+<<<<<<< HEAD
 
             if (b.gen() >= 6) {
                 if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
@@ -312,6 +311,11 @@ struct AMDrizzle : public AM {
                 } else {
                     b.callForth(w, 5);
                 }
+=======
+        if (b.gen() >= 6) {
+            if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
+                b.callForth(w, 8);
+>>>>>>> main/master
             } else {
                 b.callForth(w, -1);
             }
@@ -534,15 +538,28 @@ struct AMFrisk : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        if (b.gen() < 6) {
+            int t = b.randomOpponent(s);
 
-        if (t == -1)
-            return;
+            if (t == -1)
+                return;
 
-        int it = b.poke(t).item();
+            int it = b.poke(t).item();
 
-        if (it != 0) {
-            b.sendAbMessage(23,0,s,t,0,it);
+            if (it != 0) {
+                b.sendAbMessage(23,0,s,t,0,it);
+            }
+        } else {
+            foreach(int t, b.revs(s)) {
+                if (!b.areAdjacent(s, t)) {
+                    continue;
+                }
+                int it = b.poke(t).item();
+
+                if (it != 0) {
+                    b.sendAbMessage(23,0,s,t,0,it);
+                }
+            }
         }
     }
 };
@@ -847,7 +864,7 @@ struct AMRivalry : public AM {
         if (b.poke(s).gender() == b.poke(t).gender())
             b.chainBp(s, 5);
         else
-            b.chainBp(s, 5);
+            b.chainBp(s, -5);
     }
 };
 
@@ -1965,6 +1982,7 @@ struct AMAerilate : public AM {
 
     static void baf(int s, int, BS &b) {
         if (type(b,s) == Type::Normal) {
+            b.chainBp(s, 6);
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
     }
@@ -2062,7 +2080,7 @@ struct AMMegaLauncher : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::PulsingFlag) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 10);
         }
     }
 };
@@ -2088,7 +2106,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 10);
         }
     }
 };
@@ -2099,8 +2117,8 @@ struct AMToughClaws : public AM {
     }
 
     static void bpm (int s, int t, BS &b) {
-        if (s != t && tmove(b,s).category == Move::Physical) {
-            b.chainBp(s, 4);
+        if (s != t && (tmove(b,s).flags & Move::ContactFlag)) {
+            b.chainBp(s, 6);
         }
     }
 };
@@ -2175,7 +2193,7 @@ struct AMParentalBond : public AM
 
     static void btl(int s, int, BS &b) {
         if (b.repeatCount() == 1 && tmove(b, s).repeatMin == 0) {
-            b.chainBp(s, -14);
+            b.chainBp(s, -10);
         }
     }
 };

@@ -595,7 +595,7 @@ struct MMDetect : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int, BS &b) {
+    static bool othersHaveMoved(int s, int, BS &b) {
         /* Detect / Protects fail if all others already moved */
         bool fail = true;
         for (int t = 0;  t < b.numberOfSlots() ; t++) {
@@ -607,6 +607,15 @@ struct MMDetect : public MM
 
         if (fail) {
             fturn(b,s).add(TM::Failed);
+            return true;
+        }
+
+        return false;
+    }
+
+    static void daf(int s, int, BS &b) {
+        /* Detect / Protects fail if all others already moved */
+        if (othersHaveMoved(s, s, b)) {
             return;
         }
 
@@ -980,7 +989,7 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle) {
+        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle || (b.gen() > 5 && (move == Roar || move == Whirlwind))) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1019,6 +1028,8 @@ struct MMAssist : public MM
             //Metronome will inherit a block on Assist in Gen III despite it being a valid move
             if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
                 return gen >= 5;
+            } else if (move == Roar || move == Whirlwind || move == Fly || move == Dig || move == PhantomForce){ //could be all two turn moves
+                return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
             }
@@ -1195,6 +1206,28 @@ struct MMBind : public MM
     }
 };
 
+struct MMStomp : public MM
+{
+    MMStomp(){
+        functions["BeforeTargetList"] = &btl;
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+
+    static void btl(int s, int, BS &b) {
+        if (b.targetList.size() > 0) {
+            if (poke(b, b.targetList.front()).value("Minimize").toBool() && b.gen() > 5) {
+                tmove(b, s).accuracy = 0;
+            }
+        }
+    }
+
+    static void bcd(int s, int t, BS &b) {
+        if (poke(b,t).value("Minimize").toBool()) {
+            tmove(b, s).power = tmove(b, s).power * 2;
+        }
+    }
+};
+
 struct MMBounce : public MM
 {
     MMBounce() {
@@ -1220,6 +1253,10 @@ struct MMBounce : public MM
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+            }
+            if (move(b,s) == PhantomForce && poke(b, b.targetList.front()).value("Minimize").toBool()) {
+                tmove(b, s).accuracy = 0;
+                tmove(b, s).power = tmove(b, s).power * 2;
             }
         } else {
             tmove(b, s).power = 0;
@@ -1250,6 +1287,9 @@ struct MMBounce : public MM
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
+            } else if (move == PhantomForce) {
+                addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
             }
         }
         //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
@@ -2998,7 +3038,13 @@ struct MMAttract : public MM
 struct MMKnockOff : public MM
 {
     MMKnockOff() {
+        functions["BeforeHitting"] = &bh;
         functions["OnFoeOnAttack"] = &uas;
+    }
+    static void bh(int s, int t, BS &b) {
+        if (b.canLoseItem(t,s) && b.gen() > 5) {
+            b.chainBp(s, 10);
+        }
     }
 
     static void uas(int s,int t,BS &b)
@@ -3073,7 +3119,7 @@ struct MMTaunt : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.counters(t).hasCounter(BC::Taunt))
+        if (b.counters(t).hasCounter(BC::Taunt) || (b.gen() > 5 && b.hasWorkingAbility(t, Ability::Oblivious)))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -3148,7 +3194,7 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool()) {
+        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -3273,7 +3319,7 @@ struct MMWeather : public MM
 
         b.sendMoveMessage(57,weather-1,s,type(b,s));
         if (weather_items.contains(weather) && b.hasWorkingItem(s,weather_items[weather])) {
-            b.callForth(weather,8+ 2*(b.gen() >= 6));
+            b.callForth(weather,8);
         } else {
             b.callForth(weather,5);
         }
@@ -4677,13 +4723,13 @@ struct MMSpite : public MM
     static void uas(int s, int t, BS &b)
     {
         int slot = fpoke(b,t).lastMoveSlot;
-        int pploss;
-        if (b.gen() >= 4)
-            pploss = 4;
-        else if (b.gen().num == 3)
+        int pploss = 4;
+
+        if (b.gen().num == 3)
             pploss = 2 + b.randint(4);
         else if (b.gen().num == 2)
             pploss = 1 + b.randint(5);
+
         b.losePP(t, slot, pploss);
         b.callieffects(t,t,"AfterPPLoss");
         b.sendMoveMessage(123,0,s,Pokemon::Ghost,t,b.move(t,slot),QString::number(pploss));
@@ -4698,19 +4744,6 @@ struct MMSplash : public MM
 
     static void uas(int s, int , BS & b) {
         b.sendMoveMessage(82,0,s);
-    }
-};
-
-struct MMStomp : public MM
-{
-    MMStomp(){
-        functions["BeforeCalculatingDamage"] = &bcd;
-    }
-
-    static void bcd(int s, int t, BS &b) {
-        if (poke(b,t).value("Minimize").toBool()) {
-            tmove(b, s).power = tmove(b, s).power * 2;
-        }
     }
 };
 
@@ -4858,7 +4891,7 @@ struct MMWorrySeed : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Truant & multi-type */
-        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype) {
+        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -4963,6 +4996,8 @@ struct MMNaturePower : public MM
             move = EnergyBall;
         } else if (type == Type::Fairy) {
             move = MoonBlast;
+        } else if (type == Type::Electric) {
+            move = Thunderbolt;
         } else {
             if (b.gen().num == 3) {
                 move = Swift;
@@ -5037,15 +5072,33 @@ struct MMSecretPower : public MM {
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.gen() >= 5) {
-            tmove(b,s).classification = Move::OffensiveStatChangingMove;
-            tmove(b,s).rateOfStat = 30 << 16;
-            tmove(b,s).statAffected = Accuracy << 16;
-            tmove(b,s).boostOfStat = uchar(-1) << 16;
+        if (b.gen().num == 5) {
+                tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                tmove(b,s).rateOfStat = 30 << 16;
+                tmove(b,s).statAffected = Accuracy << 16;
+                tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
-            tmove(b,s).classification = Move::OffensiveStatusInducingMove;
-            tmove(b,s).status = Pokemon::Paralysed;
-            tmove(b,s).rate = 30;
+            if (b.terrain != 0) {
+                int type = std::abs(b.terrain);
+                if (type == Type::Grass) {
+                    tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                    tmove(b,s).status = Pokemon::Asleep;
+                    tmove(b,s).rate = 30;
+                } else if (type == Type::Electric) {
+                    tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                    tmove(b,s).status = Pokemon::Paralysed;
+                    tmove(b,s).rate = 30;
+                } else if (type == Type::Fairy) {
+                    tmove(b,s).classification = Move::OffensiveStatChangingMove;
+                    tmove(b,s).rateOfStat = 30 << 16;
+                    tmove(b,s).statAffected = SpAttack << 16;
+                    tmove(b,s).boostOfStat = uchar(-1) << 16;
+                }
+            } else {
+                tmove(b,s).classification = Move::OffensiveStatusInducingMove;
+                tmove(b,s).status = Pokemon::Paralysed;
+                tmove(b,s).rate = 30;
+            }
         }
     }
 };
@@ -5525,7 +5578,7 @@ struct MMEntrainment : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5562,7 +5615,7 @@ struct MMIncinerate : public MM {
     }
 
     static void uas(int s, int t, BS &b) {
-        if (ItemInfo::isBerry(b.poke(t).item())) {
+        if (ItemInfo::isBerry(b.poke(t).item()) || (ItemInfo::isGem(b.poke(t).item()) && b.gen() >= 6)) {
             b.sendMoveMessage(160, 0, s, Type::Fire, t, b.poke(t).item());
             b.disposeItem(t);
         }
@@ -6224,7 +6277,7 @@ struct MMSynchronoise : public MM
     }
 
     static void btl(int s, int t, BS &b) {
-        if (b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
+        if (!b.getTypes(s).toList().toSet().intersect(b.getTypes(t).toList().toSet()).isEmpty()) {
 
         } else {
             fturn(b,s).typeMod = -100;
@@ -6400,8 +6453,12 @@ struct MMAutotomize : public MM
 struct MMCraftyShield: public MM
 {
     MMCraftyShield() {
-        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        MMDetect::othersHaveMoved(s,s,b);
     }
 
     static void uas(int s, int, BS &b) {
@@ -6660,8 +6717,15 @@ struct MMKingsShield: public MM
 struct MMMatBlock : public MM
 {
     MMMatBlock() {
-        functions["DetermineAttackFailure"] = &MMDetect::daf;
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (MMDetect::othersHaveMoved(s,s,b)) {
+            return;
+        }
+        MMFakeOut::daf(s,s,b);
     }
 
     static void uas(int s, int, BS &b) {
@@ -6895,10 +6959,10 @@ struct MMPowder : public MM
 
     static void atp(int s, int, BS &b)
     {
-        if (turn(b,s).value("Powdered").toBool()) {
+        if (poke(b,s).value("Powdered").toBool()) {
             if (type(b,s) == Type::Fire) {
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
-                turn(b,s).remove("Powdered");\
+                poke(b,s).remove("Powdered");\
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
                 turn(b,s)["ImpossibleToMove"] = true;

@@ -357,7 +357,7 @@ struct IMShellBell : public IM
         if (s==t)
             return;
 
-        if (!b.canHeal(s) || b.hasWorkingAbility(s, Ability::SheerForce))
+        if (!b.canHeal(s) || turn(b,s).value("EncourageBug").toBool())
             return;
 
         int damage = turn(b,s)["DamageInflicted"].toInt();
@@ -728,7 +728,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasSubstitute(s) || b.hasWorkingAbility(s, Ability::SheerForce))
+        if (b.koed(s) || b.hasSubstitute(s) || turn(b,t).value("EncourageBug").toBool())
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];

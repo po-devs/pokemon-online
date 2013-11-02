@@ -430,7 +430,8 @@ struct ChallengeInfo
         NoTimeOut = 32,
         SpeciesClause = 64,
         RearrangeTeams = 128,
-        SelfKO = 256
+        SelfKO = 256,
+        Inverted = 512
     };
 
     enum Mode
@@ -443,7 +444,7 @@ struct ChallengeInfo
         ModeLast = Rotation
     };
 
-    static const int numberOfClauses = 9;
+    static const int numberOfClauses = 10;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];

@@ -1340,8 +1340,8 @@ int PokemonInfo::Ability(const Pokemon::uniqueId &pokeid, int slot, Pokemon::gen
     if (gen.num < GEN_MIN || gen.num-GEN_MIN >= m_Abilities[slot].size()) {
         return 0;
     }
-    int ab = m_Abilities[slot][gen.num-GEN_MIN].value(pokeid, 0);
-    return ab != 0 ? ab : m_Abilities[slot][gen.num-GEN_MIN].value(pokeid.original());
+    int ab = m_Abilities[slot][gen.num-GEN_MIN].value(pokeid, -1);
+    return ab != -1 ? ab : m_Abilities[slot][gen.num-GEN_MIN].value(pokeid.original());
 }
 
 
@@ -1388,6 +1388,11 @@ bool PokemonInfo::HasFormes(const Pokemon::uniqueId &pokeid)
 bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
 {
     return !m_Options.value(pokeid.pokenum).contains('H');
+}
+
+bool PokemonInfo::IsMegaEvo(const Pokemon::uniqueId &pokeid)
+{
+    return m_Options.value(pokeid).contains('M');
 }
 
 quint16 PokemonInfo::NumberOfAFormes(const Pokemon::uniqueId &pokeid)
@@ -2988,7 +2993,7 @@ QString HiddenPowerInfo::path(const QString &filename)
 int HiddenPowerInfo::Type(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     if (gen >= 3)
-        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*(15+ (gen.num >= 6)))/63 + 1;
+        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*(15+ (gen.num >= 6 && 0)))/63 + 1;
     else
         return (att_dv%4)*4+(def_dv%4)+1;
 }

@@ -8,7 +8,7 @@
 7 Fatumknoten
 8 Expertengurt
 9 Fokus-Band
-10 Fokus-Gurt
+10 Fokusgurt
 11 Lahmrauch
 12 Grüner Schal
 13 Schwerschweif
@@ -146,7 +146,7 @@
 145 Weiße Flöte
 146 X-Treffer
 147 X-Angriff
-148 X-Verteidigung
+148 X-Abwehr
 149 X-Spezial
 150 X-Spezial Ver
 151 X-Tempo
@@ -329,6 +329,11 @@
 328 Jubelball
 329 Parkball
 330 Feentafel
+331 Offensivweste
+332 Schutzbrille
+333 Schwächenschutz
+334 Schneeball
+335 Leuchtmoos
 1000 Rosa Band
 1001 Punkt-Band
 2001 Bisaflornit
@@ -340,7 +345,7 @@
 2007 Kangamanit
 2008 Pinsirnit
 2009 Garadosnit
-2010 Aerodactylnit
+2010 Aerodactylonit
 2011 Mewtunit-X
 2012 Mewtunit-Y
 2013 Ampharosnit
@@ -354,7 +359,7 @@
 2021 Stollossnit
 2022 Meditalisnit
 2023 Voltensonit
-2024 Banettenit
+2024 Banetteonit
 2025 Absolnit
 2026 Knakracknit
 2027 Lucarionit

@@ -1140,6 +1140,10 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return true;
     }
 
+    //Toxic always hits if used by poison type in gen 6
+    if (move == Move::Toxic && gen() > 5 && hasType(player, Type::Poison)) {
+        return true;
+    }
     /* Miracle skin can make some attacks miss */
     callaeffects(target, player, "TestEvasion");
 
@@ -2019,6 +2023,14 @@ end:
     }
 
     turnMem(player).stab = stab;
+    if(clauses() & ChallengeInfo::Inverted){
+        if(typemod<-50){
+            typemod=1;
+        }
+        else{
+            typemod*=-1;
+        }
+    }
     turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
 }
 
@@ -2667,6 +2679,22 @@ int BattleSituation::rawTypeEff(int atttype, int player)
 
     foreach(int deftype, fpoke(player).types) {
         int eff = TypeInfo::Eff(atttype, deftype);
+        if(clauses() & ChallengeInfo::Inverted){
+            switch(eff){
+                case Type::Ineffective:
+                    eff=Type::SuperEffective;
+                    break;
+                case Type::NotEffective:
+                    eff=Type::SuperEffective;
+                    break;
+                case Type::SuperEffective:
+                    eff=Type::NotEffective;
+                    break;
+                default:
+                    eff=Type::Effective;
+                    break;
+            }
+        }
         if (eff == 0) {
             return -100;
         }
@@ -3698,10 +3726,10 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     int attacked = this->attacked();
 
     if (attacker != -1 && attacked != -1) {
-        //Unaware / Sacred sword
+        //Unaware / Sacred sword / Keeneye ignores evasion in gen 6
         if (attacker != player && attacked == player) {
             if ((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
-                    && (stat == SpDefense || stat == Defense || stat == Evasion)) {
+                    && (stat == SpDefense || stat == Defense || stat == Evasion) || (gen() > 5 && stat == Evasion && hasWorkingAbility(attacker, Ability::KeenEye))) {
                 boost = 0;
             }
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&
