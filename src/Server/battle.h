@@ -122,7 +122,6 @@ public:
     void addType(int player, int type);
     void setType(int player, int type);
     int rawTypeEff(int type, int player);
-    int convertTypeEff(int typeeff);
     PokeFraction effFraction(int typeeff);
     bool ineffective(int typeeff) {return typeeff < -50;}
     bool isFlying(int player);

@@ -478,6 +478,7 @@ public:
 
     virtual PokeFraction getStatBoost(int player, int stat);
     virtual void calculateTypeModStab(int player=-1, int target=-1);
+    int convertTypeEff(int typeeff);
     virtual int repeatNum(int player);
 
     virtual void testCritical(int player, int target);
