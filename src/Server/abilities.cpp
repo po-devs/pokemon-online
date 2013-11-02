@@ -305,20 +305,16 @@ struct AMDrizzle : public AM {
 
             if (b.gen() >= 6) {
                 if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
-                    b.callForth(w, 10);
+                    b.callForth(w, 8);
                 } else {
                     b.callForth(w, 5);
                 }
-                if (b.gen() >= 6) {
-                    if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
-                        b.callForth(w, 8);
-
-                    } else {
-                        b.callForth(w, -1);
-                    }
-                }
+            } else {
+                b.callForth(w, -1);
             }
-        };
+        }
+    }
+};
 
 //Declaring static class variable
 AMDrizzle::WI AMDrizzle::weather_items;
