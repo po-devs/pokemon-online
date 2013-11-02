@@ -2235,6 +2235,22 @@ struct AMGrassPelt : public AM
     }
 };
 
+struct AMLevitate : public AM
+{
+    AMLevitate() {
+        functions["OpponentBlock"] = &uodr;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        if (type(b,t) == Type::Ground) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+
+            b.sendAbMessage(120, 0, s);
+        }
+    }
+};
+
+
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -2386,6 +2402,7 @@ void AbilityEffect::init()
     REGISTER_AB(117, AuraBreak);
     REGISTER_AB(118, BulletProof);
     REGISTER_AB(119, GrassPelt);
+    REGISTER_AB(120, Levitate);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */

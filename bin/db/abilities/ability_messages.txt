@@ -68,3 +68,4 @@
 115 %s's Gooey slows down %f!
 117 %s reversed all other Pokémon's auras!
 118 %s's Bulletproof blocked the attack!
+120 %s is levitating!
