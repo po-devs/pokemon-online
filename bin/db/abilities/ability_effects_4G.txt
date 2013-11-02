@@ -15,6 +15,7 @@
 23 53#Shadow Tag
 24 50#Rough Skin
 25 71#Wonder Guard
+26 120#Levitate
 27 16#Effect Spore
 28 61#Synchronize
 29 31#Clearbody
