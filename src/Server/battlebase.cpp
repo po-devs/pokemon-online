@@ -1936,8 +1936,7 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
             typemod = -100;
             break;
         }
-        typemod *= typeffs[i];
-        typemod /= 2;
+        typemod += convertTypeEff(typeffs[i]);
     }
 
     // Counter hits regardless of type matchups in Gen 1.
@@ -1956,6 +1955,11 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
 
     turnMem(player).stab = stab;
     turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
+}
+
+int BattleBase::convertTypeEff(int typeeff)
+{
+    return std::min(typeeff-2, 1);
 }
 
 int BattleBase::repeatNum(int player)
