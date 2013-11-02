@@ -2704,11 +2704,6 @@ int BattleSituation::rawTypeEff(int atttype, int player)
     return typemod;
 }
 
-int BattleSituation::convertTypeEff(int typeeff)
-{
-    return std::min(typeeff-2, 1);
-}
-
 PokeFraction BattleSituation::effFraction(int typeeff)
 {
     if (typeeff < 0) {
