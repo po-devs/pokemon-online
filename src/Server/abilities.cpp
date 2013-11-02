@@ -303,25 +303,22 @@ struct AMDrizzle : public AM {
             int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
             b.sendAbMessage(14,w-1,s,s,type);
 
-<<<<<<< HEAD
-
             if (b.gen() >= 6) {
                 if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
                     b.callForth(w, 10);
                 } else {
                     b.callForth(w, 5);
                 }
-=======
-        if (b.gen() >= 6) {
-            if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
-                b.callForth(w, 8);
->>>>>>> main/master
-            } else {
-                b.callForth(w, -1);
+                if (b.gen() >= 6) {
+                    if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
+                        b.callForth(w, 8);
+
+                    } else {
+                        b.callForth(w, -1);
+                    }
+                }
             }
-        }
-    }
-};
+        };
 
 //Declaring static class variable
 AMDrizzle::WI AMDrizzle::weather_items;
