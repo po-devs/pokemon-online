@@ -1879,8 +1879,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && !(tmove(player).flags & Move::SoundFlag) && attack != Move::NaturePower
-                    && !hasWorkingAbility(player, Ability::Infiltrator)) {
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower && (gen() <= 5 || (!(tmove(player).flags & Move::SoundFlag)
+                    && !hasWorkingAbility(player, Ability::Infiltrator)))) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }

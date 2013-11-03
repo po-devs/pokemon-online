@@ -2454,7 +2454,6 @@ QScriptValue ScriptEngine::banList()
 
 void ScriptEngine::ban(QString name)
 {
-    SecurityManager::setBanExpireTime(name, 0);
     SecurityManager::ban(name);
     if(loggedIn(myserver->id(name))) {
         myserver->silentKick(myserver->id(name));
@@ -2466,8 +2465,7 @@ void ScriptEngine::tempBan(QString name, int time)
     if(time < 0) {
         return;
     }
-    SecurityManager::setBanExpireTime(name, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
-    SecurityManager::ban(name);
+    SecurityManager::ban(name, time);
     if(loggedIn(myserver->id(name))) {
         myserver->silentKick(myserver->id(name));
     }
