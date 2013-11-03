@@ -62,8 +62,13 @@ public:
             this->auth = auth;
         }
 
-        void ban() {
+        void ban(int time = 0) {
             banned = true;
+            if (time == 0) {
+                ban_expire_time = 0;
+            } else {
+                ban_expire_time = QDateTime::currentDateTimeUtc().toTime_t() + time * 60;
+            }
         }
 
         void unban() {
@@ -91,14 +96,14 @@ public:
     static void updateMember(const Member &m);
 
     static bool bannedIP(const QString &ip);
-    static void ban(const QString &name);
+    static void ban(const QString &name, int time=0);
     static void banIP(const QString &ip);
     static void unban(const QString &name);
     static int numRegistered(const QString &ip);
     static void IPunban(const QString &ip);
     static void setAuth(const QString &name, int auth);
     static void clearPass(const QString &name);
-    static void setBanExpireTime(const QString &name, int time);
+    //static void setBanExpireTime(const QString &name, int time);
     static void updateMemberInDatabase(const Member &m, bool add);
     static int maxAuth(const QString &ip);
 

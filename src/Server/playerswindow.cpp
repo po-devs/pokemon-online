@@ -129,7 +129,6 @@ void PlayersWindow::ban()
 {
     SecurityManager::ban(currentName());
     /* Otherwise we may have time from a temp ban before */
-    SecurityManager::setBanExpireTime(currentName(), 0);
     mytable->item(mytable->currentRow(), 2)->setText("Banned");
     emit banned(currentName());
 }
