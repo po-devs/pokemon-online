@@ -573,4 +573,4 @@
 604 User avoids certain attacks used this round by non-users. This attack fails if user strikes last this round. If opponent uses a contact move, it loses 1/8 of its max HP. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, Wide Guard, King's Shield, or Spiky Shield as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
 605 During effect, whenever an opposing Pokémon becomes active, that Pokémon, unless it's a Flying type or has Levitate, has its Speed decreased by 1 stage.
 606 Reverts all stat of opponent's stat changes. Positive changes becomes negative, and vice versa.
-607 Fails unless opponent is Poisoned. Decreases opponent's Special Attack, Special Attack and Speed by 1 stage.
+607 Fails unless opponent is Poisoned. Decreases opponent's Attack, Special Attack and Speed by 1 stage.
