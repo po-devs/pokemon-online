@@ -2242,7 +2242,7 @@ struct AMLevitate : public AM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (type(b,t) == Type::Ground) {
+        if (type(b,t) == Type::Ground && b.isFlying(s)) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
 
             b.sendAbMessage(120, 0, s);
