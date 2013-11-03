@@ -1925,15 +1925,15 @@ QScriptValue ScriptEngine::indexOfTeamPoke(int id, int team, int pokenum)
     return myengine.undefinedValue();
 }
 
-bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index)
+bool ScriptEngine::hasDreamWorldAbility(int id, int team, int index, int gen)
 {
-    if(testPlayer("hasDreamWorldAbility", id) && testTeamCount("hasDreamWorldAbility", id, team)) {
+    if(testPlayer("hasDreamWorldAbility", id) && testTeamCount("hasDreamWorldAbility", id, team) && gen > 4) {
         if (index < 0 || index >= 6) {
             return false;
         } else {
             PokeBattle &p = myserver->player(id)->team(team).poke(index);
 
-            AbilityGroup ag = PokemonInfo::Abilities(p.num(), 5);
+            AbilityGroup ag = PokemonInfo::Abilities(p.num(), gen);
 
             return p.ability() != ag.ab(0) && p.ability() != ag.ab(1);
         }
