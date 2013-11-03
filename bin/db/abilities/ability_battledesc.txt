@@ -41,7 +41,7 @@
 40 Prevents a Pokemon with this ability from becoming Frozen.
 41 Prevents a Pokemon with this ability from becoming Burned.
 42 Prevents Steel-type enemies from switching out or running away as long as a Pokemon with this ability is on the field.
-43 Makes a Pokemon with this ability immune to Bug Buzz, Chatter, Echoed Voice, GrassWhistle, Growl, Heal Bell (only while on the field), Hyper Voice, Metal Sound, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
+43 Makes a Pokemon with this ability immune to Boomburst, Bug Buzz, Chatter, Echoed Voice, GrassWhistle, Growl, Heal Bell (only while on the field), Hyper Voice, Metal Sound, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
 44 Makes a Pokemon with this ability regain 1/16 its max HP every turn during Rain Dance.
 45 Summons Sandstorm for 5 turns when a Pokemon with this ability enters the field.
 46 Makes opponent Pokemon use 2 PP when they target a Pokemon with this ability.
