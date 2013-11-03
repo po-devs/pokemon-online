@@ -874,14 +874,13 @@ void Server::ban(int id, int src) {
         printLine("The server banned " + name(id) + "!");
     else
         printLine(name(id) + " was banned by " + name(src));
-    SecurityManager::setBanExpireTime(name(id), 0);
+
     SecurityManager::ban(name(id));
     player(id)->kick();
 }
 
 void Server::tempBan(int dest, int src, int time)
 {
-    SecurityManager::setBanExpireTime(name(dest), QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
     time = int(std::max(1, std::min(time, 1440)));
     if(src == 0) {
         if(time == 1) {
@@ -897,7 +896,7 @@ void Server::tempBan(int dest, int src, int time)
         }
     }
     notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
-    SecurityManager::ban(name(dest));
+    SecurityManager::ban(name(dest), time);
     player(dest)->kick();
 }
 

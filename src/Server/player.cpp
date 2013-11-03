@@ -721,8 +721,7 @@ void Player::CPBan(const QString &name, int time)
         time = std::max(1, std::min(time, 1440));
     }
 
-    SecurityManager::setBanExpireTime(name, time);
-    SecurityManager::ban(name);
+    SecurityManager::ban(name, time);
 
     if (time)
         emit info(id(), "Temporarily Banned player " + name + " with CP for " + int(time) + " minutes.");
