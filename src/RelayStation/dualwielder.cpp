@@ -7,6 +7,7 @@ namespace Nw {
 #include "../PokemonInfo/battlestructs.h"
 #include "pokemontojson.h"
 #include "dualwielder.h"
+#include <functional>
 
 DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), registryRead(false), myid(-1)
 {
@@ -467,12 +468,55 @@ void DualWielder::readSocket(const QByteArray &commandline)
 
         break;
     }
-//    case TierSelection: {
-//        QByteArray tierList;
-//        in >> tierList;
-//        emit tierListReceived(tierList);
-//        break;
-//    }
+    case Nw::TierSelection: {
+        qint32 len;
+        in >> len; //Unused, but describes length of following data
+
+        uchar level;
+        in >> level;
+
+        std::function<void(QVariantList&, int)> func;
+        func = [&in, &level, &func](QVariantList &parent, int curlevel) {
+            if (in.atEnd()) {
+                return;
+            }
+            QString name;
+            in >> name;
+
+            //peek of the next level
+            in >> level;
+
+            if (level > curlevel) {
+                /* Next is a child */
+                QVariantMap current;
+                QVariantList tiers;
+
+                current.insert("name", name);
+                func(tiers, level);
+                current.insert("tiers", tiers);
+
+                parent.push_back(current);
+            } else {
+                parent.push_back(name);
+            }
+
+            //needs to be outside the ifs, since it can be called after both branches
+            //because level will be modified by the recursive calls!
+            if (level == curlevel) {
+                func(parent, level);
+            }
+
+            return;
+        };
+
+        QVariantList root;
+        func(root, level);
+
+        QString res = "tiers|" + jserial.serialize(root);
+        web->write(res);
+
+        break;
+    }
 //    case ShowRankings: {
 //        bool starting;
 //        in >> starting;
