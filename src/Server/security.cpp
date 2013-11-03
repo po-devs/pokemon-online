@@ -304,10 +304,10 @@ bool SecurityManager::bannedIP(const QString &ip) {
     return i != bannedIPs.end();
 }
 
-void SecurityManager::ban(const QString &name) {
+void SecurityManager::ban(const QString &name, int time) {
     if (exist(name)) {
         Member m = member(name);
-        m.ban();
+        m.ban(time);
 
         bannedMembers.insert(name.toLower(), std::make_pair(m.ip, m.ban_expire_time));
         bannedIPs.insert(m.ip, m.ban_expire_time);
@@ -379,13 +379,13 @@ void SecurityManager::clearPass(const QString &name) {
     }
 }
 
-void SecurityManager::setBanExpireTime(const QString &name, int time) {
-    if (exist(name)) {
-        Member m = member(name);
-        m.ban_expire_time = time;
-        updateMember(m);
-    }
-}
+//void SecurityManager::setBanExpireTime(const QString &name, int time) {
+//    if (exist(name)) {
+//        Member m = member(name);
+//        m.ban_expire_time = time;
+//        updateMember(m);
+//    }
+//}
 
 
 int SecurityManager::maxAuth(const QString &ip) {
