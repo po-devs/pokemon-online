@@ -222,7 +222,9 @@ struct BMSuperHP : public BM
         }
         if (!b.canHeal(s))
             return;
-        if (fturn(b,t).typeMod <= 0)
+        if (b.attacker() == s)
+            return;
+        if (fturn(b,b.attacker()).typeMod <= 0)
             return;
         b.eatBerry(s);
         b.sendBerryMessage(6,s,0);
