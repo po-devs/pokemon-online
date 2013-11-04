@@ -1971,12 +1971,19 @@ struct AMUnnerve : public AM {
 struct AMAerilate : public AM {
     AMAerilate() {
         functions["BeforeTargetList"] = &baf;
+        functions["BasePowerModifier"] = &bpm;
     }
 
     static void baf(int s, int, BS &b) {
         if (type(b,s) == Type::Normal) {
-            b.chainBp(s, 6);
+            turn(b,s)["Aerilated"] = true;
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
+        }
+    }
+
+    static void bpm(int s, int, BS &b) {
+        if (turn(b,s).value("Aerilated").toBool()) {
+            b.chainBp(s, 6);
         }
     }
 };
