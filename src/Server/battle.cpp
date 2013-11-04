@@ -612,7 +612,7 @@ BattleChoices BattleSituation::createChoice(int slot)
         ret.mega = true;
     }
 
-    if (!hasWorkingItem(slot, Item::ShedShell) && !hasType(slot, Type::Ghost)) {
+    if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
         /* Shed Shell */
         if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
             ret.switchAllowed = false;
