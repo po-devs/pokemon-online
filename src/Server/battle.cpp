@@ -1864,6 +1864,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
               of SapSipper/Leech Seed */
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
+                callieffects(target,player,"OpponentBlock"); //Safety Goggles
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
