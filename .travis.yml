@@ -1,0 +1,13 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - sudo apt-get update
+
+install:
+  - sudo apt-get install libzip-dev qt4-dev-tools libqt4-declarative-shaders libqt4-dev libphonon-dev
+
+script:
+  - qmake "CONFIG += po_all" && make
