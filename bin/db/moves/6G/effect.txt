@@ -545,7 +545,7 @@
 575 Paralyzes opponent.
 576 If this attack is successful, user gains 3/4 of HP lost by opponent due to this attack.
 577 If this attack is successful, user gains half of HP lost by opponent due to this attack.
-578 Two-turn attack, user is invulnerable during the first turn. Ignores effect of Protect or Detect.
+578 Two-turn attack, user is invulnerable during the first turn. Power is doubled, and this move will not miss if Minimize is in effect for opponent. Ignores effect of Protect or Detect.
 579 May decrease opponent's Attack by 1 stage. (10%)
 580 Decreases opponent's Attack by 1 stage.
 581 If the opponent isn't part Ghost type, adds Ghost typing to the opponent.
