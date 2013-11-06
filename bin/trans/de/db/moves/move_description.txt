@@ -224,3 +224,30 @@
 223 Das Ziel wird verwirrt.
 224 Verursacht Schaden ohne zusätzliche Effekte.
 225 Hat eine 30%-Chance das Ziel zu paralysieren.
+226 Wechselt den Anwender aus und überträgt alle momentanen Statuswertveränderungen auf das eingetauschte Pokémon.
+227 Zwingt den Gegner, seine zuletzt eingesetzte Attacke noch 3 mal zu wiederholen.
+228 Wenn der Gegner wechselt, erleidet das ausgewechselte Pokémon doppelten Schaden.
+229 Schädigt den Gegner und folgende Attacken verlieren durch Einsatz von Turbodreher ihre Wirkung auf den Anwender: Wickel, Schnapper, Feuerwirbel, Egelsamen, Lavasturm, Sandgrab, Stachler, Tarnsteine, Giftspitzen, Whirlpool, Klammergriff, Klebenetz.
+230 Senkt den Fluchtwert des Ziels um eine Stufe.
+231 Hat eine 30%-Chance die Verteidigung des Ziels um eine Stufe zu senken.
+232 Hat eine 10%-Chance den Angriff des Anwenders um eine Stufe zu erhöhen.
+233 Trifft immer. Priorität -1.
+234 Heilt 1/2 der maximalen KP des Anwenders. 2/3 in der Sonne, 1/4 in Hagel, Regen oder Sandsturm.
+235 Heilt 1/2 der maximalen KP des Anwenders. 2/3 in der Sonne, 1/4 in Hagel, Regen oder Sandsturm.
+236 Heilt 1/2 der maximalen KP des Anwenders. 2/3 in der Sonne, 1/4 in Hagel, Regen oder Sandsturm.
+237 Stärke und Typ hängt von den DVs des Anwenders ab. Stärke beträgt zwischen 30 und 70.
+238 Hat eine erhöhte Volltrefferquote.
+239 Hat eine 20%-Chance, dass das Ziel zurückschreckt.
+240 Es fängt für 5 Runden an zu Regnen.
+241 Das Sonnenlicht ist für 5 Runden verstärkt.
+242 Hat eine 20%-Chance die Verteidigung des Ziels um eine Stufe zu senken.
+243 Wenn der zuletzt vor Einsatz von Spiegelcape dem Anwender zugefügte Schaden durch eine spezielle Attacke zugefügt wurde, erleidet das Ziel doppelt so viel Schaden.
+244 Kopiert die Veränderungen der Statuswerte des Ziels.
+245 Priorität +2.
+246 Hat eine 10%-Chance alle Statuswerte um eine Stufe zu erhöhen (außer Fluchtwert und Genauigkeit).
+247 Hat eine 20%-Chance die Spezial-Verteidigung des Ziels um eine Stufe zu senken.
+248 Das Ziel erleidet erst 2 Runden, nachdem die Attacke eingesetzt wurde, Schaden.
+249 Hat eine 50%-Chance die Verteidigung des Ziels um eine Stufe zu senken.
+250 Das Ziel kann nicht ausgetauscht werden und verliert jede Runde 1/16 seiner maximalen KP.
+251 Fügt dem Ziel Schaden von jedem im Team des Anwenders befindlichen Pokémon zu, das nicht besiegt ist. Nutzt eine veränderte Schadensberechnung.
+252 Trifft nur, wenn es in der ersten Runde eingesetzt wird, in der der Anwender am Kampf teilnimmt. Das Ziel schreckt zurück.

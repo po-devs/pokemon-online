@@ -33,6 +33,8 @@ cp bin/libpo-pokemoninfo.so.1.0.0 $DEST/libpo-pokemoninfo.so.1
 cp bin/libpo-battlemanager.so.1.0.0 $DEST/libpo-battlemanager.so.1
 cp bin/version.ini $DEST
 
+echo "Run install.sh to install the dependencies, then run the start-client script or directly the Pokemon-Online binary" > $DEST/README.txt
+
 mkdir $DEST/myplugins
 mkdir $DEST/serverplugins
 cp bin/myplugins/*.so.1.0.0 $DEST/myplugins
