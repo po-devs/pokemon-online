@@ -1,6 +1,7 @@
 #include "pokemon.h"
 
 #include <QPixmapCache>
+#include <stdexcept>
 
 #include "pokemoninfo.h"
 #include "pokemonstructs.h"
@@ -1018,8 +1019,7 @@ Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
     try {
         return pokenamesToIds.at(pokename);
-    } catch (const std::out_of_range &ex) {
-        (void) ex; //cout << ex.what() << endl;
+    } catch (const std::out_of_range &) {
         return 0;
     }
 }
