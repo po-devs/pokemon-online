@@ -286,6 +286,7 @@ struct RBYDig : public MM
 
     static void ms(int s, int, BS &b) {
         fturn(b, s).add(TM::BuildUp);
+        tmove(b,s).targets = Move::User;
     }
 
     static void uas(int s, int t, BS &b) {
