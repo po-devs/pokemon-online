@@ -216,7 +216,7 @@ struct BMSuperHP : public BM
         functions["TestPinch"] = &uodr;
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void uodr(int s, int, BS &b) {
         if (!b.attacking()) {
             return;
         }
