@@ -2201,7 +2201,7 @@ struct AMParentalBond : public AM
 struct AMMagician : public AM
 {
     AMMagician() {
-        functions["OnPhysicalAssault"] = &upa;
+        functions["OnHitting"] = &upa;
     }
 
     /* Ripped off from Covet */
