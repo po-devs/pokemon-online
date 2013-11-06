@@ -294,13 +294,14 @@ MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
         for (int i = 0; i < 3; i++) {
             if (ab == abs.ab(i)) {
                 abilities[i] = usage;
-                break;
+                goto end;
             }
         }
-        gen = 3;
+        gen = 5;
     } else {
         gen = 2;
     }
+    end:
 
     raw.level = buf [2] & 0xFF;
 
