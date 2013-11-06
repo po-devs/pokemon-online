@@ -561,19 +561,7 @@ QScriptValue ScriptEngine::pokemon(int num)
 
 QScriptValue ScriptEngine::pokeNum(const QString &name)
 {
-    QString copy = name;
-    bool up = true;
-    for (int i = 0; i < copy.length(); i++) {
-        if (up) {
-            copy[i] = copy[i].toUpper();
-            up = false;
-        } else {
-            if (copy[i] == '-' || copy[i] == ' ')
-                up = true;
-            copy[i] = copy[i].toLower();
-        }
-    }
-    Pokemon::uniqueId num = PokemonInfo::Number(copy);
+    Pokemon::uniqueId num = PokemonInfo::Number(name);
     if (num.toPokeRef() == Pokemon::NoPoke) {
         return myengine.undefinedValue();
     } else {
