@@ -329,19 +329,19 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation type="obsolete">%1s %2 %3%4!</translation>
+        <translation type="obsolete">%1s %2 %4%3!</translation>
     </message>
     <message>
         <source>sharply </source>
-        <translation type="obsolete">steigt </translation>
-    </message>
-    <message>
-        <source>rose</source>
         <translation type="obsolete">stark</translation>
     </message>
     <message>
+        <source>rose</source>
+        <translation type="obsolete">steigt </translation>
+    </message>
+    <message>
         <source>fell</source>
-        <translation type="obsolete">sinkt</translation>
+        <translation type="obsolete">sinkt </translation>
     </message>
     <message>
         <source>%1 is paralyzed! It may be unable to move!</source>
@@ -820,12 +820,12 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="196"/>
         <source>%1 avoided the attack!</source>
-        <translation>%1 ist dem Angriff ausgewichen.</translation>
+        <translation>%1 ist dem Angriff ausgewichen!</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation>%1s %2 %3%4!</translation>
+        <translation>%1s %2 %4%3!</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
@@ -835,22 +835,22 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>sharply </source>
-        <translation>steigt </translation>
-    </message>
-    <message>
-        <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
-        <source>rose</source>
         <translation>stark</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
+        <source>rose</source>
+        <translation>steigt </translation>
+    </message>
+    <message>
+        <location filename="../BattleManager/battleclientlog.cpp" line="203"/>
         <source>fell</source>
-        <translation>sinkt</translation>
+        <translation>sinkt </translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="209"/>
         <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation>%1 ist paralysiert. Es greift eventuell nicht an.</translation>
+        <translation>%1 ist paralysiert! Es greift eventuell nicht an!</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="210"/>
