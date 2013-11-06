@@ -584,6 +584,14 @@ int PokemonInfo::BoostedStat(int stat, int boost)
     return stat * std::max(2, 2+boost) / std::max(2, 2-boost);
 }
 
+struct icompare{
+    bool operator ()(const QString &a, const QString &b) {
+        return a.compare(b, Qt::CaseInsensitive) < 0;
+    }
+};
+
+static std::map<QString, Pokemon::uniqueId, icompare> pokenamesToIds;
+
 void PokemonInfo::init(const QString &dir)
 {
     m_Directory = dir;
@@ -1008,7 +1016,11 @@ bool PokemonInfo::Released(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 
 Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
-    return m_Names.key(pokename, Pokemon::uniqueId());
+    try {
+        return pokenamesToIds.at(pokename);
+    } catch (const std::out_of_range &) {
+        return 0;
+    }
 }
 
 int PokemonInfo::LevelBalance(const Pokemon::uniqueId &pokeid)
@@ -1357,6 +1369,7 @@ void PokemonInfo::loadNames()
     fill_container_with_file(temp, path("pokemons.txt"), true);
 
     m_Names.clear();
+    pokenamesToIds.clear();
     m_Options.clear();
     m_MaxForme.clear();
 
@@ -1368,6 +1381,7 @@ void PokemonInfo::loadNames()
         bool ok = Pokemon::uniqueId::extract(current, id, name, &options);
         if(ok) {
             m_Names[id] = name;
+            pokenamesToIds[name] = id;
             m_Options[id] = options;
 
             // Calculate a number of formes a given base pokemon have.
