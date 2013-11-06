@@ -1018,7 +1018,8 @@ Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
 {
     try {
         return pokenamesToIds.at(pokename);
-    } catch (const std::out_of_range &) {
+    } catch (const std::out_of_range &ex) {
+        (void) ex; //cout << ex.what() << endl;
         return 0;
     }
 }
