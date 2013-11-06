@@ -978,7 +978,7 @@ struct IMWeaknessPolicy  : public IM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (fturn(b,t).typeMod > 0) {
+        if (fturn(b,t).typeMod > 0 && !b.koed(s)) {
             b.sendItemMessage(43, s);
             b.disposeItem(s);
             b.inflictStatMod(s, Attack, 2, s);

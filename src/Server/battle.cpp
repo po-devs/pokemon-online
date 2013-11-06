@@ -612,7 +612,7 @@ BattleChoices BattleSituation::createChoice(int slot)
         ret.mega = true;
     }
 
-    if (!hasWorkingItem(slot, Item::ShedShell) && !hasType(slot, Type::Ghost)) {
+    if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
         /* Shed Shell */
         if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
             ret.switchAllowed = false;
@@ -1864,6 +1864,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
               of SapSipper/Leech Seed */
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
+                callieffects(target,player,"OpponentBlock"); //Safety Goggles
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");

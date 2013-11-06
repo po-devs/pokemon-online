@@ -250,7 +250,7 @@
 249	Has a 50% chance to lower the target's Defense by one stage.
 250	Target cannot switch and takes 1/16 damage per turn for 4-5 turns.
 251	Hits once for every non-fainted teammate. Uses a modified damage formula.
-252	Fails if user has used a move since entering the field. Flinches target.
+252	Fails if user has used a move since entering the field. Flinches target. Priority level +3.
 253	Attacks for 2-5 turns. All Pokémon wake and none can fall asleep during the attack.
 254	Raises the user's Defense and Special Defense by one stage. Adds one to the Stockpile count for Spit Up and Swallow.
 255	Power is 100 times the amount of Stockpile count. Sets stockpile count to 0.
