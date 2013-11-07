@@ -980,14 +980,17 @@ void Server::loggedIn(int id, const QString &name)
                 }
                 //When the client didn't intend to reconnect, we transfer only if the player was battling and there's a battle to save.
                 if (!player(ids)->battling()) {
+                    printLine(tr("kicking %1 because has the name %2 too").arg(ids).arg(name));
                     player(ids)->kick();
                 } else {
+                    printLine(tr("transferring player from id %1 to id %2").arg(id).arg(ids));
                     transferId(id, ids, true);
                     return;
                 }
             } else {
                 // If the other player is disconnected, we remove him
                 if (player(ids)->waitingForReconnect()) {
+                    printLine(tr("Removing disconnected %1 for the new connection").arg(name));
                     player(ids)->autoKick();
                 } else {
                     printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
@@ -1774,8 +1777,10 @@ bool Server::canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const Te
 
 void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
+    const int original_desc = desc;
+
     if (!mybattles.contains(battleid)) {
-        /* If a player forfeits at the same time a battle ends, as the signal is asynchorneous
+        /* If a player forfeits at the same time a battle ends, as the signal is asynchroneous
            because of different threads, it can be emitted twice. So that's why we may fall into
            this if */
         return;
@@ -1785,13 +1790,13 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     QString tier = battle->tier();
     bool rated = battle->rated();
 
-    qDebug() << "battleResult " << battleid << desc << winner << loser << battle;
+    //qDebug() << "battleResult " << battleid << desc << winner << loser << battle;
 
     if (winner == 0) {
         winner = battle->id(battle->opponent(battle->spot(loser)));
     }
 
-    bool disconnected = (!playerLoggedIn(winner) || !playerLoggedIn(loser)) && dynamic_cast<Player*>(sender()) != NULL; // if the battle sent the event, then it's legit win
+    bool disconnected = !playerLoggedIn(winner) && desc == Forfeit; // if the battle sent the event, then it's legit win
 
     Player *pw = player(winner);
     Player *pl = player(loser);
@@ -1800,16 +1805,18 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         pw->battleResult(battleid, Close, battle->mode(), winner, loser);
         pl->battleResult(battleid, Close, battle->mode(), winner, loser);
     } else {
-        int _desc = disconnected ? Tie : desc;
+        if (disconnected) {
+            desc = Tie;
+        }
 
-        if (_desc == Forfeit) {
+        if (desc == Forfeit) {
             battle->playerForfeit(loser);
         }
 
         QString winn = pw->name();
         QString lose = pl->name();
 
-        myengine->beforeBattleEnded(winner, loser, _desc, battleid);
+        myengine->beforeBattleEnded(winner, loser, desc, battleid);
 
         ++lastDataId;
         foreach(int chanid, pw->getChannels()) {
@@ -1818,7 +1825,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, _desc, battle->mode(), winner, loser);
+                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
                 }
             }
         }
@@ -1828,19 +1835,19 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             foreach(Player *p, chan.players) {
                 /* That test avoids to send twice the same data to the client */
                 if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, _desc, battle->mode(), winner, loser);
+                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
                 }
             }
         }
-        if (_desc == Forfeit) {
+        if (desc == Forfeit) {
             printLine(QString("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
-        } else if (_desc == Win) {
+        } else if (desc == Win) {
             printLine(QString("%1 won his battle against %2").arg(name(winner), name(loser)));
-        } else if (_desc == Tie) {
+        } else if (desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
 
-        if (_desc != Tie && rated) {
+        if (desc != Tie && rated) {
             TierMachine::obj()->changeRating(winn, lose, tier);
             if (playerExist(pw->id()))
                 pw->findRating(tier);
@@ -1848,14 +1855,14 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
                 pl->findRating(tier);
         }
 
-        myengine->afterBattleEnded(winner, loser, _desc, battleid);
+        myengine->afterBattleEnded(winner, loser, desc, battleid);
     }
 
-    if (desc == Forfeit) {
+    if (original_desc == Forfeit) {
         removeBattle(battleid);
     }
 
-    qDebug() << "battleResult " << battleid << desc << winner << loser << battle << "end";
+    //qDebug() << "battleResult " << battleid << desc << winner << loser << battle << "end";
 }
 
 void Server::removeBattle(int battleid)
