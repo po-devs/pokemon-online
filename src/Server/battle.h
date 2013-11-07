@@ -125,6 +125,8 @@ public:
     PokeFraction effFraction(int typeeff);
     bool ineffective(int typeeff) {return typeeff < -50;}
     bool isFlying(int player);
+    bool hasFlyingEffect(int player); //returns true if has flying effect outside of flying type
+    bool hasGroundingEffect(int player); //returns true for gravity, ingrain, ...
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
     void requestSwitch(int player, bool entryEffects=true);
