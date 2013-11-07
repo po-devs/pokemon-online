@@ -2904,7 +2904,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
     callieffects(p,t,"BasePowerModifier");
     if (turnMemory(p).value("GemActivated").toBool()) {
-        chainBp(p, 10);
+        gen() < 6 ? chainBp(p, 10) : chainBp(p, 6);
     }
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
