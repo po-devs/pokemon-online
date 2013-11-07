@@ -91,6 +91,9 @@ public:
     static QString dataRepo;
 
     BattleBase * getBattle(int battleId) const;
+    bool hasOngoingBattle(int id) const;
+    Battle ongoingBattle(int id) const;
+    ScriptEngine *engine();
 
     const QString &servName() {
         return serverName;
@@ -160,12 +163,12 @@ public slots:
     void startBattle(int id1, int id2, const ChallengeInfo &c, int team1=0,int team2=0);
     void battleResult(int battleid, int desc, int winner, int loser);
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
-    void spectatingRequested(int id, int battle);
-    void spectatingStopped(int id, int battle);
-    void battleMessage(int player, int battle, const BattleChoice &message);
-    void battleChat(int player, int battle, const QString &chat);
-    void resendBattleInfos(int player, int battle);
-    void spectatingChat(int player, int battle, const QString &chat);
+    void spectatingRequested(int id, int ongoingBattle);
+    void spectatingStopped(int id, int ongoingBattle);
+    void battleMessage(int player, int ongoingBattle, const BattleChoice &message);
+    void battleChat(int player, int ongoingBattle, const QString &chat);
+    void resendBattleInfos(int player, int ongoingBattle);
+    void spectatingChat(int player, int ongoingBattle, const QString &chat);
     bool joinRequest(int player, const QString &chn);
     /* Makes a player join a channel */
     bool joinChannel(int playerid, int chanid);
@@ -193,6 +196,8 @@ public slots:
     void findBattle(int id,const FindBattleData &f);
     void cancelSearch(int id);
     void loadRatedBattlesSettings();
+
+    void channelClose(int chanid);
 
     void processDailyRun();
     void updateDatabase();
@@ -317,6 +322,7 @@ private:
 
     ContextSwitcher battleThread;
 
+public:
     template <typename ...Params>
     void notifyGroup(PlayerGroupFlags group, int command, Params &&... params);
 
@@ -341,6 +347,7 @@ private:
     const QSet<Player*> &getGroup(PlayerGroupFlags group) const;
     const QSet<Player*> &getOppGroup(PlayerGroupFlags group) const;
 
+private:
     QSet<Player*> groups[LastGroup];
     QSet<Player*> oppGroups[LastGroup];
 };

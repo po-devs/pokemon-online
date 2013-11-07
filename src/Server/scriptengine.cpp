@@ -2094,7 +2094,7 @@ QScriptValue ScriptEngine::channel(int id)
     if (!myserver->channelExist(id)) {
         return myengine.undefinedValue();
     } else {
-        return myserver->channel(id).name;
+        return myserver->channel(id).name();
     }
 }
 

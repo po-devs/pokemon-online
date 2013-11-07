@@ -11,6 +11,7 @@ class Challenge;
 class BattleSituation;
 class Analyzer;
 class ChangeTeamInfo;
+class Channel;
 
 /* a single player */
 /***
