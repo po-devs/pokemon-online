@@ -2883,7 +2883,7 @@ void AbilityInfo::loadEffects()
             if (content.size() == 1) {
                 m_Effects[i-GEN_MIN].insert(it.key(), Effect(content[0].toInt()));
             } else {
-                m_Effects[i-GEN_MIN].insert(it.key(), Effect(content[0].toInt(), content[1].toInt()));
+                m_Effects[i-GEN_MIN].insert(it.key(), Effect(content[0].toInt(), content[1]));
             }
         }
     }
