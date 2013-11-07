@@ -491,8 +491,8 @@ class AbilityInfo
 public:
     struct Effect {
         int num;
-        int arg;
-        Effect(int i=0, int q=0) : num(i), arg(q){}
+        QString arg;
+        Effect(int i=0, QString q="") : num(i), arg(q){}
     };
 public:
     /* directory where all the data is */
