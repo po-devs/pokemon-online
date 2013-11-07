@@ -2700,9 +2700,6 @@ int BattleSituation::rawTypeEff(int atttype, int player)
                     break;
             }
         }
-        if (eff == 0) {
-            return -100;
-        }
         typemod += convertTypeEff(eff);
     }
 
