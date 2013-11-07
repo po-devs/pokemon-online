@@ -2000,6 +2000,10 @@ struct AMAura : public AM {
     }
 
     static void dgaf(int s, int, BS &b) {
+        addFunction(turn(b,s), "BeforeHitting", "Aura", &bh);
+    }
+
+    static void bh(int s, int, BS &b) {
         int boost = 0;
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.koed(i) && b.hasWorkingAbility(i, b.poke(i).ability())) {
