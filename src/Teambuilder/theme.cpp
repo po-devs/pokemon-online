@@ -87,9 +87,16 @@ QString Theme::path(const QString& file, bool def)
 
 void Theme::loadColors()
 {
+    auto temp = m_TColors;
+    fill_container_with_file(temp, path("types/type_colors.txt", true));
     fill_container_with_file(m_TColors, path("types/type_colors.txt"));
     fill_container_with_file(m_CColors, path("categories/category_colors.txt"));
     fill_container_with_file(m_ChatColors, path("client/chat_colors.txt"));
+
+    /* If theme is not up to date, load old type colors */
+    if (m_TColors.size() < temp.size()) {
+        m_TColors = temp;
+    }
 
     /* Loads first the default file, in case the custom file misses
       some keys */
