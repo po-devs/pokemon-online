@@ -3008,7 +3008,7 @@ QString HiddenPowerInfo::path(const QString &filename)
 int HiddenPowerInfo::Type(Pokemon::gen gen, quint8 hp_dv, quint8 att_dv, quint8 def_dv, quint8 satt_dv, quint8 sdef_dv, quint8 speed_dv)
 {
     if (gen >= 3)
-        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*(15+ (gen.num >= 6 && 0)))/63 + 1;
+        return (((hp_dv%2) + (att_dv%2)*2 + (def_dv%2)*4 + (speed_dv%2)*8 + (satt_dv%2)*16 + (sdef_dv%2)*32)*15)/63 + 1;
     else
         return (att_dv%4)*4+(def_dv%4)+1;
 }
