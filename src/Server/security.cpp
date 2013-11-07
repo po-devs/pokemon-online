@@ -319,6 +319,10 @@ void SecurityManager::ban(const QString &name, int time) {
 
 void SecurityManager::banIP(const QString &ip)
 {
+    if (bannedIPs.contains(ip)) {
+        return;
+    }
+
     bannedIPs.insert(ip, 0);
     create(ip,QDateTime::currentDateTime().toString(Qt::ISODate),ip,true);
 }
