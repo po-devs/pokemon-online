@@ -296,12 +296,13 @@ void SecurityManager::updateMember(const Member &m) {
 
 bool SecurityManager::bannedIP(const QString &ip) {
     QHash<QString, int>::const_iterator i = bannedIPs.find(ip);
-    if (i != bannedIPs.end() && i.value() != 0 && i.value() < qlonglong(QDateTime::currentDateTimeUtc().toTime_t())) {
+    bool isBanned = i != bannedIPs.end();
+    if (isBanned && i.value() != 0 && i.value() < qlonglong(QDateTime::currentDateTimeUtc().toTime_t())) {
        /* We expire the tempban here if we should */
        IPunban(ip);
        return false;
     }
-    return i != bannedIPs.end();
+    return isBanned;
 }
 
 void SecurityManager::ban(const QString &name, int time) {
