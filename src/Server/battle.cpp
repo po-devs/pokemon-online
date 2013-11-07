@@ -1979,16 +1979,35 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
 
     int typemod = 0;
 
+    // Counter hits regardless of type matchups in Gen 1.
+    if (gen().num == 1 && tmove(player).attack == Move::Counter) {
+        goto end;
+    }
+
     foreach(int type, attackTypes) {
+        if (type == Type::Ground && hasFlyingEffect(target)) {
+            typemod = -100;
+            goto end;
+        }
         foreach(int def, typeAdv) {
             if (tmove(player).attack == Move::FreezeDry && def == Type::Water) {
                 typemod += 1;
                 continue;
             }
-            int typeeff = TypeInfo::Eff(type, def, gen());
-            if (typeeff == 0) {
+            int typeeff = convertTypeEff(TypeInfo::Eff(type, def, gen()));
+
+            if(clauses() & ChallengeInfo::Inverted){
+                if(typeeff<-50){
+                    typeeff = 1;
+                }
+                else {
+                    typeeff *= -1;
+                }
+            }
+
+            if (typeeff < -50) {
                 /* Check for grounded flying types */
-                if (type == Type::Ground && !isFlying(target)) {
+                if (type == Type::Ground && hasGroundingEffect(target)) {
                     continue;
                 }
                 if (pokeMemory(target).value(QString::number(def)+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
@@ -2001,18 +2020,10 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                 typemod = -100;
                 goto end;
             }
-            typemod += convertTypeEff(typeeff);
+            typemod += typeeff;
         }
     }
 end:
-
-    // Counter hits regardless of type matchups in Gen 1.
-    if (gen().num == 1 && tmove(player).attack == Move::Counter) {
-        typemod = 0;
-    }
-    if (type == Type::Ground && isFlying(target)) {
-        typemod = -100;
-    }
 
     int stab = 2;
 
@@ -2025,14 +2036,6 @@ end:
     }
 
     turnMem(player).stab = stab;
-    if(clauses() & ChallengeInfo::Inverted){
-        if(typemod<-50){
-            typemod=1;
-        }
-        else{
-            typemod*=-1;
-        }
-    }
     turnMem(player).typeMod = typemod; /* is attack effective? or not? etc. */
 }
 
@@ -2716,14 +2719,23 @@ PokeFraction BattleSituation::effFraction(int typeeff)
 
 bool BattleSituation::isFlying(int player)
 {
-    return !battleMemory().value("Gravity").toBool() && !hasWorkingItem(player, Item::IronBall) &&
-            (gen() <= 3 || !pokeMemory(player).value("Rooted").toBool()) &&
-            !pokeMemory(player).value("SmackedDown").toBool() &&
+    return hasFlyingEffect(player) ||
+            (!hasGroundingEffect(player) && (!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying));
+}
+
+bool BattleSituation::hasFlyingEffect(int player)
+{
+    return !hasGroundingEffect(player)  &&
             (hasWorkingAbility(player, Ability::Levitate)
              || hasWorkingItem(player, Item::AirBalloon)
-             || ((!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying))
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
+}
+
+bool BattleSituation::hasGroundingEffect(int player)
+{
+    return battleMemory().value("Gravity").toBool() || hasWorkingItem(player, Item::IronBall)
+            || (gen() >= 3 && pokeMemory(player).value("Rooted").toBool()) || pokeMemory(player).value("SmackedDown").toBool();
 }
 
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
