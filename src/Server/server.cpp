@@ -378,7 +378,11 @@ int Server::addChannel(const QString &name, int playerid) {
 
     printLine(QString("Channel %1 was created").arg(chanName));
 
-    channels[chanid] = new Channel(chanName, chanid);
+    Channel *chan = new Channel(chanName, chanid);
+
+    connect(chan, SIGNAL(closeRequest(int)), SLOT(channelClose(int)));
+
+    channels[chanid] = chan;
     channelids[chanName.toLower()] = chanid;
     channelNames[chanid] = chanName;
     channelCache.outdate();
@@ -405,47 +409,7 @@ bool Server::joinChannel(int playerid, int channelid) {
     }
 
     Channel &channel = this->channel(channelid);
-    QVector<qint32> ids;
-    ids.reserve(channel.players.size());
-
-    Player *player = this->player(playerid);
-
-    QSet<Player*> unknown;
-    QVector<reference<PlayerInfo> > bundles;
-
-    Analyzer &relay = player->relay();
-    foreach(Player *p, channel.players) {
-        if (!p->isInSameChannel(player)) {
-            unknown.insert(p);
-            bundles.push_back(&p->bundle());
-        }
-        ids.push_back(p->id());
-    }
-
-    notifyGroup(unknown, NetworkServ::PlayersList, player->bundle());
-    player->sendPlayers(bundles);
-
-    relay.sendChannelPlayers(channelid, ids);
-    channel.disconnectedPlayers.remove(player);
-    channel.players.insert(player);
-    player->addChannel(channelid);
-
-    printLine(QString("%1 joined channel %2.").arg(player->name(), channel.name));
-
-    foreach(Player *p, channel.players) {
-        p->relay().sendJoin(playerid, channelid);
-    }
-
-    relay.sendBattleList(channelid, channel.battleList);
-
-    foreach(int battleid, player->getBattles()) {
-        if (!channel.battleList.contains(battleid)) {
-            channel.battleList.insert(battleid, battleList[battleid]);
-            foreach(Player *p, channel.players) {
-                p->relay().sendChannelBattle(channelid, battleid, battleList[battleid]);
-            }
-        }
-    }
+    channel.playerJoin(player(playerid));
 
     myengine->afterChannelJoin(playerid, channelid);
 
@@ -484,37 +448,15 @@ void Server::leaveRequest(int playerid, int channelid, bool keep)
 
     Player *player = this->player(playerid);
 
-    if (channel.players.contains(player)) {
-        myengine->beforeChannelLeave(playerid, channelid);
+    channel.leaveRequest(player, keep);
+}
 
-        foreach(Player *p, channel.players) {
-            p->relay().notify(NetworkServ::LeaveChannel, qint32(channelid), qint32(playerid));
-        }
-
-        foreach(int battleid, player->getBattles()) {
-            Battle &b = battleList[battleid];
-            /* We remove the battle only if only one of the player is in the channel */
-            if (int(channel.players.contains(this->player(b.id1))) + int(channel.players.contains(this->player(b.id2))) < 2) {
-                channel.battleList.remove(battleid);
-            }
-        }
-
-        printLine(QString("%1 left channel %2.").arg(player->name(), channel.name));
-        channel.players.remove(player);
-
-        if (!keep) {
-            player->removeChannel(channelid);
-        } else {
-            channel.disconnectedPlayers.insert(player);
-        }
-
-        myengine->afterChannelLeave(playerid, channelid);
-    } else if (channel.disconnectedPlayers.contains(player)) {
-        channel.disconnectedPlayers.remove(player);
-        player->removeChannel(channelid);
+void Server::channelClose(int channelid)
+{
+    if (!channels.contains(channelid)) {
+        return;
     }
-
-    if (channel.players.size() <= 0 && channelid != 0) {
+    if (channel(channelid).players.size() <= 0 && channelid != 0) {
         removeChannel(channelid);
     }
 }
@@ -538,7 +480,7 @@ void Server::removeChannel(int channelid) {
     QString chanName = channelNames.take(channelid);
     printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
-    delete channels.take(channelid);
+    channels.take(channelid)->deleteLater();
 
     channelCache.outdate();zchannelCache.outdate();
 
@@ -733,7 +675,7 @@ void Server::announcementChanged(const QString &announcement)
 }
 
 void Server::mainChanChanged(const QString &name) {
-    if (name == channel(0).name || name.length() == 0) {
+    if (name == channel(0).name() || name.length() == 0) {
         return;
     }
 
@@ -742,8 +684,8 @@ void Server::mainChanChanged(const QString &name) {
         return;
     }
 
-    channelids.remove(channel(0).name.toLower());
-    channel(0).name = name;
+    channelids.remove(channel(0).name().toLower());
+    channel(0).name() = name;
     channelids[name.toLower()] = 0;
     channelNames[0] = name;
     channelCache.outdate();zchannelCache.outdate();
@@ -1839,6 +1781,8 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
                 }
             }
         }
+        battleList.remove(battleid);
+
         if (desc == Forfeit) {
             printLine(QString("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
         } else if (desc == Win) {
@@ -1871,7 +1815,7 @@ void Server::removeBattle(int battleid)
     qDebug() << "removing battle " << battleid << battle;
 
     mybattles.remove(battleid);
-    battleList.remove(battleid);
+    //battleList.remove(battleid); <- no need, already done in battleResult()
 
     typedef QPair<int, QString> pair;
     foreach(pair p, battle->getSpectators()) {
@@ -2190,7 +2134,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
             if(useChannelFileLog) {
                 this->channel(channel).log(fullMessage);
             }
-            printLine(QString("[#%1] %2").arg(this->channel(channel).name, fullMessage), chatMessage, true);
+            printLine(QString("[#%1] %2").arg(this->channel(channel).name(), fullMessage), chatMessage, true);
             if (sender == NoSender) {
                 notifyChannel(channel, All, NetworkServ::SendChatMessage, Flags(1), Flags(html), channel, message);
             } else {
@@ -2287,6 +2231,21 @@ BattleBase * Server::getBattle(int battleId) const
     }
 }
 
+bool Server::hasOngoingBattle(int id) const
+{
+    return battleList.contains(id);
+}
+
+Battle Server::ongoingBattle(int id) const
+{
+    return battleList.value(id);
+}
+
+ScriptEngine *Server::engine()
+{
+    return myengine;
+}
+
 bool Server::correctPass(const QByteArray &hash, const QByteArray &salt) const {
     return hash == QCryptographicHash::hash(QCryptographicHash::hash(serverPassword, QCryptographicHash::Md5) + salt, QCryptographicHash::Md5);
 }
@@ -2300,23 +2259,6 @@ bool Server::isLegalProxyServer(const QString &ip) const
     return false;
 }
 
-template <typename ...Params>
-void Server::notifyGroup(PlayerGroupFlags group, int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-    notifyGroup(group, packet);
-}
-
-template <typename ...Params>
-void Server::notifyGroup(const QSet<Player*>& group, int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-
-    foreach(Player *p, group) {
-        p->sendPacket(packet);
-    }
-}
-
 void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)
 {
     const QSet<Player*> &g = getGroup(group);
@@ -2326,67 +2268,4 @@ void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)
     }
 }
 
-template <typename ...Params>
-void Server::notifyOppGroup(PlayerGroupFlags group, int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-
-    const QSet<Player*> &g = getOppGroup(group);
-
-    foreach(Player *p, g) {
-        p->sendPacket(packet);
-    }
-}
-
-template <typename ...Params>
-void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-    const QSet<Player*> &g1 = getGroup(group);
-    const QSet<Player*> &g2 = this->channel(channel).players;
-
-    if (g1.size() < g2.size()) {
-        foreach(Player *p, g1) {
-            if (p->inChannel(channel)) {
-                p->sendPacket(packet);
-            }
-        }
-    } else {
-        foreach(Player *p, g2) {
-            if (group == All || p->spec()[group]) {
-                p->sendPacket(packet);
-            }
-        }
-    }
-}
-
-template <typename ...Params>
-void Server::notifyChannelOpp(int channel, PlayerGroupFlags group, int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-    const QSet<Player*> &g1 = getOppGroup(group);
-    const QSet<Player*> &g2 = this->channel(channel).players;
-
-    if (g1.size() < g2.size()) {
-        foreach(Player *p, g1) {
-            if (p->inChannel(channel)) {
-                p->sendPacket(packet);
-            }
-        }
-    } else {
-        foreach(Player *p, g2) {
-            if (!p->spec()[group]) {
-                p->sendPacket(packet);
-            }
-        }
-    }
-}
-
-template <typename ...Params>
-void Server::notifyAll(int command, Params &&... params)
-{
-    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
-    foreach(Player *p, myplayers) {
-        p->sendPacket(packet);
-    }
-}
+#include "server.tpp"

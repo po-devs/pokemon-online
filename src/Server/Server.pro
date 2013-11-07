@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     rbymoves.cpp \
     mechanicsbase.cpp \
     modswindow.cpp \
-    relaymanager.cpp
+    relaymanager.cpp \
+    server.tpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
