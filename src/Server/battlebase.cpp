@@ -1932,10 +1932,6 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
     int typemod = 0;
 
     for (int i = 0; i < 2; i++) {
-        if (typeffs[i] == 0) {
-            typemod = -100;
-            break;
-        }
         typemod += convertTypeEff(typeffs[i]);
     }
 
@@ -1959,6 +1955,9 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
 
 int BattleBase::convertTypeEff(int typeeff)
 {
+    if (typeeff == 0) {
+        return -100;
+    }
     return std::min(typeeff-2, 1);
 }
 
