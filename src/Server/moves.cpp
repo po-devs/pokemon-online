@@ -2289,11 +2289,20 @@ struct MMQuickGuard : public MM
             return;
         }
 
-        /* Mischievous heart looks at the priority ofthe move, the raw one.
-           If the priority was altered by Mischievous heart or whatever,
-           that doesn't matter */
-        if (MoveInfo::SpeedPriority(tmove(b,s).attack, b.gen()) <= 0) {
-            return;
+        /* Quick Gard looks at the priority of the move, the raw one.
+           If the priority was altered by Prankster or whatever,
+           that doesn't matter in gen 5
+
+           In gen 6, it does!
+        */
+        if (b.gen() <= 5) {
+            if (MoveInfo::SpeedPriority(tmove(b,s).attack, b.gen()) <= 0) {
+                return;
+            }
+        } else {
+            if (tmove(b,s).priority <= 0) {
+                return;
+            }
         }
 
         /* Mind Reader */
