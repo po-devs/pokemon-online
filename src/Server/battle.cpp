@@ -1781,6 +1781,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     if (turnMemory(player).contains("CustomDamage")) {
                         int damage = turnMemory(player).value("CustomDamage").toInt();
                         inflictDamage(target, damage, player, true);
+                        hitcount += 1;
                         hitting = true;
                     }
                 }
