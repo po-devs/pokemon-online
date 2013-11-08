@@ -2031,6 +2031,12 @@ struct MMFollowMe : public MM
             return;
         }
 
+        if (tmove(b, target).flags & Move::PowderFlag) {
+            if (b.hasType(s, Type::Grass) || b.hasWorkingAbility(s, Ability::Overcoat) || b.hasWorkingItem(s, Item::SafetyGoggles)) {
+                return; //Rage powder doesn't affect them
+            }
+        }
+
         turn(b,s)["TargetChanged"] = true;
         turn(b,s)["Target"] = target;
     }
