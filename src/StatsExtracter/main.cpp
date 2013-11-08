@@ -280,6 +280,7 @@ MoveSet::MoveSet(char buffer[28], int usage, AbilityGroup abs)
     : usage(usage)
 {
     qint32 *buf = (qint32 *) buffer;
+    gen = GenInfo::GenMax();
 
     raw.item = buf[1];
     num = buf[0];
