@@ -846,24 +846,21 @@ void Server::tempBan(int dest, int src, int time)
 void Server::dosKick(int id) {
     if (playerExist(id) && overactiveShow) {
         QString ip = player(id)->ip();
-        if (!SecurityManager::bannedIP(ip)) {
-            if (playerLoggedIn(id)) {
-                broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), ip), dosChannel());
-            } else {
-                broadCast(tr("IP %1 is being overactive.").arg(ip), dosChannel());
-            }
+
+        if (playerLoggedIn(id)) {
+            broadCast(tr("Player %1 (IP %2) is being overactive.").arg(name(id), ip), dosChannel());
+        } else {
+            broadCast(tr("IP %1 is being overactive.").arg(ip), dosChannel());
         }
     }
     silentKick(id);
 }
 
 void Server::dosBan(const QString &ip) {
-    if (!SecurityManager::bannedIP(ip)) {
-        if (overactiveShow) {
-            broadCast(tr("IP %1 is being overactive, banned.").arg(ip), dosChannel());
-        }
-        SecurityManager::banIP(ip);
+    if (overactiveShow) {
+        broadCast(tr("IP %1 is being overactive, banned.").arg(ip), dosChannel());
     }
+    SecurityManager::banIP(ip);
 }
 
 int Server::dosChannel() const
