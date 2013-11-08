@@ -2794,6 +2794,11 @@ void BattleSituation::preventStatMod(int player, int attacker)
     turnMemory(player)[QString("StatModFrom%1DPrevented").arg(attacker)] = true;
 }
 
+void BattleSituation::debug(const QString &message)
+{
+    battleChat(conf.ids[0],message);
+}
+
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
     return attacking() && (!turnMemory(defender).contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
                            tmove(attacker).rateOfStat== 0);

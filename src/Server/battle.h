@@ -68,6 +68,8 @@ private:
     /* Returns false if blocked */
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
 public:
+    void debug(const QString &message);
+
     bool canSendPreventMessage(int defender, int attacker);
     bool canSendPreventSMessage(int defender, int attacker);
     void preventStatMod(int player, int attacker);
