@@ -1690,19 +1690,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
-        //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
-        /* Protect, ... */
-        callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-        if (testFail(player)) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
-        /* Coats */
-        callbeffects(player, target, "DetermineGeneralAttackFailure2", true);
-        if (testFail(player)) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
 
         if (tmove(player).power > 0)
         {
@@ -1719,6 +1706,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
             }
+
+            /* In gen 6, this check is after the "no effect" check. Since king's shield
+             * on aegislash on a physical normal/fighting attack doesn't reduce the opponent's
+             * attack by two stages */
+            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
+            /* Protect, ... */
+            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+            if (testFail(player)) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
@@ -1849,6 +1848,20 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             fpoke(target).remove(BasicPokeInfo::HadSubstitute);
         } else {
+            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
+            /* Protect, ... */
+            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+            if (testFail(player)) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
+
+            /* Magic Coat, Magic Bounce */
+            callbeffects(player, target, "DetermineGeneralAttackFailure2", true);
+            if (testFail(player)) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
             /* Needs to be called before opponentblock because lightning rod / twave */
             int type = tmove(player).type; /* move type */
