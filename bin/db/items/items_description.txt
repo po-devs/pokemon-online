@@ -241,23 +241,23 @@
 240 Increases the holder's Special Attack by 1 stage when it is hit by a Water-type move. Consumed after use.
 241 Increases the holder's Attack by 1 stage when it is hit by an Electric-type move. Consumed after use.
 242 When the holder is hit by the opponent, forces the holder to switch out. Consumed after use.
-243 Increases power of Fire-type moves used by the holder by 50%. Consumed after use.
-244 Increases power of Water-type moves used by the holder by 50%. Consumed after use.
-245 Increases power of Electric-type moves used by the holder by 50%. Consumed after use.
-246 Increases power of Grass-type moves used by the holder by 50%. Consumed after use.
-247 Increases power of Ice-type moves used by the holder by 50%. Consumed after use.
-248 Increases power of Fighting-type moves used by the holder by 50%. Consumed after use.
-249 Increases power of Poison-type moves used by the holder by 50%. Consumed after use.
-250 Increases power of Ground-type moves used by the holder by 50%. Consumed after use.
-251 Increases power of Flying-type moves used by the holder by 50%. Consumed after use.
-252 Increases power of Psychic-type moves used by the holder by 50%. Consumed after use.
-253 Increases power of Bug-type moves used by the holder by 50%. Consumed after use.
-254 Increases power of Rock-type moves used by the holder by 50%. Consumed after use.
-255 Increases power of Ghost-type moves used by the holder by 50%. Consumed after use.
-256 Increases power of Fire-type moves used by the holder by 50%. Consumed after use.
-257 Increases power of Dark-type moves used by the holder by 50%. Consumed after use.
-258 Increases power of Steel-type moves used by the holder by 50%. Consumed after use.
-259 Increases power of Normal-type moves used by the holder by 50%. Consumed after use.
+243 Increases power of Fire-type moves used by the holder by 30%. Consumed after use.
+244 Increases power of Water-type moves used by the holder by 30%. Consumed after use.
+245 Increases power of Electric-type moves used by the holder by 30%. Consumed after use.
+246 Increases power of Grass-type moves used by the holder by 30%. Consumed after use.
+247 Increases power of Ice-type moves used by the holder by 30%. Consumed after use.
+248 Increases power of Fighting-type moves used by the holder by 30%. Consumed after use.
+249 Increases power of Poison-type moves used by the holder by 30%. Consumed after use.
+250 Increases power of Ground-type moves used by the holder by 30%. Consumed after use.
+251 Increases power of Flying-type moves used by the holder by 30%. Consumed after use.
+252 Increases power of Psychic-type moves used by the holder by 30%. Consumed after use.
+253 Increases power of Bug-type moves used by the holder by 30%. Consumed after use.
+254 Increases power of Rock-type moves used by the holder by 30%. Consumed after use.
+255 Increases power of Ghost-type moves used by the holder by 30%. Consumed after use.
+256 Increases power of Fire-type moves used by the holder by 30%. Consumed after use.
+257 Increases power of Dark-type moves used by the holder by 30%. Consumed after use.
+258 Increases power of Steel-type moves used by the holder by 30%. Consumed after use.
+259 Increases power of Normal-type moves used by the holder by 30%. Consumed after use.
 260 Increases a Pokemon's HP EVs by 1, and increases its happiness.
 261 Increases a Pokemon's Attack EVs by 1, and increases its happiness.
 262 Increases a Pokemon's Defense EVs by 1, and increases its happiness.
