@@ -20,7 +20,7 @@
 30 %s's %a verhindert, dass seine Werte gesenkt werden!
 31 %s's %a verhindert, dass seine Werte gesenkt werden!
 32 %s's %a heilt einige KP!
-33 %s's %a cures it!
+33 %s's %a heilt es!
 34 Bedroher von %s verringert den Angriff von %f!|Delegator von %f unterdrückt Bedroher von %s!
 37 %s's Floraschild verhindert Statusveränderungen!
 38 %s's %a zog die Attacke an!|%s's %a erhöhte seinen Sp. Angriff!|%s's %a macht die Attacke nutzlos!
@@ -31,7 +31,7 @@
 46 %s übt seine Fähigkeit Erzwinger aus!
 50 %f verliert einige KP!
 54 %s's Expidermis heilt seine Statusprobleme!
-55 %s kommt nicht in Fahrt!|%s finally got its act together!
+55 %s kommt nicht in Fahrt!|%s kriegt schließlich doch noch die Kurve!
 56 %s verliert einige KP wegen Solarkraft!
 57 %s's Lärmschutz wehrt die Attacke ab!
 58 Temposchub von %s erhöht seine Initiative!
@@ -58,9 +58,9 @@
 96 %s's Tastfluch wurde aktiviert!
 99 %s's Heilherz heilt %f's Status!
 102 %s macht %tf's Team zu nervös um Beeren zu essen!
-103 %s is radiating a %t aura!
+103 %s strahlt eine %t Aura aus!
 104 %f's %a prevents stats changes to affect %s!
 107 %s hat seinen Typ in %t geändert!
 113 Unbeugsamkeit von %s erhöht seinen Sp. Angriff stark!
 115 %s's Viskosität verlangsamt %f!
-117 %s reversed all other Pokémon's auras!
+117 %s kehrt alle Auren der anderen Pokémon um!
