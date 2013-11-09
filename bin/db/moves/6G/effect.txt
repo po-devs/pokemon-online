@@ -73,7 +73,7 @@
 89 Power is doubled if opponent is using Dig.
 90 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
 91 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Earthquake and Magnitude, and user doesn't lose HP because of Sandstorm and Hail.
-92 Badly poisons opponent.
+92 Badly poisons opponent. If used by a Poison-type Pokémon, this move will never fail, and will hit during the invulnerability turn of Bounce, Dig, Dive, Fly, Phantom Force, Shadow Force, and Sky Drop.
 93 May confuse opponent. (10%)
 94 May decrease opponent's Special Defense by 1 stage. (10%)
 95 Puts opponent to sleep.
