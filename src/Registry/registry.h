@@ -59,8 +59,8 @@ private:
     int freeid() const;
 #ifdef USE_WEBCONF
     RegistryWebInterface *web_interface;
-#endif
     friend class RegistryWebInterface;
+#endif
 };
 
 #endif // REGISTRY_H
