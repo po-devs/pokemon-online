@@ -44,6 +44,10 @@ CONFIG(webconf) {
     DEFINES += USE_WEBCONF
 }
 
+unix:!mac {
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
+}
+
 include(../Shared/Common.pri)
 
 LIBS += $$utilities
