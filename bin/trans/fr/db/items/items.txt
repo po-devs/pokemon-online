@@ -330,14 +330,9 @@
 329 Parc Ball
 330 Plaque Pixie
 331 Veste de Combat
-332 "Safety Goggles"
-333 "Weakness Policy"
 334 Boule de Neige
-335 "Luminous Moss"
-336 "Ability Capsule"
 337 Fossile Mâchoire
 338 Fossile Nageoire
-339 "Luminose Galette"
 340 Sachet Senteur
 341 Chantibonbon
 1000 Ruban Rose
