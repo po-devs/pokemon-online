@@ -8,7 +8,7 @@
 12 %s kann wegen Konzentrator nicht zurückschrecken!
 13 %s's Download wurde aktiviert!
 14 Hagelalarm von %s lässt einen Hagelsturm aufkommen!|Niesel von %s lässt Regen aufkommen!|Sandsturm von %s lässt einen Sandsturm aufkommen!|Dürre von %s verstärkt das Sonnenlicht!
-15 %s's Aufheber heilt einige KP!|%s veliert einige KP wegen Trockenheit!
+15 %s's Trockenheit heilt einige KP!|%s veliert einige KP wegen Trockenheit!
 16 %s's Sporenwirt wurde aktiviert!
 18 %s's %a wurde aktiviert!
 19 %s's Feuerfänger verstärkt die Stärke seiner Feuerattacken!|%s's Feuerfänger macht %m wirkungslos!
