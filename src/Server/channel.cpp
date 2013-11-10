@@ -139,7 +139,7 @@ void Channel::playerJoin(Player *player)
     }
 }
 
-Channel::~Channel()
+void Channel::warnAboutRemoval()
 {
     foreach(Player *p, players) {
         p->removeChannel(id());
@@ -153,4 +153,18 @@ Channel::~Channel()
     if(logfile.isOpen()) {
         logfile.close();
     }
+
+    players.clear();
+    disconnectedPlayers.clear();
+}
+
+void Channel::onRemoval()
+{
+    warnAboutRemoval();
+    deleteLater();
+}
+
+Channel::~Channel()
+{
+    warnAboutRemoval();
 }
