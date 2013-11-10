@@ -258,6 +258,13 @@ void PokePersonal::runCheck()
         MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
     }
 
+    if (num().pokenum == Pokemon::Keldeo) {
+        if (move(0) == Move::SecretSword || move(1) == Move::SecretSword || move(2) == Move::SecretSword || move(3) == Move::SecretSword) {
+            num() = Pokemon::Keldeo_R;
+        } else {
+            num() = num().original();
+        }
+    }
 }
 
 int PokePersonal::addMove(int moveNum, bool check) throw(QString)
