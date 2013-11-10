@@ -190,9 +190,8 @@ int main(int argc, char *argv[])
         if(showWindow == false){
 #endif
             qDebug() << "Server is running in headless mode";
-            qDebug() << "Notice that it is not possible (yet) to configure the server in headless mode!";
             qDebug() << "Please change the configuration manually or in windowed mode.";
-            qDebug() << "A web-tool for configuring and maintaining is in development in form of the webserver plugin.\n";
+            qDebug() << "A web-tool for configuring and maintaining is also available in form of the webserver plugin.\n";
             qDebug() << "Console commands:";
             qDebug() << "- addp <plugin-path>: Add the plugin to the server";
             qDebug() << "- removep <plugin-index>: Remove the plugin at said index";
