@@ -163,3 +163,27 @@
 162 Victorieux
 163 TurboBrasier
 164 Téra-Voltage
+165 Peau Céleste
+166 Aura Inversée
+167 Bajoues
+168 Aura Ténébreuse
+169 Aura Féérique
+170 Flora-Voile
+171 Toison Épaisse
+172 Méga Blaster
+173 Amour Filial
+174 Peau Féérique
+175 Protéen
+176 Peau Gelée
+177 Déclic Tactique
+178 Prognathe
+179 Gluco-Voile
+180 Griffe Dure
+181 Battant
+182 Ailes Bourrasque
+183 Poisseux
+184 Aroma-Voile
+185 Pare-Balles
+186 Toison Herbue
+187 Magicien
+188 Symbiose
