@@ -184,7 +184,7 @@
 183 Piquants
 184 Dent Ocean
 185 Plaque Draco
-186 Plate Ombre
+186 Plaque Ombre
 187 Plaque Terre
 188 Plaque Poing
 189 Plaque Flamme
@@ -303,3 +303,65 @@
 302 Flat Call
 303 Dire Hit 3
 304 Gene Berserk
+305 Poké Ball
+306 Super Ball
+307 Hyper Ball
+308 Master Ball
+309 Safari Ball
+310 Niveau Ball
+311 Appât Ball
+312 Lune Ball
+313 Copain Ball
+314 Love Ball
+315 Masse Ball
+316 Speed Ball
+317 Compét Ball
+318 Honor Ball
+319 Bis Ball
+320 Chrono Ball
+321 Faiblo Ball
+322 Filet Ball
+323 Scuba Ball
+324 Luxe Ball
+325 Soin Ball
+326 Rapide Ball
+327 Sombre Ball
+328 Mémoire Ball
+329 Parc Ball
+330 Plaque Pixie
+331 Veste de Combat
+334 Boule de Neige
+337 Fossile Mâchoire
+338 Fossile Nageoire
+340 Sachet Senteur
+341 Chantibonbon
+1000 Ruban Rose
+1001 Ruban à Pois
+2001 Florizarrite
+2002 Dracaufite X
+2003 Dracaufite Y
+2004 Tortankite
+2005 Alakazamite
+2006 Ectoplasmite
+2007 Kangourexite
+2008 Scarabruite
+2009 Léviatorite
+2010 Ptéraïte
+2011 Mewtwoïte X
+2012 Mewtwoïte Y
+2013 Pharampite
+2014 Cizayoxite
+2015 Scarhinoïte
+2016 Démolossite
+2017 Tyranocivite
+2018 Braségalite
+2019 Gardevoirite 
+2020 Mysdibulite
+2021 Galekingite
+2022 Charminite
+2023 Élecsprintite
+2024 Branettite
+2025 Absolite
+2026 Carchacrokite
+2027 Lucarite
+2028 Blizzarite
