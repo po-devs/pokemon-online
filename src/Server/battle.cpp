@@ -3266,8 +3266,14 @@ void BattleSituation::disposeItem(int player) {
 void BattleSituation::eatBerry(int player, bool show) {
     int berry = poke(player).item();
 
-    if (show && !turnMemory(player).value("BugBiter").toBool())
+    if (show && !turnMemory(player).value("BugBiter").toBool()) {
         sendItemMessage(8000,player,0, 0, berry);
+
+        if (hasWorkingAbility(player, Ability::CheekPouch)) {
+            healLife(player, poke(player).totalLifePoints()/3);
+        }
+    }
+
     disposeItem(player);
 
     if (gen() >= 5) {

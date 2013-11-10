@@ -149,19 +149,26 @@ void Server::start(){
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
 
+    if (!testWritable("config")) {
+        printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
+#ifdef Q_OS_WIN
+        printLine(tr("If PO is installed in program files, move it to My Documents or your desktop for example."), false, true);
+#endif
+    }
+
     try {
         SQLCreator::createSQLConnection();
     } catch (const QString &ex) {
         printLine(ex);
     }
 
-    printLine(tr("Starting loading pokemon database..."));
+    printLine(tr("Starting loading pokemon database..."), false, true);
 
     PokemonInfoConfig::setFillMode(FillMode::Server);
     PokemonInfoConfig::setDataRepo(dataRepo);
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
-    printLine(tr("Pokemon database loaded"));
+    printLine(tr("Pokemon database loaded"), false, true);
 
     for (int i = 0; i < GenInfo::GenMax(); i++) {
         PokemonInfo::RunMovesSanityCheck(i);
@@ -172,7 +179,7 @@ void Server::start(){
     ItemEffect::init();
     AbilityEffect::init();
 
-    printLine(tr("Move, abilities & items special effects loaded"));
+    printLine(tr("Move, abilities & items special effects loaded"), false, true);
 
     try {
         SecurityManager::init();
@@ -205,9 +212,9 @@ void Server::start(){
 
         if (!listenSuccess)
         {
-            printLine(tr("Unable to listen to port %1").arg(port));
+            printLine(tr("Unable to listen to port %1").arg(port), false, true);
         } else {
-            printLine(tr("Starting to listen to port %1").arg(port));
+            printLine(tr("Starting to listen to port %1").arg(port), false, true);
         }
 
         mymapper->setMapping(&*server(i), i);
