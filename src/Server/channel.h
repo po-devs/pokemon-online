@@ -32,6 +32,9 @@ public:
     static QNickValidator *checker;
 
     void log(const QString &message);
+    void onRemoval();
+
+    void warnAboutRemoval();
 
 signals:
     void closeRequest(int id);

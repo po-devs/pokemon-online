@@ -99,6 +99,13 @@ void Server::start(){
 
     pluginManager = new PluginManager(this);
 
+    if (!testWritable("config")) {
+        printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
+#ifdef Q_OS_WIN
+        printLine(tr("If PO is installed in program files, move it to My Documents or your desktop for example."), false, true);
+#endif
+    }
+
     QSettings s("config", QSettings::IniFormat);
 
     auto setDefaultValue = [&s](const char* key, const QVariant &defaultValue) {
@@ -148,13 +155,6 @@ void Server::start(){
     setDefaultValue("Players/ClearInactivesOnStartup", true);
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
-
-    if (!testWritable("config")) {
-        printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
-#ifdef Q_OS_WIN
-        printLine(tr("If PO is installed in program files, move it to My Documents or your desktop for example."), false, true);
-#endif
-    }
 
     try {
         SQLCreator::createSQLConnection();
@@ -487,7 +487,7 @@ void Server::removeChannel(int channelid) {
     QString chanName = channelNames.take(channelid);
     printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
-    channels.take(channelid)->deleteLater();
+    channels.take(channelid)->onRemoval();
 
     channelCache.outdate();zchannelCache.outdate();
 
