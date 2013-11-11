@@ -32,13 +32,23 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
 
     AM::poke(b, source)["AbilityArg"] = effect.arg;
 
-    QString activationkey = QString("Ability%1SetUp").arg(effect.num);
+    if (b.gen() <= 3 && !firstAct) {
+        /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
+        return;
+    }
 
-    /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
-    if (AM::poke(b, source).value(activationkey) != AM::poke(b, source)["SwitchCount"].toInt() && (b.gen() >= 4 || firstAct)) {
-        AM::poke(b, source)[activationkey] = AM::poke(b, source)["SwitchCount"].toInt();
-        activate("UponSetup", num, source, source, b);
-     }
+    if (b.gen() <= 5) {
+        /* In gen 4, 5, Intimidate can't be activated twice on the same poke (Through Skill swap, ...) */
+        QString activationkey = QString("Ability%1SetUp").arg(effect.num);
+
+        if (AM::poke(b, source).value(activationkey) == AM::poke(b, source)["SwitchCount"].toInt() && !firstAct) {
+            return;
+        } else {
+            AM::poke(b, source)[activationkey] = AM::poke(b, source)["SwitchCount"].toInt();
+        }
+    }
+
+    activate("UponSetup", num, source, source, b);
 }
 
 struct AMAdaptability : public AM {
