@@ -1773,6 +1773,7 @@ void Client::serverNameReceived(const QString &sName)
 {
     serverName = sName;
     setWindowTitle(sName);
+    pmSystem->setServerName(sName);
 
     emit titleChanged();
 }
