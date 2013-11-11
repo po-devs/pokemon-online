@@ -1198,8 +1198,11 @@ struct MMBind : public MM
                     b.sendMoveMessage(10,0,s,MoveInfo::Type(move, b.gen()),s,move);
 
                     int trapper = b.linker(s, "Trapped");
-
-                    b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 8 : 16),s,false);
+                    if (b.gen() < 6) {
+                        b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 8 : 16),s,false);
+                    } else {
+                        b.inflictDamage(s, b.poke(s).totalLifePoints()/(b.hasWorkingItem(trapper, Item::BindingBand) ? 6 : 8),s,false);
+                    }
                 }
             }
         }
