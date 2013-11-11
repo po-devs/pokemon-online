@@ -419,7 +419,7 @@
 445 Decreases opponent's Special Attack by 2 stages if opponent doesn't have Oblivious, the opponent's gender is different from the user's, and neither is genderless.
 446 During effect, whenever an opposing Pokémon becomes active, that Pokémon loses X/8 of total HP, where X is the type effectiveness of the Rock type against that Pokémon's types.
 447 This attack's power is 20 if the weight of the opponent's original species is 10 kilograms (kg) or less [or less than 10 kg], else 40 if 25 kg or less, else 60 if 50 kg or less, else 80 if 100 kg or less, else 100 if 200 kg or less, else 120.
-448 If this attack is successful and user's original species is Chatot, this attack has a 0% or 10% chance of confusing the opponent depending on the volume of the user's cry.
+448 Confuses opponent if used by Chatot.
 449 If user is holding a Plate, this attack's type depends on the Plate held.
 450 If this attack is successful and opponent is holding a Berry, user uses that item if it could do so and the item has a "when" trigger condition, and then that item is consumed. (This effect happens even if opponent has Multitype and even if effects due to the opponent's item are not applied.)
 451 May increase user's Special Attack by 1 stage. (70%)
