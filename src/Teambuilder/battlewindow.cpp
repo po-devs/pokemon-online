@@ -299,6 +299,10 @@ void BattleWindow::clickClose()
     question->setAttribute(Qt::WA_DeleteOnClose, true);
     question->show();
 
+    if (question->x() < 0 || question->y() < 0) {
+        question->move(std::max(question->x(), 0), std::max(question->y(), 0));
+    }
+
     connect(question, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(questionButtonClicked(QAbstractButton*)));
     connect(question, SIGNAL(destroyed()), this, SLOT(nullQuestion()));
 }
@@ -860,6 +864,10 @@ void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
     r->show();
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
+
+    if (r->x() < 0 || r->y() < 0) {
+        r->move(std::max(r->x(), 0), std::max(r->y(), 0));
+    }
 
     connect(r, SIGNAL(forfeit()), SLOT(clickClose()));
     connect(r, SIGNAL(done()), SLOT(sendRearrangedTeam()));
