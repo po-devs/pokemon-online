@@ -911,11 +911,11 @@ int Player::teamCount() const
 
 int Player::rating(const QString &tier)
 {
-    if (ratings().contains(tier)) {
-        return ratings()[tier];
-    } else {
-        return TierMachine::obj()->rating(name(), tier);
+    if (!ratings().contains(tier)) {
+        ratings()[tier] = TierMachine::obj()->rating(name(), tier);
     }
+
+    return ratings()[tier];
 }
 
 QHash<QString, quint16> &Player::ratings()
