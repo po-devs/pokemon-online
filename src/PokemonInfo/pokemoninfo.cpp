@@ -319,7 +319,13 @@ static void fill_int_bool(QHash<int, bool> &container, const QString & filename,
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
             int line, var;
-            filestream >> line >> var;
+            filestream >> line;
+
+            if (filestream.atEnd() || filestream.status() == QTextStream::ReadCorruptData) {
+                break;
+            }
+
+            filestream >> var;
             container[line] = var;
         }
     }
