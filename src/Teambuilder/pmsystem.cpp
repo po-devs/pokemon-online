@@ -30,6 +30,11 @@ PMSystem::~PMSystem()
 {
 }
 
+void PMSystem::setServerName(const QString &name)
+{
+    setWindowTitle(QString("%1 - %2").arg(tr("Private Messages"), name));
+}
+
 bool PMSystem::hasPM(PMStruct *PM)
 {
     return myPMWindows.contains(PM->id());
