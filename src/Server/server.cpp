@@ -100,9 +100,9 @@ void Server::start(){
     pluginManager = new PluginManager(this);
 
     if (!testWritable("config")) {
-        printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
+        //printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
 #ifdef Q_OS_WIN
-        printLine(tr("If PO is installed in program files, move it to My Documents or your desktop for example."), false, true);
+        //printLine(tr("If PO is installed in program files, move it to My Documents or your desktop for example."), false, true);
 #endif
     }
 
