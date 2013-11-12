@@ -18,6 +18,7 @@ public:
     PMSystem(bool withTabs);
     ~PMSystem();
 
+    void setServerName(const QString &name);
     bool hasPM(PMStruct *PM);
     void startPM(PMStruct *newPM);
     void checkTabbing();
