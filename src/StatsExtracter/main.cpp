@@ -402,7 +402,7 @@ void MoveSet::complete(Skeleton &m) const
 
 static QString getImageLink(const Pokemon::uniqueId &pokemon)
 {
-    return QString("%1/front.png").arg(pokemon.toString());
+    return QString("%1.png").arg(pokemon.toString());
 }
 
 static QString getIconLink(const Pokemon::uniqueId& pokemon)
