@@ -32,6 +32,6 @@ mkdir $DEST/myplugins
 mkdir $DEST/serverplugins
 cp bin/myplugins/*.dll $DEST/myplugins
 cp bin/serverplugins/*.dll $DEST/serverplugins
-cp lib/windows/*.dll $DEST
+#cp lib/windows/*.dll $DEST
 rm $DEST/myplugins/*d.dll
 rm $DEST/serverplugins/*d.dll

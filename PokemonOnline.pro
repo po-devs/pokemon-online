@@ -32,7 +32,7 @@ CONFIG(po_client) | CONFIG(po_server) {
     SUBDIRS += src/PokemonInfo
 }
 
-CONFIG(po_client) | CONFIG(po_serverplugins) {
+CONFIG(po_client) | CONFIG(po_server) {
     SUBDIRS += src/BattleManager
 }
 
