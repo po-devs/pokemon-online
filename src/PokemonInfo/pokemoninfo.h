@@ -395,7 +395,7 @@ private:
     static QHash<int,int> m_Powers;
     static QHash<int,int> m_BerryPowers;
     static QHash<int,int> m_BerryTypes;
-    static QHash<int, bool> m_UsefulItems;
+    static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
 
     static void loadNames();

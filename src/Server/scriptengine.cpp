@@ -1581,7 +1581,7 @@ QScriptValue ScriptEngine::ladderRating(int id, const QString &tier)
     if (!exists(id)) {
         return myengine.undefinedValue();
     } else {
-        return TierMachine::obj()->rating(myserver->player(id)->name(), tier);
+        return myserver->player(id)->rating(tier);
     }
 }
 
