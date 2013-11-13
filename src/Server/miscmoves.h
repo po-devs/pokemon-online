@@ -127,9 +127,11 @@ struct MMDisable : public MM
     }
 
     static void mp(int s, int, BS &b) {
-        if(move(b,s) == poke(b,s)["DisabledMove"]) {
+        //doesn't block moves called through sleep talk
+        //maybe shouldn't block any moves called through another move
+        if(move(b,s) == poke(b,s)["DisabledMove"] && !turn(b,s).contains("SleepTalkedMove")) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(28,1,s,0,s,b.move(s,fpoke(b,s).lastMoveSlot));
+            b.sendMoveMessage(28,1,s,0,s, move(b,s));
         }
     }
 };
