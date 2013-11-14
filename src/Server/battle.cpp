@@ -3073,12 +3073,12 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /* Mod 3 */
         // FILTER / SOLID ROCK
-        if (typemod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
             damage = damage * 3 / 4;
         }
 
         /* Expert belt */
-        damage = damage * ((typemod > 0 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
+        damage = damage * ((turnMem(p).typeMod > 0 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
 
         move.remove("Mod3Berry");
 
