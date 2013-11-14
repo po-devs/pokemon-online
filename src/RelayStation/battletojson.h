@@ -60,8 +60,8 @@ public:
 //    void onSpriteChange(int spot, int newSprite);
 //    void onDefiniteFormeChange(int spot, int poke, int newPoke);
 //    void onCosmeticFormeChange(int spot, int subforme);
-//    void onClockStart(int player, int time);
-//    void onClockStop(int player, int time);
+    void onClockStart(int player, int time);
+    void onClockStop(int player, int time);
 //    void onShiftSpots(int player, int spot1, int spot2, bool silent);
     void onBattleEnd(int res, int winner);
     void onPPChange(int spot, int move, int PP);

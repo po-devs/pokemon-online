@@ -261,8 +261,21 @@ void BattleToJson::onTierNotification(const QString &tier)
 //    void onSpriteChange(int spot, int newSprite);
 //    void onDefiniteFormeChange(int spot, int poke, int newPoke);
 //    void onCosmeticFormeChange(int spot, int subforme);
-//    void onClockStart(int player, int time);
-//    void onClockStop(int player, int time);
+
+void BattleToJson::onClockStart(int player, int time) {
+    map.insert("command", "clock");
+    map.insert("player", player);
+    map.insert("time", time);
+    map.insert("status", "ticking");
+}
+
+void BattleToJson::onClockStop(int player, int time) {
+    map.insert("command", "clock");
+    map.insert("player", player);
+    map.insert("time", time);
+    map.insert("status", "stopped");
+}
+
 //    void onShiftSpots(int player, int spot1, int spot2, bool silent);
 
 void BattleToJson::onBattleEnd(int res, int winner)
