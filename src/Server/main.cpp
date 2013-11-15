@@ -23,6 +23,8 @@ using namespace std;
 
 QString Server::dataRepo = QDir().absoluteFilePath(PO_DATA_REPO);
 
+#define SERVER_LOGGING
+
 #ifdef _WIN32
 # ifdef QT5
 void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &msg)
@@ -63,6 +65,80 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 # endif
+#else
+
+#ifdef SERVER_LOGGING
+int logcount = 0;
+int msgcount = 0;
+
+# ifdef QT5
+void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &msg)
+{
+    msgcount += 1;
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stdout, "%s\n", msg.toLocal8Bit().data());
+        fprintf(stderr, "%s\n", msg.toLocal8Bit().data());
+        fflush(stderr);
+        break;
+    case QtWarningMsg:
+        fprintf(stdout, "Warning: %s\n", msg.toLocal8Bit().data());
+        fprintf(stderr, "Warning: %s\n", msg.toLocal8Bit().data());
+        break;
+    case QtCriticalMsg:
+        fprintf(stdout, "Warning: %s\n", msg.toLocal8Bit().data());
+        fprintf(stderr, "Critical: %s\n", msg.toLocal8Bit().data());
+        break;
+    case QtFatalMsg:
+        fprintf(stdout, "Warning: %s\n", msg.toLocal8Bit().data());
+        fprintf(stderr, "Fatal: %s\n", msg.toLocal8Bit().data());
+        abort();
+    }
+
+    /* Rotating log files */
+    if (msgcount > 10000) {
+        msgcount = 0;
+        logcount = (logcount + 1) % 10;
+
+        freopen(QString("logs%1.txt").arg(logcount).toUtf8().constData(), "w", stderr);
+        system(QString("echo " + QString("logs%1.txt").arg(logcount) + " > last_log_file.txt").toUtf8().constData());
+    }
+}
+# else
+void myMessageOutput(QtMsgType type, const char *msg)
+{
+    msgcount += 1;
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stdout, "%s\n", msg);
+        fprintf(stderr, "%s\n", msg);
+        fflush(stderr);
+        break;
+    case QtWarningMsg:
+        fprintf(stdout, "Warning: %s\n", msg);
+        fprintf(stderr, "Warning: %s\n", msg);
+        break;
+    case QtCriticalMsg:
+        fprintf(stdout, "Critical: %s\n", msg);
+        fprintf(stderr, "Critical: %s\n", msg);
+        break;
+    case QtFatalMsg:
+        fprintf(stdout, "Fatal: %s\n", msg);
+        fprintf(stderr, "Fatal: %s\n", msg);
+        abort();
+    }
+
+    if (msgcount > 10000) {
+        msgcount = 0;
+        logcount = (logcount + 1) % 10;
+
+        freopen(QString("logs%1.txt").arg(logcount).toUtf8().constData(), "w", stderr);
+        system(QString("echo " + QString("logs%1.txt").arg(logcount) + " > last_log_file.txt").toUtf8().constData());
+    }
+}
+# endif
+
+#endif
 #endif
 
 bool skipChecksOnStartUp = false;
@@ -80,6 +156,13 @@ int main(int argc, char *argv[])
 # endif
 #else
     //set_terminate( stacktrace );
+#ifdef SERVER_LOGGING
+# ifdef QT5
+    qInstallMessageHandler(myMessageOutput);
+# else
+    qInstallMsgHandler(myMessageOutput);
+# endif
+#endif
 #endif
 
     /* Names to use later for QSettings */
