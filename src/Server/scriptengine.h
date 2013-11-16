@@ -61,11 +61,8 @@ public:
 public:
     ScriptEngine(Server *s);
     ~ScriptEngine();
+
     /* Events */
-
-
-
-
     bool beforeSpectateBattle(int src, int p1, int p2);
     void afterSpectateBattle(int src, int p1, int p2);
     bool attemptToSpectateBattle(int src, int p1, int p2);
@@ -290,6 +287,8 @@ public:
     Q_INVOKABLE QScriptValue ladderRating(int id, const QString &tier = QString());
     /* returns a state of the memory, useful to check for memory leaks and memory usage */
     Q_INVOKABLE QScriptValue memoryDump();
+    Q_INVOKABLE QString profileDump();
+    Q_INVOKABLE void resetProfiling();
     Q_INVOKABLE QScriptValue dosChannel();
     Q_INVOKABLE void changeDosChannel(const QString &newChannel);
     /* Removes the history of kicks and logins for all the IPs */
@@ -554,6 +553,14 @@ private:
     bool testRange(const QString &function, int val, int min, int max);
     void warn(const QString &function, const QString &message, bool errinstrict);
 
+    struct Profile {
+        int calls = 0;
+        int totalDuration = 0;
+    };
+
+    QHash<QString, Profile> profiles;
+    QElapsedTimer startProfiling();
+    void endProfiling(QElapsedTimer performanceTimer, const QString &name);
     template <typename ...Params>
     void makeEvent(const QString &event, Params&&... params);
     template <typename ...Params>
@@ -581,7 +588,9 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
         return;
 
     QScriptValueList l;
+    QElapsedTimer performanceTimer = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
+    endProfiling(performanceTimer, "script." + event);
 }
 
 template<typename ...Params>
@@ -593,8 +602,9 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
     startStopEvent();
 
     QScriptValueList l;
+    QElapsedTimer performanceTimer = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
-
+    endProfiling(performanceTimer, "script." + event);
     return !endStopEvent();
 }
 
