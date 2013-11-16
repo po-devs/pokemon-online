@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     mechanicsbase.cpp \
     modswindow.cpp \
     relaymanager.cpp \
-    server.tpp
+    server.tpp \
+    scriptengineagent.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -108,7 +109,8 @@ HEADERS += player.h \
     mechanicsbase.h \
     modswindow.h \
     relaymanager.h \
-    ../PokemonInfo/enums.h
+    ../PokemonInfo/enums.h \
+    scriptengineagent.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

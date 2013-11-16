@@ -11,21 +11,10 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QHostInfo>
-#include <QScriptEngineAgent>
-
-
 
 #include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
 #include "sessiondatafactory.h"
-
-class ScriptEngineBacktaceGenerator: public QScriptEngineAgent
-{
-   // Q_OBJECT
-public:
-    ScriptEngineBacktaceGenerator(QScriptEngine *e);
-    void exceptionThrow (qint64, const QScriptValue & exception, bool);
-};
 
 class Server;
 class ChallengeInfo;
@@ -33,7 +22,7 @@ class ChallengeInfo;
 class ScriptEngine : public QObject
 {
     Q_OBJECT
-    friend class ScriptEngineBacktaceGenerator;
+    friend class ScriptEngineAgent;
 
 public:
     static QScriptValue enableStrict(QScriptContext *, QScriptEngine *e);
