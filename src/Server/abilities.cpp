@@ -997,17 +997,12 @@ struct AMSoundProof : public AM {
 
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
-        functions["UponSetup"] = &os;
         functions["EndTurn6.2"] = &et; /* Gen 4 */
         functions["EndTurn26.1"] = &et; /* Gen 5 */
     }
 
-    static void os(int s, int, BS &b) {
-        poke(b,s)["SpeedBoostSetupTurn"] = b.turn();
-    }
-
     static void et(int s, int, BS &b) {
-        if (b.koed(s) || b.turn() == poke(b,s).value("SpeedBoostSetupTurn").toInt() ||
+        if (b.koed(s) || b.turn() == slot(b,s).value("SwitchTurn").toInt() ||
                 b.hasMaximalStatMod(s, poke(b,s).value("AbilityArg").toInt()))
             return;
         b.sendAbMessage(58,b.ability(s) == Ability::SpeedBoost ? 0 : 1,s);
