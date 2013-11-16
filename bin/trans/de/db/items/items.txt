@@ -244,7 +244,7 @@
 243 Feuerjuwel
 244 Wasserjuwel
 245 Elektrojuwel
-246 Planzjuwel
+246 Pflanzjuwel
 247 Eisjuwel
 248 Kampfjuwel
 249 Giftjuwel
