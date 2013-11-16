@@ -467,22 +467,14 @@ void ScriptEngine::warn(const QString &function, const QString &message, bool er
     }
 }
 
-QElapsedTimer ScriptEngine::startProfiling()
+quint64 ScriptEngine::startProfiling()
 {
-    QElapsedTimer performanceTimer;
-    performanceTimer.start();
-    return performanceTimer;
+    return performanceTimer.elapsed();
 }
 
-void ScriptEngine::endProfiling(QElapsedTimer performanceTimer, const QString &name)
+void ScriptEngine::endProfiling(quint64 startTime, const QString &name)
 {
-    quint64 elapsed = performanceTimer.elapsed();
-
-    if (!profiles.contains(name)) {
-        Profile profile;
-        profiles[name] = profile;
-    }
-
+    quint64 elapsed = performanceTimer.elapsed() - startTime;
     profiles[name].calls += 1;
     profiles[name].totalDuration += elapsed;
 }
@@ -2949,7 +2941,7 @@ QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
         return QScriptValue();
     }
 
-    QElapsedTimer performanceTimer = po->startProfiling();
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::Append)) {
@@ -2958,7 +2950,7 @@ QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
     }
 
     out.write(c->argument(1).toString().toUtf8());
-    po->endProfiling(performanceTimer, "sys.append");
+    po->endProfiling(startTime, "sys.append");
     return QScriptValue();
 }
 
@@ -2970,7 +2962,7 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
     fileName = c->argument(0);
     data = c->argument(1);
 
-    QElapsedTimer performanceTimer = po->startProfiling();
+    auto startTime = po->startProfiling();
     QFile out(fileName.toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -2979,7 +2971,7 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
     }
 
     out.write(data.toString().toUtf8());
-    po->endProfiling(performanceTimer, "sys.write");
+    po->endProfiling(startTime, "sys.write");
     return QScriptValue();
 }
 
@@ -2998,7 +2990,8 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
             return QScriptValue();
         }
     }
-    QElapsedTimer performanceTimer = po->startProfiling();
+
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -3009,7 +3002,7 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
     QScriptValue serialized = po->stringify.call(QScriptValue(), QScriptValueList() << c->argument(1));
 
     out.write(qCompress(serialized.toString().toUtf8(), compression));
-    po->endProfiling(performanceTimer, "sys.writeObject");
+    po->endProfiling(startTime, "sys.writeObject");
 
     return QScriptValue();
 }
@@ -3018,7 +3011,7 @@ QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
-    QElapsedTimer performanceTimer = po->startProfiling();
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
@@ -3029,7 +3022,7 @@ QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
     QScriptValue val = po->parse.call(QScriptValue(),
         QScriptValueList() << QString::fromUtf8(qUncompress(out.readAll())));
 
-    po->endProfiling(performanceTimer, "sys.readObject");
+    po->endProfiling(startTime, "sys.readObject");
     return val;
 }
 
@@ -3037,7 +3030,7 @@ QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::deleteFile(const QString &fileName)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
-    QElapsedTimer performanceTimer = po->startProfiling();
+    auto startTime = po->startProfiling();
 
     QFile out(c->argument(0).toString());
 
@@ -3046,7 +3039,7 @@ QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
         return QScriptValue();
     }
 
-    po->endProfiling(performanceTimer, "sys.rm");
+    po->endProfiling(startTime, "sys.rm");
     return QScriptValue();
 }
 
@@ -3323,7 +3316,7 @@ QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
 
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
-    QElapsedTimer performanceTimer = po->startProfiling();
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
@@ -3332,7 +3325,7 @@ QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
     }
 
     QScriptValue content = QString::fromUtf8(out.readAll());
-    po->endProfiling(performanceTimer, "sys.read");
+    po->endProfiling(startTime, "sys.read");
     return content;
 }
 

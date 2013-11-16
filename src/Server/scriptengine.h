@@ -554,13 +554,18 @@ private:
     void warn(const QString &function, const QString &message, bool errinstrict);
 
     struct Profile {
-        int calls = 0;
-        int totalDuration = 0;
+        int calls;
+        int totalDuration;
+        Profile() {
+            calls = 0;
+            totalDuration = 0;
+        }
     };
 
     QHash<QString, Profile> profiles;
-    QElapsedTimer startProfiling();
-    void endProfiling(QElapsedTimer performanceTimer, const QString &name);
+    QElapsedTimer performanceTimer;
+    quint64 startProfiling();
+    void endProfiling(quint64 startTime, const QString &name);
     template <typename ...Params>
     void makeEvent(const QString &event, Params&&... params);
     template <typename ...Params>
@@ -588,9 +593,9 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
         return;
 
     QScriptValueList l;
-    QElapsedTimer performanceTimer = startProfiling();
+    auto startTime = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
-    endProfiling(performanceTimer, "script." + event);
+    endProfiling(startTime, "script." + event);
 }
 
 template<typename ...Params>
@@ -602,9 +607,9 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
     startStopEvent();
 
     QScriptValueList l;
-    QElapsedTimer performanceTimer = startProfiling();
+    auto startTime = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
-    endProfiling(performanceTimer, "script." + event);
+    endProfiling(startTime, "script." + event);
     return !endStopEvent();
 }
 
