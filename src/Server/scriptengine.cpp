@@ -467,6 +467,18 @@ void ScriptEngine::warn(const QString &function, const QString &message, bool er
     }
 }
 
+quint64 ScriptEngine::startProfiling()
+{
+    return performanceTimer.elapsed();
+}
+
+void ScriptEngine::endProfiling(quint64 startTime, const QString &name)
+{
+    quint64 elapsed = performanceTimer.elapsed() - startTime;
+    profiles[name].calls += 1;
+    profiles[name].totalDuration += elapsed;
+}
+
 bool ScriptEngine::beforeServerMessage(const QString &message)
 {
     return makeSEvent("beforeServerMessage", message);
@@ -515,17 +527,17 @@ void ScriptEngine::afterNewMessage(const QString &message)
 
 void ScriptEngine::serverStartUp()
 {
-    evaluate(myscript.property("serverStartUp").call(myscript, QScriptValueList()));
+    makeEvent("serverStartUp");
 }
 
 void ScriptEngine::stepEvent()
 {
-    evaluate(myscript.property("step").call(myscript, QScriptValueList()));
+    makeEvent("step");
 }
 
 void ScriptEngine::serverShutDown()
 {
-    evaluate(myscript.property("serverShutDown").call(myscript, QScriptValueList()));
+    makeEvent("serverShutDown");
 }
 
 bool ScriptEngine::beforePlayerRegister(int src)
@@ -618,59 +630,33 @@ void ScriptEngine::afterChangeTier(int src, int slot, const QString &oldTier, co
 
 bool ScriptEngine::beforeChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
-    if (!myscript.property("beforeChallengeIssued", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
-
-    return !endStopEvent();
+    return makeSEvent("beforeChallengeIssued", src, dest, c.clauses, c.rated, c.mode, c.team, c.desttier);
 }
 
 void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &c)
 {
-    if (!myscript.property("afterChallengeIssued", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterChallengeIssued").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << c.team << c.desttier));
+    makeEvent("afterChallengeIssued", src, dest, c.clauses, c.rated, c.mode, c.team, c.desttier);
 }
 
 bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
 {
-    if (!myscript.property("beforeBattleMatchup", QScriptValue::ResolveLocal).isValid())
-        return true;
-
-    startStopEvent();
-
-    evaluate(myscript.property("beforeBattleMatchup").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
-
-    return !endStopEvent();
+    return makeSEvent("beforeBattleMatchup", src, dest, c.clauses, c.rated, c.mode);
 }
 
 void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
 {
-    if (!myscript.property("afterBattleMatchup", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterBattleMatchup").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode));
+    makeEvent("afterBattleMatchup", src, dest, c.clauses, c.rated, c.mode);
 }
 
 
 void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c, int id, int team1, int team2)
 {
-    if (!myscript.property("beforeBattleStarted", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("beforeBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << id << team1 << team2));
+    makeEvent("beforeBattleStarted", src, dest, c.clauses, c.rated, c.mode, id, team1, team2);
 }
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c, int id, int team1, int team2)
 {
-    if (!myscript.property("afterBattleStarted", QScriptValue::ResolveLocal).isValid())
-        return;
-
-    evaluate(myscript.property("afterBattleStarted").call(myscript, QScriptValueList() << src << dest << c.clauses << c.rated << c.mode << id << team1 << team2));
+    makeEvent("afterBattleStarted", src, dest, c.clauses, c.rated, c.mode, id, team1, team2);
 }
 
 QString battleDesc[3] = {
@@ -681,20 +667,16 @@ QString battleDesc[3] = {
 
 void ScriptEngine::beforeBattleEnded(int src, int dest, int desc, int battleid)
 {
-    if (!myscript.property("beforeBattleEnded", QScriptValue::ResolveLocal).isValid())
-        return;
     if (desc < 0 || desc > 2)
         return;
-    evaluate(myscript.property("beforeBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
+    makeEvent("beforeBattleEnded", src, dest, battleDesc[desc], battleid);
 }
 
 void ScriptEngine::afterBattleEnded(int src, int dest, int desc, int battleid)
 {
-    if (!myscript.property("afterBattleEnded", QScriptValue::ResolveLocal).isValid())
-        return;
     if (desc < 0 || desc > 2)
         return;
-    evaluate(myscript.property("afterBattleEnded").call(myscript, QScriptValueList() << src << dest << battleDesc[desc] << battleid));
+    makeEvent("afterBattleEnded", src, dest, battleDesc[desc], battleid);
 }
 
 bool ScriptEngine::beforeFindBattle(int src) {
@@ -1161,6 +1143,35 @@ QScriptValue ScriptEngine::memoryDump()
     }
 
     return ret;
+}
+
+QString ScriptEngine::profileDump()
+{
+    QString ret;
+
+    QHash<QString, Profile>::iterator i;
+    for (i = profiles.begin(); i != profiles.end(); ++i) {
+        Profile profile = i.value();
+        int average = 0;
+
+        // prevent divide by zero
+        if (profile.totalDuration != 0 && profile.calls != 0) {
+            average = profile.totalDuration / profile.calls;
+        }
+
+        ret += QString("%1: Called %2 times, took %3 ms in total (avg %4 ms per call)\n").arg(
+                    i.key(),
+                    QString::number(profile.calls),
+                    QString::number(profile.totalDuration),
+                    QString::number(average)
+                    );
+    }
+    return ret;
+}
+
+void ScriptEngine::resetProfiling()
+{
+    profiles.clear();
 }
 
 QScriptValue ScriptEngine::dosChannel()
@@ -2916,42 +2927,42 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
     return ret;
 }
 
-// done
 QScriptValue ScriptEngine::writeConcat(QScriptContext *c, QScriptEngine *e)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
-    //Server *myserver = poscriptengine->myserver;
 
     if (!c->argument(0).isString()) {
-        po->warn("write(filename, content)", "Passed non-string to filename.", true);
+        po->warn("append(filename, content)", "Passed non-string to filename.", true);
         return QScriptValue();
     }
 
     if (!c->argument(1).isString()) {
-        po->warn("write(filename, content)", "Passed non-string to content", false);
+        po->warn("append(filename, content)", "Passed non-string to content", false);
+        return QScriptValue();
     }
 
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::Append)) {
-        po->warn("append(filename, content)", out.errorString());
+        po->warn("append(filename, content)", out.errorString(), false);
         return QScriptValue();
     }
 
     out.write(c->argument(1).toString().toUtf8());
-
+    po->endProfiling(startTime, "sys.append");
     return QScriptValue();
 }
 
 QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
-    //Server *myserver = poscriptengine->myserver;
     QScriptValue fileName, data;
 
     fileName = c->argument(0);
     data = c->argument(1);
 
+    auto startTime = po->startProfiling();
     QFile out(fileName.toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -2960,7 +2971,7 @@ QScriptValue ScriptEngine::write(QScriptContext *c, QScriptEngine *e)
     }
 
     out.write(data.toString().toUtf8());
-
+    po->endProfiling(startTime, "sys.write");
     return QScriptValue();
 }
 
@@ -2980,6 +2991,7 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
         }
     }
 
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::WriteOnly)) {
@@ -2990,15 +3002,16 @@ QScriptValue ScriptEngine::writeObject(QScriptContext *c, QScriptEngine *e)
     QScriptValue serialized = po->stringify.call(QScriptValue(), QScriptValueList() << c->argument(1));
 
     out.write(qCompress(serialized.toString().toUtf8(), compression));
+    po->endProfiling(startTime, "sys.writeObject");
 
     return QScriptValue();
 }
 
 QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
 {
-
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
@@ -3009,6 +3022,7 @@ QScriptValue ScriptEngine::readObject(QScriptContext *c, QScriptEngine *e)
     QScriptValue val = po->parse.call(QScriptValue(),
         QScriptValueList() << QString::fromUtf8(qUncompress(out.readAll())));
 
+    po->endProfiling(startTime, "sys.readObject");
     return val;
 }
 
@@ -3016,13 +3030,16 @@ QScriptValue ScriptEngine::rm(QScriptContext *c, QScriptEngine *e)
 //void ScriptEngine::deleteFile(const QString &fileName)
 {
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
+    auto startTime = po->startProfiling();
 
     QFile out(c->argument(0).toString());
 
     if (!out.remove()) {
         po->warn("rm(filename)", out.errorString(), true);
+        return QScriptValue();
     }
 
+    po->endProfiling(startTime, "sys.rm");
     return QScriptValue();
 }
 
@@ -3296,8 +3313,10 @@ QScriptValue ScriptEngine::exists(QScriptContext *c, QScriptEngine *)
 QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
 //QScriptValue ScriptEngine::getFileContent(const QString &fileName)
 {
+
     ScriptEngine *po = dynamic_cast<ScriptEngine*>(e->parent());
 
+    auto startTime = po->startProfiling();
     QFile out(c->argument(0).toString());
 
     if (!out.open(QIODevice::ReadOnly)) {
@@ -3305,7 +3324,9 @@ QScriptValue ScriptEngine::read(QScriptContext *c, QScriptEngine *e)
         return QScriptValue();
     }
 
-    return QScriptValue(QString::fromUtf8(out.readAll()));
+    QScriptValue content = QString::fromUtf8(out.readAll());
+    po->endProfiling(startTime, "sys.read");
+    return content;
 }
 
 QScriptValue ScriptEngine::getServerPlugins() {
