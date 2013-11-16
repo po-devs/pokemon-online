@@ -16,7 +16,7 @@
 #include "analyze.h"
 #include "../Shared/config.h"
 #include "../Utilities/ziputils.h"
-#include <QScriptEngineAgent>
+#include "scriptengineagent.h"
 
 #ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
@@ -158,15 +158,12 @@ ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
 
-
-
     myengine.setParent(this);
 
     parse = myengine.globalObject().property("JSON").property("parse");
     stringify = myengine.globalObject().property("JSON").property("stringify");
 
-    ScriptEngineBacktaceGenerator *b = new ScriptEngineBacktaceGenerator(&myengine);
-
+    ScriptEngineAgent *b = new ScriptEngineAgent(&myengine);
     QScriptEngineAgent *bt = b;
 
     myengine.setAgent(bt);
@@ -249,18 +246,6 @@ ScriptEngine::ScriptEngine(Server *s) {
 ScriptEngine::~ScriptEngine()
 {
     delete mySessionDataFactory;
-}
-
-ScriptEngineBacktaceGenerator::ScriptEngineBacktaceGenerator(QScriptEngine *e) : QScriptEngineAgent(e)
-{
-}
-
-void ScriptEngineBacktaceGenerator::exceptionThrow ( qint64, const QScriptValue & err, bool )
-{
-    //ScriptEngine* po = dynamic_cast<ScriptEngine *>(err.engine()->parent());
-    if (!const_cast<QScriptValue &>(err).property("backtracetext").isValid()) {
-        const_cast<QScriptValue &>(err).setProperty("backtracetext",  err.engine()->currentContext()->backtrace().join("\n"));
-    }
 }
 
 void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp)
