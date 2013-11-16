@@ -18,22 +18,26 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins
+CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation
 
-!CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):CONFIG += po_client
+!CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):!CONFIG(po_relaystation):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
 CONFIG(po_clientplugins):CONFIG += po_client
 
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) {
+CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) | CONFIG(po_relaystation) {
     SUBDIRS += src/Utilities
 }
 
-CONFIG(po_client) | CONFIG(po_server) {
+CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_relaystation) {
     SUBDIRS += src/PokemonInfo
 }
 
-CONFIG(po_client) | CONFIG(po_server) {
+CONFIG(po_client) | CONFIG(po_serverplugins) | CONFIG(po_relaystation) {
     SUBDIRS += src/BattleManager
+}
+
+CONFIG(po_relaystation) | CONFIG(po_serverplugins) {
+    SUBDIRS += src/QtWebsocket #git://gitorious.org/qtwebsocket/qtwebsocket.git
 }
 
 CONFIG(po_client) {
@@ -53,10 +57,12 @@ CONFIG(chess) {
 }
 
 CONFIG(po_server) {
-    SUBDIRS += src/Server \
-            src/QJson \
-            src/QtWebsocket \#git://gitorious.org/qtwebsocket/qtwebsocket.git
-            src/RelayStation
+    SUBDIRS += src/Server
+}
+
+CONFIG(po_relaystation) {
+    SUBDIRS += src/QJson \
+               src/RelayStation
 }
 
 CONFIG(po_serverplugins) {
@@ -84,4 +90,4 @@ TRANSLATIONS = src/trans/translation_de.ts \
 
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
-message(Following modules will be build: $$SUBDIRS)
+message(Following modules will be built: $$SUBDIRS)
