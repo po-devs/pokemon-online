@@ -2221,7 +2221,8 @@ Player * Server::player(int id) const
 {
     if (!myplayers.contains(id)) {
         qDebug() << "Fatal! player called for non existing ID " << id;
-        dump_backtrace();
+        int *i = 0;
+        *i = 1;//On purpose crash
     }
     return myplayers.value(id);
 }
