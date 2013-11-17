@@ -157,7 +157,8 @@ int main(int argc, char *argv[])
 #else
     //set_terminate( stacktrace );
 #ifdef SERVER_LOGGING
-    freopen("logs0.txt", "a", stderr);
+    freopen("logs0.txt", "w", stderr);
+    system(QString("echo " + QString("logs%1.txt").arg(0) + " > last_log_file.txt").toUtf8().constData());
 # ifdef QT5
     qInstallMessageHandler(myMessageOutput);
 # else
