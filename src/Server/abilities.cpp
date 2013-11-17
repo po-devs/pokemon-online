@@ -2014,7 +2014,7 @@ struct AMAura : public AM {
             if (!b.koed(i) && b.hasWorkingAbility(i, b.poke(i).ability())) {
                 if (poke(b,i)["AbilityArg"].toString().startsWith("Aura_")) {
                     if (type(b,s) == poke(b,i)["AbilityArg"].toString().mid(5).toInt()) {
-                        boost = 4;
+                        boost = 6;
                         break;
                     }
                 }
