@@ -2701,6 +2701,11 @@ QScriptValue ScriptEngine::teamPokeNick(int id, int team, int index)
     }
 }
 
+void ScriptEngine::changeMod(const QString &val)
+{
+    myserver->changeDbMod(val);
+}
+
 void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
 {
     if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)

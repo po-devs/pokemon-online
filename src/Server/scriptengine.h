@@ -402,6 +402,9 @@ public:
 
     Q_INVOKABLE QScriptValue teamPokeNick(int id, int team, int pokeslot);
 
+    /* Changes mod. Also reloads db even if same mod */
+    Q_INVOKABLE void changeMod(const QString &val);
+
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
