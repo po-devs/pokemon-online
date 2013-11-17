@@ -567,6 +567,7 @@ private:
 
     QHash<QString, Profile> profiles;
     QElapsedTimer performanceTimer;
+    bool resetPerfs;
     quint64 startProfiling();
     void endProfiling(quint64 startTime, const QString &name);
     template <typename ...Params>
@@ -599,6 +600,13 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
     auto startTime = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
     endProfiling(startTime, "script." + event);
+
+    if (resetPerfs) {
+        resetPerfs = false;
+
+        profiles.clear();
+        performanceTimer.restart();
+    }
 }
 
 template<typename ...Params>
@@ -614,6 +622,13 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
     endProfiling(startTime, "script." + event);
     return !endStopEvent();
+
+    if (resetPerfs) {
+        resetPerfs = false;
+
+        profiles.clear();
+        performanceTimer.restart();
+    }
 }
 
 #endif // SCRIPTENGINE_H

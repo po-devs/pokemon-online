@@ -157,6 +157,8 @@ QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
 ScriptEngine::ScriptEngine(Server *s) {
     setParent(s);
     myserver = s;
+    performanceTimer.start();
+    resetPerfs = false;
 
     myengine.setParent(this);
 
@@ -1174,8 +1176,7 @@ QString ScriptEngine::profileDump()
 
 void ScriptEngine::resetProfiling()
 {
-    profiles.clear();
-    performanceTimer.restart();
+    resetPerfs = true;
 }
 
 QScriptValue ScriptEngine::dosChannel()
