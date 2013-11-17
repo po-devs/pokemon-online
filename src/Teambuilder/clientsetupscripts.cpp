@@ -99,6 +99,26 @@ static void playerInfoFrom(const QScriptValue &v, PlayerInfo& info) {
 	info.color = qscriptvalue_cast<QColor>(v.property("color"));
 }
 
+Q_DECLARE_METATYPE(FindBattleData)
+
+static QScriptValue findBattleDataTo(QScriptEngine *e, const FindBattleData& data) {
+    QScriptValue v = e->newObject();
+    v.setProperty("rated", data.rated);
+    v.setProperty("sameTier", data.sameTier);
+    v.setProperty("ranged", data.ranged);
+    v.setProperty("range", data.range);
+    v.setProperty("teams", data.teams);
+    return v;
+}
+
+static void findBattleDataFrom(const QScriptValue &v, FindBattleData& data) {
+    data.rated = v.property("rated").toBool();
+    data.sameTier = v.property("sameTier").toBool();
+    data.ranged = v.property("ranged").toBool();
+    data.range = v.property("range").toUInt16();
+    data.teams = quint8(v.property("teams").toUInt16()); // there is no toUInt8(), so use this workaround
+}
+
 void Client::registerMetaTypes(QScriptEngine *e)
 {
     qScriptRegisterMetaType<T>(e, &analyzerTo, &analyzerFrom);
@@ -106,5 +126,6 @@ void Client::registerMetaTypes(QScriptEngine *e)
     qScriptRegisterMetaType<hash32string>(e, &hash32stringTo, &hash32stringFrom);
     qScriptRegisterMetaType<UserInfo>(e, &userInfoTo, &userInfoFrom);
     qScriptRegisterMetaType<PlayerInfo>(e, &playerInfoTo, &playerInfoFrom);
+    qScriptRegisterMetaType<FindBattleData>(e, &findBattleDataTo, &findBattleDataFrom);
     qScriptRegisterSequenceMetaType<QStringList>(e);
 }
