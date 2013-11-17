@@ -814,7 +814,7 @@ void Client::startPM(int id)
     pmSystem->flash(p);
 
     connect(p, SIGNAL(challengeSent(int)), this, SLOT(seeInfo(int)));
-    connect(p, SIGNAL(messageEntered(int,QString)), &relay(), SLOT(sendPM(int,QString)));
+    connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(sendPM(int,QString)));
     connect(p, SIGNAL(messageEntered(int,QString)), this, SLOT(registerPermPlayer(int)));
     connect(p, SIGNAL(destroyed(int,QString)), this, SLOT(removePM(int,QString)));
     connect(p, SIGNAL(controlPanel(int)), this, SLOT(controlPanel(int)));
@@ -1135,6 +1135,13 @@ void Client::setPlayer(const UserInfo &ui)
         UserInfo ui2 (ui);
         ui2.flags |= UserInfo::Online;
         emit userInfoReceived(ui2);
+    }
+}
+
+void Client::sendPM(int id, QString pm) {
+    if (call("beforePMSent(int,QString)", id, pm)) {
+        relay().sendPM(id, pm);
+        call("afterPMSent(int,QString)", id, pm);
     }
 }
 
