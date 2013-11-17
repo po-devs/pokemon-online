@@ -1150,6 +1150,7 @@ QString ScriptEngine::profileDump()
     QString ret;
 
     QHash<QString, Profile>::iterator i;
+    quint64 total = 0;
     for (i = profiles.begin(); i != profiles.end(); ++i) {
         Profile profile = i.value();
         int average = 0;
@@ -1165,13 +1166,16 @@ QString ScriptEngine::profileDump()
                     QString::number(profile.totalDuration),
                     QString::number(average)
                     );
+
+        total += profile.totalDuration;
     }
-    return ret;
+    return QString("time since last reset: %1ms, time taken by events: %2ms\n").arg(performanceTimer.elapsed()).arg(total) + ret;
 }
 
 void ScriptEngine::resetProfiling()
 {
     profiles.clear();
+    performanceTimer.restart();
 }
 
 QScriptValue ScriptEngine::dosChannel()
