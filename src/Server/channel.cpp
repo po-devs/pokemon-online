@@ -63,10 +63,13 @@ void Channel::leaveRequest(Player *player, bool onlydisconnect)
         }
 
         foreach(int battleid, player->getBattles()) {
-            Battle b = server->ongoingBattle(battleid);
-            /* We remove the battle only if only one of the player is in the channel */
-            if (int(players.contains(server->player(b.id1))) + int(players.contains(server->player(b.id2))) < 2) {
-                battleList.remove(battleid);
+            /* Because a player has a battle, it doesn't mean it's ongoing */
+            if (server->hasOngoingBattle(battleid)) {
+                Battle b = server->ongoingBattle(battleid);
+                /* We remove the battle only if only one of the player is in the channel */
+                if (int(players.contains(server->player(b.id1))) + int(players.contains(server->player(b.id2))) < 2) {
+                    battleList.remove(battleid);
+                }
             }
         }
 

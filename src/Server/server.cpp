@@ -2220,9 +2220,7 @@ void Server::setAnnouncement(int &id, const QString &html) {
 Player * Server::player(int id) const
 {
     if (!myplayers.contains(id)) {
-        qDebug() << "Fatal! player called for non existing ID " << id;
-        int *i = 0;
-        *i = 1;//On purpose crash
+        qFatal() << "Fatal! player called for non existing ID " << id;
     }
     return myplayers.value(id);
 }
@@ -2248,6 +2246,9 @@ bool Server::hasOngoingBattle(int id) const
 
 Battle Server::ongoingBattle(int id) const
 {
+    if (!battleList.contains(id)) {
+        qFatal() << "Fatal! ongoing battle called for non existing ID " << id;
+    }
     return battleList.value(id);
 }
 
