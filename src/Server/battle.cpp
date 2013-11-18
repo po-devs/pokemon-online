@@ -783,6 +783,28 @@ void BattleSituation::analyzeChoices()
         }
     }
 
+    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
+    std::vector<int> &players = speedsVector;
+    players.clear();
+
+    /* Needs to be before switches, otherwise analytic + pursuit on empty speed vector crashes the game */
+    for (it = priorities.begin(); it != priorities.end(); ++it) {
+        /* There's another priority system: Ability stall, and Item lagging tail */
+        std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
+
+        foreach (int player, it->second) {
+            callaeffects(player,player, "TurnOrder"); //Stall
+            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
+            secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
+        }
+
+        for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
+            foreach(int p, it->second) {
+                players.push_back(p);
+            }
+        }
+    }
+
     foreach(int player, items) {
         analyzeChoice(player);
     }
@@ -808,27 +830,6 @@ void BattleSituation::analyzeChoices()
                     changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
                     megas[player(slot)] = true;
                 }
-            }
-        }
-    }
-
-    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
-    std::vector<int> &players = speedsVector;
-    players.clear();
-
-    for (it = priorities.begin(); it != priorities.end(); ++it) {
-        /* There's another priority system: Ability stall, and Item lagging tail */
-        std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
-
-        foreach (int player, it->second) {
-            callaeffects(player,player, "TurnOrder"); //Stall
-            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
-            secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
-        }
-
-        for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
-            foreach(int p, it->second) {
-                players.push_back(p);
             }
         }
     }
