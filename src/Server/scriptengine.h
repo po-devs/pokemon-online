@@ -621,7 +621,6 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
     auto startTime = startProfiling();
     evaluate(myscript.property(event).call(myscript, pack(l, params...)));
     endProfiling(startTime, "script." + event);
-    return !endStopEvent();
 
     if (resetPerfs) {
         resetPerfs = false;
@@ -629,6 +628,8 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
         profiles.clear();
         performanceTimer.restart();
     }
+
+    return !endStopEvent();
 }
 
 #endif // SCRIPTENGINE_H
