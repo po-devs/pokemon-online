@@ -2926,6 +2926,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
+
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
@@ -3104,6 +3105,7 @@ int BattleSituation::repeatNum(int player)
 
     if (tmove(player).repeatMin == 0) {
         if (targetList.size() == 1 && hasWorkingAbility(player, Ability::ParentalBond)) {
+            turnMemory(player)["ParentalBond"] = true;
             return 2;
         } else {
             return 1;
