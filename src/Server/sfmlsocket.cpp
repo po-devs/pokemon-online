@@ -84,7 +84,7 @@ bool SocketSQ::listen(quint16 port)
         server().bind(tcp::endpoint(tcp::v4(), port));
     }
     catch(std::exception &e) {
-        qDebug() << "Socket listen error: " << e.what().c_str();
+        qDebug() << "Socket listen error: " << e.what();
         return false;
     }
     boost::system::error_code ec;
