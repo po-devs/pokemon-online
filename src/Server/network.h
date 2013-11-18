@@ -105,7 +105,7 @@ void Network<S>::close() {
     if (socket()) {
         //qDebug() << "valid socket " << this;
         S sock = mysocket;
-#ifndef SFML_SOCKET
+#ifndef SFML_SOCKETS
         mysocket = NULL;
 #else
         mysocket = S();
