@@ -2920,6 +2920,7 @@ int BattleSituation::calculateDamage(int p, int t)
       but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
       move power (not just power variable) because of technician which relies on it */
 
+    calleffects(p,t,"BasePowerModifier");
     callieffects(p,t,"BasePowerModifier");
     if (turnMemory(p).value("GemActivated").toBool()) {
         gen() < 6 ? chainBp(p, 10) : chainBp(p, 6);
