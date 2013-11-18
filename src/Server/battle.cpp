@@ -1243,13 +1243,22 @@ void BattleSituation::testCritical(int player, int target)
             craise += 1;
         }
 
-        switch(craise) {
-        case 0: minch = 3; break;
-        case 1: minch = 6; break;
-        case 2: minch = 12; break;
-        case 3: minch = 16; break;
-        case 4: case 5: minch = 24; break;
-        case 6: default: minch = 48;
+        if (gen() < 6) {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 12; break;
+            case 3: minch = 16; break;
+            case 4: case 5: minch = 24; break;
+            case 6: default: minch = 48;
+            }
+        } else {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 24; break;
+            case 3: default: minch = 48;
+            }
         }
 
         critical = coinflip(minch, 48);
