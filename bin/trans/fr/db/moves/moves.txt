@@ -558,3 +558,51 @@
 557 CoupVictoire
 558 Flamme Croix
 559 Éclair Croix
+560 Regard Touchant
+561 Bang Sonique
+562 Vigilance
+563 Éclat Magique
+564 Vampibaiser
+565 Vent Féérique
+566 Flying Press
+567 Maléfice Sylvain
+568 Lyophilisation
+569 Géo-Contrôle
+570 Tempête Florale
+571 
+572 
+573 Feu Ensorcelé
+574 
+575 Frotte-Frimousse
+576 
+577 Parabocharge
+578 Hantise
+579 Câlinerie
+580 
+581 Halloween
+582 Sheauriken
+583 
+584 Éructation
+585 
+586 Voix Enjôleuse
+587 
+588 
+589 Électrisation
+590 
+591 
+592 
+593 
+594 
+595 Bouclier Royal
+596 Force Chtonienne
+597 Magné-Contrôle
+598 Tatamigaeshi
+599 Champ Brumeux
+600 Dernier Mot
+601 Nuée de Poudre
+602 Poing Boost
+603 Fertilisation
+604 Pico-Défense
+605 Toile Gluante
+606 Renversement
+607 Piège de Venin
