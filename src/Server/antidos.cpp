@@ -187,6 +187,9 @@ int AntiDos::numberOfDiffIps()
 
 bool AntiDos::transferBegin(int id, int length, const QString &ip)
 {
+    if (id < 0) {
+        qFatal("Fatal! Negative id in AntiDOS: %d", id);
+    }
 
     /* If the IP is in the Trusted Ips list, do not do anything */
     if (trusted_ips.contains(ip)) {
@@ -195,7 +198,8 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
 
     if (transfersPerId.contains(id)) {
         QList< QPair<time_t, size_t> > &l = transfersPerId[id];
-        size_t &len = sizeOfTransfers[id];
+        int &len = sizeOfTransfers[id];
+        int orlen = len;
 
         int i = 0;
 
@@ -209,6 +213,10 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
             }
         }
 
+        if (len < orlen) {
+            qFatal("Fatal! Negative length in antidos: %d, id: %d, removed: %d", len, id, i);
+        }
+
         l.erase(l.begin(), l.begin()+i);
 
 
@@ -219,7 +227,7 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
         }
 
 
-        if (len + length > size_t(max_kb_per_user)*1024 && on) {
+        if (len + length > max_kb_per_user*1024 && on) {
             emit kick(id);
             addKick(ip);
             return false;

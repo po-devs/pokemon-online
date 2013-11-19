@@ -63,7 +63,7 @@ private:
     QHash<QString, int> connectionsPerIp;
     QHash<QString, QList<time_t> > loginsPerIp;
     QHash<int, QList<QPair<time_t, size_t> > > transfersPerId;
-    QHash<int, size_t> sizeOfTransfers;
+    QHash<int, int> sizeOfTransfers;
     QHash<QString, QList<time_t> > kicksPerIp;
     QTimer timer;
 
