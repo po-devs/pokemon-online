@@ -170,7 +170,7 @@
 169 Boosts the power of all Fairy-type moves used by any Pokemon on the field by 1/3.
 170 Prevents the stats of Grass-type allies of a Pokemon with this ability from being lowered by the opponent.
 171 Halves the damage taken from physical moves by a Pokemon with this ability.
-172 Boosts the power of Aura Sphere, Dark Pulse, Dragon Pulse, Hael Pulse and Water Pulse used by a Pokmon with this ability by 50%.
+172 Boosts the power of Aura Sphere, Dark Pulse, Dragon Pulse, Heal Pulse and Water Pulse used by a Pokmon with this ability by 50%.
 173 Allows all attacking moves that strike a single target a single time used by a Pokemon with this ability to strike a second time with halved power.
 174 Changes all Normal-type moves used by a Pokémon with this Ability to Fairy-type, and boosts their power by 30%.
 175 Before a Pokemon with this abiltiy uses any move, changes its type to match the move used.
