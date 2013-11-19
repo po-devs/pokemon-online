@@ -569,30 +569,30 @@
 568 Lyophilisation
 569 Géo-Contrôle
 570 Tempête Florale
-571 
-572 
+571 Harcèlement
+572 Pouvoir Lunaire
 573 Feu Ensorcelé
-574 
+574 Râle Mâle
 575 Frotte-Frimousse
-576 
+576 Mort-Ailes
 577 Parabocharge
 578 Hantise
 579 Câlinerie
-580 
+580 Camaraderie
 581 Halloween
 582 Sheauriken
-583 
+583 Brume Capiteuse
 584 Éructation
-585 
+585 Confidence
 586 Voix Enjôleuse
-587 
-588 
+587 Ondes Étranges
+588 Champs Électrifié
 589 Électrisation
-590 
-591 
-592 
-593 
-594 
+590 Verrou Enchanté
+591 Dard Mortel
+592 Garde Florale
+593 Champ Herbu
+594 DélugePlasmique
 595 Bouclier Royal
 596 Force Chtonienne
 597 Magné-Contrôle
