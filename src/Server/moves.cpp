@@ -3056,7 +3056,7 @@ struct MMAttract : public MM
 struct MMKnockOff : public MM
 {
     MMKnockOff() {
-        functions["BeforeHitting"] = &bh;
+        functions["BasePowerModifier"] = &bh;
         functions["OnFoeOnAttack"] = &uas;
     }
     static void bh(int s, int t, BS &b) {

@@ -783,6 +783,28 @@ void BattleSituation::analyzeChoices()
         }
     }
 
+    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
+    std::vector<int> &players = speedsVector;
+    players.clear();
+
+    /* Needs to be before switches, otherwise analytic + pursuit on empty speed vector crashes the game */
+    for (it = priorities.begin(); it != priorities.end(); ++it) {
+        /* There's another priority system: Ability stall, and Item lagging tail */
+        std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
+
+        foreach (int player, it->second) {
+            callaeffects(player,player, "TurnOrder"); //Stall
+            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
+            secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
+        }
+
+        for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
+            foreach(int p, it->second) {
+                players.push_back(p);
+            }
+        }
+    }
+
     foreach(int player, items) {
         analyzeChoice(player);
     }
@@ -808,27 +830,6 @@ void BattleSituation::analyzeChoices()
                     changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
                     megas[player(slot)] = true;
                 }
-            }
-        }
-    }
-
-    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
-    std::vector<int> &players = speedsVector;
-    players.clear();
-
-    for (it = priorities.begin(); it != priorities.end(); ++it) {
-        /* There's another priority system: Ability stall, and Item lagging tail */
-        std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
-
-        foreach (int player, it->second) {
-            callaeffects(player,player, "TurnOrder"); //Stall
-            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
-            secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
-        }
-
-        for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
-            foreach(int p, it->second) {
-                players.push_back(p);
             }
         }
     }
@@ -1242,13 +1243,22 @@ void BattleSituation::testCritical(int player, int target)
             craise += 1;
         }
 
-        switch(craise) {
-        case 0: minch = 3; break;
-        case 1: minch = 6; break;
-        case 2: minch = 12; break;
-        case 3: minch = 16; break;
-        case 4: case 5: minch = 24; break;
-        case 6: default: minch = 48;
+        if (gen() < 6) {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 12; break;
+            case 3: minch = 16; break;
+            case 4: case 5: minch = 24; break;
+            case 6: default: minch = 48;
+            }
+        } else {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 24; break;
+            case 3: default: minch = 48;
+            }
         }
 
         critical = coinflip(minch, 48);
@@ -2922,12 +2932,14 @@ int BattleSituation::calculateDamage(int p, int t)
       but item boosts are decided (not applied) before acrobat, and acrobat needs to modify
       move power (not just power variable) because of technician which relies on it */
 
+    calleffects(p,t,"BasePowerModifier");
     callieffects(p,t,"BasePowerModifier");
     if (turnMemory(p).value("GemActivated").toBool()) {
         gen() < 6 ? chainBp(p, 10) : chainBp(p, 6);
     }
     callaeffects(p,t,"BasePowerModifier");
     callaeffects(t,p,"BasePowerFoeModifier");
+
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
@@ -3106,6 +3118,7 @@ int BattleSituation::repeatNum(int player)
 
     if (tmove(player).repeatMin == 0) {
         if (targetList.size() == 1 && hasWorkingAbility(player, Ability::ParentalBond)) {
+            turnMemory(player)["ParentalBond"] = true;
             return 2;
         } else {
             return 1;

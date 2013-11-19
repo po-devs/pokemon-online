@@ -2197,11 +2197,17 @@ struct AMGooey : public AM
 struct AMParentalBond : public AM
 {
     AMParentalBond() {
-        functions["BasePowerModifier"] = &btl;
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int, BS &b) {
+        /* We do it that way because parental bond still halves the second hit if hit
+         * by Mummy. So we need a halving function that works even though ability is lost */
+        addFunction(turn(b,s), "BasePowerModifier", "ParentalBond", &btl);
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.repeatCount() == 1 && tmove(b, s).repeatMin == 0) {
+        if (turn(b,s).contains("ParentalBond") && b.repeatCount() == 1) {
             b.chainBp(s, -10);
         }
     }
