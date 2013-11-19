@@ -214,7 +214,7 @@ bool AntiDos::transferBegin(int id, int length, const QString &ip)
         }
 
         if (len < 0) {
-            qFatal("Fatal! Negative length in antidos: %d, id: %d, removed: %d", len, id, i);
+            qFatal("Fatal! Negative length in antidos: %d > %d, id: %d, removed: %d", orlen, len, id, i);
         }
 
         l.erase(l.begin(), l.begin()+i);
