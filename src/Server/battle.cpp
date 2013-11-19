@@ -2667,6 +2667,9 @@ QVector<int> BattleSituation::getTypes(int player) const
         if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool()) {
             continue;
         }
+        if (type == Pokemon::Curse) {
+            continue;
+        }
         ret.push_back(type);
     }
 
