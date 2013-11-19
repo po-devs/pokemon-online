@@ -6965,7 +6965,7 @@ struct MMPowder : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        b.sendMoveMessage(215,0,s,Pokemon::Grass,t);
+        b.sendMoveMessage(215,0,s,type(b,s),t);
 
         addFunction(poke(b,t), "MovePossible", "Powder", &mp);
         poke(b,t)["Powdered"] = true;
@@ -6981,7 +6981,7 @@ struct MMPowder : public MM
         if (poke(b,s).value("Powdered").toBool()) {
             if (type(b,s) == Type::Fire) {
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
-                poke(b,s).remove("Powdered");\
+                poke(b,s).remove("Powdered");
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
                 turn(b,s)["ImpossibleToMove"] = true;

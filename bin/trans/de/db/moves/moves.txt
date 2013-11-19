@@ -573,7 +573,7 @@
 572 Mondgewalt
 573 Magieflamme
 574 Kampfgebrüll
-575 Wagenrubbler
+575 Wangenrubbler
 576 Unheilsschwingen
 577 Parabolladung
 578 Phantomkraft
