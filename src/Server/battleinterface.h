@@ -29,8 +29,8 @@ public:
     };
 //    typedef QVariantHash context;
 
-//    virtual const int & turn() const = 0;
-//    virtual const int & publicId() const = 0;
+    virtual const int & turn() const = 0;
+    virtual const int & publicId() const = 0;
 //    virtual const bool & rated() const = 0;
     virtual const QString & tier() const = 0;
     virtual quint32 clauses() const = 0;

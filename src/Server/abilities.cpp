@@ -2197,7 +2197,7 @@ struct AMGooey : public AM
 struct AMParentalBond : public AM
 {
     AMParentalBond() {
-        functions["MoveSettings"] = &ms;
+        functions["BeforeTargetList"] = &ms;
     }
 
     static void ms(int s, int, BS &b) {

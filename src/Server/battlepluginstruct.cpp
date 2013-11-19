@@ -39,7 +39,7 @@ BattlePStorage::~BattlePStorage()
 int BattlePStorage::call(int f, BattleInterface *b)
 {
     if (calls[f]) {
-        qDebug() << "Plugin of " << this << " is " << plugin << "(Battle " << b << ")";
+        qDebug() << "Plugin of " << this << " is " << plugin << "(Battle " << b << ", " << b->publicId() << ")";
         /* Calls the plugin member function, from the correct class, with the appropriate parameters */
         return (*plugin.*(reinterpret_cast<int (BattlePlugin::*)(BattleInterface &)>(calls[f])))(*b);
     }
