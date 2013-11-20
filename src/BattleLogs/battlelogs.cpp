@@ -12,7 +12,7 @@
 #include "../Shared/battlecommands.h"
 
 
-ServerPlugin * createPluginClass(ServerInterface*) {
+BattleServerPlugin * createBattleServerPlugin() {
     return new BattleLogs();
 }
 

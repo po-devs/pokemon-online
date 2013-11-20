@@ -52,12 +52,9 @@ CONFIG(po_clientplugins) {
                src/SmogonPlugin 
 }
 
-CONFIG(chess) {
-    SUBDIRS += src/ChessPlugin
-}
-
 CONFIG(po_server) {
-    SUBDIRS += src/Server
+    SUBDIRS += src/Server \
+        src/BattleServer
 }
 
 CONFIG(po_relaystation) {
@@ -91,3 +88,5 @@ TRANSLATIONS = src/trans/translation_de.ts \
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
+
+SUBDIRS +=

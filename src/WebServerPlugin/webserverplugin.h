@@ -11,7 +11,7 @@
 class ServerInterface;
 
 extern "C" {
-WEBSERVERPLUGINSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
+WEBSERVERPLUGINSHARED_EXPORT ServerPlugin * createServerPlugin(ServerInterface*);
 }
 
 class WEBSERVERPLUGINSHARED_EXPORT WebServerPlugin

@@ -2,8 +2,8 @@
 #define BATTLELOGS_H
 
 #include "BattleLogs_global.h"
-#include "../Server/plugininterface.h"
-#include "../Server/battleinterface.h"
+#include "../BattleServer/plugininterface.h"
+#include "../BattleServer/battleinterface.h"
 #include "../BattleManager/defaulttheme.h"
 #include "../BattleManager/battledatatypes.h"
 #include "../PokemonInfo/battlestructs.h"
@@ -41,7 +41,7 @@ class QTextEdit;
 */
 
 extern "C" {
-BATTLELOGSSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
+BATTLELOGSSHARED_EXPORT ServerPlugin * createBattleServerPlugin();
 }
 
 class PokeBattle;
@@ -49,7 +49,7 @@ class BattleInput;
 class BattleClientLog;
 
 class BATTLELOGSSHARED_EXPORT BattleLogs
-    : public ServerPlugin
+    : public BattleServerPlugin
 {
 public:
     BattleLogs();

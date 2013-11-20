@@ -9,7 +9,6 @@
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
-#include "battle.h"
 #include "moves.h"
 #include "rbymoves.h"
 #include "items.h"
@@ -61,7 +60,7 @@ Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(),
 
 Server::~Server()
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     foreach (QTcpServer* myserver, myservers)
         myserver->deleteLater();
 #endif
@@ -86,7 +85,7 @@ void Server::start(){
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 #endif
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(new QTcpServer());
     }
@@ -97,7 +96,7 @@ void Server::start(){
 #endif
     srand(time(NULL));
 
-    pluginManager = new PluginManager(this);
+    pluginManager = new ServerPluginManager(this);
 
     if (!testWritable("config")) {
         //printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
@@ -204,7 +203,7 @@ void Server::start(){
     connect(mymapper, SIGNAL(mapped(int)), SLOT(incomingConnection(int)));
     for (int i = 0; i < serverPorts.size(); ++i) {
         quint16 port = serverPorts.at(i);
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         listenSuccess = server(i)->listen(QHostAddress::Any, port);
 #else
         listenSuccess = server(i)->listen(port);
@@ -218,13 +217,13 @@ void Server::start(){
         }
 
         mymapper->setMapping(&*server(i), i);
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         connect(server(i), SIGNAL(newConnection()), mymapper, SLOT(map()));
 #else
         connect(&*server(i), SIGNAL(active()), mymapper, SLOT(map()));
 #endif
     }
-#ifdef SFML_SOCKETS
+#ifdef BOOST_SOCKETS
     manager.start();
 #endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
@@ -286,7 +285,7 @@ void Server::print(const QString &line)
     serverIns->printLine(line, false, true);
 }
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
 QTcpServer * Server::server(int i)
 {
     return myservers.at(i);
@@ -1188,7 +1187,7 @@ void Server::incomingConnection(int i)
         return;
 
     int id = freeid();
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QString ip = newconnection->peerAddress().toString();
 #else
     QString ip = newconnection->ip();
@@ -1222,7 +1221,7 @@ void Server::incomingConnection(int i)
 
     printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
 #else
     newconnection->setLowDelay(lowTCPDelay);

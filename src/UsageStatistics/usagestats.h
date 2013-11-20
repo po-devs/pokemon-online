@@ -2,14 +2,13 @@
 #define POKEMONONLINESTATSPLUGIN_H
 
 #include "usagestats_global.h"
-#include "../Server/plugininterface.h"
-#include "../Server/battleinterface.h"
-#include "../Server/serverinterface.h"
+#include "../BattleServer/plugininterface.h"
+#include "../BattleServer/battleinterface.h"
 
 #include <QtCore>
 
 extern "C" {
-POKEMONONLINESTATSPLUGINSHARED_EXPORT ServerPlugin * createPluginClass(ServerInterface*);
+POKEMONONLINESTATSPLUGINSHARED_EXPORT BattleServerPlugin * createBattleServerPlugin();
 }
 
 class PokeBattle;
@@ -31,10 +30,10 @@ struct TierRank {
 };
 
 class POKEMONONLINESTATSPLUGINSHARED_EXPORT PokemonOnlineStatsPlugin
-    : public ServerPlugin, public QObject
+    : public BattleServerPlugin, public QObject
 {
 public:
-    PokemonOnlineStatsPlugin(ServerInterface *server);
+    PokemonOnlineStatsPlugin();
     ~PokemonOnlineStatsPlugin();
 
     QString pluginName() const;
@@ -52,7 +51,6 @@ public:
 
 /* Private */
     QHash<QString, TierRank*> tierRanks;
-    ServerInterface *server;
 
     QAtomicInt refCounter;
 };

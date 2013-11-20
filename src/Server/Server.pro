@@ -11,16 +11,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     consolereader.cpp \
     challenge.cpp \
-    berries.cpp \
-    battle.cpp \
     antidos.cpp \
     player.cpp \
     network.cpp \
-    mechanics.cpp \
     loadinsertthread.cpp \
-    items.cpp \
     analyze.cpp \
-    abilities.cpp \
     security.cpp \
     scriptengine.cpp \
     pluginmanager.cpp \
@@ -28,17 +23,10 @@ SOURCES += main.cpp \
     sql.cpp \
     waitingobject.cpp \
     tier.cpp \
-    moves.cpp \
     channel.cpp \
     tiertree.cpp \
     tiermachine.cpp \
     sessiondatafactory.cpp \
-    battlepluginstruct.cpp \
-    battlecounters.cpp \
-    battlebase.cpp \
-    battlerby.cpp \
-    rbymoves.cpp \
-    mechanicsbase.cpp \
     modswindow.cpp \
     relaymanager.cpp \
     server.tpp \
@@ -53,18 +41,12 @@ SOURCES += main.cpp \
 
 HEADERS += player.h \
     network.h \
-    moves.h \
     memoryholder.h \
-    mechanics.h \
     loadinsertthread.h \
-    items.h \
     consolereader.h \
     challenge.h \
-    berries.h \
-    battle.h \
     antidos.h \
     analyze.h \
-    abilities.h \
     security.h \
     scriptengine.h \
     pluginmanager.h \
@@ -85,16 +67,11 @@ HEADERS += player.h \
     tiertree.h \
     tiernode.h \
     ../Utilities/CrossDynamicLib.h \
-    ../Utilities/coro.h \
-    ../Utilities/contextswitch.h \
     ../Utilities/mtrand.h \
-    miscmoves.h \
     sessiondatafactory.h \
-    battleinterface.h \
-    battlepluginstruct.h \
     miscabilities.h \
     serverinterface.h \
-    sfmlsocket.h \
+    asiosocket.h \
     ../Shared/networkcommands.h \
     battlecounters.h \
     battlecounterindex.h \
@@ -103,10 +80,6 @@ HEADERS += player.h \
     ../Utilities/coreclasses.h \
     playerstructs.h \
     networkutilities.h \
-    battlebase.h \
-    battlerby.h \
-    rbymoves.h \
-    mechanicsbase.h \
     modswindow.h \
     relaymanager.h \
     ../PokemonInfo/enums.h \
@@ -125,9 +98,10 @@ CONFIG(nogui) {
     QT -= gui
     DEFINES += PO_NO_GUI
 }
-CONFIG(sfml) { 
-    DEFINES += SFML_SOCKETS
-    SOURCES += sfmlsocket.cpp
+
+CONFIG(boost_asio) {
+    DEFINES += BOOST_SOCKETS
+    SOURCES += asiosocket.cpp
     LIBS += -L/usr/local/lib \
         -lboost_system
 }

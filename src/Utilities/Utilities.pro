@@ -17,7 +17,9 @@ SOURCES += otherwidgets.cpp \
     qclosedockwidget.cpp \
     backtrace.cpp \
     qverticalscrollarea.cpp \
-    qscrolldowntextbrowser.cpp
+    qscrolldowntextbrowser.cpp \
+    pluginmanager.cpp \
+    pluginmanagerwidget.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -33,7 +35,10 @@ HEADERS += otherwidgets.h \
     qclosedockwidget.h \
     backtrace.h \
     qverticalscrollarea.h \
-    qscrolldowntextbrowser.h
+    qscrolldowntextbrowser.h \
+    pluginmanager.h \
+    plugininterface.h \
+    pluginmanagerwidget.h
 
 windows: {
 HEADERS += coro/taskimpl.h \

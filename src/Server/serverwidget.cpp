@@ -6,10 +6,6 @@
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
-#include "battle.h"
-#include "moves.h"
-#include "items.h"
-#include "abilities.h"
 #include "playerswindow.h"
 #include "security.h"
 #include "antidos.h"
@@ -23,6 +19,7 @@
 #include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
+#include "../Utilities/pluginmanagerwidget.h"
 #include "modswindow.h"
 
 ServerWidget::ServerWidget(Server *myserver)
@@ -175,6 +172,7 @@ void ServerWidget::openPluginManager()
     w->show();
 
     connect(w, SIGNAL(pluginListChanged()), this, SIGNAL(menuBarChanged()));
+    connect(w, SIGNAL(error(QString)), server, SLOT(printLine(QString));
 }
 
 void ServerWidget::openAntiDos()

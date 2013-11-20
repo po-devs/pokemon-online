@@ -4,7 +4,7 @@
 #include "webserverconfig.h"
 #include "webserverplugin.h"
 
-ServerPlugin * createPluginClass(ServerInterface* server) {
+ServerPlugin * createServerPlugin(ServerInterface* server) {
     return new WebServerPlugin(server);
 }
 

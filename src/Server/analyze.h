@@ -207,7 +207,7 @@ Analyzer::Analyzer(const SocketClass &sock, int id, bool dummy) : mysocket(new N
     connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
     /* Only if its not registry */
     if (id != 0) {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 #endif
     }

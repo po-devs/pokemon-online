@@ -380,6 +380,7 @@ public:
     Q_INVOKABLE void tempBan(QString name, int time);
     Q_INVOKABLE void unban(QString name);
 
+#if 0
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
@@ -388,6 +389,8 @@ public:
 
     /* Only do that in beforeBattleEnded. Will set your team to what it was at the end of the battle */
     Q_INVOKABLE void setTeamToBattleTeam(int pid, int teamSlot, int battleId);
+#endif
+
     Q_INVOKABLE void swapPokemons(int pid, int teamSlot, int slot1, int slot2);
 
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
@@ -502,7 +505,7 @@ private:
     };
     QHash<QProcess*, ProcessData> processes;
 public:
-    Q_INVOKABLE void addPlugin(const QString &path);
+    Q_INVOKABLE bool addPlugin(const QString &path);
     Q_INVOKABLE void removePlugin(int index);
     Q_INVOKABLE QStringList listPlugins();
 #endif // PO_SCRIPT_NO_SYSTEM

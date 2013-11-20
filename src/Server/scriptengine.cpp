@@ -10,7 +10,6 @@
 #include "scriptengine.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
-#include "battlebase.h"
 #include "pluginmanager.h"
 #include <QRegExp>
 #include "analyze.h"
@@ -2470,6 +2469,7 @@ void ScriptEngine::battleSetup(int src, int dest, int battleId)
     makeEvent("battleSetup", src, dest, battleId);
 }
 
+#if 0
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
     if((weatherId >= 0) && (weatherId <= 4)) {
@@ -2555,6 +2555,7 @@ void ScriptEngine::setTeamToBattleTeam(int pid, int teamSlot, int battleId)
         warn("setTeamToBattleTeam", "can't find a battle with specified id.");
     }
 }
+#endif
 
 void ScriptEngine::swapPokemons(int pid, int teamSlot, int slot1, int slot2)
 {
@@ -3345,20 +3346,18 @@ QScriptValue ScriptEngine::getServerPlugins() {
 }
 
 bool ScriptEngine::loadServerPlugin(const QString &path) {
-    int const count = myserver->pluginManager->getPlugins().size();
-    myserver->pluginManager->addPlugin(path);
-    int const count2 = myserver->pluginManager->getPlugins().size();
-    return count2 == 1 + count;
+    try {
+        myserver->pluginManager->addPlugin(path);
+    } catch (std::runtime_error &er) {
+        printLine(er.what());
+        return false;
+    }
+
+    return true;
 }
 
 bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
-    QStringList plugin_names = myserver->pluginManager->getPlugins();
-    int index = plugin_names.indexOf(plugin);
-    if (index != -1) {
-        myserver->pluginManager->freePlugin(index);
-        return true;
-    }
-    return false;
+    return myserver->pluginManager->freePlugin(plugin);
 }
 
 #endif // PO_SCRIPT_SAFE_ONLY
@@ -3498,9 +3497,9 @@ void ScriptEngine::read_standard_error() {
     processes[p].err.append(p->readAllStandardError());
 }
 
-void ScriptEngine::addPlugin(const QString &path)
+bool ScriptEngine::addPlugin(const QString &path)
 {
-    myserver->pluginManager->addPlugin(path);
+    return loadServerPlugin(path);
 }
 
 void ScriptEngine::removePlugin(int index)

@@ -2,7 +2,7 @@
 #define NETWORK_H
 
 #include <QtNetwork>
-#include "sfmlsocket.h"
+#include "asiosocket.h"
 
 class GenericNetwork: public QObject
 {
@@ -105,7 +105,7 @@ void Network<S>::close() {
     if (socket()) {
         //qDebug() << "valid socket " << this;
         S sock = mysocket;
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         mysocket = NULL;
 #else
         mysocket = S();
@@ -124,7 +124,7 @@ void Network<S>::close() {
 template <class S>
 void Network<S>::setLowDelay(bool lowDelay)
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     if (socket()) {
         socket()->setSocketOption(QAbstractSocket::LowDelayOption, lowDelay);
     }
@@ -142,7 +142,7 @@ Network<S>::~Network()
 template <class S>
 void Network<S>::connectToHost(const QString &ip, quint16 port)
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     socket()->connectToHost(ip, port);
     connect(socket(), SIGNAL(connected()), SIGNAL(connected()));
 #else
@@ -167,7 +167,7 @@ void Network<S>::onDisconnect()
     stillValid = false;
     if (socket()) {
         //qDebug() << "Beginning onDisconnect " << this;
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         mysocket = NULL;
 #else
         mysocket = S();
@@ -216,7 +216,7 @@ void Network<S>::onReceipt()
 template <class S>
 int Network<S>::error() const
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     if (socket())
         return socket()->error();
     else
@@ -227,7 +227,7 @@ int Network<S>::error() const
 template <class S>
 QString Network<S>::errorString() const
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     if (socket())
         return socket()->errorString();
     else

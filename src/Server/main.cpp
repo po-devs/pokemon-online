@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
             qDebug() << "A web-tool for configuring and maintaining is also available in form of the webserver plugin.\n";
             qDebug() << "Console commands:";
             qDebug() << "- addp <plugin-path>: Add the plugin to the server";
-            qDebug() << "- removep <plugin-index>: Remove the plugin at said index";
+            qDebug() << "- removep <plugin-name>: Remove the plugin with said name";
             qDebug() << "- listp: List the plugins in their order";
             qDebug() << "- <other message>: Prints the message as coming from ~~Server~~\n";
 

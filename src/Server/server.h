@@ -4,7 +4,7 @@
 #include "../Utilities/contextswitch.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverinterface.h"
-#include "sfmlsocket.h"
+#include "asiosocket.h"
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -14,14 +14,13 @@
 class FindBattleData;
 class FindBattleDataAdv;
 class Player;
-class BattleBase;
 class Analyzer;
 class BattleChoice;
 class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
 class QTcpServer;
-class PluginManager;
+class ServerPluginManager;
 class TeamBattle;
 
 class Server: public QObject, public ServerInterface
@@ -51,7 +50,7 @@ public:
     void start();
 
     static void print(const QString &line);
-    bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
+
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
@@ -118,6 +117,8 @@ signals:
     void player_authchange(int id, const QString &name);
 
 public slots:
+    bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
+
     /* Registry slots */
     void connectToRegistry();
     void clearRatedBattlesHistory();
@@ -246,13 +247,13 @@ private:
         The disavandtage is that you don't have clean ids, that are close to 0. */
     mutable int playercounter, battlecounter, channelcounter;
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QList<QTcpServer *> myservers;
 #else
     QList<GenericSocket> myservers;
     SocketManager manager;
 #endif
-    PluginManager *pluginManager;
+    ServerPluginManager *pluginManager;
 
     /* storing players */
     QHash<int, Player*> myplayers;
@@ -269,7 +270,7 @@ private:
     QHash<int, BattleBase *> mybattles;
     QHash<qint32, Battle> battleList;
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QTcpServer *server(int i);
 #else
     GenericSocket server(int i);

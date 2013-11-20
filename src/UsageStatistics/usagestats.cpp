@@ -5,11 +5,10 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 
 #include <cstdio>
 #include "usagestats.h"
-#include "../Server/playerinterface.h"
 #include "../PokemonInfo/battlestructs.h"
 
-ServerPlugin * createPluginClass(ServerInterface *server) {
-    return new PokemonOnlineStatsPlugin(server);
+ServerPlugin * createBattleServerPlugin() {
+    return new PokemonOnlineStatsPlugin();
 }
 
 /*************************/
@@ -88,7 +87,7 @@ void TierRank::writeContents()
 /*************************/
 /*************************/
 
-PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin(ServerInterface *s) :server(s)
+PokemonOnlineStatsPlugin::PokemonOnlineStatsPlugin()
 {
     QDir d;
     d.mkdir("usage_stats");
