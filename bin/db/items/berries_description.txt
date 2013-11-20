@@ -62,6 +62,9 @@
 61 Ensures that the holder will move first within its priority bracket in the turn after its HP falls below 25%. Consumed after use.
 62 Damages the enemy for 12.5% its max HP if it hits the holder with a physical attack. Consumed after use.
 63 Damages the enemy for 12.5% its max HP if it hits the holder with a special attack. Consumed after use.
+64 Halves the damage of the opponent's super-effective Fairy attack. Consumed after use.
+65 Raises the holder's Defense by one stage when it is hit by a physical attack. Consumed after use.
+66 Raises the holder's Special Defense by one stage when it is hit by a special attack. Consumed after use.
 1000 Automatically cures the holder of being Paralyzed. Consumed after use.
 1001 Automatically cures the holder of being Asleep. Consumed after use.
 1002 Automatically cures the holder of being Poisoned. Consumed after use.

@@ -299,13 +299,15 @@ struct MMCamouflage : public MM {
     }
 
     static void uas (int s, int, BS &b) {
-        if (b.gen() >= 5) {
-            b.setType(s, Pokemon::Ground);
-            b.sendMoveMessage(17,0,s,Type::Ground);
-        } else {
-            b.setType(s, Pokemon::Normal);
-            b.sendMoveMessage(17,0,s,Type::Normal);
+        int type = Pokemon::Normal;
+        if (b.gen().num == 5) {
+            type = Pokemon::Ground;
         }
+        if (b.terrain != 0) {
+            type = std::abs(b.terrain);
+        }
+        b.setType(s, type);
+        b.sendMoveMessage(17,0,s,type);
     }
 };
 
@@ -6892,10 +6894,11 @@ struct MMStickyWeb : public MM
     }
 
     static void usi(int source, int s, BS &b) {
+        int t = b.opponent(b.player(s));
         if (!b.koed(s) && team(b,source).value("StickyWeb").toBool() == true && !b.hasWorkingAbility(s, Ability::ClearBody) && !b.isFlying(s))
         {
             b.sendMoveMessage(210,1,s,Pokemon::Bug);
-            b.inflictStatMod(s, Speed, -1, s);
+            b.inflictStatMod(s, Speed, -1, t);
         }
     }
 };
