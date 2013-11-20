@@ -1,4 +1,6 @@
+#include "server.h"
 #include "networkutilities.h"
+#include "player.h"
 
 template <typename ...Params>
 void Server::notifyGroup(PlayerGroupFlags group, int command, Params &&... params)
@@ -34,7 +36,7 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
 {
     QByteArray packet = makePacket(command, std::forward<Params>(params)...);
     const QSet<Player*> &g1 = getGroup(group);
-    const QSet<Player*> &g2 = this->channel(channel).players;
+    const QSet<int> &g2 = this->channel(channel).players;
 
     if (g1.size() < g2.size()) {
         foreach(Player *p, g1) {
@@ -43,7 +45,8 @@ void Server::notifyChannel(int channel, PlayerGroupFlags group, int command, Par
             }
         }
     } else {
-        foreach(Player *p, g2) {
+        foreach(int pid, g2) {
+            Player *p = player(pid);
             if (group == All || p->spec()[group]) {
                 p->sendPacket(packet);
             }
@@ -56,7 +59,7 @@ void Server::notifyChannelOpp(int channel, PlayerGroupFlags group, int command, 
 {
     QByteArray packet = makePacket(command, std::forward<Params>(params)...);
     const QSet<Player*> &g1 = getOppGroup(group);
-    const QSet<Player*> &g2 = this->channel(channel).players;
+    const QSet<int> &g2 = this->channel(channel).players;
 
     if (g1.size() < g2.size()) {
         foreach(Player *p, g1) {
@@ -65,10 +68,24 @@ void Server::notifyChannelOpp(int channel, PlayerGroupFlags group, int command, 
             }
         }
     } else {
-        foreach(Player *p, g2) {
+        foreach(int pid, g2) {
+            Player *p = player(pid);
             if (!p->spec()[group]) {
                 p->sendPacket(packet);
             }
+        }
+    }
+}
+
+template <typename ...Params>
+void Server::notifyChannelLastId(int channel, int command, Params &&... params)
+{
+    QByteArray packet = makePacket(command, std::forward<Params>(params)...);
+
+    foreach(int pid, this->channel(channel).players) {
+        Player *p = player(pid);
+        if (!p->hasSentCommand(lastDataId)) {
+            p->sendPacket(packet);
         }
     }
 }

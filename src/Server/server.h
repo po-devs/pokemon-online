@@ -303,10 +303,6 @@ private:
         return * channels[id];
     }
 
-    inline bool channelContains(int chanid, int playerid) const {
-        return channel(chanid).players.contains(player(playerid));
-    }
-
     int numberOfPlayersLoggedIn;
 
 public:
@@ -331,13 +327,19 @@ public:
 
     void notifyGroup(PlayerGroupFlags group, const QByteArray &packet);
 
-
+    /* Notify all players in the channel not part of the group */
     template <typename ...Params>
     void notifyOppGroup(PlayerGroupFlags group, int command, Params &&... params);
 
+    /* Notify all players in the channel part of the group */
     template <typename ...Params>
     void notifyChannel(int channel, PlayerGroupFlags group, int command, Params &&... params);
 
+    /* Notify all players in the channel part of the group which haven't received the same command already */
+    template <typename ...Params>
+    void notifyChannelLastId(int channel, int command, Params &&... params);
+
+    /* Notify all players in the channel not part of the group */
     template <typename ...Params>
     void notifyChannelOpp(int channel, PlayerGroupFlags group, int command, Params &&... params);
 

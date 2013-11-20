@@ -13,26 +13,12 @@ unsigned int qHash(const QPointer<Player> &pl)
     return qHash(pl.data());
 }
 
-Channel::Channel(const QString &name, int id) : m_prop_id(id), m_prop_name(name), logDay(0) {
-    QDir d;
-    if(!d.exists("logs/chat/" + name)) {
-        d.mkpath("logs/chat/" + name);
-    }
+Channel::Channel(const QString &name, int id) : m_prop_id(id), m_prop_name(name){
+    server = Server::serverIns;
 }
 
 void Channel::log(const QString &message) {
-    if(!logfile.isOpen() || logDay != QDate::currentDate().day()) {
-        if(logfile.isOpen()) {
-            logfile.close();
-        }
-        QString date = QDate::currentDate().toString("yyyy-MM-dd");
-        QString filename = "logs/chat/"+name()+"/"+date+".txt";
-        logDay = QDate::currentDate().day();
-        logfile.setFileName(filename);
-        logfile.open(QFile::WriteOnly | QFile::Append | QFile::Text);
-    }
-    logfile.write(QString("(%1) %2\n").arg(QTime::currentTime().toString("hh:mm:ss"), message).toUtf8());
-    logfile.flush();
+    (void) message;
 }
 
 bool Channel::validName(const QString &name) {
@@ -46,65 +32,72 @@ void Channel::addBattle(int battleid, const Battle &b)
     }
 
     battleList[battleid] = b;
-    foreach(Player *p, players) {
-        p->relay().sendChannelBattle(id(), battleid, b);
+    foreach(int pid, players) {
+        server->player(pid)->relay().sendChannelBattle(id(), battleid, b);
     }
 }
 
-void Channel::leaveRequest(Player *player, bool onlydisconnect)
+void Channel::leaveRequest(int pid, bool onlydisconnect)
 {
-    Server *server = Server::serverIns;
+    Player *player = server->player(pid);
 
-    if (players.contains(player)) {
+    if (players.contains(pid)) {
         server->engine()->beforeChannelLeave(player->id(), id());
 
-        foreach(Player *p, players) {
-            p->relay().notify(NetworkServ::LeaveChannel, qint32(id()), qint32(player->id()));
+        foreach(int pid2, players) {
+            server->player(pid2)->relay().notify(NetworkServ::LeaveChannel, qint32(id()), qint32(pid));
         }
 
         foreach(int battleid, player->getBattles()) {
             /* Because a player has a battle, it doesn't mean it's ongoing */
             if (server->hasOngoingBattle(battleid)) {
                 Battle b = server->ongoingBattle(battleid);
-                /* We remove the battle only if only one of the player is in the channel */
-                if (int(players.contains(server->player(b.id1))) + int(players.contains(server->player(b.id2))) < 2) {
+                /* We remove the battle only if only one (or less) of the players are in the channel */
+                if (int(players.contains(b.id1)) + int(players.contains(b.id2)) < 2) {
                     battleList.remove(battleid);
                 }
             }
         }
 
         server->printLine(QString("%1 left channel %2.").arg(player->name(), name()));
-        players.remove(player);
+        players.remove(pid);
 
         if (onlydisconnect) {
-            disconnectedPlayers.insert(player);
+            disconnectedPlayers.insert(pid);
         } else {
             player->removeChannel(id());
         }
 
-        server->engine()->afterChannelLeave(player->id(), id());
-    } else if (disconnectedPlayers.contains(player)) {
-        disconnectedPlayers.remove(player);
+        server->engine()->afterChannelLeave(pid, id());
+    } else {
+        if (!disconnectedPlayers.contains(pid)) {
+            qFatal("Player %d leaving channel %d but no record of him being in the channel.", pid, id());
+        }
+
+        disconnectedPlayers.remove(pid);
         player->removeChannel(id());
     }
 
-    if (players.size() <= 0) {
+    if (isEmpty()) {
         emit closeRequest(id());
     }
 }
 
-void Channel::playerJoin(Player *player)
+void Channel::playerJoin(int pid)
 {
-    Server *server= Server::serverIns;
+    Player *player = server->player(pid);
 
     QVector<qint32> ids;
     ids.reserve(players.size());
 
+    /* Players of this channel which don't already know the new player */
     QSet<Player*> unknown;
+    /* The info of those players, to be sent to the player to join */
     QVector<reference<PlayerInfo> > bundles;
 
     Analyzer &relay = player->relay();
-    foreach(Player *p, players) {
+    foreach(int pid2, players) {
+        Player *p = server->player(pid2);
         if (!p->isInSameChannel(player)) {
             unknown.insert(p);
             bundles.push_back(&p->bundle());
@@ -117,15 +110,15 @@ void Channel::playerJoin(Player *player)
     player->sendPlayers(bundles);
     relay.sendChannelPlayers(id(), ids);
 
-    disconnectedPlayers.remove(player);
-    players.insert(player);
+    disconnectedPlayers.remove(pid);
+    players.insert(pid);
 
     player->addChannel(id());
 
     server->printLine(QString("%1 joined channel %2.").arg(player->name(), name()));
 
-    foreach(Player *p, players) {
-        p->relay().sendJoin(player->id(), id());
+    foreach(int pid2, players) {
+        server->player(pid2)->relay().sendJoin(pid, id());
     }
 
     relay.sendBattleList(id(), battleList);
@@ -142,19 +135,40 @@ void Channel::playerJoin(Player *player)
     }
 }
 
-void Channel::warnAboutRemoval()
+void Channel::onReconnect(int playerid)
 {
-    foreach(Player *p, players) {
-        p->removeChannel(id());
-    }
-    foreach(Player *p, disconnectedPlayers) {
-        if (p) {
-            p->removeChannel(id());
+    QVector<qint32> ids;
+    ids.reserve(players.size());
+
+    Player *player = server->player(playerid);
+
+    QVector<reference<PlayerInfo> > bundles;
+
+    Analyzer &relay = player->relay();
+    foreach(int pid, players) {
+        ids.push_back(pid);
+
+        Player *p = server->player(pid);
+        if (!p->isInSameChannel(player)) {
+            bundles.push_back(&p->bundle());
         }
     }
 
-    if(logfile.isOpen()) {
-        logfile.close();
+    player->sendPlayers(bundles);
+
+    relay.sendChannelPlayers(id(), ids);
+    player->addChannel(id());
+
+    relay.sendBattleList(id(), battleList);
+}
+
+void Channel::warnAboutRemoval()
+{
+    foreach(int p, players) {
+        server->player(p)->removeChannel(id());
+    }
+    foreach(int p, disconnectedPlayers) {
+        server->player(p)->removeChannel(id());
     }
 
     players.clear();
@@ -165,6 +179,11 @@ void Channel::onRemoval()
 {
     warnAboutRemoval();
     deleteLater();
+}
+
+bool Channel::isEmpty() const
+{
+    return players.size() == 0;
 }
 
 Channel::~Channel()

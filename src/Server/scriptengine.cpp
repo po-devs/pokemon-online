@@ -2152,8 +2152,8 @@ QScriptValue ScriptEngine::playersOfChannel(int channelid)
         int i = 0;
         QScriptValue ret = myengine.newArray(c.players.count());
 
-        foreach(Player *p, c.players) {
-            ret.setProperty(i, p->id());
+        foreach(int id, c.players) {
+            ret.setProperty(i, id);
             i += 1;
         }
 

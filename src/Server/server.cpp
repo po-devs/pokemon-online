@@ -357,6 +357,10 @@ int Server::addChannel(const QString &name, int playerid) {
     if (channelids.contains(name.toLower())) {
         return -1; //Teehee
     }
+    if (channels.size() >= 1000) {
+        sendMessage(playerid, "The server is limited to 1000 channels.");
+        return false;
+    }
 
     int chanid = 0;
     QString chanName = name;
@@ -416,7 +420,7 @@ bool Server::joinChannel(int playerid, int channelid) {
     }
 
     Channel &channel = this->channel(channelid);
-    channel.playerJoin(player(playerid));
+    channel.playerJoin(playerid);
 
     myengine->afterChannelJoin(playerid, channelid);
 
@@ -426,36 +430,15 @@ bool Server::joinChannel(int playerid, int channelid) {
 void Server::needChannelData(int playerid, int channelid)
 {
     Channel &channel = this->channel(channelid);
-    QVector<qint32> ids;
-    ids.reserve(channel.players.size());
 
-    Player *player = this->player(playerid);
-
-    QVector<reference<PlayerInfo> > bundles;
-
-    Analyzer &relay = player->relay();
-    foreach(Player *p, channel.players) {
-        if (!p->isInSameChannel(player)) {
-            bundles.push_back(&p->bundle());
-        }
-        ids.push_back(p->id());
-    }
-
-    player->sendPlayers(bundles);
-
-    relay.sendChannelPlayers(channelid, ids);
-    player->addChannel(channelid);
-
-    relay.sendBattleList(channelid, channel.battleList);
+    channel.onReconnect(playerid);
 }
 
 void Server::leaveRequest(int playerid, int channelid, bool keep)
 {
     Channel &channel = this->channel(channelid);
 
-    Player *player = this->player(playerid);
-
-    channel.leaveRequest(player, keep);
+    channel.leaveRequest(playerid, keep);
 }
 
 void Server::channelClose(int channelid)
@@ -463,7 +446,7 @@ void Server::channelClose(int channelid)
     if (!channels.contains(channelid)) {
         return;
     }
-    if (channel(channelid).players.size() <= 0 && channelid != 0) {
+    if (channel(channelid).isEmpty() && channelid != 0) {
         removeChannel(channelid);
     }
 }
@@ -1134,25 +1117,24 @@ void Server::spectatingChat(int player, int battle, const QString &chat)
 bool Server::joinRequest(int player, const QString &channel)
 {
     printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
+
     if (!channelExist(channel)) {
-        if (channels.size() >= 1000) {
-            sendMessage(player, "The server is limited to 1000 channels.");
+        if (addChannel(channel, player) == -1) {
             return false;
         }
-        if (addChannel(channel, player) == -1)
-            return false;
     }
 
     /* Because scripts might have caused the destruction of the previous channel,
        if the scripter puts some code in addChannel that would cause a masskick */
-    if (!channelExist(channel))
+    if (!channelExist(channel)) {
         return false;
+    }
 
     int channelid = channelids[channel.toLower()];
 
-    if (this->channel(channelid).players.contains(this->player(player))) {
+    if (this->channel(channelid).players.contains(player)) {
         //already in the channel
-        return true;
+        return false;
     }
 
     return joinChannel(player, channelid);
@@ -1286,14 +1268,11 @@ void Server::awayChanged(int src, bool away)
     if (!playerLoggedIn(src))
         return;
 
+    bool ladder = player(src)->state()[Player::LadderEnabled];
+
     ++lastDataId;
     foreach(int chanid, player(src)->getChannels()) {
-        foreach(Player *p, channel(chanid).players) {
-            /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
-                p->relay().notifyOptionsChange(src, away, p->state()[Player::LadderEnabled]);
-            }
-        }
+        notifyChannelLastId(chanid, NetworkServ::OptionsChange, qint32(src), Flags(ladder + (away << 1)));
     }
 }
 
@@ -1667,25 +1646,17 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     Battle battleS = battleList[id];
 
     ++lastDataId;
-    foreach(int chanid, p1->getChannels()) {
-        Channel &chan = channel(chanid);
-        if (!chan.battleList.contains(id)) {
-            chan.battleList.insert(id,battleS); //Channel Battle List //QString::number(c.rated)
-        }
-        foreach(Player *p, chan.players) {
-            /* That test avoids to send twice the same data to the client */
-            if (p->id() != id1 && p->id() != id2 && !p->hasSentCommand(lastDataId)) {
-                p->relay().notifyBattle(id,battleS);
-            }
-        }
-    }
-    foreach(int chanid, p2->getChannels()) {
+    QSet<int> allChannels = QSet<int>(p1->getChannels()).unite(p2->getChannels());
+    /* We can't reduce that loop, because a battle is version-dependent (and all android client have
+     * the older network protocol), so notifyBattle has to be called for each separate player */
+    foreach(int chanid, allChannels) {
         Channel &chan = channel(chanid);
         if (!chan.battleList.contains(id)) {
             chan.battleList.insert(id,battleS);
         }
 
-        foreach(Player *p, chan.players) {
+        foreach(int pid, chan.players) {
+            Player *p = player(pid);
             /* That test avoids to send twice the same data to the client */
             if (p->id() != id1 && p->id() != id2 && !p->hasSentCommand(lastDataId)) {
                 p->relay().notifyBattle(id,battleS);
@@ -1770,26 +1741,14 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         myengine->beforeBattleEnded(winner, loser, desc, battleid);
 
         ++lastDataId;
-        foreach(int chanid, pw->getChannels()) {
+        QSet<int> allChannels = QSet<int>(pw->getChannels()).unite(pl->getChannels());
+        foreach(int chanid, allChannels) {
             Channel &chan = channel(chanid);
+
             chan.battleList.remove(battleid);
-            foreach(Player *p, chan.players) {
-                /* That test avoids to send twice the same data to the client */
-                if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
-                }
-            }
+            notifyChannelLastId(chanid, NetworkServ::BattleFinished, qint32(battleid), qint8(desc), qint8(battle->mode()), qint32(winner), qint32(loser));
         }
-        foreach(int chanid, pl->getChannels()) {
-            Channel &chan = channel(chanid);
-            chan.battleList.remove(battleid);
-            foreach(Player *p, chan.players) {
-                /* That test avoids to send twice the same data to the client */
-                if (!p->hasSentCommand(lastDataId)) {
-                    p->battleResult(battleid, desc, battle->mode(), winner, loser);
-                }
-            }
-        }
+
         battleList.remove(battleid);
 
         if (desc == Forfeit) {
@@ -1860,12 +1819,7 @@ void Server::sendPlayer(int id)
 
     ++lastDataId;
     foreach(int chanid, source->getChannels()) {
-        foreach(Player *p, channel(chanid).players) {
-            /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
-                p->relay().sendPlayer(bundle);
-            }
-        }
+        notifyChannelLastId(chanid, NetworkServ::PlayersList, bundle);
     }
 }
 
@@ -1877,12 +1831,7 @@ void Server::sendLogout(int id)
 
     ++lastDataId;
     foreach(int chanid, source->getChannels()) {
-        foreach(Player *p, channel(chanid).players) {
-            /* That test avoids to send twice the same data to the client */
-            if (!p->hasSentCommand(lastDataId)) {
-                p->relay().sendLogout(id);
-            }
-        }
+        notifyChannelLastId(chanid, NetworkServ::Logout, qint32(id));
     }
 }
 
