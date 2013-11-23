@@ -19,7 +19,10 @@ SOURCES += otherwidgets.cpp \
     qverticalscrollarea.cpp \
     qscrolldowntextbrowser.cpp \
     pluginmanager.cpp \
-    pluginmanagerwidget.cpp
+    pluginmanagerwidget.cpp \
+    antidos.cpp \
+    antidoswindow.cpp \
+    network.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -38,7 +41,11 @@ HEADERS += otherwidgets.h \
     qscrolldowntextbrowser.h \
     pluginmanager.h \
     plugininterface.h \
-    pluginmanagerwidget.h
+    pluginmanagerwidget.h \
+    antidos.h \
+    antidoswindow.h \
+    asiosocket.h \
+    network.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
@@ -59,6 +66,13 @@ DEFINES += CORO2
 
 !windows: {
 SOURCES += coro.c
+}
+
+CONFIG(boost_asio) {
+    DEFINES += BOOST_SOCKETS
+    SOURCES += asiosocket.cpp
+    LIBS += -L/usr/local/lib \
+        -lboost_system
 }
 
 OTHER_FILES += 

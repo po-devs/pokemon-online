@@ -1,7 +1,7 @@
-#ifndef SFMLSOCKET_H
-#define SFMLSOCKET_H
+#ifndef ASIOSOCKET_H
+#define ASIOSOCKET_H
 
-#ifdef SFML_SOCKETS
+#ifdef BOOST_SOCKETS
 
 #include <QtCore>
 #include <iostream>
@@ -103,4 +103,4 @@ class QTcpSocket;
 typedef QTcpSocket* GenericSocket;
 #endif
 
-#endif // SFMLSOCKET_H
+#endif // ASIOSOCKET_H

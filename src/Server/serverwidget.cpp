@@ -191,7 +191,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(nameChanged(QString)), server, SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), server, SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), server, SLOT(regMaxChanged(int)));
-    connect(w, SIGNAL(privacyChanged(int)), server, SLOT(regPrivacyChanged(int)));
+    connect(w, SIGNAL(privacyChanged(bool)), server, SLOT(regPrivacyChanged(bool)));
     connect(w, SIGNAL(announcementChanged(QString)), server, SLOT(announcementChanged(QString)));
     connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
     connect(w, SIGNAL(inactivePlayersDeleteDaysChanged(int)), server, SLOT(inactivePlayersDeleteDaysChanged(int)));

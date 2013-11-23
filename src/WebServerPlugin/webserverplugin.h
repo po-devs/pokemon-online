@@ -43,7 +43,7 @@ signals:
 
     void nameChanged(QString);
     void mainChannelChanged(QString);
-    void privateChanged(int);
+    void privateChanged(bool);
     void proxyServersChanged(QString);
     void announcementChanged(QString);
     void antiDosChanged();

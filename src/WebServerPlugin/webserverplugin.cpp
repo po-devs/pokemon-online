@@ -49,7 +49,7 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     connect(this, SIGNAL(nameChanged(QString)), srv, SLOT(regNameChanged(QString)));
     connect(this, SIGNAL(announcementChanged(QString)), srv, SLOT(announcementChanged(QString)));
     connect(this, SIGNAL(mainChannelChanged(QString)), srv, SLOT(mainChanChanged(QString)));
-    connect(this, SIGNAL(privateChanged(int)), srv, SLOT(regPrivacyChanged(int)));
+    connect(this, SIGNAL(privateChanged(bool)), srv, SLOT(regPrivacyChanged(bool)));
     connect(this, SIGNAL(proxyServersChanged(QString)), srv, SLOT(proxyServersChanged(QString)));
     connect(this, SIGNAL(antiDosChanged()), server->getAntiDos(), SLOT(init()));
 }

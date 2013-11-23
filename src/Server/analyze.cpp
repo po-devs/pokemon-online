@@ -3,7 +3,7 @@
 */
 
 #include "analyze.h"
-#include "network.h"
+#include "../Utilities/network.h"
 #include "player.h"
 #include "tiermachine.h"
 #include "tier.h"

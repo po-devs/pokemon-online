@@ -2,9 +2,9 @@
 #define SERVER_H
 
 #include "../Utilities/contextswitch.h"
+#include "../Utilities/asiosocket.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "serverinterface.h"
-#include "asiosocket.h"
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -22,6 +22,7 @@ class Challenge;
 class QTcpServer;
 class ServerPluginManager;
 class TeamBattle;
+class RegistryCommunicator;
 
 class Server: public QObject, public ServerInterface
 {
@@ -30,6 +31,7 @@ class Server: public QObject, public ServerInterface
     friend class ScriptEngine;
     friend class ServerWidget;
     friend class ConsoleReader;
+    friend class RegistryCommunicator;
 public:
     enum PlayerGroupFlags {
         All = 0,
@@ -118,6 +120,7 @@ signals:
 
 public slots:
     bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
+    void forcePrint(const QString &line);
 
     /* Registry slots */
     void connectToRegistry();
@@ -127,13 +130,13 @@ public slots:
     void regSendPlayers();
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
-    void regMaxChanged(const int &num);
-    void regPasswordChanged(bool &newValue);
+    void regMaxChanged(int num);
+    void regPasswordChanged(bool newValue);
     void changeScript(const QString &script);
     void reloadTiers();
     void announcementChanged(const QString &announcement);
     void mainChanChanged(const QString &mainChan);
-    void regPrivacyChanged(const int &priv);
+    void regPrivacyChanged(bool priv);
     void logSavingChanged(bool logging);
     void inactivePlayersDeleteDaysChanged(int newValue);
     void useChannelFileLogChanged(bool logging);
@@ -210,7 +213,8 @@ private:
     void ban(int dest, int src);
     void tempBan(int dest, int src, int time);
 
-    Analyzer *registry_connection;
+    RegistryCommunicator *registry;
+
     QString serverName, serverDesc;
     QByteArray serverAnnouncement;
     QByteArray zippedAnnouncement;

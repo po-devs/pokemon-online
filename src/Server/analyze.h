@@ -7,7 +7,7 @@
 
 #include <QtCore>
 #include <QColor>
-#include "network.h"
+#include "../Utilities/network.h"
 #include "../Utilities/coreclasses.h"
 #include "../PokemonInfo/networkstructs.h"
 

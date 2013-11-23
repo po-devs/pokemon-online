@@ -1,40 +1,29 @@
 #ifndef ANTIDOS_H
 #define ANTIDOS_H
 
-#include <QWidget>
+#include <QObject>
+#include <QString>
 #include <QHash>
-#include <ctime>
+#include <QList>
 #include <QTimer>
+#include <QStringList>
 
-class QSpinBox;
-class QLineEdit;
-class QCheckBox;
-
-class AntiDosWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    AntiDosWindow();
-public slots:
-    void apply();
-private:
-    QSpinBox *max_people_per_ip, *max_commands_per_user, *max_kb_per_user, *max_login_per_ip, *ban_after_x_kicks;
-    QLineEdit *trusted_ips, *notificationsChannel;
-    QCheckBox *aDosOn;
-};
+class QSettings;
 
 /* A class to detect flood and ban DoSing IPs */
 class AntiDos : public QObject
 {
     Q_OBJECT
     friend class AntiDosWindow;
-    friend class ScriptEngine;
 public:
-    AntiDos();
+    AntiDos(QSettings &settings);
 
     static AntiDos * obj() {
         return instance;
     }
+
+    static void init(QSettings &settings);
+    void loadVals(QSettings &settings);
 
     /* Returns true if an ip is allowed a new connection */
     bool connecting(const QString &ip);
@@ -66,7 +55,6 @@ private:
     QHash<int, int> sizeOfTransfers;
     QHash<QString, QList<time_t> > kicksPerIp;
     QTimer timer;
-
     static AntiDos *instance;
 
     QStringList trusted_ips;
@@ -75,5 +63,4 @@ private:
 
     void addKick(const QString &ip);
 };
-
 #endif // ANTIDOS_H

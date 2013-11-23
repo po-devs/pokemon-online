@@ -4,7 +4,7 @@
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "playerinterface.h"
-#include "asiosocket.h"
+#include "../Utilities/asiosocket.h"
 #include "playerstructs.h"
 
 class Challenge;

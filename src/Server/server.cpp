@@ -14,7 +14,7 @@
 #include "items.h"
 #include "abilities.h"
 #include "security.h"
-#include "antidos.h"
+#include "../Utilities/antidos.h"
 #include "serverconfig.h"
 #include "scriptengine.h"
 #include "tiermachine.h"
@@ -27,6 +27,7 @@
 #include "networkutilities.h"
 #include "battlerby.h"
 #include "relaymanager.h"
+#include "registrycommunicator.h"
 
 Server *Server::serverIns = NULL;
 
@@ -97,6 +98,7 @@ void Server::start(){
     srand(time(NULL));
 
     pluginManager = new ServerPluginManager(this);
+    registry = new RegistryCommunicator(this);
 
     if (!testWritable("config")) {
         //printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
@@ -158,16 +160,16 @@ void Server::start(){
     try {
         SQLCreator::createSQLConnection();
     } catch (const QString &ex) {
-        printLine(ex);
+        forcePrint(ex);
     }
 
-    printLine(tr("Starting loading pokemon database..."), false, true);
+    forcePrint(tr("Starting loading pokemon database..."));
 
     PokemonInfoConfig::setFillMode(FillMode::Server);
     PokemonInfoConfig::setDataRepo(dataRepo);
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
-    printLine(tr("Pokemon database loaded"), false, true);
+    forcePrint(tr("Pokemon database loaded"));
 
     for (int i = 0; i < GenInfo::GenMax(); i++) {
         PokemonInfo::RunMovesSanityCheck(i);
@@ -178,21 +180,21 @@ void Server::start(){
     ItemEffect::init();
     AbilityEffect::init();
 
-    printLine(tr("Move, abilities & items special effects loaded"), false, true);
+    forcePrint(tr("Move, abilities & items special effects loaded"));
 
     try {
         SecurityManager::init();
     } catch (const QString &ex) {
-        printLine(ex);
+        forcePrint(ex);
     }
 
     TierMachine::init();
     connect(TierMachine::obj(), SIGNAL(tiersChanged()), SLOT(tiersChanged()));
 
-    AntiDos::obj()->init();
+    AntiDos::init(s);
     RelayManager::init();
 
-    printLine(tr("Members loaded"));
+    forcePrint(tr("Members loaded"));
 
     battleThread.start();
     printLine(tr("Battle Thread started"));
@@ -211,9 +213,9 @@ void Server::start(){
 
         if (!listenSuccess)
         {
-            printLine(tr("Unable to listen to port %1").arg(port), false, true);
+            forcePrint(tr("Unable to listen to port %1").arg(port));
         } else {
-            printLine(tr("Starting to listen to port %1").arg(port), false, true);
+            forcePrint(tr("Starting to listen to port %1").arg(port));
         }
 
         mymapper->setMapping(&*server(i), i);
@@ -276,8 +278,7 @@ void Server::start(){
 
     this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
-    if (serverPrivate != 1)
-        connectToRegistry();
+    registry->setPrivate(serverPrivate);
 }
 
 void Server::print(const QString &line)
@@ -488,84 +489,14 @@ void Server::loadRatedBattlesSettings()
     TierMachine::obj()->loadDecaySettings();
 }
 
-void Server::connectToRegistry()
-{
-    if (registry_connection != NULL) {
-        if (registry_connection->isConnected()) {
-            return;
-        }
-        else
-            registry_connection->deleteLater();
-    }
-
-    registry_connection = NULL;
-
-    if (serverPrivate)
-        return;
-
-    printLine("Connecting to registry...");
-
-    QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("registry.pokemon-online.eu", 8081);
-
-    connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
-    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
-
-    registry_connection = new Analyzer(s,0);
-}
-
-void Server::disconnectFromRegistry()
-{
-    registry_connection->deleteLater();
-    printLine("Disconnected from registry.");
-    registry_connection = NULL;
-}
-
-
-void Server::regPrivacyChanged(const int &priv)
+void Server::regPrivacyChanged(bool priv)
 {
     if (serverPrivate == priv)
         return;
 
     serverPrivate = priv;
 
-    if (serverPrivate == 1)
-    {
-        printLine("The server is now private.", false, true);
-        disconnectFromRegistry();
-    }
-    else
-    {
-        printLine("The server is now public.", false, true);
-        connectToRegistry();
-    }
-}
-
-void Server::regConnectionError()
-{
-    printLine("Error when connecting to the registry. Will restart in 30 seconds");
-    QTimer::singleShot(30000, this, SLOT(connectToRegistry()));
-}
-
-void Server::regConnected()
-{
-    printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax, serverPorts.at(0));
-    connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
-    connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
-    connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
-    connect(registry_connection, SIGNAL(accepted()), SLOT(accepted()));
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
-}
-
-void Server::regSendPlayers()
-{
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-    registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
+    registry->setPrivate(priv);
 }
 
 void Server::regNameChanged(const QString &name)
@@ -578,10 +509,7 @@ void Server::regNameChanged(const QString &name)
 
     notifyAll(NetworkServ::ServerInfoChanged, Flags(1), name);
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServNameChange, name);
+    registry->nameChange(name);
 }
 
 void Server::regDescChanged(const QString &desc)
@@ -590,12 +518,9 @@ void Server::regDescChanged(const QString &desc)
         return;
 
     serverDesc = desc;
-    printLine("The description of the server changed.", false, true);
+    forcePrint("The description of the server changed.");
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServDescChange, desc);
+    registry->descChange(desc);
 }
 
 void Server::regMaxChanged(const int &numMax)
@@ -604,18 +529,13 @@ void Server::regMaxChanged(const int &numMax)
         return;
 
     serverPlayerMax = numMax;
-    printLine("Maximum Players Changed.", false, true);
+    forcePrint("Maximum Players Changed.");
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServMaxChange,numMax);
+    registry->maxChange(numMax);
 }
 
-void Server::regPasswordChanged(bool &isEnabled) {
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-    registry_connection->notify(NetworkServ::ServerPass, isEnabled);
+void Server::regPasswordChanged(bool enabled) {
+    registry->passChange(enabled);
 }
 
 void Server::changeScript(const QString &script)
@@ -657,7 +577,7 @@ void Server::announcementChanged(const QString &announcement)
     serverAnnouncement = announcement.toUtf8();
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
 
-    printLine("Announcement changed.", false, true);
+    forcePrint("Announcement changed.");
 
     notifyGroup(SupportsZip, zippedAnnouncement);
     notifyOppGroup(SupportsZip, NetworkServ::Announcement, serverAnnouncement);
@@ -679,35 +599,15 @@ void Server::mainChanChanged(const QString &name) {
     channelNames[0] = name;
     channelCache.outdate();zchannelCache.outdate();
 
-    printLine("Main channel name changed", false, true);
+    forcePrint("Main channel name changed");
 
     notifyGroup(All, NetworkServ::ChanNameChange, qint32(0), name);
 }
 
 void Server::clearRatedBattlesHistory()
 {
-    printLine("Auto Clearing the last rated battles history (every 3 hours)");
+    forcePrint("Auto Clearing the last rated battles history (every 3 hours)");
     lastRatedIps.clear();
-}
-
-void Server::accepted()
-{
-    printLine("The registry acknowledged the server.");
-}
-
-void Server::invalidName()
-{
-    printLine("Invalid name for the registry. Please change it in Options -> Config.", false, true);
-}
-
-void Server::nameTaken()
-{
-    printLine("The name of the server is already in use. Please change it in Options -> Config.", false, true);
-}
-
-void Server::ipRefused()
-{
-    printLine("Registry wants only 1 server per IP", false, true);
 }
 
 /* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage") */
@@ -737,6 +637,10 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
     return false;
 }
 
+void Server::forcePrint(const QString &line)
+{
+    printLine(line, false, true);
+}
 
 void Server::tiersChanged()
 {
@@ -788,9 +692,9 @@ void Server::kick(int id, int src) {
     notifyGroup(All, NetworkServ::PlayerKick, qint32(id), qint32(src));
 
     if (src == 0)
-        printLine("The server kicked " + name(id) + "!");
+        forcePrint("The server kicked " + name(id) + "!");
     else
-        printLine(name(id) + " was kicked by " + name(src));
+        forcePrint(name(id) + " was kicked by " + name(src));
     silentKick(id);
 }
 
@@ -802,9 +706,9 @@ void Server::ban(int id, int src) {
     notifyGroup(All, NetworkServ::PlayerBan, qint32(id), qint32(src));
 
     if (src == 0)
-        printLine("The server banned " + name(id) + "!");
+        forcePrint("The server banned " + name(id) + "!");
     else
-        printLine(name(id) + " was banned by " + name(src));
+        forcePrint(name(id) + " was banned by " + name(src));
 
     SecurityManager::ban(name(id));
     player(id)->kick();
@@ -815,15 +719,15 @@ void Server::tempBan(int dest, int src, int time)
     time = int(std::max(1, std::min(time, 1440)));
     if(src == 0) {
         if(time == 1) {
-            printLine(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
+            forcePrint(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
         } else {
-            printLine(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
+            forcePrint(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
         }
     } else {
         if(time == 1) {
-            printLine(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
+            forcePrint(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
         } else {
-            printLine(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
+            forcePrint(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
         }
     }
     notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
@@ -895,14 +799,14 @@ void Server::loggedIn(int id, const QString &name)
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
     if (!playerExist(id)) {
-        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
+        forcePrint(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
         return;
     }
 
     if (nameExist(name)) {
         int ids = this->id(name);
         if ((!playerExist(ids) || (!playerLoggedIn(ids) && !player(ids)->waitingForReconnect())) || player(ids)->name().toLower() != name.toLower()) {
-            printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
+            forcePrint(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
             if (SecurityManager::member(name).isProtected()) {
@@ -934,7 +838,7 @@ void Server::loggedIn(int id, const QString &name)
             }
             /* Should not happen but we can't be too safe */
             if (id == ids) {
-                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
+                forcePrint(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
                 return;
             }
         }
@@ -1458,7 +1362,7 @@ void Server::logSavingChanged(bool logging)
     if (logging == showLogMessages)
         return;
     showLogMessages = logging;
-    printLine("Logging changed", false, true);
+    forcePrint("Logging changed");
 }
 
 void Server::useChannelFileLogChanged(bool logging)
@@ -1466,14 +1370,14 @@ void Server::useChannelFileLogChanged(bool logging)
     if (useChannelFileLog == logging)
         return;
     useChannelFileLog = logging;
-    printLine("Channel File Logging changed", false, true);
+    forcePrint("Channel File Logging changed");
 }
 
 void Server::inactivePlayersDeleteDaysChanged(int newValue) {
     if(amountOfInactiveDays == newValue) {
         return;
     }
-    printLine("The amount of days that an user can stay inactive in database has been changed", false, true);
+    forcePrint("The amount of days that an user can stay inactive in database has been changed");
     amountOfInactiveDays = newValue;
 }
 
@@ -1482,7 +1386,7 @@ void Server::TCPDelayChanged(bool lowTCP)
     if (lowTCPDelay == lowTCP)
         return;
     lowTCPDelay = true;
-    printLine("Low TCP Delay setting changed", false, true);
+    forcePrint("Low TCP Delay setting changed");
 
     foreach(Player *p, myplayers) {
         p->relay().setLowDelay(lowTCP);
@@ -1494,7 +1398,7 @@ void Server::safeScriptsChanged(bool safeScripts)
     if (this->safeScripts == safeScripts)
         return;
     this->safeScripts = safeScripts;
-    printLine("Safe scripts setting changed", false, true);
+    forcePrint("Safe scripts setting changed");
 }
 
 void Server::overactiveToggleChanged(bool overactiveToggle)
@@ -1508,7 +1412,7 @@ void Server::proxyServersChanged(const QString &ips)
     if (proxyServers == newlist)
         return;
     proxyServers = ips.split(",");
-    printLine("Proxy Servers setting changed", false, true);
+    forcePrint("Proxy Servers setting changed");
 }
 
 void Server::serverPasswordChanged(const QString &pass)
@@ -1516,7 +1420,7 @@ void Server::serverPasswordChanged(const QString &pass)
     if (serverPassword == pass.toUtf8())
         return;
     serverPassword = pass.toUtf8();
-    printLine("Server Password changed", false, true);
+    forcePrint("Server Password changed");
 }
 
 void Server::usePasswordChanged(bool usePass)
@@ -1524,7 +1428,7 @@ void Server::usePasswordChanged(bool usePass)
     if (passwordProtected == usePass)
         return;
     passwordProtected = usePass;
-    printLine("Require Server Password changed", false, true);
+    forcePrint("Require Server Password changed");
     regPasswordChanged(usePass);
 }
 
@@ -1950,7 +1854,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
 void Server::spectatingStopped(int id, int idOfBattle)
 {
     if (!mybattles.contains(idOfBattle)) {
-        printLine(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
+        forcePrint(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
     } else {
         mybattles[idOfBattle]->removeSpectator(id);
     }

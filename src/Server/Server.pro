@@ -11,9 +11,7 @@ TEMPLATE = app
 SOURCES += main.cpp \
     consolereader.cpp \
     challenge.cpp \
-    antidos.cpp \
     player.cpp \
-    network.cpp \
     loadinsertthread.cpp \
     analyze.cpp \
     security.cpp \
@@ -30,7 +28,9 @@ SOURCES += main.cpp \
     modswindow.cpp \
     relaymanager.cpp \
     server.tpp \
-    scriptengineagent.cpp
+    scriptengineagent.cpp \
+    battlecommunicator.cpp \
+    registrycommunicator.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -40,12 +40,10 @@ SOURCES += main.cpp \
     serverconfig.cpp
 
 HEADERS += player.h \
-    network.h \
     memoryholder.h \
     loadinsertthread.h \
     consolereader.h \
     challenge.h \
-    antidos.h \
     analyze.h \
     security.h \
     scriptengine.h \
@@ -71,7 +69,6 @@ HEADERS += player.h \
     sessiondatafactory.h \
     miscabilities.h \
     serverinterface.h \
-    asiosocket.h \
     ../Shared/networkcommands.h \
     battlecounters.h \
     battlecounterindex.h \
@@ -83,7 +80,9 @@ HEADERS += player.h \
     modswindow.h \
     relaymanager.h \
     ../PokemonInfo/enums.h \
-    scriptengineagent.h
+    scriptengineagent.h \
+    battlecommunicator.h \
+    registrycommunicator.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \
@@ -99,12 +98,6 @@ CONFIG(nogui) {
     DEFINES += PO_NO_GUI
 }
 
-CONFIG(boost_asio) {
-    DEFINES += BOOST_SOCKETS
-    SOURCES += asiosocket.cpp
-    LIBS += -L/usr/local/lib \
-        -lboost_system
-}
 CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
 CONFIG(nosysteminscript):DEFINES += PO_SCRIPT_NO_SYSTEM
