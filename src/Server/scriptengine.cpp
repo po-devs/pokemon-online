@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <QInputDialog>
 #include <QRegExp>
 
