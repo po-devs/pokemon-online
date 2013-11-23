@@ -6,8 +6,6 @@
 
 QT       += core network
 
-QT       -= gui
-
 TARGET = BattleServer
 CONFIG   += console
 CONFIG   -= app_bundle
