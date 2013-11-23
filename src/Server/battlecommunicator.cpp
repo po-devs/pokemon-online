@@ -73,8 +73,6 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
 
     /*
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->tier());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->tier());
 
 //    if (rated()) {
 //        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());

@@ -1764,6 +1764,7 @@ void Server::spectatingRequested(int id, int idOfBattle)
     myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
 
     battles->addSpectator(idOfBattle, id, name(id));
+    player(id)->spectateBattle(idOfBattle, *battles->battle(idOfBattle));
 }
 
 void Server::spectatingStopped(int id, int idOfBattle)

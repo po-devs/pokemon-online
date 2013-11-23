@@ -165,6 +165,7 @@ signals:
        sender(); */
     void battleInfo(int publicId, int id, const QByteArray &info);
     void battleFinished(int battleid, int result, int winner, int loser);
+    void sendBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&, const QString&);
 protected:
     QHash<int,QPair<int, QString> > spectators;
     mutable QMutex spectatorMutex;

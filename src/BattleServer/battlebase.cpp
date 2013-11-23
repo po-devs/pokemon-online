@@ -189,6 +189,9 @@ void BattleBase::beginTurn()
 
 void BattleBase::start(ContextSwitcher &ctx)
 {
+    emit sendBattleInfos(id(Player1), publicId(), id(Player2), team(Player1), configuration(), tier());
+    emit sendBattleInfos(id(Player2), publicId(), id(Player1), team(Player2), configuration(), tier());
+
     notify(All, BlankMessage,0);
 
     if (tier().length()>0) {
@@ -791,7 +794,7 @@ void BattleBase::addSpectator(QPair<int, QString> p)
 
     if (configuration().isInBattle(id)) {
         /* Player was likely dced */
-        startBattle(id, publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(), tier());
+        emit sendBattleInfos(id, publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(), tier());
         key = spot(id);
 
         notifyChoices(key);
@@ -805,8 +808,6 @@ void BattleBase::addSpectator(QPair<int, QString> p)
         }
 
         spectators[key] = p;
-
-        spectateBattle(id, publicId(), configuration());
 
         if (tier().length() > 0)
             notify(key, TierSection, Player1, tier());

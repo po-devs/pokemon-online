@@ -43,3 +43,8 @@ QList<BattlePlugin*> BattleServerPluginManager::getBattlePlugins(BattleInterface
 
     return ret;
 }
+
+int BattleServerPluginManager::version() const
+{
+    return 0;
+}

@@ -89,6 +89,12 @@ void BattleServer::changeDbMod(const QString &mod)
     battleThread.unpause();
 }
 
+
+void BattleServer::print(const QString &s)
+{
+    qDebug() << s;
+}
+
 void BattleServer::newConnection()
 {
     GenericSocket newconnection = server->nextPendingConnection();
@@ -120,6 +126,7 @@ void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, con
     }
 
     connections[sid]->battles.insert(battleid, battle);
+    connect(battle, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), connections[sid], SLOT(notifyBattle(int,int,int,TeamBattle,BattleConfiguration,QString)));
 
     battle->start(battleThread);
 }
