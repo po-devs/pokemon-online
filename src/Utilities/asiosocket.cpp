@@ -77,11 +77,15 @@ SocketSQ::~SocketSQ() {
     qDebug() << "Deleted SocketSQ " << this;
 }
 
-bool SocketSQ::listen(quint16 port)
+bool SocketSQ::listen(quint16 port, char *ip)
 {
     server().open(tcp::v4());
     try {
-        server().bind(tcp::endpoint(tcp::v4(), port));
+        if (ip) {
+            server().bind(tcp::endpoint(ip::address::from_string("127.0.0.1"), port));
+        } else {
+            server().bind(tcp::endpoint(tcp::v4(), port));
+        }
     }
     catch(std::exception &e) {
         qDebug() << "Socket listen error: " << e.what();

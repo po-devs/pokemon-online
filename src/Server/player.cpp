@@ -24,7 +24,6 @@ Player::Player(const GenericSocket &sock, int id)
     server_pass_sent = false;
     needToUpdate = false;
 
-
     m_bundle.auth = 0;
 
     doConnections();

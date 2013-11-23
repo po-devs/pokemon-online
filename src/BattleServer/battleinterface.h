@@ -5,8 +5,6 @@
 #include "../Utilities/functions.h"
 #include "../PokemonInfo/pokemonstructs.h"
 
-class Player;
-class PluginManager;
 class TeamBattle;
 class PokeBattle;
 class BattleConfiguration;

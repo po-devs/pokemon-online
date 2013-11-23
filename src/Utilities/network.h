@@ -195,7 +195,7 @@ void Network<S>::onReceipt()
             remainingLength= (uchar(c1) << 24) + (uchar(c2) << 16) + (uchar(c3) << 8) + uchar(c4);
 
             /* Just a little check :p */
-            if (!AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
+            if (AntiDos::obj() && !AntiDos::obj()->transferBegin(myid, remainingLength, ip())) {
                 return;
             }
 

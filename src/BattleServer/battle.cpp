@@ -18,9 +18,9 @@ typedef BattleSituation::TurnMemory TM;
 
 Q_DECLARE_METATYPE(QList<int>)
 
-BattleSituation::BattleSituation(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
+BattleSituation::BattleSituation(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &c, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p)
 {
-    init(p1, p2, c, id, nteam1, nteam2, pluginManager);
+    init(p1, p2, c, id, t1, t2, p);
 
     for (int i = 0; i < numberOfSlots(); i++) {
         slotzone.push_back(context());

@@ -32,7 +32,9 @@ SOURCES += main.cpp \
     battleserver.cpp \
     items.cpp \
     pluginmanager.cpp \
-    moves.cpp
+    moves.cpp \
+    serverconnection.cpp \
+    analyzer.cpp
 
 HEADERS += \
     rbymoves.h \
@@ -54,7 +56,9 @@ HEADERS += \
     moves.h \
     items.h \
     plugininterface.h \
-    pluginmanager.h
+    pluginmanager.h \
+    serverconnection.h \
+    analyzer.h
 
 unix:!mac {
     QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"

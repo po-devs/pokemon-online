@@ -8,6 +8,9 @@
  * Remember that plugins are still very experimental and that this file is going to be subject to
  * a lot of changes... */
 
+class BattlePlugin;
+class BattleInterface;
+
 class BattleServerPlugin : public Plugin
 {
 public:

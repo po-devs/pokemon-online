@@ -507,6 +507,17 @@ struct ChallengeInfo
 DataStream & operator >> (DataStream &in, ChallengeInfo &c);
 DataStream & operator << (DataStream &out, const ChallengeInfo &c);
 
+struct BattlePlayer
+{
+    QString name;
+    QString win, lose, tie; //messages at the end of the battle
+    int rating, avatar, id;
+    quint8 maxlevel, restrictedPokes, restrictedCount, teamCount;
+};
+
+DataStream & operator >> (DataStream &in, BattlePlayer &p);
+DataStream & operator << (DataStream &out, const BattlePlayer &p);
+
 struct BattleConfiguration
 {
     PROPERTY(QString, tier)

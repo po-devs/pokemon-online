@@ -9,8 +9,6 @@
 #include "battlepluginstruct.h"
 #include "battlecounters.h"
 
-class Player;
-class PluginManager;
 class BattlePlugin;
 class BattlePStorage;
 
@@ -23,7 +21,7 @@ class BattleSituation : public BattleBase
 public:
     typedef QVariantHash context;
 
-    BattleSituation(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
+    BattleSituation(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &additionnalData, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p);
     ~BattleSituation();
 
     /* Shows what attacks are allowed or not */

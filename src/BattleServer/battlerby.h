@@ -6,7 +6,7 @@
 class BattleRBY : public BattleBase
 {
 public:
-    BattleRBY(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
+    BattleRBY(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &additionnalData, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p);
     ~BattleRBY();
 
     typedef void (*MechanicsFunction) (int source, int target, BattleRBY &b);

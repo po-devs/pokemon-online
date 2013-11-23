@@ -5,12 +5,12 @@
 using namespace BattleCommands;
 typedef BattleBase::TurnMemory TM;
 
-BattleRBY::BattleRBY(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p)
+BattleRBY::BattleRBY(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &additionnalData, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p)
 {
     ChallengeInfo c = additionnalData;
     c.mode = ChallengeInfo::Singles;
 
-    init(p1, p2, c, id, nteam1, nteam2, p);
+    init(p1, p2, c, id, t1, t2, p);
 }
 
 BattleRBY::~BattleRBY()

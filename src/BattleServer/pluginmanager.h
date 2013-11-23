@@ -3,7 +3,8 @@
 
 #include "../Utilities/pluginmanager.h"
 
-class BattleServerPlugin;
+#include "plugininterface.h"
+
 class BattlePlugin;
 class BattleInterface;
 
@@ -21,7 +22,7 @@ public:
     BattleServerPlugin *plugin(int index) const;
 protected:
     /* What settings file to use? */
-    virtual QSettings settings() = 0;
+    virtual QSettings& settings();
     /* How to instanciate the plugin? */
     virtual BattleServerPlugin* instanciatePlugin(void *function);
     /* What is the name of the function in the library to create the plugin? */

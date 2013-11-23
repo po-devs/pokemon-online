@@ -404,16 +404,12 @@ bool Tier::isValid(const TeamBattle &t)  const
             if (isRestricted(t.poke(i))) {
                 restricted += 1;
 
-                if (restricted > maxRestrictedPokes) {
+                if (restricted > maxRestrictedPokes && count < numberOfPokemons) {
                     return false;
                 }
             }
 
             count += 1;
-
-            if (count >= numberOfPokemons) {
-                break;
-            }
         }
     }
 
@@ -428,6 +424,19 @@ void Tier::fixTeam(TeamBattle &t) const
             continue;
         }
     }
+}
+
+quint8 Tier::restricted(TeamBattle &t) const
+{
+    int ret = 0;
+
+    for (int i = 0; i < 6; i++) {
+        if (isRestricted(t.poke(i))) {
+            ret |= 1 << i;
+        }
+    }
+
+    return ret;
 }
 
 void Tier::changeRating(const QString &player, int newRating)

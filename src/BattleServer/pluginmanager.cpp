@@ -7,15 +7,6 @@
 #include "plugininterface.h"
 #include "../Utilities/CrossDynamicLib.h"
 
-/* What settings file to use? */
-virtual QSettings settings() = 0;
-/* How to instanciate the plugin? */
-virtual Plugin* instanciatePlugin(void *function);
-/* What is the name of the function in the library to create the plugin? */
-virtual const char* instantiatingFunctionName() const {return "createBattleServerPlugin";}
-/* The version the plugins need to have */
-virtual int version() const;
-
 BattleServerPluginManager::BattleServerPluginManager() : m_settings("config_battleServer", QSettings::IniFormat)
 {
     loadPlugins();
@@ -26,14 +17,14 @@ QSettings &BattleServerPluginManager::settings()
     return m_settings;
 }
 
+BattleServerPlugin *BattleServerPluginManager::plugin(int index) const
+{
+    return dynamic_cast<BattleServerPlugin*>(this->PluginManager::plugin(index));
+}
+
 BattleServerPlugin *BattleServerPluginManager::instanciatePlugin(void *function)
 {
     return dynamic_cast<BattleServerPlugin*>(((BattleServerPluginInstanceFunction)function)());
-}
-
-BattleServerPlugin *BattleServerPluginManager::plugin(index)
-{
-    return dynamic_cast<BattleServerPlugin*>(PluginManager::plugin(index));
 }
 
 QList<BattlePlugin*> BattleServerPluginManager::getBattlePlugins(BattleInterface *b)

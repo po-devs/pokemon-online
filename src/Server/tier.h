@@ -111,6 +111,8 @@ public:
     int getMaxLevel() const;
     void fixTeam(TeamBattle &t) const;
 
+    quint8 restricted(TeamBattle &t) const;
+
     QString getBannedPokes() const;
     QString getRestrictedPokes() const;
     QString getBannedMoves() const;
@@ -136,6 +138,10 @@ public:
     /* Gives a dummy tier with the same data, just used as a representation or something to work on */
     Tier *dataClone() const;
     bool isTier() const { return true; }
+
+    int maxRestrictedPokes;
+    int numberOfPokemons;
+
 protected:
     enum GetQueryType {
         GetInfoOnUser,
@@ -153,6 +159,7 @@ protected:
     int id() const {
         return m_id;
     }
+
 private:
     TierMachine *boss;
     TierCategory *node;
@@ -160,8 +167,6 @@ private:
     bool banPokes;
 //    QMultiHash<int, BannedPoke> bannedSets; // The set is there to keep good perfs
 //    QMultiHash<int, BannedPoke> restrictedSets;
-    int maxRestrictedPokes;
-    int numberOfPokemons;
     int maxLevel;
     Pokemon::gen m_gen;
     QString banParentS;

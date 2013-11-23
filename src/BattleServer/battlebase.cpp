@@ -1,9 +1,6 @@
-#include "player.h"
 #include "battlebase.h"
 #include "../Shared/battlecommands.h"
 #include "pluginmanager.h"
-#include "tiermachine.h"
-#include "tier.h"
 #include "battlefunctions.h"
 
 using namespace BattleCommands;
@@ -16,30 +13,34 @@ BattleBase::BattleBase()
     timer = NULL;
 }
 
-void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, int nteam1, int nteam2, PluginManager *pluginManager)
+void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &c, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *pluginManager)
 {
     publicId() = id;
-    conf.avatar[0] = p1.avatar();
-    conf.avatar[1] = p2.avatar();
-    conf.setTeam(0, new TeamBattle(p1.team(nteam1)));
-    conf.setTeam(1, new TeamBattle(p2.team(nteam2)));
-    team(0).name = p1.name();
-    team(1).name = p2.name();
-    conf.ids[0] = p1.id();
-    conf.ids[1] = p2.id();
+    conf.avatar[0] = p1.avatar;
+    conf.avatar[1] = p2.avatar;
+    conf.setTeam(0, new TeamBattle(t1));
+    conf.setTeam(1, new TeamBattle(t2));
+    team(0).name = p1.name;
+    team(1).name = p2.name;
+    conf.ids[0] = p1.id;
+    conf.ids[1] = p2.id;
     conf.teamOwnership = true;
     conf.gen = team(0).gen;
     conf.clauses = c.clauses;
     conf.mode = c.mode;
 
-    ratings[0] = p1.rating(conf.teams[0]->tier);
-    ratings[1] = p2.rating(conf.teams[1]->tier);
-    winMessage[0] = p1.winningMessage();
-    winMessage[1] = p2.winningMessage();
-    loseMessage[0] = p1.losingMessage();
-    loseMessage[1] = p2.losingMessage();
-    tieMessage[0] = p1.tieMessage();
-    tieMessage[1] = p2.tieMessage();
+    restrictedCount = p1.restrictedCount;
+    teamCount = p1.teamCount;
+    restricted[0] = p1.restrictedPokes;
+    restricted[1] = p2.restrictedPokes;
+    ratings[0] = p1.rating;
+    ratings[1] = p2.rating;
+    winMessage[0] = p1.win;
+    winMessage[1] = p2.win;
+    loseMessage[0] = p1.lose;
+    loseMessage[1] = p2.lose;
+    tieMessage[0] = p1.tie;
+    tieMessage[1] = p2.tie;
     attacked() = -1;
     attacker() = -1;
     selfKoer() = -1;
@@ -71,8 +72,6 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     }
     currentForcedSleepPoke[0] = -1;
     currentForcedSleepPoke[1] = -1;
-    p1.addBattle(publicId());
-    p2.addBattle(publicId());
 
     for (int i = 0; i < numberOfSlots(); i++) {
         options.push_back(BattleChoices());
@@ -137,7 +136,7 @@ void BattleBase::init(Player &p1, Player &p2, const ChallengeInfo &c, int id, in
     }
 
     if (tier().length() > 0) {
-        int maxLevel = TierMachine::obj()->tier(tier()).getMaxLevel();
+        int maxLevel = p1.maxlevel;
 
         if (maxLevel < 100) {
             for (int i = 0; i < 6; i ++) {
@@ -196,14 +195,6 @@ void BattleBase::start(ContextSwitcher &ctx)
         notify(All, TierSection, Player1, tier());
     } else {
         notify(All, TierSection, Player1, QString("Mixed %1").arg(GenInfo::Version(gen())));
-    }
-
-    if (rated()) {
-        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());
-        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team(1).name, team(0).name, tier());
-
-        notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
-        notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
     }
 
     notify(All, Rated, Player1, rated());
@@ -270,7 +261,7 @@ void BattleBase::onDestroy()
     delete timer;
 }
 
-void BattleBase::buildPlugins(PluginManager *p)
+void BattleBase::buildPlugins(BattleServerPluginManager *p)
 {
     plugins = p->getBattlePlugins(this);
 
@@ -784,22 +775,23 @@ void BattleBase::notifyChoices(int p)
     }
 }
 
-void BattleBase::addSpectator(Player *p)
+void BattleBase::addSpectator(QPair<int, QString> p)
 {
     /* Simple guard to avoid multithreading problems -- would need to be improved :s */
     if (!blocked() && !finished()) {
-        pendingSpectators.append(QPointer<Player>(p));
+        pendingSpectators.append(p);
         QTimer::singleShot(100, this, SLOT(clearSpectatorQueue()));
 
         return;
     }
 
-    int id = p->id();
+    int id = p.first;
 
     int key;
 
     if (configuration().isInBattle(id)) {
-        p->startBattle(publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(), tier());
+        /* Player was likely dced */
+        startBattle(id, publicId(), this->id(opponent(spot(id))), team(spot(id)), configuration(), tier());
         key = spot(id);
 
         notifyChoices(key);
@@ -812,9 +804,9 @@ void BattleBase::addSpectator(Player *p)
             return;
         }
 
-        spectators[key] = QPair<int, QString>(id, p->name());
+        spectators[key] = p;
 
-        p->spectateBattle(publicId(), configuration());
+        spectateBattle(id, publicId(), configuration());
 
         if (tier().length() > 0)
             notify(key, TierSection, Player1, tier());
@@ -830,7 +822,7 @@ void BattleBase::addSpectator(Player *p)
         }
     }
 
-    notify(All, Spectating, 0, true, qint32(id), p->name());
+    notify(All, Spectating, 0, true, qint32(id), p.second);
 
     notify(key, BlankMessage, 0);
 
@@ -1005,13 +997,17 @@ bool BattleBase::validChoice(const BattleChoice &b)
         }
 
         if (tier().length() > 0) {
-            team(player).setIndexes(b.choice.rearrange.pokeIndexes);
-            if (!TierMachine::obj()->isValid(team(player), tier()) && !(clauses() & ChallengeInfo::ChallengeCup) && TierMachine::obj()->tier(tier()).allowGen(gen())) {
-                team(player).resetIndexes();
-                return false;
-            } else {
-                team(player).resetIndexes();
-                return true;
+            if (!(clauses() & ChallengeInfo::ChallengeCup) && restrictedCount > 0) {
+                int nrestricted = 0;
+                for (int i = 0; i < teamCount; i++) {
+                    if ((1 << b.choice.rearrange.pokeIndexes[i]) & restricted[player]) {
+                        nrestricted++;
+                    }
+                }
+
+                if (nrestricted > restrictedCount) {
+                    return false;
+                }
             }
         }
 
@@ -1110,14 +1106,12 @@ void BattleBase::clearSpectatorQueue()
         return;
     }
     if (pendingSpectators.size() > 0) {
-        QList<QPointer<Player> > copy = pendingSpectators;
+        auto copy = pendingSpectators;
 
         pendingSpectators.clear();
 
-        foreach (QPointer<Player> p, copy) {
-            if (p) {
-                addSpectator(p);
-            }
+        foreach (auto p, copy) {
+            addSpectator(p);
         }
     }
 }
@@ -1245,13 +1239,6 @@ void BattleBase::notifyFail(int p)
 
 void BattleBase::engageBattle()
 {
-    if (tier().length() != 0) {
-        Tier &t = TierMachine::obj()->tier(tier());
-
-        t.fixTeam(team(0));
-        t.fixTeam(team(1));
-    }
-
     //qDebug() << "Engaging battle " << this << ", calling plugins";
     /* Plugin call */
     callp(BP::battleStarting);

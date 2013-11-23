@@ -308,8 +308,6 @@ void Server::processDailyRun()
 
 void Server::changeDbMod(const QString &mod)
 {
-    battleThread.pause();
-
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
@@ -327,8 +325,6 @@ void Server::changeDbMod(const QString &mod)
     GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 
     PokemonInfo::loadStadiumTradebacks();
-
-    battleThread.unpause();
 }
 
 void Server::updateDatabase()

@@ -19,7 +19,6 @@ class BattleChoice;
 class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
-class QTcpServer;
 class ServerPluginManager;
 class TeamBattle;
 class RegistryCommunicator;

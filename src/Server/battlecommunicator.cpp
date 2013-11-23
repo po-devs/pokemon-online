@@ -1,5 +1,10 @@
 #include <QTimer>
 
+#include "../Shared/networkcommands.h"
+#include "../PokemonInfo/battlestructs.h"
+
+#include "tiermachine.h"
+#include "tier.h"
 #include "analyze.h"
 #include "player.h"
 #include "battlecommunicator.h"
@@ -29,20 +34,57 @@ bool BattleCommunicator::valid() const
 
 void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, int team1, int team2)
 {
+    if (!valid()) {
+        qFatal("Starting a battle when no valid connections");
+    }
+
     QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
 
     mybattles.insert(id, new FullBattleConfiguration(id, p1->id(), p2->id(), tier, c));
 
-    /*
-    BattleBase *battle;
-    if (c.gen <= 1) {
-        battle = (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+    if (TierMachine::obj()->exists(tier)) {
+        Tier & t = TierMachine::obj()->tier(tier);
+
+        BattlePlayer pb1 = {
+            p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
+            t.getMaxLevel(), t.restricted(p1->team(team1)), t.maxRestrictedPokes, t.numberOfPokemons
+        };
+        BattlePlayer pb2 = {
+            p2->name(), p2->winningMessage(), p2->losingMessage(), p2->tieMessage(), p2->rating(p1->team(team1).tier), p2->avatar(), p2->id(),
+            t.getMaxLevel(), t.restricted(p1->team(team1)), t.maxRestrictedPokes, t.numberOfPokemons
+        };
+
+        battleserver_connection->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     } else {
-        battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
+        BattlePlayer pb1 = {
+            p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
+            100, 0, 0, 6
+        };
+        BattlePlayer pb2 = {
+            p2->name(), p2->winningMessage(), p2->losingMessage(), p2->tieMessage(), p2->rating(p1->team(team1).tier), p2->avatar(), p2->id(),
+            100, 0, 0, 6
+        };
+
+        battleserver_connection->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     }
 
+    p1->addBattle(id);
+    p2->addBattle(id);
+
+    /*
+
     p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->tier());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->tier());*/
+    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->tier());
+
+//    if (rated()) {
+//        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());
+//        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team(1).name, team(0).name, tier());
+
+//        notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
+//        notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
+//    }
+
+*/
 }
 
 void BattleCommunicator::playerForfeit(int battleid, int forfeiter)

@@ -3,35 +3,34 @@
 
 #include "battleinterface.h"
 
-//#include <QtCore>
 #include "../PokemonInfo/battlestructs.h"
-//#include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/mtrand.h"
 #include "../Utilities/contextswitch.h"
-//#include "../Utilities/coreclasses.h"
-//#include "battleinterface.h"
 #include "battlepluginstruct.h"
-//#include "battlecounters.h"
+
 #include <algorithm>
+
+class BattlePlayer;
+class BattleServerPluginManager;
 
 class BattleBase : public ContextCallee, public BattleInterface
 {
     Q_OBJECT
 
-    PROPERTY(int, turn);
-    PROPERTY(int , publicId);
-    PROPERTY(QString, tier);
-    PROPERTY(int, attacker);
-    PROPERTY(int, attacked);
-    PROPERTY(int, numberOfSlots);
-    PROPERTY(bool, blocked);
-    PROPERTY(int, attackCount);
-    PROPERTY(bool, rearrangeTime);
-    PROPERTY(int, selfKoer);
-    PROPERTY(int, repeatCount);
-    PROPERTY(bool, heatOfAttack);
-    PROPERTY(int, drawer);
-    PROPERTY(int, forfeiter);
+    PROPERTY(int, turn)
+    PROPERTY(int , publicId)
+    PROPERTY(QString, tier)
+    PROPERTY(int, attacker)
+    PROPERTY(int, attacked)
+    PROPERTY(int, numberOfSlots)
+    PROPERTY(bool, blocked)
+    PROPERTY(int, attackCount)
+    PROPERTY(bool, rearrangeTime)
+    PROPERTY(int, selfKoer)
+    PROPERTY(int, repeatCount)
+    PROPERTY(bool, heatOfAttack)
+    PROPERTY(int, drawer)
+    PROPERTY(int, forfeiter)
 
 public:
     BattleBase();
@@ -39,7 +38,7 @@ public:
 
     typedef QVariantHash context;
 
-    void init(Player &p1, Player &p2, const ChallengeInfo &additionnalData, int id, int nteam1, int nteam2, PluginManager *p);
+    void init(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &additionnalData, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p);
 
     /* The battle runs in a different thread -- easier to interrutpt the battle & co */
     void run();
@@ -169,7 +168,7 @@ signals:
 protected:
     QHash<int,QPair<int, QString> > spectators;
     mutable QMutex spectatorMutex;
-    QList<QPointer<Player> > pendingSpectators;
+    QList<QPair<int,QString> > pendingSpectators;
 
     int spectatorKey(int id) const {
         return 10000 + id;
@@ -178,6 +177,9 @@ protected:
     virtual void notifySituation(int dest);
 
     int ratings[2];
+    int restricted[2];
+    int restrictedCount;
+    int teamCount;
     /*.*/
     int myid[2];
     QString winMessage[2];
@@ -233,13 +235,13 @@ public:
         return spectators;
     }
 
-    const QList<QPointer<Player> > &getPendingSpectators() const {
+    const QList<QPair<int, QString> > &getPendingSpectators() const {
         return pendingSpectators;
     }
 
     bool acceptSpectator(int id, bool authed=false) const;
     /* In case it's one of the battler, resends the current info to the battler */
-    void addSpectator(Player *p);
+    void addSpectator(QPair<int, QString>);
     void removeSpectator(int id);
 
     /* Server tells a player forfeited */
@@ -263,7 +265,7 @@ protected:
     QList<BattlePlugin*> plugins;
     QList<BattlePStorage*> calls;
 
-    void buildPlugins(PluginManager *p);
+    void buildPlugins(BattleServerPluginManager *p);
     void removePlugin(BattlePlugin *p);
     /* Calls a plugin function. the parameter is the enum of BattlePStorage
        corresponding to the function to call */

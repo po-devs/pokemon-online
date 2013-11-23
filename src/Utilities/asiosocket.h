@@ -38,7 +38,7 @@ public:
     QByteArray read(int length);
     void putChar(char c);
     void write(const QByteArray &b);
-    bool listen(quint16 port);
+    bool listen(quint16 port, char *ip = nullptr);
     void setLowDelay(bool lowdelay);
     /* For non server sockets, start the read feed */
     void start();
@@ -100,6 +100,7 @@ private:
 typedef SocketSQ::pointer GenericSocket;
 #else
 class QTcpSocket;
+class QTcpServer;
 typedef QTcpSocket* GenericSocket;
 #endif
 
