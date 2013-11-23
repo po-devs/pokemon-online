@@ -3,6 +3,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+#include <stdexcept>
+
 #include "pluginmanagerwidget.h"
 #include "pluginmanager.h"
 

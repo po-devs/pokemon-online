@@ -1,6 +1,8 @@
 #include <QSet>
 #include <QDebug>
 
+#include <stdexcept>
+
 #include "pluginmanager.h"
 #include "plugininterface.h"
 

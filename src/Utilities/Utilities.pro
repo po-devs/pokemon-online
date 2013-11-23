@@ -1,5 +1,7 @@
 TARGET = po-utilities
 
+QT += network
+
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin
 DEFINES -= UNICODE
