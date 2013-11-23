@@ -15,7 +15,7 @@ class PluginManager
 {
     friend class PluginManagerWidget;
 public:
-    ~PluginManager();
+    virtual ~PluginManager();
 
     /* Load plugins for the first time */
     void loadPlugins();

@@ -1,21 +1,24 @@
 #include <QInputDialog>
+#include <QRegExp>
+
+#include "../Shared/config.h"
+#include "../Utilities/antidos.h"
+#include "../Utilities/ziputils.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
 
 #include "server.h"
 #include "player.h"
 #include "security.h"
-#include "../Utilities/antidos.h"
 #include "waitingobject.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "scriptengine.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
 #include "pluginmanager.h"
-#include <QRegExp>
 #include "analyze.h"
-#include "../Shared/config.h"
-#include "../Utilities/ziputils.h"
+#include "battlecommunicator.h"
+
 #include "scriptengineagent.h"
+#include "scriptengine.h"
 
 #ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
@@ -1118,7 +1121,7 @@ QScriptValue ScriptEngine::aliases(const QString &ip)
 
 int ScriptEngine::connections(const QString &ip)
 {
-    return AntiDos::obj()->connectionsPerIp.value(ip);
+    return AntiDos::obj()->connections(ip);
 }
 
 int ScriptEngine::numRegistered(const QString &ip)
@@ -1132,10 +1135,8 @@ QScriptValue ScriptEngine::memoryDump()
 
     ret += QString("Members\n\tCached in memory> %1\n\tCached as non-existing> %2\n").arg(SecurityManager::holder.cachedMembersCount()).arg(SecurityManager::holder.cachedNonExistingCount());
     ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
-    ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
-    ret += QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\tTransfers Per Id> %3\n\tSize of Transfers> %4\n\tKicks per IP> %5\n").arg(AntiDos::obj()->connectionsPerIp.count()).arg(
-                AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
-            .arg(AntiDos::obj()->kicksPerIp.count());
+    ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->battles->count()).arg(myserver->lastRatedIps.count());
+    ret += AntiDos::obj()->dump();
     ret += QString("-------------------------\n-------------------------\n");
 
     foreach (QString tier, TierMachine::obj()->tierList().split('\n')) {
@@ -1187,7 +1188,7 @@ void ScriptEngine::changeDosChannel(const QString &str)
 {
     AntiDos::obj()->notificationsChannel = str;
 
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
     s.setValue("AntiDOS/NotificationsChannel", str);
 }
 
@@ -1198,7 +1199,8 @@ void ScriptEngine::clearDosData()
 
 void ScriptEngine::reloadDosSettings()
 {
-    AntiDos::obj()->init();
+    QSettings s("config", QSettings::IniFormat);
+    AntiDos::obj()->init(s);
 }
 
 QScriptValue ScriptEngine::currentMod()
@@ -2723,23 +2725,23 @@ void ScriptEngine::changeMod(const QString &val)
     myserver->changeDbMod(val);
 }
 
-void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
-{
-    if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
-            || !testRange("inflictStatus", slot, 0, 5)) {
-        return;
-    }
-    BattleBase * battle = myserver->getBattle(battleId);
-    if (battle) {
-        if (toFirstPlayer) {
-            battle->changeStatus(0, slot, status);
-        }else{
-            battle->changeStatus(1, slot, status);
-        }
-    }else{
-        warn("inflictStatus", "can't find a battle with specified id.");
-    }
-}
+//void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
+//{
+//    if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
+//            || !testRange("inflictStatus", slot, 0, 5)) {
+//        return;
+//    }
+//    BattleBase * battle = myserver->getBattle(battleId);
+//    if (battle) {
+//        if (toFirstPlayer) {
+//            battle->changeStatus(0, slot, status);
+//        }else{
+//            battle->changeStatus(1, slot, status);
+//        }
+//    }else{
+//        warn("inflictStatus", "can't find a battle with specified id.");
+//    }
+//}
 
 void ScriptEngine::updateRatings()
 {

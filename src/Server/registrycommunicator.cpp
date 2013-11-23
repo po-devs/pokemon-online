@@ -118,7 +118,7 @@ void RegistryCommunicator::maxChange(int numMax)
     registry_connection->notify(NetworkServ::ServMaxChange,numMax);
 }
 
-void RegistryCommunicator::passChanged(bool enabled) {
+void RegistryCommunicator::passChange(bool enabled) {
     if (!testConnection())
         return;
 

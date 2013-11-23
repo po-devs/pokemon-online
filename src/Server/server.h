@@ -23,6 +23,7 @@ class QTcpServer;
 class ServerPluginManager;
 class TeamBattle;
 class RegistryCommunicator;
+class BattleCommunicator;
 
 class Server: public QObject, public ServerInterface
 {
@@ -50,6 +51,7 @@ public:
     ~Server();
 
     void start();
+    void initBattles();
 
     static void print(const QString &line);
 
@@ -91,7 +93,6 @@ public:
     static Server *serverIns;
     static QString dataRepo;
 
-    BattleBase * getBattle(int battleId) const;
     bool hasOngoingBattle(int id) const;
     Battle ongoingBattle(int id) const;
     ScriptEngine *engine();
@@ -123,11 +124,7 @@ public slots:
     void forcePrint(const QString &line);
 
     /* Registry slots */
-    void connectToRegistry();
     void clearRatedBattlesHistory();
-    void regConnected();
-    void regConnectionError();
-    void regSendPlayers();
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
     void regMaxChanged(int num);
@@ -148,10 +145,6 @@ public slots:
     void usePasswordChanged(bool usePass);
     void changeDbMod(const QString &mod);
 
-    void nameTaken();
-    void ipRefused();
-    void invalidName();
-    void accepted();
     /* means a new connection is about to start from the TCP server */
     /* i is the number of the listening port */
     void incomingConnection(int i);
@@ -169,10 +162,6 @@ public slots:
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int ongoingBattle);
     void spectatingStopped(int id, int ongoingBattle);
-    void battleMessage(int player, int ongoingBattle, const BattleChoice &message);
-    void battleChat(int player, int ongoingBattle, const QString &chat);
-    void resendBattleInfos(int player, int ongoingBattle);
-    void spectatingChat(int player, int ongoingBattle, const QString &chat);
     bool joinRequest(int player, const QString &chn);
     /* Makes a player join a channel */
     bool joinChannel(int playerid, int chanid);
@@ -214,6 +203,7 @@ private:
     void tempBan(int dest, int src, int time);
 
     RegistryCommunicator *registry;
+    BattleCommunicator *battles;
 
     QString serverName, serverDesc;
     QByteArray serverAnnouncement;
@@ -271,7 +261,6 @@ private:
     Cache<QByteArray, void (*)(QByteArray&)> channelCache;
     Cache<QByteArray, void (*)(QByteArray&)> zchannelCache;
 
-    QHash<int, BattleBase *> mybattles;
     QHash<qint32, Battle> battleList;
 
 #ifndef BOOST_SOCKETS

@@ -9,6 +9,7 @@ class BattleServer : public QObject
 public:
     explicit BattleServer(QObject *parent = 0);
     
+    void start();
 signals:
     
 public slots:

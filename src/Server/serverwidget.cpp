@@ -8,7 +8,8 @@
 #include "challenge.h"
 #include "playerswindow.h"
 #include "security.h"
-#include "antidos.h"
+#include "../Utilities/antidos.h"
+#include "../Utilities/antidoswindow.h"
 #include "serverconfig.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
@@ -22,7 +23,7 @@
 #include "../Utilities/pluginmanagerwidget.h"
 #include "modswindow.h"
 
-ServerWidget::ServerWidget(Server *myserver)
+ServerWidget::ServerWidget(Server *myserver) : settings("config", QSettings::IniFormat)
 {
     server = myserver;
 
@@ -143,7 +144,7 @@ void ServerWidget::openPluginConfig()
 {
     QAction *ac = dynamic_cast<QAction*>(sender());
 
-    ServerPlugin *s = server->pluginManager->plugin(ac->text());
+    Plugin *s = server->pluginManager->plugin(ac->text());
 
     if (s) {
         QWidget *config = s->getConfigurationWidget();
@@ -172,12 +173,12 @@ void ServerWidget::openPluginManager()
     w->show();
 
     connect(w, SIGNAL(pluginListChanged()), this, SIGNAL(menuBarChanged()));
-    connect(w, SIGNAL(error(QString)), server, SLOT(printLine(QString));
+    connect(w, SIGNAL(error(QString)), server, SLOT(forcePrint(QString)));
 }
 
 void ServerWidget::openAntiDos()
 {
-    AntiDosWindow *w = new AntiDosWindow();
+    AntiDosWindow *w = new AntiDosWindow(settings);
 
     w->show();
 }

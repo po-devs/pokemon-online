@@ -18,7 +18,6 @@ public slots:
     void disconnectFromRegistry();
     void regConnected();
     void regConnectionError();
-    void error();
 
     void setPrivate(bool serverPrivate);
     void regSendPlayers();

@@ -509,6 +509,9 @@ DataStream & operator << (DataStream &out, const ChallengeInfo &c);
 
 struct BattleConfiguration
 {
+    PROPERTY(QString, tier)
+public:
+
     enum ReceivingMode {
         Spectator = 0,
         Player = 1
@@ -520,6 +523,7 @@ struct BattleConfiguration
     quint32 clauses;
     quint8 receivingMode[2];
     quint16 avatar[2];
+    int battleId;
 
     /* Rated or not */
     Flags flags;
@@ -540,6 +544,18 @@ struct BattleConfiguration
 
     int slot(int spot, int poke = 0) const  {
         return spot + poke*2;
+    }
+
+    int id(int spot) const {
+        return ids[spot];
+    }
+
+    int opponent(int spot) const {
+        return 1 - player(spot);
+    }
+
+    int player(int spot) const {
+        return spot%2;
     }
 
     int spot(int id) const {
@@ -577,6 +593,7 @@ struct BattleConfiguration
         oldconf = false;
         teamOwnership = false;
         receivingMode[0] = receivingMode[1] = Spectator;
+        battleId = 0;
     }
 
     explicit BattleConfiguration(const BattleConfiguration &other);
@@ -627,10 +644,17 @@ inline DataStream & operator << (DataStream &out, const BattleConfiguration &c)
 
 struct FullBattleConfiguration : public BattleConfiguration
 {
+    PROPERTY(bool, finished)
+public:
     QString name[2];
+    QSet<int> spectators;
 
     const QString getName(int player) const {return receivingMode[player] == Spectator ? name[player] : teams[player]->name;}
 
+    bool acceptSpectator(int player, bool authed) const;
+
+    FullBattleConfiguration() {}
+    FullBattleConfiguration(int battleid, int p1, int p2, const QString &tier, const ChallengeInfo &c);
     FullBattleConfiguration& operator = (const BattleConfiguration& conf) {
         return * (FullBattleConfiguration*)(& (this->BattleConfiguration::operator = (conf)));
     }

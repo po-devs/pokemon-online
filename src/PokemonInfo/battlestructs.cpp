@@ -666,6 +666,8 @@ BattleConfiguration &BattleConfiguration::operator =(const BattleConfiguration &
    teamOwnership = false;
    oldconf = other.oldconf;
    flags = other.flags;
+   tier() = other.tier();
+   battleId = other.battleId;
 
    return* this;
 }
@@ -678,6 +680,25 @@ BattleConfiguration::~BattleConfiguration()
     }
 }
 
+FullBattleConfiguration::FullBattleConfiguration(int battleid, int p1, int p2, const QString &tier, const ChallengeInfo &c)
+{
+    this->battleId = battleid;
+    this->ids[0] = p1;
+    this->ids[1] = p2;
+    this->tier() = tier;
+    this->clauses = c.clauses;
+    this->flags.setFlag(Rated, c.rated);
+    this->finished() = false;
+}
+
+bool FullBattleConfiguration::acceptSpectator(int player, bool authed) const
+{
+    if (spectators.contains(player) || this->id(0) == player || this->id(1) == player)
+        return false;
+    if (authed)
+        return true;
+    return !(clauses & ChallengeInfo::DisallowSpectator);
+}
 
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {

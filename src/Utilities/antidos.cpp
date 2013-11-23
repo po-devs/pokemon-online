@@ -184,3 +184,14 @@ void AntiDos::clearData()
     loginsPerIp.clear();
     kicksPerIp.clear();
 }
+
+int AntiDos::connections(const QString &ip)
+{
+    return connectionsPerIp.value(ip);
+}
+
+QString AntiDos::dump() const
+{
+    return QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\tTransfers Per Id> %3\n\tSize of Transfers> %4\n\tKicks per IP> %5\n").arg(connectionsPerIp.count()).arg(
+                loginsPerIp.count()).arg(transfersPerId.count()).arg(sizeOfTransfers.count()).arg(kicksPerIp.count());
+}

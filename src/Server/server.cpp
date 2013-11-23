@@ -9,10 +9,6 @@
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
-#include "moves.h"
-#include "rbymoves.h"
-#include "items.h"
-#include "abilities.h"
 #include "security.h"
 #include "../Utilities/antidos.h"
 #include "serverconfig.h"
@@ -25,9 +21,9 @@
 #include "pluginmanager.h"
 #include "analyze.h"
 #include "networkutilities.h"
-#include "battlerby.h"
 #include "relaymanager.h"
 #include "registrycommunicator.h"
+#include "battlecommunicator.h"
 
 Server *Server::serverIns = NULL;
 
@@ -43,16 +39,16 @@ static void updateZippedChannelCache(QByteArray&val) {
 //channelCache([&](QByteArray &val) {val = makePacket(NetworkServ::ChannelsList, channelNames);}),
 //zchannelCache([&](QByteArray &val) {val = makeZipPacket(NetworkServ::ChannelsList, channelNames);}),
 
-Server::Server(quint16 port) : registry_connection(NULL), serverPorts(), showLogMessages(true),
+Server::Server(quint16 port) : registry(nullptr), battles(nullptr), serverPorts(), showLogMessages(true),
     lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0),
-    channelCache(&updateChannelCache), zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
+    channelCache(&updateChannelCache), zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(nullptr)
 {
     serverPorts << port;
 }
 
-Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(), showLogMessages(true),
+Server::Server(QList<quint16> ports) : registry(nullptr), battles(nullptr), serverPorts(), showLogMessages(true),
     lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), channelCache(&updateChannelCache),
-    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
+    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(nullptr)
 {
     foreach(quint16 port, ports)
         serverPorts << port;
@@ -175,13 +171,6 @@ void Server::start(){
         PokemonInfo::RunMovesSanityCheck(i);
     }
 
-    MoveEffect::init();
-    RBYMoveEffect::init();
-    ItemEffect::init();
-    AbilityEffect::init();
-
-    forcePrint(tr("Move, abilities & items special effects loaded"));
-
     try {
         SecurityManager::init();
     } catch (const QString &ex) {
@@ -196,8 +185,7 @@ void Server::start(){
 
     forcePrint(tr("Members loaded"));
 
-    battleThread.start();
-    printLine(tr("Battle Thread started"));
+    initBattles();
 
     bool listenSuccess;
 
@@ -279,6 +267,17 @@ void Server::start(){
     this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
     registry->setPrivate(serverPrivate);
+}
+
+void Server::initBattles()
+{
+    battles = new BattleCommunicator(this);
+    //battleThread.start();
+    printLine(tr("Battle Thread started"));
+
+    connect(battles, SIGNAL(info(QString)), SLOT(forcePrint(QString)));
+    connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
+    connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
 }
 
 void Server::print(const QString &line)
@@ -523,7 +522,7 @@ void Server::regDescChanged(const QString &desc)
     registry->descChange(desc);
 }
 
-void Server::regMaxChanged(const int &numMax)
+void Server::regMaxChanged(int numMax)
 {
     if (numMax == serverPlayerMax)
         return;
@@ -982,41 +981,6 @@ void Server::sendServerMessage(const QString &message)
     }
 }
 
-void Server::battleMessage(int player, int battle, const BattleChoice &choice)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->battleChoiceReceived(player, choice);
-}
-
-void Server::resendBattleInfos(int player, int battle)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->addSpectator(this->player(player));
-}
-
-void Server::battleChat(int player, int battle, const QString &chat)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->battleChat(player, chat);
-}
-
-void Server::spectatingChat(int player, int battle, const QString &chat)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-    mybattles[battle]->spectatingChat(player, chat);
-}
-
 bool Server::joinRequest(int player, const QString &channel)
 {
     printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
@@ -1151,9 +1115,9 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
     connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
-    connect(p, SIGNAL(battleChat(int,int,QString)), SLOT(battleChat(int,int,QString)));
-    connect(p, SIGNAL(battleMessage(int,int,BattleChoice)), SLOT(battleMessage(int,int,BattleChoice)));
-    connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
+    connect(p, SIGNAL(battleChat(int,int,QString)), battles, SLOT(battleChat(int,int,QString)));
+    connect(p, SIGNAL(battleMessage(int,int,BattleChoice)), battles, SLOT(battleMessage(int,int,BattleChoice)));
+    connect(p, SIGNAL(spectatingChat(int,int, QString)), battles, SLOT(spectatingChat(int,int, QString)));
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
@@ -1162,7 +1126,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
     connect(p, SIGNAL(reconnect(int,int,QByteArray)), SLOT(onReconnect(int,int,QByteArray)));
-    connect(p, SIGNAL(resendBattleInfos(int,int)), SLOT(resendBattleInfos(int,int)));
+    connect(p, SIGNAL(resendBattleInfos(int,int)), battles, SLOT(resendBattleInfos(int,int)));
     connect(p, SIGNAL(needChannelData(int,int)), SLOT(needChannelData(int,int)));
 }
 
@@ -1498,6 +1462,10 @@ void Server::playerTempBan(int src, int dest, int time)
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, int team2)
 {
+    if (!battles->valid()) {
+        return;
+    }
+
     int id = freebattleid();
 
     myengine->beforeBattleStarted(id1,id2,c,id,team1,team2);
@@ -1522,29 +1490,23 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         }
     }
 
-    BattleBase *battle;
-    if (c.gen <= 1) {
-        battle = (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
-    } else {
-        battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
-    }
-
-    printLine(QString("%1 battle between %2 and %3 started").arg(battle->tier()).arg(name(id1)).arg(name(id2)));
-
-    mybattles.insert(id, battle);
-    battleList.insert(id, Battle(id1, id2, battle->mode(), battle->tier()));
-    myengine->battleSetup(id1, id2, id); // dispatch script event
-
     Player *p1 (player(id1));
     Player *p2 (player(id2));
 
+    QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
+
+    printLine(QString("%1 battle between %2 and %3 started").arg(tier).arg(name(id1)).arg(name(id2)));
+
+    battleList.insert(id, Battle(id1, id2, c.mode, tier));
+    //myengine->battleSetup(id1, id2, id); // dispatch script event
+
+    /* Send each other's info if they don't have it */
     if (!p1->isInSameChannel(p2)) {
         p1->relay().sendPlayer(p2->bundle());
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->tier());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->tier());
+    battles->startBattle(player(id1), player(id2), c, id, team1, team2);
 
     Battle battleS = battleList[id];
 
@@ -1566,11 +1528,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
             }
         }
     }
-
-    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
-
-    battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c,id,team1,team2);
 }
@@ -1604,16 +1561,10 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
     const int original_desc = desc;
 
-    if (!mybattles.contains(battleid)) {
-        /* If a player forfeits at the same time a battle ends, as the signal is asynchroneous
-           because of different threads, it can be emitted twice. So that's why we may fall into
-           this if */
-        return;
-    }
-
-    BattleBase *battle = mybattles[battleid];
+    FullBattleConfiguration *battle = battles->battle(battleid);
     QString tier = battle->tier();
     bool rated = battle->rated();
+    int mode = battle->mode;
 
     //qDebug() << "battleResult " << battleid << desc << winner << loser << battle;
 
@@ -1627,15 +1578,15 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     Player *pl = player(loser);
 
     if (desc == Forfeit && battle->finished()) {
-        pw->battleResult(battleid, Close, battle->mode(), winner, loser);
-        pl->battleResult(battleid, Close, battle->mode(), winner, loser);
+        pw->battleResult(battleid, Close, mode, winner, loser);
+        pl->battleResult(battleid, Close, mode, winner, loser);
     } else {
         if (disconnected) {
             desc = Tie;
         }
 
         if (desc == Forfeit) {
-            battle->playerForfeit(loser);
+            battles->playerForfeit(battleid, loser);
         }
 
         QString winn = pw->name();
@@ -1649,7 +1600,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             Channel &chan = channel(chanid);
 
             chan.battleList.remove(battleid);
-            notifyChannelLastId(chanid, NetworkServ::BattleFinished, qint32(battleid), qint8(desc), qint8(battle->mode()), qint32(winner), qint32(loser));
+            notifyChannelLastId(chanid, NetworkServ::BattleFinished, qint32(battleid), qint8(desc), qint8(mode), qint32(winner), qint32(loser));
         }
 
         battleList.remove(battleid);
@@ -1674,7 +1625,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     }
 
     if (original_desc == Forfeit) {
-        removeBattle(battleid);
+       removeBattle(battleid);
     }
 
     //qDebug() << "battleResult " << battleid << desc << winner << loser << battle << "end";
@@ -1682,25 +1633,23 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 
 void Server::removeBattle(int battleid)
 {
-    BattleBase *battle = mybattles.value(battleid);
+    FullBattleConfiguration *battle = battles->battle(battleid);
     qDebug() << "removing battle " << battleid << battle;
 
-    mybattles.remove(battleid);
     //battleList.remove(battleid); <- no need, already done in battleResult()
 
-    typedef QPair<int, QString> pair;
-    foreach(pair p, battle->getSpectators()) {
-        player(p.first)->relay().finishSpectating(battleid);
-        player(p.first)->battlesSpectated.remove(battleid);
+    foreach(int spect, battle->spectators) {
+        player(spect)->relay().finishSpectating(battleid);
+        player(spect)->battlesSpectated.remove(battleid);
     }
-    /* When manipulating threaded objects, you need to be careful... */
-    battle->deleteLater();
 
     Player* p1 = player(battle->id(0));
     Player* p2 = player(battle->id(1));
 
     p1->removeBattle(battleid);
     p2->removeBattle(battleid);
+
+    battles->removeBattle(battleid);
 }
 
 void Server::sendBattlesList(int playerid, int chanid)
@@ -1802,10 +1751,10 @@ bool Server::playerLoggedIn(int id) const
 
 void Server::spectatingRequested(int id, int idOfBattle)
 {
-    if (!mybattles.contains(idOfBattle)) {
+    if (!battles->contains(idOfBattle)) {
         return; // Invalid behavior
     }
-    BattleBase *battle = mybattles.value(idOfBattle);
+    FullBattleConfiguration *battle = battles->battle(idOfBattle);
     bool forced_allow = myengine->attemptToSpectateBattle(id, battle->id(0), battle->id(1));
     if (!battle->acceptSpectator(id, (auth(id) > 0) || forced_allow)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
@@ -1813,51 +1762,17 @@ void Server::spectatingRequested(int id, int idOfBattle)
     }
     if (!myengine->beforeSpectateBattle(id, battle->id(0),battle->id(1))) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
-        myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
         return;
     }
 
-    Player *source = player(id);
-    Player *p1(player(battle->id(0))), *p2(player(battle->id(1)));
+    myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
 
-    PlayerInfo bundle = source->bundle();
-
-    if (!p1->isInSameChannel(source)) {
-        p1->relay().sendPlayer(bundle);
-        source->relay().sendPlayer(p1->bundle());
-    }
-    if (!p2->isInSameChannel(source)) {
-        p2->relay().sendPlayer(bundle);
-        source->relay().sendPlayer(p2->bundle());
-    }
-    typedef QPair<int, QString> pair;
-    foreach(pair mp, battle->getSpectators()) {
-        Player *p = player(mp.first);
-        if (!p->isInSameChannel(source)) {
-            p->relay().sendPlayer(bundle);
-            source->relay().sendPlayer(p->bundle());
-        }
-    }
-    foreach(QPointer<Player> p, battle->getPendingSpectators()) {
-        if (!p)
-            continue;
-
-        if (!p->isInSameChannel(source)) {
-            p->relay().sendPlayer(bundle);
-            source->relay().sendPlayer(p->bundle());
-        }
-    }
-
-    battle->addSpectator(player(id));
+    battles->addSpectator(idOfBattle, id, name(id));
 }
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    if (!mybattles.contains(idOfBattle)) {
-        forcePrint(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
-    } else {
-        mybattles[idOfBattle]->removeSpectator(id);
-    }
+    battles->removeSpectator(idOfBattle, id);
 }
 
 void Server::disconnectPlayer(int id)
@@ -2028,7 +1943,7 @@ int Server::freebattleid() const
 {
     do {
         ++battlecounter;
-    } while (mybattles.contains(battlecounter) || battlecounter == 0); /* 0 is reserved */
+    } while (battles->contains(battlecounter) || battlecounter == 0); /* 0 is reserved */
 
     return battlecounter;
 }
@@ -2080,15 +1995,6 @@ Player * Server::player(int id) const
 PlayerInterface * Server::playeri(int id) const
 {
     return player(id);
-}
-
-BattleBase * Server::getBattle(int battleId) const
-{
-    if(mybattles.contains(battleId)) {
-        return mybattles.value(battleId);
-    }else{
-        return NULL;
-    }
 }
 
 bool Server::hasOngoingBattle(int id) const

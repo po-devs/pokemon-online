@@ -23,7 +23,6 @@ public:
     }
 
     static void init(QSettings &settings);
-    void loadVals(QSettings &settings);
 
     /* Returns true if an ip is allowed a new connection */
     bool connecting(const QString &ip);
@@ -35,7 +34,11 @@ public:
     /* Changes the shows IP of the proxy using player */
     bool changeIP(const QString &newIp, const QString &oldIp);
 
+    int connections(const QString &ip);
+
     int numberOfDiffIps();
+
+    QString dump() const;
 
     QString notificationsChannel;
 signals:
@@ -45,8 +48,8 @@ signals:
     void ban(const QString &ip);
 public slots:
     /* Reloads all DOS data */
-    void init();
-protected slots:
+    void loadVals(QSettings &settings);
+    /* Clears data stored */
     void clearData();
 private:
     QHash<QString, int> connectionsPerIp;
