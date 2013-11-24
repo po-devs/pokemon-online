@@ -608,7 +608,6 @@ public:
         V_create,
         FusionFlare,
         FusionBolt,
-        //gen 6
         BabyDollEyes,
         Boomburst,
         CraftyShield,
@@ -632,6 +631,7 @@ public:
         PlayNice,
         TrickorTreat,
         WaterShuriken,
+        AromaticMist,
         Belch,
         Confide,
         DisarmingVoice,
