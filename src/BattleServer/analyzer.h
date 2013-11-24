@@ -7,6 +7,9 @@
 #include "../Utilities/asiosocket.h"
 
 class GenericNetwork;
+class ChallengeInfo;
+class TeamBattle;
+class BattlePlayer;
 
 class Analyzer : public QObject
 {
@@ -28,12 +31,25 @@ public:
     inline void emitCommand(const QByteArray &command) {
         emit sendCommand(command);
     }
+
+    void dealWithCommand(const QByteArray & command);
 signals:
+    /* Network */
     void sendCommand(const QByteArray&);
+
+    /* Server connection */
+    void newBattle(int, const BattlePlayer&, const BattlePlayer&, const ChallengeInfo&, const TeamBattle&, const TeamBattle&);
+
+    /* Network errors */
+    void connectionError(int, const QString&);
+    void disconnected();
 public slots:
-    
+    /* slots called by the network */
+    void error();
+    void commandReceived (const QByteArray &command);
 private:
     GenericNetwork *socket;
+    int m_id;
 };
 
 #endif // ANALYZER_H

@@ -5,15 +5,13 @@
 
 #include "tiermachine.h"
 #include "tier.h"
-#include "analyze.h"
+#include "battleanalyzer.h"
 #include "player.h"
 #include "battlecommunicator.h"
 
 BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), battleserver_connection(nullptr)
 {
-    system("./BattleServer");
-
     QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
 }
 
@@ -123,6 +121,45 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
     return mybattles.value(battleid);
 }
 
+void BattleCommunicator::connectToBattleServer()
+{
+    if (battleserver_connection) {
+        if (battleserver_connection->isConnected()) {
+            return;
+        }
+        else
+            battleserver_connection->deleteLater();
+    }
+
+    battleserver_connection = nullptr;
+
+    emit info("Connecting to battle server on port 5096...");
+
+    QTcpSocket * s = new QTcpSocket(nullptr);
+    s->connectToHost("localhost", 5096);
+
+    connect(s, SIGNAL(connected()), this, SLOT(battleConnected()));
+    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(battleConnectionError()));
+
+    battleserver_connection = new BattleAnalyzer(s);
+
+    connect(battleserver_connection, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(filterBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
+}
+
+void BattleCommunicator::battleConnected()
+{
+    emit info("Connected to battle server!");
+}
+
+void BattleCommunicator::battleConnectionError()
+{
+    emit info("Error when connecting to the battle server. Will try again in 10 seconds");
+    emit error();
+
+    QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
+}
+
+
 void BattleCommunicator::battleMessage(int player, int battle, const BattleChoice &choice)
 {
     if (!contains(battle)) {
@@ -144,7 +181,7 @@ void BattleCommunicator::resendBattleInfos(int player, int battle)
 
 void BattleCommunicator::battleChat(int player, int battle, const QString &chat)
 {
-    if (!mybattles.contains(battle)) {
+    if (!contains(battle)) {
         return;
     }
 
@@ -153,44 +190,19 @@ void BattleCommunicator::battleChat(int player, int battle, const QString &chat)
 
 void BattleCommunicator::spectatingChat(int player, int battle, const QString &chat)
 {
-    if (!mybattles.contains(battle)) {
+    if (!contains(battle)) {
         return;
     }
     //mybattles[battle]->spectatingChat(player, chat);
 }
 
-void BattleCommunicator::connectToBattleServer()
+void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &s)
 {
-    if (battleserver_connection) {
-        if (battleserver_connection->isConnected()) {
-            return;
-        }
-        else
-            battleserver_connection->deleteLater();
+    emit info(QString("infos about battle %1 received").arg(b));
+    if (!contains(b)) {
+        return;
     }
 
-    battleserver_connection = nullptr;
-
-    emit info("Connecting to battle server on port 5096...");
-
-    QTcpSocket * s = new QTcpSocket(nullptr);
-    s->connectToHost("localhost", 5096);
-
-    connect(s, SIGNAL(connected()), this, SLOT(battleConnected()));
-    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(battleConnectionError()));
-
-    battleserver_connection = new Analyzer(s,0);
-}
-
-void BattleCommunicator::battleConnected()
-{
-    emit info("Connected to battle server!");
-}
-
-void BattleCommunicator::battleConnectionError()
-{
-    emit info("Error when connecting to the battle server. Will try again in 10 seconds");
-    emit error();
-
-    QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
+    emit info(QString("infos about battle %1 received!").arg(b));
+    emit sendBattleInfos(b, p1, p2, t, c, s);
 }

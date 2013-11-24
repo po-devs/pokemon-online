@@ -666,7 +666,7 @@ BattleConfiguration &BattleConfiguration::operator =(const BattleConfiguration &
    teamOwnership = false;
    oldconf = other.oldconf;
    flags = other.flags;
-   tier() = other.tier();
+   m_prop_tier = other.m_prop_tier;
    battleId = other.battleId;
 
    return* this;

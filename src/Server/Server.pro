@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     server.tpp \
     scriptengineagent.cpp \
     battlecommunicator.cpp \
-    registrycommunicator.cpp
+    registrycommunicator.cpp \
+    battleanalyzer.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     sqlconfig.cpp \
@@ -82,7 +83,8 @@ HEADERS += player.h \
     ../PokemonInfo/enums.h \
     scriptengineagent.h \
     battlecommunicator.h \
-    registrycommunicator.h
+    registrycommunicator.h \
+    battleanalyzer.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

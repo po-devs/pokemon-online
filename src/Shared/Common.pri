@@ -21,6 +21,7 @@ CONFIG(debug, debug|release) {
         battlemanager = $$pokemoninfo -lpo-battlemanager_debug
         websocket = -lqtwebsocket_debug
         json = -lqjson_debug
+        DEFINES += EXE_SUFFIX="_debug"
     }
     win32 {
         TARGET = $$join(TARGET,,,d)
@@ -29,6 +30,7 @@ CONFIG(debug, debug|release) {
         battlemanager = $$pokemoninfo -lpo-battlemanagerd
         websocket = -lqtwebsocketd
         json = -lqjsond
+        DEFINES += EXE_SUFFIX="d"
     }
     !mac:!win32 {
         TARGET = $$join(TARGET,,,_debug)
@@ -37,6 +39,7 @@ CONFIG(debug, debug|release) {
         battlemanager = $$pokemoninfo -lpo-battlemanager_debug
         websocket = -lqtwebsocket_debug
         json = -lqjson_debug
+        DEFINES += EXE_SUFFIX="_debug"
     }
 } else {
     utilities = -L$$bin -lpo-utilities
@@ -44,4 +47,5 @@ CONFIG(debug, debug|release) {
     battlemanager = $$pokemoninfo -lpo-battlemanager
     websocket = -lqtwebsocket
     json = -lqjson
+    DEFINES += EXE_SUFFIX=""
 }

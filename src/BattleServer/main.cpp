@@ -1,10 +1,12 @@
 #include <QCoreApplication>
 #include <QDir>
 
+#include "battleserver.h"
+
 int main(int argc, char *argv[])
 {
     /* Names to use later for QSettings */
-    QCoreApplication::setApplicationName("Server for Pokemon-Online");
+    QCoreApplication::setApplicationName("Battle Server for Pokemon-Online");
     QCoreApplication::setOrganizationName("Dreambelievers");
 
     QString homeDir = PO_HOME_DIR;
@@ -18,5 +20,8 @@ int main(int argc, char *argv[])
 
     QCoreApplication a(argc, argv);
     
+    BattleServer server;
+    server.start();
+
     return a.exec();
 }

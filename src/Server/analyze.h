@@ -164,11 +164,11 @@ public slots:
     void commandReceived (const QByteArray &command);
     void undelay();
     void keepAlive();
-private:
+protected:
     GenericNetwork &socket();
     const GenericNetwork &socket() const;
 
-    void dealWithCommand(const QByteArray &command);
+    virtual void dealWithCommand(const QByteArray &command);
 
     QLinkedList<QByteArray> delayedCommands;
     int delayCount;

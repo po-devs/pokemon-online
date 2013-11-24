@@ -113,6 +113,17 @@ void BattleServer::newConnection()
     ServerConnection *conn = connections[id] = new ServerConnection(newconnection, id);
 
     connect(conn, SIGNAL(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)), SLOT(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)));
+    connect(conn, SIGNAL(error(int)), SLOT(onError(int)));
+}
+
+void BattleServer::onError(int id)
+{
+    if (!connections.contains(id)) {
+        return;
+    }
+
+    print(QString("Disonnection from slot %1").arg(id));
+    connections.take(id)->deleteLater();
 }
 
 void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2)
@@ -125,8 +136,11 @@ void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, con
         battle = new BattleSituation(pb1, pb2, c, battleid, t1, t2, pluginManager);
     }
 
-    connections[sid]->battles.insert(battleid, battle);
-    connect(battle, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), connections[sid], SLOT(notifyBattle(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    ServerConnection *conn = connections[sid];
+
+    conn->battles.insert(battleid, battle);
+    connect(battle, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), conn, SLOT(notifyBattle(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    connect(conn, SIGNAL(destroyed()), battle, SLOT(deleteLater()));
 
     battle->start(battleThread);
 }

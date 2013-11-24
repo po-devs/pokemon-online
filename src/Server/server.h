@@ -23,6 +23,7 @@ class ServerPluginManager;
 class TeamBattle;
 class RegistryCommunicator;
 class BattleCommunicator;
+class BattleConfiguration;
 
 class Server: public QObject, public ServerInterface
 {
@@ -170,6 +171,9 @@ public slots:
     void onReconnect(int, int, const QByteArray &);
     void transferId(int id1, int id2, bool copyInfo=false);
     void needChannelData(int playerId, int chanId);
+
+    /* Signals received by BattleCommunicator */
+    void sendBattleInfos(int,int,int,const TeamBattle&, const BattleConfiguration&, const QString&);
 
     void kick(int i);
     void silentKick(int i);

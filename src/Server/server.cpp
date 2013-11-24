@@ -273,11 +273,12 @@ void Server::initBattles()
 {
     battles = new BattleCommunicator(this);
     //battleThread.start();
-    printLine(tr("Battle Thread started"));
+    printLine(tr("Don't forget to run BattleServer too if you want your server to have battles!"));
 
     connect(battles, SIGNAL(info(QString)), SLOT(forcePrint(QString)));
     connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
+    connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
 }
 
 void Server::print(const QString &line)
@@ -427,6 +428,11 @@ void Server::needChannelData(int playerid, int channelid)
     Channel &channel = this->channel(channelid);
 
     channel.onReconnect(playerid);
+}
+
+void Server::sendBattleInfos(int b, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &s)
+{
+    player(p1)->startBattle(b, p2, t, c, s);
 }
 
 void Server::leaveRequest(int playerid, int channelid, bool keep)

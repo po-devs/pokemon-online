@@ -5,11 +5,13 @@
 #include <QString>
 #include <QHash>
 
-class Analyzer;
+class BattleAnalyzer;
 class BattleChoice;
 class Player;
 class ChallengeInfo;
 class FullBattleConfiguration;
+class BattleConfiguration;
+class TeamBattle;
 
 class BattleCommunicator : public QObject
 {
@@ -37,19 +39,23 @@ public:
 signals:
     void info(const QString &message);
     void error();
-    void battleInfo(int,int,QByteArray);
+    void battleInfo(int,int,const QByteArray&);
     void battleFinished(int,int,int,int);
+    void sendBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
 public slots:
     void connectToBattleServer();
     void battleConnected();
     void battleConnectionError();
 
+    /* Player -> battle server */
     void battleMessage(int player, int battle, const BattleChoice &choice);
     void resendBattleInfos(int player, int battle);
     void battleChat(int player, int battle, const QString &chat);
     void spectatingChat(int player, int battle, const QString &chat);
+    /* Battle server -> player */
+    void filterBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
 private:
-    Analyzer* battleserver_connection;
+    BattleAnalyzer* battleserver_connection;
 
     QHash<int, FullBattleConfiguration*> mybattles;
 };
