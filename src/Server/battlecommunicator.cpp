@@ -144,6 +144,8 @@ void BattleCommunicator::connectToBattleServer()
     battleserver_connection = new BattleAnalyzer(s);
 
     connect(battleserver_connection, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(filterBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    connect(battleserver_connection, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(filterBattleInfo(int,int,QByteArray)));
+    connect(battleserver_connection, SIGNAL(battleResult(int,int,int,int)), SLOT(filterBattleResult(int,int,int,int)));
 }
 
 void BattleCommunicator::battleConnected()
@@ -205,4 +207,22 @@ void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBatt
 
     emit info(QString("infos about battle %1 received!").arg(b));
     emit sendBattleInfos(b, p1, p2, t, c, s);
+}
+
+void BattleCommunicator::filterBattleInfo(int battle, int player, const QByteArray &info)
+{
+    if (!contains(battle)) {
+        return;
+    }
+
+    emit battleInfo(battle, player, info);
+}
+
+void BattleCommunicator::filterBattleResult(int b, int r, int w, int l)
+{
+    if (!contains(b)) {
+        return;
+    }
+
+    emit battleFinished(b,r,w,l);
 }

@@ -54,6 +54,8 @@ public slots:
     void spectatingChat(int player, int battle, const QString &chat);
     /* Battle server -> player */
     void filterBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
+    void filterBattleInfo(int battle, int player, const QByteArray &info);
+    void filterBattleResult(int, int, int, int);
 private:
     BattleAnalyzer* battleserver_connection;
 

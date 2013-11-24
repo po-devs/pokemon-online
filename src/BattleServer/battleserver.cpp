@@ -140,6 +140,8 @@ void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, con
 
     conn->battles.insert(battleid, battle);
     connect(battle, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), conn, SLOT(notifyBattle(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), conn, SLOT(notifyInfo(int,int,QByteArray)));
+    connect(battle, SIGNAL(battleFinished(int,int,int,int)), conn, SLOT(notifyFinished(int,int,int,int)));
     connect(conn, SIGNAL(destroyed()), battle, SLOT(deleteLater()));
 
     battle->start(battleThread);

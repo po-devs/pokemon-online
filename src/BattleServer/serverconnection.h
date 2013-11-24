@@ -28,8 +28,11 @@ signals:
     void error(int id);
 public slots:
     void onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
-    void notifyBattle(int id, int publicId, int opponent, const TeamBattle &team, const BattleConfiguration &config, const QString &tier);
     void onError();
+
+    void notifyBattle(int id, int publicId, int opponent, const TeamBattle &team, const BattleConfiguration &config, const QString &tier);
+    void notifyInfo(int bid, int player, const QByteArray &info);
+    void notifyFinished(int battle,int result, int winner, int loser);
 private:
     Analyzer *relay;
     QHash<int, BattleBase *> battles;

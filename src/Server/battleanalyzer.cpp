@@ -28,6 +28,23 @@ void BattleAnalyzer::dealWithCommand(const QByteArray &commandline)
         emit sendBattleInfos(bid, p1, p2, t, c, tier);
         break;
     }
+    case BattleMessage: {
+        qint32 bid, p;
+        QByteArray message;
+
+        in >> bid >> p >> message;
+
+        emit battleMessage(bid, p, message);
+        break;
+    }
+    case BattleFinished: {
+        qint32 bid, result, winner, loser;
+
+        in >> bid >> result >> winner >> loser;
+
+        emit battleResult(bid, result, winner, loser);
+        break;
+    }
     default: break;
     }
 }

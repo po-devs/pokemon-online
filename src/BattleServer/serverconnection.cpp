@@ -36,6 +36,16 @@ void ServerConnection::notifyBattle(int id, int publicId, int opponent, const Te
     relay->notify(EngageBattle, qint32(publicId), qint32(id), qint32(opponent), team, config, tier);
 }
 
+void ServerConnection::notifyInfo(int battle, int player, const QByteArray &info)
+{
+    relay->notify(BattleMessage, qint32(battle), qint32(player), info);
+}
+
+void ServerConnection::notifyFinished(int battle, int result, int winner, int loser)
+{
+    relay->notify(BattleFinished, qint32(battle), qint32(result), qint32(winner), qint32(loser));
+}
+
 void ServerConnection::onError()
 {
     emit error(id);
