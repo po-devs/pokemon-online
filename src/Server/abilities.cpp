@@ -2406,25 +2406,25 @@ void AbilityEffect::init()
     REGISTER_AB(101, PoisonTouch);
     REGISTER_AB(102, Unnerve);
     //gen 6
-    REGISTER_AB(102, Aerilate);
-    REGISTER_AB(103, Aura);
-    REGISTER_AB(104, Veil);
-    REGISTER_AB(105, FurCoat);
-    REGISTER_AB(106, MegaLauncher);
-    REGISTER_AB(107, Protean);
-    REGISTER_AB(108, StrongJaws);
-    REGISTER_AB(109, ToughClaws);
-    REGISTER_AB(110, StanceChange);
-    REGISTER_AB(111, ParentalBond);
-    //112 sweet veil
-    REGISTER_AB(113, Competitive);
-    REGISTER_AB(114, GaleWings);
-    REGISTER_AB(115, Gooey);
-    REGISTER_AB(116, Magician);
-    REGISTER_AB(117, AuraBreak);
-    REGISTER_AB(118, BulletProof);
-    REGISTER_AB(119, GrassPelt);
-    REGISTER_AB(120, Levitate);
+    REGISTER_AB(103, Aerilate);
+    REGISTER_AB(104, Aura);
+    REGISTER_AB(105, Veil);
+    REGISTER_AB(106, FurCoat);
+    REGISTER_AB(107, MegaLauncher);
+    REGISTER_AB(108, Protean);
+    REGISTER_AB(109, StrongJaws);
+    REGISTER_AB(110, ToughClaws);
+    REGISTER_AB(111, StanceChange);
+    REGISTER_AB(112, ParentalBond);
+    //113 sweet veil
+    REGISTER_AB(114, Competitive);
+    REGISTER_AB(115, GaleWings);
+    REGISTER_AB(116, Gooey);
+    REGISTER_AB(117, Magician);
+    REGISTER_AB(118, AuraBreak);
+    REGISTER_AB(119, BulletProof);
+    REGISTER_AB(120, GrassPelt);
+    REGISTER_AB(121, Levitate);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
