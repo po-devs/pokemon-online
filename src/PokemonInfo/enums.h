@@ -1527,7 +1527,7 @@ namespace Move
         IceBurn,
         Snarl,
         IcicleCrash,
-        VCreate,
+        V_create,
         FusionFlare,
         FusionBolt,
         BabyDollEyes,
