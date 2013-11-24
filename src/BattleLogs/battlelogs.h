@@ -41,7 +41,7 @@ class QTextEdit;
 */
 
 extern "C" {
-BATTLELOGSSHARED_EXPORT ServerPlugin * createBattleServerPlugin();
+BATTLELOGSSHARED_EXPORT BattleServerPlugin * createBattleServerPlugin();
 }
 
 class PokeBattle;

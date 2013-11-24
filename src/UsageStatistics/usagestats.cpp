@@ -7,7 +7,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include "usagestats.h"
 #include "../PokemonInfo/battlestructs.h"
 
-ServerPlugin * createBattleServerPlugin() {
+BattleServerPlugin * createBattleServerPlugin() {
     return new PokemonOnlineStatsPlugin();
 }
 
