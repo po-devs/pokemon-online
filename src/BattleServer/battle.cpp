@@ -1718,17 +1718,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
-            /* In gen 6, this check is after the "no effect" check. Since king's shield
-             * on aegislash on a physical normal/fighting attack doesn't reduce the opponent's
-             * attack by two stages */
-            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
-            /* Protect, ... */
-            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-            if (testFail(player)) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
-            }
-
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
@@ -1756,6 +1745,17 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 continue;
             }
 
+            //Moved after failure check to allow Sucker punch to work correctly.
+            /* In gen 6, this check is after the "no effect" check. Since king's shield
+             * on aegislash on a physical normal/fighting/poison attack doesn't reduce the opponent's
+             * attack by two stages. */
+            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
+            /* Protect, ... */
+            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+            if (testFail(player)) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
             int num = repeatNum(player);
             bool hit = num > 1;
 
