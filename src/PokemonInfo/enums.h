@@ -1530,7 +1530,6 @@ namespace Move
         VCreate,
         FusionFlare,
         FusionBolt,
-        //gen 6
         BabyDollEyes,
         Boomburst,
         CraftyShield,
