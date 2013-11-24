@@ -130,24 +130,24 @@
 162 75#Victory Star
 163 40#Turbo Blaze
 164 40#TeraVolt
-165 102-2#Aerilate
-166 117#Aurabreak
-168 103-Aura_16#Dark Aura
-169 103-Aura_17#Fairy Aura
-170 104-Veil_11#Flower Veil
-171 105#Fur Coat
-172 106#Mega Launcher
-173 111#Parental Bond
-174 102-17#Pixilite
-175 107#Protean
-176 102-14#Refrigerate
-177 110#Stance Change
-178 108#Strong Jaw
-179 112#Sweet Veil
-180 109#Tough Claws
-181 113#Competitive
-182 114#Gale Wings
-183 115#Gooey
-185 118#BulletProof
-186 119#Grass Pelt
-187 116#Magician
+165 103-2#Aerilate
+166 118#Aurabreak
+168 104-Aura_16#Dark Aura
+169 104-Aura_17#Fairy Aura
+170 105-Veil_11#Flower Veil
+171 106#Fur Coat
+172 107#Mega Launcher
+173 112#Parental Bond
+174 103-17#Pixilite
+175 108#Protean
+176 103-14#Refrigerate
+177 111#Stance Change
+178 109#Strong Jaw
+179 113#Sweet Veil
+180 110#Tough Claws
+181 114#Competitive
+182 115#Gale Wings
+183 116#Gooey
+185 119#BulletProof
+186 120#Grass Pelt
+187 117#Magician
