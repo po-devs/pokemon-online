@@ -1521,7 +1521,7 @@ namespace Move
         SecretSword,
         Glaciate,
         BoltStrike,
-        BlueFire,
+        BlueFlare,
         FieryDance,
         FreezeShock,
         IceBurn,
@@ -1530,7 +1530,6 @@ namespace Move
         VCreate,
         FusionFlare,
         FusionBolt,
-        //gen 6
         BabyDollEyes,
         Boomburst,
         CraftyShield,
