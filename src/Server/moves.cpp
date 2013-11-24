@@ -2201,7 +2201,7 @@ struct MMMetronome : public MM
             (*this).unite(MMAssist::forbidden_moves );
             //The inheritance is missing a few moves
             (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SacredSword
-                                     << Move::TechnoBlast << Move::VCreate << Move::WideGuard << Move::Snarl;
+                                     << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power still ruining life since Gen 5

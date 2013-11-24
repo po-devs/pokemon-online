@@ -618,7 +618,7 @@ public:
         ForestsCurse,
         FreezeDry,
         Geomancy,
-        GlowPunch,
+        PetalBlizzard,
         Infestation,
         MoonBlast,
         MysticalFire,
