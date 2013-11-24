@@ -1521,7 +1521,7 @@ namespace Move
         SecretSword,
         Glaciate,
         BoltStrike,
-        BlueFire,
+        BlueFlare,
         FieryDance,
         FreezeShock,
         IceBurn,
