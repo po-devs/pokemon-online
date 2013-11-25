@@ -29,6 +29,7 @@ effects[BattleData.ToxicSpikes] = effects[BattleData.LeechSeed];
 effects[BattleData.Spikes] = effects[BattleData.LeechSeed];
 
 effects[BattleData.Fissure] = effects[BattleData.Earthquake] = "Moves/Earthquake.qml";
+effects[BattleData.Boomburst] = effects[BattleData.Earthquake];
 effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 
 /* Charging moves */
@@ -36,13 +37,13 @@ effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickAttack, BattleData.BodySlam,
     BattleData.Retaliate, BattleData.VoltTackle, BattleData.WildCharge, BattleData.U_turn, BattleData.VoltSwitch,
     BattleData.V_create, BattleData.FlameWheel, BattleData.FlareBlitz, BattleData.FlameCharge,
-    BattleData.Rollout, BattleData.IceBall], "Moves/ChargeMove.qml",
+    BattleData.Rollout, BattleData.IceBall, BattleData.ExtremeSpeed, BattleData.Pursuit], "Moves/ChargeMove.qml",
     { attack_time: 300, return_time: 500, rolls: 0, effect: "",
       easing_in_x: Easing.Linear, easing_in_y: Easing.Linear,
       easing_out_x: Easing.Linear, easing_out_y: Easing.Linear}
 );
 
-effects[BattleData.MachPunch] = "Moves/MachPunch.qml";
+effects[BattleData.MachPunch] = effects[BattleData.BulletPunch] = "Moves/MachPunch.qml";
 effects[BattleData.CalmMind] = "Moves/CalmMind.qml";
 effects[BattleData.Substitute] = "Moves/Substitute.qml";
 effects[BattleData.Bonemerang] = "Moves/Bonemerang.qml";
@@ -80,12 +81,19 @@ params[BattleData.Spikes] = {"image":"spikes.png",
 
 params[BattleData.TakeDown].update({easing_in_x: Easing.OutQuad, easing_in_y: Easing.InQuad});
 params[BattleData.BodySlam].easing_in_y = Easing.OutBack;
+params[BattleData.Pursuit].attack_time = 250;
 params[BattleData.QuickAttack].attack_time = 200;
+params[BattleData.ExtremeSpeed].attack_time = 150;
 params[BattleData.U_turn].update({attack_time: 400, easing_in_x: Easing.InQuint, easing_out_x: Easing.InQuint});
 params[BattleData.PartingShot] = params[BattleData.VoltSwitch] = params[BattleData.U_turn];
 // Placeholder image for FlameWheel
 params[BattleData.FlameWheel].update({effect: "../../images/flame0.png", attack_time: 700});
+params[BattleData.FlameCharge].update({effect: "../../images/flame0.png", attack_time: 700});
 params[BattleData.FlareBlitz].update({effect: "../../images/flame0.png", attack_time: 700, easing_in_x: Easing.InBack,
+                                     easing_in_y: Easing.InBack});
+params[BattleData.V_create].update({effect: "../../images/flame0.png", attack_time: 700, easing_in_x: Easing.InBack,
+                                     easing_in_y: Easing.InBack});
+params[BattleData.WildCharge].update({effect: "../../images/lightparticle1.png", attack_time: 700, easing_in_x: Easing.InBack,
                                      easing_in_y: Easing.InBack});
 params[BattleData.Rollout].update({rolls: 3, attack_time: 900});
 params[BattleData.IceBall].update({rolls: 3, attack_time: 900});
