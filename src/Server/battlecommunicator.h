@@ -56,10 +56,13 @@ public slots:
     void filterBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
     void filterBattleInfo(int battle, int player, const QByteArray &info);
     void filterBattleResult(int, int, int, int);
+    /* Server -> Battle server */
+    void changeMod(const QString &mod);
 private:
     BattleAnalyzer* relay;
 
     QHash<int, FullBattleConfiguration*> mybattles;
+    QString mod;
 
     void showResult(int battle, int result, int loser);
 };

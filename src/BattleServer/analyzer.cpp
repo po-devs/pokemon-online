@@ -90,6 +90,12 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
         emit battleFinished(battle, result, forfeiter);
     }
+    case DatabaseMod: {
+        QString mod;
+        in >> mod;
+
+        emit modChanged(mod);
+    }
     default:
         //emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

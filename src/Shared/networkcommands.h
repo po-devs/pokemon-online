@@ -45,7 +45,7 @@ enum Command {
     SpectateBattle,
     SpectatingBattleMessage,
     SpectatingBattleChat,
-    Unused30 = 30,
+    DatabaseMod = 30,
     Unused31,
     Unused32,
     VersionControl_,

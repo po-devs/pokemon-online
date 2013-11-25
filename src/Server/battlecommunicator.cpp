@@ -174,6 +174,8 @@ void BattleCommunicator::connectToBattleServer()
 void BattleCommunicator::battleConnected()
 {
     emit info("Connected to battle server!");
+
+    changeMod(mod);
 }
 
 void BattleCommunicator::battleConnectionError()
@@ -255,4 +257,13 @@ void BattleCommunicator::filterBattleResult(int b, int r, int w, int l)
     }
 
     emit battleFinished(b,r,w,l);
+}
+
+void BattleCommunicator::changeMod(const QString &mod)
+{
+    this->mod = mod;
+
+    if (relay) {
+        relay->notify(DatabaseMod, mod);
+    }
 }

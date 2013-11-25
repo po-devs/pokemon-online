@@ -45,6 +45,7 @@ signals:
     void battleChat(int battle, int player, const QString &chat);
     void spectatingChat(int battle, int player, const QString &chat);
     void battleFinished(int battle, int result, int forfeiter);
+    void modChanged(const QString &mod);
 
     /* Network errors */
     void connectionError(int, const QString&);

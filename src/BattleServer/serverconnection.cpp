@@ -19,6 +19,7 @@ ServerConnection::ServerConnection(const GenericSocket &sock, int id) : id(id)
     connect(relay, SIGNAL(playerChoice(int,int,BattleChoice)), SLOT(choice(int,int,BattleChoice)));
     connect(relay, SIGNAL(spectating(int,bool,int,QString)), SLOT(spectate(int,bool,int,QString)));
     connect(relay, SIGNAL(battleFinished(int,int,int)), SLOT(finish(int,int,int)));
+    connect(relay, SIGNAL(modChanged(QString)), SIGNAL(modChanged(QString)));
 
     connect(this, SIGNAL(destroyed()), relay, SLOT(deleteLater()));
 }

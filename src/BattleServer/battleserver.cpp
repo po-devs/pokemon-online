@@ -114,6 +114,7 @@ void BattleServer::newConnection()
 
     connect(conn, SIGNAL(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)), SLOT(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)));
     connect(conn, SIGNAL(error(int)), SLOT(onError(int)));
+    connect(conn, SIGNAL(modChanged(QString)), SLOT(modChanged(QString)));
 }
 
 void BattleServer::onError(int id)
@@ -124,6 +125,16 @@ void BattleServer::onError(int id)
 
     print(QString("Disonnection from slot %1").arg(id));
     connections.take(id)->deleteLater();
+}
+
+void BattleServer::modChanged(const QString &mod)
+{
+    if (PokemonInfoConfig::currentMod() == mod) {
+        return;
+    }
+
+    print(QString("Database mod changed: %1").arg(mod));
+    changeDbMod(mod);
 }
 
 void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2)

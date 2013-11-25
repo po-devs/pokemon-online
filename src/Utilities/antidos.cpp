@@ -1,5 +1,8 @@
+#include <ctime>
+
 #include <QDebug>
 #include <QSettings>
+
 #include "antidos.h"
 
 AntiDos::AntiDos(QSettings &settings) {
