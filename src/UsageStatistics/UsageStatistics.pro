@@ -10,10 +10,9 @@ SOURCES += usagestats.cpp
 HEADERS += usagestats.h \
     usagestats_global.h \
     ../PokemonInfo/battlestructs.h \
-    ../Server/plugininterface.h \
-    ../Server/playerinterface.h \
-    ../Server/serverinterface.h \
-    ../Server/battleinterface.h
+    ../BattleServer/plugininterface.h \
+    ../BattleServer/serverinterface.h \
+    ../BattleServer/battleinterface.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5

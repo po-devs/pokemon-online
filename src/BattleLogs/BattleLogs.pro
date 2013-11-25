@@ -15,8 +15,8 @@ SOURCES += battlelogs.cpp \
 
 HEADERS += battlelogs.h\
         BattleLogs_global.h \
-    ../Server/plugininterface.h \
-    ../Server/battleinterface.h \
+    ../BattleServer/plugininterface.h \
+    ../BattleServer/battleinterface.h \
     battleserverlog.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h
