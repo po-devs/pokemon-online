@@ -12,6 +12,7 @@ class BattlePlayer;
 class ChallengeInfo;
 class TeamBattle;
 class BattleConfiguration;
+class BattleChoice;
 
 class ServerConnection : public QObject
 {
@@ -28,6 +29,10 @@ signals:
     void error(int id);
 public slots:
     void onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
+    void spectate(int battleid, bool spectate, int player, const QString &name);
+    void choice(int battleid, int player, const BattleChoice &choice);
+    void message(int battleid, int player, const QString &chat);
+    void spectatorMessage(int battleid, int player, const QString &chat);
     void onError();
 
     void notifyBattle(int id, int publicId, int opponent, const TeamBattle &team, const BattleConfiguration &config, const QString &tier);

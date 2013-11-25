@@ -10,7 +10,7 @@
 #include "battlecommunicator.h"
 
 BattleCommunicator::BattleCommunicator(QObject *parent) :
-    QObject(parent), battleserver_connection(nullptr)
+    QObject(parent), relay(nullptr)
 {
     QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
 }
@@ -27,7 +27,7 @@ bool BattleCommunicator::contains(int battleid) const
 
 bool BattleCommunicator::valid() const
 {
-    return battleserver_connection && battleserver_connection->isConnected();
+    return relay && relay->isConnected();
 }
 
 void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, int team1, int team2)
@@ -52,7 +52,7 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
             (quint8)t.getMaxLevel(), (quint8)t.restricted(p1->team(team1)), (quint8)t.maxRestrictedPokes, (quint8)t.numberOfPokemons
         };
 
-        battleserver_connection->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     } else {
         BattlePlayer pb1 = {
             p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
@@ -63,7 +63,7 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
             (quint8)100, (quint8)0, (quint8)0, (quint8)6
         };
 
-        battleserver_connection->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     }
 
     p1->addBattle(id);
@@ -95,11 +95,11 @@ void BattleCommunicator::removeBattle(int battleid)
     /* Todo: maybe notify battle server! */
 }
 
-void BattleCommunicator::addSpectator(int idOfBattle, int id, const QString &name)
+void BattleCommunicator::addSpectator(int battle, int id, const QString &name)
 {
-    mybattles[idOfBattle]->spectators.insert(id);
+    mybattles[battle]->spectators.insert(id);
 
-    /* Todo: forward to battle server */
+    relay->notify(SpectateBattle, qint32(battle), true, qint32(id), name);
 }
 
 void BattleCommunicator::removeSpectator(int idOfBattle, int id)
@@ -109,7 +109,7 @@ void BattleCommunicator::removeSpectator(int idOfBattle, int id)
     } else {
         mybattles[idOfBattle]->spectators.remove(id);
 
-        /* Todo: Forward to battle server */
+        relay->notify(SpectateBattle, qint32(idOfBattle), false, qint32(id));
     }
 }
 
@@ -123,15 +123,15 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
 
 void BattleCommunicator::connectToBattleServer()
 {
-    if (battleserver_connection) {
-        if (battleserver_connection->isConnected()) {
+    if (relay) {
+        if (relay->isConnected()) {
             return;
         }
         else
-            battleserver_connection->deleteLater();
+            relay->deleteLater();
     }
 
-    battleserver_connection = nullptr;
+    relay = nullptr;
 
     emit info("Connecting to battle server on port 5096...");
 
@@ -141,11 +141,11 @@ void BattleCommunicator::connectToBattleServer()
     connect(s, SIGNAL(connected()), this, SLOT(battleConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(battleConnectionError()));
 
-    battleserver_connection = new BattleAnalyzer(s);
+    relay = new BattleAnalyzer(s);
 
-    connect(battleserver_connection, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(filterBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
-    connect(battleserver_connection, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(filterBattleInfo(int,int,QByteArray)));
-    connect(battleserver_connection, SIGNAL(battleResult(int,int,int,int)), SLOT(filterBattleResult(int,int,int,int)));
+    connect(relay, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(filterBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    connect(relay, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(filterBattleInfo(int,int,QByteArray)));
+    connect(relay, SIGNAL(battleResult(int,int,int,int)), SLOT(filterBattleResult(int,int,int,int)));
 }
 
 void BattleCommunicator::battleConnected()
@@ -168,7 +168,7 @@ void BattleCommunicator::battleMessage(int player, int battle, const BattleChoic
         return;
     }
 
-//    mybattles[battle]->battleChoiceReceived(player, choice);
+    relay->notify(BattleMessage, qint32(battle), qint32(player), choice);
 }
 
 void BattleCommunicator::resendBattleInfos(int player, int battle)
@@ -177,8 +177,7 @@ void BattleCommunicator::resendBattleInfos(int player, int battle)
         return;
     }
 
-    //mybattles[battle]->addSpectator(this->player(player));
-    //mybattles[battle]->spectators.insert(player);
+    relay->notify(SpectateBattle, qint32(battle), true, qint32(player));
 }
 
 void BattleCommunicator::battleChat(int player, int battle, const QString &chat)
@@ -187,7 +186,7 @@ void BattleCommunicator::battleChat(int player, int battle, const QString &chat)
         return;
     }
 
-    //mybattles[battle]->battleChat(player, chat);
+    relay->notify(BattleChat, qint32(battle), qint32(player), chat);
 }
 
 void BattleCommunicator::spectatingChat(int player, int battle, const QString &chat)
@@ -195,7 +194,8 @@ void BattleCommunicator::spectatingChat(int player, int battle, const QString &c
     if (!contains(battle)) {
         return;
     }
-    //mybattles[battle]->spectatingChat(player, chat);
+
+    relay->notify(SpectatingBattleChat, qint32(battle), qint32(player), chat);
 }
 
 void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &s)

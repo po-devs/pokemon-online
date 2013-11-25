@@ -51,6 +51,39 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         notify(KeepAlive);
         break;
     }
+    case BattleMessage: {
+        qint32 battle, player;
+        BattleChoice choice;
+
+        in >> battle >> player >> choice;
+
+        emit playerChoice(battle, player, choice);
+        break;
+    }
+    case SpectatingBattleChat: case BattleChat:  {
+        qint32 battle, player;
+        QString message;
+
+        in >> battle >> player >> message;
+
+        if (command == BattleChat) {
+            emit battleChat(battle, player, message);
+        } else {
+            emit spectatingChat(battle, player, message);
+        }
+        break;
+    }
+    case SpectateBattle: {
+        qint32 battle;
+        bool spectate;
+        qint32 player;
+        QString name;
+
+        in >> battle >> spectate >> player >> name;
+
+        emit spectating(battle, spectate, player, name);
+        break;
+    }
     default:
         //emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

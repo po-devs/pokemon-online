@@ -1190,8 +1190,6 @@ void BattleBase::spectatingChat(int id, const QString &str)
     notify(All, SpectatorChat, id, qint32(id), str);
 }
 
-
-
 void BattleBase::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)
 {
     if (foe == -1) {

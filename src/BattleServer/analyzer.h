@@ -10,6 +10,7 @@ class GenericNetwork;
 class ChallengeInfo;
 class TeamBattle;
 class BattlePlayer;
+class BattleChoice;
 
 class Analyzer : public QObject
 {
@@ -39,6 +40,10 @@ signals:
 
     /* Server connection */
     void newBattle(int, const BattlePlayer&, const BattlePlayer&, const ChallengeInfo&, const TeamBattle&, const TeamBattle&);
+    void playerChoice(int battle, int player, const BattleChoice&);
+    void spectating(int battle, bool spectate, int player, const QString &name);
+    void battleChat(int battle, int player, const QString &chat);
+    void spectatingChat(int battle, int player, const QString &chat);
 
     /* Network errors */
     void connectionError(int, const QString&);

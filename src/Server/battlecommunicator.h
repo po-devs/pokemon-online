@@ -57,7 +57,7 @@ public slots:
     void filterBattleInfo(int battle, int player, const QByteArray &info);
     void filterBattleResult(int, int, int, int);
 private:
-    BattleAnalyzer* battleserver_connection;
+    BattleAnalyzer* relay;
 
     QHash<int, FullBattleConfiguration*> mybattles;
 };
