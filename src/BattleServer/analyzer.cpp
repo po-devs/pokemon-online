@@ -84,6 +84,15 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         emit spectating(battle, spectate, player, name);
         break;
     }
+    case BattleFinished: {
+        qint32 battle;
+        uchar result;
+        qint32 forfeiter;
+
+        in >> battle >> result >> forfeiter;
+
+        emit battleFinished(battle, result, forfeiter);
+    }
     default:
         //emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));
         break;

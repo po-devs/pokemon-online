@@ -18,6 +18,7 @@ ServerConnection::ServerConnection(const GenericSocket &sock, int id) : id(id)
     connect(relay, SIGNAL(spectatingChat(int,int,QString)), SLOT(spectatorMessage(int,int,QString)));
     connect(relay, SIGNAL(playerChoice(int,int,BattleChoice)), SLOT(choice(int,int,BattleChoice)));
     connect(relay, SIGNAL(spectating(int,bool,int,QString)), SLOT(spectate(int,bool,int,QString)));
+    connect(relay, SIGNAL(battleFinished(int,int,int)), SLOT(finish(int,int,int)));
 
     connect(this, SIGNAL(destroyed()), relay, SLOT(deleteLater()));
 }
@@ -74,6 +75,19 @@ void ServerConnection::spectatorMessage(int battleid, int player, const QString 
     }
 
     battles[battleid]->spectatingChat(player, chat);
+}
+
+void ServerConnection::finish(int battleid, int result, int forfeiter)
+{
+    if (!battles.contains(battleid)) {
+        return;
+    }
+
+    if (result == Forfeit) {
+        battles[battleid]->playerForfeit(forfeiter);
+    }
+
+    battles.take(battleid)->deleteLater();
 }
 
 void ServerConnection::notifyBattle(int id, int publicId, int opponent, const TeamBattle &team, const BattleConfiguration &config, const QString &tier)

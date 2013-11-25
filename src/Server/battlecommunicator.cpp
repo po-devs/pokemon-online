@@ -1,6 +1,8 @@
 #include <QTimer>
 
 #include "../Shared/networkcommands.h"
+#include "../Shared/battlecommands.h"
+
 #include "../PokemonInfo/battlestructs.h"
 
 #include "tiermachine.h"
@@ -85,14 +87,29 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
 
 void BattleCommunicator::playerForfeit(int battleid, int forfeiter)
 {
-    /* Todo: forward forfeit info to the battles engine */
+    relay->notify(BattleFinished, qint32(battleid), uchar(Forfeit), qint32(forfeiter));
+
+    /* Manually send the forfeit to everyone since we're going to remove the battle soon and so not forward anymore of its messages */
+    if (contains(battleid)) {
+        QByteArray command;
+        DataStream stream(&command, QIODevice::WriteOnly);
+
+        stream << uchar(BattleCommands::BattleEnd) << qint8(mybattles[battleid]->opponent(mybattles[battleid]->spot(forfeiter))) << uchar(Forfeit);
+
+        emit battleInfo(battleid, mybattles[battleid]->id(0), command);
+        emit battleInfo(battleid, mybattles[battleid]->id(1), command);
+
+        foreach(int spectator, mybattles[battleid]->spectators) {
+            emit battleInfo(battleid, spectator, command);
+        }
+    }
 }
 
 void BattleCommunicator::removeBattle(int battleid)
 {
     delete mybattles.take(battleid);
 
-    /* Todo: maybe notify battle server! */
+    relay->notify(BattleFinished, qint32(battleid), uchar(Close));
 }
 
 void BattleCommunicator::addSpectator(int battle, int id, const QString &name)
@@ -200,12 +217,10 @@ void BattleCommunicator::spectatingChat(int player, int battle, const QString &c
 
 void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &s)
 {
-    emit info(QString("infos about battle %1 received").arg(b));
     if (!contains(b)) {
         return;
     }
 
-    emit info(QString("infos about battle %1 received!").arg(b));
     emit sendBattleInfos(b, p1, p2, t, c, s);
 }
 

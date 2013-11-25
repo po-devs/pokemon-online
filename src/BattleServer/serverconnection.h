@@ -33,6 +33,7 @@ public slots:
     void choice(int battleid, int player, const BattleChoice &choice);
     void message(int battleid, int player, const QString &chat);
     void spectatorMessage(int battleid, int player, const QString &chat);
+    void finish(int battleid, int result, int forfeiter);
     void onError();
 
     void notifyBattle(int id, int publicId, int opponent, const TeamBattle &team, const BattleConfiguration &config, const QString &tier);
