@@ -301,11 +301,11 @@
 300 10
 301 10
 330 90
-331 
-332
-333 
-334 
-335
+331 10#this is just temporary to not give it 300+ BP, needs to be researched
+332 10#see above
+333 10#see above
+334 10#see above
+335 10#see above
 336 10
 337 100
 338 100
