@@ -2406,7 +2406,6 @@ void AbilityEffect::init()
     REGISTER_AB(101, PoisonTouch);
     REGISTER_AB(102, Unnerve);
     //gen 6
-    REGISTER_AB(102, Aerilate);
     REGISTER_AB(103, Aura);
     REGISTER_AB(104, Veil);
     REGISTER_AB(105, FurCoat);
@@ -2425,6 +2424,7 @@ void AbilityEffect::init()
     REGISTER_AB(118, BulletProof);
     REGISTER_AB(119, GrassPelt);
     REGISTER_AB(120, Levitate);
+    REGISTER_AB(121, Aerilate);
 }
 
 /* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
