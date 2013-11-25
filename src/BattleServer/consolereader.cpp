@@ -18,7 +18,7 @@ void ConsoleReader::read(int)
         if (line.indexOf("addp ") == 0) {
             try {
                 m_Server->pluginManager->addPlugin(line.section(" ", 1));
-            } catch (std::runtime_error &ex) {
+            } catch (const std::runtime_error &ex) {
                 m_Server->print(ex.what());
             }
         } else if (line.indexOf("removep ") == 0) {

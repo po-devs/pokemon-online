@@ -41,7 +41,7 @@ void PluginManager::addPlugin(const QString &path)
     try {
          l = new cross::DynamicLibrary(path.toLocal8Bit().constData());
     } catch (const std::exception &e) {
-        throw new std::runtime_error(QString("Error when loading plugin " + path +  ": " + e.what()).toStdString());
+        throw std::runtime_error(QString("Error when loading plugin " + path +  ": " + e.what()).toStdString());
     }
 
     libraries.push_back(l);
@@ -51,7 +51,7 @@ void PluginManager::addPlugin(const QString &path)
         delete l;
         libraries.pop_back();
 
-        throw new std::runtime_error(QString("Error when loading plugin " + path +  ": Not a pokemon online plugin for this program.").toStdString());
+        throw std::runtime_error(QString("Error when loading plugin " + path +  ": Not a pokemon online plugin for this program.").toStdString());
     }
 
     Plugin *s = instanciatePlugin(f);
@@ -60,14 +60,14 @@ void PluginManager::addPlugin(const QString &path)
         delete l;
         libraries.pop_back();
 
-        throw new std::runtime_error(QString("Error when loading plugin " + path +  ": Not a pokemon online plugin for this program or version outdated.").toStdString());
+        throw std::runtime_error(QString("Error when loading plugin " + path +  ": Not a pokemon online plugin for this program or version outdated.").toStdString());
     }
 
     if (s->version() != version()) {
         delete l;
         libraries.pop_back();
 
-        throw new std::runtime_error(QString("Error when loading plugin " + path +  ": different version than this program.").toStdString());
+        throw std::runtime_error(QString("Error when loading plugin " + path +  ": different version than this program.").toStdString());
     }
 
     this->plugins.push_back(s);
