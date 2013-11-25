@@ -91,17 +91,23 @@ void BattleCommunicator::playerForfeit(int battleid, int forfeiter)
 
     /* Manually send the forfeit to everyone since we're going to remove the battle soon and so not forward anymore of its messages */
     if (contains(battleid)) {
-        QByteArray command;
-        DataStream stream(&command, QIODevice::WriteOnly);
+        mybattles[battleid]->finished() = true;
+        showResult(battleid, Forfeit, forfeiter);
+    }
+}
 
-        stream << uchar(BattleCommands::BattleEnd) << qint8(mybattles[battleid]->opponent(mybattles[battleid]->spot(forfeiter))) << uchar(Forfeit);
+void BattleCommunicator::showResult(int battleid, int result, int loser)
+{
+    QByteArray command;
+    DataStream stream(&command, QIODevice::WriteOnly);
 
-        emit battleInfo(battleid, mybattles[battleid]->id(0), command);
-        emit battleInfo(battleid, mybattles[battleid]->id(1), command);
+    stream << uchar(BattleCommands::BattleEnd) << qint8(mybattles[battleid]->opponent(mybattles[battleid]->spot(loser))) << uchar(result);
 
-        foreach(int spectator, mybattles[battleid]->spectators) {
-            emit battleInfo(battleid, spectator, command);
-        }
+    emit battleInfo(battleid, mybattles[battleid]->id(0), command);
+    emit battleInfo(battleid, mybattles[battleid]->id(1), command);
+
+    foreach(int spectator, mybattles[battleid]->spectators) {
+        emit battleInfo(battleid, spectator, command);
     }
 }
 
@@ -174,6 +180,15 @@ void BattleCommunicator::battleConnectionError()
 {
     emit info("Error when connecting to the battle server. Will try again in 10 seconds");
     emit error();
+
+    /* Removing all battles */
+    foreach(int battle, mybattles.keys()) {
+        mybattles[battle]->finished() = true;
+        showResult(battle, Tie, mybattles[battle]->id(0));
+
+        emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
+        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
+    }
 
     QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
 }

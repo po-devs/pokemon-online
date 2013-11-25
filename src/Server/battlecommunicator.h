@@ -60,6 +60,8 @@ private:
     BattleAnalyzer* relay;
 
     QHash<int, FullBattleConfiguration*> mybattles;
+
+    void showResult(int battle, int result, int loser);
 };
 
 #endif // BATTLECOMMUNICATOR_H
