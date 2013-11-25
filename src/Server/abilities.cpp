@@ -554,9 +554,6 @@ struct AMFrisk : public AM {
             }
         } else {
             foreach(int t, b.revs(s)) {
-                if (!b.areAdjacent(s, t)) {
-                    continue;
-                }
                 int it = b.poke(t).item();
 
                 if (it != 0) {
