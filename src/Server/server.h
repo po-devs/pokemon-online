@@ -312,9 +312,6 @@ private:
     ScriptEngine *myengine;
 
     QHash<int, FindBattleDataAdv*> battleSearchs;
-
-    ContextSwitcher battleThread;
-
 public:
     template <typename ...Params>
     void notifyGroup(PlayerGroupFlags group, int command, Params &&... params);

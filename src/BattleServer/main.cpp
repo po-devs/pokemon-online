@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
     BattleServer server;
     server.start(port);
     ConsoleReader reader(&server);
+    QSocketNotifier notifier(fileno(stdin), QSocketNotifier::Read);
+    QObject::connect(&notifier, SIGNAL(activated(int)), &reader, SLOT(read(int)));
 
     return a.exec();
 }
