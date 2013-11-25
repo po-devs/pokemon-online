@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     pluginmanager.cpp \
     moves.cpp \
     serverconnection.cpp \
-    analyzer.cpp
+    analyzer.cpp \
+    consolereader.cpp
 
 HEADERS += \
     rbymoves.h \
@@ -56,7 +57,8 @@ HEADERS += \
     plugininterface.h \
     pluginmanager.h \
     serverconnection.h \
-    analyzer.h
+    analyzer.h \
+    consolereader.h
 
 unix:!mac {
     QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"

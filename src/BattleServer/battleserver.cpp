@@ -18,7 +18,7 @@ BattleServer::BattleServer(QObject *parent) :
 {
 }
 
-void BattleServer::start()
+void BattleServer::start(int port)
 {
     print("Starting Battle Server...");
 
@@ -39,7 +39,7 @@ void BattleServer::start()
 
 #ifndef BOOST_SOCKETS
     server = new QTcpServer();
-    bool listenSuccess = server->listen(QHostAddress::LocalHost, 5096);
+    bool listenSuccess = server->listen(QHostAddress::LocalHost, port);
 #else
     server = manager.createServerSocket();
     bool listenSuccess = server->listen(port, "127.0.0.1");
@@ -47,9 +47,9 @@ void BattleServer::start()
 
     if (listenSuccess)
     {
-        print(QString("Starting to listen to port %1").arg(5096));
+        print(QString("Starting to listen to port %1").arg(port));
     } else {
-        print(QString("Unable to listen to port %1").arg(5096));
+        print(QString("Unable to listen to port %1").arg(port));
         ::exit(1);
     }
 

@@ -16,10 +16,12 @@ class TeamBattle;
 class BattleServer : public QObject
 {
     Q_OBJECT
+
+    friend class ConsoleReader;
 public:
     explicit BattleServer(QObject *parent = 0);
     
-    void start();
+    void start(int port);
     void changeDbMod(const QString &mod);
 signals:
     

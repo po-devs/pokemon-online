@@ -11,7 +11,6 @@ HEADERS += usagestats.h \
     usagestats_global.h \
     ../PokemonInfo/battlestructs.h \
     ../BattleServer/plugininterface.h \
-    ../BattleServer/serverinterface.h \
     ../BattleServer/battleinterface.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {

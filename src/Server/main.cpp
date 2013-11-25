@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
             }
             s.setValue("Server/Description", argv[i]);
         } else if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
-            fprintf(stdout, "Server for Pokeymon-Online Help\n");
+            fprintf(stdout, "Server for Pokemon-Online Help\n");
             fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
             fprintf(stdout, "\n");
             fprintf(stdout, "Usage: ./Server [[options]]\n");
