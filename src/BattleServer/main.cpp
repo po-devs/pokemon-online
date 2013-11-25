@@ -2,6 +2,7 @@
 #include <QDir>
 
 #include "battleserver.h"
+#include "consolereader.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
 
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
     
     BattleServer server;
     server.start(port);
+    ConsoleReader reader(&server);
 
     return a.exec();
 }
