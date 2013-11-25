@@ -70,19 +70,6 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
 
     p1->addBattle(id);
     p2->addBattle(id);
-
-    /*
-
-
-//    if (rated()) {
-//        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(team(0).name, team(1).name, tier());
-//        QPair<int,int> secondChange = TierMachine::obj()->pointChangeEstimate(team(1).name, team(0).name, tier());
-
-//        notify(Player1, PointEstimate, Player1, qint8(firstChange.first), qint8(firstChange.second));
-//        notify(Player2, PointEstimate, Player2, qint8(secondChange.first), qint8(secondChange.second));
-//    }
-
-*/
 }
 
 void BattleCommunicator::playerForfeit(int battleid, int forfeiter)
@@ -241,13 +228,22 @@ void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBatt
     emit sendBattleInfos(b, p1, p2, t, c, s);
 }
 
-void BattleCommunicator::filterBattleInfo(int battle, int player, const QByteArray &info)
+void BattleCommunicator::filterBattleInfo(int battleid, int player, const QByteArray &info)
 {
-    if (!contains(battle)) {
+    if (!contains(battleid)) {
         return;
     }
 
-    emit battleInfo(battle, player, info);
+    FullBattleConfiguration *battle = mybattles[battleid];
+
+    /* Show variation here */
+    if (battle->rated() && info.length() > 4 && (battle->id(0) == player || battle->id(1) == player) && info[4] == BattleCommands::Rated) {
+        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(battle->name[battle->spot(player)], battle->name[battle->opponent(battle->spot(player))], battle->tier());
+
+        emit battleInfo(battleid, player, pack(BattleCommands::PointEstimate, battle->spot(player), qint8(firstChange.first), qint8(firstChange.second)));
+    }
+
+    emit battleInfo(battleid, player, info);
 }
 
 void BattleCommunicator::filterBattleResult(int b, int r, int w, int l)

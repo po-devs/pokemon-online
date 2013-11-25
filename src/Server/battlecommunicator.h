@@ -5,6 +5,8 @@
 #include <QString>
 #include <QHash>
 
+#include "../Utilities/coreclasses.h"
+
 class BattleAnalyzer;
 class BattleChoice;
 class Player;
@@ -65,6 +67,17 @@ private:
     QString mod;
 
     void showResult(int battle, int result, int loser);
+
+    template <typename ...Params>
+    QByteArray pack(int command, int who, Params&&... params) {
+        QByteArray tosend;
+        DataStream out(&tosend, QIODevice::WriteOnly);
+
+        out.pack(uchar(command), qint8(who), std::forward<Params>(params)...);
+
+        return tosend;
+    }
+
 };
 
 #endif // BATTLECOMMUNICATOR_H
