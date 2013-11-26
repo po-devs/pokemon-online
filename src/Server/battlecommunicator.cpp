@@ -54,7 +54,7 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
             (quint8)t.getMaxLevel(), (quint8)t.restricted(p1->team(team1)), (quint8)t.maxRestrictedPokes, (quint8)t.numberOfPokemons
         };
 
-        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2), tier);
     } else {
         BattlePlayer pb1 = {
             p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
@@ -65,7 +65,7 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
             (quint8)100, (quint8)0, (quint8)0, (quint8)6
         };
 
-        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1), p2->team(team2), tier);
     }
 
     p1->addBattle(id);

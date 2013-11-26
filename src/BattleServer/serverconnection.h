@@ -25,11 +25,11 @@ public:
 //    const Analyzer& relay() const;
 
 signals:
-    void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
+    void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2, const QString &tier);
     void error(int id);
     void modChanged(const QString&);
 public slots:
-    void onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
+    void onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2, const QString &tier);
     void spectate(int battleid, bool spectate, int player, const QString &name);
     void choice(int battleid, int player, const BattleChoice &choice);
     void message(int battleid, int player, const QString &chat);

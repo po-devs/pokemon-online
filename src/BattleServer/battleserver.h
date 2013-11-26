@@ -29,7 +29,7 @@ public slots:
     void print(const QString &s);
     void newConnection();
 
-    void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
+    void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2, const QString &tier);
     void onError(int id);
 
     void modChanged(const QString&);
