@@ -89,7 +89,18 @@ void SecurityManager::loadMembers()
                           ":banned, :salt, :hash, :ip, :banexpire)");
 
             QSqlDatabase::database().transaction();
+            int counter = 0;
             while (!memberFile.atEnd()) {
+                if (query.lastError().isValid()) {
+                    Server::print(QString("Error in last query (number %1): %2").arg(counter).arg(query.lastError().text()));
+                }
+
+                ++counter;
+
+                if (counter % 1000 == 0) {
+                    Server::print(QString("Loaded %1 members so far...").arg(counter));
+                }
+
                 QByteArray arr = memberFile.readLine();
                 QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
 
