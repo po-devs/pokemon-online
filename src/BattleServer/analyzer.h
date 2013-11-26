@@ -39,7 +39,7 @@ signals:
     void sendCommand(const QByteArray&);
 
     /* Server connection */
-    void newBattle(int, const BattlePlayer&, const BattlePlayer&, const ChallengeInfo&, const TeamBattle&, const TeamBattle&, const QString &tier);
+    void newBattle(int, const BattlePlayer&, const BattlePlayer&, const ChallengeInfo&, const TeamBattle&, const TeamBattle&);
     void playerChoice(int battle, int player, const BattleChoice&);
     void spectating(int battle, bool spectate, int player, const QString &name);
     void battleChat(int battle, int player, const QString &chat);

@@ -162,6 +162,17 @@ public:
     QString name;
     QString tier;
     Pokemon::gen gen;
+
+    struct FullSerializer {
+        FullSerializer(TeamBattle &team): team(team){}
+
+        TeamBattle &team;
+    };
+
+    FullSerializer fullSerial() {
+        return FullSerializer(*this);
+    }
+
 private:
     PokeBattle m_pokemons[6];
     int m_indexes[6];
@@ -169,6 +180,9 @@ private:
 
 DataStream & operator >> (DataStream &in, TeamBattle &te);
 DataStream & operator << (DataStream &out, const TeamBattle &te);
+
+inline DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {in >> f.team.tier >> f.team.gen >> f.team; return in;}
+inline DataStream & operator << (DataStream &out, const TeamBattle::FullSerializer &f) {out << f.team.tier << f.team.gen << f.team; return out;}
 
 struct ShallowShownPoke
 {

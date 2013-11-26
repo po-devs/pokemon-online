@@ -38,11 +38,10 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         BattlePlayer p1, p2;
         ChallengeInfo c;
         TeamBattle t1, t2;
-        QString tier;
 
-        in >> battleid >> p1 >> p2 >> c >> t1 >> t2 >> tier;
+        in >> battleid >> p1 >> p2 >> c >> t1.fullSerial() >> t2.fullSerial();
 
-        emit newBattle(battleid, p1, p2, c, t1, t2, tier);
+        emit newBattle(battleid, p1, p2, c, t1, t2);
         break;
     }
     case KeepAlive: {

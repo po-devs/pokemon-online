@@ -13,7 +13,7 @@ ServerConnection::ServerConnection(const GenericSocket &sock, int id) : id(id)
 
     connect(relay, SIGNAL(disconnected()), SLOT(onError()));
     connect(relay, SIGNAL(connectionError(int,QString)), SLOT(onError()));
-    connect(relay, SIGNAL(newBattle(int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle,QString)), SLOT(onNewBattle(int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle,QString)));
+    connect(relay, SIGNAL(newBattle(int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)), SLOT(onNewBattle(int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)));
     connect(relay, SIGNAL(battleChat(int,int,QString)), SLOT(message(int,int,QString)));
     connect(relay, SIGNAL(spectatingChat(int,int,QString)), SLOT(spectatorMessage(int,int,QString)));
     connect(relay, SIGNAL(playerChoice(int,int,BattleChoice)), SLOT(choice(int,int,BattleChoice)));
@@ -24,14 +24,14 @@ ServerConnection::ServerConnection(const GenericSocket &sock, int id) : id(id)
     connect(this, SIGNAL(destroyed()), relay, SLOT(deleteLater()));
 }
 
-void ServerConnection::onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2, const QString &tier)
+void ServerConnection::onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2)
 {
     if (battles.contains(battleid)) {
         qWarning() << "Error, new battle with id " << battleid << " when already exists";
         return;
     }
 
-    emit newBattle(id, battleid, pb1, pb2, c, t1, t2, tier);
+    emit newBattle(id, battleid, pb1, pb2, c, t1, t2);
 }
 
 void ServerConnection::spectate(int battleid, bool spectate, int player, const QString &name)

@@ -112,8 +112,7 @@ void BattleServer::newConnection()
     print(QString("Received new connection on slot %1 from %2").arg(id).arg(ip));
     ServerConnection *conn = connections[id] = new ServerConnection(newconnection, id);
 
-    connect(conn, SIGNAL(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle,QString)),
-                    SLOT(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle,QString)));
+    connect(conn, SIGNAL(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)), SLOT(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)));
     connect(conn, SIGNAL(error(int)), SLOT(onError(int)));
     connect(conn, SIGNAL(modChanged(QString)), SLOT(modChanged(QString)));
 }
@@ -138,7 +137,7 @@ void BattleServer::modChanged(const QString &mod)
     changeDbMod(mod);
 }
 
-void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2, const QString &tier)
+void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2)
 {
     BattleBase *battle;
 
@@ -147,8 +146,6 @@ void BattleServer::newBattle(int sid, int battleid, const BattlePlayer &pb1, con
     } else {
         battle = new BattleSituation(pb1, pb2, c, battleid, t1, t2, pluginManager);
     }
-
-    battle->tier() = tier;
 
     ServerConnection *conn = connections[sid];
 
