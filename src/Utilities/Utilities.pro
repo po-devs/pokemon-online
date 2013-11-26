@@ -1,6 +1,6 @@
 TARGET = po-utilities
 
-QT += network
+QT += network sql
 
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin
@@ -24,7 +24,8 @@ SOURCES += otherwidgets.cpp \
     pluginmanagerwidget.cpp \
     antidos.cpp \
     antidoswindow.cpp \
-    network.cpp
+    network.cpp \
+    qpsqlquery.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -47,7 +48,8 @@ HEADERS += otherwidgets.h \
     antidos.h \
     antidoswindow.h \
     asiosocket.h \
-    network.h
+    network.h \
+    qpsqlquery.h
 
 windows: {
 HEADERS += coro/taskimpl.h \

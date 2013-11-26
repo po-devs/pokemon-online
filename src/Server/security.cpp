@@ -1,6 +1,7 @@
 #include "security.h"
 #include "sql.h"
 #include <QtSql>
+#include "../Utilities/qpsqlquery.h"
 #include "../Utilities/otherwidgets.h"
 #include <ctime>
 #include "server.h"
@@ -34,7 +35,7 @@ QString SecurityManager::Member::toString() const
 
 void SecurityManager::loadMembers()
 {
-    QSqlQuery query;
+    QPsqlQuery query;
 
     query.setForwardOnly(true);
 
@@ -165,13 +166,13 @@ void SecurityManager::init()
 
     for (int i = 0; i < loadThreadCount; i++) {
         threads[i] = new LoadThread();
-        connect(threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QSqlQuery*,QVariant,int)), Qt::DirectConnection);
+        connect(threads[i], SIGNAL(processQuery (QPsqlQuery *, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QPsqlQuery*,QVariant,int)), Qt::DirectConnection);
         threads[i]->start();
     }
 
     ithread = new InsertThread<Member>();
-    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), instance, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
-    connect(ithread, SIGNAL(processDailyRun(QSqlQuery*)), instance, SLOT(dailyRunEx(QSqlQuery*)));
+    connect(ithread, SIGNAL(processMember(QPsqlQuery*,void*,int)), instance, SLOT(insertMember(QPsqlQuery*,void*,int)), Qt::DirectConnection);
+    connect(ithread, SIGNAL(processDailyRun(QPsqlQuery*)), instance, SLOT(dailyRunEx(QPsqlQuery*)));
 
     ithread->start();
 
@@ -212,7 +213,7 @@ SecurityManager::Member SecurityManager::member(const QString &name)
 
 QStringList SecurityManager::membersForIp(const QString &ip)
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     if (SQLCreator::databaseType == SQLCreator::SQLite) {
@@ -241,7 +242,7 @@ QHash<QString, std::pair<QString, int> > SecurityManager::banList()
 
 QStringList SecurityManager::authList()
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec("select name from trainers where auth>0");
@@ -255,7 +256,7 @@ QStringList SecurityManager::authList()
 }
 QStringList SecurityManager::userList()
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec("select name from trainers");
@@ -270,10 +271,10 @@ QStringList SecurityManager::userList()
 
 void SecurityManager::deleteUser(const QString &name)
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
-    q.prepare("delete from trainers where name=?");
-    q.addBindValue(name);
+    q.prepare("delete from trainers where name=:name");
+    q.bindValue(":name", name);
     q.exec();
 }
 
@@ -336,7 +337,7 @@ void SecurityManager::unban(const QString &name) {
 
 int SecurityManager::numRegistered(const QString &ip)
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     if (SQLCreator::databaseType == SQLCreator::SQLite) {
@@ -396,7 +397,7 @@ void SecurityManager::clearPass(const QString &name) {
 int SecurityManager::maxAuth(const QString &ip) {
     int max = 0;
 
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     if (SQLCreator::databaseType != SQLCreator::SQLite) {
@@ -433,7 +434,7 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
         qDebug() << "loading member in memory not with a thread";
 
-        QSqlQuery q;
+        QPsqlQuery q;
         q.setForwardOnly(true);
         loadMember(&q, n2, GetInfoOnUser);
 
@@ -465,7 +466,7 @@ LoadThread * SecurityManager::getThread()
     return threads[n];
 }
 
-void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
+void SecurityManager::insertMember(QPsqlQuery *q, void *m2, int update)
 {
     SecurityManager::Member *m = (SecurityManager::Member*) m2;
 
@@ -487,11 +488,11 @@ void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
     q->finish();
 }
 
-void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_type)
+void SecurityManager::loadMember(QPsqlQuery *q, const QVariant &name, int query_type)
 {
     if (query_type == SecurityManager::GetInfoOnUser) {
-        q->prepare("select laston, auth, banned, salt, hash, ip, ban_expire_time from trainers where name=? limit 1");
-        q->addBindValue(name);
+        q->prepare("select laston, auth, banned, salt, hash, ip, ban_expire_time from trainers where name=:name limit 1");
+        q->bindValue(":name", name);
         q->exec();
         if (!q->next()) {
             holder.addNonExistant(name.toString());
@@ -510,7 +511,7 @@ void SecurityManager::exportDatabase()
 
     out .open(QIODevice::WriteOnly);
 
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec("select name, laston, auth, banned, salt, hash, ip, ban_expire_time from trainers order by name asc");
@@ -531,12 +532,12 @@ void SecurityManager::processDailyRun(int maxdays, bool async)
     if (async) {
         ithread->addDailyRun();
     } else {
-        QSqlQuery q;
+        QPsqlQuery q;
         dailyRunEx(&q);
     }
 }
 
-void SecurityManager::dailyRunEx(QSqlQuery *q)
+void SecurityManager::dailyRunEx(QPsqlQuery *q)
 {
     QString limit = QDateTime::currentDateTime().addDays(-dailyRunDays).toString(Qt::ISODate);
 

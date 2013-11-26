@@ -3378,7 +3378,7 @@ int ScriptEngine::system(const QString &command)
 }
 #include <QSqlRecord>
 
-static QScriptValue sqlResult(QScriptEngine &myengine, QSqlQuery &query)
+static QScriptValue sqlResult(QScriptEngine &myengine, QPsqlQuery &query)
 {
     QScriptValue ret = myengine.newArray();
     do {
@@ -3397,7 +3397,7 @@ static QScriptValue sqlResult(QScriptEngine &myengine, QSqlQuery &query)
 
 QScriptValue ScriptEngine::sql(const QString &command)
 {
-    QSqlQuery query;
+    QPsqlQuery query;
 
     query.setForwardOnly(true);
 
@@ -3412,7 +3412,7 @@ QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &param
 {
     static const QString placeholder = ":";
 
-    QSqlQuery query;
+    QPsqlQuery query;
 
     query.setForwardOnly(true);
 

@@ -7,7 +7,8 @@
 #include "memoryholder.h"
 
 class WaitingObject;
-class QSqlQuery;
+class QPsqlQuery;
+class QPsqlQuery;
 class LoadThread;
 template<class T> class InsertThread;
 
@@ -123,10 +124,10 @@ public:
 
     static void processDailyRun(int maxdays, bool async=true);
 private slots:
-    static void insertMember(QSqlQuery *q, void *m, int update);
-    static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
+    static void insertMember(QPsqlQuery *q, void *m, int update);
+    static void loadMember(QPsqlQuery *q, const QVariant &name, int query_type);
 
-    static void dailyRunEx(QSqlQuery *q);
+    static void dailyRunEx(QPsqlQuery *q);
 private:
     static void loadMembers();
 

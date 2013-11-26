@@ -29,14 +29,14 @@ TierMachine::TierMachine()
 
     for (int i = 0; i < loadThreadCount; i++) {
         threads[i] = new LoadThread();
-        connect(threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
+        connect(threads[i], SIGNAL(processQuery (QPsqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QPsqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
         threads[i]->start();
     }
 
     nextLoadThreadNumber = 0;
 
     ithread = new InsertThread<MemberRating>();
-    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), this, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
+    connect(ithread, SIGNAL(processMember(QPsqlQuery*,void*,int)), this, SLOT(insertMember(QPsqlQuery*,void*,int)), Qt::DirectConnection);
 
     ithread->start();
 
@@ -72,7 +72,7 @@ void TierMachine::load()
     //emit tiersChanged();
 }
 
-void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
+void TierMachine::processQuery(QPsqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);
@@ -94,7 +94,7 @@ void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, 
     semaphore.release();
 }
 
-void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
+void TierMachine::insertMember(QPsqlQuery *q, void *m, int queryNo)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);

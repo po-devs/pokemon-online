@@ -5,7 +5,7 @@
 #include "sql.h"
 
 class WaitingObject;
-class QSqlQuery;
+class QPsqlQuery;
 
 class LoadThread : public QThread
 {
@@ -19,7 +19,7 @@ public:
 
     void run();
 signals:
-    void processQuery (QSqlQuery *q, const QVariant &data, int query_type, WaitingObject *w);
+    void processQuery (QPsqlQuery *q, const QVariant &data, int query_type, WaitingObject *w);
 private:
     struct Query {
         QVariant data;
@@ -48,8 +48,8 @@ public:
     virtual void run() = 0;
 
 signals:
-    void processMember (QSqlQuery *q, void * m, int type=1);
-    void processDailyRun(QSqlQuery *q);
+    void processMember (QPsqlQuery *q, void * m, int type=1);
+    void processDailyRun(QPsqlQuery *q);
 };
 
 template <class T>
@@ -81,7 +81,7 @@ void InsertThread<T>::run()
 
     SQLCreator::createSQLConnection(dbname);
     QSqlDatabase db = QSqlDatabase::database(dbname);
-    QSqlQuery sql(db);
+    QPsqlQuery sql(db);
     sql.setForwardOnly(true);
 
     sem.acquire(1);

@@ -8,7 +8,7 @@ void LoadThread::run()
 
     SQLCreator::createSQLConnection(dbname);
     QSqlDatabase db = QSqlDatabase::database(dbname);
-    QSqlQuery sql(db);
+    QPsqlQuery sql(db);
     sql.setForwardOnly(true);
 
     sem.acquire(1);

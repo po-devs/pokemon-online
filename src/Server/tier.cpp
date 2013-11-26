@@ -112,7 +112,7 @@ int Tier::make_query_number(int type)
 
 void Tier::loadFromFile()
 {
-    QSqlQuery query;
+    QPsqlQuery query;
 
     query.setForwardOnly(true);
 
@@ -224,7 +224,7 @@ int Tier::count()
     if (m_count != -1 && time(NULL) - last_count_time < 3600) {
         return m_count;
     } else {
-        QSqlQuery q;
+        QPsqlQuery q;
         q.setForwardOnly(true);
 
         q.exec(QString("select count(*) from %1").arg(sql_table));
@@ -374,7 +374,7 @@ int Tier::ranking(const QString &name)
     if (!exists(name))
         return -1;
     int r = rating(name);
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
     q.prepare(QString("select count(*) from %1 where (displayed_rating>:r1 or (displayed_rating=:r2 and name<=:name))").arg(sql_table));
     q.bindValue(":r1", r);
@@ -517,7 +517,7 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
         if (holder.isInMemory(n2))
             return;
 
-        QSqlQuery q;
+        QPsqlQuery q;
         q.setForwardOnly(true);
         processQuery(&q, n2, GetInfoOnUser, NULL);
 
@@ -581,7 +581,7 @@ void Tier::exportDatabase() const
 
     out .open(QIODevice::WriteOnly);
 
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1 order by name asc").arg(sql_table));
@@ -595,7 +595,7 @@ void Tier::exportDatabase() const
 }
 
 /* Precondition: name is in lowercase */
-void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w)
+void Tier::processQuery(QPsqlQuery *q, const QVariant &name, int type, WaitingObject *w)
 {
     if (w) {
         w->setProperty("tier", this->name());
@@ -646,7 +646,7 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
     }
 }
 
-void Tier::insertMember(QSqlQuery *q, void *data, int update)
+void Tier::insertMember(QPsqlQuery *q, void *data, int update)
 {
     MemberRating *m = (MemberRating*) data;
 
@@ -758,7 +758,7 @@ void Tier::loadFromXml(const QDomElement &elem)
 
 void Tier::resetLadder()
 {
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec(QString("delete from %1").arg(sql_table));
@@ -1077,7 +1077,7 @@ Tier *Tier::dataClone() const
 
 void Tier::processDailyRun()
 {
-    QSqlQuery query;
+    QPsqlQuery query;
 
     query.setForwardOnly(true);
 

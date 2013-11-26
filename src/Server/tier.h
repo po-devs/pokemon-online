@@ -101,8 +101,8 @@ public:
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
     void fetchRanking(const QString &name, QObject *o, const char *slot);
-    void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
-    void insertMember(QSqlQuery *q, void *data, int type);
+    void processQuery(QPsqlQuery *q, const QVariant &name, int type, WaitingObject *w);
+    void insertMember(QPsqlQuery *q, void *data, int type);
     int getMode() const;
     bool allowGen(Pokemon::gen gen) const;
     Pokemon::gen gen() const {return m_gen;}

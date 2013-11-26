@@ -3,7 +3,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlError>
-#include <QSqlQuery>
+#include "../Utilities/qpsqlquery.h"
 #include <QRegExp>
 #include "server.h"
 /*

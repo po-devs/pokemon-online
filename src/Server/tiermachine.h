@@ -10,7 +10,7 @@ struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class MemberRating;
-class QSqlQuery;
+class QPsqlQuery;
 class LoadThread;
 template<class T> class InsertThread;
 
@@ -74,8 +74,8 @@ public:
 signals:
     void tiersChanged();
 public slots:
-    void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
-    void insertMember(QSqlQuery*,void *,int);
+    void processQuery(QPsqlQuery*,const QVariant &,int,WaitingObject*);
+    void insertMember(QPsqlQuery*,void *,int);
     /* Processes the daily run in which ratings are updated.
        Be aware that it may take long. I may thread it in the future. */
     void processDailyRun();

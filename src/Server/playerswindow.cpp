@@ -2,7 +2,7 @@
 
 #include "security.h"
 
-#include <QSqlQuery>
+#include "../Utilities/qpsqlquery.h"
 
 PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
@@ -27,7 +27,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance" << "Expires In";
     mytable->setHorizontalHeaderLabels(headers);
 
-    QSqlQuery q;
+    QPsqlQuery q;
     q.setForwardOnly(true);
 
     q.exec("select count(*) from trainers");
