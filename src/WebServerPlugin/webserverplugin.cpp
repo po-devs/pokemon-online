@@ -1,4 +1,5 @@
 #include "../Utilities/functions.h"
+#include "../Utilities/antidos.h"
 #include "../Server/serverinterface.h"
 
 #include "webserverconfig.h"
@@ -51,7 +52,7 @@ WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
     connect(this, SIGNAL(mainChannelChanged(QString)), srv, SLOT(mainChanChanged(QString)));
     connect(this, SIGNAL(privateChanged(bool)), srv, SLOT(regPrivacyChanged(bool)));
     connect(this, SIGNAL(proxyServersChanged(QString)), srv, SLOT(proxyServersChanged(QString)));
-    connect(this, SIGNAL(antiDosChanged()), server->getAntiDos(), SLOT(init()));
+    connect(this, SIGNAL(antiDosChanged(QSettings&)), server->getAntiDos(), SLOT(loadVals(QSettings&)));
 }
 
 WebServerPlugin::~WebServerPlugin()
@@ -268,7 +269,7 @@ void WebServerPlugin::dealWithFrame(const QString &f)
             settings.setValue("AntiDOS/NumberOfInfractionsBeforeBan", map.value("ban").toInt());
             settings.setValue("AntiDOS/Disabled", !map.value("on").toBool());
 
-            emit antiDosChanged();
+            emit antiDosChanged(settings);
         }
     }
 }

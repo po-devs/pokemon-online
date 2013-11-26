@@ -46,7 +46,7 @@ signals:
     void privateChanged(bool);
     void proxyServersChanged(QString);
     void announcementChanged(QString);
-    void antiDosChanged();
+    void antiDosChanged(QSettings&);
 private:
     ServerInterface *server;
     QWsServer *webserver;
