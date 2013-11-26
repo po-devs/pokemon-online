@@ -76,5 +76,3 @@ for file in copy_files:
 #        destination.write("        <a href='{0}/index.html'>{1} {2}</a>\n".format(target, month, year))
 #source.close()
 #destination.close()
-
-                                                                                                                                                                                                                           79,0-1        Bot

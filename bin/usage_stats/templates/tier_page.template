@@ -1,25 +1,174 @@
 page{{
-<html>
-	<head>
-		<title>Tier {tier}</title>
-		<link rel="stylesheet" type="text/css" href="../style.css" />
-		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
-	</head>
-	<body>
-		<header><a href="../index.html" />Index</a></header>
-		<h1> Tier {tier} </h1>
-		<p class='tierbattles'>{battles} battles</p>
-		{toppokemon*}
-		{lowpokemon*}
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="Pok&eacute;mon Online is the most popular, accurate, and complete Pok&eacute;mon battle simulator out there. An open source project made in C++ with Qt framework, it features all five generations of Pokémon battling, from Pok&eacute;mon Stadium to Black & White. Download the latest version and experience competitive battles in real time with trainers from all corners of the globe!" />
+
+  <script src="http://pokemon-online.eu/js2/jquery-1.6.4.min.js" type="text/javascript"></script>
+  <script src="http://pokemon-online.eu/js2/jquery.tipsy.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="http://pokemon-online.eu/css2/tipsy.css" type="text/css" />
+  <link rel="stylesheet" href="http://pokemon-online.eu/css2/statsmain.css" type="text/css" />
+  <link rel="icon" href="http://pokemon-online.eu/imgs/favicon.ico" type="image/vnd.microsoft.icon" />
+  <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js">
+      IE7_PNG_SUFFIX=".png";
+    </script>
+  <![endif]-->
+  <title>Usage statistics for current month | Pok&eacute;mon Online - Battle Simulator</title>
+</head>
+
+<body id="index" class="home" onload='boot();'>
+
+<header id="headrow" class="body">
+  <div class="left">  
+    <a href="http://pokemon-online.eu/"><img src="http://pokemon-online.eu/imgs/logo-full.png" alt="Pokemon Online Logo" /></a>
+  </div>
+  <div class="right">
+    <img src="http://pokemon-online.eu/imgs/logothundurus.png" alt="Banner" />
+  </div>
+  <div id="information">
+    <p>
+      Pok&eacute;mon Online is the most popular, accurate, and complete Pok&eacute;mon battle simulator out there. Available in 11 languages with over 100 themes, it hosts more than a million battles per month. <a href="http://pokemon-online.eu/download">Download</a> the latest version and experience competitive battles across five generations (Stadium, GSC, RSE, HGSS, and Black/White) in real time with trainers from around the world!
+    </p>
+  </div>
+</header>
+
+<nav id="navigation" class="body">
+<script type='text/javascript'>
+  $(function() {
+  $('#homelink').tipsy({gravity: 'n', fade: true});
+  $('#wikilink').tipsy({gravity: 'n', fade: true});
+  $('#forumlink').tipsy({gravity: 'n', fade: true});
+  $('#chatlink').tipsy({gravity: 'n', fade: true});
+  $('#tubelink').tipsy({gravity: 'n', fade: true});
+  $('#downloadlink').tipsy({gravity: 'n', fade: true});
+  $('#themeslink').tipsy({gravity: 'n', fade: true});
+  $('#gototop').tipsy({gravity: 'e', fade: true});
+  });
+</script>
+
+  <h1>
+    <a href="http://pokemon-online.eu/" id="homelink" title="Pok&eacute;mon Online Latest News">Home</a>
+    <a href="http://wiki.pokemon-online.eu/view/Main_Page" id="wikilink" title="Competitive Pok&eacute;mon Information">Wiki</a>
+    <a href="http://pokemon-online.eu/forums" id="forumlink" title="Online Pok&eacute;mon Community">Forums</a>
+    <a href="http://pokemon-online.eu/chat" id="chatlink" title="Live Pok&eacute;mon Discussion">Chat</a>
+    <a href="http://www.youtube.com/user/POSimulator" id="tubelink" title="Pok&eacute;mon Online Videos">YouTube</a>
+    <a href="http://pokemon-online.eu/download" id="downloadlink" class="hidelink" title="Download Pok&eacute;mon Online">Download</a>
+    <a href="http://pokemon-online.eu/themes" id="themeslink" class="hidelink" title="Pok&eacute;mon Online Themes">Themes</a>
+  </h1>
+
+  <h2>
+    <a href="http://pokemon-online.eu/themes">Themes <span class="right">&raquo;</span></a>
+    <a href="http://pokemon-online.eu/download">Download <span class="right">&raquo;</span></a>
+  </h2>
+  
+  <nav id="rightnav-alt" class="body">
+    <a href="#">FAQ</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Running_a_PO_Server" title="Article on how to host a Pok&eacute;mon Online server.">Server Guide</a> |
+    <a href="https://github.com/coyotte508/pokemon-online" title="Browse the Pok&eacute;mon Online source on GitHub.">Source Code</a> |
+    <a href="http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes" title="Help improve Pok&eacute;mon Online by reporting bugs on our forums.">Bug Reports</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Category:Analyses" title="Articles on movesets, Pok&eacute;mon effectiveness, team synergy, and all things competitive.">StrategyDex</a> |
+    <a href="http://stats.pokemon-online.eu/" title="See which Pok&eacute;mon people are using, and even the sets and items!">Usage Statistics</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Tiers" title="Pok&eacute;mon are separated into tiers so no single Pok&eacute;mon is overpowering.">Tiers</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Category:Pok&eacute;mon" title="Stats, moves, and analyses for all 5 generations of Pok&eacute;mon.">Pok&eacute;mon</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Category:Moves" title="Check which move does what and how.">Moves</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Abilities" title="Each Pok&eacute;mon has an ability, and their effects are listed here.">Abilities</a> |
+    <a href="http://wiki.pokemon-online.eu/view/Category:Items" title="Which item you give your Pok&eacute;mon is just as important as anything else.">Items</a> |
+    <a href="" class="tooltip" title="Due to your browser's screen being too narrow, the sidebar has been hidden and this alternate navigation is being used instead. Please enlarge your browser window for a better viewing experience.">?</a>
+  </nav>
+</nav>
+
+<br class="clear" />
+<section id="content" class="body">
+  <div id="maincontent">
+    <div id="socialicons"><a href="https://twitter.com/#!/POSimulator"><img src="http://pokemon-online.eu/imgs/social-twitter.png" alt="Pokemon Online on Twitter" /></a> <a href="http://www.facebook.com/pages/PO-Battle-Simulator/236107523113831"><img src="http://pokemon-online.eu/imgs/social-facebook.png" alt="Pokemon Online on Facebook" /></a> <a href="https://plus.google.com/115644974458235392947/posts"><img src="http://pokemon-online.eu/imgs/social-google.png" alt="Pokemon Online on Google+" /></a></div>
+
+<!-- ### BEGIN Page Content Area ### -->
+
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-1373722853263006";
+/* Banner */
+google_ad_slot = "5744944867";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+		<header><table width="100%"><tr><td style="align:left;" width="50%"><a href="../index.html">Index</a></td><td width="50%" style="align:right;"><a href="ranked_stats.txt">Ranked Stats</a></td></tr></table></header>
+                <p class='tierbattles'>{battles} battles</p>
+	
+	{toppokemon*}
+	{lowpokemon*}
+<br class="clear" />
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-1373722853263006";
+/* POLeaderboard */
+google_ad_slot = "1138280244";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+<br class="clear" />
+<!-- ### END Page Content Area ### -->
+
+    <footer id="pofoot">
+    <hr />
+    <p class="copyright">&copy; 2011 Pok&eacute;mon Online. &copy; 1995-2011 Nintendo/Creatures Inc./GAME FREAK inc. Pok&eacute;mon and Pok&eacute;mon character names are trademarks of Nintendo. Pok&eacute;mon artwork provided by <a href="http://xous54.deviantart.com/">Xous54</a>.</p>
+    </footer>
+  </div>
+
+  <div id="rightnav">
+    <div id="rightnavhead">
+      <span class="navheadtext">Pok&eacute;mon Online</span>
+    </div>
+    <div id="rightnavcont">
+      <a href="http://wiki.pokemon-online.eu/view/Pok%C3%A9mon_Online/FAQ">FAQ</a>
+      <a href="http://wiki.pokemon-online.eu/view/Running_a_PO_Server" title="Article on how to host a Pok&eacute;mon Online server.">Server Guide</a>
+      <a href="https://github.com/coyotte508/pokemon-online" title="Browse the Pok&eacute;mon Online source on GitHub.">Source Code</a>
+      <a href="http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes" title="Help improve Pok&eacute;mon Online by reporting bugs on our forums.">Bug Reports</a>
+    </div>
+
+    <div id="rightnavhead">
+      <span class="navheadtext">Competitive Pok&eacute;mon</span>
+    </div>
+    <div id="rightnavcont">
+      <a href="http://wiki.pokemon-online.eu/view/Category:Analyses" title="Suggested movesets, detailed descriptions, team synergy, and all things competitive.">StrategyDex</a>
+      <a href="http://stats.pokemon-online.eu/" title="See which Pok&eacute;mon people are using, and even the sets and items!">Usage Statistics</a>
+      <a href="http://wiki.pokemon-online.eu/view/Tiers" title="Pok&eacute;mon are separated into tiers so no single Pok&eacute;mon is overpowering.">Tiers</a>
+      <a href="http://wiki.pokemon-online.eu/view/Category:Pok&eacute;mon" title="Stats, moves, and analyses for all five generations of Pok&eacute;mon.">Pok&eacute;mon</a>
+      <a href="http://wiki.pokemon-online.eu/view/Category:Moves" title="Descriptions and effects of Pok&eacute;mon moves.">Moves</a>
+      <a href="http://wiki.pokemon-online.eu/view/Abilities" title="Descriptions and effects of Pok&eacute;mon abilities.">Abilities</a>
+      <a href="http://wiki.pokemon-online.eu/view/Category:Items" title="Descriptions and effects of Pok&eacute;mon items.">Items</a>
+    </div>
+  </div>
+</section>
+
+<br class="clear" />
+<br />
+<a href="#" id="gototop" title="Go Back to the Top">TOP</a>
+</body>
 </html>
 }}
 
 toppokemon{{
-	<img src='../poke_img/{imagelink}' />
-	<p class='topPokemon'># {rank} - <a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
+        <img src='http://pokemon-online.eu/images/pokemon/x-y/{imagelink}' />
+        <p class='topPokemon'># {rank} - <a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
 }}
 
 lowpokemon{{
-	<p class='lowPokemon'># {rank} - <img src='../poke_icons/{iconlink}' /> 	<a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
+        <p class='lowPokemon'># {rank} - <img src='http://pokemon-online.eu/images/poke_icons/{iconlink}' /><a href='{pokemonlink}'>{pokemon}</a> ({percentage} %)</p>
 }}
+

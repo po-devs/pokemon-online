@@ -2,13 +2,13 @@ How to usage statistics
 
 1. remove usage statistics plugin
 On server:
-/evalp sys.unloadServerPlugin("Usage Statistics")
+/unloadstats
 -> true
 
 2. Update statistics
 On shell:
-cd ~/alpha/bin/
-LD_LIBRARY_PATH=. ./StatsExtracter
+-> goto server exe directory
+LD_LIBRARY_PATH=. ./StatsExtracter_debug
 cd usage_stats
 python archive_usagestats.py month year
 mv raw raw.bk
@@ -16,5 +16,5 @@ mkdir raw
 ./gen_past-stats_index.sh > formatted/Past\ Stats/index.html
 
 3. Reload the plugin
-/evalp sys.loadServerPlugin("serverplugins/libusagestats.so")
+/loadstats
 -> true
