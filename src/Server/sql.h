@@ -30,15 +30,18 @@ public:
         {
             case PostGreSQL:
                 driver = "QPSQL";
+                QPsqlQuery::postgres = true;
             break;
 
             case MySQL:
                 driver = "QMYSQL";
+                QPsqlQuery::postgres = false;
             break;
 
             case SQLite:
             default:
                 driver = "QSQLITE";
+                QPsqlQuery::postgres = false;
             break;
         }
 

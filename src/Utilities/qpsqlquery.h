@@ -17,6 +17,9 @@ public:
     bool exec(const QString &s) {return QSqlQuery::exec(s);}
 
     void bindValue(const QString &placeholder, const QVariant &val, QSql::ParamType type = QSql::InOut);
+
+    static bool postgres;
+
 private:
 
     QString data;

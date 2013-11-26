@@ -91,8 +91,9 @@ void SecurityManager::loadMembers()
             QSqlDatabase::database().transaction();
             int counter = 0;
             while (!memberFile.atEnd()) {
-                if (query.lastError().isValid()) {
+                if (query.lastError().isValid() && counter > 0) {
                     Server::print(QString("Error in last query (number %1): %2").arg(counter).arg(query.lastError().text()));
+                    break;
                 }
 
                 ++counter;
