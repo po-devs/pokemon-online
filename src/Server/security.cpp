@@ -55,17 +55,17 @@ void SecurityManager::loadMembers()
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
             query.exec("create table trainers (id serial, "
-                                                 "name varchar(20), laston char(10), auth int, banned boolean,"
+                                                 "name varchar(20), laston char(19), auth int, banned boolean,"
                                                  "salt varchar(7), hash varchar(32), ip varchar(39), ban_expire_time int, primary key(id), unique(name))");
         } else if (SQLCreator::databaseType == SQLCreator::MySQL) {
             query.exec("CREATE TABLE IF NOT EXISTS trainers (id int(11) NOT NULL auto_increment, "
-                                                            "name varchar(20), laston char(10), auth int(11), banned bool, "
+                                                            "name varchar(20), laston char(19), auth int(11), banned bool, "
                                                             "salt varchar(7), hash varchar(32), ip varchar(39), "
                                                             "ban_expire_time int(11), PRIMARY KEY (id));");
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
             query.exec("create table trainers (id integer primary key autoincrement, name varchar(20) unique, "
-                       "laston char(10), auth int, banned boolean, salt varchar(7), hash varchar(32), "
+                       "laston char(19), auth int, banned boolean, salt varchar(7), hash varchar(32), "
                        "ip varchar(39), ban_expire_time int);");
         } else {
             throw QString("Using a not supported database");
