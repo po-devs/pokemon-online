@@ -93,7 +93,6 @@ void Server::start(){
 #endif
     srand(time(NULL));
 
-    pluginManager = new ServerPluginManager(this);
     registry = new RegistryCommunicator(this);
 
     if (!testWritable("config")) {
@@ -182,6 +181,9 @@ void Server::start(){
 
     AntiDos::init(s);
     RelayManager::init();
+
+    //Needs to be after AntiDos init();
+    pluginManager = new ServerPluginManager(this);
 
     forcePrint(tr("Members loaded"));
 
