@@ -4,7 +4,7 @@
 
 using namespace NetworkServ;
 
-BattleAnalyzer::BattleAnalyzer(GenericSocket sock) : Analyzer(sock, 0)
+BattleAnalyzer::BattleAnalyzer(QTcpSocket *sock) : Analyzer(sock, 0)
 {
 }
 

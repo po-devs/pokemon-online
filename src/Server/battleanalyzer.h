@@ -7,7 +7,7 @@ class BattleAnalyzer : public Analyzer
 {
     Q_OBJECT
 public:
-    BattleAnalyzer(GenericSocket sock);
+    BattleAnalyzer(QTcpSocket *sock);
 signals:
     void sendBattleInfos(int bid, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &tier);
     void battleMessage(int bid, int p, const QByteArray &info);
