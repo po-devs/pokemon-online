@@ -1463,6 +1463,21 @@ QScriptValue ScriptEngine::dbDelete(const QString &name)
     }
 }
 
+bool ScriptEngine::dbLoaded(const QString &name)
+{
+    return SecurityManager::holder.isInMemory(name);
+}
+
+bool ScriptEngine::dbExists(const QString &name)
+{
+    return SecurityManager::exist(name);
+}
+
+void ScriptEngine::dbClearCache()
+{
+    SecurityManager::holder.clearCache();
+}
+
 QScriptValue ScriptEngine::dbLastOn(const QString &name)
 {
     if (!SecurityManager::exist(name)) {

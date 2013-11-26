@@ -264,6 +264,9 @@ public:
     Q_INVOKABLE QScriptValue dbAll();
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
+    Q_INVOKABLE bool dbLoaded(const QString &name);
+    Q_INVOKABLE bool dbExists(const QString &name);
+    Q_INVOKABLE void dbClearCache();
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE QScriptValue dbExpire(const QString &name);
     Q_INVOKABLE QScriptValue dbTempBanTime(const QString &name);

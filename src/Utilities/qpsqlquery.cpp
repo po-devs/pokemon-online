@@ -39,13 +39,28 @@ bool QPsqlQuery::exec()
     }
     QString ex = data;
 
+    ex.replace("?", mvalue.toString());
+    ex.replace(QRegExp(":[a-z]+"), "\''");
+
     foreach(QString key, values.keys()) {
         ex.replace(key, values[key].toString());
     }
 
-    ex.replace(QRegExp(":[a-z]+"), "\''");
-
     return exec(ex);
+}
+
+void QPsqlQuery::addBindValue(const QVariant &v)
+{
+    if (!postgres) {
+        QSqlQuery::addBindValue(v);
+        return;
+    }
+
+    if (v.type() == QVariant::String || v.type() == QVariant::ByteArray) {
+        mvalue = "E'" + v.toString().replace("\\", "\\\\").replace("'", "\\'") + "'";
+    } else {
+        mvalue = v;
+    }
 }
 
 bool QPsqlQuery::postgres = false;

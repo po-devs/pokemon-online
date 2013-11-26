@@ -623,12 +623,12 @@ void Tier::processQuery(QPsqlQuery *q, const QVariant &name, int type, WaitingOb
         }
 
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL)
-            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc offset ? limit ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc offset :offset limit :limit").arg(sql_table));
         else
-            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc limit ?, ?").arg(sql_table));
+            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc limit :offset, :limit").arg(sql_table));
 
-        q->addBindValue((p-1)*TierMachine::playersByPage);
-        q->addBindValue(TierMachine::playersByPage);
+        q->bindValue(":offset", (p-1)*TierMachine::playersByPage);
+        q->bindValue(":limit", TierMachine::playersByPage);
 
         QVector<QPair<QString, int> > results;
         results.reserve(TierMachine::playersByPage);

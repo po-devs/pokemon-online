@@ -74,6 +74,7 @@ SQLConfigWindow::SQLConfigWindow()
 
     QPushButton *apply = new QPushButton(tr("&Apply"));
     connect(apply, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(apply, SIGNAL(clicked()), SLOT(close()));
 
     v->addLayout(new QSideBySide(exporting, apply));
 
