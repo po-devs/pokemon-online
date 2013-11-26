@@ -1970,18 +1970,11 @@ void Server::atServerShutDown() {
 #ifdef _WIN32
     ::exit(0);
 #endif
+    ::exit(0);
     // On linux, threads need to be cleared or the server may be left hanging...
-//    TierMachine::destroy();
-//    SecurityManager::destroy();
-//    RelayManager::destroy();
-
-//    connect(&battleThread, SIGNAL(finished()), this, SLOT(deleteLater()));
-//    battleThread.finish();
-//    exit(0);
-    //The above always hangs now for some reason on linux, so here we go
-    int *x = NULL;
-    *x += 1;
-
+    TierMachine::destroy();
+    SecurityManager::destroy();
+    RelayManager::destroy();
 }
 
 void Server::setAnnouncement(int &id, const QString &html) {

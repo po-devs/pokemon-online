@@ -27,7 +27,7 @@ RelayManager::~RelayManager()
 RelayManager::RelayManager()
 {
     dummy = new Analyzer(new QTcpSocket(this), 0, true);
-    dummy->setParent(this);
+    connect(this, SIGNAL(destroyed()), dummy, SLOT(deleteLater()));
     QTimer *timer = new QTimer(this);
     timer->setInterval(300*1000); //long interval, but who cares, we don't want broken pipes
 
