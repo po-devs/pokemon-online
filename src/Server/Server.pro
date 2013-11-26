@@ -146,4 +146,10 @@ CONFIG(debian_package) {
     DEFINES += PO_HOME_DIR=\\\"./\\\"
 }
 
+CONFIG(boost_asio) {
+    DEFINES += BOOST_SOCKETS
+    LIBS += -L/usr/local/lib \
+        -lboost_system
+}
+
 LIBS += $$pokemoninfo

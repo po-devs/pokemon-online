@@ -1,8 +1,8 @@
-#ifdef SFML_SOCKETS
+#ifdef BOOST_SOCKETS
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
-#include "sfmlsocket.h"
+#include "asiosocket.h"
 
 /* The deleteObjectLater destructor ensures the objects are destroyed in
    the main thread instead of the local thread to the SocketManager.
@@ -17,6 +17,7 @@ struct deleteObjectLater {
 
 
 using boost::asio::ip::tcp;
+using namespace boost::asio;
 
 SocketManager::SocketManager() {
     finished = false;
