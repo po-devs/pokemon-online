@@ -1,5 +1,6 @@
-#include "battlebase.h"
+#include <cassert>
 #include "../Shared/battlecommands.h"
+#include "battlebase.h"
 #include "pluginmanager.h"
 #include "battlefunctions.h"
 
@@ -321,6 +322,7 @@ int BattleBase::slotNum(int slot) const
 
 TeamBattle &BattleBase::team(int spot)
 {
+    assert((spot >= 0));
     return *conf.teams[spot];
 }
 
