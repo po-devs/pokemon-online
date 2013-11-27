@@ -164,13 +164,13 @@ public:
     Pokemon::gen gen;
 
     struct FullSerializer {
-        FullSerializer(TeamBattle &team): team(team){}
+        FullSerializer(TeamBattle *team): team(team){}
 
-        TeamBattle &team;
+        TeamBattle *team;
     };
 
     FullSerializer fullSerial() {
-        return FullSerializer(*this);
+        return FullSerializer(this);
     }
 
 private:
@@ -181,8 +181,8 @@ private:
 DataStream & operator >> (DataStream &in, TeamBattle &te);
 DataStream & operator << (DataStream &out, const TeamBattle &te);
 
-inline DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {in >> f.team.tier >> f.team.gen >> f.team; return in;}
-inline DataStream & operator << (DataStream &out, const TeamBattle::FullSerializer &f) {out << f.team.tier << f.team.gen << f.team; return out;}
+DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f);
+DataStream & operator << (DataStream &out, const TeamBattle::FullSerializer &f);
 
 struct ShallowShownPoke
 {

@@ -3150,6 +3150,10 @@ int GenInfo::NumberOfGens() {
     return m_gens.size();
 }
 
+bool GenInfo::Exists(const Pokemon::gen &gen) {
+    return m_versions.contains(gen);
+}
+
 int GenInfo::NumberOfSubgens(int gen) {
     return m_NumberOfSubgens.value(gen);
 }

@@ -31,6 +31,8 @@ public:
     static int NumberOfGens();
     static int NumberOfSubgens(int gen);
 
+    static bool Exists(const Pokemon::gen &gen);
+
     static QList<int> AllGens();
     static QList<Pokemon::gen> AllSubGens();
 private:
@@ -91,6 +93,10 @@ public:
 
     inline QString toString() const {
         return QString("%1-%2").arg(int(num)).arg(int(subnum));
+    }
+
+    inline bool isValid() const {
+        return GenInfo::Exists(*this);
     }
 
     inline Pokemon::gen original() {return gen(num, 0);}

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 
 #include "battlestructs.h"
 #include "networkstructs.h"
@@ -577,6 +578,20 @@ DataStream & operator << (DataStream &out, const TeamBattle &te)
     for (int i = 0; i < 6; i++) {
         out << te.poke(i);
     }
+
+    return out;
+}
+
+DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {
+    in >> f.team->tier >> f.team->gen >> f.team;
+
+    assert(f.team->gen.isValid());
+
+    return in;
+}
+
+DataStream & operator << (DataStream &out, const TeamBattle::FullSerializer &f) {
+    out << f.team->tier << f.team->gen << f.team;
 
     return out;
 }
