@@ -12,6 +12,7 @@
 #include <zip.h>
 #endif
 #include "../Utilities/functions.h"
+#include "../Utilities/coreclasses.h"
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -591,13 +592,7 @@ int PokemonInfo::BoostedStat(int stat, int boost)
     return stat * std::max(2, 2+boost) / std::max(2, 2-boost);
 }
 
-struct icompare{
-    bool operator ()(const QString &a, const QString &b) {
-        return a.compare(b, Qt::CaseInsensitive) < 0;
-    }
-};
-
-static std::map<QString, Pokemon::uniqueId, icompare> pokenamesToIds;
+static istringmap<Pokemon::uniqueId> pokenamesToIds;
 
 void PokemonInfo::init(const QString &dir)
 {

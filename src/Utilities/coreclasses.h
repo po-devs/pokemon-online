@@ -5,6 +5,7 @@
 #include <QPair>
 #include <QStringList>
 #include <QList>
+#include <map>
 
 class DataStream : public QDataStream
 {
@@ -334,5 +335,15 @@ DataStream &operator<<(DataStream &out, const Expander<T> &list)
 
     return out;
 }
+
+struct icompare{
+    bool operator ()(const QString &a, const QString &b) {
+        return a.compare(b, Qt::CaseInsensitive) < 0;
+    }
+};
+
+/* Map with case insensitive key binding */
+template <class ValType>
+using istringmap = std::map<QString, ValType, icompare>;
 
 #endif // CORECLASSES_H
