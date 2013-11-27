@@ -252,6 +252,8 @@ void BattleCommunicator::filterBattleResult(int b, int r, int w, int l)
         return;
     }
 
+    battle(b)->finished() = true;
+
     emit battleFinished(b,r,w,l);
 }
 
