@@ -8,7 +8,6 @@ QT       += core
 
 QT       -= gui
 
-TARGET = test-utilities
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -33,6 +32,8 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 }
 
 include(../../src/Shared/Common.pri)
+
+TARGET = test-utilities
 
 HEADERS += \
     test.h \
