@@ -348,6 +348,6 @@ template <class ValType>
 using istringmap = std::map<QString, ValType, icompare>;
 #else
 template <class ValType>
-class istringmap : std::map<QString, ValType, icompare>{};
+class istringmap : public std::map<QString, ValType, icompare>{};
 #endif
 #endif // CORECLASSES_H
