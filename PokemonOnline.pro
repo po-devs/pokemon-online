@@ -18,11 +18,12 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation
+CONFIG(po_all): CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation tests
 
 !CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):!CONFIG(po_relaystation):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
 CONFIG(po_clientplugins):CONFIG += po_client
+CONFIG(po_server): CONFIG+= po_relaystation
 
 CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) | CONFIG(po_relaystation) {
     SUBDIRS += src/Utilities
@@ -85,8 +86,11 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_pt-br.ts \
     src/trans/translation_zh-cn.ts
 
+CONFIG(tests) {
+    SUBDIRS += \
+        tests/utilities
+}
+
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
-
-SUBDIRS +=

@@ -11,3 +11,4 @@ install:
 
 script:
   - qmake "CONFIG += po_all" && make
+  - ./scripts/run-tests.sh
