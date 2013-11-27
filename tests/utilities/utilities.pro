@@ -18,7 +18,8 @@ TEMPLATE = app
 SOURCES += main.cpp \
     test.cpp \
     testinsensitivemap.cpp \
-    testrunner.cpp
+    testrunner.cpp \
+    testfunctions.cpp
 
 LIBS += -L$$PWD/../../bin
 INCLUDEPATH += ../../src/
@@ -38,5 +39,6 @@ TARGET = test-utilities
 HEADERS += \
     test.h \
     testinsensitivemap.h \
-    testrunner.h
+    testrunner.h \
+    testfunctions.h
 

@@ -7,7 +7,7 @@ public:
     Test();
     virtual ~Test(){}
 
-    virtual void run() const = 0;
+    virtual void run() = 0;
 };
 
 #endif // TEST_H

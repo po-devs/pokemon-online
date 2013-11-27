@@ -5,6 +5,7 @@
 #include "test.h"
 #include "testrunner.h"
 #include "testinsensitivemap.h"
+#include "testfunctions.h"
 
 using namespace std;
 
@@ -13,6 +14,13 @@ TestRunner::TestRunner(QObject *parent) :
 {
     name = "";
     tests.append(new TestInsensitiveMap());
+    tests.append(new TestFunctions());
+}
+
+TestRunner::~TestRunner()
+{
+    qDeleteAll(tests);
+    tests.clear();
 }
 
 void TestRunner::start()

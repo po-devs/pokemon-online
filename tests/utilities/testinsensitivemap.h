@@ -8,7 +8,7 @@ class TestInsensitiveMap : public Test
 public:
     TestInsensitiveMap();
 
-    void run() const;
+    void run();
 };
 
 #endif // TESTINSENSITIVEMAP_H

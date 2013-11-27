@@ -1,14 +1,14 @@
 #include <cassert>
 
 #include "testinsensitivemap.h"
-#include "Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 TestInsensitiveMap::TestInsensitiveMap()
 {
 }
 
 
-void TestInsensitiveMap::run() const
+void TestInsensitiveMap::run()
 {
     istringmap<int> map;
 

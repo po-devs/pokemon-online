@@ -10,7 +10,8 @@ class TestRunner : public QObject
     Q_OBJECT
 public:
     explicit TestRunner(QObject *parent = 0);
-    
+    ~TestRunner();
+
     void start();
 
     void setName(const char *name){this->name = name;}

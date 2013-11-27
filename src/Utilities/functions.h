@@ -32,7 +32,7 @@ void merge(QHash<T,U> &map1, const QHash<T,U> &map2)
     typename QHash<T, U>::const_iterator it;
 
     for (it = map2.begin(); it != map2.end(); ++it) {
-	map1.insert(it.key(), it.value());
+    map1.insert(it.key(), it.value());
     }
 }
 
@@ -62,17 +62,17 @@ inline int operator *(int num, const PokeFraction &p)
 inline QString tu(QString &in)
 {
     if (!in[0].isUpper())
-	in[0] = in[0].toUpper();
+    in[0] = in[0].toUpper();
     return in;
 }
 
 inline QString tu(const QString &in) {
     if (in[0].isUpper())
-	return in;
+    return in;
     else {
-	QString str2 = in;
-	str2[0] = in[0].toUpper();
-	return str2;
+    QString str2 = in;
+    str2[0] = in[0].toUpper();
+    return str2;
     }
 }
 
