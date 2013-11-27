@@ -87,7 +87,7 @@ private:
     TierTree tree;
     QByteArray m_tierList;
 
-    static const int loadThreadCount=2;
+    static const int loadThreadCount=1;
     int nextLoadThreadNumber;
     LoadThread **threads;
     InsertThread<MemberRating> *ithread;
