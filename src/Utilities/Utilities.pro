@@ -70,6 +70,9 @@ DEFINES += CORO2
 
 !windows: {
 SOURCES += coro.c
+CONFIG(nocoro) {
+    DEFINES += CORO_PTHREAD
+}
 }
 
 CONFIG(boost_asio) {
