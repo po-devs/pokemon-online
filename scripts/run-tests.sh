@@ -1,5 +1,9 @@
 #!/bin/sh
 cd bin
-./test-utilities
+
+if [! ./test-utilities]
+then
+   exit 1
+fi
 
 cd ..
