@@ -8,4 +8,6 @@ Source code: https://github.com/po-devs/pokemon-online/
 
 Build Instructions, Scripting Guides and more on https://github.com/po-devs/pokemon-online/wiki
 
+To test, qmake CONFIG+="po_all" and run scripts/run-tests.sh from the main folder.
+
 License GNU General Public License

@@ -36,10 +36,12 @@ SOURCES += main.cpp \
     ../common/test.cpp \
     ../common/testrunner.cpp \
     testimportexportteam.cpp \
-    pokemontestrunner.cpp
+    pokemontestrunner.cpp \
+    testiteminfo.cpp
 
 HEADERS += \
     ../common/test.h \
     ../common/testrunner.h \
     testimportexportteam.h \
-    pokemontestrunner.h
+    pokemontestrunner.h \
+    testiteminfo.h

@@ -20,7 +20,7 @@ TestRunner::~TestRunner()
 
 void TestRunner::start()
 {
-    QTimer::singleShot(1000, this, SLOT(run()));
+    QTimer::singleShot(100, this, SLOT(run()));
 }
 
 void TestRunner::addTest(Test *test)
