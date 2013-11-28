@@ -760,19 +760,6 @@ QScriptValue ScriptEngine::sendAll(QScriptContext *c, QScriptEngine *e)
 
     return QScriptValue();
 }
-/*
-QScriptValue ScriptEngine::broadcast2(QScriptContext *c, QScriptEngine *e)
-{
-    Server * s = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
-
-
-
-    QString msg = c->argument(0).toString();
-    int channel = Server::NoChannel;
-
-    if ()
-
-}*/
 
 QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
 {
@@ -3463,8 +3450,10 @@ QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue
     connect(process, SIGNAL(readyReadStandardOutput()), SLOT(read_standard_output()));
     connect(process, SIGNAL(readyReadStandardError()), SLOT(read_standard_error()));
     process->start(command);
-    processes[process] = {callback, errback, QByteArray(), QByteArray(), command};
-    return myengine.undefinedValue();
+    quint64 pid = getProcessID(process);
+    double scriptpid = double(pid); // Conversion for scripts
+    processes[process] = {callback, errback, QByteArray(), QByteArray(), command, pid};
+    return scriptpid;
 }
 
 void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus) {
@@ -3491,6 +3480,7 @@ QScriptValue ScriptEngine::list_processes() {
         QScriptValue entry = myengine.newObject();
         entry.setProperty("state", States[iter.key()->state()]);
         entry.setProperty("command", iter.value().command);
+        entry.setProperty("pid", double(iter.value().pid));
         ret.setProperty(index++, entry);
     }
     return ret;
@@ -3506,14 +3496,39 @@ QScriptValue ScriptEngine::kill_processes() {
     return true;
 }
 
+QScriptValue ScriptEngine::write_process(double pid, const QString &data)
+{
+    QHashIterator<QProcess*, ProcessData> iter(processes);
+    QProcess* proc;
+    quint64 procpid = quint64(pid);
+    bool found = false;
+    while (iter.hasNext()) {
+        iter.next();
+        if (getProcessID(iter.key()) == procpid) {
+            proc = iter.key();
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        return false;
+    }
+
+    qint64 bytesWritten = proc->write(data.toStdString().c_str());
+    return bytesWritten != -1; // Success or fail
+}
+
 void ScriptEngine::read_standard_output() {
     QProcess *p = (QProcess*) sender();
     processes[p].out.append(p->readAllStandardOutput());
+    emit stdoutReceived(getProcessID(p), QString::fromLocal8Bit(processes[p].out));
 }
 
 void ScriptEngine::read_standard_error() {
     QProcess *p = (QProcess*) sender();
     processes[p].err.append(p->readAllStandardError());
+    emit stderrReceived(getProcessID(p), QString::fromLocal8Bit(processes[p].out));
 }
 
 bool ScriptEngine::addPlugin(const QString &path)
