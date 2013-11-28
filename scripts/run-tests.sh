@@ -1,9 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 cd bin
 
-if [! ./test-utilities]
-then
-   exit 1
+./test-utilities
+if [[ $? != 0 ]]; then
+  exit 1 
 fi
+
+#Add further tests with same pattern
 
 cd ..

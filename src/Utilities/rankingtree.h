@@ -185,8 +185,10 @@ public:
 
     Node* insert(int key, T data);
 
-    /* Could manage without deleting the node, with proper insertion / removal */
-    Node *changeKey(Node *n, int key)
+    /* Could manage without deleting the node, with proper insertion / removal.
+     * But for now use the return value as the new node
+     */
+    Node *changeKey(Node *n, int key) __attribute__((warn_unused_result))
     {
         if (key == n->key)
             return n;

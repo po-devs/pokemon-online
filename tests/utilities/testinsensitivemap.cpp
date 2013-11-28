@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include "testinsensitivemap.h"
 #include <Utilities/coreclasses.h>
 

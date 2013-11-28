@@ -1,4 +1,3 @@
-#include <cassert>
 #include <Utilities/functions.h>
 #include "testfunctions.h"
 

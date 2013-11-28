@@ -1,5 +1,5 @@
-#include <cassert>
 #include <QString>
+#include <QDebug>
 #include <Utilities/rankingtree.h>
 #include "testrankingtree.h"
 
@@ -13,7 +13,7 @@ void TestRankingTree::run()
     auto *scott =rankings.insert(8008, "Scott TM");
     auto *dn = rankings.insert(1337, "Darkness");
 
-    rankings.changeKey(scott, 999);
+    scott = rankings.changeKey(scott, 999);
 
     assert(moogle->ranking() == 2);
     assert(mystra->ranking() == 1);
@@ -21,4 +21,5 @@ void TestRankingTree::run()
     assert(dn->ranking() == 3);
     assert(scott->ranking() == 4);
     assert(rankings.count() == 5);
+    assert(rankings.getByRanking(2).node()->data == "Crystal Moogle");
 }
