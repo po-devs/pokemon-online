@@ -6,6 +6,10 @@ if [[ $? != 0 ]]; then
   exit 1 
 fi
 
-#Add further tests with same pattern
+cp ../tests/data/pokemoninfo/* . -R
+./test-pokemoninfo
+if [[ $? != 0 ]]; then
+  exit 1
+fi
 
 cd ..

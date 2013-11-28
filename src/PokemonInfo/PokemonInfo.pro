@@ -21,7 +21,6 @@ HEADERS += pokemonstructs.h \
     pokemon.h
 
 
-
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
   QT += widgets
@@ -34,6 +33,7 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 include(../Shared/Common.pri)
 
 LIBS += $$utilities
+
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }

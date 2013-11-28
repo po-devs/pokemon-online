@@ -13,6 +13,7 @@ public:
     ~TestRunner();
 
     void start();
+    void addTest(Test *test);
 
     void setName(const char *name){this->name = name;}
 signals:

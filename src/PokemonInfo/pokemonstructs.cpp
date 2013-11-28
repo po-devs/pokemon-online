@@ -565,8 +565,11 @@ void PokeTeam::load()
         ability() = abilities().ab(0);
     }
 
-    PokeGraphics::load(gender(), false);
-    PokeGraphics::loadIcon(num());
+    /* Crashes on headless servers / etc otherwise */
+    if (PokemonInfoConfig::getFillMode() == FillMode::Client) {
+        PokeGraphics::load(gender(), false);
+        PokeGraphics::loadIcon(num());
+    }
 }
 
 void PokeTeam::loadQuietly()
@@ -574,8 +577,12 @@ void PokeTeam::loadQuietly()
     PokeGeneral::load();
     /*set the default gender & ability */
     runCheck();
-    PokeGraphics::load(gender(), false);
-    PokeGraphics::loadIcon(num());
+
+    /* Crashes on headless servers / etc otherwise */
+    if (PokemonInfoConfig::getFillMode() == FillMode::Client) {
+        PokeGraphics::load(gender(), false);
+        PokeGraphics::loadIcon(num());
+    }
 }
 
 QPixmap PokeTeam::picture()

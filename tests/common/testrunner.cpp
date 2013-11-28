@@ -4,19 +4,12 @@
 
 #include "test.h"
 #include "testrunner.h"
-#include "testinsensitivemap.h"
-#include "testfunctions.h"
-#include "testrankingtree.h"
-
 using namespace std;
 
 TestRunner::TestRunner(QObject *parent) :
     QObject(parent)
 {
     name = "";
-    tests.append(new TestInsensitiveMap());
-    tests.append(new TestFunctions());
-    tests.append(new TestRankingTree());
 }
 
 TestRunner::~TestRunner()
@@ -28,6 +21,11 @@ TestRunner::~TestRunner()
 void TestRunner::start()
 {
     QTimer::singleShot(1000, this, SLOT(run()));
+}
+
+void TestRunner::addTest(Test *test)
+{
+    tests.append(test);
 }
 
 void TestRunner::run()
