@@ -24,11 +24,6 @@ static const QString processErrorMessages[] = {
     "An unknown error occurred. This is the default return value of error()."
 };
 
-static const QString processExitMessages[] = {
-    "closed"
-    "crashed"
-};
-
 BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), relay(nullptr)
 {
@@ -160,7 +155,6 @@ bool BattleCommunicator::startServer()
     battleServer->start("./BattleServer" BATTLE_SERVER_SUFFIX " -p 5096");
     connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
     connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
-    connect(battleServer, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(battleServerFinished(int, QProcess::ExitStatus)));
     return true;
 }
 
@@ -172,13 +166,6 @@ void BattleCommunicator::battleServerStarted()
 void BattleCommunicator::battleServerError(QProcess::ProcessError error)
 {
     emit info(QString("Battle server error: %1").arg(processErrorMessages[error]));
-}
-
-void BattleCommunicator::battleServerFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-    emit info(QString("The battle server %2 with exit code %1.").arg(QString::number(exitCode), processExitMessages[exitStatus]));
-    emit info("Attempting to restart in 3 seconds...");
-    QTimer::singleShot(3000, this, SLOT(startServer()));
 }
 
 void BattleCommunicator::connectToBattleServer()
@@ -215,28 +202,25 @@ void BattleCommunicator::connectToBattleServer()
 void BattleCommunicator::battleConnected()
 {
     emit info("Connected to battle server!");
-
+    wasConnected = true;
     changeMod(mod);
 }
 
 void BattleCommunicator::battleConnectionError()
 {
-    // Don't send error messages if there is no server running.
-    if (!startServer()) {
+    // Only send messages if there was previously a connection
+    // or a server is already running (which means it should've connected).
+    if (wasConnected) {
         emit info("Error when connecting to the battle server. Will try again in 10 seconds");
-        emit error();
 
-        /* Removing all battles */
-        foreach(int battle, mybattles.keys()) {
-            mybattles[battle]->finished() = true;
-            showResult(battle, Tie, mybattles[battle]->id(0));
-
-            emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
-            emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
-        }
+        wasConnected = false;
+        emit battleConnectionLost();
+    } else {
+        silent = true;
     }
 
-    silent = true;
+    emit error();
+    removeBattles();
     QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
 }
 
@@ -321,5 +305,17 @@ void BattleCommunicator::changeMod(const QString &mod)
 
     if (relay) {
         relay->notify(DatabaseMod, mod);
+    }
+}
+
+void BattleCommunicator::removeBattles()
+{
+    /* Removing all battles */
+    foreach(int battle, mybattles.keys()) {
+        mybattles[battle]->finished() = true;
+        showResult(battle, Tie, mybattles[battle]->id(0));
+
+        emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
+        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
     }
 }

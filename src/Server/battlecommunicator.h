@@ -42,6 +42,7 @@ public:
 signals:
     void info(const QString &message);
     void error();
+    void battleConnectionLost();
     void battleInfo(int,int,const QByteArray&);
     void battleFinished(int,int,int,int);
     void sendBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
@@ -60,16 +61,17 @@ public slots:
     void filterBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
     void filterBattleInfo(int battle, int player, const QByteArray &info);
     void filterBattleResult(int, int, int, int);
+    void removeBattles();
     /* Server -> Battle server */
     void changeMod(const QString &mod);
 private slots:
     void battleServerStarted();
     void battleServerError(QProcess::ProcessError error);
-    void battleServerFinished(int exitCode, QProcess::ExitStatus exitStatus);
 private:
     BattleAnalyzer* relay;
     QProcess* battleServer;
     bool silent = false;
+    bool wasConnected = false;
 
     QHash<int, FullBattleConfiguration*> mybattles;
     QString mod;

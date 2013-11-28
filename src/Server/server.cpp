@@ -262,9 +262,11 @@ void Server::initBattles()
     //printLine(tr("Don't forget to run BattleServer too if you want your server to have battles!"));
 
     connect(battles, SIGNAL(info(QString)), SLOT(forcePrint(QString)));
+    connect(battles, SIGNAL(error()), battles, SLOT(startServer()));
     connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));
 }
 
 void Server::print(const QString &line)

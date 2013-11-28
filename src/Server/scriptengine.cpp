@@ -735,6 +735,11 @@ void ScriptEngine::afterPlayerAway(int src, bool away)
     makeEvent("afterPlayerAway", src, away);
 }
 
+void ScriptEngine::battleConnectionLost()
+{
+    makeEvent("battleConnectionLost");
+}
+
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {

@@ -525,6 +525,7 @@ signals:
     void clearTheChat();
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
+    void battleConnectionLost();
 
 private slots:
     void timer();
