@@ -15,6 +15,7 @@ BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), relay(nullptr)
 {
     QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
+    battleServer = new QProcess(this);
 }
 
 int BattleCommunicator::count() const
@@ -129,6 +130,36 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
         qFatal("Fatal! Looking for non existent battle %d", battleid);
     }
     return mybattles.value(battleid);
+}
+
+void BattleCommunicator::startServer()
+{
+    if (battleServer->state() == QProcess::Starting || battleServer->state() == QProcess::Running) {
+        return;
+    }
+
+    emit info("Starting battle server.");
+    battleServer->start("./BattleServer" BATTLE_SERVER_SUFFIX " -p 5096");
+    connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
+    connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
+    connect(battleServer, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(battleServerFinished(int, QProcess::ExitStatus)));
+}
+
+void BattleCommunicator::battleServerStarted()
+{
+    emit info("Battle server started.");
+}
+
+void BattleCommunicator::battleServerError(QProcess::ProcessError error)
+{
+    emit info(QString("Battle server error: %1").arg(processErrorMessages[error]));
+}
+
+void BattleCommunicator::battleServerFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    emit info(QString("The battle server was %2 with exit code %1.").arg(QString::number(exitCode), processExitMessages[exitStatus]));
+    emit info("Attempting to restart in 3 seconds...");
+    QTimer::singleShot(3000, this, SLOT(startServer()));
 }
 
 void BattleCommunicator::connectToBattleServer()
