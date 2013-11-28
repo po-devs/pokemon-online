@@ -2,8 +2,6 @@
 
 #include "security.h"
 
-#include "../Utilities/qpsqlquery.h"
-
 PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
 {
@@ -12,7 +10,9 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
 
     QGridLayout *mylayout = new QGridLayout(this);
 
-    mytable = new QCompactTable(0,7);
+    const auto &members = SecurityManager::getMembers();
+
+    mytable = new QCompactTable(members.size(),7);
 
     mytable->setShowGrid(true);
     mylayout->addWidget(mytable,0,0,1,6);
@@ -27,30 +27,21 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance" << "Expires In";
     mytable->setHorizontalHeaderLabels(headers);
 
-    QPsqlQuery q;
-    q.setForwardOnly(true);
-
-    q.exec("select count(*) from trainers");
-
-    if (q.next()) {
-        mytable->setRowCount(q.value(0).toInt());
-    }
-
-    q.exec("select name, auth, banned, hash, ip, laston, ban_expire_time from trainers order by name asc");
-
     int i = 0;
 
-    while(q.next()) {
-        QTableWidgetItem *witem = new QTableWidgetItem(q.value(0).toString());
+    for (auto it = members.begin(); it != members.end(); ++it) {
+        const SecurityManager::Member &m = it->second;
+
+        QTableWidgetItem *witem = new QTableWidgetItem(m.name);
         mytable->setItem(i, 0, witem);
 
-        witem = new QTableWidgetItem(authgrade[q.value(1).toInt()]);
+        witem = new QTableWidgetItem(authgrade[m.authority()]);
         mytable->setItem(i, 1, witem);
 
         QString bannedString = "Banned";
-        int expiration = q.value(6).toInt() - QDateTime::currentDateTimeUtc().toTime_t();
+        int expiration = m.ban_expire_time - QDateTime::currentDateTimeUtc().toTime_t();
         if(expiration < 0) {
-            if (q.value(6).toInt() != 0)
+            if (m.ban_expire_time != 0)
             bannedString = "Expires on Login";
         } else {
             if(expiration < 60) {
@@ -70,19 +61,19 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
                 }
             }
         }
-        witem = new QTableWidgetItem(q.value(2).toBool() ? bannedString : "Fine");
+        witem = new QTableWidgetItem(m.banned ? bannedString : "Fine");
         mytable->setItem(i, 2, witem);
 
-        witem = new QTableWidgetItem(q.value(3).toString().length() > 0 ? "Yes" : "No");
+        witem = new QTableWidgetItem(m.isProtected() > 0 ? "Yes" : "No");
         mytable->setItem(i, 3, witem);
 
-        witem = new QTableWidgetItem(q.value(4).toString());
+        witem = new QTableWidgetItem(QString::fromUtf8(m.salt));
         mytable->setItem(i, 4, witem);
 
-        witem = new QTableWidgetItem(q.value(5).toString());
+        witem = new QTableWidgetItem(QString::fromUtf8(m.hash));
         mytable->setItem(i, 5, witem);
 
-        witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(q.value(5).toString(), Qt::ISODate).daysTo(QDate::currentDate())) + " Days");
+        witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(m.date, Qt::ISODate).daysTo(QDate::currentDate())) + " Days");
         mytable->setItem(i, 6, witem);
 
         i++;

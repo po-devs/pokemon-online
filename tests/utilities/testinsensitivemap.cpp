@@ -21,4 +21,10 @@ void TestInsensitiveMap::run()
     assert(map["world"] == 4);
     assert(map["World"] == 4);
     assert(map["Ketchup"] == 1);
+
+    /* Moving from hello to ketchup */
+    auto it = map.begin();
+    it++;
+    it->second = 100;
+    assert(map["keTChup"] == 100);
 }

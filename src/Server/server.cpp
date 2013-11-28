@@ -16,8 +16,6 @@
 #include "tiermachine.h"
 #include "tier.h"
 #include "battlingoptions.h"
-#include "sql.h"
-#include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "analyze.h"
 #include "networkutilities.h"
@@ -110,14 +108,6 @@ void Server::start(){
             }
     };
 
-    setDefaultValue("SQL/Driver", SQLCreator::SQLite);
-    setDefaultValue("SQL/Database", "pokemon");
-    setDefaultValue("SQL/Port", 5432);
-    setDefaultValue("SQL/User", "postgres");
-    setDefaultValue("SQL/Pass", "admin");
-    setDefaultValue("SQL/Host", "localhost");
-    setDefaultValue("SQL/DatabaseSchema", "");
-    setDefaultValue("SQL/VacuumOnStartup", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -151,12 +141,6 @@ void Server::start(){
     setDefaultValue("Players/ClearInactivesOnStartup", true);
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
-
-    try {
-        SQLCreator::createSQLConnection();
-    } catch (const QString &ex) {
-        forcePrint(ex);
-    }
 
     forcePrint(tr("Starting loading pokemon database..."));
 

@@ -17,14 +17,23 @@ public:
 
     bool isInMemory(const QString &name) const
     {
+        (void) name;
+        return true;
+
+        /* Always in memory now */
+#if 0
         QString n2 = name.toLower();
 
         QMutexLocker lock(&memberMutex);
         return members.contains(n2) || nonExistentMembers.contains(n2);
+#endif
     }
 
     void addMemberInMemory(const Member &m)
     {
+        (void) m;
+        return;
+#if 0
         memberMutex.lock();
 
         nonExistentMembers.remove(m.name);
@@ -34,6 +43,7 @@ public:
         members[m.name] = m;
 
         memberMutex.unlock();
+#endif
     }
 
     /* Should only be called from the main thread */

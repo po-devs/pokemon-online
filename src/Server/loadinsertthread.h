@@ -2,24 +2,37 @@
 #define LOADINSERTTHREAD_H
 
 #include <QtCore>
-#include "sql.h"
+#include "waitingobject.h"
 
-class WaitingObject;
-class QPsqlQuery;
-
-class LoadThread : public QThread
+/* Qt doesn't manage templates and signals well, hence why the abstract class
+   without templates */
+class AbstractLoadInsertThread : public QThread
 {
     Q_OBJECT
 public:
-    LoadThread() : finished(false) { connect(this, SIGNAL(finished()), SLOT(deleteLater()));}
-    ~LoadThread() { finish(); }
+    virtual void run() = 0;
+
+signals:
+    void processWrite (void * m, int type=1);
+    void processLoad (const QVariant &data, int query_type, WaitingObject *w);
+    void processDailyRun();
+};
+
+template <class T>
+class LoadInsertThread : public AbstractLoadInsertThread
+{
+public:
+    LoadInsertThread() : finished(false), dailyRunToProcess(false) { connect(this, SIGNAL(finished()), SLOT(deleteLater()));}
+    ~LoadInsertThread() { finish(); }
 
     void pushQuery(const QVariant &name, WaitingObject *w, int query_type);
     void finish();
 
     void run();
-signals:
-    void processQuery (QPsqlQuery *q, const QVariant &data, int query_type, WaitingObject *w);
+
+    void pushMember(const T &m, int desc);
+    void addDailyRun();
+
 private:
     struct Query {
         QVariant data;
@@ -37,70 +50,50 @@ private:
     QMutex queryMutex;
     QSemaphore sem;
     bool finished;
-};
 
-/* Qt doesn't manage templates and signals well, hence why the abstract class
-   without templates */
-class AbstractInsertThread : public QThread
-{
-    Q_OBJECT
-public:
-    virtual void run() = 0;
-
-signals:
-    void processMember (QPsqlQuery *q, void * m, int type=1);
-    void processDailyRun(QPsqlQuery *q);
-};
-
-template <class T>
-class InsertThread : public AbstractInsertThread
-{
-public:
-    InsertThread() : finished(false), dailyRunToProcess(false) { connect(this, SIGNAL(finished()), SLOT(deleteLater())); }
-    ~InsertThread() { finish(); }
-
-    /* update/insert ? */
-    void pushMember(const T &m, int desc);
-    void addDailyRun();
-    void finish() {finished = true; sem.release(1);}
-
-    void run();
-private:
     QLinkedList<QPair<T, int> > members;
     QMutex memberMutex;
-    QSemaphore sem;
-    bool finished;
     bool dailyRunToProcess;
 };
 
-
 template <class T>
-void InsertThread<T>::run()
+void LoadInsertThread<T>::run()
 {
-    QString dbname = QString::number(intptr_t(QThread::currentThreadId()));
-
-    SQLCreator::createSQLConnection(dbname);
-    QSqlDatabase db = QSqlDatabase::database(dbname);
-    QPsqlQuery sql(db);
-    sql.setForwardOnly(true);
-
     sem.acquire(1);
 
     forever {
         if (finished) {
-            db.close();
             return;
         }
 
-        if (dailyRunToProcess) {
-            dailyRunToProcess = false;
-            emit processDailyRun(&sql);
-        } else {
-            memberMutex.lock();
-            QPair<T , int> p = members.takeFirst();
-            memberMutex.unlock();
+        bool loadQuery;
 
-            emit processMember(&sql, &p.first, p.second);
+        {
+            QMutexLocker l1(&queryMutex);
+            QMutexLocker l2(&memberMutex);
+
+            /* Maybe later a system to at least place a write now and then if overloaded with load queries */
+            loadQuery = queries.size() > 0;
+        }
+
+        if (loadQuery) {
+            queryMutex.lock();
+            Query q = queries.takeFirst();
+            queryMutex.unlock();
+
+            emit processLoad(q.data, q.query_type, q.w);
+            q.w->emitSignal();
+        } else {
+            if (dailyRunToProcess) {
+                dailyRunToProcess = false;
+                emit processDailyRun();
+            } else {
+                memberMutex.lock();
+                QPair<T , int> p = members.takeFirst();
+                memberMutex.unlock();
+
+                emit processWrite(&p.first, p.second);
+            }
         }
 
         sem.acquire(1);
@@ -108,7 +101,7 @@ void InsertThread<T>::run()
 }
 
 template <class T>
-void InsertThread<T>::pushMember(const T &member, int desc)
+void LoadInsertThread<T>::pushMember(const T &member, int desc)
 {
     memberMutex.lock();
 
@@ -121,10 +114,29 @@ void InsertThread<T>::pushMember(const T &member, int desc)
 
 
 template <class T>
-void InsertThread<T>::addDailyRun()
+void LoadInsertThread<T>::addDailyRun()
 {
     dailyRunToProcess = true;
 
+    sem.release(1);
+}
+
+template<class T>
+void LoadInsertThread<T>::pushQuery(const QVariant &name, WaitingObject *w, int query_type)
+{
+    queryMutex.lock();
+
+    queries.push_back(Query(name, w, query_type));
+
+    queryMutex.unlock();
+
+    sem.release(1);
+}
+
+template <class T>
+void LoadInsertThread<T>::finish()
+{
+    finished = true;
     sem.release(1);
 }
 

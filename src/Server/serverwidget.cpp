@@ -16,8 +16,6 @@
 #include "../Shared/config.h"
 #include "tierwindow.h"
 #include "battlingoptions.h"
-#include "sql.h"
-#include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "../Utilities/pluginmanagerwidget.h"
@@ -81,7 +79,6 @@ QMenuBar* ServerWidget::createMenuBar() {
     options->addAction("&Mods", this, SLOT(openModsWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
-    options->addAction("S&QL Config", this, SLOT(openSqlConfigWindow()));
     QMenu *plugins = bar->addMenu("&Plugins");
     plugins->addAction("Plugin &Manager", this, SLOT(openPluginManager()));
     plugins->addSeparator();
@@ -240,14 +237,6 @@ void ServerWidget::openBattleConfigWindow()
 
     connect(w, SIGNAL(settingsChanged()), server, SLOT(loadRatedBattlesSettings()));
 }
-
-void ServerWidget::openSqlConfigWindow()
-{
-    SQLConfigWindow *w = new SQLConfigWindow();
-
-    w->show();
-}
-
 
 QScrollDownTextBrowser * ServerWidget::mainchat()
 {

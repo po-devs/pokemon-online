@@ -1,8 +1,9 @@
+#include "../PokemonInfo/battlestructs.h"
+
+#include "waitingobject.h"
+#include "loadinsertthread.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "loadinsertthread.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "waitingobject.h"
 
 TierMachine* TierMachine::inst;
 
@@ -25,31 +26,19 @@ TierMachine::TierMachine()
 
     loadDecaySettings();
 
-    threads = new LoadThread*[loadThreadCount];
+    thread = new LoadInsertThread<MemberRating>();
 
-    for (int i = 0; i < loadThreadCount; i++) {
-        threads[i] = new LoadThread();
-        connect(threads[i], SIGNAL(processQuery (QPsqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QPsqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
-        threads[i]->start();
-    }
+    connect(thread , SIGNAL(processLoad (QVariant, int, WaitingObject*)), this, SLOT(processQuery(QVariant, int, WaitingObject *)), Qt::DirectConnection);
+    connect(thread, SIGNAL(processWrite(void*,int)), this, SLOT(insertMember(void*,int)), Qt::DirectConnection);
 
-    nextLoadThreadNumber = 0;
-
-    ithread = new InsertThread<MemberRating>();
-    connect(ithread, SIGNAL(processMember(QPsqlQuery*,void*,int)), this, SLOT(insertMember(QPsqlQuery*,void*,int)), Qt::DirectConnection);
-
-    ithread->start();
+    thread->start();
 
     load();
 }
 
 TierMachine::~TierMachine()
 {
-    ithread->finish();
-    for (int i = 0; i < loadThreadCount; i++) {
-        threads[i]->finish();
-    }
-    delete [] threads;
+    thread->finish();
 }
 
 void TierMachine::loadDecaySettings()
@@ -72,7 +61,7 @@ void TierMachine::load()
     //emit tiersChanged();
 }
 
-void TierMachine::processQuery(QPsqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
+void TierMachine::processQuery(const QVariant &data, int queryNo, WaitingObject *w)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);
@@ -82,7 +71,7 @@ void TierMachine::processQuery(QPsqlQuery *q, const QVariant &data, int queryNo,
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
         if (m_tiers.length() > tierno && tierno >= 0) {
-            m_tiers[tierno]->processQuery(q, data, trueQueryNo, w);
+            m_tiers[tierno]->processQuery(data, trueQueryNo, w);
         } else {
             qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
         }
@@ -94,7 +83,7 @@ void TierMachine::processQuery(QPsqlQuery *q, const QVariant &data, int queryNo,
     semaphore.release();
 }
 
-void TierMachine::insertMember(QPsqlQuery *q, void *m, int queryNo)
+void TierMachine::insertMember(void *m, int queryNo)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);
@@ -104,7 +93,7 @@ void TierMachine::insertMember(QPsqlQuery *q, void *m, int queryNo)
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
         if (m_tiers.length() > tierno && tierno >= 0) {
-            m_tiers[tierno]->insertMember(q, m, trueQueryNo);
+            m_tiers[tierno]->insertMember(m, trueQueryNo);
         } else {
             qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;
         }
@@ -259,13 +248,6 @@ const QStringList & TierMachine::tierNames() const
     return m_tierNames;
 }
 
-void TierMachine::exportDatabase() const
-{
-    for(int i = 0; i < m_tiers.size(); i++) {
-        m_tiers[i]->exportDatabase();
-    }
-}
-
 int TierMachine::rating(const QString &name, const QString &tier)
 {
     return this->tier(tier).rating(name);
@@ -323,12 +305,9 @@ bool TierMachine::existsPlayer(const QString &name, const QString &player)
    return exists(name) && tier(name).exists(player);
 }
 
-LoadThread *TierMachine::getThread()
+LoadInsertThread<MemberRating> *TierMachine::getThread()
 {
-    /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
-    int n = nextLoadThreadNumber % loadThreadCount;
-    nextLoadThreadNumber = (n + 1) % loadThreadCount;
-    return threads[n];
+    return thread;
 }
 
 TierTree *TierMachine::getDataTree() const

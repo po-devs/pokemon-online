@@ -1,7 +1,8 @@
-#include "relaymanager.h"
 #include "../Shared/config.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
+
+#include "relaymanager.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"

@@ -3,8 +3,7 @@
 # -------------------------------------------------
 QT += network \
     script \
-    xml \
-    sql
+    xml
 TARGET = Server
 DESTDIR = $$PWD/../../bin
 TEMPLATE = app
@@ -12,13 +11,11 @@ SOURCES += main.cpp \
     consolereader.cpp \
     challenge.cpp \
     player.cpp \
-    loadinsertthread.cpp \
     analyze.cpp \
     security.cpp \
     scriptengine.cpp \
     pluginmanager.cpp \
     server.cpp \
-    sql.cpp \
     waitingobject.cpp \
     tier.cpp \
     channel.cpp \
@@ -34,7 +31,6 @@ SOURCES += main.cpp \
     battleanalyzer.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
-    sqlconfig.cpp \
     serverwidget.cpp \
     battlingoptions.cpp \
     tierwindow.cpp \
@@ -51,7 +47,6 @@ HEADERS += player.h \
     pluginmanager.h \
     plugininterface.h \
     server.h \
-    sql.h \
     waitingobject.h \
     tiermachine.h \
     tier.h \
@@ -92,7 +87,6 @@ HEADERS += player.h \
     playerswindow.h \
     serverwidget.h \
     serverconfig.h \
-    sqlconfig.h \
     tierwindow.h \
     ../Utilities/confighelper.h
 CONFIG(nogui) { 

@@ -967,8 +967,11 @@ void ScriptEngine::changeRating(const QString& name, const QString& tier, int ne
 {
     if (!TierMachine::obj()->exists(tier))
         warn("changeRating(name, tier, rating)", "no such tier as " + tier, true);
-    else
+    else if (!TierMachine::obj()->tier(tier).exists(name)) {
+        warn("changeRating(name, tier, rating)", "player doesn't exist in tier" + tier, true);
+    } else {
         TierMachine::obj()->changeRating(name, tier, newRating);
+    }
 }
 
 void ScriptEngine::changeTier(int id, int team, const QString &tier)
@@ -1225,16 +1228,6 @@ int ScriptEngine::disconnectedPlayers()
     return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;
 }
 
-void ScriptEngine::exportMemberDatabase()
-{
-    SecurityManager::exportDatabase();
-}
-
-void ScriptEngine::exportTierDatabase()
-{
-    TierMachine::obj()->exportDatabase();
-}
-
 void ScriptEngine::clearChat()
 {
     emit clearTheChat();
@@ -1242,7 +1235,10 @@ void ScriptEngine::clearChat()
 
 bool ScriptEngine::dbRegistered(const QString &name)
 {
-    return SecurityManager::member(name).isProtected();
+    if (!SecurityManager::exist(name)) {
+        return false;
+    }
+    return SecurityManager::registered(name);
 }
 
 #ifndef _EXCLUDE_DEPRECATED
@@ -1414,7 +1410,7 @@ QScriptValue ScriptEngine::dbAuth(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return SecurityManager::member(name).auth;
+        return SecurityManager::auth(name);
     }
 }
 
@@ -2786,22 +2782,6 @@ void ScriptEngine::resetLadder(const QString &tier)
     }
 }
 
-void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
-{
-    if (!TierMachine::obj()->exists(tier)) {
-        warn("synchronizeTierWithSQL", "tier doesn't exist");
-        return;
-    }
-
-    TierMachine::obj()->tier(tier).clearCache();
-
-    /* Updates the rating of all the players of the tier */
-    foreach(Player *p, myserver->myplayers) {
-        if (p->hasTier(tier))
-            p->findRating(tier);
-    }
-}
-
 void ScriptEngine::forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated)
 {
     if (!loggedIn(player1) || !loggedIn(player2)) {
@@ -3389,70 +3369,6 @@ int ScriptEngine::system(const QString &command)
         return -1;
     } else {
         return ::system(command.toUtf8());
-    }
-}
-#include <QSqlRecord>
-
-static QScriptValue sqlResult(QScriptEngine &myengine, QPsqlQuery &query)
-{
-    QScriptValue ret = myengine.newArray();
-    do {
-        QScriptValue rec = myengine.newObject();
-        QSqlRecord record = query.record();
-
-        for (int i = 0; i < record.count(); i++) {
-            rec.setProperty(record.fieldName(i), myengine.newVariant(record.value(i)));
-        }
-
-        ret.setProperty(query.at(), rec);
-    } while (query.next() && query.isValid());
-
-    return ret;
-}
-
-QScriptValue ScriptEngine::sql(const QString &command)
-{
-    QPsqlQuery query;
-
-    query.setForwardOnly(true);
-
-    if (query.exec(command)) {
-        return sqlResult(myengine, query);
-    } else {
-        return myengine.undefinedValue();
-    }
-}
-
-QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &params)
-{
-    static const QString placeholder = ":";
-
-    QPsqlQuery query;
-
-    query.setForwardOnly(true);
-
-    query.prepare(command);
-
-    if (params.isObject()) {
-        QScriptValueIterator it(params);
-        while (it.hasNext()) {
-            it.next();
-            query.bindValue(placeholder+it.name(), it.value().toVariant());
-        }
-    } else if (params.isArray()) {
-        QScriptValueIterator it(params);
-        while (it.hasNext()) {
-            it.next();
-            query.addBindValue(it.value().toVariant());
-        }
-    } else {
-        query.addBindValue(params.toVariant());
-    }
-
-    if (query.exec()) {
-        return sqlResult(myengine, query);
-    } else {
-        return myengine.undefinedValue();
     }
 }
 

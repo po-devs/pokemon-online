@@ -10,9 +10,8 @@ struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class MemberRating;
-class QPsqlQuery;
-class LoadThread;
-template<class T> class InsertThread;
+
+template<class T> class LoadInsertThread;
 
 class TierMachine : public QObject
 {
@@ -61,7 +60,6 @@ public:
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
     QString findTier(const TeamBattle &t) const;
 
-    void exportDatabase() const;
     TierTree *getDataTree() const;
 
     static const int playersByPage = 40;
@@ -74,8 +72,8 @@ public:
 signals:
     void tiersChanged();
 public slots:
-    void processQuery(QPsqlQuery*,const QVariant &,int,WaitingObject*);
-    void insertMember(QPsqlQuery*,void *,int);
+    void processQuery(const QVariant &,int,WaitingObject*);
+    void insertMember(void *,int);
     /* Processes the daily run in which ratings are updated.
        Be aware that it may take long. I may thread it in the future. */
     void processDailyRun();
@@ -87,15 +85,12 @@ private:
     TierTree tree;
     QByteArray m_tierList;
 
-    static const int loadThreadCount=1;
-    int nextLoadThreadNumber;
-    LoadThread **threads;
-    InsertThread<MemberRating> *ithread;
+    LoadInsertThread<MemberRating> *thread;
 
     static const int semaphoreMaxLoad = 1000;
     QSemaphore semaphore;
 
-    LoadThread * getThread();
+    LoadInsertThread<MemberRating> * getThread();
 
     /* Number gets increased by one every time tiers are reloaded.
 

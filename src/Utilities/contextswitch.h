@@ -150,7 +150,7 @@ class ContextCallee : public QObject
 {
     friend class ContextSwitcher;
 public:
-    ContextCallee(long stacksize = 300*1024);
+    ContextCallee(long stacksize = 500*1024);
     ~ContextCallee();
 
     void start(ContextSwitcher &ctx);

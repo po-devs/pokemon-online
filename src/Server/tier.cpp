@@ -4,9 +4,9 @@ namespace Pokemon {
 unsigned int qHash (const Pokemon::uniqueId &key);
 
 #include <QtXml>
-#include <QtSql/QSqlRecord>
 #include <cmath>
 #include <ctime>
+#include <cassert>
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "tier.h"
@@ -18,9 +18,9 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 
 QString MemberRating::toString() const
 {
-    return name + "%" + QString::number(matches) + "%" +
-            QString::number(rating) + "%" + QString::number(displayed_rating) + "%" +
-            QString::number(last_check_time) + "%" + QString::number(bonus_time) + "\n";
+    return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
+            QString::number(rating).rightJustified(5,0,true) + "%" + QString::number(displayed_rating).rightJustified(5,0,true) + "%" +
+            QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,'0',true) + "\n";
 }
 
 /* Explanations here: http://pokemon-online.eu/forums/showthread.php?3045-How-to-change-the-rating-system-to-include-auto-decrease
@@ -29,7 +29,10 @@ void MemberRating::changeRating(int opponent_rating, bool win)
 {
     QPair<int,int> change = pointChangeEstimate(opponent_rating);
 
-    matches += 1;
+    if (matches < 9999) {
+        matches += 1;
+    }
+
     rating = rating + (win ? change.first : change.second);
 
     const int hpp = TierMachine::obj()->hours_per_period;
@@ -95,7 +98,6 @@ QPair<int, int> MemberRating::pointChangeEstimate(int opponent_rating)
 void Tier::changeName(const QString &name)
 {
     this->m_name = name;
-    this->sql_table = "tier_" + ::slug(name);
 }
 
 void Tier::changeId(int id)
@@ -112,127 +114,60 @@ int Tier::make_query_number(int type)
 
 void Tier::loadFromFile()
 {
-    QPsqlQuery query;
+    ratings.clear();
+    rankings = decltype(rankings)();
 
-    query.setForwardOnly(true);
+    delete in;
+    in = new QFile("serverdb/tier_" + name() + ".txt");
+    in->open(QIODevice::ReadOnly);
 
-    query.exec(QString("select * from %1 limit 1").arg(sql_table));
+    QStringList members = QString::fromUtf8(in->readAll()).split('\n');
 
-    int count = query.record().count();
+    foreach(QString member, members) {
+        QStringList mmr = member.split('%');
+        if (mmr.size() != 3 && mmr.size() < 6)
+            continue;
+        if (!SecurityManager::exist(mmr[0]))
+            continue;
 
-    /* That's an outdated database, before decaying ratings were introduced */
-    if (count == 4) {
-        /* Outdated database */
-        QSqlDatabase::database().transaction();
-        query.exec(QString("alter table %1 add column displayed_rating int").arg(sql_table));
-        query.exec(QString("alter table %1 add column last_check_time int").arg(sql_table));
-        query.exec(QString("alter table %1 add column bonus_time int").arg(sql_table));
-        query.exec(QString("update %1 set bonus_time=0").arg(sql_table));
-        query.exec(QString("update %1 set displayed_rating=rating").arg(sql_table));
-        query.exec(QString("update %1 set last_check_time=%2").arg(sql_table).arg(QString::number(time(NULL))));
-        query.exec(QString("drop index tierrating_index"));
-        query.exec(QString("drop index tiername_index"));
-        query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
-        query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
+        MemberRating m;
+        m.name = mmr[0];
+        m.matches = mmr[1].toInt();
+        m.rating = mmr[2].toInt();
 
-        QSqlDatabase::database().commit();
-    } else if (!query.next() && count != 7) {
-        if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
-            /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
-            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
-        } else if (SQLCreator::databaseType == SQLCreator::MySQL){
-            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
-        } else if (SQLCreator::databaseType == SQLCreator::SQLite){
-            /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table if not exists %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int)").arg(sql_table));
+        if (mmr.size() == 3) {
+            m.displayed_rating = m.rating;
+            m.last_check_time = time(nullptr);
+            m.bonus_time = 0;
         } else {
-            throw QString("Using a not supported database");
+            m.displayed_rating = mmr[3].toInt();
+            m.last_check_time = mmr[4].toInt();
+            m.bonus_time = mmr[5].toInt();
         }
 
-        query.exec(QString("drop index %1_tiername_index").arg(sql_table));
-        query.exec(QString("drop index %1_tierrating_index").arg(sql_table));
-        query.exec(QString("create index %1_tiername_index on %1 (name)").arg(sql_table));
-        query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
-
-        QFile in("tier_" + name() + ".txt");
-
-        if (!in.exists()) {
-            return;
-        }
-
-        Server::print(QString("Importing old database for tier %1 to table %2").arg(name(), sql_table));
-
-        in.open(QIODevice::ReadOnly);
-
-        QStringList members = QString::fromUtf8(in.readAll()).split('\n');
-
-        clock_t t = clock();
-        int current_time = time(NULL);
-
-        if (members.size() > 0) {
-            int count = members[0].split('%').size();
-
-            QSqlDatabase::database().transaction();
-            query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches) "
-                                    "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches)").arg(sql_table));
-            if (count == 3) {
-                foreach(QString member, members) {
-                    QString m2 = member.toLower();
-                    QStringList mmr = m2.split('%');
-                    if (mmr.size() != 3)
-                        continue;
-
-                    query.bindValue(":name", mmr[0]);
-                    query.bindValue(":matches", mmr[1].toInt());
-                    query.bindValue(":rating", mmr[2].toInt());
-                    query.bindValue(":displayed_rating", mmr[2].toInt());
-                    query.bindValue(":last_check_time", current_time);
-                    query.bindValue(":bonus_time", 0);
-
-                    query.exec();
-                }
-            } else if (count == 6) {
-                foreach(QString member, members) {
-                    QString m2 = member.toLower();
-                    QStringList mmr = m2.split('%');
-                    if (mmr.size() != 6)
-                        continue;
-
-                    query.bindValue(":name", mmr[0]);
-                    query.bindValue(":matches", mmr[1].toInt());
-                    query.bindValue(":rating", mmr[2].toInt());
-                    query.bindValue(":displayed_rating", mmr[3].toInt());
-                    query.bindValue(":last_check_time", mmr[4].toInt());
-                    query.bindValue(":bonus_time", mmr[5].toInt());
-
-                    query.exec();
-                }
-            }
-
-            QSqlDatabase::database().commit();
-        }
-
-        t = clock() - t;
-
-        Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
-        Server::print(query.lastError().text());
+        m.node = rankings.insert(m.displayed_rating, m.name);
+        ratings[m.name] = m;
     }
+
+    in->close();
+    in->open(QIODevice::WriteOnly);
+
+    int pos = 0;
+
+    for (auto it = ratings.begin(); it != ratings.end(); ++it) {
+        it->second.filePos = pos;
+        in->write(it->second.toString().toUtf8());
+        in->putChar('\n');
+        pos = in->pos();
+    }
+    lastFilePos = pos;
+    in->close();
+    in->open(QIODevice::ReadWrite);
 }
 
 int Tier::count()
 {
-    if (m_count != -1 && time(NULL) - last_count_time < 3600) {
-        return m_count;
-    } else {
-        QPsqlQuery q;
-        q.setForwardOnly(true);
-
-        q.exec(QString("select count(*) from %1").arg(sql_table));
-
-        q.next();
-        last_count_time = time(NULL);
-        return (m_count = q.value(0).toInt());
-    }
+    return ratings.size();
 }
 
 void Tier::addBanParent(Tier *t)
@@ -373,19 +308,7 @@ int Tier::ranking(const QString &name)
 {
     if (!exists(name))
         return -1;
-    int r = rating(name);
-    QPsqlQuery q;
-    q.setForwardOnly(true);
-    q.prepare(QString("select count(*) from %1 where (displayed_rating>:r1 or (displayed_rating=:r2 and name<=:name))").arg(sql_table));
-    q.bindValue(":r1", r);
-    q.bindValue(":r2", r);
-    q.bindValue(":name", name.toLower());
-    q.exec();
-
-    if (q.next())
-        return q.value(0).toInt();
-    else
-        return -1;
+    return ratings.at(name).node->ranking();
 }
 
 bool Tier::isValid(const TeamBattle &t)  const
@@ -441,10 +364,10 @@ quint8 Tier::restricted(TeamBattle &t) const
 
 void Tier::changeRating(const QString &player, int newRating)
 {
-    MemberRating m = member(player);
-    m.rating = newRating;
+    assert(exists(player));
 
-    updateMember(m);
+    ratings[player].rating = newRating;
+    updateMember(ratings[player]);
 }
 
 void Tier::changeRating(const QString &w, const QString &l)
@@ -511,15 +434,11 @@ int Tier::ratedBattles(const QString &name)
 
 void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
 {
-    QString n2 = name.toLower();
-
-    if (o == NULL) {
-        if (holder.isInMemory(n2))
+    if (!o) {
+        if (holder.isInMemory(name))
             return;
 
-        QPsqlQuery q;
-        q.setForwardOnly(true);
-        processQuery(&q, n2, GetInfoOnUser, NULL);
+        processQuery(name, GetInfoOnUser, nullptr);
 
         return;
     }
@@ -534,14 +453,14 @@ void Tier::loadMemberInMemory(const QString &name, QObject *o, const char *slot)
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
-    if (holder.isInMemory(n2)) {
+    if (holder.isInMemory(name)) {
         w->setProperty("tier", this->name());
         w->emitSignal();
     }
     else {
-        LoadThread *t = getThread();
+        LoadInsertThread<MemberRating> *t = getThread();
 
-        t->pushQuery(n2, w, make_query_number(GetInfoOnUser));
+        t->pushQuery(name, w, make_query_number(GetInfoOnUser));
     }
 }
 
@@ -555,9 +474,13 @@ void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
+#if 0
     LoadThread *t = getThread();
 
     t->pushQuery(data, w, make_query_number(GetRankings));
+#else
+    processQuery(data, GetRankings, w);
+#endif
 }
 
 void Tier::fetchRanking(const QString &name, QObject *o, const char *slot)
@@ -570,75 +493,51 @@ void Tier::fetchRanking(const QString &name, QObject *o, const char *slot)
     QObject::connect(w, SIGNAL(waitFinished()), o, slot);
     QObject::connect(w, SIGNAL(waitFinished()), WaitingObjects::getInstance(), SLOT(freeObject()));
 
+#if 0
     LoadThread *t = getThread();
 
     t->pushQuery(name.toLower(), w, make_query_number(GetRanking));
-}
-
-void Tier::exportDatabase() const
-{
-    QFile out(QString("tier_%1.txt").arg(name()));
-
-    out .open(QIODevice::WriteOnly);
-
-    QPsqlQuery q;
-    q.setForwardOnly(true);
-
-    q.exec(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1 order by name asc").arg(sql_table));
-
-    while (q.next()) {
-        MemberRating m(q.value(0).toString(), q.value(1).toInt(), q.value(2).toInt(), q.value(3).toInt(), q.value(4).toInt(), q.value(5).toInt());
-        out.write(m.toString().toUtf8());
-    }
-
-    Server::print(QString("Database of tier %1 exported!").arg(name()));
+#else
+    processQuery(name, GetRanking, w);
+#endif
 }
 
 /* Precondition: name is in lowercase */
-void Tier::processQuery(QPsqlQuery *q, const QVariant &name, int type, WaitingObject *w)
+void Tier::processQuery(const QVariant &name, int type, WaitingObject *w)
 {
     if (w) {
         w->setProperty("tier", this->name());
     }
     if (type == GetInfoOnUser) {
-        q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time from %1 where name=? limit 1").arg(sql_table));
-        q->addBindValue(name);
-        q->exec();
-        if (!q->next()) {
-            holder.addNonExistant(name.toString());
-        } else {
-            MemberRating m(name.toString(), q->value(0).toInt(), q->value(1).toInt(), q->value(2).toInt(), q->value(3).toInt(), q->value(4).toInt());
-            holder.addMemberInMemory(m);
-        }
-        q->finish();
+        assert(0);//Should never reach here
     } else if (type == GetRankings) {
-        int p;
+        int page;
 
         if (name.type() == QVariant::String) {
             int r = ranking(name.toString());
-            p = (r-1)/TierMachine::playersByPage + 1;
+            page = (r-1)/TierMachine::playersByPage + 1;
         }
         else {
-            p = name.toInt();
+            page = name.toInt();
         }
 
-        if (SQLCreator::databaseType == SQLCreator::PostGreSQL)
-            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc offset :offset limit :limit").arg(sql_table));
-        else
-            q->prepare(QString("select name, displayed_rating from %1 order by displayed_rating desc, name asc limit :offset, :limit").arg(sql_table));
+        /* A page is 40 players */
+        int startingRank = (page-1) * TierMachine::playersByPage + 1;
 
-        q->bindValue(":offset", (p-1)*TierMachine::playersByPage);
-        q->bindValue(":limit", TierMachine::playersByPage);
+        RankingTree<QString>::iterator it = rankings.getByRanking(startingRank);
 
         QVector<QPair<QString, int> > results;
         results.reserve(TierMachine::playersByPage);
 
-        q->exec();
-        while (q->next()) {
-            results.push_back(QPair<QString, int>(q->value(0).toString(), q->value(1).toInt()));
+        int i = 0;
+        while (i < TierMachine::playersByPage && it.p != NULL)
+        {
+            i++;
+            results.push_back(QPair<QString, int> (it->data, it->key));
+            --it;
         }
-        q->finish();
-        w->data["rankingpage"] = p;
+
+        w->data["rankingpage"] = page;
         w->data["tier"] = this->name();
         w->data["rankingdata"] = QVariant::fromValue(results);
     } else if (type == GetRanking) {
@@ -646,41 +545,41 @@ void Tier::processQuery(QPsqlQuery *q, const QVariant &name, int type, WaitingOb
     }
 }
 
-void Tier::insertMember(QPsqlQuery *q, void *data, int update)
+void Tier::insertMember(void *data, int update)
 {
-    MemberRating *m = (MemberRating*) data;
+    MemberRating &m = *(MemberRating*) data;
 
-    if (update)
-        q->prepare(QString("update %1 set matches=:matches, rating=:rating, displayed_rating=:displayed_rating, last_check_time=:last_check_time,"
-                           "bonus_time=:bonus_time where name=:name").arg(sql_table));
-    else
-        q->prepare(QString("insert into %1(name, matches, rating, displayed_rating, last_check_time, bonus_time)"
-                           "values(:name, :matches, :rating, :displayed_rating, :last_check_time, :bonus_time)").arg(sql_table));
+    if (update) {
+        in->seek(m.filePos);
+        in->write(m.toString().toUtf8());
 
-    q->bindValue(":name", m->name);
-    q->bindValue(":matches", m->matches);
-    q->bindValue(":rating", m->rating);
-    q->bindValue(":displayed_rating", m->displayed_rating);
-    q->bindValue(":last_check_time", m->last_check_time);
-    q->bindValue(":bonus_time", m->bonus_time);
-
-    q->exec();
-    q->finish();
+        ratings[m.name].node = rankings.changeKey(m.node.node(), m.rating);
+    } else {
+        m.filePos = lastFilePos;
+        m.node = rankings.insert(m.rating, m.name);
+        in->seek(lastFilePos);
+        in->write(m.toString().toUtf8());
+        in->putChar('\n');
+        lastFilePos = in->pos();
+        ratings[m.name] = m;
+    }
 }
 
-void Tier::updateMember(const MemberRating &m, bool add)
+void Tier::updateMember(MemberRating &m, bool add)
 {
     holder.addMemberInMemory(m);
 
-    if (add) {
-        m_count += 1;
-    }
     updateMemberInDatabase(m, add);
 }
 
-void Tier::updateMemberInDatabase(const MemberRating &m, bool add)
+void Tier::updateMemberInDatabase(MemberRating &m, bool add)
 {
-    boss->ithread->pushMember(m, make_query_number(add ? InsertMember : UpdateMember));
+    /* Can't thread writes since manipulating data directly */
+#if 0
+    boss->thread->pushMember(m, make_query_number(add ? InsertMember : UpdateMember));
+#else
+    insertMember(&m, add ? InsertMember : UpdateMember);
+#endif
 }
 
 void Tier::loadFromXml(const QDomElement &elem)
@@ -689,14 +588,13 @@ void Tier::loadFromXml(const QDomElement &elem)
     banParentS = elem.attribute("banParent");
     parent = NULL;
     changeName(elem.attribute("name"));
-    if (elem.hasAttribute("tableName") && elem.attribute("tableName").length() > 0) {
-        sql_table = elem.attribute("tableName");
-    }
+
     m_gen = Pokemon::gen(elem.attribute("gen", QString::number(GenInfo::GenMax())).toInt(),
                          elem.attribute("subgen",QString::number(GenInfo::NumberOfSubgens(elem.attribute("gen", QString::number(GenInfo::GenMax())).toInt())-1)).toInt());
     if (m_gen.num == 0) {
         m_gen.subnum = 0;
     }
+
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -709,9 +607,6 @@ void Tier::loadFromXml(const QDomElement &elem)
     clauses = 0;
 //    bannedSets.clear(); subgen="1"
 //    restrictedSets.clear();
-
-    m_count = -1;
-    last_count_time = 0;
 
     importBannedMoves(elem.attribute("moves"));
     importBannedItems(elem.attribute("items"));
@@ -758,12 +653,11 @@ void Tier::loadFromXml(const QDomElement &elem)
 
 void Tier::resetLadder()
 {
-    QPsqlQuery q;
-    q.setForwardOnly(true);
+    ratings.clear();
+    rankings = decltype(rankings)();
 
-    q.exec(QString("delete from %1").arg(sql_table));
-    clearCache();
-    m_count = 0;
+    in->remove();
+    in->open(QIODevice::ReadWrite);
 }
 
 void Tier::clearCache()
@@ -773,7 +667,6 @@ void Tier::clearCache()
 
 QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("name", name());
-    dest.setAttribute("tableName", sql_table);
 
     if (banPokes) {
         dest.setAttribute("banMode", "ban");
@@ -992,9 +885,10 @@ void Tier::importRestrictedPokes(const QString &s)
 //    return true;
 //}
 
-Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_count(-1), last_count_time(0), holder(1000) {
+Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), holder(1000) {
+    in = nullptr;
     banPokes = true;
-    parent = NULL;
+    parent = nullptr;
     m_gen = Pokemon::gen(GenInfo::GenMax(), GenInfo::NumberOfSubgens(GenInfo::GenMax())-1);
     maxLevel = 100;
     numberOfPokemons = 6;
@@ -1007,6 +901,7 @@ Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), m_coun
 
 Tier::~Tier()
 {
+    delete in, in = nullptr;
     qDebug() << "Deleting tier " << name();
 }
 
@@ -1022,7 +917,7 @@ QPair<int, int> Tier::pointChangeEstimate(const QString &player, const QString &
     return p.pointChangeEstimate(f.rating);
 }
 
-LoadThread * Tier::getThread()
+LoadInsertThread<MemberRating> * Tier::getThread()
 {
     return boss->getThread();
 }
@@ -1077,65 +972,39 @@ Tier *Tier::dataClone() const
 
 void Tier::processDailyRun()
 {
-    QPsqlQuery query;
-
-    query.setForwardOnly(true);
-
     Server::print(QString("Running Daily Run for tier %1").arg(name()));
 
     clock_t t = clock();
 
-    QSqlDatabase::database().transaction();
+    int count = 0;
+    int min_bonus_time = -TierMachine::obj()->alt_expiration * 3600 * 24 * 30;
 
-    query.prepare(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1").arg(sql_table));
-    query.exec();
+    for (auto it = ratings.begin(); it != ratings.end(); ) {
+        auto &m = it->second;
 
-    QStringList names;
+        if (m.bonus_time < min_bonus_time) {
+            m.name[0] = ':';
 
-    while (query.next()) {
-        QString name = query.value(0).toString();
-        names.push_back(name);
-        if (!holder.isInMemory(name)) {
-            MemberRating m(query.value(0).toString(), query.value(1).toInt(), query.value(2).toInt(), query.value(3).toInt(),
-                           query.value(4).toInt(), query.value(5).toInt());
-            m.calculateDisplayedRating();
-            holder.addMemberInMemory(m);
+            in->seek(m.filePos);
+            in->write(m.toString().toUtf8());
+
+            it = ratings.erase(it);
         } else {
-            MemberRating m = holder.member(name);
             m.calculateDisplayedRating();
-            holder.addMemberInMemory(m);
+
+            in->seek(m.filePos);
+            in->write(m.toString().toUtf8());
+
+            ++it;
         }
     }
 
-    query.finish();
-
-    foreach(QString name, names) {
-        MemberRating m = holder.member(name);
-        insertMember(&query, &m, true);
-    }
-
-    /* After updating all, deleting the old members */
-    int min_bonus_time = -TierMachine::obj()->alt_expiration * 3600 * 24 * 30;
-    query.prepare(QString("select name from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
-    query.exec();
-
-    int count = 0;
-
-    while (query.next()) {
-        holder.removeMemberInMemory(query.value(0).toString());
-        count ++;
-    }
     Server::print(QString("%1 alts removed from the ladder.").arg(count));
 
-    query.prepare(QString("delete from %1 where bonus_time<%2").arg(sql_table).arg(min_bonus_time));
-    query.exec();
-
-    holder.cleanCache();
-
-    QSqlDatabase::database().commit();
+    /* Regenerate rankings & all */
+    loadFromFile();
 
     t = clock() - t;
 
     Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
-    Server::print(query.lastError().text());
 }
