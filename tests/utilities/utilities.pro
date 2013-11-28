@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     test.cpp \
     testinsensitivemap.cpp \
     testrunner.cpp \
-    testfunctions.cpp
+    testfunctions.cpp \
+    testrankingtree.cpp
 
 LIBS += -L$$PWD/../../bin
 INCLUDEPATH += ../../src/
@@ -36,5 +37,6 @@ HEADERS += \
     test.h \
     testinsensitivemap.h \
     testrunner.h \
-    testfunctions.h
+    testfunctions.h \
+    testrankingtree.h
 

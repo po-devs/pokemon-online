@@ -6,6 +6,7 @@
 #include "testrunner.h"
 #include "testinsensitivemap.h"
 #include "testfunctions.h"
+#include "testrankingtree.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ TestRunner::TestRunner(QObject *parent) :
     name = "";
     tests.append(new TestInsensitiveMap());
     tests.append(new TestFunctions());
+    tests.append(new TestRankingTree());
 }
 
 TestRunner::~TestRunner()
