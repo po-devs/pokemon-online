@@ -11,6 +11,24 @@
 #include "player.h"
 #include "battlecommunicator.h"
 
+#define XSUFFIX(x) SUFFIX(x)
+#define SUFFIX(x) #x
+#define BATTLE_SERVER_SUFFIX XSUFFIX(EXE_SUFFIX)
+
+static const QString processErrorMessages[] = {
+    "The process failed to start. Either the invoked program is missing, or you may have insufficient permissions to invoke the program.",
+    "The process crashed some time after starting successfully.",
+    "The last waitFor...() function timed out. The state of QProcess is unchanged, and you can try calling waitFor...() again.",
+    "An error occurred when attempting to write to the process. For example, the process may not be running, or it may have closed its input channel.",
+    "An error occurred when attempting to read from the process. For example, the process may not be running.",
+    "An unknown error occurred. This is the default return value of error()."
+};
+
+static const QString processExitMessages[] = {
+    "closed"
+    "crashed"
+};
+
 BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), relay(nullptr)
 {
@@ -132,10 +150,10 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
     return mybattles.value(battleid);
 }
 
-void BattleCommunicator::startServer()
+bool BattleCommunicator::startServer()
 {
     if (battleServer->state() == QProcess::Starting || battleServer->state() == QProcess::Running) {
-        return;
+        return false;
     }
 
     emit info("Starting battle server.");
@@ -143,6 +161,7 @@ void BattleCommunicator::startServer()
     connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
     connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
     connect(battleServer, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(battleServerFinished(int, QProcess::ExitStatus)));
+    return true;
 }
 
 void BattleCommunicator::battleServerStarted()
@@ -157,7 +176,7 @@ void BattleCommunicator::battleServerError(QProcess::ProcessError error)
 
 void BattleCommunicator::battleServerFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    emit info(QString("The battle server was %2 with exit code %1.").arg(QString::number(exitCode), processExitMessages[exitStatus]));
+    emit info(QString("The battle server %2 with exit code %1.").arg(QString::number(exitCode), processExitMessages[exitStatus]));
     emit info("Attempting to restart in 3 seconds...");
     QTimer::singleShot(3000, this, SLOT(startServer()));
 }
@@ -174,7 +193,11 @@ void BattleCommunicator::connectToBattleServer()
 
     relay = nullptr;
 
-    emit info("Connecting to battle server on port 5096...");
+    if (!silent) {
+        emit info("Connecting to battle server on port 5096...");
+    } else {
+        silent = false;
+    }
 
     QTcpSocket * s = new QTcpSocket(nullptr);
     s->connectToHost("localhost", 5096);
@@ -198,18 +221,22 @@ void BattleCommunicator::battleConnected()
 
 void BattleCommunicator::battleConnectionError()
 {
-    emit info("Error when connecting to the battle server. Will try again in 10 seconds");
-    emit error();
+    // Don't send error messages if there is no server running.
+    if (!startServer()) {
+        emit info("Error when connecting to the battle server. Will try again in 10 seconds");
+        emit error();
 
-    /* Removing all battles */
-    foreach(int battle, mybattles.keys()) {
-        mybattles[battle]->finished() = true;
-        showResult(battle, Tie, mybattles[battle]->id(0));
+        /* Removing all battles */
+        foreach(int battle, mybattles.keys()) {
+            mybattles[battle]->finished() = true;
+            showResult(battle, Tie, mybattles[battle]->id(0));
 
-        emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
-        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
+            emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
+            emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
+        }
     }
 
+    silent = true;
     QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
 }
 

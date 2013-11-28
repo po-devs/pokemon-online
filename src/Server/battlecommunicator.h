@@ -1,10 +1,6 @@
 #ifndef BATTLECOMMUNICATOR_H
 #define BATTLECOMMUNICATOR_H
 
-#define XSUFFIX(x) SUFFIX(x)
-#define SUFFIX(x) #x
-#define BATTLE_SERVER_SUFFIX XSUFFIX(EXE_SUFFIX)
-
 #include <QObject>
 #include <QString>
 #include <QHash>
@@ -50,7 +46,7 @@ signals:
     void battleFinished(int,int,int,int);
     void sendBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
 public slots:
-    void startServer();
+    bool startServer();
     void connectToBattleServer();
     void battleConnected();
     void battleConnectionError();
@@ -73,25 +69,12 @@ private slots:
 private:
     BattleAnalyzer* relay;
     QProcess* battleServer;
+    bool silent = false;
 
     QHash<int, FullBattleConfiguration*> mybattles;
     QString mod;
 
     void showResult(int battle, int result, int loser);
-
-    const QString processErrorMessages[6] = {
-        "The process failed to start. Either the invoked program is missing, or you may have insufficient permissions to invoke the program.",
-        "The process crashed some time after starting successfully.",
-        "The last waitFor...() function timed out. The state of QProcess is unchanged, and you can try calling waitFor...() again.",
-        "An error occurred when attempting to write to the process. For example, the process may not be running, or it may have closed its input channel.",
-        "An error occurred when attempting to read from the process. For example, the process may not be running.",
-        "An unknown error occurred. This is the default return value of error()."
-    };
-
-    const QString processExitMessages[2] = {
-        "closed"
-        "crashed"
-    };
 
     template <typename ...Params>
     QByteArray pack(int command, int who, Params&&... params) {
