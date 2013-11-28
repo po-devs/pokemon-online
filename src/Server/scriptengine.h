@@ -482,6 +482,19 @@ public:
     Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
     Q_INVOKABLE QScriptValue list_processes();
     Q_INVOKABLE QScriptValue kill_processes();
+    Q_INVOKABLE QScriptValue write_process(double pid, const QString &data);
+    inline quint64 getProcessID(const QProcess* proc)
+    {
+        #ifdef Q_OS_WIN
+            struct _PROCESS_INFORMATION* procinfo = proc->pid();
+            return procinfo->dwProcessId;
+        #else // Linux
+            return proc->pid();
+        #endif // Q_WS_WIN
+    }
+signals:
+    void stdoutReceived(quint64 pid, const QString &procStdout);
+    void stderrReceived(quint64 pid, const QString &procStderr);
 private slots:
     void process_finished(int exitcode, QProcess::ExitStatus exitStatus);
     void process_error(QProcess::ProcessError error);
@@ -499,6 +512,7 @@ private:
         QByteArray out;
         QByteArray err;
         QString command;
+        quint64 pid;
     };
     QHash<QProcess*, ProcessData> processes;
 public:
