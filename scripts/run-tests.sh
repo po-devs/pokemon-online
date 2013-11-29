@@ -10,7 +10,7 @@ function ensure_good_run(){
 ./test-utilities
 ensure_good_run
 
-#cp ../tests/data/pokemoninfo/* . -R
+cp ../tests/data/pokemoninfo/* . -R
 ./test-pokemoninfo
 ensure_good_run
 
