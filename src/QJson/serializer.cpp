@@ -223,7 +223,7 @@ QByteArray Serializer::SerializerPrivate::serialize( const QVariant &v, bool *ok
   } else if (( v.type() == QVariant::Double) || ((QMetaType::Type)v.type() == QMetaType::Float)) { // a double or a float?
     const double value = v.toDouble();
 #if defined _WIN32 && !defined(Q_OS_SYMBIAN)
-    const bool special = _isnan(value) || !_finite(value);
+    const bool special = std::isnan(value) || std::isinf(value);
 #elif defined(Q_OS_SYMBIAN) || defined(Q_OS_ANDROID)
     const bool special = isnan(value) || isinf(value);
 #else
@@ -232,7 +232,7 @@ QByteArray Serializer::SerializerPrivate::serialize( const QVariant &v, bool *ok
     if (special) {
       if (specialNumbersAllowed) {
 #if defined _WIN32 && !defined(Q_OS_SYMBIAN)
-        if (_isnan(value)) {
+        if (std::isnan(value)) {
 #elif defined(Q_OS_SYMBIAN) || defined(Q_OS_ANDROID)
         if (isnan(value)) {
 #else

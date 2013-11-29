@@ -88,13 +88,11 @@ TRANSLATIONS = src/trans/translation_de.ts \
 
 CONFIG(test) {
     SUBDIRS += \
-        tests/utilities
+        tests/utilities \
+        tests/pokemoninfo \
+        tests/battleserver
 }
 
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
-
-SUBDIRS += \
-    tests/pokemoninfo \
-    tests/battleserver

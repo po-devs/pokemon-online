@@ -63,12 +63,8 @@ HEADERS += player.h \
     ../Utilities/CrossDynamicLib.h \
     ../Utilities/mtrand.h \
     sessiondatafactory.h \
-    miscabilities.h \
     serverinterface.h \
     ../Shared/networkcommands.h \
-    battlecounters.h \
-    battlecounterindex.h \
-    battlefunctions.h \
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h \
     playerstructs.h \

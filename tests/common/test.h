@@ -18,6 +18,9 @@ public:
 
     virtual void run() = 0; //emit finished() in your sub implementation when run is over.
 signals:
+    void success();
+    void failure();
+    /* Don't call manually. Call success() or failure() */
     void finished();
 };
 

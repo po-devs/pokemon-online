@@ -9,7 +9,7 @@ CONFIG   -= app_bundle
 
 DESTDIR = $$PWD/../../bin
 TEMPLATE = app
-
+EXTRAS = test
 
 SOURCES += main.cpp \
     testinsensitivemap.cpp \

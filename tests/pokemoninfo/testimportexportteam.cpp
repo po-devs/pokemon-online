@@ -17,5 +17,5 @@ void TestImportExportTeam::run()
 
     assert(t1.exportToTxt().trimmed() == t1s);
 
-    emit finished();
+    emit success();
 }

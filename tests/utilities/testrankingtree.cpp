@@ -23,5 +23,5 @@ void TestRankingTree::run()
     assert(rankings.count() == 5);
     assert(rankings.getByRanking(2).node()->data == "Crystal Moogle");
 
-    emit finished();
+    emit success();
 }

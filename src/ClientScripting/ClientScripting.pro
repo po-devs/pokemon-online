@@ -27,6 +27,10 @@ HEADERS += clientscripting.h\
 
 include(../Shared/Common.pri)
 
+contains(QT_VERSION, ^5\\.[0-9]\\..*) {
+  QT += multimedia
+}
+
 LIBS += $$battlemanager
 
 FORMS += \

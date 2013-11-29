@@ -22,10 +22,14 @@ public slots:
     void run();
     void runNext();
     void printDot();
+    void printFail();
+    void clearTest();
 private:
     QList<Test*> tests;
     const char *name;
 
+    int passed;
+    int errors;
     int count;
 };
 

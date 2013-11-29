@@ -8,6 +8,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
+EXTRAS = test
 
 DESTDIR = $$PWD/../../bin
 

@@ -7,5 +7,5 @@ void TestFunctions::run()
     assert(intpow2(3) == 8);
     assert(intlog2(intpow2(5)) == 5);
 
-    emit finished();
+    emit success();
 }

@@ -26,5 +26,5 @@ void TestInsensitiveMap::run()
     it->second = 100;
     assert(map["keTChup"] == 100);
 
-    emit finished();
+    emit success();
 }
