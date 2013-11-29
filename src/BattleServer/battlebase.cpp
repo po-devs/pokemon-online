@@ -1240,6 +1240,12 @@ void BattleBase::notifyFail(int p)
 
 void BattleBase::engageBattle()
 {
+    for (int i = 0; i < 6; i++) {
+        if (i >= teamCount) {
+            poke(Player1,i).num() = 0;
+            poke(Player2,i).num() = 0;
+        }
+    }
     //qDebug() << "Engaging battle " << this << ", calling plugins";
     /* Plugin call */
     callp(BP::battleStarting);

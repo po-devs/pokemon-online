@@ -11,8 +11,6 @@ class TestUnrated : public BattleServerTest
 public slots:
     void onBattleServerConnected();
     void onBattleMessage(int battleid, int playerid, const QByteArray &array);
-private:
-    TeamBattle tb1, tb2;
 };
 
 #endif // TESTUNRATED_H

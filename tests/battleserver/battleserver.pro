@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     ../common/pokemontestrunner.cpp \
     battleservertest.cpp \
     ../../src/Server/battleanalyzer.cpp \
-    testunrated.cpp
+    testunrated.cpp \
+    testteamcount.cpp
 
 HEADERS += \
     ../common/testrunner.h \
@@ -37,4 +38,5 @@ HEADERS += \
     ../common/pokemontestrunner.h \
     battleservertest.h \
     ../../src/Server/battleanalyzer.h \
-    testunrated.h
+    testunrated.h \
+    testteamcount.h

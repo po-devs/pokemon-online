@@ -38,6 +38,8 @@ void TestUnrated::onBattleServerConnected()
     Team t1;
     t1.importFromTxt(getFileContent("team1.txt").trimmed());
 
+    TeamBattle tb1, tb2;
+
     tb1 = TeamBattle(t1);
     tb2 = TeamBattle(t1);
 

@@ -128,6 +128,16 @@ public:
     int spot(int player, int slot=0) {return player+2*slot;}
     int spotFromId(int id) const { return conf->spot(id);}
     int clauses() const {return conf->clauses;}
+    int countAlive(int player) const {
+        int ret = 0;
+
+        for (int i = 0; i < 6; i++) {
+            if (!team(player).poke(i)->isKoed()) {
+                ret++;
+            }
+        }
+        return ret;
+    }
     bool rated() const {return conf->rated();}
     bool oldConf() const {return conf->oldconf;}
     int avatar(int player) const {return conf->avatar[player];}
