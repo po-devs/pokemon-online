@@ -4,13 +4,18 @@ BattleServerTest::BattleServerTest()
 {
 }
 
+void BattleServerTest::start()
+{
+    run();
+}
+
 void BattleServerTest::run()
 {
     QTcpSocket * s = new QTcpSocket(nullptr);
     s->connectToHost("localhost", 5096);
 
-    connect(s, SIGNAL(connected()), this, SLOT(battleConnected()));
-    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(failure()));
+    connect(s, SIGNAL(connected()), this, SLOT(onBattleServerConnected()));
+    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(reject()));
 
     analyzer = new BaseAnalyzer(s,0);
 
@@ -22,5 +27,5 @@ void BattleServerTest::run()
 void BattleServerTest::onBattleServerConnected()
 {
     /* Default behavior for a battle server test. Override to change! */
-    emit success();
+    accept();
 }

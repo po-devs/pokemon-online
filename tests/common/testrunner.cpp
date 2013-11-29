@@ -89,5 +89,5 @@ void TestRunner::runNext()
     connect(test, SIGNAL(finished()), SLOT(clearTest()));
     connect(test, SIGNAL(finished()), SLOT(runNext()));
 
-    test->run();
+    test->start();
 }

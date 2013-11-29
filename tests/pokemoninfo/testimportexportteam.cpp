@@ -16,6 +16,4 @@ void TestImportExportTeam::run()
     assert(t1.poke(0).EV(Defense) == 4);
 
     assert(t1.exportToTxt().trimmed() == t1s);
-
-    emit success();
 }

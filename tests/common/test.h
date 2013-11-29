@@ -16,12 +16,27 @@ public:
     Test();
     virtual ~Test(){}
 
-    virtual void run() = 0; //emit finished() in your sub implementation when run is over.
+    virtual void start();
+
+    /* Method to override in your test. Use reject() or accept() to
+     * conclude the test.
+     *
+     * By default, if you don't use accept() or reject(), the test is automatically
+     * accepted when the run() function is ended.
+    */
+    virtual void run() = 0;
+
+public slots:
+    void accept();
+    void reject();
 signals:
     void success();
     void failure();
     /* Don't call manually. Call success() or failure() */
     void finished();
+
+private:
+    bool _finished;
 };
 
 #endif // TEST_H

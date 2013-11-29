@@ -10,6 +10,7 @@ class BattleServerTest : public Test
 public:
     BattleServerTest();
 
+    void start(); /* Override to not automatically accept test once run() is over */
     void run();
 public slots:
     /* Override this method to test what you want */

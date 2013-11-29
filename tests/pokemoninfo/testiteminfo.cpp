@@ -8,6 +8,4 @@ void TestItemInfo::run()
     assert(usefulItems.length() > 1);
     assert(usefulItems[0] == ItemInfo::Name(0));
     assert(ItemInfo::Number(usefulItems[1]) > 0);
-
-    emit success();
 }

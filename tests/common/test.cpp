@@ -1,7 +1,29 @@
 #include "test.h"
 
-Test::Test()
+Test::Test() : _finished(false)
 {
-    connect(this, SIGNAL(failure()), SIGNAL(finished()));
-    connect(this, SIGNAL(success()), SIGNAL(finished()));
+}
+
+void Test::start()
+{
+    run();
+    if (!_finished) {
+        accept();
+    }
+}
+
+void Test::accept()
+{
+    _finished = true;
+
+    emit success();
+    emit finished();
+}
+
+void Test::reject()
+{
+    _finished = true;
+
+    emit failure();
+    emit finished();
 }
