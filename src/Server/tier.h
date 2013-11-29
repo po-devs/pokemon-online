@@ -2,6 +2,7 @@
 #define TIER_H
 
 #include <QtCore>
+#include <ctime>
 
 #include "../Utilities/coreclasses.h"
 #include "../Utilities/rankingtree.h"
