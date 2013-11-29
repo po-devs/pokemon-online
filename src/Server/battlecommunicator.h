@@ -70,8 +70,8 @@ private slots:
 private:
     BattleAnalyzer* relay;
     QProcess* battleServer;
-    bool silent = false;
-    bool wasConnected = false;
+    bool silent;
+    bool wasConnected;
 
     QHash<int, FullBattleConfiguration*> mybattles;
     QString mod;

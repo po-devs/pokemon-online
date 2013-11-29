@@ -29,6 +29,9 @@ BattleCommunicator::BattleCommunicator(QObject *parent) :
 {
     QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
     battleServer = new QProcess(this);
+
+    wasConnected = false;
+    silent = false;
 }
 
 int BattleCommunicator::count() const
@@ -208,6 +211,7 @@ void BattleCommunicator::battleConnected()
 
 void BattleCommunicator::battleConnectionError()
 {
+    removeBattles();
     // Only send messages if there was previously a connection
     // or a server is already running (which means it should've connected).
     if (wasConnected) {
@@ -220,7 +224,6 @@ void BattleCommunicator::battleConnectionError()
     }
 
     emit error();
-    removeBattles();
     QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
 }
 
