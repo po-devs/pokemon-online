@@ -133,6 +133,7 @@ public:
     TeamBattle();
     /* removes the invalid pokemons */
     TeamBattle(PersonalTeam &other);
+    TeamBattle(Team &other);
 
     void generateRandom(Pokemon::gen gen);
 
@@ -164,12 +165,18 @@ public:
     Pokemon::gen gen;
 
     struct FullSerializer {
-        FullSerializer(TeamBattle *team): team(team){}
+        FullSerializer(TeamBattle *team): team(team), constteam(false) {}
+        FullSerializer(const TeamBattle *team): team(const_cast<TeamBattle*>(team)), constteam (true) {}
 
-        TeamBattle *team;
+        mutable TeamBattle *team;
+        bool constteam;
     };
 
     FullSerializer fullSerial() {
+        return FullSerializer(this);
+    }
+
+    FullSerializer fullSerial() const {
         return FullSerializer(this);
     }
 
@@ -504,8 +511,8 @@ struct ChallengeInfo
     QString srctier, desttier;
     Pokemon::gen gen;
 
-    explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, quint8 mode=Singles)
-        : clauses(clauses), dsc(desc), opp(opponent), mode(mode)
+    explicit ChallengeInfo(int desc=0, int opponent=0, quint32 clauses = SleepClause, quint8 mode=Singles, bool rated = false)
+        : clauses(clauses), dsc(desc), opp(opponent), mode(mode), rated(rated)
     {
     }
 
@@ -526,7 +533,18 @@ struct BattlePlayer
     QString name;
     QString win, lose, tie; //messages at the end of the battle
     int rating, avatar, id;
-    quint8 maxlevel, restrictedPokes, restrictedCount, teamCount;
+    quint8 maxlevel;
+    /* A collection of flags telling the battle server which pokemon in the team are restricted */
+    quint8 restrictedPokes;
+    quint8 restrictedCount;
+    /* Maximum number of pokes per team */
+    quint8 teamCount;
+
+    BattlePlayer(){}
+    BattlePlayer(const QString &name, int id, int rating=0, int avatar=0, const QString &win="", const QString &lose="",
+                 const QString &tie="", int maxlevel=100, int restrictedPokes=0, int restrictedCount=0, int teamCount=6)
+        : name(name), win(win), lose(lose), tie(tie), rating(rating), avatar(avatar), id(id), maxlevel(maxlevel),
+          restrictedPokes(restrictedPokes), restrictedCount(restrictedCount), teamCount(teamCount){}
 };
 
 DataStream & operator >> (DataStream &in, BattlePlayer &p);

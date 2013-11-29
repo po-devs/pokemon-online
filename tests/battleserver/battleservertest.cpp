@@ -17,7 +17,7 @@ void BattleServerTest::run()
     connect(s, SIGNAL(connected()), this, SLOT(onBattleServerConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(reject()));
 
-    analyzer = new BaseAnalyzer(s,0);
+    analyzer = new BattleAnalyzer(s);
 
     connect(this, SIGNAL(destroyed()), analyzer, SLOT(deleteLater()));
 

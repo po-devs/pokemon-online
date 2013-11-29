@@ -1,11 +1,15 @@
+#include "../Shared/networkcommands.h"
 #include "../PokemonInfo/battlestructs.h"
 
 #include "battleanalyzer.h"
 
-using namespace NetworkServ;
-
-BattleAnalyzer::BattleAnalyzer(QTcpSocket *sock) : Analyzer(sock, 0)
+BattleAnalyzer::BattleAnalyzer(QTcpSocket *sock) : BaseAnalyzer(sock, 0)
 {
+}
+
+void BattleAnalyzer::startBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2)
+{
+    notify(EngageBattle, qint32(battleid), pb1, pb2, c, t1.fullSerial(), t2.fullSerial());
 }
 
 void BattleAnalyzer::dealWithCommand(const QByteArray &commandline)
@@ -47,4 +51,9 @@ void BattleAnalyzer::dealWithCommand(const QByteArray &commandline)
     }
     default: break;
     }
+}
+
+void BattleAnalyzer::keepAlive()
+{
+    notify(KeepAlive);
 }

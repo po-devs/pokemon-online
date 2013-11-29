@@ -14,6 +14,9 @@ void Test::start()
 
 void Test::accept()
 {
+    if (_finished) {
+        return;
+    }
     _finished = true;
 
     emit success();
@@ -22,6 +25,9 @@ void Test::accept()
 
 void Test::reject()
 {
+    if (_finished) {
+        return;
+    }
     _finished = true;
 
     emit failure();

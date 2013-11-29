@@ -27,10 +27,14 @@ SOURCES += main.cpp \
     ../common/test.cpp \
     ../common/testrunner.cpp \
     ../common/pokemontestrunner.cpp \
-    battleservertest.cpp
+    battleservertest.cpp \
+    ../../src/Server/battleanalyzer.cpp \
+    testunrated.cpp
 
 HEADERS += \
     ../common/testrunner.h \
     ../common/test.h \
     ../common/pokemontestrunner.h \
-    battleservertest.h
+    battleservertest.h \
+    ../../src/Server/battleanalyzer.h \
+    testunrated.h

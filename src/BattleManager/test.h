@@ -1,5 +1,5 @@
-#ifndef TEST_H
-#define TEST_H
+#ifndef PO_ENABLEIF_H
+#define PO_ENABLEIF_H
 
 template <class X, class U = void>
 struct test {
@@ -18,4 +18,4 @@ template <class Cond, class T = void>
 struct enable_if : public enable_if_c<Cond::value, T> {};
 
 
-#endif // TEST_H
+#endif // PO_ENABLEIF

@@ -62,27 +62,19 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
 
-        BattlePlayer pb1 = {
-            p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
-            (quint8)t.getMaxLevel(), (quint8)t.restricted(p1->team(team1)), (quint8)t.maxRestrictedPokes, (quint8)t.numberOfPokemons
-        };
-        BattlePlayer pb2 = {
-            p2->name(), p2->winningMessage(), p2->losingMessage(), p2->tieMessage(), p2->rating(p1->team(team1).tier), p2->avatar(), p2->id(),
-            (quint8)t.getMaxLevel(), (quint8)t.restricted(p1->team(team1)), (quint8)t.maxRestrictedPokes, (quint8)t.numberOfPokemons
-        };
+        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
+                         p1->tieMessage(), t.getMaxLevel(), t.restricted(p1->team(team1)), t.maxRestrictedPokes, t.numberOfPokemons);
+        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(p2->team(team1).tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
+                         p2->tieMessage(), t.getMaxLevel(), t.restricted(p2->team(team2)), t.maxRestrictedPokes, t.numberOfPokemons);
 
-        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1).fullSerial(), p2->team(team2).fullSerial());
+        relay->startBattle(id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     } else {
-        BattlePlayer pb1 = {
-            p1->name(), p1->winningMessage(), p1->losingMessage(), p1->tieMessage(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->id(),
-            (quint8)100, (quint8)0, (quint8)0, (quint8)6
-        };
-        BattlePlayer pb2 = {
-            p2->name(), p2->winningMessage(), p2->losingMessage(), p2->tieMessage(), p2->rating(p1->team(team1).tier), p2->avatar(), p2->id(),
-            (quint8)100, (quint8)0, (quint8)0, (quint8)6
-        };
+        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
+                         p1->tieMessage());
+        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(p2->team(team1).tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
+                         p2->tieMessage());
 
-        relay->notify(EngageBattle, id, pb1, pb2, c, p1->team(team1).fullSerial(), p2->team(team2).fullSerial());
+        relay->startBattle(id, pb1, pb2, c, p1->team(team1), p2->team(team2));
     }
 
     p1->addBattle(id);

@@ -73,6 +73,7 @@ public slots:
     void commandReceived (const QByteArray &command);
 
     void undelay();
+    void keepAlive(){}//do something
 protected:
     GenericNetwork &socket();
     const GenericNetwork &socket() const;
@@ -110,6 +111,11 @@ BaseAnalyzer::BaseAnalyzer(const SocketClass &sock, int id, bool dummy) : mysock
 #ifndef BOOST_SOCKETS
     sock->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 #endif
+
+    QTimer *t = new QTimer(this);
+    t->setInterval(30*1000);
+    t->start();
+    connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
 }
 
 

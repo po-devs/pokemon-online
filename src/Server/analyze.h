@@ -127,10 +127,6 @@ protected:
 template<class SocketClass>
 Analyzer::Analyzer(const SocketClass &sock, int id, bool dummy) : BaseAnalyzer(sock,id,dummy), pingedBack(0), pingSent(0), mIsInCommand(false)
 {
-    QTimer *t = new QTimer(this);
-    t->setInterval(30*1000);
-    t->start();
-    connect(t, SIGNAL(timeout()),SLOT(keepAlive()));
 }
 
 

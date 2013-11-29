@@ -401,6 +401,27 @@ TeamBattle::TeamBattle(PersonalTeam &other)
     }
 }
 
+/* Could actually all be a template */
+TeamBattle::TeamBattle(Team &other)
+{
+    resetIndexes();
+
+    gen = other.gen();
+    tier = other.defaultTier();
+
+    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
+        gen = GenInfo::GenMax();
+    }
+
+    int curs = 0;
+    for (int i = 0; i < 6; i++) {
+        poke(curs).init(other.poke(i));
+        if (poke(curs).num() != 0) {
+            ++curs;
+        }
+    }
+}
+
 void TeamBattle::resetIndexes()
 {
     for (int i = 0; i < 6; i++) {
@@ -583,7 +604,11 @@ DataStream & operator << (DataStream &out, const TeamBattle &te)
 }
 
 DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {
-    in >> f.team->tier >> f.team->gen >> f.team;
+    assert(!f.constteam);
+
+    in >> f.team->tier;
+    in >> f.team->gen;
+    in >> (*f.team);
 
     assert(f.team->gen.isValid());
 
@@ -591,7 +616,7 @@ DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {
 }
 
 DataStream & operator << (DataStream &out, const TeamBattle::FullSerializer &f) {
-    out << f.team->tier << f.team->gen << f.team;
+    out << f.team->tier << f.team->gen << (*f.team);
 
     return out;
 }
@@ -923,12 +948,12 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
 }
 
 DataStream & operator >> (DataStream &in, ChallengeInfo & c) {
-    in >> c.dsc >> c.opp >> c.clauses >> c.mode >> c.team >> c.gen >> c.srctier >> c.desttier;
+    in >> c.dsc >> c.opp >> c.clauses >> c.mode >> c.team >> c.gen >> c.srctier >> c.desttier >> c.rated;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
-    out << c.dsc <<  c.opp << c.clauses << c.mode << c.team << c.gen << c.srctier << c.desttier;
+    out << c.dsc <<  c.opp << c.clauses << c.mode << c.team << c.gen << c.srctier << c.desttier << c.rated;
     return out;
 }
 
