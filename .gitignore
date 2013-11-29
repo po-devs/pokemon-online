@@ -68,3 +68,4 @@ bin/README
 bin/clientscripts
 scripts/sprite
 bin/usage_stats/raw
+bin/serverdb

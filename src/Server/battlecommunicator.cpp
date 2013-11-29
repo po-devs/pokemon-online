@@ -11,10 +11,27 @@
 #include "player.h"
 #include "battlecommunicator.h"
 
+#define XSUFFIX(x) SUFFIX(x)
+#define SUFFIX(x) #x
+#define BATTLE_SERVER_SUFFIX XSUFFIX(EXE_SUFFIX)
+
+static const QString processErrorMessages[] = {
+    "The process failed to start. Either the invoked program is missing, or you may have insufficient permissions to invoke the program.",
+    "The process crashed some time after starting successfully.",
+    "The last waitFor...() function timed out. The state of QProcess is unchanged, and you can try calling waitFor...() again.",
+    "An error occurred when attempting to write to the process. For example, the process may not be running, or it may have closed its input channel.",
+    "An error occurred when attempting to read from the process. For example, the process may not be running.",
+    "An unknown error occurred. This is the default return value of error()."
+};
+
 BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), relay(nullptr)
 {
     QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
+    battleServer = new QProcess(this);
+
+    wasConnected = false;
+    silent = false;
 }
 
 int BattleCommunicator::count() const
@@ -131,6 +148,29 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
     return mybattles.value(battleid);
 }
 
+bool BattleCommunicator::startServer()
+{
+    if (battleServer->state() == QProcess::Starting || battleServer->state() == QProcess::Running) {
+        return false;
+    }
+
+    emit info("Starting battle server.");
+    battleServer->start("./BattleServer" BATTLE_SERVER_SUFFIX " -p 5096");
+    connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
+    connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
+    return true;
+}
+
+void BattleCommunicator::battleServerStarted()
+{
+    emit info("Battle server started.");
+}
+
+void BattleCommunicator::battleServerError(QProcess::ProcessError error)
+{
+    emit info(QString("Battle server error: %1").arg(processErrorMessages[error]));
+}
+
 void BattleCommunicator::connectToBattleServer()
 {
     if (relay) {
@@ -143,7 +183,11 @@ void BattleCommunicator::connectToBattleServer()
 
     relay = nullptr;
 
-    emit info("Connecting to battle server on port 5096...");
+    if (!silent) {
+        emit info("Connecting to battle server on port 5096...");
+    } else {
+        silent = false;
+    }
 
     QTcpSocket * s = new QTcpSocket(nullptr);
     s->connectToHost("localhost", 5096);
@@ -161,24 +205,25 @@ void BattleCommunicator::connectToBattleServer()
 void BattleCommunicator::battleConnected()
 {
     emit info("Connected to battle server!");
-
+    wasConnected = true;
     changeMod(mod);
 }
 
 void BattleCommunicator::battleConnectionError()
 {
-    emit info("Error when connecting to the battle server. Will try again in 10 seconds");
-    emit error();
+    removeBattles();
+    // Only send messages if there was previously a connection
+    // or a server is already running (which means it should've connected).
+    if (wasConnected) {
+        emit info("Error when connecting to the battle server. Will try again in 10 seconds");
 
-    /* Removing all battles */
-    foreach(int battle, mybattles.keys()) {
-        mybattles[battle]->finished() = true;
-        showResult(battle, Tie, mybattles[battle]->id(0));
-
-        emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
-        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
+        wasConnected = false;
+        emit battleConnectionLost();
+    } else {
+        silent = true;
     }
 
+    emit error();
     QTimer::singleShot(10000, this, SLOT(connectToBattleServer()));
 }
 
@@ -263,5 +308,17 @@ void BattleCommunicator::changeMod(const QString &mod)
 
     if (relay) {
         relay->notify(DatabaseMod, mod);
+    }
+}
+
+void BattleCommunicator::removeBattles()
+{
+    /* Removing all battles */
+    foreach(int battle, mybattles.keys()) {
+        mybattles[battle]->finished() = true;
+        showResult(battle, Tie, mybattles[battle]->id(0));
+
+        emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
+        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
     }
 }
