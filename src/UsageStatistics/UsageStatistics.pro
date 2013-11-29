@@ -13,13 +13,6 @@ HEADERS += usagestats.h \
     ../BattleServer/plugininterface.h \
     ../BattleServer/battleinterface.h
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x"
-}
-
 include(../Shared/Common.pri)
 
 LIBS += $$pokemoninfo

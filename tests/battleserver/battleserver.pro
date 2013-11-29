@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2013-11-28T21:19:43
+# Project created by QtCreator 2013-11-28T23:39:29
 #
 #-------------------------------------------------
 
@@ -16,20 +16,16 @@ INCLUDEPATH += ../common/
 
 include(../../src/Shared/Common.pri)
 
-LIBS += $$pokemoninfo
+LIBS += $$battlemanager
 
-TARGET = test-pokemoninfo
+TARGET = test-battleserver
 
 SOURCES += main.cpp \
     ../common/test.cpp \
     ../common/testrunner.cpp \
-    testimportexportteam.cpp \
-    ../common/pokemontestrunner.cpp \
-    testiteminfo.cpp
+    ../common/pokemontestrunner.cpp
 
 HEADERS += \
-    ../common/test.h \
     ../common/testrunner.h \
-    testimportexportteam.h \
-    ../common/pokemontestrunner.h \
-    testiteminfo.h
+    ../common/test.h \
+    ../common/pokemontestrunner.h

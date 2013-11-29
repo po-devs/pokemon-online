@@ -25,11 +25,6 @@ HEADERS += csschanger.h\
     ui_massreplace.h \
     data.h
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QT += widgets
-}
-
 FORMS += \
     dialog.ui \
     colorchoice.ui \

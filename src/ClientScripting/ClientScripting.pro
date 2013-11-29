@@ -25,15 +25,6 @@ HEADERS += clientscripting.h\
     scriptutils.h \
     battlescripting.h
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5 
-  QT += widgets multimedia
-  QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
-
 include(../Shared/Common.pri)
 
 LIBS += $$battlemanager

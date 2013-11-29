@@ -7,7 +7,7 @@
 using namespace std;
 
 TestRunner::TestRunner(QObject *parent) :
-    QObject(parent)
+    QObject(parent), count(0)
 {
     name = "";
 }
@@ -30,15 +30,33 @@ void TestRunner::addTest(Test *test)
 
 void TestRunner::run()
 {
+    count = tests.size();
+
     cout << "Running tests for " << name << endl;
 
-    foreach(Test* test, tests) {
-        test->run();
-        cout << ".";
+    runNext();
+}
+
+void TestRunner::printDot()
+{
+    cout << ".";
+}
+
+void TestRunner::runNext()
+{
+    if (tests.size() == 0) {
+        cout << endl;
+        cout << count << " tests passed" << endl;
+
+        qApp->quit();
+        return;
     }
 
-    cout << endl;
-    cout << tests.count() << " tests passed" << endl;
 
-    qApp->quit();
+    Test *test = tests.takeFirst();
+
+    connect(test, SIGNAL(finished()), SLOT(printDot()));
+    connect(test, SIGNAL(finished()), SLOT(runNext()));
+
+    test->run();
 }

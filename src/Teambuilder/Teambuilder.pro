@@ -159,7 +159,6 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
 }
 
-
 FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/pokebuttonsholder.ui \
     Teambuilder/pokebutton.ui \
@@ -213,9 +212,6 @@ macx {
 
 CONFIG(debian_package) {
     DEFINES += PO_DATA_REPO=\\\"/usr/share/games/pokemon-online/\\\"
-}
-unix:!mac {
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
 }
 
 

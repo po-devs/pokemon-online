@@ -17,15 +17,6 @@ HEADERS += settingsplugin.h\
         SettingsPlugin_global.h \
     settingsdialog.h
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QT += widgets multimedia
-  QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
-
 FORMS += settingsdialog.ui
 
 include(../Shared/Common.pri)

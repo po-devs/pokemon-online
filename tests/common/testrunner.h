@@ -20,10 +20,13 @@ signals:
     
 public slots:
     void run();
-
+    void runNext();
+    void printDot();
 private:
     QList<Test*> tests;
     const char *name;
+
+    int count;
 };
 
 #endif // TESTRUNNER_H

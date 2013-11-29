@@ -96,4 +96,5 @@ contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 message(Following modules will be built: $$SUBDIRS)
 
 SUBDIRS += \
-    tests/pokemoninfo
+    tests/pokemoninfo \
+    tests/battleserver

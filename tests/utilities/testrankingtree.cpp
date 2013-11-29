@@ -22,4 +22,6 @@ void TestRankingTree::run()
     assert(scott->ranking() == 4);
     assert(rankings.count() == 5);
     assert(rankings.getByRanking(2).node()->data == "Crystal Moogle");
+
+    emit finished();
 }

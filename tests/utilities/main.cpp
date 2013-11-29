@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     TestRunner runner;
-    runner.setName("utilities");
+    runner.setName("pokemoninfo");
     runner.addTest(new TestInsensitiveMap());
     runner.addTest(new TestFunctions());
     runner.addTest(new TestRankingTree());

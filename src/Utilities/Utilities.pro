@@ -24,7 +24,8 @@ SOURCES += otherwidgets.cpp \
     pluginmanagerwidget.cpp \
     antidos.cpp \
     antidoswindow.cpp \
-    network.cpp
+    network.cpp \
+    baseanalyzer.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -48,7 +49,8 @@ HEADERS += otherwidgets.h \
     antidoswindow.h \
     asiosocket.h \
     network.h \
-    rankingtree.h
+    rankingtree.h \
+    baseanalyzer.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
@@ -86,11 +88,7 @@ OTHER_FILES +=
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   SOURCES += wavreader.cpp
   HEADERS += wavreader.h
-  DEFINES += QT5
-  QT += widgets multimedia
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x"
+  QT += multimedia
 }
 
 windows: { LIBS += -L$$PWD/../../bin -lzip-2 }

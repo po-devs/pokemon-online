@@ -19,14 +19,6 @@ HEADERS += webserverplugin.h\
         WebServerPlugin_global.h \
     webserverconfig.h
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QT += widgets
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x"
-}
-
 include(../Shared/Common.pri)
 
 LIBS += $$utilities $$websocket $$json

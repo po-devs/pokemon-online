@@ -7,14 +7,6 @@ TARGET = Registry
 DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
-
 SOURCES += main.cpp \
     mainwindow.cpp \
     registry.cpp \
@@ -42,10 +34,6 @@ CONFIG(webconf) {
     INCLUDEPATH += /home/lamperi/pillow/pillowcore
     LIBS += /home/lamperi/pillow/lib/libpillowcore.a
     DEFINES += USE_WEBCONF
-}
-
-unix:!mac {
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
 }
 
 include(../Shared/Common.pri)
