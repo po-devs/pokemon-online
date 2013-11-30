@@ -90,7 +90,8 @@ CONFIG(test) {
     SUBDIRS += \
         tests/utilities \
         tests/pokemoninfo \
-        tests/battleserver
+        tests/battleserver \
+        tests/server
 }
 
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
