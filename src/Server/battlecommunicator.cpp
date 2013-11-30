@@ -58,6 +58,8 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
     QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
 
     mybattles.insert(id, new FullBattleConfiguration(id, p1->id(), p2->id(), tier, c));
+    mybattles[id]->name[0] = p1->name();
+    mybattles[id]->name[1] = p2->name();
 
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
