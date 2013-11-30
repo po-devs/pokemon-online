@@ -224,6 +224,7 @@ inline void Network<QTcpSocket*>::connectToHost(const QString &ip, quint16 port)
 {
     if (!socket()) {
         mysocket = new QTcpSocket();
+        stillValid = true;
         makeSocketConnections();
     }
     connect(socket(), SIGNAL(connected()), SLOT(onSocketConnected()));
