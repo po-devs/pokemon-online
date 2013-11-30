@@ -28,11 +28,13 @@ SOURCES += main.cpp \
     ../common/testrunner.cpp \
     testplayer.cpp \
     ../../src/Teambuilder/analyze.cpp \
-    testchat.cpp
+    testchat.cpp \
+    testdisconnection.cpp
 
 HEADERS += \
     ../common/test.h \
     ../common/testrunner.h \
     testplayer.h \
     ../../src/Teambuilder/analyze.h \
-    testchat.h
+    testchat.h \
+    testdisconnection.h

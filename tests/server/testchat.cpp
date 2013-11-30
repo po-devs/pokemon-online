@@ -5,14 +5,7 @@
 
 void TestChat::run()
 {
-    Analyzer *analyzer = new Analyzer();
-
-    connect(this, SIGNAL(destroyed()), analyzer, SLOT(deleteLater()));
-    connect(analyzer, SIGNAL(connected()), SLOT(onPlayerConnected()));
-    connect(analyzer, SIGNAL(connectionError(int,QString)), SLOT(reject()));
-    connect(analyzer, SIGNAL(channelMessageReceived(QString,int,bool)), SLOT(onChannelMessage(QString,int,bool)));
-
-    analyzer->connectTo("localhost", 5080);
+    createAnalyzer();
 }
 
 void TestChat::onPlayerConnected()
