@@ -133,25 +133,11 @@ void ScriptEngine::changeScript(const QString &script, bool triggerStartUp)
 
 void ScriptEngine::changeSafeScripts(bool safe)
 {
-    if (safeScripts == safe) {
-        return;
-    }
-
-    QString bts = safe ? "on" : "off";
-
-    printLine(QString("Safe Scripts was turned %1.").arg(bts));
     safeScripts = safe;
 }
 
 void ScriptEngine::changeWarnings(bool warn)
 {
-    if (warnings == warn) {
-        return;
-    }
-
-    QString bts = warn ? "will now" : "won't";
-
-    printLine(QString("Warnings %1 be displayed.").arg(bts));
     warnings = warn;
 }
 
@@ -868,7 +854,7 @@ QScriptValue ScriptEngine::filesForDirectory (const QString &dir_)
         return myengine.undefinedValue();
     }
 
-    QStringList files = directory.entryList(QDir::Files);
+    QStringList files = directory.entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(files.count());
 
     for (int i = 0; i < files.size(); i++) {
@@ -888,13 +874,11 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir_)
         return myengine.undefinedValue();
     }
 
-    QStringList dirs = directory.entryList(QDir::Dirs);
+    QStringList dirs = directory.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(dirs.size());
 
     for (int i = 0; i < dirs.size(); i++) {
-        if (dirs[i] != "." && dirs[i] != "..") {
-            ret.setProperty(i, dirs[i]);
-        }
+        ret.setProperty(i, dirs[i]);
     }
 
     return ret;
