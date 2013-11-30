@@ -24,7 +24,6 @@ SOURCES += otherwidgets.cpp \
     pluginmanagerwidget.cpp \
     antidos.cpp \
     antidoswindow.cpp \
-    network.cpp \
     baseanalyzer.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \

@@ -1,22 +1,3 @@
-#include "mainwindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "menu.h"
-#include "client.h"
-#include "serverchoice.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "pluginmanager.h"
-#include "plugininterface.h"
-#include "theme.h"
-#include "logmanager.h"
-#include "replayviewer.h"
-#include "../Utilities/functions.h"
-#include "Teambuilder/teamholder.h"
-#include "Teambuilder/teambuilder.h"
-#include "mainwidget.h"
-#include "downloadmanager.h"
-#ifdef Q_OS_MACX
-#include "mac/FullScreenSupport.h"
-#endif
 #ifdef QT5
 #include <QApplication>
 #include <QDialog>
@@ -28,6 +9,29 @@
 #include <QStyleFactory>
 #endif
 #include <QtCore/QVariant>
+
+#include "../Utilities/functions.h"
+#include "../PokemonInfo/teamholder.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/movesetchecker.h"
+
+#include "Teambuilder/teambuilder.h"
+
+#include "mainwindow.h"
+#include "menu.h"
+#include "client.h"
+#include "serverchoice.h"
+#include "pluginmanager.h"
+#include "plugininterface.h"
+#include "theme.h"
+#include "logmanager.h"
+#include "replayviewer.h"
+#include "mainwidget.h"
+#include "downloadmanager.h"
+
+#ifdef Q_OS_MACX
+#include "mac/FullScreenSupport.h"
+#endif
 
 MainEngine *MainEngine::inst = NULL;
 

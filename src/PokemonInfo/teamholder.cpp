@@ -1,7 +1,7 @@
 #include <QDomElement>
 #include <QDomDocument>
 #include <QMessageBox>
-#include "Teambuilder/teamholder.h"
+#include "teamholder.h"
 
 QStringList Profile::getProfileList(const QString &path)
 {

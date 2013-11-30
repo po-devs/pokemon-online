@@ -21,6 +21,7 @@ public:
     virtual void setLowDelay(bool lowDelay) = 0;
 
     virtual void connectToHost(const QString & ip, quint16 port) = 0;
+    virtual void disconnectFromHost() = 0;
 
     virtual void close() = 0;
     virtual int id() const = 0;
@@ -36,13 +37,14 @@ public slots:
     virtual void manageError(QAbstractSocket::SocketError){}
     virtual void send(const QByteArray &message){(void) message;}
     virtual void sendPacket(const QByteArray&){}
+    virtual void onSocketConnected(){}
 };
 
 template <class S>
         class Network : public GenericNetwork
 {
 public:
-    Network(S sock, int id);
+    Network(S sock, int id=0);
     ~Network();
     /* Functions to reimplement:
            isValid: returns whether the socket is valid or not!
@@ -57,6 +59,7 @@ public:
     void setLowDelay(bool lowDelay);
 
     void connectToHost(const QString & ip, quint16 port);
+    void disconnectFromHost();
 
     void close();
     int id() const {return myid;}
@@ -64,10 +67,14 @@ public:
 
     virtual void onReceipt();
     virtual void onDisconnect();
+    virtual void onSocketConnected();
     virtual void manageError(QAbstractSocket::SocketError);
     virtual void send(const QByteArray &message);
     virtual void sendPacket(const QByteArray&);
 private:
+    void makeSocketConnections();
+    void attributeIp();
+
     /* internal socket */
     S mysocket;
     /* internal variables for the protocol */
@@ -93,6 +100,75 @@ private:
 #include "antidos.h"
 
 template <class S>
+Network<S>::Network(S sock, int id) : mysocket(sock), commandStarted(false), myid(id), stillValid(true)
+{
+    makeSocketConnections();
+}
+
+template <class S>
+void Network<S>::attributeIp()
+{
+    _ip = socket()->ip();
+}
+
+template <>
+inline void Network<QTcpSocket*>::attributeIp()
+{
+    _ip = socket()->peerAddress().toString();
+}
+
+/* For Boost Sockets */
+template <class S>
+void Network<S>::makeSocketConnections()
+{
+    connect(&*socket(), SIGNAL(active()), this, SLOT(onReceipt()));
+    connect(&*socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
+    connect(&*socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+    connect(&*socket(), SIGNAL(disconnected()), &*socket(), SLOT(deleteLater()));
+
+    /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
+    connect(this, SIGNAL(destroyed()), &*socket(), SLOT(deleteLater()));
+    attributeIp();
+}
+
+/* For QTcpSockets */
+template <>
+inline void Network<QTcpSocket*>::makeSocketConnections()
+{
+    connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
+    connect(socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
+    connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+    connect(socket(), SIGNAL(disconnected()), socket(), SLOT(deleteLater()));
+
+    connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
+    socket()->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
+    /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
+    connect(this, SIGNAL(destroyed()), socket(), SLOT(deleteLater()));
+    attributeIp();
+}
+
+template <class S>
+bool Network<S>::isConnected() const
+{
+    if (socket()) {
+        return socket()->sock().is_open();
+    }
+
+    return false;
+}
+
+template <>
+inline bool Network<QTcpSocket*>::isConnected() const
+{
+    if (socket()) {
+        return socket()->state() != QAbstractSocket::UnconnectedState;
+    }
+
+    return false;
+}
+
+template <class S>
 void Network<S>::manageError(QAbstractSocket::SocketError err)
 {
     myerror = err;
@@ -105,11 +181,9 @@ void Network<S>::close() {
     if (socket()) {
         //qDebug() << "valid socket " << this;
         S sock = mysocket;
-#ifndef BOOST_SOCKETS
-        mysocket = NULL;
-#else
-        mysocket = S();
-#endif
+
+        mysocket = S(0);
+
         sock->disconnect(this);
         sock->disconnectFromHost();
 
@@ -124,13 +198,13 @@ void Network<S>::close() {
 template <class S>
 void Network<S>::setLowDelay(bool lowDelay)
 {
-#ifndef BOOST_SOCKETS
-    if (socket()) {
-        socket()->setSocketOption(QAbstractSocket::LowDelayOption, lowDelay);
-    }
-#else
     (void) lowDelay;
-#endif
+}
+
+template <>
+inline void Network<QTcpSocket*>::setLowDelay(bool lowDelay)
+{
+    socket()->setSocketOption(QAbstractSocket::LowDelayOption, lowDelay);
 }
 
 template <class S>
@@ -142,13 +216,33 @@ Network<S>::~Network()
 template <class S>
 void Network<S>::connectToHost(const QString &ip, quint16 port)
 {
-#ifndef BOOST_SOCKETS
-    socket()->connectToHost(ip, port);
-    connect(socket(), SIGNAL(connected()), SIGNAL(connected()));
-#else
     (void) ip;
     (void) port;
-#endif
+}
+
+template <>
+inline void Network<QTcpSocket*>::connectToHost(const QString &ip, quint16 port)
+{
+    if (!socket()) {
+        mysocket = new QTcpSocket();
+        makeSocketConnections();
+    }
+    connect(socket(), SIGNAL(connected()), SLOT(onSocketConnected()));
+
+    socket()->connectToHost(ip, port);
+}
+
+template <class S>
+void Network<S>::disconnectFromHost()
+{
+}
+
+template <>
+inline void Network<QTcpSocket*>::disconnectFromHost()
+{
+    if (socket()) {
+        socket()->disconnectFromHost();
+    }
 }
 
 template <class S>
@@ -167,13 +261,17 @@ void Network<S>::onDisconnect()
     stillValid = false;
     if (socket()) {
         //qDebug() << "Beginning onDisconnect " << this;
-#ifndef BOOST_SOCKETS
-        mysocket = NULL;
-#else
-        mysocket = S();
-#endif
+        mysocket->disconnect(this);
+        mysocket = S(0);
         //qDebug() << "Ending onDisconnect " << this;
     }
+}
+
+template <class S>
+void Network<S>::onSocketConnected()
+{
+    attributeIp();
+    emit connected();
 }
 
 template <class S>
@@ -216,23 +314,25 @@ void Network<S>::onReceipt()
 template <class S>
 int Network<S>::error() const
 {
-#ifndef BOOST_SOCKETS
-    if (socket())
-        return socket()->error();
-    else
-#endif
-        return myerror;
+    return myerror;
+}
+
+template <>
+inline int Network<QTcpSocket*>::error() const
+{
+    return socket()->error();
 }
 
 template <class S>
 QString Network<S>::errorString() const
 {
-#ifndef BOOST_SOCKETS
-    if (socket())
-        return socket()->errorString();
-    else
-#endif
-        return myerrorString;
+    return myerrorString;
+}
+
+template <>
+inline QString Network<QTcpSocket*>::errorString() const
+{
+    return socket()->errorString();
 }
 
 template <class S>
@@ -276,5 +376,7 @@ void Network<S>::sendPacket(const QByteArray &p)
         socket()->write(p);
     }
 }
+
+typedef Network<QTcpSocket*> StandardNetwork;
 
 #endif // NETWORK_H

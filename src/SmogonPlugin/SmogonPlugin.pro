@@ -30,7 +30,8 @@ HEADERS += smogonplugin.h\
     pokemonteamtabs.h \
     smogonbuild.h \
     teambuildersmogonplugin.h \
-    smogonsinglepokedialog.h
+    smogonsinglepokedialog.h \
+    ../PokemonInfo/teamholderinterface.h
 
 FORMS += smogonsinglepokedialog.ui
 

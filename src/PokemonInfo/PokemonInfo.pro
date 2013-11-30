@@ -8,7 +8,8 @@ SOURCES += pokemonstructs.cpp \
     movesetchecker.cpp \
     battlestructs.cpp \
     teamsaver.cpp \
-    pokemon.cpp
+    pokemon.cpp \
+    teamholder.cpp
 HEADERS += pokemonstructs.h \
     pokemoninfo.h \
     networkstructs.h \
@@ -18,7 +19,9 @@ HEADERS += pokemonstructs.h \
     enums.h \
     ../Shared/config.h \
     geninfo.h \
-    pokemon.h
+    pokemon.h \
+    teamholder.h \
+    teamholderinterface.h
 
 include(../Shared/Common.pri)
 

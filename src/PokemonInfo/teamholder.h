@@ -1,15 +1,15 @@
 #ifndef TEAMHOLDER_H
 #define TEAMHOLDER_H
 
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "Teambuilder/teamholderinterface.h"
+#include "pokemonstructs.h"
+#include "networkstructs.h"
+#include "teamholderinterface.h"
 
 class Profile : public ProfileInterace
 {
-    PROPERTY(TrainerInfo, info);
-    PROPERTY(QString, name);
-    PROPERTY(QColor, color);
+    PROPERTY(TrainerInfo, info)
+    PROPERTY(QString, name)
+    PROPERTY(QColor, color)
 
     QStringList getProfileList(const QString &path);
     bool loadFromFile(const QString &path);
@@ -23,7 +23,7 @@ class Profile : public ProfileInterace
 
 class TeamHolder : public TeamHolderInterface
 {
-    PROPERTY(Profile, profile);
+    PROPERTY(Profile, profile)
 
     TeamHolder();
     virtual ~TeamHolder();

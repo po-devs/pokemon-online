@@ -25,8 +25,14 @@ TARGET = test-server
 
 SOURCES += main.cpp \
     ../common/test.cpp \
-    ../common/testrunner.cpp
+    ../common/testrunner.cpp \
+    testplayer.cpp \
+    ../../src/Teambuilder/analyze.cpp \
+    testchat.cpp
 
 HEADERS += \
     ../common/test.h \
-    ../common/testrunner.h
+    ../common/testrunner.h \
+    testplayer.h \
+    ../../src/Teambuilder/analyze.h \
+    testchat.h

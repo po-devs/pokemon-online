@@ -6,7 +6,7 @@
 #define ANALYZE_H
 
 #include <QtCore>
-#include "network.h"
+#include "../Utilities/network.h"
 #include "../Utilities/coreclasses.h"
 #include "../PokemonInfo/networkstructs.h"
 
@@ -39,7 +39,7 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const TeamHolder &team, bool ladder, bool away, const QColor &color, const QString &defaultChannel, const QStringList &autoJoin);
+    void login(const TeamHolder &team, bool ladder, bool away, const QColor &color=QColor(), const QString &defaultChannel=QString(), const QStringList &autoJoin=QStringList());
     /* Sends a logout message, and deletes the analyzer */
     void logout();
     Q_INVOKABLE void sendChanMessage(int channelid, const QString &message);
@@ -153,9 +153,10 @@ public slots:
     void sendChallengeStuff(const ChallengeInfo &c);
 
 private:
+    typedef Network<QTcpSocket*> network_type;
     /* The connection to the outside */
-    Network &socket();
-    const Network &socket() const;
+    network_type &socket();
+    const network_type &socket() const;
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
 
@@ -164,7 +165,7 @@ private:
     QList<QByteArray> storedCommands;
     QSet<int> channelCommands;
 
-    Network mysocket;
+    network_type mysocket;
 
     /* Server version */
     ProtocolVersion version;

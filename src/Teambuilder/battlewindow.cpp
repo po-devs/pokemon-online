@@ -66,6 +66,8 @@ PokeProxy & BattleInfo::currentPoke(int spot)
 
 BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo &opponent, const TeamBattle &team, const BattleConfiguration &_conf)
 {
+    setProperty("isbattle", true);
+
     canLeaveBattle = false;
     question = NULL;
     this->battleId() = battleId;

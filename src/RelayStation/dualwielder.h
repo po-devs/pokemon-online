@@ -9,7 +9,9 @@
 #include "../PokemonInfo/networkstructs.h"
 
 class QWsSocket;
+template<class T>
 class Network;
+class QTcpSocket;
 
 class DualWielder : public QObject
 {
@@ -32,7 +34,7 @@ signals:
     void sendCommand(const QByteArray&);
 private:
     QWsSocket *web;
-    Network *network;
+    Network<QTcpSocket*> *network;
     QString mIp;
     QString servers;
     bool registryRead;

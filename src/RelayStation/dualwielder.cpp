@@ -3,13 +3,13 @@
 namespace Nw {
 #include "../Shared/networkcommands.h"
 }
-#include "../Teambuilder/network.h"
+#include "../Utilities/network.h"
 #include "../PokemonInfo/battlestructs.h"
 #include "pokemontojson.h"
 #include "dualwielder.h"
 #include <functional>
 
-DualWielder::DualWielder(QObject *parent) : QObject(parent), web(NULL), network(NULL), registryRead(false), myid(-1)
+DualWielder::DualWielder(QObject *parent) : QObject(parent), web(nullptr), network(nullptr), registryRead(false), myid(-1)
 {
     /* No need to waste network bandwith */
     jserial.setIndentMode(QJson::IndentCompact);
@@ -714,8 +714,9 @@ void DualWielder::readWebSocket(const QString &frame)
             QString host = data.section(":", 0, -2);
             int port = data.section(":", -1).toInt();
 
-            network = new Network(aliases.value(host, host), port);
+            network = new StandardNetwork(new QTcpSocket());
 
+            network->connectToHost(aliases.value(host, host), port);
             connect(network, SIGNAL(connected()), SLOT(socketConnected()));
             connect(network, SIGNAL(disconnected()), SLOT(socketDisconnected()));
             connect(network, SIGNAL(disconnected()), network, SLOT(deleteLater()));
@@ -906,7 +907,7 @@ void DualWielder::webSocketDisconnected()
 {
     web = NULL;
     if (network) {
-        if (network->state() == QAbstractSocket::ConnectedState) {
+        if (network->isConnected()) {
             /* Gives the server the curtesy to know that there will be no reconnection */
             notify(Nw::Logout);
             network->close();

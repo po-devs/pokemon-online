@@ -13,9 +13,9 @@
 #include <QPushButton>
 
 #include "../PokemonInfo/pokemoninfo.h"
+#include "../PokemonInfo/teamholder.h"
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeedit.h"
-#include "Teambuilder/teamholder.h"
 #include "Teambuilder/pokeboxes.h"
 #include "teambuilder.h"
 

@@ -12,7 +12,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
-    network.cpp \
     client.cpp \
     clientsetupscripts.cpp \
     analyze.cpp \
@@ -42,7 +41,6 @@ SOURCES += main.cpp \
     Teambuilder/trainermenu.cpp \
     Teambuilder/pokebuttonsholder.cpp \
     Teambuilder/pokebutton.cpp \
-    Teambuilder/teamholder.cpp \
     Teambuilder/teambuilder.cpp \
     Teambuilder/teammenu.cpp \
     Teambuilder/pokeedit.cpp \
@@ -83,7 +81,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     ../Shared/config.h \
     ../Shared/networkcommands.h \
     mainwindow.h \
-    network.h \
     client.h \
     analyze.h \
     battlewindow.h \
@@ -117,10 +114,8 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     Teambuilder/poketablemodel.h \
     Teambuilder/modelenum.h \
     Teambuilder/pokemovesmodel.h \
-    Teambuilder/teamholder.h \
     Teambuilder/trainermenu.h \
     Teambuilder/pokebuttonsholder.h \
-    Teambuilder/teamholderinterface.h \
     Teambuilder/pokebutton.h \
     Teambuilder/teambuilder.h \
     Teambuilder/teammenu.h \

@@ -3,7 +3,7 @@
 #include <QTabWidget>
 #include <QtGui>
 #include "../Teambuilder/engineinterface.h"
-#include "../Teambuilder/Teambuilder/teamholderinterface.h"
+#include "../PokemonInfo/teamholderinterface.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/otherwidgets.h"

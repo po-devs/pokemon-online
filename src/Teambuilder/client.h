@@ -3,14 +3,16 @@
 
 #include <QtGui>
 #include <QStackedWidget>
-#include "analyze.h"
+
+#include "../Utilities/otherwidgets.h"
 #include "../PokemonInfo/networkstructs.h"
 #include "../PokemonInfo/battlestructs.h"
+#include "../PokemonInfo/teamholder.h"
+
+#include "analyze.h"
 #include "centralwidget.h"
-#include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
-#include "Teambuilder/teamholder.h"
 #include "clientinterface.h"
 #include "plugininterface.h"
 

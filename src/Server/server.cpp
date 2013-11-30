@@ -127,7 +127,7 @@ void Server::start(){
     setDefaultValue("Battles/ForceUnratedForSameIP", true);
     setDefaultValue("Battles/ConsecutiveFindBattlesWithDifferentIPs", 5);
     setDefaultValue("Battles/RatedThroughChallenge", false);
-    setDefaultValue("Network/ProxyServers", QString());
+    setDefaultValue("Network/ProxyServers", QString("127.0.0.1"));
     setDefaultValue("Network/LowTCPDelay", false);
     setDefaultValue("AntiDOS/ShowOveractiveMessages", true);
     setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1");

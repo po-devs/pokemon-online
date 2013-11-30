@@ -14,7 +14,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     relaystation.cpp \
-    ../Teambuilder/network.cpp \
     dualwielder.cpp \
     pokemontojson.cpp \
     battletojson.cpp \

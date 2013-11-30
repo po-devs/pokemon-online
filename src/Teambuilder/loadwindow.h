@@ -6,7 +6,7 @@
 #include <QSettings>
 
 #include "../Utilities/functions.h"
-#include "Teambuilder/teamholder.h"
+#include "../PokemonInfo/teamholder.h"
 
 class LoadLine;
 

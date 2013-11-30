@@ -4,7 +4,7 @@ namespace Nw {
 
 #include "registrystation.h"
 
-RegistryStation::RegistryStation()
+RegistryStation::RegistryStation() : network(new QTcpSocket())
 {
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), SLOT(resetRegistryConnection()));
