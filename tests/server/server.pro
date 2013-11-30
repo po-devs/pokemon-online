@@ -29,7 +29,9 @@ SOURCES += main.cpp \
     testplayer.cpp \
     ../../src/Teambuilder/analyze.cpp \
     testchat.cpp \
-    testdisconnection.cpp
+    testdisconnection.cpp \
+    testvariation.cpp \
+    ../common/pokemontestrunner.cpp
 
 HEADERS += \
     ../common/test.h \
@@ -37,4 +39,6 @@ HEADERS += \
     testplayer.h \
     ../../src/Teambuilder/analyze.h \
     testchat.h \
-    testdisconnection.h
+    testdisconnection.h \
+    testvariation.h \
+    ../common/pokemontestrunner.h

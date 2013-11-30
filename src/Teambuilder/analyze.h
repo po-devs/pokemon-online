@@ -39,7 +39,7 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const TeamHolder &team, bool ladder, bool away, const QColor &color=QColor(), const QString &defaultChannel=QString(), const QStringList &autoJoin=QStringList());
+    void login(const TeamHolder &team, bool ladder, bool away=false, const QColor &color=QColor(), const QString &defaultChannel=QString(), const QStringList &autoJoin=QStringList());
     /* Sends a logout message, and deletes the analyzer */
     void logout();
     Q_INVOKABLE void sendChanMessage(int channelid, const QString &message);

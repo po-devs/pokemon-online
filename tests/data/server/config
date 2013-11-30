@@ -40,16 +40,6 @@ ProxyServers=127.0.0.1
 ClearInactivesOnStartup=true
 InactiveThresholdInDays=182
 
-[SQL]
-Database=pokemon
-DatabaseSchema=
-Driver=0
-Host=localhost
-Pass=admin
-Port=5432
-User=postgres
-VacuumOnStartup=true
-
 [Scripts]
 SafeMode=false
 

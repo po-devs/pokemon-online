@@ -26,6 +26,7 @@ class TeamHolder : public TeamHolderInterface
     PROPERTY(Profile, profile)
 
     TeamHolder();
+    TeamHolder(const QString &name);
     virtual ~TeamHolder();
 
     TrainerInfo &info() {return profile().info();}

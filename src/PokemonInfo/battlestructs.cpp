@@ -968,6 +968,15 @@ DataStream & operator << (DataStream &out, const BattlePlayer & c) {
     return out;
 }
 
+FindBattleData::FindBattleData()
+{
+    rated = true;
+    sameTier = true;
+    ranged = false;
+    range = 300;
+    teams = 0;
+}
+
 DataStream & operator >> (DataStream &in, FindBattleData &f)
 {
     Flags network, data;

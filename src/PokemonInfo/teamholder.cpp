@@ -124,6 +124,14 @@ TeamHolder::TeamHolder()
     m_currentTeam = 0;
 }
 
+TeamHolder::TeamHolder(const QString &name)
+{
+    m_teams.push_back(Team());
+    m_currentTeam = 0;
+
+    this->name() = name;
+}
+
 TeamHolder::~TeamHolder()
 {
 }

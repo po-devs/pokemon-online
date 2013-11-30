@@ -19,8 +19,14 @@ void TestPlayer::createAnalyzer()
     connect(analyzer, SIGNAL(playerLogin(PlayerInfo,QStringList)), SLOT(loggedIn(PlayerInfo,QStringList)));
     connect(analyzer, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(analyzer, SIGNAL(PMReceived(int,QString)), SLOT(onPm(int, QString)));
+    connect(analyzer, SIGNAL(battleMessage(int,QByteArray)), SLOT(onBattleMessage(int, QByteArray)));
 
     analyzer->connectTo("localhost", 5080);
+}
+
+Analyzer *TestPlayer::sender() const
+{
+    return dynamic_cast<Analyzer*>(Test::sender());
 }
 
 void TestPlayer::onChannelMessage(const QString &, int, bool)
@@ -44,6 +50,11 @@ void TestPlayer::playerLogout(int)
 }
 
 void TestPlayer::onPm(int, const QString &)
+{
+
+}
+
+void TestPlayer::onBattleMessage(int, const QByteArray &)
 {
 
 }

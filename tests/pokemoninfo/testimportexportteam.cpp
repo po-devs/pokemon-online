@@ -9,7 +9,7 @@ void TestImportExportTeam::run()
     assert(t1s.length() > 0);
 
     Team t1;
-    t1.importFromTxt(getFileContent("team1.txt")); //tests/data/pokemoninfo/team1.txt
+    t1.importFromTxt(t1s); //tests/data/pokemoninfo/team1.txt
 
     assert(t1.poke(0).nature() == Pokemon::Calm);
     assert(t1.poke(0).nickname() == "Abomasnow");

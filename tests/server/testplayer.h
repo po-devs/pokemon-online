@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <Teambuilder/analyze.h>
+
 #include "test.h"
 
 class QStringList;
@@ -14,6 +16,7 @@ class TestPlayer : public Test
 public:
     void start();
 
+    virtual Analyzer* sender() const;
 signals:
 
 public slots:
@@ -23,6 +26,7 @@ public slots:
     virtual void loggedIn(const PlayerInfo &info, const QStringList& tiers);
     virtual void playerLogout(int id);
     virtual void onPm(int player, const QString &message);
+    virtual void onBattleMessage(int battle, const QByteArray &message);
 protected:
     void createAnalyzer();
 };

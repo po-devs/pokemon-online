@@ -259,12 +259,13 @@ void Network<S>::onDisconnect()
 {
     stillValid = false;
     if (socket()) {
-        //qDebug() << "Beginning onDisconnect " << this;
-        mysocket->disconnect(this);
-        emit disconnected();
-        mysocket->deleteLater();
+        S sock = mysocket;
         mysocket = S(0);
-        //qDebug() << "Ending onDisconnect " << this;
+
+        sock->disconnect(this);
+        sock->deleteLater();
+
+        emit disconnected();
     }
 }
 

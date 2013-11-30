@@ -14,7 +14,7 @@ void TestDisconnection::run()
 
 void TestDisconnection::onPlayerConnected()
 {
-    Analyzer *analyzer = dynamic_cast<Analyzer*>(sender());
+    Analyzer *analyzer = sender();
 
     TeamHolder holder;
 
@@ -36,7 +36,7 @@ void TestDisconnection::onPlayerConnected()
 
 void TestDisconnection::loggedIn(const PlayerInfo &info, const QStringList &)
 {
-    Analyzer *analyzer = dynamic_cast<Analyzer*>(sender());
+    Analyzer *analyzer = sender();
 
     if (info.name == "Hannah") {
         hannah = info.id;
@@ -66,7 +66,7 @@ void TestDisconnection::onPm(int id, const QString &message)
         return;
     }
 
-    Analyzer *analyzer = dynamic_cast<Analyzer*>(sender());
+    Analyzer *analyzer = sender();
 
     assert(message == "<3");
 

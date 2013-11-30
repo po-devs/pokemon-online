@@ -1437,9 +1437,11 @@ void Player::registerRequest() {
     if (m.isProtected())
         return; //INVALID BEHAVIOR
 
-    for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-        m.salt[i] = uchar((true_rand() % (90-49)) + 49);
-    }
+    do {
+        for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
+            m.salt[i] = uchar((true_rand() % (90-49)) + 49);
+        }
+    } while (!m.salt.contains('%'));
 
     SecurityManager::updateMember(m);
     relay().notify(NetworkServ::AskForPass, QString(m.salt));

@@ -756,6 +756,8 @@ inline DataStream & operator << (DataStream &out, const BattleStats &c)
 
 struct FindBattleData
 {
+    FindBattleData();
+
     bool rated;
     bool sameTier;
     bool ranged;
