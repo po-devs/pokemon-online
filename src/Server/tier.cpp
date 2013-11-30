@@ -477,6 +477,7 @@ void Tier::fetchRankings(const QVariant &data, QObject *o, const char *slot)
     t->pushQuery(data, w, make_query_number(GetRankings));
 #else
     processQuery(data, GetRankings, w);
+    w->emitSignal();
 #endif
 }
 
