@@ -393,7 +393,7 @@ MemberRating Tier::member(const QString &name)
     if (!holder.isInMemory(name))
         loadMemberInMemory(name);
 
-    return holder.member(name);
+    return ratings[name];
 }
 
 int Tier::rating(const QString &name)
@@ -401,7 +401,7 @@ int Tier::rating(const QString &name)
     if (!holder.isInMemory(name))
         loadMemberInMemory(name);
     if (exists(name)) {
-        return holder.member(name).displayed_rating;
+        return ratings[name].displayed_rating;
     } else {
         return 1000;
     }
@@ -412,7 +412,7 @@ int Tier::inner_rating(const QString &name)
     if (!holder.isInMemory(name))
         loadMemberInMemory(name);
     if (exists(name)) {
-        return holder.member(name).rating;
+        return ratings[name].rating;
     } else {
         return 1000;
     }
@@ -423,7 +423,7 @@ int Tier::ratedBattles(const QString &name)
     if (!holder.isInMemory(name))
         loadMemberInMemory(name);
     if (exists(name)) {
-        return holder.member(name).matches;
+        return ratings[name].matches;
     } else {
         return 0;
     }

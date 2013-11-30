@@ -38,7 +38,7 @@ struct MemberRating
     RankingTree<QString>::iterator node;
 
     MemberRating(const QString &name="", int matches=0, int rating=1000, int displayed_rating = 1000,
-                 int last_check_time = -1, int bonus_time = 0) : name(name.toLower()), matches(matches), rating(rating),
+                 int last_check_time = -1, int bonus_time = 0) : name(name), matches(matches), rating(rating),
                    displayed_rating(displayed_rating), bonus_time(bonus_time) {
         if (last_check_time == -1) {
             this->last_check_time = time(nullptr);
