@@ -25,6 +25,9 @@ static void channelFrom(const QScriptValue&s, U&r) {
     r = dynamic_cast<U>(s.toQObject());
 }
 
+typedef QVector<qint32> int32vector;
+Q_DECLARE_METATYPE(int32vector)
+
 typedef QHash<qint32, QString> hash32string;
 Q_DECLARE_METATYPE(hash32string)
 
@@ -116,7 +119,40 @@ static void findBattleDataFrom(const QScriptValue &v, FindBattleData& data) {
     data.sameTier = v.property("sameTier").toBool();
     data.ranged = v.property("ranged").toBool();
     data.range = v.property("range").toUInt16();
-    data.teams = quint8(v.property("teams").toUInt16()); // there is no toUInt8(), so use this workaround
+    data.teams = v.property("teams").toUInt32(); // Automatic conversion to quint8
+}
+
+Q_DECLARE_METATYPE(ChallengeInfo)
+
+static QScriptValue challengeInfoTo(QScriptEngine *e, const ChallengeInfo& info) {
+    QScriptValue v = e->newObject();
+    v.setProperty("clauses", info.clauses);
+    v.setProperty("dsc", info.dsc);
+    v.setProperty("opp", info.opp);
+    v.setProperty("mode", info.mode);
+    v.setProperty("team", info.team);
+    v.setProperty("rated", info.rated);
+    v.setProperty("srctier", info.srctier);
+    v.setProperty("desttier", info.desttier);
+
+    QScriptValue gen = e->newObject();
+    gen.setProperty("num", info.gen.num);
+    gen.setProperty("subnum", info.gen.subnum);
+
+    v.setProperty("gen", gen);
+    return v;
+}
+
+static void challengeInfoFrom(const QScriptValue &v, ChallengeInfo& info) {
+    info.clauses = v.property("clauses").toUInt32();
+    info.dsc = v.property("dsc").toUInt32(); // Automatic conversion to quint8
+    info.opp = v.property("opp").toUInt32();
+    info.mode = v.property("mode").toUInt32(); // Automatic conversion to quint8
+    info.team = v.property("team").toUInt32(); // Automatic conversion to quint8
+    info.rated = v.property("rated").toBool();
+    info.srctier = v.property("srctier").toString();
+    info.desttier = v.property("desttier").toString();
+    info.gen = Pokemon::gen(v.property("gen").property("num").toInt32(), v.property("gen").property("subnum").toInt32());
 }
 
 void Client::registerMetaTypes(QScriptEngine *e)
@@ -127,5 +163,7 @@ void Client::registerMetaTypes(QScriptEngine *e)
     qScriptRegisterMetaType<UserInfo>(e, &userInfoTo, &userInfoFrom);
     qScriptRegisterMetaType<PlayerInfo>(e, &playerInfoTo, &playerInfoFrom);
     qScriptRegisterMetaType<FindBattleData>(e, &findBattleDataTo, &findBattleDataFrom);
+    qScriptRegisterMetaType<ChallengeInfo>(e, &challengeInfoTo, &challengeInfoFrom);
     qScriptRegisterSequenceMetaType<QStringList>(e);
+    qScriptRegisterSequenceMetaType<int32vector>(e);
 }
