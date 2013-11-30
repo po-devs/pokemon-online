@@ -123,7 +123,6 @@ void Network<S>::makeSocketConnections()
 {
     connect(&*socket(), SIGNAL(active()), this, SLOT(onReceipt()));
     connect(&*socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-    connect(&*socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
     connect(&*socket(), SIGNAL(disconnected()), &*socket(), SLOT(deleteLater()));
 
     /* SO THE SOCKET IS SAFELY DELETED LATER WHEN DISCONNECTED! */
@@ -137,7 +136,6 @@ inline void Network<QTcpSocket*>::makeSocketConnections()
 {
     connect(socket(), SIGNAL(readyRead()), this, SLOT(onReceipt()));
     connect(socket(), SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-    connect(socket(), SIGNAL(disconnected()), this, SIGNAL(disconnected()));
     connect(socket(), SIGNAL(disconnected()), socket(), SLOT(deleteLater()));
 
     connect(socket(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(manageError(QAbstractSocket::SocketError)));
@@ -185,6 +183,7 @@ void Network<S>::close() {
         mysocket = S(0);
 
         sock->disconnect(this);
+        sock->deleteLater();
         sock->disconnectFromHost();
 
         emit disconnected();
@@ -262,6 +261,8 @@ void Network<S>::onDisconnect()
     if (socket()) {
         //qDebug() << "Beginning onDisconnect " << this;
         mysocket->disconnect(this);
+        emit disconnected();
+        mysocket->deleteLater();
         mysocket = S(0);
         //qDebug() << "Ending onDisconnect " << this;
     }
@@ -320,7 +321,11 @@ int Network<S>::error() const
 template <>
 inline int Network<QTcpSocket*>::error() const
 {
-    return socket()->error();
+    if (socket()) {
+        return socket()->error();
+    } else {
+        return myerror;
+    }
 }
 
 template <class S>
@@ -332,7 +337,11 @@ QString Network<S>::errorString() const
 template <>
 inline QString Network<QTcpSocket*>::errorString() const
 {
-    return socket()->errorString();
+    if (socket()) {
+        return socket()->errorString();
+    } else {
+        return myerrorString;
+    }
 }
 
 template <class S>
