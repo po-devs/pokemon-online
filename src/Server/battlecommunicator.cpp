@@ -274,7 +274,7 @@ void BattleCommunicator::filterBattleInfo(int battleid, int player, const QByteA
     FullBattleConfiguration *battle = mybattles[battleid];
 
     /* Show variation here */
-    if (battle->rated() && info.length() > 4 && (battle->id(0) == player || battle->id(1) == player) && info[4] == BattleCommands::Rated) {
+    if (battle->rated() && info.length() > 0 && (battle->id(0) == player || battle->id(1) == player) && info[0] == BattleCommands::Rated) {
         QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(battle->name[battle->spot(player)], battle->name[battle->opponent(battle->spot(player))], battle->tier());
 
         emit battleInfo(battleid, player, pack(BattleCommands::PointEstimate, battle->spot(player), qint8(firstChange.first), qint8(firstChange.second)));
