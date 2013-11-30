@@ -2901,7 +2901,7 @@ QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
         return myengine.undefinedValue();
     }
 
-    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QStringList files = directory.entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(files.count());
 
     for (int i = 0; i < files.size(); i++) {
@@ -2919,7 +2919,7 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
         return myengine.undefinedValue();
     }
 
-    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QStringList dirs = directory.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(dirs.size());
 
     for (int i = 0; i < dirs.size(); i++) {
