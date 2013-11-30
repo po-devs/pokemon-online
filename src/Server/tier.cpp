@@ -20,7 +20,7 @@ QString MemberRating::toString() const
 {
     return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
             QString::number(rating).rightJustified(5,'0',true) + "%" + QString::number(displayed_rating).rightJustified(5,'0',true) + "%" +
-            QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,'0',true) + "\n";
+            QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,' ',true) + "\n";
 }
 
 /* Explanations here: http://pokemon-online.eu/forums/showthread.php?3045-How-to-change-the-rating-system-to-include-auto-decrease
@@ -142,7 +142,7 @@ void Tier::loadFromFile()
         } else {
             m.displayed_rating = mmr[3].toInt();
             m.last_check_time = mmr[4].toInt();
-            m.bonus_time = mmr[5].toInt();
+            m.bonus_time = mmr[5].trimmed().toInt();
         }
 
         m.node = rankings.insert(m.displayed_rating, m.name);
