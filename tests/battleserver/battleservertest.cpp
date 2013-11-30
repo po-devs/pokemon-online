@@ -26,6 +26,17 @@ void BattleServerTest::run()
 
 void BattleServerTest::onBattleServerConnected()
 {
-    /* Default behavior for a battle server test. Override to change! */
-    accept();
+    connect(analyzer, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(onBattleMessage(int,int,QByteArray)));
+    connect(analyzer, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)),
+            SLOT(onBattleCreated(int,int,int,TeamBattle,BattleConfiguration,QString)));
+}
+
+void BattleServerTest::onBattleMessage(int, int, const QByteArray &)
+{
+
+}
+
+void BattleServerTest::onBattleCreated(int, int, int, const TeamBattle &, const BattleConfiguration &, const QString &)
+{
+
 }

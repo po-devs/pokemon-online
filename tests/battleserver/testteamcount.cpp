@@ -44,9 +44,7 @@ TestTeamCount::~TestTeamCount()
 
 void TestTeamCount::onBattleServerConnected()
 {
-    connect(analyzer, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(onBattleMessage(int,int,QByteArray)));
-    connect(analyzer, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)),
-            SLOT(onBattleCreated(int,int,int,TeamBattle,BattleConfiguration,QString)));
+    BattleServerTest::onBattleServerConnected();
 
     Team t1;
     t1.importFromTxt(getFileContent("team1.txt").trimmed());

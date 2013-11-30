@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 
-#include "battleservertest.h"
 #include "testunrated.h"
 #include "testteamcount.h"
+#include "testdoubles.h"
 #include "pokemontestrunner.h"
 
 int main(int argc, char *argv[])
@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
 
     PokemonTestRunner runner;
     runner.setName("battleserver");
-    runner.addTest(new BattleServerTest());
     runner.addTest(new TestUnrated());
     runner.addTest(new TestTeamCount());
+    runner.addTest(new TestDoubles());
     runner.start();
 
     return a.exec();
