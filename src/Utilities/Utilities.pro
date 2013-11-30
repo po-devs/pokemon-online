@@ -1,6 +1,6 @@
 TARGET = po-utilities
 
-QT += network
+QT += network gui
 
 TEMPLATE = lib
 DESTDIR = $$PWD/../../bin
