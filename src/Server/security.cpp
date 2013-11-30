@@ -440,11 +440,14 @@ void SecurityManager::insertMember(void *m2, int update)
 
     if (update) {
         Member oldm = member(m.name);
+        m.filepos = oldm.filepos;
+
         playersByIp.remove(oldm.ip, oldm.name);
         authed.remove(oldm.name);
 
+        members[m.name] = m;
         memberFile.seek(m.filepos);
-        members[m.name].write(&memberFile);
+        m.write(&memberFile);
         memberFile.flush();
     } else {
         m.filepos = lastPlace;

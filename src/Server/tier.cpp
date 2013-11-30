@@ -548,9 +548,14 @@ void Tier::insertMember(void *data, int update)
     MemberRating &m = *(MemberRating*) data;
 
     if (update) {
+        MemberRating oldm = ratings.at(m.name);
+        m.filePos = oldm.filePos;
+        m.node = oldm.node;
+
         in->seek(m.filePos);
         in->write(m.toString().toUtf8());
 
+        ratings[m.name] = m;
         ratings[m.name].node = rankings.changeKey(m.node.node(), m.rating);
     } else {
         m.filePos = lastFilePos;
