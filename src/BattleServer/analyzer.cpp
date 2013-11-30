@@ -32,6 +32,8 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
     in >> command;
 
+    qDebug() << "Dealing with command " << int(command);
+
     switch (command) {
     case EngageBattle: {
         qint32 battleid;

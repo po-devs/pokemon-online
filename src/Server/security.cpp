@@ -224,7 +224,7 @@ void SecurityManager::deleteUser(const QString &name)
 
     m.name[0] = ':'; //invalid character, will not get loaded when reloading database
     memberFile.seek(m.filepos);
-    members[m.name].write(&memberFile);
+    members[name].write(&memberFile);
     memberFile.flush();
 
     playersByIp.remove(m.ip, name);

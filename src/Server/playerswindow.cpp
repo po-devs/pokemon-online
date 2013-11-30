@@ -1,6 +1,8 @@
-#include "playerswindow.h"
+#include <QCheckBox>
 
 #include "security.h"
+#include "playerswindow.h"
+
 
 PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     : QWidget (parent)
@@ -67,10 +69,10 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         witem = new QTableWidgetItem(m.isProtected() > 0 ? "Yes" : "No");
         mytable->setItem(i, 3, witem);
 
-        witem = new QTableWidgetItem(QString::fromUtf8(m.salt));
+        witem = new QTableWidgetItem(m.ip);
         mytable->setItem(i, 4, witem);
 
-        witem = new QTableWidgetItem(QString::fromUtf8(m.hash));
+        witem = new QTableWidgetItem(m.date);
         mytable->setItem(i, 5, witem);
 
         witem = new QTableWidgetItem(QString::number(expireDays - QDate::fromString(m.date, Qt::ISODate).daysTo(QDate::currentDate())) + " Days");
@@ -79,9 +81,9 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         i++;
     }
 
-    mytable->sortByColumn(0, Qt::AscendingOrder);
+    //mytable->sortByColumn(0, Qt::AscendingOrder);
 
-    mytable->setSortingEnabled(true);
+    //mytable->setSortingEnabled(true);
 
     QPushButton *_authority = new QPushButton(tr("&Authority"));
     QMenu *m = new QMenu(_authority);
@@ -94,11 +96,13 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     QPushButton *_ban = new QPushButton(tr("&Ban"));
     QPushButton *_unban = new QPushButton(tr("U&nban"));
     QPushButton *_clpass = new QPushButton(tr("&Clear Password"));
+    QCheckBox *enableSorting = new QCheckBox(tr("&Enable sorting"));
 
     mylayout->addWidget(_authority,1,0);
     mylayout->addWidget(_ban,1,2);
     mylayout->addWidget(_unban,1,3);
     mylayout->addWidget(_clpass,1,4);
+    mylayout->addWidget(enableSorting, 1, 5);
 
     if (mytable->rowCount() == 0)
         return;
@@ -106,6 +110,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     connect(_ban,SIGNAL(clicked()),SLOT(ban()));
     connect(_unban,SIGNAL(clicked()),SLOT(unban()));
     connect(_clpass,SIGNAL(clicked()),SLOT(clpass()));
+    connect(enableSorting, SIGNAL(toggled(bool)), SLOT(enableSorting(bool)));
 }
 
 QString PlayersWindow::currentName()
@@ -122,6 +127,11 @@ void PlayersWindow::ban()
     /* Otherwise we may have time from a temp ban before */
     mytable->item(mytable->currentRow(), 2)->setText("Banned");
     emit banned(currentName());
+}
+
+void PlayersWindow::enableSorting(bool sort)
+{
+    mytable->setSortingEnabled(sort);
 }
 
 void PlayersWindow::unban()

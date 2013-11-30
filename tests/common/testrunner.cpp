@@ -39,14 +39,14 @@ void TestRunner::run()
 
 void TestRunner::printFail()
 {
-    cout << "E";
+    cout << "E" << flush;
 
     errors++;
 }
 
 void TestRunner::printDot()
 {
-    cout << ".";
+    cout << "." << flush;
 
     passed++;
 }

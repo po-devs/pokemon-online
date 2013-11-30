@@ -1,7 +1,6 @@
 #ifndef PLAYERSWINDOW_H
 #define PLAYERSWINDOW_H
 
-#include <QtGui>
 #include "security.h"
 
 class PlayersWindow : public QWidget
@@ -24,6 +23,7 @@ private slots:
     void owner();
     void clpass();
 
+    void enableSorting(bool);
 private:
     QTableWidget *mytable;
 

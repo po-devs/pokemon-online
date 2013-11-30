@@ -33,10 +33,10 @@ int main(int argc, char *argv[])
 
     qDebug() << "Server is running in headless mode";
     qDebug() << "Use ./BattleServer --help to get some help";
-    qDebug() << "Console commands:";
-    qDebug() << "- addp <plugin-path>: Add the plugin to the battle server";
-    qDebug() << "- removep <plugin-name>: Remove the plugin with said name";
-    qDebug() << "- listp: List the plugins in their order";
+//    qDebug() << "Console commands:";
+//    qDebug() << "- addp <plugin-path>: Add the plugin to the battle server";
+//    qDebug() << "- removep <plugin-name>: Remove the plugin with said name";
+//    qDebug() << "- listp: List the plugins in their order";
 
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Battle Server for Pokemon-Online");
@@ -55,9 +55,10 @@ int main(int argc, char *argv[])
     
     BattleServer server;
     server.start(port);
-    ConsoleReader reader(&server);
-    QSocketNotifier notifier(fileno(stdin), QSocketNotifier::Read);
-    QObject::connect(&notifier, SIGNAL(activated(int)), &reader, SLOT(read(int)));
+
+//    ConsoleReader reader(&server);
+//    QSocketNotifier notifier(fileno(stdin), QSocketNotifier::Read);
+//    QObject::connect(&notifier, SIGNAL(activated(int)), &reader, SLOT(read(int)));
 
     return a.exec();
 }

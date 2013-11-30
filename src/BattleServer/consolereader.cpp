@@ -11,9 +11,14 @@ ConsoleReader::ConsoleReader(BattleServer* server) : m_Server(server), m_TextStr
 
 void ConsoleReader::read(int)
 {
-    QString line = m_TextStream.readLine();
-    if(line != "")
+    //int type = (qobject_cast<QSocketNotifier*>(sender()))->type();
+
+    QStringList lines = m_TextStream.readAll().split("\n");
+    foreach(QString line, lines)
     {
+        if (line.length() == 0) {
+            continue;
+        }
         /* Add a plugin */
         if (line.indexOf("addp ") == 0) {
             try {

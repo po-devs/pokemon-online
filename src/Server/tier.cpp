@@ -19,7 +19,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 QString MemberRating::toString() const
 {
     return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
-            QString::number(rating).rightJustified(5,0,true) + "%" + QString::number(displayed_rating).rightJustified(5,0,true) + "%" +
+            QString::number(rating).rightJustified(5,'0',true) + "%" + QString::number(displayed_rating).rightJustified(5,'0',true) + "%" +
             QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,'0',true) + "\n";
 }
 
@@ -157,7 +157,6 @@ void Tier::loadFromFile()
     for (auto it = ratings.begin(); it != ratings.end(); ++it) {
         it->second.filePos = pos;
         in->write(it->second.toString().toUtf8());
-        in->putChar('\n');
         pos = in->pos();
     }
     lastFilePos = pos;
@@ -299,9 +298,7 @@ bool Tier::isRestricted(const PokeBattle &p) const
 
 bool Tier::exists(const QString &name)
 {
-    if (!holder.isInMemory(name))
-        loadMemberInMemory(name);
-    return holder.exists(name);
+    return ratings.find(name) != ratings.end();
 }
 
 int Tier::ranking(const QString &name)
@@ -559,7 +556,6 @@ void Tier::insertMember(void *data, int update)
         m.node = rankings.insert(m.rating, m.name);
         in->seek(lastFilePos);
         in->write(m.toString().toUtf8());
-        in->putChar('\n');
         lastFilePos = in->pos();
         ratings[m.name] = m;
     }
