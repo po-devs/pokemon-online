@@ -728,6 +728,7 @@ FullBattleConfiguration::FullBattleConfiguration(int battleid, int p1, int p2, c
     this->tier() = tier;
     this->clauses = c.clauses;
     this->flags.setFlag(Rated, c.rated);
+    this->mode = c.mode;
     this->finished() = false;
 }
 
