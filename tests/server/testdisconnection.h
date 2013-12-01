@@ -6,7 +6,6 @@
 class TestDisconnection : public TestPlayer
 {
 public:
-    void run();
     void onPlayerConnected();
     void loggedIn(const PlayerInfo &info, const QStringList& tiers);
     void playerLogout(int id);

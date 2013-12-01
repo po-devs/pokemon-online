@@ -7,11 +7,6 @@ static int count = 0;
 int hannah = 0;
 int moogle = 0;
 
-void TestDisconnection::run()
-{
-    createAnalyzer();
-}
-
 void TestDisconnection::onPlayerConnected()
 {
     Analyzer *analyzer = sender();

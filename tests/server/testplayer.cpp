@@ -7,6 +7,11 @@ void TestPlayer::start()
     run();
 }
 
+void TestPlayer::run()
+{
+    createAnalyzer();
+}
+
 void TestPlayer::createAnalyzer()
 {
     Analyzer *analyzer = new Analyzer();
@@ -20,6 +25,7 @@ void TestPlayer::createAnalyzer()
     connect(analyzer, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(analyzer, SIGNAL(PMReceived(int,QString)), SLOT(onPm(int, QString)));
     connect(analyzer, SIGNAL(battleMessage(int,QByteArray)), SLOT(onBattleMessage(int, QByteArray)));
+    connect(analyzer, SIGNAL(passRequired(QByteArray)), SLOT(onPassRequired(QByteArray)));
 
     analyzer->connectTo("localhost", 5080);
 }
@@ -55,6 +61,11 @@ void TestPlayer::onPm(int, const QString &)
 }
 
 void TestPlayer::onBattleMessage(int, const QByteArray &)
+{
+
+}
+
+void TestPlayer::onPassRequired(const QByteArray &)
 {
 
 }

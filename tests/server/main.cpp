@@ -3,6 +3,7 @@
 #include "testchat.h"
 #include "testdisconnection.h"
 #include "testvariation.h"
+#include "testregister.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestChat());
     runner.addTest(new TestDisconnection());
     runner.addTest(new TestVariation());
+    runner.addTest(new TestRegister());
     runner.start();
 
     return a.exec();

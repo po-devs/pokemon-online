@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     testchat.cpp \
     testdisconnection.cpp \
     testvariation.cpp \
-    ../common/pokemontestrunner.cpp
+    ../common/pokemontestrunner.cpp \
+    testregister.cpp
 
 HEADERS += \
     ../common/test.h \
@@ -41,4 +42,5 @@ HEADERS += \
     testchat.h \
     testdisconnection.h \
     testvariation.h \
-    ../common/pokemontestrunner.h
+    ../common/pokemontestrunner.h \
+    testregister.h

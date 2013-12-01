@@ -3,11 +3,6 @@
 
 #include "testchat.h"
 
-void TestChat::run()
-{
-    createAnalyzer();
-}
-
 void TestChat::onPlayerConnected()
 {
     Analyzer *analyzer = dynamic_cast<Analyzer*>(sender());

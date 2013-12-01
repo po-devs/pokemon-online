@@ -5,8 +5,6 @@
 class TestChat : public TestPlayer
 {
     Q_OBJECT
-public:
-    void run();
 public slots:
     void onPlayerConnected();
     void onChannelMessage(const QString &message, int chanid, bool html);
