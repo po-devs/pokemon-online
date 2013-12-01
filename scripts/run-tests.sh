@@ -23,6 +23,7 @@ ensure_good_run
 #Give time to the battle server to initialize
 sleep 2
 
+cp ../tests/data/battleserver/* . -R
 ./test-battleserver
 ensure_good_run
 

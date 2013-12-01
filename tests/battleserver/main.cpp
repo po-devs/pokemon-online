@@ -3,6 +3,7 @@
 #include "testunrated.h"
 #include "testteamcount.h"
 #include "testdoubles.h"
+#include "testimposter.h"
 #include "pokemontestrunner.h"
 
 int main(int argc, char *argv[])
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestUnrated());
     runner.addTest(new TestTeamCount());
     runner.addTest(new TestDoubles());
+    runner.addTest(new TestImposter());
     runner.start();
 
     return a.exec();
