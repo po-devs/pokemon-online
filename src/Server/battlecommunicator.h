@@ -47,6 +47,7 @@ signals:
     void battleFinished(int,int,int,int);
     void sendBattleInfos(int,int,int,const TeamBattle&,const BattleConfiguration&,const QString&);
 public slots:
+    void killServer();
     bool startServer();
     void connectToBattleServer();
     void battleConnected();

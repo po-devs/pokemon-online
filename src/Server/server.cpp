@@ -1953,6 +1953,7 @@ void Server::atServerShutDown() {
 
     myengine->serverShutDown();
 
+    battles->killServer();
 #ifdef _WIN32
     ::exit(0);
 #endif
