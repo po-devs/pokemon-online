@@ -10,6 +10,7 @@
 #include <QSound>
 #include <QHostInfo>
 
+#include "scriptengineagent.h"
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../Utilities/functions.h"
 #include "../Teambuilder/plugininterface.h"
@@ -19,11 +20,18 @@ class BaseBattleWindowInterface;
 class ScriptEngine : public OnlineClientPlugin
 {
     Q_OBJECT
+    friend class ScriptEngineAgent;
 public:
     ScriptEngine(ClientInterface *c);
     ~ScriptEngine();
 
     QHash<QString, Hook> getHooks();
+
+    static QScriptValue backtrace(QScriptContext *c, QScriptEngine *);
+    static QScriptValue lighter(QScriptContext *c, QScriptEngine *);
+    static QScriptValue darker(QScriptContext *c, QScriptEngine *);
+    static QScriptValue lightness(QScriptContext *c, QScriptEngine *);
+    static QScriptValue tint(QScriptContext *c, QScriptEngine *);
 
     /* Events */
     void stepEvent();
@@ -153,6 +161,7 @@ public:
     Q_INVOKABLE QScriptValue dirsForDirectory (const QString &dir_);
 
     // Direct file access.
+    Q_INVOKABLE bool fileExists(const QString &fileName);
     Q_INVOKABLE void appendToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void writeToFile(const QString &fileName, const QString &content);
     Q_INVOKABLE void deleteFile(const QString &fileName);

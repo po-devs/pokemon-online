@@ -38,22 +38,6 @@ DEPRECATED(
     static bool stopTimer_w = false;
 )
 
-/*!
-\qmlmethod color Qt::lighter(color baseColor, real factor)
-Returns a color lighter than \c baseColor by the \c factor provided.
-
-If the factor is greater than 1.0, this functions returns a lighter color.
-Setting factor to 1.5 returns a color that is 50% brighter. If the factor is less than 1.0,
-the return color is darker, but we recommend using the Qt.darker() function for this purpose.
-If the factor is 0 or negative, the return value is unspecified.
-
-The function converts the current RGB color to HSV, multiplies the value (V) component
-by factor and converts the color back to RGB.
-
-If \c factor is not supplied, returns a color 50% lighter than \c baseColor (factor 1.5).
-*/
-
-
 QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
@@ -69,21 +53,6 @@ QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
     return color.name();
 }
 
-/*!
-\qmlmethod color Qt::darker(color baseColor, real factor)
-Returns a color darker than \c baseColor by the \c factor provided.
-
-If the factor is greater than 1.0, this function returns a darker color.
-Setting factor to 3.0 returns a color that has one-third the brightness.
-If the factor is less than 1.0, the return color is lighter, but we recommend using
-the Qt.lighter() function for this purpose. If the factor is 0 or negative, the return
-value is unspecified.
-
-The function converts the current RGB color to HSV, divides the value (V) component
-by factor and converts the color back to RGB.
-
-If \c factor is not supplied, returns a color 50% darker than \c baseColor (factor 2.0).
-*/
 QScriptValue ScriptEngine::darker(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
@@ -111,20 +80,6 @@ QScriptValue ScriptEngine::lightness(QScriptContext *ctxt, QScriptEngine *engine
     return color.lightnessF();
 }
 
-/*!
-\qmlmethod color Qt::tint(color baseColor, color tintColor)
-    This function allows tinting one color with another.
-
-    The tint color should usually be mostly transparent, or you will not be able to see the underlying color. The below example provides a slight red tint by having the tint color be pure red which is only 1/16th opaque.
-
-    \qml
-    Rectangle { x: 0; width: 80; height: 80; color: "lightsteelblue" }
-    Rectangle { x: 100; width: 80; height: 80; color: Qt.tint("lightsteelblue", "#10FF0000") }
-    \endqml
-    \image declarative-rect_tint.png
-
-    Tint is most useful when a subtle change is intended to be conveyed due to some event; you can then use tinting to more effectively tune the visible color.
-*/
 QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 2)

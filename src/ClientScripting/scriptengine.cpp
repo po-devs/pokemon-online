@@ -18,6 +18,80 @@ static bool intervalTimer_w = false;
 static bool stopTimer_w = false;
 #endif
 
+QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.lighter(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    qsreal factor = 1.5;
+    if (ctxt->argumentCount() == 2)
+        factor = ctxt->argument(1).toNumber();
+    color = color.lighter(int(qRound(factor*100.)));
+    return color.name();
+}
+
+QScriptValue ScriptEngine::darker(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.darker(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    qsreal factor = 2.0;
+    if (ctxt->argumentCount() == 2)
+        factor = ctxt->argument(1).toNumber();
+    color = color.darker(int(qRound(factor*100.)));
+    return color.name();
+}
+
+/* Returns lightness of a color */
+QScriptValue ScriptEngine::lightness(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 1)
+        return ctxt->throwError(QLatin1String("Qt.lightness(): Invalid arguments"));
+    QColor color = QColor(ctxt->argument(0).toString());
+    if (!color.isValid()) {
+        return engine->nullValue();
+    }
+    return color.lightnessF();
+}
+
+QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
+{
+    if(ctxt->argumentCount() != 2)
+        return ctxt->throwError(QLatin1String("Qt.tint(): Invalid arguments"));
+    //get color
+    QColor color = QColor(ctxt->argument(0).toString());
+    QColor tintColor = QColor(ctxt->argument(1).toString());
+
+    if (!color.isValid() || !tintColor.isValid()) {
+        return engine->nullValue();
+    }
+
+    //tint
+    QColor finalColor;
+    int a = tintColor.alpha();
+    if (a == 0xFF)
+        finalColor = tintColor;
+    else if (a == 0x00)
+        finalColor = color;
+    else {
+        qreal a = tintColor.alphaF();
+        qreal inv_a = 1.0 - a;
+
+        finalColor.setRgbF(tintColor.redF() * a + color.redF() * inv_a,
+                           tintColor.greenF() * a + color.greenF() * inv_a,
+                           tintColor.blueF() * a + color.blueF() * inv_a,
+                           a + inv_a * color.alphaF());
+    }
+
+    return finalColor.name();
+}
+
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
     armScriptEngine(&myengine);
@@ -43,11 +117,24 @@ void ScriptEngine::armScriptEngine(QScriptEngine *engine)
     QScriptEngine &myengine = *engine;
     myclient->registerMetaTypes(&myengine);
 
+    ScriptEngineAgent *b = new ScriptEngineAgent(&myengine);
+    QScriptEngineAgent *bt = b;
+
+    myengine.setAgent(bt);
+
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("sys", sys);
     myengine.globalObject().setProperty("client", myengine.newQObject(dynamic_cast<QObject*>(myclient)));
     sys.setProperty("scriptsFolder", appDataPath("Scripts/", true));
     sys.setProperty("eval", myengine.newFunction(&eval));
+    sys.setProperty( "backtrace" , myengine.newFunction(backtrace));
+
+    QScriptValue qtObject = myengine.newObject();
+    qtObject.setProperty("lighter", myengine.newFunction(&lighter, 1));
+    qtObject.setProperty("darker", myengine.newFunction(&darker, 1));
+    qtObject.setProperty("lightness", myengine.newFunction(&lightness, 1));
+    qtObject.setProperty("tint", myengine.newFunction(&tint, 2));
+    myengine.globalObject().setProperty("Qt", qtObject);
 
     QScriptValue printfun = myengine.newFunction(nativePrint);
     printfun.setData(sys);
@@ -139,6 +226,11 @@ void ScriptEngine::changeSafeScripts(bool safe)
 void ScriptEngine::changeWarnings(bool warn)
 {
     warnings = warn;
+}
+
+QScriptValue ScriptEngine::backtrace(QScriptContext *c, QScriptEngine *)
+{
+    return c->backtrace().join("\n");
 }
 
 typedef QHash<qint32, QString> hash32string;
@@ -291,7 +383,7 @@ void ScriptEngine::clientShutDown()
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError() && warnings) {
-        printLine(QString("Script Error line %1: %2").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()));
+        printLine(QString("Script Error line %1: %2\n%3").arg(myengine.uncaughtExceptionLineNumber()).arg(expr.toString()).arg(myengine.uncaughtException().property("backtracetext").toString()));
     }
 }
 
@@ -882,6 +974,12 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir_)
     }
 
     return ret;
+}
+
+bool ScriptEngine::fileExists(const QString &fileName)
+{
+    QFile f(fileName);
+    return f.exists();
 }
 
 void ScriptEngine::appendToFile(const QString &fileName, const QString &content)
