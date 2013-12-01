@@ -27,7 +27,7 @@ static const QString processErrorMessages[] = {
 BattleCommunicator::BattleCommunicator(QObject *parent) :
     QObject(parent), relay(nullptr)
 {
-    QTimer::singleShot(5000, this, SLOT(connectToBattleServer()));
+    QTimer::singleShot(3000, this, SLOT(connectToBattleServer()));
     battleServer = new QProcess(this);
 
     wasConnected = false;
@@ -81,6 +81,20 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
 
     p1->addBattle(id);
     p2->addBattle(id);
+}
+
+void BattleCommunicator::loadPlugin(const QString &path)
+{
+    if (relay) {
+        relay->notify(LoadPlugin, true, path);
+    }
+}
+
+void BattleCommunicator::unloadPlugin(const QString &name)
+{
+    if (relay) {
+        relay->notify(LoadPlugin, false, name);
+    }
 }
 
 void BattleCommunicator::playerForfeit(int battleid, int forfeiter)

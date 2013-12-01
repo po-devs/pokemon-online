@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     testunrated.cpp \
     testteamcount.cpp \
     testdoubles.cpp \
-    testimposter.cpp
+    testimposter.cpp \
+    testloadplugin.cpp
 
 HEADERS += \
     ../common/testrunner.h \
@@ -43,4 +44,5 @@ HEADERS += \
     testunrated.h \
     testteamcount.h \
     testdoubles.h \
-    testimposter.h
+    testimposter.h \
+    testloadplugin.h

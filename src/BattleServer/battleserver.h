@@ -32,7 +32,9 @@ public slots:
     void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
     void onError(int id);
 
-    void modChanged(const QString&);
+    void modChanged(const QString &);
+    void loadPlugin(const QString &path);
+    void unloadPlugin(const QString &name);
 private:
     int freeid() const;
 

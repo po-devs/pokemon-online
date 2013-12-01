@@ -30,6 +30,8 @@ public:
     bool valid() const;
 
     void startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, int team1, int team2);
+    void loadPlugin(const QString &path);
+    void unloadPlugin(const QString &name);
 
     /* Sent from the server */
     void playerForfeit(int battleid, int forfeiter);

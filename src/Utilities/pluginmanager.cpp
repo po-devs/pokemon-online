@@ -70,6 +70,13 @@ void PluginManager::addPlugin(const QString &path)
         throw std::runtime_error(QString("Error when loading plugin " + path +  ": different version than this program.").toStdString());
     }
 
+    if (getPlugins().indexOf(s->pluginName()) != -1) {
+        delete l;
+        libraries.pop_back();
+
+        throw std::runtime_error(QString("Error when loading plugin " + path +  ": Plugin with the same name already loaded.").toStdString());
+    }
+
     this->plugins.push_back(s);
     filenames.push_back(path);
 

@@ -3306,6 +3306,14 @@ bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
     return myserver->pluginManager->freePlugin(plugin);
 }
 
+void ScriptEngine::loadBattlePlugin(const QString &path) {
+    myserver->battles->loadPlugin(path);
+}
+
+void ScriptEngine::unloadBattlePlugin(const QString &plugin) {
+    return myserver->battles->unloadPlugin(plugin);
+}
+
 #endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)

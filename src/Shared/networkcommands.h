@@ -46,7 +46,7 @@ enum Command {
     SpectatingBattleMessage,
     SpectatingBattleChat,
     DatabaseMod = 30,
-    Unused31,
+    LoadPlugin,
     Unused32,
     VersionControl_,
     TierSelection,

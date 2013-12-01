@@ -472,6 +472,8 @@ public:
     Q_INVOKABLE QScriptValue getServerPlugins();
     Q_INVOKABLE bool loadServerPlugin(const QString &path);
     Q_INVOKABLE bool unloadServerPlugin(const QString &plugin);
+    Q_INVOKABLE void loadBattlePlugin(const QString &path);
+    Q_INVOKABLE void unloadBattlePlugin(const QString &plugin);
 #endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)

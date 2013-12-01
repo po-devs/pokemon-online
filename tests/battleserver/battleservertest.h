@@ -2,7 +2,7 @@
 #define BATTLESERVERTEST_H
 
 #include <Server/battleanalyzer.h>
-#include <test.h>
+#include "../common/test.h"
 
 class BattleServerTest : public Test
 {

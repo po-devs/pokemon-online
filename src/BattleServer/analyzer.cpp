@@ -32,7 +32,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
     in >> command;
 
-    qDebug() << "Dealing with command " << int(command);
+    //qDebug() << "Dealing with command " << int(command);
 
     switch (command) {
     case EngageBattle: {
@@ -97,6 +97,23 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
         in >> mod;
 
         emit modChanged(mod);
+    }
+    case LoadPlugin: {
+        bool load;
+        in >> load;
+
+        if (load) {
+            QString path;
+            in >> path;
+
+            emit loadPlugin(path);
+        } else {
+            QString name;
+            in >> name;
+
+            emit unloadPlugin(name);
+        }
+        break;
     }
     default:
         //emit protocolError(UnknownCommand, tr("Protocol error: unknown command received"));

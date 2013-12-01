@@ -45,7 +45,10 @@ signals:
     void battleChat(int battle, int player, const QString &chat);
     void spectatingChat(int battle, int player, const QString &chat);
     void battleFinished(int battle, int result, int forfeiter);
+
     void modChanged(const QString &mod);
+    void loadPlugin(const QString &path);
+    void unloadPlugin(const QString &name);
 
     /* Network errors */
     void connectionError(int, const QString&);

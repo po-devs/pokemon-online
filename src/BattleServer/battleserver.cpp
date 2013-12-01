@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <QtNetwork>
 
 #include "../Utilities/asiosocket.h"
@@ -115,6 +116,8 @@ void BattleServer::newConnection()
     connect(conn, SIGNAL(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)), SLOT(newBattle(int,int,BattlePlayer,BattlePlayer,ChallengeInfo,TeamBattle,TeamBattle)));
     connect(conn, SIGNAL(error(int)), SLOT(onError(int)));
     connect(conn, SIGNAL(modChanged(QString)), SLOT(modChanged(QString)));
+    connect(conn, SIGNAL(loadPlugin(QString)), SLOT(loadPlugin(QString)));
+    connect(conn, SIGNAL(unloadPlugin(QString)), SLOT(unloadPlugin(QString)));
 }
 
 void BattleServer::onError(int id)
@@ -167,3 +170,16 @@ int BattleServer::freeid() const
     return servercounter;
 }
 
+void BattleServer::loadPlugin(const QString &path)
+{
+    try {
+        pluginManager->addPlugin(path);
+    } catch (const std::runtime_error &e) {
+        qDebug() << e.what();
+    }
+}
+
+void BattleServer::unloadPlugin(const QString &name)
+{
+    pluginManager->freePlugin(name);
+}

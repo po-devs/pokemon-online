@@ -28,6 +28,9 @@ signals:
     void newBattle(int sid, int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
     void error(int id);
     void modChanged(const QString&);
+
+    void loadPlugin(const QString &);
+    void unloadPlugin(const QString &);
 public slots:
     void onNewBattle(int battleid, const BattlePlayer &pb1, const BattlePlayer &pb2, const ChallengeInfo &c, const TeamBattle &t1, const TeamBattle &t2);
     void spectate(int battleid, bool spectate, int player, const QString &name);
