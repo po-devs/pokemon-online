@@ -30,7 +30,7 @@ cp ../tests/data/server/* . -R
 [[ -f Server ]] && (./Server -H -N &> /dev/null &) || (./Server_debug -H -N &> /dev/null &)
 
 #Give time to the server to initalize
-sleep 2
+sleep 7 
 
 ./test-server
 ensure_good_run
