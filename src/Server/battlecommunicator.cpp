@@ -142,6 +142,13 @@ FullBattleConfiguration *BattleCommunicator::battle(int battleid)
     return mybattles.value(battleid);
 }
 
+void BattleCommunicator::killServer()
+{
+    if (battleServer->state() == QProcess::Running) {
+        battleServer->kill();
+    }
+}
+
 bool BattleCommunicator::startServer()
 {
     if (battleServer->state() == QProcess::Starting || battleServer->state() == QProcess::Running) {
