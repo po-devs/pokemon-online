@@ -16,14 +16,16 @@ SOURCES += clientscripting.cpp \
     scriptwindow.cpp \
     scriptengine.cpp \
     scriptutils.cpp \
-    battlescripting.cpp
+    battlescripting.cpp \
+    scriptengineagent.cpp
 
 HEADERS += clientscripting.h\
         ClientScripting_global.h \
     scriptwindow.h \
     scriptengine.h \
     scriptutils.h \
-    battlescripting.h
+    battlescripting.h \
+    scriptengineagent.h
 
 include(../Shared/Common.pri)
 
