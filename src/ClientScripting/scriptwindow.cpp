@@ -51,33 +51,17 @@ ScriptWindow::~ScriptWindow()
 void ScriptWindow::safeScriptsChanged(int newStatus)
 {
     QSettings s;
+    bool checked = newStatus == Qt::Checked;
 
-    s.beginGroup("ScriptWindow");
-
-    if (newStatus == Qt::Checked) {
-        s.setValue("safeScripts", true);
-        emit safeScriptsChanged(true);
-    } else {
-        s.setValue("safeScripts", false);
-        emit safeScriptsChanged(false);
-    }
-
-    s.endGroup();
+    s.setValue("ScriptWindow/safeScripts", checked);
+    emit safeScriptsChanged(checked);
 }
 
 void ScriptWindow::warningsChanged(int newStatus)
 {
     QSettings s;
+    bool checked = newStatus == Qt::Checked;
 
-    s.beginGroup("ScriptWindow");
-
-    if (newStatus == Qt::Checked) {
-        s.setValue("warn", true);
-        emit warningsChanged(true);
-    } else {
-        s.setValue("warn", false);
-        emit warningsChanged(false);
-    }
-
-    s.endGroup();
+    s.setValue("ScriptWindow/warn", checked);
+    emit warningsChanged(checked);
 }
