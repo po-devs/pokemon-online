@@ -94,11 +94,10 @@ QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
 
 ScriptEngine::ScriptEngine(ClientInterface *c) {
     myclient = c;
+    myengine.setParent(this);
     armScriptEngine(&myengine);
 
     connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(webCall_replyFinished(QNetworkReply*)));
-    changeScript(ScriptUtils::loadScripts());
-    changeBattleScript(ScriptUtils::loadScripts(ScriptUtils::BattleScripts));
 
     QTimer *step_timer = new QTimer(this);
     step_timer->setSingleShot(false);
@@ -108,8 +107,15 @@ ScriptEngine::ScriptEngine(ClientInterface *c) {
     QSettings s;
     safeScripts = s.value("ScriptWindow/safeScripts", true).toBool();
     warnings = s.value("ScriptWindow/warn", true).toBool();
-
     datalocation = appDataPath("Scripts/", true) + "/data.ini";
+
+    changeScript(ScriptUtils::loadScripts());
+    changeBattleScript(ScriptUtils::loadScripts(ScriptUtils::BattleScripts));
+}
+
+ClientInterface* ScriptEngine::client()
+{
+    return myclient;
 }
 
 void ScriptEngine::armScriptEngine(QScriptEngine *engine)
@@ -240,8 +246,7 @@ QScriptValue ScriptEngine::channelNames(QScriptContext *context, QScriptEngine *
 {
     (void) context;
 
-    ClientInterface *c = dynamic_cast<ClientInterface*>(engine->globalObject().property("client").toQObject());
-
+    ClientInterface *c = qobject_cast<ScriptEngine*>(engine->parent())->client();
     return qScriptValueFromValue(engine, c->getChannelNames());
 }
 

@@ -231,6 +231,7 @@ private:
     void printLine(const QString &s);
     void armScriptEngine(QScriptEngine *engine);
     void armScripts(QScriptEngine *engine, const QString &scripts, bool trigger=false);
+    ClientInterface* client();
 
     void warn(const QString &function, const QString &message);
 
