@@ -1545,7 +1545,9 @@ struct AMImposter : public AM
         }
 
         b.loseAbility(s);
-        b.acquireAbility(s, b.ability(t));
+        if (b.ability(t) != Ability::Imposter) {
+            b.acquireAbility(s, b.ability(t));
+        }
     }
 };
 
