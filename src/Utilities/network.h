@@ -180,10 +180,16 @@ void Network<S>::close() {
         //qDebug() << "valid socket " << this;
         S sock = mysocket;
 
+        if (!isConnected()) {
+            /* If connected, deleteLater() will be called on the disconnected() signal.
+             * And deleting now would prevent messages like kicking or wrong password from
+             * showing */
+            sock->deleteLater();
+        }
+
         mysocket = S(0);
 
         sock->disconnect(this);
-        sock->deleteLater();
         sock->disconnectFromHost();
 
         emit disconnected();
