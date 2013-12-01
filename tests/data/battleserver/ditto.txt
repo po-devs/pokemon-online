@@ -1,0 +1,5 @@
+Ditto @ Bug Gem
+Trait: Imposter
+EVs: 4 HP
+Lonely Nature (+Atk, -Def)
+- Transform

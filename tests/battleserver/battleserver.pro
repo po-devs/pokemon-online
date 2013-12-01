@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     ../../src/Server/battleanalyzer.cpp \
     testunrated.cpp \
     testteamcount.cpp \
-    testdoubles.cpp
+    testdoubles.cpp \
+    testimposter.cpp
 
 HEADERS += \
     ../common/testrunner.h \
@@ -41,4 +42,5 @@ HEADERS += \
     ../../src/Server/battleanalyzer.h \
     testunrated.h \
     testteamcount.h \
-    testdoubles.h
+    testdoubles.h \
+    testimposter.h
