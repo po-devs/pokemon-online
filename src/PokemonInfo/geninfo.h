@@ -96,10 +96,10 @@ public:
     }
 
     inline bool isValid() const {
-        return GenInfo::Exists(*this);
+        return GenInfo::Exists(*this) || (subnum == wholeGen && GenInfo::Exists(original()));
     }
 
-    inline Pokemon::gen original() {return gen(num, 0);}
+    inline Pokemon::gen original() const {return gen(num, 0);}
 
     // Will return true if everything is fine. And false otherwise.
     static bool extract(const QString &raw, gen &id, QString &info);
