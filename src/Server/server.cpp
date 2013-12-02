@@ -651,7 +651,7 @@ void Server::banName(const QString &name) {
 }
 
 void Server::changeAuth(const QString &name, int auth) {
-    if (nameExist(name)) {
+    if (nameExist(name) && SecurityManager::exist(name)) {
         int id = this->id(name);
         if (auth == player(id)->auth())
             return;
@@ -798,7 +798,7 @@ void Server::loggedIn(int id, const QString &name)
             forcePrint(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            if (SecurityManager::member(name).isProtected()) {
+            if (SecurityManager::exist(name) && SecurityManager::member(name).isProtected()) {
                 /* Replaces the other one */
                 if (!player(ids)->waitingForReconnect()) {
                     printLine(tr("%1: replaced by new connection.").arg(name));

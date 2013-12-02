@@ -1639,7 +1639,6 @@ QScriptValue ScriptEngine::name(int id)
 }
 QScriptValue ScriptEngine::id(const QString &name)
 {
-
     if (!myserver->nameExist(name)) {
         return myengine.undefinedValue();
     } else {
