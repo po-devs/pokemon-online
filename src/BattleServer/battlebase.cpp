@@ -84,13 +84,14 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
         team(0).generateRandom(gen());
         team(1).generateRandom(gen());
     } else {
-        /* Make sure teams are valid and don't start with a koed pokemon */
+        /* Make sure teams are valid and koed pokemon are pushed to the back */
         for (int i = 0; i < 2; i++) {
-            for (int k = 0; k < numberPerSide(); k++) {
+            for (int k = 0; k < teamCount; k++) {
                 if (team(i).poke(k).ko()) {
                     for (int j=k+1;j<6;j++){
                         if (!team(i).poke(j).ko()) {
-                            team(i).switchPokemon(k,j);
+                            /* Using std::swap because local index switching + rearrange team = mess */
+                            std::swap(team(i).poke(k), team(i).poke(j));
                             break;
                         }
                     }
@@ -999,6 +1000,8 @@ bool BattleBase::validChoice(const BattleChoice &b)
             used[x] = true;
         }
 
+        /* Checks restricted pokemon (like in VGC) are restricted to a certain
+         *  number! */
         if (tier().length() > 0) {
             if (!(clauses() & ChallengeInfo::ChallengeCup) && restrictedCount > 0) {
                 int nrestricted = 0;
@@ -1011,6 +1014,20 @@ bool BattleBase::validChoice(const BattleChoice &b)
                 if (nrestricted > restrictedCount) {
                     return false;
                 }
+            }
+        }
+
+        /* Checks koed pokemon aren't sent in the front */
+        int cnt = 0;
+        for (int i = 0; i < teamCount; i++) {
+            if (!team(player).poke(b.choice.rearrange.pokeIndexes[i]).ko()) {
+                cnt++;
+            }
+        }
+
+        for (int i = 0; i < numberPerSide() && i < cnt; i++) {
+            if (team(player).poke(b.choice.rearrange.pokeIndexes[i]).ko()) {
+                return false;
             }
         }
 
