@@ -32,16 +32,6 @@ TestBattleTeamCount::TestBattleTeamCount(int id, AdvancedBattleData *data) : id(
 
 }
 
-TestTeamCount::~TestTeamCount()
-{
-    foreach(BattleInput *input, battles) {
-        input->deleteTree();
-    }
-
-    qDeleteAll(battles);
-    qDeleteAll(confs);
-}
-
 void TestTeamCount::onBattleServerConnected()
 {
     BattleServerTest::onBattleServerConnected();
@@ -77,8 +67,6 @@ void TestTeamCount::onBattleCreated(int b, int p, int, const TeamBattle &team, c
         assert(team.poke(i) == tb1.poke(i));
     }
 
-    /* We create those every time because the cost is basically nothing, but they
-     * could be persistent */
     BattleConfiguration *cf = new BattleConfiguration(conf);
 
     cf->teamOwnership = true;

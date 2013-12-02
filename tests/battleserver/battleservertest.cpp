@@ -1,7 +1,19 @@
+#include <BattleManager/battleinput.h>
+
 #include "battleservertest.h"
 
 BattleServerTest::BattleServerTest()
 {
+}
+
+BattleServerTest::~BattleServerTest()
+{
+    foreach(BattleInput *input, battles) {
+        input->deleteTree();
+    }
+
+    qDeleteAll(battles);
+    qDeleteAll(confs);
 }
 
 void BattleServerTest::start()

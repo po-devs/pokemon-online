@@ -5,6 +5,7 @@
 #include "testdoubles.h"
 #include "testimposter.h"
 #include "testloadplugin.h"
+#include "testinvalidpokemon.h"
 #include "pokemontestrunner.h"
 
 int main(int argc, char *argv[])
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestDoubles());
     runner.addTest(new TestImposter());
     runner.addTest(new TestLoadPlugin());
+    runner.addTest(new TestInvalidPokemon());
     runner.start();
 
     return a.exec();

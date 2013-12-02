@@ -19,7 +19,7 @@ public:
 
 void TestImposter::onBattleServerConnected()
 {
-    connect(analyzer, SIGNAL(battleMessage(int,int,QByteArray)), SLOT(onBattleMessage(int,int,QByteArray)));
+    BattleServerTest::onBattleServerConnected();
 
     Team t1;
     t1.importFromTxt(getFileContent("ditto.txt").trimmed());

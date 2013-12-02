@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     testteamcount.cpp \
     testdoubles.cpp \
     testimposter.cpp \
-    testloadplugin.cpp
+    testloadplugin.cpp \
+    testinvalidpokemon.cpp
 
 HEADERS += \
     ../common/testrunner.h \
@@ -45,4 +46,5 @@ HEADERS += \
     testteamcount.h \
     testdoubles.h \
     testimposter.h \
-    testloadplugin.h
+    testloadplugin.h \
+    testinvalidpokemon.h

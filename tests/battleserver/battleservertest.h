@@ -4,11 +4,16 @@
 #include <Server/battleanalyzer.h>
 #include "../common/test.h"
 
+
+class BattleInput;
+class AdvancedBattleData;
+
 class BattleServerTest : public Test
 {
     Q_OBJECT
 public:
     BattleServerTest();
+    ~BattleServerTest();
 
     void start(); /* Override to not automatically accept test once run() is over */
     void run();
@@ -19,6 +24,10 @@ public slots:
     virtual void onBattleMessage(int b, int p, const QByteArray&);
 protected:
     BattleAnalyzer *analyzer;
+protected:
+    QHash<int, BattleInput*> battles;
+    QHash<int, BattleConfiguration*> confs;
+    QHash<int, AdvancedBattleData*> datas;
 };
 
 #endif // BATTLESERVERTEST_H
