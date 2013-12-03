@@ -249,7 +249,7 @@ void BattleCommunicator::battleMessage(int player, int battle, const BattleChoic
         return;
     }
 
-    relay->notify(BattleMessage, qint32(battle), qint32(player), choice);
+    relay->notifyChoice(battle, player, choice);
 }
 
 void BattleCommunicator::resendBattleInfos(int player, int battle)

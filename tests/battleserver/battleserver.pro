@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     testdoubles.cpp \
     testimposter.cpp \
     testloadplugin.cpp \
-    testinvalidpokemon.cpp
+    testinvalidpokemon.cpp \
+    testmeganature.cpp
 
 HEADERS += \
     ../common/testrunner.h \
@@ -47,4 +48,5 @@ HEADERS += \
     testdoubles.h \
     testimposter.h \
     testloadplugin.h \
-    testinvalidpokemon.h
+    testinvalidpokemon.h \
+    testmeganature.h

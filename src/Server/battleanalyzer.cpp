@@ -12,6 +12,11 @@ void BattleAnalyzer::startBattle(int battleid, const BattlePlayer &pb1, const Ba
     notify(EngageBattle, qint32(battleid), pb1, pb2, c, t1.fullSerial(), t2.fullSerial());
 }
 
+void BattleAnalyzer::notifyChoice(int battle, int player, const BattleChoice &choice)
+{
+    notify (BattleMessage, qint32(battle), qint32(player), choice);
+}
+
 void BattleAnalyzer::dealWithCommand(const QByteArray &commandline)
 {
     DataStream in (commandline);
