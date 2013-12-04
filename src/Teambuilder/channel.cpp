@@ -174,6 +174,9 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->seeInfo(id);
             }
+        } else if (path.leftRef(5) == "send/") {
+            QString msg = path.mid(5);
+            client->sendMessage(msg, myid);
         }
     } else {
         QDesktopServices::openUrl(url);
@@ -474,7 +477,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
         in >> id;
-        if (eventEnabled(Client::ChannelEvent)) {
+        if (eventEnabled(Client::ChannelEvent) && name(id) != "~Unknown~") {
             printLine(tr("%1 left the channel.").arg(name(id)), false, false);
         }
         /* Remove everything... */
