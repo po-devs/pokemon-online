@@ -11,7 +11,7 @@ void TestLoadPlugin::onBattleServerConnected()
 #ifdef Q_OS_UNIX
     analyzer->notify(LoadPlugin, true, "serverplugins/libusagestats" PLUGIN_SUFFIX ".so");
 #elif defined(Q_OS_WIN)
-    analyzer->notify(LoadPlugin, true, "serverplugins/libusagestats" PLUGIN_SUFFIX ".dll");
+    analyzer->notify(LoadPlugin, true, "serverplugins/usagestats" PLUGIN_SUFFIX ".dll");
 #else
 #warning "Test not defined for current platform"
     accept();

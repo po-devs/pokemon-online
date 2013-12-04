@@ -80,7 +80,7 @@ void TestMegaNature::onBattleServerConnected()
 void TestMegaNature::onBattleMessage(int, int p, const QByteArray &mess)
 {
     BattleInput input;
-    TestBattleMegaNature battle(analyzer, p);
+    TestBattleMegaNature battle(analyzer, p-1);
 
     input.addOutput(&battle);
     input.receiveData(mess);

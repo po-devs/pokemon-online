@@ -21,7 +21,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     relaystation.h \
-    ../Teambuilder/network.h \
     dualwielder.h \
     pokemontojson.h \
     battletojson.h \
