@@ -54,6 +54,7 @@ private:
     quint32 nextRead;
     QByteArray lastData;
     ReplayBar bar;
+    int version;
 };
 
 #endif // REPLAYVIEWER_H

@@ -19,7 +19,7 @@ void BattleAnalyzer::notifyChoice(int battle, int player, const BattleChoice &ch
 
 void BattleAnalyzer::dealWithCommand(const QByteArray &commandline)
 {
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;

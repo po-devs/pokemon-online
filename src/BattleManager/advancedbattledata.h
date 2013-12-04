@@ -94,15 +94,15 @@ public:
     }
 
     void onDynamicInfo(int spot, const BattleDynamicInfo &info) {
-        for (int i = 0; i < 7; i++) {
-            fieldPoke(spot).setBoost(i+1, info.boosts[i]);
+        for (int i = 1; i < 8; i++) {
+            fieldPoke(spot).setBoost(i, info.boosts[i]);
         }
         field().zone(player(spot))->setHazards(info.flags);
     }
 
     void onDynamicStats(int spot, const BattleStats &stats) {
-        for (int i = 0; i < 5; i++) {
-            fieldPoke(spot).setStat(i+1, stats.stats[i]);
+        for (int i = 1; i < 6; i++) {
+            fieldPoke(spot).setStat(i, stats.stats[i]);
         }
     }
 

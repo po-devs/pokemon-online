@@ -210,7 +210,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
     mIsInCommand = true;
 
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;

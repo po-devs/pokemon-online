@@ -243,8 +243,11 @@ void PokeBattle::updateStats(Pokemon::gen gen)
 
 DataStream & operator >> (DataStream &in, PokeBattle &po)
 {
-    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability()
-       >> po.happiness();
+    in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability();
+    if (in.version >= 3) {
+        in >> po.nature();
+    }
+    in >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
         quint16 st;
@@ -269,8 +272,11 @@ DataStream & operator >> (DataStream &in, PokeBattle &po)
 
 DataStream & operator << (DataStream &out, const PokeBattle &po)
 {
-    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability()
-        << po.happiness();
+    out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability();
+    if (out.version >= 3) {
+        out << po.nature();
+    }
+    out << po.happiness();
 
     for (int i = 0; i < 5; i++) {
         out << po.normalStat(i+1);

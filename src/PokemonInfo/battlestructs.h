@@ -115,6 +115,12 @@ public:
     quint16 &lifePoints() { return mLifePoints;}
 
     void setNormalStat(int, quint16);
+
+    bool operator == (const PokeBattle &other) const {
+        return ShallowBattlePoke::operator ==(other) && nature() == other.nature() && item() == other.item()
+                && ability() == other.ability() && happiness() == other.happiness() && totalLifePoints() == other.totalLifePoints()
+                && dvs() == other.dvs() && evs() == other.evs();
+    }
 private:
     BattleMove m_moves[4];
 
@@ -708,7 +714,7 @@ DataStream & operator << (DataStream &out, const FullBattleConfiguration &c);
 
 struct BattleDynamicInfo
 {
-    qint8 boosts[7];
+    qint8 boosts[8];
     enum {
         Spikes=1,
         SpikesLV2=2,
@@ -723,33 +729,33 @@ struct BattleDynamicInfo
 
 inline DataStream & operator >> (DataStream &in, BattleDynamicInfo &c)
 {
-    in >> c.boosts[0] >> c.boosts[1] >> c.boosts[2] >> c.boosts[3] >> c.boosts[4] >> c.boosts[5] >> c.boosts[6] >> c.flags;
+    in >> c.boosts[1] >> c.boosts[2] >> c.boosts[3] >> c.boosts[4] >> c.boosts[5] >> c.boosts[6] >> c.boosts[7] >> c.flags;
 
     return in;
 }
 
 inline DataStream & operator << (DataStream &out, const BattleDynamicInfo &c)
 {
-    out << c.boosts[0] << c.boosts[1] << c.boosts[2] << c.boosts[3] << c.boosts[4] << c.boosts[5] << c.boosts[6] << c.flags;
+    out << c.boosts[1] << c.boosts[2] << c.boosts[3] << c.boosts[4] << c.boosts[5] << c.boosts[6] << c.boosts[7] << c.flags;
 
     return out;
 }
 
 struct BattleStats
 {
-    qint16 stats[5];
+    qint16 stats[6];
 };
 
 inline DataStream & operator >> (DataStream &in, BattleStats &c)
 {
-    in >> c.stats[0] >> c.stats[1] >> c.stats[2] >> c.stats[3] >> c.stats[4];
+    in >> c.stats[1] >> c.stats[2] >> c.stats[3] >> c.stats[4] >> c.stats[5];
 
     return in;
 }
 
 inline DataStream & operator << (DataStream &out, const BattleStats &c)
 {
-    out << c.stats[0] << c.stats[1] << c.stats[2] << c.stats[3] << c.stats[4];
+    out << c.stats[1] << c.stats[2] << c.stats[3] << c.stats[4] << c.stats[5];
 
     return out;
 }

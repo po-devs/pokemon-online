@@ -37,7 +37,10 @@ class QTextEdit;
 
  V2-
  Same as v1, except using new serialization scheme (in which for example string is an UTF8 bytearray)
- Current version output: V2
+
+ V3-
+ Now putting nature in PokeBattle before happiness (wasn't serialized before)
+ Current version output: V3
 */
 
 extern "C" {

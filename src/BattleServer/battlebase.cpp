@@ -1392,12 +1392,12 @@ BattleStats BattleBase::constructStats(int player)
     BattleStats ret;
 
     if (fpoke(player).flags & BasicPokeInfo::Transformed) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             ret.stats[i] = -1;
         }
     } else {
-        for (int i = 0; i < 5; i++) {
-            ret.stats[i] = getStat(player, i+1);
+        for (int i = 1; i < 6; i++) {
+            ret.stats[i] = getStat(player, i);
         }
     }
 
@@ -1408,8 +1408,8 @@ BattleDynamicInfo BattleBase::constructInfo(int slot)
 {
     BattleDynamicInfo ret;
 
-    for (int i = 0; i < 7; i++) {
-        ret.boosts[i] = fpoke(slot).boosts[i+1];
+    for (int i = 0; i < 8; i++) {
+        ret.boosts[i] = fpoke(slot).boosts[i];
     }
 
     ret.flags = 0;

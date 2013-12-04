@@ -5,6 +5,7 @@
 
 #include "../Utilities/coreclasses.h"
 #include "../Utilities/asiosocket.h"
+#include "../PokemonInfo/networkstructs.h"
 
 class GenericNetwork;
 class ChallengeInfo;
@@ -21,7 +22,7 @@ public:
     template <typename ...Params>
     void notify(int command, Params&&... params) {
         QByteArray tosend;
-        DataStream out(&tosend, QIODevice::WriteOnly);
+        DataStream out(&tosend, QIODevice::WriteOnly, version.version);
 
         out.pack(uchar(command), std::forward<Params>(params)...);
 
@@ -60,6 +61,8 @@ public slots:
 private:
     GenericNetwork *socket;
     int m_id;
+
+    ProtocolVersion version;
 };
 
 #endif // ANALYZER_H

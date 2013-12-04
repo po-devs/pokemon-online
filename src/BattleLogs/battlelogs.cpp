@@ -143,7 +143,7 @@ BattleLogsPlugin::~BattleLogsPlugin()
             QFile out;
             out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
             out.open(QIODevice::WriteOnly);
-            out.write("battle_logs_v2\n");
+            out.write("battle_logs_v3\n");
 
             /* Writing configuration */
             DataStream outd(&out);

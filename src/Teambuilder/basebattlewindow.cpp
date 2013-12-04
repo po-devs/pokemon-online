@@ -120,7 +120,7 @@ void BaseBattleWindow::init()
     replay = LogManager::obj()->createLog(ReplayLog, title);
     replay->override = Log::OverrideNo;
 
-    replayData.data = "battle_logs_v2\n";
+    replayData.data = "battle_logs_v3\n";
     DataStream stream(&replayData.data, QIODevice::Append);
     stream << conf();
     replayData.t.start();

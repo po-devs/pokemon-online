@@ -59,7 +59,7 @@ void BaseAnalyzer::stopReceiving()
 
 void BaseAnalyzer::dealWithCommand(const QByteArray &commandline)
 {
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;

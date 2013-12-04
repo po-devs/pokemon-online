@@ -4,7 +4,6 @@
 #include "testmeganature.h"
 
 static int turn = 0;
-static bool rejected = false;
 static bool accepted = false;
 
 class TestBattleMegaNature : public BattleCommandManager<TestBattleMegaNature>
@@ -24,7 +23,6 @@ public:
             return;
         }
         if (turn > 0) {
-            rejected = true;
             return;
         }
         AttackChoice attack;
@@ -33,7 +31,7 @@ public:
         attack.mega = true;
 
         BattleChoice choice(p, attack);
-        analyzer->notifyChoice(1, p, choice);
+        analyzer->notifyChoice(1, p+1, choice);
     }
 
     void onDynamicStats(int spot, const BattleStats& stats) {
@@ -45,10 +43,10 @@ public:
             return;
         }
 
-        auto speed = stats.stats[Speed-1];
+        auto speed = stats.stats[Speed];
 
         /* Check speed of timid mega lucario */
-        assert (speed == 353);
+        assert (speed == 355);
         accepted = true;
     }
 
@@ -85,9 +83,7 @@ void TestMegaNature::onBattleMessage(int, int p, const QByteArray &mess)
     input.addOutput(&battle);
     input.receiveData(mess);
 
-    if (rejected) {
-        reject();
-    } else if (accepted) {
+    if (accepted) {
         accept();
     }
 }
