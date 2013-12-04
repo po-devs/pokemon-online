@@ -1205,7 +1205,15 @@ void Client::sendText()
 
     int cid = currentChannel();
 
-    QString text = myline->text().trimmed();
+    QString text = myline->text();
+    sendMessage(text, cid);
+
+    myline->clear();
+}
+
+void Client::sendMessage(const QString &message, int cid)
+{
+    QString text = message.trimmed();
     if (text.length() > 0) {
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
@@ -1214,8 +1222,6 @@ void Client::sendText()
             }
         }
     }
-
-    myline->clear();
 }
 
 bool Client::hasChannel(int channelid) const
@@ -2398,6 +2404,10 @@ bool Client::hasKnowledgeOf(int id) {
 
 void Client::removePlayer(int id)
 {
+    if (!playerExist(id)) {
+        return;
+    }
+
     QString name = player(id).name;
 
     foreach(Channel *c, mychannels) {
