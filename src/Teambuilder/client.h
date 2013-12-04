@@ -85,14 +85,14 @@ public:
     Q_INVOKABLE QString tier(int player) const;
     Q_INVOKABLE QStringList tiers(int player) const;
 
-    void changeName(int player, const QString &name);
-    void changeChannelId(int orId, int destId);
+    Q_INVOKABLE void changeName(int player, const QString &name);
+    Q_INVOKABLE void changeChannelId(int orId, int destId);
     /* Resets fade away counter */
     void refreshPlayer(int id);
 
-    bool hasPlayer(int id);
-    bool hasPlayerInfo(int id);
-    bool hasKnowledgeOf(int id);
+    Q_INVOKABLE bool hasPlayer(int id);
+    Q_INVOKABLE bool hasPlayerInfo(int id);
+    Q_INVOKABLE bool hasKnowledgeOf(int id);
 
     QSize defaultSize() const {
         return QSize(800,600);
@@ -119,7 +119,7 @@ public:
     Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
     Q_INVOKABLE void acceptChallenge(int cId);
 
-    PlayerInfo player(int id) const;
+    Q_INVOKABLE PlayerInfo player(int id) const;
     void removePlayer(int id);
 
     void removeBattleWindow(int id);
@@ -174,6 +174,7 @@ public slots:
 
     /* sends what's in the line edit */
     void sendText();
+    void sendMessage(const QString &message, int cid);
     void changeName(const QString&);
     void playerLogin(const PlayerInfo &p, const QStringList &tiers, bool ignore=false);
     void playerReceived(const PlayerInfo &p);
