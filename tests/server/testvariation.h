@@ -11,6 +11,9 @@ public:
     void onPlayerConnected();
     void loggedIn(const PlayerInfo &info, const QStringList& tiers);
     void onBattleMessage(int battle, const QByteArray &message);
+    void onBattleStarted(int, const Battle &b, const TeamBattle &t, const BattleConfiguration &conf);
+private:
+    Team team;
 };
 
 #endif // TESTVARIATION_H

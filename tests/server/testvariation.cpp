@@ -27,7 +27,6 @@ void TestVariation::onPlayerConnected()
 {
     Analyzer *analyzer = sender();
 
-    Team team;
     team.importFromTxt(getFileContent("team1.txt").trimmed());
 
     TeamHolder holder;
@@ -64,5 +63,14 @@ void TestVariation::onBattleMessage(int, const QByteArray &message)
 
     if (done) {
         accept();
+    }
+}
+
+void TestVariation::onBattleStarted(int, const Battle &, const TeamBattle &t, const BattleConfiguration &)
+{
+    TeamBattle tb(team);
+
+    for(int i = 0; i < 6; i++) {
+        assert(tb.poke(i) == t.poke(i));
     }
 }

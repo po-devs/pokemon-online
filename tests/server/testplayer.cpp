@@ -25,6 +25,7 @@ void TestPlayer::createAnalyzer()
     connect(analyzer, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
     connect(analyzer, SIGNAL(PMReceived(int,QString)), SLOT(onPm(int, QString)));
     connect(analyzer, SIGNAL(battleMessage(int,QByteArray)), SLOT(onBattleMessage(int, QByteArray)));
+    connect(analyzer, SIGNAL(battleStarted(int,Battle,TeamBattle,BattleConfiguration)), SLOT(onBattleStarted(int,Battle,TeamBattle,BattleConfiguration)));
     connect(analyzer, SIGNAL(passRequired(QByteArray)), SLOT(onPassRequired(QByteArray)));
 
     analyzer->connectTo("localhost", 5080);
@@ -66,6 +67,11 @@ void TestPlayer::onBattleMessage(int, const QByteArray &)
 }
 
 void TestPlayer::onPassRequired(const QByteArray &)
+{
+
+}
+
+void TestPlayer::onBattleStarted(int, const Battle &, const TeamBattle &, const BattleConfiguration &)
 {
 
 }

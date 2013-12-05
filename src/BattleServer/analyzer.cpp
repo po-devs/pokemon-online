@@ -27,7 +27,7 @@ void Analyzer::commandReceived(const QByteArray &command)
 
 void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
