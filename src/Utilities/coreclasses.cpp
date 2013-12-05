@@ -17,7 +17,7 @@ DataStream::DataStream(QByteArray *array, QIODevice::OpenMode mode, quint16 vers
     setVersion(QDataStream::Qt_4_8);
 }
 
-DataStream::DataStream(QIODevice *device) : QDataStream(device), version(0)
+DataStream::DataStream(QIODevice *device, quint16 version) : QDataStream(device), version(version)
 {
     setVersion(QDataStream::Qt_4_8);
 }

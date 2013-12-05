@@ -13,7 +13,7 @@ public:
     DataStream();
     DataStream(const QByteArray &array, quint16 version=0);
     DataStream(QByteArray *array, QIODevice::OpenMode mode, quint16 version=0);
-    DataStream(QIODevice *device);
+    DataStream(QIODevice *device, quint16 version=0);
 
     /* multiple serialization */
     void pack() {
