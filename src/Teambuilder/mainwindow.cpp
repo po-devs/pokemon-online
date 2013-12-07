@@ -35,19 +35,8 @@
 
 MainEngine *MainEngine::inst = NULL;
 
-MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
+static void setDefaultValues()
 {
-    inst = this;
-
-    setProperty("updated", updated);
-
-    pluginManager = new PluginManager(this);
-
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "Themes/Current", "Themes/Classic/");
@@ -99,6 +88,24 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
+}
+
+MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
+{
+    inst = this;
+
+    setProperty("updated", updated);
+
+    pluginManager = new PluginManager(this);
+
+#ifndef QT5
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
+
+    setDefaultValues();
+
+    QSettings s;
 
     pmNotify = s.value("PMs/Notifications").isNull() ? true : s.value("PMs/Notifications").toBool();
 
