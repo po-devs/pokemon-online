@@ -427,7 +427,11 @@ void Server::leaveRequest(int playerid, int channelid, bool keep)
 {
     Channel &channel = this->channel(channelid);
 
-    channel.leaveRequest(playerid, keep);
+    channel.leaveRequest(playerid);
+
+    if (keep && channelExist(channelid)) {
+        channel.addDisconnectedPlayer(playerid);
+    }
 }
 
 void Server::channelClose(int channelid)
@@ -1778,9 +1782,7 @@ void Server::disconnectPlayer(int id)
             return;
         }
 
-        if (loggedIn) {
-            myengine->beforeLogOut(id);
-        }
+        myengine->beforeLogOut(id);
 
         for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
 
@@ -1798,11 +1800,8 @@ void Server::disconnectPlayer(int id)
 
         emit player_logout(id);
 
-        /* Sending the notice of logout to others only if the player is already logged in */
-        if (loggedIn) {
-            sendLogout(id);
-            myengine->afterLogOut(id);
-        }
+        sendLogout(id);
+        myengine->afterLogOut(id);
 
         p->changeState(Player::LoggedIn, false);
         p->changeState(Player::WaitingReconnect, true);

@@ -13,6 +13,11 @@
 #include "analyze.h"
 #include <algorithm>
 
+unsigned int qHash(const QPointer<Player> &pl)
+{
+    return qHash(pl.data());
+}
+
 Player::Player(const GenericSocket &sock, int id)
 {
     loginInfo() = NULL;
