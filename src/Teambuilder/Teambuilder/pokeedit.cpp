@@ -7,6 +7,7 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../Utilities/qclosedockwidget.h"
+#include "../Utilities/otherwidgets.h"
 
 #include "ui_pokeedit.h"
 #include "theme.h"
@@ -67,6 +68,9 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->nickname->setCompleter(completer);
     connect(completer, SIGNAL(activated(QString)), SLOT(setNum(QString)));
+
+    /* 12 characters for the name */
+    ui->nickname->setValidator(new QNickValidator(ui->nickname, 12));
 
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);

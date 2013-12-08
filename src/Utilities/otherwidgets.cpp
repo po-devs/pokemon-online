@@ -277,7 +277,11 @@ void QIdListWidgetItem::setColor(const QColor &c)
 }
 
 QNickValidator::QNickValidator(QWidget *parent)
-    : QValidator(parent)
+    : QValidator(parent), charMax(20)
+{}
+
+QNickValidator::QNickValidator(QWidget *parent, uint charmax)
+    : QValidator(parent), charMax(charmax)
 {}
 
 bool QNickValidator::isBegEndChar(QChar ch) const
@@ -296,7 +300,7 @@ void QNickValidator::fixup(QString &input) const
 
 QValidator::State QNickValidator::validate(const QString &input) const
 {
-    if (input.length() > 20)
+    if (input.length() > charMax)
     {
         return QValidator::Invalid;
     }
