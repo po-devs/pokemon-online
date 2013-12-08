@@ -141,7 +141,7 @@ void PokeBattle::init(PokePersonal &poke)
     p.num() = poke.num();
     p.load();
 
-    QNickValidator v(NULL);
+    QNickValidator v(NULL, 12);
 
     happiness() = poke.happiness();
 
@@ -175,7 +175,7 @@ void PokeBattle::init(PokePersonal &poke)
         num().subnum = 0;
     }
 
-    nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable && poke.nickname().length() <= 12) ? poke.nickname() : PokemonInfo::Name(num());
+    nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
         gender() = poke.gender();

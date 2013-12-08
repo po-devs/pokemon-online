@@ -115,11 +115,14 @@ class QNickValidator : public QValidator
     Q_OBJECT
 public:
     QNickValidator(QWidget *parent);
+    QNickValidator(QWidget *parent, uint charmax);
 
     bool isBegEndChar(QChar ch) const;
     void fixup(QString &input) const;
     State validate(QString &input, int &pos) const;
     State validate(const QString &input) const;
+private:
+    int charMax;
 };
 
 /* A Progress bar that emits a signal when clicked on */
