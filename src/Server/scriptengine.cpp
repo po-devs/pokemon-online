@@ -383,7 +383,7 @@ bool ScriptEngine::testTeamCount(const QString &function, int id, int team)
 
 bool ScriptEngine::testPlayer(const QString &function, int id)
 {
-    if (!myserver->playerExist(id)) {
+    if (!loggedIn(id)) {
         if (function.length() > 0)
             warn(function, QString("Invalid player ID."), true);
         return false;
