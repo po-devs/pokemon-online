@@ -122,7 +122,7 @@ public:
     State validate(QString &input, int &pos) const;
     State validate(const QString &input) const;
 private:
-    uint charMax;
+    int charMax;
 };
 
 /* A Progress bar that emits a signal when clicked on */
