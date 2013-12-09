@@ -55,7 +55,7 @@
 54 Raises the holder's Speed by one stage when its HP falls below 25%. Consumed after use.
 55 Raises the holder's Special Attack by one stage when its HP falls below 25%. Consumed after use.
 56 Raises the holder's Special Defense by one stage when its HP falls below 25%. Consumed after use.
-57 Raises the holder's critical hit rate by one stage when its HP falls below 25%. Consumed after use.
+57 Raises the holder's critical hit rate by two stages when its HP falls below 25%. Consumed after use.
 58 Raises a random stat of the holder by two stages when its HP falls below 25%. Consumed after use.
 59 Restores 25% of the holder's max HP if hit by a super-effective attack. Consumed after use.
 60 Ensures that the holder will hit in the turn after its HP falls below 25%. Consumed after use.
