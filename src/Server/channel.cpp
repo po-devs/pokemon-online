@@ -7,7 +7,7 @@
 #include "analyze.h"
 #include "scriptengine.h"
 
-QNickValidator *Channel::checker = NULL;
+QNickValidator *Channel::checker = new QNickValidator(nullptr);
 
 Channel::Channel(const QString &name, int id) : m_prop_id(id), m_prop_name(name){
     server = Server::serverIns;
