@@ -140,6 +140,11 @@ bool Channel::isEmpty() const
     return players.size() == 0;
 }
 
+int Channel::count() const
+{
+    return players.size();
+}
+
 Channel::~Channel()
 {
     warnAboutRemoval();

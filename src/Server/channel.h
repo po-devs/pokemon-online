@@ -38,6 +38,7 @@ public:
     void warnAboutRemoval();
 
     bool isEmpty() const;
+    int count() const;
 
 signals:
     void closeRequest(int id);
