@@ -1019,9 +1019,9 @@ struct MMAssist : public MM
     struct FM : public QSet<int>
     {
         FM() {
-            (*this) << NoMove << Assist << Bestow << Chatter << Copycat << Counter << Covet << DestinyBond << Detect
-                              << Endure << Feint << FocusPunch << FollowMe << HelpingHand << MeFirst
-                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << RagePowder
+            (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << CraftyShield << DestinyBond << Detect
+                              << Endure << Feint << FocusPunch << FollowMe << HelpingHand << KingsShield << MatBlock << MeFirst
+                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
@@ -1030,7 +1030,9 @@ struct MMAssist : public MM
             //Metronome will inherit a block on Assist in Gen III despite it being a valid move
             if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
                 return gen >= 5;
-            } else if (move == Roar || move == Whirlwind || move == Fly || move == Dig || move == PhantomForce){ //could be all two turn moves
+            } else if (move == PhantomForce || move == Geomancy || move == Belch || move == StickyWeb || move == Dive || move == Dig ||
+                       move == Fly || move == Bounce || move == FreezeShock || move == IceBurn || move == RazorWind || move == SkullBash ||
+                       move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce){
                 return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
@@ -2201,11 +2203,12 @@ struct MMMetronome : public MM
             (*this).unite(MMAssist::forbidden_moves );
             //The inheritance is missing a few moves
             (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SacredSword
-                                     << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl;
+                                     << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
+                                     << Move::Bestow;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power still ruining life since Gen 5
-            if (move == NaturePower) {
+            if (move == NaturePower || move == Snore) {
                 return gen >= 5;
             } else {
                 return QSet<int>::contains(move);
@@ -6777,7 +6780,7 @@ struct MMMatBlock : public MM
             return;
         }
 
-        if (tmove(b,s).category != Move::Other) {
+        if (tmove(b,s).category == Move::Other) {
             return;
         }
 
