@@ -15,6 +15,7 @@
 
 # Websocket library cloned from git://gitorious.org/qtwebsocket/qtwebsocket.git
 
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
@@ -50,7 +51,8 @@ CONFIG(po_clientplugins) {
                src/CSSChanger \
                src/ClientScripting \
                src/SettingsPlugin \
-               src/SmogonPlugin 
+               src/SmogonPlugin \
+               src/DesignerPlugin
 }
 
 CONFIG(po_server) {

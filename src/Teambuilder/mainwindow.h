@@ -8,6 +8,7 @@
 #include "../PokemonInfo/teamholder.h"
 #include "downloadmanager.h"
 
+class QScrollDownTextBrowser;
 class PluginManager;
 class MainWidget;
 
@@ -21,6 +22,8 @@ class MainEngine : public QObject, public MainEngineInterface {
 public:
     MainEngine(bool updated);
     ~MainEngine();
+
+    QScrollDownTextBrowser* getPokeTextEdit(QWidget* parent=0);
 
     int numberOfTabs() const;
 
