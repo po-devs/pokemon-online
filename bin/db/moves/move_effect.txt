@@ -216,7 +216,7 @@
 234 Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
 235 Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
 236 Heals user by half its max HP. 2/3 healing in sun, 1/4 in hail, rain, or sandstorm.
-237 Power and type depend upon user's IVs. Power can range from 30 to 70.
+237 Power and type depend upon user's IVs.
 238 Has a high critical hit rate.
 239 Has a 20% chance to flinch.
 240 Changes the weather to rain for five turns.
