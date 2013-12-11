@@ -4,7 +4,6 @@
 #include "../Utilities/functions.h"
 
 #include <QSettings>
-
 DesignerWidget::DesignerWidget(DesignerPlugin *plugin) :
     QDialog(0),
     ui(new Ui::DesignerWidget),
@@ -36,14 +35,18 @@ DesignerWidget::~DesignerWidget()
 
 void DesignerWidget::updateUi()
 {
+#define PROMOTE(member) \
+        QRect memberGeometry = ui->member->geometry(); \
+        ui->member->deleteLater(); \
+        ui->member = plugin->client->getPokeTextEdit(ui->infoTab); \
+        ui->member->setObjectName(#member); \
+        ui->member->setGeometry(memberGeometry); \
+        ui->member->setHtml(tr("<i>HTML output here</i>.")); \
+        ui->member->show();
+
     /* Update with a poketextedit */
-    ui->infoOutput->deleteLater();
-    ui->infoOutput = plugin->client->getPokeTextEdit();
-    ui->infoOutput->setParent(ui->infoTab);
-    ui->infoOutput->setObjectName("infoOutput");
-    ui->infoOutput->setGeometry(QRect(10, 280, 611, 241));
-    ui->infoOutput->setHtml(tr("<i>HTML output here</i>."));
-    ui->infoOutput->show();
+    PROMOTE(infoOutput)
+#undef PROMOTE
 
     infoTextChanged();
 }
