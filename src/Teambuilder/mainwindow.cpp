@@ -28,6 +28,7 @@
 #include "replayviewer.h"
 #include "mainwidget.h"
 #include "downloadmanager.h"
+#include "poketextedit.h"
 
 #ifdef Q_OS_MACX
 #include "mac/FullScreenSupport.h"
@@ -190,6 +191,12 @@ MainEngine::~MainEngine()
         delete h;
     }
     m_teams.clear();
+}
+
+/* For plugins */
+QScrollDownTextBrowser* MainEngine::getPokeTextEdit(QWidget* parent)
+{
+    return new PokeTextEdit(parent);
 }
 
 void MainEngine::updateDataReady(const QString &data, bool error)
