@@ -1,18 +1,15 @@
 ﻿#include "designerplugin.h"
 #include "designerwidget.h"
-#include "ui_designerwidget.h"
 #include "../Utilities/functions.h"
 
 #include <QSettings>
+
 DesignerWidget::DesignerWidget(DesignerPlugin *plugin) :
     QDialog(0),
     ui(new Ui::DesignerWidget),
     plugin(plugin)
 {
     ui->setupUi(this);
-    updateUi();
-
-    loadSettings(this, QSize(655, 604));
 
     /* Loading state */
     QSettings s;
@@ -20,11 +17,15 @@ DesignerWidget::DesignerWidget(DesignerPlugin *plugin) :
     liveReload = s.value("DesignerWidget/LiveReload", true).toBool();
     ui->liveReload->setChecked(liveReload);
 
+    /* Updating UI with custom classes */
+    loadSettings(this, QSize(655, 604));
+    updateUi();
+
     /* Signals/slots */
     connect(ui->liveReload, SIGNAL(toggled(bool)), this, SLOT(liveReloadChanged(bool)));
     connect(ui->reload, SIGNAL(pressed()), this, SLOT(reloadPressed()));
 
-    connect(ui->infoInput, SIGNAL(textChanged()), this, SLOT(infoTextChanged()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 }
 
 DesignerWidget::~DesignerWidget()
@@ -35,26 +36,38 @@ DesignerWidget::~DesignerWidget()
 
 void DesignerWidget::updateUi()
 {
-#define PROMOTE(member) \
-        QRect memberGeometry = ui->member->geometry(); \
-        ui->member->deleteLater(); \
-        ui->member = plugin->client->getPokeTextEdit(ui->infoTab); \
-        ui->member->setObjectName(#member); \
-        ui->member->setGeometry(memberGeometry); \
-        ui->member->setHtml(tr("<i>HTML output here</i>.")); \
-        ui->member->show();
-
     /* Update with a poketextedit */
-    PROMOTE(infoOutput)
-#undef PROMOTE
+    QRect geometry = ui->infoOutput->geometry();
+    ui->infoOutput->deleteLater();
+    ui->infoOutput = plugin->client->getPokeTextEdit(ui->infoTab);
+    ui->infoOutput->setObjectName("infoOutput");
+    ui->infoOutput->setGeometry(geometry);
 
-    infoTextChanged();
-}
+    ui->descOutput->deleteLater();
+    ui->descOutput = plugin->client->getPokeTextEdit(ui->descTab);
+    ui->descOutput->setObjectName("descOutput");
+    ui->descOutput->setGeometry(geometry);
 
-void DesignerWidget::accept()
-{
-    // TODO: Save old info
-    QDialog::accept();
+    ui->annOutput->deleteLater();
+    ui->annOutput = plugin->client->getPokeTextEdit(ui->annTab);
+    ui->annOutput->setObjectName("annOutput");
+    ui->annOutput->setGeometry(geometry);
+
+    QString profileInfo = plugin->client->trainerTeam()->profile().info().info;
+    if (profileInfo.trimmed().length() > 0) {
+        ui->infoInput->setPlainText(profileInfo);
+    }
+
+    ui->infoOutput->show();
+    ui->descOutput->show();
+    ui->annOutput->show();
+
+    connect(ui->infoInput, SIGNAL(textChanged()), this, SLOT(textChanged()));
+    connect(ui->descInput, SIGNAL(textChanged()), this, SLOT(textChanged()));
+    connect(ui->annInput, SIGNAL(textChanged()), this, SLOT(textChanged()));
+
+    /* Update everything */
+    tabChanged(0);
 }
 
 /* Slots */
@@ -66,44 +79,37 @@ void DesignerWidget::liveReloadChanged(bool checked)
     liveReload = checked;
 }
 
-void DesignerWidget::infoTextChanged()
+void DesignerWidget::textChanged()
 {
-    QString plainText = ui->infoInput->toPlainText();
-    int limit = limitForTab();
+    QString plainText = tabInput()->toPlainText();
     int length = plainText.length();
 
     ui->charCount->setText(
-                QString("%1/%2 %3").arg(
-                    QString("<font color='%1'><b>%2</b></font>").arg((length > limit ? "red" : "green"), QString::number(length)),
-                    QString::number(limit),
+                QString("<font color='%1'><b>%2</b></font>/%3 %4").arg(
+                    (length > limitForTab ? "red" : "green"),
+                    QString::number(length),
+                    QString::number(limitForTab),
                     tr("characters")
                     )
                 );
 
-    if (liveReload && length <= limit) {
-        ui->infoOutput->setHtml(plainText);
+    if (liveReload && length <= limitForTab) {
+        tabOutput()->setHtml(plainText);
     }
+}
+
+void DesignerWidget::tabChanged(int id)
+{
+    tab = id;
+    limitForTab = limitPerTab[tab];
+
+    textChanged();
 }
 
 void DesignerWidget::reloadPressed()
 {
-    QString plainText = ui->infoInput->toPlainText();
-    if (plainText.length() <= limitForTab()) {
-        ui->infoOutput->setHtml(plainText);
-    }
-}
-
-
-int DesignerWidget::limitForTab()
-{
-    int tab = ui->tabWidget->currentIndex();
-    switch (tab) {
-    case 0: /* trainer info */
-        return 300;
-    case 1: /* server description */
-        return 500;
-    default: /* 2 - server announcement */
-        /* Could be of any length, but a fairly good guideline */
-        return 80000;
+    QString plainText = tabInput()->toPlainText();
+    if (plainText.length() <= limitForTab) {
+        tabOutput()->setHtml(plainText);
     }
 }
