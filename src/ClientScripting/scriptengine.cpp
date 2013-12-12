@@ -802,7 +802,42 @@ QScriptValue ScriptEngine::type(int id)
 
 QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
 {
+    if (!PokemonInfo::Exists(Pokemon::uniqueId(poke))) {
+        warn("baseStats(poke, stat, gen)", QString("Pokemon %1 doesn't exist.").arg(QString::number(poke)));
+        return -1;
+    }
+
+    if (stat < 0 || stat > 6) {
+        warn("baseStats(poke, stat, gen)", QString("Stat %1 doesn't exist.").arg(QString::number(stat)));
+        return -1;
+    }
+
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        warn("baseStats(poke, stat, gen)", QString("Gen %1 unsupported.").arg(QString::number(gen)));
+        return -1;
+    }
+
     return PokemonInfo::BaseStats(poke,gen).baseStat(stat);
+}
+
+QScriptValue ScriptEngine::pokeBaseStats(int id, int gen)
+{
+    QScriptValue ret;
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
+            ret = myengine.newArray(6);
+            PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id), gen);
+
+            for (int i = 0; i < 6; i++) {
+                ret.setProperty(i, bs.baseStat(i));
+            }
+        }else{
+            warn("pokeBaseStats", "Pokemon doesn't exist.");
+        }
+    } else {
+        warn("pokeBaseStats", "generation is not supported.");
+    }
+    return ret;
 }
 
 int ScriptEngine::moveType(int moveNum, int gen)
