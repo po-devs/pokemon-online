@@ -39,6 +39,7 @@ public:
 
     void swapIds(BaseAnalyzer *other);
     void setId(int id);
+    void copyFrom(BaseAnalyzer *other);
 
     /* Convenience functions to avoid writing a new one every time */
     inline void emitCommand(const QByteArray &command) {

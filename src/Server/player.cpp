@@ -1064,6 +1064,8 @@ void Player::associateWith(Player *other)
 {
     removeRelay();
     std::swap(myrelay, other->myrelay);
+    /* Keep relay specific data across reconnect */
+    relay().copyFrom(other->myrelay);
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
