@@ -1067,13 +1067,14 @@ bool Player::testReconnectData(Player *other, const QByteArray &hash)
 
 void Player::associateWith(Player *other)
 {
-    removeRelay();
     std::swap(myrelay, other->myrelay);
     /* Keep relay specific data across reconnect */
-    relay().copyFrom(other->myrelay);
+    relay().copyFrom(other->relay());
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
+    /* Discard other relay */
+    other->removeRelay();
 
     std::swap(myip, other->myip);
     std::swap(proxyip, other->proxyip);
