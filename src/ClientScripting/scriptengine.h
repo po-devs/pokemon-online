@@ -101,6 +101,8 @@ public:
 
     /* Evaluates the script given in parameter */
     QScriptValue eval(const QString &script);
+    QScriptValue eval(const QString &script, const QString &file);
+
     static QScriptValue eval(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE int rand(int min, int max);

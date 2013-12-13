@@ -149,6 +149,8 @@ void ScriptEngine::armScriptEngine(QScriptEngine *engine)
     QScriptValue channelfun = myengine.newFunction(channelNames);
     channelfun.setData(sys.property("client"));
     myengine.globalObject().property("client").setProperty("channelNames", channelfun);
+
+    myengine.globalObject().setProperty("global", myengine.globalObject());
 }
 
 void ScriptEngine::changeBattleScript(const QString &bscript)
@@ -201,7 +203,7 @@ void ScriptEngine::onBattleStarted(BaseBattleWindowInterface *w)
 
 void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool triggerStartUp)
 {
-    QScriptValue myscript = engine->evaluate(script);
+    QScriptValue myscript = engine->evaluate(script, "scripts.js");
     engine->globalObject().setProperty("script", myscript);
 
     if (engine == &myengine) {
@@ -210,6 +212,7 @@ void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool
 
     if (myscript.isError()) {
         QString mess = "Fatal Script Error line " + QString::number(engine->uncaughtExceptionLineNumber()) + ": " + myscript.toString();
+        mess += "\n" + engine->uncaughtException().property("backtracetext").toString();
         engine->globalObject().property("print").call(myscript, QScriptValueList() << mess);
     } else {
         //printLine("Script Check: OK");
@@ -564,6 +567,11 @@ QScriptValue ScriptEngine:: version()
 QScriptValue ScriptEngine::eval(const QString &script)
 {
     return myengine.evaluate(script);
+}
+
+QScriptValue ScriptEngine::eval(const QString &script, const QString &file)
+{
+    return myengine.evaluate(script, file);
 }
 
 QScriptValue ScriptEngine::eval(QScriptContext *context, QScriptEngine *engine)
