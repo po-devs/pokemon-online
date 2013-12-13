@@ -98,9 +98,9 @@ void BaseAnalyzer::setId(int id)
     socket().changeId(id);
 }
 
-void BaseAnalyzer::copyFrom(BaseAnalyzer *other)
+void BaseAnalyzer::copyFrom(const BaseAnalyzer &other)
 {
-    version = other->version;
+    version = other.version;
 }
 
 void BaseAnalyzer::sendPacket(const QByteArray &packet)
