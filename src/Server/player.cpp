@@ -344,6 +344,7 @@ void Player::doWhenRC(bool wasLoggedIn)
     }
 }
 
+/* Full player removal */
 void Player::doWhenDQ()
 {
     removeRelay();
@@ -364,6 +365,10 @@ void Player::doWhenDQ()
         p->knowledge.remove(this);
     }
     knowledge.clear();
+
+    foreach(int channel, channels) {
+        emit leaveRequested(this->id(), channel);
+    }
 }
 
 void Player::quitSpectating(int battleId)
