@@ -27,6 +27,7 @@ cp ../tests/data/battleserver/* . -R
 ./test-battleserver
 ensure_good_run
 
+rm serverdb -Rf
 cp ../tests/data/server/* . -R
 [[ -f Server ]] && (./Server -H -N &> /dev/null &) || (./Server_debug -H -N &> /dev/null &)
 

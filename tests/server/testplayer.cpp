@@ -18,8 +18,9 @@ void TestPlayer::createAnalyzer()
 
     connect(this, SIGNAL(destroyed()), analyzer, SLOT(deleteLater()));
     connect(analyzer, SIGNAL(connected()), SLOT(onPlayerConnected()));
-    connect(analyzer, SIGNAL(connectionError(int,QString)), SLOT(reject()));
+    connect(analyzer, SIGNAL(disconnected()), SLOT(onPlayerDisconnected()));
     connect(analyzer, SIGNAL(channelMessageReceived(QString,int,bool)), SLOT(onChannelMessage(QString,int,bool)));
+    connect(analyzer, SIGNAL(messageReceived(QString)), SLOT(onMessage(QString)));
     connect(analyzer, SIGNAL(channelPlayers(int,QVector<qint32>)), SLOT(onChannelPlayers(int, QVector<qint32>)));
     connect(analyzer, SIGNAL(playerLogin(PlayerInfo,QStringList)), SLOT(loggedIn(PlayerInfo,QStringList)));
     connect(analyzer, SIGNAL(playerLogout(int)), SLOT(playerLogout(int)));
@@ -37,6 +38,11 @@ Analyzer *TestPlayer::sender() const
 }
 
 void TestPlayer::onChannelMessage(const QString &, int, bool)
+{
+
+}
+
+void TestPlayer::onMessage(const QString &)
 {
 
 }

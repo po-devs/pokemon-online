@@ -415,7 +415,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
             break;
         }
-    case CPTBan: // For compatability, v.2.0.05 uses this, now obsolated
+    case CPTBan: // For compatability, v.2.0.05 uses this, now obsolete
     case CPBan:
         {
             QString name;

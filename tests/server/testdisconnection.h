@@ -10,6 +10,7 @@ public:
     void loggedIn(const PlayerInfo &info, const QStringList& tiers);
     void playerLogout(int id);
     void onPm(int id, const QString &message);
+    void onPlayerDisconnected(){}
 };
 
 #endif // TESTDISCONNECTION_H

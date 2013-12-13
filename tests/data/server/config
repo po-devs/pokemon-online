@@ -15,10 +15,10 @@ RatedThroughChallenge=false
 
 [Channels]
 LoggingEnabled=false
-MainChannel=
+MainChannel=Testing
 
 [GUI]
-ShowLogMessages=false
+ShowLogMessages=true
 
 [Ladder]
 BonusPeriods=5

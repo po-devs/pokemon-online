@@ -25,7 +25,9 @@ public slots:
     /* Use onPlayerConnected as the entry point of most of your tests. From then you can
      * use sender() to log in */
     virtual void onPlayerConnected(){}
+    virtual void onPlayerDisconnected(){reject();}
     virtual void onChannelMessage(const QString &message, int chanid, bool html);
+    virtual void onMessage(const QString&);
     virtual void onChannelPlayers(int chan, const QVector<qint32>& ids);
     virtual void loggedIn(const PlayerInfo &info, const QStringList& tiers);
     virtual void playerLogout(int id);
