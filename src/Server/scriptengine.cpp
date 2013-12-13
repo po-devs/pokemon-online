@@ -2356,8 +2356,7 @@ QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
         return -1;
     }
 
-    if (stat < 0 || stat > 6) {
-        warn("baseStats(poke, stat, gen)", QString("Stat %1 doesn't exist.").arg(QString::number(stat)));
+    if (!testRange("baseStats(poke, stat, gen)", stat, 0, 6)) {
         return -1;
     }
 
