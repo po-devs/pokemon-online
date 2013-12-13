@@ -127,6 +127,21 @@ void Analyzer::sendPM(int id, const QString &mess)
     notify(SendPM, qint32(id), mess);
 }
 
+void Analyzer::kick(int id)
+{
+    notify(PlayerKick, qint32(id));
+}
+
+void Analyzer::ban(int id)
+{
+    notify(PlayerBan, qint32(id));
+}
+
+void Analyzer::tempban(int id, int time)
+{
+    notify(PlayerTBan, qint32(id), qint32(time));
+}
+
 void Analyzer::sendChanMessage(int channelid, const QString &message)
 {
     notify(SendChatMessage, Flags(1), Flags(0), qint32(channelid), message);

@@ -48,6 +48,10 @@ public:
     void sendBattleResult(int id, int result);
     bool isConnected() const;
 
+    void kick(int id);
+    void ban(int id);
+    void tempban(int id, int time);
+
     QString getIp() const;
     quint32 getCommandCount() const {return commandCount;}
     void disconnectFromHost();

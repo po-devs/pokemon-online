@@ -773,15 +773,15 @@ void Client::watchBattleRequ(int id)
 }
 
 void Client::kick(int p) {
-    relay().notify(NetworkCli::PlayerKick, qint32(p));
+    relay().kick(p);
 }
 
 void Client::ban(int p) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p));
+    relay().ban(p);
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().tempban(p, time);
 }
 
 void Client::pmcp(QString p) {

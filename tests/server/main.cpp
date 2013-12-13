@@ -4,7 +4,8 @@
 #include "testdisconnection.h"
 #include "testvariation.h"
 #include "testregister.h"
-#include "testsession.cpp"
+#include "testsession.h"
+#include "testban.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestVariation());
     runner.addTest(new TestRegister());
     runner.addTest(new TestSESSION());
+    runner.addTest(new TestBan());
     runner.start();
 
     return a.exec();
