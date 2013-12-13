@@ -149,6 +149,8 @@ void ScriptEngine::armScriptEngine(QScriptEngine *engine)
     QScriptValue channelfun = myengine.newFunction(channelNames);
     channelfun.setData(sys.property("client"));
     myengine.globalObject().property("client").setProperty("channelNames", channelfun);
+
+    myengine.globalObject().setProperty("global", myengine.globalObject());
 }
 
 void ScriptEngine::changeBattleScript(const QString &bscript)
@@ -201,7 +203,7 @@ void ScriptEngine::onBattleStarted(BaseBattleWindowInterface *w)
 
 void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool triggerStartUp)
 {
-    QScriptValue myscript = engine->evaluate(script);
+    QScriptValue myscript = engine->evaluate(script, "scripts.js");
     engine->globalObject().setProperty("script", myscript);
 
     if (engine == &myengine) {
@@ -210,6 +212,7 @@ void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool
 
     if (myscript.isError()) {
         QString mess = "Fatal Script Error line " + QString::number(engine->uncaughtExceptionLineNumber()) + ": " + myscript.toString();
+        mess += "\n" + engine->uncaughtException().property("backtracetext").toString();
         engine->globalObject().property("print").call(myscript, QScriptValueList() << mess);
     } else {
         //printLine("Script Check: OK");
@@ -566,6 +569,11 @@ QScriptValue ScriptEngine::eval(const QString &script)
     return myengine.evaluate(script);
 }
 
+QScriptValue ScriptEngine::eval(const QString &script, const QString &file)
+{
+    return myengine.evaluate(script, file);
+}
+
 QScriptValue ScriptEngine::eval(QScriptContext *context, QScriptEngine *engine)
 {
     if (context->argumentCount() <= 0) {
@@ -802,7 +810,42 @@ QScriptValue ScriptEngine::type(int id)
 
 QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
 {
+    if (!PokemonInfo::Exists(Pokemon::uniqueId(poke))) {
+        warn("baseStats(poke, stat, gen)", QString("Pokemon %1 doesn't exist.").arg(QString::number(poke)));
+        return -1;
+    }
+
+    if (stat < 0 || stat > 6) {
+        warn("baseStats(poke, stat, gen)", QString("Stat %1 doesn't exist.").arg(QString::number(stat)));
+        return -1;
+    }
+
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        warn("baseStats(poke, stat, gen)", QString("Gen %1 unsupported.").arg(QString::number(gen)));
+        return -1;
+    }
+
     return PokemonInfo::BaseStats(poke,gen).baseStat(stat);
+}
+
+QScriptValue ScriptEngine::pokeBaseStats(int id, int gen)
+{
+    QScriptValue ret;
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        if(PokemonInfo::Exists(Pokemon::uniqueId(id))) {
+            ret = myengine.newArray(6);
+            PokeBaseStats bs = PokemonInfo::BaseStats(Pokemon::uniqueId(id), gen);
+
+            for (int i = 0; i < 6; i++) {
+                ret.setProperty(i, bs.baseStat(i));
+            }
+        }else{
+            warn("pokeBaseStats", "Pokemon doesn't exist.");
+        }
+    } else {
+        warn("pokeBaseStats", "generation is not supported.");
+    }
+    return ret;
 }
 
 int ScriptEngine::moveType(int moveNum, int gen)
