@@ -101,6 +101,8 @@ public:
 
     /* Evaluates the script given in parameter */
     QScriptValue eval(const QString &script);
+    QScriptValue eval(const QString &script, const QString &file);
+
     static QScriptValue eval(QScriptContext *context, QScriptEngine *engine);
 
     Q_INVOKABLE int rand(int min, int max);
@@ -128,6 +130,7 @@ public:
     Q_INVOKABLE QString gender(int genderNum);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int _gen = GenInfo::GenMax());
     Q_INVOKABLE QScriptValue baseStats(int poke, int stat, int gen = GenInfo::GenMax());
+    Q_INVOKABLE QScriptValue pokeBaseStats(int id, int gen = GenInfo::GenMax());
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
     /* Qt doesn't convert registered types automatically, have to do it manually */

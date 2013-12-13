@@ -2349,6 +2349,25 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
+{
+    if (!PokemonInfo::Exists(Pokemon::uniqueId(poke))) {
+        warn("baseStats(poke, stat, gen)", QString("Pokemon %1 doesn't exist.").arg(QString::number(poke)));
+        return -1;
+    }
+
+    if (!testRange("baseStats(poke, stat, gen)", stat, 0, 6)) {
+        return -1;
+    }
+
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        warn("baseStats(poke, stat, gen)", QString("Gen %1 unsupported.").arg(QString::number(gen)));
+        return -1;
+    }
+
+    return PokemonInfo::BaseStats(poke,gen).baseStat(stat);
+}
+
 QScriptValue ScriptEngine::pokeBaseStats(int id, int gen)
 {
     QScriptValue ret;

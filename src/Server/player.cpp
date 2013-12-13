@@ -344,6 +344,7 @@ void Player::doWhenRC(bool wasLoggedIn)
     }
 }
 
+/* Full player removal */
 void Player::doWhenDQ()
 {
     removeRelay();
@@ -364,6 +365,10 @@ void Player::doWhenDQ()
         p->knowledge.remove(this);
     }
     knowledge.clear();
+
+    foreach(int channel, channels) {
+        emit leaveRequested(this->id(), channel);
+    }
 }
 
 void Player::quitSpectating(int battleId)
@@ -1062,13 +1067,14 @@ bool Player::testReconnectData(Player *other, const QByteArray &hash)
 
 void Player::associateWith(Player *other)
 {
-    removeRelay();
     std::swap(myrelay, other->myrelay);
     /* Keep relay specific data across reconnect */
-    relay().copyFrom(other->myrelay);
+    relay().copyFrom(other->relay());
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
+    /* Discard other relay */
+    other->removeRelay();
 
     std::swap(myip, other->myip);
     std::swap(proxyip, other->proxyip);
