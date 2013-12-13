@@ -1835,10 +1835,6 @@ void Server::removePlayer(int id)
             AntiDos::obj()->disconnect(p->ip(), id);
         }
 
-        foreach(int chanid, p->getChannels()) {
-            leaveRequest(id, chanid);
-        }
-
         emit player_logout(id);
 
         /* Sending the notice of logout to others only if the player is already logged in */
@@ -1847,7 +1843,7 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-        p->deleteLater(); myplayers.remove(id);
+        myplayers.take(id)->deleteLater();
 
         if ((loggedIn || p->state()[Player::WaitingReconnect]) && mynames.value(playerName.toLower()) == p->id())
             mynames.remove(playerName.toLower());
@@ -1971,7 +1967,7 @@ void Server::setAnnouncement(int &id, const QString &html) {
 Player * Server::player(int id) const
 {
     if (!myplayers.contains(id)) {
-        qFatal("Fatal! player battle called for non existing ID %d", id);
+        qFatal("Fatal! player called for non existing ID %d", id);
     }
     return myplayers.value(id);
 }

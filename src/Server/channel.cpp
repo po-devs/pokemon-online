@@ -122,7 +122,11 @@ void Channel::warnAboutRemoval()
         server->player(p)->removeChannel(id());
     }
     foreach(int p, disconnectedPlayers) {
-        server->player(p)->removeChannel(id());
+        if (!server->playerExist(p)) {
+            qCritical() << "Error: Closing channel containing non-existent disconnected player " << p;
+        } else {
+            server->player(p)->removeChannel(id());
+        }
     }
 
     players.clear();
