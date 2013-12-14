@@ -9,8 +9,8 @@
 #include "loadinsertthread.h"
 
 MemoryHolder<SecurityManager::Member>  SecurityManager::holder;
-QNickValidator SecurityManager::val(NULL);
-QHash<QString, int> SecurityManager::bannedIPs;
+QNickValidator SecurityManager::val(nullptr);
+QHash<QString, unsigned int> SecurityManager::bannedIPs;
 QHash<QString, std::pair<QString, int> > SecurityManager::bannedMembers;
 int SecurityManager::dailyRunDays = 182;
 
@@ -264,8 +264,8 @@ void SecurityManager::updateMember(const Member &m) {
 }
 
 bool SecurityManager::bannedIP(const QString &ip) {
-    QHash<QString, int>::const_iterator i = bannedIPs.find(ip);
-    bool isBanned = i != bannedIPs.end();
+    QHash<QString, unsigned int>::const_iterator i = bannedIPs.find(ip);
+    bool isBanned = (i != bannedIPs.end());
     if (isBanned && i.value() != 0 && i.value() < qlonglong(QDateTime::currentDateTimeUtc().toTime_t())) {
        /* We expire the tempban here if we should */
        unbanIP(ip);
@@ -286,7 +286,7 @@ void SecurityManager::banIP(const QString &ip, int time)
         return;
     }
 
-    bannedIPs.insert(ip, time);
+    bannedIPs.insert(ip, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
 
     QStringList aliases = membersForIp(ip);
 
