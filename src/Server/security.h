@@ -144,7 +144,7 @@ private:
 
     static MemoryHolder<Member> holder;
 
-    static QHash<QString, int> bannedIPs;
+    static QHash<QString, unsigned int> bannedIPs;
     static QHash<QString, std::pair<QString, int> > bannedMembers;
 
     static WaitingObject* getObject();
