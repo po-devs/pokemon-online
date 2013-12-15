@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     testvariation.cpp \
     ../common/pokemontestrunner.cpp \
     testregister.cpp \
-    testban.cpp
+    testban.cpp \
+    testsession.cpp
 
 HEADERS += \
     ../common/test.h \
@@ -45,4 +46,5 @@ HEADERS += \
     testvariation.h \
     ../common/pokemontestrunner.h \
     testregister.h \
-    testban.h
+    testban.h \
+    testsession.h

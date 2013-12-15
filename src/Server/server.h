@@ -30,6 +30,7 @@ class Server: public QObject, public ServerInterface
     Q_OBJECT
 
     friend class ScriptEngine;
+    friend class SessionDataFactory;
     friend class ServerWidget;
     friend class ConsoleReader;
     friend class RegistryCommunicator;
