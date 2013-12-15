@@ -69,3 +69,7 @@ bin/clientscripts
 scripts/sprite
 bin/usage_stats/raw
 bin/serverdb
+bin/scriptdata
+bin/bfdata
+bin/tourdata
+bin/tourconfig

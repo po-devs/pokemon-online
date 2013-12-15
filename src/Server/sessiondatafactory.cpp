@@ -1,8 +1,9 @@
 #include "sessiondatafactory.h"
 
-SessionDataFactory::SessionDataFactory(QScriptEngine *engineLink) :
-        engine(engineLink), userFactoryEnabled(false), channelFactoryEnabled(false),
-        initialStateHandled(false), globalFactoryEnabled(false), refillNeeded(false)
+SessionDataFactory::SessionDataFactory(ScriptEngine *engine) :
+        engine(engine), scriptEngine(engine->getEngine()),
+        userFactoryEnabled(false), channelFactoryEnabled(false),
+        globalFactoryEnabled(false)
 {
 }
 
@@ -11,6 +12,7 @@ void SessionDataFactory::registerUserFactory(QScriptValue factoryFunction)
     if (factoryFunction.isFunction()) {
         userFactoryFunction = factoryFunction;
         userFactoryEnabled = true;
+        refill(RefillUsers);
     }
 }
 
@@ -19,6 +21,7 @@ void SessionDataFactory::registerChannelFactory(QScriptValue factoryFunction)
     if (factoryFunction.isFunction()) {
         channelFactoryFunction = factoryFunction;
         channelFactoryEnabled = true;
+        refill(RefillChannels);
     }
 }
 
@@ -57,30 +60,18 @@ void SessionDataFactory::handleChannelDestroy(int channel_id)
 QScriptValue SessionDataFactory::users(int id)
 {
     if (userFactoryEnabled) {
-        return userFactoryStorage.value(id, engine->undefinedValue());
+        return userFactoryStorage.value(id, scriptEngine->undefinedValue());
     }else{
-        return engine->undefinedValue();
+        return scriptEngine->undefinedValue();
     }
 }
 
 QScriptValue SessionDataFactory::channels(int id)
 {
     if (channelFactoryEnabled) {
-        return channelFactoryStorage.value(id, engine->undefinedValue());
+        return channelFactoryStorage.value(id, scriptEngine->undefinedValue());
     }else{
-        return engine->undefinedValue();
-    }
-}
-
-void SessionDataFactory::handleInitialState()
-{
-    if (!initialStateHandled) {
-        handleChannelCreate(0);
-        initialStateHandled = true;
-        if (globalFactoryEnabled) {
-            globalFactoryStorage = globalFactoryFunction.construct(QScriptValueList() << currentScriptId);
-            checkError();
-        }
+        return scriptEngine->undefinedValue();
     }
 }
 
@@ -100,15 +91,14 @@ void SessionDataFactory::clearAll()
     globalFactoryStorage = QScriptValue();
     userFactoryStorage.clear();
     channelFactoryStorage.clear();
-    initialStateHandled = false;
 }
 
 void SessionDataFactory::identifyScriptAs(QString scriptId)
 {
     if (scriptId.isEmpty() || (currentScriptId != scriptId)) {
         clearAll();
-        refillNeeded = true;
     }
+
     currentScriptId = scriptId;
 }
 
@@ -117,6 +107,8 @@ void SessionDataFactory::registerGlobalFactory(QScriptValue factoryFunction)
     if (factoryFunction.isFunction()) {
         globalFactoryFunction = factoryFunction;
         globalFactoryEnabled = true;
+        globalFactoryStorage = globalFactoryFunction.construct(QScriptValueList() << currentScriptId);
+        checkError();
     }
 }
 
@@ -125,25 +117,61 @@ QScriptValue SessionDataFactory::global()
     if (globalFactoryEnabled) {
         return globalFactoryStorage;
     }else{
-        return engine->undefinedValue();
+        return scriptEngine->undefinedValue();
     }
 }
 
-bool SessionDataFactory::isRefillNeeded()
+void SessionDataFactory::refill(RefillType type)
 {
-    return refillNeeded;
+    if (type == RefillUsers || type == RefillAll) {
+        // Refill player session info if session data is no longer valid.
+        QList<int> keys = engine->getServer()->myplayers.keys();
+        for (int i = 0; i < keys.size(); i++) {
+            if (!hasUser(keys[i])) {
+                handleUserLogIn(keys[i]);
+            }
+        }
+    }
+
+    if (type == RefillChannels || type == RefillAll) {
+        // Refill channels as well.
+        QList<int> keys = engine->getServer()->channels.keys();
+        for (int i = 0; i < keys.size(); i++) {
+            int current_channel = keys[i];
+            if (!hasChannel(current_channel)) {
+                handleChannelCreate(current_channel);
+            }
+        }
+    }
 }
 
-void SessionDataFactory::refillDone()
+bool SessionDataFactory::hasUser(int id)
 {
-    refillNeeded = false;
+    return userFactoryStorage.contains(id);
+}
+
+bool SessionDataFactory::hasChannel(int id)
+{
+    return channelFactoryStorage.contains(id);
+}
+
+QString SessionDataFactory::dump()
+{
+    QStringList dump;
+    dump << QString("SESSION dump @ %1").arg(QString::number(engine->time()));
+    dump << QString("Script: %1").arg(currentScriptId);
+    dump << QString("%1 users, %2 channels.").arg(QString::number(userFactoryStorage.count()), QString::number(channelFactoryStorage.count()));
+    dump << QString("User: %1; Channel: %2, Global: %3").arg(userFactoryEnabled ? "enabled" : "disabled",
+                                                             channelFactoryEnabled ? "enabled" : "disabled",
+                                                             globalFactoryEnabled ? "enabled" : "disabled");
+    return dump.join("\n");
 }
 
 void SessionDataFactory::checkError()
 {
-    if (engine->hasUncaughtException()) {
-        qDebug() << QString("Session handler error: line %1. %2").arg(
-            QString::number(engine->uncaughtExceptionLineNumber())
-        ).arg(engine->uncaughtException().toString());
+    if (scriptEngine->hasUncaughtException()) {
+        engine->printLine(QString("Session handler error: line %1. %2").arg(
+            QString::number(scriptEngine->uncaughtExceptionLineNumber())
+        ).arg(scriptEngine->uncaughtException().toString()));
     }
 }

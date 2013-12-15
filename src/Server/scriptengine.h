@@ -14,10 +14,10 @@
 
 #include "../PokemonInfo/geninfo.h"
 #include "../Utilities/functions.h"
-#include "sessiondatafactory.h"
 
 class Server;
 class ChallengeInfo;
+class SessionDataFactory;
 
 class ScriptEngine : public QObject
 {
@@ -496,6 +496,9 @@ public:
             return proc->pid();
         #endif // Q_WS_WIN
     }
+    Server* getServer();
+    QScriptEngine* getEngine();
+    void printLine(const QString &s);
 signals:
     void stdoutReceived(quint64 pid, const QString &procStdout);
     void stderrReceived(quint64 pid, const QString &procStderr);
@@ -566,7 +569,6 @@ private:
     QString sync_data;
 
     void evaluate(const QScriptValue &expr);
-    void printLine(const QString &s);
 
     bool testPlayer(const QString &function, int id);
     bool testTeamCount(const QString &function, int id, int team);
