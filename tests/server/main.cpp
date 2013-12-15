@@ -6,6 +6,7 @@
 #include "testregister.h"
 #include "testsession.h"
 #include "testban.h"
+#include "testsession.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestRegister());
     runner.addTest(new TestSESSION());
     runner.addTest(new TestBan());
+    runner.addTest(new TestSESSION());
     runner.start();
 
     return a.exec();
