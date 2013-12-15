@@ -19,6 +19,7 @@
 #include "analyze.h"
 #include "battlecommunicator.h"
 
+#include "sessiondatafactory.h"
 #include "scriptengineagent.h"
 #include "scriptengine.h"
 
@@ -129,7 +130,7 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     myengine.setAgent(bt);
 
-    mySessionDataFactory = new SessionDataFactory(&myengine);
+    mySessionDataFactory = new SessionDataFactory(this);
 
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("global", myengine.globalObject());
@@ -227,7 +228,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     intervalTimer_w = false;
     stopTimer_w = false;
 
-    mySessionDataFactory->disableAll();
     strict = false;
     wfatal = false;
 
@@ -241,7 +241,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     } else {
         myscript = newscript;
-
         myengine.globalObject().setProperty("script", myscript);
 
         if (!makeSEvent("loadScript")) {
@@ -259,29 +258,7 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
         if(triggerStartUp) {
             serverStartUp();
         }
-
-        mySessionDataFactory->handleInitialState();
-        if (mySessionDataFactory->isRefillNeeded()) {
-            // Refill player session info if session data is no longer valid.
-            QList<int> keys = myserver->myplayers.keys();
-            for (int i = 0; i < keys.size(); i++) {
-                mySessionDataFactory->handleUserLogIn(keys[i]);
-            }
-            // Refill channels as well.
-            keys = myserver->channels.keys();
-            for (int i = 0; i < keys.size(); i++) {
-                int current_channel = keys[i];
-                // Default channel is already there.
-                if (current_channel != 0) {
-                    mySessionDataFactory->handleChannelCreate(current_channel);
-                }
-            }
-
-            mySessionDataFactory->refillDone();
-        }
-
     }
-
 }
 
 QScriptValue ScriptEngine::backtrace(QScriptContext *c, QScriptEngine *)
@@ -2220,7 +2197,7 @@ bool ScriptEngine::loggedIn(int id)
 
 void ScriptEngine::printLine(const QString &s)
 {
-    myserver->printLine(s, false, true);
+    myserver->forcePrint(s);
 }
 
 void ScriptEngine::stopEvent()
@@ -3516,4 +3493,15 @@ QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
     po->wfatal = true;
 
     return QScriptValue(1);
+}
+
+/* Not invokable by scripts */
+Server* ScriptEngine::getServer()
+{
+    return myserver;
+}
+
+QScriptEngine* ScriptEngine::getEngine()
+{
+    return &myengine;
 }
