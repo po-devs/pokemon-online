@@ -1,20 +1,26 @@
+#include "../Utilities/functions.h"
 #include "webinterface.h"
 #include "registry.h"
 #include "server.h"
 
 RegistryWebInterface::RegistryWebInterface(Registry* reg) : QObject(reg), regptr(reg), server()
 {
+    pass = QString::fromUtf8(getFileContent("registry_pass.txt").trimmed());
+    if (pass) {
+        pass.insert(0, '/');
+    }
+
     if (server.listen(QHostAddress::Any, 4567))
     {
         qDebug() << "Listening to port 4567";
     }
     router.setUnmatchedRequestAction(Pillow::HttpHandlerSimpleRouter::Return4xxResponse);
-    router.addRoute("GET", "/index", this, SLOT(showServers(Pillow::HttpConnection*)));
-    router.addRoute("GET", "/servers", this, SLOT(showServers(Pillow::HttpConnection*)));
-    router.addRoute("GET", "/bans", this, SLOT(showBans(Pillow::HttpConnection*)));
-    router.addRoute("POST", "/updatebans", this, SLOT(updateBans(Pillow::HttpConnection*)));
-    router.addRoute("GET", "/announcement", this, SLOT(showAnnouncement(Pillow::HttpConnection*)));
-    router.addRoute("POST", "/updateannouncement", this, SLOT(updateAnnouncement(Pillow::HttpConnection*)));
+    router.addRoute("GET", pass + "/index", this, SLOT(showServers(Pillow::HttpConnection*)));
+    router.addRoute("GET", pass + "/servers", this, SLOT(showServers(Pillow::HttpConnection*)));
+    router.addRoute("GET", pass + "/bans", this, SLOT(showBans(Pillow::HttpConnection*)));
+    router.addRoute("POST", pass + "/updatebans", this, SLOT(updateBans(Pillow::HttpConnection*)));
+    router.addRoute("GET", pass + "/announcement", this, SLOT(showAnnouncement(Pillow::HttpConnection*)));
+    router.addRoute("POST", pass + "/updateannouncement", this, SLOT(updateAnnouncement(Pillow::HttpConnection*)));
     QObject::connect(&server, SIGNAL(requestReady(Pillow::HttpConnection*)), &router, SLOT(handleRequest(Pillow::HttpConnection*)));
 }
 
@@ -27,9 +33,9 @@ namespace {
         "<title>Pokemon Online Registry</title>"
         "</head>"
         "<body>"
-        "<a href='/index'>Server listing</a> "
-        "| <a href='/announcement'>Announcement</a> "
-        "| <a href='/bans'> Registry bans</a>"
+        "<a href='./index'>Server listing</a> "
+        "| <a href='./announcement'>Announcement</a> "
+        "| <a href='./bans'> Registry bans</a>"
         "<hr>").toUtf8();
     QByteArray const footer = QString("</ul></body></html>").toUtf8();
 }
@@ -68,7 +74,7 @@ void RegistryWebInterface::showBans(Pillow::HttpConnection *conn)
     if (ip.size() > 0)
         conn->writeContent(ipline.arg(ip).toUtf8());
     }
-    conn->writeContent(QString("</ul><form method='POST' enctype='application/x-www-form-urlencoded' action='/updatebans'><h2>Modify bans</h2><br><label for='add'>Add IP ban</label><input type='text' name='add'><br><label for='remove'>Remove IP ban</label><input type='text' name='remove'><br><input type='submit'></form>").toUtf8());
+    conn->writeContent(QString("</ul><form method='POST' enctype='application/x-www-form-urlencoded' action='./updatebans'><h2>Modify bans</h2><br><label for='add'>Add IP ban</label><input type='text' name='add'><br><label for='remove'>Remove IP ban</label><input type='text' name='remove'><br><input type='submit'></form>").toUtf8());
     conn->writeContent(footer);
     conn->endContent();
 }
@@ -81,14 +87,14 @@ void RegistryWebInterface::updateBans(Pillow::HttpConnection *conn)
         regptr->bannedIPs.insert(post["add"]);
 
     Pillow::HttpHeaderCollection headers;
-    headers.push_back(qMakePair(QByteArray("Location"), QByteArray("/bans?updated=true")));
+    headers.push_back(qMakePair(QByteArray("Location"), QByteArray("./bans?updated=true")));
     conn->writeResponse(303, headers);
 }
 void RegistryWebInterface::showAnnouncement(Pillow::HttpConnection *conn)
 {
     conn->writeHeaders(200);
     conn->writeContent(header);
-    conn->writeContent(QString("<h1>Registry announcement</h1><div style='border 2px coral solid' id='announcement'><center>%1</center></div><hr><form method='POST' action='/updateannouncement' enctype='application/x-www-form-urlencoded'><label for='announcement'>Update announcement:<br></label><textarea name='announcement'>%1</textarea><input type='submit'></form>").arg(regptr->registry_announcement).toUtf8());
+    conn->writeContent(QString("<h1>Registry announcement</h1><div style='border 2px coral solid' id='announcement'><center>%1</center></div><hr><form method='POST' action='./updateannouncement' enctype='application/x-www-form-urlencoded'><label for='announcement'>Update announcement:<br></label><textarea name='announcement'>%1</textarea><input type='submit'></form>").arg(regptr->registry_announcement).toUtf8());
     conn->writeContent(footer);
     conn->endContent();
 }
@@ -106,7 +112,7 @@ void RegistryWebInterface::updateAnnouncement(Pillow::HttpConnection *conn)
     }
 
     Pillow::HttpHeaderCollection headers;
-    headers.push_back(qMakePair(QByteArray("Location"), QByteArray("/announcement?updated=true")));
+    headers.push_back(qMakePair(QByteArray("Location"), QByteArray("./announcement?updated=true")));
     conn->writeResponse(303, headers);
 }
 

@@ -35,6 +35,7 @@ Makefile*
 bin/core*
 bin/StatsExtracter
 bin/Registry
+bin/BattleServer
 bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
@@ -69,3 +70,5 @@ bin/clientscripts
 scripts/sprite
 bin/usage_stats/raw
 bin/serverdb
+bin/test-*
+pokemon-online*

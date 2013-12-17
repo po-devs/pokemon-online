@@ -31,8 +31,8 @@ DEFINES = REGISTRY_SIDE
 CONFIG(webconf) {
     HEADERS += webinterface.h
     SOURCES += webinterface.cpp
-    INCLUDEPATH += /home/lamperi/pillow/pillowcore
-    LIBS += /home/lamperi/pillow/lib/libpillowcore.a
+    INCLUDEPATH += ../../lib/pillow/pillowcore
+    LIBS += ../../lib/pillow/lib/libpillowcore.a
     DEFINES += USE_WEBCONF
 }
 
