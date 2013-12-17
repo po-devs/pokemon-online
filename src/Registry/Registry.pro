@@ -2,7 +2,7 @@
 # Project created by QtCreator 2009-11-05T22:07:35
 # -------------------------------------------------
 QT += network
-QT -= gui
+
 TARGET = Registry
 DESTDIR = $$PWD/../../bin
 TEMPLATE = app
