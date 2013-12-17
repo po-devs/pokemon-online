@@ -7,6 +7,7 @@ void TestBan::run()
 {
     createAnalyzer();
     createAnalyzer();
+    QTimer::singleShot(5000, this, SLOT(reject()));
 }
 
 void TestBan::onPlayerConnected()
