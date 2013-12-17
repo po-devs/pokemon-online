@@ -6,7 +6,7 @@
 RegistryWebInterface::RegistryWebInterface(Registry* reg) : QObject(reg), regptr(reg), server()
 {
     pass = QString::fromUtf8(getFileContent("registry_pass.txt").trimmed());
-    if (pass) {
+    if (pass.length() > 0) {
         pass.insert(0, '/');
     }
 

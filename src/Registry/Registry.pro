@@ -32,7 +32,7 @@ CONFIG(webconf) {
     HEADERS += webinterface.h
     SOURCES += webinterface.cpp
     INCLUDEPATH += ../../lib/pillow/pillowcore
-    LIBS += ../../lib/pillow/lib/libpillowcore.a
+    LIBS += -L../../lib/pillow/lib/ -lpillowcore
     DEFINES += USE_WEBCONF
 }
 
