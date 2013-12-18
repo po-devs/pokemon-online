@@ -10,12 +10,6 @@
     <height>604</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>655</width>
-    <height>604</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>Designer</string>
   </property>
@@ -49,9 +43,6 @@
    </item>
    <item row="0" column="0" colspan="5">
     <widget class="QTabWidget" name="tabWidget">
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -59,154 +50,52 @@
       <attribute name="title">
        <string>Trainer Info</string>
       </attribute>
-      <widget class="QPlainTextEdit" name="infoInput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>590</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="plainText">
-        <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
-       </property>
-      </widget>
-      <widget class="QScrollDownTextBrowser" name="infoOutput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>280</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>590</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="openLinks">
-        <bool>false</bool>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="infoLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="infoInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="infoOutput"/>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="descTab">
       <attribute name="title">
        <string>Server Description</string>
       </attribute>
-      <widget class="QPlainTextEdit" name="descInput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>590</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="acceptDrops">
-        <bool>true</bool>
-       </property>
-       <property name="plainText">
-        <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
-       </property>
-      </widget>
-      <widget class="QScrollDownTextBrowser" name="descOutput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>280</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>590</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="openLinks">
-        <bool>false</bool>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="descLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="descInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="descOutput"/>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="annTab">
       <attribute name="title">
        <string>Server Announcement</string>
       </attribute>
-      <widget class="QPlainTextEdit" name="annInput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>590</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="plainText">
-        <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
-       </property>
-      </widget>
-      <widget class="QScrollDownTextBrowser" name="annOutput">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>280</y>
-         <width>611</width>
-         <height>241</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>592</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="openLinks">
-        <bool>false</bool>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="annLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="annInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="annOutput"/>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

@@ -37,21 +37,20 @@ DesignerWidget::~DesignerWidget()
 void DesignerWidget::updateUi()
 {
     /* Update with a poketextedit */
-    QRect geometry = ui->infoOutput->geometry();
     ui->infoOutput->deleteLater();
     ui->infoOutput = plugin->client->getPokeTextEdit(ui->infoTab);
     ui->infoOutput->setObjectName("infoOutput");
-    ui->infoOutput->setGeometry(geometry);
+    ui->infoLayout->insertWidget(1, ui->infoOutput);
 
     ui->descOutput->deleteLater();
     ui->descOutput = plugin->client->getPokeTextEdit(ui->descTab);
     ui->descOutput->setObjectName("descOutput");
-    ui->descOutput->setGeometry(geometry);
+    ui->descLayout->insertWidget(1, ui->descOutput);
 
     ui->annOutput->deleteLater();
     ui->annOutput = plugin->client->getPokeTextEdit(ui->annTab);
     ui->annOutput->setObjectName("annOutput");
-    ui->annOutput->setGeometry(geometry);
+    ui->annLayout->insertWidget(1, ui->annOutput);
 
     QString profileInfo = plugin->client->trainerTeam()->profile().info().info;
     if (profileInfo.trimmed().length() > 0) {
