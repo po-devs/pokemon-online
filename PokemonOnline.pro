@@ -19,7 +19,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
-CONFIG(po_all): CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation po_registry test
+CONFIG(po_all): CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation test
 
 !CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):!CONFIG(po_relaystation):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
