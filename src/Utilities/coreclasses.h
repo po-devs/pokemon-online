@@ -337,7 +337,7 @@ DataStream &operator<<(DataStream &out, const Expander<T> &list)
 }
 
 struct icompare{
-    bool operator ()(const QString &a, const QString &b) {
+    bool operator ()(const QString &a, const QString &b) const {
         return a.compare(b, Qt::CaseInsensitive) < 0;
     }
 };
