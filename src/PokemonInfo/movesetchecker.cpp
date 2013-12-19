@@ -267,8 +267,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     return false;
                 }
 
-                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves */
-                if (g.num == 3 && gen > 3) {
+                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves, except gen 6 */
+                if (g.num == 3 && gen > 3 && gen < 6) {
                     ab = PokemonInfo::Abilities(pokeid, g);
                     if (ab.ab(1) != ability) {
                         if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
