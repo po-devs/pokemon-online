@@ -6955,9 +6955,10 @@ struct MMRototiller : public MM {
     static void uas(int s, int, BS &b) {
         foreach (int p, b.sortedBySpeed())
         {
-            if (b.hasType(p, Type::Grass)) {
+            if (b.hasType(p, Type::Grass) && !b.hasFlyingEffect(p) && !b.hasType(p, Type::Flying) && !poke(b,s).value("Tilled").toBool()) {
                 b.inflictStatMod(p, Attack, 1, s);
                 b.inflictStatMod(p, SpAttack, 1, s);
+                poke(b,s)["Tilled"] = true;
             }
         }
     }
