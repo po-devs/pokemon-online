@@ -14,7 +14,7 @@ Vulpix: Charm + Heat Wave
 Delcatty: Shock Wave + Sweet Kiss
 Mawile: Sing + False Swipe
 Pineco: Refresh + Pin Missile
-Swinub: Charm + AncientPower + Mud Shot
+Swinub: Charm + Ancient Power + Mud Shot
 Spearow: Baton Pass + False Swipe
 Grimer: Helping Hand + Shadow Punch
 Paras: Refresh + False Swipe
@@ -31,12 +31,12 @@ Chansey: Sweet Scent + Wish
 Electabuzz: Follow Me + Cross Chop
 Snorlax: Refresh + Curse + Fissure
 Salamence: Refresh + Dragon Dance
-Exeggutor: Refresh + Ancientpower
+Exeggutor: Refresh + Ancient Power
 Dragonite: Heal Bell + Dragon Dance
-Lugia: Featherdance + Psycho Boost
+Lugia: Feather Dance + Psycho Boost
 Articuno: Extrasensory + Heal Bell + Haze
 Zapdos: Extrasensory + Metal Sound + Baton Pass
 Moltres: Extrasensory + Will-o-Wisp + Morning Sun
-Chikorita: Frenzy Plant + Ancientpower
+Chikorita: Frenzy Plant + Ancient Power
 Cyndaquil: Blast Burn + Reversal
 Totodile: Hydro Cannon + Crunch
