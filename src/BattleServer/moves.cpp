@@ -6934,14 +6934,24 @@ struct MMVenomDrench : public MM {
 
 struct MMFlowerShield : public MM {
     MMFlowerShield() {
+        functions["BeforeTargetList"] = &btl;
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    /* Copied from Haze*/
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power == 0) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
+    }
     static void uas(int s, int, BS &b) {
-        foreach (int p, b.sortedBySpeed())
-        {
-            if (b.hasType(p, Type::Grass)) {
-                b.inflictStatMod(p, Defense, 1, s);
+        if (tmove(b,s).power == 0) {
+            foreach (int p, b.sortedBySpeed())
+            {
+                if (b.hasType(p, Type::Grass)) {
+                    b.inflictStatMod(p, Defense, 1, s);
+                }
             }
         }
     }
@@ -6953,7 +6963,7 @@ struct MMRototiller : public MM {
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    /* Copied from Haze to correctly interact with Pressure */
+    /* Copied from Haze*/
     static void btl(int s, int, BS &b) {
         if (tmove(b,s).power == 0) {
             b.targetList.clear();
