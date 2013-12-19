@@ -24,6 +24,7 @@ cp scripts/install.sh $DEST
 cp bin/languages.txt $DEST
 cp bin/Pokemon-Online $DEST
 cp bin/Server $DEST
+cp bin/BattleServer $DEST
 cp bin/StatsExtracter $DEST
 cp bin/RelayStation $DEST
 cp bin/libqtwebsocket.so.1.0.0 $DEST/libqtwebsocket.so.1
