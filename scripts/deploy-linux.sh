@@ -43,3 +43,7 @@ cp bin/serverplugins/*.so.1.0.0 $DEST/serverplugins
 
 rm $DEST/myplugins/*_debug*
 rm $DEST/serverplugins/*_debug*
+
+#sprites for 6th gen are not in the git repo
+wget https://github.com/po-devs/pokemon-online/releases/download/2.3.2/sprites.zip
+mv sprites.zip $DEST/db/pokes/6G
