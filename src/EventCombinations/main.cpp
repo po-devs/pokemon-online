@@ -83,6 +83,8 @@ int main(int argc, char *argv[])
             out.write(QString("%1:0 ").arg(i).toUtf8());
             foreach(QSet<int> sset,events[i]) {
                 sset.remove(0);
+                QList<int> x = sset.toList();
+                qSort(x);
                 if (sset.size() == 0)
                     continue;
 
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
                     out.putChar('|');
                 space = false;
 
-                foreach(int val, sset) {
+                foreach(int val, x) {
                     if (space)
                         out.putChar(' ');
                     out.write(QByteArray::number(val));
