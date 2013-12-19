@@ -6949,16 +6949,25 @@ struct MMFlowerShield : public MM {
 
 struct MMRototiller : public MM {
     MMRototiller() {
+        functions["BeforeTargetList"] = &btl;
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    /* Copied from Haze to correctly interact with Pressure */
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power == 0) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
+    }
     static void uas(int s, int, BS &b) {
-        foreach (int p, b.sortedBySpeed())
-        {
-            if (b.hasType(p, Type::Grass) && !b.hasFlyingEffect(p) && !b.hasType(p, Type::Flying) && !poke(b,s).value("Tilled").toBool()) {
-                b.inflictStatMod(p, Attack, 1, s);
-                b.inflictStatMod(p, SpAttack, 1, s);
-                poke(b,s)["Tilled"] = true;
+        if (tmove(b,s).power == 0) {
+            foreach (int p, b.sortedBySpeed())
+            {
+                if (b.hasType(p, Type::Grass) && !b.isFlying(p)) {
+                    b.inflictStatMod(p, Attack, 1, s);
+                    b.inflictStatMod(p, SpAttack, 1, s);
+                }
             }
         }
     }
