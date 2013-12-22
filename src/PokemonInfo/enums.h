@@ -1578,7 +1578,9 @@ namespace Move
         SpikyShield,
         StickyWeb,
         TopsyTurvy,
-        VenomDrench
+        VenomDrench,
+        HappyHour,
+        Celebrate
     };
 }
 

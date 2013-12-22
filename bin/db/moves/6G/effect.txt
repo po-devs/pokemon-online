@@ -574,3 +574,5 @@
 605 During effect, whenever an opposing Pokémon becomes active, that Pokémon, unless it's a Flying type or has Levitate, has its Speed decreased by 1 stage.
 606 Reverts all stat of opponent's stat changes. Positive changes becomes negative, and vice versa.
 607 Fails unless opponent is Poisoned. Decreases opponent's Attack, Special Attack and Speed by 1 stage.
+608 Doubles prize money received after battle.
+609 Congratulates you on your special day.

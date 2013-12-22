@@ -606,3 +606,5 @@
 605 Sticky Web
 606 Topsy-Turvy
 607 Venom Drench
+608 Happy Hour
+609 Celebrate

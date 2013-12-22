@@ -3278,7 +3278,7 @@ struct MMGrudge : public MM
             if (!b.koed(t)) {
                 int slot = fpoke(b, t).lastMoveSlot;
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
-                b.losePP(t, slot, 48);
+                b.losePP(t, slot, 64);
             }
         }
     }
@@ -7058,6 +7058,17 @@ struct MMIonDeluge : public MM {
     }
 };
 
+//ITS VERY IMPORTANT TO CELEBRATE YOUR SPECIAL DAY, OKAY?
+struct MMCelebrate : public MM {
+    MMCelebrate() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(218,0,s,type(b,s));
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7310,6 +7321,7 @@ void MoveEffect::init()
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
+    REGISTER_MOVE(218, Celebrate)
 }
 
 /* Not done: Ion deluge */
