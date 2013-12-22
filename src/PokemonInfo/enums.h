@@ -898,7 +898,8 @@ namespace Pokemon
         Genesect_S = Genesect + (2 << 16),
         Genesect_B = Genesect + (3 << 16),
         Genesect_C = Genesect + (4 << 16),
-        Xerneas_A = Xerneas + (1 << 16)
+        Xerneas_A = Xerneas + (1 << 16),
+        Meowstic_F = Meowstic + (1 << 16)
     };
 }
 
