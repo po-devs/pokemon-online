@@ -177,6 +177,12 @@ void Channel::anchorClicked(const QUrl &url)
         } else if (path.leftRef(5) == "send/") {
             QString msg = path.mid(5);
             client->sendMessage(msg, myid);
+        } else if (path.leftRef(7) == "setmsg/") {
+            QString msg = path.mid(7);
+            client->getLineEdit()->setText(msg);
+        } else if (path.leftRef(10) == "appendmsg/") {
+            QString msg = path.mid(10);
+            client->getLineEdit()->setText(client->getLineEdit()->text() + msg);
         }
     } else {
         QDesktopServices::openUrl(url);
