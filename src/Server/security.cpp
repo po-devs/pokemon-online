@@ -286,7 +286,11 @@ void SecurityManager::banIP(const QString &ip, int time)
         return;
     }
 
-    bannedIPs.insert(ip, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    if (time <= 0) {
+        bannedIPs.insert(ip, 0);
+    } else {
+        bannedIPs.insert(ip, QDateTime::currentDateTimeUtc().toTime_t() + time * 60);
+    }
 
     QStringList aliases = membersForIp(ip);
 
