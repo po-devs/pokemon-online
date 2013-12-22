@@ -9,6 +9,7 @@
 14 10#CompoundEyes
 15 33-2#Insomnia
 16 9#Color change
+17 33-5#Immunity
 18 19#Flash Fire
 20 44#Own tempo
 22 34#Intimidate

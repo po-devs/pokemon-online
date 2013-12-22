@@ -583,6 +583,11 @@ QString Client::defaultChannel()
     return globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
 }
 
+QIRCLineEdit* Client::getLineEdit()
+{
+    return myline;
+}
+
 void Client::addChannel(const QString &name, int id)
 {
     m_channelNames.insert(id, name);

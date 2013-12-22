@@ -330,7 +330,9 @@
 329 Parc Ball
 330 Plaque Pixie
 331 Veste de Combat
+333 Vulné-Assurance
 334 Boule de Neige
+336 Pilule Talent
 337 Fossile Mâchoire
 338 Fossile Nageoire
 340 Sachet Senteur

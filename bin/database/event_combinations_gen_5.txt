@@ -1,11 +1,11 @@
-Bulbasaur: False swipe + Block + Frenzy Plant + Weather Ball
-Charmander: False swipe + Block + Blast Burn + Acrobatics
-Squirtle: False swipe + Block + Hydro Cannon + Follow Me
-Piplup: Sing + Featherdance
+Bulbasaur: False Swipe + Block + Frenzy Plant + Weather Ball
+Charmander: False Swipe + Block + Blast Burn + Acrobatics
+Squirtle: False Swipe + Block + Hydro Cannon + Follow Me
+Piplup: Sing + Feather Dance
 Victini: Fusion Flare + Fusion Bolt + V-Create 
 Pikachu: Fly + Iron Tail
 Pikachu: Encore + Teeter Dance + Sing
 Snivy: Synthesis + Aromatherapy
 Victini: V-Create + Blue Flare + Bolt Strike + Glaciate
 Deoxys: Dark Pulse + Nasty Plot
-Genesect: Extremespeed + Shift Gear + Blaze Kick
+Genesect: Extreme Speed + Shift Gear + Blaze Kick

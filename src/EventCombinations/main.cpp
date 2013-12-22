@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    cout << "This program will update the event combinations with the contents of event_combinations_gen_[1/2/3/4/5].txt" << endl;
+    cout << "This program will update the event combinations with the contents of event_combinations_gen_[1/2/3/4/5/6].txt" << endl;
     cout << "Press enter to continue" << endl;
 
     cin.ignore();
@@ -90,7 +90,9 @@ int main(int argc, char *argv[])
                     out.putChar('|');
                 space = false;
 
-                foreach(int val, sset) {
+                QList<int> sortedList = sset.toList();
+                qSort(sortedList);
+                foreach(int val, sortedList) {
                     if (space)
                         out.putChar(' ');
                     out.write(QByteArray::number(val));

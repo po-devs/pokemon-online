@@ -129,3 +129,4 @@
 211 %f had its stat boosts reversed!
 215 %f was covered in powder!|%s exploded!
 217 Ions are storming the terrain!
+218 Congratulations, %ts!

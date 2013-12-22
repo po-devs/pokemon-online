@@ -3278,7 +3278,7 @@ struct MMGrudge : public MM
             if (!b.koed(t)) {
                 int slot = fpoke(b, t).lastMoveSlot;
                 b.sendMoveMessage(54,0,s,Pokemon::Ghost,t,b.move(t,slot));
-                b.losePP(t, slot, 48);
+                b.losePP(t, slot, 64);
             }
         }
     }
@@ -6934,14 +6934,24 @@ struct MMVenomDrench : public MM {
 
 struct MMFlowerShield : public MM {
     MMFlowerShield() {
+        functions["BeforeTargetList"] = &btl;
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    /* Copied from Haze*/
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power == 0) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
+    }
     static void uas(int s, int, BS &b) {
-        foreach (int p, b.sortedBySpeed())
-        {
-            if (b.hasType(p, Type::Grass)) {
-                b.inflictStatMod(p, Defense, 1, s);
+        if (tmove(b,s).power == 0) {
+            foreach (int p, b.sortedBySpeed())
+            {
+                if (b.hasType(p, Type::Grass)) {
+                    b.inflictStatMod(p, Defense, 1, s);
+                }
             }
         }
     }
@@ -6949,15 +6959,25 @@ struct MMFlowerShield : public MM {
 
 struct MMRototiller : public MM {
     MMRototiller() {
+        functions["BeforeTargetList"] = &btl;
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    /* Copied from Haze*/
+    static void btl(int s, int, BS &b) {
+        if (tmove(b,s).power == 0) {
+            b.targetList.clear();
+            b.targetList.push_back(s);
+        }
+    }
     static void uas(int s, int, BS &b) {
-        foreach (int p, b.sortedBySpeed())
-        {
-            if (b.hasType(p, Type::Grass)) {
-                b.inflictStatMod(p, Attack, 1, s);
-                b.inflictStatMod(p, SpAttack, 1, s);
+        if (tmove(b,s).power == 0) {
+            foreach (int p, b.sortedBySpeed())
+            {
+                if (b.hasType(p, Type::Grass) && !b.isFlying(p)) {
+                    b.inflictStatMod(p, Attack, 1, s);
+                    b.inflictStatMod(p, SpAttack, 1, s);
+                }
             }
         }
     }
@@ -7035,6 +7055,17 @@ struct MMIonDeluge : public MM {
         if (tmove(b,s).type == Type::Normal) {
             tmove(b,s).type = Type::Electric;
         }
+    }
+};
+
+//ITS VERY IMPORTANT TO CELEBRATE YOUR SPECIAL DAY, OKAY?
+struct MMCelebrate : public MM {
+    MMCelebrate() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(218,0,s,type(b,s));
     }
 };
 
@@ -7290,6 +7321,7 @@ void MoveEffect::init()
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
+    REGISTER_MOVE(218, Celebrate)
 }
 
 /* Not done: Ion deluge */

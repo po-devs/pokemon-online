@@ -250,7 +250,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)
+        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)
             continue;
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
