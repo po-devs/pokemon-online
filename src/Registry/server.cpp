@@ -39,7 +39,7 @@ QString Server::getAddress(int port) const
 
 void Server::descChanged(const QString &desc)
 {
-    this->desc() = desc.left(400).trimmed();
+    this->desc() = desc.left(500).trimmed();
 }
 
 void Server::numChanged(quint16 num)
