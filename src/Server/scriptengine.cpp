@@ -2421,6 +2421,10 @@ void ScriptEngine::unban(QString name)
     SecurityManager::unban(name);
 }
 
+bool ScriptEngine::banned(const QString &ip) {
+    return SecurityManager::bannedIP(ip);
+}
+
 void ScriptEngine::battleSetup(int src, int dest, int battleId)
 {
     makeEvent("battleSetup", src, dest, battleId);
