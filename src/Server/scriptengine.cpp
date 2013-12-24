@@ -2422,7 +2422,7 @@ void ScriptEngine::unban(QString name)
 }
 
 bool ScriptEngine::banned(const QString &ip) {
-    return SecurityManager::isBanned(ip);
+    return SecurityManager::bannedIP(ip);
 }
 
 void ScriptEngine::battleSetup(int src, int dest, int battleId)
