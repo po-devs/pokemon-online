@@ -28,6 +28,8 @@ void TestPlayer::createAnalyzer()
     connect(analyzer, SIGNAL(battleMessage(int,QByteArray)), SLOT(onBattleMessage(int, QByteArray)));
     connect(analyzer, SIGNAL(battleStarted(int,Battle,TeamBattle,BattleConfiguration)), SLOT(onBattleStarted(int,Battle,TeamBattle,BattleConfiguration)));
     connect(analyzer, SIGNAL(passRequired(QByteArray)), SLOT(onPassRequired(QByteArray)));
+    connect(analyzer, SIGNAL(reconnectSuccess()), SLOT(onReconnectSuccess()));
+    connect(analyzer, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
 
     analyzer->connectTo("localhost", 5080);
 }
@@ -80,4 +82,14 @@ void TestPlayer::onPassRequired(const QByteArray &)
 void TestPlayer::onBattleStarted(int, const Battle &, const TeamBattle &, const BattleConfiguration &)
 {
 
+}
+
+void TestPlayer::onReconnectSuccess()
+{
+
+}
+
+void TestPlayer::onReconnectFailure(int)
+{
+    reject();
 }

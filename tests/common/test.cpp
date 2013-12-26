@@ -1,3 +1,4 @@
+#include <QTimer>
 #include "test.h"
 
 Test::Test() : _finished(false)
@@ -10,6 +11,11 @@ void Test::start()
     if (!_finished) {
         accept();
     }
+}
+
+void Test::setTimeout(int time)
+{
+    QTimer::singleShot(time*1000, this, SLOT(reject()));
 }
 
 void Test::accept()

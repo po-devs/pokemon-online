@@ -46,6 +46,7 @@ public:
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TeamHolder & team);
     void sendBattleResult(int id, int result);
+    void reconnect(int id, const QByteArray &pass, int ccount = -1);
     bool isConnected() const;
 
     void kick(int id);
@@ -164,15 +165,17 @@ private:
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
 
-    quint32 commandCount;
-
     QList<QByteArray> storedCommands;
     QSet<int> channelCommands;
 
     network_type mysocket;
 
+public:
+    quint32 commandCount;
+
+    QByteArray reconnectPass;
     /* Server version */
-    ProtocolVersion version;
+    ProtocolVersion version, ownVersion;
 };
 
 #endif // ANALYZE_H

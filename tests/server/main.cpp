@@ -6,6 +6,7 @@
 #include "testregister.h"
 #include "testban.h"
 #include "testsession.h"
+#include "testreconnect.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,8 @@ int main(int argc, char *argv[])
     runner.addTest(new TestVariation());
     runner.addTest(new TestRegister());
     runner.addTest(new TestBan());
-    runner.addTest(new TestSESSION());
+    runner.addTest(new TestSession());
+    runner.addTest(new TestReconnect());
     runner.start();
 
     return a.exec();

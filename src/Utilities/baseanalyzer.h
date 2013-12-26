@@ -15,6 +15,7 @@
 class BaseAnalyzer : public QObject
 {
     friend class RelayManager;
+    friend class ScriptEngine;
 
     Q_OBJECT
 public:

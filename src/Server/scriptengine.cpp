@@ -3445,6 +3445,15 @@ QString ScriptEngine::serverVersion()
     return VERSION;
 }
 
+QString ScriptEngine::protocolVersion(int id)
+{
+    if (!testPlayer("protocolVersion", id)) {
+        return "";
+    }
+    ProtocolVersion v = myserver->player(id)->relay().version;
+    return QString("%1.%2").arg(v.version).arg(v.subversion);
+}
+
 bool ScriptEngine::isServerPrivate()
 {
     return myserver->isPrivate();

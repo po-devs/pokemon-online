@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     ../common/pokemontestrunner.cpp \
     testregister.cpp \
     testban.cpp \
-    testsession.cpp
+    testsession.cpp \
+    testreconnect.cpp
 
 HEADERS += \
     ../common/test.h \
@@ -47,4 +48,8 @@ HEADERS += \
     ../common/pokemontestrunner.h \
     testregister.h \
     testban.h \
-    testsession.h
+    testsession.h \
+    testreconnect.h
+
+OTHER_FILES += \
+    ../data/server/scripts.js

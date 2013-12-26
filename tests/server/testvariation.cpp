@@ -45,7 +45,7 @@ void TestVariation::onPlayerConnected()
     analyzer->login(holder,true);
 
     /* Timeout on test */
-    QTimer::singleShot(10000, this, SLOT(reject()));
+    setTimeout(10);
 }
 
 void TestVariation::loggedIn(const PlayerInfo &, const QStringList&)

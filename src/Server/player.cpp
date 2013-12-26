@@ -1073,6 +1073,9 @@ void Player::associateWith(Player *other)
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
+    /* Sever ALL connections :( */
+    disconnect(other->myrelay);
+    other->myrelay->disconnect(this);
     /* Discard other relay */
     other->removeRelay();
 

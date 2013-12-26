@@ -35,6 +35,8 @@ public slots:
     virtual void onBattleMessage(int battle, const QByteArray &message);
     virtual void onPassRequired(const QByteArray &);
     virtual void onBattleStarted(int, const Battle &b, const TeamBattle &t, const BattleConfiguration &conf);
+    virtual void onReconnectSuccess();
+    virtual void onReconnectFailure(int);
 protected:
     void createAnalyzer();
 };

@@ -2,7 +2,7 @@
 #define TESTSESSION_H
 
 #include "testplayer.h"
-class TestSESSION : public TestPlayer
+class TestSession : public TestPlayer
 {
     Q_OBJECT
 public slots:

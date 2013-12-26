@@ -25,6 +25,8 @@ public:
      * accepted when the run() function is ended.
     */
     virtual void run() = 0;
+    /* If the time runs out, test fails */
+    void setTimeout(int time=10);
 
 public slots:
     void accept();

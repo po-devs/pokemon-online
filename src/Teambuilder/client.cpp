@@ -2273,7 +2273,7 @@ void Client::connected()
             relay().login(*team(), ladder->isChecked(), goaway->isChecked(), team()->color(), defaultChannel, autoJoinChannels);
         }
     } else {
-        relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
+        relay().reconnect(ownId(), reconnectPass);
     }
 
     emit PMDisconnected(false);

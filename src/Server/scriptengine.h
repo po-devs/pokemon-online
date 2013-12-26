@@ -175,8 +175,6 @@ public:
 
     Q_INVOKABLE void shutDown();
 
-
-
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
     Q_INVOKABLE void clearPass(const QString &name);
@@ -415,6 +413,7 @@ public:
     Q_INVOKABLE void forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
+    Q_INVOKABLE QString protocolVersion(int id);
     Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */

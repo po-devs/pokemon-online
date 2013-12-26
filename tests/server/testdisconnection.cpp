@@ -25,7 +25,7 @@ void TestDisconnection::onPlayerConnected()
         createAnalyzer();
     } else {
         /* Test shouldn't take more than that */
-        QTimer::singleShot(10000, this, SLOT(reject()));
+        setTimeout(10);
     }
 }
 

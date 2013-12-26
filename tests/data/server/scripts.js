@@ -64,6 +64,12 @@ tests.session = {
 afterChatMessage: function (src, message, chan) {
     if (message.substr(0, 6) === "Test: ") {
         tests[message.substr(6)].run(src, chan);
+        return;
+    }
+
+    if (message.substr(0,6) === "eval: ") {
+        sys.sendAll(sys.eval(message.substr(6)), 0);
+        return;
     }
 }
 })

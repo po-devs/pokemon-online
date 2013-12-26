@@ -3,7 +3,7 @@
 
 #include "testsession.h"
 
-void TestSESSION::onPlayerConnected()
+void TestSession::onPlayerConnected()
 {
     Analyzer *analyzer = sender();
 
@@ -12,10 +12,10 @@ void TestSESSION::onPlayerConnected()
 
     analyzer->login(holder, false);
     analyzer->sendChanMessage(0, "Test: session");
-    QTimer::singleShot(5000, this, SLOT(reject()));
+    setTimeout();
 }
 
-void TestSESSION::onChannelMessage(const QString &message, int, bool)
+void TestSession::onChannelMessage(const QString &message, int, bool)
 {
     if (message == "fail") {
         reject();

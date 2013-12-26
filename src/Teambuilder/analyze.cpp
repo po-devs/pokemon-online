@@ -10,7 +10,7 @@
 
 using namespace NetworkCli;
 
-Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), commandCount(0), mysocket(new QTcpSocket())
+Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), mysocket(new QTcpSocket()), commandCount(0)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
     connect(&socket(), SIGNAL(connected()), this, SLOT(wasConnected()));
@@ -63,7 +63,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     //                  IdsWithMessage,
     //                  Idle
 
-    out << uchar(Login) << ProtocolVersion() << network;
+    out << uchar(Login) << ownVersion << network;
 
 #ifdef OS
     out << QString(OS);
@@ -169,6 +169,11 @@ void Analyzer::sendTeam(const TeamHolder &team)
 void Analyzer::sendBattleResult(int id, int result)
 {
     notify(BattleFinished, qint32(id), qint32(result));
+}
+
+void Analyzer::reconnect(int id, const QByteArray &pass, int ccount)
+{
+    notify(Reconnect, quint32(id), pass, quint32(ccount == -1 ? getCommandCount() : ccount));
 }
 
 void Analyzer::battleCommand(int id, const BattleChoice &comm)
@@ -360,7 +365,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         in >> network;
 
         if (network[0]) {
-            QByteArray reconnectPass;
             in >> reconnectPass;
             emit reconnectPassGiven(reconnectPass);
         }
