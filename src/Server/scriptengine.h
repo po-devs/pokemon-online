@@ -378,6 +378,7 @@ public:
     Q_INVOKABLE void ban(QString name);
     Q_INVOKABLE void tempBan(QString name, int time);
     Q_INVOKABLE void unban(QString name);
+    Q_INVOKABLE bool banned(const QString &ip);
 
 #if 0
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
