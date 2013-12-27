@@ -2163,7 +2163,7 @@ void ItemInfo::loadNames()
         QHashIterator<int, QString> it(m_BerryNames);
         while (it.hasNext()) {
             it.next();
-            if (isUseful(it.key()))
+            if (isUseful(it.key()+8000))
                 sortedUsefulNames.push_back(it.value());
         }
     }
