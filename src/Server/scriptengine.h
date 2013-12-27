@@ -132,6 +132,9 @@ public:
     bool beforePlayerBan(int src, int dest, int time);
     void afterPlayerBan(int src, int dest, int time);
 
+    bool beforeReconnect(int src, int sender);
+    void afterReconnect(int src);
+
     void battleSetup(int src, int dest, int battleId);
 
     bool beforeFindBattle(int src);
