@@ -927,10 +927,6 @@ void Server::processLoginDetails(Player *p)
     if (!wasLoggedIn) {
         myengine->afterLogIn(id, channel);
     }
-
-    if (p->loginInfo()) {
-        delete p->loginInfo(), p->loginInfo()=NULL;
-    }
 }
 
 void Server::sendChannelList(int player) {

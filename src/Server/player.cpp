@@ -1069,13 +1069,17 @@ void Player::associateWith(Player *other)
 {
     std::swap(myrelay, other->myrelay);
     /* Keep relay specific data across reconnect */
-    relay().copyFrom(other->relay());
+    if (loginInfo()) {
+        relay().setVersion(loginInfo()->version);
+    }
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
     /* Sever ALL connections :( */
-    disconnect(other->myrelay);
-    other->myrelay->disconnect(this);
+    if (other->myrelay) {
+        disconnect(other->myrelay);
+        other->myrelay->disconnect(this);
+    }
     /* Discard other relay */
     other->removeRelay();
 

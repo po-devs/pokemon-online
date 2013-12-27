@@ -40,7 +40,7 @@ public:
 
     void swapIds(BaseAnalyzer *other);
     void setId(int id);
-    void copyFrom(const BaseAnalyzer &other);
+    void setVersion(const ProtocolVersion &version);
 
     /* Convenience functions to avoid writing a new one every time */
     inline void emitCommand(const QByteArray &command) {
