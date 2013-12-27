@@ -37,8 +37,7 @@ public slots:
     virtual void onBattleStarted(int, const Battle &b, const TeamBattle &t, const BattleConfiguration &conf);
     virtual void onReconnectSuccess();
     virtual void onReconnectFailure(int);
-protected:
-    void createAnalyzer();
+    virtual void createAnalyzer();
 };
 
 #endif // TESTPLAYER_H

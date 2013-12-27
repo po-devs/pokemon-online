@@ -3,6 +3,7 @@
 namespace {
     int count = 0;
     int logincount = 0;
+    int success = 0;
 
     int id = 0;
     Analyzer *oldSender(0);
@@ -10,10 +11,12 @@ namespace {
 
 void TestReconnect::onPlayerConnected()
 {
+    setTimeout(20);
+
     if (++count <= 1) {
         sender()->ownVersion = ProtocolVersion(1337, 508);
         sender()->login(TeamHolder("ultimate version"), false);
-    } else if (count <= 2) {
+    } else {
         sender()->reconnect(id, oldSender->reconnectPass, oldSender->commandCount);
     }
 }
@@ -41,6 +44,11 @@ void TestReconnect::onChannelMessage(const QString &message, int, bool)
 {
     if (message.startsWith("<version>: ")) {
         assert(message.mid(11) == "1337.508");
-        accept();
+        if (++::success == 2) {
+            accept();
+        } else {
+            sender()->sendChanMessage(0, "eval: sys.disconnect(sys.id('ultimate version'))");
+            QTimer::singleShot(5000, this, SLOT(createAnalyzer()));
+        }
     }
 }
