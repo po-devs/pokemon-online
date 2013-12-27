@@ -3,6 +3,7 @@
 namespace {
     int count = 0;
     int logincount = 0;
+    int state = 0;
 
     int id = 0;
     Analyzer *oldSender(0);
@@ -41,6 +42,14 @@ void TestReconnect::onChannelMessage(const QString &message, int, bool)
 {
     if (message.startsWith("<version>: ")) {
         assert(message.mid(11) == "1337.508");
+        ++state;
+    }
+    if (message.startsWith("ultimate version")) {
+        assert(message === "ultimate version reconnected.");
+        ++state;
+    }
+
+    if (state == 2) {
         accept();
     }
 }

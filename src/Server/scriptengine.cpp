@@ -672,9 +672,9 @@ void ScriptEngine::battleConnectionLost()
     makeEvent("battleConnectionLost");
 }
 
-bool ScriptEngine::beforeReconnect(int src, int sender)
+bool ScriptEngine::beforeReconnect(int src, int dest)
 {
-    return makeSEvent("beforeReconnect", src, sender);
+    return makeSEvent("beforeReconnect", src, dest);
 }
 
 void ScriptEngine::afterReconnect(int src)
