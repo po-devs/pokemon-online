@@ -163,3 +163,27 @@
 162 Tinovictoria
 163 Turbollama
 164 Terravoltaje
+165 Piel Celeste
+166 Rompeaura
+167 Carrillo
+168 Aura Oscura
+169 Aura Feérica
+170 Velo Flor
+171 Pelaje Recio
+172 Megadisparador
+173 Amor Filial
+174 Piel Feérica
+175 Mutatipo
+176 Piel Helada
+177 Cambio Táctico
+178 Mandíbula Fuerte
+179 Velo Dulce
+180 Garra Dura
+181 Tenacidad
+182 Alas Vendaval
+183 Baba
+184 Velo Aroma
+185 Antibalas
+186 Manto Frondoso
+187 Prestidigitador
+188 Simbiosos
