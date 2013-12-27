@@ -3,7 +3,11 @@
 namespace {
     int count = 0;
     int logincount = 0;
+<<<<<<< HEAD
     int success = 0;
+=======
+    int state = 0;
+>>>>>>> reconnect
 
     int id = 0;
     Analyzer *oldSender(0);
@@ -45,10 +49,19 @@ void TestReconnect::onChannelMessage(const QString &message, int, bool)
     if (message.startsWith("<version>: ")) {
         assert(message.mid(11) == "1337.508");
         if (++::success == 2) {
-            accept();
+            ++state;
         } else {
             sender()->sendChanMessage(0, "eval: sys.disconnect(sys.id('ultimate version'))");
             QTimer::singleShot(5000, this, SLOT(createAnalyzer()));
         }
+    }
+
+    if (message.startsWith("ultimate version")) {
+        assert(message == "ultimate version reconnected.");
+        ++state;
+    }
+
+    if (state == 2) {
+        accept();
     }
 }

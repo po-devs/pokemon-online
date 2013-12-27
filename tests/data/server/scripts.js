@@ -71,5 +71,8 @@ afterChatMessage: function (src, message, chan) {
         sys.sendAll(sys.eval(message.substr(6)), 0);
         return;
     }
+},
+afterReconnection: function (src) {
+    sys.sendAll(sys.name(src) + " reconnected.", 0);
 }
 })

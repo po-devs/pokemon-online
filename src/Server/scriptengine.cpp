@@ -672,6 +672,16 @@ void ScriptEngine::battleConnectionLost()
     makeEvent("battleConnectionLost");
 }
 
+bool ScriptEngine::beforeReconnect(int src, int dest)
+{
+    return makeSEvent("beforeReconnect", src, dest);
+}
+
+void ScriptEngine::afterReconnect(int src)
+{
+    makeEvent("afterReconnect", src);
+}
+
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {
