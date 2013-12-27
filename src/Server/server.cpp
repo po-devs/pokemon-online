@@ -250,6 +250,8 @@ void Server::start(){
     myengine = new ScriptEngine(this);
     myengine->serverStartUp();
 
+    connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));
+
     this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
     registry->setPrivate(serverPrivate);
@@ -266,7 +268,6 @@ void Server::initBattles()
     connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
-    connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));
 }
 
 void Server::print(const QString &line)
