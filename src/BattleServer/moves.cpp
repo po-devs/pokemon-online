@@ -1244,9 +1244,19 @@ struct MMBounce : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.hasSubstitute(t) && move(b,s) == Move::SkyDrop) {
-            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
-            fturn(b,s).add(TM::Failed);
+        if (!poke(b,s).value("Invulnerable").toBool()) {
+            /* First part of the move */
+            if (b.hasSubstitute(t) && move(b,s) == Move::SkyDrop) {
+                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                fturn(b,s).add(TM::Failed);
+            }
+        } else {
+            /* Second part of the move */
+            if (move(b,s) == Move::SkyDrop) {
+                if (!b.linked(s, "FreeFalledPokemon")) {
+                    fturn(b,s).add(TM::Failed);
+                }
+            }
         }
     }
 
