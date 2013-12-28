@@ -5,14 +5,8 @@
 
 void TestChat::onPlayerConnected()
 {
-    Analyzer *analyzer = sender();
-
-    TeamHolder holder;
-
-    holder.name() = "ArchZombie0x";
-
-    analyzer->login(holder, false, false);
-    analyzer->sendChanMessage(0, "I am the best scripter.");
+    sender()->login(TeamHolder("ArchZombie0x"), false);
+    sender()->sendChanMessage(0, "I am the best scripter.");
 }
 
 void TestChat::onChannelMessage(const QString &message, int, bool)

@@ -130,17 +130,19 @@ public:
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, std::pair<QString, int> > banList();
     static QStringList authList();
-    static QStringList userList();
+    static QStringList &&userList();
     static void deleteUser(const QString &name);
 
     static void processDailyRun(int maxdays, bool async=true);
+    static void exportDatabase();
 private slots:
-    static void insertMember(void *m, int update);
-    static void loadMember(const QVariant &name, int query_type);
+    static void insertMember(QSqlQuery *q, void *m, int update);
+    static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
 
-    static void dailyRunEx();
+    static void dailyRunEx(QSqlQuery *q=0);
 private:
     static void loadMembers();
+    static void loadSqlMembers();
 
     static MemoryHolder<Member> holder;
 

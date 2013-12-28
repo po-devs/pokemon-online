@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "waitingobject.h"
+#include "sql.h"
 
 /* Qt doesn't manage templates and signals well, hence why the abstract class
    without templates */
@@ -13,9 +14,9 @@ public:
     virtual void run() = 0;
 
 signals:
-    void processWrite (void * m, int type=1);
-    void processLoad (const QVariant &data, int query_type, WaitingObject *w);
-    void processDailyRun();
+    void processWrite (QSqlQuery* q, void * m, int type=1);
+    void processLoad (QSqlQuery* q, const QVariant &data, int query_type, WaitingObject *w);
+    void processDailyRun(QSqlQuery* q);
 };
 
 template <class T>
@@ -59,10 +60,18 @@ private:
 template <class T>
 void LoadInsertThread<T>::run()
 {
+    QString dbname = QString::number(intptr_t(QThread::currentThreadId()));
+
+    SQLCreator::createSQLConnection(dbname);
+    QSqlDatabase db = QSqlDatabase::database(dbname);
+    QSqlQuery sql(db);
+    sql.setForwardOnly(true);
+
     sem.acquire(1);
 
     forever {
         if (finished) {
+            db.close();
             return;
         }
 
@@ -81,18 +90,18 @@ void LoadInsertThread<T>::run()
             Query q = queries.takeFirst();
             queryMutex.unlock();
 
-            emit processLoad(q.data, q.query_type, q.w);
+            emit processLoad(isSql() ? &sql : 0, q.data, q.query_type, q.w);
             q.w->emitSignal();
         } else {
             if (dailyRunToProcess) {
                 dailyRunToProcess = false;
-                emit processDailyRun();
+                emit processDailyRun(isSql() ? &sql : 0);
             } else {
                 memberMutex.lock();
                 QPair<T , int> p = members.takeFirst();
                 memberMutex.unlock();
 
-                emit processWrite(&p.first, p.second);
+                emit processWrite(isSql() ? &sql : 0, &p.first, p.second);
             }
         }
 

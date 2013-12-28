@@ -1,6 +1,9 @@
 #include <cassert>
 #include <ctime>
 
+#include <QSqlQuery>
+#include <QSqlRecord>
+
 #include "../Utilities/otherwidgets.h"
 
 #include "security.h"
@@ -64,9 +67,144 @@ void SecurityManager::Member::write(QIODevice *device) const {
     device->write("\n");
 }
 
+void SecurityManager::loadSqlMembers() {
+
+    QSqlQuery query;
+
+    query.setForwardOnly(true);
+
+    query.exec("select * from trainers limit 1");
+
+    int count = query.record().count();
+
+    if (count == 8) {
+        /* Outdated database, we are going to add ban time */
+        QSqlDatabase::database().transaction();
+
+        query.exec("alter table trainers add column ban_expire_time int");
+        query.exec("update trainers set ban_expire_time=0");
+        //query.exec("create index ban_expire_time_index on trainers (ban_expire_time)");
+
+        QSqlDatabase::database().commit();
+    } else if (!query.next()) {
+        if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
+            /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
+            query.exec("create table trainers (id serial, "
+                       "name varchar(20), laston char(19), auth int, banned boolean,"
+                       "salt varchar(7), hash varchar(32), ip varchar(39), ban_expire_time int, primary key(id), unique(name))");
+        } else if (SQLCreator::databaseType == SQLCreator::MySQL) {
+            query.exec("CREATE TABLE IF NOT EXISTS trainers (id int(11) NOT NULL auto_increment, "
+                       "name varchar(20), laston char(19), auth int(11), banned bool, "
+                       "salt varchar(7), hash varchar(32), ip varchar(39), "
+                       "ban_expire_time int(11), PRIMARY KEY (id));");
+        } else if (SQLCreator::databaseType == SQLCreator::SQLite){
+            /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
+            query.exec("create table trainers (id integer primary key autoincrement, name varchar(20) unique, "
+                       "laston char(19), auth int, banned boolean, salt varchar(7), hash varchar(32), "
+                       "ip varchar(39), ban_expire_time int);");
+        } else {
+            throw QString("Using a not supported database");
+        }
+
+        query.exec("create index tname_index on trainers (name)");
+        query.exec("create index tip_index on trainers (ip)");
+
+        QFile memberFile("serverdb/members.txt");
+        if (memberFile.exists()) {
+            Server::print("importing text db");
+
+            if (!memberFile.open(QFile::ReadWrite)) {
+                throw QObject::tr("Error: cannot open the file that contains the members ");
+            }
+
+            clock_t t = clock();
+
+            query.prepare("insert into trainers(name, laston, auth,  banned, salt, hash, ip, ban_expire_time) values (:name, :laston, :auth,"
+                          ":banned, :salt, :hash, :ip, :banexpire)");
+
+            QSqlDatabase::database().transaction();
+            int counter = 0;
+            while (!memberFile.atEnd()) {
+                if (query.lastError().isValid() && counter > 0) {
+                    Server::print(QString("Error in last query (number %1): %2").arg(counter).arg(query.lastError().text()));
+                    break;
+                }
+
+                ++counter;
+
+                if (counter % 1000 == 0) {
+                    Server::print(QString("Loaded %1 members so far...").arg(counter));
+                }
+
+                QByteArray arr = memberFile.readLine();
+                QString s = QString::fromUtf8(arr.constData(), std::max(0,arr.length()-1)); //-1 to remove the \n
+
+                QStringList ls = s.split('%');
+
+                if (ls.size() >= 6 && isValid(ls[0])) {
+                    query.bindValue(":name", ls[0].toLower());
+                    query.bindValue(":laston",ls[1]);
+                    query.bindValue(":auth", ls[2][0].toLatin1()-'0');
+                    query.bindValue(":banned", ls[2][1] == '1');
+                    /* Weirdly, i seem to have problems when updating something that has a salt containing \, probably postgresql driver,
+                       so i remove them. */
+                    if (!ls[3].contains('\\')) {
+                        query.bindValue(":salt", ls[3].trimmed().toLatin1());
+                        query.bindValue(":hash", ls[4].trimmed().toLatin1());
+                    } else {
+                        query.bindValue(":salt", "");
+                        query.bindValue(":hash", "");
+                    }
+                    query.bindValue(":ip", ls[5].trimmed());
+                    if (ls.size() >= 7) {
+                        query.bindValue(":banexpire", ls[6]);
+                    } else {
+                        query.bindValue(":banexpire", 0);
+                    }
+                    query.exec();
+                }
+            }
+
+            QSqlDatabase::database().commit();
+
+            t = clock() - t;
+
+            Server::print(QString::number(float(t)/CLOCKS_PER_SEC) + " secs");
+            Server::print(query.lastError().text());
+        }
+    }
+
+    /* Expire old temp bans */
+    if (SQLCreator::databaseType == SQLCreator::MySQL) {
+        query.prepare("update trainers set banned=0 where banned=1 and ban_expire_time < :now and ban_expire_time != 0");
+    } else {
+        query.prepare("update trainers set banned='false' where banned='true' and ban_expire_time < :now and ban_expire_time != 0");
+    }
+    query.bindValue(":now", QDateTime::currentDateTimeUtc().toTime_t());
+    query.exec();
+    QSqlDatabase::database().commit();
+
+    /* Loading the ban list */
+
+    if (SQLCreator::databaseType == SQLCreator::MySQL) {
+        query.exec("select name, ip, ban_expire_time from trainers where banned=1");
+    }
+    else {
+        query.exec("select name, ip, ban_expire_time from trainers where banned='true'");
+    }
+
+    while (query.next()) {
+        bannedIPs.insert(query.value(1).toString(), query.value(2).toInt());
+        bannedMembers.insert(query.value(0).toString().toLower(), std::make_pair(query.value(1).toString(), query.value(2).toInt()));
+    }
+}
 
 void SecurityManager::loadMembers()
 {
+    if (isSql()) {
+        loadSqlMembers();
+        return;
+    }
     const char *path = "serverdb/members.txt";
     const char *backup = "serverdb/members.backup.txt";
     {
@@ -149,9 +287,9 @@ void SecurityManager::init()
 {
     thread = new LoadInsertThread<Member>;
 
-    connect(thread, SIGNAL(processLoad(QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QVariant,int)), Qt::DirectConnection);
-    connect(thread, SIGNAL(processWrite(void*,int)), instance, SLOT(insertMember(void*,int)), Qt::DirectConnection);
-    connect(thread, SIGNAL(processDailyRun()), instance, SLOT(dailyRunEx()));
+    connect(thread, SIGNAL(processLoad(QSqlQuery*, QVariant, int, WaitingObject*)), instance, SLOT(loadMember(QSqlQuery*, QVariant,int)), Qt::DirectConnection);
+    connect(thread, SIGNAL(processWrite(QSqlQuery*, void*,int)), instance, SLOT(insertMember(QSqlQuery*, void*,int)), Qt::DirectConnection);
+    connect(thread, SIGNAL(processDailyRun(QSqlQuery*)), instance, SLOT(dailyRunEx(QSqlQuery*)));
 
     thread->start();
 
@@ -173,8 +311,11 @@ bool SecurityManager::exist(const QString &name)
         loadMemberInMemory(name);
     }
 
-    //return holder.exists(name);
-    return members.find(name) != members.end();
+    if (isSql()) {
+        return holder.exists(name);
+    } else {
+        return members.find(name) != members.end();
+    }
 }
 
 SecurityManager::Member SecurityManager::member(const QString &name)
@@ -183,16 +324,39 @@ SecurityManager::Member SecurityManager::member(const QString &name)
         loadMemberInMemory(name);
     }
 
-    //return holder.member(name);
-
     assert(exist(name));
 
-    return members[name];
+    if (isSql()) {
+        return holder.member(name);
+    } else {
+        return members[name];
+    }
 }
-
 
 QStringList SecurityManager::membersForIp(const QString &ip)
 {
+    if (isSql()) {
+        QSqlQuery q;
+        q.setForwardOnly(true);
+
+        if (SQLCreator::databaseType == SQLCreator::SQLite) {
+            /* On SQLite, there's some bug with the qt driver probably,
+                but here it oftens return nothing if i use '=' instead of 'like', so... */
+            q.prepare("select name from trainers where ip like ?");
+        } else {
+            q.prepare("select name from trainers where ip=?");
+        }
+        q.addBindValue(ip);
+        q.exec();
+
+        QStringList ret;
+
+        while (q.next()) {
+            ret.push_back(q.value(0).toString());
+        }
+
+        return ret;
+    }
     return playersByIp.values(ip);
 }
 
@@ -203,21 +367,56 @@ QHash<QString, std::pair<QString, int> > SecurityManager::banList()
 
 QStringList SecurityManager::authList()
 {
+    if (isSql()) {
+        QSqlQuery q;
+        q.setForwardOnly(true);
+
+        q.exec("select name from trainers where auth>0");
+
+        QStringList ret;
+        while (q.next()) {
+            ret.push_back(q.value(0).toString());
+        }
+
+        return ret;
+    }
     return authed.toList();
 }
 
-QStringList SecurityManager::userList()
+QStringList&& SecurityManager::userList()
 {
     QStringList ret;
-    for(auto it = members.begin(); it != members.end(); ++it) {
-        ret.push_back(it->first);
+
+    if (isSql()) {
+        QSqlQuery q;
+        q.setForwardOnly(true);
+
+        q.exec("select name from trainers");
+
+        QStringList ret;
+        while (q.next()) {
+            ret.push_back(q.value(0).toString());
+        }
+    } else {
+        for(auto it = members.begin(); it != members.end(); ++it) {
+            ret.push_back(it->first);
+        }
     }
 
-    return ret;
+    return std::move(ret);
 }
 
 void SecurityManager::deleteUser(const QString &name)
 {
+    if (isSql()) {
+        QSqlQuery q;
+        q.setForwardOnly(true);
+        q.prepare("delete from trainers where name=:name");
+        q.bindValue(":name", name.toLower());
+        q.exec();
+        return;
+    }
+
     Member m = member(name);
 
     assert (m.name.length() > 0);
@@ -247,14 +446,14 @@ void SecurityManager::updateMemberInDatabase(const Member &m, bool add)
 {
     bool update = !add;
 
-    /* Can't write in a thread manner, because can't update memory in a threaded manner and update filepos in a threaded
-     * manner. Could with mutexes */
-#if 0
-    thread->pushMember(m, update);
-#else
-    Member m2 = m;
-    insertMember(&m2, update);
-#endif
+    if (isSql()) {
+        thread->pushMember(m, update);
+    } else {
+        /* Can't write in a threaded manner, because can't update memory in a threaded manner and update filepos in a threaded
+         * manner. Could with mutexes */
+        Member m2 = m;
+        insertMember(0, &m2, update);
+    }
 }
 
 void SecurityManager::updateMember(const Member &m) {
@@ -267,9 +466,9 @@ bool SecurityManager::bannedIP(const QString &ip) {
     QHash<QString, unsigned int>::const_iterator i = bannedIPs.find(ip);
     bool isBanned = (i != bannedIPs.end());
     if (isBanned && i.value() != 0 && i.value() < qlonglong(QDateTime::currentDateTimeUtc().toTime_t())) {
-       /* We expire the tempban here if we should */
-       unbanIP(ip);
-       return false;
+        /* We expire the tempban here if we should */
+        unbanIP(ip);
+        return false;
     }
     return isBanned;
 }
@@ -334,6 +533,25 @@ int SecurityManager::auth(const QString &name)
 
 int SecurityManager::numRegistered(const QString &ip)
 {
+    if (isSql()) {
+        QSqlQuery q;
+        q.setForwardOnly(true);
+
+        if (SQLCreator::databaseType == SQLCreator::SQLite) {
+            /* On SQLite, there's some bug with the qt driver probably,
+                    but here it oftens return nothing if i use '=' instead of 'like', so... */
+            q.prepare("select count(*) from trainers where length(hash) > 0 and ip like ?");
+        } else {
+            q.prepare("select count(*) from trainers where length(hash) > 0 and ip=?");
+        }
+
+        q.addBindValue(ip);
+        q.exec();
+
+        q.next();
+        return q.value(0).toInt();
+    }
+
     int ret = 0;
 
     foreach(const QString &name, membersForIp(ip)) {
@@ -411,7 +629,11 @@ void SecurityManager::loadMemberInMemory(const QString &name, QObject *o, const 
 
         qDebug() << "loading member in memory not with a thread";
 
-        loadMember(n2, GetInfoOnUser);
+        assert(isSql());
+
+        QSqlQuery q;
+        q.setForwardOnly(true);
+        loadMember(&q, n2, GetInfoOnUser);
 
         return;
     }
@@ -438,9 +660,30 @@ LoadInsertThread<SecurityManager::Member> * SecurityManager::getThread()
     return thread;
 }
 
-void SecurityManager::insertMember(void *m2, int update)
+void SecurityManager::insertMember(QSqlQuery *q, void *m2, int update)
 {
     SecurityManager::Member &m = * (SecurityManager::Member*) m2;
+
+    if (isSql()) {
+        if (update)
+            q->prepare("update trainers set laston=:laston, auth=:auth, banned=:banned, salt=:salt, hash=:hash, ip=:ip, ban_expire_time=:banexpire where name=:name");
+        else
+            q->prepare("insert into trainers(name, laston, auth, banned, salt, hash, ip, ban_expire_time) values(:name, :laston, :auth, :banned, :salt, :hash, :ip, :banexpire)");
+
+        q->bindValue(":name", m.name.toLower());
+        q->bindValue(":laston", m.date);
+        q->bindValue(":auth", m.auth);
+        q->bindValue(":banned", m.banned);
+        q->bindValue(":hash", m.hash);
+        q->bindValue(":salt", m.salt);
+        q->bindValue(":ip", m.ip);
+        q->bindValue(":banexpire", m.ban_expire_time);
+
+        q->exec();
+        q->finish();
+
+        return;
+    }
 
     if (update) {
         Member oldm = member(m.name);
@@ -471,29 +714,55 @@ void SecurityManager::insertMember(void *m2, int update)
     }
 }
 
-void SecurityManager::loadMember(const QVariant &name, int query_type)
+void SecurityManager::loadMember(QSqlQuery *q, const QVariant &name, int query_type)
 {
-    (void) name;
-    (void) query_type;
+    if (!isSql()) {
+        /* No SQL usage, all already in memory */
+        return;
+    }
 
-    return;
-
-    /* No SQL usage, all already in memory */
-#if 0
     if (query_type == SecurityManager::GetInfoOnUser) {
         q->prepare("select laston, auth, banned, salt, hash, ip, ban_expire_time from trainers where name=:name limit 1");
-        q->bindValue(":name", name);
+        q->bindValue(":name", name.toString().toLower());
         q->exec();
         if (!q->next()) {
-            holder.addNonExistant(name.toString());
+            holder.addNonExistant(name.toString().toLower());
         } else {
-            Member m(name.toString(), q->value(0).toString(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
-                                      q->value(4).toByteArray(), q->value(5).toString(), q->value(6).toInt());
+            Member m(name.toString().toLower(), q->value(0).toString(), q->value(1).toInt(), q->value(2).toBool(), q->value(3).toByteArray(),
+                     q->value(4).toByteArray(), q->value(5).toString(), q->value(6).toInt());
             holder.addMemberInMemory(m);
         }
         q->finish();
     }
-#endif
+}
+
+void SecurityManager::exportDatabase()
+{
+    if (!isSql()) {
+        return;
+    }
+
+    {
+        QDir d;
+        d.mkdir("serverdb");
+    }
+
+    QFile out("serverdb/members.txt");
+
+    out.open(QIODevice::WriteOnly);
+
+    QSqlQuery q;
+    q.setForwardOnly(true);
+
+    q.exec("select name, laston, auth, banned, salt, hash, ip, ban_expire_time from trainers order by name asc");
+
+    while (q.next()) {
+        Member m(q.value(0).toString(), q.value(1).toString(), q.value(2).toInt(), q.value(3).toBool(), q.value(4).toByteArray(), q.value(5).toByteArray()
+                 , q.value(6).toString(), q.value(7).toInt());
+        out.write(m.toString().toUtf8());
+    }
+
+    Server::print("Member database exported!");
 }
 
 void SecurityManager::processDailyRun(int maxdays, bool async)
@@ -503,16 +772,53 @@ void SecurityManager::processDailyRun(int maxdays, bool async)
     if (async) {
         thread->addDailyRun();
     } else {
-        dailyRunEx();
+        if (isSql()) {
+            QSqlQuery q;
+            dailyRunEx(&q);
+        } else {
+            dailyRunEx();
+        }
     }
 }
 
 const istringmap<SecurityManager::Member> & SecurityManager::getMembers() {
+    if (isSql()) {
+        members.clear();
+
+        QSqlQuery q;
+        q.setForwardOnly(true);
+        q.exec("select name, auth, banned, hash, ip, laston, ban_expire_time from trainers order by name asc");
+
+        while(q.next()) {
+            Member m(q.value(0).toString(), q.value(5).toString(), q.value(1).toInt(), q.value(2).toBool(), q.value(3).toByteArray(), q.value(3).toByteArray(), q.value(4).toString(), q.value(6).toInt());
+
+            members[m.name] = m;
+        }
+    }
+
     return members;
 }
 
-void SecurityManager::dailyRunEx()
+void SecurityManager::dailyRunEx(QSqlQuery *q)
 {
+    if (q) {
+        QString limit = QDateTime::currentDateTime().addDays(-dailyRunDays).toString(Qt::ISODate);
+
+        qDebug() << "Processing daily run for members with limit " << limit;
+        if (SQLCreator::databaseType == SQLCreator::MySQL) {
+            q->prepare("delete from trainers where laston<? and auth=0 and banned=0");
+        } else {
+            q->prepare("delete from trainers where laston<? and auth=0 and banned='false'");
+        }
+        q->addBindValue(limit);
+
+        q->exec();
+        q->finish();
+        qDebug() << "Daily run for members finished";
+
+        return;
+    }
+
     QString limit = QDateTime::currentDateTime().addDays(-dailyRunDays).toString(Qt::ISODate);
 
     qDebug() << "Processing daily run for members with limit " << limit;

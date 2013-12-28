@@ -76,6 +76,7 @@ void MainWindow::createTrayIcon()
     trayMenu->addAction("&Config", myserverwidget, SLOT(openConfig()));
     trayMenu->addAction("&Script Window", myserverwidget, SLOT(openScriptWindow()));
     trayMenu->addAction("&Battle Config", myserverwidget, SLOT(openBattleConfigWindow()));
+    trayMenu->addAction("&SQL Config", myserverwidget, SLOT(openSqlConfigWindow()));
     trayMenu->addSeparator();
     trayMenu->addAction("&Plugin Manager", myserverwidget, SLOT(openPluginManager()));
     trayMenu->addSeparator();

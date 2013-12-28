@@ -1152,6 +1152,17 @@ int ScriptEngine::disconnectedPlayers()
     return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;
 }
 
+
+void ScriptEngine::exportMemberDatabase()
+{
+    SecurityManager::exportDatabase();
+}
+
+void ScriptEngine::exportTierDatabase()
+{
+    TierMachine::obj()->exportDatabase();
+}
+
 void ScriptEngine::clearChat()
 {
     emit clearTheChat();

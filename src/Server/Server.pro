@@ -3,7 +3,9 @@
 # -------------------------------------------------
 QT += network \
     script \
-    xml
+    xml \
+    sql
+
 TARGET = Server
 DESTDIR = $$PWD/../../bin
 TEMPLATE = app
@@ -28,7 +30,9 @@ SOURCES += main.cpp \
     scriptengineagent.cpp \
     battlecommunicator.cpp \
     registrycommunicator.cpp \
-    battleanalyzer.cpp
+    battleanalyzer.cpp \
+    sql.cpp \
+    sqlconfig.cpp
 !CONFIG(nogui):SOURCES += mainwindow.cpp \
     playerswindow.cpp \
     serverwidget.cpp \
@@ -75,7 +79,9 @@ HEADERS += player.h \
     scriptengineagent.h \
     battlecommunicator.h \
     registrycommunicator.h \
-    battleanalyzer.h
+    battleanalyzer.h \
+    sql.h \
+    sqlconfig.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
     ../Utilities/otherwidgets.h \

@@ -2,14 +2,17 @@
 #include <QInputDialog>
 
 #include "../Utilities/qscrolldowntextbrowser.h"
+#include "../Utilities/antidos.h"
+#include "../Utilities/antidoswindow.h"
+#include "../Utilities/pluginmanagerwidget.h"
+
+#include "sqlconfig.h"
 #include "serverwidget.h"
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
 #include "playerswindow.h"
 #include "security.h"
-#include "../Utilities/antidos.h"
-#include "../Utilities/antidoswindow.h"
 #include "serverconfig.h"
 #include "../Utilities/otherwidgets.h"
 #include "scriptengine.h"
@@ -18,7 +21,6 @@
 #include "battlingoptions.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
-#include "../Utilities/pluginmanagerwidget.h"
 #include "modswindow.h"
 
 ServerWidget::ServerWidget(Server *myserver) : settings("config", QSettings::IniFormat)
@@ -79,6 +81,7 @@ QMenuBar* ServerWidget::createMenuBar() {
     options->addAction("&Mods", this, SLOT(openModsWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
+    options->addAction("S&ql Config", this, SLOT(openSqlConfigWindow()));
     QMenu *plugins = bar->addMenu("&Plugins");
     plugins->addAction("Plugin &Manager", this, SLOT(openPluginManager()));
     plugins->addSeparator();
@@ -236,6 +239,14 @@ void ServerWidget::openBattleConfigWindow()
     w->show();
 
     connect(w, SIGNAL(settingsChanged()), server, SLOT(loadRatedBattlesSettings()));
+}
+
+
+void ServerWidget::openSqlConfigWindow()
+{
+    SQLConfigWindow *w = new SQLConfigWindow();
+
+    w->show();
 }
 
 QScrollDownTextBrowser * ServerWidget::mainchat()

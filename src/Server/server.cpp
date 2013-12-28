@@ -13,6 +13,7 @@
 #include "../Utilities/antidos.h"
 #include "serverconfig.h"
 #include "scriptengine.h"
+#include "sql.h"
 #include "tiermachine.h"
 #include "tier.h"
 #include "battlingoptions.h"
@@ -103,9 +104,9 @@ void Server::start(){
     QSettings s("config", QSettings::IniFormat);
 
     auto setDefaultValue = [&s](const char* key, const QVariant &defaultValue) {
-            if (!s.contains(key)) {
-                s.setValue(key, defaultValue);
-            }
+        if (!s.contains(key)) {
+            s.setValue(key, defaultValue);
+        }
     };
 
     setDefaultValue("Scripts/SafeMode", false);
@@ -141,6 +142,23 @@ void Server::start(){
     setDefaultValue("Players/ClearInactivesOnStartup", true);
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
+
+    setDefaultValue("SQL/Driver", SQLCreator::NoSql);
+    setDefaultValue("SQL/Database", "pokemon");
+    setDefaultValue("SQL/Port", 5432);
+    setDefaultValue("SQL/User", "postgres");
+    setDefaultValue("SQL/Pass", "admin");
+    setDefaultValue("SQL/Host", "localhost");
+    setDefaultValue("SQL/DatabaseSchema", "");
+    setDefaultValue("SQL/VacuumOnStartup", true);
+
+    if (isSql()) {
+        try {
+            SQLCreator::createSQLConnection();
+        } catch (const QString &ex) {
+            forcePrint(ex);
+        }
+    }
 
     forcePrint(tr("Starting loading pokemon database..."));
 
@@ -918,7 +936,7 @@ void Server::processLoginDetails(Player *p)
         }
 #ifndef PO_NO_WELCOME
         broadCast(tr("Welcome Message: The updates are available at http://pokemon-online.eu/ -- report any bugs on the forum."),
-              NoChannel, NoSender, false, id);
+                  NoChannel, NoSender, false, id);
 #endif
     } else {
         p->doWhenRC(wasLoggedIn);
@@ -1543,8 +1561,8 @@ bool Server::canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const Te
         if (l2.contains(p1->ip()))
             return false;
     }
-//    if (std::abs(p1->rating()-p2->rating()) > 300)
-//        return false;
+    //    if (std::abs(p1->rating()-p2->rating()) > 300)
+    //        return false;
     return true;
 }
 
@@ -1616,7 +1634,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     }
 
     if (original_desc == Forfeit) {
-       removeBattle(battleid);
+        removeBattle(battleid);
     }
 
     //qDebug() << "battleResult " << battleid << desc << winner << loser << battle << "end";
@@ -1958,7 +1976,7 @@ void Server::atServerShutDown() {
 
 void Server::setAnnouncement(int &id, const QString &html) {
     if (player(id)->isLoggedIn())
-            player(id)->relay().notify(NetworkServ::Announcement, html);;
+        player(id)->relay().notify(NetworkServ::Announcement, html);;
 }
 
 Player * Server::player(int id) const

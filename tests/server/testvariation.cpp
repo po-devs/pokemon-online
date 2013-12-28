@@ -12,7 +12,7 @@ class TestVariationBattle : public BattleCommandManager<TestVariationBattle>
 {
 public:
     void onVariation(int, int bonus, int malus) {
-        assert(bonus != 50 && malus != 50);
+        assert(!(bonus == 50 && malus == 50));
         done = true;
     }
 };

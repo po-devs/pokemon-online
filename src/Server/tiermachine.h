@@ -10,6 +10,7 @@ struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
 class MemberRating;
+class QSqlQuery;
 
 template<class T> class LoadInsertThread;
 
@@ -60,6 +61,7 @@ public:
     QPair<int, int> pointChangeEstimate(const QString &player, const QString &foe, const QString &tier);
     QString findTier(const TeamBattle &t) const;
 
+    void exportDatabase() const;
     TierTree *getDataTree() const;
 
     static const int playersByPage = 40;
@@ -72,8 +74,8 @@ public:
 signals:
     void tiersChanged();
 public slots:
-    void processQuery(const QVariant &,int,WaitingObject*);
-    void insertMember(void *,int);
+    void processQuery(QSqlQuery *q, const QVariant &,int,WaitingObject*);
+    void insertMember(QSqlQuery *q,void *,int);
     /* Processes the daily run in which ratings are updated.
        Be aware that it may take long. I may thread it in the future. */
     void processDailyRun();

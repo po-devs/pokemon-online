@@ -110,7 +110,7 @@ public:
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
     void fetchRanking(const QString &name, QObject *o, const char *slot);
-    void processQuery(const QVariant &name, int type, WaitingObject *w);
+    void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
     int getMode() const;
     bool allowGen(Pokemon::gen gen) const;
     Pokemon::gen gen() const {return m_gen;}
@@ -130,6 +130,7 @@ public:
     void importBannedMoves(const QString &);
     void importBannedItems(const QString &);
 
+    void exportDatabase() const;
     void processDailyRun();
     /* Removes all ranking */
     void resetLadder();
@@ -170,7 +171,9 @@ protected:
     /* Be very careful in how you use them */
     void updateMember(MemberRating &m, bool add=false);
     void updateMemberInDatabase(MemberRating &m, bool add=false);
-    void insertMember(void *data, int type);
+    void insertMember(QSqlQuery *q, void *data, int type);
+
+    void loadSqlFromFile();
 
 private:
     TierMachine *boss;
@@ -189,6 +192,10 @@ private:
     QSet<Pokemon::uniqueId> restrictedPokes;
     int mode; /* < 0 : any, otherwise specific mode */
     quint32 clauses;
+
+    /* Used for table name in SQL database */
+    QString sql_table;
+    int m_count, last_count_time;
 
     int m_id;
 

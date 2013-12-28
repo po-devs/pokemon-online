@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     testregister.cpp \
     testban.cpp \
     testsession.cpp \
-    testreconnect.cpp
+    testreconnect.cpp \
+    testshutdown.cpp
 
 HEADERS += \
     ../common/test.h \
@@ -49,7 +50,8 @@ HEADERS += \
     testregister.h \
     testban.h \
     testsession.h \
-    testreconnect.h
+    testreconnect.h \
+    testshutdown.h
 
 OTHER_FILES += \
     ../data/server/scripts.js

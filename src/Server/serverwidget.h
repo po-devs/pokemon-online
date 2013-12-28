@@ -41,6 +41,7 @@ public slots:
     void openScriptWindow();
     void openTiersWindow();
     void openBattleConfigWindow();
+    void openSqlConfigWindow();
     void openPluginManager();
     void openModsWindow();
 

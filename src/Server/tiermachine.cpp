@@ -28,8 +28,8 @@ TierMachine::TierMachine()
 
     thread = new LoadInsertThread<MemberRating>();
 
-    connect(thread , SIGNAL(processLoad (QVariant, int, WaitingObject*)), this, SLOT(processQuery(QVariant, int, WaitingObject *)), Qt::DirectConnection);
-    connect(thread, SIGNAL(processWrite(void*,int)), this, SLOT(insertMember(void*,int)), Qt::DirectConnection);
+    connect(thread , SIGNAL(processLoad (QSqlQuery*, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
+    connect(thread, SIGNAL(processWrite(QSqlQuery*, void*,int)), this, SLOT(insertMember(QSqlQuery*, void*,int)), Qt::DirectConnection);
 
     thread->start();
 
@@ -61,7 +61,7 @@ void TierMachine::load()
     //emit tiersChanged();
 }
 
-void TierMachine::processQuery(const QVariant &data, int queryNo, WaitingObject *w)
+void TierMachine::processQuery(QSqlQuery *q, const QVariant &data, int queryNo, WaitingObject *w)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);
@@ -71,7 +71,7 @@ void TierMachine::processQuery(const QVariant &data, int queryNo, WaitingObject 
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
         if (m_tiers.length() > tierno && tierno >= 0) {
-            m_tiers[tierno]->processQuery(data, trueQueryNo, w);
+            m_tiers[tierno]->processQuery(q, data, trueQueryNo, w);
         } else {
             qDebug() << "Critical! invalid load tier member query, tier requested: " << tierno << "query no: " << queryNo;
         }
@@ -83,7 +83,7 @@ void TierMachine::processQuery(const QVariant &data, int queryNo, WaitingObject 
     semaphore.release();
 }
 
-void TierMachine::insertMember(void *m, int queryNo)
+void TierMachine::insertMember(QSqlQuery *q, void *m, int queryNo)
 {
     semaphore.acquire();
     int tierno = queryNo % (1 << 10);
@@ -93,7 +93,7 @@ void TierMachine::insertMember(void *m, int queryNo)
     /* Safe, this->version is only updated in semaphores */
     if (version == this->version) {
         if (m_tiers.length() > tierno && tierno >= 0) {
-            m_tiers[tierno]->insertMember(m, trueQueryNo);
+            m_tiers[tierno]->insertMember(q, m, trueQueryNo);
         } else {
             qDebug() << "Critical! invalid insert tier query, tier requested: " << tierno << "query no: " << queryNo;
         }
@@ -302,13 +302,21 @@ QString TierMachine::findTier(const TeamBattle &t) const
 
 bool TierMachine::existsPlayer(const QString &name, const QString &player)
 {
-   return exists(name) && tier(name).exists(player);
+    return exists(name) && tier(name).exists(player);
 }
 
 LoadInsertThread<MemberRating> *TierMachine::getThread()
 {
     return thread;
 }
+
+void TierMachine::exportDatabase() const
+{
+    for(int i = 0; i < m_tiers.size(); i++) {
+        m_tiers[i]->exportDatabase();
+    }
+}
+
 
 TierTree *TierMachine::getDataTree() const
 {
