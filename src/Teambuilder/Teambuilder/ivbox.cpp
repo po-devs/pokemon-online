@@ -207,7 +207,7 @@ void IvBox::changeHiddenPower(int newType)
     }
 
     updateIVs();
-    updateHiddenPowerSelection();
+    updateHiddenPower();
 }
 
 void IvBox::changeHPSelection(int row)

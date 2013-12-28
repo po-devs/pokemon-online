@@ -33,7 +33,7 @@ void SmogonScraper::lookup(PokeTeam p)
     case 3:currGen = "rs";break;
     case 4:currGen = "dp";break;
     case 5:currGen = "bw";break;
-    default:currGen = "bw";/*TODO: modify this*/
+    case 6:default:currGen = "xy";break;
     }
 
     QString name = PokemonInfo::Name(p.num());
