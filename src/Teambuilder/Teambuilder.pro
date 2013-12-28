@@ -218,3 +218,8 @@ LIBS += $$battlemanager
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }
+
+OTHER_FILES += \
+    ../../bin/Themes/Classic/default.css \
+    "../../bin/Themes/Dark Classic/default.css" \
+    ../../bin/Themes/Shoddy/default.css

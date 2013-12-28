@@ -52,7 +52,8 @@ CONFIG(po_clientplugins) {
                src/ClientScripting \
                src/SettingsPlugin \
                src/SmogonPlugin \
-               src/DesignerPlugin
+               src/DesignerPlugin \
+               src/DatabaseEditor
 }
 
 CONFIG(po_server) {
@@ -102,3 +103,4 @@ CONFIG(test) {
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
+

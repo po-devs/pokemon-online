@@ -7,27 +7,24 @@ PokeButton {
     height: 85px;
 }
 
-PokeEdit #pokemonSprite {
-	margin: 9px;
-}
-
 PokeEdit #itemSprite {
 	margin: 9px;
 }
 
-PokeEdit #pokemonFrame {
-	height: 110px;
-	width: 110px;
-	/*border-radius: 4px;*/
+QToolButton#pokemonFrame {
+        height: 110px;
+        width: 110px;
+        /*border-radius: 4px;*/
+}
+
+QToolButton #pokemonSprite {
+    margin: 9px;
+    min-width: 96px;
+    min-height: 96px;
 }
 
 PokeEdit #done {
   margin-right: 60px;
-}
-
-PokeSelection #pokemonSprite {
-    min-width: 96px;
-    min-height: 96px;
 }
 
 PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {

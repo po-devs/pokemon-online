@@ -154,25 +154,25 @@ TeamMenu #done {
   margin-right: 40px;
 }
 
-PokeEdit #pokemonSprite {
-    background: #ffffff;
-	margin: 9px;
-
-}
-
 PokeEdit #itemSprite {
 	margin: 9px;
 }
 
-PokeEdit #pokemonFrame {
-	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+QToolButton#pokemonFrame {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #1a2d3c, stop: 0.495 #172c3d,
                                 stop: 0.505 #0d161f, stop: 1.0 #16242f);
-	height: 140px;
-	width: 140px;
-	/*border-radius: 4px;*/
+        height: 140px;
+        width: 140px;
+        /*border-radius: 4px;*/
 }
 
+QToolButton #pokemonSprite {
+    background: #ffffff;
+    margin: 9px;
+    min-width: 96px;
+    min-height: 96px;
+}
 
 MainWidget {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -450,16 +450,6 @@ PokeSelection QPushButton#altForme {
 PokeSelection QPushButton#changeSpecies {
     color: white;
     background: #3975b8;
-}
-
-PokeSelection #pokemonSprite {
-    min-width: 96px;
-    min-height: 96px;
-}
-
-PokeSelection #pokemonFrame {
-    width: 140px;
-    height: 140px;
 }
 
 /**** box ****/
