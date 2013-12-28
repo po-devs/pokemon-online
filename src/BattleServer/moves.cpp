@@ -1656,7 +1656,8 @@ struct MMEncore : public MM
                 fturn(b,s).add(TM::Failed);
                 return;
             }
-            if (fturn(b,t).contains(TM::NoChoice)) {
+            /* Encore & 2-turn moves fail before gen 6 */
+            if (fturn(b,t).contains(TM::NoChoice) && b.gen() < 6) {
                 fturn(b,s).add(TM::Failed);
                 return;
             }
