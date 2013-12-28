@@ -2137,7 +2137,9 @@ struct AMStanceChange : public AM {
     }
 
     static void btl (int s, int, BS &b) {
-        Pokemon::uniqueId num = fpoke(b,s).id;
+        /* Not using field pokemon since Ditto doesn't gain stance change.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
             return;
