@@ -35,6 +35,6 @@ CONFIG(po_relaystation) {
 
 CONFIG(po_registry) {
     CONFIG(webconf) {
-        SUBDIRS += ../lib/pillow
+        SUBDIRS += ../../lib/pillow
     }
 }
