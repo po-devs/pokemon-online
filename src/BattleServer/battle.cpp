@@ -3752,6 +3752,11 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.gender() = p2.gender();
         p.shiny() = p2.shiny();
 
+        /* Special case: xerneas and its other forme */
+        if (p.num() == Pokemon::Xerneas) {
+            p.num() = Pokemon::Xerneas_A;
+        }
+
         return p;
     } else {
         return BattleBase::opoke(slot, player, i);
