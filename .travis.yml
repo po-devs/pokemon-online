@@ -9,5 +9,10 @@ before_install:
 install:
   - sudo apt-get install libzip-dev qt4-dev-tools libqt4-declarative-shaders libqt4-dev libphonon-dev
 
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 5
+
 script:
   - qmake "CONFIG += po_all po_registry webconf" && make && ./scripts/run-tests.sh
