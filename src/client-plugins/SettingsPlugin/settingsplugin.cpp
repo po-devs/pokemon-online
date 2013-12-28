@@ -1,7 +1,7 @@
 #include "settingsplugin.h"
 #include "settingsdialog.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface *)
+ClientPlugin* createClientPlugin(MainEngineInterface *)
 {
     return new SettingsPlugin();
 }

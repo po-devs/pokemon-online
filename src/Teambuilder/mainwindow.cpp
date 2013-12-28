@@ -11,6 +11,7 @@
 #include <QtCore/QVariant>
 
 #include "../Utilities/functions.h"
+#include "../Utilities/pluginmanagerwidget.h"
 #include "../PokemonInfo/teamholder.h"
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
@@ -96,7 +97,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     setProperty("updated", updated);
 
-    pluginManager = new PluginManager(this);
+    pluginManager = new ClientPluginManager(this);
 
 #ifndef QT5
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -263,6 +264,7 @@ void MainEngine::openPluginManager()
 {
     PluginManagerWidget *w = new PluginManagerWidget(*pluginManager);
 
+    w->setFolder("myplugins");
     w->show();
 
     connect(w, SIGNAL(pluginListChanged()), SLOT(updateMenuBar()));

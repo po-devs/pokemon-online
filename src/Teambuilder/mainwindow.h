@@ -9,7 +9,7 @@
 #include "downloadmanager.h"
 
 class QScrollDownTextBrowser;
-class PluginManager;
+class ClientPluginManager;
 class MainWidget;
 
 /* The main window!
@@ -70,7 +70,7 @@ private:
     void rebuildThemeMenu();
 
     QMainWindow *displayer;
-    PluginManager *pluginManager;
+    ClientPluginManager *pluginManager;
 
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;

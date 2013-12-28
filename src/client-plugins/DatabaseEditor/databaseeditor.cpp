@@ -1,7 +1,7 @@
 #include "pokemoneditordialog.h"
 #include "databaseeditor.h"
 
-ClientPlugin *createPluginClass(MainEngineInterface *client)
+ClientPlugin *createClientPlugin(MainEngineInterface *client)
 {
     return new DatabaseEditor(client);
 }

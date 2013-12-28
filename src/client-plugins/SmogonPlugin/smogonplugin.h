@@ -5,7 +5,7 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-SMOGONPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+SMOGONPLUGINSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class SMOGONPLUGINSHARED_EXPORT SmogonPlugin : public QObject, public ClientPlugin {

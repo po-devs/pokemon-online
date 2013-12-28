@@ -8,7 +8,7 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-DESIGNERPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+DESIGNERPLUGINSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class DESIGNERPLUGINSHARED_EXPORT DesignerPlugin : public ClientPlugin {

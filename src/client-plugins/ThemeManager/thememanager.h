@@ -6,7 +6,7 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-THEMEMANAGERSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+THEMEMANAGERSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class THEMEMANAGERSHARED_EXPORT ThemeManagerPlugin : public ClientPlugin {

@@ -1,7 +1,7 @@
 ﻿#include "designerplugin.h"
 #include "designerwidget.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface *client)
+ClientPlugin* createClientPlugin(MainEngineInterface *client)
 {
     return new DesignerPlugin(client);
 }

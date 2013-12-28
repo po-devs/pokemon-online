@@ -12,7 +12,7 @@
 #include "pokemonteamtabs.h"
 #include "teambuildersmogonplugin.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface *_interface)
+ClientPlugin* createClientPlugin(MainEngineInterface *_interface)
 {
     return new SmogonPlugin(_interface);
 }

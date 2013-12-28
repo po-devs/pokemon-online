@@ -3,7 +3,7 @@
 #include "scriptwindow.h"
 #include "scriptengine.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface*)
+ClientPlugin* createClientPlugin(MainEngineInterface*)
 {
     return new ClientScripting();
 }

@@ -12,6 +12,7 @@ class PluginManagerWidget : public QWidget
 public:
     PluginManagerWidget(PluginManager &pl);
 
+    void setFolder(const QString &folder);
 signals:
     void pluginListChanged();
     void error(QString);
@@ -23,6 +24,7 @@ private:
     PluginManager &pl;
 
     QListWidget *list;
+    QString defaultFolder;
 };
 
 #endif // PLUGINMANAGERWIDGET_H

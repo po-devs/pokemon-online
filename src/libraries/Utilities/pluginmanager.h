@@ -28,8 +28,8 @@ public:
     int count() const;
 
     //throws std::runtime_error on error
-    void addPlugin(const QString &path);
-    void freePlugin(int index);
+    virtual void addPlugin(const QString &path);
+    virtual void freePlugin(int index);
     //returns true if plugin was found
     bool freePlugin(const QString &name);
 

@@ -6,7 +6,7 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-DATABASEEDITORSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+DATABASEEDITORSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class DATABASEEDITORSHARED_EXPORT DatabaseEditor : public ClientPlugin

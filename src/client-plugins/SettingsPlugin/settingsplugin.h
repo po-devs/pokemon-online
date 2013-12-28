@@ -5,7 +5,7 @@
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
-SETTINGSPLUGINSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+SETTINGSPLUGINSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class SETTINGSPLUGINSHARED_EXPORT SettingsPlugin : public ClientPlugin {

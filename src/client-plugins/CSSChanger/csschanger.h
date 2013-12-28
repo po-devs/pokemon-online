@@ -8,7 +8,7 @@
 struct ThemeAccessor;
 
 extern "C" {
-CSSCHANGERSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+CSSCHANGERSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class CSSCHANGERSHARED_EXPORT CSSPlugin : public ClientPlugin {

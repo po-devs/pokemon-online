@@ -33,7 +33,7 @@ class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
 class DataStream;
-class PluginManager;
+class ClientPluginManager;
 
 /* The class for going online.
 
@@ -45,7 +45,7 @@ class Client : public QWidget, public ClientInterface, public CentralWidgetInter
 
     friend class Channel;
 public:
-    Client(PluginManager*, TeamHolder *, const QString &url, const quint16 port);
+    Client(ClientPluginManager*, TeamHolder *, const QString &url, const quint16 port);
     ~Client();
 
     TeamHolder *team();
@@ -463,7 +463,7 @@ private:
     bool exitWarning;
 
     QSet<OnlineClientPlugin*> plugins;
-    PluginManager *pluginManager;
+    ClientPluginManager *pluginManager;
     QHash<OnlineClientPlugin*, QHash<QString, OnlineClientPlugin::Hook> > hooks;
 
     template<class T1>

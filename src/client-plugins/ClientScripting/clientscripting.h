@@ -8,7 +8,7 @@
 class ScriptEngine;
 
 extern "C" {
-CLIENTSCRIPTINGSHARED_EXPORT ClientPlugin *createPluginClass(MainEngineInterface*);
+CLIENTSCRIPTINGSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface*);
 }
 
 class CLIENTSCRIPTINGSHARED_EXPORT ClientScripting : public ClientPlugin {

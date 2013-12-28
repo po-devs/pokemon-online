@@ -31,7 +31,7 @@
 #include <QSplitter>
 #endif
 
-Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
+Client::Client(ClientPluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
     exitWarning = globals.value("Client/ShowExitWarning").toBool(); // initiate, to show exit warning or not
     flashingToggled = !globals.contains("Client/Flashing") ? true : globals.value("Client/Flashing").toBool();

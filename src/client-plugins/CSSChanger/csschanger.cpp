@@ -2,7 +2,7 @@
 #include "csswidget.h"
 #include "../Teambuilder/engineinterface.h"
 
-ClientPlugin* createPluginClass(MainEngineInterface*i)
+ClientPlugin* createClientPlugin(MainEngineInterface*i)
 {
     return new CSSPlugin(i->theme());
 }
