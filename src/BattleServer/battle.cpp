@@ -645,7 +645,17 @@ BattleChoices BattleSituation::createChoice(int slot)
 
 bool BattleSituation::isMovePossible(int player, int move)
 {
-    return (BattleBase::isMovePossible(player, move) && turnMemory(player).value("Move" + QString::number(move) + "Blocked").toBool() == false);
+    bool possible = (BattleBase::isMovePossible(player, move) && turnMemory(player).value("Move" + QString::number(move) + "Blocked").toBool() == false);
+
+    if (possible) {
+        int attack = fpoke(player).moves[move];
+
+        if (attack == Move::Belch && !pokeMemory(player).contains("BerryEaten")) {
+            return false;
+        }
+    }
+
+    return possible;
 }
 
 void BattleSituation::analyzeChoice(int slot)
@@ -3294,6 +3304,8 @@ void BattleSituation::eatBerry(int player, bool show) {
         if (hasWorkingAbility(player, Ability::CheekPouch)) {
             healLife(player, poke(player).totalLifePoints()/3);
         }
+
+        pokeMemory(player)["BerryEaten"] = true;
     }
 
     disposeItem(player);

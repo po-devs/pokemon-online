@@ -991,7 +991,8 @@ struct MMCopycat : public MM
     static void daf(int s, int, BS &b) {
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
-        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle || (b.gen() > 5 && (move == Roar || move == Whirlwind))) {
+        if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle || (b.gen() > 5 && (move == Roar || move == Whirlwind))
+                || move == Belch) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1021,7 +1022,7 @@ struct MMAssist : public MM
         FM() {
             (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << CraftyShield << DestinyBond << Detect
                               << Endure << Feint << FocusPunch << FollowMe << HelpingHand << KingsShield << MatBlock << MeFirst
-                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect
+                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << Belch
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
@@ -4615,7 +4616,7 @@ struct MMSleepTalk : public MM
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
-                              << Uproar << IceBurn << FreezeShock << Geomancy << PhantomForce;
+                              << Uproar << IceBurn << FreezeShock << Geomancy << PhantomForce << Belch;
         }
         bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
             //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
@@ -6548,25 +6549,13 @@ struct MMBelch :  public MM
 {
     MMBelch() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["BeforeTargetList"] = &btl;
     }
 
     static void daf(int s, int, BS &b) {
-        if (!turn(b,s).value("BelchOk").toBool()) {
+        if (!poke(b,s).contains("BerryEaten")) {
             fturn(b,s).add(TM::Failed);
         }
-    }
-
-    static void btl(int s, int, BS &b) {
-        int berry = b.poke(s).item();
-
-        if (!b.hasWorkingItem(s, berry) || !ItemInfo::isBerry(berry)) {
-            return;
-        }
-
-        b.eatBerry(s);
-
-        turn(b,s)["BelchOk"] = true;
+        poke(b,s).remove("BerryEaten");
     }
 };
 
