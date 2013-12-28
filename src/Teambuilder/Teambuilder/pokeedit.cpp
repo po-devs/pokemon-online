@@ -11,11 +11,11 @@
 
 #include "TeambuilderLibrary/theme.h"
 #include "TeambuilderLibrary/pokeselection.h"
+#include "TeambuilderLibrary/poketablemodel.h"
 
 #include "ui_pokeedit.h"
 #include "pokeedit.h"
 #include "pokemovesmodel.h"
-#include "poketablemodel.h"
 #include "teambuilderwidget.h"
 #include "teambuilder.h"
 

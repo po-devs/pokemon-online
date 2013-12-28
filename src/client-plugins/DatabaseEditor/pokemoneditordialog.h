@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+class QAbstractItemModel;
+
 namespace Ui {
 class PokemonEditorDialog;
 }
@@ -15,8 +17,11 @@ public:
     explicit PokemonEditorDialog(QWidget *parent = 0);
     ~PokemonEditorDialog();
 
+private slots:
+    void on_pokemonFrame_clicked();
 private:
     Ui::PokemonEditorDialog *ui;
+    QAbstractItemModel *pokeModel;
 };
 
 #endif // POKEMONEDITORDIALOG_H

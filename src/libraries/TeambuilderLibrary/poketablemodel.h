@@ -7,7 +7,7 @@
 
 class PokeTableModel : public QAbstractTableModel {
 public:
-    PokeTableModel(Pokemon::gen gen=5, QObject *parent = NULL);
+    PokeTableModel(Pokemon::gen gen=GenInfo::GenMax(), QObject *parent = NULL);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;

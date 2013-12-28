@@ -31,7 +31,6 @@ SOURCES += main.cpp \
     findbattledialog.cpp \
     menu.cpp \
     serverchoice.cpp \
-    Teambuilder/poketablemodel.cpp \
     Teambuilder/pokemovesmodel.cpp \
     Teambuilder/trainermenu.cpp \
     Teambuilder/pokebuttonsholder.cpp \
@@ -97,8 +96,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     findbattledialog.h \
     tieractionfactory.h \
     menu.h \
-    Teambuilder/poketablemodel.h \
-    Teambuilder/modelenum.h \
     Teambuilder/pokemovesmodel.h \
     Teambuilder/trainermenu.h \
     Teambuilder/pokebuttonsholder.h \

@@ -4,13 +4,13 @@
 #include "../PokemonInfo/teamholder.h"
 
 #include "../Utilities/functions.h"
+#include "TeambuilderLibrary/poketablemodel.h"
 
 #include "Teambuilder/teambuilder.h"
 #include "Teambuilder/trainermenu.h"
 #include "mainwindow.h"
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeboxes.h"
-#include "Teambuilder/poketablemodel.h"
 #include "loadwindow.h"
 #include "pluginmanager.h"
 

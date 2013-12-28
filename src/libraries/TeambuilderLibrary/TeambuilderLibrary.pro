@@ -15,7 +15,8 @@ SOURCES += \
     pokeselection.cpp \
     advancedsearch.cpp \
     basestatswidget.cpp \
-    pokechoice.cpp
+    pokechoice.cpp \
+    poketablemodel.cpp
 
 HEADERS += \
     theme.h \
@@ -25,7 +26,8 @@ HEADERS += \
     modelenum.h \
     advancedsearch.h \
     basestatswidget.h \
-    pokechoice.h
+    pokechoice.h \
+    poketablemodel.h
 
 include(../../Shared/Common.pri)
 
