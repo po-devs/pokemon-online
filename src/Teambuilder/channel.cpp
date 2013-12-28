@@ -535,10 +535,10 @@ void Channel::updateState(int id)
 void Channel::playerLogOut(int id) {
     QString name = this->name(id);
 
-    removePlayer(id);
-
     if (eventEnabled(Client::ChannelEvent))
         printLine(tr("%1 logged out.").arg(name), false, false);
+
+    removePlayer(id);
 }
 
 void Channel::removePlayer(int id) {
