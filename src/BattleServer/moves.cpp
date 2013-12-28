@@ -6685,7 +6685,9 @@ struct MMGrassyTerrain : public MM {
         } else {
             b.sendMoveMessage(205,2,s,Pokemon::Grass);
             foreach (int p, b.sortedBySpeed()) {
-                b.healLife(p, b.poke(p).totalLifePoints()/16);
+                if (!b.isFlying(p)) {
+                    b.healLife(p, b.poke(p).totalLifePoints()/16);
+                }
             }
         }
     }
