@@ -44,11 +44,16 @@ void TestReconnect::onChannelMessage(const QString &message, int, bool)
 {
     if (message.startsWith("<version>: ")) {
         assert(message.mid(11) == "1337.508");
-        if (++::success == 2) {
+        if (++::success == 4) {
             accept();
         } else {
             sender()->sendChanMessage(0, "eval: sys.disconnect(sys.id('ultimate version'))");
             QTimer::singleShot(5000, this, SLOT(createAnalyzer()));
         }
+    }
+
+    /* called twice */
+    if (message == "ultimate version reconnected.") {
+        ++::success;
     }
 }
