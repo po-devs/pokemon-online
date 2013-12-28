@@ -773,6 +773,13 @@ struct IMBerserkGene : public IM {
         b.inflictStatMod(s, Attack, 2, s, false);
         b.inflictConfused(s,s);
         b.disposeItem(s);
+
+        /* in GSC cart mechanics, infinite confusion */
+        if (b.isConfused(s)) {
+            if (b.gen() == Gen::GoldSilver || b.gen() == Gen::Crystal) {
+                poke(b,s)["ConfusedCount"] = 255;
+            }
+        }
     }
 };
 
