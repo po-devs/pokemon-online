@@ -4937,7 +4937,7 @@ struct MMYawn : public MM {
         int opp = b.player(t);
 
         if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() > 0
-                || (b.terrainCount > 0 && std::abs(b.terrain) == Type::Electric)) {
+                || (b.terrainCount > 0 && std::abs(b.terrain) == Type::Electric && !b.isFlying(t))) {
             fturn(b,s).add(TM::Failed);
             return;
         }

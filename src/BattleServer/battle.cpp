@@ -2389,7 +2389,7 @@ bool BattleSituation::canGetStatus(int player, int status) {
                 hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
             return false;
         }
-        if (!isFlying(player) && battleMemory().contains("ElectricTerrainCount")) {
+        if (!isFlying(player) && terrainCount > 0 && terrain == Type::Electric) {
             return false;
         }
         return true;
@@ -2494,7 +2494,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
                 return;
             }
         }
-        if(battleMemory().value("MistyTerrainCount").toInt() > 0 && !isFlying(player)) {
+        if(std::abs(terrain) == Type::Fairy && terrainCount > 0 && !isFlying(player)) {
             sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
             return;
         }
