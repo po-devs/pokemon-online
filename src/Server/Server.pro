@@ -7,7 +7,6 @@ QT += network \
     sql
 
 TARGET = Server
-DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 SOURCES += main.cpp \
     consolereader.cpp \
@@ -100,6 +99,8 @@ CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
 CONFIG(nosysteminscript):DEFINES += PO_SCRIPT_NO_SYSTEM
 
+include(../Shared/Common.pri)
+
 macx {
    LIBS += -framework CoreFoundation
    # Todo: get a real icon
@@ -115,8 +116,6 @@ macx {
    QMAKE_POST_LINK += macdeployqt $${DESTDIR}/$${TARGET}.app -verbose=3
 
 }
-
-include(../Shared/Common.pri)
 
 FORMS += \
     modswindow.ui

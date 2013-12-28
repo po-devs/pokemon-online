@@ -6,7 +6,7 @@
 
 TARGET = battlelogs
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/serverplugins
+EXTRAS=serverplugin
 DEFINES += BATTLELOGS_LIBRARY
 QT += gui core declarative
 

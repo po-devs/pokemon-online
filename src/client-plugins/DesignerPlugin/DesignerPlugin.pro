@@ -1,6 +1,6 @@
 TARGET = DesignerPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 DEFINES += DESIGNERPLUGIN_LIBRARY
 

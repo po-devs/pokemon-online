@@ -6,7 +6,7 @@
 
 TARGET = CSSChanger
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 DEFINES += CSSCHANGER_LIBRARY
 

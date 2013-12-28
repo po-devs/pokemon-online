@@ -7,7 +7,6 @@
 QT       += core network xml gui
 
 TARGET = RelayStation
-DESTDIR = $$PWD/../../bin
 CONFIG   += console
 
 TEMPLATE = app

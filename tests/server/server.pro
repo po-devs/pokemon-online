@@ -6,13 +6,12 @@
 
 QT       += core network
 
-DESTDIR = $$PWD/../../bin
-
 CONFIG   += console
 CONFIG   -= app_bundle
 
-TEMPLATE = app
 EXTRAS = test
+
+TEMPLATE = app
 
 INCLUDEPATH += ../../src/
 INCLUDEPATH += ../common/

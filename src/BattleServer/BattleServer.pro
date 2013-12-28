@@ -11,7 +11,6 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TARGET = BattleServer
-DESTDIR = $$PWD/../../bin
 
 TEMPLATE = app
 

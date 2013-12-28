@@ -7,7 +7,6 @@
 QT       += widgets
 
 TARGET = po-teambuilder
-DESTDIR = $$PWD/../../bin
 TEMPLATE = lib
 
 SOURCES += \

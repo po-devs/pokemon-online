@@ -7,7 +7,6 @@
 QT += declarative opengl
 TARGET = po-battlemanager
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin
 
 DEFINES += BATTLEMANAGER_LIBRARY
 

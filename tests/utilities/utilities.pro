@@ -7,9 +7,9 @@
 CONFIG   += console
 CONFIG   -= app_bundle
 
-DESTDIR = $$PWD/../../bin
-TEMPLATE = app
 EXTRAS = test
+
+TEMPLATE = app
 
 SOURCES += main.cpp \
     testinsensitivemap.cpp \

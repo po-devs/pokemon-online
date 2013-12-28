@@ -8,9 +8,8 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-EXTRAS = test
 
-DESTDIR = $$PWD/../../bin
+EXTRAS = test
 
 INCLUDEPATH += ../../src/
 INCLUDEPATH += ../common/

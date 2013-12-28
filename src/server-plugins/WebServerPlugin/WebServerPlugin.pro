@@ -8,7 +8,7 @@ QT       += network
 
 TARGET = WebServerPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/serverplugins
+EXTRAS=serverplugin
 
 DEFINES += WEBSERVERPLUGIN_LIBRARY
 

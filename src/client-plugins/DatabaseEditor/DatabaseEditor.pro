@@ -8,7 +8,7 @@ QT       += widgets
 
 TARGET = DatabaseEditor
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 DEFINES += DATABASEEDITOR_LIBRARY
 

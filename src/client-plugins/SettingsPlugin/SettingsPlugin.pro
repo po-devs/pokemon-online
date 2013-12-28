@@ -6,7 +6,7 @@
 
 TARGET = SettingsPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 DEFINES += SETTINGSPLUGIN_LIBRARY
 

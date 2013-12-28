@@ -3,7 +3,7 @@ TARGET = po-utilities
 QT += network gui
 
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin
+
 DEFINES -= UNICODE
 SOURCES += otherwidgets.cpp \
     mtrand.cpp \

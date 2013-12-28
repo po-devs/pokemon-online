@@ -20,6 +20,15 @@ CONFIG(shadow)|!equals($${_PRO_FILE_PWD_}, $${OUT_PWD}) {
 }
 
 bin = $$PWD/../../bin
+
+DESTDIR=$$bin
+contains(EXTRAS, clientplugin) {
+    DESTDIR=$$bin/myplugins
+}
+contains(EXTRAS, serverplugin) {
+    DESTDIR=$$bin/serverplugins
+}
+
 #adds debug suffix to libraries when compiled
 CONFIG(debug, debug|release) {
     win32 {

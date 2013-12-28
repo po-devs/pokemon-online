@@ -9,7 +9,6 @@ QT       += network
 
 QT       -= gui
 
-DESTDIR = $$PWD/../../bin
 TARGET = qtwebsocket
 TEMPLATE = lib
 

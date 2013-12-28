@@ -6,7 +6,7 @@
 
 TARGET = ThemeManager
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 QT += network xml
 

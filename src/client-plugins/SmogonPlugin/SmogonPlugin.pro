@@ -6,7 +6,7 @@
 
 TARGET = SmogonPlugin
 TEMPLATE = lib 
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 QT += xml network 
 

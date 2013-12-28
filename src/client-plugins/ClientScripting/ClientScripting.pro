@@ -8,7 +8,7 @@ QT += script network declarative
 
 TARGET = ClientScripting
 TEMPLATE = lib
-DESTDIR = $$PWD/../../../bin/myplugins
+EXTRAS=clientplugin
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 

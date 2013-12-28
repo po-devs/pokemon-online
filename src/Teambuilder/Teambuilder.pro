@@ -5,9 +5,6 @@ QT += network \
     script
 
 TARGET = Pokemon-Online
-
-DESTDIR = $$PWD/../../bin
-
 TEMPLATE = app
 
 SOURCES += main.cpp \
@@ -166,6 +163,8 @@ RC_FILE = myapp.rc
 
 RESOURCES += 
 
+include(../Shared/Common.pri)
+
 macx {
    LIBS += -framework CoreFoundation
    ICON = pokemononline.icns
@@ -195,8 +194,6 @@ CONFIG(debian_package) {
 
 
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
-
-include(../Shared/Common.pri)
 
 LIBS += $$battlemanager $$teambuilder
 

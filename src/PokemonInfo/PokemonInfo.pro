@@ -1,6 +1,5 @@
 TARGET = po-pokemoninfo
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin
 QT += xml
 SOURCES += pokemonstructs.cpp \
     pokemoninfo.cpp \

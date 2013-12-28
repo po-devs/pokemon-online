@@ -7,7 +7,6 @@
 
 QT       -= gui
 
-DESTDIR = $$PWD/../../bin
 TARGET = qjson
 TEMPLATE = lib
 

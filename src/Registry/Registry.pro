@@ -4,7 +4,6 @@
 QT += network
 
 TARGET = Registry
-DESTDIR = $$PWD/../../bin
 TEMPLATE = app
 
 SOURCES += main.cpp \
