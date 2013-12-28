@@ -32,7 +32,7 @@ cp ../tests/data/server/* . -R
 [[ -f Server ]] && (./Server -H -N &> /dev/null &) || (./Server_debug -H -N &> /dev/null &)
 
 #Give time to the server to initalize
-sleep 5 
+sleep 6 
 
 ./test-server
 ensure_good_run
@@ -45,7 +45,7 @@ cp ../tests/data/server/* . -R
 [[ -f Server ]] && (./Server -H -N --sqlite &> /dev/null &) || (./Server_debug -H -N --sqlite &> /dev/null &)
 
 #Give time to the server to initalize
-sleep 5 
+sleep 6 
 
 ./test-server
 ensure_good_run
