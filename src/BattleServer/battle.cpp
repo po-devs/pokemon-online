@@ -3007,6 +3007,10 @@ int BattleSituation::calculateDamage(int p, int t)
                     ? 2 : 1);
     }
 
+    if (std::abs(terrain) == Type::Fairy && type == Type::Dragon && !isFlying(oppPlayer)) {
+        damage /= 2;
+    }
+
     /* Light screen / Reflect */
     if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
          (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
