@@ -2194,7 +2194,7 @@ struct MMMetronome : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "Metronome");
 
         while (1) {
-            int move = b.randint(MoveInfo::NumberOfMoves());
+            int move = b.randint(MoveInfo::NumberOfMoves()-1)+1;
 
             if (!MoveInfo::Exists(move, b.gen())) {
                 continue;
