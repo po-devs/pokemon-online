@@ -28,7 +28,7 @@ tests.session = {
     },
     state: {
         '1': function (src, chan) {
-            print("TestSESSION: State #1");
+            print("TestSession: State #1");
             if (SESSION.hasUser(src) && SESSION.hasChannel(chan)) {
                 SESSION.users(src).messageSent = true;
                 SESSION.global().messageSent = true;
@@ -40,7 +40,7 @@ tests.session = {
         '2': function (src, chan) {
             reloadScripts();
             // Using the same script id shouldn't reset objects
-            print("TestSESSION: State #2");
+            print("TestSession: State #2");
             if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === true) {
                 tests.session.state[3](src, chan);
             } else {
@@ -50,7 +50,7 @@ tests.session = {
         '3': function (src, chan) {
             reloadScripts();
             // Objects should be reset if the script id is changed
-            print("TestSESSION: State #3");
+            print("TestSession: State #3");
             if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === false && SESSION.global().messageSent === false) {
                 success();
             } else {
@@ -71,5 +71,8 @@ afterChatMessage: function (src, message, chan) {
         sys.sendAll(sys.eval(message.substr(6)), 0);
         return;
     }
+},
+afterReconnect: function (src) {
+    sys.sendAll(sys.name(src) + " reconnected.", 0);
 }
 })

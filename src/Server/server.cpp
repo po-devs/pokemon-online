@@ -1165,8 +1165,14 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
         return;
     }
 
+    if (!myengine->beforeReconnect(sender, id)) {
+        player(sender)->kick();
+        return;
+    }
+
     //proceed to reconnect
     transferId(sender, id);
+    myengine->afterReconnect(id);
 }
 
 void Server::transferId(int sender, int id, bool copyInfo)
