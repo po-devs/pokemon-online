@@ -978,8 +978,7 @@ struct IMSafetyGoggles  : public IM {
     }
 };
 
-struct IMWeaknessPolicy  : public IM
-{
+struct IMWeaknessPolicy  : public IM {
     IMWeaknessPolicy() {
         functions["UponOffensiveDamageReceived"] = &uodr;
     }
@@ -992,28 +991,21 @@ struct IMWeaknessPolicy  : public IM
             b.inflictStatMod(s, SpAttack, 2, s);
         }
     }
-
 };
 
-struct IMAssaultVest : public IM
-{
+struct IMAssaultVest : public IM {
     IMAssaultVest() {
         functions["MovesPossible"] = &mp;
     }
 
-
-
     static void mp(int s, int, BS &b) {
-
-
         for (int i = 0; i < 4; i++) {
-             if (MoveInfo::Power(b.move(s,i), b.gen()) == 0) {
+            if (MoveInfo::Power(b.move(s,i), b.gen()) == 0) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
-
-}
- };
+    }
+};
 
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
