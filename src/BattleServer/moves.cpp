@@ -1600,7 +1600,10 @@ struct MMEmbargo : public MM
     static void et(int s, int , BS &b) {
         if (poke(b,s).value("Embargoed").toBool() && poke(b,s)["EmbargoEnd"].toInt() <= b.turn()) {
             b.sendMoveMessage(32,1,s,0);
+            poke(b,s)["Embargoed"] = false;
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
+            //White Herb activates right now if there are negative stats
+            b.callieffects(s, s, "AfterStatChange");
         }
     }
 };
@@ -1974,24 +1977,26 @@ struct MMFling : public MM
 
     static void uas (int s, int t, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isBerry(item)) {
-            if (item == Item::WhiteHerb || item == Item::MentalHerb) {
-                int oppitem = b.poke(t).item();
-                ItemEffect::activate("OnSetup", item, t,s,b);
-                b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
-            } else if (item == Item::RazorFang || item == Item::KingsRock) {
-                fturn(b,t).add(TM::Flinched); /* king rock, razor fang */
-            } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
-                switch (item) {
-                case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-                case Item::ToxicOrb: b.inflictStatus(t, Pokemon::Poisoned, s, 15, 15); break; /*toxic orb*/
-                case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
-                case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
+        if (!b.koed(t)) {
+            if (!ItemInfo::isBerry(item)) {
+                if (item == Item::WhiteHerb || item == Item::MentalHerb) {
+                    int oppitem = b.poke(t).item();
+                    ItemEffect::activate("UponSetup", item, t,s,b);
+                    b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+                } else if (item == Item::RazorFang || item == Item::KingsRock) {
+                    fturn(b,t).add(TM::Flinched); /* king rock, razor fang */
+                } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
+                    switch (item) {
+                    case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
+                    case Item::ToxicOrb: b.inflictStatus(t, Pokemon::Poisoned, s, 15, 15); break; /*toxic orb*/
+                    case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
+                    case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
+                    }
                 }
+            } else {
+                b.sendMoveMessage(16,0,t,type(b,s),s,item);
+                b.devourBerry(s, item, t);
             }
-        } else {
-            b.sendMoveMessage(16,0,t,type(b,s),s,item);
-            b.devourBerry(s, item, t);
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
         b.disposeItem(s);
@@ -5569,6 +5574,10 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
+            //White Herb activates right now if there are negative stats
+            foreach (int p, b.sortedBySpeed()) {
+                b.callieffects(p, p, "AfterStatChange");
+            }
         }
     }
 };
