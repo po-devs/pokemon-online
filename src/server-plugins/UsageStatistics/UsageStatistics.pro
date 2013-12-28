@@ -2,7 +2,7 @@
 # Project created by QtCreator 2010-07-22T23:36:49
 # -------------------------------------------------
 TARGET = usagestats
-DESTDIR = $$PWD/../../bin/serverplugins
+DESTDIR = $$PWD/../../../bin/serverplugins
 TEMPLATE = lib
 DEFINES += POKEMONONLINESTATSPLUGIN_LIBRARY
 DEFINES += SERVER_SIDE
@@ -13,6 +13,6 @@ HEADERS += usagestats.h \
     ../BattleServer/plugininterface.h \
     ../BattleServer/battleinterface.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$pokemoninfo

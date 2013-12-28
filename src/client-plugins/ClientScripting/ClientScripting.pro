@@ -8,7 +8,7 @@ QT += script network declarative
 
 TARGET = ClientScripting
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 DEFINES += CLIENTSCRIPTING_LIBRARY
 
@@ -27,7 +27,7 @@ HEADERS += clientscripting.h\
     battlescripting.h \
     scriptengineagent.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QT += multimedia

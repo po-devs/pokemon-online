@@ -6,7 +6,7 @@
 
 TARGET = battlelogs
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/serverplugins
+DESTDIR = $$PWD/../../../bin/serverplugins
 DEFINES += BATTLELOGS_LIBRARY
 QT += gui core declarative
 
@@ -21,6 +21,6 @@ HEADERS += battlelogs.h\
     ../Shared/battlecommands.h \
     ../Utilities/coreclasses.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$battlemanager

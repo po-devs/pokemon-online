@@ -6,7 +6,7 @@
 
 TARGET = SmogonPlugin
 TEMPLATE = lib 
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 QT += xml network 
 
@@ -23,18 +23,18 @@ SOURCES += smogonplugin.cpp \
 
 HEADERS += smogonplugin.h\
         SmogonPlugin_global.h \
-    ../Teambuilder/plugininterface.h \
-    ../Teambuilder/engineinterface.h \
+    ../../Teambuilder/plugininterface.h \
+    ../../Teambuilder/engineinterface.h \
     smogonscraper.h \
     pokemontab.h \
     pokemonteamtabs.h \
     smogonbuild.h \
     teambuildersmogonplugin.h \
     smogonsinglepokedialog.h \
-    ../PokemonInfo/teamholderinterface.h
+    ../../PokemonInfo/teamholderinterface.h
 
 FORMS += smogonsinglepokedialog.ui
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$battlemanager

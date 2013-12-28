@@ -8,7 +8,7 @@ QT       += network
 
 TARGET = WebServerPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/serverplugins
+DESTDIR = $$PWD/../../../bin/serverplugins
 
 DEFINES += WEBSERVERPLUGIN_LIBRARY
 
@@ -19,7 +19,7 @@ HEADERS += webserverplugin.h\
         WebServerPlugin_global.h \
     webserverconfig.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$utilities $$websocket $$json
 

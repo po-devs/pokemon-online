@@ -8,7 +8,7 @@ QT       += widgets
 
 TARGET = DatabaseEditor
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 DEFINES += DATABASEEDITOR_LIBRARY
 
@@ -17,12 +17,12 @@ SOURCES += databaseeditor.cpp \
 
 HEADERS += databaseeditor.h\
         databaseeditor_global.h \
-    ../Teambuilder/plugininterface.h \
-    ../Teambuilder/engineinterface.h \
-    ../PokemonInfo/teamholderinterface.h \
+    ../../Teambuilder/plugininterface.h \
+    ../../Teambuilder/engineinterface.h \
+    ../../PokemonInfo/teamholderinterface.h \
     pokemoneditordialog.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$pokemoninfo
 

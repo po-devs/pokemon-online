@@ -6,7 +6,7 @@
 
 TARGET = ThemeManager
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 QT += network xml
 
@@ -29,6 +29,6 @@ FORMS += \
     thememanagerwidget.ui \
     themewidget.ui
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 macx:QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/

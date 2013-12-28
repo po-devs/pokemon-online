@@ -6,7 +6,7 @@
 
 TARGET = CSSChanger
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 DEFINES += CSSCHANGER_LIBRARY
 
@@ -30,4 +30,4 @@ FORMS += \
     colorchoice.ui \
     massreplace.ui
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)

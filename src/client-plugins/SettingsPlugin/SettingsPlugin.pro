@@ -6,7 +6,7 @@
 
 TARGET = SettingsPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 DEFINES += SETTINGSPLUGIN_LIBRARY
 
@@ -19,6 +19,6 @@ HEADERS += settingsplugin.h\
 
 FORMS += settingsdialog.ui
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$utilities

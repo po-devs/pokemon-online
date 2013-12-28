@@ -47,13 +47,7 @@ CONFIG(po_client) {
 }
 
 CONFIG(po_clientplugins) {
-    SUBDIRS += src/ThemeManager \
-               src/CSSChanger \
-               src/ClientScripting \
-               src/SettingsPlugin \
-               src/SmogonPlugin \
-               src/DesignerPlugin \
-               src/DatabaseEditor
+    SUBDIRS += src/client-plugins
 }
 
 CONFIG(po_server) {
@@ -67,10 +61,7 @@ CONFIG(po_relaystation) {
 }
 
 CONFIG(po_serverplugins) {
-    SUBDIRS += src/UsageStatistics \
-               src/StatsExtracter \
-               src/BattleLogs \
-               src/WebServerPlugin
+    SUBDIRS += src/server-plugins
 }
 
 CONFIG(po_registry) {
@@ -94,13 +85,11 @@ TRANSLATIONS = src/trans/translation_de.ts \
 
 CONFIG(test) {
     SUBDIRS += \
-        tests/utilities \
-        tests/pokemoninfo \
-        tests/battleserver \
-        tests/server
+        tests
 }
 
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
+
 

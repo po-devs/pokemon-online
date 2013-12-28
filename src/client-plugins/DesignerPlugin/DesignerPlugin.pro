@@ -1,6 +1,6 @@
 TARGET = DesignerPlugin
 TEMPLATE = lib
-DESTDIR = $$PWD/../../bin/myplugins
+DESTDIR = $$PWD/../../../bin/myplugins
 
 DEFINES += DESIGNERPLUGIN_LIBRARY
 
@@ -13,7 +13,7 @@ HEADERS += \
     DesignerPlugin_global.h \
     designerwidget.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$utilities
 
