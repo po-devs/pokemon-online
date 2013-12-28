@@ -1,14 +1,15 @@
-#include "theme.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
-#include "../Utilities/qimagebuttonlr.h"
 #include <QtCore>
 #include <QFontDatabase>
 #include <QPixmapCache>
 #include <QApplication>
+#include <QToolButton>
+
+#include "theme.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../Utilities/otherwidgets.h"
+#include "../Utilities/qimagebuttonlr.h"
 #include "../BattleManager/defaulttheme.h"
 #include "themeaccessor.h"
-#include "QToolButton"
 
 static void fill_container_with_file(QList<QColor> &container, const QString &filename)
 {

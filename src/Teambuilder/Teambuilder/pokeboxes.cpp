@@ -5,10 +5,11 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/teamholder.h"
 
+#include "TeambuilderLibrary/theme.h"
+
 #include "pokeboxes.h"
 #include "pokebox.h"
 #include "ui_pokeboxes.h"
-#include "theme.h"
 
 PokeBoxes::PokeBoxes(QWidget *parent, TeamHolder *nteam) :
     TeamBuilderWidget(parent), m_team(nteam),

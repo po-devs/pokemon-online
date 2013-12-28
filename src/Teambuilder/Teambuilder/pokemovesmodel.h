@@ -1,9 +1,9 @@
 #ifndef POKEMOVESMODEL_H
 #define POKEMOVESMODEL_H
 
-#include "../PokemonInfo/pokemonstructs.h"
 #include <QAbstractTableModel>
-#include "Teambuilder/modelenum.h"
+#include "../PokemonInfo/pokemonstructs.h"
+#include "TeambuilderLibrary/modelenum.h"
 
 class PokeMovesModel : public QAbstractTableModel
 {

@@ -1,17 +1,21 @@
-#include "battlewindow.h"
-#include "../BattleManager/advancedbattledata.h"
-#include "../BattleManager/battleinput.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
-#include "basebattlewindow.h"
-#include "logmanager.h"
-#include "theme.h"
-#include "spectatorwindow.h"
-#include "../Shared/battlecommands.h"
 #include <cstdlib>
+
 #ifdef QT5
 #include <QButtonGroup>
 #endif
+
+#include "../Shared/battlecommands.h"
+#include "../Utilities/otherwidgets.h"
+#include "../PokemonInfo/pokemoninfo.h"
+#include "../BattleManager/advancedbattledata.h"
+#include "../BattleManager/battleinput.h"
+#include "TeambuilderLibrary/theme.h"
+
+#include "battlewindow.h"
+#include "basebattlewindow.h"
+#include "logmanager.h"
+#include "spectatorwindow.h"
+
 
 BattleInfo::BattleInfo(const TeamBattle &team, const PlayerInfo &me, const PlayerInfo &opp, int mode, int my, int op)
     : BaseBattleInfo(me, opp, mode, my, op)

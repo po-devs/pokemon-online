@@ -1,8 +1,9 @@
-﻿#include "channel.h"
+﻿#include "Utilities/coreclasses.h"
+#include "TeambuilderLibrary/poketextedit.h"
+#include "TeambuilderLibrary/theme.h"
+
 #include "client.h"
-#include "poketextedit.h"
-#include "theme.h"
-#include "../Utilities/coreclasses.h"
+#include "channel.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)

@@ -1,13 +1,14 @@
-#include "Teambuilder/pokeselection.h"
-#include "ui_pokeselection.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "Teambuilder/modelenum.h"
-#include "theme.h"
-#include "modelenum.h"
 #include <QMenu>
 #include <QCompleter>
-#include "advancedsearch.h"
 #include <QSortFilterProxyModel>
+
+#include "PokemonInfo/pokemoninfo.h"
+#include "TeambuilderLibrary/theme.h"
+
+#include "pokeselection.h"
+#include "ui_pokeselection.h"
+#include "modelenum.h"
+#include "advancedsearch.h"
 
 PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
     ui(new Ui::PokeSelection), search(NULL), newwidth(0)

@@ -2,6 +2,9 @@
 #include "../PokemonInfo/pokemonstructs.h"
 #include "../PokemonInfo/teamholder.h"
 
+#include "TeambuilderLibrary/theme.h"
+#include "TeambuilderLibrary/poketextedit.h"
+
 #include "client.h"
 #include "mainwindow.h"
 #include "logmanager.h"
@@ -12,9 +15,7 @@
 #include "pmsystem.h"
 #include "controlpanel.h"
 #include "ranking.h"
-#include "poketextedit.h"
 #include "channel.h"
-#include "theme.h"
 #include "soundconfigwindow.h"
 #include "challengedialog.h"
 #include "tieractionfactory.h"

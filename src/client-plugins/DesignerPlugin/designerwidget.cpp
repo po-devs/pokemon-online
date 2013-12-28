@@ -1,8 +1,10 @@
-﻿#include "designerplugin.h"
-#include "designerwidget.h"
-#include "../Utilities/functions.h"
+﻿#include <QSettings>
 
-#include <QSettings>
+#include "Utilities/functions.h"
+#include "TeambuilderLibrary/poketextedit.h"
+
+#include "designerplugin.h"
+#include "designerwidget.h"
 
 DesignerWidget::DesignerWidget(DesignerPlugin *plugin) :
     QDialog(0),
@@ -38,17 +40,17 @@ void DesignerWidget::updateUi()
 {
     /* Update with a poketextedit */
     ui->infoOutput->deleteLater();
-    ui->infoOutput = plugin->client->getPokeTextEdit(ui->infoTab);
+    ui->infoOutput = new PokeTextEdit(ui->infoTab);
     ui->infoOutput->setObjectName("infoOutput");
     ui->infoLayout->insertWidget(1, ui->infoOutput);
 
     ui->descOutput->deleteLater();
-    ui->descOutput = plugin->client->getPokeTextEdit(ui->descTab);
+    ui->descOutput = new PokeTextEdit(ui->descTab);
     ui->descOutput->setObjectName("descOutput");
     ui->descLayout->insertWidget(1, ui->descOutput);
 
     ui->annOutput->deleteLater();
-    ui->annOutput = plugin->client->getPokeTextEdit(ui->annTab);
+    ui->annOutput = new PokeTextEdit(ui->annTab);
     ui->annOutput->setObjectName("annOutput");
     ui->annLayout->insertWidget(1, ui->annOutput);
 

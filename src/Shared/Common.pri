@@ -4,7 +4,7 @@ contains(EXTRAS, test) {
    dirprefix =
 }
 
-INCLUDEPATH += $$PWD/
+INCLUDEPATH += $$PWD/ $$PWD/../
 
 # Common shadow build directory for all builds
 CONFIG(shadow)|!equals($${_PRO_FILE_PWD_}, $${OUT_PWD}) {
@@ -22,42 +22,23 @@ CONFIG(shadow)|!equals($${_PRO_FILE_PWD_}, $${OUT_PWD}) {
 bin = $$PWD/../../bin
 #adds debug suffix to libraries when compiled
 CONFIG(debug, debug|release) {
-    mac {
-        TARGET = $$join(TARGET,,,_debug)
-        utilities = -L$$bin -lpo-utilities_debug
-        pokemoninfo = $$utilities -lpo-pokemoninfo_debug
-        battlemanager = $$pokemoninfo -lpo-battlemanager_debug
-        websocket = -lqtwebsocket_debug
-        json = -lqjson_debug
-        DEFINES += EXE_SUFFIX="_debug"
-    }
     win32 {
-        TARGET = $$join(TARGET,,,d)
-        utilities = -L$$bin -lpo-utilitiesd
-        pokemoninfo = $$utilities -lpo-pokemoninfod
-        battlemanager = $$pokemoninfo -lpo-battlemanagerd
-        websocket = -lqtwebsocketd
-        json = -lqjsond
-        DEFINES += EXE_SUFFIX="d"
-    }
-    !mac:!win32 {
-        TARGET = $$join(TARGET,,,_debug)
-        utilities = -L$$bin -lpo-utilities_debug
-        pokemoninfo = $$utilities -lpo-pokemoninfo_debug
-        battlemanager = $$pokemoninfo -lpo-battlemanager_debug
-        websocket = -lqtwebsocket_debug
-        json = -lqjson_debug
-        DEFINES += EXE_SUFFIX="_debug"
+        exesuffix=d
+    } else {
+        exesuffix=_debug
     }
 } else {
-    utilities = -L$$bin -lpo-utilities
-    pokemoninfo = $$utilities -lpo-pokemoninfo
-    battlemanager = $$pokemoninfo -lpo-battlemanager
-    websocket = -lqtwebsocket
-    json = -lqjson
-    DEFINES += EXE_SUFFIX=""
+    exesuffix=
 }
 
+TARGET = $$join(TARGET,,,$$exesuffix)
+utilities = -L$$bin -lpo-utilities$$exesuffix
+pokemoninfo = $$utilities -lpo-pokemoninfo$$exesuffix
+battlemanager = $$pokemoninfo -lpo-battlemanager$$exesuffix
+teambuilder = $$pokemoninfo -lpo-teambuilder$$exesuffix
+websocket = -lqtwebsocket$$exesuffix
+json = -lqjson$$exesuffix
+DEFINES += EXE_SUFFIX="$$exesuffix"
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5

@@ -23,8 +23,6 @@ public:
     MainEngine(bool updated);
     ~MainEngine();
 
-    QScrollDownTextBrowser* getPokeTextEdit(QWidget* parent=0);
-
     int numberOfTabs() const;
 
     void addThemeMenu(QMenuBar *m);

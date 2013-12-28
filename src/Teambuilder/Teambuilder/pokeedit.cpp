@@ -9,11 +9,12 @@
 #include "../Utilities/qclosedockwidget.h"
 #include "../Utilities/otherwidgets.h"
 
+#include "TeambuilderLibrary/theme.h"
+#include "TeambuilderLibrary/pokeselection.h"
+
 #include "ui_pokeedit.h"
-#include "theme.h"
 #include "pokeedit.h"
 #include "pokemovesmodel.h"
-#include "pokeselection.h"
 #include "poketablemodel.h"
 #include "teambuilderwidget.h"
 #include "teambuilder.h"

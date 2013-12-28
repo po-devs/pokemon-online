@@ -1,11 +1,13 @@
-#include "csswidget.h"
+#include <QtCore>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QtCore>
-#include "../Teambuilder/themeaccessor.h"
-#include "colorchoicewidget.h"
 #include <QDialogButtonBox>
+
+#include "TeambuilderLibrary//themeaccessor.h"
+
+#include "colorchoicewidget.h"
 #include "massreplacewidget.h"
+#include "csswidget.h"
 
 CssWidget::CssWidget(ThemeAccessor* theme) : theme(theme) {
     setupUi(this);

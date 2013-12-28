@@ -140,7 +140,7 @@
   <customwidget>
    <class>TB_PokeChoice</class>
    <extends>QTableView</extends>
-   <header>Teambuilder/pokechoice.h</header>
+   <header>TeambuilderLibrary/pokechoice.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

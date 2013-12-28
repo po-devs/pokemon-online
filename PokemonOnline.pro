@@ -43,7 +43,8 @@ CONFIG(po_relaystation) | CONFIG(po_serverplugins) {
 }
 
 CONFIG(po_client) {
-    SUBDIRS += src/Teambuilder
+    SUBDIRS += src/TeambuilderLibrary\
+               src/Teambuilder
 }
 
 CONFIG(po_clientplugins) {
@@ -91,5 +92,6 @@ CONFIG(test) {
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
+
 
 

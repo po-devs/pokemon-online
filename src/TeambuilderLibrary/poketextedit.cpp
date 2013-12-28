@@ -1,6 +1,7 @@
+#include "PokemonInfo/pokemoninfo.h"
+
 #include "poketextedit.h"
 #include "theme.h"
-#include "../PokemonInfo/pokemoninfo.h"
 
 QVariant PokeTextEdit::loadResource(int type, const QUrl &name)
 {

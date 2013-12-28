@@ -4,10 +4,11 @@
 #include "../PokemonInfo/teamholder.h"
 #include "../PokemonInfo/pokemoninfo.h"
 
+#include "TeambuilderLibrary/theme.h"
+
 #include "challengedialog.h"
 #include "ui_challengedialog.h"
 #include "tierratingbutton.h"
-#include "theme.h"
 
 ChallengeDialog::ChallengeDialog(QWidget *parent) :
     QDialog(parent),

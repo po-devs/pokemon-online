@@ -123,7 +123,16 @@
         <property name="spacing">
          <number>0</number>
         </property>
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -163,12 +172,13 @@
   <customwidget>
    <class>TB_PokeChoice</class>
    <extends>QTableView</extends>
-   <header>Teambuilder/pokechoice.h</header>
+   <header>TeambuilderLibrary/pokechoice.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>BaseStatsWidget</class>
    <extends>QWidget</extends>
-   <header>Teambuilder/basestatswidget.h</header>
+   <header>TeambuilderLibrary/basestatswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

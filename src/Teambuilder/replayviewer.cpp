@@ -4,11 +4,12 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QMessageBox>
-#include "replayviewer.h"
-#include "spectatorwindow.h"
-#include "poketextedit.h"
 #include "../Utilities/coreclasses.h"
 #include "../BattleManager/battleinput.h"
+#include "TeambuilderLibrary/poketextedit.h"
+
+#include "replayviewer.h"
+#include "spectatorwindow.h"
 
 /* Format for raw:
 

@@ -15,7 +15,7 @@ HEADERS += \
 
 include(../../Shared/Common.pri)
 
-LIBS += $$utilities
+LIBS += $$teambuilder
 
 FORMS += \
     designerwidget.ui

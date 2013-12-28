@@ -15,6 +15,7 @@
 #include "../PokemonInfo/pokemoninfo.h"
 #include "../PokemonInfo/movesetchecker.h"
 
+#include "TeambuilderLibrary/theme.h"
 #include "Teambuilder/teambuilder.h"
 
 #include "mainwindow.h"
@@ -23,12 +24,10 @@
 #include "serverchoice.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
-#include "theme.h"
 #include "logmanager.h"
 #include "replayviewer.h"
 #include "mainwidget.h"
 #include "downloadmanager.h"
-#include "poketextedit.h"
 
 #ifdef Q_OS_MACX
 #include "mac/FullScreenSupport.h"
@@ -191,12 +190,6 @@ MainEngine::~MainEngine()
         delete h;
     }
     m_teams.clear();
-}
-
-/* For plugins */
-QScrollDownTextBrowser* MainEngine::getPokeTextEdit(QWidget* parent)
-{
-    return new PokeTextEdit(parent);
 }
 
 void MainEngine::updateDataReady(const QString &data, bool error)

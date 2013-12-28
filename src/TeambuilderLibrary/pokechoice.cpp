@@ -1,10 +1,12 @@
-#include "Teambuilder/pokechoice.h"
 #include <QHeaderView>
-#include "Teambuilder/modelenum.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include <QMouseEvent>
 #include <QApplication>
 #include <QDrag>
+
+#include "../PokemonInfo/pokemoninfo.h"
+
+#include "modelenum.h"
+#include "pokechoice.h"
 
 QSize TB_PokeChoice::sizeHint() const {
     //Overrides QTableView's size hint which is too big

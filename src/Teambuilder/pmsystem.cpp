@@ -1,10 +1,12 @@
-#include "pmsystem.h"
-#include "../Utilities/qscrolldowntextbrowser.h"
-#include "../Utilities/functions.h"
-#include "theme.h"
 #ifdef QT5
 #include <QApplication>
 #endif
+
+#include "../Utilities/qscrolldowntextbrowser.h"
+#include "../Utilities/functions.h"
+#include "TeambuilderLibrary/theme.h"
+
+#include "pmsystem.h"
 
 // TO-DO: Begin able to drag a tab outside of it's tab widget to separate the PM. I didn't do it because i
 // think it would break part of the new system.

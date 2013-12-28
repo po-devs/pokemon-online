@@ -22,10 +22,8 @@ SOURCES += main.cpp \
     pluginmanager.cpp \
     channel.cpp \
     tierstruct.cpp \
-    theme.cpp \
     rearrangewindow.cpp \
     logmanager.cpp \
-    poketextedit.cpp \
     spectatorwindow.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp \
@@ -47,13 +45,9 @@ SOURCES += main.cpp \
     Teambuilder/evbox.cpp \
     Teambuilder/pokelevelsettings.cpp \
     Teambuilder/teamline.cpp \
-    Teambuilder/pokeselection.cpp \
     Teambuilder/ivbox.cpp \
     Teambuilder/teamimporter.cpp \
-    Teambuilder/pokechoice.cpp \
     Teambuilder/pokeboxes.cpp \
-    Teambuilder/basestatswidget.cpp \
-    Teambuilder/advancedsearch.cpp \
     Teambuilder/pokebox.cpp \
     Teambuilder/pokeboxitem.cpp \
     serverchoicemodel.cpp \
@@ -92,14 +86,11 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     centralwidget.h \
     channel.h \
     tierstruct.h \
-    theme.h \
     rearrangewindow.h \
     engineinterface.h \
     logmanager.h \
-    poketextedit.h\
     password_wallet.h\
     basebattlewindowinterface.h \
-    themeaccessor.h \
     soundconfigwindow.h \
     replayviewer.h \
     password_wallet.h \
@@ -109,8 +100,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     findbattledialog.h \
     tieractionfactory.h \
     menu.h \
-    Teambuilder/pokeselection.h \
-    Teambuilder/pokechoice.h \
     Teambuilder/poketablemodel.h \
     Teambuilder/modelenum.h \
     Teambuilder/pokemovesmodel.h \
@@ -129,8 +118,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     serverchoice.h \
     Teambuilder/pokeboxes.h \
     clientinterface.h \
-    Teambuilder/basestatswidget.h \
-    Teambuilder/advancedsearch.h \
     Teambuilder/pokebox.h \
     Teambuilder/pokeboxitem.h \
     serverchoicemodel.h \
@@ -162,7 +149,6 @@ FORMS += Teambuilder/trainermenu.ui \
     Teambuilder/pokelevelsettings.ui \
     Teambuilder/ivbox.ui \
     Teambuilder/teamline.ui \
-    Teambuilder/pokeselection.ui \
     controlpanel.ui \
     challengedialog.ui \
     tierratingbutton.ui \
@@ -170,8 +156,6 @@ FORMS += Teambuilder/trainermenu.ui \
     menu.ui \
     serverchoice.ui \
     Teambuilder/pokeboxes.ui \
-    Teambuilder/basestatswidget.ui \
-    Teambuilder/advancedsearch.ui \
     mainwidget.ui \
     loadwindow.ui \
     loadline.ui \
@@ -214,7 +198,7 @@ CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
 include(../Shared/Common.pri)
 
-LIBS += $$battlemanager
+LIBS += $$battlemanager $$teambuilder
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }

@@ -1,21 +1,22 @@
-#include "basebattlewindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
-#include "theme.h"
-#include "logmanager.h"
-#include "../BattleManager/advancedbattledata.h"
-#include "../BattleManager/battleclientlog.h"
-#include "../BattleManager/battleinput.h"
-#include "poketextedit.h"
-#include "../Shared/battlecommands.h"
-#include "../Utilities/coreclasses.h"
-
 #ifdef QT5
 #include <QApplication>
 #include <QToolTip>
 #include <QMediaPlayer>
 #include "../Utilities/wavreader.h"
 #endif
+
+#include "Shared/battlecommands.h"
+#include "Utilities/coreclasses.h"
+#include "Utilities/otherwidgets.h"
+#include "PokemonInfo/pokemoninfo.h"
+#include "BattleManager/advancedbattledata.h"
+#include "BattleManager/battleclientlog.h"
+#include "BattleManager/battleinput.h"
+#include "TeambuilderLibrary/poketextedit.h"
+#include "TeambuilderLibrary/theme.h"
+
+#include "basebattlewindow.h"
+#include "logmanager.h"
 
 using namespace BattleCommands;
 

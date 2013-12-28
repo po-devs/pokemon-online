@@ -24,7 +24,7 @@ HEADERS += databaseeditor.h\
 
 include(../../Shared/Common.pri)
 
-LIBS += $$pokemoninfo
+LIBS += $$teambuilder
 
 FORMS += \
     pokemoneditordialog.ui

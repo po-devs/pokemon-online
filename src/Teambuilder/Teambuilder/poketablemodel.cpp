@@ -1,6 +1,6 @@
-#include "Teambuilder/poketablemodel.h"
+#include "TeambuilderLibrary/modelenum.h"
 #include "../PokemonInfo/pokemoninfo.h"
-#include "Teambuilder/modelenum.h"
+#include "Teambuilder/poketablemodel.h"
 
 using namespace CustomModel;
 
