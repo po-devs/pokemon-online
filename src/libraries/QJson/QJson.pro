@@ -40,4 +40,4 @@ HEADERS += \
     json_scanner.h \
     json_parser.hh
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)

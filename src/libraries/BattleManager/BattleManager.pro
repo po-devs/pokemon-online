@@ -111,6 +111,6 @@ OTHER_FILES += \
     ../../bin/qml/BattleDataQML/Moves/CalmMind.qml \
     ../../bin/qml/BattleDataQML/Moves/AuraSphere.qml
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$pokemoninfo

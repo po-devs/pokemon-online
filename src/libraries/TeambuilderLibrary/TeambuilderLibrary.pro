@@ -27,7 +27,7 @@ HEADERS += \
     basestatswidget.h \
     pokechoice.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 FORMS += \
     pokeselection.ui \

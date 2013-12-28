@@ -26,25 +26,10 @@ CONFIG(po_serverplugins):CONFIG += po_server
 CONFIG(po_clientplugins):CONFIG += po_client
 CONFIG(po_server):!CONFIG(po_norelaystation):CONFIG+= po_relaystation
 
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) | CONFIG(po_relaystation) {
-    SUBDIRS += src/Utilities
-}
-
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_relaystation) {
-    SUBDIRS += src/PokemonInfo
-}
-
-CONFIG(po_client) | CONFIG(po_serverplugins) | CONFIG(po_relaystation) {
-    SUBDIRS += src/BattleManager
-}
-
-CONFIG(po_relaystation) | CONFIG(po_serverplugins) {
-    SUBDIRS += src/QtWebsocket #git://gitorious.org/qtwebsocket/qtwebsocket.git
-}
+SUBDIRS += src/libraries
 
 CONFIG(po_client) {
-    SUBDIRS += src/TeambuilderLibrary\
-               src/Teambuilder
+    SUBDIRS += src/Teambuilder
 }
 
 CONFIG(po_clientplugins) {
@@ -57,8 +42,7 @@ CONFIG(po_server) {
 }
 
 CONFIG(po_relaystation) {
-    SUBDIRS += src/QJson \
-               src/RelayStation
+    SUBDIRS += src/RelayStation
 }
 
 CONFIG(po_serverplugins) {
@@ -66,9 +50,6 @@ CONFIG(po_serverplugins) {
 }
 
 CONFIG(po_registry) {
-    CONFIG(webconf) {
-        SUBDIRS += lib/pillow
-    }
     SUBDIRS += src/Registry
 }
 
@@ -92,6 +73,5 @@ CONFIG(test) {
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
-
 
 

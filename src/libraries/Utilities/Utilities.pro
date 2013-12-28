@@ -93,4 +93,4 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
 windows: { LIBS += -L$$PWD/../../bin -lzip-2 }
 !windows: { LIBS += -lzip }
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)

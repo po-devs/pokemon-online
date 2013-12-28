@@ -22,10 +22,9 @@ HEADERS += pokemonstructs.h \
     teamholder.h \
     teamholderinterface.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
 
 LIBS += $$utilities
-
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }

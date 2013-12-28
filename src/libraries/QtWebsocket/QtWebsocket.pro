@@ -6,7 +6,6 @@
 #git://gitorious.org/qtwebsocket/qtwebsocket.git
 
 QT       += network
-
 QT       -= gui
 
 TARGET = qtwebsocket
@@ -20,4 +19,4 @@ SOURCES += QWsServer.cpp \
 HEADERS += QWsServer.h \
     QWsSocket.h
 
-include(../Shared/Common.pri)
+include(../../Shared/Common.pri)
