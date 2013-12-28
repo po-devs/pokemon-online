@@ -60,6 +60,9 @@ void TeambuilderSmogonPlugin::openSmogonWindow()
 
 void TeambuilderSmogonPlugin::updatePokemon()
 {
-    *pokeTeam = *poke.data()->getPokeTeam();
-    teambuilder->updateCurrentTeamAndNotify();
+    auto * _poke = poke.data()->getPokeTeam();
+    if (_poke) {
+        *pokeTeam = *_poke;
+        teambuilder->updateCurrentTeamAndNotify();
+    }
 }
