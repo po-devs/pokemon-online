@@ -1481,6 +1481,11 @@ void Player::userInfoAsked(const QString &name)
     SecurityManager::Member m = SecurityManager::member(name);
 
     UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip, m.date);
+
+    int id = Server::serverIns->id(name);
+    if (id && Server::serverIns->playerLoggedIn(id)) {
+        ret.os = Server::serverIns->player(id)->os();
+    }
     relay().sendUserInfo(ret);
 
     if (SecurityManager::maxAuth(m.ip) > auth()) {
