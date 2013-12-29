@@ -1,5 +1,5 @@
 #include "confighelper.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 
 /* I hate stupid GCC that forces to specify the base class
    of attributes when templates are involved, even though

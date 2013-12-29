@@ -36,7 +36,16 @@
           <bool>true</bool>
          </property>
          <layout class="QGridLayout">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item row="0" column="0">
@@ -225,7 +234,16 @@
         </sizepolicy>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <property name="spacing">
@@ -301,7 +319,7 @@
   <customwidget>
    <class>QClickLabel</class>
    <extends>QLabel</extends>
-   <header>../Utilities/qclicklabel.h</header>
+   <header location="global">Utilities/qclicklabel.h</header>
   </customwidget>
   <customwidget>
    <class>EvBox</class>

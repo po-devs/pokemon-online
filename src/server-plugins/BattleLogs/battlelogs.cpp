@@ -6,9 +6,9 @@
 #include "battleserverlog.h"
 #include "battlelogs.h"
 
-#include "../BattleManager/battleinput.h"
-#include "../BattleManager/battleclientlog.h"
-#include "../BattleManager/battledatatypes.h"
+#include <BattleManager/battleinput.h>
+#include <BattleManager/battleclientlog.h>
+#include <BattleManager/battledatatypes.h>
 #include "../Shared/battlecommands.h"
 
 

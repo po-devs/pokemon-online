@@ -32,6 +32,7 @@ cp bin/libqjson.so.1.0.0 $DEST/libqtjson.so.1
 cp bin/libpo-utilities.so.1.0.0 $DEST/libpo-utilities.so.1
 cp bin/libpo-pokemoninfo.so.1.0.0 $DEST/libpo-pokemoninfo.so.1
 cp bin/libpo-battlemanager.so.1.0.0 $DEST/libpo-battlemanager.so.1
+cp bin/libpo-teambuilder.so.1.0.0 $DEST/libpo-teambuilder.so.1
 cp bin/version.ini $DEST
 
 echo "Run install.sh to install the dependencies, then run the start-client script or directly the Pokemon-Online binary" > $DEST/README.txt
@@ -44,6 +45,13 @@ cp bin/serverplugins/*.so.1.0.0 $DEST/serverplugins
 rm $DEST/myplugins/*_debug*
 rm $DEST/serverplugins/*_debug*
 
-#sprites for 6th gen are not in the git repo
-wget https://github.com/po-devs/pokemon-online/releases/download/2.3.2/sprites.zip
-mv sprites.zip $DEST/db/pokes/6G
+#Use zips instead of folders for sprites
+cd $DEST/db/pokes
+for g in 1G 2G 3G 4G 5G 6G
+do
+    cd $g/sprites
+    zip -r sprites.zip .
+    mv sprites.zip ../
+    cd -
+    rm -Rf $g/sprites
+done

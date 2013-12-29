@@ -1,7 +1,7 @@
 #ifndef SLOTBATTLEDATA_H
 #define SLOTBATTLEDATA_H
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 #include <vector>
 
 class ShallowBattlePoke;

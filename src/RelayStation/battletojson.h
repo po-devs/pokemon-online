@@ -1,8 +1,8 @@
 #ifndef BATTLETOJSON_H
 #define BATTLETOJSON_H
 
-#include "../BattleManager/battlecommandmanager.h"
-#include "../BattleManager/battledata.h"
+#include <BattleManager/battlecommandmanager.h>
+#include <BattleManager/battledata.h>
 #include "battletojsonflow.h"
 #include <QObject>
 

@@ -1,11 +1,11 @@
-﻿#include "../PokemonInfo/pokemoninfo.h"
+﻿#include <PokemonInfo/pokemoninfo.h>
 #include "../Teambuilder/clientinterface.h"
 #include "../Teambuilder/basebattlewindowinterface.h"
 #include "scriptengine.h"
 #include "scriptutils.h"
 #include "battlescripting.h"
-#include "../Utilities/functions.h"
-#include "../Utilities/ziputils.h"
+#include <Utilities/functions.h>
+#include <Utilities/ziputils.h>
 #include "../Shared/config.h"
 
 #ifndef _EXCLUDE_DEPRECATED

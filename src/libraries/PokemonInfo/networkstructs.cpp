@@ -1,5 +1,5 @@
 #include "networkstructs.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 #include "../Shared/config.h"
 #include "../Shared/networkcommands.h"
 

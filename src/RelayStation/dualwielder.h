@@ -2,11 +2,11 @@
 #define DUALWIELDER_H
 
 #include <QObject>
-#include "../BattleManager/battleinput.h"
+#include <BattleManager/battleinput.h>
 #include "battletojson.h"
-#include "../QJson/qjson.h"
-#include "../Utilities/coreclasses.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <QJson/qjson.h>
+#include <Utilities/coreclasses.h>
+#include <PokemonInfo/networkstructs.h>
 
 class QWsSocket;
 template<class T>

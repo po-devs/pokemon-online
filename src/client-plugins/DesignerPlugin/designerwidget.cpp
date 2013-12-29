@@ -1,7 +1,7 @@
 ﻿#include <QSettings>
 
-#include "Utilities/functions.h"
-#include "TeambuilderLibrary/poketextedit.h"
+#include <Utilities/functions.h>
+#include <TeambuilderLibrary/poketextedit.h>
 
 #include "designerplugin.h"
 #include "designerwidget.h"

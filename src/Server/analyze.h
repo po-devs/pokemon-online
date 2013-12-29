@@ -6,7 +6,7 @@
 #define ANALYZE_H
 
 #include <QtCore>
-#include "../Utilities/baseanalyzer.h"
+#include <Utilities/baseanalyzer.h>
 
 class TeamBattle;
 class Battle;

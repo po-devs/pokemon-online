@@ -1,16 +1,16 @@
 #include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "../Utilities/otherwidgets.h"
-#include "../Utilities/backtrace.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/movesetchecker.h>
+#include <Utilities/otherwidgets.h>
+#include <Utilities/backtrace.h>
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
 #include "security.h"
-#include "../Utilities/antidos.h"
+#include <Utilities/antidos.h>
 #include "serverconfig.h"
 #include "scriptengine.h"
 #include "sql.h"

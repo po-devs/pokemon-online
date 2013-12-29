@@ -1,10 +1,10 @@
 #include <QColor>
-#include "../QtWebsocket/QWsSocket.h"
+#include <QtWebsocket/QWsSocket.h>
 namespace Nw {
 #include "../Shared/networkcommands.h"
 }
-#include "../Utilities/network.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <Utilities/network.h>
+#include <PokemonInfo/battlestructs.h>
 #include "pokemontojson.h"
 #include "dualwielder.h"
 #include <functional>

@@ -1,4 +1,4 @@
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 #include "tierstruct.h"
 #include "tieractionfactory.h"
 

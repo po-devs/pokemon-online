@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 #include "clientinterface.h"
 #include "teambuilderinterface.h"
-#include "../Utilities/CrossDynamicLib.h"
+#include <Utilities/CrossDynamicLib.h>
 
 ClientPluginManager::ClientPluginManager(MainEngine *t) : engine(t)
 {

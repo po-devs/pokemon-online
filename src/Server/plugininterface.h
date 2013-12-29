@@ -1,7 +1,7 @@
 #ifndef SERVERPLUGININTERFACE_H
 #define SERVERPLUGININTERFACE_H
 
-#include "../Utilities/plugininterface.h"
+#include <Utilities/plugininterface.h>
 
 /* An interface Server Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to

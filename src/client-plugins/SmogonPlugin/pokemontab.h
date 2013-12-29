@@ -8,7 +8,7 @@
 #include <QtWidgets>
 #endif
 #include "smogonbuild.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 
 class PokemonTab : public QWidget{

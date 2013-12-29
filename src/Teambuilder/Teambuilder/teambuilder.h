@@ -1,8 +1,8 @@
 #ifndef TEAMBUILDER_H
 #define TEAMBUILDER_H
 
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/geninfo.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
 #include <QWidget>
 #include "centralwidget.h"
 #include "Teambuilder/teambuilderwidget.h"

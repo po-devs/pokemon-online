@@ -11,8 +11,8 @@
 #else
 #include <zip.h>
 #endif
-#include "../Utilities/functions.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/functions.h>
+#include <Utilities/coreclasses.h>
 
 /*initialising static variables */
 QString PokemonInfo::m_Directory;
@@ -100,6 +100,12 @@ int GenInfo::genMin, GenInfo::genMax;
 
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
+    /* Allows to read standard files too */
+    QString archiveS(archiveName);
+    if (!archiveS.endsWith(".zip")) {
+        return getFileContent(archiveS + "/" + fileName);
+    }
+
     int error = 0;
     char buffer[1024];
     int readsize = 0;
@@ -1107,13 +1113,26 @@ QPixmap PokemonInfo::Picture(const QString &url)
 
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
 {
-    QString archive = path("%1G/sprites.zip").arg(gen.num);
+    QString archives[] = {path("%1G/sprites").arg(gen.num), path("%1G/sprites.zip").arg(gen.num)};
+    QString archive;
 
-    if (mod && modPath.length() > 0 && QFile::exists(modPath+archive)) {
-        archive.prepend(modPath);
-    } else {
-        mod = false;
+    if (mod && modPath.length() > 0) {
+        if (QFile::exists(modPath+archives[1])) {
+            archive = modPath+archives[1];
+        } else if (QDir(modPath+archives[0]).exists()) {
+            archive = modPath+archives[0];
+        } else {
+            mod = false;
+        }
     }
+    if (!mod) {
+        if (QFile::exists(archives[1])) {
+            archive = archives[1];
+        } else if (QDir(archives[0]).exists()) {
+            archive = archives[0];
+        }
+    }
+
 
     QString file;
 

@@ -2,9 +2,9 @@
 #define BATTLE_H
 
 #include <QtCore>
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../Utilities/mtrand.h"
-#include "../Utilities/coreclasses.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <Utilities/mtrand.h>
+#include <Utilities/coreclasses.h>
 #include "battlebase.h"
 #include "battlepluginstruct.h"
 #include "battlecounters.h"

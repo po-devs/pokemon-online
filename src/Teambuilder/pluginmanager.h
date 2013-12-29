@@ -7,7 +7,7 @@
 #include <QtWidgets>
 #endif
 
-#include "Utilities/pluginmanager.h"
+#include <Utilities/pluginmanager.h>
 #include "plugininterface.h"
 
 class ClientPlugin;

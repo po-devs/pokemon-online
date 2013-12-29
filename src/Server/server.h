@@ -1,9 +1,9 @@
 ﻿#ifndef SERVER_H
 #define SERVER_H
 
-#include "../Utilities/contextswitch.h"
-#include "../Utilities/asiosocket.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/contextswitch.h>
+#include <Utilities/asiosocket.h>
+#include <PokemonInfo/networkstructs.h>
 #include "serverinterface.h"
 #include "channel.h"
 

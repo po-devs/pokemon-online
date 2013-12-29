@@ -1,6 +1,6 @@
 #include "berries.h"
 #include "items.h"
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 
 typedef BerryMechanics BM;
 typedef BattleSituation BS;

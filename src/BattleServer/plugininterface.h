@@ -1,7 +1,7 @@
 #ifndef BATTLEPLUGININTERFACE_H
 #define BATTLEPLUGININTERFACE_H
 
-#include "../Utilities/plugininterface.h"
+#include <Utilities/plugininterface.h>
 
 /* An interface Server Plugins must follow.
  *

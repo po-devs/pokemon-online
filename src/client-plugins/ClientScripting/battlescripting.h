@@ -2,8 +2,8 @@
 #define BATTLESCRIPTING_H
 
 #include <QScriptEngine>
-#include "../Utilities/functions.h"
-#include "../BattleManager/battlecommandmanager.h"
+#include <Utilities/functions.h>
+#include <BattleManager/battlecommandmanager.h>
 
 /***
   Todo:

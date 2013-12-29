@@ -2,9 +2,9 @@
 #include <QApplication>
 #endif
 
-#include "../Utilities/qscrolldowntextbrowser.h"
-#include "../Utilities/functions.h"
-#include "TeambuilderLibrary/theme.h"
+#include <Utilities/qscrolldowntextbrowser.h>
+#include <Utilities/functions.h>
+#include <TeambuilderLibrary/theme.h>
 
 #include "pmsystem.h"
 

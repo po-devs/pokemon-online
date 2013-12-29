@@ -1,8 +1,8 @@
 #ifndef BATTLETOJSONFLOW_H
 #define BATTLETOJSONFLOW_H
 
-#include "../BattleManager/commandflow.h"
-#include "../BattleManager/param.h"
+#include <BattleManager/commandflow.h>
+#include <BattleManager/param.h>
 
 template <class T, class Underling>
 class BattleToJsonFlow

@@ -54,27 +54,15 @@ HEADERS += player.h \
     tiermachine.h \
     tier.h \
     playerinterface.h \
-    ../PokemonInfo/pokemonstructs.h \
-    ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/networkstructs.h \
-    ../PokemonInfo/movesetchecker.h \
-    ../PokemonInfo/battlestructs.h \
-    ../Shared/config.h \
     channel.h \
     tiertree.h \
     tiernode.h \
-    ../Utilities/CrossDynamicLib.h \
-    ../Utilities/mtrand.h \
     sessiondatafactory.h \
     serverinterface.h \
-    ../Shared/networkcommands.h \
-    ../Shared/battlecommands.h \
-    ../Utilities/coreclasses.h \
     playerstructs.h \
     networkutilities.h \
     modswindow.h \
     relaymanager.h \
-    ../PokemonInfo/enums.h \
     scriptengineagent.h \
     battlecommunicator.h \
     registrycommunicator.h \
@@ -83,13 +71,10 @@ HEADERS += player.h \
     sqlconfig.h
 !CONFIG(nogui):HEADERS += mainwindow.h \
     battlingoptions.h \
-    ../Utilities/otherwidgets.h \
-    ../Utilities/functions.h \
     playerswindow.h \
     serverwidget.h \
     serverconfig.h \
-    tierwindow.h \
-    ../Utilities/confighelper.h
+    tierwindow.h
 CONFIG(nogui) { 
     QT -= gui
     DEFINES += PO_NO_GUI

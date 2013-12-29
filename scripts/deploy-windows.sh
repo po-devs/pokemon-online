@@ -35,3 +35,14 @@ cp bin/serverplugins/*.dll $DEST/serverplugins
 #cp lib/windows/*.dll $DEST
 rm $DEST/myplugins/*d.dll
 rm $DEST/serverplugins/*d.dll
+
+#Use zips instead of folders for sprites
+cd $DEST/db/pokes
+for g in 1G 2G 3G 4G 5G 6G
+do
+    cd $g/sprites
+    zip -r sprites.zip .
+    mv sprites.zip ../
+    cd -
+    rm -Rf $g/sprites
+done

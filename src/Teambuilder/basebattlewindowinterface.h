@@ -2,7 +2,7 @@
 #define BASEBATTLEWINDOWINTERFACE_H
 
 #include <QLabel>
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "spectatorwindow.h"
 
 struct BattleChoice;

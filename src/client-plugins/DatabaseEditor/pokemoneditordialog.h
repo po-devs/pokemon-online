@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "PokemonInfo/pokemon.h"
+#include <PokemonInfo/pokemon.h>
 
 class QAbstractItemModel;
 class MainEngineInterface;

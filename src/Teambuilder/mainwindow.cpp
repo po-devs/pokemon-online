@@ -10,13 +10,13 @@
 #endif
 #include <QtCore/QVariant>
 
-#include "../Utilities/functions.h"
-#include "../Utilities/pluginmanagerwidget.h"
-#include "../PokemonInfo/teamholder.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
+#include <Utilities/functions.h>
+#include <Utilities/pluginmanagerwidget.h>
+#include <PokemonInfo/teamholder.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/theme.h>
 #include "Teambuilder/teambuilder.h"
 
 #include "mainwindow.h"

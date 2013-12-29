@@ -54,22 +54,7 @@ SOURCES += main.cpp \
     Teambuilder/pokedex.cpp \
     Teambuilder/pokedexpokeselection.cpp
 
-HEADERS += ../PokemonInfo/pokemonstructs.h \
-    ../PokemonInfo/battlestructs.h \
-    ../PokemonInfo/networkstructs.h \
-    ../PokemonInfo/pokemoninfo.h \
-    ../PokemonInfo/movesetchecker.h \
-    ../BattleManager/battlescene.h \
-    ../BattleManager/battleinput.h \
-    ../BattleManager/battledatatypes.h \
-    ../BattleManager/battledata.h \
-    ../BattleManager/battleclientlog.h \
-    ../Utilities/functions.h \
-    ../Utilities/coreclasses.h \
-    ../Utilities/otherwidgets.h \
-    ../Shared/config.h \
-    ../Shared/networkcommands.h \
-    mainwindow.h \
+HEADERS += mainwindow.h \
     client.h \
     analyze.h \
     battlewindow.h \
@@ -119,8 +104,6 @@ HEADERS += ../PokemonInfo/pokemonstructs.h \
     spectatorwindow.h \
     downloadmanager.h \
     teambuilderinterface.h \
-    ../PokemonInfo/geninfo.h \
-    ../PokemonInfo/pokemon.h \
     Teambuilder/pokedex.h \
     Teambuilder/pokedexpokeselection.h
 

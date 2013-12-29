@@ -2,9 +2,9 @@
 #include <QCompleter>
 #include <QSortFilterProxyModel>
 
-#include "PokemonInfo/pokemoninfo.h"
-#include "TeambuilderLibrary/theme.h"
+#include <PokemonInfo/pokemoninfo.h>
 
+#include "theme.h"
 #include "pokeselection.h"
 #include "ui_pokeselection.h"
 #include "modelenum.h"

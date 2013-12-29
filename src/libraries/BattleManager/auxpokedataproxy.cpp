@@ -1,5 +1,5 @@
 #include "auxpokedataproxy.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "battledataaccessor.h"
 #include "zoneproxy.h"
 

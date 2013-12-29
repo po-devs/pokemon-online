@@ -4,11 +4,11 @@
 #include <QtCore>
 #include <ctime>
 
-#include "../Utilities/coreclasses.h"
-#include "../Utilities/rankingtree.h"
+#include <Utilities/coreclasses.h>
+#include <Utilities/rankingtree.h>
 
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/geninfo.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
 
 #include "memoryholder.h"
 #include "tiernode.h"

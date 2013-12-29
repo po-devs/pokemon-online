@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "../Utilities/coreclasses.h"
-#include "../Utilities/asiosocket.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/coreclasses.h>
+#include <Utilities/asiosocket.h>
+#include <PokemonInfo/networkstructs.h>
 
 class GenericNetwork;
 class ChallengeInfo;

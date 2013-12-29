@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QHash>
 
-#include "../Utilities/contextswitch.h"
-#include "../Utilities/asiosocket.h"
+#include <Utilities/contextswitch.h>
+#include <Utilities/asiosocket.h>
 
 class BattleServerPluginManager;
 class ServerConnection;

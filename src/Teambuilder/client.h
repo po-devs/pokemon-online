@@ -4,10 +4,10 @@
 #include <QtGui>
 #include <QStackedWidget>
 
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/teamholder.h"
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
 
 #include "analyze.h"
 #include "centralwidget.h"

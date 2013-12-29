@@ -7,7 +7,7 @@
 #include <QString>
 #include "test.h"
 #include "battleenum.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 /*
 class ShallowBattlePoke;

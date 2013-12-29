@@ -1,7 +1,7 @@
 #ifndef BATTLESERVERPLUGINMANAGER_H
 #define BATTLESERVERPLUGINMANAGER_H
 
-#include "../Utilities/pluginmanager.h"
+#include <Utilities/pluginmanager.h>
 
 #include "plugininterface.h"
 

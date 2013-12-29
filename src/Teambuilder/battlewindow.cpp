@@ -5,11 +5,11 @@
 #endif
 
 #include "../Shared/battlecommands.h"
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../BattleManager/advancedbattledata.h"
-#include "../BattleManager/battleinput.h"
-#include "TeambuilderLibrary/theme.h"
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <BattleManager/advancedbattledata.h>
+#include <BattleManager/battleinput.h>
+#include <TeambuilderLibrary/theme.h>
 
 #include "battlewindow.h"
 #include "basebattlewindow.h"

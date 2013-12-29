@@ -6,7 +6,7 @@
 #include <QHash>
 #include <QProcess>
 
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 class BattleAnalyzer;
 class BattleChoice;

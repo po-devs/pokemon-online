@@ -2,7 +2,7 @@
 #define CHANNEL_H
 
 #include <QtCore>
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/networkstructs.h>
 
 class QNickValidator;
 class Server;

@@ -1,10 +1,10 @@
 #ifndef BASEANALYZER_H
 #define BASEANALYZER_H
 
-#include "../Utilities/network.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/network.h>
+#include <Utilities/coreclasses.h>
 /* for ProtocolVersion */
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/networkstructs.h>
 
 /***
   WARNING! Always use deleteLater on this!

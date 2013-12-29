@@ -3,8 +3,8 @@
 
 #include "DesignerPlugin_global.h"
 #include "../Teambuilder/engineinterface.h"
-#include "../PokemonInfo/teamholderinterface.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/teamholderinterface.h>
+#include <PokemonInfo/networkstructs.h>
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {

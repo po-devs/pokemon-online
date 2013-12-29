@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 
-#include "TeambuilderLibrary//themeaccessor.h"
+#include <TeambuilderLibrary//themeaccessor.h>
 
 #include "colorchoicewidget.h"
 #include "massreplacewidget.h"

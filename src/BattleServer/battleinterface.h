@@ -2,8 +2,8 @@
 #define BATTLEINTERFACE_H
 
 #include <QtCore>
-#include "../Utilities/functions.h"
-#include "../PokemonInfo/pokemonstructs.h"
+#include <Utilities/functions.h>
+#include <PokemonInfo/pokemonstructs.h>
 
 class TeamBattle;
 class PokeBattle;

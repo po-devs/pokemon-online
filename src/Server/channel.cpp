@@ -1,5 +1,5 @@
 #include <cassert>
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "channel.h"
 #include "player.h"
 #include "server.h"

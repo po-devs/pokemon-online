@@ -1,6 +1,6 @@
 #include "pokemon.h"
 #include "geninfo.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 #include <QTextStream>
 
 QString Pokemon::uniqueId::toString() const

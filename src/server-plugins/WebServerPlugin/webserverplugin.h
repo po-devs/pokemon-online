@@ -5,8 +5,8 @@
 
 #include "WebServerPlugin_global.h"
 #include "../Server/plugininterface.h"
-#include "../QtWebsocket/QWsServer.h"
-#include "../QJson/qjson.h"
+#include <QtWebsocket/QWsServer.h>
+#include <QJson/qjson.h>
 
 class ServerInterface;
 

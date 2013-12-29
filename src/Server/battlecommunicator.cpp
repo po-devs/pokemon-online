@@ -3,7 +3,7 @@
 #include "../Shared/networkcommands.h"
 #include "../Shared/battlecommands.h"
 
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 #include "tiermachine.h"
 #include "tier.h"

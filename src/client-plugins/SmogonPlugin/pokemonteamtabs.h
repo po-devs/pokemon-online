@@ -1,7 +1,7 @@
 #ifndef POKEMONTEAMTABS_H
 #define POKEMONTEAMTABS_H
 
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "pokemontab.h"
 #include <QLabel>
 #include <QDialog>

@@ -1,4 +1,4 @@
-#include "../QtWebsocket/QWsServer.h"
+#include <QtWebsocket/QWsServer.h>
 
 #include "dualwielder.h"
 #include "relaystation.h"

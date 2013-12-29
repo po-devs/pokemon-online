@@ -1,9 +1,9 @@
 #include "battleinput.h"
 #include <memory>
 #include <QPair>
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 #include "../Shared/battlecommands.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 namespace BC = BattleCommands;
 

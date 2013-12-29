@@ -1,7 +1,7 @@
 #ifndef AUXPOKEDATAPROXY_H
 #define AUXPOKEDATAPROXY_H
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 
 class PokeProxy;
 class ShallowBattlePoke;

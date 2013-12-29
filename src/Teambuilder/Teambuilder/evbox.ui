@@ -20,10 +20,19 @@
    <string>EVs</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="verticalSpacing">
+   <property name="leftMargin">
     <number>3</number>
    </property>
-   <property name="margin">
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <property name="verticalSpacing">
     <number>3</number>
    </property>
    <item row="0" column="0">
@@ -358,7 +367,7 @@
   <customwidget>
    <class>QImageButtonLR</class>
    <extends>QWidget</extends>
-   <header>../Utilities/qimagebuttonlr.h</header>
+   <header location="global">Utilities/qimagebuttonlr.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

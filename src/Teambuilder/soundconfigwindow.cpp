@@ -2,7 +2,7 @@
 #define SOUNDCONFIGWINDOW_CPP
 
 #include "soundconfigwindow.h"
-#include "../Utilities/confighelper.h"
+#include <Utilities/confighelper.h>
 
 SoundConfigWindow::SoundConfigWindow()
 {

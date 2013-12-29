@@ -4,7 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 
 #include "security.h"
 #include "server.h"

@@ -7,7 +7,7 @@
 #include <QSet>
 #include <QIcon>
 #include <QPixmap>
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "enums.h"
 
 class QDomElement;

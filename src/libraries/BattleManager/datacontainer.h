@@ -5,7 +5,7 @@
 
 #include "teamdata.h"
 #include "auxpokebattledata.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 struct BattleConfiguration;
 
 class DataContainer {

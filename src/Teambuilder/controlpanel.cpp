@@ -1,6 +1,6 @@
 #include "controlpanel.h"
-#include "../Utilities/functions.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/functions.h>
+#include <PokemonInfo/networkstructs.h>
 #ifdef QT5
 #include <QMessageBox>
 #endif

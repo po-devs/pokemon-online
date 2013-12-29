@@ -1,7 +1,7 @@
 #include "abilities.h"
 #include "miscmoves.h"
 #include "moves.h" //For magic mirror.
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "miscabilities.h"
 #include "../Shared/battlecommands.h"
 

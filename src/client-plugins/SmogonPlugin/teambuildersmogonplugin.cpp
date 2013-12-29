@@ -1,8 +1,8 @@
 #include <QLayout>
 #include <QToolButton>
-#include "../Utilities/qverticalscrollarea.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <Utilities/qverticalscrollarea.h>
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
 #include "../Teambuilder/teambuilderinterface.h"
 #include "pokemontab.h"
 #include "teambuildersmogonplugin.h"

@@ -1,6 +1,6 @@
 #include "../Shared/networkcommands.h"
-#include "../Utilities/network.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <Utilities/network.h>
+#include <PokemonInfo/battlestructs.h>
 
 #include "analyzer.h"
 

@@ -4,8 +4,8 @@
 /* damage formula: http://www.smogon.com/dp/articles/damage_formula */
 
 #include <QtCore>
-#include "../Utilities/functions.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/functions.h>
+#include <Utilities/coreclasses.h>
 #include "pokemoninfo.h"
 
 class TeamInfo;

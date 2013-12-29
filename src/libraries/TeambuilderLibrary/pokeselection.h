@@ -2,8 +2,8 @@
 #define POKESELECTION_H
 
 #include <QWidget>
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/geninfo.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
 
 namespace Ui {
 class PokeSelection;

@@ -115,7 +115,7 @@
   <customwidget>
    <class>QScrollDownTextBrowser</class>
    <extends>QTextBrowser</extends>
-   <header>../Utilities/qscrolldowntextbrowser.h</header>
+   <header location="global">Utilities/qscrolldowntextbrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

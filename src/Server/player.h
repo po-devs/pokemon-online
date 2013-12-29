@@ -7,10 +7,10 @@ template<class T> class QPointer;
 
 unsigned int qHash (const QPointer<Player>&);
 
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/battlestructs.h>
 #include "playerinterface.h"
-#include "../Utilities/asiosocket.h"
+#include <Utilities/asiosocket.h>
 #include "playerstructs.h"
 
 class Challenge;

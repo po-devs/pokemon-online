@@ -1,7 +1,7 @@
 #ifndef BATTLEANALYZER_H
 #define BATTLEANALYZER_H
 
-#include "../Utilities/baseanalyzer.h"
+#include <Utilities/baseanalyzer.h>
 
 class TeamBattle;
 class BattlePlayer;

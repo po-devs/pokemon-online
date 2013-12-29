@@ -3,7 +3,7 @@
 
 #include <QAbstractTableModel>
 
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/networkstructs.h>
 
 class ServerChoiceModel : public QAbstractTableModel
 {

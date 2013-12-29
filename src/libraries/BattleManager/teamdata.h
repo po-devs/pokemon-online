@@ -1,7 +1,7 @@
 #ifndef TEAMDATA_H
 #define TEAMDATA_H
 
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 #include <memory>
 

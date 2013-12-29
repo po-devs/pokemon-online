@@ -1,5 +1,5 @@
 #include <utility>
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 #include "pokemontojson.h"
 
 QVariantMap toJson(const Pokemon::gen &gen)

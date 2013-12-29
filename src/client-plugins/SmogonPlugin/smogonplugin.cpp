@@ -3,10 +3,10 @@
 #include <QTabWidget>
 #include <QtGui>
 #include "../Teambuilder/engineinterface.h"
-#include "../PokemonInfo/teamholderinterface.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
+#include <PokemonInfo/teamholderinterface.h>
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/otherwidgets.h>
 #include "smogonplugin.h"
 #include "pokemontab.h"
 #include "pokemonteamtabs.h"

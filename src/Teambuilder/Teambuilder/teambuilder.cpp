@@ -1,10 +1,10 @@
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/geninfo.h"
-#include "../PokemonInfo/teamholder.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/geninfo.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "../Utilities/functions.h"
-#include "TeambuilderLibrary/poketablemodel.h"
+#include <Utilities/functions.h>
+#include <TeambuilderLibrary/poketablemodel.h>
 
 #include "Teambuilder/teambuilder.h"
 #include "Teambuilder/trainermenu.h"

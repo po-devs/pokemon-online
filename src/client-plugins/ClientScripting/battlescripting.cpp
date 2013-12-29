@@ -1,10 +1,10 @@
 #include <QScriptEngine>
-#include "../Utilities/qscrolldowntextbrowser.h"
-#include "../BattleManager/advancedbattledata.h"
-#include "../BattleManager/battledataaccessor.h"
-#include "../BattleManager/pokemoninfoaccessor.h"
-#include "../BattleManager/proxydatacontainer.h"
-#include "../BattleManager/battleinput.h"
+#include <Utilities/qscrolldowntextbrowser.h>
+#include <BattleManager/advancedbattledata.h>
+#include <BattleManager/battledataaccessor.h>
+#include <BattleManager/pokemoninfoaccessor.h>
+#include <BattleManager/proxydatacontainer.h>
+#include <BattleManager/battleinput.h>
 #include "../Teambuilder/basebattlewindowinterface.h"
 #include "battlescripting.h"
 

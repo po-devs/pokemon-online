@@ -1,5 +1,5 @@
 #include "scriptutils.h"
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 
 QString ScriptUtils::loadScripts(ScriptType type)
 {

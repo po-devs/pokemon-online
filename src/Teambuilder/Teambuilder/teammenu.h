@@ -1,7 +1,7 @@
 #ifndef TEAMMENU_H
 #define TEAMMENU_H
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 #include "Teambuilder/teambuilderwidget.h"
 #include <QHash>
 

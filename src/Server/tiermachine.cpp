@@ -1,4 +1,4 @@
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 #include "waitingobject.h"
 #include "loadinsertthread.h"

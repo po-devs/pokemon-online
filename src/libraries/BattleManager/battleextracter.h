@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <memory>
 #include "battleenum.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 /*
 namespace std {
     template<class T> class shared_ptr;

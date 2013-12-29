@@ -4,8 +4,8 @@
 #include <QtGui>
 
 #include "logmanager.h"
-#include "../Utilities/functions.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/functions.h>
+#include <Utilities/otherwidgets.h>
 
 class QScrollDownTextBrowser;
 class QIRCLineEdit;

@@ -2,7 +2,7 @@
 #define POKEMOVESMODEL_H
 
 #include <QAbstractTableModel>
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 #include "modelenum.h"
 
 class PokeMovesModel : public QAbstractTableModel

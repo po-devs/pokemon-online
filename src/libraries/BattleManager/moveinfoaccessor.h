@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-#include "../PokemonInfo/geninfo.h"
+#include <PokemonInfo/geninfo.h>
 
 class MoveInfoAccessor : public QObject
 {

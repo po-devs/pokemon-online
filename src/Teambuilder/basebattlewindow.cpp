@@ -2,18 +2,18 @@
 #include <QApplication>
 #include <QToolTip>
 #include <QMediaPlayer>
-#include "../Utilities/wavreader.h"
+#include <Utilities/wavreader.h>
 #endif
 
 #include "Shared/battlecommands.h"
-#include "Utilities/coreclasses.h"
-#include "Utilities/otherwidgets.h"
-#include "PokemonInfo/pokemoninfo.h"
-#include "BattleManager/advancedbattledata.h"
-#include "BattleManager/battleclientlog.h"
-#include "BattleManager/battleinput.h"
-#include "TeambuilderLibrary/poketextedit.h"
-#include "TeambuilderLibrary/theme.h"
+#include <Utilities/coreclasses.h>
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <BattleManager/advancedbattledata.h>
+#include <BattleManager/battleclientlog.h>
+#include <BattleManager/battleinput.h>
+#include <TeambuilderLibrary/poketextedit.h>
+#include <TeambuilderLibrary/theme.h>
 
 #include "basebattlewindow.h"
 #include "logmanager.h"

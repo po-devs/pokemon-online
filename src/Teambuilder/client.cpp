@@ -1,9 +1,9 @@
-﻿#include "../Utilities/functions.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/teamholder.h"
+﻿#include <Utilities/functions.h>
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "TeambuilderLibrary/theme.h"
-#include "TeambuilderLibrary/poketextedit.h"
+#include <TeambuilderLibrary/theme.h>
+#include <TeambuilderLibrary/poketextedit.h>
 
 #include "client.h"
 #include "mainwindow.h"

@@ -1,5 +1,5 @@
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/teamholder.h"
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
 
 #include "findbattledialog.h"
 #include "ui_findbattledialog.h"

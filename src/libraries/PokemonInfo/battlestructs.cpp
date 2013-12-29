@@ -4,8 +4,8 @@
 #include "battlestructs.h"
 #include "networkstructs.h"
 #include "movesetchecker.h"
-#include "../Utilities/otherwidgets.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/otherwidgets.h>
+#include <Utilities/coreclasses.h>
 
 QString ChallengeInfo::clauseText[] =
 {

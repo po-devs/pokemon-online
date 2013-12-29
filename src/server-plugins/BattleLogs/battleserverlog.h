@@ -1,7 +1,7 @@
 #ifndef BATTLESERVERLOG_H
 #define BATTLESERVERLOG_H
 
-#include "../BattleManager/battleclientlog.h"
+#include <BattleManager/battleclientlog.h>
 
 class BattleServerLog : public BattleClientLog
 {

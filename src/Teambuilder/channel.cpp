@@ -1,6 +1,6 @@
-﻿#include "Utilities/coreclasses.h"
-#include "TeambuilderLibrary/poketextedit.h"
-#include "TeambuilderLibrary/theme.h"
+﻿#include <Utilities/coreclasses.h>
+#include <TeambuilderLibrary/poketextedit.h>
+#include <TeambuilderLibrary/theme.h>
 
 #include "client.h"
 #include "channel.h"

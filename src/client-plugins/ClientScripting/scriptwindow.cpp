@@ -1,6 +1,6 @@
 ﻿#include "scriptwindow.h"
 #include "ui_scriptwindow.h"
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "scriptutils.h"
 
 ScriptWindow::ScriptWindow(QWidget *parent) :

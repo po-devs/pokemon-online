@@ -3,8 +3,8 @@
 */
 
 #include "../Shared/config.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/teamholder.h"
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
 
 #include "analyze.h"
 

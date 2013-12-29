@@ -2,11 +2,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/teamsaver.h"
-#include "../PokemonInfo/teamholder.h"
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/teamsaver.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/theme.h>
 
 #include "Teambuilder/trainermenu.h"
 #include "ui_trainermenu.h"

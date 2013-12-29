@@ -1,8 +1,8 @@
 #ifndef SPECTATORWINDOW_H
 #define SPECTATORWINDOW_H
 
-#include "../BattleManager/battledatatypes.h"
-#include "../BattleManager/battleenum.h"
+#include <BattleManager/battledatatypes.h>
+#include <BattleManager/battleenum.h>
 
 template <class T> class FlowCommandManager;
 class BattleClientLog;

@@ -1,6 +1,7 @@
+#include <PokemonInfo/pokemoninfo.h>
+
 #include "basestatswidget.h"
 #include "ui_basestatswidget.h"
-#include "../PokemonInfo/pokemoninfo.h"
 
 BaseStatsWidget::BaseStatsWidget(QWidget *parent) :
     QWidget(parent),

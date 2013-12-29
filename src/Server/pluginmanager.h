@@ -1,7 +1,7 @@
 #ifndef SERVERPLUGINMANAGER_H
 #define SERVERPLUGINMANAGER_H
 
-#include "../Utilities/pluginmanager.h"
+#include <Utilities/pluginmanager.h>
 #include "plugininterface.h"
 
 class Server;

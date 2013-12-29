@@ -1,10 +1,10 @@
 #include <QCheckBox>
 #include <QRadioButton>
 
-#include "../PokemonInfo/teamholder.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/teamholder.h>
+#include <PokemonInfo/pokemoninfo.h>
 
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/theme.h>
 
 #include "challengedialog.h"
 #include "ui_challengedialog.h"

@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QVector>
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/battlestructs.h>
 
 class TeamData;
 class ShallowBattlePoke;

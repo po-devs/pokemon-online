@@ -1,5 +1,5 @@
 #include "../Shared/networkcommands.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 #include "battleanalyzer.h"
 

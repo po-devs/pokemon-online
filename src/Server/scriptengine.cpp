@@ -4,10 +4,10 @@
 #include <QRegExp>
 
 #include "../Shared/config.h"
-#include "../Utilities/antidos.h"
-#include "../Utilities/ziputils.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
+#include <Utilities/antidos.h>
+#include <Utilities/ziputils.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 
 #include "server.h"
 #include "player.h"

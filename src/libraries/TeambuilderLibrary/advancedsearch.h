@@ -2,7 +2,7 @@
 #define ADVANCEDSEARCH_H
 
 #include <QWidget>
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 
 namespace Ui {
 class AdvancedSearch;

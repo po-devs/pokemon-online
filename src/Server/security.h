@@ -4,9 +4,9 @@
 #include <QtCore>
 
 /* For istringmap */
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 /* For QNickValidator */
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 
 #include "memoryholder.h"
 

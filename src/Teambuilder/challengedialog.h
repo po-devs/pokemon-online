@@ -3,8 +3,8 @@
 
 #include <QDialog>
 
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/battlestructs.h>
 
 namespace Ui {
     class ChallengeDialog;

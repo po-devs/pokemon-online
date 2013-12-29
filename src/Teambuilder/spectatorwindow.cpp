@@ -2,16 +2,16 @@
 #include <QtDeclarative/QDeclarativeError>
 #include <QHBoxLayout>
 
-#include "../BattleManager/battleclientlog.h"
-#include "../BattleManager/battledata.h"
-#include "../BattleManager/battleinput.h"
-#include "../BattleManager/battlescene.h"
-#include "../BattleManager/regularbattlescene.h"
-#include "../BattleManager/battledatatypes.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <BattleManager/battleclientlog.h>
+#include <BattleManager/battledata.h>
+#include <BattleManager/battleinput.h>
+#include <BattleManager/battlescene.h>
+#include <BattleManager/regularbattlescene.h>
+#include <BattleManager/battledatatypes.h>
+#include <PokemonInfo/networkstructs.h>
 
-#include "TeambuilderLibrary/poketextedit.h"
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/poketextedit.h>
+#include <TeambuilderLibrary/theme.h>
 
 #include "spectatorwindow.h"
 

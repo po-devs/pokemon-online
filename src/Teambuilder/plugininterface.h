@@ -5,7 +5,7 @@
 #include <QString>
 #include <QHash>
 
-#include "Utilities/plugininterface.h"
+#include <Utilities/plugininterface.h>
 
 /* An interface Client Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to

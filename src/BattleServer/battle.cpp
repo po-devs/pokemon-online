@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "battle.h"
 
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "moves.h"
 #include "items.h"
 #include "abilities.h"

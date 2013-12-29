@@ -4,9 +4,9 @@
 #include <QMessageBox>
 
 #include "downloadmanager.h"
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "../Shared/config.h"
-#include "../Utilities/ziputils.h"
+#include <Utilities/ziputils.h>
 #ifdef QT5
 #include <QtConcurrent>
 #endif

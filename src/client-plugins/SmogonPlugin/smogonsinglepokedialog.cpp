@@ -1,4 +1,4 @@
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 #include "smogonsinglepokedialog.h"
 #include "ui_smogonsinglepokedialog.h"
 #include "pokemontab.h"

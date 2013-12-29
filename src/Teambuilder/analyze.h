@@ -6,9 +6,9 @@
 #define ANALYZE_H
 
 #include <QtCore>
-#include "../Utilities/network.h"
-#include "../Utilities/coreclasses.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/network.h>
+#include <Utilities/coreclasses.h>
+#include <PokemonInfo/networkstructs.h>
 
 class Client;
 class PlayerInfo;

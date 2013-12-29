@@ -5,7 +5,7 @@
 #ifdef QT5
 #include <QtWidgets>
 #endif
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/networkstructs.h>
 
 class QTreeWidget;
 class QTreeWidgetItem;

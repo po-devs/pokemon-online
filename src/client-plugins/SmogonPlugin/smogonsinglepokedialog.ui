@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>376</width>
-        <height>241</height>
+        <width>380</width>
+        <height>251</height>
        </rect>
       </property>
      </widget>
@@ -47,7 +47,7 @@
   <customwidget>
    <class>QVerticalScrollArea</class>
    <extends>QScrollArea</extends>
-   <header>../Utilities/qverticalscrollarea.h</header>
+   <header location="global">Utilities/qverticalscrollarea.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

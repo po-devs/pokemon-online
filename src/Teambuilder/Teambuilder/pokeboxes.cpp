@@ -1,11 +1,11 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/teamholder.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/theme.h>
 
 #include "pokeboxes.h"
 #include "pokebox.h"

@@ -1,4 +1,4 @@
-#include "PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 #include "poketextedit.h"
 #include "theme.h"

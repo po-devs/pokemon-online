@@ -2,9 +2,9 @@
 #define REGISTRYSTATION_H
 
 #include <QObject>
-#include "../PokemonInfo/networkstructs.h"
-#include "../Utilities/network.h"
-#include "../QJson/qjson.h"
+#include <PokemonInfo/networkstructs.h>
+#include <Utilities/network.h>
+#include <QJson/qjson.h>
 
 class RegistryStation : public QObject
 {

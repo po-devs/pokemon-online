@@ -2,7 +2,7 @@
 #define CHALLENGE_H
 
 #include <QObject>
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 class Server;
 class Player;

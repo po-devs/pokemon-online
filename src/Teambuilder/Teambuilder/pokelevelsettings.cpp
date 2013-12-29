@@ -1,5 +1,5 @@
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
 #include "Teambuilder/pokelevelsettings.h"
 #include "ui_pokelevelsettings.h"
 

@@ -1,6 +1,6 @@
 #include "items.h"
 #include "berries.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "battlecounterindex.h"
 
 typedef ItemMechanics IM;

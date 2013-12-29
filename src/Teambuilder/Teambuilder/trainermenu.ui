@@ -588,7 +588,7 @@
   <customwidget>
    <class>QClickLabel</class>
    <extends>QLabel</extends>
-   <header>../Utilities/qclicklabel.h</header>
+   <header location="global">Utilities/qclicklabel.h</header>
   </customwidget>
   <customwidget>
    <class>PokeButtonsHolder</class>

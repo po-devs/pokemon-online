@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QHash>
 
-#include "../Utilities/asiosocket.h"
+#include <Utilities/asiosocket.h>
 
 class Analyzer;
 class BattleBase;

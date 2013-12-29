@@ -5,7 +5,7 @@
 #include "proxydatacontainer.h"
 
 #include <QLayout>
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include <QMouseEvent>
 #include <QToolTip>
 

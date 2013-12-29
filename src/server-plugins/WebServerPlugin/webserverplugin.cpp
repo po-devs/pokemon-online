@@ -1,5 +1,5 @@
-#include "../Utilities/functions.h"
-#include "../Utilities/antidos.h"
+#include <Utilities/functions.h>
+#include <Utilities/antidos.h>
 #include "../Server/serverinterface.h"
 
 #include "webserverconfig.h"

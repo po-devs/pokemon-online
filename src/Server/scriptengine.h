@@ -12,8 +12,8 @@
 #include <QNetworkReply>
 #include <QHostInfo>
 
-#include "../PokemonInfo/geninfo.h"
-#include "../Utilities/functions.h"
+#include <PokemonInfo/geninfo.h>
+#include <Utilities/functions.h>
 
 class Server;
 class ChallengeInfo;

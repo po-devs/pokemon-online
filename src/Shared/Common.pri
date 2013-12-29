@@ -4,7 +4,7 @@ contains(EXTRAS, test) {
    dirprefix =
 }
 
-INCLUDEPATH += $$PWD/ $$PWD/../ $$PWD/../libraries $$PWD/../libraries/Utilities
+INCLUDEPATH += $$PWD/ $$PWD/../ $$PWD/../libraries
 
 # Common shadow build directory for all builds
 CONFIG(shadow)|!equals($${_PRO_FILE_PWD_}, $${OUT_PWD}) {

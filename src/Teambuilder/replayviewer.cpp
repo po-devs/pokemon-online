@@ -4,9 +4,9 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QMessageBox>
-#include "../Utilities/coreclasses.h"
-#include "../BattleManager/battleinput.h"
-#include "TeambuilderLibrary/poketextedit.h"
+#include <Utilities/coreclasses.h>
+#include <BattleManager/battleinput.h>
+#include <TeambuilderLibrary/poketextedit.h>
 
 #include "replayviewer.h"
 #include "spectatorwindow.h"

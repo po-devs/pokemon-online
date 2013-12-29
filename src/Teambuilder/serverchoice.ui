@@ -212,12 +212,12 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>PokeTextEdit</class>
    <extends>QTextBrowser</extends>
-   <header>TeambuilderLibrary/poketextedit.h</header>
+   <header location="global">TeambuilderLibrary/poketextedit.h</header>
   </customwidget>
   <customwidget>
    <class>QTablePlus</class>
    <extends>QTableView</extends>
-   <header>../Utilities/qtableplus.h</header>
+   <header location="global">Utilities/qtableplus.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -3,9 +3,9 @@
 
 #include "battleinterface.h"
 
-#include "../PokemonInfo/battlestructs.h"
-#include "../Utilities/mtrand.h"
-#include "../Utilities/contextswitch.h"
+#include <PokemonInfo/battlestructs.h>
+#include <Utilities/mtrand.h>
+#include <Utilities/contextswitch.h>
 #include "battlepluginstruct.h"
 
 #include <algorithm>

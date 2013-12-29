@@ -1,10 +1,10 @@
 #include <QMenuBar>
 #include <QInputDialog>
 
-#include "../Utilities/qscrolldowntextbrowser.h"
-#include "../Utilities/antidos.h"
-#include "../Utilities/antidoswindow.h"
-#include "../Utilities/pluginmanagerwidget.h"
+#include <Utilities/qscrolldowntextbrowser.h>
+#include <Utilities/antidos.h>
+#include <Utilities/antidoswindow.h>
+#include <Utilities/pluginmanagerwidget.h>
 
 #include "sqlconfig.h"
 #include "serverwidget.h"
@@ -14,7 +14,7 @@
 #include "playerswindow.h"
 #include "security.h"
 #include "serverconfig.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "scriptengine.h"
 #include "../Shared/config.h"
 #include "tierwindow.h"

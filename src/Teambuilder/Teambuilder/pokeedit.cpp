@@ -4,15 +4,15 @@
 #include <QMessageBox>
 #include <QDockWidget>
 
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/qclosedockwidget.h"
-#include "../Utilities/otherwidgets.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/qclosedockwidget.h>
+#include <Utilities/otherwidgets.h>
 
-#include "TeambuilderLibrary/theme.h"
-#include "TeambuilderLibrary/pokeselection.h"
-#include "TeambuilderLibrary/poketablemodel.h"
-#include "TeambuilderLibrary/pokemovesmodel.h"
+#include <TeambuilderLibrary/theme.h>
+#include <TeambuilderLibrary/pokeselection.h>
+#include <TeambuilderLibrary/poketablemodel.h>
+#include <TeambuilderLibrary/pokemovesmodel.h>
 
 #include "ui_pokeedit.h"
 #include "pokeedit.h"

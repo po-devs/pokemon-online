@@ -2,7 +2,7 @@
 #define TIERMACHINE_H
 
 #include <QtGui>
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "tiertree.h"
 
 class Tier;

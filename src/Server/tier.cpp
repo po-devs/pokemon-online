@@ -10,8 +10,8 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 #include <QtXml>
 #include <QSqlRecord>
 
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/battlestructs.h>
 #include "tier.h"
 #include "tiermachine.h"
 #include "security.h"

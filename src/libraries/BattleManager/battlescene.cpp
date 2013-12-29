@@ -12,7 +12,7 @@
 #include "moveinfoaccessor.h"
 #include "proxydatacontainer.h"
 #include "defaulttheme.h"
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 
 BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariantMap options)
     : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false), pauseCount(0), mOptions(options)

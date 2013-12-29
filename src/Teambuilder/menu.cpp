@@ -1,7 +1,7 @@
-#include "../Utilities/functions.h"
-#include "../PokemonInfo/teamholder.h"
+#include <Utilities/functions.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "TeambuilderLibrary/theme.h"
+#include <TeambuilderLibrary/theme.h>
 
 #include "menu.h"
 #include "ui_menu.h"

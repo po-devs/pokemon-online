@@ -5,7 +5,7 @@
 #include <QSystemTrayIcon>
 #include "engineinterface.h"
 #include "centralwidget.h"
-#include "../PokemonInfo/teamholder.h"
+#include <PokemonInfo/teamholder.h>
 #include "downloadmanager.h"
 
 class QScrollDownTextBrowser;

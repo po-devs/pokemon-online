@@ -11,8 +11,8 @@
 #include <QHostInfo>
 
 #include "scriptengineagent.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../Utilities/functions.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <Utilities/functions.h>
 #include "../Teambuilder/plugininterface.h"
 
 class BaseBattleWindowInterface;

@@ -4,10 +4,10 @@
 #include "BattleLogs_global.h"
 #include "../BattleServer/plugininterface.h"
 #include "../BattleServer/battleinterface.h"
-#include "../BattleManager/defaulttheme.h"
-#include "../BattleManager/battledatatypes.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../Utilities/coreclasses.h"
+#include <BattleManager/defaulttheme.h>
+#include <BattleManager/battledatatypes.h>
+#include <PokemonInfo/battlestructs.h>
+#include <Utilities/coreclasses.h>
 #include <QtCore>
 #include <QWidget>
 

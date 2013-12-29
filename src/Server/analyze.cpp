@@ -3,12 +3,12 @@
 */
 
 #include "analyze.h"
-#include "../Utilities/network.h"
+#include <Utilities/network.h>
 #include "player.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/battlestructs.h>
 
 using namespace NetworkServ;
 

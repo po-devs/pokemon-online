@@ -4,7 +4,7 @@
 class QRadioButton;
 
 #include "tiertree.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 class ConfigForm;
 

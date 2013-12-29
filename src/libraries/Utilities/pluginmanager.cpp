@@ -6,7 +6,7 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 
-#include "../Utilities/CrossDynamicLib.h"
+#include <Utilities/CrossDynamicLib.h>
 
 void PluginManager::loadPlugins()
 {

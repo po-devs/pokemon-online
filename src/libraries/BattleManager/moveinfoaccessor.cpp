@@ -1,5 +1,5 @@
 #include "moveinfoaccessor.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 MoveInfoAccessor::MoveInfoAccessor(QObject *parent, Pokemon::gen gen) :
     QObject(parent),

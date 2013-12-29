@@ -5,7 +5,7 @@
 
 #include "sql.h"
 #include "sqlconfig.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "security.h"
 #include "tiermachine.h"
 

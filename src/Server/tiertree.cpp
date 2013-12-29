@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "tiertree.h"
 #include "tier.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 TierCategory::~TierCategory()
 {

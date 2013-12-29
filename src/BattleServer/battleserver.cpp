@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <QtNetwork>
 
-#include "../Utilities/asiosocket.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
+#include <Utilities/asiosocket.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 
 #include "abilities.h"
 #include "items.h"

@@ -2,7 +2,7 @@
 #define REPLAYVIEWER_H
 
 #include <QtCore>
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 class SpectatorWindow;
 class QPushButton;

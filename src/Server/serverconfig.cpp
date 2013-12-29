@@ -7,7 +7,7 @@
 
 #include "serverconfig.h"
 #include "server.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 
 ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
 {

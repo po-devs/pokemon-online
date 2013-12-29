@@ -1,4 +1,4 @@
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 #include "battledataaccessor.h"
 #include "teamdata.h"

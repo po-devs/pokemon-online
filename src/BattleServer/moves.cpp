@@ -1,5 +1,5 @@
 #include "../Shared/battlecommands.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "moves.h"
 #include "miscabilities.h"
 #include "items.h"

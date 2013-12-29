@@ -2,7 +2,7 @@
 #define POKEMONINFOACCESSOR_H
 
 #include <QtDeclarative/QDeclarativeImageProvider>
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 class PokemonInfoAccessor : public QObject, public QDeclarativeImageProvider
 {

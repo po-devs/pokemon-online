@@ -2,7 +2,7 @@
 #define NETWORKSTRUCTS_H
 
 #include "pokemonstructs.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 #include "../Shared/config.h"
 
 struct UserInfo

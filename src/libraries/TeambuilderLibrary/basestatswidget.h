@@ -2,8 +2,8 @@
 #define BASESTATSWIDGET_H
 
 #include <QWidget>
-#include "../PokemonInfo/geninfo.h"
-#include "../PokemonInfo/pokemon.h"
+#include <PokemonInfo/geninfo.h>
+#include <PokemonInfo/pokemon.h>
 
 class QProgressBar;
 

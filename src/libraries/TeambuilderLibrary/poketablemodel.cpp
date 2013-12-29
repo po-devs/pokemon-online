@@ -1,4 +1,4 @@
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 #include "modelenum.h"
 #include "poketablemodel.h"
 

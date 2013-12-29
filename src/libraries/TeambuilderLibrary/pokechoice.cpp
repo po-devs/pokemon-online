@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QDrag>
 
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 #include "modelenum.h"
 #include "pokechoice.h"
