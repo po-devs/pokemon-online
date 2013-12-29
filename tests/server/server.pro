@@ -35,6 +35,7 @@ SOURCES += main.cpp \
     testban.cpp \
     testsession.cpp \
     testreconnect.cpp \
+    testcolor.cpp \
     testshutdown.cpp
 
 HEADERS += \
@@ -50,6 +51,7 @@ HEADERS += \
     testban.h \
     testsession.h \
     testreconnect.h \
+    testcolor.h \
     testshutdown.h
 
 OTHER_FILES += \
