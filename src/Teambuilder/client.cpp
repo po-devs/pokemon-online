@@ -2283,9 +2283,9 @@ void Client::connected()
 void Client::disconnected()
 {
     if (reconnectPass.length() > 0) {
-        printHtml(tr("<hr><br>Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved.<br><hr>"));
+        printHtml(toBold(tr("Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved.")));
     } else {
-        printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
+        printHtml(toBold(tr("Disconnected from Server!")));
     }
 
     onDisconnection();
