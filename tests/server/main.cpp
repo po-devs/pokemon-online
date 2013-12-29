@@ -7,6 +7,7 @@
 #include "testban.h"
 #include "testsession.h"
 #include "testreconnect.h"
+#include "testcolor.h"
 #include "testshutdown.h"
 
 int main(int argc, char *argv[])
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
     runner.addTest(new TestBan());
     runner.addTest(new TestSession());
     runner.addTest(new TestReconnect());
+    runner.addTest(new TestColor());
     /* Always last test */
     runner.addTest(new TestShutdown());
 

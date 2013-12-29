@@ -1471,6 +1471,21 @@ QScriptValue ScriptEngine::away(int id)
     }
 }
 
+void ScriptEngine::changeColor(int id, const QString &color)
+{
+    if (!testPlayer("changeColor", id)) {
+        return;
+    }
+
+    QColor playerColor(color);
+    if (!playerColor.isValid()) {
+        return;
+    }
+
+    myserver->player(id)->color() = playerColor;
+    myserver->sendPlayer(id);
+}
+
 QScriptValue ScriptEngine::getColor(int id)
 {
     if (!exists(id)) {
