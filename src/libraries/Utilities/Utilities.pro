@@ -92,7 +92,7 @@ contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   QT += multimedia
 }
 
-windows: { LIBS += -L$$PWD/../../bin -lzip-2 }
-!windows: { LIBS += -lzip }
-
 include(../../Shared/Common.pri)
+
+windows: { LIBS += -L$$bin -lzip-2 }
+!windows: { LIBS += -lzip }
