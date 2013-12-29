@@ -44,7 +44,7 @@ TARGET = $$join(TARGET,,,$$exesuffix)
 utilities = -L$$bin -lpo-utilities$$exesuffix
 pokemoninfo = $$utilities -lpo-pokemoninfo$$exesuffix
 battlemanager = $$pokemoninfo -lpo-battlemanager$$exesuffix
-teambuilder = $$pokemoninfo -lpo-teambuilder$$exesuffix
+teambuilder = $$battlemanager -lpo-teambuilder$$exesuffix
 websocket = -lqtwebsocket$$exesuffix
 json = -lqjson$$exesuffix
 DEFINES += EXE_SUFFIX="$$exesuffix"

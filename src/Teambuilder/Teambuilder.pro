@@ -190,7 +190,7 @@ CONFIG(debian_package) {
 
 CONFIG(popmsyoustartonly):DEFINES += PO_PMS_YOU_START_ONLY
 
-LIBS += $$battlemanager $$teambuilder
+LIBS += $$teambuilder
 
 windows: { LIBS += -lzip-2 }
 !windows: { LIBS += -lzip }

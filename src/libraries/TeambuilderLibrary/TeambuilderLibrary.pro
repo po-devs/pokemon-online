@@ -33,7 +33,7 @@ HEADERS += \
 
 include(../../Shared/Common.pri)
 
-LIBS += $$pokemoninfo
+LIBS += $$battlemanager
 
 FORMS += \
     pokeselection.ui \
