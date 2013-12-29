@@ -22,7 +22,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(ClientPluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
+TeamBuilder::TeamBuilder(ClientPluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(nullptr)
 {
 //    QStringList undone;
 //    for (int i = 1;i <= 718; i++) {

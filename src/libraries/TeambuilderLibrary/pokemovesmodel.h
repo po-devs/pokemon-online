@@ -3,13 +3,13 @@
 
 #include <QAbstractTableModel>
 #include "../PokemonInfo/pokemonstructs.h"
-#include "TeambuilderLibrary/modelenum.h"
+#include "modelenum.h"
 
 class PokeMovesModel : public QAbstractTableModel
 {
 public:
-    PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen, QObject *parent=0);
-    void setPokemon(const Pokemon::uniqueId &id, Pokemon::gen gen);
+    PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen = Pokemon::gen(), QObject *parent=0);
+    void setPokemon(const Pokemon::uniqueId &id, Pokemon::gen gen = Pokemon::gen());
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;

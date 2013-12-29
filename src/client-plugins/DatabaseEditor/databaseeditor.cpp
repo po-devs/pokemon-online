@@ -9,7 +9,7 @@ ClientPlugin *createClientPlugin(MainEngineInterface *client)
 
 DatabaseEditor::DatabaseEditor(MainEngineInterface *client)
 {
-    (void) client;
+    this->client = client;
 }
 
 QString DatabaseEditor::pluginName() const
@@ -24,5 +24,5 @@ bool DatabaseEditor::hasConfigurationWidget() const
 
 QWidget * DatabaseEditor::getConfigurationWidget()
 {
-    return new PokemonEditorDialog();
+    return new PokemonEditorDialog(client);
 }

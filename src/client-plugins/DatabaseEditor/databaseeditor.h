@@ -24,6 +24,9 @@ public:
     /* A widget that would be used to configure the plugin in the menu bar.
        Return NULL if you don't want one (default behavior) */
     QWidget * getConfigurationWidget();
+
+private:
+    MainEngineInterface *client;
 };
 
 #endif // DATABASEEDITOR_H
