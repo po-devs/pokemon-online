@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Database Editor</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -64,6 +64,9 @@
        </item>
        <item>
         <widget class="QTableWidget" name="addedMoves">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
@@ -104,6 +107,9 @@
        </item>
        <item>
         <widget class="QTableWidget" name="deletedMoves">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
@@ -155,9 +161,6 @@
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
-     <attribute name="verticalHeaderDefaultSectionSize">
-      <number>20</number>
-     </attribute>
     </widget>
    </item>
    <item>
@@ -172,10 +175,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="newMove"/>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="learningMethod"/>
        </item>
       </layout>
      </item>

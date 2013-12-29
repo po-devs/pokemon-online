@@ -1839,6 +1839,11 @@ QString MoveInfo::Name(int movenum)
     return m_Names.value(movenum, m_Names.value(0));
 }
 
+QStringList MoveInfo::Names()
+{
+    return m_Names.values();
+}
+
 #define move_find(var, mv, g) do {\
     Gen *G = &gens[g]; \
     while (!G->var.contains(mv) && G->parent != 0) { \

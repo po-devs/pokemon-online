@@ -233,6 +233,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
+    static QStringList Names();
     static int Type(int movenum, Pokemon::gen gen);
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);

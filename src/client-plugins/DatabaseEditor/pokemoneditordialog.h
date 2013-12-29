@@ -23,8 +23,11 @@ public:
 
 public slots:
     void setPokemon(Pokemon::uniqueId id);
+    void addMove();
 private slots:
     void on_pokemonFrame_clicked();
+    void moveEntered(const QModelIndex&);
+    void removeRow(int row);
 private:
     Ui::PokemonEditorDialog *ui;
     QAbstractItemModel *pokeModel;

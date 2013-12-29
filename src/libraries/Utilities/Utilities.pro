@@ -24,7 +24,8 @@ SOURCES += otherwidgets.cpp \
     pluginmanagerwidget.cpp \
     antidos.cpp \
     antidoswindow.cpp \
-    baseanalyzer.cpp
+    baseanalyzer.cpp \
+    keypresseater.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -49,7 +50,8 @@ HEADERS += otherwidgets.h \
     asiosocket.h \
     network.h \
     rankingtree.h \
-    baseanalyzer.h
+    baseanalyzer.h \
+    keypresseater.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
