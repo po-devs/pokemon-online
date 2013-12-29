@@ -8,6 +8,7 @@
 class QAbstractItemModel;
 class MainEngineInterface;
 class PokeMovesModel;
+class QModelIndex;
 
 namespace Ui {
 class PokemonEditorDialog;
