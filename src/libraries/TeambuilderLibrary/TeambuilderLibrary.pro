@@ -33,6 +33,8 @@ HEADERS += \
 
 include(../../Shared/Common.pri)
 
+LIBS += $$pokemoninfo
+
 FORMS += \
     pokeselection.ui \
     advancedsearch.ui \
