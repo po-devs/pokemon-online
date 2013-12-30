@@ -882,7 +882,9 @@ struct MMBellyDrum : public MM
                 b.inflictStatMod(s,Attack,1,s,false);
             }
         }
-        b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
+        if (!move(b,s) != Move::Substitute) {
+            b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
+        }
     }
 };
 
@@ -3011,6 +3013,7 @@ struct MMSubstitute : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*25/100,1));
         fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
         fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
         b.sendMoveMessage(128,4,s);
