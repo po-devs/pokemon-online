@@ -51,5 +51,5 @@ int BattleServerPluginManager::version() const
 
 QString BattleServerPluginManager::directory() const
 {
-    return "battleserver/";
+    return "battleserverplugins/";
 }

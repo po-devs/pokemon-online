@@ -6,9 +6,9 @@
 void TestLoadPlugin::onBattleServerConnected()
 {
 #ifdef Q_OS_UNIX
-    analyzer->notify(LoadPlugin, true, "battleserverplugins/libusagestats" OS_LIB_SUFFIX);
+    analyzer->notify(LoadPlugin, true, QString("battleserverplugins/libusagestats") + OS_LIB_SUFFIX);
 #elif defined(Q_OS_WIN)
-    analyzer->notify(LoadPlugin, true, "battleserverplugins/usagestats" OS_LIB_SUFFIX);
+    analyzer->notify(LoadPlugin, true, QString("battleserverplugins/usagestats") + OS_LIB_SUFFIX);
 #else
 #warning "Test not defined for current platform"
     accept();
