@@ -635,6 +635,10 @@ struct AMHyperCutter : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
+        //AbilityArgs defined by speed, so a faster Intimidate would lower attack despite ability
+        if (b.poke(s).ability() == Ability::HyperCutter) {
+            poke(b,s)["AbilityArg"] = Attack;
+        }
         if (turn(b,s)["StatModType"].toString() == "Stat" && turn(b,s)["StatModded"].toInt() == poke(b,s)["AbilityArg"].toInt() && turn(b,s)["StatModification"].toInt() < 0) {
             if (b.canSendPreventMessage(s,t))
                 b.sendAbMessage(30,0,s,s,0,b.ability(s));
