@@ -41,8 +41,8 @@ cp bin/languages.txt $DEST
 cp bin/Pokemon-Online.exe $DEST
 cp bin/*.exe $DEST
 cp bin/*.dll $DEST
-rm $DEST/*d.exe
-rm $DEST/*d.dll
+rm $DEST/*_debug.exe
+rm $DEST/*_debug.dll
 cp bin/version.ini $DEST
 
 mkdir $DEST/myplugins
@@ -50,8 +50,8 @@ mkdir $DEST/serverplugins
 cp bin/myplugins/*.dll $DEST/myplugins
 cp bin/serverplugins/*.dll $DEST/serverplugins
 #cp lib/windows/*.dll $DEST
-rm $DEST/myplugins/*d.dll
-rm $DEST/serverplugins/*d.dll
+rm $DEST/myplugins/*_debug.dll
+rm $DEST/serverplugins/*_debug.dll
 
 #Use zips instead of folders for sprites
 cd $DEST/db/pokes

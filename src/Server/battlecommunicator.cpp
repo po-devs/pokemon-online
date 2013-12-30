@@ -3,6 +3,7 @@
 #include "../Shared/networkcommands.h"
 #include "../Shared/battlecommands.h"
 
+#include <Utilities/exesuffix.h>
 #include <PokemonInfo/battlestructs.h>
 
 #include "tiermachine.h"
@@ -10,10 +11,6 @@
 #include "battleanalyzer.h"
 #include "player.h"
 #include "battlecommunicator.h"
-
-#define XSUFFIX(x) SUFFIX(x)
-#define SUFFIX(x) #x
-#define BATTLE_SERVER_SUFFIX XSUFFIX(EXE_SUFFIX)
 
 static const QString processErrorMessages[] = {
     "The process failed to start. Either the invoked program is missing, or you may have insufficient permissions to invoke the program.",
@@ -170,7 +167,7 @@ bool BattleCommunicator::startServer()
     }
 
     emit info("Starting battle server.");
-    battleServer->start("./BattleServer" BATTLE_SERVER_SUFFIX " -p 5096");
+    battleServer->start("./BattleServer" SUFFIX " -p 5096");
     connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
     connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
     return true;

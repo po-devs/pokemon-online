@@ -31,11 +31,7 @@ contains(EXTRAS, serverplugin) {
 
 #adds debug suffix to libraries when compiled
 CONFIG(debug, debug|release) {
-    win32 {
-        exesuffix=d
-    } else {
-        exesuffix=_debug
-    }
+    exesuffix=_debug
 } else {
     exesuffix=
 }

@@ -51,7 +51,8 @@ HEADERS += otherwidgets.h \
     network.h \
     rankingtree.h \
     baseanalyzer.h \
-    keypresseater.h
+    keypresseater.h \
+    exesuffix.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
