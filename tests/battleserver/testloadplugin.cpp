@@ -1,17 +1,14 @@
 #include <Shared/networkcommands.h>
+#include <Utilities/exesuffix.h>
 
 #include "testloadplugin.h"
-
-#define XSUFFIX(x) SUFFIX(x)
-#define SUFFIX(x) #x
-#define PLUGIN_SUFFIX XSUFFIX(EXE_SUFFIX)
 
 void TestLoadPlugin::onBattleServerConnected()
 {
 #ifdef Q_OS_UNIX
-    analyzer->notify(LoadPlugin, true, "serverplugins/libusagestats" PLUGIN_SUFFIX ".so");
+    analyzer->notify(LoadPlugin, true, "battleserverplugins/libusagestats" OS_LIB_SUFFIX);
 #elif defined(Q_OS_WIN)
-    analyzer->notify(LoadPlugin, true, "serverplugins/usagestats" PLUGIN_SUFFIX ".dll");
+    analyzer->notify(LoadPlugin, true, "battleserverplugins/usagestats" OS_LIB_SUFFIX);
 #else
 #warning "Test not defined for current platform"
     accept();

@@ -3,7 +3,8 @@
 
 #include <Qt>
 
-#define XSUFFIX(x) #x
+#define XSUFFIX(x) XXSUFFIX(x)
+#define XXSUFFIX(x) #x
 #define SUFFIX XSUFFIX(EXE_SUFFIX)
 
 #ifdef Q_OS_LINUX

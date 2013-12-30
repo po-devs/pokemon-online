@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 
+#include "exesuffix.h"
 #include "pluginmanagerwidget.h"
 #include "pluginmanager.h"
 
@@ -34,10 +35,10 @@ PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
 
 void PluginManagerWidget::addClicked()
 {
-    QFileDialog *fd = new QFileDialog(this);
+    QString dir = QDir(pl.directory()).absolutePath();
+    QFileDialog *fd = new QFileDialog(this,tr("Add Plugin"), dir, QString("*")+OS_LIB_SUFFIX);
     fd->setAttribute(Qt::WA_DeleteOnClose, true);
     fd->setFileMode(QFileDialog::ExistingFile);
-    fd->setDirectory(QDir(pl.directory()).absolutePath());
     fd->show();
 
     connect(fd, SIGNAL(fileSelected(QString)), this, SLOT(addPlugin(QString)));
