@@ -1,4 +1,6 @@
-﻿#include "clientscripting.h"
+﻿#include <QMessageBox>
+
+#include "clientscripting.h"
 #include "../Teambuilder/engineinterface.h"
 #include "scriptwindow.h"
 #include "scriptengine.h"
@@ -29,6 +31,13 @@ QWidget *ClientScripting::getConfigurationWidget()
     QObject::connect(ret, SIGNAL(battleScriptChanged(QString)), engine.data(), SLOT(changeBattleScript(QString)));
     QObject::connect(ret, SIGNAL(safeScriptsChanged(bool)), engine.data(), SLOT(changeSafeScripts(bool)));
     QObject::connect(ret, SIGNAL(warningsChanged(bool)), engine.data(), SLOT(changeWarnings(bool)));
+    QObject::connect(ret, SIGNAL(moogleScripts()), engine.data(), SLOT(setMoogleScripts()));
+    QObject::connect(engine.data(), SIGNAL(scriptsChanged(QString)), ret, SLOT(setScripts(QString)));
+
+    if (!engine.data()) {
+        ret->setOffline();
+    }
+
     return ret;
 }
 

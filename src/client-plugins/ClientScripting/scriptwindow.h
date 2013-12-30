@@ -21,9 +21,14 @@ signals:
     void battleScriptChanged(const QString&);
     void safeScriptsChanged(bool safe);
     void warningsChanged(bool warn);
+    void moogleScripts();
 public slots:
     void safeScriptsChanged(int newStatus);
     void warningsChanged(int newStatus);
+    void setScripts(const QString &scripts);
+    void setOffline();
+private slots:
+    void on_moogle_clicked();
 private:
     Ui::ScriptWindow *ui;
 };

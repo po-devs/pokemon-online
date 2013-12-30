@@ -184,10 +184,12 @@ public:
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring);
     /* synchronous POST call */
     Q_INVOKABLE QScriptValue synchronousWebCall(const QString &urlstring, const QScriptValue &params_array);
-
+signals:
+    void scriptsChanged(const QString &scripts);
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
     void changeBattleScript(const QString &bscript);
+    void setMoogleScripts();
 
 private slots:
     void timer();

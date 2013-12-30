@@ -158,6 +158,19 @@ void ScriptEngine::changeBattleScript(const QString &bscript)
     battleScript = bscript;
 }
 
+void ScriptEngine::setMoogleScripts()
+{
+    /* Shouldn't be necessary */
+    if (safeScripts) {
+        changeSafeScripts(false);
+    }
+
+    evaluate(eval(QString("sys.webCall('%1', %2)").arg(
+             "https://raw.github.com/CrystalMoogle/PO-User-Scripts/master/script.js",
+             "sys.changeScript"
+             )));
+}
+
 ScriptEngine::~ScriptEngine()
 {
 }
@@ -225,6 +238,8 @@ void ScriptEngine::armScripts(QScriptEngine *engine, const QString &script, bool
 void ScriptEngine::changeScript(const QString &script, bool triggerStartUp)
 {
     armScripts(&myengine, script, triggerStartUp);
+
+    emit scriptsChanged(script);
 }
 
 void ScriptEngine::changeSafeScripts(bool safe)

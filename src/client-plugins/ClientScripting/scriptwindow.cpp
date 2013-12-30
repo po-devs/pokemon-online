@@ -65,3 +65,21 @@ void ScriptWindow::warningsChanged(int newStatus)
     s.setValue("ScriptWindow/warn", checked);
     emit warningsChanged(checked);
 }
+
+void ScriptWindow::setScripts(const QString &scripts)
+{
+    ui->scripts->clear();
+    ui->scripts->insertPlainText(scripts);
+}
+
+void ScriptWindow::setOffline()
+{
+    ui->moogle->setDisabled(true);
+    ui->moogle->setToolTip(tr("You need to be connected to a server to load moogle's scripts."));
+}
+
+void ScriptWindow::on_moogle_clicked()
+{
+    ui->checkBox->setChecked(false);
+    emit moogleScripts();
+}
