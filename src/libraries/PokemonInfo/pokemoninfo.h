@@ -379,7 +379,7 @@ public:
     static int Power(int itemnum);
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
-    static QPixmap Icon(int itemnum);
+    static QPixmap Icon(int itemnum, bool mod=true);
     static QPixmap HeldItem();
 private:
     static QHash<int,QString> m_BerryNames;

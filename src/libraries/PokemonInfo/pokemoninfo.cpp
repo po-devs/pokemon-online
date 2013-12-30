@@ -98,6 +98,10 @@ QHash<Pokemon::gen, QString> GenInfo::m_versions;
 QHash<int, int> GenInfo::m_NumberOfSubgens;
 int GenInfo::genMin, GenInfo::genMax;
 
+
+
+namespace {
+
 QByteArray readZipFile(const char *archiveName, const char *fileName)
 {
     /* Allows to read standard files too */
@@ -137,6 +141,8 @@ QByteArray readZipFile(const char *archiveName, const char *fileName)
     zip_close(archive);
 
     return ret;
+}
+
 }
 
 namespace PokemonInfoConfig {
@@ -256,8 +262,28 @@ QStringList availableMods()
 
 using namespace PokemonInfoConfig;
 
+namespace {
+
+QString getArchive(QString archives[2], bool &mod) {
+    if (mod && modPath.length() > 0) {
+        if (QFile::exists(modPath+archives[1])) {
+            return modPath+archives[1];
+        } else if (QDir(modPath+archives[0]).exists()) {
+            return modPath+archives[0];
+        } else {
+            mod = false;
+        }
+    }
+
+    if (QFile::exists(archives[1])) {
+        return archives[1];
+    } else {
+        return archives[0];
+    }
+}
+
 template <class T, class U>
-static QHash<U,T> reverse_hash(const QHash<T,U> &hash) {
+QHash<U,T> reverse_hash(const QHash<T,U> &hash) {
     QHashIterator<T,U> it(hash);
     QHash<U,T> ret;
 
@@ -271,7 +297,7 @@ static QHash<U,T> reverse_hash(const QHash<T,U> &hash) {
     return ret;
 }
 
-static void fill_container_with_file(QStringList &container, const QString & filename, bool trans = false)
+void fill_container_with_file(QStringList &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
@@ -290,7 +316,7 @@ static void fill_container_with_file(QStringList &container, const QString & fil
     }
 }
 
-static void fill_int_char(QHash<int, char> &container, const QString & filename, bool trans = false)
+void fill_int_char(QHash<int, char> &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
@@ -311,17 +337,17 @@ static void fill_int_char(QHash<int, char> &container, const QString & filename,
     }
 }
 
-static void fill_int_bool(QHash<int, bool> &container, const QString & filename, bool trans = false)
+void fill_int_bool(QHash<int, bool> &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -338,17 +364,17 @@ static void fill_int_bool(QHash<int, bool> &container, const QString & filename,
     }
 }
 
-static void fill_int_char(QHash<int, unsigned char> &container, const QString & filename, bool trans = false)
+void fill_int_char(QHash<int, unsigned char> &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -359,17 +385,17 @@ static void fill_int_char(QHash<int, unsigned char> &container, const QString & 
     }
 }
 
-static void fill_int_char(QHash<int, signed char> &container, const QString & filename, bool trans = false)
+void fill_int_char(QHash<int, signed char> &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -380,7 +406,7 @@ static void fill_int_char(QHash<int, signed char> &container, const QString & fi
     }
 }
 
-static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename, bool trans = false)
+void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -406,7 +432,7 @@ static void fill_uid_int(QHash<Pokemon::uniqueId, int> &container, const QString
     }
 }
 
-static void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QString &filename, bool trans = false)
+void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -428,7 +454,7 @@ static void fill_uid_str(QHash<Pokemon::uniqueId, QString> &container, const QSt
     }
 }
 
-static void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QString &filename, bool trans = false)
+void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QString &filename, bool trans = false)
 {
 
     container.clear();
@@ -452,7 +478,7 @@ static void fill_gen_string(QHash<Pokemon::gen, QString> &container, const QStri
 }
 
 template <class T, class U>
-static void fill_double(QHash<T, U> &container, const QString &filename, bool trans = false)
+void fill_double(QHash<T, U> &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -478,7 +504,7 @@ static void fill_double(QHash<T, U> &container, const QString &filename, bool tr
 }
 
 template <class T>
-static void fill_int_str(T &container, const QString &filename, bool trans = false)
+void fill_int_str(T &container, const QString &filename, bool trans = false)
 {
     container.clear();
 
@@ -500,17 +526,17 @@ static void fill_int_str(T &container, const QString &filename, bool trans = fal
 }
 
 template <class T>
-static void fill_container_with_file(T &container, const QString & filename, bool trans = false)
+void fill_container_with_file(T &container, const QString & filename, bool trans = false)
 {
     container.clear();
 
     foreach(QString fileName, allFiles(filename, trans)) {
         QFile file(fileName);
-        
+
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        
+
         QTextStream filestream(&file);
-        
+
         /* discarding all the uninteresting lines, should find a more effective way */
         while (!filestream.atEnd() && filestream.status() != QTextStream::ReadCorruptData)
         {
@@ -520,6 +546,9 @@ static void fill_container_with_file(T &container, const QString & filename, boo
         }
     }
 }
+
+}
+
 
 QString PokemonInfo::Desc(const Pokemon::uniqueId &pokeid, int cartridge)
 {
@@ -1114,25 +1143,7 @@ QPixmap PokemonInfo::Picture(const QString &url)
 QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
 {
     QString archives[] = {path("%1G/sprites").arg(gen.num), path("%1G/sprites.zip").arg(gen.num)};
-    QString archive;
-
-    if (mod && modPath.length() > 0) {
-        if (QFile::exists(modPath+archives[1])) {
-            archive = modPath+archives[1];
-        } else if (QDir(modPath+archives[0]).exists()) {
-            archive = modPath+archives[0];
-        } else {
-            mod = false;
-        }
-    }
-    if (!mod) {
-        if (QFile::exists(archives[1])) {
-            archive = archives[1];
-        } else if (QDir(archives[0]).exists()) {
-            archive = archives[0];
-        }
-    }
-
+    QString archive = getArchive(archives, mod);
 
     QString file;
 
@@ -1231,13 +1242,8 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 
 QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
 {
-    QString archive = path("icons.zip");
-
-    if (mod && modPath.length() > 0 && QFile::exists(modPath + archive)) {
-        archive.prepend(modPath);
-    } else {
-        mod = false;
-    }
+    QString archives[] = {path("icons"), path("icons.zip")};
+    QString archive = getArchive(archives, mod);
 
     QString file = QString("%1.png").arg(pokeid.toString());
 
@@ -1270,14 +1276,9 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
 QByteArray PokemonInfo::Cry(const Pokemon::uniqueId &pokeid, bool mod)
 {
     quint16 num = pokeid.pokenum;
-    QString archive = path("cries.zip");
 
-    // TODO: Read this number from somewhere else.
-    if (mod && modPath.length() > 0 && QFile::exists(modPath+archive)) {
-        archive.prepend(modPath);
-    } else {
-        mod = false;
-    }
+    QString archives[] = {path("cries"), path("cries.zip")};
+    QString archive = getArchive(archives, mod);
 
     QString file = QString("%1.wav").arg(num).rightJustified(7, '0');
 
@@ -2333,18 +2334,21 @@ int ItemInfo::BerryType(int itemnum)
     return m_BerryTypes[itemnum-8000];
 }
 
-QPixmap ItemInfo::Icon(int itemnum)
+QPixmap ItemInfo::Icon(int itemnum, bool mod)
 {
     QPixmap ret;
 
     if (itemnum == 0)
         return ret;
 
-    QString archive = path("Items.zip");
+    QString base = isBerry(itemnum) ? "berries" : "items";
     if (isBerry(itemnum)) {
         itemnum -= 7999;
-        archive = path("Berries.zip");
     }
+
+    QString archives[] = {path("%1").arg(base), path("%1.zip").arg(base)};
+    QString archive = getArchive(archives, mod);
+
 
     QString file = QString("%1.png").arg(itemnum);
 

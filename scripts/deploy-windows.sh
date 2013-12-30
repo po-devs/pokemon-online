@@ -1,7 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script is used to compile PO in an install folder
 # Maybe make something to make -j4 optional?
+
+function zip_files(){
+    cd $1
+    name=`basename $1 .txt`
+    zip -r $name.zip .
+    mv $name.zip ../
+    cd -
+    rm -Rf $1
+}
+function ensure_good_run(){
+    if [[ $? != 0 ]]; then
+        exit 1 
+    fi
+}
 
 DEST=pokemon-online
 alias make=mingw32-make
@@ -9,11 +23,14 @@ alias make=mingw32-make
 cd ../
 rm -Rf $DEST
 make clean
+rm -Rf build/release
 rm src/*/Makefile
+rm src/*/*/Makefile
 rm Makefile
 qmake CONFIG+="po_clientplugins po_serverplugins release"
 make clean
 make -j4
+ensure_good_run
 mkdir $DEST
 cp bin/db $DEST -R
 cp bin/trans $DEST -R
@@ -40,9 +57,12 @@ rm $DEST/serverplugins/*d.dll
 cd $DEST/db/pokes
 for g in 1G 2G 3G 4G 5G 6G
 do
-    cd $g/sprites
-    zip -r sprites.zip .
-    mv sprites.zip ../
-    cd -
-    rm -Rf $g/sprites
+    zip_files $g/sprites
 done
+zip_files icons
+zip_files cries
+cd ..
+zip_files items/items
+zip_files items/berries
+cd ..
+
