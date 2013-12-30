@@ -2838,7 +2838,8 @@ void BattleSituation::debug(const QString &message)
 }
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
-    return attacking() && (!turnMemory(defender).contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
+    //Message needs to show with Intimidate, et al. No attacking() check possible.
+    return attacker != defender && (!turnMemory(defender).contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
                            tmove(attacker).rateOfStat== 0);
 }
 
