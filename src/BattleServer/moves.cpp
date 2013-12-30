@@ -2996,6 +2996,7 @@ struct MMSubstitute : public MM
     static void uas(int s, int, BS &b) {
         fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
         fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4;
+        b.callieffects(s, s, "AfterHPChange");
         b.sendMoveMessage(128,4,s);
         b.notifySub(s,true);
         //addFunction(poke(b,s), "BlockTurnEffects", "Substitute", &bte);
