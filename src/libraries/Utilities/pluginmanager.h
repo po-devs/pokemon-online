@@ -1,6 +1,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
+#include <QFileInfoList>
 #include <QVector>
 #include <QStringList>
 #include <QSettings>
@@ -34,6 +35,10 @@ public:
     bool freePlugin(const QString &name);
 
     void cleanPlugins();
+    /* List of file paths corresponding to possible plugins for the exe */
+    QFileInfoList matchingFilePaths() const;
+    /* Association of plugin name / plugin path for plugins of the exe */
+    QMap<QString, QString> availablePlugins() const;
 protected:
     /* What settings file to use? */
     virtual QSettings &settings() = 0;
@@ -43,6 +48,8 @@ protected:
     virtual const char* instantiatingFunctionName() const {return "createPlugin";}
     /* The version the plugins need to have */
     virtual int version() const;
+    /* The directory in which plugins are located by default */
+    virtual QString directory() const = 0;
 private:
     QVector<cross::DynamicLibrary *> libraries;
     QVector<Plugin *> plugins;

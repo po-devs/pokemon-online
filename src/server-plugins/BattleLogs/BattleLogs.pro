@@ -6,7 +6,7 @@
 
 TARGET = battlelogs
 TEMPLATE = lib
-EXTRAS=serverplugin
+EXTRAS=battleserverplugin
 DEFINES += BATTLELOGS_LIBRARY
 QT += gui core declarative
 

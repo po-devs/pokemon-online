@@ -45,13 +45,16 @@ rm $DEST/*_debug.exe
 rm $DEST/*_debug.dll
 cp bin/version.ini $DEST
 
-mkdir $DEST/myplugins
+mkdir $DEST/clientplugins
 mkdir $DEST/serverplugins
-cp bin/myplugins/*.dll $DEST/myplugins
+mkdir $DEST/battleserverplugins
+cp bin/clientplugins/*.dll $DEST/clientplugins
 cp bin/serverplugins/*.dll $DEST/serverplugins
+cp bin/battleserverplugins/*.dll $DEST/battleserverplugins
 #cp lib/windows/*.dll $DEST
-rm $DEST/myplugins/*_debug.dll
+rm $DEST/clientplugins/*_debug.dll
 rm $DEST/serverplugins/*_debug.dll
+rm $DEST/battleserverplugins/*_debug.dll
 
 #Use zips instead of folders for sprites
 cd $DEST/db/pokes

@@ -16,6 +16,7 @@ protected:
     QSettings &settings();
     ServerPlugin* instanciatePlugin(void *function);
     const char* instantiatingFunctionName() const {return "createServerPlugin";}
+    QString directory() const;
 private:
     Server *server;
     QSettings m_settings;

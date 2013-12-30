@@ -9,7 +9,7 @@
 #include "pluginmanager.h"
 
 PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
-    : pl(pl), defaultFolder("serverplugins")
+    : pl(pl)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -32,17 +32,12 @@ PluginManagerWidget::PluginManagerWidget(PluginManager &pl)
     connect(remove, SIGNAL(clicked()), SLOT(removePlugin()));
 }
 
-void PluginManagerWidget::setFolder(const QString &folder)
-{
-    defaultFolder = folder;
-}
-
 void PluginManagerWidget::addClicked()
 {
     QFileDialog *fd = new QFileDialog(this);
     fd->setAttribute(Qt::WA_DeleteOnClose, true);
     fd->setFileMode(QFileDialog::ExistingFile);
-    fd->setDirectory(defaultFolder);
+    fd->setDirectory(QDir(pl.directory()).absolutePath());
     fd->show();
 
     connect(fd, SIGNAL(fileSelected(QString)), this, SLOT(addPlugin(QString)));

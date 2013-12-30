@@ -17,3 +17,8 @@ ServerPlugin *ServerPluginManager::instanciatePlugin(void *function)
 {
     return dynamic_cast<ServerPlugin*>(((ServerPluginInstanceFunction)function)(server));
 }
+
+QString ServerPluginManager::directory() const
+{
+    return "serverplugins/";
+}

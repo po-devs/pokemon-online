@@ -8,7 +8,7 @@
 
 #ifdef Q_OS_LINUX
 #define OS_EXE_SUFFIX (SUFFIX "")
-#define OS_LIB_SUFFIX (SUFFIX ".so")
+#define OS_LIB_SUFFIX (SUFFIX ".so.1.0.0")
 #elif defined(Q_OS_WIN)
 #define OS_EXE_SUFFIX (SUFFIX ".exe")
 #define OS_LIB_SUFFIX (SUFFIX ".dll")

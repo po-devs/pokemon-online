@@ -11,8 +11,6 @@ class PluginManagerWidget : public QWidget
     Q_OBJECT
 public:
     PluginManagerWidget(PluginManager &pl);
-
-    void setFolder(const QString &folder);
 signals:
     void pluginListChanged();
     void error(QString);

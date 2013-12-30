@@ -1,16 +1,17 @@
-#include <QSet>
-#include <QDebug>
-
 #include <stdexcept>
 
+#include <QSet>
+#include <QDebug>
+#include <QDir>
+
+#include "exesuffix.h"
+#include "CrossDynamicLib.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
 
-#include <Utilities/CrossDynamicLib.h>
-
 void PluginManager::loadPlugins()
 {
-    QStringList plugins = settings().value("plugins").toStringList();
+    QStringList plugins = settings().value("plugins" SUFFIX).toStringList();
     plugins = plugins.toSet().toList(); /* Remove duplicates */
 
     foreach(QString plugin, plugins) {
@@ -134,6 +135,42 @@ void PluginManager::cleanPlugins()
             i--;
         }
     }
+}
+
+QFileInfoList PluginManager::matchingFilePaths() const
+{
+    QDir d;
+    d.cd(directory());
+
+    auto files = d.entryInfoList(QStringList() << (QString("*") + OS_LIB_SUFFIX), QDir::Files);
+
+    QFileInfoList resFiles;
+
+    foreach(QFileInfo info, files) {
+        if (strlen(SUFFIX) == 0) {
+            if (!info.fileName().contains("_debug")) {
+                resFiles.push_back(info);
+            }
+        } else {
+            if (info.fileName().contains(SUFFIX)) {
+                resFiles.push_back(info);
+            }
+        }
+    }
+
+    return resFiles;
+}
+
+QMap<QString,QString> PluginManager::availablePlugins() const
+{
+    QFileInfoList files = matchingFilePaths();
+
+    QMap<QString,QString> ret;
+
+    (void) files;
+    /* Todo: test all files to make sure they're valid plugin, and add their name/file path entries to ret */
+
+    return ret;
 }
 
 void PluginManager::updateSavedList()

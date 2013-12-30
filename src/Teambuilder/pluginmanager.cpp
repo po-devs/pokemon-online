@@ -130,3 +130,8 @@ ClientPlugin *ClientPluginManager::instanciatePlugin(void *function)
 {
     return dynamic_cast<ClientPlugin*>(((ClientPluginInstanceFunction)function)(engine));
 }
+
+QString ClientPluginManager::directory() const
+{
+    return "clientplugins/";
+}

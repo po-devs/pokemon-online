@@ -13,11 +13,10 @@ bin/pokemon
 bin/members.txt
 bin/*.dll
 bin/stdout.txt
-bin/serverplugins
 bin/logs/
 bin/Boxes/
 bin/Pokemon-Online
-bin/myplugins/
+bin/*plugins/
 bin/Themes/
 bin/Teams/
 bin/usage_stats/formatted/

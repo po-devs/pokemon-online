@@ -264,7 +264,6 @@ void MainEngine::openPluginManager()
 {
     PluginManagerWidget *w = new PluginManagerWidget(*pluginManager);
 
-    w->setFolder("myplugins");
     w->show();
 
     connect(w, SIGNAL(pluginListChanged()), SLOT(updateMenuBar()));

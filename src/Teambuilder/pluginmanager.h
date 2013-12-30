@@ -19,7 +19,6 @@ class TeambuilderPlugin;
 
 class ClientPluginManager : public PluginManager
 {
-    friend class PluginManagerWidget;
 public:
     ClientPluginManager(MainEngine *t);
     ~ClientPluginManager();
@@ -42,6 +41,7 @@ protected:
     virtual ClientPlugin* instanciatePlugin(void *function);
     /* What is the name of the function in the library to create the plugin? */
     virtual const char* instantiatingFunctionName() const {return "createClientPlugin";}
+    QString directory() const;
 private:
     QHash<ClientInterface*, QHash<ClientPlugin *, OnlineClientPlugin*> > clientPlugins;
     QHash<TeambuilderInterface*, QHash<ClientPlugin *, TeambuilderPlugin*> > teambuilderPlugins;

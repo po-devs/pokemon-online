@@ -48,3 +48,8 @@ int BattleServerPluginManager::version() const
 {
     return 0;
 }
+
+QString BattleServerPluginManager::directory() const
+{
+    return "battleserver/";
+}

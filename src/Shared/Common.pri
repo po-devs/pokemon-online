@@ -23,10 +23,13 @@ bin = $$PWD/../../bin
 
 DESTDIR=$$bin
 contains(EXTRAS, clientplugin) {
-    DESTDIR=$$bin/myplugins
+    DESTDIR=$$bin/clientplugins
 }
 contains(EXTRAS, serverplugin) {
     DESTDIR=$$bin/serverplugins
+}
+contains(EXTRAS, battleserverplugin) {
+    DESTDIR=$$bin/battleserverplugins
 }
 
 #adds debug suffix to libraries when compiled

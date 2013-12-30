@@ -29,6 +29,7 @@ protected:
     virtual const char* instantiatingFunctionName() const {return "createBattleServerPlugin";}
     /* The version the plugins need to have */
     virtual int version() const;
+    virtual QString directory() const;
 private:
     QSettings m_settings;
 };

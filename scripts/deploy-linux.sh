@@ -54,13 +54,16 @@ cp bin/version.ini $DEST
 
 echo "Run install.sh to install the dependencies, then run the start-client script or directly the Pokemon-Online binary" > $DEST/README.txt
 
-mkdir $DEST/myplugins
+mkdir $DEST/clientplugins
 mkdir $DEST/serverplugins
-cp bin/myplugins/*.so.1.0.0 $DEST/myplugins
+mkdir $DEST/battleserverplugins
+cp bin/clientplugins/*.so.1.0.0 $DEST/clientplugins
 cp bin/serverplugins/*.so.1.0.0 $DEST/serverplugins
+cp bin/battleserverplugins/*.so.1.0.0 $DEST/battleserverplugins
 
-rm $DEST/myplugins/*_debug*
+rm $DEST/clientplugins/*_debug*
 rm $DEST/serverplugins/*_debug*
+rm $DEST/battleserverplugins/*_debug*
 
 #Use zips instead of folders for sprites
 cd $DEST/db/pokes
