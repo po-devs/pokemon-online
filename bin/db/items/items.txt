@@ -337,7 +337,7 @@
 336 Ability Capsule
 337 Jaw Fossil
 338 Sail Fossil
-339 Luminose Galette
+339 Lumiose Galette
 340 Sachet
 341 Whipped Dream
 1000 Pink Bow
