@@ -62,3 +62,13 @@
 61 Baccacrela
 62 Baccajaba
 63 Baccaroam
+1000 Baccantiparalisi
+1001 Bacca Menta
+1002 Baccantiveleno
+1003 Bacca Bruciata
+1004 Bacca Ghiaccio
+1005 Bacca Misteriosa
+1006 Bacca
+1007 Bacca Amara
+1008 Bacca Miracolosa
+1009 Bacca Oro
