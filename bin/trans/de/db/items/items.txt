@@ -334,6 +334,12 @@
 333 Schwächenschutz
 334 Schneeball
 335 Leuchtmoos
+336 Fähigk.-Kapsel
+337 Kieferfossil
+338 Flossenfossil
+339 Illumina-Galette
+340 Duftbeutel
+341 Sahnehäubchen
 1000 Rosa Band
 1001 Punkt-Band
 2001 Bisaflornit
