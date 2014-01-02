@@ -606,3 +606,5 @@
 605 Klebenetz
 606 Invertigo
 607 Giftfalle
+608 Goldene Zeiten
+609 Ehrentag
