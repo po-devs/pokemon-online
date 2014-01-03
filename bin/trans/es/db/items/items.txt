@@ -328,6 +328,18 @@
 327 Ocaso Ball
 328 Gloria Ball
 329 Parque Ball
+330 Tabla duende
+331 Chaleco asalto
+332 Gafa protectora
+333 Seguro debilidad
+334 Bola de nieve
+335 Musgo brillante
+336 Cápsula habilidad
+337 Fósil mandíbula
+338 Fósil aleta
+339 Crêpe Luminalia
+340 Saquito fragante
+341 Dulce de nata
 1000 Lazo Rosa
 1001 Cinta Lunares
 2001 Venusaurita
