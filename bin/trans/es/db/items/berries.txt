@@ -62,6 +62,9 @@
 61 Baya Chiri
 62 Baya Jaboca
 63 Baya Magua
+64 Baya Hibis
+65 Baya Biglia
+66 Baya Maranga
 1000 Antiparabaya
 1001 Baya Menta
 1002 Bayantídoto
