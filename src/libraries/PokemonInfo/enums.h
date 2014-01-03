@@ -928,8 +928,8 @@ namespace Move
         PulsingFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
         MischievousFlag = 8192, // Can this move bypass substitute?
-        BiteFlag = 8192*2,//Strong jaw moves
-        PowderFlag = 16384*2, //Powder moves
+        BiteFlag = 16384,//Strong jaw moves
+        PowderFlag = 32768, //Powder moves
         BallFlag = 65536
     };
 
