@@ -62,6 +62,9 @@
 61 Eipfelbeere
 62 Jabocabeere
 63 Roselbeere
+64 Hibisbeere
+65 Akibeere
+66 Tarabeere
 1000 Antiparbeere
 1001 Minzbeere
 1002 Gegengiftbeere
