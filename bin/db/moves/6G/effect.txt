@@ -242,7 +242,7 @@
 260 If opponent's Special Attack can be increased, increases opponent's Special Attack by 1 stage. If opponent is not confused, confuses opponent.
 261 Burns opponent.
 262 User faints as part of this attack's use. Decreases opponent's Attack and Special Attack by 2 stages. Fails if there is no target (doesn't cause fainting).
-263 Power is doubled if user is Poisoned, Burned, or Paralyzed.
+263 Power is doubled if user is Poisoned, Burned, or Paralyzed. Ignores the Attack loss from being Burned.
 264 Fails if user lost HP due to a damaging attack by a non-user this round. Priority level -3.
 265 If this attack is successful and opponent is Paralyzed, power is doubled and opponent is cured of Paralysis.
 266 Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3.
