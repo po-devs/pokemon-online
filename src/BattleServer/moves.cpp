@@ -2057,7 +2057,7 @@ struct MMFollowMe : public MM
             return;
         }
 
-        if (tmove(b,s).flags && Move::PowderFlag) {
+        if (tmove(b,s).flags & Move::PowderFlag) {
             if (b.hasType(s, Type::Grass) || b.hasWorkingAbility(s, Ability::Overcoat) || b.hasWorkingItem(s, Item::SafetyGoggles)) {
                 return; //Rage powder doesn't affect them
             }
