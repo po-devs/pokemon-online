@@ -62,3 +62,14 @@
 61 Baie Chérim
 62 Baie Jaboca
 63 Baie Pommo
+64 Baie Selro
+1000 Baie Antipar
+1001 Baie Menthe
+1002 Baie Antidot
+1003 Baie Brûlure
+1004 Baie Gel
+1005 Baie Mystère
+1006 Baie
+1007 Baie Amère
+1008 Baie Miracle
+1009 Baie Dorée
