@@ -258,6 +258,8 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
         if(triggerStartUp) {
             serverStartUp();
         }
+
+        mySessionDataFactory->refill(SessionDataFactory::ConstructGlobal);
     }
 }
 

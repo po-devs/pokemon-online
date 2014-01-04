@@ -3,7 +3,7 @@
 SessionDataFactory::SessionDataFactory(ScriptEngine *engine) :
         engine(engine), scriptEngine(engine->getEngine()),
         userFactoryEnabled(false), channelFactoryEnabled(false),
-        globalFactoryEnabled(false)
+        globalFactoryEnabled(false), globalFactoryConstructed(false)
 {
 }
 
@@ -85,6 +85,7 @@ void SessionDataFactory::disableAll()
 void SessionDataFactory::clearAll()
 {
     disableAll();
+    globalFactoryConstructed = false;
     userFactoryFunction = QScriptValue();
     channelFactoryFunction = QScriptValue();
     globalFactoryFunction = QScriptValue();
@@ -107,8 +108,6 @@ void SessionDataFactory::registerGlobalFactory(QScriptValue factoryFunction)
     if (factoryFunction.isFunction()) {
         globalFactoryFunction = factoryFunction;
         globalFactoryEnabled = true;
-        globalFactoryStorage = globalFactoryFunction.construct(QScriptValueList() << currentScriptId);
-        checkError();
     }
 }
 
@@ -143,6 +142,15 @@ void SessionDataFactory::refill(RefillType type)
             }
         }
     }
+
+    if (type == RefillAll || type == ConstructGlobal) {
+        if (globalFactoryEnabled && !globalFactoryConstructed) {
+            globalFactoryStorage = globalFactoryFunction.construct(QScriptValueList() << currentScriptId);
+            checkError();
+
+            globalFactoryConstructed = true;
+        }
+    }
 }
 
 bool SessionDataFactory::hasUser(int id)
@@ -161,9 +169,10 @@ QString SessionDataFactory::dump()
     dump << QString("SESSION dump @ %1").arg(QString::number(engine->time()));
     dump << QString("Script: %1").arg(currentScriptId);
     dump << QString("%1 users, %2 channels.").arg(QString::number(userFactoryStorage.count()), QString::number(channelFactoryStorage.count()));
-    dump << QString("User: %1; Channel: %2, Global: %3").arg(userFactoryEnabled ? "enabled" : "disabled",
-                                                             channelFactoryEnabled ? "enabled" : "disabled",
-                                                             globalFactoryEnabled ? "enabled" : "disabled");
+    dump << QString("User: %1; Channel: %2; Global: %3, %4").arg(userFactoryEnabled ? "enabled" : "disabled",
+                                                                 channelFactoryEnabled ? "enabled" : "disabled",
+                                                                 globalFactoryEnabled ? "enabled" : "disabled",
+                                                                 globalFactoryConstructed ? "constructed" : "not constructed");
     return dump.join("\n");
 }
 

@@ -41,7 +41,7 @@ tests.session = {
             reloadScripts();
             // Using the same script id shouldn't reset objects
             print("TestSession: State #2");
-            if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === true) {
+            if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === true && typeof SESSION.global().uptime === 'number') {
                 tests.session.state[3](src, chan);
             } else {
                 fail(2);
@@ -51,7 +51,7 @@ tests.session = {
             reloadScripts();
             // Objects should be reset if the script id is changed
             print("TestSession: State #3");
-            if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === false && SESSION.global().messageSent === false) {
+            if (SESSION.hasUser(src) && SESSION.hasChannel(chan) && SESSION.users(src).messageSent === false && SESSION.global().messageSent === false && typeof SESSION.global().uptime === 'undefined') {
                 success();
             } else {
                 fail(3);
@@ -61,6 +61,9 @@ tests.session = {
 };
 
 ({
+serverStartUp: function () {
+    SESSION.global().uptime = +sys.time();
+},
 afterChatMessage: function (src, message, chan) {
     if (message.substr(0, 6) === "Test: ") {
         tests[message.substr(6)].run(src, chan);
