@@ -19,7 +19,8 @@ public:
     enum RefillType {
         RefillAll,
         RefillUsers,
-        RefillChannels
+        RefillChannels,
+        ConstructGlobal
     };
 
     Q_INVOKABLE void registerUserFactory(QScriptValue factoryFunction);
@@ -44,6 +45,7 @@ private:
     bool userFactoryEnabled;
     bool channelFactoryEnabled;
     bool globalFactoryEnabled;
+    bool globalFactoryConstructed;
     QString currentScriptId;
     QScriptValue globalFactoryFunction;
     QScriptValue globalFactoryStorage;
