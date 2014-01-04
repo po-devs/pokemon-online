@@ -5391,8 +5391,8 @@ struct MMNaturalGift :  public MM
         }
 
         b.eatBerry(s);
-
-        tmove(b, s).power = tmove(b, s).power * ItemInfo::BerryPower(berry);
+        //Natural gift gets a 20 BP boost in Gen 6
+        tmove(b, s).power = tmove(b, s).power * (ItemInfo::BerryPower(berry) + (b.gen() >= 6 ? 20 : 0));
         tmove(b,s).type = ItemInfo::BerryType(berry);
         turn(b,s)["NaturalGiftOk"] = true;
     }
