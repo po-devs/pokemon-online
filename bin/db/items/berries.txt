@@ -63,7 +63,7 @@
 62 Jaboca Berry
 63 Rowap Berry
 64 Roseli Berry
-65 Kee Berry	
+65 Kee Berry
 66 Maranga Berry
 1000 PRZCureBerry
 1001 Mint Berry
