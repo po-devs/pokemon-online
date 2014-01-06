@@ -177,7 +177,7 @@
 176 Changes all Normal-type moves used by a Pokémon with this Ability to Ice-type, and boosts their power by 30%.
 177 Changes Aegislash into Blade Forme when it uses any offensive move. Changes Aegislash into Shield Forme when it uses King's Shield.
 178 Boosts the power of Bite, Crunch, Fire Fang, Hyper Fang, Ice Fang, Poison Fang and Thunder Fang used by a Pokemon with this ability by 50%.
-179 Prevents the partners of a Pokemon with this ability from falling asleep.
+179 Prevents any Pokemon on the side of a Pokemon with this ability from falling asleep.
 180 Boosts the power of contact moves used by a Pokemon with this ability by 30%.
 181 Boosts the Special Attack of a Pokemon with this ability by 1 stage every time the enemy lowers any of its stats.
 182 Increases priority of all Flying-type moves used by a Pokemon with this ability by 1.
