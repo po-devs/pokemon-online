@@ -1,6 +1,8 @@
+//First because QHash problem
+#include <PokemonInfo/pokemoninfo.h>
+
 #include <QtCore>
 #include <ctime>
-#include <PokemonInfo/pokemoninfo.h>
 #include <Utilities/coreclasses.h>
 
 /*
