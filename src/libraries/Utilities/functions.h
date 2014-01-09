@@ -116,12 +116,18 @@ inline int intpow2(unsigned x) {
     return i;
 }
 
-
 inline QByteArray getFileContent(const QString &path) {
     QFile f(path);
     f.open(QIODevice::ReadOnly);
 
     return f.readAll();
+}
+
+inline void writeFileContent(const QString &path, const QByteArray &content) {
+    QFile f(path);
+    f.open(QIODevice::WriteOnly);
+
+    f.write(content);
 }
 
 void cropImage(QImage &img);

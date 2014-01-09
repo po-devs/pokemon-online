@@ -4,6 +4,7 @@
 #include <QDialog>
 
 #include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
 
 class QAbstractItemModel;
 class MainEngineInterface;
@@ -25,6 +26,9 @@ public:
 public slots:
     void setPokemon(Pokemon::uniqueId id);
     void addMove();
+protected:
+    void saveChanges();
+    void updateFiles(Pokemon::uniqueId num, QHash<int, QSet<int> > moves, Pokemon::gen gen = Pokemon::gen());
 private slots:
     void on_pokemonFrame_clicked();
     void moveEntered(const QModelIndex&);
