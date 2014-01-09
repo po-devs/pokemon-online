@@ -76,7 +76,7 @@ namespace {
         qSort(sorted);
 
         QString ret;
-        foreach(int num, numbers) {
+        foreach(int num, sorted) {
             if (first) {
                 first = false;
             } else {
