@@ -143,7 +143,7 @@ void Server::start(){
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
 
-    setDefaultValue("SQL/Driver", SQLCreator::NoSql);
+    setDefaultValue("SQL/Driver", SQLCreator::SQLite);
     setDefaultValue("SQL/Database", "pokemon");
     setDefaultValue("SQL/Port", 5432);
     setDefaultValue("SQL/User", "postgres");
