@@ -60,6 +60,7 @@ public:
     static QScriptValue tint(QScriptContext *c, QScriptEngine *);
 public:
     ScriptEngine(Server *s);
+    void init();
     ~ScriptEngine();
 
     /* Events */
@@ -621,7 +622,7 @@ private:
 template<typename ...Params>
 void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 {
-    if (!this || !myscript.property(event, QScriptValue::ResolveLocal).isValid())
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return;
 
     QScriptValueList l;
@@ -640,9 +641,7 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 template<typename ...Params>
 bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
 {
-    /* !this happens on first run of the server for example when channels are created outside events,
-     * when script is first evaluated */
-    if (!this || !myscript.property(event, QScriptValue::ResolveLocal).isValid())
+    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return true;
 
     startStopEvent();

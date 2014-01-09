@@ -266,6 +266,7 @@ void Server::start(){
     t2->start(24*3600*1000);
 
     myengine = new ScriptEngine(this);
+    myengine->init();
     myengine->serverStartUp();
 
     connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));

@@ -194,15 +194,18 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     sys.setProperty( "backtrace" , myengine.newFunction(backtrace));
 
-    QFile f("scripts.js");
-    f.open(QIODevice::ReadOnly);
-
-    changeScript(QString::fromUtf8(f.readAll()));
-
     QTimer *step_timer = new QTimer(this);
     step_timer->setSingleShot(false);
     step_timer->start(1000);
     connect(step_timer, SIGNAL(timeout()), SLOT(timer_step()));
+}
+
+void ScriptEngine::init()
+{
+    QFile f("scripts.js");
+    f.open(QIODevice::ReadOnly);
+
+    changeScript(QString::fromUtf8(f.readAll()));
 }
 
 ScriptEngine::~ScriptEngine()
@@ -513,9 +516,6 @@ bool ScriptEngine::beforeChannelCreated(int channelid, const QString &channelnam
 
 void ScriptEngine::afterChannelCreated(int channelid, const QString &channelname, int playerid)
 {
-    if (!this) {
-        return;
-    }
     mySessionDataFactory->handleChannelCreate(channelid);
     makeEvent("afterChannelCreated", channelid, channelname, playerid);
 }
