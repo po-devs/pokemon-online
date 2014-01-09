@@ -26,6 +26,7 @@ public:
 public slots:
     void setPokemon(Pokemon::uniqueId id);
     void addMove();
+    void accept();
 protected:
     void saveChanges();
     void updateFiles(Pokemon::uniqueId num, QHash<int, QSet<int> > moves, Pokemon::gen gen = Pokemon::gen());

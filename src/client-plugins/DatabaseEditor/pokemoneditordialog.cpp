@@ -167,6 +167,13 @@ void PokemonEditorDialog::addMove()
     }
 }
 
+void PokemonEditorDialog::accept()
+{
+    saveChanges();
+
+    QDialog::accept();
+}
+
 void PokemonEditorDialog::saveChanges()
 {
     /* So we have some moves deleted and some added. */
@@ -197,6 +204,8 @@ void PokemonEditorDialog::saveChanges()
 
     /* We now have all the relevant move lists in finalMoves. Now to update the files */
     updateFiles(current, finalMoves);
+
+    /* Rest is not done, but could easily be finished by runnning move machine once and saving */
 }
 
 void PokemonEditorDialog::updateFiles(Pokemon::uniqueId num, QHash<int, QSet<int> > moves, Pokemon::gen g)
