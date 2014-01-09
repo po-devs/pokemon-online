@@ -15,5 +15,5 @@
 14 Gelo
 15 Dragão
 16 Noturno
-17 Fairy
+17 Fada
 18 ???
