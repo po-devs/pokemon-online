@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += BattleLogs \
            UsageStatistics \
-           WebServerPlugin
+           WebServerPlugin \
+           ../StatsExtracter

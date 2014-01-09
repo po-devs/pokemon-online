@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 TARGET = StatsExtracter
-DESTDIR = $$PWD/../../bin
 
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -13,8 +12,6 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp
-HEADERS = ../PokemonInfo/pokemoninfo.h \
-          ../Utilities/coreclasses.h
 
 include(../Shared/Common.pri)
 

@@ -1,7 +1,7 @@
-#include "../PokemonInfo/pokemoninfo.h"
 #include <QtCore>
 #include <ctime>
-#include "../Utilities/coreclasses.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/coreclasses.h>
 
 /*
  * First we move to a tier.
