@@ -621,7 +621,7 @@ private:
 template<typename ...Params>
 void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 {
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+    if (!this || !myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return;
 
     QScriptValueList l;
@@ -640,7 +640,9 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 template<typename ...Params>
 bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
 {
-    if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
+    /* !this happens on first run of the server for example when channels are created outside events,
+     * when script is first evaluated */
+    if (!this || !myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return true;
 
     startStopEvent();

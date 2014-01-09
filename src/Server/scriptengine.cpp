@@ -513,6 +513,9 @@ bool ScriptEngine::beforeChannelCreated(int channelid, const QString &channelnam
 
 void ScriptEngine::afterChannelCreated(int channelid, const QString &channelname, int playerid)
 {
+    if (!this) {
+        return;
+    }
     mySessionDataFactory->handleChannelCreate(channelid);
     makeEvent("afterChannelCreated", channelid, channelname, playerid);
 }
