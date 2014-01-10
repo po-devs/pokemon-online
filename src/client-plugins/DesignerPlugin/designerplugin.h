@@ -2,9 +2,6 @@
 #define DESIGNERPLUGIN_H
 
 #include "DesignerPlugin_global.h"
-#include "../Teambuilder/engineinterface.h"
-#include <PokemonInfo/teamholderinterface.h>
-#include <PokemonInfo/networkstructs.h>
 #include "../Teambuilder/plugininterface.h"
 
 extern "C" {
@@ -12,6 +9,7 @@ DESIGNERPLUGINSHARED_EXPORT ClientPlugin *createClientPlugin(MainEngineInterface
 }
 
 class DESIGNERPLUGINSHARED_EXPORT DesignerPlugin : public ClientPlugin {
+    friend class DesignerWidget;
 public:
     DesignerPlugin(MainEngineInterface *client);
 
@@ -24,9 +22,11 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
-    MainEngineInterface *client;
 
     client_plugin_version()
+
+private:
+    MainEngineInterface *client;
 };
 
 #endif // DESIGNERPLUGIN_H

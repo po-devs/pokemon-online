@@ -4,7 +4,7 @@
 #include <Utilities/qscrolldowntextbrowser.h>
 #include <Utilities/antidos.h>
 #include <Utilities/antidoswindow.h>
-#include <Utilities/pluginmanagerwidget.h>
+#include <Utilities/pluginmanagerdialog.h>
 
 #include "sqlconfig.h"
 #include "serverwidget.h"
@@ -168,12 +168,12 @@ void ServerWidget::openPlayers()
 
 void ServerWidget::openPluginManager()
 {
-    PluginManagerWidget *w = new PluginManagerWidget(*server->pluginManager);
-
+    PluginManagerDialog *w = new PluginManagerDialog(this);
+    w->setWindowFlags(Qt::Window);
+    w->setPluginManager(server->pluginManager);
     w->show();
 
-    connect(w, SIGNAL(pluginListChanged()), this, SIGNAL(menuBarChanged()));
-    connect(w, SIGNAL(error(QString)), server, SLOT(forcePrint(QString)));
+    connect(w, SIGNAL(accepted()), this, SIGNAL(menuBarChanged()));
 }
 
 void ServerWidget::openAntiDos()

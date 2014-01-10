@@ -21,11 +21,11 @@ SOURCES += otherwidgets.cpp \
     qverticalscrollarea.cpp \
     qscrolldowntextbrowser.cpp \
     pluginmanager.cpp \
-    pluginmanagerwidget.cpp \
     antidos.cpp \
     antidoswindow.cpp \
     baseanalyzer.cpp \
-    keypresseater.cpp
+    keypresseater.cpp \
+    pluginmanagerdialog.cpp
 HEADERS += otherwidgets.h \
     mtrand.h \
     functions.h \
@@ -44,7 +44,6 @@ HEADERS += otherwidgets.h \
     qscrolldowntextbrowser.h \
     pluginmanager.h \
     plugininterface.h \
-    pluginmanagerwidget.h \
     antidos.h \
     antidoswindow.h \
     asiosocket.h \
@@ -52,7 +51,8 @@ HEADERS += otherwidgets.h \
     rankingtree.h \
     baseanalyzer.h \
     keypresseater.h \
-    exesuffix.h
+    exesuffix.h \
+    pluginmanagerdialog.h
 
 windows: {
 HEADERS += coro/taskimpl.h \
@@ -97,3 +97,6 @@ include(../../Shared/Common.pri)
 
 windows: { LIBS += -L$$bin -lzip-2 }
 !windows: { LIBS += -lzip }
+
+FORMS += \
+    pluginmanagerdialog.ui

@@ -11,7 +11,7 @@
 #include <QtCore/QVariant>
 
 #include <Utilities/functions.h>
-#include <Utilities/pluginmanagerwidget.h>
+#include <Utilities/pluginmanagerdialog.h>
 #include <PokemonInfo/teamholder.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include <PokemonInfo/movesetchecker.h>
@@ -262,11 +262,12 @@ QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
 
 void MainEngine::openPluginManager()
 {
-    PluginManagerWidget *w = new PluginManagerWidget(*pluginManager);
+    PluginManagerDialog *d = new PluginManagerDialog(displayer->centralWidget());
+    d->setWindowFlags(Qt::Window);
+    d->setPluginManager(pluginManager);
+    d->show();
 
-    w->show();
-
-    connect(w, SIGNAL(pluginListChanged()), SLOT(updateMenuBar()));
+    connect(d, SIGNAL(accepted()), SLOT(updateMenuBar()));
 }
 
 void MainEngine::openPluginConfiguration()

@@ -1,7 +1,10 @@
 ﻿#include <QSettings>
 
 #include <Utilities/functions.h>
+#include <PokemonInfo/teamholderinterface.h>
+#include <PokemonInfo/networkstructs.h>
 #include <TeambuilderLibrary/poketextedit.h>
+#include <Teambuilder/engineinterface.h>
 
 #include "designerplugin.h"
 #include "designerwidget.h"
