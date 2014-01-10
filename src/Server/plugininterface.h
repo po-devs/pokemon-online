@@ -12,6 +12,7 @@ class ServerInterface;
 /* See ../Utilities/plugininterface.h for the class def */
 class ServerPlugin : public Plugin
 {
+#define server_plugin_version() int version() const { return 1;}
 };
 
 /* Each plugin will have to have a function like that named

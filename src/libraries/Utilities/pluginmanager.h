@@ -50,7 +50,7 @@ protected:
     /* What is the name of the function in the library to create the plugin? */
     virtual const char* instantiatingFunctionName() const {return "createPlugin";}
     /* The version the plugins need to have */
-    virtual int version() const;
+    virtual int version() const = 0;
     /* The directory in which plugins are located by default */
     virtual QString directory() const = 0;
 private:

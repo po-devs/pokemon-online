@@ -64,6 +64,8 @@ public:
     bool hasConfigurationWidget() const;
     QWidget * getConfigurationWidget();
 
+    battleserver_plugin_version()
+
     QSet<QString> tiers;
     bool saveMixedTiers;
     bool saveRawFiles;

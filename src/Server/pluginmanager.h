@@ -12,6 +12,7 @@ class ServerPluginManager : public PluginManager
 public:
     ServerPluginManager(Server *s);
 
+    server_plugin_version()
 protected:
     QSettings &settings();
     ServerPlugin* instanciatePlugin(void *function);

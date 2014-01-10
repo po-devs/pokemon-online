@@ -24,6 +24,8 @@ public:
     QWidget * getConfigurationWidget();
 
     bool hasConfigurationWidget() const;
+
+    client_plugin_version()
 private:
     ThemeAccessor *theme;
 };

@@ -28,7 +28,7 @@ protected:
     /* What is the name of the function in the library to create the plugin? */
     virtual const char* instantiatingFunctionName() const {return "createBattleServerPlugin";}
     /* The version the plugins need to have */
-    virtual int version() const;
+    battleserver_plugin_version()
     virtual QString directory() const;
 private:
     QSettings m_settings;

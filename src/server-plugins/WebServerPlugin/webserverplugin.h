@@ -30,6 +30,7 @@ public:
 
     QWidget *getConfigurationWidget();
 
+    server_plugin_version()
 public slots:
     void onChatMessage(const QString& message);
     void onServerMessage(const QString& message);

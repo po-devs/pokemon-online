@@ -56,6 +56,8 @@ public:
     virtual TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface*) {
         return NULL;
     }
+
+    #define client_plugin_version() int version() const { return 1;}
 };
 
 /* Each plugin will have to have a function like that named

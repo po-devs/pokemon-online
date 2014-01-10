@@ -34,6 +34,8 @@ public:
 
     void launchTeambuilder(TeambuilderInterface *c);
     void quitTeambuilder(TeambuilderInterface *c);
+
+    client_plugin_version()
 protected:
     /* What settings file to use? */
     virtual QSettings& settings();

@@ -23,6 +23,8 @@ public:
     bool hasConfigurationWidget() const;
 
     TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface *);
+
+    client_plugin_version()
 private:
     MainEngineInterface *_interface;
 };

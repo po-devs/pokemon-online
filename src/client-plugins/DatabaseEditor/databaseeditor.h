@@ -25,6 +25,8 @@ public:
        Return NULL if you don't want one (default behavior) */
     QWidget * getConfigurationWidget();
 
+    client_plugin_version()
+
 private:
     MainEngineInterface *client;
 };

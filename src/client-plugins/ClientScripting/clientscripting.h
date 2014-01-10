@@ -26,6 +26,8 @@ public:
     bool hasConfigurationWidget() const;
 
     OnlineClientPlugin *getOnlinePlugin(ClientInterface *);
+
+    client_plugin_version()
 private:
     QPointer<ScriptEngine> engine;
 };

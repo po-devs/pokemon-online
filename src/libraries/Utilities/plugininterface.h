@@ -20,8 +20,6 @@ public:
 
     virtual ~Plugin(){}
 
-    static const int pluginVersion = 0;
-
     /* The name of the option the plugin would take in the menu bar.
        Also appears as the name of the plugin */
     virtual QString pluginName() const = 0;
@@ -42,9 +40,7 @@ public:
     }
 
     /* The version for that particular plugin class */
-    virtual int version() const {
-        return pluginVersion;
-    }
+    virtual int version() const = 0;
 };
 
 /* Each plugin will have to have a function like that named

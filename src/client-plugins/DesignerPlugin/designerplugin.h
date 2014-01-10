@@ -25,6 +25,8 @@ public:
 
     bool hasConfigurationWidget() const;
     MainEngineInterface *client;
+
+    client_plugin_version()
 };
 
 #endif // DESIGNERPLUGIN_H

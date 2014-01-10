@@ -100,11 +100,6 @@ Plugin* PluginManager::instanciatePlugin(void *function)
     return ((PluginInstanceFunction)function)();
 }
 
-int PluginManager::version() const
-{
-    return Plugin::pluginVersion;
-}
-
 void PluginManager::freePlugin(int index)
 {
     if (index < plugins.size() && index >= 0) {

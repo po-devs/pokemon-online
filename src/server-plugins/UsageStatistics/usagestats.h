@@ -49,6 +49,8 @@ public:
 #endif
     }
 
+    battleserver_plugin_version()
+
 /* Private */
     QHash<QString, TierRank*> tierRanks;
 

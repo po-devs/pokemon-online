@@ -14,15 +14,11 @@ class BattleInterface;
 class BattleServerPlugin : public Plugin
 {
 public:
-    static const int battleServerPluginVersion = 0;
-
     virtual BattlePlugin * getBattlePlugin (BattleInterface *) {
         return NULL;
     }
 
-    virtual int version() const {
-        return battleServerPluginVersion;
-    }
+    #define battleserver_plugin_version() int version() const { return 1;}
 };
 
 class BattlePlugin
