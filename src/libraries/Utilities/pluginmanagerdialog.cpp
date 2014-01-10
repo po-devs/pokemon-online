@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <QMessageBox>
 
 #include "pluginmanagerdialog.h"
