@@ -11,6 +11,10 @@ ServerPlugin * createServerPlugin(ServerInterface* server) {
 
 WebServerPlugin::WebServerPlugin(ServerInterface* server) : server(server)
 {
+}
+
+void WebServerPlugin::init()
+{
     jserial.setIndentMode(QJson::IndentCompact);
 
     QSettings settings("config", QSettings::IniFormat);

@@ -22,6 +22,7 @@ class WEBSERVERPLUGINSHARED_EXPORT WebServerPlugin
     friend class WebServerConfig;
 public:
     WebServerPlugin(ServerInterface *server);
+    void init();
     ~WebServerPlugin();
 
     QString pluginName() const;

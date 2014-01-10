@@ -36,7 +36,7 @@ PluginManager::~PluginManager()
     filenames.clear();
 }
 
-void PluginManager::addPlugin(const QString &path)
+void PluginManager::addPlugin(const QString &path, QString *name)
 {
     cross::DynamicLibrary *l;
     try {
@@ -71,6 +71,15 @@ void PluginManager::addPlugin(const QString &path)
         throw std::runtime_error(QString("Error when loading plugin " + path +  ": different version than this program.").toStdString());
     }
 
+    if (name) {
+        *name = s->pluginName();
+
+        delete l;
+        libraries.pop_back();
+
+        return;
+    }
+
     if (getPlugins().indexOf(s->pluginName()) != -1) {
         delete l;
         libraries.pop_back();
@@ -82,6 +91,8 @@ void PluginManager::addPlugin(const QString &path)
     filenames.push_back(path);
 
     updateSavedList();
+
+    s->init();
 }
 
 Plugin* PluginManager::instanciatePlugin(void *function)
@@ -167,10 +178,22 @@ QMap<QString,QString> PluginManager::availablePlugins() const
 
     QMap<QString,QString> ret;
 
-    (void) files;
-    /* Todo: test all files to make sure they're valid plugin, and add their name/file path entries to ret */
+    foreach(QFileInfo file, files) {
+        QString name = testLoad(file.absoluteFilePath());
+
+        ret[file.absoluteFilePath()] = name;
+    }
 
     return ret;
+}
+
+QString PluginManager::testLoad(const QString &filepath) const
+{
+    QString name;
+
+    const_cast<PluginManager*>(this)->addPlugin(filepath, &name);
+
+    return name;
 }
 
 void PluginManager::updateSavedList()

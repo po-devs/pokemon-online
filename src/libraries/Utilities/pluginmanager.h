@@ -29,7 +29,7 @@ public:
     int count() const;
 
     //throws std::runtime_error on error
-    virtual void addPlugin(const QString &path);
+    virtual void addPlugin(const QString &path, QString *name = nullptr);
     virtual void freePlugin(int index);
     //returns true if plugin was found
     bool freePlugin(const QString &name);
@@ -39,6 +39,9 @@ public:
     QFileInfoList matchingFilePaths() const;
     /* Association of plugin name / plugin path for plugins of the exe */
     QMap<QString, QString> availablePlugins() const;
+
+    /* Returns plugin name if success, empty string otherwise */
+    QString testLoad(const QString &filepath) const;
 protected:
     /* What settings file to use? */
     virtual QSettings &settings() = 0;

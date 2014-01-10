@@ -13,6 +13,11 @@ class QWidget;
 class Plugin
 {
 public:
+    /* Sometimes plugins are just test loaded, in which case init() won't be called.
+     * If your plugin listens to a port, make sure to do that in the init() function
+     * and not in your constructor */
+    virtual void init() {}
+
     virtual ~Plugin(){}
 
     static const int pluginVersion = 0;
