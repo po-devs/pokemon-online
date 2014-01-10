@@ -204,7 +204,7 @@ QString PluginManager::testLoad(const QString &filepath) const
 
 void PluginManager::updateSavedList()
 {
-    settings().setValue("plugins", filenames);
+    settings().setValue("plugins" SUFFIX, filenames);
 }
 
 QStringList PluginManager::getPlugins() const
