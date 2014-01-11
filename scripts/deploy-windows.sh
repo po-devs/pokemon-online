@@ -38,7 +38,6 @@ cp bin/qml $DEST -R
 cp bin/usage_stats $DEST -R
 cp bin/Themes $DEST -R
 cp bin/languages.txt $DEST
-cp bin/Pokemon-Online.exe $DEST
 cp bin/*.exe $DEST
 cp bin/*.dll $DEST
 rm $DEST/*_debug.exe

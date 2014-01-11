@@ -105,7 +105,8 @@ HEADERS += mainwindow.h \
     downloadmanager.h \
     teambuilderinterface.h \
     Teambuilder/pokedex.h \
-    Teambuilder/pokedexpokeselection.h
+    Teambuilder/pokedexpokeselection.h \
+    ../Shared/config.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5

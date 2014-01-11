@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Database Editor</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1,0,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -161,6 +161,16 @@
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Run MoveMachine and do Ctrl+S after having done  all your changes, to propagate them through the various files correctly.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>

@@ -42,7 +42,7 @@ namespace {
     };
 
     int learningToId(const QString &method) {
-        for (int i = 0; i < sizeof(learningMethods)/sizeof(QString); i++) {
+        for (unsigned i = 0; i < sizeof(learningMethods)/sizeof(QString); i++) {
             if (learningMethods[i] == method) {
                 return i;
             }

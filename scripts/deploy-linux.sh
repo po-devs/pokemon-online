@@ -44,6 +44,7 @@ cp bin/Server $DEST
 cp bin/BattleServer $DEST
 cp bin/StatsExtracter $DEST
 cp bin/RelayStation $DEST
+cp bin/MoveMachine $DEST
 cp bin/libqtwebsocket.so.1.0.0 $DEST/libqtwebsocket.so.1
 cp bin/libqjson.so.1.0.0 $DEST/libqtjson.so.1
 cp bin/libpo-utilities.so.1.0.0 $DEST/libpo-utilities.so.1
