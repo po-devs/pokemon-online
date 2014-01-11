@@ -131,7 +131,7 @@
 109 1000#Old Gateau
 110 1000-1#Parlyz Heal
 113 1001-20#Potion
-119 1000-7_1Red Flute
+119 1000-7_1#Red Flute
 122 1007|1006#Revival Herb
 123 1007-50#Revive
 124 1999#Sacred Ash
@@ -170,4 +170,3 @@
 327 3016#Dusk Ball
 328 3017#Cherish Ball
 329 3000#Park Ball
-#
