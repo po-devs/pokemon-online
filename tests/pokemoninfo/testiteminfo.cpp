@@ -11,5 +11,5 @@ void TestItemInfo::run()
     assert(ItemInfo::Number(usefulItems[1]) > 0);
     assert(items.contains("Salac Berry"));
     assert(usefulItems.contains("Salac Berry"));
-    assert(ItemInfo::Power(Item::AssaultVest)== 10);
+    assert(ItemInfo::Power(Item::AssaultVest)== 80);
 }
