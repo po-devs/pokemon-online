@@ -625,7 +625,8 @@ struct MMDetect : public MM
         }
 
         if (poke(b,s).contains("ProtectiveMoveTurn") && poke(b,s)["ProtectiveMoveTurn"].toInt() == b.turn() - 1) {
-            if (!testSuccess(poke(b,s)["ProtectiveMoveCount"].toInt(), b)) {
+            //Wide guard and Quick guard are not affected by ProtectMoveCount in gen 6
+            if (!testSuccess(poke(b,s)["ProtectiveMoveCount"].toInt(), b) && !((b.gen() >= 6 && (move(b,s) == Move::QuickGuard || move(b,s) == Move::WideGuard)))) {
                 fturn(b,s).add(TM::Failed);
             } else {
                 poke(b,s)["ProtectiveMoveTurn"] = b.turn();
