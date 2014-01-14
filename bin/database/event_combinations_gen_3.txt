@@ -1,0 +1,42 @@
+Exeggcute: Sweet Scent + Wish
+Lickitung: Heal Bell + Wish
+Kangaskhan: Yawn + Wish
+Farfetch'd: Yawn + Wish
+Drowzee: Belly Drum + Wish
+Teddiursa: Metal Claw + Refresh
+Ledyba: Refresh + Psybeam
+Poochyena: Heal Bell + Poison Fang
+Gulpin: Shock Wave + Sing
+Spinarak: Refresh + Signal Beam
+Shroomish: Refresh + False Swipe
+Ralts: Shock Wave + Sing
+Vulpix: Charm + Heat Wave
+Delcatty: Shock Wave + Sweet Kiss
+Mawile: Sing + False Swipe
+Pineco: Refresh + Pin Missile
+Swinub: Charm + Ancient Power + Mud Shot
+Spearow: Baton Pass + False Swipe
+Grimer: Helping Hand + Shadow Punch
+Paras: Refresh + False Swipe
+Shellder: Refresh + Take Down
+Weepinbell: Morning Sun + Magical Leaf
+Primeape: Helping Hand + Reversal
+Sableye: Helping Hand + Recover
+Magcargo: Refresh + Heat Wave
+Pinsir: Helping Hand + False Swipe
+Magmar: Follow Me + Cross Chop
+Scyther: Morning Sun + Silver Wind + Razor Wind
+Chansey: Skill Swap + Sweet Kiss
+Chansey: Sweet Scent + Wish
+Electabuzz: Follow Me + Cross Chop
+Snorlax: Refresh + Curse + Fissure
+Salamence: Refresh + Dragon Dance
+Exeggutor: Refresh + Ancient Power
+Dragonite: Heal Bell + Dragon Dance
+Lugia: Feather Dance + Psycho Boost
+Articuno: Extrasensory + Heal Bell + Haze
+Zapdos: Extrasensory + Metal Sound + Baton Pass
+Moltres: Extrasensory + Will-o-Wisp + Morning Sun
+Chikorita: Frenzy Plant + Ancient Power
+Cyndaquil: Blast Burn + Reversal
+Totodile: Hydro Cannon + Crunch

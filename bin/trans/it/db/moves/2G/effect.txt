@@ -1,0 +1,252 @@
+0 Nessun effetto
+1 Infligge danno senza effetti aggiuntivi.
+2 Probabilità maggiore di fare Brutto Colpo.
+3 Colpisce da 2 a 5 volte in un turno.
+4 Colpisce da 2 a 5 volte in un turno.
+5 Infligge danno senza effetti aggiuntivi.
+6 Sparge soldi sul terreno, valenti 5 volte il livello dell'utilizzatore.
+7 Ha una probabilità di $effect_chance% di scottare il bersaglio.
+8 Ha una probabilità di $effect_chance% di congelare il bersaglio.
+9 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+10 Infligge danno senza effetti aggiuntivi.
+11 Infligge danno senza effetti aggiuntivi.
+12 Causa KO istantaneo.
+13 Richiede un turno per caricarsi prima di attaccare.
+14 Aumenta l'Attacco del Pokemon di 2 Livelli.
+15 Infligge danno senza effetti aggiuntivi.
+16 Infligge danno e può colpire chi sta usando Volo o Rimbalzo.
+17 Infligge danno senza effetti aggiuntivi.
+18 Termina all'istante le battaglie selvatiche.  Costringe gli allenatori a sostituire il Pokemon.
+19 Il Pokemon vola alto in aria, evitando tutti gli attacchi, e colpisce il turno successivo.
+20 Impedisce al bersaglio di scappare e infligge danno per 2-5 turni.
+21 Infligge danno senza effetti aggiuntivi.
+22 Infligge danno senza effetti aggiuntivi.
+23 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+24 Colpisce 2 volte in un turno.
+25 Infligge danno senza effetti aggiuntivi.
+26 Se il Pokemon manca, subisce come contraccolpo la metà del danno che avrebbe inflitto.
+27 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+28 Riduce la Precisione del bersaglio di un Livello.
+29 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+30 Infligge danno senza effetti aggiuntivi.
+31 Colpisce da 2 a 5 volte in un turno.
+32 Causa KO istantaneo.
+33 Infligge danno senza effetti aggiuntivi.
+34 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+35 Impedisce al bersaglio di scappare e infligge danno per 2-5 turni.
+36 Il Pokemon subisce come contraccolpo 1/4 dei danni inflitti.
+37 Colpisce ogni turno per 2-3 turni, poi confonde l'utilizzatore.
+38 Il Pokemon subisce come contraccolpo 1/3 dei danni inflitti.
+39 Riduce la Difesa del bersaglio di un Livello.
+40 Ha una probabilità di $effect_chance% di avvelenare il bersaglio.
+41 Colpisce 2 volte nello stesso turno.  Ha una probabilità di $effect_chance% di avvelenare il bersaglio.
+42 Colpisce da 2 a 5 volte in un turno.
+43 Riduce la Difesa del bersaglio di un Livello.
+44 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+45 Riduce l'Attacco del bersaglio di un Livello.
+46 Termina all'istante le battaglie selvatiche.  Costringe gli allenatori a sostituire il Pokemon.
+47 Addormenta il bersaglio.
+48 Confonde il bersaglio.
+49 Infligge 20 danni.
+50 Inibisce l'ultima mossa usata dal bersaglio per 1-8 turni.
+51 Ha una probabilità di $effect_chance% di ridurre la Difesa Speciale del bersaglio di un Livello.
+52 Ha una probabilità di $effect_chance% di scottare il bersaglio.
+53 Ha una probabilità di $effect_chance% di scottare il bersaglio.
+54 Protegge le stat dell'utilizzatore dal venir cambiate da mosse avversarie.
+55 Infligge danno senza effetti aggiuntivi.
+56 Infligge danno senza effetti aggiuntivi.
+57 Infligge danno e colpisce chi sta usando Sub.
+58 Ha una probabilità di $effect_chance% di congelare il bersaglio.
+59 Ha una probabilità di $effect_chance% di congelare il bersaglio.
+60 Ha una probabilità di $effect_chance% di confondere il bersaglio.
+61 Ha una probabilità di $effect_chance% di ridurre la Velocità del bersaglio di un Livello.
+62 Ha una probabilità di $effect_chance% di ridurre l'Attacco del bersaglio di un Livello.
+63 Il Pokemon salta il suo prossimo turnoper ricaricarsi.
+64 Infligge danno senza effetti aggiuntivi.
+65 Infligge danno senza effetti aggiuntivi.
+66 Il Pokemon subisce come contraccolpo 1/4 dei danni inflitti.
+67 Infligge più danni ai bersagli pesanti, con potenza massima di 120.
+68 Infligge 2 volte i danni ricevuti dall'utilizzatore dall'ultimamossa fisica che l'ha colpito.
+69 Infligge danno pari al livello del Pokemon.
+70 Infligge danno senza effetti aggiuntivi.
+71 Cura il Pokemon di metà dei danni inflitti.
+72 Cura il Pokemon di metà dei danni inflitti.
+73 Insemina il nemico, rubandone PS ogni turno.
+74 Aumenta l'Attacco e Attacco Speciale di un Livello.
+75 Probabilità maggiore di fare Brutto Colpo.
+76 Richiede un turno per caricarsi prima di attaccare.
+77 Avvelena il bersaglio.
+78 Paralizza il bersaglio.
+79 Addormenta il bersaglio.
+80 Colpisce ogni turno per 2-3 turni, poi confonde l'utilizzatore.
+81 Riduce la Velocità del bersaglio di un Livello.
+82 Infligge 40 danni.
+83 Impedisce al bersaglio di scappare e infligge danno per 2-5 turni.
+84 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+85 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+86 Paralizza il bersaglio.
+87 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+88 Infligge danno senza effetti aggiuntivi.
+89 Infligge danno e può colpire chi sta usando Fossa.
+90 Causa KO istantaneo.
+91 Il Pokemon scava sottoterra, evitando tutti gli attacchi, e colpisce il turno successivo.
+92 Iperavvelena il bersaglio, infliggendo più danni ogni turno.
+93 Ha una probabilità di $effect_chance% di confondere il bersaglio.
+94 Ha una probabilità di $effect_chance% di ridurre la Difesa Speciale del bersaglio di un Livello.
+95 Addormenta il bersaglio.
+96 Aumenta l'Attacco del Pokemon di un Livello.
+97 Aumenta la Velocità del Pokemon di 2 Livelli.
+98 Infligge danno senza effetti aggiuntivi.
+99 Se il Pokemon è colpito dopo aver usato questa mossa, il suo attacco sale di un Livello.
+100 Finisce istantaneamente le battaglie selvatiche. Altrimenti nessun effetto.
+101 Infligge danno pari al livello del Pokemon.
+102 Copia l'ultima mossa usata dal bersaglio.
+103 Riduce la Difesa del bersaglio di 2 Livelli.
+104 Aumenta l'Evasione del Pokemon di un Livello.
+105 Cura il Pokemon di metà dei suoi PS massimi.
+106 Aumenta la Difesa del Pokemon di un Livello.
+107 Aumenta l'Evasione del Pokemon.
+108 Riduce la Precisione del bersaglio di un Livello.
+109 Confonde il bersaglio.
+110 Aumenta la Difesa del Pokemon di un Livello.
+111 Aumenta la Difesa del Pokemon di un Livello.
+112 Aumenta la Difesa del Pokemon di 2 Livelli.
+113 Riduce per 5 turni i danni delle mosse speciali al 50%.
+114 Ripristina tutte le stat.
+115 Riduce a metà i danni di mosse fisiche.
+116 Aumenta le possibilità di fare Brutti Colpi.
+117 Il Pokemon aspetta per 2-3 turni, poi colpisce con potenza pari al doppio dei danni subiti.
+118 Sceglie e usa casualmente una qualsiasi mossa del gioco.
+119 Usa l'ultima mossa usata dal bersaglio.
+120 Infligge doppio danno.  Il Pokemon va KO.
+121 Infligge danno senza effetti aggiuntivi.
+122 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+123 Ha una probabilità di $effect_chance% di avvelenare il bersaglio.
+124 Ha una probabilità di $effect_chance% di avvelenare il bersaglio.
+125 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+126 Ha una probabilità di $effect_chance% di scottare il bersaglio.
+127 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+128 Impedisce al bersaglio di scappare e infligge danno per 2-5 turni.
+129 Non fallisce mai.
+130 Aumenta la Difesa del Pokemon di un Livello.  Il Pokemon si carica per un turno prima di attaccare.
+131 Colpisce da 2 a 5 volte in un turno.
+132 Ha una probabilità di $effect_chance% di ridurre la Velocità del bersaglio di un Livello.
+133 Aumenta la Difesa Speciale del Pokemon di 2 Livelli.
+134 Riduce la Precisione del bersaglio di un Livello.
+135 Cura il Pokemon di metà dei suoi PS massimi.
+136 Se il Pokemon manca, subisce come contraccolpo la metà del danno che avrebbe inflitto.
+137 Paralizza il bersaglio.
+138 Funzione solo sui Pokemon addormentati.  Cura il Pokemon di metà dei danni inflitti.
+139 Avvelena il bersaglio.
+140 Colpisce da 2 a 5 volte in un turno.
+141 Cura il Pokemon di metà dei danni inflitti.
+142 Addormenta il bersaglio.
+143 Il Pokemon si carica per un turno prima di attaccare.  Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+144 Il Pokemon diventa una copia del bersaglio finchè non lascia il campo.
+145 Ha una probabilità di $effect_chance% di ridurre la Velocità del bersaglio di un Livello.
+146 Ha una probabilità di $effect_chance% di confondere il bersaglio.
+147 Addormenta il bersaglio.
+148 Riduce la Precisione del bersaglio di un Livello.
+149 Infligge danno tra il 50% e il 150% del livello del Pokemon.
+150 Non fa nulla.
+151 Aumenta la Difesa del Pokemon di 2 Livelli.
+152 Probabilità maggiore di fare Brutto Colpo.
+153 Infligge doppio danno.  Il Pokemon finisce KO.
+154 Colpisce da 2 a 5 volte in un turno.
+155 Colpisce 2 volte in un turno.
+156 Il Pokemon dorme per 2 turni, curandosi completamente.
+157 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+158 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.
+159 Aumenta l'Attacco del Pokemon di un Livello.
+160 Il tipo del Pokemon cambia in quello di una delle sue mosse scelta casualmente.
+161 Ha una probabilità di $effect_chance% di bruciare, congelare o paralizzare il bersaglio.
+162 Infligge danni pari alla metà dei PS del bersaglio.
+163 Probabilità maggiore di fare Brutto Colpo.
+164 Trasferisce 1/4 dei PS massimi del Pokemon in una bambola, proteggendo il Pokemon da danni e cambi di status finchè non si rompe.
+165 Il Pokemon subisce di contraccolpo 1/4 dei danni subiti.
+166 Diventa permanentemente l'ultima mossa usata dal bersaglio.
+167 Colpisce 3 volte, aumentando la potenza del 100% con ogni colpo riuscito.
+168 Prende l'oggetto del bersaglio.
+169 Impedisce al bersaglio di scappare.
+170 Assicura che la prossima mossa del Pokemon colpirà il bersaglio.
+171 Il bersaglio perde 1/4 dei suoi PS massimi ogni turno finchè sta dormendo.
+172 Ha una probabilità di $effect_chance% di bruciare il bersaglio.  Scongela i Pokemon congelati.
+173 Ha una probabilità di $effect_chance% di far tentennare il bersaglio.  Funziona solo se il Pokemon sta dormendo.
+174 I tipi Spettro pagano metà dei PS massimi per danneggiare il bersaglio ogni turno.  Agli altri riduce la Velocità ma aumenta Attacco e Difesa.
+175 Infligge più danni quando il Pokemon ha pochi PS rimasti, con una potenza massima di 200.
+176 Cambia il tipo del Pokemon in un tipo casuale resistente o immune a quello dell'ultima mossa usata contro di esso.
+177 Ha una maggiore possibilità di fare Brutti Colpi.
+178 Riduce la Velocità del bersaglio di 2 Livelli.
+179 Infligge più danni quando il Pokemon ha meno PS rimasti, con una potenza massima di 200.
+180 Riduce i PP dell'ultima mossa usata dal bersaglio di 4.
+181 Ha una probabilità di $effect_chance% di congelare il bersaglio.
+182 Impedisce a qualsiasi mossa di colpire il Pokemon in questo turno.
+183 Infligge danni senza effetti aggiuntivi.
+184 Riduce la Velocità del bersaglio di 2 Livelli.
+185 Non può fallire.
+186 Confonde il bersaglio.
+187 Il pokemon paga metà dei suoi PS massimi per massimizzare l'attacco.
+188 Ha una probabilità di $effect_chance% di avvelenare il bersaglio.
+189 Ha una probabilità di $effect_chance% di ridurre la Precisione del bersaglio di un Livello.
+190 Ha una probabilità di $effect_chance% di ridurre la Precisione del bersaglio di un Livello.
+191 Sparge Punte, ferendo il Pokemon avversario che viene mandato in campo.
+192 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+193 Costringe il bersaglio a non avere Evasione, e permette di colpirlo con mosse Normale e Lotta anche se è un tipo Spettro.
+194 Se il Pokemon finisce KO in questo turno, il bersaglio subirà lo stesso destino.
+195 Il Pokemon e il bersaglio finiscono entrambi KO dopo 3 turni.
+196 Ha una probabilità di $effect_chance% di ridurre la Velocità del bersaglio di un Livello.
+197 Impedisce a qualsiasi mossa in questo turno di colpire il Pokemon.
+198 Colpisce da 2 a 5 volte in un turno.
+199 Assicura che la prossima mossa del Pokemon colpisca il bersaglio.
+200 Colpisce ogni turno per 2-3 turni, poi confonde il Pokemon.
+201 Cambia il meteo in una tempesta di sabbia per 5 turni.
+202 Cura il Pokemon di metà del danno inflitto.
+203 Impedisce che i PS del Pokemon in questo turno scendano sotto 1.
+204 Riduce l'Attacco del bersaglio di 2 Livelli.
+205 La potenza raddoppia ogni turno che questa mossa viene usata dopo la prima volta, resettandosi dopo 5 turni.
+206 Non può ridurre i PS del bersaglio a meno di 1.
+207 Aumenta l'Attacco del bersaglio di 2 Livelli e confonde il bersaglio.
+208 Cura il Pokemon di metà dei suoi PS massimi.
+209 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+210 La potenza raddoppia ogni turno che questa mossa viene usata dopo la prima volta, resettandosi dopo 5 turni.
+211 Ha una probabilità di $effect_chance% to raise the user's Defense di un Livello.
+212 Impedisce al bersaglio di scappare.
+213 Il bersaglio si innamora se è del sesso opposto, e ha il 50% di possibilità di non attaccare.
+214 Usa a caso una delle altre 3 mosse del Pokemon.  Funziona solo se il Pokemon sta dormendo.
+215 Cura il Pokemon e i suoi alleati di tutti i problemi principali di status.
+216 La potenza aumenta con la felicità, fino a un massimo di 102.
+217 Infligge danno casualmente con potenza da 40 a 120 oppure cura il bersaglio di 1/4 dei PS massimi.
+218 La potenza aumenta se la felicità diminuisce, fino a un massimo di 102.
+219 Protegge il tuo campo da problemi di status principali e confusione per 5 turni.
+220 Sets the user's and targets's HP to the average of their current HP.
+221 Ha una probabilità di $effect_chance% di bruciare il bersaglio.  Scongela i Pokemon congelati.
+222 La potenza varia a caso da 10 a 150.
+223 Ha una probabilità di $effect_chance% di confondere il bersaglio.
+224 Infligge danni senza effetti aggiuntivi.
+225 Ha una probabilità di $effect_chance% di paralizzare il bersaglio.
+226 Permette all'allenatore di sostituire il Pokemon e passare i suoi effetti al nuovo Pokemon.
+227 Costringe il bersaglio a ripetere l'ultima mossa usata ogni turno da 2 a 6 turni.
+228 Se il bersaglio viene sostituito in questo turno, il Pokemon colpirà il bersaglio con potenza doppia e poi colpirà normalmente il nuovo pokemon.
+229 Libera il Pokemon dalle mosse leganti, rimuove Parassiseme, e spazza via le Punte.
+230 Riduce l'Evasione del bersaglio di un Livello.
+231 Ha una probabilità di $effect_chance% di ridurre la Difesa del bersaglio di un Livello.
+232 Ha una probabilità di $effect_chance% di aumentare l'Attacco di un Livello.
+233 Non può fallire.
+234 Cura il Pokemon di metà dei suoi PS massimi.  Influenzato dal meteo.
+235 Cura il Pokemon di metà dei suoi PS massimi.  Influenzato dal meteo.
+236 Cura il Pokemon di metà dei suoi PS massimi.  Influenzato dal meteo.
+237 Il tipo e la potenza dipendono dagli IV del Pokemon.  La potenza può andare da 30 a 70.
+238 Ha più probabilità di fare Brutti Colpi.
+239 Può far tentennare il bersaglio.
+240 Cambia il meteo in pioggia per 5 turni.
+241 Cambia il meteo in sole per 5 turni.
+242 Ha una probabilità di $effect_chance% di ridurre la Difesa del bersaglio di un Livello.
+243 Infligge 2 volte i danni ricevuti dal Pokemon dall'ultimo colpo Speciale che ha subito.
+244 Annulla i cambi di stat del Pokemon e copia quelli del bersaglio.
+245 Infligge danni senza effetti aggiuntivi.
+246 Ha una probabilità di $effect_chance% di aumentare tutte le stat di un Livello.
+247 Ha una probabilità di $effect_chance% di ridurre la Difesa Speciale del bersaglio di un Livello.
+248 Colpisce il bersaglio 2 turni dopo.
+249 Ha una probabilità di $effect_chance% di ridurre la Difesa del bersaglio di un Livello.
+250 Impedisce al bersaglio di scappare e infligge 1/16 dei PS massimi di danno per 2-5 turni.
+251 Colpisce una volte per ogni Pokemon non KO che ha l'allenatore.

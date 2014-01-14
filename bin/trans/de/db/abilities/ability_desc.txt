@@ -1,0 +1,165 @@
+﻿0
+1 Bei jedem Angriff, der Schaden verursacht, besteht eine Chance von 10%, dass der Gegner zurückschreckt.
+2 Das Pokémon verursacht im Kampf Regen.
+3 Der Initiative-Wert steigt am Ende jeder Runde um 1 Stufe.
+4 Das Pokémon ist vor Volltreffern geschützt.
+5 Wenn das Pokémon volle KP hat und auf 0 KP runtergesetzt wird, überlebt es mit 1 KP.
+6 Keines der im Kampf befindlichen Pokémon kann die Attacken Explosion oder Finale einsetzen.
+7 Das Pokémon kann nicht paralysiert werden.
+8 Der Fluchtwert des Pokémon steigt im Sandsturm um 20%. Außerdem nimmt das Pokémon keinen Schaden durch Sandstürme.
+9 Der Gegner kann bei einem direkten Angriff paralysiert werden (30% Chance).
+10 Wird es von einer Elektro-Attacke getroffen, werden seine KP um so viel wieder aufgefüllt, wie der Angriff eigentlich an Schaden zugefügt hätte (maximal 1/4 der Gesamt-KP).
+11 Wird es von einer Wasser-Attacke getroffen, werden seine KP um so viel wieder aufgefüllt, wie der Angriff eigentlich an Schaden zugefügt hätte (maximal 1/4 der Gesamt-KP).
+12 Das Pokémon fühlt sich nie angezogen.
+13 Verhindert Wettereffekte bei allen Pokémon im Kampf, hebt diese jedoch nicht auf.
+14 Die Genauigkeit der vom Pokémon ausgeführten Attacken nimmt um 30% zu.
+15 Das Pokémon wird im Kampf nicht einschlafen. 
+16 Wenn das Pokémon von einer Attacke getroffen wird, wechselt der Typ des Pokémon zum Typ der Attacke.
+17 Das Pokémon kann nicht vergiftet werden.
+18 Wird es von einer Feuer-Attacke getroffen, werden seine eigenen Feuer-Attacken um 50% verstärkt.
+19 Zusatzeffekte von Attacken fallen weg (Gift, Verbrennung, Verwirrung, Anziehung usw.)
+20 Das Pokémon kann nicht verwirrt werden.
+21 Verhindert den Austausch des Pokémon durch Attacken und Items.
+22 Senkt Angriff des gegnerischen Pokémon um 1 Stufe.
+23 Verhindert die Flucht des gegnerischen Pokémon.
+24 Der Gegner nimmt bei jedem Angriff mit Kontakt auf das Pokémon auch Schaden.
+25 Nur sehr effektive Attacken haben eine Wirkung gegen das Pokémon.
+26 Pokémon mit dieser Fähigkeit werden nicht von Boden-Attacken getroffen.
+27 Nimmt das Pokémon Schaden, besteht eine 30%-Chance, dass das gengnerische Pokémon einschläft, vergiftet wird oder paralysiert wird.
+28 Wird das Pokémon vergiftet, paralysiert oder verbrannt, geschieht dasselbe mit dem gegnerischen Pokémon.
+29 Die Statuswerte können durch den Gegner nicht gesenkt werden.
+30 Beim Austausch werden alle Statusveränderungen wieder aufgehoben.
+31 Elektro-Attacken treffen dieses Pokémon immer.
+32 Zusatzeffekte treten bei Attacken doppelt so oft wie sonst auf.
+33 Bei Regen wird die Initiative des Pokémon verdoppelt.
+34 Bei Sonnenschein wird die Initiative des Pokémon verdoppelt.
+35 Man trifft öfter auf wilde Pokémon.
+36 Das Pokémon übernimmt die Fähigkeit des gegnerischen Pokémon.
+37 Verdoppelt den Angriffs-Wert des Pokémons.
+38 Erleidet das Pokémon physischen Schaden, wird der Gegner mit einer 30%-Chance vergiftet.
+39 Das Pokémon kann nicht zurückschrecken.
+40 Das Pokémon kann nicht einfrieren.
+41 Das Pokémon kann keine Verbrennungen erleiden.
+42 Stahl-Pokémon können vor dem Pokémon nicht flüchten.
+43 Ein Schutz vor allen Attacken, die mit der Akustik und dem Schall zutun haben.
+44 Wenn es im Kampf regnet, erhält das Pokémon jede Runde KP zurück.
+45 Das Pokémon verursacht im Kampf einen Sandsturm.
+46 Der Verbrauch von AP gegnerischer Attacken, die dieses Pokémon anvisieren, wird um 1 erhöht.
+47 Halbiert den Schaden von Eis- und Feuer-Attacken auf das Pokémon.
+48 Das Pokémon wacht schneller auf als normal.
+49 Nimmt das Pokémon Schaden, erleidet der Gegner mit einer 30% Wahrscheinlichkeit eine Verbrennung.
+50 Ermöglicht Flucht vor jedem wilden Pokémon.
+51 Der Gegner kann die Trefferchance der Angriffe des Pokémon nicht sinken lassen.
+52 Verhindert das Absinken des Angriffs.
+53 Benutzt der Gegner eine Beere findet sie das Pokémon und konsumiert sie selbst.
+54 Das Pokémon kann nur jede 2. Runde erfolgreich eine Attacke einsetzen. Außerdem ist es immun gegen Sorgensamen und Wankelstrahl.
+55 Erhöht den Angriff um 1 Stufe, senkt aber Genauigkeit aller Attacken um 20%.
+56 Wird das Pokémon von einem physischen Angriff getroffen, setzt es denselben Effekt wie bei der Attacke Anziehung frei. Funktioniert nur, wenn der Gegner das jeweils andere Geschlecht hat.
+57 Der Spezial-Angriff steigt um ein Level, wenn der Partner die Fähigkeit Plus oder Minus hat. Die Fähigkeit funktioniert nur in einem Doppel- bzw. Dreifachkampf.
+58 Der Spezial-Angriff steigt um ein Level, wenn der Partner die Fähigkeit Plus oder Minus hat. Die Fähigkeit funktioniert nur in einem Doppel- bzw. Dreifachkampf.
+59 Typ und Aussehen von FORMEO ändern sich mit dem Wetter: (Klar, Sandsturm = Normal; Sonnig = Feuer; Regen = Wasser; Hagel = Eis).
+60 Hindert das gegnerischen Pokémon, das Item des Pokémon zu stehlen.
+61 Es besteht jede Runde eine 30% Chance, dass das Pokémon seine Status-Probleme von selbst heilt.
+62 Leidet das Pokémon unter einem primären Statusproblem, wird der Angriffswert um 50% erhöht. Der Angriffswertverlust durch eine Verbrennung wird dabei ignoriert, die Verbrennung fügt jedoch trotz allem Schaden zu.
+63 Die Verteidigung wird bei Statusveränderungen um 50% erhöht.
+64 Versucht der Gegner KP zu absorbieren, gewinnt er diese nicht hinzu, sondern verliert sie.
+65 Hat das Pokémon nur noch weniger als 30% seiner KP, so werden Pflanzen-Attacken um 50% verstärkt. 
+66 Hat das Pokémon nur noch weniger als 30% seiner KP, so werden Feuer-Attacken um 50% verstärkt.
+67 Hat das Pokémon nur noch weniger als 30% seiner KP, so werden Wasser-Attacken um 50% verstärkt.
+68 Hat das Pokémon nur noch weniger als 30% seiner KP, so werden Käfer-Attacken um 50% verstärkt.
+69 Verhindert Schaden durch Rückstoß-Attacken.
+70 Das Pokémon verursacht im Kampf Sonnenschein.
+71 Macht die Flucht für den Gegner unmöglich. Allerdings nicht für Pokémon des Types Flug, Pokémon mit der Fähigkeit Schwebe oder solche, die unter Wirkung von Magnetflug oder Telekinese stehen.
+72 Das Pokémon kann nicht einschlafen.
+73 Der Gegner kann die Werte des Pokémon nicht verändern.
+74 Der Angriffswert des Pokémons wird verdoppelt.
+75 Das Pokémon kann keine Volltreffer erleiden.
+76 Alle Wettereffekte werden aufgehoben.
+77 Bei Verwirrung erhöht sich der Fluchtwert des Pokémons.
+78 Wird das Pokémon von einer Elektro-Attacke getroffen, erhöht sich seine Initiative um 1 Stufe.
+79 Der Angriffswert steigt, wenn der Gegner vom selben Geschlecht ist und sinkt, wenn der Gegner vom anderen Geschlecht ist (keine Wirkung bei Gegnern ohne Geschlecht).
+80 Wenn das Pokémon zurückschreckt, erhöht sich seine Initiative um 1 Stufe.
+81 Hagel erhöht den Fluchtwert des Pokémons.
+82 Das Pokémon benutzt die gehaltenen Beere schon, wenn es noch die Hälfte seiner KP hat.
+83 Wenn das Pokémon durch einen Volltreffer geschädigt wird, wird sein Angriff maximiert.
+84 Wenn das Item des Pokémons verwendet oder verloren wird, steigt seine Initiative um 1 Stufe.
+85 Feuer-Attacken und Verbrennung fügen diesem Pokémon nur halb so viel Schaden zu.
+86 Verdoppelt die Statuserhöhungen und -senkungen.
+87 Bei Sonnenschein verliert das Pokémon am Ende jeder Runde 1/8 der max. KP, bei Regen regeneriert es diese. Außerdem fügen Feuerattacken mehr Schaden zu und Wasserattacken füllen KP auf.
+88 Erhöht den Spezial-Angriff, wenn die Spezial-Verteidigung niedriger ist bzw. den Angriff, wenn die Verteidigung niedriger ist.
+89 Attacken, bei denen mit der Faust zugeschlagen wird, werden um 20% verstärkt.
+90 Pokémon erhält 1/8 seiner KP zurück, wenn es vergiftet ist.
+91 Verstärkt den Schaden, wenn die Attacke vom selben Typ wie der des Anwenders ist.
+92 Multi-Treffer-Attacken werden immer 5 Mal ausgeführt.
+93 Heilt Statusprobleme bei Regen.
+94 Das Pokémon verliert bei Sonnenschein KP, sein Sp.Angr. wird jedoch um eine Stufe erhöht.
+95 Der Initiative-Wert steigt bei Statusveränderungen um 50%.
+96 Alle Attacken des Pokémon sind vom Typ Normal.
+97 Ein Volltreffer hat die dreifache Kraft wie ein normaler Treffer.
+98 Nur direkter Schaden hat eine Wirkung auf dieses Pokémon.
+99 Alle Attacken haben eine Trefferquote von 100%.
+100 Das Pokémon ist langsamer als der Gegner, wenn beide Attacken dieselbe Priorität haben.
+101 Attacken, die eine Basisstärke von 60 oder weniger haben, werden um 50% stärker.
+102 Verhindert Statusprobleme bei Sonne.
+103 Das Pokémon kann keine Items verwenden.
+104 Gegnerische Fähigkeit wird außer Kraft gesetzt, wenn sie bestimmte Attacken verhindert.
+105 Die Volltrefferquote aller Attacken des Pokémon ist 1 Stufe höher.
+106 Schädigt den Gegner, wenn Pokémon durch eine Attacke per Kontakt besiegt wurde (1/4 seiner maximalen KP).
+107 Sagt sehr effektive Attacke des Gegners voraus.
+108 Gibt Auskunft über die stärkste gegnerische Attacke.
+109 Ignoriert Wechsel der Statuswerte des Gegners.
+110 Verstärkt nicht sehr effektive Attacken.
+111 Sehr effektive Attacken des Gegners verursachen auf dieses Pokémon nur halben Schaden.
+112 Bewirkt, dass das Pokémon in den ersten 5 Runden nach seiner Einwechslung nur die Hälfte der Angriffs- und Initiativewerte hat.
+113 Ermöglicht dem Pokémon, Geist-Pokémon auch mit Normal- oder Kampf-Attacken zu treffen.
+114 Das Pokémon ist immun gegenüber Wasser-Attacken, es wird von denen immer getroffen und sie steigern dazu den Spezial-Angriff.
+115 Das Pokémon bekommt im Hagelsturm am Ende jeder Runde 1/16 der maximalen KP zurück.
+116 Verursachter Schaden von sehr effektiven Attacken wird um 1/4 reduziert. 
+117 Entfacht im Kampf einen Hagelsturm.
+118 Das Pokémon sammelt Honig nach dem Kampf.
+119 Zeigt an, welches Item der Gegner hält.
+120 Attacken mit Selbstverletzungsgefahr werden um 20% verstärkt.
+121 Der Typ des Pokémons hängt von der getragenen Tafel ab.
+122 Bei Sonnenschein ändert sich die Form des Pokémons und Angriff und Spezial-Verteidigung des ganzen Teams werden  um 50% erhöht, solange es das aktive Pokémon ist.
+123 Wenn der Gegner schläft, verliert er am Ende jeder Runde 1/8 seiner maximalen KP.
+124 Stiehlt das getragene Item des Gegners bei Kontakt.
+125 Attacken mit Zusatzeffekt werden um 30% verstärkt und Zusatzeffekte werden blockiert.
+126 Attacken, die einen Statuswert erhöhen würden, senken ihn und umgekehrt.
+127 Das gegnerische Pokémon kann keine Beere mehr essen.
+128 Erhöht den Angriff um 2 Stufen, wenn ein Statuswert gesenkt wird.
+129 Angriff und Spezial-Angriff des Pokémons wird halbiert, wenn es nur noch die Hälfte seiner KP besitzt.
+130 Wird das Pokémon vom Gegner angegriffen, wird die eingesetzte Attacke mit einer Wahrscheinlichkeit von 30% blockiert.
+131 Am Ende einer Runde werden in Doppel- und Dreifachkämpfen Statusprobleme von Kampfpartnern mit einer Wahrscheinlichkeit von 30% geheilt.
+132 Der Schaden, den das Pokémon von einem Partner im Mehrfachkampf erhält, wird reduziert.
+133 Senkt die Verteidigung und erhöht die Initiative um eine Stufe bei jeder physischen Attacke.
+134 Das Gewicht des Pokémon verdoppelt sich.
+135 Das Gewicht des Pokémon halbiert sich.
+136 Wenn das Pokémon volle KP hat, erleidet es nur die Hälfte des normalen Schadens.
+137 Wenn das Pokémon vergiftet wird, steigt sein Angriff um 1 Stufe.
+138 Der Spezialangriff steigt um eine Stufe, wenn das Pokémon brennt.
+139 Eine benutzte Beere kann am Ende jeder Runde zu 50% (100% in der Sonne) zurückerhalten werden.
+140 Das Pokémon ist resistent gegenüber der Attacken seiner Teammitglieder.
+141 Am Ende jeder Runde wird ein zufälliger Statuswert um 2 Stufen erhöht.
+142 Das Pokémon ist immun gegen Wettereffekte.
+143 Wenn das Pokémon des gegnerische Pokémon berührt, wird es mit einer Wahrscheinlichkeit von 20% vergiftet.
+144 KP werden um 1/3 des Maximalwertes geheilt, wenn das Pokémon ausgetauscht wird.
+145 Die Verteidigungs-Werte des Pokémons können nicht sinken.
+146 Verdoppelt im Sandsturm die Initiative.
+147 Es besteht eine Chance von 50%, dass gegnerische Status-Attacken das Pokémon verfehlen.
+148 Wenn das Pokémon nach dem Gegner agiert, wird die Kraft seiner Attacke um 30% verstärkt.
+149 Das Pokémon hat von Beginn an das Aussehen des Pokémon, welches sich an letzter Stelle im eigenen Team befindet, bis es Schaden durch den Gegner erleidet.
+150 Sobald das Pokémon in den Kampf geschickt wird, verwandelt es sich in den Gegner und kopiert seine Statuswertveränderungen.
+151 Das Pokémon ignoriert Reflektor, Lichtschild und Bodyguard.
+152 Bei physischem Kontakt mit einem anderen Pokémon wird die Fähigkeit Mumie auf dieses übertragen.
+153 Wenn Pokémon ein anderes Pokémon besiegt, wird sein Angriff um 1 Stufe erhöht.
+154 Wenn das Pokémon von einer Unlicht-Attacke getroffen wird, erhöht sich sein Angriff um 1 Stufe.
+155 Wenn das Pokémon von einer Geist-, Käfer- oder Unlicht-Attacken getroffen wird, erhöht sich seine Initiative um 1 Stufe.
+156 Die Effekte von Status-Attacken werden zurückgeworfen.
+157 Wird des Pokémon von einer Pflanzen-Attacke getroffen, wird sein Angriff um eine Stufe erhöht.
+158 Erhöht die Priorität von Attacken, die keinen Schaden anrichten, um 1.
+159 Erhöht die Stärke von Gesteins-, Stahl- und Boden-Attacken im Sandsturm um 30%.
+160 Der Gegner verliert bei Kontakt mit dem Pokémon 1/8 seiner maximalen KP.
+161 Wenn das Pokémon KP noch weniger als 50% hat, ändert es seine Form in die Trance-Form.
+162 Erhöht die Genauigkeit vonn allen Team-Pokémon um 10%.
+163 Gegnerische Fähigkeit wird außer Kraft gesetzt, wenn sie bestimmte Attacken verhindert.
+164 Gegnerische Fähigkeit wird außer Kraft gesetzt, wenn sie bestimmte Attacken verhindert.

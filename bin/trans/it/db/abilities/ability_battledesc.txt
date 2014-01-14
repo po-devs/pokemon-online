@@ -1,0 +1,124 @@
+﻿0 
+1 Se questo Pokemon è in prima posizione, si riduce la possibilità di incontrare Pokemon selvatici.
+2 Mentre questo pokemon è in battaglia Poiggiadanza è attivo.
+3 La Velocità di questo pokemon sale di un Livello per turno.
+4 Questo Pokemon non può subire Brutti Colpi.
+5 Le mosse da KO istantaneo non funzionano su questo pokemon.
+6 Nessuno dei Pokemon può usare Esplosione o Autodistruzione.
+7 Questo Pokemon non può essere Paralizzato.
+8 L'Evasione di questo Pokemon sale di un Livello durante una tempesta di sabbia.
+9 Il Pokemon avversario ha il 30% di possibilità di rimanere Paralizzato ad ogni contatto.
+10 Il danno da mosse Elettro cura invece 1/4 dei PS massimi del Pokemon.
+11 Il danno da mosse Acqua cura invece 1/4 dei PS massimi del Pokemon.
+12 Previene l'attrazione e fa fallire Incanto quando usato dall'avversario. 
+13 Questo Pokemon non viene influenzato dal meteo.
+14 Le mosse di questo Pokemon hanno il 30% di Precisione in più.
+15 Questo Pokemon non può essere addormentato.
+16 Il tipo di questo Pokemon cambia in quello dell'ultima mossa che ha inflitto danni.
+17 Questo Pokemon non può essere Avvelenato.
+18 Quando questo Pokemon riceve danno da una mossa Fuoco, diventa immune alle mosse Fuoco e tutte le mosse Fuoco usate fanno 50% in più di danni finchè non lascia il campo.
+19 Questo Pokemon è immune ai cambi di stat/status per via di mosse danneggianti.
+20 Questo Pokemon non può essere confuso.
+21 Questo Pokemon non può essere scambiato da Boato o Turbine.
+22 Questo Pokemon riduce l'Attacco nemico di un Livello quando entra in battaglia.
+23 Il Pokemon nemico non può scappare o essere scambiato.
+24 Il Pokemon nemico riceve 1/8 dei PS massimi di danno ogni volta che tocca questo Pokemon.
+25 Questo Pokemon può essere danneggiato solo da mosse di tipi ai quali è debole.
+26 Questo Pokemon non subisce danni dalle mosse Terra.
+27 Il Pokemon nemico ha il 30% di possibilità di diventare Paralizzato, Avvelenato, o Addormentato ogni volta che tocca questo Pokemon.
+28 Quando questo Pokemon viene Bruciato, Paralizzato, o Avvelenato, anche il nemico subisce tale sorte.
+29 Le statistiche di questo Pokemon non possono essere abbassate.
+30 Lo status di questo Pokemon viene eliminato quando lascia il campo.
+31 Questo Pokemon riceve danno dalle mosse Elettro indirizzate al partner.
+32 La possibilità che un effetto status/stat della mossa si realizzi è doppio per questo Pokemon.
+33 La Velocità di questo Pokemon raddoppia durante Pioggiadanza.
+34 La Velocità di questo Pokemon raddoppia se c'è il sole.
+35 Se questo Pokemon è il primo del team, aumentano le probabilità di Pokemon selvatici.
+36 Questo Pokemon copia l'abilità del nemico quando entra in campo.
+37 L'Attacco di questo Pokemon è raddoppiato.
+38 Il Pokemon nemico ha il 30% di possibilità di diventare Avvelenato ogni volta che tocca questo Pokemon.
+39 Questo Pokemon non tentennerà.
+40 Questo Pokemon non può essere Congelato.
+41 Questo Pokemon non può essere Bruciato.
+42 I Pokemon Acciaio non possono scappare nè essere cambiati.
+43 Questo Pokemon è immune a Ruggito, Meloderba, Granvoce, Rintoccasana, Ferrostrido, Ultimocanto, Boato, Stridio, Canto, Russare, Supersuono, e Baraonda.
+44 Questo Pokemon recupera 1/16 dei PS massimi ogni turno finchè c'è la pioggia.
+45 Mentre questo Pokemon è in campo, Terrempesta è attiva.
+46 Il Pokemon Avversario deve usare 2 PP per mossa.
+47 Le mosse Fuoco e Ghiaccio infliggono danni dimezzati su questo Pokemon.
+48 Questo Pokemon si sveglia dal Sonno nella metà dei turni, includendo il sonno di Riposo.
+49 Il Pokemon nemico ha il 30% di possibilità di diventare Bruciato ogni volta che tocca questo Pokemon.
+50 Questo Pokemon può sempre scappare dalle battaglie selvatiche.
+51 La Precisione di questo Pokemon non può essere ridotta.
+52 L'Attacco di questo Pokemon non può essere ridotto.
+53 Dopo la battaglia, questo Pokemon a volte terrà con se un oggetto, se non ne stava già tenendo uno.
+54 Quando questo Pokemon infligge danni, salta il suo prossimo turno.
+55 L'Attacco base di questo Pokemon è aumentato del 50%, ma le sue mosse fisiche hanno l'80% della loro precisione.
+56 Il Pokemon nemico ha il 30% di possibilità di diventare Infatuato ogni volta che tocca questo Pokemon.
+57 Quando il partner di questo Pokemon ha Meno, il suo Attacco Speciale aumenta di 50%.
+58 Quando il partner di questo Pokemon ha Più, il suo Attacco Speciale aumenta di 50%.
+59 Il tipo di questo Pokemoncambia a seconda del meteo.
+60 L'oggetto di questo Pokemon non può essere rimosso dalle mosse nemiche.
+61 Ogni turno, questo Pokemon ha 1/3 di possibilità di curare il suo status.
+62 Quando questo Pokemon ha un problema di status principale, il suo Attacco aumenta del 50%.
+63 Quando questo Pokemon ha una condizione di status, la sua Difesa aumenta del 50%.
+64 Quando il nemico usa mosse d'assorbimento su questo Pokemon, perde PS anzichè guadagnarne.
+65 Quando i PS di questo Pokemon sono 1/3 del massimo o meno, le sue mosse Erba fanno 50% in più di danni.
+66 Quando i PS di questo Pokemon sono 1/3 del massimo o meno, le sue mosse Fuoco fanno 50% in più di danni.
+67 Quando i PS di questo Pokemon sono 1/3 del massimo o meno, le sue mosse Acqua fanno 50% in più di danni.
+68 Quando i PS di questo Pokemon sono 1/3 del massimo o meno, le sue mosse Coleottero fanno 50% in più di danni.
+69 Questo Pokemon non riceve contraccolpi dalle mosse.
+70 Mentre questo Pokemon è in campo, Giornodisole è attivo.
+71 Impedisce al Pokemon nemico (apparte Pokemon Volante e Pokemon con Levitazione) di scappare o venire scambiati.
+72 Questo Pokemon non può essere Addormentato.
+73 Le stat di questo Pokemon non possono essere abbassate.
+74 L'Attacco di questo Pokemon è raddoppiato.
+75 Questo Pokemon non può essere colpito da Brutti Colpi.
+76 Questo Pokemon non è influenzato dal meteo.
+77 L'Evasione di questo Pokemon aumenta se viene confuso.
+78 La velocità di questo Pokemon aumenta di un Livello se viene colpito da una mossa Elettro.
+79 L'Attacco di questo Pokemon aumenta se combatte con un avversario dello stesso sesso.
+80 La Velocità di questo Pokemon aumenta di un Livello se tentenna.
+81 L'Evasione di questo Pokemon aumenta di un Livello durante la grandine.
+82 Questo Pokemon mangerà le bacche tenute quando i suoi PS saranno a 1/2 del massimo invece che a 1/4.
+83 L'Attacco di questo Pokemon aumenta al massimo quando è colpito da un Brutto Colpo.
+84 La Velocità di questo Pokemon aumenta di un Livello quando usa o perde il suo oggetto.
+85 Questo Pokemon riceve metà danno dalle mosse Fuoco.
+86 Contro questo Pokemon i cambi di stat sono raddoppiati, anche se il massimo di 6 è immutato.
+87 Questo Pokemon perde PS ogni turno durante il sole, e si cura gradualmente con la pioggia.  Questo Pokemon subisce danni doppi da attacchi Fuoco, ma attacchi Acqua lo curano per 1/4 dei suoi PS totali.
+88 Quando questo Pokemon entra in campo, aumenta di un Livello la stat di Attacco corrispondente alla stat Difesa più bassa.
+89 Le mosse Pugno di questo Pokemon fanno 20% in più di danni.
+90 Questo Pokemon recupera 1/8 dei PS massimi ogni turno fintanto che è Avvelenato.
+91 Mosse dello stesso tipo di questo Pokemon diventano più potenti.
+92 Questo Pokemon colpisce sempre 5 volte con le mosse multicolpo.
+93 Questo Pokemon è curato da ogni status principale durante la pioggia.
+94 I PS massimi di questo Pokemon diminuiscono e l'Attacco Speciale aumenta di un Livello durante il sole.
+95 La Velocità di questo Pokemon aumenta di un Livello quando c'ha un problema di status principale.
+96 Tutte le mosse di questo Pokemon sono di tipo Normale.
+97 Questo Pokemon infligge danni doppi con i Brutti Colpi.
+98 Questo Pokemon è immune al danno non causato direttamente da un attacco.
+99 Tutte le mosse che infliggono danno hanno precisione 100% mentre questo Pokemon è in campo.
+100 Questo Pokemon attacca sempre per secondo.
+101 Questo Pokemon infligge 50% in più di danni con mosse di potenza 60 o meno. Introforza non viene considerata.
+102 Questo Pokemon è immune ai principali cambiamenti di status durante il sole.
+103 Questo Pokemon non può usare il suo oggetto.
+104 Il Pokemon nemico non può usare la sua abilità per evitare gli attacchi.
+105 Questo Pokemon ha possibilità maggiori di fare Brutto Colpo.
+106 Quando questo Pokemon finisce KO per via di una mossa con contatto, l'attaccante subisce 1/4 dei PS massimi di danno.
+107 Questo Pokemon verrà a conoscenza dei Pokemon avversari con una mossa superefficace contro di esso quando entrano in campo.
+108 Questo Pokemon può vedere la mossa avversario più potente, o causalmente una di esse in caso di pareggio.
+109 Questo Pokemon ignora ogni cambio di stat avversario.  Il calcolo di velocità non sono contati.
+110 Questo Pokemon infligge danni doppi con le mosse non molto efficaci.
+111 Questo Pokemon subisce la metà dei danni dalle mosse superefficaci.
+112 L'Attacco e la Velocità di questo Pokemon sono dimezzati per i primi turni in cui è in battaglia.
+113 Questo Pokemon può colpire i Pokemon Spettro con mosse Normale e Lotta.
+114 Tutte le mosse Acqua vengono attirate verso questo Pokemon.
+115 Questo Pokemon recupera PS durante la grandine.
+116 Questo Pokemon subisce meno danno dalle mosse superefficaci.
+117 Mentre questo Pokemon è in campo,Grandine è in effetto.
+118 Questo Pokemon raccoglie Dolce Miele dopo la battaglia.
+119 Questo Pokemon può vedere cosa sta tenendo il Pokemon nemico.
+120 Il Pokemon Avversario riceve 30% di danni in più dalle mosse con contraccolpo.
+121 Questo Pokemon cambia tipo e forma per corrispondere alla Lastra che tiene.
+122 Finchè c'è il sole, questo Pokemon cambia forma, e l'Attacco e Attacco Speciale suo e dell'alleato aumentano del 50%.
+123 Il Pokemon nemico perde PS per ogni turno in cui sono addormentati.

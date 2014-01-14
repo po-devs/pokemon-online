@@ -1,0 +1,468 @@
+﻿0 No effect
+1 Inflicts regular damage with no additional effect.
+2 Has an increased chance for a critical hit. (12.5%)
+3 Hits 2-5 times in one turn.
+4 Hits 2-5 times in one turn.
+5 Inflicts regular damage with no additional effect.
+6 Scatters money on the ground worth five times the user's level.
+7 Has a $effect_chance% chance to burn the target.
+8 Has a $effect_chance% chance to freeze the target.
+9 Has a $effect_chance% chance to paralyze the target.
+10 Inflicts regular damage with no additional effect.
+11 Inflicts regular damage with no additional effect.
+12 Causes a one-hit KO.
+13 Requires a turn to charge before attacking.
+14 Raises the user's Attack by two levels.
+15 Inflicts regular damage with no additional effect.
+16 Inflicts regular damage and can hit Bounce and Fly users.
+17 Inflicts regular damage with no additional effect.
+18 Immediately ends wild battles. Forces trainers to switch Pokémon.
+19 User flies high into the air, dodging all attacks, and hits next turn.
+20 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+21 Inflicts regular damage with no additional effect.
+22 Inflicts regular damage with no additional effect.
+23 Has a $effect_chance% chance to make the target flinch.
+24 Hits twice in one turn.
+25 Inflicts regular damage with no additional effect.
+26 If the user misses, it takes half the damage it would have inflicted in recoil.
+27 Has a $effect_chance% chance to make the target flinch.
+28 Lowers the target's Accuracy by one level.
+29 Has a $effect_chance% chance to make the target flinch.
+30 Inflicts regular damage with no additional effect.
+31 Hits 2-5 times in one turn.
+32 Causes a one-hit KO.
+33 Inflicts regular damage with no additional effect.
+34 Has a $effect_chance% chance to paralyze the target.
+35 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+36 User receives 1/4 the damage it inflicts in recoil.
+37 Hits every turn for 2-3 turns, then confuses the user.
+38 User receives 1/3 the damage inflicted in recoil.
+39 Lowers the target's Defense by one level.
+40 Has a $effect_chance% chance to poison the target.
+41 Hits twice in the same turn.  Has a $effect_chance% chance to poison the target.
+42 Hits 2-5 times in one turn.
+43 Lowers the target's Defense by one level.
+44 Has a $effect_chance% chance to make the target flinch.
+45 Lowers the target's Attack by one level.
+46 Immediately ends wild battles. Forces trainers to switch Pokémon.
+47 Puts the target to sleep.
+48 Confuses the target.
+49 Inflicts 20 points of damage.
+50 Disables the target's last used move for 1-8 turns.
+51 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+52 Has a $effect_chance% chance to burn the target.
+53 Has a $effect_chance% chance to burn the target.
+54 Protects the user's stats from being changed by enemy moves.
+55 Inflicts regular damage with no additional effect.
+56 Inflicts regular damage with no additional effect.
+57 Inflicts regular damage and can hit Dive users.
+58 Has a $effect_chance% chance to freeze the target.
+59 Has a $effect_chance% chance to freeze the target.
+60 Has a $effect_chance% chance to confuse the target.
+61 Has a $effect_chance% chance to lower the target's Speed by one level.
+62 Has a $effect_chance% chance to lower the target's Attack by one level.
+63 User foregoes its next turn to recharge.
+64 Inflicts regular damage with no additional effect.
+65 Inflicts regular damage with no additional effect.
+66 User receives 1/4 the damage it inflicts in recoil.
+67 Inflicts more damage to heavier targets, with a maximum of 120 power.
+68 Inflicts twice the damage the user received from the last physical hit it took.
+69 Inflicts damage equal to the user's level.
+70 Inflicts regular damage with no additional effect.
+71 Heals the user by half the damage inflicted.
+72 Heals the user by half the damage inflicted.
+73 Seeds the target, stealing HP from it every turn.
+74 Raises the user's Attack and Special Attack by one level.
+75 Has an increased chance for a critical hit. (12.5%)
+76 Requires a turn to charge before attacking.
+77 Poisons the target.
+78 Paralyzes the target.
+79 Puts the target to sleep.
+80 Hits every turn for 2-3 turns, then confuses the user.
+81 Lowers the target's Speed by one level.
+82 Inflicts 40 points of damage.
+83 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+84 Has a $effect_chance% chance to paralyze the target.
+85 Has a $effect_chance% chance to paralyze the target.
+86 Paralyzes the target.
+87 Has a $effect_chance% chance to paralyze the target.
+88 Inflicts regular damage with no additional effect.
+89 Inflicts regular damage and can hit Dig users.
+90 Causes a one-hit KO.
+91 User digs underground, dodging all attacks, and hits next turn.
+92 Badly poisons the target, inflicting more damage every turn.
+93 Has a $effect_chance% chance to confuse the target.
+94 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+95 Puts the target to sleep.
+96 Raises the user's Attack by one level.
+97 Raises the user's Speed by two levels.
+98 Priority level 1.
+99 If the user is hit after using this move, its Attack rises by one level.
+100 Immediately ends wild battles.  No effect otherwise.
+101 Inflicts damage equal to the user's level.
+102 Copies the target's last used move.
+103 Lowers the target's Defense by two levels.
+104 Raises the user's Evasion by one level.
+105 Heals the user by half its max HP.
+106 Raises the user's Defense by one level.
+107 Raises the user's evasion.
+108 Lowers the target's Accuracy by one level.
+109 Confuses the target.
+110 Raises the user's Defense by one level.
+111 Raises user's Defense by one level.
+112 Raises the user's Defense by two levels.
+113 Reduces damage from special attacks by 50% for five turns..
+114 Resets all Pokémon's stats, Accuracy and Evasion.
+115 Reduces damage from physical attacks by half.
+116 Increases the user's chance to score a critical hit. (25%)
+117 User waits for 2-3 turns, then hits back for twice the damage it took.
+118 Randomly selects and uses any move in the game.
+119 Uses the target's last used move.
+120 Inflicts double damage. User faints.
+121 Inflicts regular damage with no additional effect.
+122 Has a $effect_chance% chance to paralyze the target.
+123 Has a $effect_chance% chance to poison the target.
+124 Has a $effect_chance% chance to poison the target.
+125 Has a $effect_chance% chance to make the target flinch.
+126 Has a $effect_chance% chance to burn the target.
+127 Has a $effect_chance% chance to make the target flinch.
+128 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+129 Never misses.
+130 Raises the user's Defense by one level.  User charges for one turn before attacking.
+131 Hits 2-5 times in one turn.
+132 Has a $effect_chance% chance to lower the target's Speed by one level.
+133 Raises the user's Special Defense by two levels.
+134 Lowers the target's Accuracy by one level.
+135 Heals the user by half its max HP.
+136 If the user misses, it takes half the damage it would have inflicted in recoil.
+137 Paralyzes the target.
+138 Only works on sleeping Pokémon. Heals the user by half the damage inflicted.
+139 Poisons the target.
+140 Hits 2-5 times in one turn.
+141 Heals the user by half the damage inflicted.
+142 Puts the target to sleep.
+143 User charges for one turn before attacking.  Has a $effect_chance% chance to make the target flinch.
+144 User becomes a copy of the target until it leaves battle.
+145 Has a $effect_chance% chance to lower the target's Speed by one level.
+146 Has a $effect_chance% chance to confuse the target.
+147 Puts the target to sleep.
+148 Lowers the target's Accuracy by one level.
+149 Inflicts damage between 50% and 150% of the user's level.
+150 Does nothing.
+151 Raises the user's Defense by two levels.
+152 Has an increased chance for a critical hit. (12.5%)
+153 Inflicts double damage. User faints.
+154 Hits 2-5 times in one turn.
+155 Hits twice in one turn.
+156 User sleeps for two turns, completely healing itself.
+157 Has a $effect_chance% chance to make the target flinch.
+158 Has a $effect_chance% chance to make the target flinch.
+159 Raises the user's Attack by one level.
+160 User's type changes to the type of one of its moves at random.
+161 Has a $effect_chance% chance to burn, freeze, or paralyze the target.
+162 Inflicts damage equal to half the target's HP.
+163 Has an increased chance for a critical hit. (12.5%)
+164 Transfers 1/4 of the user's max HP into a doll, protecting the user from further damage or status changes until it breaks.
+165 User takes 1/4 its max HP in recoil.
+166 Permanently becomes the target's last used move.
+167 Hits three times, increasing power by 100% with each successful hit.
+168 Takes the target's item.
+169 Prevents the target from leaving battle.
+170 Ensures that the user's next move will hit the target.
+171 Target loses 1/4 its max HP every turn as long as it's asleep.
+172 Has a $effect_chance% chance to burn the target. Lets frozen Pokémon thaw themselves.
+173 Has a $effect_chance% chance to make the target flinch.  Only works if the user is sleeping.
+174 Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.
+175 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
+176 Changes the user's type to a random type either resistant or immune to the last move used against it.
+177 Has an increased chance for a critical hit. (12.5%)
+178 Lowers the target's Speed by two levels.
+179 Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.
+180 Lowers the PP of the target's last used move by 4.
+181 Has a $effect_chance% chance to freeze the target.
+182 Prevents any moves from hitting the user this turn.
+183 Priority level 1.
+184 Lowers the target's Speed by two levels.
+185 Never misses.
+186 Confuses the target.
+187 User pays half its max HP to max out its Attack.
+188 Has a $effect_chance% chance to poison the target.
+189 Has a $effect_chance% chance to lower the target's Accuracy by one level.
+190 Has a $effect_chance% chance to lower the target's Accuracy by one level.
+191 Scatters Spikes, hurting opposing Pokémon that switch in.
+192 Has a $effect_chance% chance to paralyze the target.
+193 Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it's a Ghost.
+194 If the user faints this turn, the target automatically will, too.
+195 User and target both faint after three turns.
+196 Has a $effect_chance% chance to lower the target's Speed by one level.
+197 Prevents any moves from hitting the user this turn.
+198 Hits 2-5 times in one turn.
+199 Ensures that the user's next move will hit the target.
+200 Hits every turn for 2-3 turns, then confuses the user.
+201 Changes the weather to a sandstorm for five turns.
+202 Heals the user by half the damage inflicted.
+203 Prevents the user's HP from lowering below 1 this turn.
+204 Lowers the target's Attack by two levels.
+205 Power doubles every turn this move is used in succession after the first, resetting after five turns.
+206 Cannot lower the target's HP below 1.
+207 Raises the target's Attack by two levels and confuses the target.
+208 Heals the user by half its max HP.
+209 Has a $effect_chance% chance to paralyze the target.
+210 Power doubles every turn this move is used in succession after the first, maxing out after five turns.
+211 Has a $effect_chance% chance to raise the user's Defense by one level.
+212 Prevents the target from leaving battle.
+213 Target falls in love if it has the opposite gender, and has a 50% chance to refuse attacking the user.
+214 Randomly uses one of the user's other three moves.  Only works if the user is sleeping.
+215 Cures the user and the user's ally of major status effects.
+216 Power increases with happiness, up to a maximum of 102.
+217 Randomly inflicts damage with power from 40 to 120 or heals the target for 1/4 its max HP.
+218 Power increases as happiness decreases, up to a maximum of 102.
+219 Protects the user's field from major status ailments and confusion for five turns.
+220 Sets the user's and targets's HP to the average of their current HP.
+221 Has a $effect_chance% chance to burn the target. Lets frozen Pokémon thaw themselves.
+222 Power varies randomly from 10 to 150.
+223 Has a $effect_chance% chance to confuse the target.
+224 Inflicts regular damage with no additional effect.
+225 Has a $effect_chance% chance to paralyze the target.
+226 Allows the trainer to switch out the user and pass effects along to its replacement.
+227 Forces the target to repeat its last used move every turn for 2 to 6 turns.
+228 If the target leaves battle this turn, user will hit the target with double power and then hit its replacement normally.
+229 Frees the user from binding moves, removes Leech Seed, and blows away Spikes.
+230 Lowers the target's Evasion by one level.
+231 Has a $effect_chance% chance to lower the target's Defense by one level.
+232 Has a $effect_chance% chance to raise the user's Attack by one level.
+233 Never misses.
+234 Heals the user by half its max HP. Affected by weather.
+235 Heals the user by half its max HP. Affected by weather.
+236 Heals the user by half its max HP. Affected by weather.
+237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
+238 Has an increased chance for a critical hit. (12.5%)
+239 Has a $effect_chance% chance to make the target flinch.
+240 Changes the weather to rain for five turns.
+241 Changes the weather to sunny for five turns.
+242 Has a $effect_chance% chance to lower the target's Defense by one level.
+243 Inflicts twice the damage the user received from the last special hit it took.
+244 Discards the user's stat changes and copies the target's.
+245 Priority level 1.
+246 Has a $effect_chance% chance to raise all of the user's stats by one level.
+247 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+248 Hits the target two turns later.
+249 Has a $effect_chance% chance to lower the target's Defense by one level.
+250 Prevents the target from leaving battle and inflicts 1/16 its max HP in damage for 2-5 turns.
+251 Hits once for every conscious Pokémon the trainer has.
+252 Can only be used as the first move after the user enters battle.  Causes the target to flinch.
+253 Forced to use this move for several turns. Pokémon cannot fall asleep in that time.
+254 Stores energy up to three times for use with Spit Up and Swallow.
+255 Power is 100 times the amount of energy Stockpiled.
+256 Recovers 1/4 HP after one Stockpile, 1/2 HP after two Stockpiles, or full HP after three Stockpiles.
+257 Has a $effect_chance% chance to burn the target.
+258 Changes the weather to a hailstorm for five turns.
+259 Prevents the target from using the same move twice in a row.
+260 Raises the target's Special Attack by two levels and confuses the target.
+261 Burns the target.
+262 Lowers the target's Attack and Special Attack by two levels. User faints.
+263 Power doubles if user is burned, paralyzed, or poisoned.
+264 If the user takes damage before attacking, the attack is canceled.
+265 If the target is paralyzed, inflicts double damage and cures the paralysis.
+266 Redirects the target's single-target effects to the user for this turn.
+267 Uses a move which depends upon the terrain.
+268 Raises the user's Special Defense by one level.  User's Electric moves have doubled power next turn.
+269 For the next few turns, the target can only use damaging moves.
+270 Ally's next move inflicts half more damage.
+271 User and target swap items.
+272 Copies the target's ability.
+273 User will recover half its max HP at the end of the next turn.
+274 Randomly selects and uses one of the trainer's other Pokémon's moves.
+275 Prevents the user from leaving battle.  User regains 1/16 of its max HP every turn.
+276 Lowers the user's Attack and Defense by one level after inflicting damage.
+277 Reflects back the first effect move used on the user this turn.
+278 User recovers the item it last used up.
+279 Inflicts double damage if the user takes damage before attacking this turn.
+280 Destroys Reflect and Light Screen.
+281 Target sleeps at the end of the next turn.
+282 Target drops its held item.
+283 Lowers the target's HP to equal the user's.
+284 Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.
+285 User and target swap abilities.
+286 Prevents the target from using any moves that the user also knows.
+287 Cleanses the user of a burn, paralysis, or poison.
+288 When the user faints, the PP of the move that fainted it will be reduced to 0.
+289 Steals the target's move, if it's self-targeted.
+290 Has a $effect_chance% chance to inflict a status effect which depends upon the terrain.
+291 User dives underwater, dodging all attacks, and hits next turn.
+292 Hits 2-5 times in one turn.
+293 User's type changes to match the terrain.
+294 Raises the user's Special Attack by two levels.
+295 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+296 Has a $effect_chance% chance to lower the target's Special Attack by one level.
+297 Lowers the target's Attack by two levels.
+298 Confuses the target.
+299 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to burn the target.
+300 All damage from Electric moves is halved until the end of the battle.
+301 Power doubles every turn this move is used in succession after the first, resetting after five turns.
+302 Has a $effect_chance% chance to make the target flinch.
+303 Heals the user by half its max HP.
+304 Inflicts regular damage with no additional effect.
+305 Has a $effect_chance% chance to badly poison the target.
+306 Has a $effect_chance% chance to lower the target's Defense by one level.
+307 User foregoes its next turn to recharge.
+308 User foregoes its next turn to recharge.
+309 Has a $effect_chance% chance to raise the user's Attack by one level.
+310 Has a $effect_chance% chance to make the target flinch.
+311 If there be weather, this move has doubled power and the weather's type.
+312 Cures the user and the user's ally of major status effects.
+313 Lowers the target's Special Defense by two levels.
+314 Has an increased chance for a critical hit. (12.5%)
+315 Lowers the user's Special Attack by two levels after inflicting damage.
+316 Forces the target to have no Evade, and allows it to be hit by Normal and Fighting moves even if it's a Ghost.
+317 Has a $effect_chance% chance to lower the target's Speed by one level.
+318 Has a $effect_chance% chance to raise all of the user's stats by one level.
+319 Lowers the target's Special Defense by two levels.
+320 Puts the target to sleep.
+321 Lowers the target's Attack and Defense by one level.
+322 Raises the user's Defense and Special Defense by one level.
+323 Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.
+324 Has a $effect_chance% chance to confuse the target.
+325 Never misses.
+326 Has a $effect_chance% chance to make the target flinch.
+327 Inflicts regular damage and can hit Bounce and Fly users.
+328 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+329 Causes a one-hit KO.
+330 Has a $effect_chance% chance to lower the target's Accuracy by one level.
+331 Hits 2-5 times in one turn.
+332 Never misses.
+333 Hits 2-5 times in one turn.
+334 Raises the user's Defense by two levels.
+335 Prevents the target from leaving battle.
+336 Raises the user's Attack by one level.
+337 Inflicts regular damage with no additional effect.
+338 User foregoes its next turn to recharge.
+339 Raises the user's Attack and Defense by one level.
+340 User bounces high into the air, dodging all attacks, and hits next turn.
+341 Has a $effect_chance% chance to lower the target's Speed by one level.
+342 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to poison the target.
+343 Takes the target's item.
+344 User takes 1/3 the damage inflicted in recoil.  Has a $effect_chance% chance to paralyze the target.
+345 Never misses.
+346 All damage from Fire moves is halved until the end of the battle.
+347 Raises the user's Special Attack and Special Defense by one level.
+348 Has an increased chance for a critical hit. (12.5%)
+349 Raises the user's Attack and Speed by one level.
+350 Hits 2-5 times in one turn.
+351 Never misses.
+352 Has a $effect_chance% chance to confuse the target.
+353 Hits the target two turns later.
+354 Lowers the user's Special Attack by two levels after inflicting damage.
+355 Heals the user by half its max HP.
+356 Disables moves and immunities that involve flying or levitating for five turns.
+357 Forces the target to have no evasion, and allows it to be hit by Psychic moves even if it's Dark.
+358 If the target is asleep, has double power and wakes it up.
+359 Lowers user's Speed by one level.
+360 Power raises when the user has lower Speed, up to a maximum of 150.
+361 User faints. Its replacement has its HP fully restored and any major status effect removed.
+362 Has double power against Pokémon that have less than half their max HP remaining.
+363 Power and type depend on the held berry.
+364 Only works if the target uses Protect or Detect on this turn.
+365 If target has a berry, inflicts double damage and uses the berry.
+366 For three turns, friendly Pokémon have doubled Speed.
+367 Raises one of a friendly Pokémon's stats at random by two levels.
+368 Strikes back at the last Pokémon to hit the user this turn with double the damage.
+369 User must switch out after attacking.
+370 Lowers the user's Defense and Special Defense by one level after inflicting damage.
+371 Power is doubled if the target has already moved this turn.
+372 Power is doubled if the target has already received damage this turn.
+373 Target cannot use held items.
+374 Throws held item at the target; power depends on the item.
+375 Transfers the user's major status effect to the target.
+376 Power increases when this move has less PP, up to a maximum of 200.
+377 Prevents target from restoring its HP for five turns.
+378 Power increases against targets with more HP remaining, up to a maximum of 110 power.
+379 User swaps Attack and Defense.
+380 Nullifies target's ability until it leaves battle.
+381 Prevents the target from scoring critical hits for five turns.
+382 Uses the target's move against it before it attacks, with power increased by half.
+383 Uses the target's last used move.
+384 User swaps Attack and Special Attack changes with the target.
+385 User swaps Defense and Special Defense changes with the target.
+386 Power increases against targets with more raised stats, up to a maximum of 200.
+387 Can only be used after all of the user's other moves have been used.
+388 Changes the target's ability to Insomnia.
+389 Only works if the target is about to use a damaging move. Priority level 1.
+390 Scatters poisoned spikes, poisoning opposing Pokémon that switch in.
+391 User and target swap stat changes.
+392 Restores 1/16 of the user's max HP each turn.
+393 User is immune to Ground moves and effects for five turns.
+394 User takes 1/3 the damage inflicted in recoil.  Has a $effect_chance% chance to burn the target.
+395 Has a $effect_chance% chance to paralyze the target.
+396 Never misses.
+397 Raises the user's Speed by two levels.
+398 Has a $effect_chance% chance to poison the target.
+399 Has a $effect_chance% chance to make the target flinch.
+400 Has an increased chance for a critical hit. (12.5%)
+401 Inflicts regular damage with no additional effect.
+402 Inflicts regular damage with no additional effect.
+403 Has a $effect_chance% chance to make the target flinch.
+404 Inflicts regular damage with no additional effect.
+405 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+406 Inflicts regular damage with no additional effect.
+407 Has a $effect_chance% chance to make the target flinch.
+408 Inflicts regular damage with no additional effect.
+409 Heals the user by half the damage inflicted.
+410 Priority level 1.
+411 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+412 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+413 User receives 1/3 the damage inflicted in recoil.
+414 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+415 User and target swap items.
+416 User foregoes its next turn to recharge.
+417 Raises the user's Special Attack by two levels.
+418 Priority level 1.
+419 Inflicts double damage if the user takes damage before attacking this turn.
+420 Inflicts regular damage with no additional effect.
+421 Has an increased chance for a critical hit. (12.5%)
+422 Has a $effect_chance% chance to paralyze the target and a $effect_chance% chance to make the target flinch.
+423 Has a $effect_chance% chance to freeze the target and a $effect_chance% chance to make the target flinch.
+424 Has a $effect_chance% chance to burn the target and a $effect_chance% chance to make the target flinch.
+425 Priority level 1.
+426 Has a $effect_chance% chance to lower the target's Accuracy by one level.
+427 Has an increased chance for a critical hit. (12.5%)
+428 Has a $effect_chance% chance to make the target flinch.
+429 Has a $effect_chance% chance to lower the target's Accuracy by one level.
+430 Has a $effect_chance% chance to lower the target's Special Defense by one level.
+431 Has a $effect_chance% chance to confuse the target.
+432 Lowers the target's evasion by one level.  Removes field effects from the enemy field.
+433 For five turns, slower Pokémon will act before faster Pokémon.
+434 Lowers the user's Special Attack by two levels after inflicting damage.
+435 Has a $effect_chance% chance to paralyze the target.
+436 Has a $effect_chance% chance to burn the target.
+437 Lowers the user's Special Attack by two levels after inflicting damage.
+438 Inflicts regular damage with no additional effect.
+439 User foregoes its next turn to recharge.
+440 Has an increased chance for a critical hit (12.5%) and a $effect_chance% chance to poison the target.
+441 Has a $effect_chance% chance to poison the target.
+442 Has a $effect_chance% chance to make the target flinch.
+443 Never misses.
+444 Has an increased chance for a critical hit. (12.5%)
+445 Lowers the target's Special Attack by two levels if it's the opposite gender.
+446 Causes damage when opposing Pokémon switch in.
+447 Inflicts more damage to heavier targets, with a maximum of 120 power.
+448 Has a higher chance to confuse the target when the recorded sound is louder.
+449 If the user is holding a plate, the damage inflicted will match it.
+450 If target has a berry, inflicts double damage and uses the berry.
+451 Has a $effect_chance% chance to raise the user's Special Attack by one level.
+452 User receives 1/3 the damage inflicted in recoil.
+453 Priority level 1.
+454 Has an increased chance for a critical hit. (12.5%)
+455 Raises the user's Defense and Special Defense by one level.
+456 Heals the user by half its max HP.
+457 User receives 1/2 the damage inflicted in recoil.
+458 Hits twice in one turn.
+459 User foregoes its next turn to recharge.
+460 Has an increased chance for a critical hit. (12.5%)
+461 User faints, and its replacement is fully healed.
+462 Power increases against targets with more HP remaining, up to a maximum of 110 power.
+463 Prevents the target from fleeing and inflicts damage for 2-5 turns.
+464 Puts the target to sleep.
+465 Has a $effect_chance% chance to lower the target's Special Defense by two levels.
+466 Has a $effect_chance% chance to raise all of the user's stats by one level.
+467 User vanishes, dodging all attacks, and hits next turn. Works against Protect and Detect.

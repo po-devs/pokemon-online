@@ -1,0 +1,12 @@
+#ifndef CSSCHANGER_GLOBAL_H
+#define CSSCHANGER_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(CSSCHANGER_LIBRARY)
+#  define CSSCHANGERSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define CSSCHANGERSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // CSSCHANGER_GLOBAL_H

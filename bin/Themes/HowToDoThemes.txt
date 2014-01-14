@@ -1,0 +1,30 @@
+Well
+
+1 -> Create a folder with the name of your theme
+2 -> Create a css file if you want
+3 -> Create a pictures.ini file and put the pictures in the folder too
+4 -> Add fonts needed by the CSS in the Themes/YourTheme/Fonts folder
+
+=== Detailed ===
+
+1 -> No explanation needed. The folder you'll create will contain everything about your theme.
+If something is missing, PO will always look in the Default folder for that thing, so worry not.
+
+2 -> The default.css file manages all the "styling" of the fonts, backgrounds, ...
+It's advised to copy the one in the Default folder, to your folder, and then edit it and
+test your edits using Reload Stylesheet.
+
+Note: The CSS file uses some pictures directly (like mainchat background, scrolling pokeball for EVs)
+So if you want to change the main chat background, you have to create the picture in your theme
+folder and then in the default.css change the location where it gets the picture.
+
+
+3 -> Pictures. You can override the default pictures. For that put some pictures in your theme
+folder. Then create a pictures.ini file. Look at the pictures.ini file that's in the Default folder.
+
+Then add the pictures paths correctly. If you use the same "key" as in the default pictures.ini file, 
+then the path you specify will be used instead of the default pictures.ini file.
+
+_________
+
+For any question go on the forums. Or look at the created themes, apart from Default.

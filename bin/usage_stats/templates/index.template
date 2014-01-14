@@ -1,0 +1,18 @@
+page{{
+<html>
+	<head>
+		<title>Usage statistics</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+	</head>
+	<body>
+		<h1> Usage statistics </h1>
+		{tier*}
+	</body>
+</html>
+}}
+
+tier{{
+	<img src='poke_img/{imagelink}' />
+	<p class='tier'><a href='{tier}/index.html'>Tier {tier}</a></p>
+}}

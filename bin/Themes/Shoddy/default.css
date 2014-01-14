@@ -1,0 +1,34 @@
+QToolTip {
+    color: black;
+}
+
+PokeButton {
+    min-width: 170px;
+    height: 85px;
+}
+
+PokeEdit #itemSprite {
+	margin: 9px;
+}
+
+QToolButton#pokemonFrame {
+        height: 110px;
+        width: 110px;
+        /*border-radius: 4px;*/
+}
+
+QToolButton #pokemonSprite {
+    margin: 9px;
+    min-width: 96px;
+    min-height: 96px;
+}
+
+PokeEdit #done {
+  margin-right: 60px;
+}
+
+PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
+    width: 96px;
+    height: 96px;
+    border: 0;
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+    <key>CFBundleIconFile</key>
+    <string>pokemononline.icns</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleGetInfoString</key>
+    <string>Created by Qt/QMake</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleExecutable</key>
+    <string>Pokemon-Online</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.dreambelievers.Pokemon-Online</string>
+    <key>CFBundleVersion</key>
+    <string>{{VERSION}}</string>
+    <key>SUFeedURL</key>
+    <string>{{URL}}</string>
+    <key>SUPublicDSAKeyFile</key>
+    <string>{{PEM_FILE}}</string>
+</dict>
+</plist>

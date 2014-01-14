@@ -1,0 +1,613 @@
+0 
+1 Mostro
+2 Mostro
+3 Mostro
+4 Mostro
+5 Mostro
+6 Mostro
+7 Mostro
+8 Mostro
+9 Mostro
+10 Coleottero
+11 Coleottero
+12 Coleottero
+13 Coleottero
+14 Coleottero
+15 Coleottero
+16 Volante
+17 Volante
+18 Volante
+19 Terra
+20 Terra
+21 Volante
+22 Volante
+23 Terra
+24 Terra
+25 Terra
+26 Terra
+27 Terra
+28 Terra
+29 Mostro
+32 Mostro
+33 Mostro
+34 Mostro
+35 Fata
+36 Fata
+37 Terra
+38 Terra
+39 Fata
+40 Fata
+41 Volante
+42 Volante
+43 Pianta
+44 Pianta
+45 Pianta
+46 Coleottero
+47 Coleottero
+48 Coleottero
+49 Coleottero
+50 Terra
+51 Terra
+52 Terra
+53 Terra
+54 Acqua 1
+55 Acqua 1
+56 Terra
+57 Terra
+58 Terra
+59 Terra
+60 Acqua 1
+61 Acqua 1
+62 Acqua 1
+63 Umanoide
+64 Umanoide
+65 Umanoide
+66 Umanoide
+67 Umanoide
+68 Umanoide
+69 Pianta
+70 Pianta
+71 Pianta
+72 Acqua 3
+73 Acqua 3
+74 Minerale
+75 Minerale
+76 Minerale
+77 Terra
+78 Terra
+79 Mostro
+80 Mostro
+81 Minerale
+82 Minerale
+83 Volante
+84 Volante
+85 Volante
+86 Acqua 1
+87 Acqua 1
+88 Indeterminato
+89 Indeterminato
+90 Acqua 3
+91 Acqua 3
+92 Indeterminato
+93 Indeterminato
+94 Indeterminato
+95 Minerale
+96 Umanoide
+97 Umanoide
+98 Acqua 3
+99 Acqua 3
+100 Minerale
+101 Minerale
+102 Pianta
+103 Pianta
+104 Mostro
+105 Mostro
+106 Umanoide
+107 Umanoide
+108 Mostro
+109 Indeterminato
+110 Indeterminato
+111 Mostro
+112 Mostro
+113 Fata
+114 Pianta
+115 Mostro
+116 Acqua 1
+117 Acqua 1
+118 Acqua 2
+119 Acqua 2
+120 Acqua 3
+121 Acqua 3
+122 Umanoide
+123 Coleottero
+124 Umanoide
+125 Umanoide
+126 Umanoide
+127 Coleottero
+128 Terra
+129 Acqua 2
+130 Acqua 2
+131 Mostro
+132 Ditto
+133 Terra
+134 Terra
+135 Terra
+136 Terra
+137 Minerale
+138 Acqua 1
+139 Acqua 1
+140 Acqua 1
+141 Acqua 1
+142 Volante
+143 Mostro
+147 Acqua 1
+148 Acqua 1
+149 Acqua 1
+152 Mostro
+153 Mostro
+154 Mostro
+155 Terra
+156 Terra
+157 Terra
+158 Mostro
+159 Mostro
+160 Mostro
+161 Terra
+162 Terra
+163 Volante
+164 Volante
+165 Coleottero
+166 Coleottero
+167 Coleottero
+168 Coleottero
+169 Volante
+170 Acqua 2
+171 Acqua 2
+172 Terra
+173 Fata
+174 Fata
+175 Volante
+176 Volante
+177 Volante
+178 Volante
+179 Mostro
+180 Mostro
+181 Mostro
+182 Pianta
+183 Acqua 1
+184 Acqua 1
+185 Minerale
+186 Acqua 1
+187 Fata
+188 Fata
+189 Fata
+190 Terra
+191 Pianta
+192 Pianta
+193 Coleottero
+194 Acqua 1
+195 Acqua 1
+196 Terra
+197 Terra
+198 Volante
+199 Mostro
+200 Indeterminato
+202 Indeterminato
+203 Terra
+204 Coleottero
+205 Coleottero
+206 Terra
+207 Coleottero
+208 Minerale
+209 Terra
+210 Terra
+211 Acqua 2
+212 Coleottero
+213 Coleottero
+214 Coleottero
+215 Terra
+216 Terra
+217 Terra
+218 Indeterminato
+219 Indeterminato
+220 Terra
+221 Terra
+222 Acqua 1
+223 Acqua 1
+224 Acqua 1
+225 Acqua 1
+226 Acqua 1
+227 Volante
+228 Terra
+229 Terra
+230 Acqua 1
+231 Terra
+232 Terra
+233 Minerale
+234 Terra
+235 Terra
+236 Umanoide
+237 Umanoide
+238 Umanoide
+239 Umanoide
+240 Umanoide
+241 Terra
+242 Fata
+246 Mostro
+247 Mostro
+248 Mostro
+252 Mostro
+253 Mostro
+254 Mostro
+255 Terra
+256 Terra
+257 Terra
+258 Mostro
+259 Mostro
+260 Mostro
+261 Terra
+262 Terra
+263 Terra
+264 Terra
+265 Coleottero
+266 Coleottero
+267 Coleottero
+268 Coleottero
+269 Coleottero
+270 Acqua 1
+271 Acqua 1
+272 Acqua 1
+273 Terra
+274 Terra
+275 Terra
+276 Volante
+277 Volante
+278 Acqua 1
+279 Acqua 1
+280 Indeterminato
+281 Indeterminato
+282 Indeterminato
+283 Acqua 1
+284 Acqua 1
+285 Fata
+286 Fata
+287 Terra
+288 Terra
+289 Terra
+290 Coleottero
+291 Coleottero
+292 Minerale
+293 Mostro
+294 Mostro
+295 Mostro
+296 Umanoide
+297 Umanoide
+298 Acqua 1
+299 Minerale
+300 Terra
+301 Terra
+302 Umanoide
+303 Terra
+304 Mostro
+305 Mostro
+306 Mostro
+307 Umanoide
+308 Umanoide
+309 Terra
+310 Terra
+311 Fata
+312 Fata
+313 Coleottero
+314 Coleottero
+315 Fata
+316 Indeterminato
+317 Indeterminato
+318 Acqua 2
+319 Acqua 2
+320 Terra
+321 Terra
+322 Terra
+323 Terra
+324 Terra
+325 Terra
+326 Terra
+327 Terra
+328 Coleottero
+329 Coleottero
+330 Coleottero
+331 Pianta
+332 Pianta
+333 Volante
+334 Volante
+335 Terra
+336 Terra
+337 Minerale
+338 Minerale
+339 Acqua 2
+340 Acqua 2
+341 Acqua 1
+342 Acqua 1
+343 Minerale
+344 Minerale
+345 Acqua 3
+346 Acqua 3
+347 Acqua 3
+348 Acqua 3
+349 Acqua 1
+350 Acqua 1
+351 Fata
+352 Terra
+353 Indeterminato
+354 Indeterminato
+355 Indeterminato
+356 Indeterminato
+357 Mostro
+358 Indeterminato
+359 Terra
+361 Fata
+362 Fata
+363 Acqua 1
+364 Acqua 1
+365 Acqua 1
+366 Acqua 1
+367 Acqua 1
+368 Acqua 1
+369 Acqua 1
+370 Acqua 2
+371 Drago
+372 Drago
+373 Drago
+374 Minerale
+375 Minerale
+376 Minerale
+387 Mostro
+388 Mostro
+389 Mostro
+390 Terra
+391 Terra
+392 Terra
+393 Acqua 1
+394 Acqua 1
+395 Acqua 1
+396 Volante
+397 Volante
+398 Volante
+399 Acqua 1
+400 Acqua 1
+401 Coleottero
+402 Coleottero
+403 Terra
+404 Terra
+405 Terra
+406 Fata
+407 Fata
+408 Mostro
+409 Mostro
+410 Mostro
+411 Mostro
+412 Coleottero
+413 Coleottero
+414 Coleottero
+415 Coleottero
+416 Coleottero
+417 Terra
+418 Acqua 1
+419 Acqua 1
+420 Fata
+421 Fata
+422 Acqua 1
+423 Acqua 1
+424 Terra
+425 Indeterminato
+426 Indeterminato
+427 Terra
+428 Terra
+429 Indeterminato
+430 Volante
+431 Terra
+432 Terra
+433 Indeterminato
+434 Terra
+435 Terra
+436 Minerale
+437 Minerale
+438 Minerale
+439 Umanoide
+440 Fata
+441 Volante
+442 Indeterminato
+443 Mostro
+444 Mostro
+445 Mostro
+446 Mostro
+447 Terra
+448 Terra
+449 Terra
+450 Terra
+451 Coleottero
+452 Coleottero
+453 Umanoide
+454 Umanoide
+455 Pianta
+456 Acqua 2
+457 Acqua 2
+458 Acqua 1
+459 Mostro
+460 Mostro
+461 Terra
+462 Minerale
+463 Mostro
+464 Mostro
+465 Pianta
+466 Umanoide
+467 Umanoide
+468 Volante
+469 Coleottero
+470 Terra
+471 Terra
+472 Coleottero
+473 Terra
+474 Minerale
+475 Indeterminato
+476 Minerale
+477 Indeterminato
+478 Fata
+479 Indeterminato
+489 Acqua 1
+490 Acqua 1
+494 
+495 Terra
+496 Terra
+497 Terra
+498 Terra
+499 Terra
+500 Terra
+501 Terra
+502 Terra
+503 Terra
+504 Terra
+505 Terra
+506 Terra
+507 Terra
+508 Terra
+509 Terra
+510 Terra
+511 Terra
+512 Terra
+513 Terra
+514 Terra
+515 Terra
+516 Terra
+517 Terra
+518 Terra
+519 Volante
+520 Volante
+521 Volante
+522 Terra
+523 Terra
+524 Minerale
+525 Minerale
+526 Minerale
+527 Terra
+528 Terra
+529 Terra
+530 Terra
+531 Fata
+532 Umanoide
+533 Umanoide
+534 Umanoide
+535 Acqua 1
+536 Acqua 1
+537 Acqua 1
+538 Umanoide
+539 Umanoide
+540 Coleottero
+541 Coleottero
+542 Coleottero
+543 Coleottero
+544 Coleottero
+545 Coleottero
+546 Pianta
+547 Pianta
+548 Pianta
+549 Pianta
+550 Acqua 2
+551 Terra
+552 Terra
+553 Terra
+554 Terra
+555 Terra
+556 Pianta
+557 Coleottero
+558 Coleottero
+559 Terra
+560 Terra
+561 Volante
+562 Minerale
+563 Minerale
+564 Acqua 1
+565 Acqua 1
+566 Volante
+567 Volante
+568 Minerale
+569 Minerale
+570 Terra
+571 Terra
+572 Terra
+573 Terra
+574 Umanoide
+575 Umanoide
+576 Umanoide
+577 Indeterminato
+578 Indeterminato
+579 Indeterminato
+580 Acqua 1
+581 Acqua 1
+582 Minerale
+583 Minerale
+584 Minerale
+585 Terra
+586 Terra
+587 Terra
+588 Coleottero
+589 Coleottero
+590 Pianta
+591 Pianta
+592 Indeterminato
+593 Indeterminato
+594 Acqua 1
+595 Coleottero
+596 Coleottero
+597 Pianta
+598 Pianta
+599 Minerale
+600 Minerale
+601 Minerale
+602 Indeterminato
+603 Indeterminato
+604 Indeterminato
+605 Umanoide
+606 Umanoide
+607 Indeterminato
+608 Indeterminato
+609 Indeterminato
+610 Mostro
+611 Mostro
+612 Mostro
+613 Terra
+614 Terra
+615 Minerale
+616 Coleottero
+617 Coleottero
+618 Acqua 1
+619 Terra
+620 Terra
+621 Drago
+622 Minerale
+623 Minerale
+624 Umanoide
+625 Umanoide
+626 Terra
+627 Volante
+628 Volante
+629 Volante
+630 Volante
+631 Terra
+632 Coleottero
+633 Drago
+634 Drago
+635 Drago
+636 Coleottero
+637 Coleottero
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649

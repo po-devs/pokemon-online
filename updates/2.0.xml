@@ -1,0 +1,21 @@
+<updates version="2.0">
+  <!-- updateIdFrom can be a range : "1,4" represents all ids from 1 to 4.
+      Use the UpdateMaker program to create an update. Remember, increase updateId
+      by 1 for each update, and if the updates are plateform-independent, if they 
+      represent the same state of advancement, use the same updateId.
+      
+      os can be either all, linux, windows or mac. Changelog is what you want the users
+      to see before the update, what they will see after is in the changelog in the zip
+      that is automatically created by the updatemaker.
+  -->
+  <!--<update updateIdFrom="0" updateIdTo="1" os="all" 
+  	changelog="https://raw.github.com/gist/3073864/d772c98ae74a7e298a840e709d0b5f86055fa8bb/changelog-0-to-1.txt" 
+	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-0-to-1-all.zip"
+	versionTo="2.0.03"
+  />-->
+  <update updateIdFrom="1" updateIdTo="2" os="windows" 
+  	changelog="https://raw.github.com/gist/3095069/fec0d6c5861d2deeaeec199b152970e614e86d2f/gistfile1.txt" 
+	download="http://cloud.github.com/downloads/coyotte508/pokemon-online/update-2.0.07-windows-2.zip"
+	versionTo="2.0.07"
+  />
+</updates>

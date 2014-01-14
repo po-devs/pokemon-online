@@ -1,0 +1,113 @@
+<!-- Syntax: page with 2 braces ( {{ and }} ) to declare the main body,
+	or the body of a subpart. The '{{' have to be appended to the body 
+	name, and the body name has to be lower case.
+
+	{value} for a single value defined later or built in,
+	and {value*} to display multiple elements of that value.
+
+	Look at the example, it's pretty much explicit. 
+
+	All sub bodies and values are predetermined, you can't create custom
+	ones. 
+-->
+
+page{{
+<html>
+	<head>
+		<title>Pok&eacute;mon {pokemon}</title>
+		<link rel="stylesheet" type="text/css" href="../style.css" />
+		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+		<script type="text/javascript" src="../script.js"></script>
+	</head>
+	<body>
+		<header><a href='index.html'>Tier {tier}</a></header>
+		<p><input type='button' onclick="spoiler(document.getElementById('globals'))" value='Show globals'/></p>
+		<div id="globals" style="display: none;">
+		<img src="../poke_img/{imagelink}" />
+		<table class="globaltable">
+			<tr><th>Moves</th>
+			<th>Items</th></tr>
+			<tr>
+				<td valign="top" class="globaltd">
+					<table>
+						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
+						{globalmove*}
+					</table>
+				</td>
+				<td valign="top" class="globaltd">
+					<table>
+						<tr><th>Rank</th><th>Name</th><th>Usage</th></tr>
+						{globalitem*}
+					</table>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<img src="../poke_img/{imagelink}" />
+		<ul>
+			{globalability*}
+		</ul>
+		<table style="width: 100%">
+			<caption>Global Usage: {percentage} % ({battles} battles)</caption>
+			<tr><th>Regular Usage</th><th>Lead Usage</th></tr>
+			<tr><td>{nonleadpercentage} %</td><td>{leadpercentage} %</td></tr>
+			<tr><td valign="top">{moveset*}</td><td valign="top">{leadmoveset*}</td>
+		</table>
+	</body>
+</html>
+}}
+
+globalmove{{
+	<tr><td><code>{rank}</code></td><td><code>| {move}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
+}}
+
+globalitem{{
+	<tr><td><code>{rank}</code></td><td><code>| {item}</code></td><td><code>&nbsp;| {percentage} % <!-- {battles} battles --></code></td></tr>
+}}
+
+globalability{{
+	<li>{ability} - {percentage} % ({battles} battles)</li>
+}}
+
+moveset{{
+	<p class='pokemonRank'># {rank} - {percentage} % ({battles} battles)</p>
+	<hr />
+	<p class='pokemonTitle'>{pokemon} @ {item} Lv. {level} -- {abilities}</p>
+	<!-- This is the first stat set, the other are in the braces -->
+	{firststatset}
+	<div style='display: none;'>
+		{statset*}
+	</div>
+	<ul class='moveList'>
+		<li class='move'>{move1}</li>
+		<li class='move'>{move2}</li>
+		<li class='move'>{move3}</li>
+		<li class='move'>{move4}</li>
+	</ul>
+}}
+
+leadmoveset{{
+	<p class='pokemonRank'># {rank} - {percentage} % ({battles} battles)</p>
+	<hr />
+	<p class='pokemonTitle'>{pokemon} @ {item} Lv. {level} -- {abilities}</p>
+	<!-- This is the first stat set, the other are in the braces -->
+	{firststatset}
+	<div style='display: none;'>
+		{statset*}
+	</div>
+	<ul class='moveList'>
+		<li class='move'>{move1}</li>
+		<li class='move'>{move2}</li>
+		<li class='move'>{move3}</li>
+		<li class='move'>{move4}</li>
+	</ul>
+}}
+
+firststatset{{
+	<p class="advanced">Nature: {nature} - EVs: {evs} <!-- - IVs: {ivs}--><span class='smallPercent'>({percentage} %)</span><span class='hiddenPower'>{hiddenpower}</span>
+		<input type='button' onclick='hideShow(this)' value='+'/></p>
+}}
+
+statset{{
+	<p class='advanced'>Nature: {nature} - EVs: {evs} <!-- - IVs: {ivs}--><span class='smallPercent'>({percentage} %)</span><span class='hiddenPower'>{hiddenpower}</span></p>
+}}

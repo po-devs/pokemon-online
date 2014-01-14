@@ -1,0 +1,100 @@
+﻿0 
+1 %f had its energy drained!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
+2 A ring of water surrounds %s!|Aquaring recovered %s's hp a little.
+3 A soothing aroma wafted through the area!|A bell chimed!
+7 %q ú÷ó!
+8 %s hasn't enough energy left!|%s cut its own HP and maximized its attack!
+9 %s is storing energy!|%s unleashed energy!
+10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
+11 %s çééá ìäéèòï!
+12 %f ìà éëåì éåúø ìáøåç!
+13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!
+14 %s shattered %tf's team protections!
+16 %s ate %f's %i!
+17 %s transformed into the %t type!
+18 %s äúçéì ìèòåï çùîì!
+19 %s transformed into the %t type!
+20 %s transformed into the %t type!
+23 %s begged %f!%f gave its %i to %s|%s stole %f's %i!
+24 %s crushed %f!
+25 %s cut its own HP and laid a Curse on %f!|%s is afflicted by the Curse!
+26 %s took %f down with it!|%s is trying to take its foe with it!
+27 %s äâï òì òöîå!
+28 %f's %m was disabled!|%s's %m is disabled!|%s is no longer disabled!
+29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
+31 %f òø!
+32 %f can't use items anymore!|%s can use items again!
+33 %s's Encore ended!|%f received an encore!
+35 %s endured the hit!|%s braced itself!
+43 äéëåìú: Sturdy ùì%f âøîä ìîäìê ìäëùì!
+45 %s threw %i at %f!
+46 %s îçæ÷ àú òöîå!
+47 %s lost its focus!|%s is tightening its focus!
+51 %f's %a is nullified!
+53 Gravity intensified!|Gravity went back to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
+54 %f's %m lost all its PP because of %s' Grudge!
+55 %s swapped its boosts with %f!
+57 ñåôú ùìâéí äúçéìä!|äúçéì ìøãú âùí!|ñåôú çåì îúçåììú!|äùîù äúçæ÷ä!
+58 %s is in love with %f!|%f Fell in love!|%s is immobilized by love!
+59 %f can't heal!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+60 %s äçæéø ìòöîå îòè çééí!
+61 %s ðøôà!
+62 %s äúçìéó àú ääâðä òí ääú÷ôä!
+64 %s äúøñ÷ òì ä÷ø÷ò!
+67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
+68 %s floats on a magnetic field!|The magnet field %s was floating on canceled out!
+70 %s knocked off %f's %i!
+72 %f evaded the seed!|%f was seeded!|%s's health is sapped by leech seed.
+73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|%ts's reflect wore off!|%ts's light screen wore off!
+74 %s took aim at %f!
+75 %ts's team is protected from critical hits!|%ts's lucky chant wore off!
+76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!
+77 %s cleared the field around %tf's team!
+78 ù÷ùå÷ àãîä áøîä %d!
+81 %s learned %m!
+82 àáì ùåí ãáø ìà ÷øä!
+84 %s æää àú %f!
+86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
+87 %s regained health!|%s regained a lot of health!|%s regained little health!
+88 Electric's power has been weakened!|Fire's power has been weakened!
+92 %s ëòú çåìí ñéåè!
+93 %s calmed down!|%s became confused due to fatigue!
+94 äìåçîéí äúçì÷å áçééí ùìäí!
+95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+96 %s's present healed %f some HP!
+97 %s copied %f's stat changes!
+98 %s äáéà àú äñèèåñ ùìå ì%f!
+102 %s äúçéì ìäúòöáï!
+103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
+104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s lowered its head!|%s absorbed light!
+105 %s îçæø %i!
+106 %s äìê ìéùåï åðäéä áøéà!
+107 %f held on to the ground using its Suction Cups!|%f is solidly rooted to the ground!|%f was dragged out!
+108 %s copied %f's %a!
+109 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
+111 %s äòúé÷ àú ä%m!
+112 %s äçìéó éëåìåú òí äéøéá!
+114 äDamp ùì%s îðò îæä ìòáåã!
+118 %f snatched %s's %m!|%s waits for a target to make a move!
+121 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
+122 %s ùåçøø!
+123 It reduced the PP of %f's %m by 4!
+124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
+125 %s stockpiled %d!
+127 %s ÷áì îëä îääãó!
+128 %s already has a substitute.|%s's substitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!|%s made a substitute!
+131 %s áìò!
+132 %s switched items with %f!|%s obtained one %i!
+133 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
+134 %s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
+135 %f is now tormented!
+136 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
+137 %s äùúðä àì %p!
+138 %s twisted the dimensions!|The twisted dimensions returned to normal!
+141 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
+142 äîùàìä ùì %q äúâùîä!
+143 %f áòì àéðñåîðéä!
+144 %s made %f feel drowsy!|%s yawns!
+149 ëì ëéðåéé äñèèåñéí ðîç÷å!
+150 %s ðçú òì äàãîä!
+151 %s planted its roots!| %s absorbed nutrients with its roots!

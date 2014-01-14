@@ -1,0 +1,197 @@
+﻿0 
+1 Plant
+2 Plant
+3 Plant
+4 Dragon
+5 Dragon
+6 Dragon
+7 Water 1
+8 Water 1
+9 Water 1
+23 Dragon
+24 Dragon
+25 Fairy
+26 Fairy
+29 Ground
+32 Ground
+33 Ground
+34 Ground
+46 Plant
+47 Plant
+54 Ground
+55 Ground
+79 Water 1
+80 Water 1
+83 Ground
+86 Ground
+87 Ground
+111 Ground
+112 Ground
+116 Dragon
+117 Dragon
+129 Dragon
+130 Dragon
+131 Water 1
+138 Water 3
+139 Water 3
+140 Water 3
+141 Water 3
+147 Dragon
+148 Dragon
+149 Dragon
+152 Plant
+153 Plant
+154 Plant
+158 Water 1
+159 Water 1
+160 Water 1
+172 Fairy
+175 Fairy
+176 Fairy
+179 Ground
+180 Ground
+181 Ground
+183 Fairy
+184 Fairy
+187 Plant
+188 Plant
+189 Plant
+194 Ground
+195 Ground
+199 Water 1
+209 Fairy
+210 Fairy
+222 Water 3
+223 Water 2
+224 Water 2
+225 Ground
+230 Dragon
+252 Dragon
+253 Dragon
+254 Dragon
+258 Water 1
+259 Water 1
+260 Water 1
+270 Plant
+271 Plant
+272 Plant
+273 Plant
+274 Plant
+275 Plant
+278 Flying
+279 Flying
+283 Bug
+284 Bug
+285 Plant
+286 Plant
+293 Ground
+294 Ground
+295 Ground
+298 Fairy
+300 Fairy
+301 Fairy
+303 Fairy
+313 HumanShape
+314 HumanShape
+315 Plant
+320 Water 2
+321 Water 2
+327 HumanShape
+331 HumanShape
+332 HumanShape
+333 Dragon
+334 Dragon
+336 Dragon
+341 Water 3
+342 Water 3
+349 Dragon
+350 Dragon
+351 Indeterminate
+357 Plant
+361 Mineral
+362 Mineral
+363 Ground
+364 Ground
+365 Ground
+369 Water 2
+387 Plant
+388 Plant
+389 Plant
+390 HumanShape
+391 HumanShape
+392 HumanShape
+393 Ground
+394 Ground
+395 Ground
+399 Ground
+400 Ground
+406 Plant
+407 Plant
+417 Fairy
+418 Ground
+419 Ground
+420 Plant
+421 Plant
+422 Indeterminate
+423 Indeterminate
+427 HumanShape
+428 HumanShape
+443 Dragon
+444 Dragon
+445 Dragon
+447 HumanShape
+448 HumanShape
+451 Water 3
+452 Water 3
+459 Plant
+460 Plant
+464 Ground
+468 Fairy
+478 Mineral
+489 Fairy
+490 Fairy
+495 Plant
+496 Plant
+497 Plant
+527 Flying
+528 Flying
+546 Fairy
+547 Fairy
+557 Mineral
+558 Mineral
+559 Dragon
+560 Dragon
+562 Indeterminate
+563 Indeterminate
+564 Water 3
+565 Water 3
+566 Water 3
+567 Water 3
+580 Flying
+581 Flying
+594 Water 2
+597 Mineral
+598 Mineral
+610 Dragon
+611 Dragon
+612 Dragon
+618 Indeterminate
+619 HumanShape
+620 HumanShape
+621 Monster
+674 HumanShape
+675 HumanShape
+686 Water 2
+687 Water 2
+690 Dragon
+691 Dragon
+692 Water 3
+693 Water 3
+694 Dragon
+695 Dragon
+696 Dragon
+697 Dragon
+702 Fairy
+703 Mineral
+708 Indeterminate
+709 Indeterminate

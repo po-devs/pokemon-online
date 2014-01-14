@@ -1,0 +1,18 @@
+﻿1:0 Rojo/Azul
+1:1 Amarillo
+1:2 Stadium
+1:3 Stadium + movs GSC
+2:0 Oro/Plata
+2:1 Cristal
+2:2 Stadium 2
+3:0 Rubí/Zafiro
+3:1 Colosseum
+3:2 Rojo Fuego/Verde Hoja
+3:3 Esmeralda
+3:4 XD
+4:0 Diamante/Perla
+4:1 Platino
+4:2 Heart Gold/Soul Silver
+5:0 Blanco/Negro
+5:1 Blanco/Negro 2
+6:0 X/Y

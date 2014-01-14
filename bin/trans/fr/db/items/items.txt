@@ -1,0 +1,370 @@
+﻿0 (Pas d'objet)
+1 Grosse Racine
+2 Foul.Bleu
+3 Poudreclair
+4 Bandeau Choix
+5 Mouchoir Choix
+6 Lunet.Choix
+7 Noeud Destin
+8 Ceinture Pro
+9 Bandeau
+10 Ceinture Force
+11 Encens Plein
+12 Foul.Vert
+13 Ralentiqueue
+14 Encens Doux
+15 Restes
+16 Encens Veine
+17 Herbe Mental
+18 Poudre Metal
+19 Bandeau Muscle
+20 Bizar.Encens
+21 Foul.Rose
+22 Herbe Pouvoir
+23 Encens Pur
+24 Poudre Vite
+25 Tissu Fauche
+26 Foul.Rouge
+27 Encens Roc
+28 Encens Fleur
+29 Encens Mer
+30 Carapace Mue
+31 Mouchoir Soie
+32 Poudre Argent
+33 Roche Lisse
+34 Sable Doux
+35 Grelot Zen
+36 Encens Vague
+37 Herbeblanche
+38 Loupe
+39 Lunettes Sages
+40 Foul.Jaune
+41 Lentille Zoom
+42 Pièce  Rune
+43 Antidote
+44 Réveil
+45 Jus de baie
+46 Grande Perle
+47 Gros Champignon
+48 Ceinture Noire
+49 Flute Noire
+50 Boue Noir
+51 Lunettes Noire
+52 Flûte Bleue
+53 Tesson Bleu
+54 Anti-Brûle
+55 Calcium
+56 Carbone
+57 Charbon
+58 Rune Purif
+59 Fertihumide
+60 Ecaille Océan
+61 Muscle +
+62 Ecaille Draco
+63 Elixir
+64 Racinénergie
+65 Poudrénergie
+66 Corde Sortie
+67 Huile
+68 Pierre Stase
+69 Multi. Exp
+70 Pierre Feu
+71 Orbe Flamme
+72 Queue Skitty
+73 Eau Fraîche
+74 Total Soin
+75 Guérison
+76 Fertiglu
+77 Tesson Vert
+78 Fertipousse
+79 Défense Spec
+80 Poudre Soin
+81 Ecaillecoeur
+82 Miel
+83 PV Plus
+84 Hyper Potion
+85 AntiGel
+86 Fer
+87 Roche Royal
+88 Lava Cookie
+89 Pierre Plante
+90 Limonade
+91 Orbe Vie
+92 Balle Lumière
+93 Lumargile
+94 Oeuf Chance
+95 Aimant
+96 Max Elixir
+97 Huile Max
+98 Potion Max
+99 Max Repousse
+100 Rappel Max
+101 Peau Metal
+102 Métronome
+103 Graine Miracle
+104 Lait Meumeu
+105 Pierre Lune
+106 Eau Mystique
+107 Glaceternel
+108 Pépite
+109 Vieux Gâteau
+110 Anti-Para
+111 Perle
+112 Poképoupée
+113 Potion
+114 PP Max
+115 PP Plus
+116 Protéine
+117 Super Bonbon
+118 Croc Rasoir
+119 Flûte Rouge
+120 Tesson Rouge
+121 Repousse
+122 Herbe Rappel
+123 Rappel
+124 Cendre Sacrée
+125 Lentilscope
+126 Grelot Coque
+127 Sel Trefond
+128 Co. Trefond
+129 Boule Fumée
+130 Soda Cool
+131 Rosée Ame
+132 Rune Sort
+133 Fertistable
+134 Morc. Etoile
+135 Poudre Etoile
+136 Pierresoleil
+137 Super Potion
+138 Superepousse
+139 Pierre Foudre
+140 Petit Champignon
+141 Orbe Toxik
+142 Cuillertordu
+143 Ameliorator
+144 Pierre Eau
+145 Flute Blanche
+146 Précision +
+147 Attaque +
+148 Défense +
+149 Spécial +
+150 Défense Spé +
+151 Vitesse +
+152 Flûte Jaune
+153 Tesson Jaune
+154 Zinc
+155 Roche Glace
+156 Poing Chance
+157 CD Douteux
+158 Bec Pointu
+159 Orbe Adamant
+160 Roche Humide
+161 Roche Chaude
+162 Orbe Perlé
+163 Brac.Macho
+164 Baton
+165 Croc Dragon
+166 Pic Venin
+167 Chaîne Pouvoir
+168 Band Pouvoir
+169 Ceinture Pouvoir
+170 Poignet Pouvoir
+171 Lentilles Pouvoir
+172 Poids Pouvoir
+173 Pierre Aube
+174 Pierre Nuit
+175 Electiriseur
+176 Magmariseur
+177 Clé de Voûte
+178 Pierre Ovale
+179 Protecteur
+180 Vive Griffe
+181 Griffe Rasoir
+182 Pierre Eclat
+183 Piquants
+184 Dent Ocean
+185 Plaque Draco
+186 Plaque Ombre
+187 Plaque Terre
+188 Plaque Poing
+189 Plaque Flamme
+190 Accro Griffe
+191 Plaque Glace
+192 Plaqueinsect
+193 Plaque Fer
+194 Plaque Herbe
+195 Plaquesprit
+196 Plaque Ciel
+197 Plaque Hydro
+198 Plaque Fantô
+199 Plaque Roc
+200 Masse Os
+201 Plaque Toxic
+202 Plaque Volt
+203 Fossile Armure
+204 Fossile Griffe
+205 Fossile Dome
+206 Pierre Dure
+207 Fosile Nautile
+208 Vieil Ambre
+209 Os Rare
+210 Fossile Racine
+211 Fossile Crâne
+212 Balle Fer
+213 Orbe Platiné
+214 Air Mail
+215 Bloom Mail
+216 Brick Mail
+217 Bubble Mail
+218 Flame Mail
+219 Grass Mail
+220 Harbor Mail
+221 Heart Mail
+222 Mosaic Mail
+223 Snow Mail
+224 Space Mail
+225 Steel Mail
+226 Tunnel Mail
+227 Module Aqua
+228 Module Choc
+229 Module Pyro
+230 Modul Cryo
+231 Chococoeurs
+232 Bel'écaille
+233 Evoluroc
+234 Pierrallégée
+235 Casque Brut
+236 Ballon
+237 Carte Rouge
+238 Pt de Mire
+239 B. Étreinte
+240 Bulbe
+241 Pile
+242 Bouton Fuite
+243 Joyau Feu
+244 Joyau Eau
+245 Joyau Electrique
+246 Joyau Plante
+247 Joyau Glace
+248 Joyau Combat
+249 Joyau Poison
+250 Joyau Sol
+251 Joyau Vol
+252 Joyau Psy
+253 Joyau Insecte
+254 Joyau Roche
+255 Joyau Spectre
+256 Joyau Dragon
+257 Joyau Ténèbre
+258 Joyau Acier
+259 Joyau Normal
+260 Strength Wing
+261 Aile Force
+262 Aile Armure
+263 Aile Esprit
+264 Aile Mental
+265 Aile Sprint
+266 Jolie Aile
+267 Rêve Ball
+268 Champi Suave
+269 Max Pépite
+270 Perles triple
+271 Morc. Comète
+272 Vieux Sou
+273 Vieil Ecu
+274 Vieux Ducat
+275 Vieux Vase
+276 Vieux Bijou
+277 Vieux Santon
+278 Vieux Tortil
+279 Glace Volute
+280 Muscle 2
+281 X Vitesse 2
+282 X Att.Spé 2
+283 X Def.Spé 2
+284 X Defense 2
+285 X Attaque 2
+286 X Précision 2
+287 X Vitesse 3
+288 X Att.Spé 3
+289 X Def.Spé 3
+290 X Defense 3
+291 X Attaque 3
+292 X Précision 3
+293 X Vitesse 6
+294 X Att.Spé 6
+295 X Def.Spé 6
+296 X Defense 6
+297 X Attaque 6
+298 X Précision 6
+299 Appel Cap.Spé
+300 Jette Objet
+301 Appel Objet
+302 Flat Call
+303 Dire Hit 3
+304 Gene Berserk
+305 Poké Ball
+306 Super Ball
+307 Hyper Ball
+308 Master Ball
+309 Safari Ball
+310 Niveau Ball
+311 Appât Ball
+312 Lune Ball
+313 Copain Ball
+314 Love Ball
+315 Masse Ball
+316 Speed Ball
+317 Compét Ball
+318 Honor Ball
+319 Bis Ball
+320 Chrono Ball
+321 Faiblo Ball
+322 Filet Ball
+323 Scuba Ball
+324 Luxe Ball
+325 Soin Ball
+326 Rapide Ball
+327 Sombre Ball
+328 Mémoire Ball
+329 Parc Ball
+330 Plaque Pixie
+331 Veste de Combat
+333 Vulné-Assurance
+334 Boule de Neige
+336 Pilule Talent
+337 Fossile Mâchoire
+338 Fossile Nageoire
+339 Galette Illumis
+340 Sachet Senteur
+341 Chantibonbon
+1000 Ruban Rose
+1001 Ruban à Pois
+2001 Florizarrite
+2002 Dracaufite X
+2003 Dracaufite Y
+2004 Tortankite
+2005 Alakazamite
+2006 Ectoplasmite
+2007 Kangourexite
+2008 Scarabruite
+2009 Léviatorite
+2010 Ptéraïte
+2011 Mewtwoïte X
+2012 Mewtwoïte Y
+2013 Pharampite
+2014 Cizayoxite
+2015 Scarhinoïte
+2016 Démolossite
+2017 Tyranocivite
+2018 Braségalite
+2019 Gardevoirite 
+2020 Mysdibulite
+2021 Galekingite
+2022 Charminite
+2023 Élecsprintite
+2024 Branettite
+2025 Absolite
+2026 Carchacrokite
+2027 Lucarite
+2028 Blizzarite

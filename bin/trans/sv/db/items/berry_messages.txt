@@ -1,0 +1,12 @@
+﻿0 %s åt sin %i!
+1 %s kom ur sin förvirring!|%ss status-återställdes!|%s är inte längre paralyserad!|%ss brännskador läkte!|%s tinade upp!|%s vaknade!|%s är botad från förgiftningen!|%s är botad från förgiftningen!
+2 %ss %ms PP återställdes!
+3 %s återställde lite HP!
+4 %ss %i försvagade %ms styrka!
+5 %ss %i försvagade %ms styrka!
+6 %s återställde lite HP
+7 %i ökade %ss %st!
+9 %i ökade skarpt %ss %st!
+10 %s fokuserar på sitt mål!
+11 %s planerar redan sitt nästa drag!
+12 %f skadas av rekylen

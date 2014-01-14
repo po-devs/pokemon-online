@@ -1,0 +1,154 @@
+﻿0 #
+2 14-2#Drizzle
+3 58-5#Speed boost
+5 91#Sturdy
+7 33-1#Limber
+8 51-3#Sandveil
+9 18-1#Static
+10 70-12#Volt absorb
+11 70-10#Water absorb
+13 89#Cloud Nine
+14 10#CompoundEyes
+15 33-2#Insomnia
+16 9#Color change
+17 33-5#Immunity
+18 19#Flash Fire
+20 44#Own tempo
+22 34#Intimidate
+23 53#Shadow Tag
+24 50#Rough Skin
+25 71#Wonder Guard
+26 120#Levitate
+27 16#Effect Spore
+28 61#Synchronize
+29 31#Clearbody
+30 42#Natural Cure
+31 38-12#Lightning Rod
+33 8-2#Swift Swim
+34 8-4#Chlorophyll
+36 66#Trace
+37 27#Huge Power
+38 18-5#Poison Point
+39 12#Inner focus
+40 33-3#Magma Armor
+41 33-4#Water Veil
+42 39#Magnet Pull
+43 57#SoundProof
+44 32-2#Rain Dish
+45 14-3#Sandstream
+46 46#Pressure
+47 64#Thick fat
+49 18-4#Flame Body
+51 30-6#Keen Eye
+52 30-1#Hyper Cutter
+53 93#pickup
+54 67#Truant
+55 28#Hustle
+56 11#CuteCharm
+57 45#Plus
+58 36#Minus
+59 21#Forecast
+61 54#Shed Skin
+62 25-1#Guts
+63 25-2#Marvel Scale
+65 7-11#Overgrow
+66 7-9#Blaze
+67 7-10#Torrent
+68 7-6#Swarm
+70 14-4#Drought
+71 5#Arena Trap
+72 33-2#Vital Spirit
+73 31#WhiteSmoke
+74 27#Pure Power
+76 89#Air Lock
+77 62#Tangled Feet
+78 41#Motor Drive
+79 49#Rivalry
+80 60#Steadfast
+81 51-1#Snow cloak
+82 24#Gluttony
+83 3#Anger Point
+84 69#Unburden
+85 26#Heatproof
+87 15#Dry skin
+88 13#Download
+89 35#Iron Fist
+91 1#Adaptability
+93 29#Hydration
+94 56#Solar power
+95 25-5#Quick Feet
+96 43#Normalize
+100 59#Stall
+101 63#Technician
+102 37#Leaf Guard
+104 40#Mold Breaker
+106 2#Aftermath
+107 4#Anticipation
+108 22#Forewarn
+110 65#Tinted lens
+112 55#Slow Start
+114 38-10#Storm Drain
+115 32-1#Ice body
+117 14-1#Snow Warning
+119 23#Frisk
+120 48#Reckless
+122 20#Flower Gift
+123 6#Bad Dreams
+124 78#Pickpocket
+125 79#SheerForce
+127 102#Unnerve
+128 80#Defiant
+129 76#Defeatist
+130 96#Cursed Body
+131 99#Healer
+132 100#Friend Guard
+133 74#Weak Armor
+136 83#Multiscale
+137 84-5#Toxic Boost
+138 84-4#Flare Boost
+139 88#Harvest
+140 85#Telepathy
+141 95#Moody
+142 17#Overcoat
+143 101-5#Poison Touch
+144 86#Regenerator
+145 30-2#Big Pecks
+146 8-3#Sand Rush
+147 90#Miracle Skin
+148 98#Analytic
+149 92#Illusion
+150 81#Imposter
+152 47#Mummy
+153 52#Moxie
+154 94#Justified
+155 97#Rattled
+156 87#Magic Bounce
+157 68-11#Herbivore
+158 82#Prankster
+159 72#Sand Force
+160 50#Iron Barb
+161 77#Zen Mode
+162 75#Victory Star
+163 40#Turbo Blaze
+164 40#TeraVolt
+165 121-2#Aerilate
+166 117#Aurabreak
+168 103-Aura_16#Dark Aura
+169 103-Aura_17#Fairy Aura
+170 104-Veil_11#Flower Veil
+171 105#Fur Coat
+172 106#Mega Launcher
+173 111#Parental Bond
+174 121-17#Pixilite
+175 107#Protean
+176 121-14#Refrigerate
+177 110#Stance Change
+178 108#Strong Jaw
+179 112#Sweet Veil
+180 109#Tough Claws
+181 113#Competitive
+182 114#Gale Wings
+183 115#Gooey
+185 118#BulletProof
+186 119#Grass Pelt
+187 116#Magician

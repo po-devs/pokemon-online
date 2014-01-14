@@ -1,0 +1,608 @@
+﻿0 (Pas d'attaque)
+1 Ecras'face
+2 Poing-karate
+3 Torgnoles
+4 Poing Comete
+5 Ultimapoing
+6 Jackpot
+7 Poing De Feu
+8 Poinglace
+9 Poing-eclair
+10 Griffe
+11 Force Poigne
+12 Guillotine
+13 Coupe-vent
+14 Danse-lames
+15 Coupe
+16 Tornade
+17 Cru-aile
+18 Cyclone
+19 Vol
+20 Étreinte
+21 Souplesse
+22 Fouet Lianes
+23 Écrasement
+24 Double Pied
+25 Ultimawashi
+26 Pied Sauté
+27 Mawashi Geri
+28 Jet De Sable
+29 Coup D'boule
+30 Koud'korne
+31 Furie
+32 Empal'korne
+33 Charge
+34 Plaquage
+35 Ligotage
+36 Bélier
+37 Mania
+38 Damocles
+39 Mimi-queue
+40 Dard-venin
+41 Double-dard
+42 Dard-nuée
+43 Groz'yeux
+44 Morsure
+45 Rugissement
+46 Hurlement
+47 Berceuse
+48 Ultrason
+49 Sonicboom
+50 Entrave
+51 Acide
+52 Flammeche
+53 Lance-flamme
+54 Brume
+55 Pistolet à O
+56 Hydrocanon
+57 Surf
+58 Laser Glace
+59 Blizzard
+60 Rafale Psy
+61 Bulles d'O
+62 Onde Boreale
+63 Ultralaser
+64 Picpic
+65 Bec Vrille
+66 Sacrifice
+67 Balayage
+68 Riposte
+69 Frappe Atlas
+70 Force
+71 Vol-vie
+72 Mega-sangsue
+73 Vampigraine
+74 Croissance
+75 Tranch'herbe
+76 Lance-soleil
+77 Poudre Toxik
+78 Para-spore
+79 Poudre Dodo
+80 Danse-fleur
+81 Sécrétion
+82 Draco-rage
+83 Danseflamme
+84 Éclair
+85 Tonnerre
+86 Cage-éclair
+87 Fatal-foudre
+88 Jet-pierres
+89 Séisme
+90 Abime
+91 Tunnel
+92 Toxik
+93 Choc Mental
+94 Psyko
+95 Hypnose
+96 Yoga
+97 Hâte
+98 Vive-attaque
+99 Frenesie
+100 Teleport
+101 Tenebres
+102 Copie
+103 Grincement
+104 Reflet
+105 Soin
+106 Armure
+107 Lilliput
+108 Brouillard
+109 Onde Folie
+110 Repli
+111 Boul'armure
+112 Bouclier
+113 Mur Lumière
+114 Buée Noire
+115 Protection
+116 Puissance
+117 Patience
+118 Métronome
+119 Mimique
+120 Destruction
+121 Bomb'oeuf
+122 Lechouille
+123 Puredpois
+124 Detritus
+125 Massd'os
+126 Déflagration
+127 Cascade
+128 Claquoir
+129 Meteores
+130 Coud'krane
+131 Picanon
+132 Constriction
+133 Amnésie
+134 Télékinésie
+135 E-coque
+136 Pied Voltige
+137 Intimidation
+138 Dévorêve
+139 Gaz Toxik
+140 Pilonnage
+141 Vampirisme
+142 Grobisou
+143 Piqué
+144 Morphing
+145 Ecume
+146 Uppercut
+147 Spore
+148 Flash
+149 Vague Psy
+150 Trempette
+151 Acidarmure
+152 Pince-masse
+153 Explosion
+154 Combo-griffe
+155 Osmerang
+156 Repos
+157 Eboulement
+158 Croc De Mort
+159 Affutage
+160 Adaptation
+161 Triplattaque
+162 Croc Fatal
+163 Tranche
+164 Clonage
+165 Lutte
+166 Gribouille
+167 Triple Pied
+168 Larcin
+169 Toile
+170 Lire-esprit
+171 Cauchemar
+172 Roue De Feu
+173 Ronflement
+174 Malediction
+175 Fleau
+176 Adaptation2
+177 Aeroblast
+178 Spore Coton
+179 Contre
+180 Depit
+181 Poudreuse
+182 Abri
+183 Mach Punch
+184 Grimace
+185 Feinte
+186 Doux Baiser
+187 Cognobidon
+188 Bomb-beurk
+189 Coud'boue
+190 Octazooka
+191 Picots
+192 Elecanon
+193 Clairvoyance
+194 Prlvt Destin
+195 Requiem
+196 Vent-glace
+197 Detection
+198 Charge-os
+199 Verrouillage
+200 Colere
+201 Tempetesable
+202 Giga-sangsue
+203 Tenacite
+204 Charme
+205 Roulade
+206 Faux-chage
+207 Vantardise
+208 Lait A Boire
+209 Etincelle
+210 Taillade
+211 Aile D'acier
+212 Regard Noir
+213 Attraction
+214 Blabla Dodo
+215 Glas De Soin
+216 Retour
+217 Cadeau
+218 Frustration
+219 Rune Protect
+220 Balance
+221 Feu Sacre
+222 Ampleur
+223 Dynamopoing
+224 Megacorne
+225 Dracosouffle
+226 Relais
+227 Encore
+228 Poursuite
+229 Tour Rapide
+230 Doux Parfum
+231 Queue De Fer
+232 Griffe Acier
+233 Corps Perdu
+234 Aurore
+235 Synthese
+236 Rayon Lune
+237 Puis.cachee
+238 Coup-croix
+239 Ouragan
+240 Danse Pluie
+241 Zenith
+242 Machouille
+243 Voile Miroir
+244 Boost
+245 Vit.extreme
+246 Pouv.antique
+247 Ball'ombre
+248 Prescience
+249 Eclate-roc
+250 Siphon
+251 Baston
+252 Bluff
+253 Brouhaha
+254 Stockage
+255 Relache
+256 Avale
+257 Canicule
+258 Grele
+259 Tourmente
+260 Flatterie
+261 Feu Follet
+262 Souvenir
+263 Facade
+264 Mitra-poing
+265 Stimulant
+266 Par Ici
+267 Force-nature
+268 Chargeur
+269 Provoc
+270 Coup D'main
+271 Tourmagik
+272 Imitation
+273 Voeu
+274 Assistance
+275 Racines
+276 Surpuissance
+277 Reflet Magik
+278 Recyclage
+279 Vendetta
+280 Casse-brique
+281 Baillement
+282 Sabotage
+283 Effort
+284 Eruption
+285 Echange
+286 Possessif
+287 Regeneration
+288 Rancune
+289 Saisie
+290 Force Cachee
+291 Plongee
+292 Cogne
+293 Camouflage
+294 Lumiqueue
+295 Lumi-eclat
+296 Ball'brume
+297 Danse-plume
+298 Danse-folle
+299 Pied Bruleur
+300 Lance-boue
+301 Ball'glace
+302 Poing Dard
+303 Paresse
+304 Megaphone
+305 Crochetvenin
+306 Eclategriffe
+307 Rafale Feu
+308 Hydroblast
+309 Poing Meteor
+310 Etonnement
+311 Ball'meteo
+312 Aromatherapi
+313 Croco Larme
+314 Tranch'air
+315 Surchauffe
+316 Flair
+317 Tomberoche
+318 Vent Argente
+319 Strido-son
+320 Siffl'herbe
+321 Chatouille
+322 Force Cosmik
+323 Gicledo
+324 Rayon Signal
+325 Poing Ombre
+326 Extrasenseur
+327 Stratopercut
+328 Tourbi-sable
+329 Glaciation
+330 Ocroupi
+331 Balle Graine
+332 Aeropique
+333 Stalagtite
+334 Mur De Fer
+335 Barrage
+336 Grondement
+337 Dracogriffe
+338 Vege-attak
+339 Gonflette
+340 Rebond
+341 Tir De Boue
+342 Queue-poison
+343 Implore
+344 Electacle
+345 Feuillemagik
+346 Tourniquet
+347 Plenitude
+348 Lame-feuille
+349 Danse Draco
+350 Boule Roc
+351 Onde De Choc
+352 Vibraqua
+353 Carnareket
+354 Psycho Boost
+355 Atterrissage
+356 Gravite
+357 Oeil Miracle
+358 Reveil Force
+359 Marto-poing
+360 Gyroballe
+361 Voeu Soin
+362 Saumure
+363 Don Naturel
+364 Ruse
+365 Picore
+366 Vent Arriere
+367 Acupression
+368 Fulmifer
+369 Demi-tour
+370 Close Combat
+371 Represailles
+372 Assurance
+373 Embargo
+374 Degommage
+375 Echange Psy
+376 Atout
+377 Anti-soin
+378 Essorage
+379 Astuce Force
+380 Suc Digestif
+381 Air Veinard
+382 Moi D'abord
+383 Photocopie
+384 Permuforce
+385 Permugarde
+386 Punition
+387 Dernierecour
+388 Soucigraine
+389 Coup Bas
+390 Pics Toxik
+391 Permucoeur
+392 Anneau Hydro
+393 Vol Magnetik
+394 Boutefeu
+395 Forte-paume
+396 Aurasphere
+397 Poliroche
+398 Direct Toxik
+399 Vibrobscur
+400 Tranche-nuit
+401 Hydroqueue
+402 Canon Graine
+403 Lame D'air
+404 Plaie-croix
+405 Bourdon
+406 Dracochoc
+407 Dracocharge
+408 Rayon Gemme
+409 Vampipoing
+410 Onde Vide
+411 Exploforce
+412 Eco-sphere
+413 Rapace
+414 Telluriforce
+415 Passe-passe
+416 Giga Impact
+417 Machination
+418 Pisto-poing
+419 Avalanche
+420 Eclats Glace
+421 Griffe Ombre
+422 Crocs Eclair
+423 Crocs Givre
+424 Crocs Feu
+425 Ombre Portee
+426 Boue-bombe
+427 Coupe Psycho
+428 Psykoud'boul
+429 Miroi-tir
+430 Luminocanon
+431 Escalade
+432 Anti-brume
+433 Distorsion
+434 Draco Meteor
+435 Coup D'jus
+436 Ebullilave
+437 Tempeteverte
+438 Megafouet
+439 Roc-boulet
+440 Poison-croix
+441 Detricanon
+442 Tete De Fer
+443 Bombaimant
+444 Lame De Roc
+445 Seduction
+446 Piege De Roc
+447 Noeud Herbe
+448 Babil
+449 Jugement
+450 Piqure
+451 Rayon Charge
+452 Martobois
+453 Aqua-jet
+454 Appel Attak
+455 Appel Defens
+456 Appel Soins
+457 Fracass'tete
+458 Coup Double
+459 Hurle-temps
+460 Spatio-rift
+461 Danse-lune
+462 Presse
+463 Vortex Magma
+464 Trou Noir
+465 Fulmigraine
+466 Vent Mauvais
+467 Revenant
+468 Aiguisage
+469 Garde Large
+470 PartageGarde
+471 PartageForce
+472 Zone Étrange
+473 Choc Psy
+474 Choc Venin
+475 Allègement
+476 PoudreFureur
+477 Lévikinésie
+478 Zone Magique
+479 Anti-Air
+480 Yama Arashi
+481 Rebondifeu
+482 Cradovague
+483 Papillodance
+484 Tacle lourd
+485 Synchropeine
+486 Boule Élek
+487 Détrempage
+488 Nitrocharge
+489 Enroulement
+490 Balayette
+491 Bombe acide
+492 Tricherie
+493 Rayon simple
+494 Ten-danse
+495 Après Vous
+496 Chant Canon
+497 Echo
+498 Chatiment
+499 Bain de Smog
+500 ForceAjoutée
+501 Prévention
+502 Interversion
+503 Ebullition
+504 Exuviation
+505 Vibra Soin
+506 Chatiment
+507 Chute Libre
+508 Chgt Vitesse
+509 Projection
+510 Calcination
+511 À la Queue
+512 Acrobatie
+513 Ten-danse
+514 Vengeance
+515 Tout ou Rien
+516 Passe-Cadeau
+517 Feu d'Enfer
+518 Aire d'Eau
+519 Aire de Feu
+520 Aire d'Herbe
+521 ChangeÉclair
+522 Survinsecte
+523 Piétisol
+524 Souffle Glacé
+525 Draco-Queue
+526 Rengorgement
+527 Toile Élek
+528 Eclair Fou
+529 Tunnelier
+530 Double Baffe
+531 Crèvecoeur
+532 Encornebois
+533 Lame Sainte
+534 Coquilame
+535 Tacle Feu
+536 Phytomixeur
+537 Bulldoboule
+538 Cotogarde
+539 Explonuit
+540 Frappe Psy
+541 Plumo-Queue
+542 Vent Violent
+543 Peignée
+544 Lancécrou
+545 Incendie
+546 TechnoBuster
+547 ChantAntique
+548 Lame Ouinte
+549 Aire Glacière
+550 ChargeFoudre
+551 Flamme Bleue
+552 Danse du Feu
+553 Éclair Gelé
+554 Feu glacé
+555 Aboiement
+556 Chute Glace
+557 CoupVictoire
+558 Flamme Croix
+559 Éclair Croix
+560 Regard Touchant
+561 Bang Sonique
+562 Vigilance
+563 Éclat Magique
+564 Vampibaiser
+565 Vent Féérique
+566 Flying Press
+567 Maléfice Sylvain
+568 Lyophilisation
+569 Géo-Contrôle
+570 Tempête Florale
+571 Harcèlement
+572 Pouvoir Lunaire
+573 Feu Ensorcelé
+574 Râle Mâle
+575 Frotte-Frimousse
+576 Mort-Ailes
+577 Parabocharge
+578 Hantise
+579 Câlinerie
+580 Camaraderie
+581 Halloween
+582 Sheauriken
+583 Brume Capiteuse
+584 Éructation
+585 Confidence
+586 Voix Enjôleuse
+587 Ondes Étranges
+588 Champs Électrifié
+589 Électrisation
+590 Verrou Enchanté
+591 Dard Mortel
+592 Garde Florale
+593 Champ Herbu
+594 DélugePlasmique
+595 Bouclier Royal
+596 Force Chtonienne
+597 Magné-Contrôle
+598 Tatamigaeshi
+599 Champ Brumeux
+600 Dernier Mot
+601 Nuée de Poudre
+602 Poing Boost
+603 Fertilisation
+604 Pico-Défense
+605 Toile Gluante
+606 Renversement
+607 Piège de Venin

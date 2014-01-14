@@ -1,0 +1,189 @@
+﻿0 (Sin habilidad)
+1 Hedor
+2 Llovizna
+3 Impulso
+4 Armad. Bat.
+5 Robustez
+6 Humedad
+7 Flexibilidad
+8 Velo arena
+9 Elec. Estát.
+10 Absor. Elec.
+11 Absor. Agua
+12 Despiste
+13 Aclimatación
+14 Ojocompuesto
+15 Insomnio
+16 Cambio Color
+17 Inmunidad
+18 Absor. Fuego
+19 Polvo Escudo
+20 Ritmo Propio
+21 Ventosas
+22 Intimidación
+23 Sombratrampa
+24 Piel Tosca
+25 Superguarda
+26 Levitación
+27 Efec. Espora
+28 Sincronía
+29 Cuerpo Puro
+30 Cura Natural
+31 Pararrayos
+32 Dicha
+33 Nado Rápido
+34 Clorofila
+35 Iluminación
+36 Rastro
+37 Potencia
+38 Punto Tóxico
+39 Foco Interno
+40 Escudo Magma
+41 Velo Agua
+42 Imán
+43 Insonorizar
+44 Cura Lluvia
+45 Chorro Arena
+46 Presión
+47 Sebo
+48 Madrugar
+49 Cuerpo Llama
+50 Fuga
+51 Vista Lince
+52 Corte Fuerte
+53 Recogida
+54 Ausente
+55 Entusiasmo
+56 Gran Encanto
+57 Más
+58 Menos
+59 Predicción
+60 Viscosidad
+61 Mudar
+62 Agallas
+63 Escama Esp.
+64 Lodo Líquido
+65 Espesura
+66 Mar Llamas
+67 Torrente
+68 Enjambre
+69 Cabeza Roca
+70 Sequía
+71 Trampa Arena
+72 Espír. Vital
+73 Humo Blanco
+74 Energía Pura
+75 Caparazón
+76 Bucle Aire
+77 Tumbos
+78 Electromotor
+79 Rivalidad
+80 Impasible
+81 Manto Níveo
+82 Gula
+83 Irascible
+84 Liviano
+85 Ignífugo
+86 Simple
+87 Piel Seca
+88 Descarga
+89 Puño Férreo
+90 Antídoto
+91 Adaptable
+92 Encadenado
+93 Hidratación
+94 Poder Solar
+95 Pies Rápidos
+96 Normalidad
+97 Francotirador
+98 Muro Mágico
+99 Indefenso
+100 Rezagado
+101 Experto
+102 Defensa Hoja
+103 Zoquete
+104 Rompemoldes
+105 Afortunado
+106 Resquicio
+107 Anticipación
+108 Alerta
+109 Ignorante
+110 Cromolente
+111 Filtro
+112 Inicio Lento
+113 Intrépido
+114 Colector
+115 Gélido
+116 Roca Sólida
+117 Nevada
+118 Recogemiel
+119 Cacheo
+120 Audaz
+121 Multitipo
+122 Don Floral
+123 Mal Sueño
+124 Hurto
+125 Potencia Bruta
+126 Respondón
+127 Nerviosismo
+128 Competitivo
+129 Flaqueza
+130 Cue. Maldito
+131 Alma Cura
+132 Compiescolta
+133 Arm. Frágil
+134 Met. Pesado
+135 Met. Liviano
+136 Compensación
+137 Ím. Tóxico
+138 Ím. Ardiente
+139 Cosecha
+140 Telepatía
+141 Veleta
+142 Funda
+143 Toque Tóxico
+144 Regeneración
+145 Sacapecho
+146 Ímpetu Arena
+147 Piel Milagro
+148 Cálc. Final
+149 Ilusión
+150 Impostor
+151 Allanamiento
+152 Momia
+153 Autoestima
+154 Justiciero
+155 Cobardía
+156 Espejomágico
+157 Herbívoro
+158 Bromista
+159 Poder Arena
+160 Punta Acero
+161 Modo Daruma
+162 Tinovictoria
+163 Turbollama
+164 Terravoltaje
+165 Piel Celeste
+166 Rompeaura
+167 Carrillo
+168 Aura Oscura
+169 Aura Feérica
+170 Velo Flor
+171 Pelaje Recio
+172 Megadisparador
+173 Amor Filial
+174 Piel Feérica
+175 Mutatipo
+176 Piel Helada
+177 Cambio Táctico
+178 Mandíbula Fuerte
+179 Velo Dulce
+180 Garra Dura
+181 Tenacidad
+182 Alas Vendaval
+183 Baba
+184 Velo Aroma
+185 Antibalas
+186 Manto Frondoso
+187 Prestidigitador
+188 Simbiosos

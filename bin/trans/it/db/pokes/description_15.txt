@@ -1,0 +1,494 @@
+﻿0 
+1 The seed on its back is filled with nutrients. The seed grows steadily larger as its body grows.
+2 Exposure to sunlight adds to its strength. Sunlight also makes the bud on its back grow larger.
+3 By spreading the broad petals of its flower and catching the sun’s rays, it fills its body with power.
+4 The flame on its tail shows the strength of its life force. If it is weak, the flame also burns weakly.
+5 It is very hotheaded by nature, so it constantly seeks opponents. It calms down only when it wins.
+6 If CHARIZARD becomes furious, the flame at the tip of its tail flares up in a light blue shade.
+7 The shell is soft when it is born. It soon becomes so resilient, prodding fingers will bounce off it.
+8 It is a well-established symbol of longevity. If its shell has algae on it, that WARTORTLE is very old.
+9 It deliberately makes itself heavy so it can withstand the recoil of the water jets it fires.
+10 For protection, it releases a horrible stench from the antennae on its head to drive away enemies.
+11 Inside the shell, it is soft and weak as it prepares to evolve. It stays motionless in the shell.
+12 It collects honey every day. It rubs honey onto the hairs on its legs to carry it back to its nest.
+13 Its poison stinger is very powerful. Its bright-colored body is intended to warn off its enemies.
+14 Although it is a cocoon, it can move a little. It can extend its poison barb if it is attacked.
+15 It can take down any opponent with its powerful poison stingers. It sometimes attacks in swarms.
+16 It usually hides in tall grass. Because it dislikes fighting, it protects itself by kicking up sand.
+17 It has outstanding vision. However high it flies, it is able to distinguish the movements of its prey.
+18 Its well-developed chest muscles make it strong enough to whip up a gusty windstorm with just a few flaps.
+19 It eats anything. Wherever food is available, it will settle down and produce offspring continuously.
+20 Gnaws on anything with its tough fangs. It can even topple concrete buildings by gnawing on them.
+21 It flaps its short wings to flush out insects from tall grass. It then plucks them with its stubby beak.
+22 It shoots itself suddenly high into the sky, then plummets down in one fell swoop to strike its prey.
+23 It can freely detach its jaw to swallow large prey whole. It can become too heavy to move, however.
+24 Transfixing prey with the face-like pattern on its belly, it binds and poisons the frightened victim.
+25 This intelligent Pokémon roasts hard berries with electricity to make them tender enough to eat.
+26 When its electricity builds, its muscles are stimulated, and it becomes more aggressive than usual.
+27 If it fell from a great height, this Pokémon could save itself by rolling into a ball and bouncing.
+28 In an attempt to hide itself, it will run around at top speed to kick up a blinding dust storm.
+29 The poison hidden in its small horn is extremely potent. Even a tiny scratch can have fatal results.
+30 When feeding its young, it first chews the food into a paste, then spits it out for the offspring.
+31 Its body is covered with needle-like scales. It never shows signs of shrinking from any attack.
+32 It is small, but its horn is filled with poison. It charges then stabs with the horn to inject poison.
+33 It raises its big ears to check its surroundings. If it senses anything, it attacks immediately.
+34 It swings its big tail around during battle. If its foe flinches, it will charge with its sturdy body.
+35 The moonlight that it stores in the wings on its back apparently gives it the ability to float in midair.
+36 With its acute hearing, it can pick up sounds from far away. It usually hides in quiet places.
+37 As it develops, its single white tail gains color and splits into six. It is quite warm and cuddly.
+38 Some legends claim that each of its nine tails has its own unique type of special mystical power.
+39 If it inflates to sing a lullaby, it can perform longer and cause sure drowsiness in its audience.
+40 Their fur feels so good that if two of them snuggle together, they won’t want to be separated.
+41 While flying, it constantly emits ultrasonic waves from its mouth to check its surroundings.
+42 However hard its victim’s hide may be, it punctures with sharp fangs and gorges itself with blood.
+43 Awakened by moonlight, it roams actively at night. In the day, it stays quietly underground.
+44 What appears to be drool is actually sweet honey. It is very sticky and clings stubbornly if touched.
+45 It has the world’s largest petals. With every step, the petals shake out heavy clouds of toxic pollen.
+46 It is doused with mushroom spores when it is born. As its body grows, mushrooms sprout from its back.
+47 It stays mostly in dark, damp places, the preference not of the bug, but of the big mushroom on its back.
+48 Its eyes also function as radar units. It catches and eats small bugs that hide in darkness.
+49 When it attacks, it flaps its large wings violently to scatter its poisonous powder all around.
+50 Its skin is very thin. If it is exposed to light, its blood heats up, causing it to grow weak.
+51 Its three heads bob separately up and down to loosen the soil nearby, making it easier for it to burrow.
+52 It is fascinated by round objects. It can’t stop playing with them until it tires and falls asleep.
+53 Many adore it for its sophisticated air. However, it will lash out and scratch for little reason.
+54 It has mystical powers but doesn’t recall that it has used them. That is why it always looks puzzled.
+55 When it swims at full speed using its long, webbed limbs, its forehead somehow begins to glow.
+56 It is extremely ill-tempered. Groups of them will attack any handy target for no reason.
+57 If approached while asleep, it may awaken and angrily give chase in a groggy state of semi-sleep.
+58 It has a brave and trustworthy nature. It fearlessly stands up to bigger and stronger foes.
+59 This legendary Chinese Pokémon is considered magnificent. Many people are enchanted by its grand mane.
+60 Because it is inept at walking on its newly grown legs, it always  swims around in water.
+61 The swirl on its belly subtly undulates. Staring at it may gradually cause drowsiness.
+62 This strong and skilled swimmer is even capable of crossing the Pacific Ocean just by kicking.
+63 It senses impending attacks and teleports away to safety before the actual attacks can strike.
+64 It possesses strong spiritual power. The more danger it faces, the stronger its psychic power.
+65 Closing both its eyes heightens all its other senses. This enables it to use its abilities to their extremes.
+66 Always brimming with power, it passes time by lifting boulders. Doing so makes it even stronger.
+67 It always goes at its full power, but this very tough and durable Pokémon never gets tired.
+68 It quickly swings its four arms to rock its opponents with ceaseless punches and chops from all angles.
+69 Even though its body is extremely skinny, it is blindingly fast when catching its prey.
+70 Even though it is filled with acid, it does not melt because it also oozes a protective fluid.
+71 Acid that has dissolved many prey becomes sweeter, making it even more effective at attracting prey.
+72 When the tide goes out, dehydrated TENTACOOL remains can be found washed up on the shore.
+73 Its 80 tentacles absorb water and stretch almost endlessly to constrict its prey and enemies.
+74 Most people may not notice, but a closer look should reveal that there are many GEODUDE around.
+75 With a free and uncaring nature, it doesn’t mind if pieces break off while it rolls down mountains.
+76 It sheds its skin once a year. The discarded shell immediately hardens and crumbles away.
+77 It is a weak runner immediately after birth. It gradually becomes faster by chasing after its parents.
+78 At full gallop, its four hooves barely touch the ground because it moves so incredibly fast.
+79 It lazes vacantly near water. If something bites its tail, it won’t even notice for a whole day.
+80 If the tail-biting SHELLDER is thrown off in a harsh battle, it reverts to being an ordinary SLOWPOKE.
+81 It is attracted by electromagnetic waves. It may approach Trainers if they are using their Pokégear.
+82 Three MAGNEMITE are linked by a strong magnetic force. Earaches will occur if you get too close.
+83 If anyone tries to disturb where the essential plant stalks grow, it uses its own stalk to thwart them.
+84 By alternately raising and lowering its two heads, it balances itself to be more stable while running.
+85 It collects data and plans three times as wisely, but it may think too much and fall into a state of immobility.
+86 Although it can’t walk well on land, it is a graceful swimmer. It especially loves being in frigid seas.
+87 Its streamlined body has little drag in water. The colder the temperature, the friskier it gets.
+88 As it moves, it loses bits of its body, from which new GRIMER emerge. This worsens the stench around it.
+89 They love to gather in smelly areas where sludge accumulates, making the stench around them worse.
+90 It swims facing backward by opening and closing its two-piece shell. It is surprisingly fast.
+91 Once it slams its shell shut, it is impossible to open, even by those with superior strength.
+92 With its gas-like body, it can sneak into any place it desires. However, it can be blown away by wind.
+93 In total darkness, where nothing is visible, HAUNTER lurks, silently stalking its next victim.
+94 It steals heat from its surroundings. If you feel a sudden chill, it is certain that a GENGAR appeared.
+95 It twists and squirms through the ground. The thunderous roar of its tunneling echoes a long way.
+96 If you think that you had a good dream but you can’t remember it, a DROWZEE has probably eaten it.
+97 When it is very hungry, it puts humans it meets to sleep, then it feasts on their dreams.
+98 If it senses danger approaching, it cloaks itself with bubbles from its mouth so it will look bigger.
+99 It can hardly lift its massive, overgrown pincer. The pincer’s size makes it difficult to aim properly.
+100 It rolls to move. If the ground is uneven, a sudden jolt from hitting a bump can cause it to explode.
+101 It is dangerous. If it has too much electricity and has nothing to do, it amuses itself by exploding.
+102 Their shells are very durable. Even if they crack, they can survive without spilling their contents.
+103 Its three heads think independently. However, they are friendly and never appear to squabble.
+104 If it is sad or lonely, the skull it wears shakes and emits a plaintive and mournful sound.
+105 It has been seen pounding boulders with the bone it carries in order to tap out messages to others.
+106 This amazing Pokémon has an awesome sense of balance. It can kick in succession from any position.
+107 Its punches slice the air. However, it seems to need a short break after fighting for three minutes.
+108 Its tongue has well-developed nerves that run to the very tip, so it can be deftly manipulated.
+109 Its thin, filmy body is filled with gases that cause constant sniffles, coughs and teary eyes.
+110 If one of the twin KOFFING inflates, the other one deflates. It constantly mixes its poisonous gases.
+111 It is inept at turning because of its four short legs. It can only charge and run in one direction.
+112 Its rugged hide protects it from even the heat of lava. However, the hide also makes it insensitive.
+113 It walks carefully to prevent its egg from breaking. However, it is extremely fast at running away.
+114 The vines that cloak its entire body are always jiggling. They effectively unnerve its foes.
+115 If it is safe, the young gets out of the belly pouch to play. The adult keeps a close eye on the youngster.
+116 If attacked by a larger enemy, it quickly swims to safety by adeptly controlling its well-developed dorsal fin.
+117 An examination of its cells revealed the presence of a gene not found in HORSEA. It became a hot topic.
+118 Its dorsal, pectoral and tail fins wave elegantly in water. That is why it is known as the water dancer.
+119 During spawning season, SEAKING gather from all over, causing rivers to appear a brilliant red.
+120 At night, the middle of its body slowly flickers with the same rhythm as a human heartbeat.
+121 The middle section of its body is called the core. It glows in a different color each time it is seen.
+122 A skilled mime from birth, it gains the ability to create invisible objects as it matures.
+123 It slashes through grass with its sharp scythes, moving too fast for the human eye to track.
+124 It rocks its body rhythmically. It appears to alter the rhythm depending on how it is feeling.
+125 Electricity runs across the surface of its body. In darkness, its entire body glows a whitish-blue.
+126 It dislikes cold places, so it blows scorching flames to make the environment suitable for itself.
+127 With its pincer horns, it digs burrows to sleep in at night. In the morning, damp soil clings to its body.
+128 They fight each other by locking horns. The herd’s protector takes pride in its battle-scarred horns.
+129 An underpowered, pathetic Pokémon. It may jump high on rare occasions, but usually not more than seven feet.
+130 They say that during past strife, GYARADOS would appear and leave blazing ruins in its wake.
+131 They have gentle hearts. Because they rarely fight, many have been caught. Their number has dwindled.
+132 It can transform into anything. When it sleeps, it changes into a stone to avoid being attacked.
+133 It has the ability to alter the composition of its body to suit its surrounding environment.
+134 When VAPOREON’s fins begin to vibrate, it is a sign that rain will come within a few hours.
+135 It concentrates the weak electric charges emitted by its cells and launches wicked lightning bolts.
+136 It stores some of the air it inhales in its internal flame pouch, which heats it to over 3,000 degrees Fahrenheit.
+137 It is a manmade Pokémon. Since it doesn’t breathe, people are eager to try it in any environment.
+138 Revived from an ancient fossil, this Pokémon uses air stored in its shell to sink and rise in water.
+139 Apparently, it cracked SHELLDER’s shell with its sharp fangs and sucked out the insides.
+140 On rare occasions, some have been found as fossils which they became while hiding on the ocean floor.
+141 In the water, it tucks in its limbs to become more compact, then it wiggles its shell to swim fast.
+142 A vicious Pokémon from the distant past, it appears to have flown by spreading its wings and gliding.
+143 What sounds like its cry may actually be its snores or the rumblings of its hungry belly.
+144 The magnificent, seemingly translucent wings of this legendary bird Pokémon are said to be made of ice.
+145 This legendary bird Pokémon causes savage thunderstorms by flapping its glittering wings.
+146 This legendary Pokémon scatters embers with every flap of its wings. It is a thrilling sight to behold.
+147 It is born large to start with. It repeatedly sheds its skin as it steadily grows longer.
+148 They say that if it emits an aura from its whole body, the weather will begin to change instantly.
+149 It is said that this Pokémon constantly flies over the immense seas and rescues drowning people.
+150 Because its battle abilities were raised to the ultimate level, it thinks only of defeating its foes.
+151 Apparently, it appears only to those people who are pure of heart and have a strong desire to see it.
+152 A sweet aroma gently wafts from the leaf on its head. It is docile and loves to soak up sunrays.
+153 The scent of spices comes from around its neck. Somehow, sniffing it makes you want to fight.
+154 The aroma that rises from its petals contains a substance that calms aggressive feelings.
+155 It is timid, and always curls itself up in a ball. If attacked, it flares up its back for protection.
+156 Be careful if it turns its back during battle. It means that it will attack with the fire on its back.
+157 If its rage peaks, it becomes so hot that anything that touches it will instantly go up in flames.
+158 Its powerful, well-developed jaws are capable of crushing anything. Even its Trainer must be careful.
+159 If it loses a fang, a new one grows back in its place. There are always 48 fangs lining its mouth.
+160 When it bites with its massive and powerful jaws, it shakes its head and savagely tears its victim up.
+161 A very cautious Pokémon, it raises itself up using its tail to get a better view of its surroundings.
+162 It makes a nest to suit its long and skinny body. The nest is impossible for other Pokémon to enter.
+163 It always stands on one foot. It changes feet so fast, the movement can rarely be seen.
+164 Its eyes are specially adapted. They concentrate even faint light and enable it to see in the dark.
+165 It is very timid. It will be afraid to move if it is alone. But it will be active if it is in a group.
+166 When the stars flicker in the night sky, it flutters about, scattering a glowing powder.
+167 It lies still in the same pose for days in its web, waiting for its unsuspecting prey to wander close.
+168 It spins string not only from its rear but also from its mouth. It’s hard to tell which end is which.
+169 It flies so silently through the dark on its four wings that it may not be noticed even when nearby.
+170 It shoots positive and negative electricity between the tips of its two antennae and zaps its enemies.
+171 The light it emits is so bright that it can illuminate the sea’s surface from a depth of over three miles.
+172 It is not yet skilled at storing electricity. It may send out a jolt if amused or startled.
+173 Because of its unusual, starlike silhouette, people believe that it came here on a meteor.
+174 It has a very soft body. If it starts to roll, it will bounce all over and be impossible to stop.
+175 The shell seems to be filled with joy. It is said that it will share good luck when treated kindly.
+176 They say that it will appear before kindhearted, caring people and shower them with happiness.
+177 Because its wings aren’t yet fully grown, it has to hop to get around. It is always staring at something.
+178 They say that it stays still and quiet because it is seeing both the past and future at the same time.
+179 If static electricity builds in its body, its fleece doubles in volume. Touching it will shock you.
+180 As a result of storing too much electricity, it developed patches where even downy wool won’t grow.
+181 The tail’s tip shines brightly and can be seen from far away. It acts as a beacon for lost people.
+182 BELLOSSOM gather at times and seem to dance. They say that the dance is a ritual to summon the sun.
+183 The tip of its tail, which contains oil that is lighter than water, lets it swim without drowning.
+184 By keeping still and listening intently, it can tell what is in even wild, fast-moving rivers.
+185 Although it always pretends to be a tree, its composition appears more similar to rock than to vegetation.
+186 If POLIWAG and POLIWHIRL hear its echoing cry, they respond by gathering from far and wide.
+187 To keep from being blown away by the wind, they gather in clusters. But they do enjoy gentle breezes.
+188 The bloom on top of its head opens and closes as the temperature fluctuates up and down.
+189 Once it catches the wind, it deftly controls its cotton-puff spores-- it can even float around the world.
+190 Its tail is so powerful that it can use it to grab a tree branch and hold itself up in the air.
+191 It may plummet from the sky. If attacked by a SPEAROW, it will violently shake its leaves.
+192 It converts sunlight into energy. In the darkness after sunset, it closes its petals and becomes still.
+193 If it flaps its wings really fast, it can generate shock waves that will shatter windows in the area.
+194 This Pokémon lives in cold water. It will leave the water to search for food when it gets cold outside.
+195 This carefree Pokémon has an easy-going nature. While swimming, it always bumps into boat hulls.
+196 It uses the fine hair that covers its body to sense air currents and predict its enemy’s actions.
+197 When agitated, this Pokémon protects itself by spraying poisonous sweat from its pores.
+198 Feared and loathed by many, it is believed to bring misfortune to all those who see it at night.
+199 It has incredible intellect and intuition. Whatever the situation, it remains calm and collected.
+200 It likes playing mischievous tricks, such as screaming and wailing to startle people at night.
+201 Their shapes look like hieroglyphs on ancient tablets. It is said that the two are somehow related.
+202 It hates light and shock. If attacked, it inflates its body to build up its counterstrike.
+203 Its tail has a small brain of its own. Beware! If you get close, it may react to your scent by biting.
+204 It likes to make its shell thicker by adding layers of tree bark. The additional weight doesn’t bother it.
+205 Its entire body is shielded by a steel-hard shell. What lurks inside this shell is a total mystery.
+206 When spotted, this Pokémon escapes backward by furiously boring into the ground with its tail.
+207 It flies straight at its target’s face, then clamps down on the startled victim to inject poison.
+208 Its body has been compressed deep under the ground. As a result, it is even harder than a diamond.
+209 Although it looks frightening, it is actually kind and affectionate. It is very popular among women.
+210 It is actually timid and easily spooked. If attacked, it flails about to fend off its attacker.
+211 To fire its poison spikes, it must inflate its body by drinking over 2.6 gallons of water all at once.
+212 It swings its eye-patterned pincers up to scare its foes. This makes it look like it has three heads.
+213 The berries it stores in its vase-like shell decompose and become a gooey liquid.
+214 This powerful Pokémon thrusts its prized horn under its enemies’ bellies, then lifts and throws them.
+215 Its paws conceal sharp claws. If attacked, it suddenly extends the claws and startles its enemy.
+216 If it finds honey, its crescent mark glows. It always licks its paws because they’re soaked with honey.
+217 Although it is a good climber, it prefers to snap trees with its forelegs and eat fallen berries.
+218 It never sleeps. It has to keep moving because if it stopped, its magma body would cool and harden.
+219 The shell on its back is just skin that has cooled and hardened. It breaks easily with a slight touch.
+220 It rubs its snout on the ground to find and dig up food. It sometimes discovers hot springs.
+221 Because the long hair all over its body obscures its sight, it just keeps charging repeatedly.
+222 It continuously sheds and grows. The tip of its head is prized as a treasure because of its beauty.
+223 It has superb accuracy. The water it shoots out can strike moving prey from more than 300 feet away.
+224 It traps foes with the suction cups on its tentacles, then smashes them with its rock-hard head.
+225 It carries food all day long. There are tales about lost people who were saved by its stored food.
+226 As it majestically swims, it doesn’t care if REMORAID attach to it for scavenging its leftovers.
+227 Its sturdy wings look heavy, but they are actually hollow and light, allowing it to fly freely in the sky.
+228 It uses different kinds of cries for communicating with others of its kind and for pursuing its prey.
+229 If you are burned by the flames it shoots from its mouth, the pain will never go away.
+230 It is said that it usually hides in underwater caves. It can create whirlpools by yawning.
+231 It swings its long snout around playfully, but because it is so strong, that can be dangerous.
+232 It has sharp, hard tusks and a rugged hide. Its tackle is strong enough to knock down a house.
+233 This upgraded version of PORYGON is designed for space exploration. It can’t fly, however.
+234 The curved antlers subtly change the flow of air to create a strange space where reality is distorted.
+235 A special fluid oozes from the tip of its tail. It paints the fluid everywhere to mark its territory.
+236 It is always bursting with energy. To make itself stronger, it keeps on fighting even if it loses.
+237 If you are enchanted by its smooth, dance-like kicks, you may get a closer experience with one than you’d like.
+238 Its lips are the most sensitive part of its body. It always uses its lips first to examine things.
+239 It rotates its arms to generate electricity, but it tires easily, so it only charges up a little bit.
+240 Each and every time it inhales and exhales, hot embers dribble from its mouth and nostrils.
+241 Its milk is packed with nutrition, making it the ultimate beverage for the sick or weary.
+242 Anyone who takes even one taste of BLISSEY’s egg becomes unfailingly caring and pleasant to everyone.
+243 The rain clouds it carries let it fire thunderbolts at will. They say that it descended with lightning.
+244 Volcanoes erupt when it barks. Unable to contain its sheer power, it races headlong around the land.
+245 Said to be the embodiment of north winds, it can instantly purify filthy, murky water.
+246 It feeds on soil. After it has eaten a large mountain, it falls asleep so it can grow.
+247 Its shell is as hard as sheet rock, and it is also very strong. Its thrashing can topple a mountain.
+248 Its body can’t be harmed by any sort of attack, so it is very eager to make challenges against enemies.
+249 It is said that it quietly spends its time deep at the bottom of the sea because its powers are too strong.
+250 Legends claim this Pokémon flies the world’s skies continuously on its magnificent, seven-colored wings.
+251 This Pokémon wanders across time. Grass and trees flourish in the forests in which it has appeared.
+252 Small hooks on the bottom of its feet catch on walls and ceilings. That is how it can hang from above.
+253 It leaps from tree branch to tree branch quite swiftly. It shows astounding agility.
+254 It agilely leaps about the jungle and uses the sharp leaves on its arms to strike its prey.
+255 Inside its body is a place where it keeps a small flame. Hug it! It will be as warm as a hot-water bottle.
+256 During a battle, the hot flame in its body increases. Its kicks have outstanding destructive power.
+257 It can clear a 30-story building in a leap. Its fiery punches scorch its foes.
+258 Its power can crush boulders. It rests by covering itself with mud at the bottom of a river.
+259 Living on muddy ground that provides poor footing has made its legs sturdy.
+260 Its arms are hard as rock. With one swing, it can break a boulder into pieces.
+261 It chases its prey until the victim becomes exhausted. However, it turns tail if the prey strikes back.
+262 It chases down prey in a pack of around ten. They defeat foes with perfectly coordinated teamwork.
+263 It gets interested in everything, which is why it zigs and zags. It is good at finding items.
+264 When running in a straight line, it can easily top 60 miles an hour. It has a tough time with curved roads.
+265 It lives among the tall grass and in forests. It repels attacks by  raising up the spikes on its rear.
+266 Having wrapped silk around the branches of a tree, it quiescently awaits evolution.
+267 Vibrantly patterned wings are its prominent feature. It sucks sweet flower nectar with its long mouth.
+268 It endures attacks with patience, because the more pain before evolution, the sturdier it becomes.
+269 It scatters its fine dust all over when it is attacked. It is a nocturnal Pokémon.
+270 Its leaf grew too large for it to live on land. That is how it began to live floating in the water.
+271 It is nocturnal and becomes active at nightfall. It feeds on aquatic mosses that grow in the riverbed.
+272 If it hears festive music, it begins moving in rhythm in order to amplify its power.
+273 It attaches itself to a tree branch using the top of its head. Strong winds can sometimes make it fall.
+274 It lives deep in forests. With the leaf on its head, it makes a flute whose song makes listeners uneasy.
+275 It lives quietly in the deep forest. It is said to create chilly winter winds with the fans it holds.
+276 When it gets cold, they migrate, flying over 180 miles a day. It hunts for tasty prey.
+277 It dives at a steep angle as soon as it spots its prey. It catches its prey with sharp claws.
+278 It soars on updrafts without flapping its wings. It makes a nest on sheer cliffs at the sea’s edge.
+279 It protects its young in its beak. It bobs on waves, resting on them on days when the waters are calm.
+280 The horns on its head provide a strong power that enables it to sense people’s emotions.
+281 It has a psychic power that enables it to distort the space around it and see into the future.
+282 It unleashes psychokinetic energy at full power when protecting a Trainer it has bonded closely with.
+283 It secretes a thick, sweet-scented syrup from the tip of its head. It lives on weed-choked ponds.
+284 It flaps its four wings to hover and fly freely in any direction-- to and fro and sideways.
+285 If it senses danger, it scatters spores from the top of its head to protect itself.
+286 It scatters poisonous spores and throws powerful punches while its foe is hampered by inhaled spores.
+287 The way SLAKOTH lolls around makes anyone who watches it feel like doing the same.
+288 Its stress level rises if it cannot keep moving constantly. Too much stress makes it feel sick.
+289 The world’s laziest Pokémon. It moves to another spot when there’s no food left within its reach.
+290 It can sometimes live underground for more than 10 years. It absorbs nutrients from the roots of trees.
+291 Its cry leaves a lasting headache if heard for too long. It moves so quickly that it is almost invisible.
+292 A strange Pokémon--it flies without moving its wings, has a hollow shell for a body, and does not breathe.
+293 If it senses danger, it scares the foe by crying out with the volume of a jet-plane engine.
+294 It shouts loudly by inhaling air, and then uses its well-developed stomach muscles to exhale.
+295 Its roar in battle shakes the ground like a tremor--or like an earthquake has struck.
+296 It toughens up by slamming into thick trees over and over. It gains a sturdy body and dauntless spirit.
+297 It loves challenging others to tests of strength. It has the power to stop a train with a slap.
+298 Its tail is packed full of the nutrients it needs to grow.
+299 If two of these meet, they cannot get too close because their noses repel each other.
+300 It’s adorable when it chases its own tail. It’s difficult to earn its trust.
+301 It dislikes dirty places. It often searches for a comfortable place in which to groom itself.
+302 It dwells in the darkness of caves. It uses its sharp claws to dig up gems to nourish itself.
+303 It chomps with its gaping mouth. Its huge jaws are actually steel horns that have been transformed.
+304 When it evolves, it sheds the steel carapace that covered its whole body and develops a new one.
+305 It loves iron ore. Groups of them fight for territory by bashing one another with their steel bodies.
+306 You can tell its age by the length of its iron horns. It claims an entire mountain as its territory.
+307 It meditates to heighten its inner energy and to float in the air. It eats one berry a day.
+308 Through yoga training, it gained the psychic power to predict its foe’s next move.
+309 It stores electricity in its fur. It gives off sparks from all over its body in seasons when the air is dry.
+310 Its nest can be found where a thunderbolt hits. It is discharging electricity from its mane.
+311 It absorbs electricity from telephone poles. It shorts out its body to create crackling noises.
+312 Exposure to electricity from MINUN and PLUSLE promotes blood circulation and relaxes muscles.
+313 It emits light from its tail to communicate. It loves the sweet aroma given off by ILLUMISE.
+314 Its fragrance attracts a swarm of VOLBEAT, so they draw over 200 patterns in the night sky.
+315 ROSELIA that drink nutritionally rich springwater are said to reveal rare coloration when they bloom.
+316 It has a small heart and brain. Its stomach comprises most of its body, with enzymes to dissolve anything.
+317 It gulps anything that fits in its mouth. Its special enzymes can dissolve anything.
+318 They form packs to attack boats and rip out their hulls to sink them. They live in rivers in the jungle.
+319 It can swim at speeds of 75 mph by jetting seawater through its body. It is the bandit of the sea.
+320 It bounces playfully like a ball. The more seawater it swallows, the higher it bounces.
+321 It is the largest of all identified Pokémon. They jump as a pack to herd their prey.
+322 The flaming magma it stores in the hump on its back is the source of its tremendous power.
+323 It lives in the crater of a volcano. It is well known that the humps on its back erupt every 10 years.
+324 You find abandoned coal mines full of them. They dig tirelessly in search of coal.
+325 It bounces around on its tail to keep its heart pumping. It carries a pearl from CLAMPERL on its head.
+326 It can perform odd dance steps to influence foes. Its style of dancing became hugely popular overseas.
+327 The chances of two SPINDA having identical spot patterns is less than one in four billion.
+328 Its nest is a sloped, bowl-like pit in the desert. Once something has fallen in, there is no escape.
+329 It vibrates its wings vigorously, creating ultrasonic waves that cause serious headaches.
+330 It is nicknamed “The Desert Spirit” because the flapping of its wings sounds like a woman singing.
+331 It lives in arid locations. Its yellow flowers bloom once a year.
+332 Packs of them follow travelers through the desert until the travelers can no longer move.
+333 Its wings bring cottony clouds to mind. It grooms with springwater and loves to sit on heads.
+334 It flies gracefully through the sky. Its melodic humming makes you feel like you’re in a dream.
+335 Its fur would all stand on end if it smelled a SEVIPER nearby. Its sharp claws tear up its foes.
+336 In battle, it uses its bladed tail to counter any ZANGOOSE. It secretes a deadly venom in its tail.
+337 It was discovered at the site of a meteor strike 40 years ago. Its stare can lull its foes to sleep.
+338 When it rotates itself, it gives off light similar to the sun, thus blinding its foes.
+339 BARBOACH uses its whiskers to taste things just as a person uses his or her tongue to taste things.
+340 It claims a large swamp to itself. If a foe comes near it, it sets off tremors by thrashing around.
+341 It was originally a Pokémon from afar that escaped to the wild. It can adapt to the dirtiest river.
+342 A brutish Pokémon that loves to battle. It will crash itself into any foe that approaches its nest.
+343 It moves while spinning around on its single foot. Some BALTOY have been seen spinning on their heads.
+344 It is said that it originates from clay dolls made by an ancient civilization.
+345 It disguises its tentacles as flowers to attract and catch prey. It became extinct in ancient times.
+346 It lives in warm seas. Its heavy body weighs it down so it won’t get washed away in rough weather.
+347 An ancestral Pokémon that lived in the ocean. Over time, its eight feet transformed into wings.
+348 Its enormous, retractable claws can cut through most anything. Its entire body is clad in sturdy plates.
+349 It is the shabbiest Pokémon of all. It forms in schools and lives at the bottom of rivers.
+350 It’s said that a glimpse of a MILOTIC and its beauty will calm any hostile emotions you’re feeling.
+351 This Pokémon can change its cells, taking different forms based on the temperature and humidity.
+352 It changes its shading to match its surroundings so it can sneak up on prey. Only its belly patterns stay fixed.
+353 It uses its horn to feed on envy and malice, or so it’s said. It’s very active at night.
+354 This Pokémon developed from an abandoned doll that amassed a grudge. It is seen in dark alleys.
+355 If it finds bad children who won’t listen to their parents, it will spirit them away--or so it’s said.
+356 Anyone who dares peer into its body to see its spectral ball of fire will have their spirit stolen away.
+357 The bunch of fruit around its neck ripens twice a year and is delicious. It’s a highly favored tropical snack.
+358 It uses the sucker on its head to hang from a tree or from eaves. It can produce seven different tones.
+359 It has the ability to foretell natural disasters. Its life span is over a hundred years.
+360 It tends to move in a pack. Individuals squash against one another to toughen their spirits.
+361 It’s said that if they are seen at midnight, they’ll cause heavy snow. They eat snow and ice to survive.
+362 It can instantly freeze moisture in the atmosphere. It uses this power to freeze its foes.
+363 It crosses the oceans by rolling itself on drifting ice. Fluffy fur keeps it warm when the temperature is below freezing.
+364 It has a very sensitive nose. It touches new things with its nose to examine them.
+365 It shatters drift ice with its strong tusks. Its thick layer of blubber repels enemy attacks.
+366 When it evolves, it makes a mysterious pearl that amplifies psychic powers when it’s held.
+367 It lives deep in the pitch-dark sea. It attracts prey by moving its tail in mimicry of a small animal.
+368 Its pink body becomes more vivid with the rise of water temperatures in the springtime.
+369 Discovered by chance during deep-sea explorations, it has not changed since ancient times.
+370 Its heart-shaped body makes it popular. In some places, you would give a LUVDISC to someone you love.
+371 Its well-developed neck muscles and ironlike head can smash boulders into pieces.
+372 It surrounds its body in an iron-hard shell to accumulate enough power to evolve.
+373 It’s uncontrollable if enraged. It flies around spouting flames and scorching fields and mountains.
+374 The magnetic force generated by its body repels the ground’s natural magnetism, letting it float.
+375 When two BELDUM fuse together, a magnetic nervous system places their brains in union.
+376 It folds its four legs when flying. Its four brains are said to be superior to a supercomputer.
+377 The same rocks that form its body have been found in ground layers around the world.
+378 It is said to have slept in a glacier for thousands of years. Its body can’t be melted, even by magma.
+379 Its body is said to be harder than any kind of metal. A study has revealed that its body is hollow.
+380 It communicates using telepathy. Its body is covered in down that refracts light to make it invisible.
+381 It understands human speech and is highly intelligent. It is a tender Pokémon that dislikes fighting.
+382 A mythical Pokémon said to have swelled the seas with rain and tidal waves. It battled with GROUDON.
+383 Said to have expanded the lands by evaporating water with raging heat. It battled titanically with KYOGRE.
+384 It flies in the ozone layer, way up high in the sky. Until recently, no one had ever seen it.
+385 Generations have believed that any wish written on a note on its head will come true when it awakens.
+386 DNA from a space virus mutated and became a Pokémon. It appears where auroras are seen.
+387 Photosynthesis occurs across its body under the sun. The shell on its back is actually hardened soil.
+388 A GROTLE that lives in the forest is said to have its own secret springwater.
+389 Ancient people imagined that beneath the ground, a gigantic TORTERRA dwelled.
+390 The gas made in its belly burns from its rear end. The fire burns weakly when it feels sick.
+391 A bigger fire on its tail and a brighter blue pattern on its face means its rank in its pack is higher.
+392 It tosses its enemies around with agility. It uses all its limbs to fight in its own unique style.
+393 It doesn’t like to be taken care of. It’s difficult to bond with since it won’t listen to its Trainer.
+394 It lives a solitary life. Its wings deliver wicked blows that can snap even the thickest of trees.
+395 It avoids unnecessary disputes, but it will decimate anything that threatens its pride.
+396 They flock around mountains and fields, chasing after bug Pokémon. Their singing is noisy and annoying.
+397 They maintain huge flocks, although fierce scuffles break out between various flocks.
+398 When STARAVIA evolve into STARAPTOR, they leave the flock to live alone. They have sturdy wings.
+399 It lives in groups by the water.  It chews up boulders and trees around its nest with its incisors.
+400 It busily makes its nest with stacks of branches and roots it has cut up with its sharp incisors.
+401 When its antennae hit each other, it sounds like the music of a xylophone.
+402 By allowing its cry to resonate in the hollow of its belly, it produces a captivating sound.
+403 The extension and contraction of its muscles generates electricity. Its fur glows when it’s in trouble.
+404 By gathering their tails together, they collectively generate powerful electricity from their claws.
+405 LUXRAY’s ability to see through objects comes in handy when it’s scouting for danger.
+406 When it feels the sun’s warm touch, it opens its bud to release pollen. It lives alongside clear pools.
+407 Its sweet aroma attracts prey. Then it spews poison. The more toxic it is, the sweeter its aroma.
+408 CRANIDOS toughen up their already rock-hard heads by headbutting one another.
+409 Its skull withstands impacts of any magnitude. As a result, its brain never gets the chance to grow.
+410 It was generated from a fossil dug out of a layer of clay that was older than anyone knows. It has a sturdy face.
+411 When attacked, they form a wall. Their rock-hard faces serve to protect them from the attacks.
+412 It covers itself with a cloak to shelter from the cold. When it’s hot, its cloak is thinner.
+413 It is said that a WORMADAM that evolves on a cold day will have a thicker cloak.
+414 It flutters around at night and steals honey from the COMBEE hive.
+415 At night, COMBEE sleep in a group of about a thousand, packed closely together in a lump.
+416 It raises grubs in the holes in its body. It secretes pheromones to control COMBEE.
+417 It’s one of the kinds of Pokémon  with electric cheek pouches. It shoots charges from its tail.
+418 It inflates its flotation sac, keeping its face above water in order to watch for prey movement.
+419 With its flotation sac inflated, it can carry people on its back. It deflates the sac before it dives.
+420 It evolves by sucking the energy out of the small ball where it had been storing nutrients.
+421 During times of strong sunlight, its bud blooms, its petals open fully, and it becomes very active.
+422 Its shape and coloration vary, depending on its habitat.
+423 When its natural enemy attacks, it oozes purple fluid and escapes.
+424 They live on large trees. They are said to communicate by connecting their tails to those of others.
+425 It is whispered that any child who mistakes DRIFLOON for a balloon and holds on to it could wind up missing.
+426 It can generate and release gas within its body. That’s how it can control the altitude of its drift.
+427 You can tell how it feels by the way it rolls its ears. When it’s scared, both ears are rolled up.
+428 It sheds its fur twice a year. Its winter fur is soft and fluffy.
+429 Its cries sound like incantations to torment the foe. It appears where you least expect it.
+430 It is merciless by nature. It is said that it never forgives the mistakes of its MURKROW followers.
+431 When it’s happy, GLAMEOW demonstrates beautiful movements of its tail, like a dancing ribbon.
+432 It would claim another Pokémon’s nest as its own if it finds a nest sufficiently comfortable.
+433 It emits high-frequency cries that  people can’t hear. Once it starts, it can cry for an awfully long time.
+434 The foul fluid from its rear is so revolting that it can make people feel queasy up to a mile and a quarter away.
+435 It attacks by spraying a repugnant fluid from its tail, but the stench dulls after a few squirts.
+436 Ancient people believed that the pattern on BRONZOR’s back contained a mysterious power.
+437 Ancient people believed that petitioning BRONZONG for rain was the way to make crops grow.
+438 In order to adjust the level of fluids in its body, it exudes water from its eyes. This makes it appear to be crying.
+439 In an attempt to confuse its enemy, it mimics the enemy’s movements. Then it wastes no time in making itself scarce!
+440 It carefully carries a round, white rock that it thinks is an egg. It’s bothered by how curly its hair looks.
+441 It mimics the cries of other Pokémon to trick them into thinking it’s one of them. This way they won’t attack it.
+442 It was formed by uniting 108 spirits. It has been bound to the Odd Keystone to keep it from doing any mischief.
+443 It nests in horizontal holes warmed by geothermal heat. Foes who get too close can expect to be pounced on and bitten.
+444 As it digs to expand its nest, it habitually digs up gems that it then hoards in its nest.
+445 Its body is covered in fine scales that reduce drag, enabling it to fly at high speeds.
+446 It conceals food under the long fur on its body. It carts around this food stash and swallows it without chewing.
+447 They communicate with one another using their auras. They are able to run all through the night.
+448 It’s said that no foe can remain invisible to LUCARIO, since it can detect auras. Even foes it could not otherwise see.
+449 It shrouds itself in sand to ward off germs. It travels easily through the sands of the desert.
+450 It brandishes its gaping mouth in a display of fearsome strength. It raises vast quantities of sand while attacking.
+451 It burrows under the sand to lie in wait for prey. Its tail claws can inject its prey with a savage poison.
+452 It attacks people and Pokémon that cross the desert. This has only furthered its bad reputation.
+453 Fluid squeezed from its finger, albeit poisonous, is a significant ingredient in remedies for lower-back pain.
+454 Swaying and dodging the attacks of its foes, it weaves its flexible body in close, then lunges out with its poisonous claws.
+455 It walks around on its tentacles in search of a tree branch where it can dangle down and ambush prey.
+456 Swimming and fluttering its two tail fins, it looks like a BEAUTIFLY. At night, the patterns on its tail fins softly shine.
+457 LUMINEON swimming in the darkness of the deep sea look like stars shining in the night sky.
+458 When it swims close to the surface of the ocean, people aboard ships are able to observe the pattern on its back.
+459 During cold seasons, it migrates to the mountain’s lower reaches. It returns to the snow-covered summit in the spring.
+460 It lives a quiet life on mountains that are perpetually covered in snow. It hides itself by whipping up blizzards.
+461 It lives in snowy regions. It carves patterns in trees with its claws as a signal to others.
+462 Exposure to a special magnetic field changed MAGNETON’s molecular structure, turning it into MAGNEZONE.
+463 Its saliva can decompose anything. It wraps its long tongue around things to coat them with its sticky saliva.
+464 From holes in its palms, it fires out GEODUDE. Its carapace  can withstand volcanic eruptions.
+465 When it remains still, it appears to be a large shrub. Unsuspecting prey that wander near get ensnared by its vines.
+466 As its electric charge amplifies, blue sparks begin to crackle between its horns.
+467 It blasts fireballs of over 3,600 degrees Fahrenheit out of its arms. Its breath also sears and sizzles.
+468 As everyone knows, it visits peaceful regions, bringing them gifts of kindness and sweet blessings.
+469 This six-legged Pokémon is easily capable of transporting an adult in flight. The wings on its tail help it stay balanced.
+470 When you see LEAFEON asleep in a patch of sunshine, you’ll know it is using photosynthesis to produce clean air.
+471 It causes small ice crystals to form by lowering the temperature of the surrounding atmosphere.
+472 Its flight is soundless. It uses its lengthy tail to carry off its prey... Then its elongated fangs do the rest.
+473 A frozen MAMOSWINE was dug from ice dating back 10,000 years. This Pokémon has been around a long, long, long time.
+474 Its programming was modified to enable it to travel through alien dimensions. Seems there might have been an error...
+475 Because it can sense what its foe is thinking, its attacks burst out first, fast, and fierce.
+476 It controls three units called Mini-Noses using magnetic force. With them, it can attack the foe from three directions.
+477 This feared Pokémon is said to travel to worlds unknown. Some even believe that it takes lost spirits along with it.
+478 Legends in snowy regions say that a woman who was lost on an icy mountain was reborn as FROSLASS.
+479 Research continues on this Pokémon, which could be the power source of a unique motor.
+480 According to some sources, this Pokémon provided people with the intelligence necessary to solve various problems.
+481 This Pokémon is said to have endowed the human heart with emotions, such as sorrow and joy.
+482 This Pokémon is said to have endowed humans with the determination needed to face any of life’s difficulties.
+483 This Pokémon completely controls the flow of time. It uses its power to travel at will through the past and future.
+484 Its total control over the boundaries of space enable it to transport itself to faraway places or even other dimensions.
+485 Boiling blood, like magma, circulates through its body. It makes its dwelling place in volcanic caves.
+486 It is believed to have shaped REGIROCK, REGICE, and REGISTEEL out of clay, ice, and magma.
+487 This Pokémon is said to live in a world on the reverse side of ours, where common knowledge is distorted and strange.
+488 Those who sleep holding CRESSELIA’s feather are assured of joyful dreams. It is said to represent the crescent moon.
+489 When the water warms, they inflate the flotation sac on their heads and drift languidly on the sea in packs.
+490 It starts its life with a wondrous power that permits it to bond with any kind of Pokémon.
+491 It chases people and Pokémon from its territory by causing them to experience deep, nightmarish slumbers.
+492 The blooming of Gracidea flowers confers the power of flight upon it. Feelings  of gratitude are the message it delivers.
+493 According to the legends of Sinnoh, this Pokémon emerged from an egg and shaped all there is in this world.

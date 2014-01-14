@@ -1,0 +1,117 @@
+﻿0 #156 is free
+12 43#Guillotine
+13 104-0#razor wind
+18 107#whirlwind
+19 13-3_16*2_239*2_327_87_542_479#Fly
+20 10#bind-inflict damage every turn
+23 126#stomp
+26 64#jump kick
+32 43#Horn Drill
+35 10#wrap
+37 93#thrash
+46 107#roar
+49 30-20#sonic boom
+50 28#disable
+54 86#mist
+59 38#blizzard
+63 11#Hyper beam
+67 52#Low kick
+68 22-1#counter: 1 is physical
+69 91#seismic toss
+71 #1#leech
+72 #1#mega drain
+73 72#leech seed
+74 191#Growth
+76 104-3#solar beam
+80 93#petal dance
+82 30-40#dragon rage
+83 10#Fire spin
+87 152#Thunder
+90 43#Fissure
+91 13-1_89*2_222*2#Dig
+99 102#rage
+101 91#night shade
+102 81#mimic
+105 60#recover
+107 83#minimize
+111 154#defense curl
+113 73-2#light screen
+114 149#haze
+115 73-1#reflect
+116 46#focus energy
+117 9#bide
+118 80#metronome
+119 85#mirror move
+120 37#self destruct
+128 10#Clamp
+130 104-2#skull bash
+135 #60#softboiled
+136 64#high jump kick
+138 31|1#dream eater
+141 #1#Leech Life
+143 104-1#sky attack
+144 137#transform
+149 99#psywave
+150 82#Splash
+153 37#explosion
+156 106#rest
+160 19#conversion
+161 #192#Tri Attack
+162 130#super fang
+164 8-25|128#SUBSTITUTE
+165 #127#struggle
+166 111#sketch
+167 139#triple kick
+168 23#thief
+169 12#spider web.
+170 74#Mind reader
+171 31|92#nightmare
+172 153#flame wheel
+173 115#snore
+174 25#curse
+175 44#flail
+176 20#conversion2
+179 44#flail
+180 123#spite
+182 27#Protect
+187 8-50#belly drum
+191 121#spikes
+193 84-7#7 is ghost -- fore sight
+194 26#destiny bond
+195 95#perish song
+197 27#detect
+199 74#lock on
+200 93#outrage
+201 57-3#sandstorm
+202 #1#Giga drain
+203 35#endure
+205 66#rollout
+206 41#false swipe
+207 196#Swagger
+208 #60#healing - milk drink
+210 50#fury cutter
+212 12#mean look
+213 58#attract
+214 115|116#115 = works only if asleep, 116 is sleep talk
+215 3#heal bell
+216 49-0#return
+217 96#present
+218 49-1#frustration
+219 109#safeguard
+220 94#pain split
+221 153#sacred fire
+222 78#magnitude
+226 6#baton pass
+227 33#encore
+229 103#rapid spin
+234 87#morning sun
+235 87#synthesis
+236 87#moon light
+237 65#hidden power
+240 57-2#rain dance
+241 57-4#sunny day
+243 22-2#mirror coat
+244 97#psychup
+248 29#Future sight
+250 10#whirlpool
+251 7#beat up

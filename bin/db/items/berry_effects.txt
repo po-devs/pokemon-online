@@ -1,0 +1,57 @@
+﻿0 1-1#Cheri
+1 1-2#Chesto
+2 1-5#Pecha
+3 1-4#Rawst
+4 1-3#Aspear
+5 2#Leppa
+6 3-10#pinch Oran 
+7 1--1#Persim
+8 1-0#Lum
+9 3-30#pinch Sitrus
+10 6#ConfuseBerry
+11 6#ConfuseBerry
+12 6#ConfuseBerry
+13 6#ConfuseBerry
+14 6#ConfuseBerry
+35 4-9
+36 4-10
+37 4-12 
+38 4-11
+39 4-14
+40 4-1 
+41 4-3
+42 4-4
+43 4-2
+44 4-13
+45 4-6
+46 4-5
+47 4-7
+48 4-15
+49 4-16
+50 4-8
+51 5#Reduces normal type attacks
+52 7-1#pinch attack
+53 7-2#pinch def
+54 7-5#pinch speed
+55 7-3#pinch sp att
+56 7-4#pinch sp def
+57 8#pinch raises Critical hit ratio berry
+58 9#pinch Starf berry
+59 6#Anti super effective: gain hp after being hit by a super effective attack
+60 10#pinch Accuracy once berry
+61 11#pinch move first just once
+62 12-1#Physical recoil
+63 12-2#Special recoil
+64 4-17
+65 14-2#Physical +Defense
+66 15-4#Special +Sp.Defense
+1000 1-1#Cheri #### GSC BERRIES ####
+1001 1-2#Chesto
+1002 1-5#Pecha
+1003 1-4#Rawst
+1004 1-3#Aspear
+1005 2#Leppa
+1006 3-10#pinch Oran 
+1007 1--1#Persim
+1008 1-0#Lum
+1009 3-30#pinch Sitrus

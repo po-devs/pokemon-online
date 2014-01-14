@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EvBox</class>
+ <widget class="QWidget" name="EvBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>574</width>
+    <height>227</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+    <horstretch>10</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>EVs</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>3</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="hpdesc">
+     <property name="text">
+      <string>Hit Points:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="hplabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QSlider" name="hpslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="atkdesc">
+     <property name="text">
+      <string>Attack:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="atklabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QSlider" name="atkslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="atkedit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="defdesc">
+     <property name="text">
+      <string>Defense:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="deflabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QSlider" name="defslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QLineEdit" name="defedit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="satkdesc">
+     <property name="text">
+      <string>Special Attack:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLabel" name="satklabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QSlider" name="satkslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QLineEdit" name="satkedit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="4">
+    <widget class="QSlider" name="totalslider">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>508</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="4">
+    <widget class="QLabel" name="totallabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QSlider" name="sdefslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QLineEdit" name="sdefedit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="sdeflabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="sdefdesc">
+     <property name="text">
+      <string>Special Defense:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="speeddesc">
+     <property name="text">
+      <string>Speed:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QLabel" name="speedlabel">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="QSlider" name="speedslider">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="maximum">
+      <number>252</number>
+     </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QLineEdit" name="speededit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLineEdit" name="hpedit">
+     <property name="maximumSize">
+      <size>
+       <width>35</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QImageButtonLR" name="atkboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QImageButtonLR" name="defboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QImageButtonLR" name="satkboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QImageButtonLR" name="sdefboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QImageButtonLR" name="speedboost" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QImageButtonLR" name="hpboost" native="true">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QImageButtonLR</class>
+   <extends>QWidget</extends>
+   <header location="global">Utilities/qimagebuttonlr.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>atkslider</tabstop>
+  <tabstop>hpedit</tabstop>
+  <tabstop>atkedit</tabstop>
+  <tabstop>defedit</tabstop>
+  <tabstop>satkedit</tabstop>
+  <tabstop>sdefedit</tabstop>
+  <tabstop>speededit</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

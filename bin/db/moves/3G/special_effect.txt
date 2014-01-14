@@ -1,0 +1,172 @@
+﻿0 #156 is free
+12 43#Guillotine
+13 104-0#razor wind
+18 107#whirlwind
+19 13-3_16*2_239*2_327_87_542_479#Fly
+20 10#bind-inflict damage every turn
+23 126#stomp
+26 64#jump kick
+32 43#Horn Drill
+35 10#wrap
+37 93#thrash
+46 107#roar
+49 30-20#sonic boom
+50 28#disable
+54 86#mist
+59 38#blizzard
+63 11#Hyper beam
+67 52#Low kick
+68 22-1#counter: 1 is physical
+69 91#seismic toss
+71 #1#leech
+72 #1#mega drain
+73 72#leech seed
+74 191#Growth
+76 104-3#solar beam
+80 93#petal dance
+82 30-40#dragon rage
+83 10#Fire spin
+87 152#Thunder
+90 43#Fissure
+91 13-1_89*2_222*2#Dig
+99 102#rage
+101 91#night shade
+102 81#mimic
+105 60#recover
+107 83#minimize
+111 154#defense curl
+113 73-2#light screen
+114 149#haze
+115 73-1#reflect
+116 46#focus energy
+117 9#bide
+118 80#metronome
+119 85#mirror move
+120 37#self destruct
+128 10#Clamp
+130 104-2#skull bash
+135 #60#softboiled
+136 64#high jump kick
+138 31|1#dream eater
+141 #1#Leech Life
+143 104-1#sky attack
+144 137#transform
+149 99#psywave
+150 82#Splash
+153 37#explosion
+156 106#rest
+160 19#conversion
+161 #192#Tri Attack
+162 130#super fang
+164 8-25|128#SUBSTITUTE
+165 #127#struggle
+166 111#sketch
+167 139#triple kick
+168 23#thief
+169 12#spider web.
+170 74#Mind reader
+171 31|92#nightmare
+172 153#flame wheel
+173 115#snore
+174 25#curse
+175 44#flail
+176 20#conversion2
+179 44#flail
+180 123#spite
+182 27#Protect
+187 8-50#belly drum
+191 121#spikes
+193 84-7#7 is ghost -- fore sight
+194 26#destiny bond
+195 95#perish song
+197 27#detect
+199 74#lock on
+200 93#outrage
+201 57-3#sandstorm
+202 #1#Giga drain
+203 35#endure
+205 66#rollout
+206 41#false swipe
+207 196#Swagger
+208 #60#healing - milk drink
+210 50#fury cutter
+212 12#mean look
+213 58#attract
+214 115|116#115 = works only if asleep, 116 is sleep talk
+215 3#heal bell
+216 49-0#return
+217 96#present
+218 49-1#frustration
+219 109#safeguard
+220 94#pain split
+221 153#sacred fire
+222 78#magnitude
+226 6#baton pass
+227 33#encore
+229 103#rapid spin
+234 87#morning sun
+235 87#synthesis
+236 87#moon light
+237 65#hidden power
+240 57-2#rain dance
+241 57-4#sunny day
+243 22-2#mirror coat
+244 97#psychup
+248 29#Future sight
+250 10#whirlpool
+251 7#beat up
+252 40#fake out
+253 141#uproar
+254 125#stock pile
+255 122#spit up
+256 131#swallow
+258 57-1#hail
+259 135#torment
+261 195#will-o-wisp
+262 165#memento
+263 39#facade
+264 47#focus punch
+265 117-1#smelling salt
+266 48#follow me
+267 90#nature power
+268 18#charge
+269 134#taunt
+270 63#helping hand
+271 132#trick
+272 108#role play
+273 142#wish
+274 4#assist
+275 151#ingrain
+277 76#magic coat
+278 105#recycle
+279 146#revenge
+280 14#brick break
+281 144#yawn
+282 70#knock off
+283 34#endeavor
+284 36#eruption
+285 112#skill swap
+286 67#imprison
+287 164#Refresh
+288 54#grudge
+289 118#snatch
+290 110#secret power
+291 13-2_57*2#dive
+293 17#camouflage
+300 88-12#mud sport
+301 66#ice ball
+303 #60#slack off
+307 11#blast burn -- one turn slacking off
+308 11#hydro cannon
+311 113#weather ball
+312 3#aromatherapy
+316 84-7#odor sleuth
+323 36#water spout
+328 10#sand tomb
+329 43#sheer cold
+335 12#block, aka mean look
+338 11#frenzy plant
+340 13-0_16*2_239*2_327_87_542_479#bounce
+343 23#covet
+346 88-9#water sport
+353 29#doom desire

@@ -1,0 +1,372 @@
+﻿0 (Kein Item)
+1 Großwurzel
+2 Blauer Schal
+3 Blendpuder
+4 Wahlband
+5 Wahlschal
+6 Wahlglas
+7 Fatumknoten
+8 Expertengurt
+9 Fokus-Band
+10 Fokusgurt
+11 Lahmrauch
+12 Grüner Schal
+13 Schwerschweif
+14 Laxrauch
+15 Überreste
+16 Glücksrauch
+17 Mentalkraut
+18 Metallstaub
+19 Muskelband
+20 Schrägrauch
+21 Rosa Schal
+22 Energiekraut
+23 Scheuchrauch
+24 Flottstaub
+25 Düsterumhang
+26 Roter Schal
+27 Steinrauch
+28 Rosenrauch
+29 Seerauch
+30 Wechselhülle
+31 Seidenschal
+32 Silberstaub
+33 Glattbrocken
+34 Pudersand
+35 Sanftglocke
+36 Wellenrauch
+37 Schlohkraut
+38 Großlinse
+39 Schlauglas
+40 Gelber Schal
+41 Zoomlinse
+42 Münzamulett
+43 Gegengift
+44 Aufwecker
+45 Beerensaft
+46 Riesenperle
+47 Riesenpilz
+48 Schwarzgurt
+49 Schwarze Flöte
+50 Giftschleim
+51 Schattenglas
+52 Blaue Flöte
+53 Indigostück
+54 Feuerheiler
+55 Kalzium
+56 Carbon
+57 Holzkohle
+58 Schutzband
+59 Feuchtmulch
+60 Abyssplatte
+61 Angriffplus
+62 Drachenhaut
+63 Elixier
+64 Kraftwurzel
+65 Energiestaub
+66 Fluchtseil
+67 Äther
+68 Ewigstein
+69 EP-Teiler
+70 Feuerstein
+71 Heiß-Orb
+72 Eneco-Rute
+73 Tafelwasser
+74 Hyperheiler
+75 Top-Genesung
+76 Neumulch
+77 Grünstück
+78 Wachsmulch
+79 Megablock
+80 Heilpuder
+81 Herzschuppe
+82 Honig
+83 KP-Plus
+84 Hypertrank
+85 Eisheiler
+86 Eisen
+87 King-Stein
+88 Lavakeks
+89 Blattstein
+90 Limonade
+91 Leben-Orb
+92 Kugelblitz
+93 Lichtlehm
+94 Glücks-Ei
+95 Magnet
+96 Top-Elixier
+97 Top-Äther
+98 Top-Trank
+99 Top-Schutz
+100 Top-Beleber
+101 Metallmantel
+102 Metronom
+103 Wundersaat
+104 Kuhmuh-Milch
+105 Mondstein
+106 Zauberwasser
+107 Ewiges Eis
+108 Nugget
+109 Spezialität
+110 Para-Heiler
+111 Perle
+112 Pokepuppe
+113 Trank
+114 AP-Top
+115 AP-Plus
+116 Protein
+117 Sondebonbon
+118 Scharfzahn
+119 Rote Flöte
+120 Purpurstück
+121 Schutz
+122 Vitalkraut
+123 Beleber
+124 Zauberasche
+125 Scope-Linse
+126 Seegesang
+127 Küstensalz
+128 Küstenschale
+129 Rauchball
+130 Sprudel
+131 Seelentau
+132 Bannsticker
+133 Stabilmulch
+134 Sternenstück
+135 Sternenstaub
+136 Sonnenstein
+137 Supertrank
+138 Superschutz
+139 Donnerstein
+140 Minipilz
+141 Toxik-Orb
+142 Krummlöffel
+143 Up-Grade
+144 Wasserstein
+145 Weiße Flöte
+146 X-Treffer
+147 X-Angriff
+148 X-Abwehr
+149 X-Spezial
+150 X-Spezial Ver
+151 X-Tempo
+152 Gelbe Flöte
+153 Gelbstück
+154 Zink
+155 Eisbrocken
+156 Lucky Punch
+157 Dubiosdisc
+158 Hackattack
+159 Adamant-Orb
+160 Nassbrocken
+161 Heißbrocken
+162 Weiß-Orb
+163 Machoband
+164 Lauchstange
+165 Drachenzahn
+166 Giftstich
+167 Machtkette
+168 Machtband
+169 Machtgurt
+170 Machtreif
+171 Machtlinse
+172 Machtgewicht
+173 Funkelstein
+174 Finsterstein
+175 Stromisierer
+176 Magmaisierer
+177 Spiritkern
+178 Ovaler Stein
+179 Schützer
+180 Flinkklaue
+181 Scharfklaue
+182 Leuchtstein
+183 Klettdorn
+184 Abysszahn
+185 Dracotafel
+186 Furchttafel
+187 Erdtafel
+188 Fausttafel
+189 Feuertafel
+190 Griffklaue
+191 Frosttafel
+192 Käfertafel
+193 Eisentafel
+194 Wiesentafel
+195 Hirntafel
+196 Wolkentafel
+197 Wassertafel
+198 Spuktafel
+199 Steintafel
+200 Kampfknochen
+201 Gifttafel
+202 Blitztafel
+203 Panzerfossil
+204 Klauenfossil
+205 Domfossil
+206 Granitstein
+207 Helixfossil
+208 Altbernstein
+209 Steinknochen
+210 Wurzelfossil
+211 Kopffossil
+212 Eisenkugel
+213 Platinum-Orb
+214 Luftbrief
+215 Blumenbrief
+216 Ziegelbrief
+217 Wasserbrief
+218 Feuerbrief
+219 Wiesenbrief
+220 Hafenbrief
+221 Herzbrief
+222 Mosaikbrief
+223 Schneebrief
+224 Sternbrief
+225 Stahlbrief
+226 Minenbrief
+227 Aquamodul
+228 Blitzmodul
+229 Flammenmodul
+230 Gefriermodul
+231 Herzkonfekt
+232 Schönschuppe
+233 Evolith
+234 Leichtstein
+235 Beulenhelm
+236 Luftballon
+237 Rote Karte
+238 Zielscheibe
+239 Klammerband
+240 Knolle
+241 Akku
+242 Fluchtknopf
+243 Feuerjuwel
+244 Wasserjuwel
+245 Elektrojuwel
+246 Pflanzjuwel
+247 Eisjuwel
+248 Kampfjuwel
+249 Giftjuwel
+250 Bodenjuwel
+251 Flugjuwel
+252 Psychojuwel
+253 Käferjuwel
+254 Gesteinjuwel
+255 Geistjuwel
+256 Drakojuwel
+257 Unlichtjuwel
+258 Stahljuwel
+259 Normaljuwel
+260 Heilfeder
+261 Kraftfeder
+262 Abwehrfeder
+263 Geniefeder
+264 Espritfeder
+265 Flinkfeder
+266 Prachtfeder
+267 Traumball
+268 Duftpilz
+269 Riesennugget
+270 Triperle
+271 Kometstück
+272 Alter Heller
+273 Alter Taler
+274 Alter Dukat
+275 Alte Vase
+276 Alter Reif
+277 Alte Statue
+278 Alte Krone
+279 Stratos-Eis
+280 Angriffplus 2
+281 X-Tempo 2
+282 X-Spezial 2
+283 X-Spezial Ver 2
+284 X-Abwehr 2
+285 X-Angriff 2
+286 X-Treffer 2
+287 X-Tempo 3
+288 X-Spezial 3
+289 X-Spezial Ver 3
+290 X-Abwehr 3
+291 X-Angriff 3
+292 X-Treffer 3
+293 X-Tempo 6
+294 X-Spezial 6
+295 X-Spezial Ver 6
+296 X-Abwehr 6
+297 X-Angriff 6
+298 X-Treffer 6
+299 Fäh.-Appell
+300 Itemabwurf
+301 Itemappell
+302 Umkehrappell
+303 Angriffplus 3
+304 Berserk-Gen
+305 Pokéball
+306 Superball
+307 Hyperball
+308 Meisterball
+309 Safariball
+310 Levelball
+311 Köderball
+312 Mondball
+313 Freundesball
+314 Sympaball
+315 Schwerball
+316 Turboball
+317 Turnierball
+318 Premierball
+319 Wiederball
+320 Timerball
+321 Nestball
+322 Netzball
+323 Tauchball
+324 Luxusball
+325 Heilball
+326 Flottball
+327 Finsterball
+328 Jubelball
+329 Parkball
+330 Feentafel
+331 Offensivweste
+332 Schutzbrille
+333 Schwächenschutz
+334 Schneeball
+335 Leuchtmoos
+336 Fähigk.-Kapsel
+337 Kieferfossil
+338 Flossenfossil
+339 Illumina-Galette
+340 Duftbeutel
+341 Sahnehäubchen
+1000 Rosa Band
+1001 Punkt-Band
+2001 Bisaflornit
+2002 Gluraknit-X
+2003 Gluraknit-Y
+2004 Turtoknit
+2005 Simsalanit
+2006 Gengarnit
+2007 Kangamanit
+2008 Pinsirnit
+2009 Garadosnit
+2010 Aerodactylonit
+2011 Mewtunit-X
+2012 Mewtunit-Y
+2013 Ampharosnit
+2014 Scheroxnit
+2015 Skarabornnit
+2016 Hundemonnit
+2017 Despotarnit
+2018 Lohgocknit
+2019 Guardevoirnit
+2020 Flunkifernit
+2021 Stollossnit
+2022 Meditalisnit
+2023 Voltensonit
+2024 Banetteonit
+2025 Absolnit
+2026 Knakracknit
+2027 Lucarionit
+2028 Rexblisarnit

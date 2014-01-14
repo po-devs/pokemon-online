@@ -1,0 +1,189 @@
+﻿0 (No Ability)
+1 Puanteur
+2 Crachin
+3 Turbo
+4 Armurebaston
+5 Fermeté
+6 Moiteur
+7 Échauffement
+8 Voile sable
+9 Static
+10 Absorb Volt
+11 Absorb Eau
+12 Benêt
+13 Ciel Gris
+14 Oeil Composé
+15 Insomnia
+16 Déguisement
+17 Vaccin
+18 Torche
+19 Ecran poudre
+20 Tempo Perso
+21 Ventouse
+22 Intimidation
+23 Marque Ombre
+24 Peau dure
+25 Garde magic
+26 Lévitation
+27 Pose Spore
+28 Synchro
+29 Corps Sain
+30 Médic Nature
+31 Paratonnerre
+32 Sérénité
+33 Glissade
+34 Chlorophylle
+35 Lumiattirance
+36 Calque
+37 Coloforce
+38 Point Poison
+39 Attention
+40 Armumagma
+41 Ignifu voile
+42 Magnépiège
+43 Anti bruit
+44 Cuvette
+45 Sable volant
+46 Pression
+47 Isograisse
+48 Matinal
+49 Corps Ardent
+50 Fuite
+51 Regard Vif
+52 Hyper Cutter
+53 Rammassage
+54 Absentéisme 
+55 Agitation
+56 Joli Sourire
+57 Plus
+58 Minus
+59 Meteo
+60 Glue
+61 Mue
+62 Cran
+63 Écaille Spéciale
+64 Suintement
+65 Engrais
+66 Brasier
+67 Torrent
+68 Essaim
+69 Tête de Roc
+70 Sécheresse
+71 Piège
+72 Esprit Vital
+73 Ecran fumée
+74 Force Pure
+75 Coque Armure
+76 Air Lock
+77 Tempo perso
+78 Motorisé
+79 Rivalité
+80 Impassible
+81 Rideau Neige
+82 Gloutonnerie
+83 Colérique
+84 Délestage
+85 Ignifuge
+86 Simple
+87 Dry Skin
+88 Télécharge
+89 Poing de Fer
+90 Soin Poison
+91 Adaptabilité
+92 Multi coups
+93 Hydratation
+94 Force soleil
+95 Pied Véloce
+96 Normalise
+97 Sniper
+98 Garde Magik
+99 Annulle Garde
+100 Frein
+101 Technicien
+102 Feuille Garde
+103 Maladresse
+104 Brise Moule
+105 Chanceux
+106 Boom Final
+107 Anticipation
+108 Prédiction
+109 Inconscient
+110 Lumiteintée
+111 Filtre
+112 Début calme
+113 Querelleur
+114 Lavabo
+115 Corps Gel
+116 Solide Roc
+117 Alerte Neige
+118 Cherche Miel
+119 Fouille
+120 Téméraire
+121 Multitype
+122 Don Floral
+123 Mauvais Rêve
+124 Pickpocket
+125 Sans Limite
+126 Contestation
+127 Tension
+128 Acharné
+129 Défaitiste
+130 Corps Maudit
+131 Cur Soin
+132 Garde amie
+133 Armurouillée
+134 Heavy Metal
+135 Light Metal
+136 Multécaille
+137 Rage Poison
+138 Rage Brûlure
+139 Récolte
+140 Télépathe
+141 Lunatique
+142 Envelocape
+143 Toxitouche
+144 Régé-Force
+145 Coeur de coq
+146 Baigne Sable
+147 Peau Miracle
+148 Analyste
+149 Illusion
+150 Imposteur
+151 Infiltration
+152 Momie
+153 Impudence
+154 Cur Noble
+155 Phobique
+156 Miroir Magik
+157 Herbivore
+158 Farceur
+159 Force Sable
+160 Épine de Fer
+161 Mode Transe
+162 Victorieux
+163 TurboBrasier
+164 Téra-Voltage
+165 Peau Céleste
+166 Aura Inversée
+167 Bajoues
+168 Aura Ténébreuse
+169 Aura Féérique
+170 Flora-Voile
+171 Toison Épaisse
+172 Méga Blaster
+173 Amour Filial
+174 Peau Féérique
+175 Protéen
+176 Peau Gelée
+177 Déclic Tactique
+178 Prognathe
+179 Gluco-Voile
+180 Griffe Dure
+181 Battant
+182 Ailes Bourrasque
+183 Poisseux
+184 Aroma-Voile
+185 Pare-Balles
+186 Toison Herbue
+187 Magicien
+188 Symbiose

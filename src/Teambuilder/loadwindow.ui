@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoadWindow</class>
+ <widget class="QDialog" name="LoadWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>739</width>
+    <height>259</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Load teams</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="name1">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="LoadLine" name="line1" native="true"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QComboBox" name="gen1"/>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLineEdit" name="tier1">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QToolButton" name="browser1">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="name2">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="LoadLine" name="line2" native="true"/>
+   </item>
+   <item row="2" column="2">
+    <widget class="QComboBox" name="gen2"/>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLineEdit" name="tier2">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QToolButton" name="browser2">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="name3">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="LoadLine" name="line3" native="true"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QComboBox" name="gen3"/>
+   </item>
+   <item row="3" column="3">
+    <widget class="QLineEdit" name="tier3">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QToolButton" name="browser3">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="name4">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="LoadLine" name="line4" native="true"/>
+   </item>
+   <item row="4" column="2">
+    <widget class="QComboBox" name="gen4"/>
+   </item>
+   <item row="4" column="3">
+    <widget class="QLineEdit" name="tier4">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QToolButton" name="browser4">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="name5">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="LoadLine" name="line5" native="true"/>
+   </item>
+   <item row="5" column="2">
+    <widget class="QComboBox" name="gen5"/>
+   </item>
+   <item row="5" column="3">
+    <widget class="QLineEdit" name="tier5">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QToolButton" name="browser5">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QCheckBox" name="name6">
+     <property name="text">
+      <string>Untitled</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="LoadLine" name="line6" native="true"/>
+   </item>
+   <item row="6" column="2">
+    <widget class="QComboBox" name="gen6"/>
+   </item>
+   <item row="6" column="3">
+    <widget class="QLineEdit" name="tier6">
+     <property name="maxLength">
+      <number>100</number>
+     </property>
+     <property name="placeholderText">
+      <string>Team tier</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QToolButton" name="browser6">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="5">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QComboBox" name="profileList"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="colorButton">
+     <property name="text">
+      <string>Color</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LoadLine</class>
+   <extends>QWidget</extends>
+   <header>loadline.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>LoadWindow</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>LoadWindow</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -1,0 +1,53 @@
+Abomasnow (M) @ Icy Rock
+Trait: Snow Warning
+EVs: 252 HP / 4 Def / 252 SDef
+Calm Nature (+SDef, -Atk)
+- Blizzard
+- Leech Seed
+- Protect
+- Giga Drain
+
+Froslass (F) @ Leftovers
+Trait: Snow Cloak
+EVs: 252 SAtk / 4 SDef / 252 Spd
+Timid Nature (+Spd, -Atk)
+- Blizzard
+- Thunder Wave
+- Confuse Ray
+- Substitute
+
+Mamoswine (M) @ Focus Sash
+Trait: Snow Cloak
+EVs: 4 HP / 252 Atk / 252 Spd
+Jolly Nature (+Spd, -SAtk)
+- Earthquake
+- Endeavor
+- Stealth Rock
+- Ice Shard
+
+Kyurem-B @ Choice Band
+Trait: Teravolt
+EVs: 252 Atk / 4 Def / 252 Spd
+Hasty Nature (+Spd, -Def)
+- Outrage
+- Fusion Bolt
+- Iron Head
+- Blizzard
+
+Avalugg (F) @ Leftovers
+Trait: Sturdy
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature (+Def, -SAtk)
+- Earthquake
+- Rock Slide
+- Rapid Spin
+- Avalanche
+
+Weavile (M) @ Focus Sash
+Trait: Pickpocket
+EVs: 4 HP / 252 Atk / 252 Spd
+Jolly Nature (+Spd, -SAtk)
+- Knock Off
+- Ice Punch
+- Pursuit
+- Counter

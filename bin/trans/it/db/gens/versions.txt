@@ -1,0 +1,17 @@
+﻿1:0 Rosso/Blu
+1:1 Giallo
+1:2 Stadium
+1:3 Stadium con Scambio
+2:0 Oro/Argento
+2:1 Cristallo
+2:2 Stadium 2
+3:0 Rubino/Zaffiro
+3:1 Colosseum
+3:2 Rosso Fuoco/Verde Foglia
+3:3 Smeraldo
+3:4 XD: Tempesta Oscura
+4:0 Diamante/Perla
+4:1 Platino
+4:2 Heart Gold/Soul Silver
+5:0 Nero/Bianco
+5:1 Nero 2/Bianco 2

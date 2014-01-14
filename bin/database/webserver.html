@@ -1,0 +1,338 @@
+<html>
+	<head>
+		<title>Websocket client test</title>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+        <script src="http://www.webtoolkit.info/djs/webtoolkit.md5.js"></script>
+        <script>
+            $(function() {
+                $("#tabs").tabs();
+
+                $("#config *").attr("disabled",true);
+                $("#dosConfig *").attr("disabled",true);
+            });
+        </script>
+	</head>
+	<body>
+		<p>
+            <input type="text" id="url" value="ws://localhost:8508" onkeydown="if(event.keyCode==13) initWebsocket();"/>
+			<button onClick="initWebsocket();">Connect</button>
+			<button onClick="stopWebsocket();">Disconnect</button>
+			<button onClick="checkSocket();">State</button>
+		</p>
+        <div id="tabs">
+            <ul>
+                <li><a href="#tabs-1">logs & chat</a></li>
+                <li><a href="#tabs-2">config</a></li>
+                <li><a href="#tabs-3">scripts</a></li>
+                <li><a href="#tabs-4">tiers</a></li>
+                <li><a href="#tabs-5">edit file</a></li>
+                <li><a href="#tabs-6">Anti DOS</a></li>
+            </ul>
+            <div id="tabs-1">
+                <p>
+                    <textarea id="chatTextArea" style="width:400px;height:280px;"></textarea>
+                    <textarea id="logTextArea" style="width:400px;height:280px;"></textarea>
+                </p>
+                <p>
+                    <input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
+                    <button onClick="sendMessage();">Send</button>
+                </p>
+            </div>
+            <div id="tabs-2">
+                <table id="config">
+                    <tr><td>Private</td><td><input type="checkbox" id="cfPrivate"/></tr></td>
+                    <tr><td>Server name</td><td><input type="text" id="cfName"/></tr></td>
+                    <tr><td>Main channel</td><td><input type="text" id="cfChannel"/></tr></td>
+                    <tr><td>Announcement</td><td><textarea id="cfAnnouncement"></textarea></tr></td>
+                    <tr><td>Proxy servers</td><td><input type="text" id="cfProxies"/></tr></td>
+                </table>
+                <p>
+                    <button onClick="refreshConfig();">Refresh</button>
+                    <button onClick="sendConfig();" id="sendConfig" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-3">
+                <p>
+                    <textarea id="scriptArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshScripts();">Refresh</button>
+                    <button onClick="sendScripts();" id="sendScripts" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-4">
+                <p>
+                    <textarea id="tiersArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshTiers();">Refresh</button>
+                    <button onClick="sendTiers();" id="sendTiers" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-5">
+                <p>
+                    File <input type="text" id="fileurl" />
+                </p>
+                <p>
+                    <textarea id="fileArea" style="width:600px;height:400px;" disabled="true"></textarea>
+                </p>
+                <p>
+                    <button onClick="refreshFile();">Refresh</button>
+                    <button onClick="sendFile();" id="sendFile" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+            <div id="tabs-6">
+                <table id="dosConfig">
+                    <tr><td>Anti DOS on</td><td><input type="checkbox" id="dosOn"/></tr></td>
+                    <tr><td>Max number of people connected with the same IP</td><td><input type="text" id="dosConnections"/></tr></td>
+                    <tr><td>Max number of times someone is active inside a minute</td><td><input type="text" id="dosActivity"/></tr></td>
+                    <tr><td>Maximum upload from user per minute (kilo Bytes)</td><td><input type="text" id="dosUpload"/></tr></td>
+                    <tr><td>Max number of times the same ip attempts to log in per minute</td><td><input type="text" id="dosLogins"/></tr></td>
+                    <tr><td>Bans after X antidos kicks per 15 minutes</td><td><input type="text" id="dosBan"/></tr></td>
+                    <tr><td>Trusted IPs</td><td><input type="text" id="dosTrusted"/></tr></td>
+                    <tr><td>Notifications channel</td><td><input type="text" id="dosChannel"/></tr></td>
+                </table>
+                <p>
+                    <button onClick="refreshDos();">Refresh</button>
+                    <button onClick="sendDos();" id="sendDos" disabled="true">Apply Changes</button>
+                </p>
+            </div>
+        </div>
+		
+		<script type="text/javascript">
+            var logTextArea = document.getElementById("logTextArea");
+            var logCount = 0;
+			function displayMessage(message)
+			{
+                logTextArea.value += message + "\n";
+                /* Limit number of lines */
+                if (logCount++ % 500 == 0) {
+                    logTextArea.value = logTextArea.value.split("\n").slice(-500).join("\n");
+                }
+                logTextArea.scrollTop = logTextArea.scrollHeight;
+			}
+            var chatTextArea = document.getElementById("chatTextArea");
+            var chatCount = 0;
+            function displayChatMessage(message)
+            {
+                chatTextArea.value += message + "\n";
+                /* Limit number of lines */
+                if (chatCount++ % 500 == 0) {
+                    chatTextArea.value = chatTextArea.value.split("\n").slice(-500).join("\n");
+                }
+                chatTextArea.scrollTop = chatTextArea.scrollHeight;
+            }
+			
+			function sendMessage()
+            {
+                var strToSend = "msg|" + $("#inputText").val();
+				if ( websocket != null )
+				{
+                    $("#inputText").val('');
+					websocket.send( strToSend );
+					console.log( "Message sent :", '"'+strToSend+'"' );
+				}
+			}
+
+            function refreshConfig()
+            {
+                websocket.send("getconfig|");
+            }
+
+            function sendConfig()
+            {
+                var cf = {
+                    name: $('#cfName').val(),
+                    proxies: $('#cfProxies').val(),
+                    announcement: $('#cfAnnouncement').val(),
+                    mainChannel: $('#cfChannel').val(),
+                    private: $('#cfPrivate').is(':checked')
+                };
+
+                var strToSend = "editconfig|"+JSON.stringify(cf);
+                websocket.send( strToSend );
+                console.log( "Message sent :", '"'+strToSend+'"' );
+            }
+
+            function refreshScripts()
+            {
+                websocket.send("getscripts|");
+            }
+
+            function sendScripts()
+            {
+                websocket.send("changescripts|"+$('#scriptArea').val());
+            }
+
+            function refreshTiers()
+            {
+                websocket.send("gettiers|");
+            }
+
+            function sendTiers()
+            {
+                websocket.send("changetiers|"+$('#tiersArea').val());
+            }
+
+            function refreshFile()
+            {
+                websocket.send("getfile|"+$('#fileurl').val());
+            }
+
+            function sendFile()
+            {
+                websocket.send("editfile|"+$('#fileurl').val()+"|"+$('#fileArea').val());
+            }
+
+            function refreshDos()
+            {
+                websocket.send("getdos|");
+            }
+
+            function sendDos()
+            {
+                var dos = {
+                    connections: $('#dosConnections').val(),
+                    activity: $('#dosActivity').val(),
+                    upload: $('#dosUpload').val(),
+                    logins: $('#dosLogins').val(),
+                    ban: $('#dosBan').val(),
+                    trustedIPs: $('#dosTrusted').val(),
+                    channel: $('#dosChannel').val(),
+                    on: $('#dosOn').is(':checked')
+                };
+
+                var strToSend = "editdos|"+JSON.stringify(dos);
+                websocket.send( strToSend );
+                console.log( "Message sent :", '"'+strToSend+'"' );
+            }
+
+			var websocket = null;
+            var parseCommand;
+
+			function initWebsocket()
+			{
+				try
+				{
+					if ( typeof MozWebSocket == 'function' )
+						WebSocket = MozWebSocket;
+					if ( websocket && websocket.readyState == 1 )
+                        websocket.close();
+                    displayMessage("Connecting to " + $("#url").val());
+                    websocket = new WebSocket( $("#url").val() );
+					websocket.onopen = function( evt ) {
+						displayMessage( "CONNECTED" );
+					};
+					websocket.onclose = function( evt ) {
+						displayMessage( "DISCONNECTED" );
+					};
+					websocket.onmessage = function( evt ) {
+						console.log( "Message received :", evt.data );
+
+                        if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
+					};
+					websocket.onerror = function( evt ) {
+						displayMessage( 'ERROR: ' + evt.data );
+					};
+				}
+				catch( exception )
+				{
+					displayMessage( 'ERROR: ' + exception );
+				}
+			}
+			
+			function stopWebsocket()
+			{
+				if ( websocket )
+					websocket.close();
+			}
+			
+			function checkSocket()
+			{
+				if ( websocket != null )
+				{
+					var stateStr;
+					switch ( websocket.readyState )
+					{
+						case 0:
+							stateStr = "CONNECTING";
+							break;
+						case 1:
+							stateStr = "OPEN";
+							break;
+						case 2:
+							stateStr = "CLOSING";
+							break;
+						case 3:
+							stateStr = "CLOSED";
+							break;
+						default:
+							stateStr = "UNKNOW";
+							break;
+					}
+					displayMessage( "Websocket state = " + websocket.readyState + " ( " + stateStr + " )" );
+				}
+				else
+				{
+					displayMessage( "Websocket is null" );
+				}
+			}
+
+            parseCommand = function(message) {
+                var cmd = message.substr(0, message.indexOf("|"));
+                var data = message.slice(message.indexOf("|")+1);
+
+                if (cmd == "msg") {
+                    if (data[0] == "~") displayChatMessage(data);
+                    else displayMessage(data);
+                } else if (cmd == "chat") {
+                    displayChatMessage(data);
+                } else if (cmd == "scripts") {
+                    $("#scriptArea").val(data);
+                    $("#sendScripts").removeAttr("disabled");
+                    $("#scriptArea").removeAttr("disabled");
+                } else if (cmd == "challenge") {
+                    var pass = prompt("Please enter the webserver password");
+                    var hash = MD5(data+"@@"+pass);
+                    websocket.send("auth|"+hash);
+                } else if (cmd == "tiers") {
+                    $("#tiersArea").val(data);
+                    $("#sendTiers").removeAttr("disabled");
+                    $("#tiersArea").removeAttr("disabled");
+                } else if (cmd == "file") {
+                    $("#fileurl").val(data.substr(0, data.indexOf("|")));
+                    $("#fileArea").val(data.slice(data.indexOf("|")+1));
+                    $("#sendFile").removeAttr("disabled");
+                    $("#fileArea").removeAttr("disabled");
+                } else if (cmd == "config") {
+                    var cf = JSON.parse(data);
+                    $("#cfPrivate").prop("checked", cf.private);
+                    $("#cfName").val(cf.name);
+                    $("#cfChannel").val(cf.mainChannel);
+                    $("#cfAnnouncement").val(cf.announcement);
+                    $("#cfProxies").val(cf.proxies);
+
+                    $("#config *").removeAttr("disabled");
+                    $("#sendConfig").removeAttr("disabled");
+                } else if (cmd == "dos") {
+                    var dos = JSON.parse(data);
+
+                    $('#dosConnections').val(dos.connections);
+                    $('#dosActivity').val(dos.activity);
+                    $('#dosUpload').val(dos.upload);
+                    $('#dosLogins').val(dos.logins);
+                    $('#dosBan').val(dos.ban);
+                    $('#dosTrusted').val(dos.trustedIPs);
+                    $('#dosChannel').val(dos.channel);
+                    $('#dosOn').prop('checked', dos.on);
+
+                    $("#dosConfig *").removeAttr("disabled");
+                    $("#sendDos").removeAttr("disabled");
+                }
+            };
+			
+		</script>
+	</body>
+</html>

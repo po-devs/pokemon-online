@@ -1,0 +1,371 @@
+﻿0 (Nessun oggetto)
+1 Granradice
+2 Fascia Blu
+3 Luminpolvere
+4 Bendascelta
+5 Stolascelta
+6 Lentiscelta
+7 Destincomune
+8 Abilcintura
+9 Bandana
+10 Focalnastro
+11 Gonfioaroma
+12 Fascia Verde
+13 Rallentocoda
+14 Distraroma
+15 Avanzi
+16 Fortunaroma
+17 Mentalerba
+18 Metalpolvere
+19 Muscolbanda
+20 Bizzoaroma
+21 Fascia Rosa
+22 Vigorerba
+23 Puroaroma
+24 Velopolvere
+25 Terrorpanno
+26 Fascia Rossa
+27 Roccioaroma
+28 Rosaroma
+29 Marearoma
+30 Disfoguscio
+31 Sciarpaseta
+32 Argenpolvere
+33 Roccialiscia
+34 Sabbia Soffice
+35 Calmanella
+36 Ondaroma
+37 Erbachiara
+38 Grandelente
+39 Saviocchiali
+40 Fascia Gialla
+41 Zoomlente
+42 Monetamuleto
+43 Antidoto
+44 Sveglia
+45 Succo di Bacca
+46 Grande Perla
+47 Grande Fungo
+48 Cinturanera
+49 Flauto Nero
+50 Fangopece
+51 Occhialineri
+52 Flauto Blu
+53 Coccio Blu
+54 Antiscottatura
+55 Calcio
+56 Carburante
+57 Carbonella
+58 Velopuro
+59 Fertilidro
+60 Squamabissi
+61 Supercolpo
+62 Squama Drago
+63 Elisir
+64 Radicenergia
+65 Polvenergia
+66 Fune di Fuga
+67 Etere
+68 Pietrastante
+69 Condiv.Esp.
+70 Pietrafocaia
+71 Fiammosfera
+72 Coda Skitty
+73 Acqua Fresca
+74 Cura Totale
+75 Ricarica Totale
+76 Fertilcolla
+77 Coccio Verde
+78 Fertilrapido
+79 Superguardia
+80 Polvocura
+81 Squama Cuore
+82 Miele
+83 PS-Su
+84 Iperpozione
+85 Antigelo
+86 Ferro
+87 Roccia di Re
+88 Lavottino
+89 Pietrafoglia
+90 Lemonsucco
+91 Assorbisfera
+92 Elettropalla
+93 Cretaluce
+94 Fortunuovo
+95 Calamita
+96 Elisir Max
+97 Etere Max
+98 Pozione Max
+99 Repellente Max
+100 Revitalizzante Max
+101 Metalcoperta
+102 Metronomo
+103 Miracolseme
+104 Latte MooMoo
+105 Pietralunare
+106 Acqua Magica
+107 Gelomai
+108 Pepita
+109 Dolce Gateau
+110 Antiparalisi
+111 Perla
+112 Poké Bambola
+113 Pozione
+114 PP Max
+115 PP-Su
+116 Proteina
+117 Caramella Rara
+118 Affilodente
+119 Flauto Rosso
+120 Coccio Rosso
+121 Repellente
+122 Vitalerba
+123 Revitalizzante
+124 Ceneremagica
+125 Mirino
+126 Conchinella
+127 Sale Ondoso
+128 Gusciondoso
+129 Palla Fumo
+130 Gassosa
+131 Cuorugiada
+132 Spettrotarga
+133 Fertilsaldo
+134 Pezzo Stella
+135 Polvostella
+136 Pietrasolare
+137 Super Pozione
+138 Super Repellente
+139 Pietratuono
+140 Minifungo
+141 Tossicsfera
+142 Cucchiaio Torto
+143 Upgrade
+144 Pietraidrica
+145 Flauto Bianco
+146 Precisione X
+147 Attacco X
+148 Difesa X
+149 Special X
+150 Dif.Sp.X
+151 Velocità X
+152 Flauto Giallo
+153 Coccio Giallo
+154 Zinco
+155 Rocciafredda
+156 Fortunpugno
+157 Dubbiodisco
+158 Beccaffilato
+159 Adamasfera
+160 Rocciaumida
+161 Rocciacalda
+162 Splendisfera
+163 Crescicappa
+164 Gambo
+165 Dentedidrago
+166 Velenaculeo
+167 Vigorgliera
+168 Vigorbanda
+169 Vigorfascia
+170 Vigorcerchio
+171 Vigorlente
+172 Vigorpeso
+173 Pietralbore
+174 Neropietra
+175 Elettritore
+176 Magmatore
+177 Roccianima
+178 Pietraovale
+179 Copertura
+180 Rapidartigli
+181 Affilartigli
+182 Pietrabrillo
+183 Vischiopunta
+184 Denteabissi
+185 Lastradrakon
+186 Lastratimore
+187 Lastrageo
+188 Lastrapugno
+189 Lastrarogo
+190 Presartigli
+191 Lastragelo
+192 Lastrabaco
+193 Lastraferro
+194 Lastraprato
+195 Lastramente
+196 Lastracielo
+197 Lastraidro
+198 Lastratetra
+199 Lastrapietra
+200 Ossospesso
+201 Lastrafiele
+202 Lastrasaetta
+203 Fossilscudo
+204 Fossilunghia
+205 Domofossile
+206 Pietradura
+207 Helixfossile
+208 Ambra Antica
+209 Ossospesso
+210 Radifossile
+211 Fossilcranio
+212 Ferropalla
+213 Grigiosfera
+214 Messaggio Aereo
+215 Messaggio Petalo
+216 Messaggio Muro
+217 Messaggio Bolla
+218 Messaggio Fiamma
+219 Messaggio Erba
+220 Messaggio Porto
+221 Messaggio Cuore
+222 Messaggio Iride
+223 Messaggio Neve
+224 Messaggio Spazio
+225 Messaggio Lega
+226 Messaggio Tunnel
+227 Idromodulo
+228 Voltmodulo
+229 Piromodulo
+230 Gelomodulo
+231 Sweet Heart
+232 Squama Bella
+233 Evolcondensa
+234 Pietralieve
+235 Bitorzolelmo
+236 Palloncino
+237 Cartelrosso
+238 Facilsaglio
+239 Legafascia
+240 Bulbo
+241 Ricaripila
+242 Pulsantefuga
+243 Bijoufuoco
+244 Bijouacqua
+245 Bijouelettro
+246 Bijouerba
+247 Bijoughiaccio
+248 Bijoulotta
+249 Bijouveleno
+250 Bijouterra
+251 Bijouvolante
+252 Bijoupsico
+253 Bijoucoleottero
+254 Bijouroccia
+255 Bijouspettro
+256 Bijoudrago
+257 Bijoubuio
+258 Bijouacciaio
+259 Bijounormale
+260 Piumsalute
+261 Piumpotenza
+262 Piumtutela
+263 Piumingegno
+264 Piumintuito
+265 Piumreazione
+266 Piumabella
+267 Dream Ball
+268 Profumfungo
+269 Granpepita
+270 Trittiperla
+271 Pezzo Cometa
+272 Soldantico
+273 Ducatantico
+274 Doblonantico
+275 Vasantico
+276 Bracciantico
+277 Statuantica
+278 Coronantica
+279 Conostropoli
+280 Supercolpo 2
+281 Velocità X-2
+282 Special X-2
+283 Dif.Sp. X-2
+284 Difesa X-2
+285 Attacco X-2
+286 Precisione X-2
+287 Velocità X-3
+288 Special X-3
+289 Dif.Sp.X-3
+290 Difesa X-3
+291 Attacco X-3
+292 Precisione X-3
+293 Velocità X-6
+294 Special X-6
+295 Dif.Sp.X-6
+296 Difesa X-6
+297 Attacco X-6
+298 Precisione X-6
+299 Ability Urge
+300 Item Drop
+301 Item Urge
+302 Reset Urge
+303 Supercolpo 3
+304 Genefurioso
+305 Poké Ball
+306 Mega Ball
+307 Ultra Ball
+308 Master Ball
+309 Safari Ball
+310 Level Ball
+311 Esca Ball
+312 Luna Ball
+313 Friend Ball
+314 Love Ball
+315 Peso Ball
+316 Rapid Ball
+317 Gara Ball
+318 Premier Ball
+319 Bis Ball
+320 Timer Ball
+321 Minor Ball
+322 Rete Ball
+323 Sub Ball
+324 Chic Ball
+325 Cura Ball
+326 Velox Ball
+327 Scuro Ball
+328 Pregio Ball
+329 Parco Ball
+330 Lastraspiritello
+331 Corpetto Assalto
+332 Visierantisabbia
+333 Vulneropolizza
+334 Palla di Neve
+335 Luminous Moss
+336 Capsula Abilità
+337 Fossilmascella
+338 Fossilpinna
+340 Bustina Aromi
+341 Dolcespuma
+1000 Fiocco Rosa
+1001 Fiocco Pois
+2001 Venusaurite
+2002 Charizardite X
+2003 Charizardite Y
+2004 Blastoisite
+2005 Alakazamite
+2006 Gengarite
+2007 Kangaskhanite
+2008 Pinsirite
+2009 Gyaradosite
+2010 Aerodactylite
+2011 Mewtwoite X
+2012 Mewtwoite Y
+2013 Ampharosite
+2014 Scizorite
+2015 Heracrossite
+2016 Houndoomite
+2017 Tyranitarite
+2018 Blazikenite
+2019 Gardevoirite
+2020 Mawilite
+2021 Aggronite
+2022 Medichamite
+2023 Manectricite
+2024 Banettite
+2025 Absolite
+2026 Garchompite
+2027 Lucarite
+2028 Abomasnowite

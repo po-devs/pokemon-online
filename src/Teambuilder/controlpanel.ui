@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ControlPanel</class>
+ <widget class="QTabWidget" name="ControlPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>384</width>
+    <height>335</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Control Panel</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <widget class="QWidget" name="userInfo">
+   <attribute name="title">
+    <string>User info</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Username: </string>
+        </property>
+        <property name="buddy">
+         <cstring>userName</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="userName"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="searchUser">
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Status: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="status">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Online</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Authority: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="authority">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>IP Address: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ip">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Last Appearance:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lastAp">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Temporary Ban:</string>
+        </property>
+        <property name="buddy">
+         <cstring>time</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="time">
+        <property name="suffix">
+         <string> minutes</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1440</number>
+        </property>
+        <property name="value">
+         <number>60</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="tBan">
+        <property name="text">
+         <string>Temp Ban</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QPushButton" name="mute">
+        <property name="text">
+         <string>Mute</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="kick">
+        <property name="text">
+         <string>Kick</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="ban">
+        <property name="text">
+         <string>Ban</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pm">
+        <property name="text">
+         <string>PM User</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="userAlias">
+   <attribute name="title">
+    <string>User alias</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item row="1" column="0" colspan="2">
+     <widget class="QListWidget" name="aliasList">
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLineEdit" name="aliasName">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="searchAlias">
+      <property name="text">
+       <string>Search</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="bans">
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <attribute name="title">
+    <string>Bans</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item row="3" column="2">
+     <widget class="QPushButton" name="banIP">
+      <property name="text">
+       <string>Ban IP ...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="unban">
+      <property name="text">
+       <string>Unban</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="refresh">
+      <property name="text">
+       <string>Refresh</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="3">
+     <widget class="QTableWidget" name="banTable">
+      <property name="locale">
+       <locale language="English" country="UnitedStates"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::SolidLine</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="cornerButtonEnabled">
+       <bool>false</bool>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>100</number>
+      </attribute>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Username</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Banned IP</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Expires</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QDateTimeEdit" name="expireEdit">
+      <property name="maximumDateTime">
+       <datetime>
+        <hour>23</hour>
+        <minute>59</minute>
+        <second>59</second>
+        <year>2020</year>
+        <month>12</month>
+        <day>31</day>
+       </datetime>
+      </property>
+      <property name="maximumDate">
+       <date>
+        <year>2020</year>
+        <month>12</month>
+        <day>31</day>
+       </date>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="updateBantime">
+      <property name="text">
+       <string>Set Expire</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

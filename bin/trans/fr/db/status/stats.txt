@@ -1,0 +1,8 @@
+﻿0 PV
+1 Attaque
+2 Défense
+3 Atk. Spé.
+4 Déf. Spé.
+5 Vitesse
+6 Précision
+7 Esquive

@@ -1,0 +1,372 @@
+﻿0 (No Item)
+1 Big Root
+2 Blue Scarf
+3 BrightPowder
+4 Choice Band
+5 Choice Scarf
+6 Choice Specs
+7 Destiny Knot
+8 Expert Belt
+9 Focus Band
+10 Focus Sash
+11 Full Incense
+12 Green Scarf
+13 Lagging Tail
+14 Lax Incense
+15 Leftovers
+16 Luck Incense
+17 Mental Herb
+18 Metal Powder
+19 Muscle Band
+20 Odd Incense
+21 Pink Scarf
+22 Power Herb
+23 Pure Incense
+24 Quick Powder
+25 Reaper Cloth
+26 Red Scarf
+27 Rock Incense
+28 Rose Incense
+29 Sea Incense
+30 Shed Shell
+31 Silk Scarf
+32 Silver Powder
+33 Smooth Rock
+34 Soft Sand
+35 Soothe Bell
+36 Wave Incense
+37 White Herb
+38 Wide Lens
+39 Wise Glasses
+40 Yellow Scarf
+41 Zoom Lens
+42 Amulet Coin
+43 Antidote
+44 Awakening
+45 Berry Juice
+46 Big Pearl
+47 Big Mushroom
+48 Black Belt
+49 Black Flute
+50 Black Sludge
+51 BlackGlasses
+52 Blue Flute
+53 Blue Shard
+54 Burn Heal
+55 Calcium
+56 Carbos
+57 Charcoal
+58 Cleanse Tag
+59 Damp Mulch
+60 DeepSeaScale
+61 Dire Hit
+62 Dragon Scale
+63 Elixir
+64 Energy Root
+65 EnergyPowder
+66 Escape Rope
+67 Ether
+68 Everstone
+69 Exp. Share
+70 Fire Stone
+71 Flame Orb
+72 Fluffy Tail
+73 Fresh Water
+74 Full Heal
+75 Full Restore
+76 Gooey Mulch
+77 Green Shard
+78 Growth Mulch
+79 Guard Spec.
+80 Heal Powder
+81 Heart Scale
+82 Honey
+83 HP Up
+84 Hyper Potion
+85 Ice Heal
+86 Iron
+87 King's Rock
+88 Lava Cookie
+89 Leaf Stone
+90 Lemonade
+91 Life Orb
+92 Light Ball
+93 Light Clay
+94 Lucky Egg
+95 Magnet
+96 Max Elixir
+97 Max Ether
+98 Max Potion
+99 Max Repel
+100 Max Revive
+101 Metal Coat
+102 Metronome
+103 Miracle Seed
+104 Moomoo Milk
+105 Moon Stone
+106 Mystic Water
+107 NeverMeltIce
+108 Nugget
+109 Old Gateau
+110 Parlyz Heal
+111 Pearl
+112 Poké Doll
+113 Potion
+114 PP Max
+115 PP Up
+116 Protein
+117 Rare Candy
+118 Razor Fang
+119 Red Flute
+120 Red Shard
+121 Repel
+122 Revival Herb
+123 Revive
+124 Sacred Ash
+125 Scope Lens
+126 Shell Bell
+127 Shoal Salt
+128 Shoal Shell
+129 Smoke Ball
+130 Soda Pop
+131 Soul Dew
+132 Spell Tag
+133 Stable Mulch
+134 Star Piece
+135 Stardust
+136 Sun Stone
+137 Super Potion
+138 Super Repel
+139 Thunderstone
+140 TinyMushroom
+141 Toxic Orb
+142 TwistedSpoon
+143 Up-Grade
+144 Water Stone
+145 White Flute
+146 X Accuracy
+147 X Attack
+148 X Defend
+149 X Special
+150 X Sp. Def
+151 X Speed
+152 Yellow Flute
+153 Yellow Shard
+154 Zinc
+155 Icy Rock
+156 Lucky Punch
+157 Dubious Disc
+158 Sharp Beak
+159 Adamant Orb
+160 Damp Rock
+161 Heat Rock
+162 Lustrous Orb
+163 Macho Brace
+164 Stick
+165 Dragon Fang
+166 Poison Barb
+167 Power Anklet
+168 Power Band
+169 Power Belt
+170 Power Bracer
+171 Power Lens
+172 Power Weight
+173 Dawn Stone
+174 Dusk Stone
+175 Electirizer
+176 Magmarizer
+177 Odd Keystone
+178 Oval Stone
+179 Protector
+180 Quick Claw
+181 Razor Claw
+182 Shiny Stone
+183 Sticky Barb
+184 DeepSeaTooth
+185 Draco Plate
+186 Dread Plate
+187 Earth Plate
+188 Fist Plate
+189 Flame Plate
+190 Grip Claw
+191 Icicle Plate
+192 Insect Plate
+193 Iron Plate
+194 Meadow Plate
+195 Mind Plate
+196 Sky Plate
+197 Splash Plate
+198 Spooky Plate
+199 Stone Plate
+200 Thick Club
+201 Toxic Plate
+202 Zap Plate
+203 Armor Fossil
+204 Claw Fossil
+205 Dome Fossil
+206 Hard Stone
+207 Helix Fossil
+208 Old Amber
+209 Rare Bone
+210 Root Fossil
+211 Skull Fossil
+212 Iron Ball
+213 Griseous Orb
+214 Air Mail
+215 Bloom Mail
+216 Brick Mail
+217 Bubble Mail
+218 Flame Mail
+219 Grass Mail
+220 Harbor Mail
+221 Heart Mail
+222 Mosaic Mail
+223 Snow Mail
+224 Space Mail
+225 Steel Mail
+226 Tunnel Mail
+227 Douse Drive
+228 Shock Drive
+229 Burn Drive
+230 Chill Drive
+231 Sweet Heart
+232 Prism Scale
+233 Eviolite
+234 Float Stone
+235 Rocky Helmet
+236 Air Balloon
+237 Red Card
+238 Ring Target
+239 Binding Band
+240 Absorb Bulb
+241 Cell Battery
+242 Eject Button
+243 Fire Gem
+244 Water Gem
+245 Electric Gem
+246 Grass Gem
+247 Ice Gem
+248 Fighting Gem
+249 Poison Gem
+250 Ground Gem
+251 Flying Gem
+252 Psychic Gem
+253 Bug Gem
+254 Rock Gem
+255 Ghost Gem
+256 Dragon Gem
+257 Dark Gem
+258 Steel Gem
+259 Normal Gem
+260 Health Wing
+261 Muscle Wing
+262 Resist Wing
+263 Genius Wing
+264 Clever Wing
+265 Swift Wing
+266 Pretty Wing
+267 Dream Ball
+268 BalmMushroom
+269 Big Nugget
+270 Pearl String
+271 Comet Shard
+272 Relic Copper
+273 Relic Silver
+274 Relic Gold
+275 Relic Vase
+276 Relic Band
+277 Relic Statue
+278 Relic Crown
+279 Casteliacone
+280 Dire Hit 2
+281 X Speed 2
+282 X Special 2
+283 X Sp. Def 2
+284 X Defend 2
+285 X Attack 2
+286 X Accuracy 2
+287 X Speed 3
+288 X Special 3
+289 X Sp. Def 3
+290 X Defend 3
+291 X Attack 3
+292 X Accuracy 3
+293 X Speed 6
+294 X Special 6
+295 X Sp. Def 6
+296 X Defend 6
+297 X Attack 6
+298 X Accuracy 6
+299 Ability Urge
+300 Item Drop
+301 Item Urge
+302 Reset Urge
+303 Dire Hit 3
+304 Berserk Gene
+305 Poké Ball
+306 Great Ball
+307 Ultra Ball
+308 Master Ball
+309 Safari Ball
+310 Level Ball
+311 Lure Ball
+312 Moon Ball
+313 Friend Ball
+314 Love Ball
+315 Heavy Ball
+316 Fast Ball
+317 Sport Ball
+318 Premier Ball
+319 Repeat Ball
+320 Timer Ball
+321 Nest Ball
+322 Net Ball
+323 Dive Ball
+324 Luxury Ball
+325 Heal Ball
+326 Quick Ball
+327 Dusk Ball
+328 Cherish Ball
+329 Park Ball
+330 Pixie Plate
+331 Assault Vest
+332 Safety Goggles
+333 Weakness Policy
+334 Snowball
+335 Luminous Moss
+336 Ability Capsule
+337 Jaw Fossil
+338 Sail Fossil
+339 Lumiose Galette
+340 Sachet
+341 Whipped Dream
+1000 Pink Bow
+1001 Polkadot Bow
+2001 Venusaurite
+2002 Charizardite X
+2003 Charizardite Y
+2004 Blastoisinite
+2005 Alakazite
+2006 Gengarite
+2007 Kangaskhanite
+2008 Pinsirite
+2009 Gyaradosite
+2010 Aerodactylite
+2011 Mewtwonite X
+2012 Mewtwonite Y
+2013 Ampharosite
+2014 Scizorite
+2015 Heracronite
+2016 Houndoominite
+2017 Tyranitarite
+2018 Blazikenite
+2019 Gardevoirite 
+2020 Mawilite
+2021 Aggronite
+2022 Medichamite
+2023 Manectite
+2024 Banettite
+2025 Absolite
+2026 Garchompite
+2027 Lucarionite
+2028 Abomasite

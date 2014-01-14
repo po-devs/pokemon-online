@@ -1,0 +1,226 @@
+﻿0 #items with 1000+ effects are in-battle items like burn heal
+3 1-7_2#bright powder
+4 2|1-1_10#choice band
+5 2|1-5_10#choice scarf
+6 2|1-3_10#choice specs
+7 41#Destiny Knot
+9 4#focus band
+10 5#focus sash
+11 6#full incense
+13 6#lagging tail
+14 1-7_1#lax incense
+15 12#Leftovers
+18 8-132_10_2_4#Metal Powder
+19 9-1#Muscle Band
+20 10-13#Odd Incense 
+22 #11#Power Herb
+24 8-132_20_5#Quick Powder
+27 10-5#Rock Incense 
+28 10-11#Rose Incense 
+29 10-10#Sea Incense
+30 #13#Shed Shell
+31 10-0#Silk Scarf
+32 10-7#Silver Powder
+33 #14-3#Smooth Rock 
+34 10-4Soft Sand
+36 10-10#Wave Incense 
+37 3#white herb
+38 1-6_2#Wide Lens 
+39 9-2#Wise Glasses
+41 15#Zoom Lens
+45 18#Berry Juice
+48 10-1#black belt
+50 16#black sludge
+51 10-16#dark glasses
+57 10-9#charcoal
+60 8-366_20_4#deepseascale
+62 10-15#Dragon Scale
+71 19-4#Flame Orb
+87 #20#king's rock
+91 21#Life Orb
+92 8-25_20_1_3#Light Ball
+95 10-12#Magnet
+101 10-8#Steel
+102 22#Metronome
+103 10-11#Miracle seed
+106 10-10#Mystic water
+107 10-14#Nevermelt Ice
+125 23#Scope Lens
+126 24#Shell Bell
+131 8-380/381_10_3_4#Soul Dew
+132 10-7#Spell Tag
+141 19-5#Toxic Orb 
+142 10-13#Twistedspoon
+155 #14-1#Icy Rock
+156 26-113#Lucky Punch
+158 10-2#Sharp Beak
+159 27-483_15_8#Adamant Orb
+160 #14-2#Damp Rock 
+161 #14-4#Heat Rock 
+162 27-484_15_10#Lustrous Orb
+163 1-5_-10#Macho Brace
+164 26-83#Stick
+165 10-15#Dragon Fang
+166 10-3#Poison Barb
+167 1-5_-10#Power Anklet 
+168 1-5_-10#Power Band 
+169 1-5_-10#Power Belt 
+170 1-5_-10#Power Bracer
+171 1-5_-10#Power Lens 
+172 1-5_-10#Power Weight 
+180 17#Quick Claw
+181 23#Razor Claw 
+183 28#Sticky Barb
+184 8-366_20_3#Deepseatooth
+185 29-15|10-15#Draco Plate
+186 29-16|10-16#Dread Plate 
+187 29-4|10-4#Earth Plate 
+188 29-1|10-1#Fist Plate 
+189 29-9|10-9#Flame Plate 
+190 30#Grip Claw
+191 29-14|10-14#Icicle Plate 
+192 29-6|10-6#Insect Plate 
+193 29-8|10-8#Iron Plate 
+194 29-11|10-11#Meadow Plate 
+195 29-13|10-13#Mind Plate 
+196 29-2|10-2#Sky Plate 
+197 29-10|10-10#Splash Plate 
+198 29-7|10-7#Spooky Plate 
+199 29-5|10-5#Stone Plate 
+200 8-104/105_20_1#Thick Club
+201 29-3|10-3#Toxic Plate 
+202 29-12|10-12#Zap Plate
+206 10-5#Hard stone
+212 1-5_-10#Iron Ball
+213 27-487_15_7#Griseous Orb
+214 31#Air Mail
+215 31#Bloom Mail
+216 31#Brick Mail
+217 31#Bubble Mail
+218 31#Flame Mail
+219 31#Grass Mail
+220 31#Harbor Mail
+221 31#Heart Mail
+222 31#Mosaic Mail
+223 31#Snow Mail
+224 31#Space Mail
+225 31#Steel Mail
+226 31#Tunnel Mail
+227 32-10#Douse Drive
+228 32-12#Shock Drive
+229 32-9#Burn Drive
+230 32-14#Chill Drive
+233 33#Evolution Stone
+234 #Pumice Stone
+235 34#Rugged Helmet
+236 35#Balloon
+237 38#Red Card
+240 36-10_3#Absorb Bulb
+241 36-12_1#Rechargeable battery
+242 39#Escape Button
+243 37-9#Fire Jewel
+244 37-10#Water Jewel
+245 37-12#Electric Jewel
+246 37-11#Grass Jewel
+247 37-14#Ice Jewel
+248 37-1#Fight Jewel
+249 37-3#Poison Jewel
+250 37-4#Earth Jewel
+251 37-2#Flight Jewel
+252 37-13#Psychic Jewel
+253 37-6#Bug Jewel
+254 37-5#Rock Jewel
+255 37-7#Ghost Jewel
+256 37-15#Dragon Jewel
+257 37-16#Dark Jewel
+258 37-8#Steel Jewel
+259 37-0#Normal Jewel
+0 #1002, 1005 not used
+43 1000-5#Antidote
+44 1000-2#Awakening
+45 1001-20#Berry Juice
+52 1000-2_1#Blue flute
+54 1000-4#Burn heal
+61 2002#Dire hit
+63 1003-10#Elixir
+67 1004-10#Ether
+74 1000#Full Heal
+75 1000|1001#Full Restore
+79 2005#Guard Spec.
+80 1000|1006#Heal Powder - 1006 is to decrease happiness
+84 1001-200#Hyper Potion
+85 1000-3#Ice Heal
+88 1000#Lava Cookie
+90 1001-80#Lemonade
+96 1003#Max Elixir
+97 1004#Max Ether
+98 1001#Max Potion
+100 1007#Max Revive
+104 1001-100#MooMoo Milk
+109 1000#Old Gateau
+110 1000-1#Parlyz Heal
+113 1001-20#Potion
+119 1000-7_1#Red Flute
+122 1007|1006#Revival Herb
+123 1007-50#Revive
+124 1999#Sacred Ash
+130 1001-60#Soda Pop
+137 1001-50#Super Potion
+146 2000-6#X Accuracy
+147 2000-1#X Attack
+148 2000-2#X Defend
+149 2000-3#X Special
+150 2000-4#X Sp. Def
+151 2000-5#X Speed
+152 1000-6_1#Yellow Flute
+231 1001-20#Sweet Heart
+279 1000#Casteliacone
+280 2002-2#Dire Hit 2
+281 2000-5*2#X Speed 2
+282 2000-3*2#X Special 2
+283 2000-4*2#X Sp. Def 2
+284 2000-2*2#X Defend 2
+285 2000-1*2#X Attack 2
+286 2000-6*2#X Accuracy 2
+287 2000-5*3#X Speed 3
+288 2000-3*3#X Special 3
+289 2000-4*3#X Sp. Def 3
+290 2000-2*3#X Defend 3
+291 2000-1*3#X Attack 3
+292 2000-6*3#X Accuracy 3
+293 2000-5*6#X Speed 6
+294 2000-3*6#X Special 6
+295 2000-4*6#X Sp. Def 6
+296 2000-2*6#X Defend 6
+297 2000-1*6#X Attack 6
+298 2000-6*6#X Accuracy 6
+299 2001#Ability Urge
+300 2003#Item Drop
+301 2004#Item Urge
+302 2006#Reset Urge
+303 2002-3#Dire Hit 3
+305 3000-2#Poké Ball
+306 3000-3#Great Ball
+307 3000-4#Ultra Ball
+308 3000#Master Ball
+309 3000-3#Safari Ball
+310 3001#Level Ball
+311 3002#Lure Ball
+312 3003#Moon Ball
+313 3004#Friend Ball
+314 3005#Love Ball
+315 3006#Heavy Ball
+316 3007#Fast Ball
+317 3000-3#Sport Ball
+318 3000-2#Premier Ball
+319 3008#Repeat Ball
+320 3009#Timer Ball
+321 3010#Nest Ball
+322 3011#Net Ball
+323 3012#Dive Ball
+324 3013#Luxury Ball
+325 3014#Heal Ball
+326 3015#Quick Ball
+327 3016#Dusk Ball
+328 3017#Cherish Ball
+329 3000#Park Ball

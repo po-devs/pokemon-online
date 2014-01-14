@@ -1,0 +1,12 @@
+﻿0 %s aß seine %i!
+1 %s ist nicht mehr verwirrt !|Statusproblem von %s wurde aufgehoben !|%s ist nicht mehr paralysiert !|Verbrennung von %s wurde geheilt !|%s ist aufgetaut !|%s wacht auf !|%s ist nicht mehr vergiftet !|%s ist nicht mehr vergiftet !
+2 %s's %m's PPs are restored!
+3 %s restored a some HP!
+4 %i von %s schwächt die Wirkung von %m!
+5 %i von %s schwächt die Wirkung von %m!
+6 %s restored a some HP
+7 The %i raised %s's %st!
+9 The %i sharply raised %s's %st!
+10 %s is focusing on the target!
+11 %s is already preparing its next move!
+12 %f is hit with recoil

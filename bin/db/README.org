@@ -1,0 +1,18 @@
+﻿
+Follows is a directory by directory description of each database file.
+
+* moves/
+** move\_message.txt
+   Each line contains the message that will be printed out to the html logs
+   when the corresponding move is done.
+
+   - %s :: Replaced by the owner's pokemon nickname.
+   - %f :: Replaced by the foe's pokemon nickname.
+   - %i :: The name of an item held by owner's pokemon.
+   - %m :: The name of a move.
+   - %tf :: Foe's team name.
+   - %p :: Another pokemon's name other then the name of the acting pokemon
+           or the target pokemon.
+   - %q :: ???
+   - %a :: ???
+   - %d :: Some digit or digits.

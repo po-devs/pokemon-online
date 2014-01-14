@@ -1,0 +1,7 @@
+﻿0 normal
+1 paralizado
+2 dormindo
+3 congelado
+4 queimado
+5 envenenado
+6 confused

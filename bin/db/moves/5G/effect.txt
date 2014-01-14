@@ -1,0 +1,533 @@
+﻿0 No Effect
+2 Has a higher chance of a critical hit. (12.5%)
+3 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+4 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+6 {In internal battles, player obtains money after battle when using, if the player wins. If this attack is successful, an amount equal to five times the user's current level (during attack's use) is added to the money to be obtained. Not obtained if fleeing occurred in the battle.}
+7 May burn opponent. (10%)
+8 May freeze opponent. (10%)
+9 May paralyze opponent. (10%)
+12 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
+13 Two-turn attack. Has a higher chance of a critical hit. (12.5%)
+14 Increases user's Attack by 2 stages.
+16 Power is doubled if opponent is using Fly, Bounce or Sky Drop.
+18 { Ends wild battles. In trainer battles, replaces opponent with a random non-active Pokémon in opponent's party; fails if opponent's party has no non-active Pokémon. Fails either way if Ingrain is in effect for opponent. Priority level -6.}
+19 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thunder, Twister, and Whirlwind.
+20 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+23 May cause opponent to flinch. Power is doubled if Minimize is in effect for opponent. (30%)
+24 Strikes twice.
+26 If this attack misses or becomes ineffective, user loses half of the damage the attack would have dealt (ignoring type immunities, not considered recoil damage), but not [less than 1 HP or] more HP than half of user's total HP.
+27 May cause opponent to flinch. (30%)
+28 Decreases opponent's Accuracy by 1 stage.
+29 May cause opponent to flinch. (30%)
+31 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+32 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
+34 May paralyze opponent. (30%)
+35 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+36 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+37 If this attack is successful, the effect begins. Effect lasts for two or three rounds, including the current round. During effect, user uses this attack during each of its turns and can't take any other action. [When user uses this attack this way during the last round of the effect, it becomes confused at the end of that round], unless it's already confused. Effect ends without causing confusion if this attack's type is ineffective against opponent's types [before the last round of the effect], if user is prevented from using this attack, or when user falls asleep, becomes frozen, or is replaced [before the last round of the effect]. If user is asleep, this attack deals damage and lasts one turn (doesn't cause confusion).
+38 Returns to user 1/3 of HP lost by user due to this attack (recoil).
+39 Decreases opponent's Defense by 1 stage.
+40 May poison opponent. (30%)
+41 Strikes twice. May poison opponent. (20%)
+42 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+43 Decreases opponent's Defense by 1 stage.
+44 May cause opponent to flinch. (30%)
+45 Decreases opponent's Attack by 1 stage.
+46 { Ends wild battles. In trainer battles, replaces opponent with a random non-active Pokémon in opponent's party; fails if opponent's party has no non-active Pokémon. Fails either way if Ingrain is in effect for opponent. Priority level -6.}
+47 Puts opponent to sleep.
+48 Confuses opponent.
+49 Deals 20 damage to opponent. Affected by type immunities.
+50 For four to seven rounds, including the current round, the last move used by opponent when this attack was used is disabled for opponent. Fails if opponent doesn't have that move or it has zero PP. During effect, this attack fails against opponent. Effect ends when opponent is replaced.
+51 May decrease opponent's Special Defense by 1 stage. (10%)
+52 May burn opponent. (10%)
+53 May burn opponent. (10%)
+54 For five rounds, including the current round, attacks and abilities can't reduce the stat stages of each active Pokémon on the user's side if they are used by other Pokémon. During effect, this attack fails for user's party.
+57 If opponent is using Dive, this attack's power is doubled.
+58 May freeze opponent. (10%)
+59 May freeze opponent. (10%) During Hail, this attack hits without fail.
+60 May confuse opponent. (10%)
+61 May decrease opponent's Speed by 1 stage. (10%)
+62 May decrease opponent's Attack by 1 stage. (10%)
+63 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+66 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+67 This attack's power is 20 if the weight of the opponent's original species is 10 kilograms (kg) or less [or less than 10 kg], else 40 if 25 kg or less, else 60 if 50 kg or less, else 80 if 100 kg or less, else 100 if 200 kg or less, else 120.
+68 If the last non-user who hit the user with a physical attack this round is one of user's opposing Pokémon, and there is a Pokemon at that non-user's position, deals damage to the Pokémon at that non-user's position equal to 2 times the amount of HP lost by user due to that attack. Fails if that amount is 0. Affected by type immunities. For multi-hit attacks, returns HP based on the last hit of that attack. Priority level -5.
+69 Deals damage to opponent equal to user's level. Affected by type immunities.
+71 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+72 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+73 {During effect, at the end of every round, if there is a Pokémon at user's position, opponent loses 1/8 of total HP, and the Pokémon at user's position gains HP lost by opponent. Effect ends when opponent is switched or uses Rapid Spin. Fails if opponent's current type includes Grass.}
+74 Increases user's Attack and Special Attack by 1 stage, or 2 stages during Sunny Day.
+75 Has a higher chance of a critical hit. (12.5%)
+76 Two-turn attack. Effectiveness is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.
+77 Poisons opponent.
+78 Paralyzes opponent.
+79 Puts opponent to sleep.
+80 If this attack is successful, the effect begins. Effect lasts for two or three rounds, including the current round. During effect, user uses this attack during each of its turns and can't take any other action. [When user uses this attack this way during the last round of the effect, it becomes confused at the end of that round], unless it's already confused. Effect ends without causing confusion if this attack's type is ineffective against opponent's types [before the last round of the effect], if user is prevented from using this attack, or when user falls asleep, becomes frozen, or is replaced [before the last round of the effect]. If user is asleep, this attack deals damage and lasts one turn (doesn't cause confusion).
+81 Decreases opponent's Speed by 1 stage.
+82 Deals 40 damage to opponent. Affected by type immunities.
+83 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+84 May paralyze opponent. (10%)
+85 May paralyze opponent. (10%)
+86 Paralyzes opponent. (Affected by type immunities.)
+87 May paralyze opponent. (30%) During Rain Dance, this attack hits without fail. Otherwise, during Sunny Day, this attack's accuracy is 50. Can hit opponent even if it is using Fly, Bounce, or Sky Drop.
+89 Power is doubled if opponent is using Dig.
+90 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
+91 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Earthquake and Magnitude, and user doesn't lose HP because of Sandstorm and Hail.
+92 Badly poisons opponent.
+93 May confuse opponent. (10%)
+94 May decrease opponent's Special Defense by 1 stage. (10%)
+95 Puts opponent to sleep.
+96 Increases user's Attack by 1 stage.
+97 Increases user's Speed by 2 stages.
+98 Priority level 1.
+99 If this attack is successful, the effect begins. During effect, whenever user loses HP due to an attack by a non-user (as well as Doom Desire and Future Sight), user's Attack is increased by 1 stage. Effect ends when user doesn't choose this move for use or when user is replaced.
+100 User flees from the wild battle. Fails if battle is a Trainer battle.
+101 Deals damage to opponent equal to user's level. Affected by type immunities.
+102 Copies last move used by opponent. That move replaces this move. The copied move has 5 PP. Fails if that move is Metronome, Struggle, Sketch, Mimic, Chatter, or any move user knows. Fails if Transform is in effect for user.
+103 Decreases opponent's Defense by 2 stages.
+104 Increases user's evasiveness by 1 stage.
+105 User gains half of total HP. Fails if user's HP is full.
+106 Increases user's Defense by 1 stage.
+107 Increases user's evasiveness by 1 stage. Even if user's evasiveness cannot be increased, until user is replaced, the move Stomp, when used by non-users, deals double power against user.
+108 Decreases opponent's Accuracy by 1 stage.
+109 Confuses opponent.
+110 Increases user's Defense by 1 stage.
+111 {Increases user's Defense by 1 stage. Even if user's Defense can't be increased, until user is replaced, the power of Ice Ball and Rollout, when used by user, is doubled. (Effect is not cumulative.)}
+112 Increases user's Defense by 2 stages.
+113 {Effect lasts for five rounds including the current round. During effect, effectiveness of special non-critical-hit attacks against any active Pokémon on the user's side is halved as long as there is only one active Pokémon on the user's side, or multiplied by 2/3 otherwise. During effect, this attack fails for user's party.}
+114 Resets all stat stages on all active Pokémon to zero.
+115 {Effect lasts for five rounds including the current round. During effect, effectiveness of physical non-critical-hit attacks against any active Pokémon on the user's side is halved as long as there is only one active Pokémon on the user's side, or multiplied by 2/3 otherwise. During effect, this attack fails for user's party.}
+116 Increases chances of a critical hit by one stage for attacks by the user. Effect ends when user is switched.
+117 When this attack is used, the effect begins and X is set to 0. During effect, user uses this attack during each of its turns and can't take any other action, and whenever a non-user hits the user with a damaging attack, the HP lost by user due to that attack is added to X. After user's second turn after this one, deals X times 2 damage to the last non-user who hit the user with a damaging attack during this attack's effect, or if there is no Pokemon at that position, to one of the opposing Pokemon chosen at random, and this effect ends. Not affected by type immunities. Returned attack is considered an attack by the user. If, during effect, user is prevented from using this attack or is replaced, or when user falls asleep or becomes frozen, effect ends without returning an attack. Priority level 1.
+118 Uses a random move other than the following:  Metronome, Struggle, Sketch, Mimic, Chatter, Sleep Talk, Assist, Mirror Move, Counter, Mirror Coat, Protect, Detect, Endure, Destiny Bond, Thief, Follow Me, Snatch, Helping Hand, Covet, Trick, Focus Punch, Nature Power, Feint, Copycat, Me First, Switcheroo, After You, Quash, Bestow, Rage Powder, Quick Guard, Wide Guard, Snarl, Freeze Shock, Ice Burn, V-create, Relic Song, Techno Buster, or any move user knows.
+119 Uses with no target the last move that targeted the user, was not prevented from being used, was not used by another move, can be used with this attack, and has a target of "single non-user", "all opposing Pokémon", "opposing Pokémon selected at random", "all non-users", or "no target". Fails if the affected move is Encore. The affected move is reset for a Pokémon when it is replaced or one of its opposing Pokémon is replaced. (A two-turn attack targets a Pokémon on both turns of use.)
+120 User faints as part of this attack's use. Fails if no target exists (doesn't cause fainting).
+122 May paralyze opponent. (30%)
+123 May poison opponent. (40%)
+124 May poison opponent. (30%)
+125 May cause opponent to flinch. (10%)
+126 May burn opponent. (10%)
+127 May cause opponent to flinch. (20%)
+128 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+129 Cannot be evaded.
+130 Two-turn attack. On first turn of use, increases user's Defense by 1 stage. (100%)
+131 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+132 May decrease opponent's Speed by 1 stage. (10%)
+133 Increases user's Special Defense by 2 stages.
+134 Decreases opponent's Accuracy by 1 stage.
+135 User gains half of total HP. Fails if user's HP is full.
+136 If this attack misses or becomes ineffective, user loses half of the damage the attack would have dealt (ignoring type immunities, not considered recoil damage), but not [less than 1 HP or] more HP than half of user's total HP.
+137 Paralyzes opponent. (Not affected by type immunities.)
+138 Fails unless opponent is asleep. If this attack is successful, user gains half of HP lost by opponent due to this attack.
+139 Poisons opponent.
+140 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+141 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+142 Puts opponent to sleep.
+143 Two-turn attack. Has a higher chance of a critical hit. (12.5%) May cause opponent to flinch. (30%)
+144 User's Attack, Defense, Speed, Special Attack, and Special Defense stats; types; moves; species; individual values; ability; and stat stages become those of the opponent. Ends effect of Disable for the user. Moves copied have 5 PP. Fails if opponent is using Fly, Dig, Dive, or Bounce. These attributes revert to their originals when user is replaced. During effect, user can use this attack, and this attack fails against user.
+145 May decrease opponent's Speed by 1 stage. (10%)
+146 May confuse opponent. (20%)
+147 Puts opponent to sleep.
+148 Decreases opponent's Accuracy by 1 stage.
+149 Deals damage to opponent equal to (user's level) * (N * 10 + 50) / 100, rounded down, where N is a random number from 0 through 10. Affected by type immunities.
+150 Has no effect at all.
+151 Increases user's Defense by 2 stages.
+152 Has a higher chance of a critical hit. (12.5%)
+153 User faints as part of this attack's use. Fails if no target exists (doesn't cause fainting).
+154 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+155 Strikes twice.
+156 User gains all HP; user sleeps with a sleep count of 3, even if user has a status problem. Fails if user's HP is full or if user is already asleep. Does nothing if user cannot fall asleep.
+157 May cause opponent to flinch. (30%)
+158 May cause opponent to flinch. (10%)
+159 Increases user's Attack by 1 stage.
+160 User's types become the original type of one of the user's moves, chosen at random. Fails if user has Multitype or if each of user's moves is of either type of the user, since it chooses a type other than one of user's types.
+161 May either burn, freeze, or paralyze opponent. (20% total)
+162 Deals damage to opponent equal to half of opponent's current HP, but not less than 1. Affected by type immunities.
+163 Has a higher chance of a critical hit. (12.5%)
+164 Creates a decoy using 1/4 of user's total HP. The decoy takes damage for the user, and vanishes once it has lost the expended HP. The decoy will nullify almost all status and stat altering moves and abilities aimed at the user, except for Attract, Encore, Imprison, Taunt, Torment, and Synchronize. Can be Baton Passed, but the decoy won't stop damage from Spikes and Stealth Rock, or status from Toxic Spikes. Effect ends when user is switched.
+165 This attack's effectiveness is not affected by user's or opponent's types. If this attack is successful, user loses 1/4 of total HP (not considered recoil damage).
+166 {Permanently copies move opponent last used (different variable). That move replaces this move even after the battle ends. Does not copy Sketch, Struggle, Chatter, or any move user knows. Fails if Transform is in effect for user. Moves copied this way have all PP.}
+167 Hits three times. Stops if a miss is caused. When used, power starts at its original value, and increases by 10 after each hit.
+168 If this attack is successful, user receives opponent's held item (even if opponent has zero HP) if user isn't holding any items, if that item is not a Mail, if user did not drop its held item this battle, and unless opponent has Multitype or is one of the player's Pokemon in an internal battle.
+169 {During effect, opponent cannot switch or flee. Effect ends when user or opponent is switched. During effect, this attack fails against opponent.}
+170 [Until the end of the next round, attacks by the user against the opponent hit without fail5. Effect ends when user or opponent is switched or when an attack hits without fail this way. User can use this attack during effect. When this attack is used, effect of this attack ends for all other non-users.]
+171 Fails unless opponent is asleep. As long as opponent remains asleep, opponent loses 1/4 of total HP at the end of every round (including the current round). Effect ends when opponent is replaced or wakes up.
+172 May burn opponent. (10%) If user is frozen and it chose this move for use, it becomes defrosted before this attack is used.
+173 May cause opponent to flinch. Fails unless user is asleep. (30%)
+174 If user's current type does not include Ghost or if user has Magic Guard, decreases user's Speed by one stage and increases user's Attack and Defense by one stage. Otherwise, user loses half of total HP (even if HP reduced would faint user) and at the end of every round, opponent loses 1/4 of total HP. This latter effect ends when opponent is switched. During effect, this attack fails against opponent. Fails either way if no target exists. (As commands are chosen, if user's current type does not include Ghost or if user has Magic Guard, user can't choose an opponent. If user doesn't choose an opponent, a random opposing Pokemon is chosen as the opponent as this attack is used.)
+175 This attack's power is 200 if N is less than 2, 150 if N is 2 through 5, 100 if N is 6 through 12, 80 if N is 13 through 21, 40 if N is 22 through 42, or 20 if N is 43 or greater, where N is equal to (user's current HP * 64 / user's total HP), rounded down.
+176 {User's types change to a random type that is resistant or immune to the type of the last attack that successfully targeted user. Fails if there is no such attack or if user has Multitype. Doesn't choose either of the user's types. More information4.}
+177 Has a higher chance of a critical hit. (12.5%)
+178 Decreases opponent's Speed by 2 stages.
+179 This attack's power is 200 if N is less than 2, 150 if N is 2 through 5, 100 if N is 6 through 12, 80 if N is 13 through 21, 40 if N is 22 through 42, or 20 if N is 43 or greater, where N is equal to (user's current HP * 64 / user's total HP), rounded down.
+180 Decreases PP of last move used by opponent by 4. Fails if that move has zero PP or if there is no such move.
+181 May freeze opponent. (10%)
+182 User avoids certain attacks used this round by non-users. This attack fails if user strikes last this round. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, or Wide Guard as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
+183 Priority level 1.
+184 Decreases opponent's Speed by 2 stages.
+185 Cannot be evaded.
+186 Confuses opponent.
+187 User loses half of total HP, and increases user's Attack by 12 stages. Will fail if HP reduced would faint user or if user's Attack cannot be increased.
+188 May poison opponent. (30%)
+189 Decreases opponent's Accuracy by 1 stage.
+190 May decrease opponent's Accuracy by 1 stage. (50%)
+191 Can be used up to three times. During effect, whenever an opposing Pokémon becomes active, that Pokémon, unless it's a Flying type or has Levitate, loses HP:  1/8 of total HP for one use; 1/6 of total HP for two uses; and 1/4 of total HP for three uses.
+192 Paralyzes opponent.
+193 During effect, if opponent's evasiveness stat stage is greater than 0, it temporarily becomes 0 in accuracy checks for attacks against the opponent. During effect, Normal- and Fighting-type attacks against opponent have normal effectiveness against the Ghost type. Effect ends when opponent is replaced. This attack can be used against opponent during effect.
+194 Until user's next turn, if an attack by an opposing Pokémon causes the user to faint, that opposing Pokémon also faints if that Pokémon is still active.
+195 Each active Pokémon without a perish count receives a perish count of 4. At the end of every round (including the current round), the perish count of each active Pokémon is reduced by 1 and all Pokémon with a perish count of 0 faint simultaneously. A Pokémon's perish count is removed when it is switched.
+196 Decreases opponent's Speed by 1 stage.
+197 User avoids certain attacks used this round by non-users. This attack fails if user strikes last this round. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, or Wide Guard as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
+198 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+199 [Until the end of the next round, attacks by the user against the opponent hit without fail. Effect ends when user or opponent is switched or when an attack hits without fail this way. User can use this attack during effect. When this attack is used, effect of this attack ends for all other non-users.]
+200 If this attack is successful, the effect begins. Effect lasts for two or three rounds, including the current round. During effect, user uses this attack during each of its turns and can't take any other action. [When user uses this attack this way during the last round of the effect, it becomes confused at the end of that round], unless it's already confused. Effect ends without causing confusion if this attack's type is ineffective against opponent's types [before the last round of the effect], if user is prevented from using this attack, or when user falls asleep, becomes frozen, or is replaced [before the last round of the effect]. If user is asleep, this attack deals damage and lasts one turn (doesn't cause confusion).
+201 Weather. Lasts for five rounds including the current round. At the end of every round except the last, each active Pokémon, except Ground, Rock, and Steel types, loses 1/16 of total HP simultaneously. During effect, Special Defense of active Pokémon whose current type includes Rock is multiplied by 1.5.
+202 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+203 Until the end of the round, if an attack by non-users would reduce user's HP to less than 1, its damage is changed so that it reduces user's HP to 1 instead. This attack fails if it occurred last this round. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, or Wide Guard as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
+204 Decreases opponent's Attack by 2 stages.
+205 User uses this attack for five turns, during which user can't take any other action. A multiplier, X (which begins at 0), increases by 1 whenever this attack is successful. Effect ends and X is reset to 0 when user is replaced; when this attack is prevented from being used, misses, or becomes ineffective; when the attack is used for five turns; or when user falls asleep or becomes frozen. This attack's power is multiplied by 2 to the power of X. If user is asleep, this attack's effect lasts one turn.
+206 If this attack's damage would be equal to or greater than opponent's current HP, its damage is instead equal to opponent's current HP minus 1. (This attack doesn't fail if 0 damage would be dealt this way.)
+207 If opponent's Attack can be increased, increases opponent's Attack by 2 stages. If opponent is not confused, confuses opponent.
+208 User gains half of total HP. Fails if user's HP is full.
+209 May paralyze opponent. (30%)
+210 A multiplier, X (which begins at 0), increases by 1 if this attack is successful, up to a maximum of 4. X is reset to 0 when user is replaced; when user falls asleep or becomes frozen; or when this attack is prevented from being used, misses, or becomes ineffective. This attack's power is multiplied by 2 to the power of X.
+211 May increase user's Defense by 1 stage. (10%)
+212 {During effect, opponent cannot switch or flee. Effect ends when user or opponent is switched. During effect, this attack fails against opponent.}
+213 Infatuates opponent. (There is a 50% chance that the attack of an infatuated Pokémon will be canceled.) Fails if user or opponent is genderless, or if both have the same gender. Effect ends when user or opponent is replaced. During effect, this attack fails against opponent.
+214 Uses one of the user's moves, at random. Fails unless user is asleep. Doesn't choose the following:  Sleep Talk, Copycat, Assist, Me First, Metronome, Mirror Move, Focus Punch, Uproar, Chatter, Bide, any two-turn move, any move the user cannot choose for use, or a move with zero PP. No PP is spent for the move used.
+215 Each Pokémon in user's party is cured of its status problem.
+216 This attack's power is equal to int((User's happiness)*2/5). Minimum 1.
+217 At random, recovers to opponent 1/4 of total HP (52/256 chance), or deals 40 (102/256), 80 (76/256), or 120 (26/256) power.
+218 This attack's power is equal to int((255-User's happiness)*2/5). Minimum 1.
+219 {For five rounds, including the current round, for each active Pokémon on the user's side, attacks by other Pokémon and items cannot inflict status problems or confusion against that Pokémon. During effect, Yawn will fail against any active Pokémon on the user's side. During effect, this attack fails for user's party.}
+220 User's HP and opponent's HP become equal to the average of user's and opponent's current HP, rounded down, and are adjusted so that they don't exceed their total HP. Not affected by type immunities.
+221 May burn opponent. (50%) If user is frozen and it chose this move for use, it becomes defrosted before this attack is used.
+222 This attack's power is 10 (5% chance), 30 (10%), 50 (20%), 70 (30%), 90 (20%), 110 (10%), or 150 (5%) (Magnitude 4 through 10, respectively). If an opponent is using Dig, this attack's power is doubled for that opponent.
+223 Confuses opponent.
+225 May paralyze opponent. (30%)
+226 Replaces user's Pokémon with a different non-active Pokémon in user's party of user's choice and transfers user's stat stages, confusion, and effects of certain moves to the new Pokémon.
+227 Effect lasts for three rounds, including the current round. During effect, opponent, during each of its turns, uses the last move it used before this attack was used, with no target, and opponent chooses that move for use automatically and can't choose any other move for use. (Opponent can switch or flee as normal.) This attack fails if there is no affected move; the affected move is Transform, Mimic, Sketch, Mirror Move, Encore, or Struggle; if opponent doesn't have affected move; or if affected move has zero PP. During effect, this attack fails against opponent. Effect ends when opponent is replaced. At the beginning of opponent's turn and at the end of the round, if affected move has changed, effect ends. At the end of the round, if affected move has zero PP, effect ends.
+228 When opponent switches, if user chose this move for use and opponent is one of user's opposing Pokémon, and if user is not asleep, frozen, or about to skip its attack this round because it has Truant, and if user did not take its turn yet this round, user uses this attack with effectiveness doubled and skips its attack this round. (Can be used this way even if disabled. If this attack is used this way, user is considered to strike before other Pokémon. If this attack causes the opponent to faint this way, the new Pokémon at opponent's position becomes active immediately.)
+229 If this attack is successful, effects of multi-turn attacks and Leech Seed end for user, and effect of Spikes, Stealth Rock, and Toxic Spikes ends for user's side.
+230 Decreases opponent's evasiveness by 1 stage.
+231 May decrease opponent's Defense by 1 stage. (30%)
+232 May increase user's Attack by 1 stage. (10%)
+233 Cannot be evaded. Priority level -1.
+234 User gains 2/3 of total HP during Sunny Day; otherwise, user gains 1/4 of total HP during Rain Dance, Hail, fog, or Sandstorm; otherwise, user gains half of total HP.
+235 User gains 2/3 of total HP during Sunny Day; otherwise, user gains 1/4 of total HP during Rain Dance, Hail, fog, or Sandstorm; otherwise, user gains half of total HP.
+236 User gains 2/3 of total HP during Sunny Day; otherwise, user gains 1/4 of total HP during Rain Dance, Hail, fog, or Sandstorm; otherwise, user gains half of total HP.
+237 This attack's power is equal to (X*40/63)+30, rounded down, where X is 0, plus 1 if half the user's HP individual value (IV) is odd, plus 2 if half its Attack IV is odd, plus 4 if half its Defense IV is odd, plus 8 if half its Speed IV is odd, plus 16 if half its Special Attack IV is: odd, plus 32 if half its Special Defense IV is odd. This attack's type is equal to (X * 15 / 63), rounded down, where X is 0, plus 1 if the user's HP IV is odd, plus 2 if its Attack IV is odd, plus 4 if its Defense IV is odd, plus 8 if its Speed IV is odd, plus 16 if its Special Attack IV is odd, plus 32 if its Special Defense IV is odd, and the type is selected from this list:  0 = Fighting; 1 = Flying; 2 = Poison; 3 = Ground; 4 = Rock; 5 = Bug; 6 = Ghost; 7 = Steel; 8 = Fire; 9 = Water; 10 = Grass; 11 = Electric; 12 = Psychic; 13 = Ice; 14 = Dragon; 15 = Dark.
+238 Has a higher chance of a critical hit. (12.5%)
+239 May cause opponent to flinch. Power is doubled if opponent is using Fly, Bounce, or Sky Drop. (20%)
+240 Weather. Lasts for five rounds including the current round. During effect, effectiveness of Water-type attacks is multiplied by 1.5, and effectiveness of Fire-type attacks is halved.
+241 Weather. Lasts for five rounds including the current round. During effect, effectiveness of Fire-type attacks is multiplied by 1.5, and effectiveness of Water-type attacks is halved. During effect, effects can't freeze a Pokemon.
+242 May decrease opponent's Defense by 1 stage. (20%)
+243 If the last non-user who hit the user with a special attack this round is one of user's opposing Pokémon, and there is a Pokemon at that non-user's position, deals damage to the Pokémon at that non-user's position equal to 2 times the amount of HP lost by user due to that attack. Fails if that amount is 0. Affected by type immunities. For multi-hit attacks, returns HP based on the last hit of that attack. Priority level -5.
+244 User adopts all of opponent's current stat stages.
+245 Priority level 2.
+246 May increase user's Attack, Defense, Speed, Special Attack, and Special Defense by 1 stage. (10%)
+247 May decrease opponent's Special Defense by 1 stage. (20%)
+248 {On the turn it is used, queues the attack; at the end of the round that follows the next round, if there is a Pokémon at opponent's position, that Pokémon is hit by the attack, damage is calculated with its Special Defense and the user's Special Attack. Accuracy check and damage weighting are performed when attack is returned, so stat boosts from moves, items and abilities only remain if the user stays in the field. Remains in effect even if user or opponent is replaced. During effect, this attack fails against the Pokémon at opponent's position.}
+249 Decreases opponent's Defense by 1 stage.
+250 {Power is doubled if opponent is using Dive. Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+251 {Performs one hit for each unfainted Pokémon in user's party, excluding eggs and those with status problems, in party order. The Base Power of each hit is equal to int(Base Attack of the called Pokémon / 10) + 5; for this calculation, the Attack Stage of the called Pokémon is ignored, but held items that boost its Attack are not. Accuracy check is performed only once. Considered a multi-hit attack. All hits are considered attacks by the user.}
+252 Causes opponent to flinch. Fails unless it's the user's first turn since user last became active. Priority level 3.
+253 {If this attack is successful, the effect begins. Effect lasts for two to five rounds, including the current round. During effect, user uses this attack during each of its turns and can't take any other action. During effect, no Pokemon can fall asleep and each sleeping active Pokemon wakes up at the beginning of its turn and at the end of each round including the last one. Effect ends [at the end of the round] if user is prevented from using this attack. Effect ends when user falls asleep, becomes frozen, or is replaced. Effect ends at the end of the round if this attack is ineffective against opponent's types.}
+254 Increases user's Stockpile count by 1, and increases user's Defense and Special Defense by 1 stage. Fails if user's Stockpile count is 3 or greater. The Stockpile count is reset when user is replaced.
+255 This attack's power is equal to 100 times the user's Stockpile count. Damage weighting is not performed for this attack. Even if this attack misses or becomes ineffective, resets user's Stockpile count to 0 and decreases user's Defense and Special Defense by the amount the user gained with Stockpile. (That amount is also reset to 0.)
+256 User gains HP according to the user's Stockpile count:  1/4 of total HP if it's 1; half of total HP if it's 2; and all HP if it's 3. Even if user's HP is full, resets user's Stockpile count to 0 and decreases user's Defense and Special Defense by the amount the user gained with Stockpile. (That amount is also reset to 0.)
+257 May burn opponent. (10%)
+258 Weather. Lasts for five rounds including the current round. During effect, at the end of every round except the last, each active Pokémon, except Ice types, loses 1/16 of total HP simultaneously.
+259 During effect, opponent can't choose for use the last move it used. Effect ends when opponent is replaced.
+260 If opponent's Special Attack can be increased, increases opponent's Special Attack by 1 stage. If opponent is not confused, confuses opponent.
+261 Burns opponent.
+262 User faints as part of this attack's use. Decreases opponent's Attack and Special Attack by 2 stages. Fails if there is no target (doesn't cause fainting).
+263 Power is doubled if user is Poisoned, Burned, or Paralyzed.
+264 Fails if user lost HP due to a damaging attack by a non-user this round. Priority level -3.
+265 If this attack is successful and opponent is Paralyzed, power is doubled and opponent is cured of Paralysis.
+266 Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3.
+267 In tall grass, very tall grass, or puddles, uses Seed Bomb. In caves or on rocky ground, uses Rock Slide. On snow, uses Blizzard. On sand or other outdoor ground, uses Earthquake. On water, uses Hydro Pump. On ice, uses Ice Beam. Elsewhere, uses Tri Attack.
+268 Until the end of the next round and until user is replaced, effectiveness of Electric-type moves the user uses is doubled. User can use this attack during effect. When this attack is used, increases user's Special Defense by 1 stage.
+269 For three rounds, including the current round, non-damaging moves are disabled for opponent. Effect ends when opponent is replaced.
+270 Power of attacks by the target this round is multiplied by 1.5. Effect ends when the target is replaced. Fails if no target exists or if user struck after the target. Priority level 5.
+271 Simultaneously, user receives opponent's item, and opponent receives user's item. Fails if either or both hold a Mail, if user or opponent dropped its held item this battle, if neither one holds an item, or if opponent has Multitype or is one of the player's Pokemon in an internal battle.
+272 User adopts opponent's ability. Fails if opponent's ability is Flower Gift, Forecast, Illusion, Imposter, Multitype, Trace, Wonder Guard, or Zen Mode or if opponent doesn't have an ability. (A Pokémon's ability reverts to its original ability when it is replaced.)
+273 {At the end of the next round, if there is a Pokémon at user's position, that Pokémon gains half of the user's max HP. Remains effective even if user is replaced. During effect, this attack fails for the Pokémon at user's position.}
+274 Uses a random move from a random Pokémon in user's party, other than the user and eggs. Does not use the following moves:  Metronome, Struggle, Sketch, Mimic, Chatter, Sleep Talk, Assist, Mirror Move, Counter, Mirror Coat, Protect, Detect, Endure, Destiny Bond, Thief, Follow Me, Snatch, Helping Hand, Covet, Trick, Focus Punch, Feint, Copycat, Me First, Switcheroo, Rage Powder, Bestow, Circle Throw, or Dragon Tail.
+275 During effect, user cannot switch, flee, or be switched, and at the end of every round, user gains 1/16 of total HP. During effect, Ground-type attacks are effective against user and user can receive the effect of Spikes and Toxic Spikes as though user did not have Levitate and as though its current type did not include Flying. Effect ends when user is switched.
+276 Decreases user's Attack and Defense by 1 stage if this attack is successful.
+277 The next time this round, if the user is the target of one of certain attacks by non-users (most non-attacking moves), instead user uses that attack against that non-user. Effect ends when user is replaced. Priority level 4. (Applies to each target separately. Takes precedence over Soundproof. Even attacks with multiple targets target a single target this way.)
+278 If user isn't holding an item, user receives the last item that was held by a Pokémon at user's position this battle and was consumed this battle. That item is reset if user receives an item this way. Cannot receive an Air Balloon that popped.
+279 {Effectiveness is doubled if user lost HP due to a damaging attack by the opponent this round and opponent was the last non-user to hit the user this round with a damaging attack. Priority level -4.}
+280 If this attack is successful, ends the effects of Reflect and Light Screen on the opponent's side before dealing damage.
+281 {At the end of the next round, if opponent is not affected by a status problem and remains active since this attack was used, opponent sleeps. Fails if [opponent cannot fall asleep when this attack is used, or if] opponent has a status problem.}
+282 If this attack is successful, opponent drops its held item for the rest of the battle even if it has zero HP. Remains effective even if opponent is replaced. (That item is not consumed.)
+283 Deals damage to opponent equal to opponent's current HP minus user's current HP. Affected by type immunities. Fails if user's current HP is equal to or greater than opponent's current HP.
+284 This attack's power is equal to min(1,int(user's current HP * 150 / user's total HP)). Minimum 1, maximum 150.
+285 Simultaneously, user adopts opponent's ability, and opponent adopts user's ability. Fails if either or both abilities are Wonder Guard, Multitype, or Illusion, or if neither have an ability.
+286 During effect, moves that the user knows are disabled for each opposing Pokémon. Effect ends when user is replaced. Fails if neither opposing Pokémon knows a move that the user knows.
+287 User is cured of a Burn, Poison, and Paralysis.
+288 Until user's next turn, if an attack by an opposing Pokémon causes the user to faint, that move's PP is reduced to 0.
+289 The next time this round, user, instead of the non-user, uses certain attacks if they are used by non-users. Will use every self-targeting move a non-user tries to use, except for Protect and Detect. Priority level 4.
+290 In tall grass, very tall grass, or puddles, may put opponent to sleep. In caves or on rocky ground, may cause opponent to flinch. On snow and ice, may freeze opponent. On sand and other outdoor ground, may decrease opponent's Accuracy by 1 stage. On mud, may decrease opponent's Speed by 1 stage. On water, may decrease opponent's Attack by 1 stage. Elsewhere, may paralyze opponent. (30%)
+291 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Surf and Whirlpool, and user doesn't lose HP because of Sandstorm and Hail.
+292 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+293 On and under water, user's type becomes Water. In caves and on rocky ground, user's type becomes Rock. On tall grass, very tall grass, and puddles, user's type becomes Grass. On sand, mud, and other outdoor ground, user's type becomes Ground. On snow and ice, user's type becomes Ice. Elsewhere, user's type becomes Normal. Fails if user has Multitype or if determined type is the same as one of the user's types.
+294 Increases user's Special Attack by 3 stages.
+295 May decrease opponent's Special Defense by 1 stage. (50%)
+296 May decrease opponent's Special Attack by 1 stage. (50%)
+297 Decreases opponent's Attack by 2 stages.
+298 Confuses all non-users.
+299 Has a higher chance of a critical hit. (12.5%) May burn opponent. (10%)
+300 During effect, power of Electric-type attacks is halved. (Effect is not cumulative.) Effect ends when user is switched. During effect, this attack fails for user, and non-users can use this attack.
+301 User uses this attack for five turns, during which user can't take any other action. A multiplier, X (which begins at 0), increases by 1 whenever this attack is successful. Effect ends and X is reset to 0 when user is replaced; when this attack is prevented from being used, misses, or becomes ineffective; when the attack is used for five turns; or when user falls asleep or becomes frozen. This attack's power is multiplied by 2 to the power of X. If user is asleep, this attack's effect lasts one turn.
+302 May cause opponent to flinch. (30%)
+303 User gains half of total HP. Fails if user's HP is full.
+305 May badly poison opponent. (30%)
+306 May decrease opponent's Defense by 1 stage. (50%)
+307 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+308 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+309 May increase user's Attack by 1 stage. (20%)
+310 May cause opponent to flinch. (30%)
+311 This attack's power is doubled during weather (including fog). During Hail, this attack's type is Ice. Otherwise, during Sunny Day, this attack's type is Fire. Otherwise, during Sandstorm, this attack's type is Rock. Otherwise, during Rain Dance, this attack's type is Water.
+312 Each Pokémon in user's party is cured of its status problem.
+313 Decreases opponent's Special Defense by 2 stages.
+314 Has a higher chance of a critical hit. (12.5%)
+315 If this attack is successful, decreases user's Special Attack by 2 stages.
+316 During effect, if opponent's evasiveness stat stage is greater than 0, it temporarily becomes 0 in accuracy checks for attacks against the opponent. During effect, Normal- and Fighting-type attacks against opponent have normal effectiveness against the Ghost type. Effect ends when opponent is replaced. This attack can be used against opponent during effect.
+317 Decreases opponent's Speed by 1 stage.
+318 May increase user's Attack, Defense, Speed, Special Attack, and Special Defense by 1 stage. (10%)
+319 Decreases opponent's Special Defense by 2 stages.
+320 Puts opponent to sleep.
+321 Decreases opponent's Attack and Defense by one stage.
+322 Increases user's Defense and Special Defense by 1 stage.
+323 This attack's power is equal to min(1,int(user's current HP * 150 / user's total HP)). Minimum 1, maximum 150.
+324 May confuse opponent. (10%)
+325 Cannot be evaded.
+326 May cause opponent to flinch. (10%)
+327 Can hit opponent even if it's using Fly or Bounce.
+328 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+329 One-hit KO. Deals damage to opponent equal to opponent's total HP. Ineffective if opponent's level is greater than user's level. When used, this attack's accuracy increases by the level difference. Affected by type immunities. Other accuracy effects are ignored for this attack.
+330 May decrease opponent's Accuracy by 1 stage. (30%)
+331 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+332 Cannot be evaded.
+333 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+334 Increases user's Defense by 2 stages.
+335 {During effect, opponent cannot switch or flee. Effect ends when user or opponent is switched. During effect, this attack fails against opponent.}
+336 Increases user's Attack by 1 stage.
+338 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+339 Increases user's Attack and Defense by 1 stage.
+340 Two-turn attack. While user is using this attack, user is unaffected by attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thunder, Twister, and Whirlwind. May paralyze opponent. (30%)
+341 Decreases opponent's Speed by 1 stage.
+342 Has a higher chance of a critical hit. (12.5%) May poison opponent. (10%)
+343 If this attack is successful, user receives opponent's held item (even if opponent has zero HP) if user isn't holding any items, if that item is not a Mail, if user did not drop its held item this battle, and unless opponent has Multitype or is one of the player's Pokemon in an internal battle.
+344 Returns to user 1/3 of HP lost by opponent due to this attack (recoil). May paralyze opponent. (10%)
+345 Cannot be evaded.
+346 During effect, power of Fire-type attacks is halved. (Effect is not cumulative.) Effect ends when user is switched. During effect, this attack fails for user, and non-users can use this attack.
+347 Increases user's Special Attack and Special Defense by 1 stage.
+348 Has a higher chance of a critical hit. (12.5%)
+349 Increases user's Attack and Speed by 1 stage.
+350 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+351 Cannot be evaded.
+352 May confuse opponent. (20%)
+353 {On the turn it is used, queues the attack; at the end of the round that follows the next round, if there is a Pokémon at opponent's position, that Pokémon is hit by the attack, damage is calculated with its Special Defense and the user's Special Attack. Accuracy check and damage weighting are performed when attack is returned, so stat boosts from moves, items and abilities only remain if the user stays in the field. Remains in effect even if user or opponent is replaced. During effect, this attack fails against the Pokémon at opponent's position.}
+354 If this attack is successful, decreases user's Special Attack by 2 stages.
+355 User gains half of total HP. If user gains HP this way, until the end of the round, attacks against user have normal effectiveness against the Flying type. If used by a pure Flying type Pokémon, it becomes Normal type for the rest of the turn.
+356 Effect lasts for five rounds including the current round. When this attack is used, the effects of Fly, Bounce, Sky Drop, Magnet Rise and Telekinesis end for all active Pokémon. During effect, Fly, Bounce, Magnet Rise, Hi Jump Kick, Splash, Jump Kick, Sky Drop, and Telekinesis are disabled for all active Pokémon. During effect, Ground-type attacks are effective against each active Pokémon, and each active Pokémon can receive the effect of Spikes and Toxic Spikes, and each active Pokémon is prevented from switching and fleeing because of Arena Trap, as though it did not have Levitate and as though its current type did not include Flying. During effect, each active Pokémon's Accuracy is multiplied by 10/6. During effect, this attack fails for all active Pokémon.
+357 During effect, if opponent's evasiveness stat stage is greater than 0, it temporarily becomes 0 in accuracy checks for attacks against the opponent. During effect, Psychic-type attacks against opponent have normal effectiveness against the Dark type. Effect ends when opponent is replaced.
+358 If this attack is successful and opponent is asleep, power is doubled and opponent wakes up.
+359 If this attack is successful, decreases user's Speed by 1 stage.
+360 This attack's power is equal to int((opponent's current Speed*25)/max(user's current Speed,1))+1. Maximum 150.
+361 User faints as part of this attack's use. When a Pokémon at user's position becomes active during this turn, it recovers all HP and is cured of all status problems. (New Pokémon become active immediately during this turn.) Fails if user's party has no non-active Pokémon (doesn't cause fainting).
+362 Power is doubled if opponent's HP is less than or equal to half of total HP.
+363 This attack's type and power depend on the Berry the user is holding. Unless this attack misses, even if this attack becomes ineffective due to type immunities, the item is consumed. Fails if user has Klutz, if user could not use its held item, or if user's item isn't a Berry (item is not consumed in those cases).
+364 If this attack is successful, the effect of Protect, Detect, Quick Guard and Wide Guard does not apply for opponent this round. Priority level 2.
+365 If this attack is successful and opponent is holding a Berry, user uses that item if it could do so and the item has a "when" trigger condition, and then that item is consumed. (This effect happens even if opponent has Multitype and even if effects due to the opponent's item are not applied.)
+366 For three rounds, including the current round, the Speed of each active Pokémon on the user's side is doubled. During effect, this attack fails for user's party.
+367 If any of the target's stat stages can be increased, increases one of those stat stages chosen at random by 2.
+368 If the last non-user who hit the user with a damaging attack this round is one of user's opposing Pokémon, and there is a Pokemon at that non-user's position, deals damage to the Pokémon at that non-user's position equal to 1.5 times the amount of HP lost by user due to that attack. Affected by type immunities. (For multi-hit attacks, returns HP based on the last hit of that attack.)
+369 After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokémon and the opposing Pokemon's party has at least one unfainted Pokémon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokémon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
+370 If this attack is successful, decreases user's Defense and Special Defense by 1 stage.
+371 Power is doubled if user strikes after opponent this round, or if opponent switched this round before user's turn.
+372 Power is doubled if opponent lost HP this round (even from Pain Split).
+373 Effect lasts for five rounds, including the current round. During effect, effects due to the opponent's item are not applied, opponent cannot use or throw items, and items cannot be used on opponent. Effect ends when opponent is switched. Fails if opponent has Multitype.
+374 As part of this attack's use, user throws its item at opponent and that item is consumed after damage calculation. This attack's power depends on the item thrown this way. If this attack is successful, the thrown item takes effect. Fails if user can't throw items (item is not consumed in this case). (User can throw items this way even if effects due to the user's item are not applied.)
+375 Opponent gains user's status problem. If opponent gains a status problem this way, user is cured of its status problem. Fails if opponent has a status problem. If user is badly poisoned, opponent becomes badly poisoned.
+376 If this attack has 0 PP, this attack's power is 200. If this attack has 1 PP, this attack's power is 80. If this attack has 2 PP, this attack's power is 60. If this attack has 3 PP, this attack's power is 50. If this attack has 4 or more PP, this attack's power is 40.
+377 Effect lasts for five rounds, including the current round. During effect, the moves Heal Order, Milk Drink, Moonlight, Morning Sun, Recover, Rest, Roost, Slack Off, Softboiled, Swallow, Synthesis, and Wish are disabled for opponent. During effect, Volt Absorb and Water Absorb are ignored; healing items are disabled. During effect, if a move or an effect of a move (other than Pain Split) would cause the opponent to gain HP, it gains no HP instead. (Liquid Ooze still works.) Effect ends when opponent is switched.
+378 This attack's power is equal to int((opponent's current HP)*120/max(1,opponent's total HP))+1.
+379 Switches user's Attack and Defense stats. If user is replaced with Baton Pass and user used this attack an odd number of times since it became active, the new Pokemon's Attack and Defense stats are switched.
+380 During effect, effects due to opponent's ability are not applied. Effect ends when opponent is switched. Fails if opponent's ability is Multitype.
+381 For five rounds, including the current round, no attacks against any active Pokémon on the user's side can be critical hits. During effect, this attack fails for user's party.
+382 If user strikes before opponent this round and the move the opponent chose for use this round is a damaging move other than Counter, Mirror Coat, Thief, Covet, Focus Punch, or Chatter, user uses that move with no target with effectiveness multiplied by 1.5.
+383 Uses the last move used by a Pokémon. Fails if that move is Sleep Talk, Copycat, Assist, Me First, Mirror Move, Metronome, Struggle, Sketch, Mimic, Chatter, Counter, Mirror Coat, Protect, Detect, Endure, Destiny Bond, Thief, Follow Me, Snatch, Helping Hand, Covet, Trick, Focus Punch, Feint, Switcheroo, Bestow, Rage Powder, Circle Throw, or Dragon Tail or if there is no such move[, or if that move was prevented from being used].
+384 Simultaneously, user adopts opponent's current Attack and Special Attack stat stages, and opponent adopts user's current Attack and Special Attack stat stages.
+385 Simultaneously, user adopts opponent's current Defense and Special Defense stat stages, and opponent adopts user's current Defense and Special Defense stat stages.
+386 This attack's power is equal to 60+(20*X), where X is the total of all of opponent's current stat stages that are greater than 0. Maximum 200.
+387 Fails unless user has at least one other move and had previously used all its other moves at least once since the last time user became active.
+388 Changes opponent's ability to Insomnia. Fails if opponent's ability is Insomnia, Multitype, or Truant.
+389 Fails if opponent did not choose a damaging move for use this round, or if opponent struck before the user this round. Priority level 1.
+390 Can be used up to two times. During effect, whenever an opposing Pokémon becomes active, that Pokémon becomes poisoned if this attack was used once; or badly poisoned if this attack was used twice, unless it has Levitate or its current type includes Flying, Poison, or Steel. (Prevented by Safeguard.) Effect ends when a Poison-type opposing Pokémon without Levitate or the Flying type becomes active, if Magnet Rise is not in effect for that Pokémon.
+391 Simultaneously, user adopts opponent's current stat stages, and opponent adopts user's current stat stages.
+392 During effect, user gains 1/16 of total HP at the end of every round. Effect ends when user is switched.
+393 For five rounds, including the current round, user is immune to Ground-type attacks (overridden by Ingrain's effect), and user is unaffected by Spikes and Toxic Spikes (not overridden by Ingrain's effect), and user can switch and flee despite Arena Trap, as though it had Levitate (even if effects due to the user's ability are not applied). Effect ends when user is switched. Fails if Ingrain is in effect for the user. Fails if user has Levitate.
+394 Returns to user 1/3 of HP lost by opponent due to this attack (recoil). If user is frozen and it chose this move for use, it becomes defrosted before this attack is used. May burn opponent. (10%)
+395 May paralyze opponent. (30%)
+396 Cannot be evaded.
+397 Increases user's Speed by 2 stages.
+398 May poison opponent. (30%)
+399 May cause opponent to flinch. (20%)
+400 Has a higher chance of a critical hit. (12.5%)
+403 May cause opponent to flinch. (30%)
+405 May decrease opponent's Special Defense by 1 stage. (10%)
+407 May cause opponent to flinch. (20%)
+409 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+410 Priority level 1.
+411 May decrease opponent's Special Defense by 1 stage. (10%)
+412 May decrease opponent's Special Defense by 1 stage. (10%)
+413 Returns to user 1/3 of HP lost by user due to this attack (recoil).
+414 May decrease opponent's Special Defense by 1 stage. (10%)
+415 Simultaneously, user receives opponent's item, and opponent receives user's item. Fails if either or both hold a Mail, if user or opponent dropped its held item this battle, if neither one holds an item, or if opponent has Multitype or is one of the player's Pokemon in an internal battle.
+416 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+417 Increases user's Special Attack by 2 stages.
+418 Priority level 1.
+419 {Effectiveness is doubled if user lost HP due to a damaging attack by the opponent this round and opponent was the last non-user to hit the user this round with a damaging attack. Priority level -4.}
+420 Priority level 1.
+421 Has a higher chance of a critical hit. (12.5%)
+422 May paralyze opponent. May cause opponent to flinch. (10% each)
+423 May freeze opponent. May cause opponent to flinch. (10% each)
+424 May burn opponent. May cause opponent to flinch. (10% each)
+425 Priority level 1.
+426 May decrease opponent's Accuracy by 1 stage. (30%)
+427 Has a higher chance of a critical hit. (12.5%)
+428 May cause opponent to flinch. (20%)
+429 May decrease opponent's Accuracy by 1 stage. (30%)
+430 May decrease opponent's Special Defense by 1 stage. (10%)
+431 May confuse opponent. (20%)
+432 Decreases opponent's evasiveness by 1 stage. Even if opponent's evasiveness cannot be decreased, ends the effects of Reflect, Light Screen, Safeguard, Mist, Spikes, Toxic Spikes, and Stealth Rock on the opponent's side, and ends fog.
+433 Effect lasts for five rounds, including the current round. During effect, as part of determining priority, active Pokémon with lower Speeds strike before those with higher Speeds, rather than after. Effect ends when any active Pokémon uses this move. Priority level -7.
+434 If this attack is successful, decreases user's Special Attack by 2 stages.
+435 May paralyze opponent. (30%)
+436 May burn opponent. (30%)
+437 If this attack is successful, decreases user's Special Attack by 2 stages.
+439 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+440 Has a higher chance of a critical hit. (12.5%) May poison opponent. (10%)
+441 May poison opponent. (30%)
+442 May cause opponent to flinch. (30%)
+443 Cannot be evaded.
+444 Has a higher chance of a critical hit. (12.5%)
+445 Decreases opponent's Special Attack by 2 stages if opponent doesn't have Oblivious, the opponent's gender is different from the user's, and neither is genderless.
+446 During effect, whenever an opposing Pokémon becomes active, that Pokémon loses X/8 of total HP, where X is the type effectiveness of the Rock type against that Pokémon's types.
+447 This attack's power is 20 if the weight of the opponent's original species is 10 kilograms (kg) or less [or less than 10 kg], else 40 if 25 kg or less, else 60 if 50 kg or less, else 80 if 100 kg or less, else 100 if 200 kg or less, else 120.
+448 If this attack is successful and user's original species is Chatot, this attack has a 0% or 10% chance of confusing the opponent depending on the volume of the user's cry.
+449 If user is holding a Plate, this attack's type depends on the Plate held.
+450 If this attack is successful and opponent is holding a Berry, user uses that item if it could do so and the item has a "when" trigger condition, and then that item is consumed. (This effect happens even if opponent has Multitype and even if effects due to the opponent's item are not applied.)
+451 May increase user's Special Attack by 1 stage. (70%)
+452 Returns to user 1/3 of HP lost by user due to this attack (recoil).
+453 Priority level 1.
+454 Has a higher chance of a critical hit. (12.5%)
+455 Increases user's Defense and Special Defense by 1 stage.
+456 User gains half of total HP. Fails if user's HP is full.
+457 Returns to user half of HP lost by opponent due to this attack (recoil).
+458 Strikes twice.
+459 If this attack is successful, on the next round, user can't take any action and does nothing during its turn. (That move is prevented from being used during that turn.)
+460 Has a higher chance of a critical hit. (12.5%)
+461 User faints as part of this attack's use. When a Pokémon at user's position becomes active during this turn, it recovers all HP and PP and is cured of all status problems. (New Pokémon become active immediately during this turn.) Fails if user's party has no non-active Pokémon (doesn't cause fainting).
+462 This attack's power is equal to int((opponent's current HP)*120/max(1,opponent's total HP))+1.
+463 {Multi-turn attack. If this attack is successful, the effect begins. Effect lasts for [four to five] rounds, including the current round. During effect, opponent cannot switch or flee, and at the end of every round except the last, opponent loses 1/16 of total HP. Effect ends when user is replaced or opponent is replaced or uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against opponent during effect.}
+464 Puts both opponents to sleep in a double battle, or all adjacent opponents in a triple battle.
+465 May decrease opponent's Special Defense by 2 stages. (40%)
+466 May increase user's Attack, Defense, Speed, Special Attack, and Special Defense by 1 stage. (10%)
+467 Two-turn attack, user is invulnerable during the first turn. Ignores effect of Protect or Detect.
+468 Raises user's Attack and accuracy by one stage.
+469 User's team avoids moves that target more than one Pokémon for one turn. This attack fails if user strikes last this round. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, or Wide Guard as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
+470 Sets user's and target's Defense to the average between user's current Defense and opponent's current Defense. Sets user's and target's Special Defense to the average between user's current Special Defense and opponent's current Special Defense. Stat boosts are unaffected.
+471 Sets user's and target's Attack to the average between user's current Attack and opponent's current Attack. Sets user's and target's Special Attack to the average between user's current Special Attack and opponent's current Special Attack. Stat boosts are unaffected.
+472 Effect lasts for five rounds, including the current round. During effect, the Defense and Special Defense of all Pokémon on the field are swapped, but stat changes are not. Effect ends when any active Pokémon uses this move. Priority level -7.
+473 Damage is calculated using the opponent's Defense stat, not Special Defense.
+474 Power is doubled if opponent is Poisoned.
+475 Increases user's Speed by 2 stages, and halves user's weight.
+476 Whenever an opposing Pokémon uses an attack with a target of "single non-user" or "single opposing Pokémon" this round and there is a Pokemon at the position of this attack's user, it is directed to the Pokemon at the position of this attack's user instead of to any other non-user of that attack. Remains effective even if user is replaced. Priority level 3.
+477 For three rounds, including the current round, all moves except for OHKO moves are guaranteed to hit the opponent, and the opponent is immune to Ground-type attacks, the effect of Spikes and Toxic Spikes, and can switch and flee despite Arena Trap. Effect ends when opponent is replaced.
+478 Effect lasts for five rounds, including the current round. During effect, effects due to items held by any Pokémon on the field are not applied, Natural Gift and Fling are disabled. Effect ends when any active Pokémon uses this move. Priority level -7.
+479 If this attack is successful, it ends the effects of Bounce, Fly, Magnet Rise and Telekinesis for the opponent, and if the opponent has the Ability Levitate or is a Flying type, removes opponent's immunity to Ground-type attacks and Arena Trap. Effect ends when opponent is replaced. Can hit opponent even if it is using Fly, Bounce, or Sky Drop.
+480 Always scores a critical hit.
+481 If this attack is successful, opponents next to the main target are hit with typeless damage that hits for 1/16 their max HP.
+482 May poison opponent. (10%)
+483 Increases user's Special Attack, Special Defense and Speed by 1 stage.
+484 This attack's power is 40 if floor(user's weight/opponent's weight) is equal to 1 or less, 60 if it is equal to 2, 80 if it is equal to 3, 100 if it is equal to 4, and 120 if it is equal to 5 or more.
+485 Deals damage to any Pokémon on the field that shares a type with the user.
+486 This attack's power is 60 if floor(user's Speed/opponent's Speed) is equal to 1 or less, 80 if it is equal to 2, 100 if it is equal to 3, and 120 if it is equal to 4 or more.
+487 Changes opponent's type to Water. Effect lasts until opponent is switched out.
+488 Increases user's Speed by 1 stage.
+489 Increases user's Attack, Defense and Accuracy by 1 stage.
+490 Decreases opponent's Speed by 1 stage.
+491 Decreases opponent's Special Defense by 2 stages.
+492 Damage is calculated using the opponent's Attack stat, not the user's.
+493 Changes opponent's Ability to Simple. Fails if opponent's Ability is Multitype or Truant. Effect lasts until opponent is switched out.
+494 Changes opponent's Ability to be the same as the user's. Fails if opponent's Ability is Multitype or Truant. Fails if user's Ability is Flower Gift, Forecast, Illusion, Imposter, Multitype, Trace or Zen Mode. Effect lasts until opponent is switched out.
+495 Makes the target move immediately after the user, if it hasn't moved already.
+496 If Pokémon other than the user chose this attack, they attack immediately after the user, and power of this attack becomes 120.
+497 This attack's power is increased by 40 for every turn it is used in a row by any Pokémon on the field, up to 200.
+498 Damage is calculated ignoring opponent's Defense stat changes, and hit chance is calculated ignoring opponent's Evasion stat changes.
+499 Resets opponent's stat changes to 0.
+500 This attack's power is increased by 20 for every stage the user's stats are raised.
+501 User's team avoids moves with greater priority than 0 for one turn. This attack fails if user strikes last this round. A variable, X, starts at 0, and resets to 0 if the last move called for the user is not Protect, Detect, Endure, Quick Guard, or Wide Guard as user uses this attack or if this attack fails, and increases by 1 (up to 3) each time this attack is successful. This attack has a 50% chance of failing if X is 1, a 75% chance if X is 2, and an 87.5% chance if X is 3. Priority level 4.
+502 In double and triple battles, switches the user's position with the ally on the opposite side of the field. Priority level 1.
+503 May burn opponent. (30%)
+504 Increases user's Attack, Special Attack and Speed by 2 stages, but decreases user's Defense and Special Defense by 1 stage.
+505 Recovers half of target's total HP. Fail if target's HP is full.
+506 This attack's power is doubled if opponent has a major status condition.
+507 Two-turn attack. While user is using this attack, opponent cannot act or be switched out, and user and opponent are unaffected by attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thunder, Twister, and Whirlwind.
+508 Increases user's Attack by 1 stage, and Speed by 2 stages.
+509 Ends wild battles. In trainer battles, replaces opponent with a random non-active Pokémon in opponent's party; effect fails if opponent's party has no non-active Pokémon. Effect fails either way if Ingrain is in effect for opponent. Priority level -6.
+510 Destroys the target's Berry.
+511 Forces opponent to move last in the turn this move is used.
+512 This attack's power is doubled is user is not holding an item, or if it was consumed during this attack.
+513 Changes user's typing to be the same as opponent's. Effect last until user is switched out.
+514 This attack's power is doubled if one of user's teammates was fainted on the turn before this attack is used.
+515 User faints as part of this attack's use. Opponent loses the same HP user had before using this attack.
+516 Gives user's held item to opponent. Fails if opponent is holding an item.
+517 Burns opponent.
+518 If an ally is about to use Fire Pledge or Grass Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Fire Pledge, it creates a rainbow over the user's side of the field, and starts an effect for 4 rounds including the current one. During effect, chances of added effects happening for user's side are doubled; doesn't stack with Serene Grace. If this attack is used in such a way after Grass Pledge, it creates a swamp on the opponent's side of the field, and starts an effect for 4 rounds including the current one. During effect, all opponents have their Speed halved.
+519 If an ally is about to use Water Pledge or Grass Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Water Pledge, it creates a rainbow over the user's side of the field, and starts an effect for 4 rounds including the current one. During effect, chances of added effects happening for user's side are doubled; doesn't stack with Serene Grace. If this attack is used in such a way after Grass Pledge, it creates a sea of fire on the opponent's side of the field, and starts an effect for 4 rounds including the current one. During effect, all opponents, except Fire types, lose 1/8 their max HP at the end of each round.
+520 If an ally is about to use Water Pledge or Fire Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Water Pledge, it creates a swamp on the opponent's side of the field, and starts an effect for 4 rounds including the current one. During effect, all opponents have their Speed halved. If this attack is used in such a way after Fire Pledge, it creates a sea of fire on the opponent's side of the field, and starts an effect for 4 rounds including the current one. During effect, all opponents, except Fire types, lose 1/8 their max HP at the end of each round.
+521 After this attack is used, if this attack is successful, if user has at least 1 HP, and if user's party has at least one non-active Pokémon and the opposing Pokemon's party has at least one unfainted Pokémon that isn't an egg, this attack causes the user to switch even if it cannot switch. (The new Pokémon becomes active immediately. Effect of Destiny Bond and Grudge takes precedence over this attack's effect.)
+522 Decreases opponent's Special Attack by 1 stage.
+523 Decreases opponent's Speed by 1 stage.
+524 Always scores a critical hit.
+525 Ends wild battles. In trainer battles, replaces opponent with a random non-active Pokémon in opponent's party; effect fails if opponent's party has no non-active Pokémon. Effect fails either way if Ingrain is in effect for opponent. Priority level -6.
+526 Increases user's Attack and Special Attack by 1 stage.
+527 Decreases opponent's Speed by 1 stage.
+528 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+529 Has a higher chance of a critical hit. (12.5%)
+530 Strikes twice.
+531 May cause opponent to flinch. (30%)
+532 If this attack is successful, user gains half of HP lost by opponent due to this attack.
+533 Damage is calculated ignoring opponent's Defense stat changes, and hit chance is calculated ignoring opponent's Evasion stat changes.
+534 May decrease opponent's Defense by 1 stage. (50%)
+535 This attack's power is 40 if floor(user's weight/opponent's weight) is equal to 1 or less, 60 if it is equal to 2, 80 if it is equal to 3, 100 if it is equal to 4, and 120 if it is equal to 5 or more.
+536 May decrease opponent's Accuracy by 1 stage. (50%)
+537 May cause opponent to flinch. (30%) Power is doubled if Minimize is in effect for opponent.
+538 Increases user's Defense by 3 stages.
+539 May decrease opponent's Accuracy by 1 stage. (40%)
+540 Damage is calculated using the opponent's Defense stat, not Special Defense.
+541 Multi-hit attack. Attacks two to five times in a row. 37.5% for 2 or 3 times; 12.5% for 4 or 5 times.
+542 May confuse opponent. (30%) During Rain Dance, this attack hits without fail. Otherwise, during Sunny Day, this attack's accuracy is 50. Can hit opponent even if it is using Fly, Bounce or Sky Drop.
+543 Returns to user 1/4 of HP lost by opponent due to this attack (recoil).
+544 Strikes twice.
+545 May burn opponent. (30%)
+546 If user is holding a Cassette, this attack's type depends on the Cassette held.
+547 May put Target to sleep (10%)
+548 Damage is calculated using the opponent's Defense stat, not Special Defense.
+549 Decrease opponent's Speed by 1 stage.
+550 May paralyze opponent. (20%)
+551 May burn opponent. (20%)
+552 May increase user's Special Attack by 1 stage. (50%)
+553 Two-turn attack. May paralyze opponent. (30%)
+554 Two-turn attack. May burn opponent. (30%)
+555 Decreases opponent's Special Attack by 1 stage.
+556 May cause opponent to flinch. (30%)
+557 Decreases user's Speed, Defense and Special Defense by 1 stage.
+558 This attack's power is doubled if another Pokémon has used Fusion Bolt in the same turn. If user is frozen and it chose this move for use, it becomes defrosted before this attack is used.
+559 This attack's power is doubled if another Pokémon has used Fusion Flare in the same turn.

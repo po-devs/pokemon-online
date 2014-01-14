@@ -1,0 +1,4157 @@
+How Things Work
+Last Updated 12 Mar 2005
+
+
+Table of Contents
+
+A. Introduction, Copyright, Disclaimer
+
+B. General Battle Information
+
+C. Stats, Stat Modifiers, and Stat Caps
+
+D. Status Ailments
+
+E. Type Effectiveness
+
+F. Order of Operations
+
+G. Moves
+     1. General Information
+     2. Ways of Obtaining
+     3. Previous Evolution Moves
+     4. Number of Moves
+     5. Specific Move Information
+
+H. Other Battle-Related Things
+     1. Critical Hits
+     2. Flinching
+     3. Items
+     4. In-game Differences (cross reference)
+     5. Stadium Differences (cross reference)
+
+I. Reference Information
+     1. Glossary
+     2. Additional Resources
+     3. Revision History
+     4. Contacting Me
+     5. Unanswered Questions
+     6. Credits
+
+
+
+A. Introduction, Copyright, Disclaimer;
+The purpose of this document is to provide as much and as detailed information as possible
+about the battling aspect of the Pokémon chromatic generation. It should be noted that despite
+this, I do not guarantee that the information provided is 100% complete or accurate (see
+especially I5).
+
+All trademarks and copyrighted information contained in this document are owned by there
+respective holders. This document is Copyright 2004-2005 by Nautilator and may not be
+distributed, or modified without permission. The latest version of this document can be found
+at GameFAQs (http://www.gamefaqs.com), and at
+http://roadcaesar.homestead.com/files/rby-stuff.zip (though I might make slight format changes
+to that one that GameFAQs does not allow).
+
+Parts of this document, such as triple astericks entries and entries in F1 and F2, have been
+worded to facilitate search convenience.
+
+
+
+B. General Battle Information;
+This section describes what can happen or be done during a battle and other information that
+can related to the process of battling. General information relevant to all gameboy battles is
+first given, and then any information that is relevant only to certain types of battles is
+then presented and noted accordingly.
+
+
+When you start a battle, you will automatically send out the first pokémon in your team that
+has not fainted. During any one turn of a battle, there are four general actions that can be
+performed: fight, switch, use an item, or run away.
+
+***Fight***
+You can order your active pokémon to attempt an attack, the effects of which are listed in E4.
+
+***Switch***
+If you don't want your current active pokémon to fight, you can decide to switch it to one of
+your other party members (though this will not be possible if your team party has only one
+member, or if you try to switch to a pokémon that has fainted). Switching your active pokémon
+takes precedence over all other actions. Any time either player switches, the last move used
+flag of both pokémon will be reset.
+
+***Use an Item***
+You can opt to use an item instead of attacking. The use of an item takes precedence over
+making a move, though not over switching. Item use during a battle is restricted to items that
+can restore HP, restore PP, cure a status ailment, temporarily increase a stat, attempt to
+catch the opposing pokémon, or allow you to escape from the battle. It is not possible to
+escape from a trainer battle, and it is not possible to catch a trainer's pokémon (though you
+still have the ability to try). This option is unavailable in link battles.
+
+***Run away***
+If you do not want to battle, you can attempt to run away from the opposing pokémon. If the 
+current speed of your active pokémon is greater than or equal to the current speed of the
+opponent, you will be able to run away without any problems, but if the current speed of your
+active pokémon is less than the speed of the opponent, there is a chance of not being able to
+escape, in which case you do nothing during that round. It is not possible to run away from a
+trainer battle.
+
+A battle will end if all of your pokémon faint, if all the opposing pokémon faint, or (if
+against a wild pokémon) the opposing pokémon is caught.
+
+A pokémon's health will be represented by health bar with 48 pixels. The health bar will be
+green if it has int(2.25*int(MaxHP/4) + 0.75) or more HP, orange if it has
+int(265*int(0.2*MaxHP + 0.2)/256 + 2) or more HP but less HP than the amount needed for a green
+health bar, and red if it has less HP than the amount needed for a yellow bar. This translates
+into approximate ranges of 1% to 20% for a red meter, 21% to 55% for an orange meter, and 56%
+or higher for a green meter. If a pokémon's health bar is red, its cry will change, further
+indicating that it is in poor health.
+
+The Battle Damage Formula is:
+
+     (((((min(((((2L/5 + 2)*A*P)/max(1, D))/50), 997) + 2)*S)*T)/10)*R)/255
+
+and is used to calculate the damage done by an attack with a power value. L is the user's
+level, A is the user's current attack, P is the move's power, D is the opponent's current
+defense, S is the STAB modifier (S is 1.5 if the move's type matches one of the user's, and is
+otherwise 1), T is the type effectiveness modifier (40, 20, 10, 5, 2.5, or 0; note though that
+this is afterwards divided by 10), and R is a random number between 217 and 255. If an
+opponent's defense is decreased to 0 during calculations (such as for Selfdestruct and
+Explosion), it will be increased to 1 (though this doesn't happen if the defense value used
+experiences rollover). The maximum amount of damage any one attack can do before STAB or type
+effectiveness multipliers is 999.
+
+There are some other phenomena that influence the BDF. One is rollover, the effects of which
+are described in the Stats section. Each time a calculation is made, it is done by integer
+division, which results in the decimal (if any) always being dropped, instead of rounded.
+Aside from recurrent damage, the amount of damage done to a pokémon can never be greater than
+its current HP (but the amount of damage done to a substitute can). Any time a damaging move
+results in 0 damage being done, it will generate a miss, though the displayed message will
+almost always be that the opponent is unaffected. Also, if the pokémon's current attack or
+current defense is greater than 255, then its attack and its defense will be halved, and halved
+again (truncating both times), and those numbers will be used in place of its actual attack and
+defense values.
+
+If an active pokémon switches out, all benefits and losses of moves that have influenced it
+while it remained active will be reset. The only things a pokémon will retain after switching
+is its current HP, current PP, and any major status ailments it has.
+
+
+Common to all in-game battles:
+Your PP is of course limited, but the opponent will have an unlimited amount current of PP.
+Each time an opponent pokémon faints, every one of your team members that was active during
+that battle will gain experience. If you win the battle, you will pick up any money generated
+by the use of Pay Day and will receive money if the battle was against a trainer. If all of
+your pokémon are knocked out, you will black out, and awake in the last pokémon center you
+visited, with half of your money.
+
+If a pokémon has been traded to you (either from another person or from a person in the game),
+it will gain 50% more experience from each battle than your pokémon, but if you do not have the
+proper badges, it may become unruly. It will always run away when ordered to, but if ordered to
+attack, it might turn away, loaf around, ignore orders, use a different attack, begin to nap,
+or not obey. If it turns away, loafs around, or ignores orders, it will simply not make a move
+during that round. If it uses a different move, PP will still be deducted from the move you
+ordered it to use. If it begins to nap, it will fall asleep (but not regain any HP in the
+process). If if does not obey, it will hurt itself in its confusion.
+
+After defeating each of the eight gym leaders, you will receive the leader's badge, enhancing
+your in-game abilities.
+
+Boulderbadge: increases the attack of all your pokémon by 12.5% of its original value
+              allows you to use Flash outside of battle
+
+Cascadebadge: traded pokémon of up to Lv.30 will always obey you
+              allows you to use Cut outside of battle
+
+Thunderbadge: increases the speed of all your pokémon by 12.5% of its original value
+              allows you to use Fly outside of battle
+
+Rainbowbadge: traded pokémon of up to Lv.50 will always obey you
+              allows you to use Strength outside of battle
+
+Soul Badge: increases the defense of all your pokémon by 12.5% of its original value
+            allows you to use Surf outside of battle
+
+Marsh Badge: traded pokémon of up to Lv.70 will always obey you
+
+Volcanobadge: increases the special of all your pokémon by 12.5% of its original value
+
+Earth Badge: traded pokémon of up to Lv.100 will always obey you
+
+The effects of gym leader badges apply to all in-game battles. Even without any gym badges,
+traded pokémon of up to Lv.10 will always obey you. Note that the Earth Badge will allow you
+to control traded pokémon of up to Lv.100, as opposed to allowing you to control all traded
+pokémon. It is not possible for you to fully control a traded pokémon that is above Lv.100
+(though such a pokémon would have to be obtained via a glitch or cheating device).
+
+Stat increases due to badges are automatically applied to all your pokémon, and do not
+count as stat level changes. Because of these stat increases, the stat value cap for all stats
+essentially becomes 888 instead of 999. Also, each time your pokémon uses a stat-increasing
+move (such as Amnesia, Double Team, or Swords Dance), the stat increases given by the badges
+will be applied again; this is known as the stat bleeding glitch.
+
+
+Wild pokémon battles:
+Wild pokémon can be encountered in tall grass, caves, across water, or when fishing (or in the
+Safari Zone, but that is slightly different, as noted below). You can attempt to catch the
+pokémon by throwing a pokéball at it before it faints. The battle ends when the wild pokémon
+has fainted or been caught, or all of your active pokémon have fainted.
+
+
+Safari Zone battles:
+The Safari Zone is located in Fuschia City. You pay 500 pokédollars for 30 Safari Balls (which
+act like Great Balls), and can stay until you use all of them, walk 500 steps, or leave on your
+own will, whichever happens first. When encountering pokémon in the Safari Zone, you can't
+battle them. Instead, you will have the option to throw bait, a rock, or a Safari Ball at the
+pokémon, or to run away. Throwing a rock doubles the pokémon's catch rate and run away rate,
+while throwing bait halves a pokémon's catch rate and run away rate.
+
+
+Trainer battles:
+If you get in the field of view of a trainer, an exclamation point will appear over the
+trainer's head and the trainer will walk up to you, give an introduction, and start a battle.
+Whenever you knock out one of the trainer's pokémon, you will be told what the next pokémon
+sent out will be and then have the option of switching your active pokémon without taking a
+turn, even if your active pokémon normally couldn't. Instead of attacking or switching, both
+you and the trainer (though the trainer almost never does this) may use an item. You may also
+throw a pokéball at the opponent's pokémon, but the trainer will always block it. You win by
+knocking out all of the trainer's pokémon. It is not possible to run from a trainer battle. Gym
+leaders and Elite 4 members will not automatically walk up to you; you must face them and press
+A to challenge them.
+
+
+Link Battles:
+If you and someone else have linked your games and are both in pokémon centers, the person in
+the right half of the pokémon center will allow you to trade pokémon or battle. You will have
+to save before battling, and your pokémon will not be automatically healed before battling.
+Choosing to battle will land you and your opponent in a room with a battling simulator, and
+when both of you have pressed A while facing it, the battle will begin. During each turn, you
+will have the chance to make an attack, switch your active pokémon, or run away. You win if
+your opponent has no active pokémon or runs away, lose if you have no active pokémon or run
+away, and draw if both of you simultaneously run away or have no active pokémon.
+
+For the purpose of a link battle, badges, unruliness, items, and gaining experience do not
+exist, and your pokémon will be restored to their original state after the battle ends or is
+reset.
+
+
+Stadium Differences:
+A pokémon's health bar will have 96 pixels. Players will be able to see the exact amount of
+current and maximum HP that each active pokémon has. Damaging moves that do 0 damage will
+always result in a message that the move missed.
+
+
+
+C. Stats, Stat Modifiers, and Stat Caps
+
+All pokémon have six numerical statistics (Level, HP, Attack, Defense, Speed, Special), as well
+as two non-numerical stats (Accuracy, Evasion). Pokémon also have experience points, which are
+used to determine their levels, and stat experience, a non-visible number that affects a
+pokémon's stats.
+
+***Level, Experience Points***
+Each time a pokémon grows a level, its other numerical stats will increase. Both level and the
+appropriate offensive stat are used in the BDF to calculate the amount of damage it can do, so
+an increase in level results in an increase in average damage. Since a pokémon's level also
+determines how much damage Night Shade, Seismic Toss, and (less directly) Psywave will do, the
+damage done by those moves will increase as well. Wild pokémon can be found as low as Lv.2, and
+it is possible to raise a pokémon up to Lv.100.
+
+A pokémon's level is determined by how many experience points it has and its growth rate. The
+growth rate formulas are:
+     Fast:   0.8L^3                          (800,000 to get to Lv.100)
+     Medium: L^3                           (1,000,000 to get to Lv.100)
+     Slow:   1.25L^3                       (1,250,000 to get to Lv.100)
+     Fading: 1.2L^3 - 15L^2 + 100L - 140   (1,059,860 to get to Lv.100)
+
+Truncating the values given by these formulas determines the minimum number of experience
+points necessary to be on a given level L. The total amount of experience points that an
+opponent pokémon will give for defeating it is equal to int(T*int(int(int(int(B*L*W)/7)/N)/E)).
+Additionally, if E=2, then int(T*int(int(int(int(int(B*L*W)/7)/N)/2)/P)) experience points will
+be gained by each non-fainted member of your party, regardless of whether or not they were
+active during the battle. In both of these formulas, B is the opponent's base experience (a
+fundamental value based on its species), L is the opponent's level, W is the opponent's
+wildness (1.5 if used by a trainer, otherwise 1), N is the total number of your pokémon that
+were active and did not faint while the opponent was active, E is your Exp.All value (2 if you
+are carrying the Exp.All item, 1 if you are not), P is the number of party members you have
+that have not fainted, and T is your pokémon's trade value (1.5 if your pokémon is traded,
+otherwise 1; a pokémon is considered traded if its ID number does not match your ID number).
+Pokémon that have fainted cannot gain experience points, even if they were active before
+fainting. Pokémon cannot gain experience in link battles.
+
+Although the actual levels on which you can normally acquire pokémon on range from 2 to 100, it
+is theoretically possible for a pokémon's level to be any integer from 0 to 255 (any time it
+becomes higher, including during a critical hit, it will be reduced mod 256). It is also
+possible to find pokémon on levels higher than 100 (and through level roll over, 0 and 1) via
+the Missingno. glitch in Pokémon Red and Blue. To activate the Missingno. glitch, talk to the
+old man in Viridian City near the cuttable bush, answer no to his question, and watch him catch
+a Weedle. Afterwards, wild pokémon (including the glitch pokémon Missingno.) will appear on the
+eastern edges of Cinnabar and Seafoam Islands, and some of these pokémon will have levels
+higher than 100.
+
+A pokémon's level can be increased by gaining enough experience points (and is in fact
+recalculated each time a pokémon gains experience points or is given a Rare Candy). Using the
+Rare Candy item on a pokémon will increase its experience points by the minimum amount needed
+to increase its level by 1. Though it will have no effect on Lv.100 pokémon, it will work on
+pokémon of higher levels. A Lv.100 pokémon cannot gain experience points, and if a pokémon's
+level is greater than 100, it will be reduced to 100 if it gains any experience points via
+battling.
+
+
+***HP***
+Short for Hit Points, basically the amount of damage a pokémon can withstand. When a pokémon
+has no HP left, it will faint, and you will win a battle when all of your opponent's pokémon
+have fainted. Pokémon have two HP values, current and maximum. Current HP is the amount of HP
+the pokémon has at any referenced time, since it may have been damaged during the battle and
+have less than its maximum possible HP. Maximum HP is supposedly the highest amount a pokémon's
+HP can be, but is more of a calibration number for determining how much HP to restore to a
+pokémon via HP-restoring methods. In at least one case, it is legally possible for a pokémon to
+have greater current HP than maximum HP (for more information, see the in-game differences for
+Transform).
+
+Ways that HP can be restored:
+     -Healing at a Pokémon Center or rest stop, in which case the current HP of all your party
+      members will be made equal to their respective maximum HP values.
+     -Using a HP-restoring item, either in battle (where it will count as your turn) or out of
+      battle. Items that can restore HP are Fresh Water, Full Restore, Hyper Potion, Lemonade,
+      Max Potion, Max Revive, Potion, Rare Candy, Revive, Soda Pop, and Super Potion. (Rare
+      Candy is designated to increasing a pokémon's level rather than HP, but a level increase
+      usually results in an increase in maximum HP and subsequently current HP, even if the
+      pokémon was fainted at the time of use.)
+     -By using a move while battling that can restore HP. Absorb, Dream Eater, Leech Life,
+      Leech Seed, Mega Drain, Recover, Rest, and Softboiled are the moves that can restore HP,
+      and Softboiled can also be used out of battle to heal other party members.
+
+There is also an item, HP Up, which can increase a pokémon's maximum HP but will have no effect
+on its current HP.
+
+Using a move is the only available method of HP restoration in link battles.
+
+
+***Attack***
+A pokémon's attack stat is used in calculating how much damage it will do with physical,
+damaging attacks.
+
+***Defense***
+A pokémon's defense stat is used in calculating how much resistance it has to physical,
+damaging attacks.
+
+***Speed***
+A pokémon's speed will determine when in a round it will attack in relation to its opponent,
+unless one of them uses an altered-priority move. If both pokémon use an increased or a
+decreased priority move, turn placement will be determined normally. If both active pokémon
+have the same speed, turn placement will be determined randomly.
+
+***Special***
+A pokémon's special stat is used in calculating how much damage it will do with as well as how
+much resistance it has to special, damaging attacks.
+
+
+A pokémon's Attack, Defense, Speed, and Special can be increased or decreased by up to six
+levels, via the use of certain moves or items. A stat with a level value of N will multiply the
+pokémon's base stat by (2+N)/2 if N is positive, or by 2/(2-N) if N is negative (and truncate
+afterwards). Actual changes to stat levels happen via addition and subtraction. All of a
+pokémon's stat levels will be reset to 0 if it switches out, and the use of Haze by either
+pokémon will (among other things) reset the stat levels of both active pokémon to 0.
+
+A pokémon does not have statistical Accuracy or Evasion values, but Accuracy and Evasion
+modifiers are taken into consideration by moves that have accuracy values (moves that do not
+have accuracy values are unaffected by accuracy and evasion modifiers, and essentially never
+miss). Accuracy and Evasion modifiers are also increased in terms of levels, but not on the
+same scale as Attack, Defense, Speed, and Special. Whenever a pokémon uses an attack with an
+accuracy value, the base accuracy of the move is multiplied by the user's accuracy modifier and
+opponent's evasion modifier to determine the move's final accuracy.
+
+The base accuracy of a move with an accuracy value will be multiplied by the user's accuracy
+modifier and the opponent's evasion modifier to determine the final accuracy of the move.
+The user's accuracy modifier is equal to (3+N)/3 if N is positive, or 3/(3-N) if N is negative.
+The opponent's evasion modifier is equal to 3/(3+N) if N is positive, or by (3-N)/3 if N is
+negative. Whenever a move with an accuracy value is used, its initial accuracy value is
+multiplied by the user's accuracy modifier and the opponent's evasion modifier to determine the
+final accuracy of the move.
+
+Stats have level and value caps. A pokémon's stat levels cannot go above +6 or below -6.
+Additionally, a pokémon's stat values cannot go above 999 or below 1 (for Accuracy and Evasion
+modifiers, a move's accuracy cannot go above 100% or below 0%). If a move that can only cause a
+stat level change attempts to change a stat beyond either of these limitations, nothing will
+happen, and if a move has a secondary effect that could potentially change a stat beyond its
+level or value limitations, the secondary effect will not activate. The stat value changes due
+to a burn, paralysis, or (in-game only) badges counts towards stat value caps, but the changes
+due to Light Screen and Reflect do not, and as a result may cause roll over.
+
+A pokémon's stats can roll over if they get too high. If a pokémon's attack, defense, or
+special reaches 1024 or higher at any time during battle calculations, it will be reduced mod
+1024. There is no such rollover associated with speed, though under normal circumstances it is
+still subject to the standard stat level and value caps.
+
+
+
+D. Status Ailments;
+This is a detailed list of the status ailments that a pokémon might be subjected to while
+battling. Major status ailments cannot be reset by switching, though minor status ailments can.
+A pokémon can't have more than one status ailment at a time (so any major status ailment can
+prevented by having another major status ailment), but can simultaneously have one major status
+ailment and one minor status ailment. Burn, Freeze, Paralysis, Poison, and Sleep are major
+status ailments, and Confusion is a minor status ailment.
+
+If a move that can only inflict a major status ailment does not work for any reason, it will be
+the equivolent of a miss, though the gameboy-displayed text message will not claim that. A move
+that can only inflict sleep used against a sleeping opponent will result in a notice that the
+opponent is already asleep. If a move that can only inflict a major status ailment does not
+work for whatever reason (other than the case just mentioned), the opponent will be
+"unaffected."
+
+Whenever a calculation is made, the decimal is dropped, so numbers will always be truncated.
+The only time this is not true is if a number is calculated to be 0, in which case it is bumped
+up to 1.
+
+
+***Burn***
+Effects: The pokémon becomes burned, and loses 1/16th of its maximum HP at the end of each of
+its turns in a round. Also, the pokémon's attack is reduced to 50% of its original value,
+though this attack reduction is in addition to any stat modifiers that the pokémon may have. If
+the pokémon's maximum HP is less than 16, it will lose 1 HP per round.
+
+If the pokémon is burned during a round that it switches in, it will only be subjected to
+recurrent burn damage that round if its speed is less than or equal to the opponent's speed. If
+the pokémon is burned and is switched in, it will be subjected to recurrent burn damage before
+the opponent makes a move if its speed is greater than the opponent's, but after the opponent
+makes a move if its speed is less than or equal to the opponent's. If both pokémon switch in
+and are burned or poisoned, recurrent damage will be done in order according to their current
+speed values.
+
+Recurrent burn damage will be done even if the pokémon knocks itself out with crash damage,
+recoil damage, or self-inflicted confusion damage, or by making a substitute before the end of
+its turn but will not occur if the burned pokémon knocks out an opponent. Continuing partial
+trapping damage is done before recurrent burn damage, and Leech Seed draining is done after
+recurrent burn damage.
+
+The attack loss penalty will be ignored during a critical hit, and will be ignored after using
+an attack-raising attack, but reimplemented if the pokémon is subsequently hit with a attack-
+reducing attack.
+
+Prevention, Cures: A substitute will block secondary burns, and fire types can't be burned by
+fire attacks. Rest can cure a burn, but will not cure its attack reduction penalty (though
+subsequently using a attack-raising move or switching out will then cure that). Using an
+attack-raising move will tenuously negate the attack reduction penalty, but not the burn
+status. Haze will temporarily cure the attack reduction penalty if used by the pokémon, and
+completely cure the burn if it is used by the opponent. Critical hits will ignore the attack
+reduction of a burn.
+
+In-game Differences: Any attack modifiers used against a burned pokémon will cause the attack
+reduction due to burn to be ignored.
+
+Stadium Differences: The attack reduction of a burn will be reset by rest. Attack-raising
+attacks will not negate the attack loss penalty. A pokémon can rid itself of the burn ailment
+by using Haze. A pokémon will not take recurrent burn damage when it switches in.
+
+Moves that can cause a burn: Ember, Fire Blast, Fire Punch, Flamethrower
+
+
+***Confusion***
+Effects: The pokémon receives a confusion duration length of 2-5 turns (chosen randomly), which
+is reduced by 1 each time the pokémon attempts to execute an attack. The duration deduction for
+confusion occurs immediately before the attempt to execute the move is made, so the pokémon
+will effectively be confused for 1-4 turns. When the confusion duration length ends, a notice
+that the pokémon is no longer confused will be shown immediately before it attempts to execute
+its next attack. While confused, the pokémon will have a 50% chance of attacking itself with a
+40-power attack, resulting in min(int(int(40*A*int(2L/5 + 2)/D)/50), 997) + 2 damage to itself
+(where A, D, and L are the pokémon's current attack, current defense, and level) instead of
+performing its selected attack. If the pokémon's current attack or current defense is greater
+than 255, then its attack and its defense will be halved, and halved again (truncating both
+times), and those numbers will be used in place of its actual attack and defense values.
+
+The confusion duration length will only be reduced when the pokémon actually attempts to make a
+move, so turns spent flinching, fast asleep, frozen solid, recharging, or partially trapped
+will not count towards the confusion duration length. Self inflicted confusion damage will not
+reset the last move used flag, counts as the last amount of damage done (and can be countered
+by the opponent), ignores the effect of Reflect, can never be a critical hit, and will be
+absorbed by a substitute. The duration of all moves, other than than Hyper Beam and Rage, that
+take more than one turn to fully execute will be disrupted if the user hurts itself due to
+confusion. If a move that can only inflict the confusion condition does not work for whatever
+reason, it will "fail."
+
+Prevention, Cures: Confusion can be cured by Haze or switching, and a substitute will block
+primary confusion. This ailment is temporary.
+
+Stadium Differences: The messages regarding confusion are displayed after the move choice is
+shown, allowing both players to see the attempted attack regardless of success. A substitute
+will completely protect the user from confusion (though not self-inflicted confusion).
+
+Moves that can cause confusion: Confuse Ray, Confusion, Petal Dance (self-inflicted), Psybeam,
+          Supersonic, Thrash (self-inflicted)
+
+
+***Freeze***
+Effects: The pokémon becomes frozen solid indefinately, rendering it unable to attack or select
+a move.
+
+Freeze will pause but not disrupt the turn duration of multi-turn moves, Bide, Hyper Beam,
+Petal Dance, Rage, and Thrash.
+
+If a frozen pokémon gets defrosted by a fire move before its turn in a round ends, it will be
+able to attack during that round. It will attack with the last move it selected, or its topmost
+move if it had not selected an attack (selecting an attack but switching out will reset the
+attack selection). If at this time the move selected has a current PP count of 0, it will still
+be used, and afterwards, its current PP will become 63, and full PP ups will be applied to the
+move. Additionally, a frozen pokémon that has not recharged and has its freeze status
+eliminated via Haze will remain unable to attack, switch, or do anything, and nothing (not even
+getting refrozen and then defrosted by a fire move) will be able to change this.
+
+Prevention, Cures: A substitute will block secondary freeze, and ice types can't be frozen by
+ice attacks. The pokémon can be defrosted only if the opponent uses a fire attack or Haze
+against it while it is active.
+
+Stadium Differences: You get to select a move while the pokémon is frozen.
+
+Moves that can cause freezing: Blizzard, Ice Beam, Ice Punch
+
+
+***Paralysis****
+Effects: The pokémon becomes paralyzed, reducing its speed to 25% of its original value, though
+this speed reduction is in addition to any stat modifiers that the pokémon may have.
+Additionally, each time the pokémon attempts to perform an attack, it will have a 25% chance of
+being fully paralyzed and not being able to attack.
+
+The speed loss penalty can be negated by using a speed-raising attack, but will be
+reimplemented if the pokémon is subsequently hit with a speed-reducing attack. If a pokémon
+becomes fully paralyzed during the semi-invulnerable turn of Dig or Fly, it will remain semi-
+invulnerable until it switches out or successfully executes Dig or Fly. Being fully paralyzed
+will not reset the last amount of damage done or last move used flags.
+
+Prevention, Cures: A substitute will block secondary paralysis, and type immunities will
+prevent the paralysis possibility of the respective attacks. Rest can cure paralysis, but will
+not cure the speed reduction penalty (though subsequently using a speed-raising move or
+switching out will then cure that). Speed-increasing moves will temporarily cure the speed
+reduction penalty, but not the paralysis status. Haze will temporarily cure the speed reduction
+penalty if used by the pokémon, and completely cure paralysis if it is used by the opponent.
+
+In-game Differences: Any speed modifiers used against a paralyzed pokémon will cause the speed
+reduction due to paralysis to be ignored.
+
+Stadium Differences: Rest will reset the speed reduction of paralysis. Speed-raising attacks
+will not negate the speed loss penalty. A substitute will completely protect the user from
+paralysis. A pokémon can completely rid itself of the paralysis ailment by using Haze.
+
+Moves that can cause paralysis: Body Slam, Glare, Lick, Stun Spore, Thunder, Thunder Wave,
+          Thunderbolt, Thundershock, Thunderpunch
+
+
+***Poison***
+Effects: The pokémon becomes poisoned, and loses 1/16th of its maximum HP at the end of each of
+its turns in a round. If the pokémon's maximum HP is less than 16, it will lose 1 HP per round.
+
+If the pokémon is poisoned during a round that it switches in, it will only be subjected to
+recurrent poison damage that round if its speed is less than or equal to the opponent's speed.
+If the pokémon is poisoned and is switched in, it will be subjected to recurrent poison damage
+before the opponent makes a move if its speed is greater than the opponent's, but after the
+opponent makes a move if its speed is less than or equal to the opponent's. If both pokémon
+switch in and are burned or poisoned, recurrent damage will be done in order according to their
+current speed values.
+
+Recurrent poison damage will be done even if the pokémon knocks itself out with crash damage,
+recoil damage, or self-inflicted confusion damage, or by making a substitute before the end of
+its turn but will not occur if the poisoned pokémon knocks out an opponent. Continuing partial
+trapping damage is done before recurrent poison damage, and Leech Seed draining is done after
+recurrent poison damage.
+
+Prevention, Cures: A substitute will prevent poisoning, and poison types can't be poisoned. If
+used by the opponent, Haze will cure poisoning.
+
+In-game Differences: Out of battle, a poisoned Pokémon will take 1 HP of damage for every
+fourth step you take. The amount of steps that required for the HP to be deducted will be reset
+by resetting the game. (No such poison damage is taken while walking around in a colosseum
+room.)
+
+Stadium Differences: A pokémon can rid itself of the poison ailment by using Haze. A pokémon
+will not take recurrent poison damage when it switches in.
+
+Moves that can cause poisoning: Poison Gas, Poison Sting, Poisonpowder, Sludge, Smog,
+          Toxic (badly poisons), Twineedle
+
+
+***Sleep***
+Effects: The pokémon receives a sleep duration length of 1-7 turns (chosen randomly), which is
+reduced by 1 each time the pokémon attempts to execute an attack. The duration deduction will
+occur immediately before the attempt to execute the move is made, and the pokémon will wake up
+when its duration length becomes 0. It will not be able to attack on the same turn that it
+wakes up though, so the pokémon will be unable to attack for a total of 1-7 turns. The
+countdown duration will not be altered if the pokémon is switched out before it wakes up.
+
+Sleep is required for Dream Eater to work. Sleep will pause but not disrupt the turn duration
+of all moves that take more than one turn to fully execute, except for Hyper Beam, for which
+the recharge turn will be negated. If pokémon uses an altered attack priority move (Counter,
+Quick Attack) during the same round it is put to sleep, the altered priority received by the
+move will only be reset on the turn after it wakes up (not even switching can reset this).
+
+Prevention, Cures: Can be cured by Haze, if used by the opponent. This ailment is temporary.
+
+Stadium Differenecs: The pokémon receives a sleep duration of 1-3 turns (chosen randomly).
+Also, you get to select a move while the pokémon is asleep. A substitute will protect the user
+from primary sleep.
+
+Moves that can cause sleep: Hypnosis, Lovely Kiss, Rest (self-inflicted), Sing, Sleep Powder,
+          Spore
+
+
+
+E. Type Effectiveness
+Each move has a type associated with it, which influences the amount of damage that the move
+will do, if it has a power value. The effectiveness of a move with a power against an opponent
+pokémon can be summed up with this chart:
+
+
+      A\Defending
+      t \   Types        E       F
+      t  \               l       i                               P
+      a   \          D   e       g   F           G       N   P   s
+      c    \         r   c       h   l   G   G   r       o   o   y       W
+      k T   \        a   t   F   t   y   h   r   o       r   i   c   R   a
+      i y    \   B   g   r   i   i   i   o   a   u   I   m   s   h   o   t
+      n p     \  u   o   i   r   n   n   s   s   n   c   a   o   i   c   e
+      g e      \ g   n   c   e   g   g   t   s   d   e   l   n   c   k   r
+     /=====================================================================\
+     |Bug      | 1 | 1 | 1 |0.5|0.5|0.5|0.5| 2 | 1 | 1 | 1 | 2 | 2 | 1 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Dragon   | 1 | 2 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Electric | 1 |0.5|0.5| 1 | 1 | 2 | 1 |0.5| 0 | 1 | 1 | 1 | 1 | 1 | 2 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Fire     | 2 |0.5| 1 |0.5| 1 | 1 | 1 | 2 | 1 | 2 | 1 | 1 | 1 |0.5|0.5|
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Fighting |0.5| 1 | 1 | 1 | 1 |0.5| 0 | 1 | 1 | 2 | 2 |0.5|0.5| 2 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Flying   | 2 | 1 |0.5| 1 | 2 | 1 | 1 | 2 | 1 | 1 | 1 | 1 | 1 |0.5| 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Ghost    | 1 | 1 | 1 | 1 | 1 | 1 | 2 | 1 | 1 | 1 | 0 | 1 | 0 | 1 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Grass    |0.5|0.5| 1 |0.5| 1 |0.5| 1 |0.5| 2 | 1 | 1 |0.5| 1 | 2 | 2 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Ground   |0.5| 1 | 2 | 2 | 1 | 0 | 1 |0.5| 1 | 1 | 1 | 2 | 1 | 2 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Ice      | 1 | 2 | 1 | 1 | 1 | 2 | 1 | 2 | 2 |0.5| 1 | 1 | 1 | 1 |0.5|
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Normal   | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 1 | 1 | 1 | 1 | 1 | 1 |0.5| 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Poison   | 2 | 1 | 1 | 1 | 1 | 1 |0.5| 2 |0.5| 1 | 1 |0.5| 1 |0.5| 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Psychic  | 1 | 1 | 1 | 1 | 2 | 1 | 1 | 1 | 1 | 1 | 1 | 2 |0.5| 1 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Rock     | 2 | 1 | 1 | 2 |0.5| 2 | 1 | 1 |0.5| 2 | 1 | 1 | 1 | 1 | 1 |
+     |---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+     |Water    | 1 |0.5| 1 | 2 | 1 | 1 | 1 |0.5| 2 | 1 | 1 | 1 | 1 | 2 |0.5|
+     \=====================================================================/
+
+
+In order to determine the type effectiveness of a move against a pokémon, look at the move's
+type in the rows and the pokémon's type in the columns. For example, a water attack used
+against a dragon type has a multiplier of 0.5, so it would do half the damage it usually would.
+If a pokémon has two types, look at the type effectiveness against both types and multiply the
+moves together. For example, a grass attack used against a poison type has a multiplier of 0.5,
+and has a multiplier of 2 if used against a water type, so if used against a water/poison type,
+the multiplier will be 2 * 0.5 = 1, or just regular damage. The type effectiveness values used
+in the BDF are ten times the final type effectiveness value, but the damage amount is divided
+by 10 immediately afterwards.
+
+An attack is considered super effective if it has a type multiplier of 2 or 4, and not very
+effective if it has a type multiplier of 0.25 or 0.5. If it has a multiplier of 1, it does
+regular damage, and if it has a multiplier of 0, it will always miss against the opponent,
+though the text message will almost always note that the move "doesn't affect" the opponent.
+There is no text message distinction beyond whether or not a type multiplier is 0, between 0
+and 1, 1, or greater than 1. Additionally, if a pokémon has a second type and is attacked with
+a move that does not result in a type multiplier of 1 (or 10, depending on perspective), the
+type effectiveness message associated with the attack will be based solely on the pokémon's
+second type.
+
+Stadium Differences:
+The type effectiveness messages associated with moves will always take both of a pokémon's
+types into account (except regarding immunities, which will always result in a message that the
+attempted attack missed).
+
+
+
+F. Order of Operations
+This is a list that shows the order in which the various operations happen relative to each
+other in any one round.
+
+First, determination of which pokémon performs its action first and which performs its action
+second in a round occurs. Running away takes priority over switching, which takes priority over
+using an item, which takes priority over attempting to attack. If both trainers choose to run
+away, it will happen simultaneously and the game will be declared a draw. If both trainers
+switch, each trainer will always see their pokémon switched out first. If both trainers use an
+item (in an in-game battle of course), each trainer will always see their pokémon affected
+first.
+
+If both trainers choose to attack, determination of which pokémon attacks first depends on the
+current speed of both pokémon and the priority of the attack selected. If one of the pokémon
+has selected an increased (or decreased) priority attack, it will attack first (or last) unless
+the opponent has also selected an increased (or decreased) priority attack. If the attack
+priority of both the selected attacks is the same, then the pokémon with the higher current
+speed will go first. If both pokémon have the same current speed, the game will randomly select
+which one goes first.
+
+Provided that neither player chooses to run away, the round will proceed as follows:
+
+Beforehand:
+     *All players select an action, including a specific item or attack if possible*
+
+Running away will end the battle, but otherwise the round will proceed:
+
+First pokémon's turn:
+     *Sleep duration deduction*
+     [First pokémon is frozen solid, fast asleep, or wakes up]
+     ([First pokémon must recharge])
+     *Disable duration deduction*
+     [First pokémon is disabled no more]
+     *Confusion duration deduction*
+     [First pokémon is confused no more]
+     *[First pokémon is fully paralyzed]*
+     *[First pokémon hurts itself due to confusion]*
+     *PP is deducted from selected attack*
+     *[Attack is used]*
+     *[Attack misses]*
+     *Damage calculation including critical hit*
+     *Battle animation*
+     *Damage and primary effects of attack*
+     [Second pokémon's substitute took the damage]
+     [Second pokémon's substitute broke]
+     [Critical hit]
+     [Type effectiveness of attack]
+     [Any flavor text associated with the executed attack]
+     ([Second pokémon faints])
+     *[Second pokémon's rage builds]*
+     *[Secondary effects of attack]*
+     *[Recurrent poison/burn damage to first pokémon]*
+     *[Recurrent Leech Seed damage to first pokémon]*
+     *[Second pokémon flinches]*
+
+Second pokémon's turn:
+     *Sleep duration deduction*
+     [Second pokémon is frozen solid, fast asleep, or wakes up]
+     (Second pokémon must recharge)
+     *Disable duration deduction*
+     [Second pokémon is disabled no more]
+     *Confusion duration deduction*
+     [Second pokémon is confused no more]
+     *[Second pokémon is fully paralyzed]*
+     *[Second pokémon hurts itself due to confusion]*
+     *PP is deducted from selected attack*
+     *[Attack is used]*
+     *[Attack misses]*
+     *Damage calculation including critical hit*
+     *Battle animation*
+     *Damage and primary effects of attack*
+     [First pokémon's substitute took the damage]
+     [First pokémon's substitute broke]
+     [Critical Hit]
+     [Type effectiveness of attack]
+     [Any flavor text associated with the executed attack]
+     ([First pokémon faints])
+     *[First pokémon's rage builds]*
+     *[Secondary effects of attack]*
+     *[Recurrent poison/burn damage to second pokémon]*
+     *[Recurrent Leech Seed damage to second pokémon]*
+
+Astericks indicate that the line involves an operation. Parentheses indicate that the line is
+a potential battle condition, which may effect the execution of lines below it. Brackets
+indicate that the line is a displayed text message. Lines marked with astericks/parentheses as
+well as brackets indicate that the line is an operation/condition, and a text message directly
+associated with the line is displayed immediately following the operation or condition
+(provided that it happened/exists).
+
+Also note that all lines will of course happen only if applicable, since the disable or
+confusion duration deductions can only happen if the pokémon actually is disabled or confused,
+an attack missing will not result in a battle animation, etc.
+
+
+
+G. Moves;
+
+G1. General Information;
+A move has four main attributes: type, power, PP, and accuracy.
+
+
+***Type***
+One of the 15 possible types that a move might be. A move's type determines whether it is a
+physical or special attack and also changes the effectiveness of the move when used against
+pokémon of different types (though this does not apply to moves that do damage but do not have
+power values). Also, if the move has a power and the move's type is the same as one of the
+user's types, the move will do 50% more damage (this is known as STAB, short for same type
+attack bonus).
+
+
+***Power***
+Every move that does damage calculated with the Battle Damage Formula has a base power. Some
+moves can do damage despite not having power values.
+
+
+***PP***
+PP is short for power points, and basically represents the number of times you can use the
+move. Each move has two PP values, a current value and a maximum value. Current PP is the
+amount of PP the pokémon has at any referenced time, since PP will be deducted from moves when
+used. Maximum PP is supposedly the highest PP a move can have, but is more of a calibration
+number for determining how much PP to restore to a pokémon via PP-restoring methods.
+
+Every time a move is fully executed, 1 PP is deducted from it. If a move has 0 PP, you will not
+be allowed to select the attack (though this is bypassed in a couple of cases where the game
+automatically selects the attack). In-game, PP can be restored by healing at a Pokémon Center
+or use a PP-restoring item (Elixer, Ether, Max Elixer, Max Ether).
+
+The only way to "restore" used PP in a link battle is with the PP roll over glitch. If by some
+means the game allows you to use a move with a current PP count of 0, its current PP will
+become 63 and it will have max PP ups applied to it after that use. This can happen to any
+attack if a pokémon attacks immediately after being defrosted, or to a handful of moves (Bind,
+Clamp, Fire Spin, Hyper Beam, Metronome, Mimic, and Wrap) because of the autoselection involved
+with partial trapping moves. More detailed information on how it can be done can be found in
+the information entry for Freeze, and in the entries of each mentioned move.
+
+When a move is first learned, its maximum PP value will be at its base value. Subsequently, you
+can apply up to 3 PP-ups to each move, and each PP-up will increase the move's maximum PP by
+20% of its base value (though 61 is the maximum PP of a move with 40 base PP).
+
+
+***Accuracy***
+Accuracy is the probability that the selected move will actually hit the opponent. Multiply an
+accuracy value by 2.56, round accordingly, and call that value A. If a randomly generated
+number from 0 to 255 is less than A, the move will hit the opponent. The initial accuracy of
+the move can be influenced by Accuracy and Evasion modifiers. The execution of certain moves
+does not involve an accuracy or evasion check, and such moves essentially never miss.
+
+
+G2. Ways of Obtaining;
+A pokémon can learn a move by Level, Previous Evolution, TM, HM, or Gift.
+
+***Level***
+When a pokémon's level reaches certain values, it will learn moves. If the pokémon has less
+than 4 moves, it will automatically learn the move, but if it has 4 moves, you will be given
+the option of allowing the pokémon to learn the move; you will have to replace one of the
+pokémon's current moves because it can't have more than 4 moves at a time. If the pokémon
+already knows the move, no acknowledgement that it learns the move at that level will be made,
+and if the pokémon gains enough experience at once to skip the level at which it learns a move,
+it will not learn it either.
+
+***Previous Evolution***
+In a few instances, a pokémon will not be able to learn a move by Level or TM, yet one of its
+previous evolutions will, allowing it access to the move. E3 contains a list of moves learnable
+in this way.
+
+***TM***
+During the course of the game, you will find TMs that will allow you to teach a pokémon the
+move it contains, provided that the selected pokémon is compatible with the move. If the
+pokémon already knows the move, the game will not allow you to teach the TM to that pokémon.
+There are a total of 50 different TMs, each of which is a one-time use (though it is possible
+to obtain multiple copies of some of them).
+
+***HM***
+Essentially the same as TMs, but HMs can be used an unlimited number of times (and whose use
+out of battle is required to complete the game). Once learned, you will not be allowed to
+replace any of the 5 HM moves without using a move deleter (which is only present in GSC).
+
+***Gift***
+A move is considered a Gift move if it is a move that can be obtained by receiving a gift
+pokémon with that move. Usually such a move can't be learned by any other means. Any of such a
+pokémon's evolutions are also considered to learn that move as a Gift move (as opposed to
+Previous Evolution).
+
+Two moves can be obtained only from Stadium. A Lv.15 Psyduck with Amnesia can be obtained by
+getting all 151 pokémon in Stadium's Hall of Fame. Since it is awarded to you and does not
+usually have that move, it is a Gift move. A Pikachu with Surf can be obtained by beating the
+R2 Prime Cup at the Master Ball level without saving. The team used for this must contain a
+Pikachu and must be completely selected from your gameboy cartridge. Pikachu must be in your
+3-member team, but only during the last round. Since Surf is taught to the Pikachu you bring
+with you, it is essentially a move learned by HM, though not under normal circumstances.
+
+A pokémon's move set will not be allowed to have the same move more than once, except
+temporarily via Mimic.
+
+For a list of pokémon and the moves they can learn, I would recommend White Cat's dexes, found
+at http://pokedex.kary.ca/.
+
+
+G3. Previous Evolution Moves;
+This is a list of all moves that can be learned by Previous Evolution but not by chromatic
+Level. Moves marked with parentheses can be learned by metallic Level, TM, or Tutor. Moves
+marked with brackets can be learned by chromatic TM.
+
+Metapod: Tackle, String Shot
+Butterfree: Harden, Tackle, String Shot
+Kakuna: Poison Sting, String Shot
+Beedrill: Harden, Poison Sting, String Shot
+Raichu: Agility, [(Double Team)], (Light Screen), (Quick Attack), Slam, [(Swift)], (Tail whip),
+           [(Thunder)], [(Thunderbolt)]
+Nidoqueen: Bite, Fury Swipes, Growl
+Nidoking: Focus Energy, Fury Attack, [Horn Drill], Leer
+Clefable: (Defense Curl), Growl, Light Screen, Pound
+Ninetales: (Confuse Ray), Fire Spin, (Flamethrower)
+Wigglytuff: [Body Slam], [Double-Edge], Pound, [(Rest)]
+Vileplume: (Absorb), [(Solarbeam)]
+Arcanine: Agility, Bite, (Flamethrower)
+Poliwrath: Amnesia, Bubble, Hydro Pump
+Victreebel: Growth, Slam, (Vine Whip)
+Cloyster: [(Ice beam)], Leer, Tackle
+Exeggutor: Leech Seed, Poisonpowder, [Reflect], [(Solarbeam)], Sleep Powder, Stun Spore
+Starmie: Hydro Pump, Light Screen, Minimize, (Recover), [(Swift)]
+Gyarados: Splash, Tackle
+Vaporeon: Focus Energy, Growl, [Take Down]
+Jolteon: Bite, Focus Energy, Growl, [Take Down]
+Flareon: Focus Energy, Growl, [Take Down]
+
+Also, Pikachu essentially learns Surf by HM (though under special conditions of course), so in
+turn, Raichu essentially learns Surf by Previous HM.
+
+
+G4. Number of Moves;
+The maximum number of moves a pokémon may have at any one time is four, and no pokémon may have
+less than one move. Since there is a move deleter in Blackthorn City in the Metallic
+generation, it is possible to have any pokémon with only one move by trading it to a metallic
+cartridge, deleting the move, and trading back.
+
+There is no move deleter directly available in the Chromatic generation though, and if the move
+deleter is not accessible, the minimum number of moves a pokémon can have will not always be
+equal to one. For calculating the minimum number of moves a pokémon can have, the minimum
+number of level moves it can have is all that needs to be considered, since a pokémon can skip
+all of its Previous Evolution, TM, HM, and Gift moves (if the minimum number of moves a pokémon
+must have is less than 4, then it will be equal to the minimum number of level moves it can
+have, but if the minimum number of moves a pokémon can have is 4, those moves may be obtained
+by any means, since they can be simply overwritten with moves not learned by level). Since a
+pokémon will not learn a move if it skips the level the move is learned on, the minimum number
+of moves a pokémon can have is equal to min(4, I + U + S). I is equal to the initial number of
+moves the pokémon has (which by its nature must be at least 1), though if the pokémon's level
+is greater than or equal to its evolution level and the pokémon has lower evolutions, then I is
+equal to the pokémon's initial number of moves or the initial number of moves of its lower
+evolution(s), whichever is lower. U is the number of moves the pokémon learns on levels it
+can't skip. To find U, first determine a level K, which is the least K such that F(K)-F(K-1)>E,
+where F(K) (read as "F of K", since a pokémon's minimum experience points can be written as a
+function of level) is the number of experience points needed to be on level K, and E is the
+maximum number of experience points that can be obtained at once. Taking E to be 4387 (from a
+traded pokémon singlehandedly surviving your rival's Lv.65 Blastoise in Red or Blue), K is 35
+if the pokémon's growth rate is slow, 39 if the pokémon's growth rate is medium or fading, or
+43 if the pokémon's growth rate is fast. If the pokémon's level L is less than K, then U is 0,
+otherwise, U is the number of level moves the pokémon can learn from level K to level L. If L
+is greater than or equal to K, then S is 0 (since the pokémon won't be able to skip any levels
+at such values), otherwise, S is determined by the lengths of unskippable move streaks that a
+pokémon's level move list experiences. To determine how much of a move streak can be skipped,
+find the least N such that F(H-N)-F(J)<E, where H is the highest level in the streak, J is the
+lowest level in the streak, and N is a nonnegative integer. Add N to S, and repeat the process
+until all move streaks are accounted for. It should be noted that no move streaks in RBY are
+unskippable.
+
+
+G5. Individual Move Information;
+This is a detailed list of the type, power, PP, accuracy, and any additional info about the 165
+moves in the Chromatic series. Moves that do not have power values will have their power values
+listed as ---. Such moves do not do damage based on the BDF (if they do damage at all) and
+unless otherwise noted, will be completely unaffected by the user's or opponent's type(s).
+Moves that do not have accuracy values will have their accuracy values listed as ---, and
+essentially can never miss since there is no accuracy or evasion check performed when such
+moves are used. All information given pertains to how the moves function in a gameboy, link
+battle. Any differences in Stadium or in-game battles are noted accordingly.
+
+Whenever a calculation is made, the decimal is dropped, so numbers will always be truncated.
+The only time this is not true is if a number is calculated to be 0, in which case it is bumped
+up to 1.
+
+Any references to PP in this section are to current PP, unless otherwise noted. References to
+items are relevant only when items are relevant, but behavior-wise are not presumed to be
+strictly different.
+
+
+***Absorb***
+Type: Grass
+Power: 20
+PP: 20-32
+Accuracy: 99.6%
+
+Absorb does damage, and up to 50% of the damage done to the opponent is restored to the user.
+However, if this attack does 1 point of damage, 1 HP will be restored to the user.
+
+If Absorb breaks a substitute, no HP will be restored to the user. If HP is restored to the
+user when its current HP is greater than its maximum HP, its current HP will be set equal to
+its maximum HP.
+
+Stadium Differences:
+Absorb will always miss if the opponent has a substitute.
+
+
+***Acid***
+Type: Poison
+Power: 40
+PP: 30-48
+Accuracy: 99.6%
+
+Acid does damage and has a 9.8% chance of lowering the opponent's defense by 1 level.
+
+Acid will not be able to lower the opponent's defense if it has reached a level of -6 or a
+value of 1, or if the opponent has a substitute.
+
+Stadium Differences:
+Acid has a 19.9% chance of lowering the opponent's defense by 1 level.
+
+
+***Acid Armor***
+Type: Poison
+Power: ---
+PP: 40-61
+Accuracy: ---
+
+Acid Armor increases the user's defense by 2 levels.
+
+Acid Armor will do nothing if the user's defense has reached a level of +6 or a value of 999.
+The effect of Acid Armor is ignored by critical hits.
+
+
+***Agility***
+Type: Psychic
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Agility increases the user's speed by 2 levels.
+
+Agility will do nothing if the user's speed has reached a level +6 or a value of 999.
+
+
+***Amnesia***
+Type: Psychic
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Amnesia increases the user's special by 2 levels.
+
+Amnesia will do nothing if the user's special has reached a level of +6 or a value of 999. The
+effect of Amnesia is ignored by critical hits.
+
+
+***Aurora Beam***
+Type: Ice
+Power: 65
+PP: 20-32
+Accuracy: 99.6%
+
+Aurora Beam does damage and has a 9.8% chance of lowering the opponent's attack by 1 level.
+
+Aurora Beam will not be able to lower the opponent's attack if it has reached a level of -6 or
+a value of 1, or if the opponent has a substitute.
+
+Stadium Differences:
+Aurora Beam has a 29.7% chance of lowering the opponent's attack by 1 level.
+
+
+***Barrage***
+Type: Normal
+Power: 15
+PP: 20-32
+Accuracy: 84.4%
+
+Barrage does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Barrage will end immediately if it breaks a substitute. Counter will only counter the last hit
+of a Barrage attack.
+
+
+***Barrier***
+Type: Psychic
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Barrier increases the user's defense by 2 levels.
+
+Barrier will do nothing if the user's defense has reached a level of +6 or a value of 999. The
+effect of Barrier is ignored by critical hits.
+
+
+***Bide***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: 99.6%
+
+After Bide is selected, the user will be unable to select a move for an idling period of 2-3
+turns (chosen randomly), though it will still be able to switch out during this time. On the
+following turn, Bide will do damage equal to twice the damage received during the idling
+period. Although Bide deals normal damage, type has no effect on the calculated damage
+inflicted by this attack. Bide is unaffected by accuracy and evasion modifiers, and can hit
+pokémon during the semi-invulnerable turn of Dig and Fly.
+
+Bide will count crash damage and an opponent's self-inflicted confusion damage as damage that
+can be reversed. Damage absorbed by a Substitute can be reversed for the amount of damage it
+would have done to the user had the user not had a substitute. If an opponent damages the user
+during the idling period, it must then use an attack that actually misses (as opposed to one
+that fails, or making a move, or using an item) in order to reset the last amount of damage
+counted towards Bide. For example, if a Nidoking uses Seismic Toss and then Growl during the
+same idling period of a Bide attack, Bide will count the turn that Growl was used as if Seismic
+Toss was used a second time.
+
+Sleep, freeze, partial trap duration, and flinching will pause but not disrupt the duration of
+Bide.
+
+Stadium Differences:
+You get to select a move during each of Bide's idling turns. Bide will miss against pokémon
+that are in the middle of Dig or Fly.
+
+
+***Bind***
+Type: Normal
+Power: 15
+PP: 20-32
+Accuracy: 74.6%
+
+Bind does damage for 2-5 turns. There is a 37.5% chance that it will attack for 2 turns, a
+37.5% chance that it will attack for 3 turns, a 12.5% chance that it will attack for 4 turns,
+and a 12.5% chance that it will attack for 5 turns. Though technically only the first attack
+can critical hit, every attack during the duration will do the same amount of damage. During
+this turn duration, the opponent will be unable to attack, and if the user of Bind attacks
+before the opponent when used, the opponent will be unable to attack during that round as well.
+
+Damage done by Bind's continuing duration is done after recurrent damage. If the user switches
+out before the turn duration ends, the opponent will be unable to attack during that turn,
+since it did not get to select a move. If the opponent switches out before the turn duration
+ends, Bind will automatically be used against the incoming pokémon, deducting an additional PP
+from the move. If at such a time Bind has 0 PP, Bind will still be used against the incoming
+pokémon. After that use, the current PP of Bind will roll over to 63, and full PP ups will be
+applied to it.
+
+Even if Bind misses, it will negate the recharge turn normally required for Hyper Beam.
+Additionally, if the user of Bind attacks before the user of Hyper Beam during a recharge turn
+and the use of Bind misses, the user of Hyper Beam will automatically use Hyper Beam during
+that turn. If at such a time Hyper Beam has 0 PP, Hyper Beam will still be used, and afterwards
+its current PP will roll over to 63, and full PP ups will be applied to it.
+
+Although Bind can't damage ghost types, it can immobilize them.
+
+In-game differences:
+The opponent will get to select a move during each turn of Bind's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+Stadium Differences:
+You get to select a move during each turn of Bind's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Bind will
+negate the recharge turn of Hyper Beam only if successful.
+
+
+***Bite***
+Type: Normal
+Power: 60
+PP: 25-40
+Accuracy: 99.6%
+
+Bite does damage and has a 9.8% chance of causing the opponent to flinch.
+
+Bite can only cause the opponent to flinch if the user attacks before the opponent does. Bite
+can't make an opponent with a substitute flinch.
+
+
+***Blizzard***
+Type: Ice
+Power: 120
+PP: 5-8
+Accuracy: 89.5%
+
+Blizzard does damage and has a 9.8% chance of freezing the opponent.
+
+Blizzard can't freeze an opponent that has a substitute or already has a major status ailment.
+
+
+***Body Slam***
+Type: Normal
+Power: 85
+PP: 15-24
+Accuracy: 99.6%
+
+Body Slam does damage and has a 29.7% chance of paralyzing its opponent.
+
+Body Slam can't paralyze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Bone Club***
+Type: Ground
+Power: 65
+PP: 20-32
+Accuracy: 84.4%
+
+Bone Club does damage and has a 9.8% chance of causing the opponent to flinch.
+
+Bone Club can only cause the opponent to flinch if the user attacks before the opponent does.
+Bone Club can't make an opponent with a substitute flinch.
+
+
+***Bonemerang***
+Type: Ground
+Power: 50
+PP: 10-16
+Accuracy: 89.5%
+
+Bonmerang does damage, hitting twice per use. Though technically only the first hit can
+critical hit, each hit per use will do the same amount of damage.
+
+Bonemerang will end immediately if it breaks a substitute.
+
+
+***Bubble***
+Type: Water
+Power: 20
+PP: 30-48
+Accuracy: 99.6%
+
+Bubble does damage and has a 9.8% chance of lowering the opponent's speed by 1 level.
+
+Bubble will not be able to lower the opponent's speed if it has reached a level of -6 or a
+value of 1, or if the opponent has a substitute.
+
+
+***Bubblebeam***
+Type: Water
+Power: 65
+PP: 20-32
+Accuracy: 99.6%
+
+Bubblebeam does damage and has a 9.8% chance of lowering the opponent's speed by 1 level.
+
+Bubblebeam will not be able to lower the opponent's speed if it has reached a level of -6 or a
+value of 1, or if the opponent has a substitute.
+
+Stadium Differences:
+Bubblebeam has a 29.7% chance of lowering the opponent's speed by 1 level.
+
+
+***Clamp***
+Type: Water
+Power: 35
+PP: 10-16
+Accuracy: 74.6%
+
+Clamp does damage for 2-5 turns. There is a 37.5% chance that it will attack for 2 turns, a
+37.5% chance that it will attack for 3 turns, a 12.5% chance that it will attack for 4 turns,
+and a 12.5% chance that it will attack for 5 turns. Though technically only the first attack
+can critical hit, every attack during the duration will do the same amount of damage. During
+this turn duration, the opponent will be unable to attack, and if the user of Clamp attacks
+before the opponent when used, the opponent will be unable to attack during that round as well.
+
+Damage done by Clamp's continuing duration is done after recurrent damage. If the user switches
+out before the turn duration ends, the opponent will be unable to attack during that turn. If
+the opponent switches out before the turn duration ends, Clamp will automatically be used
+against the incoming pokémon, deducting an additional PP from the move. If at such a time Clamp
+has 0 PP, Clamp will still be used against the incoming pokémon. After that use, the current PP
+of Clamp will roll over to 63, and full PP ups will be applied to it.
+
+Even if Clamp misses, it will negate the recharge turn normally required for Hyper Beam.
+Additionally, if the user of Clamp attacks before the user of Hyper Beam during a recharge turn
+and the use of Clamp misses, the user of Hyper Beam will automatically use Hyper Beam during
+that turn. If at such a time Hyper Beam has 0 PP, Hyper Beam will still be used, and afterwards
+its current PP will roll over to 63, and full PP ups will be applied to it.
+
+In-game differences:
+The opponent will get to select a move during each turn of Clamp's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+Stadium Differences:
+You get to select a move during each turn of Clamp's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Clamp will
+negate the recharge turn of Hyper Beam only if successful.
+
+
+***Comet Punch***
+Type: Normal
+Power: 18
+PP: 15-24
+Accuracy: 84.4%
+
+Comet Punch does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Comet Punch will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Comet Punch attack.
+
+
+***Confuse Ray***
+Type: Ghost
+Power: ---
+PP: 10-16
+Accuracy: 99.6%
+
+Confuse Ray causes the opponent to become confused.
+
+Confuse Ray will fail if the opponent has a substitute or is already confused.
+
+
+***Confusion***
+Type: Psychic
+Power: 50
+PP: 25-40
+Accuracy: 99.6%
+
+Confusion does damage and has a 9.8% chance of confusing the opponent.
+
+Confusion can't confuse an opponent that is already confused.
+
+Stadium Differences:
+Confusion can't confuse an opponent that has a substitute.
+
+
+***Constrict***
+Type: Normal
+Power: 10
+PP: 35-56
+Accuracy: 99.6%
+
+Constrict does damage and has a 9.8% chance of lowering the opponent's speed by 1 level.
+
+Constrict will not be able to lower the opponent's speed if it has reached a level of -6 or a
+value of 1, or if the opponent has a substitute.
+
+
+***Conversion***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Conversion changes the user's current type(s) to the opponent's current type(s).
+
+
+***Counter***
+Type: Fighting
+Power: ---
+PP: 20-32
+Accuracy: 99.6%
+
+If the last amount of damage done before the use of Counter is greater than 0 and was dealt by
+a normal or fighting attack, Counter will do twice as much damage to the opponent. Although
+Counter deals fighting damage, its type does not alter the amount of damage it inflicts.
+
+Counter is a decresed priority move. If the opponent does not use an decreased priority move
+during the round that it is used, Counter will go last regardless of the user's or opponent's
+speed. If the opponent also uses an decreased priority move during the same round, the attack
+order of the users will be determined normally. If the user is put to sleep or is frozen during
+the round that Counter is (or attempts to be) used, Counter's decreased speed priority will not
+be reset. Subsequently, it will only be reset on the turn after the user wakes up or is
+defrosted, or if the user switches out.
+
+Counter can critical hit, but the actual amount of damage dealt back by it will not be altered
+by a critical hit. Counter will only counter the last hit of a multi-hit move and the last
+attack of a partial trapping move. Counter will always miss if called by Metronome.
+
+Switching, full paralysis, and using a multi-turn move will not reset the last amount of damage
+done, allowing counter to counter itself as well as self-inflicted recoil damage. However, if
+both active pokémon use Counter during the same round, both attacks will fail. An attack
+absorbed by a Substitute can be countered for the amount of damage it would have done to the
+user had the user not had a substitute.
+
+If a a HP-restoring item is used on the opponent during the same round that Counter is used,
+Counter will counter the item.
+
+Stadium Differences:
+Switching, full paralysis, and using a multi-turn move reset the last amount of damage done, so
+Counter can't counter itself or self-inflicted recoil damage if the opponent does not make a
+move on its following turn.
+
+
+***Crabhammer***
+Type: Water
+Power: 90
+PP: 10-16
+Accuracy: 84.4%
+
+Crabhammer does damage, and has a high critical hit ratio.
+
+
+***Cut***
+Type: Normal
+Power: 50
+PP: 30-48
+Accuracy: 94.5%
+
+Cut does damage.
+
+
+***Defense Curl***
+Type: Normal
+Power: ---
+PP: 40-61
+Accuracy: ---
+
+Defense Curl increases the user's defense by 1 level.
+
+Defense Curl will do nothing if the user's defense has reached a level of +6 or a value of 999.
+The effect of Defense Curl is ignored by critical hits.
+
+
+***Dig***
+Type: Ground
+Power: 100
+PP: 10-16
+Accuracy: 99.6%
+
+On the turn that Dig is selected, the user will dig underground, where the only attacks it
+can't avoid are Bide, Swift, and Transform. On the following turn, Dig will do damage, PP will
+be deducted from it, and it will count as the last move used. Once Dig is selected, the user
+won't be able to switch out until it is disrupted or fully executed.
+
+If Dig is not fully executed, PP will not be deducted from it, and it will not count as the
+last move used. If the opponent uses Mirror Move during the turn that the user digs
+underground, Mirror Move will copy the move that the user executed immediately before using Dig
+(or fail if it can't).
+
+Confusion and full paralysis will disrupt Dig. Additionally, if the user is fully paralyzed
+during the mostly-invulnerable turn of Dig, the mostly-invulnerable part will not be reset
+until the user switches out or fully executes Dig or Fly.
+
+Stadium Differences:
+Dig will allow the user to avoid damage reversed by Bide. Full paralysis will reset the mostly-
+invulnerable part of Dig. Mirror Move will copy Dig on either of the turns it takes to execute.
+
+
+***Disable***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 54.7%
+
+Disable randomly selects one move that is in the opponent's current move set and whose current
+PP is greater than 0, and gives it a randomly chosen disable duration length of 1-8, which is
+reduced by 1 each time the pokémon attempts to execute an attack. While the move is disabled, a
+message of "disabled!" will appear in place of the disabled move's PP, and the opponent will be
+unable to use the move until the round after Disable wears off (attempting to select the move
+will just result in a notice that the move is disabled).
+
+If the opponent does manage to select the move (such as if it knows the move twice because of
+Mimic, or if the user is faster than the opponent and disables the attack that the opponent was
+going to use during that round) and attempts to execute it before the disable duration is over,
+it will only result in a wasted turn and a message that the move is disabled. Since the check
+to see if a move is disabled happens after the duration reduction, it is possible to disable
+the move the opponent was about to use for only 1 turn and as a result have Disable end
+immediately, still allowing the opponent to use said move during that round. It is also
+possible for the opponent to still use the disabled move if it is called via Metronome or
+Mirror Move.
+
+If the opponent has only one move and that move is successfully disabled, it will use Struggle
+until it can select its move again. Disable will fail if the opponent has no PP for any of its
+moves.
+
+Turns spent flinching, fast asleep, frozen solid, recharging, or partially trapped will not
+count towards the disable duration length.
+
+Even if unsuccessful (for any reason), using Disable against a pokémon using Rage will cause
+its rage to build.
+
+Stadium Differences:
+Disable will cause a pokémon's rage to build only if successful. The disabled move's PP is not
+replaced with a "disabled!" message, though attempting to select the move will still result in
+a notice that the move is disabled.
+
+
+***Dizzy Punch***
+Type: Normal
+Power: 70
+PP: 10-16
+Accuracy: 99.6%
+
+Dizzy Punch does damage.
+
+
+***Double Kick***
+Type: Fighting
+Power: 30
+PP: 30-48
+Accuracy: 99.6%
+
+Double Kick does damage, hitting twice per use. Though technically only the first hit can
+critical hit, each hit per use will do the same amount of damage.
+
+Double Kick will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Double Kick attack.
+
+
+***Double Team***
+Type: Normal
+Power: ---
+PP: 15-24
+Accuracy: ---
+
+Double Team increases the user's evasion by 1 level.
+
+Double Team will do nothing if the user's evasion has reached a level of +6.
+
+
+***Double-Edge***
+Type: Normal
+Power: 100
+PP: 15-24
+Accuracy: 99.6%
+
+Double-Edge does damage, and the user receives recoil damage equal to 25% of the damage done to
+the opponent.
+
+If the user of Double-Edge attacks first and faints itself due to recoil damage, the opponent
+will not attack or be subjected to recurrent damage during that round. However, the user will
+still be subject to recurrent damage.
+
+Self-inflicted recoil damage from Double-Edge from the previous turn can be countered if the
+opponent does not make a move on the following turn. If Double-Edge breaks a substitute, the
+user will take no recoil damage.
+
+Stadium Differences:
+No recoil damage is taken if Double-Edge knocks out an opponent.
+
+
+***Doubleslap***
+Type: Normal
+Power: 15
+PP: 10-16
+Accuracy: 84.4%
+
+Doubleslap does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Doubleslap will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Doubleslap attack.
+
+
+***Dragon Rage***
+Type: Dragon
+Power: ---
+PP: 10-16
+Accuracy: 99.6%
+
+Unless it misses, Dragon Rage will always do 40 points of dragon damage to the opponent. Its
+type will not alter the amount of damage it inflicts.
+
+
+***Dream Eater***
+Type: Psychic
+Power: 100
+PP: 15-24
+Accuracy: 99.6%
+
+Dream Eater does damage, but only if the opponent is asleep. Up to 50% of the damage done to
+the opponent is restored to the user. However, if this attack does 1 point of damage, 1 HP will
+be restored to the user.
+
+If Dream Eater breaks a substitute, no HP will be restored to the user. If HP is restored to
+the user when its current HP is greater than its maximum HP, its current HP will be set equal
+to its maximum HP.
+
+Dream Eater will miss if the opponent is not asleep.
+
+Stadium Differences:
+Dream Eater will always miss if the opponent has a substitute.
+
+
+***Drill Peck***
+Type: Flying
+Power: 80
+PP: 20-32
+Accuracy: 99.6%
+
+Drill Peck does damage.
+
+
+***Earthquake***
+Type: Ground
+Power: 100
+PP: 10-16
+Accuracy: 99.6%
+
+Earthquake does damage.
+
+
+***Egg Bomb***
+Type: Normal
+Power: 100
+PP: 10-16
+Accuracy: 74.6%
+
+Egg Bomb does damage.
+
+
+***Ember***
+Type: Fire
+Power: 40
+PP: 25-40
+Accuracy: 99.6%
+
+Ember does damage and has a 9.8% chance of burning the opponent.
+
+Ember can't burn an opponent that has a substitute or already has a major status ailment.
+
+
+***Explosion***
+Type: Normal
+Power: 170
+PP: 5-8
+Accuracy: 99.6%
+
+Explosion does damage, and causes the user to faint. Though its power is 170, the opponent's
+defense will be halved when damage from this attack is calculated, giving it an effective power
+of 340. The game will bump 0 up to 1 to avoid infinite damage, so Explosion will then
+effectively have a power of 170 if used against an opponent with a defense value of 1.
+
+If Explosion breaks an opponent's substitute, the user will not faint, though its image will be
+replaced by a blank image. Additionally, if the user of Explosion had a substitute at the time
+of such a situation, uses Substitute later, or switches out, its regular image will once again
+become visible.
+
+If the user of Explosion attacks first and faints itself, the opponent will not attack or be
+subjected to recurrent damage during that round.
+
+Stadium Differences:
+If Explosion breaks an opponent's substitute, the user will faint.
+
+
+***Fire Blast***
+Type: Fire
+Power: 120
+PP: 5-8
+Accuracy: 84.4%
+
+Fire Blast does damage and has a 29.7% chance of burning the opponent.
+
+Fire Blast can't burn an opponent that has a substitute or already has a major status ailment.
+
+
+***Fire Punch***
+Type: Fire
+Power: 75
+PP: 15-24
+Accuracy: 99.6%
+
+Fire Punch does damage and has a 9.8% chance of burning the opponent.
+
+Fire Punch can't burn an opponent that has a substitute or already has a major status ailment.
+
+
+***Fire Spin***
+Type: Fire
+Power: 15
+PP: 15-24
+Accuracy: 69.5%
+
+Fire Spin does damage for 2-5 turns. There is a 37.5% chance that it will attack for 2 turns, a
+37.5% chance that it will attack for 3 turns, a 12.5% chance that it will attack for 4 turns,
+and a 12.5% chance that it will attack for 5 turns. Though technically only the first attack
+can critical hit, every attack during the duration will do the same amount of damage. During
+this turn duration, the opponent will be unable to attack, and if the user of Fire Spin attacks
+before the opponent when used, the opponent will be unable to attack during that round as well.
+
+Damage done by Fire Spin's continuing duration is done after recurrent damage. If the user
+switches out before the turn duration ends, the opponent will be unable to attack during that
+turn. If the opponent switches out before the turn duration ends, Fire Spin will automatically
+be used against the incoming pokémon, deducting an additional PP from the move. If at such a
+time Fire Spin has 0 PP, Fire Spin will still be used against the incoming pokémon. After that
+use, the current PP of Fire Spin will roll over to 63, and full PP ups will be applied to it.
+
+Even if Fire Spin misses, it will negate the recharge turn normally required for Hyper Beam.
+Additionally, if the user of Fire Spin attacks before the user of Hyper Beam during a recharge
+turn and the use of Fire Spin misses, the user of Hyper Beam will automatically use Hyper Beam
+during that turn. If at such a time Hyper Beam has 0 PP, Hyper Beam will still be used, and
+afterwards its current PP will roll over to 63, and full PP ups will be applied to it.
+
+In-game differences:
+The opponent will get to select a move during each turn of Fire Spin's duration, and will
+attack your incoming pokémon with the selected move if you decide to switch before the duration
+is over.
+
+Stadium Differences:
+You get to select a move during each turn of Fire Spin's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Fire Spin
+will negate the recharge turn of Hyper Beam only if successful.
+
+
+***Fissure***
+Type: Ground
+Power: ---
+PP: 5-8
+Accuracy: 29.7%
+
+Fissure does damage equal to the opponent's current HP. Fissure will break a substitute
+on contact, and can be countered for infinite damage on the turn it breaks a substitute.
+
+Fissure will not affect an opponent whose current speed is greater than the user's current speed.
+
+
+***Flamethrower***
+Type: Fire
+Power: 95
+PP: 15-24
+Accuracy: 99.6%
+
+Flamethrower does damage and has a 9.8% chance of burning the opponent.
+
+Flamethrower can't burn an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Flash***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 69.5%
+
+Flash decreases the opponent's accuracy by 1 level.
+
+Flash will do nothing if the opponent's accuracy level is at -6, and will fail if the opponent
+has a substitute or is under the effect of Mist.
+
+
+***Fly***
+Type: Flying
+Power: 70
+PP: 15-24
+Accuracy: 94.5%
+
+On the turn that Fly is selected, the user will fly up high, where the only attacks it can't
+avoid are Bide, Swift, and Transform. On the following turn, Fly will do damage, PP will be
+deducted from it, and it will count as the last move used. Once Fly is selected, the user won't
+be able to switch out until it is disrupted or fully executed.
+
+If Fly is not fully executed, PP will not be deducted from it, and it will not count as the
+last move used. If the opponent uses Mirror Move during the turn that the user flys up high,
+Mirror Move will copy the move that the user executed immediately before using Fly (or fail if
+it can't).
+
+Full paralysis and getting hurt due to confusion will disrupt Fly. Additionally, if the user is
+fully paralyzed during the mostly-invulnerable turn of Dig, the mostly-invulnerable part will
+not be reset until the user switches out or fully executes Dig or Fly.
+
+Stadium Differences:
+Fly will allow the user to avoid damage reversed by Bide. Full paralysis will reset the mostly-
+invulnerable part of Fly. Mirror Move will copy Fly on either of the turns it takes to execute.
+
+
+***Focus Energy***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Focus Energy quarters the probability of the user scoring a critical hit.
+
+The effect of Focus Energy can only be removed by switching or Haze. Focus Energy will fail if
+the user is already under its effect.
+
+Stadium Differences:
+Focus Energy works properly; it quadruples the probability of the user scoring a critical hit.
+
+
+***Fury Attack***
+Type: Normal
+Power: 15
+PP: 20-32
+Accuracy: 84.4%
+
+Fury Attack does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Fury Attack will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Fury Attack attack.
+
+
+***Fury Swipes***
+Type: Normal
+Power: 18
+PP: 15-24
+Accuracy: 79.7%
+
+Fury Swipes does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Fury Swipes will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Fury Swipes attack.
+
+
+***Glare***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: 74.6%
+
+Glare paralyzes the opponent.
+
+Glare can't affect an opponent that already has a major status ailment.
+
+Stadium:
+Glare can't affect an opponent that has a substitute.
+
+
+***Growl***
+Type: Normal
+Power: ---
+PP: 40-61
+Accuracy: 99.6%
+
+Growl decreases the opponent's attack by 1 level.
+
+Growl will do nothing if the opponent's attack has reached a level of -6 or a value of 1, and
+will fail if the opponent has a substitute or is under the effect of Mist. The effect of Growl
+is ignored by critical hits.
+
+
+***Growth***
+Type: Grass
+Power: ---
+PP: 40-61
+Accuracy: ---
+
+Growth increases the user's special by 1 level.
+
+Growth will do nothing if the user's special has reached a level of +6 or a value of 999. The
+effect of Growth is ignored by critical hits.
+
+
+***Guillotine***
+Type: Normal
+Power: ---
+PP: 5-8
+Accuracy: 29.7%
+
+Guillotine does damage equal to the opponent's current HP. Guillotine will break a substitute
+on contact, and can be countered for infinite damage on the turn it breaks a substitute.
+
+Guillotine will not affect an opponent whose current speed is greater than the user's current
+speed.
+
+
+***Gust***
+Type: Normal
+Power: 40
+PP: 35-56
+Accuracy: 99.6%
+
+Gust does damage.
+
+
+***Harden***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Harden increases the user's defense by 1 level.
+
+Harden will do nothing if the user's defense has reached a level of +6 or a value of 999. The
+effect of Harden is ignored by critical hits.
+
+
+***Haze***
+Type: Ice
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Haze resets the stat levels of both active pokémon to 0 and removes the statistic reductions
+due to burns and paralysis as well as the effects of Focus Energy, Leech Seed, Light Screen,
+Mist, Reflect, confusion, and the cumulative nature of Toxic from both active pokémon. In
+addition, Haze removes any major status ailments from the opponent.
+
+Haze does not remove any major status ailments that the user has, does not change the generic
+Minimize graphic back to the pokémon's regular image, and does not reset either pokémon's
+current type(s), current move(s), or current species.
+
+If a frozen pokémon that has not recharged from Hyper Beam has its freeze status eliminated via
+Haze, it will remain unable to attack, switch, or do anything else, and nothing will then be
+able to change this.
+
+Stadium Differences:
+Haze eliminates any major status ailments that the user has.
+
+
+***Headbutt***
+Type: Normal
+Power: 70
+PP: 15-24
+Accuracy: 99.6%
+
+Headbutt does damage and has a 29.7% chance of causing the opponent to flinch.
+
+Headbutt can only cause the opponent to flinch if the user attacks before the opponent does.
+Headbutt can't make an opponent with a substitute flinch.
+
+
+***Hi Jump Kick***
+Type: Fighting
+Power: 85
+PP: 20-32
+Accuracy: 89.5%
+
+Hi Jump Kick does damage. If this attack misses, the user will take 1 point of crash damage.
+Since all attacks that do 0 damage miss, Hi Jump Kick will always miss if used against a ghost
+type.
+
+If the user of Hi Jump Kick attacks first and faints itself due to crash damage, the opponent
+will not attack or be subjected to recurrent damage during that round. However, the user will
+still be subject to recurrent damage.
+
+The crash damage from Hi Jump Kick can be reversed by Bide or Counter.
+
+
+***Horn Attack***
+Type: Normal
+Power: 65
+PP: 25-40
+Accuracy: 99.6%
+
+Horn Attack does damage.
+
+
+***Horn Drill***
+Type: Normal
+Power: ---
+PP: 5-8
+Accuracy: 29.7%
+
+Horn Drill does damage equal to the opponent's current HP. Horn Drill will break a substitute
+on contact, and can be countered for infinite damage if and when it breaks a substitute.
+
+Horn Drill will not affect an opponent whose current speed is greater than the user's current
+speed.
+
+
+***Hydro Pump***
+Type: Water
+Power: 120
+PP: 5-8
+Accuracy: 79.7%
+
+Hydro Pump does damage.
+
+
+***Hyper Beam***
+Type: Normal
+Power: 150
+PP: 5-8
+Accuracy: 89.5%
+
+Hyper Beam does damage. A recharge turn is required on the turn after damage is done, during
+which no action may be performed.
+
+Hyper Beam will not require a recharge turn if it misses, breaks a substitute, or faints the
+opponent, or if the user is targetted by a partial trapping move (even if it misses), flinches,
+or is put to sleep after the attack but before the recharge turn. However, freeze does not
+negate the recharge turn of Hyper Beam. If the user is confused, the recharge turn of Hyper
+Beam will not count towards the number of turns the user will remain confused.
+
+In a round where the opponent attacks before a user which must recharge, if the opponent uses a
+partial trapping move that misses, the user will automatically use Hyper Beam during that turn.
+If at such a time Hyper Beam has 0 PP, Hyper Beam will still be used, and afterwards its PP
+will roll over to 63, and full PP ups will be applied to it.
+
+If a frozen pokémon that has not recharged gets defrosted via Haze, it will remain unable to
+attack, switch, or do anything, and nothing (not even getting refrozen and then defrosted by a
+fire move) will be able to change this.
+
+Stadium Differences:
+Hyper Beam requires a recharge turn every time it is used.
+
+
+***Hyper Fang***
+Type: Normal
+Power: 80
+PP: 15-24
+Accuracy: 89.5%
+
+Hyper Fang does damage and has a 9.8% chance of causing the opponent to flinch.
+
+Hyper Fang can only cause the opponent to flinch if the user attacks before the opponent does.
+Hyper Fang can't make an opponent with a substitute flinch.
+
+
+***Hypnosis***
+Type: Psychic
+Power: ---
+PP: 20-32
+Accuracy: 59.8%
+
+Hypnosis puts the opponent to sleep.
+
+Hypnosis can't affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Hypnosis can't affect an opponent that has a substitute.
+
+
+***Ice Beam***
+Type: Ice
+Power: 95
+PP: 10-16
+Accuracy: 99.6%
+
+Ice Beam does damage and has a 9.8% chance of freezing the opponent
+
+Ice Beam can't freeze an opponent that has a substitute or already has a major status ailment.
+
+
+***Ice Punch***
+Type: Ice
+Power: 75
+PP: 15-24
+Accuracy: 99.6%
+
+Ice Punch does damage and has a 9.8% chance of freezing the opponent.
+
+Ice Punch can't freeze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Jump Kick***
+Type: Fighting
+Power: 70
+PP: 25-40
+Accuracy: 94.5%
+
+Jump Kick does damage. If this attack misses, the user will take 1 point of crash damage. Since
+all attacks that do 0 damage miss, Jump Kick will always miss if used against a ghost type.
+
+If the user of Jump Kick attacks first and faints itself due to crash damage, the opponent will
+not attack or be subjected to recurrent damage during that round. However, the user will still
+be subject to recurrent damage.
+
+The crash damage from Jump Kick can be reversed by Bide or Counter.
+
+
+***Karate Chop***
+Type: Normal
+Power: 50
+PP: 25-40
+Accuracy: 99.6%
+
+Karate Chop does damage, and has a high critical hit ratio.
+
+
+***Kinesis***
+Type: Psychic
+Power: ---
+PP: 15-24
+Accuracy: 79.7%
+
+Kinesis decreases the opponent's accuracy by 1 level.
+
+Kinesis will do nothing if the opponent's accuracy level is at -6, and will fail if the
+opponent has a substitute or is under the effect of Mist.
+
+
+***Leech Life***
+Type: Bug
+Power: 20
+PP: 15-24
+Accuracy: 99.6%
+
+Leech Life does damage, and up to 50% of the damage done to the opponent is restored to the
+user. However, if this attack does 1 point of damage, 1 HP will be restored to the user.
+
+If Leech Life breaks a substitute, no HP will be restored to the user.  If HP is restored to
+the user when its current HP is greater than its maximum HP, its current HP will be set equal
+to its maximum HP.
+
+Stadium Differences:
+Leech Life will always miss if the opponent has a substitute.
+
+
+***Leech Seed***
+Type: Grass
+Power: ---
+PP: 10-16
+Accuracy: 89.5%
+
+Leech Seed plants a seed on the opponent. At the end of each of its turns that it is under the
+effect of Leech Seed, 1/16th of the opponent's HP will be drained, and the same amount of HP
+will be restored to your active pokémon (even if it was not the pokémon that originally used
+the attack). Recurrent Leech Seed draining will not occur if the seeded pokémon knocks out an
+opponent. Unlike other types of damage, the recurrent damage done by Leech Seed can exceed the
+opponent's current HP.
+
+If the opponent has less than 16 HP, Leech Seed will drain 1 HP per turn. Leech Seed draining
+will occur even if the seeded pokémon knocks itself out with crash damage, recoil damage, or
+self-inflicted confusion damage, or by making a substitute before the end of its turn. Draining
+from Leech Seed is done after continuing partial trapping damage and recurrent poison or burn
+damage. Leech Seed can be removed by Haze or switching. If the opponent is seeded during a
+round that it switches in, it will take recurrent damage during that round, but only if its
+speed is less than or equal to the user's speed.
+
+If the opponent is also under the effect of Toxic, Leech Seed will increase the N value of
+of Toxic by 1 per turn. If the current HP of the recepient of Leech Seed's HP-restoring effect
+is greater than its maximum HP, its current HP will be set equal to its maximum HP.
+
+Leech Seed will not work against grass types.
+
+Stadium Differences:
+Leech Seed will not work against a substitute.
+
+
+***Leer***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: 99.6%
+
+Leer decreases the opponent's defense by 1 level.
+
+Leer will do nothing if the opponent's defense has reached a level of -6 or a value of 1, and
+will fail if the opponent has a substitute or is under the effect of Mist. The effect of Leer
+is ignored by critical hits.
+
+
+***Lick***
+Type: Ghost
+Power: 20
+PP: 30-48
+Accuracy: 99.6%
+
+Lick does damage and has a 29.7% chance of paralyzing its opponent.
+
+Lick can't paralyze an opponent that has a substitute or already has a major status ailment.
+
+
+***Light Screen***
+Type: Psychic
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Light Screen doubles the user's special when the opponent damages the user with a special
+attack that has a power.
+
+Light Screen will fail if the user is already under its effect. The effect of Light Screen is
+ignored by critical hits. If Light Screen causes the user's special to reach 1024 or higher at
+any time during battle calculations, it will be reduced mod 1024.
+
+
+***Lovely Kiss***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: 74.6%
+
+Lovely Kiss puts the opponent to sleep.
+
+Lovely Kiss can't affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Lovely Kiss can't affect an opponent that has a substitute.
+
+
+***Low Kick***
+Type: Fighting
+Power: 50
+PP: 20-32
+Accuracy: 89.5%
+
+Low Kick does damage and has a 29.7% chance of causing the opponent to flinch.
+
+Low Kick can only cause the opponent to flinch if the user attacks before the opponent does.
+Low Kick can't make an opponent with a substitute flinch.
+
+
+***Meditate***
+Type: Psychic
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Meditate increases the user's attack by 1 level.
+
+Meditate will do nothing if the user's attack has reached a level of +6 or a value of 999. The
+effect of Meditate is ignored by critical hits.
+
+
+***Mega Drain***
+Type: Grass
+Power: 40
+PP: 10-16
+Accuracy: 99.6%
+
+Mega Drain does damage, and up to 50% of the damage done to the opponent is restored to the
+user. However, if this attack does 1 point of damage, 1 HP will be restored to the user.
+
+If Mega Drain breaks a substitute, no HP will be restored to the user. If HP is restored to the
+user when its current HP is greater than its maximum HP, its current HP will be set equal to
+its maximum HP.
+
+Stadium Differences:
+Mega Drain will always miss if the opponent has a substitute.
+
+
+***Mega Kick***
+Type: Normal
+Power: 120
+PP: 5-8
+Accuracy: 74.6%
+
+Mega Kick does damage.
+
+
+***Mega Punch***
+Type: Normal
+Power: 80
+PP: 20-32
+Accuracy: 84.4%
+
+Mega Punch does damage.
+
+
+***Metronome***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: ---
+
+Metronome randomly selects one attack other than Metronome and Struggle, and fully executes the
+attack. An attack called by Metronome in this way counts as the last move used.
+
+If Metronome successfully calls Hyper Beam or a partial trapping move and has 0 PP before the
+move fully executes, its PP can roll over in the same manner as the move is called. If
+Metronome calls Counter, it will always miss. A pokémon will be able to use a move that is
+disabled if called via Metronome.
+
+
+***Mimic***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: 99.6%
+
+Mimic randomly copies one of the opponent's current attacks and its maximum PP. The user will
+retain the copied attack until it faints or is switched out, or the battle ends. There are no
+restrictions on what Mimic can copy (though in practice, Mimic can't copy Struggle because it
+is not a normally selectable move).
+
+If Mimic copies a partial trapping move, and if the opponent switches out when its PP is 0 and
+before its duration is over, the current PP of the move will roll over to 63 and full PP ups
+will be applied to it. Mimic will retain the move's current PP if the user switches out, and
+full PP ups will be applied to any moves that Mimic subsequently copies.
+
+In-game Differences:
+Mimic allows you to see the opponent's moveset and select the move to copy.
+
+Stadium Differences:
+Mimic will not copy a move's maximum PP.
+
+
+***Minimize***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Minimize increases the user's evasion by 1 level and replaces the user's regular image with a
+tiny, generic image until the user faints or is switched out, or the battle ends.
+
+Minimize will do nothing if the user's evasion has reached a level of +6.
+
+
+***Mirror Move***
+Type: Flying
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Mirror Move causes the user to use the last move that the opponent used. An attack called by
+Mirror Move in this way counts as the last move used.
+
+Mirror Move will fail if the opponent did not make a move selection in the round before the use
+of Mirror Move, switches out during the round Mirror Move is used, or if the opponent's last
+move used was Mirror Move.
+
+Paralysis, confusion, recharging, and building up for a multi turn move have no effect to the
+last move used. If Mirror Move is used against an opponent that was fully paralyzed or hurt
+itself right before its use, Mirror Move will still use the last move that the opponent used.
+If Mirror Move is used during the first turn of a multi-turn move, Mirror Move will use the
+move that the opponent used before that move (or fail if no move was previously made).
+
+A pokémon will be able to use a move that is disabled if it is called via Mirror Move.
+
+Stadium Differences:
+Mirror Move will copy multi-turn moves during either of the turns they take to execute.
+
+
+***Mist***
+Type: Ice
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Mist prevents the effects of primary stat modifications inflicted by the opponent. If a move
+used by the opponent could only cause a stat change (such as Growl or Kinesis), that move will
+fail. However, Mist will have no effect on side effect stat modifiers used by the opponent,
+such as defense reducing via Acid or special reducing via Psychic.
+
+Mist does not remove any stat modifiers already in effect, does not prevent the stat
+modifications associated with burns or paralysis, and does not prevent the user from
+successfully using stat modifiers. The effect of Mist can only be removed by switching or Haze.
+
+Mist will fail if the user is already under its effect.
+
+
+***Night Shade***
+Type: Ghost
+Power: ---
+PP: 15-24
+Accuracy: 99.6%
+
+Night Shade does damage equal to the user's level. Although Night Shade deals ghost damage, its
+type does not alter the amount of damage it inflicts.
+
+
+***Pay Day***
+Type: Normal
+Power: 40
+PP: 20-32
+Accuracy: 99.6%
+
+Pay Day does damage, and each use scatters coins on the ground with a value equal to twice the
+user's level. These coins can't be collected.
+
+In-game Differences:
+Coins scattered by Pay Day are picked up if you win the battle.
+
+
+***Peck***
+Type: Flying
+Power: 35
+PP: 35-56
+Accuracy: 99.6%
+
+Peck does damage.
+
+
+***Petal Dance***
+Type: Grass
+Power: 70
+PP: 20-32
+Accuracy: 99.6%
+
+Petal Dance does damage for 3-4 (chosen randomly) turns. Once used (even if it misses on the
+turn of its use), the user will only be able to use Petal Dance, and will not be able to switch
+out. At the end of this duration, the user will become confused.
+
+If the Petal Dance duration is disrupted (such as by full paralysis or hurting itself due to
+confusion), it will immediately end. The user will only become confused if Petal Dance is fully
+executed, without its duration being disrupted. Sleep, freeze, partial trapping, and flinching
+will pause but not disrupt the duration of Petal Dance.
+
+Stadium Differences:
+After the duration of Petal Dance ends, there will be a notice that the user becomes confused.
+
+
+***Pin Missile***
+Type: Bug
+Power: 14
+PP: 20-32
+Accuracy: 84.4%
+
+Pin Missile does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Pin Missile will end immediately if it breaks a substitute.
+
+
+***Poison Gas***
+Type: Poison
+Power: ---
+PP: 40-61
+Accuracy: 54.7%
+
+Poison Gas poisons the opponent.
+
+Poison Gas can't affect an opponent that has a substitute, already has a major status ailment,
+or is a poison type.
+
+
+***Poison Sting***
+Type: Poison
+Power: 15
+PP: 35-56
+Accuracy: 99.6%
+
+Poison Sting does damage and has a 19.9% chance of poisoning the opponent.
+
+Poison Sting can't poison an opponent that has a substitute, already has a major status
+ailment, or is a poison type.
+
+
+***Poisonpowder***
+Type: Poison
+Power: ---
+PP: 35-56
+Accuracy: 74.6%
+
+Poisonpowder poisons the opponent.
+
+Poisonpowder can't affect an opponent that has a substitute, already has a major status
+ailment, or is a poison type.
+
+
+***Pound***
+Type: Normal
+Power: 40
+PP: 35-56
+Accuracy: 99.6%
+
+Pound does damage.
+
+
+***Psybeam***
+Type: Psychic
+Power: 65
+PP: 20-32
+Accuracy: 99.6%
+
+Psybeam does damage and has a 9.8% chance of confusing the opponent.
+
+Psybeam can't confuse an opponent that is already confused.
+
+Stadium Differences:
+Psybeam can't confuse an opponent that has a substitute.
+
+
+***Psychic***
+Type: Psychic
+Power: 90
+PP: 10-16
+Accuracy: 99.6%
+
+Psychic does damage and has a 29.7% chance of lowering the opponent's special by 1 level.
+
+Psychic will not be able to lower the opponent's special if it has a stat level of -6 or a
+value of 1, or if the opponent has a substitute.
+
+
+***Psywave***
+Type: Psychic
+Power: ---
+PP: 15-24
+Accuracy: 79.7%
+
+Psywave causes a random amount of damage. The minimum damage it can do is 1, and the maximum
+damage it can do is less than 1.5 times the user's level. And yes, the game will freeze if a
+Lv.1 pokémon uses this attack.
+
+
+***Quick Attack***
+Type: Normal
+Power: 40
+PP: 30-48
+Accuracy: 99.6%
+
+Quick Attack does damage, and is an increased priority move. If the opponent does not use an
+increased priority move during the round that it is used, Quick Attack will go first regardless
+of the user's or opponent's speed. If the opponent also uses an increased priority move during
+the same round that the user uses Quick Attack, the attack order of the users will be
+determined normally. If the user is put to sleep or frozen during the round that Quick Attack
+is (or attempts to be) used, Quick Attack's increased speed priority will not be reset.
+Subsequently, it will only be reset on the turn after the user wakes up or is defrosted, or if
+the user switches out.
+
+
+***Rage***
+Type: Normal
+Power: 20
+PP: 20-32
+Accuracy: 99.6%
+
+Rage does damage. After Rage is used, it will not be possible to do anything other than let the
+user use Rage, and it will not stop using Rage until it faints or the battle ends. Every time
+the user is damaged by a hit or is targetted by Disable (even if it misses or fails), its
+attack level will increase by 1. Rage will use 1 PP when selected, but not use any PP on any
+subsequent turns.
+
+If Rage misses during the turn it is selected, its secondary effects will not activate. If Rage
+misses due to an accuracy or evasion check when its decision-removing effect is active, the
+accuracy of Rage will subsequently become 0.4%. The duration of Rage will be paused but not
+disrupted by anything, including sleep, freeze, partial trapping, flinching, or if the user
+hurts itself due to confusion.
+
+Rage will not attempt to increase the user's attack if it has reached a level of +6, and will
+not successfully increase the user's attack if it has reached a value of 999.
+
+Stadium Differences:
+Disable will cause a pokémon's rage to build only if successful.
+
+
+***Razor Leaf***
+Type: Grass
+Power: 55
+PP: 25-40
+Accuracy: 94.5%
+
+Razor Leaf does damage, and has a high critical hit ratio.
+
+
+***Razor Wind***
+Type: Normal
+Power: 80
+PP: 10-16
+Accuracy: 74.6%
+
+Razor Wind does nothing on the turn it is selected, other than say that the user created a
+whirlwind. On the following turn, Razor Wind will do damage, PP will be deducted from it, and
+it will count as the last move used. Once Razor Wind is selected, the user won't be able to
+switch out until it is disrupted or fully executed.
+
+If Razor Wind is not fully executed, PP will not be deducted from it, and it will not count as
+the last move used. If the opponent uses Mirror Move during the turn that the user creates a
+whirlwind, Mirror Move will copy the move that the user executed immediately before using Razor
+Wind (or fail if it can't).
+
+Sleep, freeze, partial trapping, and flinching will pause but not disrupt the duration of Razor
+Wind.
+
+Stadium Differences:
+Mirror Move will copy Razor Wind on either of the turns it takes to execute.
+
+
+***Recover***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Recover restores up to 50% of the user's current HP.
+
+Recover will fail if the difference between the user's current and maximum HP is 0, or if
+(user's maximum HP - user's current HP) mod 256 = 255. If the user's current HP is greater than
+its maximum HP, Recover will set the user's current HP to equal its maximum HP.
+
+Stadium Differences:
+Recover will fail only when the difference between the user's current and maximum HP is 0.
+
+
+***Reflect***
+Type: Psychic
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Reflect doubles the user's defense when the opponent damages the user with a physical attack
+that has a power.
+
+Reflect will fail if the user is already under its effect. The effect of Reflect is ignored by
+self-inflicted confusion damage and critical hits. If Reflect causes the user's defense to
+reach 1024 or higher at any time during battle calculations, it will be reduced mod 1024.
+
+
+***Rest***
+Type: Psychic
+Power: ---
+PP: 10-16
+Accuracy: ---
+
+Rest restores all of the user's current HP, and makes the user fall asleep. The user will be
+asleep for one turn, wake up on the next turn, and then be able to attack after that. The sleep
+countdown of Rest is not reset by switching.
+
+Since the user falls asleep, it will be cured of any major status ailments it had prior to the
+use of Rest, but Rest will not reset the stat reductions caused by paralysis or burns, will not
+reset the cumulative nature of Toxic, and will not count towards turns confused.
+
+Rest will fail if the difference between the user's current and maximum HP is 0, or if
+(user's maximum HP - user's current HP) mod 256 = 255. If the user's current HP is greater than
+its maximum HP, Rest will set the user's current HP to equal its maximum HP and make the user
+fall asleep.
+
+Stadium Differences:
+Rest will fail only when the difference between the user's current and maximum HP is 0. Rest
+will reset the cumulative nature of Toxic and the stat drops due to paralysis and burns.
+
+
+***Roar***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 99.6%
+
+Roar will never affect the opponent.
+
+In-game Differences:
+Roar can be used to automatically end wild pokémon battles.
+
+
+***Rock Slide***
+Type: Rock
+Power: 75
+PP: 10-16
+Accuracy: 89.5%
+
+Rock Slide does damage.
+
+
+***Rock Throw***
+Type: Rock
+Power: 50
+PP: 15-24
+Accuracy: 64.5%
+
+Rock Throw does damage.
+
+
+***Rolling Kick***
+Type: Fighting
+Power: 60
+PP: 15-24
+Accuracy: 84.4%
+
+Rolling Kick does damage and has a 29.7% chance of causing the opponent to flinch.
+
+Rolling Kick can only cause the opponent to flinch if the user attacks before the opponent
+does. Rolling Kick can't make an opponent with a substitute flinch.
+
+
+***Sand-Attack***
+Type: Normal
+Power: ---
+PP: 15-24
+Accuracy: 99.6%
+
+Sand-Attack decreases the opponent's accuracy by 1 level.
+
+Sand-Attack will do nothing if the opponent's accuracy level is at -6, and will fail if the
+opponent has a substitute or is under the effect of Mist.
+
+
+***Scratch***
+Type: Normal
+Power: 40
+PP: 35-56
+Accuracy: 99.6%
+
+Scratch does damage.
+
+
+***Screech***
+Type: Normal
+Power: ---
+PP: 40-61
+Accuracy: 84.4%
+
+Screech decreases the opponent's defense by 2 levels.
+
+Screech will do nothing if the opponent's attack has reached a level of -6 or a value of 1, and
+will fail if the opponent has a substitute or is under the effect of Mist. The effect of
+Screech is ignored by critical hits.
+
+
+***Seismic Toss***
+Type: Fighting
+Power: ---
+PP: 20-32
+Accuracy: 99.6%
+
+Seismic Toss does damage equal to the user's level. Although Seismic Toss deals fighting
+damage, its type does not alter the amount of damage it inflicts.
+
+
+***Selfdestruct***
+Type: Normal
+Power: 130
+PP: 5-8
+Accuracy: 99.6%
+
+Selfdestruct does damage, and causes the user to faint. Though its power is listed as 130, the
+opponent's defense will be halved when damage from this attack is calculated, giving it an
+effective power of 260. The game will bump 0 up to 1 to avoid infinite damage, so Selfdestruct
+will then effectively have a power of 130 if used against an opponent with a defense value of
+1.
+
+If Selfdestruct breaks an opponent's substitute, the user will not faint, though its image will
+be replaced by a blank image. Additionally, if the user of Selfdestruct had a substitute at the
+time of such a situation, uses Substitute later, or switches out, its regular image will once
+again become visible.
+
+If the user of Selfdestruct attacks first and faints itself, the opponent will not attack or be
+subjected to recurrent damage during that round.
+
+Stadium Differences:
+If Selfdestruct breaks an opponent's substitute, the user will faint.
+
+
+***Sharpen***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Sharpen increases the user's attack by 1 level.
+
+Sharpen will do nothing if the user's attack has reached a level of +6 or a value of 999. The
+effect of Sharpen is ignored by critical hits.
+
+
+***Sing***
+Type: Normal
+Power: ---
+PP: 15-24
+Accuracy: 54.7%
+
+Sing puts the opponent to sleep.
+
+Sing will not affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Sing can't affect an opponent that has a substitute.
+
+
+***Skull Bash***
+Type: Normal
+Power: 100
+PP: 15-24
+Accuracy: 99.6%
+
+Skull Bash does nothing on the turn it is selected, other than say that the user lowered its
+head. On the following turn, Skull Bash will do damage, PP will be deducted from it, and it
+will count as the last move used. Once Skull Bash is selected, the user won't be able to switch
+out until it is disrupted or fully executed.
+
+If Skull Bash is not fully executed, PP will not be deducted from it, and it will not count as
+the last move used. If the opponent uses Mirror Move during the turn that the user lowers its
+head, Mirror Move will copy the move that the user executed immediately before using Skull Bash
+(or fail if it can't).
+
+Sleep, freeze, partial trapping, and flinching will pause but not disrupt the duration of Skull
+Bash.
+
+Stadium:
+Mirror Move will copy Skull Bash on either of the turns it takes to execute.
+
+
+***Sky Attack***
+Type: Flying
+Power: 140
+PP: 5-8
+Accuracy: 89.5%
+
+Sky Attack does nothing on the turn it is selected, other than say that the user is glowing. On
+the following turn, Sky Attack will do damage, PP will be deducted from it, and it will count
+as the last move used. Once Sky Attack is selected, the user won't be able to switch out until
+it is disrupted or fully executed.
+
+If Sky Attack is not fully executed, PP will not be deducted from it, and it will not count as
+the last move used. If the opponent uses Mirror Move during the turn that the user is glowing,
+Mirror Move will copy the move that the user executed immediately before using Sky Attack (or
+fail if it can't).
+
+Sleep, freeze, partial trapping, and flinching will pause but not disrupt the duration of Sky
+Attack.
+
+Stadium Differences:
+Mirror Move will copy Sky Attack on either of the turns it takes to execute.
+
+
+***Slam***
+Type: Normal
+Power: 80
+PP: 20-32
+Accuracy: 74.6%
+
+Slam does damage.
+
+
+***Slash***
+Type: Normal
+Power: 70
+PP: 20-32
+Accuracy: 99.6%
+
+Slash does damage, and has a high critical hit ratio.
+
+
+***Sleep Powder***
+Type: Grass
+Power: ---
+PP: 15-24
+Accuracy: 74.6%
+
+Sleep Powder puts the opponent to sleep.
+
+Sleep Powder can't affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Sleep Powder can't affect an opponent that has a substitute.
+
+
+***Sludge***
+Type: Poison
+Power: 65
+PP: 20-32
+Accuracy: 99.6%
+
+Sludge does damage and has a 29.7% chance of poisoning the opponent.
+
+Sludge can't poison an opponent that has a substitute, already has a major status ailment, or
+is a ground type.
+
+
+***Smog***
+Type: Poison
+Power: 20
+PP: 20-32
+Accuracy: 69.5%
+
+Smog does damage and has a 39.8% chance of poisoning the opponent.
+
+Smog can't poison an opponent that has a substitute, already has a major status ailment, or is
+a ground type.
+
+
+***Smokescreen***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 99.6%
+
+Smokescreen decreases the opponent's accuracy by 1 level.
+
+Smokescreen will do nothing if the opponent's accuracy level is at -6, and will fail if the
+opponent has a substitute or is under the effect of Mist.
+
+
+***Softboiled***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: ---
+
+Softboiled restores up to 50% of the user's current HP.
+
+Softboiled will fail if the difference between the user's current and maximum HP is 0, or if
+(user's maximum HP - user's current HP) mod 256 = 255. If the user's current HP is greater than
+its maximum HP, Softboiled will set the user's current HP to equal its maximum HP.
+
+Stadium Differences:
+Softboiled will fail only when the difference between the user's current and maximum HP is 0.
+
+
+***Solarbeam***
+Type: Grass
+Power: 120
+PP: 10-16
+Accuracy: 99.6%
+
+Solarbeam does nothing on the turn it is selected, other than say that the user took in
+sunlight. On the following turn, Solarbeam will do damage, PP will be deducted from it, and it
+will count as the last move used. Once Solarbeam is selected, the user won't be able to switch
+out until it is disrupted or fully executed.
+
+If Solarbeam is not fully executed, PP will not be deducted from it, and it will not count as
+the last move used. If the opponent uses Mirror Move during the turn that the user takes in
+sunlight, Mirror Move will copy the move that the user executed immediately before using
+Solarbeam (or fail if it can't).
+
+Sleep, freeze, partial trapping, and flinching will pause but not disrupt the duration of
+Solarbeam.
+
+Stadium:
+Mirror Move will copy Solarbeam on either of the turns it takes to execute.
+
+
+***Sonicboom***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 89.5%
+
+Unless it misses, Sonicboom will always do 20 points of normal damage to the opponent. Its type
+will not alter the amount of damage it inflicts.
+
+
+***Spike Cannon***
+Type: Normal
+Power: 20
+PP: 15-24
+Accuracy: 99.6%
+
+Spike Cannon does damage, hitting 2-5 times per use. There is a 37.5% chance that it will hit 2
+times, a 37.5% chance that it will hit 3 times, a 12.5% chance that it will hit 4 times, and a
+12.5% chance that it will hit 5 times. Though technically only the first hit can critical hit,
+each hit per use will do the same amount of damage.
+
+Spike Cannon will end immediately if it breaks a substitute. Counter will only counter the last
+hit of a Spike Cannon attack.
+
+
+***Splash***
+Type: Normal
+Power: ---
+PP: 40-61
+Accuracy: ---
+
+Splash has no effect. Ever.
+
+
+***Spore***
+Type: Grass
+Power: ---
+PP: 15-24
+Accuracy: 99.6%
+
+Spore puts the opponent to sleep.
+
+Sleep Powder can't affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Spore can't affect an opponent that has a substitute.
+
+
+***Stomp***
+Type: Normal
+Power: 65
+PP: 20-32
+Accuracy: 99.6%
+
+Stomp does damage and has a 29.7% chance of causing the opponent to flinch.
+
+Stomp can only cause the opponent to flinch if the user attacks before the opponent does. Stomp
+can't make an opponent with a substitute flinch.
+
+
+***Strength***
+Type: Normal
+Power: 80
+PP: 15-24
+Accuracy: 99.6%
+
+Strength does damage.
+
+
+***String Shot***
+Type: Bug
+Power: ---
+PP: 40-61
+Accuracy: 94.5%
+
+String Shot decreases the opponent's speed by 1 level.
+
+String Shot will do nothing if the opponent's speed has reached a level of -6 or a value of 1,
+and will fail if the opponent has a substitute or is under the effect of Mist.
+
+
+***Struggle***
+Type: Normal
+Power: 50
+PP: 10-16
+Accuracy: 99.6%
+
+Struggle does damage, and the user receives recoil damage equal to 50% of the damage done to
+the opponent. Struggle will automatically be used by a pokémon that has no usable moves but
+is ordered to attack, and has infinite PP in such a situation.
+
+If the user of Struggle attacks first and faints itself due to recoil damage, the opponent will
+not attack or be subjected to recurrent damage during that round. However, the user will still
+be subject to recurrent damage.
+
+If Struggle breaks a substitute, the user will take no recoil damage.
+
+If Struggle was a normally obtainable move, it would have 10-16 PP though no PP would ever be
+deducted from it, and self-inflicted recoil damage from Struggle from the previous turn could
+be countered if the opponent did not make a move on the following turn.
+
+Stadium Differences:
+No recoil damage is taken if Struggle knocks out an opponent. Type has no effect on the amount
+of damage that Struggle inflicts.
+
+
+***Stun Spore***
+Type: Grass
+Power: ---
+PP: 30-48
+Accuracy: 74.6%
+
+Stun Spore paralyzes the opponent.
+
+Stun Spore can't affect an opponent that already has a major status ailment.
+
+Stadium Differences:
+Stun Spore can't affect an opponent that has a substitute.
+
+
+***Submission***
+Type: Fighting
+Power: 80
+PP: 25-40
+Accuracy: 79.7%
+
+Submission does damage, and the user receives recoil damage equal to 25% of the damage done to
+the opponent.
+
+If the user of Submission attacks first and faints itself due to recoil damage, the opponent
+will not attack or be subjected to recurrent damage during that round. However, the user will
+still be subject to recurrent damage.
+
+Self-inflicted recoil damage from Submission from the previous turn can be countered if the
+opponent does not make a move on the following turn. If Submission breaks a substitute, the
+user will take no recoil damage.
+
+Stadium Differences:
+No recoil damage is taken if Submission knocks out an opponent.
+
+
+***Substitute***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: ---
+
+Using 25% of the user's maximum HP, the user creates a substitute with 1 HP more than the
+amount of HP lost by the user. If the user's max HP is 3 or less, it will not lose any HP when
+the substitute is made. A substitute will have the same current type(s) and current stats of
+the pokémon that has it. Once created, all stat modifying attacks and side effects used by the
+opponent against the user will fail, though all current stat modifiers will remain in effect,
+and any stat modifiers used by the user will also be applied to the substitute. Until it
+breaks, a substitute will absorb all damage done by the opponent (even if the damage done
+exceeds the remaining HP of the sustitute), but will not reduce the actual amount of damage
+that the opponent's attacks do. A one-hit ko will break a substitute on contact.
+
+Substitute will not protect the user from primary sleep, primary paralysis, secondary
+confusion, or self-inflicted status ailments, but it will protect the user from poison,
+secondary burns, secondary freeze, secondary paralysis, and primary confusion.
+
+Substitute will not alter the execution of Bide, Counter, Disable, Haze, Leech Seed, Super
+Fang, Transform, or partial trapping moves, and it will not absorb crash damage, recoil damage,
+or recurrent damage. However, a substitute will absorb self-inflicted confusion damage and
+prevent the user from flinching.
+
+If a pokémon breaks a substitute with Hyper Beam, it will not need to recharge. If a pokémon
+breaks a substitute with Explosion or Selfdestruct, it will not faint, though its picture will
+no longer be visible until it switches out or uses Substitute. If a pokémon breaks a substitute
+with a recoil move, it will not take any recoil damage. If a pokémon breaks a substitute with a
+draining move, no HP will be restored to it. Note that in each of these cases, the substitute
+has to be broken, not merely damaged, by the referenced attack.
+
+If the user's curent HP is less than 25% (rounded down) of its maximum HP, it will be too weak
+to make a substitute. If the user's current HP is exactly equal to 25% (rounded down) of its
+maximum HP, it will create a substitute, and then faint.
+
+Stadium Differences:
+Substitute will protect the user from Absorb, Dream Eater, Leech Life, Leech Seed, Mega Drain,
+and all status ailments inflicted by the opponent. If the user's current HP is exactly equal to
+25% (rounded down) of its maximum HP, it will be too weak to create a substitute. If a pokémon
+breaks a substitute with Explosion or Selfdestruct, it will faint.
+
+
+***Super Fang***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: 89.5%
+
+Super Fang does damage equal to 50% of the opponent's current HP. Although Super Fang does
+normal damage, its type does not alter the amount of damage it inflicts. Super Fang will do 1
+damage if the opponent's current HP is equal to 1.
+
+
+***Supersonic***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 54.7%
+
+Supersonic causes the opponent to become confused.
+
+Supersonic will fail if the opponent has a substitute or is already confused.
+
+
+***Surf***
+Type: Water
+Power: 95
+PP: 15-24
+Accuracy: 99.6%
+
+Surf does damage.
+
+
+***Swift***
+Type: Normal
+Power: 60
+PP: 20-32
+Accuracy: ---
+
+Swift does damage. Swift is unaffected by accuracy and evasion modifiers, and can hit pokémon
+during the semi-invulnerable turn of Dig and Fly.
+
+
+***Swords Dance***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: ---
+
+Swords Dance increases the user's attack by 2 levels.
+
+Swords Dance will do nothing if the user's attack has reached a level of +6 or a value of 999.
+The effect of Swords Dance is ignored by critical hits.
+
+
+***Tackle***
+Type: Normal
+Power: 35
+PP: 35-56
+Accuracy: 94.5%
+
+Tackle does damage.
+
+
+***Tail Whip***
+Type: Normal
+Power: ---
+PP: 30-48
+Accuracy: 99.6%
+
+Tail Whip decreases the opponent's defense by 1 level.
+
+Tail Whip will do nothing if the opponent's defense has reached a level of -6 or a value of 1,
+and will fail if the opponent has a substitute or is under the effect of Mist. The effect of
+Tail Whip is ignored by critical hits.
+
+
+***Take Down***
+Type: Normal
+Power: 90
+PP: 20-32
+Accuracy: 84.4%
+
+Take Down does damage, and the user receives recoil damage equal to 25% of the damage done to
+the opponent.
+
+If the user of Take Down attacks first and faints itself due to recoil damage, the opponent
+will not attack or be subjected to recurrent damage during that round. However, the user will
+still be subject to recurrent damage.
+
+Self-inflicted recoil damage from Take Down from the previous turn can be countered if the
+opponent does not make a move on the following turn. If Take Down breaks a substitute, the user
+will take no recoil damage.
+
+Stadium Differences:
+No recoil damage is taken if Take Down knocks out an opponent.
+
+
+***Teleport***
+Type: Psychic
+Power: ---
+PP: 20-32
+Accuracy: ---
+
+Teleport will always fail.
+
+In-game Differences:
+Teleport can be used to run away from wild pokémon battles.
+
+
+***Thrash***
+Type: Normal
+Power: 90
+PP: 20-32
+Accuracy: 99.6%
+
+Thrash does damage for 3-4 (chosen randomly) turns. Once used (even if it misses on the turn of
+its use), the user will only be able to use Thrash, and will not be able to switch out. At the
+end of this duration, the user will become confused.
+
+If the Thrash duration is disrupted (such as by full paralysis or hurting itself due to
+confusion), it will immediately end. The user will only become confused if Thrash is fully
+executed, without its duration being disrupted. Sleep, freeze, partial trapping, and flinching
+will pause but not disrupt the duration of Thrash.
+
+Stadium Differences:
+After the duration of Thrash ends, there will be a notice that the user becomes confused.
+
+
+***Thunder***
+Type: Electric
+Power: 120
+PP: 10-16
+Accuracy: 69.5%
+
+Thunder does damage and has a 9.8% chance of paralyzing the opponent.
+
+Thunder can't paralyze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Thunder Wave***
+Type: Electric
+Power: ---
+PP: 20-32
+Accuracy: 99.6%
+
+Thunder Wave paralyzes the opponent.
+
+Thunder Wave can't affect an opponent that already has a major status ailment, and will not
+work against ground types.
+
+Stadium Differences:
+Thunder Wave can't affect an opponent that has a substitute.
+
+
+***Thunderbolt***
+Type: Electric
+Power: 95
+PP: 15-24
+Accuracy: 99.6%
+
+Thunderbolt does damage and has a 9.8% chance of paralyzing the opponent.
+
+Thunderbolt can't paralyze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Thunderpunch***
+Type: Electric
+Power: 75
+PP: 15-24
+Accuracy: 99.6%
+
+Thunderpunch does damage and has a 9.8% chance of paralyzing the opponent.
+
+Thunderpunch can't paralyze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Thundershock***
+Type: Electric
+Power: 40
+PP: 30-48
+Accuracy: 99.6%
+
+Thundershock does damage and has a 9.8% chance of paralyzing the opponent.
+
+Thundershock can't paralyze an opponent that has a substitute or already has a major status
+ailment.
+
+
+***Toxic***
+Type: Poison
+Power: ---
+PP: 10-16
+Accuracy: 84.4%
+
+Toxic badly poisons the opponent. Each time the opponent takes recurrent damage, the damage
+will equal N*max(1, int(0.0625*MaxHP)). N starts as 1 but is increased by 1 each time the
+afflicted pokémon endures recurrent damage (including by Leech Seed). Basically, the pokémon
+will lose 1/16 of its maximum HP the first time, then 2/16 of its maximum HP, then 3/16 of its
+maximum HP, etc.
+
+The N value of Toxic can be reset by Haze, switching, or ending the battle, but not by Rest. If
+a pokémon rests off the poison and gets normally poisoned, burned, or seeded without switching
+out, the N value will influence the amount of damage done, and will increase each time
+recurrent damage is done. However, if a pokémon gets badly poisoned again, the cumulative value
+will be reset. Unlike other types of damage, the recurrent damage done by Toxic can exceed the
+opponent's current HP.
+
+Toxic can't affect an opponent that has a substitute, already has a major status ailment, or is
+a ground type.
+
+Stadium Differences:
+The N value of Toxic will be reset by Rest.
+
+
+***Transform***
+Type: Normal
+Power: ---
+PP: 10-16
+Accuracy: ---
+
+Transform changes the user's current type(s), current stats, current stat levels, current
+move(s), current species, current cry, and current catch rate to the opponent's current
+type(s), current stats, current stat levels, current move(s), current species, current cry, and
+current catch rate. Each move copied by Transform will have 5 PP.
+
+Transform does not copy the opponent's status ailments, level, current or maximum HP, base
+experience, palette colors, or the generic minimize image. The current stat changes due to
+Transform will be ignored by critical hits, since critical hits use a pokémon's original stats.
+Transform is not affected by accuracy and evasion modifiers, and no move can prevent the
+successful execution of Transform.
+
+In-game Differences:
+If a wild pokémon uses Transform and is subsequently caught, it will become a Ditto, regardless
+of what species it originally was. It will then have all the stats and moves of a Ditto, except
+for its current HP, which will remain unaltered by this change.
+
+Stadium Differences:
+Transform will not work if the opponent's current species is Ditto.
+
+
+***Tri Attack***
+Type: Normal
+Power: 80
+PP: 10-16
+Accuracy: 99.6%
+
+Tri Attack does damage.
+
+
+***Twineedle***
+Type: Bug
+Power: 25
+PP: 20-32
+Accuracy: 99.6%
+
+Twineedle does damage, and has a 19.9% chance of poisoning the opponent. Twineedle hits twice
+per use. Though technically only the first hit can critical hit, each hit per use will do the
+same amount of damage.
+
+Twineedle will end immediately if it breaks a substitute.
+
+Twineedle can't poison an opponent that has a substitute, already has a major status ailment,
+or is a poison type.
+
+
+***Vicegrip***
+Type: Normal
+Power: 55
+PP: 30-48
+Accuracy: 99.6%
+
+Vicegrip does damage.
+
+
+***Vine Whip***
+Type: Grass
+Power: 35
+PP: 10-16
+Accuracy: 99.6%
+
+Vine Whip does damage.
+
+
+***Water Gun***
+Type: Water
+Power: 40
+PP: 25-40
+Accuracy: 99.6%
+
+Water Gun does damage.
+
+
+***Waterfall***
+Type: Water
+Power: 80
+PP: 15-24
+Accuracy: 99.6%
+
+Waterfall does damage.
+
+
+***Whirlwind***
+Type: Normal
+Power: ---
+PP: 20-32
+Accuracy: 84.4%
+
+Whirlwind will never affect the opponent.
+
+In-game Differences:
+Whirlwind can be used to automatically end wild pokémon battles.
+
+
+***Wing Attack***
+Type: Flying
+Power: 35
+PP: 35-56
+Accuracy: 99.6%
+
+Wing Attack does damage.
+
+
+***Withdraw***
+Type: Water
+Power: ---
+PP: 40-61
+Accuracy: ---
+
+Withdraw increases the user's defense by 1 level.
+
+Withdraw will do nothing if the user's defense has reached a level of +6 or a value of 999.
+
+
+***Wrap***
+Type: Normal
+Power: 15
+PP: 20-32
+Accuracy: 84.4%
+
+Wrap does damage for 2-5 turns. There is a 37.5% chance that it will attack for 2 turns, a
+37.5% chance that it will attack for 3 turns, a 12.5% chance that it will attack for 4 turns,
+and a 12.5% chance that it will attack for 5 turns. Though technically only the first attack
+can critical hit, every attack during the duration will do the same amount of damage. During
+this turn duration, the opponent will be unable to attack, and if the user of Wrap attacks
+before the opponent when used, the opponent will be unable to attack during that round as well.
+
+Damage done by Wrap's continuing duration is done after recurrent damage. If the user switches
+out before the turn duration ends, the opponent will be unable to attack during that turn. If
+the opponent switches out before the turn duration ends, Wrap will automatically be used
+against the incoming pokémon, deducting an additional PP from the move. If at such a time Wrap
+has 0 PP, Wrap will still be used against the incoming pokémon. After that use, the current PP
+of Wrap will roll over to 63, and full PP ups will be applied to it.
+
+Even if Wrap misses, it will negate the recharge turn normally required for Hyper Beam.
+Additionally, if the user of Wrap attacks before the user of Hyper Beam during a recharge turn
+and the use of Wrap misses, the user of Hyper Beam will automatically use Hyper Beam during
+that turn. If at such a time Hyper Beam has 0 PP, Hyper Beam will still be used, and afterwards
+its current PP will roll over to 63, and full PP ups will be applied to it.
+
+Although Wrap can't damage ghost types, it can immobilize them.
+
+In-game differences:
+The opponent will get to select a move during each turn of Wrap's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+Stadium Differences:
+You get to select a move during each turn of Wrap's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Wrap will
+negate the recharge turn of Hyper Beam only if successful.
+
+
+
+H. Other Battle-Related Stuff;
+
+H1. Critical Hits;
+If a damaging move scores a critical hit, damage from the move will be calculated using twice
+the user's level as well as the user's and opponent's original stats. Because of this, critical
+hits ignore Reflect, Light Screen, all stat modifiers (including the attack reduction due to
+burn), and stat changes due to Transform.
+
+A damaging attack will be a critical hit if a randomly chosen number from 0 to 255 is less than
+min(255, int(N*int(S/2))), where S is the base speed of the user's current species and N
+depends on what moves are being used. Under most cases N is 1, but is multiplied by 8 if using
+an attack with a high critical hit ratio, is divided by 4 if under the effect of Focus Energy
+in a gameboy battle, and is multiplied by 4 if under the effect of Focus Energy in Stadium.
+
+If a pokémon's level reaches 256 or higher during the damage calculation, it will be reduced
+mod 256.
+
+Moves that have high critical hit ratios: Crabhammer, Karate Chop, Razor Leaf, Slash
+
+
+H2. Flinching;
+A pokémon may only cause its opponent to flinch if in any given round it attacks before the
+opponent performs an action. If the opponent flinches, it loses its ability to make an attack
+during its turn in that round.
+
+Flinching negates the recharge turn of Hyper Beam. Turns spent flinching will not count towards
+the durations of Petal Dance, Thrash, multi-turn moves, and the confusion ailment. A pokémon
+with a substitute cannot flinch.
+
+Moves that can cause flinching: Bite, Bone Club, Headbutt, Hyper Fang, Low Kick, Rolling Kick,
+          Stomp
+
+
+H3. Items
+This is a list of the items that can be used during battles, and their effects. Use of an item
+counts as an action and and has priority over making a move, but not over switching. Items
+may not be used in link battles.
+
+Every item in this section except for the Poké Flute is a one-time use item. Unless noted,
+items will not be usable if they will have no effect on the selected target.
+
+
+***Antidote***
+Antidote will cure a pokémon of the poison status ailment.
+
+***Awakening***
+Awakening will cure a pokémon of the sleep status ailment.
+
+***Burn Heal***
+Burn Heal will cure a pokémon of the burn status ailment.
+
+***Dire Hit***
+Like Focus Energy, Dire Hit will quarter the probability of your active pokémon scoring a
+critical hit and will last until you switch your active pokémon. Dire Hit can be used in
+multiples, but will have no actual effect beyond the first use. If under the influence of Dire
+Hit, use of Focus Energy will fail, and the effect of Dire Hit can be removed via Haze.
+
+***Elixer***
+Elixir will increase the current PP of each of a pokémon's moves by up to 10 (or set the move's
+current PP equal to its maximum PP if its current PP is greater than its maximum PP).
+
+***Ether***
+Ether will increase the current PP of one of a pokémon's moves by up to 10 (or set the move's
+current PP equal to its maximum PP if its current PP is greater than its maximum PP).
+
+***Fresh Water***
+Fresh Water will increase a pokémon's current HP by up to 50 (or set its current HP equal to
+its maximum HP if its current HP is greater than its maximum HP).
+
+***Full Heal***
+Full Heal will cure any major status ailment that a pokémon has.
+
+***Full Restore***
+Full Restore will make a pokémon's current HP equal to its maximum HP, and cure any major
+status ailments it has.
+
+***Great Ball***
+A Great Ball might catch a wild pokémon, with a success rate of 1.5 times that of a Pokéball.
+If used against a trainer's pokémon, it will always be blocked.
+
+***Guard Spec.***
+Like Mist, Guard Spec. will prevent the effects of primary stat modifications inflicted by the
+opponent.
+
+***Hyper Potion***
+Hyper Potion will increase a pokémon's current HP by up to 200 (or set its current HP equal to
+its maximum HP if its current HP is greater than its maximum HP).
+
+***Ice Heal***
+Ice Heal will cure a pokémon of the freeze status ailment.
+
+***Lemonade***
+Lemonade will increase a pokémon's current HP by up to 80 (or set its current HP equal to its
+maximum HP if its current HP is greater than its maximum HP).
+
+***Master Ball***
+A Master Ball will catch a wild pokémon. If used against a trainer's pokémon, it will always be
+blocked.
+
+***Max Elixer***
+Max Elixir will make the current PP of each of a pokémon's moves equal to their maximum PP
+values.
+
+***Max Ether***
+Max Ether will make the current PP of one of a pokémon's moves equal to its maximum PP.
+
+***Max Potion***
+Max Potion will make a pokémon's current HP equal to its maximum HP.
+
+***Max Revive***
+Max Revive can only be used on a pokémon that has fainted, and will restore all of that
+pokémon's health.
+
+***Paralyz Heal***
+Paraylz Heal will cure a pokémon of the paralysis status ailment.
+
+***Pokéball***
+A Pokéball might catch a wild pokémon. If used against a trainer's pokémon, it will always be
+blocked.
+
+***Poké Flute***
+When played, the Poké Flute will cure all active pokémon of the sleep status ailment. If no
+active pokémon are asleep, it will just note that it is a catchy tune.
+
+***Potion***
+Potion will increase a pokémon's current HP by up to 20 (or set its current HP equal to its
+maximum HP if its current HP is greater than its maximum HP).
+
+***Revive***
+Revive can only be used on a pokémon that has fainted, and will restore half of that pokémon's
+health.
+
+***Soda Pop***
+Soda Pop will increase a pokémon's current HP by up to 60 (or set its current HP equal to its
+maximum HP if its current HP is greater than its maximum HP).
+
+***Super Potion***
+Super Potion will increase a pokémon's current HP by up to 50 (or set its current HP equal to
+its maximum HP if its current HP is greater than its maximum HP).
+
+***Ultra Ball***
+An Ultra Ball might catch a wild pokémon, with a success rate of twice that of a Pokéball. If
+used against a trainer's pokémon, it will always be blocked.
+
+***X Accuracy***
+X Accuracy increases your active pokémon's accuracy by 1 level. If your active pokémon's
+accuracy has reached a level cap, use of X Accuracy will do nothing.
+
+***X Attack***
+X Attack increases your active pokémon's attack by 1 level. If your active pokémon's attack has
+reached a level or value cap, use of X Attack will do nothing.
+
+***X Defend***
+X Defend increases your active pokémon's defense by 1 level. If your active pokémon's defense
+has reached a level or value cap, use of X Defense will do nothing.
+
+***X Special***
+X Special increases your active pokémon's special by 1 level. If your active pokémon's special
+has reached a level or value cap, use of X Special will do nothing.
+
+***X Speed***
+X Speed increases your active pokémon's speed by 1 level. If your active pokémon's speed has
+reached a level or value cap, use of X Speed will do nothing.
+
+
+H4. In-game Differences;
+This is a cross reference list of in-game differences.
+
+Burn (In-game) status ailment:
+Any attack modifiers used against a burned pokémon will cause the attack reduction due to burn
+to be ignored.
+
+Paraylsis (In-game) status ailment:
+Any speed modifiers used against a paralyzed pokémon will cause the speed reduction due to
+paralysis to be ignored.
+
+Bind (In-game):
+The opponent will get to select a move during each turn of Bind's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+Clamp (In-game):
+The opponent will get to select a move during each turn of Clamp's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+Fire Spin (In-game):
+The opponent will get to select a move during each turn of Fire Spin's duration, and will
+attack your incoming pokémon with the selected move if you decide to switch before the duration
+is over.
+
+Mimic (In-game):
+Mimic allows you to see the opponent's moveset and select the move to copy.
+
+Pay Day (In-game):
+Coins scattered by Pay Day are picked up if you win the battle.
+
+Roar (In-game):
+Roar can be used to automatically end wild pokémon battles.
+
+Teleport (In-game):
+Teleport can be used to run away from wild pokémon battles.
+
+Transform (In-game):
+If a wild pokémon uses Transform and is subsequently caught, it will become a Ditto, regardless
+of its original species. It will then have all the stats and moves of a Ditto, except for its
+current HP, which will not be altered by this change.
+
+Whirlwind (In-game):
+Whirlwind can be used to automatically end wild pokémon battles.
+
+Wrap (In-game):
+The opponent will get to select a move during each turn of Wrap's duration, and will attack
+your incoming pokémon with the selected move if you decide to switch before the duration is
+over.
+
+For general in-game differences, see section B.
+
+
+H5. Stadium Differences;
+This is a cross reference list of Stadium differences.
+
+General Stadium Differences:
+A pokémon's health bar will have 96 pixels. Players will be able to see the exact amount of
+current and maximum HP that each active pokémon has. Damaging moves that do 0 damage will
+always result in a message that the move missed.
+
+Type Effectiveness Messages (Stadium):
+The type effectiveness messages associated with moves will take both of a pokémon's types into
+account.
+
+Burn (Stadium) status ailment:
+The attack reduction of a burn will be reset by rest. Attack-raising attacks will not negate
+the attack loss penalty. A pokémon can completely rid itself of the burn ailment by using Haze.
+A pokémon will not take burn damage when it switches in.
+
+Confusion (Stadium) status ailment:
+The messages regarding confusion are displayed after the move choice is shown, allowing both
+players to see the attempted attack regardless of success. A substitute will completely protect
+the user from confusion (though not self-inflicted confusion).
+
+Freeze (Stadium) status ailment:
+You get to select a move while the pokémon is frozen.
+
+Paralysis (Stadium) status ailment:
+Rest will reset the speed reduction of paralysis. Speed-raising attacks will not negate the
+speed loss penalty. Substitute will completely protect the user from paralysis. A pokémon can
+completely rid itself of the paralysis ailment by using Haze.
+
+Poison (Stadium) status ailment:
+A pokémon can rid itself of the poison ailment by using Haze. A pokémon will not take poison
+damage when it switches in.
+
+Sleep (Stadium) status ailment:
+The pokémon receives a sleep duration of 1-3 turns (chosen randomly). Also, you get to select a
+move while the pokémon is asleep. A substitute will protect the user from primary sleep.
+
+Absorb (Stadium):
+Absorb will always miss if the opponent has a substitute.
+
+Acid (Stadium):
+Acid has a 19.9% chance of lowering the opponent's defense by 1 level.
+
+Aurora Beam (Stadium):
+Aurora Beam has a 29.7% chance of lowering the opponent's attack by 1 level.
+
+Bide (Stadium):
+You get to select a move during each of Bide's idling turns. Bide will miss against pokémon
+that are in the middle of Dig or Fly.
+
+Bind (Stadium):
+You get to select a move during each turn of Bind's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Bind will
+negate the recharge turn of Hyper Beam only if successful.
+
+Bubblebeam (Stadium):
+Bubblebeam has a 29.7% chance of lowering the opponent's speed by 1 level.
+
+Clamp (Stadium):
+You get to select a move during each turn of Clamp's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Clamp will
+negate the recharge turn of Hyper Beam only if successful.
+
+Confusion (Stadium):
+Confusion can't confuse an opponent that has a substitute.
+
+Counter (Stadium):
+Switching, full paralysis, and using a multi-turn move reset the last amount of damage done, so
+Counter can't counter itself or self-inflicted recoil damage if the opponent does not make a
+move on its following turn.
+
+Dig (Stadium):
+Dig will allow the user to avoid damage reversed by Bide. Full paralysis will reset the mostly-
+invulnerable part of Dig. Mirror Move will copy Dig on either of the turns it takes to execute.
+
+Disable (Stadium):
+Disable will cause a pokémon's rage to build only if successful. The disabled move's PP is not
+replaced with a "disabled!" message, though attempting to select the move will still result in
+a notice that the move is disabled.
+
+Double-Edge (Stadium):
+No recoil damage is taken if Double-Edge knocks out an opponent.
+
+Dream Eater (Stadium):
+Dream Eater will always miss if the opponent has a substitute.
+
+Explosion (Stadium):
+If Explosion breaks an opponent's substitute, the user will faint.
+
+Fire Spin (Stadium):
+You get to select a move during each turn of Fire Spin's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Fire Spin
+will negate the recharge turn of Hyper Beam only if successful.
+
+Fly (Stadium):
+Fly will allow the user to avoid damage reversed by Bide. Full paralysis will reset the mostly-
+invulnerable part of Fly. Mirror Move will copy Fly on either of the turns it takes to execute.
+
+Focus Energy (Stadium):
+Focus Energy works properly; it quadruples the probability of the user scoring a critical hit.
+
+Glare (Stadium):
+Glare can't affect an opponent that has a substitute.
+
+Haze (Stadium):
+Haze eliminates any major status ailments that the user has.
+
+Hyper Beam (Stadium):
+Hyper Beam requires a recharge turn every time it is used.
+
+Hypnosis (Stadium):
+Hypnosis can't affect an opponent that has a substitute.
+
+Leech Life (Stadium):
+Leech Life will always miss if the opponent has a substitute.
+
+Leech Seed (Stadium):
+Leech Seed will not work against a substitute.
+
+Lovely Kiss (Stadium):
+Lovely Kiss can't affect an opponent that has a substitute.
+
+Mega Drain (Stadium):
+Mega Drain will always miss if the opponent has a substitute.
+
+Mimic (Stadium):
+Mimic will not copy a move's max PP.
+
+Mirror Move (Stadium):
+Mirror Move will copy multi-turn moves during either of the turns they take to execute.
+
+Petal Dance (Stadium):
+After the duration of Petal Dance ends, there will be a notice that the user becomes confused.
+
+Psybeam (Stadium):
+Psybeam can't confuse an opponent that has a substitute.
+
+Rage (Stadium):
+Disable will cause a pokémon's rage to build only if successful.
+
+Razor Wind (Stadium):
+Mirror Move will copy Razor Wind on either of the turns it takes to execute.
+
+Recover (Stadium):
+Recover will fail only when the difference between the user's current and maximum HP is 0.
+
+Rest (Stadium):
+Rest will fail only when the difference between the user's current and maximum HP is 0. Rest
+will reset the cumulative nature of Toxic and the stat drops due to paralysis and burns.
+
+Selfdestruct (Stadium):
+If Selfdestruct breaks an opponent's substitute, the user will faint.
+
+Sing (Stadium):
+Sing can't affect an opponent that has a substitute.
+
+Skull Bash (Stadium):
+Mirror Move will copy Skull Bash on either of the turns it takes to execute.
+
+Sky Attack (Stadium):
+Mirror Move will copy Sky Attack on either of the turns it takes to execute.
+
+Sleep Powder (Stadium):
+Sleep Powder can't affect an opponent that has a substitute.
+
+Softboiled (Stadium):
+Softboiled will fail only when the difference between the user's current and maximum HP is 0.
+
+Solarbeam (Stadium):
+Mirror Move will copy Solarbeam on either of the turns it takes to execute.
+
+Spore (Stadium):
+Spore can't affect an opponent that has a substitute.
+
+Struggle (Stadium):
+No recoil damage is taken if Struggle knocks out an opponent. Type has no effect on the amount
+of damage that Struggle inflicts.
+
+Stun Spore (Stadium):
+Stun Spore can't affect an opponent that has a substitute.
+
+Submission (Stadium):
+No recoil damage is taken if Submission knocks out an opponent.
+
+Substitute (Stadium):
+Substitute will protect the user from Absorb, Dream Eater, Leech Life, Leech Seed, Mega Drain,
+and all status ailments inflicted by the opponent. If the user's current HP is exactly equal to
+25% (rounded down) of its maximum HP, it will be too weak to create a substitute. If a pokémon
+breaks a substitute with Explosion or Selfdestruct, it will faint.
+
+Take Down (Stadium):
+No recoil damage is taken if Take Down knocks out an opponent.
+
+Thunder Wave (Stadium):
+Thunder Wave can't affect an opponent that has a substitute.
+
+Thrash (Stadium):
+After the duration of Thrash ends, there will be a notice that the user becomes confused.
+
+Toxic (Stadium):
+The cumulative nature of Toxic will be reset by Rest.
+
+Transform (Stadium):
+Transform will not work if the opponent's current species is Ditto.
+
+Wrap (Stadium):
+You get to select a move during each turn of Wrap's duration. If the opponent switches out
+before the duration ends, the incoming pokémon will not automatically be attacked. Wrap will
+negate the recharge turn of Hyper Beam only if successful.
+
+
+
+I. Reference Information;
+
+I1. Glossary;
+These are the definitions of various terms as used in this document.
+
+***Active pokémon***
+Out of your party of up to 6 pokémon, the one that is at the time facing an opponent.
+
+***Altered-priority (move)***
+A move such as Counter or Quick Attack whose very use takes precedence over the speed of the
+active pokémon. In any given round, using an increased priority move will make the user attack
+before its opponent by default, while using a decreased priority move will make the user attack
+after its opponent by default. If both active pokémon use an increased or decreased priority
+move, turn placement will be determined normally.
+
+***Battle Damage Formula (BDF for short)***
+The formula used to calculate the amount of damage done by an attack that has a power.
+
+***Chromatic***
+Collectively refers to Pokémon Red, Pokémon Blue, Pokémon Yellow, and Pokémon Stadium, the
+first generation of pokémon games featuring 151 pokémon and 165 moves.
+
+***Current***
+What a property is at a referenced time, since it may have changed during the course of the
+battle.
+
+***Disrupt***
+When the full execution of any move that takes more than one turn to fully execute is prevented
+because of a move, flinching, status ailment, etc.
+
+***Draining move***
+A move that will do damage and increase the user's HP depending on the amount of damage done,
+such as Dream Eater or Leech Life.
+
+***Evolution Level***
+The earliest level at which a pokémon can have evolved from its lower evolution. The evolution
+level of a pokémon that has no evolutions or is the lowest evolution in its chain is 1. The
+evolution level of a pokémon that evolves by using a stone is equal to the evolution level of
+its unevolved form, because it does not have to increase a level to evolve. It is possible to
+obtain some pokémon below their evolution levels, such as the Lv.4 Metapods that can be found
+in Viridian Forest.
+
+***Extended Duration***
+Refers to any move that normally takes more than one turn to fully execute yet uses just 1 PP.
+Extended duration moves include all multi-turn moves, all partial trapping moves, Bide, Hyper
+Beam, Petal Dance, Rage, and Thrash.
+
+***GSC***
+Short for Gold, Silver, and Crystal, which are nearly clones of each other; can be used as an
+abbreviation of sorts for Metallic.
+
+***In-game***
+Pokémon Red, Blue, and Yellow each consist of two major parts: the RPG section, in which you
+complete a quest in the Kanto region, catch & train pokémon, and find items, and the link
+battle section, where you can link with a friend and battle each other with your team. In-game
+refers to things that exclusively occur in the RPG section of the games.
+
+***Initial***
+What a property is before the battle began, since it may change during the course of the
+battle.
+
+***Int***
+The integer portion of a number; written in the form int(N).
+
+***Metallic***
+Collectively refers to Pokémon Gold, Pokémon Silver, Pokémon Crystal, and Pokémon Stadium 2,
+the second generation of pokémon games featuring 251 pokémon and 251 moves.
+
+***Max***
+Out of two numbers, the larger one; written in the form max(A, B).
+
+***Min***
+Out of two numbers, the smaller one; written in the form min(A, B).
+
+***Mod***
+Short for modulo, a mathematical operation. To find the value of A mod B, reduce (or increase)
+A by increments of B until you end up with a nonnegative number less than B.
+
+***Move streak***
+When a pokémon learns moves on levels that immediately follow each other, such as the Lv.13,
+Lv.14, Lv.15 move streak in Butterfree's Yellow level move list. Learning more than one move on
+the same level does not count towards a move streak.
+
+***Multi-hit (move)***
+A move that performs more than one hit in one turn, though it uses just 1 PP. There are two
+types of multi-hit moves:
+     Type 1: Hits twice per use, such as Bonemerang and Double Kick.
+     Type 2: Hits 2-5 times per use, such as Barrage and Pin Missile, and has a 37.5% chance of
+               performing 2 hits, a 37.5% chance of performing 3 hits, a 12.5% chance of
+               performing 4 hits, and a 12.5% chance of performing 5 hits.
+
+***Multi-turn (move)***
+A move that takes two turns to fully execute, though it uses just 1 PP. On the first turn of
+such a move, only a check to see if the pokémon can use the move will be performed, and on the
+following turn, the move will do damage, PP will be deducted from it, and (in a gameboy battle)
+it will then count as the last move used. Dig and Fly also render the user invulnerable to most
+attacks during the first turn of their use.
+
+***One-hit KO (OHKO)***
+A move that will cause the opponent to faint if successful, regardless of other factors such as
+HP or defense.
+
+***One-time Use***
+Refers to an item that is is consumed/disappears after being used, since some items can be
+used repeatedly without being consumed.
+
+***Palette Color***
+The image of each pokémon in the game consists of two parts. One part is its overall shape. The
+other is the set of colors that are in the image, and those are what palette color(s) refer to.
+Each pokémon image has four palette colors, two of which are always black and white. There are
+some differences in the palette colors of Red/Blue as compared to Yellow as well as the
+metallic generation.
+
+***Partial Trapping***
+A condition inflicted by a move (such as Clamp or Wrap) that lasts for 2-5 rounds during which
+a pokémon will be unable to attack (but still able to switch out) while its opponent does
+damage with one move chosen at the beginning of the duration. There is a 37.5% chance it will
+last for 2 turns, a 37.5% chance it will last for 3 turns, a 12.5% chance it will last for 4
+turns, and a 12.5% chance it will last for 5 turns.
+
+***Pause***
+When the full execution of a multi-turn move is delayed (but not disrupted) because of a move,
+flinching, status ailment, etc.
+
+***Pokédollars***
+For lack of a better word, the currency that is used in the Pokémon games. If that's too
+unnatural for you, you could call it yen (the standard currency of Japan) instead, since that
+is the currency used in the Japanese Pokémon games.
+
+***Previous (level)***
+A move that a pokémon can't learn by level, but one of its lower evolutions can learn by level.
+Note that Surf Raichu is also considered a Previous move, due to the special circumstances
+under which it can learn it.
+
+***Primary***
+Refers to a status ailment or stat modification that is guaranteed to happen if the move
+inflicting it does not miss. Paralysis from Glare and defense reduction from Screech are
+examples of a primary status ailment and stat modification.
+
+***RBY***
+Short for Red, Blue, and Yellow, which are nearly clones of each other; can be used as an
+abbreviation of sorts for Chromatic.
+
+***Recurrent (damage)***
+The fixed amount of damage inflicted by poison, a burn, and/or Leech seed at the end of each of
+the afflicted pokémon's turns. Unlike nearly every other way to inflict damage, recurrent
+damage can be greater than the pokémon's current HP.
+
+***Reversed (damage)***
+Damage that can be inflicted only in response to being damaged (such as via Bide or Counter).
+
+***Round***
+Two back-to-back turns (yours and your opponent's) and what was done during those turns. It can
+frequently but not always be interchanged with "turn."
+
+***Secondary***
+Refers to a status ailment or stat modification that might happen if the move inflicting it
+does not miss. Paralysis from Body Slam and defense reduction from Acid are examples of a
+secondary status ailment and stat modification.
+
+***STAB***
+Short for same-type attack bonus. If a pokémon uses a damaging move whose type matches one of
+the user's current types, that attack will do 50% more damage.
+
+***Turn***
+The action that you, your pokémon, your opponent, or your opponent's pokémon just performed,
+such as attack, switch, or use an item. It can frequently but not always be interchanged with
+"round."
+
+
+I2. Additional Resources;
+
+Azure Heights, http://www.math.miami.edu/~jam/azure/ (or just http://www.azureheights.com/)
+Detailed research concerning the chromatic series.
+
+GameFAQS, http://www.gamefaqs.com/
+Houses lots of FAQs on lots of games.
+
+The P-Files, http://white-cat.virtualave.net/pfiles/
+White Cat's page, with his dexes and some other files.
+
+
+I3. Revision History;
+
+      2 Nov 2004 - first public release
+
+      7 Jan 2005 - expanded overall scope of this faq to include as much information as
+                   possible about the battling aspect of pokémon in RBY
+                 - created type effectiveness and stats sections
+                 - added detailed information on minimum move amounts
+                 - added definitions for In-game, Move Streak, and Partial Trapping
+                 - added new information about Disable and HP-restoring moves
+                 - split the move information section into subsections
+                 - moved the previous evolution move section to Moves section
+                 - moved the in-game and stadium differences lists to the Other Battle-Related
+                   Things section
+                 - made minor additions and corrections in entries for the status ailments
+                   Confusion and Sleep and the moves Fissure, Flamethrower, Focus Energy, Hyper
+                   Beam, Light Screen, Mist, Recover, Reflect, Toxic, and Transform
+                 - made rounding corrections in the extended BDF
+                 - corrected some minor typos and made other small changes
+
+     12 Mar 2005 - added an Order of Operations section and an Items subsection
+                 - added some more information to the Type Effectiveness section
+                 - added some information to and restructured the Battle Information section
+                 - added more information about defrosting/attack selecting, and PP roll over
+                 - added definitions for Extended Duration, One-time Use, and Palette Color
+                 - made some additions and corrections in entries for the status ailment Freeze
+                   and the moves Counter, Disable, Hyper Beam, Metronome, Mirror Move, Petal
+                   Dance, Rage, and Thrash
+                 - made some corrections regarding altered-priority moves, palette colors,
+                   switching, and type effectiveness messages
+                 - corrected a couple of minor typos and made other small changes
+
+
+I4. Contacting Me;
+You can contact me at GameFAQs (Nautilator), by sending email to nautilator@hotmail.com (though
+I don't check that email too often), or by other means.
+
+
+I5. Unanswered Questions;
+These are all the RBY questions that I haven't been able to find answers to, or am looking for
+confirmation. Any help answering them would be appreciated.
+
+ 1. Does Blizzard ever have a 30% freeze rate, and if so, under what conditions?
+
+ 2. What causes moves like Growl, Roar, and Teleport to fail in-game? (It looks like there is a
+    25% failure rate for such moves if the opponent is faster than the user, but I don't know
+    all moves that this applies to or why.)
+
+ 3. In the gameboy, Substitute does not prevent primary paralysis (like from Glare or Thunder
+    Wave) yet prevents secondary paralysis (like from Body Slam or Lick). If things like
+    secondary sleep, primary burn, and primary freeze existed, would Substitute block them?
+
+ 4. If Counter does not manage to counter anything, does it actually miss, or just fail? Bide
+    counts the last amount of damage done if a move that does not actually miss is used (like
+    if something used Seismic Toss and then Counter, it'll count the turn for Counter as if
+    Seismic Toss had been used), and it looks like such accumulation is only reset by moves
+    that miss, not fail. If it actually misses, then why does it not reset Bide accumulation?
+    If it just fails, then why does the game claim that it misses?
+
+ 5. What are the color boundaries for the health meter? I got my answers by guess and test, and
+    I think the red/orange boundary line is off by a point in a couple of places.
+
+ 6. In Stadium, is the maximum amount of damage that Psywave can do less than 1.5 times the
+    user's level, or less-than-or-equal-to 1.5 times the user's level?
+
+ 7. If Counter counters a HP-restoring item (in-game of course), how much damage does it do? In
+    at least one case (Super Potion), it does not seem like it does damage equal to the amount
+    of HP restored.
+
+ 8. Has anyone (else) done any formal testing on side effect rates in Stadium? After reading a
+    number of old posts at Azure Heights that said they had increased, I did some testing and
+    it apaprently is true, but I'd like some confirmation of the results. Also, since I am only
+    able to use rental pokemon, I can't check the side effect rate of Constrict.
+
+ 9. If you have a traded pokemon that won't obey you, what is the probability that it will
+    disobey your orders, and what are the chances of each possible outcome happening?
+
+10. What exactly is the probability of failure when trying to run away from a battle?
+
+11. How do OHKOs deal damage?
+
+
+If you have more generic descriptions that account for the unusual behavior of certain moves
+(such as Bide, Counter, Haze, Horn Drill), I'd like to know about it. And of course, if I have
+any faulty or am missing any information, I'd like to know about that too.
+
+
+I6. Credits;
+
+***Azure Heights*** (http://www.math.miami.edu/~jam/azure/contributors.htm)
+Because it provided a lot of general information and a nice starting point for making this
+document.
+
+***Jolt0135***
+For some general gameboy information and confirmation of some of Metronome's behavior.
+
+***MasamuneXGP***
+For doing a number of tests and result confirming, and for proofreading.
+
+***Meowth346***
+For some help with the palette colors and determining the displayed type effectiveness
+messages.
+
+***NickWiz1***
+Whose walkthrough FAQ (found at GameFAQs) was consulted for the effects of gym badges.
+
+***Uiru***
+For some Rage testing.
+
+***White Cat***
+Whose dexes (found at The P-Files) were handy in making the list of previous evolution moves.
+
+And less directly, pretty much everyone who posted various bits of (RBY) information and
+observations in the Azure Heights Research Lab from 2000-2004. This includes but is probably
+not limited to: Anthrax, Atma, cfalcon, incompetent, Jolt0135, KeroKato, magmar5, Meowth346,
+MewtwoSama, Mr. K, NeoSyrex, NickWiz1, PoKamek, Uiru, VaporeonsHaze, Volrath50, White Cat,
+Wintermute, and Yay Porygon.
+
+
+I couldn't have completed this document without your help. Thanks. (And if I forgot to mention
+you, feel free to let me know.)
+
+

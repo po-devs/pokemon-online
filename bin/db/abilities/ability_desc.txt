@@ -1,0 +1,165 @@
+﻿0 
+1 The stench helps keep wild Pokémon away.
+2 The Pokémon makes it rain if it appears in battle.
+3 The Pokémon's Speed stat is gradually boosted.
+4 The Pokémon is protected against critical hits.
+5 The Pokémon is protected against 1-hit KO attacks.
+6 Prevents combatants from self destructing.
+7 The Pokémon is protected from paralysis.
+8 Boosts the Pokémon's evasion in a sandstorm.
+9 Contact with the Pokémon may cause paralysis.
+10 Restores HP if hit by an Electric-type move.
+11 Restores HP if hit by a Water-type move.
+12 Prevents the Pokémon from becoming infatuated.
+13 Eliminates the effects of weather.
+14 The Pokémon's accuracy is boosted.
+15 Prevents the Pokémon from falling asleep.
+16 Changes the Pokémon's type to the foe's move.
+17 Prevents the Pokémon from getting poisoned.
+18 Powers up Fire-type moves if hit by a fire move.
+19 Blocks the added effects of attacks taken.
+20 Prevents the Pokémon from becoming confused.
+21 Negates moves that force switching out.
+22 Lowers the foe's Attack stat.
+23 Prevents the foe from escaping.
+24 Inflicts damage to the foe on contact.
+25 Only supereffective moves will hit.
+26 Gives full immunity to all Ground-type moves.
+27 Contact may paralyze, poison, or cause sleep.
+28 Passes on a burn, poison, or paralysis to the foe.
+29 Prevents the Pokémon's stats from being lowered.
+30 All status problems are healed upon switching out.
+31 The Pokémon draws in all Electric-type moves.
+32 Boosts the likelihood of added effects appearing.
+33 Boosts the Pokémon's Speed in rain.
+34 Boosts the Pokémon's Speed in sunshine.
+35 Raises the likelihood of meeting wild Pokémon.
+36 The Pokémon copies the foe's ability.
+37 Raises the Pokémon's Attack stat.
+38 Contact with the Pokémon may poison the foe.
+39 The Pokémon is protected from flinching.
+40 Prevents the Pokémon from becoming frozen.
+41 Prevents the Pokémon from getting a burn.
+42 Prevents Steel-type Pokémon from escaping.
+43 Gives full immunity to all sound-based moves.
+44 The Pokémon gradually recovers HP in rain.
+45 The Pokémon summons a sandstorm in battle.
+46 The Pokémon raises the foe's PP usage.
+47 Raises resistance to Fire-and Ice-type moves.
+48 The Pokémon awakens quickly from sleep.
+49 Contact with the Pokémon may burn the foe.
+50 Enables sure getaway from wild Pokémon.
+51 Prevents the Pokémon from losing accuracy.
+52 Prevents the Attack stat from being lowered.
+53 The Pokémon may pick up items.
+54 The Pokémon can't attack on consecutive turns.
+55 Boosts the Attack stat, but lowers accuracy.
+56 Contact with the Pokémon may cause infatuation.
+57 Boosts Sp. Atk if another Pokémon has Minus.
+58 Boosts Sp. Atk if another Pokémon has Plus.
+59 CASTFORM transforms with the weather.
+60 Protects the Pokémon from item theft.
+61 The Pokémon may heal its own status problems.
+62 Boosts Attack if there is a status problem.
+63 Boosts Defense if there is a status problem.
+64 Inflicts damage on foes using any draining move.
+65 Powers up Grass-type moves in a pinch.
+66 Powers up Fire-type moves in a pinch.
+67 Powers up Water-type moves in a pinch.
+68 Powers up Bug-type moves in a pinch.
+69 Protects the Pokémon from recoil damage.
+70 The Pokémon makes it sunny if it is in battle.
+71 Prevents the foe from fleeing.
+72 Prevents the Pokémon from falling asleep.
+73 Prevents the Pokémon's stats from being lowered.
+74 Boosts the power of physical attacks.
+75 The Pokémon is protected against critical hits.
+76 Eliminates the effects of weather.
+77 Raises evasion if the Pokémon is confused.
+78 Raises Speed if hit by an Electric-type move.
+79 Raises Attack if the foe is of the same gender.
+80 Raises Speed each time the Pokémon flinches.
+81 Raises evasion in a hailstorm.
+82 Encourages the early use of a held Berry.
+83 Raises Attack upon taking a critical hit.
+84 Raises Speed if a held item is used.
+85 Weakens the power of Fire-type moves.
+86 The Pokémon is prone to wild stat changes.
+87 Reduces HP if it is hot. Water restores HP.
+88 Adjusts power according to the foe's ability.
+89 Boosts the power of punching moves.
+90 Restores HP if the Pokémon is poisoned.
+91 Powers up moves of the same type.
+92 Increases the frequency of multi-strike moves.
+93 Heals status problems if it is raining.
+94 Boosts Sp. Atk, but lowers HP in sunshine.
+95 Boosts Speed if there is a status problem.
+96 All the Pokémon's moves become the Normal type.
+97 Powers up moves if they become critical hits.
+98 The Pokémon only takes damage from attacks.
+99 Ensures the Pokémon and its foe's attacks land.
+100 The Pokémon moves after even slower foes.
+101 Powers up the Pokémon's weaker moves.
+102 Prevents status problems in sunny weather.
+103 The Pokémon can't use any held items.
+104 Moves can be used regardless of abilities.
+105 Heightens the critical-hit ratios of moves.
+106 Damages the foe landing the finishing hit.
+107 Senses the foe's dangerous moves.
+108 Determines what moves the foe has.
+109 Ignores any change in ability by the foe.
+110 Powers up "not very effective" moves.
+111 Powers down super-effective moves.
+112 Temporarily halves Attack and Speed.
+113 Enables moves to hit Ghost-type foes.
+114 The Pokémon draws in all Water-type moves.
+115 The Pokémon regains HP in a hailstorm.
+116 Powers down super-effective moves.
+117 The Pokémon summons a hailstorm in battle.
+118 The Pokémon may gather Honey from somewhere.
+119 The Pokémon can check the foe's held item.
+120 Powers up moves that have recoil damage.
+121 Changes type to match the held Plate.
+122 Powers up party Pokémon when it is sunny.
+123 Reduces a sleeping foe's HP.
+124 Steals attacking Pokémon's held item on contact.
+125 Strengthens moves with extra effects to 1.3× their power, but prevents their extra effects.
+126 Inverts stat modifiers.
+127 Prevents opposing Pokémon from eating held Berries.
+128 Raises Attack two stages upon having any stat lowered.
+129 Halves Attack and Special Attack below 50% HP.
+130 Has a 30% chance of Disabling any move that hits the Pokémon.
+131 Has a 30% chance of curing each adjacent ally of any major status ailment after each turn.
+132 Decreases damage inflicted against friendly Pokémon.
+133 Raises Speed and lowers Defense by one stage each upon being hit by any move.
+134 Doubles the Pokémon's weight.
+135 Halves the Pokémon's weight.
+136 Halves damage taken from full HP.
+137 Increases Attack to 1.5× when poisoned.
+138 Increases Special Attack to 1.5× when burned.
+139 Restores any held Berry after the turn on which it is used.
+140 Protects against damaging moves from friendly Pokémon.
+141 Raises a random stat two stages and lowers another one stage after each turn.
+142 Protects against damage from weather.
+143 Has a 20% chance of poisoning Pokémon upon contact when attacking.
+144 Heals for 1/3 max HP upon leaving battle.
+145 Protects against Defense drops.
+146 Doubles Speed during a sandstorm.
+147 Has a 50% chance of protecting against non-damaging moves that inflict major status ailments.
+148 Strengthens moves when moving last.
+149 Takes the appearance of the last conscious party Pokémon upon being sent out until hit by a damaging move.
+150 Transforms upon entering battle.
+151 Ignores Light Screen, Reflect, and Safeguard.
+152 Changes attacking Pokémon's abilities to mummify on contact.
+153 Raises Attack one stage upon KOing a Pokémon.
+154 Raises Attack when hit by dark-type moves.
+155 Raises Speed one stage upon being hit by a Dark, Ghost, or Bug move.
+156 Reflects most non-damaging moves back at their user.
+157 Absorbs Grass moves, raising Attack one stage{mechanic:stat modifier}.
+158 Raises non-damaging moves' priority by one stage.
+159 Strengthens Rock, Ground, and Steel moves to 1.3× their power during a sandstorm.
+160 Damages attacking Pokémon for 1/8 their max HP on contact.
+161 Changes Darmanitan to daruma mode below 50% max HP.
+162 Raises moves' accuracy to 1.1× for friendly Pokémon.
+163 Makes moves ignore targets' abilities if they could hinder or prevent them.
+164 Makes moves ignore targets' abilities if they could hinder or prevent them.

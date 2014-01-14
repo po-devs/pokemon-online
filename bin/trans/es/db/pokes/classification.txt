@@ -1,0 +1,650 @@
+﻿0 
+1 Pokémon Semilla
+2 Pokémon Semilla
+3 Pokémon Semilla
+4 Pokémon Lagartija
+5 Pokémon Llama
+6 Pokémon Llama
+7 Pokémon Tortuguita
+8 Pokémon Tortuga
+9 Pokémon Marisco
+10 Pokémon Oruga
+11 Pokémon Capullo
+12 Pokémon Mariposa
+13 Pokémon Oruga
+14 Pokémon Capullo
+15 Pokémon Abeja Venenosa
+16 Pokémon Pajarito
+17 Pokémon Pájaro
+18 Pokémon Pájaro
+19 Pokémon Rata
+20 Pokémon Ratón
+21 Pokémon Volador
+22 Pokémon Pico
+23 Pokémon Serpiente
+24 Pokémon Cobra
+25 Pokémon Ratón
+26 Pokémon Ratón
+27 Pokémon Ratón
+28 Pokémon Ratón
+29 Pokémon Pin Veneno
+30 Pokémon Pin Veneno
+31 Pokémon Taladro
+32 Pokémon Pin Veneno
+33 Pokémon Pin Veneno
+34 Pokémon Taladro
+35 Pokémon Hada
+36 Pokémon Hada
+37 Pokémon Zorro
+38 Pokémon Zorro
+39 Pokémon Globo
+40 Pokémon Globo
+41 Pokémon Murciélago
+42 Pokémon Murciélago
+43 Pokémon Hierbajo
+44 Pokémon Hierbajo
+45 Pokémon Flor
+46 Pokémon Hongo
+47 Pokémon Hongo
+48 Pokémon Insecto
+49 Pokémon Polilla Venenosa
+50 Pokémon Topo
+51 Pokémon Topo
+52 Pokémon Gato Araña
+53 Pokémon Gato Fino
+54 Pokémon Pato
+55 Pokémon Pato
+56 Pokémon Mono Cerdo
+57 Pokémon Mono Cerdo
+58 Pokémon Perrito
+59 Pokémon Legendario
+60 Pokémon Renacuajo
+61 Pokémon Renacuajo
+62 Pokémon Renacuajo
+63 Pokémon Psíquico
+64 Pokémon Psi
+65 Pokémon Psi
+66 Pokémon Superpoder
+67 Pokémon Superpoder
+68 Pokémon Superpoder
+69 Pokémon Flor
+70 Pokémon Matamoscas
+71 Pokémon Matamoscas
+72 Pokémon Medusa
+73 Pokémon Medusa
+74 Pokémon Roca
+75 Pokémon Roca
+76 Pokémon Megatón
+77 Pokémon Caballo Fuego
+78 Pokémon Caballo Fuego
+79 Pokémon Atontado
+80 Pokémon Ermitaño
+81 Pokémon Imán
+82 Pokémon Imán
+83 Pokémon Pato Salvaje
+84 Pokémon Ave Gemela
+85 Pokémon Ave Triple
+86 Pokémon León Marino
+87 Pokémon León Marino
+88 Pokémon Lodo
+89 Pokémon Lodo
+90 Pokémon Bivalvo
+91 Pokémon Bivalvo
+92 Pokémon Gas
+93 Pokémon Gas
+94 Pokémon Sombra
+95 Pokémon Serpiente Roca
+96 Pokémon Hipnosis
+97 Pokémon Hipnosis
+98 Pokémon Cangrejo
+99 Pokémon Tenaza
+100 Pokémon Bola
+101 Pokémon Bola
+102 Pokémon Huevo
+103 Pokémon Coco
+104 Pokémon Solitario
+105 Pokémon Apilahueso
+106 Pokémon Pateando
+107 Pokémon Golpeando
+108 Pokémon Lamiendo
+109 Pokémon Gas Veneno
+110 Pokémon Gas Veneno
+111 Pokémon Clavos
+112 Pokémon Taladro
+113 Pokémon Huevo
+114 Pokémon Enredadera
+115 Pokémon Padres
+116 Pokémon Dragón
+117 Pokémon Dragón
+118 Pokémon Pez Color
+119 Pokémon Pez Color
+120 Pokémon Estrellada
+121 Pokémon Misterioso
+122 Pokémon Mimo
+123 Pokémon Mantis
+124 Pokémon Forma Humana
+125 Pokémon Eléctrico
+126 Pokémon Escupe Fuego
+127 Pokémon Escarabajo
+128 Pokémon Toro Bravo
+129 Pokémon Pez
+130 Pokémon Atrocidad
+131 Pokémon Transporte
+132 Pokémon Transformación
+133 Pokémon Evolución
+134 Pokémon Burbuja
+135 Pokémon Relámpago
+136 Pokémon Llamas
+137 Pokémon Virtual
+138 Pokémon Espiral
+139 Pokémon Espiral
+140 Pokémon Marisco
+141 Pokémon Marisco
+142 Pokémon Fósil
+143 Pokémon Dormir
+144 Pokémon Congelar
+145 Pokémon Eléctrico
+146 Pokémon Llama
+147 Pokémon Dragón
+148 Pokémon Dragón
+149 Pokémon Dragón
+150 Pokémon Genético
+151 Pokémon Nueva Especie
+152 Pokémon Hoja
+153 Pokémon Hoja
+154 Pokémon Hierba
+155 Pokémon Ratón Fuego
+156 Pokémon Volcán
+157 Pokémon Volcán
+158 Pokémon Fauces
+159 Pokémon Fauces
+160 Pokémon Fauces
+161 Pokémon Explorador
+162 Pokémon Alargado
+163 Pokémon Búho
+164 Pokémon Búho
+165 Pokémon Cinco Estrellas
+166 Pokémon Cinco Estrellas
+167 Pokémon Escupesoga
+168 Pokémon Pata Larga
+169 Pokémon Murciélago
+170 Pokémon Rape
+171 Pokémon Luz
+172 Pokémon Ratoncito
+173 Pokémon Estrellada
+174 Pokémon Globo
+175 Pokémon Bola Clavos
+176 Pokémon Felicidad
+177 Pokémon Pajarito
+178 Pokémon Místico
+179 Pokémon Lana
+180 Pokémon Lana
+181 Pokémon Luz
+182 Pokémon Flor
+183 Pokémon Ratón Agua
+184 Pokémon Conejo Agua
+185 Pokémon Imitación
+186 Pokémon Rana
+187 Pokémon Algadón
+188 Pokémon Algadón
+189 Pokémon Algadón
+190 Pokémon Cola Larga
+191 Pokémon Semilla
+192 Pokémon Sol
+193 Pokémon Ala Clara
+194 Pokémon Pez Agua
+195 Pokémon Pez Agua
+196 Pokémon Sol
+197 Pokémon Luz Lunar
+198 Pokémon Oscuridad
+199 Pokémon Regio
+200 Pokémon Chirrido
+201 Pokémon Símbolo
+202 Pokémon Paciente
+203 Pokémon Grancuello
+204 Pokémon Larva
+205 Pokémon Larva
+206 Pokémon Serptierra
+207 Pokémon Escorpiala
+208 Pokémon Serpiente Férrea
+209 Pokémon Hada
+210 Pokémon Hada
+211 Pokémon Globo
+212 Pokémon Mantis
+213 Pokémon Moho
+214 Pokémon Unicornio
+215 Pokémon Garra Filo
+216 Pokémon Osito
+217 Pokémon Hibernante
+218 Pokémon Lava
+219 Pokémon Lava
+220 Pokémon Cerdo
+221 Pokémon Puerco
+222 Pokémon Coral
+223 Pokémon Reactor
+224 Pokémon Reactor
+225 Pokémon Reparto
+226 Pokémon Milano
+227 Pokémon Coraza Ave
+228 Pokémon Siniestro
+229 Pokémon Siniestro
+230 Pokémon Dragón
+231 Pokémon Narizotas
+232 Pokémon Elefante
+233 Pokémon Virtual
+234 Pokémon Gran Guerno
+235 Pokémon Pintor
+236 Pokémon Peleón
+237 Pokémon Boca Abajo
+238 Pokémon Beso
+239 Pokémon Eléctrico
+240 Pokémon Ascuas
+241 Pokémon Lechera
+242 Pokémon Felicidad
+243 Pokémon Trueno
+244 Pokémon Volcán
+245 Pokémon Aurora
+246 Pokémon Piel Roca
+247 Pokémon Caparazón
+248 Pokémon Coraza
+249 Pokémon Buceo
+250 Pokémon Arco Iris
+251 Pokémon Viajetiempo
+252 Pokémon Geco Bosque
+253 Pokémon Geco Bosque
+254 Pokémon Monte
+255 Pokémon Polluelo
+256 Pokémon Ave Corral
+257 Pokémon Mar Llamas
+258 Pokémon Pez Lodo
+259 Pokémon Pez Lodo
+260 Pokémon Pez Lodo
+261 Pokémon Mordisco
+262 Pokémon Hiena
+263 Pokémon Mapachito
+264 Pokémon Lanzado
+265 Pokémon Gusano
+266 Pokémon Capullo
+267 Pokémon Mariposa
+268 Pokémon Capullo
+269 Pokémon Polilla Venenosa
+270 Pokémon Alga
+271 Pokémon Alegre
+272 Pokémon Optimista
+273 Pokémon Bellota
+274 Pokémon Astuto
+275 Pokémon Malvado
+276 Pokémon Pequebuche
+277 Pokémon Buche
+278 Pokémon Gaviota
+279 Pokémon Ave Agua
+280 Pokémon Sensible
+281 Pokémon Sensorio
+282 Pokémon Envolvente
+283 Pokémon Zapatero
+284 Pokémon Globo Ocular
+285 Pokémon Hongo
+286 Pokémon Hongo
+287 Pokémon Gandul
+288 Pokémon Mono Feroz
+289 Pokémon Holgazán
+290 Pokémon Aprendiz
+291 Pokémon Ninja
+292 Pokémon Muda
+293 Pokémon Susurro
+294 Pokémon Chillón
+295 Pokémon Escandaloso
+296 Pokémon Valiente
+297 Pokémon Empuje
+298 Pokémon A Topos
+299 Pokémon Brújula
+300 Pokémon Gatito
+301 Pokémon Cursi
+302 Pokémon Oscuridad
+303 Pokémon Tramposo
+304 Pokémon Coraza Férrea
+305 Pokémon Coraza Férrea
+306 Pokémon Coraza Férrea
+307 Pokémon Meditador
+308 Pokémon Meditador
+309 Pokémon Calambre
+310 Pokémon Descarga
+311 Pokémon Ánimo
+312 Pokémon Ánimo
+313 Pokémon Luciérnaga
+314 Pokémon Luciérnaga
+315 Pokémon Espina
+316 Pokémon Estómago
+317 Pokémon Bolsa Veneno
+318 Pokémon Feroz
+319 Pokémon Voraz
+320 Pokémon Ballenabola
+321 Pokémon Ballena Flotante
+322 Pokémon Torpe
+323 Pokémon Erupción
+324 Pokémon Carbón
+325 Pokémon Saltarín
+326 Pokémon Manipulador
+327 Pokémon Panda Topos
+328 Pokémon Hormiga León
+329 Pokémon Vibrante
+330 Pokémon Místico
+331 Pokémon Cactus
+332 Pokémon Espantapájaros
+333 Pokémon Ave Algodón
+334 Pokémon Cantor
+335 Pokémon Gato Hurón
+336 Pokémon Colmillos
+337 Pokémon Meteorito
+338 Pokémon Meteorito
+339 Pokémon Bigotudo
+340 Pokémon Bigotudo
+341 Pokémon Rufián
+342 Pokémon Granuja
+343 Pokémon Muñeco Barro
+344 Pokémon Muñeco Barro
+345 Pokémon Lila Marina
+346 Pokémon Percebe
+347 Pokémon Camarón
+348 Pokémon Armadura
+349 Pokémon Pez
+350 Pokémon Tierno
+351 Pokémon Clima
+352 Pokémon Camaleónico
+353 Pokémon Títere
+354 Pokémon Marioneta
+355 Pokémon Réquiem
+356 Pokémon Atrayente
+357 Pokémon Fruto
+358 Pokémon Sonido Aire
+359 Pokémon Catástrofe
+360 Pokémon Radiante
+361 Pokémon Gorro de Nieve
+362 Pokémon Cara
+363 Pokémon Aplauso
+364 Pokémon Rodabola
+365 Pokémon Rompehielo
+366 Pokémon Bivalvo
+367 Pokémon Abisal
+368 Pokémon Mar del Sur
+369 Pokémon Longevo
+370 Pokémon Cita
+371 Pokémon Cabeza Roca
+372 Pokémon Resistencia
+373 Pokémon Dragón
+374 Pokémon Bola Hierro
+375 Pokémon Garra Hierro
+376 Pokémon Pata Hierro
+377 Pokémon Pico Roca
+378 Pokémon Iceberg
+379 Pokémon Hierro
+380 Pokémon Eón
+381 Pokémon Eón
+382 Pokémon Cuenca Mar
+383 Pokémon Continente
+384 Pokémon Cielo
+385 Pokémon Deseo
+386 Pokémon ADN
+387 Pokémon Hojita
+388 Pokémon Arboleda
+389 Pokémon Continente
+390 Pokémon Chimpancé
+391 Pokémon Juguetón
+392 Pokémon Llama
+393 Pokémon Pingüino
+394 Pokémon Pingüino
+395 Pokémon Emperador
+396 Pokémon Estornino
+397 Pokémon Estornino
+398 Pokémon Depredador
+399 Pokémon Gran Ratón
+400 Pokémon Castor
+401 Pokémon Grillo
+402 Pokémon Grillo
+403 Pokémon Flash
+404 Pokémon Chispa
+405 Pokémon Chispa Ojos
+406 Pokémon Brote
+407 Pokémon Ramillete
+408 Pokémon Cabezazo
+409 Pokémon Cabezazo
+410 Pokémon Escudo
+411 Pokémon Escudo
+412 Pokémon Larva
+413 Pokémon Larva
+414 Pokémon Polilla
+415 Pokémon Abejita
+416 Pokémon Colmena
+417 Pokémon Ardillalec
+418 Pokémon Nutria Marina
+419 Pokémon Nutria Marina
+420 Pokémon Cereza
+421 Pokémon Don Floral
+422 Pokémon Babosa Marina
+423 Pokémon Babosa Marina
+424 Pokémon Cola Larga
+425 Pokémon Globo
+426 Pokémon Dirigible
+427 Pokémon Conejo
+428 Pokémon Conejo
+429 Pokémon Mágico
+430 Pokémon Gran Jefe
+431 Pokémon Gato
+432 Pokémon Gato Tigre
+433 Pokémon Campana
+434 Pokémon Mofeta
+435 Pokémon Mofeta
+436 Pokémon Bronce
+437 Pokémon Campana Bronce
+438 Pokémon Bonsai
+439 Pokémon Payasito
+440 Pokémon Casita
+441 Pokémon Corchea
+442 Pokémon Prohibido
+443 Pokémon Terrascualo
+444 Pokémon Cueva
+445 Pokémon Mach
+446 Pokémon Gran Comedor
+447 Pokémon Emanación
+448 Pokémon Aura
+449 Pokémon Hipo
+450 Pokémon Peso Pesado
+451 Pokémon Escorpión
+452 Pokémon Escorpiogro
+453 Pokémon Boca Tóxica
+454 Pokémon Boca Tóxica
+455 Pokémon Caza Bichos
+456 Pokémon Pez Ala
+457 Pokémon Neón
+458 Pokémon Milano
+459 Pokémon Árbol Nieve
+460 Pokémon Árbol Nieve
+461 Pokémon Garra Filo
+462 Pokémon Magnético
+463 Pokémon Lametazo
+464 Pokémon Taladro
+465 Pokémon Enredadera
+466 Pokémon Eléctrico
+467 Pokémon Explosión
+468 Pokémon Festejo
+469 Pokémon Libélula
+470 Pokémon Verdor
+471 Pokémon Nieve Fresca
+472 Pokémon Colmicorpio
+473 Pokémon 2colmillos
+474 Pokémon Virtual
+475 Pokémon Gallade
+476 Pokémon Brújula
+477 Pokémon Grilletes
+478 Pokémon Tierra Fría
+479 Pokémon Plasma
+480 Pokémon Sabiduría
+481 Pokémon Sensorio
+482 Pokémon Voluntad
+483 Pokémon Temporal
+484 Pokémon Espacial
+485 Pokémon Domo Lava
+486 Pokémon Colosal
+487 Pokémon Renegado
+488 Pokémon Lunar
+489 Pokémon Marino
+490 Pokémon Naútico
+491 Pokémon Oscuridad
+492 Pokémon Gratitud
+493 Pokémon Alfa
+494 Pokémon Victoria
+495 Pokémon Serpiente Hierba
+496 Pokémon Serpiente Hierba
+497 Pokémon Realeza
+498 Pokémon Cerdo Fuego
+499 Pokémon Cerdo Fuego
+500 Pokémon Cerdo Ígneo
+501 Pokémon Nutria
+502 Pokémon Superación
+503 Pokémon Majestuoso
+504 Pokémon Explorador
+505 Pokémon Alerta
+506 Pokémon Perrito
+507 Pokémon Leal
+508 Pokémon Magnánimo
+509 Pokémon Malicioso
+510 Pokémon Calculador
+511 Pokémon Mono Hierba
+512 Pokémon Mono Pincho
+513 Pokémon Ardiente
+514 Pokémon Lumbre
+515 Pokémon Salpicadura
+516 Pokémon Drenaje
+517 Pokémon Comesueños
+518 Pokémon Duermevela
+519 Pokémon Pichón
+520 Pokémon Torcaz
+521 Pokémon Altanero
+522 Pokémon Electrizado
+523 Pokémon Rayo
+524 Pokémon Manto
+525 Pokémon Mineral
+526 Pokémon Presurizado
+527 Pokémon Murciélago
+528 Pokémon Galante
+529 Pokémon Topo
+530 Pokémon Subterráneo
+531 Pokémon Escucha
+532 Pokémon Musculoso
+533 Pokémon Musculoso
+534 Pokémon Musculoso
+535 Pokémon Renacuajo
+536 Pokémon Vibrante
+537 Pokémon Vibrante
+538 Pokémon Judo
+539 Pokémon Kárate
+540 Pokémon Sastre
+541 Pokémon Arropado
+542 Pokémon Cuidador
+543 Pokémon Ciempiés
+544 Pokémon Pupaciempiés
+545 Pokémon Megaciempiés
+546 Pokémon Bolalgodón
+547 Pokémon Vuelalviento
+548 Pokémon Bulbo
+549 Pokémon Adornofloral
+550 Pokémon Violento
+551 Pokémon Desierdrilo
+552 Pokémon Desierdrilo
+553 Pokémon Amenazador
+554 Pokémon Daruma
+555 Pokémon Candente
+556 Pokémon Cactus
+557 Pokémon Casapiedra
+558 Pokémon Casarroca
+559 Pokémon Mudapiel
+560 Pokémon Gamberro
+561 Pokémon Pseudopájaro
+562 Pokémon Espíritu
+563 Pokémon Sepultura
+564 Pokémon Pretortuga
+565 Pokémon Pretortuga
+566 Pokémon Protopájaro
+567 Pokémon Protopájaro
+568 Pokémon Bolsabasura
+569 Pokémon Vertedero
+570 Pokémon Zorropillo
+571 Pokémon Disfrazorro
+572 Pokémon Chinchilla
+573 Pokémon Estola
+574 Pokémon Inquisitivo
+575 Pokémon Manipulador
+576 Pokémon Astro
+577 Pokémon Célula
+578 Pokémon Mitosis
+579 Pokémon Ampliación
+580 Pokémon Ave Agua
+581 Pokémon Cisne
+582 Pokémon Nievefresca
+583 Pokémon Nievehelada
+584 Pokémon Nievegélida
+585 Pokémon Estacional
+586 Pokémon Estacional
+587 Pokémon Vuelardilla
+588 Pokémon Bocado
+589 Pokémon Soldado
+590 Pokémon Hongo
+591 Pokémon Hongo
+592 Pokémon Ingrávido
+593 Pokémon Ingrávido
+594 Pokémon Socorrista
+595 Pokémon Lapa
+596 Pokémon Electroaraña
+597 Pokémon Frutoespina
+598 Pokémon Bolaespina
+599 Pokémon Engranaje
+600 Pokémon Engranaje
+601 Pokémon Engranaje
+602 Pokémon Electropez
+603 Pokémon Electropez
+604 Pokémon Electropez
+605 Pokémon Cerebro
+606 Pokémon Cerebro
+607 Pokémon Vela
+608 Pokémon Farolillo
+609 Pokémon Señuelo
+610 Pokémon Colmillo
+611 Pokémon Bocahacha
+612 Pokémon Bocahacha
+613 Pokémon Congelación
+614 Pokémon Glaciación
+615 Pokémon Cristal
+616 Pokémon Caracol
+617 Pokémon Sincaparazón
+618 Pokémon Trampa
+619 Pokémon Artemarcial
+620 Pokémon Artemarcial
+621 Pokémon Cueva
+622 Pokémon Autómata
+623 Pokémon Autómata
+624 Pokémon Tajo
+625 Pokémon Filo
+626 Pokémon Torocabezazo
+627 Pokémon Aguilucho
+628 Pokémon Aguerrido
+629 Pokémon Pañal
+630 Pokémon Aguilahueso
+631 Pokémon Hormiguero
+632 Pokémon Hormigacero
+633 Pokémon Tosco
+634 Pokémon Violento
+635 Pokémon Voraz
+636 Pokémon Antorcha
+637 Pokémon Sol
+638 Pokémon Tesón Acero
+639 Pokémon Gruta
+640 Pokémon Prado
+641 Pokémon Torbellino
+642 Pokémon Centella
+643 Pokémon Blanco Veraz
+644 Pokémon Negro Puro
+645 Pokémon Fertilidad
+646 Pokémon Frontera
+647 Pokémon Potro
+648 Pokémon Melodía
+649 Pokémon Paleozoico

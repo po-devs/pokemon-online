@@ -1,0 +1,7 @@
+﻿0 Ok
+1 Paralizzato
+2 Addormentato
+3 Congelato
+4 Bruciato
+5 Avvelenato
+6 Confuso

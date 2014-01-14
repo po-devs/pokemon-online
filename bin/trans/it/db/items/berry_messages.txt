@@ -1,0 +1,12 @@
+﻿0 %s mangia la sua %i!
+1 %s non è più confuso!|Lo status di %s è svanito!|%s non è più paralizzato!|%s woke up!|%s si è scongelato!|%s non è più bruciato!|%s è curato dal veleno!
+2 I PP della mossa %m di %s sono stati ricaricati!
+3 %s recupera un pò di PV!
+4 %i di %s indebolisce la potenza di %m!
+5 %i di %s indebolisce la potenza di %m!
+6 %s rigenera alcuni PV
+7 La %i aumenta la stat %st di %s!
+9 La %i aumenta di molto la stat %st di %s!
+10 %s si sta focalizzando sul bersaglio!
+11 %s sta già preparando la sua mossa!
+12 %f subisce il contraccolpo!

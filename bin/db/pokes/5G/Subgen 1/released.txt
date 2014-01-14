@@ -1,0 +1,6 @@
+641:1 Tornadus-T
+642:1 Thundurus-T
+645:1 Landorus-T
+646:1 Kyurem-W
+646:2 Kyurem-B
+647:1 Keldeo-R

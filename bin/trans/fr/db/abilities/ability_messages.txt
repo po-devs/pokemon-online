@@ -1,0 +1,43 @@
+2 Boom Final du %s blesse %f!
+3 %s est vraiment frustré!
+4 Anticipation du %s le fait trembler!
+6 %f est tourmenté par Mauvais Rêve!
+9 Déguisement du %s le change pour le type %t!
+11 %f tombe amoureux de %s à cause de Joli Sourire!
+12 Attention du %s l'empêche d'avoir peur!
+13 Télécharge du %s s'active!
+14 Alerte Neige du %s provoque une tempête de grêle!|Crachin du %s fait tomber la pluie!|Sable Volant du %s provoque une tempête de sable!|Sécheresse du %s intensifie les rayons du soleil!
+15 %s récupère des PV grâce à Peau Sèche!|Peau Sèche du %s lui fait perdre des PV!
+16 Pose Spore du %s s'active!
+18 %s's %a s'active!
+19 Torche de%s augmente la puissance des ses capacités de type Feu!|Torche du %s rend %m inefficace!
+21 %s change son type pour %t!
+22 Prédiction du %s l'avertit de %m!
+23 Fouille du %s lui dévoile %i tenu!
+24 Ecran Poudre du %s empêche le cumul d'effets!
+29 Hydratation du %s le guéri de son altération de statut!
+30 %a du %s empêche la diminution de stats!
+31 %a du %s a empêché ses stats d'être diminués!
+32 %a du %s lui restaure des PV!
+33 %a du %s le guérit!
+34 %s intimide %f!|Le clone du %f empêche Intimidation du %s de fonctionner!
+37 Feuille Garde du %s bloque les altérations de statut!
+38 %a du %s reçoit l'attaque!|%a du %s augmente son attaque spéciale!|%a du %s rend l'attaque inutile!
+40 %s a Brise Moule!
+41 Motorisé du %s augmente sa stat Vitesse!
+44 Tempo Perso du %s l'empêche d'être confus!
+45 Soin Poison du %s lui restaure des PV!
+46 %s exerce Pression!
+50 Peau Dure du %s blesse %f!
+54 %s's Mue soigne le statut!
+55 %s ne peut pas bouger à cause de Début Calme!|%s retrouve enfin ses facultés!
+56 %s a perdu quelques PV à cause de Force Soleil
+57 %s's Anti Bruit bloque l'attaque!
+58 %s's Turbo augmente sa vitesse!
+60 %s's Impassible augmente sa bitesse!
+61 %s's Synchro change le statut of %f!
+66 %s calque %f's %a!
+67 %s paresse!
+70 %s's %a absorbe l'attaque!|%s's %a rend l'attaque inutile!
+71 %s's Garde Magic déjoue the l'attaque!
+

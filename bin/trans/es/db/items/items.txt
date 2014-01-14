@@ -1,0 +1,372 @@
+﻿0 (Sin objeto)
+1 Raíz Grande
+2 Pañuelo Azul
+3 Polvo Brillo
+4 Cinta Elegida
+5 Pañuelo Elegido
+6 Gafas Elegidas
+7 Lazo Destino
+8 Cinta Xperto
+9 Cinta Focus
+10 Banda Focus
+11 Incienso Lento
+12 Pañuelo Verde
+13 Cola Plúmbea
+14 Incienso Suave
+15 Restos
+16 Incienso Duplo
+17 Hierba Mental
+18 Polvo Metálico
+19 Cinta Fuerte
+20 Incienso Raro
+21 Pañuelo Rosa
+22 Hierba Única
+23 Incienso Puro
+24 Polvo Veloz
+25 Telaterrible
+26 Pañuelo Rojo
+27 Incienso Roca
+28 Incienso Floral
+29 Incienso Marino
+30 Muda Concha
+31 Pañuelo Seda
+32 Polvo Plata
+33 Roca Suave
+34 Arena Fina
+35 Campana Alivio
+36 Incienso Aqua
+37 Hierba Blanca
+38 Lupa 
+39 Gafas Especiales
+40 Pañuelo Amarillo
+41 Telescopio
+42 Moneda Amuleto
+43 Antídoto
+44 Despertar
+45 Zumo de Baya
+46 Perla Grande
+47 Seta Grande
+48 Cinturón Negro
+49 Flauta Negra
+50 Lodo Negro
+51 Gafas de Sol
+52 Flauta Azul
+53 Parte Azul
+54 Antiquemar
+55 Calcio
+56 Carburante
+57 Carbón
+58 Amuleto
+59 Abono Lento
+60 Escama Marina
+61 Directo
+62 Escamadragón
+63 Elixir
+64 Raíz Energía
+65 Polvoenergía
+66 Cuerda Huida
+67 Éter
+68 Piedraeterna
+69 Repartir Exp
+70 Piedra Fuego
+71 Llamasfera
+72 Cola Skitty
+73 Agua Fresca
+74 Cura Total
+75 Restaura Todo
+76 Abono Brote
+77 Parte Verde
+78 Abono Rápido
+79 Protección Esp.
+80 Polvo Curación
+81 Escama Corazón
+82 Miel
+83 Más PS
+84 Hiperpoción
+85 Antihielo
+86 Hierro
+87 Roca del Rey
+88 Galleta Lava
+89 Piedra Hoja
+90 Limonada
+91 Vidasfera
+92 Bolaluminosa
+93 Refleluz
+94 Huevo Suerte
+95 Imán
+96 Elixir Máximo
+97 Éter Maximo
+98 Máxima Poción
+99 Máximo Repelente
+100 Máximo Revivir
+101 Rev. Metálico
+102 Metrónomo
+103 Semilla Milagro
+104 Leche Mu-mu
+105 Piedra Lunar
+106 Agua Mística
+107 Antiderretir
+108 Pepita
+109 Barrita Plus
+110 Antiparaliz
+111 Perla
+112 Poké Muñeco
+113 Poción
+114 Máximo PP
+115 Más PP
+116 Proteína
+117 Carameloraro
+118 Colmillagudo
+119 Flauta Roja
+120 Parte Roja
+121 Repelente
+122 Hierba Revivir
+123 Revivir
+124 Ceniza Sagrada
+125 Periscopio
+126 Campana Concha
+127 Sal Cardumen
+128 Concha Cardumen
+129 Bola Humo
+130 Refresco
+131 Rocío Bondad
+132 Hechizo
+133 Abono Fijador
+134 Trozo Estrella
+135 Polvoestelar
+136 Piedra Solar
+137 Superpoción
+138 Superrepel
+139 Piedratrueno
+140 Mini Seta
+141 Toxisfera
+142 Cuchara Tor.
+143 Mejora
+144 Piedra Agua
+145 Flauta Blanca
+146 Precisión X
+147 Ataque X
+148 Defensa X
+149 Especial X
+150 Defensa Esp. X
+151 Velocidad X
+152 Flauta Amarilla
+153 Parte Amarilla
+154 Zinc
+155 Roca Helada
+156 Puño Suerte
+157 Discoxtraño
+158 Pico Afilado
+159 Diamansfera
+160 Roca Lluvia
+161 Roca Calor
+162 Lustresfera
+163 Brazal Firme
+164 Palo
+165 Colmillodragón
+166 Flecha Venenosa
+167 Franja Recia
+168 Banda Recia
+169 Cinto Recio
+170 Brazal Recio
+171 Lente Recia
+172 Pesa Recia
+173 Piedra Alba
+174 Piedra Noche
+175 Electrizador
+176 Magmatizador
+177 Piedra Espíritu
+178 Piedra Oval
+179 Protector
+180 Garra Rápida
+181 Garrafilada
+182 Piedra Día
+183 Toxiestrella
+184 Diente Marino
+185 Tabla Draco
+186 Tabla Oscura
+187 Tabla Terrax
+188 Tabla Fuerte
+189 Tabla Llama
+190 Garra Garfio
+191 Tabla Helada
+192 Tabla Bicho
+193 Tabla Acero
+194 Tabla Pradal
+195 Tabla Mental
+196 Tabla Cielo
+197 Tabla Linfa
+198 Tabla Terror
+199 Tabla Pétrea
+200 Hueso Grueso
+201 Tabla Tóxica
+202 Tabla Trueno
+203 Fósil Coraza
+204 Fósil Garra
+205 Fósil Domo
+206 Piedra Dura
+207 Fósil Hélix
+208 Ámbar Viejo
+209 Hueso Raro
+210 Fósil Raíz
+211 Fósil Cráneo
+212 Bola Hierro
+213 Griseosfera
+214 Carta Aérea
+215 Carta Flores
+216 Carta Pared
+217 Carta Pompas
+218 Carta Fuego
+219 Carta Hierba
+220 Carta Puerto
+221 Carta Corazón
+222 Carta Mosaico
+223 Carta Nieve
+224 Carta Sideral
+225 Carta Acero
+226 Carta Mina
+227 HidroROM
+228 FulgoROM
+229 PiroROM
+230 CrioROM
+231 Cor. Dulce
+232 Escama Bella
+233 Mineral Evol
+234 Piedra Pómez
+235 Casco Dentado
+236 Globo Helio
+237 Tarjeta Roja
+238 Blanco
+239 Banda Atadura
+240 Tubérculo
+241 Pila
+242 Botón Escape
+243 Gema Fuego
+244 Gema Agua
+245 Gema Eléctrica
+246 Gema Planta
+247 Gema Hielo
+248 Gema Lucha
+249 Gema Veneno
+250 Gema Tierra
+251 Gema Voladora
+252 Gema Psíquica
+253 Gema Bicho
+254 Gema Roca
+255 Gema Fantasma
+256 Gema Dragón
+257 Gema Siniestra
+258 Gema Acero
+259 Gema Normal
+260 Pluma Vigor
+261 Pluma Músculo
+262 Pluma Aguante
+263 Pluma Intelecto
+264 Pluma Mente
+265 Pluma Ímpetu
+266 Pluma Bella
+267 Ensueño Ball
+268 Seta Aroma
+269 Maxipepita
+270 Sarta Perlas
+271 Fragmento Cometa
+272 Real Cobre
+273 Real Plata
+274 Real Oro
+275 Ánfora
+276 Brazal
+277 Efigie Antigua
+278 Corona Antigua
+279 Porcehelado
+280 Directo 2
+281 Velocidad X 2
+282 Especial X 2
+283 Def. Esp. X 2
+284 Defensa X 2
+285 Ataque X 2
+286 Precisión X 2
+287 Velocidad X 3
+288 Especial X 3
+289 Def. Esp. X 3
+290 Defensa X 3
+291 Ataque X 3
+292 Precisión X 3
+293 Velocidad X 6
+294 Especial X 6
+295 Def. Esp. X 6
+296 Defensa X 6
+297 Ataque X 6
+298 Precisión X 6
+299 Habilitador
+300 Tiraobjeto
+301 Activaobjeto
+302 Quitaestado
+303 Directo 3
+304 Gen loco
+305 Poké Ball
+306 Superball
+307 Ultraball
+308 Master Ball
+309 Safari Ball
+310 Nivel Ball
+311 Cebo Ball
+312 Luna Ball
+313 Amigo Ball
+314 Amor Ball
+315 Peso Ball
+316 Rapid Ball
+317 Competi Ball
+318 Honor Ball
+319 Acopio Ball
+320 Turno Ball
+321 Nido Ball
+322 Malla Ball
+323 Buceo Ball
+324 Lujo Ball
+325 Sana Ball
+326 Veloz Ball
+327 Ocaso Ball
+328 Gloria Ball
+329 Parque Ball
+330 Tabla duende
+331 Chaleco asalto
+332 Gafa protectora
+333 Seguro debilidad
+334 Bola de nieve
+335 Musgo brillante
+336 Cápsula habilidad
+337 Fósil mandíbula
+338 Fósil aleta
+339 Crêpe Luminalia
+340 Saquito fragante
+341 Dulce de nata
+1000 Lazo Rosa
+1001 Cinta Lunares
+2001 Venusaurita
+2002 Charizardita X
+2003 Charizardita Y
+2004 Blastoisita
+2005 Alakazamita
+2006 Gengarita
+2007 Kangaskhanita
+2008 Pinsirita
+2009 Gyaradosita
+2010 Aerodactylita
+2011 Mewtwoita X
+2012 Mewtwoita Y
+2013 Ampharosita
+2014 Scizorita
+2015 Heracrossita
+2016 Houndoomita
+2017 Tyranitarita
+2018 Blazikenita
+2019 Gardevoirita
+2020 Mawilita
+2021 Aggronita
+2022 Medichamita
+2023 Manectricita
+2024 Banettita
+2025 Absolita
+2026 Garchompita
+2027 Lucarita
+2028 Abomasnowita

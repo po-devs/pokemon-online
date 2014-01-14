@@ -1,0 +1,52 @@
+/*
+ * This file is loaded as CSS for main chat's text.
+ * Several properties can be styled as documented here.
+ */
+
+/* timestamp and name of server message */
+.server-message-begin {
+    color: orange;
+}
+
+/* timestamp and name of welcome message */
+.welcome-message-begin {
+    color: blue;
+}
+
+/* timestamp and name of scripted message / unknown name */
+.script-message-begin {
+    color: #318739;
+}
+
+/* line beginning with *** */
+.action {
+    color: magenta;
+}
+
+/* timestamp can be styled here */
+.timestamp {
+}
+
+/* all lines printed with html can be styled here */
+.line {
+}
+
+/* line where your name is mentioned by someone else than you */
+.line-hilight {
+    font-style: italic;
+}
+
+/* your name when mentioned by someone else than you */
+.name-hilight {
+    background-color:#FCD116;
+}
+
+/* the name before : */
+.name {
+    font-weight: bold;
+}
+
+/* custom style for different auth levels */
+.name-auth-1, .name-auth-2, .name-auth-3 {
+    font-style: italic;
+}

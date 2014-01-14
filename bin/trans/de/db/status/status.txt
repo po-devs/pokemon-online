@@ -1,0 +1,7 @@
+﻿0 OK
+1 paralysiert
+2 schläft
+3 eingefroren
+4 verbrannt
+5 vergiftet
+6 verwirrt

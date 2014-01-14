@@ -1,0 +1,63 @@
+﻿0 Ele pode ser usado ou segurado por um Pokémon para recuperar da paralisia.
+1 Ele pode ser usado ou segurado por um Pokémon para acordar.
+2 Ele pode ser usado ou segurado por um Pokémon para recuperar-se de veneno.
+3 Ele pode ser usado ou segurado por um Pokémon para se recuperar de uma queimadura.
+4 Ele pode ser usado ou segurado por um Pokémon para descongelar ele.
+5 Ele pode ser usado ou segurado por um Pokémon para restaurar 10 PP de um ataque.
+6 Ele pode ser usado ou segurado por um Pokémon para se curar por apenas 10 HP.
+7 Ele pode ser usado ou segurado por um Pokémon para se recuperar de confusão.
+8 Ele pode ser usado ou segurado por um Pokémon para se recuperar de algum problema de status.
+9 Ele pode ser usado ou segurado por um Pokémon para curar um pouco do HP.
+10 Se realizada por um Pokémon, ele restaura HP do usuário um pouco, mas também pode causar confusão.
+11 Se realizada por um Pokémon, ele restaura HP do usuário um pouco, mas também pode causar confusão.
+12 Se realizada por um Pokémon, ele restaura HP do usuário um pouco, mas também pode causar confusão.
+13 Se realizada por um Pokémon, ele restaura HP do usuário um pouco, mas também pode causar confusão.
+14 Se realizada por um Pokémon, ele restaura HP do usuário um pouco, mas também pode causar confusão.
+15 Enterrá-la no solo macio para crescer uma Razz Plant.
+16 Enterrá-la no solo macio para crescer uma Bluk Plant.
+17 Enterrá-la no solo macio para crescer uma Plant.
+18 Enterrá-la no solo macio para crescer uma Wepear Plant.
+19 Enterrá-la no solo macio para crescer uma Pinap Plant.
+20 Usá-lo em um Pokémon faz com que seja mais amigável, mas ela também reduz a sua base de HP.
+21 Usá-lo em um Pokémon faz com que seja mais amigável, mas ela também reduz a sua base de Attack.
+22 Usá-lo em um Pokémon faz com que seja mais amigável, mas também reduz o sua base de Defesa.
+23 Usá-lo em um Pokémon faz com que seja mais amigável, mas também diminui a sua base de Sp. Atk.
+24 Usá-lo em um Pokémon faz com que seja mais amigável, mas também diminui a sua base de Sp. Def.
+25 Usá-lo em um Pokémon faz com que seja mais amigável, mas também diminui a sua base de Speed.
+26 Enterrá-la no solo macio para crescer uma Cornn Plant.
+27 Enterrá-la no solo macio para crescer uma Magost Plant.
+28 Enterrá-la no solo macio para crescer uma Rabuta Plant.
+29 Enterrá-la no solo macio para crescer uma Nomel Plant.
+30 Enterrá-la no solo macio para crescer uma Spelon Plant.
+31 Enterrá-la no solo macio para crescer uma Pamtre Plant.
+32 Enterrá-la no solo macio para crescer uma Watmel Plant.
+33 Enterrá-la no solo macio para crescer uma Durin Plant.
+34 Enterrá-la no solo macio para crescer uma Belue Plant.
+35 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Fogo.
+36 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Água.
+37 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Elétrico.
+38 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Grama.
+39 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Gelo.
+40 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Lutador.
+41 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Venenoso.
+42 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Terra.
+43 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Voador.
+44 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Psíquico.
+45 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Inseto.
+46 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Pedra.
+47 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Fantasma.
+48 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Dragão.
+49 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Noturno.
+50 Se realizada por um Pokémon, que enfraquece o ataque do adversário Super Efetivo do tipo Aço
+51 Se realizada por um Pokémon, ele aumenta seu status de Ataque um pouco.
+52 Se realizada por um Pokémon, ele aumenta seu status de Defesa um pouco.
+53 Se realizada por um Pokémon, ele aumenta seu status de velocidade um pouco.
+54 Se realizada por um Pokémon, ele aumenta seu status de SP. Atk um pouco.
+55 Se realizada por um Pokémon, ele aumenta seu status de SP. Def stat um pouco.
+56 Se realizada por um Pokémon, ele aumenta a sua taxa de acerto crítico um pouco.
+57 Se realizada por um Pokémon, ele aumenta bruscamente uma de seus status um pouco.
+58 Se realizada por um Pokémon, ele restaura seu HP se for atingido por um ataque super efetivo do inimigo.
+59 Se realizada por um Pokémon, ele aumenta a precisão de um ataque apenas um pouco e só uma vez.
+60 Se realizada por um Pokémon, ele se movimenta primeiro apenas um pouco e só uma vez.
+61 Se realizada por um Pokémon, e se o adversário usar um ataque físico, o adversário também tem leva o dano.
+62 Se realizada por um Pokémon, e se o adversário usar um ataque especial, o adversário também leva o dano.

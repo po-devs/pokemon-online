@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>IvBox</class>
+ <widget class="QWidget" name="IvBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>236</width>
+    <height>386</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>DVs</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="finalStats">
+     <property name="title">
+      <string>&amp;DVs</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <widget class="QSpinBox" name="hpivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="attivdesc">
+        <property name="text">
+         <string>Att:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QSpinBox" name="attivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="defivdesc">
+        <property name="text">
+         <string>Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QSpinBox" name="defivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="spattivdesc">
+        <property name="text">
+         <string>Sp. Att:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QSpinBox" name="spattivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="spdefivdesc">
+        <property name="text">
+         <string>Sp. Def:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QSpinBox" name="spdefivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="speedivdesc">
+        <property name="text">
+         <string>Speed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QSpinBox" name="speedivspin">
+        <property name="maximum">
+         <number>31</number>
+        </property>
+        <property name="value">
+         <number>31</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="attivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="defivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLabel" name="spattivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLabel" name="spdefivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLabel" name="speedivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="hpivlabel">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="hpivdesc">
+        <property name="text">
+         <string>HP:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     <zorder>hpivspin</zorder>
+     <zorder>attivdesc</zorder>
+     <zorder>attivspin</zorder>
+     <zorder>defivdesc</zorder>
+     <zorder>defivspin</zorder>
+     <zorder>spattivdesc</zorder>
+     <zorder>spattivspin</zorder>
+     <zorder>spdefivdesc</zorder>
+     <zorder>spdefivspin</zorder>
+     <zorder>speedivdesc</zorder>
+     <zorder>speedivspin</zorder>
+     <zorder>attivlabel</zorder>
+     <zorder>defivlabel</zorder>
+     <zorder>spattivlabel</zorder>
+     <zorder>spdefivlabel</zorder>
+     <zorder>speedivlabel</zorder>
+     <zorder>hpivlabel</zorder>
+     <zorder>hpivdesc</zorder>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="hiddenPowerTitle">
+       <property name="text">
+        <string>&amp;Hidden Power</string>
+       </property>
+       <property name="buddy">
+        <cstring>hiddenPowerType</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="hiddenPowerType"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="hiddenPowerPower">
+       <property name="text">
+        <string>(70 pow)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="hpchoice">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="columnCount">
+      <number>6</number>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>40</number>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>25</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>HP</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Att</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Def</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>S. Att</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>S. Def</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Spd</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>hpivspin</tabstop>
+  <tabstop>attivspin</tabstop>
+  <tabstop>defivspin</tabstop>
+  <tabstop>spattivspin</tabstop>
+  <tabstop>spdefivspin</tabstop>
+  <tabstop>speedivspin</tabstop>
+  <tabstop>hiddenPowerType</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

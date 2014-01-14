@@ -1,0 +1,872 @@
+QToolTip {
+    color: black;
+}
+
+QDockWidget {
+    color: #cccccc;
+    font-weight: bold;
+}
+
+ QDockWidget::title {
+    background-color: transparent;
+    text-align:center;
+ }
+
+ QDockWidget::close-button{
+     background: rgba(200,200,200,60);
+ }
+
+ QDockWidget::close-button:hover{
+     background: gray;
+ }
+
+ QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+     padding: 1px -1px -1px 1px;
+ }
+
+/* Because styles other than plastique suck... */
+QMainWindow::handle, QSplitter::handle {
+/* Find the right image and add :  image: url(images/splitter.png
+   Just look at how Plastique style's splitter is when there's no css
+   and you'll understand.
+
+   In the meantime, without the image, it's not as good. */
+	width: 5px;
+	height: 5px;
+	background-color: transparent;
+}
+
+/* Because styles other than plastique suck... */
+QSplitter::handle:hover {
+	background-color: rgba(255,255,255,140);
+}
+
+/* Main Widgets */
+
+PokeSelection, Menu, ServerChoice, Client, TeamBuilder {
+    background: #070a0f;
+    border-radius: 20px;
+}
+
+MainWidget #topWidget QRadioButton::indicator {
+     image: none;
+     width: 0px;
+     height: 0px;
+}
+
+MainWidget #topWidget QRadioButton {
+    padding-left: 2px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    color: #DDD;
+}
+
+MainWidget #topWidget QRadioButton:checked {
+    border: 1px solid black;
+    border-radius: 4px;
+    color: black;
+    background-color: white;
+}
+
+/**************** Menu ****************************/
+
+
+Menu QWidget#menuButtonsFrame {
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #192c3b, stop: 0.50 #192b39,
+                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+	padding-top: 18px;
+	padding-bottom: 18px;
+	padding-left: 11px;
+	padding-right: 11px;
+}
+
+Menu #menuButtons {
+	background: #111b25;
+}
+
+Menu #updateLabel {
+    color: white;
+    font-size: 14;
+    font-weight: bold;
+}
+
+Menu #updateContainer QGroupBox::title {
+    color: white;
+}
+
+/********** ServerChoice ***************************/
+
+ServerChoice QWidget#serverChoiceFrame {
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #192c3b, stop: 0.50 #192b39,
+                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left: 11px;
+        padding-right: 11px;
+}
+
+ServerChoice #serverChoice {
+        background: #111b25;
+}
+
+/*=============================================*\*/
+/*************** Platform dependent **************/
+
+PokeButton QLabel#nickname, PokeButton QLabel#number, PokeBoxes #nickNameLabel {
+    color: white;
+    font-size: 15px;
+}
+
+PokeButton QLabel#species, PokeBoxes QFrame#innerSelectedFrame QLabel#speciesLabel {
+    font-size: 11px;
+    color: #90979f;
+}
+
+PokeButton QLabel#itemLabel {
+    font-size: 11px;
+    color: #dfe6ec;
+}
+
+PokeButton QLabel#level, PokeBoxes #levelLabel {
+    font-size: 12px;
+    color: white;
+}
+
+/*=============================================*\*/
+
+PokeButton {
+    min-width: 170px;
+    height: 85px;
+}
+
+TrainerMenu QLabel#avatar {
+    background: #ffffff;
+}
+
+TeamMenu #done {
+  margin-right: 40px;
+}
+
+PokeEdit #itemSprite {
+	margin: 9px;
+}
+
+QToolButton#pokemonFrame {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #1a2d3c, stop: 0.495 #172c3d,
+                                stop: 0.505 #0d161f, stop: 1.0 #16242f);
+        height: 140px;
+        width: 140px;
+        /*border-radius: 4px;*/
+}
+
+QToolButton #pokemonSprite {
+    background: #ffffff;
+    margin: 9px;
+    min-width: 96px;
+    min-height: 96px;
+}
+
+MainWidget {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+							stop: 0 #192c3b, stop: 0.55 #192b39,
+							stop: 0.56 #11181e, stop: 1.0 #12202b);
+	
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#Blank space at the top of the window
+MainWidget QLabel#topLabel {
+}
+
+MainWidget #topWidget {
+    margin-bottom: 20px;
+}
+
+MainWidget QLabel#versionLabel {
+    color: #DDDDDD;
+}
+
+QLabel#appLogo {
+	margin-left: 40px;
+	margin-right: 40px;
+	margin-top: 15px;
+	margin-bottom: 30px;
+}
+
+TeamBuilder * {
+    font-family: Verdana;
+}
+
+TrainerMenu QLabel {
+    color: white;
+}
+
+TrainerMenu QLineEdit#teamName, TrainerMenu QLineEdit#teamTier {
+    padding: -1px;
+}
+
+TrainerMenu QLabel#teambuilderLabel {
+    font-size: 24px;
+}
+
+TrainerMenu QFrame#teambuilderFrame {
+    margin-top: 5px;
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #192c3b, stop: 0.59 #192b39,
+                                stop: 0.60 #11181e, stop: 1.0 #12202b);
+}
+
+PokeBoxes QFrame#teamFrame, PokeBoxes QFrame#selectedFrame {
+    margin-top: 5px;
+    border-radius: 15px;
+    border: 1px solid #304250;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #192c3b, stop: 0.50 #192b39,
+                                stop: 0.51 #11181e, stop: 1.0 #12202b);
+}
+
+
+TrainerMenu QPushButton#close {
+/*    background: #b10305;*/
+    color: white;
+    margin-top: 10px;
+    margin-right: 30px;
+    min-height: 27px;
+    margin-bottom: 8px;
+    border: 1px solid #7f8585;
+    border-radius: 3px;
+
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fe001b, stop: 0.8 #d40000,
+                                stop: 1.0 #9d0104);
+}
+
+TrainerMenu QPushButton#close:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ff224b, stop: 0.8 #e40000,
+                                stop: 1.0 #bd3134);
+}
+
+TrainerMenu QPushButton#close:pressed {
+    background: #9d0104;
+    padding-top: 3px;
+    padding-left: 3px;
+    padding-bottom: 1px;
+    padding-right: 1px;
+}
+
+TrainerMenu QToolButton {
+    background-position: center;
+    background-origin: content;
+    background-repeat: no-repeat;
+}
+
+TrainerMenu QToolButton:pressed {
+    padding-top: 1px;
+    padding-left: 1px;
+    padding-bottom: -1px;
+    padding-right: -1px;
+}
+
+TrainerMenu QToolButton#addTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/At.png);
+}
+
+TrainerMenu QToolButton#addTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/AtH.png);
+}
+
+TrainerMenu QToolButton#removeTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Dt.png);
+}
+
+TrainerMenu QToolButton#removeTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/DtH.png);
+}
+
+TrainerMenu QToolButton#importTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/It.png);
+}
+
+TrainerMenu QToolButton#importTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/ItH.png);
+}
+
+TrainerMenu QToolButton#loadTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Lt.png);
+}
+
+TrainerMenu QToolButton#loadTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/LtH.png);
+}
+
+TrainerMenu QToolButton#saveTeam {
+    background-image: url(Themes/Classic/Teambuilder/trainer/St.png);
+}
+
+TrainerMenu QToolButton#saveTeam:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/StH.png);
+}
+
+TrainerMenu QToolButton#teamFolderButton {
+    background-image: url(Themes/Classic/Teambuilder/trainer/Cf.png);
+}
+
+TrainerMenu QToolButton#teamFolderButton:hover {
+    background-image: url(Themes/Classic/Teambuilder/trainer/CfH.png);
+}
+
+TrainerMenu PokeButton, PokeBoxes PokeButton {
+    background: #111b25;
+    border-color: #0a131c;
+}
+
+TrainerMenu PokeButton:checked {
+    background: #40491e;
+}
+
+PokeBoxes PokeButton:checked {
+    background: #491e1e;
+}
+
+ /* Style the tab using the tab sub-control. Note that
+     it reads QTabBar _not_ QTabWidget */
+ QTabBar#pokemonTabs::tab {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #9e9d9b, stop: 0.6 #7e7e7e,
+                                 stop: 0.65 #7a7a7a, stop: 1.0 #65696c);
+     border: 1px solid #808684;
+     border-top-color: #192a32; /* same as the pane color */
+     border-bottom-left-radius: 4px;
+     border-bottom-right-radius: 4px;
+     min-width: 8ex;
+     padding: 2px;
+	 margin-right: 2px;
+ }
+ 
+ QTabBar#pokemonTabs::tab:first {
+	 margin-left: 20px;
+ }
+
+ QTabBar#pokemonTabs::tab:selected, QTabBar#pokemonTabs::tab:hover {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+ }
+
+ QTabBar#pokemonTabs::tab:selected {
+     border-color: #9B9B9B;
+     border-top-color: #192a32; /* same as pane color */
+ }
+
+ QTabBar#pokemonTabs::tab:!selected {
+     margin-bottom: 4px; /* make non-selected tabs look smaller */
+ }
+ 
+TeamMenu #done {
+    background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
+        stop: 0 #016d9c, stop: 0.4 #005e90,
+        stop: 0.6 #045283, stop: 1.0 #0f3258);
+    border: 1px solid #76859a;
+    padding: 3px;
+    color: white;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-color: #025780;
+}
+
+TeamMenu #done:hover {
+         background: qlineargradient(x1:0, y1:0, x2: 0, y2: 1,
+                                                                 stop: 0 #3e8aab, stop: 0.4 #448eb5,
+                                                                 stop: 0.6 #417b9f, stop: 1.0 #154477);
+}
+
+TeamMenu #done:pressed {
+    background: #045283;
+}
+ 
+PokeEdit #levelSettings {
+    margin-top: 9px;
+}
+
+PokeEdit #speciesLabel {
+    font-size: 15px;
+}
+
+PokeEdit QLabel {
+    color: white;
+}
+
+TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
+    color: white;
+}
+
+TeamMenu QRadioButton::indicator {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio.png);
+}
+
+TeamMenu QRadioButton::indicator:checked {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-checked.png);
+}
+
+TeamMenu QRadioButton::indicator:checked:hover {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-checked-hover.png);
+}
+
+TeamMenu QRadioButton::indicator:pressed {
+    image: url(Themes/Classic/Teambuilder/check-icons/radio-pressed.png);
+}
+
+TeamMenu QCheckBox::indicator:checked {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-checked.png);
+}
+
+TeamMenu QCheckBox::indicator:checked:hover {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-checked-hover.png);
+}
+
+TeamMenu QCheckBox::indicator:pressed {
+    image: url(Themes/Classic/Teambuilder/check-icons/check-pressed.png);
+}
+
+PokeSelection QPushButton#altForme {
+    color: white;
+    background: #459903;
+}
+
+PokeSelection QPushButton#changeSpecies {
+    color: white;
+    background: #3975b8;
+}
+
+/**** box ****/
+
+PokeBoxes QFrame#innerSelectedFrame {
+    background: #111b25;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+PokeBoxes QFrame#innerSelectedFrame QLabel {
+    color: white;
+}
+
+PokeBoxes QFrame#innerSelectedFrame #pokemonFrame {
+    width: 96px;
+    height: 96px;
+    border: 0;
+}
+
+PokeBoxes #boxes {
+    border: 1px solid red;
+    border-radius: 10px;
+}
+
+PokeBoxes #boxes:pane {
+    border-radius: 10px;
+    border: 1px solid #5c707e;
+}
+
+PokeBoxes #boxes QGraphicsView {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #C4C4C3;
+}
+QTabWidget#boxes::tab-bar {
+    left: 20px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabWidget#boxes QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabWidget#boxes QTabBar::tab:selected, QTabWidget#MainChat QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabWidget#boxes QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabWidget#boxes QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
+
+PokeBoxes #boxes QGraphicsScene {
+}
+
+PokeBoxes #movesLabel, PokeBoxes #natureLabel {
+    font-weight: bold;
+}
+
+/*\*=============================================*/
+
+Client QTextEdit {
+	font-family: Tahoma;
+}
+
+Client QTreeWidget {
+	font-family: Segoe UI Semibold;
+	font-size: 12px;
+}
+
+Client QTreeWidget::branch:!has-children {
+	border: 0px;
+	width: 5px;
+}
+
+Client QListWidget::item {
+	min-height: 22px;
+}
+
+Client QTreeWidget::item {
+	min-height: 25px;
+}
+
+QTabWidget#MainChat::tab-bar {
+    left: 5px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabWidget#MainChat QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border: 2px solid #C4C4C3;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 8ex;
+    padding: 2px;
+}
+
+QTabWidget#MainChat QTabBar::tab:selected, QTabWidget#MainChat QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabWidget#MainChat QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabWidget#MainChat QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
+DockAdvanced#OwnWindow {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
+}
+
+QMainWindow::separator {
+	width: 0px;
+}
+
+
+QTextEdit#MainChat {
+	background-image: url(Themes/Classic/mainchat.png);
+	background-attachment: fixed;
+	background-repeat: repeat;
+	background-position: center;
+	background-color: white;
+}
+
+#Announcement, ServerChoice #announcement, Menu #tip {
+	border-radius: 2px;
+	border: 1px solid grey;
+	background: #ffffcd;
+	text-align: center;
+}
+
+ServerChoice #announcement {
+	padding:2px;
+}
+
+#Announcement {
+	font-size: 11px;
+}
+
+Menu #tipNumber {
+    background: rgba(255,255,255, 60);
+}
+
+Menu QGroupBox {
+    font-weight: bold;
+    color: #EEEEEE;
+}
+
+Menu #nextTip, Menu #prevTip {
+    background: rgba(255,255,255, 160);
+}
+
+Menu QLineEdit {
+    color: white;
+}
+
+ServerChoice #serverChoiceFrame QLabel {
+    color: white;
+}
+
+QSlider::groove:horizontal {
+	border: 1px solid #999999;
+	height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+	margin: 2px 2px 2px 2px;
+}
+
+QSlider::handle:horizontal {
+	/*background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #3354e3, stop:1 #788de8);
+	border: 1px solid #102eb0; 
+	border-radius: 7px;*/
+	width: 14px;
+	image:url(Themes/Classic/Teambuilder/ScrollBall.png);
+	margin: -8px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+}
+
+QSlider::sub-page:horizontal {
+	border: 1px solid #0072b3;
+	height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00a2ff, stop:1 #80c2e8);
+	margin: 2px 0;
+}
+
+TeamPokeButton {
+	width: 127px;
+	height: 61px;
+	background: #9d9fa1;
+}
+
+QPushButton#PokemonTargetButton {
+	min-height: 40px;
+}
+
+QProgressBar#TimeOut {
+	font-family: LCD;
+	font-weight: bold;
+	font-size: 15px;
+    border: 1px solid black;
+	width: 79px;
+	height: 21px;
+	background-color:black;
+	text-align: center;
+	color: white;
+	border-radius: 7px;
+}
+
+QProgressBar#TimeOut::chunk{
+	background-color: #55a8fc;
+	width: 1px;
+}
+
+QProgressBar#LifePoints {
+	border: 1px solid #353535;
+	border-left: 0px;
+	min-height: 13px;
+	height: 13px;
+	max-height: 13px;
+	text-align: center;
+}
+
+QProgressBar#LifePoints::chunk{
+	background-color: #1fc42a;
+	width: 1px;
+}
+
+BaseBattleWindow, #ReplayViewer {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8f9294, stop: 0.5 #ccc9c9, stop: 1 #8f9294);
+}
+
+BaseBattleWindow QLabel#TrainerNick {
+	font-weight: bold;
+	color: #312f2f;
+	font-size: 12px;
+}
+
+BaseBattleWindow QLabel#PokemonNick {
+text-transform: uppercase;
+font-variant: small-caps; 
+	font-weight: bold;
+   font-family: Arial Rounded MT;
+	font-size: 14px;
+}
+
+BaseBattleWindow QLabel#PokemonLevel {
+	font-weight: bold;
+  font-family: Arial Rounded MT;
+	font-size: 10px;
+}
+
+
+PokeButton {
+	min-height: 50px;
+}
+
+
+QLabel#MyTrainerBox, QLabel#OppTrainerBox {
+	height: 82px;
+	width: 82px;
+	background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #e9e8e8, stop: 0.5 #aeacac, stop: 1 #e9e8e8);
+	border-radius: 8px
+}
+
+QLabel#MyTrainerBox {
+	border: 1px solid #fa1111
+}
+
+QLabel#OppTrainerBox {
+	border: 1px solid #16a7d6
+}
+
+QLabel#AttackName, QLabel#AttackPP{
+	font-family: Trebuchet MS;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+QLabel#AttackPP{
+	color: white;
+	padding-right: 5px;
+}
+
+OldAttackButton{
+	min-height: 45px;
+}
+
+BattleWindow QTabWidget#Modified::pane {
+	border: 3px solid #e2e1e1;
+	padding: 0;
+	margin: 0;
+	border-radius: 8px;
+}
+
+TypeChart QTableWidgetItem{
+	font-weight: bold;
+}
+
+/* Style the tab using the tab sub-control. Note that
+it reads QTabBar _not_ QTabWidget */
+QTabWidget#Modified > QTabBar::tab:top, QTabWidget#Modified > QTabBar::tab:bottom {
+	background: #bababa;
+	border: 1px solid #676a6c;
+	border-radius: 5px;
+	height: 23px;
+	min-width: 90px;
+	padding: 2px;
+}
+
+QTabWidget#Modified  > QTabBar::tab::title {
+	font-weight:bold;
+	font-family:Trebuchet MS;
+	font-size: 14px;
+}
+
+QTabWidget#Modified > QTabBar::tab:hover{
+	border-color: #077cff;
+	color: white;
+	background: #88bcf1;
+}
+
+QTabWidget#Modified > QTabBar::tab:selected {
+	border-color: #077cff;
+	color: white;
+	background: #66ace1;
+}
+
+QTabWidget#Modified > QTabBar::tab:top:selected , QTabWidget#Modified > QTabBar::tab:bottom:selected {
+	/* expand/overlap to the left and right by 4px */
+	margin-left: -2px;
+	margin-right: -2px;
+}
+
+QTabWidget#Modified > QTabBar::tab:top:first,QTabWidget#Modified > QTabBar::tab:bottom:first {
+	margin-left: 15px;
+}
+
+QTabWidget#Modified > QTabBar::tab:top:last, QTabWidget#Modified > QTabBar::tab:bottom:last {
+	margin-right: 0px;
+}
+
+
+ChallengeDialog {
+	background: #111b25;
+}
+
+ChallengeDialog QLabel#name, ChallengeDialog QGroupBox::title {
+	color: white;
+}
+
+ChallengeDialog QCheckBox {
+	color: #0ca0dd;
+}
+
+ChallengeDialog QLabel#avatar {
+        /*background: white;*/
+}
+
+#PlayerInfo {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+
+
+BaseChallengeWindow QLabel {
+	color: black;
+}
+
+BattleWindow QStackedWidget {
+	background: #9d9f9d;
+}
+
+/*
+QTabBar::tab:left, QTabBar::tab:right {
+	background: #bababa;
+	border: 1px solid #676a6c;
+	border-radius: 5px;
+	min-height: 23px;
+	width: 70px;
+	padding: 2px;
+}
+
+
+ QTabBar::tab:left:selected , QTabBar::tab:right:selected {
+	margin-top: -2px;
+	margin-bottom: -2px;
+}
+
+QTabBar::tab:left:first,QTabBar::tab:right:first {
+	margin-left: 0px;
+}
+
+QTabBar::tab:left:last, QTabBar::tab:right:last {
+	margin-right: 0px;
+}
+
+ */

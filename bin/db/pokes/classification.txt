@@ -1,0 +1,719 @@
+﻿0 
+1 Seed Pokémon
+2 Seed Pokémon
+3 Seed Pokémon
+4 Lizard Pokémon
+5 Flame Pokémon
+6 Flame Pokémon
+7 Tiny Turtle Pokémon
+8 Turtle Pokémon
+9 Turtle Pokémon
+10 Worm Pokémon
+11 Cocoon Pokémon
+12 Butterfly Pokémon
+13 Hairy Pokémon
+14 Cocoon Pokémon
+15 Poison Bee Pokémon
+16 Tiny Bird Pokémon
+17 Bird Pokémon
+18 Bird Pokémon
+19 Mouse Pokémon
+20 Mouse Pokémon
+21 Tiny Bird Pokémon
+22 Beak Pokémon
+23 Snake Pokémon
+24 Cobra Pokémon
+25 Mouse Pokémon
+26 Mouse Pokémon
+27 Mouse Pokémon
+28 Mouse Pokémon
+29 Poison Pin Pokémon
+30 Poison Pin Pokémon
+31 Drill Pokémon
+32 Poison Pin Pokémon
+33 Poison Pin Pokémon
+34 Drill Pokémon
+35 Fairy Pokémon
+36 Fairy Pokémon
+37 Fox Pokémon
+38 Fox Pokémon
+39 Balloon Pokémon
+40 Balloon Pokémon
+41 Bat Pokémon
+42 Bat Pokémon
+43 Weed Pokémon
+44 Weed Pokémon
+45 Flower Pokémon
+46 Mushroom Pokémon
+47 Mushroom Pokémon
+48 Insect Pokémon
+49 Poison Moth Pokémon
+50 Mole Pokémon
+51 Mole Pokémon
+52 Scratch Cat Pokémon
+53 Classy Cat Pokémon
+54 Duck Pokémon
+55 Duck Pokémon
+56 Pig Monkey Pokémon
+57 Pig Monkey Pokémon
+58 Puppy Pokémon
+59 Legendary Pokémon
+60 Tadpole Pokémon
+61 Tadpole Pokémon
+62 Tadpole Pokémon
+63 Psi Pokémon
+64 Psi Pokémon
+65 Psi Pokémon
+66 Superpower Pokémon
+67 Superpower Pokémon
+68 Superpower Pokémon
+69 Flower Pokémon
+70 Flycatcher Pokémon
+71 Flycatcher Pokémon
+72 Jellyfish Pokémon
+73 Jellyfish Pokémon
+74 Rock Pokémon
+75 Rock Pokémon
+76 Megaton Pokémon
+77 Fire Horse Pokémon
+78 Fire Horse Pokémon
+79 Dopey Pokémon
+80 Hermit Crab Pokémon
+81 Magnet Pokémon
+82 Magnet Pokémon
+83 Wild Duck Pokémon
+84 Twin Bird Pokémon
+85 Triple Bird Pokémon
+86 Sea Lion Pokémon
+87 Sea Lion Pokémon
+88 Sludge Pokémon
+89 Sludge Pokémon
+90 Bivalve Pokémon
+91 Bivalve Pokémon
+92 Gas Pokémon
+93 Gas Pokémon
+94 Gas Pokémon
+95 Rock Snake Pokémon
+96 Hypnosis Pokémon
+97 Hypnosis Pokémon
+98 River Crab Pokémon
+99 Pincer Pokémon
+100 Ball Pokémon
+101 Ball Pokémon
+102 Egg Pokémon
+103 Coconut Pokémon
+104 Lonely Pokémon
+105 Bone Keeper Pokémon
+106 Kicking Pokémon
+107 Punching Pokémon
+108 Licking Pokémon
+109 Poison Gas Pokémon
+110 Poison Gas Pokémon
+111 Spikes Pokémon
+112 Drill Pokémon
+113 Egg Pokémon
+114 Vine Pokémon
+115 Parent Pokémon
+116 Dragon Pokémon
+117 Dragon Pokémon
+118 Goldfish Pokémon
+119 Goldfish Pokémon
+120 Starshape Pokémon
+121 Mysterious Pokémon
+122 Barrier Pokémon
+123 Mantis Pokémon
+124 Humanshape Pokémon
+125 Electric Pokémon
+126 Spitfire Pokémon
+127 Stagbeetle Pokémon
+128 Wild Bull Pokémon
+129 Fish Pokémon
+130 Atrocious Pokémon
+131 Transport Pokémon
+132 Transform Pokémon
+133 Evolution Pokémon
+134 Bubble Jet Pokémon
+135 Lightning Pokémon
+136 Flame Pokémon
+137 Virtual Pokémon
+138 Spiral Pokémon
+139 Spiral Pokémon
+140 Shellfish Pokémon
+141 Shellfish Pokémon
+142 Fossil Pokémon
+143 Sleeping Pokémon
+144 Freeze Pokémon
+145 Electric Pokémon
+146 Flame Pokémon
+147 Dragon Pokémon
+148 Dragon Pokémon
+149 Dragon Pokémon
+150 Genetic Pokémon
+151 New Specie Pokémon
+152 Leaf Pokémon
+153 Leaf Pokémon
+154 Herb Pokémon
+155 Fire Mouse Pokémon
+156 Volcano Pokémon
+157 Volcano Pokémon
+158 Big Jaw Pokémon
+159 Big Jaw Pokémon
+160 Big Jaw Pokémon
+161 Scout Pokémon
+162 Long Body Pokémon
+163 Owl Pokémon
+164 Owl Pokémon
+165 Five Star Pokémon
+166 Five Star Pokémon
+167 String Spit Pokémon
+168 Long Leg Pokémon
+169 Bat Pokémon
+170 Angler Pokémon
+171 Light Pokémon
+172 Tiny Mouse Pokémon
+173 Star Shape Pokémon
+174 Balloon Pokémon
+175 Spike Ball Pokémon
+176 Happiness Pokémon
+177 Little Bird Pokémon
+178 Mystic Pokémon
+179 Wool Pokémon
+180 Wool Pokémon
+181 Light Pokémon
+182 Flower Pokémon
+183 Aquamouse Pokémon
+184 Aquarabbit Pokémon
+185 Imitation Pokémon
+186 Frog Pokémon
+187 Cottonweed Pokémon
+188 Cottonweed Pokémon
+189 Cottonweed Pokémon
+190 Long Tail Pokémon
+191 Seed Pokémon
+192 Sun Pokémon
+193 Clear Wing Pokémon
+194 Water Fish Pokémon
+195 Water Fish Pokémon
+196 Sun Pokémon
+197 Moonlight Pokémon
+198 Darkness Pokémon
+199 Royal Pokémon
+200 Screech Pokémon
+201 Symbol Pokémon
+202 Patient Pokémon
+203 Long Neck Pokémon
+204 Bagworm Pokémon
+205 Bagworm Pokémon
+206 Land Snake Pokémon
+207 Flyscorpion Pokémon
+208 Iron Snake Pokémon
+209 Fairy Pokémon
+210 Fairy Pokémon
+211 Balloon Pokémon
+212 Pincer Pokémon
+213 Mold Pokémon
+214 Singlehorn Pokémon
+215 Sharp Claw Pokémon
+216 Little Bear Pokémon
+217 Hibernator Pokémon
+218 Lava Pokémon
+219 Lava Pokémon
+220 Pig Pokémon
+221 Swine Pokémon
+222 Coral Pokémon
+223 Jet Pokémon
+224 Jet Pokémon
+225 Delivery Pokémon
+226 Kite Pokémon
+227 Armor Bird Pokémon
+228 Dark Pokémon
+229 Dark Pokémon
+230 Dragon Pokémon
+231 Long Nose Pokémon
+232 Armor Pokémon
+233 Virtual Pokémon
+234 Big Horn Pokémon
+235 Painter Pokémon
+236 Scuffle Pokémon
+237 Handstand Pokémon
+238 Kiss Pokémon
+239 Electric Pokémon
+240 Live Coal Pokémon
+241 Milk Cow Pokémon
+242 Happiness Pokémon
+243 Thunder Pokémon
+244 Volcano Pokémon
+245 Aurora Pokémon
+246 Rock Skin Pokémon
+247 Hard Shell Pokémon
+248 Armor Pokémon
+249 Diving Pokémon
+250 Rainbow Pokémon
+251 Time Travel Pokémon
+252 Wood Gecko Pokémon
+253 Wood Gecko Pokémon
+254 Forest Pokémon
+255 Chick Pokémon
+256 Young Fowl Pokémon
+257 Blaze Pokémon
+258 Mud Fish Pokémon
+259 Mud Fish Pokémon
+260 Mud Fish Pokémon
+261 Bite Pokémon
+262 Bite Pokémon
+263 Tinyracoon Pokémon
+264 Rush Pokémon
+265 Worm Pokémon
+266 Cocoon Pokémon
+267 Butterfly Pokémon
+268 Cocoon Pokémon
+269 Poison Moth Pokémon
+270 Water Weed Pokémon
+271 Jolly Pokémon
+272 Carefree Pokémon
+273 Acorn Pokémon
+274 Wily Pokémon
+275 Wickid Pokémon
+276 TinySwallow Pokémon
+277 Swallow Pokémon
+278 Seagull Pokémon
+279 Water Bird Pokémon
+280 Feeling Pokémon
+281 Emotion Pokémon
+282 Embrace Pokémon
+283 Pond Skater Pokémon
+284 Eyeball Pokémon
+285 Mushroom Pokémon
+286 Mushroom Pokémon
+287 Slacker Pokémon
+288 Wild Monkey Pokémon
+289 Lazy Pokémon
+290 Trainee Pokémon
+291 Ninja Pokémon
+292 Shed Pokémon
+293 Whisper Pokémon
+294 Big Voice Pokémon
+295 Loud Noise Pokémon
+296 Guts Pokémon
+297 Arm Thrust Pokémon
+298 Polka Dot Pokémon
+299 Compass Pokémon
+300 Kitten Pokémon
+301 Prim Pokémon
+302 Darkness Pokémon
+303 Deceiver Pokémon
+304 Iron Armor Pokémon
+305 Iron Armor Pokémon
+306 Iron Armor Pokémon
+307 Meditate Pokémon
+308 Meditate Pokémon
+309 Lightning Pokémon
+310 Discharge Pokémon
+311 Cheering Pokémon
+312 Cheering Pokémon
+313 Firefly Pokémon
+314 Firefly Pokémon
+315 Thorn Pokémon
+316 Stomach Pokémon
+317 Poison Bag Pokémon
+318 Savage Pokémon
+319 Brutal Pokémon
+320 Ball Whale Pokémon
+321 Float Whale Pokémon
+322 Numb Pokémon
+323 Eruption Pokémon
+324 Coal Pokémon
+325 Bounce Pokémon
+326 Manipulate Pokémon
+327 Spot Panda Pokémon
+328 Ant Pit Pokémon
+329 Vibration Pokémon
+330 Mystic Pokémon
+331 Cactus Pokémon
+332 Scarecrow Pokémon
+333 Cotton Bird Pokémon
+334 Humming Pokémon
+335 Cat Ferret Pokémon
+336 Fang Snake Pokémon
+337 Meteorite Pokémon
+338 Meteorite Pokémon
+339 Whiskers Pokémon
+340 Whiskers Pokémon
+341 Ruffian Pokémon
+342 Rogue Pokémon
+343 Clay Doll Pokémon
+344 Clay Doll Pokémon
+345 Sea Lily Pokémon
+346 Barnacle Pokémon
+347 Old Shrimp Pokémon
+348 Plate Pokémon
+349 Fish Pokémon
+350 Tender Pokémon
+351 Weather Pokémon
+352 Color Swap Pokémon
+353 Puppet Pokémon
+354 Marionette Pokémon
+355 Requiem Pokémon
+356 Beckon Pokémon
+357 Fruit Pokémon
+358 Wind Chime Pokémon
+359 Disaster Pokémon
+360 Bright Pokémon
+361 Snow Hat Pokémon
+362 Face Pokémon
+363 Clap Pokémon
+364 Ball Roll Pokémon
+365 Ice Break Pokémon
+366 Bivalve Pokémon
+367 Deep Sea Pokémon
+368 South Sea Pokémon
+369 Longevity Pokémon
+370 Rendezvous Pokémon
+371 Rock Head Pokémon
+372 Endurance Pokémon
+373 Dragon Pokémon
+374 Iron Ball Pokémon
+375 Iron Claw Pokémon
+376 Iron Leg Pokémon
+377 Rock Peak Pokémon
+378 Iceberg Pokémon
+379 Iron Pokémon
+380 Eon Pokémon
+381 Eon Pokémon
+382 Sea Basin Pokémon
+383 Continent Pokémon
+384 Sky High Pokémon
+385 Wish Pokémon
+386 DNA Pokémon
+387 Tiny Leaf Pokémon
+388 Grove Pokémon
+389 Continent Pokémon
+390 Chimp Pokémon
+391 Playful Pokémon
+392 Flame Pokémon
+393 Penguin Pokémon
+394 Penguin Pokémon
+395 Emperor Pokémon
+396 Starling Pokémon
+397 Starling Pokémon
+398 Predator Pokémon
+399 Plump Mouse Pokémon
+400 Beaver Pokémon
+401 Cricket Pokémon
+402 Cricket Pokémon
+403 Flash Pokémon
+404 Spark Pokémon
+405 Gleam Eyes Pokémon
+406 Bud Pokémon
+407 Bouquet Pokémon
+408 Head Butt Pokémon
+409 Head Butt Pokémon
+410 Shield Pokémon
+411 Shield Pokémon
+412 Bagworm Pokémon
+413 Bagworm Pokémon
+414 Moth Pokémon
+415 Tiny Bee Pokémon
+416 Beehive Pokémon
+417 EleSquirrel Pokémon
+418 Sea Weasel Pokémon
+419 Sea Weasel Pokémon
+420 Cherry Pokémon
+421 Blossom Pokémon
+422 Sea Slug Pokémon
+423 Sea Slug Pokémon
+424 Long Tail Pokémon
+425 Balloon Pokémon
+426 Blimp Pokémon
+427 Rabbit Pokémon
+428 Rabbit Pokémon
+429 Magical Pokémon
+430 Big Boss Pokémon
+431 Catty Pokémon
+432 Tiger Cat Pokémon
+433 Bell Pokémon
+434 Skunk Pokémon
+435 Skunk Pokémon
+436 Bronze Pokémon
+437 Bronze Bell Pokémon
+438 Bonsai Pokémon
+439 Mime Pokémon
+440 Playhouse Pokémon
+441 Music Note Pokémon
+442 Forbidden Pokémon
+443 Land Shark Pokémon
+444 Cave Pokémon
+445 Mach Pokémon
+446 Big Eater Pokémon
+447 Emanation Pokémon
+448 Aura Pokémon
+449 Hippo Pokémon
+450 Heavyweight Pokémon
+451 Scorpion Pokémon
+452 Ogre Scorp Pokémon
+453 Toxic Mouth Pokémon
+454 Toxic Mouth Pokémon
+455 Bug Catcher Pokémon
+456 Wing Fish Pokémon
+457 Neon Pokémon
+458 Kite Pokémon
+459 Frosted Tree Pokémon
+460 Frosted Tree Pokémon
+461 Sharp Claw Pokémon
+462 Magnet Area Pokémon
+463 Licking Pokémon
+464 Drill Pokémon
+465 Vine Pokémon
+466 Thunderbolt Pokémon
+467 Blast Pokémon
+468 Jubilee Pokémon
+469 Ogre Darner Pokémon
+470 Verdant Pokémon
+471 Fresh Snow Pokémon
+472 Fang Scorp Pokémon
+473 Twin Tusk Pokémon
+474 Virtual Pokémon
+475 Blade Pokémon
+476 Compass Pokémon
+477 Gripper Pokémon
+478 Snow Land Pokémon
+479 Plasma Pokémon
+480 Knowledge Pokémon
+481 Emotion Pokémon
+482 Willpower Pokémon
+483 Temporal Pokémon
+484 Spatial Pokémon
+485 Lava Dome Pokémon
+486 Colossal Pokémon
+487 Renegade Pokémon
+488 Lunar Pokémon
+489 Sea Drifter Pokémon
+490 Seafaring Pokémon
+491 Pitch-Black Pokémon
+492 Gratitude Pokémon
+493 Alpha Pokémon
+494 Victory Pokémon
+495 Grass Snake Pokémon
+496 Grass Snake Pokémon
+497 Regal Pokémon
+498 Fire Pig Pokémon
+499 Fire Pig Pokémon
+500 Mega Fire Pig Pokémon
+501 Sea Otter Pokémon
+502 Discipline Pokémon
+503 Formidable Pokémon
+504 Scout Pokémon
+505 Lookout Pokémon
+506 Puppy Pokémon
+507 Loyal Dog Pokémon
+508 Big-Hearted Pokémon
+509 Devious Pokémon
+510 Cruel Pokémon
+511 Grass Monkey Pokémon
+512 Thorn Monkey Pokémon
+513 High Temp Pokémon
+514 Ember Pokémon
+515 Spray Pokémon
+516 Geyser Pokémon
+517 Dream Eater Pokémon
+518 Drowsing Pokémon
+519 Tiny Pigeon Pokémon
+520 Wild Pigeon Pokémon
+521 Proud Pokémon
+522 Electrified Pokémon
+523 Thunderbolt Pokémon
+524 Mantle Pokémon
+525 Ore Pokémon
+526 Compressed Pokémon
+527 Bat Pokémon
+528 Courting Pokémon
+529 Mole Pokémon
+530 Subterrene Pokémon
+531 Hearing Pokémon
+532 Muscular Pokémon
+533 Muscular Pokémon
+534 Muscular Pokémon
+535 Tadpole Pokémon
+536 Vibration Pokémon
+537 Vibration Pokémon
+538 Vibration Pokémon
+539 Karate Pokémon
+540 Sewing Pokémon
+541 Leaf-Wrapped Pokémon
+542 Nurturing Pokémon
+543 Centipede Pokémon
+544 Curlipede Pokémon
+545 Megapede Pokémon
+546 Cotton Puff Pokémon
+547 Windveiled Pokémon
+548 Bulb Pokémon
+549 Flowering Pokémon
+550 Hostile Pokémon
+551 Desert Croc Pokémon
+552 Desert Croc Pokémon
+553 Intimidation Pokémon
+554 Zen Charm Pokémon
+555 Blazing Pokémon
+556 Cactus Pokémon
+557 Rock Inn Pokémon
+558 Stone Home Pokémon
+559 Shedding Pokémon
+560 Hoodlum Pokémon
+561 Avianoid Pokémon
+562 Spirit Pokémon
+563 Coffin Pokémon
+564 Prototurtle Pokémon
+565 Prototurtle Pokémon
+566 First Bird Pokémon
+567 First Bird Pokémon
+568 Trash Bag Pokémon
+569 Trash Heap Pokémon
+570 Tricky Fox Pokémon
+571 Illusion Fox Pokémon
+572 Chinchilla Pokémon
+573 Scarf Pokémon
+574 Fixation Pokémon
+575 Manipulate Pokémon
+576 Astral Body Pokémon
+577 Cell Pokémon
+578 Mitosis Pokémon
+579 Multiplying Pokémon
+580 Water Bird Pokémon
+581 White Bird Pokémon
+582 Fresh Snow Pokémon
+583 Icy Snow Pokémon
+584 Snowstorm Pokémon
+585 Season Pokémon
+586 Season Pokémon
+587 Sky Squirrel Pokémon
+588 Clamping Pokémon
+589 Cavalry Pokémon
+590 Mushroom Pokémon
+591 Mushroom Pokémon
+592 Floating Pokémon
+593 Floating Pokémon
+594 Caring Pokémon
+595 Attaching Pokémon
+596 EleSpider Pokémon
+597 Thorn Seed Pokémon
+598 Thorn Pod Pokémon
+599 Gear Pokémon
+600 Gear Pokémon
+601 Gear Pokémon
+602 EleFish Pokémon
+603 EleFish Pokémon
+604 EleFish Pokémon
+605 Cerebral Pokémon
+606 Cerebral Pokémon
+607 Candle Pokémon
+608 Lamp Pokémon
+609 Luring Pokémon
+610 Tusk Pokémon
+611 Axe Jaw Pokémon
+612 Axe Jaw Pokémon
+613 Chill Pokémon
+614 Freezing Pokémon
+615 Crystallizing Pokémon
+616 Snail Pokémon
+617 Shell Out Pokémon
+618 Trap Pokémon
+619 Martial Arts Pokémon
+620 Martial Arts Pokémon
+621 Cave Pokémon
+622 Automaton Pokémon
+623 Automaton Pokémon
+624 Sharp Blade Pokémon
+625 Sword Blade Pokémon
+626 Bash Buffalo Pokémon
+627 Eaglet Pokémon
+628 Valiant Pokémon
+629 Diapered Pokémon
+630 Bone Vulture Pokémon
+631 Anteater Pokémon
+632 Iron Ant Pokémon
+633 Irate Pokémon
+634 Hostile Pokémon
+635 Brutal Pokémon
+636 Torch Pokémon
+637 Sun Pokémon
+638 Iron Will Pokémon
+639 Cavern Pokémon
+640 Grassland Pokémon
+641 Cyclone Pokémon
+642 Bolt Strike Pokémon
+643 Vast White Pokémon
+644 Deep Black Pokémon
+645 Abundance Pokémon
+646 Boundary Pokémon
+647 Colt Pokémon
+648 Melody Pokémon
+649 Paleozoic Pokémon
+650 Spiny Nut Pokémon
+651 Spiny Armor Pokémon
+652 Spiny Armor Pokémon
+653 Fox Pokémon
+654 Fox Pokémon
+655 Fox Pokémon
+656 Bubble Frog Pokémon
+657 Bubble Frog Pokémon
+658 Ninja Pokémon
+659 Digging Pokémon
+660 Digging Pokémon
+661 Tiny Robin Pokémon
+662 Ember Pokémon
+663 Scorching Pokémon
+664 Scatterdust Pokémon
+665 Powder Blowing Pokémon
+666 Scales Pokémon
+667 Lion Cub Pokémon
+668 Royal Pokémon
+669 Lone Flower Pokémon
+670 Single Bloom Pokémon
+671 Garden Pokémon
+672 Mount Pokémon
+673 Ride Pokémon
+674 Playful Pokémon
+675 Daunting Pokémon
+676 Poodle Pokémon
+677 Restraint Pokémon
+678 Constraint Pokémon
+679 Sword Pokémon
+680 Sword Pokémon
+681 Royal Sword Pokémon
+682 Perfume Pokémon
+683 Fragrance Pokémon
+684 Cotton Candy Pokémon
+685 Meringue Pokémon
+686 Revolving Pokémon
+687 Overturning Pokémon
+688 Two-Handed Pokémon
+689 Collective Pokémon
+690 Mock Kelp Pokémon
+691 Mock Kelp Pokémon
+692 Water Gun Pokémon
+693 Water Gun Pokémon
+694 Generator Pokémon
+695 Generator Pokémon	
+696 Royal Heir Pokémon
+697 Despot Pokémon
+698 Tundra Pokémon
+699 Tundra Pokémon
+700 Intertwining Pokémon
+701 Wrestling Pokémon
+702 Antenna Pokémon
+703 Jewel Pokémon
+704 Soft Tissue Pokémon
+705 Soft Tissue Pokémon
+706 Dragon Pokémon
+707 Key Ring Pokémon
+708 Stump Pokémon
+709 Elder Tree Pokémon
+710 Pumpkin Pokémon
+711 Pumpkin Pokémon
+712 Ice Chunk Pokémon
+713 Iceberg Pokémon	
+714 Sound Wave Pokémon
+715 Sound Wave Pokémon
+716 Life Pokémon
+717 Destruction Pokémon	
+718 Order Pokémon	

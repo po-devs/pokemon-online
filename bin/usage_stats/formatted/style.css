@@ -1,0 +1,164 @@
+.tier {
+	margin-top: 8px;
+	margin-bottom: 0px;
+}
+
+.hiddenPower {
+	padding-left: 4px;
+	font-weight: bold;
+}
+
+/* Top 5 pokemon in the tier page */
+.topPokemon {
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+
+/* Lower pokemon in the tier page */
+.lowPokemon {
+	margin-bottom: 0px;
+}
+
+/* Top of a tier page */
+.tierBattleNumber {
+}
+
+/* Top of a pokemon page */
+.pokemonBattleNumber {
+	/*text-align: center;*/
+}
+
+/* Ranks within a pokemon page */
+.pokemonRank {
+	font-weight: bold;
+}
+
+/* Styles <ul> */
+.moveList {
+}
+
+/* Styles <li> */
+.move {
+}
+
+/* Level, item, ability */
+.pokemonTitle {
+	margin-bottom: 0px;
+}
+
+/* Evs, ivs, nature */
+.advanced {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 0.9em;
+}
+
+.smallPercent {
+	padding-left: 4px;
+	font-size: 0.7em;
+}
+
+.button {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+}
+
+.normal {
+	color: #a8a878;
+}
+.fighting {
+	color: #c03028;
+}
+.flying {
+	color: #a890f0;
+}
+.poison {
+	color: #a040a0;
+}
+.ground {
+	color: #e0c068;
+}
+.rock {
+	color: #b8a038;
+}
+.bug {
+	color: #a8b820;
+}
+.ghost {
+	color: #705898;
+}
+.steel {
+	color: #b8b8d0;
+}
+.fire {
+	color: #f08030;
+}
+.water {
+	color: #6890f0;
+}
+.grass {
+	color: #78c850;
+}
+.electric {
+	color: #f8d030;
+}
+.psychic {
+	color: #f85888;
+}
+.ice {
+	color: #98d8d8;
+}
+.dragon {
+	color: #7038f8;
+}
+.dark {
+	color: #705848;
+}
+.curse {
+	color: #68a090;
+}
+
+.globaltable th, .globaltable td{
+	background: #dddddd;
+	/*margin: 0;
+	padding: 0;
+	border-width: 5px;
+	border-color: #dddddd;*/
+}
+
+
+/* Links */
+a {
+    text-decoration : none;
+    color : #0ca0dd;
+}
+a:hover {
+    color : #0462dd;
+    text-shadow : 0px 0px 3px #0462dd;
+}
+a img {
+    border : 0px;
+}
+
+header {
+    display : block;
+    margin : 0px auto;
+	/*text-align: center;*/
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+h1 {
+	text-align: center;
+}
+
+body {
+	
+}
+
+div {
+	margin: 0px;
+}
