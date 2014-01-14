@@ -286,7 +286,10 @@ struct MMBugBite : public MM
         int item = b.poke(t).item();
         if (!ItemInfo::isBerry(item))
             return;
-
+        if (b.hasWorkingAbility(t, Ability::StickyHold)) {
+            b.sendAbMessage(121,1,t);
+            return;
+        }
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
         b.devourBerry(s, item, s);
         b.disposeItem(t);
@@ -957,10 +960,13 @@ struct MMCovet : public MM
     static void uas(int s,int t,BS &b)
     {
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
-        if (b.poke(s).item() == 0 && b.canLoseItem(t, s)) {
+        int i2 = b.poke(t).item();
+        if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && !((ItemInfo::isMegaStone(i2) && ItemInfo::MegaStoneForme(i2).original() == b.pokenum(s).original()))) {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
+        } else if (b.hasWorkingAbility(t, Ability::StickyHold)) {
+            b.sendAbMessage(121,1,t);
         }
     }
 };
@@ -1979,7 +1985,7 @@ struct MMFling : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.poke(s).item() != 0 && b.hasWorkingItem(s, b.poke(s).item()) && !(ItemInfo::isGem(b.poke(s).item())) && ItemInfo::Power(b.poke(s).item()) > 0) {
+        if (b.canLoseItem(s,s) && ItemInfo::Power(b.poke(s).item()) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
                 return;
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
@@ -3085,18 +3091,20 @@ struct MMKnockOff : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
     static void bh(int s, int t, BS &b) {
-        if (b.canLoseItem(t,s) && b.gen() > 5) {
+        if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
             b.chainBp(s, 10);
         }
     }
 
-    static void uas(int s,int t,BS &b)
-    {
-        if (!b.koed(t) && b.canLoseItem(t,s))
-        {
-            b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-            b.loseItem(t);
-            b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
+    static void uas(int s,int t,BS &b) {
+        if (!b.koed(t)) {
+            if (b.canLoseItem(t,s)) {
+                b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+                b.loseItem(t);
+                b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
+            } else if (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0) {
+                b.sendAbMessage(121,1,t);
+            }
         }
     }
 };
@@ -3109,7 +3117,14 @@ struct MMSwitcheroo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.koed(t) || b.koed(s) || !b.canLoseItem(t, s) || !b.canLoseItem(s, s)) {
+        int i1 = b.poke(s).item();
+        int i2 = b.poke(t).item();
+        if (b.koed(t) || b.koed(s) || !b.canLoseItem(t, s) || !b.canLoseItem(s, s) ||
+                (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()) ||
+                (ItemInfo::isMegaStone(i2) && ItemInfo::MegaStoneForme(i2).original() == b.pokenum(s).original())) {
+            if (b.hasWorkingAbility(t, Ability::StickyHold)) {
+                b.sendAbMessage(121,0,t);
+            }
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5691,10 +5706,12 @@ struct MMBestow : public MM {
 
     static void daf(int s, int t, BS &b)
     {
+        int i1 = b.poke(s).item();
         if (b.koed(t) || b.poke(s).item() == 0 || b.poke(t).item() != 0 || ItemInfo::isMail(b.poke(s).item())
                 || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && ItemInfo::isPlate(b.poke(s).item()))
                 || ((b.pokenum(t).pokenum == Pokemon::Giratina || b.pokenum(s).pokenum == Pokemon::Giratina) && b.poke(s).item() == Item::GriseousOrb)
-                || ((b.pokenum(t).pokenum == Pokemon::Genesect || b.pokenum(s).pokenum == Pokemon::Genesect) && ItemInfo::isDrive(b.poke(s).item())))
+                || ((b.pokenum(t).pokenum == Pokemon::Genesect || b.pokenum(s).pokenum == Pokemon::Genesect) && ItemInfo::isDrive(b.poke(s).item()))
+                || (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()))
         {
             fturn(b,s).add(TM::Failed);
         }
@@ -7134,7 +7151,7 @@ void MoveEffect::init()
     REGISTER_MOVE(13, Bounce);
     REGISTER_MOVE(14, BrickBreak);
     REGISTER_MOVE(15, Brine);
-    REGISTER_MOVE(16, BugBite);
+    REGISTER_MOVE(16, BugBite); /*Bug Bite, Pluck */
     REGISTER_MOVE(17, Camouflage);
     REGISTER_MOVE(18, Charge);
     REGISTER_MOVE(19, Conversion);

@@ -69,3 +69,4 @@
 117 %s reversed all other Pokémon's auras!
 118 %s's Bulletproof blocked the attack!
 120 %s is levitating!
+121 %s's Sticky Hold made the attack ineffective!|%s's Sticky Hold prevented item loss!
