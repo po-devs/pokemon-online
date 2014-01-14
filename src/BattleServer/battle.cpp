@@ -607,8 +607,8 @@ BattleChoices BattleSituation::createChoice(int slot)
         }
     }
 
-    if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
-            && hasWorkingItem(slot, poke(slot).item()) && !megas[player(slot)]) {
+    //Mega Evolution is not hindered by Embargo, etc.
+    if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num() && !megas[player(slot)]) {
         ret.mega = true;
     }
 
@@ -834,8 +834,8 @@ void BattleSituation::analyzeChoices()
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
             if (choice(slot).mega()) {
-                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()
-                        && hasWorkingItem(slot, poke(slot).item())) {
+                //Mega Evolution is not hindered by Embargo, etc.
+                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
                     sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
                     changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
                     megas[player(slot)] = true;
