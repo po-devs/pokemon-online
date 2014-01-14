@@ -6,10 +6,10 @@
 #include <QMouseEvent>
 #include <QDropEvent>
 #include <QDragEnterEvent>
+#include <TeambuilderLibrary/theme.h>
 #include "pokebox.h"
 #include "pokeboxitem.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "theme.h"
+#include <PokemonInfo/pokemonstructs.h>
 
 PokeBox::PokeBox(int boxNum, const QString &file) : m_Num(boxNum), currentPokemon(0), isLoaded(false)
 {

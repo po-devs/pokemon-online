@@ -3,7 +3,7 @@
 
 #include <QtCore>
 #include "network.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 /* Commands to dialog with the server */
 namespace NetworkReg

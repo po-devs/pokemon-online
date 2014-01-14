@@ -5,8 +5,8 @@
 #include <QColorDialog>
 #include <QSettings>
 
-#include "../Utilities/functions.h"
-#include "Teambuilder/teamholder.h"
+#include <Utilities/functions.h>
+#include <PokemonInfo/teamholder.h>
 
 class LoadLine;
 

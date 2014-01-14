@@ -3,22 +3,14 @@
 */
 
 #include "analyze.h"
-#include "network.h"
+#include <Utilities/network.h>
 #include "player.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/battlestructs.h>
 
 using namespace NetworkServ;
-
-Analyzer::~Analyzer()
-{
-    blockSignals(true);
-    /* Very important feature. If you don't do this it might crash.
-        this makes the stillValid of Network redundant, but still.*/
-    close();
-}
 
 void Analyzer::keepAlive()
 {
@@ -77,33 +69,6 @@ void Analyzer::spectateBattle(int battleid, const BattleConfiguration &conf)
     } else {
         notify(SpectateBattle, Flags(1), qint32(battleid), conf);
     }
-}
-
-void Analyzer::connectTo(const QString &host, quint16 port)
-{
-    connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
-    socket().connectToHost(host, port);
-}
-
-void Analyzer::close() {
-    if (dummy) {return;}
-    socket().close();
-}
-
-QString Analyzer::ip() const {
-    if (dummy) {return QString("dummyip");}
-    return socket().ip();
-}
-
-void Analyzer::changeIP(const QString &ip) {
-    if (dummy) return;
-    socket().changeIP(ip);
-}
-
-void Analyzer::setLowDelay(bool lowDelay)
-{
-    if (dummy) {return;}
-    socket().setLowDelay(lowDelay);
 }
 
 void Analyzer::sendPlayers(const QList<PlayerInfo> &p)
@@ -215,25 +180,6 @@ void Analyzer::sendUserInfo(const UserInfo &ui)
     notify(GetUserInfo, ui);
 }
 
-void Analyzer::error()
-{
-    if (dummy) {return;}
-    emit connectionError(socket().error(), socket().errorString());
-}
-
-bool Analyzer::isConnected() const
-{
-    if (dummy) {return false;}
-    return socket().isConnected();
-}
-
-void Analyzer::stopReceiving()
-{
-    if (dummy) {return;}
-    blockSignals(true);
-    socket().close();
-}
-
 void Analyzer::finishSpectating(qint32 battleId)
 {
     notify(SpectateBattle, Flags(0), battleId);
@@ -264,7 +210,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 {
     mIsInCommand = true;
 
-    DataStream in (commandline);
+    DataStream in (commandline, version.version);
     uchar command;
 
     in >> command;
@@ -469,7 +415,7 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
 
             break;
         }
-    case CPTBan: // For compatability, v.2.0.05 uses this, now obsolated
+    case CPTBan: // For compatability, v.2.0.05 uses this, now obsolete
     case CPBan:
         {
             QString name;
@@ -588,54 +534,4 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
     }
     mIsInCommand = false;
     emit endCommand();
-}
-
-void Analyzer::commandReceived(const QByteArray &command)
-{
-    if (delayCount > 0) {
-        delayedCommands.push_back(command);
-    } else {
-        dealWithCommand(command);
-    }
-}
-
-void Analyzer::delay()
-{
-    delayCount += 1;
-}
-
-void Analyzer::swapIds(Analyzer *other)
-{
-    int id = other->socket().id();
-    other->socket().changeId(socket().id());
-    socket().changeId(id);
-}
-
-void Analyzer::setId(int id)
-{
-    socket().changeId(id);
-}
-
-void Analyzer::sendPacket(const QByteArray &packet)
-{
-    emit packetToSend(packet);
-}
-
-void Analyzer::undelay()
-{
-    delayCount -=1;
-
-    while(delayedCommands.size() > 0 && delayCount==0) {
-        dealWithCommand(delayedCommands.takeFirst());
-    }
-}
-
-GenericNetwork & Analyzer::socket()
-{
-    return *mysocket;
-}
-
-const GenericNetwork & Analyzer::socket() const
-{
-    return *mysocket;
 }

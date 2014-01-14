@@ -1,9 +1,11 @@
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#ifndef CLIENTPLUGININTERFACE_H
+#define CLIENTPLUGININTERFACE_H
 
 #include <QObject>
 #include <QString>
 #include <QHash>
+
+#include <Utilities/plugininterface.h>
 
 /* An interface Client Plugins must follow.
    Remember that plugins are still very experimental and that this file is going to be subject to
@@ -44,25 +46,9 @@ public:
     }
 };
 
-class ClientPlugin
+class ClientPlugin : public Plugin
 {
 public:
-    virtual ~ClientPlugin() {}
-
-    /* The name of the option the plugin would take in the menu bar.
-       Also appears as the name of the plugin */
-    virtual QString pluginName() const = 0;
-
-    /* A widget that would be used to configure the plugin in the menu bar.
-       Return NULL if you don't want one (default behavior) */
-    virtual QWidget * getConfigurationWidget() {
-        return NULL;
-    }
-
-    virtual bool hasConfigurationWidget() const {
-        return false;
-    }
-
     virtual OnlineClientPlugin *getOnlinePlugin(ClientInterface*) {
         return NULL;
     }
@@ -70,12 +56,14 @@ public:
     virtual TeambuilderPlugin *getTeambuilderPlugin(TeambuilderInterface*) {
         return NULL;
     }
+
+    #define client_plugin_version() int version() const { return 1;}
 };
 
 /* Each plugin will have to have a function like that named
    createPluginClass, that creates a ClientPlugin (or a derived
     class) through new and returns it. */
-typedef ClientPlugin *(*PluginInstanceFunction) (MainEngineInterface*);
+typedef ClientPlugin *(*ClientPluginInstanceFunction) (MainEngineInterface*);
 
 /* Will be used like that:
 
@@ -90,10 +78,10 @@ ClientPlugin *createPluginClass(void);
 
 ....
 
-ClientPlugin *createPluginClass() {
+ClientPlugin *createClientPlugin() {
     return new MyPlugin();
 }
 
 */
 
-#endif // PLUGININTERFACE_H
+#endif // CLIENTPLUGININTERFACE_H

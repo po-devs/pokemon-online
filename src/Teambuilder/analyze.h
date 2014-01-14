@@ -6,9 +6,9 @@
 #define ANALYZE_H
 
 #include <QtCore>
-#include "network.h"
-#include "../Utilities/coreclasses.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/network.h>
+#include <Utilities/coreclasses.h>
+#include <PokemonInfo/networkstructs.h>
 
 class Client;
 class PlayerInfo;
@@ -39,14 +39,19 @@ public:
     Analyzer(bool registry_connection = false);
 
     /* functions called by the client */
-    void login(const TeamHolder &team, bool ladder, bool away, const QColor &color, const QString &defaultChannel, const QStringList &autoJoin);
+    void login(const TeamHolder &team, bool ladder, bool away=false, const QColor &color=QColor(), const QString &defaultChannel=QString(), const QStringList &autoJoin=QStringList());
     /* Sends a logout message, and deletes the analyzer */
     void logout();
     Q_INVOKABLE void sendChanMessage(int channelid, const QString &message);
     void connectTo(const QString &host, quint16 port);
     void sendTeam(const TeamHolder & team);
     void sendBattleResult(int id, int result);
+    void reconnect(int id, const QByteArray &pass, int ccount = -1);
     bool isConnected() const;
+
+    void kick(int id);
+    void ban(int id);
+    void tempban(int id, int time);
 
     QString getIp() const;
     quint32 getCommandCount() const {return commandCount;}
@@ -153,21 +158,24 @@ public slots:
     void sendChallengeStuff(const ChallengeInfo &c);
 
 private:
+    typedef Network<QTcpSocket*> network_type;
     /* The connection to the outside */
-    Network &socket();
-    const Network &socket() const;
+    network_type &socket();
+    const network_type &socket() const;
     /* To tell if its the registry we're connected to*/
     bool registry_socket;
-
-    quint32 commandCount;
 
     QList<QByteArray> storedCommands;
     QSet<int> channelCommands;
 
-    Network mysocket;
+    network_type mysocket;
 
+public:
+    quint32 commandCount;
+
+    QByteArray reconnectPass;
     /* Server version */
-    ProtocolVersion version;
+    ProtocolVersion version, ownVersion;
 };
 
 #endif // ANALYZE_H

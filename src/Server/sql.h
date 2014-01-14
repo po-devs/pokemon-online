@@ -3,8 +3,8 @@
 
 #include <QSqlDatabase>
 #include <QSqlError>
-#include <QSqlQuery>
 #include <QRegExp>
+#include <QSqlQuery>
 #include "server.h"
 /*
     This file defines a helper function to open a connection to an
@@ -42,6 +42,11 @@ public:
             break;
         }
 
+        if (databaseType < 0) {
+            /* No SQL */
+            return;
+        }
+
         QSqlDatabase db;
         if (name == "")
             db = QSqlDatabase::addDatabase(driver);
@@ -56,7 +61,7 @@ public:
             db.setUserName(s.value("SQL/User").toString());
             db.setPassword(s.value("SQL/Pass").toString());
         }
-		
+
         if (databaseType == MySQL) {
             db.setConnectOptions("MYSQL_OPT_RECONNECT=1");
         }
@@ -86,7 +91,8 @@ public:
     }
 
     enum DataBaseType  {
-        SQLite,
+        NoSql=-1,
+        SQLite=0,
         PostGreSQL,
         MySQL
     };
@@ -96,5 +102,9 @@ public:
     static QMutex mutex;
     static bool doVacuum;
 };
+
+inline bool isSql() {
+    return SQLCreator::databaseType >= 0;
+}
 
 #endif // SQL_H

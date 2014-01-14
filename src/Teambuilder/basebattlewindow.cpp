@@ -1,21 +1,22 @@
-#include "basebattlewindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
-#include "theme.h"
-#include "logmanager.h"
-#include "../BattleManager/advancedbattledata.h"
-#include "../BattleManager/battleclientlog.h"
-#include "../BattleManager/battleinput.h"
-#include "poketextedit.h"
-#include "../Shared/battlecommands.h"
-#include "../Utilities/coreclasses.h"
-
 #ifdef QT5
 #include <QApplication>
 #include <QToolTip>
 #include <QMediaPlayer>
-#include "../Utilities/wavreader.h"
+#include <Utilities/wavreader.h>
 #endif
+
+#include "Shared/battlecommands.h"
+#include <Utilities/coreclasses.h>
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <BattleManager/advancedbattledata.h>
+#include <BattleManager/battleclientlog.h>
+#include <BattleManager/battleinput.h>
+#include <TeambuilderLibrary/poketextedit.h>
+#include <TeambuilderLibrary/theme.h>
+
+#include "basebattlewindow.h"
+#include "logmanager.h"
 
 using namespace BattleCommands;
 
@@ -120,7 +121,7 @@ void BaseBattleWindow::init()
     replay = LogManager::obj()->createLog(ReplayLog, title);
     replay->override = Log::OverrideNo;
 
-    replayData.data = "battle_logs_v2\n";
+    replayData.data = "battle_logs_v3\n";
     DataStream stream(&replayData.data, QIODevice::Append);
     stream << conf();
     replayData.t.start();

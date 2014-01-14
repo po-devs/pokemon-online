@@ -15,61 +15,38 @@
 
 # Websocket library cloned from git://gitorious.org/qtwebsocket/qtwebsocket.git
 
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
-CONFIG(po_all):CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation
+CONFIG(po_all): CONFIG += po_client po_clientplugins po_server po_serverplugins po_relaystation test
 
 !CONFIG(po_server):!CONFIG(po_serverplugins):!CONFIG(po_registry):!CONFIG(po_relaystation):CONFIG += po_client
 CONFIG(po_serverplugins):CONFIG += po_server
 CONFIG(po_clientplugins):CONFIG += po_client
+CONFIG(po_server):!CONFIG(po_norelaystation):CONFIG+= po_relaystation
 
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) | CONFIG(po_relaystation) {
-    SUBDIRS += src/Utilities
-}
-
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_relaystation) {
-    SUBDIRS += src/PokemonInfo
-}
-
-CONFIG(po_client) | CONFIG(po_serverplugins) | CONFIG(po_relaystation) {
-    SUBDIRS += src/BattleManager
-}
-
-CONFIG(po_relaystation) | CONFIG(po_serverplugins) {
-    SUBDIRS += src/QtWebsocket #git://gitorious.org/qtwebsocket/qtwebsocket.git
-}
+SUBDIRS += src/libraries
 
 CONFIG(po_client) {
     SUBDIRS += src/Teambuilder
 }
 
 CONFIG(po_clientplugins) {
-    SUBDIRS += src/ThemeManager \
-               src/CSSChanger \
-               src/ClientScripting \
-               src/SettingsPlugin \
-               src/SmogonPlugin 
-}
-
-CONFIG(chess) {
-    SUBDIRS += src/ChessPlugin
+    SUBDIRS += src/client-plugins
 }
 
 CONFIG(po_server) {
-    SUBDIRS += src/Server
+    SUBDIRS += src/Server \
+        src/BattleServer
 }
 
 CONFIG(po_relaystation) {
-    SUBDIRS += src/QJson \
-               src/RelayStation
+    SUBDIRS += src/RelayStation
 }
 
 CONFIG(po_serverplugins) {
-    SUBDIRS += src/UsageStatistics \
-               src/StatsExtracter \
-               src/BattleLogs \
-               src/WebServerPlugin
+    SUBDIRS += src/server-plugins
 }
 
 CONFIG(po_registry) {
@@ -88,6 +65,13 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_pt-br.ts \
     src/trans/translation_zh-cn.ts
 
+CONFIG(test) {
+    SUBDIRS += \
+        tests
+}
+
 contains(QT_VERSION, ^5\\.[1]\\..*):cache()
 
 message(Following modules will be built: $$SUBDIRS)
+
+

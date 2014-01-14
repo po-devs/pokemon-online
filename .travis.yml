@@ -10,4 +10,4 @@ install:
   - sudo apt-get install libzip-dev qt4-dev-tools libqt4-declarative-shaders libqt4-dev libphonon-dev
 
 script:
-  - qmake "CONFIG += po_all" && make
+  - qmake "CONFIG += po_all po_registry webconf" && make && ./scripts/run-tests.sh

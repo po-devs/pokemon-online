@@ -55,7 +55,16 @@
      <item row="0" column="1" colspan="2">
       <widget class="QWidget" name="tierContainer" native="true">
        <layout class="QGridLayout" name="gridLayout_2">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
        </layout>
@@ -198,7 +207,7 @@
   <customwidget>
    <class>PokeTextEdit</class>
    <extends>QTextBrowser</extends>
-   <header>poketextedit.h</header>
+   <header>TeambuilderLibrary/poketextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,9 +1,11 @@
+#include <Utilities/functions.h>
+#include <PokemonInfo/teamholder.h>
+
+#include <TeambuilderLibrary/theme.h>
+
 #include "menu.h"
 #include "ui_menu.h"
-#include "../Utilities/functions.h"
 #include "mainwindow.h"
-#include "theme.h"
-#include "Teambuilder/teamholder.h"
 #include "loadwindow.h"
 
 static bool menuLoaded = false;

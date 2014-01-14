@@ -1,22 +1,27 @@
+#include <stdexcept>
+
 #include <QInputDialog>
+#include <QRegExp>
+
+#include "../Shared/config.h"
+#include <Utilities/antidos.h>
+#include <Utilities/ziputils.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 
 #include "server.h"
 #include "player.h"
 #include "security.h"
-#include "antidos.h"
 #include "waitingobject.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "scriptengine.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "battlebase.h"
 #include "pluginmanager.h"
-#include <QRegExp>
 #include "analyze.h"
-#include "../Shared/config.h"
-#include "../Utilities/ziputils.h"
+#include "battlecommunicator.h"
+
+#include "sessiondatafactory.h"
 #include "scriptengineagent.h"
+#include "scriptengine.h"
 
 #ifndef _EXCLUDE_DEPRECATED
 #define DEPRECATED(x) x
@@ -34,22 +39,6 @@ DEPRECATED(
     static bool stopTimer_w = false;
 )
 
-/*!
-\qmlmethod color Qt::lighter(color baseColor, real factor)
-Returns a color lighter than \c baseColor by the \c factor provided.
-
-If the factor is greater than 1.0, this functions returns a lighter color.
-Setting factor to 1.5 returns a color that is 50% brighter. If the factor is less than 1.0,
-the return color is darker, but we recommend using the Qt.darker() function for this purpose.
-If the factor is 0 or negative, the return value is unspecified.
-
-The function converts the current RGB color to HSV, multiplies the value (V) component
-by factor and converts the color back to RGB.
-
-If \c factor is not supplied, returns a color 50% lighter than \c baseColor (factor 1.5).
-*/
-
-
 QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
@@ -65,21 +54,6 @@ QScriptValue ScriptEngine::lighter(QScriptContext *ctxt, QScriptEngine *engine)
     return color.name();
 }
 
-/*!
-\qmlmethod color Qt::darker(color baseColor, real factor)
-Returns a color darker than \c baseColor by the \c factor provided.
-
-If the factor is greater than 1.0, this function returns a darker color.
-Setting factor to 3.0 returns a color that has one-third the brightness.
-If the factor is less than 1.0, the return color is lighter, but we recommend using
-the Qt.lighter() function for this purpose. If the factor is 0 or negative, the return
-value is unspecified.
-
-The function converts the current RGB color to HSV, divides the value (V) component
-by factor and converts the color back to RGB.
-
-If \c factor is not supplied, returns a color 50% darker than \c baseColor (factor 2.0).
-*/
 QScriptValue ScriptEngine::darker(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 1 && ctxt->argumentCount() != 2)
@@ -107,20 +81,6 @@ QScriptValue ScriptEngine::lightness(QScriptContext *ctxt, QScriptEngine *engine
     return color.lightnessF();
 }
 
-/*!
-\qmlmethod color Qt::tint(color baseColor, color tintColor)
-    This function allows tinting one color with another.
-
-    The tint color should usually be mostly transparent, or you will not be able to see the underlying color. The below example provides a slight red tint by having the tint color be pure red which is only 1/16th opaque.
-
-    \qml
-    Rectangle { x: 0; width: 80; height: 80; color: "lightsteelblue" }
-    Rectangle { x: 100; width: 80; height: 80; color: Qt.tint("lightsteelblue", "#10FF0000") }
-    \endqml
-    \image declarative-rect_tint.png
-
-    Tint is most useful when a subtle change is intended to be conveyed due to some event; you can then use tinting to more effectively tune the visible color.
-*/
 QScriptValue ScriptEngine::tint(QScriptContext *ctxt, QScriptEngine *engine)
 {
     if(ctxt->argumentCount() != 2)
@@ -170,7 +130,7 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     myengine.setAgent(bt);
 
-    mySessionDataFactory = new SessionDataFactory(&myengine);
+    mySessionDataFactory = new SessionDataFactory(this);
 
     QScriptValue sys = myengine.newQObject(this);
     myengine.globalObject().setProperty("global", myengine.globalObject());
@@ -234,15 +194,18 @@ ScriptEngine::ScriptEngine(Server *s) {
 
     sys.setProperty( "backtrace" , myengine.newFunction(backtrace));
 
-    QFile f("scripts.js");
-    f.open(QIODevice::ReadOnly);
-
-    changeScript(QString::fromUtf8(f.readAll()));
-
     QTimer *step_timer = new QTimer(this);
     step_timer->setSingleShot(false);
     step_timer->start(1000);
     connect(step_timer, SIGNAL(timeout()), SLOT(timer_step()));
+}
+
+void ScriptEngine::init()
+{
+    QFile f("scripts.js");
+    f.open(QIODevice::ReadOnly);
+
+    changeScript(QString::fromUtf8(f.readAll()));
 }
 
 ScriptEngine::~ScriptEngine()
@@ -268,7 +231,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
     intervalTimer_w = false;
     stopTimer_w = false;
 
-    mySessionDataFactory->disableAll();
     strict = false;
     wfatal = false;
 
@@ -282,7 +244,6 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
 
     } else {
         myscript = newscript;
-
         myengine.globalObject().setProperty("script", myscript);
 
         if (!makeSEvent("loadScript")) {
@@ -301,28 +262,8 @@ void ScriptEngine::changeScript(const QString &script, const bool triggerStartUp
             serverStartUp();
         }
 
-        mySessionDataFactory->handleInitialState();
-        if (mySessionDataFactory->isRefillNeeded()) {
-            // Refill player session info if session data is no longer valid.
-            QList<int> keys = myserver->myplayers.keys();
-            for (int i = 0; i < keys.size(); i++) {
-                mySessionDataFactory->handleUserLogIn(keys[i]);
-            }
-            // Refill channels as well.
-            keys = myserver->channels.keys();
-            for (int i = 0; i < keys.size(); i++) {
-                int current_channel = keys[i];
-                // Default channel is already there.
-                if (current_channel != 0) {
-                    mySessionDataFactory->handleChannelCreate(current_channel);
-                }
-            }
-
-            mySessionDataFactory->refillDone();
-        }
-
+        mySessionDataFactory->refill(SessionDataFactory::ConstructGlobal);
     }
-
 }
 
 QScriptValue ScriptEngine::backtrace(QScriptContext *c, QScriptEngine *)
@@ -424,7 +365,7 @@ bool ScriptEngine::testTeamCount(const QString &function, int id, int team)
 
 bool ScriptEngine::testPlayer(const QString &function, int id)
 {
-    if (!myserver->playerExist(id)) {
+    if (!loggedIn(id)) {
         if (function.length() > 0)
             warn(function, QString("Invalid player ID."), true);
         return false;
@@ -731,6 +672,21 @@ void ScriptEngine::afterPlayerAway(int src, bool away)
     makeEvent("afterPlayerAway", src, away);
 }
 
+void ScriptEngine::battleConnectionLost()
+{
+    makeEvent("battleConnectionLost");
+}
+
+bool ScriptEngine::beforeReconnect(int dest, int src)
+{
+    return makeSEvent("beforeReconnect", dest, src);
+}
+
+void ScriptEngine::afterReconnect(int src)
+{
+    makeEvent("afterReconnect", src);
+}
+
 void ScriptEngine::evaluate(const QScriptValue &expr)
 {
     if (expr.isError()) {
@@ -756,19 +712,6 @@ QScriptValue ScriptEngine::sendAll(QScriptContext *c, QScriptEngine *e)
 
     return QScriptValue();
 }
-/*
-QScriptValue ScriptEngine::broadcast2(QScriptContext *c, QScriptEngine *e)
-{
-    Server * s = (dynamic_cast<ScriptEngine*>(e->parent()))->myserver;
-
-
-
-    QString msg = c->argument(0).toString();
-    int channel = Server::NoChannel;
-
-    if ()
-
-}*/
 
 QScriptValue ScriptEngine::broadcast(QScriptContext *c, QScriptEngine *e)
 {
@@ -963,8 +906,11 @@ void ScriptEngine::changeRating(const QString& name, const QString& tier, int ne
 {
     if (!TierMachine::obj()->exists(tier))
         warn("changeRating(name, tier, rating)", "no such tier as " + tier, true);
-    else
+    else if (!TierMachine::obj()->tier(tier).exists(name)) {
+        warn("changeRating(name, tier, rating)", "player doesn't exist in tier" + tier, true);
+    } else {
         TierMachine::obj()->changeRating(name, tier, newRating);
+    }
 }
 
 void ScriptEngine::changeTier(int id, int team, const QString &tier)
@@ -1119,7 +1065,7 @@ QScriptValue ScriptEngine::aliases(const QString &ip)
 
 int ScriptEngine::connections(const QString &ip)
 {
-    return AntiDos::obj()->connectionsPerIp.value(ip);
+    return AntiDos::obj()->connections(ip);
 }
 
 int ScriptEngine::numRegistered(const QString &ip)
@@ -1133,10 +1079,8 @@ QScriptValue ScriptEngine::memoryDump()
 
     ret += QString("Members\n\tCached in memory> %1\n\tCached as non-existing> %2\n").arg(SecurityManager::holder.cachedMembersCount()).arg(SecurityManager::holder.cachedNonExistingCount());
     ret += QString("Waiting Objects\n\tFree Objects> %1\n\tTotal Objects> %2\n").arg(WaitingObjects::freeObjects.count()).arg(WaitingObjects::objectCount);
-    ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->mybattles.count()).arg(myserver->lastRatedIps.count());
-    ret += QString("Antidos\n\tConnections Per IP> %1\n\tLogins per IP> %2\n\tTransfers Per Id> %3\n\tSize of Transfers> %4\n\tKicks per IP> %5\n").arg(AntiDos::obj()->connectionsPerIp.count()).arg(
-                AntiDos::obj()->loginsPerIp.count()).arg(AntiDos::obj()->transfersPerId.count()).arg(AntiDos::obj()->sizeOfTransfers.count())
-            .arg(AntiDos::obj()->kicksPerIp.count());
+    ret += QString("Battles\n\tActive> %1\n\tRated Battles History> %2\n").arg(myserver->battles->count()).arg(myserver->lastRatedIps.count());
+    ret += AntiDos::obj()->dump();
     ret += QString("-------------------------\n-------------------------\n");
 
     foreach (QString tier, TierMachine::obj()->tierList().split('\n')) {
@@ -1188,7 +1132,7 @@ void ScriptEngine::changeDosChannel(const QString &str)
 {
     AntiDos::obj()->notificationsChannel = str;
 
-    QSettings s;
+    QSettings s("config", QSettings::IniFormat);
     s.setValue("AntiDOS/NotificationsChannel", str);
 }
 
@@ -1199,7 +1143,8 @@ void ScriptEngine::clearDosData()
 
 void ScriptEngine::reloadDosSettings()
 {
-    AntiDos::obj()->init();
+    QSettings s("config", QSettings::IniFormat);
+    AntiDos::obj()->init(s);
 }
 
 QScriptValue ScriptEngine::currentMod()
@@ -1222,6 +1167,7 @@ int ScriptEngine::disconnectedPlayers()
     return myserver->mynames.size() - myserver->numberOfPlayersLoggedIn;
 }
 
+
 void ScriptEngine::exportMemberDatabase()
 {
     SecurityManager::exportDatabase();
@@ -1239,7 +1185,10 @@ void ScriptEngine::clearChat()
 
 bool ScriptEngine::dbRegistered(const QString &name)
 {
-    return SecurityManager::member(name).isProtected();
+    if (!SecurityManager::exist(name)) {
+        return false;
+    }
+    return SecurityManager::registered(name);
 }
 
 #ifndef _EXCLUDE_DEPRECATED
@@ -1411,7 +1360,7 @@ QScriptValue ScriptEngine::dbAuth(const QString &name)
     if (!SecurityManager::exist(name)) {
         return myengine.undefinedValue();
     } else {
-        return SecurityManager::member(name).auth;
+        return SecurityManager::auth(name);
     }
 }
 
@@ -1458,6 +1407,21 @@ QScriptValue ScriptEngine::dbDelete(const QString &name)
         SecurityManager::deleteUser(name);
         return myengine.undefinedValue();
     }
+}
+
+bool ScriptEngine::dbLoaded(const QString &name)
+{
+    return SecurityManager::holder.isInMemory(name);
+}
+
+bool ScriptEngine::dbExists(const QString &name)
+{
+    return SecurityManager::exist(name);
+}
+
+void ScriptEngine::dbClearCache()
+{
+    SecurityManager::holder.clearCache();
 }
 
 QScriptValue ScriptEngine::dbLastOn(const QString &name)
@@ -1510,6 +1474,21 @@ QScriptValue ScriptEngine::away(int id)
     } else {
         return myserver->player(id)->away();
     }
+}
+
+void ScriptEngine::changeColor(int id, const QString &color)
+{
+    if (!testPlayer("changeColor", id)) {
+        return;
+    }
+
+    QColor playerColor(color);
+    if (!playerColor.isValid()) {
+        return;
+    }
+
+    myserver->player(id)->color() = playerColor;
+    myserver->sendPlayer(id);
 }
 
 QScriptValue ScriptEngine::getColor(int id)
@@ -1678,7 +1657,6 @@ QScriptValue ScriptEngine::name(int id)
 }
 QScriptValue ScriptEngine::id(const QString &name)
 {
-
     if (!myserver->nameExist(name)) {
         return myengine.undefinedValue();
     } else {
@@ -2150,7 +2128,7 @@ QScriptValue ScriptEngine::playersOfChannel(int channelid)
         Channel &c = myserver->channel(channelid);
 
         int i = 0;
-        QScriptValue ret = myengine.newArray(c.players.count());
+        QScriptValue ret = myengine.newArray(c.count());
 
         foreach(int id, c.players) {
             ret.setProperty(i, id);
@@ -2260,7 +2238,7 @@ bool ScriptEngine::loggedIn(int id)
 
 void ScriptEngine::printLine(const QString &s)
 {
-    myserver->printLine(s, false, true);
+    myserver->forcePrint(s);
 }
 
 void ScriptEngine::stopEvent()
@@ -2389,6 +2367,25 @@ int ScriptEngine::pokeType2(int id, int gen)
     return result;
 }
 
+QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
+{
+    if (!PokemonInfo::Exists(Pokemon::uniqueId(poke))) {
+        warn("baseStats(poke, stat, gen)", QString("Pokemon %1 doesn't exist.").arg(QString::number(poke)));
+        return -1;
+    }
+
+    if (!testRange("baseStats(poke, stat, gen)", stat, 0, 6)) {
+        return -1;
+    }
+
+    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+        warn("baseStats(poke, stat, gen)", QString("Gen %1 unsupported.").arg(QString::number(gen)));
+        return -1;
+    }
+
+    return PokemonInfo::BaseStats(poke,gen).baseStat(stat);
+}
+
 QScriptValue ScriptEngine::pokeBaseStats(int id, int gen)
 {
     QScriptValue ret;
@@ -2465,11 +2462,16 @@ void ScriptEngine::unban(QString name)
     SecurityManager::unban(name);
 }
 
+bool ScriptEngine::banned(const QString &ip) {
+    return SecurityManager::bannedIP(ip);
+}
+
 void ScriptEngine::battleSetup(int src, int dest, int battleId)
 {
     makeEvent("battleSetup", src, dest, battleId);
 }
 
+#if 0
 void ScriptEngine::prepareWeather(int battleId, int weatherId)
 {
     if((weatherId >= 0) && (weatherId <= 4)) {
@@ -2555,6 +2557,7 @@ void ScriptEngine::setTeamToBattleTeam(int pid, int teamSlot, int battleId)
         warn("setTeamToBattleTeam", "can't find a battle with specified id.");
     }
 }
+#endif
 
 void ScriptEngine::swapPokemons(int pid, int teamSlot, int slot1, int slot2)
 {
@@ -2722,23 +2725,23 @@ void ScriptEngine::changeMod(const QString &val)
     myserver->changeDbMod(val);
 }
 
-void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
-{
-    if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
-            || !testRange("inflictStatus", slot, 0, 5)) {
-        return;
-    }
-    BattleBase * battle = myserver->getBattle(battleId);
-    if (battle) {
-        if (toFirstPlayer) {
-            battle->changeStatus(0, slot, status);
-        }else{
-            battle->changeStatus(1, slot, status);
-        }
-    }else{
-        warn("inflictStatus", "can't find a battle with specified id.");
-    }
-}
+//void ScriptEngine::inflictStatus(int battleId, bool toFirstPlayer, int slot, int status)
+//{
+//    if (!testRange("inflictStatus", status, Pokemon::Fine, Pokemon::Koed)
+//            || !testRange("inflictStatus", slot, 0, 5)) {
+//        return;
+//    }
+//    BattleBase * battle = myserver->getBattle(battleId);
+//    if (battle) {
+//        if (toFirstPlayer) {
+//            battle->changeStatus(0, slot, status);
+//        }else{
+//            battle->changeStatus(1, slot, status);
+//        }
+//    }else{
+//        warn("inflictStatus", "can't find a battle with specified id.");
+//    }
+//}
 
 void ScriptEngine::updateRatings()
 {
@@ -2758,22 +2761,6 @@ void ScriptEngine::resetLadder(const QString &tier)
     }
 
     TierMachine::obj()->tier(tier).resetLadder();
-
-    /* Updates the rating of all the players of the tier */
-    foreach(Player *p, myserver->myplayers) {
-        if (p->hasTier(tier))
-            p->findRating(tier);
-    }
-}
-
-void ScriptEngine::synchronizeTierWithSQL(const QString &tier)
-{
-    if (!TierMachine::obj()->exists(tier)) {
-        warn("synchronizeTierWithSQL", "tier doesn't exist");
-        return;
-    }
-
-    TierMachine::obj()->tier(tier).clearCache();
 
     /* Updates the rating of all the players of the tier */
     foreach(Player *p, myserver->myplayers) {
@@ -2909,7 +2896,7 @@ QScriptValue ScriptEngine::filesForDirectory (const QString &dir)
         return myengine.undefinedValue();
     }
 
-    QStringList files = directory.entryList(QDir::Files, QDir::Name);
+    QStringList files = directory.entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(files.count());
 
     for (int i = 0; i < files.size(); i++) {
@@ -2927,7 +2914,7 @@ QScriptValue ScriptEngine::dirsForDirectory (const QString &dir)
         return myengine.undefinedValue();
     }
 
-    QStringList dirs = directory.entryList(QDir::Dirs, QDir::Name);
+    QStringList dirs = directory.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     QScriptValue ret = myengine.newArray(dirs.size());
 
     for (int i = 0; i < dirs.size(); i++) {
@@ -3345,20 +3332,26 @@ QScriptValue ScriptEngine::getServerPlugins() {
 }
 
 bool ScriptEngine::loadServerPlugin(const QString &path) {
-    int const count = myserver->pluginManager->getPlugins().size();
-    myserver->pluginManager->addPlugin(path);
-    int const count2 = myserver->pluginManager->getPlugins().size();
-    return count2 == 1 + count;
+    try {
+        myserver->pluginManager->addPlugin(path);
+    } catch (std::runtime_error &er) {
+        printLine(er.what());
+        return false;
+    }
+
+    return true;
 }
 
 bool ScriptEngine::unloadServerPlugin(const QString &plugin) {
-    QStringList plugin_names = myserver->pluginManager->getPlugins();
-    int index = plugin_names.indexOf(plugin);
-    if (index != -1) {
-        myserver->pluginManager->freePlugin(index);
-        return true;
-    }
-    return false;
+    return myserver->pluginManager->freePlugin(plugin);
+}
+
+void ScriptEngine::loadBattlePlugin(const QString &path) {
+    myserver->battles->loadPlugin(path);
+}
+
+void ScriptEngine::unloadBattlePlugin(const QString &plugin) {
+    return myserver->battles->unloadPlugin(plugin);
 }
 
 #endif // PO_SCRIPT_SAFE_ONLY
@@ -3373,70 +3366,6 @@ int ScriptEngine::system(const QString &command)
         return ::system(command.toUtf8());
     }
 }
-#include <QSqlRecord>
-
-static QScriptValue sqlResult(QScriptEngine &myengine, QSqlQuery &query)
-{
-    QScriptValue ret = myengine.newArray();
-    do {
-        QScriptValue rec = myengine.newObject();
-        QSqlRecord record = query.record();
-
-        for (int i = 0; i < record.count(); i++) {
-            rec.setProperty(record.fieldName(i), myengine.newVariant(record.value(i)));
-        }
-
-        ret.setProperty(query.at(), rec);
-    } while (query.next() && query.isValid());
-
-    return ret;
-}
-
-QScriptValue ScriptEngine::sql(const QString &command)
-{
-    QSqlQuery query;
-
-    query.setForwardOnly(true);
-
-    if (query.exec(command)) {
-        return sqlResult(myengine, query);
-    } else {
-        return myengine.undefinedValue();
-    }
-}
-
-QScriptValue ScriptEngine::sql(const QString &command, const QScriptValue &params)
-{
-    static const QString placeholder = ":";
-
-    QSqlQuery query;
-
-    query.setForwardOnly(true);
-
-    query.prepare(command);
-
-    if (params.isObject()) {
-        QScriptValueIterator it(params);
-        while (it.hasNext()) {
-            it.next();
-            query.bindValue(placeholder+it.name(), it.value().toVariant());
-        }
-    } else if (params.isArray()) {
-        QScriptValueIterator it(params);
-        while (it.hasNext()) {
-            it.next();
-            query.addBindValue(it.value().toVariant());
-        }
-    } else {
-        query.addBindValue(params.toVariant());
-    }
-
-    if (query.exec()) {
-        return sqlResult(myengine, query);
-    } else {
-        return myengine.undefinedValue();
-    }
-}
 
 QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback) {
     QProcess *process = new QProcess(this);;
@@ -3445,8 +3374,10 @@ QScriptValue ScriptEngine::get_output(const QString &command, const QScriptValue
     connect(process, SIGNAL(readyReadStandardOutput()), SLOT(read_standard_output()));
     connect(process, SIGNAL(readyReadStandardError()), SLOT(read_standard_error()));
     process->start(command);
-    processes[process] = {callback, errback, QByteArray(), QByteArray(), command};
-    return myengine.undefinedValue();
+    quint64 pid = getProcessID(process);
+    double scriptpid = double(pid); // Conversion for scripts
+    processes[process] = {callback, errback, QByteArray(), QByteArray(), command, pid};
+    return scriptpid;
 }
 
 void ScriptEngine::process_finished(int exitcode, QProcess::ExitStatus) {
@@ -3473,6 +3404,7 @@ QScriptValue ScriptEngine::list_processes() {
         QScriptValue entry = myengine.newObject();
         entry.setProperty("state", States[iter.key()->state()]);
         entry.setProperty("command", iter.value().command);
+        entry.setProperty("pid", double(iter.value().pid));
         ret.setProperty(index++, entry);
     }
     return ret;
@@ -3488,19 +3420,44 @@ QScriptValue ScriptEngine::kill_processes() {
     return true;
 }
 
+QScriptValue ScriptEngine::write_process(double pid, const QString &data)
+{
+    QHashIterator<QProcess*, ProcessData> iter(processes);
+    QProcess* proc;
+    quint64 procpid = quint64(pid);
+    bool found = false;
+    while (iter.hasNext()) {
+        iter.next();
+        if (getProcessID(iter.key()) == procpid) {
+            proc = iter.key();
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        return false;
+    }
+
+    qint64 bytesWritten = proc->write(data.toStdString().c_str());
+    return bytesWritten != -1; // Success or fail
+}
+
 void ScriptEngine::read_standard_output() {
     QProcess *p = (QProcess*) sender();
     processes[p].out.append(p->readAllStandardOutput());
+    emit stdoutReceived(getProcessID(p), QString::fromLocal8Bit(processes[p].out));
 }
 
 void ScriptEngine::read_standard_error() {
     QProcess *p = (QProcess*) sender();
     processes[p].err.append(p->readAllStandardError());
+    emit stderrReceived(getProcessID(p), QString::fromLocal8Bit(processes[p].out));
 }
 
-void ScriptEngine::addPlugin(const QString &path)
+bool ScriptEngine::addPlugin(const QString &path)
 {
-    myserver->pluginManager->addPlugin(path);
+    return loadServerPlugin(path);
 }
 
 void ScriptEngine::removePlugin(int index)
@@ -3531,6 +3488,15 @@ int ScriptEngine::moveType(int moveNum, int gen)
 QString ScriptEngine::serverVersion()
 {
     return VERSION;
+}
+
+QString ScriptEngine::protocolVersion(int id)
+{
+    if (!testPlayer("protocolVersion", id)) {
+        return "";
+    }
+    ProtocolVersion v = myserver->player(id)->relay().version;
+    return QString("%1.%2").arg(v.version).arg(v.subversion);
 }
 
 bool ScriptEngine::isServerPrivate()
@@ -3581,4 +3547,15 @@ QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
     po->wfatal = true;
 
     return QScriptValue(1);
+}
+
+/* Not invokable by scripts */
+Server* ScriptEngine::getServer()
+{
+    return myserver;
+}
+
+QScriptEngine* ScriptEngine::getEngine()
+{
+    return &myengine;
 }

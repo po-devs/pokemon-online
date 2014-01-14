@@ -15,7 +15,7 @@ class ServerWindow : public QWidget
 public:
     ServerWindow(QWidget *parent = 0);
 signals:
-    void privacyChanged(int priv);
+    void privacyChanged(bool priv);
     void mainChanChanged(const QString &mainchan);
     void nameChanged(const QString &name);
     void descChanged(const QString &desc);

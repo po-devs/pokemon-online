@@ -1,8 +1,9 @@
+#include <PokemonInfo/battlestructs.h>
+
+#include "waitingobject.h"
+#include "loadinsertthread.h"
 #include "tiermachine.h"
 #include "tier.h"
-#include "loadinsertthread.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "waitingobject.h"
 
 TierMachine* TierMachine::inst;
 
@@ -25,31 +26,19 @@ TierMachine::TierMachine()
 
     loadDecaySettings();
 
-    threads = new LoadThread*[loadThreadCount];
+    thread = new LoadInsertThread<MemberRating>();
 
-    for (int i = 0; i < loadThreadCount; i++) {
-        threads[i] = new LoadThread();
-        connect(threads[i], SIGNAL(processQuery (QSqlQuery *, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
-        threads[i]->start();
-    }
+    connect(thread , SIGNAL(processLoad (QSqlQuery*, QVariant, int, WaitingObject*)), this, SLOT(processQuery(QSqlQuery*, QVariant, int, WaitingObject *)), Qt::DirectConnection);
+    connect(thread, SIGNAL(processWrite(QSqlQuery*, void*,int)), this, SLOT(insertMember(QSqlQuery*, void*,int)), Qt::DirectConnection);
 
-    nextLoadThreadNumber = 0;
-
-    ithread = new InsertThread<MemberRating>();
-    connect(ithread, SIGNAL(processMember(QSqlQuery*,void*,int)), this, SLOT(insertMember(QSqlQuery*,void*,int)), Qt::DirectConnection);
-
-    ithread->start();
+    thread->start();
 
     load();
 }
 
 TierMachine::~TierMachine()
 {
-    ithread->finish();
-    for (int i = 0; i < loadThreadCount; i++) {
-        threads[i]->finish();
-    }
-    delete [] threads;
+    thread->finish();
 }
 
 void TierMachine::loadDecaySettings()
@@ -259,13 +248,6 @@ const QStringList & TierMachine::tierNames() const
     return m_tierNames;
 }
 
-void TierMachine::exportDatabase() const
-{
-    for(int i = 0; i < m_tiers.size(); i++) {
-        m_tiers[i]->exportDatabase();
-    }
-}
-
 int TierMachine::rating(const QString &name, const QString &tier)
 {
     return this->tier(tier).rating(name);
@@ -320,16 +302,21 @@ QString TierMachine::findTier(const TeamBattle &t) const
 
 bool TierMachine::existsPlayer(const QString &name, const QString &player)
 {
-   return exists(name) && tier(name).exists(player);
+    return exists(name) && tier(name).exists(player);
 }
 
-LoadThread *TierMachine::getThread()
+LoadInsertThread<MemberRating> *TierMachine::getThread()
 {
-    /* '%' is a safety thing, in case nextLoadThreadNumber is also accessed in writing and that messes it up, at least it isn't out of bounds now */
-    int n = nextLoadThreadNumber % loadThreadCount;
-    nextLoadThreadNumber = (n + 1) % loadThreadCount;
-    return threads[n];
+    return thread;
 }
+
+void TierMachine::exportDatabase() const
+{
+    for(int i = 0; i < m_tiers.size(); i++) {
+        m_tiers[i]->exportDatabase();
+    }
+}
+
 
 TierTree *TierMachine::getDataTree() const
 {

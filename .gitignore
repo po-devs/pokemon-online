@@ -13,11 +13,10 @@ bin/pokemon
 bin/members.txt
 bin/*.dll
 bin/stdout.txt
-bin/serverplugins
 bin/logs/
 bin/Boxes/
 bin/Pokemon-Online
-bin/myplugins/
+bin/*plugins/
 bin/Themes/
 bin/Teams/
 bin/usage_stats/formatted/
@@ -35,6 +34,7 @@ Makefile*
 bin/core*
 bin/StatsExtracter
 bin/Registry
+bin/BattleServer
 bin/Chain Breeding
 bin/MoveMachine
 bin/BattleManager
@@ -68,3 +68,6 @@ bin/README
 bin/clientscripts
 scripts/sprite
 bin/usage_stats/raw
+bin/serverdb
+bin/test-*
+pokemon-online*

@@ -72,6 +72,8 @@ private:
 
     Server *server;
     bool minimizeToTray, showTrayPopup, doubleClick;
+
+    QSettings settings;
 };
 
 #endif	/* SERVERWIDGET_H */

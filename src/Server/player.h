@@ -1,10 +1,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/battlestructs.h"
+
+class Player;
+template<class T> class QPointer;
+
+unsigned int qHash (const QPointer<Player>&);
+
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/battlestructs.h>
 #include "playerinterface.h"
-#include "sfmlsocket.h"
+#include <Utilities/asiosocket.h>
 #include "playerstructs.h"
 
 class Challenge;
@@ -23,16 +29,16 @@ class Player : public QObject, public PlayerInterface
 {
     Q_OBJECT
 
-    PROPERTY(QString, winningMessage);
-    PROPERTY(QString, losingMessage);
-    PROPERTY(QString, tieMessage);
-    PROPERTY(bool, battleSearch);
-    PROPERTY(QString, lastFindBattleIp);
-    PROPERTY(Flags, spec);
-    PROPERTY(Flags, state);
-    PROPERTY(quint8, reconnectBits);
-    PROPERTY(QString, os);
-    PROPERTY(LoginInfo*, loginInfo);
+    PROPERTY(QString, winningMessage)
+    PROPERTY(QString, losingMessage)
+    PROPERTY(QString, tieMessage)
+    PROPERTY(bool, battleSearch)
+    PROPERTY(QString, lastFindBattleIp)
+    PROPERTY(Flags, spec)
+    PROPERTY(Flags, state)
+    PROPERTY(quint8, reconnectBits)
+    PROPERTY(QString, os)
+    PROPERTY(LoginInfo*, loginInfo)
 public:
     enum State
     {

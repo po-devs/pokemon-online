@@ -1,7 +1,7 @@
 #include "loadline.h"
 #include "ui_loadline.h"
 
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 #include <QComboBox>
 #include <QLabel>

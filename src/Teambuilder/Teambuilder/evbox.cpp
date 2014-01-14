@@ -1,8 +1,8 @@
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "Teambuilder/evbox.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <TeambuilderLibrary/theme.h>
+#include "evbox.h"
 #include "ui_evbox.h"
-#include "theme.h"
 
 EvBox::EvBox(QWidget *parent) :
     QWidget(parent),

@@ -1,33 +1,28 @@
 #include <QtNetwork>
 #include <ctime> /* for random numbers, time(NULL) needed */
 #include <algorithm>
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "../Utilities/otherwidgets.h"
-#include "../Utilities/backtrace.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/movesetchecker.h>
+#include <Utilities/otherwidgets.h>
+#include <Utilities/backtrace.h>
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
-#include "battle.h"
-#include "moves.h"
-#include "rbymoves.h"
-#include "items.h"
-#include "abilities.h"
 #include "security.h"
-#include "antidos.h"
+#include <Utilities/antidos.h>
 #include "serverconfig.h"
 #include "scriptengine.h"
+#include "sql.h"
 #include "tiermachine.h"
 #include "tier.h"
 #include "battlingoptions.h"
-#include "sql.h"
-#include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "analyze.h"
 #include "networkutilities.h"
-#include "battlerby.h"
 #include "relaymanager.h"
+#include "registrycommunicator.h"
+#include "battlecommunicator.h"
 
 Server *Server::serverIns = NULL;
 
@@ -43,16 +38,16 @@ static void updateZippedChannelCache(QByteArray&val) {
 //channelCache([&](QByteArray &val) {val = makePacket(NetworkServ::ChannelsList, channelNames);}),
 //zchannelCache([&](QByteArray &val) {val = makeZipPacket(NetworkServ::ChannelsList, channelNames);}),
 
-Server::Server(quint16 port) : registry_connection(NULL), serverPorts(), showLogMessages(true),
+Server::Server(quint16 port) : registry(nullptr), battles(nullptr), serverPorts(), showLogMessages(true),
     lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0),
-    channelCache(&updateChannelCache), zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
+    channelCache(&updateChannelCache), zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(nullptr)
 {
     serverPorts << port;
 }
 
-Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(), showLogMessages(true),
+Server::Server(QList<quint16> ports) : registry(nullptr), battles(nullptr), serverPorts(), showLogMessages(true),
     lastDataId(0), playercounter(0), battlecounter(0), channelcounter(0), channelCache(&updateChannelCache),
-    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(NULL)
+    zchannelCache(updateZippedChannelCache), numberOfPlayersLoggedIn(0), myengine(nullptr)
 {
     foreach(quint16 port, ports)
         serverPorts << port;
@@ -61,7 +56,7 @@ Server::Server(QList<quint16> ports) : registry_connection(NULL), serverPorts(),
 
 Server::~Server()
 {
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     foreach (QTcpServer* myserver, myservers)
         myserver->deleteLater();
 #endif
@@ -86,7 +81,7 @@ void Server::start(){
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 #endif
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(new QTcpServer());
     }
@@ -97,7 +92,7 @@ void Server::start(){
 #endif
     srand(time(NULL));
 
-    pluginManager = new PluginManager(this);
+    registry = new RegistryCommunicator(this);
 
     if (!testWritable("config")) {
         //printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
@@ -109,19 +104,11 @@ void Server::start(){
     QSettings s("config", QSettings::IniFormat);
 
     auto setDefaultValue = [&s](const char* key, const QVariant &defaultValue) {
-            if (!s.contains(key)) {
-                s.setValue(key, defaultValue);
-            }
+        if (!s.contains(key)) {
+            s.setValue(key, defaultValue);
+        }
     };
 
-    setDefaultValue("SQL/Driver", SQLCreator::SQLite);
-    setDefaultValue("SQL/Database", "pokemon");
-    setDefaultValue("SQL/Port", 5432);
-    setDefaultValue("SQL/User", "postgres");
-    setDefaultValue("SQL/Pass", "admin");
-    setDefaultValue("SQL/Host", "localhost");
-    setDefaultValue("SQL/DatabaseSchema", "");
-    setDefaultValue("SQL/VacuumOnStartup", true);
     setDefaultValue("Scripts/SafeMode", false);
     setDefaultValue("Server/Password", "pikachu");
     setDefaultValue("Server/RequirePassword", false);
@@ -141,7 +128,7 @@ void Server::start(){
     setDefaultValue("Battles/ForceUnratedForSameIP", true);
     setDefaultValue("Battles/ConsecutiveFindBattlesWithDifferentIPs", 5);
     setDefaultValue("Battles/RatedThroughChallenge", false);
-    setDefaultValue("Network/ProxyServers", QString());
+    setDefaultValue("Network/ProxyServers", QString("127.0.0.1"));
     setDefaultValue("Network/LowTCPDelay", false);
     setDefaultValue("AntiDOS/ShowOveractiveMessages", true);
     setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1");
@@ -156,47 +143,53 @@ void Server::start(){
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
 
-    try {
-        SQLCreator::createSQLConnection();
-    } catch (const QString &ex) {
-        printLine(ex);
+    setDefaultValue("SQL/Driver", SQLCreator::SQLite);
+    setDefaultValue("SQL/Database", "pokemon");
+    setDefaultValue("SQL/Port", 5432);
+    setDefaultValue("SQL/User", "postgres");
+    setDefaultValue("SQL/Pass", "admin");
+    setDefaultValue("SQL/Host", "localhost");
+    setDefaultValue("SQL/DatabaseSchema", "");
+    setDefaultValue("SQL/VacuumOnStartup", true);
+
+    if (isSql()) {
+        try {
+            SQLCreator::createSQLConnection();
+        } catch (const QString &ex) {
+            forcePrint(ex);
+        }
     }
 
-    printLine(tr("Starting loading pokemon database..."), false, true);
+    forcePrint(tr("Starting loading pokemon database..."));
 
     PokemonInfoConfig::setFillMode(FillMode::Server);
     PokemonInfoConfig::setDataRepo(dataRepo);
     changeDbMod(s.value("Mods/CurrentMod").toString());
 
-    printLine(tr("Pokemon database loaded"), false, true);
+    forcePrint(tr("Pokemon database loaded"));
 
     for (int i = 0; i < GenInfo::GenMax(); i++) {
         PokemonInfo::RunMovesSanityCheck(i);
     }
 
-    MoveEffect::init();
-    RBYMoveEffect::init();
-    ItemEffect::init();
-    AbilityEffect::init();
-
-    printLine(tr("Move, abilities & items special effects loaded"), false, true);
-
     try {
         SecurityManager::init();
     } catch (const QString &ex) {
-        printLine(ex);
+        forcePrint(ex);
     }
 
     TierMachine::init();
     connect(TierMachine::obj(), SIGNAL(tiersChanged()), SLOT(tiersChanged()));
 
-    AntiDos::obj()->init();
+    AntiDos::init(s);
     RelayManager::init();
 
-    printLine(tr("Members loaded"));
+    //Needs to be after AntiDos init();
+    pluginManager = new ServerPluginManager(this);
 
-    battleThread.start();
-    printLine(tr("Battle Thread started"));
+    forcePrint(tr("Members loaded"));
+
+    initBattles();
 
     bool listenSuccess;
 
@@ -204,7 +197,7 @@ void Server::start(){
     connect(mymapper, SIGNAL(mapped(int)), SLOT(incomingConnection(int)));
     for (int i = 0; i < serverPorts.size(); ++i) {
         quint16 port = serverPorts.at(i);
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         listenSuccess = server(i)->listen(QHostAddress::Any, port);
 #else
         listenSuccess = server(i)->listen(port);
@@ -212,19 +205,19 @@ void Server::start(){
 
         if (!listenSuccess)
         {
-            printLine(tr("Unable to listen to port %1").arg(port), false, true);
+            forcePrint(tr("Unable to listen to port %1").arg(port));
         } else {
-            printLine(tr("Starting to listen to port %1").arg(port), false, true);
+            forcePrint(tr("Starting to listen to port %1").arg(port));
         }
 
         mymapper->setMapping(&*server(i), i);
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
         connect(server(i), SIGNAL(newConnection()), mymapper, SLOT(map()));
 #else
         connect(&*server(i), SIGNAL(active()), mymapper, SLOT(map()));
 #endif
     }
-#ifdef SFML_SOCKETS
+#ifdef BOOST_SOCKETS
     manager.start();
 #endif
     connect(AntiDos::obj(), SIGNAL(kick(int)), SLOT(dosKick(int)));
@@ -273,12 +266,27 @@ void Server::start(){
     t2->start(24*3600*1000);
 
     myengine = new ScriptEngine(this);
+    myengine->init();
     myengine->serverStartUp();
+
+    connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));
 
     this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
-    if (serverPrivate != 1)
-        connectToRegistry();
+    registry->setPrivate(serverPrivate);
+}
+
+void Server::initBattles()
+{
+    battles = new BattleCommunicator(this);
+    //battleThread.start();
+    //printLine(tr("Don't forget to run BattleServer too if you want your server to have battles!"));
+
+    connect(battles, SIGNAL(info(QString)), SLOT(forcePrint(QString)));
+    connect(battles, SIGNAL(error()), battles, SLOT(startServer()));
+    connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
+    connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
+    connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
 }
 
 void Server::print(const QString &line)
@@ -286,7 +294,7 @@ void Server::print(const QString &line)
     serverIns->printLine(line, false, true);
 }
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
 QTcpServer * Server::server(int i)
 {
     return myservers.at(i);
@@ -309,8 +317,6 @@ void Server::processDailyRun()
 
 void Server::changeDbMod(const QString &mod)
 {
-    battleThread.pause();
-
     PokemonInfoConfig::changeMod(mod);
 
     /* Really useful for headless servers */
@@ -328,8 +334,6 @@ void Server::changeDbMod(const QString &mod)
     GenderInfo::init("db/genders/"); //needed by battlelogs plugin
 
     PokemonInfo::loadStadiumTradebacks();
-
-    battleThread.unpause();
 }
 
 void Server::updateDatabase()
@@ -434,11 +438,20 @@ void Server::needChannelData(int playerid, int channelid)
     channel.onReconnect(playerid);
 }
 
+void Server::sendBattleInfos(int b, int p1, int p2, const TeamBattle &t, const BattleConfiguration &c, const QString &s)
+{
+    player(p1)->startBattle(b, p2, t, c, s);
+}
+
 void Server::leaveRequest(int playerid, int channelid, bool keep)
 {
     Channel &channel = this->channel(channelid);
 
-    channel.leaveRequest(playerid, keep);
+    channel.leaveRequest(playerid);
+
+    if (keep && channelExist(channelid)) {
+        channel.addDisconnectedPlayer(playerid);
+    }
 }
 
 void Server::channelClose(int channelid)
@@ -489,84 +502,14 @@ void Server::loadRatedBattlesSettings()
     TierMachine::obj()->loadDecaySettings();
 }
 
-void Server::connectToRegistry()
-{
-    if (registry_connection != NULL) {
-        if (registry_connection->isConnected()) {
-            return;
-        }
-        else
-            registry_connection->deleteLater();
-    }
-
-    registry_connection = NULL;
-
-    if (serverPrivate)
-        return;
-
-    printLine("Connecting to registry...");
-
-    QTcpSocket * s = new QTcpSocket(NULL);
-    s->connectToHost("registry.pokemon-online.eu", 8081);
-
-    connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
-    connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
-
-    registry_connection = new Analyzer(s,0);
-}
-
-void Server::disconnectFromRegistry()
-{
-    registry_connection->deleteLater();
-    printLine("Disconnected from registry.");
-    registry_connection = NULL;
-}
-
-
-void Server::regPrivacyChanged(const int &priv)
+void Server::regPrivacyChanged(bool priv)
 {
     if (serverPrivate == priv)
         return;
 
     serverPrivate = priv;
 
-    if (serverPrivate == 1)
-    {
-        printLine("The server is now private.", false, true);
-        disconnectFromRegistry();
-    }
-    else
-    {
-        printLine("The server is now public.", false, true);
-        connectToRegistry();
-    }
-}
-
-void Server::regConnectionError()
-{
-    printLine("Error when connecting to the registry. Will restart in 30 seconds");
-    QTimer::singleShot(30000, this, SLOT(connectToRegistry()));
-}
-
-void Server::regConnected()
-{
-    printLine("Connected to registry! Sending server info...");
-    registry_connection->notify(NetworkServ::Login, serverName, serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), serverPlayerMax, serverPorts.at(0));
-    connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
-    connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
-    connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
-    connect(registry_connection, SIGNAL(accepted()), SLOT(accepted()));
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
-}
-
-void Server::regSendPlayers()
-{
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-    registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
+    registry->setPrivate(priv);
 }
 
 void Server::regNameChanged(const QString &name)
@@ -579,10 +522,7 @@ void Server::regNameChanged(const QString &name)
 
     notifyAll(NetworkServ::ServerInfoChanged, Flags(1), name);
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServNameChange, name);
+    registry->nameChange(name);
 }
 
 void Server::regDescChanged(const QString &desc)
@@ -591,32 +531,24 @@ void Server::regDescChanged(const QString &desc)
         return;
 
     serverDesc = desc;
-    printLine("The description of the server changed.", false, true);
+    forcePrint("The description of the server changed.");
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServDescChange, desc);
+    registry->descChange(desc);
 }
 
-void Server::regMaxChanged(const int &numMax)
+void Server::regMaxChanged(int numMax)
 {
     if (numMax == serverPlayerMax)
         return;
 
     serverPlayerMax = numMax;
-    printLine("Maximum Players Changed.", false, true);
+    forcePrint("Maximum Players Changed.");
 
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-
-    registry_connection->notify(NetworkServ::ServMaxChange,numMax);
+    registry->maxChange(numMax);
 }
 
-void Server::regPasswordChanged(bool &isEnabled) {
-    if (registry_connection == NULL || !registry_connection->isConnected())
-        return;
-    registry_connection->notify(NetworkServ::ServerPass, isEnabled);
+void Server::regPasswordChanged(bool enabled) {
+    registry->passChange(enabled);
 }
 
 void Server::changeScript(const QString &script)
@@ -658,7 +590,7 @@ void Server::announcementChanged(const QString &announcement)
     serverAnnouncement = announcement.toUtf8();
     zippedAnnouncement = makeZipPacket(NetworkServ::Announcement, serverAnnouncement);
 
-    printLine("Announcement changed.", false, true);
+    forcePrint("Announcement changed.");
 
     notifyGroup(SupportsZip, zippedAnnouncement);
     notifyOppGroup(SupportsZip, NetworkServ::Announcement, serverAnnouncement);
@@ -680,35 +612,15 @@ void Server::mainChanChanged(const QString &name) {
     channelNames[0] = name;
     channelCache.outdate();zchannelCache.outdate();
 
-    printLine("Main channel name changed", false, true);
+    forcePrint("Main channel name changed");
 
     notifyGroup(All, NetworkServ::ChanNameChange, qint32(0), name);
 }
 
 void Server::clearRatedBattlesHistory()
 {
-    printLine("Auto Clearing the last rated battles history (every 3 hours)");
+    forcePrint("Auto Clearing the last rated battles history (every 3 hours)");
     lastRatedIps.clear();
-}
-
-void Server::accepted()
-{
-    printLine("The registry acknowledged the server.");
-}
-
-void Server::invalidName()
-{
-    printLine("Invalid name for the registry. Please change it in Options -> Config.", false, true);
-}
-
-void Server::nameTaken()
-{
-    printLine("The name of the server is already in use. Please change it in Options -> Config.", false, true);
-}
-
-void Server::ipRefused()
-{
-    printLine("Registry wants only 1 server per IP", false, true);
 }
 
 /* Returns false if the event "newMessage" was stopped (nothing to do with "chatMessage") */
@@ -738,6 +650,10 @@ bool Server::printLine(const QString &line, bool chatMessage, bool forcedLog)
     return false;
 }
 
+void Server::forcePrint(const QString &line)
+{
+    printLine(line, false, true);
+}
 
 void Server::tiersChanged()
 {
@@ -759,7 +675,7 @@ void Server::banName(const QString &name) {
 }
 
 void Server::changeAuth(const QString &name, int auth) {
-    if (nameExist(name)) {
+    if (nameExist(name) && SecurityManager::exist(name)) {
         int id = this->id(name);
         if (auth == player(id)->auth())
             return;
@@ -789,9 +705,9 @@ void Server::kick(int id, int src) {
     notifyGroup(All, NetworkServ::PlayerKick, qint32(id), qint32(src));
 
     if (src == 0)
-        printLine("The server kicked " + name(id) + "!");
+        forcePrint("The server kicked " + name(id) + "!");
     else
-        printLine(name(id) + " was kicked by " + name(src));
+        forcePrint(name(id) + " was kicked by " + name(src));
     silentKick(id);
 }
 
@@ -803,9 +719,9 @@ void Server::ban(int id, int src) {
     notifyGroup(All, NetworkServ::PlayerBan, qint32(id), qint32(src));
 
     if (src == 0)
-        printLine("The server banned " + name(id) + "!");
+        forcePrint("The server banned " + name(id) + "!");
     else
-        printLine(name(id) + " was banned by " + name(src));
+        forcePrint(name(id) + " was banned by " + name(src));
 
     SecurityManager::ban(name(id));
     player(id)->kick();
@@ -816,15 +732,15 @@ void Server::tempBan(int dest, int src, int time)
     time = int(std::max(1, std::min(time, 1440)));
     if(src == 0) {
         if(time == 1) {
-            printLine(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
+            forcePrint(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
         } else {
-            printLine(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
+            forcePrint(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
         }
     } else {
         if(time == 1) {
-            printLine(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
+            forcePrint(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
         } else {
-            printLine(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
+            forcePrint(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
         }
     }
     notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
@@ -861,7 +777,7 @@ int Server::dosChannel() const
     return channelId(AntiDos::obj()->notificationsChannel);
 }
 
-QObject* Server::getAntiDos() const
+AntiDos* Server::getAntiDos() const
 {
     return AntiDos::obj();
 }
@@ -896,17 +812,17 @@ void Server::loggedIn(int id, const QString &name)
     printLine(QString("Player %1 set name to %2").arg(id).arg(name));
 
     if (!playerExist(id)) {
-        printLine(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
+        forcePrint(QString("Critical Bug needing to be solved: Server::loggedIn, playerExist(%1) = false").arg(id));
         return;
     }
 
     if (nameExist(name)) {
         int ids = this->id(name);
         if ((!playerExist(ids) || (!playerLoggedIn(ids) && !player(ids)->waitingForReconnect())) || player(ids)->name().toLower() != name.toLower()) {
-            printLine(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
+            forcePrint(QString("Critical Bug needing to be solved (kept a name too much in the name list: %1)").arg(name));
             mynames.remove(name.toLower());
         } else {
-            if (SecurityManager::member(name).isProtected()) {
+            if (SecurityManager::exist(name) && SecurityManager::member(name).isProtected()) {
                 /* Replaces the other one */
                 if (!player(ids)->waitingForReconnect()) {
                     printLine(tr("%1: replaced by new connection.").arg(name));
@@ -935,7 +851,7 @@ void Server::loggedIn(int id, const QString &name)
             }
             /* Should not happen but we can't be too safe */
             if (id == ids) {
-                printLine(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
+                forcePrint(QString("Critical Bug needing to be solved: Server::loggedIn, id=ids=%1").arg(id));
                 return;
             }
         }
@@ -1021,7 +937,7 @@ void Server::processLoginDetails(Player *p)
         }
 #ifndef PO_NO_WELCOME
         broadCast(tr("Welcome Message: The updates are available at http://pokemon-online.eu/ -- report any bugs on the forum."),
-              NoChannel, NoSender, false, id);
+                  NoChannel, NoSender, false, id);
 #endif
     } else {
         p->doWhenRC(wasLoggedIn);
@@ -1029,10 +945,6 @@ void Server::processLoginDetails(Player *p)
 
     if (!wasLoggedIn) {
         myengine->afterLogIn(id, channel);
-    }
-
-    if (p->loginInfo()) {
-        delete p->loginInfo(), p->loginInfo()=NULL;
     }
 }
 
@@ -1077,41 +989,6 @@ void Server::sendServerMessage(const QString &message)
         broadCast(message, NoChannel, 0);
         myengine->afterServerMessage(message);
     }
-}
-
-void Server::battleMessage(int player, int battle, const BattleChoice &choice)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->battleChoiceReceived(player, choice);
-}
-
-void Server::resendBattleInfos(int player, int battle)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->addSpectator(this->player(player));
-}
-
-void Server::battleChat(int player, int battle, const QString &chat)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-
-    mybattles[battle]->battleChat(player, chat);
-}
-
-void Server::spectatingChat(int player, int battle, const QString &chat)
-{
-    if (!mybattles.contains(battle)) {
-        return;
-    }
-    mybattles[battle]->spectatingChat(player, chat);
 }
 
 bool Server::joinRequest(int player, const QString &channel)
@@ -1188,7 +1065,7 @@ void Server::incomingConnection(int i)
         return;
 
     int id = freeid();
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QString ip = newconnection->peerAddress().toString();
 #else
     QString ip = newconnection->ip();
@@ -1222,7 +1099,7 @@ void Server::incomingConnection(int i)
 
     printLine(QString("Received pending connection on slot %1 from %2").arg(id).arg(ip));
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     newconnection->setSocketOption(QAbstractSocket::LowDelayOption, lowTCPDelay);
 #else
     newconnection->setLowDelay(lowTCPDelay);
@@ -1248,9 +1125,9 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(awayChange(int,bool)), this, SLOT(awayChanged(int, bool)));
     connect(p, SIGNAL(spectatingRequested(int,int)), SLOT(spectatingRequested(int,int)));
     connect(p, SIGNAL(spectatingStopped(int,int)), SLOT(spectatingStopped(int,int)));
-    connect(p, SIGNAL(battleChat(int,int,QString)), SLOT(battleChat(int,int,QString)));
-    connect(p, SIGNAL(battleMessage(int,int,BattleChoice)), SLOT(battleMessage(int,int,BattleChoice)));
-    connect(p, SIGNAL(spectatingChat(int,int, QString)), SLOT(spectatingChat(int,int, QString)));
+    connect(p, SIGNAL(battleChat(int,int,QString)), battles, SLOT(battleChat(int,int,QString)));
+    connect(p, SIGNAL(battleMessage(int,int,BattleChoice)), battles, SLOT(battleMessage(int,int,BattleChoice)));
+    connect(p, SIGNAL(spectatingChat(int,int, QString)), battles, SLOT(spectatingChat(int,int, QString)));
     connect(p, SIGNAL(updated(int)), SLOT(sendPlayer(int)));
     connect(p, SIGNAL(findBattle(int,FindBattleData)), SLOT(findBattle(int, FindBattleData)));
     connect(p, SIGNAL(battleSearchCancelled(int)), SLOT(cancelSearch(int)));
@@ -1259,7 +1136,7 @@ void Server::incomingConnection(int i)
     connect(p, SIGNAL(leaveRequested(int,int)), SLOT(leaveRequest(int,int)));
     connect(p, SIGNAL(ipChangeRequested(int,QString)), SLOT(ipChangeRequested(int,QString)));
     connect(p, SIGNAL(reconnect(int,int,QByteArray)), SLOT(onReconnect(int,int,QByteArray)));
-    connect(p, SIGNAL(resendBattleInfos(int,int)), SLOT(resendBattleInfos(int,int)));
+    connect(p, SIGNAL(resendBattleInfos(int,int)), battles, SLOT(resendBattleInfos(int,int)));
     connect(p, SIGNAL(needChannelData(int,int)), SLOT(needChannelData(int,int)));
 }
 
@@ -1289,8 +1166,14 @@ void Server::onReconnect(int sender, int id, const QByteArray &hash)
         return;
     }
 
+    if (!myengine->beforeReconnect(sender, id)) {
+        player(sender)->kick();
+        return;
+    }
+
     //proceed to reconnect
     transferId(sender, id);
+    myengine->afterReconnect(id);
 }
 
 void Server::transferId(int sender, int id, bool copyInfo)
@@ -1459,7 +1342,7 @@ void Server::logSavingChanged(bool logging)
     if (logging == showLogMessages)
         return;
     showLogMessages = logging;
-    printLine("Logging changed", false, true);
+    forcePrint("Logging changed");
 }
 
 void Server::useChannelFileLogChanged(bool logging)
@@ -1467,14 +1350,14 @@ void Server::useChannelFileLogChanged(bool logging)
     if (useChannelFileLog == logging)
         return;
     useChannelFileLog = logging;
-    printLine("Channel File Logging changed", false, true);
+    forcePrint("Channel File Logging changed");
 }
 
 void Server::inactivePlayersDeleteDaysChanged(int newValue) {
     if(amountOfInactiveDays == newValue) {
         return;
     }
-    printLine("The amount of days that an user can stay inactive in database has been changed", false, true);
+    forcePrint("The amount of days that an user can stay inactive in database has been changed");
     amountOfInactiveDays = newValue;
 }
 
@@ -1483,7 +1366,7 @@ void Server::TCPDelayChanged(bool lowTCP)
     if (lowTCPDelay == lowTCP)
         return;
     lowTCPDelay = true;
-    printLine("Low TCP Delay setting changed", false, true);
+    forcePrint("Low TCP Delay setting changed");
 
     foreach(Player *p, myplayers) {
         p->relay().setLowDelay(lowTCP);
@@ -1495,7 +1378,7 @@ void Server::safeScriptsChanged(bool safeScripts)
     if (this->safeScripts == safeScripts)
         return;
     this->safeScripts = safeScripts;
-    printLine("Safe scripts setting changed", false, true);
+    forcePrint("Safe scripts setting changed");
 }
 
 void Server::overactiveToggleChanged(bool overactiveToggle)
@@ -1509,7 +1392,7 @@ void Server::proxyServersChanged(const QString &ips)
     if (proxyServers == newlist)
         return;
     proxyServers = ips.split(",");
-    printLine("Proxy Servers setting changed", false, true);
+    forcePrint("Proxy Servers setting changed");
 }
 
 void Server::serverPasswordChanged(const QString &pass)
@@ -1517,7 +1400,7 @@ void Server::serverPasswordChanged(const QString &pass)
     if (serverPassword == pass.toUtf8())
         return;
     serverPassword = pass.toUtf8();
-    printLine("Server Password changed", false, true);
+    forcePrint("Server Password changed");
 }
 
 void Server::usePasswordChanged(bool usePass)
@@ -1525,7 +1408,7 @@ void Server::usePasswordChanged(bool usePass)
     if (passwordProtected == usePass)
         return;
     passwordProtected = usePass;
-    printLine("Require Server Password changed", false, true);
+    forcePrint("Require Server Password changed");
     regPasswordChanged(usePass);
 }
 
@@ -1595,6 +1478,10 @@ void Server::playerTempBan(int src, int dest, int time)
 
 void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, int team2)
 {
+    if (!battles->valid()) {
+        return;
+    }
+
     int id = freebattleid();
 
     myengine->beforeBattleStarted(id1,id2,c,id,team1,team2);
@@ -1619,29 +1506,23 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         }
     }
 
-    BattleBase *battle;
-    if (c.gen <= 1) {
-        battle = (BattleBase*)new BattleRBY(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
-    } else {
-        battle = new BattleSituation(*player(id1), *player(id2), c, id, team1, team2, pluginManager);
-    }
-
-    printLine(QString("%1 battle between %2 and %3 started").arg(battle->tier()).arg(name(id1)).arg(name(id2)));
-
-    mybattles.insert(id, battle);
-    battleList.insert(id, Battle(id1, id2, battle->mode(), battle->tier()));
-    myengine->battleSetup(id1, id2, id); // dispatch script event
-
     Player *p1 (player(id1));
     Player *p2 (player(id2));
 
+    QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
+
+    printLine(QString("%1 battle between %2 and %3 started").arg(tier).arg(name(id1)).arg(name(id2)));
+
+    battleList.insert(id, Battle(id1, id2, c.mode, tier));
+    //myengine->battleSetup(id1, id2, id); // dispatch script event
+
+    /* Send each other's info if they don't have it */
     if (!p1->isInSameChannel(p2)) {
         p1->relay().sendPlayer(p2->bundle());
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    p1->startBattle(id, id2, battle->pubteam(id1), battle->configuration(), battle->tier());
-    p2->startBattle(id, id1, battle->pubteam(id2), battle->configuration(), battle->tier());
+    battles->startBattle(player(id1), player(id2), c, id, team1, team2);
 
     Battle battleS = battleList[id];
 
@@ -1663,11 +1544,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
             }
         }
     }
-
-    connect(battle, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
-    connect(battle, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int, int,int,int)));
-
-    battle->start(battleThread);
 
     myengine->afterBattleStarted(id1,id2,c,id,team1,team2);
 }
@@ -1692,8 +1568,8 @@ bool Server::canHaveRatedBattle(int id1, int id2, const TeamBattle &t1, const Te
         if (l2.contains(p1->ip()))
             return false;
     }
-//    if (std::abs(p1->rating()-p2->rating()) > 300)
-//        return false;
+    //    if (std::abs(p1->rating()-p2->rating()) > 300)
+    //        return false;
     return true;
 }
 
@@ -1701,16 +1577,10 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 {
     const int original_desc = desc;
 
-    if (!mybattles.contains(battleid)) {
-        /* If a player forfeits at the same time a battle ends, as the signal is asynchroneous
-           because of different threads, it can be emitted twice. So that's why we may fall into
-           this if */
-        return;
-    }
-
-    BattleBase *battle = mybattles[battleid];
+    FullBattleConfiguration *battle = battles->battle(battleid);
     QString tier = battle->tier();
     bool rated = battle->rated();
+    int mode = battle->mode;
 
     //qDebug() << "battleResult " << battleid << desc << winner << loser << battle;
 
@@ -1724,15 +1594,15 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
     Player *pl = player(loser);
 
     if (desc == Forfeit && battle->finished()) {
-        pw->battleResult(battleid, Close, battle->mode(), winner, loser);
-        pl->battleResult(battleid, Close, battle->mode(), winner, loser);
+        pw->battleResult(battleid, Close, mode, winner, loser);
+        pl->battleResult(battleid, Close, mode, winner, loser);
     } else {
         if (disconnected) {
             desc = Tie;
         }
 
         if (desc == Forfeit) {
-            battle->playerForfeit(loser);
+            battles->playerForfeit(battleid, loser);
         }
 
         QString winn = pw->name();
@@ -1746,7 +1616,7 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
             Channel &chan = channel(chanid);
 
             chan.battleList.remove(battleid);
-            notifyChannelLastId(chanid, NetworkServ::BattleFinished, qint32(battleid), qint8(desc), qint8(battle->mode()), qint32(winner), qint32(loser));
+            notifyChannelLastId(chanid, NetworkServ::BattleFinished, qint32(battleid), qint8(desc), qint8(mode), qint32(winner), qint32(loser));
         }
 
         battleList.remove(battleid);
@@ -1779,25 +1649,23 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
 
 void Server::removeBattle(int battleid)
 {
-    BattleBase *battle = mybattles.value(battleid);
+    FullBattleConfiguration *battle = battles->battle(battleid);
     qDebug() << "removing battle " << battleid << battle;
 
-    mybattles.remove(battleid);
     //battleList.remove(battleid); <- no need, already done in battleResult()
 
-    typedef QPair<int, QString> pair;
-    foreach(pair p, battle->getSpectators()) {
-        player(p.first)->relay().finishSpectating(battleid);
-        player(p.first)->battlesSpectated.remove(battleid);
+    foreach(int spect, battle->spectators) {
+        player(spect)->relay().finishSpectating(battleid);
+        player(spect)->battlesSpectated.remove(battleid);
     }
-    /* When manipulating threaded objects, you need to be careful... */
-    battle->deleteLater();
 
     Player* p1 = player(battle->id(0));
     Player* p2 = player(battle->id(1));
 
     p1->removeBattle(battleid);
     p2->removeBattle(battleid);
+
+    battles->removeBattle(battleid);
 }
 
 void Server::sendBattlesList(int playerid, int chanid)
@@ -1899,10 +1767,10 @@ bool Server::playerLoggedIn(int id) const
 
 void Server::spectatingRequested(int id, int idOfBattle)
 {
-    if (!mybattles.contains(idOfBattle)) {
+    if (!battles->contains(idOfBattle)) {
         return; // Invalid behavior
     }
-    BattleBase *battle = mybattles.value(idOfBattle);
+    FullBattleConfiguration *battle = battles->battle(idOfBattle);
     bool forced_allow = myengine->attemptToSpectateBattle(id, battle->id(0), battle->id(1));
     if (!battle->acceptSpectator(id, (auth(id) > 0) || forced_allow)) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
@@ -1910,51 +1778,18 @@ void Server::spectatingRequested(int id, int idOfBattle)
     }
     if (!myengine->beforeSpectateBattle(id, battle->id(0),battle->id(1))) {
         sendMessage(id, "The battle refused you watching (maybe Disallow Spectator clause is enabled?)");
-        myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
         return;
     }
 
-    Player *source = player(id);
-    Player *p1(player(battle->id(0))), *p2(player(battle->id(1)));
+    myengine->afterSpectateBattle(id, battle->id(0),battle->id(1));
 
-    PlayerInfo bundle = source->bundle();
-
-    if (!p1->isInSameChannel(source)) {
-        p1->relay().sendPlayer(bundle);
-        source->relay().sendPlayer(p1->bundle());
-    }
-    if (!p2->isInSameChannel(source)) {
-        p2->relay().sendPlayer(bundle);
-        source->relay().sendPlayer(p2->bundle());
-    }
-    typedef QPair<int, QString> pair;
-    foreach(pair mp, battle->getSpectators()) {
-        Player *p = player(mp.first);
-        if (!p->isInSameChannel(source)) {
-            p->relay().sendPlayer(bundle);
-            source->relay().sendPlayer(p->bundle());
-        }
-    }
-    foreach(QPointer<Player> p, battle->getPendingSpectators()) {
-        if (!p)
-            continue;
-
-        if (!p->isInSameChannel(source)) {
-            p->relay().sendPlayer(bundle);
-            source->relay().sendPlayer(p->bundle());
-        }
-    }
-
-    battle->addSpectator(player(id));
+    battles->addSpectator(idOfBattle, id, name(id));
+    player(id)->spectateBattle(idOfBattle, *battles->battle(idOfBattle));
 }
 
 void Server::spectatingStopped(int id, int idOfBattle)
 {
-    if (!mybattles.contains(idOfBattle)) {
-        printLine(QString("Critical bug needing to be solved: Server::spectatingStopped, player %1 (%2) and non-existent battle %3").arg(id).arg(name(id)).arg(idOfBattle));
-    } else {
-        mybattles[idOfBattle]->removeSpectator(id);
-    }
+    battles->removeSpectator(idOfBattle, id);
 }
 
 void Server::disconnectPlayer(int id)
@@ -1969,9 +1804,7 @@ void Server::disconnectPlayer(int id)
             return;
         }
 
-        if (loggedIn) {
-            myengine->beforeLogOut(id);
-        }
+        myengine->beforeLogOut(id);
 
         for (int i = 0; i < LastGroup; i++) {groups[i].remove(p); oppGroups[i].remove(p);}
 
@@ -1989,11 +1822,8 @@ void Server::disconnectPlayer(int id)
 
         emit player_logout(id);
 
-        /* Sending the notice of logout to others only if the player is already logged in */
-        if (loggedIn) {
-            sendLogout(id);
-            myengine->afterLogOut(id);
-        }
+        sendLogout(id);
+        myengine->afterLogOut(id);
 
         p->changeState(Player::LoggedIn, false);
         p->changeState(Player::WaitingReconnect, true);
@@ -2027,10 +1857,6 @@ void Server::removePlayer(int id)
             AntiDos::obj()->disconnect(p->ip(), id);
         }
 
-        foreach(int chanid, p->getChannels()) {
-            leaveRequest(id, chanid);
-        }
-
         emit player_logout(id);
 
         /* Sending the notice of logout to others only if the player is already logged in */
@@ -2039,7 +1865,7 @@ void Server::removePlayer(int id)
             myengine->afterLogOut(id);
         }
 
-        p->deleteLater(); myplayers.remove(id);
+        myplayers.take(id)->deleteLater();
 
         if ((loggedIn || p->state()[Player::WaitingReconnect]) && mynames.value(playerName.toLower()) == p->id())
             mynames.remove(playerName.toLower());
@@ -2125,7 +1951,7 @@ int Server::freebattleid() const
 {
     do {
         ++battlecounter;
-    } while (mybattles.contains(battlecounter) || battlecounter == 0); /* 0 is reserved */
+    } while (battles->contains(battlecounter) || battlecounter == 0); /* 0 is reserved */
 
     return battlecounter;
 }
@@ -2144,32 +1970,26 @@ void Server::atServerShutDown() {
 
     myengine->serverShutDown();
 
+    battles->killServer();
 #ifdef _WIN32
     ::exit(0);
 #endif
+    ::exit(0);
     // On linux, threads need to be cleared or the server may be left hanging...
-//    TierMachine::destroy();
-//    SecurityManager::destroy();
-//    RelayManager::destroy();
-
-//    connect(&battleThread, SIGNAL(finished()), this, SLOT(deleteLater()));
-//    battleThread.finish();
-//    exit(0);
-    //The above always hangs now for some reason on linux, so here we go
-    int *x = NULL;
-    *x += 1;
-
+    TierMachine::destroy();
+    SecurityManager::destroy();
+    RelayManager::destroy();
 }
 
 void Server::setAnnouncement(int &id, const QString &html) {
     if (player(id)->isLoggedIn())
-            player(id)->relay().notify(NetworkServ::Announcement, html);;
+        player(id)->relay().notify(NetworkServ::Announcement, html);;
 }
 
 Player * Server::player(int id) const
 {
     if (!myplayers.contains(id)) {
-        qFatal("Fatal! player battle called for non existing ID %d", id);
+        qFatal("Fatal! player called for non existing ID %d", id);
     }
     return myplayers.value(id);
 }
@@ -2177,15 +1997,6 @@ Player * Server::player(int id) const
 PlayerInterface * Server::playeri(int id) const
 {
     return player(id);
-}
-
-BattleBase * Server::getBattle(int battleId) const
-{
-    if(mybattles.contains(battleId)) {
-        return mybattles.value(battleId);
-    }else{
-        return NULL;
-    }
 }
 
 bool Server::hasOngoingBattle(int id) const

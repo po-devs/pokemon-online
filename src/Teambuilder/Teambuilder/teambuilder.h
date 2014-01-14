@@ -1,8 +1,8 @@
 #ifndef TEAMBUILDER_H
 #define TEAMBUILDER_H
 
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/geninfo.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
 #include <QWidget>
 #include "centralwidget.h"
 #include "Teambuilder/teambuilderwidget.h"
@@ -13,13 +13,13 @@ class TeamHolder;
 class TrainerMenu;
 class TeamMenu;
 class PokeBoxes;
-class PluginManager;
+class ClientPluginManager;
 
 class TeamBuilder : public QMainWindow, public TeambuilderInterface, public CentralWidgetInterface
 {
     Q_OBJECT
 public:
-    TeamBuilder(PluginManager *p, TeamHolder *team, bool loadSettings=true);
+    TeamBuilder(ClientPluginManager *p, TeamHolder *team, bool loadSettings=true);
     ~TeamBuilder();
 
     virtual QSize defaultSize() const;
@@ -68,7 +68,7 @@ private:
     TeamMenu *teamMenu;
 
     QSet<TeambuilderPlugin*> plugins;
-    PluginManager *pluginManager;
+    ClientPluginManager *pluginManager;
     QHash<TeambuilderPlugin*, QHash<QString, TeambuilderPlugin::Hook> > hooks;
 
     QAbstractItemModel *pokemonModel;

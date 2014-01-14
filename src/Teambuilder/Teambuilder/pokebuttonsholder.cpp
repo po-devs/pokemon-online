@@ -1,6 +1,6 @@
 #include <QButtonGroup>
 
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 #include "Teambuilder/pokebuttonsholder.h"
 #include "ui_pokebuttonsholder.h"
 

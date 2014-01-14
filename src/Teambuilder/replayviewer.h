@@ -2,7 +2,7 @@
 #define REPLAYVIEWER_H
 
 #include <QtCore>
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 
 class SpectatorWindow;
 class QPushButton;
@@ -54,6 +54,7 @@ private:
     quint32 nextRead;
     QByteArray lastData;
     ReplayBar bar;
+    int version;
 };
 
 #endif // REPLAYVIEWER_H

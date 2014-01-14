@@ -2,8 +2,8 @@
 #define BATTLEWINDOW_H
 
 #include <QtGui>
-#include "../PokemonInfo/battlestructs.h"
-#include "../Utilities/otherwidgets.h"
+#include <PokemonInfo/battlestructs.h>
+#include <Utilities/otherwidgets.h>
 #include "basebattlewindow.h"
 #ifdef QT5
 #include <QMessageBox>

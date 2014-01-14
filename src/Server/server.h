@@ -1,10 +1,10 @@
 ﻿#ifndef SERVER_H
 #define SERVER_H
 
-#include "../Utilities/contextswitch.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/contextswitch.h>
+#include <Utilities/asiosocket.h>
+#include <PokemonInfo/networkstructs.h>
 #include "serverinterface.h"
-#include "sfmlsocket.h"
 #include "channel.h"
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
@@ -14,23 +14,26 @@
 class FindBattleData;
 class FindBattleDataAdv;
 class Player;
-class BattleBase;
 class Analyzer;
 class BattleChoice;
 class ChallengeInfo;
 class ScriptEngine;
 class Challenge;
-class QTcpServer;
-class PluginManager;
+class ServerPluginManager;
 class TeamBattle;
+class RegistryCommunicator;
+class BattleCommunicator;
+class BattleConfiguration;
 
 class Server: public QObject, public ServerInterface
 {
     Q_OBJECT
 
     friend class ScriptEngine;
+    friend class SessionDataFactory;
     friend class ServerWidget;
     friend class ConsoleReader;
+    friend class RegistryCommunicator;
 public:
     enum PlayerGroupFlags {
         All = 0,
@@ -49,9 +52,10 @@ public:
     ~Server();
 
     void start();
+    void initBattles();
 
     static void print(const QString &line);
-    bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
+
     /* returns the name of that player */
     QString name(int id) const;
     QString authedName(int id) const;
@@ -69,7 +73,7 @@ public:
     int id(const QString &name) const;
     int auth(int id) const;
     int dosChannel() const;
-    QObject *getAntiDos() const;
+    AntiDos *getAntiDos() const;
     int channelId(const QString &chanName) const;
     void removeBattle(int battleid);
     bool beforePlayerRegister(int src);
@@ -90,7 +94,6 @@ public:
     static Server *serverIns;
     static QString dataRepo;
 
-    BattleBase * getBattle(int battleId) const;
     bool hasOngoingBattle(int id) const;
     Battle ongoingBattle(int id) const;
     ScriptEngine *engine();
@@ -118,21 +121,20 @@ signals:
     void player_authchange(int id, const QString &name);
 
 public slots:
+    bool printLine(const QString &line, bool chatMessage = false, bool forcedLog = false);
+    void forcePrint(const QString &line);
+
     /* Registry slots */
-    void connectToRegistry();
     void clearRatedBattlesHistory();
-    void regConnected();
-    void regConnectionError();
-    void regSendPlayers();
     void regNameChanged(const QString &name);
     void regDescChanged(const QString &desc);
-    void regMaxChanged(const int &num);
-    void regPasswordChanged(bool &newValue);
+    void regMaxChanged(int num);
+    void regPasswordChanged(bool newValue);
     void changeScript(const QString &script);
     void reloadTiers();
     void announcementChanged(const QString &announcement);
     void mainChanChanged(const QString &mainChan);
-    void regPrivacyChanged(const int &priv);
+    void regPrivacyChanged(bool priv);
     void logSavingChanged(bool logging);
     void inactivePlayersDeleteDaysChanged(int newValue);
     void useChannelFileLogChanged(bool logging);
@@ -144,10 +146,6 @@ public slots:
     void usePasswordChanged(bool usePass);
     void changeDbMod(const QString &mod);
 
-    void nameTaken();
-    void ipRefused();
-    void invalidName();
-    void accepted();
     /* means a new connection is about to start from the TCP server */
     /* i is the number of the listening port */
     void incomingConnection(int i);
@@ -165,10 +163,6 @@ public slots:
     void sendBattleCommand(int battleId, int id, const QByteArray &command);
     void spectatingRequested(int id, int ongoingBattle);
     void spectatingStopped(int id, int ongoingBattle);
-    void battleMessage(int player, int ongoingBattle, const BattleChoice &message);
-    void battleChat(int player, int ongoingBattle, const QString &chat);
-    void resendBattleInfos(int player, int ongoingBattle);
-    void spectatingChat(int player, int ongoingBattle, const QString &chat);
     bool joinRequest(int player, const QString &chn);
     /* Makes a player join a channel */
     bool joinChannel(int playerid, int chanid);
@@ -178,6 +172,9 @@ public slots:
     void onReconnect(int, int, const QByteArray &);
     void transferId(int id1, int id2, bool copyInfo=false);
     void needChannelData(int playerId, int chanId);
+
+    /* Signals received by BattleCommunicator */
+    void sendBattleInfos(int,int,int,const TeamBattle&, const BattleConfiguration&, const QString&);
 
     void kick(int i);
     void silentKick(int i);
@@ -209,7 +206,9 @@ private:
     void ban(int dest, int src);
     void tempBan(int dest, int src, int time);
 
-    Analyzer *registry_connection;
+    RegistryCommunicator *registry;
+    BattleCommunicator *battles;
+
     QString serverName, serverDesc;
     QByteArray serverAnnouncement;
     QByteArray zippedAnnouncement;
@@ -246,13 +245,13 @@ private:
         The disavandtage is that you don't have clean ids, that are close to 0. */
     mutable int playercounter, battlecounter, channelcounter;
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QList<QTcpServer *> myservers;
 #else
     QList<GenericSocket> myservers;
     SocketManager manager;
 #endif
-    PluginManager *pluginManager;
+    ServerPluginManager *pluginManager;
 
     /* storing players */
     QHash<int, Player*> myplayers;
@@ -266,10 +265,9 @@ private:
     Cache<QByteArray, void (*)(QByteArray&)> channelCache;
     Cache<QByteArray, void (*)(QByteArray&)> zchannelCache;
 
-    QHash<int, BattleBase *> mybattles;
     QHash<qint32, Battle> battleList;
 
-#ifndef SFML_SOCKETS
+#ifndef BOOST_SOCKETS
     QTcpServer *server(int i);
 #else
     GenericSocket server(int i);
@@ -315,9 +313,6 @@ private:
     ScriptEngine *myengine;
 
     QHash<int, FindBattleDataAdv*> battleSearchs;
-
-    ContextSwitcher battleThread;
-
 public:
     template <typename ...Params>
     void notifyGroup(PlayerGroupFlags group, int command, Params &&... params);

@@ -1,7 +1,7 @@
 #ifndef NETWORKUTILITIES_H
 #define NETWORKUTILITIES_H
 
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 template <typename ...Params>
 QByteArray makeZipPacket(int command, Params&&... params) {

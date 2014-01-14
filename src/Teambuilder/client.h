@@ -3,14 +3,16 @@
 
 #include <QtGui>
 #include <QStackedWidget>
+
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/networkstructs.h>
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
+
 #include "analyze.h"
-#include "../PokemonInfo/networkstructs.h"
-#include "../PokemonInfo/battlestructs.h"
 #include "centralwidget.h"
-#include "../Utilities/otherwidgets.h"
 #include "tierstruct.h"
 #include "password_wallet.h"
-#include "Teambuilder/teamholder.h"
 #include "clientinterface.h"
 #include "plugininterface.h"
 
@@ -31,7 +33,7 @@ class Channel;
 class QExposedTabWidget;
 class SmallPokeTextEdit;
 class DataStream;
-class PluginManager;
+class ClientPluginManager;
 
 /* The class for going online.
 
@@ -43,7 +45,7 @@ class Client : public QWidget, public ClientInterface, public CentralWidgetInter
 
     friend class Channel;
 public:
-    Client(PluginManager*, TeamHolder *, const QString &url, const quint16 port);
+    Client(ClientPluginManager*, TeamHolder *, const QString &url, const quint16 port);
     ~Client();
 
     TeamHolder *team();
@@ -83,14 +85,14 @@ public:
     Q_INVOKABLE QString tier(int player) const;
     Q_INVOKABLE QStringList tiers(int player) const;
 
-    void changeName(int player, const QString &name);
-    void changeChannelId(int orId, int destId);
+    Q_INVOKABLE void changeName(int player, const QString &name);
+    Q_INVOKABLE void changeChannelId(int orId, int destId);
     /* Resets fade away counter */
     void refreshPlayer(int id);
 
-    bool hasPlayer(int id);
-    bool hasPlayerInfo(int id);
-    bool hasKnowledgeOf(int id);
+    Q_INVOKABLE bool hasPlayer(int id);
+    Q_INVOKABLE bool hasPlayerInfo(int id);
+    Q_INVOKABLE bool hasKnowledgeOf(int id);
 
     QSize defaultSize() const {
         return QSize(800,600);
@@ -117,13 +119,14 @@ public:
     Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
     Q_INVOKABLE void acceptChallenge(int cId);
 
-    PlayerInfo player(int id) const;
+    Q_INVOKABLE PlayerInfo player(int id) const;
     void removePlayer(int id);
 
     void removeBattleWindow(int id);
     void disableBattleWindow(int id);
 
     void onDisconnection();
+    QIRCLineEdit* getLineEdit();
 
     QList<QIcon> statusIcons;
     QIcon chatot, greychatot;
@@ -172,6 +175,7 @@ public slots:
 
     /* sends what's in the line edit */
     void sendText();
+    void sendMessage(const QString &message, int cid);
     void changeName(const QString&);
     void playerLogin(const PlayerInfo &p, const QStringList &tiers, bool ignore=false);
     void playerReceived(const PlayerInfo &p);
@@ -459,7 +463,7 @@ private:
     bool exitWarning;
 
     QSet<OnlineClientPlugin*> plugins;
-    PluginManager *pluginManager;
+    ClientPluginManager *pluginManager;
     QHash<OnlineClientPlugin*, QHash<QString, OnlineClientPlugin::Hook> > hooks;
 
     template<class T1>

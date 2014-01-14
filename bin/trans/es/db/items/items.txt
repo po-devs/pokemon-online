@@ -328,3 +328,45 @@
 327 Ocaso Ball
 328 Gloria Ball
 329 Parque Ball
+330 Tabla duende
+331 Chaleco asalto
+332 Gafa protectora
+333 Seguro debilidad
+334 Bola de nieve
+335 Musgo brillante
+336 Cápsula habilidad
+337 Fósil mandíbula
+338 Fósil aleta
+339 Crêpe Luminalia
+340 Saquito fragante
+341 Dulce de nata
+1000 Lazo Rosa
+1001 Cinta Lunares
+2001 Venusaurita
+2002 Charizardita X
+2003 Charizardita Y
+2004 Blastoisita
+2005 Alakazamita
+2006 Gengarita
+2007 Kangaskhanita
+2008 Pinsirita
+2009 Gyaradosita
+2010 Aerodactylita
+2011 Mewtwoita X
+2012 Mewtwoita Y
+2013 Ampharosita
+2014 Scizorita
+2015 Heracrossita
+2016 Houndoomita
+2017 Tyranitarita
+2018 Blazikenita
+2019 Gardevoirita
+2020 Mawilita
+2021 Aggronita
+2022 Medichamita
+2023 Manectricita
+2024 Banettita
+2025 Absolita
+2026 Garchompita
+2027 Lucarita
+2028 Abomasnowita

@@ -2,8 +2,14 @@
 #define TIER_H
 
 #include <QtCore>
-#include <QtGui>
-#include "sql.h"
+#include <ctime>
+
+#include <Utilities/coreclasses.h>
+#include <Utilities/rankingtree.h>
+
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/geninfo.h>
+
 #include "memoryholder.h"
 #include "tiernode.h"
 
@@ -12,7 +18,8 @@ class TierCategory;
 struct TeamBattle;
 struct PokeBattle;
 class WaitingObject;
-class LoadThread;
+template <class T>
+class LoadInsertThread;
 class QDomElement;
 
 /* Banned sets have been removed because i was lazy to do the GUI to edit them. */
@@ -27,11 +34,14 @@ struct MemberRating
     int last_check_time;
     int bonus_time;
 
+    int filePos;
+    RankingTree<QString>::iterator node;
+
     MemberRating(const QString &name="", int matches=0, int rating=1000, int displayed_rating = 1000,
-                 int last_check_time = -1, int bonus_time = 0) : name(name.toLower()), matches(matches), rating(rating),
+                 int last_check_time = -1, int bonus_time = 0) : name(name), matches(matches), rating(rating),
                    displayed_rating(displayed_rating), bonus_time(bonus_time) {
         if (last_check_time == -1) {
-            this->last_check_time = time(NULL);
+            this->last_check_time = time(nullptr);
         } else {
             this->last_check_time = last_check_time;
         }
@@ -96,13 +106,11 @@ public:
     bool exists(const QString &name);
     int ranking(const QString &name);
     int count();
-    void updateMember(const MemberRating &m, bool add=false);
-    void updateMemberInDatabase(const MemberRating &m, bool add=false);
+
     void loadMemberInMemory(const QString &name, QObject *o=NULL, const char *slot=NULL);
     void fetchRankings(const QVariant &data, QObject *o, const char *slot);
     void fetchRanking(const QString &name, QObject *o, const char *slot);
     void processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObject *w);
-    void insertMember(QSqlQuery *q, void *data, int type);
     int getMode() const;
     bool allowGen(Pokemon::gen gen) const;
     Pokemon::gen gen() const {return m_gen;}
@@ -110,6 +118,8 @@ public:
     int getClauses() const;
     int getMaxLevel() const;
     void fixTeam(TeamBattle &t) const;
+
+    quint8 restricted(TeamBattle &t) const;
 
     QString getBannedPokes() const;
     QString getRestrictedPokes() const;
@@ -136,6 +146,10 @@ public:
     /* Gives a dummy tier with the same data, just used as a representation or something to work on */
     Tier *dataClone() const;
     bool isTier() const { return true; }
+
+    int maxRestrictedPokes;
+    int numberOfPokemons;
+
 protected:
     enum GetQueryType {
         GetInfoOnUser,
@@ -153,6 +167,14 @@ protected:
     int id() const {
         return m_id;
     }
+
+    /* Be very careful in how you use them */
+    void updateMember(MemberRating &m, bool add=false);
+    void updateMemberInDatabase(MemberRating &m, bool add=false);
+    void insertMember(QSqlQuery *q, void *data, int type);
+
+    void loadSqlFromFile();
+
 private:
     TierMachine *boss;
     TierCategory *node;
@@ -160,8 +182,6 @@ private:
     bool banPokes;
 //    QMultiHash<int, BannedPoke> bannedSets; // The set is there to keep good perfs
 //    QMultiHash<int, BannedPoke> restrictedSets;
-    int maxRestrictedPokes;
-    int numberOfPokemons;
     int maxLevel;
     Pokemon::gen m_gen;
     QString banParentS;
@@ -175,15 +195,21 @@ private:
 
     /* Used for table name in SQL database */
     QString sql_table;
+    int m_count, last_count_time;
+
     int m_id;
-    int m_count;
-    int last_count_time;
+
+    QFile *in;
 
     mutable MemoryHolder<MemberRating> holder;
 
     MemberRating member(const QString &name);
 
-    LoadThread *getThread();
+    LoadInsertThread<MemberRating> *getThread();
+
+    istringmap<MemberRating> ratings;
+    RankingTree<QString> rankings;
+    int lastFilePos;
 };
 
 #endif // TIER_H

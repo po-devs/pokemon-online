@@ -1,14 +1,16 @@
-#include "../PokemonInfo/pokemon.h"
-#include "../PokemonInfo/geninfo.h"
-#include "../Utilities/functions.h"
+#include <PokemonInfo/pokemon.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/geninfo.h>
+#include <PokemonInfo/teamholder.h>
+
+#include <Utilities/functions.h>
+#include <TeambuilderLibrary/poketablemodel.h>
+
 #include "Teambuilder/teambuilder.h"
 #include "Teambuilder/trainermenu.h"
-#include "Teambuilder/teamholder.h"
 #include "mainwindow.h"
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeboxes.h"
-#include "Teambuilder/poketablemodel.h"
-#include "../PokemonInfo/pokemoninfo.h"
 #include "loadwindow.h"
 #include "pluginmanager.h"
 
@@ -20,7 +22,7 @@
 
 #include <cerrno>
 
-TeamBuilder::TeamBuilder(PluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(NULL)
+TeamBuilder::TeamBuilder(ClientPluginManager *p, TeamHolder *team, bool load) : m_team(team), teamMenu(nullptr)
 {
 //    QStringList undone;
 //    for (int i = 1;i <= 718; i++) {

@@ -1,4 +1,11 @@
-﻿#include "client.h"
+﻿#include <Utilities/functions.h>
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/teamholder.h>
+
+#include <TeambuilderLibrary/theme.h>
+#include <TeambuilderLibrary/poketextedit.h>
+
+#include "client.h"
 #include "mainwindow.h"
 #include "logmanager.h"
 #include "findbattledialog.h"
@@ -8,13 +15,8 @@
 #include "pmsystem.h"
 #include "controlpanel.h"
 #include "ranking.h"
-#include "poketextedit.h"
-#include "../Utilities/functions.h"
-#include "../PokemonInfo/pokemonstructs.h"
 #include "channel.h"
-#include "theme.h"
 #include "soundconfigwindow.h"
-#include "Teambuilder/teamholder.h"
 #include "challengedialog.h"
 #include "tieractionfactory.h"
 #include "pluginmanager.h"
@@ -29,7 +31,7 @@
 #include <QSplitter>
 #endif
 
-Client::Client(PluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
+Client::Client(ClientPluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {
     exitWarning = globals.value("Client/ShowExitWarning").toBool(); // initiate, to show exit warning or not
     flashingToggled = !globals.contains("Client/Flashing") ? true : globals.value("Client/Flashing").toBool();
@@ -582,6 +584,11 @@ QString Client::defaultChannel()
     return globals.value(QString("DefaultChannels/%1").arg(relay().getIp())).toString();
 }
 
+QIRCLineEdit* Client::getLineEdit()
+{
+    return myline;
+}
+
 void Client::addChannel(const QString &name, int id)
 {
     m_channelNames.insert(id, name);
@@ -772,15 +779,15 @@ void Client::watchBattleRequ(int id)
 }
 
 void Client::kick(int p) {
-    relay().notify(NetworkCli::PlayerKick, qint32(p));
+    relay().kick(p);
 }
 
 void Client::ban(int p) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p));
+    relay().ban(p);
 }
 
 void Client::tempban(int p, int time) {
-    relay().notify(NetworkCli::PlayerBan, qint32(p), qint32(time));
+    relay().tempban(p, time);
 }
 
 void Client::pmcp(QString p) {
@@ -1204,7 +1211,15 @@ void Client::sendText()
 
     int cid = currentChannel();
 
-    QString text = myline->text().trimmed();
+    QString text = myline->text();
+    sendMessage(text, cid);
+
+    myline->clear();
+}
+
+void Client::sendMessage(const QString &message, int cid)
+{
+    QString text = message.trimmed();
     if (text.length() > 0) {
         QStringList s = text.split('\n');
         foreach(QString s1, s) {
@@ -1213,8 +1228,6 @@ void Client::sendText()
             }
         }
     }
-
-    myline->clear();
 }
 
 bool Client::hasChannel(int channelid) const
@@ -2261,7 +2274,7 @@ void Client::connected()
             relay().login(*team(), ladder->isChecked(), goaway->isChecked(), team()->color(), defaultChannel, autoJoinChannels);
         }
     } else {
-        relay().notify(NetworkCli::Reconnect, quint32(ownId()), reconnectPass, quint32(relay().getCommandCount()));
+        relay().reconnect(ownId(), reconnectPass);
     }
 
     emit PMDisconnected(false);
@@ -2270,9 +2283,9 @@ void Client::connected()
 void Client::disconnected()
 {
     if (reconnectPass.length() > 0) {
-        printHtml(tr("<hr><br>Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved.<br><hr>"));
+        printHtml(toBold(tr("Disconnected from Server! If the disconnect is due to an internet problem, try to <a href=\"po:reconnect\">reconnect</a> once the issue is solved.")));
     } else {
-        printHtml(tr("<hr><br>Disconnected from Server!<br><hr>"));
+        printHtml(toBold(tr("Disconnected from Server!")));
     }
 
     onDisconnection();
@@ -2397,6 +2410,10 @@ bool Client::hasKnowledgeOf(int id) {
 
 void Client::removePlayer(int id)
 {
+    if (!playerExist(id)) {
+        return;
+    }
+
     QString name = player(id).name;
 
     foreach(Channel *c, mychannels) {

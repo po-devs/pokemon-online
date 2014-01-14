@@ -1,8 +1,8 @@
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "Teambuilder/ivbox.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <TeambuilderLibrary/theme.h>
+#include "ivbox.h"
 #include "ui_ivbox.h"
-#include "theme.h"
 
 IvBox::IvBox(QWidget *parent) :
     QWidget(parent),
@@ -207,7 +207,7 @@ void IvBox::changeHiddenPower(int newType)
     }
 
     updateIVs();
-    updateHiddenPowerSelection();
+    updateHiddenPower();
 }
 
 void IvBox::changeHPSelection(int row)

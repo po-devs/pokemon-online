@@ -2,11 +2,9 @@
 #define REGISTRYSTATION_H
 
 #include <QObject>
-#include "../PokemonInfo/networkstructs.h"
-#include "../Teambuilder/network.h"
-#include "../QJson/qjson.h"
-
-class Network;
+#include <PokemonInfo/networkstructs.h>
+#include <Utilities/network.h>
+#include <QJson/qjson.h>
 
 class RegistryStation : public QObject
 {
@@ -22,7 +20,7 @@ public slots:
     void resetRegistryConnection();
     void readCommand(const QByteArray &array);
 private:
-    Network network;
+    StandardNetwork network;
 
     void saveServers();
 

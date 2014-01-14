@@ -1,12 +1,12 @@
 #ifndef BASEBATTLEWINDOW_H
 #define BASEBATTLEWINDOW_H
 
-#include "../PokemonInfo/battlestructs.h"
+#include <PokemonInfo/battlestructs.h>
 #include "client.h"
 
 #include "basebattlewindowinterface.h"
-#include "../BattleManager/battledatatypes.h"
-#include "../BattleManager/battlecommandmanager.h"
+#include <BattleManager/battledatatypes.h>
+#include <BattleManager/battlecommandmanager.h>
 
 #ifdef QT5
 #include <QMediaPlayer>

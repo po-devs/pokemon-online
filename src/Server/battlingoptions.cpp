@@ -6,7 +6,7 @@
 #include <QHBoxLayout>
 
 #include "battlingoptions.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "tiermachine.h"
 
 BattlingOptionsWindow::BattlingOptionsWindow()

@@ -1,4 +1,4 @@
-#include "../PokemonInfo/pokemonstructs.h"
+#include <PokemonInfo/pokemonstructs.h>
 
 #include <QStackedWidget>
 #include <QTabBar>
@@ -12,10 +12,10 @@
 #include <QStyle>
 #include <QPushButton>
 
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/teamholder.h>
 #include "Teambuilder/teammenu.h"
 #include "Teambuilder/pokeedit.h"
-#include "Teambuilder/teamholder.h"
 #include "Teambuilder/pokeboxes.h"
 #include "teambuilder.h"
 

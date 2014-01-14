@@ -2,6 +2,7 @@
 #define MEMORYHOLDER_H
 
 #include <QtCore>
+#include "sql.h"
 
 template <class Member>
 class MemoryHolder
@@ -17,23 +18,32 @@ public:
 
     bool isInMemory(const QString &name) const
     {
-        QString n2 = name.toLower();
+        if (isSql()) {
+            QString n2 = name.toLower();
 
-        QMutexLocker lock(&memberMutex);
-        return members.contains(n2) || nonExistentMembers.contains(n2);
+            QMutexLocker lock(&memberMutex);
+            return members.contains(n2) || nonExistentMembers.contains(n2);
+        } else {
+            /* Always in memory now */
+            return true;
+        }
     }
 
     void addMemberInMemory(const Member &m)
     {
-        memberMutex.lock();
+        if (isSql()) {
+            memberMutex.lock();
 
-        nonExistentMembers.remove(m.name);
-        if (!members.contains(m.name))
-            cachedMembersOrder.push_front(m.name);
+            nonExistentMembers.remove(m.name);
+            if (!members.contains(m.name))
+                cachedMembersOrder.push_front(m.name);
 
-        members[m.name] = m;
+            members[m.name] = m;
 
-        memberMutex.unlock();
+            memberMutex.unlock();
+        } else {
+            return;
+        }
     }
 
     /* Should only be called from the main thread */
@@ -104,8 +114,8 @@ public:
                 return false;
             }
 
-//            if (nonExistentMembers.contains(n2))
-//                return false;
+            //            if (nonExistentMembers.contains(n2))
+            //                return false;
         }
     }
 

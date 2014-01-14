@@ -303,3 +303,69 @@
 302 Reset Urge
 303 Supercolpo 3
 304 Genefurioso
+305 Poké Ball
+306 Mega Ball
+307 Ultra Ball
+308 Master Ball
+309 Safari Ball
+310 Level Ball
+311 Esca Ball
+312 Luna Ball
+313 Friend Ball
+314 Love Ball
+315 Peso Ball
+316 Rapid Ball
+317 Gara Ball
+318 Premier Ball
+319 Bis Ball
+320 Timer Ball
+321 Minor Ball
+322 Rete Ball
+323 Sub Ball
+324 Chic Ball
+325 Cura Ball
+326 Velox Ball
+327 Scuro Ball
+328 Pregio Ball
+329 Parco Ball
+330 Lastraspiritello
+331 Corpetto Assalto
+332 Visierantisabbia
+333 Vulneropolizza
+334 Palla di Neve
+335 Luminous Moss
+336 Capsula Abilità
+337 Fossilmascella
+338 Fossilpinna
+340 Bustina Aromi
+341 Dolcespuma
+1000 Fiocco Rosa
+1001 Fiocco Pois
+2001 Venusaurite
+2002 Charizardite X
+2003 Charizardite Y
+2004 Blastoisite
+2005 Alakazamite
+2006 Gengarite
+2007 Kangaskhanite
+2008 Pinsirite
+2009 Gyaradosite
+2010 Aerodactylite
+2011 Mewtwoite X
+2012 Mewtwoite Y
+2013 Ampharosite
+2014 Scizorite
+2015 Heracrossite
+2016 Houndoomite
+2017 Tyranitarite
+2018 Blazikenite
+2019 Gardevoirite
+2020 Mawilite
+2021 Aggronite
+2022 Medichamite
+2023 Manectricite
+2024 Banettite
+2025 Absolite
+2026 Garchompite
+2027 Lucarite
+2028 Abomasnowite

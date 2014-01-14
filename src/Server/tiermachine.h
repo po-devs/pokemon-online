@@ -2,7 +2,7 @@
 #define TIERMACHINE_H
 
 #include <QtGui>
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 #include "tiertree.h"
 
 class Tier;
@@ -11,8 +11,8 @@ struct PokeBattle;
 class WaitingObject;
 class MemberRating;
 class QSqlQuery;
-class LoadThread;
-template<class T> class InsertThread;
+
+template<class T> class LoadInsertThread;
 
 class TierMachine : public QObject
 {
@@ -74,8 +74,8 @@ public:
 signals:
     void tiersChanged();
 public slots:
-    void processQuery(QSqlQuery*,const QVariant &,int,WaitingObject*);
-    void insertMember(QSqlQuery*,void *,int);
+    void processQuery(QSqlQuery *q, const QVariant &,int,WaitingObject*);
+    void insertMember(QSqlQuery *q,void *,int);
     /* Processes the daily run in which ratings are updated.
        Be aware that it may take long. I may thread it in the future. */
     void processDailyRun();
@@ -87,15 +87,12 @@ private:
     TierTree tree;
     QByteArray m_tierList;
 
-    static const int loadThreadCount=2;
-    int nextLoadThreadNumber;
-    LoadThread **threads;
-    InsertThread<MemberRating> *ithread;
+    LoadInsertThread<MemberRating> *thread;
 
     static const int semaphoreMaxLoad = 1000;
     QSemaphore semaphore;
 
-    LoadThread * getThread();
+    LoadInsertThread<MemberRating> * getThread();
 
     /* Number gets increased by one every time tiers are reloaded.
 

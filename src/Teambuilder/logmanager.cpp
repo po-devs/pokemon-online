@@ -3,7 +3,7 @@
 #include <QTime>
 #include <QFile>
 #include <QDesktopServices>
-#include "../Utilities/functions.h"
+#include <Utilities/functions.h>
 
 LogManager* LogManager::instance = NULL;
 

@@ -5,7 +5,7 @@
 
 #include "sql.h"
 #include "sqlconfig.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "security.h"
 #include "tiermachine.h"
 
@@ -18,32 +18,26 @@ SQLConfigWindow::SQLConfigWindow()
     QLabel *desc = new QLabel(tr("<b><span style='color:red'>Don't touch anything if you've no clue what SQL is!</span></b><br /><br />For any change to have effect, you need to restart the server."
                                  "<br />If you change the settings without knowledge of what you are doing, you'll probably end up without any users stored anymore.<br/><br/>SQLite is the "
                                  "only system fully supported by default. PostGreSQL needs an external installation, and you then just have to put the .dlls in that are located in PostGreSQL's bin folder in the server folder. "
-                                 "MySQL needs the user to get the right DLLs, the MySQL driver and to install a MySQL database too (it is advised to be on linux to do this as this is far less complicated)."));
+                                 "MySQL needs the user to get the right DLLs, the MySQL driver and to install a MySQL database too (it is advised to be on linux to do this as this is far less complicated)."
+                                 "<br/> Text is the default format, and the fastest. Text files will be stored in the 'serverdb' folder. If you want to move from SQL to Text, export the database, switch "
+                                 "to text and restart the server."));
     desc->setWordWrap(true);
     v->addWidget(desc);
-
-    QLabel *desc2 = new QLabel(tr("If you have a player database from before BW 2, you may want to export it, delete the database file, and rerun the server. That way it's converted and players "
-                                  "from that time will have their last login properly stored, which enables the functionality to delete old alts to work fine."));
-    desc2->setWordWrap(true);
-    v->addWidget(desc2);
 
     QSettings s("config", QSettings::IniFormat);
 
     b = new QComboBox();
+    b->addItem("Text");
     b->addItem("SQLite");
     b->addItem("PostGreSQL");
     b->addItem("MySQL");
     v->addLayout(new QSideBySide(new QLabel(tr("SQL Database type: ")), b));
-    if (s.value("SQL/Driver").toInt() == SQLCreator::PostGreSQL) {
-        b->setCurrentIndex(1);
-    } else if (s.value("SQL/Driver").toInt() == SQLCreator::MySQL) {
-        b->setCurrentIndex(2);
-    }
+    b->setCurrentIndex(s.value("SQL/Driver").toInt()+1);
 
     name = new QLineEdit();
     name->setText(s.value("SQL/Database").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Database name: ")), name));
-    
+
     schema = new QLineEdit();
     schema->setText(s.value("SQL/DatabaseSchema", "").toString());
     v->addLayout(new QSideBySide(new QLabel(tr("Schema: ")), schema));
@@ -74,6 +68,7 @@ SQLConfigWindow::SQLConfigWindow()
 
     QPushButton *apply = new QPushButton(tr("&Apply"));
     connect(apply, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(apply, SIGNAL(clicked()), SLOT(close()));
 
     v->addLayout(new QSideBySide(exporting, apply));
 
@@ -83,21 +78,24 @@ SQLConfigWindow::SQLConfigWindow()
 
 void SQLConfigWindow::changeEnabled()
 {
-    bool c = (b->currentIndex() == 0);
+    bool c = (b->currentIndex()-1 == 0);
 
     user->setDisabled(c);
     port->setDisabled(c);
     host->setDisabled(c);
     pass->setDisabled(c);
     // Schema for PostgreSQL.
-    schema->setEnabled(b->currentIndex() == 1);
+    schema->setEnabled(b->currentIndex()-1 == 1);
+    //Text does nothing!
+    bool t = (b->currentIndex()-1 == -1);
+    name->setDisabled(t);
 }
 
 void SQLConfigWindow::apply()
 {
     QSettings s("config", QSettings::IniFormat);
 
-    s.setValue("SQL/Driver", b->currentIndex());
+    s.setValue("SQL/Driver", b->currentIndex()-1);
     s.setValue("SQL/Database", name->text());
     s.setValue("SQL/Port", port->value());
     s.setValue("SQL/User", user->text());
@@ -117,7 +115,7 @@ void SQLConfigWindow::exportDatabase()
     SecurityManager::exportDatabase();
     TierMachine::obj()->exportDatabase();
 
-    QMessageBox::information(this, "Database Saved!", "The database was saved successfully (members.txt and tier_*.txt files). If you want to import it"
+    QMessageBox::information(this, "Database Saved!", "The database was saved successfully in text format (serverdb folder). If you want to import it"
                              " from another server, put those files in the other server's directory and make sure the database it has access to is empty,"
                              " otherwise it won't import. You also have to restart the other server.");
 }

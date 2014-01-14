@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DesignerWidget</class>
+ <widget class="QDialog" name="DesignerWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>655</width>
+    <height>604</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Designer</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QToolButton" name="reload">
+     <property name="text">
+      <string>Reload</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QRadioButton" name="liveReload">
+     <property name="text">
+      <string>Live Edit</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="infoTab">
+      <attribute name="title">
+       <string>Trainer Info</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="infoLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="infoInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="infoOutput"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="descTab">
+      <attribute name="title">
+       <string>Server Description</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="descLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="descInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="descOutput"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="annTab">
+      <attribute name="title">
+       <string>Server Announcement</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="annLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="annInput">
+         <property name="plainText">
+          <string>&lt;i&gt;HTML goes here.&lt;/i&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollDownTextBrowser" name="annOutput"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QLabel" name="charCount">
+     <property name="text">
+      <string>0/300 characters</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QScrollDownTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header location="global">Utilities/qscrolldowntextbrowser.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DesignerWidget</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DesignerWidget</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

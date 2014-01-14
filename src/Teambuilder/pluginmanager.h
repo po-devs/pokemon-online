@@ -1,11 +1,14 @@
-#ifndef PLUGINMANAGER_H
-#define PLUGINMANAGER_H
+#ifndef CLIENTPLUGINMANAGER_H
+#define CLIENTPLUGINMANAGER_H
 
 #include <QtCore>
 #include <QtGui>
 #ifdef QT5
 #include <QtWidgets>
 #endif
+
+#include <Utilities/pluginmanager.h>
+#include "plugininterface.h"
 
 class ClientPlugin;
 class MainEngine;
@@ -14,20 +17,14 @@ class OnlineClientPlugin;
 class TeambuilderInterface;
 class TeambuilderPlugin;
 
-namespace cross {
-    class DynamicLibrary;
-}
-
-class PluginManager
+class ClientPluginManager : public PluginManager
 {
-    friend class PluginManagerWidget;
 public:
-    PluginManager(MainEngine *t);
-    ~PluginManager();
+    ClientPluginManager(MainEngine *t);
+    ~ClientPluginManager();
 
-    QStringList getPlugins() const;
-    QStringList getVisiblePlugins() const;
-    ClientPlugin *plugin(const QString &name) const;
+    ClientPlugin* plugin(int index) const;
+    ClientPlugin* plugin(const QString&) const;
 
     void addPlugin(const QString &path);
     void freePlugin(int index);
@@ -37,35 +34,24 @@ public:
 
     void launchTeambuilder(TeambuilderInterface *c);
     void quitTeambuilder(TeambuilderInterface *c);
+
+    client_plugin_version()
+protected:
+    /* What settings file to use? */
+    virtual QSettings& settings();
+    /* How to instanciate the plugin? */
+    virtual ClientPlugin* instanciatePlugin(void *function);
+    /* What is the name of the function in the library to create the plugin? */
+    virtual const char* instantiatingFunctionName() const {return "createClientPlugin";}
+    QString directory() const;
 private:
-    QVector<cross::DynamicLibrary *> libraries;
-    QVector<ClientPlugin *> plugins;
     QHash<ClientInterface*, QHash<ClientPlugin *, OnlineClientPlugin*> > clientPlugins;
     QHash<TeambuilderInterface*, QHash<ClientPlugin *, TeambuilderPlugin*> > teambuilderPlugins;
-    QStringList filenames;
 
-    void updateSavedList();
     MainEngine *engine;
     QSet<ClientInterface *> clients;
     QSet<TeambuilderInterface *> teambuilders;
+    QSettings m_settings;
 };
 
-class PluginManagerWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    PluginManagerWidget(PluginManager &pl);
-
-signals:
-    void pluginListChanged();
-private slots:
-    void addClicked();
-    void addPlugin(const QString &filename);
-    void removePlugin();
-private:
-    PluginManager &pl;
-
-    QListWidget *list;
-};
-
-#endif // PLUGINMANAGER_H
+#endif // CLIENTPLUGINMANAGER_H

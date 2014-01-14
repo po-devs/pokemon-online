@@ -1,0 +1,8 @@
+Lucario (M) @ Lucarionite
+Trait: Steadfast
+EVs: 252 SAtk / 252 Spd
+Timid Nature (+Spd, -Atk)
+- Nasty Plot
+- Dark Pulse
+- Vacuum Wave
+- Flash Cannon

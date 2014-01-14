@@ -1,8 +1,9 @@
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
+
 #include "findbattledialog.h"
 #include "ui_findbattledialog.h"
-#include "Teambuilder/teamholder.h"
 #include "Teambuilder/teamline.h"
-#include "../PokemonInfo/battlestructs.h"
 
 FindBattleDialog::FindBattleDialog(QWidget *parent) :
     QWidget(parent),

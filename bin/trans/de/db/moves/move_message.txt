@@ -31,8 +31,8 @@
 47 %s hat seinen Fokus verloren!|%s verstärkt seinen Fokus!
 48 %s became the center of attention!
 51 %f's %a is nullified!
-53 Die Erdanziehung wurde verstärkt!|Die Erdanziehung ist wieder normal!|%s couldn't stay airbourne because of gravity!|%s's %m wurde wegen Erdanziehung blockiert!|%s %m wegen Erdanziehung nicht einsetzen!
-54 %f's %m verliert alle seine  AP wegen Nachspiel von %s!
+53 Die Erdanziehung wurde verstärkt!|Die Erdanziehung ist wieder normal!|%s couldn't stay airbourne because of gravity!|%s's %m wurde wegen Erdanziehung blockiert!|%s kann %m wegen Erdanziehung nicht einsetzen!
+54 %f's %m verliert alle seine AP wegen Nachspiel von %s!
 55 %s swapped its boosts with %f!
 57 Es fängt an zu hageln!|Es fängt an zu regnen!|Ein Sandsturm zieht auf!|Das Sonnenlicht wird stärker!
 58 %s hat sich in %f verliebt!|%f hat sich verliebt!|%s ist starr vor Liebe!
@@ -40,7 +40,7 @@
 60 %s erholt sich!
 61 %s erholt sich!|Der Wunschtraum erfüllt sich!|Es wurde von mystischem Mondlicht umhüllt!
 62 %s tauscht seine Verteidigung und seinen Angriff!
-63 %s is ready to help %f!
+63 %s ist bereit %f zu helfen!
 64 %s macht weiter und bricht zusammen!
 67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
 68 %s schwebt durch Elektromagnetismus!|Magnetflug von %s lässt nach!
@@ -61,7 +61,7 @@
 92 %s leidet unter dem Alptraum!
 93 %s beruhigt sich!|%s became confused due to fatigue!
 94 Die Pokémon teilen sich ihr Leid!
-95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+95 All Pokémon hearing the song will faint in three turns!|%s's Abgesang steht bei %d!
 96 %s's Geschenk heilt einige KP von %f!
 97 %s kopiert %f's Statusveränderungen!
 98 %s moved its status onto %f!
@@ -102,8 +102,8 @@
 155 %s und %f haben ihre Kraft aufgeteilt!|%s und %f haben ihre Verteidigung aufgeteilt!
 156 %s negiert die Itemeffekte!|Die Items funktionieren wieder!
 157 %s transformed into the %t type!
-158 %f gained %a!
-160 %f's %i burned!
+158 %f erhält %a!
+160 %f's %i verbrennt!
 162 %s gave %f its %i!
 164 %s's status cleared!
 168 %s tauscht die Verteidigung und die Spezial Vertidigung von allen Pokémon!|Die Verteidigung und die Spezial Verteidigung der Pokémon ist wieder normal!
@@ -111,17 +111,17 @@
 170 %ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
 171 %s is being sent back!
 172 %s type changed to match %f's types!
-174 %f was hurled into the air!|%s was freed from the telekinesis!
+174 %f was hurled into the air!|%s wurde von der Telekinese befreit!
 175 %f fell straight down!
 178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
 179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
 190 %f took the kind offer!
 199 %ts's Team ist durch Trickschutz geschützt!Trickschutz von %ts's Team wurde zerstört!
-201 The terrain became electrified!|Electricity on the terrain faded away.
+201 The terrain became electrified!|Electricity on the terrain faded away!
 202 %f became electrified!
-203 Die Pokémon können nicht mehr fliehen!|Fairy Lock's effect disappeared.
-205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field!
+203 Die Pokémon können nicht mehr fliehen!|Der Effekt von Feenschloss verschwindet!
+205 The terrain became grassy!|Grass on the terrain faded away!|The Grassy Terrain heals the Pokemon on the field!
 206 %s schützt sich selbst!
 207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
 208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!

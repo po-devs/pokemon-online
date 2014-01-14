@@ -2,6 +2,8 @@
 #define PLUGINDELEGATE_H
 
 class TeamHolderInterface;
+class QScrollDownTextBrowser;
+class QWidget;
 struct ThemeAccessor;
 
 class MainEngineInterface {

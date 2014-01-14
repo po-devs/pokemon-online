@@ -1,9 +1,9 @@
 #include <QFileDialog>
 
-#include "../Utilities/ziputils.h"
+#include <Utilities/ziputils.h>
 #include "modswindow.h"
 #include "ui_modswindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 ModsWindow::ModsWindow(QWidget *parent) :
     QWidget(parent),

@@ -1,7 +1,8 @@
-#include "relaymanager.h"
 #include "../Shared/config.h"
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+
+#include "relaymanager.h"
 #include "player.h"
 #include "security.h"
 #include "challenge.h"
@@ -11,6 +12,11 @@
 #include "server.h"
 #include "analyze.h"
 #include <algorithm>
+
+unsigned int qHash(const QPointer<Player> &pl)
+{
+    return qHash(pl.data());
+}
 
 Player::Player(const GenericSocket &sock, int id)
 {
@@ -23,7 +29,6 @@ Player::Player(const GenericSocket &sock, int id)
     myip = relay().ip();
     server_pass_sent = false;
     needToUpdate = false;
-
 
     m_bundle.auth = 0;
 
@@ -339,6 +344,7 @@ void Player::doWhenRC(bool wasLoggedIn)
     }
 }
 
+/* Full player removal */
 void Player::doWhenDQ()
 {
     removeRelay();
@@ -359,6 +365,10 @@ void Player::doWhenDQ()
         p->knowledge.remove(this);
     }
     knowledge.clear();
+
+    foreach(int channel, channels) {
+        emit leaveRequested(this->id(), channel);
+    }
 }
 
 void Player::quitSpectating(int battleId)
@@ -1057,11 +1067,21 @@ bool Player::testReconnectData(Player *other, const QByteArray &hash)
 
 void Player::associateWith(Player *other)
 {
-    removeRelay();
     std::swap(myrelay, other->myrelay);
+    /* Keep relay specific data across reconnect */
+    if (loginInfo()) {
+        relay().setVersion(loginInfo()->version);
+    }
     relay().setId(id());
     relay().disconnect(other);
     other->disconnect(&relay());
+    /* Sever ALL connections :( */
+    if (other->myrelay) {
+        disconnect(other->myrelay);
+        other->myrelay->disconnect(this);
+    }
+    /* Discard other relay */
+    other->removeRelay();
 
     std::swap(myip, other->myip);
     std::swap(proxyip, other->proxyip);
@@ -1437,9 +1457,11 @@ void Player::registerRequest() {
     if (m.isProtected())
         return; //INVALID BEHAVIOR
 
-    for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
-        m.salt[i] = uchar((true_rand() % (90-49)) + 49);
-    }
+    do {
+        for (int i = 0; i < SecurityManager::Member::saltLength; i++) {
+            m.salt[i] = uchar((true_rand() % (90-49)) + 49);
+        }
+    } while (m.salt.contains('%'));
 
     SecurityManager::updateMember(m);
     relay().notify(NetworkServ::AskForPass, QString(m.salt));
@@ -1459,6 +1481,11 @@ void Player::userInfoAsked(const QString &name)
     SecurityManager::Member m = SecurityManager::member(name);
 
     UserInfo ret(name, m.isBanned() ? UserInfo::Banned : 0, m.authority(), m.ip, m.date);
+
+    int id = Server::serverIns->id(name);
+    if (id && Server::serverIns->playerLoggedIn(id)) {
+        ret.os = Server::serverIns->player(id)->os();
+    }
     relay().sendUserInfo(ret);
 
     if (SecurityManager::maxAuth(m.ip) > auth()) {

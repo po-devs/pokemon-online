@@ -1,8 +1,8 @@
 #ifndef PLAYERSTRUCTS_H
 #define PLAYERSTRUCTS_H
 
-#include "../PokemonInfo/battlestructs.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/networkstructs.h>
 
 struct TeamsHolder
 {

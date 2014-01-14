@@ -3,13 +3,16 @@
 
 #include <QtCore>
 
-#include "../Utilities/otherwidgets.h"
+/* For istringmap */
+#include <Utilities/coreclasses.h>
+/* For QNickValidator */
+#include <Utilities/otherwidgets.h>
+
 #include "memoryholder.h"
 
 class WaitingObject;
-class QSqlQuery;
-class LoadThread;
-template<class T> class InsertThread;
+
+template<class T> class LoadInsertThread;
 
 class SecurityManager : public QObject
 {
@@ -36,6 +39,7 @@ public:
         QByteArray salt;
         QByteArray hash;
         QString ip;
+        int filepos; // position in the file
         unsigned int ban_expire_time;
 
         void modifyIP(const QString &ip) {
@@ -86,7 +90,19 @@ public:
         QString toString() const;
 
         static const int saltLength = 7;
+        static const int hashLength = 32;
+        static const int dateLength = 19;
+        static const int ipLength = 39; //IPv6 is 39, so lets be ready for the future
+        static const int banTimeLength = 10;
+
+        void write(QIODevice *device) const;
     };
+
+
+    static const istringmap<Member> & getMembers();
+
+    static bool registered(const QString &name);
+    static int auth(const QString &name);
 
     static bool isValid(const QString &name);
     static bool exist(const QString &name);
@@ -97,10 +113,10 @@ public:
 
     static bool bannedIP(const QString &ip);
     static void ban(const QString &name, int time=0);
-    static void banIP(const QString &ip);
+    static void banIP(const QString &ip, int time=0);
     static void unban(const QString &name);
+    static void unbanIP(const QString &ip);
     static int numRegistered(const QString &ip);
-    static void IPunban(const QString &ip);
     static void setAuth(const QString &name, int auth);
     static void clearPass(const QString &name);
     //static void setBanExpireTime(const QString &name, int time);
@@ -114,25 +130,23 @@ public:
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, std::pair<QString, int> > banList();
     static QStringList authList();
-    static QStringList userList();
+    static QStringList &&userList();
     static void deleteUser(const QString &name);
 
-    /* Exports the whole database to members.txt. Done in the main thread (and please call it
-       only from there), so hangs the server */
-    static void exportDatabase();
-
     static void processDailyRun(int maxdays, bool async=true);
+    static void exportDatabase();
 private slots:
     static void insertMember(QSqlQuery *q, void *m, int update);
     static void loadMember(QSqlQuery *q, const QVariant &name, int query_type);
 
-    static void dailyRunEx(QSqlQuery *q);
+    static void dailyRunEx(QSqlQuery *q=0);
 private:
     static void loadMembers();
+    static void loadSqlMembers();
 
     static MemoryHolder<Member> holder;
 
-    static QHash<QString, int> bannedIPs;
+    static QHash<QString, unsigned int> bannedIPs;
     static QHash<QString, std::pair<QString, int> > bannedMembers;
 
     static WaitingObject* getObject();
@@ -143,16 +157,19 @@ private:
 
     static SecurityManager * instance;
 
-    static const int loadThreadCount=2;
-    static int nextLoadThreadNumber;
-    static LoadThread **threads;
-    static InsertThread<Member> *ithread;
+    static LoadInsertThread<Member> *thread;
 
-    static LoadThread * getThread();
+    static LoadInsertThread<Member> * getThread();
 
     static QNickValidator val;
 
     static int dailyRunDays;
+    static int lastPlace;
+    static QFile memberFile;
+    static istringmap<Member> members;
+
+    static QMultiHash<QString, QString> playersByIp;
+    static QSet<QString> authed;
 };
 
 #endif // SECURITY_H

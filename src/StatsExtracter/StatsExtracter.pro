@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT +=
 TARGET = StatsExtracter
-DESTDIR = $$PWD/../../bin
 
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -14,20 +12,6 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp
-HEADERS = ../PokemonInfo/pokemoninfo.h \
-          ../Utilities/coreclasses.h
-
-unix:!mac {
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
-}
-
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
 
 include(../Shared/Common.pri)
 

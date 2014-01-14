@@ -1,7 +1,9 @@
-#include "../PokemonInfo/pokemoninfo.h"
+//First because QHash problem
+#include <PokemonInfo/pokemoninfo.h>
+
 #include <QtCore>
 #include <ctime>
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 /*
  * First we move to a tier.

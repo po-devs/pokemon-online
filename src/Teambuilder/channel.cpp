@@ -1,8 +1,9 @@
-﻿#include "channel.h"
+﻿#include <Utilities/coreclasses.h>
+#include <TeambuilderLibrary/poketextedit.h>
+#include <TeambuilderLibrary/theme.h>
+
 #include "client.h"
-#include "poketextedit.h"
-#include "theme.h"
-#include "../Utilities/coreclasses.h"
+#include "channel.h"
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
@@ -174,6 +175,15 @@ void Channel::anchorClicked(const QUrl &url)
             } else {
                 client->seeInfo(id);
             }
+        } else if (path.leftRef(5) == "send/") {
+            QString msg = path.mid(5);
+            client->sendMessage(msg, myid);
+        } else if (path.leftRef(7) == "setmsg/") {
+            QString msg = path.mid(7);
+            client->getLineEdit()->setText(msg);
+        } else if (path.leftRef(10) == "appendmsg/") {
+            QString msg = path.mid(10);
+            client->getLineEdit()->setText(client->getLineEdit()->text() + msg);
         }
     } else {
         QDesktopServices::openUrl(url);
@@ -474,7 +484,7 @@ void Channel::dealWithCommand(int command, DataStream *stream)
     } else if (command == NetworkCli::LeaveChannel) {
         qint32 id;
         in >> id;
-        if (eventEnabled(Client::ChannelEvent)) {
+        if (eventEnabled(Client::ChannelEvent) && name(id) != "~Unknown~") {
             printLine(tr("%1 left the channel.").arg(name(id)), false, false);
         }
         /* Remove everything... */
@@ -526,10 +536,10 @@ void Channel::updateState(int id)
 void Channel::playerLogOut(int id) {
     QString name = this->name(id);
 
-    removePlayer(id);
-
     if (eventEnabled(Client::ChannelEvent))
         printLine(tr("%1 logged out.").arg(name), false, false);
+
+    removePlayer(id);
 }
 
 void Channel::removePlayer(int id) {

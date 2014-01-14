@@ -12,12 +12,12 @@
 #include <QNetworkReply>
 #include <QHostInfo>
 
-#include "../PokemonInfo/geninfo.h"
-#include "../Utilities/functions.h"
-#include "sessiondatafactory.h"
+#include <PokemonInfo/geninfo.h>
+#include <Utilities/functions.h>
 
 class Server;
 class ChallengeInfo;
+class SessionDataFactory;
 
 class ScriptEngine : public QObject
 {
@@ -60,6 +60,7 @@ public:
     static QScriptValue tint(QScriptContext *c, QScriptEngine *);
 public:
     ScriptEngine(Server *s);
+    void init();
     ~ScriptEngine();
 
     /* Events */
@@ -132,6 +133,9 @@ public:
     bool beforePlayerBan(int src, int dest, int time);
     void afterPlayerBan(int src, int dest, int time);
 
+    bool beforeReconnect(int dest, int src);
+    void afterReconnect(int src);
+
     void battleSetup(int src, int dest, int battleId);
 
     bool beforeFindBattle(int src);
@@ -156,6 +160,7 @@ public:
     Q_INVOKABLE void putInChannel(int playerid, int chanid);
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
+    Q_INVOKABLE void changeColor(int id, const QString &color);
     Q_INVOKABLE QScriptValue getColor(int id);
 
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
@@ -174,8 +179,6 @@ public:
     Q_INVOKABLE void stopEvent();
 
     Q_INVOKABLE void shutDown();
-
-
 
     /* Print on the server. Useful for debug purposes */
     Q_INVOKABLE void print(QScriptContext *context, QScriptEngine *engine);
@@ -206,7 +209,6 @@ public:
     Q_INVOKABLE void updateDatabase();
     /* Resets a tier's ladders */
     Q_INVOKABLE void resetLadder(const QString &tier);
-    Q_INVOKABLE void synchronizeTierWithSQL(const QString &tier);
 
     Q_INVOKABLE void clearChat();
 
@@ -264,6 +266,9 @@ public:
     Q_INVOKABLE QScriptValue dbAll();
     Q_INVOKABLE QScriptValue dbIp(const QString &name);
     Q_INVOKABLE QScriptValue dbDelete(const QString &name);
+    Q_INVOKABLE bool dbLoaded(const QString &name);
+    Q_INVOKABLE bool dbExists(const QString &name);
+    Q_INVOKABLE void dbClearCache();
     Q_INVOKABLE QScriptValue dbLastOn(const QString &name);
     Q_INVOKABLE QScriptValue dbExpire(const QString &name);
     Q_INVOKABLE QScriptValue dbTempBanTime(const QString &name);
@@ -371,7 +376,9 @@ public:
 
     Q_INVOKABLE int pokeType1(int id, int gen = GenInfo::GenMax());
     Q_INVOKABLE int pokeType2(int id, int gen = GenInfo::GenMax());
+    Q_INVOKABLE QScriptValue baseStats(int poke, int stat, int gen = GenInfo::GenMax());
     Q_INVOKABLE QScriptValue pokeBaseStats(int id, int gen = GenInfo::GenMax());
+
     /* Returns an array of "male", "female", "neutral" with percentages associated */
     Q_INVOKABLE QScriptValue pokeGenders(int poke);
    
@@ -379,7 +386,9 @@ public:
     Q_INVOKABLE void ban(QString name);
     Q_INVOKABLE void tempBan(QString name, int time);
     Q_INVOKABLE void unban(QString name);
+    Q_INVOKABLE bool banned(const QString &ip);
 
+#if 0
     Q_INVOKABLE void prepareWeather(int battleId, int weatherId);
     Q_INVOKABLE QScriptValue weatherNum(const QString &weatherName);
     Q_INVOKABLE QScriptValue weather(int weatherId);
@@ -388,6 +397,8 @@ public:
 
     /* Only do that in beforeBattleEnded. Will set your team to what it was at the end of the battle */
     Q_INVOKABLE void setTeamToBattleTeam(int pid, int teamSlot, int battleId);
+#endif
+
     Q_INVOKABLE void swapPokemons(int pid, int teamSlot, int slot1, int slot2);
 
     Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
@@ -406,11 +417,12 @@ public:
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
 
-    Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
+    //Q_INVOKABLE void inflictStatus(int battleId, bool toFirstPlayer, int slot, int status);
 
     Q_INVOKABLE void forceBattle(int player1, int player2, int team1, int team2, int clauses, int mode, bool is_rated = false);
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
+    Q_INVOKABLE QString protocolVersion(int id);
     Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */
@@ -470,18 +482,34 @@ public:
     Q_INVOKABLE QScriptValue getServerPlugins();
     Q_INVOKABLE bool loadServerPlugin(const QString &path);
     Q_INVOKABLE bool unloadServerPlugin(const QString &plugin);
+    Q_INVOKABLE void loadBattlePlugin(const QString &path);
+    Q_INVOKABLE void unloadBattlePlugin(const QString &plugin);
 #endif // PO_SCRIPT_SAFE_ONLY
 
 #if !defined(PO_SCRIPT_NO_SYSTEM) && !defined(PO_SCRIPT_SAFE_ONLY)
     /* Calls the underlying OS for a command */
     Q_INVOKABLE int system(const QString &command);
-    Q_INVOKABLE QScriptValue sql(const QString &command);
-    Q_INVOKABLE QScriptValue sql(const QString &command, const QScriptValue &params);
 
     /* Better version of system, also captures the output */
     Q_INVOKABLE QScriptValue get_output(const QString &command, const QScriptValue &callback, const QScriptValue &errback);
     Q_INVOKABLE QScriptValue list_processes();
     Q_INVOKABLE QScriptValue kill_processes();
+    Q_INVOKABLE QScriptValue write_process(double pid, const QString &data);
+    inline quint64 getProcessID(const QProcess* proc)
+    {
+        #ifdef Q_OS_WIN
+            struct _PROCESS_INFORMATION* procinfo = proc->pid();
+            return procinfo->dwProcessId;
+        #else // Linux
+            return proc->pid();
+        #endif // Q_WS_WIN
+    }
+    Server* getServer();
+    QScriptEngine* getEngine();
+    void printLine(const QString &s);
+signals:
+    void stdoutReceived(quint64 pid, const QString &procStdout);
+    void stderrReceived(quint64 pid, const QString &procStderr);
 private slots:
     void process_finished(int exitcode, QProcess::ExitStatus exitStatus);
     void process_error(QProcess::ProcessError error);
@@ -499,10 +527,11 @@ private:
         QByteArray out;
         QByteArray err;
         QString command;
+        quint64 pid;
     };
     QHash<QProcess*, ProcessData> processes;
 public:
-    Q_INVOKABLE void addPlugin(const QString &path);
+    Q_INVOKABLE bool addPlugin(const QString &path);
     Q_INVOKABLE void removePlugin(int index);
     Q_INVOKABLE QStringList listPlugins();
 #endif // PO_SCRIPT_NO_SYSTEM
@@ -511,6 +540,7 @@ signals:
     void clearTheChat();
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
+    void battleConnectionLost();
 
 private slots:
     void timer();
@@ -547,7 +577,6 @@ private:
     QString sync_data;
 
     void evaluate(const QScriptValue &expr);
-    void printLine(const QString &s);
 
     bool testPlayer(const QString &function, int id);
     bool testTeamCount(const QString &function, int id, int team);

@@ -2,12 +2,14 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "../Utilities/otherwidgets.h"
-#include "../PokemonInfo/teamsaver.h"
+#include <Utilities/otherwidgets.h>
+#include <PokemonInfo/teamsaver.h>
+#include <PokemonInfo/teamholder.h>
+
+#include <TeambuilderLibrary/theme.h>
+
 #include "Teambuilder/trainermenu.h"
 #include "ui_trainermenu.h"
-#include "Teambuilder/teamholder.h"
-#include "theme.h"
 #include "Teambuilder/teamimporter.h"
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :

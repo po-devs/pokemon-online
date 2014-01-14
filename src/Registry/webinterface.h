@@ -36,6 +36,7 @@ private:
     Pillow::HttpServer server;
     Pillow::HttpHandlerSimpleRouter router;
 
+    QString pass;
 };
 
 #endif

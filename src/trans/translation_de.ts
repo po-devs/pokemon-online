@@ -329,7 +329,7 @@ Effekt: %5</translation>
     </message>
     <message>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation type="obsolete">%1s %2 %4%3!</translation>
+        <translation type="obsolete">%1s %2 %4 %3!</translation>
     </message>
     <message>
         <source>sharply </source>
@@ -825,7 +825,7 @@ Effekt: %5</translation>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>
         <source>%1&apos;s %2 %3%4!</source>
-        <translation>%1s %2 %4%3!</translation>
+        <translation>%1s %2 %4 %3!</translation>
     </message>
     <message>
         <location filename="../BattleManager/battleclientlog.cpp" line="201"/>

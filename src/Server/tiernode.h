@@ -3,7 +3,7 @@
 
 #include <QtCore>
 #include <QTreeWidgetItem>
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 class QDomElement;
 

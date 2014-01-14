@@ -1,22 +1,3 @@
-#include "mainwindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "menu.h"
-#include "client.h"
-#include "serverchoice.h"
-#include "../PokemonInfo/movesetchecker.h"
-#include "pluginmanager.h"
-#include "plugininterface.h"
-#include "theme.h"
-#include "logmanager.h"
-#include "replayviewer.h"
-#include "../Utilities/functions.h"
-#include "Teambuilder/teamholder.h"
-#include "Teambuilder/teambuilder.h"
-#include "mainwidget.h"
-#include "downloadmanager.h"
-#ifdef Q_OS_MACX
-#include "mac/FullScreenSupport.h"
-#endif
 #ifdef QT5
 #include <QApplication>
 #include <QDialog>
@@ -29,21 +10,34 @@
 #endif
 #include <QtCore/QVariant>
 
-MainEngine *MainEngine::inst = NULL;
+#include <Utilities/functions.h>
+#include <Utilities/pluginmanagerdialog.h>
+#include <PokemonInfo/teamholder.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 
-MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
-{
-    inst = this;
+#include <TeambuilderLibrary/theme.h>
+#include "Teambuilder/teambuilder.h"
 
-    setProperty("updated", updated);
+#include "mainwindow.h"
+#include "menu.h"
+#include "client.h"
+#include "serverchoice.h"
+#include "pluginmanager.h"
+#include "plugininterface.h"
+#include "logmanager.h"
+#include "replayviewer.h"
+#include "mainwidget.h"
+#include "downloadmanager.h"
 
-    pluginManager = new PluginManager(this);
-
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#ifdef Q_OS_MACX
+#include "mac/FullScreenSupport.h"
 #endif
 
+MainEngine *MainEngine::inst = NULL;
+
+static void setDefaultValues()
+{
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "Themes/Current", "Themes/Classic/");
@@ -95,6 +89,24 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
+}
+
+MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
+{
+    inst = this;
+
+    setProperty("updated", updated);
+
+    pluginManager = new ClientPluginManager(this);
+
+#ifndef QT5
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
+
+    setDefaultValues();
+
+    QSettings s;
 
     pmNotify = s.value("PMs/Notifications").isNull() ? true : s.value("PMs/Notifications").toBool();
 
@@ -250,11 +262,12 @@ QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
 
 void MainEngine::openPluginManager()
 {
-    PluginManagerWidget *w = new PluginManagerWidget(*pluginManager);
+    PluginManagerDialog *d = new PluginManagerDialog(displayer->centralWidget());
+    d->setWindowFlags(Qt::Window);
+    d->setPluginManager(pluginManager);
+    d->show();
 
-    w->show();
-
-    connect(w, SIGNAL(pluginListChanged()), SLOT(updateMenuBar()));
+    connect(d, SIGNAL(accepted()), SLOT(updateMenuBar()));
 }
 
 void MainEngine::openPluginConfiguration()

@@ -1,12 +1,12 @@
 #include "serverchoice.h"
 #include "ui_serverchoice.h"
 #include "analyze.h"
-#include "../Utilities/functions.h"
-#include "../PokemonInfo/networkstructs.h"
+#include <Utilities/functions.h>
+#include <PokemonInfo/networkstructs.h>
 #include "serverchoicemodel.h"
 #include "loadwindow.h"
 #include "mainwindow.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 
 ServerChoice::ServerChoice(TeamHolder* team) :
     ui(new Ui::ServerChoice), wasConnected(false), team(team)

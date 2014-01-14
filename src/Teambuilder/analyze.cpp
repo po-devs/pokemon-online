@@ -2,26 +2,22 @@
  * See network protocol here: http://wiki.pokemon-online.eu/view/Network_Protocol_v2
 */
 
-#include "analyze.h"
-#include "network.h"
-#include "client.h"
-#include "../PokemonInfo/battlestructs.h"
 #include "../Shared/config.h"
-#include "Teambuilder/teamholder.h"
+#include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/teamholder.h>
 
-#include "battlewindow.h"
-
+#include "analyze.h"
 
 using namespace NetworkCli;
 
-Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), commandCount(0)
+Analyzer::Analyzer(bool reg_connection) : registry_socket(reg_connection), mysocket(new QTcpSocket()), commandCount(0)
 {
     connect(&socket(), SIGNAL(connected()), SIGNAL(connected()));
     connect(&socket(), SIGNAL(connected()), this, SLOT(wasConnected()));
     connect(&socket(), SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(this, SIGNAL(sendCommand(QByteArray)), &socket(), SLOT(send(QByteArray)));
     connect(&socket(), SIGNAL(isFull(QByteArray)), SLOT(commandReceived(QByteArray)));
-    connect(&socket(), SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
+    connect(&socket(), SIGNAL(_error()), SLOT(error()));
 
     /* Commands that will be redirected to channels */
     channelCommands << BattleList << JoinChannel << LeaveChannel << ChannelBattle;
@@ -67,7 +63,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     //                  IdsWithMessage,
     //                  Idle
 
-    out << uchar(Login) << ProtocolVersion() << network;
+    out << uchar(Login) << ownVersion << network;
 
 #ifdef OS
     out << QString(OS);
@@ -105,7 +101,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
 
 void Analyzer::logout()
 {
-    if (socket().isValid() && socket().state() == QAbstractSocket::ConnectedState) {
+    if (socket().isConnected()) {
         notify(Logout);
 
         /* Waits for the writing to finish */
@@ -129,6 +125,21 @@ void Analyzer::getUserInfo(const QString &name)
 void Analyzer::sendPM(int id, const QString &mess)
 {
     notify(SendPM, qint32(id), mess);
+}
+
+void Analyzer::kick(int id)
+{
+    notify(PlayerKick, qint32(id));
+}
+
+void Analyzer::ban(int id)
+{
+    notify(PlayerBan, qint32(id));
+}
+
+void Analyzer::tempban(int id, int time)
+{
+    notify(PlayerTBan, qint32(id), qint32(time));
 }
 
 void Analyzer::sendChanMessage(int channelid, const QString &message)
@@ -160,6 +171,11 @@ void Analyzer::sendBattleResult(int id, int result)
     notify(BattleFinished, qint32(id), qint32(result));
 }
 
+void Analyzer::reconnect(int id, const QByteArray &pass, int ccount)
+{
+    notify(Reconnect, quint32(id), pass, quint32(ccount == -1 ? getCommandCount() : ccount));
+}
+
 void Analyzer::battleCommand(int id, const BattleChoice &comm)
 {
     notify(BattleMessage, qint32(id), comm);
@@ -179,7 +195,7 @@ void Analyzer::channelCommand(int command, int channelid, const QByteArray &body
 
 void Analyzer::battleMessage(int id, const QString &str)
 {
-    if (dynamic_cast<BattleWindow*>(sender()) != NULL)
+    if (sender()->property("isbattle").toBool())
         notify(BattleChat, qint32(id), str);
     else
         notify(SpectatingBattleChat, qint32(id), str);
@@ -198,7 +214,7 @@ void Analyzer::disconnectFromHost()
 
 QString Analyzer::getIp() const
 {
-    return socket().peerAddress().toString();
+    return socket().ip();
 }
 
 void Analyzer::getRanking(const QString &tier, const QString &name)
@@ -213,7 +229,7 @@ void Analyzer::getRanking(const QString &tier, int page)
 
 void Analyzer::connectTo(const QString &host, quint16 port)
 {
-    if (mysocket.state() != QAbstractSocket::UnconnectedState) {
+    if (mysocket.isConnected()) {
         mysocket.close();
     }
     mysocket.connectToHost(host, port);
@@ -226,9 +242,8 @@ void Analyzer::error()
 
 void Analyzer::wasConnected()
 {
-    socket().setSocketOption(QAbstractSocket::KeepAliveOption, 1);
     /* At least makes client use full bandwith, even if the server doesn't */
-    socket().setSocketOption(QAbstractSocket::LowDelayOption, 1);
+    socket().setLowDelay(true);
 }
 
 /*{
@@ -350,7 +365,6 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         in >> network;
 
         if (network[0]) {
-            QByteArray reconnectPass;
             in >> reconnectPass;
             emit reconnectPassGiven(reconnectPass);
         }
@@ -669,12 +683,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
 }
 
-Network & Analyzer::socket()
+Network<QTcpSocket*> & Analyzer::socket()
 {
     return mysocket;
 }
 
-const Network & Analyzer::socket() const
+const Network<QTcpSocket*> & Analyzer::socket() const
 {
     return mysocket;
 }

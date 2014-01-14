@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
             }
             s.setValue("Server/Description", argv[i]);
         } else if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
-            fprintf(stdout, "Server for Pokeymon-Online Help\n");
+            fprintf(stdout, "Server for Pokemon-Online Help\n");
             fprintf(stdout, "Please visit http://www.pokemon-online.eu/ for more information.\n");
             fprintf(stdout, "\n");
             fprintf(stdout, "Usage: ./Server [[options]]\n");
@@ -224,6 +224,7 @@ int main(int argc, char *argv[])
             PRINTOPT("-N, --no-checks", "Runs no server daily runs at the start");
             PRINTOPT("-p, --port [PORT]", "Sets the server port.");
             PRINTOPT("-P, --private", "Makes the server private.");
+            PRINTOPT("--sqlite", "Uses sqlite db engine instead of text database.");
             fprintf(stdout, "\n");
             return 0;   //exit app
         } else if(strcmp(argv[i], "-H") == 0 || strcmp(argv[i], "--headless") == 0){
@@ -246,6 +247,8 @@ int main(int argc, char *argv[])
             ports.append(argv[i]);
         } else if(strcmp(argv[i], "-P") == 0 || strcmp(argv[i], "--private") == 0){
             s.setValue("Server/Private", 1);
+        } else if (strcmp(argv[i], "--sqlite") == 0) {
+            s.setValue("SQL/Driver", 0);
         }
     }
 
@@ -279,7 +282,7 @@ int main(int argc, char *argv[])
             qDebug() << "A web-tool for configuring and maintaining is also available in form of the webserver plugin.\n";
             qDebug() << "Console commands:";
             qDebug() << "- addp <plugin-path>: Add the plugin to the server";
-            qDebug() << "- removep <plugin-index>: Remove the plugin at said index";
+            qDebug() << "- removep <plugin-name>: Remove the plugin with said name";
             qDebug() << "- listp: List the plugins in their order";
             qDebug() << "- <other message>: Prints the message as coming from ~~Server~~\n";
 

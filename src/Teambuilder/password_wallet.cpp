@@ -1,5 +1,5 @@
 #include "password_wallet.h"
-#include "../Utilities/coreclasses.h"
+#include <Utilities/coreclasses.h>
 
 namespace {
     static quint32 MAGIC = 0xB0C3B455;

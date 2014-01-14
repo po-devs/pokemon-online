@@ -2,18 +2,9 @@
 # Project created by QtCreator 2009-11-05T22:07:35
 # -------------------------------------------------
 QT += network
-QT -= gui
-TARGET = Registry
-DESTDIR = $$PWD/../../bin
-TEMPLATE = app
 
-contains(QT_VERSION, ^5\\.[0-9]\\..*) {
-  DEFINES += QT5
-  QMAKE_CXXFLAGS += "-U__STRICT_ANSI__"
-  CONFIG += c++11
-} else {
-  QMAKE_CXXFLAGS += "-std=c++0x -U__STRICT_ANSI__"
-}
+TARGET = Registry
+TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
@@ -39,13 +30,9 @@ DEFINES = REGISTRY_SIDE
 CONFIG(webconf) {
     HEADERS += webinterface.h
     SOURCES += webinterface.cpp
-    INCLUDEPATH += /home/lamperi/pillow/pillowcore
-    LIBS += /home/lamperi/pillow/lib/libpillowcore.a
+    INCLUDEPATH += ../../lib/pillow/pillowcore
+    LIBS += -L../../lib/pillow/lib/ -lpillowcore
     DEFINES += USE_WEBCONF
-}
-
-unix:!mac {
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN'"
 }
 
 include(../Shared/Common.pri)

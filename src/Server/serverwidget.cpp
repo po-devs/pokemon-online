@@ -1,31 +1,29 @@
 #include <QMenuBar>
 #include <QInputDialog>
 
-#include "../Utilities/qscrolldowntextbrowser.h"
+#include <Utilities/qscrolldowntextbrowser.h>
+#include <Utilities/antidos.h>
+#include <Utilities/antidoswindow.h>
+#include <Utilities/pluginmanagerdialog.h>
+
+#include "sqlconfig.h"
 #include "serverwidget.h"
 #include "server.h"
 #include "player.h"
 #include "challenge.h"
-#include "battle.h"
-#include "moves.h"
-#include "items.h"
-#include "abilities.h"
 #include "playerswindow.h"
 #include "security.h"
-#include "antidos.h"
 #include "serverconfig.h"
-#include "../Utilities/otherwidgets.h"
+#include <Utilities/otherwidgets.h>
 #include "scriptengine.h"
 #include "../Shared/config.h"
 #include "tierwindow.h"
 #include "battlingoptions.h"
-#include "sql.h"
-#include "sqlconfig.h"
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "modswindow.h"
 
-ServerWidget::ServerWidget(Server *myserver)
+ServerWidget::ServerWidget(Server *myserver) : settings("config", QSettings::IniFormat)
 {
     server = myserver;
 
@@ -83,7 +81,7 @@ QMenuBar* ServerWidget::createMenuBar() {
     options->addAction("&Mods", this, SLOT(openModsWindow()));
     options->addAction("&Tiers", this, SLOT(openTiersWindow()));
     options->addAction("&Battle Config", this, SLOT(openBattleConfigWindow()));
-    options->addAction("S&QL Config", this, SLOT(openSqlConfigWindow()));
+    options->addAction("S&ql Config", this, SLOT(openSqlConfigWindow()));
     QMenu *plugins = bar->addMenu("&Plugins");
     plugins->addAction("Plugin &Manager", this, SLOT(openPluginManager()));
     plugins->addSeparator();
@@ -146,7 +144,7 @@ void ServerWidget::openPluginConfig()
 {
     QAction *ac = dynamic_cast<QAction*>(sender());
 
-    ServerPlugin *s = server->pluginManager->plugin(ac->text());
+    Plugin *s = server->pluginManager->plugin(ac->text());
 
     if (s) {
         QWidget *config = s->getConfigurationWidget();
@@ -170,16 +168,17 @@ void ServerWidget::openPlayers()
 
 void ServerWidget::openPluginManager()
 {
-    PluginManagerWidget *w = new PluginManagerWidget(*server->pluginManager);
-
+    PluginManagerDialog *w = new PluginManagerDialog(this);
+    w->setWindowFlags(Qt::Window);
+    w->setPluginManager(server->pluginManager);
     w->show();
 
-    connect(w, SIGNAL(pluginListChanged()), this, SIGNAL(menuBarChanged()));
+    connect(w, SIGNAL(accepted()), this, SIGNAL(menuBarChanged()));
 }
 
 void ServerWidget::openAntiDos()
 {
-    AntiDosWindow *w = new AntiDosWindow();
+    AntiDosWindow *w = new AntiDosWindow(settings);
 
     w->show();
 }
@@ -193,7 +192,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(nameChanged(QString)), server, SLOT(regNameChanged(const QString)));
     connect(w, SIGNAL(descChanged(QString)), server, SLOT(regDescChanged(const QString)));
     connect(w, SIGNAL(maxChanged(int)), server, SLOT(regMaxChanged(int)));
-    connect(w, SIGNAL(privacyChanged(int)), server, SLOT(regPrivacyChanged(int)));
+    connect(w, SIGNAL(privacyChanged(bool)), server, SLOT(regPrivacyChanged(bool)));
     connect(w, SIGNAL(announcementChanged(QString)), server, SLOT(announcementChanged(QString)));
     connect(w, SIGNAL(logSavingChanged(bool)), server, SLOT(logSavingChanged(bool)));
     connect(w, SIGNAL(inactivePlayersDeleteDaysChanged(int)), server, SLOT(inactivePlayersDeleteDaysChanged(int)));
@@ -242,13 +241,13 @@ void ServerWidget::openBattleConfigWindow()
     connect(w, SIGNAL(settingsChanged()), server, SLOT(loadRatedBattlesSettings()));
 }
 
+
 void ServerWidget::openSqlConfigWindow()
 {
     SQLConfigWindow *w = new SQLConfigWindow();
 
     w->show();
 }
-
 
 QScrollDownTextBrowser * ServerWidget::mainchat()
 {

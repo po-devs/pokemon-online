@@ -5,10 +5,11 @@
 #include <QSystemTrayIcon>
 #include "engineinterface.h"
 #include "centralwidget.h"
-#include "Teambuilder/teamholder.h"
+#include <PokemonInfo/teamholder.h>
 #include "downloadmanager.h"
 
-class PluginManager;
+class QScrollDownTextBrowser;
+class ClientPluginManager;
 class MainWidget;
 
 /* The main window!
@@ -69,7 +70,7 @@ private:
     void rebuildThemeMenu();
 
     QMainWindow *displayer;
-    PluginManager *pluginManager;
+    ClientPluginManager *pluginManager;
 
     QMenuBar* transformMenuBar(QMenuBar *param);
     QMenu* themeMenu;

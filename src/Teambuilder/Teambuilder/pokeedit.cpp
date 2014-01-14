@@ -4,16 +4,18 @@
 #include <QMessageBox>
 #include <QDockWidget>
 
-#include "../PokemonInfo/pokemonstructs.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/qclosedockwidget.h"
+#include <PokemonInfo/pokemonstructs.h>
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/qclosedockwidget.h>
+#include <Utilities/otherwidgets.h>
+
+#include <TeambuilderLibrary/theme.h>
+#include <TeambuilderLibrary/pokeselection.h>
+#include <TeambuilderLibrary/poketablemodel.h>
+#include <TeambuilderLibrary/pokemovesmodel.h>
 
 #include "ui_pokeedit.h"
-#include "theme.h"
 #include "pokeedit.h"
-#include "pokemovesmodel.h"
-#include "pokeselection.h"
-#include "poketablemodel.h"
 #include "teambuilderwidget.h"
 #include "teambuilder.h"
 
@@ -67,6 +69,9 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     completer->setCompletionMode(QCompleter::PopupCompletion);
     ui->nickname->setCompleter(completer);
     connect(completer, SIGNAL(activated(QString)), SLOT(setNum(QString)));
+
+    /* 12 characters for the name */
+    ui->nickname->setValidator(new QNickValidator(ui->nickname, 12));
 
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
