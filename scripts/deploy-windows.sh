@@ -32,6 +32,7 @@ $MAKE clean
 $MAKE -j4
 ensure_good_run
 mkdir $DEST
+cp pokemon-template/* $DEST -R
 cp bin/db $DEST -R
 cp bin/trans $DEST -R
 cp bin/qml $DEST -R
@@ -41,6 +42,7 @@ cp bin/languages.txt $DEST
 cp bin/*.exe $DEST
 cp bin/*.dll $DEST
 rm $DEST/*_debug.exe
+rm $DEST/test-*.exe
 rm $DEST/*_debug.dll
 cp bin/version.ini $DEST
 
