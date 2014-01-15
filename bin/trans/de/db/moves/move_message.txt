@@ -66,7 +66,7 @@
 97 %s kopiert %f's Statusveränderungen!
 98 %s moved its status onto %f!
 102 %s's rage builds up!
-103 %s kam von %f's %m frei!|%s zerstört die Egelsamen!|%s fegt die Stachler vom Feld!|%s fegt die Giftspitzen vom Felt!|%s fegt die Tarnsteine vom Feld!
+103 %s kam von %f's %m frei!|%s zerstört die Egelsamen!|%s fegt die Stachler vom Feld!|%s fegt die Giftspitzen vom Feld!|%s fegt die Tarnsteine vom Feld!
 104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbiert Sonnenlicht!
 105 %s recycled %i!
 106 %s went to sleep and became healthy!
