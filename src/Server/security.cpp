@@ -523,12 +523,12 @@ void SecurityManager::unban(const QString &name) {
 
 bool SecurityManager::registered(const QString &name)
 {
-    return members.at(name).isProtected();
+    return member(name).isProtected();
 }
 
 int SecurityManager::auth(const QString &name)
 {
-    return members.at(name).authority();
+    return member(name).authority();
 }
 
 int SecurityManager::numRegistered(const QString &ip)
