@@ -71,3 +71,4 @@ bin/usage_stats/raw
 bin/serverdb
 bin/test-*
 pokemon-online*
+pokemon-template
