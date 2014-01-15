@@ -886,7 +886,7 @@ struct MMBellyDrum : public MM
                 b.inflictStatMod(s,Attack,1,s,false);
             }
         }
-        if (!move(b,s) != Move::Substitute) {
+        if (move(b,s) != Move::Substitute) {
             b.changeHp(s, b.poke(s).lifePoints() - std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1));
         }
     }
