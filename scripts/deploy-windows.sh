@@ -18,18 +18,18 @@ function ensure_good_run(){
 }
 
 DEST=pokemon-online
-alias make=mingw32-make
+MAKE=mingw32-make
 
 cd ../
 rm -Rf $DEST
-make clean
+$MAKE clean
 rm -Rf build/release
 rm src/*/Makefile
 rm src/*/*/Makefile
 rm Makefile
 qmake CONFIG+="po_clientplugins po_serverplugins release"
-make clean
-make -j4
+$MAKE clean
+$MAKE -j4
 ensure_good_run
 mkdir $DEST
 cp bin/db $DEST -R

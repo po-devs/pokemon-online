@@ -15,6 +15,10 @@
 #include <PokemonInfo/geninfo.h>
 #include <Utilities/functions.h>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 class Server;
 class ChallengeInfo;
 class SessionDataFactory;
