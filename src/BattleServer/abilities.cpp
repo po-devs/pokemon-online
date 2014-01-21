@@ -2147,6 +2147,8 @@ struct AMStanceChange : public AM {
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
             return;
+            
+        num = fpoke(b,s).id;
 
         if (num.subnum == 0 && tmove(b,s).category != Move::Other) {
             b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, 1));
