@@ -1042,7 +1042,7 @@ struct MMAssist : public MM
                 return gen >= 5;
             } else if (move == PhantomForce || move == Geomancy || move == Belch || move == StickyWeb || move == Dive || move == Dig ||
                        move == Fly || move == Bounce || move == FreezeShock || move == IceBurn || move == RazorWind || move == SkullBash ||
-                       move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce){
+                       move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce || move == Roar || move == Whirlwind){
                 return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
