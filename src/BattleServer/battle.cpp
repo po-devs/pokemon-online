@@ -1916,8 +1916,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower && (gen() <= 5 || (!(tmove(player).flags & Move::SoundFlag)
-                    && !hasWorkingAbility(player, Ability::Infiltrator)))) {
+            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower && (gen() <= 5 || !canBypassSub(player))) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
@@ -3177,7 +3176,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         damage = 1;
     }
 
-    bool sub = hasSubstitute(player) && (gen() <= 5 || (!hasWorkingAbility(source, Ability::Infiltrator) && !(tmove(source).flags & Move::SoundFlag)));
+    bool sub = hasSubstitute(player) && !canBypassSub(source);
 
     // Used for Sturdy, Endure(?), Focus Sash, and Focus Band
     bool survivalFactor = false;
@@ -3919,5 +3918,16 @@ bool BattleSituation::canHeal(int s)
     if (!koed(s) && !poke(s).isFull() && !(pokeMemory(s).value("HealBlockCount").toInt() > 0))
         return true;
 
+    return false;
+}
+
+bool BattleSituation::canBypassSub(int t)
+{
+    if (gen().num >= 6) {
+        if (hasWorkingAbility(t, Ability::Infiltrator))
+            return true;
+        if (tmove(t).flags & Move::SoundFlag)
+            return true;
+    }
     return false;
 }
