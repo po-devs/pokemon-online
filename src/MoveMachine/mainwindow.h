@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "../PokemonInfo/geninfo.h"
+#include "../libraries/PokemonInfo/geninfo.h"
 #include <QMainWindow>
 #include <QListWidgetItem>
-#include "../PokemonInfo/pokemonstructs.h"
+#include "../libraries/PokemonInfo/pokemonstructs.h"
 
 namespace Ui {
     class MainWindow;
