@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/otherwidgets.h>
 #include <QCompleter>
 #include <QMessageBox>
 
