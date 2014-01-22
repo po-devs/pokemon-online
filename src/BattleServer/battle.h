@@ -76,6 +76,7 @@ public:
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     bool canGetStatus(int player, int status);
     bool canHeal(int s);
+    bool canBypassSub(int t);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
     void inflictRecoil(int source, int target);

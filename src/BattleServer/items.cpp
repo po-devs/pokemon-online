@@ -668,9 +668,8 @@ struct IMRedCard : public IM
 
     static void ubh(int s, int t, BS &b) {
         //Red Card does not trigger if the Pokemon is phazed with Dragon Tail/Circle Throw
-        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::SheerForce) && turn(b,t).contains("EncourageBug")) || b.hasSubstitute(s) || tmove(b,t).attack == Move::DragonTail || tmove(b,t).attack == Move::CircleThrow)
+        if (b.koed(s) || (b.hasWorkingAbility(t, Ability::SheerForce) && turn(b,t).contains("EncourageBug")) || tmove(b,t).attack == Move::DragonTail || tmove(b,t).attack == Move::CircleThrow || (b.hasSubstitute(s) && !b.canBypassSub(t)))
             return;
-
         addFunction(turn(b,t), "AfterAttackFinished", "RedCard", &aaf);
         turn(b,t)["RedCardUser"] = s;
         turn(b,t)["RedCardCount"] = slot(b,t)["SwitchCount"];
@@ -698,10 +697,10 @@ struct IMRedCard : public IM
 
         /* ingrain & suction cups */
         if (poke(b,t).value("Rooted").toBool()) {
-            b.sendMoveMessage(107, 1, s, Pokemon::Grass,t);
+            b.sendMoveMessage(107, 1, s, Pokemon::Grass, t);
             return;
         } else if (b.hasWorkingAbility(t,Ability::SuctionCups)) {
-            b.sendMoveMessage(107, 0, s, 0,t);
+            b.sendMoveMessage(107, 0, s, 0, t);
             return;
         }
 
@@ -728,7 +727,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || b.hasSubstitute(s) || turn(b,t).value("EncourageBug").toBool())
+        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)))
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
