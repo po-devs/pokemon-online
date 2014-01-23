@@ -434,11 +434,13 @@ struct RBYExplosion : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        /* Explosion doesn't faint the user if it breaks a sub */
-        if (!b.hadSubstitute(t)) {
-            b.selfKoer() = s;
-            b.koPoke(s, s);
-        }
+        /* Explosion doesn't faint the user if it breaks a sub.
+         * However, it faints all the time in Stadium. */
+        if (b.gen() <= Pokemon::gen(Gen::Yellow) && b.hadSubstitute(t))
+            return;
+
+        b.selfKoer() = s;
+        b.koPoke(s, s);
     }
 
     static void asf(int s, int, BS &b) {
@@ -510,6 +512,11 @@ struct RBYHaze : public MM
 
         b.poke(s).removeStatus(Pokemon::Seeded);
         b.poke(t).removeStatus(Pokemon::Seeded);
+
+        //Haze clears major status that the user has in Stadium
+        if (b.gen() > Pokemon::gen(Gen::Yellow)) {
+            b.changeStatus(s, Pokemon::Fine,false);
+        }
     }
 };
 
@@ -532,9 +539,10 @@ struct RBYHyperBeam : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        if (b.koed(t)) {
+        /*Hyper Beam always needs to recharge in Stadium
+         *KOs and sub breaks dont cause recharge in RBY*/
+        if (b.gen() <= Pokemon::gen(Gen::Yellow) && (b.koed(t) || b.hadSubstitute(t)))
             return;
-        }
 
         poke(b,s)["Recharging"] = b.turn()+1;
         addFunction(poke(b,s), "TurnSettings", "HyperBeam", &ts);
@@ -649,11 +657,21 @@ struct RBYMimic : public MM
 
     static void uas(int s, int t, BS &b) {
         int move = 0;
-        /* Mimic copies a random move in Gen 1 */
-        while (move == 0) {
+        int check = 0;
+        /* Mimic copies a random move in Gen 1 that the user does not already know */
+        while (move == 0 && check < 4) {
             move = b.move(t, b.randint(4));
+            if (b.hasMove(s,move)) {
+                move = 0;
+                check++;
+            }
+        }
+        if (check == 4) {
+            fturn(b,s).add(TM::Failed);
+            return;
         }
         int slot = fpoke(b,s).lastMoveSlot;
+
         b.changeTempMove(s, slot, move);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
