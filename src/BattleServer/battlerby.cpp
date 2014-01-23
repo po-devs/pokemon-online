@@ -43,6 +43,10 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     if (poke(player).status() == status) {
         return;
     }
+    //Sub blocks status in Stadium
+    if (hasSubstitute(player) && gen() > Pokemon::gen(Gen::Yellow)) {
+        return;
+    }
 
     //Sleep clause
     if (status != Pokemon::Asleep && currentForcedSleepPoke[this->player(player)] == currentInternalId(player)) {
