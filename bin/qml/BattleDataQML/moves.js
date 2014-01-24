@@ -37,7 +37,7 @@ effects[BattleData.RapidSpin] = "Moves/RapidSpin.qml";
 setupWithDefaultParam([BattleData.Tackle, BattleData.TakeDown, BattleData.QuickAttack, BattleData.BodySlam,
     BattleData.Retaliate, BattleData.VoltTackle, BattleData.WildCharge, BattleData.U_turn, BattleData.VoltSwitch,
     BattleData.V_create, BattleData.FlameWheel, BattleData.FlareBlitz, BattleData.FlameCharge,
-    BattleData.Rollout, BattleData.IceBall, BattleData.ExtremeSpeed, BattleData.Pursuit], "Moves/ChargeMove.qml",
+    BattleData.Rollout, BattleData.IceBall, BattleData.ExtremeSpeed, BattleData.Pursuit, BattleData.PartingShot], "Moves/ChargeMove.qml",
     { attack_time: 300, return_time: 500, rolls: 0, effect: "",
       easing_in_x: Easing.Linear, easing_in_y: Easing.Linear,
       easing_out_x: Easing.Linear, easing_out_y: Easing.Linear}
