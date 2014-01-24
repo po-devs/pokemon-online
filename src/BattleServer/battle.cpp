@@ -2239,7 +2239,7 @@ void BattleSituation::inflictRecoil(int source, int target)
 void BattleSituation::applyMoveStatMods(int player, int target)
 {
     applyingMoveStatMods = true;
-    bool sub = hasSubstitute(target);
+    bool sub = hasSubstitute(target) && !canBypassSub(player);
 
     BasicMoveInfo &fm = tmove(player);
 
