@@ -21,7 +21,7 @@ class BattleServer : public QObject
 public:
     explicit BattleServer(QObject *parent = 0);
     
-    void start(int port);
+    void start(int port, bool closeOnDc);
     void changeDbMod(const QString &mod);
 signals:
     
@@ -50,6 +50,7 @@ private:
     mutable int servercounter;
 
     QHash<int, ServerConnection*> connections;
+    bool closeOnDc;
 };
 
 #endif // BATTLESERVER_H
