@@ -5055,7 +5055,7 @@ struct MMNaturePower : public MM
         } else if (type == Type::Grass) {
             move = EnergyBall;
         } else if (type == Type::Fairy) {
-            move = MoonBlast;
+            move = Moonblast;
         } else if (type == Type::Electric) {
             move = Thunderbolt;
         } else {
