@@ -15,11 +15,11 @@
 #include "pluginmanager.h"
 
 BattleServer::BattleServer(QObject *parent) :
-    QObject(parent), servercounter(0)
+    QObject(parent), servercounter(0), closeOnDc(false)
 {
 }
 
-void BattleServer::start(int port)
+void BattleServer::start(int port, bool closeOnDc)
 {
     print("Starting Battle Server...");
 
@@ -37,6 +37,8 @@ void BattleServer::start(int port)
     print("...Done!");
 
     pluginManager = new BattleServerPluginManager();
+
+    closeOnDc = closeOnDc;
 
 #ifndef BOOST_SOCKETS
     server = new QTcpServer();
@@ -128,6 +130,10 @@ void BattleServer::onError(int id)
 
     print(QString("Disonnection from slot %1").arg(id));
     connections.take(id)->deleteLater();
+
+    if (closeOnDc) {
+        ::exit(0);
+    }
 }
 
 void BattleServer::modChanged(const QString &mod)
