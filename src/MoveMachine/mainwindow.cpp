@@ -110,7 +110,7 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
                         continue;
                     }
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -165,7 +165,7 @@ void PokeMovesDb::save()
 
         for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
-                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
+                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
                     continue;
                 }
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
