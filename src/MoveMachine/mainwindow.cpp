@@ -43,7 +43,7 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)
             continue;
 
         MovesPerPoke p;
