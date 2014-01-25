@@ -4,8 +4,8 @@ namespace Pokemon {
 unsigned int qHash (const Pokemon::uniqueId &key);
 
 #include <QtCore/QCoreApplication>
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../PokemonInfo/movesetchecker.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <PokemonInfo/movesetchecker.h>
 #include <iostream>
 using namespace std;
 int main(int argc, char *argv[])
