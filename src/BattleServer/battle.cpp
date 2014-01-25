@@ -1300,8 +1300,6 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Asleep) {
         if (poke(player).statusCount() > (gen().num == 1 ? 1 : 0)) {
-            //Early bird
-            poke(player).statusCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
             notify(All, StatusMessage, player, qint8(FeelAsleep));
 
             if (!turnMemory(player).value("SleepingMove").toBool())
@@ -2723,18 +2721,18 @@ int BattleSituation::rawTypeEff(int atttype, int player)
         int eff = TypeInfo::Eff(atttype, deftype);
         if(clauses() & ChallengeInfo::Inverted){
             switch(eff){
-                case Type::Ineffective:
-                    eff=Type::SuperEffective;
-                    break;
-                case Type::NotEffective:
-                    eff=Type::SuperEffective;
-                    break;
-                case Type::SuperEffective:
-                    eff=Type::NotEffective;
-                    break;
-                default:
-                    eff=Type::Effective;
-                    break;
+            case Type::Ineffective:
+                eff=Type::SuperEffective;
+                break;
+            case Type::NotEffective:
+                eff=Type::SuperEffective;
+                break;
+            case Type::SuperEffective:
+                eff=Type::NotEffective;
+                break;
+            default:
+                eff=Type::Effective;
+                break;
             }
         }
         typemod += convertTypeEff(eff);
@@ -2807,6 +2805,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
             poke(player).statusCount() = 1 + (randint(3));
             poke(player).oriStatusCount() = poke(player).statusCount();
         }
+        poke(player).statusCount() /= (hasWorkingAbility(player, Ability::EarlyBird) ? 2 : 1);
     }
     else {
         poke(player).statusCount() = 0;
@@ -2839,7 +2838,7 @@ void BattleSituation::debug(const QString &message)
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
     //Message needs to show with Intimidate, et al. No attacking() check possible.
     return attacker != defender && (!turnMemory(defender).contains(QString("StatModFrom%1DPrevented").arg(attacker)) &&
-                           tmove(attacker).rateOfStat== 0);
+                                    tmove(attacker).rateOfStat== 0);
 }
 
 bool BattleSituation::canSendPreventSMessage(int defender, int attacker) {
@@ -3799,7 +3798,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
         //Unaware / Sacred sword / Keeneye ignores evasion in gen 6
         if (attacker != player && attacked == player) {
             if (((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
-                    && (stat == SpDefense || stat == Defense || stat == Evasion)) || (gen() > 5 && stat == Evasion && hasWorkingAbility(attacker, Ability::KeenEye))) {
+                 && (stat == SpDefense || stat == Defense || stat == Evasion)) || (gen() > 5 && stat == Evasion && hasWorkingAbility(attacker, Ability::KeenEye))) {
                 boost = 0;
             }
         } else if (attacker == player && attacked != player && hasWorkingAbility(attacked, Ability::Unaware) &&
