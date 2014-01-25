@@ -636,7 +636,7 @@
 541:0 Swadloon
 542:0 Leavanny
 543:0 Venipede
-544:0 Whirlipede 
+544:0 Whirlipede
 545:0 Scolipede
 546:0 Cottonee
 547:0 Whimsicott
