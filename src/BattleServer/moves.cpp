@@ -7040,11 +7040,11 @@ struct MMPowder : public MM
         if (poke(b,s).value("Powdered").toBool()) {
             if (type(b,s) == Type::Fire) {
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
-                poke(b,s).remove("Powdered");
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
                 turn(b,s)["ImpossibleToMove"] = true;
             }
+            poke(b,s).remove("Powdered");
         }
     }
 };
