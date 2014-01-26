@@ -982,6 +982,10 @@ bool Team::importFromTxt(const QString &file1)
                     if (abnum != 0) {
                         p.ability() = abnum;
                     }
+                } else if (key == "Level") {
+                    p.level() = val.toInt();
+                } else if (key == "Shiny") {
+                    p.shiny() = true;
                 } else if (key == "EVs" || key == "IVs") {
                     QStringList evList = pokeDetail[2].split(": ")[1].split("/");
 
@@ -1012,7 +1016,7 @@ bool Team::importFromTxt(const QString &file1)
                         }
                     }
                 }
-            } else if (s.contains(" Nature ")) {
+            } else if (s.contains(" Nature")) {
                 p.nature() = NatureInfo::Number(s.section(' ', 0, 0));
             } else if (s.startsWith("-")) {
                 QString move = s.section('-',1).trimmed();
@@ -1117,6 +1121,14 @@ QString Team::exportToTxt() const
         }
 
         ret += " @ " + ItemInfo::Name(p.item()) + "\n";
+
+        if (p.level() != 100)
+            ret += "Level: " + QString("%1").arg(p.level()) + "\n";
+
+        if (p.gen() >= 2) {
+            if (p.shiny())
+                ret += "Shiny: Yes\n";
+        }
 
         if (p.gen() >= 3) {
             ret += "Trait: " + AbilityInfo::Name(p.ability()) + "\n";
