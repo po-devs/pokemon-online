@@ -1300,8 +1300,6 @@ bool BattleSituation::testStatus(int player)
 
     if (poke(player).status() == Pokemon::Asleep) {
         if (poke(player).statusCount() > (gen().num == 1 ? 1 : 0)) {
-            //Early bird
-            poke(player).statusCount() -= 1 + hasWorkingAbility(player, Ability::EarlyBird);
             notify(All, StatusMessage, player, qint8(FeelAsleep));
 
             if (!turnMemory(player).value("SleepingMove").toBool())
@@ -2807,6 +2805,7 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
             poke(player).statusCount() = 1 + (randint(3));
             poke(player).oriStatusCount() = poke(player).statusCount();
         }
+        poke(player).statusCount() /= (hasWorkingAbility(player, Ability::EarlyBird) ? 2 : 1);
     }
     else {
         poke(player).statusCount() = 0;
