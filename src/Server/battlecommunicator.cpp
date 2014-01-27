@@ -167,7 +167,7 @@ bool BattleCommunicator::startServer()
     }
 
     emit info("Starting battle server.");
-    battleServer->start("./BattleServer" SUFFIX " -p 5096");
+    battleServer->start("./BattleServer" SUFFIX " -p 5096 -c");
     connect(battleServer, SIGNAL(started()), this, SLOT(battleServerStarted()));
     connect(battleServer, SIGNAL(error(QProcess::ProcessError)), this, SLOT(battleServerError(QProcess::ProcessError)));
     return true;

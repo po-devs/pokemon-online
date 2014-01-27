@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../PokemonInfo/pokemoninfo.h"
-#include "../Utilities/otherwidgets.h"
+#include <PokemonInfo/pokemoninfo.h>
+#include <Utilities/otherwidgets.h>
 #include <QCompleter>
 #include <QMessageBox>
 
@@ -43,7 +43,7 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)
             continue;
 
         MovesPerPoke p;
@@ -110,7 +110,7 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
                         continue;
                     }
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -165,7 +165,7 @@ void PokeMovesDb::save()
 
         for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
-                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam)) {
+                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
                     continue;
                 }
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {

@@ -1042,7 +1042,7 @@ struct MMAssist : public MM
                 return gen >= 5;
             } else if (move == PhantomForce || move == Geomancy || move == Belch || move == StickyWeb || move == Dive || move == Dig ||
                        move == Fly || move == Bounce || move == FreezeShock || move == IceBurn || move == RazorWind || move == SkullBash ||
-                       move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce){
+                       move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce || move == Roar || move == Whirlwind){
                 return gen >= 6;
             } else {
                 return QSet<int>::contains(move);
@@ -5056,7 +5056,7 @@ struct MMNaturePower : public MM
         } else if (type == Type::Grass) {
             move = EnergyBall;
         } else if (type == Type::Fairy) {
-            move = MoonBlast;
+            move = Moonblast;
         } else if (type == Type::Electric) {
             move = Thunderbolt;
         } else {
@@ -7041,11 +7041,11 @@ struct MMPowder : public MM
         if (poke(b,s).value("Powdered").toBool()) {
             if (type(b,s) == Type::Fire) {
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
-                poke(b,s).remove("Powdered");
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
                 turn(b,s)["ImpossibleToMove"] = true;
             }
+            poke(b,s).remove("Powdered");
         }
     }
 };

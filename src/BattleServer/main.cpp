@@ -9,6 +9,7 @@
 int main(int argc, char *argv[])
 {
     int port = 5096;
+    bool closeOnDc = false;
 
     //parse commandline arguments
     for(int i = 0; i < argc; i++){
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
             fprintf(stdout, "Usage: ./BattleServer [[options]]\n");
             fprintf(stdout, "Options:\n");
             PRINTOPT("-h, --help", "Displays this help.");
+            PRINTOPT("-c, --close-on-dc", "Makes this battle server close itself when connection to a server has been lost.");
             //PRINTOPT("-p, --port [PORT]", "Sets the server port.");
             fprintf(stdout, "\n");
             return 0;   //exit app
@@ -28,6 +30,8 @@ int main(int argc, char *argv[])
                 return 1;
             }
             port = atoi(argv[i]);
+        } else if(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--close-on-dc") == 0){
+            closeOnDc = true;
         }
     }
 
@@ -54,7 +58,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     
     BattleServer server;
-    server.start(port);
+    server.start(port, closeOnDc);
 
 //    ConsoleReader reader(&server);
 //    QSocketNotifier notifier(fileno(stdin), QSocketNotifier::Read);

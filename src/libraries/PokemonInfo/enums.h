@@ -899,7 +899,13 @@ namespace Pokemon
         Genesect_B = Genesect + (3 << 16),
         Genesect_C = Genesect + (4 << 16),
         Xerneas_A = Xerneas + (1 << 16),
-        Meowstic_F = Meowstic + (1 << 16)
+        Meowstic_F = Meowstic + (1 << 16),
+        Pumpkaboo_S = Pumpkaboo + (1 << 16),
+        Pumpkaboo_L = Pumpkaboo + (2 << 16),
+        Pumpkaboo_XL = Pumpkaboo + (3 << 16),
+        Gourgeist_S = Gourgeist + (1 << 16),
+        Gourgeist_L = Gourgeist + (2 << 16),
+        Gourgeist_XL = Gourgeist + (3 << 16)
     };
 }
 
@@ -1543,14 +1549,14 @@ namespace Move
         Geomancy,
         PetalBlizzard,
         Infestation,
-        MoonBlast,
+        Moonblast,
         MysticalFire,
         NobleRoar,
         Nuzzle,
         OblivionWing,
         ParabolicCharge,
         PhantomForce,
-        PlayAround,
+        PlayRough,
         PlayNice,
         TrickorTreat,
         WaterShuriken,
@@ -1568,7 +1574,7 @@ namespace Move
         IonDeluge,
         KingsShield,
         LandsWrath,
-        MagneticsFlux,
+        MagneticFlux,
         MatBlock,
         MistyTerrain,
         PartingShot,
