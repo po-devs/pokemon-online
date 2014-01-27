@@ -9,13 +9,7 @@ CONFIG(po_serverplugins):CONFIG += po_server
 CONFIG(po_clientplugins):CONFIG += po_client
 CONFIG(po_server):!CONFIG(po_norelaystation):CONFIG+= po_relaystation
 
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_registry) | CONFIG(po_relaystation) {
-    SUBDIRS += Utilities
-}
-
-CONFIG(po_client) | CONFIG(po_server) | CONFIG(po_relaystation) {
-    SUBDIRS += PokemonInfo
-}
+SUBDIRS += Utilities PokemonInfo
 
 CONFIG(po_client) | CONFIG(po_serverplugins) | CONFIG(po_relaystation) {
     SUBDIRS += BattleManager
