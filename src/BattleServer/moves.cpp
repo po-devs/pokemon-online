@@ -1317,6 +1317,7 @@ struct MMBounce : public MM
             } else if (move == PhantomForce) {
                 addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
+                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             }
         }
         //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
