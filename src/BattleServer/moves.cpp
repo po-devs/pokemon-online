@@ -3093,7 +3093,7 @@ struct MMKnockOff : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
     static void bh(int s, int t, BS &b) {
-        if (b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
+        if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
             b.chainBp(s, 10);
         }
     }

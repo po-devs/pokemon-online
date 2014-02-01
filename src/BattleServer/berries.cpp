@@ -94,7 +94,6 @@ struct BMLeppa : public BM
             }
         }
 
-
         if (init && (zeroPP || turn(b,p).value("BugBiter").toBool())) {
             b.eatBerry(s, s==p);
             b.sendBerryMessage(2,s,0,0,0,b.move(s,minmove));
