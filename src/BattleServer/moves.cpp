@@ -3105,7 +3105,8 @@ struct MMKnockOff : public MM
                 //We call this here to prevent knock off effects if attacker dies
                 b.callaeffects(t,s,"UponPhysicalAssault"); //Rough Skin, Iron Barbs, Pickpocket, Aftermath
                 b.callieffects(t,s,"UponPhysicalAssault"); //Rocky Helmet, Sticky Barb
-                b.callieffects(t,s,"UponOffensiveDamageReceived"); //Weakness Policy
+                b.callieffects(t,s,"UponOffensiveDamageReceived"); //Weakness Policy, Kee Berry
+                b.callieffects(t,s,"Mod3Items"); //Colbur berry
                 //Fixme
                 //b.callieffects(t,s,"UponBeingHit"); //Red Card, Escape Button
                 if (!b.koed(s) && b.poke(t).item() != 0) { //No item loss if attacker dies
