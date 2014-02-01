@@ -983,7 +983,9 @@ struct IMWeaknessPolicy  : public IM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (fturn(b,t).typeMod > 0 && !b.koed(s)) {
+        if (fturn(b,t).typeMod > 0 && !b.koed(s) && !(move(b,t) == Move::SonicBoom || move(b,t) == Move::DragonRage || move(b,t) == Move::NightShade || move(b,t) == Move::SeismicToss
+                                                      || move(b,t) == Move::Psywave) || move(b,t) == Move::Present || move(b,t) == Move::Counter || move(b,t) == Move::MirrorCoat || move(b,t) == Move::Bide
+                                                        || move(b,t) == Move::MetalBurst || move(b,t) == Move::FinalGambit || move(b,t) == Move::Endeavor || move(b,t) == Move::SuperFang) {
             b.sendItemMessage(43, s);
             b.disposeItem(s);
             b.inflictStatMod(s, Attack, 2, s);

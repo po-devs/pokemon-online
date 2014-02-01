@@ -93,8 +93,8 @@ struct BMLeppa : public BM
                 minPP = b.PP(s, i);
             }
         }
-            
-        
+
+
         if (init && (zeroPP || turn(b,p).value("BugBiter").toBool())) {
             b.eatBerry(s, s==p);
             b.sendBerryMessage(2,s,0,0,0,b.move(s,minmove));
@@ -472,12 +472,12 @@ struct BMPhysicalStat : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.attacking()) {
+        if (!b.attacking() || b.koed(s)) {
             return;
         }
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
-        if (tmove(b,t).category != Move::Special) {
+        if (tmove(b,t).category != Move::Physical) {
             return;
         }
         b.eatBerry(s);
@@ -499,7 +499,7 @@ struct BMSpecialStat : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.attacking()) {
+        if (!b.attacking() || b.koed(s)) {
             return;
         }
         int arg = poke(b,s)["ItemArg"].toInt();
