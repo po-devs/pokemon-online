@@ -89,6 +89,7 @@ public:
     void devourBerry(int player, int berry, int target);
     void acqItem(int player, int item);
     bool canLoseItem(int player, int attacker);
+    bool canBoostKnockOff(int player, int attacker);
     void loseItem(int player, bool real = true);
     void loseAbility(int player);
     /* Removes PP.. */

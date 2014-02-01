@@ -3093,7 +3093,7 @@ struct MMKnockOff : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
     static void bh(int s, int t, BS &b) {
-        if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
+        if (b.canBoostKnockOff(t,s)) {
             b.chainBp(s, 10);
         }
     }
@@ -3101,9 +3101,19 @@ struct MMKnockOff : public MM
     static void uas(int s,int t,BS &b) {
         if (!b.koed(t)) {
             if (b.canLoseItem(t,s)) {
-                b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-                b.loseItem(t);
-                b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
+                b.callieffects(t,s,"BeforeTakingDamage"); //Focus Band, Sash
+                //We call this here to prevent knock off effects if attacker dies
+                b.callaeffects(t,s,"UponPhysicalAssault"); //Rough Skin, Iron Barbs, Pickpocket, Aftermath
+                b.callieffects(t,s,"UponPhysicalAssault"); //Rocky Helmet, Sticky Barb
+                b.callieffects(t,s,"UponOffensiveDamageReceived"); //Weakness Policy, Kee Berry
+                b.callieffects(t,s,"Mod3Items"); //Colbur berry
+                //Fixme
+                //b.callieffects(t,s,"UponBeingHit"); //Red Card, Escape Button
+                if (!b.koed(s) && b.poke(t).item() != 0) { //No item loss if attacker dies
+                    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+                    b.loseItem(t);
+                    b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
+                }
             } else if (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0) {
                 b.sendAbMessage(121,1,t);
             }
