@@ -472,7 +472,7 @@ struct BMPhysicalStat : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.attacking() && !b.koed(s)) {
+        if (!b.attacking() || b.koed(s)) {
             return;
         }
         int arg = poke(b,s)["ItemArg"].toInt();
@@ -499,7 +499,7 @@ struct BMSpecialStat : public BM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.attacking() && !b.koed(s)) {
+        if (!b.attacking() || b.koed(s)) {
             return;
         }
         int arg = poke(b,s)["ItemArg"].toInt();
