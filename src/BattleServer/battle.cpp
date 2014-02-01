@@ -3407,6 +3407,28 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     return true;
 }
 
+bool BattleSituation::canBoostKnockOff (int player, int attacker)
+{
+    //Some cases the item isn't lost, but damage is still increased
+    if (gen() < 6)
+        return false;
+    const auto& poke = this->poke(player);
+    int item = poke.item();
+    if (item == 0) {
+        return false;
+    }
+    if (hasWorkingAbility(player, Ability::StickyHold))
+        return true;
+    if (ability(player) == Ability::Multitype && ItemInfo::isPlate(item))
+        return true;
+
+    //Now that the exceptions are run, we run through canLoseItem to ensure completeness
+    if (canLoseItem(player,attacker))
+        return true;
+
+    return false;
+}
+
 void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
