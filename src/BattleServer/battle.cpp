@@ -3371,6 +3371,9 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     if (item == 0) {
         return false;
     }
+    if (hasSubstitute(player) && !canBypassSub(attacker)) {
+        return false;
+    }
     if (attacker != player && hasWorkingAbility(player, Ability::StickyHold)) {
         return false;
     }
@@ -3393,7 +3396,6 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     if (ItemInfo::isMail(item)) {
         return false;
     }
-
     if (ItemInfo::isDrive(item) && poke.num().original() == Pokemon::Genesect) {
         return false;
     }

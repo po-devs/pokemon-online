@@ -3090,30 +3090,21 @@ struct MMKnockOff : public MM
 {
     MMKnockOff() {
         functions["BasePowerModifier"] = &bh;
-        functions["OnFoeOnAttack"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
     }
+
     static void bh(int s, int t, BS &b) {
         if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
             b.chainBp(s, 10);
         }
     }
 
-    static void uas(int s,int t,BS &b) {
+    static void aas(int s,int t,BS &b) {
         if (!b.koed(t)) {
             if (b.canLoseItem(t,s)) {
-                b.callieffects(t,s,"BeforeTakingDamage"); //Focus Band, Sash
-                //We call this here to prevent knock off effects if attacker dies
-                b.callaeffects(t,s,"UponPhysicalAssault"); //Rough Skin, Iron Barbs, Pickpocket, Aftermath
-                b.callieffects(t,s,"UponPhysicalAssault"); //Rocky Helmet, Sticky Barb
-                b.callieffects(t,s,"UponOffensiveDamageReceived"); //Weakness Policy, Kee Berry
-                b.callieffects(t,s,"Mod3Items"); //Colbur berry
-                //Fixme
-                //b.callieffects(t,s,"UponBeingHit"); //Red Card, Escape Button
-                if (!b.koed(s) && b.poke(t).item() != 0) { //No item loss if attacker dies
-                    b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
-                    b.loseItem(t);
-                    b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
-                }
+                b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
+                b.loseItem(t);
+                b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
             } else if (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0) {
                 b.sendAbMessage(121,1,t);
             }
@@ -5719,10 +5710,10 @@ struct MMBestow : public MM {
     static void daf(int s, int t, BS &b)
     {
         int i1 = b.poke(s).item();
-        if (b.koed(t) || b.poke(s).item() == 0 || b.poke(t).item() != 0 || ItemInfo::isMail(b.poke(s).item())
-                || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && ItemInfo::isPlate(b.poke(s).item()))
-                || ((b.pokenum(t).pokenum == Pokemon::Giratina || b.pokenum(s).pokenum == Pokemon::Giratina) && b.poke(s).item() == Item::GriseousOrb)
-                || ((b.pokenum(t).pokenum == Pokemon::Genesect || b.pokenum(s).pokenum == Pokemon::Genesect) && ItemInfo::isDrive(b.poke(s).item()))
+        if (b.koed(t) || !b.canLoseItem(s,s) || b.poke(t).item() != 0
+                || (b.ability(t) == Ability::Multitype && ItemInfo::isPlate(b.poke(s).item()))
+                || (b.pokenum(t).pokenum == Pokemon::Giratina && b.poke(s).item() == Item::GriseousOrb)
+                || (b.pokenum(t).pokenum == Pokemon::Genesect && ItemInfo::isDrive(b.poke(s).item()))
                 || (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()))
         {
             fturn(b,s).add(TM::Failed);
