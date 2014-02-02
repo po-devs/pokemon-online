@@ -3930,6 +3930,8 @@ bool BattleSituation::canBypassSub(int t)
             return true;
         if (tmove(t).flags & Move::SoundFlag)
             return true;
+        if (turnMemory(t)["MoveChosen"].toInt() == Move::Bestow)
+            return true;
     }
     return false;
 }
