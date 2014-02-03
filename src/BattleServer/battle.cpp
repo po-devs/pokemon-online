@@ -1916,7 +1916,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && !(tmove(player).flags & Move::MischievousFlag) && attack != Move::NaturePower && !canBypassSub(player)) {
+            if (target != player && hasSubstitute(target) && !canBypassSub(player)) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
@@ -3925,12 +3925,13 @@ bool BattleSituation::canHeal(int s)
 
 bool BattleSituation::canBypassSub(int t)
 {
+    if (tmove(t).flags & Move::MischievousFlag)
+        return true;
+
     if (gen().num >= 6) {
         if (hasWorkingAbility(t, Ability::Infiltrator))
             return true;
         if (tmove(t).flags & Move::SoundFlag)
-            return true;
-        if (turnMemory(t)["MoveChosen"].toInt() == Move::Bestow)
             return true;
     }
     return false;
