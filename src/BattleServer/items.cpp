@@ -982,7 +982,20 @@ struct IMWeaknessPolicy  : public IM {
         functions["UponOffensiveDamageReceived"] = &uodr;
     }
 
+    struct FM : public QSet<int> {
+        FM() {
+            (*this) << Move::SonicBoom << Move::DragonRage << Move::NightShade << Move::SeismicToss
+                                       << Move::Psywave << Move::Present << Move::Counter << Move::Bide
+                                       << Move::MirrorCoat << Move::MetalBurst << Move::FinalGambit
+                                       << Move::Endeavor << Move::SuperFang;
+        }
+    };
+    static FM forbidden_moves;
+
     static void uodr(int s, int t, BS &b) {
+        if (forbidden_moves.contains(move(b,t)))
+            return;
+
         if (fturn(b,t).typeMod > 0 && !b.koed(s)) {
             b.sendItemMessage(43, s);
             b.disposeItem(s);
@@ -991,6 +1004,9 @@ struct IMWeaknessPolicy  : public IM {
         }
     }
 };
+
+//Declaring static class variable
+IMWeaknessPolicy::FM IMWeaknessPolicy::forbidden_moves;
 
 struct IMAssaultVest : public IM {
     IMAssaultVest() {

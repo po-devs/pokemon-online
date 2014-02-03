@@ -3090,15 +3090,16 @@ struct MMKnockOff : public MM
 {
     MMKnockOff() {
         functions["BasePowerModifier"] = &bh;
-        functions["OnFoeOnAttack"] = &uas;
+        functions["AfterAttackSuccessful"] = &aas;
     }
+
     static void bh(int s, int t, BS &b) {
         if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
             b.chainBp(s, 10);
         }
     }
 
-    static void uas(int s,int t,BS &b) {
+    static void aas(int s,int t,BS &b) {
         if (!b.koed(t)) {
             if (b.canLoseItem(t,s)) {
                 b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
@@ -5709,10 +5710,10 @@ struct MMBestow : public MM {
     static void daf(int s, int t, BS &b)
     {
         int i1 = b.poke(s).item();
-        if (b.koed(t) || b.poke(s).item() == 0 || b.poke(t).item() != 0 || ItemInfo::isMail(b.poke(s).item())
-                || ((b.ability(t) == Ability::Multitype || b.ability(s) == Ability::Multitype) && ItemInfo::isPlate(b.poke(s).item()))
-                || ((b.pokenum(t).pokenum == Pokemon::Giratina || b.pokenum(s).pokenum == Pokemon::Giratina) && b.poke(s).item() == Item::GriseousOrb)
-                || ((b.pokenum(t).pokenum == Pokemon::Genesect || b.pokenum(s).pokenum == Pokemon::Genesect) && ItemInfo::isDrive(b.poke(s).item()))
+        if (b.koed(t) || !b.canLoseItem(s,s) || b.poke(t).item() != 0
+                || (b.ability(t) == Ability::Multitype && ItemInfo::isPlate(b.poke(s).item()))
+                || (b.pokenum(t).pokenum == Pokemon::Giratina && b.poke(s).item() == Item::GriseousOrb)
+                || (b.pokenum(t).pokenum == Pokemon::Genesect && ItemInfo::isDrive(b.poke(s).item()))
                 || (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()))
         {
             fturn(b,s).add(TM::Failed);
