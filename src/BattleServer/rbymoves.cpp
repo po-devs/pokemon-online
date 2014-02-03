@@ -657,21 +657,11 @@ struct RBYMimic : public MM
 
     static void uas(int s, int t, BS &b) {
         int move = 0;
-        int check = 0;
-        /* Mimic copies a random move in Gen 1 that the user does not already know */
-        while (move == 0 && check < 4) {
+        /* Mimic copies a random move in Gen 1 */
+        while (move == 0) {
             move = b.move(t, b.randint(4));
-            if (b.hasMove(s,move)) {
-                move = 0;
-                check++;
-            }
-        }
-        if (check == 4) {
-            fturn(b,s).add(TM::Failed);
-            return;
         }
         int slot = fpoke(b,s).lastMoveSlot;
-
         b.changeTempMove(s, slot, move);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
