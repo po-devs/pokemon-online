@@ -3090,7 +3090,7 @@ struct MMKnockOff : public MM
 {
     MMKnockOff() {
         functions["BasePowerModifier"] = &bh;
-        functions["AfterAttackSuccessful"] = &aas;
+        functions["KnockOff"] = &aas;
     }
     static void bh(int s, int t, BS &b) {
         if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
@@ -3100,7 +3100,7 @@ struct MMKnockOff : public MM
 
     static void aas(int s,int t,BS &b) {
         if (!b.koed(t)) {
-            if (b.canLoseItem(t,s)) {
+            if (b.canLoseItem(t,s) && !b.koed(s)) {
                 b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
                 b.loseItem(t);
                 b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
