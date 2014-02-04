@@ -1916,7 +1916,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
-            if (target != player && hasSubstitute(target) && attack != Move::NaturePower && !canBypassSub(player)) {
+            if (target != player && hasSubstitute(target) && !canBypassSub(player)) {
                 sendMoveMessage(128, 2, player,0,target, tmove(player).attack);
                 continue;
             }
