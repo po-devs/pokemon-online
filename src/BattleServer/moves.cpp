@@ -3104,7 +3104,6 @@ struct MMKnockOff : public MM
                 b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
                 b.loseItem(t);
                 b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
-
             } else if (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0) {
                 b.sendAbMessage(121,1,t);
             }

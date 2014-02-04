@@ -519,8 +519,6 @@ struct BMSpecialStat : public BM
         }
     }
 };
-
-
 #define REGISTER_BERRY(num, name) mechanics[num+8000] = BM##name(); names[num+8000] = #name; nums[#name] = num+8000;
 
 void ItemEffect::initBerries()
