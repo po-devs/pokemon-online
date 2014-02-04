@@ -468,7 +468,7 @@ struct BMConfuseBerry : public BMPinch
 struct BMPhysicalStat : public BM
 {
     BMPhysicalStat() {
-        functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponBeingHit"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
@@ -477,25 +477,25 @@ struct BMPhysicalStat : public BM
         }
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
-        if (tmove(b,t).category != Move::Physical) {
-            return;
-        }
-        b.eatBerry(s);
-        b.inflictStatMod(s,arg,1,s,false);
-        if (b.isOut(s)) {
-            if (b.hasWorkingAbility(s, Ability::Contrary)) {
-                b.sendBerryMessage(7,s,1,s, berry, arg);
-            } else {
-                b.sendBerryMessage(7,s,0,s, berry, arg);
-            }
 
+        if (turn(b,t).value("BugBiter").toBool() || tmove(b,t).category == Move::Physical) {
+            b.eatBerry(s, s==t);
+            b.inflictStatMod(s,arg,1,s,false);
+
+            if (b.isOut(s)) {
+                if (b.hasWorkingAbility(s, Ability::Contrary)) {
+                    b.sendBerryMessage(7,s,1,s, berry, arg);
+                } else {
+                    b.sendBerryMessage(7,s,0,s, berry, arg);
+                }
+            }
         }
     }
 };
 struct BMSpecialStat : public BM
 {
     BMSpecialStat() {
-        functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["UponBeingHit"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
@@ -504,22 +504,23 @@ struct BMSpecialStat : public BM
         }
         int arg = poke(b,s)["ItemArg"].toInt();
         int berry = b.poke(s).item();
-        if (tmove(b,t).category != Move::Special) {
-            return;
-        }
-        b.eatBerry(s);
-        b.inflictStatMod(s,arg,1,s,false);
 
-        if (b.isOut(s)) {
-            if (b.hasWorkingAbility(s, Ability::Contrary)) {
-                b.sendBerryMessage(7,s,1,s, berry, arg);
-            } else {
-                b.sendBerryMessage(7,s,0,s, berry, arg);
+        if (turn(b,t).value("BugBiter").toBool() || tmove(b,t).category == Move::Special) {
+            b.eatBerry(s, s==t);
+            b.inflictStatMod(s,arg,1,s,false);
+
+            if (b.isOut(s)) {
+                if (b.hasWorkingAbility(s, Ability::Contrary)) {
+                    b.sendBerryMessage(7,s,1,s, berry, arg);
+                } else {
+                    b.sendBerryMessage(7,s,0,s, berry, arg);
+                }
             }
-
         }
     }
 };
+
+
 #define REGISTER_BERRY(num, name) mechanics[num+8000] = BM##name(); names[num+8000] = #name; nums[#name] = num+8000;
 
 void ItemEffect::initBerries()
