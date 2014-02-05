@@ -833,14 +833,7 @@ void BattleSituation::analyzeChoices()
     foreach(int i, playersByOrder) {
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
-            if (choice(slot).mega()) {
-                //Mega Evolution is not hindered by Embargo, etc.
-                if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
-                    sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
-                    changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
-                    megas[player(slot)] = true;
-                }
-            }
+            megaEvolve(slot);
         }
     }
 
@@ -884,6 +877,19 @@ void BattleSituation::analyzeChoices()
 }
 
 /* Battle functions! Yeah! */
+
+void BattleSituation::megaEvolve(int slot)
+{
+    //Split to allow Mega Evo to activate on Special Pursuit
+    //Mega Evolution is not hindered by Embargo, etc.
+    if (choice(slot).mega()) {
+        if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
+            sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
+            changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
+            megas[player(slot)] = true;
+        }
+    }
+}
 
 void BattleSituation::sendPoke(int slot, int pok, bool silent)
 {
@@ -1091,12 +1097,14 @@ void BattleSituation::sendBack(int player, bool silent)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            //Pursuit does not deal additional effects to a teammate switching
-            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser") && !arePartners(opp, player)) {
+            //Pursuit does not deal additional effects to a teammate switching, or on Pokemon using UTurn/etc.
+            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMem(player).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser") && !arePartners(opp, player)) {
+                megaEvolve(opp);
                 if (!notified) {
                     notified = true;
                     sendMoveMessage(171, 0, player);
                 }
+
                 tmove(opp).power = tmove(opp).power * 2;
                 choice(opp).setTarget(player);
                 analyzeChoice(opp);

@@ -51,6 +51,7 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
+    void megaEvolve(int spot);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
