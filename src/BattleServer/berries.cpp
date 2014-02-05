@@ -106,7 +106,11 @@ struct BMLeppa : public BM
 
 struct BMPinch : public BM
 {
-    static bool testpinch(int p, int s, BS &b, int ratio) {
+    static bool testpinch(int p, int s, BS &b, int ratio, bool activate) {
+        //HP Pinches activate, nothing else does if sending back
+        if (turn(b,s).value("SendingBack").toBool() && !activate) {
+            return false;
+        }
         if (turn(b,p).value("BugBiter").toBool()) {
             b.eatBerry(s);
             return true;
@@ -151,7 +155,7 @@ struct BMPinchHP : public BMPinch
         if (!b.canHeal(s))
             return;
 
-        if (!testpinch(p, s, b, 2))
+        if (!testpinch(p, s, b, 2, true))
             return;
 
         b.sendBerryMessage(3,s,0);
@@ -255,7 +259,7 @@ struct BMPinchStat : public BMPinch
            so saved before. */
         int berry = b.poke(s).item();
 
-        if (!testpinch(p, s, b, 4))
+        if (!testpinch(p, s, b, 4, false))
             return;
 
         int arg = poke(b,p)["ItemArg"].toInt();
@@ -290,7 +294,7 @@ struct BMCriticalPinch : public BMPinch
     }
 
     static void tp(int p, int s, BS &b) {
-        if (!testpinch(p, s, b,4))
+        if (!testpinch(p, s, b, 4, false))
             return;
 
         uas(p,s,b);
@@ -347,7 +351,7 @@ struct BMStarf : public BMPinch
         if (stats.empty())
             return;
 
-        if (!testpinch(p, s, b, 4))
+        if (!testpinch(p, s, b, 4, false))
             return;
 
         int stat = stats[b.randint(stats.size())];
@@ -382,7 +386,7 @@ struct BMBerryLock : public BMPinch
             return;
         }
 
-        if (!testpinch(p, s, b,4)) {
+        if (!testpinch(p, s, b, 4, false)) {
             return;
         }
 
@@ -401,7 +405,7 @@ struct BMCustap : public BMPinch
         if (!b.isOut(p)) {
             return;
         }
-        if (!testpinch(p, s, b, 4)) {
+        if (!testpinch(p, s, b, 4, false)) {
             return;
         }
 
@@ -451,7 +455,7 @@ struct BMConfuseBerry : public BMPinch
         if (!b.isOut(s))
             return;
 
-        if (!testpinch(p, s, b, 4))
+        if (!testpinch(p, s, b, 4, true))
             return;
 
         if (!b.canHeal(s))

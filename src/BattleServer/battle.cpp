@@ -1104,7 +1104,7 @@ void BattleSituation::sendBack(int player, bool silent)
                     notified = true;
                     sendMoveMessage(171, 0, player);
                 }
-
+                turnMemory(player)["SendingBack"] = true; //To prevent PinchStat berries from activating right before switch
                 tmove(opp).power = tmove(opp).power * 2;
                 choice(opp).setTarget(player);
                 analyzeChoice(opp);
