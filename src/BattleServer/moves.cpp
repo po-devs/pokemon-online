@@ -5800,10 +5800,13 @@ struct MMRelicSong : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (fpoke(b,s).id == Pokemon::Meloetta)
-            b.changePokeForme(s, Pokemon::Meloetta_P);
-        else if (fpoke(b,s).id == Pokemon::Meloetta_P)
-            b.changePokeForme(s, Pokemon::Meloetta);
+        if (!turn(b,s).contains("ChangedForm")) {
+            if (fpoke(b,s).id == Pokemon::Meloetta)
+                b.changePokeForme(s, Pokemon::Meloetta_P);
+            else if (fpoke(b,s).id == Pokemon::Meloetta_P)
+                b.changePokeForme(s, Pokemon::Meloetta);
+            turn(b,s)["ChangedForm"] = true;
+        }
     }
 };
 
