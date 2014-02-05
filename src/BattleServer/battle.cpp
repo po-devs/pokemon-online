@@ -1499,7 +1499,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     if (!specialOccurence) {
         if (PP(player, move) <= 0) {
-            /* Todo : notify of PP absence */
+            notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
+            sendMoveMessage(123,1,player);
             goto trueend;
         }
 

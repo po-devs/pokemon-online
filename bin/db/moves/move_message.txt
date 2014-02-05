@@ -79,7 +79,7 @@
 118 %s snatched %f's move!|%s waits for a target to make a move!
 121 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
 122 %s released!
-123 It reduced the PP of %f's %m by %q!
+123 It reduced the PP of %f's %m by %q!|But there was no PP left for the move!
 124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 125 %s stockpiled %d!
 127 %s is hit with recoil!
