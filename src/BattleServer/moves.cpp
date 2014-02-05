@@ -2017,7 +2017,7 @@ struct MMFling : public MM
                 }
             } else {
                 b.sendMoveMessage(16,0,t,type(b,s),s,item);
-                b.devourBerry(s, item, t);
+                b.devourBerry(t, item, t);
             }
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
