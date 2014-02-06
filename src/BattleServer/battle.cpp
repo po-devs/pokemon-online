@@ -2280,7 +2280,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     }
 
     bool statChange = false;
-    bool negativeStatChange = false;
+    //bool negativeStatChange = false; //Done Elsewhere
 
     if (cl == Move::OffensiveSelfStatChangingMove) {
         target = player;
@@ -2333,7 +2333,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
             if (!inflictStatMod(target, stat, increase, player)) {
                 //return; or not, hyper cutter blocks only a part of tickle
             }
-            negativeStatChange = true;
+            //negativeStatChange = true; //Done Elsewhere
         }
 
         statChange = true;
@@ -2341,9 +2341,10 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     if (statChange == true) {
         callieffects(target, player, "AfterStatChange");
-        if (target != player && negativeStatChange && gen() >= 5) {
+        //Done Elsewhere
+        /*if (target != player && negativeStatChange && gen() >= 5) {
             callaeffects(target, player, "AfterNegativeStatChange");
-        }
+        }*/
     }
 
     /* Now Status */
@@ -2468,9 +2469,9 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
 
         if (!applyingMoveStatMods) {
             callieffects(player, attacker, "AfterStatChange");
-            if (player != attacker) {
-                callaeffects(player, attacker, "AfterNegativeStatChange");
-            }
+        }
+        if (player != attacker) {
+            callaeffects(player, attacker, "AfterNegativeStatChange");
         }
     } else {
         //fixme: can't decrease message
