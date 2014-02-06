@@ -292,7 +292,12 @@ struct MMBugBite : public MM
         }
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
         b.devourBerry(s, item, s);
-        b.disposeItem(t);
+        if (b.gen().num >= 5) {
+            b.loseItem(t);
+        } else {
+            //Gen 4 BugBite/Pluck allows restoration of the berry
+            b.disposeItem(t);
+        }
     }
 };
 
@@ -2021,7 +2026,7 @@ struct MMFling : public MM
             }
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
-        b.disposeItem(s);
+        b.loseItem(s);
     }
 };
 
@@ -5682,7 +5687,7 @@ struct MMIncinerate : public MM {
     static void uas(int s, int t, BS &b) {
         if (ItemInfo::isBerry(b.poke(t).item()) || (ItemInfo::isGem(b.poke(t).item()) && b.gen() >= 6)) {
             b.sendMoveMessage(160, 0, s, Type::Fire, t, b.poke(t).item());
-            b.disposeItem(t);
+            b.loseItem(t);
         }
     }
 };
