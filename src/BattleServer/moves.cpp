@@ -292,7 +292,7 @@ struct MMBugBite : public MM
         }
         b.sendMoveMessage(16,0,s,type(b,s),t,item);
         b.devourBerry(s, item, s);
-        if (b.gen().num >= 5) {
+        if (b.gen() >= 5) {
             b.loseItem(t);
         } else {
             //Gen 4 BugBite/Pluck allows restoration of the berry
