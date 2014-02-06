@@ -1477,13 +1477,13 @@ struct AMDefiant : public AM
     }
 
     static void ansc(int s, int ts, BS &b) {
-        if (b.hasMaximalStatMod(s, Attack))
+        int arg = poke(b,s)["AbilityArg"].toInt();
+        if (b.hasMaximalStatMod(s, arg))
             return;
         if (ts != -1 && b.player(ts) == b.player(s))
             return;
-        /* Fix me : ability message */
-        b.sendAbMessage(80, 0, s);
-        b.inflictStatMod(s, Attack, 2, s, false);
+        b.sendAbMessage(80, arg-1, s, s, 0, b.ability(s));
+        b.inflictStatMod(s, arg, 2, s, false);
     }
 };
 
@@ -2158,22 +2158,6 @@ struct AMStanceChange : public AM {
     }
 };
 
-struct AMCompetitive : public AM
-{
-    AMCompetitive() {
-        functions["AfterNegativeStatChange"] = &ansc;
-    }
-
-    static void ansc(int s, int ts, BS &b) {
-        if (b.hasMaximalStatMod(s, SpAttack))
-            return;
-        if (ts != -1 && b.player(ts) == b.player(s))
-            return;
-        b.sendAbMessage(113, 0, s);
-        b.inflictStatMod(s, SpAttack, 2, s, false);
-    }
-};
-
 struct AMGaleWings : public AM
 {
     AMGaleWings() {
@@ -2389,7 +2373,7 @@ void AbilityEffect::init()
     REGISTER_AB(77, ZenMode);
     REGISTER_AB(78, PickPocket);
     REGISTER_AB(79, SheerForce);
-    REGISTER_AB(80, Defiant);
+    REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
     REGISTER_AB(81, Imposter);
     REGISTER_AB(82, Prankster);
     REGISTER_AB(83, MultiScale);
@@ -2423,7 +2407,7 @@ void AbilityEffect::init()
     REGISTER_AB(110, StanceChange);
     REGISTER_AB(111, ParentalBond);
     //112 sweet veil
-    REGISTER_AB(113, Competitive);
+    //113 Competitive
     REGISTER_AB(114, GaleWings);
     REGISTER_AB(115, Gooey);
     REGISTER_AB(116, Magician);

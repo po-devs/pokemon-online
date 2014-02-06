@@ -97,7 +97,7 @@
 124 78#Pickpocket
 125 79#SheerForce
 127 102#Unnerve
-128 80#Defiant
+128 80-1#Defiant
 129 76#Defeatist
 130 96#Cursed Body
 131 99#Healer

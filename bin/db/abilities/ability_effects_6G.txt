@@ -97,7 +97,7 @@
 124 78#Pickpocket
 125 79#SheerForce
 127 102#Unnerve
-128 80#Defiant
+128 80-1#Defiant
 129 76#Defeatist
 130 96#Cursed Body
 131 99#Healer
@@ -146,7 +146,7 @@
 178 108#Strong Jaw
 179 112#Sweet Veil
 180 109#Tough Claws
-181 113#Competitive
+181 80-3#Competitive
 182 114#Gale Wings
 183 115#Gooey
 185 118#BulletProof

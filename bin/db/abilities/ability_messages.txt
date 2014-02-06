@@ -46,7 +46,7 @@
 71 %s's Wonder Guard evades the attack!
 74 %s lost part of its armor!
 78 %s stole %f's %i!
-80 Defiant sharply raised %s's Attack!
+80 %a sharply raised %s's Attack!|%a sharply raised %s's Defense!|%a sharply raised %s's Sp. Att.!|%a sharply raised %s's Sp. Def.!|%a sharply raised %s's Speed!
 81 %s transformed into %p!
 85 %s avoided %f's attack thanks to its Telepathy!
 86 %s regains health with its Regenerator!
@@ -64,7 +64,6 @@
 103 %s is radiating a %t aura!
 104 %f's %a prevents stats changes to affect %s!
 107 %s had its type changed to %t!
-113 Competitive sharply raised %s's Sp. Attack!
 115 %s's Gooey slows down %f!
 117 %s reversed all other Pokémon's auras!
 118 %s's Bulletproof blocked the attack!
