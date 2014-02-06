@@ -7,6 +7,7 @@
 23 126#stomp
 26 64#jump kick
 32 43#Horn Drill
+34 126#Body slam
 35 10#wrap
 37 93#thrash
 46 107#roar
