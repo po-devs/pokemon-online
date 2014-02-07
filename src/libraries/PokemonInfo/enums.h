@@ -1586,7 +1586,8 @@ namespace Move
         TopsyTurvy,
         VenomDrench,
         HappyHour,
-        Celebrate
+        Celebrate,
+        HoldBack
     };
 }
 
