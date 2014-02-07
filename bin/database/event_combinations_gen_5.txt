@@ -9,3 +9,4 @@ Snivy: Synthesis + Aromatherapy
 Victini: V-Create + Blue Flare + Bolt Strike + Glaciate
 Deoxys: Dark Pulse + Nasty Plot
 Genesect: Extreme Speed + Shift Gear + Blaze Kick
+Sableye: Octazooka + Tickle + Trick
