@@ -414,8 +414,9 @@ struct AMFlowerGift : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Cherrim)
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Cherrim)
             return;
+
         if (b.weather == BS::Sunny) {
             if (b.pokenum(s).subnum != 1) b.changeAForme(s, 1);
         } else {
@@ -439,7 +440,8 @@ struct AMFlowerGift : public AM {
     }
 
     static void ol(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Cherrim)
+        //Flower Gift does not affect Aesthetic form in Gen 4.
+        if (b.pokenum(s).pokenum != Pokemon::Cherrim || b.gen() <= 4)
             return;
         if (b.pokenum(s).subnum != 0) {
             b.changeAForme(s, 0);
@@ -452,6 +454,8 @@ struct AMForeCast : public AM {
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
         functions["OnLoss"] = &ol;
+        functions["EndTurn12.0"] = &et; /* Gen 4 */
+        functions["EndTurn29.0"] = &et; /* Gen 5 */
     }
 
     static void us(int s, int, BS &b) {
@@ -475,6 +479,18 @@ struct AMForeCast : public AM {
         if (b.pokenum(s).subnum != 0) {
             b.changeAForme(s, 0);
         }
+    }
+
+    static void et (int s, int, BS &b) {
+        //At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.
+        int weather = b.weather;
+        int type = Type::Normal;
+        switch (weather) {
+            case BS::Sunny: type = Type::Fire; break;
+            case BS::Rain: type = Type::Water; break;
+            case BS::Hail: type = Type::Ice; break;
+        }
+        b.setType(s,type);
     }
 };
 
@@ -1405,14 +1421,14 @@ struct AMZenMode : public AM {
     AMZenMode() {
         functions["EndTurn27.0"] = &et;
         functions["OnLoss"] = &ol;
+        functions["UponSetup"] = &et;
     }
 
     static void et (int s, int, BS &b) {
-        Pokemon::uniqueId num = fpoke(b,s).id;
-
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan)
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Darmanitan)
             return;
 
+        Pokemon::uniqueId num = fpoke(b,s).id;
         bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
         if (daruma == num.subnum)
