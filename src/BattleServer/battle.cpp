@@ -2240,8 +2240,9 @@ void BattleSituation::inflictRecoil(int source, int target)
             }
         } else {
             if (pokeMemory(source).value("HealBlockCount").toInt() > 0) {
-                sendMoveMessage(60, 0, source);
+                sendMoveMessage(59, 3, source);
             } else {
+                sendMoveMessage(60, 0, source);
                 healLife(source, damage);
             }
         }
