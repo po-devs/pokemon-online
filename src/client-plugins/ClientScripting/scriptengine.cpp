@@ -835,7 +835,7 @@ QScriptValue ScriptEngine::baseStats(int poke, int stat, int gen)
         return -1;
     }
 
-    if((gen >= GEN_MIN) && (gen <= GenInfo::GenMax())) {
+    if((gen < GEN_MIN) || (gen > GenInfo::GenMax())) {
         warn("baseStats(poke, stat, gen)", QString("Gen %1 unsupported.").arg(QString::number(gen)));
         return -1;
     }
