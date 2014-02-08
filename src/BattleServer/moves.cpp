@@ -153,9 +153,11 @@ struct MMAquaRing : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s))
+        if (!b.canHeal(s)) {
+            if (poke(b, s).value("HealBlockCount").toInt() > 0)
+                b.sendMoveMessage(59,3,s,Type::Psychic);
             return;
-
+        }
         int healing = b.poke(s).totalLifePoints()/16;
         if (b.hasWorkingItem(s, Item::BigRoot)) {
             healing = healing * 13 / 10;
@@ -2615,6 +2617,8 @@ struct MMLeechSeed : public MM
             if (!(poke(b, s2).value("HealBlockCount").toInt() > 0)) {
                 b.sendMoveMessage(60, 0, s2);
                 b.healLife(s2, damage);
+            } else {
+                b.sendMoveMessage(59, 3, s2, Type::Psychic);
             }
         } else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
@@ -2758,7 +2762,9 @@ struct MMIngrain : public MM
 
             b.sendMoveMessage(151,1,s,Pokemon::Grass);
             b.healLife(s, healing);
-
+        } else {
+            if (poke(b, s).value("HealBlockCount").toInt() > 0)
+                b.sendMoveMessage(59,3,s,Type::Psychic);
         }
     }
 };

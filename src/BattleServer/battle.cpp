@@ -562,9 +562,12 @@ void BattleSituation::endTurnStatus(int player)
     case Pokemon::Poisoned:
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            if (!poke(player).isFull()) {
+            if (canHeal(player)) {
                 sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
+            } else {
+                if (pokeMemory(source).value("HealBlockCount").toInt() > 0 && !poke(s).isFull()) {
+                    sendMoveMessage(59,5,s,Type::Psychic,t,b.ability(s));
             }
         } else {
             if (hasWorkingAbility(player, Ability::MagicGuard)) {
@@ -2240,8 +2243,9 @@ void BattleSituation::inflictRecoil(int source, int target)
             }
         } else {
             if (pokeMemory(source).value("HealBlockCount").toInt() > 0) {
-                sendMoveMessage(60, 0, source);
+                sendMoveMessage(59, 3, source);
             } else {
+                sendMoveMessage(60, 0, source);
                 healLife(source, damage);
             }
         }

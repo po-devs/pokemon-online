@@ -56,9 +56,11 @@ struct IMBlackSludge : public IM
             if (b.canHeal(s)) {
                 b.sendItemMessage(16,s,0);
                 b.healLife(s, b.poke(s).totalLifePoints()/16);
+            } else {
+                if (poke(b, s).value("HealBlockCount").toInt() > 0 && !b.poke(s).isFull())
+                    b.sendMoveMessage(59,4,s,Type::Psychic,s,b.poke(s).item());
             }
-        } else
-        {
+        } else {
             b.sendItemMessage(16,s,1);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
         }
@@ -74,9 +76,11 @@ struct IMLeftOvers : public IM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s))
+        if (!b.canHeal(s)) {
+            if (poke(b, s).value("HealBlockCount").toInt() > 0 && !b.poke(s).isFull())
+                b.sendMoveMessage(59,4,s,Type::Psychic,s,b.poke(s).item());
             return;
-
+        }
         b.sendItemMessage(12,s);
         b.healLife(s, b.poke(s).totalLifePoints()/16);
     }
@@ -357,9 +361,11 @@ struct IMShellBell : public IM
         if (s==t)
             return;
 
-        if (!b.canHeal(s) || turn(b,s).value("EncourageBug").toBool())
+        if (!b.canHeal(s) || turn(b,s).value("EncourageBug").toBool()) {
+            if (poke(b, s).value("HealBlockCount").toInt() > 0 && !b.poke(s).isFull())
+                b.sendMoveMessage(59,4,s,Type::Psychic,t,b.poke(s).item());
             return;
-
+        }
         int damage = turn(b,s)["DamageInflicted"].toInt();
 
         if (damage > 0) {
@@ -550,10 +556,12 @@ struct IMBerryJuice : public IM
     }
 
     static void ahpc(int s, int, BS &b) {
-        if (!b.canHeal(s))
-            return;
-
         if (b.poke(s).lifePercent() <= 50) {
+            if (!b.canHeal(s)) {
+                if (poke(b, s).value("HealBlockCount").toInt() > 0 )
+                    b.sendMoveMessage(59,4,s,Type::Psychic,s,b.poke(s).item());
+                return;
+            }
             b.disposeItem(s);
             b.sendItemMessage(18,s,0);
             b.healLife(s, 20);
