@@ -2133,6 +2133,7 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
 
     if (!pokeMemory(play).value("AbilityNullified").toBool())
         AbilityEffect::setup(ability(play),play,*this, firstTime);
+        callaeffects(play,opponent(play),"OnAbilityAcquire");
 }
 
 void BattleSituation::loseAbility(int slot)

@@ -33,7 +33,7 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
     AM::poke(b, source)["AbilityArg"] = effect.arg;
 
     if (b.gen() <= 3 && !firstAct) {
-        /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
+        /* In gen 3, intimidate/a/... aren't triggered by Trace */
         return;
     }
 
@@ -681,6 +681,7 @@ struct AMInsomnia : public AM {
     AMInsomnia() {
         functions["UponSetup"] = &us;
         functions["PreventStatChange"] = &psc;
+        functions["OnAbilityAcquire"] = &us;
     }
 
     static void us(int s, int, BS &b) {
