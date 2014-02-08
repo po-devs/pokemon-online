@@ -33,7 +33,7 @@ void AbilityEffect::setup(int num, int source, BattleSituation &b, bool firstAct
     AM::poke(b, source)["AbilityArg"] = effect.arg;
 
     if (b.gen() <= 3 && !firstAct) {
-        /* In gen 3, intimidate/a/... aren't triggered by Trace */
+        /* In gen 3, intimidate/insomnia/... aren't triggered by Trace */
         return;
     }
 
@@ -1086,7 +1086,7 @@ struct AMTrace : public AM {
         int ab = b.ability(t);
         //Multitype
         if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace
-            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget"))) {
+            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
             b.sendAbMessage(66,0,s,t,0,ab);
             b.loseAbility(s);
             b.acquireAbility(s, ab);
