@@ -562,7 +562,7 @@ void BattleSituation::endTurnStatus(int player)
     case Pokemon::Poisoned:
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            if (!poke(player).isFull()) {
+            if (canHeal(player)) {
                 sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
             }
