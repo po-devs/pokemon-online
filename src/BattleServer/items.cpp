@@ -451,7 +451,7 @@ struct IMMetronome : public IM
             return;
         }
         if (act) {
-            poke(b,s)["IMMetroCount"] = std::min(10, count+1);
+            poke(b,s)["IMMetroCount"] = std::min((b.gen().num > 5 ? 20 : 10), count+1);
         }
     }
 
