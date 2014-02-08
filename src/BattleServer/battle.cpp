@@ -565,6 +565,9 @@ void BattleSituation::endTurnStatus(int player)
             if (canHeal(player)) {
                 sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
+            } else {
+                if (pokeMemory(source).value("HealBlockCount").toInt() > 0 && !poke(s).isFull()) {
+                    sendMoveMessage(59,5,s,Type::Psychic,t,b.ability(s));
             }
         } else {
             if (hasWorkingAbility(player, Ability::MagicGuard)) {

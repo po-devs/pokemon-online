@@ -669,9 +669,12 @@ struct AMIceBody : public AM {
     static void ws(int s, int, BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
-            if (!b.poke(s).isFull()) {
+            if (b.canHeal()) {
                 b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
                 b.healLife(s, b.poke(s).totalLifePoints()/16);
+            } else {
+                if (poke(b, s).value("HealBlockCount").toInt() > 0 && !b.poke(s).isFull()) {
+                    b.sendMoveMessage(59,5,s,Type::Psychic,t,b.ability(s));
             }
         }
     }
