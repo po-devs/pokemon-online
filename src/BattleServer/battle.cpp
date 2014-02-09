@@ -120,7 +120,7 @@ void BattleSituation::initializeEndTurnFunctions()
     10.3 Stealth Rock
 
     11.0 Healing Heart
-    12.0 Slow start
+    12.0 Slow start, Forecast
     */
     else if (gen() <= 4) {
         ownEndFunctions.push_back(QPair<int, VoidFunction>(3, &BattleSituation::endTurnWeather));
@@ -136,7 +136,7 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
 
 
-        addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start */
+        addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start, Forecast */
     } else {
         /* 1.0 weather ends
 
@@ -208,7 +208,7 @@ void BattleSituation::initializeEndTurnFunctions()
         28.1 Healing Wish, Lunar Dance
         28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
-        29.0 Slow Start
+        29.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
         ownEndFunctions.push_back(QPair<int, VoidFunction>(28, &BattleSituation::requestEndOfTurnSwitchIns));
@@ -223,7 +223,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         addEndTurnEffect(AbilityEffect, 27, 0); /* Daruma Mode */
 
-        addEndTurnEffect(AbilityEffect, 29, 0); /* Slow Start */
+        addEndTurnEffect(AbilityEffect, 29, 0); /* Slow Start, Forecast */
     }
 }
 
