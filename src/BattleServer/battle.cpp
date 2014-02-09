@@ -570,9 +570,9 @@ void BattleSituation::endTurnStatus(int player)
                 healLife(player, poke(player).totalLifePoints()/8);
             }
         } else {
-            /*if (hasWorkingAbility(player, Ability::MagicGuard)) {
+            if (hasWorkingAbility(player, Ability::MagicGuard)) {
                 return;
-            }*/
+            }
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (poke(player).statusCount() == 0)
