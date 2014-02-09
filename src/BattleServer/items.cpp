@@ -53,12 +53,11 @@ struct IMBlackSludge : public IM
             return;
         }
         if(b.hasType(s, Pokemon::Poison)) {
-            if (b.canHeal(s)) {
+            if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
                 b.sendItemMessage(16,s,0);
                 b.healLife(s, b.poke(s).totalLifePoints()/16);
             }
-        } else
-        {
+        } else {
             b.sendItemMessage(16,s,1);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8,s);
         }
@@ -74,11 +73,10 @@ struct IMLeftOvers : public IM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s))
-            return;
-
-        b.sendItemMessage(12,s);
-        b.healLife(s, b.poke(s).totalLifePoints()/16);
+        if (b.canHeal(s,BS::HealByItem,b.poke(s).item()))  {
+            b.sendItemMessage(12,s);
+            b.healLife(s, b.poke(s).totalLifePoints()/16);
+        }
     }
 };
 
@@ -357,7 +355,7 @@ struct IMShellBell : public IM
         if (s==t)
             return;
 
-        if (!b.canHeal(s) || turn(b,s).value("EncourageBug").toBool())
+        if (!b.canHeal(s,BS::HealByItem,b.poke(s).item()) || turn(b,s).value("EncourageBug").toBool())
             return;
 
         int damage = turn(b,s)["DamageInflicted"].toInt();
@@ -550,13 +548,12 @@ struct IMBerryJuice : public IM
     }
 
     static void ahpc(int s, int, BS &b) {
-        if (!b.canHeal(s))
-            return;
-
         if (b.poke(s).lifePercent() <= 50) {
-            b.disposeItem(s);
-            b.sendItemMessage(18,s,0);
-            b.healLife(s, 20);
+            if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
+                b.disposeItem(s);
+                b.sendItemMessage(18,s,0);
+                b.healLife(s, 20);
+            }
         }
     }
 };

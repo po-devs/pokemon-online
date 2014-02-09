@@ -669,7 +669,7 @@ struct AMIceBody : public AM {
     static void ws(int s, int, BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
-            if (!b.poke(s).isFull()) {
+            if (b.canHeal(s,BS::HealByAbility,b.ability(s))) {
                 b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
                 b.healLife(s, b.poke(s).totalLifePoints()/16);
             }
@@ -1128,10 +1128,8 @@ struct AMVoltAbsorb : public AM {
 
     static void op(int s, int t, BS &b) {
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
-            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-            if (!b.canHeal(s)){
-                b.sendAbMessage(70,1,s,s,type(b,t), b.ability(s));
-            } else {
+            if (b.canHeal(s,BS::HealByAbility,b.ability(s))){
+                turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
                 b.sendAbMessage(70,0,s,s,type(b,t), b.ability(s));
                 b.healLife(s, b.poke(s).totalLifePoints()/4);
             }
