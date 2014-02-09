@@ -608,3 +608,4 @@
 607 Inflicts damage. Lowers Attack, Special Attack and Speed of a poisoned target.
 608 Doubles prize money received after battle.
 609 Congratulates you on your special day.
+610 Target is left at 1 HP if this attack would KO.
