@@ -454,9 +454,10 @@ struct AMForeCast : public AM {
         functions["UponSetup"] = &us;
         functions["WeatherChange"] = &us;
         functions["OnLoss"] = &ol;
-        functions["EndTurn12.0"] = &et; /* Gen 4 */
-        functions["EndTurn29.0"] = &et; /* Gen 5 */
+        functions["EndTurn12.0"] = &us; /* Gen 4 */
+        functions["EndTurn29.0"] = &us; /* Gen 5 */
     }
+    /*At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.*/
 
     static void us(int s, int, BS &b) {
         if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform)
@@ -479,18 +480,6 @@ struct AMForeCast : public AM {
         if (b.pokenum(s).subnum != 0) {
             b.changeAForme(s, 0);
         }
-    }
-
-    static void et (int s, int, BS &b) {
-        //At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.
-        int weather = b.weather;
-        int type = Type::Normal;
-        switch (weather) {
-            case BS::Sunny: type = Type::Fire; break;
-            case BS::Rain: type = Type::Water; break;
-            case BS::Hail: type = Type::Ice; break;
-        }
-        b.setType(s,type);
     }
 };
 
