@@ -36,7 +36,7 @@
 55 %s swapped its boosts with %f!
 57 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned harsh!
 58 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
-59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+59 %f was prevented from healing due to Heal Block!|%s's heal block wore off!|%s was prevented from healing due to Heal Block!|%s can't use %m because of Heal Block!|%s couldn't heal using it's %i due to Heal Block!|%s's %a had no effect due to Heal Block!
 60 %s regained health!
 61 %s regained health!|The healing wish came true!|It became cloaked in mystical moonlight!
 62 %s swapped its defense and attack!

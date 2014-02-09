@@ -560,19 +560,19 @@ void BattleSituation::endTurnStatus(int player)
         inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
         break;
     case Pokemon::Poisoned:
+        /* Toxic still increases under magic guard, poison heal */
+        if (poke(player).statusCount() != 0)
+            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            if (!poke(player).isFull()) {
+            if (canHeal(player,HealByAbility,ability(player))) {
                 sendAbMessage(45,0,player,0,Pokemon::Poison);
                 healLife(player, poke(player).totalLifePoints()/8);
             }
         } else {
-            if (hasWorkingAbility(player, Ability::MagicGuard)) {
-                /* Toxic still increases under magic guard */
-                if (poke(player).statusCount() != 0)
-                    poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+            /*if (hasWorkingAbility(player, Ability::MagicGuard)) {
                 return;
-            }
+            }*/
             notify(All, StatusMessage, player, qint8(HurtPoison));
 
             if (poke(player).statusCount() == 0)
@@ -3928,12 +3928,18 @@ void BattleSituation::setupMove(int i, int move)
     MoveEffect::setup(move,i,0,*this);
 }
 
-bool BattleSituation::canHeal(int s)
+bool BattleSituation::canHeal(int s, int part, int focus)
 {
-    if (!koed(s) && !poke(s).isFull() && !(pokeMemory(s).value("HealBlockCount").toInt() > 0))
-        return true;
+    if (koed(s) || poke(s).isFull())
+        return false;
 
-    return false;
+    //Gen 4 items are not hindered by heal block.
+    if (pokeMemory(s).value("HealBlockCount").toInt() > 0 && !(gen() <= 4 && part == HealByItem)) {
+        sendMoveMessage(59,part,s,Type::Psychic,s,focus);
+        return false;
+    }
+
+    return true;
 }
 
 bool BattleSituation::canBypassSub(int t)

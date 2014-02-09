@@ -124,6 +124,11 @@ struct BMPinch : public BM
             int tp = b.poke(s).totalLifePoints();
 
             if (lp*ratio <= tp) {
+                //Reusing 'bool activate' in order to only affect HP berries
+                if (poke(b, s).value("HealBlockCount").toInt() > 0 && activate) {
+                    b.sendMoveMessage(59,BS::HealByItem,s,Type::Psychic,s,b.poke(s).item());
+                    return false;
+                }
                 b.eatBerry(s,s==p);
                 return true;
             }
@@ -152,7 +157,7 @@ struct BMPinchHP : public BMPinch
     }
 
     static void tp(int p, int s, BS &b) {
-        if (!b.canHeal(s))
+        if (b.koed(s) || b.poke(s).isFull())
             return;
 
         if (!testpinch(p, s, b, 2, true))
@@ -224,7 +229,7 @@ struct BMSuperHP : public BM
         if (!b.attacking()) {
             return;
         }
-        if (!b.canHeal(s))
+        if (b.canHeal(s,BS::HealByItem,b.poke(s).item()))
             return;
         if (b.attacker() == s)
             return;
@@ -437,6 +442,7 @@ struct BMBerryRecoil : public BM
 struct BMConfuseBerry : public BMPinch
 {
     BMConfuseBerry() {
+        functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
     }
@@ -452,20 +458,23 @@ struct BMConfuseBerry : public BMPinch
     }
 
     static void tp (int p, int s, BS &b) {
-        if (!b.isOut(s))
+        if (b.koed(s) || b.poke(s).isFull())
             return;
 
         if (!testpinch(p, s, b, 4, true))
             return;
 
-        if (!b.canHeal(s))
-            return;
-
-        b.eatBerry(s);
         b.sendBerryMessage(6,s,0);
         b.healLife(s, b.poke(s).totalLifePoints()/8);
-        //Fixme: Nature checking for Trick, Switcheroo, Covet, Thief, Bug Bite, Fling, etc.
-        b.inflictConfused(s,s);
+
+        //Berries inflict confusion based on the hindering stat of a non-neutral Nature
+        int plus = NatureInfo::StatBoosted(b.poke(s).nature());
+        int minus = NatureInfo::StatHindered(b.poke(s).nature());
+        if (plus != minus) {
+            int arg = poke(b,p)["ItemArg"].toInt();
+            if (arg == minus)
+                b.inflictConfused(s,s);
+        }
     }
 };
 
@@ -496,6 +505,7 @@ struct BMPhysicalStat : public BM
         }
     }
 };
+
 struct BMSpecialStat : public BM
 {
     BMSpecialStat() {

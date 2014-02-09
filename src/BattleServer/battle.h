@@ -76,7 +76,7 @@ public:
     virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     bool canGetStatus(int player, int status);
-    bool canHeal(int s);
+    bool canHeal(int s, int part, int focus);
     bool canBypassSub(int t);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
@@ -163,6 +163,14 @@ public:
 	Rain = 2,
 	SandStorm = 3,
 	Sunny = 4
+    };
+
+    enum HealBlockBlock
+    {
+    HealByEffect = 2, //Effects like Aqua Ring, Leech Seed
+    HealByMove = 3, //Direct use of a move
+    HealByItem = 4, //Held Items
+    HealByAbility = 5 //Abilities
     };
 
 private:

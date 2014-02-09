@@ -153,7 +153,7 @@ struct MMAquaRing : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (!b.canHeal(s))
+        if (!b.canHeal(s,BS::HealByEffect,0))
             return;
 
         int healing = b.poke(s).totalLifePoints()/16;
@@ -2612,7 +2612,7 @@ struct MMLeechSeed : public MM
             damage = damage * 13 / 10;
         }
         if (!b.hasWorkingAbility(s, Ability::LiquidOoze)) {
-            if (!(poke(b, s2).value("HealBlockCount").toInt() > 0)) {
+            if (b.canHeal(s2,BS::HealByEffect,0)) {
                 b.sendMoveMessage(60, 0, s2);
                 b.healLife(s2, damage);
             }
@@ -2749,7 +2749,7 @@ struct MMIngrain : public MM
     }
 
     static void et(int s, int, BS &b) {
-        if (b.canHeal(s) && poke(b,s)["Rooted"].toBool() == true) {
+        if (b.canHeal(s,BS::HealByEffect,0) && poke(b,s)["Rooted"].toBool() == true) {
             int healing = b.poke(s).totalLifePoints()/16;
 
             if (b.hasWorkingItem(s, Item::BigRoot)) {
@@ -2758,7 +2758,6 @@ struct MMIngrain : public MM
 
             b.sendMoveMessage(151,1,s,Pokemon::Grass);
             b.healLife(s, healing);
-
         }
     }
 };
@@ -3523,7 +3522,7 @@ struct MMHealBlock: public MM
         int count = poke(b,s)["HealBlockCount"].toInt();
 
         if (count == 0) {
-            b.sendMoveMessage(59,2,s,Type::Psychic);
+            b.sendMoveMessage(59,1,s,Type::Psychic);
             b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
             removeFunction(poke(b,s), "MovesPossible", "HealBlock");
             removeFunction(poke(b,s), "MovePossible", "HealBlock");
@@ -3544,7 +3543,7 @@ struct MMHealBlock: public MM
         if(tmove(b,s).flags & Move::HealingFlag
                 || (b.gen() >= 6 && tmove(b,s).recoil > 0)) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(59,1,s,Type::Psychic,s,mv);
+            b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
         }
     }
 };
