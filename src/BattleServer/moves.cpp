@@ -1285,10 +1285,10 @@ struct MMBounce : public MM
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
-            }
-            if (move(b,s) == PhantomForce && poke(b, b.targetList.front()).value("Minimize").toBool()) {
-                tmove(b, s).accuracy = 0;
-                tmove(b, s).power = tmove(b, s).power * 2;
+                if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
+                    tmove(b, s).accuracy = 0;
+                    tmove(b, s).power = tmove(b, s).power * 2;
+                }
             }
         } else {
             tmove(b, s).power = 0;
@@ -1313,16 +1313,14 @@ struct MMBounce : public MM
             initMove(move, b.gen(),tmove(b,s));
             addFunction(turn(b,s), "EvenWhenCantMove", "Bounce", &ewc);
 
-            if (move == ShadowForce) {
+            if (move == ShadowForce || move == PhantomForce) {
+                addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
+                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             } else if (move == SkyDrop) {
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
-            } else if (move == PhantomForce) {
-                addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
-                addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
-                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
             }
         }
         //In ADV, the turn can end if for exemple the foe explodes, in which case TurnSettings will be needed next turn too
