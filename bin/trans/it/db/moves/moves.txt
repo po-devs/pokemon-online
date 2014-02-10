@@ -558,3 +558,53 @@
 557 Generatore V
 558 Incrofiamma
 559 Incrotuono
+560 Occhioni Teneri
+561 Ondaboato
+562 Truccodifesa
+563 Magibrillio
+564 Assorbibacio
+565 Vento di Fata
+566 Schiacciatuffo
+567 Boscomalocchio
+568 Liofilizzazione
+569 Geocontrollo
+570 Fiortempesta
+571 Assillo
+572 Forza Lunare
+573 Magifiamma
+574 Urlo
+575 Elettrococcola
+576 Ali del Fato
+577 Caricaparabola
+578 Spettrotuffo
+579 Carineria
+580 Simpatia
+581 Halloween
+582 Acqualame
+583 Nebularoma
+584 Rutto
+585 Confidenza
+586 Incantavoce
+587 Elettromistero
+588 Campo Elettrico
+589 Elettrocontagio
+590 Blocco Fatato
+591 Pungiglione
+592 Fiordifesa
+593 Campo Erboso
+594 Pioggiaplasma
+595 Scudo Reale
+596 Forza Tellurica
+597 Controllo Polare
+598 Ribaltappeto
+599 Campo Nebbioso
+600 Monito
+601 Pulviscoppio
+602 Crescipugno
+603 Aracampo
+604 Agodifesa
+605 Rete Vischiosa
+606 Sottosopra
+607 Velenotrappola
+608 Cuccagna
+610 Riguardo
