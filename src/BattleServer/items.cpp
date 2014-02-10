@@ -449,7 +449,7 @@ struct IMMetronome : public IM
             return;
         }
         if (act) {
-            poke(b,s)["IMMetroCount"] = std::min(10, count+1);
+            poke(b,s)["IMMetroCount"] = std::min(10, count+(b.gen() >= 5 ? 2 : 1));
         }
     }
 
