@@ -98,6 +98,7 @@ protected:
     start(Miss, int spot) end(spot)
     start(Avoid, int spot) end(spot)
     start(StatChange, int spot; int stat; int boost; bool silent) end(spot, stat, boost, silent)
+    start(CappedStat, int spot; int stat; bool maxi) end(spot, stat, maxi)
     start(ClassicStatusChange, int spot; int status; bool multipleTurns; bool silent) end(spot, status, multipleTurns, silent)
     start(AbsoluteStatusChange, int player; int poke; int status) end(player, poke, status)
     start(AlreadyStatusMessage, int spot; int status) end(spot, status)
@@ -218,6 +219,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(Miss);
     addCallback(Avoid);
     addCallback(StatChange);
+    addCallback(CappedStat);
     addCallback(ClassicStatusChange);
     addCallback(AbsoluteStatusChange);
     addCallback(AlreadyStatusMessage);

@@ -73,7 +73,8 @@ enum /* class */ BattleEnum
     ChooseShiftToCenter,
     ChooseDraw,
     UseItem,
-    ItemCountChange
+    ItemCountChange,
+    CappedStat
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

@@ -162,6 +162,14 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         output<BattleEnum::StatChange>(spot, stat, boost, silent);
         break;
     }
+    case BC::CappedStat:
+    {
+        qint8 stat;
+        bool maxi;
+        in >> stat >> maxi;
+        output<BattleEnum::CappedStat>(spot, stat, maxi);
+        break;
+    }
     case BC::StatusChange:
     {
         qint8 status;

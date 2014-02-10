@@ -2474,7 +2474,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
             callaeffects(player, attacker, "AfterNegativeStatChange");
         }
     } else {
-        //fixme: can't decrease message
+        notify(All, CappedStat, player, qint8(stat), false);
     }
 
     return true;
